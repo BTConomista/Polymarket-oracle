@@ -111,8 +111,8 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     out["date"] = _parse_dates(raw["Date"])
     out["season"] = season_code
     out["league"] = league.key
-    out["home_team"] = raw["HomeTeam"].astype(str).str.strip()
-    out["away_team"] = raw["AwayTeam"].astype(str).str.strip()
+    out["home_team"] = raw["HomeTeam"].astype(str).str.strip().map(sources.canonical_team)
+    out["away_team"] = raw["AwayTeam"].astype(str).str.strip().map(sources.canonical_team)
     out["home_goals"] = raw["FTHG"].astype(int)
     out["away_goals"] = raw["FTAG"].astype(int)
     out["result"] = raw["FTR"].astype(str).str.strip()

@@ -27,10 +27,10 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
 
 | Mercato | Metrica | Modello | Baseline | Mercato (chiusura) |
 |---|---|---:|---:|---:|
-| **1X2** | log-loss | 1.0047 | 1.0851 | **0.9784** |
-| **1X2** | Brier | 0.6004 | 0.6579 | **0.5830** |
-| **O/U 2.5** | log-loss | 0.7155 | 0.6896 | **0.6996** |
-| **O/U 2.5** | Brier | 0.2599 | 0.2482 | **0.2530** |
+| **1X2** | log-loss | 1.0017 | 1.0851 | **0.9784** |
+| **1X2** | Brier | 0.5984 | 0.6579 | **0.5830** |
+| **O/U 2.5** | log-loss | 0.7115 | 0.6896 | **0.6996** |
+| **O/U 2.5** | Brier | 0.2583 | 0.2482 | **0.2530** |
 
 **Come leggerli** (più bassi = meglio):
 
@@ -46,8 +46,25 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
   prevedibile a questo stadio.
 
 **Conclusione**: la pipeline funziona e il modello è valido *come modello*, ma non
-ha ancora un vantaggio sul mercato. Il prossimo lavoro (feature engineering) serve
-a colmare quel divario. **Non usare questo modello per scommettere soldi veri.**
+ha ancora un vantaggio sul mercato. **Non usare questo modello per scommettere
+soldi veri.**
+
+### Analisi degli errori — Fase 2a (`scripts/analyze.py`)
+
+Prima di aggiungere feature, abbiamo analizzato *dove* il modello perde contro il
+mercato. Risultati principali:
+
+- **Sulla media il modello è ben calibrato** (nessun bias sistematico, nemmeno sui
+  pareggi): il vantaggio del mercato è nella **discriminazione** delle singole
+  partite, non nella calibrazione media.
+- **Bug trovato e corretto**: la stagione di test chiamava il Verona "Hellas
+  Verona" mentre le stagioni di training usavano "Verona" → il modello lo trattava
+  come squadra sconosciuta, producendo predizioni assurde. Risolto con una mappa
+  di normalizzazione nomi (`TEAM_ALIASES` in `sources.py`).
+- **Dove il modello perde di più** (log-loss, gap col mercato): partite con
+  **neopromosse** (gap +0.037, doppio della media) e **inizio stagione**
+  (+0.030). Radice comune: dati storici scarsi o datati → stime inaffidabili.
+  Questi sono i bersagli prioritari del feature engineering (Fase 2b).
 
 ## Struttura
 
@@ -74,6 +91,7 @@ pip install -e .            # oppure: pip install numpy pandas scipy pytest
 
 python scripts/download_data.py     # scarica i dati storici (una volta)
 python scripts/backtest.py          # esegue il backtest sulla stagione 2025-26
+python scripts/analyze.py           # analizza gli errori del backtest
 python -m pytest                    # esegue i test
 ```
 
@@ -87,12 +105,15 @@ python scripts/backtest.py --test-season 2425     # testa un'altra stagione
 ## Roadmap (idee, non impegni)
 
 1. ✅ **Fase 1** — tracer bullet: Dixon-Coles + backtest su Serie A.
-2. **Predizioni su partite future** (non solo backtest): serve una fonte per il
+2. ✅ **Fase 2a** — analisi degli errori: capito dove il modello perde (neopromosse,
+   inizio stagione) e corretto il bug dei nomi squadra.
+3. **Fase 2b — feature engineering** per colmare il divario col mercato, partendo
+   dai punti deboli individuati (priori per neopromosse, riduzione
+   dell'overconfidence su dati scarsi; poi forma recente, xG, ecc.).
+4. **Predizioni su partite future** (non solo backtest): serve una fonte per il
    calendario delle prossime giornate.
-3. **Feature engineering** per provare a colmare il divario col mercato (forma
-   recente, xG, indisponibilità giocatori, riposo, ecc.).
-4. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-5. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+5. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+6. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Note sui dati
 

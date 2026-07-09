@@ -53,6 +53,22 @@ LEAGUES: dict[str, League] = {
     # "la_liga":        League("la_liga",        "SP1", "La Liga"),
 }
 
+# Normalizzazione nomi squadra.
+#
+# Il provider a volte cambia il nome della stessa squadra tra una stagione e
+# l'altra (es. "Hellas Verona" vs "Verona"). Se non li unifichiamo, il modello le
+# tratta come squadre DIVERSE e perde tutto lo storico: errore grave e silenzioso.
+# Mappa {nome_come_appare: nome_canonico}. Aggiungere qui eventuali nuove varianti.
+TEAM_ALIASES: dict[str, str] = {
+    "Hellas Verona": "Verona",
+}
+
+
+def canonical_team(name: str) -> str:
+    """Nome canonico di una squadra (applica gli alias noti)."""
+    return TEAM_ALIASES.get(name, name)
+
+
 # Le 9 stagioni piu' recenti di Serie A, codificate come nel provider:
 # "1718" = stagione 2017-2018, ... "2526" = stagione 2025-2026 (l'ultima conclusa).
 SEASONS: list[str] = [
