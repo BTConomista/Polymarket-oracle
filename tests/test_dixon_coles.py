@@ -44,6 +44,9 @@ def _synthetic_matches(n_seasons: int = 3, seed: int = 0) -> pd.DataFrame:
                     "home_goals": int(rng.poisson(lam)),
                     "away_goals": int(rng.poisson(mu)),
                     "result": "H",  # ricalcolato sotto
+                    # Tiri in porta: ~3x i gol attesi (conversione ~0.33).
+                    "home_sot": int(rng.poisson(lam * 3.0)),
+                    "away_sot": int(rng.poisson(mu * 3.0)),
                     "odds_home": np.nan, "odds_draw": np.nan, "odds_away": np.nan,
                     "odds_over25": np.nan, "odds_under25": np.nan,
                 })
@@ -111,6 +114,26 @@ def test_shrinkage_pulls_toward_average():
     assert spread(shrunk) < spread(plain)
     # L'ordine tra squadre deve comunque restare (Forte > Debole).
     assert shrunk.attack["Forte"] > shrunk.attack["Debole"]
+
+
+def test_shots_blend_valid_and_backward_compatible():
+    """Il blend gol/tiri produce probabilita' valide, e alpha=1 coincide col
+    modello sui soli gol (retrocompatibilita')."""
+    matches = _synthetic_matches(n_seasons=4)
+    goals_only = DixonColesModel(half_life_days=None, shots_blend=1.0).fit(matches)
+    blended = DixonColesModel(half_life_days=None, shots_blend=0.5).fit(matches)
+    pure_shots = DixonColesModel(half_life_days=None, shots_blend=0.0).fit(matches)
+
+    for model in (goals_only, blended, pure_shots):
+        p = model.predict_match("Forte", "Debole")
+        assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-6)
+        assert p.prob_home_win > p.prob_away_win  # il forte in casa resta favorito
+
+    # alpha=1 non deve nemmeno stimare il modello sui tiri.
+    assert goals_only.attack_sot == {}
+    # alpha<1 deve averlo stimato e prodotto tassi di conversione plausibili.
+    assert blended.attack_sot != {}
+    assert 0.1 < blended.conv_home < 1.0
 
 
 def test_devig_sums_to_one():

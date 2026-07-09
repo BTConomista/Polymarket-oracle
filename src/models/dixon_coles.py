@@ -103,6 +103,7 @@ class DixonColesModel:
         half_life_days: float = 180.0,
         max_goals: int = 10,
         shrinkage: float = 0.0,
+        shots_blend: float = 1.0,
     ):
         """
         Args:
@@ -116,17 +117,34 @@ class DixonColesModel:
                 il contributo dei dati cresce col numero di partite, l'effetto e'
                 AUTOMATICAMENTE piu' forte sulle squadre con pochi dati
                 (neopromosse, inizio stagione). 0 = nessuna regolarizzazione.
+            shots_blend: peso alpha del segnale GOL rispetto ai TIRI IN PORTA nella
+                stima dei gol attesi. I gol sono rumorosi (fortuna sotto porta); i
+                tiri in porta misurano le occasioni con meno rumore. Si allena un
+                modello sui gol e uno sui tiri in porta, e si mescolano i tassi:
+                    gol_attesi = alpha * (dai gol) + (1-alpha) * (dai tiri in porta)
+                alpha=1 -> solo gol (modello classico); alpha=0 -> solo tiri in
+                porta; valori intermedi -> miscela. Tarabile via scripts/tune.py.
         """
         self.half_life_days = half_life_days
         self.max_goals = max_goals
         self.shrinkage = shrinkage
+        self.shots_blend = shots_blend
 
-        # Parametri stimati (riempiti da fit()).
+        # Parametri stimati sui GOL (riempiti da fit()).
         self.teams: list[str] = []
         self.attack: dict[str, float] = {}
         self.defense: dict[str, float] = {}
         self.home_advantage: float = 0.0
         self.rho: float = 0.0
+
+        # Parametri stimati sui TIRI IN PORTA (solo se shots_blend < 1).
+        self.attack_sot: dict[str, float] = {}
+        self.defense_sot: dict[str, float] = {}
+        self.home_advantage_sot: float = 0.0
+        # Tasso di conversione tiri-in-porta -> gol (per riportare i tiri su scala gol).
+        self.conv_home: float = 1.0
+        self.conv_away: float = 1.0
+
         self.fitted: bool = False
 
     # ------------------------------------------------------------------ #
@@ -166,17 +184,68 @@ class DixonColesModel:
 
         teams = sorted(set(train["home_team"]) | set(train["away_team"]))
         idx = {t: k for k, t in enumerate(teams)}
-        n = len(teams)
+        self.teams = teams
 
+        # --- Modello sui GOL (sempre) ---
         home_idx = train["home_team"].map(idx).to_numpy()
         away_idx = train["away_team"].map(idx).to_numpy()
-        hg = train["home_goals"].to_numpy().astype(float)
-        ag = train["away_goals"].to_numpy().astype(float)
         weights = self._time_weights(train["date"], as_of_date)
+        attack, defense, home_adv, rho = self._fit_counts(
+            len(teams), home_idx, away_idx,
+            train["home_goals"].to_numpy().astype(float),
+            train["away_goals"].to_numpy().astype(float),
+            weights, use_correction=True,
+        )
+        self.attack = {t: attack[idx[t]] for t in teams}
+        self.defense = {t: defense[idx[t]] for t in teams}
+        self.home_advantage = home_adv
+        self.rho = rho
 
-        # Costanti nella log-verosimiglianza (indipendenti dai parametri):
-        # -log(x!) = -gammaln(x+1). Le precalcoliamo una volta sola.
-        log_fact = gammaln(hg + 1.0) + gammaln(ag + 1.0)
+        # --- Modello sui TIRI IN PORTA (solo se serve mescolarli) ---
+        if self.shots_blend < 1.0:
+            sot = train.dropna(subset=["home_sot", "away_sot"])
+            if sot.empty:
+                raise ValueError("shots_blend < 1 ma mancano i dati sui tiri in porta.")
+            s_home_idx = sot["home_team"].map(idx).to_numpy()
+            s_away_idx = sot["away_team"].map(idx).to_numpy()
+            s_weights = self._time_weights(sot["date"], as_of_date)
+            # I tiri in porta sono conteggi ad alto volume: niente correzione sui
+            # punteggi bassi (serve solo il tasso atteso, che poi convertiamo).
+            a_sot, d_sot, ha_sot, _ = self._fit_counts(
+                len(teams), s_home_idx, s_away_idx,
+                sot["home_sot"].to_numpy().astype(float),
+                sot["away_sot"].to_numpy().astype(float),
+                s_weights, use_correction=False,
+            )
+            self.attack_sot = {t: a_sot[idx[t]] for t in teams}
+            self.defense_sot = {t: d_sot[idx[t]] for t in teams}
+            self.home_advantage_sot = ha_sot
+            # Tasso di conversione: quanti gol per tiro in porta (pesato nel tempo).
+            self.conv_home = float(np.sum(s_weights * sot["home_goals"].to_numpy())
+                                   / np.sum(s_weights * sot["home_sot"].to_numpy()))
+            self.conv_away = float(np.sum(s_weights * sot["away_goals"].to_numpy())
+                                   / np.sum(s_weights * sot["away_sot"].to_numpy()))
+
+        self.fitted = True
+        return self
+
+    def _fit_counts(
+        self,
+        n: int,
+        home_idx: np.ndarray,
+        away_idx: np.ndarray,
+        home_counts: np.ndarray,
+        away_counts: np.ndarray,
+        weights: np.ndarray,
+        use_correction: bool,
+    ) -> tuple[np.ndarray, np.ndarray, float, float]:
+        """Stima attacco/difesa/vantaggio-casa/rho via ML pesata su generici
+        conteggi (gol o tiri in porta). Ritorna (attack, defense, home_adv, rho).
+
+        use_correction: applica la correzione Dixon-Coles sui punteggi bassi
+        (adatta ai gol). Per i tiri in porta la disattiviamo (rho fissato a 0).
+        """
+        log_fact = gammaln(home_counts + 1.0) + gammaln(away_counts + 1.0)
 
         def neg_log_likelihood(params: np.ndarray) -> float:
             attack = params[:n]
@@ -187,51 +256,35 @@ class DixonColesModel:
             lam = np.exp(attack[home_idx] + defense[away_idx] + home_adv)
             mu = np.exp(attack[away_idx] + defense[home_idx])
 
-            # log P(x) + log P(y) sotto le due Poisson.
-            ll = (hg * np.log(lam) - lam) + (ag * np.log(mu) - mu) - log_fact
-            # Correzione Dixon-Coles (clip per evitare log di numeri <= 0).
-            tau = _tau(hg, ag, lam, mu, rho)
-            ll = ll + np.log(np.clip(tau, 1e-10, None))
+            ll = (home_counts * np.log(lam) - lam) \
+                + (away_counts * np.log(mu) - mu) - log_fact
+            if use_correction:
+                tau = _tau(home_counts, away_counts, lam, mu, rho)
+                ll = ll + np.log(np.clip(tau, 1e-10, None))
 
             weighted = np.sum(weights * ll)
 
-            # Indeterminazione: la verosimiglianza e' invariante se si sposta
-            # attack_i += c e defense_i -= c per ogni squadra. La fissiamo
-            # imponendo media(attacco) = 0 tramite una penalita'.
+            # Indeterminazione: invariante per attack_i += c, defense_i -= c.
+            # La fissiamo imponendo media(attacco) = 0.
             penalty = _IDENTIFIABILITY_PENALTY * attack.mean() ** 2
-            # Shrinkage: tira attacco/difesa verso la media (0). Non tocca
-            # vantaggio-casa e rho (parametri globali, gia' ben stimati).
             if self.shrinkage > 0.0:
                 penalty += self.shrinkage * (np.sum(attack ** 2) + np.sum(defense ** 2))
             return -weighted + penalty
 
-        # Punto di partenza: tutto neutro, vantaggio-casa positivo, rho piccolo.
         x0 = np.concatenate([
-            np.zeros(n),            # attack
-            np.zeros(n),            # defense
-            np.array([0.25]),       # home_advantage (log-scala, ~ +28% gol)
-            np.array([-0.05]),      # rho
+            np.zeros(n), np.zeros(n), np.array([0.25]), np.array([-0.05]),
         ])
+        rho_bounds = (-0.4, 0.4) if use_correction else (0.0, 0.0)
         bounds = (
-            [(-3.0, 3.0)] * n       # attack
-            + [(-3.0, 3.0)] * n     # defense
-            + [(-1.0, 2.0)]         # home_advantage
-            + [(-0.4, 0.4)]         # rho (deve tenere tau > 0)
+            [(-3.0, 3.0)] * n + [(-3.0, 3.0)] * n + [(-1.0, 2.0)] + [rho_bounds]
         )
 
         result = minimize(
             neg_log_likelihood, x0, method="L-BFGS-B", bounds=bounds,
             options={"maxiter": 500, "ftol": 1e-9},
         )
-
         params = result.x
-        self.teams = teams
-        self.attack = {t: float(params[idx[t]]) for t in teams}
-        self.defense = {t: float(params[n + idx[t]]) for t in teams}
-        self.home_advantage = float(params[2 * n])
-        self.rho = float(params[2 * n + 1])
-        self.fitted = True
-        return self
+        return params[:n], params[n:2 * n], float(params[2 * n]), float(params[2 * n + 1])
 
     # ------------------------------------------------------------------ #
     # Predizione
@@ -256,13 +309,30 @@ class DixonColesModel:
         return matrix
 
     def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:
-        """Gol attesi (lambda, mu). Squadre sconosciute = forza media (0)."""
-        a_h = self.attack.get(home_team, 0.0)
-        d_h = self.defense.get(home_team, 0.0)
-        a_a = self.attack.get(away_team, 0.0)
-        d_a = self.defense.get(away_team, 0.0)
-        lam = math.exp(a_h + d_a + self.home_advantage)
-        mu = math.exp(a_a + d_h)
+        """Gol attesi (lambda, mu). Squadre sconosciute = forza media (0).
+
+        Se shots_blend < 1, mescola il tasso stimato dai gol con quello stimato
+        dai tiri in porta (convertito in scala gol): lam = a*lam_gol + (1-a)*lam_tiri.
+        """
+        # Tasso dai GOL.
+        lam_g = math.exp(self.attack.get(home_team, 0.0)
+                         + self.defense.get(away_team, 0.0) + self.home_advantage)
+        mu_g = math.exp(self.attack.get(away_team, 0.0)
+                        + self.defense.get(home_team, 0.0))
+
+        a = self.shots_blend
+        if a >= 1.0 or not self.attack_sot:
+            return lam_g, mu_g
+
+        # Tasso dai TIRI IN PORTA, riportato su scala gol con il tasso di conversione.
+        lam_s = math.exp(self.attack_sot.get(home_team, 0.0)
+                         + self.defense_sot.get(away_team, 0.0)
+                         + self.home_advantage_sot) * self.conv_home
+        mu_s = math.exp(self.attack_sot.get(away_team, 0.0)
+                        + self.defense_sot.get(home_team, 0.0)) * self.conv_away
+
+        lam = a * lam_g + (1.0 - a) * lam_s
+        mu = a * mu_g + (1.0 - a) * mu_s
         return lam, mu
 
     def predict_match(self, home_team: str, away_team: str) -> MatchPrediction:
@@ -311,10 +381,16 @@ class DixonColesModel:
             "half_life_days": self.half_life_days,
             "max_goals": self.max_goals,
             "shrinkage": self.shrinkage,
+            "shots_blend": self.shots_blend,
             "attack": self.attack,
             "defense": self.defense,
             "home_advantage": self.home_advantage,
             "rho": self.rho,
+            "attack_sot": self.attack_sot,
+            "defense_sot": self.defense_sot,
+            "home_advantage_sot": self.home_advantage_sot,
+            "conv_home": self.conv_home,
+            "conv_away": self.conv_away,
         }
 
     @classmethod
@@ -323,11 +399,17 @@ class DixonColesModel:
             half_life_days=data.get("half_life_days", 180.0),
             max_goals=data.get("max_goals", 10),
             shrinkage=data.get("shrinkage", 0.0),
+            shots_blend=data.get("shots_blend", 1.0),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
         model.home_advantage = float(data["home_advantage"])
         model.rho = float(data["rho"])
+        model.attack_sot = dict(data.get("attack_sot", {}))
+        model.defense_sot = dict(data.get("defense_sot", {}))
+        model.home_advantage_sot = float(data.get("home_advantage_sot", 0.0))
+        model.conv_home = float(data.get("conv_home", 1.0))
+        model.conv_away = float(data.get("conv_away", 1.0))
         model.teams = sorted(model.attack)
         model.fitted = True
         return model

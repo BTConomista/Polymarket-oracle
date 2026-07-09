@@ -117,6 +117,12 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     out["away_goals"] = raw["FTAG"].astype(int)
     out["result"] = raw["FTR"].astype(str).str.strip()
 
+    # Tiri in porta (HST/AST): segnale meno rumoroso dei gol per stimare la
+    # forza delle squadre (vedi models/dixon_coles.py, blend gol/tiri). Puo'
+    # mancare in qualche riga/stagione: in quel caso resta NaN.
+    out["home_sot"] = pd.to_numeric(raw.get("HST"), errors="coerce")
+    out["away_sot"] = pd.to_numeric(raw.get("AST"), errors="coerce")
+
     for target, candidates in _ODDS_PREFERENCE.items():
         out[target] = raw.apply(lambda r: _pick_odds(r, candidates), axis=1)
 

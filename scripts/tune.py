@@ -35,12 +35,12 @@ from src.data import sources
 DEFAULT_SEASONS = ["2324", "2425", "2526"]
 
 
-def _evaluate(task: tuple[str, float | None, float]) -> dict:
-    """Esegue un backtest (stagione, emivita, shrinkage) e ne calcola le
-    metriche 1X2 (log-loss del modello e del mercato)."""
-    season, half_life, shrinkage = task
+def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
+    """Esegue un backtest (stagione, emivita, shrinkage, shots_blend) e ne calcola
+    le metriche 1X2 (log-loss del modello e del mercato)."""
+    season, half_life, shrinkage, shots_blend = task
     df = run_backtest("serie_a", season, half_life_days=half_life,
-                      shrinkage=shrinkage, verbose=False)
+                      shrinkage=shrinkage, shots_blend=shots_blend, verbose=False)
     outcomes = df["result"].tolist()
     model = df[["m_home", "m_draw", "m_away"]].to_numpy()
 
@@ -55,6 +55,7 @@ def _evaluate(task: tuple[str, float | None, float]) -> dict:
         "season": season,
         "half_life": half_life,
         "shrinkage": shrinkage,
+        "shots_blend": shots_blend,
         "model_ll": metrics.log_loss_1x2(model, outcomes),
         "market_ll": metrics.log_loss_1x2(mkt[has], out_mkt),
     }
@@ -62,36 +63,49 @@ def _evaluate(task: tuple[str, float | None, float]) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Tuning di un iperparametro.")
-    parser.add_argument("--sweep", choices=["shrinkage", "half_life_days"],
+    parser.add_argument("--sweep",
+                        choices=["shrinkage", "half_life_days", "shots_blend"],
                         default="shrinkage", help="iperparametro da spazzare")
     parser.add_argument("--values", type=float, nargs="+",
                         default=[0.0, 1.0, 1.5, 3.0, 10.0],
                         help="valori da provare (per half_life_days, 0 = nessun decadimento)")
     parser.add_argument("--seasons", nargs="+", default=DEFAULT_SEASONS)
-    parser.add_argument("--half-life", type=float, default=180.0,
-                        help="emivita fissa quando si spazza lo shrinkage")
+    parser.add_argument("--half-life", type=float, default=730.0,
+                        help="emivita fissa quando non e' quella spazzata")
     parser.add_argument("--shrinkage", type=float, default=1.5,
-                        help="shrinkage fisso quando si spazza l'emivita")
+                        help="shrinkage fisso quando non e' quello spazzato")
+    parser.add_argument("--shots-blend", type=float, default=1.0,
+                        help="shots_blend fisso quando non e' quello spazzato")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 
-    def build(season: str, value: float) -> tuple[str, float | None, float]:
+    def build(season: str, value: float) -> tuple[str, float | None, float, float]:
+        hl, shr, sb = args.half_life, args.shrinkage, args.shots_blend
         if args.sweep == "shrinkage":
-            return (season, args.half_life, value)
-        # half_life_days: 0 (o negativo) = nessun decadimento (None).
-        hl = None if value <= 0 else value
-        return (season, hl, args.shrinkage)
+            shr = value
+        elif args.sweep == "shots_blend":
+            sb = value
+        else:  # half_life_days: 0 (o negativo) = nessun decadimento (None).
+            hl = None if value <= 0 else value
+        return (season, hl, shr, sb)
 
     tasks = [build(s, v) for s in args.seasons for v in args.values]
-    fixed = (f"emivita={args.half_life}g" if args.sweep == "shrinkage"
-             else f"shrinkage={args.shrinkage}")
-    print(f"Spazzo '{args.sweep}' su {len(args.seasons)} stagioni ({fixed} fisso), "
+    fixed_bits = []
+    if args.sweep != "half_life_days":
+        fixed_bits.append(f"emivita={args.half_life}g")
+    if args.sweep != "shrinkage":
+        fixed_bits.append(f"shrinkage={args.shrinkage}")
+    if args.sweep != "shots_blend":
+        fixed_bits.append(f"shots_blend={args.shots_blend}")
+    print(f"Spazzo '{args.sweep}' su {len(args.seasons)} stagioni "
+          f"({', '.join(fixed_bits)} fissi), "
           f"{len(tasks)} backtest su {args.workers} processi...\n")
 
     with Pool(args.workers) as pool:
         results = pool.map(_evaluate, tasks)
 
-    by = {(r["season"], r["half_life"], r["shrinkage"]): r for r in results}
+    by = {(r["season"], r["half_life"], r["shrinkage"], r["shots_blend"]): r
+          for r in results}
 
     print(f"{args.sweep:>14}", end="")
     for s in args.seasons:

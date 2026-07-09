@@ -42,6 +42,7 @@ def run_backtest(
     test_season: str,
     half_life_days: float,
     shrinkage: float = 0.0,
+    shots_blend: float = 1.0,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """Esegue il walk-forward e ritorna un DataFrame con una riga per partita."""
@@ -60,7 +61,8 @@ def run_backtest(
     n_weeks = test["_week"].nunique()
     for w, (_, group) in enumerate(test.groupby("_week", sort=True), start=1):
         as_of = group["date"].min()
-        model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage)
+        model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage,
+                                shots_blend=shots_blend)
         model.fit(all_matches, as_of_date=as_of)
         if verbose:
             print(f"  settimana {w}/{n_weeks}  ({as_of.date()}): "
@@ -212,6 +214,9 @@ def main() -> None:
     parser.add_argument("--shrinkage", type=float, default=1.5,
                         help="forza della regolarizzazione verso la media "
                              "(default 1.5, valore scelto via scripts/tune.py)")
+    parser.add_argument("--shots-blend", type=float, default=1.0,
+                        help="peso alpha gol vs tiri in porta (1=solo gol, "
+                             "0=solo tiri; vedi Fase 3)")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",
@@ -220,9 +225,11 @@ def main() -> None:
 
     print(f"Backtest {args.league} — stagione test {args.test_season} "
           f"({sources.season_label(args.test_season)}), "
-          f"emivita {args.half_life_days:.0f}g, shrinkage {args.shrinkage}")
+          f"emivita {args.half_life_days:.0f}g, shrinkage {args.shrinkage}, "
+          f"shots_blend {args.shots_blend}")
     df = run_backtest(args.league, args.test_season, args.half_life_days,
-                      shrinkage=args.shrinkage, verbose=not args.quiet)
+                      shrinkage=args.shrinkage, shots_blend=args.shots_blend,
+                      verbose=not args.quiet)
 
     report(df)
 
