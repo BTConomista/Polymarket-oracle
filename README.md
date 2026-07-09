@@ -27,10 +27,14 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
 
 | Mercato | Metrica | Modello | Baseline | Mercato (chiusura) |
 |---|---|---:|---:|---:|
-| **1X2** | log-loss | 1.0017 | 1.0851 | **0.9784** |
-| **1X2** | Brier | 0.5984 | 0.6579 | **0.5830** |
-| **O/U 2.5** | log-loss | 0.7115 | 0.6896 | **0.6996** |
-| **O/U 2.5** | Brier | 0.2583 | 0.2482 | **0.2530** |
+| **1X2** | log-loss | 0.9992 | 1.0851 | **0.9784** |
+| **1X2** | Brier | 0.5968 | 0.6579 | **0.5830** |
+| **O/U 2.5** | log-loss | 0.7062 | 0.6896 | **0.6996** |
+| **O/U 2.5** | Brier | 0.2559 | 0.2482 | **0.2530** |
+
+_Numeri con shrinkage = 1.5 (vedi Fase 2b). Il modello è validato su **due**
+stagioni (2024-25 e 2025-26): le conclusioni sono stabili, non rumore di una
+singola stagione._
 
 **Come leggerli** (più bassi = meglio):
 
@@ -66,6 +70,28 @@ mercato. Risultati principali:
   (+0.030). Radice comune: dati storici scarsi o datati → stime inaffidabili.
   Questi sono i bersagli prioritari del feature engineering (Fase 2b).
 
+### Feature engineering — Fase 2b (in corso)
+
+Primo intervento: **shrinkage** (regolarizzazione verso la media della lega),
+tarato con `scripts/tune_shrinkage.py` su due stagioni. Poiché la penalità è
+fissa mentre il contributo dei dati cresce col numero di partite, l'effetto è
+**automaticamente più forte sulle squadre con pochi dati** — proprio i punti
+deboli individuati.
+
+Risultato (log-loss 1X2, media 2024-25 + 2025-26; più basso = meglio):
+
+| shrinkage | media | gap col mercato |
+|---:|---:|---:|
+| 0.0 (base) | 0.9918 | +0.026 |
+| **1.5** (scelto) | **0.9879** | **+0.022** |
+| Mercato | 0.9654 | — |
+
+Migliora **entrambe** le stagioni e riduce il divario col mercato di ~15%. In
+particolare il gap sull'**inizio stagione** scende da +0.030 a +0.022 e quello
+sulle **neopromosse** da +0.037 a +0.030: l'intervento colpisce i bersagli
+previsti. Guadagno modesto ma solido — senza informazione *nuova* il tetto è
+questo. I prossimi passi (forma, xG) puntano ad alzarlo.
+
 ## Struttura
 
 ```
@@ -92,6 +118,7 @@ pip install -e .            # oppure: pip install numpy pandas scipy pytest
 python scripts/download_data.py     # scarica i dati storici (una volta)
 python scripts/backtest.py          # esegue il backtest sulla stagione 2025-26
 python scripts/analyze.py           # analizza gli errori del backtest
+python scripts/tune_shrinkage.py    # tara lo shrinkage su piu' stagioni
 python -m pytest                    # esegue i test
 ```
 

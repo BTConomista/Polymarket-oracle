@@ -96,6 +96,23 @@ def test_serialization_roundtrip():
     assert p1.prob_home_win == pytest.approx(p2.prob_home_win, abs=1e-9)
 
 
+def test_shrinkage_pulls_toward_average():
+    """Con shrinkage>0 le stime di forza sono piu' vicine alla media (0):
+    e' la regolarizzazione che riduce l'overconfidence sui dati scarsi."""
+    matches = _synthetic_matches(n_seasons=2)
+    plain = DixonColesModel(half_life_days=None, shrinkage=0.0).fit(matches)
+    shrunk = DixonColesModel(half_life_days=None, shrinkage=5.0).fit(matches)
+
+    def spread(model):
+        vals = list(model.attack.values()) + list(model.defense.values())
+        return np.std(vals)
+
+    # La dispersione delle forze deve ridursi con lo shrinkage.
+    assert spread(shrunk) < spread(plain)
+    # L'ordine tra squadre deve comunque restare (Forte > Debole).
+    assert shrunk.attack["Forte"] > shrunk.attack["Debole"]
+
+
 def test_devig_sums_to_one():
     p = metrics.devig_1x2(2.0, 3.5, 4.0)
     assert p.sum() == pytest.approx(1.0, abs=1e-9)

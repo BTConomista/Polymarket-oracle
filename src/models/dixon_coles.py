@@ -98,7 +98,12 @@ class DixonColesModel:
         pred = model.predict_match("Inter", "Milan")
     """
 
-    def __init__(self, half_life_days: float = 180.0, max_goals: int = 10):
+    def __init__(
+        self,
+        half_life_days: float = 180.0,
+        max_goals: int = 10,
+        shrinkage: float = 0.0,
+    ):
         """
         Args:
             half_life_days: dopo quanti giorni il peso di una partita si dimezza
@@ -106,9 +111,15 @@ class DixonColesModel:
                 ma piu' rumoroso. None/inf = nessun decadimento (tutte uguali).
             max_goals: numero massimo di gol per squadra considerato nella matrice
                 dei punteggi (troncamento; 10 e' abbondante per il calcio).
+            shrinkage: forza della regolarizzazione L2 che tira attacco/difesa
+                verso la media della lega (0). Poiche' la penalita' e' fissa mentre
+                il contributo dei dati cresce col numero di partite, l'effetto e'
+                AUTOMATICAMENTE piu' forte sulle squadre con pochi dati
+                (neopromosse, inizio stagione). 0 = nessuna regolarizzazione.
         """
         self.half_life_days = half_life_days
         self.max_goals = max_goals
+        self.shrinkage = shrinkage
 
         # Parametri stimati (riempiti da fit()).
         self.teams: list[str] = []
@@ -188,6 +199,10 @@ class DixonColesModel:
             # attack_i += c e defense_i -= c per ogni squadra. La fissiamo
             # imponendo media(attacco) = 0 tramite una penalita'.
             penalty = _IDENTIFIABILITY_PENALTY * attack.mean() ** 2
+            # Shrinkage: tira attacco/difesa verso la media (0). Non tocca
+            # vantaggio-casa e rho (parametri globali, gia' ben stimati).
+            if self.shrinkage > 0.0:
+                penalty += self.shrinkage * (np.sum(attack ** 2) + np.sum(defense ** 2))
             return -weighted + penalty
 
         # Punto di partenza: tutto neutro, vantaggio-casa positivo, rho piccolo.
@@ -295,6 +310,7 @@ class DixonColesModel:
         return {
             "half_life_days": self.half_life_days,
             "max_goals": self.max_goals,
+            "shrinkage": self.shrinkage,
             "attack": self.attack,
             "defense": self.defense,
             "home_advantage": self.home_advantage,
@@ -306,6 +322,7 @@ class DixonColesModel:
         model = cls(
             half_life_days=data.get("half_life_days", 180.0),
             max_goals=data.get("max_goals", 10),
+            shrinkage=data.get("shrinkage", 0.0),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
