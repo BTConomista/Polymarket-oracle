@@ -210,7 +210,7 @@ def main() -> None:
                         help="emivita del decadimento temporale (giorni)")
     parser.add_argument("--shrinkage", type=float, default=1.5,
                         help="forza della regolarizzazione verso la media "
-                             "(default 1.5, valore scelto via scripts/tune_shrinkage.py)")
+                             "(default 1.5, valore scelto via scripts/tune.py)")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",

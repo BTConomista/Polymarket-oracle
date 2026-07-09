@@ -73,7 +73,7 @@ mercato. Risultati principali:
 ### Feature engineering — Fase 2b (in corso)
 
 Primo intervento: **shrinkage** (regolarizzazione verso la media della lega),
-tarato con `scripts/tune_shrinkage.py` su due stagioni. Poiché la penalità è
+tarato con `scripts/tune.py` su due stagioni. Poiché la penalità è
 fissa mentre il contributo dei dati cresce col numero di partite, l'effetto è
 **automaticamente più forte sulle squadre con pochi dati** — proprio i punti
 deboli individuati.
@@ -118,7 +118,7 @@ pip install -e .            # oppure: pip install numpy pandas scipy pytest
 python scripts/download_data.py     # scarica i dati storici (una volta)
 python scripts/backtest.py          # esegue il backtest sulla stagione 2025-26
 python scripts/analyze.py           # analizza gli errori del backtest
-python scripts/tune_shrinkage.py    # tara lo shrinkage su piu' stagioni
+python scripts/tune.py    # tara lo shrinkage su piu' stagioni
 python -m pytest                    # esegue i test
 ```
 
