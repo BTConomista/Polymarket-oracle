@@ -1,0 +1,1 @@
+"""Raccolta e normalizzazione dati."""

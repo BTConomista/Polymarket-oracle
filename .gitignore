@@ -1,0 +1,19 @@
+# Dati grezzi scaricati (rigenerabili con scripts/download_data.py)
+data/raw/*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Output/artefatti dei modelli
+models/*.json
+outputs/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

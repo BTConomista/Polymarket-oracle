@@ -1,0 +1,110 @@
+"""Test del modello Dixon-Coles e delle metriche.
+
+Verifichiamo proprieta' matematiche che DEVONO valere sempre, cosi' un domani
+una modifica che rompe il modello viene subito segnalata.
+"""
+
+import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.evaluation import metrics
+from src.models.dixon_coles import DixonColesModel
+
+
+def _synthetic_matches(n_seasons: int = 3, seed: int = 0) -> pd.DataFrame:
+    """Genera partite finte con una gerarchia di forza nota.
+
+    "Forte" segna tanto e subisce poco, "Debole" il contrario. Serve a verificare
+    che il modello RECUPERI la gerarchia (Forte deve risultare piu' probabile).
+    """
+    rng = np.random.default_rng(seed)
+    teams = ["Forte", "Media", "Debole"]
+    strength = {"Forte": 1.6, "Media": 1.1, "Debole": 0.6}  # gol attesi base
+    rows = []
+    day = pd.Timestamp("2020-01-01")
+    for _ in range(n_seasons):
+        for home in teams:
+            for away in teams:
+                if home == away:
+                    continue
+                lam = strength[home] * 1.2      # vantaggio casa
+                mu = strength[away] * 0.9
+                rows.append({
+                    "date": day,
+                    "season": "syn",
+                    "league": "syn",
+                    "home_team": home,
+                    "away_team": away,
+                    "home_goals": int(rng.poisson(lam)),
+                    "away_goals": int(rng.poisson(mu)),
+                    "result": "H",  # ricalcolato sotto
+                    "odds_home": np.nan, "odds_draw": np.nan, "odds_away": np.nan,
+                    "odds_over25": np.nan, "odds_under25": np.nan,
+                })
+                day += pd.Timedelta(days=3)
+    df = pd.DataFrame(rows)
+    df["result"] = np.where(
+        df.home_goals > df.away_goals, "H",
+        np.where(df.home_goals < df.away_goals, "A", "D"))
+    return df
+
+
+def test_probabilities_sum_to_one():
+    model = DixonColesModel(half_life_days=None).fit(_synthetic_matches())
+    pred = model.predict_match("Forte", "Debole")
+    assert pred.prob_home_win + pred.prob_draw + pred.prob_away_win == pytest.approx(1.0, abs=1e-6)
+    assert pred.prob_over_2_5 + pred.prob_under_2_5 == pytest.approx(1.0, abs=1e-9)
+    assert pred.score_matrix.sum() == pytest.approx(1.0, abs=1e-9)
+
+
+def test_recovers_team_strength():
+    """Il forte in casa contro il debole deve essere nettamente favorito."""
+    model = DixonColesModel(half_life_days=None).fit(_synthetic_matches(n_seasons=6))
+    strong_home = model.predict_match("Forte", "Debole")
+    weak_home = model.predict_match("Debole", "Forte")
+    assert strong_home.prob_home_win > strong_home.prob_away_win
+    assert strong_home.prob_home_win > weak_home.prob_home_win
+    assert model.attack["Forte"] > model.attack["Debole"]
+
+
+def test_home_advantage_positive():
+    model = DixonColesModel(half_life_days=None).fit(_synthetic_matches())
+    # Con dati generati con vantaggio casa, il parametro deve risultare > 0.
+    assert model.home_advantage > 0.0
+
+
+def test_unknown_team_uses_average():
+    """Una squadra mai vista non deve rompere la predizione (forza media)."""
+    model = DixonColesModel(half_life_days=None).fit(_synthetic_matches())
+    pred = model.predict_match("Neopromossa", "Forte")
+    assert 0.0 <= pred.prob_home_win <= 1.0
+    lam, mu = model.expected_goals("Neopromossa", "Neopromossa")
+    assert lam > 0 and mu > 0
+
+
+def test_serialization_roundtrip():
+    model = DixonColesModel(half_life_days=90).fit(_synthetic_matches())
+    restored = DixonColesModel.from_dict(model.to_dict())
+    p1 = model.predict_match("Forte", "Media")
+    p2 = restored.predict_match("Forte", "Media")
+    assert p1.prob_home_win == pytest.approx(p2.prob_home_win, abs=1e-9)
+
+
+def test_devig_sums_to_one():
+    p = metrics.devig_1x2(2.0, 3.5, 4.0)
+    assert p.sum() == pytest.approx(1.0, abs=1e-9)
+    over, under = metrics.devig_binary(1.9, 1.95)
+    assert over + under == pytest.approx(1.0, abs=1e-9)
+
+
+def test_metrics_perfect_vs_wrong():
+    """Una predizione perfetta deve avere log-loss migliore di una sbagliata."""
+    perfect = np.array([[1.0, 0.0, 0.0]])
+    wrong = np.array([[0.0, 0.0, 1.0]])
+    assert metrics.log_loss_1x2(perfect, ["H"]) < metrics.log_loss_1x2(wrong, ["H"])
