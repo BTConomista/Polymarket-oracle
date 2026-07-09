@@ -9,7 +9,11 @@ quella distribuzione si derivano in modo coerente tutti i mercati (1X2,
 Over/Under, ecc.). Solo in un secondo momento il motore potrà essere collegato a
 Polymarket, bookmaker, exchange o altri mercati di previsione.
 
-## Stato attuale — Fase 1 (tracer bullet)
+> 📖 **[Diario di bordo](docs/DIARIO.md)** — il resoconto passo-passo di tutte le
+> fasi, con il ragionamento e le scelte dietro ogni decisione. Se vuoi capire
+> *perché* il progetto è fatto così, parti da lì.
+
+## Stato attuale
 
 Prima pipeline **end-to-end** funzionante su **Serie A**:
 
