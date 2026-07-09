@@ -27,8 +27,8 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts.backtest import run_backtest
-from src.evaluation import metrics
-from src.data import sources
+from src.evaluation import experiment_log
+from src.data import loader, sources
 
 # Stagioni di test di default: le tre piu' recenti (7a, 8a, 9a), ognuna con
 # training abbondante grazie alle stagioni precedenti.
@@ -37,37 +37,21 @@ DEFAULT_SEASONS = ["2324", "2425", "2526"]
 
 def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
     """Esegue un backtest (stagione, emivita, shrinkage, shots_blend) e ne calcola
-    le metriche 1X2 (log-loss del modello e del mercato)."""
+    tutte le metriche (via experiment_log.compute_metrics, fonte di verita' unica)."""
     season, half_life, shrinkage, shots_blend = task
     df = run_backtest("serie_a", season, half_life_days=half_life,
                       shrinkage=shrinkage, shots_blend=shots_blend, verbose=False)
-    outcomes = df["result"].tolist()
-    model = df[["m_home", "m_draw", "m_away"]].to_numpy()
-
-    mkt = np.full((len(df), 3), np.nan)
-    for i, (_, r) in enumerate(df.iterrows()):
-        if np.isfinite([r.odds_home, r.odds_draw, r.odds_away]).all():
-            mkt[i] = metrics.devig_1x2(r.odds_home, r.odds_draw, r.odds_away)
-    has = ~np.isnan(mkt).any(axis=1)
-    out_mkt = [outcomes[i] for i in range(len(df)) if has[i]]
-
-    # Over/Under 2.5 (binario): utile perche' riguarda direttamente il volume gol.
-    is_over = df["is_over"].to_numpy()
-    ou_mkt = np.full(len(df), np.nan)
-    for i, (_, r) in enumerate(df.iterrows()):
-        if np.isfinite([r.odds_over, r.odds_under]).all():
-            ou_mkt[i], _ = metrics.devig_binary(r.odds_over, r.odds_under)
-    has_ou = ~np.isnan(ou_mkt)
-
+    m = experiment_log.compute_metrics(df)
     return {
         "season": season,
         "half_life": half_life,
         "shrinkage": shrinkage,
         "shots_blend": shots_blend,
-        "model_ll": metrics.log_loss_1x2(model, outcomes),
-        "market_ll": metrics.log_loss_1x2(mkt[has], out_mkt),
-        "ou_model_ll": metrics.log_loss_binary(df["m_over"].to_numpy(), is_over),
-        "ou_market_ll": metrics.log_loss_binary(ou_mkt[has_ou], is_over[has_ou]),
+        "metrics": m,
+        "model_ll": m["x2_model_logloss"],
+        "market_ll": m["x2_market_logloss"],
+        "ou_model_ll": m["ou_model_logloss"],
+        "ou_market_ll": m["ou_market_logloss"],
     }
 
 
@@ -113,6 +97,18 @@ def main() -> None:
 
     with Pool(args.workers) as pool:
         results = pool.map(_evaluate, tasks)
+
+    # Registra ogni backtest del tuning nel log (seriale: niente scritture
+    # concorrenti). Ogni run resta cosi' replicabile e verificabile.
+    fingerprint = experiment_log.data_fingerprint(loader.load_league("serie_a"))
+    for r in results:
+        config = {
+            "league": "serie_a", "test_season": r["season"],
+            "half_life_days": r["half_life"], "shrinkage": r["shrinkage"],
+            "shots_blend": r["shots_blend"], "source": "tune.py",
+        }
+        experiment_log.append_run(
+            experiment_log.make_record(config, r["metrics"], fingerprint))
 
     by = {(r["season"], r["half_life"], r["shrinkage"], r["shots_blend"]): r
           for r in results}
