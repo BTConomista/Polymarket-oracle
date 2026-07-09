@@ -120,20 +120,23 @@ presenti nella fonte dati) misurano le occasioni create con meno rumore dei gol
 quello sui gol, un modello sui tiri in porta e **mescolare** i due tassi attesi
 con un peso α tarabile (`shots_blend`: α=1 solo gol, α=0 solo tiri).
 
-Esito, tarato su tre stagioni:
+Esito, tarato su **sei** stagioni di test (2020-21 → 2025-26, regimi diversi,
+COVID inclusi):
 
 | α (peso gol) | 1X2 (media) | O/U 2.5 (media) |
 |---:|---:|---:|
-| 0 (solo tiri) | 0.9946 | 0.6914 |
-| 0.5 | 0.9858 | 0.6890 |
-| **1 (solo gol)** | **0.9829** | 0.6893 |
-| Mercato | 0.9658 | 0.6840 |
+| 0 (solo tiri) | 0.9913 | 0.6964 |
+| 0.5 | 0.9833 | 0.6909 |
+| **1 (solo gol)** | **0.9817** | **0.6904** |
+| Mercato | 0.9632 | 0.6816 |
 
 - Sull'**1X2** i tiri **peggiorano** in modo netto e monotòno (α=1 è il migliore).
-- Sull'**Over/Under** l'effetto è **inconsistente** tra stagioni e il guadagno
-  medio è ~0.0005, dentro il rumore.
+- Sull'**Over/Under** α=1 è il migliore anche in media. Su 3 stagioni sembrava
+  esserci un lieve vantaggio dei tiri, ma **si dissolve su 6 stagioni**: era
+  rumore di piccolo campione (allargare il backtest ha chiarito il quadro).
 
-**Conclusione: i tiri in porta grezzi non danno un miglioramento affidabile.** Il
+**Conclusione: i tiri in porta grezzi non danno un miglioramento affidabile** (su
+6 stagioni, α=1 è il migliore per entrambi i mercati). Il
 default resta α=1 (solo gol); il codice del blend è mantenuto (esperimento
 documentato, riutilizzabile con l'xG *reale*, che pesa la qualità delle occasioni
 e non solo il conteggio). È un risultato prezioso: aver testato la versione
