@@ -206,8 +206,9 @@ def main() -> None:
     parser.add_argument("--league", default="serie_a")
     parser.add_argument("--test-season", default=sources.SEASONS[-1],
                         help="stagione di test (default: l'ultima)")
-    parser.add_argument("--half-life-days", type=float, default=180.0,
-                        help="emivita del decadimento temporale (giorni)")
+    parser.add_argument("--half-life-days", type=float, default=730.0,
+                        help="emivita del decadimento temporale in giorni "
+                             "(default 730, valore scelto via scripts/tune.py)")
     parser.add_argument("--shrinkage", type=float, default=1.5,
                         help="forza della regolarizzazione verso la media "
                              "(default 1.5, valore scelto via scripts/tune.py)")

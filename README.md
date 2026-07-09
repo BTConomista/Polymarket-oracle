@@ -27,14 +27,14 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
 
 | Mercato | Metrica | Modello | Baseline | Mercato (chiusura) |
 |---|---|---:|---:|---:|
-| **1X2** | log-loss | 0.9992 | 1.0851 | **0.9784** |
-| **1X2** | Brier | 0.5968 | 0.6579 | **0.5830** |
-| **O/U 2.5** | log-loss | 0.7062 | 0.6896 | **0.6996** |
-| **O/U 2.5** | Brier | 0.2559 | 0.2482 | **0.2530** |
+| **1X2** | log-loss | 0.9890 | 1.0851 | **0.9784** |
+| **1X2** | Brier | 0.5907 | 0.6579 | **0.5830** |
+| **O/U 2.5** | log-loss | 0.7056 | 0.6896 | **0.6996** |
+| **O/U 2.5** | Brier | 0.2560 | 0.2482 | **0.2530** |
 
-_Numeri con shrinkage = 1.5 (vedi Fase 2b). Il modello è validato su **due**
-stagioni (2024-25 e 2025-26): le conclusioni sono stabili, non rumore di una
-singola stagione._
+_Configurazione: shrinkage = 1.5, emivita = 730g (vedi Fase 2b). Il modello è
+validato su **tre** stagioni (2023-24, 2024-25, 2025-26): le conclusioni sono
+stabili, non rumore di una singola stagione._
 
 **Come leggerli** (più bassi = meglio):
 
@@ -89,8 +89,28 @@ Risultato (log-loss 1X2, media 2024-25 + 2025-26; più basso = meglio):
 Migliora **entrambe** le stagioni e riduce il divario col mercato di ~15%. In
 particolare il gap sull'**inizio stagione** scende da +0.030 a +0.022 e quello
 sulle **neopromosse** da +0.037 a +0.030: l'intervento colpisce i bersagli
-previsti. Guadagno modesto ma solido — senza informazione *nuova* il tetto è
-questo. I prossimi passi (forma, xG) puntano ad alzarlo.
+previsti.
+
+Secondo intervento: **taratura dell'emivita** del decadimento temporale (quanto
+peso dare alle partite recenti), su tre stagioni. Risultato (log-loss 1X2 medio):
+
+| emivita | media | note |
+|---:|---:|---|
+| 90g | 0.9935 | troppo reattiva, rumorosa |
+| 180g (prima) | 0.9863 | |
+| 365g | 0.9834 | |
+| **730g** (scelta) | **0.9829** | memoria ~2 stagioni |
+| Mercato | 0.9658 | |
+
+Lezione: in Serie A le rose restano stabili anno su anno, quindi una **memoria
+lunga** (~2 stagioni) batte il peso aggressivo sulle ultime partite. Con la
+configurazione finale (emivita 730g, shrinkage 1.5) il divario medio col mercato
+scende da +0.026 (Dixon-Coles puro) a **+0.017**: circa un terzo del divario
+recuperato solo con la taratura, senza informazione nuova.
+
+Qui il modello basato sui **soli gol** è vicino al suo tetto: per avvicinarsi
+ancora al mercato serve informazione nuova (forma, xG, indisponibili), non altro
+tuning.
 
 ## Struttura
 
