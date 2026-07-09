@@ -112,6 +112,34 @@ Qui il modello basato sui **soli gol** è vicino al suo tetto: per avvicinarsi
 ancora al mercato serve informazione nuova (forma, xG, indisponibili), non altro
 tuning.
 
+### Informazione nuova: tiri in porta — Fase 3 (risultato NEGATIVO)
+
+Terzo intervento, primo con informazione *nuova*: i **tiri in porta** (già
+presenti nella fonte dati) misurano le occasioni create con meno rumore dei gol
+(la "fortuna sotto porta"). Il modello è stato esteso per allenare, oltre a
+quello sui gol, un modello sui tiri in porta e **mescolare** i due tassi attesi
+con un peso α tarabile (`shots_blend`: α=1 solo gol, α=0 solo tiri).
+
+Esito, tarato su tre stagioni:
+
+| α (peso gol) | 1X2 (media) | O/U 2.5 (media) |
+|---:|---:|---:|
+| 0 (solo tiri) | 0.9946 | 0.6914 |
+| 0.5 | 0.9858 | 0.6890 |
+| **1 (solo gol)** | **0.9829** | 0.6893 |
+| Mercato | 0.9658 | 0.6840 |
+
+- Sull'**1X2** i tiri **peggiorano** in modo netto e monotòno (α=1 è il migliore).
+- Sull'**Over/Under** l'effetto è **inconsistente** tra stagioni e il guadagno
+  medio è ~0.0005, dentro il rumore.
+
+**Conclusione: i tiri in porta grezzi non danno un miglioramento affidabile.** Il
+default resta α=1 (solo gol); il codice del blend è mantenuto (esperimento
+documentato, riutilizzabile con l'xG *reale*, che pesa la qualità delle occasioni
+e non solo il conteggio). È un risultato prezioso: aver testato la versione
+*economica* dell'idea "le occasioni aiutano" ci ha evitato di costruire una
+pipeline xG/database sull'assunzione sbagliata che bastasse.
+
 ## Struttura
 
 ```
@@ -138,15 +166,16 @@ pip install -e .            # oppure: pip install numpy pandas scipy pytest
 python scripts/download_data.py     # scarica i dati storici (una volta)
 python scripts/backtest.py          # esegue il backtest sulla stagione 2025-26
 python scripts/analyze.py           # analizza gli errori del backtest
-python scripts/tune.py    # tara lo shrinkage su piu' stagioni
+python scripts/tune.py --sweep shrinkage          # tara un iperparametro su piu' stagioni
 python -m pytest                    # esegue i test
 ```
 
-Opzioni utili del backtest:
+Opzioni utili:
 
 ```bash
-python scripts/backtest.py --half-life-days 120   # decadimento più reattivo
-python scripts/backtest.py --test-season 2425     # testa un'altra stagione
+python scripts/backtest.py --test-season 2425          # testa un'altra stagione
+python scripts/tune.py --sweep half_life_days --values 0 180 365 730
+python scripts/tune.py --sweep shots_blend --values 0 0.5 1
 ```
 
 ## Roadmap (idee, non impegni)
@@ -154,13 +183,15 @@ python scripts/backtest.py --test-season 2425     # testa un'altra stagione
 1. ✅ **Fase 1** — tracer bullet: Dixon-Coles + backtest su Serie A.
 2. ✅ **Fase 2a** — analisi degli errori: capito dove il modello perde (neopromosse,
    inizio stagione) e corretto il bug dei nomi squadra.
-3. **Fase 2b — feature engineering** per colmare il divario col mercato, partendo
-   dai punti deboli individuati (priori per neopromosse, riduzione
-   dell'overconfidence su dati scarsi; poi forma recente, xG, ecc.).
-4. **Predizioni su partite future** (non solo backtest): serve una fonte per il
-   calendario delle prossime giornate.
-5. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-6. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+3. ✅ **Fase 2b** — tuning: shrinkage + memoria lunga (emivita 730g). Divario
+   medio col mercato da +0.026 a +0.017.
+4. ✅ **Fase 3** — tiri in porta come informazione nuova: **risultato negativo**
+   (i tiri grezzi non aiutano in modo affidabile). Codice mantenuto per l'xG reale.
+5. **Prossimo bivio** — o dati genuinamente più ricchi (xG reale, formazioni,
+   indisponibili) con database interno, oppure passare a **predizioni su partite
+   future** e all'uso pratico del modello.
+6. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+7. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Note sui dati
 
