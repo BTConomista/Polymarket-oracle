@@ -135,6 +135,15 @@ COVID inclusi):
   esserci un lieve vantaggio dei tiri, ma **si dissolve su 6 stagioni**: era
   rumore di piccolo campione (allargare il backtest ha chiarito il quadro).
 
+> **Da tenere d'occhio (ipotesi aperta).** Nella stagione più recente (2025-26),
+> e in modo più sfumato nel 2024-25, dare peso ai tiri in porta **migliora
+> l'Over/Under** (2025-26: α=0 → 0.7000 vs α=1 → 0.7056), anche se non aiuta
+> l'1X2 e non aiuta nella media a 6 stagioni. Possibile ipotesi: da un paio di
+> stagioni il modo di affrontarsi in campionato sta cambiando e le occasioni
+> create potrebbero diventare via via più informative. **Da ri-verificare** man
+> mano che arrivano nuove stagioni: se il segnale si rafforza, il blend (o l'xG
+> reale) tornerà utile, almeno sull'Over/Under.
+
 **Conclusione: i tiri in porta grezzi non danno un miglioramento affidabile** (su
 6 stagioni, α=1 è il migliore per entrambi i mercati). Il
 default resta α=1 (solo gol); il codice del blend è mantenuto (esperimento
@@ -196,7 +205,30 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
 6. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
 7. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
-## Note sui dati
+## Archivio dati interno (riproducibilità)
+
+Per non dipendere dalla disponibilità *in tempo reale* di una fonte esterna (che
+può cambiare o sparire) e permettere a chiunque di rieseguire gli stessi calcoli,
+i dati sono **congelati** in un archivio interno con due artefatti:
+
+- **snapshot** `data/serie_a_matches.csv` — **versionato in git**, testo diffabile:
+  è la fonte di verità congelata (3420 partite, 9 stagioni). Chi clona il repo ha
+  esattamente gli stessi dati, **senza rete**.
+- **database** `data/football.db` — SQLite queryable, **rigenerabile** dallo
+  snapshot (non versionato).
+
+```bash
+python scripts/build_database.py            # ricostruisce il DB dallo snapshot (offline)
+python scripts/build_database.py --refresh  # riscarica dalle fonti e aggiorna lo snapshot
+sqlite3 data/football.db "SELECT season, COUNT(*) FROM matches GROUP BY season"
+```
+
+Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
+congelato (nessun download per run), quindi i risultati sono riproducibili identici.
+Ogni backtest è inoltre registrato in `experiments/runs.jsonl` con l'impronta dei
+dati usati (vedi `experiments/README.md`).
+
+### Fonte originale
 
 L'ambiente di sviluppo cloud non raggiunge direttamente `football-data.co.uk`
 (policy di rete), quindi si usa un mirror su GitHub con **lo stesso formato**.

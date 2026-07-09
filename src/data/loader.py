@@ -142,12 +142,26 @@ def load_league(
     Args:
         league_key: chiave in sources.LEAGUES (default "serie_a").
         season_codes: stagioni da caricare (default: tutte in sources.SEASONS).
-        force_download: se True riscarica ignorando la cache.
+        force_download: se True riscarica dalle fonti ignorando lo snapshot.
+
+    Comportamento OFFLINE-FIRST: se esiste lo snapshot congelato
+    (data/serie_a_matches.csv, versionato in git) lo si usa senza rete, cosi' i
+    calcoli sono riproducibili identici da chiunque. Si scarica dalle fonti solo
+    con force_download=True o se lo snapshot manca.
 
     Ritorna un unico DataFrame ordinato per data, nello schema interno.
     """
     league = sources.LEAGUES[league_key]
     seasons = season_codes if season_codes is not None else sources.SEASONS
+
+    # Import locale per evitare qualsiasi ciclo di import.
+    from . import database
+    if (not force_download and league_key == "serie_a"
+            and database.SNAPSHOT_PATH.exists()):
+        df = database.read_snapshot()
+        wanted = {str(s) for s in seasons}
+        df = df[df["season"].isin(wanted)]
+        return df.sort_values("date").reset_index(drop=True)
 
     frames: list[pd.DataFrame] = []
     for code in seasons:

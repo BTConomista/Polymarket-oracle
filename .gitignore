@@ -1,6 +1,10 @@
 # Dati grezzi scaricati (rigenerabili con scripts/download_data.py)
 data/raw/*.csv
 
+# Database SQLite: rigenerabile dallo snapshot con scripts/build_database.py.
+# Lo SNAPSHOT (data/serie_a_matches.csv) invece E' versionato: fonte congelata.
+data/football.db
+
 # Python
 __pycache__/
 *.py[cod]
