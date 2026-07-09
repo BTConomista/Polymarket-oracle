@@ -51,6 +51,14 @@ def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
     has = ~np.isnan(mkt).any(axis=1)
     out_mkt = [outcomes[i] for i in range(len(df)) if has[i]]
 
+    # Over/Under 2.5 (binario): utile perche' riguarda direttamente il volume gol.
+    is_over = df["is_over"].to_numpy()
+    ou_mkt = np.full(len(df), np.nan)
+    for i, (_, r) in enumerate(df.iterrows()):
+        if np.isfinite([r.odds_over, r.odds_under]).all():
+            ou_mkt[i], _ = metrics.devig_binary(r.odds_over, r.odds_under)
+    has_ou = ~np.isnan(ou_mkt)
+
     return {
         "season": season,
         "half_life": half_life,
@@ -58,6 +66,8 @@ def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
         "shots_blend": shots_blend,
         "model_ll": metrics.log_loss_1x2(model, outcomes),
         "market_ll": metrics.log_loss_1x2(mkt[has], out_mkt),
+        "ou_model_ll": metrics.log_loss_binary(df["m_over"].to_numpy(), is_over),
+        "ou_market_ll": metrics.log_loss_binary(ou_mkt[has_ou], is_over[has_ou]),
     }
 
 
@@ -107,33 +117,31 @@ def main() -> None:
     by = {(r["season"], r["half_life"], r["shrinkage"], r["shots_blend"]): r
           for r in results}
 
-    print(f"{args.sweep:>14}", end="")
-    for s in args.seasons:
-        print(f"{sources.season_label(s):>12}", end="")
-    print(f"{'media':>10}")
+    def print_table(title: str, model_key: str, market_key: str) -> float:
+        """Stampa una tabella (righe=valori, colonne=stagioni) e ritorna il
+        miglior valore dell'iperparametro per quella metrica."""
+        print(f"\n=== {title} (log-loss; piu' basso = meglio) ===")
+        header = f"{args.sweep:>14}" + "".join(
+            f"{sources.season_label(s):>12}" for s in args.seasons) + f"{'media':>10}"
+        print(header)
+        market_vals = [by[build(s, args.values[0])][market_key] for s in args.seasons]
+        print(f"{'MERCATO':>14}" + "".join(f"{m:>12.4f}" for m in market_vals)
+              + f"{np.mean(market_vals):>10.4f}")
+        print("-" * (14 + 12 * len(args.seasons) + 10))
+        best_v, best_m = None, np.inf
+        for v in args.values:
+            vals = [by[build(s, v)][model_key] for s in args.seasons]
+            mean = float(np.mean(vals))
+            label = "no-decay" if (args.sweep == "half_life_days" and v <= 0) else f"{v:g}"
+            print(f"{label:>14}" + "".join(f"{x:>12.4f}" for x in vals)
+                  + f"{mean:>10.4f}")
+            if mean < best_m:
+                best_m, best_v = mean, v
+        print(f"  -> migliore per {title}: {best_v:g} ({best_m:.4f})")
+        return best_v
 
-    # Riga mercato (uguale per tutti i valori: dipende solo dalla stagione).
-    first = args.values[0]
-    market_vals = [by[build(s, first)]["market_ll"] for s in args.seasons]
-    mline = f"{'MERCATO':>14}" + "".join(f"{m:>12.4f}" for m in market_vals)
-    mline += f"{np.mean(market_vals):>10.4f}"
-    print(mline)
-    print("-" * (14 + 12 * len(args.seasons) + 10))
-
-    best_val, best_mean = None, np.inf
-    for v in args.values:
-        vals = [by[build(s, v)]["model_ll"] for s in args.seasons]
-        mean = float(np.mean(vals))
-        label = "no-decay" if (args.sweep == "half_life_days" and v <= 0) else f"{v:g}"
-        line = f"{label:>14}" + "".join(f"{x:>12.4f}" for x in vals)
-        line += f"{mean:>10.4f}"
-        print(line)
-        if mean < best_mean:
-            best_mean, best_val = mean, v
-
-    print(f"\nMigliore '{args.sweep}' (media log-loss piu' bassa): {best_val:g} "
-          f"-> {best_mean:.4f}")
-    print("Nota: piu' basso = meglio. Confronta con la riga MERCATO in alto.")
+    print_table("1X2", "model_ll", "market_ll")
+    print_table("OVER/UNDER 2.5", "ou_model_ll", "ou_market_ll")
 
 
 if __name__ == "__main__":
