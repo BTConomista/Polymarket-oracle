@@ -518,6 +518,71 @@ diagnostico in-sample va confermato fuori campione, su piu' stagioni.
 
 ---
 
+## Fase 4e-bis — Validazione della congestione VERA (walk-forward)
+
+**Obiettivo.** Chiudere il cerchio della Fase 4c: ora che abbiamo il calendario
+di club COMPLETO (Fase 4e), la fatica reale aiuta le previsioni dove il proxy
+solo-Serie-A falliva?
+
+**Ragionamento / ipotesi.** La Fase 4c aveva trovato la covariata `rest`
+(riposo sul solo calendario di Serie A) *leggermente negativa*: non vedeva le
+partite infrasettimanali di coppa/Europa, cioe' proprio quelle che causano la
+fatica asimmetrica. Ipotesi: sostituendo la sorgente del calendario (Serie A →
+completo) e lasciando **identico tutto il resto**, il segno dovrebbe migliorare.
+
+**Alternative considerate.**
+- *Config del modello*: riprodurre a emivita 730g (quella della Fase 4c) oppure
+  usare la config ufficiale corrente (emivita 365g, Fase 4d). Scelto **365g**:
+  e' il modello che usiamo davvero, e il confronto interno `rest` vs `rest_full`
+  resta pulito perche' cambia **un solo fattore** (la sorgente del calendario).
+- *Stagioni*: tutte e 9 oppure solo quelle con copertura reale delle coppe.
+  Scelte le **5 stagioni 2020-21 → 2024-25** (`2021, 2122, 2223, 2324, 2425`):
+  sono quelle in cui EL/Conference/Coppa Italia sono coperte e quindi
+  `rest_days_full < rest_days` accade davvero (il limite onesto della Fase 4e).
+  Sulle 2017-20 (solo Champions) e sul 2025-26 (coppe non ancora coperte) il
+  segnale sarebbe quasi identico al proxy solo-lega: test poco potente.
+
+**Scelta.** Aggiunta la covariata `rest_full` (`home/away_rest_days_full`,
+trasformazione `identity`) accanto a `rest` in `_COVARIATES`; tripletta
+walk-forward **baseline / rest / rest_full** sulle 5 stagioni, config ufficiale.
+15 run registrati (`source=fase4e_congestione`), impronta dati invariata
+(`8483944342fc8b15`).
+
+**Risultato (1X2 log-loss, piu' basso = meglio; Δ = vs baseline).**
+
+| Stagione | baseline | rest (solo lega) | rest_full (completo) | Δ rest | Δ rest_full |
+|---|--:|--:|--:|--:|--:|
+| 2020-21 | 0.9538 | 0.9549 | 0.9549 | +0.0011 | +0.0011 |
+| 2021-22 | 0.9887 | 0.9891 | 0.9862 | +0.0004 | **−0.0025** |
+| 2022-23 | 0.9943 | 0.9940 | 0.9933 | −0.0002 | **−0.0010** |
+| 2023-24 | 0.9848 | 0.9862 | 0.9849 | +0.0013 | +0.0001 |
+| 2024-25 | 0.9695 | 0.9700 | 0.9701 | +0.0005 | +0.0005 |
+| **MEDIA** | **0.9782** | **0.9788** | **0.9779** | **+0.0006** | **−0.0004** |
+
+(Mercato medio: 0.9601 — nessuna variante lo avvicina.)
+
+**Lezione / cosa ne consegue.**
+1. Il calendario completo **inverte il segno** rispetto al proxy solo-lega: `rest`
+   peggiorava (+0.0006 medio, conferma della Fase 4c), `rest_full` migliora di un
+   soffio (−0.0004 medio). La diagnosi della Fase 4c era corretta: il problema era
+   la *sorgente*, non l'idea della congestione.
+2. Ma il guadagno e' **minuscolo e incoerente**: aiuta 2 stagioni su 5 (le due a
+   copertura piu' piena, 2021-22 e 2022-23), e' neutro/negativo sulle altre;
+   l'ordine di grandezza (±0.001 su log-loss) e' **dentro il rumore**. Non basta
+   per adottarlo nella config ufficiale, e **non tocca il divario col mercato**.
+3. Coerente con lo stato del progetto: **il modello e' al tetto pratico dei dati
+   attuali**. La fatica reale e' un segnale vero ma debolissimo, probabilmente
+   gia' in gran parte implicito in gol+xG recenti (la stanchezza si vede nei
+   risultati). Config ufficiale **invariata**; covariata `rest_full` disponibile
+   (off di default) per dati futuri a copertura piena (es. calendario per-squadra
+   FBref, che chiuderebbe i buchi 2017-20 e 2025-26).
+
+**Riproducibilita'.** `python scripts/_run_fase4e_congestione.py` (tripletta su 5
+stagioni), oppure per singola cella: `python scripts/backtest.py --test-season 2122
+--covariates rest_full`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

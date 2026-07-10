@@ -55,7 +55,8 @@ _BLEND_SIGNALS: dict[str, tuple[str, str]] = {
 _COVARIATES: dict[str, tuple[str, str, str]] = {
     "squad_value": ("home_squad_value", "away_squad_value", "log"),
     "absence": ("home_absent_value_est", "away_absent_value_est", "log1p"),
-    "rest": ("home_rest_days", "away_rest_days", "identity"),  # riposo/congestione
+    "rest": ("home_rest_days", "away_rest_days", "identity"),  # riposo/congestione (solo Serie A)
+    "rest_full": ("home_rest_days_full", "away_rest_days_full", "identity"),  # riposo/congestione VERA (calendario completo di club, Fase 4e)
 }
 
 

@@ -80,8 +80,8 @@ def main() -> None:
     parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
                         help="segnale secondario del blend (default xg=xG reale)")
     parser.add_argument("--covariates", nargs="*", default=[],
-                        choices=["squad_value", "absence", "rest"],
-                        help="covariate di partita fisse (Fase 4c)")
+                        choices=["squad_value", "absence", "rest", "rest_full"],
+                        help="covariate di partita fisse (Fase 4c/4e)")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 

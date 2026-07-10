@@ -136,6 +136,32 @@ def test_shots_blend_valid_and_backward_compatible():
     assert 0.1 < blended.conv_home < 1.0
 
 
+def test_rest_full_covariate_registered_and_usable():
+    """La covariata `rest_full` (Fase 4e) e' registrata sulle colonne del
+    calendario COMPLETO e il modello ci allena/predice producendo probabilita'
+    valide. Colonne mancanti (NaN) -> contributo neutro, non rompe il fit."""
+    from src.models.dixon_coles import _COVARIATES
+
+    assert _COVARIATES["rest_full"] == (
+        "home_rest_days_full", "away_rest_days_full", "identity")
+
+    matches = _synthetic_matches(n_seasons=4)
+    rng = np.random.default_rng(1)
+    matches["home_rest_days_full"] = rng.integers(2, 15, len(matches)).astype(float)
+    matches["away_rest_days_full"] = rng.integers(2, 15, len(matches)).astype(float)
+    # Una riga senza il dato (NaN): deve degradare a neutro, non far esplodere il fit.
+    matches.loc[matches.index[0], ["home_rest_days_full", "away_rest_days_full"]] = np.nan
+
+    model = DixonColesModel(half_life_days=None, covariates=("rest_full",)).fit(matches)
+    assert "rest_full" in model.beta and np.isfinite(model.beta["rest_full"])
+
+    p = model.predict_match("Forte", "Debole",
+                            features={"home_rest_days_full": 3.0,
+                                      "away_rest_days_full": 10.0})
+    assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-6)
+    assert p.prob_home_win > p.prob_away_win  # il forte in casa resta favorito
+
+
 def test_devig_sums_to_one():
     p = metrics.devig_1x2(2.0, 3.5, 4.0)
     assert p.sum() == pytest.approx(1.0, abs=1e-9)

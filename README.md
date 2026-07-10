@@ -249,14 +249,22 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
    pratico** dei dati attuali.
 8. ✅ **Fase 4d** — ri-taratura congiunta: col blend xG l'emivita ottima passa a
    **365g** (memoria più corta). Piccolo guadagno su entrambi i mercati.
-9. ✅ **Fase 5** — grande backtest **multi-mercato** (`scripts/markets.py`): il
+9. ✅ **Fase 4e** — **calendario di club completo** (Serie A + Coppa Italia +
+   coppe europee) per la **congestione vera** + validazione walk-forward della
+   covariata `rest_full` sulle 5 stagioni a copertura reale (2020-25). Il
+   calendario completo **inverte il segno** del proxy solo-lega della Fase 4c
+   (che peggiorava), ma il guadagno è **minuscolo e dentro il rumore** (−0.0004
+   medio su 1X2 log-loss, aiuta 2 stagioni su 5) e **non tocca il mercato**:
+   config ufficiale **invariata**, covariata off di default. Conferma il **tetto
+   pratico** dei dati attuali. Vedi `docs/DIARIO.md`, Fase 4e / 4e-bis.
+10. ✅ **Fase 5** — grande backtest **multi-mercato** (`scripts/markets.py`): il
    modello è affidabile sui mercati d'**esito** (1X2, 1X, 2X, batte la baseline),
    **debole** su Over/Under, e **peggio della baseline su GG/NG** (cattura male la
    correlazione dei punteggi). Nessun mercato batte le quote. Vedi `docs/DIARIO.md`.
-10. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
+11. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
     GG/NG) / dati davvero nuovi, oppure **uso pratico** (comando di predizione).
-11. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-12. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+12. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+13. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 
@@ -313,9 +321,12 @@ Copertura reale per stagione (onesta, con i buchi documentati) nel
 Europa dal 2020-21, Conference dal 2021-22, Coppa Italia 2020-21→2024-25. Dove
 una competizione non è coperta, `rest_days_full` degrada verso il valore
 solo-lega (mai in direzione sbagliata) — **nessun numero inventato**. Invariante
-verificata su ~3400 partite: `rest_days_full ≤ rest_days` (0 violazioni). Le
-colonne sono **dati pronti**: il modello non le legge finché non si aggiunge una
-covariata `rest_full` (covariate off di default).
+verificata su ~3400 partite: `rest_days_full ≤ rest_days` (0 violazioni). La
+covariata `rest_full` legge queste colonne ma resta **off di default**: la
+validazione walk-forward (Fase 4e-bis) mostra un guadagno dentro il rumore
+(−0.0004 medio su 1X2 log-loss, 2020-25), non abbastanza per adottarla —
+`python scripts/backtest.py --covariates rest_full --test-season 2122` per
+riprovare.
 
 Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
 congelato (nessun download per run), quindi i risultati sono riproducibili identici.
