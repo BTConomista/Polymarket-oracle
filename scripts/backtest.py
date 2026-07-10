@@ -43,6 +43,7 @@ def run_backtest(
     shrinkage: float = 0.0,
     shots_blend: float = 1.0,
     blend_signal: str = "sot",
+    covariates: tuple[str, ...] = (),
     verbose: bool = True,
 ) -> pd.DataFrame:
     """Esegue il walk-forward e ritorna un DataFrame con una riga per partita."""
@@ -62,7 +63,8 @@ def run_backtest(
     for w, (_, group) in enumerate(test.groupby("_week", sort=True), start=1):
         as_of = group["date"].min()
         model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage,
-                                shots_blend=shots_blend, blend_signal=blend_signal)
+                                shots_blend=shots_blend, blend_signal=blend_signal,
+                                covariates=covariates)
         model.fit(all_matches, as_of_date=as_of)
         if verbose:
             print(f"  settimana {w}/{n_weeks}  ({as_of.date()}): "
@@ -70,7 +72,7 @@ def run_backtest(
                   flush=True)
 
         for _, m in group.iterrows():
-            pred = model.predict_match(m["home_team"], m["away_team"])
+            pred = model.predict_match(m["home_team"], m["away_team"], features=m)
             row = {
                 "date": m["date"],
                 "home_team": m["home_team"],
@@ -141,6 +143,9 @@ def main() -> None:
     parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
                         help="segnale secondario da mescolare (default xg=xG reale; "
                              "sot=tiri in porta)")
+    parser.add_argument("--covariates", nargs="*", default=[],
+                        choices=["squad_value", "absence"],
+                        help="covariate di partita da aggiungere (Fase 4c)")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",
@@ -153,7 +158,8 @@ def main() -> None:
           f"shots_blend {args.shots_blend} ({args.blend_signal})")
     df = run_backtest(args.league, args.test_season, args.half_life_days,
                       shrinkage=args.shrinkage, shots_blend=args.shots_blend,
-                      blend_signal=args.blend_signal, verbose=not args.quiet)
+                      blend_signal=args.blend_signal, covariates=tuple(args.covariates),
+                      verbose=not args.quiet)
 
     m = experiment_log.compute_metrics(df)
     report(m, len(df))
@@ -166,6 +172,7 @@ def main() -> None:
         "shrinkage": args.shrinkage,
         "shots_blend": args.shots_blend,
         "blend_signal": args.blend_signal,
+        "covariates": list(args.covariates),
     }
     all_matches = loader.load_league(args.league)
     record = experiment_log.make_record(

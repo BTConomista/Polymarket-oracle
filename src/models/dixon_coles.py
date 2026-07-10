@@ -47,6 +47,25 @@ _BLEND_SIGNALS: dict[str, tuple[str, str]] = {
     "npxg": ("home_npxg", "away_npxg"),   # xG senza rigori
 }
 
+# Covariate di partita: forza/contesto ESTERNI ai risultati (Fase 4c). Ogni voce
+# definisce le colonne per-squadra e la trasformazione da applicare al valore
+# grezzo prima di standardizzarlo. La covariata entra nel tasso atteso della
+# squadra che segna come beta * (z_squadra - z_avversaria): un vantaggio relativo
+# fa segnare di piu' (o di meno, se beta<0, es. per le assenze).
+_COVARIATES: dict[str, tuple[str, str, str]] = {
+    "squad_value": ("home_squad_value", "away_squad_value", "log"),
+    "absence": ("home_absent_value_est", "away_absent_value_est", "log1p"),
+}
+
+
+def _cov_transform(values: np.ndarray, kind: str) -> np.ndarray:
+    """Trasforma i valori grezzi di una covariata (log / log1p / identita')."""
+    if kind == "log":
+        return np.log(np.where(values > 0, values, np.nan))
+    if kind == "log1p":
+        return np.log1p(np.where(values >= 0, values, np.nan))
+    return values.astype(float)
+
 
 @dataclass
 class MatchPrediction:
@@ -112,6 +131,7 @@ class DixonColesModel:
         shrinkage: float = 0.0,
         shots_blend: float = 1.0,
         blend_signal: str = "sot",
+        covariates: tuple[str, ...] = (),
     ):
         """
         Args:
@@ -136,15 +156,26 @@ class DixonColesModel:
             blend_signal: quale segnale secondario mescolare quando shots_blend < 1:
                 "sot" = tiri in porta (Fase 3, non aiuta), "xg" = expected goals
                 reali (Fase 4b, qualita' delle occasioni), "npxg" = xG senza rigori.
+            covariates: covariate di partita da aggiungere al modello-gol (Fase 4c),
+                es. ("squad_value",) o ("squad_value", "absence"). Entrano nel tasso
+                atteso come termini beta*(z_squadra - z_avversaria), stimati insieme
+                agli altri parametri. Combinarne piu' di una cattura (in fit
+                congiunto) il loro contributo reciproco. () = nessuna covariata
+                (modello identico a prima).
         """
         if blend_signal not in _BLEND_SIGNALS:
             raise ValueError(f"blend_signal sconosciuto: {blend_signal!r} "
                              f"(usa uno di {list(_BLEND_SIGNALS)})")
+        unknown = [c for c in covariates if c not in _COVARIATES]
+        if unknown:
+            raise ValueError(f"covariate sconosciute: {unknown} "
+                             f"(usa un sottoinsieme di {list(_COVARIATES)})")
         self.half_life_days = half_life_days
         self.max_goals = max_goals
         self.shrinkage = shrinkage
         self.shots_blend = shots_blend
         self.blend_signal = blend_signal
+        self.covariates = tuple(covariates)
 
         # Parametri stimati sui GOL (riempiti da fit()).
         self.teams: list[str] = []
@@ -162,7 +193,37 @@ class DixonColesModel:
         self.conv_home: float = 1.0
         self.conv_away: float = 1.0
 
+        # Covariate (Fase 4c): coefficienti beta e parametri di standardizzazione
+        # (media/dev.std del valore per-squadra trasformato, sul training).
+        self.beta: dict[str, float] = {}
+        self.cov_mean: dict[str, float] = {}
+        self.cov_std: dict[str, float] = {}
+
         self.fitted: bool = False
+
+    # ------------------------------------------------------------------ #
+    # Covariate (Fase 4c)
+    # ------------------------------------------------------------------ #
+    def _team_cov_z(self, name: str, home_vals: np.ndarray,
+                    away_vals: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        """Valori standardizzati (z) per casa/ospite di una covariata, usando
+        media/dev.std imparate in fit. Valori mancanti -> 0 (neutro)."""
+        home, away, kind = _COVARIATES[name]
+        m, s = self.cov_mean[name], self.cov_std[name]
+        zh = (_cov_transform(home_vals, kind) - m) / s
+        za = (_cov_transform(away_vals, kind) - m) / s
+        return np.nan_to_num(zh), np.nan_to_num(za)
+
+    def _cov_lam(self, matches: pd.DataFrame) -> np.ndarray:
+        """Matrice [n_partite x n_covariate] del contributo (z_casa - z_ospite)
+        al tasso della squadra di CASA. Per l'ospite il segno e' opposto."""
+        cols = []
+        for name in self.covariates:
+            hcol, acol, _ = _COVARIATES[name]
+            zh, za = self._team_cov_z(name, matches[hcol].to_numpy(float),
+                                      matches[acol].to_numpy(float))
+            cols.append(zh - za)
+        return np.column_stack(cols) if cols else np.empty((len(matches), 0))
 
     # ------------------------------------------------------------------ #
     # Stima dei parametri
@@ -203,20 +264,34 @@ class DixonColesModel:
         idx = {t: k for k, t in enumerate(teams)}
         self.teams = teams
 
+        # --- Covariate (Fase 4c): impara la standardizzazione sul training ---
+        for name in self.covariates:
+            hcol, acol, kind = _COVARIATES[name]
+            pooled = np.concatenate([
+                _cov_transform(train[hcol].to_numpy(float), kind),
+                _cov_transform(train[acol].to_numpy(float), kind),
+            ])
+            pooled = pooled[~np.isnan(pooled)]
+            self.cov_mean[name] = float(pooled.mean()) if pooled.size else 0.0
+            std = float(pooled.std()) if pooled.size else 1.0
+            self.cov_std[name] = std if std > 1e-9 else 1.0
+
         # --- Modello sui GOL (sempre) ---
         home_idx = train["home_team"].map(idx).to_numpy()
         away_idx = train["away_team"].map(idx).to_numpy()
         weights = self._time_weights(train["date"], as_of_date)
-        attack, defense, home_adv, rho = self._fit_counts(
+        cov_lam = self._cov_lam(train)  # [n x k], k = numero covariate
+        attack, defense, home_adv, rho, beta = self._fit_counts(
             len(teams), home_idx, away_idx,
             train["home_goals"].to_numpy().astype(float),
             train["away_goals"].to_numpy().astype(float),
-            weights, use_correction=True,
+            weights, use_correction=True, cov_lam=cov_lam,
         )
         self.attack = {t: attack[idx[t]] for t in teams}
         self.defense = {t: defense[idx[t]] for t in teams}
         self.home_advantage = home_adv
         self.rho = rho
+        self.beta = {name: float(beta[i]) for i, name in enumerate(self.covariates)}
 
         # --- Modello sul SEGNALE SECONDARIO (solo se serve mescolarlo) ---
         if self.shots_blend < 1.0:
@@ -233,7 +308,8 @@ class DixonColesModel:
             sig_away = sig[away_col].to_numpy().astype(float)
             # Segnale ad alto volume / continuo (tiri, xG): niente correzione sui
             # punteggi bassi (serve solo il tasso atteso, che poi convertiamo).
-            a_sig, d_sig, ha_sig, _ = self._fit_counts(
+            # Il segnale secondario NON usa covariate (restano solo sul modello-gol).
+            a_sig, d_sig, ha_sig, _, _ = self._fit_counts(
                 len(teams), s_home_idx, s_away_idx,
                 sig_home, sig_away, s_weights, use_correction=False,
             )
@@ -259,23 +335,30 @@ class DixonColesModel:
         away_counts: np.ndarray,
         weights: np.ndarray,
         use_correction: bool,
-    ) -> tuple[np.ndarray, np.ndarray, float, float]:
-        """Stima attacco/difesa/vantaggio-casa/rho via ML pesata su generici
-        conteggi (gol o tiri in porta). Ritorna (attack, defense, home_adv, rho).
+        cov_lam: np.ndarray | None = None,
+    ) -> tuple[np.ndarray, np.ndarray, float, float, np.ndarray]:
+        """Stima attacco/difesa/vantaggio-casa/rho (+ beta covariate) via ML
+        pesata su generici conteggi (gol o segnale). Ritorna
+        (attack, defense, home_adv, rho, beta).
 
         use_correction: applica la correzione Dixon-Coles sui punteggi bassi
-        (adatta ai gol). Per i tiri in porta la disattiviamo (rho fissato a 0).
+        (adatta ai gol). Per il segnale secondario la disattiviamo (rho=0).
+        cov_lam: matrice [n_partite x k] del contributo covariata al tasso di
+        CASA (per l'ospite si usa il segno opposto). k=0 -> nessuna covariata.
         """
         log_fact = gammaln(home_counts + 1.0) + gammaln(away_counts + 1.0)
+        k = 0 if cov_lam is None else cov_lam.shape[1]
 
         def neg_log_likelihood(params: np.ndarray) -> float:
             attack = params[:n]
             defense = params[n:2 * n]
             home_adv = params[2 * n]
             rho = params[2 * n + 1]
+            beta = params[2 * n + 2:]
 
-            lam = np.exp(attack[home_idx] + defense[away_idx] + home_adv)
-            mu = np.exp(attack[away_idx] + defense[home_idx])
+            cov_h = cov_lam @ beta if k else 0.0
+            lam = np.exp(attack[home_idx] + defense[away_idx] + home_adv + cov_h)
+            mu = np.exp(attack[away_idx] + defense[home_idx] - cov_h)
 
             ll = (home_counts * np.log(lam) - lam) \
                 + (away_counts * np.log(mu) - mu) - log_fact
@@ -294,18 +377,20 @@ class DixonColesModel:
 
         x0 = np.concatenate([
             np.zeros(n), np.zeros(n), np.array([0.25]), np.array([-0.05]),
+            np.zeros(k),
         ])
         rho_bounds = (-0.4, 0.4) if use_correction else (0.0, 0.0)
         bounds = (
             [(-3.0, 3.0)] * n + [(-3.0, 3.0)] * n + [(-1.0, 2.0)] + [rho_bounds]
+            + [(-1.0, 1.0)] * k   # beta covariate
         )
 
         result = minimize(
             neg_log_likelihood, x0, method="L-BFGS-B", bounds=bounds,
             options={"maxiter": 500, "ftol": 1e-9},
         )
-        params = result.x
-        return params[:n], params[n:2 * n], float(params[2 * n]), float(params[2 * n + 1])
+        p = result.x
+        return p[:n], p[n:2 * n], float(p[2 * n]), float(p[2 * n + 1]), p[2 * n + 2:]
 
     # ------------------------------------------------------------------ #
     # Predizione
@@ -329,18 +414,38 @@ class DixonColesModel:
         matrix /= matrix.sum()
         return matrix
 
-    def expected_goals(self, home_team: str, away_team: str) -> tuple[float, float]:
+    def _cov_term(self, features: dict | None) -> float:
+        """Contributo covariata al log-tasso della squadra di CASA:
+        somma_k beta_k * (z_casa - z_ospite). Per l'ospite si usa il segno opposto.
+        0 se non ci sono covariate o mancano i valori."""
+        if not self.covariates or not self.beta or features is None:
+            return 0.0
+        total = 0.0
+        for name in self.covariates:
+            hcol, acol, kind = _COVARIATES[name]
+            m, s = self.cov_mean[name], self.cov_std[name]
+            zh = _cov_transform(np.array([features.get(hcol, np.nan)], float), kind)[0]
+            za = _cov_transform(np.array([features.get(acol, np.nan)], float), kind)[0]
+            zh = 0.0 if np.isnan(zh) else (zh - m) / s
+            za = 0.0 if np.isnan(za) else (za - m) / s
+            total += self.beta[name] * (zh - za)
+        return total
+
+    def expected_goals(self, home_team: str, away_team: str,
+                       features: dict | None = None) -> tuple[float, float]:
         """Gol attesi (lambda, mu). Squadre sconosciute = forza media (0).
 
         Se shots_blend < 1, mescola il tasso stimato dai gol con quello stimato
         dal segnale secondario (convertito in scala gol):
-        lam = a*lam_gol + (1-a)*lam_segnale.
+        lam = a*lam_gol + (1-a)*lam_segnale. Le eventuali covariate (Fase 4c)
+        aggiustano il tasso dai GOL usando i valori di partita in ``features``.
         """
-        # Tasso dai GOL.
+        # Tasso dai GOL (con eventuale aggiustamento delle covariate).
+        cov = self._cov_term(features)
         lam_g = math.exp(self.attack.get(home_team, 0.0)
-                         + self.defense.get(away_team, 0.0) + self.home_advantage)
+                         + self.defense.get(away_team, 0.0) + self.home_advantage + cov)
         mu_g = math.exp(self.attack.get(away_team, 0.0)
-                        + self.defense.get(home_team, 0.0))
+                        + self.defense.get(home_team, 0.0) - cov)
 
         a = self.shots_blend
         if a >= 1.0 or not self.attack_sig:
@@ -357,17 +462,22 @@ class DixonColesModel:
         mu = a * mu_g + (1.0 - a) * mu_s
         return lam, mu
 
-    def predict_match(self, home_team: str, away_team: str) -> MatchPrediction:
+    def predict_match(self, home_team: str, away_team: str,
+                      features: dict | None = None) -> MatchPrediction:
         """Predice tutti i mercati per una partita.
 
         Le squadre non viste in allenamento (es. neopromosse senza storico nella
         finestra dati) ricevono forza d'attacco/difesa media (0): una stima
         prudente finche' non accumulano partite reali.
+
+        features: valori grezzi della partita per le covariate (es.
+        {"home_squad_value": ..., "away_squad_value": ...}); necessari solo se il
+        modello usa covariate. Assenti/NaN -> covariata neutra per quella partita.
         """
         if not self.fitted:
             raise RuntimeError("Il modello non e' ancora stato allenato (fit).")
 
-        lam, mu = self.expected_goals(home_team, away_team)
+        lam, mu = self.expected_goals(home_team, away_team, features)
         matrix = self._score_matrix(lam, mu)
 
         # Somme sui triangoli / diagonale della matrice dei punteggi.
@@ -414,6 +524,10 @@ class DixonColesModel:
             "home_advantage_sig": self.home_advantage_sig,
             "conv_home": self.conv_home,
             "conv_away": self.conv_away,
+            "covariates": list(self.covariates),
+            "beta": self.beta,
+            "cov_mean": self.cov_mean,
+            "cov_std": self.cov_std,
         }
 
     @classmethod
@@ -424,6 +538,7 @@ class DixonColesModel:
             shrinkage=data.get("shrinkage", 0.0),
             shots_blend=data.get("shots_blend", 1.0),
             blend_signal=data.get("blend_signal", "sot"),
+            covariates=tuple(data.get("covariates", ())),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
@@ -434,6 +549,9 @@ class DixonColesModel:
         model.home_advantage_sig = float(data.get("home_advantage_sig", 0.0))
         model.conv_home = float(data.get("conv_home", 1.0))
         model.conv_away = float(data.get("conv_away", 1.0))
+        model.beta = dict(data.get("beta", {}))
+        model.cov_mean = dict(data.get("cov_mean", {}))
+        model.cov_std = dict(data.get("cov_std", {}))
         model.teams = sorted(model.attack)
         model.fitted = True
         return model

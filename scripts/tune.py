@@ -34,9 +34,10 @@ from src.data import loader, sources
 # training abbondante grazie alle stagioni precedenti.
 DEFAULT_SEASONS = ["2324", "2425", "2526"]
 
-# Segnale secondario del blend, fisso durante uno sweep. Impostato in main();
-# i processi worker lo ereditano al fork (Linux).
+# Segnale secondario del blend e covariate, fissi durante uno sweep. Impostati in
+# main(); i processi worker li ereditano al fork (Linux).
 _BLEND_SIGNAL = "sot"
+_COVARIATES: tuple[str, ...] = ()
 
 
 def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
@@ -45,7 +46,7 @@ def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
     season, half_life, shrinkage, shots_blend = task
     df = run_backtest("serie_a", season, half_life_days=half_life,
                       shrinkage=shrinkage, shots_blend=shots_blend,
-                      blend_signal=_BLEND_SIGNAL, verbose=False)
+                      blend_signal=_BLEND_SIGNAL, covariates=_COVARIATES, verbose=False)
     m = experiment_log.compute_metrics(df)
     return {
         "season": season,
@@ -78,11 +79,15 @@ def main() -> None:
                              "(default 0.75, config ufficiale)")
     parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
                         help="segnale secondario del blend (default xg=xG reale)")
+    parser.add_argument("--covariates", nargs="*", default=[],
+                        choices=["squad_value", "absence"],
+                        help="covariate di partita fisse (Fase 4c)")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 
-    global _BLEND_SIGNAL
+    global _BLEND_SIGNAL, _COVARIATES
     _BLEND_SIGNAL = args.blend_signal
+    _COVARIATES = tuple(args.covariates)
 
     def build(season: str, value: float) -> tuple[str, float | None, float, float]:
         hl, shr, sb = args.half_life, args.shrinkage, args.shots_blend
@@ -117,7 +122,7 @@ def main() -> None:
             "league": "serie_a", "test_season": r["season"],
             "half_life_days": r["half_life"], "shrinkage": r["shrinkage"],
             "shots_blend": r["shots_blend"], "blend_signal": _BLEND_SIGNAL,
-            "source": "tune.py",
+            "covariates": list(_COVARIATES), "source": "tune.py",
         }
         experiment_log.append_run(
             experiment_log.make_record(config, r["metrics"], fingerprint))
