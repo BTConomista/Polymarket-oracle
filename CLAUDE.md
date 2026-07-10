@@ -61,6 +61,7 @@ cattura le *decisioni e il perché* (narrazione); il **README** è lo stato
 
 ```bash
 python scripts/build_database.py       # (ri)costruisce il DB dallo snapshot (offline)
+python scripts/build_database.py --fixtures  # calendario di club completo + congestione vera (Fase 4e)
 python scripts/build_database.py --refresh   # riscarica dalle fonti, aggiorna lo snapshot
 python scripts/backtest.py             # backtest walk-forward (registra il run)
 python scripts/backtest.py --test-season 2425 --shots-blend 0.5   # varianti
@@ -114,13 +115,18 @@ tests/           test unitari
 Vedi `docs/DIARIO.md` per la storia completa e `README.md` per lo stato sintetico.
 In breve: modello Dixon-Coles sui soli gol, tarato; **batte le baseline ma non il
 mercato**; i tiri in porta grezzi non aiutano (verificato su 6 stagioni).
-**Fase 4a-4d completate:** dati arricchiti (xG/npxG/PPDA/deep, valori rosa,
+**Fase 4a-4e completate:** dati arricchiti (xG/npxG/PPDA/deep, valori rosa,
 assenze); config ufficiale = blend gol/**xG reale** (α=0.75) + emivita ri-tarata
 a **365g** (Fase 4d: col blend xG conviene memoria piu' corta). npxG≈xG; valori
 rosa, assenze e riposo-solo-SerieA (anche in combo) **non aiutano** out-of-sample
 (gia' impliciti in gol+xG, o confusi con la forza): il modello e' al **tetto
 pratico** dei dati attuali. Esiste un layer covariate (off di default) per dati
 futuri davvero indipendenti (es. calendario di club completo per la congestione).
+**Fase 4e:** aggiunto il **calendario di club completo** (coppe+Europa via
+openfootball) → colonne `home/away_rest_days_full` e `home/away_midweek_europe`
+nello snapshot + tabella grezza `data/club_fixtures.csv`. E' la **congestione
+vera** (il proxy solo-lega non la vedeva); dato pronto, da validare con una
+covariata `rest_full`. Non-regressione confermata (impronta dati invariata).
 **Prossimo bivio:** modello di classe diversa / dati nuovi, oppure uso pratico
 (predizione su partite future).
 

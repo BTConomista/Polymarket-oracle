@@ -273,6 +273,7 @@ i dati sono **congelati** in un archivio interno con due artefatti:
 ```bash
 python scripts/build_database.py            # ricostruisce il DB dallo snapshot (offline)
 python scripts/build_database.py --enrich   # ricalcola xG/rose/assenze sullo snapshot esistente
+python scripts/build_database.py --fixtures # assembla il calendario di club completo + congestione vera
 python scripts/build_database.py --refresh  # riscarica TUTTO dalle fonti e aggiorna lo snapshot
 sqlite3 data/football.db "SELECT season, COUNT(*) FROM matches GROUP BY season"
 ```
@@ -292,6 +293,29 @@ contiene 14 colonne da fonti esterne (`NaN` dove la fonte non copre):
 Il join usa la chiave `(season, home_team, away_team)` con nomi squadra
 canonicalizzati (alias in `sources.TEAM_ALIASES`); la data serve solo da
 controllo di coerenza.
+
+### Congestione vera — calendario di club completo (Fase 4e)
+
+Il riposo di `add_rest_days` vede solo le date di Serie A; la **congestione
+vera** richiede coppe ed Europa. `src/data/fixtures.py` assembla il **calendario
+di club completo** (Serie A dallo snapshot + Champions/Europa/Conference e Coppa
+Italia da openfootball, via mirror GitHub) nella tabella grezza versionata
+`data/club_fixtures.csv` (`season, team, date, competition, home_away,
+opponent`), e aggiunge allo snapshot 4 colonne:
+
+| Colonne | Significato |
+|---|---|
+| `home_rest_days_full`, `away_rest_days_full` | giorni dall'ultima partita di club in **qualsiasi** competizione, cap 14, solo partite precedenti (no look-ahead), `NaN` se ignoto |
+| `home_midweek_europe`, `away_midweek_europe` | 1 se la squadra ha giocato una gara europea/coppa nei ~4 giorni precedenti |
+
+Copertura reale per stagione (onesta, con i buchi documentati) nel
+[diario, Fase 4e](docs/DIARIO.md): Champions League tutte e 9 le stagioni,
+Europa dal 2020-21, Conference dal 2021-22, Coppa Italia 2020-21→2024-25. Dove
+una competizione non è coperta, `rest_days_full` degrada verso il valore
+solo-lega (mai in direzione sbagliata) — **nessun numero inventato**. Invariante
+verificata su ~3400 partite: `rest_days_full ≤ rest_days` (0 violazioni). Le
+colonne sono **dati pronti**: il modello non le legge finché non si aggiunge una
+covariata `rest_full` (covariate off di default).
 
 Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
 congelato (nessun download per run), quindi i risultati sono riproducibili identici.

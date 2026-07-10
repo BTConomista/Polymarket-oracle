@@ -72,6 +72,40 @@ TEAM_ALIASES: dict[str, str] = {
     "Internazionale": "Inter",
     "AS Roma": "Roma",
     "SSC Napoli": "Napoli",
+    # Varianti usate dal calendario di club completo (openfootball, vedi
+    # fixtures.py): nomi ESTESI di coppa/Europa. Enumerate estraendo TUTTI i nomi
+    # (ITA) delle competizioni europee 2017-18 -> 2025-26 e tutti i nomi della
+    # Coppa Italia 2020-21 -> 2024-25, poi confrontate coi 32 nomi canonici dello
+    # snapshot. Ogni club di Serie A comparso nelle fonti e' qui: i mancati
+    # aggancio vengono comunque LOGGATi da fixtures.py (mai ignorati in silenzio).
+    "ACF Fiorentina": "Fiorentina",
+    "Atalanta BC": "Atalanta",
+    "Bologna FC": "Bologna",
+    "Bologna FC 1909": "Bologna",
+    "FC Internazionale Milano": "Inter",
+    "Juventus FC": "Juventus",
+    "Lazio Roma": "Lazio",
+    "SS Lazio": "Lazio",
+    "AC Monza": "Monza",
+    "AC Pisa": "Pisa",
+    "Pisa SC": "Pisa",
+    "Benevento Calcio": "Benevento",
+    "Brescia Calcio": "Brescia",
+    "Cagliari Calcio": "Cagliari",
+    "Como 1907": "Como",
+    "Empoli FC": "Empoli",
+    "FC Crotone": "Crotone",
+    "Frosinone Calcio": "Frosinone",
+    "Genoa CFC": "Genoa",
+    "Sassuolo Calcio": "Sassuolo",
+    "Spezia Calcio": "Spezia",
+    "Torino FC": "Torino",
+    "US Cremonese": "Cremonese",
+    "US Lecce": "Lecce",
+    "US Salernitana 1919": "Salernitana",
+    "Udinese Calcio": "Udinese",
+    "Venezia FC": "Venezia",
+    "SPAL 2013 Ferrara": "Spal",
 }
 
 
@@ -161,3 +195,75 @@ def transfermarkt_url(table: str) -> str:
     if table not in TRANSFERMARKT_TABLES:
         raise KeyError(f"Tabella Transfermarkt sconosciuta: {table}")
     return TRANSFERMARKT_MIRROR_URL.format(table=table)
+
+
+# --------------------------------------------------------------------------- #
+# Fonte calendario di CLUB completo: openfootball (via mirror GitHub)
+# --------------------------------------------------------------------------- #
+# Serve per la CONGESTIONE vera (fatica): il riposo calcolato sulle sole date di
+# Serie A non vede coppe ed Europa -- proprio le partite infrasettimanali che
+# causano fatica asimmetrica (vedi docs/DIARIO.md, Fase 4c/4e). Le fonti "per
+# squadra, multi-competizione" tipiche (FBref "Scores & Fixtures", Transfermarkt)
+# NON sono raggiungibili dall'ambiente cloud (proxy, come gia' per xG e valori
+# rosa). Usiamo i dataset testuali di openfootball, pubblici e raggiungibili via
+# raw.githubusercontent.com, che coprono per stagione:
+#   - competizioni UEFA per club (Champions/Europa/Conference + preliminari)
+#     nel repo openfootball/champions-league;
+#   - Coppa Italia nel repo openfootball/italy (file cup.txt).
+# Le partite di Serie A NON si scaricano: si derivano dallo snapshot congelato
+# (esatte, nomi gia' canonici). In locale si puo' puntare a una fonte per-squadra
+# piu' completa (es. FBref) semplicemente cambiando questi URL e il parser.
+OPENFOOTBALL_EUROPE_OFFICIAL = "https://github.com/openfootball/champions-league"
+OPENFOOTBALL_ITALY_OFFICIAL = "https://github.com/openfootball/italy"
+OPENFOOTBALL_EUROPE_URL = (
+    "https://raw.githubusercontent.com/openfootball/champions-league"
+    "/master/{season}/{comp}.txt"
+)
+OPENFOOTBALL_ITALY_URL = (
+    "https://raw.githubusercontent.com/openfootball/italy"
+    "/master/{season}/{comp}.txt"
+)
+
+# Competizioni europee per club (codice file openfootball -> nome canonico).
+# "*q" = turni preliminari/qualificazioni (presenti solo nelle stagioni recenti).
+EUROPE_COMPETITIONS: dict[str, str] = {
+    "cl": "Champions League",
+    "clq": "Champions League (qual.)",
+    "el": "Europa League",
+    "elq": "Europa League (qual.)",
+    "conf": "Conference League",
+    "confq": "Conference League (qual.)",
+}
+
+# Coppe nazionali italiane (per ora solo la Coppa Italia).
+ITALY_CUP_COMPETITIONS: dict[str, str] = {
+    "cup": "Coppa Italia",
+}
+
+# Nome canonico usato nel calendario di club per le partite di Serie A (derivate
+# dallo snapshot, non scaricate).
+SERIE_A_COMPETITION = "Serie A"
+
+
+def openfootball_season_label(season_code: str) -> str:
+    """Converte "1920" -> "2019-20" (cartelle openfootball: anno pieno-anno 2c)."""
+    start = 2000 + int(season_code[:2])
+    return f"{start}-{str(start + 1)[2:]}"
+
+
+def openfootball_europe_url(season_code: str, comp: str) -> str:
+    """URL del file openfootball di una competizione europea per una stagione."""
+    if comp not in EUROPE_COMPETITIONS:
+        raise KeyError(f"Competizione europea sconosciuta: {comp}")
+    return OPENFOOTBALL_EUROPE_URL.format(
+        season=openfootball_season_label(season_code), comp=comp
+    )
+
+
+def openfootball_italy_url(season_code: str, comp: str) -> str:
+    """URL del file openfootball di una coppa nazionale per una stagione."""
+    if comp not in ITALY_CUP_COMPETITIONS:
+        raise KeyError(f"Coppa nazionale sconosciuta: {comp}")
+    return OPENFOOTBALL_ITALY_URL.format(
+        season=openfootball_season_label(season_code), comp=comp
+    )

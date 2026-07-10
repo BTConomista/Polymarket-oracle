@@ -424,6 +424,100 @@ proprio la **correlazione dei punteggi** (es. bivariate Poisson) per il GG/NG.
 
 ---
 
+## Fase 4e — Calendario di club completo: la congestione VERA (dato nuovo)
+
+**Obiettivo.** Dare al modello l'unico segnale "indipendente dai risultati"
+rimasto con potenziale (Fase 4c): la **congestione vera**. Il riposo calcolato
+sulle sole date di Serie A (`loader.add_rest_days`) NON vede coppe ed Europa —
+proprio le partite infrasettimanali che causano fatica ASIMMETRICA — quindi non
+aiutava. Serve il **calendario COMPLETO di club** di ogni squadra.
+
+**Ragionamento e alternative.**
+- *Fonte ideale*: FBref ("Scores & Fixtures" per squadra, colonna Comp) o
+  Transfermarkt — entrambe NON raggiungibili dall'ambiente cloud (proxy, come
+  gia' per xG e valori rosa). I datalake Transfermarkt su GitHub o non hanno una
+  tabella partite (`salimt/football-datasets`), o la tengono dietro Git LFS
+  esaurito / su S3 (`dcaribou`): vicolo cieco.
+- *Fonte scelta*: **openfootball** (mirror GitHub, testo pubblico raggiungibile
+  via raw). Copre per stagione le competizioni UEFA per club
+  (Champions/Europa/Conference + preliminari) e la Coppa Italia. Le partite di
+  **Serie A NON si scaricano**: si derivano dallo **snapshot congelato** (esatte,
+  nomi gia' canonici, copertura 100%). Il calendario completo = Serie A (interno)
+  + coppe/Europa (openfootball).
+
+**Cosa abbiamo costruito.**
+1. Un fetcher pulito (`src/data/fixtures.py`) con URL centralizzati in
+   `sources.py`, cache offline in `data/raw/` (coerente con understat/transfermarkt).
+2. La tabella grezza versionata `data/club_fixtures.csv` (una riga per
+   squadra-partita: `season, team, date, competition, home_away, opponent`), coi
+   nomi allineati ai nostri via `TEAM_ALIASES` (aggiunti gli alias estesi di
+   coppa/Europa, es. `ACF Fiorentina`→`Fiorentina`, `SS Lazio`→`Lazio`); i club
+   di Serie A non agganciati vengono **loggati**, non ignorati (**0** mancati
+   aggancio, verificato).
+3. Due colonne nello snapshot e nel DB, STESSA semantica di `add_rest_days` ma
+   sul calendario COMPLETO: `home_rest_days_full`, `away_rest_days_full` (giorni
+   dall'ultima partita di club di quella squadra in QUALSIASI competizione, cap
+   14, solo partite precedenti → niente look-ahead, NaN se ignoto). Piu' due flag
+   utili: `home_midweek_europe`, `away_midweek_europe` (gara europea/coppa nei 4
+   giorni precedenti).
+
+**Insidie risolte (registrate perche' si ripresentano).**
+- Parser di date openfootball: la fase a **gironi** riparte da Settembre a ogni
+  girone → un rollover ingenuo "mese tornato indietro = +1 anno" sballava le date
+  (Juventus 2019-20 finiva nel 2022). Risolto con una regola **per semestre**
+  (Set-Dic→anno d'inizio, Gen-Giu→anno di fine; Ago è preliminari salvo finali
+  post-COVID già entrate in year1). Verificato: 0 date fuori finestra stagione.
+- La **Coppa Italia** cambia formato tra stagioni (`Casa v Ospite` dal 2024-25,
+  `Casa punteggio Ospite` prima): il parser gestisce entrambi.
+
+**Risultato — copertura reale (onesta, verificata).**
+
+| Stagione | Champions | Europa | Conference | Coppa Italia | Partite con congestione VERA catturata* |
+|---|:--:|:--:|:--:|:--:|--:|
+| 2017-18 | ✅ | — | — | — | 28 (7.4%) |
+| 2018-19 | ✅ | — | — | — | 28 (7.4%) |
+| 2019-20 | ✅ | — | — | — | 26 (6.8%) |
+| 2020-21 | ✅ | ✅ | — | ✅ | 86 (22.6%) |
+| 2021-22 | ✅ | ✅ | ✅ | ✅ | 98 (25.8%) |
+| 2022-23 | ✅ | ✅ | ✅ | ✅ | 121 (31.8%) |
+| 2023-24 | ✅ | ✅ | ✅ | ✅ | 104 (27.4%) |
+| 2024-25 | ✅ | ✅ | ✅ | ✅ | 124 (32.6%) |
+| 2025-26 | ✅ | — | — | — | 40 (10.5%) |
+
+*(*) partite in cui almeno una squadra aveva una gara "nascosta" (coppa/Europa)
+che accorcia il riposo rispetto al proxy solo-lega. **Totale: 655/3420 (19.2%).**
+- **Champions League: tutte e 9 le stagioni.** Europa League dal 2020-21,
+  Conference dal 2021-22, Coppa Italia 2020-21→2024-25 (openfootball non copre
+  EL/Coppa prima, ne' la Coppa 2025-26): dove manca, quelle partite non entrano
+  e `rest_days_full` **degrada in modo controllato** verso il valore solo-lega
+  (mai in direzione sbagliata), `midweek_europe` puo' essere un falso 0. **Niente
+  numeri inventati.**
+- **Non-regressione**: impronta dati invariata (`8483944342fc8b15` — le nuove
+  colonne non entrano nell'impronta, calcolata su date/squadre/gol); backtest
+  2025-26 con la config ufficiale corrente (emivita 365g, Fase 4d) invariato
+  (1X2 log-loss 0.9932). Il modello **non** legge ancora le colonne (covariate
+  off di default): il dato è pronto, la validazione è il passo successivo.
+
+**Invariante che ci fa fidare del dato.** Il calendario completo e' un
+SOVRAINSIEME di quello di Serie A, quindi la partita precedente e' sempre >=:
+→ `rest_days_full <= rest_days` (solo-lega) su ogni riga dove entrambi sono
+definiti. Verificato su ~3400 partite: **0 violazioni**. Un bug di join o un
+look-ahead romperebbero questa disuguaglianza — e' il nostro test di sicurezza.
+
+**Limite onesto.** Il segnale utile (dove `rest_days_full < rest_days`) e'
+concentrato nelle stagioni 2020-25 (EL/Conf/Coppa coperte) e per le squadre che
+fanno le coppe. Nelle stagioni 2017-20 abbiamo solo la Champions: il test della
+congestione sara' piu' potente sulle stagioni recenti. In locale, puntando gli
+URL a una fonte per-squadra (FBref) si chiuderebbero i buchi senza toccare il
+resto della pipeline.
+
+**Prossimo passo (a cura dell'utente).** Aggiungere una covariata `rest_full` che
+legge le nuove colonne e verificare walk-forward se la congestione VERA migliora
+le previsioni dove il proxy solo-lega non ci riusciva (Fase 4c). Come sempre: il
+diagnostico in-sample va confermato fuori campione, su piu' stagioni.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
