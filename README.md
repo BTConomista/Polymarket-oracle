@@ -242,11 +242,15 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
    invariata (stessa impronta dati). Vedi `docs/DIARIO.md`, Fase 4a.
 6. ✅ **Fase 4b** — blend gol/**xG reale** (α=0.75): primo miglioramento da dati
    nuovi, soprattutto sull'Over/Under. Config ufficiale aggiornata.
-7. **Fase 4c (prossima)** — spremere gli altri dati già disponibili: npxG come
-   segnale, e **valori rosa / assenze** come regressori di forza (mirati ai punti
-   deboli: neopromosse e inizio stagione).
-8. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-9. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+7. ✅ **Fase 4c** — spremuti gli altri dati (npxG, valori rosa, assenze) via un
+   **layer di covariate** (anche in combinazione): **risultato negativo** — non
+   aggiungono segnale indipendente (già implicito in gol+xG). Modello al **tetto
+   pratico** dei dati attuali.
+8. **Prossimo bivio** — o un modello di classe diversa / dati davvero nuovi
+   (formazioni ufficiali, meteo…), oppure passare all'**uso pratico** (comando di
+   predizione su partite future) accettando che il modello non batte il mercato.
+9. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+10. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

@@ -114,11 +114,13 @@ tests/           test unitari
 Vedi `docs/DIARIO.md` per la storia completa e `README.md` per lo stato sintetico.
 In breve: modello Dixon-Coles sui soli gol, tarato; **batte le baseline ma non il
 mercato**; i tiri in porta grezzi non aiutano (verificato su 6 stagioni).
-**Fase 4a-4b completate:** dati arricchiti nello snapshot (xG/npxG/PPDA/deep,
-valori rosa, assenze `_est`); il blend gol/**xG reale** (α=0.75) e' la nuova
-config ufficiale — primo miglioramento da dati nuovi, soprattutto sull'O/U.
-**Prossimo passo: Fase 4c — spremere gli altri dati gia' disponibili**: npxG come
-segnale, e valori rosa/assenze come regressori di forza (mirati a neopromosse e
-inizio stagione).
+**Fase 4a-4c completate:** dati arricchiti (xG/npxG/PPDA/deep, valori rosa,
+assenze); il blend gol/**xG reale** (α=0.75) e' la config ufficiale (primo
+miglioramento da dati nuovi, soprattutto O/U). npxG≈xG; valori rosa e assenze
+(anche in combo) **non aiutano** out-of-sample (gia' impliciti in gol+xG): il
+modello e' al **tetto pratico** dei dati attuali. Esiste un layer covariate
+(off di default) per dati futuri davvero indipendenti.
+**Prossimo bivio:** modello di classe diversa / dati nuovi, oppure uso pratico
+(predizione su partite future).
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

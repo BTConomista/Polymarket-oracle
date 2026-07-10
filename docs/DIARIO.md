@@ -309,7 +309,52 @@ da spremere gli altri dati gia' disponibili (npxG, valori rosa, assenze).
 
 ---
 
-## Prossimo passo — altri dati da spremere e xG reale
+## Fase 4c — Spremere il resto dei dati: npxG, valori rosa, assenze (NEGATIVO)
+
+**Obiettivo.** Sfruttare al massimo i dati gia' in casa prima di cercarne altri:
+npxG come segnale, e valori rosa / assenze come **covariate** (forza/contesto
+esterni ai risultati), anche in **combinazione** (l'idea: due segnali deboli da
+soli potrebbero valere di piu' insieme).
+
+**Cosa abbiamo costruito.** Un **layer di covariate** generale: ogni covariata
+entra nel tasso atteso della squadra che segna come `beta*(z_squadra -
+z_avversaria)`, con i `beta` stimati **insieme** al resto via ML. Piu' covariate =
+fit congiunto (cattura il contributo reciproco). Retrocompatibile.
+
+**Metodo onesto.** Prima un diagnostico *economico* in-sample sul valore-rosa:
+segnale residuo apparente (coeff +0.48). Ma il test vero e' walk-forward.
+
+**Risultati (6 stagioni, log-loss).**
+
+| | 1X2 | O/U 2.5 |
+|---|---:|---:|
+| baseline (config Fase 4b) | **0.9813** | 0.6893 |
+| npxG al posto di xG | 0.9811 | 0.6892 |
+| + valore-rosa | 0.9818 | 0.6891 |
+| + assenze | 0.9813 | 0.6893 |
+| + valore-rosa & assenze | 0.9818 | 0.6892 |
+
+- **npxG ≈ xG** (differenza 0.0002, entro il rumore): tenuto xG, piu' standard.
+- **Valore-rosa: non aiuta** (peggiora appena l'1X2). Il diagnostico in-sample era
+  ottimistico: la forza della rosa e' **gia' catturata** dal modello gol+xG (si
+  vede nei risultati e nell'xG). Fuori campione aggiunge piu' rumore che segnale.
+- **Assenze: effetto nullo** (dato stimato e rumoroso; gli infortuni sono in parte
+  gia' nei risultati recenti che il decadimento pesa).
+- **Nessuna sinergia** dalle combinazioni: unire segnali ~nulli da' ~nulla.
+
+**Lezione.** Con questa fonte dati il modello ha raggiunto il suo **tetto
+pratico**: gol + xG + taratura. I dati extra (rosa, assenze) non aggiungono
+segnale *indipendente* out-of-sample perche' cio' che contengono e' gia' implicito
+nei risultati. Il diagnostico in-sample va sempre confermato walk-forward.
+
+**Config ufficiale invariata:** emivita 730g, shrinkage 1.5, blend gol/xG α=0.75,
+nessuna covariata. Il layer covariate resta (documentato, off di default),
+riutilizzabile per dati futuri davvero indipendenti (es. formazioni ufficiali
+last-minute, meteo, motivazione).
+
+---
+
+## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
 *qualità* delle occasioni. Abbiamo trovato una fonte **xG reale** raggiungibile
