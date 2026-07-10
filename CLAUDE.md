@@ -83,8 +83,9 @@ src/data/        sources.py (URL/stagioni/alias), loader.py (offline-first),
                  database.py (snapshot CSV + SQLite)
 src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
+                 calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         download_data, build_database, backtest, analyze, tune
+scripts/         download_data, build_database, backtest, analyze, tune, calibrate
 experiments/     runs.jsonl (registro replicabile) + README (formato)
 data/            serie_a_matches.csv (SNAPSHOT congelato, versionato)
                  football.db (SQLite, rigenerabile, NON versionato)
@@ -125,9 +126,13 @@ futuri davvero indipendenti (es. calendario di club completo per la congestione)
 **Fase 4e:** aggiunto il **calendario di club completo** (coppe+Europa via
 openfootball) → colonne `home/away_rest_days_full` e `home/away_midweek_europe`
 nello snapshot + tabella grezza `data/club_fixtures.csv`. E' la **congestione
-vera** (il proxy solo-lega non la vedeva); dato pronto, da validare con una
-covariata `rest_full`. Non-regressione confermata (impronta dati invariata).
-**Prossimo bivio:** modello di classe diversa / dati nuovi, oppure uso pratico
-(predizione su partite future).
+vera** (il proxy solo-lega non la vedeva). **Fase 4e-bis:** validata la covariata
+`rest_full` walk-forward (2020-25): inverte il segno del proxy solo-lega ma il
+guadagno e' nel rumore (−0.0004 medio) → covariata off di default.
+**Fase 6:** ricalibrazione confidenza (temperature scaling, `scripts/calibrate.py`):
+il modello e' un po' **sottoconfidente** (T≈0.94, robusto) ma il guadagno e'
+trascurabile (−0.0003) → non entra nella config; modulo `src/evaluation/calibration.py`
+per l'uso pratico. **Prossimo bivio:** modello di classe diversa / dati nuovi,
+oppure uso pratico; leva residua dentro il modello = prior cold-start neopromosse.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

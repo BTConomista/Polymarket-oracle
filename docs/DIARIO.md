@@ -583,6 +583,70 @@ stagioni), oppure per singola cella: `python scripts/backtest.py --test-season 2
 
 ---
 
+## Fase 6 — Ricalibrazione della confidenza (temperature scaling, NEGATIVO-ish)
+
+**Obiettivo.** Spremere il modello attuale SENZA dati nuovi. Il diagnostico
+(`scripts/analyze.py`, stagione 2024-25) diceva: il modello e' calibrato sulla
+media ma perde contro il mercato dove e' molto sicuro (+0.034) e sulle
+neopromosse (+0.029). La leva piu' economica per il primo problema e' il
+**temperature scaling**: un SOLO parametro T che rende le probabilita' piu'
+nette (T<1) o piu' morbide (T>1), tarato sul passato e applicato al futuro.
+
+**Ragionamento / ipotesi.** Se il modello e' troppo sicuro, T>1 (raffredda)
+riduce la log-loss. La tabella di calibrazione per fascia suggeriva invece il
+contrario (probabilita' un po' "compresse" verso l'uniforme): da verificare
+tarando T empiricamente, senza pregiudizi.
+
+**Alternative considerate.**
+- *Cosa tarare*: un T globale (scelto: la versione piu' economica), oppure una
+  calibrazione per-fascia/isotonica (piu' parametri, piu' rischio di overfit su
+  ~380 partite/stagione). Prima la versione economica, da protocollo.
+- *Come evitare il look-ahead*: T si tara SOLO sulle predizioni walk-forward
+  delle stagioni PRECEDENTI a quella di test (leave-future-out), mai su quella di
+  test. Nuovo modulo puro `src/evaluation/calibration.py` (fit/apply) + test.
+
+**Risultato (1X2 log-loss, T tarato sul passato di ogni stagione).**
+
+| Stagione | T | base | calibrato | Δ |
+|---|--:|--:|--:|--:|
+| 2020-21 | 0.963 | 0.9538 | 0.9526 | −0.0012 |
+| 2021-22 | 0.918 | 0.9887 | 0.9903 | +0.0016 |
+| 2022-23 | 0.948 | 0.9943 | 0.9948 | +0.0005 |
+| 2023-24 | 0.962 | 0.9848 | 0.9843 | −0.0005 |
+| 2024-25 | 0.955 | 0.9695 | 0.9681 | −0.0014 |
+| 2025-26 | 0.937 | 0.9932 | 0.9925 | −0.0007 |
+| **MEDIA** | **~0.94** | **0.9807** | **0.9804** | **−0.0003** |
+
+(Mercato medio: 0.9632 — la calibrazione non lo tocca.)
+
+**Lezione / cosa ne consegue.**
+1. Scoperta reale e **robusta**: **T < 1 in tutte e 6 le stagioni** (0.92–0.96).
+   Il modello e' **sistematicamente un po' SOTTOconfidente** — le probabilita'
+   vanno rese un filo piu' nette, non piu' morbide (l'opposto dell'ipotesi
+   "troppo sicuro": l'eccesso di confidenza del diagnostico e' concentrato in
+   poche partite estreme, non nella distribuzione media).
+2. Ma il guadagno e' **trascurabile** (−0.0003 medio su log-loss, −0.0002 Brier)
+   e **non uniforme** (peggiora 2 stagioni su 6: dove i pronostici sicuri
+   sbagliavano di piu', rendere le prob piu' nette punisce). Rendere piu' nette
+   le probabilita' e' un'arma a doppio taglio: premia quando il modello ha
+   ragione, punisce di piu' quando ha torto — in Serie A i due effetti quasi si
+   annullano.
+3. Coerente con congestione (Fase 4e-bis) e valori-rosa (Fase 4c): **effetto
+   reale, direzione coerente, payoff nel rumore**. Il modello e' al tetto. La
+   calibrazione **non entra** nella config ufficiale (guadagno < rumore, e
+   inconsistente); il modulo resta disponibile per un uso pratico (probabilita'
+   leggermente piu' oneste su singola partita) e per dati/mercati futuri.
+
+**Riproducibilita'.** `python scripts/calibrate.py` (validazione walk-forward su
+tutte le stagioni; registra 6 run con `source=calibrate_temperature`).
+
+**Prossimo (se si vuole continuare a spremere).** La perdita piu' grande e
+concentrata resta le **neopromosse** (+0.029 su ~28% delle partite): un prior di
+cold-start e' la leva con l'aspettativa migliore rimasta dentro il modello
+attuale.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

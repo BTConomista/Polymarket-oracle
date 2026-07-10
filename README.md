@@ -261,10 +261,19 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
    modello è affidabile sui mercati d'**esito** (1X2, 1X, 2X, batte la baseline),
    **debole** su Over/Under, e **peggio della baseline su GG/NG** (cattura male la
    correlazione dei punteggi). Nessun mercato batte le quote. Vedi `docs/DIARIO.md`.
-11. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
+11. ✅ **Fase 6** — **ricalibrazione della confidenza** (temperature scaling,
+    `scripts/calibrate.py`): T tarato walk-forward sul passato. Scoperta reale e
+    robusta — il modello è **sistematicamente un po' sottoconfidente** (T≈0.94,
+    <1 in tutte e 6 le stagioni) — ma il guadagno è **nel rumore** (−0.0003 medio
+    su 1X2 log-loss) e non uniforme: **non entra** nella config ufficiale. Modulo
+    `src/evaluation/calibration.py` disponibile per l'uso pratico. Conferma il
+    **tetto pratico** dei dati attuali. Vedi `docs/DIARIO.md`, Fase 6.
+12. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
     GG/NG) / dati davvero nuovi, oppure **uso pratico** (comando di predizione).
-12. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-13. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+    Leva residua *dentro* il modello: prior di cold-start per le **neopromosse**
+    (perdita più grande e concentrata, +0.029 su ~28% delle partite).
+13. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+14. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 
