@@ -12,6 +12,10 @@ Polymarket, bookmaker, exchange o altri mercati di previsione.
 > 📖 **[Diario di bordo](docs/DIARIO.md)** — il resoconto passo-passo di tutte le
 > fasi, con il ragionamento e le scelte dietro ogni decisione. Se vuoi capire
 > *perché* il progetto è fatto così, parti da lì.
+>
+> 🛠️ **[Protocollo di lavoro](CLAUDE.md)** — come si contribuisce e **cosa
+> aggiornare ogni volta** (registro esperimenti, diario, test). Da leggere prima
+> di modificare il progetto; una sessione AI lo carica in automatico.
 
 ## Stato attuale
 
