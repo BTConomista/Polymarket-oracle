@@ -61,6 +61,17 @@ LEAGUES: dict[str, League] = {
 # Mappa {nome_come_appare: nome_canonico}. Aggiungere qui eventuali nuove varianti.
 TEAM_ALIASES: dict[str, str] = {
     "Hellas Verona": "Verona",
+    # Varianti usate da Understat (fonte xG). Verificate estraendo TUTTI i nomi
+    # distinti delle 9 stagioni e confrontandoli con i nomi canonici: queste tre
+    # sono le uniche differenze.
+    "AC Milan": "Milan",
+    "Parma Calcio 1913": "Parma",
+    "SPAL 2013": "Spal",
+    # Varianti comuni in altre fonti (difensivo: non costano nulla e prevengono
+    # il bug "squadra sconosciuta" se una fonte cambia stile).
+    "Internazionale": "Inter",
+    "AS Roma": "Roma",
+    "SSC Napoli": "Napoli",
 }
 
 
@@ -88,3 +99,65 @@ def season_label(season_code: str) -> str:
 def csv_url(season_code: str, league: League) -> str:
     """URL del CSV per una data stagione e campionato."""
     return BASE_URL.format(season=season_code, code=league.code)
+
+
+# --------------------------------------------------------------------------- #
+# Fonte xG: Understat (via mirror GitHub)
+# --------------------------------------------------------------------------- #
+# La fonte originale (understat.com) non e' raggiungibile dall'ambiente cloud
+# (policy di rete, verificato: 403 host_not_allowed). Usiamo lo STESSO repo
+# mirror gia' usato per football-data, che pubblica i JSON di lega di Understat
+# (datesData/teamsData/playersData) per stagione, aggiornati da un workflow
+# giornaliero. In locale basta sostituire UNDERSTAT_URL con quello ufficiale.
+UNDERSTAT_OFFICIAL_URL = "https://understat.com/league/{league}/{year}"
+UNDERSTAT_MIRROR_URL = (
+    "https://raw.githubusercontent.com/Mentaturan/ScoutFootball_for_World_Cup"
+    "/main/data/raw/understat/{league}/{year}.json"
+)
+UNDERSTAT_URL = UNDERSTAT_MIRROR_URL
+
+# Nome del campionato nello stile Understat (chiave interna -> nome Understat).
+UNDERSTAT_LEAGUES: dict[str, str] = {
+    "serie_a": "Serie_A",
+}
+
+
+def understat_year(season_code: str) -> int:
+    """Anno di inizio stagione nello stile Understat ("1718" -> 2017)."""
+    return 2000 + int(season_code[:2])
+
+
+def understat_url(season_code: str, league_key: str = "serie_a") -> str:
+    """URL del JSON Understat per una stagione."""
+    return UNDERSTAT_URL.format(
+        league=UNDERSTAT_LEAGUES[league_key], year=understat_year(season_code)
+    )
+
+
+# --------------------------------------------------------------------------- #
+# Fonte valori di mercato e infortuni: Transfermarkt (via mirror GitHub)
+# --------------------------------------------------------------------------- #
+# Anche transfermarkt.com e' bloccato dall'ambiente cloud. Usiamo il datalake
+# GitHub "salimt/football-datasets" (storico valutazioni giocatore, profili,
+# infortuni; ~93k giocatori). Tabelle usate:
+#   - player_market_value: storico valutazioni (player_id, data, valore in EUR);
+#   - player_profiles:     anagrafica (nome, ruolo) per il match sui nomi;
+#   - player_injuries:     infortuni con date di inizio/fine.
+TRANSFERMARKT_MIRROR_URL = (
+    "https://raw.githubusercontent.com/salimt/football-datasets/main"
+    "/datalake/transfermarkt/{table}/{table}.csv"
+)
+
+TRANSFERMARKT_TABLES: list[str] = [
+    "player_market_value",           # storico valutazioni (id, data, EUR)
+    "player_profiles",               # anagrafica/ruolo (per il match sui nomi)
+    "player_injuries",               # infortuni (date inizio/fine)
+    "player_teammates_played_with",  # coppie compagni: amplia la mappa nome->id
+]
+
+
+def transfermarkt_url(table: str) -> str:
+    """URL di una tabella del mirror Transfermarkt."""
+    if table not in TRANSFERMARKT_TABLES:
+        raise KeyError(f"Tabella Transfermarkt sconosciuta: {table}")
+    return TRANSFERMARKT_MIRROR_URL.format(table=table)

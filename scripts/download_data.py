@@ -31,6 +31,20 @@ def main() -> None:
         path = loader.download_season(code, league, force=args.force)
         n = sum(1 for _ in open(path)) - 1
         print(f"  {sources.season_label(code)}: {n} partite  ->  {path.name}")
+
+    if args.league in sources.UNDERSTAT_LEAGUES:
+        from src.data import transfermarkt, understat
+
+        print("\nUnderstat (xG):")
+        for code in sources.SEASONS:
+            path = understat.download_season(code, args.league, force=args.force)
+            print(f"  {sources.season_label(code)}  ->  {path.name}")
+
+        print("\nTransfermarkt (datalake):")
+        for table in sources.TRANSFERMARKT_TABLES:
+            path = transfermarkt.download_table(table, force=args.force)
+            print(f"  {table}  ->  {path.name}")
+
     print("Fatto.")
 
 

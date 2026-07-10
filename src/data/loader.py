@@ -25,6 +25,16 @@ Schema interno (un DataFrame pandas con queste colonne):
     odds_over25  float      quota Over 2.5
     odds_under25 float      quota Under 2.5
 
+Colonne di ARRICCHIMENTO (vedi understat.py e transfermarkt.py; NaN se la
+fonte non copre la partita/squadra):
+    home_xg, away_xg           float  expected goals (Understat)
+    home_npxg, away_npxg       float  xG senza rigori
+    home_ppda, away_ppda       float  passaggi avversari per azione difensiva
+    home_deep, away_deep       float  passaggi profondi completati
+    home_squad_value, away_squad_value  float  valore rosa a inizio stagione (EUR)
+    home_absent_count_est, away_absent_count_est  float  n. assenti STIMATO
+    home_absent_value_est, away_absent_value_est  float  valore assenti STIMATO (EUR)
+
 Politica sulle quote: per ogni mercato prendiamo la MIGLIORE fonte disponibile in
 ordine di preferenza (quote di CHIUSURA medie -> chiusura Bet365 -> pre-match
 medie -> pre-match Bet365). Le quote di chiusura sono lo stimatore di mercato
@@ -131,6 +141,26 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     return out
 
 
+def enrich(matches: pd.DataFrame, *, force_download: bool = False) -> pd.DataFrame:
+    """Arricchisce le partite con le colonne da fonti esterne.
+
+    In ordine: xG di Understat (add_xg), valori rosa Transfermarkt
+    (add_squad_values) e assenze stimate da infortuni (add_absences).
+    E' idempotente: le colonne gia' presenti vengono ricalcolate.
+    Le leghe non coperte da Understat vengono restituite invariate.
+    """
+    leagues = set(matches["league"].unique())
+    if not leagues <= set(sources.UNDERSTAT_LEAGUES):
+        return matches
+
+    from . import transfermarkt, understat
+
+    matches = understat.add_xg(matches, force=force_download)
+    matches = transfermarkt.add_squad_values(matches, force=force_download)
+    matches = transfermarkt.add_absences(matches, force=force_download)
+    return matches
+
+
 def load_league(
     league_key: str = "serie_a",
     season_codes: list[str] | None = None,
@@ -171,4 +201,5 @@ def load_league(
 
     combined = pd.concat(frames, ignore_index=True)
     combined = combined.sort_values("date").reset_index(drop=True)
+    combined = enrich(combined, force_download=force_download)
     return combined
