@@ -135,11 +135,12 @@ def main() -> None:
     parser.add_argument("--shrinkage", type=float, default=1.5,
                         help="forza della regolarizzazione verso la media "
                              "(default 1.5, valore scelto via scripts/tune.py)")
-    parser.add_argument("--shots-blend", type=float, default=1.0,
+    parser.add_argument("--shots-blend", type=float, default=0.75,
                         help="peso alpha gol vs segnale secondario (1=solo gol, "
-                             "0=solo segnale; vedi Fase 3/4b)")
-    parser.add_argument("--blend-signal", default="sot", choices=["sot", "xg", "npxg"],
-                        help="segnale secondario da mescolare (sot=tiri, xg=xG reale)")
+                             "0=solo segnale; default 0.75, scelto in Fase 4b)")
+    parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
+                        help="segnale secondario da mescolare (default xg=xG reale; "
+                             "sot=tiri in porta)")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",

@@ -35,14 +35,17 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
 
 | Mercato | Metrica | Modello | Baseline | Mercato (chiusura) |
 |---|---|---:|---:|---:|
-| **1X2** | log-loss | 0.9890 | 1.0851 | **0.9784** |
-| **1X2** | Brier | 0.5907 | 0.6579 | **0.5830** |
-| **O/U 2.5** | log-loss | 0.7056 | 0.6896 | **0.6996** |
-| **O/U 2.5** | Brier | 0.2560 | 0.2482 | **0.2530** |
+| **1X2** | log-loss | 0.9900 | 1.0851 | **0.9784** |
+| **1X2** | Brier | 0.5912 | 0.6579 | **0.5830** |
+| **O/U 2.5** | log-loss | 0.7029 | 0.6896 | **0.6996** |
+| **O/U 2.5** | Brier | 0.2548 | 0.2482 | **0.2530** |
 
-_Configurazione: shrinkage = 1.5, emivita = 730g (vedi Fase 2b). Il modello è
-validato su **tre** stagioni (2023-24, 2024-25, 2025-26): le conclusioni sono
-stabili, non rumore di una singola stagione._
+_Configurazione ufficiale: shrinkage = 1.5, emivita = 730g, **blend gol/xG con
+α = 0.75** (vedi Fase 4b). Le scelte di config sono prese sulla **media di 6
+stagioni** (2020-21 → 2025-26), non su una sola: la 2025-26 qui mostrata è solo la
+vetrina. Nota: su questa singola stagione l'xG migliora l'Over/Under ma è appena
+sotto sull'1X2 — è variabilità di stagione; sulla media a 6 stagioni migliora
+entrambi._
 
 **Come leggerli** (più bassi = meglio):
 
@@ -160,6 +163,32 @@ e non solo il conteggio). È un risultato prezioso: aver testato la versione
 *economica* dell'idea "le occasioni aiutano" ci ha evitato di costruire una
 pipeline xG/database sull'assunzione sbagliata che bastasse.
 
+### xG reale nel blend — Fase 4b (primo miglioramento da dati nuovi)
+
+Con l'xG reale integrato (Fase 4a), abbiamo rifatto lo *stesso* esperimento del
+blend, ma con l'**xG** al posto dei tiri grezzi. Il meccanismo è identico (peso α
+gol vs segnale), cambia solo la qualità del segnale.
+
+Esito su **6 stagioni** (log-loss, più basso = meglio):
+
+| α (peso gol) | 1X2 | O/U 2.5 |
+|---:|---:|---:|
+| 0 (solo xG) | 0.9840 | 0.6897 |
+| 0.5 | 0.9816 | **0.6888** |
+| **0.75** (scelto) | **0.9813** | 0.6893 |
+| 1 (solo gol) | 0.9817 | 0.6904 |
+| Mercato | 0.9632 | 0.6816 |
+
+- È il **primo segnale che aggiunge valore** dopo il tuning: dove i tiri *grezzi*
+  fallivano (Fase 3), l'**xG aiuta** — piccolo ma reale, soprattutto
+  sull'Over/Under (la *qualità* delle occasioni informa il volume di gol).
+- α=0.75 (config scelta) migliora **entrambi** i mercati sulla media a 6 stagioni.
+- I guadagni O/U più grandi sono nelle stagioni **recenti** (2024-25, 2025-26),
+  coerente con l'ipotesi che lo stile di gioco stia evolvendo.
+
+**Onestà:** il miglioramento è *modesto* e non ci fa battere il mercato. Ma è il
+primo passo avanti ottenuto con informazione nuova.
+
 ## Struttura
 
 ```
@@ -211,10 +240,13 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
    3420 partite**, valori rosa Transfermarkt a inizio stagione (copertura 63-80%
    per stagione) e assenze stimate da infortuni. Snapshot e DB rigenerati, base
    invariata (stessa impronta dati). Vedi `docs/DIARIO.md`, Fase 4a.
-6. **Fase 4b (prossima)** — ri-tarare il blend del modello usando l'**xG reale**
-   al posto dei tiri grezzi; poi valutare valori rosa/assenze come regressori.
-7. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-8. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+6. ✅ **Fase 4b** — blend gol/**xG reale** (α=0.75): primo miglioramento da dati
+   nuovi, soprattutto sull'Over/Under. Config ufficiale aggiornata.
+7. **Fase 4c (prossima)** — spremere gli altri dati già disponibili: npxG come
+   segnale, e **valori rosa / assenze** come regressori di forza (mirati ai punti
+   deboli: neopromosse e inizio stagione).
+8. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+9. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

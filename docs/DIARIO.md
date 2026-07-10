@@ -269,7 +269,47 @@ nomi tra fonti vale piu' di qualunque raffinatezza statistica a valle.
 
 ---
 
-## Prossimo passo — Fase 4: xG reale
+## Fase 4b — xG reale nel blend: primo miglioramento da dati nuovi
+
+**Obiettivo.** Rifare l'esperimento del blend della Fase 3 (fallito coi tiri
+grezzi) usando l'**xG reale** ora disponibile: le occasioni pesate per qualita'
+aiutano dove i tiri grezzi non aiutavano?
+
+**Ragionamento e scelta.** L'infrastruttura c'era gia': abbiamo generalizzato il
+blend a un `blend_signal` qualsiasi ("sot"=tiri, "xg"=xG, "npxg"). L'xG e' gia' in
+scala gol (la conversione risulta ~1, contro ~0.3 dei tiri). Il modello sull'xG
+usa lo stesso `_fit_counts` (Poisson-famiglia su valori continui, senza la
+correzione sui punteggi bassi).
+
+**Risultato (6 stagioni, log-loss).**
+
+| α (peso gol) | 1X2 | O/U 2.5 |
+|---:|---:|---:|
+| 0 (solo xG) | 0.9840 | 0.6897 |
+| 0.5 | 0.9816 | 0.6888 |
+| **0.75** | **0.9813** | 0.6893 |
+| 1 (solo gol) | 0.9817 | 0.6904 |
+
+- **Primo segnale che aggiunge valore.** Dove i tiri grezzi fallivano, l'xG
+  aiuta: piccolo, ma reale e consistente, soprattutto sull'Over/Under (la qualita'
+  delle occasioni informa il volume di gol; sull'1X2 conta meno chi *crea*, piu'
+  chi *concretizza*).
+- **Scelta config: α = 0.75** (blend_signal xg). Migliora *entrambi* i mercati
+  sulla media a 6 stagioni ed e' conservativa. Presa sulla media, non su una
+  stagione: sul solo 2025-26 l'1X2 e' appena sotto (0.9900 vs 0.9890) ma l'O/U
+  migliora — variabilita' attesa.
+
+**Lezione.** La *qualita'* del segnale conta piu' del segnale in se': stessa idea
+("le occasioni aiutano"), stesso meccanismo, ma coi tiri grezzi -> nulla, con
+l'xG -> primo passo avanti. Conferma anche l'ipotesi tenuta agli atti: i guadagni
+O/U piu' grandi sono nelle stagioni recenti (stile di gioco in evoluzione).
+
+**Onestà.** Il miglioramento e' modesto e non basta a battere il mercato. Restano
+da spremere gli altri dati gia' disponibili (npxG, valori rosa, assenze).
+
+---
+
+## Prossimo passo — altri dati da spremere e xG reale
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
 *qualità* delle occasioni. Abbiamo trovato una fonte **xG reale** raggiungibile

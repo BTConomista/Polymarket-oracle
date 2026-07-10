@@ -73,10 +73,11 @@ def main() -> None:
                         help="emivita fissa quando non e' quella spazzata")
     parser.add_argument("--shrinkage", type=float, default=1.5,
                         help="shrinkage fisso quando non e' quello spazzato")
-    parser.add_argument("--shots-blend", type=float, default=1.0,
-                        help="shots_blend fisso quando non e' quello spazzato")
-    parser.add_argument("--blend-signal", default="sot", choices=["sot", "xg", "npxg"],
-                        help="segnale secondario del blend (sot=tiri, xg=xG reale)")
+    parser.add_argument("--shots-blend", type=float, default=0.75,
+                        help="shots_blend fisso quando non e' quello spazzato "
+                             "(default 0.75, config ufficiale)")
+    parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
+                        help="segnale secondario del blend (default xg=xG reale)")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 

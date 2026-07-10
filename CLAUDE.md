@@ -70,8 +70,8 @@ python -m pytest                       # test
 ```
 
 Config "ufficiale" corrente del modello (default in `backtest.py`): **emivita
-730g, shrinkage 1.5, shots_blend 1.0** (solo gol). Se la cambi, aggiorna README e
-diario.
+730g, shrinkage 1.5, shots_blend 0.75, blend_signal xg** (blend gol/xG reale,
+Fase 4b). Se la cambi, aggiorna README e diario.
 
 ---
 
@@ -114,11 +114,11 @@ tests/           test unitari
 Vedi `docs/DIARIO.md` per la storia completa e `README.md` per lo stato sintetico.
 In breve: modello Dixon-Coles sui soli gol, tarato; **batte le baseline ma non il
 mercato**; i tiri in porta grezzi non aiutano (verificato su 6 stagioni).
-**Fase 4a completata: dati integrati nello snapshot** — xG Understat per il 100%
-delle partite (piu' npxG/PPDA/deep), valori rosa Transfermarkt a inizio stagione
-(copertura 63-80%, `NaN` sotto soglia) e assenze stimate (`_est`). Impronta dati
-invariata, backtest di non-regressione identico.
-**Prossimo passo: Fase 4b — ri-tarare il blend con l'xG reale** al posto dei
-tiri grezzi (l'infrastruttura della Fase 3 lo abilita gia').
+**Fase 4a-4b completate:** dati arricchiti nello snapshot (xG/npxG/PPDA/deep,
+valori rosa, assenze `_est`); il blend gol/**xG reale** (α=0.75) e' la nuova
+config ufficiale — primo miglioramento da dati nuovi, soprattutto sull'O/U.
+**Prossimo passo: Fase 4c — spremere gli altri dati gia' disponibili**: npxG come
+segnale, e valori rosa/assenze come regressori di forza (mirati a neopromosse e
+inizio stagione).
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**
