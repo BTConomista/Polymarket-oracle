@@ -114,7 +114,11 @@ tests/           test unitari
 Vedi `docs/DIARIO.md` per la storia completa e `README.md` per lo stato sintetico.
 In breve: modello Dixon-Coles sui soli gol, tarato; **batte le baseline ma non il
 mercato**; i tiri in porta grezzi non aiutano (verificato su 6 stagioni).
-**Prossimo passo: Fase 4 — xG reale** (mirror Understat trovato, copertura storica
-completa) per testare se la *qualità* delle occasioni apre un vantaggio.
+**Fase 4a completata: dati integrati nello snapshot** — xG Understat per il 100%
+delle partite (piu' npxG/PPDA/deep), valori rosa Transfermarkt a inizio stagione
+(copertura 63-80%, `NaN` sotto soglia) e assenze stimate (`_est`). Impronta dati
+invariata, backtest di non-regressione identico.
+**Prossimo passo: Fase 4b — ri-tarare il blend con l'xG reale** al posto dei
+tiri grezzi (l'infrastruttura della Fase 3 lo abilita gia').
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

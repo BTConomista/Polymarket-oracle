@@ -215,6 +215,60 @@ il mercato senza superarlo.
 
 ---
 
+## Fase 4a — I dati per l'xG reale (e per le rose): arricchimento completato
+
+**Obiettivo.** Prima di ri-tarare il modello con l'xG (Fase 4), servivano i
+dati: xG per *ogni* partita storica, valori rosa a inizio stagione e una stima
+delle assenze. Tutto nello snapshot congelato, offline-first, senza toccare la
+base football-data.
+
+**Ragionamento e alternative.**
+- *xG*: understat.com e fbref.com non sono raggiungibili da questo ambiente
+  (proxy). Alternativa trovata: lo **stesso repo mirror** GitHub gia' usato per
+  football-data espone anche i JSON di lega Understat (aggiornati da un workflow
+  giornaliero). Verificato: 380/380 partite con xG per tutte e 9 le stagioni.
+- *Valori rosa*: transfermarkt.com non raggiungibile; nessuna tabella con valori
+  rosa per squadra-stagione nei datalake GitHub esplorati. Scelta: ricostruzione
+  **bottom-up** = rosa stimata dai giocatori con minuti su Understat + ultima
+  valutazione Transfermarkt (datalake `salimt/football-datasets`) **antecedente
+  al 1° settembre** della stagione (niente look-ahead, staleness max 550 giorni).
+- *Assenze*: dalla tabella infortuni dello stesso datalake, contando per ogni
+  partita i giocatori della rosa infortunati in quella data (informazione nota
+  pre-partita). Sono **stime**, marcate col suffisso `_est`.
+
+**Il problema vero: allineare i nomi.** Squadre: bastano 3 alias
+(`AC Milan`→`Milan`, `Parma Calcio 1913`→`Parma`, `SPAL 2013`→`Spal`).
+Giocatori: molto piu' duro (accenti, translitterazioni, "Gian Marco"/"Gianmarco",
+nomi accorciati). Catena deterministica di aggancio misurata su 1.986 giocatori:
+esatto 1691, filtro ruolo/valutazioni 96, spareggio per valore di picco 63,
+senza-spazi 3, sottoinsiemi di token 21, cognome+iniziale 29, fuzzy conservativo
+(soglia 0.90) 8, **non agganciati 78** (~4%, quasi tutti con pochi minuti).
+
+**Risultato.**
+- 14 nuove colonne nello snapshot (3420 righe invariate, impronta dati
+  invariata `8483944342fc8b15` perche' calcolata solo su date/squadre/gol):
+  `home_xg, away_xg, home_npxg, away_npxg, home_ppda, away_ppda, home_deep,
+  away_deep, home_squad_value, away_squad_value, home_absent_count_est,
+  away_absent_count_est, home_absent_value_est, away_absent_value_est`.
+- Copertura xG: **100% in tutte le stagioni**. Copertura valori rosa (entrambe
+  le squadre): 63-80% a seconda della stagione.
+- Backtest di non-regressione: metriche **identiche** a quelle documentate
+  (log-loss 1X2 0.9890 / baseline 1.0851 / mercato 0.9784).
+
+**Limite onesto (documentato, non aggirato).** Il datalake Transfermarkt e'
+incompleto: ~25% dei profili **non ha alcuna serie di valutazioni** (mancano
+anche titolari, es. Milinkovic-Savic; la Lazio ne soffre in tutte le stagioni).
+Politica: il valore rosa e' pubblicato **solo** se i giocatori valutati coprono
+almeno l'85% dei minuti della squadra, altrimenti `NaN`. **Niente imputazioni**:
+meglio un buco dichiarato che un numero inventato. Le assenze restano stime
+(`_est`) perche' rosa e infortuni derivano da fonti ricostruite.
+
+**Lezione.** Con vincoli di rete stretti, il collo di bottiglia non e' il
+modello ma la *provenienza* dei dati: trovare mirror affidabili e allineare i
+nomi tra fonti vale piu' di qualunque raffinatezza statistica a valle.
+
+---
+
 ## Prossimo passo — Fase 4: xG reale
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

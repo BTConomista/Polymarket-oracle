@@ -207,11 +207,14 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
    medio col mercato da +0.026 a +0.017.
 4. ✅ **Fase 3** — tiri in porta come informazione nuova: **risultato negativo**
    (i tiri grezzi non aiutano in modo affidabile). Codice mantenuto per l'xG reale.
-5. **Prossimo bivio** — o dati genuinamente più ricchi (xG reale, formazioni,
-   indisponibili) con database interno, oppure passare a **predizioni su partite
-   future** e all'uso pratico del modello.
-6. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-7. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+5. ✅ **Fase 4a** — arricchimento dati: **xG reale Understat per il 100% delle
+   3420 partite**, valori rosa Transfermarkt a inizio stagione (copertura 63-80%
+   per stagione) e assenze stimate da infortuni. Snapshot e DB rigenerati, base
+   invariata (stessa impronta dati). Vedi `docs/DIARIO.md`, Fase 4a.
+6. **Fase 4b (prossima)** — ri-tarare il blend del modello usando l'**xG reale**
+   al posto dei tiri grezzi; poi valutare valori rosa/assenze come regressori.
+7. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+8. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 
@@ -227,18 +230,44 @@ i dati sono **congelati** in un archivio interno con due artefatti:
 
 ```bash
 python scripts/build_database.py            # ricostruisce il DB dallo snapshot (offline)
-python scripts/build_database.py --refresh  # riscarica dalle fonti e aggiorna lo snapshot
+python scripts/build_database.py --enrich   # ricalcola xG/rose/assenze sullo snapshot esistente
+python scripts/build_database.py --refresh  # riscarica TUTTO dalle fonti e aggiorna lo snapshot
 sqlite3 data/football.db "SELECT season, COUNT(*) FROM matches GROUP BY season"
 ```
+
+### Colonne di arricchimento (Fase 4a)
+
+Oltre alle 15 colonne base (partita, gol, tiri in porta, quote), lo snapshot
+contiene 14 colonne da fonti esterne (`NaN` dove la fonte non copre):
+
+| Colonne | Fonte | Note |
+|---|---|---|
+| `home_xg`, `away_xg`, `home_npxg`, `away_npxg` | Understat | xG e xG senza rigori; **100% delle partite** |
+| `home_ppda`, `away_ppda`, `home_deep`, `away_deep` | Understat | pressing e passaggi profondi |
+| `home_squad_value`, `away_squad_value` | Transfermarkt | valore rosa (EUR) all'inizio stagione (valutazioni ≤ 1 settembre, **niente look-ahead**); pubblicato solo con copertura ≥85% dei minuti, altrimenti `NaN` |
+| `home_absent_count_est`, `away_absent_count_est`, `home_absent_value_est`, `away_absent_value_est` | Transfermarkt | assenze per infortunio alla data della partita: **stime** (suffisso `_est`), rosa ricostruita dai minutaggi Understat |
+
+Il join usa la chiave `(season, home_team, away_team)` con nomi squadra
+canonicalizzati (alias in `sources.TEAM_ALIASES`); la data serve solo da
+controllo di coerenza.
 
 Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
 congelato (nessun download per run), quindi i risultati sono riproducibili identici.
 Ogni backtest è inoltre registrato in `experiments/runs.jsonl` con l'impronta dei
 dati usati (vedi `experiments/README.md`).
 
-### Fonte originale
+### Fonti originali
 
-L'ambiente di sviluppo cloud non raggiunge direttamente `football-data.co.uk`
-(policy di rete), quindi si usa un mirror su GitHub con **lo stesso formato**.
-Girando il progetto in locale è sufficiente sostituire `BASE_URL` in
-`src/data/sources.py` con l'URL ufficiale.
+L'ambiente di sviluppo cloud non raggiunge direttamente `football-data.co.uk`,
+`understat.com` né `transfermarkt.com` (policy di rete), quindi si usano mirror
+su GitHub con **lo stesso formato**:
+
+- **football-data** e **Understat**: stesso repo mirror (aggiornato da un
+  workflow giornaliero) — URL in `sources.BASE_URL` / `sources.UNDERSTAT_URL`;
+- **Transfermarkt**: datalake `salimt/football-datasets` — URL in
+  `sources.TRANSFERMARKT_MIRROR_URL`. Limite noto: ~25% dei profili è privo di
+  serie di valutazioni (per questo alcune squadre-stagione hanno `squad_value = NaN`).
+
+Girando il progetto in locale è sufficiente sostituire gli URL in
+`src/data/sources.py` con quelli ufficiali (per Understat c'è già
+`UNDERSTAT_OFFICIAL_URL`).
