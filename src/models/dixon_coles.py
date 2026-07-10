@@ -40,6 +40,13 @@ from scipy.special import gammaln
 # Penalita' che fissa l'unica indeterminazione del modello (vedi nota in fit()).
 _IDENTIFIABILITY_PENALTY = 1e4
 
+# Segnali secondari mescolabili col modello-gol (colonne dello schema interno).
+_BLEND_SIGNALS: dict[str, tuple[str, str]] = {
+    "sot": ("home_sot", "away_sot"),      # tiri in porta (Fase 3)
+    "xg": ("home_xg", "away_xg"),         # expected goals reali (Fase 4b)
+    "npxg": ("home_npxg", "away_npxg"),   # xG senza rigori
+}
+
 
 @dataclass
 class MatchPrediction:
@@ -104,6 +111,7 @@ class DixonColesModel:
         max_goals: int = 10,
         shrinkage: float = 0.0,
         shots_blend: float = 1.0,
+        blend_signal: str = "sot",
     ):
         """
         Args:
@@ -117,18 +125,26 @@ class DixonColesModel:
                 il contributo dei dati cresce col numero di partite, l'effetto e'
                 AUTOMATICAMENTE piu' forte sulle squadre con pochi dati
                 (neopromosse, inizio stagione). 0 = nessuna regolarizzazione.
-            shots_blend: peso alpha del segnale GOL rispetto ai TIRI IN PORTA nella
-                stima dei gol attesi. I gol sono rumorosi (fortuna sotto porta); i
-                tiri in porta misurano le occasioni con meno rumore. Si allena un
-                modello sui gol e uno sui tiri in porta, e si mescolano i tassi:
-                    gol_attesi = alpha * (dai gol) + (1-alpha) * (dai tiri in porta)
-                alpha=1 -> solo gol (modello classico); alpha=0 -> solo tiri in
-                porta; valori intermedi -> miscela. Tarabile via scripts/tune.py.
+            shots_blend: peso alpha del segnale GOL rispetto al SEGNALE SECONDARIO
+                (vedi blend_signal) nella stima dei gol attesi. I gol sono rumorosi
+                (fortuna sotto porta); il segnale secondario misura le occasioni con
+                meno rumore. Si allena un modello sui gol e uno sul segnale, e si
+                mescolano i tassi:
+                    gol_attesi = alpha * (dai gol) + (1-alpha) * (dal segnale)
+                alpha=1 -> solo gol (modello classico); alpha=0 -> solo segnale;
+                valori intermedi -> miscela. Tarabile via scripts/tune.py.
+            blend_signal: quale segnale secondario mescolare quando shots_blend < 1:
+                "sot" = tiri in porta (Fase 3, non aiuta), "xg" = expected goals
+                reali (Fase 4b, qualita' delle occasioni), "npxg" = xG senza rigori.
         """
+        if blend_signal not in _BLEND_SIGNALS:
+            raise ValueError(f"blend_signal sconosciuto: {blend_signal!r} "
+                             f"(usa uno di {list(_BLEND_SIGNALS)})")
         self.half_life_days = half_life_days
         self.max_goals = max_goals
         self.shrinkage = shrinkage
         self.shots_blend = shots_blend
+        self.blend_signal = blend_signal
 
         # Parametri stimati sui GOL (riempiti da fit()).
         self.teams: list[str] = []
@@ -137,11 +153,12 @@ class DixonColesModel:
         self.home_advantage: float = 0.0
         self.rho: float = 0.0
 
-        # Parametri stimati sui TIRI IN PORTA (solo se shots_blend < 1).
-        self.attack_sot: dict[str, float] = {}
-        self.defense_sot: dict[str, float] = {}
-        self.home_advantage_sot: float = 0.0
-        # Tasso di conversione tiri-in-porta -> gol (per riportare i tiri su scala gol).
+        # Parametri stimati sul SEGNALE SECONDARIO (solo se shots_blend < 1).
+        self.attack_sig: dict[str, float] = {}
+        self.defense_sig: dict[str, float] = {}
+        self.home_advantage_sig: float = 0.0
+        # Tasso di conversione segnale -> gol (per riportare il segnale su scala gol;
+        # per l'xG e' ~1, per i tiri in porta ~0.3).
         self.conv_home: float = 1.0
         self.conv_away: float = 1.0
 
@@ -201,30 +218,34 @@ class DixonColesModel:
         self.home_advantage = home_adv
         self.rho = rho
 
-        # --- Modello sui TIRI IN PORTA (solo se serve mescolarli) ---
+        # --- Modello sul SEGNALE SECONDARIO (solo se serve mescolarlo) ---
         if self.shots_blend < 1.0:
-            sot = train.dropna(subset=["home_sot", "away_sot"])
-            if sot.empty:
-                raise ValueError("shots_blend < 1 ma mancano i dati sui tiri in porta.")
-            s_home_idx = sot["home_team"].map(idx).to_numpy()
-            s_away_idx = sot["away_team"].map(idx).to_numpy()
-            s_weights = self._time_weights(sot["date"], as_of_date)
-            # I tiri in porta sono conteggi ad alto volume: niente correzione sui
+            home_col, away_col = _BLEND_SIGNALS[self.blend_signal]
+            sig = train.dropna(subset=[home_col, away_col])
+            if sig.empty:
+                raise ValueError(
+                    f"shots_blend < 1 ma mancano i dati del segnale "
+                    f"'{self.blend_signal}' ({home_col}/{away_col}).")
+            s_home_idx = sig["home_team"].map(idx).to_numpy()
+            s_away_idx = sig["away_team"].map(idx).to_numpy()
+            s_weights = self._time_weights(sig["date"], as_of_date)
+            sig_home = sig[home_col].to_numpy().astype(float)
+            sig_away = sig[away_col].to_numpy().astype(float)
+            # Segnale ad alto volume / continuo (tiri, xG): niente correzione sui
             # punteggi bassi (serve solo il tasso atteso, che poi convertiamo).
-            a_sot, d_sot, ha_sot, _ = self._fit_counts(
+            a_sig, d_sig, ha_sig, _ = self._fit_counts(
                 len(teams), s_home_idx, s_away_idx,
-                sot["home_sot"].to_numpy().astype(float),
-                sot["away_sot"].to_numpy().astype(float),
-                s_weights, use_correction=False,
+                sig_home, sig_away, s_weights, use_correction=False,
             )
-            self.attack_sot = {t: a_sot[idx[t]] for t in teams}
-            self.defense_sot = {t: d_sot[idx[t]] for t in teams}
-            self.home_advantage_sot = ha_sot
-            # Tasso di conversione: quanti gol per tiro in porta (pesato nel tempo).
-            self.conv_home = float(np.sum(s_weights * sot["home_goals"].to_numpy())
-                                   / np.sum(s_weights * sot["home_sot"].to_numpy()))
-            self.conv_away = float(np.sum(s_weights * sot["away_goals"].to_numpy())
-                                   / np.sum(s_weights * sot["away_sot"].to_numpy()))
+            self.attack_sig = {t: a_sig[idx[t]] for t in teams}
+            self.defense_sig = {t: d_sig[idx[t]] for t in teams}
+            self.home_advantage_sig = ha_sig
+            # Tasso di conversione segnale -> gol (pesato nel tempo). Porta il
+            # segnale su scala gol: ~1 per l'xG, ~0.3 per i tiri in porta.
+            self.conv_home = float(np.sum(s_weights * sig["home_goals"].to_numpy())
+                                   / np.sum(s_weights * sig_home))
+            self.conv_away = float(np.sum(s_weights * sig["away_goals"].to_numpy())
+                                   / np.sum(s_weights * sig_away))
 
         self.fitted = True
         return self
@@ -312,7 +333,8 @@ class DixonColesModel:
         """Gol attesi (lambda, mu). Squadre sconosciute = forza media (0).
 
         Se shots_blend < 1, mescola il tasso stimato dai gol con quello stimato
-        dai tiri in porta (convertito in scala gol): lam = a*lam_gol + (1-a)*lam_tiri.
+        dal segnale secondario (convertito in scala gol):
+        lam = a*lam_gol + (1-a)*lam_segnale.
         """
         # Tasso dai GOL.
         lam_g = math.exp(self.attack.get(home_team, 0.0)
@@ -321,15 +343,15 @@ class DixonColesModel:
                         + self.defense.get(home_team, 0.0))
 
         a = self.shots_blend
-        if a >= 1.0 or not self.attack_sot:
+        if a >= 1.0 or not self.attack_sig:
             return lam_g, mu_g
 
-        # Tasso dai TIRI IN PORTA, riportato su scala gol con il tasso di conversione.
-        lam_s = math.exp(self.attack_sot.get(home_team, 0.0)
-                         + self.defense_sot.get(away_team, 0.0)
-                         + self.home_advantage_sot) * self.conv_home
-        mu_s = math.exp(self.attack_sot.get(away_team, 0.0)
-                        + self.defense_sot.get(home_team, 0.0)) * self.conv_away
+        # Tasso dal SEGNALE SECONDARIO, riportato su scala gol con la conversione.
+        lam_s = math.exp(self.attack_sig.get(home_team, 0.0)
+                         + self.defense_sig.get(away_team, 0.0)
+                         + self.home_advantage_sig) * self.conv_home
+        mu_s = math.exp(self.attack_sig.get(away_team, 0.0)
+                        + self.defense_sig.get(home_team, 0.0)) * self.conv_away
 
         lam = a * lam_g + (1.0 - a) * lam_s
         mu = a * mu_g + (1.0 - a) * mu_s
@@ -382,13 +404,14 @@ class DixonColesModel:
             "max_goals": self.max_goals,
             "shrinkage": self.shrinkage,
             "shots_blend": self.shots_blend,
+            "blend_signal": self.blend_signal,
             "attack": self.attack,
             "defense": self.defense,
             "home_advantage": self.home_advantage,
             "rho": self.rho,
-            "attack_sot": self.attack_sot,
-            "defense_sot": self.defense_sot,
-            "home_advantage_sot": self.home_advantage_sot,
+            "attack_sig": self.attack_sig,
+            "defense_sig": self.defense_sig,
+            "home_advantage_sig": self.home_advantage_sig,
             "conv_home": self.conv_home,
             "conv_away": self.conv_away,
         }
@@ -400,14 +423,15 @@ class DixonColesModel:
             max_goals=data.get("max_goals", 10),
             shrinkage=data.get("shrinkage", 0.0),
             shots_blend=data.get("shots_blend", 1.0),
+            blend_signal=data.get("blend_signal", "sot"),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
         model.home_advantage = float(data["home_advantage"])
         model.rho = float(data["rho"])
-        model.attack_sot = dict(data.get("attack_sot", {}))
-        model.defense_sot = dict(data.get("defense_sot", {}))
-        model.home_advantage_sot = float(data.get("home_advantage_sot", 0.0))
+        model.attack_sig = dict(data.get("attack_sig", {}))
+        model.defense_sig = dict(data.get("defense_sig", {}))
+        model.home_advantage_sig = float(data.get("home_advantage_sig", 0.0))
         model.conv_home = float(data.get("conv_home", 1.0))
         model.conv_away = float(data.get("conv_away", 1.0))
         model.teams = sorted(model.attack)

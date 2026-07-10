@@ -34,13 +34,18 @@ from src.data import loader, sources
 # training abbondante grazie alle stagioni precedenti.
 DEFAULT_SEASONS = ["2324", "2425", "2526"]
 
+# Segnale secondario del blend, fisso durante uno sweep. Impostato in main();
+# i processi worker lo ereditano al fork (Linux).
+_BLEND_SIGNAL = "sot"
+
 
 def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
     """Esegue un backtest (stagione, emivita, shrinkage, shots_blend) e ne calcola
     tutte le metriche (via experiment_log.compute_metrics, fonte di verita' unica)."""
     season, half_life, shrinkage, shots_blend = task
     df = run_backtest("serie_a", season, half_life_days=half_life,
-                      shrinkage=shrinkage, shots_blend=shots_blend, verbose=False)
+                      shrinkage=shrinkage, shots_blend=shots_blend,
+                      blend_signal=_BLEND_SIGNAL, verbose=False)
     m = experiment_log.compute_metrics(df)
     return {
         "season": season,
@@ -70,8 +75,13 @@ def main() -> None:
                         help="shrinkage fisso quando non e' quello spazzato")
     parser.add_argument("--shots-blend", type=float, default=1.0,
                         help="shots_blend fisso quando non e' quello spazzato")
+    parser.add_argument("--blend-signal", default="sot", choices=["sot", "xg", "npxg"],
+                        help="segnale secondario del blend (sot=tiri, xg=xG reale)")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
+
+    global _BLEND_SIGNAL
+    _BLEND_SIGNAL = args.blend_signal
 
     def build(season: str, value: float) -> tuple[str, float | None, float, float]:
         hl, shr, sb = args.half_life, args.shrinkage, args.shots_blend
@@ -105,7 +115,8 @@ def main() -> None:
         config = {
             "league": "serie_a", "test_season": r["season"],
             "half_life_days": r["half_life"], "shrinkage": r["shrinkage"],
-            "shots_blend": r["shots_blend"], "source": "tune.py",
+            "shots_blend": r["shots_blend"], "blend_signal": _BLEND_SIGNAL,
+            "source": "tune.py",
         }
         experiment_log.append_run(
             experiment_log.make_record(config, r["metrics"], fingerprint))

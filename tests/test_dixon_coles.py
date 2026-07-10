@@ -129,10 +129,10 @@ def test_shots_blend_valid_and_backward_compatible():
         assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-6)
         assert p.prob_home_win > p.prob_away_win  # il forte in casa resta favorito
 
-    # alpha=1 non deve nemmeno stimare il modello sui tiri.
-    assert goals_only.attack_sot == {}
+    # alpha=1 non deve nemmeno stimare il modello sul segnale secondario.
+    assert goals_only.attack_sig == {}
     # alpha<1 deve averlo stimato e prodotto tassi di conversione plausibili.
-    assert blended.attack_sot != {}
+    assert blended.attack_sig != {}
     assert 0.1 < blended.conv_home < 1.0
 
 
