@@ -1,0 +1,163 @@
+"""Test dell'arricchimento dati: xG Understat, valori rosa e assenze TM.
+
+Tre famiglie di controlli:
+  1. allineamento nomi squadra/giocatore tra fonti (alias, normalizzazione);
+  2. correttezza del join xG su dati sintetici (nessuna partita persa,
+     orfani rilevati, idempotenza);
+  3. integrita' dello snapshot arricchito versionato (offline, nessuna rete).
+"""
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from src.data import database, sources, understat
+from src.data.transfermarkt import normalize_name
+from src.data.understat import XG_COLUMNS
+
+
+# ---------------------------------------------------------------- 1. nomi
+
+def test_alias_squadre_understat():
+    """I nomi Understat divergenti vanno mappati sui canonici football-data."""
+    assert sources.canonical_team("AC Milan") == "Milan"
+    assert sources.canonical_team("Parma Calcio 1913") == "Parma"
+    assert sources.canonical_team("SPAL 2013") == "Spal"
+    # I canonici restano invariati.
+    assert sources.canonical_team("Inter") == "Inter"
+    assert sources.canonical_team("Verona") == "Verona"
+
+
+def test_normalize_name_giocatori():
+    assert normalize_name("Danilo D&#039;Ambrosio") == "danilo d ambrosio"
+    assert normalize_name("Nicolás González") == "nicolas gonzalez"
+    assert normalize_name("Danilo (2)") == "danilo"            # suffisso TM
+    assert normalize_name("Simon Kjær") == "simon kjaer"       # translitterazione
+    assert normalize_name("Kenan Yıldız") == "kenan yildiz"
+    assert normalize_name("  Zlatan   Ibrahimović ") == "zlatan ibrahimovic"
+
+
+# ------------------------------------------------------------ 2. join xG
+
+def _partite_sintetiche() -> pd.DataFrame:
+    return pd.DataFrame({
+        "date": pd.to_datetime(["2024-08-20", "2024-08-21"]),
+        "season": ["2425", "2425"],
+        "league": ["serie_a", "serie_a"],
+        "home_team": ["Milan", "Parma"],
+        "away_team": ["Inter", "Spal"],
+        "home_goals": [1, 0],
+        "away_goals": [1, 2],
+    })
+
+
+def _xg_sintetico() -> pd.DataFrame:
+    riga = {c: 1.0 for c in XG_COLUMNS}
+    return pd.DataFrame([
+        # nomi come li fornirebbe Understat: alias da risolvere
+        {"season": "2425", "home_team": "Milan", "away_team": "Inter",
+         "understat_date": pd.Timestamp("2024-08-20"), **riga},
+    ])
+
+
+def test_add_xg_join_senza_perdite(monkeypatch):
+    """Il join non deve perdere partite; dove manca l'xG restano NaN."""
+    monkeypatch.setattr(understat, "season_xg",
+                        lambda code, league="serie_a", force=False: _xg_sintetico())
+    out = understat.add_xg(_partite_sintetiche())
+    assert len(out) == 2                                  # nessuna riga persa
+    assert out.loc[out.home_team == "Milan", "home_xg"].item() == 1.0
+    assert out.loc[out.home_team == "Parma", "home_xg"].isna().all()
+
+
+def test_add_xg_idempotente(monkeypatch):
+    monkeypatch.setattr(understat, "season_xg",
+                        lambda code, league="serie_a", force=False: _xg_sintetico())
+    una = understat.add_xg(_partite_sintetiche())
+    due = understat.add_xg(una)                           # seconda passata
+    pd.testing.assert_frame_equal(una, due)
+
+
+def test_add_xg_duplicati_rifiutati(monkeypatch):
+    doppio = pd.concat([_xg_sintetico()] * 2, ignore_index=True)
+    monkeypatch.setattr(understat, "season_xg",
+                        lambda code, league="serie_a", force=False: doppio)
+    with pytest.raises(ValueError):
+        understat.add_xg(_partite_sintetiche())
+
+
+# ------------------------------------------- 3. snapshot arricchito (offline)
+
+COLONNE_BASE = [
+    "date", "season", "league", "home_team", "away_team",
+    "home_goals", "away_goals", "result", "home_sot", "away_sot",
+    "odds_home", "odds_draw", "odds_away", "odds_over25", "odds_under25",
+]
+COLONNE_NUOVE = XG_COLUMNS + [
+    "home_squad_value", "away_squad_value",
+    "home_absent_count_est", "away_absent_count_est",
+    "home_absent_value_est", "away_absent_value_est",
+]
+
+
+@pytest.fixture(scope="module")
+def snapshot() -> pd.DataFrame:
+    if not database.SNAPSHOT_PATH.exists():
+        pytest.skip("snapshot non presente")
+    return database.read_snapshot()
+
+
+def test_snapshot_schema(snapshot):
+    """Colonne originali intatte (e per prime), nuove colonne presenti."""
+    assert list(snapshot.columns[: len(COLONNE_BASE)]) == COLONNE_BASE
+    assert set(COLONNE_NUOVE) <= set(snapshot.columns)
+
+
+def test_snapshot_chiave_unica(snapshot):
+    assert not snapshot.duplicated(["season", "home_team", "away_team"]).any()
+
+
+def test_snapshot_xg_completo(snapshot):
+    """xG presente per OGNI partita di OGNI stagione (380/380)."""
+    per_stagione = snapshot.groupby("season")["home_xg"].apply(
+        lambda s: s.notna().all()
+    )
+    assert per_stagione.all(), per_stagione[~per_stagione]
+    assert snapshot[["away_xg", "home_npxg", "away_npxg"]].notna().all().all()
+
+
+def test_snapshot_xg_plausibile(snapshot):
+    assert snapshot["home_xg"].between(0, 8).all()
+    assert snapshot["away_xg"].between(0, 8).all()
+    # npxG non puo' superare l'xG totale della stessa squadra.
+    assert (snapshot["home_npxg"] <= snapshot["home_xg"] + 1e-9).all()
+    # In media il fattore campo deve vedersi anche nell'xG.
+    assert snapshot["home_xg"].mean() > snapshot["away_xg"].mean()
+
+
+def test_snapshot_valori_rosa(snapshot):
+    """Copertura minima e ordini di grandezza sensati (niente look-ahead
+    garantito a monte: valutazioni <= 1 settembre della stagione)."""
+    entrambe = (snapshot["home_squad_value"].notna()
+                & snapshot["away_squad_value"].notna())
+    per_stagione = entrambe.groupby(snapshot["season"]).mean()
+    assert (per_stagione >= 0.60).all(), per_stagione
+    valori = pd.concat([snapshot["home_squad_value"],
+                        snapshot["away_squad_value"]]).dropna()
+    assert valori.between(10e6, 1500e6).all()
+
+
+def test_snapshot_assenze_stimate(snapshot):
+    conteggi = pd.concat([snapshot["home_absent_count_est"],
+                          snapshot["away_absent_count_est"]]).dropna()
+    assert conteggi.between(0, 25).all()
+    valori = pd.concat([snapshot["home_absent_value_est"],
+                        snapshot["away_absent_value_est"]]).dropna()
+    assert (valori >= 0).all()
+
+
+def test_snapshot_base_invariata(snapshot):
+    """La parte congelata non deve cambiare con l'arricchimento."""
+    assert len(snapshot) == 3420
+    assert snapshot.groupby("season").size().eq(380).all()
+    assert snapshot["home_goals"].between(0, 15).all()
