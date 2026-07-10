@@ -153,6 +153,7 @@ class DixonColesModel:
         shots_blend: float = 1.0,
         blend_signal: str = "sot",
         covariates: tuple[str, ...] = (),
+        promoted_prior: tuple[float, float] | None = None,
     ):
         """
         Args:
@@ -183,6 +184,15 @@ class DixonColesModel:
                 agli altri parametri. Combinarne piu' di una cattura (in fit
                 congiunto) il loro contributo reciproco. () = nessuna covariata
                 (modello identico a prima).
+            promoted_prior: prior di cold-start per le NEOPROMOSSE (Fase 7). Coppia
+                ``(delta_att, delta_def)`` in unita' di log-tasso: il bersaglio
+                dello shrinkage per le squadre passate a ``fit(promoted_teams=...)``
+                diventa attacco ``-delta_att`` e difesa ``+delta_def`` (piu' debole)
+                invece di 0 (la media). Storicamente le neopromosse segnano ~20% in
+                meno e subiscono ~25% in piu' (delta ~0.23): il modello base, senza
+                storico, le sovrastima. Una neopromossa con 0 partite finisce
+                esattamente sul prior; man mano che gioca, i dati lo sovrastano
+                (stesso meccanismo dello shrinkage). None = disattivato.
         """
         if blend_signal not in _BLEND_SIGNALS:
             raise ValueError(f"blend_signal sconosciuto: {blend_signal!r} "
@@ -197,6 +207,7 @@ class DixonColesModel:
         self.shots_blend = shots_blend
         self.blend_signal = blend_signal
         self.covariates = tuple(covariates)
+        self.promoted_prior = promoted_prior
 
         # Parametri stimati sui GOL (riempiti da fit()).
         self.teams: list[str] = []
@@ -262,6 +273,7 @@ class DixonColesModel:
         self,
         matches: pd.DataFrame,
         as_of_date: pd.Timestamp | None = None,
+        promoted_teams: set[str] | None = None,
     ) -> "DixonColesModel":
         """Stima i parametri via massima verosimiglianza pesata.
 
@@ -273,6 +285,10 @@ class DixonColesModel:
             as_of_date: momento "presente". Le partite successive sono ignorate
                 e il decadimento temporale e' calcolato rispetto a questa data.
                 Default: il giorno dopo l'ultima partita disponibile.
+            promoted_teams: squadre a cui applicare il ``promoted_prior`` (Fase 7).
+                Vengono incluse nel modello anche se non hanno ancora partite nel
+                training (inizio stagione), cosi' partono dal prior invece che
+                dalla media. Ignorato se ``promoted_prior`` non e' impostato.
         """
         if as_of_date is None:
             as_of_date = matches["date"].max() + pd.Timedelta(days=1)
@@ -281,9 +297,21 @@ class DixonColesModel:
         if train.empty:
             raise ValueError("Nessuna partita disponibile prima di as_of_date.")
 
-        teams = sorted(set(train["home_team"]) | set(train["away_team"]))
+        # Le neopromosse col prior entrano nel modello anche a 0 partite: senza
+        # dati lo shrinkage le porta esattamente sul prior (cold-start onesto).
+        prior_teams = (promoted_teams or set()) if self.promoted_prior else set()
+        teams = sorted(set(train["home_team"]) | set(train["away_team"]) | prior_teams)
         idx = {t: k for k, t in enumerate(teams)}
         self.teams = teams
+
+        # Bersaglio dello shrinkage: 0 (media) per tutti, spostato per le promosse.
+        attack_prior = np.zeros(len(teams))
+        defense_prior = np.zeros(len(teams))
+        if self.promoted_prior and prior_teams:
+            d_att, d_def = self.promoted_prior
+            for t in prior_teams:
+                attack_prior[idx[t]] = -d_att   # segna meno
+                defense_prior[idx[t]] = d_def   # subisce di piu'
 
         # --- Covariate (Fase 4c): impara la standardizzazione sul training ---
         for name in self.covariates:
@@ -307,6 +335,7 @@ class DixonColesModel:
             train["home_goals"].to_numpy().astype(float),
             train["away_goals"].to_numpy().astype(float),
             weights, use_correction=True, cov_lam=cov_lam,
+            attack_prior=attack_prior, defense_prior=defense_prior,
         )
         self.attack = {t: attack[idx[t]] for t in teams}
         self.defense = {t: defense[idx[t]] for t in teams}
@@ -333,6 +362,7 @@ class DixonColesModel:
             a_sig, d_sig, ha_sig, _, _ = self._fit_counts(
                 len(teams), s_home_idx, s_away_idx,
                 sig_home, sig_away, s_weights, use_correction=False,
+                attack_prior=attack_prior, defense_prior=defense_prior,
             )
             self.attack_sig = {t: a_sig[idx[t]] for t in teams}
             self.defense_sig = {t: d_sig[idx[t]] for t in teams}
@@ -357,6 +387,8 @@ class DixonColesModel:
         weights: np.ndarray,
         use_correction: bool,
         cov_lam: np.ndarray | None = None,
+        attack_prior: np.ndarray | None = None,
+        defense_prior: np.ndarray | None = None,
     ) -> tuple[np.ndarray, np.ndarray, float, float, np.ndarray]:
         """Stima attacco/difesa/vantaggio-casa/rho (+ beta covariate) via ML
         pesata su generici conteggi (gol o segnale). Ritorna
@@ -366,7 +398,11 @@ class DixonColesModel:
         (adatta ai gol). Per il segnale secondario la disattiviamo (rho=0).
         cov_lam: matrice [n_partite x k] del contributo covariata al tasso di
         CASA (per l'ospite si usa il segno opposto). k=0 -> nessuna covariata.
+        attack_prior/defense_prior: bersaglio dello shrinkage per squadra (Fase 7).
+        None -> 0 per tutti (comportamento classico: shrinkage verso la media).
         """
+        a_prior = np.zeros(n) if attack_prior is None else attack_prior
+        d_prior = np.zeros(n) if defense_prior is None else defense_prior
         log_fact = gammaln(home_counts + 1.0) + gammaln(away_counts + 1.0)
         k = 0 if cov_lam is None else cov_lam.shape[1]
 
@@ -393,11 +429,12 @@ class DixonColesModel:
             # La fissiamo imponendo media(attacco) = 0.
             penalty = _IDENTIFIABILITY_PENALTY * attack.mean() ** 2
             if self.shrinkage > 0.0:
-                penalty += self.shrinkage * (np.sum(attack ** 2) + np.sum(defense ** 2))
+                penalty += self.shrinkage * (np.sum((attack - a_prior) ** 2)
+                                             + np.sum((defense - d_prior) ** 2))
             return -weighted + penalty
 
         x0 = np.concatenate([
-            np.zeros(n), np.zeros(n), np.array([0.25]), np.array([-0.05]),
+            a_prior, d_prior, np.array([0.25]), np.array([-0.05]),
             np.zeros(k),
         ])
         rho_bounds = (-0.4, 0.4) if use_correction else (0.0, 0.0)
@@ -554,6 +591,7 @@ class DixonColesModel:
             "beta": self.beta,
             "cov_mean": self.cov_mean,
             "cov_std": self.cov_std,
+            "promoted_prior": list(self.promoted_prior) if self.promoted_prior else None,
         }
 
     @classmethod
@@ -565,6 +603,8 @@ class DixonColesModel:
             shots_blend=data.get("shots_blend", 1.0),
             blend_signal=data.get("blend_signal", "sot"),
             covariates=tuple(data.get("covariates", ())),
+            promoted_prior=(tuple(data["promoted_prior"])
+                            if data.get("promoted_prior") else None),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])

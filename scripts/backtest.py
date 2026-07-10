@@ -36,6 +36,22 @@ from src.evaluation import experiment_log
 from src.models.dixon_coles import DixonColesModel
 
 
+def promoted_teams(all_matches: pd.DataFrame, test_season: str) -> set[str]:
+    """Squadre presenti nella stagione ``test_season`` ma non nella precedente
+    (neopromosse: poco o nessuno storico recente in Serie A)."""
+    seasons = list(sources.SEASONS)
+    if test_season not in seasons:
+        return set()
+    i = seasons.index(test_season)
+    if i == 0:
+        return set()
+    prev = all_matches[all_matches["season"] == seasons[i - 1]]
+    cur = all_matches[all_matches["season"] == test_season]
+    teams_prev = set(prev["home_team"]) | set(prev["away_team"])
+    teams_cur = set(cur["home_team"]) | set(cur["away_team"])
+    return teams_cur - teams_prev
+
+
 def run_backtest(
     league_key: str,
     test_season: str,
@@ -44,6 +60,7 @@ def run_backtest(
     shots_blend: float = 1.0,
     blend_signal: str = "sot",
     covariates: tuple[str, ...] = (),
+    promoted_prior: tuple[float, float] | None = None,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """Esegue il walk-forward e ritorna un DataFrame con una riga per partita."""
@@ -51,6 +68,11 @@ def run_backtest(
     test = all_matches[all_matches["season"] == test_season].copy()
     if test.empty:
         raise SystemExit(f"Nessun dato per la stagione di test {test_season}.")
+
+    # Neopromosse = presenti nella stagione di test ma non nella precedente
+    # (poco/nessuno storico in Serie A: il modello base le sovrastima). Servono
+    # solo se e' attivo il prior di cold-start (Fase 7).
+    promoted = promoted_teams(all_matches, test_season) if promoted_prior else set()
 
     # Raggruppiamo la stagione di test per settimana solare: rialleniamo una
     # volta a settimana (realistico) invece che ad ogni singola partita.
@@ -64,8 +86,8 @@ def run_backtest(
         as_of = group["date"].min()
         model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage,
                                 shots_blend=shots_blend, blend_signal=blend_signal,
-                                covariates=covariates)
-        model.fit(all_matches, as_of_date=as_of)
+                                covariates=covariates, promoted_prior=promoted_prior)
+        model.fit(all_matches, as_of_date=as_of, promoted_teams=promoted)
         if verbose:
             print(f"  settimana {w}/{n_weeks}  ({as_of.date()}): "
                   f"{len(group)} partite, allenato su {(all_matches['date'] < as_of).sum()} gare",
@@ -148,6 +170,11 @@ def main() -> None:
     parser.add_argument("--covariates", nargs="*", default=[],
                         choices=["squad_value", "absence", "rest", "rest_full"],
                         help="covariate di partita da aggiungere (Fase 4c)")
+    parser.add_argument("--promoted-prior", type=float, default=None, metavar="DELTA",
+                        help="prior di cold-start per le neopromosse (Fase 7): "
+                             "sposta il bersaglio dello shrinkage a attacco -DELTA / "
+                             "difesa +DELTA (piu' debole). Stima storica DELTA~0.23. "
+                             "Assente = disattivato.")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",
@@ -158,10 +185,12 @@ def main() -> None:
           f"({sources.season_label(args.test_season)}), "
           f"emivita {args.half_life_days:.0f}g, shrinkage {args.shrinkage}, "
           f"shots_blend {args.shots_blend} ({args.blend_signal})")
+    prior = ((args.promoted_prior, args.promoted_prior)
+             if args.promoted_prior is not None else None)
     df = run_backtest(args.league, args.test_season, args.half_life_days,
                       shrinkage=args.shrinkage, shots_blend=args.shots_blend,
                       blend_signal=args.blend_signal, covariates=tuple(args.covariates),
-                      verbose=not args.quiet)
+                      promoted_prior=prior, verbose=not args.quiet)
 
     m = experiment_log.compute_metrics(df)
     report(m, len(df))
@@ -175,6 +204,7 @@ def main() -> None:
         "shots_blend": args.shots_blend,
         "blend_signal": args.blend_signal,
         "covariates": list(args.covariates),
+        "promoted_prior": args.promoted_prior,
     }
     all_matches = loader.load_league(args.league)
     record = experiment_log.make_record(

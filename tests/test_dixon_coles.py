@@ -162,6 +162,45 @@ def test_rest_full_covariate_registered_and_usable():
     assert p.prob_home_win > p.prob_away_win  # il forte in casa resta favorito
 
 
+def test_promoted_prior_weakens_newcomer():
+    """Il prior di cold-start (Fase 7) fa partire una neopromossa senza storico
+    come piu' debole della media (attacco<0, difesa>0), rendendo piu' probabile
+    che una squadra forte le vinca. Con prior=None, la neopromossa e' sconosciuta
+    -> media (retrocompatibilita')."""
+    matches = _synthetic_matches(n_seasons=4)
+
+    # Senza prior: "Neo" non ha storico -> trattata come media.
+    base = DixonColesModel(half_life_days=None, shrinkage=1.5).fit(matches)
+    p_base = base.predict_match("Forte", "Neo")
+
+    # Con prior: "Neo" entra nel modello e parte dal prior (piu' debole).
+    prior = DixonColesModel(half_life_days=None, shrinkage=1.5,
+                            promoted_prior=(0.23, 0.23))
+    prior.fit(matches, promoted_teams={"Neo"})
+    assert "Neo" in prior.teams
+    assert prior.attack["Neo"] < 0.0        # segna meno della media
+    assert prior.defense["Neo"] > 0.0       # subisce piu' della media
+    p_prior = prior.predict_match("Forte", "Neo")
+    assert p_prior.prob_home_win > p_base.prob_home_win
+
+    # Retrocompat: senza promoted_teams il prior non cambia le squadre note.
+    same = DixonColesModel(half_life_days=None, shrinkage=1.5,
+                           promoted_prior=(0.23, 0.23)).fit(matches)
+    p_same = same.predict_match("Forte", "Debole")
+    assert abs(p_same.prob_home_win - base.predict_match("Forte", "Debole").prob_home_win) < 1e-6
+
+
+def test_promoted_prior_serialization_roundtrip():
+    matches = _synthetic_matches(n_seasons=3)
+    model = DixonColesModel(half_life_days=None, promoted_prior=(0.2, 0.25))
+    model.fit(matches, promoted_teams={"Neo"})
+    restored = DixonColesModel.from_dict(model.to_dict())
+    assert restored.promoted_prior == (0.2, 0.25)
+    p1 = model.predict_match("Forte", "Neo")
+    p2 = restored.predict_match("Forte", "Neo")
+    assert abs(p1.prob_home_win - p2.prob_home_win) < 1e-9
+
+
 def test_devig_sums_to_one():
     p = metrics.devig_1x2(2.0, 3.5, 4.0)
     assert p.sum() == pytest.approx(1.0, abs=1e-9)

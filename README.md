@@ -268,12 +268,17 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     su 1X2 log-loss) e non uniforme: **non entra** nella config ufficiale. Modulo
     `src/evaluation/calibration.py` disponibile per l'uso pratico. Conferma il
     **tetto pratico** dei dati attuali. Vedi `docs/DIARIO.md`, Fase 6.
-12. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
+12. ✅ **Fase 7** — **prior di cold-start per le neopromosse** (`--promoted-prior`):
+    sposta il bersaglio dello shrinkage sotto la media per le squadre senza
+    storico (δ≈0.23, stimato leave-future-out). È il **miglior guadagno interno**
+    trovato: −0.0011 medio complessivo (3-4× congestione/calibrazione) e −0.0039
+    sulle partite delle neopromosse, su **5 stagioni su 6**. Resta piccolo e non
+    batte il mercato; **off di default**, in attesa di decidere se renderlo config
+    ufficiale. Vedi `docs/DIARIO.md`, Fase 7.
+13. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
     GG/NG) / dati davvero nuovi, oppure **uso pratico** (comando di predizione).
-    Leva residua *dentro* il modello: prior di cold-start per le **neopromosse**
-    (perdita più grande e concentrata, +0.029 su ~28% delle partite).
-13. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-14. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+14. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+15. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

@@ -132,7 +132,11 @@ guadagno e' nel rumore (−0.0004 medio) → covariata off di default.
 **Fase 6:** ricalibrazione confidenza (temperature scaling, `scripts/calibrate.py`):
 il modello e' un po' **sottoconfidente** (T≈0.94, robusto) ma il guadagno e'
 trascurabile (−0.0003) → non entra nella config; modulo `src/evaluation/calibration.py`
-per l'uso pratico. **Prossimo bivio:** modello di classe diversa / dati nuovi,
-oppure uso pratico; leva residua dentro il modello = prior cold-start neopromosse.
+per l'uso pratico. **Fase 7:** **prior di cold-start neopromosse**
+(`--promoted-prior`, δ≈0.23 stimato leave-future-out): sposta il bersaglio dello
+shrinkage sotto la media per le squadre senza storico. **Miglior guadagno interno**
+(−0.0011 medio, −0.0039 sulle partite delle promosse, 5/6 stagioni) ma piccolo e
+non batte il mercato → **off di default**, da decidere se renderlo ufficiale.
+**Prossimo bivio:** modello di classe diversa / dati nuovi, oppure uso pratico.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

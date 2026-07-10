@@ -647,6 +647,73 @@ attuale.
 
 ---
 
+## Fase 7 — Prior di cold-start per le neopromosse (il miglior guadagno interno)
+
+**Obiettivo.** Aggredire la perdita piu' grande e concentrata individuata dal
+diagnostico: le **neopromosse** (+0.029 di log-loss su ~28% delle partite). Il
+modello, senza storico recente di Serie A per Como/Parma/Venezia..., le tratta
+come squadre di media forza e le **sovrastima**.
+
+**Ragionamento / ipotesi.** Le neopromosse sono strutturalmente piu' deboli
+(vengono dalla Serie B). Se diamo loro un **prior** sotto la media finche' non
+accumulano partite, il modello smette di sovrastimarle. Misura economica prima
+di costruire (protocollo): su tutte le 24 neopromosse 2018-2026, segnano in media
+**1.08 gol/partita vs 1.36 della lega** (−20%) e ne subiscono **1.72** (+26%), in
+modo consistente. In unita' di log-tasso: **δ ≈ 0.23** su attacco e difesa.
+
+**Alternative considerate.**
+- *Dove iniettare il prior*: (a) dati-fantasma per le promosse; (b) shrinkage
+  extra verso la media; (c) **spostare il bersaglio dello shrinkage** verso un
+  valore sotto la media. Scelto (c): riusa il meccanismo di shrinkage gia' nel
+  modello (penalita' L2 fissa), cambia solo il *bersaglio* per le promosse da 0 a
+  (−δ_att, +δ_def). Elegante: una promossa con **0 partite** finisce esattamente
+  sul prior; man mano che gioca, i dati lo sovrastano allo stesso ritmo con cui
+  lo shrinkage cede su qualsiasi squadra. Le promosse entrano nel modello anche a
+  0 partite (inizio stagione), non piu' trattate come "sconosciute = media".
+- *δ fisso vs stimato*: per evitare il look-ahead, δ e' stimato **leave-future-out**
+  (per la stagione S, solo dalle promosse delle stagioni < S). Applicato sia al
+  modello-gol sia al modello-xG del blend (la promossa e' piu' debole in entrambi).
+
+**Scelta.** Parametro `promoted_prior=(δ_att, δ_def)` nel modello + set
+`promoted_teams` passato a `fit` (calcolato dal backtest: presenti nella stagione
+di test, assenti nella precedente). Flag CLI `--promoted-prior DELTA`.
+
+**Risultato (1X2 log-loss, δ leave-future-out, 6 stagioni 2020-25 → 2025-26).**
+
+| Stagione | δ (att, def) | TUTTE base | TUTTE prior | Δ | NEOPROM base | NEOPROM prior | Δ |
+|---|:--:|--:|--:|--:|--:|--:|--:|
+| 2020-21 | (0.27, 0.23) | 0.9538 | 0.9533 | −0.0006 | 0.9475 | 0.9454 | −0.0022 |
+| 2021-22 | (0.26, 0.26) | 0.9887 | 0.9858 | −0.0029 | 0.9835 | 0.9736 | −0.0099 |
+| 2022-23 | (0.28, 0.26) | 0.9943 | 0.9914 | −0.0028 | 1.0291 | 1.0188 | −0.0103 |
+| 2023-24 | (0.27, 0.24) | 0.9848 | 0.9855 | +0.0007 | 0.9767 | 0.9792 | +0.0025 |
+| 2024-25 | (0.25, 0.23) | 0.9695 | 0.9693 | −0.0002 | 1.0250 | 1.0241 | −0.0009 |
+| 2025-26 | (0.24, 0.21) | 0.9932 | 0.9925 | −0.0008 | 0.9661 | 0.9634 | −0.0027 |
+| **MEDIA** | | **0.9807** | **0.9796** | **−0.0011** | **0.9880** | **0.9841** | **−0.0039** |
+
+**Lezione / cosa ne consegue.**
+1. **Il miglior guadagno interno trovato finora.** −0.0011 medio complessivo
+   (3-4× congestione −0.0004 e calibrazione −0.0003) e **−0.0039** dove doveva
+   colpire (partite con una neopromossa). Migliora **5 stagioni su 6** sia
+   complessivamente sia sul sottoinsieme. E' principiato (fatto strutturale), non
+   un parametro tirato a caso.
+2. **Non e' gratis ovunque**: il 2023-24 peggiora (+0.0007) perche' quel trio di
+   promosse (Genoa/Cagliari/Frosinone) era piu' vicino alla media — il prior le
+   sotto-stima. E' la varianza attesa: il prior scommette sulla regola generale,
+   e ogni tanto la promossa e' buona.
+3. **Resta piccolo e NON batte il mercato** (0.9796 vs ~0.963): utile per
+   previsioni piu' oneste su partite reali (soprattutto inizio stagione e squadre
+   neopromosse), non per un edge.
+4. **Adozione**: e' l'unico dei tre esperimenti "di spremitura" che supera il
+   rumore in modo consistente. Lasciato **disponibile ma OFF di default** (δ~0.23
+   consigliato via `--promoted-prior 0.23`) in attesa della decisione se renderlo
+   config ufficiale — cambiare i default e' una decisione, non un automatismo.
+
+**Riproducibilita'.** `python scripts/_run_fase7_promosse.py` (validazione su 6
+stagioni, δ leave-future-out), oppure singola cella:
+`python scripts/backtest.py --test-season 2122 --promoted-prior 0.23`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
