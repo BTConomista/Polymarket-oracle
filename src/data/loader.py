@@ -161,6 +161,31 @@ def enrich(matches: pd.DataFrame, *, force_download: bool = False) -> pd.DataFra
     return matches
 
 
+def add_rest_days(matches: pd.DataFrame, cap: int = 14) -> pd.DataFrame:
+    """Aggiunge home_rest_days / away_rest_days: giorni dall'ultima partita di
+    ciascuna squadra (fatica / congestione di calendario).
+
+    Feature derivata, deterministica e INDIPENDENTE dai risultati: cattura la
+    stanchezza, che il modello gol/xG non puo' dedurre. Rispetta la cronologia
+    (usa solo partite precedenti -> niente look-ahead). Prima partita di una
+    squadra nei dati -> NaN (covariata neutra). Cap a ``cap`` giorni: oltre due
+    settimane il recupero e' completo, conta solo la congestione.
+    """
+    df = matches.sort_values("date").reset_index(drop=True)
+    last_seen: dict[str, pd.Timestamp] = {}
+    home_rest, away_rest = [], []
+    for _, r in df.iterrows():
+        d = r["date"]
+        for team, out in ((r["home_team"], home_rest), (r["away_team"], away_rest)):
+            prev = last_seen.get(team)
+            out.append(min((d - prev).days, cap) if prev is not None else float("nan"))
+        last_seen[r["home_team"]] = d
+        last_seen[r["away_team"]] = d
+    df["home_rest_days"] = home_rest
+    df["away_rest_days"] = away_rest
+    return df
+
+
 def load_league(
     league_key: str = "serie_a",
     season_codes: list[str] | None = None,
@@ -189,6 +214,9 @@ def load_league(
     if (not force_download and league_key == "serie_a"
             and database.SNAPSHOT_PATH.exists()):
         df = database.read_snapshot()
+        # Riposo calcolato su TUTTE le stagioni (per avere la partita precedente
+        # a cavallo tra stagioni), poi si filtra alle stagioni richieste.
+        df = add_rest_days(df)
         wanted = {str(s) for s in seasons}
         df = df[df["season"].isin(wanted)]
         return df.sort_values("date").reset_index(drop=True)
@@ -202,4 +230,5 @@ def load_league(
     combined = pd.concat(frames, ignore_index=True)
     combined = combined.sort_values("date").reset_index(drop=True)
     combined = enrich(combined, force_download=force_download)
+    combined = add_rest_days(combined)
     return combined
