@@ -387,6 +387,43 @@ gia' tarati. Guadagno piccolo (~0.0007) ma su entrambi i mercati e ben fondato.
 
 ---
 
+## Fase 5 — Grande backtest multi-mercato: per cosa il modello serve davvero
+
+**Obiettivo.** Allargare lo sguardo oltre 1X2/OU: GG/NG (entrambe segnano) e
+doppie chance (1X/2X/12). Sono tutti derivabili GRATIS dalla stessa matrice dei
+punteggi. Grande operazione: 2 config (gol base vs ufficiale gol+xG) x 6 stagioni
+x tutti i mercati.
+
+**Risultato (log-loss medio 6 stagioni).**
+
+| Mercato | gol+xG (uff.) | Mercato | Baseline |
+|---|---:|---:|---:|
+| 1X2 | 0.9807 | 0.9632 | 1.0834 |
+| Over/Under 2.5 | 0.6884 | 0.6816 | 0.6892 |
+| GG/NG | 0.6896 | — | 0.6871 |
+| 1X (casa o pari) | 0.5497 | 0.5371 | 0.6303 |
+| 2X (ospite o pari) | 0.5966 | 0.5833 | 0.6744 |
+| 12 (no pari) | 0.5766 | 0.5746 | 0.5820 |
+
+**Lettura.**
+- **Bravo (batte nettamente la baseline): 1X2, 1X, 2X** — i mercati d'ESITO. Il
+  modello stima bene chi vince; tutto cio' che ne deriva funziona.
+- **Debole: Over/Under** (baseline di un soffio) e **12/no-pari** (~pari a mercato
+  e baseline: i pareggi sono quasi casuali per tutti).
+- **NEGATIVO: GG/NG e' PEGGIO della baseline** (0.6896 vs 0.6871). La probabilita'
+  congiunta "entrambe segnano" dipende dalla correlazione tra i due punteggi, che
+  il modello (Poisson quasi-indipendenti + correzione DC solo sui punteggi bassi)
+  cattura male: sul GG aggiunge rumore, non segnale.
+- La config gol+xG e' uniformemente >= alla base solo-gol: config ufficiale
+  validata anche multi-mercato. **Nessun mercato batte le quote.**
+
+**Lezione / cosa ne consegue.** Il motore e' uno strumento d'analisi affidabile
+per i mercati d'ESITO (1X2, doppie chance), NON per il GG/NG (lì meglio la media)
+e a malapena per l'Over/Under. Un'eventuale prossima mossa sul modello sarebbe
+proprio la **correlazione dei punteggi** (es. bivariate Poisson) per il GG/NG.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

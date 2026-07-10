@@ -216,6 +216,7 @@ python scripts/download_data.py     # scarica i dati storici (una volta)
 python scripts/backtest.py          # esegue il backtest sulla stagione 2025-26
 python scripts/analyze.py           # analizza gli errori del backtest
 python scripts/tune.py --sweep shrinkage          # tara un iperparametro su piu' stagioni
+python scripts/markets.py           # grande backtest su TUTTI i mercati (1X2, O/U, GG/NG, doppie chance)
 python -m pytest                    # esegue i test
 ```
 
@@ -246,11 +247,16 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
    **layer di covariate** (anche in combinazione): **risultato negativo** — non
    aggiungono segnale indipendente (già implicito in gol+xG). Modello al **tetto
    pratico** dei dati attuali.
-8. **Prossimo bivio** — o un modello di classe diversa / dati davvero nuovi
-   (formazioni ufficiali, meteo…), oppure passare all'**uso pratico** (comando di
-   predizione su partite future) accettando che il modello non batte il mercato.
-9. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-10. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+8. ✅ **Fase 4d** — ri-taratura congiunta: col blend xG l'emivita ottima passa a
+   **365g** (memoria più corta). Piccolo guadagno su entrambi i mercati.
+9. ✅ **Fase 5** — grande backtest **multi-mercato** (`scripts/markets.py`): il
+   modello è affidabile sui mercati d'**esito** (1X2, 1X, 2X, batte la baseline),
+   **debole** su Over/Under, e **peggio della baseline su GG/NG** (cattura male la
+   correlazione dei punteggi). Nessun mercato batte le quote. Vedi `docs/DIARIO.md`.
+10. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
+    GG/NG) / dati davvero nuovi, oppure **uso pratico** (comando di predizione).
+11. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+12. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 
