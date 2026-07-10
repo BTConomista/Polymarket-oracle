@@ -341,6 +341,13 @@ segnale residuo apparente (coeff +0.48). Ma il test vero e' walk-forward.
 - **Assenze: effetto nullo** (dato stimato e rumoroso; gli infortuni sono in parte
   gia' nei risultati recenti che il decadimento pesa).
 - **Nessuna sinergia** dalle combinazioni: unire segnali ~nulli da' ~nulla.
+- **Riposo/congestione (solo Serie A): non aiuta** (1X2 0.9817 vs 0.9813).
+  Motivo: calcolato dalle sole date di Serie A, NON vede coppe/Europa/nazionali —
+  proprio le partite che causano fatica asimmetrica. Quando tutta la lega gioca
+  infrasettimana, il riposo e' basso per entrambe -> la *differenza* e' ~0. Il
+  layer covariate "rest" resta: con un **calendario di club completo** (dato
+  nuovo) calcolerebbe la congestione vera. E' l'unico segnale "indipendente dai
+  risultati" rimasto con potenziale, ma va reperito.
 
 **Lezione.** Con questa fonte dati il modello ha raggiunto il suo **tetto
 pratico**: gol + xG + taratura. I dati extra (rosa, assenze) non aggiungono

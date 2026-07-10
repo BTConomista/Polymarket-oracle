@@ -144,7 +144,7 @@ def main() -> None:
                         help="segnale secondario da mescolare (default xg=xG reale; "
                              "sot=tiri in porta)")
     parser.add_argument("--covariates", nargs="*", default=[],
-                        choices=["squad_value", "absence"],
+                        choices=["squad_value", "absence", "rest"],
                         help="covariate di partita da aggiungere (Fase 4c)")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
