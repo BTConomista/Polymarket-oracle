@@ -81,11 +81,13 @@ def run_backtest(
                 "away_goals": m["away_goals"],
                 "result": m["result"],
                 "is_over": int(m["home_goals"] + m["away_goals"] >= 3),
+                "is_btts": int(m["home_goals"] >= 1 and m["away_goals"] >= 1),
                 # Probabilita' del modello
                 "m_home": pred.prob_home_win,
                 "m_draw": pred.prob_draw,
                 "m_away": pred.prob_away_win,
                 "m_over": pred.prob_over_2_5,
+                "m_btts": pred.prob_btts_yes,
                 # Quote di mercato (per il confronto)
                 "odds_home": m["odds_home"],
                 "odds_draw": m["odds_draw"],

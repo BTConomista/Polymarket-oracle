@@ -85,7 +85,22 @@ class MatchPrediction:
     prob_away_win: float
     prob_over_2_5: float
     prob_under_2_5: float
+    prob_btts_yes: float   # GG: entrambe segnano
+    prob_btts_no: float    # NG: almeno una non segna
     score_matrix: np.ndarray = field(repr=False)
+
+    # --- Mercati derivati (dalle stesse probabilita', gratis e coerenti) ---
+    @property
+    def prob_1x(self) -> float:      # doppia chance: casa o pareggio
+        return self.prob_home_win + self.prob_draw
+
+    @property
+    def prob_2x(self) -> float:      # doppia chance: ospite o pareggio
+        return self.prob_away_win + self.prob_draw
+
+    @property
+    def prob_12(self) -> float:      # doppia chance: casa o ospite (no pareggio)
+        return self.prob_home_win + self.prob_away_win
 
     def as_row(self) -> dict:
         """Versione "piatta" (senza la matrice) comoda per tabelle/CSV."""
@@ -99,6 +114,10 @@ class MatchPrediction:
             "prob_away_win": round(self.prob_away_win, 4),
             "prob_over_2_5": round(self.prob_over_2_5, 4),
             "prob_under_2_5": round(self.prob_under_2_5, 4),
+            "prob_btts_yes": round(self.prob_btts_yes, 4),
+            "prob_1x": round(self.prob_1x, 4),
+            "prob_2x": round(self.prob_2x, 4),
+            "prob_12": round(self.prob_12, 4),
         }
 
 
@@ -493,6 +512,9 @@ class DixonColesModel:
         prob_over = float(matrix[over_mask].sum())
         prob_under = 1.0 - prob_over
 
+        # GG (both teams to score): entrambe segnano almeno 1 -> celle i>=1, j>=1.
+        prob_btts_yes = float(matrix[1:, 1:].sum())
+
         return MatchPrediction(
             home_team=home_team,
             away_team=away_team,
@@ -503,6 +525,8 @@ class DixonColesModel:
             prob_away_win=prob_away,
             prob_over_2_5=prob_over,
             prob_under_2_5=prob_under,
+            prob_btts_yes=prob_btts_yes,
+            prob_btts_no=1.0 - prob_btts_yes,
             score_matrix=matrix,
         )
 
