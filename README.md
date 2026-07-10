@@ -31,21 +31,21 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
   settimanale, **senza look-ahead**), con Brier score e log-loss, confronto contro
   le quote di chiusura dei bookmaker e contro una baseline banale.
 
-### Risultati del backtest (stagione 2025-26, 380 partite)
+### Risultati del backtest (media su 6 stagioni, 2020-21 → 2025-26)
 
-| Mercato | Metrica | Modello | Baseline | Mercato (chiusura) |
-|---|---|---:|---:|---:|
-| **1X2** | log-loss | 0.9900 | 1.0851 | **0.9784** |
-| **1X2** | Brier | 0.5912 | 0.6579 | **0.5830** |
-| **O/U 2.5** | log-loss | 0.7029 | 0.6896 | **0.6996** |
-| **O/U 2.5** | Brier | 0.2548 | 0.2482 | **0.2530** |
+Metrica principale: **log-loss medio** su 6 stagioni di test (walk-forward, senza
+look-ahead). Usiamo la media di 6 stagioni — non una sola — perché una singola
+stagione è rumorosa (è il nostro principio: mai concludere da una stagione).
 
-_Configurazione ufficiale: shrinkage = 1.5, emivita = 730g, **blend gol/xG con
-α = 0.75** (vedi Fase 4b). Le scelte di config sono prese sulla **media di 6
-stagioni** (2020-21 → 2025-26), non su una sola: la 2025-26 qui mostrata è solo la
-vetrina. Nota: su questa singola stagione l'xG migliora l'Over/Under ma è appena
-sotto sull'1X2 — è variabilità di stagione; sulla media a 6 stagioni migliora
-entrambi._
+| Mercato | Modello | Baseline | Mercato (chiusura) |
+|---|---:|---:|---:|
+| **1X2** log-loss | 0.9807 | ~1.085 | **0.9632** |
+| **O/U 2.5** log-loss | 0.6884 | ~0.690 | **0.6816** |
+
+_Configurazione ufficiale: **blend gol/xG con α = 0.75**, shrinkage = 1.5, emivita
+= 365g (vedi Fasi 4b e 4d). Il modello batte nettamente la baseline e si avvicina
+al mercato (gap 1X2 ~+0.018), ma **non lo batte**. Su una singola stagione i numeri
+oscillano (es. la 2025-26 ha 1X2 ≈ 0.993): per questo si giudica sulla media._
 
 **Come leggerli** (più bassi = meglio):
 

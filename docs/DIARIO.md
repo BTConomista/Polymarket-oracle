@@ -354,10 +354,36 @@ pratico**: gol + xG + taratura. I dati extra (rosa, assenze) non aggiungono
 segnale *indipendente* out-of-sample perche' cio' che contengono e' gia' implicito
 nei risultati. Il diagnostico in-sample va sempre confermato walk-forward.
 
-**Config ufficiale invariata:** emivita 730g, shrinkage 1.5, blend gol/xG α=0.75,
+**Config (dopo la Fase 4d):** emivita 365g, shrinkage 1.5, blend gol/xG α=0.75,
 nessuna covariata. Il layer covariate resta (documentato, off di default),
 riutilizzabile per dati futuri davvero indipendenti (es. formazioni ufficiali
 last-minute, meteo, motivazione).
+
+---
+
+## Fase 4d — Ri-taratura congiunta: l'emivita si accorcia col blend xG
+
+**Obiettivo.** Shrinkage ed emivita erano stati tarati (Fase 2b) sul modello
+*solo-gol*. Con il blend xG (Fase 4b) attivo, l'ottimo potrebbe essere cambiato:
+interazione mai verificata. Ri-taratura a coordinate su 6 stagioni, alla config
+attuale (blend xG 0.75).
+
+**Risultato.** Lo shrinkage resta buono a 1.5. L'**emivita ottima si sposta da
+730g a ~365g** (una stagione): rifinita, minimo netto a 365 per *entrambi* i
+mercati.
+
+| emivita | 1X2 | O/U 2.5 |
+|---:|---:|---:|
+| 730 (vecchia) | 0.9813 | 0.6893 |
+| **365 (nuova)** | **0.9807** | **0.6884** |
+
+**Lezione.** Con un segnale meno rumoroso (l'xG), il modello puo' permettersi una
+**memoria piu' corta** / piu' reattiva senza rincorrere il rumore. E' un'interazione
+reale: cambiare una parte (aggiungere l'xG) sposta l'ottimo di un'altra (l'emivita).
+Per questo, dopo un cambiamento importante, conviene ri-verificare gli iperparametri
+gia' tarati. Guadagno piccolo (~0.0007) ma su entrambi i mercati e ben fondato.
+
+**Config ufficiale aggiornata:** blend gol/xG α=0.75, shrinkage 1.5, **emivita 365g**.
 
 ---
 

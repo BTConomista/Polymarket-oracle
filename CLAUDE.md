@@ -70,8 +70,8 @@ python -m pytest                       # test
 ```
 
 Config "ufficiale" corrente del modello (default in `backtest.py`): **emivita
-730g, shrinkage 1.5, shots_blend 0.75, blend_signal xg** (blend gol/xG reale,
-Fase 4b). Se la cambi, aggiorna README e diario.
+365g, shrinkage 1.5, shots_blend 0.75, blend_signal xg** (blend gol/xG reale,
+Fase 4b; emivita ri-tarata a 365g in Fase 4d). Se la cambi, aggiorna README e diario.
 
 ---
 
@@ -114,12 +114,13 @@ tests/           test unitari
 Vedi `docs/DIARIO.md` per la storia completa e `README.md` per lo stato sintetico.
 In breve: modello Dixon-Coles sui soli gol, tarato; **batte le baseline ma non il
 mercato**; i tiri in porta grezzi non aiutano (verificato su 6 stagioni).
-**Fase 4a-4c completate:** dati arricchiti (xG/npxG/PPDA/deep, valori rosa,
-assenze); il blend gol/**xG reale** (α=0.75) e' la config ufficiale (primo
-miglioramento da dati nuovi, soprattutto O/U). npxG≈xG; valori rosa e assenze
-(anche in combo) **non aiutano** out-of-sample (gia' impliciti in gol+xG): il
-modello e' al **tetto pratico** dei dati attuali. Esiste un layer covariate
-(off di default) per dati futuri davvero indipendenti.
+**Fase 4a-4d completate:** dati arricchiti (xG/npxG/PPDA/deep, valori rosa,
+assenze); config ufficiale = blend gol/**xG reale** (α=0.75) + emivita ri-tarata
+a **365g** (Fase 4d: col blend xG conviene memoria piu' corta). npxG≈xG; valori
+rosa, assenze e riposo-solo-SerieA (anche in combo) **non aiutano** out-of-sample
+(gia' impliciti in gol+xG, o confusi con la forza): il modello e' al **tetto
+pratico** dei dati attuali. Esiste un layer covariate (off di default) per dati
+futuri davvero indipendenti (es. calendario di club completo per la congestione).
 **Prossimo bivio:** modello di classe diversa / dati nuovi, oppure uso pratico
 (predizione su partite future).
 

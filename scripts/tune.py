@@ -70,7 +70,7 @@ def main() -> None:
                         default=[0.0, 1.0, 1.5, 3.0, 10.0],
                         help="valori da provare (per half_life_days, 0 = nessun decadimento)")
     parser.add_argument("--seasons", nargs="+", default=DEFAULT_SEASONS)
-    parser.add_argument("--half-life", type=float, default=730.0,
+    parser.add_argument("--half-life", type=float, default=365.0,
                         help="emivita fissa quando non e' quella spazzata")
     parser.add_argument("--shrinkage", type=float, default=1.5,
                         help="shrinkage fisso quando non e' quello spazzato")
