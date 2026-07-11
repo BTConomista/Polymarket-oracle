@@ -969,6 +969,59 @@ fissa `w_ospite=1` (2 parametri). Pesi tarati SOLO sulle stagioni precedenti
 
 ---
 
+## Fase 11 — Combinazioni delle feature off-di-default (nessuna e' utile)
+
+**Obiettivo.** Finora le feature opzionali erano state provate quasi sempre DA
+SOLE. Domanda: esiste una loro **combinazione** che, sul modello attuale (col
+prior), supera il rumore in modo consistente? Feature off-di-default:
+covariate `squad_value`, `absence`, `rest_full` (livello-modello) + ricalibrazione
+per-classe post-hoc (Fase 10).
+
+**Disegno.** Tutti i 2^3 = 8 sottoinsiemi delle covariate, ognuno **con e senza**
+la ricalibrazione per-classe strutturale (pesi fissi robusti casa 0.96 / pari
+1.04 / ospite 1.00, dalla Fase 10). 48 backtest walk-forward × 6 stagioni. Metrica:
+1X2 log-loss, Δ vs ufficiale (0.9797) e n. stagioni migliorate (consistenza).
+
+**Risultato (1X2 log-loss; Δ<0 = meglio).**
+
+| Combinazione | RAW | Δ | migl. | +RECAL | Δ | migl. |
+|---|--:|--:|:--:|--:|--:|:--:|
+| ufficiale (solo prior) | 0.9797 | — | — | 0.9789 | −0.0008 | 6/6 |
+| +squad_value | 0.9804 | +0.0007 | 1/6 | 0.9796 | −0.0001 | 3/6 |
+| +absence | 0.9796 | −0.0001 | 2/6 | 0.9789 | −0.0008 | 5/6 |
+| +rest_full | 0.9794 | −0.0003 | 2/6 | 0.9786 | −0.0011 | 4/6 |
+| +squad+absence | 0.9804 | +0.0007 | 1/6 | 0.9796 | −0.0001 | 3/6 |
+| +squad+rest_full | 0.9801 | +0.0004 | 2/6 | 0.9793 | −0.0004 | 4/6 |
+| +absence+rest_full | 0.9793 | −0.0004 | 3/6 | **0.9786** | **−0.0011** | 4/6 |
+| +tutte e tre | 0.9801 | +0.0004 | 2/6 | 0.9793 | −0.0004 | 2/6 |
+
+Multi-mercato (miglior combo vs ufficiale, pool 6 stagioni): gap 1X2 +0.0165→
++0.0161, doppie chance e O/U ~invariati, GG/NG identico (−0.0018). Nessun mercato
+beneficia.
+
+**Lezione / cosa ne consegue.**
+1. **Nessuna covariata aiuta, nemmeno in combinazione.** `squad_value` **peggiora**
+   in ogni mix (+0.0004/+0.0007); `absence` e `rest_full` sono ~neutre da sole e
+   la loro coppia da' il miglior RAW ma solo −0.0004 (3/6, rumore). Aggiungere
+   covariate non "impila" nulla: confermato che sono ridondanti con gol+xG (gia'
+   visto in Fase 4c, ora anche in combinazione e con la config attuale).
+2. **L'unico effetto additivo e' la ricalibrazione per-classe** (~−0.0008 coi
+   pesi fissi; l'onesto leave-future-out della Fase 10 e' −0.0005). Applicata al
+   modello base aiuta 6/6 stagioni, ma e' piccola e la conosciamo gia'.
+3. **La "miglior" combinazione (+absence+rest_full+recal, −0.0011) non e' una
+   vera vittoria**: il guadagno e' tutto della ricalibrazione (mildly ottimista
+   coi pesi fissi), il contributo delle covariate e' rumore, e migliora solo 4/6
+   stagioni — MENO del recal sul modello base (6/6). Le covariate qui **sporcano**
+   invece di aiutare.
+4. **Sesto esperimento interno di fila senza un guadagno robusto.** La risposta
+   alla domanda "c'e' una combinazione off-di-default utile?" e' **no**. Le
+   feature restano giustamente off; l'unica ha valore solo per l'uso pratico
+   (probabilita' un filo piu' oneste), non per un edge.
+
+**Riproducibilita'.** `python scripts/_run_combo_analysis.py`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

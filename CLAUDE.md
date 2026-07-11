@@ -147,7 +147,10 @@ nessun guadagno); vantaggio-casa per-squadra = **persistenza anno-su-anno r≈0.
 mercato); varia per stagione (peggio COVID 2020-21) e a U per forza-squadra.
 **Fase 10:** ricalibrazione per-classe 1X2 (`scripts/_run_class_recal.py`):
 conferma robusta casa-sovrastimata/pari-sottostimato ma guadagno nel rumore
-(−0.0005) → off. **Bilancio:** 5 esperimenti interni di fila nel rumore → il
+(−0.0005) → off. **Fase 11:** griglia combinazioni feature off-di-default
+(`scripts/_run_combo_analysis.py`): **nessuna combo utile** (squad_value peggiora,
+absence/rest_full rumore; l'unico effetto additivo e' la ricalibrazione gia' nota).
+**Bilancio:** 6 esperimenti interni di fila senza guadagno robusto → il
 modello e' al **tetto pratico**; ogni analisi punta al **Poisson bivariato**
 (correlazione punteggi) come prossimo salto. **Prossimo bivio:** cambio di classe
 / dati nuovi, oppure uso pratico.

@@ -293,10 +293,16 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     4/6 stagioni) → **non entra** nella config (come il temperature); funzioni in
     `src/evaluation/calibration.py` per l'uso pratico. Quinto esperimento interno
     di fila con guadagno nel rumore. Vedi `docs/DIARIO.md`, Fase 10.
-16. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per la
+16. ✅ **Fase 11** — **combinazioni delle feature off-di-default**
+    (`scripts/_run_combo_analysis.py`): griglia 8 combo covariate × con/senza
+    ricalibrazione, 6 stagioni. **Nessuna combinazione è utile**: `squad_value`
+    peggiora sempre, `absence`/`rest_full` sono rumore anche in coppia; l'unico
+    effetto additivo è la ricalibrazione (già nota, −0.0005/−0.0008). Sesto
+    esperimento interno di fila senza guadagno robusto. Vedi `docs/DIARIO.md`.
+17. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per la
     correlazione dei punteggi / GG/NG) / dati davvero nuovi, oppure **uso pratico**.
-17. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-18. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+18. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+19. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 
