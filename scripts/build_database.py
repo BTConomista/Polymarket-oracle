@@ -13,6 +13,10 @@ Due modalita':
                                                 # e aggiunge le colonne
                                                 # rest_days_full/midweek_europe
                                                 # allo snapshot (congestione vera)
+    python scripts/build_database.py --open-odds # aggancia le quote PRE-chiusura
+                                                # (colonne *_open, Fase 14) allo
+                                                # snapshot dai CSV grezzi (cache
+                                                # data/raw/, scarica se mancanti)
     python scripts/build_database.py --refresh  # riscarica TUTTO dalle fonti,
                                                 # arricchisce, aggiorna lo snapshot
                                                 # e ricostruisce il DB
@@ -43,6 +47,9 @@ def main() -> None:
     parser.add_argument("--fixtures", action="store_true",
                         help="assembla il calendario di club completo e aggiunge "
                              "le colonne rest_days_full/midweek_europe allo snapshot")
+    parser.add_argument("--open-odds", action="store_true",
+                        help="aggancia le quote pre-chiusura (colonne *_open) allo "
+                             "snapshot dai CSV grezzi football-data (Fase 14)")
     parser.add_argument("--league", default="serie_a")
     args = parser.parse_args()
 
@@ -87,6 +94,14 @@ def main() -> None:
         print(f"  snapshot aggiornato con congestione vera: {path}")
         print("\nCopertura calendario extra (coppe/Europa) per stagione:")
         print(fixtures_mod.coverage_report(fx).to_string(index=False))
+    elif args.open_odds:
+        # Aggancia le quote PRE-chiusura (linea "di apertura") allo snapshot
+        # esistente, dai CSV grezzi. La base congelata NON viene toccata: si
+        # aggiungono solo le colonne *_open (impronta dati invariata).
+        print(f"Aggancio le quote di apertura allo snapshot: {database.SNAPSHOT_PATH}")
+        matches = loader.add_open_odds(database.read_snapshot())
+        path = database.write_snapshot(matches)
+        print(f"  snapshot aggiornato con quote di apertura: {path}")
     else:
         print(f"Uso lo snapshot congelato: {database.SNAPSHOT_PATH}")
         matches = database.read_snapshot()

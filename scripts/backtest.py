@@ -118,6 +118,12 @@ def run_backtest(
                 "odds_away": m["odds_away"],
                 "odds_over": m["odds_over25"],
                 "odds_under": m["odds_under25"],
+                # Quote PRE-chiusura (Fase 14) — NaN se lo snapshot non le ha.
+                "odds_home_open": m.get("odds_home_open", float("nan")),
+                "odds_draw_open": m.get("odds_draw_open", float("nan")),
+                "odds_away_open": m.get("odds_away_open", float("nan")),
+                "odds_over_open": m.get("odds_over25_open", float("nan")),
+                "odds_under_open": m.get("odds_under25_open", float("nan")),
             }
             rows.append(row)
 

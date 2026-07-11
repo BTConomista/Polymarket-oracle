@@ -24,6 +24,11 @@ Schema interno (un DataFrame pandas con queste colonne):
     odds_away    float      quota 2
     odds_over25  float      quota Over 2.5
     odds_under25 float      quota Under 2.5
+    odds_home_open    float  quota 1 PRE-chiusura (linea "di apertura", vedi sotto)
+    odds_draw_open    float  quota X pre-chiusura
+    odds_away_open    float  quota 2 pre-chiusura
+    odds_over25_open  float  quota Over 2.5 pre-chiusura
+    odds_under25_open float  quota Under 2.5 pre-chiusura
 
 Colonne di ARRICCHIMENTO (vedi understat.py e transfermarkt.py; NaN se la
 fonte non copre la partita/squadra):
@@ -41,6 +46,17 @@ medie -> pre-match Bet365). Le quote di chiusura sono lo stimatore di mercato
 piu' efficiente; sono pero' assenti nelle stagioni piu' vecchie, dove ripieghiamo
 sulle pre-match. Le quote servono in fase di VALUTAZIONE (benchmark di mercato),
 non per stimare il modello.
+
+Quote "di apertura" (colonne *_open, Fase 14): le colonne football-data SENZA
+suffisso C (AvgH, B365H, ...) sono raccolte GIORNI prima della partita (tipicam.
+venerdi' pomeriggio per i turni del weekend): sono la linea PRE-chiusura, il
+benchmark "battibile" contro cui misurare il Closing Line Value del modello.
+NON e' l'apertura vera del mercato (ora ignota nei dati storici), ma una linea
+intermedia onesta e documentata. REGOLA CRITICA: le colonne *_open NON ripiegano
+MAI sulle colonne di chiusura (*C*) -- meglio un NaN dichiarato che confrontare
+il mercato con se' stesso. Nelle stagioni senza colonne di chiusura (< 2019-20)
+odds_home e odds_home_open COINCIDONO per costruzione: il confronto open-vs-close
+va fatto solo dove le due linee sono davvero distinte (test: stagioni 2020-21+).
 """
 
 from __future__ import annotations
@@ -63,6 +79,17 @@ _ODDS_PREFERENCE: dict[str, list[str]] = {
     "odds_away":   ["AvgCA", "B365CA", "AvgA", "BbAvA", "B365A"],
     "odds_over25": ["AvgC>2.5", "B365C>2.5", "Avg>2.5", "BbAv>2.5", "B365>2.5"],
     "odds_under25": ["AvgC<2.5", "B365C<2.5", "Avg<2.5", "BbAv<2.5", "B365<2.5"],
+}
+
+# Quote PRE-chiusura ("apertura", Fase 14): SOLO colonne senza suffisso C.
+# Mai ripiegare sulla chiusura: un NaN e' onesto, una chiusura spacciata per
+# apertura invaliderebbe il confronto open-vs-close in modo silenzioso.
+_ODDS_PREFERENCE_OPEN: dict[str, list[str]] = {
+    "odds_home_open":    ["AvgH", "BbAvH", "B365H"],
+    "odds_draw_open":    ["AvgD", "BbAvD", "B365D"],
+    "odds_away_open":    ["AvgA", "BbAvA", "B365A"],
+    "odds_over25_open":  ["Avg>2.5", "BbAv>2.5", "B365>2.5"],
+    "odds_under25_open": ["Avg<2.5", "BbAv<2.5", "B365<2.5"],
 }
 
 
@@ -133,7 +160,7 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     out["home_sot"] = pd.to_numeric(raw.get("HST"), errors="coerce")
     out["away_sot"] = pd.to_numeric(raw.get("AST"), errors="coerce")
 
-    for target, candidates in _ODDS_PREFERENCE.items():
+    for target, candidates in (_ODDS_PREFERENCE | _ODDS_PREFERENCE_OPEN).items():
         out[target] = raw.apply(lambda r: _pick_odds(r, candidates), axis=1)
 
     out = out.dropna(subset=["date"])
@@ -159,6 +186,70 @@ def enrich(matches: pd.DataFrame, *, force_download: bool = False) -> pd.DataFra
     matches = transfermarkt.add_squad_values(matches, force=force_download)
     matches = transfermarkt.add_absences(matches, force=force_download)
     return matches
+
+
+def add_open_odds(matches: pd.DataFrame, *, force_download: bool = False) -> pd.DataFrame:
+    """Aggancia le quote PRE-chiusura (colonne *_open) a uno snapshot esistente.
+
+    Rilegge i CSV grezzi football-data (cache in data/raw/, download solo se
+    mancanti o ``force_download``) ed estrae le colonne senza suffisso C
+    (_ODDS_PREFERENCE_OPEN). Join per (season, home_team, away_team) con nomi
+    canonicalizzati — stessa chiave usata per xG/rose (vedi README, Fase 4a).
+
+    Controlli d'integrita' (falliscono rumorosamente, mai in silenzio):
+      - i GOL del CSV grezzo devono coincidere con quelli dello snapshot su ogni
+        riga agganciata (un join sbagliato o una fonte cambiata li sballerebbe);
+      - le righe di snapshot senza aggancio vengono contate e stampate (le
+        colonne restano NaN: nessun numero inventato).
+    Le colonne esistenti dello snapshot NON vengono toccate.
+    """
+    league = sources.LEAGUES[matches["league"].iloc[0]]
+    out = matches.copy()
+    open_cols = list(_ODDS_PREFERENCE_OPEN)
+
+    frames = []
+    for code in sorted(out["season"].unique()):
+        path = download_season(code, league, force=force_download)
+        raw = pd.read_csv(path, encoding="latin-1")
+        raw = raw.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG"]).copy()
+        part = pd.DataFrame({
+            "season": code,
+            "home_team": raw["HomeTeam"].astype(str).str.strip().map(sources.canonical_team),
+            "away_team": raw["AwayTeam"].astype(str).str.strip().map(sources.canonical_team),
+            "_raw_hg": raw["FTHG"].astype(int),
+            "_raw_ag": raw["FTAG"].astype(int),
+        })
+        for target, candidates in _ODDS_PREFERENCE_OPEN.items():
+            part[target] = raw.apply(lambda r: _pick_odds(r, candidates), axis=1).values
+        frames.append(part)
+    open_df = pd.concat(frames, ignore_index=True)
+
+    key = ["season", "home_team", "away_team"]
+    dup = open_df.duplicated(subset=key)
+    if dup.any():
+        raise ValueError(f"CSV grezzi: {dup.sum()} chiavi (stagione, casa, ospite) duplicate")
+
+    merged = out.drop(columns=open_cols, errors="ignore").merge(
+        open_df, on=key, how="left", validate="one_to_one")
+
+    # Integrita': gol del grezzo == gol dello snapshot su ogni riga agganciata.
+    matched = merged["_raw_hg"].notna()
+    bad = matched & ((merged["_raw_hg"] != merged["home_goals"])
+                     | (merged["_raw_ag"] != merged["away_goals"]))
+    if bad.any():
+        raise ValueError(
+            f"add_open_odds: {bad.sum()} righe con GOL diversi tra CSV grezzo e "
+            f"snapshot — join sbagliato o fonte cambiata a monte. Mi fermo.")
+    n_miss = int((~matched).sum())
+    if n_miss:
+        print(f"  [open_odds] {n_miss} partite di snapshot senza aggancio nel "
+              f"grezzo (restano NaN)")
+    cov = merged.groupby("season")["odds_home_open"].apply(lambda s: s.notna().mean())
+    print("  [open_odds] copertura quota apertura 1X2 per stagione:")
+    for season, frac in cov.items():
+        print(f"    {season}: {frac:6.1%}")
+
+    return merged.drop(columns=["_raw_hg", "_raw_ag"])
 
 
 def add_rest_days(matches: pd.DataFrame, cap: int = 14) -> pd.DataFrame:

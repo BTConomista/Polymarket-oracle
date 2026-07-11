@@ -60,32 +60,45 @@ def data_fingerprint(df: pd.DataFrame) -> str:
 # ---------------------------------------------------------------------- #
 # Calcolo metriche di un backtest (fonte di verita' unica)
 # ---------------------------------------------------------------------- #
-def _market_1x2(df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+_ODDS_1X2 = ("odds_home", "odds_draw", "odds_away")
+_ODDS_1X2_OPEN = ("odds_home_open", "odds_draw_open", "odds_away_open")
+_ODDS_OU = ("odds_over", "odds_under")
+_ODDS_OU_OPEN = ("odds_over_open", "odds_under_open")
+
+
+def _market_1x2(df: pd.DataFrame,
+                cols: tuple[str, str, str] = _ODDS_1X2) -> tuple[np.ndarray, np.ndarray]:
     out = np.full((len(df), 3), np.nan)
     for i, (_, r) in enumerate(df.iterrows()):
-        if np.isfinite([r.odds_home, r.odds_draw, r.odds_away]).all():
-            out[i] = metrics.devig_1x2(r.odds_home, r.odds_draw, r.odds_away)
+        odds = [r[c] for c in cols]
+        if np.isfinite(odds).all():
+            out[i] = metrics.devig_1x2(*odds)
     return out, ~np.isnan(out).any(axis=1)
 
 
-def _market_over(df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+def _market_over(df: pd.DataFrame,
+                 cols: tuple[str, str] = _ODDS_OU) -> tuple[np.ndarray, np.ndarray]:
     out = np.full(len(df), np.nan)
     for i, (_, r) in enumerate(df.iterrows()):
-        if np.isfinite([r.odds_over, r.odds_under]).all():
-            out[i], _ = metrics.devig_binary(r.odds_over, r.odds_under)
+        odds = [r[c] for c in cols]
+        if np.isfinite(odds).all():
+            out[i], _ = metrics.devig_binary(*odds)
     return out, ~np.isnan(out)
 
 
-def value_bet_roi(df: pd.DataFrame, threshold: float = 0.05) -> tuple[int, float]:
+def value_bet_roi(df: pd.DataFrame, threshold: float = 0.05,
+                  odds_cols: tuple[str, str, str] = _ODDS_1X2) -> tuple[int, float]:
     """ROI illustrativo su value bet 1X2 (edge del modello > soglia).
 
-    Ritorna (numero scommesse, ROI %). ATTENZIONE: illustrativo, un backtest
-    storico sovrastima quasi sempre la redditivita' reale.
+    ``odds_cols`` sceglie la linea contro cui si scommette (chiusura di default;
+    apertura per il test CLV della Fase 14): l'edge e' misurato vs quella linea
+    e la scommessa e' pagata a QUELLA quota. Ritorna (numero scommesse, ROI %).
+    ATTENZIONE: illustrativo, un backtest storico sovrastima quasi sempre la
+    redditivita' reale.
     """
     outcomes = df["result"].tolist()
     model = df[["m_home", "m_draw", "m_away"]].to_numpy()
-    market, has = _market_1x2(df)
-    cols = ["odds_home", "odds_draw", "odds_away"]
+    market, has = _market_1x2(df, odds_cols)
     stake = profit = 0.0
     n = 0
     for i in range(len(df)):
@@ -93,12 +106,40 @@ def value_bet_roi(df: pd.DataFrame, threshold: float = 0.05) -> tuple[int, float
             continue
         for k, key in enumerate("HDA"):
             if model[i, k] - market[i, k] > threshold:
-                odds = df.iloc[i][cols[k]]
+                odds = df.iloc[i][odds_cols[k]]
                 n += 1
                 stake += 1.0
                 profit += (odds - 1.0) if outcomes[i] == key else -1.0
     roi = 100.0 * profit / stake if stake else 0.0
     return n, roi
+
+
+def clv_stats(df: pd.DataFrame, threshold: float = 0.05) -> tuple[int, float, float]:
+    """Closing Line Value delle selezioni fatte alla linea di APERTURA.
+
+    Per ogni value bet individuata contro la linea di apertura (edge del modello
+    > soglia), misura se la CHIUSURA si e' mossa verso il modello:
+    CLV = prob_chiusura(selezione) - prob_apertura(selezione), devigate.
+    CLV > 0 = il mercato ha dato ragione al modello (prezzo preso migliore della
+    chiusura): e' il test che i professionisti usano per distinguere edge da
+    fortuna, PRIMA di guardare il ROI (rumorosissimo).
+
+    Ritorna (n selezioni, CLV medio in punti di probabilita', quota di CLV>0).
+    """
+    model = df[["m_home", "m_draw", "m_away"]].to_numpy()
+    open_p, has_open = _market_1x2(df, _ODDS_1X2_OPEN)
+    close_p, has_close = _market_1x2(df, _ODDS_1X2)
+    clvs: list[float] = []
+    for i in range(len(df)):
+        if not (has_open[i] and has_close[i]):
+            continue
+        for k in range(3):
+            if model[i, k] - open_p[i, k] > threshold:
+                clvs.append(close_p[i, k] - open_p[i, k])
+    if not clvs:
+        return 0, float("nan"), float("nan")
+    arr = np.array(clvs)
+    return len(arr), float(arr.mean()), float((arr > 0).mean())
 
 
 def compute_metrics(df: pd.DataFrame) -> dict:
@@ -115,6 +156,35 @@ def compute_metrics(df: pd.DataFrame) -> dict:
     base_1x2 = np.tile(metrics.base_rates_1x2(outcomes), (len(df), 1))
     base_over = np.full(len(df), float(is_over.mean()))
     n_bets, roi = value_bet_roi(df)
+
+    # Metriche vs linea di APERTURA (Fase 14): solo se il df ha le colonne
+    # *_open con almeno una riga valida (retrocompatibile: i backtest storici
+    # non le hanno e il dizionario resta identico a prima).
+    open_metrics: dict = {}
+    if set(_ODDS_1X2_OPEN) <= set(df.columns):
+        open_1x2, has_open = _market_1x2(df, _ODDS_1X2_OPEN)
+        if has_open.any():
+            out_open = [outcomes[i] for i in range(len(df)) if has_open[i]]
+            n_open, roi_open = value_bet_roi(df, odds_cols=_ODDS_1X2_OPEN)
+            clv_n, clv_mean, clv_pos = clv_stats(df)
+            open_metrics.update({
+                "x2_market_open_logloss": metrics.log_loss_1x2(open_1x2[has_open], out_open),
+                "x2_market_open_brier": metrics.brier_1x2(open_1x2[has_open], out_open),
+                "value_bet_open_n": n_open,
+                "value_bet_open_roi_pct": roi_open,
+                "clv_n": clv_n,
+                "clv_mean_prob": clv_mean,
+                "clv_positive_share": clv_pos,
+            })
+    if set(_ODDS_OU_OPEN) <= set(df.columns):
+        ou_open, has_ou_open = _market_over(df, _ODDS_OU_OPEN)
+        if has_ou_open.any():
+            open_metrics.update({
+                "ou_market_open_logloss": metrics.log_loss_binary(
+                    ou_open[has_ou_open], is_over[has_ou_open]),
+                "ou_market_open_brier": metrics.brier_binary(
+                    ou_open[has_ou_open], is_over[has_ou_open]),
+            })
 
     return {
         "n_matches": int(len(df)),
@@ -134,7 +204,7 @@ def compute_metrics(df: pd.DataFrame) -> dict:
         # Value bet (illustrativo)
         "value_bet_n": n_bets,
         "value_bet_roi_pct": roi,
-    }
+    } | open_metrics
 
 
 # ---------------------------------------------------------------------- #
