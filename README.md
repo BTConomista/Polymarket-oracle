@@ -31,133 +31,81 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
   settimanale, **senza look-ahead**), con Brier score e log-loss, confronto contro
   le quote di chiusura dei bookmaker e contro una baseline banale.
 
-### Risultati del backtest (media su 6 stagioni, 2020-21 → 2025-26)
+### La configurazione ufficiale e il risultato
 
-Metrica principale: **log-loss medio** su 6 stagioni di test (walk-forward, senza
-look-ahead). Usiamo la media di 6 stagioni — non una sola — perché una singola
-stagione è rumorosa (è il nostro principio: mai concludere da una stagione).
+Metrica principale: **log-loss 1X2 medio**, walk-forward **senza look-ahead**,
+sulla **media di 6 stagioni** (2020-21 → 2025-26) — mai una sola, che è rumorosa.
+Config ufficiale: **blend gol/xG (α=0.75)** · shrinkage **1.5** · emivita **365g**
+· **prior neopromosse δ=0.23**.
 
-| Mercato | Modello | Baseline | Mercato (chiusura) |
-|---|---:|---:|---:|
-| **1X2** log-loss | 0.9807 | ~1.085 | **0.9632** |
-| **O/U 2.5** log-loss | 0.6884 | ~0.690 | **0.6816** |
+| Mercato | Modello | Mercato (chiusura) | Baseline |
+|---|--:|--:|--:|
+| **1X2** (log-loss) | **0.9797** | **0.9632** | ~1.085 |
+| **Over/Under 2.5** | 0.6884 | 0.6816 | ~0.690 |
 
-_Configurazione ufficiale: **blend gol/xG con α = 0.75**, shrinkage = 1.5, emivita
-= 365g, **prior neopromosse δ = 0.23** (vedi Fasi 4b, 4d e 7). Il modello batte
-nettamente la baseline e si avvicina al mercato (gap 1X2 ~+0.018), ma **non lo
-batte**. Su una singola stagione i numeri oscillano (es. la 2025-26 ha 1X2 ≈
-0.993): per questo si giudica sulla media. (Il prior neopromosse migliora la
-media a ~0.9796; la tabella sopra riporta la config pre-Fase 7 per continuità.)_
+Il modello **batte nettamente la baseline** ma **non il mercato**: gap 1X2
+**+0.0165** (ha chiuso **~87%** della distanza baseline→mercato). Su una singola
+stagione i numeri oscillano → si giudica sulla media. Il *value betting* simulato
+dà **ROI ≈ −8.5%**: chi non batte la linea di chiusura perde contro il margine del
+bookmaker. **Non usare questo modello per scommettere soldi veri.**
 
-**Come leggerli** (più bassi = meglio):
+### Come si è chiuso il gap (dal modello grezzo all'attuale)
 
-- Sull'**1X2** il modello **batte nettamente la baseline** (impara qualcosa di
-  reale) e si avvicina al mercato, ma **non lo batte**. È il risultato atteso e
-  sano per un primo modello semplice: le quote di chiusura sono lo stimatore più
-  efficiente che esista.
-- Sull'**Over/Under 2.5** il modello è vicino al mercato ma **non aggiunge valore**
-  rispetto a "scommetti sulla frequenza media" (baseline). L'O/U è un mercato
-  quasi 50/50, difficile da battere senza feature più ricche.
-- La simulazione di *value betting* dà **ROI ≈ -8.5%**: un modello che non batte
-  la linea di chiusura **perde soldi** contro il margine del bookmaker. Onesto e
-  prevedibile a questo stadio.
-
-**Conclusione**: la pipeline funziona e il modello è valido *come modello*, ma non
-ha ancora un vantaggio sul mercato. **Non usare questo modello per scommettere
-soldi veri.**
-
----
-
-## Registro completo dei risultati — ogni analisi, in un colpo d'occhio
-
-> **Questa sezione è il punto unico e accessibile con i numeri chiave di OGNI
-> backtest e analisi.** Va **sempre** aggiornata dopo ogni esperimento (regola nel
-> `CLAUDE.md`). Per il ragionamento passo-passo vedi [`docs/DIARIO.md`](docs/DIARIO.md);
-> per i run grezzi replicabili [`experiments/runs.jsonl`](experiments/runs.jsonl).
-> Metrica: **1X2 log-loss medio, walk-forward, 6 stagioni (2020-21 → 2025-26)**;
-> più basso = meglio; il *gap* è `modello − mercato` (>0 = mercato meglio).
-
-### 1) Dove siamo, in una riga
-
-Config ufficiale (emivita 365g, shrinkage 1.5, α=0.75 gol/xG, **prior neopromosse
-δ=0.23**): **1X2 log-loss 0.9797** vs **mercato 0.9632** → **gap +0.0165**. Il
-modello ha chiuso **~87%** della distanza baseline→mercato; batte nettamente la
-baseline, **non** il mercato. Dopo **oltre 12 esperimenti** il modello è al
-**tetto reale** dei dati attuali: l'unica vittoria interna è il prior neopromosse.
-
-### 2) Evoluzione — quanto si è chiuso il gap 1X2 (dal grezzo all'attuale, Fase 9)
-
-| Versione | gap vs mercato | Δ |
+| Versione | gap 1X2 vs mercato | Δ |
 |---|--:|--:|
-| V0 grezzo (gol, no shrink/decay) | +0.0236 | — |
-| V1 gol tarato (shrinkage+emivita, Fase 2b) | +0.0185 | **−0.0051** |
-| V2 +xG nel blend (Fase 4b) | +0.0181 | −0.0004 |
-| V3 emivita ri-tarata 365g (Fase 4d) | +0.0175 | −0.0006 |
-| V4 +prior neopromosse (Fase 7, **ATTUALE**) | +0.0165 | −0.0010 |
+| V0 — grezzo (soli gol, no shrinkage/decay) | +0.0236 | — |
+| V1 — gol tarato (shrinkage + emivita, Fase 2b) | +0.0185 | **−0.0051** |
+| V2 — +xG nel blend (Fase 4b) | +0.0181 | −0.0004 |
+| V3 — emivita ri-tarata 365g (Fase 4d) | +0.0175 | −0.0006 |
+| V4 — +prior neopromosse (Fase 7, **ATTUALE**) | **+0.0165** | −0.0010 |
 
-Il **72%** del recupero totale viene dalla sola regolarizzazione+memoria (Fase 2b);
-il resto sono rendimenti decrescenti.
+Il **72%** del recupero viene dalla sola regolarizzazione+memoria (Fase 2b); il
+resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei dati.
 
-### 3) Anatomia del gap col mercato (versione attuale, Fase 9)
+### Tutti gli esperimenti, in un colpo d'occhio
 
-**Per mercato** (pool 6 stagioni; GG/NG senza quote → vs baseline):
-
-| 1X2 | 1X | 2X | **12 (no pari)** | Over/Under 2.5 | GG/NG |
-|--:|--:|--:|--:|--:|--:|
-| +0.0165 | +0.0116 | +0.0127 | **+0.0020** | +0.0069 | −0.0018 |
-
-→ **Il gap è quasi tutto nel PAREGGIO**: escluso il pari (mercato 12) il modello è
-a livello mercato. La debolezza è prezzare i pareggi, non stimare chi è più forte.
-
-**Per stagione** (gap 1X2): 2020-21 +0.0202 · 2021-22 +0.0145 · 2022-23 +0.0146 ·
-2023-24 +0.0187 · 2024-25 +0.0170 · **2025-26 +0.0141** (minimo). Peggio nel COVID
-(stadi vuoti, Fase 9-bis); i mercati d'esito migliorano post-COVID e nell'ultimo triennio.
-
-**Per forza-squadra** (gap 1X2, a U): forte +0.0180 · media **+0.0123** (meglio) ·
-debole **+0.0206** (peggio) · neopromossa +0.0159.
-
-### 4) Tutti gli esperimenti di miglioramento — cosa ha funzionato
+> Registro sempre aggiornato di **ogni** analisi (regola obbligatoria nel
+> `CLAUDE.md`). Il dettaglio di ciascuna è nella sezione
+> **[Analisi dettagliata per fase](#analisi-dettagliata-per-fase)**; il
+> ragionamento completo nel **[DIARIO](docs/DIARIO.md)**; i run grezzi replicabili
+> in **[`experiments/runs.jsonl`](experiments/runs.jsonl)**.
 
 | Fase | Leva provata | Effetto (1X2) | Esito |
-|---|---|--:|:--|
-| 2b | shrinkage + emivita | gap −0.0051 | ✅ **adottato** |
-| 3 | tiri in porta (SOT) | nullo/neg (6 stag.) | ❌ off |
-| 4b | blend gol/**xG** α=0.75 | guadagno (soprat. O/U) | ✅ **adottato** |
-| 4c | valori rosa, assenze, npxG (covariate) | ridondanti | ❌ off |
-| 4d | ri-taratura emivita → 365g | piccolo guadagno | ✅ **adottato** |
+|:--:|---|--:|:--:|
+| 2b | shrinkage + emivita | gap −0.0051 | ✅ adottato |
+| 3 | tiri in porta grezzi (SOT) | nullo / negativo | ❌ off |
+| 4b | blend gol / **xG** (α=0.75) | guadagno (soprat. O/U) | ✅ adottato |
+| 4c | valori rosa · assenze · npxG | ridondanti | ❌ off |
+| 4d | ri-taratura emivita → 365g | piccolo guadagno | ✅ adottato |
 | 4e-bis | congestione vera (`rest_full`) | −0.0004 (rumore) | ❌ off |
 | 6 | temperature scaling | −0.0003 (rumore) | ❌ off |
-| **7** | **prior neopromosse δ=0.23** | **−0.0011 (5/6); −0.0039 sulle promosse** | ✅ **ADOTTATO** |
-| 8 | ri-taratura shrinkage / vantaggio-casa per-squadra | piatto / non persiste (r≈0.00) | ❌ niente |
-| 10 | ricalibrazione per-classe (casa↓/pari↑) | −0.0005 (rumore) | ❌ off |
-| 11 | combinazioni di feature off | nessuna utile (`squad_value` peggiora) | ❌ off |
-| 12a | ensemble emivite (180+730) | −0.0006 (borderline, 4/6) | ❌ off |
-| 12b | **diagonale inflazionata** (bivariato) | calibra il pari, ma −0.0004 (3/6) | ❌ off |
-| 13 | stato di forma (punti ultime 5) | +0.0002 (peggio) | ❌ off |
-| 13-bis | streak + rendimento recente (gol/xG), data-driven | **R²=0.0101 = rumore** | ❌ off |
-| 13-quater | streak × avversario debole | interazione nulla | ❌ off |
+| **7** | **prior neopromosse (δ=0.23)** | **−0.0011; −0.0039 sulle promosse** | ✅ **ADOTTATO** |
+| 8 | shrinkage / vantaggio-casa per-squadra | piatto / non persiste | ❌ off |
+| 10 | ricalibrazione per-classe (casa↓ / pari↑) | −0.0005 (rumore) | ❌ off |
+| 11 | combinazioni di feature off | nessuna utile | ❌ off |
+| 12a | ensemble di emivite (180+730) | −0.0006 (borderline) | ❌ off |
+| 12b | **diagonale inflazionata** (bivariato) | calibra il pari, ma −0.0004 | ❌ off |
+| 13 | forma · streak · rendimento recente | R² = rumore | ❌ off |
 
-**Adottato**: solo tuning (2b/4b/4d) + **prior neopromosse (7)**. Tutto il resto è
-al livello del rumore o dannoso, e resta **off di default** (alcune opzioni —
-ricalibrazione, `--draw-inflation` — sono utili per la calibrazione nell'uso pratico).
+**Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
+resto è al livello del rumore o dannoso, e resta **off di default** — alcune
+opzioni (ricalibrazione, `--draw-inflation`) restano utili per l'uso pratico.
 
-### 5) Multi-mercato (Fase 5) — per cosa il modello serve davvero
-
-Affidabile sui mercati d'**esito** (1X2, 1X, 2X: batte la baseline); **debole** su
-Over/Under; **peggio della baseline su GG/NG** (cattura male la correlazione dei
-punteggi). **Nessun mercato batte le quote.**
-
-### 6) Il verdetto
-
-Il gap residuo col mercato **non è cattiva modellazione**: è concentrato nel
-pareggio, che è **quasi-casuale per tutti (mercato incluso)** — lo conferma sia il
-mercato 12 già a livello mercato, sia il fatto che il cambio di classe (bivariato)
-migliora la *calibrazione* del pari ma non il log-loss. È **informazione che il
-mercato ha e noi no** su singole partite (infortuni, motivazioni, notizie
-dell'ultima ora). L'unica via rimasta per un edge sono **dati genuinamente nuovi**;
-altrimenti il modello è pronto per l'**uso pratico** come strumento d'analisi.
+**Dove vive il gap col mercato** (anatomia completa in [Fase 9](#anatomia-del-gap-col-mercato--fase-9-dove-vive-il-divario)):
+è **quasi tutto nel PAREGGIO** — escluso il pari (mercato "12") il modello è già a
+livello mercato. Il pareggio è quasi-casuale per tutti (mercato incluso): il gap
+residuo non è cattiva modellazione ma **informazione che il mercato ha e noi no**
+sulle singole partite (infortuni, motivazioni, notizie dell'ultima ora).
 
 ---
+
+## Analisi dettagliata per fase
+
+Ogni fase è raccontata qui con **obiettivo → ragionamento → cosa abbiamo fatto →
+numeri del backtest → conclusione**, in ordine cronologico. Per il diario completo
+con le alternative considerate vedi [`docs/DIARIO.md`](docs/DIARIO.md). Le fasi di
+**acquisizione dati** (4a: xG/valori-rosa/assenze; 4e: calendario di club completo)
+sono descritte più sotto in [Archivio dati interno](#archivio-dati-interno-riproducibilità).
 
 ### Analisi degli errori — Fase 2a (`scripts/analyze.py`)
 
@@ -496,16 +444,6 @@ quattro angoli, tutti **data-driven** per uscire dall'arbitrarietà delle soglie
 *è* ciò che il fit **pesato nel tempo** già usa e pesa di più. Il residuo del
 modello non contiene momentum. L'unico filo di segnale è l'xG recente, **già nel
 blend**. Nessun pattern nascosto.
-
-### In sintesi: perché ci fermiamo (per ora)
-
-Oltre 12 esperimenti (tuning, dati extra, calibrazioni, combinazioni, cambio di
-classe, forma/streak) convergono: il modello Dixon-Coles gol+xG è al **tetto reale**
-dei dati attuali. L'unica vittoria interna è il prior neopromosse. Il gap residuo
-col mercato vive nel pareggio (quasi-casuale per tutti) ed è **informazione che il
-mercato ha e noi no** su singole partite. Le uniche vie avanti: **dati genuinamente
-nuovi** (formazioni ufficiali, infortuni last-minute) o l'**uso pratico** del
-modello come strumento d'analisi.
 
 ## Struttura
 
