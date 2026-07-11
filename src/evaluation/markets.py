@@ -14,6 +14,12 @@ Nota onesta: per GG/NG non abbiamo quote nei dati (football-data non le include)
 quindi c'e' solo modello vs realta' vs baseline. Per le doppie chance il "mercato"
 e' ricavato dalle quote 1X2 devigate (1X = P(1)+P(X), ecc.): e' un benchmark
 coerente ma indiretto.
+
+Seconda nota onesta (audit Fase 15): le baseline usano le frequenze del campione
+VALUTATO (in-sample) — la costante ottima a posteriori, un filo piu' forte della
+baseline ex-ante giocabile davvero. Vale per tutti i mercati qui sotto; per il
+GG/NG (che non ha quote) significa che il confronto "peggio della baseline" e'
+severo: contro una baseline ex-ante il modello sarebbe un po' meno lontano.
 """
 
 from __future__ import annotations

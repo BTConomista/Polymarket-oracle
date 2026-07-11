@@ -52,11 +52,14 @@ suffisso C (AvgH, B365H, ...) sono raccolte GIORNI prima della partita (tipicam.
 venerdi' pomeriggio per i turni del weekend): sono la linea PRE-chiusura, il
 benchmark "battibile" contro cui misurare il Closing Line Value del modello.
 NON e' l'apertura vera del mercato (ora ignota nei dati storici), ma una linea
-intermedia onesta e documentata. REGOLA CRITICA: le colonne *_open NON ripiegano
-MAI sulle colonne di chiusura (*C*) -- meglio un NaN dichiarato che confrontare
-il mercato con se' stesso. Nelle stagioni senza colonne di chiusura (< 2019-20)
-odds_home e odds_home_open COINCIDONO per costruzione: il confronto open-vs-close
-va fatto solo dove le due linee sono davvero distinte (test: stagioni 2020-21+).
+intermedia onesta e documentata. REGOLA CRITICA (rafforzata dall'audit Fase 15):
+le colonne *_open NON ripiegano MAI sulle colonne di chiusura (*C*), e sono
+valorizzate SOLO dove la chiusura proviene davvero da una colonna *C* -- se per
+una riga la chiusura e' il fallback pre-match, open e close coinciderebbero per
+costruzione e il confronto open-vs-close (CLV) confronterebbe il mercato con se'
+stesso: in quel caso *_open resta NaN (righe escluse, mai contaminate). Ne
+consegue che nelle stagioni senza colonne di chiusura (< 2019-20) le colonne
+*_open sono interamente NaN.
 """
 
 from __future__ import annotations
@@ -139,6 +142,20 @@ def _pick_odds(row: pd.Series, candidates: list[str]) -> float:
     return float("nan")
 
 
+def _open_odds_column(raw: pd.DataFrame, target_open: str) -> pd.Series:
+    """Quota di apertura per ogni riga del CSV grezzo, oscurata (NaN) dove la
+    CHIUSURA proverrebbe dal fallback pre-match (nessuna colonna *C* valida):
+    li' open e close coinciderebbero per costruzione, e ogni confronto
+    open-vs-close (gap, CLV) confronterebbe il mercato con se' stesso."""
+    open_vals = raw.apply(
+        lambda r: _pick_odds(r, _ODDS_PREFERENCE_OPEN[target_open]), axis=1)
+    close_target = target_open[: -len("_open")]
+    close_only = [c for c in _ODDS_PREFERENCE[close_target]
+                  if c not in _ODDS_PREFERENCE_OPEN[target_open]]
+    close_c = raw.apply(lambda r: _pick_odds(r, close_only), axis=1)
+    return open_vals.where(close_c.notna())
+
+
 def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFrame:
     """Traduce un CSV grezzo nello schema interno pulito."""
     # Righe valide: devono avere le squadre e i gol finali.
@@ -160,8 +177,10 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     out["home_sot"] = pd.to_numeric(raw.get("HST"), errors="coerce")
     out["away_sot"] = pd.to_numeric(raw.get("AST"), errors="coerce")
 
-    for target, candidates in (_ODDS_PREFERENCE | _ODDS_PREFERENCE_OPEN).items():
+    for target, candidates in _ODDS_PREFERENCE.items():
         out[target] = raw.apply(lambda r: _pick_odds(r, candidates), axis=1)
+    for target in _ODDS_PREFERENCE_OPEN:
+        out[target] = _open_odds_column(raw, target)
 
     out = out.dropna(subset=["date"])
     out = out.sort_values("date").reset_index(drop=True)
@@ -193,8 +212,10 @@ def add_open_odds(matches: pd.DataFrame, *, force_download: bool = False) -> pd.
 
     Rilegge i CSV grezzi football-data (cache in data/raw/, download solo se
     mancanti o ``force_download``) ed estrae le colonne senza suffisso C
-    (_ODDS_PREFERENCE_OPEN). Join per (season, home_team, away_team) con nomi
-    canonicalizzati — stessa chiave usata per xG/rose (vedi README, Fase 4a).
+    (_ODDS_PREFERENCE_OPEN), oscurate riga per riga dove la chiusura non
+    proviene da una colonna *C* (vedi _open_odds_column). Join per
+    (season, home_team, away_team) con nomi canonicalizzati — stessa chiave
+    usata per xG/rose (vedi README, Fase 4a).
 
     Controlli d'integrita' (falliscono rumorosamente, mai in silenzio):
       - i GOL del CSV grezzo devono coincidere con quelli dello snapshot su ogni
@@ -219,8 +240,8 @@ def add_open_odds(matches: pd.DataFrame, *, force_download: bool = False) -> pd.
             "_raw_hg": raw["FTHG"].astype(int),
             "_raw_ag": raw["FTAG"].astype(int),
         })
-        for target, candidates in _ODDS_PREFERENCE_OPEN.items():
-            part[target] = raw.apply(lambda r: _pick_odds(r, candidates), axis=1).values
+        for target in _ODDS_PREFERENCE_OPEN:
+            part[target] = _open_odds_column(raw, target).values
         frames.append(part)
     open_df = pd.concat(frames, ignore_index=True)
 

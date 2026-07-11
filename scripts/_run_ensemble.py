@@ -15,8 +15,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.data import sources
-from src.evaluation import metrics
+from src.data import loader, sources
+from src.evaluation import experiment_log, metrics
 from scripts.backtest import run_backtest
 
 SEASONS = ["2021", "2122", "2223", "2324", "2425", "2526"]
@@ -43,6 +43,15 @@ def main():
     with Pool(6) as pool:
         res = pool.map(_worker, tasks)
     P = {(hl, s): df for hl, s, df in res}
+
+    # Registro replicabile: ogni backtest per-emivita (metriche complete).
+    fp = experiment_log.data_fingerprint(loader.load_league("serie_a"))
+    for (hl, s), df in P.items():
+        cfg = {"source": "fase12a_ensemble", "league": "serie_a",
+               "test_season": s, "half_life_days": hl, **{k: v for k, v in CFG.items()
+               if k != "promoted_prior"}, "promoted_prior": 0.23}
+        experiment_log.append_run(experiment_log.make_record(
+            cfg, experiment_log.compute_metrics(df), fp))
 
     def probs(hl, s):
         return P[(hl, s)][PC].to_numpy()
@@ -72,6 +81,19 @@ def main():
         imp = sum(vals[s] < base[s] - 1e-9 for s in SEASONS)
         print(f"{name:<28}" + "".join(f"{vals[s]:>8.4f}" for s in SEASONS)
               + f"{m:>9.4f}{m-base_m:>+9.4f}{imp:>5}/6")
+        # Registro replicabile: i blend sono derivati (solo 1X2), registrati
+        # con le sole metriche 1X2 per non spacciare l'O/U del 365g per loro.
+        if name.startswith("blend"):
+            for s in SEASONS:
+                out = P[(365.0, s)]["result"].tolist()
+                p = fn(s)
+                cfg = {"source": "fase12a_ensemble", "league": "serie_a",
+                       "test_season": s, "variant": name, "promoted_prior": 0.23}
+                experiment_log.append_run(experiment_log.make_record(cfg, {
+                    "n_matches": len(out),
+                    "x2_model_logloss": metrics.log_loss_1x2(p, out),
+                    "x2_model_brier": metrics.brier_1x2(p, out),
+                }, fp))
     print("\n(Δ vs singola 365g. I blend mescolano le probabilita' 1X2, righe allineate.)")
 
 

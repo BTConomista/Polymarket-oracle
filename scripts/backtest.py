@@ -12,7 +12,11 @@ Metodologia (per evitare il look-ahead, cioe' "barare" guardando il futuro):
 Alla fine confrontiamo, su 1X2 e Over/Under 2.5:
   - il MODELLO,
   - il MERCATO (quote di chiusura dei bookmaker, margine rimosso),
-  - una BASELINE banale (frequenze storiche costanti),
+  - una BASELINE banale: le frequenze H/D/A costanti DELLA STAGIONE DI TEST
+    stessa (nota onesta, audit Fase 15: e' una baseline IN-SAMPLE, cioe' la
+    costante ottima a posteriori, leggermente piu' forte delle frequenze
+    storiche ex-ante ~1.086 che sarebbero l'unica baseline giocabile davvero;
+    direzione conservativa per il modello),
 tramite log-loss e Brier score (piu' bassi = meglio).
 
 E' incluso anche un semplice conto di ROI su "value bet" (scommesse dove il
@@ -98,6 +102,9 @@ def run_backtest(
         for _, m in group.iterrows():
             pred = model.predict_match(m["home_team"], m["away_team"], features=m)
             row = {
+                # Stagione di test: salvata nelle predizioni cosi' analyze.py
+                # non puo' etichettare le neopromosse della stagione sbagliata.
+                "season": test_season,
                 "date": m["date"],
                 "home_team": m["home_team"],
                 "away_team": m["away_team"],
@@ -142,12 +149,12 @@ def report(m: dict, n_matches: int) -> None:
 
     print("\n[1X2]  (log-loss e brier: piu' bassi = meglio)")
     line("Modello Dixon-Coles", m["x2_model_logloss"], m["x2_model_brier"])
-    line("Baseline (freq. costanti)", m["x2_baseline_logloss"], m["x2_baseline_brier"])
+    line("Baseline (freq. stagione, in-sample)", m["x2_baseline_logloss"], m["x2_baseline_brier"])
     line("Mercato (quote chiusura)", m["x2_market_logloss"], m["x2_market_brier"])
 
     print("\n[OVER/UNDER 2.5]")
     line("Modello Dixon-Coles", m["ou_model_logloss"], m["ou_model_brier"])
-    line("Baseline (freq. costante)", m["ou_baseline_logloss"])
+    line("Baseline (freq. stagione, in-sample)", m["ou_baseline_logloss"])
     line("Mercato (quote chiusura)", m["ou_market_logloss"], m["ou_market_brier"])
 
     print("\n[VALUE BET 1X2 — illustrativo, NON una promessa di guadagno]")

@@ -18,7 +18,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data import loader
-from src.evaluation import metrics
+from src.evaluation import experiment_log, metrics
 from scripts.backtest import run_backtest
 
 SEASONS = ["2021", "2122", "2223", "2324", "2425", "2526"]
@@ -41,8 +41,18 @@ def main():
         res = pool.map(_worker, tasks)
     P = {(name, s): df for name, s, df in res}
 
-    am = loader.load_league("serie_a")[["date", "home_team", "away_team",
-                                        "home_form", "away_form"]]
+    # Registro replicabile: entrambe le varianti, metriche complete.
+    all_m = loader.load_league("serie_a")
+    fp = experiment_log.data_fingerprint(all_m)
+    for (name, s), df in P.items():
+        cfg = {"source": "fase13_form", "league": "serie_a", "test_season": s,
+               "covariates": ["form"] if name == "form" else [],
+               **{k: v for k, v in CFG.items() if k != "promoted_prior"},
+               "promoted_prior": 0.23}
+        experiment_log.append_run(experiment_log.make_record(
+            cfg, experiment_log.compute_metrics(df), fp))
+
+    am = all_m[["date", "home_team", "away_team", "home_form", "away_form"]]
 
     # ---------- (1) DIAGNOSTICO: la forma predice l'errore del modello? ----------
     base = pd.concat([P[("base", s)] for s in SEASONS], ignore_index=True)

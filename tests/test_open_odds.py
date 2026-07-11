@@ -2,7 +2,10 @@
 
 Tre famiglie di controlli:
   1. estrazione dal CSV grezzo: le colonne *_open NON devono MAI ripiegare
-     sulle colonne di chiusura (*C*) — meglio NaN che mercato-vs-se-stesso;
+     sulle colonne di chiusura (*C*) — meglio NaN che mercato-vs-se-stesso —
+     e sono valorizzate SOLO dove la chiusura proviene da una colonna *C*
+     (audit Fase 15: se la chiusura e' il fallback pre-match, open==close
+     per costruzione e la riga va esclusa, non contaminata);
   2. aggancio allo snapshot esistente (add_open_odds): join corretto,
      integrita' sui gol, righe senza aggancio dichiarate (NaN);
   3. metriche: chiavi *open* e CLV presenti solo se il df le ha
@@ -56,6 +59,28 @@ def test_apertura_fallback_interno_bet365():
     assert out["odds_home_open"].item() == 2.15
 
 
+def test_apertura_oscurata_dove_la_chiusura_e_fallback():
+    """Riga SENZA colonne *C*: la chiusura ripiega sulla pre-match, quindi
+    open==close per costruzione -> l'apertura va oscurata (NaN), riga per riga
+    (audit Fase 15: un CLV=0 spurio verrebbe contato come negativo)."""
+    raw = pd.DataFrame({
+        "Date": ["20/08/2024", "21/08/2024"],
+        "HomeTeam": ["Milan", "Parma"], "AwayTeam": ["Inter", "Lecce"],
+        "FTHG": [1, 0], "FTAG": [1, 2], "FTR": ["D", "A"],
+        "HST": [5, 3], "AST": [4, 6],
+        "AvgH": [2.10, 2.60], "AvgD": [3.30, 3.10], "AvgA": [3.60, 2.90],
+        # Chiusura vera solo sulla prima riga.
+        "AvgCH": [2.00, np.nan], "AvgCD": [3.40, np.nan], "AvgCA": [3.80, np.nan],
+    })
+    out = _normalize(raw, "2425", LEAGUES["serie_a"])
+    milan = out[out.home_team == "Milan"].iloc[0]
+    parma = out[out.home_team == "Parma"].iloc[0]
+    assert milan["odds_home_open"] == 2.10          # chiusura da colonna C: ok
+    assert milan["odds_home"] == 2.00
+    assert parma["odds_home"] == 2.60               # chiusura = fallback...
+    assert np.isnan(parma["odds_home_open"])        # ...quindi apertura oscurata
+
+
 # --------------------------------------------- 2. aggancio allo snapshot
 
 def _snapshot_sintetico() -> pd.DataFrame:
@@ -83,6 +108,9 @@ def test_add_open_odds_join(monkeypatch, tmp_path):
         "Date": ["20/08/2024"], "HomeTeam": ["AC Milan"], "AwayTeam": ["Inter"],
         "FTHG": [1], "FTAG": [1], "FTR": ["D"],
         "AvgH": [2.10], "AvgD": [3.30], "AvgA": [3.60],
+        # Chiusura vera presente: senza colonne *C* l'apertura resterebbe
+        # oscurata (vedi test_apertura_oscurata_dove_la_chiusura_e_fallback).
+        "AvgCH": [2.00], "AvgCD": [3.40], "AvgCA": [3.80],
     })
     _monkeypatch_grezzo(monkeypatch, tmp_path, raw)
     out = loader.add_open_odds(_snapshot_sintetico())
@@ -145,13 +173,28 @@ def test_compute_metrics_retrocompatibile():
 def test_compute_metrics_con_apertura():
     m = experiment_log.compute_metrics(_backtest_df(con_open=True))
     for chiave in ["x2_market_open_logloss", "x2_market_open_brier",
-                   "ou_market_open_logloss", "value_bet_open_n",
+                   "x2_model_open_logloss", "ou_market_open_logloss",
+                   "ou_model_open_logloss", "value_bet_open_n",
                    "clv_n", "clv_mean_prob", "clv_positive_share"]:
         assert chiave in m, chiave
     # Le metriche di chiusura devono restare identiche al caso senza open.
     base = experiment_log.compute_metrics(_backtest_df(con_open=False))
     assert m["x2_market_logloss"] == base["x2_market_logloss"]
     assert m["value_bet_n"] == base["value_bet_n"]
+
+
+def test_metriche_modello_vs_apertura_sulle_stesse_righe():
+    """Audit Fase 15: il gap modello-vs-apertura dal registro deve confrontare
+    le STESSE righe. Con una riga senza quote di apertura, x2_model_open_logloss
+    va calcolato sul sottoinsieme con apertura, non su tutte le partite."""
+    df = _backtest_df(con_open=True)
+    df.loc[2, ["odds_home_open", "odds_draw_open", "odds_away_open"]] = np.nan
+    df.loc[2, ["odds_over_open", "odds_under_open"]] = np.nan
+    m = experiment_log.compute_metrics(df)
+    sub = experiment_log.compute_metrics(df.drop(index=2).reset_index(drop=True))
+    assert m["x2_model_open_logloss"] == pytest.approx(sub["x2_model_open_logloss"])
+    assert m["x2_model_open_logloss"] != pytest.approx(m["x2_model_logloss"])
+    assert m["ou_model_open_logloss"] == pytest.approx(sub["ou_model_open_logloss"])
 
 
 def test_clv_positivo_quando_chiusura_si_muove_verso_il_modello():

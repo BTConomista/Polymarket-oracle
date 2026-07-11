@@ -52,7 +52,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Analisi errori del backtest.")
     parser.add_argument("--predictions", default="outputs/backtest_predictions.csv")
     parser.add_argument("--league", default="serie_a")
-    parser.add_argument("--test-season", default=sources.SEASONS[-1])
+    parser.add_argument("--test-season", default=None,
+                        help="default: la stagione salvata nel CSV delle predizioni "
+                             "(fallback: l'ultima in sources.SEASONS)")
     args = parser.parse_args()
 
     path = Path(args.predictions)
@@ -60,6 +62,18 @@ def main() -> None:
         raise SystemExit(f"File non trovato: {path}. Esegui prima scripts/backtest.py")
 
     df = pd.read_csv(path, parse_dates=["date"])
+
+    # Stagione: la verita' e' nel CSV (colonna scritta da backtest.py, audit
+    # Fase 15). Il flag serve solo per CSV vecchi senza colonna; se contraddice
+    # il CSV ci si ferma invece di etichettare le neopromosse sbagliate.
+    csv_season = None
+    if "season" in df.columns and df["season"].notna().any():
+        csv_season = str(df["season"].iloc[0]).strip()
+    if args.test_season and csv_season and args.test_season != csv_season:
+        raise SystemExit(
+            f"--test-season {args.test_season} ma le predizioni in {path} sono "
+            f"della stagione {csv_season}: rigenera il CSV o togli il flag.")
+    args.test_season = args.test_season or csv_season or sources.SEASONS[-1]
     market = _market_1x2(df)
     model = df[["m_home", "m_draw", "m_away"]].to_numpy()
     outcomes = df["result"].tolist()

@@ -27,9 +27,9 @@ Prima pipeline **end-to-end** funzionante su **Serie A**:
   (`src/models/dixon_coles.py`). Stima forza d'attacco/difesa di ogni squadra +
   vantaggio-casa + correzione sui punteggi bassi.
 - **Dati**: 9 stagioni di Serie A (2017-18 → 2025-26) in formato football-data.co.uk.
-- **Validazione**: backtest walk-forward sulla stagione 2025-26 (riallenamento
-  settimanale, **senza look-ahead**), con Brier score e log-loss, confronto contro
-  le quote di chiusura dei bookmaker e contro una baseline banale.
+- **Validazione**: backtest walk-forward su 6 stagioni di test (2020-21 → 2025-26,
+  riallenamento settimanale, **senza look-ahead**), con Brier score e log-loss,
+  confronto contro le quote di chiusura dei bookmaker e contro una baseline banale.
 
 ### La configurazione ufficiale e il risultato
 
@@ -38,16 +38,28 @@ sulla **media di 6 stagioni** (2020-21 → 2025-26) — mai una sola, che è rum
 Config ufficiale: **blend gol/xG (α=0.75)** · shrinkage **1.5** · emivita **365g**
 · **prior neopromosse δ=0.23**.
 
-| Mercato | Modello | Mercato (chiusura) | Baseline |
-|---|--:|--:|--:|
-| **1X2** (log-loss) | **0.9797** | **0.9632** | ~1.085 |
-| **Over/Under 2.5** | 0.6884 | 0.6816 | ~0.690 |
+| Mercato | Modello | Mercato (chiusura) | Baseline in-sample | Baseline ex-ante |
+|---|--:|--:|--:|--:|
+| **1X2** (log-loss) | **0.9797** | **0.9632** | 1.0834 | 1.0860 |
+| **Over/Under 2.5** | 0.6885 | 0.6816 | 0.6892 | 0.6961 |
+
+*Nota onestà (audit Fase 15): la baseline stampata dalla pipeline usa le frequenze
+H/D/A della **stagione di test stessa** (in-sample: è la costante ottima a
+posteriori, quindi leggermente troppo forte). La baseline **ex-ante** — frequenze
+delle sole stagioni precedenti, l'unica giocabile davvero — è ricalcolata qui
+accanto: 1.0860 (1X2) e 0.6961 (O/U). La differenza non cambia nessuna
+conclusione.*
 
 Il modello **batte nettamente la baseline** ma **non il mercato**: gap 1X2
-**+0.0165** (ha chiuso **~87%** della distanza baseline→mercato). Su una singola
-stagione i numeri oscillano → si giudica sulla media. Il *value betting* simulato
-dà **ROI ≈ −8.5%**: chi non batte la linea di chiusura perde contro il margine del
-bookmaker. **Non usare questo modello per scommettere soldi veri.**
+**+0.0165** (ha chiuso **~86%** della distanza baseline→mercato: 86.3% sulla
+baseline in-sample, 86.6% su quella ex-ante). Su una singola stagione i numeri
+oscillano → si giudica sulla media. Il *value betting* simulato con la config
+ufficiale dà **ROI medio −15.7%** su 6 stagioni (864 scommesse; per stagione da
+−4.7% a −23.0%; pooled −15.6%): chi non batte la linea di chiusura perde contro
+il margine del bookmaker. **Non usare questo modello per scommettere soldi
+veri.** *(Il "ROI ≈ −8.5%" riportato in precedenza era il valore del primo
+backtest di Fase 1 — una sola stagione, modello iniziale — rimasto per errore
+accanto a metriche a 6 stagioni: corretto nell'audit di Fase 15.)*
 
 ### Come si è chiuso il gap (dal modello grezzo all'attuale)
 
@@ -58,6 +70,12 @@ bookmaker. **Non usare questo modello per scommettere soldi veri.**
 | V2 — +xG nel blend (Fase 4b) | +0.0181 | −0.0004 |
 | V3 — emivita ri-tarata 365g (Fase 4d) | +0.0175 | −0.0006 |
 | V4 — +prior neopromosse (Fase 7, **ATTUALE**) | **+0.0165** | −0.0010 |
+
+*Il Δ del prior compare come −0.0010 qui e come −0.0011 nella tabella degli
+esperimenti: non è un refuso ma due stime diverse dello stesso intervento —
+−0.0010 con δ=0.23 fisso (config ufficiale: 0.9797 vs 0.9807), −0.0011 con δ
+stimato leave-future-out stagione per stagione (Fase 7: 0.9796). Entrambe
+verificate sul registro.*
 
 Il **72%** del recupero viene dalla sola regolarizzazione+memoria (Fase 2b); il
 resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei dati.
@@ -86,6 +104,8 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 12a | ensemble di emivite (180+730) | −0.0006 (borderline) | ❌ off |
 | 12b | **diagonale inflazionata** (bivariato) | calibra il pari, ma −0.0004 | ❌ off |
 | 13 | forma · streak · rendimento recente | R² = rumore | ❌ off |
+| 14 | quote di apertura + CLV (codice pronto) | — (dati `*_open` non ancora estesi) | ⏸ in attesa dati |
+| 15 | **audit dei calcoli** (verifica di ogni numero) | ROI corretto (−15.7%, non −8.5%); resto confermato | ✅ doc corretta |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -159,8 +179,9 @@ peso dare alle partite recenti), su tre stagioni. Risultato (log-loss 1X2 medio)
 Lezione: in Serie A le rose restano stabili anno su anno, quindi una **memoria
 lunga** (~2 stagioni) batte il peso aggressivo sulle ultime partite. Con la
 configurazione finale (emivita 730g, shrinkage 1.5) il divario medio col mercato
-scende da +0.026 (Dixon-Coles puro) a **+0.017**: circa un terzo del divario
-recuperato solo con la taratura, senza informazione nuova.
+scende da +0.026 (Dixon-Coles puro, misurato su 2 stagioni) a **+0.017** (0.9829
+− 0.9658, su 3 stagioni): circa un terzo del divario recuperato solo con la
+taratura, senza informazione nuova.
 
 Qui il modello basato sui **soli gol** è vicino al suo tetto: per avvicinarsi
 ancora al mercato serve informazione nuova (forma, xG, indisponibili), non altro
@@ -275,7 +296,8 @@ ri-taratura a coordinate su 6 stagioni:
 
 L'**emivita ottima passa da 730g a ~365g**: con un segnale meno rumoroso (l'xG) il
 modello può permettersi una **memoria più corta/reattiva** senza rincorrere il
-rumore. Guadagno piccolo (~0.0007) ma su **entrambi** i mercati. Lezione di metodo:
+rumore. Guadagno piccolo (−0.0006 su 1X2, −0.0009 su O/U) ma su **entrambi** i
+mercati. Lezione di metodo:
 dopo un cambiamento importante, ri-verifica gli iperparametri già tarati.
 **Config ufficiale**: blend gol/xG α=0.75, shrinkage 1.5, **emivita 365g**.
 
@@ -357,7 +379,7 @@ senza costruirla. Entrambe negative.
 
 Non spremere ma **capire**: quanto vale il gap (`modello − mercato`) e come si
 scompone. Gap 1X2 medio attuale **+0.0165** (modello 0.9797 vs mercato 0.9632);
-il modello ha chiuso ~87% della distanza baseline→mercato. Tre tagli:
+il modello ha chiuso ~86% della distanza baseline→mercato. Tre tagli:
 
 **Per mercato** — il gap è **quasi tutto nel PAREGGIO**:
 
@@ -444,6 +466,77 @@ quattro angoli, tutti **data-driven** per uscire dall'arbitrarietà delle soglie
 *è* ciò che il fit **pesato nel tempo** già usa e pesa di più. Il residuo del
 modello non contiene momentum. L'unico filo di segnale è l'xG recente, **già nel
 blend**. Nessun pattern nascosto.
+
+### Audit dei calcoli — Fase 15 (verifica indipendente di ogni numero)
+
+Revisione sistematica di **formule, pipeline e numeri dichiarati**: ogni valore di
+README/DIARIO ricalcolato a precisione piena dal registro `experiments/runs.jsonl`
+(233 run), più la ri-esecuzione del backtest ufficiale (riproduzione **identica**
+alla 4ª cifra) e l'audit del codice (modello, metriche, script di fase).
+
+**Verdetto sulle formule: nessun errore.** Log-loss, Brier, devig, correzione
+Dixon-Coles τ, verosimiglianza dell'inflazione diagonale, temperature scaling,
+blend gol/xG, ordine (H,D,A), walk-forward (`date < as_of` ovunque): tutto
+corretto. La stragrande maggioranza dei numeri pubblicati è riproducibile alla
+4ª cifra decimale.
+
+**La tabella di riferimento, per stagione** (config ufficiale, valori reali dal
+registro — 1X2 log-loss):
+
+| Stagione | Modello | Mercato | Gap | ROI value bet (n) |
+|---|--:|--:|--:|--:|
+| 2020-21 | 0.9532 | 0.9331 | +0.0202 | −23.0% (129) |
+| 2021-22 | 0.9860 | 0.9715 | +0.0145 | −15.1% (152) |
+| 2022-23 | 0.9916 | 0.9770 | +0.0146 | −14.9% (152) |
+| 2023-24 | 0.9854 | 0.9668 | +0.0187 | −15.0% (125) |
+| 2024-25 | 0.9693 | 0.9523 | +0.0170 | −21.2% (159) |
+| 2025-26 | 0.9925 | 0.9784 | +0.0141 | −4.7% (147) |
+| **MEDIA** | **0.9797** | **0.9632** | **+0.0165** | **−15.7% (864 tot)** |
+
+**Errori trovati e corretti (solo documentazione):**
+
+1. **ROI ≈ −8.5% → −15.7%**: il valore nel README era il ROI del primo backtest
+   di Fase 1 (una stagione, modello iniziale), rimasto accanto a metriche a 6
+   stagioni. Il ROI reale della config ufficiale è **−15.7% medio** (sopra, per
+   stagione). La conclusione «non scommettere» ne esce *rafforzata*.
+2. **DIARIO, tabella Fase 2b**: la riga «Dixon-Coles puro ~0.9863, gap +0.026»
+   era internamente incoerente (con quel log-loss il gap è +0.021; il +0.026
+   appartiene al valore a 2 stagioni 0.9918). Corretta.
+3. **O/U ufficiale 0.6884 → 0.6885** (0.6884 era il valore *senza* prior);
+   «~87%» → **86.3%** di distanza chiusa; baseline «~1.085» → **1.0834**;
+   guadagno Fase 4d «~0.0007» → **−0.0006** (1X2) e **−0.0009** (O/U).
+
+**Limiti metodologici scoperti (dichiarati, non correggibili a posteriori):**
+
+- **La baseline è in-sample**: usa le frequenze H/D/A della stagione di test
+  stessa (la costante ottima *a posteriori*). La baseline **ex-ante** onesta
+  (frequenze delle sole stagioni precedenti) è 1.0860 (1X2) e 0.6961 (O/U) —
+  vedi la tabella all'inizio. Direzione conservativa: il modello la batte
+  comunque, di più.
+- **Iperparametri tarati sulle stesse stagioni poi riportate** (winner's curse
+  potenziale): verificato però sui fatti che il gap sulle stagioni **mai usate
+  per il tuning** (2020-21→2022-23: **+0.0164**) è indistinguibile da quello
+  sulle stagioni di tuning (2023-24→2025-26: **+0.0166**) → nessuna evidenza di
+  overfitting di selezione materiale.
+- **Costanti col senno di poi negli script delle fasi 10-12**: `RECAL_W` e
+  δ=0.23 fisso derivano da fit che includono le stagioni di valutazione; i Δ
+  onesti restano quelli leave-future-out (−0.0005 la ricalibrazione, −0.0011 il
+  prior). Caveat ora dichiarati negli script stessi.
+- **`analyze_gap` per fascia di forza** usa la classifica *finale* della
+  stagione (informazione futura): la tabella per-tier è diagnostica, non una
+  segmentazione operativa.
+- **Streak (Fase 13)**: lo stato per-squadra non si azzerava tra stagioni (una
+  retrocessa che risale rientrava con la streak di anni prima); impatto piccolo
+  sui bin estremi, conclusioni invariate.
+- **Fase 14 (quote di apertura)**: nel codice, quando in una riga manca la
+  quota di chiusura il fallback rendeva `open ≡ close` (CLV=0 spurio contato
+  come negativo) e le metriche modello/mercato-apertura del registro erano su
+  righe diverse. Corretti entrambi prima dell'arrivo dei dati `*_open`.
+
+**Conclusione dell'audit: nessuna conclusione del progetto cambia.** Il modello
+batte la baseline (anche quella ex-ante), non batte il mercato (+0.0165), il
+value betting perde (più di quanto scritto prima: −15.7%, non −8.5%). Il tetto
+resta reale. **Non usare il modello per scommettere soldi veri.**
 
 ## Struttura
 
@@ -564,10 +657,23 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     (punti/gara ultime 5) **non predice l'errore del modello** (corr +0.035) e come
     covariata peggiora (+0.0002) → già catturata dal fit pesato nel tempo, nessun
     pattern nascosto. Ottavo esperimento convergente. Vedi `docs/DIARIO.md`.
-19. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
+19. 🔶 **Fase 14** — **quote di apertura e CLV** (codice pronto, dati in attesa):
+    loader per le colonne `*_open` (linea pre-chiusura football-data), metriche
+    vs apertura, value bet @open e CLV in `experiment_log`, script
+    `_run_fase14_openline.py`, test. I dati `*_open` **non sono ancora nello
+    snapshot** (serve `build_database.py --open-odds` con accesso ai CSV grezzi):
+    nessun numero pubblicato finché non arrivano.
+20. ✅ **Fase 15** — **audit dei calcoli**: ogni numero di README/DIARIO
+    ricalcolato dal registro, backtest ufficiale riprodotto identico, formule
+    verificate (nessun errore). Corretti: ROI (−15.7% reale, non −8.5%), tabella
+    Fase 2b del diario, O/U 0.6885, ~86%, baseline 1.0834 + baseline ex-ante
+    1.0860 dichiarata. Registrate nel registro le run mancanti delle Fasi
+    11/12a/13. Nessuna conclusione cambia. Vedi la sezione
+    [Audit dei calcoli](#audit-dei-calcoli--fase-15-verifica-indipendente-di-ogni-numero).
+21. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
     oppure **uso pratico** del modello attuale (comando di predizione).
-20. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-21. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+22. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+23. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

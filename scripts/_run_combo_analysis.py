@@ -27,13 +27,17 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data import loader, sources
-from src.evaluation import calibration, markets, metrics
+from src.evaluation import calibration, experiment_log, markets, metrics
 from scripts.backtest import run_backtest
 
 SEASONS = ["2021", "2122", "2223", "2324", "2425", "2526"]
 COV_OPTS = ["squad_value", "absence", "rest_full"]
 COVSETS = [tuple(c) for k in range(len(COV_OPTS) + 1)
            for c in itertools.combinations(COV_OPTS, k)]
+# Pesi di ricalibrazione FISSI, sintesi dei fit della Fase 10. ATTENZIONE
+# (audit Fase 15): sono stati consolidati conoscendo i fit su TUTTE le 6
+# stagioni qui valutate, quindi le colonne "+RECAL" sono leggermente ottimiste
+# rispetto al leave-future-out onesto della Fase 10 (che dava -0.0005).
 RECAL_W = (0.96, 1.04, 1.00)  # strutturale, Fase 10 (casa giu', pari su)
 CFG = dict(half_life_days=365, shrinkage=1.5, shots_blend=0.75,
            blend_signal="xg", promoted_prior=(0.23, 0.23))
@@ -69,6 +73,17 @@ def main():
             dfs[ci][s] = df
             print(f"  [{k:>2}/{len(tasks)}] {label(COVSETS[ci]):<34} {s}", flush=True)
 
+    # Registro replicabile: ogni combo x stagione (metriche complete, RAW).
+    fp = experiment_log.data_fingerprint(loader.load_league("serie_a"))
+    for ci in range(len(COVSETS)):
+        for s in SEASONS:
+            cfg = {"source": "fase11_combo", "league": "serie_a",
+                   "test_season": s, "covariates": list(COVSETS[ci]),
+                   **{k: v for k, v in CFG.items() if k != "promoted_prior"},
+                   "promoted_prior": 0.23}
+            experiment_log.append_run(experiment_log.make_record(
+                cfg, experiment_log.compute_metrics(dfs[ci][s]), fp))
+
     base_ll = {s: ll(dfs[0][s]) for s in SEASONS}  # ufficiale (covset vuoto)
     base_mean = np.mean(list(base_ll.values()))
 
@@ -98,6 +113,9 @@ def main():
     print("-" * 96)
     print(f"MIGLIORE: {best[0]} ({tag})  media {best_val:.4f}  "
           f"Δ {best_val-base_mean:+.4f} vs ufficiale")
+    print("  (ATTENZIONE: minimo tra 16 combo x 2 varianti valutate sulle STESSE"
+          " 6 stagioni:\n   con Δ di quest'ordine il 'migliore' e' quasi certamente"
+          " rumore selezionato, NON un Δ out-of-sample.)")
 
     # multi-mercato per la combinazione migliore vs ufficiale
     print("\n" + "=" * 96)

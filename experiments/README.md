@@ -8,7 +8,10 @@ ottenuto un numero.
 ## `runs.jsonl`
 
 Un record JSON per riga (formato JSON Lines), aggiunto in append ad ogni run di
-`scripts/backtest.py` e `scripts/tune.py`. Ogni record contiene:
+`scripts/backtest.py` e `scripts/tune.py`, e dagli script di fase (`scripts/_run_*.py`,
+riconoscibili dal campo `config.source`, es. `fase7_promosse`, `fase11_combo`,
+`fase12a_ensemble`, `fase13_form`; regola dall'audit di Fase 15: **nessuna
+analisi senza run nel registro**). Ogni record contiene:
 
 | campo | significato |
 |---|---|

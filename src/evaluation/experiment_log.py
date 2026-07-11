@@ -153,6 +153,11 @@ def compute_metrics(df: pd.DataFrame) -> dict:
     model_over = df["m_over"].to_numpy()
     ou_mkt, has_ou = _market_over(df)
 
+    # NOTA ONESTA (audit Fase 15): la baseline usa le frequenze della stagione
+    # di test STESSA (in-sample), quindi e' la costante ottima a posteriori --
+    # leggermente piu' forte della baseline ex-ante (frequenze delle sole
+    # stagioni precedenti). Direzione conservativa per il modello; mantenuta
+    # per continuita' con lo storico del registro (233+ run gia' scritte).
     base_1x2 = np.tile(metrics.base_rates_1x2(outcomes), (len(df), 1))
     base_over = np.full(len(df), float(is_over.mean()))
     n_bets, roi = value_bet_roi(df)
@@ -170,6 +175,11 @@ def compute_metrics(df: pd.DataFrame) -> dict:
             open_metrics.update({
                 "x2_market_open_logloss": metrics.log_loss_1x2(open_1x2[has_open], out_open),
                 "x2_market_open_brier": metrics.brier_1x2(open_1x2[has_open], out_open),
+                # Modello sulle STESSE righe della linea di apertura (audit
+                # Fase 15): senza queste, un gap modello-vs-apertura ricavato
+                # dal registro confronterebbe insiemi di partite diversi.
+                "x2_model_open_logloss": metrics.log_loss_1x2(model[has_open], out_open),
+                "x2_model_open_brier": metrics.brier_1x2(model[has_open], out_open),
                 "value_bet_open_n": n_open,
                 "value_bet_open_roi_pct": roi_open,
                 "clv_n": clv_n,
@@ -184,6 +194,11 @@ def compute_metrics(df: pd.DataFrame) -> dict:
                     ou_open[has_ou_open], is_over[has_ou_open]),
                 "ou_market_open_brier": metrics.brier_binary(
                     ou_open[has_ou_open], is_over[has_ou_open]),
+                # Modello sulle stesse righe (vedi nota sopra per l'1X2).
+                "ou_model_open_logloss": metrics.log_loss_binary(
+                    model_over[has_ou_open], is_over[has_ou_open]),
+                "ou_model_open_brier": metrics.brier_binary(
+                    model_over[has_ou_open], is_over[has_ou_open]),
             })
 
     return {

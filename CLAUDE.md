@@ -168,7 +168,20 @@ esperimenti convergono: **tetto REALE**, non solo pratico. draw_inflation off di
 default. **Fase 13:** stato di forma (`add_form`, covariata `form`,
 `scripts/_run_form.py`): la forma NON predice l'errore del modello (corr +0.035) e
 come covariata peggiora (+0.0002) → gia' catturata dal fit pesato nel tempo,
-nessun pattern nascosto (8 esperimenti convergenti). **Prossimo bivio:** solo
-**dati davvero nuovi** o **uso pratico**.
+nessun pattern nascosto (8 esperimenti convergenti). **Fase 14 (codice pronto,
+dati in attesa):** quote di apertura `*_open` + metriche CLV; lo snapshot NON ha
+ancora le colonne (serve `build_database.py --open-odds` coi CSV grezzi): nessun
+numero di Fase 14 esiste. **Fase 15 (audit dei calcoli):** ogni numero di
+README/DIARIO ricalcolato dal registro; formule tutte corrette, walk-forward
+pulito, backtest ufficiale riprodotto identico. UN errore vero trovato e
+corretto: il ROI del value betting era **−15.7%** (media 6 stagioni, config
+ufficiale), non il −8.5% (valore Fase 1) rimasto nel README. Corrette sbavature
+(O/U 0.6885, ~86%, baseline 1.0834, tabella 2b del diario) e dichiarati i limiti:
+baseline in-sample (ex-ante onesta: 1.0860/0.6961, battuta comunque), costanti
+RECAL_W/δ fisso col senno di poi negli script 10-12, gap identico su stagioni
+pulite (+0.0164) e di tuning (+0.0166) → nessun overfitting di selezione.
+Registrate nel registro le run mancanti (Fasi 11/12a/13); regola: **nessuna
+analisi senza run in `runs.jsonl`**. **Prossimo bivio:** solo **dati davvero
+nuovi** o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

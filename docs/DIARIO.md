@@ -121,11 +121,17 @@ preferisce **memoria lunga (~730g, due stagioni)**. Ha senso: in Serie A le rose
 restano stabili anno su anno, quindi pesare troppo le ultime partite butta via
 segnale.
 
-| Config | log-loss 1X2 (media 3 stagioni) | gap col mercato |
+| Config | log-loss 1X2 | gap col mercato |
 |---|---:|---:|
-| Dixon-Coles puro | ~0.9863 | +0.026 |
-| + shrinkage 1.5 | 0.9863 | +0.021 |
-| + emivita 730g | **0.9829** | **+0.017** |
+| Dixon-Coles puro (media 2 stagioni) | 0.9918 | +0.026 |
+| + shrinkage 1.5 (media 2 stagioni) | 0.9879 | +0.022 |
+| + shrinkage, emivita 180g (media 3 stagioni) | 0.9863 | +0.021 |
+| + emivita 730g (media 3 stagioni) | **0.9829** | **+0.017** |
+
+*(Mercato: 0.9654 sulle 2 stagioni, 0.9658 sulle 3. Nota audit Fase 15: la
+versione precedente di questa tabella attribuiva al "puro" il valore 0.9863 con
+gap +0.026 — internamente impossibile; il +0.026 appartiene al valore a 2
+stagioni 0.9918, il 0.9863 è la config con shrinkage a emivita 180g.)*
 
 **Risultato:** solo con la taratura abbiamo recuperato **circa un terzo** del
 divario col mercato, senza informazione nuova. Ma il modello sui *soli gol* è ora
@@ -1206,24 +1212,94 @@ cio' che sta nei risultati recenti.
 
 ---
 
-## Prossimo passo — il modello e' al tetto dei dati attuali
+## Fase 14 — Quote di apertura e CLV (codice pronto, dati in attesa)
 
-Il divario residuo richiede **informazione che il mercato ha e noi no**: la
-*qualità* delle occasioni. Abbiamo trovato una fonte **xG reale** raggiungibile
-(mirror Understat su GitHub) con copertura storica completa (2016-17 → 2024-25).
+**Obiettivo.** Confrontare il modello con la **linea di apertura** oltre che con
+la chiusura: se il modello batte l'apertura (piu' morbida) anche senza battere la
+chiusura, esiste un uso pratico (CLV — closing line value — positivo).
 
-Piano in due binari:
-1. **Validazione (in questo ambiente):** integrare l'xG storico nel database e
-   ri-tarare il blend usando l'**xG reale** al posto dei tiri grezzi — la prova
-   pulita dell'ipotesi "le occasioni aiutano", fatta coi dati giusti. La stessa
-   infrastruttura della Fase 3 la abilita già (basta puntare il "secondo modello"
-   sull'xG).
-2. **Uso reale (in locale):** un fetcher Understat per dati *completi e correnti*,
-   sostituibile in `sources.py`, che scrive nello stesso snapshot/database.
+**Ragionamento.** Le colonne football-data senza suffisso "C" sono quote
+pre-chiusura; quelle con "C" (dal 2019-20) sono la chiusura. Estraendole entrambe
+si misura: gap vs apertura, ROI @open, e quanto la chiusura si muove verso il
+modello (CLV).
 
-Nota di realismo: anche con l'xG, battere le quote di chiusura resta difficile
-(i professionisti parlano di 2-5% di edge dopo anni). L'xG è la mossa con la
-miglior probabilità di aprire un vantaggio, ma senza garanzie.
+**Scelta.** Loader per le colonne `*_open` (mai fallback sulle colonne C),
+metriche vs apertura in `experiment_log`, script `_run_fase14_openline.py`, test.
+
+**Risultato.** **Nessun numero ancora**: i dati `*_open` non sono nello snapshot
+(serve `build_database.py --open-odds` con accesso ai CSV grezzi, bloccato dalla
+rete della sessione). Qualsiasi numero di Fase 14 in giro per il repo sarebbe
+inventato: non ce ne sono, per costruzione.
+
+**Lezione.** Registrare lo stato "in attesa dati" evita che una fase a meta'
+venga scambiata per una fase conclusa.
+
+---
+
+## Fase 15 — Audit dei calcoli (verifica indipendente; 1 errore vero trovato)
+
+**Obiettivo.** Prima di investire altro lavoro sul modello: c'e' qualche errore
+di calcolo nei backtest fatti finora? Verifica sistematica di formule, pipeline
+e di OGNI numero dichiarato in README/DIARIO.
+
+**Ragionamento / metodo.** Quattro verifiche indipendenti e incrociate:
+(1) audit del codice di modello e metriche (formule, segni, allineamenti,
+look-ahead); (2) audit di tutti gli script di fase; (3) ricalcolo a precisione
+piena di ogni numero di README/DIARIO dal registro `runs.jsonl` (233 run);
+(4) ri-esecuzione del backtest ufficiale dallo snapshot congelato.
+
+**Risultato.**
+- **Formule: nessun errore.** Log-loss, Brier, devig, correzione DC τ,
+  verosimiglianza dell'inflazione diagonale, temperature scaling, blend: tutto
+  corretto. Walk-forward pulito (`date < as_of` ovunque, nessun leakage
+  per-partita). Backtest ufficiale **riprodotto identico** alla 4ª cifra.
+- **1 errore numerico vero**: il ROI del value betting nel README (**≈ −8.5%**)
+  era il valore della Fase 1 (una stagione, modello iniziale); quello reale
+  della config ufficiale su 6 stagioni e' **−15.7% medio** (da −4.7% a −23.0%,
+  864 scommesse). Corretto. La conclusione "non scommettere" si rafforza.
+- **Sbavature corrette**: tabella Fase 2b di questo diario (riga "puro"
+  incoerente), O/U ufficiale 0.6885 (non 0.6884), ~86% di distanza chiusa (non
+  ~87%), baseline 1.0834 (non ~1.085), guadagno Fase 4d −0.0006/−0.0009 (non
+  ~0.0007), doppia stima del prior (−0.0010 δ fisso / −0.0011 leave-future-out)
+  ora spiegata.
+- **Limiti metodologici dichiarati** (non correggibili a posteriori senza
+  rifare la storia): baseline in-sample (quella ex-ante onesta e' 1.0860/0.6961:
+  il modello batte anche quella); iperparametri tarati su stagioni poi
+  riportate — ma il gap sulle stagioni MAI usate per il tuning (+0.0164,
+  2020-23) e' indistinguibile da quello sulle stagioni di tuning (+0.0166,
+  2023-26), quindi nessuna evidenza di overfitting di selezione; costanti
+  RECAL_W e δ=0.23 fisso col senno di poi negli script delle fasi 10-12 (i Δ
+  onesti restano i leave-future-out); tier di `analyze_gap` dalla classifica
+  finale (diagnostica, non operativa); streak (Fase 13) senza reset tra
+  stagioni (impatto marginale).
+- **Fix preventivi alla Fase 14** (prima che arrivino i dati): niente righe
+  open≡close spurie nel CLV; metriche modello/apertura sulle stesse righe nel
+  registro.
+- **Registro completato**: le run delle Fasi 11, 12a e 13 (assenti da
+  `runs.jsonl` nonostante la promessa di replicabilita') sono state ri-eseguite
+  e registrate.
+
+**Lezione.** L'errore sopravvissuto piu' a lungo non era in una formula ma in un
+**numero copiato tra contesti diversi** (ROI di Fase 1 accanto a metriche a 6
+stagioni). Il registro automatico funziona: tutto cio' che passava da
+`runs.jsonl` era giusto; gli errori vivevano solo nei documenti scritti a mano e
+negli script che NON registravano le run. Regola rafforzata: ogni numero
+pubblicato deve essere ricalcolabile dal registro.
+
+---
+
+## Prossimo passo — il modello e' al tetto REALE dei dati attuali
+
+Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15: il gap residuo
+col mercato (+0.0165, quasi tutto nel pareggio) non e' cattiva modellazione ne'
+errore di calcolo, ma **informazione che il mercato ha e noi no**. Il bivio:
+1. **Dati davvero nuovi** (formazioni/assenze ufficiali pre-partita, mercati
+   d'apertura — Fase 14 quando arrivano i dati `*_open`);
+2. **Uso pratico** del modello attuale (comando di predizione, monitoraggio CLV).
+
+Nota di realismo invariata: battere le quote di chiusura resta difficilissimo;
+il value betting simulato perde il **15.7%** — piu' di quanto credevamo prima
+dell'audit. **Non scommettere soldi veri con questo modello.**
 
 ---
 
