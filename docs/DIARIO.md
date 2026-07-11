@@ -1022,6 +1022,33 @@ beneficia.
 
 ---
 
+## Fase 12a — Ensemble di emivite (ultimo tweak economico; piccolo, borderline)
+
+**Obiettivo / idea.** L'unica idea economica non ancora testata: mescolare un
+modello a memoria CORTA (180g, reattivo/forma) e uno LUNGA (730g, forza stabile)
+puo' battere la singola emivita 365g? Si mescolano le probabilita' 1X2 (righe
+allineate), tutti col prior.
+
+**Risultato (1X2 log-loss, 6 stagioni).**
+
+| Variante | media | Δ vs 365g | migliora |
+|---|--:|--:|:--:|
+| singola 180g | 0.9806 | +0.0009 | 3/6 |
+| singola 365g (ATTUALE) | 0.9797 | — | — |
+| singola 730g | 0.9803 | +0.0006 | 3/6 |
+| **blend 180+730 (50/50)** | **0.9791** | **−0.0006** | 4/6 |
+| blend 180+365+730 (1/3) | 0.9793 | −0.0004 | 4/6 |
+| blend 365+730 (50/50) | 0.9798 | +0.0001 | 3/6 |
+
+**Lezione.** La miscela **corta+lunga (180+730)** batte di un soffio ogni singola
+emivita (−0.0006, 4/6): combinare forma reattiva e forza stabile cattura un po'
+piu' della singola 365g. Ma e' **borderline** (4/6, non 6/6), nella stessa fascia
+di prior/calibrazione/ricalibrazione. **Non adottato** (non abbastanza robusto).
+Chiude il capitolo dei tweak economici: anche l'ultima idea non testata e'
+rumore-adiacente. **Riproducibilita'.** `python scripts/_run_ensemble.py`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
