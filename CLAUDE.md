@@ -157,6 +157,10 @@ calibrazione del pareggio ma il log-loss guadagna solo −0.0004 (3/6): *quanti*
 pareggi capitano e' rumore. **Il pareggio e' quasi-casuale per tutti (mercato
 incluso)** → il gap non e' cattiva modellazione ma info che il mercato ha. 7
 esperimenti convergono: **tetto REALE**, non solo pratico. draw_inflation off di
-default. **Prossimo bivio:** solo **dati davvero nuovi** o **uso pratico**.
+default. **Fase 13:** stato di forma (`add_form`, covariata `form`,
+`scripts/_run_form.py`): la forma NON predice l'errore del modello (corr +0.035) e
+come covariata peggiora (+0.0002) → gia' catturata dal fit pesato nel tempo,
+nessun pattern nascosto (8 esperimenti convergenti). **Prossimo bivio:** solo
+**dati davvero nuovi** o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

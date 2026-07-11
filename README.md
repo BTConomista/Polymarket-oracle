@@ -306,10 +306,14 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     Il pareggio è **quasi-casuale per tutti, mercato incluso** → il gap non è
     cattiva modellazione ma informazione che il mercato ha. **Tetto reale**
     confermato. Vedi `docs/DIARIO.md`, Fase 12b.
-18. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
+18. ✅ **Fase 13** — **stato di forma** (`add_form`, covariata `form`): la forma
+    (punti/gara ultime 5) **non predice l'errore del modello** (corr +0.035) e come
+    covariata peggiora (+0.0002) → già catturata dal fit pesato nel tempo, nessun
+    pattern nascosto. Ottavo esperimento convergente. Vedi `docs/DIARIO.md`.
+19. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
     oppure **uso pratico** del modello attuale (comando di predizione).
-19. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-20. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+20. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+21. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

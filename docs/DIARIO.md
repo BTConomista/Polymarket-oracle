@@ -1109,6 +1109,41 @@ GG/NG ~invariati. φ fittato ~0.10-0.14 (positivo, come da deficit).
 
 ---
 
+## Fase 13 — Stato di forma: un pattern nascosto? (NO, gia' catturato)
+
+**Obiettivo.** Verificare l'ultima intuizione: c'e' un momentum ("forma")
+predittivo che la forza pesata nel tempo non vede? Il modello cattura la forma
+GIA' in modo implicito (emivita 365g: le gare recenti pesano di piu'), e un
+indizio c'era (l'emivita corta 180g, piu' reattiva, era peggio, Fase 12a). Ma
+una covariata di forma ESPLICITA e' un segnale diverso dal ri-pesare: da provare.
+
+**Feature.** `add_form` nel loader: `home_form`/`away_form` = punti per partita
+nelle ultime 5 gare di ciascuna squadra prima di questa (no look-ahead, scorre
+tra stagioni). Covariata `form`.
+
+**Metodo: prima il diagnostico del pattern nascosto, poi la covariata.**
+
+*(1) La forma predice l'ERRORE del modello?* Se le squadre in forma battono
+sistematicamente l'aspettativa, c'e' segnale non catturato. Su 6 stagioni:
+- **corr(forma_casa − forma_ospite, residuo punti casa) = +0.035** → ~zero.
+- Residuo medio per terzile di differenza-forma: ~0 in ogni gruppo. Nessun bias
+  sistematico legato alla forma.
+
+*(2) Covariata `form` walk-forward (1X2 log-loss):* base 0.9797 → +form **0.9799
+(+0.0002, peggio)**, 3/6 stagioni. Come `squad_value`: ridondante e un filo dannosa.
+
+**Lezione.** **Nessun pattern nascosto nella forma.** La ragione e' strutturale:
+la "forma" (punti recenti) SONO i risultati recenti, che il fit pesato nel tempo
+gia' pesa di piu' → la forma esplicita e' quasi perfettamente collineare con la
+forza recente che il modello stima. Il residuo del modello e' scorrelato dalla
+forma (+0.035): non resta momentum da spremere. (Una forma su xG sarebbe ancora
+piu' ridondante: l'xG e' gia' nel blend.) La covariata `form` resta off. Ottavo
+esperimento convergente: il tetto e' reale, la forma non lo scalfisce.
+
+**Riproducibilita'.** `python scripts/_run_form.py`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

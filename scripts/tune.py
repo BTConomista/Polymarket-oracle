@@ -82,7 +82,7 @@ def main() -> None:
     parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
                         help="segnale secondario del blend (default xg=xG reale)")
     parser.add_argument("--covariates", nargs="*", default=[],
-                        choices=["squad_value", "absence", "rest", "rest_full"],
+                        choices=["squad_value", "absence", "rest", "rest_full", "form"],
                         help="covariate di partita fisse (Fase 4c/4e)")
     parser.add_argument("--promoted-prior", type=float, default=None, metavar="DELTA",
                         help="prior di cold-start neopromosse fisso (Fase 7): "

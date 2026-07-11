@@ -186,6 +186,33 @@ def add_rest_days(matches: pd.DataFrame, cap: int = 14) -> pd.DataFrame:
     return df
 
 
+def add_form(matches: pd.DataFrame, window: int = 5) -> pd.DataFrame:
+    """Aggiunge home_form / away_form: punti per partita nelle ultime ``window``
+    gare di ciascuna squadra PRIMA di questa (stato di forma recente).
+
+    Feature derivata dai risultati recenti: cattura eventuale momentum che la
+    forza pesata nel tempo non vedesse. Rispetta la cronologia (solo partite
+    precedenti -> niente look-ahead), scorre tra le stagioni. Squadra con nessuna
+    gara precedente -> NaN (covariata neutra). Punti: vittoria 3, pari 1, sconf. 0.
+    """
+    from collections import deque
+    df = matches.sort_values("date").reset_index(drop=True)
+    recent: dict[str, deque] = {}
+    home_form, away_form = [], []
+    for _, r in df.iterrows():
+        for team, out in ((r["home_team"], home_form), (r["away_team"], away_form)):
+            dq = recent.get(team)
+            out.append(sum(dq) / len(dq) if dq else float("nan"))
+        # Aggiorna DOPO aver letto (no look-ahead): punti di QUESTA gara.
+        hg, ag = r["home_goals"], r["away_goals"]
+        hp = 3 if hg > ag else (1 if hg == ag else 0)
+        recent.setdefault(r["home_team"], deque(maxlen=window)).append(hp)
+        recent.setdefault(r["away_team"], deque(maxlen=window)).append(3 - hp if hp != 1 else 1)
+    df["home_form"] = home_form
+    df["away_form"] = away_form
+    return df
+
+
 def load_league(
     league_key: str = "serie_a",
     season_codes: list[str] | None = None,
@@ -214,9 +241,10 @@ def load_league(
     if (not force_download and league_key == "serie_a"
             and database.SNAPSHOT_PATH.exists()):
         df = database.read_snapshot()
-        # Riposo calcolato su TUTTE le stagioni (per avere la partita precedente
-        # a cavallo tra stagioni), poi si filtra alle stagioni richieste.
+        # Riposo e forma calcolati su TUTTE le stagioni (per avere le partite
+        # precedenti a cavallo tra stagioni), poi si filtra a quelle richieste.
         df = add_rest_days(df)
+        df = add_form(df)
         wanted = {str(s) for s in seasons}
         df = df[df["season"].isin(wanted)]
         return df.sort_values("date").reset_index(drop=True)
@@ -231,4 +259,5 @@ def load_league(
     combined = combined.sort_values("date").reset_index(drop=True)
     combined = enrich(combined, force_download=force_download)
     combined = add_rest_days(combined)
+    combined = add_form(combined)
     return combined

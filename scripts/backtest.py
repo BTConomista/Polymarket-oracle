@@ -170,7 +170,7 @@ def main() -> None:
                         help="segnale secondario da mescolare (default xg=xG reale; "
                              "sot=tiri in porta)")
     parser.add_argument("--covariates", nargs="*", default=[],
-                        choices=["squad_value", "absence", "rest", "rest_full"],
+                        choices=["squad_value", "absence", "rest", "rest_full", "form"],
                         help="covariate di partita da aggiungere (Fase 4c)")
     parser.add_argument("--promoted-prior", type=float, default=0.23, metavar="DELTA",
                         help="prior di cold-start per le neopromosse (Fase 7, config "
