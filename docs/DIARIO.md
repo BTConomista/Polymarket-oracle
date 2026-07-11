@@ -867,6 +867,57 @@ piu'). Non e' l'asse dove si nasconde il divario.
 **Riproducibilita'.** `python scripts/analyze_gap.py` (5 versioni × 6 stagioni,
 scomposizione per stagione/mercato/forza/favoritismo).
 
+### Fase 9-bis — COVID vs post-COVID e trend recente
+
+**Obiettivo.** Il gap 1X2 peggiore era il 2020-21: e' un effetto COVID (stadi
+vuoti) o solo la stagione piu' vecchia? E negli ultimi anni dove sta andando?
+Periodi: **COVID** = 2020-21 (stadi vuoti tutta la stagione); **transizione** =
+2021-22 (capienza ridotta/Omicron); **post-COVID** = 2022-23→2025-26.
+
+**Gap per periodo (versione attuale; GG/NG vs baseline, no quote).**
+
+| Periodo | 1X2 | 1X | 2X | 12 | O/U 2.5 | GG/NG |
+|---|--:|--:|--:|--:|--:|--:|
+| COVID (2020-21) | +0.0202 | +0.0160 | +0.0151 | +0.0017 | **−0.0031** | +0.0074 |
+| transizione (2021-22) | +0.0145 | +0.0082 | +0.0105 | +0.0031 | +0.0147 | −0.0054 |
+| post-COVID (2022-26) | +0.0161 | +0.0114 | +0.0127 | +0.0018 | +0.0074 | +0.0035 |
+| **Δ (post − COVID)** | **−0.0041** | −0.0047 | −0.0024 | +0.0001 | **+0.0104** | −0.0039 |
+
+**Due movimenti opposti.**
+1. **Mercati d'ESITO (1X2/1X/2X): il gap si RIDUCE dopo il COVID** (1X2 da +0.0202
+   a +0.0161). Ipotesi: a stadi vuoti il **vantaggio-casa e' crollato**; il
+   modello lo eredita dallo storico "normale" e sovra-pesava le squadre di casa,
+   mentre il mercato si adeguava piu' in fretta → gap piu' largo. (Confuso in
+   parte col fatto che 2020-21 e' la stagione con meno storico di training.)
+   Tornato il pubblico, il gap si e' richiuso. Collega la Fase 8: il vantaggio-
+   casa GLOBALE conta e drifta, ma quello per-squadra e' rumore — coerente.
+2. **Over/Under: l'OPPOSTO. Nel COVID il modello BATTEVA il mercato** (−0.0031),
+   post-COVID il mercato e' tornato affilato (+0.0074, Δ +0.0104). I totali
+   risentono meno del pubblico; in quella stagione anomala le quote O/U erano
+   verosimilmente meno precise. (Cautela: un solo campione COVID, 380 partite.)
+3. **12 (senza pari): a livello mercato in ogni periodo** (~+0.002). La debolezza
+   sul pareggio non e' un effetto COVID: e' strutturale.
+
+**Trend ultime 3 stagioni (gap; ↓ = migliora).**
+
+| Mercato | 2023-24 | 2024-25 | 2025-26 | Δ(25/26−23/24) |
+|---|--:|--:|--:|--:|
+| 1X2 | +0.0187 | +0.0170 | +0.0141 | **−0.0046 ↓** |
+| 1X | +0.0175 | +0.0082 | +0.0108 | −0.0066 ↓ |
+| 2X | +0.0128 | +0.0156 | +0.0096 | −0.0031 ↓ |
+| 12 | −0.0021 | +0.0050 | +0.0022 | +0.0043 ↑ (ma ~mercato) |
+| O/U 2.5 | +0.0007 | +0.0101 | +0.0020 | +0.0013 ≈ rumoroso |
+| GG/NG | −0.0003 | +0.0037 | +0.0039 | +0.0042 ↑ (vs baseline) |
+
+**Lezione.** I **mercati d'esito stanno migliorando**: il gap 1X2 e' al **minimo
+nell'ultima stagione (2025-26: +0.0141)**, in calo netto dalle tre precedenti
+(aiutano prior neopromosse e maturazione dell'xG). Il **12 resta incollato al
+mercato** ovunque. **O/U e GG/NG oscillano vicino a zero** senza trend. La parte
+che si chiude e' quella d'esito; quella che non si muove e' il **pareggio** —
+ancora una volta il dito punta sulla correlazione dei punteggi.
+
+**Riproducibilita'.** `python scripts/_run_gap_covid.py`.
+
 ---
 
 ## Prossimo passo — il modello e' al tetto dei dati attuali
