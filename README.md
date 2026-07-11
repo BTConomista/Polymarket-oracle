@@ -667,8 +667,11 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     ricalcolato dal registro, backtest ufficiale riprodotto identico, formule
     verificate (nessun errore). Corretti: ROI (−15.7% reale, non −8.5%), tabella
     Fase 2b del diario, O/U 0.6885, ~86%, baseline 1.0834 + baseline ex-ante
-    1.0860 dichiarata. Registrate nel registro le run mancanti delle Fasi
-    11/12a/13. Nessuna conclusione cambia. Vedi la sezione
+    1.0860 dichiarata. Le run mancanti delle Fasi 11/12a/13 sono state
+    **ri-eseguite e registrate** (96 run nuove, registro a 329): i numeri
+    pubblicati sono **confermati identici** (blend 180+730 = 0.9791/−0.0006;
+    forma +0.0002, corr +0.0353; miglior combo −0.0011, squad_value peggiora).
+    Nessuna conclusione cambia. Vedi la sezione
     [Audit dei calcoli](#audit-dei-calcoli--fase-15-verifica-indipendente-di-ogni-numero).
 21. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
     oppure **uso pratico** del modello attuale (comando di predizione).

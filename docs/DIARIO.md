@@ -1275,9 +1275,12 @@ piena di ogni numero di README/DIARIO dal registro `runs.jsonl` (233 run);
 - **Fix preventivi alla Fase 14** (prima che arrivino i dati): niente righe
   open≡close spurie nel CLV; metriche modello/apertura sulle stesse righe nel
   registro.
-- **Registro completato**: le run delle Fasi 11, 12a e 13 (assenti da
-  `runs.jsonl` nonostante la promessa di replicabilita') sono state ri-eseguite
-  e registrate.
+- **Registro completato e numeri riconfermati**: le run delle Fasi 11, 12a e 13
+  (assenti da `runs.jsonl` nonostante la promessa di replicabilita') sono state
+  ri-eseguite (96 backtest, registro a 329 run) e i numeri pubblicati sono
+  usciti **identici**: blend 180+730 = 0.9791 (−0.0006, 4/6); forma +0.0002
+  (corr +0.0353); miglior combo −0.0011 (+absence+rest_full +RECAL, rumore
+  selezionato), squad_value peggiora in ogni mix.
 
 **Lezione.** L'errore sopravvissuto piu' a lungo non era in una formula ma in un
 **numero copiato tra contesti diversi** (ROI di Fase 1 accanto a metriche a 6
