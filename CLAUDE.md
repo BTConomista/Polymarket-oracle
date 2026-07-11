@@ -71,8 +71,9 @@ python -m pytest                       # test
 ```
 
 Config "ufficiale" corrente del modello (default in `backtest.py`): **emivita
-365g, shrinkage 1.5, shots_blend 0.75, blend_signal xg** (blend gol/xG reale,
-Fase 4b; emivita ri-tarata a 365g in Fase 4d). Se la cambi, aggiorna README e diario.
+365g, shrinkage 1.5, shots_blend 0.75, blend_signal xg, promoted_prior 0.23**
+(blend gol/xG reale, Fase 4b; emivita ri-tarata a 365g in Fase 4d; prior di
+cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e diario.
 
 ---
 
@@ -135,8 +136,12 @@ trascurabile (−0.0003) → non entra nella config; modulo `src/evaluation/cali
 per l'uso pratico. **Fase 7:** **prior di cold-start neopromosse**
 (`--promoted-prior`, δ≈0.23 stimato leave-future-out): sposta il bersaglio dello
 shrinkage sotto la media per le squadre senza storico. **Miglior guadagno interno**
-(−0.0011 medio, −0.0039 sulle partite delle promosse, 5/6 stagioni) ma piccolo e
-non batte il mercato → **off di default**, da decidere se renderlo ufficiale.
-**Prossimo bivio:** modello di classe diversa / dati nuovi, oppure uso pratico.
+(−0.0011 medio, −0.0039 sulle partite delle promosse, 5/6 stagioni): **ADOTTATO
+nella config ufficiale** (δ=0.23). **Fase 8 (ultimo giro economico, NEGATIVO):**
+ri-taratura shrinkage col prior = curva **piatta** 0.75-1.5 (leve ortogonali,
+nessun guadagno); vantaggio-casa per-squadra = **persistenza anno-su-anno r≈0.00**
+(solo rumore stagionale, non generalizza) → niente da spremere. Il modello e' al
+tetto pratico dei dati attuali. **Prossimo bivio:** modello di classe diversa
+(es. Poisson bivariato per GG/NG) / dati nuovi, oppure uso pratico.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

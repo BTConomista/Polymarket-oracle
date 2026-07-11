@@ -704,13 +704,63 @@ di test, assenti nella precedente). Flag CLI `--promoted-prior DELTA`.
    previsioni piu' oneste su partite reali (soprattutto inizio stagione e squadre
    neopromosse), non per un edge.
 4. **Adozione**: e' l'unico dei tre esperimenti "di spremitura" che supera il
-   rumore in modo consistente. Lasciato **disponibile ma OFF di default** (δ~0.23
-   consigliato via `--promoted-prior 0.23`) in attesa della decisione se renderlo
-   config ufficiale — cambiare i default e' una decisione, non un automatismo.
+   rumore in modo consistente ed e' principiato → **ADOTTATO nella config
+   ufficiale** (δ=0.23, default in `backtest.py`; `--promoted-prior 0` per
+   disattivarlo). La decisione arriva dopo aver chiuso le altre leve economiche
+   (Fase 8): siccome non c'e' altro da spremere, non c'e' motivo di tenere spento
+   l'unico guadagno reale.
 
 **Riproducibilita'.** `python scripts/_run_fase7_promosse.py` (validazione su 6
 stagioni, δ leave-future-out), oppure singola cella:
 `python scripts/backtest.py --test-season 2122 --promoted-prior 0.23`.
+
+---
+
+## Fase 8 — Ultimo giro economico (shrinkage, vantaggio-casa): niente da spremere
+
+**Obiettivo.** Prima di dichiarare il modello "al tetto", chiudere le due ultime
+leve economiche interne rimaste, una alla volta e misurando.
+
+**#1 — Ri-taratura dello shrinkage col prior attivo.** Lo shrinkage ufficiale
+(1.5) era stato tarato in Fase 4d *senza* il prior; con il cold-start ora gestito
+dal prior, l'ottimo potrebbe spostarsi. Sweep 0.75→3.0 su 6 stagioni con
+`--promoted-prior 0.23` (`scripts/tune.py`, 30 run registrati):
+
+| shrinkage | 0.75 | 1.0 | 1.5 | 2.0 | 3.0 |
+|---|--:|--:|--:|--:|--:|
+| media 1X2 log-loss | 0.9797 | 0.9797 | 0.9797 | 0.9798 | 0.9803 |
+
+**Curva piatta** tra 0.75 e 1.5 (ottimo nominale 1.0, ma a 0.00002 da 1.5 =
+rumore). **Le due leve sono ortogonali**: il prior gestisce il cold-start, lo
+shrinkage nell'intervallo utile non ci si combina. Nessun guadagno → shrinkage
+resta 1.5.
+
+**#2 — Vantaggio-casa per-squadra (versione economica prima di costruire).** Idea:
+dare a ogni squadra il proprio vantaggio-casa invece di uno globale. Test a
+costo zero PRIMA della chirurgia sul modello: il vantaggio-casa per-squadra e'
+**stabile** anno su anno? Misura (proxy = punti/gara in casa − fuori, tutte le
+team-stagioni 2017-2026):
+- effetto medio **0.254 punti/gara** (l'effetto GLOBALE esiste — ed e' gia' nel
+  modello come `home_adv` globale, che il fit pesato nel tempo fa anche driftare
+  post-COVID);
+- ma la **persistenza anno-su-anno e' r ≈ 0.004** (n=136 coppie squadra): il
+  "forte in casa" di una stagione e' scorrelato dalla successiva.
+
+Con persistenza nulla, un vantaggio-casa per-squadra **fitterebbe solo rumore
+stagionale e non generalizzerebbe** al futuro → l'idea muore prima della
+chirurgia (principio: testa la versione economica prima di investire).
+
+**Lezione / cosa ne consegue.** Le due ultime leve economiche sono **entrambe
+negative**: #1 piatto, #2 rumore non persistente. Sommato ai risultati di
+congestione (Fase 4e-bis) e calibrazione (Fase 6), la conclusione e' solida: il
+modello Dixon-Coles gol+xG e' al **tetto pratico dei dati attuali**. Il prior
+neopromosse (−0.0011) resta l'unico guadagno interno reale, ed e' ora nella
+config ufficiale. Il prossimo passo di valore non e' un altro ritocco interno ma
+un **cambio di classe** (es. Poisson bivariato per la correlazione dei punteggi /
+GG/NG) o l'**uso pratico** del modello.
+
+**Riproducibilita'.** #1: `python scripts/tune.py --sweep shrinkage --values 0.75
+1.0 1.5 2.0 3.0 --seasons 2021 2122 2223 2324 2425 2526 --promoted-prior 0.23`.
 
 ---
 

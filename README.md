@@ -43,9 +43,11 @@ stagione è rumorosa (è il nostro principio: mai concludere da una stagione).
 | **O/U 2.5** log-loss | 0.6884 | ~0.690 | **0.6816** |
 
 _Configurazione ufficiale: **blend gol/xG con α = 0.75**, shrinkage = 1.5, emivita
-= 365g (vedi Fasi 4b e 4d). Il modello batte nettamente la baseline e si avvicina
-al mercato (gap 1X2 ~+0.018), ma **non lo batte**. Su una singola stagione i numeri
-oscillano (es. la 2025-26 ha 1X2 ≈ 0.993): per questo si giudica sulla media._
+= 365g, **prior neopromosse δ = 0.23** (vedi Fasi 4b, 4d e 7). Il modello batte
+nettamente la baseline e si avvicina al mercato (gap 1X2 ~+0.018), ma **non lo
+batte**. Su una singola stagione i numeri oscillano (es. la 2025-26 ha 1X2 ≈
+0.993): per questo si giudica sulla media. (Il prior neopromosse migliora la
+media a ~0.9796; la tabella sopra riporta la config pre-Fase 7 per continuità.)_
 
 **Come leggerli** (più bassi = meglio):
 
@@ -272,13 +274,16 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     sposta il bersaglio dello shrinkage sotto la media per le squadre senza
     storico (δ≈0.23, stimato leave-future-out). È il **miglior guadagno interno**
     trovato: −0.0011 medio complessivo (3-4× congestione/calibrazione) e −0.0039
-    sulle partite delle neopromosse, su **5 stagioni su 6**. Resta piccolo e non
-    batte il mercato; **off di default**, in attesa di decidere se renderlo config
-    ufficiale. Vedi `docs/DIARIO.md`, Fase 7.
-13. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
+    sulle partite delle neopromosse, su **5 stagioni su 6**. **Adottato nella
+    config ufficiale** (δ=0.23). Vedi `docs/DIARIO.md`, Fase 7.
+13. ✅ **Fase 8** — ultimo giro economico, **entrambe negative**: ri-taratura
+    shrinkage col prior = curva **piatta** (leve ortogonali, nessun guadagno);
+    vantaggio-casa per-squadra = **persistenza anno-su-anno r≈0.00** (solo rumore,
+    non generalizza). Nulla più da spremere: modello al **tetto pratico**.
+14. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
     GG/NG) / dati davvero nuovi, oppure **uso pratico** (comando di predizione).
-14. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-15. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+15. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+16. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

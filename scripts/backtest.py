@@ -170,23 +170,25 @@ def main() -> None:
     parser.add_argument("--covariates", nargs="*", default=[],
                         choices=["squad_value", "absence", "rest", "rest_full"],
                         help="covariate di partita da aggiungere (Fase 4c)")
-    parser.add_argument("--promoted-prior", type=float, default=None, metavar="DELTA",
-                        help="prior di cold-start per le neopromosse (Fase 7): "
-                             "sposta il bersaglio dello shrinkage a attacco -DELTA / "
-                             "difesa +DELTA (piu' debole). Stima storica DELTA~0.23. "
-                             "Assente = disattivato.")
+    parser.add_argument("--promoted-prior", type=float, default=0.23, metavar="DELTA",
+                        help="prior di cold-start per le neopromosse (Fase 7, config "
+                             "ufficiale): sposta il bersaglio dello shrinkage a "
+                             "attacco -DELTA / difesa +DELTA (piu' debole). Stima "
+                             "storica DELTA~0.23. Passa 0 per disattivarlo.")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",
                         help="dove salvare le predizioni per-partita")
     args = parser.parse_args()
 
+    # DELTA=0 (o assente) disattiva il prior; altrimenti (-DELTA att, +DELTA def).
+    prior = ((args.promoted_prior, args.promoted_prior)
+             if args.promoted_prior else None)
+    prior_txt = f", promoted_prior {args.promoted_prior}" if prior else ""
     print(f"Backtest {args.league} — stagione test {args.test_season} "
           f"({sources.season_label(args.test_season)}), "
           f"emivita {args.half_life_days:.0f}g, shrinkage {args.shrinkage}, "
-          f"shots_blend {args.shots_blend} ({args.blend_signal})")
-    prior = ((args.promoted_prior, args.promoted_prior)
-             if args.promoted_prior is not None else None)
+          f"shots_blend {args.shots_blend} ({args.blend_signal}){prior_txt}")
     df = run_backtest(args.league, args.test_season, args.half_life_days,
                       shrinkage=args.shrinkage, shots_blend=args.shots_blend,
                       blend_signal=args.blend_signal, covariates=tuple(args.covariates),
@@ -204,7 +206,7 @@ def main() -> None:
         "shots_blend": args.shots_blend,
         "blend_signal": args.blend_signal,
         "covariates": list(args.covariates),
-        "promoted_prior": args.promoted_prior,
+        "promoted_prior": (prior[0] if prior else None),
     }
     all_matches = loader.load_league(args.league)
     record = experiment_log.make_record(
