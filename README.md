@@ -280,10 +280,17 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     shrinkage col prior = curva **piatta** (leve ortogonali, nessun guadagno);
     vantaggio-casa per-squadra = **persistenza anno-su-anno r≈0.00** (solo rumore,
     non generalizza). Nulla più da spremere: modello al **tetto pratico**.
-14. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per il
-    GG/NG) / dati davvero nuovi, oppure **uso pratico** (comando di predizione).
-15. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-16. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+14. ✅ **Fase 9** — **anatomia del gap col mercato** (`scripts/analyze_gap.py`):
+    gap 1X2 medio **+0.0165** (modello 0.9797 vs mercato 0.9632). Scomposto: varia
+    per stagione (+0.014→+0.020, peggio nel COVID 2020-21), per forza-squadra (a U:
+    deboli +0.0206 e forti +0.0180 peggio delle medie +0.0123), e — soprattutto —
+    **è quasi tutto nel PAREGGIO** (il mercato 12 senza pari ha gap +0.0020 ≈
+    mercato). Punta al prossimo passo mirato: **correlazione dei punteggi**. Vedi
+    `docs/DIARIO.md`, Fase 9.
+15. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per la
+    correlazione dei punteggi / GG/NG) / dati davvero nuovi, oppure **uso pratico**.
+16. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+17. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

@@ -86,7 +86,8 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         download_data, build_database, backtest, analyze, tune, calibrate
+scripts/         download_data, build_database, backtest, analyze, tune, calibrate,
+                 markets (multi-mercato), analyze_gap (anatomia del gap col mercato)
 experiments/     runs.jsonl (registro replicabile) + README (formato)
 data/            serie_a_matches.csv (SNAPSHOT congelato, versionato)
                  football.db (SQLite, rigenerabile, NON versionato)

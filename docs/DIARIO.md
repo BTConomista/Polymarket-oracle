@@ -764,6 +764,111 @@ GG/NG) o l'**uso pratico** del modello.
 
 ---
 
+## Fase 9 — Anatomia del gap col mercato (analisi approfondita)
+
+**Obiettivo.** Non "spremere" ma **capire**: quanto vale oggi il divario col
+mercato, e come si scompone per stagione, per mercato e per forza delle squadre.
+E come si e' ridotto lungo l'evoluzione del modello (dal grezzo all'attuale).
+Definizione: **gap = log-loss modello − log-loss mercato** (>0 = mercato meglio;
+piu' vicino a 0 = meglio). Tutto walk-forward, 6 stagioni (2020-21→2025-26),
+riproducibile con `scripts/analyze_gap.py`.
+
+**Il gap oggi (versione ATTUALE, 1X2).** Modello **0.9797** vs mercato **0.9632**
+→ **gap medio +0.0165** di log-loss. Per dare una scala: la baseline banale sta a
+~1.085 (gap +0.12), quindi il modello ha gia' chiuso ~**87%** della distanza
+baseline→mercato; l'ultimo 13% e' la parte dura.
+
+**1) Evoluzione — il gap 1X2 lungo le versioni (media 6 stagioni).**
+
+| Versione | gap 1X2 | Δ vs precedente |
+|---|--:|--:|
+| V0 grezzo (gol, no shrink/no decay) | +0.0236 | — |
+| V1 gol tarato (shrinkage+emivita, Fase 2b) | +0.0185 | **−0.0051** |
+| V2 +xG nel blend (Fase 4b) | +0.0181 | −0.0004 |
+| V3 emivita ri-tarata 365g (Fase 4d) | +0.0175 | −0.0006 |
+| V4 +prior neopromosse (Fase 7, ATTUALE) | +0.0165 | −0.0010 |
+
+Lezione: il grosso del recupero (**−0.0051 su −0.0071 totali, il 72%**) e' venuto
+dalla **regolarizzazione+memoria** (Fase 2b). xG, ri-taratura e prior hanno
+limato il resto (−0.0020 combinato). Dopo il tuning di base, i dati e i ritocchi
+danno rendimenti decrescenti — coerente col "tetto".
+
+**2) Per STAGIONE (versione attuale, gap 1X2).**
+
+| 2020-21 | 2021-22 | 2022-23 | 2023-24 | 2024-25 | 2025-26 |
+|--:|--:|--:|--:|--:|--:|
+| +0.0202 | +0.0145 | +0.0146 | +0.0187 | +0.0170 | +0.0141 |
+
+**Sì, varia** (da +0.014 a +0.020). La peggiore e' la **2020-21** (COVID, stadi
+vuoti: piu' rumore, vantaggio-casa anomalo). Le piu' recenti (2021-22, 2025-26)
+sono le migliori. Nessuna stagione batte il mercato sull'1X2.
+
+**3) Per MERCATO (versione attuale, pool 6 stagioni).**
+
+| Mercato | gap | note |
+|---|--:|---|
+| **1X2** | +0.0165 | quote dirette |
+| **1X** (casa o pari) | +0.0116 | quota derivata 1X2 |
+| **2X** (ospite o pari) | +0.0127 | quota derivata 1X2 |
+| **12** (no pareggio) | **+0.0020** | quota derivata 1X2 |
+| **Over/Under 2.5** | +0.0069 | quote dirette |
+| GG/NG | −0.0018 (vs baseline) | **niente quote nei dati** |
+
+**Scoperta chiave: il gap e' quasi tutto nel PAREGGIO.** Il mercato **12**
+(vince una delle due, si esclude il pari) ha gap **+0.0020**, cioe' il modello e'
+praticamente a livello mercato quando NON deve prezzare il pareggio. Appena il
+pari rientra (1X, 2X, 1X2) il gap triplica/quadruplica. Tradotto: la nostra
+debolezza vs mercato e' **prezzare i pareggi** (i punteggi bassi correlati), non
+stimare chi e' piu' forte. **Over/Under** e' quasi competitivo (+0.0069, e in
+2020-21 il modello lo batte: −0.0031). GG/NG non ha quote nei dati: vs baseline
+il modello e' ~pari (oscilla per stagione, rumore).
+
+**4) Per FORZA delle squadre (versione attuale, gap 1X2; una partita conta per
+entrambe le squadre coinvolte).**
+
+| Gruppo (tier da classifica) | n | gap medio 1X2 |
+|---|--:|--:|
+| forte (top 6) | 1368 | +0.0180 |
+| media (7°-14°) | 1824 | +0.0123 |
+| debole (bottom 6) | 1368 | **+0.0206** |
+| neopromossa (sottoinsieme) | 648 | +0.0159 |
+
+**Sì, varia, con una U:** il modello perde di piu' sulle **squadre deboli**
+(+0.0206) e sulle **forti** (+0.0180), meno sulle **medie** (+0.0123). Sui deboli
+il mercato ha informazione che noi non abbiamo (motivazione salvezza, turnover,
+episodi); sui forti conta molto la forma/rotazioni nelle coppe. Le neopromosse
+(+0.0159) sono ora **sotto** la media dei deboli grazie al prior della Fase 7
+(senza prior sarebbero il gruppo peggiore).
+
+**5) Per FAVORITISMO di mercato (versione attuale, gap 1X2).**
+
+| Partita | n | gap medio 1X2 |
+|---|--:|--:|
+| equilibrata (favorito <45%) | 799 | +0.0167 |
+| moderata (45-60%) | 852 | +0.0173 |
+| netta (favorito >60%) | 629 | +0.0152 |
+
+Qui la variazione e' **piccola**: il gap e' abbastanza uniforme, leggermente
+minore quando c'e' un favorito netto (+0.0152, modello e mercato concordano di
+piu'). Non e' l'asse dove si nasconde il divario.
+
+**Lezione / cosa ne consegue.**
+1. Il gap medio 1X2 e' **+0.0165** e non e' uniforme: peggiore su **stagioni
+   rumorose (COVID)**, su **squadre deboli/forti**, e — soprattutto — **sul
+   pareggio** (il mercato 12 senza pari e' gia' a livello mercato).
+2. Questo **punta il dito** sul prossimo passo con la miglior aspettativa
+   *dentro un cambio di classe*: **modellare la correlazione dei punteggi**
+   (es. Poisson bivariato / dipendenza sui punteggi bassi oltre la correzione DC),
+   che e' esattamente cio' che serve per prezzare meglio pareggio e GG/NG. Non e'
+   un ritocco: e' la mossa mirata suggerita dai numeri.
+3. Il resto del gap (deboli/forti, stagioni rumorose) e' **informazione che il
+   mercato ha e noi no** e difficilmente si chiude coi dati storici attuali.
+
+**Riproducibilita'.** `python scripts/analyze_gap.py` (5 versioni × 6 stagioni,
+scomposizione per stagione/mercato/forza/favoritismo).
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
