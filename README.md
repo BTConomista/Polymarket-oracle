@@ -284,6 +284,229 @@ Esito su **6 stagioni** (log-loss, più basso = meglio):
 **Onestà:** il miglioramento è *modesto* e non ci fa battere il mercato. Ma è il
 primo passo avanti ottenuto con informazione nuova.
 
+### Spremere il resto dei dati: npxG, valori rosa, assenze — Fase 4c (NEGATIVO)
+
+Prima di cercare dati *nuovi*, abbiamo spremuto quelli già in casa. Abbiamo
+costruito un **layer di covariate** generale: ogni covariata (forza/contesto
+esterni ai risultati) entra nel tasso atteso come `β·(z_squadra − z_avversaria)`,
+con i β stimati **insieme** al resto. Abbiamo provato **npxG** (xG senza rigori)
+come segnale, e **valore rosa** (Transfermarkt) e **assenze** stimate come
+covariate, anche in **combinazione** (l'idea: due segnali deboli insieme).
+
+Esito (6 stagioni, log-loss):
+
+| | 1X2 | O/U 2.5 |
+|---|---:|---:|
+| baseline (config Fase 4b) | **0.9813** | 0.6893 |
+| npxG al posto di xG | 0.9811 | 0.6892 |
+| + valore-rosa | 0.9818 | 0.6891 |
+| + assenze | 0.9813 | 0.6893 |
+| + valore-rosa & assenze | 0.9818 | 0.6892 |
+
+- **npxG ≈ xG** (differenza 0.0002, rumore): teniamo l'xG, più standard.
+- **Valore-rosa e assenze: non aiutano** (il valore-rosa peggiora appena l'1X2).
+  Un diagnostico *in-sample* sul valore-rosa sembrava promettente (coeff +0.48), ma
+  fuori campione svanisce: la forza della rosa è **già catturata** dai gol+xG.
+- **Nessuna sinergia**: unire segnali ~nulli dà ~nulla. Anche il **riposo solo-Serie-A**
+  non aiuta (non vede coppe/Europa → la differenza di fatica è ~0).
+
+**Lezione (ricorrente d'ora in poi):** il diagnostico in-sample va SEMPRE
+confermato walk-forward, e i dati extra non aiutano se il loro contenuto è già
+implicito nei risultati. Il modello è al **tetto pratico** di questa fonte dati.
+
+### Ri-taratura congiunta: l'emivita si accorcia — Fase 4d
+
+Shrinkage ed emivita erano stati tarati (Fase 2b) sul modello *solo-gol*. Con il
+blend xG attivo l'ottimo poteva essersi spostato — interazione mai verificata. Una
+ri-taratura a coordinate su 6 stagioni:
+
+| emivita | 1X2 | O/U 2.5 |
+|---:|---:|---:|
+| 730g (vecchia) | 0.9813 | 0.6893 |
+| **365g (nuova)** | **0.9807** | **0.6884** |
+
+L'**emivita ottima passa da 730g a ~365g**: con un segnale meno rumoroso (l'xG) il
+modello può permettersi una **memoria più corta/reattiva** senza rincorrere il
+rumore. Guadagno piccolo (~0.0007) ma su **entrambi** i mercati. Lezione di metodo:
+dopo un cambiamento importante, ri-verifica gli iperparametri già tarati.
+**Config ufficiale**: blend gol/xG α=0.75, shrinkage 1.5, **emivita 365g**.
+
+### Grande backtest multi-mercato — Fase 5 (per cosa serve il modello)
+
+Abbiamo allargato lo sguardo oltre 1X2/OU a **tutti** i mercati derivabili *gratis*
+dalla matrice dei punteggi: GG/NG (entrambe segnano) e doppie chance (1X/2X/12).
+
+| Mercato | modello (uff.) | Mercato | Baseline |
+|---|---:|---:|---:|
+| 1X2 | 0.9807 | **0.9632** | 1.0834 |
+| Over/Under 2.5 | 0.6884 | **0.6816** | 0.6892 |
+| GG/NG | 0.6896 | — | 0.6871 |
+| 1X (casa o pari) | 0.5497 | **0.5371** | 0.6303 |
+| 2X (ospite o pari) | 0.5966 | **0.5833** | 0.6744 |
+| 12 (no pari) | 0.5766 | 0.5746 | 0.5820 |
+
+- **Affidabile sui mercati d'ESITO** (1X2, 1X, 2X): batte nettamente la baseline.
+- **Debole su Over/Under** (baseline di un soffio) e su **12** (pareggi ~casuali).
+- **NEGATIVO su GG/NG**: è **peggio della baseline** (0.6896 vs 0.6871). Il "GG"
+  dipende dalla **correlazione** tra i due punteggi, che il modello (Poisson
+  quasi-indipendenti + correzione DC) cattura male.
+- **Nessun mercato batte le quote.**
+
+**Conclusione:** il motore è affidabile per gli esiti, non per il GG/NG. La prima
+volta che i numeri indicano il **prossimo salto**: la *correlazione dei punteggi*.
+
+### Ricalibrazione della confidenza (temperature scaling) — Fase 6 (nel rumore)
+
+Il diagnostico (Fase 2a) diceva "calibrato in media". Ma il modello perde dove è
+**molto sicuro**. Il **temperature scaling** è la correzione post-hoc più
+economica: un solo parametro T che rende le probabilità più nette (T<1) o più
+morbide (T>1), tarato sulle stagioni passate e applicato al futuro (no look-ahead).
+
+| Stagione | 2020-21 | 2021-22 | 2022-23 | 2023-24 | 2024-25 | 2025-26 | media |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| T ottimo | 0.96 | 0.92 | 0.95 | 0.96 | 0.96 | 0.94 | ~0.94 |
+| Δ 1X2 | −0.0012 | +0.0016 | +0.0005 | −0.0005 | −0.0014 | −0.0007 | **−0.0003** |
+
+**Scoperta reale e robusta**: T<1 in **tutte e 6** le stagioni → il modello è
+sistematicamente un po' **sottoconfidente** (probabilità troppo "compresse").
+**Ma** il guadagno è **nel rumore** (−0.0003) e non uniforme (peggiora 2 stagioni):
+rendere le prob più nette premia quando il modello ha ragione e punisce quando ha
+torto — in Serie A i due effetti quasi si annullano. **Non entra** nella config;
+il modulo `src/evaluation/calibration.py` resta per l'uso pratico.
+
+### Prior di cold-start per le neopromosse — Fase 7 (l'unica vittoria interna)
+
+La perdita più grande e concentrata (Fase 2a/9): le **neopromosse** (+0.029 su
+~28% delle partite), che il modello sovrastima non avendo storico. Idea: dare loro
+un **prior** sotto la media finché non accumulano partite. Misura (24 neopromosse
+2018-2026): segnano ~1.08 gol/partita vs ~1.36 della lega (−20%) e ne subiscono
+~1.72 (+26%) → in log-tasso **δ ≈ 0.23**. Meccanismo: spostare il *bersaglio* dello
+shrinkage per le promosse da 0 (media) a (−δ, +δ); una promossa a 0 partite parte
+dal prior, poi i dati lo sovrastano. δ stimato **leave-future-out** (no look-ahead).
+
+| | media 6 stagioni | sulle partite delle neopromosse |
+|---|--:|--:|
+| base | 0.9807 | 0.9880 |
+| **+prior (δ=0.23)** | **0.9796** | **0.9841** |
+| Δ | **−0.0011** (5/6 stagioni) | **−0.0039** (5/6) |
+
+**Il miglior guadagno interno**: 3-4× congestione/calibrazione, e colpisce dove
+doveva. Principiato (fatto strutturale), non un parametro a caso. **ADOTTATO** nella
+config ufficiale (peggiora solo il 2023-24, dove le promosse erano più forti della
+media — varianza attesa). Piccolo e non batte il mercato, ma reale.
+
+### Ultimo giro economico: shrinkage e vantaggio-casa — Fase 8 (niente)
+
+Due leve interne rimaste, una alla volta. **(1) Ri-taratura dello shrinkage** col
+prior attivo: curva **piatta** (0.75→1.5 tutte a ~0.9797) → le due leve sono
+ortogonali, nessun guadagno. **(2) Vantaggio-casa per-squadra**: prima della
+chirurgia, il test economico — è **stabile** anno su anno? L'effetto medio esiste
+(0.254 punti/gara) ma la **persistenza anno-su-anno è r ≈ 0.004** (rumore
+stagionale). Un vantaggio-casa per-squadra fitterebbe solo rumore → idea scartata
+senza costruirla. Entrambe negative.
+
+### Anatomia del gap col mercato — Fase 9 (dove vive il divario)
+
+Non spremere ma **capire**: quanto vale il gap (`modello − mercato`) e come si
+scompone. Gap 1X2 medio attuale **+0.0165** (modello 0.9797 vs mercato 0.9632);
+il modello ha chiuso ~87% della distanza baseline→mercato. Tre tagli:
+
+**Per mercato** — il gap è **quasi tutto nel PAREGGIO**:
+
+| 1X2 | 1X | 2X | **12 (no pari)** | O/U 2.5 | GG/NG |
+|--:|--:|--:|--:|--:|--:|
+| +0.0165 | +0.0116 | +0.0127 | **+0.0020** | +0.0069 | −0.0018 |
+
+Escluso il pari (mercato 12) il modello è **a livello mercato**: la debolezza è
+prezzare i pareggi, non stimare chi è più forte.
+
+**Per forza-squadra** (gap 1X2, a U): deboli **+0.0206** e forti +0.0180 peggio
+delle medie **+0.0123**. Sui deboli il mercato ha info che noi non abbiamo
+(motivazione salvezza, turnover); le neopromosse (+0.0159) sono ora *sotto* i
+deboli grazie al prior.
+
+**Per periodo — COVID vs post-COVID (Fase 9-bis):** sui mercati d'esito il gap si
+**riduce** dopo il COVID (1X2 +0.0202 → +0.0161): a stadi vuoti il vantaggio-casa è
+crollato e il modello, che lo eredita dallo storico, sovra-pesava la casa.
+Sull'**Over/Under è l'opposto** (nel COVID il modello batteva il mercato, −0.0031).
+Trend recente: il gap 1X2 è al **minimo nell'ultima stagione (2025-26, +0.0141)**.
+
+### Ricalibrazione per-classe 1X2 — Fase 10 (conferma il bias, nel rumore)
+
+Il temperature (Fase 6) scala tutto in modo uniforme e non può *spostare* massa da
+casa a pareggio. Tre moltiplicatori per classe (casa/pari/ospite) sì, tarati
+leave-future-out. Risultato robusto: in **tutte e 6** le stagioni il fit **abbassa
+la casa (w≈0.96) e alza il pareggio (w≈1.04)** — conferma esatta della
+miscalibrazione direzionale. Ma il guadagno è **−0.0005** (nel rumore, 4/6): un
+surrogato *lineare e globale* di ciò che servirebbe (la correlazione dei punteggi).
+**Off** di default, disponibile per l'uso pratico.
+
+### Combinazioni delle feature off-di-default — Fase 11 (nessuna utile)
+
+Fin qui le feature opzionali erano provate **da sole**. Griglia: tutti gli 8
+sottoinsiemi delle covariate {valore-rosa, assenze, congestione} × con/senza
+ricalibrazione, 6 stagioni. **Nessuna combinazione è utile**: il valore-rosa
+**peggiora** in ogni mix; congestione/assenze sono rumore anche in coppia; l'unico
+effetto additivo è la ricalibrazione (già nota). La "miglior" combo (−0.0011) è
+dominata dalla ricalibrazione, le covariate sono rumore. Conferma in combinazione
+ciò che la Fase 4c aveva visto in isolamento.
+
+### Ensemble di emivite e il cambio di classe — Fase 12
+
+**(a) Ensemble di emivite:** mescolare memoria corta (180g) e lunga (730g) batte
+la singola 365g? Il blend 180+730 dà **0.9791 (−0.0006, 4/6)**: reale ma
+borderline. **Off.**
+
+**(b) Il cambio di classe — modello a diagonale inflazionata (bivariato):** la
+mossa strutturale indicata da ogni analisi. Un parametro **φ** che alza *tutti* i
+punteggi di parità (0-0,1-1,2-2…) oltre le 4 celle della correzione Dixon-Coles,
+fittato sulla verosimiglianza dei punteggi e **dipendente dalla partita** (ciò che
+la ricalibrazione piatta non fa).
+
+| | media 6 stagioni | P(pari) modello → reale |
+|---|--:|--:|
+| base | 0.9797 | ~0.25 |
+| **+diagonale inflazionata** | **0.9793** (−0.0004, 3/6) | sale verso il reale ✓ |
+
+**Il meccanismo funziona**: la calibrazione del pareggio migliora in ogni stagione
+(2024-25: 0.264 → 0.288 vs reale 0.284). **Ma** il log-loss guadagna solo −0.0004,
+perché *quanti* pareggi capitano in una stagione è in gran parte **rumore** (dove
+ne capitano pochi, l'inflazione sovrastima). Anche la mossa strutturalmente
+corretta dà l'ordine di grandezza di ogni tampone: **il pareggio è quasi-casuale
+per tutti, mercato incluso**. Il gap non è cattiva modellazione — è irriducibilità
+del fenomeno. **Off** di default (opzione utile per la calibrazione del pari).
+
+### Stato di forma, streak, rendimento recente — Fase 13 (già catturato)
+
+C'è un **momentum** predittivo che la forza pesata nel tempo non vede? Attaccato da
+quattro angoli, tutti **data-driven** per uscire dall'arbitrarietà delle soglie:
+
+- **Forma** (punti/gara ultime 5) come covariata: base 0.9797 → 0.9799 (**+0.0002**,
+  peggio). La forma è scorrelata dall'errore del modello (corr **+0.035**).
+- **Streak** (serie utile/di sconfitte in corso, a *ogni* lunghezza): corr con
+  l'errore ~0; i bucket per lunghezza serie hanno segni **erratici** (rumore).
+- **Ventaglio completo** (gol fatti/subiti, xG, "fortuna"=gol−xG, finestre 3/5/10,
+  23 feature): il verdetto in un numero — **R² = 0.0101** = R² da **puro rumore**
+  (23 feature/2273 partite). Identici. Nessun pattern sfruttabile.
+- **Streak × avversario debole** (l'interazione): corr −0.005, guadagno di R²
+  **+0.00003** (meno del rumore). La cella "in serie & avversario debole" non si
+  accende.
+
+**Lezione:** la ragione è strutturale — il rendimento recente (risultati, gol, xG)
+*è* ciò che il fit **pesato nel tempo** già usa e pesa di più. Il residuo del
+modello non contiene momentum. L'unico filo di segnale è l'xG recente, **già nel
+blend**. Nessun pattern nascosto.
+
+### In sintesi: perché ci fermiamo (per ora)
+
+Oltre 12 esperimenti (tuning, dati extra, calibrazioni, combinazioni, cambio di
+classe, forma/streak) convergono: il modello Dixon-Coles gol+xG è al **tetto reale**
+dei dati attuali. L'unica vittoria interna è il prior neopromosse. Il gap residuo
+col mercato vive nel pareggio (quasi-casuale per tutti) ed è **informazione che il
+mercato ha e noi no** su singole partite. Le uniche vie avanti: **dati genuinamente
+nuovi** (formazioni ufficiali, infortuni last-minute) o l'**uso pratico** del
+modello come strumento d'analisi.
+
 ## Struttura
 
 ```
