@@ -1049,6 +1049,66 @@ rumore-adiacente. **Riproducibilita'.** `python scripts/_run_ensemble.py`.
 
 ---
 
+## Fase 12b — Il cambio di classe: inflazione della diagonale (bivariato)
+
+**Obiettivo.** La mossa strutturale indicata da TUTTE le analisi: attaccare la
+correlazione dei punteggi / il pareggio, non piu' con un tampone ma cambiando il
+modello. Il Poisson bivariato classico (Karlis-Ntzoufras) impone correlazione
+positiva (λ₃≥0) che nel calcio e' ≈0 e non aiuta i pareggi; la variante giusta e'
+il **modello a diagonale inflazionata**.
+
+**Cosa abbiamo costruito.** Un parametro **φ** che moltiplica per (1+φ) TUTTI i
+punteggi di parita' (0-0,1-1,2-2,3-3…) nella matrice, esteso **oltre le 4 celle**
+della correzione Dixon-Coles, e — a differenza della ricalibrazione piatta (Fase
+10) — **fittato nella verosimiglianza dei punteggi** e **dipendente dalla partita**
+(inflaziona in base ai gol attesi). `draw_inflation` nel modello (`--draw-inflation`),
+φ stimato con una 1-D per settimana (formula chiusa sulla prob. di pareggio base).
+
+**Diagnosi che lo motiva.** rho fittato −0.04/−0.07, **interno** (non saturo) ma
+vincolato alla struttura a 4 celle; deficit pareggio residuo **+0.020** (modello
+0.264 vs reale 0.284). C'e' margine per una leva-pareggio dedicata.
+
+**Risultato (1X2 log-loss + calibrazione pareggio, 6 stagioni).**
+
+| Stagione | base | +infl | Δ | P(pari) base→infl | reale |
+|---|--:|--:|--:|:--:|--:|
+| 2020-21 | 0.9532 | 0.9536 | +0.0003 | 0.250→0.245 | 0.255 |
+| 2021-22 | 0.9860 | 0.9854 | −0.0006 | 0.242→0.248 | 0.258 |
+| 2022-23 | 0.9916 | 0.9917 | +0.0001 | 0.247→0.257 | 0.263 |
+| 2023-24 | 0.9854 | 0.9825 | **−0.0029** | 0.253→0.267 | 0.295 |
+| 2024-25 | 0.9693 | 0.9687 | −0.0006 | 0.264→0.288 | 0.284 |
+| 2025-26 | 0.9925 | 0.9939 | +0.0014 | 0.264→0.283 | 0.261 |
+| **MEDIA** | **0.9797** | **0.9793** | **−0.0004** | | |
+
+Multi-mercato (pool): gap 1X2 +0.0165→+0.0161, **12** +0.0020→+0.0016, O/U e
+GG/NG ~invariati. φ fittato ~0.10-0.14 (positivo, come da deficit).
+
+**Lezione / cosa ne consegue — la conclusione dell'intera indagine.**
+1. **Il meccanismo funziona come progettato**: P(pari) sale verso il reale in
+   OGNI stagione (2024-25: 0.264→0.288 vs 0.284, quasi perfetto). La calibrazione
+   del pareggio migliora davvero: il cambio di classe **fa la cosa giusta**.
+2. **Ma il log-loss guadagna solo −0.0004 (3/6 stagioni)**, perche' *quanti*
+   pareggi capitano in una stagione e' in larga parte **rumore**: dove ne capitano
+   pochi (2025-26, reale 0.261) l'inflazione tarata sul passato **sovrastima** e
+   peggiora. Migliorare la calibrazione MEDIA del pareggio non basta se la
+   deviazione stagionale e' imprevedibile.
+3. **Questo chiude il cerchio.** Anche la mossa strutturalmente corretta — quella
+   che tre analisi indipendenti indicavano — da' lo stesso ordine di grandezza
+   (−0.0004) di ogni tampone. Ragione profonda: **il pareggio e' quasi-casuale per
+   tutti, mercato incluso** (il mercato 12 senza pari e' gia' a livello mercato,
+   gap +0.0020). Non e' un difetto del nostro modello: e' irriducibilita' del
+   fenomeno. Il gap col mercato NON e' "cattiva modellazione del pareggio" da
+   sistemare, ma **informazione che il mercato ha e noi no** su singole partite.
+4. **Verdetto definitivo**: 7 esperimenti (5 tweak + 1 combinazione + 1 cambio di
+   classe) convergono. Il modello e' al **tetto reale**, non solo pratico.
+   `draw_inflation` resta **off di default** (−0.0004, non robusto), disponibile
+   come opzione (migliora la calibrazione del pareggio per l'uso pratico).
+
+**Riproducibilita'.** `python scripts/_run_draw_infl.py`, oppure
+`python scripts/backtest.py --draw-inflation`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

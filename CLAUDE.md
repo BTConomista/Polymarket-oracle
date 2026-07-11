@@ -150,9 +150,13 @@ conferma robusta casa-sovrastimata/pari-sottostimato ma guadagno nel rumore
 (−0.0005) → off. **Fase 11:** griglia combinazioni feature off-di-default
 (`scripts/_run_combo_analysis.py`): **nessuna combo utile** (squad_value peggiora,
 absence/rest_full rumore; l'unico effetto additivo e' la ricalibrazione gia' nota).
-**Bilancio:** 6 esperimenti interni di fila senza guadagno robusto → il
-modello e' al **tetto pratico**; ogni analisi punta al **Poisson bivariato**
-(correlazione punteggi) come prossimo salto. **Prossimo bivio:** cambio di classe
-/ dati nuovi, oppure uso pratico.
+**Fase 12:** ensemble emivite (blend 180+730 = −0.0006, borderline) e il **cambio
+di classe** — modello a **diagonale inflazionata** (`--draw-inflation`, Fase 12b):
+alza i pareggi oltre la correzione DC, fittato sui punteggi. Migliora la
+calibrazione del pareggio ma il log-loss guadagna solo −0.0004 (3/6): *quanti*
+pareggi capitano e' rumore. **Il pareggio e' quasi-casuale per tutti (mercato
+incluso)** → il gap non e' cattiva modellazione ma info che il mercato ha. 7
+esperimenti convergono: **tetto REALE**, non solo pratico. draw_inflation off di
+default. **Prossimo bivio:** solo **dati davvero nuovi** o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

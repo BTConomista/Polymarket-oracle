@@ -297,12 +297,19 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     (`scripts/_run_combo_analysis.py`): griglia 8 combo covariate × con/senza
     ricalibrazione, 6 stagioni. **Nessuna combinazione è utile**: `squad_value`
     peggiora sempre, `absence`/`rest_full` sono rumore anche in coppia; l'unico
-    effetto additivo è la ricalibrazione (già nota, −0.0005/−0.0008). Sesto
-    esperimento interno di fila senza guadagno robusto. Vedi `docs/DIARIO.md`.
-17. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per la
-    correlazione dei punteggi / GG/NG) / dati davvero nuovi, oppure **uso pratico**.
-18. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-19. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+    effetto additivo è la ricalibrazione (già nota, −0.0005/−0.0008).
+17. ✅ **Fase 12** — chiusura: **ensemble di emivite** (blend 180+730 = −0.0006,
+    borderline) e **il cambio di classe** — modello a **diagonale inflazionata**
+    (`--draw-inflation`): alza i pareggi oltre la correzione Dixon-Coles, fittato
+    sui punteggi. **Migliora la calibrazione del pareggio** (P(pari)→reale) ma il
+    log-loss guadagna solo −0.0004 (3/6): *quanti* pareggi capitano è rumore.
+    Il pareggio è **quasi-casuale per tutti, mercato incluso** → il gap non è
+    cattiva modellazione ma informazione che il mercato ha. **Tetto reale**
+    confermato. Vedi `docs/DIARIO.md`, Fase 12b.
+18. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
+    oppure **uso pratico** del modello attuale (comando di predizione).
+19. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+20. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

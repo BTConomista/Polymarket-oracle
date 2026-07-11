@@ -201,6 +201,43 @@ def test_promoted_prior_serialization_roundtrip():
     assert abs(p1.prob_home_win - p2.prob_home_win) < 1e-9
 
 
+def test_draw_inflation_boosts_draws_and_roundtrips():
+    """L'inflazione della diagonale (Fase 12b): su dati con ECCESSO di pareggi il
+    fit trova phi>0 e alza P(pari); probabilita' valide; serializzazione ok.
+    draw_inflation=False lascia phi=0 e il modello identico a prima."""
+    # Dataset con molti pareggi (piu' di quanti ne preveda un Poisson indipendente).
+    rng = np.random.default_rng(3)
+    teams = ["A", "B", "C"]
+    rows, day = [], pd.Timestamp("2021-01-01")
+    for _ in range(60):
+        h, a = rng.choice(teams, 2, replace=False)
+        if rng.random() < 0.45:            # 45% pareggi forzati
+            g = int(rng.integers(0, 3)); hg = ag = g
+        else:
+            hg, ag = int(rng.poisson(1.3)), int(rng.poisson(1.1))
+        rows.append(dict(date=day, season="s", league="l", home_team=h, away_team=a,
+                         home_goals=hg, away_goals=ag, result="H",
+                         home_sot=0, away_sot=0, odds_home=np.nan, odds_draw=np.nan,
+                         odds_away=np.nan, odds_over25=np.nan, odds_under25=np.nan))
+        day += pd.Timedelta(days=3)
+    df = pd.DataFrame(rows)
+    df["result"] = np.where(df.home_goals > df.away_goals, "H",
+                            np.where(df.home_goals < df.away_goals, "A", "D"))
+
+    base = DixonColesModel(half_life_days=None, shots_blend=1.0).fit(df)
+    infl = DixonColesModel(half_life_days=None, shots_blend=1.0,
+                           draw_inflation=True).fit(df)
+    assert base.draw_phi == 0.0
+    assert infl.draw_phi > 0.0                       # eccesso di pareggi -> phi>0
+    p0, p1 = base.predict_match("A", "B"), infl.predict_match("A", "B")
+    assert p1.prob_draw > p0.prob_draw               # pareggio piu' probabile
+    assert p1.prob_home_win + p1.prob_draw + p1.prob_away_win == pytest.approx(1.0, abs=1e-6)
+
+    restored = DixonColesModel.from_dict(infl.to_dict())
+    assert restored.draw_phi == pytest.approx(infl.draw_phi)
+    assert restored.predict_match("A", "B").prob_draw == pytest.approx(p1.prob_draw, abs=1e-9)
+
+
 def test_devig_sums_to_one():
     p = metrics.devig_1x2(2.0, 3.5, 4.0)
     assert p.sum() == pytest.approx(1.0, abs=1e-9)

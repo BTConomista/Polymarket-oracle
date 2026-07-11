@@ -34,7 +34,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize
+from scipy.optimize import minimize, minimize_scalar
 from scipy.special import gammaln
 
 # Penalita' che fissa l'unica indeterminazione del modello (vedi nota in fit()).
@@ -154,6 +154,7 @@ class DixonColesModel:
         blend_signal: str = "sot",
         covariates: tuple[str, ...] = (),
         promoted_prior: tuple[float, float] | None = None,
+        draw_inflation: bool = False,
     ):
         """
         Args:
@@ -208,6 +209,12 @@ class DixonColesModel:
         self.blend_signal = blend_signal
         self.covariates = tuple(covariates)
         self.promoted_prior = promoted_prior
+        # Inflazione della DIAGONALE (Fase 12b): un parametro phi che aumenta la
+        # massa su TUTTI i punteggi di parita' (0-0,1-1,2-2,...), esteso oltre le
+        # 4 celle della correzione Dixon-Coles. Fittato nella verosimiglianza dei
+        # punteggi (non post-hoc) e dipendente dalla partita. 0 = disattivato.
+        self.draw_inflation = draw_inflation
+        self.draw_phi: float = 0.0
 
         # Parametri stimati sui GOL (riempiti da fit()).
         self.teams: list[str] = []
@@ -375,7 +382,46 @@ class DixonColesModel:
                                    / np.sum(s_weights * sig_away))
 
         self.fitted = True
+
+        # --- Inflazione della diagonale (Fase 12b): fitta phi sui punteggi ---
+        # Va dopo il modello-gol e il segnale (usa i tassi attesi finali).
+        if self.draw_inflation:
+            self.draw_phi = self._fit_draw_phi(train, weights)
+
         return self
+
+    def _fit_draw_phi(self, train: pd.DataFrame, weights: np.ndarray) -> float:
+        """Stima phi (inflazione diagonale) massimizzando la verosimiglianza
+        pesata dei punteggi. Con inflazione P_phi(x,y) ∝ M(x,y)*(1+phi*[x=y]);
+        il termine che dipende da phi e' log(1+phi*[pari]) - log(1+phi*D_match),
+        con D_match = P(pari) del modello base per quella partita. Non serve la
+        matrice intera: basta la prob. di pareggio base per riga (vettoriale)."""
+        # Tassi attesi (blended) per ogni partita di training.
+        lam = np.array([self.expected_goals(h, a)[0]
+                        for h, a in zip(train["home_team"], train["away_team"])])
+        mu = np.array([self.expected_goals(h, a)[1]
+                       for h, a in zip(train["home_team"], train["away_team"])])
+        k = np.arange(self.max_goals + 1)
+        lg = gammaln(k + 1.0)
+        # Poisson pmf per riga: (N, K).
+        ph = np.exp(np.outer(np.log(lam), k) - lam[:, None] - lg[None, :])
+        pa = np.exp(np.outer(np.log(mu), k) - mu[:, None] - lg[None, :])
+        diag = np.sum(ph * pa, axis=1)          # pareggi non corretti
+        Sh, Sa = ph.sum(1), pa.sum(1)
+        m00, m11 = ph[:, 0] * pa[:, 0], ph[:, 1] * pa[:, 1]
+        m01, m10 = ph[:, 0] * pa[:, 1], ph[:, 1] * pa[:, 0]
+        # Correzione DC su (0,0) e (1,1) [diagonale] e su (0,1),(1,0) [per Z].
+        diag_c = diag + m00 * (-lam * mu * self.rho) + m11 * (-self.rho)
+        Z = (Sh * Sa + m00 * (-lam * mu * self.rho) + m01 * (lam * self.rho)
+             + m10 * (mu * self.rho) + m11 * (-self.rho))
+        d_match = np.clip(diag_c / Z, 1e-9, 1.0 - 1e-9)   # P(pari) base per riga
+        is_draw = (train["home_goals"].to_numpy() == train["away_goals"].to_numpy()).astype(float)
+
+        def neg_ll(phi: float) -> float:
+            return -np.sum(weights * (np.log1p(phi * is_draw) - np.log1p(phi * d_match)))
+
+        res = minimize_scalar(neg_ll, bounds=(-0.5, 2.0), method="bounded")
+        return float(res.x)
 
     def _fit_counts(
         self,
@@ -467,7 +513,12 @@ class DixonColesModel:
         matrix[1, 0] *= 1.0 + mu * self.rho
         matrix[1, 1] *= 1.0 - self.rho
 
-        # Rinormalizza: la correzione e il troncamento rompono la somma a 1.
+        # Inflazione della diagonale (Fase 12b): alza TUTTI i pareggi di (1+phi).
+        if self.draw_phi:
+            idx = np.arange(matrix.shape[0])
+            matrix[idx, idx] *= 1.0 + self.draw_phi
+
+        # Rinormalizza: correzione, inflazione e troncamento rompono la somma a 1.
         matrix = np.clip(matrix, 0.0, None)
         matrix /= matrix.sum()
         return matrix
@@ -592,6 +643,8 @@ class DixonColesModel:
             "cov_mean": self.cov_mean,
             "cov_std": self.cov_std,
             "promoted_prior": list(self.promoted_prior) if self.promoted_prior else None,
+            "draw_inflation": self.draw_inflation,
+            "draw_phi": self.draw_phi,
         }
 
     @classmethod
@@ -605,6 +658,7 @@ class DixonColesModel:
             covariates=tuple(data.get("covariates", ())),
             promoted_prior=(tuple(data["promoted_prior"])
                             if data.get("promoted_prior") else None),
+            draw_inflation=data.get("draw_inflation", False),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
@@ -618,6 +672,7 @@ class DixonColesModel:
         model.beta = dict(data.get("beta", {}))
         model.cov_mean = dict(data.get("cov_mean", {}))
         model.cov_std = dict(data.get("cov_std", {}))
+        model.draw_phi = float(data.get("draw_phi", 0.0))
         model.teams = sorted(model.attack)
         model.fitted = True
         return model
