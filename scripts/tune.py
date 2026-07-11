@@ -38,6 +38,7 @@ DEFAULT_SEASONS = ["2324", "2425", "2526"]
 # main(); i processi worker li ereditano al fork (Linux).
 _BLEND_SIGNAL = "sot"
 _COVARIATES: tuple[str, ...] = ()
+_PROMOTED_PRIOR: tuple[float, float] | None = None
 
 
 def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
@@ -46,7 +47,8 @@ def _evaluate(task: tuple[str, float | None, float, float]) -> dict:
     season, half_life, shrinkage, shots_blend = task
     df = run_backtest("serie_a", season, half_life_days=half_life,
                       shrinkage=shrinkage, shots_blend=shots_blend,
-                      blend_signal=_BLEND_SIGNAL, covariates=_COVARIATES, verbose=False)
+                      blend_signal=_BLEND_SIGNAL, covariates=_COVARIATES,
+                      promoted_prior=_PROMOTED_PRIOR, verbose=False)
     m = experiment_log.compute_metrics(df)
     return {
         "season": season,
@@ -82,12 +84,17 @@ def main() -> None:
     parser.add_argument("--covariates", nargs="*", default=[],
                         choices=["squad_value", "absence", "rest", "rest_full"],
                         help="covariate di partita fisse (Fase 4c/4e)")
+    parser.add_argument("--promoted-prior", type=float, default=None, metavar="DELTA",
+                        help="prior di cold-start neopromosse fisso (Fase 7): "
+                             "attacco -DELTA / difesa +DELTA. Assente = off.")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 
-    global _BLEND_SIGNAL, _COVARIATES
+    global _BLEND_SIGNAL, _COVARIATES, _PROMOTED_PRIOR
     _BLEND_SIGNAL = args.blend_signal
     _COVARIATES = tuple(args.covariates)
+    _PROMOTED_PRIOR = ((args.promoted_prior, args.promoted_prior)
+                       if args.promoted_prior is not None else None)
 
     def build(season: str, value: float) -> tuple[str, float | None, float, float]:
         hl, shr, sb = args.half_life, args.shrinkage, args.shots_blend
@@ -122,7 +129,8 @@ def main() -> None:
             "league": "serie_a", "test_season": r["season"],
             "half_life_days": r["half_life"], "shrinkage": r["shrinkage"],
             "shots_blend": r["shots_blend"], "blend_signal": _BLEND_SIGNAL,
-            "covariates": list(_COVARIATES), "source": "tune.py",
+            "covariates": list(_COVARIATES),
+            "promoted_prior": args.promoted_prior, "source": "tune.py",
         }
         experiment_log.append_run(
             experiment_log.make_record(config, r["metrics"], fingerprint))
