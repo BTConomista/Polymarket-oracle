@@ -287,10 +287,16 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     **è quasi tutto nel PAREGGIO** (il mercato 12 senza pari ha gap +0.0020 ≈
     mercato). Punta al prossimo passo mirato: **correlazione dei punteggi**. Vedi
     `docs/DIARIO.md`, Fase 9.
-15. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per la
+15. ✅ **Fase 10** — **ricalibrazione per-classe 1X2** (casa/pari/ospite): conferma
+    robusta che il modello **sovrastima la casa e sottostima il pareggio** (w≈0.96
+    / 1.04 in tutte e 6 le stagioni), ma il guadagno è nel rumore (−0.0005 medio,
+    4/6 stagioni) → **non entra** nella config (come il temperature); funzioni in
+    `src/evaluation/calibration.py` per l'uso pratico. Quinto esperimento interno
+    di fila con guadagno nel rumore. Vedi `docs/DIARIO.md`, Fase 10.
+16. **Prossimo bivio** — modello di classe diversa (es. bivariate Poisson per la
     correlazione dei punteggi / GG/NG) / dati davvero nuovi, oppure **uso pratico**.
-16. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-17. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+17. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+18. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

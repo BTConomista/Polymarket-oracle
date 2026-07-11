@@ -44,6 +44,36 @@ def test_fit_recovers_known_distortion():
     assert 1.0 / T0 * 0.75 < T < 1.0 / T0 * 1.25  # recupera ~0.5
 
 
+def test_class_recalibration_normalization_and_identity():
+    p = np.array([[0.5, 0.3, 0.2], [0.6, 0.1, 0.3]])
+    assert np.allclose(calibration.apply_class_recalibration(p, [1, 1, 1]), p)
+    for w in ([1.5, 1.0, 1.0], [1.0, 2.0, 0.7]):
+        out = calibration.apply_class_recalibration(p, w)
+        assert np.allclose(out.sum(axis=1), 1.0)
+    # Aumentare il peso del pareggio ne alza la probabilita'.
+    boosted = calibration.apply_class_recalibration(p, [1.0, 2.0, 1.0])
+    assert (boosted[:, 1] > p[:, 1]).all()
+
+
+def test_class_recalibration_recovers_draw_deficit():
+    """Se il modello SOTTOSTIMA il pareggio (e sovrastima la casa) e gli esiti
+    vengono dalla distribuzione vera, il fit alza il peso del pari e abbassa la
+    casa (w_D > w_H)."""
+    rng = np.random.default_rng(0)
+    true = np.array([0.40, 0.30, 0.30])
+    model = np.array([0.50, 0.20, 0.30])  # casa gonfiata, pari sgonfiato
+    n = 40000
+    probs = np.repeat(model[None, :], n, axis=0)
+    outcomes = [["H", "D", "A"][d] for d in rng.choice(3, size=n, p=true)]
+    wH, wD, wA = calibration.fit_class_recalibration(probs, outcomes)
+    assert wD > wA > wH  # alza pari, abbassa casa
+    # e migliora la log-loss rispetto al modello grezzo
+    base = metrics.log_loss_1x2(probs, outcomes)
+    cal = metrics.log_loss_1x2(
+        calibration.apply_class_recalibration(probs, [wH, wD, wA]), outcomes)
+    assert cal < base
+
+
 def test_fit_improves_or_matches_logloss_in_sample():
     """In-sample, la log-loss dopo la calibrazione non puo' peggiorare
     (T=1 e' sempre ammissibile: il minimo trovato e' <= baseline)."""

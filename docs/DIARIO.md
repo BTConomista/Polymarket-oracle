@@ -920,6 +920,55 @@ ancora una volta il dito punta sulla correlazione dei punteggi.
 
 ---
 
+## Fase 10 — Ricalibrazione per-classe 1X2 (attacca il pareggio; robusto ma piccolo)
+
+**Obiettivo.** Sfruttare la pista mirata della Fase 9: il gap col mercato e'
+concentrato nel PAREGGIO e la calibrazione media mostra **casa sovrastimata /
+pari sottostimato**. Il temperature scaling (Fase 6) non poteva correggerlo
+(scala tutto in modo uniforme, non sposta massa tra esiti). Tre moltiplicatori
+per classe (casa/pari/ospite) si'.
+
+**Ragionamento.** `q_i ∝ w_i·p_i`, rinormalizzato; solo i rapporti contano, si
+fissa `w_ospite=1` (2 parametri). Pesi tarati SOLO sulle stagioni precedenti
+(leave-future-out) e applicati alla stagione di test. Modello = ufficiale ATTUALE
+(gol+xG+prior). Nuove funzioni in `src/evaluation/calibration.py`.
+
+**Risultato (1X2 log-loss; pesi normalizzati a media geometrica 1).**
+
+| Stagione | w_casa | w_pari | w_ospite | base | rical. | Δ | gap→mercato |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| 2020-21 | 0.981 | 1.037 | 0.983 | 0.9532 | 0.9532 | −0.0000 | +0.0202 |
+| 2021-22 | 0.970 | 1.029 | 1.001 | 0.9860 | 0.9847 | −0.0013 | +0.0131 |
+| 2022-23 | 0.949 | 1.036 | 1.017 | 0.9916 | 0.9920 | +0.0004 | +0.0150 |
+| 2023-24 | 0.960 | 1.040 | 1.001 | 0.9854 | 0.9840 | −0.0015 | +0.0172 |
+| 2024-25 | 0.962 | 1.060 | 0.981 | 0.9693 | 0.9682 | −0.0011 | +0.0159 |
+| 2025-26 | 0.960 | 1.061 | 0.982 | 0.9925 | 0.9932 | +0.0007 | +0.0148 |
+| **MEDIA** | **~0.96** | **~1.04** | **~0.99** | **0.9797** | **0.9792** | **−0.0005** | **+0.0160** |
+
+**Lezione / cosa ne consegue.**
+1. **Diagnosi confermata, robusta**: in TUTTE e 6 le stagioni il fit **abbassa la
+   casa (w≈0.96) e alza il pareggio (w≈1.04-1.06)**. Il modello sovrastima
+   sistematicamente le vittorie di casa e sottostima i pari — esattamente la
+   miscalibrazione direzionale del diagnostico (Fase 9). Piu' informativo del
+   temperature (che poteva solo scaldare/raffreddare).
+2. **Payoff piccolo e non uniforme**: −0.0005 medio (gap 1X2 +0.0165→+0.0160),
+   aiuta 4 stagioni su 6, peggiora 2 (incl. la piu' recente). E' un po' meglio
+   del temperature (−0.0003) ma sempre ai margini del rumore. **Non entra nella
+   config ufficiale** (come il temperature); le funzioni restano per l'uso pratico
+   (probabilita' 1X2 un filo piu' oneste su singola partita).
+3. **Perche' cosi' poco?** La ricalibrazione per-classe e' un surrogato *lineare
+   e globale* di cio' che servirebbe davvero: modellare la **correlazione dei
+   punteggi** partita-per-partita (la probabilita' del pari dipende dai tassi
+   attesi, non e' un fattore costante). Spreme lo strato "medio" della
+   miscalibrazione (−0.0005), ma il residuo e' strutturale. **Quinto esperimento
+   interno di fila con guadagno nel rumore**: la conclusione e' definitiva —
+   dentro questo modello e questi dati il margine e' esaurito, e ogni analisi
+   punta allo stesso salto (Poisson bivariato).
+
+**Riproducibilita'.** `python scripts/_run_class_recal.py`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la

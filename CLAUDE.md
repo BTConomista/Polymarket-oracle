@@ -141,8 +141,15 @@ shrinkage sotto la media per le squadre senza storico. **Miglior guadagno intern
 nella config ufficiale** (δ=0.23). **Fase 8 (ultimo giro economico, NEGATIVO):**
 ri-taratura shrinkage col prior = curva **piatta** 0.75-1.5 (leve ortogonali,
 nessun guadagno); vantaggio-casa per-squadra = **persistenza anno-su-anno r≈0.00**
-(solo rumore stagionale, non generalizza) → niente da spremere. Il modello e' al
-tetto pratico dei dati attuali. **Prossimo bivio:** modello di classe diversa
-(es. Poisson bivariato per GG/NG) / dati nuovi, oppure uso pratico.
+(solo rumore stagionale, non generalizza) → niente da spremere.
+**Fase 9:** anatomia del gap col mercato (`scripts/analyze_gap.py`): gap 1X2 medio
++0.0165, **quasi tutto nel PAREGGIO** (il mercato 12 senza pari e' gia' a livello
+mercato); varia per stagione (peggio COVID 2020-21) e a U per forza-squadra.
+**Fase 10:** ricalibrazione per-classe 1X2 (`scripts/_run_class_recal.py`):
+conferma robusta casa-sovrastimata/pari-sottostimato ma guadagno nel rumore
+(−0.0005) → off. **Bilancio:** 5 esperimenti interni di fila nel rumore → il
+modello e' al **tetto pratico**; ogni analisi punta al **Poisson bivariato**
+(correlazione punteggi) come prossimo salto. **Prossimo bivio:** cambio di classe
+/ dati nuovi, oppure uso pratico.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**
