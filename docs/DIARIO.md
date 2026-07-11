@@ -1144,6 +1144,50 @@ esperimento convergente: il tetto e' reale, la forma non lo scalfisce.
 
 ---
 
+## Fase 13-bis — Streak e rendimento recente: ricerca DATA-DRIVEN (nessun pattern)
+
+**Obiettivo.** Uscire dall'arbitrarieta' della "finestra 5". Due intuizioni:
+(a) **streak** (serie utile / di sconfitte in corso) invece di una media a finestra
+fissa — effetti di soglia/psicologici; (b) guardare anche **gol fatti/subiti e xG**
+recenti, lasciando che siano i **dati** a dire se c'e' un pattern, non soglie
+scelte a mano. Solo Serie A (i risultati che abbiamo; le coppe in `club_fixtures`
+non hanno i punteggi).
+
+**Metodo.** Diagnostico: le feature di rendimento recente predicono l'ERRORE
+(residuo punti casa) del modello walk-forward? Se il modello gia' cattura tutto,
+il residuo e' scorrelato da qualsiasi rendimento recente.
+
+**(1) Streak (`scripts/_run_streaks.py`).** corr con residuo: serie utile +0.041,
+serie vittorie +0.030, serie sconfitte −0.004 → ~zero. I bucket per lunghezza
+serie *sembrano* mostrare qualcosa (serie utile 10-14 → +0.135; sconfitte 3-4 →
++0.130) ma **i segni si ribaltano in modo erratico** (sconfitte 2→−0.157, 3-4→
++0.130, 5+→−0.159) su n=27-146: errore standard ~0.29 > effetti → **rumore**.
+
+**(2) Ventaglio completo (`scripts/_run_recent_patterns.py`).** 23 feature (gol
+fatti/subiti/differenza, xG fatti/subiti, "fortuna"=gol−xG, punti, serie),
+finestre 3/5/10, differenziale casa-ospite, su 2273 partite. Verdetto in un
+numero:
+
+> **R² (residuo spiegato dal rendimento recente) = 0.0101**
+> **R² atteso da puro rumore (23 feature / 2273 partite) = 0.0101** — IDENTICI.
+
+Le correlazioni singole piu' alte sono l'**xG recente** (xgf10 +0.069, xga10
+−0.058, gd10 +0.055): statisticamente sopra la soglia-rumore (2·SE≈0.042) ma
+**minuscole** (~0.4% di varianza) e **collineari** → in multivariata l'R² non
+supera il rumore. Le streak e i punti (risultati) sono ancora piu' deboli.
+
+**Lezione.** **Nessun pattern nascosto nel rendimento recente**, ne' nelle streak
+ne' nei gol/xG recenti, con qualunque finestra. La ragione e' la stessa della
+forma: il rendimento recente (risultati E gol E xG) e' cio' che il fit **pesato
+nel tempo** gia' usa e pesa di piu' → il residuo del modello non contiene
+momentum residuo. L'unico filo di segnale (xG recente) e' gia' nel blend. Se
+mai, conferma che l'xG e' la strada giusta — ma non ne resta da spremere.
+Nono/decimo esperimento convergente: il tetto e' reale.
+
+**Riproducibilita'.** `python scripts/_run_streaks.py`, `python scripts/_run_recent_patterns.py`.
+
+---
+
 ## Prossimo passo — il modello e' al tetto dei dati attuali
 
 Il divario residuo richiede **informazione che il mercato ha e noi no**: la
