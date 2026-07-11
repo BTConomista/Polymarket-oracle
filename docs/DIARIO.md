@@ -1184,7 +1184,25 @@ momentum residuo. L'unico filo di segnale (xG recente) e' gia' nel blend. Se
 mai, conferma che l'xG e' la strada giusta — ma non ne resta da spremere.
 Nono/decimo esperimento convergente: il tetto e' reale.
 
-**Riproducibilita'.** `python scripts/_run_streaks.py`, `python scripts/_run_recent_patterns.py`.
+**(3) Interazione STREAK × avversario (`scripts/_run_streak_interaction.py`).**
+Ipotesi mirata: una squadra in serie CONTRO un avversario debole sposta l'esito
+oltre il modello. "Debolezza avversario" = favoritismo del modello (P(casa)−
+P(ospite), out-of-sample). Risultato:
+- corr(interazione streak×favoritismo, residuo) = **−0.005** (~zero);
+- R² con interazione − R² senza = **+0.00003** (meno di quanto darebbe una feature
+  di puro rumore, ~0.00044);
+- Griglia 2×2 (residuo medio): casa in serie ≥5 & avversario debole = **−0.018**
+  (n=224), perfino piu' basso di casa senza serie & avversario debole (+0.013).
+  La cella che dovrebbe "accendersi" e' spenta.
+
+L'interazione **non esiste**: il residuo del modello e' gia' condizionato a
+entrambe le forze (l'avversario debole e' gia' prezzato), e la striscia non
+aggiunge nulla nemmeno in combinazione. Chiude in modo definitivo il filone
+"forma/streak/rendimento recente": il modello prezza gia' in modo ottimale tutto
+cio' che sta nei risultati recenti.
+
+**Riproducibilita'.** `python scripts/_run_streaks.py`,
+`python scripts/_run_recent_patterns.py`, `python scripts/_run_streak_interaction.py`.
 
 ---
 
