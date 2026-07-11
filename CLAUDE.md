@@ -44,16 +44,24 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   4. **scelta** e perché;
   5. **risultato** (numeri, anche se negativo);
   6. **lezione / cosa ne consegue**.
-- [ ] **README** — se è cambiata la **configurazione ufficiale** del modello o un
-  risultato chiave, aggiorna le tabelle dei risultati e la roadmap.
+- [ ] **README — «Registro completo dei risultati»** (OBBLIGATORIO, SEMPRE).
+  Il README contiene una sezione **«Registro completo dei risultati — ogni analisi,
+  in un colpo d'occhio»**: è il punto UNICO e accessibile dove **chiunque** deve
+  poter vedere i numeri chiave di **OGNI** backtest e analisi, senza leggere il
+  diario o il codice. **Dopo ogni esperimento significativo — positivo, negativo o
+  "nel rumore" — aggiungi lì la riga corrispondente** (nella tabella degli
+  esperimenti e, se serve, nelle tabelle del gap/evoluzione). Nessuna analisi può
+  restare fuori da questo registro. Se cambia la config ufficiale, aggiorna anche
+  la riga di stato e la roadmap.
 - [ ] **Test** — mantieni `pytest` verde; aggiungi un test per ogni nuova
   funzionalità del modello/pipeline.
 - [ ] **Commit + push** — messaggio chiaro (cosa e perché), sul branch di
   sviluppo. Non lasciare mai lavoro non committato: il container è effimero.
 
-Regola pratica: **il registro** cattura *ogni* run (dati grezzi); **il diario**
-cattura le *decisioni e il perché* (narrazione); il **README** è lo stato
-*corrente* sintetico.
+Regola pratica: **il registro `runs.jsonl`** cattura *ogni* run (dati grezzi); **il
+diario** cattura le *decisioni e il perché* (narrazione); il **README** è lo stato
+*corrente* sintetico E il **«Registro completo dei risultati» leggibile da tutti** —
+va **sempre** aggiornato: chiunque apra il README deve vedere l'esito di ogni analisi.
 
 ---
 
