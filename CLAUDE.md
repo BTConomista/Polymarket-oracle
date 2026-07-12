@@ -170,7 +170,7 @@ default. **Fase 13:** stato di forma (`add_form`, covariata `form`,
 come covariata peggiora (+0.0002) → gia' catturata dal fit pesato nel tempo,
 nessun pattern nascosto (8 esperimenti convergenti). **Fase 14 (linea di APERTURA + CLV,
 NEGATIVO):** snapshot esteso con le quote pre-chiusura `*_open` (CSV originali
-football-data congelati in `files/`; il mirror storico di sources.BASE_URL e'
+football-data congelati in `data/football_data_raw/`; il mirror storico di sources.BASE_URL e'
 SPARITO da GitHub → `--refresh` senza fonte a monte;
 `scripts/_restore_raw_cache.py` ricostruisce la cache). Il modello NON batte
 nemmeno l'apertura (gap 1X2 +0.0146, 6/6 stagioni; affilamento open→close solo

@@ -1237,7 +1237,8 @@ pipeline `--refresh` oggi non ha piu' una fonte a monte, e lo snapshot congelato
 e' cio' che ha salvato il progetto — esattamente lo scenario per cui era stato
 versionato. Nessun mirror alternativo conserva le quote (footballcsv e datahub
 le spogliano; i dataset HF hanno un solo set). Soluzione: i **CSV originali**
-scaricati dall'utente da football-data.co.uk e versionati in `files/` — ora la
+scaricati dall'utente da football-data.co.uk e versionati in `data/football_data_raw/`
+(fonte grezza congelata, README dedicato nella cartella) — ora la
 fonte grezza congelata del repo (`scripts/_restore_raw_cache.py` li identifica
 per data e ricostruisce la cache `data/raw/`).
 

@@ -525,7 +525,7 @@ linee (2279/2280), 5 versioni × 6 stagioni.
   morbida) — richiederebbe raccolta prospettica di quote in tempo reale.
 
 *Nota di provenienza:* il mirror GitHub storico dei dati è **sparito** (404);
-i CSV originali football-data sono ora congelati in `files/` (fonte grezza
+i CSV originali football-data sono ora congelati in `data/football_data_raw/` (fonte grezza
 versionata) e `scripts/_restore_raw_cache.py` ricostruisce la cache. Dettagli
 nel [diario, Fase 14](docs/DIARIO.md).
 
@@ -721,7 +721,7 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     pattern nascosto. Ottavo esperimento convergente. Vedi `docs/DIARIO.md`.
 19. ✅ **Fase 14** — **linea di apertura e CLV** (risultato NEGATIVO, definitivo
     su questi dati): snapshot esteso con le quote pre-chiusura (`*_open`, dai CSV
-    originali football-data ora congelati in `files/`; il mirror storico è
+    originali football-data ora congelati in `data/football_data_raw/`; il mirror storico è
     sparito da GitHub). Il modello **non batte nemmeno l'apertura** (gap 1X2
     +0.0146, 6/6 stagioni; l'affilamento open→close vale solo +0.0020) e il
     **CLV è negativo** (−0.0028, 45%>0): i dissensi del modello sono rumore,
@@ -821,7 +821,8 @@ su GitHub con **lo stesso formato**:
   GitHub** (404, verificato luglio 2026, Fase 14): `--refresh` non ha più una
   fonte a monte raggiungibile dal cloud. Il progetto non ne dipende: lo snapshot
   congelato è versionato, e i **CSV grezzi originali** football-data (9 stagioni,
-  con TUTTE le colonne quote) sono congelati in **`files/`** —
+  con TUTTE le colonne quote) sono congelati in **`data/football_data_raw/`** (con
+README di provenienza) —
   `scripts/_restore_raw_cache.py` ricostruisce la cache `data/raw/` da lì.
 - **Transfermarkt**: datalake `salimt/football-datasets` — URL in
   `sources.TRANSFERMARKT_MIRROR_URL`. Limite noto: ~25% dei profili è privo di

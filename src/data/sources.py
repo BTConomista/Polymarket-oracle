@@ -24,8 +24,9 @@ from dataclasses import dataclass
 # Mentaturan/... non esiste piu' su GitHub (404 reale, fuori dal proxy); vale
 # anche per l'xG Understat (UNDERSTAT_URL, stesso repo). Il progetto NON ne
 # dipende per i calcoli: lo snapshot congelato e' versionato, e i CSV grezzi
-# ORIGINALI football-data (tutte le colonne quote) sono congelati in files/ —
-# `python scripts/_restore_raw_cache.py` ricostruisce la cache data/raw/.
+# ORIGINALI football-data (tutte le colonne quote) sono congelati in
+# data/football_data_raw/ (versionata) e `python scripts/_restore_raw_cache.py`
+# ricostruisce da li' la cache data/raw/.
 # Per un refresh futuro serve una fonte nuova: in locale basta puntare
 # BASE_URL a OFFICIAL_BASE_URL (raggiungibile da una rete normale).
 OFFICIAL_BASE_URL = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
