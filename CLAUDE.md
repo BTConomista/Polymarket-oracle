@@ -202,6 +202,14 @@ statisticamente zero; Δ prior −0.0010 [−0.0025,+0.0004] probabile (~93%) ma
 non conclusivo — resta adottato per coerenza e motivazione strutturale, va
 dichiarato "probabilmente utile". Disciplina multiple-testing: dopo ~30 test
 sulle stesse 6 stagioni, un CI che sfiora lo zero = "non concluso".
+**Fase 18 (rho dinamico, NEGATIVA con regola pre-dichiarata):** correzione sui
+punteggi bassi per-partita (`--dynamic-rho`): rho_slope instabile (cambia
+segno, sbatte sui bound) e Δ +0.0003 [−0.0007,+0.0013] → off; terza e ultima
+via strutturale sul pareggio chiusa (dopo Fasi 10 e 12b). **Fase 19 (potenza
+sul prior):** finestra estesa alle stagioni 1819/1920 (mai usate) → 8
+stagioni: Δ prior −0.0013 [−0.0026,+0.0001], P(aiuta) 96.5% (97% sulle
+promosse); entrambe le stagioni nuove confermano → prior confermato, etichetta
+da "probabile" a "molto probabile, formalmente non concluso".
 **Prossimo bivio:** solo **dati davvero nuovi** o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

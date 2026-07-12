@@ -111,6 +111,8 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 15-bis | gap per mercato × stagione | 12≈0 in ogni stagione; pari persistente; O/U volatile | ✅ analisi |
 | 16 | **encompassing** (blend modello+mercato) | **α\*≈0 ovunque**: nessuna info propria | ❌ definitivo |
 | 17 | **CI bootstrap sui numeri chiave** | gap 1X2/O/U reali\*; 12 e Δ prior **≈0 statistico** | ✅ analisi |
+| 18 | **ρ dinamico** (correzione per-partita) | +0.0003 (CI include 0; slope instabile) | ❌ off |
+| 19 | potenza sul prior: finestra a **8 stagioni** | −0.0013 [−0.0026, +0.0001], P(aiuta) 96.5% | ✅ conferma (non concluso) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -662,6 +664,52 @@ Quattro letture oneste:
 Disciplina: dopo ~30 test sulle stesse 6 stagioni, ogni futuro CI che sfiora lo
 zero va letto come "non concluso", mai come scoperta.
 
+### ρ dinamico — Fase 18 (l'ultima idea strutturale sul pareggio: NEGATIVA)
+
+Il ρ di Dixon-Coles (correzione sui punteggi bassi 0-0/1-0/0-1/1-1) è un numero
+unico per tutte le partite. Ipotesi mai provata: la correlazione dei punteggi
+bassi dipende dalla partita — `ρ_match = ρ + ρ_slope·(λ+μ − centro)`, con
+ρ_slope stimato nella verosimiglianza (`--dynamic-rho`,
+`scripts/_run_dynrho.py`). **Regola dichiarata prima di vedere i numeri**:
+adozione solo se il CI95 del Δ esclude lo zero.
+
+| | risultato |
+|---|---|
+| ρ_slope al via di ogni stagione | **instabile**: +0.06, −0.11, +0.15, −0.08, +0.15, +0.15 |
+| Δ 1X2 walk-forward (6 stagioni, n=2280) | **+0.0003**, CI95 [−0.0007, +0.0013] |
+| Δ O/U 2.5 | −0.0000, CI95 [−0.0007, +0.0006] |
+
+Doppia evidenza negativa: il parametro **cambia segno di stagione in stagione e
+sbatte sul bound (±0.15) in 3 fit su 6** — la firma di un parametro che insegue
+rumore, non struttura — e out-of-sample il modello peggiora leggermente. Regola
+pre-dichiarata → **non si adotta**. Con la 12b (diagonale inflazionata) e la 10
+(ricalibrazione per-classe), è la **terza e ultima via strutturale sul pareggio
+a chiudersi**: il tetto non dipende dalla forma funzionale della correzione.
+
+### Potenza statistica sul prior — Fase 19 (finestra estesa a 8 stagioni)
+
+Il Δ del prior neopromosse era "probabile ma non concluso" (Fase 17:
+[−0.0025, +0.0004], P~93%). Non perché l'effetto balli, ma perché le
+partite-promosse sono poche. Estensione alle stagioni **2018-19 e 2019-20, mai
+usate in nessuna analisi precedente** (`scripts/_run_prior_power.py`; il 2017-18
+resta solo-training):
+
+| Pool | media | CI95 | P(il prior aiuta) |
+|---|--:|--:|--:|
+| tutte le partite, 8 stagioni (n=3040) | −0.0013 | [−0.0026, **+0.0001**] | **96.5%** |
+| solo partite promosse (n=864) | −0.0045 | [−0.0094, +0.0001] | 97.0% |
+| *(confronto: 6 stagioni, Fase 17)* | −0.0010 | [−0.0025, +0.0004] | 92.6% |
+
+Le due stagioni aggiunte vanno **entrambe nella direzione del prior** (Δ −0.0024
+e −0.0014; sulle promosse −0.0093 e −0.0045): è evidenza genuinamente nuova, su
+partite mai toccate da alcun tuning. L'effetto aiuta in **7 stagioni su 8** e il
+CI si stringe — ma sfiora ancora lo zero (+0.0001). Verdetto disciplinato: il
+prior **resta adottato** e la sua etichetta migliora da "probabile (~93%)" a
+"**molto probabile (~96.5%)**, formalmente non concluso". Caveat dichiarato:
+δ=0.23 è la stima storica della Fase 7 (include il 2018-20), quindi per le due
+stagioni aggiunte non è leave-future-out — è un test di potenza sull'effetto
+della config adottata, non una nuova stima di δ.
+
 ## Struttura
 
 ```
@@ -813,10 +861,20 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     +0.0069 [+0.0022, +0.0116] (reale), Δ prior neopromosse −0.0010
     [−0.0025, +0.0004] (probabile ma non conclusivo, ~93%). Vedi la sezione
     [Fase 17](#barre-derrore-sui-numeri-chiave--fase-17-bootstrap-appaiato).
-23. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
+23. ✅ **Fase 18** — **ρ dinamico** (`--dynamic-rho`, `scripts/_run_dynrho.py`):
+    la correzione sui punteggi bassi per-partita, ultima idea strutturale sul
+    pareggio. **Negativa con regola pre-dichiarata**: Δ +0.0003
+    [−0.0007, +0.0013], ρ_slope instabile (cambia segno, sbatte sui bound) →
+    **off**. Terza via strutturale sul pareggio chiusa (dopo Fasi 10 e 12b).
+24. ✅ **Fase 19** — **potenza sul prior neopromosse**: finestra estesa alle
+    stagioni 2018-19 e 2019-20 (mai usate) → 8 stagioni, n=3040. Il CI si
+    stringe a **[−0.0026, +0.0001]**, P(aiuta) **96.5%** (97.0% sulle
+    promosse); le due stagioni nuove confermano entrambe. Resta "molto
+    probabile ma formalmente non concluso": prior confermato nella config.
+25. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
     oppure **uso pratico** del modello attuale (comando di predizione).
-24. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-25. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+26. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+27. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

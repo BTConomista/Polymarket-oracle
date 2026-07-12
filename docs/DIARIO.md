@@ -1467,15 +1467,90 @@ stagione".
 
 ---
 
+## Fase 18 — Rho dinamico: l'ultima idea strutturale sul pareggio (NEGATIVA)
+
+**Obiettivo.** Il rho di Dixon-Coles e' un numero unico per tutte le partite.
+Ipotesi (l'unica strutturale mai provata dopo la 12b): la correlazione dei
+punteggi bassi varia con la partita — un match da 1.8 gol attesi ha dinamiche
+di 0-0/1-1 diverse da uno da 3.5.
+
+**Ragionamento.** rho_match = rho + rho_slope*(lam+mu − centro), con rho_slope
+stimato NELLA verosimiglianza (non post-hoc) e centro = media pesata dei gol
+totali del training (costante fissata prima del fit). rho_slope=0 riproduce
+esattamente il modello classico (test di regressione in tests/).
+
+**Alternative.** Spline/bucket di rho per fascia di gol attesi (piu' parametri,
+piu' overfitting) o rho per-squadra (gia' escluso in Fase 8 per il
+vantaggio-casa: non persiste). Scelta la parametrizzazione lineare a 1
+parametro: la versione economica dell'idea.
+
+**Regola di decisione dichiarata PRIMA di vedere i numeri** (disciplina Fase
+17): adozione solo se il CI95 bootstrap del Δ esclude lo zero.
+
+**Risultato** (`scripts/_run_dynrho.py`; 13 run nel registro, source
+`fase18_dynrho`):
+- diagnostico del parametro (fit al via di ogni stagione): rho_slope
+  **instabile** — +0.06, −0.11, +0.15, −0.08, +0.15, +0.15 — cambia segno e
+  sbatte sul bound (±0.15) in 3 fit su 6;
+- walk-forward 6 stagioni: Δ **+0.0003**, CI95 [−0.0007, +0.0013],
+  P(migliora)=25.9%; O/U −0.0000 [−0.0007, +0.0006];
+- regola pre-dichiarata → **NON si adotta**.
+
+**Lezione.** Doppia firma del rumore: parametro senza segno stabile E nessun
+guadagno out-of-sample. Con la ricalibrazione per-classe (Fase 10) e la
+diagonale inflazionata (Fase 12b), e' la **terza e ultima via strutturale sul
+pareggio a chiudersi**: il tetto non dipende dalla forma funzionale della
+correzione, ma dall'informazione disponibile. Nota di metodo: dichiarare la
+regola di adozione prima di vedere i numeri costa zero e vale molto.
+
+---
+
+## Fase 19 — Potenza sul prior: 8 stagioni (l'evidenza si rafforza, non conclude)
+
+**Obiettivo.** Il Δ del prior neopromosse (unica feature adottata) era
+"probabile ma non concluso" in Fase 17 (CI [−0.0025, +0.0004], P~93%). Colpa
+dell'effetto o del campione? Le partite-promosse in 6 stagioni sono solo 648.
+
+**Ragionamento.** Il dataset ha 9 stagioni ma i test ne usavano 6: le stagioni
+2018-19 e 2019-20 non sono MAI state usate in nessuna analisi (il 2017-18
+resta solo-training). Estenderle e' potenza gratis e genuinamente
+out-of-sample rispetto a ogni scelta fatta finora. Caveat dichiarato: δ=0.23
+(stima storica Fase 7) include informazione 2018-20, quindi per le due
+stagioni aggiunte il VALORE del prior non e' leave-future-out: e' un test di
+potenza sull'effetto della config adottata, non una nuova stima di δ.
+
+**Risultato** (`scripts/_run_prior_power.py`; 17 run nel registro, source
+`fase19_prior_power`):
+
+| pool | media | CI95 | P(aiuta) | n |
+|---|--:|--:|--:|--:|
+| tutte, 8 stagioni | −0.0013 | [−0.0026, +0.0001] | 96.5% | 3040 |
+| solo promosse | −0.0045 | [−0.0094, +0.0001] | 97.0% | 864 |
+| (Fase 17, 6 stagioni) | −0.0010 | [−0.0025, +0.0004] | 92.6% | 2280 |
+
+Le due stagioni aggiunte confermano ENTRAMBE il prior (Δ −0.0024 e −0.0014;
+sulle promosse −0.0093 e −0.0045); l'effetto aiuta in 7 stagioni su 8 (l'unica
+contraria resta il 2023-24, promosse piu' forti della media).
+
+**Lezione.** L'evidenza si muove nella direzione giusta man mano che arrivano
+dati (93% → 96.5%): comportamento da effetto reale piccolo, non da rumore. Ma
+il CI sfiora ancora lo zero (+0.0001): per la disciplina multiple-testing il
+verdetto resta "**molto probabile, formalmente non concluso**". Il prior resta
+adottato; l'etichetta onesta migliora. Per chiudere davvero servirebbero altre
+~2-3 stagioni di dati nuovi (o piu' leghe).
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
 linea di apertura (Fase 14) + l'**encompassing** (Fase 16: α*=0, il mercato
-ingloba il modello): il gap residuo col mercato (+0.0165 vs chiusura,
-+0.0146 vs apertura, quasi tutto nel pareggio) non e' cattiva modellazione ne'
-errore di calcolo, ma **informazione che il mercato ha e noi no** — ce l'ha
-gia' il venerdi' (CLV negativo) e il modello non aggiunge nulla nemmeno in
-blend. Il bivio:
+ingloba il modello) + il **rho dinamico** (Fase 18: anche l'ultima via
+strutturale sul pareggio e' rumore): il gap residuo col mercato (+0.0165 vs
+chiusura, +0.0146 vs apertura, quasi tutto nel pareggio) non e' cattiva
+modellazione ne' errore di calcolo, ma **informazione che il mercato ha e noi
+no** — ce l'ha gia' il venerdi' (CLV negativo) e il modello non aggiunge nulla
+nemmeno in blend. Il bivio:
 1. **Dati davvero nuovi** (formazioni ufficiali pre-partita; oppure la linea di
    apertura VERA di domenica/lunedi', che richiede raccolta prospettica di quote);
 2. **Uso pratico** del modello attuale (comando di predizione);
