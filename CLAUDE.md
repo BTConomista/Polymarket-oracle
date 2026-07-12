@@ -24,6 +24,28 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
    sempre le avvertenze quando il modello non batte il mercato.
 7. **Valida su più stagioni** — mai concludere da una sola stagione (rumore).
    Default: 3+ stagioni; per conclusioni importanti, 6.
+8. **Il bersaglio è la predizione del SINGOLO mercato, non un modello unico
+   "bello".** L'obiettivo del progetto è stimare bene le probabilità di *ogni*
+   evento (1X2, Over/Under, GG/NG, doppie chance…), preso uno per uno. Finora
+   c'è **un solo modello** (Dixon-Coles) da cui si derivano tutti i mercati
+   dalla stessa matrice dei punteggi: ha il pregio della **coerenza interna**
+   (P(1X)=P(1)+P(X) vale sempre) ma **non è un obbligo**. Un modello può essere
+   ottimo su un mercato e mediocre su un altro — è già successo (Fase 5: il DC
+   è forte su 1X2/1X/2X ma **peggio della baseline su GG/NG**, perché cattura
+   male la *correlazione* dei punteggi). Quindi:
+   - **valuta e seleziona i modelli PER MERCATO**, non solo sul log-loss 1X2
+     aggregato. Un modello che vince sul GG/NG ma perde sull'1X2 è comunque una
+     vittoria *su quel mercato*;
+   - è legittimo che la config "ufficiale" diventi un **portafoglio di
+     specialisti** — un `dict {mercato: modello_migliore}` — invece di un modello
+     unico. Metti in conto che così si **perde la coerenza tra mercati** (le
+     probabilità di modelli diversi non si sommano più in modo consistente): è
+     un trade-off da fare **consapevolmente**, accettabile se il bersaglio è la
+     bontà per-caso e non un prezzo arbitrage-free su tutti i mercati insieme;
+   - alcuni mercati sono più promettenti di altri per un modello nuovo: il
+     **GG/NG non ha quote nei dati** (football-data non le include), quindi è
+     l'unico dove non possiamo dimostrare l'efficienza del mercato — l'unico con
+     "spazio" non ancora chiuso dai risultati Fasi 14/16/20. Priorità lì.
 
 ---
 
@@ -217,7 +239,14 @@ casuali) → nessun segnale nascosto oltre la forma. MA emerge l'**adverse
 selection**: il gap vs mercato cresce col dissenso modello-mercato (r=+0.18;
 quartile alto +0.0539 vs basso +0.0009) → i "value bet" del modello sono i
 suoi errori. E' il meccanismo del ROI negativo, coerente con Fase 16 (α*=0) e
-Fase 14 (CLV<0). **Prossimo bivio:** solo **dati davvero nuovi**, un **modello
-di famiglia diversa** (GBM/logistico, mai provato) o **uso pratico**.
+Fase 14 (CLV<0). **Prossima direzione (Fase 21+): MODELLI NUOVI, valutati
+PER MERCATO** (vedi principio 8). Non piu' tweak al Dixon-Coles ma famiglie
+diverse — es. gradient boosting/logistico che predicono un mercato DIRETTAMENTE
+(senza matrice dei punteggi), o modelli a punteggio con miglior correlazione
+(bivariato Poisson, negative-binomial) per il GG/NG. Regola: giudica ogni
+candidato mercato per mercato; la config ufficiale puo' diventare un portafoglio
+di specialisti; **priorita' al GG/NG** (l'unico mercato senza quote nei dati,
+quindi senza tetto di efficienza dimostrato). Restano validi anche **dati
+davvero nuovi** e **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

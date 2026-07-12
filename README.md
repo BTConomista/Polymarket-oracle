@@ -913,10 +913,24 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     segnale nascosto. Ma emerge l'**adverse selection**: il gap vs mercato
     cresce col dissenso del modello (r=+0.18; quartile alto +0.0539 vs +0.0009)
     → i "value bet" del modello sono i suoi errori. Spiega il ROI negativo.
-26. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
-    oppure **uso pratico** del modello attuale (comando di predizione).
-27. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-28. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+26. 🔜 **Fase 21+ — modelli nuovi, valutati PER MERCATO.** Esaurito il tuning
+    del Dixon-Coles, la prossima direzione è provare **famiglie diverse** di
+    modelli, con un principio nuovo (vedi `CLAUDE.md`, principio 8): il
+    bersaglio è la predizione del **singolo mercato**, quindi un modello va
+    giudicato **mercato per mercato**, non solo sull'1X2 aggregato. Un modello
+    può essere ottimo su un mercato e mediocre su un altro (già visto: il DC è
+    forte sugli esiti ma **peggio della baseline su GG/NG**), e la config
+    ufficiale può legittimamente diventare un **portafoglio di specialisti**
+    `{mercato: modello}` — sacrificando la coerenza tra mercati in cambio della
+    bontà per-caso. Candidati: gradient boosting / logistico che predicono un
+    mercato *direttamente*; modelli a punteggio con miglior correlazione
+    (bivariato Poisson, negative-binomial) per il GG/NG. **Priorità al GG/NG**:
+    è l'unico mercato **senza quote nei dati**, quindi l'unico dove il tetto di
+    efficienza (Fasi 14/16/20) non è dimostrato e resta spazio reale.
+27. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
+    vere) oppure **uso pratico** del modello attuale (comando di predizione).
+28. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+29. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 
