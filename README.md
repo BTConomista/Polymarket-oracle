@@ -116,6 +116,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 20 | **residui su tutte le covariate + adverse selection** | R²=rumore; ma gap ∝ dissenso (r=+0.18) | ✅ scoperta (perché si perde) |
 | 21 | **gradient boosting sul GG/NG** (modello nuovo) | calibrato pareggia il DC (+0.0047), nessuno batte la baseline | ❌ non adottato (convergenza) |
 | 22 | **sweep GBM su 6 mercati × 3 feature** | non batte il DC su nessun mercato; gap ✗ su 5/6 | ❌ tetto informativo |
+| 23 | **GBM modello + mercato** (encompassing non-lin.) | col mercato come feature resta > DC; non lo pareggia | ❌ nessun edge, gap non ridotto |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -836,6 +837,40 @@ stato testato a fondo (2 famiglie, 6 mercati, 3 feature-set): su questi dati
 nessun mercato cede a una famiglia diversa. Per un edge serve **informazione
 nuova**, non un modello nuovo.
 
+### GBM che combina modello + mercato — Fase 23 (ridurre il gap? non con un GBM)
+
+Ultima leva per "ridurre il gap": l'unica informazione mai data al modello sono
+le **quote di mercato stesse**. Un GBM con feature = [DC + covariate + quote di
+chiusura devigate] (`scripts/_run_gbm_market.py`) — encompassing *non-lineare*
+(la Fase 16 era solo lineare) — può correggere le inefficienze residue della
+linea, o almeno riprodurla (gap → 0)?
+
+| 1X2 | log-loss | gap vs mercato |
+|---|--:|--:|
+| Dixon-Coles | 0.9797 | +0.0165 |
+| GBM senza mercato | 1.0114 | +0.0482 |
+| **GBM con mercato** | 0.9996 | +0.0364 |
+| Mercato (chiusura) | 0.9632 | 0 |
+
+(O/U analogo: GBM con mercato 0.6956 vs DC 0.6885 vs mercato 0.6816.)
+
+Risultato controintuitivo e istruttivo: **anche ricevendo le probabilità di
+mercato come feature, il GBM non riesce nemmeno a pareggiare il mercato** — resta
+a 0.9996, peggio del DC da solo. Il motivo: il mercato è già una previsione
+quasi-ottima, e un ensemble di alberi la **degrada** (quantizza/regolarizza un
+input probabilistico near-optimal, aggiungendo rumore). Il mercato come feature
+*aiuta* il GBM rispetto a se stesso (1.0114 → 0.9996: porta informazione che le
+altre feature non hanno), ma non basta a superare il rumore del GBM stesso.
+
+Sintesi su "ridurre il gap": a **~0** si arriva solo *banalmente* copiando il
+mercato (già noto dalla Fase 16: blend lineare ottimo con peso sul mercato ≈ 1);
+**sotto zero (batterlo) no**, con nessun metodo, lineare o non-lineare, con o
+senza il mercato come input (P(batte il mercato) = 0%). Il **GBM è lo strumento
+sbagliato** per combinare modello e mercato: degrada perfino un input di
+qualità-mercato. Il modo giusto di combinare è lineare, e la Fase 16 ha già dato
+il verdetto. Chiude definitivamente la ricerca di un metodo per ridurre il gap
+col GBM.
+
 ## Struttura
 
 ```
@@ -1003,13 +1038,13 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     segnale nascosto. Ma emerge l'**adverse selection**: il gap vs mercato
     cresce col dissenso del modello (r=+0.18; quartile alto +0.0539 vs +0.0009)
     → i "value bet" del modello sono i suoi errori. Spiega il ROI negativo.
-26. ✅ **Fase 21-22 — modelli nuovi, valutati PER MERCATO** (principio 8 in
-    `CLAUDE.md`): gradient boosting sul GG/NG (Fase 21, pareggia il DC calibrato)
-    e poi lo **sweep completo** (Fase 22): 6 mercati × 3 feature-set. Il GBM
-    **non batte il DC su nessun mercato** e allarga il gap col mercato (CI<0
-    escluso su 5/6); rende al meglio quando copia di più il DC. **Il tetto è
-    informativo, non architetturale**: non serve un modello nuovo ma
-    informazione nuova.
+26. ✅ **Fase 21-23 — modelli nuovi, valutati PER MERCATO** (principio 8 in
+    `CLAUDE.md`): gradient boosting sul GG/NG (Fase 21, pareggia il DC calibrato),
+    lo **sweep completo** (Fase 22: 6 mercati × 3 feature-set, non batte il DC su
+    nessuno), e il GBM **modello + mercato** (Fase 23: dando in pasto anche le
+    quote, resta peggio del DC — un ensemble degrada un input near-optimal).
+    **Il tetto è informativo, non architetturale**; e il gap col mercato non si
+    riduce con un modello (a ~0 solo copiando il mercato, sotto zero mai).
 27. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
     vere) — l'unica leva che le 22 fasi indicano non ancora esaurita — oppure
     **uso pratico** del modello attuale (comando di predizione).

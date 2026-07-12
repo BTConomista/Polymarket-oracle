@@ -1715,6 +1715,57 @@ nuovo. Chiude il filone "modelli alternativi" avviato in Fase 21.
 
 ---
 
+## Fase 23 — GBM modello + mercato: si puo' ridurre il gap? (no, non con un GBM)
+
+**Obiettivo.** Ultima leva per ridurre il gap col mercato: l'unica informazione
+mai data al modello sono le QUOTE di mercato stesse. Un GBM che le riceve puo'
+(a) correggere inefficienze non-lineari della linea e batterla, o almeno (b)
+riprodurla, portando il gap a ~0?
+
+**Ragionamento.** Encompassing NON-lineare: la Fase 16 aveva mescolato
+alpha*modello+(1-alpha)*mercato (lineare, alpha*=0 -> mercato ottimo). Un GBM su
+[DC + covariate + quote devigate di chiusura] cattura bias non-lineari
+(favourite-longshot, mispricing del pareggio per fascia) che un alpha scalare non
+vede. Le quote di chiusura sono pre-esito: usarle come feature e' lecito (nessun
+look-ahead sull'outcome), ma e' informazione del mercato.
+
+**Alternative.** Blend lineare gia' fatto (Fase 16). Regressione logistica sulle
+quote (equivalente al GBM ma meno flessibile). Scelto il GBM: la forma piu'
+potente per trovare struttura non-lineare, se c'e'.
+
+**Regola (dichiarata prima):** "edge sul mercato" solo se il GBM-con-mercato
+batte il MERCATO con CI95 del gap < 0. Pareggiarlo (gap ~0) non e' un edge ma un
+miglioramento come stimatore per un mercato diverso.
+
+**Risultato** (`scripts/_run_gbm_market.py`; 9 run, source `fase23_gbm_market`):
+
+| 1X2 | log-loss | gap vs mercato |
+|---|--:|--:|
+| DC | 0.9797 | +0.0165 |
+| GBM senza mercato | 1.0114 | +0.0482 |
+| GBM con mercato | 0.9996 | +0.0364 |
+| mercato | 0.9632 | 0 |
+
+(O/U: GBM con mercato 0.6956 vs DC 0.6885 vs mercato 0.6816.)
+
+- il GBM-con-mercato NON batte il mercato (P=0%, CI [+0.0275, +0.0454]);
+- piu' sorprendente: non lo **pareggia** nemmeno, e resta **peggio del DC da
+  solo** (0.9996 vs 0.9797). Anche ricevendo le probabilita' di mercato, il GBM
+  le degrada;
+- il mercato come feature AIUTA il GBM rispetto a se stesso (1.0114 -> 0.9996):
+  porta informazione che le altre feature non hanno, ma non basta.
+
+**Lezione.** Il mercato di chiusura e' una previsione quasi-ottima, e un ensemble
+di alberi non puo' che degradarla (quantizza/regolarizza un input probabilistico
+near-optimal, aggiungendo rumore). Sintesi su "ridurre il gap": a ~0 si arriva
+solo BANALMENTE copiando il mercato (gia' noto dalla Fase 16, peso sul mercato
+~1); sotto zero (batterlo) NO, con nessun metodo lineare o non-lineare, con o
+senza il mercato come input. Il GBM e' lo strumento sbagliato per combinare
+modello e mercato: il modo giusto e' lineare, e la Fase 16 ha gia' dato il
+verdetto. Chiude la ricerca di un metodo per ridurre il gap.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

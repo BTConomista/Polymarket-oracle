@@ -264,7 +264,14 @@ feature del DC (aggiungere covariate peggiora). Conclusione forte: il **tetto e'
 INFORMATIVO, non architetturale** — la forma del Dixon-Coles non e' il collo di
 bottiglia, lo sono i dati pre-partita. Testate 2 famiglie di modelli su 6
 mercati: nessuno cede. Per un edge serve **informazione nuova**, non un modello
-nuovo. **Prossimo bivio:** dati davvero nuovi, uso pratico, o cross-lega (per
-robustezza, non per edge).
+nuovo. **Fase 23 (GBM modello+mercato):** dato al GBM anche le quote di chiusura
+come feature (`scripts/_run_gbm_market.py`, encompassing NON-lineare):
+sull'1X2 il GBM-con-mercato resta a 0.9996 — **peggio del DC da solo** (0.9797)
+e lontano dal mercato (0.9632), P(batte mercato)=0%. Il mercato e' una previsione
+quasi-ottima e un ensemble di alberi la degrada; il mercato come feature aiuta il
+GBM rispetto a se stesso ma non basta. Ridurre il gap a ~0 si puo' solo copiando
+il mercato (lineare, gia' Fase 16); batterlo NO, con nessun metodo. Il GBM e' lo
+strumento sbagliato per combinare modello+mercato. **Prossimo bivio:** dati
+davvero nuovi, uso pratico, o cross-lega (per robustezza, non per edge).
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**
