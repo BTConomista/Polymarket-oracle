@@ -247,6 +247,14 @@ diverse — es. gradient boosting/logistico che predicono un mercato DIRETTAMENT
 candidato mercato per mercato; la config ufficiale puo' diventare un portafoglio
 di specialisti; **priorita' al GG/NG** (l'unico mercato senza quote nei dati,
 quindi senza tetto di efficienza dimostrato). Restano validi anche **dati
-davvero nuovi** e **uso pratico**.
+davvero nuovi** e **uso pratico**. **Fase 21 (primo modello nuovo):** gradient
+boosting sul GG/NG (`scripts/_run_gbm_btts.py`, sklearn extra "models"). Il GBM
+grezzo perde (+0.0280) ma e' quasi tutto mis-calibrazione: **calibrato (Platt)
+pareggia il DC** (+0.0047, CI [−0.0019,+0.0113]) ma non lo batte, e **nessuno
+batte la baseline** → convergenza sul tetto, non fallimento del modello. Il
+GG/NG e' quasi-impredicibile come il pareggio. LEZIONE METODOLOGICA: per ogni
+modello nuovo, valuta SEMPRE anche la versione calibrata (il log-loss punisce la
+sovra-confidenza; senza il controllo si conclude il falso). Il principio "un
+modello per mercato" resta valido; questo mercato non cede.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

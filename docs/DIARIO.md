@@ -1595,6 +1595,66 @@ contro la chiusura, ha torto in media".
 
 ---
 
+## Fase 21 — Un modello diverso sul GG/NG: gradient boosting (pareggia, non batte)
+
+**Obiettivo.** Primo modello di famiglia diversa dal Dixon-Coles e primo test
+del principio "un modello per mercato" (CLAUDE.md §8). Bersaglio: il GG/NG,
+dove il DC e' debole (Fase 5: peggio della baseline, cattura male la
+correlazione dei punteggi) e — cruciale — l'unico mercato SENZA quote nei dati,
+quindi l'unico dove il tetto di efficienza (Fasi 14/16/20) non e' dimostrato.
+
+**Ragionamento.** Un gradient boosting che predice P(GG) direttamente, con
+feature = output del DC (gol attesi lam/mu, P(GG), P(over), tutti walk-forward)
++ covariate pre-partita (forma, riposo, valore rosa, assenze). Cosi' il GBM
+puo' imparare la correzione di correlazione non-lineare che al DC manca,
+partendo pero' dall'informazione che il DC gia' estrae.
+
+**Alternative.** Modello a punteggio con correlazione esplicita (bivariato
+Poisson) o GBM sulle sole covariate grezze. Scelto lo stacking DC+GBM: la
+versione piu' potente e onesta (il GBM ha tutto cio' che ha il DC, piu' spazio
+per correggerlo). Walk-forward per stagione (allena su 1819..S-1); niente
+look-ahead ne' nelle feature ne' nel target.
+
+**Controllo di equita' (decisivo).** Il log-loss punisce durissimo la
+mis-calibrazione, e un boosting e' sovra-confidente su un evento ~50/50. Per
+non incolpare il modello di un difetto di taratura, valutata anche una versione
+CALIBRATA (Platt in cross-validation sul solo training).
+
+**Regola di adozione (dichiarata PRIMA dei numeri):** il GBM (raw o calibrato)
+entra come modello ufficiale del GG/NG solo se batte il DC con CI95<0 E almeno
+pareggia la baseline (che il DC non batteva).
+
+**Risultato** (`scripts/_run_gbm_btts.py`; 9 run nel registro, source
+`fase21_gbm_btts`):
+
+| | log-loss GG/NG | Δ vs DC (CI95) |
+|---|--:|--:|
+| GBM grezzo | 0.7178 | +0.0280 [+0.0167, +0.0391] |
+| GBM calibrato | 0.6945 | +0.0047 [−0.0019, +0.0113] |
+| Dixon-Coles | 0.6898 | — |
+| baseline (in-sample) | 0.6871 | — |
+
+- il GBM grezzo sembrava un disastro, ma era quasi tutto **mis-calibrazione**:
+  calibrato, il divario dal DC crolla da +0.0280 a +0.0047 (CI che include lo
+  zero; batte il DC in 2 stagioni su 6);
+- ma il GBM calibrato **non batte il DC** ne' la baseline; **nessuno dei due
+  batte la baseline** sul GG/NG;
+- regola pre-dichiarata → **non adottato**.
+
+**Lezione.** Due conclusioni. (1) Metodologica: il controllo di calibrazione e'
+stato decisivo — senza avremmo concluso il falso ("GBM molto peggio"); la
+verita' e' "GBM pareggia il DC una volta calibrato". Da tenere per ogni modello
+nuovo. (2) Sostanziale: una famiglia di modelli COMPLETAMENTE diversa, con
+pieno accesso ai lam/mu del DC e alle covariate, atterra sullo STESSO punto —
+a livello della frequenza di base. E' **convergenza sul tetto**, non fallimento
+del GBM: il GG/NG e' intrinsecamente quasi-impredicibile dai dati pre-partita
+in Serie A, come il pareggio. Il principio "un modello per mercato" resta
+valido per i prossimi tentativi; ma questo mercato, col miglior candidato
+ragionevole, non cede — e il fatto che un modello non-parametrico non trovi
+nulla oltre il DC abbassa molto le attese anche per un bivariato Poisson.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

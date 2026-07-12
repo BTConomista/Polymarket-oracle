@@ -114,6 +114,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 18 | **ρ dinamico** (correzione per-partita) | +0.0003 (CI include 0; slope instabile) | ❌ off |
 | 19 | potenza sul prior: finestra a **8 stagioni** | −0.0013 [−0.0026, +0.0001], P(aiuta) 96.5% | ✅ conferma (non concluso) |
 | 20 | **residui su tutte le covariate + adverse selection** | R²=rumore; ma gap ∝ dissenso (r=+0.18) | ✅ scoperta (perché si perde) |
+| 21 | **gradient boosting sul GG/NG** (modello nuovo) | calibrato pareggia il DC (+0.0047), nessuno batte la baseline | ❌ non adottato (convergenza) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -746,6 +747,43 @@ Fase 16 (α\*=0) e il CLV negativo (Fase 14): tre viste diverse dello stesso
 fatto — contro la chiusura, ogni scostamento del modello è rumore che il mercato
 ha già corretto.
 
+### Un modello diverso sul GG/NG — Fase 21 (gradient boosting: pareggia, non batte)
+
+Primo modello di **famiglia diversa** dal Dixon-Coles, e primo test del principio
+"un modello per mercato" (`CLAUDE.md` §8). Bersaglio scelto: il **GG/NG**, dove
+il DC è debole (Fase 5: peggio della baseline, cattura male la correlazione dei
+punteggi) e dove **non ci sono quote nei dati** — l'unico mercato senza tetto di
+efficienza dimostrato. Un **gradient boosting** (`scripts/_run_gbm_btts.py`)
+predice P(GG) direttamente, con feature = output del DC (gol attesi λ/μ, P(GG),
+P(over) — walk-forward, no look-ahead) + covariate pre-partita; allenato per
+stagione sulle sole stagioni precedenti (1819→S−1).
+
+| | log-loss GG/NG | Δ vs DC (CI95) |
+|---|--:|--:|
+| GBM grezzo | 0.7178 | +0.0280 [+0.0167, +0.0391] |
+| **GBM calibrato** (Platt) | 0.6945 | **+0.0047 [−0.0019, +0.0113]** |
+| Dixon-Coles | 0.6898 | — |
+| baseline (in-sample) | 0.6871 | — |
+
+Due letture, una metodologica e una sostanziale:
+
+- **Metodologica**: il GBM grezzo sembrava un disastro (+0.0280), ma era quasi
+  tutto **mis-calibrazione** — un boosting è sovra-confidente su un evento
+  ~50/50, e il log-loss lo punisce. Calibrato (Platt in CV sul solo training),
+  il divario crolla a +0.0047. **Senza il controllo di calibrazione avremmo
+  concluso il falso.** Lezione da tenere per ogni modello nuovo.
+- **Sostanziale**: il GBM calibrato **pareggia il DC** (CI include lo zero, lo
+  batte in 2 stagioni su 6) ma **non lo batte, e nessuno dei due batte la
+  baseline**. Una famiglia di modelli completamente diversa, con pieno accesso
+  ai λ/μ del DC e alle covariate, atterra **sullo stesso punto** — a livello
+  della frequenza di base. È **convergenza**, non fallimento del GBM: il GG/NG
+  è intrinsecamente quasi-impredicibile dai dati pre-partita in Serie A (come il
+  pareggio), non un problema di modello sbagliato. Regola pre-dichiarata
+  (adozione solo se batte DC con CI95<0 **e** la baseline) → **non adottato**.
+
+Il principio "un modello per mercato" resta valido e va tenuto per i prossimi
+tentativi; ma *questo* mercato, col miglior candidato ragionevole, non cede.
+
 ## Struttura
 
 ```
@@ -913,24 +951,20 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     segnale nascosto. Ma emerge l'**adverse selection**: il gap vs mercato
     cresce col dissenso del modello (r=+0.18; quartile alto +0.0539 vs +0.0009)
     → i "value bet" del modello sono i suoi errori. Spiega il ROI negativo.
-26. 🔜 **Fase 21+ — modelli nuovi, valutati PER MERCATO.** Esaurito il tuning
-    del Dixon-Coles, la prossima direzione è provare **famiglie diverse** di
-    modelli, con un principio nuovo (vedi `CLAUDE.md`, principio 8): il
-    bersaglio è la predizione del **singolo mercato**, quindi un modello va
-    giudicato **mercato per mercato**, non solo sull'1X2 aggregato. Un modello
-    può essere ottimo su un mercato e mediocre su un altro (già visto: il DC è
-    forte sugli esiti ma **peggio della baseline su GG/NG**), e la config
-    ufficiale può legittimamente diventare un **portafoglio di specialisti**
-    `{mercato: modello}` — sacrificando la coerenza tra mercati in cambio della
-    bontà per-caso. Candidati: gradient boosting / logistico che predicono un
-    mercato *direttamente*; modelli a punteggio con miglior correlazione
-    (bivariato Poisson, negative-binomial) per il GG/NG. **Priorità al GG/NG**:
-    è l'unico mercato **senza quote nei dati**, quindi l'unico dove il tetto di
-    efficienza (Fasi 14/16/20) non è dimostrato e resta spazio reale.
-27. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
+26. ✅ **Fase 21 — modelli nuovi, valutati PER MERCATO** (principio 8 in
+    `CLAUDE.md`): primo tentativo, **gradient boosting sul GG/NG**. Il GBM
+    calibrato **pareggia il Dixon-Coles** (+0.0047, CI include lo zero) ma non lo
+    batte, e nessuno dei due batte la baseline → **convergenza sul tetto**, non
+    fallimento del modello. Il principio resta valido; questo mercato non cede.
+27. 🔜 **Altri modelli / mercati** (la direzione resta aperta): logistico o GBM
+    su O/U e 1X2 valutati per-mercato; modelli a punteggio con miglior
+    correlazione (bivariato Poisson) — anche se la Fase 21 abbassa le attese sul
+    GG/NG. La config ufficiale può ancora diventare un **portafoglio di
+    specialisti** `{mercato: modello}` se qualcuno emerge.
+28. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
     vere) oppure **uso pratico** del modello attuale (comando di predizione).
-28. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-29. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+29. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+30. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

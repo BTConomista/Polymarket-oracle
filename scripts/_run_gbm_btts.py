@@ -21,9 +21,15 @@ Onesta' del backtest:
   - confronto a tre: GBM vs DC (m_btts) vs baseline. Baseline in-sample
     (severa, vedi audit Fase 15) E ex-ante (frequenza del training).
 
-REGOLA DI ADOZIONE (dichiarata PRIMA dei numeri): il GBM entra come modello
-ufficiale del GG/NG solo se batte il DC con CI95 del Δ < 0 E almeno pareggia
-la baseline (che il DC non batteva).
+Controllo di equita': il log-loss punisce durissimo la MIS-CALIBRAZIONE, e un
+GBM tende a essere sovra-confidente su un mercato ~50/50. Per non incolpare il
+modello di un difetto di calibrazione, si valuta anche una versione CALIBRATA
+(Platt/sigmoid in cross-validation sul training): se anche quella perde, il
+problema non e' la calibrazione ma l'assenza di segnale.
+
+REGOLA DI ADOZIONE (dichiarata PRIMA dei numeri): il GBM (nella sua versione
+migliore, raw o calibrata) entra come modello ufficiale del GG/NG solo se batte
+il DC con CI95 del Δ < 0 E almeno pareggia la baseline (che il DC non batteva).
 
 Uso:  python scripts/_run_gbm_btts.py     (8 backtest DC + GBM; ~alcuni minuti)
 """
@@ -86,6 +92,7 @@ def build_features(df: pd.DataFrame, cov: pd.DataFrame) -> pd.DataFrame:
 
 def main():
     from sklearn.ensemble import HistGradientBoostingClassifier
+    from sklearn.calibration import CalibratedClassifierCV
 
     with Pool(min(8, len(FEAT_SEASONS))) as pool:
         dfs = dict(pool.map(_worker, FEAT_SEASONS))
@@ -107,65 +114,77 @@ def main():
     X_all = {s: build_features(dfs[s], cov) for s in FEAT_SEASONS}
     y_all = {s: dfs[s]["is_btts"].to_numpy().astype(int) for s in FEAT_SEASONS}
 
-    print("=" * 84)
-    print("GRADIENT BOOSTING sul GG/NG — GBM vs Dixon-Coles vs baseline "
-          "(log-loss, piu' basso = meglio)")
-    print("=" * 84)
-    print(f"  {'stag.':<7}{'GBM':>9}{'DC':>9}{'base(in)':>10}{'base(ex)':>10}"
-          f"{'Δ GBM-DC':>11}{'GBM-base':>10}")
-    diffs, dc_diffs, gbm_lls, dc_lls, base_lls = [], [], [], [], []
+    print("=" * 92)
+    print("GRADIENT BOOSTING sul GG/NG — GBM (raw e calibrato) vs Dixon-Coles vs "
+          "baseline")
+    print("log-loss, piu' basso = meglio; Δ vs DC (>0 = il GBM perde)")
+    print("=" * 92)
+    print(f"  {'stag.':<7}{'GBM raw':>9}{'GBM cal':>9}{'DC':>9}{'base(in)':>10}"
+          f"{'base(ex)':>10}{'Δraw-DC':>10}{'Δcal-DC':>10}")
+    diffs, diffs_cal = [], []
+    gbm_lls, cal_lls, dc_lls, base_lls = [], [], [], []
     for s in TEST_SEASONS:
         i = FEAT_SEASONS.index(s)
         Xtr = pd.concat([X_all[t] for t in FEAT_SEASONS[:i]], ignore_index=True)
         ytr = np.concatenate([y_all[t] for t in FEAT_SEASONS[:i]])
-        clf = HistGradientBoostingClassifier(
-            max_iter=200, max_depth=3, learning_rate=0.05,
-            l2_regularization=1.0, min_samples_leaf=30, random_state=SEED)
-        clf.fit(Xtr, ytr)
+        kw = dict(max_iter=200, max_depth=3, learning_rate=0.05,
+                  l2_regularization=1.0, min_samples_leaf=30, random_state=SEED)
+        clf = HistGradientBoostingClassifier(**kw).fit(Xtr, ytr)
+        # Calibrazione Platt (sigmoid) in cross-validation sul solo training.
+        cal = CalibratedClassifierCV(HistGradientBoostingClassifier(**kw),
+                                     method="sigmoid", cv=3).fit(Xtr, ytr)
         p_gbm = clf.predict_proba(X_all[s])[:, 1]
+        p_cal = cal.predict_proba(X_all[s])[:, 1]
         y = y_all[s]
         p_dc = dfs[s]["m_btts"].to_numpy()
-        base_in = y.mean()                        # in-sample (severa)
-        base_ex = ytr.mean()                      # ex-ante (frequenza training)
         ll_g = ll_binary_rows(p_gbm, y)
+        ll_c = ll_binary_rows(p_cal, y)
         ll_d = ll_binary_rows(p_dc, y)
-        ll_bi = ll_binary_rows(np.full(len(y), base_in), y)
-        ll_be = ll_binary_rows(np.full(len(y), base_ex), y)
-        diffs.append(ll_g - ll_d)
-        gbm_lls.append(ll_g.mean()); dc_lls.append(ll_d.mean())
-        base_lls.append(ll_bi.mean())
-        print(f"  {s:<7}{ll_g.mean():>9.4f}{ll_d.mean():>9.4f}{ll_bi.mean():>10.4f}"
-              f"{ll_be.mean():>10.4f}{ll_g.mean()-ll_d.mean():>+11.4f}"
-              f"{ll_g.mean()-ll_bi.mean():>+10.4f}")
+        ll_bi = ll_binary_rows(np.full(len(y), y.mean()), y)
+        ll_be = ll_binary_rows(np.full(len(y), ytr.mean()), y)
+        diffs.append(ll_g - ll_d); diffs_cal.append(ll_c - ll_d)
+        gbm_lls.append(ll_g.mean()); cal_lls.append(ll_c.mean())
+        dc_lls.append(ll_d.mean()); base_lls.append(ll_bi.mean())
+        print(f"  {s:<7}{ll_g.mean():>9.4f}{ll_c.mean():>9.4f}{ll_d.mean():>9.4f}"
+              f"{ll_bi.mean():>10.4f}{ll_be.mean():>10.4f}"
+              f"{ll_g.mean()-ll_d.mean():>+10.4f}{ll_c.mean()-ll_d.mean():>+10.4f}")
 
-    d_all = np.concatenate(diffs)
     rng = np.random.default_rng(SEED)
-    means = d_all[rng.integers(0, len(d_all), (B, len(d_all)))].mean(axis=1)
-    lo, hi = np.percentile(means, [2.5, 97.5])
-    print("-" * 84)
-    print(f"  {'MEDIA':<7}{np.mean(gbm_lls):>9.4f}{np.mean(dc_lls):>9.4f}"
-          f"{np.mean(base_lls):>10.4f}{'':>10}"
-          f"{np.mean(gbm_lls)-np.mean(dc_lls):>+11.4f}"
-          f"{np.mean(gbm_lls)-np.mean(base_lls):>+10.4f}")
-    print(f"\n  Δ GBM-DC pooled (n={len(d_all)}): {d_all.mean():+.4f}  "
-          f"CI95 [{lo:+.4f}, {hi:+.4f}]  P(GBM meglio)={float((means<0).mean()):.1%}")
-    beats_dc = hi < 0
-    beats_base = np.mean(gbm_lls) < np.mean(base_lls)
-    print(f"  REGOLA PRE-DICHIARATA: adozione GG/NG solo se CI95<0 E batte la "
-          f"baseline -> {'ADOTTARE' if (beats_dc and beats_base) else 'NON adottare'}")
-    print(f"    (batte DC con CI95<0: {beats_dc}; batte baseline in media: {beats_base})")
+    def ci(chunks):
+        d = np.concatenate(chunks)
+        m = d[rng.integers(0, len(d), (B, len(d)))].mean(axis=1)
+        return d.mean(), np.percentile(m, 2.5), np.percentile(m, 97.5), (m < 0).mean()
+    print("-" * 92)
+    print(f"  {'MEDIA':<7}{np.mean(gbm_lls):>9.4f}{np.mean(cal_lls):>9.4f}"
+          f"{np.mean(dc_lls):>9.4f}{np.mean(base_lls):>10.4f}")
+    for tag, chunks in [("GBM raw - DC", diffs), ("GBM calibrato - DC", diffs_cal)]:
+        mean, lo, hi, pn = ci(chunks)
+        print(f"  Δ {tag:<20} {mean:+.4f}  CI95 [{lo:+.4f}, {hi:+.4f}]  "
+              f"P(GBM meglio)={pn:.1%}")
+
+    best_gbm = min(np.mean(gbm_lls), np.mean(cal_lls))
+    mean_c, lo_c, hi_c, _ = ci(diffs_cal)
+    mean_r, lo_r, hi_r, _ = ci(diffs)
+    beats_dc = min(hi_c, hi_r) < 0
+    beats_base = best_gbm < np.mean(base_lls)
+    print(f"\n  REGOLA PRE-DICHIARATA: adozione GG/NG solo se (raw O calibrato) "
+          f"batte DC con CI95<0 E batte baseline")
+    print(f"  -> {'ADOTTARE' if (beats_dc and beats_base) else 'NON adottare'} "
+          f"(batte DC: {beats_dc}; batte baseline: {beats_base})")
 
     experiment_log.append_run(experiment_log.make_record(
         {"source": "fase21_gbm_btts", "league": "serie_a",
          "variant": "gbm_vs_dc_summary", "model": "HistGradientBoosting",
          "bootstrap_B": B, "bootstrap_seed": SEED, "promoted_prior": 0.23},
-        {"n_matches": int(len(d_all)),
-         "gbm_btts_logloss": float(np.mean(gbm_lls)),
+        {"n_matches": int(sum(len(d) for d in diffs)),
+         "gbm_raw_btts_logloss": float(np.mean(gbm_lls)),
+         "gbm_cal_btts_logloss": float(np.mean(cal_lls)),
          "dc_btts_logloss": float(np.mean(dc_lls)),
          "baseline_btts_logloss": float(np.mean(base_lls)),
-         "gbm_minus_dc_mean": float(d_all.mean()),
-         "gbm_minus_dc_ci_lo": float(lo), "gbm_minus_dc_ci_hi": float(hi),
-         "gbm_minus_dc_p_neg": float((means < 0).mean())}, fp))
+         "gbm_raw_minus_dc_mean": float(mean_r), "gbm_raw_minus_dc_ci_lo": float(lo_r),
+         "gbm_raw_minus_dc_ci_hi": float(hi_r),
+         "gbm_cal_minus_dc_mean": float(mean_c), "gbm_cal_minus_dc_ci_lo": float(lo_c),
+         "gbm_cal_minus_dc_ci_hi": float(hi_c)}, fp))
 
 
 if __name__ == "__main__":
