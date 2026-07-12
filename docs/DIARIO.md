@@ -1391,14 +1391,91 @@ source `gap_markets`).
 
 ---
 
+## Fase 16 — Encompassing: il modello ha informazione propria? (NO, α*=0)
+
+**Obiettivo.** L'ultima domanda che il gap non puo' dire: un modello a +0.0165
+dal mercato puo' comunque contenere informazione INDIPENDENTE (utile in blend,
+monetizzabile su mercati meno efficienti) oppure e' mercato degradato con
+rumore? E' la distinzione tra "modello inutile" e "modello con segnale proprio
+ma non abbastanza".
+
+**Ragionamento.** Test standard di forecast encompassing: p_blend =
+α·modello + (1−α)·mercato, α stimato minimizzando la log-loss. Se il mercato
+"ingloba" il modello, α*≈0; se α*>0 stabile e il blend migliora out-of-sample,
+c'e' segnale proprio.
+
+**Alternative.** Regressione logistica sui residui del mercato (equivalente ma
+meno leggibile) o blend fittato in-sample (barare). Scelto il blend con α
+fittato SOLO sulle stagioni di test precedenti, applicato alla successiva
+(walk-forward onesto; la prima stagione non e' valutabile → 5 valutazioni).
+L'α* in-sample per stagione e' riportato come descrittivo.
+
+**Risultato** (`scripts/_run_encompassing.py`; 6 run + summary nel registro,
+source `fase16_encompassing`):
+- α* in-sample = **0.000 in TUTTE le stagioni** (≤10⁻⁵): anche potendo barare,
+  il fit non da' alcun peso al modello;
+- α walk-forward = 0.000 ovunque → blend ≡ mercato, Δ pooled +0.0000,
+  CI95 [−0.0000, +0.0000] (bootstrap appaiato, B=10.000, n=1900);
+- verdetto: **il mercato di chiusura ingloba completamente il modello**.
+
+**Lezione.** Il gap +0.0165 non e' "informazione nostra meno informazione
+loro": e' informazione loro + il nostro rumore di stima. Converge con il CLV
+negativo della Fase 14 (due test indipendenti, stessa conclusione). Contro la
+chiusura non c'e' NULLA da monetizzare, nemmeno in combinazione; l'unica
+speranza pratica residua sono avversari meno efficienti (exchange sottili,
+leghe minori) — questione empirica aperta, non promessa.
+
+---
+
+## Fase 17 — Intervalli di confidenza: quali numeri sono reali e quali rumore
+
+**Obiettivo.** Dare barre d'errore ai quattro numeri che reggono le
+conclusioni: gap 1X2, gap 12, gap O/U, Δ del prior neopromosse (l'unica
+feature adottata).
+
+**Ragionamento / metodo.** Bootstrap APPAIATO per-partita (si ricampionano le
+differenze di log-loss della stessa partita, B=10.000, seed fisso, pooled 6
+stagioni, n=2280). Per il Δ prior: V4 e V3 rifatti sulle stesse partite
+(allineamento verificato per costruzione).
+
+**Risultato** (`scripts/_run_gap_uncertainty.py`; 12 run + summary nel
+registro, source `fase17_bootstrap`):
+
+| quantita' | media | CI95 | P(modello meglio / prior aiuta) |
+|---|--:|--:|--:|
+| gap 1X2 | +0.0165 | [+0.0106, +0.0225] * | 0.0% |
+| gap 12 (no pari) | +0.0020 | [−0.0006, +0.0046] | 6.5% |
+| gap O/U 2.5 | +0.0069 | [+0.0022, +0.0116] * | 0.2% |
+| Δ prior (V4−V3) | −0.0010 | [−0.0025, +0.0004] | 92.6% |
+
+*(\* = CI95 che non attraversa lo zero.)* Per stagione (gap 1X2): CI tipico
+±0.014 → 3 stagioni su 6, da sole, non distinguerebbero il modello dal
+mercato: e' la giustificazione statistica della regola "mai giudicare da una
+stagione".
+
+**Lezione (tre punti onesti).**
+1. Il gap 1X2 e l'O/U sono REALI (CI lontani da zero): il mercato e' davvero
+   migliore, non e' varianza.
+2. Il "quasi-zero" del 12 e' ora un'affermazione statistica: sul "chi vince"
+   siamo formalmente indistinguibili dal mercato.
+3. Il Δ del prior (−0.0010) NON e' conclusivo da solo (CI include lo zero,
+   P(aiuta)~93%). Resta adottato perche' coerente (5/6 stagioni), concentrato
+   dove deve agire (−0.0039 sulle promosse) e motivato strutturalmente — ma la
+   dichiarazione corretta e' "probabilmente utile", non "dimostrato". Con ~30
+   test sulle stesse 6 stagioni, qualunque futuro CI che sfiora lo zero va
+   letto come "non concluso".
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
-linea di apertura (Fase 14): il gap residuo col mercato (+0.0165 vs chiusura,
+linea di apertura (Fase 14) + l'**encompassing** (Fase 16: α*=0, il mercato
+ingloba il modello): il gap residuo col mercato (+0.0165 vs chiusura,
 +0.0146 vs apertura, quasi tutto nel pareggio) non e' cattiva modellazione ne'
-errore di calcolo, ma **informazione che il mercato ha e noi no** — e la Fase 14
-mostra che ce l'ha gia' il venerdi' (CLV negativo: i nostri dissensi sono
-rumore). Il bivio:
+errore di calcolo, ma **informazione che il mercato ha e noi no** — ce l'ha
+gia' il venerdi' (CLV negativo) e il modello non aggiunge nulla nemmeno in
+blend. Il bivio:
 1. **Dati davvero nuovi** (formazioni ufficiali pre-partita; oppure la linea di
    apertura VERA di domenica/lunedi', che richiede raccolta prospettica di quote);
 2. **Uso pratico** del modello attuale (comando di predizione);

@@ -109,6 +109,8 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 14 | **linea di APERTURA + CLV** | gap open **+0.0146** (6/6); CLV **−0.0028** (45%>0) | ❌ niente edge |
 | 15 | **audit dei calcoli** (verifica di ogni numero) | ROI corretto (−15.7%, non −8.5%); resto confermato | ✅ doc corretta |
 | 15-bis | gap per mercato × stagione | 12≈0 in ogni stagione; pari persistente; O/U volatile | ✅ analisi |
+| 16 | **encompassing** (blend modello+mercato) | **α\*≈0 ovunque**: nessuna info propria | ❌ definitivo |
+| 17 | **CI bootstrap sui numeri chiave** | gap 1X2/O/U reali\*; 12 e Δ prior **≈0 statistico** | ✅ analisi |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -116,7 +118,8 @@ opzioni (ricalibrazione, `--draw-inflation`) restano utili per l'uso pratico.
 
 **Dove vive il gap col mercato** (anatomia completa in [Fase 9](#anatomia-del-gap-col-mercato--fase-9-dove-vive-il-divario)):
 è **quasi tutto nel PAREGGIO** — escluso il pari (mercato "12") il modello è già a
-livello mercato. Il pareggio è quasi-casuale per tutti (mercato incluso): il gap
+livello mercato (dalla Fase 17, con CI95: il gap del 12 è **statisticamente
+indistinguibile da zero**). Il pareggio è quasi-casuale per tutti (mercato incluso): il gap
 residuo non è cattiva modellazione ma **informazione che il mercato ha e noi no**
 sulle singole partite (infortuni, motivazioni, notizie dell'ultima ora).
 
@@ -600,6 +603,65 @@ batte la baseline (anche quella ex-ante), non batte il mercato (+0.0165), il
 value betting perde (più di quanto scritto prima: −15.7%, non −8.5%). Il tetto
 resta reale. **Non usare il modello per scommettere soldi veri.**
 
+### Il mercato ingloba il modello — Fase 16 (encompassing, il test definitivo)
+
+La domanda che il gap non può dire: un modello a +0.0165 dal mercato contiene
+**informazione che il mercato non ha** (utile in combinazione, anche se da solo
+perde) oppure è solo mercato + rumore? Test standard di *forecast encompassing*
+(`scripts/_run_encompassing.py`): si mescola `p = α·modello + (1−α)·mercato` e
+si stima α minimizzando la log-loss — **walk-forward onesto** (α fittato solo
+sulle stagioni di test precedenti, applicato alla successiva).
+
+| | risultato |
+|---|---|
+| α\* in-sample, ogni stagione (2021→2526) | **0.000** (≤10⁻⁵) |
+| α walk-forward, ogni stagione valutabile | **0.000** (≤10⁻⁵) |
+| Δ blend−mercato pooled (5 stagioni, n=1900) | +0.0000, CI95 [−0.0000, +0.0000] |
+
+Il verdetto è il più netto possibile: **il peso ottimo del modello è zero anche
+quando il fit può "barare"** (in-sample sulla stagione stessa). Il mercato di
+chiusura *ingloba* completamente il modello: non c'è alcuna informazione
+indipendente da monetizzare in combinazione. Converge con il CLV negativo della
+Fase 14 (i dissensi dalla linea del venerdì sono rumore): due test indipendenti,
+stessa conclusione. È il punto fermo definitivo *su questi dati* — un eventuale
+edge su mercati meno efficienti (exchange sottili, leghe minori) resta questione
+empirica aperta, ma contro la chiusura dei bookmaker il modello non aggiunge
+nulla.
+
+### Barre d'errore sui numeri chiave — Fase 17 (bootstrap appaiato)
+
+Finora "nel rumore" era un giudizio a occhio. CI95 con bootstrap appaiato
+per-partita (B=10.000, seed fisso, pooled 6 stagioni, n=2280;
+`scripts/_run_gap_uncertainty.py`):
+
+| Quantità | media | CI95 | P(modello meglio / prior aiuta) |
+|---|--:|--:|--:|
+| gap 1X2 (modello − mercato) | +0.0165 | [+0.0106, +0.0225] ✱ | 0.0% |
+| gap 12 no pari | +0.0020 | [−0.0006, +0.0046] | 6.5% |
+| gap O/U 2.5 | +0.0069 | [+0.0022, +0.0116] ✱ | 0.2% |
+| Δ prior neopromosse (V4−V3) | −0.0010 | [−0.0025, +0.0004] | 92.6% |
+
+*✱ = CI95 che non attraversa lo zero.*
+
+Quattro letture oneste:
+
+- **Il gap 1X2 è reale e solido** (mai vicino a zero): il mercato è davvero
+  migliore, non è varianza.
+- **Il "quasi-zero" del 12 è ora un'affermazione statistica**: +0.0020 con CI
+  che include lo zero — sul "chi vince" modello e mercato sono formalmente
+  indistinguibili.
+- **Il gap O/U è reale** anche se volatile tra stagioni (Fase 15-bis).
+- **Il Δ del prior neopromosse (l'unica feature adottata) NON è conclusivo**:
+  −0.0010 con CI [−0.0025, +0.0004]. Aiuta con probabilità ~93%, coerente in
+  5/6 stagioni e con una motivazione strutturale (per questo resta adottato),
+  ma va detto: da solo non supererebbe una soglia di significatività formale.
+- Le **CI per stagione** del gap 1X2 (±0.014 tipico) spiegano perché non si
+  giudica mai da una stagione: tre stagioni su sei, da sole, non
+  distinguerebbero il modello dal mercato.
+
+Disciplina: dopo ~30 test sulle stesse 6 stagioni, ogni futuro CI che sfiora lo
+zero va letto come "non concluso", mai come scoperta.
+
 ## Struttura
 
 ```
@@ -738,10 +800,23 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     forma +0.0002, corr +0.0353; miglior combo −0.0011, squad_value peggiora).
     Nessuna conclusione cambia. Vedi la sezione
     [Audit dei calcoli](#audit-dei-calcoli--fase-15-verifica-indipendente-di-ogni-numero).
-21. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
+21. ✅ **Fase 16** — **test di encompassing** (`scripts/_run_encompassing.py`):
+    blend `α·modello + (1−α)·mercato` con α fittato walk-forward. **α\*≈0
+    ovunque, perfino in-sample**: il mercato di chiusura ingloba completamente
+    il modello, nessuna informazione indipendente da combinare. Converge col
+    CLV negativo (Fase 14). Vedi la sezione
+    [Fase 16](#il-mercato-ingloba-il-modello--fase-16-encompassing-il-test-definitivo).
+22. ✅ **Fase 17** — **intervalli di confidenza bootstrap** sui numeri chiave
+    (`scripts/_run_gap_uncertainty.py`, B=10.000): gap 1X2 **+0.0165
+    [+0.0106, +0.0225]** (reale), gap 12 **+0.0020 [−0.0006, +0.0046]**
+    (statisticamente zero: sul "chi vince" siamo a livello mercato), gap O/U
+    +0.0069 [+0.0022, +0.0116] (reale), Δ prior neopromosse −0.0010
+    [−0.0025, +0.0004] (probabile ma non conclusivo, ~93%). Vedi la sezione
+    [Fase 17](#barre-derrore-sui-numeri-chiave--fase-17-bootstrap-appaiato).
+23. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
     oppure **uso pratico** del modello attuale (comando di predizione).
-22. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-23. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+24. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+25. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

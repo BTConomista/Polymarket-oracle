@@ -190,7 +190,18 @@ analisi senza run in `runs.jsonl`**. **Fase 15-bis:** matrice gap per mercato ×
 stagione (`scripts/_run_gap_markets.py`): il 12 (no pari) e' a livello mercato
 in OGNI stagione (−0.0021…+0.0050), il costo del pareggio e' strutturale
 (1X/2X +0.008…+0.018 sempre), l'O/U e' il mercato piu' volatile (−0.0031…
-+0.0168: il gap medio +0.0069 ha poca sostanza operativa). **Prossimo bivio:**
-solo **dati davvero nuovi** o **uso pratico**.
++0.0168: il gap medio +0.0069 ha poca sostanza operativa). **Fase 16
+(encompassing, definitivo):** blend α·modello+(1−α)·mercato walk-forward
+(`scripts/_run_encompassing.py`): **α*≈0 ovunque, perfino in-sample** → il
+mercato di chiusura ingloba completamente il modello, nessuna informazione
+propria da combinare (converge col CLV negativo della Fase 14). **Fase 17
+(CI bootstrap):** bootstrap appaiato B=10.000
+(`scripts/_run_gap_uncertainty.py`): gap 1X2 +0.0165 [+0.0106,+0.0225] e O/U
++0.0069 [+0.0022,+0.0116] REALI; gap 12 +0.0020 [−0.0006,+0.0046]
+statisticamente zero; Δ prior −0.0010 [−0.0025,+0.0004] probabile (~93%) ma
+non conclusivo — resta adottato per coerenza e motivazione strutturale, va
+dichiarato "probabilmente utile". Disciplina multiple-testing: dopo ~30 test
+sulle stesse 6 stagioni, un CI che sfiora lo zero = "non concluso".
+**Prossimo bivio:** solo **dati davvero nuovi** o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**
