@@ -113,6 +113,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 17 | **CI bootstrap sui numeri chiave** | gap 1X2/O/U reali\*; 12 e Δ prior **≈0 statistico** | ✅ analisi |
 | 18 | **ρ dinamico** (correzione per-partita) | +0.0003 (CI include 0; slope instabile) | ❌ off |
 | 19 | potenza sul prior: finestra a **8 stagioni** | −0.0013 [−0.0026, +0.0001], P(aiuta) 96.5% | ✅ conferma (non concluso) |
+| 20 | **residui su tutte le covariate + adverse selection** | R²=rumore; ma gap ∝ dissenso (r=+0.18) | ✅ scoperta (perché si perde) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -710,6 +711,41 @@ prior **resta adottato** e la sua etichetta migliora da "probabile (~93%)" a
 stagioni aggiunte non è leave-future-out — è un test di potenza sull'effetto
 della config adottata, non una nuova stima di δ.
 
+### Anatomia dei residui — Fase 20 (nessun segnale nascosto; ma *perché* si perde)
+
+La Fase 13 aveva testato solo "la forma". Qui l'analisi completa: il residuo del
+modello (punti reali casa − attesi) è predetto da **qualcuna delle 11 covariate
+pre-partita**, incluse tre di *estremità* mai provate — |scarto di valore rosa|,
+|scarto di riposo|, carico totale di assenze — più confidenza del modello e
+dissenso col mercato (`scripts/_run_residuals.py`).
+
+**Parte 1 — il residuo è rumore puro.** Nessuna covariata supera la soglia di
+rumore in modo netto; la regressione multivariata dà **R² = 0.0055**, contro
+**0.0048** atteso da rumore (k/n) e **0.0051** da 11 feature *casuali*. Le
+feature di estremità sono le più piatte di tutte (|scarto valore| −0.0018,
+assenze totali −0.0011). Poiché è nullo già **in-sample** (dove il fit può
+barare), lo è a fortiori out-of-sample. Il residuo del modello non contiene
+struttura sfruttabile: conferma indipendente del tetto informativo.
+
+**Parte 2 — il risultato positivo: adverse selection.** Ordinando le partite per
+*quanto* il modello dissente dal mercato, il gap (quanto il modello perde) cresce
+in modo monotòno:
+
+| Quartile di dissenso modello-mercato | n | gap medio vs mercato |
+|---|--:|--:|
+| basso | 570 | +0.0009 |
+| medio-basso | 570 | +0.0024 |
+| medio-alto | 570 | +0.0088 |
+| **alto** | 570 | **+0.0539** |
+
+`corr(dissenso, gap) = +0.18`. Dove il modello dissente di più dal mercato — cioè
+esattamente dove segnalerebbe un *value bet* — perde ~60 volte di più che dove è
+d'accordo. **I disaccordi del modello sono i suoi errori, non la sua intuizione.**
+È il meccanismo operativo che spiega il ROI −15.7% e chiude il cerchio con la
+Fase 16 (α\*=0) e il CLV negativo (Fase 14): tre viste diverse dello stesso
+fatto — contro la chiusura, ogni scostamento del modello è rumore che il mercato
+ha già corretto.
+
 ## Struttura
 
 ```
@@ -871,10 +907,16 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     stringe a **[−0.0026, +0.0001]**, P(aiuta) **96.5%** (97.0% sulle
     promosse); le due stagioni nuove confermano entrambe. Resta "molto
     probabile ma formalmente non concluso": prior confermato nella config.
-25. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
+25. ✅ **Fase 20** — **anatomia dei residui** (`scripts/_run_residuals.py`): 11
+    covariate pre-partita (incluse tre di estremità mai provate) contro il
+    residuo del modello → **R² a livello rumore** (0.0055 vs 0.0051), nessun
+    segnale nascosto. Ma emerge l'**adverse selection**: il gap vs mercato
+    cresce col dissenso del modello (r=+0.18; quartile alto +0.0539 vs +0.0009)
+    → i "value bet" del modello sono i suoi errori. Spiega il ROI negativo.
+26. **Prossimo bivio** — **dati davvero nuovi** (l'unica via rimasta per un edge)
     oppure **uso pratico** del modello attuale (comando di predizione).
-26. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-27. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+27. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
+28. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
 
 ## Archivio dati interno (riproducibilità)
 

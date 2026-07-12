@@ -210,6 +210,14 @@ sul prior):** finestra estesa alle stagioni 1819/1920 (mai usate) → 8
 stagioni: Δ prior −0.0013 [−0.0026,+0.0001], P(aiuta) 96.5% (97% sulle
 promosse); entrambe le stagioni nuove confermano → prior confermato, etichetta
 da "probabile" a "molto probabile, formalmente non concluso".
-**Prossimo bivio:** solo **dati davvero nuovi** o **uso pratico**.
+**Fase 20 (anatomia dei residui):** regressione del residuo del modello su 11
+covariate pre-partita, incluse tre di estremità mai provate
+(`scripts/_run_residuals.py`): R² 0.0055 = **rumore** (vs 0.0051 da feature
+casuali) → nessun segnale nascosto oltre la forma. MA emerge l'**adverse
+selection**: il gap vs mercato cresce col dissenso modello-mercato (r=+0.18;
+quartile alto +0.0539 vs basso +0.0009) → i "value bet" del modello sono i
+suoi errori. E' il meccanismo del ROI negativo, coerente con Fase 16 (α*=0) e
+Fase 14 (CLV<0). **Prossimo bivio:** solo **dati davvero nuovi**, un **modello
+di famiglia diversa** (GBM/logistico, mai provato) o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

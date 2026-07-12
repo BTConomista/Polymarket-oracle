@@ -1541,16 +1541,71 @@ adottato; l'etichetta onesta migliora. Per chiudere davvero servirebbero altre
 
 ---
 
+## Fase 20 — Anatomia dei residui: nessun segnale nascosto, ma si scopre il PERCHE'
+
+**Obiettivo.** La Fase 13 aveva testato solo "la forma" come predittore
+dell'errore del modello. Domanda completa: QUALCUNA delle covariate pre-partita
+disponibili predice il residuo del modello? Incluse quelle di ESTREMITA' mai
+provate (lo scarto di valore-rosa e' gia' stato bocciato come valore assoluto in
+Fase 4c, ma il suo MODULO — mismatch estremo — no).
+
+**Ragionamento.** Due domande in una:
+1. il residuo (punti reali casa − attesi) e' predetto da 11 covariate
+   pre-partita? Regressione multivariata con benchmark di rumore (R²≈k/n +
+   200 draw di feature casuali), come in Fase 13.
+2. il modello perde di piu' dove DISSENTE dal mercato? (adverse selection: se
+   si', i "value bet" del modello sono i suoi errori — spiegherebbe il ROI).
+
+**Alternative.** Target = gap vs mercato invece di residuo vs esito (piu'
+diretto ma confonde errore-modello con forza-mercato); scelto il residuo vs
+esito per la Parte 1 (continuita' con Fase 13) e il gap per la Parte 2
+(adverse selection). Feature di estremita' incluse esplicitamente perche' sono
+l'unica classe mai testata.
+
+**Risultato** (`scripts/_run_residuals.py`; 7 run nel registro, source
+`fase20_residuals`):
+
+*Parte 1 — il residuo e' rumore puro.* R² multivariata = **0.0055** vs 0.0048
+(k/n) e 0.0051 (feature casuali). Ogni covariata a livello rumore; le tre di
+estremita' sono le piu' piatte (|scarto valore| −0.0018, |scarto riposo|
+−0.0046, assenze totali −0.0011). Nullo gia' in-sample → a fortiori
+out-of-sample. Nessun pattern nascosto oltre la forma.
+
+*Parte 2 — adverse selection, forte e pulita.* Il gap vs mercato cresce
+monotono coi quartili di dissenso modello-mercato:
+
+| quartile dissenso | n | gap medio |
+|---|--:|--:|
+| basso | 570 | +0.0009 |
+| medio-basso | 570 | +0.0024 |
+| medio-alto | 570 | +0.0088 |
+| alto | 570 | +0.0539 |
+
+corr(dissenso, gap) = **+0.18**. Dove il modello dissente di piu' — cioe' dove
+segnalerebbe un value bet — perde ~60 volte di piu'.
+
+**Lezione.** Due conclusioni. (1) Il residuo non contiene struttura sfruttabile
+con NESSUNA covariata disponibile: l'analisi dei residui e' chiusa. (2) Ma
+l'adverse selection e' il **meccanismo operativo** del fallimento: i disaccordi
+del modello sono i suoi errori, non la sua intuizione. Chiude il cerchio con
+l'encompassing (Fase 16, α*=0) e il CLV negativo (Fase 14) — tre viste dello
+stesso fatto. E' il risultato che rende ONESTO il "non scommettere": non "il
+modello e' un po' peggio", ma "ogni volta che il modello crede di avere ragione
+contro la chiusura, ha torto in media".
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
 linea di apertura (Fase 14) + l'**encompassing** (Fase 16: α*=0, il mercato
 ingloba il modello) + il **rho dinamico** (Fase 18: anche l'ultima via
-strutturale sul pareggio e' rumore): il gap residuo col mercato (+0.0165 vs
-chiusura, +0.0146 vs apertura, quasi tutto nel pareggio) non e' cattiva
-modellazione ne' errore di calcolo, ma **informazione che il mercato ha e noi
-no** — ce l'ha gia' il venerdi' (CLV negativo) e il modello non aggiunge nulla
-nemmeno in blend. Il bivio:
+strutturale sul pareggio e' rumore) + l'**anatomia dei residui** (Fase 20: R² a
+livello rumore su 11 covariate, e i disaccordi del modello sono i suoi errori):
+il gap residuo col mercato (+0.0165 vs chiusura, +0.0146 vs apertura, quasi
+tutto nel pareggio) non e' cattiva modellazione ne' errore di calcolo, ma
+**informazione che il mercato ha e noi no** — ce l'ha gia' il venerdi' (CLV
+negativo) e il modello non aggiunge nulla nemmeno in blend. Il bivio:
 1. **Dati davvero nuovi** (formazioni ufficiali pre-partita; oppure la linea di
    apertura VERA di domenica/lunedi', che richiede raccolta prospettica di quote);
 2. **Uso pratico** del modello attuale (comando di predizione);

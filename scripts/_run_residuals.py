@@ -177,7 +177,7 @@ def main():
     print(f"  corr(dissenso, gap vs mercato) = {r_ds:+.4f}")
     print(f"  {'quartile di dissenso':<22}{'n':>6}{'gap medio':>12}")
     for lab in ["dissenso basso", "medio-basso", "medio-alto", "dissenso alto"]:
-        mask = (q == lab).to_numpy()
+        mask = np.asarray(q == lab)
         print(f"  {lab:<22}{mask.sum():>6}{gap[mask].mean():>+12.4f}")
     print("  (gap che CRESCE col dissenso = i 'value bet' del modello sono i suoi errori)")
 
