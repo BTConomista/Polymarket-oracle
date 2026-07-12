@@ -1291,6 +1291,54 @@ pubblicato deve essere ricalcolabile dal registro.
 
 ---
 
+## Fase 15-bis — Gap per mercato, stagione per stagione (la matrice completa)
+
+**Obiettivo.** La Fase 9 aveva scomposto il gap per mercato solo in aggregato
+(pool 6 stagioni) e per stagione solo sull'1X2. Domanda: le medie per-mercato
+nascondono stagioni storte? Il "quasi-zero" del mercato 12 regge sempre?
+
+**Ragionamento.** Una media a 6 stagioni puo' coprire una varianza enorme (l'O/U
+lo dimostrera'). Prima di trarre conclusioni operative da un gap medio serve la
+matrice completa mercato x stagione, con la config ufficiale e le stesse
+convenzioni di analyze_gap (gap = model_ll − market_ll; GG/NG vs baseline
+perche' non ha quote).
+
+**Alternative.** Estendere analyze_gap.py (gia' lungo, 4 assi) o script
+dedicato: scelto lo script dedicato (`scripts/_run_gap_markets.py`), che
+registra le 6 run in `runs.jsonl` (regola Fase 15).
+
+**Risultato** (gap col mercato; >0 = mercato migliore):
+
+| Gap | 2021 | 2122 | 2223 | 2324 | 2425 | 2526 | media |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| 1X2 | +0.0202 | +0.0145 | +0.0146 | +0.0187 | +0.0170 | +0.0141 | +0.0165 |
+| 1X | +0.0160 | +0.0082 | +0.0089 | +0.0175 | +0.0082 | +0.0108 | +0.0116 |
+| 2X | +0.0151 | +0.0105 | +0.0127 | +0.0128 | +0.0156 | +0.0096 | +0.0127 |
+| 12 (no pari) | +0.0017 | +0.0031 | +0.0021 | −0.0021 | +0.0050 | +0.0022 | +0.0020 |
+| O/U 2.5 | −0.0031 | +0.0147 | +0.0168 | +0.0007 | +0.0101 | +0.0020 | +0.0069 |
+| GG/NG (vs base) | +0.0074 | −0.0054 | +0.0069 | −0.0003 | +0.0037 | +0.0039 | +0.0027 |
+
+Tre fatti:
+1. **Il 12 e' a livello mercato in OGNI stagione** (−0.0021…+0.0050; nel
+   2023-24 il modello lo batte). Non e' un artefatto della media.
+2. **Il costo del pareggio e' strutturale**: 1X/2X restano a +0.008…+0.018 in
+   tutte le stagioni, ~5x il 12. Nessuna annata in cui il modello "impara" il
+   pari.
+3. **L'O/U e' il mercato piu' volatile** (σ tra stagioni ~0.008, range 0.02):
+   dal battere il mercato (COVID) al gap peggiore di tutti (2022-23). Una
+   stagione buona sull'O/U non e' segnale.
+
+**Lezione.** La media aggregata della Fase 9 era rappresentativa per i mercati
+d'esito (12 stabile, pari stabile) ma NON per l'O/U, dove il gap medio +0.0069
+e' quasi privo di significato operativo (varianza della stessa scala del
+valore). Conferma la gerarchia: esiti > totali-gol per affidabilita' del
+modello.
+
+**Riproducibilita'.** `python scripts/_run_gap_markets.py` (6 run registrate,
+source `gap_markets`).
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15: il gap residuo

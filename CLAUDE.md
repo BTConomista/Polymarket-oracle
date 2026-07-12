@@ -181,7 +181,11 @@ baseline in-sample (ex-ante onesta: 1.0860/0.6961, battuta comunque), costanti
 RECAL_W/δ fisso col senno di poi negli script 10-12, gap identico su stagioni
 pulite (+0.0164) e di tuning (+0.0166) → nessun overfitting di selezione.
 Registrate nel registro le run mancanti (Fasi 11/12a/13); regola: **nessuna
-analisi senza run in `runs.jsonl`**. **Prossimo bivio:** solo **dati davvero
-nuovi** o **uso pratico**.
+analisi senza run in `runs.jsonl`**. **Fase 15-bis:** matrice gap per mercato ×
+stagione (`scripts/_run_gap_markets.py`): il 12 (no pari) e' a livello mercato
+in OGNI stagione (−0.0021…+0.0050), il costo del pareggio e' strutturale
+(1X/2X +0.008…+0.018 sempre), l'O/U e' il mercato piu' volatile (−0.0031…
++0.0168: il gap medio +0.0069 ha poca sostanza operativa). **Prossimo bivio:**
+solo **dati davvero nuovi** o **uso pratico**.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

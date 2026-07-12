@@ -106,6 +106,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 13 | forma · streak · rendimento recente | R² = rumore | ❌ off |
 | 14 | quote di apertura + CLV (codice pronto) | — (dati `*_open` non ancora estesi) | ⏸ in attesa dati |
 | 15 | **audit dei calcoli** (verifica di ogni numero) | ROI corretto (−15.7%, non −8.5%); resto confermato | ✅ doc corretta |
+| 15-bis | gap per mercato × stagione | 12≈0 in ogni stagione; pari persistente; O/U volatile | ✅ analisi |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -389,6 +390,34 @@ il modello ha chiuso ~86% della distanza baseline→mercato. Tre tagli:
 
 Escluso il pari (mercato 12) il modello è **a livello mercato**: la debolezza è
 prezzare i pareggi, non stimare chi è più forte.
+
+**Per mercato × stagione (Fase 15-bis,** `scripts/_run_gap_markets.py`**)** — la
+matrice completa, per verificare che le medie qui sopra non nascondano stagioni
+storte:
+
+| Gap | 2020-21 | 2021-22 | 2022-23 | 2023-24 | 2024-25 | 2025-26 | media |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| 1X2 | +0.0202 | +0.0145 | +0.0146 | +0.0187 | +0.0170 | +0.0141 | **+0.0165** |
+| 1X (casa o pari) | +0.0160 | +0.0082 | +0.0089 | +0.0175 | +0.0082 | +0.0108 | +0.0116 |
+| 2X (ospite o pari) | +0.0151 | +0.0105 | +0.0127 | +0.0128 | +0.0156 | +0.0096 | +0.0127 |
+| **12 (no pari)** | +0.0017 | +0.0031 | +0.0021 | **−0.0021** | +0.0050 | +0.0022 | **+0.0020** |
+| Over/Under 2.5 | **−0.0031** | +0.0147 | +0.0168 | +0.0007 | +0.0101 | +0.0020 | +0.0069 |
+| GG/NG (vs baseline*) | +0.0074 | −0.0054 | +0.0069 | −0.0003 | +0.0037 | +0.0039 | +0.0027 |
+
+*\*GG/NG non ha quote nei dati → gap vs baseline (in-sample, severa). Le doppie
+chance usano il mercato derivato dalle 1X2 devigate.*
+
+Tre letture (tutte e 6 le stagioni, non solo la media):
+
+- **Il "quasi-zero" del 12 regge in OGNI stagione** (range −0.0021…+0.0050; nel
+  2023-24 il modello *batte* il mercato). Sapere chi è più forte è a livello
+  mercato sempre, non in media.
+- **Il costo del pareggio è persistente**: 1X e 2X (che lo includono) stanno a
+  +0.008…+0.018 in ogni stagione, ~5 volte il 12. Il gap del pari non è
+  un'annata storta: è strutturale.
+- **L'Over/Under è il mercato più volatile** (range −0.0031…+0.0168): battuto il
+  mercato nel COVID, quasi-parità 2023-24 e 2025-26, male 2021-23. Nessun trend
+  affidabile — con σ così alta, una stagione buona sull'O/U non è segnale.
 
 **Per forza-squadra** (gap 1X2, a U): deboli **+0.0206** e forti +0.0180 peggio
 delle medie **+0.0123**. Sui deboli il mercato ha info che noi non abbiamo
