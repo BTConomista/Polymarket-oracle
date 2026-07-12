@@ -1212,27 +1212,78 @@ cio' che sta nei risultati recenti.
 
 ---
 
-## Fase 14 — Quote di apertura e CLV (codice pronto, dati in attesa)
+## Fase 14 — Il modello contro la linea di APERTURA (CLV) — NEGATIVO, e definitivo
 
-**Obiettivo.** Confrontare il modello con la **linea di apertura** oltre che con
-la chiusura: se il modello batte l'apertura (piu' morbida) anche senza battere la
-chiusura, esiste un uso pratico (CLV — closing line value — positivo).
+**Obiettivo.** Tutti i confronti fatti finora erano contro le quote di
+**chiusura** — lo stimatore piu' efficiente che esista, l'avversario piu' duro.
+Ma nessuno e' obbligato a scommettere alla chiusura: si puo' prendere il prezzo
+**prima**, quando la linea contiene meno informazione. Domanda: il modello batte
+la linea **pre-chiusura** ("apertura")? Se si', esiste un edge *tradeable* anche
+senza battere la chiusura — e il **CLV** (la chiusura si muove verso di noi?) e'
+il criterio che i professionisti usano per distinguere edge da fortuna.
 
-**Ragionamento.** Le colonne football-data senza suffisso "C" sono quote
-pre-chiusura; quelle con "C" (dal 2019-20) sono la chiusura. Estraendole entrambe
-si misura: gap vs apertura, ROI @open, e quanto la chiusura si muove verso il
-modello (CLV).
+**Ragionamento.** Le colonne football-data senza suffisso "C" (AvgH...) sono
+raccolte ~1-3 giorni prima della partita; quelle con "C" (dal 2019-20) sono la
+chiusura. Le predizioni del modello non dipendono dalla quota → si riusano le 5
+versioni x 6 stagioni di `analyze_gap` cambiando solo il benchmark, sempre sulle
+STESSE righe (entrambe le linee presenti), altrimenti i log-loss non sono
+comparabili. Onesta': la "apertura" football-data e' la linea del venerdi', non
+l'apertura vera del mercato (piu' morbida ancora, ma non esiste nei dati storici).
 
-**Scelta.** Loader per le colonne `*_open` (mai fallback sulle colonne C),
-metriche vs apertura in `experiment_log`, script `_run_fase14_openline.py`, test.
+**La saga dei dati (lezione di provenienza).** Il mirror GitHub storico
+(`Mentaturan/ScoutFootball_for_World_Cup`, fonte di `BASE_URL` e dell'xG
+Understat) **e' sparito da GitHub** (404 verificato fuori dal proxy): la
+pipeline `--refresh` oggi non ha piu' una fonte a monte, e lo snapshot congelato
+e' cio' che ha salvato il progetto — esattamente lo scenario per cui era stato
+versionato. Nessun mirror alternativo conserva le quote (footballcsv e datahub
+le spogliano; i dataset HF hanno un solo set). Soluzione: i **CSV originali**
+scaricati dall'utente da football-data.co.uk e versionati in `files/` — ora la
+fonte grezza congelata del repo (`scripts/_restore_raw_cache.py` li identifica
+per data e ricostruisce la cache `data/raw/`).
 
-**Risultato.** **Nessun numero ancora**: i dati `*_open` non sono nello snapshot
-(serve `build_database.py --open-odds` con accesso ai CSV grezzi, bloccato dalla
-rete della sessione). Qualsiasi numero di Fase 14 in giro per il repo sarebbe
-inventato: non ce ne sono, per costruzione.
+**Risultato (30 backtest, `source=fase14_openline`; 2279/2280 righe comparabili).**
 
-**Lezione.** Registrare lo stato "in attesa dati" evita che una fase a meta'
-venga scambiata per una fase conclusa.
+Gap 1X2 (model_ll − market_ll) per versione, STESSE righe:
+
+| Versione | vs APERTURA | vs CHIUSURA |
+|---|--:|--:|
+| V0 grezzo | +0.0217 | +0.0237 |
+| V1 gol tarato | +0.0166 | +0.0186 |
+| V4 ATTUALE | **+0.0146** | **+0.0166** |
+
+Versione attuale per stagione (gap vs apertura): +0.0199, +0.0089, +0.0115,
++0.0173, +0.0174, +0.0123 → **positivo in TUTTE e 6 le stagioni**. O/U 2.5:
+gap vs apertura +0.0052 medio (batte l'apertura solo nel COVID 2020-21, −0.0029,
+e nel 2023-24, −0.0046: non consistente).
+
+Il test decisivo — value bet all'apertura e CLV (pool 6 stagioni):
+
+| bet@open | ROI@open | CLV medio (prob) | CLV>0 |
+|--:|--:|--:|--:|
+| 692 | **−17.3%** | **−0.0028** | **45%** |
+
+**Lezione / cosa ne consegue.**
+1. **La linea del venerdi' e' gia' quasi-chiusura**: l'affilamento open→close
+   vale solo **+0.0020** di log-loss (identico per ogni versione del modello,
+   com'e' logico: e' una proprieta' del mercato, non nostra). L'informazione
+   dell'ultimo giorno (formazioni, notizie) sposta poco la linea 1X2 media.
+2. **Il modello non batte nemmeno l'apertura** (+0.0146, 6 stagioni su 6): il
+   suo deficit e' 7 volte l'intero guadagno informativo open→close. Anche
+   l'avversario "morbido" disponibile nei dati storici e' troppo affilato.
+3. **CLV negativo (−0.0028, 45% positivo)**: quando il modello dissente
+   dall'apertura, la chiusura si muove **contro** di lui piu' spesso che verso.
+   I dissensi del modello sono rumore, non informazione che il mercato deve
+   ancora incorporare. E' la morte pulita dell'ipotesi "scommetti presto":
+   ROI@open −17.3% (peggio del ROI@close −15.6%).
+4. Resta aperta (non testabile con questi dati) solo la linea di apertura VERA
+   (domenica sera/lunedi'), piu' morbida del venerdi'. Servirebbe raccolta
+   prospettica di quote in tempo reale — un progetto dati, non un backtest.
+5. Nona conferma convergente del quadro: l'edge non e' nei dati storici. Le vie
+   rimaste sono quelle gia' indicate: dati davvero nuovi (formazioni ufficiali)
+   o mercati strutturalmente meno efficienti della Serie A 1X2.
+
+**Riproducibilita'.** `python scripts/_restore_raw_cache.py && python
+scripts/build_database.py --open-odds && python scripts/_run_fase14_openline.py`.
 
 ---
 
@@ -1341,12 +1392,17 @@ source `gap_markets`).
 
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
-Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15: il gap residuo
-col mercato (+0.0165, quasi tutto nel pareggio) non e' cattiva modellazione ne'
-errore di calcolo, ma **informazione che il mercato ha e noi no**. Il bivio:
-1. **Dati davvero nuovi** (formazioni/assenze ufficiali pre-partita, mercati
-   d'apertura — Fase 14 quando arrivano i dati `*_open`);
-2. **Uso pratico** del modello attuale (comando di predizione, monitoraggio CLV).
+Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
+linea di apertura (Fase 14): il gap residuo col mercato (+0.0165 vs chiusura,
++0.0146 vs apertura, quasi tutto nel pareggio) non e' cattiva modellazione ne'
+errore di calcolo, ma **informazione che il mercato ha e noi no** — e la Fase 14
+mostra che ce l'ha gia' il venerdi' (CLV negativo: i nostri dissensi sono
+rumore). Il bivio:
+1. **Dati davvero nuovi** (formazioni ufficiali pre-partita; oppure la linea di
+   apertura VERA di domenica/lunedi', che richiede raccolta prospettica di quote);
+2. **Uso pratico** del modello attuale (comando di predizione);
+3. **Mercati strutturalmente meno efficienti** (leghe minori, exchange lenti):
+   stessa infrastruttura, avversario diverso.
 
 Nota di realismo invariata: battere le quote di chiusura resta difficilissimo;
 il value betting simulato perde il **15.7%** — piu' di quanto credevamo prima

@@ -56,7 +56,9 @@ baseline in-sample, 86.6% su quella ex-ante). Su una singola stagione i numeri
 oscillano → si giudica sulla media. Il *value betting* simulato con la config
 ufficiale dà **ROI medio −15.7%** su 6 stagioni (864 scommesse; per stagione da
 −4.7% a −23.0%; pooled −15.6%): chi non batte la linea di chiusura perde contro
-il margine del bookmaker. **Non usare questo modello per scommettere soldi
+il margine del bookmaker. E non è questione di "scommettere prima": il modello
+**non batte nemmeno la linea di apertura** (gap +0.0146, ROI@open −17.3%, CLV
+negativo — Fase 14). **Non usare questo modello per scommettere soldi
 veri.** *(Il "ROI ≈ −8.5%" riportato in precedenza era il valore del primo
 backtest di Fase 1 — una sola stagione, modello iniziale — rimasto per errore
 accanto a metriche a 6 stagioni: corretto nell'audit di Fase 15.)*
@@ -104,7 +106,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 12a | ensemble di emivite (180+730) | −0.0006 (borderline) | ❌ off |
 | 12b | **diagonale inflazionata** (bivariato) | calibra il pari, ma −0.0004 | ❌ off |
 | 13 | forma · streak · rendimento recente | R² = rumore | ❌ off |
-| 14 | quote di apertura + CLV (codice pronto) | — (dati `*_open` non ancora estesi) | ⏸ in attesa dati |
+| 14 | **linea di APERTURA + CLV** | gap open **+0.0146** (6/6); CLV **−0.0028** (45%>0) | ❌ niente edge |
 | 15 | **audit dei calcoli** (verifica di ogni numero) | ROI corretto (−15.7%, non −8.5%); resto confermato | ✅ doc corretta |
 | 15-bis | gap per mercato × stagione | 12≈0 in ogni stagione; pari persistente; O/U volatile | ✅ analisi |
 
@@ -496,6 +498,37 @@ quattro angoli, tutti **data-driven** per uscire dall'arbitrarietà delle soglie
 modello non contiene momentum. L'unico filo di segnale è l'xG recente, **già nel
 blend**. Nessun pattern nascosto.
 
+### Il modello contro la linea di APERTURA — Fase 14 (niente edge nemmeno lì)
+
+Ogni confronto precedente era contro la **chiusura**, l'avversario più duro. Ma
+si può scommettere *prima*: la Fase 14 confronta le stesse predizioni con la
+linea **pre-chiusura** di football-data (colonne senza suffisso C, ~1-3 giorni
+prima della partita) — il benchmark "battibile" — e misura il **CLV** (la
+chiusura si muove verso il modello sulle selezioni?), il criterio dei
+professionisti per distinguere edge da fortuna. Stesse righe per entrambe le
+linee (2279/2280), 5 versioni × 6 stagioni.
+
+| | vs APERTURA | vs CHIUSURA |
+|---|--:|--:|
+| gap 1X2 (versione attuale) | **+0.0146** (peggio del mercato in 6/6 stagioni) | +0.0166 |
+| gap O/U 2.5 | +0.0052 | +0.0069 |
+| value bet (pool, 692 sel. @open) | ROI **−17.3%** | ROI −15.6% |
+| **CLV** | **−0.0028** medio, solo **45%** delle selezioni >0 | — |
+
+- **La linea del venerdì è già quasi-chiusura**: l'affilamento open→close vale
+  solo +0.0020 di log-loss — e il deficit del modello (+0.0146) è **7 volte**
+  quell'intero guadagno informativo.
+- **CLV negativo**: quando il modello dissente dall'apertura, la chiusura gli dà
+  torto più spesso che ragione. I dissensi sono rumore, non informazione in
+  anticipo sul mercato. L'ipotesi "scommetti presto" muore pulita.
+- Non testabile con questi dati: l'apertura *vera* (domenica/lunedì, più
+  morbida) — richiederebbe raccolta prospettica di quote in tempo reale.
+
+*Nota di provenienza:* il mirror GitHub storico dei dati è **sparito** (404);
+i CSV originali football-data sono ora congelati in `files/` (fonte grezza
+versionata) e `scripts/_restore_raw_cache.py` ricostruisce la cache. Dettagli
+nel [diario, Fase 14](docs/DIARIO.md).
+
 ### Audit dei calcoli — Fase 15 (verifica indipendente di ogni numero)
 
 Revisione sistematica di **formule, pipeline e numeri dichiarati**: ogni valore di
@@ -686,12 +719,15 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     (punti/gara ultime 5) **non predice l'errore del modello** (corr +0.035) e come
     covariata peggiora (+0.0002) → già catturata dal fit pesato nel tempo, nessun
     pattern nascosto. Ottavo esperimento convergente. Vedi `docs/DIARIO.md`.
-19. 🔶 **Fase 14** — **quote di apertura e CLV** (codice pronto, dati in attesa):
-    loader per le colonne `*_open` (linea pre-chiusura football-data), metriche
-    vs apertura, value bet @open e CLV in `experiment_log`, script
-    `_run_fase14_openline.py`, test. I dati `*_open` **non sono ancora nello
-    snapshot** (serve `build_database.py --open-odds` con accesso ai CSV grezzi):
-    nessun numero pubblicato finché non arrivano.
+19. ✅ **Fase 14** — **linea di apertura e CLV** (risultato NEGATIVO, definitivo
+    su questi dati): snapshot esteso con le quote pre-chiusura (`*_open`, dai CSV
+    originali football-data ora congelati in `files/`; il mirror storico è
+    sparito da GitHub). Il modello **non batte nemmeno l'apertura** (gap 1X2
+    +0.0146, 6/6 stagioni; l'affilamento open→close vale solo +0.0020) e il
+    **CLV è negativo** (−0.0028, 45%>0): i dissensi del modello sono rumore,
+    ROI@open −17.3%. L'ipotesi "scommetti presto" è chiusa; resta non testabile
+    solo l'apertura vera (domenica/lunedì), che richiede raccolta prospettica.
+    Vedi `docs/DIARIO.md`, Fase 14.
 20. ✅ **Fase 15** — **audit dei calcoli**: ogni numero di README/DIARIO
     ricalcolato dal registro, backtest ufficiale riprodotto identico, formule
     verificate (nessun errore). Corretti: ROI (−15.7% reale, non −8.5%), tabella
@@ -777,15 +813,20 @@ dati usati (vedi `experiments/README.md`).
 ### Fonti originali
 
 L'ambiente di sviluppo cloud non raggiunge direttamente `football-data.co.uk`,
-`understat.com` né `transfermarkt.com` (policy di rete), quindi si usano mirror
+`understat.com` né `transfermarkt.com` (policy di rete), quindi si usavano mirror
 su GitHub con **lo stesso formato**:
 
-- **football-data** e **Understat**: stesso repo mirror (aggiornato da un
-  workflow giornaliero) — URL in `sources.BASE_URL` / `sources.UNDERSTAT_URL`;
+- **football-data** e **Understat**: stesso repo mirror — URL in
+  `sources.BASE_URL` / `sources.UNDERSTAT_URL`. ⚠️ **Il mirror è sparito da
+  GitHub** (404, verificato luglio 2026, Fase 14): `--refresh` non ha più una
+  fonte a monte raggiungibile dal cloud. Il progetto non ne dipende: lo snapshot
+  congelato è versionato, e i **CSV grezzi originali** football-data (9 stagioni,
+  con TUTTE le colonne quote) sono congelati in **`files/`** —
+  `scripts/_restore_raw_cache.py` ricostruisce la cache `data/raw/` da lì.
 - **Transfermarkt**: datalake `salimt/football-datasets` — URL in
   `sources.TRANSFERMARKT_MIRROR_URL`. Limite noto: ~25% dei profili è privo di
   serie di valutazioni (per questo alcune squadre-stagione hanno `squad_value = NaN`).
 
 Girando il progetto in locale è sufficiente sostituire gli URL in
-`src/data/sources.py` con quelli ufficiali (per Understat c'è già
-`UNDERSTAT_OFFICIAL_URL`).
+`src/data/sources.py` con quelli ufficiali (football-data.co.uk è raggiungibile
+da un browser/rete normale; per Understat c'è già `UNDERSTAT_OFFICIAL_URL`).

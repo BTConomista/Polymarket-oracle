@@ -168,10 +168,15 @@ esperimenti convergono: **tetto REALE**, non solo pratico. draw_inflation off di
 default. **Fase 13:** stato di forma (`add_form`, covariata `form`,
 `scripts/_run_form.py`): la forma NON predice l'errore del modello (corr +0.035) e
 come covariata peggiora (+0.0002) → gia' catturata dal fit pesato nel tempo,
-nessun pattern nascosto (8 esperimenti convergenti). **Fase 14 (codice pronto,
-dati in attesa):** quote di apertura `*_open` + metriche CLV; lo snapshot NON ha
-ancora le colonne (serve `build_database.py --open-odds` coi CSV grezzi): nessun
-numero di Fase 14 esiste. **Fase 15 (audit dei calcoli):** ogni numero di
+nessun pattern nascosto (8 esperimenti convergenti). **Fase 14 (linea di APERTURA + CLV,
+NEGATIVO):** snapshot esteso con le quote pre-chiusura `*_open` (CSV originali
+football-data congelati in `files/`; il mirror storico di sources.BASE_URL e'
+SPARITO da GitHub → `--refresh` senza fonte a monte;
+`scripts/_restore_raw_cache.py` ricostruisce la cache). Il modello NON batte
+nemmeno l'apertura (gap 1X2 +0.0146, 6/6 stagioni; affilamento open→close solo
++0.0020) e il CLV e' negativo (−0.0028, 45%>0; ROI@open −17.3%): i dissensi del
+modello dalla linea del venerdi' sono rumore. "Scommetti presto" e' chiusa;
+resta non testabile solo l'apertura vera (serve raccolta prospettica di quote). **Fase 15 (audit dei calcoli):** ogni numero di
 README/DIARIO ricalcolato dal registro; formule tutte corrette, walk-forward
 pulito, backtest ufficiale riprodotto identico. UN errore vero trovato e
 corretto: il ROI del value betting era **−15.7%** (media 6 stagioni, config

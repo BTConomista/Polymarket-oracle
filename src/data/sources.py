@@ -18,11 +18,18 @@ from dataclasses import dataclass
 #
 # La fonte originale (https://www.football-data.co.uk/mmz4281/{season}/{code}.csv)
 # non e' raggiungibile dall'ambiente cloud in cui il progetto viene sviluppato
-# (policy di rete). Usiamo un mirror su GitHub che replica lo STESSO formato e le
-# STESSE colonne. Girando il progetto in locale si puo' semplicemente sostituire
-# BASE_URL con quello ufficiale.
+# (policy di rete). Si usava un mirror su GitHub con lo STESSO formato.
+#
+# ATTENZIONE — MIRROR SPARITO (verificato 2026-07, Fase 14): il repo
+# Mentaturan/... non esiste piu' su GitHub (404 reale, fuori dal proxy); vale
+# anche per l'xG Understat (UNDERSTAT_URL, stesso repo). Il progetto NON ne
+# dipende per i calcoli: lo snapshot congelato e' versionato, e i CSV grezzi
+# ORIGINALI football-data (tutte le colonne quote) sono congelati in files/ —
+# `python scripts/_restore_raw_cache.py` ricostruisce la cache data/raw/.
+# Per un refresh futuro serve una fonte nuova: in locale basta puntare
+# BASE_URL a OFFICIAL_BASE_URL (raggiungibile da una rete normale).
 OFFICIAL_BASE_URL = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
-MIRROR_BASE_URL = (
+MIRROR_BASE_URL = (  # MORTO — tenuto come riferimento storico del formato
     "https://raw.githubusercontent.com/Mentaturan/ScoutFootball_for_World_Cup"
     "/main/data/raw/football_data/{season}/{code}.csv"
 )
