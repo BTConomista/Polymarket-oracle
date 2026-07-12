@@ -117,6 +117,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 21 | **gradient boosting sul GG/NG** (modello nuovo) | calibrato pareggia il DC (+0.0047), nessuno batte la baseline | ❌ non adottato (convergenza) |
 | 22 | **sweep GBM su 6 mercati × 3 feature** | non batte il DC su nessun mercato; gap ✗ su 5/6 | ❌ tetto informativo |
 | 23 | **GBM modello + mercato** (encompassing non-lin.) | col mercato come feature resta > DC; non lo pareggia | ❌ nessun edge, gap non ridotto |
+| 24 | **DC calcolato DAL mercato** (λ,μ impliciti → GG/NG) | GG/NG 0.6853: batte DC-da-gol (P=95.7%) e la baseline | ✅ primo miglioramento (condizionato alle quote) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -870,6 +871,41 @@ sbagliato** per combinare modello e mercato: degrada perfino un input di
 qualità-mercato. Il modo giusto di combinare è lineare, e la Fase 16 ha già dato
 il verdetto. Chiude definitivamente la ricerca di un metodo per ridurre il gap
 col GBM.
+
+### Il DC calcolato DAL mercato — Fase 24 (il primo risultato positivo)
+
+Idea nuova: finora il DC stima i gol attesi λ,μ dai GOL; ma il mercato li stima
+**meglio** (batte il DC di +0.0165 sull'1X2). E se **invertissimo** le quote per
+ricavare i λ,μ *impliciti nel mercato*, e ci facessimo girare sopra la matrice
+dei punteggi del DC? (`scripts/_run_dc_from_market.py`). Sui mercati *con* quote
+(1X2, O/U) l'inversione riproduce il mercato (gap ~0 banale); il valore è tutto
+nel **derivare un mercato che il book NON prezza** — il GG/NG.
+
+| GG/NG | log-loss |
+|---|--:|
+| **mercato-implicito + ρ** | **0.6853** |
+| mercato-implicito (Poisson indip.) | 0.6865 |
+| DC-da-gol (attuale) | 0.6898 |
+| baseline (in-sample) | 0.6871 |
+
+Il GG/NG dai λ,μ del mercato **batte il nostro DC-da-gol** (Δ −0.0033, CI95
+[−0.0072, +0.0005], P=95.7%, negativo in **6 stagioni su 6**) ed è **la prima
+cosa a battere la baseline sul GG/NG** (0.6865 < 0.6871; il DC-da-gol non ci
+riusciva). La correzione ρ sulla diagonale aiuta ancora (0.6853).
+
+Perché funziona senza contraddire le Fasi 16/23: il mercato stima λ,μ meglio di
+noi, e la struttura del DC **trasferisce** quell'informazione a un mercato che il
+book non prezza. Non è circolare (il GG/NG non è tra gli input) né un edge contro
+un mercato efficiente.
+
+**Onestà d'obbligo:** (1) il CI sfiora lo zero (+0.0005) → "molto probabile ma
+formalmente non concluso" (come il prior, Fase 19); (2) il guadagno è modesto e
+il GG/NG resta difficile (~0.685, vicino al testa-o-croce ~0.69); (3) non è
+verificabile contro un'ipotetica linea di chiusura del GG/NG (assente nei dati);
+(4) **richiede le quote 1X2+O/U al momento della predizione** (il DC-da-gol no) e
+un venue che offra il GG/NG — plausibile su un prediction market. Come stimatore
+*condizionato alla disponibilità delle quote*, però, è il primo miglioramento
+reale su un mercato in tutto l'arco Fasi 21-24.
 
 ## Struttura
 

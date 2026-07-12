@@ -1766,6 +1766,61 @@ verdetto. Chiude la ricerca di un metodo per ridurre il gap.
 
 ---
 
+## Fase 24 — DC calcolato DAL mercato: il primo risultato positivo dell'arco modelli
+
+**Obiettivo.** Nessuna fase l'aveva fatto: finora il DC stima lambda,mu dai GOL,
+e finora abbiamo sempre MESCOLATO gli output (DC+mercato) o dato il mercato a un
+GBM. Domanda nuova: e se COSTRUISSIMO il DC a partire dal mercato? Il mercato
+stima lambda,mu meglio di noi (batte il DC di +0.0165 sull'1X2); invertendo le
+quote si ricavano i lambda,mu impliciti, e la matrice del DC ci deriva sopra gli
+altri mercati.
+
+**Ragionamento.** Sui mercati CON quote (1X2, O/U) l'inversione riproduce il
+mercato -> gap ~0 banale. Il valore e' tutto nel DERIVARE un mercato che il book
+NON prezza: il GG/NG (nessuna quota nei dati, l'unico con "spazio" per il
+principio 8). Se lambda,mu del mercato + struttura DC battono il nostro GG/NG e
+la baseline, e' l'informazione superiore del mercato trasferita a un mercato non
+prezzato — non circolare (il GG/NG non e' tra gli input), non un edge contro un
+mercato efficiente.
+
+**Metodo.** Per ogni partita: devig 1X2 + O/U -> 4 probabilita' target; si trova
+(lambda,mu) che le riproduce meglio via la matrice a Poisson indipendenti
+(rho=0; il mercato 1X2+O/U non vincola rho). Da quella matrice si legge P(GG).
+Sensibilita' con un rho della diagonale (-0.06, correzione dei punteggi bassi).
+
+**Alternative.** Prior di forza dal mercato nel fit del DC (piu' invasivo);
+scelto il piu' pulito: inversione per-partita, nessun ri-fit.
+
+**Risultato** (`scripts/_run_dc_from_market.py`; 7 run, source
+`fase24_dc_from_market`):
+
+| GG/NG | log-loss |
+|---|--:|
+| mercato-implicito + rho | 0.6853 |
+| mercato-implicito (rho=0) | 0.6865 |
+| DC-da-gol (attuale) | 0.6898 |
+| baseline (in-sample) | 0.6871 |
+
+- il GG/NG dai lambda,mu del mercato BATTE il nostro DC-da-gol: Δ -0.0033, CI95
+  [-0.0072, +0.0005], P=95.7%, negativo in 6 stagioni su 6;
+- e' la PRIMA cosa a battere la baseline sul GG/NG (0.6865 < 0.6871; il DC-da-gol
+  no); la correzione rho aiuta ancora (0.6853).
+
+**Lezione.** Dopo 8 risultati negativi sui modelli (Fasi 18, 21-23), il primo
+positivo — e viene da una domanda giusta: non "quale modello", ma "quale
+informazione, e come trasferirla". Il mercato conosce i gol attesi meglio di noi;
+la struttura del DC li porta su un mercato non prezzato. Onesta': (1) il CI
+sfiora lo zero -> "molto probabile, formalmente non concluso" (come il prior,
+Fase 19); (2) guadagno modesto, il GG/NG resta difficile (~0.685 vicino al
+testa-o-croce); (3) non verificabile contro un'ipotetica linea GG/NG; (4)
+richiede le quote 1X2+O/U al momento della predizione (il DC-da-gol no) + un
+venue che offra il GG/NG. Come stimatore CONDIZIONATO alle quote, il GG/NG
+"specialista" (principio 8) diventa: inverti il mercato -> matrice DC -> P(GG),
+invece del DC-da-gol. E' la prova che la leva vera e' l'informazione (qui: quella
+del mercato su un mercato non prezzato), non l'architettura.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

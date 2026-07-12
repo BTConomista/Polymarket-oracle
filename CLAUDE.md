@@ -271,7 +271,20 @@ e lontano dal mercato (0.9632), P(batte mercato)=0%. Il mercato e' una prevision
 quasi-ottima e un ensemble di alberi la degrada; il mercato come feature aiuta il
 GBM rispetto a se stesso ma non basta. Ridurre il gap a ~0 si puo' solo copiando
 il mercato (lineare, gia' Fase 16); batterlo NO, con nessun metodo. Il GBM e' lo
-strumento sbagliato per combinare modello+mercato. **Prossimo bivio:** dati
-davvero nuovi, uso pratico, o cross-lega (per robustezza, non per edge).
+strumento sbagliato per combinare modello+mercato. **Fase 24 (DC calcolato DAL
+mercato — PRIMO risultato positivo):** invertire le quote 1X2+O/U per ricavare i
+lambda,mu IMPLICITI nel mercato (che li stima meglio di noi) e derivarci il GG/NG
+con la matrice del DC (`scripts/_run_dc_from_market.py`). Sui mercati con quote
+riproduce il mercato (banale); il valore e' derivare il GG/NG, che il book NON
+prezza: 0.6853 (con rho) vs DC-da-gol 0.6898 vs baseline 0.6871 -> **batte
+entrambi** (Δ vs DC -0.0033, CI [-0.0072,+0.0005], P=95.7%, 6/6 stagioni; prima
+cosa a battere la baseline sul GG/NG). Onesta': CI sfiora lo zero (molto
+probabile, non concluso), guadagno modesto, non verificabile vs un'ipotetica
+linea GG/NG, e RICHIEDE le quote 1X2+O/U al momento della predizione. LEZIONE: la
+leva vera e' l'INFORMAZIONE (qui quella del mercato su un mercato non prezzato),
+non l'architettura; il GG/NG "specialista" (principio 8) diventa
+mercato-implicito -> matrice DC -> P(GG), non il DC-da-gol. **Prossimo bivio:**
+dati davvero nuovi, uso pratico (il predittore GG/NG condizionato alle quote e' il
+primo candidato utile), o cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**
