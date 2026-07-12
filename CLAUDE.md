@@ -255,6 +255,16 @@ batte la baseline** → convergenza sul tetto, non fallimento del modello. Il
 GG/NG e' quasi-impredicibile come il pareggio. LEZIONE METODOLOGICA: per ogni
 modello nuovo, valuta SEMPRE anche la versione calibrata (il log-loss punisce la
 sovra-confidenza; senza il controllo si conclude il falso). Il principio "un
-modello per mercato" resta valido; questo mercato non cede.
+modello per mercato" resta valido; questo mercato non cede. **Fase 22 (sweep
+GBM completo):** 6 mercati (1X2, O/U, GG/NG, 1X, 2X, 12) × 3 feature-set
+(cov / dc / dc+cov) × calibrazione (`scripts/_run_gbm_sweep.py`). Il GBM **non
+batte il DC su NESSUN mercato** e allarga il gap col mercato (CI<0 escluso su
+5/6; GG/NG pareggia a livello baseline); rende al meglio quando usa SOLO le
+feature del DC (aggiungere covariate peggiora). Conclusione forte: il **tetto e'
+INFORMATIVO, non architetturale** — la forma del Dixon-Coles non e' il collo di
+bottiglia, lo sono i dati pre-partita. Testate 2 famiglie di modelli su 6
+mercati: nessuno cede. Per un edge serve **informazione nuova**, non un modello
+nuovo. **Prossimo bivio:** dati davvero nuovi, uso pratico, o cross-lega (per
+robustezza, non per edge).
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

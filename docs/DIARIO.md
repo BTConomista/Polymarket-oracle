@@ -1655,6 +1655,66 @@ nulla oltre il DC abbassa molto le attese anche per un bivariato Poisson.
 
 ---
 
+## Fase 22 — Sweep del GBM su tutti i mercati: il tetto e' informativo, non di modello
+
+**Obiettivo.** La Fase 21 ha provato il GBM solo sul GG/NG. Qui lo spremiamo:
+molte varianti su molti mercati, per vedere se su QUALCUNO il GBM muove il gap
+col mercato rispetto al Dixon-Coles. E' il test a fondo del principio 8.
+
+**Ragionamento.** 6 mercati (1X2, O/U 2.5, GG/NG, doppie chance 1X/2X/12) x 3
+set di feature (cov = solo covariate pre-partita; dc = solo output del DC;
+dc+cov = entrambe) x calibrazione. Ogni GBM walk-forward per stagione (allena
+su 1819..S-1). Headline calibrata (la Fase 21 ha mostrato che il grezzo mente
+per mis-calibrazione). Verdetto inferenziale sulla variante pre-scelta dc+cov
+calibrata, gap vs mercato con CI bootstrap appaiato per-riga.
+
+**Alternative.** Sweep di iperparametri (profondita', regolarizzazione) invece
+dei feature-set: scartato in favore dei feature-set, che rispondono alla
+domanda vera ("da dove viene il segnale?"). Un tuning fine avrebbe al piu'
+avvicinato il GBM al DC, non battuto — vedi la lezione sotto.
+
+**Risultato** (`scripts/_run_gbm_sweep.py`; 9 run nel registro, source
+`fase22_gbm_sweep`). Log-loss calibrata, miglior feature-set del GBM:
+
+| mercato | GBM migliore | DC | mercato | baseline |
+|---|--:|--:|--:|--:|
+| 1X2 | 1.0059 | 0.9797 | 0.9632 | 1.0834 |
+| O/U 2.5 | 0.6966 | 0.6885 | 0.6816 | 0.6892 |
+| GG/NG | 0.6943 | 0.6898 | — | 0.6871 |
+| 1X | 0.5572 | 0.5487 | 0.5371 | 0.6303 |
+| 2X | 0.6097 | 0.5960 | 0.5833 | 0.6744 |
+| 12 | 0.5811 | 0.5766 | 0.5746 | 0.5820 |
+
+Movimento del gap (Δ = GBM − DC appaiato per-riga):
+
+| mercato | Δ gap | CI95 |
+|---|--:|--:|
+| 1X2 | +0.0310 | [+0.0217, +0.0402] |
+| O/U 2.5 | +0.0081 | [+0.0005, +0.0157] |
+| GG/NG | +0.0045 | [−0.0023, +0.0111] (pari) |
+| 1X | +0.0141 | [+0.0066, +0.0216] |
+| 2X | +0.0198 | [+0.0131, +0.0263] |
+| 12 | +0.0051 | [+0.0015, +0.0086] |
+
+- il GBM **non batte il DC su nessun mercato**; allarga il gap ovunque, con CI
+  che esclude lo zero su 5 mercati su 6 (solo il GG/NG pareggia, entrambi a
+  livello baseline);
+- il GBM fa MEGLIO quando usa SOLO le feature del DC (dc batte dc+cov e cov su
+  1X2/1X/2X): aggiungere covariate grezze peggiora → rende al meglio quando
+  modifica MENO il DC.
+
+**Lezione.** Due famiglie di modelli (parametrica e non), 6 mercati, 3
+feature-set: il tetto e' **informativo, non architetturale**. La forma del
+Dixon-Coles non e' il collo di bottiglia — lo sono i dati pre-partita. Il
+segnale utile e' tutto e solo quello che il DC gia' estrae (gol/xG pesati nel
+tempo); ogni grado di liberta' in piu' aggiunge rumore, che sui mercati con
+quote il mercato ha gia' prezzato (gap che cresce). Il principio "un modello per
+mercato" era corretto da testare e ora e' testato a fondo: su questi dati
+nessun mercato cede. Per un edge serve **informazione nuova**, non un modello
+nuovo. Chiude il filone "modelli alternativi" avviato in Fase 21.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

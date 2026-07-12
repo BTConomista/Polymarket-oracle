@@ -115,6 +115,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 19 | potenza sul prior: finestra a **8 stagioni** | −0.0013 [−0.0026, +0.0001], P(aiuta) 96.5% | ✅ conferma (non concluso) |
 | 20 | **residui su tutte le covariate + adverse selection** | R²=rumore; ma gap ∝ dissenso (r=+0.18) | ✅ scoperta (perché si perde) |
 | 21 | **gradient boosting sul GG/NG** (modello nuovo) | calibrato pareggia il DC (+0.0047), nessuno batte la baseline | ❌ non adottato (convergenza) |
+| 22 | **sweep GBM su 6 mercati × 3 feature** | non batte il DC su nessun mercato; gap ✗ su 5/6 | ❌ tetto informativo |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -784,6 +785,57 @@ Due letture, una metodologica e una sostanziale:
 Il principio "un modello per mercato" resta valido e va tenuto per i prossimi
 tentativi; ma *questo* mercato, col miglior candidato ragionevole, non cede.
 
+### Sweep del GBM su tutti i mercati — Fase 22 (il tetto è informativo, non di modello)
+
+Spremuto il GBM: **6 mercati × 3 set di feature × calibrazione**
+(`scripts/_run_gbm_sweep.py`). Feature: `cov` (solo covariate pre-partita), `dc`
+(solo output del Dixon-Coles), `dc+cov` (entrambe). Domanda: su *qualche* mercato
+il GBM muove il gap col mercato rispetto al DC?
+
+**Log-loss (calibrata), miglior feature-set del GBM vs DC vs mercato:**
+
+| Mercato | GBM (migliore) | DC | Mercato | Baseline |
+|---|--:|--:|--:|--:|
+| 1X2 | 1.0059 | **0.9797** | 0.9632 | 1.0834 |
+| O/U 2.5 | 0.6966 | **0.6885** | 0.6816 | 0.6892 |
+| GG/NG | 0.6943 | **0.6898** | — | 0.6871 |
+| 1X | 0.5572 | **0.5487** | 0.5371 | 0.6303 |
+| 2X | 0.6097 | **0.5960** | 0.5833 | 0.6744 |
+| 12 | 0.5811 | **0.5766** | 0.5746 | 0.5820 |
+
+**Movimento del gap** (Δ = GBM − DC sulle stesse righe; il mercato si cancella,
+quindi è un confronto GBM-vs-DC appaiato):
+
+| Mercato | Δ gap (GBM−DC) | CI95 | esito |
+|---|--:|--:|:--:|
+| 1X2 | +0.0310 | [+0.0217, +0.0402] | GBM peggio ✗ |
+| O/U 2.5 | +0.0081 | [+0.0005, +0.0157] | GBM peggio ✗ |
+| GG/NG | +0.0045 | [−0.0023, +0.0111] | pari (≈ baseline) |
+| 1X | +0.0141 | [+0.0066, +0.0216] | GBM peggio ✗ |
+| 2X | +0.0198 | [+0.0131, +0.0263] | GBM peggio ✗ |
+| 12 | +0.0051 | [+0.0015, +0.0086] | GBM peggio ✗ |
+
+Il verdetto è netto e trasversale: **il GBM non batte il DC su nessun mercato**,
+e allarga il gap col mercato ovunque (CI che esclude lo zero su 5 mercati su 6;
+sul GG/NG pareggia il DC, ma entrambi restano a livello baseline). Due dettagli
+lo rendono conclusivo:
+
+- **Il GBM fa meglio quando usa SOLO le feature del DC** (`dc` batte `dc+cov` e
+  `cov` su 1X2/1X/2X): aggiungere le covariate grezze *peggiora*. Il modello
+  rende al meglio proprio quando modifica meno il Dixon-Coles — la firma di
+  "non c'è altro segnale da estrarre". Conferma indipendente delle Fasi 4c/11/20.
+- **Ogni grado di libertà in più fa peggio**: una macchina non-parametrica con
+  pieno accesso alle stesse informazioni non trova nulla oltre il DC, e dove
+  devia aggiunge solo rumore — che il mercato ha già prezzato (per questo il gap
+  *cresce*).
+
+**Conclusione: il tetto è INFORMATIVO, non architetturale.** La forma parametrica
+del Dixon-Coles non è il collo di bottiglia; lo sono i dati disponibili prima
+della partita. Il principio "un modello per mercato" era giusto da testare ed è
+stato testato a fondo (2 famiglie, 6 mercati, 3 feature-set): su questi dati
+nessun mercato cede a una famiglia diversa. Per un edge serve **informazione
+nuova**, non un modello nuovo.
+
 ## Struttura
 
 ```
@@ -951,20 +1003,21 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     segnale nascosto. Ma emerge l'**adverse selection**: il gap vs mercato
     cresce col dissenso del modello (r=+0.18; quartile alto +0.0539 vs +0.0009)
     → i "value bet" del modello sono i suoi errori. Spiega il ROI negativo.
-26. ✅ **Fase 21 — modelli nuovi, valutati PER MERCATO** (principio 8 in
-    `CLAUDE.md`): primo tentativo, **gradient boosting sul GG/NG**. Il GBM
-    calibrato **pareggia il Dixon-Coles** (+0.0047, CI include lo zero) ma non lo
-    batte, e nessuno dei due batte la baseline → **convergenza sul tetto**, non
-    fallimento del modello. Il principio resta valido; questo mercato non cede.
-27. 🔜 **Altri modelli / mercati** (la direzione resta aperta): logistico o GBM
-    su O/U e 1X2 valutati per-mercato; modelli a punteggio con miglior
-    correlazione (bivariato Poisson) — anche se la Fase 21 abbassa le attese sul
-    GG/NG. La config ufficiale può ancora diventare un **portafoglio di
-    specialisti** `{mercato: modello}` se qualcuno emerge.
-28. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
-    vere) oppure **uso pratico** del modello attuale (comando di predizione).
-29. **Estensione** a nuovi campionati (già predisposto in `sources.py`).
-30. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …).
+26. ✅ **Fase 21-22 — modelli nuovi, valutati PER MERCATO** (principio 8 in
+    `CLAUDE.md`): gradient boosting sul GG/NG (Fase 21, pareggia il DC calibrato)
+    e poi lo **sweep completo** (Fase 22): 6 mercati × 3 feature-set. Il GBM
+    **non batte il DC su nessun mercato** e allarga il gap col mercato (CI<0
+    escluso su 5/6); rende al meglio quando copia di più il DC. **Il tetto è
+    informativo, non architetturale**: non serve un modello nuovo ma
+    informazione nuova.
+27. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
+    vere) — l'unica leva che le 22 fasi indicano non ancora esaurita — oppure
+    **uso pratico** del modello attuale (comando di predizione).
+28. **Estensione** a nuovi campionati (già predisposto in `sources.py`): non per
+    un edge ma per capire se le conclusioni (gap, tetto, prior) sono robuste
+    fuori dalla Serie A.
+29. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …), dove il
+    mercato potrebbe essere meno efficiente della chiusura dei bookmaker.
 
 ## Archivio dati interno (riproducibilità)
 
