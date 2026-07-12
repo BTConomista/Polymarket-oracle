@@ -120,6 +120,10 @@ def run_backtest(
                 "m_away": pred.prob_away_win,
                 "m_over": pred.prob_over_2_5,
                 "m_btts": pred.prob_btts_yes,
+                # Gol attesi del modello (lambda, mu): feature naturali per
+                # modelli a valle (es. GBM sul GG/NG, Fase 21).
+                "exp_home_goals": pred.exp_home_goals,
+                "exp_away_goals": pred.exp_away_goals,
                 # Quote di mercato (per il confronto)
                 "odds_home": m["odds_home"],
                 "odds_draw": m["odds_draw"],
