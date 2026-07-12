@@ -124,16 +124,21 @@ class MatchPrediction:
 
 
 def _tau(goals_home, goals_away, lam, mu, rho):
-    """Correzione Dixon-Coles sui 4 punteggi bassi. Vettorializzata."""
+    """Correzione Dixon-Coles sui 4 punteggi bassi. Vettorializzata.
+
+    ``rho`` puo' essere uno scalare (modello classico) oppure un array
+    per-partita (rho DINAMICO, Fase 18: la correzione dipende dai gol attesi
+    della singola partita)."""
     tau = np.ones_like(lam, dtype=float)
+    rho = np.broadcast_to(np.asarray(rho, dtype=float), lam.shape)
     m00 = (goals_home == 0) & (goals_away == 0)
     m01 = (goals_home == 0) & (goals_away == 1)
     m10 = (goals_home == 1) & (goals_away == 0)
     m11 = (goals_home == 1) & (goals_away == 1)
-    tau[m00] = 1.0 - lam[m00] * mu[m00] * rho
-    tau[m01] = 1.0 + lam[m01] * rho
-    tau[m10] = 1.0 + mu[m10] * rho
-    tau[m11] = 1.0 - rho
+    tau[m00] = 1.0 - lam[m00] * mu[m00] * rho[m00]
+    tau[m01] = 1.0 + lam[m01] * rho[m01]
+    tau[m10] = 1.0 + mu[m10] * rho[m10]
+    tau[m11] = 1.0 - rho[m11]
     return tau
 
 
@@ -156,6 +161,7 @@ class DixonColesModel:
         covariates: tuple[str, ...] = (),
         promoted_prior: tuple[float, float] | None = None,
         draw_inflation: bool = False,
+        dynamic_rho: bool = False,
     ):
         """
         Args:
@@ -216,6 +222,16 @@ class DixonColesModel:
         # punteggi (non post-hoc) e dipendente dalla partita. 0 = disattivato.
         self.draw_inflation = draw_inflation
         self.draw_phi: float = 0.0
+
+        # Rho DINAMICO (Fase 18): la correzione sui punteggi bassi diventa
+        # funzione della partita, rho_match = rho + rho_slope*(lam+mu - centro),
+        # con rho_slope stimato nella verosimiglianza insieme al resto e centro
+        # = media pesata dei gol totali del training (costante, non un
+        # parametro). rho fisso e' il caso rho_slope=0. Nota: non combinare con
+        # draw_inflation (il fit di phi usa il rho base).
+        self.dynamic_rho = dynamic_rho
+        self.rho_slope: float = 0.0
+        self.rho_center: float = 0.0
 
         # Parametri stimati sui GOL (riempiti da fit()).
         self.teams: list[str] = []
@@ -338,17 +354,24 @@ class DixonColesModel:
         away_idx = train["away_team"].map(idx).to_numpy()
         weights = self._time_weights(train["date"], as_of_date)
         cov_lam = self._cov_lam(train)  # [n x k], k = numero covariate
-        attack, defense, home_adv, rho, beta = self._fit_counts(
+        # Centro del rho dinamico: media pesata dei gol totali del training
+        # (scala dei "gol attesi tipici"; costante fissata PRIMA del fit).
+        totals = (train["home_goals"] + train["away_goals"]).to_numpy(float)
+        self.rho_center = (float(np.sum(weights * totals) / np.sum(weights))
+                           if self.dynamic_rho else 0.0)
+        attack, defense, home_adv, rho, rho_slope, beta = self._fit_counts(
             len(teams), home_idx, away_idx,
             train["home_goals"].to_numpy().astype(float),
             train["away_goals"].to_numpy().astype(float),
             weights, use_correction=True, cov_lam=cov_lam,
             attack_prior=attack_prior, defense_prior=defense_prior,
+            dynamic_rho=self.dynamic_rho, rho_center=self.rho_center,
         )
         self.attack = {t: attack[idx[t]] for t in teams}
         self.defense = {t: defense[idx[t]] for t in teams}
         self.home_advantage = home_adv
         self.rho = rho
+        self.rho_slope = rho_slope
         self.beta = {name: float(beta[i]) for i, name in enumerate(self.covariates)}
 
         # --- Modello sul SEGNALE SECONDARIO (solo se serve mescolarlo) ---
@@ -367,7 +390,7 @@ class DixonColesModel:
             # Segnale ad alto volume / continuo (tiri, xG): niente correzione sui
             # punteggi bassi (serve solo il tasso atteso, che poi convertiamo).
             # Il segnale secondario NON usa covariate (restano solo sul modello-gol).
-            a_sig, d_sig, ha_sig, _, _ = self._fit_counts(
+            a_sig, d_sig, ha_sig, _, _, _ = self._fit_counts(
                 len(teams), s_home_idx, s_away_idx,
                 sig_home, sig_away, s_weights, use_correction=False,
                 attack_prior=attack_prior, defense_prior=defense_prior,
@@ -436,10 +459,12 @@ class DixonColesModel:
         cov_lam: np.ndarray | None = None,
         attack_prior: np.ndarray | None = None,
         defense_prior: np.ndarray | None = None,
-    ) -> tuple[np.ndarray, np.ndarray, float, float, np.ndarray]:
-        """Stima attacco/difesa/vantaggio-casa/rho (+ beta covariate) via ML
-        pesata su generici conteggi (gol o segnale). Ritorna
-        (attack, defense, home_adv, rho, beta).
+        dynamic_rho: bool = False,
+        rho_center: float = 0.0,
+    ) -> tuple[np.ndarray, np.ndarray, float, float, float, np.ndarray]:
+        """Stima attacco/difesa/vantaggio-casa/rho (+ rho_slope, + beta
+        covariate) via ML pesata su generici conteggi (gol o segnale). Ritorna
+        (attack, defense, home_adv, rho, rho_slope, beta).
 
         use_correction: applica la correzione Dixon-Coles sui punteggi bassi
         (adatta ai gol). Per il segnale secondario la disattiviamo (rho=0).
@@ -447,18 +472,22 @@ class DixonColesModel:
         CASA (per l'ospite si usa il segno opposto). k=0 -> nessuna covariata.
         attack_prior/defense_prior: bersaglio dello shrinkage per squadra (Fase 7).
         None -> 0 per tutti (comportamento classico: shrinkage verso la media).
+        dynamic_rho (Fase 18): aggiunge il parametro rho_slope e usa
+        rho_match = rho + rho_slope*(lam + mu - rho_center) nella correzione.
         """
         a_prior = np.zeros(n) if attack_prior is None else attack_prior
         d_prior = np.zeros(n) if defense_prior is None else defense_prior
         log_fact = gammaln(home_counts + 1.0) + gammaln(away_counts + 1.0)
         k = 0 if cov_lam is None else cov_lam.shape[1]
+        r = 1 if (dynamic_rho and use_correction) else 0  # param. rho_slope
 
         def neg_log_likelihood(params: np.ndarray) -> float:
             attack = params[:n]
             defense = params[n:2 * n]
             home_adv = params[2 * n]
             rho = params[2 * n + 1]
-            beta = params[2 * n + 2:]
+            rho_slope = params[2 * n + 2] if r else 0.0
+            beta = params[2 * n + 2 + r:]
 
             cov_h = cov_lam @ beta if k else 0.0
             lam = np.exp(attack[home_idx] + defense[away_idx] + home_adv + cov_h)
@@ -467,7 +496,8 @@ class DixonColesModel:
             ll = (home_counts * np.log(lam) - lam) \
                 + (away_counts * np.log(mu) - mu) - log_fact
             if use_correction:
-                tau = _tau(home_counts, away_counts, lam, mu, rho)
+                rho_m = rho + rho_slope * (lam + mu - rho_center) if r else rho
+                tau = _tau(home_counts, away_counts, lam, mu, rho_m)
                 ll = ll + np.log(np.clip(tau, 1e-10, None))
 
             weighted = np.sum(weights * ll)
@@ -482,12 +512,13 @@ class DixonColesModel:
 
         x0 = np.concatenate([
             a_prior, d_prior, np.array([0.25]), np.array([-0.05]),
-            np.zeros(k),
+            np.zeros(r), np.zeros(k),
         ])
         rho_bounds = (-0.4, 0.4) if use_correction else (0.0, 0.0)
         bounds = (
             [(-3.0, 3.0)] * n + [(-3.0, 3.0)] * n + [(-1.0, 2.0)] + [rho_bounds]
-            + [(-1.0, 1.0)] * k   # beta covariate
+            + [(-0.15, 0.15)] * r   # rho_slope (Fase 18)
+            + [(-1.0, 1.0)] * k     # beta covariate
         )
 
         result = minimize(
@@ -495,7 +526,8 @@ class DixonColesModel:
             options={"maxiter": 500, "ftol": 1e-9},
         )
         p = result.x
-        return p[:n], p[n:2 * n], float(p[2 * n]), float(p[2 * n + 1]), p[2 * n + 2:]
+        return (p[:n], p[n:2 * n], float(p[2 * n]), float(p[2 * n + 1]),
+                float(p[2 * n + 2]) if r else 0.0, p[2 * n + 2 + r:])
 
     # ------------------------------------------------------------------ #
     # Predizione
@@ -508,11 +540,14 @@ class DixonColesModel:
         away_pmf = np.exp(k * math.log(mu) - mu - gammaln(k + 1.0))
         matrix = np.outer(home_pmf, away_pmf)
 
-        # Correzione sui 4 punteggi bassi.
-        matrix[0, 0] *= 1.0 - lam * mu * self.rho
-        matrix[0, 1] *= 1.0 + lam * self.rho
-        matrix[1, 0] *= 1.0 + mu * self.rho
-        matrix[1, 1] *= 1.0 - self.rho
+        # Correzione sui 4 punteggi bassi. Col rho DINAMICO (Fase 18) la
+        # correzione dipende dai gol attesi della partita (stessa formula del
+        # fit); rho_slope=0 riproduce esattamente il modello classico.
+        rho = self.rho + self.rho_slope * (lam + mu - self.rho_center)
+        matrix[0, 0] *= 1.0 - lam * mu * rho
+        matrix[0, 1] *= 1.0 + lam * rho
+        matrix[1, 0] *= 1.0 + mu * rho
+        matrix[1, 1] *= 1.0 - rho
 
         # Inflazione della diagonale (Fase 12b): alza TUTTI i pareggi di (1+phi).
         if self.draw_phi:
@@ -646,6 +681,9 @@ class DixonColesModel:
             "promoted_prior": list(self.promoted_prior) if self.promoted_prior else None,
             "draw_inflation": self.draw_inflation,
             "draw_phi": self.draw_phi,
+            "dynamic_rho": self.dynamic_rho,
+            "rho_slope": self.rho_slope,
+            "rho_center": self.rho_center,
         }
 
     @classmethod
@@ -660,6 +698,7 @@ class DixonColesModel:
             promoted_prior=(tuple(data["promoted_prior"])
                             if data.get("promoted_prior") else None),
             draw_inflation=data.get("draw_inflation", False),
+            dynamic_rho=data.get("dynamic_rho", False),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
@@ -674,6 +713,8 @@ class DixonColesModel:
         model.cov_mean = dict(data.get("cov_mean", {}))
         model.cov_std = dict(data.get("cov_std", {}))
         model.draw_phi = float(data.get("draw_phi", 0.0))
+        model.rho_slope = float(data.get("rho_slope", 0.0))
+        model.rho_center = float(data.get("rho_center", 0.0))
         model.teams = sorted(model.attack)
         model.fitted = True
         return model

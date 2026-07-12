@@ -66,6 +66,7 @@ def run_backtest(
     covariates: tuple[str, ...] = (),
     promoted_prior: tuple[float, float] | None = None,
     draw_inflation: bool = False,
+    dynamic_rho: bool = False,
     verbose: bool = True,
 ) -> pd.DataFrame:
     """Esegue il walk-forward e ritorna un DataFrame con una riga per partita."""
@@ -92,7 +93,7 @@ def run_backtest(
         model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage,
                                 shots_blend=shots_blend, blend_signal=blend_signal,
                                 covariates=covariates, promoted_prior=promoted_prior,
-                                draw_inflation=draw_inflation)
+                                draw_inflation=draw_inflation, dynamic_rho=dynamic_rho)
         model.fit(all_matches, as_of_date=as_of, promoted_teams=promoted)
         if verbose:
             print(f"  settimana {w}/{n_weeks}  ({as_of.date()}): "
@@ -193,6 +194,10 @@ def main() -> None:
     parser.add_argument("--draw-inflation", action="store_true",
                         help="inflazione della diagonale (Fase 12b): fitta phi che "
                              "alza i pareggi (0-0,1-1,2-2,...) oltre la correzione DC")
+    parser.add_argument("--dynamic-rho", action="store_true",
+                        help="rho dinamico (Fase 18): la correzione sui punteggi "
+                             "bassi dipende dai gol attesi della partita "
+                             "(rho + rho_slope*(lam+mu-centro), rho_slope fittato)")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",
@@ -211,7 +216,7 @@ def main() -> None:
                       shrinkage=args.shrinkage, shots_blend=args.shots_blend,
                       blend_signal=args.blend_signal, covariates=tuple(args.covariates),
                       promoted_prior=prior, draw_inflation=args.draw_inflation,
-                      verbose=not args.quiet)
+                      dynamic_rho=args.dynamic_rho, verbose=not args.quiet)
 
     m = experiment_log.compute_metrics(df)
     report(m, len(df))
@@ -226,6 +231,7 @@ def main() -> None:
         "blend_signal": args.blend_signal,
         "covariates": list(args.covariates),
         "promoted_prior": (prior[0] if prior else None),
+        "dynamic_rho": args.dynamic_rho,
     }
     all_matches = loader.load_league(args.league)
     record = experiment_log.make_record(

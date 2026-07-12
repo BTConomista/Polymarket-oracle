@@ -250,3 +250,35 @@ def test_metrics_perfect_vs_wrong():
     perfect = np.array([[1.0, 0.0, 0.0]])
     wrong = np.array([[0.0, 0.0, 1.0]])
     assert metrics.log_loss_1x2(perfect, ["H"]) < metrics.log_loss_1x2(wrong, ["H"])
+
+
+def test_dynamic_rho_off_identico_al_classico():
+    """Con dynamic_rho=False (default) il modello deve essere IDENTICO a prima
+    (rho_slope=0, rho_center=0): regressione sulla Fase 18."""
+    matches = _synthetic_matches(n_seasons=3)
+    base = DixonColesModel(half_life_days=None).fit(matches)
+    assert base.rho_slope == 0.0 and base.rho_center == 0.0
+    p = base.predict_match("A", "B")
+    assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-9)
+
+
+def test_dynamic_rho_fitta_slope_e_prevede_coerente():
+    matches = _synthetic_matches(n_seasons=4)
+    dyn = DixonColesModel(half_life_days=None, dynamic_rho=True).fit(matches)
+    # Il centro e' la media (pesata) dei gol totali del training.
+    assert dyn.rho_center == pytest.approx(
+        (matches.home_goals + matches.away_goals).mean(), abs=0.2)
+    assert -0.15 <= dyn.rho_slope <= 0.15            # entro i bound del fit
+    p = dyn.predict_match("A", "B")
+    assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-9)
+    assert 0.0 < p.prob_draw < 1.0
+
+
+def test_dynamic_rho_serialization_roundtrip():
+    matches = _synthetic_matches(n_seasons=3)
+    dyn = DixonColesModel(half_life_days=None, dynamic_rho=True).fit(matches)
+    restored = DixonColesModel.from_dict(dyn.to_dict())
+    assert restored.rho_slope == pytest.approx(dyn.rho_slope)
+    assert restored.rho_center == pytest.approx(dyn.rho_center)
+    a, b = dyn.predict_match("A", "B"), restored.predict_match("A", "B")
+    assert a.prob_draw == pytest.approx(b.prob_draw, abs=1e-9)
