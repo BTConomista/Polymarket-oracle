@@ -418,6 +418,24 @@ mirror esterno (che può cambiare o sparire):
 La pipeline è **offline-first**: i backtest leggono lo snapshot congelato, quindi
 i risultati sono riproducibili identici.
 
+### 📐 In dettaglio — non è modello, ma è ciò che rende i numeri fidati
+
+Questa sezione non ha formule del modello (le metriche vivono in `metrics.py`, vedi il
+blocco della Fase 1); ha però due meccanismi *quantitativi* che garantiscono ogni
+numero di questo diario:
+
+- **Fonte di verità unica per le metriche** (`compute_metrics`): log-loss, Brier e
+  devig sono calcolati in **un solo** punto, così ogni fase misura con lo stesso metro
+  (l'audit di Fase 15 le ha ricontrollate tutte).
+- **Impronta dei dati** (`8483944342fc8b15`): un hash calcolato **solo** su
+  date/squadre/gol (l'input del modello-gol). Ogni run in `runs.jsonl` la registra →
+  se cambia, i dati sotto sono cambiati e i confronti tra fasi non sarebbero validi.
+  È il motivo per cui aggiungere colonne (xG, valori rosa, calendario) **non** rompe la
+  riproducibilità: non entrano nell'impronta.
+
+Insieme (registro + impronta + `compute_metrics`) sono l'infrastruttura che permette
+di dire "ogni numero è ricalcolabile da terzi" — la premessa di tutto il resto.
+
 ---
 
 ## Dove siamo — cosa sappiamo con onestà
