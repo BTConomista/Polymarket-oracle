@@ -66,6 +66,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from . import sources
@@ -325,6 +326,57 @@ def add_form(matches: pd.DataFrame, window: int = 5) -> pd.DataFrame:
     return df
 
 
+def add_stakes(matches: pd.DataFrame, n_teams: int = 20, relegated: int = 3,
+               europe_rank: int = 7) -> pd.DataFrame:
+    """Aggiunge home_settled / away_settled: 1.0 se la squadra non ha piu' NESSUNA
+    corsa aperta (posta in palio 'decisa'), 0.0 se e' ancora in corsa (Fase 31/32).
+
+    'Decisa' = ne' in lotta salvezza, ne' in corsa Europa, ne' in corsa titolo,
+    inclusi i due estremi (gia' matematicamente retrocessa o gia' campione).
+    Usa la classifica PRIMA della partita (solo gare precedenti della stessa
+    stagione -> niente look-ahead). Euristica di raggiungibilita' 3*gare-rimaste.
+    """
+    total = 2 * (n_teams - 1)
+    df = matches.sort_values("date").reset_index(drop=True)
+    settled_h = np.full(len(df), 0.0)
+    settled_a = np.full(len(df), 0.0)
+    for _, sdf in df.groupby("season"):
+        pts: dict[str, int] = {}
+        played: dict[str, int] = {}
+        for _, day in sdf.groupby("date", sort=True):
+            board = sorted(pts.values(), reverse=True)
+
+            def line(rk):
+                return board[rk] if len(board) > rk else 0
+            safe_line = line(n_teams - relegated - 1)   # ultima salva (17a)
+            releg_line = line(n_teams - relegated)       # prima retrocessa (18a)
+            euro_line = line(europe_rank - 1)            # ~Europa (7a)
+            title_line = line(0)
+            second_line = line(1)
+            for i, m in day.iterrows():
+                for who, arr in (("home", settled_h), ("away", settled_a)):
+                    t = m[f"{who}_team"]
+                    p = pts.get(t, 0)
+                    reach = 3 * (total - played.get(t, 0))
+                    math_safe = p > releg_line + reach
+                    math_releg = p + reach < safe_line
+                    releg_open = (not math_safe) and (not math_releg)
+                    euro_open = abs(p - euro_line) <= reach
+                    is_leader = p >= title_line
+                    champion = is_leader and (p - second_line) > reach
+                    title_open = (abs(p - title_line) <= reach) and (not champion)
+                    arr[i] = 0.0 if (releg_open or euro_open or title_open) else 1.0
+            for _, m in day.iterrows():
+                h, a, r = m["home_team"], m["away_team"], m["result"]
+                pts[h] = pts.get(h, 0) + (3 if r == "H" else 1 if r == "D" else 0)
+                pts[a] = pts.get(a, 0) + (3 if r == "A" else 1 if r == "D" else 0)
+                played[h] = played.get(h, 0) + 1
+                played[a] = played.get(a, 0) + 1
+    df["home_settled"] = settled_h
+    df["away_settled"] = settled_a
+    return df
+
+
 def load_league(
     league_key: str = "serie_a",
     season_codes: list[str] | None = None,
@@ -357,6 +409,7 @@ def load_league(
         # precedenti a cavallo tra stagioni), poi si filtra a quelle richieste.
         df = add_rest_days(df)
         df = add_form(df)
+        df = add_stakes(df)
         wanted = {str(s) for s in seasons}
         df = df[df["season"].isin(wanted)]
         return df.sort_values("date").reset_index(drop=True)
@@ -372,4 +425,5 @@ def load_league(
     combined = enrich(combined, force_download=force_download)
     combined = add_rest_days(combined)
     combined = add_form(combined)
+    combined = add_stakes(combined)
     return combined

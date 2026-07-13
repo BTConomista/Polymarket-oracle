@@ -282,3 +282,31 @@ def test_dynamic_rho_serialization_roundtrip():
     assert restored.rho_center == pytest.approx(dyn.rho_center)
     a, b = dyn.predict_match("A", "B"), restored.predict_match("A", "B")
     assert a.prob_draw == pytest.approx(b.prob_draw, abs=1e-9)
+
+
+def test_add_stakes_solo_a_fine_stagione():
+    """La posta in palio 'decisa' (settled=1) deve comparire solo nel finale:
+    a inizio stagione tutte in corsa (0), verso la 38a alcune decise."""
+    from src.data import loader
+    m = loader.load_league("serie_a")
+    assert {"home_settled", "away_settled"} <= set(m.columns)
+    assert m["home_settled"].isin([0.0, 1.0]).all()
+    # per una stagione: quota decise a inizio (g<=25) vs fine (g>=36)
+    s = m[m["season"] == "2223"].sort_values("date").reset_index(drop=True)
+    g = np.minimum(np.arange(len(s)) // 10 + 1, 38)
+    early = s["home_settled"].to_numpy()[g <= 25].mean()
+    late = s["home_settled"].to_numpy()[g >= 36].mean()
+    assert early == 0.0          # nessuna decisa a inizio/meta' stagione
+    assert late > early          # alcune decise nel finale
+
+
+def test_stakes_covariata_usabile():
+    """Il modello deve accettare la covariata 'stakes' senza errori."""
+    from src.data import loader
+    m = loader.load_league("serie_a", ["2122", "2223"])
+    model = DixonColesModel(half_life_days=365, shrinkage=1.5,
+                            covariates=("stakes",)).fit(m)
+    assert "stakes" in model.beta
+    p = model.predict_match(m.iloc[-1]["home_team"], m.iloc[-1]["away_team"],
+                            features=m.iloc[-1].to_dict())
+    assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-6)

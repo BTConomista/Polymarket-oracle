@@ -58,6 +58,7 @@ _COVARIATES: dict[str, tuple[str, str, str]] = {
     "rest": ("home_rest_days", "away_rest_days", "identity"),  # riposo/congestione (solo Serie A)
     "rest_full": ("home_rest_days_full", "away_rest_days_full", "identity"),  # riposo/congestione VERA (calendario completo di club, Fase 4e)
     "form": ("home_form", "away_form", "identity"),  # stato di forma: punti/gara ultime 5 (Fase 13)
+    "stakes": ("home_settled", "away_settled", "identity"),  # posta in palio: 1=decisa, 0=in corsa (Fase 32)
 }
 
 

@@ -340,8 +340,16 @@ decise" niente. Escludendo le partite con >=1 decisa il gap scende (+0.0188 ->
 motivazione, noi usiamo la forza stagionale). Primo LEAD azionabile dai dati
 interni. Onesta': campioni piccoli (133/76/44/23) e molti test -> indizio forte,
 non prova. METODO: un classificatore sbagliato ai bordi (Fase 29) ribaltava la
-conclusione. **Prossimo bivio:** covariata "stakes mismatch" (da validare
-walk-forward), il candidato home-advantage-finale (Fase 30), uso pratico, dati
-nuovi, cross-lega.
+conclusione. **Fase 32 (validazione covariata stakes su DC e GBM):** covariata `stakes`
+(1=decisa/0=in corsa, `loader.add_stakes`, `--covariates stakes`, off di default)
+testata walk-forward su entrambi i modelli (`scripts/_run_stakes_cov.py`). Sulle
+partite mismatch (n=99) la direzione e' CONFERMATA su entrambi: DC -0.0022, GBM
+-0.0127 (il GBM la cattura ~6x meglio, l'effetto e' non-lineare); ma nessuno e'
+conclusivo (CI includono lo zero, il GBM per un pelo). Non adottata (regola CI<0)
+ma e' il LEAD interno piu' credibile: direzione giusta su due architetture,
+meccanismo chiaro, ≠ dai "residui=rumore" delle Fasi 13/20. Serve piu' campione.
+Se si usera', il GBM e' il veicolo giusto. **Prossimo bivio:** piu' stagioni/
+cross-lega per confermare lo stakes, il candidato home-advantage-finale (Fase 30),
+uso pratico (tool di predizione), dati davvero nuovi.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

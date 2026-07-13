@@ -125,6 +125,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 29 | **posta in palio** (dead rubber dalla classifica) | dead rubber rari (4.3%); nessun effetto sul gap | ❌ non spiega il finale |
 | 30 | **pattern dentro la stagione** (anatomia) | no trend robusto; vantaggio-casa crolla a fine stagione | 🔎 candidato: home-adv finale |
 | 31 | **posta in palio corretta** (8 stag., asimmetria) | mismatch motivazione: gap +0.057 (3×), ribalta la 29 | 🔎 lead: stakes mismatch |
+| 32 | **covariata stakes** su DC e GBM (walk-forward) | aiuta i mismatch su entrambi (GBM −0.0127) ma CI tocca 0 | 🔎 lead credibile, non concluso |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1122,6 +1123,36 @@ piccoli (133 la categoria più solida, 23-76 le altre) e molti test → indizio
 forte e sensato, non una prova. È il primo **lead azionabile dai dati interni**:
 una covariata "stakes mismatch" potrebbe attenuare la previsione a favore della
 squadra motivata (da validare prima di adottare).
+
+### Validazione della covariata stakes-mismatch — Fase 32 (DC e GBM)
+
+Il lead della Fase 31 regge walk-forward? Costruita la covariata `stakes` (posta
+in palio dalla classifica, 1=decisa/0=in corsa; `loader.add_stakes`,
+`--covariates stakes`) e testata su **entrambi** i modelli
+(`scripts/_run_stakes_cov.py`):
+
+| Modello | subset | log-loss base→stakes | Δ (CI95) |
+|---|---|--:|--:|
+| DC | overall | 0.9797 → 0.9796 | −0.0001 [−0.0007, +0.0005] |
+| DC | mismatch (n=99) | 0.9609 → 0.9587 | −0.0022 [−0.0157, +0.0114] |
+| GBM | overall | 1.0098 → 1.0096 | −0.0001 [−0.0014, +0.0012] |
+| GBM | mismatch (n=99) | 0.9968 → **0.9841** | **−0.0127** [−0.0283, +0.0030] |
+
+Tre letture: (1) **direzione confermata su entrambi i modelli** — sulle partite
+mismatch la covariata aiuta sia il DC (−0.0022) sia il GBM (−0.0127), entrambe
+negative (il rumore puro darebbe segni sparsi; due modelli indipendenti che
+concordano su un meccanismo sensato è più di un caso); (2) **il GBM la cattura
+molto meglio del DC** (−0.0127 vs −0.0022) — l'effetto "la squadra scarica
+sotto-rende" è non-lineare, e il GBM modella l'interazione mentre il DC può solo
+spostare linearmente il tasso-gol → il GBM è il veicolo giusto per questo segnale;
+(3) **ma nessuno è statisticamente conclusivo** (CI includono lo zero, il GBM per
+un pelo; n=99 troppo piccolo).
+
+**Verdetto** (regola: adozione solo se CI<0): **non adottata**, ma è il **lead
+interno più credibile del progetto** — direzione giusta su due architetture,
+meccanismo chiaro, effetto concentrato dove previsto (≠ dai "residui = rumore"
+delle Fasi 13/20, dove i segni erano casuali). Serve più campione per superare la
+soglia. Covariata `stakes` disponibile, off di default.
 
 ## Struttura
 
