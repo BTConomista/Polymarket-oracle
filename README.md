@@ -121,6 +121,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 25 | **finestra dei dati** (taglio netto / no-COVID) | tagliare i dati vecchi peggiora (+0.0011…+0.0035) | ❌ più storia è meglio |
 | 26 | **market-implied su tutti i mercati gol** | batte DC-da-gol su 13/14 mercati e la baseline su 13/14 | ✅ motore di pricing (condizionato alle quote) |
 | 27 | **forma dei punteggi** (ρ/φ/binom-neg fittati) | già ottima; NB rigettata (gol ~Poisson) | ❌ tetto anche sulla forma |
+| 28 | **errore per giornata** (finale di stagione) | fine più difficile per TUTTI; gap raddoppia ma non concl. | 🔎 tendenza (posta in palio) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1004,6 +1005,37 @@ e non conclusivo (CI include lo zero) solo sul risultato esatto, e la binomiale
 negativa è **rigettata** (il fit spinge la dispersione verso la Poisson: i gol,
 con λ dal mercato, non sono over-dispersi). Il market-implied ha toccato il suo
 tetto anche sulla forma: i λ,μ del mercato sono tutta la storia.
+
+### Quando falliscono i modelli? Errore per giornata — Fase 28
+
+Ipotesi: a fine campionato alcune squadre non lottano più per nulla, quindi i
+risultati delle ultime giornate sono più "ballerini". Ma il fallimento è NOSTRO
+o di tutti (mercato incluso)? Log-loss 1X2 per momento della stagione, giornata
+stimata ordinando le partite per data (`scripts/_run_matchday.py`):
+
+| Giornate | Modello | Mercato | Gap |
+|---|--:|--:|--:|
+| 1-6 (inizio) | 0.9725 | 0.9580 | +0.0145 |
+| 7-19 | 0.9744 | 0.9569 | +0.0175 |
+| 20-31 | 0.9631 | 0.9507 | +0.0124 |
+| 32-34 | 1.0328 | 1.0125 | +0.0203 |
+| **35-38 (fine)** | **1.0179** | **0.9921** | **+0.0258** |
+
+Due fatti: (1) **il finale è molto più difficile per TUTTI** — il log-loss sale
+da ~0.96 a ~1.02 sia per il modello sia per il mercato (le ultime giornate sono
+davvero più ballerine, ma lo sono per chiunque: casualità irriducibile);
+(2) **il gap raddoppia verso la fine** (+0.0124 a metà → +0.0258 nel finale),
+indizio che il mercato prezzi la posta in palio meglio di noi.
+
+**Onestà:** il raddoppio del gap NON è statisticamente conclusivo — Δ gap
+late(35-38)-vs-resto = +0.0104, CI95 [−0.0196, +0.0395], include lo zero (con
+sole 240 partite finali ad alta varianza manca la potenza). È una *tendenza*
+pulita nei bucket, non un fatto dimostrato. La difficoltà del finale è quindi in
+gran parte non risolvibile (fatica anche il mercato); l'indizio di un gap
+model-specifico nelle ultime giornate è dove dei dati sulla **posta in palio**
+potrebbero aiutare — un primo taglio dei quali (squadra già salva / retrocessa /
+in corsa) è derivabile dalla classifica, **senza dati esterni** (Fase 29
+candidata).
 
 ## Struttura
 

@@ -309,8 +309,15 @@ fittato ~ fisso (nessun guadagno), phi diagonale minuscolo e non conclusivo,
 binomiale negativa RIGETTATA (nb_size->Poisson: i gol con lambda dal mercato non
 sono over-dispersi). Il market-implied ha toccato il tetto anche sulla forma; per
 spingere oltre servirebbero PIU' input di mercato (altre linee O/U, handicap) che
-lo snapshot non ha. **Prossimo bivio:** uso pratico (tool di predizione basato su
-market_implied, ora ben motivato e maturo), dati davvero nuovi (altre linee di
-quota), o cross-lega.
+lo snapshot non ha. **Fase 28 (errore per giornata):** log-loss modello e mercato
+per momento della stagione (`scripts/_run_matchday.py`). Il finale (giornate
+32-38) e' molto piu' difficile per ENTRAMBI (log-loss ~0.96 -> ~1.02): le ultime
+giornate sono ballerine per chiunque (casualita' irriducibile). Il gap raddoppia
+verso la fine (+0.0124 a meta' -> +0.0258 nel finale), indizio che il mercato
+prezzi la posta in palio meglio di noi, MA non conclusivo (Δ gap late-vs-resto
++0.0104, CI [-0.0196,+0.0395], 240 partite ad alta varianza). **Prossimo bivio:**
+Fase 29 (feature "posta in palio" derivata dalla classifica -- gia' salva/
+retrocessa/in corsa -- per spiegare il residuo nel finale, senza dati esterni),
+uso pratico (tool di predizione), dati davvero nuovi, o cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

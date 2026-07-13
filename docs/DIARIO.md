@@ -1950,6 +1950,49 @@ e' maturo cosi' com'e'.
 
 ---
 
+## Fase 28 — Quando falliscono i modelli? Errore per momento della stagione
+
+**Obiettivo.** Ipotesi: a fine campionato alcune squadre non lottano piu' per
+nulla (gia' salve o retrocesse), quindi le ultime giornate sono piu' "ballerine".
+Ma la domanda decisiva: e' un fallimento NOSTRO o falliscono TUTTI (mercato
+incluso)?
+
+**Ragionamento.** Se a fine stagione peggiorano sia modello SIA mercato e il GAP
+resta piatto -> casualita' irriducibile, non un nostro difetto (nemmeno dati
+sulla motivazione aiuterebbero, neanche il mercato la prezza). Se il GAP si
+allarga -> il mercato prezza la posta in palio e noi no: difetto nostro, dati
+nuovi utili. Log-loss modello e mercato per giornata (stimata ordinando le
+partite per data, gruppi di 10).
+
+**Risultato** (`scripts/_run_matchday.py`; 7 run, source `fase28_matchday`):
+
+| giornate | modello | mercato | gap |
+|---|--:|--:|--:|
+| 1-6 | 0.9725 | 0.9580 | +0.0145 |
+| 7-19 | 0.9744 | 0.9569 | +0.0175 |
+| 20-31 | 0.9631 | 0.9507 | +0.0124 |
+| 32-34 | 1.0328 | 1.0125 | +0.0203 |
+| 35-38 | 1.0179 | 0.9921 | +0.0258 |
+
+- il finale (32-38) e' molto piu' difficile per ENTRAMBI (log-loss ~0.96 ->
+  ~1.02 sia modello sia mercato): le ultime giornate sono davvero piu' ballerine,
+  ma per chiunque -> casualita' irriducibile;
+- il gap RADDOPPIA verso la fine (+0.0124 a meta' -> +0.0258 nel finale): indizio
+  che il mercato prezzi la posta in palio meglio di noi;
+- MA il test e' non conclusivo: Δ gap late(35-38)-vs-resto +0.0104, CI95
+  [-0.0196, +0.0395], include lo zero (240 partite finali ad alta varianza, poca
+  potenza). Tendenza pulita nei bucket, non un fatto dimostrato.
+
+**Lezione.** L'ipotesi "finale ballerino" e' confermata ma in gran parte
+UNIVERSALE (fatica anche il mercato -> non risolvibile). C'e' un indizio non
+provato di un gap model-specifico nelle ultime giornate: e' li' che dei dati
+sulla POSTA IN PALIO potrebbero aiutare. Nota chiave: un primo taglio di "posta
+in palio" NON richiede dati esterni -- e' derivabile dalla classifica a ogni
+giornata (squadra gia' matematicamente salva / retrocessa / in corsa). E' la
+Fase 29 naturale, a costo zero di dati nuovi.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
