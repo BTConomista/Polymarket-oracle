@@ -316,8 +316,13 @@ giornate sono ballerine per chiunque (casualita' irriducibile). Il gap raddoppia
 verso la fine (+0.0124 a meta' -> +0.0258 nel finale), indizio che il mercato
 prezzi la posta in palio meglio di noi, MA non conclusivo (Δ gap late-vs-resto
 +0.0104, CI [-0.0196,+0.0395], 240 partite ad alta varianza). **Prossimo bivio:**
-Fase 29 (feature "posta in palio" derivata dalla classifica -- gia' salva/
-retrocessa/in corsa -- per spiegare il residuo nel finale, senza dati esterni),
-uso pratico (tool di predizione), dati davvero nuovi, o cross-lega.
+Fase 29. **Fase 29 (posta in palio, NEGATIVA):** feature "dead rubber" derivata
+dalla classifica (`scripts/_run_stakes.py`, euristica 3×gare-rimaste). I dead
+rubber sono rari (0.5% entrambe, 4.3% almeno una) e NON spiegano il finale: sul
+campione affidabile nessun effetto (Δ gap dead-live -0.012, CI [-0.058,+0.035]),
+e la direzione e' negativa (il modello e' semmai migliore nei dead rubber).
+Cercare dati esterni sulla motivazione probabilmente non aiuta. **Prossimo
+bivio:** Fase 30 (pattern dentro la stagione, richiesta), uso pratico (tool di
+predizione), dati davvero nuovi, o cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

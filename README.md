@@ -122,6 +122,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 26 | **market-implied su tutti i mercati gol** | batte DC-da-gol su 13/14 mercati e la baseline su 13/14 | ✅ motore di pricing (condizionato alle quote) |
 | 27 | **forma dei punteggi** (ρ/φ/binom-neg fittati) | già ottima; NB rigettata (gol ~Poisson) | ❌ tetto anche sulla forma |
 | 28 | **errore per giornata** (finale di stagione) | fine più difficile per TUTTI; gap raddoppia ma non concl. | 🔎 tendenza (posta in palio) |
+| 29 | **posta in palio** (dead rubber dalla classifica) | dead rubber rari (4.3%); nessun effetto sul gap | ❌ non spiega il finale |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1036,6 +1037,31 @@ model-specifico nelle ultime giornate è dove dei dati sulla **posta in palio**
 potrebbero aiutare — un primo taglio dei quali (squadra già salva / retrocessa /
 in corsa) è derivabile dalla classifica, **senza dati esterni** (Fase 29
 candidata).
+
+### Posta in palio: i "dead rubber" spiegano il finale? — Fase 29 (NO)
+
+Se la difficoltà del finale fosse la MOTIVAZIONE (squadre già salve e fuori
+dall'Europa, senza più nulla in gioco), il gap del modello dovrebbe essere
+maggiore proprio nei "dead rubber" — testabile SENZA dati esterni, derivando la
+posta in palio dalla classifica a ogni giornata (`scripts/_run_stakes.py`,
+euristica di raggiungibilità 3×gare-rimaste):
+
+| Definizione dead | n | gap dead | gap live | Δ (dead−live) |
+|---|--:|--:|--:|--:|
+| entrambe le squadre | 12 (0.5%) | −0.069 | +0.017 | −0.086 [−0.14, −0.03] * |
+| almeno una squadra | 99 (4.3%) | +0.005 | +0.017 | −0.012 [−0.058, +0.035] |
+
+Sul campione affidabile (99 partite; le 12 "entrambe" sono troppo poche per
+fidarsi) **non c'è effetto** (CI include lo zero), e la direzione è comunque
+**negativa**: nei dead rubber il modello è, semmai, *leggermente migliore* del
+mercato — l'opposto di "il mercato prezza la motivazione e noi no". La
+correlazione posta-in-palio/gap è ~0.
+
+**Conclusione:** i dead rubber **non spiegano** la difficoltà del finale: sono
+troppo rari (0.5–4.3%) e dove la posta è bassa il modello non fa peggio. Il
+finale è difficile per **casualità diffusa** (Fase 28), non per una posta in
+palio che ci sfugge → cercare dati esterni sulla motivazione probabilmente **non
+aiuterebbe**. Risultato utile: evita un investimento sbagliato.
 
 ## Struttura
 

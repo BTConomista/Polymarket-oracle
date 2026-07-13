@@ -1993,6 +1993,42 @@ Fase 29 naturale, a costo zero di dati nuovi.
 
 ---
 
+## Fase 29 — Posta in palio: i "dead rubber" spiegano il finale? (NO)
+
+**Obiettivo.** La Fase 28 ha visto un indizio (non concluso) che il modello ci
+perda un po' piu' del mercato nel finale. Se la causa e' la MOTIVAZIONE (squadre
+gia' salve e fuori dall'Europa senza piu' nulla in gioco), il gap dovrebbe essere
+maggiore proprio nei "dead rubber". Testabile SENZA dati esterni, dalla classifica.
+
+**Ragionamento.** Per ogni squadra, con la classifica PRIMA della partita:
+reach=3*gare_rimaste; fighting_relegation se (punti - linea_salvezza) <= reach;
+chasing_europe se punti >= linea_europa - reach; dead_rubber se nessuno dei due
+(limbo mid-table). Partita dead = entrambe (o almeno una) in dead_rubber. Test
+diagnostico: gap modello-mercato dead vs live, CI bootstrap.
+
+**Risultato** (`scripts/_run_stakes.py`; 7 run, source `fase29_stakes`):
+
+| definizione | n | gap dead | gap live | Δ (dead-live) |
+|---|--:|--:|--:|--:|
+| entrambe dead | 12 (0.5%) | -0.069 | +0.017 | -0.086 [-0.14,-0.03] * |
+| almeno una dead | 99 (4.3%) | +0.005 | +0.017 | -0.012 [-0.058,+0.035] |
+
+- sul campione affidabile (99; le 12 "entrambe" troppo poche) NESSUN effetto (CI
+  include lo zero);
+- direzione comunque NEGATIVA: nei dead rubber il modello e' semmai leggermente
+  MIGLIORE del mercato — l'opposto di "il mercato prezza la motivazione e noi no";
+- corr(dead, gap) ~ 0.
+
+**Lezione.** I dead rubber NON spiegano la difficolta' del finale: sono troppo
+rari (0.5-4.3%) e dove la posta e' bassa il modello non fa peggio. Il finale e'
+difficile per casualita' diffusa (Fase 28), non per una posta in palio che ci
+sfugge. Consegue che cercare dati esterni sulla motivazione probabilmente NON
+aiuterebbe: risultato utile, evita un investimento sbagliato. La caccia al
+"perche' il finale e' piu' difficile" si sposta da "motivazione" a "varianza
+strutturale delle ultime giornate" (Fase 30: pattern dentro la stagione).
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
