@@ -3172,6 +3172,31 @@ in palio" NON richiede dati esterni -- e' derivabile dalla classifica a ogni
 giornata (squadra gia' matematicamente salva / retrocessa / in corsa). E' la
 Fase 29 naturale, a costo zero di dati nuovi.
 
+### 📐 In dettaglio — il test che distingue "colpa nostra" da "difficile per tutti"
+
+**La logica diagnostica.** Si guarda la log-loss di **modello E mercato** per fascia di
+giornate, e soprattutto il loro **gap**:
+
+```
+se log-loss ↑ per entrambi  E  gap piatto   →  casualità irriducibile (non un difetto nostro)
+se il GAP si allarga                          →  il mercato prezza qualcosa che noi no (difetto nostro, dati utili)
+```
+
+**I numeri.** Il finale (giornate 32-38) è molto più difficile per **entrambi**
+(log-loss ~0.96 → ~1.02 sia modello sia mercato) → in gran parte difficoltà
+**universale**. Ma il gap **raddoppia** (+0.0124 a metà → +0.0258 nel finale): indizio
+che il mercato prezzi la posta in palio meglio di noi.
+
+**Perché è solo un indizio, non un fatto.** Il test formale è **non conclusivo**:
+
+```
+Δ gap (giornate 35-38 vs resto) = +0.0104 ,  CI95 [−0.0196, +0.0395]  →  include lo zero
+```
+
+Solo 240 partite finali, ad alta varianza → poca potenza. La tendenza nei bucket è
+pulita, ma statisticamente non dimostrata. Ecco perché la Fase 29 va a cercare la
+*causa* (motivazione/posta in palio) sui dati di classifica, a costo zero.
+
 ---
 
 ## Fase 29 — Posta in palio: i "dead rubber" spiegano il finale? (NO)
@@ -3207,6 +3232,31 @@ sfugge. Consegue che cercare dati esterni sulla motivazione probabilmente NON
 aiuterebbe: risultato utile, evita un investimento sbagliato. La caccia al
 "perche' il finale e' piu' difficile" si sposta da "motivazione" a "varianza
 strutturale delle ultime giornate" (Fase 30: pattern dentro la stagione).
+
+### 📐 In dettaglio — il classificatore "dead rubber" (e il suo difetto)
+
+**La logica (dalla classifica PRIMA della partita, solo gare precedenti → no
+look-ahead).** Con `reach = 3 · gare_rimaste` (i punti ancora ottenibili):
+
+```
+in_lotta_salvezza  se  (punti − linea_salvezza) ≤ reach
+in_corsa_Europa    se   punti ≥ (linea_Europa − reach)
+dead_rubber        se  NESSUNO dei due  (limbo mid-table)
+```
+
+**Il risultato.** Sul campione affidabile (99 partite con almeno una squadra "dead"; le
+12 "entrambe dead" sono troppo poche) **nessun effetto**: gap dead ≈ gap live (CI
+include lo zero), corr(dead, gap) ≈ 0. Anzi la direzione è semmai **negativa** (nei
+dead rubber il modello è un filo *migliore* del mercato) — l'opposto di "il mercato
+prezza la motivazione e noi no".
+
+**Il difetto nascosto (che la Fase 31 correggerà).** Questa definizione è **sbagliata
+ai due estremi**: conta una squadra già **retrocessa** come "in lotta salvezza" (è
+sotto la linea, quindi `punti − linea ≤ reach` scatta) e una già **campione** come "in
+corsa titolo". Cioè classifica come *ancora in gioco* proprio le squadre che non lo
+sono più. Con la definizione corretta (Fase 31: DECISA = nessuna corsa aperta, inclusi
+retrocessa e campione) la conclusione si **ribalta**. Lezione di metodo: un
+classificatore sbagliato ai bordi, su 12 partite, capovolge il verdetto.
 
 ---
 
@@ -3247,6 +3297,33 @@ riduce, come nel COVID Fase 9) -- molto piu' promettente della motivazione, ma
 marginale finche' il gap non sale in modo robusto. E' un candidato per una
 covariata "giornata avanzata -> attenua il vantaggio-casa", da valutare con
 prudenza (rischio overfitting su un effetto piccolo).
+
+### 📐 In dettaglio — l'entropia degli esiti e cosa esclude
+
+**La metrica chiave: entropia degli esiti** (quanto sono "bilanciati" H/D/A in un
+periodo):
+
+```
+entropia = − Σ_{k ∈ {H,D,A}}  f_k · ln f_k        (f_k = frequenza dell'esito k nel periodo)
+```
+
+Massimo teorico `ln 3 ≈ 1.099` (tre esiti equiprobabili = massima imprevedibilità).
+
+**Cosa dimostra il fatto che sia PIATTA (~1.08 ovunque).** Se il finale fosse più
+difficile *perché* gli esiti diventano più bilanciati (più imprevedibili di per sé),
+l'entropia salirebbe nelle ultime giornate. Invece è **piatta** (1.089 → 1.084) →
+la spiegazione "meccanica" (esiti più equilibrati) è **esclusa**. Il finale difficile
+non viene da lì.
+
+**Cosa emerge invece.** Due cambi strutturali reali: giornate **32-34** tese e bloccate
+(pareggi 31%, pochi gol, log-loss alto per tutti = scontri decisivi col freno a mano);
+giornate **35-38** dove il **vantaggio-casa CROLLA** (casa 40%→36%, trasferta 31%→38%,
+più gol). Quest'ultimo è lo stesso meccanismo del COVID (γ globale ereditato dallo
+storico che nel finale non regge, Fase 9-bis) → candidato per una covariata "giornata
+avanzata → attenua il vantaggio-casa". Ma **nessun pattern-gap robusto**: corr(gap,
+giornata) ≈ 0, gap fine−inizio positivo solo in 3 stagioni su 6 (media +0.0015, range
+−0.017…+0.021) → l'indizio della Fase 28 **non è coerente** tra stagioni. Prudenza:
+overfitting su un effetto piccolo.
 
 ---
 
@@ -3291,6 +3368,46 @@ e' gia' nei dati (dalla classifica). METODO: la Fase 29 mostra quanto conta una
 definizione corretta -- un classificatore sbagliato ai bordi ribaltava la
 conclusione.
 
+### 📐 In dettaglio — il classificatore CORRETTO e il segnale di asimmetria
+
+**La definizione giusta (`loader.add_stakes`).** Una squadra è **DECISA** (`settled=1`)
+se non ha *nessuna* corsa aperta — inclusi i due estremi che la Fase 29 sbagliava. Con
+`reach = 3·(gare_rimaste)`:
+
+```
+math_safe   = punti  >  linea_18ª + reach           (già matematicamente salva)
+math_releg  = punti + reach  <  linea_17ª            (già matematicamente retrocessa)
+releg_open  = (not math_safe) and (not math_releg)   (salvezza ancora in gioco)
+euro_open   = |punti − linea_Europa| ≤ reach
+champion    = leader and (punti − 2ª) > reach        (già campione)
+title_open  = (|punti − linea_titolo| ≤ reach) and (not champion)
+
+settled = 0  se (releg_open or euro_open or title_open)   [in corsa]
+settled = 1  altrimenti  [decisa: retrocessa, campione, o limbo mid-table]
+```
+
+La differenza chiave vs Fase 29: retrocessa e campione ora contano come **decise**
+(prima erano classificate "in corsa" ai bordi).
+
+**Il segnale è l'ASIMMETRIA (non il "dead rubber" simmetrico).** Con la definizione
+corretta, il gap per categoria di partita:
+
+```
+entrambe in corsa          gap +0.0172   [CI +0.0122, +0.0221]
+UNA decisa, UNA in corsa   gap +0.0572   [CI +0.0139, +0.1014] *   ← ~3x, CI esclude lo zero
+entrambe decise            gap +0.0130   [CI −0.035, +0.060]       (niente)
+coinvolge una campione     gap +0.0949   [CI +0.013, +0.179] *
+```
+
+**Ribalta la Fase 29**: escludendo le partite con ≥1 squadra decisa il gap **scende**
+(+0.0188→+0.0172) → su quelle partite il modello va **peggio** del mercato, non meglio.
+Il segnale è **solo** nell'asimmetria (una decisa vs una in corsa), non quando
+entrambe sono decise — coerente col meccanismo: la squadra motivata sovra-rende / quella
+scarica molla, il mercato lo prezza e noi (che usiamo la forza *stagionale*, ciechi
+alla motivazione del momento) no. È il **primo lead azionabile dai dati interni**.
+Onestà: campioni piccoli (133 la categoria più solida) e molti test → indizio forte e
+sensato, non una prova.
+
 ---
 
 ## Fase 32 — Validazione della covariata stakes-mismatch (DC e GBM)
@@ -3331,6 +3448,40 @@ superare la soglia. Nota per il futuro: se si usera' questo segnale, il GBM e' i
 veicolo giusto (lo cattura ~6x meglio del DC). Infrastruttura pronta: covariata
 `stakes` disponibile, off di default.
 
+### 📐 Il modello in dettaglio — come entra `stakes` nei due modelli
+
+**Nel DC** la covariata entra come le altre (Fase 4c), nel log-tasso:
+
+```
+cov = β · ( z_settled,casa − z_settled,ospite )     con settled ∈ {0, 1}
+```
+
+Può solo spostare **linearmente** il tasso-gol in funzione della differenza di stato.
+
+**Nel GBM** entra come feature aggiuntive (`home_settled`, `away_settled`, e la loro
+differenza), dove può interagire in modo **non-lineare** con le altre.
+
+**Perché il test vero è sulla riga MISMATCH.** Il segnale è su ~5% di partite (una
+decisa vs una in corsa), quindi l'effetto **overall** è minuscolo per costruzione
+(diluito nel 95% di partite senza mismatch). Ecco i numeri:
+
+```
+DC   overall  0.9797→0.9796  Δ −0.0001            mismatch (n=99)  0.9609→0.9587  Δ −0.0022
+GBM  overall  1.0098→1.0096  Δ −0.0001            mismatch (n=99)  0.9968→0.9841  Δ −0.0127
+```
+
+**Cosa dicono.** Direzione **confermata su entrambe le architetture** (entrambe
+negative sulla riga mismatch). Il GBM la cattura ~**6x** meglio del DC (−0.0127 vs
+−0.0022): l'effetto "la squadra scarica sotto-rende" è **non-lineare** (una soglia
+di comportamento), che il GBM modella e il DC lineare no. Ma **nessuno è conclusivo**
+(i CI includono lo zero, il GBM per un pelo: +0.0030) → **non adottato** (regola: CI<0).
+
+**Perché resta il lead più credibile del progetto.** Due negativi **concordi** su due
+architetture indipendenti, meccanismo chiaro, effetto concentrato dove previsto — a
+differenza dei "residui = rumore" delle Fasi 13/20, dove i segni erano casuali. Il
+rumore puro non darebbe due negativi concordi. Serve solo più campione (più stagioni o
+il futuro OOS). Se si userà, il **GBM** è il veicolo giusto.
+
 ---
 
 ## Fase 33 — Ultime covariate mai provate: PPDA/deep e finishing-luck (ridondanti)
@@ -3368,6 +3519,45 @@ sensata (mean-reversion) che il modello incorporava gia'. L'unico lead vivo rest
 lo stakes-mismatch (Fase 32), che serve piu' stagioni. Ogni altro guadagno ora
 richiede INFORMAZIONE NUOVA (formazioni, quote live) o un avversario meno
 efficiente (leghe/mercati diversi): finisce la strada "spremere lo snapshot".
+
+### 📐 Il modello in dettaglio — le feature rolling e perché luck = 0 esatto
+
+**Le feature** (`loader.add_style_luck`, rolling sulle ultime 8 gare della squadra,
+solo precedenti → no look-ahead):
+
+```
+ppda_roll = media( PPDA )        # passaggi avversari per azione difensiva = intensità di pressing
+deep_roll = media( deep )        # completamenti in zona profonda = dominio territoriale
+luck      = media( gol − xG )    # sovra/sotto-rendimento realizzativo ("fortuna sotto porta")
+```
+
+`luck` codifica l'ipotesi di **mean-reversion**: chi ha segnato *sopra* il suo xG
+dovrebbe regredire (segnare meno in futuro).
+
+**Perché PPDA/deep sono ridondanti.** Lo **stile** (come pressa/domina una squadra) si
+traduce in occasioni, e le occasioni sono già catturate dall'**xG** nel blend →
+PPDA/deep peggiorano appena il DC (+0.0009), come il valore-rosa (Fase 4c). Stessa
+diagnosi: informazione già implicita in gol+xG.
+
+**Perché `luck` dà effetto ESATTAMENTE ZERO sul DC (la nota più istruttiva).** È una
+conferma elegante e *prevedibile* dalla struttura del modello. Il blend è:
+
+```
+λ = 0.75 · λ_gol + 0.25 · λ_xg
+```
+
+Questo blend **è già** un meccanismo di mean-reversion: pesa i gol realizzati (che
+includono la fortuna) *insieme* all'xG (la qualità sottostante, senza fortuna). Una
+squadra che ha segnato sopra l'xG ha `λ_gol > λ_xg`, e il blend la tira già verso il
+basso col peso 0.25 sull'xG. Aggiungere `luck = gol − xG` come covariata significa
+aggiungere una funzione **degli stessi due ingredienti già combinati** → contributo
+nullo, non "piccolo": **zero esatto**. È la dimostrazione più pulita che α=0.75 non è
+un numero arbitrario, ma *è* la correzione della fortuna.
+
+**Verdetto finale del filone.** Con la Fase 33 i dati interni sono completamente
+esplorati (gol, xG, npxG, PPDA, deep, valore-rosa, assenze, riposo, forma, stakes,
+luck): il tetto è **informativo**, confermato per l'ultima volta. Ogni altro guadagno
+richiede **informazione nuova** o un **avversario meno efficiente**.
 
 ---
 
