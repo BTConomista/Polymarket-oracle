@@ -57,6 +57,7 @@ _COVARIATES: dict[str, tuple[str, str, str]] = {
     "absence": ("home_absent_value_est", "away_absent_value_est", "log1p"),
     "rest": ("home_rest_days", "away_rest_days", "identity"),  # riposo/congestione (solo Serie A)
     "rest_full": ("home_rest_days_full", "away_rest_days_full", "identity"),  # riposo/congestione VERA (calendario completo di club, Fase 4e)
+    "midweek": ("home_midweek_europe", "away_midweek_europe", "identity"),  # DUMMY congestione: gara europea/coppa infrasettimana (Fase 35/Punto 2)
     "form": ("home_form", "away_form", "identity"),  # stato di forma: punti/gara ultime 5 (Fase 13)
     "stakes": ("home_settled", "away_settled", "identity"),  # posta in palio: 1=decisa, 0=in corsa (Fase 32)
     "ppda": ("home_ppda_roll", "away_ppda_roll", "identity"),  # pressing rolling (Fase 33)
@@ -166,6 +167,7 @@ class DixonColesModel:
         promoted_prior: tuple[float, float] | None = None,
         draw_inflation: bool = False,
         dynamic_rho: bool = False,
+        draw_balance: bool = False,
     ):
         """
         Args:
@@ -226,6 +228,27 @@ class DixonColesModel:
         # punteggi (non post-hoc) e dipendente dalla partita. 0 = disattivato.
         self.draw_inflation = draw_inflation
         self.draw_phi: float = 0.0
+
+        # Inflazione della diagonale CONDIZIONATA all'EQUILIBRIO (Fase 35). A
+        # differenza del phi COSTANTE (Fase 12b) e del rho DINAMICO sul TOTALE
+        # dei gol (lam+mu, Fase 18), qui il boost sui pareggi dipende dalla
+        # BILANCIA |lam-mu|: due squadre equilibrate pareggiano piu' di quanto
+        # una Poisson preveda, a parita' di gol totali attesi. Forma:
+        #     phi(lam,mu) = phi0 * exp(-kappa * |lam - mu|)
+        # phi0>=0 = boost massimo a squadre pari-livello; kappa>=0 = quanto
+        # velocemente svanisce all'aumentare dello squilibrio. Entrambi fittati
+        # nella verosimiglianza dei punteggi. Diagnostico D2 (Fase 34): il
+        # deficit di pareggio del modello e' concentrato nelle partite
+        # equilibrate (|lam-mu| piccolo), la dimensione mai testata prima.
+        self.draw_balance = draw_balance
+        self.draw_phi0: float = 0.0
+        self.draw_kappa: float = 0.0
+        if draw_balance and draw_inflation:
+            raise ValueError("draw_balance e draw_inflation sono alternativi "
+                             "(entrambi inflazionano la diagonale): usane uno.")
+        if draw_balance and dynamic_rho:
+            raise ValueError("draw_balance non si combina con dynamic_rho "
+                             "(il fit del pareggio usa il rho base).")
 
         # Rho DINAMICO (Fase 18): la correzione sui punteggi bassi diventa
         # funzione della partita, rho_match = rho + rho_slope*(lam+mu - centro),
@@ -415,16 +438,21 @@ class DixonColesModel:
         # Va dopo il modello-gol e il segnale (usa i tassi attesi finali).
         if self.draw_inflation:
             self.draw_phi = self._fit_draw_phi(train, weights)
+        # --- Inflazione condizionata all'equilibrio (Fase 35) ---
+        if self.draw_balance:
+            self.draw_phi0, self.draw_kappa = self._fit_draw_balance(train, weights)
 
         return self
 
-    def _fit_draw_phi(self, train: pd.DataFrame, weights: np.ndarray) -> float:
-        """Stima phi (inflazione diagonale) massimizzando la verosimiglianza
-        pesata dei punteggi. Con inflazione P_phi(x,y) ∝ M(x,y)*(1+phi*[x=y]);
-        il termine che dipende da phi e' log(1+phi*[pari]) - log(1+phi*D_match),
-        con D_match = P(pari) del modello base per quella partita. Non serve la
-        matrice intera: basta la prob. di pareggio base per riga (vettoriale)."""
-        # Tassi attesi (blended) per ogni partita di training.
+    def _draw_base_arrays(self, train: pd.DataFrame
+                          ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+        """Grandezze per il fit dell'inflazione-pareggio, per riga di training:
+        (lam, mu) blended, D_match = P(pari) del modello BASE (DC-corretto,
+        rinormalizzato) e is_draw. Con inflazione P_phi(x,y) ∝ M(x,y)*(1+phi*[x=y]),
+        il termine di verosimiglianza che dipende da phi e'
+        log(1+phi*[pari]) - log(1+phi*D_match): non serve la matrice intera, basta
+        D_match per riga (vettoriale). Condiviso da _fit_draw_phi (phi costante,
+        Fase 12b) e _fit_draw_balance (phi funzione di |lam-mu|, Fase 35)."""
         lam = np.array([self.expected_goals(h, a)[0]
                         for h, a in zip(train["home_team"], train["away_team"])])
         mu = np.array([self.expected_goals(h, a)[1]
@@ -444,12 +472,37 @@ class DixonColesModel:
              + m10 * (mu * self.rho) + m11 * (-self.rho))
         d_match = np.clip(diag_c / Z, 1e-9, 1.0 - 1e-9)   # P(pari) base per riga
         is_draw = (train["home_goals"].to_numpy() == train["away_goals"].to_numpy()).astype(float)
+        return lam, mu, d_match, is_draw
+
+    def _fit_draw_phi(self, train: pd.DataFrame, weights: np.ndarray) -> float:
+        """Stima phi COSTANTE (Fase 12b) massimizzando la verosimiglianza pesata
+        dei punteggi (vedi _draw_base_arrays per la formula)."""
+        _, _, d_match, is_draw = self._draw_base_arrays(train)
 
         def neg_ll(phi: float) -> float:
             return -np.sum(weights * (np.log1p(phi * is_draw) - np.log1p(phi * d_match)))
 
         res = minimize_scalar(neg_ll, bounds=(-0.5, 2.0), method="bounded")
         return float(res.x)
+
+    def _fit_draw_balance(self, train: pd.DataFrame,
+                          weights: np.ndarray) -> tuple[float, float]:
+        """Stima (phi0, kappa) dell'inflazione-pareggio CONDIZIONATA all'equilibrio
+        (Fase 35): phi_partita = phi0 * exp(-kappa * |lam - mu|). Stessa
+        verosimiglianza di _fit_draw_phi ma con phi per-partita (2 parametri).
+        phi0>=0, kappa>=0: boost dei pareggi massimo per squadre pari-livello,
+        che svanisce all'aumentare dello squilibrio."""
+        lam, mu, d_match, is_draw = self._draw_base_arrays(train)
+        bal = np.abs(lam - mu)
+
+        def neg_ll(params: np.ndarray) -> float:
+            phi0, kappa = params
+            phi = phi0 * np.exp(-kappa * bal)   # per-partita, >= 0
+            return -np.sum(weights * (np.log1p(phi * is_draw) - np.log1p(phi * d_match)))
+
+        res = minimize(neg_ll, np.array([0.1, 1.0]), method="L-BFGS-B",
+                       bounds=[(0.0, 2.0), (0.0, 5.0)])
+        return float(res.x[0]), float(res.x[1])
 
     def _fit_counts(
         self,
@@ -557,6 +610,14 @@ class DixonColesModel:
         if self.draw_phi:
             idx = np.arange(matrix.shape[0])
             matrix[idx, idx] *= 1.0 + self.draw_phi
+
+        # Inflazione condizionata all'EQUILIBRIO (Fase 35): il boost sui pareggi
+        # dipende da |lam-mu| (piu' equilibrio -> piu' boost). Stessa struttura
+        # dell'inflazione costante, ma phi calcolato per la partita.
+        if self.draw_balance and self.draw_phi0:
+            phi_bal = self.draw_phi0 * math.exp(-self.draw_kappa * abs(lam - mu))
+            idx = np.arange(matrix.shape[0])
+            matrix[idx, idx] *= 1.0 + phi_bal
 
         # Rinormalizza: correzione, inflazione e troncamento rompono la somma a 1.
         matrix = np.clip(matrix, 0.0, None)
@@ -685,6 +746,9 @@ class DixonColesModel:
             "promoted_prior": list(self.promoted_prior) if self.promoted_prior else None,
             "draw_inflation": self.draw_inflation,
             "draw_phi": self.draw_phi,
+            "draw_balance": self.draw_balance,
+            "draw_phi0": self.draw_phi0,
+            "draw_kappa": self.draw_kappa,
             "dynamic_rho": self.dynamic_rho,
             "rho_slope": self.rho_slope,
             "rho_center": self.rho_center,
@@ -703,6 +767,7 @@ class DixonColesModel:
                             if data.get("promoted_prior") else None),
             draw_inflation=data.get("draw_inflation", False),
             dynamic_rho=data.get("dynamic_rho", False),
+            draw_balance=data.get("draw_balance", False),
         )
         model.attack = dict(data["attack"])
         model.defense = dict(data["defense"])
@@ -717,6 +782,8 @@ class DixonColesModel:
         model.cov_mean = dict(data.get("cov_mean", {}))
         model.cov_std = dict(data.get("cov_std", {}))
         model.draw_phi = float(data.get("draw_phi", 0.0))
+        model.draw_phi0 = float(data.get("draw_phi0", 0.0))
+        model.draw_kappa = float(data.get("draw_kappa", 0.0))
         model.rho_slope = float(data.get("rho_slope", 0.0))
         model.rho_center = float(data.get("rho_center", 0.0))
         model.teams = sorted(model.attack)

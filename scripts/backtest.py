@@ -67,6 +67,7 @@ def run_backtest(
     promoted_prior: tuple[float, float] | None = None,
     draw_inflation: bool = False,
     dynamic_rho: bool = False,
+    draw_balance: bool = False,
     train_window_days: float | None = None,
     drop_train_seasons: tuple[str, ...] = (),
     verbose: bool = True,
@@ -113,7 +114,8 @@ def run_backtest(
         model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage,
                                 shots_blend=shots_blend, blend_signal=blend_signal,
                                 covariates=covariates, promoted_prior=promoted_prior,
-                                draw_inflation=draw_inflation, dynamic_rho=dynamic_rho)
+                                draw_inflation=draw_inflation, dynamic_rho=dynamic_rho,
+                                draw_balance=draw_balance)
         model.fit(train_frame, as_of_date=as_of, promoted_teams=promoted)
         if verbose:
             print(f"  settimana {w}/{n_weeks}  ({as_of.date()}): "
@@ -209,8 +211,10 @@ def main() -> None:
                         help="segnale secondario da mescolare (default xg=xG reale; "
                              "sot=tiri in porta)")
     parser.add_argument("--covariates", nargs="*", default=[],
-                        choices=["squad_value", "absence", "rest", "rest_full", "form"],
-                        help="covariate di partita da aggiungere (Fase 4c)")
+                        choices=["squad_value", "absence", "rest", "rest_full",
+                                 "midweek", "form", "stakes", "ppda", "deep", "luck"],
+                        help="covariate di partita da aggiungere (Fase 4c/32/33; "
+                             "midweek=dummy congestione europea, Punto 2)")
     parser.add_argument("--promoted-prior", type=float, default=0.23, metavar="DELTA",
                         help="prior di cold-start per le neopromosse (Fase 7, config "
                              "ufficiale): sposta il bersaglio dello shrinkage a "
@@ -223,6 +227,11 @@ def main() -> None:
                         help="rho dinamico (Fase 18): la correzione sui punteggi "
                              "bassi dipende dai gol attesi della partita "
                              "(rho + rho_slope*(lam+mu-centro), rho_slope fittato)")
+    parser.add_argument("--draw-balance", action="store_true",
+                        help="inflazione pareggio condizionata all'EQUILIBRIO "
+                             "(Fase 35): phi(lam,mu)=phi0*exp(-kappa*|lam-mu|), "
+                             "boost dei pareggi maggiore per squadre pari-livello "
+                             "(phi0, kappa fittati). Alternativo a --draw-inflation.")
     parser.add_argument("--train-window-days", type=float, default=None, metavar="N",
                         help="finestra dei dati (Fase 25): allena solo sulle partite "
                              "degli ultimi N giorni prima di ogni predizione (taglio "
@@ -248,7 +257,7 @@ def main() -> None:
                       shrinkage=args.shrinkage, shots_blend=args.shots_blend,
                       blend_signal=args.blend_signal, covariates=tuple(args.covariates),
                       promoted_prior=prior, draw_inflation=args.draw_inflation,
-                      dynamic_rho=args.dynamic_rho,
+                      dynamic_rho=args.dynamic_rho, draw_balance=args.draw_balance,
                       train_window_days=args.train_window_days,
                       drop_train_seasons=tuple(args.drop_train_seasons),
                       verbose=not args.quiet)

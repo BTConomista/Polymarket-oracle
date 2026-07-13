@@ -3689,6 +3689,116 @@ ribalterebbe, ma il test era **diluito**: onestà dovuta.
 **Riproducibilità.** `python scripts/_run_audit_diagnostics.py` (6 backtest + D1/D2/D3
 + test economici A/B, 1 run registrato `source=fase34_audit`).
 
+---
+
+## Fase 35 — Il pareggio come EQUILIBRIO: φ condizionato a |λ−μ| (il miglior risultato sul pareggio)
+
+**Obiettivo.** Implementare e validare nel modello la leva più promettente
+dell'audit (Fase 34, D2): il deficit di pareggio è concentrato nelle partite
+**equilibrate** (|λ−μ| piccolo), la dimensione che τ, φ-costante (12b) e ρ-dinamico
+(18) avevano tutte mancato (esploravano il *volume* λ+μ, non la *bilancia*).
+
+**Ragionamento / ipotesi.** Il pareggio è strutturalmente un fenomeno di
+**equilibrio**: due squadre pari-livello pareggiano più di quanto una Poisson
+preveda, *a parità di gol totali attesi*. Serve un boost dei pareggi che dipenda da
+|λ−μ| e svanisca con lo squilibrio: `φ(λ,μ) = φ0·exp(−κ·|λ−μ|)`, fittato nella
+verosimiglianza dei punteggi (estende l'inflazione diagonale della Fase 12b da
+costante a funzione della bilancia).
+
+**Alternative considerate.** (a) φ costante (Fase 12b, già fatto); (b) ρ o φ funzione
+del *totale* λ+μ (Fase 18-style, la dimensione sbagliata); (c) φ funzione di |λ−μ|
+(scelta). Forma esponenziale `φ0·exp(−κ|λ−μ|)` invece di lineare: garantisce φ≥0
+(niente pareggi negativi) e un decadimento morbido con 2 soli parametri.
+
+**Scelta.** `draw_balance=True` (`--draw-balance`), off di default. Fit 2-D di
+(φ0, κ) via L-BFGS-B nella stessa verosimiglianza-pareggio della Fase 12b. Guardie:
+alternativo a `draw_inflation`, non combinabile con `dynamic_rho` (usano lo stesso
+canale). Test unitario aggiunto.
+
+**Risultato** (`scripts/_run_draw_balance.py`; 4 varianti × 6 stagioni walk-forward,
+stessi split, bootstrap appaiato; 4 run `source=fase35_draw_balance`):
+
+| approccio | dimensione | 1X2 log-loss | Δ vs base | CI95 | P(migliora) |
+|---|---|--:|--:|--:|--:|
+| base (solo τ) | — | 0.9797 | — | — | — |
+| φ costante (12b) | nessuna (globale) | 0.9793 | −0.0004 | [−0.0018, +0.0010] | 70% |
+| ρ dinamico (18) | volume λ+μ | 0.9800 | +0.0003 | [−0.0007, +0.0013] | 27% |
+| **φ(\|λ−μ\|) (35)** | **equilibrio** | **0.9790** | **−0.0007** | [−0.0032, +0.0017] | **72%** |
+
+**Calibrazione del pareggio per quartile di |λ−μ|** — P(pareggio):
+
+| quartile \|λ−μ\| | reale | base | φ cost | ρ din | **φ equil** | mercato |
+|---|--:|--:|--:|--:|--:|--:|
+| equilibrata | 0.332 | 0.287 | 0.300 | 0.290 | **0.334** | 0.296 |
+| medio-bassa | 0.288 | 0.276 | 0.288 | 0.278 | 0.295 | 0.282 |
+| medio-alta | 0.272 | 0.253 | 0.264 | 0.252 | 0.260 | 0.253 |
+| sbilanciata | 0.186 | 0.198 | 0.206 | 0.194 | 0.200 | 0.196 |
+
+**Lezione / cosa ne consegue.**
+1. **La diagnosi dell'audit era giusta e il meccanismo funziona come da progetto.**
+   φ(|λ−μ|) porta la P(pareggio) delle partite equilibrate da 0.287 a **0.334**,
+   contro un reale di **0.332**: calibrazione quasi perfetta dove tutti gli altri
+   fallivano. E — fatto raro — su quella dimensione **batte il mercato** (0.296,
+   che sotto-prezza i pareggi equilibrati di 3.6 punti): è il **miglior risultato
+   sul pareggio dell'intero progetto**.
+2. **È la migliore delle quattro varianti anche sul log-loss** (0.9790): quasi il
+   doppio del guadagno del φ costante (−0.0007 vs −0.0004) e batte nettamente il ρ
+   dinamico sul totale (+0.0003, che ri-conferma la Fase 18). La dimensione
+   *equilibrio* è quella giusta.
+3. **Ma il log-loss NON è ancora CI-conclusivo** (CI [−0.0032, +0.0017] include lo
+   zero, P 72%): come per il φ costante, *quanti* pareggi capitano in una stagione
+   resta in parte rumore, e i φ0 fittati variano molto (0.22–0.63). Per la regola
+   pre-dichiarata (CI<0) **non entra nella config ufficiale** — resta disponibile
+   (`--draw-balance`, off di default), ottimo per **probabilità di pareggio
+   calibrate** a uso pratico (migliore del mercato sulle partite equilibrate) e come
+   base per il Punto 3 (covariate nel canale-pareggio).
+4. Onestà: −0.0007 su log-loss è piccolo e non chiude il gap col mercato sull'1X2
+   aggregato; il valore è la calibrazione del pareggio, non un edge.
+
+**Riproducibilità.** `python scripts/_run_draw_balance.py` (4 varianti × 6 stagioni),
+oppure `python scripts/backtest.py --draw-balance`.
+
+### 📐 Il modello in dettaglio — la formula e perché φ0≈0.39, κ≈3.6
+
+**La formula** (`_fit_draw_balance` + `_score_matrix` in `dixon_coles.py`):
+
+```
+φ(λ, μ) = φ0 · exp( −κ · |λ − μ| )                    φ0 ≥ 0, κ ≥ 0
+P_φ(i, j) ∝ M(i, j) · ( 1 + φ(λ,μ) · [i = j] )         (poi rinormalizzata)
+```
+
+Il fit di (φ0, κ) massimizza la stessa verosimiglianza-pareggio della Fase 12b, con
+φ **per-partita** invece che costante (vedi `_draw_base_arrays`):
+
+```
+ℓ(φ0, κ) = Σ_partite  w · [ ln(1 + φ_p·1{pari}) − ln(1 + φ_p·d_match) ]
+con  φ_p = φ0·exp(−κ·|λ_p − μ_p|)  e  d_match = P(pari) base DC-corretta per riga
+```
+
+**Perché φ0 ≈ 0.39 (il boost a squadre pari-livello).** A |λ−μ|=0, φ=φ0: la
+diagonale dei pareggi è moltiplicata per `1+φ0 ≈ 1.39`. Dopo la rinormalizzazione
+questo alza la P(pareggio) delle partite equilibrate da 0.287 a ~0.334 (l'aumento
+non è lineare in φ0 per via del denominatore Z=1+φ0·d_match): φ0 è fittato,
+non ri-derivabile a mano, ma il suo *ruolo* è chiaro — colma il deficit −0.044 del
+quartile equilibrato. Varia per stagione (0.22–0.63): è la ragione per cui il
+log-loss non è conclusivo (quanto boost serve cambia di anno in anno).
+
+**Perché κ ≈ 3.6 (quanto in fretta svanisce).** κ misura la concentrazione del boost
+sull'equilibrio. Con κ=3.6, al |λ−μ| **mediano** (≈0.60, dalla Fase 34) il boost è
+già `φ0·exp(−3.6·0.60) = 0.39·0.115 ≈ 0.045` (4.5%), e a |λ−μ|=1.0 è
+`0.39·exp(−3.6) ≈ 0.011` (1%). Cioè il boost è **fortemente concentrato** sulle
+partite quasi-perfettamente equilibrate (|λ−μ|<0.3), esattamente dove il diagnostico
+D2 localizzava il deficit. In 2 stagioni su 6 κ sbatte sul bound superiore (5.0): i
+dati vorrebbero una concentrazione ancora più netta → conferma che è un effetto di
+**equilibrio stretto**, non un boost diffuso (che il φ costante forniva, peggio).
+
+**Perché la Fase 18 (ρ sul totale λ+μ) falliva e questa no.** Sono la stessa idea
+"correzione dipendente dalla partita" ma su variabili diverse: λ+μ (volume) vs
+|λ−μ| (equilibrio). Il pareggio non dipende dal *quanti gol* ma dal *quanto sono
+vicine le squadre*: due squadre da 1.2 gol ciascuna pareggiano spesso, una da
+2.5–0.6 (stesso totale ~3.1) quasi mai. Condizionare sulla variabile giusta è tutta
+la differenza tra +0.0003 (Fase 18) e −0.0007 con calibrazione quasi perfetta (Fase 35).
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

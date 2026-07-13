@@ -238,6 +238,49 @@ def test_draw_inflation_boosts_draws_and_roundtrips():
     assert restored.predict_match("A", "B").prob_draw == pytest.approx(p1.prob_draw, abs=1e-9)
 
 
+def test_draw_balance_conditioned_on_lambda_mu_diff():
+    """Fase 35: l'inflazione-pareggio condizionata all'equilibrio phi(lam,mu)=
+    phi0*exp(-kappa*|lam-mu|). Su dati con eccesso di pareggi tra squadre
+    pari-livello, il fit trova phi0>0; le probabilita' restano valide; il
+    round-trip conserva phi0/kappa. draw_balance=False lascia phi0=0. Non si
+    combina con draw_inflation ne' con dynamic_rho (ValueError)."""
+    rng = np.random.default_rng(7)
+    teams = ["A", "B", "C"]                    # forze simili -> match equilibrati
+    rows, day = [], pd.Timestamp("2021-01-01")
+    for _ in range(80):
+        h, a = rng.choice(teams, 2, replace=False)
+        if rng.random() < 0.45:                # eccesso di pareggi
+            g = int(rng.integers(0, 3)); hg = ag = g
+        else:
+            hg, ag = int(rng.poisson(1.2)), int(rng.poisson(1.1))
+        rows.append(dict(date=day, season="s", league="l", home_team=h, away_team=a,
+                         home_goals=hg, away_goals=ag, result="H",
+                         home_sot=0, away_sot=0, odds_home=np.nan, odds_draw=np.nan,
+                         odds_away=np.nan, odds_over25=np.nan, odds_under25=np.nan))
+        day += pd.Timedelta(days=3)
+    df = pd.DataFrame(rows)
+    df["result"] = np.where(df.home_goals > df.away_goals, "H",
+                            np.where(df.home_goals < df.away_goals, "A", "D"))
+
+    base = DixonColesModel(half_life_days=None, shots_blend=1.0).fit(df)
+    bal = DixonColesModel(half_life_days=None, shots_blend=1.0, draw_balance=True).fit(df)
+    assert base.draw_phi0 == 0.0
+    assert bal.draw_phi0 > 0.0                        # eccesso di pareggi -> phi0>0
+    p0, p1 = base.predict_match("A", "B"), bal.predict_match("A", "B")
+    assert p1.prob_draw > p0.prob_draw               # squadre equilibrate -> piu' pari
+    assert p1.prob_home_win + p1.prob_draw + p1.prob_away_win == pytest.approx(1.0, abs=1e-6)
+
+    restored = DixonColesModel.from_dict(bal.to_dict())
+    assert restored.draw_phi0 == pytest.approx(bal.draw_phi0)
+    assert restored.draw_kappa == pytest.approx(bal.draw_kappa)
+    assert restored.predict_match("A", "B").prob_draw == pytest.approx(p1.prob_draw, abs=1e-9)
+
+    with pytest.raises(ValueError):
+        DixonColesModel(draw_balance=True, draw_inflation=True)
+    with pytest.raises(ValueError):
+        DixonColesModel(draw_balance=True, dynamic_rho=True)
+
+
 def test_devig_sums_to_one():
     p = metrics.devig_1x2(2.0, 3.5, 4.0)
     assert p.sum() == pytest.approx(1.0, abs=1e-9)
