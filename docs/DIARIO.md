@@ -3579,6 +3579,170 @@ richiede **informazione nuova** o un **avversario meno efficiente**.
 
 ---
 
+## Fase 34 — Audit critico: caccia a errori, superficialità e leve mai testate
+
+**Obiettivo.** Rivedere TUTTO il lavoro (Fasi 0-33) con occhio avversariale: (a)
+c'è un errore in qualche formula? (b) c'è un ragionamento chiuso troppo in fretta?
+(c) qualche feature disattivata, o una dimensione mai provata, può ancora aiutare i
+modelli attuali (DC ufficiale e GBM)? Non per un edge miracoloso, ma per portare i
+modelli al loro *vero* massimo — anche in vista del porting ad altre leghe.
+
+**Ragionamento / ipotesi.** Un audit onesto parte dal **codice**, non dai documenti.
+Ho riletto riga per riga `dixon_coles.py`, `market_implied.py`, `calibration.py`,
+`metrics.py`, `markets.py`, `experiment_log.py`, `loader.py`, `backtest.py` e gli
+script GBM. Poi ho testato le ipotesi vive con **diagnostici e test economici**
+(`scripts/_run_audit_diagnostics.py`), riusando la ricalibrazione per-classe (Fase
+10) — nessuna modifica al modello — con regola dichiarata prima: una leva è "viva"
+solo se il Δ log-loss è <0 con **CI95 bootstrap che esclude lo zero** (altrimenti è
+la trappola calibrazione-vs-log-loss della Fase 12b).
+
+**Alternative considerate.** Modificare subito il modello (aggiungere un termine
+strutturale sul pareggio) e misurarlo walk-forward, oppure prima il test **post-hoc
+economico** che dice se la leva è viva *senza* la chirurgia. Scelto il post-hoc
+(principio: testa la versione economica prima di investire); se sopravvive, allora la
+si costruisce nel modello.
+
+**Risultato.**
+
+*1) Formule — NESSUN errore.* Verosimiglianza pesata, decadimento, correzione τ
+(segni inclusi), inflazione φ (formula di `_fit_draw_phi` con la sua `Z` di
+rinormalizzazione), rho dinamico, blend, conversione, covariate, inversione
+market-implied, devig, log-loss/Brier, temperature, ricalibrazione per-classe, ROI e
+CLV: tutte corrette e coerenti col codice. Il walk-forward è pulito (`date < as_of`
+ovunque). *Questo è un risultato: dopo l'audit di Fase 15 sui numeri, questo è
+l'audit sulle formule — entrambi puliti.*
+
+*2) D1 — vantaggio-casa a fine stagione: miscalibrazione REALE ma NON sfruttabile.*
+Nelle ultime giornate la casa vince molto meno (35-38: **36.2%** vs ~41% a metà) e
+il modello la **sovrastima** (P(casa) media 0.414 → bias **+0.051**). Ma il mercato
+la sovrastima **ancora di più** (+0.062): su questa dimensione siamo già meglio del
+mercato. Sembrava una leva d'oro. Il test economico la **uccide**: ricalibrare il
+finale (w_casa appreso ≈0.85-0.90) dà Δ **+0.0021** (35-38) e **+0.0042** (32-38),
+entrambi *peggiori*, CI che include lo zero. È **esattamente** la trappola della Fase
+12b: la miscalibrazione media è reale, ma *quanto* crolla la casa varia di anno in
+anno, quindi correggere la media non aiuta il log-loss. La cautela della Fase 30 era
+giusta. Resta utile solo per **probabilità calibrate** a uso pratico, non per un edge.
+
+*3) D2 — il pareggio dipende dall'EQUILIBRIO |λ−μ|, dimensione MAI testata.* Qui il
+ragionamento passato era davvero superficiale: le tre vie strutturali sul pareggio
+(τ, φ Fase 12b, rho dinamico Fase 18) hanno esplorato solo il **totale** dei gol
+attesi (λ+μ) o un fattore costante — **mai la bilancia** |λ−μ|. Il diagnostico:
+
+| quartile \|λ−μ\| | pari reale | mod P(pari) | mkt P(pari) | mod−reale |
+|---|--:|--:|--:|--:|
+| equilibrata | 0.332 | 0.287 | 0.296 | **−0.044** |
+| medio-bassa | 0.288 | 0.276 | 0.282 | −0.012 |
+| medio-alta | 0.272 | 0.253 | 0.253 | −0.019 |
+| sbilanciata | 0.186 | 0.198 | 0.196 | +0.012 |
+
+Il deficit-pareggio è **concentrato nelle partite equilibrate** (−0.044, il modello
+prezza 28.7% dove il reale è 33.2%), e il mercato fa meglio ma poco (−0.036). Il test
+economico: ricalibrare le sole partite equilibrate dà Δ **−0.0014** (P(migliora)
+**77%**, CI [−0.0052, +0.0024]) — **~4× la ricalibrazione globale** (−0.0003, P 59%)
+della Fase 10. Non conclusivo (CI include lo zero → regola non soddisfatta) ma è **il
+lead strutturale più promettente del progetto**: la variabile di condizionamento
+giusta è |λ−μ|, e non è mai stata provata dentro il modello.
+
+*4) D3 — copertura di squad_value: 71.7%.* La bocciatura della Fase 4c ("non aiuta")
+è stata misurata su ~72% delle partite; sul restante 28% la covariata era **neutra**
+(z=0, valore mancante). La direzione era negativa, quindi difficilmente si
+ribalterebbe, ma il test era **diluito**: onestà dovuta.
+
+*5) Punti dal codice (non da diagnostico) — dove il lavoro è stato superficiale.*
+- **Il GBM (Fase 22) non ha MAI visto stakes/luck/ppda/deep.** Il suo `cov_block`
+  usa {forma, rest_full, valore, assenze, midweek}; `stakes` (il lead più credibile,
+  Fase 32, che il GBM cattura ~6× meglio del DC) e `luck/ppda/deep` (Fase 33) sono
+  arrivati dopo o testati a parte. La combinazione **non-lineare completa** — proprio
+  quella in cui gli effetti a soglia si sommano — non è mai stata provata.
+- **I flag `home/away_midweek_europe` esistono nei dati ma non sono covariate DC**
+  (né sono mai stati isolati): un **dummy** di congestione ("ha giocato in Europa
+  infrasettimana") è più robusto del `rest_full` continuo, che degrada dove la
+  copertura coppe manca (Fase 4e).
+- **Le covariate entrano SOLO nel sotto-modello dei gol**, non in quello del segnale
+  (xG): con α=0.75 il loro effetto sul tasso *blendato* è diluito — una possibile
+  ragione per cui sembrano più deboli del dovuto.
+- **Il market-implied inverte ogni partita in modo indipendente**: nessun
+  *denoising* cross-partita (es. shrinkage stagionale dei λ,μ impliciti per squadra),
+  mai tentato.
+- **Interazione prior/identificabilità:** la penalità impone media(attacco)=0 mentre
+  il prior tira 3 promosse a −δ → un lieve spostamento compensativo delle altre
+  squadre. Effetto piccolo, ma è un accoppiamento dato per scontato, da tenere
+  d'occhio quando le promosse sono molte (es. leghe con più retrocessioni).
+
+**Lezione / cosa ne consegue.**
+1. **Le formule sono solide.** Il "tetto informativo" non nasconde un bug.
+2. Il "tetto" resta vero *in aggregato*, ma l'audit trova **una crepa strutturale
+   non sfruttata**: il pareggio nelle partite equilibrate (|λ−μ| piccolo). È l'unica
+   via sul pareggio mai provata, ed è la più promettente (−0.0014, P 77%). **Prossimo
+   candidato (Fase 35): un boost-pareggio in-modello condizionato a |λ−μ|** (φ o ρ
+   funzione della bilancia, fittato nella verosimiglianza, regola CI<0 pre-dichiarata).
+3. **Per il GBM (secondo modello):** va ri-testato con il **set di feature completo**
+   (stakes + luck + midweek + forma + rest_full insieme), possibilmente con
+   iperparametri tarati — mai fatto. È il veicolo giusto per gli effetti non-lineari
+   (stakes su tutti).
+4. **Onestà:** nessuna di queste è ancora un guadagno dimostrato. Sono **ipotesi
+   vive** con evidenza direzionale, da validare walk-forward con regola dichiarata —
+   non promesse. L'edge contro la chiusura resta improbabile; il valore è portare i
+   modelli al loro vero massimo e prepararli ad altre leghe (dove gli iperparametri
+   vanno ri-tarati, CLAUDE.md §7).
+
+**Riproducibilità.** `python scripts/_run_audit_diagnostics.py` (6 backtest + D1/D2/D3
++ test economici A/B, 1 run registrato `source=fase34_audit`).
+
+### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
+
+**La ricalibrazione condizionata usata nei test economici** (riuso di
+`apply_class_recalibration`, Fase 10), applicata a un **sottoinsieme** S:
+
+```
+per p ∈ S:   q_i(p) ∝ w_i · P_i(p)              w = (w_H, w_D, w_A) appresi su S PASSATO
+per p ∉ S:   q(p) = P(p)  invariato
+```
+
+con `w` fittato leave-future-out (solo stagioni < S) minimizzando la log-loss su S.
+- *Finale (D1):* S = {giornate ≥ 35}. `w_casa ≈ 0.85` appreso (abbassa la casa) →
+  Δ log-loss **+0.0021** (peggiora): la correzione media non regge la varianza
+  annuale del crollo casa. **Morta.**
+- *Equilibrio (D2):* S = {|λ−μ| < mediana}. `w_pari ≈ 1.08` (alza i pari) → Δ
+  **−0.0014**, P 77%: **la più promettente**, ma CI non esclude lo zero.
+
+**Perché la Fase 18 ha mancato il bersaglio (il punto tecnico centrale).** Il rho
+dinamico era `ρ_match = ρ + ρ_slope·(λ+μ − centro)`: fa dipendere la correzione dal
+**volume** di gol atteso. Ma il pareggio è un evento di **equilibrio**, non di volume:
+due squadre con λ=μ=1.2 (equilibrate, pochi gol) pareggiano spesso; una con λ=2.5,
+μ=0.6 (stessi ~3 gol totali, ma sbilanciata) quasi mai. La variabile giusta è la
+**differenza**, non la somma:
+
+```
+Fase 18 (mancata):   ρ_match = ρ + ρ_slope · (λ + μ − centro)      # volume  → nulla
+Fase 35 (proposta):  boost pareggio = f( |λ − μ| ),  f decrescente # equilibrio
+```
+
+Forma concreta candidata per la Fase 35 — **φ condizionato alla bilancia**, esteso
+dall'inflazione diagonale (Fase 12b) da costante a funzione di |λ−μ|:
+
+```
+φ(λ, μ) = φ0 · exp( −κ · |λ − μ| )          # più equilibrio (|λ−μ|→0) → più boost pari
+P_φ(i, j) ∝ M(i, j) · ( 1 + φ(λ,μ) · [i = j] )
+```
+
+con `φ0 ≥ 0` e `κ ≥ 0` fittati nella verosimiglianza dei punteggi (2 parametri,
+regola CI<0 pre-dichiarata). φ0>0, κ>0 ⇒ inflaziona i pareggi **solo dove i tassi
+sono vicini**, esattamente dove il diagnostico D2 mostra il deficit (−0.044). A
+differenza del φ costante (Fase 12b, −0.0004) o del ρ sul totale (Fase 18, +0.0003),
+questa forma condiziona sulla variabile che i dati indicano.
+
+**Perché il vantaggio-casa finale NON è la variabile giusta per il log-loss.** Il
+bias medio esiste (+0.051), ma il log-loss dipende dalla predizione **per-partita**:
+`−ln P(esito)`. Abbassare P(casa) di un fattore fisso su TUTTE le finali aiuta le
+partite dove vince la trasferta e punisce quelle (ancora tante) dove vince la casa;
+poiché *quali* finali ribaltano è imprevedibile (varianza annuale), i due effetti si
+annullano — la stessa matematica del "quanti pareggi capitano è rumore" (Fase 12b).
+Utile solo per rendere le probabilità *medie* più oneste (uso pratico), non per il
+punteggio.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
@@ -3595,6 +3759,18 @@ negativo) e il modello non aggiunge nulla nemmeno in blend. Il bivio:
 2. **Uso pratico** del modello attuale (comando di predizione);
 3. **Mercati strutturalmente meno efficienti** (leghe minori, exchange lenti):
    stessa infrastruttura, avversario diverso.
+
+**Aggiornamento dopo l'audit (Fase 34).** Il quadro "tetto informativo in aggregato"
+regge, ma l'audit critico ha trovato **una crepa strutturale non sfruttata**: il
+deficit di pareggio è concentrato nelle partite **equilibrate** (|λ−μ| piccolo), una
+dimensione che nessuna delle tre vie sul pareggio (τ, φ costante, ρ sul totale λ+μ)
+aveva mai toccato. Un boost-pareggio condizionato a |λ−μ| (proposta Fase 35) è il
+candidato più promettente rimasto (post-hoc −0.0014, P 77%, non ancora conclusivo).
+In parallelo restano da testare: il **GBM col set di feature completo** (stakes +
+luck + midweek + forma insieme, mai fatto) e il **dummy di congestione**
+`midweek_europe` (esiste nei dati, mai usato). Il bivio "dati nuovi / uso pratico /
+altre leghe" resta, ma prima c'è ancora *questo* da spremere, con onestà: sono
+ipotesi vive, non guadagni dimostrati.
 
 Nota di realismo invariata: battere le quote di chiusura resta difficilissimo;
 il value betting simulato perde il **15.7%** — piu' di quanto credevamo prima
