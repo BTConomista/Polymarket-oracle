@@ -1,0 +1,60 @@
+"""Test del modello market-implied (Fase 24/26)."""
+
+import numpy as np
+import pytest
+
+from src.models import market_implied as mi
+
+
+def test_score_matrix_normalizzata_e_rho():
+    M0 = mi.score_matrix(1.5, 1.1, rho=0.0)
+    assert M0.sum() == pytest.approx(1.0, abs=1e-9)
+    assert (M0 >= 0).all()
+    # rho<0 alza la massa su 0-0 e 1-1 (correzione Dixon-Coles)
+    Mr = mi.score_matrix(1.5, 1.1, rho=-0.08)
+    assert Mr.sum() == pytest.approx(1.0, abs=1e-9)
+    assert Mr[0, 0] > M0[0, 0]
+    assert Mr[1, 1] > M0[1, 1]
+
+
+def test_inversione_recupera_lambda_mu():
+    """Da lambda,mu noti -> prob -> inversione deve recuperarli."""
+    for lam, mu, rho in [(1.6, 1.0, 0.0), (2.1, 0.7, -0.06), (1.0, 1.0, 0.0)]:
+        pH, pD, pA, pO = mi._1x2_over(mi.score_matrix(lam, mu, rho))
+        lam2, mu2 = mi.implied_lambda_mu(pH, pD, pA, pO, rho=rho)
+        assert lam2 == pytest.approx(lam, abs=0.03)
+        assert mu2 == pytest.approx(mu, abs=0.03)
+
+
+def test_over25_derivato_uguale_al_target():
+    """L'inversione con O/U come target deve riprodurre l'Over 2.5."""
+    pH, pD, pA, pO = 0.45, 0.27, 0.28, 0.52
+    m = mi.markets_from_odds(pH, pD, pA, pO, rho=0.0)
+    assert m["over_2.5"] == pytest.approx(pO, abs=0.02)
+    # e le 1X2 devono avvicinarsi ai target
+    assert m["home_win"] == pytest.approx(pH, abs=0.03)
+
+
+def test_derive_markets_coerenti():
+    m = mi.derive_markets(mi.score_matrix(1.7, 1.2, rho=-0.05))
+    # monotonia degli Over: over_0.5 >= over_1.5 >= ... >= over_4.5
+    ov = [m[f"over_{x}"] for x in ("0.5", "1.5", "2.5", "3.5", "4.5")]
+    assert all(ov[i] >= ov[i + 1] - 1e-12 for i in range(len(ov) - 1))
+    # 1X2 somma a 1
+    assert m["home_win"] + m["draw"] + m["away_win"] == pytest.approx(1.0, abs=1e-9)
+    # multigol partiziona: mg_0_1 + mg_2_3 + mg_4plus = 1
+    assert m["mg_0_1"] + m["mg_2_3"] + m["mg_4plus"] == pytest.approx(1.0, abs=1e-9)
+    # over_2.5 == mg_4plus (entrambi = totale >= 4? no: over_2.5 = tot>=3)
+    assert m["over_3.5"] == pytest.approx(m["mg_4plus"], abs=1e-12)
+    # tutte le prob in [0,1]
+    for k, v in m.items():
+        if k != "score_matrix":
+            assert 0.0 <= v <= 1.0
+
+
+def test_btts_coerente_con_matrice():
+    M = mi.score_matrix(1.4, 1.3, rho=0.0)
+    m = mi.derive_markets(M)
+    # GG = 1 - P(casa 0) - P(ospite 0) + P(0-0)
+    p_home0 = M[0, :].sum(); p_away0 = M[:, 0].sum(); p00 = M[0, 0]
+    assert m["btts"] == pytest.approx(1 - p_home0 - p_away0 + p00, abs=1e-9)

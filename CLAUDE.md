@@ -113,6 +113,8 @@ cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e dia
 src/data/        sources.py (URL/stagioni/alias), loader.py (offline-first),
                  database.py (snapshot CSV + SQLite)
 src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione)
+                 market_implied.py (Fase 24/26: inverte le quote 1X2+O/U ->
+                 lambda,mu del mercato -> matrice DC -> ogni mercato sui gol)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
@@ -289,9 +291,17 @@ ufficiale (`scripts/_run_window.py`). Tagliare le stagioni vecchie PEGGIORA
 (finestra 3 stag +0.0011, 2 stag +0.0019, e di piu' sulle recenti +0.0035);
 perfino escludere la stagione COVID anomala costa +0.0007. Piu' storia batte
 meno: rose stabili anno su anno, l'emivita 365g gia' gestisce la recency in modo
-ottimale. Conferma la Fase 2b (memoria lunga). **Prossimo bivio:** Fase 26
-(market-implied esteso a TUTTI i mercati sui gol, nessun dato nuovo serve), dati
-davvero nuovi, uso pratico (predittore GG/NG condizionato alle quote), o
-cross-lega.
+ottimale. Conferma la Fase 2b (memoria lunga). **Fase 26 (market-implied su TUTTI
+i mercati sui gol — il risultato piu' forte):** modulo
+`src/models/market_implied.py` (inversione 1X2+O/U -> lambda,mu del mercato ->
+matrice DC -> ogni mercato) + sweep (`scripts/_run_market_implied.py`). Batte il
+DC-da-gol su 13 mercati su 14 (CI95<0 su 12) e la baseline su 13 su 14; guadagni
+maggiori sui mercati ricchi (risultato esatto -0.0309, multigol, total-squadra).
+Solo il pari/dispari non migliora (quasi-casuale). Strade: rho -0.06 aiuta poco;
+servono 1X2 E O/U (l'O/U aggiunge); blend coi nostri lambda,mu PEGGIORA (mercato
+puro meglio, conferma Fase 16). E' un MOTORE di pricing coerente per ogni mercato
+sui gol, condizionato alle quote 1X2+O/U; non verificabile vs ipotetiche linee di
+quei mercati. **Prossimo bivio:** uso pratico (tool di predizione basato su
+market_implied, ora ben motivato), dati davvero nuovi, o cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

@@ -1861,6 +1861,57 @@ leghe piu' volatili, dove il verdetto potrebbe cambiare.
 
 ---
 
+## Fase 26 — Market-implied su TUTTI i mercati sui gol (il risultato piu' forte)
+
+**Obiettivo.** La Fase 24 ha mostrato che il GG/NG derivato dai lambda,mu del
+mercato batte il nostro DC-da-gol e la baseline. Domanda: vale per OGNI mercato
+sui gol? Costruire il motore completo e provarlo a fondo (molte strade).
+
+**Ragionamento.** Il mercato stima lambda,mu meglio di noi (+0.0165 sull'1X2);
+la matrice del DC li trasferisce coerentemente a ogni mercato basato sui gol,
+inclusi quelli che il book NON prezza. Sui mercati con quote (1X2, O/U 2.5)
+l'inversione riproduce il mercato (ancoraggi); il valore e' nei mercati derivati.
+
+**Metodo.** Modulo riutilizzabile `src/models/market_implied.py` (inversione ai
+minimi quadrati + derivazione di tutti i mercati dalla matrice), con test. Sweep
+`scripts/_run_market_implied.py`: ~15 mercati, walk-forward per stagione, CI
+bootstrap appaiato. Tre strade laterali: rho della correzione, target
+d'inversione (1X2+O/U vs solo 1X2), blend coi nostri lambda,mu.
+
+**Risultato** (7 run, source `fase26_market_implied`):
+
+| mercato | mkt-impl | DC-gol | baseline | Δ vs DC |
+|---|--:|--:|--:|--:|
+| risultato esatto | 2.8037 | 2.8345 | 2.8974 | -0.0309 |
+| multigol | 1.0333 | 1.0470 | 1.0444 | -0.0137 |
+| total ospite Ov1.5 | 0.5985 | 0.6111 | 0.6529 | -0.0126 |
+| Over 3.5 | 0.5762 | 0.5877 | 0.5864 | -0.0114 |
+| GG/NG | 0.6853 | 0.6901 | 0.6871 | -0.0047 |
+| pari/dispari | 0.6932 | 0.6930 | 0.6923 | +0.0001 |
+
+- il market-implied batte il DC-da-gol su 13 mercati su 14 (CI95<0 su 12) e la
+  baseline su 13 su 14; guadagni maggiori sui mercati ricchi (risultato esatto
+  -0.031, multigol, total-squadra);
+- l'unica eccezione e' il pari/dispari (+0.0001): la parita' del totale e'
+  quasi-casuale, nessun lambda,mu la predice (atteso: non inventa segnale);
+- rho: conta poco, un piccolo negativo (-0.06/-0.10) aiuta i punteggi bassi;
+- target: 1X2+O/U batte solo-1X2 (l'O/U fissa il livello di gol, servono
+  entrambi);
+- blend coi nostri lambda,mu: PEGGIORA (il nostro modello non aggiunge nulla al
+  mercato — conferma dell'encompassing, Fase 16). Meglio il mercato puro.
+
+**Lezione.** E' il risultato piu' forte del progetto: un MOTORE di pricing
+coerente per ogni mercato sui gol, che date le sole quote 1X2+O/U prezza
+risultati esatti/multigol/total-squadra/over-under/handicap meglio del nostro
+modello e della baseline, in modo statisticamente solido. Conferma la tesi
+centrale: la leva e' l'INFORMAZIONE (quella del mercato, trasferita a mercati non
+prezzati), non l'architettura. Onesta': non verificabile vs ipotetiche linee di
+chiusura di quei mercati (assenti nei dati), richiede le quote 1X2+O/U alla
+predizione. Config del motore: inversione 1X2+O/U, rho -0.06, lambda,mu puri del
+mercato (niente blend). E' la base pronta per il tool pratico.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

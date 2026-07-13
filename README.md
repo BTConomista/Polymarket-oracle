@@ -119,6 +119,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 23 | **GBM modello + mercato** (encompassing non-lin.) | col mercato come feature resta > DC; non lo pareggia | ❌ nessun edge, gap non ridotto |
 | 24 | **DC calcolato DAL mercato** (λ,μ impliciti → GG/NG) | GG/NG 0.6853: batte DC-da-gol (P=95.7%) e la baseline | ✅ primo miglioramento (condizionato alle quote) |
 | 25 | **finestra dei dati** (taglio netto / no-COVID) | tagliare i dati vecchi peggiora (+0.0011…+0.0035) | ❌ più storia è meglio |
+| 26 | **market-implied su tutti i mercati gol** | batte DC-da-gol su 13/14 mercati e la baseline su 13/14 | ✅ motore di pricing (condizionato alle quote) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -931,6 +932,56 @@ come training (escluderla costa +0.0007). L'emivita di 365g gestisce già la
 recency in modo ottimale; un taglio netto in aggiunta è solo dannoso — conferma e
 rafforza la Fase 2b (memoria lunga). Il parametro `train_window_days` resta
 disponibile nel backtest per future esplorazioni (es. su leghe più volatili).
+
+### Market-implied su tutti i mercati sui gol — Fase 26 (il risultato più forte)
+
+Estensione della Fase 24 a **ogni mercato basato sui gol**, come modulo
+riutilizzabile (`src/models/market_implied.py`, con test) + sweep
+(`scripts/_run_market_implied.py`). Si invertono le quote 1X2+O/U per i λ,μ del
+mercato, e la matrice del DC deriva coerentemente tutti i mercati. Confronto per
+mercato: **market-implied vs DC-da-gol vs baseline**, con CI bootstrap.
+
+| Mercato (\* = non prezzato) | market-implied | DC-da-gol | baseline | Δ vs DC (CI95) |
+|---|--:|--:|--:|--:|
+| risultato esatto \* | 2.8037 | 2.8345 | 2.8974 | −0.0309 [−0.039, −0.023] |
+| multigol 0-1/2-3/4+ \* | 1.0333 | 1.0470 | 1.0444 | −0.0137 [−0.019, −0.008] |
+| total ospite Over 1.5 \* | 0.5985 | 0.6111 | 0.6529 | −0.0126 [−0.018, −0.008] |
+| total casa Over 1.5 \* | 0.6243 | 0.6359 | 0.6770 | −0.0116 [−0.017, −0.007] |
+| Over 3.5 \* | 0.5762 | 0.5877 | 0.5864 | −0.0114 [−0.016, −0.007] |
+| Over 4.5 \* | 0.3765 | 0.3871 | 0.3832 | −0.0106 [−0.015, −0.006] |
+| scarto ospite ≥2 \* | 0.3465 | 0.3558 | 0.4113 | −0.0094 [−0.014, −0.005] |
+| scarto casa ≥2 \* | 0.4318 | 0.4402 | 0.4945 | −0.0083 [−0.013, −0.004] |
+| Over 1.5 \* | 0.5440 | 0.5512 | 0.5491 | −0.0073 [−0.012, −0.003] |
+| GG/NG \* | 0.6853 | 0.6901 | 0.6871 | −0.0047 [−0.008, −0.001] |
+| Over 0.5 \* | 0.2468 | 0.2478 | 0.2477 | −0.0010 [−0.004, +0.001] |
+| pari/dispari totale \* | 0.6932 | 0.6930 | 0.6923 | +0.0001 (≈0) |
+| *(Over 2.5, ancoraggio)* | 0.6818 | 0.6885 | 0.6892 | −0.0067 |
+
+Il market-implied **batte il DC-da-gol su 13 mercati su 14** (CI95<0 su 12) e
+**batte la baseline su 13 su 14**. I guadagni maggiori sono sui mercati più
+ricchi (risultato esatto −0.031, multigol, total-squadra). L'unico mercato dove
+non migliora è il **pari/dispari** (+0.0001): la parità del totale gol è
+quasi-casuale, nessun λ,μ la predice — atteso e rassicurante (non inventa segnale
+dove non c'è). Le due righe *ancoraggio* (1X2, Over 2.5) riproducono il mercato
+per costruzione.
+
+Le tre strade laterali:
+
+- **ρ** (correzione DC): conta poco, ma un piccolo ρ negativo (−0.06/−0.10)
+  aiuta marginalmente sui punteggi bassi (GG/NG 0.6865 → 0.6847). Config ρ≈−0.06.
+- **Target d'inversione**: 1X2+O/U batte solo-1X2 su tutto (Δ +0.003…+0.007):
+  l'O/U aggiunge informazione reale (fissa il livello di gol). **Servono entrambi.**
+- **Blend col nostro DC**: mescolare i nostri λ,μ con quelli del mercato
+  **peggiora** (Δ +0.002…+0.010). Il nostro modello non aggiunge nulla al mercato
+  — conferma pulita dell'encompassing (Fase 16). **Meglio il mercato puro.**
+
+**In mano abbiamo un motore di pricing coerente per ogni mercato sui gol**: date
+le sole quote 1X2+O/U, prezza risultati esatti, multigol, total-squadra,
+over/under a ogni soglia, handicap — meglio del nostro modello e della baseline,
+in modo statisticamente solido. **Onestà:** non verificabile contro *ipotetiche*
+linee di chiusura di quei mercati (assenti nei dati) e richiede le quote 1X2+O/U
+alla predizione. Ma come stimatore per-caso su mercati non prezzati è il
+risultato più forte del progetto, e la base pronta per un tool pratico.
 
 ## Struttura
 
