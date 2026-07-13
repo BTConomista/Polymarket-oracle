@@ -3907,6 +3907,64 @@ aggregato a `0.043 × (−0.041) ≈ −0.0018` — sotto il rumore. È il motiv
 lead è reale ma non muove la metrica complessiva: va valutato **sul sottoinsieme**,
 mai sull'aggregato (lezione già di Fase 31/32, qui riconfermata sul GBM completo).
 
+### Fase 36-bis — `midweek_europe` come covariata del DC (dummy congestione)
+
+**Obiettivo (Punto 2b).** Il flag `home/away_midweek_europe` (gara europea/coppa
+infrasettimana) esiste nei dati ma non era mai stato una covariata del **sotto-modello
+gol** del DC. È un DUMMY di congestione (soglia sì/no), potenzialmente più robusto del
+`rest_full` continuo. Aiuta? E spiega varianza che `rest_full` non cattura, o è
+ridondante?
+
+**Risultato** (`scripts/_run_midweek_cov.py`; 6 stagioni walk-forward, 4 run
+`source=punto2b_midweek`):
+
+| variante | 1X2 log-loss | Δ vs base | CI95 | P(migliora) |
+|---|--:|--:|--:|--:|
+| base | 0.9797 | — | — | — |
+| +midweek | 0.9794 | −0.0003 | [−0.0017, +0.0012] | 65% |
+| +rest_full | 0.9794 | −0.0003 | [−0.0013, +0.0007] | 71% |
+| +rest_full & midweek | 0.9797 | +0.0000 | [−0.0015, +0.0015] | 48% |
+
+Coefficienti a inizio stagione con ENTRAMBE le covariate:
+
+| stagione | β rest_full | β midweek |
+|---|--:|--:|
+| 2020-21 | −0.0501 | −0.0214 |
+| 2021-22 | −0.0053 | −0.0271 |
+| 2022-23 | +0.0257 | −0.0227 |
+| 2023-24 | −0.0019 | −0.0141 |
+| 2024-25 | +0.0052 | −0.0089 |
+| 2025-26 | −0.0159 | −0.0250 |
+| **media** | **−0.0071** | **−0.0199** |
+
+**Lezione / cosa ne consegue.**
+1. **Da solo, midweek non aiuta** (−0.0003, CI include lo zero), come `rest_full`:
+   la congestione è un segnale vero ma debolissimo (coerente con Fase 4c/4e-bis, in
+   gran parte già implicito in gol+xG recenti).
+2. **Ma l'ipotesi dell'audit è confermata: il dummy è un proxy più PULITO del
+   continuo.** `β_midweek` è **negativo in 6 stagioni su 6** (segno atteso:
+   congestione → meno gol) e stabile (−0.009…−0.027); `β_rest_full` invece **cambia
+   segno** (−0.050…+0.026, instabile). L'effetto-soglia "ha giocato in Europa sì/no"
+   cattura la fatica in modo più affidabile del gradiente sui giorni di riposo.
+3. **Insieme sono RIDONDANTI**: la coppia dà +0.0000 (peggio di ciascuna da sola) →
+   catturano la stessa congestione sottostante, non due segnali distinti. midweek è
+   il rappresentante migliore, ma non abbastanza forte da adottarlo.
+4. **Rilevanza cross-lega:** in leghe con più congestione da coppe (es. Premier, EFL
+   Cup + FA Cup + Europa) questo dummy potrebbe pesare di più → resta disponibile
+   (`--covariates midweek`), off di default. È il tipo di iperparametro/feature che
+   §7 dice di **ri-valutare per ogni lega**.
+
+**Riproducibilità.** `python scripts/_run_midweek_cov.py`.
+
+**📐 Il modello in dettaglio.** midweek entra come le altre covariate (Fase 4c):
+`cov = β·(z_casa − z_ospite)`, con `z` la standardizzazione del dummy 0/1. Il segno
+di β si legge sui gol: `β_midweek = −0.020` ⇒ una squadra reduce da un impegno
+europeo infrasettimanale ha tasso-gol `× e^{−0.020} ≈ 0.98` (−2%) rispetto a una
+riposata. Piccolo ma **coerente in segno** (6/6), a differenza di `rest_full`: la
+stabilità del segno — non la dimensione — è ciò che distingue un dummy-soglia
+robusto da un gradiente rumoroso. Il test di ridondanza (β entrambi insieme + Δ
+combinato +0.0000) mostra che i due misurano lo stesso fenomeno.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di
