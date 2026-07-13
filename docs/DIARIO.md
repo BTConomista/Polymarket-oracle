@@ -4023,6 +4023,83 @@ Fase 34 aveva evitato altrove. Coerente con il principio "testa la versione
 economica prima di investire": qui la versione economica (residui, costo zero di
 compute) chiude la questione senza toccare `_fit_draw_balance`.
 
+---
+
+## Fase 38 — Denoising cross-stagione del market-implied (Punto 4: motore già maturo)
+
+**Obiettivo (Punto 4).** Il motore market-implied (Fase 24/26) inverte OGNI partita
+in **isolamento**: nessun meccanismo che sfrutti l'informazione cross-stagione per
+ridurre il rumore o correggere bias sistematici del bookmaker. Due correzioni,
+stimate sul passato e applicate al futuro (leave-future-out), sul mercato-vetrina non
+prezzato (GG/NG): (1) **power-devig** `p_i ∝ (1/o_i)^{1/η}` (corregge il bias del
+margine); (2) **ricalibrazione derivata** Platt sul GG/NG (corregge un bias
+sistematico del motore). Più il **trade-off bias/varianza/lag**: calibrazione su
+tutto il passato vs pesata sul recente.
+
+**Ragionamento / scelta.** Modulo puro `src/models/market_denoise.py` (power_devig,
+fit_power_eta, fit_derived_recal, recency_weights). Validazione
+`scripts/_run_market_denoise.py` (usa i backtest in cache, solo inversioni; 1 run
+`source=punto4_market_denoise`). Confronto vs raw market-implied (Fase 26), DC-da-gol,
+baseline.
+
+**Risultato** (LFO, 5 stagioni; riferimenti: raw 0.6866, DC-da-gol 0.6915,
+baseline 0.6928):
+
+| denoiser | GG log-loss | Δ vs raw | CI95 | P(migliora) | parametri |
+|---|--:|--:|--:|--:|---|
+| power-devig | 0.6863 | −0.0003 | [−0.0021, +0.0015] | 63% | η=0.895 |
+| recal Platt (all-history) | 0.6886 | +0.0020 | [−0.0013, +0.0053] | 12% | a=1.06, b=+0.14 |
+| recal Platt (recency hl=2) | 0.6887 | +0.0021 | [−0.0011, +0.0054] | 10% | a=1.07, b=+0.13 |
+| power + recal | 0.6879 | +0.0013 | [−0.0024, +0.0049] | 24% | η=0.895 |
+
+**Lezione / cosa ne consegue.**
+1. **La ricalibrazione derivata PEGGIORA** (+0.0020). Il motivo è istruttivo: il GG/NG
+   market-implied è **già ben calibrato** (Platt stima `a ≈ 1.06 ≈ 1`, cioè "nessuna
+   temperatura da cambiare"); il `b = +0.14` è un aggiustamento di livello che
+   **sovracorregge**. Non c'è bias sistematico da togliere → correggere aggiunge solo
+   rumore. È la conferma che il motore (Fase 26) è **non-biased**.
+2. **Il power-devig è trascurabile e non conclusivo** (−0.0003, P 63%, CI include lo
+   zero). η=0.895 (<1) affila appena i favoriti nell'inversione: direzione coerente,
+   effetto sotto il rumore.
+3. **Trade-off bias/varianza/lag — documentato:** recency (hl=2) è **identica**
+   all'all-history (+0.0021 vs +0.0020) → **non c'è deriva** del bias del bookmaker in
+   queste 6 stagioni da inseguire, quindi la calibrazione a minima varianza
+   (all-history) è la scelta giusta e la recency aggiunge solo varianza senza
+   guadagno di lag. Se in futuro il margine derivasse (nuove leghe, nuovi anni),
+   `recency_weights(half_life=...)` è pronto per gestirlo.
+4. **Verdetto:** il market-implied non beneficia del denoising cross-stagione — le
+   quote di ogni partita contengono già l'informazione, e aggregare tra stagioni non
+   riduce varianza in modo utile. Dopo la forma (Fase 27), anche il denoising tocca
+   il tetto: il motore è **maturo così com'è**. Il modulo resta disponibile per leghe
+   con bookmaker meno efficienti (dove un bias sistematico da correggere potrebbe
+   esistere davvero) — §7.
+
+**Riproducibilità.** `python scripts/_run_market_denoise.py`.
+
+### 📐 Il modello in dettaglio — le due correzioni e perché non servono qui
+
+```
+power-devig:   p_i ∝ (1/o_i)^{1/η}          η tarato su log-loss 1X2 passata
+recal Platt:   p_corr = σ(a·logit(p_raw) + b)   (a,b) su GG/NG passato
+recency:       peso_stagione = 2^{−(distanza_stagioni)/half_life}
+```
+
+**Perché `a ≈ 1.06` dice "non c'è nulla da correggere".** Il Platt riduce a due gesti:
+`a` = temperatura (a<1 raffredda, a>1 affila), `b` = spostamento di livello. Su un
+mercato *ben calibrato* il fit ottimo è `(a,b) = (1,0)` (identità). Qui esce `a=1.06`
+(quasi 1) e `b=+0.14`: il motore market-implied è già near-identità; il piccolo `b`
+che il fit trova sul passato **non generalizza** (il GG/NG medio varia per stagione,
+come i pareggi) e out-of-sample fa danno (+0.0020). È lo stesso meccanismo della Fase
+6 (temperature) e 12b: correggere una media che oscilla per stagione punisce il
+log-loss.
+
+**Perché recency = all-history qui.** `recency_weights` con half-life 2 dà più peso
+alle stagioni recenti; se il bias del bookmaker **derivasse**, seguirlo ridurrebbe il
+bias a costo di varianza. Il fatto che i due diano lo **stesso** risultato
+(+0.0021 vs +0.0020) è la prova empirica che **non c'è deriva**: `a,b` stimati sul
+recente ≈ stimati su tutto. Trade-off risolto a favore della minima varianza
+(all-history). Il lag non è un problema perché non c'è nulla che si muove.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di
