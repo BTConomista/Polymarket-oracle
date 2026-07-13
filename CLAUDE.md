@@ -301,7 +301,16 @@ Solo il pari/dispari non migliora (quasi-casuale). Strade: rho -0.06 aiuta poco;
 servono 1X2 E O/U (l'O/U aggiunge); blend coi nostri lambda,mu PEGGIORA (mercato
 puro meglio, conferma Fase 16). E' un MOTORE di pricing coerente per ogni mercato
 sui gol, condizionato alle quote 1X2+O/U; non verificabile vs ipotetiche linee di
-quei mercati. **Prossimo bivio:** uso pratico (tool di predizione basato su
-market_implied, ora ben motivato), dati davvero nuovi, o cross-lega.
+quei mercati. **Fase 27 (forma dei punteggi):** i lambda,mu vengono dal mercato,
+ma la forma della distribuzione e' nostra; fittata walk-forward
+(`scripts/_run_shape.py`, modulo esteso con inflazione diagonale + binomiale
+negativa). La forma della Fase 26 (Poisson + rho -0.06) e' gia' ottima: rho
+fittato ~ fisso (nessun guadagno), phi diagonale minuscolo e non conclusivo,
+binomiale negativa RIGETTATA (nb_size->Poisson: i gol con lambda dal mercato non
+sono over-dispersi). Il market-implied ha toccato il tetto anche sulla forma; per
+spingere oltre servirebbero PIU' input di mercato (altre linee O/U, handicap) che
+lo snapshot non ha. **Prossimo bivio:** uso pratico (tool di predizione basato su
+market_implied, ora ben motivato e maturo), dati davvero nuovi (altre linee di
+quota), o cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

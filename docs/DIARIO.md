@@ -1912,6 +1912,44 @@ mercato (niente blend). E' la base pronta per il tool pratico.
 
 ---
 
+## Fase 27 — Ottimizzare la forma dei punteggi sul market-implied (gia' ottima)
+
+**Obiettivo.** Spremere il market-implied: i lambda,mu vengono dal mercato
+(ottimi), ma la FORMA della distribuzione attorno a loro e' nostra, e in Fase 26
+rho=-0.06 era fissato a occhio. Impararla dai risultati reali puo' migliorare i
+mercati derivati (soprattutto risultato esatto e code)?
+
+**Ragionamento.** La forma e' un parametro GLOBALE (non per-squadra), quindi
+fittabile a bassa varianza sui risultati passati e applicabile in avanti (niente
+look-ahead). Varianti: rho fittato; rho + inflazione diagonale phi (Fase 12b);
+binomiale negativa (over-dispersione dei gol). Non serve il DC: il motore usa
+solo quote + matrice, si lavora dallo snapshot.
+
+**Risultato** (`scripts/_run_shape.py`; 1 run summary, source `fase27_shape`):
+
+| forma | risultato esatto | Δ vs Fase 26 |
+|---|--:|--:|
+| rho=-0.06 (Fase 26) | 2.8037 | — |
+| rho fittato (~-0.074) | 2.8038 | +0.0002 (rumore) |
+| rho + phi (~0.09) | 2.8025 | -0.0011 [-0.0025, +0.0003] |
+| binom. negativa | 2.8045 | +0.0009 (peggio) |
+
+- rho fittato ~ rho fisso: il -0.06 a occhio era gia' giusto, fittarlo non aiuta;
+- inflazione diagonale phi: guadagno minuscolo e NON conclusivo (CI include lo
+  zero) solo sul risultato esatto -> non adottata;
+- binomiale negativa RIGETTATA: il fit spinge la dispersione verso la Poisson
+  (nb_size ~200) e peggiora -> i gol, con lambda dal mercato, sono Poisson, non
+  over-dispersi.
+
+**Lezione.** La forma della Fase 26 era gia' essenzialmente ottima: i lambda,mu
+del mercato sono tutta la storia, la Poisson+rho attorno a loro e' il meglio.
+Il market-implied ha toccato il suo tetto anche sulla dimensione della forma:
+per spingere oltre servirebbero PIU' input di mercato (altre linee O/U, handicap
+asiatici) per vincolare meglio i lambda,mu — che lo snapshot non ha. Il motore
+e' maturo cosi' com'e'.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

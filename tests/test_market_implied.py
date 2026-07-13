@@ -58,3 +58,25 @@ def test_btts_coerente_con_matrice():
     # GG = 1 - P(casa 0) - P(ospite 0) + P(0-0)
     p_home0 = M[0, :].sum(); p_away0 = M[:, 0].sum(); p00 = M[0, 0]
     assert m["btts"] == pytest.approx(1 - p_home0 - p_away0 + p00, abs=1e-9)
+
+
+def test_diag_inflation_alza_i_pareggi():
+    M0 = mi.score_matrix(1.5, 1.3, rho=0.0)
+    Mi = mi.score_matrix(1.5, 1.3, rho=0.0, diag_inflation=0.15)
+    assert Mi.sum() == pytest.approx(1.0, abs=1e-9)
+    p_draw0 = float(np.trace(M0)); p_drawi = float(np.trace(Mi))
+    assert p_drawi > p_draw0                     # piu' massa sui pareggi
+
+
+def test_nbinom_over_dispersa_vs_poisson():
+    """La NB con size finito ha varianza > Poisson (piu' massa sulle code)."""
+    Mp = mi.score_matrix(1.6, 1.6, nb_size=None)      # Poisson
+    Mnb = mi.score_matrix(1.6, 1.6, nb_size=5.0)      # over-dispersa
+    assert Mnb.sum() == pytest.approx(1.0, abs=1e-9)
+    # coda alta (totale >= 5) piu' pesante con la NB
+    i = mi._K.reshape(-1, 1); j = mi._K.reshape(1, -1)
+    tail_p = float(Mp[(i + j) >= 5].sum()); tail_nb = float(Mnb[(i + j) >= 5].sum())
+    assert tail_nb > tail_p
+    # size molto grande -> ~Poisson
+    Mbig = mi.score_matrix(1.6, 1.6, nb_size=1e6)
+    assert np.abs(Mbig - Mp).max() < 1e-3

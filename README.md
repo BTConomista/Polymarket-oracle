@@ -120,6 +120,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 24 | **DC calcolato DAL mercato** (λ,μ impliciti → GG/NG) | GG/NG 0.6853: batte DC-da-gol (P=95.7%) e la baseline | ✅ primo miglioramento (condizionato alle quote) |
 | 25 | **finestra dei dati** (taglio netto / no-COVID) | tagliare i dati vecchi peggiora (+0.0011…+0.0035) | ❌ più storia è meglio |
 | 26 | **market-implied su tutti i mercati gol** | batte DC-da-gol su 13/14 mercati e la baseline su 13/14 | ✅ motore di pricing (condizionato alle quote) |
+| 27 | **forma dei punteggi** (ρ/φ/binom-neg fittati) | già ottima; NB rigettata (gol ~Poisson) | ❌ tetto anche sulla forma |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -982,6 +983,27 @@ in modo statisticamente solido. **Onestà:** non verificabile contro *ipotetiche
 linee di chiusura di quei mercati (assenti nei dati) e richiede le quote 1X2+O/U
 alla predizione. Ma come stimatore per-caso su mercati non prezzati è il
 risultato più forte del progetto, e la base pronta per un tool pratico.
+
+### Ottimizzare la forma dei punteggi — Fase 27 (già ottima)
+
+Ultima spinta sul market-implied: i λ,μ vengono dal mercato (ottimi), ma la
+*forma* della distribuzione attorno a loro è nostra, e in Fase 26 ρ=−0.06 era
+fissato a occhio. La impariamo dai risultati reali, walk-forward, tenendo i λ,μ
+del mercato (`scripts/_run_shape.py`):
+
+| Forma | risultato esatto | Δ vs Fase 26 |
+|---|--:|--:|
+| ρ=−0.06 (Fase 26) | 2.8037 | — |
+| ρ fittato (≈−0.074) | 2.8038 | +0.0002 (rumore) |
+| ρ + φ diagonale (≈0.09) | 2.8025 | −0.0011 [−0.0025, +0.0003] |
+| binomiale negativa | 2.8045 | +0.0009 (peggio) |
+
+La forma della Fase 26 era **già essenzialmente ottima**: fittare ρ non aiuta
+(il −0.06 a occhio era giusto), l'inflazione diagonale φ dà un guadagno minuscolo
+e non conclusivo (CI include lo zero) solo sul risultato esatto, e la binomiale
+negativa è **rigettata** (il fit spinge la dispersione verso la Poisson: i gol,
+con λ dal mercato, non sono over-dispersi). Il market-implied ha toccato il suo
+tetto anche sulla forma: i λ,μ del mercato sono tutta la storia.
 
 ## Struttura
 

@@ -30,11 +30,34 @@ _K = np.arange(MAX_GOALS + 1)
 _LOGFACT = gammaln(_K + 1.0)
 
 
-def score_matrix(lam: float, mu: float, rho: float = 0.0) -> np.ndarray:
-    """Matrice P(gol_casa=i, gol_ospite=j) con correzione Dixon-Coles (rho sui
-    4 punteggi bassi). rho=0 = Poisson indipendenti. Normalizzata."""
-    ph = np.exp(_K * np.log(lam) - lam - _LOGFACT)
-    pa = np.exp(_K * np.log(mu) - mu - _LOGFACT)
+def _poisson_pmf(lam: float) -> np.ndarray:
+    return np.exp(_K * np.log(lam) - lam - _LOGFACT)
+
+
+def _nbinom_pmf(mean: float, size: float) -> np.ndarray:
+    """PMF binomiale negativa con media ``mean`` e parametro di dispersione
+    ``size`` (r): var = mean + mean^2/size. size -> inf ricade nella Poisson.
+    Cattura l'over-dispersione dei gol."""
+    p = size / (size + mean)
+    return np.exp(gammaln(_K + size) - gammaln(size) - _LOGFACT
+                  + size * np.log(p) + _K * np.log1p(-p))
+
+
+def score_matrix(lam: float, mu: float, rho: float = 0.0,
+                 diag_inflation: float = 0.0, nb_size: float | None = None
+                 ) -> np.ndarray:
+    """Matrice P(gol_casa=i, gol_ospite=j) attorno ai tassi (lam, mu).
+
+    - ``rho``           : correzione Dixon-Coles sui 4 punteggi bassi (rho=0 =
+      marginali indipendenti);
+    - ``diag_inflation``: phi che alza TUTTA la diagonale dei pareggi (Fase 12b);
+    - ``nb_size``       : se dato, usa marginali binomiali-negative con quel
+      parametro di dispersione invece della Poisson (over-dispersione).
+    Normalizzata."""
+    if nb_size is not None:
+        ph, pa = _nbinom_pmf(lam, nb_size), _nbinom_pmf(mu, nb_size)
+    else:
+        ph, pa = _poisson_pmf(lam), _poisson_pmf(mu)
     M = np.outer(ph, pa)
     if rho:
         M[0, 0] *= 1.0 - lam * mu * rho
@@ -42,6 +65,9 @@ def score_matrix(lam: float, mu: float, rho: float = 0.0) -> np.ndarray:
         M[1, 0] *= 1.0 + mu * rho
         M[1, 1] *= 1.0 - rho
         M = np.clip(M, 0.0, None)
+    if diag_inflation:
+        idx = np.arange(M.shape[0])
+        M[idx, idx] *= 1.0 + diag_inflation
     return M / M.sum()
 
 
