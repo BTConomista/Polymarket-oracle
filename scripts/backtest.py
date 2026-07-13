@@ -67,9 +67,17 @@ def run_backtest(
     promoted_prior: tuple[float, float] | None = None,
     draw_inflation: bool = False,
     dynamic_rho: bool = False,
+    train_window_days: float | None = None,
+    drop_train_seasons: tuple[str, ...] = (),
     verbose: bool = True,
 ) -> pd.DataFrame:
-    """Esegue il walk-forward e ritorna un DataFrame con una riga per partita."""
+    """Esegue il walk-forward e ritorna un DataFrame con una riga per partita.
+
+    Finestra dei dati (Fase 25): ``train_window_days`` scarta dal training le
+    partite piu' vecchie di N giorni prima del momento della predizione (taglio
+    NETTO, oltre al decadimento morbido dell'emivita); ``drop_train_seasons``
+    esclude intere stagioni dal training (es. la stagione COVID a porte chiuse).
+    Nessuno dei due tocca la stagione di test o il calcolo delle neopromosse."""
     all_matches = loader.load_league(league_key)
     test = all_matches[all_matches["season"] == test_season].copy()
     if test.empty:
@@ -86,18 +94,31 @@ def run_backtest(
     # ordina correttamente in senso cronologico.
     test["_week"] = test["date"] - pd.to_timedelta(test["date"].dt.dayofweek, unit="D")
 
+    # Base di training: opzionalmente senza intere stagioni (es. COVID).
+    train_base = all_matches
+    if drop_train_seasons:
+        keep = ~all_matches["season"].isin(drop_train_seasons) \
+            | (all_matches["season"] == test_season)   # la test resta intatta
+        train_base = all_matches[keep]
+
     rows: list[dict] = []
     n_weeks = test["_week"].nunique()
     for w, (_, group) in enumerate(test.groupby("_week", sort=True), start=1):
         as_of = group["date"].min()
+        # Finestra netta: solo le partite entro train_window_days prima di as_of.
+        train_frame = train_base
+        if train_window_days is not None:
+            cutoff = as_of - pd.Timedelta(days=float(train_window_days))
+            train_frame = train_base[train_base["date"] >= cutoff]
         model = DixonColesModel(half_life_days=half_life_days, shrinkage=shrinkage,
                                 shots_blend=shots_blend, blend_signal=blend_signal,
                                 covariates=covariates, promoted_prior=promoted_prior,
                                 draw_inflation=draw_inflation, dynamic_rho=dynamic_rho)
-        model.fit(all_matches, as_of_date=as_of, promoted_teams=promoted)
+        model.fit(train_frame, as_of_date=as_of, promoted_teams=promoted)
         if verbose:
             print(f"  settimana {w}/{n_weeks}  ({as_of.date()}): "
-                  f"{len(group)} partite, allenato su {(all_matches['date'] < as_of).sum()} gare",
+                  f"{len(group)} partite, allenato su "
+                  f"{(train_frame['date'] < as_of).sum()} gare",
                   flush=True)
 
         for _, m in group.iterrows():
@@ -202,6 +223,13 @@ def main() -> None:
                         help="rho dinamico (Fase 18): la correzione sui punteggi "
                              "bassi dipende dai gol attesi della partita "
                              "(rho + rho_slope*(lam+mu-centro), rho_slope fittato)")
+    parser.add_argument("--train-window-days", type=float, default=None, metavar="N",
+                        help="finestra dei dati (Fase 25): allena solo sulle partite "
+                             "degli ultimi N giorni prima di ogni predizione (taglio "
+                             "netto, oltre all'emivita). Default: nessun limite.")
+    parser.add_argument("--drop-train-seasons", nargs="*", default=[], metavar="STAG",
+                        help="esclude intere stagioni dal training (es. 2021 per la "
+                             "stagione COVID); la stagione di test resta intatta")
     parser.add_argument("--quiet", action="store_true",
                         help="non stampare il log settimanale")
     parser.add_argument("--save", default="outputs/backtest_predictions.csv",
@@ -220,7 +248,10 @@ def main() -> None:
                       shrinkage=args.shrinkage, shots_blend=args.shots_blend,
                       blend_signal=args.blend_signal, covariates=tuple(args.covariates),
                       promoted_prior=prior, draw_inflation=args.draw_inflation,
-                      dynamic_rho=args.dynamic_rho, verbose=not args.quiet)
+                      dynamic_rho=args.dynamic_rho,
+                      train_window_days=args.train_window_days,
+                      drop_train_seasons=tuple(args.drop_train_seasons),
+                      verbose=not args.quiet)
 
     m = experiment_log.compute_metrics(df)
     report(m, len(df))

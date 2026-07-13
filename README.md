@@ -118,6 +118,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 22 | **sweep GBM su 6 mercati × 3 feature** | non batte il DC su nessun mercato; gap ✗ su 5/6 | ❌ tetto informativo |
 | 23 | **GBM modello + mercato** (encompassing non-lin.) | col mercato come feature resta > DC; non lo pareggia | ❌ nessun edge, gap non ridotto |
 | 24 | **DC calcolato DAL mercato** (λ,μ impliciti → GG/NG) | GG/NG 0.6853: batte DC-da-gol (P=95.7%) e la baseline | ✅ primo miglioramento (condizionato alle quote) |
+| 25 | **finestra dei dati** (taglio netto / no-COVID) | tagliare i dati vecchi peggiora (+0.0011…+0.0035) | ❌ più storia è meglio |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -906,6 +907,30 @@ verificabile contro un'ipotetica linea di chiusura del GG/NG (assente nei dati);
 un venue che offra il GG/NG — plausibile su un prediction market. Come stimatore
 *condizionato alla disponibilità delle quote*, però, è il primo miglioramento
 reale su un mercato in tutto l'arco Fasi 21-24.
+
+### Sensibilità alla finestra dei dati — Fase 25 (più storia batte meno)
+
+Il modello già scorda il passato in modo *morbido* (emivita 365g). Domanda:
+tagliare via del tutto le stagioni vecchie — o la sola stagione COVID a porte
+chiuse (anomala) — aiuta, o l'emivita basta? Sweep sulla config ufficiale
+(`--train-window-days` / esclusione stagioni, `scripts/_run_window.py`):
+
+| Training | 1X2 (tutte) | gap mercato | Δ vs "tutto" (recenti-3) |
+|---|--:|--:|--:|
+| **tutto (attuale)** | **0.9797** | +0.0165 | — |
+| finestra 3 stagioni | 0.9808 | +0.0176 | +0.0014 |
+| finestra 2 stagioni | 0.9816 | +0.0184 | **+0.0035** |
+| senza COVID 2020-21 | 0.9803 | +0.0172 | +0.0003 |
+
+Risultato controintuitivo: **tagliare i dati vecchi peggiora, non aiuta** — e la
+finestra corta danneggia *di più proprio le stagioni recenti* (+0.0035 sul
+2023-26 con sole 2 stagioni di training). Le rose di Serie A sono stabili anno su
+anno, quindi anche i dati vecchi informano la forza attuale; buttarli via aumenta
+la varianza delle stime. Perfino la stagione COVID, anomala, è **netto-utile**
+come training (escluderla costa +0.0007). L'emivita di 365g gestisce già la
+recency in modo ottimale; un taglio netto in aggiunta è solo dannoso — conferma e
+rafforza la Fase 2b (memoria lunga). Il parametro `train_window_days` resta
+disponibile nel backtest per future esplorazioni (es. su leghe più volatili).
 
 ## Struttura
 

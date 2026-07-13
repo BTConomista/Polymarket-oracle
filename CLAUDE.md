@@ -283,8 +283,15 @@ probabile, non concluso), guadagno modesto, non verificabile vs un'ipotetica
 linea GG/NG, e RICHIEDE le quote 1X2+O/U al momento della predizione. LEZIONE: la
 leva vera e' l'INFORMAZIONE (qui quella del mercato su un mercato non prezzato),
 non l'architettura; il GG/NG "specialista" (principio 8) diventa
-mercato-implicito -> matrice DC -> P(GG), non il DC-da-gol. **Prossimo bivio:**
-dati davvero nuovi, uso pratico (il predittore GG/NG condizionato alle quote e' il
-primo candidato utile), o cross-lega.
+mercato-implicito -> matrice DC -> P(GG), non il DC-da-gol. **Fase 25 (finestra dei dati):** aggiunti al backtest
+``train_window_days`` (taglio netto) e ``drop_train_seasons``; sweep sulla config
+ufficiale (`scripts/_run_window.py`). Tagliare le stagioni vecchie PEGGIORA
+(finestra 3 stag +0.0011, 2 stag +0.0019, e di piu' sulle recenti +0.0035);
+perfino escludere la stagione COVID anomala costa +0.0007. Piu' storia batte
+meno: rose stabili anno su anno, l'emivita 365g gia' gestisce la recency in modo
+ottimale. Conferma la Fase 2b (memoria lunga). **Prossimo bivio:** Fase 26
+(market-implied esteso a TUTTI i mercati sui gol, nessun dato nuovo serve), dati
+davvero nuovi, uso pratico (predittore GG/NG condizionato alle quote), o
+cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

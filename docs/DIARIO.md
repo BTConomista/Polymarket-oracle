@@ -1821,6 +1821,46 @@ del mercato su un mercato non prezzato), non l'architettura.
 
 ---
 
+## Fase 25 — Finestra dei dati: piu' storia batte meno (anche per il calcio di oggi)
+
+**Obiettivo.** Il modello scorda il passato in modo MORBIDO (emivita 365g).
+Ipotesi da testare (proposta: "fai finta che il calcio pre-COVID non sia
+esistito"): tagliare via del tutto le stagioni vecchie, o la sola stagione COVID
+a porte chiuse (anomala), aiuta le stagioni recenti?
+
+**Ragionamento.** L'emivita e' un decadimento morbido (una partita di 3 stagioni
+fa pesa <0.06). Un taglio NETTO e' diverso: rimuove del tutto quei dati. Se il
+calcio evolve, i dati vecchi potrebbero fare rumore -> finestra corta meglio. Se
+invece le rose sono stabili, i dati vecchi informano ancora -> finestra corta
+peggio (piu' varianza).
+
+**Metodo.** Aggiunti al backtest ``train_window_days`` (taglio netto) e
+``drop_train_seasons`` (esclude intere stagioni), senza toccare test o
+neopromosse. Sweep sulla config ufficiale, 6 test season, spezzato in
+recenti-3 (2023-26) vs vecchie-3 (2020-23).
+
+**Risultato** (`scripts/_run_window.py`; 24 run, source `fase25_window`):
+
+| training | 1X2 tutte | gap | Δ vs "tutto" (recenti-3) |
+|---|--:|--:|--:|
+| tutto (attuale) | 0.9797 | +0.0165 | — |
+| finestra 3 stag | 0.9808 | +0.0176 | +0.0014 |
+| finestra 2 stag | 0.9816 | +0.0184 | +0.0035 |
+| senza COVID 2020-21 | 0.9803 | +0.0172 | +0.0003 |
+
+Controintuitivo: tagliare i dati vecchi PEGGIORA, e la finestra corta danneggia
+DI PIU' proprio le stagioni recenti (+0.0035 sul 2023-26 con 2 stagioni). Perfino
+la stagione COVID e' netto-utile (escluderla costa +0.0007).
+
+**Lezione.** Piu' storia batte meno, sempre: le rose di Serie A sono stabili anno
+su anno, quindi anche i dati vecchi informano la forza attuale, e buttarli via
+aumenta solo la varianza. L'emivita 365g gestisce gia' la recency in modo
+ottimale; un taglio netto in aggiunta e' dannoso. Conferma e rafforza la Fase 2b
+(memoria lunga). Nota: il parametro ``train_window_days`` resta nel backtest per
+leghe piu' volatili, dove il verdetto potrebbe cambiare.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della
