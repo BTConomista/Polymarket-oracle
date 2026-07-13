@@ -2405,6 +2405,37 @@ pareggio a chiudersi**: il tetto non dipende dalla forma funzionale della
 correzione, ma dall'informazione disponibile. Nota di metodo: dichiarare la
 regola di adozione prima di vedere i numeri costa zero e vale molto.
 
+### 📐 Il modello in dettaglio — la formula del rho dinamico
+
+Il `ρ` di Dixon-Coles classico è **un solo numero** per tutte le partite. L'ipotesi:
+la correlazione dei punteggi bassi varia con la partita (un match da 1.8 gol attesi ha
+dinamiche di 0-0/1-1 diverse da uno da 3.5). Si rende `ρ` funzione lineare del volume
+di gol atteso:
+
+```
+ρ_match = ρ + ρ_slope · ( λ + μ − centro )
+centro  = media pesata dei gol totali del training   (costante fissata PRIMA del fit)
+```
+
+- `ρ_slope` è stimato **dentro** la verosimiglianza (non post-hoc), con
+  `ρ_slope ∈ [−0.15, 0.15]`;
+- `ρ_slope = 0` riproduce **esattamente** il modello classico (c'è un test di
+  regressione in `tests/` che lo verifica);
+- il `centro` sottratto rende `ρ_slope` interpretabile come "quanto cambia la
+  correlazione per gol atteso *in più della media*".
+
+**La disciplina (regola dichiarata PRIMA dei numeri).** Adozione **solo se** il CI95
+bootstrap del Δ esclude lo zero. Dichiararla prima costa zero e blinda contro il
+"trovare" un guadagno post-hoc.
+
+**Perché è rumore — la doppia firma.** (1) Il *parametro* è instabile: `ρ_slope` fittato
+al via di ogni stagione fa +0.06, −0.11, +0.15, −0.08, +0.15, +0.15 → cambia segno e
+sbatte sul bound in 3 fit su 6 (un parametro reale sarebbe stabile). (2) Nessun
+guadagno OOS: Δ **+0.0003**, CI95 [−0.0007, +0.0013], P(migliora)=25.9%. Regola
+pre-dichiarata → **non adottato**. Terza via strutturale sul pareggio a chiudersi: il
+tetto non dipende dalla *forma funzionale* della correzione (τ costante, φ, ρ(match)
+danno tutti lo stesso ordine di grandezza) ma dall'informazione disponibile.
+
 ---
 
 ## Fase 19 — Potenza sul prior: 8 stagioni (l'evidenza si rafforza, non conclude)
@@ -2440,6 +2471,24 @@ il CI sfiora ancora lo zero (+0.0001): per la disciplina multiple-testing il
 verdetto resta "**molto probabile, formalmente non concluso**". Il prior resta
 adottato; l'etichetta onesta migliora. Per chiudere davvero servirebbero altre
 ~2-3 stagioni di dati nuovi (o piu' leghe).
+
+### 📐 In dettaglio — perché più stagioni spostano P(aiuta) (e il caveat)
+
+**Il meccanismo statistico.** Il segnale del prior è piccolo ma reale; la larghezza
+del suo CI si stringe come `∝ 1/√n`. Aggiungendo le stagioni **2018-19 e 2019-20** —
+mai usate in nessuna analisi precedente — `n` passa da 2280 a 3040 partite (e le
+partite-promosse da 648 a 864). Con l'effetto fisso e il CI che si stringe, la massa
+della distribuzione bootstrap che sta sotto zero cresce: **P(aiuta) 92.6% → 96.5%**.
+È il comportamento di un **effetto reale piccolo** (P si muove verso 1 man mano che
+arrivano dati), non di rumore (che oscillerebbe attorno al 50%). Le due stagioni nuove
+confermano entrambe il prior (Δ −0.0024 e −0.0014; sulle promosse −0.0093 e −0.0045).
+
+**Il caveat onesto (perché "non concluso" resta).** `δ = 0.23` è la stima **storica**
+della Fase 7, che **include** informazione 2018-20. Quindi per le due stagioni aggiunte
+il *valore* del prior non è leave-future-out: questo è un **test di potenza**
+sull'effetto della config adottata, non una nuova stima indipendente di `δ`. Inoltre,
+con ~30 test sulle stesse 6-8 stagioni (multiple testing), un CI che sfiora lo zero
+(+0.0001) va letto conservativamente → "molto probabile, formalmente non concluso".
 
 ---
 
@@ -2494,6 +2543,34 @@ l'encompassing (Fase 16, α*=0) e il CLV negativo (Fase 14) — tre viste dello
 stesso fatto. E' il risultato che rende ONESTO il "non scommettere": non "il
 modello e' un po' peggio", ma "ogni volta che il modello crede di avere ragione
 contro la chiusura, ha torto in media".
+
+### 📐 In dettaglio — residuo rumoroso, ma l'adverse selection è netta
+
+**Parte 1 — il residuo è rumore puro.** Regressione multivariata del residuo su 11
+covariate pre-partita, col benchmark di rumore della Fase 13-bis:
+
+```
+R²_osservato = 0.0055     vs     R²_rumore ≈ k/n = 0.0048   (e 0.0051 da feature casuali)
+```
+
+Praticamente identici → nessuna covariata predice il residuo, **incluse** le tre di
+*estremità* mai provate (|scarto valore-rosa| −0.0018, |scarto riposo| −0.0046, assenze
+totali −0.0011: le più piatte). Nullo già in-sample → a fortiori fuori campione.
+
+**Parte 2 — adverse selection, forte e pulita.** Si ordina il **dissenso**
+modello-mercato (quanto la P del modello si discosta da quella di mercato) in quartili
+e si guarda il gap:
+
+```
+quartile dissenso:  basso +0.0009 → medio-basso +0.0024 → medio-alto +0.0088 → alto +0.0539
+corr( dissenso , gap ) = +0.18
+```
+
+Il gap cresce **monotòno**: dove il modello dissente di più — cioè **dove segnalerebbe
+un value bet** — perde ~`0.0539/0.0009 ≈ 60 volte` di più. È il meccanismo operativo
+del fallimento reso quantitativo: i disaccordi del modello sono i suoi **errori**, non
+la sua intuizione. Chiude il cerchio con encompassing (α*=0, Fase 16) e CLV negativo
+(Fase 14): tre misure indipendenti, stesso fatto.
 
 ---
 
@@ -2555,6 +2632,43 @@ valido per i prossimi tentativi; ma questo mercato, col miglior candidato
 ragionevole, non cede — e il fatto che un modello non-parametrico non trovi
 nulla oltre il DC abbassa molto le attese anche per un bivariato Poisson.
 
+### 📐 Il modello in dettaglio — lo stacking DC+GBM e la calibrazione di Platt
+
+**L'architettura (stacking).** Un gradient boosting predice `P(GG)` direttamente, con
+in ingresso l'informazione che il DC già estrae **più** le covariate grezze:
+
+```
+feature del GBM = [ λ, μ, P(GG)_DC, P(Over)_DC   (output DC, walk-forward)
+                    + forma, riposo, valore-rosa, assenze ]   →   P(GG)
+target = 1 se entrambe segnano, 0 altrimenti
+```
+
+Così il GBM ha *tutto* ciò che ha il DC, più lo spazio per imparare la correzione di
+correlazione **non-lineare** che al DC (Poisson quasi-indipendenti) manca. Walk-forward
+per stagione (allena su 1819..S−1); niente look-ahead né nelle feature né nel target.
+
+**Il controllo di equità decisivo — calibrazione di Platt.** Il log-loss punisce
+durissimo la mis-calibrazione, e un boosting è sovra-confidente su un evento ~50/50.
+Per non incolpare il modello di un difetto di *taratura* invece che di *contenuto*, si
+calibra con una logistica a 2 parametri, stimata in cross-validation **sul solo
+training**:
+
+```
+p_calibrato = σ( a · logit(p_grezzo) + b )        σ = sigmoide;  (a, b) fit in CV
+```
+
+**Perché il controllo era decisivo (in numeri).** Il GBM grezzo sembrava un disastro
+(Δ vs DC **+0.0280**), ma calibrato il divario **crolla a +0.0047** (CI include lo
+zero, batte il DC in 2 stagioni su 6): quasi tutto era mis-calibrazione, non mancanza
+di contenuto. Senza questo controllo avremmo concluso il falso ("GBM molto peggio").
+
+**Il verdetto.** Regola pre-dichiarata: il GBM entra come modello ufficiale del GG/NG
+solo se batte il DC (CI95<0) **e** almeno pareggia la baseline. Il GBM calibrato non
+batte né il DC né la baseline → **non adottato**. Una famiglia di modelli
+completamente diversa, con pieno accesso ai `λ,μ` del DC, atterra sullo **stesso
+punto**: è **convergenza sul tetto** (il GG/NG è quasi-impredicibile dai dati
+pre-partita), non un fallimento del GBM.
+
 ---
 
 ## Fase 22 — Sweep del GBM su tutti i mercati: il tetto e' informativo, non di modello
@@ -2614,6 +2728,31 @@ quote il mercato ha gia' prezzato (gap che cresce). Il principio "un modello per
 mercato" era corretto da testare e ora e' testato a fondo: su questi dati
 nessun mercato cede. Per un edge serve **informazione nuova**, non un modello
 nuovo. Chiude il filone "modelli alternativi" avviato in Fase 21.
+
+### 📐 In dettaglio — il disegno "da dove viene il segnale?"
+
+**Il disegno (non iperparametri, ma feature-set).** 6 mercati × 3 **set di feature**
+× calibrazione:
+
+```
+cov      = solo covariate pre-partita
+dc       = solo output del Dixon-Coles (λ, μ, prob derivate)
+dc+cov   = entrambe
+```
+
+La scelta dei feature-set (invece di uno sweep di profondità/regolarizzazione) risponde
+alla domanda vera: **da dove viene il segnale?** Un tuning fine avrebbe al più
+avvicinato il GBM al DC, non battuto.
+
+**Il risultato che spiega il tetto.** Il GBM rende **al meglio quando usa SOLO le
+feature del DC** (`dc` batte `dc+cov` e `cov` su 1X2/1X/2X): aggiungere le covariate
+grezze **peggiora**. Cioè il GBM è migliore quando **modifica meno** il DC. E allarga
+il gap col mercato su 5 mercati su 6 (CI esclude lo zero). Interpretazione: il segnale
+utile è tutto e solo quello che il DC già estrae (gol/xG pesati nel tempo); ogni grado
+di libertà in più (covariate, non-linearità) aggiunge **rumore che, sui mercati con
+quote, il mercato ha già prezzato** → gap che cresce. Due famiglie di modelli
+(parametrica e non), 6 mercati, 3 feature-set: il tetto è **informativo, non
+architetturale**. Per un edge serve informazione nuova, non un modello nuovo.
 
 ---
 
