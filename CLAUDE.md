@@ -65,7 +65,10 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   3. **alternative** considerate;
   4. **scelta** e perché;
   5. **risultato** (numeri, anche se negativo);
-  6. **lezione / cosa ne consegue**.
+  6. **lezione / cosa ne consegue**;
+  7. **📐 Il modello in dettaglio (OBBLIGATORIO, vedi §2-bis)** — la/le formula/e
+     esatta/e coinvolte e il ragionamento numerico sul *perché* ogni variabile o
+     iperparametro assume quel valore.
 - [ ] **README — «Registro completo dei risultati»** (OBBLIGATORIO, SEMPRE).
   Il README contiene una sezione **«Registro completo dei risultati — ogni analisi,
   in un colpo d'occhio»**: è il punto UNICO e accessibile dove **chiunque** deve
@@ -84,6 +87,34 @@ Regola pratica: **il registro `runs.jsonl`** cattura *ogni* run (dati grezzi); *
 diario** cattura le *decisioni e il perché* (narrazione); il **README** è lo stato
 *corrente* sintetico E il **«Registro completo dei risultati» leggibile da tutti** —
 va **sempre** aggiornato: chiunque apra il README deve vedere l'esito di ogni analisi.
+
+---
+
+## 2-bis. STANDARD «formule + ragionamento» (NON negoziabile, vale SEMPRE)
+
+Ogni fase del diario e ogni spiegazione di modello **deve** contenere un blocco
+**«📐 Il modello in dettaglio»** che rende esplicito ciò che prima restava
+implicito. Non basta la narrazione del *cosa*: serve il *come* (la matematica) e il
+*perché quel numero*. Requisiti minimi del blocco:
+
+1. **La formula esatta**, in un blocco di codice, **verificata riga per riga contro
+   il codice sorgente** (`src/…`) — mai a memoria, mai inventata. Se una fase non
+   introduce nuova matematica, richiama la formula rilevante già definita altrove
+   (es. "blend: vedi Fase 3") e spiega come si applica qui.
+2. **Il ragionamento numerico sul valore di ogni variabile/iperparametro.** Non
+   "δ ≈ 0.23" ma "δ = ln(1.36/1.08) = 0.230, il log del rapporto-gol osservato".
+   Se un valore è scelto per griglia/ottimizzazione, dillo e spiega il compromesso
+   (bias-varianza, ecc.); se è fittato, indica come e su quali dati.
+3. **Onestà esplicita dove un numero NON è ri-derivabile** dai dati/registro: si
+   scrive che non lo è (es. l'"87%" della Fase 2a), non lo si inventa né lo si
+   lascia sottinteso.
+4. **Coerenza col registro**: ogni numero citato deve essere ricalcolabile da
+   `runs.jsonl` o da uno script `_run_*` (regola Fase 15).
+
+Questo standard è retroattivo (tutte le fasi 0-33 lo rispettano) e prospettico:
+**nessuna fase futura è "chiusa" senza il suo blocco 📐.** Lo stesso vale quando si
+porta il modello su un'altra lega: le formule non cambiano, ma il *ragionamento sul
+perché di ogni numero* va rifatto per i dati di quella lega (vedi §7).
 
 ---
 
@@ -359,5 +390,28 @@ snapshot testato): tetto informativo confermato. Ogni altro guadagno richiede
 INFORMAZIONE NUOVA o un avversario meno efficiente. **Prossimo bivio:** piu'
 stagioni/cross-lega per lo stakes, uso pratico (tool di predizione, la
 culminazione naturale), o dati davvero nuovi (formazioni, quote live).
+
+---
+
+## 7. Portare il modello su un'altra lega (Premier, ecc.) — NON copiare i numeri
+
+Le **formule** del modello sono universali; gli **iperparametri no**. Sono tutti
+tarati sulla Serie A e vivono come default in `backtest.py`: `emivita 365g`,
+`shrinkage 1.5`, `blend α=0.75`, `promoted_prior δ=0.23`, `rho`. Trasferirli
+uncritically a un'altra lega lascerebbe il modello **sub-ottimo**. Prima di dichiarare
+un modello "buono" su una nuova lega, **ri-tara e ri-motiva ogni numero** (regola
+§2-bis), perché ognuno dipende dai dati di *quella* lega:
+
+- **δ (prior neopromosse)**: `δ = ln(gol_lega / gol_promosse)` — va ricalcolato. In
+  Premier le promosse sono notoriamente più deboli → δ probabilmente **maggiore** di
+  0.23. Copiare 0.23 sotto-correggerebbe.
+- **emivita / shrinkage**: dipendono dalla stabilità delle rose e dal rumore del
+  segnale nella lega. Una lega con più turnover → emivita più corta.
+- **α del blend gol/xG**: dipende dalla qualità/copertura dell'xG di quella lega.
+- **vantaggio-casa `γ`**: differisce per lega (e, come emerso nelle Fasi 9-bis/30,
+  **non è costante** nemmeno *dentro* una stagione — vedi audit).
+
+Ogni ri-taratura è una fase a sé, con blocco 📐 e riga nel registro. Non esiste "il
+modello": esiste *il modello tarato per la lega X*.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**
