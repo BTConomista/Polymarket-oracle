@@ -2805,6 +2805,31 @@ senza il mercato come input. Il GBM e' lo strumento sbagliato per combinare
 modello e mercato: il modo giusto e' lineare, e la Fase 16 ha gia' dato il
 verdetto. Chiude la ricerca di un metodo per ridurre il gap.
 
+### 📐 Il modello in dettaglio — encompassing NON-lineare
+
+**L'idea.** La Fase 16 mescolava modello e mercato **linearmente** (`α*=0`). Qui un
+GBM riceve anche le quote e può catturare bias **non-lineari** della linea:
+
+```
+feature del GBM = [ output DC (λ, μ, prob) + covariate + quote di CHIUSURA devigate ]  →  P(1X2)
+```
+
+Usare le quote di chiusura come feature è lecito (sono pre-esito, nessun look-ahead
+sull'outcome) ma è **informazione del mercato**. Regola pre-dichiarata: "edge" solo se
+il GBM-con-mercato batte il **mercato** con CI95<0; pareggiarlo (gap ~0) non è un edge.
+
+**Il risultato sorprendente.** Il GBM-con-mercato (0.9996) **non batte** il mercato
+(0.9632, P=0%), non lo **pareggia** nemmeno, e resta **peggio del DC da solo** (0.9797).
+Il mercato come feature *aiuta* il GBM rispetto a sé stesso (1.0114→0.9996) ma non
+basta.
+
+**Il perché.** La chiusura è una previsione **quasi-ottima**: un ensemble di alberi
+non può che **degradarla** — quantizza e regolarizza un input probabilistico
+near-optimal, aggiungendo rumore di discretizzazione. È lo strumento sbagliato per
+combinare modello e mercato: il modo giusto è **lineare**, e la Fase 16 ha già dato il
+verdetto (a gap ~0 si arriva solo copiando il mercato, peso ~1; sotto zero non ci si
+arriva con nessun metodo). Chiude la ricerca di un metodo per ridurre il gap.
+
 ---
 
 ## Fase 24 — DC calcolato DAL mercato: il primo risultato positivo dell'arco modelli
@@ -2860,6 +2885,38 @@ venue che offra il GG/NG. Come stimatore CONDIZIONATO alle quote, il GG/NG
 invece del DC-da-gol. E' la prova che la leva vera e' l'informazione (qui: quella
 del mercato su un mercato non prezzato), non l'architettura.
 
+### 📐 Il modello in dettaglio — l'inversione delle quote in (λ, μ)
+
+**L'idea invertita.** Finora il DC stimava `(λ, μ)` dai **gol**. Ma il mercato li stima
+meglio di noi (batte il DC di +0.0165). Quindi si **invertono** le quote per ricavare
+i tassi *impliciti* e ci si fa girare sopra la matrice del DC per derivare mercati che
+il book **non** prezza (GG/NG).
+
+**La formula (ai minimi quadrati).** Per ogni partita si cerca `(λ, μ)` che riproduce
+le probabilità di mercato devigate 1X2 (+ Over 2.5):
+
+```
+(λ*, μ*) = argmin_{λ,μ}  [ (q_H−p_H)² + (q_D−p_D)² + (q_A−p_A)² + (q_O−p_O)² ]
+dove (q_H, q_D, q_A, q_O) = mercati letti dalla matrice score_matrix(λ, μ, ρ)
+```
+
+con inizializzazione informata: il **totale gol** `≈ 2.5 + (p_over−0.5)·2` dall'O/U, e
+lo **sbilanciamento** `tilt ≈ 0.5 + (p_home−p_away)·0.6` dal 1X2. `ρ` è **fissato** (il
+mercato 1X2+O/U non lo vincola). Da `score_matrix(λ*, μ*, ρ)` si legge `P(GG) = Σ_{i≥1,
+j≥1}`.
+
+**Perché non è circolare né un edge.** Sui mercati **con** quote (1X2, O/U) l'inversione
+riproduce il mercato → gap ~0 banale. Il valore è tutto nel **derivare** un mercato che
+il book non prezza (il GG/NG **non** è tra gli input). Non è un edge contro un mercato
+efficiente: è **informazione superiore del mercato trasferita a un mercato non prezzato**.
+
+**Il primo risultato positivo dell'arco modelli.** P(GG) dai `λ,μ` del mercato batte il
+DC-da-gol: Δ **−0.0033**, CI95 [−0.0072, +0.0005], P=95.7%, negativo in 6/6 stagioni; ed
+è la **prima** cosa a battere la baseline sul GG/NG (0.6865 < 0.6871). La correzione `ρ`
+(−0.06) aiuta ancora (0.6853). Onestà: il CI sfiora lo zero ("molto probabile, non
+concluso"), il guadagno è modesto, e richiede le quote 1X2+O/U al momento della
+predizione. La leva vera è l'**informazione**, non l'architettura.
+
 ---
 
 ## Fase 25 — Finestra dei dati: piu' storia batte meno (anche per il calcio di oggi)
@@ -2899,6 +2956,30 @@ aumenta solo la varianza. L'emivita 365g gestisce gia' la recency in modo
 ottimale; un taglio netto in aggiunta e' dannoso. Conferma e rafforza la Fase 2b
 (memoria lunga). Nota: il parametro ``train_window_days`` resta nel backtest per
 leghe piu' volatili, dove il verdetto potrebbe cambiare.
+
+### 📐 In dettaglio — taglio netto vs decadimento morbido
+
+**Due modi di "scordare" il passato.** Il decadimento (emivita 365g) è **morbido**: il
+peso di una gara di `k` stagioni fa è `w = 2^{−k}` (0.5, 0.25, 0.125 per 1/2/3
+stagioni) — piccolo ma **non zero**. Un taglio netto (`train_window_days` o
+`drop_train_seasons`) mette il peso a **zero** oltre la finestra: rimuove del tutto
+quei dati.
+
+```
+decadimento:  w(k stagioni) = 2^{−k}  > 0          (le usa, sfumate)
+taglio netto: w = 0  oltre la finestra              (le butta)
+```
+
+**Perché il taglio netto PEGGIORA (bias-varianza, di nuovo).** Se le rose fossero
+volatili, i dati vecchi farebbero *bias* → finestra corta meglio. Ma in Serie A le
+rose sono **stabili** anno su anno: i dati vecchi hanno bias piccolo e contengono
+ancora informazione sulla forza attuale. Buttarli via riduce il campione efficace
+`N_eff` → aumenta solo la **varianza**. Ecco perché tagliare a 2 stagioni danneggia di
+più proprio le stagioni **recenti** (+0.0035): meno storia = stime più rumorose anche
+sul presente. Perfino la stagione COVID (anomala) è netto-utile (escluderla costa
++0.0007): il decadimento la sta già sfumando quanto basta. Conferma e rafforza la Fase
+2b: **più storia batte meno, sempre** — e la recency va gestita col decadimento
+morbido, non col machete.
 
 ---
 
@@ -2951,6 +3032,40 @@ chiusura di quei mercati (assenti nei dati), richiede le quote 1X2+O/U alla
 predizione. Config del motore: inversione 1X2+O/U, rho -0.06, lambda,mu puri del
 mercato (niente blend). E' la base pronta per il tool pratico.
 
+### 📐 Il modello in dettaglio — un motore di pricing da (λ, μ) impliciti
+
+Generalizzazione della Fase 24 a **ogni** mercato sui gol, in un modulo riutilizzabile
+(`src/models/market_implied.py`): inverti le quote → matrice → deriva tutto.
+
+```
+(λ, μ) = implied_lambda_mu(1X2, Over 2.5)          # inversione ai minimi quadrati (Fase 24)
+M = score_matrix(λ, μ, ρ = −0.06)                  # matrice dei punteggi
+derive_markets(M):
+   over_x.5   = Σ_{i+j ≥ x+0.5} M            btts     = Σ_{i≥1, j≥1} M
+   home_ov_.5 = Σ_{i ≥ 1} M                  away_ov  = Σ_{j ≥ 1} M
+   odd_total  = Σ_{(i+j) dispari} M          home_by_2+ = Σ_{i−j ≥ 2} M
+   multigol   = Σ celle nella banda di gol totali (0-1, 2-3, 4+)
+   risultato esatto = la cella M(i,j) stessa
+```
+
+**Il risultato più forte del progetto.** Il market-implied batte il DC-da-gol su **13
+mercati su 14** (CI95<0 su 12) e la baseline su 13/14; guadagni maggiori sui mercati
+"ricchi" (risultato esatto −0.031, multigol, total-squadra), dove la forma dettagliata
+della matrice conta di più.
+
+**Le eccezioni e i controlli laterali (perché confermano, non smentiscono).**
+- *pari/dispari del totale* (+0.0001): la parità di `i+j` è **quasi-casuale**, nessun
+  `(λ,μ)` la predice. Il motore **non inventa** segnale dove non c'è — è una prova di
+  onestà, non un difetto.
+- *target d'inversione*: 1X2+O/U batte solo-1X2, perché l'O/U **fissa il livello** di
+  gol (`λ+μ`) e il 1X2 ne fissa lo **sbilanciamento** — servono entrambi per
+  identificare `(λ, μ)`.
+- *blend coi nostri λ,μ*: **peggiora** → il nostro modello non aggiunge nulla al
+  mercato (conferma dell'encompassing, Fase 16). Meglio il mercato **puro**.
+
+La tesi centrale, dimostrata: la leva è l'**informazione** (quella del mercato,
+trasferita a mercati non prezzati), non l'architettura.
+
 ---
 
 ## Fase 27 — Ottimizzare la forma dei punteggi sul market-implied (gia' ottima)
@@ -2988,6 +3103,31 @@ Il market-implied ha toccato il suo tetto anche sulla dimensione della forma:
 per spingere oltre servirebbero PIU' input di mercato (altre linee O/U, handicap
 asiatici) per vincolare meglio i lambda,mu — che lo snapshot non ha. Il motore
 e' maturo cosi' com'e'.
+
+### 📐 Il modello in dettaglio — le tre forme provate e perché la Poisson vince
+
+I `(λ, μ)` vengono dal mercato (ottimi); qui si tara solo la **forma** della
+distribuzione attorno a loro — un parametro **globale** (non per-squadra), quindi
+fittabile a bassa varianza sui risultati passati e applicabile in avanti.
+
+**1) `ρ` fittato** (correzione DC): esce **~−0.074**, praticamente uguale al −0.06
+fissato a occhio → Δ +0.0002 (rumore). *Il valore a occhio era già giusto.*
+
+**2) `ρ + φ`** (inflazione diagonale, Fase 12b): `φ ~0.09`, guadagno minuscolo e **non
+conclusivo** (CI include lo zero) solo sul risultato esatto → non adottato.
+
+**3) Binomiale negativa** (over-dispersione dei gol). Sostituisce le marginali Poisson
+con:
+
+```
+Var(gol) = media + media² / size          (size → ∞  ⇒  ricade nella Poisson)
+```
+
+Il fit spinge `size ~200` (cioè **verso** la Poisson) e **peggiora** (+0.0009) →
+**rigettata**. Conclusione pulita: **con i λ dal mercato, i gol sono Poisson, non
+over-dispersi.** La forma della Fase 26 era già essenzialmente ottima; per spingere
+oltre servirebbero *più input di mercato* (altre linee O/U, handicap asiatici) per
+vincolare meglio `(λ, μ)` — non una forma diversa.
 
 ---
 
