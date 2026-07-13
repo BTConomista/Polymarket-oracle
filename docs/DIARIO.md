@@ -49,6 +49,35 @@ exchange). Il valore è il modello, non l'integrazione con un sito.
   impresa da professionisti.
 - **Dati: football-data.co.uk** (gratis, include risultati *e* quote di chiusura).
 
+### 📐 Il modello in dettaglio — cosa significa "modellare i gol"
+
+La scelta di fondo ("modellare la distribuzione dei gol per squadra") ha una forma
+matematica precisa, presa da Dixon & Coles (1997). Per una partita casa `h` vs
+ospite `a`, i gol delle due squadre sono due Poisson i cui tassi attesi sono:
+
+```
+λ = E[gol casa]   = exp( att_h + dif_a + γ )
+μ = E[gol ospite] = exp( att_a + dif_h )
+```
+
+- `att_·` = forza d'attacco della squadra (in **log-scala**), `dif_·` = forza di
+  difesa (quanto fa segnare gli altri), `γ` = **vantaggio-casa** globale.
+- **Perché la scala esponenziale (log-lineare)?** Tre motivi concreti: (1) garantisce
+  `λ, μ > 0` (non esistono gol attesi negativi); (2) rende i contributi *additivi in
+  log e moltiplicativi in gol* — una squadra "+0,30 in attacco" segna `e^0.30 ≈ 1,35`
+  volte tanto contro *qualsiasi* difesa, coerente con l'intuizione "i forti segnano di
+  più contro tutti"; (3) è la parametrizzazione canonica del GLM di Poisson, quindi la
+  massima verosimiglianza è ben posta.
+- **Perché i gol per squadra e non i mercati direttamente?** Se stimassi 1X2 e O/U con
+  due modelli separati potrei ottenere `P(vittoria casa)=55%` **e** `P(Under 2.5)=70%`
+  reciprocamente incoerenti. Partendo dalla matrice `P(gol_casa=i, gol_ospite=j)` ogni
+  mercato è una *somma di celle* della stessa matrice → coerenza garantita per
+  costruzione, e ogni nuovo mercato è gratis (basta sommare le celle giuste).
+
+I valori numerici di `att`, `dif`, `γ`, `ρ` non esistono ancora in questa fase: sono
+**stimati dai dati** nella Fase 1 (massima verosimiglianza). Qui è fissata solo la
+*forma*; il *perché quei numeri* arriva col primo fit.
+
 ---
 
 ## Fase 1 — Tracer bullet: Dixon-Coles + backtest
@@ -78,6 +107,80 @@ il mercato** — esito atteso e sano per un primo modello. La simulazione di
 scommesse dava ROI negativo: onesto e prevedibile. *La pipeline funziona: da qui
 si può migliorare con basi solide.*
 
+### 📐 Il modello in dettaglio — tutte le formule del tracer bullet
+
+Questa è la fase in cui il modello passa da *forma* (Fase 0) a *numeri stimati*.
+Ecco l'intera catena, come è scritta in `src/models/dixon_coles.py`.
+
+**1) Verosimiglianza pesata (la funzione che il fit minimizza).** I parametri
+`{att_i, dif_i, γ, ρ}` sono scelti massimizzando la log-verosimiglianza di Poisson
+sui gol osservati, **pesata nel tempo**:
+
+```
+ℓ = Σ_partite  w_t · [  (g_h·ln λ − λ)  +  (g_a·ln μ − μ)  +  ln τ(g_h, g_a; λ, μ, ρ)  ]
+```
+
+dove `g_h, g_a` sono i gol realmente segnati, e i due termini `(g·ln rate − rate)`
+sono il nucleo della Poisson (il fattoriale `ln(g!)` è costante e si può ignorare
+nell'ottimizzazione, ma nel codice è incluso per completezza).
+
+**2) Peso temporale `w_t` (decadimento).** Una partita giocata `Δ` giorni prima del
+momento della predizione pesa:
+
+```
+w_t = exp( −ξ · Δ ),   con   ξ = ln 2 / emivita
+```
+
+Così il peso si **dimezza ogni `emivita` giorni**: a emivita 365g una gara di una
+stagione fa pesa 0,5, di due stagioni 0,25, di tre 0,125. È il meccanismo con cui
+"le squadre cambiano nel tempo" entra nel modello *senza buttare via* i dati vecchi
+(li sfuma soltanto). Il valore di emivita è un iperparametro, tarato in Fase 2b.
+
+**3) Correzione Dixon-Coles `τ` sui 4 punteggi bassi.** La Poisson pura sottostima
+0-0/1-1 e sovrastima 1-0/0-1; `τ` corregge SOLO quelle 4 celle:
+
+```
+τ(0,0) = 1 − λ·μ·ρ      τ(0,1) = 1 + λ·ρ
+τ(1,0) = 1 + μ·ρ        τ(1,1) = 1 − ρ         (tutti gli altri punteggi: τ = 1)
+```
+
+Con `ρ < 0` (il valore che i dati scelgono, tipicamente −0,04…−0,07): `τ(0,0)` e
+`τ(1,1)` diventano **>1** (più massa su 0-0 e 1-1, cioè più pareggi bassi) mentre
+`τ(0,1), τ(1,0)` diventano **<1**. È esattamente il "le squadre giocano sul
+risultato". `ρ` è stimato *dentro* la verosimiglianza, non imposto.
+
+**4) Identificabilità.** Il modello è invariante se sommo una costante a tutti gli
+attacchi e la sottraggo a tutte le difese (`att_i += c`, `dif_i −= c` non cambia
+`λ, μ`). Si fissa l'indeterminazione con una penalità che impone **media(attacco) =
+0**: `penalità = 10⁴ · media(att)²`. È il motivo per cui "forza 0 = squadra media
+della lega".
+
+**5) Dalla matrice ai mercati.** Con `(λ, μ)` stimati si costruisce la matrice
+`P(i,j) = Poisson(i; λ) · Poisson(j; μ) · τ(i,j)` (troncata a 10 gol/squadra e
+rinormalizzata perché `τ` e il troncamento rompono la somma a 1). Da essa:
+
+```
+P(1) = Σ_{i>j} P(i,j)   (triangolo inferiore)      P(X) = Σ_i P(i,i)  (diagonale)
+P(2) = Σ_{i<j} P(i,j)   (triangolo superiore)
+P(Over 2.5) = Σ_{i+j ≥ 3} P(i,j)                   P(GG) = Σ_{i≥1, j≥1} P(i,j)
+```
+
+**6) Come si misura (le metriche).** Log-loss 1X2 = `−media( ln P(esito realizzato) )`
+(punisce duramente la sicurezza sbagliata); Brier = `media Σ_k (p_k − y_k)²`.
+
+**Perché quei tre numeri (1.0047 / 1.0851 / 0.9784).**
+- Il **mercato (0.9784)** è la log-loss delle quote di chiusura *devigate*: le quote
+  1X2 si convertono in probabilità con `p_i = (1/quota_i) / Σ_j(1/quota_j)` (metodo
+  moltiplicativo: dividere per la somma toglie il margine del bookmaker, che rende
+  `Σ 1/quota > 1`). È lo stimatore più efficiente esistente → il numero da battere.
+- La **baseline (1.0851)** è la log-loss del predittore banale costante = frequenze
+  empiriche (H,D,A) della stagione. Batterla significa "il modello discrimina le
+  singole partite meglio del prezzo medio di lega".
+- Il **modello (1.0047)** sta **in mezzo**: `1.0851 > 1.0047 > 0.9784`. Ha già chiuso
+  `(1.0851−1.0047)/(1.0851−0.9784) = 75%` della distanza baseline→mercato al primo
+  colpo, senza tuning. È il risultato "sano" atteso: impara qualcosa di reale, non
+  ancora abbastanza da battere il prezzo.
+
 ---
 
 ## Fase 2a — Analisi degli errori (e un bug trovato)
@@ -100,6 +203,44 @@ contro il mercato.
 3. **Dove perdiamo di più:** partite con **neopromosse** (gap col mercato +0.037,
    doppio della media) e **inizio stagione** (+0.030). Radice comune: dati storici
    scarsi o datati → stime inaffidabili e troppo sicure.
+
+### 📐 Il modello in dettaglio — come si misura "dove si perde"
+
+**Definizione operativa del "gap" (usata da qui fino alla Fase 33).** Per ogni
+sottoinsieme di partite S:
+
+```
+gap(S) = media_{p ∈ S} [ log-loss_modello(p) − log-loss_mercato(p) ]
+```
+
+`>0` = il mercato è più accurato; `≈0` = pari; `<0` = il modello batte il mercato.
+Il gap medio globale in questa fase è ~+0.018; sulle **neopromosse è +0.037** (il
+doppio) e a **inizio stagione +0.030**. Non sono numeri inventati: sono la stessa
+media, ristretta alle righe di quel gruppo.
+
+**Perché "calibrato in media ma battuto in discriminazione".** La calibrazione si
+misura a *fasce*: si raggruppano le predizioni per probabilità stimata (es. "partite
+dove il modello dà 50-60% alla casa") e si confronta la probabilità media stimata con
+la **frequenza reale** in quella fascia. Erano allineate → nessun bias sistematico
+(nemmeno sul pareggio, il difetto tipico della Poisson pura, che qui la correzione
+`τ` con `ρ<0` già evita). Ma calibrazione ≠ discriminazione: il mercato assegna
+probabilità *diverse e più giuste alle singole partite*. Due modelli possono avere la
+stessa calibrazione media e log-loss diversa; il gap vive lì.
+
+**Perché il gap esplode sulle neopromosse — il meccanismo del bug e della debolezza
+strutturale.** Una squadra **mai vista nel training** riceve `att = dif = 0` (la
+media di lega, per la penalità di identificabilità della Fase 1). Due conseguenze:
+1. *Il bug degli alias.* Il Verona era `"Verona"` nel training e `"Hellas Verona"`
+   nel test: due stringhe diverse → il modello lo trattava come **sconosciuto →
+   forza media** invece che come la squadra (debole) che era. Da qui predizioni
+   sbilanciate e troppo sicure. Corretto con `TEAM_ALIASES` (mappa di
+   normalizzazione). *Nota onesta:* l'esatto "87%" citato dipende dalla singola
+   partita e non è ri-derivabile dai dati aggregati qui riportati — è un esempio
+   illustrativo del sintomo, non una cifra da registro.
+2. *La debolezza vera (non un bug).* Anche con gli alias giusti, una neopromossa con
+   0-poche partite di Serie A resta ancorata a `forza ≈ 0` (media), mentre in realtà
+   è **sotto** la media (viene dalla B). Il modello la **sovrastima** → gap alto.
+   È il problema che le Fasi 2b (shrinkage) e 7 (prior) attaccano direttamente.
 
 ---
 
@@ -136,6 +277,51 @@ stagioni 0.9918, il 0.9863 è la config con shrinkage a emivita 180g.)*
 **Risultato:** solo con la taratura abbiamo recuperato **circa un terzo** del
 divario col mercato, senza informazione nuova. Ma il modello sui *soli gol* è ora
 vicino al suo tetto.
+
+### 📐 Il modello in dettaglio — le formule di shrinkage ed emivita
+
+**1) Lo shrinkage è una penalità L2 nella verosimiglianza.** Il fit ora minimizza
+`−ℓ + penalità`, dove (con bersaglio 0 = media di lega in questa fase):
+
+```
+penalità_shrinkage = s · ( Σ_i att_i²  +  Σ_i dif_i² )
+```
+
+con `s` = forza dello shrinkage (l'iperparametro tarato). È letteralmente una molla
+che tira ogni forza verso 0.
+
+**Perché è AUTOMATICAMENTE più forte sulle squadre con pochi dati** (il punto
+cruciale). La forza di una squadra è stimata bilanciando due termini: il contributo
+dei *suoi dati* (che nella verosimiglianza pesa in proporzione al **peso totale delle
+sue partite** `n_i = Σ w_t`) contro la penalità fissa `s`. L'attrazione verso 0 vale
+in pratica `≈ s / (s + n_i)`: per una squadra con **tante** partite `n_i ≫ s` → quasi
+nessuno shrinkage (i dati vincono); per una **neopromossa / inizio stagione**
+`n_i` piccolo → la penalità domina → la stima è tirata verso la media. *Non serve
+codice speciale per le squadre con pochi dati: la stessa penalità fissa produce
+l'effetto giusto.* È il motivo per cui lo shrinkage "attacca proprio neopromosse e
+inizio stagione", visibile nei gap: inizio stagione +0.030→+0.022, neopromosse
++0.037→+0.030.
+
+**Perché `s = 1.5`.** Non c'è formula chiusa: `s` è scelto per **griglia**, cercando
+il valore che minimizza la log-loss 1X2 walk-forward mediata su più stagioni. Troppo
+basso → non regolarizza (varianza alta sulle squadre incerte); troppo alto → schiaccia
+anche le forze ben stimate verso la media (bias). Il minimo empirico è `1.5` (vedi
+anche lo sweep piatto 0.75–1.5 della Fase 8).
+
+**2) Perché la MEMORIA LUNGA (emivita ~730/365g) batte quella corta (90–180g).** È un
+compromesso bias-varianza sul **campione efficace**:
+
+```
+N_eff = (Σ w_t)² / Σ w_t²     (numero "effettivo" di partite che entrano nella stima)
+```
+
+Un'emivita corta concentra il peso su poche gare recenti → `N_eff` piccolo → stime
+**rumorose** (alta varianza). Un'emivita lunga usa più storia → `N_eff` grande →
+stime stabili. Il rischio della memoria lunga sarebbe il *bias* (usare dati non più
+rappresentativi), ma **in Serie A le rose restano stabili anno su anno**, quindi i
+dati vecchi sono ancora informativi: il bias è piccolo e la riduzione di varianza
+domina. Ecco perché il dato *preferisce* 730g e l'emivita corta 90g è la peggiore.
+(Coerente con la Fase 25, dove tagliare NETTO i dati vecchi peggiora ancora di più.)
 
 ---
 
@@ -175,6 +361,40 @@ dell'idea "le occasioni aiutano" ci ha **evitato** di costruire una pipeline
 xG/database sull'assunzione — sbagliata — che bastassero i tiri grezzi. Il codice
 del blend resta, pronto per l'**xG reale** (che pesa la *qualità* delle occasioni,
 non solo il conteggio).
+
+### 📐 Il modello in dettaglio — la formula del blend e perché α=1
+
+**Come funziona il blend (la "forma generale" citata).** Si allena un secondo
+modello identico al primo ma sui **tiri in porta** invece che sui gol (stessa
+struttura attacco/difesa/vantaggio-casa, ma **senza** la correzione `τ`: `ρ=0`, perché
+i tiri sono un conteggio ad alto volume che non ha il fenomeno "0-0 più frequente").
+I due tassi attesi si **mescolano** con un peso `α = shots_blend`:
+
+```
+λ = α · λ_gol  +  (1−α) · λ_tiri · c_home
+μ = α · μ_gol  +  (1−α) · μ_tiri · c_away
+```
+
+Il **fattore di conversione** riporta i tiri sulla scala dei gol (un tiro in porta
+non è un gol):
+
+```
+c = Σ w_t · gol  /  Σ w_t · tiri     (pesato nel tempo, per casa e ospite)
+```
+
+Per i tiri `c ≈ 0.3` (servono ~3 tiri in porta per un gol); per l'xG (Fase 4b) `c ≈ 1`
+(l'xG è già in scala gol). `α=1` = solo gol (modello classico); `α=0` = solo tiri.
+
+**Perché α=1 vince (i tiri grezzi non aiutano).** L'esperimento è un semplice sweep di
+`α` che sceglie il valore con log-loss minima su 6 stagioni. Il risultato: `α=1`
+(0.9817 su 1X2) < `α=0.5` (0.9833) < `α=0` (0.9913). Interpretazione: i tiri in porta
+**contano le occasioni ma non ne pesano la qualità** — un tiro debole da 30 metri e
+un colpo di testa a porta vuota valgono uguale. Aggiungere quel segnale sostituisce
+rumore-gol con rumore-tiri, senza guadagno netto. L'illusione di un vantaggio su O/U
+a 3 stagioni **spariva** allargando a 6 (`N` raddoppia, l'errore standard `∝ 1/√N`
+si dimezza e il falso segnale rientra nel rumore): è la ragione per cui la regola
+"valida su più stagioni" esiste. Il meccanismo era giusto, mancava la *qualità* del
+segnale — che l'xG fornisce.
 
 ---
 
@@ -218,6 +438,25 @@ opportunità → ROI simulato negativo.
 **Conseguenza pratica:** allo stato attuale il modello **non va usato per
 scommettere soldi veri**. È un motore pulito, calibrato e onesto che *approssima*
 il mercato senza superarlo.
+
+### 📐 In dettaglio — cosa vogliono dire quei numeri
+
+- **52.6% vs 53.9% (accuratezza del segno 1X2).** È la frazione di partite in cui
+  `argmax(P_casa, P_pari, P_ospite)` coincide con l'esito reale. Un solo punto di
+  distanza, e nel 92% dei casi il favorito scelto è lo stesso → il modello e il
+  mercato "vedono" quasi le stesse partite; la differenza non è *chi* è favorito ma
+  *quanto*.
+- **"più vicini al vero solo nel 43%".** È la frazione di partite in cui la log-loss
+  del modello è **minore** di quella del mercato, cioè in cui il modello ha dato
+  all'esito realizzato una probabilità *più alta*. 43% < 50% ⇒ quando i due
+  dissentono, ha ragione il mercato più spesso. (La Fase 20 spiega *perché* i
+  dissensi del modello sono i suoi errori: adverse selection.)
+- **Il "margine ~5%" e perché serve batterlo.** Le quote implicano `Σ 1/quota > 1`;
+  l'eccesso (`overround`) è il margine del bookmaker, ~5% sull'1X2 di Serie A. Per
+  *guadagnare* non basta essere accurati quanto il mercato: bisogna esserlo **più**
+  del margine. Essendo un filo *meno* accurati, ogni "value bet" è quasi sempre un
+  nostro errore → ROI simulato negativo. È la traduzione quantitativa di "non
+  scommettere".
 
 ---
 
@@ -273,6 +512,35 @@ meglio un buco dichiarato che un numero inventato. Le assenze restano stime
 modello ma la *provenienza* dei dati: trovare mirror affidabili e allineare i
 nomi tra fonti vale piu' di qualunque raffinatezza statistica a valle.
 
+### 📐 In dettaglio — le soglie e perché quei valori (non è modello, è provenienza)
+
+Questa fase non introduce formule del modello, ma **decisioni quantitative** sui
+dati, ognuna con un perché preciso:
+
+- **Look-ahead sui valori rosa: cutoff al 1° settembre.** Si prende l'ultima
+  valutazione Transfermarkt **antecedente al 1° settembre** della stagione. Motivo:
+  è informazione *nota prima* che la stagione conti davvero; usare valori aggiornati
+  a gennaio sarebbe guardare il futuro. Staleness massima ammessa **550 giorni** (se
+  l'ultima valutazione è più vecchia, il dato è troppo datato per fidarsi).
+- **Soglia dell'85% dei minuti per pubblicare il valore-rosa.** Il valore squadra è
+  la somma dei valori dei giocatori agganciati; si pubblica **solo se i giocatori
+  valutati coprono ≥85% dei minuti stagionali** della squadra, altrimenti `NaN`.
+  Perché una soglia e non un'imputazione: con un datalake incompleto (~25% dei
+  profili senza serie di valutazioni, es. Milinkovic-Savic/Lazio), riempire i buchi
+  con una media *inventerebbe* forza; un buco dichiarato (`NaN` → covariata neutra)
+  è onesto. Politica: **niente imputazioni, mai un numero inventato.**
+- **La catena di aggancio dei nomi è deterministica e ordinata** (dal più sicuro al
+  più permissivo), misurata su 1.986 giocatori: esatto 1691 → filtro ruolo 96 →
+  spareggio per valore di picco 63 → senza-spazi 3 → sottoinsiemi di token 21 →
+  cognome+iniziale 29 → fuzzy con soglia **0.90** 8 → **non agganciati 78 (~4%)**.
+  La soglia fuzzy 0.90 è volutamente alta (conservativa): meglio lasciare 78 giocatori
+  non agganciati (quasi tutti con pochi minuti, impatto trascurabile) che agganciare
+  la persona sbagliata.
+- **Perché l'impronta dati resta invariata (`8483944342fc8b15`).** L'impronta è
+  calcolata **solo** su date/squadre/gol (l'input del modello-gol), non sulle nuove
+  colonne: aggiungere xG/valori/assenze non tocca la riproducibilità dei backtest
+  già registrati → il backtest di non-regressione dà metriche **identiche**.
+
 ---
 
 ## Fase 4b — xG reale nel blend: primo miglioramento da dati nuovi
@@ -312,6 +580,32 @@ O/U piu' grandi sono nelle stagioni recenti (stile di gioco in evoluzione).
 
 **Onestà.** Il miglioramento e' modesto e non basta a battere il mercato. Restano
 da spremere gli altri dati gia' disponibili (npxG, valori rosa, assenze).
+
+### 📐 Il modello in dettaglio — stessa formula dei tiri, segnale migliore
+
+La meccanica è **identica** alla Fase 3 (stessa formula di blend), cambia solo il
+segnale secondario: `blend_signal = "xg"` invece di `"sot"`.
+
+```
+λ = α · λ_gol  +  (1−α) · λ_xg · c_home        (idem per μ)
+c = Σ w·gol / Σ w·xg  ≈  1     (l'xG è GIÀ in scala gol; per i tiri era ~0.3)
+```
+
+**Perché l'xG aiuta dove i tiri no.** L'xG **pesa la qualità** di ogni occasione
+(probabilità di gol di quel tiro dato posizione/tipo), non la conta e basta. È un
+"conteggio di gol attesi" con meno rumore dei gol realizzati (che dipendono dalla
+fortuna sotto porta) e con più informazione dei tiri grezzi (che ignorano la
+qualità). Il fatto che `c ≈ 1` conferma che è già la grandezza giusta.
+
+**Perché α = 0.75 (e non 0 né 1).** È il valore che minimizza la log-loss **media a
+6 stagioni su ENTRAMBI i mercati** (1X2 0.9813 a α=0.75 vs 0.9817 a α=1; l'O/U
+migliora già a α più bassi). La scelta è **conservativa**: `0.75` dà ancora il peso
+maggiore ai gol (il segnale "duro", ciò che conta davvero), usando l'xG come
+correzione del rumore realizzativo, non come sostituto. Presa sulla *media* e non su
+una stagione singola (sul solo 2025-26 l'1X2 è appena sotto) proprio per non
+inseguire il rumore di piccolo campione — la lezione della Fase 3. È il primo segnale
+che aggiunge valore reale e consistente, soprattutto su O/U (la qualità delle
+occasioni informa il *volume* di gol più di *chi* vince).
 
 ---
 
@@ -365,6 +659,45 @@ nessuna covariata. Il layer covariate resta (documentato, off di default),
 riutilizzabile per dati futuri davvero indipendenti (es. formazioni ufficiali
 last-minute, meteo, motivazione).
 
+### 📐 Il modello in dettaglio — la formula delle covariate
+
+Ogni covariata entra nel **log-tasso** della squadra che segna come vantaggio
+*relativo* rispetto all'avversaria. Il termine aggiunto al tasso di CASA è:
+
+```
+cov = Σ_k  β_k · ( z_casa,k − z_ospite,k )          → λ = exp(… + cov)
+                                                     → μ = exp(… − cov)   (segno opposto)
+```
+
+dove `z` è il valore per-squadra **standardizzato** sul training:
+
+```
+z = ( trasforma(valore) − media ) / dev.std
+```
+
+Le trasformazioni sono scelte per la natura del dato: `squad_value → log` (i valori
+rosa spaziano su ordini di grandezza), `absence → log1p` (conteggio/valore ≥0, log1p
+gestisce lo zero), `rest → identity` (già in giorni). Valori mancanti → `z=0`
+(covariata **neutra**, non penalizzante). I coefficienti `β_k` sono stimati
+**insieme** a tutto il resto nella stessa verosimiglianza (fit congiunto), con
+`β ∈ [−1, 1]`. Un `β<0` significa "più valore relativo → segna di **meno**": è il
+segno atteso per le assenze (più assenze pesanti → meno gol).
+
+**Perché il valore-rosa NON aiuta (nonostante il diagnostico in-sample +0.48).** Il
+coefficiente in-sample positivo dice solo che squadre di valore alto segnano di più
+*nei dati già visti* — ma quella forza **è già catturata** dal modello gol+xG (una
+squadra costosa segna di più e ha xG più alto, e il modello lo vede). Fuori campione
+la covariata non aggiunge informazione *indipendente*: aggiunge solo il rumore della
+sua stima → l'1X2 peggiora appena (0.9813→0.9818). È la lezione centrale: **un
+diagnostico in-sample va sempre confermato walk-forward.**
+
+**Perché il riposo solo-Serie-A dà ~0.** La covariata entra come *differenza*
+`z_casa − z_ospite`. Quando tutta la lega gioca infrasettimana, il riposo cala per
+**entrambe** → la differenza è ~0 → nessun effetto. E il calendario di sola Serie A
+**non vede** coppe/Europa/nazionali, cioè proprio le partite che causano fatica
+*asimmetrica*. Questo motiva la Fase 4e (calendario di club completo): il segnale
+esiste solo se la sorgente del calendario è completa.
+
 ---
 
 ## Fase 4d — Ri-taratura congiunta: l'emivita si accorcia col blend xG
@@ -390,6 +723,27 @@ Per questo, dopo un cambiamento importante, conviene ri-verificare gli iperparam
 gia' tarati. Guadagno piccolo (~0.0007) ma su entrambi i mercati e ben fondato.
 
 **Config ufficiale aggiornata:** blend gol/xG α=0.75, shrinkage 1.5, **emivita 365g**.
+
+### 📐 Il modello in dettaglio — perché l'emivita ottima si accorcia
+
+Nessuna formula nuova: si ri-cerca l'ottimo degli **stessi** iperparametri (shrinkage,
+emivita) con il blend xG ora attivo, per **coordinate** (fissa uno, ottimizza l'altro).
+Il risultato è un'interazione reale tra due parametri già tarati.
+
+**Il perché, in termini di bias-varianza.** L'emivita bilancia:
+- *memoria corta* → più reattiva ma meno campione efficace `N_eff` → più **varianza**;
+- *memoria lunga* → più stabile ma rischia di usare forza non più attuale → più **bias**.
+
+Nella Fase 2b il segnale era i soli **gol**, molto rumorosi (fortuna sotto porta):
+serviva memoria lunga (730g) per mediare via quel rumore. Ora il blend `α·gol +
+(1−α)·xG` fornisce un segnale **meno rumoroso a parità di partite** (l'xG stabilizza
+la stima del tasso). Con meno rumore per-partita, il modello può permettersi un
+`N_eff` più piccolo (emivita **365g**, più reattiva) **senza** inseguire il rumore:
+il termine di varianza è già domato dall'xG, quindi conviene ridurre il bias
+diventando più recenti. È il caso da manuale del "cambiare una parte del modello
+(aggiungere l'xG) sposta l'ottimo di un'altra (l'emivita)" → dopo ogni modifica
+importante si ri-verificano gli iperparametri. Guadagno piccolo (−0.0006 su 1X2,
+−0.0009 su O/U) ma su entrambi i mercati e ben fondato.
 
 ---
 
@@ -427,6 +781,36 @@ x tutti i mercati.
 per i mercati d'ESITO (1X2, doppie chance), NON per il GG/NG (lì meglio la media)
 e a malapena per l'Over/Under. Un'eventuale prossima mossa sul modello sarebbe
 proprio la **correlazione dei punteggi** (es. bivariate Poisson) per il GG/NG.
+
+### 📐 Il modello in dettaglio — ogni mercato è una somma di celle
+
+Nessun nuovo parametro: tutti i mercati derivano dalla **stessa** matrice `P(i,j)`.
+
+```
+1X  = P(1)+P(X)          2X = P(2)+P(X)          12 = P(1)+P(2)   (= 1 − P(X))
+Over 2.5 = Σ_{i+j≥3} P(i,j)                       GG = Σ_{i≥1, j≥1} P(i,j)
+```
+
+Ecco perché aggiungere un mercato è "gratis" e perché i mercati d'esito funzionano:
+`1X, 2X, 12` sono combinazioni lineari delle probabilità 1X2, che il modello stima
+bene → le eredita bene.
+
+**Perché il GG/NG è PEGGIO della baseline (il punto tecnico chiave).** Sotto Poisson
+**indipendenti** varrebbe esattamente:
+
+```
+P(GG) = P(casa ≥ 1) · P(ospite ≥ 1) = (1 − e^{−λ}) · (1 − e^{−μ})
+```
+
+cioè un prodotto di due marginali: **nessuna informazione sulla correlazione** tra i
+due punteggi. La correzione `τ` di Dixon-Coles tocca solo 4 celle basse → perturba
+`P(GG)` di pochissimo. Ma il GG/NG **è** un evento di correlazione ("segnano
+*entrambe*"): dipende da quanto i due punteggi si muovono insieme, che il modello
+quasi-indipendente non modella. Risultato: sul GG/NG il modello aggiunge rumore, non
+segnale, e finisce **sotto** la media (0.6896 vs baseline 0.6871). È la diagnosi che
+motiva il "cambio di classe" (Poisson bivariato / inflazione diagonale, Fase 12b) e
+che verrà confermata: il pareggio e il GG/NG vivono nella *correlazione*, non nei
+tassi marginali.
 
 ---
 
@@ -522,6 +906,41 @@ legge le nuove colonne e verificare walk-forward se la congestione VERA migliora
 le previsioni dove il proxy solo-lega non ci riusciva (Fase 4c). Come sempre: il
 diagnostico in-sample va confermato fuori campione, su piu' stagioni.
 
+### 📐 In dettaglio — la definizione del riposo e l'invariante che lo verifica
+
+**Formula della feature** (identica a `add_rest_days`, ma sul calendario COMPLETO):
+
+```
+rest_days_full = min( giorni dall'ULTIMA gara di club della squadra
+                      in QUALSIASI competizione,  cap = 14 )
+```
+
+- `cap = 14`: oltre due settimane il recupero fisico è completo; conta la
+  *congestione*, non il riposo lungo → si tronca a 14.
+- Solo partite **precedenti** → niente look-ahead. Prima gara nota → `NaN`.
+
+**L'invariante di sicurezza (perché ci fidiamo del dato).** Il calendario completo è
+un **sovrainsieme** di quello di Serie A, quindi l'ultima partita precedente è sempre
+più vicina o uguale:
+
+```
+rest_days_full  ≤  rest_days   (su ogni riga dove entrambi sono definiti)
+```
+
+Verificato su ~3400 partite: **0 violazioni**. Un bug di join o un look-ahead
+romperebbe questa disuguaglianza → è un test automatico che *dimostra* l'assenza di
+errori di allineamento, non una speranza. È lo stesso spirito dei controlli
+d'integrità (gol grezzi == gol snapshot) del loader.
+
+**Perché il segnale utile è concentrato in poche stagioni.** Il riposo differisce dal
+proxy solo dove `rest_days_full < rest_days`, cioè dove c'è una gara "nascosta"
+(coppa/Europa). openfootball copre Champions in tutte le 9 stagioni, ma EL dal
+2020-21, Conference dal 2021-22, Coppa Italia 2020-25. Dove una competizione manca,
+`rest_days_full` **degrada in modo controllato** verso il valore solo-lega (mai nella
+direzione sbagliata, per l'invariante sopra): niente numeri inventati, solo un
+segnale più debole. Totale partite con congestione vera catturata: **655/3420
+(19.2%)**, quasi tutte nelle stagioni 2020-25.
+
 ---
 
 ## Fase 4e-bis — Validazione della congestione VERA (walk-forward)
@@ -586,6 +1005,23 @@ walk-forward **baseline / rest / rest_full** sulle 5 stagioni, config ufficiale.
 **Riproducibilita'.** `python scripts/_run_fase4e_congestione.py` (tripletta su 5
 stagioni), oppure per singola cella: `python scripts/backtest.py --test-season 2122
 --covariates rest_full`.
+
+### 📐 Il modello in dettaglio — un solo fattore cambiato, e la soglia del rumore
+
+Meccanicamente `rest_full` è **la stessa covariata** di `rest` (formula in Fase 4c:
+`cov = β·(z_casa − z_ospite)`), con l'unica differenza nella *sorgente* della colonna
+(`home/away_rest_days_full` invece di `home/away_rest_days`). Tenere identico tutto il
+resto è ciò che rende il confronto pulito: **un solo fattore per volta**.
+
+**Perché "migliora ma è rumore".** Il `β` di `rest_full` diventa del segno giusto
+(la congestione vera pesa), e il Δ medio passa da **+0.0006** (`rest`, peggiora,
+conferma 4c) a **−0.0004** (`rest_full`, migliora appena). Ma −0.0004 va letto
+sulla scala della **variabilità stagionale**: il CI bootstrap di un gap 1X2 per
+stagione è tipicamente ±0.014 (Fase 17). Un effetto di 0.0004, che aiuta solo 2
+stagioni su 5, è **un ordine di grandezza dentro il rumore** → la diagnosi 4c era
+giusta (il problema era la sorgente), ma l'effetto è reale-e-minuscolo, non
+adottabile. È la prima di una lunga serie di leve "direzione corretta, payoff nel
+rumore" che convergono sul tetto.
 
 ---
 
