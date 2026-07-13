@@ -3799,6 +3799,114 @@ vicine le squadre*: due squadre da 1.2 gol ciascuna pareggiano spesso, una da
 2.5–0.6 (stesso totale ~3.1) quasi mai. Condizionare sulla variabile giusta è tutta
 la differenza tra +0.0003 (Fase 18) e −0.0007 con calibrazione quasi perfetta (Fase 35).
 
+---
+
+## Fase 36 — GBM col set di feature COMPLETO: overfitting, non guadagno (ma lo stakes emerge)
+
+**Obiettivo.** Rispondere al Punto 1 della roadmap post-audit: la Fase 22 aveva
+provato il GBM con un set ridotto di covariate. `stakes` (Fase 32, il lead più
+forte, non-lineare), `luck`/`ppda`/`deep` (Fase 33) non erano MAI stati messi
+insieme nello stesso GBM. La combinazione non-lineare completa (effetti-soglia che
+si sommano) produce un guadagno REALE o solo overfitting rispetto al numero di
+feature?
+
+**Ragionamento / ipotesi.** Un GBM (HistGradientBoosting, calibrato Platt) predice
+1X2 e GG/NG con tre set: `dc` (solo output del DC), `dc+cov_rid` (set Fase 22:
+forma, rest_full, valore, assenze, midweek), `dc+cov_full` (+ stakes, luck, ppda,
+deep). Nessuna feature selection preventiva. La chiave onesta: misurare **train vs
+test** (il gap = overfitting) e il **sottoinsieme mismatch** (dove lo stakes deve
+agire), oltre alla feature importance a permutazione.
+
+**Alternative considerate.** Tuning degli iperparametri (profondità/regolarizzazione)
+invece dei feature-set: scartato come primo passo — la domanda è "il segnale c'è?",
+non "quanto lo spremo"; e la Fase 23 ha già mostrato che il GBM degrada previsioni
+near-optimal. Un tuning più aggressivo ridurrebbe l'overfit ma non farebbe battere
+il DC (vedi lezione).
+
+**Scelta.** `scripts/_run_gbm_full.py` (walk-forward per stagione, allena su
+1819..S−1, calibrato; 1 run `source=gbm_full`). Feature importance a permutazione
+(neg-log-loss) sul set completo, stagione 2526.
+
+**Risultato.**
+
+*1X2* (DC di riferimento = 0.9797):
+
+| feature-set | test LL | train LL | overfit (test−train) | Δ vs dc (CI95) | mismatch LL (n=99) |
+|---|--:|--:|--:|--:|--:|
+| dc | 1.0071 | 0.9133 | +0.094 | — | 1.0115 |
+| dc+cov ridotto | 1.0108 | 0.8923 | +0.119 | +0.0036 [−0.0017,+0.0090] | 0.9989 |
+| **dc+cov completo** | 1.0088 | 0.8673 | **+0.142** | +0.0016 [−0.0052,+0.0084] | **0.9703** |
+
+full vs ridotto: Δ −0.0020, CI [−0.0070, +0.0031], P(full meglio) 78%.
+
+*GG/NG* (DC = 0.6898, baseline 0.6871): GBM dc 0.6943, ridotto 0.6942, completo
+0.6948 — **nessuno batte il DC né la baseline**; full vs ridotto +0.0006 (peggio).
+
+*Feature importance (1X2, 2526, set completo):* dominano gli **output del DC**
+(dc_pa +0.0163, dc_ph +0.0158, dc_lam +0.0092, dc_mu +0.0085); tra le covariate
+spiccano `home_logval` (valore rosa, +0.0096) e `deep` (dominio territoriale,
++0.004); `home_settled` (stakes) è modesta (+0.0026), `stakes_mismatch` quasi nulla
+in aggregato (+0.0001, perché è ~5% delle partite).
+
+**Lezione / cosa ne consegue.**
+1. **La combinazione completa è OVERFITTING, non guadagno** (risposta diretta al
+   Punto 1). La firma è da manuale: aggiungendo feature il **train** log-loss scende
+   (0.9133 → 0.8923 → 0.8673) ma il **test** NON migliora (resta ~1.007–1.011) → il
+   gap di overfit CRESCE (+0.094 → +0.142). Il "full vs ridotto" −0.0020 non è
+   CI-conclusivo (P 78%). Le feature extra danno capacità che il GBM usa per
+   memorizzare il training, non per generalizzare.
+2. **Ma lo stakes è reale e LOCALIZZATO.** Sul sottoinsieme **mismatch** (una
+   squadra decisa, una in corsa; n=99) il set completo fa **0.9703**, contro 1.0115
+   del dc-only e persino meglio del DC (0.9797). È esattamente dove la Fase 32
+   prevedeva il segnale: la dilizione su 2280 partite lo nasconde in aggregato, ma
+   dove il mismatch esiste il GBM col set completo lo cattura. Conferma indipendente
+   del lead stakes.
+3. **Nessun GBM batte il DC** su 1X2 (1.007 vs 0.9797) né su GG/NG — ri-conferma il
+   tetto informativo (Fasi 21-23): la feature importance mostra che il GBM si appoggia
+   quasi tutto agli output del DC, e ogni grado di libertà in più aggiunge rumore.
+   `midweek` (già nel set ridotto dalla Fase 22) resta a bassa importanza.
+4. **Onestà:** un tuning più forte della regolarizzazione ridurrebbe l'overfit ma
+   non colmerebbe il divario di 0.027 dal DC sull'1X2 (il GBM degrada una previsione
+   già near-optimal, Fase 23). L'unico valore reale è lo **stakes sul mismatch**, e
+   il GBM è il veicolo giusto per esso (Fase 32) — ma serve più campione per la
+   conclusività.
+
+**Riproducibilità.** `python scripts/_run_gbm_full.py` (8 backtest DC + GBM
+walk-forward, feature importance; serve `scikit-learn`).
+
+### 📐 Il modello in dettaglio — overfitting, importance e dove vive lo stakes
+
+**La firma dell'overfitting (la metrica chiave di questa fase):**
+
+```
+overfit(feature-set) = log-loss_TEST − log-loss_TRAIN
+dc: 1.0071 − 0.9133 = +0.094      dc+cov_rid: +0.119      dc+cov_full: +0.142
+```
+
+Un modello che **generalizza** ha train ≈ test; qui il train scende con le feature
+ma il test no → il gap cresce = memorizzazione. Con ~2000–3000 esempi di training e
+21 feature, la capacità del GBM (max_depth=3, 200 iterazioni, min_samples_leaf=30)
+eccede il segnale disponibile: aggiungere feature riempie quella capacità di rumore.
+
+**Feature importance a permutazione** (perché è onesta): si mescola a caso una
+colonna del test e si misura di quanto **peggiora** la neg-log-loss:
+
+```
+importanza(feature k) = perdita(X con colonna k permutata) − perdita(X)     (media su 8 ripetizioni)
+```
+
+Le più alte sono `dc_pa`/`dc_ph` (le probabilità del DC stesso): il GBM **non
+scopre nulla oltre il DC**, lo ricopia. Le covariate che contano un po'
+(`home_logval`, `deep`) sono quelle già note come ridondanti (Fase 4c/33) — il GBM
+ne estrae un capello in-sample che non generalizza.
+
+**Perché lo stakes vive solo sul mismatch (aritmetica della diluizione).** L'effetto
+"squadra decisa che molla" agisce su ~99/2280 = **4.3%** delle partite. Anche un
+guadagno forte lì (dc→full sul mismatch: 1.0115→0.9703, −0.041) si diluisce in
+aggregato a `0.043 × (−0.041) ≈ −0.0018` — sotto il rumore. È il motivo per cui il
+lead è reale ma non muove la metrica complessiva: va valutato **sul sottoinsieme**,
+mai sull'aggregato (lezione già di Fase 31/32, qui riconfermata sul GBM completo).
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

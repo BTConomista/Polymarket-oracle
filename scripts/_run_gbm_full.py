@@ -102,7 +102,7 @@ def main():
     from sklearn.calibration import CalibratedClassifierCV
     from sklearn.inspection import permutation_importance
 
-    with Pool(min(8, len(FEAT_SEASONS))) as pool:
+    with Pool(4) as pool:            # 4 core reali
         dfs = dict(zip(FEAT_SEASONS, pool.map(_dc_backtest, FEAT_SEASONS)))
     all_m = loader.load_league("serie_a")
     covcols = ["date", "home_team", "away_team", "home_form", "away_form",

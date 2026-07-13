@@ -129,6 +129,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 33 | **PPDA/deep + finishing-luck** (ultimi segnali interni) | ridondanti; luck esattamente 0 (già nel blend xG) | ❌ dati interni esauriti |
 | **34** | **audit critico** (formule + superficialità + leve mai testate) | formule OK; pareggio deficit −0.044 nelle partite **equilibrate** \|λ−μ\| (mai testato); post-hoc **−0.0014, P 77%** | 🔎 lead strutturale (→ Fase 35) |
 | **35** | **φ pareggio condizionato a \|λ−μ\|** (equilibrio) | 1X2 **0.9790** (Δ −0.0007, best di 4 varianti); calibrazione pari equilibrati 0.287→**0.334** (reale 0.332, **batte il mercato**); CI include 0 | 🔎 miglior risultato sul pareggio; off di default (uso pratico) |
+| **36** | **GBM col set di feature COMPLETO** (stakes+luck+ppda+deep+midweek) | overfitting (train 0.913→0.867, test invariato ~1.01); nessun GBM batte il DC; **ma stakes reale sul mismatch: full 0.9703 vs DC 0.9797 (n=99)** | ❌ overfitting in aggregato / 🔎 stakes localizzato (conferma Fase 32) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
