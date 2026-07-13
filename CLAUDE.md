@@ -348,8 +348,16 @@ partite mismatch (n=99) la direzione e' CONFERMATA su entrambi: DC -0.0022, GBM
 conclusivo (CI includono lo zero, il GBM per un pelo). Non adottata (regola CI<0)
 ma e' il LEAD interno piu' credibile: direzione giusta su due architetture,
 meccanismo chiaro, ≠ dai "residui=rumore" delle Fasi 13/20. Serve piu' campione.
-Se si usera', il GBM e' il veicolo giusto. **Prossimo bivio:** piu' stagioni/
-cross-lega per confermare lo stakes, il candidato home-advantage-finale (Fase 30),
-uso pratico (tool di predizione), dati davvero nuovi.
+Se si usera', il GBM e' il veicolo giusto. **Fase 33 (ultime covariate interne, RIDONDANTI):** PPDA/deep (tattica) e
+finishing-luck (gol-xG rolling, mean-reversion), mai provate prima
+(`loader.add_style_luck`, covariate `ppda`/`deep`/`luck`, off di default,
+`scripts/_run_style_luck.py`). Sul DC: ppda/deep peggiorano appena (+0.0009),
+luck effetto ESATTAMENTE ZERO (il blend gol/xG e' gia' il meccanismo di
+mean-reversion); GBM estrae un capello (-0.0022, 81%) non conclusivo e
+irrilevante. Con la Fase 33 i DATI INTERNI SONO COMPLETAMENTE ESPLORATI (tutto lo
+snapshot testato): tetto informativo confermato. Ogni altro guadagno richiede
+INFORMAZIONE NUOVA o un avversario meno efficiente. **Prossimo bivio:** piu'
+stagioni/cross-lega per lo stakes, uso pratico (tool di predizione, la
+culminazione naturale), o dati davvero nuovi (formazioni, quote live).
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

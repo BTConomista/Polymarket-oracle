@@ -2152,6 +2152,44 @@ veicolo giusto (lo cattura ~6x meglio del DC). Infrastruttura pronta: covariata
 
 ---
 
+## Fase 33 — Ultime covariate mai provate: PPDA/deep e finishing-luck (ridondanti)
+
+**Obiettivo.** Chiudere onestamente il capitolo "spremere i dati interni": nello
+snapshot restavano DUE segnali mai messi nel modello -- PPDA/deep (tattica) e
+finishing-luck (gol-xG rolling, mean-reversion). Sono gli ultimi segnali interni
+inesplorati.
+
+**Ragionamento.** Feature ROLLING pre-partita (no look-ahead), aggiunte al loader
+(`add_style_luck`) e registrate come covariate `ppda`/`deep`/`luck` (off di
+default). Testate su DC (nel fit) e GBM (feature), disciplina solita (overall 1X2
+log-loss + gap, CI). Aspettativa onesta: probabilmente ridondanti (l'xG cattura
+gia' la qualita' delle occasioni), ma vanno provate per chiudere il libro.
+
+**Risultato** (`scripts/_run_style_luck.py`; 27 run, source `fase33_style_luck`):
+
+DC: base 0.9797; +ppda+deep 0.9806 (Δ +0.0009 [-0.0012,+0.0030]); +luck 0.9797
+(Δ -0.0000 [-0.0006,+0.0006]); +tutte 0.9807. GBM: 1.0107 -> 1.0085 (Δ -0.0022
+[-0.0072,+0.0028], P 81%).
+
+- PPDA/deep RIDONDANTI: peggiorano appena il DC (lo stile e' gia' implicito in
+  gol+xG, come il valore-rosa Fase 4c);
+- finishing-luck effetto ESATTAMENTE ZERO sul DC: conferma elegante che il blend
+  gol/xG (alpha=0.75) e' gia' il meccanismo di mean-reversion -- pesa gol e xG in
+  modo ottimale, quindi "la fortuna regredisce" non aggiunge nulla;
+- il GBM estrae un capello dalle feature tattiche (-0.0022, 81%) che il DC lineare
+  non vede, ma non conclusivo e irrilevante (resta ben peggio del DC).
+
+**Lezione.** Con la Fase 33 i DATI INTERNI SONO COMPLETAMENTE ESPLORATI: tutto lo
+snapshot (gol, xG, npxG, PPDA, deep, valore-rosa, assenze, riposo, forma, stakes)
+e' stato testato. Il tetto e' informativo, confermato per l'ultima volta coi
+segnali rimasti. Il finishing-luck a zero e' la nota piu' istruttiva: un'ipotesi
+sensata (mean-reversion) che il modello incorporava gia'. L'unico lead vivo resta
+lo stakes-mismatch (Fase 32), che serve piu' stagioni. Ogni altro guadagno ora
+richiede INFORMAZIONE NUOVA (formazioni, quote live) o un avversario meno
+efficiente (leghe/mercati diversi): finisce la strada "spremere lo snapshot".
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

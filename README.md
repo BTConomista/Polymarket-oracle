@@ -126,6 +126,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 30 | **pattern dentro la stagione** (anatomia) | no trend robusto; vantaggio-casa crolla a fine stagione | 🔎 candidato: home-adv finale |
 | 31 | **posta in palio corretta** (8 stag., asimmetria) | mismatch motivazione: gap +0.057 (3×), ribalta la 29 | 🔎 lead: stakes mismatch |
 | 32 | **covariata stakes** su DC e GBM (walk-forward) | aiuta i mismatch su entrambi (GBM −0.0127) ma CI tocca 0 | 🔎 lead credibile, non concluso |
+| 33 | **PPDA/deep + finishing-luck** (ultimi segnali interni) | ridondanti; luck esattamente 0 (già nel blend xG) | ❌ dati interni esauriti |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1153,6 +1154,35 @@ interno più credibile del progetto** — direzione giusta su due architetture,
 meccanismo chiaro, effetto concentrato dove previsto (≠ dai "residui = rumore"
 delle Fasi 13/20, dove i segni erano casuali). Serve più campione per superare la
 soglia. Covariata `stakes` disponibile, off di default.
+
+### Le ultime covariate: PPDA/deep e finishing-luck — Fase 33 (ridondanti)
+
+Nello snapshot restavano due segnali mai messi nel modello: **PPDA e deep
+completions** (indicatori tattici Understat) e **finishing-luck** (gol − xG
+rolling = sovra/sotto-rendimento realizzativo, ipotesi di mean-reversion). Testati
+come covariate rolling pre-partita su DC e GBM (`scripts/_run_style_luck.py`):
+
+| DC ± covariata | log-loss | Δ vs base (CI95) |
+|---|--:|--:|
+| base | 0.9797 | — |
+| +ppda+deep | 0.9806 | +0.0009 [−0.0012, +0.0030] |
+| +luck | 0.9797 | **−0.0000** [−0.0006, +0.0006] |
+| +tutte | 0.9807 | +0.0010 |
+
+GBM: base 1.0107 → +style 1.0085, Δ −0.0022 [−0.0072, +0.0028] (P 81%, non concl.).
+
+Tutte **ridondanti**: (1) PPDA/deep peggiorano appena il DC (lo stile è già
+implicito in gol+xG, come il valore-rosa in Fase 4c); (2) finishing-luck ha
+effetto **esattamente zero** — conferma elegante che il blend gol/xG (α=0.75) *è
+già* il meccanismo di mean-reversion (pesa gol e xG in modo ottimale, quindi "la
+fortuna regredisce" non aggiunge nulla); (3) il GBM estrae un capello dalle
+feature tattiche (−0.0022, 81%) ma non conclusivo e irrilevante (resta ben peggio
+del DC). Covariate `ppda`/`deep`/`luck` disponibili, off di default.
+
+**Con la Fase 33 i dati interni sono completamente esplorati**: tutto lo snapshot
+(gol, xG, npxG, PPDA, deep, valore-rosa, assenze, riposo, forma, stakes) è stato
+testato. Il tetto è **informativo**, confermato per l'ultima volta coi segnali
+rimasti. L'unico lead vivo è lo stakes-mismatch (Fase 32), che serve più stagioni.
 
 ## Struttura
 

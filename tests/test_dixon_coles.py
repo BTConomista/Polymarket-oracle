@@ -310,3 +310,26 @@ def test_stakes_covariata_usabile():
     p = model.predict_match(m.iloc[-1]["home_team"], m.iloc[-1]["away_team"],
                             features=m.iloc[-1].to_dict())
     assert p.prob_home_win + p.prob_draw + p.prob_away_win == pytest.approx(1.0, abs=1e-6)
+
+
+def test_add_style_luck_rolling_no_lookahead():
+    """PPDA/deep/luck rolling: colonne presenti, prima gara di ogni squadra NaN,
+    luck (gol-xG) di media ~0."""
+    from src.data import loader
+    m = loader.load_league("serie_a")
+    for c in ["home_ppda_roll", "away_ppda_roll", "home_deep_roll",
+              "away_deep_roll", "home_luck", "away_luck"]:
+        assert c in m.columns
+    # la prima partita in assoluto ha entrambe le squadre senza storico -> NaN
+    first = m.sort_values("date").iloc[0]
+    assert pd.isna(first["home_ppda_roll"]) and pd.isna(first["away_luck"])
+    assert abs(m["home_luck"].mean()) < 0.3          # gol-xG ~ 0
+
+
+def test_style_luck_covariate_usabile():
+    from src.data import loader
+    m = loader.load_league("serie_a", ["2122", "2223"])
+    model = DixonColesModel(half_life_days=365, shrinkage=1.5,
+                            covariates=("ppda", "deep", "luck")).fit(m)
+    for c in ("ppda", "deep", "luck"):
+        assert c in model.beta

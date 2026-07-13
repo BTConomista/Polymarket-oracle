@@ -59,6 +59,9 @@ _COVARIATES: dict[str, tuple[str, str, str]] = {
     "rest_full": ("home_rest_days_full", "away_rest_days_full", "identity"),  # riposo/congestione VERA (calendario completo di club, Fase 4e)
     "form": ("home_form", "away_form", "identity"),  # stato di forma: punti/gara ultime 5 (Fase 13)
     "stakes": ("home_settled", "away_settled", "identity"),  # posta in palio: 1=decisa, 0=in corsa (Fase 32)
+    "ppda": ("home_ppda_roll", "away_ppda_roll", "identity"),  # pressing rolling (Fase 33)
+    "deep": ("home_deep_roll", "away_deep_roll", "identity"),  # dominio territoriale rolling (Fase 33)
+    "luck": ("home_luck", "away_luck", "identity"),  # gol-xG rolling: mean-reversion (Fase 33)
 }
 
 

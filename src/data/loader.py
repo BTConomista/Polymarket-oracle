@@ -326,6 +326,47 @@ def add_form(matches: pd.DataFrame, window: int = 5) -> pd.DataFrame:
     return df
 
 
+def add_style_luck(matches: pd.DataFrame, window: int = 8) -> pd.DataFrame:
+    """Aggiunge feature ROLLING pre-partita mai usate nel modello (Fase 33):
+      - home/away_ppda_roll : media PPDA (intensita' di pressing) ultime N gare;
+      - home/away_deep_roll : media 'deep completions' (dominio territoriale);
+      - home/away_luck      : media (gol - xG) = sovra/sotto-rendimento realizzativo
+        ('fortuna sotto porta'), ipotesi di mean-reversion (chi ha segnato sopra
+        l'xG regredisce).
+    Ognuna usa SOLO le gare precedenti della squadra (qualsiasi campo) -> niente
+    look-ahead. Prima gara di una squadra -> NaN (covariata neutra)."""
+    from collections import deque
+    df = matches.sort_values("date").reset_index(drop=True)
+    dq: dict[str, dict[str, deque]] = {}
+    cols = {c: [] for c in ("home_ppda_roll", "away_ppda_roll", "home_deep_roll",
+                            "away_deep_roll", "home_luck", "away_luck")}
+
+    def _mean(d):
+        return float(np.mean(d)) if d else float("nan")
+
+    for _, r in df.iterrows():
+        for side in ("home", "away"):
+            t = r[f"{side}_team"]
+            d = dq.get(t)
+            cols[f"{side}_ppda_roll"].append(_mean(d["ppda"]) if d else float("nan"))
+            cols[f"{side}_deep_roll"].append(_mean(d["deep"]) if d else float("nan"))
+            cols[f"{side}_luck"].append(_mean(d["luck"]) if d else float("nan"))
+        for side in ("home", "away"):
+            t = r[f"{side}_team"]
+            slot = dq.setdefault(t, {"ppda": deque(maxlen=window),
+                                     "deep": deque(maxlen=window),
+                                     "luck": deque(maxlen=window)})
+            if pd.notna(r.get(f"{side}_ppda")):
+                slot["ppda"].append(float(r[f"{side}_ppda"]))
+            if pd.notna(r.get(f"{side}_deep")):
+                slot["deep"].append(float(r[f"{side}_deep"]))
+            if pd.notna(r.get(f"{side}_xg")):
+                slot["luck"].append(float(r[f"{side}_goals"]) - float(r[f"{side}_xg"]))
+    for c, v in cols.items():
+        df[c] = v
+    return df
+
+
 def add_stakes(matches: pd.DataFrame, n_teams: int = 20, relegated: int = 3,
                europe_rank: int = 7) -> pd.DataFrame:
     """Aggiunge home_settled / away_settled: 1.0 se la squadra non ha piu' NESSUNA
@@ -410,6 +451,7 @@ def load_league(
         df = add_rest_days(df)
         df = add_form(df)
         df = add_stakes(df)
+        df = add_style_luck(df)
         wanted = {str(s) for s in seasons}
         df = df[df["season"].isin(wanted)]
         return df.sort_values("date").reset_index(drop=True)
@@ -426,4 +468,5 @@ def load_league(
     combined = add_rest_days(combined)
     combined = add_form(combined)
     combined = add_stakes(combined)
+    combined = add_style_luck(combined)
     return combined
