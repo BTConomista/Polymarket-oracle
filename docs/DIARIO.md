@@ -1082,6 +1082,37 @@ tarando T empiricamente, senza pregiudizi.
 **Riproducibilita'.** `python scripts/calibrate.py` (validazione walk-forward su
 tutte le stagioni; registra 6 run con `source=calibrate_temperature`).
 
+### 📐 Il modello in dettaglio — la formula del temperature scaling
+
+Correzione **post-hoc** a un solo parametro `T`, applicata alle probabilità 1X2 già
+prodotte dal modello e poi rinormalizzata (`src/evaluation/calibration.py`):
+
+```
+q_i ∝ p_i^(1/T) ,   poi   q_i ← q_i / Σ_j q_j
+```
+
+- `T = 1` → nessun cambiamento;
+- `T > 1` → "raffredda": probabilità più vicine all'uniforme (meno sicuro);
+- `T < 1` → "scalda": probabilità più nette (più sicuro).
+
+**Come si evita il look-ahead.** `T` si **tara** minimizzando la log-loss *solo* sulle
+predizioni walk-forward delle stagioni **precedenti** a quella di test
+(leave-future-out), e si applica alla stagione di test. `T` non tocca mai i dati che
+valuta.
+
+**Perché la scoperta è robusta ma il guadagno no.**
+- *Robusta:* `T < 1` in **tutte e 6** le stagioni (0.92–0.96). Il modello è
+  sistematicamente un filo **sotto**confidente → le probabilità andrebbero rese un
+  po' più nette. (L'eccesso di sicurezza segnalato dal diagnostico era concentrato in
+  poche partite estreme, non nella distribuzione media.)
+- *Nel rumore:* rendere le probabilità più nette è un'arma a doppio taglio — `−ln p`
+  premia molto quando l'esito netto si avvera, ma punisce ancora di più quando no. In
+  Serie A i due effetti quasi si annullano: −0.0003 medio, e **peggiora 2 stagioni su
+  6**. Sotto la soglia del rumore → non entra nella config ufficiale.
+- *Limite strutturale:* `T` scala **tutte** le classi in modo uniforme, non può
+  *spostare massa* da un esito all'altro (es. dalla casa al pareggio). Per quello
+  serve la ricalibrazione per-classe (Fase 10).
+
 **Prossimo (se si vuole continuare a spremere).** La perdita piu' grande e
 concentrata resta le **neopromosse** (+0.029 su ~28% delle partite): un prior di
 cold-start e' la leva con l'aspettativa migliore rimasta dentro il modello
@@ -1156,6 +1187,50 @@ di test, assenti nella precedente). Flag CLI `--promoted-prior DELTA`.
 stagioni, δ leave-future-out), oppure singola cella:
 `python scripts/backtest.py --test-season 2122 --promoted-prior 0.23`.
 
+### 📐 Il modello in dettaglio — come è costruito δ e perché vale 0.23
+
+**Il meccanismo: si sposta il BERSAGLIO dello shrinkage.** La penalità della Fase 2b
+tirava le forze verso 0 (media). Per le neopromosse il bersaglio diventa un valore
+**sotto** la media:
+
+```
+penalità = s · [ Σ_i (att_i − att_prior_i)² + Σ_i (dif_i − dif_prior_i)² ]
+con   att_prior = −δ_att   e   dif_prior = +δ_def   SOLO per le neopromosse
+      (0 per tutte le altre)
+```
+
+Eleganza del riuso: non serve codice nuovo per il cold-start. Una neopromossa con
+**0 partite** non ha contributo dai dati → la penalità la porta *esattamente* sul
+prior; man mano che gioca, il termine dati la sovrasta allo stesso ritmo con cui lo
+shrinkage cede su qualsiasi squadra (`≈ s/(s+n_i)`, Fase 2b). Le promosse entrano nel
+modello anche a inizio stagione, non più trattate come "sconosciute = media".
+
+**Perché δ ≈ 0.23 (l'aritmetica esatta).** In log-scala, uno spostamento `δ`
+dell'attacco moltiplica il tasso-gol per `e^{−δ}`. Dai dati storici delle 24
+neopromosse 2018-2026:
+
+```
+attacco:  segnano 1.08 gol/gara vs 1.36 della lega  →  δ_att = ln(1.36 / 1.08) = 0.230
+difesa:   subiscono 1.72 vs 1.36                     →  δ_def = ln(1.72 / 1.36) = 0.235
+```
+
+I due coincidono a ~0.23 → si usa un unico `δ = 0.23`. Verifica del segno: `e^{−0.23} =
+0.795` (segnano il **−20%**) e `e^{+0.23} = 1.259` (subiscono il **+26%**) —
+esattamente i −20%/+26% osservati. **Il numero non è tirato a caso: è il logaritmo del
+rapporto di gol osservato.**
+
+**Perché non è look-ahead.** Per la stagione S, `δ` è stimato **solo** dalle
+neopromosse delle stagioni `< S` (leave-future-out) e applicato **sia** al modello-gol
+**sia** al modello-xG del blend (la promossa è più debole in entrambi).
+
+**Perché è l'unico adottato.** −0.0011 medio complessivo (3-4× congestione e
+calibrazione) e **−0.0039** dove deve colpire (partite con una neopromossa),
+migliorando 5 stagioni su 6. È l'unica leva che *supera il rumore in modo consistente*
+ed è **principiata** (un fatto strutturale — le promosse *sono* più deboli — non un
+parametro pescato). Il 2023-24 peggiora (+0.0007) perché quel trio
+(Genoa/Cagliari/Frosinone) era vicino alla media: è la varianza attesa di una regola
+che scommette sul caso generale.
+
 ---
 
 ## Fase 8 — Ultimo giro economico (shrinkage, vantaggio-casa): niente da spremere
@@ -1203,6 +1278,33 @@ GG/NG) o l'**uso pratico** del modello.
 
 **Riproducibilita'.** #1: `python scripts/tune.py --sweep shrinkage --values 0.75
 1.0 1.5 2.0 3.0 --seasons 2021 2122 2223 2324 2425 2526 --promoted-prior 0.23`.
+
+### 📐 Il modello in dettaglio — ortogonalità e il test di persistenza
+
+**#1 — Perché lo shrinkage resta 1.5 (ortogonalità).** Con il prior attivo, lo sweep
+dà una curva **piatta** (0.9797 da 0.75 a 1.5, minimo nominale a 1.0 ma a 0.00002 da
+1.5 = rumore). Interpretazione: prior e shrinkage agiscono su cose diverse — il
+**prior** fissa *dove* punta la molla per le neopromosse (il cold-start), lo
+**shrinkage** ne regola la *forza* per tutte. Nell'intervallo utile non interagiscono
+→ nessun guadagno a ri-tararlo → resta 1.5.
+
+**#2 — Perché il vantaggio-casa per-squadra muore prima di costruirlo.** Il test
+economico misura la **persistenza anno-su-anno** dell'effetto per-squadra:
+
+```
+proxy per team-stagione:  (punti/gara in casa) − (punti/gara fuori)
+persistenza:  r = corr( proxy_stagione_t , proxy_stagione_t+1 )  su n=136 coppie
+```
+
+Risultato: **r ≈ 0.004** (praticamente zero), mentre l'effetto **medio** è reale
+(0.254 punti/gara — ed è già nel modello come `home_advantage` globale `γ`). La
+regola statistica: l'utilità *out-of-sample* di un predittore è limitata dalla sua
+**affidabilità** (quanto si ripete). Con `r ≈ 0`, il "forte in casa" di quest'anno è
+scorrelato da quello del prossimo → un vantaggio-casa per-squadra **fitterebbe solo
+rumore stagionale** e non generalizzerebbe. L'idea muore *prima* della chirurgia sul
+modello: è il principio "testa la versione economica prima di investire". (La Fase 30
+troverà che il vantaggio-casa varia *dentro* la stagione — crollo nel finale — che è
+un effetto diverso e globale, non per-squadra.)
 
 ---
 
@@ -1309,6 +1411,37 @@ piu'). Non e' l'asse dove si nasconde il divario.
 **Riproducibilita'.** `python scripts/analyze_gap.py` (5 versioni × 6 stagioni,
 scomposizione per stagione/mercato/forza/favoritismo).
 
+### 📐 In dettaglio — l'aritmetica del "quanto manca" e "dove vive il gap"
+
+**Quanta strada è stata chiusa.** La baseline banale sta a gap ~+0.12 dal mercato,
+il modello attuale a +0.0165:
+
+```
+frazione chiusa = 1 − (gap_attuale / gap_baseline) = 1 − 0.0165/0.12 ≈ 0.86  (86%)
+```
+
+L'ultimo ~14% è la parte dura. (L'audit di Fase 15 ha corretto un precedente "87%"
+in **86%**: differenza di arrotondamento, ma va registrata.)
+
+**Perché il gap è "quasi tutto nel pareggio" (scomposizione).** I mercati derivati
+isolano *dove* si perde:
+- **12 = 1 − P(X)**: prezzarlo non richiede stimare la *massa* del pareggio, solo
+  "vince una delle due". Gap **+0.0020** ≈ mercato.
+- Appena il pareggio rientra come esito da prezzare (1X, 2X, 1X2) il gap
+  **triplica/quadruplica** (+0.012…+0.017).
+
+Poiché `gap(1X2)` ≈ (errore nel prezzare *chi vince*) + (errore nel prezzare *il
+pareggio*), e il primo termine è ~0 (lo dice il 12), **il grosso del gap è il secondo
+termine**: prezzare i pareggi (= i punteggi bassi correlati). È la firma matematica
+che indirizza il "cambio di classe" verso la correlazione dei punteggi (Fase 12b/18),
+non verso più feature di forza.
+
+**La "U" per forza squadra** (deboli +0.0206, forti +0.0180, medie +0.0123) e il
+picco sulle **stagioni rumorose** (COVID 2020-21 +0.0202) sono coerenti con
+l'interpretazione "il mercato ha informazione che noi non abbiamo" (motivazione
+salvezza, turnover coppe): non è modellabile con i dati storici → è il residuo
+irriducibile.
+
 ### Fase 9-bis — COVID vs post-COVID e trend recente
 
 **Obiettivo.** Il gap 1X2 peggiore era il 2020-21: e' un effetto COVID (stadi
@@ -1360,6 +1493,21 @@ ancora una volta il dito punta sulla correlazione dei punteggi.
 
 **Riproducibilita'.** `python scripts/_run_gap_covid.py`.
 
+### 📐 In dettaglio — perché il COVID muove il gap d'esito (il ruolo di γ)
+
+Il vantaggio-casa nel modello è un **unico parametro globale** `γ` (in
+`λ = exp(att_h + dif_a + γ)`), stimato con i pesi temporali. Come ogni parametro
+pesato nel tempo, si adatta **lentamente**: a stadi vuoti (2020-21) il vantaggio-casa
+reale è crollato, ma `γ` continuava a riflettere lo storico "normale" a pubblico
+pieno → il modello **sovra-pesava** le squadre di casa proprio quando contavano meno.
+Il mercato si adeguava più in fretta → gap d'esito più largo (+0.0202). Tornato il
+pubblico, il gap si è richiuso (−0.0041). È lo stesso meccanismo che la Fase 30
+ritroverà *dentro* la stagione (crollo del vantaggio-casa nel finale) e coerente con
+la Fase 8 (il vantaggio-casa **globale** conta e drifta; quello **per-squadra** è
+rumore). L'O/U fa l'opposto (nel COVID il modello lo *batte*, −0.0031): i totali gol
+risentono meno del pubblico, e in quella stagione anomala le quote O/U erano
+verosimilmente meno affilate. *Cautela onesta:* un solo campione COVID (380 partite).
+
 ---
 
 ## Fase 10 — Ricalibrazione per-classe 1X2 (attacca il pareggio; robusto ma piccolo)
@@ -1408,6 +1556,37 @@ fissa `w_ospite=1` (2 parametri). Pesi tarati SOLO sulle stagioni precedenti
    punta allo stesso salto (Poisson bivariato).
 
 **Riproducibilita'.** `python scripts/_run_class_recal.py`.
+
+### 📐 Il modello in dettaglio — la formula della ricalibrazione per-classe
+
+Tre moltiplicatori, uno per esito (casa/pari/ospite), applicati alle probabilità 1X2
+e rinormalizzati:
+
+```
+q_i ∝ w_i · p_i ,   poi   q_i ← q_i / Σ_j q_j
+```
+
+**Perché 2 parametri e non 3.** Solo i *rapporti* tra i `w` contano: `w=(c,c,c)` si
+semplifica nella rinormalizzazione. Si fissa `w_ospite = 1` (restano `w_casa, w_pari`)
+e alla fine il vettore è normalizzato a media geometrica 1 per leggibilità. Tarato
+**leave-future-out** (solo stagioni precedenti) e applicato al test.
+
+**Cosa la distingue dal temperature (Fase 6).** Il temperature `p^{1/T}` scala tutte
+le classi allo stesso modo → non può *spostare massa* tra esiti. Qui `w_i` diverso
+per classe **sposta massa**: è ciò che serve per una miscalibrazione **direzionale**.
+
+**Perché w_casa ≈ 0.96 e w_pari ≈ 1.04-1.06 (robusto in 6/6 stagioni).** Il fit, senza
+che glielo si dica, **abbassa la casa e alza il pareggio** in ogni stagione: conferma
+quantitativa che il modello **sovrastima le vittorie casalinghe e sottostima i pari**
+— la stessa direzione del diagnostico (Fase 9) e dell'analisi COVID (γ, Fase 9-bis).
+
+**Perché il guadagno resta piccolo (−0.0005).** È un surrogato **lineare e globale**
+di ciò che servirebbe davvero: la probabilità *giusta* del pareggio dipende dai tassi
+`(λ, μ)` della **singola partita** (un match da 1.8 gol attesi ha P(pari) diversa da
+uno da 3.5), non da un fattore costante `w_pari`. La ricalibrazione spreme lo strato
+"medio" della miscalibrazione (−0.0005, un filo meglio del temperature −0.0003) ma il
+residuo è strutturale → non entra nella config ufficiale. Punta di nuovo al Poisson
+bivariato (Fase 12b).
 
 ---
 
@@ -1462,6 +1641,27 @@ beneficia.
 
 **Riproducibilita'.** `python scripts/_run_combo_analysis.py`.
 
+### 📐 In dettaglio — perché unire segnali nulli non "impila" nulla
+
+**Il disegno.** Tutti i `2³ = 8` sottoinsiemi delle covariate off-di-default
+(`squad_value`, `absence`, `rest_full`), ciascuno con e senza la ricalibrazione
+per-classe a **pesi fissi robusti** (casa 0.96 / pari 1.04 / ospite 1.00, dalla Fase
+10) = 48 backtest × 6 stagioni.
+
+**Perché nessuna combinazione aiuta.** Le covariate entrano additivamente nel
+log-tasso (`cov = Σ_k β_k (z_h,k − z_a,k)`, Fase 4c). Se ogni `β_k` è ~0
+out-of-sample (perché il segnale è già catturato da gol+xG, Fase 4c), la loro somma è
+~0 più il rumore accumulato di più stime → in media **peggiora** (`squad_value` fa
++0.0004/+0.0007 in ogni mix). Non c'è sinergia da estrarre: due segnali ridondanti da
+soli restano ridondanti insieme.
+
+**Perché la "miglior combo" (−0.0011) non è una vittoria.** Quel guadagno è **tutto**
+della ricalibrazione (che aiuta 6/6 sul modello base), mentre il contributo delle
+covariate è rumore; e la combo migliora solo **4/6** stagioni — *meno* del recal da
+solo (6/6). Scegliere il minimo tra 8 combinazioni è **selezione post-hoc**: con
+tante prove, il minimo campionario è ottimisticamente basso anche sotto rumore puro.
+Il verdetto onesto è "nessun guadagno robusto", non "abbiamo trovato la combo".
+
 ---
 
 ## Fase 12a — Ensemble di emivite (ultimo tweak economico; piccolo, borderline)
@@ -1488,6 +1688,24 @@ piu' della singola 365g. Ma e' **borderline** (4/6, non 6/6), nella stessa fasci
 di prior/calibrazione/ricalibrazione. **Non adottato** (non abbastanza robusto).
 Chiude il capitolo dei tweak economici: anche l'ultima idea non testata e'
 rumore-adiacente. **Riproducibilita'.** `python scripts/_run_ensemble.py`.
+
+### 📐 Il modello in dettaglio — la media di due modelli
+
+Si allenano **due** modelli identici tranne l'emivita — uno corto (180g, reattivo/
+forma) e uno lungo (730g, forza stabile) — e si mediano le probabilità 1X2 riga per
+riga:
+
+```
+p_blend = 0.5 · p_180g  +  0.5 · p_730g       (media sulle probabilità, non sui tassi)
+```
+
+**Perché corto+lungo batte il singolo 365g (di un soffio).** È un mini-ensemble: i due
+modelli sbagliano in modo parzialmente **scorrelato** (il corto cattura la forma
+recente, il lungo la forza di fondo), quindi mediarli riduce la varianza più di quanto
+faccia una singola emivita intermedia. Guadagno −0.0006, ma **4/6** stagioni (non
+6/6): nella stessa fascia di rumore di prior/calibrazione/ricalibrazione → **non
+adottato**. Il 365g singolo resta la config: cattura già gran parte del beneficio in
+un modello solo, più semplice.
 
 ---
 
@@ -1548,6 +1766,41 @@ GG/NG ~invariati. φ fittato ~0.10-0.14 (positivo, come da deficit).
 
 **Riproducibilita'.** `python scripts/_run_draw_infl.py`, oppure
 `python scripts/backtest.py --draw-inflation`.
+
+### 📐 Il modello in dettaglio — la formula dell'inflazione diagonale φ
+
+**La correzione.** Un parametro `φ` moltiplica per `(1+φ)` **tutti** i punteggi di
+parità (non solo le 4 celle di Dixon-Coles), poi si rinormalizza:
+
+```
+P_φ(i, j) ∝ M(i, j) · ( 1 + φ · [i = j] )        (i = j: 0-0, 1-1, 2-2, 3-3, …)
+```
+
+`φ > 0` sposta massa **verso** i pareggi (a tutte le altezze), non solo 0-0/1-1.
+
+**Come si stima `φ` (fittato nella verosimiglianza, non post-hoc).** Il termine della
+log-verosimiglianza che dipende da `φ` si riduce a una **1-D** (formula chiusa):
+
+```
+ℓ(φ) = Σ_partite  w · [ ln(1 + φ·1{pareggio_reale})  −  ln(1 + φ·d_match) ]
+```
+
+dove `d_match` = P(pareggio) del **modello base per quella partita** (calcolata
+vettorialmente riga per riga). Ecco perché è "dipendente dalla partita": pur essendo
+`φ` un unico scalare, l'effetto è normalizzato dalla massa-pareggio *specifica* di
+ogni match. Fittato con `φ ∈ [−0.5, 2.0]`; qui esce **~0.10-0.14** (positivo, come da
+deficit-pareggio).
+
+**Perché fa la cosa giusta ma non guadagna.** Il meccanismo **funziona**: `P(pari)`
+sale verso il reale in OGNI stagione (2024-25: 0.264→0.288 vs reale 0.284,
+quasi-perfetto). Migliora la *calibrazione media* del pareggio. Ma il log-loss guadagna
+solo −0.0004 (3/6) perché **quanti** pareggi capitano in una stagione è in larga parte
+**rumore**: dove ne capitano pochi (2025-26, reale 0.261) l'inflazione tarata sul
+passato **sovrastima** e peggiora. È la prova definitiva: anche la mossa
+strutturalmente corretta — quella indicata da tre analisi — dà lo stesso ordine di
+grandezza (−0.0004) di ogni tampone, perché **il pareggio è quasi-casuale per tutti,
+mercato incluso** (il 12 senza pari è già a livello mercato). Non è cattiva
+modellazione: è irriducibilità del fenomeno.
 
 ---
 
