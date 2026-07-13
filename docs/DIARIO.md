@@ -2069,6 +2069,49 @@ prudenza (rischio overfitting su un effetto piccolo).
 
 ---
 
+## Fase 31 — Posta in palio corretta (8 stagioni): conta l'ASIMMETRIA
+
+**Obiettivo.** La Fase 29 (dead rubber = "salva E fuori dall'Europa") era
+sbagliata ai due estremi: contava una squadra gia' RETROCESSA come "in lotta
+salvezza" e una gia' CAMPIONE come "in corsa titolo". Definizione corretta
+(DECISA = nessuna corsa aperta, inclusi retrocessa e campione), su 8 stagioni,
+con molte combinazioni a livello partita.
+
+**Risultato** (`scripts/_run_stakes2.py`; 9 run, source `fase31_stakes2`; n=3040):
+
+Stati-squadra (su 6080): in_corsa 5795, salva_limbo 147, europa_decisa 70,
+retrocessa 45, campione 23 (solo 4.7% "deciso").
+
+| categoria | n | gap | CI95 |
+|---|--:|--:|--:|
+| entrambe in corsa | 2831 | +0.0172 | [+0.0122, +0.0221] |
+| una decisa, una in corsa | 133 | +0.0572 | [+0.0139, +0.1014] * |
+| entrambe decise | 76 | +0.0130 | [-0.035, +0.060] |
+| coinvolge una campione | 23 | +0.0949 | [+0.013, +0.179] * |
+
+- RIBALTA la Fase 29: escludendo le partite con >=1 squadra decisa il gap SCENDE
+  da +0.0188 a +0.0172 (quelle partite hanno gap +0.0411) -> su di esse il
+  modello va PEGGIO del mercato, non meglio (la Fase 29, col classificatore rotto
+  e 12 partite, concludeva l'opposto);
+- il segnale e' l'ASIMMETRIA: "una decisa, una in corsa" ha gap triplo (+0.057 vs
+  +0.017, CI esclude lo zero); "entrambe decise" invece niente.
+
+**Lezione.** Quando una squadra non ha piu' nulla in gioco e l'altra lotta, la
+squadra motivata sovra-rende / quella scarica molla: il mercato lo prezza, noi
+no (usiamo la forza stagionale, ciechi alla motivazione del momento). E' il primo
+LEAD azionabile dai dati interni. Onesta': campioni piccoli (133 la categoria piu'
+solida, 23-76 le altre) e molti test -> indizio forte e sensato, non una prova; e
+l'effetto e' SOLO nell'asimmetria, non quando entrambe sono decise (coerente col
+meccanismo). Candidato: una covariata "stakes mismatch" (una squadra decisa vs
+una in corsa) che attenui la previsione a favore della squadra motivata, da
+validare walk-forward prima di adottare. Indica anche quali dati esterni
+cercherebbero valore (indicatori di motivazione/asimmetria), ma il primo taglio
+e' gia' nei dati (dalla classifica). METODO: la Fase 29 mostra quanto conta una
+definizione corretta -- un classificatore sbagliato ai bordi ribaltava la
+conclusione.
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

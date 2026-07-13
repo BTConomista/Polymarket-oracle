@@ -329,8 +329,19 @@ bloccate; 35-38 col VANTAGGIO-CASA che crolla, casa 40%->36% e trasferta
 31%->38%); nessun pattern-gap robusto (correlazioni ~0, gap fine-inizio positivo
 solo 3/6 stagioni). Candidato concreto emerso: attenuare il vantaggio-casa nelle
 ultime giornate (come nel COVID, Fase 9), piu' promettente della motivazione ma
-marginale. **Prossimo bivio:** Fase 31 (posta in palio ricca su 8 stagioni,
-richiesta), il candidato home-advantage-finale, uso pratico, dati nuovi,
-cross-lega.
+marginale. **Fase 31 (posta in palio corretta, 8 stagioni — RIBALTA la 29):** la Fase 29
+sbagliava ai due estremi (una retrocessa contata come "in lotta salvezza", una
+campione come "in corsa titolo"). Definizione corretta (DECISA = nessuna corsa
+aperta, inclusi retrocessa/campione) su 8 stagioni (`scripts/_run_stakes2.py`):
+il segnale e' l'ASIMMETRIA di motivazione -- "una decisa, una in corsa" ha gap
++0.057 (3x il +0.017 di "entrambe in corsa"), CI esclude lo zero; "entrambe
+decise" niente. Escludendo le partite con >=1 decisa il gap scende (+0.0188 ->
++0.0172): su di esse il modello va PEGGIO del mercato (il mercato prezza la
+motivazione, noi usiamo la forza stagionale). Primo LEAD azionabile dai dati
+interni. Onesta': campioni piccoli (133/76/44/23) e molti test -> indizio forte,
+non prova. METODO: un classificatore sbagliato ai bordi (Fase 29) ribaltava la
+conclusione. **Prossimo bivio:** covariata "stakes mismatch" (da validare
+walk-forward), il candidato home-advantage-finale (Fase 30), uso pratico, dati
+nuovi, cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

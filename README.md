@@ -124,6 +124,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 28 | **errore per giornata** (finale di stagione) | fine più difficile per TUTTI; gap raddoppia ma non concl. | 🔎 tendenza (posta in palio) |
 | 29 | **posta in palio** (dead rubber dalla classifica) | dead rubber rari (4.3%); nessun effetto sul gap | ❌ non spiega il finale |
 | 30 | **pattern dentro la stagione** (anatomia) | no trend robusto; vantaggio-casa crolla a fine stagione | 🔎 candidato: home-adv finale |
+| 31 | **posta in palio corretta** (8 stag., asimmetria) | mismatch motivazione: gap +0.057 (3×), ribalta la 29 | 🔎 lead: stakes mismatch |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1089,8 +1090,38 @@ Fase 28 non è coerente tra stagioni.
 
 Il **crollo del vantaggio-casa nel finale** è un candidato concreto di piccolo
 difetto nostro (il modello eredita un vantaggio-casa dallo storico che nelle
-ultime giornate si riduce — come nel COVID, Fase 9), molto più della motivazione
-(bocciata in Fase 29). Ma il gap non sale in modo robusto, quindi è marginale.
+ultime giornate si riduce — come nel COVID, Fase 9). Ma il gap non sale in modo
+robusto, quindi è marginale.
+
+### Posta in palio, versione corretta — Fase 31 (l'asimmetria conta)
+
+La Fase 29 definiva "dead rubber" solo come "salva E fuori dall'Europa" (12
+partite) — **sbagliato ai due estremi**: contava una squadra già RETROCESSA come
+"in lotta salvezza" e una già CAMPIONE come "in corsa titolo". Definizione
+corretta (squadra DECISA = nessuna corsa aperta, inclusi già-retrocessa e
+già-campione) su **8 stagioni** (`scripts/_run_stakes2.py`):
+
+| Categoria partita | n | gap | CI95 |
+|---|--:|--:|--:|
+| entrambe in corsa (riferimento) | 2831 | +0.0172 | [+0.0122, +0.0221] |
+| **una decisa, una in corsa** | 133 | **+0.0572** | [+0.0139, +0.1014] ✱ |
+| entrambe decise | 76 | +0.0130 | [−0.035, +0.060] |
+| coinvolge una campione | 23 | +0.0949 | [+0.013, +0.179] ✱ |
+
+Il risultato **ribalta la Fase 29**: escludendo le partite con almeno una
+squadra decisa il gap **scende** da +0.0188 a +0.0172 (quelle partite hanno gap
++0.0411) → su di esse il modello va **peggio** del mercato, non meglio (la Fase 29,
+col classificatore rotto e 12 partite, aveva concluso l'opposto).
+
+Il segnale vero non è "entrambe decise" (lì niente) ma l'**asimmetria di
+motivazione**: quando una squadra non ha più nulla in gioco e l'altra lotta, il
+gap triplica (+0.057 vs +0.017, CI esclude lo zero). Ha senso: la squadra motivata
+sovra-rende / quella scarica molla, e **il mercato lo prezza mentre noi usiamo la
+forza stagionale, ciechi alla motivazione del momento**. **Onestà:** campioni
+piccoli (133 la categoria più solida, 23-76 le altre) e molti test → indizio
+forte e sensato, non una prova. È il primo **lead azionabile dai dati interni**:
+una covariata "stakes mismatch" potrebbe attenuare la previsione a favore della
+squadra motivata (da validare prima di adottare).
 
 ## Struttura
 
