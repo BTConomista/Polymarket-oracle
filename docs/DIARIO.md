@@ -1837,6 +1837,36 @@ esperimento convergente: il tetto e' reale, la forma non lo scalfisce.
 
 **Riproducibilita'.** `python scripts/_run_form.py`.
 
+### 📐 Il modello in dettaglio — perché la forma è collineare con la forza
+
+**La feature** (`loader.add_form`, finestra 5):
+
+```
+home_form = (punti nelle ultime 5 gare della squadra) / (n. gare)   [vit 3, pari 1, sconf 0]
+```
+
+Solo gare precedenti (no look-ahead), scorre tra stagioni. Come covariata entra
+esattamente come le altre: `β · (z_form,casa − z_form,ospite)`.
+
+**Il diagnostico del "pattern nascosto".** Prima di aggiungere la feature si verifica
+se la forma predice l'**errore** del modello:
+
+```
+residuo = (punti reali casa) − (punti attesi dal modello)
+corr( forma_casa − forma_ospite ,  residuo ) = +0.035  ≈  0
+```
+
+~zero → nessun momentum che il modello non veda già. E infatti come covariata
+**peggiora** (0.9797→0.9799, 3/6).
+
+**Il perché strutturale.** La "forma" (punti recenti) **è** il risultato delle gare
+recenti, e il fit **pesato nel tempo** (emivita 365g) già pesa di più proprio quelle
+gare. Quindi `home_form` è quasi perfettamente **collineare** con la forza recente che
+il modello stima → non porta informazione ortogonale, solo il rumore della sua stima.
+Aggiungere un regressore collineare in un modello ben specificato non può che
+aggiungere varianza. (Una forma su *xG* sarebbe ancora più ridondante: l'xG è già nel
+blend.) Ottavo esperimento convergente sul tetto.
+
 ---
 
 ## Fase 13-bis — Streak e rendimento recente: ricerca DATA-DRIVEN (nessun pattern)
@@ -1898,6 +1928,38 @@ cio' che sta nei risultati recenti.
 
 **Riproducibilita'.** `python scripts/_run_streaks.py`,
 `python scripts/_run_recent_patterns.py`, `python scripts/_run_streak_interaction.py`.
+
+### 📐 In dettaglio — il benchmark di rumore che chiude la questione
+
+Il cuore statistico di questa fase è **come si distingue un segnale dal rumore** in
+una regressione multivariata sul residuo. Due formule:
+
+**1) R² atteso da puro rumore.** Con `k` regressori *indipendenti dal target* e `n`
+campioni, la varianza spiegata attesa per solo caso è:
+
+```
+R²_rumore ≈ k / n = 23 / 2273 = 0.0101
+```
+
+Il valore osservato è **0.0101** — **identico**. Il rendimento recente (23 feature:
+gol, xG, "fortuna", punti, streak, su finestre 3/5/10) spiega del residuo *esattamente
+quanto ne spiegherebbero 23 colonne casuali*. Verdetto in un numero: nessun segnale.
+
+**2) Soglia sulle correlazioni singole.** Una correlazione è distinguibile da zero se
+supera `2·SE ≈ 2/√n ≈ 2/√2273 ≈ 0.042`. Le più alte (xG recente: xgf10 +0.069, xga10
+−0.058, gd10 +0.055) superano la soglia ma sono **minuscole** (~0.4% di varianza) e
+**collineari** tra loro → in multivariata non aggiungono nulla oltre il rumore.
+
+**3) L'interazione streak × avversario debole.** L'incremento di R² aggiungendo il
+termine d'interazione è **+0.00003**, *meno* di quanto darebbe una feature di puro
+rumore (~`1/n ≈ 0.00044`) → l'interazione non esiste. La cella che dovrebbe
+"accendersi" (casa in serie ≥5 vs avversario debole) ha residuo **−0.018**, più basso
+del baseline: spenta.
+
+**Perché, di nuovo, è strutturale.** Streak, gol/xG recenti e punti recenti **sono**
+ciò che il fit pesato nel tempo già usa e pesa di più → il residuo non contiene
+momentum residuo. L'unico filo (xG recente) è già nel blend. Conferma che l'xG è la
+strada giusta, ma non ne resta da spremere.
 
 ---
 
@@ -1975,6 +2037,44 @@ Il test decisivo — value bet all'apertura e CLV (pool 6 stagioni):
 **Riproducibilita'.** `python scripts/_restore_raw_cache.py && python
 scripts/build_database.py --open-odds && python scripts/_run_fase14_openline.py`.
 
+### 📐 In dettaglio — value bet, ROI e CLV in formule
+
+Le predizioni del modello **non cambiano**: cambia solo il benchmark (apertura invece
+di chiusura). Definizioni:
+
+**Value bet.** Si scommette sull'esito `o` quando il modello vede un margine positivo
+sulla linea di apertura devigata:
+
+```
+edge(o) = P_modello(o) − P_apertura(o)  > 0        (con P_apertura da devig delle quote *_open)
+```
+
+**ROI.** Con puntata unitaria su ogni value bet, pagata alla quota di apertura
+`quota_open(o)`:
+
+```
+ROI = ( Σ vincite − Σ puntate ) / Σ puntate
+    = ( Σ_{bet vinti} quota_open − N_bet ) / N_bet = −17.3%   (692 bet, 6 stagioni)
+```
+
+**CLV (Closing Line Value) — il criterio dei professionisti.** Misura se la chiusura
+si muove *verso* la nostra scommessa:
+
+```
+CLV(o) = P_chiusura(o) − P_apertura(o)          (in probabilità devigata)
+```
+
+`CLV > 0` = il mercato ci ha dato ragione (avevamo battuto la chiusura futura). Qui:
+**CLV medio −0.0028**, positivo solo nel **45%** dei casi (< 50%).
+
+**Perché è la morte pulita dell'ipotesi "scommetti presto".** L'affinamento
+open→close vale solo +0.0020 di log-loss (proprietà del *mercato*, identica per ogni
+versione del modello) mentre il deficit del modello è +0.0146 — **7 volte** quel
+guadagno informativo. E il CLV negativo dice che i dissensi del modello dall'apertura
+sono **rumore che la chiusura corregge contro di lui**, non informazione anticipata.
+Due misure indipendenti (gap e CLV), stessa conclusione. Resta non testabile solo la
+linea di apertura *vera* (domenica/lunedì), assente nei dati storici.
+
 ---
 
 ## Fase 15 — Audit dei calcoli (verifica indipendente; 1 errore vero trovato)
@@ -2030,6 +2130,43 @@ stagioni). Il registro automatico funziona: tutto cio' che passava da
 negli script che NON registravano le run. Regola rafforzata: ogni numero
 pubblicato deve essere ricalcolabile dal registro.
 
+### 📐 In dettaglio — le formule verificate e l'errore trovato
+
+**Cosa è stato ricontrollato riga per riga (tutte confermate corrette):**
+
+```
+log-loss 1X2   = −media( ln P(esito) )                         [metrics.log_loss_1x2]
+Brier 1X2      = media Σ_k (p_k − y_k)²                          [metrics.brier_1x2]
+devig 1X2      = (1/quota_i) / Σ_j (1/quota_j)                   [metrics.devig_1x2]
+correzione τ   = τ(0,0)=1−λμρ, τ(0,1)=1+λρ, τ(1,0)=1+μρ, τ(1,1)=1−ρ
+inflazione φ   = Σ w·[ln(1+φ·1{pari}) − ln(1+φ·d_match)]        [_fit_draw_phi]
+temperature    = p^{1/T} rinormalizzato                          [apply_temperature]
+blend          = α·rate_gol + (1−α)·rate_segnale·c
+```
+
+Walk-forward pulito: il filtro `data < as_of` è presente **ovunque** (nessun leakage
+per-partita); il backtest ufficiale è stato **riprodotto identico alla 4ª cifra**.
+
+**L'unico errore numerico vero (e la sua aritmetica).** Il ROI del value betting nel
+README era **≈ −8.5%**, ma quello era il valore della **Fase 1** (una sola stagione,
+modello iniziale) rimasto per errore accanto a metriche a 6 stagioni. Il ROI reale
+della config ufficiale su **6 stagioni / 864 scommesse** è:
+
+```
+ROI = ( Σ_{bet vinti} quota − N_bet ) / N_bet = −15.7% medio   (range −4.7% … −23.0%)
+```
+
+L'errore non era in una formula ma in un **numero copiato tra contesti diversi**. Tutto
+ciò che passava dal registro `runs.jsonl` era giusto; gli errori vivevano solo nei
+documenti scritti a mano → la regola "ogni numero deve essere ricalcolabile dal
+registro". La conclusione "non scommettere" ne esce **rafforzata**.
+
+**Limiti metodologici dichiarati (onestà, non correggibili a posteriori).** Baseline
+in-sample (frequenze del campione valutato); la baseline ex-ante onesta è
+1.0860/0.6961, e il modello batte anche quella. Nessuna evidenza di overfitting di
+selezione: il gap sulle stagioni **mai** usate per il tuning (+0.0164, 2020-23) è
+indistinguibile da quello sulle stagioni di tuning (+0.0166, 2023-26).
+
 ---
 
 ## Fase 15-bis — Gap per mercato, stagione per stagione (la matrice completa)
@@ -2078,6 +2215,26 @@ modello.
 **Riproducibilita'.** `python scripts/_run_gap_markets.py` (6 run registrate,
 source `gap_markets`).
 
+### 📐 In dettaglio — quando una media a 6 stagioni è (dis)onesta
+
+Il punto tecnico è quando un **gap medio** è rappresentativo. Una media è affidabile
+solo se la **deviazione standard tra stagioni** è piccola rispetto al valore:
+
+```
+rappresentatività ≈  |gap_medio|  /  σ_tra-stagioni
+```
+
+- **Mercati d'esito** (12, 1X, 2X): `σ` piccola → il gap è stabile in *ogni* stagione
+  (il 12 sta a −0.0021…+0.0050 sempre ≈ mercato; 1X/2X sempre +0.008…+0.018). La media
+  della Fase 9 era rappresentativa.
+- **Over/Under**: `σ ≈ 0.008` con range ~0.02, mentre il gap medio è +0.0069 → **`σ`
+  della stessa scala del valore**. La media +0.0069 è quasi priva di significato
+  operativo: l'O/U passa dal *battere* il mercato (COVID −0.0031) al gap peggiore di
+  tutti (2022-23 +0.0168). Una stagione buona sull'O/U **non** è segnale.
+
+Conferma la gerarchia di affidabilità: **esiti > totali-gol**. Ed è il motivo per cui
+le conclusioni operative si prendono sui mercati d'esito, non sull'O/U.
+
 ---
 
 ## Fase 16 — Encompassing: il modello ha informazione propria? (NO, α*=0)
@@ -2113,6 +2270,34 @@ negativo della Fase 14 (due test indipendenti, stessa conclusione). Contro la
 chiusura non c'e' NULLA da monetizzare, nemmeno in combinazione; l'unica
 speranza pratica residua sono avversari meno efficienti (exchange sottili,
 leghe minori) — questione empirica aperta, non promessa.
+
+### 📐 Il modello in dettaglio — il test di forecast encompassing
+
+**La formula.** Si costruisce il blend lineare modello-mercato e si cerca il peso
+`α` che minimizza la log-loss:
+
+```
+p_blend = α · p_modello + (1 − α) · p_mercato ,   α* = argmin_α  log-loss(p_blend)
+```
+
+Interpretazione: se il mercato "ingloba" (encompasses) il modello, il fit non dà peso
+al modello → `α* ≈ 0`. Se il modello avesse informazione **indipendente** (utile in
+blend, monetizzabile altrove), `α* > 0` stabile e il blend migliorerebbe
+out-of-sample.
+
+**Come è reso onesto (walk-forward).** `α` è stimato **solo** sulle stagioni di test
+precedenti e applicato alla successiva (la prima non è valutabile → 5 valutazioni).
+L'`α*` in-sample per stagione è riportato solo come descrittivo. Il Δ pooled ha CI da
+**bootstrap appaiato** per-partita (B=10.000, n=1900).
+
+**Il risultato, in numeri.** `α* = 0.000` in **tutte** le stagioni (≤10⁻⁵): anche
+potendo *barare* col fit in-sample, non si dà peso al modello. Walk-forward: blend ≡
+mercato, Δ +0.0000, CI95 [−0.0000, +0.0000].
+
+**Cosa dimostra.** Il gap +0.0165 **non** è "informazione nostra meno informazione
+loro": è informazione loro + il nostro **rumore di stima**. Il modello non contiene un
+segnale ortogonale al mercato. Converge esattamente col CLV negativo (Fase 14) e con
+l'adverse selection (Fase 20): tre viste indipendenti dello stesso fatto.
 
 ---
 
@@ -2153,6 +2338,34 @@ stagione".
    dichiarazione corretta e' "probabilmente utile", non "dimostrato". Con ~30
    test sulle stesse 6 stagioni, qualunque futuro CI che sfiora lo zero va
    letto come "non concluso".
+
+### 📐 In dettaglio — come si costruisce una barra d'errore (bootstrap appaiato)
+
+**La procedura.** Per confrontare due predittori (modello vs mercato, o V4 vs V3) si
+lavora sulle **differenze per-partita** di log-loss, non sulle medie separate:
+
+```
+d_p = log-loss_A(p) − log-loss_B(p)      per ogni partita p    (le due predizioni sulla STESSA riga)
+```
+
+Poi si **ricampiona con reinserimento** l'insieme delle `d_p` (B=10.000 volte, seed
+fisso, n=2280), ricalcolando ogni volta la media; il CI95 sono i percentili 2.5 e 97.5
+di quelle medie. "Appaiato" = si ricampiona la stessa partita per entrambi i modelli →
+si toglie la varianza *comune* (partite intrinsecamente facili/difficili) e resta solo
+la varianza della *differenza* → CI più stretti e onesti.
+
+**Come leggere i risultati.**
+- `gap 1X2 = +0.0165, CI [+0.0106, +0.0225]` → **non attraversa lo zero** ⇒ il mercato
+  è davvero migliore, non è varianza (P(modello meglio) = 0.0%).
+- `gap 12 = +0.0020, CI [−0.0006, +0.0046]` → **attraversa lo zero** ⇒ sul "chi vince"
+  siamo statisticamente **indistinguibili** dal mercato.
+- `Δ prior = −0.0010, CI [−0.0025, +0.0004]` → attraversa lo zero (P(aiuta) 92.6%) ⇒
+  "**probabilmente** utile", non dimostrato. Adottato per coerenza (5/6) e meccanismo,
+  ma l'etichetta onesta è quella.
+
+Per singola stagione il CI tipico è ±0.014: **3 stagioni su 6 da sole non
+distinguerebbero il modello dal mercato** → la giustificazione statistica della regola
+"mai giudicare da una stagione".
 
 ---
 
