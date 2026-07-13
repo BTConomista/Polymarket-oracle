@@ -141,11 +141,15 @@ cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e dia
 ## 4. Mappa del repo (dove sta cosa)
 
 ```
+src/config.py    iperparametri PER LEGA (LEAGUE_CONFIGS) = fonte unica (§7); nuova
+                 lega = nuova voce, non codice
 src/data/        sources.py (URL/stagioni/alias), loader.py (offline-first),
                  database.py (snapshot CSV + SQLite)
-src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione)
+src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
+                 draw_balance Fase 35 = phi(|lam-mu|))
                  market_implied.py (Fase 24/26: inverte le quote 1X2+O/U ->
                  lambda,mu del mercato -> matrice DC -> ogni mercato sui gol)
+                 market_denoise.py (Fase 38/Punto 4: power-devig + recal cross-stagione)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
@@ -395,12 +399,15 @@ culminazione naturale), o dati davvero nuovi (formazioni, quote live).
 
 ## 7. Portare il modello su un'altra lega (Premier, ecc.) — NON copiare i numeri
 
-Le **formule** del modello sono universali; gli **iperparametri no**. Sono tutti
-tarati sulla Serie A e vivono come default in `backtest.py`: `emivita 365g`,
-`shrinkage 1.5`, `blend α=0.75`, `promoted_prior δ=0.23`, `rho`. Trasferirli
-uncritically a un'altra lega lascerebbe il modello **sub-ottimo**. Prima di dichiarare
-un modello "buono" su una nuova lega, **ri-tara e ri-motiva ogni numero** (regola
-§2-bis), perché ognuno dipende dai dati di *quella* lega:
+Le **formule** del modello sono universali; gli **iperparametri no**. Vivono in un
+**unico punto di verità**, `src/config.py` (`LEAGUE_CONFIGS`), da cui `backtest.py`
+legge i default: `emivita 365g`, `shrinkage 1.5`, `blend α=0.75`, `blend_signal xg`,
+`promoted_prior δ=0.23`. La classe `DixonColesModel` ha default **neutri** (nessun
+decadimento/shrinkage): la lega-specificità non è mai incisa nel modello. Aggiungere
+una lega = **aggiungere una voce in `LEAGUE_CONFIGS`**, non toccare il codice.
+Trasferire i numeri della Serie A uncritically lascerebbe il modello **sub-ottimo**:
+prima di dichiarare un modello "buono" su una nuova lega, **ri-tara e ri-motiva ogni
+numero** (regola §2-bis), perché ognuno dipende dai dati di *quella* lega:
 
 - **δ (prior neopromosse)**: `δ = ln(gol_lega / gol_promosse)` — va ricalcolato. In
   Premier le promosse sono notoriamente più deboli → δ probabilmente **maggiore** di

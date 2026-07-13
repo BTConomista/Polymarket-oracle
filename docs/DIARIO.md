@@ -4175,13 +4175,39 @@ negativo) e il modello non aggiunge nulla nemmeno in blend. Il bivio:
 regge, ma l'audit critico ha trovato **una crepa strutturale non sfruttata**: il
 deficit di pareggio è concentrato nelle partite **equilibrate** (|λ−μ| piccolo), una
 dimensione che nessuna delle tre vie sul pareggio (τ, φ costante, ρ sul totale λ+μ)
-aveva mai toccato. Un boost-pareggio condizionato a |λ−μ| (proposta Fase 35) è il
-candidato più promettente rimasto (post-hoc −0.0014, P 77%, non ancora conclusivo).
-In parallelo restano da testare: il **GBM col set di feature completo** (stakes +
-luck + midweek + forma insieme, mai fatto) e il **dummy di congestione**
-`midweek_europe` (esiste nei dati, mai usato). Il bivio "dati nuovi / uso pratico /
-altre leghe" resta, ma prima c'è ancora *questo* da spremere, con onestà: sono
-ipotesi vive, non guadagni dimostrati.
+aveva mai toccato.
+
+**Roadmap post-audit ESEGUITA (Fasi 35-38 + Punto 6).**
+- **Fase 35 (φ condizionato a |λ−μ|):** la crepa era reale. È il **miglior risultato
+  sul pareggio del progetto** — calibrazione dei pari equilibrati quasi perfetta
+  (0.287→0.334 vs reale 0.332), **batte il mercato** su quella dimensione, 1X2 0.9790
+  (best di 4 varianti). Log-loss non ancora CI-conclusivo (varianza stagionale) → off
+  di default, ottimo per calibrazione pratica. La dimensione *equilibrio* era quella
+  giusta (la Fase 18 sul *volume* falliva).
+- **Fase 36 (GBM set completo):** la combinazione non-lineare completa è
+  **overfitting** in aggregato (train scende, test no), nessun GBM batte il DC; ma lo
+  **stakes** è reale e localizzato sul mismatch (full 0.9703 vs DC 0.9797, n=99) →
+  conferma Fase 32, e il GBM è il suo veicolo.
+- **Fase 36-bis (midweek DC):** il dummy è un proxy di congestione più pulito del
+  continuo `rest_full` (β stabile 6/6 vs segno che cambia), ma troppo debole; utile
+  cross-lega.
+- **Fase 37 (covariate nel canale-pareggio):** diagnostico economico NEGATIVO —
+  "cruciali → più pari" falso, canale-pareggio saturo dopo la Fase 35. Nessuna
+  chirurgia.
+- **Fase 38 (denoising market-implied):** il motore è già non-biased (la
+  ricalibrazione peggiora); nessuna deriva del margine → recency ≡ all-history.
+  Motore maturo.
+- **Punto 6 (architettura):** iperparametri per-lega centralizzati in
+  `src/config.py` (`LEAGUE_CONFIGS`), da cui `backtest.py` legge i default; le
+  formule restano generali. Aggiungere una lega ora è configurazione, non codice.
+
+**Sintesi onesta.** La roadmap ha prodotto **un risultato di sostanza** (Fase 35: il
+pareggio come equilibrio, che batte il mercato in calibrazione sulle partite pari) e
+**quattro conferme/chiusure oneste** (GBM overfit ma stakes localizzato; midweek
+ridondante; canale-pareggio saturo; market-implied maturo). Nessuna sposta il gap
+1X2 aggregato col mercato in modo conclusivo, ma tutte affinano i modelli e li
+preparano ad altre leghe. Le ipotesi vive restano vive con etichetta onesta; le morte
+sono documentate col *perché*.
 
 Nota di realismo invariata: battere le quote di chiusura resta difficilissimo;
 il value betting simulato perde il **15.7%** — piu' di quanto credevamo prima

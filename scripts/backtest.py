@@ -35,6 +35,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from src.config import SERIE_A
 from src.data import loader, sources
 from src.evaluation import experiment_log
 from src.models.dixon_coles import DixonColesModel
@@ -198,16 +199,17 @@ def main() -> None:
     parser.add_argument("--league", default="serie_a")
     parser.add_argument("--test-season", default=sources.SEASONS[-1],
                         help="stagione di test (default: l'ultima)")
-    parser.add_argument("--half-life-days", type=float, default=365.0,
+    parser.add_argument("--half-life-days", type=float, default=SERIE_A["half_life_days"],
                         help="emivita del decadimento temporale in giorni "
-                             "(default 365, ri-tarato col blend xG in Fase 4d)")
-    parser.add_argument("--shrinkage", type=float, default=1.5,
+                             "(default da src/config.py, ri-tarato col blend xG in Fase 4d)")
+    parser.add_argument("--shrinkage", type=float, default=SERIE_A["shrinkage"],
                         help="forza della regolarizzazione verso la media "
-                             "(default 1.5, valore scelto via scripts/tune.py)")
-    parser.add_argument("--shots-blend", type=float, default=0.75,
+                             "(default da src/config.py, scelto via scripts/tune.py)")
+    parser.add_argument("--shots-blend", type=float, default=SERIE_A["shots_blend"],
                         help="peso alpha gol vs segnale secondario (1=solo gol, "
-                             "0=solo segnale; default 0.75, scelto in Fase 4b)")
-    parser.add_argument("--blend-signal", default="xg", choices=["sot", "xg", "npxg"],
+                             "0=solo segnale; default da src/config.py, Fase 4b)")
+    parser.add_argument("--blend-signal", default=SERIE_A["blend_signal"],
+                        choices=["sot", "xg", "npxg"],
                         help="segnale secondario da mescolare (default xg=xG reale; "
                              "sot=tiri in porta)")
     parser.add_argument("--covariates", nargs="*", default=[],
@@ -215,11 +217,12 @@ def main() -> None:
                                  "midweek", "form", "stakes", "ppda", "deep", "luck"],
                         help="covariate di partita da aggiungere (Fase 4c/32/33; "
                              "midweek=dummy congestione europea, Punto 2)")
-    parser.add_argument("--promoted-prior", type=float, default=0.23, metavar="DELTA",
+    parser.add_argument("--promoted-prior", type=float,
+                        default=SERIE_A["promoted_prior"], metavar="DELTA",
                         help="prior di cold-start per le neopromosse (Fase 7, config "
-                             "ufficiale): sposta il bersaglio dello shrinkage a "
-                             "attacco -DELTA / difesa +DELTA (piu' debole). Stima "
-                             "storica DELTA~0.23. Passa 0 per disattivarlo.")
+                             "ufficiale da src/config.py): sposta il bersaglio dello "
+                             "shrinkage a attacco -DELTA / difesa +DELTA (piu' debole). "
+                             "Stima storica DELTA~0.23. Passa 0 per disattivarlo.")
     parser.add_argument("--draw-inflation", action="store_true",
                         help="inflazione della diagonale (Fase 12b): fitta phi che "
                              "alza i pareggi (0-0,1-1,2-2,...) oltre la correzione DC")
