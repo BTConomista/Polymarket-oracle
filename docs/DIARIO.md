@@ -2029,6 +2029,46 @@ strutturale delle ultime giornate" (Fase 30: pattern dentro la stagione).
 
 ---
 
+## Fase 30 — Pattern dentro la stagione: anatomia per periodo
+
+**Obiettivo.** Cercare pattern DENTRO la stagione: per ogni periodo, non solo il
+gap ma cosa cambia (pareggi, gol, vantaggio-casa, entropia degli esiti), per
+capire perche' certi momenti sono piu' difficili e se il pattern e' coerente tra
+le 6 stagioni.
+
+**Risultato** (`scripts/_run_season_patterns.py`; 7 run, source
+`fase30_season_patterns`):
+
+| giornate | gap | %casa | %pari | %osp | gol/g | entropia |
+|---|--:|--:|--:|--:|--:|--:|
+| 1-6 | +0.0145 | 39.7% | 28.9% | 31.4% | 2.84 | 1.089 |
+| 7-19 | +0.0175 | 40.5% | 26.4% | 33.1% | 2.64 | 1.084 |
+| 20-31 | +0.0124 | 41.9% | 26.0% | 32.1% | 2.60 | 1.079 |
+| 32-34 | +0.0203 | 41.1% | 31.1% | 27.8% | 2.56 | 1.085 |
+| 35-38 | +0.0258 | 36.2% | 25.4% | 38.3% | 2.90 | 1.084 |
+
+Tre scoperte:
+1. NON e' entropia: l'entropia degli esiti e' piatta -> il finale piu' difficile
+   non e' dovuto a esiti piu' bilanciati (spiegazione meccanica esclusa);
+2. due cambi strutturali reali: giornate 32-34 tese e bloccate (pareggi 31%,
+   pochi gol, log-loss alto per tutti = scontri decisivi col freno a mano);
+   giornate 35-38 dove il VANTAGGIO-CASA CROLLA (casa 40%->36%, trasferta
+   31%->38%, piu' gol) = effetto fine stagione;
+3. nessun pattern robusto nel gap: correlazioni con la giornata ~0 (gap +0.0056),
+   gap fine-inizio positivo solo in 3 stagioni su 6 (media +0.0015, range
+   -0.017..+0.021) -> l'indizio della Fase 28 NON e' coerente tra stagioni.
+
+**Lezione.** Il finale piu' difficile e' reale ma non ha un pattern-gap robusto:
+riguarda tutti (mercato incluso), non e' entropia ne' motivazione (Fase 29). Il
+candidato concreto che emerge e' il CROLLO DEL VANTAGGIO-CASA nel finale (il
+modello eredita un home-advantage dallo storico che nelle ultime giornate si
+riduce, come nel COVID Fase 9) -- molto piu' promettente della motivazione, ma
+marginale finche' il gap non sale in modo robusto. E' un candidato per una
+covariata "giornata avanzata -> attenua il vantaggio-casa", da valutare con
+prudenza (rischio overfitting su un effetto piccolo).
+
+---
+
 ## Prossimo passo — il modello e' al tetto REALE dei dati attuali
 
 Sette esperimenti convergenti (Fasi 6-13) + l'audit di Fase 15 + il test della

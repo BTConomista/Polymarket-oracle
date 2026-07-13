@@ -321,8 +321,16 @@ dalla classifica (`scripts/_run_stakes.py`, euristica 3×gare-rimaste). I dead
 rubber sono rari (0.5% entrambe, 4.3% almeno una) e NON spiegano il finale: sul
 campione affidabile nessun effetto (Δ gap dead-live -0.012, CI [-0.058,+0.035]),
 e la direzione e' negativa (il modello e' semmai migliore nei dead rubber).
-Cercare dati esterni sulla motivazione probabilmente non aiuta. **Prossimo
-bivio:** Fase 30 (pattern dentro la stagione, richiesta), uso pratico (tool di
-predizione), dati davvero nuovi, o cross-lega.
+Cercare dati esterni sulla motivazione probabilmente non aiuta. **Fase 30
+(pattern dentro la stagione):** anatomia per periodo
+(`scripts/_run_season_patterns.py`). Il finale piu' difficile NON e' entropia
+(esiti non piu' bilanciati); due cambi strutturali reali (giornate 32-34 tese e
+bloccate; 35-38 col VANTAGGIO-CASA che crolla, casa 40%->36% e trasferta
+31%->38%); nessun pattern-gap robusto (correlazioni ~0, gap fine-inizio positivo
+solo 3/6 stagioni). Candidato concreto emerso: attenuare il vantaggio-casa nelle
+ultime giornate (come nel COVID, Fase 9), piu' promettente della motivazione ma
+marginale. **Prossimo bivio:** Fase 31 (posta in palio ricca su 8 stagioni,
+richiesta), il candidato home-advantage-finale, uso pratico, dati nuovi,
+cross-lega.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

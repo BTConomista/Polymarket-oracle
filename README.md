@@ -123,6 +123,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 27 | **forma dei punteggi** (ρ/φ/binom-neg fittati) | già ottima; NB rigettata (gol ~Poisson) | ❌ tetto anche sulla forma |
 | 28 | **errore per giornata** (finale di stagione) | fine più difficile per TUTTI; gap raddoppia ma non concl. | 🔎 tendenza (posta in palio) |
 | 29 | **posta in palio** (dead rubber dalla classifica) | dead rubber rari (4.3%); nessun effetto sul gap | ❌ non spiega il finale |
+| 30 | **pattern dentro la stagione** (anatomia) | no trend robusto; vantaggio-casa crolla a fine stagione | 🔎 candidato: home-adv finale |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1062,6 +1063,34 @@ troppo rari (0.5–4.3%) e dove la posta è bassa il modello non fa peggio. Il
 finale è difficile per **casualità diffusa** (Fase 28), non per una posta in
 palio che ci sfugge → cercare dati esterni sulla motivazione probabilmente **non
 aiuterebbe**. Risultato utile: evita un investimento sbagliato.
+
+### Pattern dentro la stagione — Fase 30 (anatomia per periodo)
+
+Anatomia completa: per ogni periodo, non solo il gap ma cosa *cambia*
+(`scripts/_run_season_patterns.py`).
+
+| Giornate | gap | %casa | %pari | %osp | gol/g | entropia |
+|---|--:|--:|--:|--:|--:|--:|
+| 1-6 | +0.0145 | 39.7% | 28.9% | 31.4% | 2.84 | 1.089 |
+| 7-19 | +0.0175 | 40.5% | 26.4% | 33.1% | 2.64 | 1.084 |
+| 20-31 | +0.0124 | 41.9% | 26.0% | 32.1% | 2.60 | 1.079 |
+| 32-34 | +0.0203 | 41.1% | **31.1%** | 27.8% | 2.56 | 1.085 |
+| 35-38 | +0.0258 | **36.2%** | 25.4% | **38.3%** | 2.90 | 1.084 |
+
+Tre scoperte: (1) **non è una storia di entropia** — l'entropia degli esiti è
+piatta, quindi il finale più difficile NON è dovuto a esiti più bilanciati;
+(2) **due veri cambi strutturali**: giornate **32-34** tese e bloccate (pareggi
+31%, pochi gol) — scontri decisivi col freno a mano; giornate **35-38** dove il
+**vantaggio-casa crolla** (casa 40%→36%, trasferta 31%→38%, più gol) — l'effetto
+"fine stagione", in casa si pesa meno; (3) **nessun pattern robusto nel gap** —
+correlazioni con la giornata ~0 (gap +0.0056), e il gap fine-inizio è positivo
+solo in **3 stagioni su 6** (media +0.0015, range −0.017…+0.021): l'indizio della
+Fase 28 non è coerente tra stagioni.
+
+Il **crollo del vantaggio-casa nel finale** è un candidato concreto di piccolo
+difetto nostro (il modello eredita un vantaggio-casa dallo storico che nelle
+ultime giornate si riduce — come nel COVID, Fase 9), molto più della motivazione
+(bocciata in Fase 29). Ma il gap non sale in modo robusto, quindi è marginale.
 
 ## Struttura
 
