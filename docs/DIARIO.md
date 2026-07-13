@@ -3965,6 +3965,64 @@ stabilità del segno — non la dimensione — è ciò che distingue un dummy-so
 robusto da un gradiente rumoroso. Il test di ridondanza (β entrambi insieme + Δ
 combinato +0.0000) mostra che i due misurano lo stesso fenomeno.
 
+---
+
+## Fase 37 — Covariate nel CANALE-PAREGGIO? (Punto 3: diagnostico economico, NEGATIVO)
+
+**Obiettivo (Punto 3).** Dopo la Fase 35 (boost-pareggio condizionato a |λ−μ|),
+resta un effetto delle covariate — in particolare `stakes` — sui pareggi
+**indipendente** dal volume/equilibrio? L'ipotesi: partite "cruciali" (entrambe in
+corsa) → più cautela tattica → più pareggi di quanto λ,μ prevedano.
+
+**Ragionamento / scelta.** Prima di estendere il fit di φ con un coefficiente per la
+covariata (chirurgia sul modello), il **diagnostico economico** (principio §1.3): il
+**residuo di pareggio** (reale − modello) della variante φ-equilibrio già in cache
+mostra un pattern per categoria stakes? Se sì, si costruisce; se è sotto il rumore,
+si evita la chirurgia. `scripts/_run_draw_covariate.py` (1 run
+`source=punto3_draw_covariate`).
+
+**Risultato.**
+
+| categoria stakes | n | pari reale | modello (Fase 35) | residuo |
+|---|--:|--:|--:|--:|
+| entrambe in corsa ("cruciali") | 2124 | 0.271 | 0.273 | **−0.0017** |
+| mismatch (una decisa/una in corsa) | 99 | 0.202 | 0.265 | −0.0628 |
+| entrambe decise | 57 | 0.316 | 0.262 | +0.0539 |
+
+`corr(entrambe_in_corsa, residuo) = +0.0106`; `corr(mismatch, residuo) = −0.0289`;
+**soglia-rumore 2·SE = 0.0419** → entrambe **sotto il rumore**.
+
+**Lezione / cosa ne consegue.**
+1. **L'ipotesi "cruciali → più pareggi" è FALSA.** Le partite con entrambe in corsa
+   hanno residuo **−0.0017 ≈ 0**: il modello le prezza già bene, nessuna cautela
+   tattica sistematica non catturata. La Fase 35 (equilibrio) ha già preso il segnale.
+2. **L'unico pattern è sul mismatch** (residuo −0.063: il modello *sovra*-prezza i
+   pareggi perché la squadra motivata vince e quella scarica molla → meno pari). Ma:
+   (a) è lo **stesso** segnale stakes-mismatch già noto (Fase 31/32), che si
+   manifesta nei pareggi, non un canale-pareggio nuovo; (b) è su **n=99** e la
+   correlazione aggregata (−0.029) è **sotto il rumore**; (c) il veicolo giusto per
+   il mismatch è il **GBM**, non un termine lineare del DC (Fase 32: DC −0.0022 vs
+   GBM −0.0127; Fase 36: il GBM col set completo lo cattura, mismatch 0.9703).
+3. **Il diagnostico economico ha evitato una chirurgia inutile** sul modello: il
+   canale-pareggio, dopo la Fase 35, è **saturo** rispetto alle covariate interne.
+   `entrambe_decise` (+0.054) è su n=57 e si ribalta nel sottoinsieme equilibrato →
+   rumore. **Punto 3 chiuso senza modifica al modello.**
+
+**Riproducibilità.** `python scripts/_run_draw_covariate.py`.
+
+### 📐 Il modello in dettaglio — perché non serve la chirurgia
+
+La chirurgia sarebbe stata estendere `φ(λ,μ) = φ0·exp(−κ|λ−μ|)` (Fase 35) con un
+fattore per la covariata, es. `φ(λ,μ,x) = φ0·exp(−κ|λ−μ|)·exp(γ·x)` con `x` =
+indicatore di partita cruciale/mismatch e `γ` fittato. Il diagnostico dice che `γ`
+sarebbe **statisticamente indistinguibile da 0**: il residuo di pareggio per la
+categoria "cruciali" è −0.0017 (il termine `x` non ha nulla da spiegare), e la
+correlazione aggregata (|0.011|, |0.029|) è sotto `2/√n = 0.042`. Costruire `γ`
+significherebbe fittare rumore su 99 partite (mismatch) — l'esatto errore che la
+Fase 34 aveva evitato altrove. Coerente con il principio "testa la versione
+economica prima di investire": qui la versione economica (residui, costo zero di
+compute) chiude la questione senza toccare `_fit_draw_balance`.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

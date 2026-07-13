@@ -131,6 +131,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **35** | **φ pareggio condizionato a \|λ−μ\|** (equilibrio) | 1X2 **0.9790** (Δ −0.0007, best di 4 varianti); calibrazione pari equilibrati 0.287→**0.334** (reale 0.332, **batte il mercato**); CI include 0 | 🔎 miglior risultato sul pareggio; off di default (uso pratico) |
 | **36** | **GBM col set di feature COMPLETO** (stakes+luck+ppda+deep+midweek) | overfitting (train 0.913→0.867, test invariato ~1.01); nessun GBM batte il DC; **ma stakes reale sul mismatch: full 0.9703 vs DC 0.9797 (n=99)** | ❌ overfitting in aggregato / 🔎 stakes localizzato (conferma Fase 32) |
 | 36-bis | **`midweek_europe` covariata DC** (dummy congestione) | −0.0003 (CI include 0); ma β_midweek stabile −0.020 (6/6) vs β_rest_full che cambia segno → dummy più pulito; insieme ridondanti | ❌ off (utile cross-lega) |
+| **37** | **covariate nel canale-pareggio** (Punto 3, diagnostico) | "cruciali → più pari" FALSO (residuo −0.0017); solo mismatch (−0.063, n=99, già Fase 31/32); corr sotto rumore | ❌ canale-pareggio saturo (nessuna chirurgia) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
