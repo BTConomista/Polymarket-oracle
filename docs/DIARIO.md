@@ -5011,6 +5011,79 @@ niente da guadagnare dalla continuita'.
 
 ---
 
+## Fase 49 — Perche' solo 35-38? La finestra/forma del nudge GG/NG (non e' binario)
+
+**Obiettivo.** Rispondere a un'obiezione giusta: il ginocchio a g.31 del profilo (Fase 48)
+e' scelto a mano. E se il boost si applicasse ad altre giornate, o "a scalare"? E' per
+forza quella finestra, o e' un falso bianco/nero? Si fa decidere ai dati.
+
+**Ragionamento / premessa.** Il profilo NON e' gia' binario: e' liscio
+(exp(c0+c1·s+c2·coda), s trend globale + coda liscia). Ma la POSIZIONE del ginocchio e la
+larghezza sono ipotesi. Prima la forma empirica — rapporto gol-ospite/μ per giornata,
+8 stagioni:
+
+```
+1a meta (1-19):  1.011      20-31:  1.005      32-34:  0.966      35-38:  1.118
+per-giornata nel finale:  g.35 ≈1.009   g.36 1.210   g.37 1.096   g.38 1.175
+picchi a meta' (g.20 1.270, g.28 1.183): piccoli campioni (~80 gare/giornata) = rumore
+```
+
+Poi il test OOS (`scripts/_run_season_window.py`; 1 run `source=fase49_season_window`;
+8 stagioni walk-forward): 5 forme del moltiplicatore μ per la GG/NG — base (r=1), coda a
+g.34 (piu' stretta), g.31 (attuale), g.25 (piu' larga), e **cubica libera** [1,s,s²,s³]
+(nessun ginocchio: se il segnale fosse graduale/altrove, il fit lo troverebbe). Δ GG/NG
+per fetta:
+
+```
+fetta          knee34            knee31(attuale)    knee25            cubic (libera)
+OVERALL      −0.0011 P98% ✓    −0.0009 P95%       −0.0007 P90%      −0.0007 P89%
+early 1-19   −0.0007 P82%      −0.0006 P79%       −0.0006 P76%      −0.0007 P80%
+mid 20-34    −0.0009 P89%      −0.0005 P76%       −0.0002 P61%      −0.0000 P50%
+finale 35-38 −0.0036 P94%      −0.0036 P95%       −0.0029 P94%      −0.0034 P96%
+(✓ = CI95 esclude lo zero; tutti gli altri lo includono)
+```
+
+**Lezione / cosa ne consegue.**
+1. **Non e' binario** — il profilo e' gia' continuo. Ma la domanda vera (estendere/graduare
+   su piu' giornate) ha risposta **negativa nei dati**.
+2. **Allargare NON aiuta.** knee25 (seconda meta' intera) e' il PEGGIORE dei nudge
+   (−0.0007); piu' larga la finestra, piu' rumore si mescola al segnale.
+3. **La forma libera non trova nulla di nascosto.** La cubica, libera di curvare ovunque,
+   a meta' stagione da' Δ = −0.0000 (P 50%): non c'e' segnale graduale sommerso da
+   scoprire: fuori dal finale il tasso-ospite e' calibrato (≈1), e i picchi per-giornata
+   (g.20, g.28) sono rumore che un fit onesto ignora.
+4. **Se mai, la finestra ottimale e' piu' STRETTA.** knee34 (≈solo 35-38) e' l'unica il cui
+   CI overall esclude lo zero (−0.0011, P 98%). Ma il vantaggio su knee31 e' −0.0002, entro
+   il rumore e dopo molti test (disciplina multiple-testing, Fase 17) → **non giustifica il
+   cambio**: knee31 resta il profilo ufficiale, ora validato come ragionevole.
+5. **Perche' proprio il finale:** e' un fenomeno reale e concentrato — le ultime ~3 giornate
+   le partite "si aprono" (chi rincorre spinge, chi non ha piu' nulla in palio difende meno),
+   e i gol-ospite salgono. Le giornate 32-34 (tese, tutto ancora in gioco) l'ospite segna
+   perfino MENO (0.966): coerente col fatto che l'apertura e' di fine-corsa, non di
+   meta'-tabellone.
+
+**📐 Il modello in dettaglio — le basi confrontate.**
+
+```
+knee_K:  base(md) = [1, s, max(0, md−K)/(38−K)]     K ∈ {34, 31, 25}
+cubic:   base(md) = [1, s, s², s³]                  s = (md−19.5)/18.5
+c = MLE Poisson (offset ln μ, come Fase 48);  r_μ(md) = exp(base(md)·c);  μ' = μ·r_μ(md)
+```
+
+verificato contro `_basis()`/`_fit()` in `_run_season_window.py`. **Ragionamento numerico.**
+Il moltiplicatore alla 38a e' simile per tutte (×1.055-1.076): tutte "vedono" lo stesso
+salto di coda, cambia solo QUANTO in la' lo spalmano. knee25 lo diluisce su 13 giornate
+(×1.055, piu' debole dove serve), knee34 lo concentra su 4 (×1.076). La cubica ricostruisce
+una forma simile (×1.059) ma spende gradi di liberta' a fittare il rumore di meta' stagione,
+per questo overall non batte la knee semplice. **Perche' overall knee34 > knee31 di un
+soffio:** knee31 applica un moltiplicatore ≠1 anche a g.32-34, dove il tasso-ospite e'
+sotto 1 → un filo di rumore in piu'; knee34 le lascia intatte. Differenza reale ma
+minuscola: il segnale utile e' tutto nelle ultime 3 giornate.
+
+**Riproducibilità.** `python scripts/_run_season_window.py`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
