@@ -135,6 +135,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **38** | **denoising cross-stagione market-implied** (Punto 4) | motore già non-biased (Platt a≈1.06 → peggiora +0.0020); power-devig −0.0003 (non concl.); recency ≡ all-history (nessuna deriva) | ❌ motore già maturo; modulo pronto cross-lega |
 | **39** | **market-implied + φ(\|λ−μ\|)** (sintesi Fase 26 × 35) | **GG/NG 0.6861 (miglior del progetto), Δ −0.0006, P 96%**; ris.esatto −0.0013 (P 80%); multigol −0.0001 | 🔎 ultimo margine interno; molto probabile, non concluso |
 | **40** | **ROI per esito/mercato** (cosa nascondeva il 1X2 piatto) | casa −19.6% / trasferta −12.9% / **pari −2.0%**; **pari in partite equilibrate +4.7%** (CI [−4.9,+14.4], P 83%, 4/6 stag.); O/U negativo | 🔎 lead monetizzabile (draw bias); non concluso, alta varianza |
+| **41** | **bakeoff per-mercato** (specialisti, Tier 1) | market-implied migliore su **19/20 mercati**, DC su 0, baseline 1 (pari/dispari); il portafoglio collassa a 1 motore + φ35 sui pareggi | ✅ specialisti = market-implied + φ35; no bespoke-per-mercato |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune

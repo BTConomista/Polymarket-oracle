@@ -68,6 +68,24 @@ def test_diag_inflation_alza_i_pareggi():
     assert p_drawi > p_draw0                     # piu' massa sui pareggi
 
 
+def test_tier1_markets_coerenti():
+    """I mercati Tier 1 aggiunti sono coerenti con la matrice: doppia chance =
+    somma 1X2; clean sheet casa = 1 - P(ospite segna); win-to-nil <= vittoria e
+    <= clean sheet; probabilita' complementari sommano a 1."""
+    d = mi.derive_markets(mi.score_matrix(1.7, 1.1, rho=-0.06))
+    assert d["dc_1x"] == pytest.approx(d["home_win"] + d["draw"], abs=1e-9)
+    assert d["dc_2x"] == pytest.approx(d["away_win"] + d["draw"], abs=1e-9)
+    assert d["dc_12"] == pytest.approx(d["home_win"] + d["away_win"], abs=1e-9)
+    # clean sheet casa = ospite non segna = 1 - P(ospite >= 1)
+    assert d["cs_home"] == pytest.approx(1.0 - d["away_ov_0.5"], abs=1e-9)
+    assert d["cs_away"] == pytest.approx(1.0 - d["home_ov_0.5"], abs=1e-9)
+    # vince a zero <= vittoria e <= clean sheet
+    assert d["wtn_home"] <= d["home_win"] + 1e-9
+    assert d["wtn_home"] <= d["cs_home"] + 1e-9
+    # 1X + 2 = 1
+    assert d["dc_1x"] + d["away_win"] == pytest.approx(1.0, abs=1e-9)
+
+
 def test_balance_phi_fit_e_forma():
     """Fase 39: fit_balance_phi su lam,mu del mercato con eccesso di pareggi tra
     squadre pari-livello trova phi0>0; balance_phi decresce con |lam-mu| e boosta

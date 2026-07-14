@@ -131,6 +131,14 @@ def derive_markets(M: np.ndarray) -> dict:
         "mg_0_1": float(M[tot <= 1].sum()),
         "mg_2_3": float(M[(tot >= 2) & (tot <= 3)].sum()),
         "mg_4plus": float(M[tot >= 4].sum()),
+        # doppia chance (dai 1X2)
+        "dc_1x": pH + pD, "dc_2x": pA + pD, "dc_12": pH + pA,
+        # clean sheet (la squadra NON subisce): casa = ospite segna 0; ospite = casa segna 0
+        "cs_home": float(M[:, 0].sum()),
+        "cs_away": float(M[0, :].sum()),
+        # vince a zero (win to nil): vince E tiene la porta inviolata
+        "wtn_home": float(M[1:, 0].sum()),   # casa >=1, ospite 0
+        "wtn_away": float(M[0, 1:].sum()),   # ospite >=1, casa 0
         "score_matrix": M,
     }
     return d

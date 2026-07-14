@@ -4252,6 +4252,92 @@ difetto. Serve più campione (più stagioni), non un modello migliore: il segnal
 limite del rumore campionario, e la sua conferma è una questione di **dati nuovi**,
 non di calcolo.
 
+---
+
+## Fase 41 — Bakeoff per-mercato: un modello cucito su ogni mercato? (specialisti)
+
+**Obiettivo.** Operazionalizzare il principio 8 (portafoglio di specialisti): invece
+di un modello unico, valutare OGNI mercato Tier 1 con più modelli e scegliere il
+migliore per quel mercato. Studio di fattibilità su ~20 mercati Tier 1 (1X2, O/U
+multilinea, GG/NG, doppie chance, total-squadra, clean sheet, vince-a-zero, scarto
+≥2, multigol, risultato esatto), walk-forward 6 stagioni.
+
+**Ragionamento / scelta.** Estesa `derive_markets` con i mercati Tier 1 mancanti
+(doppia chance, clean sheet, win-to-nil). Bakeoff `scripts/_run_markets_bakeoff.py`:
+per ogni mercato, **baseline** (frequenza in-sample) vs **DC gol+xG** (matrice dai
+λ,μ del backtest ufficiale) vs **market-implied** (λ,μ invertiti dalle quote
+1X2+O/U). Onestà: la matrice del DC è **ricostruita** dai λ,μ salvati con rho fisso
+−0.05 (errore max per-partita 0.0306; in aggregato DC 1X2 0.9800 ≈ vero 0.9797 → il
+ranking regge). I mercati derivati non hanno quote (come il GG/NG) → confronto vs
+baseline; il market-implied li deriva dalle 1X2+O/U.
+
+**Risultato** (1 run `source=fase41_markets_bakeoff`). Modello **migliore** per mercato:
+
+| mercato | baseline | DC | market-impl | migliore (Δ vs DC) |
+|---|--:|--:|--:|---|
+| 1X2 | 1.0834 | 0.9800 | **0.9642** | market-impl (−0.0159) |
+| risultato esatto | 2.8974 | 2.8346 | **2.8037** | market-impl (−0.0309) |
+| multigol | 1.0444 | 1.0471 | **1.0333** | market-impl (−0.0137) |
+| O/U 2.5 | 0.6892 | 0.6885 | **0.6818** | market-impl (−0.0067) |
+| GG/NG | 0.6871 | 0.6901 | **0.6853** | market-impl (−0.0048) |
+| clean sheet casa | 0.6058 | 0.5734 | **0.5659** | market-impl (−0.0076) |
+| casa +2 | 0.4945 | 0.4402 | **0.4318** | market-impl (−0.0083) |
+| … (altri 12) | | | | market-impl |
+| pari/dispari | **0.6923** | 0.6930 | 0.6932 | baseline (quasi-casuale) |
+
+**Conteggio: market-implied migliore su 19/20 mercati; DC su 0; baseline su 1.**
+I CI del Δ (market-impl − DC) escludono lo zero su quasi tutti.
+
+**Lezione / cosa ne consegue.**
+1. **La risposta alla domanda "un modello per ogni mercato?" è sorprendente e più
+   semplice: NO, ne basta UNO — il market-implied — per quasi tutti.** I λ,μ del
+   mercato battono i nostri (dai gol) su OGNI mercato sui gol; il DC-da-gol non è mai
+   il migliore. Il "portafoglio di specialisti" non è 20 modelli bespoke, è **un
+   motore (market-implied) + la φ(|λ−μ|) della Fase 35/39 per la famiglia-pareggio**
+   (1X2 draw, risultato esatto in diagonale). Cucire un modello diverso per ogni
+   mercato sarebbe complessità sprecata: converge tutto sullo stesso vincitore.
+2. **Cautele che rendono onesto il risultato:**
+   - Sui mercati **prezzati** (1X2, O/U 2.5) la vittoria del market-implied è in parte
+     **tautologica** (legge le quote): non è "specialista bravo", è "il mercato è più
+     bravo di noi e noi lo leggiamo".
+   - Sui mercati **non prezzati** (risultato esatto, total-squadra, clean sheet…) il
+     market-implied è il **miglior stimatore disponibile**, ma **non verificabile**
+     contro una linea (assente nei dati) e **condizionato** ad avere le quote 1X2+O/U.
+   - Il DC-da-gol resta l'unico strumento **quando le quote non ci sono** (predizione
+     pura pre-dati): lì è uguale su tutti i mercati (nessun vantaggio bespoke emerso).
+3. **La parte NON testata dell'ipotesi:** un modello **bespoke ML per singolo
+   mercato** (es. un GBM addestrato solo sul clean-sheet, o sul risultato esatto).
+   Qui il bakeoff confronta DC vs market-implied, non un ML dedicato per mercato. Dato
+   il verdetto delle Fasi 22/36 (il GBM overfitta e non batte il DC/mercato),
+   difficilmente batterebbe il market-implied — ma è il passo per **chiudere del tutto**
+   la domanda. Candidato per una fase futura.
+
+**Conseguenza operativa.** Il tool pratico deve usare il **market-implied per tutti i
+mercati quando ci sono le quote 1X2+O/U** (con la φ35 sulla famiglia-pareggio), e il
+DC come fallback senza quote. Non serve un modello per mercato.
+
+**Riproducibilità.** `python scripts/_run_markets_bakeoff.py`.
+
+### 📐 Il modello in dettaglio — perché lo stesso motore vince ovunque
+
+Ogni mercato Tier 1 è una **somma di celle** della *stessa* matrice `P(i,j)` (vedi
+Fase 5): `clean sheet casa = Σ_j P(·,0)`, `casa+2 = Σ_{i−j≥2} P`, `risultato esatto =
+P(i,j)`, ecc. Quindi la qualità su OGNI mercato dipende da un'unica cosa: quanto sono
+buoni i `(λ, μ)` che generano la matrice. Il bakeoff misura, indirettamente, proprio
+questo:
+
+```
+log-loss(mercato | modello) = f( qualità di λ,μ del modello )     per ogni mercato
+```
+
+e i λ,μ del **mercato** (gap +0.0165 a nostro favore sull'1X2, Fase 26) sono migliori
+dei nostri **su tutta la linea** → vincono su tutti i mercati derivati insieme, non
+uno per uno. È il motivo per cui "un modello per mercato" collassa a "un motore per i
+λ,μ": i mercati non sono problemi indipendenti, sono **proiezioni della stessa
+matrice**. L'unica correzione che *non* passa dai λ,μ ma dalla **forma** della matrice
+è il boost-pareggio sull'equilibrio (φ(|λ−μ|), Fase 35): per questo è l'unico
+"specialista" aggiuntivo che ha senso, e solo sulla famiglia-pareggio.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

@@ -46,6 +46,20 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      **GG/NG non ha quote nei dati** (football-data non le include), quindi è
      l'unico dove non possiamo dimostrare l'efficienza del mercato — l'unico con
      "spazio" non ancora chiuso dai risultati Fasi 14/16/20. Priorità lì.
+   - **Mercati standard = Tier 1** (d'ora in poi): 1X2, O/U 1.5/2.5/3.5, GG/NG,
+     doppie chance, total-squadra (casa/ospite O0.5/1.5), clean sheet, vince-a-zero,
+     scarto ≥2, multigol, risultato esatto. Ogni backtest/analisi li copre tutti
+     (`scripts/_run_markets_bakeoff.py`, `derive_markets`). Tier 2 (handicap
+     asiatico) e Tier 3 (HT/FT, tempi → fondazione live) in futuro.
+   - **Esito del bakeoff (Fase 41):** il "portafoglio di specialisti" NON è 20
+     modelli bespoke — **collassa a UN motore**: il **market-implied** è il migliore
+     su 19/20 mercati Tier 1 (il DC-da-gol non vince mai), perché i mercati sono
+     proiezioni della stessa matrice e i λ,μ del mercato battono i nostri ovunque.
+     L'unico "specialista" aggiuntivo è la **φ(|λ−μ|)** (Fase 35/39) sulla
+     famiglia-pareggio. Regola operativa: **market-implied + φ35 quando ci sono le
+     quote 1X2+O/U; DC come fallback senza quote.** Un ML bespoke per singolo mercato
+     resta l'unica variante non ancora testata (improbabile che batta, viste le
+     Fasi 22/36).
 
 ---
 
