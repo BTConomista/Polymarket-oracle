@@ -26,6 +26,7 @@ from scipy.optimize import minimize
 from scipy.special import gammaln
 
 MAX_GOALS = 10
+_EPS = 1e-9
 _K = np.arange(MAX_GOALS + 1)
 _LOGFACT = gammaln(_K + 1.0)
 
@@ -141,3 +142,38 @@ def markets_from_odds(p_home, p_draw, p_away, p_over=None, rho=0.0) -> dict:
     out = derive_markets(score_matrix(lam, mu, rho))
     out["lam"], out["mu"] = lam, mu
     return out
+
+
+def balance_phi(lam: float, mu: float, phi0: float, kappa: float) -> float:
+    """Inflazione-pareggio condizionata all'EQUILIBRIO (Fase 35/39):
+    phi(lam,mu) = phi0 * exp(-kappa * |lam - mu|). Da passare come
+    ``diag_inflation`` a ``score_matrix`` per applicarla ai lambda,mu del mercato."""
+    return float(phi0 * np.exp(-kappa * abs(lam - mu)))
+
+
+def fit_balance_phi(lams, mus, is_draw, rho: float = 0.0,
+                    weights=None) -> tuple[float, float]:
+    """Stima (phi0, kappa) di phi(lam,mu)=phi0*exp(-kappa*|lam-mu|) sui lambda,mu
+    del MERCATO massimizzando la verosimiglianza pesata dei pareggi (Fase 39).
+
+    Stessa verosimiglianza di DixonColesModel._fit_draw_balance, ma applicata ai
+    lambda,mu impliciti nelle quote invece che a quelli stimati dai gol. Il termine
+    dipendente da phi e' log(1+phi*[pari]) - log(1+phi*D_match), con D_match la
+    prob. di pareggio base (matrice market-implied, rho fisso) per riga.
+    phi0>=0, kappa>=0. Ritorna (phi0, kappa)."""
+    lams = np.asarray(lams, float); mus = np.asarray(mus, float)
+    is_draw = np.asarray(is_draw, float)
+    bal = np.abs(lams - mus)
+    w = np.ones(len(lams)) if weights is None else np.asarray(weights, float)
+    # Prob. di pareggio base per riga (traccia della matrice market-implied).
+    d_match = np.array([float(np.trace(score_matrix(l, m, rho)))
+                        for l, m in zip(lams, mus)])
+    d_match = np.clip(d_match, _EPS, 1.0 - _EPS)
+
+    def neg_ll(p: np.ndarray) -> float:
+        phi = p[0] * np.exp(-p[1] * bal)
+        return -np.sum(w * (np.log1p(phi * is_draw) - np.log1p(phi * d_match)))
+
+    r = minimize(neg_ll, np.array([0.1, 1.0]), method="L-BFGS-B",
+                 bounds=[(0.0, 2.0), (0.0, 5.0)])
+    return float(r.x[0]), float(r.x[1])

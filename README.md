@@ -133,6 +133,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | 36-bis | **`midweek_europe` covariata DC** (dummy congestione) | −0.0003 (CI include 0); ma β_midweek stabile −0.020 (6/6) vs β_rest_full che cambia segno → dummy più pulito; insieme ridondanti | ❌ off (utile cross-lega) |
 | **37** | **covariate nel canale-pareggio** (Punto 3, diagnostico) | "cruciali → più pari" FALSO (residuo −0.0017); solo mismatch (−0.063, n=99, già Fase 31/32); corr sotto rumore | ❌ canale-pareggio saturo (nessuna chirurgia) |
 | **38** | **denoising cross-stagione market-implied** (Punto 4) | motore già non-biased (Platt a≈1.06 → peggiora +0.0020); power-devig −0.0003 (non concl.); recency ≡ all-history (nessuna deriva) | ❌ motore già maturo; modulo pronto cross-lega |
+| **39** | **market-implied + φ(\|λ−μ\|)** (sintesi Fase 26 × 35) | **GG/NG 0.6861 (miglior del progetto), Δ −0.0006, P 96%**; ris.esatto −0.0013 (P 80%); multigol −0.0001 | 🔎 ultimo margine interno; molto probabile, non concluso |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune

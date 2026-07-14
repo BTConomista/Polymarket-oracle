@@ -4100,6 +4100,77 @@ bias a costo di varianza. Il fatto che i due diano lo **stesso** risultato
 recente ≈ stimati su tutto. Trade-off risolto a favore della minima varianza
 (all-history). Il lag non è un problema perché non c'è nulla che si muove.
 
+---
+
+## Fase 39 — Market-implied + φ(|λ−μ|): la sintesi dei due risultati positivi
+
+**Obiettivo.** Combinare i **due** risultati positivi del progetto, mai messi
+insieme: i λ,μ **del mercato** (Fase 26, migliori dei nostri) + la struttura-pareggio
+**dell'equilibrio** (Fase 35, φ condizionato a |λ−μ|). La Fase 27 aveva ottimizzato la
+*forma* del market-implied (ρ, φ **costante**, binomiale negativa) ma **non** aveva
+mai provato il φ condizionato all'equilibrio — la dimensione che solo la Fase 35 ha
+identificato. Bersaglio: i mercati che il book **non** prezza (GG/NG, risultato
+esatto, multigol).
+
+**Ragionamento / scelta.** Nuove funzioni pure nel motore
+(`market_implied.balance_phi`, `fit_balance_phi`), con test. Per ogni partita:
+inversione 1X2+O/U → (λ,μ) del mercato; (φ0,κ) fittati **leave-future-out** sui λ,μ
+del mercato e i pareggi reali passati; applicati come `diag_inflation` alla matrice
+della stagione di test. Confronto raw (φ=0, = Fase 26) vs balance-φ, bootstrap
+appaiato per-riga.
+
+**Risultato** (`scripts/_run_mi_balance.py`; LFO 5 stagioni, n=1900, 1 run
+`source=fase39_mi_balance`; φ0≈0.30, κ≈1.47):
+
+| mercato non prezzato | raw (Fase 26) | + φ(\|λ−μ\|) | Δ | CI95 | P(migliora) |
+|---|--:|--:|--:|--:|--:|
+| **GG/NG** | 0.6866 | **0.6861** | −0.0006 | [−0.0012, +0.0001] | **96%** |
+| risultato esatto | 2.7733 | 2.7721 | −0.0013 | [−0.0042, +0.0017] | 80% |
+| multigol | 1.0364 | 1.0363 | −0.0001 | [−0.0003, +0.0001] | 70% |
+
+**Lezione / cosa ne consegue.**
+1. **La sintesi funziona: è il miglior GG/NG del progetto** (0.6861), e il guadagno
+   sul GG/NG è **quasi conclusivo** (P 96%, CI che sfiora lo zero a +0.0001) — la
+   stessa etichetta onesta del prior (Fase 19): "molto probabile, formalmente non
+   concluso". La struttura-equilibrio migliora anche i λ,μ *già ottimi* del mercato.
+2. **È l'unico margine interno residuo trovato dopo l'audit**, e viene — di nuovo —
+   dalla combinazione di **informazione** (mercato) e **struttura giusta**
+   (equilibrio), non da un modello nuovo. Piccolo ma coerente su tutti e tre i
+   mercati derivati (tutti Δ<0).
+3. **Onestà invariata:** non verificabile contro una linea di chiusura di quei
+   mercati (assente nei dati); richiede le quote 1X2+O/U alla predizione. Non è un
+   edge dimostrato, è la miglior **stima condizionata** per i mercati non prezzati.
+   Config del motore GG/NG "specialista" aggiornata: inverti 1X2+O/U → applica
+   φ(|λ−μ|) → P(GG).
+
+**Riproducibilità.** `python scripts/_run_mi_balance.py`.
+
+### 📐 Il modello in dettaglio — perché φ0≈0.30 e κ≈1.47 (più bassi del DC)
+
+Stessa formula della Fase 35, ma i λ,μ vengono dal mercato:
+
+```
+(λ, μ) = implied_lambda_mu(1X2, O/U)                 # Fase 26
+φ(λ,μ) = φ0 · exp(−κ · |λ − μ|)                       # fit LFO sui λ,μ DEL MERCATO
+M = score_matrix(λ, μ, ρ=−0.06, diag_inflation=φ)    # poi derive_markets(M)
+```
+
+**Perché φ0 ≈ 0.30 (vs 0.39 del DC, Fase 35).** φ0 è il boost dei pareggi a
+squadre pari-livello. I λ,μ **del mercato** prezzano già i gol meglio dei nostri
+(gap +0.0165 a nostro sfavore sull'1X2), quindi il loro **deficit di pareggio
+residuo è più piccolo**: serve **meno** inflazione per colmarlo (0.30 vs 0.39). È una
+conferma indiretta che il mercato è più vicino al vero anche sulla massa-pareggio —
+la φ ha meno da correggere.
+
+**Perché κ ≈ 1.47 (vs 3.6 del DC).** κ regola quanto in fretta il boost svanisce con
+lo squilibrio. Più basso ⇒ boost **meno concentrato**, esteso a un intervallo più
+ampio di |λ−μ|. Sui λ,μ del mercato l'ottimo è un boost più *diffuso e leggero*
+(φ0 piccolo, κ piccolo); sui nostri λ,μ (più rumorosi) era un boost *forte e
+strettissimo* (φ0 grande, κ grande, concentrato solo su |λ−μ|<0.3). Coerente:
+correzioni più aggressive dove la stima di base è peggiore, più delicate dove è già
+buona. La forma esponenziale a 2 parametri si adatta automaticamente alla qualità
+dei λ,μ di partenza.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

@@ -68,6 +68,31 @@ def test_diag_inflation_alza_i_pareggi():
     assert p_drawi > p_draw0                     # piu' massa sui pareggi
 
 
+def test_balance_phi_fit_e_forma():
+    """Fase 39: fit_balance_phi su lam,mu del mercato con eccesso di pareggi tra
+    squadre pari-livello trova phi0>0; balance_phi decresce con |lam-mu| e boosta
+    i pareggi solo dove le squadre sono vicine."""
+    rng = np.random.default_rng(1)
+    lams, mus, is_draw = [], [], []
+    # Partite EQUILIBRATE con pareggi ben SOPRA la base Poisson (~0.30) -> phi0>0.
+    for _ in range(300):
+        lams.append(1.1); mus.append(1.1)
+        is_draw.append(1.0 if rng.random() < 0.55 else 0.0)
+    # Partite SBILANCIATE con pochi pareggi -> il boost deve svanire (kappa>0).
+    for _ in range(300):
+        lams.append(1.9); mus.append(0.6)
+        is_draw.append(1.0 if rng.random() < 0.15 else 0.0)
+    phi0, kappa = mi.fit_balance_phi(lams, mus, is_draw, rho=-0.06)
+    assert phi0 > 0.0 and kappa > 0.0
+    # boost maggiore per squadre equilibrate
+    assert mi.balance_phi(1.3, 1.3, phi0, kappa) > mi.balance_phi(2.3, 0.5, phi0, kappa)
+    # applicando phi ai pari, P(pareggio) sale per un match equilibrato
+    M0 = mi.score_matrix(1.3, 1.3, rho=-0.06)
+    Mb = mi.score_matrix(1.3, 1.3, rho=-0.06,
+                         diag_inflation=mi.balance_phi(1.3, 1.3, phi0, kappa))
+    assert float(np.trace(Mb)) > float(np.trace(M0))
+
+
 def test_nbinom_over_dispersa_vs_poisson():
     """La NB con size finito ha varianza > Poisson (piu' massa sulle code)."""
     Mp = mi.score_matrix(1.6, 1.6, nb_size=None)      # Poisson
