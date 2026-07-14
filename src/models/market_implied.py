@@ -144,6 +144,38 @@ def derive_markets(M: np.ndarray) -> dict:
     return d
 
 
+# Mercati "puro-totale" o "puro-marginale" (dipendono da X+Y o da una sola squadra):
+# la forma migliore è la τ PURA — l'inflazione diagonale/correlazione sovra-disperde
+# i totali e li peggiora (Fasi 42/43). Tutti gli altri (esiti/pareggio/joint) usano
+# la φ(|λ−μ|) (Fase 35). Routing di forma PER-MERCATO (meccanico, non fittato).
+_TAU_MARKETS = frozenset({
+    "over_0.5", "over_1.5", "over_2.5", "over_3.5", "over_4.5",
+    "mg_0_1", "mg_2_3", "mg_4plus",
+    "home_ov_0.5", "home_ov_1.5", "away_ov_0.5", "away_ov_1.5",
+    "odd_total", "cs_home", "cs_away",
+})
+
+
+def price_markets(lam: float, mu: float, rho: float = 0.0,
+                  phi0: float = 0.0, kappa: float = 0.0) -> dict:
+    """Prezza OGNI mercato Tier 1 con la sua forma MIGLIORE (routing per-mercato,
+    Fase 44): i mercati puro-totale/marginale dalla matrice τ (senza φ, che
+    sovra-disperde i totali); esiti/pareggio/joint dalla matrice con φ(|λ−μ|).
+
+    Rompe la coerenza tra le due famiglie (prezzi da matrici diverse) — accettabile
+    per il pricing PER-MERCATO (non per un prezzo unico coerente). phi0=0 -> nessuna
+    inflazione (tutto dalla τ)."""
+    M_tau = score_matrix(lam, mu, rho)
+    phi = balance_phi(lam, mu, phi0, kappa) if phi0 else 0.0
+    M_phi = score_matrix(lam, mu, rho, diag_inflation=phi) if phi else M_tau
+    d_tau, d_phi = derive_markets(M_tau), derive_markets(M_phi)
+    out = {k: (d_tau[k] if k in _TAU_MARKETS else d_phi[k])
+           for k in d_phi if k != "score_matrix"}
+    out["score_matrix"] = M_phi            # risultato esatto: la diagonale conta
+    out["lam"], out["mu"] = lam, mu
+    return out
+
+
 def markets_from_odds(p_home, p_draw, p_away, p_over=None, rho=0.0) -> dict:
     """Comodo: inverte le quote e deriva tutti i mercati in un colpo."""
     lam, mu = implied_lambda_mu(p_home, p_draw, p_away, p_over, rho)

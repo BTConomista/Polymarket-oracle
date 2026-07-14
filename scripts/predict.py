@@ -40,16 +40,22 @@ def _top_scores(M: np.ndarray, n: int = 6):
             for i, j in (np.unravel_index(k, M.shape) for k in flat)]
 
 
-def _show(pred, titolo: str) -> None:
-    p = pred
+def _show_markets(d: dict, titolo: str) -> None:
+    """Stampa TUTTI i mercati Tier 1 da un dizionario price_markets (forma
+    instradata per-mercato: φ35 su esiti/pareggio, τ sui totali — Fase 44)."""
     print(f"\n----- {titolo} -----")
-    print(f"  Gol attesi:  casa λ={p.exp_home_goals:.2f}   ospite μ={p.exp_away_goals:.2f}")
-    print(f"  1X2:            casa {p.prob_home_win:6.1%}   pari {p.prob_draw:6.1%}   ospite {p.prob_away_win:6.1%}")
-    print(f"  Doppia chance:  1X   {p.prob_1x:6.1%}   X2   {p.prob_2x:6.1%}   12   {p.prob_12:6.1%}")
-    print(f"  Over/Under 2.5: Over {p.prob_over_2_5:6.1%}   Under {p.prob_under_2_5:6.1%}")
-    print(f"  GG/NG:          GG   {p.prob_btts_yes:6.1%}   NG   {p.prob_btts_no:6.1%}")
+    print(f"  Gol attesi:  casa λ={d['lam']:.2f}   ospite μ={d['mu']:.2f}")
+    print(f"  1X2:            1 {d['home_win']:6.1%}   X {d['draw']:6.1%}   2 {d['away_win']:6.1%}")
+    print(f"  Doppia chance:  1X {d['dc_1x']:6.1%}   X2 {d['dc_2x']:6.1%}   12 {d['dc_12']:6.1%}")
+    print(f"  Over/Under:     O1.5 {d['over_1.5']:5.1%}  O2.5 {d['over_2.5']:5.1%}  O3.5 {d['over_3.5']:5.1%}")
+    print(f"  GG/NG:          GG {d['btts']:6.1%}   NG {1-d['btts']:6.1%}")
+    print(f"  Multigol:       0-1 {d['mg_0_1']:5.1%}  2-3 {d['mg_2_3']:5.1%}  4+ {d['mg_4plus']:5.1%}")
+    print(f"  Total-squadra:  casa O1.5 {d['home_ov_1.5']:5.1%}   ospite O1.5 {d['away_ov_1.5']:5.1%}")
+    print(f"  Clean sheet:    casa {d['cs_home']:6.1%}   ospite {d['cs_away']:6.1%}")
+    print(f"  Vince a zero:   casa {d['wtn_home']:6.1%}   ospite {d['wtn_away']:6.1%}")
+    print(f"  Scarto >=2:     casa {d['home_by_2plus']:6.1%}   ospite {d['away_by_2plus']:6.1%}")
     print("  Risultati esatti piu' probabili:  "
-          + "   ".join(f"{i}-{j} {pr:.1%}" for i, j, pr in _top_scores(p.score_matrix)))
+          + "   ".join(f"{i}-{j} {pr:.1%}" for i, j, pr in _top_scores(d["score_matrix"])))
 
 
 def main() -> None:
@@ -82,34 +88,33 @@ def main() -> None:
     kw = dict(half_life_days=SERIE_A["half_life_days"], shrinkage=SERIE_A["shrinkage"],
               shots_blend=SERIE_A["shots_blend"], blend_signal=SERIE_A["blend_signal"],
               promoted_prior=(SERIE_A["promoted_prior"], SERIE_A["promoted_prior"]))
-    m = DixonColesModel(**kw).fit(allm, as_of_date=as_of, promoted_teams=prom)
+    # Modello DC con φ35 (draw_balance): fornisce λ,μ, rho e (φ0,κ) per il routing.
+    m = DixonColesModel(**kw, draw_balance=True).fit(allm, as_of_date=as_of, promoted_teams=prom)
     print("Forza stimata (log-scala, 0 = media lega):")
     for t in (args.home, args.away):
         print(f"  {t:<14} attacco {m.attack.get(t, 0.0):+.3f}   difesa {m.defense.get(t, 0.0):+.3f}")
-    print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}")
-    _show(m.predict_match(args.home, args.away), "Modello 1a: base (config ufficiale)")
-
-    if not args.no_draw_balance:
-        mb = DixonColesModel(**kw, draw_balance=True).fit(allm, as_of_date=as_of, promoted_teams=prom)
-        print(f"\n  [Fase 35: φ0={mb.draw_phi0:.3f}, κ={mb.draw_kappa:.3f} — boost pari solo se |λ−μ| piccolo]")
-        _show(mb.predict_match(args.home, args.away), "Modello 1b: + φ(|λ−μ|) Fase 35")
+    print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}   "
+          f"[φ35: φ0={m.draw_phi0:.3f}, κ={m.draw_kappa:.3f}]")
+    lam_dc, mu_dc = m.expected_goals(args.home, args.away)
+    d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=m.draw_phi0, kappa=m.draw_kappa)
+    _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (forma instradata per-mercato)")
 
     print("\n" + "=" * 74)
     print("MODELLO 2 — market-implied (richiede le quote del match)")
     print("=" * 74)
     if args.odds is None:
         print("  Non attivato: passa --odds H D A OVER UNDER per invertirle in λ,μ del")
-        print("  mercato e derivarne i mercati (specialmente GG/NG e risultato esatto).")
+        print("  mercato e prezzarne TUTTI i mercati (routing φ35/τ per-mercato).")
     else:
         oH, oD, oA, oOv, oUn = args.odds
         pH, pD, pA = metrics.devig_1x2(oH, oD, oA)
         pO, _ = metrics.devig_binary(oOv, oUn)
-        d = mi.markets_from_odds(pH, pD, pA, pO, rho=-0.06)
+        lam, mu = mi.implied_lambda_mu(pH, pD, pA, pO, rho=-0.06)
+        # φ del mercato: valori rappresentativi (Fase 39); il guadagno di un fit
+        # esatto e' trascurabile (Fase 44).
+        d = mi.price_markets(lam, mu, rho=-0.06, phi0=0.30, kappa=1.5)
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
-        print(f"  -> λ,μ impliciti nel mercato:  casa {d['lam']:.2f}   ospite {d['mu']:.2f}")
-        print(f"  1X2:  casa {d['home_win']:.1%}  pari {d['draw']:.1%}  ospite {d['away_win']:.1%}")
-        print(f"  O/U 2.5: Over {d['over_2.5']:.1%}   GG/NG: GG {d['btts']:.1%}   "
-              f"multigol 2-3 {d['mg_2_3']:.1%}")
+        _show_markets(d, "Modello 2: market-implied + φ35 (forma instradata per-mercato)")
 
 
 if __name__ == "__main__":

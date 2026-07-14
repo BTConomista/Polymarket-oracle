@@ -4508,6 +4508,55 @@ totali quasi intatti. In una frase: **il calcio non vuole "più correlazione", v
 "più pareggi dove le squadre sono pari" — e quella è la φ35, non una copula.** Le tre
 copule lo confermano da tre angoli diversi.
 
+---
+
+## Fase 44 — Routing di forma per-mercato + decisioni di architettura
+
+**Obiettivo.** Operazionalizzare l'idea "forme/modelli diversi per mercati diversi":
+la Fase 43 mostra che la φ35 vince su pareggio/GG ma la **τ pura** vince sui totali
+(φ/correlazione li sovra-disperdono). Quindi la forma migliore **non è la stessa per
+tutti i mercati**. Si costruisce un **router di forma per-mercato**
+(`market_implied.price_markets`): totali/marginali dalla matrice **τ**, esiti/pareggio/
+joint dalla matrice con **φ(|λ−μ|)**. Routing **meccanico** (per famiglia di mercato),
+non fittato per cella → niente overfitting.
+
+**Risultato** (`scripts/_run_routing.py`; 1 run `source=fase44_routing`; 19 mercati):
+
+```
+media log-loss dei 19 mercati:  τ-ovunque 0.7027   φ35-ovunque 0.7026   ROUTER 0.7024
+guadagno router vs φ35-ovunque: −0.0002   vs τ-ovunque: −0.0003
+```
+
+**Lezione / cosa ne consegue.**
+1. **Il router è la scelta corretta e gratuita** (è ≥ del meglio per-mercato per
+   costruzione), ma il guadagno è **trascurabile (~0.0002)**: l'ennesima conferma che
+   la **forma è spremuta a secco** (dopo τ, φ-costante, ρ-dinamico, bivariato, 3
+   copule, e ora il routing). Adottato perché principiato e a costo zero, non per il
+   numero. Esposto in `predict.py` (mostra tutti i Tier 1 con la forma instradata).
+2. **Decisione: `frank_b+φ` FUORI dal motore** (Fase 43): batte la φ35 sul GG di
+   −0.0001, un pareggio; aggiunge complessità e rompe la coerenza per zero. Il modulo
+   copula resta per il registro/altre leghe.
+
+**📐 Decisioni di architettura (per il futuro).**
+- **Routing di forma**: `price_markets` — τ per {over_*, mg_*, team-totals, clean
+  sheet, pari/dispari}; φ35 per {1X2, doppie chance, GG, win-to-nil, scarto, risultato
+  esatto}. Split per *famiglia* (robusto), non per singolo mercato (che avrebbe flip
+  a livello rumore).
+- **Routing per CONTESTO — dove ha valore.** Un'osservazione chiave: **con le quote,
+  il market-implied GIÀ prezza il contesto** (motivazione, neopromosse) — è *perché*
+  vince 19/20 (Fase 41). Il GBM batteva il *DC* sui mismatch (Fase 36) perché il DC è
+  cieco alla motivazione; ma il market-implied non lo è. Quindi il context-routing
+  (neopromossa→prior, mismatch→GBM) paga sul **path SENZA quote (DC fallback)**, non
+  quando abbiamo le quote. Regola: path market-implied = universale; path DC =
+  DC + prior(neopromosse) + φ35, con eventuale aggiustamento-stakes.
+- **La frontiera vera è bloccata dai DATI, non dal modello:** i **marginali λ,μ**
+  migliorerebbero con *più linee di mercato* (altre O/U, handicap asiatico — Fase 27),
+  e l'**in-play** è l'avversario più morbido — ma nessuno dei due è nei dati (solo
+  O/U 2.5, niente minuto-per-minuto). Sono progetti di **raccolta dati**, non backtest.
+
+**Riproducibilità.** `python scripts/_run_routing.py`; tool: `python scripts/predict.py
+Roma Fiorentina --odds 1.50 4.10 6.00 1.87 1.82`.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

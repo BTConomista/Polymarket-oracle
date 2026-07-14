@@ -86,6 +86,27 @@ def test_tier1_markets_coerenti():
     assert d["dc_1x"] + d["away_win"] == pytest.approx(1.0, abs=1e-9)
 
 
+def test_price_markets_routing():
+    """price_markets: i totali vengono dalla matrice τ (senza φ), gli esiti/pareggio
+    dalla matrice con φ. Con φ>0 il pareggio sale ma l'Over 2.5 resta quello τ."""
+    lam, mu, rho, phi0, kappa = 1.3, 1.2, -0.06, 0.35, 2.0
+    p = mi.price_markets(lam, mu, rho, phi0, kappa)
+    d_tau = mi.derive_markets(mi.score_matrix(lam, mu, rho))
+    phi = mi.balance_phi(lam, mu, phi0, kappa)
+    d_phi = mi.derive_markets(mi.score_matrix(lam, mu, rho, diag_inflation=phi))
+    # totali dalla τ
+    assert p["over_2.5"] == pytest.approx(d_tau["over_2.5"], abs=1e-12)
+    assert p["mg_2_3"] == pytest.approx(d_tau["mg_2_3"], abs=1e-12)
+    # esiti/pareggio dalla φ
+    assert p["draw"] == pytest.approx(d_phi["draw"], abs=1e-12)
+    assert p["btts"] == pytest.approx(d_phi["btts"], abs=1e-12)
+    # φ alza il pareggio rispetto alla τ pura
+    assert p["draw"] > d_tau["draw"]
+    # phi0=0 -> tutto dalla τ
+    p0 = mi.price_markets(lam, mu, rho, 0.0, 0.0)
+    assert p0["draw"] == pytest.approx(d_tau["draw"], abs=1e-12)
+
+
 def test_balance_phi_fit_e_forma():
     """Fase 39: fit_balance_phi su lam,mu del mercato con eccesso di pareggi tra
     squadre pari-livello trova phi0>0; balance_phi decresce con |lam-mu| e boosta
