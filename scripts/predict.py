@@ -40,15 +40,24 @@ def _top_scores(M: np.ndarray, n: int = 6):
             for i, j in (np.unravel_index(k, M.shape) for k in flat)]
 
 
-def _show_markets(d: dict, titolo: str) -> None:
+def _show_markets(d: dict, titolo: str, rho: float = 0.0, matchday: int | None = None) -> None:
     """Stampa TUTTI i mercati Tier 1 da un dizionario price_markets (forma
-    instradata per-mercato: φ35 su esiti/pareggio, τ sui totali — Fase 44)."""
+    instradata per-mercato: φ35 su esiti/pareggio, τ sui totali — Fase 44).
+
+    Se `matchday` e' passato, mostra anche la GG/NG col NUDGE stagionale di fine
+    stagione (Fase 48): alza μ per il solo GG/NG col profilo della giornata. OFF
+    di default (guadagno ~90% probabile, CI include lo zero): riga informativa."""
     print(f"\n----- {titolo} -----")
     print(f"  Gol attesi:  casa λ={d['lam']:.2f}   ospite μ={d['mu']:.2f}")
     print(f"  1X2:            1 {d['home_win']:6.1%}   X {d['draw']:6.1%}   2 {d['away_win']:6.1%}")
     print(f"  Doppia chance:  1X {d['dc_1x']:6.1%}   X2 {d['dc_2x']:6.1%}   12 {d['dc_12']:6.1%}")
     print(f"  Over/Under:     O1.5 {d['over_1.5']:5.1%}  O2.5 {d['over_2.5']:5.1%}  O3.5 {d['over_3.5']:5.1%}")
     print(f"  GG/NG:          GG {d['btts']:6.1%}   NG {1-d['btts']:6.1%}")
+    if matchday is not None:
+        f = mi.season_mu_factor(matchday)
+        gg_n = mi.btts_season(d["lam"], d["mu"], matchday, rho)
+        print(f"    └ +nudge stag. (g.{matchday}, μ×{f:.3f}):  GG {gg_n:6.1%}   "
+              f"NG {1-gg_n:6.1%}   [opt-in, utile solo nel finale]")
     print(f"  Multigol:       0-1 {d['mg_0_1']:5.1%}  2-3 {d['mg_2_3']:5.1%}  4+ {d['mg_4plus']:5.1%}")
     print(f"  Total-squadra:  casa O1.5 {d['home_ov_1.5']:5.1%}   ospite O1.5 {d['away_ov_1.5']:5.1%}")
     print(f"  Clean sheet:    casa {d['cs_home']:6.1%}   ospite {d['cs_away']:6.1%}")
@@ -69,6 +78,9 @@ def main() -> None:
                     help="quote 1X2 + Over/Under 2.5 -> attiva il market-implied (Modello 2)")
     ap.add_argument("--no-draw-balance", action="store_true",
                     help="non mostrare la variante Fase 35 φ(|λ−μ|)")
+    ap.add_argument("--matchday", type=int, default=None,
+                    help="giornata (1-38): mostra il nudge stagionale GG/NG di fine "
+                         "stagione (Fase 48; utile solo nel finale 35-38)")
     args = ap.parse_args()
 
     allm = loader.load_league(args.league)
@@ -97,7 +109,8 @@ def main() -> None:
           f"[φ35: φ0={m.draw_phi0:.3f}, κ={m.draw_kappa:.3f}]")
     lam_dc, mu_dc = m.expected_goals(args.home, args.away)
     d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=m.draw_phi0, kappa=m.draw_kappa)
-    _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (forma instradata per-mercato)")
+    _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (forma instradata per-mercato)",
+                  rho=m.rho, matchday=args.matchday)
 
     print("\n" + "=" * 74)
     print("MODELLO 2 — market-implied (richiede le quote del match)")
@@ -114,7 +127,8 @@ def main() -> None:
         # esatto e' trascurabile (Fase 44).
         d = mi.price_markets(lam, mu, rho=-0.06, phi0=0.30, kappa=1.5)
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
-        _show_markets(d, "Modello 2: market-implied + φ35 (forma instradata per-mercato)")
+        _show_markets(d, "Modello 2: market-implied + φ35 (forma instradata per-mercato)",
+                      rho=-0.06, matchday=args.matchday)
 
 
 if __name__ == "__main__":

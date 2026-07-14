@@ -132,6 +132,27 @@ def test_balance_phi_fit_e_forma():
     assert float(np.trace(Mb)) > float(np.trace(M0))
 
 
+def test_season_mu_factor_e_nudge_ggng():
+    """Fase 48: il fattore stagionale μ e' ~1 fuori dal finale e cresce nelle ultime
+    giornate; il nudge alza la GG/NG nel finale, ~invariata a inizio stagione; e il
+    coefficiente di coda e' riproducibile dal fit su dati con boost di fine stagione."""
+    # ~1 fuori dal finale; monotono crescente nel finale; sensibile alla 38a
+    assert mi.season_mu_factor(20) == pytest.approx(1.0, abs=0.03)
+    assert mi.season_mu_factor(38) > mi.season_mu_factor(35) > mi.season_mu_factor(31)
+    assert mi.season_mu_factor(38) > 1.05
+    # il nudge alza la GG nel finale, ma non a inizio stagione
+    gg = mi.derive_markets(mi.score_matrix(1.4, 1.0, -0.06))["btts"]
+    assert mi.btts_season(1.4, 1.0, 38, -0.06) > gg
+    assert mi.btts_season(1.4, 1.0, 20, -0.06) == pytest.approx(gg, abs=0.01)
+    # coda positiva riproducibile: piu' gol ospite nelle giornate >=35
+    rng = np.random.default_rng(0)
+    md = rng.integers(1, 39, 4000)
+    mu = np.full(4000, 1.2)
+    y = rng.poisson(mu * np.where(md >= 35, 1.25, 1.0))
+    c = mi.fit_season_mu_profile(mu, y, md)
+    assert c[2] > 0.0
+
+
 def test_nbinom_over_dispersa_vs_poisson():
     """La NB con size finito ha varianza > Poisson (piu' massa sulle code)."""
     Mp = mi.score_matrix(1.6, 1.6, nb_size=None)      # Poisson

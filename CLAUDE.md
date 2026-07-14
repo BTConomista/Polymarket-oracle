@@ -164,7 +164,9 @@ src/data/        sources.py (URL/stagioni/alias), loader.py (offline-first),
 src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  draw_balance Fase 35 = phi(|lam-mu|))
                  market_implied.py (Fase 24/26: inverte le quote 1X2+O/U ->
-                 lambda,mu del mercato -> matrice DC -> ogni mercato sui gol)
+                 lambda,mu del mercato -> matrice DC -> ogni mercato sui gol;
+                 price_markets Fase 44 = routing forma per-mercato; btts_season Fase 48
+                 = nudge stagionale GG/NG di fine stagione, off di default)
                  market_denoise.py (Fase 38/Punto 4: power-devig + recal cross-stagione)
                  bivariate_poisson.py (Fase 42: correlazione esplicita λ3; perde vs φ35)
                  copula_scores.py (Fase 43: copula di Frank, dip. flessibile; tetto = φ35)

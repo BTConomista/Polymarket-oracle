@@ -4969,9 +4969,18 @@ GG/NG   0.6888 −0.0009(P84%)  −0.0012(P93%)      0.6888 −0.0062(P89%)  −
    nudge-GG/NG di fine stagione (~90%, off di default per disciplina CI). Per un edge reale
    serve **informazione nuova**, non un modello nuovo.
 
-**Uso pratico (opzionale).** Chi vuole spremere il nudge sul mercato non prezzato puo'
-alzare μ nel finale per il solo GG/NG (specialista GG/NG + coda stagionale); resta
-**off di default** (CI include lo zero).
+**Uso pratico — IMPLEMENTATO (opt-in).** Il nudge e' cablato nel motore:
+`market_implied.btts_season(lam, mu, matchday, rho)` alza μ per il **solo GG/NG** col
+profilo stagionale e ne deriva la BTTS; `season_mu_factor(matchday)` da' il moltiplicatore
+(≈1 fuori dal finale, ×1.07-1.14 nelle 35-38). Coefficienti ufficiali
+`GG_SEASON_MU_COEF = (−0.00118, −0.03657, 0.16799)` = fit **pooled in-sample su 8 stagioni**
+(miglior stima del profilo per l'uso; l'*effetto* e' invece validato walk-forward, ~90%),
+riproducibili con `fit_season_mu_profile` e da **rifittare per ogni lega** (§7). Esposto nel
+tool: `predict.py --matchday N` stampa la riga GG/NG col nudge sotto quella standard, per
+entrambi i modelli. Resta **off di default** (CI include lo zero): riga informativa, non
+sostituisce la GG/NG standard. Esempio:
+`python scripts/predict.py Roma Fiorentina --odds 1.50 4.10 6.00 1.87 1.82 --matchday 38`
+→ GG 47.4% → **51.1%** (market-implied) alla 38a giornata.
 
 **📐 Il modello in dettaglio — il profilo liscio e perche' i numeri.**
 

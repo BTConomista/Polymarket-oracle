@@ -217,3 +217,54 @@ def fit_balance_phi(lams, mus, is_draw, rho: float = 0.0,
     r = minimize(neg_ll, np.array([0.1, 1.0]), method="L-BFGS-B",
                  bounds=[(0.0, 2.0), (0.0, 5.0)])
     return float(r.x[0]), float(r.x[1])
+
+
+# --- Fase 47/48: profilo stagionale del tasso-gol OSPITE per la GG/NG --------- #
+# Nel finale di stagione l'ospite segna piu' del previsto (le partite si aprono):
+# effetto ~+7% alla 38a giornata su 8 stagioni. La GG/NG e' il mercato sensibile
+# (la BTTS cresce alzando il tasso piu' basso, di norma μ). NUDGE opzionale: alza μ
+# SOLO per il GG/NG in base alla giornata. Coefficienti fittati su 8 stagioni (Fase
+# 48, pooled), riproducibili con fit_season_mu_profile (scripts/_run_seasonal_profile.py).
+# OFF di default: il CI del guadagno include lo zero (~90% probabile, non provato).
+GG_SEASON_MU_COEF = (-0.00118, -0.03657, 0.16799)   # (c0, c1_trend, c2_coda), Fase 48
+
+
+def season_basis(matchday) -> np.ndarray:
+    """Base del profilo stagionale: [1, trend, coda]. trend=(md−19.5)/18.5 (globale);
+    coda=max(0,md−31)/7 (0 fino alla 31a giornata → 1 alla 38a: isola il finale)."""
+    md = np.asarray(matchday, float)
+    s = (md - 19.5) / 18.5
+    tail = np.maximum(0.0, md - 31.0) / 7.0
+    return np.column_stack([np.ones_like(md), s, tail])
+
+
+def fit_season_mu_profile(mu, away_goals, matchday) -> tuple[float, float, float]:
+    """MLE Poisson dei coefficienti c: away_goals ~ Poisson(μ·exp(c·base(md))), con
+    offset log(μ). Ritorna (c0, c1, c2). Va rifittato per ogni lega (§7)."""
+    X = season_basis(matchday)
+    base = np.asarray(mu, float)
+    y = np.asarray(away_goals, float)
+
+    def neg_ll(c):
+        return float(np.sum(base * np.exp(X @ c) - y * (X @ c)))
+
+    def grad(c):
+        return X.T @ (base * np.exp(X @ c) - y)
+
+    r = minimize(neg_ll, np.zeros(3), jac=grad, method="L-BFGS-B")
+    return (float(r.x[0]), float(r.x[1]), float(r.x[2]))
+
+
+def season_mu_factor(matchday, coef=GG_SEASON_MU_COEF) -> float:
+    """Moltiplicatore del tasso-gol ospite alla giornata `matchday`: ≈1 fuori dal
+    finale, ×1.07–1.14 nelle giornate 35-38."""
+    return float(np.exp(season_basis([matchday]) @ np.asarray(coef, float))[0])
+
+
+def btts_season(lam: float, mu: float, matchday, rho: float = 0.0,
+                coef=GG_SEASON_MU_COEF) -> float:
+    """P(GG) col NUDGE stagionale (Fase 48): alza μ col profilo di fine stagione e
+    deriva la BTTS. Fuori dal finale ≈ GG/NG standard. OFF di default nel motore
+    (guadagno ~90% probabile, CI include lo zero)."""
+    return derive_markets(score_matrix(lam, mu * season_mu_factor(matchday, coef),
+                                       rho))["btts"]

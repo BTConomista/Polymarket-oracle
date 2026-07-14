@@ -26,7 +26,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -55,13 +54,6 @@ def _add_matchday(df):
     return df
 
 
-def _basis(md):
-    md = np.asarray(md, float)
-    s = (md - 19.5) / 18.5
-    tail = np.maximum(0.0, md - 31.0) / 7.0
-    return np.column_stack([np.ones_like(md), s, tail])
-
-
 def _bucket(md):
     return np.where(md <= 31, "early", np.where(md <= 34, "tense", "late"))
 
@@ -76,25 +68,6 @@ def _load():
     df = _add_matchday(df)
     df["bucket"] = _bucket(df["matchday"].values)
     return df
-
-
-def _fit_profile(base_rate, goals, md):
-    """MLE Poisson del profilo: y~Poisson(base·exp(X·c)). Ritorna c (3,)."""
-    X = _basis(md)
-    base = np.asarray(base_rate, float); y = np.asarray(goals, float)
-
-    def nll(c):
-        g = X @ c
-        rate = base * np.exp(g)
-        return float(np.sum(rate - y * g))            # + const (y·ln base) irrilevante
-
-    def grad(c):
-        g = X @ c
-        rate = base * np.exp(g)
-        return X.T @ (rate - y)
-
-    res = minimize(nll, np.zeros(3), jac=grad, method="L-BFGS-B")
-    return res.x
 
 
 def _fit_buckets(past):
@@ -140,12 +113,14 @@ def main():
         buckets.append(cur.bucket.values)
 
         deltas = _fit_buckets(past)
-        c_lam = _fit_profile(past.exp_home_goals.values, past.home_goals.values, past.matchday.values)
-        c_mu = _fit_profile(past.exp_away_goals.values, past.away_goals.values, past.matchday.values)
-        boost38.append(float(np.exp(_basis([38]) @ c_mu)[0]))
+        c_lam = np.asarray(mi.fit_season_mu_profile(
+            past.exp_home_goals.values, past.home_goals.values, past.matchday.values))
+        c_mu = np.asarray(mi.fit_season_mu_profile(
+            past.exp_away_goals.values, past.away_goals.values, past.matchday.values))
+        boost38.append(float(np.exp(mi.season_basis([38]) @ c_mu)[0]))
 
-        r_lam = np.exp(_basis(md) @ c_lam)
-        r_mu = np.exp(_basis(md) @ c_mu)
+        r_lam = np.exp(mi.season_basis(md) @ c_lam)
+        r_mu = np.exp(mi.season_basis(md) @ c_mu)
 
         for k in range(len(cur)):
             d, e = deltas[cur.bucket.iloc[k]]
