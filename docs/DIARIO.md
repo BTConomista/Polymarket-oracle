@@ -4918,6 +4918,90 @@ dove il modello statico sbagliava nel finale.
 
 ---
 
+## Fase 48 — Modello dinamico a profilo stagionale liscio, su 8 stagioni (chiude l'architettura)
+
+**Obiettivo.** Fare le DUE cose insieme chieste dopo il redirect della Fase 47:
+**(1) robustezza** — validare il segnale (inflazione-gol-ospite di fine stagione) su
+**8 stagioni** (1819-2526, come Fasi 19/31), non piu' 6; **(2) modello pieno** — sostituire
+i 3 bucket grezzi con un vero modello *dinamico* a **profilo stagionale liscio**: i
+moltiplicatori dei tassi λ,μ come funzione continua della giornata.
+
+**Ragionamento / scelta dell'architettura.** Il "dinamico" corretto qui NON e' un Kalman
+(random-walk delle forze): le forze sono stabili (Fasi 2b/13/25) e l'effetto e' di **fase
+stagionale deterministica** (si ripete ogni anno). Quindi si modella un **profilo** liscio
+r(md) = exp(c0 + c1·s + c2·tail), con s = (md−19.5)/18.5 ∈[−1,1] (trend globale) e
+tail = max(0,md−31)/7 (salita di coda), stimato per casa e ospite via regressione di
+Poisson walk-forward. E' la generalizzazione liscia dei bucket della Fase 47.
+
+**Risultato** (`scripts/_run_seasonal_profile.py`; 1 run `source=fase48_seasonal_profile`;
+2660 partite, finale 35-38 = 283; profilo confrontato con base e con V2-bucket):
+
+```
+moltiplicatore OSPITE alla 38a (profilo liscio, media walk-forward): ×1.072
+   (Fase 47, bucket-late su 6 stagioni: ×1.148 → l'effetto si SGONFIA con piu' dati)
+
+              OVERALL (n=2660)                          FINALE 35-38 (n=283)
+mercato  base   bucket Δ/P        smooth Δ/P        base   bucket Δ/P         smooth Δ/P
+1X2     0.9803 +0.0002(P39%)  +0.0010(P 7%)      1.0058 +0.0001(P48%)  +0.0052(P10%)
+Over2.5 0.6867 +0.0018(P 8%)  +0.0015(P 9%)      0.6941 +0.0017(P41%)  +0.0019(P38%)
+GG/NG   0.6888 −0.0009(P84%)  −0.0012(P93%)      0.6888 −0.0062(P89%)  −0.0059(P92%)
+(P=P(Δ<0) bootstrap; NESSUN CI del finale esclude lo zero: 283 partite ad alta varianza)
+```
+
+**Lezione / cosa ne consegue — l'architettura dinamica si CHIUDE.**
+1. **Il segnale si sgonfia con piu' stagioni.** Il boost-ospite di fine stagione passa da
+   ×1.148 (6 st.) a ×1.072 (8 st.): regressione verso la media, il tracer a 6 stagioni lo
+   sovrastimava. Esattamente perche' il metodo impone di validare su piu' stagioni (§1.7).
+2. **Sopravvive UN solo mercato: la GG/NG.** Overall −0.0009…−0.0012 (P 84-93%) e finale
+   −0.0059…−0.0062 (P 89-92%), coerente su 8 stagioni. Ma **nessun CI esclude lo zero**:
+   e' un segnale **~90% probabile, non provato** — stesso tier del lead market-implied sul
+   GG/NG (Fase 24) e del pareggio-in-equilibrio (Fase 40). Su 1X2 e Over la correzione e'
+   neutra o leggermente dannosa.
+3. **Il modello "pieno" liscio NON batte i bucket grezzi.** Pari sulla GG/NG, PEGGIO
+   sull'1X2 (finale smooth +0.0052, P 10%): il trend-globale `s` inietta aggiustamento
+   anche fuori dal finale, dove non serve. Piu' machinery, zero guadagno. Verdetto: la
+   forma dinamica non aggiunge nulla sopra il DC statico, se non un ritocco marginale e
+   non provato sul GG/NG.
+4. **Conclusione sull'ULTIMA architettura.** Abbiamo testato tutte le famiglie
+   (5 sui punteggi, il GBM diretto, e ora il dinamico a profilo). Nessuna batte lo statico
+   in modo conclusivo. Il tetto e' confermato **informativo, non architetturale** (Fase 22),
+   ora anche contro il tempo: dentro la stagione non c'e' struttura sfruttabile oltre un
+   nudge-GG/NG di fine stagione (~90%, off di default per disciplina CI). Per un edge reale
+   serve **informazione nuova**, non un modello nuovo.
+
+**Uso pratico (opzionale).** Chi vuole spremere il nudge sul mercato non prezzato puo'
+alzare μ nel finale per il solo GG/NG (specialista GG/NG + coda stagionale); resta
+**off di default** (CI include lo zero).
+
+**📐 Il modello in dettaglio — il profilo liscio e perche' i numeri.**
+
+Moltiplicatori dei tassi come regressione di Poisson (offset = log-tasso base):
+
+```
+r_λ(md) = exp(c^λ · x(md)),   r_μ(md) = exp(c^μ · x(md)),   x(md) = [1, s, tail]
+s = (md − 19.5)/18.5           tail = max(0, md − 31)/7
+c = argmin  Σ_i [ base_i·exp(c·x_i) − y_i·(c·x_i) ]      # MLE Poisson, offset ln(base_i)
+applicazione:  λ' = λ · r_λ(md),   μ' = μ · r_μ(md)
+```
+
+verificato riga per riga contro `_fit_profile()`/`_basis()` (gradiente
+X·ᵀ(rate − y), L-BFGS-B). **Ragionamento numerico.** Il profilo ospite valutato alla 38ª
+da' r_μ(38) = exp(c^μ·[1, +1, +1]) = ×1.072 in media walk-forward: la salita di coda `tail`
+cattura l'apertura di fine stagione, ma su 8 stagioni pesa meno che su 6 (piu' anni →
+stima piu' conservativa). **Perche' la GG/NG e' l'unico sopravvissuto:** la BTTS e'
+massimamente sensibile ad alzare il tasso *piu' basso* (μ, l'ospite); μ×1.07 sposta massa
+da "ospite non segna" a "segnano entrambe" e migliora il GG/NG del finale, mentre sull'1X2
+lo spostamento casa↔ospite e' quasi simmetrico e si annulla. **Perche' smooth < bucket
+sull'1X2:** il termine `s` (trend globale) applica un moltiplicatore ≠1 gia' da meta'
+stagione, dove non c'e' effetto → rumore aggiunto; i bucket lasciano intatte early/tense
+e agiscono solo sul finale. La forma piu' semplice (gradino) batte quella piu' ricca:
+niente da guadagnare dalla continuita'.
+
+**Riproducibilità.** `python scripts/_run_seasonal_profile.py`
+(rigenera in cache `outputs/db_base_{1819,1920}.csv` la prima volta, via `run_backtest`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
