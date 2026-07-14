@@ -4672,6 +4672,161 @@ dell'audit. **Non scommettere soldi veri con questo modello.**
 
 ---
 
+## Fase 45 — Router "stakes-aware" sul path senza quote (chiude il lead della Fase 32)
+
+**Obiettivo.** Operazionalizzare l'ultima leva predittiva interna. La Fase 44 aveva
+deciso: sul path DC (senza quote) il predittore e' `DC + prior + φ35`, "con eventuale
+aggiustamento-stakes". Qui si COSTRUISCE quell'aggiustamento e lo si mette alla prova.
+
+**Ragionamento / ipotesi.** Fasi 31/32: quando UNA squadra e' *decisa* (niente in
+palio) e l'altra e' *in corsa* — le partite **mismatch** — il DC usa la forza
+stagionale ed e' cieco alla motivazione, e perde piu' del mercato (gap +0.057). La
+Fase 32 aveva trovato che il **GBM** cattura il segnale ~6x meglio del DC. Ipotesi:
+un router che sulle sole mismatch sostituisce la previsione DC con quella GBM-stakes
+chiude parte del gap.
+
+**Alternative.** (a) covariata `stakes` dentro il DC (Fase 32: Δ mismatch −0.0022,
+non conclusivo); (b) router **hard** (DC ovunque, GBM-stakes sul mismatch); (c) router
+**soft** (sul mismatch fonde DC e GBM-stakes 50/50, meno aggressivo). Testati (b) e (c),
+che sfruttano il veicolo migliore (GBM) invece della covariata debole.
+
+**Scelta.** Router meccanico per contesto: la maschera mismatch =
+`home_settled + away_settled == 1` (dalla classifica, `loader.add_stakes`), il GBM e'
+calibrato (Platt) e allenato walk-forward sulle stagioni passate della cache.
+
+**Risultato** (`scripts/_run_stakes_routing.py`; 1 run `source=fase45_stakes_routing`;
+1900 partite, di cui **84 mismatch = 4.4%**):
+
+```
+                     OVERALL                          SOLO MISMATCH (n=84)
+                  ll     Δ vs DC   P(aiuta)         ll     Δ vs DC   P(aiuta)   gap-mkt
+DC (attuale)    0.9850     —          —           0.9943     —          —        +0.0549
+GBM-base        1.0146   +0.0297    100%          1.0236   +0.0293     86%       +0.0842
+GBM-stakes      1.0138   +0.0288    100%          1.0087   +0.0145     69%       +0.0693
+ROUTER hard     0.9856   +0.0006     69%          1.0087   +0.0145     69%       +0.0693
+ROUTER soft     0.9849   −0.0001     47%          0.9924   −0.0018     47%       +0.0531
+(mercato: overall 0.9692, mismatch 0.9394)
+```
+
+**Lezione / cosa ne consegue.**
+1. **Il gap sulle mismatch e' REALE e grande** (DC +0.0549 vs mercato, riproduce il
+   +0.057 della Fase 31 su dati e definizione indipendenti). Il segnale-motivazione
+   esiste.
+2. **Ma non e' sfruttabile con i modelli che abbiamo.** La GBM-stakes, in *assoluto*,
+   e' PEGGIORE del DC anche sulle mismatch (1.0087 vs 0.9943). Il "6x meglio" della
+   Fase 32 era relativo alla **GBM-base** (un baseline gia' scarso): battere se stessa
+   non basta a battere il DC. Instradare DC→GBM-stakes sul mismatch **peggiora**
+   (+0.0145); il router soft non fa danni ma e' **dead-neutral** (−0.0018, CI
+   [−0.0342,+0.0277], P 47%).
+3. **Questo CHIUDE l'ultimo lead predittivo interno.** Il gap-motivazione e'
+   informazione che il mercato prezza e noi non abbiamo: non un errore di
+   modellazione che un router puo' correggere. Coerente con Fase 16 (α*≈0), Fase 20
+   (adverse selection) e Fase 22 (tetto informativo, non architetturale).
+
+**📐 Il modello in dettaglio — il router e perche' il GBM non basta.**
+
+Router (per la sola classe 1X2, dove la motivazione morde di piu'):
+
+```
+mism_i = 1[ home_settled_i + away_settled_i == 1 ]          # una decisa, una in corsa
+ROUTER hard:  p_i = p^DC_i                     se mism_i = 0
+              p_i = p^GBM-stakes_i             se mism_i = 1
+ROUTER soft:  p_i = p^DC_i                     se mism_i = 0
+              p_i = 0.5·p^DC_i + 0.5·p^GBM-stakes_i   se mism_i = 1
+```
+
+verificato riga per riga contro `_run_stakes_routing.py` (`route[mism] = gbm_st[mism]`;
+`soft[mism] = 0.5*dc[mism] + 0.5*gbm_st[mism]`). Il GBM-stakes usa le 17 feature del
+DC-block (λ,μ, λ·μ, λ+μ, le 5 prob DC, forma/riposo/valore/assenze) **piu'**
+`home_settled, away_settled, settled_diff`; calibrato con `CalibratedClassifierCV`
+(sigmoid, cv=3), `HistGradientBoostingClassifier(max_iter=200, max_depth=3, lr=0.05,
+l2=1.0, min_samples_leaf=30)`.
+
+**Perche' il numero cade cosi'.** Il router hard eredita la log-loss del GBM-stakes
+*sulle mismatch* (1.0087) perche' li' li copia; e 1.0087 > 0.9943 (DC). Il GBM in
+assoluto e' peggiore perche' e' allenato su poche stagioni (cache, walk-forward) e le
+sue feature pre-partita sono quelle gia' spremute (Fase 22: aggiungere covariate al
+GBM peggiora). L'unica variabile nuova, lo `stakes`, sposta il GBM di −0.0149 sulle
+mismatch (1.0236→1.0087) — reale ma insufficiente a colmare i +0.029 di svantaggio
+di partenza vs DC. Il router soft e' ≈ DC perche' con appena 84 partite su 1900 la
+correzione 50/50 su quel 4.4% e' invisibile nell'overall.
+
+**Riproducibilità.** `python scripts/_run_stakes_routing.py`.
+
+---
+
+## Fase 46 — Ensemble dei predittori standalone (DC + bivariato + GBM), senza quote
+
+**Obiettivo.** Rispondere all'ultima domanda combinatoria: sul path SENZA quote,
+**mescolare** i tre predittori standalone (DC, Poisson bivariato, GBM) batte il
+migliore singolo? Le Fasi 16/23 lo escludono *contro il mercato*, ma la combinazione
+INTRA-standalone (senza quote) non era mai stata testata a fondo.
+
+**Ragionamento / ipotesi.** Un ensemble aiuta quando i modelli sono **diversi** e
+sbagliano in modo scorrelato. Qui pero' DC e bivariato sono quasi lo stesso modello
+(la Fase 42 ha trovato λ3≈0.11, correlazione minuscola → matrici quasi identiche), e
+il GBM — l'unica vista davvero diversa — da solo **perde** (Fase 22). Ipotesi onesta:
+al piu' una piccola riduzione di varianza sui totali, nessun edge.
+
+**Alternative (metodi di combinazione).** (a) media aritmetica delle probabilita';
+(b) log-linear pool (media geometrica, rinormalizzata); (c) media DC+GBM (i due modelli
+piu' diversi, scartando il bivariato ridondante). Tutte su 1X2 (3-classi), Over 2.5,
+GG/NG, walk-forward, con CI bootstrap appaiato **ensemble − miglior singolo**.
+
+**Risultato** (`scripts/_run_ensemble_standalone.py`; 1 run `source=fase46_ensemble`;
+1900 partite):
+
+```
+mercato        DC       biv      GBM    | miglior singolo | mean      logpool    dc_gbm
+1X2 (3cl)    0.9850   0.9847   1.0146   |     biv         | +0.0033   +0.0027   +0.0080
+Over 2.5     0.6907   0.6901   0.6982   |     biv         | −0.0006   −0.0008   +0.0005
+GG/NG        0.6915   0.6912   0.6978   |     biv         | −0.0008   −0.0008   −0.0001
+(Δ vs miglior singolo; CI95: mean/logpool su O2.5 e GG ~[−0.003,+0.002], includono 0)
+```
+
+**Lezione / cosa ne consegue.**
+1. **Nessun ensemble batte il migliore singolo.** Sull'1X2 mescolare **peggiora**
+   (il GBM a 1.0146 zavorra la media; dc_gbm +0.0080 con CI<0 escluso al contrario,
+   cioe' significativamente peggio). Su Over/GG l'ensemble e' neutro-leggermente
+   utile (mean/logpool −0.0006…−0.0008) ma fermamente **nel rumore** (P 23–34%).
+2. **Il motivo e' strutturale**, non di tuning: DC≈bivariato (nessuna diversita' da
+   sfruttare), e il modello diverso (GBM) e' peggiore, quindi pesarlo *danneggia*
+   dove conta (1X2). L'ensemble aiuta solo se combini modelli buoni E scorrelati:
+   qui manca la seconda condizione tra DC/biv e la prima per il GBM.
+3. Chiude la leva "ensemble standalone": conferma a livello intra-modello la lezione
+   delle Fasi 22/23 (il tetto e' informativo). Il bivariato resta il miglior singolo
+   standalone per un soffio (≈ DC, differenza 0.0003 = rumore).
+
+**📐 Il modello in dettaglio — le tre combinazioni.**
+
+Per un mercato con prob dei tre modelli `a` (DC), `b` (biv), `c` (GBM):
+
+```
+media:        p = (a + b + c) / 3
+log-pool:     p = exp( (ln a + ln b + ln c) / 3 )          # media geometrica
+DC+GBM:       p = (a + c) / 2
+(per l'1X2, ogni p e' poi rinormalizzato a somma 1 sulle 3 classi)
+```
+
+verificato contro `_combine()` in `_run_ensemble_standalone.py`. La media geometrica
+(log-pool) e' piu' conservativa della aritmetica: penalizza le prob discordi (se un
+modello dice 0.1 e un altro 0.5, la geometrica sta piu' in basso), motivo per cui su
+1X2 fa un filo meno danni della media (+0.0027 vs +0.0033) ma resta peggiore del
+singolo. I marginali dei modelli: DC = `m_home/m_draw/m_away`, `m_over`, `m_btts` dalla
+cache (matrice τ, rho −0.05); bivariato = `derive_markets(bp_matrix(λ,μ,λ3))` con λ3
+fittato walk-forward (0.111 medio); GBM = tre classificatori calibrati (1X2 a 3 classi,
+Over 2.5 e GG/NG binari) sulle 17 feature del DC-block.
+
+**Perche' i numeri.** Il peso 1/3 al GBM sull'1X2 costa: il GBM e' +0.0296 peggio del
+DC, quindi 1/3 di quel divario (≈ +0.010) ricade sulla media, coerente col +0.0033
+osservato (attenuato dalla scorrelazione parziale degli errori). Su Over/GG il GBM e'
+piu' vicino (+0.007), e la scorrelazione dei suoi errori con quelli DC/biv quasi
+pareggia il costo → Δ ≈ 0. Nessuna magia: e' aritmetica di bias e varianza.
+
+**Riproducibilità.** `python scripts/_run_ensemble_standalone.py`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
