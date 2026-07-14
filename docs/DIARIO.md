@@ -4425,6 +4425,89 @@ corregge *dove serve* (il pareggio-equilibrio) senza l'effetto collaterale del
 bivariato sui totali. È il motivo per cui, sui gol del calcio, **la struttura giusta
 per il pareggio/GG è l'equilibrio |λ−μ|, non la correlazione globale λ3.**
 
+---
+
+## Fase 43 — Spremere la dipendenza: copule flessibili (la φ35 è il tetto)
+
+**Obiettivo.** "Migliorare il Poisson bivariato il più possibile": una batteria di
+strutture di dipendenza sui marginali del mercato, per vedere se una qualsiasi batte
+la φ35. Il candidato-chiave: la **copula di Frank**, che a differenza del bivariato
+(solo correlazione positiva) ammette dipendenza di **qualsiasi segno** e preserva
+esattamente i marginali Poisson.
+
+**Ragionamento / scelta.** Modulo `src/models/copula_scores.py` (copula di Frank via
+differenze della CDF; fit di θ globale e di θ=a+b·|λ−μ|). Sei varianti walk-forward:
+τ (rho) · φ35 · biv (λ3) · frank_g (θ globale) · frank_b (θ condizionato) · frank_b+φ
+(copula + inflazione diagonale). Mercati sensibili: GG, risultato esatto, multigol,
+pareggio, O/U 2.5.
+
+**Risultato** (`scripts/_run_copula.py`; 1 run `source=fase43_copula`; parametri:
+λ3=0.120, **θ_globale=+0.62**, frank_b a=+0.47 b=+0.20):
+
+| mercato | τ | **φ35** | biv | frank_g | frank_b | **frank_b+φ** |
+|---|--:|--:|--:|--:|--:|--:|
+| GG/NG | 0.6866 | 0.6861 | 0.6863 | 0.6862 | 0.6864 | **0.6860** |
+| risultato esatto | 2.7733 | **2.7721** | 2.7734 | 2.7727 | 2.7739 | 2.7726 |
+| multigol | 1.0364 | **1.0363** | 1.0390 | 1.0396 | 1.0394 | 1.0394 |
+| pareggio | 0.5784 | **0.5771** | 0.5783 | 0.5781 | 0.5784 | **0.5771** |
+| O/U 2.5 | 0.6820 | 0.6823 | 0.6820 | 0.6820 | **0.6818** | 0.6822 |
+
+Δ (miglior copula − φ35), bootstrap appaiato: GG **−0.0001** [−0.0004, +0.0003]
+P(<φ35)=67%; risultato esatto +0.0005; **multigol +0.0031 [+0.0003, +0.0059]
+P(<φ35)=1%**.
+
+**Lezione / cosa ne consegue — la strada più efficiente è… convergere alla φ35.**
+1. **Anche con piena libertà di segno, i dati vogliono dipendenza POSITIVA** (θ=+0.62):
+   l'ipotesi "il calcio vuole dipendenza negativa" (dalla τ<0 del DC) **non si
+   materializza** sui λ,μ del mercato. Sui tassi del mercato la dipendenza residua è
+   debole e leggermente positiva — la stessa direzione del bivariato.
+2. **La φ (inflazione diagonale) fa TUTTO il lavoro.** La copula da sola (frank_g,
+   frank_b) è sempre ≤ φ35; solo aggiungendo la φ (frank_b+φ) si torna al livello
+   φ35, battendola sul GG di **−0.0001** — cioè **un pareggio statistico** (CI include
+   lo zero, P 67%). Il pezzo-copula non aggiunge nulla oltre la φ.
+3. **Ogni dipendenza globale (bivariato o copula) PEGGIORA i totali** (multigol
+   +0.003, P<φ35 solo 1%): la sovra-dispersione di X+Y è strutturale a *qualsiasi*
+   correlazione, la φ35 (diagonale mirata) ne è immune. È la conferma definitiva del
+   perché la φ35 vince.
+4. **Verdetto:** dopo bivariato (Fase 42) + 3 copule (Fase 43), la struttura di
+   dipendenza è **spremuta**. La φ35 (inflazione diagonale condizionata all'equilibrio)
+   è il **tetto della forma**: nessuna struttura la batte in modo significativo. La
+   "versione migliore del bivariato" **è** la φ35. L'unico micro-guadagno (frank_b+φ
+   sul GG, 0.6860, il miglior GG del progetto) è un pareggio con φ35 → si può usare
+   frank_b+φ come specialista GG se si vuole il miglior punto-stima, ma è indifferente.
+   Coerente col principio concordato: sul punto-stima frank_b+φ ≈ φ35, e per un
+   *claim* servirebbe un CI<0 che non c'è. Chiuso il filone dipendenza-dei-punteggi.
+
+**Riproducibilità.** `python scripts/_run_copula.py`.
+
+### 📐 Il modello in dettaglio — perché la copula non supera la φ35
+
+**La matrice via copula** (differenze della CDF, marginali Poisson esatti):
+
+```
+P(X=x, Y=y) = C(Fx(x),Fy(y)) − C(Fx(x−1),Fy(y)) − C(Fx(x),Fy(y−1)) + C(Fx(x−1),Fy(y−1))
+Frank:  C(u,v;θ) = −(1/θ)·ln[ 1 + (e^{−θu}−1)(e^{−θv}−1)/(e^{−θ}−1) ]
+```
+
+θ>0 = dipendenza positiva, θ<0 = negativa, θ→0 = indipendenza. Il fit sceglie θ ⇒
+massima verosimiglianza dei punteggi.
+
+**Perché θ esce POSITIVO (+0.62) e non negativo.** La τ<0 del Dixon-Coles era fittata
+sui λ,μ *dei gol* (i nostri): correggeva un difetto dei nostri tassi. Sui λ,μ *del
+mercato* (migliori) quel difetto è già assorbito, e la dipendenza residua osservata è
+la lieve co-occorrenza "partita aperta → segnano entrambe" (positiva, debole). La
+libertà di segno della copula quindi non serve: il segno utile è positivo, come nel
+bivariato.
+
+**Perché nemmeno la copula supera la φ35 (il punto strutturale).** Qualsiasi
+dipendenza globale (biv λ3 o copula θ) sposta massa **congiunta** e altera la
+distribuzione del **totale** X+Y (`Var(X+Y)=Var(X)+Var(Y)+2·Cov` cambia) → penalizza
+multigol/O/U. La φ(|λ−μ|) invece **rinormalizza spostando massa TRA esiti** con lo
+stesso totale (sposta un 2-0 verso 1-1 solo quando serve, in equilibrio), lasciando i
+totali quasi intatti. In una frase: **il calcio non vuole "più correlazione", vuole
+"più pareggi dove le squadre sono pari" — e quella è la φ35, non una copula.** Le tre
+copule lo confermano da tre angoli diversi.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di

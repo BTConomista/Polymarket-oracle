@@ -137,6 +137,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **40** | **ROI per esito/mercato** (cosa nascondeva il 1X2 piatto) | casa −19.6% / trasferta −12.9% / **pari −2.0%**; **pari in partite equilibrate +4.7%** (CI [−4.9,+14.4], P 83%, 4/6 stag.); O/U negativo | 🔎 lead monetizzabile (draw bias); non concluso, alta varianza |
 | **41** | **bakeoff per-mercato** (specialisti, Tier 1) | market-implied migliore su **19/20 mercati**, DC su 0, baseline 1 (pari/dispari); il portafoglio collassa a 1 motore + φ35 sui pareggi | ✅ specialisti = market-implied + φ35; no bespoke-per-mercato |
 | **42** | **Poisson bivariato** (correlazione esplicita λ3, 5° modello) | λ3≈0.11 (corr +0.09, reale ma debole); non batte la φ35 su nessun mercato (GG biv −0.0003 vs φ35 −0.0005); **peggiora il multigol +0.0026** (sovra-disperde i totali) | ❌ perde vs φ35; l'equilibrio \|λ−μ\| batte la correlazione globale |
+| **43** | **copule flessibili** (Frank, dipendenza di qualsiasi segno) | θ fittato **+0.62** (i dati vogliono dip. positiva anche potendo negativa); frank_b+φ pareggia φ35 sul GG (−0.0001, P 67%); copule peggiorano il multigol (+0.003) | ❌ φ35 è il tetto della forma; la φ fa tutto, la copula è zavorra sui totali |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune

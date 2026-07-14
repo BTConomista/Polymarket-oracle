@@ -167,6 +167,7 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  lambda,mu del mercato -> matrice DC -> ogni mercato sui gol)
                  market_denoise.py (Fase 38/Punto 4: power-devig + recal cross-stagione)
                  bivariate_poisson.py (Fase 42: correlazione esplicita λ3; perde vs φ35)
+                 copula_scores.py (Fase 43: copula di Frank, dip. flessibile; tetto = φ35)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
