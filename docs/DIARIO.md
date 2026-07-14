@@ -4171,6 +4171,87 @@ correzioni più aggressive dove la stima di base è peggiore, più delicate dove
 buona. La forma esponenziale a 2 parametri si adatta automaticamente alla qualità
 dei λ,μ di partenza.
 
+---
+
+## Fase 40 — ROI PER MERCATO/ESITO: cosa nascondeva il value-betting 1X2 piatto
+
+**Obiettivo.** Domanda-chiave: abbiamo **sottovalutato** qualcosa? Tutte le analisi di
+ROI (Fasi 1/14/15) usavano il value-betting 1X2 **indistinto** (qualunque esito con
+edge>soglia) → −15%, "non scommettere". Ma questo **lumpa** casa, pari e trasferta.
+La Fase 35 ha mostrato che il mercato **sotto-prezza i pareggi delle partite
+equilibrate** (0.296 vs reale 0.332): forse l'edge è molto diverso per esito. Scomposto.
+
+**Risultato** (`scripts/_run_market_specific_roi.py`; predizioni Fase 35; quota di
+chiusura; 1 run `source=fase40_market_specific_roi`).
+
+*A) Value-betting PER ESITO (edge > 0.03):*
+
+| esito | n bet | ROI | CI95 | P(ROI>0) |
+|---|--:|--:|--:|--:|
+| casa | 485 | **−19.6%** | [−31.1, −7.6] | 0% |
+| pari | 698 | **−2.0%** | [−14.5, +11.1] | 37% |
+| trasferta | 572 | −12.9% | [−26.6, +1.1] | 4% |
+
+*B) Strategia PAREGGIO se |λ−μ| < 0.5 (soglia FISSA pre-dichiarata):*
+
+| stagione | 2021 | 2122 | 2223 | 2324 | 2425 | 2526 | **POOLED** |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| ROI | −0.5% | +12.1% | +4.6% | +16.4% | +3.9% | −8.2% | **+4.7%** |
+
+Pooled +4.7% (n=973), CI95 **[−4.9%, +14.4%]**, P(ROI>0)=83%, **4/6 stagioni positive**.
+Gradiente (più equilibrio → più ROI): |<0.8 +2.4%, |<0.6 +2.3%, |<0.4 +5.1%, |<0.25
++4.1%. Riferimento: scommettere TUTTI i pari = −0.4%.
+
+*C) Value-betting O/U 2.5:* Over −6.9%, Under −5.6% (nessun edge).
+
+**Lezione / cosa ne consegue — quello che avevamo sottovalutato.**
+1. **Il verdetto "−15%, non scommettere" era il framing SBAGLIATO.** Aggregava un
+   disastro (casa −19.6%: i nostri value-bet sulla casa sono i nostri errori, è
+   l'adverse-selection della Fase 20 resa in €) con un mercato quasi-efficiente per
+   noi (pari −2.0%). La media nasconde la struttura.
+2. **Il PAREGGIO nelle partite equilibrate è l'unica strategia a ROI positivo del
+   progetto** (+4.7% a quota di CHIUSURA), ed è **principiata**: il mercato
+   sotto-prezza i pari equilibrati (Fase 35), noi li prezziamo meglio (0.334 vs reale
+   0.332), e questo si traduce in valore atteso. È coerente con la letteratura sul
+   "draw bias" dei mercati calcistici (i pareggi sono l'esito meno giocato e più
+   mis-prezzato).
+3. **MA NON è un edge dimostrato.** CI [−4.9%, +14.4%] **include lo zero** (P 83%),
+   varianza altissima (evento ~32%), 2/6 stagioni negative **inclusa la più recente
+   (2526 −8.2%)**. Disciplina Fase 17: CI che tocca lo zero = "non concluso". È il
+   **lead monetizzabile più promettente mai trovato**, non una licenza di scommettere.
+4. **Direzione:** merita **raccolta prospettica** (tracciare stake reali su questa
+   sola strategia, con soglia pre-registrata, per 1-2 stagioni) prima di qualsiasi
+   conclusione. È l'unico posto dove il mercato mostra una crepa e noi abbiamo lo
+   strumento (Fase 35) per vederla.
+
+**Riproducibilità.** `python scripts/_run_market_specific_roi.py`.
+
+### 📐 Il modello in dettaglio — la formula del ROI e perché il pari è diverso
+
+```
+ROI(strategia) = media_bet [ 1{esito vinto}·quota − 1 ]        (puntata unitaria)
+value bet su esito k:  scommetti se  P_modello(k) − P_mercato(k) > edge
+strategia pari-equilibrio:  scommetti il pari se |λ − μ| < 0.5
+```
+
+**Perché casa −19.6% e pari −2.0% (la matematica dell'adverse selection).** Un value
+bet scatta dove `P_modello > P_mercato`. Sulla **casa**, i nostri eccessi di
+probabilità sono proprio i casi in cui sbagliamo (Fase 20: gap ∝ dissenso, r=+0.18):
+scommettiamo quando sovrastimiamo la casa → perdiamo (ROI −19.6%, win 34% a quota
+media ~2.4 non basta). Sul **pari**, invece, il nostro "eccesso" rispetto al mercato
+è spesso *corretto* (il mercato sotto-prezza i pari equilibrati): win 31.9% a quota
+media 3.33 dà `0.319×3.33 − 1 = +6.2%` sulle equilibrate. La differenza è **da che
+parte del nostro errore sta il mercato**: contro di noi sulla casa (adverse
+selection), a nostro favore sul pari equilibrato (draw bias del mercato).
+
+**Perché +4.7% ma non concluso.** Il pareggio ha varianza `p(1−p) ≈ 0.32·0.68 ≈ 0.22`
+per bet; su n=973 l'errore standard del win-rate è `√(0.22/973) ≈ 0.015`, che a quota
+~3.3 diventa `±0.015×3.3 ≈ ±5%` di ROI per una sola deviazione standard → il CI95
+±9.5% osservato è esattamente la varianza attesa da un evento ad alta quota, non un
+difetto. Serve più campione (più stagioni), non un modello migliore: il segnale è al
+limite del rumore campionario, e la sua conferma è una questione di **dati nuovi**,
+non di calcolo.
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di
