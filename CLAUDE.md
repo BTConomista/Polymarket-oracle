@@ -57,9 +57,11 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      proiezioni della stessa matrice e i λ,μ del mercato battono i nostri ovunque.
      L'unico "specialista" aggiuntivo è la **φ(|λ−μ|)** (Fase 35/39) sulla
      famiglia-pareggio. Regola operativa: **market-implied + φ35 quando ci sono le
-     quote 1X2+O/U; DC come fallback senza quote.** Un ML bespoke per singolo mercato
-     resta l'unica variante non ancora testata (improbabile che batta, viste le
-     Fasi 22/36).
+     quote 1X2+O/U; DC come fallback senza quote.** Il **Poisson bivariato** (Fase 42,
+     5° modello) è stato implementato e **perde** vs la φ35 (l'equilibrio |λ−μ| batte
+     la correlazione globale λ3, che peggiora i totali). Un ML bespoke per singolo
+     mercato resta l'unica variante non ancora testata (improbabile che batta, viste
+     le Fasi 22/36).
 
 ---
 
@@ -164,6 +166,7 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  market_implied.py (Fase 24/26: inverte le quote 1X2+O/U ->
                  lambda,mu del mercato -> matrice DC -> ogni mercato sui gol)
                  market_denoise.py (Fase 38/Punto 4: power-devig + recal cross-stagione)
+                 bivariate_poisson.py (Fase 42: correlazione esplicita λ3; perde vs φ35)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)

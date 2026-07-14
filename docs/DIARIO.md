@@ -4338,6 +4338,93 @@ matrice**. L'unica correzione che *non* passa dai λ,μ ma dalla **forma** della
 è il boost-pareggio sull'equilibrio (φ(|λ−μ|), Fase 35): per questo è l'unico
 "specialista" aggiuntivo che ha senso, e solo sulla famiglia-pareggio.
 
+---
+
+## Fase 42 — Poisson bivariato: la correlazione esplicita (5° modello, non batte la φ35)
+
+**Obiettivo.** Implementare e testare l'unica famiglia di modelli sui punteggi mai
+provata: il **Poisson bivariato** (Karlis-Ntzoufras), che modella una
+**correlazione esplicita** tra i gol delle due squadre — il candidato naturale per i
+mercati che dipendono dalla correlazione (GG/NG, risultato esatto). È il "5° modello"
+del panel (DC, DC+φ35, market-implied, GBM, **bivariato**).
+
+**Ragionamento / ipotesi.** `src/models/bivariate_poisson.py`: `X=W1+W3`, `Y=W2+W3`
+con `W3~Pois(λ3)` componente comune → `Cov(X,Y)=λ3≥0`. Costruito **preservando i
+marginali** (λ, μ) dati (λ1=λ−λ3, λ2=μ−λ3), così λ3 è un parametro di **forma**
+confrontabile con il ρ (DC) e la φ (Fase 35). λ3 fittato walk-forward. Nuova regola
+metodologica (concordata): il CI resta la guardia per *config/claim*, ma la scelta
+del modello si fa su **punto-stima + meccanismo**, non serve CI<0 per *guardare* un
+modello.
+
+**Alternative considerate.** Un bivariato con re-fit completo di attacco/difesa da
+zero (più invasivo) vs il bivariato come forma sui marginali dati (scelto: pulito e
+confrontabile con τ/φ). Limite noto: λ3≥0 può solo aggiungere correlazione
+**positiva**, mentre il ρ<0 del DC gestisce i punteggi bassi — strutture diverse.
+
+**Risultato** (`scripts/_run_bivariate.py`; walk-forward 5 stagioni; 1 run
+`source=fase42_bivariate`; λ3 medio **DC 0.111, mercato 0.120** → correlazione ~+0.09):
+
+*Marginali del mercato* (i migliori, Fase 41):
+
+| mercato | mkt-ρ (attuale) | mkt-φ35 (Fase 39) | **mkt-biv (λ3)** | Δ biv−ρ (CI95) |
+|---|--:|--:|--:|--:|
+| GG/NG | 0.6866 | **0.6861** | 0.6863 | −0.0003 [−0.0006, +0.0001] |
+| risultato esatto | 2.7733 | **2.7721** | 2.7734 | +0.0000 [−0.0041, +0.0043] |
+| **multigol** | **1.0364** | 1.0363 | 1.0390 | **+0.0026 [+0.0002, +0.0051]** |
+| pareggio | 0.5784 | **0.5771** | 0.5783 | −0.0001 [−0.0006, +0.0004] |
+
+*Marginali del DC*: GG −0.0004, risultato esatto −0.0002, multigol +0.0012, pareggio
+−0.0002 (idem: minuscolo, e i marginali del DC sono comunque peggiori del mercato).
+
+**Lezione / cosa ne consegue.**
+1. **Il bivariato trova una correlazione REALE ma piccola** (λ3≈0.11, ~+9%): esiste
+   una lieve co-occorrenza dei gol ("partita aperta → segnano entrambe"). Non è zero
+   (contro l'attesa più pessimista), ma è debole.
+2. **Non batte la φ35 su NESSUN mercato**, nemmeno sul GG/NG (il suo terreno
+   naturale): biv −0.0003 vs φ35 −0.0005 sul GG. Sul punto-stima la φ35 vince
+   ovunque; per la regola del bakeoff (Fase 41) il bivariato **non si guadagna un
+   posto** nel portafoglio.
+3. **E PEGGIORA il multigol (+0.0026, CI esclude lo zero)** — ed è il risultato
+   tecnicamente più istruttivo (vedi 📐): la correlazione positiva **sovra-disperde
+   il totale** dei gol, spostando massa dai totali medi agli estremi. La φ35 sposta
+   massa sui pareggi *senza* questo effetto collaterale sui totali.
+4. **Verdetto:** il 5° modello è implementato, testato e **onestamente perde**. Ma è
+   un risultato pulito: la φ(|λ−μ|) è strutturalmente superiore alla correlazione
+   globale per la famiglia-pareggio/GG. Chiude "proviamo il bivariato?" con la nostra
+   implementazione. Resta disponibile (`bivariate_poisson`) come mattone/fallback e
+   per altre leghe (dove la correlazione potrebbe essere diversa — §7).
+
+**Riproducibilità.** `python scripts/_run_bivariate.py`.
+
+### 📐 Il modello in dettaglio — la formula e perché la φ35 vince
+
+**La PMF congiunta** (convoluzione sul termine comune W3):
+
+```
+P(X=x, Y=y) = Σ_{k=0}^{min(x,y)} Pois(k; λ3) · Pois(x−k; λ1) · Pois(y−k; λ2)
+con  λ1 = λ − λ3,  λ2 = μ − λ3   (marginali preservati: X~Pois(λ), Y~Pois(μ))
+Cov(X,Y) = λ3 ≥ 0,   corr = λ3 / √(λ·μ)
+```
+
+**Perché λ3 ≈ 0.11 e non 0.** Il fit massimizza la verosimiglianza dei punteggi; un
+λ3 positivo piccolo migliora la probabilità congiunta dove entrambe segnano (o
+entrambe no), cioè cattura la "partita aperta/chiusa". Ma corr ~+0.09 è debole → il
+guadagno è minuscolo.
+
+**Perché PEGGIORA il multigol (il punto chiave).** Preservare i marginali **non**
+preserva la distribuzione del TOTALE `X+Y`: con correlazione positiva,
+`Var(X+Y) = Var(X)+Var(Y)+2·λ3` **aumenta** → più massa sui totali estremi (0-1 e
+4+), meno sui medi (2-3). Se i totali reali del calcio sono ~Poisson (non
+over-dispersi, confermato Fase 27: la binomiale-negativa era stata rigettata), questa
+sovra-dispersione è nella direzione sbagliata → il multigol peggiora (+0.0026).
+
+**Perché la φ35 è strutturalmente migliore.** La φ(|λ−μ|) alza la diagonale
+(pareggi) *concentrandosi sulle partite equilibrate* e rinormalizza, spostando massa
+**tra esiti a parità di dispersione del totale**; non gonfia le code di `X+Y`. Cioè
+corregge *dove serve* (il pareggio-equilibrio) senza l'effetto collaterale del
+bivariato sui totali. È il motivo per cui, sui gol del calcio, **la struttura giusta
+per il pareggio/GG è l'equilibrio |λ−μ|, non la correlazione globale λ3.**
+
 ### 📐 Il modello in dettaglio — le formule dell'audit e delle leve proposte
 
 **La ricalibrazione condizionata usata nei test economici** (riuso di
