@@ -185,7 +185,7 @@ def main():
             mean, lo, hi, pneg = _boot(acc[mk][e] - acc[mk][best], rng)
             flag = "meglio (CI<0)" if hi < 0 else ("nel rumore" if lo < 0 < hi else "peggio")
             print(f"    {e:<9} {means[e]:.4f}   Δ vs {best}: {mean:+.4f} "
-                  f"[{lo:+.4f},{hi:+.4f}]  P(aiuta)={1-pneg:.0%}  {flag}")
+                  f"[{lo:+.4f},{hi:+.4f}]  P(aiuta)={pneg:.0%}  {flag}")
             summ[mk][f"delta_{e}_vs_best"] = mean
 
     experiment_log.append_run(experiment_log.make_record(

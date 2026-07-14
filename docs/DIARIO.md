@@ -4701,11 +4701,11 @@ calibrato (Platt) e allenato walk-forward sulle stagioni passate della cache.
                      OVERALL                          SOLO MISMATCH (n=84)
                   ll     Δ vs DC   P(aiuta)         ll     Δ vs DC   P(aiuta)   gap-mkt
 DC (attuale)    0.9850     —          —           0.9943     —          —        +0.0549
-GBM-base        1.0146   +0.0297    100%          1.0236   +0.0293     86%       +0.0842
-GBM-stakes      1.0138   +0.0288    100%          1.0087   +0.0145     69%       +0.0693
-ROUTER hard     0.9856   +0.0006     69%          1.0087   +0.0145     69%       +0.0693
-ROUTER soft     0.9849   −0.0001     47%          0.9924   −0.0018     47%       +0.0531
-(mercato: overall 0.9692, mismatch 0.9394)
+GBM-base        1.0146   +0.0297     0%           1.0236   +0.0293     14%       +0.0842
+GBM-stakes      1.0138   +0.0288     0%           1.0087   +0.0145     31%       +0.0693
+ROUTER hard     0.9856   +0.0006     31%          1.0087   +0.0145     31%       +0.0693
+ROUTER soft     0.9849   −0.0001     53%          0.9924   −0.0018     53%       +0.0531
+(mercato: overall 0.9692, mismatch 0.9394; P(aiuta) = P(Δ<0) bootstrap)
 ```
 
 **Lezione / cosa ne consegue.**
@@ -4717,7 +4717,7 @@ ROUTER soft     0.9849   −0.0001     47%          0.9924   −0.0018     47%  
    Fase 32 era relativo alla **GBM-base** (un baseline gia' scarso): battere se stessa
    non basta a battere il DC. Instradare DC→GBM-stakes sul mismatch **peggiora**
    (+0.0145); il router soft non fa danni ma e' **dead-neutral** (−0.0018, CI
-   [−0.0342,+0.0277], P 47%).
+   [−0.0342,+0.0277], P(aiuta) 53%).
 3. **Questo CHIUDE l'ultimo lead predittivo interno.** Il gap-motivazione e'
    informazione che il mercato prezza e noi non abbiamo: non un errore di
    modellazione che un router puo' correggere. Coerente con Fase 16 (α*≈0), Fase 20
@@ -4787,8 +4787,10 @@ GG/NG        0.6915   0.6912   0.6978   |     biv         | −0.0008   −0.000
 **Lezione / cosa ne consegue.**
 1. **Nessun ensemble batte il migliore singolo.** Sull'1X2 mescolare **peggiora**
    (il GBM a 1.0146 zavorra la media; dc_gbm +0.0080 con CI<0 escluso al contrario,
-   cioe' significativamente peggio). Su Over/GG l'ensemble e' neutro-leggermente
-   utile (mean/logpool −0.0006…−0.0008) ma fermamente **nel rumore** (P 23–34%).
+   cioe' significativamente peggio). Su Over/GG l'ensemble e' **probabilmente utile di
+   un filo** (mean/logpool −0.0006…−0.0008, P(aiuta) 66–77%) ma il CI include lo zero
+   → **non concluso**: guadagno cosi' piccolo che non giustifica di rompere la
+   coerenza usando due motori diversi per mercati diversi.
 2. **Il motivo e' strutturale**, non di tuning: DC≈bivariato (nessuna diversita' da
    sfruttare), e il modello diverso (GBM) e' peggiore, quindi pesarlo *danneggia*
    dove conta (1X2). L'ensemble aiuta solo se combini modelli buoni E scorrelati:
@@ -4824,6 +4826,95 @@ piu' vicino (+0.007), e la scorrelazione dei suoi errori con quelli DC/biv quasi
 pareggia il costo → Δ ≈ 0. Nessuna magia: e' aritmetica di bias e varianza.
 
 **Riproducibilità.** `python scripts/_run_ensemble_standalone.py`.
+
+---
+
+## Fase 47 — Tracer-bullet dinamico: vantaggio-casa tempo-variante (γ per fascia)
+
+**Obiettivo.** Testare l'unica ARCHITETTURA mai provata — un modello *dinamico* in cui
+i parametri evolvono dentro la stagione invece di essere costanti — nella sua versione
+piu' economica (metodo: "testa la versione economica prima di investire"). Bersaglio
+concreto: la Fase 30 aveva trovato che il **vantaggio-casa crolla nelle ultime giornate**
+(casa 40%→36%, trasferta 31%→38% nelle 35-38); il nostro DC usa un γ **costante** e
+quel crollo lo ignora. Se un γ per fascia migliora out-of-sample → si costruisce lo
+state-space pieno; se no → si chiude anche l'ultima architettura.
+
+**Ragionamento / ipotesi.** γ entra solo nel tasso di casa: λ = exp(att_h + dif_a + γ).
+Un γ tempo-variante = scalare λ per exp(δ_fascia), con δ stimato sulle stagioni PASSATE
+(leave-future-out). Due varianti: **V1** = solo λ (il "vantaggio-casa t" letterale);
+**V2** = anche μ (μ·exp(ε)), per catturare l'eventuale movimento del tasso ospite.
+
+**Risultato** (`scripts/_run_dynamic_gamma.py`; 1 run `source=fase47_dynamic_gamma`;
+1900 partite, finale 35-38 = 202). δ,ε medi walk-forward per fascia:
+
+```
+fascia    δ_casa (×)         ε_ospite (×)
+early    −0.0228 (×0.977)   +0.0010 (×1.001)
+tense    −0.0093 (×0.991)   +0.0009 (×1.001)
+late     +0.0188 (×1.019)   +0.1383 (×1.148)   ← nel finale l'OSPITE segna +14.8%
+```
+
+Log-loss walk-forward (Δ vs γ costante; P(aiuta)=P(Δ<0) bootstrap):
+
+```
+                OVERALL (n=1900)                     FINALE 35-38 (n=202)
+mercato   base    V1  Δ / P        V2  Δ / P     base    V1  Δ / P         V2  Δ / P
+1X2      0.9852  +0.0009 (P 4%)  −0.0001 (P54%)  1.0292  +0.0037 (P 1%)  −0.0033 (P70%)
+Over2.5  0.6907  +0.0001 (P41%)  +0.0009 (P22%)  0.6931  +0.0009 (P28%)  −0.0022 (P62%)
+GG/NG    0.6916  −0.0003 (P80%)  −0.0003 (P66%)  0.6930  −0.0013 (P91%)  −0.0075 (P91%)
+(nessun CI del finale esclude lo zero: n=202, alta varianza → probabile, non provato)
+```
+
+**Lezione / cosa ne consegue.**
+1. **Il pattern Fase 30 e' confermato OUT-OF-SAMPLE, ma il meccanismo e' un altro.** Nel
+   finale il vantaggio-casa cala **non perche' la casa segni meno** (δ_late +1.9%,
+   praticamente invariato) **ma perche' l'OSPITE segna il 14.8% in piu'** (ε_late ×1.148).
+   Le partite di fine stagione si "aprono": chi rincorre spinge, e i gol ospite salgono.
+2. **Percio' il "γ tempo-variante" (V1) e' la parametrizzazione SBAGLIATA.** Aggiusta λ e
+   nel finale lo alza pure (δ_late>0), rendendo la casa *piu'* favorita proprio quando il
+   suo edge crolla → 1X2 **peggiora** (overall P 4%, finale P 1%). La leva giusta e' μ,
+   che V1 non tocca.
+3. **La versione corretta (V2, ricalibra ENTRAMBI i tassi per fascia) punta nel verso
+   giusto sul finale** su tutti e tre i mercati (1X2 −0.0033 P 70%, Over −0.0022 P 62%,
+   **GG/NG −0.0075 P 91%**), con la GG/NG la piu' netta — e la GG/NG e' il mercato NON
+   prezzato, la priorita' del principio 8. Ma **nessun CI del finale esclude lo zero**
+   (202 partite, alta varianza): **probabile, non provato**, disciplina multiple-testing.
+4. **Esito del tracer: REDIRECT, non null.** Non "γ dinamico" ma **inflazione dei gol
+   ospite di fine stagione**. E' il PRIMO segnale temporale intra-stagione che muove la
+   log-loss nel verso giusto e per di piu' sul mercato che ci interessa. Candidato reale
+   per lo state-space pieno — ma il campione finale e' sottile: prima di investire, va
+   irrobustito su piu' stagioni (finestra 8, come Fasi 19/31).
+
+**📐 Il modello in dettaglio — le formule del γ tempo-variante e perche' i numeri.**
+
+γ entra solo in λ; renderlo per-fascia = fattore moltiplicativo su λ:
+
+```
+V1 (γ dinamico):  λ'_i = λ_i · exp(δ_{b(i)}),   μ'_i = μ_i
+V2 (rical. 2 tassi): λ'_i = λ_i · exp(δ_{b(i)}), μ'_i = μ_i · exp(ε_{b(i)})
+```
+
+con b(i) ∈ {early(1-31), tense(32-34), late(35-38)} (fasce Fase 30; giornata derivata dal
+conteggio partite-per-squadra nella stagione). δ, ε sono la **MLE Poisson closed-form** del
+fattore comune, sulle partite passate della fascia:
+
+```
+per y_i ~ Poisson(λ_i·e^δ):  ∂/∂δ Σ[y_i(lnλ_i+δ) − λ_i e^δ] = Σy_i − e^δ Σλ_i = 0
+⇒  e^δ = Σ gol_casa / Σ λ        (analogo:  e^ε = Σ gol_ospite / Σ μ)
+```
+
+verificato riga per riga contro `_fit_deltas()`. **Ragionamento numerico.** ε_late =
+ln(Σ gol_ospite_late / Σ μ_late) = ln(1.148) = +0.1383: nelle giornate 35-38 delle stagioni
+passate gli ospiti hanno segnato il **14.8% in piu'** di quanto μ prevedeva — l'effetto e'
+robusto (media walk-forward su 5 fit). δ_late = +0.019 (casa ≈ come previsto). Fuori dal
+finale δ e' leggermente negativo (−0.023 early) perche' i fattori per-fascia devono mediare
+a ~0 sulla stagione (il modello e' calibrato nel complesso): le fasce ridistribuiscono, e
+la coda di stagione e' dove la ridistribuzione morde. **Perche' la GG/NG guadagna di piu':**
+la BTTS e' massimamente sensibile ad alzare il tasso *piu' basso* (di norma μ, l'ospite):
+portare μ×1.148 sposta molte partite da "ospite non segna" a "segnano entrambe", esattamente
+dove il modello statico sbagliava nel finale.
+
+**Riproducibilità.** `python scripts/_run_dynamic_gamma.py`.
 
 ---
 

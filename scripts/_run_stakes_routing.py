@@ -136,7 +136,7 @@ def main():
         mean, lo, hi, pneg = _boot((ll_v - ll_dc)[mask], rng)
         gap = (ll_v[mask] - ll_mk[mask]).mean()
         print(f"  {name:<22} ll {ll_v[mask].mean():.4f}   Δ vs DC {mean:+.4f} "
-              f"[{lo:+.4f},{hi:+.4f}]  P(aiuta)={1-pneg:.0%}   gap-mkt {gap:+.4f}")
+              f"[{lo:+.4f},{hi:+.4f}]  P(aiuta)={pneg:.0%}   gap-mkt {gap:+.4f}")
 
     for label, mask in [("--- OVERALL ---", np.ones(len(y), bool)),
                         ("--- SOLO MISMATCH ---", mism)]:
