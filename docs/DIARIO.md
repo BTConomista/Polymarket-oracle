@@ -5084,6 +5084,194 @@ minuscola: il segnale utile e' tutto nelle ultime 3 giornate.
 
 ---
 
+## Fase 50 — Mega-sweep combinatorio: le leve OFF, insieme, su tutti i motori
+
+**Obiettivo.** Le leve del progetto sono state validate quasi sempre UNA ALLA VOLTA
+(metodo §1.2) e molte sono rimaste off per disciplina CI pur essendo "probabili":
+φ35 (Fase 35/39), nudge stagionale (Fasi 48/49), power-devig (Fase 38), covariate
+stakes/midweek (Fasi 32/36-bis), copula (Fase 43). Domanda del giro: qualche
+**combinazione mai provata** — anche di feature su motori diversi da quelli su cui
+erano state testate — migliora il gap col mercato o produce un motore migliore?
+Sei esperimenti in un'unica fase (tutti registrati, un run ciascuno):
+
+  A. **mega-sweep market-implied** (`_run_fase50_mi_sweep.py`): forma {τ, φ35,
+     frank_b+φ} × nudge-μ {none, knee31, knee34} × devig {moltiplicativo, potenza}
+     — 14 combo, walk-forward 8 stagioni (n=2660). Novita': il nudge fittato sui
+     λ,μ DEL MERCATO (Fasi 48/49 lo validavano solo sui μ del DC);
+  B. **scomposizione del nudge** (`_run_fase50_mi_decomp.py`): livello vs coda;
+  C. **ricalibrazione dei tassi** λ,μ del mercato (`_run_fase50_rates_recal.py`);
+  D. **ricalibrazione per-classe del MERCATO stesso** (`_run_fase50_market_recal.py`);
+  E. **GBM bespoke per singolo mercato** (`_run_fase50_gbm_bespoke.py`) — l'unica
+     variante dichiarata mai testata (CLAUDE.md §1.8), su ENTRAMBI i path;
+  F. **sweep del path DC** (`_run_fase50_dc_sweep.py`): φ35 × covariate
+     {stakes, midweek} × ri-taratura iperparametri CON φ35 attiva — 9 config × 6
+     stagioni di backtest walk-forward completo.
+
+### A. Mega-sweep del market-implied: le combo si sommano (sul GG/NG)
+
+Risultato (n=2660, test = 7 stagioni 1920-2526; riferimento = `prop-phi35`, cioe'
+la config Fase 39; `k31`/`k34` = nudge-μ con ginocchio a g.31/34):
+
+| variante | GG/NG | Δ GG vs φ35 | CI95 | P(migliora) |
+|---|--:|--:|--:|--:|
+| prop-tau (Fase 26) | 0.6831 | +0.0011 | [+0.0004, +0.0018] | 0% |
+| prop-phi35 (Fase 39) | 0.6821 | — | — | — |
+| prop-phi35+**k31** | 0.6813 | −0.0008 | [−0.0017, +0.0002] | 95% |
+| prop-phi35+**k34** | **0.6810** | **−0.0010** | **[−0.0020, −0.0000]** | **98%** |
+| prop-frank | 0.6816 | −0.0004 | [−0.0008, −0.0001] | 99% |
+| prop-frank+**k31** | **0.6809** | **−0.0011** | **[−0.0023, −0.0000]** | **98%** |
+| pow-phi35 (power-devig) | 0.6827 | +0.0007 | [−0.0005, +0.0019] | 14% |
+
+- **Le due leve "probabili" (φ35 e nudge-μ) sono ADDITIVE**: −0.0006 (φ35, Fase 39)
+  e ~−0.0004 (nudge) ≈ −0.0010 insieme. E' il **miglior GG/NG del progetto**
+  (0.6809-0.6810), e per la prima volta il CI di un guadagno GG **tocca lo zero
+  senza includerlo** (hi −0.0000/−0.0001).
+- **Onesta' multiple-testing (Fase 17):** 13 confronti simultanei e CI che
+  *sfiorano* lo zero → l'etichetta resta "**molto probabile, non concluso**".
+  Nessun cambio di default.
+- Per-stagione (φ35+k34): **5/7 migliorano**, ma il guadagno e' concentrato in
+  1920-2122 (−0.0024…−0.0029, l'era porte-chiuse/COVID) ed e' ≈neutro nelle
+  ultime 4 stagioni (+0.0015, −0.0003, −0.0008, +0.0004) — vedi B per il perche'.
+- **power-devig chiuso**: eta fittato 0.909 (accentua i favoriti), MAI utile
+  (conferma e chiude la coda della Fase 38); **nudge su τ pura**: neutro — serve
+  la φ35 perche' il nudge paghi; sui totali/ris.esatto ogni nudge peggiora
+  (coerente col routing Fase 44: quelle famiglie restano su τ senza nudge).
+- caveat: sul **pareggio secco** il vantaggio della φ35 sulla τ si attenua su
+  questa finestra estesa (Δ −0.0004 a favore di τ, P 60%, trascinato dal fit
+  sottile della prima stagione di test) — caveat, non smentita della Fase 43.
+
+### B. La scomposizione: NON e' l'effetto-stagione della Fase 48
+
+Il nudge fittato sui μ del mercato da' moltiplicatori **opposti** a quelli del DC:
+alla 38ª ×0.92-0.94 (medie walk-forward) contro ×1.07-1.14 del DC. Scomposto
+(`_run_fase50_mi_decomp.py`, GG/NG su φ35): solo-livello −0.0002 (P 77%),
+solo-coda −0.0004 (P 91%), completo −0.0010 (P 98% ✓). E il fit **pooled** su
+tutte e 8 le stagioni da' un profilo quasi **piatto** (coda +0.8%): le medie
+walk-forward negative in coda vengono dai fit iniziali su campioni sottili.
+
+La lettura onesta (con il per-stagione del punto A): il "nudge di mercato" **non
+e'** l'inflazione-ospite di fine stagione (quella il mercato la prezza gia') ma una
+**ricalibrazione adattiva dei tassi del mercato**, che ha pagato soprattutto
+nell'era porte-chiuse (1920-2122: i gol ospite salirono e le quote inseguivano) ed
+e' ≈neutra da tre stagioni. Per questo NON si cabla un coefficiente statico "di
+mercato" nel motore: il valore sta nel RIFIT walk-forward, non nel numero.
+
+### C-D. Il bias residuo del mercato: casa cara, pari/trasferta sottoprezzati
+
+Misura per-stagione dei tassi impliciti (8 stagioni): `gol_casa/λ_mkt < 1` in 6/8
+(media ~0.97) e `gol_ospite/μ_mkt > 1` in 6/8 (media ~1.02): **il bias-casa dei
+book sopravvive al devig moltiplicativo** e finisce nei tassi invertiti.
+
+- **C (tassi):** ricalibrare i LIVELLI di entrambi i tassi (λ×0.986, μ×1.023 medi)
+  migliora l'**1X2 del motore**: 0.9637 → 0.9630 (Δ −0.0007, P 90%) e recupera
+  meta' della perdita di inversione (mercato diretto sulla stessa finestra:
+  0.9625) — ma **non batte la chiusura**. Il GG/NG preferisce il profilo completo
+  su μ (k34_mu −0.0010 ✓); ricalibrare anche λ col profilo (k34_both) NON aiuta.
+- **D (probabilita'):** ricalibrazione per-classe del mercato stesso,
+  `q ∝ w·p_mkt` con (w_D, w_A) fittati leave-future-out (regola pre-dichiarata:
+  fit ≥ 2 stagioni — su una sola e' rumore): **5/6 stagioni migliorano**, pesi
+  stabili (w_D≈1.09, w_A≈1.06: pari e trasferta sottoprezzati, coerente col
+  draw-bias delle Fasi 35/40), pooled 0.9632→0.9626, Δ **−0.0006 CI [−0.0020,
+  +0.0009], P 78%** → **indizio, non concluso**. "Battere la chiusura in
+  log-loss" resta non dimostrato, ma questa e' la crepa piu' credibile trovata
+  finora (direzione giusta, meccanismo noto, pesi stabili su 6 fit).
+
+### E. GBM bespoke per mercato: CHIUSO (perde ovunque, su entrambi i path)
+
+L'ultima variante mai testata (§1.8). GBM calibrato (Platt cv=3), feature DC-block
++ λ,μ mercato + |λ−μ| + matchday + **la predizione dell'engine stessa** (encompassing
+non-lineare sul mercato non prezzato — la Fase 23 lo fece solo sull'1X2):
+
+| mercato | baseline | DC | mkt-impl | gbm_dc | gbm_mkt | Δ (gbm_mkt−mi), CI95 |
+|---|--:|--:|--:|--:|--:|--:|
+| GG/NG | 0.6838 | 0.6888 | **0.6821** | 0.6924 | 0.6919 | +0.0099 [+0.0045,+0.0154] |
+| clean sheet casa | 0.5984 | 0.5686 | **0.5595** | 0.5858 | 0.5802 | +0.0206 [+0.0140,+0.0273] |
+| casa Over 1.5 | 0.6791 | 0.6363 | **0.6245** | 0.6539 | 0.6415 | +0.0170 [+0.0109,+0.0233] |
+| O/U 2.5 (sanity) | 0.6849 | 0.6867 | **0.6791** | 0.6952 | 0.6940 | +0.0149 [+0.0078,+0.0218] |
+
+Il GBM **perde su ogni mercato e su entrambi i path** (anche `gbm_dc` vs DC:
++0.003…+0.017), pure avendo la predizione dell'engine tra le feature — la degrada
+invece di migliorarla (stesso meccanismo della Fase 23). **La domanda "ML bespoke
+per mercato" e' definitivamente chiusa**; la riserva del §1.8 si puo' togliere.
+
+### F. Sweep del path DC: *(in esecuzione — numeri nel commit successivo)*
+
+### Tool (`predict.py`): fix del nudge sul path market-implied
+
+La Fase 48 esponeva il nudge (coefficienti fittati sui μ del DC) su ENTRAMBI i
+modelli del tool. Verificato in questa fase: applicare quel profilo ai μ del
+mercato **peggiora** (GG overall +0.0002, finale 35-38 **+0.0014**, n=283) — il
+mercato prezza gia' l'apertura del finale. `predict.py` ora mostra il nudge solo
+sul Modello 1 (DC) e sul Modello 2 stampa il perche' (`nudge=False`).
+
+**Lezione / cosa ne consegue.**
+1. Le uniche combo che muovono qualcosa stanno sul **GG/NG** (il mercato non
+   prezzato — principio 8) e sull'**1X2 letto dal mercato**; vengono da
+   informazione + struttura giusta, mai da un modello nuovo (conferma Fasi 22/24/26).
+2. **φ35 e nudge-μ sono componibili e additivi** — la miglior stima GG/NG del
+   progetto e' ora: inverti 1X2+O/U → ricalibra μ (rifit walk-forward, profilo
+   knee34) → φ(|λ−μ|) → P(GG) = **0.6810** (con copula: 0.6809, +complessita' per
+   −0.0001 → non si adotta, stessa logica Fase 44). Etichetta: molto probabile,
+   non concluso → **off di default**, disponibile come miglior stima condizionata.
+3. Il mercato ha **bias residui misurabili** oltre il draw-bias: casa cara ~2-3%
+   nei tassi impliciti, pari/trasferta sottoprezzati nelle probabilita' (w_D 1.09,
+   w_A 1.06 stabili). Nessuno dei due e' (ancora) un edge dimostrato in log-loss.
+4. **GBM bespoke chiuso per sempre** (quarta e ultima bocciatura della famiglia:
+   Fasi 21/22/23/36 + questa). Il tetto resta informativo.
+5. *(lezione del punto F nel commit successivo, a backtest conclusi)*
+
+### 📐 Il modello in dettaglio — le formule della fase
+
+**Nudge-μ sul mercato** (A/B/C) — identico alla Fase 48/49 ma con base = μ del
+mercato (dall'inversione delle quote, Fase 26), fittato leave-future-out:
+
+```
+(λ, μ) = implied_lambda_mu(1X2 devigato, O/U devigato, ρ=−0.06)      # Fase 26
+r_μ(md) = exp(c·x(md)),  x(md) = [1, s, coda]                        # knee31/34
+s = (md−19.5)/18.5;   coda_K = max(0, md−K)/(38−K),  K ∈ {31, 34}
+c = argmin Σ_i [ μ_i·exp(c·x_i) − y_i·(c·x_i) ]      # MLE Poisson, offset ln μ
+μ' = μ·r_μ(md);  poi φ(|λ−μ'|) rifittata sui tassi ricalibrati (Fase 39)
+```
+
+verificato riga per riga contro `_fit_nudge`/`_nudged` (`_run_fase50_mi_sweep.py`)
+e `_fit`/`_basis` (`_run_fase50_mi_decomp.py`). **Perche' i numeri:** i fit
+walk-forward danno r_μ(38) medio 0.92-0.94 — ma e' una media di fit per meta'
+sottili; il fit pooled 8 stagioni da' coefficenti `(+0.0212, −0.0016, +0.0082)` =
+profilo quasi piatto con livello +2.1%: il contenuto vero del nudge-di-mercato e'
+il LIVELLO adattivo (μ del mercato basso ~2%, di piu' nell'era porte-chiuse), non
+la coda. Per questo NON esiste un `GG_SEASON_MU_COEF_MKT` statico nel motore.
+
+**Ricalibrazione per-classe del mercato** (D) — riuso della forma Fase 10, ma
+applicata alle probabilita' devigate del MERCATO, non al modello:
+
+```
+q_i(p) ∝ w_i · p_mkt,i        w = (1, w_D, w_A) fittato sulle stagioni passate
+w_D, w_A = argmin  −Σ log q_esito(p)   su ≥ 2 stagioni di training (pre-dichiarato)
+```
+
+**Perche' w_D≈1.087 e w_A≈1.058.** Sono il rapporto sistematico tra frequenze
+reali e prezzi devigati: il pari reale ~32-33% e' prezzato ~30-31% (il draw-bias
+gia' misurato in Fase 35: 0.296 vs 0.332 sulle equilibrate), la trasferta e'
+sottoprezzata dal bias-casa. Moltiplicare e rinormalizzare sposta ~1-2 punti di
+massa da casa verso pari/trasferta. Il guadagno atteso e' dell'ordine del bias²
+→ ~0.0005-0.001 di log-loss: coerente col −0.0006 osservato; per "concludere"
+servirebbero ~20 stagioni (stessa matematica della Fase 40 sul ROI).
+
+**GBM bespoke** (E): stesso `HistGradientBoostingClassifier(max_iter=200,
+max_depth=3, lr=0.05, l2=1.0, min_leaf=30)` + `CalibratedClassifierCV(sigmoid,
+cv=3)` delle Fasi 36/45, con in piu' le feature `mlam, mmu, |λ−μ|_mkt, λ+μ_mkt,
+mi_p_target` (la predizione dell'engine) e `matchday`. Il fallimento con la
+predizione-engine in input e' informativo: un albero che PARTE dalla risposta
+giusta e la peggiora conferma che le feature residue contengono solo rumore
+(stesso esito dell'encompassing non-lineare, Fase 23).
+
+**Riproducibilità.** `python scripts/_run_fase50_mi_sweep.py` ·
+`_run_fase50_mi_decomp.py` · `_run_fase50_rates_recal.py` ·
+`_run_fase50_market_recal.py` · `_run_fase50_gbm_bespoke.py` ·
+`_run_fase50_dc_sweep.py` (cache: `scripts/_gen_cache.py`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

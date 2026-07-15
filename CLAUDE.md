@@ -59,9 +59,12 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      famiglia-pareggio. Regola operativa: **market-implied + φ35 quando ci sono le
      quote 1X2+O/U; DC come fallback senza quote.** Il **Poisson bivariato** (Fase 42,
      5° modello) è stato implementato e **perde** vs la φ35 (l'equilibrio |λ−μ| batte
-     la correlazione globale λ3, che peggiora i totali). Un ML bespoke per singolo
-     mercato resta l'unica variante non ancora testata (improbabile che batta, viste
-     le Fasi 22/36).
+     la correlazione globale λ3, che peggiora i totali). Il **ML bespoke per singolo
+     mercato è stato testato e CHIUSO (Fase 50-quater)**: perde su ogni mercato e su
+     entrambi i path, anche con la predizione dell'engine tra le feature. La miglior
+     stima GG/NG (opt-in, non conclusa) è: market-implied → ricalibrazione-μ
+     walk-forward → φ(|λ−μ|) (Fase 50, GG 0.6810); il nudge stagionale della Fase 48
+     vale SOLO sul path DC (il mercato prezza già il finale — Fase 50-bis).
 
 ---
 
