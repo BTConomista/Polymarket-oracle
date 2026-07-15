@@ -5194,7 +5194,32 @@ Il GBM **perde su ogni mercato e su entrambi i path** (anche `gbm_dc` vs DC:
 invece di migliorarla (stesso meccanismo della Fase 23). **La domanda "ML bespoke
 per mercato" e' definitivamente chiusa**; la riserva del §1.8 si puo' togliere.
 
-### F. Sweep del path DC: *(in esecuzione — numeri nel commit successivo)*
+### F. Sweep del path DC: le leve si sommano senza interagire (tutto nel rumore)
+
+9 config × 6 stagioni = 54 backtest walk-forward completi (n=2280; riferimento =
+config ufficiale, 1X2 0.9797, gap col mercato +0.0165):
+
+| variante | 1X2 | Δ vs uff. | P(migliora) | gap-mkt 1X2 |
+|---|--:|--:|--:|--:|
+| phi35 (= Fase 35) | 0.9790 | −0.0007 | 72% | +0.0158 |
+| phi35 + stakes | 0.9790 | −0.0007 | 71% | +0.0158 |
+| **phi35 + midweek** | **0.9786** | **−0.0011** | **78%** | **+0.0154** |
+| phi35 + stakes + midweek | 0.9786 | −0.0011 | 77% | +0.0154 |
+| stakes + midweek (senza φ35) | 0.9793 | −0.0004 | 68% | +0.0161 |
+| phi35, emivita 270g | 0.9790 | −0.0007 | 68% | +0.0158 |
+| phi35, emivita 540g | 0.9791 | −0.0005 | 67% | +0.0159 |
+| phi35, shrinkage 0.75 | 0.9789 | −0.0008 | 72% | +0.0157 |
+| phi35, shrinkage 3.0 | 0.9796 | −0.0001 | 52% | +0.0164 |
+
+- **sanity:** la φ35 riproduce identico il numero della Fase 35 (0.9790);
+- **le covariate si sommano alla φ35 senza interferire:** midweek aggiunge
+  −0.0004, lo **stakes non aggiunge nulla** una volta che la φ35 c'e' (0.9790
+  identico); φ35+midweek = **0.9786**, il miglior 1X2 del progetto (gap
+  **+0.0154**), ma P 78% e CI ampio [−0.0040, +0.0018];
+- **NESSUNA interazione iperparametri × φ35:** emivita 270/365/540 e shrinkage
+  0.75/1.5 tutte ≈0.979 (curva piatta come in Fase 8); solo shrinkage 3.0
+  peggiora. La taratura ufficiale resta ottima anche con la φ35 attiva — non
+  c'era un "ottimo nascosto" condizionato alla nuova struttura.
 
 ### Tool (`predict.py`): fix del nudge sul path market-implied
 
@@ -5218,7 +5243,12 @@ sul Modello 1 (DC) e sul Modello 2 stampa il perche' (`nudge=False`).
    w_A 1.06 stabili). Nessuno dei due e' (ancora) un edge dimostrato in log-loss.
 4. **GBM bespoke chiuso per sempre** (quarta e ultima bocciatura della famiglia:
    Fasi 21/22/23/36 + questa). Il tetto resta informativo.
-5. *(lezione del punto F nel commit successivo, a backtest conclusi)*
+5. Sul path DC **le leve off si combinano onestamente** — nessuna interazione
+   nascosta, ne' positiva (nessun ottimo iperparametrico condizionato alla φ35)
+   ne' negativa (le covariate non si rubano il segnale, semplicemente lo stakes
+   e' ridondante con la φ35 sull'1X2). Il "pacchetto completo" φ35+midweek e'
+   la miglior variante DC (0.9786, gap +0.0154) ma resta **nel rumore** (P 78%):
+   il tetto informativo regge anche alle combinazioni.
 
 ### 📐 Il modello in dettaglio — le formule della fase
 
@@ -5264,6 +5294,13 @@ mi_p_target` (la predizione dell'engine) e `matchday`. Il fallimento con la
 predizione-engine in input e' informativo: un albero che PARTE dalla risposta
 giusta e la peggiora conferma che le feature residue contengono solo rumore
 (stesso esito dell'encompassing non-lineare, Fase 23).
+
+**Sweep DC** (F): nessuna matematica nuova — covariate (Fase 4c: termine
+β·z nella log-intensita'), φ35 (Fase 35), iperparametri (Fase 2b). La novita' e'
+la COMBINAZIONE, e il risultato e' l'assenza di interazioni: il Δ della coppia
+φ35+midweek (−0.0011) e' la somma dei Δ singoli (−0.0007 e −0.0003/−0.0004,
+Fasi 35 e 36-bis) entro l'arrotondamento — additivita' quasi esatta, cioe' le due
+leve correggono difetti ortogonali (massa-pareggio vs congestione europea).
 
 **Riproducibilità.** `python scripts/_run_fase50_mi_sweep.py` ·
 `_run_fase50_mi_decomp.py` · `_run_fase50_rates_recal.py` ·
