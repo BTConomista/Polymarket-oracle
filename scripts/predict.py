@@ -40,13 +40,17 @@ def _top_scores(M: np.ndarray, n: int = 6):
             for i, j in (np.unravel_index(k, M.shape) for k in flat)]
 
 
-def _show_markets(d: dict, titolo: str, rho: float = 0.0, matchday: int | None = None) -> None:
+def _show_markets(d: dict, titolo: str, rho: float = 0.0, matchday: int | None = None,
+                  nudge: bool = True) -> None:
     """Stampa TUTTI i mercati Tier 1 da un dizionario price_markets (forma
     instradata per-mercato: φ35 su esiti/pareggio, τ sui totali — Fase 44).
 
     Se `matchday` e' passato, mostra anche la GG/NG col NUDGE stagionale di fine
     stagione (Fase 48): alza μ per il solo GG/NG col profilo della giornata. OFF
-    di default (guadagno ~90% probabile, CI include lo zero): riga informativa."""
+    di default (guadagno ~90% probabile, CI include lo zero): riga informativa.
+    ``nudge=False`` per il path MARKET-IMPLIED: il profilo della Fase 48 e' fittato
+    sui μ del DC e applicarlo ai μ del mercato PEGGIORA (Fase 50: il mercato prezza
+    gia' — e semmai sovra-prezza — l'apertura del finale; Δ finale +0.0014)."""
     print(f"\n----- {titolo} -----")
     print(f"  Gol attesi:  casa λ={d['lam']:.2f}   ospite μ={d['mu']:.2f}")
     print(f"  1X2:            1 {d['home_win']:6.1%}   X {d['draw']:6.1%}   2 {d['away_win']:6.1%}")
@@ -54,10 +58,14 @@ def _show_markets(d: dict, titolo: str, rho: float = 0.0, matchday: int | None =
     print(f"  Over/Under:     O1.5 {d['over_1.5']:5.1%}  O2.5 {d['over_2.5']:5.1%}  O3.5 {d['over_3.5']:5.1%}")
     print(f"  GG/NG:          GG {d['btts']:6.1%}   NG {1-d['btts']:6.1%}")
     if matchday is not None:
-        f = mi.season_mu_factor(matchday)
-        gg_n = mi.btts_season(d["lam"], d["mu"], matchday, rho)
-        print(f"    └ +nudge stag. (g.{matchday}, μ×{f:.3f}):  GG {gg_n:6.1%}   "
-              f"NG {1-gg_n:6.1%}   [opt-in, utile solo nel finale]")
+        if nudge:
+            f = mi.season_mu_factor(matchday)
+            gg_n = mi.btts_season(d["lam"], d["mu"], matchday, rho)
+            print(f"    └ +nudge stag. (g.{matchday}, μ×{f:.3f}):  GG {gg_n:6.1%}   "
+                  f"NG {1-gg_n:6.1%}   [opt-in, utile solo nel finale]")
+        else:
+            print("    └ nudge stagionale NON applicato: i μ del mercato prezzano "
+                  "gia' il finale (Fase 50)")
     print(f"  Multigol:       0-1 {d['mg_0_1']:5.1%}  2-3 {d['mg_2_3']:5.1%}  4+ {d['mg_4plus']:5.1%}")
     print(f"  Total-squadra:  casa O1.5 {d['home_ov_1.5']:5.1%}   ospite O1.5 {d['away_ov_1.5']:5.1%}")
     print(f"  Clean sheet:    casa {d['cs_home']:6.1%}   ospite {d['cs_away']:6.1%}")
@@ -128,7 +136,7 @@ def main() -> None:
         d = mi.price_markets(lam, mu, rho=-0.06, phi0=0.30, kappa=1.5)
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
         _show_markets(d, "Modello 2: market-implied + φ35 (forma instradata per-mercato)",
-                      rho=-0.06, matchday=args.matchday)
+                      rho=-0.06, matchday=args.matchday, nudge=False)
 
 
 if __name__ == "__main__":
