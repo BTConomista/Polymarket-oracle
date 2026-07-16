@@ -6275,6 +6275,100 @@ scripts/build_league_snapshot.py --refresh-odds premier_league la_liga`
 
 ---
 
+## Fase 62 — Ricostruire la chiusura O/U mancante (2017-19) coi nostri modelli?
+
+**Obiettivo.** Dopo la Fase 61 l'unico buco e' l'O/U 2.5 del 2017-19: una sola
+linea (BbAv pre-match, timing "apertura") mentre l'1X2 ha entrambe (Pinnacle).
+L'utente chiede: coi modelli che abbiamo, si puo' RICAVARE la linea mancante?
+E di validare l'idea con un backtest sulle stagioni dove abbiamo gia' tutto.
+
+**Ipotesi/disegno (S1.2, una cosa alla volta; S1.3, versione economica).**
+Cio' che muove la chiusura O/U rispetto all'apertura e' informazione arrivata
+tra venerdi' e il calcio d'inizio; parte di quella STESSA informazione muove
+anche l'1X2, che nel 2017-19 abbiamo in entrambe le versioni. Il motore
+market-implied (Fase 26) sa tradurre un 1X2 in tassi di gol (lambda, mu) e
+quindi in un O/U: puo' quindi misurare lo shift O/U implicato dal movimento
+1X2. Backtest sulle 21 (lega, stagione) 2019-20+ con TUTTE e 4 le linee:
+si finge di non avere la chiusura O/U, la si stima, la si confronta con quella
+vera. Candidati: M0 identita' (stima=apertura); M1 shift del motore applicato
+all'apertura vera (il bias d'inversione si cancella nella differenza); M2
+inversione assoluta su (1X2_close, OU_open); M3 ricalibrazione lineare in
+logit SENZA 1X2 (walk-forward per lega — separa "affinamento sistematico" da
+"notizie"); M4 = M3 + lo shift del motore come feature (walk-forward).
+
+**Risultato** (`scripts/_run_fase62_ou_close_est.py`; n=2658-2660 per lega;
+B=10000; 3 run `source=fase62_ou_close_est`):
+
+| | Serie A | Premier | La Liga |
+|---|--:|--:|--:|
+| movimento reale open→close (media assoluta) | 0.0212 | 0.0202 | 0.0217 |
+| M4: MAE vs chiusura vera (M0=movimento) | **0.0142** (−33%) | **0.0127** (−37%) | **0.0128** (−41%) |
+| M4: corr / beta del movimento previsto | 0.64 / 0.80 | 0.77 / 1.04 | 0.80 / 1.08 |
+| M3 (recal senza 1X2): corr movimento | 0.03 | −0.00 | 0.13 |
+| log-loss: close vero − open | −0.0018 (ns) | −0.0007 (ns) | **−0.0026 ✓CI** |
+| log-loss: M4 − open | +0.0011 (ns) | −0.0010 (ns) | **−0.0024 ✓CI** |
+| log-loss: M4 − close vero | +0.0028 (ns) | −0.0001 (ns) | +0.0003 (ns) |
+
+**Lezione / cosa ne consegue.**
+1. **La chiusura O/U e' parzialmente ricostruibile, e la parte prevedibile del
+   suo movimento sta TUTTA nel movimento 1X2** mappato attraverso la matrice
+   DC: la ricalibrazione pura (M3) non cattura nulla (corr ~0 su 3 leghe),
+   lo shift del motore cattura il 64-80% di correlazione col movimento vero.
+   Interessante il contrasto con la Fase 52-quinquies: sull'1X2 il movimento
+   open→close era quasi tutto ricalibrazione sistematica; sull'O/U e' quasi
+   tutto informazione condivisa con l'1X2.
+2. **Lo shift grezzo del motore e' giusto in direzione ma 4-10 volte troppo
+   piccolo** (beta 4.5-9.8): l'inversione tiene l'O/U d'apertura come vincolo,
+   quindi i tassi impliciti si muovono poco. La regressione M4 lo riscala
+   (beta 0.8-1.1) — serve il fit, il motore da solo non basta.
+3. **Il tetto dell'esercizio e' basso**: la chiusura VERA vale solo
+   −0.0007…−0.0026 di log-loss rispetto all'apertura (conclusivo solo in
+   Liga). Dove vale qualcosa, M4 la recupera quasi tutta (Liga −0.0024 ✓CI,
+   indistinguibile dal close vero; Premier idem, −0.0001 vs close); in Serie A
+   il guadagno annega nel rumore.
+4. **Decisione: NON si scrive la stima negli snapshot.** Una chiusura
+   ricostruita e' output di modello, non un prezzo di mercato: metterla nelle
+   colonne quota violerebbe la regola "mai un numero inventato" (S2-bis/3) e
+   contaminerebbe ogni analisi futura in modo silenzioso. Lo script resta come
+   TOOL: se un'analisi sul 2017-19 avra' bisogno di un benchmark di chiusura
+   O/U "equo", potra' generarlo dichiarandolo esplicitamente come stima.
+   Caveat dichiarati: per applicarlo al 2017-19 i coefficienti andrebbero
+   fittati sulle stagioni SUCCESSIVE (unico dato disponibile — accettabile per
+   un benchmark storico, non per una predizione); e li' le linee sono Pinnacle
+   /BbAv, non le medie Avg usate nel backtest.
+
+### 📐 Il modello in dettaglio
+
+Devig moltiplicativo (fonte unica, `metrics.devig_binary`): `p_over =
+(1/q_over) / (1/q_over + 1/q_under)`. Lo shift del motore (M1), verificato
+contro `implied_lambda_mu`/`score_matrix` (market_implied.py:109/66):
+
+```
+(lam_o, mu_o) = argmin  (qH-pH_o)^2 + (qD-pD_o)^2 + (qA-pA_o)^2 + (qO-pOU_o)^2
+(lam_c, mu_c) = stesso argmin con 1X2 di CHIUSURA e lo STESSO pOU_o
+shift = Over2.5(lam_c, mu_c) - Over2.5(lam_o, mu_o)        [rho = -0.06, Fase 26]
+M1: p_hat = p_open + shift
+M4: logit(p_hat) = a + b*logit(p_open) + c*[logit(p_open+shift) - logit(p_open)]
+    (a, b, c) OLS walk-forward per lega (train = stagioni precedenti, test 2021+)
+```
+
+**Perche' beta(M1) = 4.5-9.8 e non 1**: nell'inversione il termine
+`(qO - pOU_o)^2` ancora i tassi totali all'O/U d'apertura; il movimento 1X2
+riesce a spostare soprattutto il TILT (lam-mu), quasi niente il totale
+(lam+mu), quindi lo shift O/U esce sistematicamente compresso di ~1/beta
+(0.10-0.22). Il coefficiente `c` di M4 impara esattamente questo fattore di
+riscala (beta finale 0.80-1.08 ≈ 1, corretto). **Perche' rho=-0.06**: la
+costante adottata dalla Fase 24/26 per la matrice market-implied; nella
+DIFFERENZA q_c - q_o il suo effetto si cancella quasi del tutto (M1 vs M2:
+stessa direzione, M2 porta il bias assoluto). **Numeri ricalcolabili** da
+`runs.jsonl` (3 run `fase62_ou_close_est`, config completa: rho, stagioni,
+finestre walk-forward, B, seed).
+
+**Riproducibilita'.** `python scripts/_run_fase62_ou_close_est.py` (offline,
+~50s; bootstrap B=10000, seed 62).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
