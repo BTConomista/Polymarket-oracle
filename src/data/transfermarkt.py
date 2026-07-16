@@ -335,18 +335,26 @@ def team_season_values(
     *,
     min_coverage: float = MIN_COVERAGE,
     force: bool = False,
+    squads: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Valore rosa a inizio stagione per ogni (season, team).
 
     Colonne: season, team, squad_value (EUR, NaN se copertura < min_coverage),
     value_coverage (quota dei minuti stagionali coperta da giocatori agganciati
     e valutati), n_players, n_valued.
+
+    ``squads`` (Fase 59): se fornito, salta il download Understat via rete e usa
+    QUESTE rose (schema di ``understat.parse_season_players`` -- season, team,
+    player_id, player_name, position, minutes). Serve per Premier/Liga, il cui
+    mirror Understat per-stagione e' sparito (Fase 14): le rose vengono invece
+    dai bundle locali gia' caricati in files/ (stessa fonte dell'xG, Fase 54).
     """
-    squads = pd.concat(
-        [understat.season_players(c, league_key, force=force)
-         for c in season_codes],
-        ignore_index=True,
-    )
+    if squads is None:
+        squads = pd.concat(
+            [understat.season_players(c, league_key, force=force)
+             for c in season_codes],
+            ignore_index=True,
+        )
     mapping, _ = map_players(squads, force=force)
     valuations = _load_valuations(force=force)
     squads = squads.merge(mapping[["player_id", "tm_id"]],
@@ -384,16 +392,18 @@ def add_squad_values(
     league_key: str = "serie_a",
     *,
     force: bool = False,
+    squads: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Aggiunge home_squad_value / away_squad_value allo schema interno.
 
     Join per (season, squadra); nessuna riga persa o duplicata (verificato).
+    ``squads``: vedi ``team_season_values`` (bypassa il download Understat).
     """
     out = matches.copy()
     out = out.drop(columns=[c for c in SQUAD_VALUE_COLUMNS if c in out.columns])
 
     seasons = sorted(out["season"].astype(str).unique())
-    values = team_season_values(seasons, league_key, force=force)
+    values = team_season_values(seasons, league_key, force=force, squads=squads)
 
     n_before = len(out)
     for side in ("home", "away"):
@@ -441,6 +451,7 @@ def add_absences(
     league_key: str = "serie_a",
     *,
     force: bool = False,
+    squads: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Aggiunge le colonne assenze stimate (suffisso ``_est``) per partita.
 
@@ -449,16 +460,19 @@ def add_absences(
     infortunati in quella data. L'informazione "chi e' indisponibile" e'
     nota al mercato PRIMA della partita, quindi la feature e' legittima in
     backtest walk-forward (nessun look-ahead sull'esito).
+
+    ``squads``: vedi ``team_season_values`` (bypassa il download Understat).
     """
     out = matches.copy()
     out = out.drop(columns=[c for c in ABSENCE_COLUMNS if c in out.columns])
 
     seasons = sorted(out["season"].astype(str).unique())
-    squads = pd.concat(
-        [understat.season_players(c, league_key, force=force)
-         for c in seasons],
-        ignore_index=True,
-    )
+    if squads is None:
+        squads = pd.concat(
+            [understat.season_players(c, league_key, force=force)
+             for c in seasons],
+            ignore_index=True,
+        )
     mapping, _ = map_players(squads, force=force)
     squads = squads.merge(mapping[["player_id", "tm_id"]],
                           on="player_id", how="left")

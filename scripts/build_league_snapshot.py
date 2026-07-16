@@ -23,6 +23,12 @@ Uso:  python scripts/build_league_snapshot.py [premier_league] [la_liga]
         openfootball/{england,espana}) e aggiunge rest_days_full/midweek_europe
         allo snapshot. RICHIEDE rete (raw.githubusercontent.com/openfootball/*,
         cache offline in data/raw/ dopo il primo download).
+      python scripts/build_league_snapshot.py --enrich [premier_league] [la_liga]
+        aggiunge home/away_squad_value e le colonne di assenze stimate (Fase 59,
+        generalizza la Fase 4a: il mirror Understat per-stagione e' sparito, le
+        rose vengono quindi dal bundle GIA' caricato in files/, non da rete;
+        Transfermarkt invece e' raggiunto via rete -- mirror diverso, ancora
+        vivo -- cache offline in data/raw/ dopo il primo download, ~100MB).
 """
 from __future__ import annotations
 
@@ -36,7 +42,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data import database, fixtures as fixtures_mod, loader, sources  # noqa: E402
-from src.data import understat                          # noqa: E402
+from src.data import transfermarkt, understat            # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ROOT / "files"
@@ -96,6 +102,40 @@ def _build(league_key: str) -> pd.DataFrame:
     return df
 
 
+def _squads_from_bundle(league_key: str) -> pd.DataFrame:
+    """Rose (season, team, player_id, player_name, position, minutes) da TUTTE
+    le stagioni del bundle Understat gia' caricato in files/ (Fase 59: stessa
+    fonte/stesso bundle dell'xG, Fase 54 -- nessuna rete)."""
+    ud_bundle = json.load(open(FILES / f"understat_{league_key}_bundle.json"))
+    frames = []
+    for name, content in ud_bundle.items():
+        year = int(name.rsplit("_", 1)[-1].replace(".json", ""))
+        data = content if isinstance(content, dict) else json.loads(content)
+        # "1718" -> 2017; sources.understat_year fa l'inverso, quindi si cerca
+        # la stagione le cui SEASONS map a questo year (stesso anno di inizio).
+        season = next(c for c in sources.SEASONS
+                     if sources.understat_year(c) == year)
+        frames.append(understat.parse_season_players(data, season))
+    return pd.concat(frames, ignore_index=True)
+
+
+def _add_enrichment(key: str) -> None:
+    """Aggiunge home/away_squad_value + assenze stimate allo snapshot ESISTENTE
+    (Fase 59, generalizza la Fase 4a). Le rose vengono dal bundle locale (niente
+    rete); le valutazioni/infortuni Transfermarkt vengono scaricati (rete,
+    cache offline dopo il primo download)."""
+    snap = database.read_snapshot(database.snapshot_path(key))
+    squads = _squads_from_bundle(key)
+    print(f"Rose dal bundle: {len(squads)} righe (giocatore, squadra) su "
+          f"{squads['season'].nunique()} stagioni")
+    matches = transfermarkt.add_squad_values(snap, key, squads=squads)
+    matches = transfermarkt.add_absences(matches, key, squads=squads)
+    database.write_snapshot(matches, database.snapshot_path(key))
+    both_sq = matches["home_squad_value"].notna() & matches["away_squad_value"].notna()
+    print(f"  -> {database.snapshot_path(key).name} aggiornato: "
+          f"{both_sq.sum()}/{len(matches)} partite con valore rosa su entrambi i lati")
+
+
 def _add_fixtures(key: str) -> None:
     """Assembla il calendario di club completo e aggiunge rest_days_full/
     midweek_europe allo snapshot ESISTENTE (Fase 59). Come per la Serie A
@@ -120,7 +160,15 @@ def _add_fixtures(key: str) -> None:
 def main() -> None:
     args = sys.argv[1:]
     do_fixtures = "--fixtures" in args
-    keys = [a for a in args if a != "--fixtures"] or ["premier_league", "la_liga"]
+    do_enrich = "--enrich" in args
+    keys = [a for a in args if a not in ("--fixtures", "--enrich")] \
+        or ["premier_league", "la_liga"]
+
+    if do_enrich:
+        for key in keys:
+            print(f"\n=== {sources.LEAGUES[key].name} (valore rosa + assenze) ===")
+            _add_enrichment(key)
+        return
 
     if do_fixtures:
         for key in keys:

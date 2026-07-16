@@ -6082,6 +6082,95 @@ in `data/raw/fixtures_*`); `pytest tests/test_fixtures.py -q`.
 
 ---
 
+## Fase 60 — Valore rosa e assenze anche per Premier League e La Liga
+
+**Obiettivo.** Le ultime 6 colonne mancanti rispetto alla Serie A
+(`squad_value` × 2, `absences` × 4, Fase 4a). Nella risposta precedente
+all'utente era stato detto "bloccato: Transfermarkt non e' raggiungibile" —
+**affermazione MAI verificata empiricamente in questa sessione**, solo dedotta
+dai commenti nel codice ("anche transfermarkt.com e' bloccato dall'ambiente
+cloud", `sources.py`). Testato direttamente: il mirror USATO DAL PROGETTO
+(`raw.githubusercontent.com/salimt/football-datasets`, non transfermarkt.com)
+risponde **200** su tutte e 4 le tabelle (~106MB totali) — e' `transfermarkt.com`
+diretto ad essere bloccato, non il mirror GitHub, esattamente come per
+openfootball (Fase 59) e a differenza del mirror football-data/Understat
+(quello sì sparito, 404 verificato). **Lezione ribadita (§ metodo, principio 3):
+mai dedurre una lacuna dati da un commento — si verifica.**
+
+**Il problema restante:** il mirror Understat PER-STAGIONE (da cui vengono le
+rose/minutaggi dei giocatori, servono a `transfermarkt.team_season_values` per
+pesare la copertura) e' invece sparito per davvero (stesso repo morto della
+Fase 14) — quindi non scaricabile per Premier/Liga. Soluzione: le rose vengono
+dai bundle Understat GIA' caricati in `files/` (Fase 54), che contengono la
+sezione `players` con lo stesso identico schema (minuti, ruolo, nome) che
+`understat.season_players` otterrebbe da rete.
+
+**Scelta implementativa.** `understat.season_players` scisso in
+`parse_season_players` (pura, su dict gia' caricato) + `season_players`
+(fetch+parse) — stesso pattern gia' usato per `parse_season_xg`/`season_xg`
+(Fase 54). `transfermarkt.team_season_values`/`add_squad_values`/`add_absences`
+accettano ora un parametro opzionale `squads`: se fornito, salta il download
+Understat e usa quelle rose (default `None` = comportamento invariato per la
+Serie A). `scripts/build_league_snapshot.py --enrich [lega...]` costruisce le
+rose dal bundle e chiama le funzioni Transfermarkt (rete SOLO per
+valutazioni/infortuni, cache offline dopo il primo download).
+
+**Risultato.**
+
+| | Premier League | La Liga | *(Serie A, rif.)* |
+|---|--:|--:|--:|
+| copertura `squad_value` (entrambi i lati) | **95.6%** | **58.3%** | *~78%* (Fase 4a) |
+| copertura minima di stagione | 90% (5 stagioni sotto soglia 85%) | 41% (2020-21) | *60%* (Fase 4c) |
+| aggancio nomi giocatore (per identita') | 91.7%+ | 91.7% exact/filtered/tiebreak | *n/d, mai misurato a parte* |
+
+**La Liga ha una copertura sensibilmente piu' bassa** delle altre due leghe,
+Real Madrid 2025-26 incluso (84%, appena sotto soglia). Diagnosticato PRIMA di
+accettarlo come limite onesto (non per pigrizia): il matching per NOME e'
+buono (91.7% agganciato su 1974 giocatori: 1403 esatti + 174 filtrati + 109
+per-picco-valutazione + resto fuzzy/token, solo 163 mai agganciati), e dei
+1811 agganciati il 94.9% ha una valutazione utilizzabile. Il problema e' che
+il ~13% di giocatori senza numero utilizzabile (nome non agganciato O
+agganciato ma privo di serie di valutazioni) e' sbilanciato verso i TITOLARI
+(la soglia pesa sui MINUTI, non sul conteggio giocatori): nomi brevi/nickname
+sudamericani-spagnoli (es. "Vinicius", "Rodrygo") sono strutturalmente piu'
+difficili da agganciare univocamente o mancano piu' spesso nel datalake
+rispetto ai nomi europei — stessa causa radice della Fase 4a (Lazio/
+Milinkovic-Savic: profili senza serie di valutazioni), qui piu' diffusa.
+**Nessuna imputazione**: la politica resta NaN dichiarato sotto l'85%,
+verificata a mano di essere una lacuna di DATI (datalake incompleto) e non di
+CODICE (matching che fallisce silenziosamente).
+
+Schema ora **38/38 colonne, IDENTICO a quello della Serie A**, per tutte e tre
+le leghe. `pytest`: 118/118 verdi (+4 test parametrizzati, soglie di copertura
+onesta per-lega esplicite: 85% Premier, 35% Liga — quest'ultima piu' bassa e
+DOCUMENTATA, non un numero a caso).
+
+**Onesta' sui limiti.** Come per `rest_full` (Fase 59) e per la Serie A stessa
+(Fase 4c/11), **`squad_value`/`absences` sono gia' state provate e bocciate**
+come covariate del modello (peggiorano il log-loss). Costruire queste colonne
+per Premier/Liga completa lo SCHEMA DATI (simmetria/riproducibilita' tra
+leghe) ma non e' atteso alcun guadagno predittivo diretto — coerente con la
+lezione della Fase 33 ("i dati interni sono completamente esplorati").
+
+### 📐 Il modello in dettaglio
+
+Nessuna formula nuova: `squad_value`/`absences` sono ESATTAMENTE le definizioni
+della Fase 4a (`transfermarkt.team_season_values`/`add_absences`, invariate),
+applicate a rose Understat di provenienza diversa (bundle anziche' rete). La
+soglia di pubblicazione resta `MIN_COVERAGE = 0.85` (stessa costante, stesso
+significato: quota dei MINUTI stagionali coperta da giocatori agganciati e
+valutati) — non ritarata per lega: e' una soglia di ONESTA' del dato
+("non pubblicare un numero che rappresenta meno dell'85% della rosa reale"),
+non un iperparametro del modello, quindi non ha senso allentarla per far
+"tornare" la copertura della Liga.
+
+**Riproducibilita'.** `python scripts/build_league_snapshot.py --enrich
+premier_league la_liga` (rete per Transfermarkt, ~106MB al primo download,
+poi cache offline in `data/raw/transfermarkt_*.csv`); `pytest
+tests/test_data_enrichment.py -q`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

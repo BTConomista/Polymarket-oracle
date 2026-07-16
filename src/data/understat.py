@@ -149,17 +149,19 @@ def season_xg(
                            season_code)
 
 
-def season_players(
-    season_code: str, league_key: str = "serie_a", *, force: bool = False
-) -> pd.DataFrame:
-    """Giocatori della stagione con la/e squadra/e in cui hanno giocato.
+def parse_season_players(data: dict, season_code: str) -> pd.DataFrame:
+    """Giocatori della stagione da un JSON Understat GIA' caricato (dict).
+
+    Separata da ``season_players`` (che aggiunge il download/cache), stesso
+    motivo di ``parse_season_xg``/``season_xg``: una fonte OFFLINE alternativa
+    (i bundle di Premier/Liga in files/, Fase 54/59) puo' riusare esattamente
+    la stessa logica di parsing senza rete.
 
     Una riga per (giocatore, squadra): Understat elenca in ``team_title`` piu'
     squadre separate da virgola se il giocatore ha cambiato maglia a gennaio.
     Colonne: season, team (canonico), player_id, player_name, position,
     minutes. Serve al modulo transfermarkt per stimare le rose.
     """
-    data = _load_json(season_code, league_key, force=force)
     rows: list[dict] = []
     for p in data.get("players", []):
         for team in str(p.get("team_title", "")).split(","):
@@ -175,6 +177,14 @@ def season_players(
                 "minutes": pd.to_numeric(p.get("time"), errors="coerce"),
             })
     return pd.DataFrame(rows)
+
+
+def season_players(
+    season_code: str, league_key: str = "serie_a", *, force: bool = False
+) -> pd.DataFrame:
+    """Giocatori della stagione (con download/cache). Vedi ``parse_season_players``."""
+    return parse_season_players(_load_json(season_code, league_key, force=force),
+                                season_code)
 
 
 # --------------------------------------------------------------------------- #

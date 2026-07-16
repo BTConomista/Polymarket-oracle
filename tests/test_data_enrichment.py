@@ -161,3 +161,54 @@ def test_snapshot_base_invariata(snapshot):
     assert len(snapshot) == 3420
     assert snapshot.groupby("season").size().eq(380).all()
     assert snapshot["home_goals"].between(0, 15).all()
+
+
+# --------------------- 4. valore rosa/assenze generalizzati (Fase 59) --------
+# Le rose per Premier/Liga vengono dai bundle Understat locali (mirror Understat
+# per-stagione sparito, Fase 14) mentre Transfermarkt e' raggiunto via rete
+# (mirror diverso, ancora vivo): vedi transfermarkt.add_squad_values(squads=...)
+# e scripts/build_league_snapshot.py --enrich.
+
+# Copertura minima onesta per lega: la Liga e' sensibilmente piu' bassa
+# (41-72% per stagione) delle altre due -- i giocatori sudamericani/spagnoli
+# con nomi brevi o nickname (Vinicius, Rodrygo, ...) mancano piu' spesso una
+# valutazione utilizzabile nel datalake Transfermarkt, coerente con la stessa
+# causa gia' documentata per Lazio/Serie A (§"Limite onesto" nel README/CLAUDE.md).
+_MIN_COVERAGE_PER_LEGA = {"premier_league": 0.85, "la_liga": 0.35}
+
+
+@pytest.fixture(params=["premier_league", "la_liga"])
+def altra_lega(request):
+    return request.param
+
+
+@pytest.fixture
+def altro_snapshot(altra_lega):
+    path = database.snapshot_path(altra_lega)
+    if not path.exists():
+        pytest.skip(f"snapshot {altra_lega} non costruito")
+    snap = database.read_snapshot(path)
+    if "home_squad_value" not in snap.columns:
+        pytest.skip(f"{altra_lega}: valore rosa non ancora costruito "
+                    f"(build_league_snapshot.py --enrich)")
+    return snap
+
+
+def test_altra_lega_valori_rosa_plausibili(altra_lega, altro_snapshot):
+    entrambe = (altro_snapshot["home_squad_value"].notna()
+                & altro_snapshot["away_squad_value"].notna())
+    per_stagione = entrambe.groupby(altro_snapshot["season"]).mean()
+    soglia = _MIN_COVERAGE_PER_LEGA[altra_lega]
+    assert (per_stagione >= soglia).all(), per_stagione
+    valori = pd.concat([altro_snapshot["home_squad_value"],
+                        altro_snapshot["away_squad_value"]]).dropna()
+    assert valori.between(10e6, 1500e6).all()
+
+
+def test_altra_lega_assenze_stimate_plausibili(altro_snapshot):
+    conteggi = pd.concat([altro_snapshot["home_absent_count_est"],
+                          altro_snapshot["away_absent_count_est"]]).dropna()
+    assert conteggi.between(0, 25).all()
+    valori = pd.concat([altro_snapshot["home_absent_value_est"],
+                        altro_snapshot["away_absent_value_est"]]).dropna()
+    assert (valori >= 0).all()

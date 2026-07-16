@@ -1459,6 +1459,24 @@ Il join usa la chiave `(season, home_team, away_team)` con nomi squadra
 canonicalizzati (alias in `sources.TEAM_ALIASES`); la data serve solo da
 controllo di coerenza.
 
+**Generalizzato a Premier League e La Liga (Fase 60).** `python
+scripts/build_league_snapshot.py --enrich premier_league la_liga` aggiunge le
+stesse 6 colonne. Le rose Understat vengono dai bundle già caricati in
+`files/` (il mirror Understat per-stagione è sparito, come da Fase 14); le
+valutazioni/infortuni Transfermarkt vengono invece scaricati dalla rete — **il
+mirror usato dal progetto è raggiungibile** (contrariamente a quanto scritto in
+una risposta precedente, mai verificato prima d'ora: è `transfermarkt.com`
+diretto ad essere bloccato, non il mirror GitHub). Copertura `squad_value`:
+**95.6% Premier League**, **58.3% La Liga** (quest'ultima sensibilmente più
+bassa — diagnosticata, non solo osservata: il matching per nome è comunque
+buono, 91.7%; il gap è nei giocatori sudamericani/spagnoli dal nome breve o
+senza serie di valutazioni nel datalake, la stessa causa già nota per
+Lazio/Milinkovic-Savic ma più diffusa — dettagli nel
+[diario, Fase 60](docs/DIARIO.md)). Schema ora **38/38 colonne, identico su
+tutte e tre le leghe**. Come già verificato per la Serie A, queste due feature
+non migliorano il modello (Fase 4c/11): completano lo schema dati, non ci si
+aspetta guadagno predittivo.
+
 ### Integrità delle quote 1X2 — overround impossibile (Fase 58)
 
 Le quote 1X2 (chiusura e apertura) vengono scelte per **intero mercato**, non
@@ -1509,11 +1527,10 @@ Coppa Italia, 2020-21→2024-25) e aggiunge le stesse 4 colonne allo snapshot
 in silenzio le partite europee di club senza mai un'avversaria italiana in un
 turno — dettagli e conteggio nel [diario, Fase 59](docs/DIARIO.md)).
 
-Restano assenti per Premier/Liga (32/38 colonne dello schema Serie A) solo
-`squad_value`/`absences`: bloccate su Transfermarkt, l'unica fonte SENZA una
-cache/bundle locale o un mirror raggiungibile (a differenza di football-data,
-Understat e openfootball) — serve un bundle caricato dall'utente per
-sbloccarle, come già fatto per football-data/Understat (Fase 54).
+A questo punto restavano assenti per Premier/Liga solo `squad_value`/`absences`
+(Transfermarkt) — costruite nella Fase 60 subito successiva (vedi sopra):
+il mirror Transfermarkt si è rivelato raggiungibile, contrariamente a quanto
+scritto in un primo momento senza averlo verificato.
 
 Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
 congelato (nessun download per run), quindi i risultati sono riproducibili identici.
