@@ -34,6 +34,14 @@ SNAPSHOT_PATH = _DATA_DIR / "serie_a_matches.csv"
 DB_PATH = _DATA_DIR / "football.db"
 
 
+def snapshot_path(league_key: str = "serie_a") -> Path:
+    """Percorso dello snapshot congelato di una lega (data/{league}_matches.csv).
+
+    Retro-compatibile: serie_a resta data/serie_a_matches.csv. Premier/La Liga
+    (Fase 54) usano lo stesso schema, costruiti dai bundle in files/."""
+    return _DATA_DIR / f"{league_key}_matches.csv"
+
+
 # ---------------------------------------------------------------------- #
 # Snapshot CSV (fonte di verita' congelata, versionata)
 # ---------------------------------------------------------------------- #

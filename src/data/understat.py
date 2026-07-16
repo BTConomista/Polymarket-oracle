@@ -91,17 +91,12 @@ def _ppda(entry: dict | None) -> float:
 # --------------------------------------------------------------------------- #
 # Normalizzazione nello schema interno
 # --------------------------------------------------------------------------- #
-def season_xg(
-    season_code: str, league_key: str = "serie_a", *, force: bool = False
-) -> pd.DataFrame:
-    """xG (e metriche collegate) a livello partita per una stagione.
+def parse_season_xg(data: dict, season_code: str) -> pd.DataFrame:
+    """xG a livello partita da un JSON Understat GIA' caricato (dict).
 
-    Ritorna un DataFrame con chiave di join (season, home_team, away_team)
-    -- nomi squadra gia' CANONICI -- piu' ``date`` (solo come controllo) e le
-    colonne di XG_COLUMNS.
-    """
-    data = _load_json(season_code, league_key, force=force)
-
+    Separata da ``season_xg`` (che aggiunge il download/cache) cosi' che una fonte
+    OFFLINE alternativa -- es. i bundle caricati a mano in files/ (Fase 54) --
+    possa riusare esattamente la stessa logica di parsing. Nomi gia' canonici."""
     # 1) npxG / PPDA / deep dalla history per-squadra, indicizzati per
     #    (squadra canonica, datetime) cosi' da riallinearli alla partita.
     history: dict[tuple[str, str], dict] = {}
@@ -139,6 +134,19 @@ def season_xg(
         rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+def season_xg(
+    season_code: str, league_key: str = "serie_a", *, force: bool = False
+) -> pd.DataFrame:
+    """xG (e metriche collegate) a livello partita per una stagione (con download).
+
+    Ritorna un DataFrame con chiave di join (season, home_team, away_team)
+    -- nomi squadra gia' CANONICI -- piu' ``date`` (solo come controllo) e le
+    colonne di XG_COLUMNS.
+    """
+    return parse_season_xg(_load_json(season_code, league_key, force=force),
+                           season_code)
 
 
 def season_players(

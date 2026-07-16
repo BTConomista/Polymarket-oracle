@@ -443,9 +443,14 @@ def load_league(
 
     # Import locale per evitare qualsiasi ciclo di import.
     from . import database
-    if (not force_download and league_key == "serie_a"
-            and database.SNAPSHOT_PATH.exists()):
-        df = database.read_snapshot()
+    # OFFLINE-FIRST per QUALSIASI lega con snapshot congelato (Serie A da sempre;
+    # Premier/La Liga da Fase 54, costruiti dai bundle). L'xG e' gia' nello
+    # snapshot: le feature derivate (riposo/forma/stakes/luck) si ricalcolano dai
+    # dati stessi, senza rete. Le fonti di arricchimento SOLO-Serie-A (valori rosa,
+    # congestione da openfootball) non si applicano alle altre leghe.
+    snap = database.snapshot_path(league_key)
+    if not force_download and snap.exists():
+        df = database.read_snapshot(snap)
         # Riposo e forma calcolati su TUTTE le stagioni (per avere le partite
         # precedenti a cavallo tra stagioni), poi si filtra a quelle richieste.
         df = add_rest_days(df)

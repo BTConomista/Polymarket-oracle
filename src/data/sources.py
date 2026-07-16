@@ -54,11 +54,18 @@ class League:
 
 
 # Campionati supportati. Aggiungerne uno = aggiungere una riga qui.
+#
+# Premier League e La Liga (Fase 54): il provider originale non e' raggiungibile
+# (403 dal proxy) e il mirror storico e' sparito (vedi sopra). I dati grezzi
+# sono stati CARICATI a mano come "bundle" JSON in files/ (football-data +
+# Understat, 9 stagioni ciascuna, 2017-18 -> 2025-26): stesso formato/era della
+# Serie A. Da questi bundle si costruisce lo snapshot congelato
+# data/{league}_matches.csv (scripts/build_league_snapshot.py), esattamente come
+# per la Serie A. Nessuna dipendenza di rete: 100% offline e riproducibile.
 LEAGUES: dict[str, League] = {
     "serie_a": League(key="serie_a", code="I1", name="Serie A"),
-    # Esempi pronti per il futuro (stesso provider, stesso formato):
-    # "premier_league": League("premier_league", "E0", "Premier League"),
-    # "la_liga":        League("la_liga",        "SP1", "La Liga"),
+    "premier_league": League(key="premier_league", code="E0", name="Premier League"),
+    "la_liga": League(key="la_liga", code="SP1", name="La Liga"),
 }
 
 # Normalizzazione nomi squadra.
@@ -114,6 +121,29 @@ TEAM_ALIASES: dict[str, str] = {
     "Udinese Calcio": "Udinese",
     "Venezia FC": "Venezia",
     "SPAL 2013 Ferrara": "Spal",
+    # --- Premier League (Fase 54): nomi Understat -> nomi football-data (canonici).
+    # Le 6 uniche differenze, verificate estraendo TUTTI i nomi delle 9 stagioni da
+    # entrambe le fonti (files/*_premier_league_bundle.json) e confrontandoli.
+    "Manchester City": "Man City",
+    "Manchester United": "Man United",
+    "Newcastle United": "Newcastle",
+    "Nottingham Forest": "Nott'm Forest",
+    "West Bromwich Albion": "West Brom",
+    "Wolverhampton Wanderers": "Wolves",
+    # --- La Liga (Fase 54): le 11 differenze Understat -> football-data. Ogni
+    # coppia verificata per IDENTITA' (non per ordinamento): es. "Atletico Madrid"
+    # (Ath Madrid) e' distinta da "Real Madrid", presente identica in entrambe.
+    "Athletic Club": "Ath Bilbao",
+    "Atletico Madrid": "Ath Madrid",
+    "Real Betis": "Betis",
+    "Celta Vigo": "Celta",
+    "Espanyol": "Espanol",
+    "SD Huesca": "Huesca",
+    "Deportivo La Coruna": "La Coruna",
+    "Real Oviedo": "Oviedo",
+    "Real Sociedad": "Sociedad",
+    "Real Valladolid": "Valladolid",
+    "Rayo Vallecano": "Vallecano",
 }
 
 
@@ -161,6 +191,8 @@ UNDERSTAT_URL = UNDERSTAT_MIRROR_URL
 # Nome del campionato nello stile Understat (chiave interna -> nome Understat).
 UNDERSTAT_LEAGUES: dict[str, str] = {
     "serie_a": "Serie_A",
+    "premier_league": "EPL",
+    "la_liga": "La_liga",
 }
 
 
