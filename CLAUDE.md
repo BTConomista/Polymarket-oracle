@@ -221,6 +221,15 @@ tests/           test unitari
   (join per data + squadre). Fai guidare lo schema dai dati reali, non da ipotesi.
 - **Metriche**: calcolale SEMPRE via `experiment_log.compute_metrics` (fonte
   unica), mai reimplementarle altrove.
+- **STIME dichiarate** (Fase 62-bis): dove un dato di mercato NON esiste nelle
+  fonti, può essere stimato coi nostri modelli ma vive SOLO in
+  `data/estimates/` (mai nelle colonne quota degli snapshot), come
+  PROBABILITÀ (mai quote), con errore atteso validato in backtest e
+  dichiarato. Ogni analisi che usa una stima lo dichiara; mai usarle per
+  simulare ROI. Regole in `data/estimates/README.md`; catalogo completo di
+  tutti i dati (reali e stimati) in **`docs/DATI.md`** — da aggiornare a ogni
+  modifica dei dati. Stimare ALTRI dati mancanti (es. squad_value Liga) è un
+  lavoro futuro previsto: stesso protocollo (backtest di fedeltà prima).
 
 ---
 

@@ -634,3 +634,32 @@ def load_league(
     combined = add_stakes(combined)
     combined = add_style_luck(combined)
     return combined
+
+
+# --------------------------------------------------------------------------- #
+# STIME dichiarate (data/estimates/, Fase 62-bis) — NON dati di mercato
+# --------------------------------------------------------------------------- #
+ESTIMATES_DIR = Path(__file__).resolve().parents[2] / "data" / "estimates"
+
+
+def read_ou_close_estimates() -> pd.DataFrame:
+    """Le STIME della chiusura O/U 2.5 per le stagioni 2017-18/2018-19.
+
+    ⚠️  Sono ricostruzioni di MODELLO (Fase 62/62-bis), non prezzi di mercato:
+    MAE atteso ~0.012 in probabilita', e catturano solo la parte di movimento
+    condivisa con l'1X2. Ogni analisi che le usa deve dichiararlo; non vanno
+    MAI usate per simulare scommesse/ROI ne' copiate nelle colonne quota.
+    Regole complete: data/estimates/README.md e docs/DATI.md §Stime.
+
+    Ritorna: league, season, date, home_team, away_team, p_over25_close_est
+    (probabilita' devigata stimata; P(Under) = 1 - P(Over)). Chiave di join:
+    (season, home_team, away_team) come per ogni altra fonte (§5).
+    """
+    path = ESTIMATES_DIR / "ou_close_2017_19.csv"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path} non trovato: genera le stime con "
+            f"`python scripts/build_estimates.py`")
+    df = pd.read_csv(path, dtype={"season": str})
+    df["date"] = pd.to_datetime(df["date"])
+    return df

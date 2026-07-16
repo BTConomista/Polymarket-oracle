@@ -16,6 +16,11 @@ Polymarket, bookmaker, exchange o altri mercati di previsione.
 > 🛠️ **[Protocollo di lavoro](CLAUDE.md)** — come si contribuisce e **cosa
 > aggiornare ogni volta** (registro esperimenti, diario, test). Da leggere prima
 > di modificare il progetto; una sessione AI lo carica in automatico.
+>
+> 🗂️ **[Catalogo dei dati](docs/DATI.md)** — TUTTI i dati a disposizione:
+> fonti, coperture, semantica apertura/chiusura delle quote, e **cosa è dato
+> reale vs cosa è STIMA** (`data/estimates/`). Da consultare prima di ogni
+> analisi sui dati.
 
 ## Stato attuale
 
@@ -169,7 +174,8 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **59** | **congestione vera per Premier/Liga** (calendario club: coppe nazionali + Europa) | FA Cup+EFL Cup (england) e Copa del Rey (espana) su openfootball; **bug corretto**: `parse_europe` filtrava solo club ITA anche per le altre leghe (azzerava le partite europee senza un'italiana); copertura `rest_full` 99.5%/99.4% | ✅ schema 32/38 per Premier/Liga; covariata resta off (Fase 4e-bis) |
 | **60** | **valore rosa + assenze per Premier/Liga** (rose dai bundle Understat, Transfermarkt via mirror — raggiungibile, contrariamente al presunto) | copertura `squad_value` **95.6% Premier**, **58.3% Liga** (matching nomi 91.7%; il gap è nei giocatori senza serie di valutazioni nel datalake — stessa causa di Lazio/Serie A) | ✅ schema **38/38 identico su 3 leghe**; feature già bocciate come covariate (Fase 4c/11) |
 | **61** | **quote apertura 2017-19 recuperate** (chiusura Pinnacle PSC* ignorata dal loader) | 2017-18/2018-19 hanno PS*/PSC* (apertura+chiusura Pinnacle, diverse nel 96%): **2279 aperture 1X2 recuperate**, chiusura vera al posto della pre-match spacciata; stagioni 2019-20+ bit-per-bit invariate | ✅ CLV misurabile anche su 1718/1819; O/U di quelle stagioni resta senza apertura (Pinnacle non ha O/U closing) |
-| **62** | **ricostruire la chiusura O/U mancante (2017-19)** dal movimento 1X2 open→close (backtest su 21 lega-stagioni con entrambe le linee) | la parte prevedibile del movimento O/U è TUTTA nel movimento 1X2 mappato via matrice DC (recal pura: corr ~0): M4 (recal+shift motore WF) taglia il MAE del 33-41% (corr movimento 0.64-0.80, beta≈1) e in **Liga recupera tutto il valore della chiusura** (−0.0024 ✓CI vs open, indistinguibile dal close vero); ma il close vero vale solo −0.0007…−0.0026 vs open (CI solo Liga) | 🔎 **ricostruibile in struttura, ma valore marginale**: stima NON scritta negli snapshot (mai mischiare stima e dato); script disponibile come tool |
+| **62** | **ricostruire la chiusura O/U mancante (2017-19)** dal movimento 1X2 open→close (backtest su 21 lega-stagioni con entrambe le linee) | la parte prevedibile del movimento O/U è TUTTA nel movimento 1X2 mappato via matrice DC (recal pura: corr ~0): M4 (recal+shift motore WF) taglia il MAE del 33-41% (corr movimento 0.64-0.80, beta≈1) e in **Liga recupera tutto il valore della chiusura** (−0.0024 ✓CI vs open, indistinguibile dal close vero); ma il close vero vale solo −0.0007…−0.0026 vs open (CI solo Liga) | 🔎 **ricostruibile in struttura**; pubblicazione decisa (come stima dichiarata) nella 62-bis |
+| **62-bis** | **bakeoff estimatori + pubblicazione della stima** (richiesta utente: "utile, purché scritto che è una stima") | il movimento 1X2 GREZZO (Δlogit H/X/2) **batte** lo shift del motore (la matrice DC comprime il segnale): **E3 pooled** MAE **0.0117** (−44% vs non stimare, corr 0.75-0.86); coefficienti simmetrici cH≈cA=+1.245 (componente gol-totali), cD=−0.81 (pareggio→Under) | ✅ **2279 stime pubblicate in `data/estimates/`** (probabilità, mai quote; test-guardia anti-contaminazione); nuovo catalogo dati **`docs/DATI.md`**; convenzione stime nel CLAUDE.md §5 |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune

@@ -6369,6 +6369,103 @@ finestre walk-forward, B, seed).
 
 ---
 
+## Fase 62-bis — La stima migliorata, pubblicata come STIMA (e il catalogo dati)
+
+**Obiettivo.** L'utente ribalta (legittimamente) la decisione di default della
+Fase 62: la stima della chiusura O/U 2017-19 GLI SERVE — purche' sia
+"scritto chiaramente che si tratta di stime e che non bisogna farci troppo
+affidamento". Tre richieste: (1) migliorare la stima il piu' possibile;
+(2) pubblicarla marcata come stima; (3) un documento che spieghi TUTTI i dati
+a disposizione, stime incluse. Piu' un promemoria: in futuro si stimeranno
+cosi' anche altri dati mancanti.
+
+**(1) Il bakeoff degli estimatori** (`scripts/_run_fase62bis_estimator.py`,
+stesso protocollo/righe/bootstrap della Fase 62, 1 run
+`source=fase62bis_estimator`). Candidati sopra M4: fit POOLED cross-lega
+(la mappa 1X2→O/U e' fisica della matrice, non della lega) e il movimento 1X2
+GREZZO (Δlogit di H/X/2) al posto dello shift del motore:
+
+| candidato (walk-forward 2021+) | MAE medio 3 leghe | corr movimento |
+|---|--:|--:|
+| M4 (riferimento Fase 62: recal + shift motore) | 0.0132 | 0.64-0.80 |
+| M4 pooled | 0.0131 | — |
+| **E3 = logit(OU_open) + ΔlogitH + ΔlogitD + ΔlogitA** | 0.0118 | 0.73-0.86 |
+| **E3 pooled** ← **SCELTO** | **0.0117** | 0.75-0.86 |
+| E4 = E3 + shift motore (pooled) | 0.0119 | — |
+
+Tre lezioni: (a) il movimento 1X2 grezzo **batte** lo shift del motore — i
+dati imparano una mappa migliore di quella imposta dalla matrice DC (che
+comprime il segnale, Fase 62 §2); (b) una volta dentro il movimento grezzo,
+lo shift del motore **non aggiunge nulla** (E4 ≈ E3): l'informazione e' la
+stessa; (c) il pooling non guasta e triplica il train → per la disciplina
+multiple-testing (candidati vicini → si sceglie il PIU' SEMPLICE e generale)
+si adotta **E3 pooled**: 5 coefficienti, niente inversioni, un solo set
+cross-lega. MAE 0.0117 = **riduzione del 44%** rispetto a non stimare
+(movimento medio |.| ≈ 0.021).
+
+**(2) La pubblicazione** (`scripts/build_estimates.py` →
+`data/estimates/ou_close_2017_19.csv`, 2279 stime; 1 run
+`source=build_estimates_ou_close` coi coefficienti registrati). Scelte di
+design per NON farla scambiare per un dato:
+- vive in **`data/estimates/`**, mai negli snapshot (test-guardia:
+  `tests/test_estimates.py::test_snapshot_non_contaminati`);
+- e' una **probabilita'** (`p_over25_close_est`), mai una quota: senza
+  margine, non puo' essere presa per un prezzo di book;
+- README della cartella con le regole d'uso (niente ROI simulati; ogni
+  analisi che la usa lo dichiara) e l'errore atteso in chiaro;
+- accesso da codice con warning nel docstring:
+  `loader.read_ou_close_estimates()`.
+I coefficienti finali (fit pooled su 7978 partite 2019-20+):
+`[0.0209, 0.9788, +1.2453, −0.8113, +1.2457]` per
+`[1, logit(OU_open), ΔlogitH, ΔlogitD, ΔlogitA]` — vedi 📐.
+
+**(3) Il catalogo dati**: nuovo **`docs/DATI.md`** — per ogni gruppo di
+colonne: fonte, copertura, semantica (inclusa la tabella apertura/chiusura
+per stagione, che e' il punto piu' insidioso), i limiti dichiarati dei dati
+reali, la sezione **Stime** e i **candidati futuri a stima** (promemoria
+esplicito richiesto dall'utente: `squad_value` Liga/Lazio — prerequisito:
+sistemare il sospetto bug del matching giocatori; aperture O/U sparse; ecc.).
+Convenzione fissata anche nel CLAUDE.md §5 (vale per ogni stima futura).
+
+**Onesta'.** La stima cattura solo la parte di movimento CONDIVISA con l'1X2
+(corr 0.75-0.86 → ~55-75% della varianza del movimento): le notizie
+puro-totali (turnover d'attacco annunciato, meteo) restano fuori. In log-loss
+vs esiti reali la stima resta indistinguibile dalla chiusura vera in
+Premier/Liga ma un filo peggiore in Serie A (+0.0022 [+0.0001,+0.0053]): per
+un benchmark va bene, per qualsiasi uso "operativo" no — ed e' scritto
+ovunque.
+
+### 📐 Il modello in dettaglio
+
+Verificato riga per riga contro `scripts/build_estimates.py::_X`:
+
+```
+logit(p̂_close_OU) = a + b·logit(p_OU_linea) + cH·Δlogit(pH) + cD·Δlogit(pD) + cA·Δlogit(pA)
+Δlogit(pX) = logit(pX_close) − logit(pX_open)        [1X2 devigato, molt.]
+fit: OLS pooled, 7978 partite (3 leghe × 7 stagioni 2019-20+)
+a=0.0209  b=0.9788  cH=+1.2453  cD=−0.8113  cA=+1.2457
+```
+
+**Perche' quei valori.** `b≈0.98` ≈ 1: la linea pre-match e' gia' quasi la
+chiusura (il grosso dell'informazione c'e' gia'; b<1 = leggerissima
+regressione verso la media). `cH ≈ cA ≈ +1.245` — la SIMMETRIA e' la parte
+interessante: l'accorciarsi di UNA delle due squadre (casa O trasferta) alza
+l'Over della stessa quantita'; e' la componente "gol totali attesi" del
+movimento 1X2, che e' simmetrica per costruzione. `cD = −0.81` negativo: il
+pareggio che si accorcia segnala partita bloccata → Under. Il contenuto
+informativo del movimento 1X2 sull'O/U e' quindi (cH+cA)·(componente
+simmetrica) + cD·(componente pareggio) — la matrice DC codifica la stessa
+struttura, ma con pesi fissi sbagliati (lo shift del motore usciva compresso
+4-10x, Fase 62); la regressione li impara dai dati. **MAE atteso 0.012**: dal
+walk-forward della Fase 62-bis (mai dal fit in-sample, che per coincidenza e'
+simile: 0.0122). Tutti i numeri ricalcolabili dai 2 run registrati.
+
+**Riproducibilita'.** `python scripts/_run_fase62bis_estimator.py` (bakeoff,
+~35s) → `python scripts/build_estimates.py` (pubblicazione, ~1s) →
+`pytest tests/test_estimates.py -q`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
