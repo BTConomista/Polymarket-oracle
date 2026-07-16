@@ -78,8 +78,14 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      moltiplicativo) l'edge dp_lvl scende a −0.0009 (93%, non concluso). **Router
      v3 ADOTTATO** (`price_markets(dp_theta)`: dp su tutto il listino, mai peggiore,
      5 CI conclusivi; θ=1.225 mercato / 1.138 DC). Lo state-space e' chiuso PER
-     TEST (GAS perde dal DC batch, +0.0027). Prossimo test forte: cross-lega
-     (Premier) — bloccato dalla policy di rete (football-data.co.uk 403).
+     TEST (GAS perde dal DC batch, +0.0027). **Fase 53 (tracer cross-lega, bundle
+     utente in files/):** θ>1 anche su Premier (1.069) e La Liga (1.097) ma
+     DECRESCE con la liquidità; tilt e draw-bias NON si replicano (Premier:
+     pareggi sovra-prezzati, ROI pari-equilibrio −5.4%); **dp_lvl non batte la
+     chiusura fuori dalla Serie A** anche rifittata → il beat-the-close è una
+     proprietà della chiusura Serie A (meno liquida), non del calcio. Le costanti
+     del motore restano dichiaratamente per-lega (§7). Aperto: port completo DC
+     su Premier/Liga coi bundle Understat (Fase 53-bis).
 
 ---
 

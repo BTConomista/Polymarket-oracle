@@ -5624,6 +5624,74 @@ l'estensione e l'esito (dominanza debole, 5 CI conclusivi).
 
 ---
 
+## Fase 53 (tracer) — Cross-lega: i bias del mercato sono UNIVERSALI o Serie A?
+
+**Obiettivo.** La validazione piu' forte possibile delle Fasi 50-52: se
+sotto-dispersione, tilt e draw-bias compaiono anche su Premier League e La Liga,
+sono proprieta' dei mercati calcistici; se no, sono idiosincrasie della Serie A.
+Dati: bundle caricati dall'utente (`files/football_data_*_bundle.json`, 9
+stagioni 1718-2526 per lega, formato football-data, stesse preferenze-colonna
+del loader §5). Tracer market-side (metodo §1.3): niente port del DC — bastano
+quote di chiusura + risultati. I bundle Understat (xG) restano per il futuro
+port completo.
+
+**Risultato** (`scripts/_run_fase53_crossleague.py`; walk-forward, 8 stagioni di
+test per lega, n=3040 ciascuna; 2 run `source=fase53_crossleague`):
+
+| | **Serie A** (F.51-52) | **Premier** | **La Liga** |
+|---|--:|--:|--:|
+| θ (sotto-dispersione) | **1.205** | 1.069 | 1.097 |
+| livelli λ / μ | 0.973 / **1.022** | 0.981 / 0.988 | 0.964 / 0.972 |
+| w_D (pareggio) | **1.094** | **0.932** | 1.010 |
+| dp_lvl − mercato (1X2) | **−0.0016 ✓CI** | +0.0008 (P 3%) | +0.0001 (P 38%) |
+| Shin − mercato | −0.0007 (P 97%) | −0.0002 (P 68%) | −0.0005 (P 94%) |
+| ROI pari-equilibrio | +3.2% (P 76%) | **−5.4% (P 11%)** | +3.6% (P 81%) |
+
+**Lezione / cosa ne consegue — il ridimensionamento onesto.**
+1. **La sotto-dispersione e' universale nel SEGNO** (θ>1 in tutte e tre le
+   leghe, su ogni fit) **ma non nella taglia**: θ decresce con la liquidita'
+   del mercato (Premier 1.07 < Liga 1.10 < Serie A 1.21). E sotto ~1.1 e'
+   troppo piccola per battere la chiusura.
+2. **Il tilt casa/trasferta e il draw-bias NON si replicano.** In Premier
+   entrambi i tassi impliciti sono un filo alti (nessuna asimmetria) e i
+   pareggi sono SOVRA-prezzati (w_D=0.93, opposto della Serie A); il ROI
+   pari-equilibrio e' negativo (−5.4%). La Liga e' intermedia (draw-bias
+   simile alla Serie A: +3.6%, P 81%; tilt assente).
+3. **Quindi: il "beat-the-close" della Fase 51 e' una proprieta' della
+   chiusura della SERIE A** — un mercato meno liquido e meno efficiente — non
+   dei mercati calcistici. Anche RIFITTATA per lega, la dp non basta dove θ e'
+   piccolo (Premier dp +0.0001). Coerenza notevole col quadro di efficienza:
+   piu' liquidita' → chiusura meglio calibrata → meno spazio.
+4. **Il §7 e' vendicato nel modo piu' concreto**: nessun numero si trasferisce
+   (θ, livelli, w — tutti diversi per lega). Le costanti del motore
+   (`DP_THETA`, `RATE_LEVELS`) restano dichiaratamente Serie A.
+5. Il draw-bias della Serie A (Fasi 35/40) trova un mezzo-gemello in Liga e un
+   contro-esempio in Premier: per scommetterci servirebbe capire *perche'*
+   (liquidita'? cultura di scommessa locale sul pareggio?) — fuori dal
+   perimetro dei dati attuali.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: θ/livelli/w_D/w_A/dp_lvl/Shin/ROI identici alle Fasi
+50-52 (formule ivi verificate), applicati per lega con fit leave-future-out per
+lega. Convenzioni-quota: le stesse liste di preferenza del loader
+(`loader._ODDS_PREFERENCE`: AvgCH→B365CH→AvgH→BbAvH→B365H, ecc.) — fonte unica
+§5. **Perche' θ_Premier < θ_SerieA:** θ misura quanto i punteggi oscillano meno
+di una Poisson DATI i tassi del mercato; tassi piu' precisi (mercato piu'
+liquido) lasciano meno varianza residua apparente MA anche meno errore
+sistematico di calibrazione — l'ordinamento θ ∝ 1/liquidita' e' coerente con
+l'interpretazione della Fase 51 (θ cattura la sotto-confidenza della chiusura,
+che nei mercati liquidi e' minima).
+
+**Prossimo passo naturale (Fase 53-bis, non tracer):** port completo del DC su
+Premier/Liga coi bundle Understat (blend xG), ri-taratura §7 (emivita, δ
+promosse, α), e verifica se il *gap modello-vs-mercato* (+0.0165 in Serie A) e'
+piu' largo o stretto dove il mercato e' meno/piu' efficiente.
+
+**Riproducibilità.** `python scripts/_run_fase53_crossleague.py`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
