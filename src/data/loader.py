@@ -57,9 +57,15 @@ le colonne *_open NON ripiegano MAI sulle colonne di chiusura (*C*), e sono
 valorizzate SOLO dove la chiusura proviene davvero da una colonna *C* -- se per
 una riga la chiusura e' il fallback pre-match, open e close coinciderebbero per
 costruzione e il confronto open-vs-close (CLV) confronterebbe il mercato con se'
-stesso: in quel caso *_open resta NaN (righe escluse, mai contaminate). Ne
-consegue che nelle stagioni senza colonne di chiusura (< 2019-20) le colonne
-*_open sono interamente NaN.
+stesso: in quel caso *_open resta NaN (righe escluse, mai contaminate).
+
+Chiusura Pinnacle nelle prime 2 stagioni (Fase 61): 2017-18 e 2018-19 NON hanno
+la chiusura AGGREGATA (AvgC*/B365C*), ma hanno PSC* -- la chiusura di Pinnacle,
+una colonna *C* a tutti gli effetti. Includendola in _ODDS_PREFERENCE, quelle
+stagioni ottengono una chiusura VERA (non piu' il fallback pre-match) e quindi
+anche l'apertura 1X2 (PS*, Pinnacle pre-match) si sblocca -- prima erano NaN.
+L'O/U di quelle 2 stagioni resta senza apertura: Pinnacle non pubblica un O/U
+di chiusura (nessun PSC>2.5), quindi manca la colonna *C* che la sbloccherebbe.
 """
 
 from __future__ import annotations
@@ -77,10 +83,19 @@ RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
 
 # Ordine di preferenza delle colonne per ciascun mercato.
 # Il primo nome presente (e valorizzato) nella riga viene usato.
+#
+# Chiusura Pinnacle PSC* (Fase 61): nelle prime 2 stagioni (2017-18, 2018-19)
+# football-data NON pubblica le colonne di chiusura AGGREGATE (AvgC*, B365C*),
+# ma pubblica PSCH/PSCD/PSCA -- la CHIUSURA di Pinnacle, il book di riferimento
+# per efficienza. Va DOPO Avg/B365 chiusura (cosi' le stagioni 2019-20+, che
+# hanno AvgC*, restano IDENTICHE) ma PRIMA dei fallback pre-match: cosi' quelle
+# 2 stagioni ottengono una chiusura VERA (Pinnacle) invece di una pre-match
+# spacciata per chiusura. Pinnacle NON ha O/U closing nel dataset di quelle
+# stagioni (nessun PSC>2.5), quindi l'O/U resta invariato.
 _ODDS_PREFERENCE: dict[str, list[str]] = {
-    "odds_home":   ["AvgCH", "B365CH", "AvgH", "BbAvH", "B365H"],
-    "odds_draw":   ["AvgCD", "B365CD", "AvgD", "BbAvD", "B365D"],
-    "odds_away":   ["AvgCA", "B365CA", "AvgA", "BbAvA", "B365A"],
+    "odds_home":   ["AvgCH", "B365CH", "PSCH", "AvgH", "BbAvH", "B365H"],
+    "odds_draw":   ["AvgCD", "B365CD", "PSCD", "AvgD", "BbAvD", "B365D"],
+    "odds_away":   ["AvgCA", "B365CA", "PSCA", "AvgA", "BbAvA", "B365A"],
     "odds_over25": ["AvgC>2.5", "B365C>2.5", "Avg>2.5", "BbAv>2.5", "B365>2.5"],
     "odds_under25": ["AvgC<2.5", "B365C<2.5", "Avg<2.5", "BbAv<2.5", "B365<2.5"],
 }
@@ -88,10 +103,15 @@ _ODDS_PREFERENCE: dict[str, list[str]] = {
 # Quote PRE-chiusura ("apertura", Fase 14): SOLO colonne senza suffisso C.
 # Mai ripiegare sulla chiusura: un NaN e' onesto, una chiusura spacciata per
 # apertura invaliderebbe il confronto open-vs-close in modo silenzioso.
+#
+# Apertura Pinnacle PS* (Fase 61): va DOPO AvgH (le stagioni 2019-20+ hanno
+# AvgH al 100%, restano identiche) ma PRIMA di BbAvH: cosi' le prime 2 stagioni,
+# prive di AvgH, aprono con la PRE-MATCH di Pinnacle -- lo STESSO book della loro
+# chiusura (PSCH sopra), un CLV pulito Pinnacle->Pinnacle invece di misto.
 _ODDS_PREFERENCE_OPEN: dict[str, list[str]] = {
-    "odds_home_open":    ["AvgH", "BbAvH", "B365H"],
-    "odds_draw_open":    ["AvgD", "BbAvD", "B365D"],
-    "odds_away_open":    ["AvgA", "BbAvA", "B365A"],
+    "odds_home_open":    ["AvgH", "PSH", "BbAvH", "B365H"],
+    "odds_draw_open":    ["AvgD", "PSD", "BbAvD", "B365D"],
+    "odds_away_open":    ["AvgA", "PSA", "BbAvA", "B365A"],
     "odds_over25_open":  ["Avg>2.5", "BbAv>2.5", "B365>2.5"],
     "odds_under25_open": ["Avg<2.5", "BbAv<2.5", "B365<2.5"],
 }
@@ -323,6 +343,94 @@ def add_open_odds(matches: pd.DataFrame, *, force_download: bool = False) -> pd.
         print(f"    {season}: {frac:6.1%}")
 
     return merged.drop(columns=["_raw_hg", "_raw_ag"])
+
+
+_ALL_ODDS_COLUMNS: list[str] = list(_ODDS_PREFERENCE) + list(_ODDS_PREFERENCE_OPEN)
+
+
+def _odds_from_raw(raw: pd.DataFrame) -> dict[str, pd.Series]:
+    """Le 10 colonne quota (chiusura + apertura) da un CSV grezzo gia' filtrato
+    (righe con squadre/gol validi). Stessa identica logica di ``_normalize``
+    (scelta per-mercato + masking apertura), estratta per il ricalcolo mirato
+    delle sole quote su uno snapshot esistente (Fase 61)."""
+    cols: dict[str, pd.Series] = {}
+    for group in _ODDS_MARKET_GROUPS:
+        picks = raw.apply(
+            lambda r: _pick_market_odds(r, group, _ODDS_PREFERENCE), axis=1)
+        for target in group:
+            cols[target] = picks.map(lambda d: d[target]).reset_index(drop=True)
+    for group in _ODDS_MARKET_GROUPS:
+        open_group = [f"{t}_open" for t in group]
+        for target, series in _open_odds_market(raw, open_group).items():
+            cols[target] = series.reset_index(drop=True)
+    return cols
+
+
+def refresh_odds(
+    matches: pd.DataFrame, raw_by_season: dict[str, pd.DataFrame]
+) -> pd.DataFrame:
+    """Ricalcola TUTTE le colonne quota (chiusura E apertura) di uno snapshot
+    esistente dai CSV grezzi, senza toccare le altre colonne (xG, rose,
+    congestione, gol). Generalizza ``add_open_odds`` (Fase 61): serve quando
+    cambia la POLITICA di scelta delle quote -- es. l'aggiunta della chiusura
+    Pinnacle PSC* per le prime 2 stagioni -- non solo l'aggancio delle aperture.
+
+    ``raw_by_season``: {codice_stagione: DataFrame grezzo football-data}. Cosi'
+    la fonte delle grezze e' iniettata dal chiamante (data/raw per la Serie A,
+    bundle per Premier/Liga), senza dipendere dalla rete.
+
+    Stessi controlli d'integrita' di ``add_open_odds``: gol grezzo == gol
+    snapshot su ogni riga agganciata (falliscono rumorosamente); righe senza
+    aggancio contate (le quote restano NaN, nessun numero inventato).
+    """
+    out = matches.copy()
+    frames = []
+    for code, raw in raw_by_season.items():
+        raw = raw.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG"]).copy()
+        raw = raw.reset_index(drop=True)
+        part = pd.DataFrame({
+            "season": str(code),
+            "home_team": raw["HomeTeam"].astype(str).str.strip().map(sources.canonical_team),
+            "away_team": raw["AwayTeam"].astype(str).str.strip().map(sources.canonical_team),
+            "_raw_hg": raw["FTHG"].astype(int).values,
+            "_raw_ag": raw["FTAG"].astype(int).values,
+        })
+        for target, series in _odds_from_raw(raw).items():
+            part[target] = series.values
+        frames.append(part)
+    odds_df = pd.concat(frames, ignore_index=True)
+
+    key = ["season", "home_team", "away_team"]
+    odds_df["season"] = odds_df["season"].astype(str)
+    out["season"] = out["season"].astype(str)
+    dup = odds_df.duplicated(subset=key)
+    if dup.any():
+        raise ValueError(f"CSV grezzi: {int(dup.sum())} chiavi (stagione, casa, ospite) duplicate")
+
+    merged = out.drop(columns=_ALL_ODDS_COLUMNS, errors="ignore").merge(
+        odds_df, on=key, how="left", validate="one_to_one")
+
+    matched = merged["_raw_hg"].notna()
+    bad = matched & ((merged["_raw_hg"] != merged["home_goals"])
+                     | (merged["_raw_ag"] != merged["away_goals"]))
+    if bad.any():
+        raise ValueError(
+            f"refresh_odds: {int(bad.sum())} righe con GOL diversi tra CSV grezzo "
+            f"e snapshot — join sbagliato o fonte cambiata a monte. Mi fermo.")
+    n_miss = int((~matched).sum())
+    if n_miss:
+        print(f"  [refresh_odds] {n_miss} partite di snapshot senza aggancio "
+              f"nel grezzo (quote NaN)")
+    for label, col in (("chiusura 1X2", "odds_home"), ("apertura 1X2", "odds_home_open")):
+        cov = merged.groupby("season")[col].apply(lambda s: s.notna().mean())
+        print(f"  [refresh_odds] copertura {label} per stagione:")
+        for season, frac in cov.items():
+            print(f"    {season}: {frac:6.1%}")
+
+    merged = merged.drop(columns=["_raw_hg", "_raw_ag"])
+    # Ripristina l'ORDINE originale delle colonne (il drop+merge sposterebbe le
+    # quote in fondo; lo snapshot ha un ordine di colonne stabile e testato).
+    return merged[list(matches.columns)]
 
 
 def add_rest_days(matches: pd.DataFrame, cap: int = 14) -> pd.DataFrame:

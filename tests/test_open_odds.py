@@ -87,6 +87,40 @@ def test_apertura_fallback_interno_bet365():
     assert out["odds_home_open"].item() == 2.15
 
 
+def test_chiusura_pinnacle_e_apertura_pinnacle_prime_stagioni():
+    """Fase 61: le prime 2 stagioni (2017-18, 2018-19) NON hanno la chiusura
+    aggregata (AvgC*/B365C*) ma hanno Pinnacle apertura (PS*) e chiusura (PSC*).
+    Il loader deve usare PSC* come CHIUSURA (una chiusura VERA, non la pre-match
+    spacciata) e PS* come APERTURA -- un CLV pulito Pinnacle->Pinnacle."""
+    raw = _raw_sintetico(
+        PSH=[2.20], PSD=[3.30], PSA=[3.50],       # Pinnacle apertura
+        PSCH=[2.05], PSCD=[3.45], PSCA=[3.70],    # Pinnacle chiusura
+        # nessuna colonna Avg*/AvgC*/B365C*: e' lo scenario 2017-19
+    )
+    out = _normalize(raw, "1718", LEAGUES["serie_a"])
+    assert out["odds_home"].item() == 2.05        # chiusura = Pinnacle closing
+    assert out["odds_away"].item() == 3.70
+    assert out["odds_home_open"].item() == 2.20   # apertura = Pinnacle pre-match
+    assert out["odds_away_open"].item() == 3.50
+    # apertura e chiusura DEVONO differire (altrimenti niente CLV)
+    assert out["odds_home"].item() != out["odds_home_open"].item()
+
+
+def test_pinnacle_non_tocca_le_stagioni_con_media():
+    """Non-regressione: dove la media di chiusura (AvgC*) c'e' (2019-20+), resta
+    lei la scelta -- Pinnacle e' solo il ripiego per le stagioni che ne sono
+    prive, e non deve mai scavalcare la media."""
+    raw = _raw_sintetico(
+        AvgCH=[2.00], AvgCD=[3.40], AvgCA=[3.80],  # chiusura aggregata
+        AvgH=[2.10], AvgD=[3.30], AvgA=[3.60],     # apertura aggregata
+        PSCH=[1.95], PSCD=[3.50], PSCA=[3.90],     # Pinnacle presente ma NON scelto
+        PSH=[2.15], PSD=[3.25], PSA=[3.55],
+    )
+    out = _normalize(raw, "2223", LEAGUES["serie_a"])
+    assert out["odds_home"].item() == 2.00         # media, non Pinnacle
+    assert out["odds_home_open"].item() == 2.10    # media, non Pinnacle
+
+
 def test_apertura_oscurata_dove_la_chiusura_e_fallback():
     """Riga SENZA colonne *C*: la chiusura ripiega sulla pre-match, quindi
     open==close per costruzione -> l'apertura va oscurata (NaN), riga per riga
@@ -262,6 +296,19 @@ def test_snapshot_apertura_copertura(snapshot):
     recenti = snapshot[snapshot["season"].isin(
         ["2021", "2122", "2223", "2324", "2425", "2526"])]
     assert recenti["odds_home_open"].notna().mean() >= 0.95
+
+
+def test_snapshot_apertura_recuperata_prime_stagioni(snapshot):
+    """Fase 61: anche 2017-18 e 2018-19 hanno ora l'apertura 1X2 (Pinnacle),
+    non piu' NaN come prima (la chiusura aggregata mancava, ma PSC*/PS* c'erano
+    e non venivano usate)."""
+    vecchie = snapshot[snapshot["season"].isin(["1718", "1819"])]
+    if vecchie.empty:
+        pytest.skip("stagioni 2017-19 non presenti nello snapshot")
+    assert vecchie["odds_home_open"].notna().mean() >= 0.95
+    # e le due linee (apertura Pinnacle vs chiusura Pinnacle) differiscono
+    sub = vecchie.dropna(subset=["odds_home", "odds_home_open"])
+    assert (sub["odds_home"] != sub["odds_home_open"]).mean() > 0.5
 
 
 def test_snapshot_apertura_distinta_dalla_chiusura(snapshot):

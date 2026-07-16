@@ -1490,6 +1490,24 @@ Trovato e corretto un caso reale per lega (dettagli e formula nel
 (2 righe su 10260, mai usate per stimare il modello — impronta dati invariata).
 Test di non-regressione su tutte e tre le leghe in `tests/test_league_snapshots.py`.
 
+### Quote di apertura 2017-19 — chiusura Pinnacle recuperata (Fase 61)
+
+Le stagioni 2017-18 e 2018-19 (tutte e 3 le leghe) non hanno le colonne di
+chiusura **aggregate** (`AvgCH`/`B365CH`), quindi il loader usava le pre-match
+come chiusura e lasciava l'apertura a `NaN` (~22% delle partite). In realtà
+quelle stagioni pubblicano **`PSCH`/`PSCD`/`PSCA` = la chiusura di Pinnacle**
+(il book di riferimento per efficienza), che era semplicemente ignorata.
+Includendola in coda alla chiusura aggregata — e `PSH`/`PSD`/`PSA` in coda
+all'apertura aggregata — quelle stagioni ottengono una **chiusura vera** e una
+**apertura vera** Pinnacle→Pinnacle (**2279 aperture 1X2 recuperate**), mentre
+le stagioni 2019-20+ restano **bit-per-bit identiche** (hanno la media, che
+resta preferita). Diff chirurgico: solo le colonne quota, solo in 2017-19,
+impronta dati invariata; l'O/U di quelle 2 stagioni resta senza apertura
+(Pinnacle non ha un O/U di chiusura). `python scripts/build_database.py
+--refresh-odds` (Serie A) e `... build_league_snapshot.py --refresh-odds
+premier_league la_liga` (bundle). Dettagli e tabella completa per stagione nel
+[diario, Fase 61](docs/DIARIO.md).
+
 ### Congestione vera — calendario di club completo (Fase 4e)
 
 Il riposo di `add_rest_days` vede solo le date di Serie A; la **congestione

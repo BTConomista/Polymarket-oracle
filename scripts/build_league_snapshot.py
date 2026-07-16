@@ -136,6 +136,19 @@ def _add_enrichment(key: str) -> None:
           f"{both_sq.sum()}/{len(matches)} partite con valore rosa su entrambi i lati")
 
 
+def _refresh_odds(key: str) -> None:
+    """Ricalcola TUTTE le quote (chiusura + apertura) dello snapshot dai bundle
+    football-data (Fase 61: chiusura Pinnacle PSC* per le prime 2 stagioni),
+    senza toccare xG/rose/congestione."""
+    snap = database.read_snapshot(database.snapshot_path(key))
+    fd_bundle = json.load(open(FILES / f"football_data_{key}_bundle.json"))
+    raw_by_season = {_fd_season(name): pd.read_csv(io.StringIO(fd_bundle[name]))
+                     for name in sorted(fd_bundle)}
+    matches = loader.refresh_odds(snap, raw_by_season)
+    database.write_snapshot(matches, database.snapshot_path(key))
+    print(f"  -> {database.snapshot_path(key).name} aggiornato (quote ricalcolate)")
+
+
 def _add_fixtures(key: str) -> None:
     """Assembla il calendario di club completo e aggiunge rest_days_full/
     midweek_europe allo snapshot ESISTENTE (Fase 59). Come per la Serie A
@@ -161,8 +174,15 @@ def main() -> None:
     args = sys.argv[1:]
     do_fixtures = "--fixtures" in args
     do_enrich = "--enrich" in args
-    keys = [a for a in args if a not in ("--fixtures", "--enrich")] \
+    do_refresh_odds = "--refresh-odds" in args
+    keys = [a for a in args if a not in ("--fixtures", "--enrich", "--refresh-odds")] \
         or ["premier_league", "la_liga"]
+
+    if do_refresh_odds:
+        for key in keys:
+            print(f"\n=== {sources.LEAGUES[key].name} (quote ricalcolate) ===")
+            _refresh_odds(key)
+        return
 
     if do_enrich:
         for key in keys:

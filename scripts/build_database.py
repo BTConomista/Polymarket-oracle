@@ -32,6 +32,8 @@ import argparse
 import sys
 from pathlib import Path
 
+import pandas as pd
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.data import database, loader
@@ -50,6 +52,10 @@ def main() -> None:
     parser.add_argument("--open-odds", action="store_true",
                         help="aggancia le quote pre-chiusura (colonne *_open) allo "
                              "snapshot dai CSV grezzi football-data (Fase 14)")
+    parser.add_argument("--refresh-odds", action="store_true",
+                        help="ricalcola TUTTE le colonne quota (chiusura+apertura) "
+                             "dai CSV grezzi, senza toccare il resto (Fase 61: "
+                             "chiusura Pinnacle PSC* per le prime 2 stagioni)")
     parser.add_argument("--league", default="serie_a")
     args = parser.parse_args()
 
@@ -102,6 +108,21 @@ def main() -> None:
         matches = loader.add_open_odds(database.read_snapshot())
         path = database.write_snapshot(matches)
         print(f"  snapshot aggiornato con quote di apertura: {path}")
+    elif args.refresh_odds:
+        # Ricalcola TUTTE le quote (chiusura + apertura) dai CSV grezzi congelati
+        # in data/raw/ (ricostruiti da _restore_raw_cache.py). Le altre colonne
+        # (xG, rose, congestione, gol) NON vengono toccate.
+        from src.data import sources
+        league = sources.LEAGUES[args.league]
+        print(f"Ricalcolo tutte le quote dallo snapshot: {database.SNAPSHOT_PATH}")
+        snap = database.read_snapshot()
+        raw_by_season = {}
+        for code in sorted(snap["season"].astype(str).unique()):
+            path = loader.download_season(code, league)
+            raw_by_season[code] = pd.read_csv(path, encoding="latin-1")
+        matches = loader.refresh_odds(snap, raw_by_season)
+        path = database.write_snapshot(matches)
+        print(f"  snapshot aggiornato (quote ricalcolate): {path}")
     else:
         print(f"Uso lo snapshot congelato: {database.SNAPSHOT_PATH}")
         matches = database.read_snapshot()

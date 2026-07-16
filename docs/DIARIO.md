@@ -6171,6 +6171,110 @@ tests/test_data_enrichment.py -q`.
 
 ---
 
+## Fase 61 — Quote di apertura 2017-19: la chiusura di Pinnacle era ignorata
+
+**Obiettivo.** L'utente chiede: dove le colonne quota NON distinguono apertura e
+chiusura, capire se quella che abbiamo e' l'una o l'altra, e — se e' la chiusura
+— recuperare l'apertura; per TUTTE le stagioni e TUTTE le leghe. Le quote di
+apertura sono metodologicamente centrali (tutta la Fase 14 sul Closing Line
+Value ci gira sopra), e mancavano al ~22% delle partite (le stagioni 2017-18 e
+2018-19, su tutte e 3 le leghe).
+
+**Ragionamento / la scoperta.** Nella risposta precedente all'utente avevo
+liquidato quel 22% come "limite di design irrecuperabile: quelle stagioni hanno
+una sola istantanea di quote". **Sbagliato — e verificato guardando i CSV grezzi
+colonna per colonna** invece di fidarmi del commento del loader ("nelle stagioni
+< 2019-20 le *_open sono interamente NaN"). Le prime 2 stagioni hanno DUE
+istantanee Pinnacle distinte: `PSH/PSD/PSA` (apertura) e `PSCH/PSCD/PSCA`
+(chiusura — il suffisso `C` = Closing), presenti al 100% e diverse nel 95-98%
+delle righe. Il loader cercava la chiusura solo in `AvgCH`/`B365CH` (assenti in
+quelle stagioni) e **ignorava del tutto Pinnacle**: cosi' (1) usava la pre-match
+come se fosse chiusura, e (2) mascherava l'apertura a NaN (senza colonna `*C*`
+la maschera scatta). Pinnacle e' per giunta il book di RIFERIMENTO per
+l'efficienza (margini piu' bassi), quindi non e' un ripiego di serie B.
+
+**La tabella completa (richiesta esplicita: tutte le stagioni × leghe).** Con la
+politica nuova, ESITO 1X2 per (lega, stagione):
+
+| | 2017-18 · 2018-19 | 2019-20 → 2025-26 |
+|---|---|---|
+| Serie A / Premier / Liga | close **Pinnacle**, open **Pinnacle** (era: close pre-match, open NaN) | close/open **media** (invariato) |
+
+Le uniche 6 celle (3 leghe × 2 stagioni) prima "non separabili" ora lo sono; le
+21 celle recenti restano identiche.
+
+**Scelta implementativa (una leva alla volta, §1.2).** In `_ODDS_PREFERENCE`
+(chiusura) inserito `PSCH/PSCD/PSCA` **dopo** `AvgC*`/`B365C*` ma **prima** dei
+fallback pre-match: le stagioni 2019-20+ (che hanno `AvgC*` al 100%, verificato)
+restano bit-per-bit identiche, le prime 2 prendono la chiusura Pinnacle. In
+`_ODDS_PREFERENCE_OPEN` (apertura) inserito `PSH/PSD/PSA` **dopo** `AvgH` (100%
+nelle recenti → invariate) ma **prima** di `BbAvH`: le prime 2 aprono con la
+pre-match di Pinnacle, lo STESSO book della loro chiusura → CLV pulito
+Pinnacle→Pinnacle, non misto. Nuova `loader.refresh_odds(matches,
+raw_by_season)` (generalizza `add_open_odds` della Fase 14): ricalcola le 10
+colonne quota da grezze e le re-inietta nello snapshot **senza toccare
+xG/rose/congestione/gol**, con lo stesso controllo d'integrita' sui gol; le
+grezze sono iniettate dal chiamante (data/raw per la Serie A, bundle per
+Premier/Liga), zero rete. Entry-point: `build_database.py --refresh-odds` (Serie
+A) e `build_league_snapshot.py --refresh-odds` (Premier/Liga).
+
+**Risultato.**
+
+| | prima | dopo |
+|---|--:|--:|
+| apertura 1X2 recuperate (3 leghe × 2 stagioni) | 0 | **2279** (99.9%) |
+| chiusura 1718/1819 | pre-match spacciata | **Pinnacle closing vera** (margine ~2.5%) |
+| stagioni 2019-20+ | — | **invariate** (diff bit-per-bit = 0) |
+| colonne non-quota | — | **invariate** (diff = 0, verificato) |
+| impronta dati | `8483944342fc8b15` | **invariata** (quote non entrano nel fingerprint) |
+
+Diff chirurgico verificato: cambiano SOLO le 10 colonne quota, SOLO nelle
+stagioni 1718/1819, su tutte e 3 le leghe; overround sempre ≥ 1 (margine
+Pinnacle ~2.2-2.5%, piu' basso della media aggregata ~4.9% — coerente); apertura
+≠ chiusura nel 96%. `pytest`: 121/121 (+3: chiusura+apertura Pinnacle sintetica,
+non-regressione sulle stagioni con media, copertura reale 1718/1819). L'O/U di
+quelle 2 stagioni resta senza apertura (Pinnacle non pubblica un O/U di
+chiusura, nessun `PSC>2.5` → manca la colonna `*C*` che la sbloccherebbe):
+limite onesto documentato, non un buco silenzioso.
+
+**Onesta' sull'impatto nelle analisi.** Le prime 2 stagioni sono soprattutto
+TRAINING (il test ufficiale e' 2020-21→2025-26); 1819 e' usata come test solo
+nelle finestre estese (Fasi 19/31, prior/stakes). Le run gia' in `runs.jsonl`
+sono congelate e NON cambiano; ri-eseguendole, le metriche di MERCATO per 1819
+migliorerebbero (chiusura vera Pinnacle invece della pre-match), il che
+semmai RAFFORZA le conclusioni (nessuna cambia). Ora, per la prima volta,
+esiste un CLV misurabile su 1718/1819 — la Fase 14 (CLV negativo) potra' essere
+ri-testata su 2 stagioni in piu' se servira'.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica di modello — e' politica di selezione dei dati. L'unico
+"numero" e' l'ordinamento delle liste di preferenza, e la sua correttezza si
+verifica sui dati, non a memoria:
+
+```
+_ODDS_PREFERENCE["odds_home"]      = [AvgCH, B365CH, PSCH, AvgH, BbAvH, B365H]
+_ODDS_PREFERENCE_OPEN["odds_home_open"] = [AvgH, PSH, BbAvH, B365H]
+```
+
+- `PSCH` dopo `B365CH`: se una stagione ha la chiusura aggregata la usa (nessun
+  cambiamento per il 2019-20+, dove `AvgCH` copre il 100%); solo dove manca
+  (2017-19) scende su Pinnacle. **Perche' non prima:** metterlo prima
+  cambierebbe la chiusura di TUTTE le stagioni da "media di ~10 book" a
+  "solo Pinnacle", alterando le metriche gia' pubblicate — non voluto.
+- `PSH` dopo `AvgH`: idem sul lato apertura. `AvgH` copre il 100% delle recenti
+  (verificato su tutte e 3 le leghe), quindi `PSH` agisce solo sulle prime 2.
+- La maschera dell'apertura (Fase 14) e' invariata nella logica: si sblocca da
+  sola perche' ora `close_only` include `PSCH`, che nelle prime 2 stagioni e'
+  valorizzato → la condizione "la chiusura viene da una colonna `*C*`" e' vera.
+
+**Riproducibilita'.** `python scripts/_restore_raw_cache.py && python
+scripts/build_database.py --refresh-odds` (Serie A) e `python
+scripts/build_league_snapshot.py --refresh-odds premier_league la_liga`
+(bundle, zero rete); `pytest tests/test_open_odds.py -q`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
