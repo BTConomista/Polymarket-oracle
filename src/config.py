@@ -28,9 +28,40 @@ SERIE_A: dict = {
     "promoted_prior": 0.23,    # Fase 7: δ = ln(1.36/1.08) ≈ 0.23 (gol lega/promosse)
 }
 
+# Config Premier League e La Liga (ri-tarate nella Fase 57, §7).
+#
+# ESITO della ri-taratura: gli iperparametri sono PIATTI su entrambe le leghe,
+# esattamente come in Serie A (Fase 8). emivita 365g e shrinkage 1.5 restano
+# ottimi (emivita 730 PEGGIORA ovunque, anche in Liga malgrado le rose piu'
+# stabili: la EDA sovra-interpretava l'autocorr 0.82). L'UNICA differenza
+# strutturale e' il prior neopromosse δ, ricalcolato dai gol di ciascuna lega
+# (§2-bis) e adottato per motivazione (guadagno log-loss nel rumore, come il
+# δ Serie A alla Fase 7/17 — "probabile, non concluso"):
+#   Premier δ=0.33: promosse inglesi molto piu' deboli (segnano il 33% in meno
+#                   della media; ln(1.419/1.022)=0.329). Ipotesi §7 confermata.
+#   La Liga δ=0.22: promosse in linea con la Serie A (ln(1.291/1.038)=0.218).
+# γ (vantaggio-casa, molto piu' forte in Liga) NON e' qui: il DC lo fitta dai dati.
+PREMIER_LEAGUE: dict = {
+    "half_life_days": 365.0,   # Fase 57 (730 peggiora, +0.0057)
+    "shrinkage": 1.5,          # Fase 57 (curva piatta, come Serie A)
+    "shots_blend": 0.75,       # xG di qualita' pari alla Serie A (EDA Fase 55)
+    "blend_signal": "xg",
+    "promoted_prior": 0.33,    # Fase 55/57: δ = ln(1.419/1.022) ≈ 0.33
+}
+
+LA_LIGA: dict = {
+    "half_life_days": 365.0,   # Fase 57 (730 peggiora, +0.0015)
+    "shrinkage": 1.5,          # Fase 57 (shrink 3.0 nel rumore, −0.0001)
+    "shots_blend": 0.75,
+    "blend_signal": "xg",
+    "promoted_prior": 0.22,    # Fase 55/57: δ = ln(1.291/1.038) ≈ 0.22
+}
+
 # Registro delle configurazioni per lega. Nuova lega = nuova voce (ri-tarata).
 LEAGUE_CONFIGS: dict[str, dict] = {
     "serie_a": SERIE_A,
+    "premier_league": PREMIER_LEAGUE,
+    "la_liga": LA_LIGA,
 }
 
 

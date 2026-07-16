@@ -137,7 +137,7 @@ def main():
 
     rng = np.random.default_rng(SEED)
     for lg in LEAGUES:
-        mkt = _market_ll(_load_cfg(lg, **DEF).rename(columns={}))
+        mkt = _market_ll(_load_cfg(lg, DEF["half_life"], DEF["shrink"], DEF["delta"]))
         ok = np.isfinite(mkt)
         def_ll = _model_ll(_load_cfg(lg, DEF["half_life"], DEF["shrink"], DEF["delta"]))
         def_gap = float((def_ll[ok] - mkt[ok]).mean())

@@ -465,4 +465,15 @@ numero** (regola §2-bis), perché ognuno dipende dai dati di *quella* lega:
 Ogni ri-taratura è una fase a sé, con blocco 📐 e riga nel registro. Non esiste "il
 modello": esiste *il modello tarato per la lega X*.
 
+**Premier League e La Liga sono state aggiunte (Fasi 54-57).** Dati grezzi caricati
+a mano come bundle in `files/` (rete bloccata) → snapshot congelati
+`data/{premier_league,la_liga}_matches.csv` via `scripts/build_league_snapshot.py`.
+Config in `LEAGUE_CONFIGS`: **identiche alla Serie A tranne δ** (Premier 0.33, Liga
+0.22 — ri-tarato, ipotesi §7 confermata). Esito cross-lega: **il modello è
+trasferibile** (DC+xG batte la baseline, gap col mercato dello stesso ordine, la
+ri-taratura è piatta = tetto informativo universale) **ma l'edge no** (Fase 53: la
+sotto-dispersione decresce con la liquidità del mercato, il tilt e il draw-bias non
+si replicano — il beat-the-close è idiosincratico della chiusura Serie A). γ
+(vantaggio-casa, molto più forte in Liga) è auto-fittato dal DC, non in config.
+
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

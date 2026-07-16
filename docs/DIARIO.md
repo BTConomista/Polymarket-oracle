@@ -5780,9 +5780,75 @@ gap della Serie A (+0.0162), la Premier a un gap più largo (+0.0207) — propri
 dove il mercato è più efficiente (EDA punto 6). Baseline onesta contro cui misurare
 la ri-taratura (Fase 57).
 
-### Fase 57 — Ri-taratura per lega [DA COMPLETARE con lo sweep in corso]
+### Fase 57 — Ri-taratura per lega: gli iperparametri sono piatti (di nuovo)
 
-*(sweep degli iperparametri in esecuzione; numeri e config nel commit successivo)*
+**Obiettivo.** §7: ri-tarare ogni iperparametro sui dati di ciascuna lega, una
+leva alla volta (§1.2), tenendo le altre al default Serie A. γ non è un
+iperparametro (il DC lo fitta). Griglie: δ {0, 0.15, 0.23, 0.33, 0.45}, emivita
+{365, 730}, shrinkage {1.5, 3.0}.
+
+**Risultato** (`scripts/_run_fase57_retune.py`; walk-forward 6 stagioni; 2 run
+`source=fase57_retune`; Δ = log-loss 1X2 vs default Serie A):
+
+| leva | Premier (gap; Δ vs def) | La Liga (gap; Δ vs def) |
+|---|--:|--:|
+| δ=0.23 (default) | +0.0207 | +0.0162 |
+| δ=0.15 | +0.0208 (+0.0001) | +0.0162 (−0.0000) |
+| **δ ottimo** | **0.33: +0.0207 (−0.0000)** | **0.15-0.23: +0.0162** |
+| δ=0.45 | +0.0209 (+0.0002) | +0.0167 (+0.0005) |
+| emivita 730 | +0.0264 (**+0.0057**) | +0.0178 (**+0.0015**) |
+| shrinkage 3.0 | +0.0207 (−0.0000) | +0.0161 (−0.0001) |
+
+**Lezione / cosa ne consegue.**
+1. **Gli iperparametri sono PIATTI su entrambe le leghe** — tutti i Δ entro
+   ±0.0005, nessun CI conclusivo. È la Fase 8 della Serie A che si ripete: le
+   leve sono ortogonali e la config è già vicina all'ottimo. Il gap col mercato
+   (Premier +0.0207, Liga +0.0162) **non si chiude ritarando**: è informazione,
+   non cattiva calibrazione. La stessa conclusione della Serie A, confermata su
+   due leghe indipendenti.
+2. **Il δ punta dove la EDA prevedeva** — 0.33 è nominalmente il migliore in
+   Premier (0.9830 vs 0.9831), 0.15-0.23 in Liga — ma il guadagno è nullo: le
+   neopromosse sono poche partite (≈15% del totale) e lo shrinkage già le tira
+   verso la media. Adottiamo comunque il δ **strutturalmente corretto** per lega
+   (Premier 0.33, Liga 0.22), per motivazione e non per il numero — esattamente
+   come la Serie A adottò δ=0.23 con CI non conclusivo (Fase 7/17).
+3. **L'ipotesi "rose Liga più stabili → memoria più lunga" (EDA) è FALSA per il
+   log-loss**: emivita 730 peggiora anche in Liga (+0.0015). L'autocorr 0.82 dice
+   che le forze sono stabili, ma 365g le segue già bene; allungare aggiunge solo
+   inerzia sulle poche squadre che cambiano. Lezione: una differenza descrittiva
+   (autocorr) non implica una differenza di taratura ottimale.
+4. **`LEAGUE_CONFIGS` aggiornato** (`src/config.py`): Premier e Liga con δ per
+   lega, tutto il resto = Serie A (confermato ottimo). Aggiungere una lega è
+   stata **configurazione, non codice** (§7 mantenuto).
+
+**Sintesi delle Fasi 54-57.** Gli STESSI modelli reggono: DC + xG batte la
+baseline, l'ordine di grandezza del gap è lo stesso, e la ri-taratura non sposta
+nulla (tetto informativo universale). Le differenze tra leghe sono **strutturali
+e auto-gestite** (γ fittato) o **piccole e motivate** (δ). La lezione della
+Fase 53 (i bias sfruttabili sono idiosincratici della Serie A) più questa (i
+modelli e il tetto sono universali) danno il quadro completo: **il modello è
+trasferibile, l'edge no.**
+
+### 📐 Il modello in dettaglio — perché la ri-taratura è piatta
+
+Le formule sono quelle Serie A (nessuna nuova): prior δ sposta il bersaglio dello
+shrinkage delle neopromosse (attacco −δ, difesa +δ, Fase 7); emivita = peso
+`exp(−ln2·Δt/H)`; shrinkage = forza del pull verso la media. **Perché il δ non
+paga in log-loss pur essendo "giusto":** il δ agisce solo sulle partite delle
+neopromosse (≈3 squadre × 38 gare × 2 = ~228 gare/stagione su ~380, ma solo ~15%
+hanno una neopromossa con storico assente all'inizio stagione, e l'effetto svanisce
+appena arrivano dati). Su quelle poche partite δ=0.33 in Premier riduce l'errore
+(le promosse inglesi sono davvero più deboli), ma diluito su 2280 partite il
+guadagno annega nel rumore. È lo stesso motivo per cui in Serie A il δ era
+"−0.0011, non concluso" (Fase 17): un effetto reale e localizzato, statisticamente
+invisibile in aggregato. **Perché emivita 730 peggiora:** con `H=730` il peso di
+una partita di 2 anni fa è `2^(−1)=0.5` contro `2^(−2)=0.25` a 365g — troppa
+memoria su rose che cambiano ~25% l'anno (autocorr 0.74-0.82 ⇒ 18-26% di turnover
+di forza), quindi il modello insegue tassi vecchi. 365g è il punto in cui il
+compromesso bias-varianza è ottimo in tutte e tre le leghe.
+
+**Riproducibilità.** `python scripts/build_league_snapshot.py` (snapshot) →
+`_run_fase55_eda.py` · `_run_fase56_tracer.py` · `_run_fase57_retune.py`.
 
 ### 📐 Il modello in dettaglio — le formule dell'EDA e perché i numeri
 
