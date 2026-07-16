@@ -143,18 +143,62 @@ def _pick_odds(row: pd.Series, candidates: list[str]) -> float:
     return float("nan")
 
 
-def _open_odds_column(raw: pd.DataFrame, target_open: str) -> pd.Series:
-    """Quota di apertura per ogni riga del CSV grezzo, oscurata (NaN) dove la
-    CHIUSURA proverrebbe dal fallback pre-match (nessuna colonna *C* valida):
-    li' open e close coinciderebbero per costruzione, e ogni confronto
-    open-vs-close (gap, CLV) confronterebbe il mercato con se' stesso."""
-    open_vals = raw.apply(
-        lambda r: _pick_odds(r, _ODDS_PREFERENCE_OPEN[target_open]), axis=1)
-    close_target = target_open[: -len("_open")]
-    close_only = [c for c in _ODDS_PREFERENCE[close_target]
-                  if c not in _ODDS_PREFERENCE_OPEN[target_open]]
-    close_c = raw.apply(lambda r: _pick_odds(r, close_only), axis=1)
-    return open_vals.where(close_c.notna())
+# Mercati le cui colonne _ODDS_PREFERENCE(_OPEN) vanno validate INSIEME (Fase 58):
+# un book vero non puo' mai avere overround implicito < 1 (arbitraggio garantito).
+_ODDS_MARKET_GROUPS: list[list[str]] = [
+    ["odds_home", "odds_draw", "odds_away"],
+    ["odds_over25", "odds_under25"],
+]
+
+
+def _pick_market_odds(row: pd.Series, targets: list[str],
+                       preference: dict[str, list[str]]) -> dict[str, float]:
+    """Sceglie le quote di un intero mercato (es. 1X2) per una riga, con un
+    controllo di coerenza che la scelta colonna-per-colonna (_pick_odds) non fa.
+
+    Perche' (Fase 58, audit dati): una quota "Avg" e' singolarmente valida
+    (>1.0) ma puo' comunque essere inquinata da un bookmaker anomalo incluso
+    nella media della fonte (osservato: un "Max" fuori scala di 3-4x rispetto
+    a tutti gli altri book dello stesso mercato/riga). Il sintomo e' un
+    overround implicito < 1 -- impossibile per un book vero, quindi la fonte
+    scelta per quella riga e' inaffidabile. In tal caso si scarta IN BLOCCO
+    (mai un solo lato) e si ritenta col livello di preferenza successivo per
+    OGNI colonna del mercato; se anche il ripiego resta impossibile, NaN
+    dichiarato (mai un numero corretto a mano).
+    """
+    picks = {t: _pick_odds(row, preference[t]) for t in targets}
+    if all(pd.notna(v) for v in picks.values()):
+        if sum(1.0 / v for v in picks.values()) < 1.0:
+            retry = {t: _pick_odds(row, preference[t][1:]) for t in targets}
+            if all(pd.notna(v) for v in retry.values()) and \
+                    sum(1.0 / v for v in retry.values()) >= 1.0:
+                picks = retry
+            else:
+                picks = {t: float("nan") for t in targets}
+    return picks
+
+
+def _open_odds_market(raw: pd.DataFrame, targets: list[str]) -> dict[str, pd.Series]:
+    """Quote di apertura di un intero mercato, oscurate (NaN) dove la CHIUSURA
+    proverrebbe dal fallback pre-match (nessuna colonna *C* valida): li' open e
+    close coinciderebbero per costruzione, e ogni confronto open-vs-close (gap,
+    CLV) confronterebbe il mercato con se' stesso. Overround impossibile ->
+    stesso ripiego in blocco di _pick_market_odds (Fase 58)."""
+    picks = raw.apply(
+        lambda r: _pick_market_odds(r, targets, _ODDS_PREFERENCE_OPEN), axis=1)
+    open_vals = {t: picks.map(lambda d: d[t]) for t in targets}
+
+    # Mascheramento invariato rispetto a prima (per-colonna, non di gruppo): la
+    # colonna open di UN esito resta NaN solo se LA SUA chiusura specifica non
+    # viene da una colonna *C*, indipendentemente dagli altri esiti dello
+    # stesso mercato.
+    out = {}
+    for t in targets:
+        close_only = [c for c in _ODDS_PREFERENCE[t[: -len("_open")]]
+                      if c not in _ODDS_PREFERENCE_OPEN[t]]
+        close_c = raw.apply(lambda r: _pick_odds(r, close_only), axis=1)
+        out[t] = open_vals[t].where(close_c.notna())
+    return out
 
 
 def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFrame:
@@ -178,10 +222,15 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     out["home_sot"] = pd.to_numeric(raw.get("HST"), errors="coerce")
     out["away_sot"] = pd.to_numeric(raw.get("AST"), errors="coerce")
 
-    for target, candidates in _ODDS_PREFERENCE.items():
-        out[target] = raw.apply(lambda r: _pick_odds(r, candidates), axis=1)
-    for target in _ODDS_PREFERENCE_OPEN:
-        out[target] = _open_odds_column(raw, target)
+    for group in _ODDS_MARKET_GROUPS:
+        picks = raw.apply(
+            lambda r: _pick_market_odds(r, group, _ODDS_PREFERENCE), axis=1)
+        for target in group:
+            out[target] = picks.map(lambda d: d[target])
+    for group in _ODDS_MARKET_GROUPS:
+        open_group = [f"{t}_open" for t in group]
+        for target, series in _open_odds_market(raw, open_group).items():
+            out[target] = series
 
     out = out.dropna(subset=["date"])
     out = out.sort_values("date").reset_index(drop=True)
@@ -214,7 +263,7 @@ def add_open_odds(matches: pd.DataFrame, *, force_download: bool = False) -> pd.
     Rilegge i CSV grezzi football-data (cache in data/raw/, download solo se
     mancanti o ``force_download``) ed estrae le colonne senza suffisso C
     (_ODDS_PREFERENCE_OPEN), oscurate riga per riga dove la chiusura non
-    proviene da una colonna *C* (vedi _open_odds_column). Join per
+    proviene da una colonna *C* (vedi _open_odds_market). Join per
     (season, home_team, away_team) con nomi canonicalizzati — stessa chiave
     usata per xG/rose (vedi README, Fase 4a).
 
@@ -241,8 +290,10 @@ def add_open_odds(matches: pd.DataFrame, *, force_download: bool = False) -> pd.
             "_raw_hg": raw["FTHG"].astype(int),
             "_raw_ag": raw["FTAG"].astype(int),
         })
-        for target in _ODDS_PREFERENCE_OPEN:
-            part[target] = _open_odds_column(raw, target).values
+        for group in _ODDS_MARKET_GROUPS:
+            open_group = [f"{t}_open" for t in group]
+            for target, series in _open_odds_market(raw, open_group).items():
+                part[target] = series.values
         frames.append(part)
     open_df = pd.concat(frames, ignore_index=True)
 

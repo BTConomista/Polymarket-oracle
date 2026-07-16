@@ -1459,6 +1459,19 @@ Il join usa la chiave `(season, home_team, away_team)` con nomi squadra
 canonicalizzati (alias in `sources.TEAM_ALIASES`); la data serve solo da
 controllo di coerenza.
 
+### Integrità delle quote 1X2 — overround impossibile (Fase 58)
+
+Le quote 1X2 (chiusura e apertura) vengono scelte per **intero mercato**, non
+colonna per colonna: se il livello di preferenza preferito (`AvgCH/CD/CA`, …)
+produce un **overround implicito < 1** (`Σ 1/quota < 1`, un arbitraggio
+garantito — impossibile per un book vero, sintomo di un bookmaker anomalo
+incluso nella media della fonte), si scarta **in blocco** e si ripiega sul
+livello successivo (`B365CH/CD/CA`, …), mai su un solo lato aggiustato a mano.
+Trovato e corretto un caso reale per lega (dettagli e formula nel
+[diario, Fase 58](docs/DIARIO.md)); impatto nullo sui risultati già pubblicati
+(2 righe su 10260, mai usate per stimare il modello — impronta dati invariata).
+Test di non-regressione su tutte e tre le leghe in `tests/test_league_snapshots.py`.
+
 ### Congestione vera — calendario di club completo (Fase 4e)
 
 Il riposo di `add_rest_days` vede solo le date di Serie A; la **congestione

@@ -52,6 +52,34 @@ def test_apertura_non_ripiega_mai_sulla_chiusura():
     assert np.isnan(out["odds_draw_open"].item())
 
 
+def test_quota_media_inquinata_ripiega_sul_livello_successivo():
+    """Fase 58 (audit dati): un caso reale (La Liga 2025-08-16, Mallorca-Barcelona)
+    ha AvgCH/AvgCD/AvgCA singolarmente validi (>1.0) ma con overround implicito
+    0.929 -- impossibile per un book vero, sintomo di un bookmaker anomalo
+    incluso nella media della fonte. La scelta per riga deve scartare IN BLOCCO
+    il livello preferito e ripiegare su B365CH/B365CD/B365CA (livello successivo),
+    mai un solo lato aggiustato a mano."""
+    raw = _raw_sintetico(AvgCH=[8.70], AvgCD=[5.79], AvgCA=[1.56],
+                         B365CH=[9.50], B365CD=[5.50], B365CA=[1.30])
+    out = _normalize(raw, "2425", LEAGUES["serie_a"])
+    assert out["odds_home"].item() == 9.50
+    assert out["odds_draw"].item() == 5.50
+    assert out["odds_away"].item() == 1.30
+    overround = 1 / 9.50 + 1 / 5.50 + 1 / 1.30
+    assert overround >= 1.0
+
+
+def test_quota_valida_non_scartata_da_overround_ok():
+    """Controllo di non-regressione: un overround normale (>1) non deve
+    innescare il ripiego -- solo il caso impossibile lo fa."""
+    raw = _raw_sintetico(AvgCH=[2.00], AvgCD=[3.40], AvgCA=[3.80],
+                         B365CH=[1.90], B365CD=[3.10], B365CA=[3.50])
+    out = _normalize(raw, "2425", LEAGUES["serie_a"])
+    assert out["odds_home"].item() == 2.00
+    assert out["odds_draw"].item() == 3.40
+    assert out["odds_away"].item() == 3.80
+
+
 def test_apertura_fallback_interno_bet365():
     """Senza Avg pre-match si ripiega su B365 pre-match (mai su *C*)."""
     raw = _raw_sintetico(B365H=[2.15], B365D=[3.2], B365A=[3.5], AvgCH=[2.0])

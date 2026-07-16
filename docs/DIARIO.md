@@ -5876,6 +5876,103 @@ sotto-disperso (Fase 53: θ_Premier 1.07 < θ_SerieA 1.21).
 
 ---
 
+## Fase 58 — Audit dati: overround impossibile nella quota "Avg" (bug, non modello)
+
+**Obiettivo.** Su richiesta dell'utente, un audit mirato dei dati a disposizione
+(i tre snapshot `data/{serie_a,premier_league,la_liga}_matches.csv`) per trovare
+e sistemare problemi reali, distinti dai limiti già documentati e accettati
+(es. copertura `squad_value` — §"Limite onesto" sopra — che è una scelta, non un
+bug).
+
+**Ragionamento/metodo.** Controlli di integrità sui tre snapshot: coerenza
+`result` vs gol, duplicati, continuità date, copertura NaN per colonna/stagione,
+e — il controllo che ha trovato il problema — l'**overround implicito 1X2**
+(`Σ 1/quota`). Un bookmaker vero ha SEMPRE overround > 1 (il margine è il suo
+guadagno): un valore < 1 implica un arbitraggio garantito, impossibile su una
+linea reale — quindi è un sintomo di dato corrotto, non di un mercato efficiente.
+
+**Scoperta.** Due righe su 10260 (0.02%) violano il vincolo:
+- **La Liga, chiusura**: Mallorca-Barcelona (2025-08-16) — `AvgCH/AvgCD/AvgCA`
+  = 8.70/5.79/1.56 → overround **0.9287**. Nel CSV grezzo la colonna `MaxCA`
+  (massimo tra i book) vale **5.4**, mentre ogni singolo book quota l'ospite
+  1.29-1.39: un book anomalo incluso nella media della fonte (football-data.co.uk)
+  gonfia `AvgCA` ben oltre ciò che i book reali quotano.
+- **Serie A, apertura**: Genoa-Inter (2025-12-14) — `AvgH/AvgD/AvgA` =
+  6.37/4.20/1.67 → overround **0.9939** (stesso pattern: `MaxA`=4.0 contro
+  B365A=1.5).
+
+In entrambi i casi il livello di preferenza SUCCESSIVO (`B365CH/CD/CA` per la
+Liga, `B365H/D/A` per la Serie A) da' un overround sano (1.056 e 1.059).
+
+**Alternative considerate.** (a) Correggere a mano il numero — **scartata**:
+il progetto non inventa/aggiusta mai un dato (principio cardine, vedi §"niente
+imputazioni" sopra); non sappiamo QUALE quota tra le tre sia quella sbagliata,
+solo che la combinazione è impossibile. (b) Lasciare NaN la riga — perde
+informazione quando un livello successivo valido esiste. (c) **Ripiegare in
+BLOCCO** (mai un solo lato) sul livello di preferenza successivo quando
+l'overround del livello preferito è impossibile — **scelta adottata**: usa
+comunque un prezzo di mercato reale (non inventato), preserva la coerenza
+interna del book (stessa fonte per i tre esiti), e degrada a NaN solo se pure
+il ripiego fallisce (mai successo nei dati attuali).
+
+**Correzione.** `src/data/loader.py`: `_pick_market_odds` sceglie ora le quote
+di un intero mercato (1X2 o O/U) per riga invece che colonna per colonna,
+validando l'overround prima di accettare un livello e ritentando col successivo
+se impossibile (`_ODDS_MARKET_GROUPS`); `_open_odds_market` applica la stessa
+logica alle quote di apertura, senza toccare il mascheramento esistente (open
+resta NaN dove la chiusura è essa stessa un fallback pre-match, invariato dalla
+Fase 14/15). Rigenerati offline (nessuna rete): `la_liga_matches.csv` e
+`premier_league_matches.csv` via `build_league_snapshot.py` (bundle locali),
+`serie_a_matches.csv` via `_restore_raw_cache.py` + `build_database.py
+--open-odds` (CSV grezzi versionati). Diff verificato: **esattamente le 2 righe
+sopra cambiano**, nessun'altra — l'impronta dati (`data_fingerprint`, calcolata
+solo su date/squadre/gol) resta **invariata**: `8483944342fc8b15`, quindi nessun
+risultato già pubblicato nel registro (Fasi 1-57) è invalidato o va ricontrollato.
+
+**Risultato/impatto.** Impatto statistico nullo per costruzione (2 righe su
+oltre 10mila, mai usate per stimare il modello — le quote servono solo da
+benchmark in valutazione): nessuna riga di `experiments/runs.jsonl` cambia.
+Il valore del fix è nella **correttezza del dato pubblicato** e nella guardia
+per il futuro.
+
+**Lezione / cosa ne consegue.** Un controllo per-colonna (`valore > 1.0`) non
+basta a garantire un book coerente: serve un controllo di **gruppo** (l'intero
+mercato) perché il vincolo economico (niente arbitraggio) è sulla combinazione,
+non sul singolo numero. Aggiunti test di non-regressione: 2 unitari
+(`tests/test_open_odds.py`, con e senza overround impossibile, dati sintetici
+che riproducono il caso reale) + 1 parametrizzato su tutte e tre le leghe
+(`tests/test_league_snapshots.py::test_quote_1x2_senza_overround_impossibile`,
+chiusura e apertura) che blocca ogni futura corruzione della stessa natura,
+in qualunque lega.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova sul motore di stima — questa è una fase di **integrità
+dati**, non di modellazione. L'unica formula coinvolta è la definizione stessa
+di overround (verificata contro `_pick_market_odds` in `loader.py`):
+
+```
+overround = Σ_i 1/quota_i   (i = esiti del mercato: 1X2 o O/U)
+```
+
+`overround > 1` per costruzione economica: `1/quota_i` è la probabilità
+implicita SENZA rimuovere il margine (devig), e la somma delle probabilità
+implicite vigorish-incluse eccede 1 esattamente della quota di margine del
+book (tipicamente 3-8% nei dati, vedi Fase 55 EDA: margine medio 4.3-4.9%
+per lega). Un valore < 1 non è "un margine negativo piccolo": è matematicamente
+un arbitraggio a somma positiva garantita per chi punta su tutti e tre gli
+esiti contemporaneamente — impossibile per un book che vuole guadagnare dal
+margine, quindi certamente un errore di aggregazione a monte (nella fonte),
+non un fenomeno di mercato.
+
+**Riproducibilità.** `python scripts/_restore_raw_cache.py &&
+python scripts/build_database.py --open-odds` (Serie A) e
+`python scripts/build_league_snapshot.py premier_league la_liga` (bundle
+locali, nessuna rete) rigenerano gli snapshot con il fix; `pytest` verde
+(106 test, +5 da questa fase).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
