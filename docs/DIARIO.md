@@ -5692,6 +5692,124 @@ piu' largo o stretto dove il mercato e' meno/piu' efficiente.
 
 ---
 
+## Fasi 54-57 — Premier League e La Liga: conoscere due leghe nuove da zero
+
+Dopo 53 fasi tutte sulla Serie A, l'utente chiede un lavoro **approfondito** su
+Premier e La Liga: ripartire dai dati, capirne le differenze, e verificare se
+gli STESSI modelli reggono. È l'esame più severo del §7 (le formule sono
+universali, i numeri no) e delle scoperte recenti (sotto-dispersione, draw-bias,
+gap col mercato): sono proprietà del calcio o idiosincrasie della Serie A?
+
+### Fase 54 — La pipeline: due leghe nello stesso schema
+
+**Obiettivo/vincolo.** Il provider (football-data.co.uk) è irraggiungibile
+(403 dal proxy) e il mirror storico è sparito (Fase 14). I dati grezzi sono stati
+**caricati a mano** come bundle JSON in `files/` — football-data (risultati +
+quote) e Understat (xG), 9 stagioni ciascuna (2017-18 → 2025-26), stesso
+formato/era della Serie A.
+
+**Scelta.** `scripts/build_league_snapshot.py` fonde i bundle nello **stesso
+schema interno** della Serie A (riusa `loader._normalize` per risultati/quote e
+`understat.parse_season_xg` per l'xG — refactor che separa il parsing dal
+download), con i medesimi controlli d'integrità, e congela
+`data/{premier_league,la_liga}_matches.csv` (versionati, offline-first). La lega
+è ora una modifica di **configurazione** (voce in `sources.LEAGUES`,
+`UNDERSTAT_LEAGUES`, alias), non di codice (§4/§7).
+
+**Il punto critico: i nomi squadra.** Football-data e Understat scrivono gli
+stessi club in modo diverso (il bug silenzioso della Fase 2a). Estratti TUTTI i
+nomi delle 9 stagioni da entrambe le fonti: **6 differenze in Premier**
+(Man City/Manchester City, Wolves/Wolverhampton Wanderers, …) e **11 in La Liga**
+(Ath Madrid/Atletico Madrid — distinta da Real Madrid! —, Betis/Real Betis, …),
+tutte verificate **per identità** (non per ordinamento) e aggiunte a
+`TEAM_ALIASES`. Risultato: **copertura xG 100%, zero righe orfane** su entrambe
+le leghe. Due test nuovi bloccano la riconciliazione (nessun "quasi-duplicato").
+
+### Fase 55 — EDA: come si muovono i dati (la tabella che risponde alla domanda)
+
+**Obiettivo.** PRIMA di modellare, conoscere i dati (metodo §1). Statistiche
+descrittive delle tre leghe sulle dimensioni che sono state portanti in Serie A.
+
+| | Serie A | Premier | La Liga |
+|---|--:|--:|--:|
+| vittoria casa % | 41.2% | 44.1% | **45.3%** |
+| pareggio % | 26.0% | **23.4%** | 26.5% |
+| vittoria ospite % | 32.7% | 32.5% | **28.2%** |
+| Over 2.5 % | 52.0% | **54.4%** | 47.1% |
+| gol totali/partita | 2.72 | **2.84** | 2.58 |
+| **vantaggio-casa γ=ln(casa/osp)** | 0.150 | 0.185 | **0.272** |
+| Var/Media gol (casa) | 1.057 | **1.113** | 1.047 |
+| **δ neopromosse (attacco)** | 0.229 | **0.329** | 0.218 |
+| autocorr forze (t, t−1) | 0.736 | 0.736 | **0.818** |
+| corr xG-gol | 0.607 | 0.635 | 0.621 |
+| margine bookmaker | 4.9% | **4.3%** | 4.8% |
+| edge mercato vs baseline | **0.1285** | 0.1121 | 0.0951 |
+
+**Letture (le ipotesi per la modellazione).**
+1. **γ (vantaggio-casa): La Liga 0.272 ≫ Premier 0.185 > Serie A 0.150.** La Liga
+   è la più "casalinga" (45.3% casa, 28.2% ospite). MA γ è **auto-fittato** dal
+   DC: il modello si adatta da solo, non è un iperparametro da ritarare.
+2. **δ neopromosse: Premier 0.329 ≫ Serie A 0.229 ≈ Liga 0.218 — l'ipotesi §7 è
+   VERIFICATA sui dati.** Le promosse inglesi sono nettamente più deboli (segnano
+   1.02 vs media lega 1.42, subiscono 1.82). Il prior va ritarato: ~0.33 Premier,
+   ~0.22 Liga. Copiare 0.23 sotto-correggerebbe la Premier.
+3. **Draw-rate: Premier 23.4% (meno pareggi, la firma inglese)** vs 26% italiane/
+   spagnole. La famiglia-pareggio (φ35) potrebbe avere meno da correggere.
+4. **Stabilità delle rose: Liga autocorr 0.82 > 0.74** → memoria potenzialmente
+   più lunga per la Liga (da verificare).
+5. **Dispersione grezza: Premier più alta (Var/Media 1.11)** → gol più dispersi,
+   coerente col θ_Premier più basso (meno sotto-dispersione) della Fase 53.
+6. **Efficienza del mercato: Premier il più liquido** (margine 4.3%, il minore);
+   l'edge del mercato sulla baseline è massimo in Serie A (0.128) e minimo in Liga
+   (0.095). Ordina l'aspettativa di "battibilità" (Premier il più duro — Fase 53).
+
+### Fase 56 — Tracer bullet: il DC Serie A, non tarato, dove atterra?
+
+**Metodo §1.** Prima di ritarare, si prende il modello Serie A **così com'è**
+(config ufficiale) e lo si fa girare walk-forward (6 stagioni) sulle due leghe.
+
+| lega | modello | mercato | baseline | **gap 1X2** | CI95 |
+|---|--:|--:|--:|--:|--:|
+| Premier | 0.9831 | 0.9623 | 1.0653 | **+0.0207** | [+0.0138, +0.0274] |
+| La Liga | 0.9843 | 0.9681 | 1.0669 | **+0.0162** | [+0.0102, +0.0223] |
+| *(Serie A rif.)* | *0.9797* | *0.9632* | *1.0834* | *+0.0165* | *[+0.0106,+0.0225]* |
+
+**Lezione.** La **struttura trasferisce**: il DC batte nettamente la baseline su
+entrambe (0.98 vs 1.066, come in Serie A). Ma i **numeri no**: la Liga atterra al
+gap della Serie A (+0.0162), la Premier a un gap più largo (+0.0207) — proprio
+dove il mercato è più efficiente (EDA punto 6). Baseline onesta contro cui misurare
+la ri-taratura (Fase 57).
+
+### Fase 57 — Ri-taratura per lega [DA COMPLETARE con lo sweep in corso]
+
+*(sweep degli iperparametri in esecuzione; numeri e config nel commit successivo)*
+
+### 📐 Il modello in dettaglio — le formule dell'EDA e perché i numeri
+
+**Vantaggio-casa aggregato** `γ = ln(ḡ_casa / ḡ_ospite)` (medie dei gol): è la
+versione "a lega" del parametro home_advantage che il DC stima per partita
+(`λ = exp(att_h + dif_a + γ)`, dixon_coles.py:656). γ_Liga = ln(1.466/1.117) =
+0.272; γ_SerieA = ln(1.461/1.258) = 0.150. La differenza (0.12) è enorme in
+scala-gol (≈ +13% di tasso-casa in più in Liga) — ed è la ragione per cui la Liga
+ha il 45% di vittorie casalinghe. Il DC la cattura da solo (home_advantage fittato
+nella MLE), quindi NON entra nella config.
+
+**Prior neopromosse** `δ = ln(ḡ_lega / ḡ_promosse)` (Fase 7): ḡ_lega = gol per
+squadra per gara (1.360 Serie A, 1.419 Premier, 1.291 Liga); ḡ_promosse = gol
+segnati per gara dalle sole neopromosse. δ_Premier = ln(1.419/1.022) = 0.329:
+le promosse inglesi segnano il 33% in meno della media, contro il 23% in Serie A —
+il "gap di categoria" inglese è più marcato (la Championship è più distante dalla
+Premier di quanto la Serie B lo sia dalla A). È esattamente la previsione del §7,
+ora un numero, non un'intuizione.
+
+**Dispersione** Var/Media dei gol: 1 = Poisson. Il valore >1 misura
+l'eterogeneità tra squadre (una lega con più squattrini e più corazzate ha code
+più pesanti). Premier 1.11 > Liga/Serie A 1.05: la Premier ha più varianza di
+forza tra i club — coerente col fatto che il suo mercato-gol condizionato è meno
+sotto-disperso (Fase 53: θ_Premier 1.07 < θ_SerieA 1.21).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
