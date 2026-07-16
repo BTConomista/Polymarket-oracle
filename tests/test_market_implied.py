@@ -165,3 +165,30 @@ def test_nbinom_over_dispersa_vs_poisson():
     # size molto grande -> ~Poisson
     Mbig = mi.score_matrix(1.6, 1.6, nb_size=1e6)
     assert np.abs(Mbig - Mp).max() < 1e-3
+
+
+def test_double_poisson_sotto_dispersa_e_mean_preserving():
+    """La double-Poisson (Fase 51) con theta>1 e' SOTTO-dispersa (meno massa
+    sulle code, piu' sul centro), preserva la media, e theta=1 = Poisson."""
+    Mp = mi.score_matrix(1.6, 1.2, dp_theta=None)      # Poisson
+    Mdp = mi.score_matrix(1.6, 1.2, dp_theta=1.225)    # sotto-dispersa
+    assert Mdp.sum() == pytest.approx(1.0, abs=1e-9)
+    # media dei marginali preservata
+    qh = Mdp.sum(axis=1)
+    assert float((qh * mi._K).sum()) == pytest.approx(1.6, abs=1e-3)
+    # coda alta (totale >= 6) piu' LEGGERA della Poisson (sotto-dispersione)
+    i = mi._K.reshape(-1, 1); j = mi._K.reshape(1, -1)
+    assert float(Mdp[(i + j) >= 6].sum()) < float(Mp[(i + j) >= 6].sum())
+    # theta=1 riproduce la Poisson esatta
+    M1 = mi.score_matrix(1.6, 1.2, dp_theta=1.0)
+    assert np.abs(M1 - Mp).max() < 1e-12
+
+
+def test_sharpen_1x2_affinamento_fase51():
+    """sharpen_1x2 (dp_lvl): probabilita' valide, e la correzione dei livelli
+    sposta massa dalla casa verso la trasferta (bias-casa dei tassi impliciti)."""
+    pH, pD, pA = mi.sharpen_1x2(1.6, 1.1)
+    assert pH + pD + pA == pytest.approx(1.0, abs=1e-9)
+    raw = mi._1x2_over(mi.score_matrix(1.6, 1.1, -0.06))
+    assert pH < raw[0]          # la casa si sgonfia (lambda x0.9726)
+    assert pA > raw[2]          # la trasferta sale (mu x1.0224)

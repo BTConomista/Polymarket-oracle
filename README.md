@@ -150,6 +150,10 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **50-ter** | **ricalibrare il MERCATO stesso** (livelli λ,μ; pesi per-classe w_D/w_A leave-future-out) | livelli: 1X2 dell'engine 0.9637→**0.9630** (P 90%) ma la chiusura diretta resta meglio (0.9625); per-classe: **5/6 stagioni migliorano**, w_D≈1.09 w_A≈1.06 stabili (pari+trasferta sottoprezzati = draw bias noto), pooled Δ **−0.0006** CI [−0.0020,+0.0009] P 78% | 🔎 la crepa più credibile sulla chiusura, **non conclusa** (servono ~20 stagioni per il verdetto) |
 | **50-quater** | **GBM bespoke per singolo mercato** (chiude la riserva §1.8; con λ,μ mercato, matchday e la predizione dell'engine TRA LE FEATURE) | perde **ovunque, su entrambi i path**: GG +0.0099, clean-sheet casa +0.0206, casa O1.5 +0.0170, O/U +0.0149 (tutti i CI escludono lo zero dal lato sbagliato); anche `gbm_dc` < DC ovunque; degrada perfino la predizione-engine ricevuta in input (meccanismo Fase 23) | ❌ **chiuso definitivamente** (quarta bocciatura della famiglia: 21/22/23/36 + questa) |
 | **50-quinquies** | **sweep del path DC** (φ35 × covariate stakes/midweek × ri-taratura emivita/shrinkage con φ35 attiva; 54 backtest walk-forward) | le leve si sommano **senza interagire**: φ35+midweek = **0.9786** (miglior 1X2 del progetto, Δ −0.0011, P 78%, gap **+0.0154** vs +0.0165); **stakes ridondante** una volta attiva la φ35; iperparametri **piatti** con φ35 (270/365/540g e shr 0.75/1.5 tutti ≈0.979: la taratura ufficiale resta ottima); additività quasi esatta dei Δ singoli | 🔎 tutto nel rumore (CI includono 0) → config invariata; φ35+midweek = miglior variante DC opt-in |
+| **51** | **audit delle lacune + batteria di forme mai provate** (double-Poisson di Efron, Rue-Salvesen, zero-inflazione 0-0; fittate LFO sui tassi del mercato) | **i gol sono SOTTO-dispersi dati i tassi del mercato: θ=1.205, >1 in 7/7 fit** — l'asse che la NB della Fase 27 non poteva vedere; migliora tutto il blocco esiti (1X2 −0.0021, ris.esatto **−0.0078**, pareggio, GG); Rue-Salvesen (γ=+0.03) e zero-inflazione (z≈0) **nulli**; Kalman dichiarato chiuso-per-argomento (emivita = suo steady-state) | ✅ **scoperta**: la forma giusta è più CONCENTRATA della Poisson; RS e ZI chiusi |
+| **51-bis** | **si batte la chiusura 1X2?** (confronto appaiato: temperatura sul mercato — mai provata —, w-classe, double-Poisson, dp+livelli) | **dp_lvl = 0.9609 vs chiusura 0.9625: Δ −0.0016, CI95 [−0.0029, −0.0003] ESCLUDE lo zero, P 99%, 7/7 stagioni** (regge sul sottoinsieme fit≥2 stag.: −0.0018); temperatura T≈1.10 da sola −0.0010 (87%): la chiusura è un filo sotto-confidente + tilt casa/trasferta | ✅ **primo risultato che batte la chiusura con CI conclusivo** (in log-loss); opt-in `sharpen_1x2` nel motore + `predict.py` |
+| **51-ter** | **ROI dei risultati nuovi** (pari-equilibrio coi tassi del mercato; value-bet 1X2 con dp_lvl) | pari-equilibrio: **+3.2%** (n=1141, 7 stag., CI [−5.9,+11.9], P 76%, 5/7 — coerente con Fase 40); filtro dp_lvl sul pari PEGGIORA (−13.3%, n=92); value-bet dp_lvl quasi mai attivato (edge ~0.5-1% ≪ margine ~5%) | 🔎 **battere la chiusura in log-loss ≠ ROI**: dp_lvl è valore da oracolo, non da scommessa; draw-bias resta l'unico lead monetizzabile (non concluso) |
+| **51-quater** | **simmetrie mancanti**: routing v2 (tassi per famiglia), GBM bespoke sul PAREGGIO, recal O/U del mercato | routing v2: GG −0.0010 ✓ (conferma indipendente), scarto-casa ≥2 −0.0012 ✓ (P 100%); GBM-pareggio **perde** (+0.0078, P=0% → bespoke bocciato su TUTTI i mercati); recal O/U peggiora out-of-sample (+0.0013: bias O/U instabile, a differenza del tilt 1X2) | ❌ tre chiusure pulite / ✅ router v2 confermato |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -164,6 +168,14 @@ come covariata DC; (4) **covariate nel canale-pareggio** (φ condizionato a stak
 (5) **denoising cross-stagione del market-implied**. Il vantaggio-casa a fine
 stagione (Fase 30) resta un candidato di sola **calibrazione** (post-hoc peggiora il
 log-loss: +0.0021).
+
+**Nota Fase 51 (la prima crepa conclusiva):** la lettura *affinata* della chiusura
+— double-Poisson sotto-dispersa (θ=1.225) sui tassi impliciti corretti nei livelli
+(`market_implied.sharpen_1x2`) — **batte la chiusura devigata in log-loss 1X2**
+(0.9609 vs 0.9625, CI95 [−0.0029, −0.0003], 7/7 stagioni). NON è un edge di
+scommessa (l'affinamento ~0.5-1% per esito è sotto il margine ~5%: ROI nullo,
+Fase 51-ter): è la miglior *stima* 1X2 del progetto, condizionata alle quote. Il
+gap storico del modello standalone (DC) resta quello qui sopra.
 
 **Dove vive il gap col mercato** (anatomia completa in [Fase 9](#anatomia-del-gap-col-mercato--fase-9-dove-vive-il-divario)):
 è **quasi tutto nel PAREGGIO** — escluso il pari (mercato "12") il modello è già a

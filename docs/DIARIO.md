@@ -5309,6 +5309,174 @@ leve correggono difetti ortogonali (massa-pareggio vs congestione europea).
 
 ---
 
+## Fase 51 — Audit delle lacune + modelli mai provati: la sotto-dispersione batte la chiusura
+
+**Obiettivo.** Audit sistematico delle 50 fasi: quali calcoli/analisi mancano?
+Quali famiglie statistiche non sono mai state provate? Lacune trovate:
+
+1. **La Fase 27 aveva testato solo META' dell'asse dispersione**: la binomiale
+   negativa copre solo la SOVRA-dispersione (rigettata → "gol ~ Poisson"). La
+   SOTTO-dispersione non era testabile con quella famiglia → **double-Poisson di
+   Efron (1986)**, che copre entrambe le direzioni con un parametro θ.
+2. **Rue-Salvesen (2000)** mai provato (smorzamento della differenza di forza).
+3. **Zero-inflazione dello 0-0** mai provata (il ρ tocca 4 punteggi, la φ35 la
+   diagonale intera; lo 0-0 da solo mai).
+4. Il **Kalman vero** (random-walk delle forze) non e' mai stato fittato: la
+   Fase 48 ha chiuso "l'architettura dinamica" testando il profilo stagionale
+   deterministico, non lo state-space. Nota onesta: resta **chiuso per
+   argomento** — il decadimento esponenziale (emivita) E' il filtro di Kalman a
+   regime per un random-walk osservato con rumore, e le emivite sono gia' state
+   spazzate (Fasi 2b/4d/12a); il guadagno atteso di un Kalman pieno e' ~0. Non testato.
+5. Combo suggerite dalla Fase 50 e mai valutate: routing con tassi ricalibrati
+   per famiglia; recal O/U; ROI pareggio-equilibrio coi tassi del MERCATO;
+   GBM bespoke sul pareggio (il Track C non lo includeva).
+
+Cinque esperimenti (tutti su cache, un run ciascuno): **A** batteria di forme
+(`_run_fase51_shape_battery.py`), **B** routing v2 (`_run_fase51_routing2.py`),
+**C** "si batte la chiusura?" (`_run_fase51_beat_close.py`), **D** ROI
+(`_run_fase51_roi.py`), **E** pareggio bespoke + recal O/U
+(`_run_fase51_draw_ou.py`).
+
+### A. La batteria delle forme: i gol sono SOTTO-dispersi, dati i tassi del mercato
+
+Fit walk-forward sui tassi del mercato (8 stagioni, n=2660):
+
+| variante | GG/NG | ris.esatto | pareggio | 1X2 | parametro medio |
+|---|--:|--:|--:|--:|---|
+| τ (Fase 26) | 0.6831 | 2.8250 | 0.5684 | 0.9633 | — |
+| φ35 (Fase 39) | 0.6821 | 2.8254 | 0.5688 | 0.9637 | φ0≈0.30 |
+| **double-Poisson (dp)** | 0.6815 | **2.8172** | **0.5679** | **0.9615** | **θ=1.205** |
+| dp + φ35 | **0.6812** | 2.8181 | 0.5688 | 0.9624 | |
+| Rue-Salvesen | 0.6830 | 2.8253 | 0.5684 | 0.9642 | γ=+0.033 |
+| zero-inflazione 0-0 | 0.6834 | 2.8254 | 0.5689 | 0.9638 | z=−0.006 |
+
+- **La double-Poisson e' la scoperta**: θ>1 in TUTTI e 7 i fit (1.16→1.24,
+  cresce con la finestra = stima consistente). I gol, condizionati ai tassi del
+  mercato, hanno varianza ~17% SOTTO la Poisson: la matrice va **concentrata**,
+  non allargata. La Fase 27 non poteva vederlo (la NB va solo nell'altro verso).
+  Migliora TUTTO il blocco esiti: 1X2 −0.0021 vs φ35, risultato esatto −0.0078
+  (il piu' grande guadagno dal Fase 26), pareggio, GG.
+- **Rue-Salvesen: γ=+0.033 piccolo, nessun guadagno** (il suo lavoro lo fa gia'
+  la φ35, in modo mirato). **Zero-inflazione: z≈0** — dopo ρ e φ35 lo 0-0 non ha
+  massa mancante. Entrambe chiuse pulite.
+
+### B. Routing v2 (tassi per famiglia): conferma e un mercato nuovo
+
+Router con tassi ricalibrati per famiglia (lvl_both per esiti, k34_mu per GG,
+τ grezza per totali) vs router Fase 44, 20 mercati Tier 1: media 0.5517 vs
+0.5519; GG **−0.0010 ✓CI** (conferma Track A per via indipendente), scarto-casa
+≥2 **−0.0012 ✓CI (P 100%)**, pareggio −0.0003 (P 89%); totali identici per
+costruzione. Adottato come routing di riferimento del motore *(nota: superato
+in parte dalla dp del punto C — il router coi tassi dp è il candidato Fase 52)*.
+
+### C. Si batte la chiusura? SI' — prima volta con CI conclusivo (in log-loss)
+
+Confronto APPAIATO sull'1X2, stessa finestra (n=2660), vs mercato devigato:
+
+| variante | 1X2 | Δ vs mercato | CI95 | P | stagioni |
+|---|--:|--:|--:|--:|--:|
+| mercato (devig) | 0.9625 | — | — | — | — |
+| mercato + temperatura T (LFO) | 0.9615 | −0.0010 | [−0.0027, +0.0007] | 87% | 6/7 |
+| mercato + w-classe (50-ter) | 0.9635 | +0.0011 | [−0.0007, +0.0029] | 11% | 5/7 |
+| double-Poisson (dp) | 0.9615 | −0.0009 | [−0.0020, +0.0002] | 95% | 4/7 |
+| **dp + livelli (dp_lvl)** | **0.9609** | **−0.0016** | **[−0.0029, −0.0003]** | **99%** | **7/7** |
+
+- **dp_lvl** = double-Poisson (θ LFO) sui tassi ricalibrati nei LIVELLI
+  (λ×~0.97, μ×~1.02, il bias-casa della Fase 50). **CI95 esclude lo zero, 7/7
+  stagioni, e regge sul sottoinsieme con fit ≥2 stagioni (−0.0018)**. E' il primo
+  risultato del progetto che batte la linea di chiusura in log-loss con CI
+  conclusivo. Meccanismo = composizione di DUE bias misurati indipendentemente
+  (sotto-dispersione + tilt casa/trasferta), non un fit fortunato.
+- La **temperatura sul mercato** (mai provata prima; T≈1.10 = chiusura un filo
+  SOTTO-confidente) da sola fa −0.0010 (87%): meta' dell'effetto dp e' proprio
+  sharpening; l'altra meta' (il tilt dei livelli) la temperatura non puo' farla.
+- Onesta': (i) "chiusura" = devig moltiplicativo, il benchmark usato in TUTTO il
+  progetto (gap +0.0165 ecc.) — un devig piu' raffinato (Shin) potrebbe assorbire
+  parte del bias; (ii) dopo ~50 fasi di test sulla stessa finestra un CI a
+  [−0.0029,−0.0003] va preso con disciplina: e' il risultato piu' forte mai
+  visto qui, non una verita' assoluta.
+
+### D. Il ROI: l'edge di log-loss NON e' un edge di scommessa
+
+- Pari-equilibrio coi tassi del MERCATO (|λ−μ|<0.5, soglia Fase 40): **+3.2%**
+  (n=1141, 7 stagioni, CI [−5.9%, +11.9%], P 76%, 5/7 positive) — coerente col
+  +4.7% della Fase 40 (tassi DC, 6 stagioni), sempre non conclusivo.
+- Filtro "edge dp_lvl" sul pari: PEGGIORA (−13.3%, n=92) — l'affinamento dp_lvl
+  non seleziona value-bet sul pari.
+- Value-bet 1X2 con dp_lvl (edge>0.03): quasi MAI attivato (1 bet casa, 0 pari,
+  69 trasferta +6.0% CI include 0). L'affinamento e' ~0.5-1% per esito, il
+  margine ~5%: **battere la chiusura in log-loss ≠ batterla in ROI**. Il valore
+  del dp_lvl e' da ORACOLO (stima migliore), non da scommettitore.
+
+### E. Le due simmetrie mancanti: chiuse
+
+- **GBM bespoke sul PAREGGIO** (il mercato che mancava al Track C): perde anche
+  qui (+0.0078 vs engine, CI [+0.0033,+0.0123], P=0%). La famiglia bespoke e'
+  ora bocciata su TUTTI i mercati provati (GG, CS, total-squadra, O/U, pari).
+- **Recal O/U del mercato** (w_over≈1.07 fittato): out-of-sample PEGGIORA
+  (+0.0013, P 7%) — il bias O/U non e' stabile, a differenza del tilt 1X2.
+
+**Lezione / cosa ne consegue.**
+1. **Un audit onesto trova ancora spazio**: la lacuna era su un asse (sotto-
+   dispersione) che il test esistente (NB) non copriva per costruzione. Metodo:
+   quando un test rigetta una famiglia, chiedersi quali direzioni QUELLA
+   famiglia non puo' vedere.
+2. Il motore market-implied guadagna un'opzione di **stima 1X2 affinata**
+   (`market_implied.sharpen_1x2`, costanti pooled θ=1.225 e livelli
+   (0.9726, 1.0224), da rifittare per lega — §7); esposta in `predict.py` come
+   riga informativa. La chiusura resta il benchmark del GAP (coerenza storica).
+3. Il draw-bias resta l'unico candidato di ROI (+3.2/+4.7%, mai concluso);
+   tutto il resto e' oracolo, non scommessa.
+4. Rue-Salvesen, zero-inflazione, GBM-pareggio, recal-O/U: **chiusi**.
+   Kalman: chiuso per argomento (dichiarato, non testato).
+
+### 📐 Il modello in dettaglio — la double-Poisson e perche' i numeri
+
+**La PMF double-Poisson mean-preserving** (verificata riga per riga contro
+`market_implied._dp_pmf` e `_dp_pmf` negli script `_run_fase51_*`):
+
+```
+q_k(r, θ) ∝ [ Poisson(k; c·r) ]^θ ,  k = 0..10, rinormalizzata
+c risolto per bisezione (45 iter.) perche'  Σ k·q_k = r   (media preservata)
+matrice:  M = q(λ)⊗q(μ), poi correzione ρ sui 4 punteggi bassi e rinorm.
+dp_lvl:   λ' = λ·0.9726,  μ' = μ·1.0224  (livelli pooled, Fase 50/51), poi dp
+```
+
+**Perche' θ ≈ 1.2 (e non 1).** Elevare la PMF a θ>1 e rinormalizzare concentra
+la massa attorno alla media: Var ≈ Var_Poisson/θ. Il fit MLE walk-forward trova
+θ=1.16→1.24 (piu' dati → stima piu' alta e piu' stabile): i punteggi reali,
+condizionati ai tassi del mercato (che sono stime BUONE), oscillano ~17% meno di
+una Poisson. Intuizione: la Poisson assume l'intensita' costante e indipendenza
+tra i gol; nel calcio reale chi conduce gestisce (il 2-0 "si addormenta"), e la
+parte di varianza dovuta all'incertezza sui tassi qui NON c'e' (i tassi sono
+condizionati, non stimati male). La NB della Fase 27 (solo Var>media) non poteva
+scoprirlo: rigettarla NON implicava "Poisson ottima", implicava "non
+sovra-dispersi" — l'errore logico che l'audit ha stanato.
+
+**Perche' θ migliora l'1X2 e il risultato esatto.** Concentrare la matrice
+alza le celle centrali (i punteggi tipici) → il risultato esatto guadagna
+−0.0078; sull'1X2 l'effetto e' uno sharpening coerente delle tre probabilita'
+(analogo a T=1.10 sul mercato: la chiusura e' un filo sotto-confidente, perche'
+il margine e il devig moltiplicativo "appiattiscono" le prob implicite).
+
+**Perche' i livelli (0.9726, 1.0224).** `exp(c) = Σ gol / Σ tasso` pooled su
+8 stagioni (MLE Poisson del fattore comune, come Fase 47): il bias-casa dei book
+sopravvive al devig e finisce nei tassi invertiti (λ alto, μ basso). Il tilt
+sposta ~1 punto di massa da casa a trasferta — la componente che lo sharpening
+non puo' dare.
+
+**ROI del pari-equilibrio** (D): stessa formula della Fase 40
+(`ROI = media[1{pari}·quota − 1]` su |λ−μ|<0.5), con λ,μ del mercato: +3.2%
+pooled, CI [−5.9,+11.9] — la varianza attesa di un evento a quota ~3.3 su
+n=1141 e' ±9% (stessa matematica della Fase 40): per concludere servono ~20
+stagioni o una quota migliore (exchange).
+
+**Riproducibilità.** `python scripts/_run_fase51_shape_battery.py` ·
+`_run_fase51_routing2.py` · `_run_fase51_beat_close.py` · `_run_fase51_roi.py` ·
+`_run_fase51_draw_ou.py`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

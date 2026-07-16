@@ -65,6 +65,12 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      stima GG/NG (opt-in, non conclusa) è: market-implied → ricalibrazione-μ
      walk-forward → φ(|λ−μ|) (Fase 50, GG 0.6810); il nudge stagionale della Fase 48
      vale SOLO sul path DC (il mercato prezza già il finale — Fase 50-bis).
+     **Fase 51:** i gol dati i tassi del mercato sono **SOTTO-dispersi** (double-
+     Poisson θ≈1.2 — l'asse che la binomiale negativa della Fase 27 non copriva);
+     `sharpen_1x2` (θ + livelli dei tassi) **batte la chiusura devigata sull'1X2 in
+     log-loss con CI conclusivo** (0.9609 vs 0.9625, 7/7 stagioni) ma NON in ROI
+     (affinamento ≪ margine). Rue-Salvesen, zero-inflazione, GBM-pareggio e recal
+     O/U: testati e chiusi (Fase 51).
 
 ---
 

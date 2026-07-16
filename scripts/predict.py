@@ -137,6 +137,11 @@ def main() -> None:
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
         _show_markets(d, "Modello 2: market-implied + φ35 (forma instradata per-mercato)",
                       rho=-0.06, matchday=args.matchday, nudge=False)
+        # 1X2 "affinato" dp_lvl (Fase 51): sotto-dispersione + livelli dei tassi.
+        # Batte la chiusura in log-loss (CI conclusivo) ma NON e' un edge di ROI.
+        sH, sD, sA = mi.sharpen_1x2(lam, mu)
+        print(f"\n  1X2 affinato (dp_lvl, Fase 51):  1 {sH:6.1%}   X {sD:6.1%}   "
+              f"2 {sA:6.1%}   [miglior stima; non un edge di scommessa]")
 
 
 if __name__ == "__main__":

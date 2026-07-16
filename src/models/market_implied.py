@@ -44,18 +44,42 @@ def _nbinom_pmf(mean: float, size: float) -> np.ndarray:
                   + size * np.log(p) + _K * np.log1p(-p))
 
 
+def _dp_pmf(rate: float, theta: float) -> np.ndarray:
+    """PMF double-Poisson di Efron (1986), MEAN-PRESERVING: q_k ∝ Poisson(c·rate)^θ
+    rinormalizzata, con c risolto per bisezione perché la media resti ``rate``.
+    θ>1 = SOTTO-dispersione (Fase 51: θ≈1.2 sui gol dati i tassi del mercato),
+    θ<1 = sovra-dispersione, θ=1 = Poisson."""
+    if theta == 1.0:
+        return _poisson_pmf(rate)
+    lo, hi = 0.2, 5.0
+    for _ in range(45):
+        c = 0.5 * (lo + hi)
+        q = np.exp(theta * (_K * np.log(c * rate) - c * rate - _LOGFACT))
+        q = q / q.sum()
+        if (q * _K).sum() < rate:
+            lo = c
+        else:
+            hi = c
+    return q
+
+
 def score_matrix(lam: float, mu: float, rho: float = 0.0,
-                 diag_inflation: float = 0.0, nb_size: float | None = None
-                 ) -> np.ndarray:
+                 diag_inflation: float = 0.0, nb_size: float | None = None,
+                 dp_theta: float | None = None) -> np.ndarray:
     """Matrice P(gol_casa=i, gol_ospite=j) attorno ai tassi (lam, mu).
 
     - ``rho``           : correzione Dixon-Coles sui 4 punteggi bassi (rho=0 =
       marginali indipendenti);
     - ``diag_inflation``: phi che alza TUTTA la diagonale dei pareggi (Fase 12b);
     - ``nb_size``       : se dato, usa marginali binomiali-negative con quel
-      parametro di dispersione invece della Poisson (over-dispersione).
+      parametro di dispersione invece della Poisson (over-dispersione);
+    - ``dp_theta``      : se dato, usa marginali double-Poisson mean-preserving
+      (Fase 51: θ>1 = sotto-dispersione, l'asse che la binomiale negativa non
+      copre; θ≈1.2 fittato sui tassi del mercato).
     Normalizzata."""
-    if nb_size is not None:
+    if dp_theta is not None:
+        ph, pa = _dp_pmf(lam, dp_theta), _dp_pmf(mu, dp_theta)
+    elif nb_size is not None:
         ph, pa = _nbinom_pmf(lam, nb_size), _nbinom_pmf(mu, nb_size)
     else:
         ph, pa = _poisson_pmf(lam), _poisson_pmf(mu)
@@ -259,6 +283,34 @@ def season_mu_factor(matchday, coef=GG_SEASON_MU_COEF) -> float:
     """Moltiplicatore del tasso-gol ospite alla giornata `matchday`: ≈1 fuori dal
     finale, ×1.07–1.14 nelle giornate 35-38."""
     return float(np.exp(season_basis([matchday]) @ np.asarray(coef, float))[0])
+
+
+# --- Fase 51: affinamento 1X2 "dp_lvl" (sotto-dispersione + livelli dei tassi) --- #
+# Due bias misurati indipendentemente sui tassi impliciti nelle quote (8 stagioni):
+#   1. i gol, DATI i tassi del mercato, sono SOTTO-dispersi (double-Poisson
+#      θ≈1.2, stabile 7/7 fit walk-forward — l'asse che la binomiale negativa
+#      della Fase 27 non poteva vedere);
+#   2. il bias-casa dei book sopravvive al devig: λ implicito ALTO (~×0.97 il
+#      fattore correttivo), μ BASSO (~×1.02).
+# Composti (walk-forward, 7 stagioni test): 1X2 0.9609 vs chiusura devigata
+# 0.9625, Δ −0.0016, CI95 [−0.0029, −0.0003], P 99%, 7/7 stagioni — il PRIMO
+# risultato del progetto che batte la chiusura con CI conclusivo. NON è un edge
+# monetizzabile (l'affinamento è ~0.5-1% per esito, sotto il margine ~5%:
+# value-bet quasi mai attivato — Fase 51-D). Costanti pooled 8 stagioni, da
+# RIFITTARE per lega/periodo (§7).
+DP_THETA = 1.225                    # sotto-dispersione double-Poisson (Fase 51)
+RATE_LEVELS = (0.9726, 1.0224)      # fattori di livello (λ, μ) dei tassi impliciti
+
+
+def sharpen_1x2(lam: float, mu: float, rho: float = -0.06,
+                theta: float = DP_THETA,
+                levels: tuple[float, float] = RATE_LEVELS
+                ) -> tuple[float, float, float]:
+    """1X2 "affinato" (dp_lvl, Fase 51): corregge i livelli dei tassi impliciti e
+    usa marginali double-Poisson sotto-dispersi. Ritorna (P(1), P(X), P(2))."""
+    M = score_matrix(lam * levels[0], mu * levels[1], rho, dp_theta=theta)
+    pH, pD, pA, _ = _1x2_over(M)
+    return pH, pD, pA
 
 
 def btts_season(lam: float, mu: float, matchday, rho: float = 0.0,
