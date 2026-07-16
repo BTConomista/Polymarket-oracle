@@ -109,28 +109,35 @@ _CUP_RE = re.compile(
 # --------------------------------------------------------------------------- #
 # Download (con cache offline)
 # --------------------------------------------------------------------------- #
-def _cache_path(kind: str, season_code: str, comp: str) -> Path:
-    return RAW_DIR / f"fixtures_{kind}_{season_code}_{comp}.txt"
+def _cache_path(kind: str, season_code: str, comp: str, league_key: str = "serie_a") -> Path:
+    # La Serie A mantiene il nome-file storico (senza lega nel path): le altre
+    # leghe lo aggiungono per non collidere in cache (Fase 59).
+    prefix = "fixtures" if league_key == "serie_a" else f"fixtures_{league_key}"
+    return RAW_DIR / f"{prefix}_{kind}_{season_code}_{comp}.txt"
 
 
 def download_openfootball(
-    season_code: str, comp: str, kind: str, *, force: bool = False
+    season_code: str, comp: str, kind: str, *,
+    league_key: str = "serie_a", force: bool = False,
 ) -> Path | None:
-    """Scarica (con cache) un file openfootball. ``kind`` in {"europe","italy"}.
+    """Scarica (con cache) un file openfootball. ``kind`` in {"europe","domestic"}
+    (``"italy"`` resta accettato come alias storico di ``"domestic"``+serie_a).
 
     Ritorna il percorso locale, o ``None`` se la competizione non e' presente per
     quella stagione (HTTP 404): NON e' un errore, e' una lacuna di copertura che
     logghiamo e documentiamo, non un numero da inventare.
     """
     RAW_DIR.mkdir(parents=True, exist_ok=True)
-    dest = _cache_path(kind, season_code, comp)
+    if kind == "italy":
+        kind, league_key = "domestic", "serie_a"
+    dest = _cache_path(kind, season_code, comp, league_key)
     if dest.exists() and not force:
         return dest
 
     if kind == "europe":
         url = sources.openfootball_europe_url(season_code, comp)
-    elif kind == "italy":
-        url = sources.openfootball_italy_url(season_code, comp)
+    elif kind == "domestic":
+        url = sources.openfootball_domestic_cup_url(league_key, season_code, comp)
     else:
         raise ValueError(f"kind sconosciuto: {kind}")
 
@@ -147,8 +154,9 @@ def download_openfootball(
     return dest
 
 
-def _read_cached(kind: str, season_code: str, comp: str, *, force: bool) -> str | None:
-    path = download_openfootball(season_code, comp, kind, force=force)
+def _read_cached(kind: str, season_code: str, comp: str, *,
+                  league_key: str = "serie_a", force: bool) -> str | None:
+    path = download_openfootball(season_code, comp, kind, league_key=league_key, force=force)
     if path is None:
         return None
     return path.read_text(encoding="utf-8", errors="replace")
@@ -202,11 +210,19 @@ class _DateTracker:
             return None
 
 
-def parse_europe(text: str, season_code: str, competition: str) -> pd.DataFrame:
-    """Estrae le partite di una competizione UEFA che coinvolgono un club ITA.
+def parse_europe(
+    text: str, season_code: str, competition: str, country_code: str = "ITA",
+) -> pd.DataFrame:
+    """Estrae le partite di una competizione UEFA che coinvolgono un club di
+    ``country_code`` (default "ITA", Serie A).
 
     Ritorna righe grezze: date, home_raw, home_cc, away_raw, away_cc, competition.
-    Il filtro/aggancio ai nomi canonici avviene a valle (in ``_uefa_team_rows``).
+    Il filtro/aggancio ai nomi canonici avviene a valle (in ``_uefa_team_rows``,
+    che va chiamata con LO STESSO ``country_code`` -- Fase 59: prima di
+    generalizzare a Premier/Liga questo filtro era cablato su "ITA" e scartava
+    silenziosamente ogni partita europea SENZA una squadra italiana, es.
+    Manchester City-RB Leipzig: un club senza mai un'italiana in un turno
+    (comune) restava a ZERO partite anche quando i dati le contenevano tutte).
     """
     tracker = _DateTracker(season_code)
     rows: list[dict] = []
@@ -221,8 +237,8 @@ def parse_europe(text: str, season_code: str, competition: str) -> pd.DataFrame:
         if not m or current_date is None:
             continue
         home, hc, away, ac = (g.strip() for g in m.groups())
-        if hc != "ITA" and ac != "ITA":
-            continue  # ci interessano solo le squadre italiane
+        if hc != country_code and ac != country_code:
+            continue  # ci interessano solo le squadre della lega in oggetto
         rows.append({
             "season": season_code, "competition": competition,
             "date": current_date,
@@ -283,12 +299,16 @@ def parse_cup(text: str, season_code: str, competition: str) -> pd.DataFrame:
 # --------------------------------------------------------------------------- #
 # Da righe grezze a righe "per squadra italiana" (una riga per club coinvolto)
 # --------------------------------------------------------------------------- #
-def _uefa_team_rows(raw: pd.DataFrame, snapshot_teams: set[str]) -> list[dict]:
+def _uefa_team_rows(
+    raw: pd.DataFrame, snapshot_teams: set[str], country_code: str = "ITA",
+) -> list[dict]:
     """Trasforma le partite grezze in righe per-squadra dello schema fixtures.
 
-    Per ogni lato ITALIANO della partita emette una riga (team canonico,
-    opponent = altro lato canonico, home_away). I nomi ITA che NON agganciano un
-    club dello snapshot vengono LOGGATi (probabile alias mancante).
+    Per ogni lato con codice paese ``country_code`` (default "ITA", Serie A)
+    emette una riga (team canonico, opponent = altro lato canonico, home_away).
+    I nomi di quel paese che NON agganciano un club dello snapshot vengono
+    LOGGATi (probabile alias mancante) -- generalizzato Fase 59 per Premier
+    ("ENG")/Liga ("ESP"), stessa logica, stesso schema.
     """
     out: list[dict] = []
     for r in raw.itertuples(index=False):
@@ -298,13 +318,13 @@ def _uefa_team_rows(raw: pd.DataFrame, snapshot_teams: set[str]) -> list[dict]:
             (r.home_cc, home, away, "H"),
             (r.away_cc, away, home, "A"),
         ):
-            if side_cc != "ITA":
+            if side_cc != country_code:
                 continue
             if team not in snapshot_teams:
                 log.warning(
-                    "Club ITA NON agganciato (alias mancante?): %r -> %r "
+                    "Club %s NON agganciato (alias mancante?): %r -> %r "
                     "[%s %s, %s]",
-                    r.home_raw if ha == "H" else r.away_raw, team,
+                    country_code, r.home_raw if ha == "H" else r.away_raw, team,
                     r.season, r.competition, r.date.date(),
                 )
                 continue
@@ -333,53 +353,66 @@ def _cup_team_rows(raw: pd.DataFrame, snapshot_teams: set[str]) -> list[dict]:
     return out
 
 
-def _serie_a_rows(matches: pd.DataFrame) -> list[dict]:
-    """Righe di Serie A derivate dallo snapshot (esatte, nomi gia' canonici)."""
+def _league_rows(matches: pd.DataFrame, competition: str) -> list[dict]:
+    """Righe di campionato derivate dallo snapshot (esatte, nomi gia' canonici),
+    per QUALSIASI lega -- ``competition`` e' il nome usato nel calendario."""
     out: list[dict] = []
     for r in matches.itertuples(index=False):
         date = pd.Timestamp(r.date).normalize()
         out.append({
             "season": str(r.season), "team": r.home_team, "date": date,
-            "competition": sources.SERIE_A_COMPETITION,
+            "competition": competition,
             "home_away": "H", "opponent": r.away_team,
         })
         out.append({
             "season": str(r.season), "team": r.away_team, "date": date,
-            "competition": sources.SERIE_A_COMPETITION,
+            "competition": competition,
             "home_away": "A", "opponent": r.home_team,
         })
     return out
+
+
+def _serie_a_rows(matches: pd.DataFrame) -> list[dict]:
+    """Righe di Serie A derivate dallo snapshot. Alias storico di
+    ``_league_rows(matches, sources.SERIE_A_COMPETITION)`` (retrocompatibilita'
+    dei test/codice esistenti)."""
+    return _league_rows(matches, sources.SERIE_A_COMPETITION)
 
 
 # --------------------------------------------------------------------------- #
 # Assemblaggio del calendario di club completo
 # --------------------------------------------------------------------------- #
 def build_club_fixtures(
-    matches: pd.DataFrame, *, force: bool = False
+    matches: pd.DataFrame, *, league_key: str = "serie_a", force: bool = False
 ) -> pd.DataFrame:
-    """Assembla il calendario di club completo (schema FIXTURE_COLUMNS).
+    """Assembla il calendario di club completo (schema FIXTURE_COLUMNS) per la
+    lega ``league_key`` (default "serie_a", retrocompatibile).
 
-    = Serie A (dallo snapshot) + coppe europee + Coppa Italia (da openfootball).
+    = campionato (dallo snapshot) + coppe europee (Champions/Europa/Conference,
+    filtrate sul codice paese della lega) + coppa/e nazionale/i (da openfootball,
+    Fase 59 generalizza la sola Coppa Italia della Fase 4e a Premier/Liga).
     Deduplica su (season, team, date, competition, opponent) e ordina per data.
     """
     snapshot_teams = set(matches["home_team"]) | set(matches["away_team"])
     seasons = sorted(matches["season"].astype(str).unique())
+    country_code = sources.UEFA_COUNTRY_CODE[league_key]
+    domestic_cups = sources.DOMESTIC_CUP_COMPETITIONS.get(league_key, {})
 
-    rows: list[dict] = _serie_a_rows(matches)
+    rows: list[dict] = _league_rows(matches, sources.own_league_competition(league_key))
 
     for code in seasons:
         for comp in sources.EUROPE_COMPETITIONS:
             text = _read_cached("europe", code, comp, force=force)
             if not text:
                 continue
-            raw = parse_europe(text, code, sources.EUROPE_COMPETITIONS[comp])
+            raw = parse_europe(text, code, sources.EUROPE_COMPETITIONS[comp], country_code)
             if not raw.empty:
-                rows.extend(_uefa_team_rows(raw, snapshot_teams))
-        for comp in sources.ITALY_CUP_COMPETITIONS:
-            text = _read_cached("italy", code, comp, force=force)
+                rows.extend(_uefa_team_rows(raw, snapshot_teams, country_code))
+        for comp in domestic_cups:
+            text = _read_cached("domestic", code, comp, league_key=league_key, force=force)
             if not text:
                 continue
-            raw = parse_cup(text, code, sources.ITALY_CUP_COMPETITIONS[comp])
+            raw = parse_cup(text, code, domestic_cups[comp])
             if not raw.empty:
                 rows.extend(_cup_team_rows(raw, snapshot_teams))
 
@@ -390,6 +423,17 @@ def build_club_fixtures(
     )
     fx = fx.sort_values(["date", "team", "competition"]).reset_index(drop=True)
     return fx
+
+
+def club_fixtures_path(league_key: str = "serie_a") -> Path:
+    """Percorso dello snapshot del calendario di club per una lega.
+
+    La Serie A mantiene il nome storico ``club_fixtures.csv`` (== CLUB_FIXTURES_PATH,
+    retrocompatibile); le altre leghe (Fase 59) usano
+    ``club_fixtures_{lega}.csv``."""
+    if league_key == "serie_a":
+        return CLUB_FIXTURES_PATH
+    return _DATA_DIR / f"club_fixtures_{league_key}.csv"
 
 
 def write_club_fixtures(
@@ -417,17 +461,23 @@ def add_rest_days_full(
     *,
     cap: int = 14,
     europe_window: int = 4,
+    own_competition: str = sources.SERIE_A_COMPETITION,
 ) -> pd.DataFrame:
     """Aggiunge le colonne REST_FULL_COLUMNS alle partite dello schema interno.
 
-    Per ogni partita di Serie A alla data ``d``, e per ciascuna delle due
+    Per ogni partita di campionato alla data ``d``, e per ciascuna delle due
     squadre ``T``:
       - ``rest_days_full`` = min(giorni da (ultima partita di club di T con data
         < d, QUALSIASI competizione), cap). NaN se T non ha partite precedenti nel
         calendario. Uso di ``< d`` STRETTO -> nessun look-ahead e nessun
         auto-conteggio della partita stessa.
       - ``midweek_europe`` = 1 se T ha una partita EUROPEA/COPPA (competizione !=
-        Serie A) con data in [d - europe_window, d - 1]; 0 altrimenti.
+        ``own_competition``, default "Serie A") con data in
+        [d - europe_window, d - 1]; 0 altrimenti.
+
+    ``own_competition`` (Fase 59) identifica il campionato "di casa" nel
+    calendario di club, cosi' da poter distinguere le gare extra anche per
+    Premier League ("Premier League") e La Liga ("La Liga").
 
     Idempotente: se le colonne esistono gia', vengono ricalcolate.
     """
@@ -436,7 +486,7 @@ def add_rest_days_full(
 
     fx = fixtures.copy()
     fx["date"] = pd.to_datetime(fx["date"]).dt.normalize()
-    fx["is_extra"] = fx["competition"] != sources.SERIE_A_COMPETITION
+    fx["is_extra"] = fx["competition"] != own_competition
 
     # Per ogni squadra: date ordinate di TUTTE le partite di club, e (a parte) le
     # sole date delle partite europee/coppa (per il flag infrasettimanale).
@@ -484,9 +534,11 @@ def add_rest_days_full(
 # --------------------------------------------------------------------------- #
 # Copertura (onesta', documentabile)
 # --------------------------------------------------------------------------- #
-def coverage_report(fixtures: pd.DataFrame) -> pd.DataFrame:
+def coverage_report(
+    fixtures: pd.DataFrame, own_competition: str = sources.SERIE_A_COMPETITION
+) -> pd.DataFrame:
     """Copertura per stagione: n. partite extra (coppe/Europa) e squadre coinvolte."""
-    fx = fixtures[fixtures["competition"] != sources.SERIE_A_COMPETITION]
+    fx = fixtures[fixtures["competition"] != own_competition]
     rows = []
     for season, grp in fx.groupby("season"):
         comps = grp.groupby("competition").size().to_dict()

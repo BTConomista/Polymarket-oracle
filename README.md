@@ -1498,6 +1498,23 @@ validazione walk-forward (Fase 4e-bis) mostra un guadagno dentro il rumore
 `python scripts/backtest.py --covariates rest_full --test-season 2122` per
 riprovare.
 
+**Generalizzato a Premier League e La Liga (Fase 59).** `python
+scripts/build_league_snapshot.py --fixtures premier_league la_liga` assembla
+`data/club_fixtures_{premier_league,la_liga}.csv` (Champions/Europa/Conference,
+filtrate sul club-paese della lega, + coppa/e nazionale/i: FA Cup/EFL Cup per
+la Premier, Copa del Rey per la Liga — stessa finestra di copertura della
+Coppa Italia, 2020-21→2024-25) e aggiunge le stesse 4 colonne allo snapshot
+(copertura `rest_days_full` 99.5%/99.4%). Nel farlo, corretto un bug reale in
+`parse_europe` (filtrava le squadre italiane ANCHE per le altre leghe, azzerando
+in silenzio le partite europee di club senza mai un'avversaria italiana in un
+turno — dettagli e conteggio nel [diario, Fase 59](docs/DIARIO.md)).
+
+Restano assenti per Premier/Liga (32/38 colonne dello schema Serie A) solo
+`squad_value`/`absences`: bloccate su Transfermarkt, l'unica fonte SENZA una
+cache/bundle locale o un mirror raggiungibile (a differenza di football-data,
+Understat e openfootball) — serve un bundle caricato dall'utente per
+sbloccarle, come già fatto per football-data/Understat (Fase 54).
+
 Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
 congelato (nessun download per run), quindi i risultati sono riproducibili identici.
 Ogni backtest è inoltre registrato in `experiments/runs.jsonl` con l'impronta dei

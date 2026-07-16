@@ -144,6 +144,52 @@ TEAM_ALIASES: dict[str, str] = {
     "Real Sociedad": "Sociedad",
     "Real Valladolid": "Valladolid",
     "Rayo Vallecano": "Vallecano",
+    # --- Calendario di club (openfootball, Fase 59): varianti "FC/CF/Hotspur"
+    # usate nelle competizioni europee/coppe nazionali per i club di Premier
+    # League e La Liga, generalizzando la Fase 4e (Coppa Italia/coppe europee)
+    # oltre la sola Serie A. Enumerate estraendo TUTTI i nomi (ENG/ESP) delle
+    # competizioni europee e delle coppe nazionali 2018-19 -> 2024-25 e
+    # confrontandole coi 32+32 nomi canonici dei due snapshot.
+    "Liverpool FC": "Liverpool",
+    "Chelsea FC": "Chelsea",
+    "Tottenham Hotspur": "Tottenham",
+    "Tottenham Hotspur FC": "Tottenham",
+    "West Ham United": "West Ham",
+    "Arsenal FC": "Arsenal",
+    "Manchester City FC": "Man City",
+    "Manchester United FC": "Man United",
+    "Newcastle United FC": "Newcastle",
+    "Leicester City": "Leicester",
+    "Everton FC": "Everton",
+    "Aston Villa FC": "Aston Villa",
+    "Brighton & Hove Albion": "Brighton",
+    "Crystal Palace FC": "Crystal Palace",
+    "Wolverhampton Wanderers FC": "Wolves",
+    "Southampton FC": "Southampton",
+    "Leeds United": "Leeds",
+    "Fulham FC": "Fulham",
+    "Brentford FC": "Brentford",
+    "Burnley FC": "Burnley",
+    "Nottingham Forest FC": "Nott'm Forest",
+    "AFC Bournemouth": "Bournemouth",
+    "FC Barcelona": "Barcelona",
+    "Real Madrid CF": "Real Madrid",
+    "Sevilla FC": "Sevilla",
+    "Atlético Madrid": "Ath Madrid",
+    "Atletico de Madrid": "Ath Madrid",
+    "Club Atlético de Madrid": "Ath Madrid",
+    "Athletic Club de Bilbao": "Ath Bilbao",
+    "Real Betis Balompié": "Betis",
+    "Villarreal CF": "Villarreal",
+    "Valencia CF": "Valencia",
+    "RC Celta de Vigo": "Celta",
+    "RCD Espanyol de Barcelona": "Espanol",
+    "CA Osasuna": "Osasuna",
+    "Getafe CF": "Getafe",
+    "SD Eibar": "Eibar",
+    "Real Sociedad de Fútbol": "Sociedad",
+    "Granada CF": "Granada",
+    "Girona FC": "Girona",
 }
 
 
@@ -263,6 +309,13 @@ OPENFOOTBALL_ITALY_URL = (
     "https://raw.githubusercontent.com/openfootball/italy"
     "/master/{season}/{comp}.txt"
 )
+# Coppe NAZIONALI per lega (Fase 59): stesso formato testuale della Coppa
+# Italia, ma repo openfootball diverso per paese. Verificato raggiungibile
+# (200) e col formato atteso per ogni (repo, stagione, file) elencato sotto.
+OPENFOOTBALL_DOMESTIC_URL = (
+    "https://raw.githubusercontent.com/openfootball/{repo}"
+    "/master/{season}/{comp}.txt"
+)
 
 # Competizioni europee per club (codice file openfootball -> nome canonico).
 # "*q" = turni preliminari/qualificazioni (presenti solo nelle stagioni recenti).
@@ -275,14 +328,48 @@ EUROPE_COMPETITIONS: dict[str, str] = {
     "confq": "Conference League (qual.)",
 }
 
-# Coppe nazionali italiane (per ora solo la Coppa Italia).
+# Coppe nazionali italiane (per ora solo la Coppa Italia). Alias storico di
+# DOMESTIC_CUP_COMPETITIONS["serie_a"] (stesso oggetto): mantenuto per
+# retrocompatibilita' (test/codice esistenti lo referenziano direttamente).
 ITALY_CUP_COMPETITIONS: dict[str, str] = {
     "cup": "Coppa Italia",
 }
 
-# Nome canonico usato nel calendario di club per le partite di Serie A (derivate
-# dallo snapshot, non scaricate).
+# Repo openfootball che ospita i dati DOMESTICI (campionato/coppe) di ogni lega.
+OPENFOOTBALL_DOMESTIC_REPO: dict[str, str] = {
+    "serie_a": "italy",
+    "premier_league": "england",
+    "la_liga": "espana",
+}
+
+# Coppe nazionali per lega (Fase 59, verificate una per una sul mirror):
+#   - Premier: FA Cup (facup, 2018-19->2024-25) + EFL Cup (eflcup, stesse stagioni);
+#   - La Liga: Copa del Rey (cup, 2020-21->2024-25, stessa finestra della Coppa
+#     Italia -- il dataset copre entrambe le coppe "minori" solo dal 2020-21).
+DOMESTIC_CUP_COMPETITIONS: dict[str, dict[str, str]] = {
+    "serie_a": ITALY_CUP_COMPETITIONS,
+    "premier_league": {"facup": "FA Cup", "eflcup": "EFL Cup"},
+    "la_liga": {"cup": "Copa del Rey"},
+}
+
+# Codice paese UEFA (usato nei file delle competizioni europee, es. "(ITA)") per
+# ogni lega: filtra i club di QUELLA lega dentro Champions/Europa/Conference.
+UEFA_COUNTRY_CODE: dict[str, str] = {
+    "serie_a": "ITA", "premier_league": "ENG", "la_liga": "ESP",
+}
+
+# Nome canonico usato nel calendario di club per le partite della lega stessa
+# (derivate dallo snapshot, non scaricate). Per compatibilita' col codice/test
+# storici, la Serie A resta "Serie A"; le altre leghe usano League.name.
 SERIE_A_COMPETITION = "Serie A"
+
+
+def own_league_competition(league_key: str) -> str:
+    """Nome-competizione usato nel calendario di club per le partite di
+    campionato di ``league_key`` (derivate dallo snapshot, non da openfootball)."""
+    if league_key == "serie_a":
+        return SERIE_A_COMPETITION
+    return LEAGUES[league_key].name
 
 
 def openfootball_season_label(season_code: str) -> str:
@@ -306,4 +393,16 @@ def openfootball_italy_url(season_code: str, comp: str) -> str:
         raise KeyError(f"Coppa nazionale sconosciuta: {comp}")
     return OPENFOOTBALL_ITALY_URL.format(
         season=openfootball_season_label(season_code), comp=comp
+    )
+
+
+def openfootball_domestic_cup_url(league_key: str, season_code: str, comp: str) -> str:
+    """URL del file openfootball di una coppa nazionale, per QUALSIASI lega
+    supportata (Fase 59: generalizza openfootball_italy_url a Premier/Liga)."""
+    cups = DOMESTIC_CUP_COMPETITIONS.get(league_key, {})
+    if comp not in cups:
+        raise KeyError(f"Coppa nazionale sconosciuta per {league_key}: {comp}")
+    repo = OPENFOOTBALL_DOMESTIC_REPO[league_key]
+    return OPENFOOTBALL_DOMESTIC_URL.format(
+        repo=repo, season=openfootball_season_label(season_code), comp=comp
     )

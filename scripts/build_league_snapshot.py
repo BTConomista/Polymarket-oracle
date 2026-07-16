@@ -17,6 +17,12 @@ grezzo devono coincidere con quelli dell'xG dove agganciato; copertura per
 stagione stampata; righe Understat orfane elencate (spia di alias mancante).
 
 Uso:  python scripts/build_league_snapshot.py [premier_league] [la_liga]
+      python scripts/build_league_snapshot.py --fixtures [premier_league] [la_liga]
+        assembla il calendario di club completo (Fase 59, generalizza la Fase 4e:
+        coppe europee gia' scaricate per la Serie A + coppe nazionali via
+        openfootball/{england,espana}) e aggiunge rest_days_full/midweek_europe
+        allo snapshot. RICHIEDE rete (raw.githubusercontent.com/openfootball/*,
+        cache offline in data/raw/ dopo il primo download).
 """
 from __future__ import annotations
 
@@ -29,7 +35,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.data import database, loader, sources         # noqa: E402
+from src.data import database, fixtures as fixtures_mod, loader, sources  # noqa: E402
 from src.data import understat                          # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -90,8 +96,38 @@ def _build(league_key: str) -> pd.DataFrame:
     return df
 
 
+def _add_fixtures(key: str) -> None:
+    """Assembla il calendario di club completo e aggiunge rest_days_full/
+    midweek_europe allo snapshot ESISTENTE (Fase 59). Come per la Serie A
+    (build_database.py --fixtures): la base football-data/Understat resta
+    congelata, si aggiungono solo le 4 colonne di congestione."""
+    snap = database.read_snapshot(database.snapshot_path(key))
+    print(f"Assemblo il calendario di club completo ({sources.LEAGUES[key].name})...")
+    fx = fixtures_mod.build_club_fixtures(snap, league_key=key, force=False)
+    fx_path = fixtures_mod.write_club_fixtures(fx, fixtures_mod.club_fixtures_path(key))
+    print(f"  calendario di club: {fx_path}  ({len(fx)} righe squadra-partita)")
+    matches = fixtures_mod.add_rest_days_full(
+        snap, fx, own_competition=sources.own_league_competition(key)
+    )
+    database.write_snapshot(matches, database.snapshot_path(key))
+    print(f"  -> {database.snapshot_path(key).name} aggiornato con congestione vera")
+    print("Copertura calendario extra (coppe/Europa) per stagione:")
+    print(fixtures_mod.coverage_report(
+        fx, own_competition=sources.own_league_competition(key)
+    ).to_string(index=False))
+
+
 def main() -> None:
-    keys = sys.argv[1:] or ["premier_league", "la_liga"]
+    args = sys.argv[1:]
+    do_fixtures = "--fixtures" in args
+    keys = [a for a in args if a != "--fixtures"] or ["premier_league", "la_liga"]
+
+    if do_fixtures:
+        for key in keys:
+            print(f"\n=== {sources.LEAGUES[key].name} (congestione vera) ===")
+            _add_fixtures(key)
+        return
+
     for key in keys:
         print(f"\n=== {sources.LEAGUES[key].name} ===")
         df = _build(key)

@@ -5973,6 +5973,115 @@ locali, nessuna rete) rigenerano gli snapshot con il fix; `pytest` verde
 
 ---
 
+## Fase 59 — Congestione vera anche per Premier League e La Liga (colmato il gap dati)
+
+**Obiettivo.** Dopo l'audit dati (Fase 58) l'utente chiede di colmare, a partire
+dalle coppe, il gap di schema tra Serie A (38 colonne) e Premier/Liga (28): le
+10 colonne mancanti sono `squad_value`/`absences` (Transfermarkt, bloccato: nessun
+mirror/bundle raggiungibile, vedi risposta precedente) e `rest_days_full`/
+`midweek_europe` (calendario di club completo, Fase 4e) — quest'ultimo
+recuperabile perche' `fixtures.py` era scritto solo per l'Italia ma la fonte
+(openfootball) e' generale.
+
+**Ragionamento.** Verificata la raggiungibilita' reale (non assunta): il mirror
+`raw.githubusercontent.com/openfootball/*` risponde 200 (a differenza di
+football-data/Understat/Transfermarkt, tutti bloccati). Cercati i repo/nomi-file
+domestici per le altre due leghe (nessuna API GitHub generica disponibile
+dall'ambiente, solo raw-file diretti, quindi ricerca per tentativi mirati):
+`openfootball/england` ha `facup.txt` (FA Cup) e `eflcup.txt` (EFL Cup), stesso
+formato testuale della Coppa Italia; `openfootball/espana` ha `cup.txt` (Copa
+del Rey), **stessa finestra di copertura della Coppa Italia** (2020-21->2024-25,
+mancano 2017-20 e 2025-26 in corso) — coincidenza che suggerisce lo stesso
+processo di raccolta del dataset per le coppe "minori" di tutte le leghe. Le
+competizioni UEFA (Champions/Europa/Conference) erano gia' scaricate per la
+Serie A dallo STESSO repo `champions-league`, che e' europeo (non italiano):
+bastava filtrare per codice paese "ENG"/"ESP" invece di "ITA".
+
+**Bug trovato e corretto in corsa (non e' un'estensione, e' un fix).**
+`parse_europe` filtrava **al proprio interno** solo le righe con una squadra
+"ITA", PRIMA che `_uefa_team_rows` applicasse il filtro-paese generalizzato:
+per club senza mai un'italiana in un turno (es. Manchester City-RB Leipzig-
+Paris Saint-Germain-Club Brugge, girone 2021-22 Champions League: NESSUNA
+squadra italiana) il filtro azzerava silenziosamente OGNI partita, anche se il
+file le conteneva tutte. Scoperto confrontando il conteggio grezzo (grep
+`(ENG)` sul file: 43 occorrenze) con l'output della pipeline (8 righe): un
+divario troppo grande per essere rumore. Corretto passando ``country_code``
+anche a `parse_europe` (prima veniva generalizzato solo in `_uefa_team_rows`).
+**Lezione:** un conteggio-sanity (grep sul grezzo vs righe prodotte) ha
+catturato un bug che i soli test unitari (che usano frammenti sintetici SEMPRE
+con una italiana) non potevano vedere.
+
+**Alias mancanti (stesso metodo della Fase 54/4e): estratti TUTTI i nomi
+ENG/ESP dalle competizioni europee e dalle coppe nazionali 2017-18->2025-26 e
+confrontati coi 32+32 nomi canonici degli snapshot, iterando fino a ZERO
+club non agganciati** (non assunto: verificato ad ogni round). ~35 nuove voci
+in `TEAM_ALIASES` (varianti "FC"/"CF"/nome-lungo usate da openfootball, es.
+"Manchester City FC"->"Man City", "FC Barcelona"->"Barcelona", "Club Atlético
+de Madrid"->"Ath Madrid" — una TERZA variante dello stesso club, oltre alle due
+gia' note da Understat).
+
+**Scelta implementativa.** Generalizzato `src/data/fixtures.py` (e
+`src/data/sources.py`) da Serie-A-only a multi-lega, con retrocompatibilita'
+totale: ogni funzione accetta un parametro opzionale (``league_key``/
+``country_code``/``own_competition``) che DEFAULT al comportamento Serie A
+esistente (stesso path, stessi nomi-funzione/test usati dai test storici).
+Nuova config in `sources.py`: `OPENFOOTBALL_DOMESTIC_REPO`,
+`DOMESTIC_CUP_COMPETITIONS` (Premier: facup+eflcup; Liga: cup==Copa del Rey;
+Serie A: alias dello storico `ITALY_CUP_COMPETITIONS`), `UEFA_COUNTRY_CODE`.
+Nuovo file `data/club_fixtures_{premier_league,la_liga}.csv` (Serie A mantiene
+il nome storico senza suffisso lega). `scripts/build_league_snapshot.py
+--fixtures [lega...]` assembla il calendario e aggiorna lo snapshot, speculare
+a `build_database.py --fixtures` per la Serie A.
+
+**Risultato.**
+
+| | Premier League | La Liga | *(Serie A, rif.)* |
+|---|--:|--:|--:|
+| partite extra (coppe/Europa), 9 stagioni | 1495 | 829 | *836* |
+| copertura Champions League | tutte e 9 | tutte e 9 | *tutte e 9* |
+| copertura Europa League | dal 2020-21 | dal 2020-21 | *dal 2020-21* |
+| copertura Conference League | dal 2021-22 | dal 2021-22 | *dal 2021-22* |
+| copertura coppa/e nazionale/i | FA Cup+EFL Cup 2018-19->2024-25 | Copa del Rey 2020-21->2024-25 | *Coppa Italia 2020-21->2024-25* |
+| copertura `rest_days_full` (entrambe le squadre) | 99.5% | 99.4% | *99.6%* |
+| club NON agganciati (dopo gli alias) | 0 | 0 | *0* |
+
+Schema ora a 32/38 colonne per Premier/Liga (mancano solo le 6
+`squad_value`/`absences`, bloccate su Transfermarkt — vedi risposta precedente).
+`pytest`: 114/114 verdi (+8 test parametrizzati sulle due leghe, stesse
+invarianti della Serie A: `rest_full <= rest solo-lega`, cap 14, nessun club
+orfano, schema competizioni noto).
+
+**Onesta' sui limiti.** Non e' stata (ancora) verificata l'UTILITA' di
+`rest_full`/`midweek_europe` per Premier/Liga: la Fase 4e-bis l'aveva trovata
+neutra in Serie A (−0.0004, rumore); lo stesso test andrebbe rifatto qui prima
+di eventualmente attivarla (resta covariata off-di-default, come in Serie A).
+Le coppe minori (EFL Cup, Copa del Rey) sono giocate spesso con formazioni
+rimaneggiate: la loro presenza in `midweek_europe` puo' quindi essere un
+segnale piu' debole della sola Champions/Europa (il proxy tratta ogni
+competizione extra allo stesso modo, come gia' per la Coppa Italia in Serie A).
+
+### 📐 Il modello in dettaglio
+
+Nessuna formula nuova: `rest_days_full`/`midweek_europe` sono ESATTAMENTE le
+definizioni della Fase 4e (`fixtures.add_rest_days_full`, invariate), applicate
+a un calendario di club piu' ampio. L'unico parametro nuovo per-lega e' il
+codice paese UEFA usato per filtrare i club nelle competizioni europee:
+
+```
+country_code = UEFA_COUNTRY_CODE[league_key]   # "ITA" / "ENG" / "ESP"
+riga tenuta  <=>  home_cc == country_code  OR  away_cc == country_code
+```
+
+non e' un iperparametro stimato: e' un dato anagrafico (il codice-paese ISO/UEFA
+a 3 lettere usato dal dataset openfootball), verificato per ogni lega
+grep-ando il file grezzo (`(ENG)`, `(ESP)`) prima di fidarsene nel codice.
+
+**Riproducibilita'.** `python scripts/build_league_snapshot.py --fixtures
+premier_league la_liga` (rete richiesta al primo download, poi cache offline
+in `data/raw/fixtures_*`); `pytest tests/test_fixtures.py -q`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

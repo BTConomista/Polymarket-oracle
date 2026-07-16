@@ -93,7 +93,9 @@ def test_parse_europa_filtra_ita_e_orienta():
     # rows per-squadra: Juventus in casa -> H, avversario canonico
     teams = fixtures._uefa_team_rows(df, {"Juventus", "Napoli", "Atalanta"})
     juve = [x for x in teams if x["team"] == "Juventus"][0]
-    assert juve["home_away"] == "H" and juve["opponent"] == "Atlético Madrid"
+    # "Atletico Madrid" e' ora un alias noto (Fase 59, aggiunto per La Liga) ->
+    # l'avversario e' canonicalizzato allo stesso nome usato altrove nel progetto.
+    assert juve["home_away"] == "H" and juve["opponent"] == "Ath Madrid"
 
 
 def test_parse_europa_due_italiane_due_righe():
@@ -280,3 +282,68 @@ def test_club_fixtures_no_look_ahead_date(club_fx):
     for season, grp in club_fx.groupby("season"):
         y = 2000 + int(season[:2])
         assert grp.date.between(pd.Timestamp(y, 7, 1), pd.Timestamp(y + 1, 8, 31)).all()
+
+
+# --------------------------- 8. congestione vera generalizzata (Fase 59) -----
+# Stessi controlli della sezione 7, ma parametrizzati su Premier League/La Liga
+# (build_club_fixtures/add_rest_days_full generalizzati oltre la sola Serie A).
+
+@pytest.fixture(params=["premier_league", "la_liga"])
+def altra_lega(request):
+    return request.param
+
+
+@pytest.fixture
+def altro_snapshot(altra_lega):
+    path = database.snapshot_path(altra_lega)
+    if not path.exists():
+        pytest.skip(f"snapshot {altra_lega} non costruito")
+    snap = database.read_snapshot(path)
+    if not set(REST_FULL_COLUMNS) <= set(snap.columns):
+        pytest.skip(f"{altra_lega}: congestione vera non ancora costruita "
+                    f"(build_league_snapshot.py --fixtures)")
+    return snap
+
+
+@pytest.fixture
+def altro_club_fx(altra_lega):
+    path = fixtures.club_fixtures_path(altra_lega)
+    if not path.exists():
+        pytest.skip(f"club_fixtures {altra_lega} non presente")
+    return fixtures.read_club_fixtures(path)
+
+
+def test_altra_lega_snapshot_rest_full_plausibile(altro_snapshot):
+    v = pd.concat([altro_snapshot.home_rest_days_full,
+                   altro_snapshot.away_rest_days_full]).dropna()
+    assert v.between(0, 14).all()
+    for c in ("home_midweek_europe", "away_midweek_europe"):
+        assert set(altro_snapshot[c].dropna().unique()) <= {0, 1}
+
+
+def test_altra_lega_rest_full_non_supera_solo_lega(altro_snapshot):
+    """Stessa invariante della Serie A (test_snapshot_rest_full_non_supera_solo_serie_a):
+    il calendario completo e' un sovrainsieme del solo-lega -> rest_full <= rest."""
+    base = loader.add_rest_days(altro_snapshot)
+    for side in ("home", "away"):
+        a = base[f"{side}_rest_days"]
+        b = base[f"{side}_rest_days_full"]
+        both = a.notna() & b.notna()
+        assert (b[both] <= a[both] + 1e-9).all()
+
+
+def test_altra_lega_club_fixtures_completo_e_senza_orfani(altra_lega, altro_snapshot, altro_club_fx):
+    own = sources.own_league_competition(altra_lega)
+    n_own = (altro_club_fx.competition == own).sum()
+    assert n_own == 2 * len(altro_snapshot)
+    universo = set(altro_snapshot.home_team) | set(altro_snapshot.away_team)
+    teams_own = set(altro_club_fx[altro_club_fx.competition == own].team)
+    assert teams_own <= universo
+
+
+def test_altra_lega_club_fixtures_competizioni_note(altra_lega, altro_club_fx):
+    own = sources.own_league_competition(altra_lega)
+    note = (set(sources.EUROPE_COMPETITIONS.values())
+            | set(sources.DOMESTIC_CUP_COMPETITIONS[altra_lega].values())
+            | {own})
+    assert set(altro_club_fx.competition.unique()) <= note
