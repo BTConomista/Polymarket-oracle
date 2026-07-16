@@ -5477,6 +5477,153 @@ stagioni o una quota migliore (exchange).
 
 ---
 
+## Fase 52 — Spremere la scoperta: la double-Poisson su tutto il listino, i suoi limiti, e il dinamico chiuso per test
+
+**Obiettivo.** Sette esperimenti per spremere fino in fondo la scoperta della
+Fase 51 (sotto-dispersione + tilt) e chiudere le ultime domande aperte: dove
+vale la dp e dove no, il tilt e' un artefatto del devig, i bias esistono
+nell'apertura, la sotto-dispersione e' uniforme, e lo state-space chiuso per
+test (non piu' per argomento).
+
+### A. L'O/U 2.5 NON si batte (`_run_fase52_ou_close.py`)
+
+Confronto appaiato mai fatto (la Fase 26 l'aveva liquidato come "banale"): devig
+binario diretto 0.6788 vs matrice τ +0.0003, dp +0.0003, dp_lvl +0.0010,
+temperatura +0.0006 — **il devig binario resta il migliore** (nessun P>17%).
+L'edge dell'1X2 viene dalla struttura pareggio/tilt-casa, che l'O/U non ha; il
+"banale" della Fase 26 era giusto. Chiuso.
+
+### B. Router v3: la dp estesa a tutto il listino DOMINA (`_run_fase52_router3.py`)
+
+Router v3 = marginali double-Poisson ovunque (+ φ35 e ricalibrazioni della
+Fase 51 sulle stesse famiglie) vs router v2. Su 20 mercati Tier 1: **mai
+peggiore**, media −0.0005, e **5 mercati con CI conclusivo**: ospite-segna/
+clean-sheet-casa **−0.0023** (P 99%), casa-vince **−0.0011** (P 100%), scarto≥2
+**−0.0011** (P 100%), ospite O1.5 **−0.0008** (P 100%). La TRIPLA sul GG
+(dp+k34+φ35) invece **satura** a 0.6809: dp e φ35+k34 correggono la stessa cosa
+sul GG, non si sommano. **ADOTTATO nel motore**: `price_markets(dp_theta=...)`
+(opt-in, None = router Fase 44), usato da `predict.py` con θ=1.225 (mercato) e
+θ=1.138 (DC).
+
+### C. Il devig di Shin: il tilt e' PER META' un artefatto (`_run_fase52_shin.py`)
+
+Il caveat onesto della Fase 51, quantificato. Shin (mai provato) e' davvero un
+devig migliore: 0.9617 (Δ −0.0007, P 97%). Il dp_lvl (0.9609) batte anche Shin
+ma **senza CI conclusivo**: Δ −0.0009 [−0.0021, +0.0003], P 93%. Riformulazione
+onesta del claim di Fase 51: *conclusivo contro il benchmark storico del
+progetto (devig moltiplicativo); molto probabile (93%) ma non concluso contro il
+miglior devig*. In piu': la temperatura SOPRA il dp_lvl aggiunge ancora
+(T=1.056≠1 → 0.9605, Δ −0.0020, P 97% ma CI [−0.0040,+0.0001]): θ non assorbe
+tutta la sotto-confidenza della chiusura.
+
+### D. La dp regge sul path DC (`_run_fase52_dp_dc.py`)
+
+θ fittato sui tassi del NOSTRO DC: **θ_DC = 1.138** — piu' basso del mercato
+(1.205), esattamente come predice l'argomento del rumore (sotto-dispersione
+osservata = vera − rumore dei tassi; i nostri tassi sono piu' rumorosi), e
+ancora >1. Migliora anche il fallback senza quote: 1X2 **0.9794** (−0.0009,
+P 99%), risultato esatto **−0.0041** (P 100%), pareggio best. Il nuovo miglior
+1X2 standalone del progetto.
+
+### E. La sotto-dispersione e' UNIFORME (`_run_fase52_theta_cond.py`)
+
+θ(x) = θ0 + θ1·x con x ∈ {volume λ+μ, equilibrio |λ−μ|, coda stagione}: il fit
+LFO da' **θ1 = 0.000 su tutti e tre gli assi, in tutti i fit** — nessun
+condizionamento batte il θ costante. La sotto-dispersione e' una proprieta'
+globale dei punteggi dati i tassi, non un effetto di contesto: massima
+robustezza per la costante unica del motore.
+
+### F. I bias esistono gia' NELL'APERTURA — e l'open affinato VALE la chiusura (`_run_fase52_open.py`)
+
+Sulle righe con quote open complete (n=2278): θ_open=1.218, tilt μ×1.043.
+Confronti appaiati:
+
+```
+dp_lvl(open) − open_devig   = −0.0019  CI[−0.0036, −0.0002] ✓CI   (batte l'open)
+dp_lvl(open) − close_devig  = +0.0001  CI[−0.0031, +0.0033]       (= chiusura!)
+dp_lvl(close) − close_devig = −0.0018  CI[−0.0037, −0.0001] ✓CI   (conferma F.51)
+close_devig − open_devig    = −0.0020  (l'affilamento open→close, Fase 14)
+```
+
+**L'apertura affinata coi bias sistematici RAGGIUNGE la chiusura grezza**
+(0.9630 = 0.9630): quello che il mercato "impara" tra venerdi' e il kickoff e',
+in media, quasi tutto ricalibrazione sistematica (sotto-confidenza + tilt), non
+notizie. Le notizie vere esistono ma pesano quanto il residuo dp_lvl(close) −
+dp_lvl(open) ≈ −0.0019. Rilettura fine della Fase 14: "il mercato sa gia' tutto
+il venerdi'" va corretta in "il venerdi' il mercato sa gia' tutto, MA e' anche
+sistematicamente mal calibrato di ~0.002".
+
+### G. Lo state-space chiuso PER TEST (`_run_fase52_gas.py`)
+
+Modello score-driven (GAS-lite): forze aggiornate DOPO OGNI partita col residuo
+di Pearson (η scelto LFO, ~0.035-0.05), nessun refit batch. Risultato: 1X2
+0.9830 vs DC batch 0.9803 (**Δ +0.0027, P(GAS meglio)=18%, 3/7 stagioni**).
+Il dinamico online non aggiunge nulla al decadimento esponenziale — che ne e' lo
+steady-state — e in pratica perde (piu' varianza di stima). La chiusura della
+Fase 48, che era per argomento, ora e' per test.
+
+**Nota fattibilita' Premier (Fase 53).** La validazione cross-lega resta il
+test piu' importante rimasto, ma football-data.co.uk NON e' raggiungibile dalla
+policy di rete corrente (403 dal proxy) e il mirror storico e' sparito (Fase
+14): servono una modifica della policy o l'upload manuale dei CSV `E0`.
+
+**Lezione / cosa ne consegue.**
+1. **La scoperta della Fase 51 e' robusta e generale** (uniforme nel contesto,
+   presente in apertura e chiusura, su tassi di mercato E nostri) **ma il suo
+   perimetro e' l'1X2/famiglia-esiti**: l'O/U non si batte, il GG satura.
+2. Contro il miglior devig (Shin) l'edge scende a −0.0009 (93%): meta' del
+   guadagno era "devig migliore". Onesta' aggiornata nel claim.
+3. **Router v3 adottato** (mai peggiore, 5 CI conclusivi); il fallback DC
+   guadagna anche lui (θ_DC=1.138).
+4. L'apertura-affinata≈chiusura e' la quantificazione piu' pulita mai avuta di
+   QUANTO del vantaggio della chiusura sia informazione vera (~0.002) vs
+   calibrazione (~0.002).
+5. Dinamico: chiuso per test. Il conto delle architetture bocciate e' completo.
+
+### 📐 Il modello in dettaglio — le formule della fase
+
+**Shin (C)** — verificato contro `shin_devig` in `_run_fase52_shin.py`:
+
+```
+π_i = 1/quota_i,  Π = Σπ;   p_i(z) = [√(z² + 4(1−z)·π_i²/Π) − z] / (2(1−z))
+z risolto per bisezione perche' Σp_i = 1   (z = quota di scommettitori informati)
+```
+
+z>0 sposta massa dai favoriti ai longshot in modo NON proporzionale — corregge
+il favourite-longshot bias che il devig moltiplicativo lascia. |shin−molt| medio
+0.0047: una correzione piccola ma reale (Δ −0.0007).
+
+**GAS (G)** — verificato contro `_run_gas`:
+
+```
+λ = exp(c + a_H − d_A + γ),  μ = exp(c + a_A − d_H)
+update dopo la partita (residuo di Pearson, auto-scalato):
+  a_H += η·(y_H−λ)/√λ,  d_A −= η·(y_H−λ)/√λ   (e simmetrico per l'ospite)
+```
+
+η≈0.035-0.05 scelto LFO: un η cosi' piccolo equivale a una memoria effettiva
+~1/η ≈ 20-30 partite — piu' corta dell'emivita 365g del DC, ed e' per questo che
+perde: il segnale delle forze vive su orizzonti lunghi (Fasi 2b/25), e l'update
+per-partita compra reattivita' pagando varianza.
+
+**Perche' l'open affinato = chiusura (F).** Scomposizione:
+`close_raw − open_raw ≈ −0.0020` (Fase 14) e `open_affinato − open_raw =
+−0.0019`; se la parte sistematica (θ, tilt) e' la stessa nelle due linee (θ_open
+1.218 ≈ θ_close 1.205), l'affinamento cattura la stessa quantita' che il flusso
+di scommesse incorpora tra venerdi' e domenica — la parità osservata (+0.0001)
+dice che l'informazione *incrementale* vera della chiusura vale ≈ l'affinamento
+sistematico residuo che ancora le manca.
+
+**Router v3 (B)**: nessuna matematica nuova — dp (Fase 51) dentro il routing
+per-famiglia (Fase 44) con le ricalibrazioni della Fase 50; la novita' e'
+l'estensione e l'esito (dominanza debole, 5 CI conclusivi).
+
+**Riproducibilità.** `python scripts/_run_fase52_ou_close.py` · `_run_fase52_router3.py`
+· `_run_fase52_shin.py` · `_run_fase52_dp_dc.py` · `_run_fase52_theta_cond.py` ·
+`_run_fase52_open.py` · `_run_fase52_gas.py` (helper comuni: `_fase52_common.py`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

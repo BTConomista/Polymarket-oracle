@@ -70,7 +70,16 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      `sharpen_1x2` (θ + livelli dei tassi) **batte la chiusura devigata sull'1X2 in
      log-loss con CI conclusivo** (0.9609 vs 0.9625, 7/7 stagioni) ma NON in ROI
      (affinamento ≪ margine). Rue-Salvesen, zero-inflazione, GBM-pareggio e recal
-     O/U: testati e chiusi (Fase 51).
+     O/U: testati e chiusi (Fase 51). **Fase 52:** la dp e' robusta e generale
+     (θ uniforme nel contesto; presente nell'APERTURA, θ_open=1.218 — e l'open
+     affinato VALE la chiusura grezza; regge sui tassi DC, θ_DC=1.138) ma il suo
+     perimetro e' la famiglia-esiti: l'O/U 2.5 NON si batte (il devig binario resta
+     il migliore) e la tripla GG satura. Contro il devig di Shin (migliore del
+     moltiplicativo) l'edge dp_lvl scende a −0.0009 (93%, non concluso). **Router
+     v3 ADOTTATO** (`price_markets(dp_theta)`: dp su tutto il listino, mai peggiore,
+     5 CI conclusivi; θ=1.225 mercato / 1.138 DC). Lo state-space e' chiuso PER
+     TEST (GAS perde dal DC batch, +0.0027). Prossimo test forte: cross-lega
+     (Premier) — bloccato dalla policy di rete (football-data.co.uk 403).
 
 ---
 

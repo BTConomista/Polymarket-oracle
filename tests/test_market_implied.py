@@ -192,3 +192,17 @@ def test_sharpen_1x2_affinamento_fase51():
     raw = mi._1x2_over(mi.score_matrix(1.6, 1.1, -0.06))
     assert pH < raw[0]          # la casa si sgonfia (lambda x0.9726)
     assert pA > raw[2]          # la trasferta sale (mu x1.0224)
+
+
+def test_price_markets_router_v3_dp():
+    """Il router v3 (Fase 52) con dp_theta: prob valide, e la sotto-dispersione
+    alleggerisce le code dei totali rispetto al router Poisson."""
+    d_p = mi.price_markets(1.6, 1.2, rho=-0.06, phi0=0.3, kappa=1.5)
+    d_dp = mi.price_markets(1.6, 1.2, rho=-0.06, phi0=0.3, kappa=1.5,
+                            dp_theta=mi.DP_THETA)
+    assert 0 < d_dp["btts"] < 1 and 0 < d_dp["draw"] < 1
+    assert d_dp["over_4.5"] < d_p["over_4.5"]      # coda alta piu' leggera
+    assert d_dp["home_win"] + d_dp["draw"] + d_dp["away_win"] == pytest.approx(1.0, abs=1e-9)
+    # dp_theta=None riproduce il router Fase 44
+    d_none = mi.price_markets(1.6, 1.2, rho=-0.06, phi0=0.3, kappa=1.5, dp_theta=None)
+    assert d_none["over_2.5"] == pytest.approx(d_p["over_2.5"], abs=1e-12)

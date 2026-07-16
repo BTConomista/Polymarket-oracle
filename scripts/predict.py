@@ -116,8 +116,10 @@ def main() -> None:
     print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}   "
           f"[φ35: φ0={m.draw_phi0:.3f}, κ={m.draw_kappa:.3f}]")
     lam_dc, mu_dc = m.expected_goals(args.home, args.away)
-    d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=m.draw_phi0, kappa=m.draw_kappa)
-    _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (forma instradata per-mercato)",
+    # Router v3 (Fase 52): marginali double-Poisson sotto-dispersi (θ_DC=1.138).
+    d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=m.draw_phi0,
+                            kappa=m.draw_kappa, dp_theta=mi.DP_THETA_DC)
+    _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (router v3: dp + forma per-mercato)",
                   rho=m.rho, matchday=args.matchday)
 
     print("\n" + "=" * 74)
@@ -133,9 +135,11 @@ def main() -> None:
         lam, mu = mi.implied_lambda_mu(pH, pD, pA, pO, rho=-0.06)
         # φ del mercato: valori rappresentativi (Fase 39); il guadagno di un fit
         # esatto e' trascurabile (Fase 44).
-        d = mi.price_markets(lam, mu, rho=-0.06, phi0=0.30, kappa=1.5)
+        # Router v3 (Fase 52): θ del mercato = 1.225 (DP_THETA).
+        d = mi.price_markets(lam, mu, rho=-0.06, phi0=0.30, kappa=1.5,
+                             dp_theta=mi.DP_THETA)
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
-        _show_markets(d, "Modello 2: market-implied + φ35 (forma instradata per-mercato)",
+        _show_markets(d, "Modello 2: market-implied + φ35 (router v3: dp + forma per-mercato)",
                       rho=-0.06, matchday=args.matchday, nudge=False)
         # 1X2 "affinato" dp_lvl (Fase 51): sotto-dispersione + livelli dei tassi.
         # Batte la chiusura in log-loss (CI conclusivo) ma NON e' un edge di ROI.

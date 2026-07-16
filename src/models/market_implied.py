@@ -181,17 +181,24 @@ _TAU_MARKETS = frozenset({
 
 
 def price_markets(lam: float, mu: float, rho: float = 0.0,
-                  phi0: float = 0.0, kappa: float = 0.0) -> dict:
+                  phi0: float = 0.0, kappa: float = 0.0,
+                  dp_theta: float | None = None) -> dict:
     """Prezza OGNI mercato Tier 1 con la sua forma MIGLIORE (routing per-mercato,
     Fase 44): i mercati puro-totale/marginale dalla matrice τ (senza φ, che
     sovra-disperde i totali); esiti/pareggio/joint dalla matrice con φ(|λ−μ|).
 
+    ``dp_theta`` (Fase 52, router v3): marginali double-Poisson sotto-dispersi al
+    posto della Poisson su ENTRAMBE le matrici — mai peggiore del router Poisson e
+    con CI conclusivo su clean-sheet/ospite-segna, casa-vince, scarto≥2 (θ≈1.225
+    sui tassi del mercato, ≈1.14 sui tassi del DC; None = Poisson, Fase 44).
+
     Rompe la coerenza tra le due famiglie (prezzi da matrici diverse) — accettabile
     per il pricing PER-MERCATO (non per un prezzo unico coerente). phi0=0 -> nessuna
     inflazione (tutto dalla τ)."""
-    M_tau = score_matrix(lam, mu, rho)
+    M_tau = score_matrix(lam, mu, rho, dp_theta=dp_theta)
     phi = balance_phi(lam, mu, phi0, kappa) if phi0 else 0.0
-    M_phi = score_matrix(lam, mu, rho, diag_inflation=phi) if phi else M_tau
+    M_phi = (score_matrix(lam, mu, rho, diag_inflation=phi, dp_theta=dp_theta)
+             if phi else M_tau)
     d_tau, d_phi = derive_markets(M_tau), derive_markets(M_phi)
     out = {k: (d_tau[k] if k in _TAU_MARKETS else d_phi[k])
            for k in d_phi if k != "score_matrix"}
@@ -300,6 +307,10 @@ def season_mu_factor(matchday, coef=GG_SEASON_MU_COEF) -> float:
 # RIFITTARE per lega/periodo (§7).
 DP_THETA = 1.225                    # sotto-dispersione double-Poisson (Fase 51)
 RATE_LEVELS = (0.9726, 1.0224)      # fattori di livello (λ, μ) dei tassi impliciti
+# θ sui tassi del DC (Fase 52-D): piu' basso perche' i tassi nostri sono piu'
+# rumorosi del mercato (il rumore di stima aggiunge dispersione apparente);
+# resta >1 e migliora anche il path senza quote (1X2 −0.0009 P99%, esatto −0.0041).
+DP_THETA_DC = 1.138
 
 
 def sharpen_1x2(lam: float, mu: float, rho: float = -0.06,
