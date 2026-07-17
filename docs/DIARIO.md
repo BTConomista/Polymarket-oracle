@@ -6618,6 +6618,16 @@ ricalcolabile da `runs.jsonl`; il file non introduce numeri propri. La regola
 nuova (principio 9) e' prospettica: ogni esperimento futuro dichiara su quale
 fronte sta lavorando e aggiorna la matrice.
 
+**Verifica di completezza (richiesta utente, stessa fase).** Ripassate TUTTE
+le fasi del registro README contro la rosa: mancavano 5 voci, aggiunte —
+vantaggio-casa per-squadra (F8, bocciato), covariata `midweek_europe`
+(F36-bis: −0.0003 ma β stabile 6/6 → PANCHINA, non bocciata), covariate del
+canale-pareggio (F37, bocciate), ricalibrazione O/U del mercato (F51-quater,
+bocciata), temperatura sopra dp_lvl (F52-ter, panchina). Completate anche le
+etichette (GBM include F36; GAS include il Kalman chiuso-per-argomento;
+covariate includono ppda/deep; stakes unifica F32/36/45). Totale rosa: 34
+righe di matrice, 13 voci di panchina, 23 bocciati.
+
 ---
 
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi

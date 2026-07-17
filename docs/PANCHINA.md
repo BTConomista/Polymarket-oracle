@@ -57,6 +57,8 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Diagonale inflazionata (`--draw-inflation`) | 🪑 F12b | ⬜ | ⬜ | ⬜ |
 | Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ⬜ colonne pronte F59 | ⬜ colonne pronte F59 | ⬜ |
 | Temperature scaling post-hoc | 🪑 F6 (T≈0.94) | ⬜ | ⬜ | ⬜ |
+| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ⬜ colonne pronte F59 | ⬜ colonne pronte F59 | ⬜ |
+| Temperatura sopra dp_lvl (T=1.056) | 🪑 F52-ter | ❌ (dp_lvl bocciato lì) | ❌ | ❌ |
 | GBM (diretto, per mercato, bespoke) | ❌ F21-23/50-quater | ⬜ ✱5 | ⬜ ✱5 | ❌ tetto informativo |
 | Poisson bivariato (λ3) | ❌ F42 | ⬜ | ⬜ | ⬜ |
 | Copula di Frank | ❌ F43/50 | ⬜ | ⬜ | ⬜ |
@@ -64,12 +66,15 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Binomiale negativa · zero-inflazione · Rue-Salvesen | ❌ F27/51 | ⬜ | ⬜ | ⬜ |
 | ρ dinamico per-partita | ❌ F18 | ⬜ | ⬜ | ⬜ |
 | Power-devig / denoising cross-stagione | ❌ F38/50 | ⬜ | ⬜ | ⬜ |
-| Router stakes-aware (path DC) | ❌ F45 | ⬜ | ⬜ | ⬜ |
+| Covariata stakes + router stakes-aware | ❌ F32/36/45 | ⬜ | ⬜ | ⬜ |
+| Vantaggio-casa per-squadra | ❌ F8 (r≈0.00) | ⬜ | ⬜ | ⬜ |
+| Covariate nel canale-pareggio | ❌ F37 | ⬜ | ⬜ | ⬜ |
+| Ricalibrazione O/U del mercato | ❌ F51-quater | ⬜ | ⬜ | ⬜ |
 | Ensemble standalone (DC+biv+GBM) | ❌ F46 | ⬜ | ⬜ | ⬜ |
 | Blend modello+mercato (lineare α / GBM) | ❌ F16 (α*≈0) / F23 | ⬜ | ⬜ | ⬜ |
 | Profilo stagionale dinamico (γ/λ,μ nel tempo) | ❌ F47/48 | ⬜ | ⬜ | ⬜ |
 | Tiri in porta grezzi nel blend | ❌ F3 | ⬜ | ⬜ | ⬜ |
-| Covariate squad_value/absence/npxG/forma/luck | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ |
+| Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ |
 
 Note della matrice:
 - **✱1** Il motore market-implied su Premier/Liga non è mai stato backtestato
@@ -115,6 +120,8 @@ Note della matrice:
 | 9 | Covariata congestione vera `rest_full` (4e-bis) | −0.0004 | rumore | `--covariates rest_full` |
 | 10 | Temperature scaling post-hoc (6) | −0.0003 | trascurabile (T≈0.94 robusto) | `scripts/calibrate.py` |
 | 11 | GBM + finishing-luck (33) | −0.0022 (P 81%) | non conclusivo, e il GBM di suo perde dal DC | — |
+| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme | `--covariates midweek` |
+| 13 | Temperatura sopra dp_lvl (52-ter) | 0.9609→**0.9605** (T=1.056) | si somma a una leva già Serie-A-only e da oracolo | sopra `sharpen_1x2` |
 
 ### Dettaglio delle voci di panchina
 
@@ -218,23 +225,26 @@ Note della matrice:
 | modello/leva (fase) | verdetto | numero chiave |
 |---|---|---|
 | Tiri in porta grezzi nel blend (3) | nullo/negativo su 6 stagioni | — |
+| Vantaggio-casa per-squadra (8) | il γ per-club è solo rumore stagionale | persistenza anno-su-anno r≈0.00 |
 | Covariate squad_value / absence / npxG (4c, 11) | ridondanti con gol+xG; squad_value PEGGIORA in ogni combo | +0.0004…+0.0007 |
 | Forma / streak / rendimento recente (13) | già catturati dal fit pesato nel tempo | corr residui +0.035 |
 | Blend lineare modello+mercato (16) | il mercato INGLOBA il modello | α* ≈ 0 perfino in-sample |
 | ρ dinamico per-partita (18) | instabile, sbatte sui bound | +0.0003 [−0.0007,+0.0013] |
-| GBM diretto per mercato (21/22) | non batte il DC su NESSUN mercato | CI<0 escluso su 5/6 |
+| GBM diretto per mercato (21/22/36) | non batte il DC su NESSUN mercato; col feature-set completo overfitta | CI<0 escluso su 5/6; train 0.913→0.867, test ~1.01 |
 | GBM modello+mercato (23) | degrada perfino il mercato-feature | 0.9996 vs mercato 0.9632 |
 | Finestre dati corte (25) | più storia batte meno, sempre | 3 stag +0.0011, 2 stag +0.0019 |
 | Binomiale negativa (27) | i gol NON sono sovra-dispersi dati i tassi | nb_size→Poisson |
 | Power-devig / denoising (38, 50) | motore già non-biased | Platt a≈1.06 peggiora +0.0020; η=0.909 mai utile |
 | Poisson bivariato λ3 (42) | l'equilibrio \|λ−μ\| batte la correlazione globale | perde vs φ35 |
 | Copula di Frank (43, 50) | dipendenza flessibile senza guadagno | tetto = φ35; +compless. per −0.0001 |
-| Router stakes-aware (45) | il GBM-stakes NON batte il DC nemmeno sul mismatch | soft −0.0018, P 53% |
+| Covariata stakes + router stakes-aware (32/36/45) | segnale reale sul mismatch ma NON sfruttabile: il GBM-stakes non batte il DC nemmeno lì | soft −0.0018, P 53% |
+| Covariate nel canale-pareggio (37) | "cruciali → più pari" è FALSO; canale saturo | residuo −0.0017 |
+| Ricalibrazione O/U del mercato (51-quater) | il bias O/U è instabile (a differenza del tilt 1X2) | +0.0013 out-of-sample |
 | Ensemble standalone DC+biv+GBM (46) | nessun ensemble batte il miglior singolo | 1X2 mean +0.0033 |
 | Profilo stagionale dinamico γ/λ,μ (47/48) | l'effetto si sgonfia con più dati | ×1.148→×1.072 |
 | GBM bespoke per singolo mercato (50-quater) | perde su ogni mercato e su entrambi i path | anche con l'engine tra le feature |
 | Rue-Salvesen · zero-inflazione 0-0 (51) | nulli | γ=+0.03; z≈0 |
-| GAS / score-driven (52-sexies) | memoria effettiva troppo corta (~25 partite) | +0.0027 vs DC batch, P 18% |
+| GAS / score-driven (52-sexies); Kalman chiuso-per-argomento (51) | memoria effettiva troppo corta (~25 partite); l'emivita del DC è già lo steady-state di un Kalman | +0.0027 vs DC batch, P 18% |
 | dp_lvl fuori dalla Serie A (53) | il beat-the-close è idiosincrasia della chiusura SA | Premier +0.0008, Liga +0.0001 |
 | Ri-taratura per-lega di emivita/shrinkage/α (57) | piatta: il gap è informazione, non calibrazione | tutti i Δ entro ±0.0005 |
 
