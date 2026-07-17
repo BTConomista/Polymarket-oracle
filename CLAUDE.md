@@ -118,6 +118,12 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   esperimenti e, se serve, nelle tabelle del gap/evoluzione). Nessuna analisi può
   restare fuori da questo registro. Se cambia la config ufficiale, aggiorna anche
   la riga di stato e la roadmap.
+- [ ] **Panchina** (`docs/PANCHINA.md`) — se l'esperimento si chiude
+  "migliorativo ma NON adottato" (CI contiene lo zero, rumore, una sola lega,
+  multiple testing…), aggiungi/aggiorna la voce corrispondente: numeri, motivo
+  della panchina, come si attiva, cosa la promuoverebbe. Se una voce esistente
+  viene promossa in config ufficiale o smentita, spostala nell'archivio in
+  fondo al file con data e motivo. Il file deve restare SEMPRE allineato.
 - [ ] **Test** — mantieni `pytest` verde; aggiungi un test per ogni nuova
   funzionalità del modello/pipeline.
 - [ ] **Commit + push** — messaggio chiaro (cosa e perché), sul branch di

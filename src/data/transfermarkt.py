@@ -208,6 +208,9 @@ def map_players(
          gli omonimi) -- scelta CONTATA a parte nel report perche' fallibile;
       4. nessun candidato: nome confrontato SENZA spazi (cattura
          "Gian Marco"/"Gianmarco", "N'Koulou"/"Nkoulou");
+      4-bis. stessi token in ORDINE diverso (Fase 63: "Djené Dakonam" Understat
+         vs "Dakonam Djené" Transfermarkt — l'inversione nome/cognome, comune
+         per i giocatori extra-europei), candidato valutato unico;
       5. sottoinsiemi di token per i nomi lunghi ("Pierre Kalulu Kyatengwa"
          -> "Pierre Kalulu"), accettati solo con candidato valutato unico;
       6. cognome + iniziale del nome (o solo cognome per i nomi a token
@@ -229,6 +232,11 @@ def map_players(
     by_squashed: dict[str, set[int]] = {}
     for name_norm, ids in by_name.items():
         by_squashed.setdefault(name_norm.replace(" ", ""), set()).update(ids)
+    # Indice a token ORDINATI (Fase 63): cattura le inversioni nome/cognome
+    # tra le fonti ("djene dakonam" e "dakonam djene" -> "dakonam djene").
+    by_tokensort: dict[str, set[int]] = {}
+    for name_norm, ids in by_name.items():
+        by_tokensort.setdefault(" ".join(sorted(name_norm.split())), set()).update(ids)
     # Indice per cognome (ultimo token del nome normalizzato).
     by_surname: dict[str, list[tuple[str, int]]] = {}
     for name_norm, ids in by_name.items():
@@ -249,7 +257,8 @@ def map_players(
         })
 
     stats = {"exact": 0, "filtered": 0, "peak_tiebreak": 0, "squashed": 0,
-             "token_subset": 0, "surname": 0, "fuzzy": 0, "unmatched": 0}
+             "token_sort": 0, "token_subset": 0, "surname": 0, "fuzzy": 0,
+             "unmatched": 0}
     rows: list[dict] = []
     players = squads.drop_duplicates("player_id")
     for _, p in players.iterrows():
@@ -274,6 +283,12 @@ def map_players(
                           p["position"])
             if len(good) == 1:
                 tm_id, method = good[0], "squashed"
+            # 4-bis) stessi token, ordine diverso (inversione nome/cognome)
+            if tm_id is None and len(toks) >= 2:
+                good = _valid(by_tokensort.get(" ".join(sorted(toks)), []),
+                              p["position"])
+                if len(good) == 1:
+                    tm_id, method = good[0], "token_sort"
             # 5) sottoinsiemi di token (nomi con parti in piu'/in meno)
             if tm_id is None and len(toks) >= 3:
                 subsets = [" ".join(toks[:2]), f"{toks[0]} {toks[-1]}",

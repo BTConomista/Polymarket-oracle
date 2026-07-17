@@ -6466,6 +6466,115 @@ simile: 0.0122). Tutti i numeri ricalcolabili dai 2 run registrati.
 
 ---
 
+## Fase 63 — Il bug del matching giocatori: l'inversione nome/cognome
+
+**Obiettivo.** Sistemare il "sospetto bug" del matching Understat↔Transfermarkt
+segnalato nella Fase 60 e messo in cima ai prerequisiti in DATI.md: titolari
+con migliaia di minuti (Djené 25.960', Gerard Moreno 17.974', …) senza valore
+di mercato, che abbassano la copertura `squad_value` (Liga 58.3%).
+
+**Diagnosi (prima di toccare il codice).** I casi sospetti si dividono in DUE
+categorie, e solo una e' un bug:
+1. **Inversione nome/cognome tra le fonti** — Understat scrive "Djené Dakonam",
+   Transfermarkt "Dakonam Djené" (id 221150, VALUTATO): stesso insieme di
+   token, ordine diverso. Nessuno dei 7 stadi del matching lo copriva (l'indice
+   per cognome usa l'ULTIMO token, che nelle due fonti e' diverso). Quantificato
+   sui dati reali: **27 giocatori / 115.488 minuti recuperabili in Liga, 12 /
+   23.069 in Premier**. Questo E' il bug.
+2. **Buchi del datalake** — Gerard Moreno, Theo Hernández, Álex Baena: il loro
+   record VALUTATO non esiste proprio in `player_profiles` (compaiono solo
+   nella tabella "compagni di squadra", con id privi di valutazioni). Nessun
+   algoritmo puo' trovare cio' che non c'e': NON e' un bug, e' il limite gia'
+   documentato del datalake (lo stesso di Lazio/Milinkovic-Savic, Fase 4a).
+   Idem "Morales" (Levante): nome a token unico con MOLTI omonimi valutati →
+   ambiguo → giustamente non agganciato (mai un omonimo a caso).
+
+**Fix (una cosa alla volta: solo la categoria 1).** Nuovo stadio **4-bis
+`token_sort`** in `map_players`: match sull'insieme ORDINATO dei token
+("dakonam djene" == sorted("djene dakonam")), accettato solo con candidato
+valutato unico e ruolo compatibile — ambiguita' → nessun match (2 test
+unitari sintetici, incluso il caso ambiguo a 3 token). La categoria 2 resta
+dichiarata in DATI.md; l'unico rimedio vero sarebbe una fonte valutazioni
+migliore.
+
+**Risultato** (ri-arricchimento Premier/Liga; la Serie A NON e'
+ri-arricchibile: le sue rose Understat non hanno ne' bundle ne' mirror — 
+limite aggiunto a DATI.md §4):
+
+| copertura `squad_value` (entrambi i lati) | prima | dopo |
+|---|--:|--:|
+| La Liga | 58.3% | **60.2%** (Getafe 22%→44%) |
+| Premier League | 95.6% | 95.6% (invariata) |
+
+Guadagno reale ma modesto, e ASIMMETRICO in modo istruttivo: in Liga i
+ripescati fanno superare la soglia dell'85% a nuove (squadra, stagione); in
+Premier i 12 ripescati (23k minuti) NON spostano nessuna coppia sopra soglia —
+pero' i VALORI pubblicati si aggiornano comunque (247 righe per lega ora
+sommano anche i ripescati, +52/16 righe di assenze), quindi il dato e' piu'
+accurato anche dove la copertura non sale. Il resto del gap Liga e' di
+categoria 2 (buchi del datalake): non e' estraibile dal matching, serve una
+fonte valutazioni migliore.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: e' un algoritmo di riconciliazione. La regola nuova,
+verificata contro `transfermarkt.py::map_players` (stadio 4-bis):
+
+```
+chiave(nome) = " ".join(sorted(token_normalizzati(nome)))
+match se: |{id : chiave(nome_TM) == chiave(nome_Understat), id valutato,
+            ruolo compatibile}| == 1
+```
+
+Perche' DOPO squashed (4) e PRIMA di token_subset (5): e' piu' precisa di
+subset/cognome/fuzzy (usa TUTTI i token, solo riordinati) ma meno del match
+esatto/senza-spazi (che preserva l'ordine). Il vincolo "candidato UNICO"
+e' lo stesso di tutti gli stadi di ripiego: su 3 token la stessa chiave puo'
+coprire persone diverse ("ana bruno carlos" vs "bruno ana carlos") → in caso
+di collisione non si aggancia (test dedicato).
+
+**Riproducibilita'.** `python scripts/build_league_snapshot.py --enrich
+premier_league la_liga` (rete per Transfermarkt, cache dopo il primo giro);
+`pytest tests/test_data_enrichment.py -q`.
+
+---
+
+## Fase 64 — «La panchina»: il registro dei miglioramenti misurati ma non attivati
+
+**Obiettivo (richiesta utente).** Un file, da tenere SEMPRE aggiornato (regola
+scritta nel protocollo), con l'elenco dei modelli/leve che nei backtest
+migliorano la config attiva ma NON sono stati adottati — perche' il CI
+contiene lo zero, per rumore, o per altre mancanze di robustezza.
+
+**Perche' serve (e perche' non bastava cio' che c'era).** `runs.jsonl` ha
+tutte le run (grezzo), il diario ha le decisioni (narrazione), il README ha
+l'esito di ogni analisi (sintesi) — ma NESSUNO dei tre risponde a colpo
+d'occhio alla domanda operativa: *"cosa abbiamo gia' misurato che potrebbe
+diventare ufficiale se arrivasse piu' potenza statistica?"*. Con ~64 fasi,
+quella lista viveva solo nella memoria di chi ha letto tutto il diario.
+
+**Scelta.** Nuovo **`docs/PANCHINA.md`**: 11 voci ordinate per credibilita' ×
+grandezza (da GG/NG φ35+knee34 della Fase 50, P 98%, a temperature scaling,
+−0.0003), ciascuna con: numeri + CI/P, motivo della panchina, come si attiva
+(flag/API gia' esistenti), condizioni di promozione. Piu' una sezione "lead
+operativi" (draw-bias Serie A, stakes-mismatch) e un archivio per le voci
+promosse/smentite. In testa, il contro-esempio che DEFINISCE i criteri: il
+prior δ fu adottato NONOSTANTE il CI non conclusivo per motivazione
+strutturale (Fasi 7/17/19) — la panchina non e' un "mai", e' un "non finche'".
+**Regola fissata nel CLAUDE.md §2** (checklist obbligatoria): ogni esperimento
+"migliorativo ma non adottato" aggiunge/aggiorna una voce; promozioni e
+smentite si spostano nell'archivio con data e motivo.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: e' un artefatto di PROCESSO. Ogni numero citato nel
+file proviene dalle fasi gia' documentate (50, 50-ter, 52-ter, 35, 48, 12a,
+10, 12b, 4e-bis, 6, 33, 40, 45) ed e' ricalcolabile dalle run corrispondenti
+in `runs.jsonl` — il file non introduce ne' potra' mai introdurre numeri
+propri (regola 3 del file stesso).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

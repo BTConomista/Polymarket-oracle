@@ -21,6 +21,11 @@ Polymarket, bookmaker, exchange o altri mercati di previsione.
 > fonti, coperture, semantica apertura/chiusura delle quote, e **cosa è dato
 > reale vs cosa è STIMA** (`data/estimates/`). Da consultare prima di ogni
 > analisi sui dati.
+>
+> 🪑 **[La panchina](docs/PANCHINA.md)** — i miglioramenti **misurati ma non
+> attivati** (CI che contiene lo zero, rumore, robustezza insufficiente), con
+> numeri, motivo e condizioni di promozione. Sempre aggiornato (regola nel
+> CLAUDE.md §2).
 
 ## Stato attuale
 
@@ -176,6 +181,8 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **61** | **quote apertura 2017-19 recuperate** (chiusura Pinnacle PSC* ignorata dal loader) | 2017-18/2018-19 hanno PS*/PSC* (apertura+chiusura Pinnacle, diverse nel 96%): **2279 aperture 1X2 recuperate**, chiusura vera al posto della pre-match spacciata; stagioni 2019-20+ bit-per-bit invariate | ✅ CLV misurabile anche su 1718/1819; O/U di quelle stagioni resta senza apertura (Pinnacle non ha O/U closing) |
 | **62** | **ricostruire la chiusura O/U mancante (2017-19)** dal movimento 1X2 open→close (backtest su 21 lega-stagioni con entrambe le linee) | la parte prevedibile del movimento O/U è TUTTA nel movimento 1X2 mappato via matrice DC (recal pura: corr ~0): M4 (recal+shift motore WF) taglia il MAE del 33-41% (corr movimento 0.64-0.80, beta≈1) e in **Liga recupera tutto il valore della chiusura** (−0.0024 ✓CI vs open, indistinguibile dal close vero); ma il close vero vale solo −0.0007…−0.0026 vs open (CI solo Liga) | 🔎 **ricostruibile in struttura**; pubblicazione decisa (come stima dichiarata) nella 62-bis |
 | **62-bis** | **bakeoff estimatori + pubblicazione della stima** (richiesta utente: "utile, purché scritto che è una stima") | il movimento 1X2 GREZZO (Δlogit H/X/2) **batte** lo shift del motore (la matrice DC comprime il segnale): **E3 pooled** MAE **0.0117** (−44% vs non stimare, corr 0.75-0.86); coefficienti simmetrici cH≈cA=+1.245 (componente gol-totali), cD=−0.81 (pareggio→Under) | ✅ **2279 stime pubblicate in `data/estimates/`** (probabilità, mai quote; test-guardia anti-contaminazione); nuovo catalogo dati **`docs/DATI.md`**; convenzione stime nel CLAUDE.md §5 |
+| **63** | **fix matching giocatori** (Understat↔Transfermarkt): inversione nome/cognome tra fonti ("Djené Dakonam"/"Dakonam Djené") | diagnosi in 2 categorie: **bug vero** = ordine dei token (27 giocatori/115k min in Liga, 12/23k in Premier → nuovo stadio `token_sort`, unico+valutato+ruolo); **non-bug** = record valutati ASSENTI dal datalake (Gerard Moreno, Theo Hernández: nessun matching può trovarli) | ✅ Liga 58.3→**60.2%** (Getafe 22→44%); Premier invariata ma valori più accurati (247 righe/lega aggiornate); Serie A non ri-arricchibile (rose senza bundle/mirror) |
+| **64** | **«la panchina»** (`docs/PANCHINA.md`): registro dei miglioramenti misurati ma NON attivati | 11 voci (da GG/NG φ35+knee34 P 98% a temperature scaling −0.0003) con numeri, motivo, attivazione e condizioni di promozione; + lead operativi (draw-bias, stakes) e archivio | ✅ regola di aggiornamento obbligatoria nel CLAUDE.md §2; risponde a "cosa abbiamo già misurato che potrebbe diventare ufficiale?" |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune
@@ -1478,7 +1485,7 @@ valutazioni/infortuni Transfermarkt vengono invece scaricati dalla rete — **il
 mirror usato dal progetto è raggiungibile** (contrariamente a quanto scritto in
 una risposta precedente, mai verificato prima d'ora: è `transfermarkt.com`
 diretto ad essere bloccato, non il mirror GitHub). Copertura `squad_value`:
-**95.6% Premier League**, **58.3% La Liga** (quest'ultima sensibilmente più
+**95.6% Premier League**, **60.2% La Liga** (58.3% prima del fix del matching, Fase 63; quest'ultima sensibilmente più
 bassa — diagnosticata, non solo osservata: il matching per nome è comunque
 buono, 91.7%; il gap è nei giocatori sudamericani/spagnoli dal nome breve o
 senza serie di valutazioni nel datalake, la stessa causa già nota per

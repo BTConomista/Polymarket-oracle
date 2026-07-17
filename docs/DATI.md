@@ -3,7 +3,7 @@
 Questo documento è la **mappa unica di tutti i dati** del progetto: cosa c'è,
 da dove viene, quanto copre, e — sezione più importante — **cosa è dato reale e
 cosa è STIMA**. Va aggiornato ogni volta che i dati cambiano (nuova fonte,
-nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 62-bis**.
+nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 63/64**.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
@@ -37,7 +37,7 @@ canonicalizzati via `sources.TEAM_ALIASES`.
 | **quote apertura** | `odds_*_open` (5 colonne) | football-data (vedi §2) | 1X2: ~100% · O/U: 77.8% (**manca 2017-19**, vedi §5) |
 | xG | `home/away_xg, home/away_npxg` | Understat | 100% |
 | stile | `home/away_ppda, home/away_deep` | Understat | 100% |
-| valore rosa | `home/away_squad_value` | Transfermarkt (datalake) | SA 69.8% · PL 95.6% · **Liga 58.3%** (entrambi i lati; vedi §4) |
+| valore rosa | `home/away_squad_value` | Transfermarkt (datalake) | SA 69.8% · PL 95.6% · **Liga 60.2%** (entrambi i lati; vedi §4) |
 | assenze (STIMA, suffisso `_est`) | `home/away_absent_count_est, home/away_absent_value_est` | Transfermarkt + rose Understat | 100% (ma è una **stima dichiarata**, vedi §4) |
 | congestione | `home/away_rest_days_full, home/away_midweek_europe` | openfootball + snapshot | ~99.5% (NaN solo alla prima partita nota di una squadra) |
 
@@ -92,7 +92,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 |---|---|---|
 | football-data (Serie A, CSV originali completi) | `data/football_data_raw/` (versionata) | ✅ congelata; il sito originale non è raggiungibile dal cloud |
 | football-data (Premier/Liga) | `files/football_data_*_bundle.json` (caricati a mano, Fase 54) | ✅ congelata |
-| Understat (xG + rose giocatori) | `files/understat_*_bundle.json`; Serie A in cache `data/raw/` | ✅ congelata; il mirror per-stagione è **sparito** (Fase 14) |
+| Understat (xG + rose giocatori) | `files/understat_*_bundle.json` (Premier/Liga); Serie A: **solo lo snapshot** | ⚠️ il mirror per-stagione è **sparito** (Fase 14): le rose Serie A NON sono rigenerabili — `--enrich`/ri-matching valgono solo per Premier/Liga finché non viene caricato un bundle Understat Serie A (come Fase 54) |
 | Transfermarkt (valutazioni, infortuni) | mirror GitHub `salimt/football-datasets`, cache `data/raw/` (~106 MB, non versionata) | ✅ raggiungibile (verificato Fase 60) |
 | openfootball (coppe/Europa) | cache `data/raw/fixtures_*` | ✅ raggiungibile |
 
@@ -100,7 +100,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 - `squad_value`: pubblicato solo se i giocatori valutati coprono ≥85% dei
   minuti della squadra, altrimenti `NaN`. Il datalake Transfermarkt è
   incompleto (~25% dei profili senza valutazioni): Lazio `NaN` in tutte le
-  stagioni di Serie A; in Liga il problema è più diffuso (58.3%) per i nomi
+  stagioni di Serie A; in Liga il problema è più diffuso (60.2% anche dopo il fix del matching, Fase 63) per i nomi
   brevi/nickname sudamericani-spagnoli. **Niente imputazioni.**
 - `absent_*_est`: già una **stima dichiarata** nel nome (rosa ricostruita dai
   minutaggi Understat + storico infortuni TM): usarla come indicazione, non
@@ -136,10 +136,12 @@ Accesso da codice: `loader.read_ou_close_estimates()`. Rigenerazione:
 Da valutare **solo** con lo stesso protocollo (backtest di fedeltà su dati
 dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
 
-- **`squad_value` mancante** (Liga 41.7%, Lazio/Serie A): stimabile da
+- **`squad_value` mancante** (Liga ~40%, Lazio/Serie A): stimabile da
   posizione in classifica, xG cumulato, valore delle stagioni adiacenti della
-  stessa squadra. Prerequisito: sistemare il matching giocatori (c'è un
-  sospetto bug: titolari "agganciati" a record TM senza valutazioni).
+  stessa squadra. Il prerequisito "matching giocatori" è stato chiuso (Fase 63:
+  fix inversione nome/cognome, Liga 58.3→60.2%); il gap residuo è un buco del
+  DATALAKE (record valutati assenti: Gerard Moreno, Theo Hernández, …), quindi
+  la strada è la stima per-squadra, non altro matching.
 - **apertura O/U 2017-19** (l'altra metà del buco di §2): meno utile — la
   linea unica disponibile È già di timing apertura.
 - **quote O/U di apertura mancanti sparse** (1 partita 21-22 SA, 1 Liga 17-18).

@@ -37,6 +37,60 @@ def test_normalize_name_giocatori():
     assert normalize_name("  Zlatan   Ibrahimović ") == "zlatan ibrahimovic"
 
 
+def test_map_players_inversione_nome_cognome(monkeypatch):
+    """Fase 63: Understat scrive "Djené Dakonam", Transfermarkt "Dakonam Djené"
+    (stesso insieme di token, ordine diverso): il match deve riuscire via lo
+    stadio token_sort — prima del fix il giocatore restava unmatched (25960
+    minuti persi nel solo caso reale di Getafe)."""
+    from src.data import transfermarkt as tm
+
+    names = pd.DataFrame({"tm_id": [221150, 999],
+                          "name_norm": ["dakonam djene", "altro giocatore"]})
+    positions = {221150: "Defender", 999: "Attack"}
+    valuations = {221150: (np.array(["2020-01-01"], dtype="datetime64[ns]"),
+                           np.array([5e6]))}
+    monkeypatch.setattr(tm, "_load_name_index",
+                        lambda force=False: (names, positions))
+    monkeypatch.setattr(tm, "_load_valuations", lambda force=False: valuations)
+
+    squads = pd.DataFrame({
+        "season": ["2223"], "team": ["Getafe"],
+        "player_id": ["u1"], "player_name": ["Djené Dakonam"],
+        "position": ["D"], "minutes": [3000.0],
+    })
+    mapping, stats = tm.map_players(squads)
+    assert stats["token_sort"] == 1
+    assert int(mapping.iloc[0]["tm_id"]) == 221150
+
+
+def test_map_players_token_sort_ambiguo_non_aggancia(monkeypatch):
+    """Due persone DIVERSE con gli stessi token (in ordini diversi) -> il
+    token_sort e' ambiguo -> NIENTE match (meglio un buco dichiarato che un
+    omonimo sbagliato). Serve un nome a 3 token: con 2 token uno dei due
+    ordini coincide sempre col match esatto."""
+    from src.data import transfermarkt as tm
+
+    names = pd.DataFrame({"tm_id": [1, 2],
+                          "name_norm": ["ana bruno carlos", "bruno ana carlos"]})
+    positions = {1: "Defender", 2: "Defender"}
+    dates = np.array(["2020-01-01"], dtype="datetime64[ns]")
+    valuations = {1: (dates, np.array([1e6])), 2: (dates, np.array([2e6]))}
+    monkeypatch.setattr(tm, "_load_name_index",
+                        lambda force=False: (names, positions))
+    monkeypatch.setattr(tm, "_load_valuations", lambda force=False: valuations)
+
+    squads = pd.DataFrame({
+        "season": ["2223"], "team": ["X"],
+        "player_id": ["u1"], "player_name": ["Carlos Bruno Ana"],
+        "position": ["D"], "minutes": [900.0],
+    })
+    mapping, stats = tm.map_players(squads)
+    assert stats["token_sort"] == 0            # ambiguo: non deve scattare
+    assert pd.isna(mapping.iloc[0]["tm_id"]) or stats["unmatched"] == 0
+    # (il fallback per COGNOME puo' legittimamente agganciare o no; il punto
+    #  del test e' che il token_sort ambiguo non scelga a caso)
+
+
 # ------------------------------------------------------------ 2. join xG
 
 def _partite_sintetiche() -> pd.DataFrame:
