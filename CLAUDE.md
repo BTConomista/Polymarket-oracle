@@ -86,6 +86,18 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      proprietà della chiusura Serie A (meno liquida), non del calcio. Le costanti
      del motore restano dichiaratamente per-lega (§7). Aperto: port completo DC
      su Premier/Liga coi bundle Understat (Fase 53-bis).
+9. **Ogni modello si sviluppa su DUE FRONTI e si traccia nella rosa (Fase 65).**
+   Per ogni modello/leva vanno considerate e valutate DUE versioni:
+   - **per-lega**: costanti/iperparametri ritarati sulla singola lega (es. DC
+     Serie A con δ=0.23, DC Premier con δ=0.33);
+   - **generale**: versione unica cross-lega (pooled/universale — es. lo
+     stimatore E3 pooled della Fase 62-bis, che ha BATTUTO le versioni
+     per-lega; o gli iperparametri del DC, di fatto generali dopo la Fase 57).
+   Nessuno dei due fronti è "quello giusto" a priori: si misura (a volte vince
+   il pooled, a volte il segno NON è universale — es. draw-bias, Fase 53).
+   Lo stato di ogni modello su ogni fronte (titolare/panchina/bocciato/mai
+   testato) vive nella **matrice di `docs/PANCHINA.md`** ("la rosa dei
+   modelli"), da aggiornare a ogni esperimento.
 
 ---
 
@@ -118,12 +130,14 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   esperimenti e, se serve, nelle tabelle del gap/evoluzione). Nessuna analisi può
   restare fuori da questo registro. Se cambia la config ufficiale, aggiorna anche
   la riga di stato e la roadmap.
-- [ ] **Panchina** (`docs/PANCHINA.md`) — se l'esperimento si chiude
-  "migliorativo ma NON adottato" (CI contiene lo zero, rumore, una sola lega,
-  multiple testing…), aggiungi/aggiorna la voce corrispondente: numeri, motivo
-  della panchina, come si attiva, cosa la promuoverebbe. Se una voce esistente
-  viene promossa in config ufficiale o smentita, spostala nell'archivio in
-  fondo al file con data e motivo. Il file deve restare SEMPRE allineato.
+- [ ] **Rosa dei modelli** (`docs/PANCHINA.md`) — il registro di TUTTI i
+  modelli in tre stati (⚽ titolari / 🪑 panchina / ❌ bocciati) su DUE fronti
+  (per-lega e generale, principio 9). Dopo ogni esperimento che tocca lo stato
+  di un modello: aggiorna la cella della matrice (lega × fronte) e la voce
+  della sezione corrispondente (numeri, motivo, attivazione, condizioni di
+  promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
+  spostata di sezione, archivio in fondo con data e motivo. Il file deve
+  restare SEMPRE allineato.
 - [ ] **Test** — mantieni `pytest` verde; aggiungi un test per ogni nuova
   funzionalità del modello/pipeline.
 - [ ] **Commit + push** — messaggio chiaro (cosa e perché), sul branch di

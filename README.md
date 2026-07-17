@@ -22,10 +22,11 @@ Polymarket, bookmaker, exchange o altri mercati di previsione.
 > reale vs cosa è STIMA** (`data/estimates/`). Da consultare prima di ogni
 > analisi sui dati.
 >
-> 🪑 **[La panchina](docs/PANCHINA.md)** — i miglioramenti **misurati ma non
-> attivati** (CI che contiene lo zero, rumore, robustezza insufficiente), con
-> numeri, motivo e condizioni di promozione. Sempre aggiornato (regola nel
-> CLAUDE.md §2).
+> ⚽ **[La rosa dei modelli](docs/PANCHINA.md)** — lo stato di **OGNI** modello
+> del progetto: **titolari, panchina, bocciati**, ciascuno su **due fronti**
+> (versione per-lega e versione generale/pooled), con la matrice
+> modello × lega a colpo d'occhio. Sempre aggiornata (regole nel CLAUDE.md
+> §1.9 e §2).
 
 ## Stato attuale
 
@@ -183,6 +184,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **62-bis** | **bakeoff estimatori + pubblicazione della stima** (richiesta utente: "utile, purché scritto che è una stima") | il movimento 1X2 GREZZO (Δlogit H/X/2) **batte** lo shift del motore (la matrice DC comprime il segnale): **E3 pooled** MAE **0.0117** (−44% vs non stimare, corr 0.75-0.86); coefficienti simmetrici cH≈cA=+1.245 (componente gol-totali), cD=−0.81 (pareggio→Under) | ✅ **2279 stime pubblicate in `data/estimates/`** (probabilità, mai quote; test-guardia anti-contaminazione); nuovo catalogo dati **`docs/DATI.md`**; convenzione stime nel CLAUDE.md §5 |
 | **63** | **fix matching giocatori** (Understat↔Transfermarkt): inversione nome/cognome tra fonti ("Djené Dakonam"/"Dakonam Djené") | diagnosi in 2 categorie: **bug vero** = ordine dei token (27 giocatori/115k min in Liga, 12/23k in Premier → nuovo stadio `token_sort`, unico+valutato+ruolo); **non-bug** = record valutati ASSENTI dal datalake (Gerard Moreno, Theo Hernández: nessun matching può trovarli) | ✅ Liga 58.3→**60.2%** (Getafe 22→44%); Premier invariata ma valori più accurati (247 righe/lega aggiornate); Serie A non ri-arricchibile (rose senza bundle/mirror) |
 | **64** | **«la panchina»** (`docs/PANCHINA.md`): registro dei miglioramenti misurati ma NON attivati | 11 voci (da GG/NG φ35+knee34 P 98% a temperature scaling −0.0003) con numeri, motivo, attivazione e condizioni di promozione; + lead operativi (draw-bias, stakes) e archivio | ✅ regola di aggiornamento obbligatoria nel CLAUDE.md §2; risponde a "cosa abbiamo già misurato che potrebbe diventare ufficiale?" |
+| **65** | **la rosa completa + regola dei due fronti** (richiesta utente) | `PANCHINA.md` → «rosa dei modelli»: matrice **modello × fronte** (SA/PL/Liga/generale, ~28 modelli) con ⚽/🪑/❌/⬜; +sezione bocciati (20 voci coi numeri); emerge il lavoro più urgente (market-implied mai backtestato multi-mercato su PL/Liga) e il candidato generale più maturo (devig Shin, 3/3 leghe) | ✅ **principio 9 nel CLAUDE.md**: ogni modello si sviluppa su DUE fronti — per-lega e generale — e ogni esperimento aggiorna la matrice |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune

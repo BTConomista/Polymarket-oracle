@@ -6575,6 +6575,51 @@ propri (regola 3 del file stesso).
 
 ---
 
+## Fase 65 — La rosa completa e la regola dei due fronti
+
+**Obiettivo (richiesta utente).** Estendere il registro della Fase 64 da
+"sola panchina" a **rosa completa** — titolari, panchina E bocciati — e
+fissare una nuova regola di lavoro: d'ora in poi ogni modello si sviluppa su
+**due fronti**, la versione **per-lega** (es. il DC della Serie A) e la
+versione **generale** (es. il DC con iperparametri comuni), entrambe
+tracciate nello stesso file.
+
+**Scelta.** `docs/PANCHINA.md` (nome invariato: e' gia' linkato da regole e
+README) diventa **«La rosa dei modelli»** con:
+1. la **matrice modello × fronte** (Serie A / Premier / Liga / generale-pooled,
+   ~28 righe): ogni cella e' ⚽ titolare, 🪑 panchina, ❌ bocciato o ⬜ mai
+   testato — e il ⬜ e' dichiarato "lavoro potenziale, non un'assoluzione";
+2. le tre sezioni (titolari coi fronti di ciascuno; panchina con le 11 voci
+   della Fase 64 ora annotate per-fronte; **bocciati** — 20 voci coi numeri
+   del verdetto, da F3 a F57);
+3. regole aggiornate nel CLAUDE.md: nuovo **principio 9** (i due fronti) e
+   checklist §2 riscritta (ogni esperimento aggiorna la cella della matrice).
+
+**Cosa emerge gia' dalla matrice (il valore del colpo d'occhio).**
+- Il **fronte per-lega piu' urgente**: il motore market-implied multi-mercato
+  non e' MAI stato backtestato su Premier/Liga (solo il tracer F53); le
+  costanti θ/φ/ρ sono tutte Serie A.
+- Il **fronte generale gia' vinto senza saperlo**: gli iperparametri del DC
+  (ri-taratura piatta, F57) e lo stimatore E3 pooled (F62-bis, batte i
+  per-lega) sono le due prove documentate che la versione generale a volte e'
+  la migliore.
+- Il **contro-esempio che vieta di generalizzare alla cieca**: la
+  ricalibrazione per-classe del mercato ha segno OPPOSTO in Premier (w_D=0.93
+  vs 1.09, F53) — una versione generale e' bocciata in partenza, il fronte
+  per-lega resta aperto.
+- Il candidato **piu' vicino alla promozione sul fronte generale**: il devig
+  di Shin — unica voce di panchina con direzione confermata su 3/3 leghe.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: artefatto di processo (come la Fase 64). Ogni cella
+della matrice rimanda alla fase che l'ha misurata e ogni numero resta
+ricalcolabile da `runs.jsonl`; il file non introduce numeri propri. La regola
+nuova (principio 9) e' prospettica: ogni esperimento futuro dichiara su quale
+fronte sta lavorando e aggiorna la matrice.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
