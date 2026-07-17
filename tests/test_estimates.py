@@ -67,6 +67,48 @@ def test_snapshot_non_contaminati(estimates):
             f"{lg}: colonna di stima dentro lo snapshot — vietato"
 
 
+@pytest.fixture(scope="module")
+def squad_est() -> pd.DataFrame:
+    path = loader.ESTIMATES_DIR / "squad_value_2017_26.csv"
+    if not path.exists():
+        pytest.skip("stime squad_value non generate (scripts/build_estimates.py)")
+    return pd.read_csv(path, dtype={"season": str})
+
+
+def test_squad_value_schema_e_metodi(squad_est):
+    assert list(squad_est.columns) == ["league", "season", "team",
+                                       "squad_value_est", "method",
+                                       "expected_median_err_pct"]
+    assert set(squad_est["method"].unique()) <= {"anchored", "regression"}
+    # l'errore atteso e' dichiarato riga per riga e coerente col metodo
+    per_m = squad_est.groupby("method")["expected_median_err_pct"].nunique()
+    assert (per_m == 1).all()
+    assert squad_est["squad_value_est"].between(5e6, 1.5e9).all()
+
+
+def test_squad_value_copre_esattamente_i_buchi(squad_est):
+    """Le stime coprono ESATTAMENTE le celle (stagione, squadra) NaN degli
+    snapshot: ne' una di piu' (sovrascriverebbe dati veri) ne' una di meno."""
+    for lg, grp in squad_est.groupby("league"):
+        snap = database.read_snapshot(database.snapshot_path(lg))
+        snap["season"] = snap["season"].astype(str)
+        home = snap[["season", "home_team", "home_squad_value"]].rename(
+            columns={"home_team": "team", "home_squad_value": "v"})
+        away = snap[["season", "away_team", "away_squad_value"]].rename(
+            columns={"away_team": "team", "away_squad_value": "v"})
+        ts = pd.concat([home, away]).groupby(["season", "team"])["v"].first()
+        holes = set(ts[ts.isna()].index)
+        est_cells = set(zip(grp["season"], grp["team"]))
+        assert est_cells == holes, f"{lg}: stime != buchi dello snapshot"
+
+
+def test_squad_value_non_contamina_gli_snapshot(squad_est):
+    """I buchi negli snapshot devono RESTARE NaN (la stima vive solo qui)."""
+    for lg in squad_est["league"].unique():
+        snap = database.read_snapshot(database.snapshot_path(lg))
+        assert "squad_value_est" not in snap.columns
+
+
 def test_stima_diversa_dalla_linea_prematch(estimates):
     """La stima deve MUOVERSI rispetto alla linea pre-match (se coincidesse
     sempre, il builder starebbe ricopiando l'input invece di stimare)."""

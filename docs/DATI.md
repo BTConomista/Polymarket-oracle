@@ -127,6 +127,7 @@ le tre che contano:
 | file | cosa stima | metodo | errore atteso (validato walk-forward) |
 |---|---|---|---|
 | `ou_close_2017_19.csv` (2279 righe, 3 leghe) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti | regressione logit della chiusura su (linea O/U pre-match + movimento 1X2 open→close), fit pooled su 7978 partite 2019-20+ (Fasi 62/62-bis) | **MAE ~0.012** in probabilità; corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile (notizie puro-totali) |
+| `squad_value_2017_26.csv` (73 righe, 3 leghe) | il **valore rosa** delle celle (stagione, squadra) senza copertura Transfermarkt (Lazio, Getafe, …) | ibrido validato LOO/leave-team-out (Fase 66): `anchored` = regressione pooled + valore stagioni adiacenti; `regression` = solo rendimento, per-lega (squadre senza stagioni note) | **mediano ~17%** (anchored) / **~29%, p90 75%** (regression) — ⚠️ ordine di grandezza, code >100% per squadre sovra-performanti; metodo+errore riga per riga |
 
 Accesso da codice: `loader.read_ou_close_estimates()`. Rigenerazione:
 `python scripts/build_estimates.py`.
@@ -136,12 +137,9 @@ Accesso da codice: `loader.read_ou_close_estimates()`. Rigenerazione:
 Da valutare **solo** con lo stesso protocollo (backtest di fedeltà su dati
 dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
 
-- **`squad_value` mancante** (Liga ~40%, Lazio/Serie A): stimabile da
-  posizione in classifica, xG cumulato, valore delle stagioni adiacenti della
-  stessa squadra. Il prerequisito "matching giocatori" è stato chiuso (Fase 63:
-  fix inversione nome/cognome, Liga 58.3→60.2%); il gap residuo è un buco del
-  DATALAKE (record valutati assenti: Gerard Moreno, Theo Hernández, …), quindi
-  la strada è la stima per-squadra, non altro matching.
+- ~~**`squad_value` mancante**~~ → **FATTO (Fase 66)**: le 73 celle sono ora
+  stimate in `squad_value_2017_26.csv` (vedi tabella sopra). Migliorabile solo
+  con una fonte valutazioni migliore, non con altro modeling.
 - **apertura O/U 2017-19** (l'altra metà del buco di §2): meno utile — la
   linea unica disponibile È già di timing apertura.
 - **quote O/U di apertura mancanti sparse** (1 partita 21-22 SA, 1 Liga 17-18).

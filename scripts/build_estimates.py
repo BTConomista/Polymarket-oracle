@@ -5,7 +5,9 @@
     PROBABILITA' (non quote: niente margine, impossibile confonderle coi prezzi)
     e ogni analisi che le usa deve dichiararlo. Vedi docs/DATI.md §Stime.
 
-Contenuto attuale — ou_close_2017_19.csv (Fase 62/62-bis):
+Contenuto attuale (un file per stima; regole d'uso nel README della cartella):
+
+ou_close_2017_19.csv (Fase 62/62-bis):
   la CHIUSURA O/U 2.5 delle stagioni 2017-18 e 2018-19 (3 leghe), che le fonti
   non hanno (una sola linea O/U pre-match). Stimata con l'estimatore vincitore
   del bakeoff Fase 62-bis (E3 pooled): regressione in spazio logit della
@@ -19,6 +21,18 @@ Contenuto attuale — ou_close_2017_19.csv (Fase 62/62-bis):
     - nel 2017-19 le linee input sono Pinnacle/BbAv, il fit usa le medie Avg;
     - la stima cattura solo la parte di movimento CONDIVISA con l'1X2 (~60-75%
       della varianza): le notizie puro-totali (es. turnover d'attacco) no.
+
+squad_value_2017_26.csv (Fase 66):
+  il valore rosa delle 73 celle (stagione, squadra) che il datalake
+  Transfermarkt non copre (SA 29, Liga 40, PL 4 — Lazio, Getafe, ecc.).
+  Stimatore ibrido, scelto col leave-one-out/leave-team-out sulle 467 celle
+  note (run fase66_squad_value_est):
+    - "anchored" (A3 pooled): regressione su rendimento stagionale + valore
+      della stessa squadra nelle stagioni adiacenti -> err mediano ~17%;
+    - "regression" (A2 per-lega): solo rendimento, per le squadre senza
+      NESSUNA stagione nota (es. Lazio) -> err mediano ~29% (p90 ~75%!).
+  Errore GRANDE e dichiarato riga per riga: usare solo come ordine di
+  grandezza, mai come valore puntuale.
 
 Uso:  python scripts/build_estimates.py
 """
@@ -138,6 +152,51 @@ def build_ou_close() -> pd.DataFrame:
     return pd.concat(est_frames, ignore_index=True), coef, in_mae, fit
 
 
+SQUAD_VALUE_PATH = ESTIMATES_DIR / "squad_value_2017_26.csv"
+# Errori attesi dal backtest leave-one-out / leave-team-out (Fase 66).
+ERR_ANCHORED, ERR_REGRESSION = 17.0, 29.0
+
+
+def build_squad_value() -> pd.DataFrame:
+    """Stima le celle (stagione, squadra) senza valore rosa (Fase 66)."""
+    from scripts._run_fase66_squad_value_est import (
+        _design, _fit_ols, _pred_ols, anchor_feature, team_season_table)
+
+    t = team_season_table()
+    known = np.isfinite(t["y"].to_numpy())
+    anchor = anchor_feature(t, known)
+    D = _design(t, anchor)
+    y = t["y"].to_numpy()
+
+    # A3 pooled (celle CON ancora) — fit su tutte le note
+    coef3 = _fit_ols(D["A3"][known], y[known])
+    # A2 per-lega (celle SENZA ancora)
+    coef2 = {lg: _fit_ols(D["A2"][known & (t["league"] == lg).to_numpy()],
+                          y[known & (t["league"] == lg).to_numpy()])
+             for lg in t["league"].unique()}
+
+    holes = t[~known].copy()
+    rows = []
+    for i, r in holes.iterrows():
+        if np.isfinite(anchor[i]):
+            y_hat = float(_pred_ols(coef3, D["A3"][[i]])[0])
+            method, err = "anchored", ERR_ANCHORED
+        else:
+            y_hat = float(_pred_ols(coef2[r.league], D["A2"][[i]])[0])
+            method, err = "regression", ERR_REGRESSION
+        value = float(np.exp(y_hat + r.log_med))
+        rows.append({
+            "league": r.league, "season": r.season, "team": r.team,
+            "squad_value_est": round(value, -5),      # arrotonda ai 100k EUR
+            "method": method, "expected_median_err_pct": err,
+        })
+    est = pd.DataFrame(rows).sort_values(["league", "season", "team"])
+    n_anch = (est["method"] == "anchored").sum()
+    print(f"\nsquad_value: {len(est)} stime ({n_anch} anchored ~{ERR_ANCHORED:.0f}%, "
+          f"{len(est)-n_anch} regression ~{ERR_REGRESSION:.0f}%)")
+    return est, t
+
+
 def main() -> None:
     t0 = time.time()
     ESTIMATES_DIR.mkdir(parents=True, exist_ok=True)
@@ -155,7 +214,23 @@ def main() -> None:
         metrics_dict={"n_estimates": int(len(est)), "in_sample_mae": in_mae},
         fingerprint=experiment_log.data_fingerprint(fit),
     ))
-    print(f"Registrato in experiments/runs.jsonl. ({time.time()-t0:.0f}s)")
+
+    sq, t_table = build_squad_value()
+    sq.to_csv(SQUAD_VALUE_PATH, index=False)
+    print(f"-> {SQUAD_VALUE_PATH.relative_to(ROOT)}: {len(sq)} stime "
+          f"({sq.league.nunique()} leghe)")
+    print("   ⚠️  errore mediano atteso 17-29% (riga per riga nel file): "
+          "ordini di grandezza, non valori puntuali.")
+    experiment_log.append_run(experiment_log.make_record(
+        config={"source": "build_estimates_squad_value",
+                "model": "A3_pooled(anchored)+A2_perlega(regression)",
+                "expected_err": {"anchored": ERR_ANCHORED,
+                                 "regression": ERR_REGRESSION}},
+        metrics_dict={"n_estimates": int(len(sq)),
+                      "n_anchored": int((sq["method"] == "anchored").sum())},
+        fingerprint=experiment_log.data_fingerprint(fit),
+    ))
+    print(f"Registrati in experiments/runs.jsonl. ({time.time()-t0:.0f}s)")
 
 
 if __name__ == "__main__":

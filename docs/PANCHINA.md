@@ -47,6 +47,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
+| **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
 | GG/NG φ35+knee34 su market-implied | 🪑 F50 | ⬜ | ⬜ | ⬜ |
 | Ricalibrazione per-classe del mercato (w_D, w_A) | 🪑 F50-ter | ❌ F53 (direzione OPPOSTA, w_D=0.93) | 🪑 F53 (+3.6% P81) | ❌ segno non universale |
 | Devig di Shin | 🪑 F52-ter (P 97%) | 🪑 F53 (P 68%) | 🪑 F53 (P 94%) | 🪑 sempre ≥ moltiplicativo |
@@ -90,6 +91,10 @@ Note della matrice:
   esempio documentato di "versione generale" che regge.
 - **✱5** Il GBM non è mai stato rifatto su Premier/Liga, ma il tetto
   informativo è universale (F57): riaprirlo richiederebbe una ragione nuova.
+- **✱6** Caso istruttivo per il principio 9: per lo stimatore squad_value il
+  fronte VINCENTE dipende dal regime — con l'ancora adiacente vince il pooled
+  (17% vs 17.8%), senza ancore vince il per-lega (28.5% vs 31.4%, leave-team-out
+  F66). Nessun fronte domina: si misura caso per caso.
 
 ---
 
@@ -101,6 +106,7 @@ Note della matrice:
 | **Dixon-Coles + blend xG** | fallback senza quote; `backtest.py` | `LEAGUE_CONFIGS`: δ 0.23/0.33/0.22; il resto è comune (F57) | iperparametri comuni = versione generale di fatto |
 | **sharpen_1x2 (dp_lvl)** | `predict.py`, solo Serie A | SA only | bocciato fuori SA (F53) |
 | **Stimatore E3 chiusura O/U** | `scripts/build_estimates.py` → `data/estimates/` | (per-lega TESTATO e battuto dal pooled) | **pooled: 5 coefficienti unici, MAE 0.0117** |
+| **Stimatore squad_value (ibrido)** | `scripts/build_estimates.py` → `data/estimates/` | A2 per-lega per squadre senza stagioni note (err ~29%) | A3 pooled dove c'è l'ancora adiacente (err ~17%) |
 | **Baseline frequenze H/D/A** | benchmark in ogni backtest | per-lega per costruzione | — |
 
 ---

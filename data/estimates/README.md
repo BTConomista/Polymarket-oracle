@@ -44,4 +44,30 @@ Fase 61). Il file colma il buco con una stima.
 - La colonna è `p_over25_close_est` (probabilità devigata stimata);
   `P(Under) = 1 − P(Over)`.
 
+### `squad_value_2017_26.csv` — valore rosa stimato per le 73 celle mancanti
+
+**Perché.** 73 coppie (stagione, squadra) su 540 non hanno il valore rosa
+(SA 29, Liga 40, PL 4): il datalake Transfermarkt non ha valutazioni per
+abbastanza giocatori di quelle squadre (Lazio in TUTTE le stagioni, Getafe,
+Levante, …) e la soglia di onestà dell'85% dei minuti lascia `NaN`.
+
+**Come (Fase 66).** Stimatore ibrido, scelto con leave-one-out e
+leave-TEAM-out sulle 467 celle note:
+- `anchored` (37 celle): regressione pooled su rendimento stagionale + valore
+  della STESSA squadra nelle stagioni adiacenti → **errore mediano ~17%**;
+- `regression` (36 celle): solo rendimento (pts/gara, diff. reti, diff. xG,
+  promossa), per-lega — per le squadre senza NESSUNA stagione nota (es.
+  Lazio) → **errore mediano ~29%, p90 ~75%**.
+
+**⚠️ Limiti (più severi della stima O/U).**
+- L'errore è GRANDE: usare come **ordine di grandezza**, mai come valore
+  puntuale. Il metodo e l'errore atteso sono dichiarati **riga per riga**.
+- Code pesanti: per squadre fortemente sovra/sotto-performanti rispetto al
+  valore reale della rosa (es. il Getafe quinto nel 2018-19) l'errore può
+  superare il 100% — la regressione deduce il valore dal rendimento, e chi
+  rende più di quanto vale viene sovrastimato per costruzione.
+- La feature `squad_value` è comunque **bocciata come covariata** del modello
+  (Fase 4c/11): queste stime servono alla completezza del dato, non ci si
+  aspetta alcun guadagno predittivo.
+
 Documentazione completa dei dati e delle stime: **[docs/DATI.md](../../docs/DATI.md)**.

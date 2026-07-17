@@ -6630,6 +6630,86 @@ righe di matrice, 13 voci di panchina, 23 bocciati.
 
 ---
 
+## Fase 66 — Riempire le celle vuote: il valore rosa stimato (e l'inventario finale)
+
+**Obiettivo (richiesta utente).** "Riempire le celle vuote delle colonne che
+gia' abbiamo". Inventario post-Fasi 58-63 dei NaN residui negli snapshot:
+
+| gruppo di celle vuote | entita' | esito |
+|---|---|---|
+| `squad_value` | **73 celle (stagione, squadra)/540** (SA 29, Liga 40, PL 4) | **STIMATE in questa fase** |
+| O/U apertura 2017-19 | 760×2 per lega | resta NaN **per design** (il dato reale non esiste; la stima della CHIUSURA e' gia' pubblicata, F62-bis; riempire l'apertura violerebbe la maschera anti-contaminazione) |
+| `rest_days_full` prime partite | ~14/lega (0.4%) | resta NaN (fisiologico: nessuna partita precedente nota; riempirlo col cap=14 sarebbe un'assunzione fuori dai dati) |
+| 2 partite senza 1X2 apertura | 1 SA (Torino-Fiorentina 2122, recupero COVID: il grezzo non ha NESSUNA quota pre-match) + 1 Liga (Alaves-Sociedad 1718: pre-match Pinnacle presente ma chiusura Pinnacle assente → maschera corretta) | restano NaN, onesti |
+
+**Il lavoro: stimare le 73 celle `squad_value`** (protocollo stime, CLAUDE.md
+§5: backtest di fedelta' PRIMA di pubblicare). Sulle 467 celle note,
+leave-one-out E leave-TEAM-out (il caso Lazio: squadra senza NESSUNA stagione
+nota), candidati dal piu' economico, entrambi i fronti (principio 9):
+
+| candidato | LOO err mediano | leave-TEAM-out |
+|---|--:|--:|
+| A0 mediana di lega | 52.0% | 52.0% |
+| A1 ancora adiacente (dove esiste, 87%) | 16.3% | — (copertura 0) |
+| A2 regressione rendimento, per-lega | 27.8% | **28.5%** |
+| A2 pooled | 30.6% | 31.4% |
+| **A3 = A2+ancora, pooled** | **16.6%** | 38.1% |
+
+**Scelta: ibrido dichiarato riga per riga.** `anchored` (A3 pooled) per le 37
+celle con almeno una stagione adiacente nota (err ~17%); `regression` (A2
+per-lega) per le 36 senza ancore (err ~29%, p90 75%). Il leave-team-out mostra
+il perche' dell'ibrido: A3, fittato CON l'ancora tra le feature, degrada
+(38%) quando l'ancora manca per tutta la squadra — meglio il modello che non
+l'ha mai vista. **Nota per il principio 9**: il fronte vincente DIPENDE DAL
+REGIME (pooled con ancora, per-lega senza) — nessuno dei due domina.
+
+**Pubblicazione**: `data/estimates/squad_value_2017_26.csv` (73 stime, EUR
+arrotondati ai 100k, metodo + errore atteso per riga); 2 run registrati
+(`fase66_squad_value_est`, `build_estimates_squad_value`); 3 test nuovi (lo
+"esattamente i buchi": le stime coprono le celle NaN degli snapshot, ne' una
+di piu' ne' una di meno; non-contaminazione).
+
+**Onesta' (piu' severa del solito).** L'errore e' GRANDE (17-29% mediano) e
+con CODE PESANTI: la regressione deduce il valore dal rendimento, quindi una
+squadra che rende piu' di quanto vale viene sovrastimata per costruzione (es.
+Getafe 2018-19, quinto in Liga con una rosa modesta: stima ~254M contro un
+valore reale plausibile di ~80M — errore >100%, oltre il p90). Sono ordini di
+grandezza, non valori puntuali — scritto nel README della cartella, nel file
+(colonna `expected_median_err_pct`) e qui. E la feature resta BOCCIATA come
+covariata (F4c/11): queste stime completano il DATO, non promettono
+predizione.
+
+### 📐 Il modello in dettaglio
+
+Verificato contro `scripts/_run_fase66_squad_value_est.py` /
+`build_estimates.py::build_squad_value`:
+
+```
+bersaglio:  y = log(v) − log(mediana_lega_stagione)     [errore = relativo]
+A2:  y ≈ a + b·pts_pg + c·gd_pg + d·xgd_pg + e·promossa      (OLS, per-lega)
+A3:  y ≈ ... + f·ancora_riempita + g·flag_ancora             (OLS, pooled)
+ancora = media dei y NOTI della stessa squadra in (t−1, t+1)
+stima finale:  v̂ = exp(ŷ + log(mediana_lega_stagione))
+```
+
+**Perche' il log-rapporto col mediano**: i valori spaziano 30M-1.3B e ogni
+lega-stagione ha la sua inflazione; il rapporto rende l'errore RELATIVO e
+toglie il trend di mercato senza stimarlo. **Perche' il rendimento della
+stagione stessa** (e non della precedente): e' un completamento STORICO, non
+una predizione — l'informazione in-season e' lecita e dichiarata; per meta'
+delle celle (promosse, prime stagioni) la stagione precedente non esiste nei
+nostri dati. **Perche' l'OLS e non altro**: 467 osservazioni, 5-7 parametri,
+e il confronto e' con candidati piu' semplici (A0/A1) — la versione economica
+prima (§1.3); un modello piu' ricco andrebbe ri-validato da zero. I numeri
+17/29% vengono dal backtest (run `fase66_squad_value_est`), non dal fit
+in-sample.
+
+**Riproducibilita'.** `python scripts/_run_fase66_squad_value_est.py`
+(backtest, ~6s) → `python scripts/build_estimates.py` (pubblica entrambe le
+stime) → `pytest tests/test_estimates.py -q`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
