@@ -44,12 +44,13 @@ Fase 61). Il file colma il buco con una stima.
 - La colonna è `p_over25_close_est` (probabilità devigata stimata);
   `P(Under) = 1 − P(Over)`.
 
-### `squad_value_2017_26.csv` — valore rosa stimato per le 73 celle mancanti
+### `squad_value_2017_26.csv` — valore rosa stimato per le celle mancanti
 
-**Perché.** 73 coppie (stagione, squadra) su 540 non hanno il valore rosa
-(SA 29, Liga 40, PL 4): il datalake Transfermarkt non ha valutazioni per
-abbastanza giocatori di quelle squadre (Lazio in TUTTE le stagioni, Getafe,
-Levante, …) e la soglia di onestà dell'85% dei minuti lascia `NaN`.
+**Perché (ridimensionato dalla Fase 67).** Con la fonte player-scores i valori
+rosa REALI coprono il 100% delle stagioni concluse: restano **13 celle**, tutte
+della stagione in corso 2025-26 (valutazioni di inizio stagione ancora
+incomplete nel dataset per alcune neopromosse/club). Erano 73 prima della
+Fase 67: 60 stime sono state SOSTITUITE da dati reali.
 
 **Come (Fase 66).** Stimatore ibrido, scelto con leave-one-out e
 leave-TEAM-out sulle 467 celle note:

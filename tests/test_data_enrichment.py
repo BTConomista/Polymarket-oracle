@@ -190,12 +190,15 @@ def test_snapshot_xg_plausibile(snapshot):
 
 
 def test_snapshot_valori_rosa(snapshot):
-    """Copertura minima e ordini di grandezza sensati (niente look-ahead
-    garantito a monte: valutazioni <= 1 settembre della stagione)."""
+    """Copertura e ordini di grandezza sensati (niente look-ahead garantito a
+    monte: valutazioni <= 1 settembre della stagione). Dalla Fase 67 la fonte
+    e' player-scores: 100% sulle stagioni concluse, buchi onesti solo nella
+    stagione in corso."""
     entrambe = (snapshot["home_squad_value"].notna()
                 & snapshot["away_squad_value"].notna())
-    per_stagione = entrambe.groupby(snapshot["season"]).mean()
-    assert (per_stagione >= 0.60).all(), per_stagione
+    per_stagione = entrambe.groupby(snapshot["season"].astype(str)).mean()
+    concluse = per_stagione.drop(index="2526", errors="ignore")
+    assert (concluse >= 0.95).all(), per_stagione
     valori = pd.concat([snapshot["home_squad_value"],
                         snapshot["away_squad_value"]]).dropna()
     assert valori.between(10e6, 1500e6).all()
@@ -223,12 +226,10 @@ def test_snapshot_base_invariata(snapshot):
 # (mirror diverso, ancora vivo): vedi transfermarkt.add_squad_values(squads=...)
 # e scripts/build_league_snapshot.py --enrich.
 
-# Copertura minima onesta per lega: la Liga e' sensibilmente piu' bassa
-# (41-72% per stagione) delle altre due -- i giocatori sudamericani/spagnoli
-# con nomi brevi o nickname (Vinicius, Rodrygo, ...) mancano piu' spesso una
-# valutazione utilizzabile nel datalake Transfermarkt, coerente con la stessa
-# causa gia' documentata per Lazio/Serie A (§"Limite onesto" nel README/CLAUDE.md).
-_MIN_COVERAGE_PER_LEGA = {"premier_league": 0.85, "la_liga": 0.35}
+# Copertura minima onesta per lega (stagioni CONCLUSE; la 2526 in corso e'
+# testata a parte in test_player_scores). Dalla Fase 67 la fonte e'
+# player-scores: praticamente piena ovunque.
+_MIN_COVERAGE_PER_LEGA = {"premier_league": 0.95, "la_liga": 0.95}
 
 
 @pytest.fixture(params=["premier_league", "la_liga"])
@@ -251,9 +252,11 @@ def altro_snapshot(altra_lega):
 def test_altra_lega_valori_rosa_plausibili(altra_lega, altro_snapshot):
     entrambe = (altro_snapshot["home_squad_value"].notna()
                 & altro_snapshot["away_squad_value"].notna())
-    per_stagione = entrambe.groupby(altro_snapshot["season"]).mean()
+    per_stagione = entrambe.groupby(
+        altro_snapshot["season"].astype(str)).mean()
+    concluse = per_stagione.drop(index="2526", errors="ignore")
     soglia = _MIN_COVERAGE_PER_LEGA[altra_lega]
-    assert (per_stagione >= soglia).all(), per_stagione
+    assert (concluse >= soglia).all(), per_stagione
     valori = pd.concat([altro_snapshot["home_squad_value"],
                         altro_snapshot["away_squad_value"]]).dropna()
     assert valori.between(10e6, 1500e6).all()

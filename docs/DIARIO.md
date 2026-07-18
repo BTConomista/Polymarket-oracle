@@ -6710,6 +6710,91 @@ stime) → `pytest tests/test_estimates.py -q`.
 
 ---
 
+## Fase 67 — I valori rosa REALI: il canale GitHub Actions e la fonte player-scores
+
+**Obiettivo (richiesta utente).** Dopo le stime della Fase 66, l'utente chiede
+di cercare su internet i dati REALI. E ha un'intuizione operativa decisiva:
+un **workflow GitHub Actions** come "braccio" con rete libera — l'ambiente
+cloud e' dietro un proxy che blocca Kaggle/HuggingFace/transfermarkt, ma i
+runner Actions no.
+
+**La ricerca della fonte.** Transfermarkt diretto, download HF, CDN R2,
+Datasets-Server: tutti bloccati (verificati uno a uno). La fonte giusta e'
+`davidcariboo/player-scores` (progetto dcaribou/transfermarkt-datasets, CC0,
+aggiornato settimanalmente): ~508k valutazioni per 31.5k giocatori — TUTTI i
+giocatori che al datalake salimt mancavano (Milinkovic-Savic 31 valutazioni,
+Gerard Moreno 33, Morales 30…) — e le tabelle `appearances` (presenze con
+minuti = rose reali per id interno) e `clubs`.
+
+**Il workflow (debug di quello dell'utente).** Tre problemi: (1) file in
+`files/.github/workflows/` — GitHub lo legge solo dalla radice; (2) contenuto
+corrotto da un incolla duplicato; (3) `workflow_dispatch` compare nella tab
+Actions solo se il file sta sul branch di DEFAULT (main, vuoto). Riscritto in
+`.github/workflows/import_dataset.yml` con trigger aggiuntivo su push del
+file-segnale `.github/import-dataset-trigger` (il trigger push legge il
+workflow dal branch pushato → azionabile da questo branch senza toccare main)
+e CSV compressi (`files/player_scores/*.csv.gz`: appearances 148MB→42MB,
+niente split sotto il limite GitHub dei 100MB). Primo run: successo, 4 file
+committati dal bot sul branch.
+
+**La pipeline (`src/data/player_scores.py` + `scripts/build_squad_values.py`).**
+Definizione INVARIATA dalla Fase 4a (somma ultima valutazione ≤ 1 settembre,
+cap 550 giorni, soglia 85% dei minuti) ma: rose dalle `appearances` della lega
+domestica (id interni: **zero matching giocatori per nome** — l'unico aggancio
+e' quello dei ~110 club, +34 alias formali in TEAM_ALIASES, zero orfani);
+stagioni assegnate per **finestra di date dello snapshot** — la regola "mese
+≥ 7" avrebbe fatto traboccare la coda COVID della 2019-20 (chiusa il 2 agosto
+2020) nella stagione successiva: scoperto perche' il conteggio celle dava 549
+invece di 540, le 9 extra erano TUTTE retrocesse-2020 (test di regressione
+dedicato).
+
+**Risultato.**
+
+| copertura `squad_value` (entrambi i lati) | prima (salimt) | **dopo (player-scores)** |
+|---|--:|--:|
+| Serie A | 69.8% (Lazio mai) | **94.2%** — stagioni concluse **100%** |
+| Premier League | 95.6% | **97.8%** — concluse 100% |
+| La Liga | 60.2% | **95.0%** — concluse 100% |
+
+I buchi residui: **13 celle, tutte 2025-26** (valutazioni di inizio stagione
+ancora incomplete a monte per alcune neopromosse). Le stime della Fase 66
+scendono da 73 a 13 (60 SOSTITUITE da dati reali — la Lazio vera: 177-368M
+contro stime 185-418M, dentro l'errore dichiarato ~29% con code). Cross-check
+sulle 456 celle che avevano gia' un valore: scarto mediano 3-6% (stessa
+grandezza, stessa fonte a monte; differenze di vintage e di rosa), p90 12-19%.
+
+**Lezione.** (1) Il canale Actions e' un pattern RIUSABILE per ogni futura
+fonte bloccata dal proxy (bundle senza upload manuale dell'utente); (2) la
+via maestra contro i buchi era la FONTE, non il modeling (le Fasi 63/66
+restano utili: il fix del matching per il path salimt/assenze, lo stimatore
+per i 13 residui); (3) di nuovo il conteggio-sanity (549≠540) ha catturato un
+bug che i test non vedevano (la coda COVID).
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la formula del valore rosa e' quella della Fase 4a
+(verificata contro `player_scores.py::team_season_values`):
+
+```
+V(team, s) = Σ_{p ∈ rosa(team, s)} v_p(asof = 1 settembre anno(s))
+v_p(asof)  = ultima valutazione ≤ asof, scartata se piu' vecchia di 550 giorni
+pubblicato ⇔ Σ minuti dei giocatori valutati / Σ minuti totali ≥ 0.85
+rosa(team, s) = {p : ≥1 presenza in campionato per team con data ∈ finestra(s)}
+finestra(s)   = [min data, max data] della stagione s NELLO SNAPSHOT
+```
+
+L'unica novita' e' `finestra(s)`: derivata dai dati stessi (non da una regola
+di calendario), gestisce esattamente la coda COVID. Le costanti 550/0.85 NON
+sono state ritoccate (fonte unica: `transfermarkt.py`, da cui sono importate).
+
+**Riproducibilita'.** Import: push di `.github/import-dataset-trigger` (o
+Run workflow quando il file sara' su main) → `python scripts/build_squad_values.py`
+→ `python scripts/build_estimates.py` (stime residue) → `pytest -q`
+(136 test, +5). Run registrati: `build_squad_values_player_scores`,
+`build_estimates_squad_value`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

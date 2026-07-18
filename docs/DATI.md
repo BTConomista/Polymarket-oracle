@@ -3,7 +3,7 @@
 Questo documento è la **mappa unica di tutti i dati** del progetto: cosa c'è,
 da dove viene, quanto copre, e — sezione più importante — **cosa è dato reale e
 cosa è STIMA**. Va aggiornato ogni volta che i dati cambiano (nuova fonte,
-nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 63/64**.
+nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 67**.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
@@ -37,7 +37,7 @@ canonicalizzati via `sources.TEAM_ALIASES`.
 | **quote apertura** | `odds_*_open` (5 colonne) | football-data (vedi §2) | 1X2: ~100% · O/U: 77.8% (**manca 2017-19**, vedi §5) |
 | xG | `home/away_xg, home/away_npxg` | Understat | 100% |
 | stile | `home/away_ppda, home/away_deep` | Understat | 100% |
-| valore rosa | `home/away_squad_value` | Transfermarkt (datalake) | SA 69.8% · PL 95.6% · **Liga 60.2%** (entrambi i lati; vedi §4) |
+| valore rosa | `home/away_squad_value` | **player-scores** (Transfermarkt via Kaggle, Fase 67; vedi §4) | **100% su tutte le stagioni concluse** (3 leghe); buchi onesti solo nella 2025-26 in corso (48-81%) → stime in §5 |
 | assenze (STIMA, suffisso `_est`) | `home/away_absent_count_est, home/away_absent_value_est` | Transfermarkt + rose Understat | 100% (ma è una **stima dichiarata**, vedi §4) |
 | congestione | `home/away_rest_days_full, home/away_midweek_europe` | openfootball + snapshot | ~99.5% (NaN solo alla prima partita nota di una squadra) |
 
@@ -93,15 +93,16 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 | football-data (Serie A, CSV originali completi) | `data/football_data_raw/` (versionata) | ✅ congelata; il sito originale non è raggiungibile dal cloud |
 | football-data (Premier/Liga) | `files/football_data_*_bundle.json` (caricati a mano, Fase 54) | ✅ congelata |
 | Understat (xG + rose giocatori) | `files/understat_*_bundle.json` (Premier/Liga); Serie A: **solo lo snapshot** | ⚠️ il mirror per-stagione è **sparito** (Fase 14): le rose Serie A NON sono rigenerabili — `--enrich`/ri-matching valgono solo per Premier/Liga finché non viene caricato un bundle Understat Serie A (come Fase 54) |
-| Transfermarkt (valutazioni, infortuni) | mirror GitHub `salimt/football-datasets`, cache `data/raw/` (~106 MB, non versionata) | ✅ raggiungibile (verificato Fase 60) |
+| **player-scores** (valutazioni complete + presenze/rose, 3 leghe) | `files/player_scores/*.csv.gz` (versionati; import via **workflow GitHub Actions** `.github/workflows/import_dataset.yml` — il runner ha rete libera, l'ambiente cloud no) | ✅ fonte UFFICIALE dei valori rosa dalla Fase 67 (CC0, `dcaribou/transfermarkt-datasets`); rigenerabile: push di `.github/import-dataset-trigger` |
+| Transfermarkt (datalake `salimt`) | mirror GitHub, cache `data/raw/` (~106 MB, non versionata) | ✅ raggiungibile; dalla Fase 67 usato SOLO per gli infortuni (`absent_*_est`) — per i valori rosa e' superato da player-scores |
 | openfootball (coppe/Europa) | cache `data/raw/fixtures_*` | ✅ raggiungibile |
 
 **Limiti noti dei dati reali** (dichiarati, non aggirati):
 - `squad_value`: pubblicato solo se i giocatori valutati coprono ≥85% dei
-  minuti della squadra, altrimenti `NaN`. Il datalake Transfermarkt è
-  incompleto (~25% dei profili senza valutazioni): Lazio `NaN` in tutte le
-  stagioni di Serie A; in Liga il problema è più diffuso (60.2% anche dopo il fix del matching, Fase 63) per i nomi
-  brevi/nickname sudamericani-spagnoli. **Niente imputazioni.**
+  minuti della squadra, altrimenti `NaN`. Dalla Fase 67 (fonte player-scores)
+  la soglia è quasi sempre superata: i soli `NaN` residui sono 13 celle della
+  stagione in corso 2025-26 (valutazioni di inizio stagione non ancora
+  complete a monte). **Niente imputazioni** — per quelle 13 c'è la stima (§5).
 - `absent_*_est`: già una **stima dichiarata** nel nome (rosa ricostruita dai
   minutaggi Understat + storico infortuni TM): usarla come indicazione, non
   come verità di formazione.
@@ -127,7 +128,7 @@ le tre che contano:
 | file | cosa stima | metodo | errore atteso (validato walk-forward) |
 |---|---|---|---|
 | `ou_close_2017_19.csv` (2279 righe, 3 leghe) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti | regressione logit della chiusura su (linea O/U pre-match + movimento 1X2 open→close), fit pooled su 7978 partite 2019-20+ (Fasi 62/62-bis) | **MAE ~0.012** in probabilità; corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile (notizie puro-totali) |
-| `squad_value_2017_26.csv` (73 righe, 3 leghe) | il **valore rosa** delle celle (stagione, squadra) senza copertura Transfermarkt (Lazio, Getafe, …) | ibrido validato LOO/leave-team-out (Fase 66): `anchored` = regressione pooled + valore stagioni adiacenti; `regression` = solo rendimento, per-lega (squadre senza stagioni note) | **mediano ~17%** (anchored) / **~29%, p90 75%** (regression) — ⚠️ ordine di grandezza, code >100% per squadre sovra-performanti; metodo+errore riga per riga |
+| `squad_value_2017_26.csv` (**13 righe** — erano 73, 60 sostituite da dati REALI nella Fase 67; tutte 2025-26) | il **valore rosa** delle celle (stagione, squadra) ancora scoperte | ibrido validato LOO/leave-team-out (Fase 66): `anchored` = regressione pooled + valore stagioni adiacenti; `regression` = solo rendimento, per-lega (squadre senza stagioni note) | **mediano ~17%** (anchored) / **~29%, p90 75%** (regression) — ⚠️ ordine di grandezza, code >100% per squadre sovra-performanti; metodo+errore riga per riga |
 
 Accesso da codice: `loader.read_ou_close_estimates()`. Rigenerazione:
 `python scripts/build_estimates.py`.
