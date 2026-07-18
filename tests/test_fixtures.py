@@ -258,8 +258,11 @@ def test_snapshot_rest_full_non_supera_solo_serie_a(snapshot):
 
 def test_club_fixtures_schema_e_competizioni(club_fx):
     assert list(club_fx.columns) == FIXTURE_COLUMNS
-    note = set(sources.EUROPE_COMPETITIONS.values()) | \
-        set(sources.ITALY_CUP_COMPETITIONS.values()) | {sources.SERIE_A_COMPETITION}
+    note = (set(sources.EUROPE_COMPETITIONS.values())
+            | set(sources.ITALY_CUP_COMPETITIONS.values())
+            | {sources.SERIE_A_COMPETITION,
+               sources.prelude_competition("serie_a"),      # Fase 68
+               sources.SECOND_TIER_NAMES["serie_a"]})
     assert set(club_fx.competition.unique()) <= note
 
 
@@ -345,5 +348,6 @@ def test_altra_lega_club_fixtures_competizioni_note(altra_lega, altro_club_fx):
     own = sources.own_league_competition(altra_lega)
     note = (set(sources.EUROPE_COMPETITIONS.values())
             | set(sources.DOMESTIC_CUP_COMPETITIONS[altra_lega].values())
-            | {own})
+            | {own, sources.prelude_competition(altra_lega),   # Fase 68
+               sources.SECOND_TIER_NAMES[altra_lega]})
     assert set(altro_club_fx.competition.unique()) <= note

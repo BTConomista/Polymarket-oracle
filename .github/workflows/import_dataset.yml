@@ -24,6 +24,13 @@ on:
     paths:
       - '.github/import-dataset-trigger'
   workflow_dispatch:
+  # Re-import mensile (1° del mese, 05:00 UTC): il dataset a monte si aggiorna
+  # settimanalmente e BACKFILLA lo storico valutazioni — le celle squad_value
+  # della stagione in corso si chiudono da sole col tempo (Fase 68).
+  # NOTA: come workflow_dispatch, lo schedule parte SOLO dal branch di default:
+  # diventera' attivo quando questo file sara' su main.
+  schedule:
+    - cron: '0 5 1 * *'
 
 permissions:
   contents: write

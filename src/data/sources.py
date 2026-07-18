@@ -227,6 +227,12 @@ TEAM_ALIASES: dict[str, str] = {
     "Real Valladolid CF": "Valladolid",
     "UD Almería": "Almeria",
     "UD Las Palmas": "Las Palmas",
+    # --- Calendari preludio 2016-17 (Fase 68): varianti del file openfootball
+    # espana/2016-17 non ancora coperte dagli alias sopra.
+    "CD Alavés": "Alaves",
+    "RC Celta": "Celta",
+    "Espanyol Barcelona": "Espanol",
+    "Deportivo La Coruña": "La Coruna",
 }
 
 
@@ -431,6 +437,42 @@ def openfootball_italy_url(season_code: str, comp: str) -> str:
     return OPENFOOTBALL_ITALY_URL.format(
         season=openfootball_season_label(season_code), comp=comp
     )
+
+
+# Calendari "PRELUDIO" (Fase 68): file openfootball dei CAMPIONATI (non coppe)
+# usati SOLO per radicare il riposo delle prime partite nel calendario di club:
+#   - massima serie 2016-17 (l'ultima prima della finestra dati);
+#   - seconda serie 1617..2425 (l'ultima stagione di ogni neopromossa prima
+#     del suo esordio nella finestra).
+# Tutti verificati raggiungibili (200) sul mirror raw.githubusercontent.
+PRELUDE_TOP_FILES: dict[str, str] = {
+    "serie_a": "1-seriea", "premier_league": "1-premierleague", "la_liga": "1-liga",
+}
+SECOND_TIER_FILES: dict[str, str] = {
+    "serie_a": "2-serieb", "premier_league": "2-championship", "la_liga": "2-liga2",
+}
+SECOND_TIER_NAMES: dict[str, str] = {
+    "serie_a": "Serie B", "premier_league": "Championship",
+    "la_liga": "Segunda División",
+}
+PRELUDE_SEASON = "1617"
+
+
+def prelude_competition(league_key: str) -> str:
+    """Etichetta-competizione del campionato 2016-17 nel calendario di club
+    (distinta dal campionato in finestra, che ha regole di conteggio proprie)."""
+    return f"{own_league_competition(league_key)} 2016-17"
+
+
+def openfootball_league_url(league_key: str, season_code: str, tier: str) -> str:
+    """URL del file openfootball di un CAMPIONATO (tier 'top' o 'second')."""
+    files = PRELUDE_TOP_FILES if tier == "top" else SECOND_TIER_FILES
+    if league_key not in files:
+        raise KeyError(f"Lega sconosciuta per il preludio: {league_key}")
+    repo = OPENFOOTBALL_DOMESTIC_REPO[league_key]
+    return OPENFOOTBALL_DOMESTIC_URL.format(
+        repo=repo, season=openfootball_season_label(season_code),
+        comp=files[league_key])
 
 
 def openfootball_domestic_cup_url(league_key: str, season_code: str, comp: str) -> str:

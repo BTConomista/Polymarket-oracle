@@ -120,8 +120,9 @@ def download_openfootball(
     season_code: str, comp: str, kind: str, *,
     league_key: str = "serie_a", force: bool = False,
 ) -> Path | None:
-    """Scarica (con cache) un file openfootball. ``kind`` in {"europe","domestic"}
-    (``"italy"`` resta accettato come alias storico di ``"domestic"``+serie_a).
+    """Scarica (con cache) un file openfootball. ``kind`` in {"europe","domestic",
+    "league_top","league_second"} (``"italy"`` resta accettato come alias storico
+    di ``"domestic"``+serie_a).
 
     Ritorna il percorso locale, o ``None`` se la competizione non e' presente per
     quella stagione (HTTP 404): NON e' un errore, e' una lacuna di copertura che
@@ -138,6 +139,9 @@ def download_openfootball(
         url = sources.openfootball_europe_url(season_code, comp)
     elif kind == "domestic":
         url = sources.openfootball_domestic_cup_url(league_key, season_code, comp)
+    elif kind in ("league_top", "league_second"):
+        url = sources.openfootball_league_url(
+            league_key, season_code, "top" if kind == "league_top" else "second")
     else:
         raise ValueError(f"kind sconosciuto: {kind}")
 
@@ -379,6 +383,39 @@ def _serie_a_rows(matches: pd.DataFrame) -> list[dict]:
     return _league_rows(matches, sources.SERIE_A_COMPETITION)
 
 
+def _prelude_rows(
+    league_key: str, snapshot_teams: set[str], seasons: list[str],
+    *, force: bool = False,
+) -> list[dict]:
+    """Righe di PRELUDIO (Fase 68): campionati fuori-finestra che radicano il
+    riposo delle PRIME partite di ogni squadra con date reali:
+      - massima serie 2016-17 (per le squadre presenti dalla prima stagione);
+      - seconda serie 1617..penultima (l'ultima stagione di ogni neopromossa
+        prima del suo esordio nella finestra).
+    Solo i club dello snapshot generano righe (gli altri restano opponent);
+    file mancanti = lacuna dichiarata, mai un errore."""
+    rows: list[dict] = []
+    text = _read_cached("league_top", sources.PRELUDE_SEASON, "top",
+                        league_key=league_key, force=force)
+    if text:
+        raw = parse_cup(text, sources.PRELUDE_SEASON,
+                        sources.prelude_competition(league_key))
+        if not raw.empty:
+            rows.extend(_cup_team_rows(raw, snapshot_teams))
+
+    second_name = sources.SECOND_TIER_NAMES[league_key]
+    prior = [sources.PRELUDE_SEASON] + seasons[:-1]   # 1617..penultima
+    for code in prior:
+        text = _read_cached("league_second", code, "second",
+                            league_key=league_key, force=force)
+        if not text:
+            continue
+        raw = parse_cup(text, code, second_name)
+        if not raw.empty:
+            rows.extend(_cup_team_rows(raw, snapshot_teams))
+    return rows
+
+
 # --------------------------------------------------------------------------- #
 # Assemblaggio del calendario di club completo
 # --------------------------------------------------------------------------- #
@@ -399,6 +436,7 @@ def build_club_fixtures(
     domestic_cups = sources.DOMESTIC_CUP_COMPETITIONS.get(league_key, {})
 
     rows: list[dict] = _league_rows(matches, sources.own_league_competition(league_key))
+    rows.extend(_prelude_rows(league_key, snapshot_teams, seasons, force=force))
 
     for code in seasons:
         for comp in sources.EUROPE_COMPETITIONS:
