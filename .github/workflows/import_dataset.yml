@@ -1,0 +1,113 @@
+name: Import player-scores dataset
+
+# Scarica il dataset Transfermarkt "davidcariboo/player-scores" (Kaggle, CC0)
+# e lo committa COMPRESSO in files/player_scores/ (*.csv.gz):
+#   - player_valuations.csv.gz   storico valutazioni con date (~32 MB -> ~8)
+#   - players.csv.gz             anagrafica per l'aggancio nomi (~17 MB -> ~5)
+#   - appearances.csv.gz         presenze con minuti = rose reali (~148 MB -> ~35)
+#   - clubs.csv.gz               mappa club_id -> nome (~180 KB)
+# Con gzip ogni file resta ben sotto il limite GitHub dei 100 MB: niente split.
+#
+# PERCHE' via Actions: l'ambiente di sviluppo cloud e' dietro un proxy che
+# blocca Kaggle/HuggingFace/transfermarkt; i runner GitHub no (Fase 67).
+#
+# COME SI AVVIA (due modi):
+#   1. push di .github/import-dataset-trigger su QUESTO branch (funziona
+#      da qualsiasi branch: il trigger "push" legge il workflow dal branch
+#      pushato — a differenza di workflow_dispatch, che richiede il file
+#      sul branch di default);
+#   2. workflow_dispatch (tab Actions -> Run workflow) — funzionera' solo
+#      quando questo file sara' anche su main.
+
+on:
+  push:
+    paths:
+      - '.github/import-dataset-trigger'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download dataset (Kaggle, con fallback su mirror HF)
+        run: |
+          pip install --quiet kagglehub requests
+          python - <<'EOF'
+          import gzip, os, shutil
+
+          WANTED = ["player_valuations.csv", "players.csv",
+                    "appearances.csv", "clubs.csv"]
+          OUT_DIR = "files/player_scores"
+          os.makedirs(OUT_DIR, exist_ok=True)
+          CHUNK = 1 << 20  # 1 MB
+
+          def compress_to(src_path, name):
+              dest = os.path.join(OUT_DIR, name + ".gz")
+              with open(src_path, "rb") as fin, \
+                   gzip.open(dest, "wb", compresslevel=9) as fout:
+                  shutil.copyfileobj(fin, fout, CHUNK)
+              return dest
+
+          def from_kaggle():
+              import kagglehub
+              path = kagglehub.dataset_download("davidcariboo/player-scores")
+              for f in WANTED:
+                  src = os.path.join(path, f)
+                  if not os.path.isfile(src):
+                      raise FileNotFoundError(src)
+              for f in WANTED:
+                  compress_to(os.path.join(path, f), f)
+              print("OK: scaricato da Kaggle (fonte ufficiale)")
+
+          def from_hf_mirror():
+              import requests
+              base = ("https://huggingface.co/datasets/"
+                      "ngeorgea/transfermarkt-player-scores/resolve/main/")
+              for f in WANTED:
+                  print("scarico", f, "dal mirror HF...", flush=True)
+                  tmp = "/tmp/" + f
+                  with requests.get(base + f, stream=True, timeout=600) as r:
+                      r.raise_for_status()
+                      with open(tmp, "wb") as out:
+                          for chunk in r.iter_content(CHUNK):
+                              out.write(chunk)
+                  compress_to(tmp, f)
+              print("OK: scaricato dal mirror Hugging Face")
+
+          try:
+              from_kaggle()
+          except Exception as e:
+              print("Kaggle non disponibile (", e, "), uso il mirror HF")
+              from_hf_mirror()
+
+          LIMIT = 95 * 1024 * 1024   # margine sotto il limite GitHub (100 MB)
+          for f in WANTED:
+              p = os.path.join(OUT_DIR, f + ".gz")
+              size = os.path.getsize(p)
+              print(f"{p}: {size/1e6:.1f} MB")
+              assert size < LIMIT, p + " sopra il limite GitHub anche compresso!"
+          EOF
+
+      - name: Commit e push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add files/player_scores/
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da committare"
+          else
+            git commit -m "Add player-scores dataset (valuations, players, appearances, clubs — csv.gz)"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
