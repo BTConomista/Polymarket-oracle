@@ -1,0 +1,118 @@
+name: Import player-scores dataset
+
+# Scarica il dataset Kaggle davidcariboo/player-scores e committa in files/:
+#   - player_valuations.csv
+#   - players.csv
+#   - appearances_part1.csv + appearances_part2.csv
+#     (appearances.csv pesa ~148 MB: GitHub rifiuta file sopra 100 MB,
+#      quindi viene diviso in 2 parti, ognuna con il proprio header)
+#
+# Avvio manuale: tab "Actions" -> "Import player-scores dataset" -> "Run workflow"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download dataset (Kaggle, con fallback su mirror HF)
+        run: |
+          pip install --quiet kagglehub requests
+          python - <<'EOF'
+          import os, shutil
+
+          WANTED = ["player_valuations.csv", "players.csv", "appearances.csv"]
+          os.makedirs("files", exist_ok=True)
+
+          CHUNK_BYTES = 1048576  # 1 MB
+
+          def from_kaggle():
+              import kagglehub
+              path = kagglehub.dataset_download("davidcariboo/player-scores")
+              for f in WANTED:
+                  src = os.path.join(path, f)
+                  if not os.path.isfile(src):
+                      raise FileNotFoundError(src)
+                  shutil.copyfile(src, os.path.join("files", f))
+              print("OK: scaricato da Kaggle (fonte ufficiale)")
+
+          def from_hf_mirror():
+              import requests
+              base = "https://huggingface.co/datasets/ngeorgea/transfermarkt-player-scores/resolve/main/"
+              for f in WANTED:
+                  print("scarico", f, "dal mirror HF...")
+                  with requests.get(base + f, stream=True, timeout=600) as r:
+                      r.raise_for_status()
+                      with open(os.path.join("files", f), "wb") as out:
+                          for chunk in r.iter_content(CHUNK_BYTES):
+                              out.write(chunk)
+              print("OK: scaricato dal mirror Hugging Face")
+
+          try:
+              from_kaggle()
+          except Exception as e:
+              print("Kaggle non disponibile (", e, "), uso il mirror HF")
+              from_hf_mirror()
+
+          for f in WANTED:
+              p = os.path.join("files", f)
+              print(f, os.path.getsize(p), "bytes")
+          EOF
+
+      - name: Split appearances.csv (limite GitHub 100 MB)
+        run: |
+          python - <<'EOF'
+          import os
+
+          src = "files/appearances.csv"
+          SPLIT_THRESHOLD = 99614720   # 95 MB, margine di sicurezza sotto i 100 MB
+          HARD_LIMIT = 104857600       # 100 MB, limite GitHub
+
+          if os.path.getsize(src) <= SPLIT_THRESHOLD:
+              print("appearances.csv sotto il limite, nessuno split necessario")
+              raise SystemExit(0)
+
+          with open(src, "r", encoding="utf-8", newline="") as fh:
+              header = fh.readline()
+              lines = fh.readlines()
+
+          half = len(lines) // 2
+          parts = [
+              ("files/appearances_part1.csv", lines[:half]),
+              ("files/appearances_part2.csv", lines[half:]),
+          ]
+          for path, chunk in parts:
+              with open(path, "w", encoding="utf-8", newline="") as out:
+                  out.write(header)
+                  out.writelines(chunk)
+              size = os.path.getsize(path)
+              print(path, size, "bytes,", len(chunk), "righe")
+              assert size < HARD_LIMIT, path + " ancora sopra i 100 MB!"
+
+          os.remove(src)
+          print("split completato: header replicato in entrambe le parti")
+          EOF
+
+      - name: Commit e push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add files/
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da committare"
+          else
+            git commit -m "Add player-scores dataset (players, player_valuations, appearances in 2 parti)"
+            git push
+          fi
