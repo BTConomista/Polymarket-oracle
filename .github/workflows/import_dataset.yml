@@ -61,8 +61,11 @@ jobs:
 
           def compress_to(src_path, name):
               dest = os.path.join(OUT_DIR, name + ".gz")
-              with open(src_path, "rb") as fin, \
-                   gzip.open(dest, "wb", compresslevel=9) as fout:
+              # mtime=0 -> gzip DETERMINISTICO: a contenuto identico, byte
+              # identici -> il commit-step salta i no-op (niente rumore dal cron)
+              with open(src_path, "rb") as fin, open(dest, "wb") as raw, \
+                   gzip.GzipFile(fileobj=raw, mode="wb",
+                                 compresslevel=9, mtime=0) as fout:
                   shutil.copyfileobj(fin, fout, CHUNK)
               return dest
 

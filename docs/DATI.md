@@ -3,7 +3,7 @@
 Questo documento è la **mappa unica di tutti i dati** del progetto: cosa c'è,
 da dove viene, quanto copre, e — sezione più importante — **cosa è dato reale e
 cosa è STIMA**. Va aggiornato ogni volta che i dati cambiano (nuova fonte,
-nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 67**.
+nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 68**.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
@@ -39,7 +39,7 @@ canonicalizzati via `sources.TEAM_ALIASES`.
 | stile | `home/away_ppda, home/away_deep` | Understat | 100% |
 | valore rosa | `home/away_squad_value` | **player-scores** (Transfermarkt via Kaggle, Fase 67; vedi §4) | **100% su tutte le stagioni concluse** (3 leghe); buchi onesti solo nella 2025-26 in corso (48-81%) → stime in §5 |
 | assenze (STIMA, suffisso `_est`) | `home/away_absent_count_est, home/away_absent_value_est` | Transfermarkt + rose Understat | 100% (ma è una **stima dichiarata**, vedi §4) |
-| congestione | `home/away_rest_days_full, home/away_midweek_europe` | openfootball + snapshot | ~99.5% (NaN solo alla prima partita nota di una squadra) |
+| congestione | `home/away_rest_days_full, home/away_midweek_europe` | openfootball + snapshot | **100%** (Fase 68: gli esordi sono radicati coi calendari 'preludio' — massima serie 2016-17 + seconde serie) |
 
 ---
 
@@ -76,9 +76,9 @@ Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
 
 | file | righe | competizioni oltre il campionato |
 |---|--:|---|
-| `data/club_fixtures.csv` (Serie A) | 7676 | Champions (9 stagioni), Europa L. (dal 20-21), Conference (dal 21-22), Coppa Italia (20-21→24-25) |
-| `data/club_fixtures_premier_league.csv` | 8335 | idem UEFA + **FA Cup, EFL Cup** (18-19→24-25) |
-| `data/club_fixtures_la_liga.csv` | 7669 | idem UEFA + **Copa del Rey** (20-21→24-25) |
+| `data/club_fixtures.csv` (Serie A) | 11657 | Champions (9 stagioni), Europa L. (dal 20-21), Conference (dal 21-22), Coppa Italia (20-21→24-25) + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68) |
+| `data/club_fixtures_premier_league.csv` | 11994 | idem UEFA + **FA Cup, EFL Cup** (18-19→24-25) + preludio: Premier 2016-17, Championship 1617→2425 |
+| `data/club_fixtures_la_liga.csv` | 11643 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
 
 Dove una competizione non è coperta, `rest_days_full` degrada verso il valore
 solo-campionato (mai in direzione sbagliata) e `midweek_europe` può essere un
@@ -107,7 +107,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
   minutaggi Understat + storico infortuni TM): usarla come indicazione, non
   come verità di formazione.
 - O/U 2017-19: vedi §2 e §5.
-- `rest_days_full`: `NaN` alla prima partita nota di una squadra (fisiologico).
+- `rest_days_full`: **nessun `NaN` residuo** (Fase 68).
 
 ---
 

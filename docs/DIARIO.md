@@ -6795,6 +6795,67 @@ Run workflow quando il file sara' su main) → `python scripts/build_squad_value
 
 ---
 
+## Fase 68 — Gli ultimi buchi chiudibili: preludio dei calendari e cron d'import
+
+**Obiettivo (richiesta utente).** I due passi finali del completamento dati:
+(1) re-import periodico del dataset player-scores (per le 13 celle squad_value
+2025-26); (2) radicare con date REALI il riposo delle prime partite (82 celle
+`rest_days_full` NaN — artefatto della finestra, non buchi del mondo).
+
+**Passo 2 — i calendari "preludio"** (`fixtures._prelude_rows`): massima serie
+2016-17 + SECONDE serie 1617→2425 (Serie B, Championship, Segunda — tutte su
+openfootball, verificate 200) entrano nel calendario di club con etichette
+proprie. Cosi' OGNI squadra della finestra ha una partita precedente reale al
+suo esordio: **0 NaN residui su 3 leghe** (82 → 0; +4 alias dal file spagnolo
+1617: CD Alavés, RC Celta, Espanyol Barcelona, Deportivo La Coruña).
+**Bonus retroattivo scoperto nel diff**: 36 (PL) + 71 (Liga) righe di riposo
+GIA' note sono ora piu' accurate — gli alias formali della Fase 67 ("Levante
+UD", "Cádiz CF", …) agganciano partite di Copa del Rey/FA Cup che le build
+delle Fasi 59-63 scartavano in silenzio (club senza alias → riga persa senza
+errore). Il diff e' stato ispezionato riga per riga prima di accettarlo: ogni
+cambio risale a una partita di coppa reale ora contata.
+
+**Passo 1 — cron mensile + test immediato.** Aggiunto `schedule` (1° del mese)
+al workflow d'import — con l'onesta' dovuta: come il dispatch manuale, lo
+schedule parte SOLO dal branch di default, quindi si attivera' quando il file
+sara' su main (documentato nel workflow). Il re-trigger immediato (run-2) ha
+dato l'informazione che serviva: fonte **Kaggle ufficiale** (dato del 18
+luglio 2026, non il mirror di giugno) e coperture IDENTICHE → **le 13 celle
+2025-26 mancano davvero a monte oggi**, non per staleness; si chiuderanno se/
+quando il backfill arrivera' (il cron le raccogliera' da solo). Sistemato in
+corsa un dettaglio visto nel log: gzip reso DETERMINISTICO (mtime=0), cosi' i
+run senza dati nuovi non producono commit-rumore.
+
+**Stato finale del completamento** (inventario Fase 66 aggiornato):
+
+| gruppo | prima | dopo |
+|---|--:|--:|
+| `rest_days_full` | 82 NaN | **0** |
+| `squad_value` | 494 NaN (13 celle, stima F66) | invariato (buco A MONTE, cron in attesa) |
+| O/U apertura 2017-19 | 4.564 NaN | invariato (unico blocco residuo; chiusura coperta da stima) |
+| quote sparse | 6 NaN | invariato (irriducibili: nessuna quota nel grezzo / maschera corretta) |
+
+Completamento celle: **98.68% → 98.70% reale**; ogni cella mancante ha causa
+scritta e, dove sensato, una stima dichiarata.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: `rest_days_full` e' la definizione della Fase 4e,
+invariata — cambia solo l'INSIEME delle partite note (piu' ampio). L'unica
+scelta con contenuto: le partite di preludio/seconda serie contano nel riposo
+(sono partite di club a tutti gli effetti) e, per il flag `midweek_europe`,
+ricadono nella classe "non-campionato" — irrilevante in pratica (mai a <4
+giorni da una partita di massima serie della stessa squadra, stagioni
+diverse). Verificata l'invariante di sempre: `rest_full ≤ rest solo-lega`
+(il calendario piu' ampio puo' solo accorciare il riposo).
+
+**Riproducibilita'.** `python scripts/build_database.py --fixtures` (Serie A)
+e `python scripts/build_league_snapshot.py --fixtures premier_league la_liga`
+(rete openfootball al primo giro, poi cache); re-import: push di
+`.github/import-dataset-trigger`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
