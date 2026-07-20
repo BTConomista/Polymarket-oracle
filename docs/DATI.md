@@ -141,8 +141,9 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
 - ~~**`squad_value` mancante**~~ → **FATTO (Fase 66)**: le 73 celle sono ora
   stimate in `squad_value_2017_26.csv` (vedi tabella sopra). Migliorabile solo
   con una fonte valutazioni migliore, non con altro modeling.
-- **apertura O/U 2017-19** (l'altra metà del buco di §2): meno utile — la
-  linea unica disponibile È già di timing apertura.
+- **apertura O/U 2017-19** (l'altra metà del buco di §2): ora ha un piano di
+  ricerca dedicato con specifica del dato e prompt pronto per un'AI con web
+  libero → **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
 - **quote O/U di apertura mancanti sparse** (1 partita 21-22 SA, 1 Liga 17-18).
 - eventuali linee di mercati mai pubblicati (GG/NG storico): molto più
   incerto, servirebbe una validazione esterna.
