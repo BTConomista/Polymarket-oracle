@@ -198,6 +198,16 @@ cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e dia
 
 ---
 
+## 3-bis. Git — branch di lavoro
+
+- **Commit e push SOLO sull'ultimo branch di lavoro usato nella sessione**
+  (quello su cui si è già committato/lavorato, es. `claude/data-review-2hu63v`).
+- **Creare un nuovo branch SOLO se esplicitamente richiesto** dall'utente. In
+  assenza di indicazioni, si resta sul branch corrente: niente branch nuovi
+  "per prudenza" o per separare un sotto-task.
+
+---
+
 ## 4. Mappa del repo (dove sta cosa)
 
 ```
