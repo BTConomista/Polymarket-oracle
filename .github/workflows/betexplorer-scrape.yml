@@ -25,6 +25,9 @@ on:
   # segnale, azionabile da QUALSIASI branch pushato. Sempre in probe mode
   # sulla lega di default (serie-a-2017-2018): serve solo a validare il
   # parsing prima di decidere se lanciare i run completi da main.
+  # Nota: il numero di partite della probe (--probe-limit) e' hardcoded nello
+  # step "Scrape" sotto (10, alzato da 3 su richiesta utente per un campione
+  # piu' ampio prima del run completo).
   push:
     paths:
       - '.github/betexplorer-scrape-trigger'
@@ -51,7 +54,7 @@ jobs:
           LEAGUE: ${{ inputs.league_season || 'serie-a-2017-2018' }}
         run: |
           if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "${{ inputs.probe }}" = "true" ]; then
-            python scripts/scrape_betexplorer.py --league "$LEAGUE" --probe-limit 3 --dump-first 3
+            python scripts/scrape_betexplorer.py --league "$LEAGUE" --probe-limit 10 --dump-first 10
           else
             python scripts/scrape_betexplorer.py --league "$LEAGUE" --dump-first 1
           fi
