@@ -353,10 +353,13 @@ def build_squad_value() -> pd.DataFrame:
             "squad_value_est": round(value, -5),      # arrotonda ai 100k EUR
             "method": method, "expected_median_err_pct": err,
         })
-    est = pd.DataFrame(rows).sort_values(["league", "season", "team"])
+    cols = ["league", "season", "team", "squad_value_est", "method",
+           "expected_median_err_pct"]
+    est = pd.DataFrame(rows, columns=cols).sort_values(["league", "season", "team"])
     n_anch = (est["method"] == "anchored").sum()
     print(f"\nsquad_value: {len(est)} stime ({n_anch} anchored ~{ERR_ANCHORED:.0f}%, "
-          f"{len(est)-n_anch} regression ~{ERR_REGRESSION:.0f}%)")
+          f"{len(est)-n_anch} regression ~{ERR_REGRESSION:.0f}%)"
+          + (" -- nessun buco residuo (Fase 70)" if not rows else ""))
     return est, t
 
 

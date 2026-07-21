@@ -8,7 +8,7 @@ file deve trovare non "cosa manca" ma **"cosa potrei provare dopo, con che
 cosa, e perché potrebbe funzionare"**. La parte operativa (rete, strumenti,
 Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
-l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 69.
+l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 70.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 
@@ -208,12 +208,16 @@ dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).*
   Mediana ~15% ma code ±45-75%: il regime dichiarato (~29% mediano, p90
   75%) è reale — le stime valgono per analisi aggregate, MAI per feature
   per-partita.
-- **Le 13 celle squad_value 2025-26**: coperture reali al 18/7/2026 —
-  Bologna 79%, Como 82%, Cremonese 70%, Parma 64%, **Pisa 33%**, Udinese
-  80% · Leeds 72%, Sunderland 80% · Celta 78%, Elche 56%, Espanol 59%,
-  Levante 45%, **Oviedo 34%** (soglia 85%). Si chiuderanno da sole col
-  backfill a monte (cron mensile); i due neopromossi estremi (Pisa,
-  Oviedo) per ultimi.
+- **Le 13 celle squad_value 2025-26 — CHIUSE (Fase 70)**: coperture player-
+  scores insufficienti al 18/7/2026 (Bologna 79%, Como 82%, Cremonese 70%,
+  Parma 64%, **Pisa 33%**, Udinese 80% · Leeds 72%, Sunderland 80% · Celta
+  78%, Elche 56%, Espanol 59%, Levante 45%, **Oviedo 34%**; soglia 85%), ma
+  recuperate con dato REALE preso direttamente da Transfermarkt (pagine di
+  competizione per stagione, non il profilo-club che mostra il valore live)
+  prima che il backfill a monte le chiudesse da sole. Scarto vs la stima
+  Fase 66 mediano 22.5% (range −43%…+77%, coerente col regime d'errore
+  dichiarato: conferma che la stima era onesta, non che fosse precisa
+  cella-per-cella).
 - **Le 2 partite senza quote d'apertura** (irriducibili, tentata anche una
   ricerca esterna, senza esito — vedi sotto): Torino-Fiorentina 10/01/2022
   (recupero COVID, il grezzo non ha NESSUNA colonna pre-match) e

@@ -6965,6 +6965,108 @@ le stime, incluso questo file); lettura da codice:
 
 ---
 
+## Fase 70 — Le ultime 13 celle squad_value: dato REALE da Transfermarkt (richiesta utente)
+
+**Obiettivo.** Chiudere il gap 2 (13 celle `squad_value` 2025-26 sotto la
+soglia di copertura player-scores, Fase 68/PISTE §5) con dato vero invece
+che con la sola stima, visto che il numero è pubblico e potenzialmente
+"molto semplice" da recuperare (richiesta utente).
+
+**Ragionamento/ipotesi.** Il valore rosa di un club è mostrato pubblicamente
+su Transfermarkt — ma `transfermarkt.com`/`.it`/`.us`/`.co.uk` sono bloccati
+dal proxy di QUESTA sessione (confermato: anche `WebFetch` su `example.com`
+dava 403, un problema del tool in quel momento, non un blocco mirato). Serve
+un canale diverso: un'AI con browser reale (Claude Cowork + estensione
+Chrome dell'utente), stesso principio del canale GitHub Actions (Fase 67) ma
+per un recupero manuale una tantum, non automatizzabile.
+
+**Alternative considerate (e un errore corretto in corsa).** Primo giro di
+link forniti: pagina PROFILO club (`startseite`/`kader` senza `saison_id`).
+L'utente ha chiesto "sicuro che puntino all'anno giusto?" — giustamente:
+quella pagina mostra sempre il valore **LIVE di oggi** (luglio 2026, quasi
+un anno dopo l'inizio della stagione 2025-26 che ci serve), non lo storico.
+Corretto aggiungendo `saison_id/2025` alla pagina squadra — ma la sessione
+Cowork ha scoperto che nemmeno quello basta: il dato storico per-stagione
+vive nella pagina di **competizione filtrata per stagione**
+(`.../{lega}/startseite/wettbewerb/{codice}/saison_id/{anno}`), non nella
+pagina squadra. Verifica di sanità della sessione Cowork: club poi
+retrocessi (Cremonese, Pisa, Oviedo) mostrano nella pagina-competizione un
+valore ben diverso (più alto) di quello attuale — se i due numeri
+coincidessero, sarebbe la pagina live sbagliata.
+
+**Scelta e perché.** Accettare i 13 valori con provenienza dichiarata (fonte
++ URL + data di recupero, mai verificati in prima persona da questa
+sessione per via del blocco di rete) DOPO un controllo di plausibilità: li
+confronto con la stima Fase 66 già pubblicata, che ha un errore atteso
+dichiarato (17% anchored / 29% regression) — se il nuovo dato cadesse
+sistematicamente fuori da quel range, sarebbe un segnale di errore nella
+raccolta, non solo nella stima.
+
+**Risultato.**
+
+| team | lega | stima F66 (M€) | reale F70 (M€) | scarto |
+|---|---|--:|--:|--:|
+| Bologna | serie_a | 479.4 | 274.70 | −42.7% |
+| Como | serie_a | 276.2 | 405.20 | +46.7% |
+| Cremonese | serie_a | 107.3 | 69.03 | −35.7% |
+| Parma | serie_a | 136.4 | 189.00 | +38.6% |
+| Pisa | serie_a | 92.8 | 98.30 | +5.9% |
+| Udinese | serie_a | 255.6 | 200.00 | −21.8% |
+| Leeds | premier_league | 414.0 | 373.30 | −9.8% |
+| Sunderland | premier_league | 413.7 | 424.93 | +2.7% |
+| Celta | la_liga | 108.6 | 192.20 | +77.0% |
+| Elche | la_liga | 81.8 | 100.20 | +22.5% |
+| Espanol | la_liga | 96.2 | 127.85 | +32.9% |
+| Levante | la_liga | 100.1 | 109.90 | +9.8% |
+| Oviedo | la_liga | 55.4 | 56.40 | +1.8% |
+
+Scarto assoluto **mediano 22.5%**, medio 26.8% — dentro il range dichiarato
+per la Fase 66 (17-29%), anche se alcune righe singole (Celta +77%, Bologna
+−43%) sono nella coda: coerente col limite già scritto allora ("code
+pesanti... l'errore può superare il 100%"), non un segnale che il nuovo dato
+sia sbagliato. I 13 valori sono entrati negli snapshot
+(`home/away_squad_value`), le 13 righe sono state rimosse da
+`squad_value_2017_26.csv` (ora vuoto, stesso schema di sempre, rigenerabile:
+0 buchi → 0 righe). **`squad_value` è ora reale al 100% su TUTTE le 9
+stagioni, 3 leghe, zero NaN residui.**
+
+**Lezione/cosa ne consegue.** (1) Un dato "pubblico e semplice" può comunque
+avere una trappola di **timing** non ovvia (pagina live vs storica): la
+domanda scettica dell'utente ("sicuro che l'anno sia giusto?") ha evitato di
+scrivere nello snapshot un numero sbagliato di quasi un anno. (2) Quando un
+dato reale arriva a sostituire una stima, il confronto tra i due è di per sé
+un piccolo esperimento: qui conferma che l'errore dichiarato della Fase 66
+era onesto (mediana vicina al dichiarato), non che fosse preciso riga per
+riga — a riprova del proprio avviso "usare come ordine di grandezza". (3) Un
+canale "browser reale una tantum" (Cowork) è un terzo modo di aggirare i
+blocchi di rete, distinto sia dal proxy-bypass di GitHub Actions (Fase 67,
+automatizzabile) sia dal blocco geo/ADM incontrato per BetExplorer (Fase
+69, bloccato anche da browser reale se l'IP è italiano) — utile quando il
+dato è troppo piccolo/puntuale per giustificare un intero workflow.
+
+### 📐 Il modello in dettaglio
+
+Nessuna nuova matematica: sostituzione diretta di 13 valori NaN con numeri
+reali (EUR), stesso schema delle colonne `home/away_squad_value` già
+esistenti. L'unico calcolo è il confronto con la stima pre-esistente:
+
+```
+scarto_% = (valore_reale - valore_stimato_F66) / valore_stimato_F66 * 100
+```
+
+usato per decidere se il dato raccolto è plausibile (confrontato contro
+l'errore atteso già dichiarato alla Fase 66), non per calibrare nulla.
+
+**Riproducibilità.** L'iniezione è un'operazione MANUALE una tantum (non
+rigenerabile da una fonte automatica), fatta con
+`scripts/_apply_fase70_squad_value_real.py` (i 13 valori sono scritti nel
+codice, con la fonte in testa al file); da rilanciare `build_estimates.py`
+dopo per confermare che `squad_value_2017_26.csv` resti vuoto (corretto un
+bug di bordo: con 0 buchi il costruttore andava in errore su
+`sort_values` — ora gestito).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

@@ -6,7 +6,7 @@ trucchi di GitHub Actions, le fonti già valutate (e scartate). Serve a NON
 ri-scoprire da zero questi fatti a ogni sessione. Le **piste di
 miglioramento dei modelli** stanno invece in [PISTE.md](PISTE.md).
 **Va aggiornato ogni volta che si scopre un fatto operativo nuovo.**
-Ultimo aggiornamento: Fase 69 (luglio 2026).
+Ultimo aggiornamento: Fase 70 (luglio 2026).
 
 ## 1 · Mappa della rete dall'ambiente cloud (tutta verificata, mai presunta)
 
@@ -53,6 +53,29 @@ italiano) presumibilmente non lo incontra, ma va verificato sul campo
 **Il canale che aggira tutto**: un workflow **GitHub Actions** — il runner ha
 rete libera, scarica e committa i dati compressi nel repo, e la sessione li
 legge dal branch (pattern della Fase 67, v. §3).
+
+**Canale alternativo per un recupero manuale una tantum (Fase 70)**: quando
+serve un numero pubblico ma non rigenerabile via script (es. il valore rosa
+attuale di un club su Transfermarkt), un'AI con un vero browser (Claude
+Cowork + estensione Chrome, sessione utente) raggiunge siti bloccati dal
+proxy di QUESTA sessione (`transfermarkt.com`) — diverso dal canale Actions
+perché e' interattivo/una tantum, non automatizzabile in un workflow.
+**Attenzione al timing**: la pagina PROFILO club (`startseite`, `kader`
+senza `saison_id`) mostra sempre il valore LIVE di oggi, non quello storico
+della stagione che serve (il nostro `squad_value` è "a inizio stagione",
+1° settembre — mesi prima di oggi se la stagione è già in corso/conclusa).
+Il dato storico corretto sta nella pagina di **competizione filtrata per
+stagione** (`.../{lega}/startseite/wettbewerb/{codice}/saison_id/{anno}`,
+es. `IT1` Serie A, `GB1` Premier, `ES1` LaLiga), che elenca ogni club con il
+valore rosa registrato in quella specifica annata. Verifica di sanità che
+ha funzionato: club poi retrocessi mostrano un valore storico ben diverso
+(più alto) di quello attuale — se i due numeri coincidessero, la pagina
+sarebbe quella live sbagliata.
+
+**Nota tecnica**: nella stessa sessione, `WebFetch` può smettere di
+funzionare **del tutto** (403 anche su `example.com`, non solo sui domini
+attesi) — segnale di un problema del tool stesso, non del sito target;
+prima di concludere "sito bloccato" testare un URL banale per escluderlo.
 
 ## 2 · Strumenti della sessione: limiti misurati
 

@@ -1,14 +1,1 @@
 league,season,team,squad_value_est,method,expected_median_err_pct
-la_liga,2526,Celta,108600000.0,anchored,17.0
-la_liga,2526,Elche,81800000.0,regression,29.0
-la_liga,2526,Espanol,96200000.0,anchored,17.0
-la_liga,2526,Levante,100100000.0,regression,29.0
-la_liga,2526,Oviedo,55400000.0,regression,29.0
-premier_league,2526,Leeds,414000000.0,regression,29.0
-premier_league,2526,Sunderland,413700000.0,regression,29.0
-serie_a,2526,Bologna,479400000.0,anchored,17.0
-serie_a,2526,Como,276200000.0,anchored,17.0
-serie_a,2526,Cremonese,107300000.0,regression,29.0
-serie_a,2526,Parma,136400000.0,anchored,17.0
-serie_a,2526,Pisa,92800000.0,regression,29.0
-serie_a,2526,Udinese,255600000.0,anchored,17.0
