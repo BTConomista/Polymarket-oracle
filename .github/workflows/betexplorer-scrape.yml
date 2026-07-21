@@ -51,8 +51,17 @@ jobs:
 
       - name: Scrape (probe o run completo)
         env:
-          LEAGUE: ${{ inputs.league_season || 'serie-a-2017-2018' }}
+          INPUT_LEAGUE: ${{ inputs.league_season }}
         run: |
+          # push (file-segnale): la lega si legge dal 2o campo della prima
+          # riga del trigger, cosi' si puo' testare qualunque lega senza
+          # toccare questo file (richiesta utente: confronto multi-lega).
+          if [ "${{ github.event_name }}" = "push" ]; then
+            LEAGUE=$(head -1 .github/betexplorer-scrape-trigger | awk '{print $2}')
+          else
+            LEAGUE="$INPUT_LEAGUE"
+          fi
+          echo "Lega risolta: $LEAGUE"
           if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "${{ inputs.probe }}" = "true" ]; then
             python scripts/scrape_betexplorer.py --league "$LEAGUE" --probe-limit 2 --dump-first 2
           else
