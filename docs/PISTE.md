@@ -214,11 +214,23 @@ dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).*
   Levante 45%, **Oviedo 34%** (soglia 85%). Si chiuderanno da sole col
   backfill a monte (cron mensile); i due neopromossi estremi (Pisa,
   Oviedo) per ultimi.
-- **Le 2 partite senza quote d'apertura** (irriducibili): Torino-Fiorentina
-  10/01/2022 (recupero COVID, il grezzo non ha NESSUNA colonna pre-match)
-  e Alaves-Sociedad 14/10/2017 (pre-match Pinnacle 3.52/3.55/2.20 presente
-  ma chiusura assente → la maschera anti-contaminazione correttamente la
-  scarta).
+- **Le 2 partite senza quote d'apertura** (irriducibili, tentata anche una
+  ricerca esterna, senza esito — vedi sotto): Torino-Fiorentina 10/01/2022
+  (recupero COVID, il grezzo non ha NESSUNA colonna pre-match) e
+  Alaves-Sociedad 14/10/2017: nel grezzo PSH/PSD/PSA (Pinnacle pre-match) =
+  3.52/3.55/2.20 sono presenti, ma PSCH/PSCD/PSCA (Pinnacle chiusura) sono
+  vuote — l'unico caso su 2.280 partite (2017-19, 3 leghe) in cui succede.
+  La chiusura pubblicata per questa riga (odds_home=3.37/3.39/2.17) viene
+  quindi dal fallback `BbAvH` (media multi-book, Fase 58), **non** da
+  Pinnacle: NON è la chiusura abbinata al 3.52 di apertura (margini diversi:
+  Pinnacle ~2.0% vs media ~5.3%, coerente con book diversi, non con un
+  movimento di linea). `_open_odds_market()` in `src/data/loader.py` lo sa
+  già e azzera `odds_home_open` a NaN per questa riga — **non è una coppia
+  open/close contaminata nel modello**, è semplicemente NaN dichiarato.
+  Tentativo di ricerca esterna (sessione utente, luglio 2026): BetExplorer
+  e OddsPortal da IP italiano reindirizzano a edizioni ADM-compliant
+  (`/it/`, `centroquote.it`) che non pubblicano Pinnacle e nascondono lo
+  storico apertura/chiusura dietro login — nessun dato recuperato.
 
 ## 6 · Come procurarsi i dati
 
