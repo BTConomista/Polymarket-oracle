@@ -237,7 +237,17 @@ scripts/         download_data, build_database, backtest, analyze, tune, calibra
 experiments/     runs.jsonl (registro replicabile) + README (formato)
 data/            serie_a_matches.csv (SNAPSHOT congelato, versionato)
                  football.db (SQLite, rigenerabile, NON versionato)
-docs/DIARIO.md   narrazione passo-passo con ragionamento
+docs/DIARIO.md   narrazione passo-passo con ragionamento (le decisioni e il perché)
+docs/DATI.md     catalogo di TUTTI i dati (reali e stimati): copertura, semantica
+                 quote, fonti, stime dichiarate — aggiornare a ogni modifica dati
+docs/PANCHINA.md la rosa dei modelli: titolari/panchina/bocciati × 2 fronti (§1.9)
+docs/PISTE.md    idee dato/architettura -> modello NON ancora provate, per costo
+                 crescente; aggiornare quando una pista si apre/prova/chiude
+docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
+                 raggiungibile, limiti degli strumenti MCP, fatti su GitHub
+                 Actions, fonti esterne valutate/scartate)
+docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
+                 apertura 2017-19)
 tests/           test unitari
 ```
 
