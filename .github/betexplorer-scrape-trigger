@@ -1,1 +1,1 @@
-probe-4 serie-a-2017-2018 2-partite-diagnostica-v2  # giro 1 senza esito utile (falsi positivi su "ou"): cerca match-odds/script/tab nella pagina
+probe-5 serie-a-2017-2018 2-partite-diagnostica-v3  # trovato #bettingTabs e script con _page_proxy/_bet365_url: dump completo per trovare l'endpoint vero

@@ -328,22 +328,28 @@ def main():
                                 ctx = page.text[max(0, idx - 80):idx + 120]
                                 log(f"    ...{ctx!r}...")
 
-                        # ogni <script> che nomina "odds": primi 400 caratteri
+                        # script con "odds": stavolta TUTTO (non troncato a 400)
                         scripts = re.findall(
                             r'<script[^>]*>(.*?)</script>', page.text,
                             re.I | re.S)
                         odds_scripts = [s for s in scripts if "odds" in s.lower()]
                         log(f"  DIAG script con 'odds' dentro: {len(odds_scripts)}/{len(scripts)}")
-                        for s in odds_scripts[:3]:
-                            log(f"    SCRIPT: {s[:400]!r}")
+                        for s in odds_scripts[:2]:
+                            for chunk_start in range(0, min(len(s), 2400), 800):
+                                log(f"    SCRIPT[{chunk_start}:]: "
+                                    f"{s[chunk_start:chunk_start+800]!r}")
 
-                        # ogni classe/id che nomina "tab" (i tab O/U, 1X2, ecc.
-                        # spesso sono <li data-tab-market="ou"> o simili)
-                        tabs = sorted(set(re.findall(
-                            r'<(?:li|a|div)[^>]*(?:tab|market)[^>]*>', page.text, re.I)))[:15]
-                        log(f"  DIAG elementi con 'tab'/'market' nell'attributo ({len(tabs)}):")
-                        for t in tabs:
-                            log(f"    {t}")
+                        # contenuto del div #bettingTabs (dove vive il tab O/U)
+                        bt = re.search(r'<div id="bettingTabs"[^>]*>(.*?)</div>\s*</div>',
+                                       page.text, re.I | re.S)
+                        if bt:
+                            content = bt.group(0)
+                            log(f"  DIAG #bettingTabs ({len(content)} car.):")
+                            for chunk_start in range(0, min(len(content), 2400), 800):
+                                log(f"    BT[{chunk_start}:]: "
+                                    f"{content[chunk_start:chunk_start+800]!r}")
+                        else:
+                            log("  DIAG #bettingTabs: non trovato con questo regex")
             polite_sleep(args.throttle_min, args.throttle_max)
             ajax_url = f"{BASE}/match-odds/{m['match_id']}/1/ou/"
             resp = get(session, ajax_url, referer=BASE + m["href"], ajax=True)
