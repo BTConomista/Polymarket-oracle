@@ -172,3 +172,7 @@ python scripts/build_estimates.py             # data/estimates/ (offline)
 
 Ogni backtest/analisi è registrato in `experiments/runs.jsonl` con l'impronta
 dei dati usati; le decisioni e il perché sono nel [diario](DIARIO.md).
+
+Conoscenza operativa sull'ambiente (rete, strumenti, GitHub Actions) in
+[MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md); idee di miglioramento
+dei modelli dai dati disponibili-ma-non-usati in [PISTE.md](PISTE.md).

@@ -140,6 +140,11 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   restare SEMPRE allineato.
 - [ ] **Test** — mantieni `pytest` verde; aggiungi un test per ogni nuova
   funzionalità del modello/pipeline.
+- [ ] **Piste** (`docs/PISTE.md`) e **manuale di sopravvivenza**
+  (`docs/MANUALE_SOPRAVVIVENZA.md`) — se l'esperimento apre, prova o chiude
+  una pista dati→modello, aggiorna la voce corrispondente in PISTE.md (anche
+  l'esito negativo, principio §1.4); se scopri un fatto operativo nuovo
+  sull'ambiente (rete, strumenti, GitHub Actions), aggiungilo al manuale.
 - [ ] **Commit + push** — messaggio chiaro (cosa e perché), sul branch di
   sviluppo. Non lasciare mai lavoro non committato: il container è effimero.
 
