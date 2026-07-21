@@ -303,6 +303,14 @@ def main():
     n_ok = n_noline = n_fail = 0
     with ckpt_path.open("a") as ck:
         for i, m in enumerate(todo, 1):
+            if i <= args.dump_first:
+                # pagina-partita grezza: ground truth per trovare il vero
+                # endpoint/markup delle quote se l'AJAX indovinato fallisce
+                # (mai contata nel throttle delle quote: e' un fetch a parte)
+                polite_sleep(args.throttle_min, args.throttle_max)
+                page = get(session, BASE + m["href"])
+                if page is not None:
+                    (debug_dir / f"matchpage_{m['match_id']}.html").write_text(page.text)
             polite_sleep(args.throttle_min, args.throttle_max)
             ajax_url = f"{BASE}/match-odds/{m['match_id']}/1/ou/"
             resp = get(session, ajax_url, referer=BASE + m["href"], ajax=True)
