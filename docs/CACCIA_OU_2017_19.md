@@ -103,9 +103,34 @@ spiaggia, valutare costo vs 2.280 partite.
 | fase | azione | costo | go/no-go |
 |---|---|---|---|
 | **A** | ricognizione dataset esistenti (prompt AI qui sotto, oppure a mano) | 1-2 ore | trovato un dataset che passa i criteri §1 → salta a INGRESSO |
-| **B** | tracer BetExplorer via GitHub Actions: **una sola stagione** (Serie A 2017-18, 380 partite, throttle 2-3s/richiesta ≈ 25 min) | mezza giornata | copertura ≥95% E apertura≠chiusura reali → scala |
-| **C** | scala alle 6 (lega, stagione); bundle `files/ou_2017_19_bundle.json` | 1 giorno | — |
-| **D** | OddsPortal headless (solo se B fallisce) | 2+ giorni, fragile | — |
+| **B** | ❌ **FALLITA** — tracer BetExplorer via GitHub Actions (probe live, 5 giri: vedi sotto) | mezza giornata | copertura 0% — chiusa, non scala |
+| **C** | scala alle 6 (lega, stagione); bundle `files/ou_2017_19_bundle.json` | — | **salta**: B non ha prodotto dati da scalare |
+| **D** | OddsPortal headless (solo se B fallisce) | 2+ giorni, fragile | B è fallita → candidata, ma con un limite noto (vedi sotto) |
+
+**Esito Fase B (probe live, runner GitHub Actions, non da questa sessione
+cloud).** Il sito è raggiunto correttamente (pagina risultati OK, 380
+partite trovate), ma l'endpoint delle quote indovinato
+(`/match-odds/{id}/1/ou/`) risponde **404 su tutte le partite testate**
+(10 + 2 + 2, tre probe successive). Diagnostica sulla pagina-partita grezza
+(match Serie A 2017-18): **zero** occorrenze della stringa `match-odds` in
+tutta la pagina; il div `#bettingTabs` (dove vivono i tab quote) contiene
+**solo un "1X2" DISABILITATO** (`class="...disabled..."`) e **nessun tab
+O/U**. Non è un problema di parsing/URL sbagliato: BetExplorer sembra aver
+**ritirato la funzione di confronto-quote per le partite archiviate così
+vecchie** (2017-18, ~8 anni fa) — un headless browser non aiuterebbe, il
+dato non è più esposto lì, non solo nascosto dietro JavaScript. **Fase B
+chiusa, negativa** (principio §1.4 del CLAUDE.md: si documenta anche
+l'esito negativo). Nota tecnica scoperta nel processo: quando l'artifact
+zip del workflow non è scaricabile dalla sessione (dominio Azure blob
+bloccato), la diagnostica va stampata nei log del job (leggibili via MCP
+GitHub), non salvata solo nell'artifact.
+
+**Implicazione per la Fase D**: OddsPortal richiede **login** per lo
+storico apertura/chiusura per singola quota (già noto da un tentativo
+precedente, vedi `docs/MANUALE_SOPRAVVIVENZA.md`) — indipendente dal blocco
+geo/ADM per IP italiano, quindi si ripresenterebbe anche dal runner
+Actions: servirebbero credenziali reali in un secret, un salto di
+complessità/rischio rispetto a un semplice scraper pubblico.
 
 **INGRESSO dei dati** (qualunque fase li produca): stessi controlli di sempre
 — gol della fonte == gol dello snapshot su OGNI riga (join per data+squadre
