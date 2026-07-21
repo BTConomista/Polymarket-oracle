@@ -80,6 +80,8 @@ fonte (sito/dataset) · book ("average" oppure nome del bookmaker)
 pagine risultati per stagione → link partita → tab "O/U" con quote per book e
 **movimento** (apertura nel tooltip/endpoint AJAX `.../match-odds/...`). HTML
 in gran parte server-rendered: scrappabile con richieste semplici e throttle.
+Scraper pronto (workflow GitHub Actions + probe): vedi
+[BETEXPLORER_SCRAPER.md](BETEXPLORER_SCRAPER.md).
 
 **C. OddsPortal** (`oddsportal.com/soccer/italy/serie-a-2017-2018/results/`):
 il più ricco (open+close per book con timestamp) ma JS-pesante + Cloudflare:

@@ -1,0 +1,75 @@
+name: Scrape BetExplorer OU 2.5
+
+on:
+  workflow_dispatch:
+    inputs:
+      league_season:
+        description: "Lega-stagione da scrappare"
+        required: true
+        default: "serie-a-2017-2018"
+        type: choice
+        options:
+          - serie-a-2017-2018
+          - serie-a-2018-2019
+          - premier-league-2017-2018
+          - premier-league-2018-2019
+          - laliga-2017-2018
+          - laliga-2018-2019
+      probe:
+        description: "Solo probe: 3 partite + dump HTML per validare il parsing"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install requests beautifulsoup4
+
+      - name: Scrape (probe o run completo)
+        run: |
+          if [ "${{ inputs.probe }}" = "true" ]; then
+            python scripts/scrape_betexplorer.py --league "${{ inputs.league_season }}" --probe-limit 3 --dump-first 3
+          else
+            python scripts/scrape_betexplorer.py --league "${{ inputs.league_season }}" --dump-first 1
+          fi
+
+      - name: Criteri di accettazione
+        if: ${{ inputs.probe != true }}
+        run: python scripts/check_acceptance.py files/ou25_${{ inputs.league_season }}.csv
+        continue-on-error: true   # il report va letto comunque; il commit non si blocca
+
+      - name: Upload artifact (CSV + checkpoint + debug)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ou25-${{ inputs.league_season }}
+          path: |
+            files/
+            debug/
+          if-no-files-found: warn
+
+      - name: Commit CSV in files/
+        if: ${{ inputs.probe != true }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add files/ou25_*.csv
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da committare"
+          else
+            git commit -m "data: OU2.5 open/close ${{ inputs.league_season }} (BetExplorer)"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
