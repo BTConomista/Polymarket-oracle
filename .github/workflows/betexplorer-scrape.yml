@@ -19,6 +19,15 @@ on:
         description: "Solo probe: 3 partite + dump HTML per validare il parsing"
         type: boolean
         default: true
+  # workflow_dispatch compare nella tab Actions/e' dispatchabile via API solo
+  # se il file e' sul branch di DEFAULT (main, qui ancora vuoto -- stesso
+  # problema gia' risolto per import_dataset.yml). Workaround: push del file-
+  # segnale, azionabile da QUALSIASI branch pushato. Sempre in probe mode
+  # sulla lega di default (serie-a-2017-2018): serve solo a validare il
+  # parsing prima di decidere se lanciare i run completi da main.
+  push:
+    paths:
+      - '.github/betexplorer-scrape-trigger'
 
 permissions:
   contents: write
@@ -38,15 +47,17 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Scrape (probe o run completo)
+        env:
+          LEAGUE: ${{ inputs.league_season || 'serie-a-2017-2018' }}
         run: |
-          if [ "${{ inputs.probe }}" = "true" ]; then
-            python scripts/scrape_betexplorer.py --league "${{ inputs.league_season }}" --probe-limit 3 --dump-first 3
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "${{ inputs.probe }}" = "true" ]; then
+            python scripts/scrape_betexplorer.py --league "$LEAGUE" --probe-limit 3 --dump-first 3
           else
-            python scripts/scrape_betexplorer.py --league "${{ inputs.league_season }}" --dump-first 1
+            python scripts/scrape_betexplorer.py --league "$LEAGUE" --dump-first 1
           fi
 
       - name: Criteri di accettazione
-        if: ${{ inputs.probe != true }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.probe != true }}
         run: python scripts/check_acceptance.py files/ou25_${{ inputs.league_season }}.csv
         continue-on-error: true   # il report va letto comunque; il commit non si blocca
 
@@ -54,14 +65,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ou25-${{ inputs.league_season }}
+          name: ou25-${{ inputs.league_season || 'serie-a-2017-2018' }}
           path: |
             files/
             debug/
           if-no-files-found: warn
 
       - name: Commit CSV in files/
-        if: ${{ inputs.probe != true }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.probe != true }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
