@@ -110,20 +110,31 @@ spiaggia, valutare costo vs 2.280 partite.
 **Esito Fase B (probe live, runner GitHub Actions, non da questa sessione
 cloud).** Il sito è raggiunto correttamente (pagina risultati OK, 380
 partite trovate), ma l'endpoint delle quote indovinato
-(`/match-odds/{id}/1/ou/`) risponde **404 su tutte le partite testate**
-(10 + 2 + 2, tre probe successive). Diagnostica sulla pagina-partita grezza
-(match Serie A 2017-18): **zero** occorrenze della stringa `match-odds` in
-tutta la pagina; il div `#bettingTabs` (dove vivono i tab quote) contiene
-**solo un "1X2" DISABILITATO** (`class="...disabled..."`) e **nessun tab
-O/U**. Non è un problema di parsing/URL sbagliato: BetExplorer sembra aver
-**ritirato la funzione di confronto-quote per le partite archiviate così
-vecchie** (2017-18, ~8 anni fa) — un headless browser non aiuterebbe, il
-dato non è più esposto lì, non solo nascosto dietro JavaScript. **Fase B
-chiusa, negativa** (principio §1.4 del CLAUDE.md: si documenta anche
-l'esito negativo). Nota tecnica scoperta nel processo: quando l'artifact
-zip del workflow non è scaricabile dalla sessione (dominio Azure blob
-bloccato), la diagnostica va stampata nei log del job (leggibili via MCP
-GitHub), non salvata solo nell'artifact.
+(`/match-odds/{id}/1/ou/`) risponde **404 su tutte le partite testate**.
+Diagnostica sulla pagina-partita grezza: **zero** occorrenze della stringa
+`match-odds` in tutta la pagina; il div `#bettingTabs` (dove vivono i tab
+quote) contiene **solo un "1X2" DISABILITATO** (`class="...disabled..."`) e
+**nessun tab O/U**. Non è un problema di parsing/URL sbagliato: BetExplorer
+sembra aver **ritirato la funzione di confronto-quote per le partite
+archiviate così vecchie** (~8 anni) — un headless browser non aiuterebbe,
+il dato non è più esposto lì, non solo nascosto dietro JavaScript.
+
+**Copertura per lega (richiesta utente, "quali campionati raggiungiamo?"):
+il blocco è generale, non specifico di una lega.** Stesso identico pattern
+(0 occorrenze `match-odds`, `#bettingTabs` con solo "1X2" disabilitato,
+0.0% copertura) verificato su **tutte e 3 le leghe** target 2017-18 — Serie
+A, Premier League, La Liga — quindi con altissima probabilità su **tutte e
+6** le combinazioni lega-stagione del piano (le due stagioni 2017-18/18-19
+sono la stessa "età" agli occhi del sito). **Nessuna delle 6 è raggiungibile
+con questo metodo**: non è un problema risolvibile lega per lega, è un
+limite strutturale del sito per l'intera finestra temporale che serve al
+progetto.
+
+**Fase B chiusa, negativa** (principio §1.4 del CLAUDE.md: si documenta
+anche l'esito negativo). Nota tecnica scoperta nel processo: quando
+l'artifact zip del workflow non è scaricabile dalla sessione (dominio Azure
+blob bloccato), la diagnostica va stampata nei log del job (leggibili via
+MCP GitHub), non salvata solo nell'artifact.
 
 **Implicazione per la Fase D**: OddsPortal richiede **login** per lo
 storico apertura/chiusura per singola quota (già noto da un tentativo
