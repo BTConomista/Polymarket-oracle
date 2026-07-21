@@ -313,19 +313,37 @@ def main():
                     (debug_dir / f"matchpage_{m['match_id']}.html").write_text(page.text)
                     if i == 1:
                         # diagnostica stampata nel LOG (l'artifact zip non e'
-                        # sempre scaricabile dalla sessione che lancia il run):
-                        # ogni link/percorso che sembra portare alle quote.
-                        hrefs = sorted(set(re.findall(
-                            r'href=["\']([^"\']*(?:odds|1x2|over-under|ou)[^"\']*)["\']',
-                            page.text, re.I)))
-                        log(f"  DIAG link 'odds/1x2/ou' nella pagina-partita ({len(hrefs)}):")
-                        for h in hrefs[:30]:
-                            log(f"    {h}")
-                        data_attrs = sorted(set(re.findall(
-                            r'data-[a-z-]*(?:odds|match|id)[a-z-]*=["\']([^"\']{1,60})["\']',
-                            page.text, re.I)))[:20]
-                        log(f"  DIAG attributi data-* rilevanti ({len(data_attrs)}): {data_attrs}")
+                        # sempre scaricabile dalla sessione che lancia il run).
+                        # Giro 1 (href semplici) non ha trovato nulla di utile
+                        # (falsi positivi: "backgrounds", "touch-icon" contengono
+                        # "ou"): il tab quote e' probabilmente costruito via JS,
+                        # non un <a href> statico. Cerchiamo di piu'.
                         log(f"  DIAG lunghezza pagina: {len(page.text)} caratteri")
+
+                        for needle in ("match-odds", "odds-comparison", m["match_id"]):
+                            idxs = [mm.start() for mm in re.finditer(
+                                re.escape(needle), page.text, re.I)][:5]
+                            log(f"  DIAG occorrenze di {needle!r}: {len(idxs)}")
+                            for idx in idxs:
+                                ctx = page.text[max(0, idx - 80):idx + 120]
+                                log(f"    ...{ctx!r}...")
+
+                        # ogni <script> che nomina "odds": primi 400 caratteri
+                        scripts = re.findall(
+                            r'<script[^>]*>(.*?)</script>', page.text,
+                            re.I | re.S)
+                        odds_scripts = [s for s in scripts if "odds" in s.lower()]
+                        log(f"  DIAG script con 'odds' dentro: {len(odds_scripts)}/{len(scripts)}")
+                        for s in odds_scripts[:3]:
+                            log(f"    SCRIPT: {s[:400]!r}")
+
+                        # ogni classe/id che nomina "tab" (i tab O/U, 1X2, ecc.
+                        # spesso sono <li data-tab-market="ou"> o simili)
+                        tabs = sorted(set(re.findall(
+                            r'<(?:li|a|div)[^>]*(?:tab|market)[^>]*>', page.text, re.I)))[:15]
+                        log(f"  DIAG elementi con 'tab'/'market' nell'attributo ({len(tabs)}):")
+                        for t in tabs:
+                            log(f"    {t}")
             polite_sleep(args.throttle_min, args.throttle_max)
             ajax_url = f"{BASE}/match-odds/{m['match_id']}/1/ou/"
             resp = get(session, ajax_url, referer=BASE + m["href"], ajax=True)

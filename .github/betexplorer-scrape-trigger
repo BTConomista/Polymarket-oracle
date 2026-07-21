@@ -1,1 +1,1 @@
-probe-3 serie-a-2017-2018 2-partite-diagnostica  # stampa nel log i link odds/1x2/ou trovati nella pagina-partita
+probe-4 serie-a-2017-2018 2-partite-diagnostica-v2  # giro 1 senza esito utile (falsi positivi su "ou"): cerca match-odds/script/tab nella pagina
