@@ -8,7 +8,7 @@ file deve trovare non "cosa manca" ma **"cosa potrei provare dopo, con che
 cosa, e perché potrebbe funzionare"**. La parte operativa (rete, strumenti,
 Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
-l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 68.
+l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 69.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 

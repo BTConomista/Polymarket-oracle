@@ -663,3 +663,28 @@ def read_ou_close_estimates() -> pd.DataFrame:
     df = pd.read_csv(path, dtype={"season": str})
     df["date"] = pd.to_datetime(df["date"])
     return df
+
+
+def read_open_sparse_estimates() -> pd.DataFrame:
+    """Le STIME dell'apertura per le partite "sparse" senza apertura vera,
+    fuori dal buco sistemico O/U 2017-19 (Fase 69).
+
+    ⚠️  Ricostruzioni di MODELLO (regressione logit pooled chiusura->apertura,
+    bakeoff contro 4 alternative): MAE atteso ~0.016 in probabilita' per il
+    1X2 (3 esiti insieme), ~0.020 per l'O/U. Stesse regole delle altre stime:
+    mai nelle colonne quota degli snapshot, mai per ROI, dichiararle in ogni
+    analisi che le usa. Regole complete: data/estimates/README.md.
+
+    Ritorna: league, season, date, home_team, away_team,
+    p_home_open_est/p_draw_open_est/p_away_open_est (NaN se quella partita
+    non aveva bisogno della stima 1X2), p_over25_open_est/p_under25_open_est
+    (idem per l'O/U). Chiave di join: (season, home_team, away_team).
+    """
+    path = ESTIMATES_DIR / "open_sparse_1x2_ou.csv"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path} non trovato: genera le stime con "
+            f"`python scripts/build_estimates.py`")
+    df = pd.read_csv(path, dtype={"season": str})
+    df["date"] = pd.to_datetime(df["date"])
+    return df

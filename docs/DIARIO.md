@@ -6856,6 +6856,115 @@ e `python scripts/build_league_snapshot.py --fixtures premier_league la_liga`
 
 ---
 
+## Fase 69 — Stimare i gap sparsi: bakeoff apertura~chiusura (richiesta utente)
+
+**Obiettivo.** Chiudere i "6 NaN" residui delle quote sparse (Fase 68) senza
+raccolta dati: l'utente chiede esplicitamente di provare **più metodi di
+stima**, fare un bakeoff, e scegliere il migliore (o un mix). Prima, però, un
+tentativo di ricerca esterna diretta (BetExplorer/OddsPortal da IP italiano,
+sessione utente): fallito per un blocco strutturale nuovo — redirect
+geo/ADM (`/it/` senza tabella quote, `oddsportal.com`→`centroquote.it` senza
+Pinnacle, storico dietro login) — documentato in MANUALE_SOPRAVVIVENZA.md.
+
+**Scoperta preliminare (correzione di rotta).** Riesaminando il grezzo per
+rispondere alla ricerca esterna, il pattern "PS presente, PSC assente" che
+spiega Alaves-Sociedad risulta **unico su 2.280 partite 2017-19** (non
+sistemico): l'ipotesi dell'AI esterna che 3.52/3.55/2.20 e 3.37/3.39/2.17
+fossero "lo stesso momento di mercato" era già gestita correttamente dalla
+maschera anti-contaminazione (`_open_odds_market`, Fase 58/61) — nessun bug,
+solo NaN dichiarato. Nell'inventariare i gap sparsi con precisione emerge
+anche un **terzo buco mai catalogato**: Verona-Genoa 19/10/2020 (Serie A,
+stagione 2020-21) ha l'O/U di apertura mancante pur avendo il 1X2 completo —
+il conteggio "6 NaN" di Fase 68 copriva solo le 2 partite 1X2, non questa.
+
+**Ragionamento/ipotesi.** Se l'apertura è correlata alla chiusura (che per
+tutte e 3 le partite conosciamo per certo), un modello chiusura→apertura può
+riempire il buco con un errore MISURABILE — stesso principio già usato per
+`ou_close_2017_19.csv` (Fase 62, ma in direzione opposta: lì si stima la
+chiusura dall'apertura + movimento 1X2; qui si stima l'apertura dalla sola
+chiusura, un problema più povero di segnale ma con **enormemente più dati di
+validazione** — 10.258 coppie 1X2 e 7.978 O/U reali contro le 7.978 usate
+per l'altro estimatore).
+
+**Alternative considerate (bakeoff, 5-fold CV su tutte le coppie reali).**
+
+| metodo | MAE 1X2 | MAE O/U |
+|---|--:|--:|
+| A — identità (apertura≈chiusura) | 0.02051 | 0.02105 |
+| B — regressione lineare pooled | 0.02013 | 0.01956 |
+| **C — regressione LOGIT pooled** | **0.02011** | **0.01956** |
+| D — regressione lineare per-lega | 0.02007 | 0.01938 |
+| E — blend identità+logit (media) | 0.02022 (**peggio di A e C**) | — |
+
+**Scelta e perché.** **C (logit pooled)**, sempre: sul 1X2 nessun metodo
+batte davvero l'identità (curva piatta, come Fase 8/57 — il movimento di
+linea 1X2 è quasi tutto rumore piccolo, r=0.99 tra apertura e chiusura
+devigate); sull'O/U la regressione aiuta per davvero (~7% in meno). Il
+per-lega (D) è sempre marginalmente il migliore ma il margine (~0.0002, 5-10
+partite per lega-stagione) non giustifica 3× i parametri per stimare 3
+partite. Il blend (E) è **peggiore** di entrambi i singoli metodi — la media
+tira l'identità (debole) verso il basso invece di migliorarla: nessun mix,
+come sospettava l'utente poteva servire ma i dati dicono di no. Scelto lo
+spazio **logit** (non lineare) per coerenza con l'unico altro estimatore del
+progetto (Fase 62) e perché resta in [0,1] per costruzione.
+
+**Risultato.** 3 partite stimate in `data/estimates/open_sparse_1x2_ou.csv`
+(mai dentro gli snapshot): Alaves-Sociedad (1X2: 0.2871/0.2758/0.4371),
+Verona-Genoa (O/U: Over 0.5452), Torino-Fiorentina (1X2: 0.3205/0.2849/0.3947,
+O/U: Over 0.4938). MAE atteso dichiarato: **~0.016** (1X2, 3 esiti insieme) e
+**~0.020** (O/U) — molto più stretto della stima squad_value (17-29%),
+perché qui il rapporto sotto stima è quasi un'identità (β≈0.93-0.97).
+Conferma indiretta: per Alaves-Sociedad la stima (`p_home≈0.287`) è vicina al
+valore Pinnacle grezzo mai validato (`p_home≈0.278`, scartato dalla maschera)
+— coerenza, non prova, ma un segnale che il metodo non produce numeri assurdi.
+
+**Lezione/cosa ne consegue.** (1) Un bakeoff onesto a volte conferma che il
+modello più semplice basta (identità sul 1X2) e a volte no (regressione
+sull'O/U) — **si misura, non si assume**, anche su un problema piccolissimo
+(3 partite). (2) Il blend non è un'assicurazione contro l'errore: mescolare
+un metodo debole con uno forte può peggiorare entrambi — va validato come
+gli altri, non applicato per prudenza. (3) Il completamento dati "98.70%
+reale" della Fase 68 nascondeva un buco non censito (Verona-Genoa): ogni
+volta che si tocca l'inventario dei NaN conviene un controllo programmatico
+completo, non fidarsi del conteggio della fase precedente.
+
+### 📐 Il modello in dettaglio
+
+```
+p_close = devig(quota_chiusura)                 # metrics.devig_1x2 / devig_binary
+logit(p_open_est) = alpha + beta * logit(p_close)
+p_open_est = sigmoid(alpha + beta * logit(p_close))
+```
+
+Fit pooled (minimi quadrati su tutte le coppie reali, 3 leghe insieme):
+
+- **1X2** (home e draw fittati direttamente, away per differenza +
+  rinormalizzazione — sempre somma 1 per costruzione):
+  `home: alpha=-0.0012, beta=0.9715` · `draw: alpha=-0.0899, beta=0.9281`.
+  beta≈1 e alpha≈0 per l'home conferma numericamente il "quasi-identità":
+  il coefficiente angolare è a 3 punti percentuali da 1, l'intercetta
+  trascurabile. Il draw ha un'intercetta negativa più marcata (-0.09 in
+  spazio logit): i pareggi tendono a diventare leggermente MENO probabili
+  tra apertura e chiusura (draw-bias noto, Fase 40/50-ter, letto qui dal
+  lato opposto della chiusura).
+- **O/U**: `alpha=0.0126, beta=0.8912`. beta più lontano da 1 (11% di
+  "compressione" verso il centro) spiega perché qui la regressione batte
+  l'identità: la chiusura O/U si muove via via più decisa quanto più la
+  linea di apertura è già estrema, un pattern che l'identità non cattura.
+- **MAE 5-fold**: stesso split (seed fisso 42, riproducibile) per tutti i
+  metodi del bakeoff, cosi' il confronto è ad armi pari; il numero
+  dichiarato per il 1X2 (0.0156 nel file finale) è il MAE **congiunto sui 3
+  esiti** (home+draw dal fit, away rinormalizzato) — più onesto della media
+  dei soli due MAE fittati direttamente (che sarebbe stato 0.0143,
+  sottostimando l'errore reale perché ignora l'esito away).
+
+**Riproducibilità.** `python scripts/build_estimates.py` (rigenera tutte e 3
+le stime, incluso questo file); lettura da codice:
+`loader.read_open_sparse_estimates()`; run registrato in
+`experiments/runs.jsonl` (`source: build_estimates_open_sparse`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

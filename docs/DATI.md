@@ -3,7 +3,7 @@
 Questo documento è la **mappa unica di tutti i dati** del progetto: cosa c'è,
 da dove viene, quanto copre, e — sezione più importante — **cosa è dato reale e
 cosa è STIMA**. Va aggiornato ogni volta che i dati cambiano (nuova fonte,
-nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 68**.
+nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 69**.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
@@ -129,6 +129,7 @@ le tre che contano:
 |---|---|---|---|
 | `ou_close_2017_19.csv` (2279 righe, 3 leghe) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti | regressione logit della chiusura su (linea O/U pre-match + movimento 1X2 open→close), fit pooled su 7978 partite 2019-20+ (Fasi 62/62-bis) | **MAE ~0.012** in probabilità; corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile (notizie puro-totali) |
 | `squad_value_2017_26.csv` (**13 righe** — erano 73, 60 sostituite da dati REALI nella Fase 67; tutte 2025-26) | il **valore rosa** delle celle (stagione, squadra) ancora scoperte | ibrido validato LOO/leave-team-out (Fase 66): `anchored` = regressione pooled + valore stagioni adiacenti; `regression` = solo rendimento, per-lega (squadre senza stagioni note) | **mediano ~17%** (anchored) / **~29%, p90 75%** (regression) — ⚠️ ordine di grandezza, code >100% per squadre sovra-performanti; metodo+errore riga per riga |
+| `open_sparse_1x2_ou.csv` (**3 righe**, Fase 69) | l'**apertura** (1X2 e/o O/U) delle 3 partite sparse senza apertura vera, fuori dal buco sistemico O/U 2017-19 | bakeoff (5 metodi, 5-fold CV su 10.258/7.978 coppie reali): vince la regressione in **spazio logit pooled** (chiusura→apertura); nessun blend migliora | **MAE ~0.016** (1X2, 3 esiti) / **~0.020** (O/U) — molto più affidabile della stima squad_value; rapporto apertura↔chiusura quasi identità (corr 0.96-0.99) |
 
 Accesso da codice: `loader.read_ou_close_estimates()`. Rigenerazione:
 `python scripts/build_estimates.py`.
@@ -144,7 +145,12 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
 - **apertura O/U 2017-19** (l'altra metà del buco di §2): ora ha un piano di
   ricerca dedicato con specifica del dato e prompt pronto per un'AI con web
   libero → **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
-- **quote O/U di apertura mancanti sparse** (1 partita 21-22 SA, 1 Liga 17-18).
+- ~~**quote O/U/1X2 di apertura mancanti sparse**~~ → **FATTO (Fase 69)**: le
+  3 partite sparse (2 di 1X2, 1 di O/U isolata in 2020-21, fuori dal buco
+  sistemico 2017-19) sono stimate in `open_sparse_1x2_ou.csv` (vedi tabella
+  sopra). Un tentativo di ricerca esterna diretta (BetExplorer/OddsPortal da
+  IP italiano) non ha trovato nulla per il blocco geo/ADM — vedi
+  `docs/MANUALE_SOPRAVVIVENZA.md`.
 - eventuali linee di mercati mai pubblicati (GG/NG storico): molto più
   incerto, servirebbe una validazione esterna.
 

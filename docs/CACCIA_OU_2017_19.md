@@ -30,6 +30,12 @@ fonte (sito/dataset) · book ("average" oppure nome del bookmaker)
 
 **Bonus** (2 partite sparse senza 1X2 di apertura): Torino-Fiorentina
 10/01/2022 (Serie A, recupero) e Alaves-Real Sociedad 14/10/2017 (La Liga).
+Un tentativo di ricerca esterna diretta (BetExplorer/OddsPortal da IP
+italiano) non ha trovato nulla per un blocco geo/ADM (vedi
+`docs/MANUALE_SOPRAVVIVENZA.md`); nel frattempo **sono stimate** (Fase 69,
+bakeoff di 5 metodi, MAE atteso ~0.016) in
+`data/estimates/open_sparse_1x2_ou.csv` — restano comunque candidate a dato
+vero se mai si trovasse una fonte percorribile.
 
 ### Criteri di accettazione (chi cerca DEVE verificarli)
 

@@ -34,6 +34,24 @@ squad_value_2017_26.csv (Fase 66):
   Errore GRANDE e dichiarato riga per riga: usare solo come ordine di
   grandezza, mai come valore puntuale.
 
+open_sparse_1x2_ou.csv (Fase 69):
+  le quote di APERTURA per le partite "sparse" senza apertura vera che NON
+  fanno parte del buco sistemico 2017-19 O/U (quello ha un piano di raccolta
+  dati dedicato, vedi docs/CACCIA_OU_2017_19.md): 2 partite 1X2 (il grezzo
+  non ha mai avuto la colonna, o la maschera anti-contaminazione l'ha
+  scartata) + 1 partita O/U isolata in stagione 2020-21. Bakeoff (richiesta
+  utente) tra 5 metodi -- identita', regressione lineare pooled, regressione
+  logit pooled, regressione lineare per-lega, blend identita'+logit -- via
+  5-fold CV su TUTTE le coppie apertura/chiusura reali (10.258 per l'1X2,
+  7.978 per l'O/U, tutte le 3 leghe/9 stagioni): il logit pooled vince o
+  pareggia sempre i metodi piu' complessi, nessun blend fa meglio del
+  migliore singolo.
+
+  Errore atteso (MAE 5-fold, probabilita'): **1X2 ~0.020** (praticamente pari
+  all'identita': il movimento di linea 1X2 e' quasi tutto rumore piccolo),
+  **O/U ~0.0196** (qui la regressione aiuta davvero, ~7% in meno della sola
+  identita'). Molto piu' affidabile della stima squad_value (~17-29%).
+
 Uso:  python scripts/build_estimates.py
 """
 from __future__ import annotations
@@ -157,6 +175,151 @@ SQUAD_VALUE_PATH = ESTIMATES_DIR / "squad_value_2017_26.csv"
 ERR_ANCHORED, ERR_REGRESSION = 17.0, 29.0
 
 
+OPEN_SPARSE_PATH = ESTIMATES_DIR / "open_sparse_1x2_ou.csv"
+# Stagioni del buco SISTEMICO O/U (piano dedicato, CACCIA_OU_2017_19.md) --
+# le righe O/U mancanti li' NON sono "sparse", non vanno stimate qui.
+SYSTEMIC_OU_SEASONS = {"1718", "1819"}
+N_FOLDS = 5           # k-fold per l'errore atteso del bakeoff (Fase 69)
+_CV_SEED = 42          # riproducibilita': stesso split ad ogni run
+
+
+def _fit_logit_1d(x_prob: np.ndarray, y_prob: np.ndarray) -> tuple[float, float]:
+    """Regressione logit(y) = alpha + beta*logit(x) (minimi quadrati)."""
+    X = np.column_stack([np.ones(len(x_prob)), _logit(x_prob)])
+    coef, *_ = np.linalg.lstsq(X, _logit(y_prob), rcond=None)
+    return float(coef[0]), float(coef[1])
+
+
+def _kfold_mae_logit(x_prob: np.ndarray, y_prob: np.ndarray,
+                     k: int = N_FOLDS, seed: int = _CV_SEED) -> float:
+    """MAE out-of-sample media k-fold della regressione logit(y)~logit(x)
+    (Fase 69, bakeoff apertura~chiusura): stessa famiglia di stima gia' usata
+    per ou_close (Fase 62/62-bis), qui validata su tutte le coppie reali
+    invece che walk-forward (non e' una predizione nel tempo, e' un riempi-
+    mento di buchi puntuali sparsi in tutte le stagioni)."""
+    rng = np.random.default_rng(seed)
+    idx = rng.permutation(len(x_prob))
+    folds = np.array_split(idx, k)
+    maes = []
+    for i in range(k):
+        test = folds[i]
+        train = np.concatenate([folds[j] for j in range(k) if j != i])
+        a, b = _fit_logit_1d(x_prob[train], y_prob[train])
+        pred = _sigmoid(a + b * _logit(x_prob[test]))
+        maes.append(float(np.abs(pred - y_prob[test]).mean()))
+    return float(np.mean(maes))
+
+
+def _kfold_mae_1x2(pc: np.ndarray, po: np.ndarray, k: int = N_FOLDS,
+                   seed: int = _CV_SEED) -> float:
+    """MAE k-fold sui 3 ESITI del 1X2 insieme (home/draw fittati, away per
+    differenza+rinormalizzazione) -- rispecchia esattamente l'applicazione in
+    build_open_sparse, cosi' l'errore dichiarato copre anche l'esito away
+    (che non ha un fit proprio)."""
+    rng = np.random.default_rng(seed)
+    idx = rng.permutation(len(pc))
+    folds = np.array_split(idx, k)
+    maes = []
+    for i in range(k):
+        test, train = folds[i], np.concatenate([folds[j] for j in range(k) if j != i])
+        a_h, b_h = _fit_logit_1d(pc[train, 0], po[train, 0])
+        a_d, b_d = _fit_logit_1d(pc[train, 1], po[train, 1])
+        ph = _sigmoid(a_h + b_h * _logit(pc[test, 0]))
+        pdw = _sigmoid(a_d + b_d * _logit(pc[test, 1]))
+        pa = np.clip(1 - ph - pdw, 1e-6, None)
+        s = ph + pdw + pa
+        pred = np.column_stack([ph / s, pdw / s, pa / s])
+        maes.append(float(np.abs(pred - po[test]).mean()))
+    return float(np.mean(maes))
+
+
+def build_open_sparse() -> tuple[pd.DataFrame, float, float]:
+    """Stima l'apertura per le partite sparse senza apertura vera (Fase 69).
+
+    Bakeoff (5 metodi, 5-fold CV su tutte le coppie apertura/chiusura reali):
+    identita', lineare pooled, LOGIT pooled (vincitore o pari ovunque),
+    lineare per-lega, blend identita'+logit (mai meglio del singolo migliore).
+    Dettaglio numerico nel diario (Fase 69) e nel docstring del modulo.
+    """
+    frames = []
+    for lg in LEAGUES:
+        df = database.read_snapshot(database.snapshot_path(lg))
+        df["season"] = df["season"].astype(str)
+        df["league"] = lg
+        frames.append(df)
+    all_df = pd.concat(frames, ignore_index=True)
+
+    # ---- fit 1X2: home e draw diretti, away per differenza/rinormalizz. ---
+    has_1x2 = all_df[["odds_home", "odds_draw", "odds_away", "odds_home_open",
+                      "odds_draw_open", "odds_away_open"]].notna().all(axis=1)
+    fit_1x2 = all_df[has_1x2]
+    pc_1x2 = np.array([metrics.devig_1x2(r.odds_home, r.odds_draw, r.odds_away)
+                       for r in fit_1x2.itertuples()])
+    po_1x2 = np.array([metrics.devig_1x2(r.odds_home_open, r.odds_draw_open,
+                                         r.odds_away_open)
+                       for r in fit_1x2.itertuples()])
+    a_h, b_h = _fit_logit_1d(pc_1x2[:, 0], po_1x2[:, 0])
+    a_d, b_d = _fit_logit_1d(pc_1x2[:, 1], po_1x2[:, 1])
+    mae_1x2 = _kfold_mae_1x2(pc_1x2, po_1x2)
+    print(f"fit logit pooled 1X2 (n={len(fit_1x2)}): "
+          f"home a={a_h:.4f} b={b_h:.4f} | draw a={a_d:.4f} b={b_d:.4f} | "
+          f"MAE congiunto (3 esiti, home+draw fittati + away rinormalizzato) "
+          f"{mae_1x2:.4f}")
+
+    # ---- fit O/U --------------------------------------------------------
+    has_ou = all_df[["odds_over25", "odds_under25", "odds_over25_open",
+                     "odds_under25_open"]].notna().all(axis=1)
+    fit_ou = all_df[has_ou]
+    pc_ou = np.array([metrics.devig_binary(r.odds_over25, r.odds_under25)[0]
+                      for r in fit_ou.itertuples()])
+    po_ou = np.array([metrics.devig_binary(r.odds_over25_open, r.odds_under25_open)[0]
+                      for r in fit_ou.itertuples()])
+    a_ou, b_ou = _fit_logit_1d(pc_ou, po_ou)
+    mae_ou = _kfold_mae_logit(pc_ou, po_ou)
+    print(f"fit logit pooled O/U  (n={len(fit_ou)}): "
+          f"a={a_ou:.4f} b={b_ou:.4f} (MAE {mae_ou:.4f})")
+
+    # ---- individua i buchi SPARSI (fuori dal gap sistemico O/U) ---------
+    systemic = all_df["season"].isin(SYSTEMIC_OU_SEASONS)
+    need_1x2 = all_df["odds_home_open"].isna() & all_df["odds_home"].notna()
+    need_ou = (all_df["odds_over25_open"].isna() & ~systemic
+              & all_df["odds_over25"].notna())
+    targets = all_df[need_1x2 | need_ou].copy()
+
+    rows = []
+    for r in targets.itertuples():
+        row = {"league": r.league, "season": r.season,
+               "date": r.date.strftime("%Y-%m-%d"),
+               "home_team": r.home_team, "away_team": r.away_team,
+               "p_home_open_est": np.nan, "p_draw_open_est": np.nan,
+               "p_away_open_est": np.nan,
+               "p_over25_open_est": np.nan, "p_under25_open_est": np.nan}
+        if pd.isna(r.odds_home_open) and pd.notna(r.odds_home):
+            pc = metrics.devig_1x2(r.odds_home, r.odds_draw, r.odds_away)
+            ph = float(_sigmoid(a_h + b_h * _logit(pc[0])))
+            pdw = float(_sigmoid(a_d + b_d * _logit(pc[1])))
+            pa = max(1e-6, 1 - ph - pdw)
+            s = ph + pdw + pa
+            row["p_home_open_est"] = round(ph / s, 4)
+            row["p_draw_open_est"] = round(pdw / s, 4)
+            row["p_away_open_est"] = round(pa / s, 4)
+        if pd.isna(r.odds_over25_open) and r.season not in SYSTEMIC_OU_SEASONS \
+                and pd.notna(r.odds_over25):
+            pco = metrics.devig_binary(r.odds_over25, r.odds_under25)[0]
+            po = float(_sigmoid(a_ou + b_ou * _logit(pco)))
+            row["p_over25_open_est"] = round(po, 4)
+            row["p_under25_open_est"] = round(1 - po, 4)
+        rows.append(row)
+
+    est = pd.DataFrame(rows).sort_values(["league", "season", "date"])
+    print(f"\nopen_sparse: {len(est)} partite stimate (fuori dal gap sistemico O/U)")
+    for r in est.itertuples():
+        print(f"  {r.league:14s} {r.season} {r.date} {r.home_team}-{r.away_team}: "
+              f"1X2={r.p_home_open_est}/{r.p_draw_open_est}/{r.p_away_open_est}  "
+              f"OU={r.p_over25_open_est}")
+    return est, mae_1x2, mae_ou
+
+
 def build_squad_value() -> pd.DataFrame:
     """Stima le celle (stagione, squadra) senza valore rosa (Fase 66)."""
     from scripts._run_fase66_squad_value_est import (
@@ -228,6 +391,22 @@ def main() -> None:
                                  "regression": ERR_REGRESSION}},
         metrics_dict={"n_estimates": int(len(sq)),
                       "n_anchored": int((sq["method"] == "anchored").sum())},
+        fingerprint=experiment_log.data_fingerprint(fit),
+    ))
+
+    sparse, mae_1x2, mae_ou = build_open_sparse()
+    sparse.to_csv(OPEN_SPARSE_PATH, index=False)
+    print(f"\n-> {OPEN_SPARSE_PATH.relative_to(ROOT)}: {len(sparse)} partite "
+          f"(MAE atteso 1X2 ~{mae_1x2:.4f}, O/U ~{mae_ou:.4f})")
+    print("   ⚠️  STIME di modello (bakeoff logit pooled, Fase 69): vedi docs/DATI.md §Stime.")
+    experiment_log.append_run(experiment_log.make_record(
+        config={"source": "build_estimates_open_sparse",
+                "model": "logit_pooled(chiusura->apertura)",
+                "bakeoff_metodi": ["identita", "lineare_pooled", "logit_pooled",
+                                  "lineare_perlega", "blend_identita_logit"],
+                "n_folds": N_FOLDS},
+        metrics_dict={"n_estimates": int(len(sparse)),
+                      "mae_5fold_1x2": mae_1x2, "mae_5fold_ou": mae_ou},
         fingerprint=experiment_log.data_fingerprint(fit),
     ))
     print(f"Registrati in experiments/runs.jsonl. ({time.time()-t0:.0f}s)")

@@ -109,6 +109,62 @@ def test_squad_value_non_contamina_gli_snapshot(squad_est):
         assert "squad_value_est" not in snap.columns
 
 
+@pytest.fixture(scope="module")
+def open_sparse() -> pd.DataFrame:
+    if not (loader.ESTIMATES_DIR / "open_sparse_1x2_ou.csv").exists():
+        pytest.skip("stime non generate (scripts/build_estimates.py)")
+    return loader.read_open_sparse_estimates()
+
+
+def test_open_sparse_schema(open_sparse):
+    assert list(open_sparse.columns) == [
+        "league", "season", "date", "home_team", "away_team",
+        "p_home_open_est", "p_draw_open_est", "p_away_open_est",
+        "p_over25_open_est", "p_under25_open_est"]
+    # ogni riga stima ALMENO uno dei due mercati (mai una riga inutile)
+    has_1x2 = open_sparse["p_home_open_est"].notna()
+    has_ou = open_sparse["p_over25_open_est"].notna()
+    assert (has_1x2 | has_ou).all()
+
+
+def test_open_sparse_probabilita_plausibili(open_sparse):
+    triple = open_sparse[["p_home_open_est", "p_draw_open_est",
+                          "p_away_open_est"]].dropna()
+    assert np.isclose(triple.sum(axis=1), 1.0, atol=1e-3).all()
+    assert ((triple >= 0.0) & (triple <= 1.0)).all().all()
+    binary = open_sparse[["p_over25_open_est", "p_under25_open_est"]].dropna()
+    assert np.isclose(binary.sum(axis=1), 1.0, atol=1e-3).all()
+
+
+def test_open_sparse_copre_esattamente_i_buchi_sparsi(open_sparse):
+    """Le righe stimate devono corrispondere ESATTAMENTE alle celle NaN degli
+    snapshot che NON fanno parte del buco sistemico O/U 2017-19 (quello ha
+    un piano di raccolta dati dedicato, non va confuso con questa stima)."""
+    from scripts.build_estimates import SYSTEMIC_OU_SEASONS
+
+    keys_est = set(zip(open_sparse["league"], open_sparse["season"],
+                       open_sparse["home_team"], open_sparse["away_team"]))
+    keys_holes = set()
+    for lg in ["serie_a", "premier_league", "la_liga"]:
+        snap = database.read_snapshot(database.snapshot_path(lg))
+        snap["season"] = snap["season"].astype(str)
+        need_1x2 = snap["odds_home_open"].isna() & snap["odds_home"].notna()
+        need_ou = (snap["odds_over25_open"].isna()
+                  & ~snap["season"].isin(SYSTEMIC_OU_SEASONS)
+                  & snap["odds_over25"].notna())
+        holes = snap[need_1x2 | need_ou]
+        keys_holes |= set(zip([lg] * len(holes), holes["season"],
+                              holes["home_team"], holes["away_team"]))
+    assert keys_est == keys_holes
+
+
+def test_open_sparse_non_contamina_gli_snapshot(open_sparse):
+    for lg in ["serie_a", "premier_league", "la_liga"]:
+        snap = database.read_snapshot(database.snapshot_path(lg))
+        assert "p_home_open_est" not in snap.columns
+        assert "p_over25_open_est" not in snap.columns
+
+
 def test_stima_diversa_dalla_linea_prematch(estimates):
     """La stima deve MUOVERSI rispetto alla linea pre-match (se coincidesse
     sempre, il builder starebbe ricopiando l'input invece di stimare)."""
