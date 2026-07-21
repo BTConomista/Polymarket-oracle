@@ -311,6 +311,21 @@ def main():
                 page = get(session, BASE + m["href"])
                 if page is not None:
                     (debug_dir / f"matchpage_{m['match_id']}.html").write_text(page.text)
+                    if i == 1:
+                        # diagnostica stampata nel LOG (l'artifact zip non e'
+                        # sempre scaricabile dalla sessione che lancia il run):
+                        # ogni link/percorso che sembra portare alle quote.
+                        hrefs = sorted(set(re.findall(
+                            r'href=["\']([^"\']*(?:odds|1x2|over-under|ou)[^"\']*)["\']',
+                            page.text, re.I)))
+                        log(f"  DIAG link 'odds/1x2/ou' nella pagina-partita ({len(hrefs)}):")
+                        for h in hrefs[:30]:
+                            log(f"    {h}")
+                        data_attrs = sorted(set(re.findall(
+                            r'data-[a-z-]*(?:odds|match|id)[a-z-]*=["\']([^"\']{1,60})["\']',
+                            page.text, re.I)))[:20]
+                        log(f"  DIAG attributi data-* rilevanti ({len(data_attrs)}): {data_attrs}")
+                        log(f"  DIAG lunghezza pagina: {len(page.text)} caratteri")
             polite_sleep(args.throttle_min, args.throttle_max)
             ajax_url = f"{BASE}/match-odds/{m['match_id']}/1/ou/"
             resp = get(session, ajax_url, referer=BASE + m["href"], ajax=True)

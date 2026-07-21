@@ -54,7 +54,7 @@ jobs:
           LEAGUE: ${{ inputs.league_season || 'serie-a-2017-2018' }}
         run: |
           if [ "${{ github.event_name }}" != "workflow_dispatch" ] || [ "${{ inputs.probe }}" = "true" ]; then
-            python scripts/scrape_betexplorer.py --league "$LEAGUE" --probe-limit 10 --dump-first 10
+            python scripts/scrape_betexplorer.py --league "$LEAGUE" --probe-limit 2 --dump-first 2
           else
             python scripts/scrape_betexplorer.py --league "$LEAGUE" --dump-first 1
           fi

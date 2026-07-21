@@ -1,1 +1,1 @@
-probe-2 serie-a-2017-2018 10-partite  # AJAX /match-odds/{id}/1/ou/ risponde 404: dump della pagina-partita grezza per trovare l'endpoint vero
+probe-3 serie-a-2017-2018 2-partite-diagnostica  # stampa nel log i link odds/1x2/ou trovati nella pagina-partita
