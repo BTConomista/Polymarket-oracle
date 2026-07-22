@@ -7349,10 +7349,29 @@ REALE (era solo mal etichettato), solo la chiusura è mancante — la caccia
 esterna (CACCIA_OU_2017_19.md) ha ora un bersaglio più stretto e onesto.
 (3) La correzione ha reso la politica quote **più semplice** (niente masking,
 insiemi disgiunti) oltre che più corretta: un raro caso in cui il fix riduce
-il codice. (4) Impatto a valle da tenere presente: la chiusura O/U del 2017-19
-è ora NaN negli snapshot — ogni analisi che ne ha bisogno usa l'apertura reale
+il codice. (4) Impatto a valle (auditato): la chiusura O/U del 2017-19 è ora
+NaN negli snapshot — ogni analisi che ne ha bisogno usa l'apertura reale
 (`odds_over25_open`) o la stima (`data/estimates/`), mai più una pre-match
 scambiata per chiusura.
+
+**Audit dell'impatto a valle (fatto, non solo dichiarato).** 14 script storici
+(Fasi 50/51/52: `_fase52_common`, `_run_fase50_mi_*`, `_run_fase51_*`,
+`_run_gbm_*`, `_run_season_window`, `_run_seasonal_profile`) includono il 1819
+nel loro range e usano l'O/U: prima leggevano `odds_over25` per il 1819 (di
+fatto un'apertura `BbAv` mal etichettata), ora NaN. Verificato che la
+degradazione è **graziosa**: caricano l'O/U con `dropna`/`isfinite` (es.
+`_fase52_common.load_with_rates` filtra `ok = isfinite(...odds_over/under)`),
+quindi le righe 1819 senza chiusura O/U vengono **escluse**, non usate sbagliate
+né causano crash. La cache che alimenta quegli script (`outputs/db_base_*.csv`)
+**non è versionata** ed è rigenerata da `_gen_cache.py` (che legge lo snapshot
+vivo): nessun dato vecchio mal etichettato persiste su disco. I run già
+registrati in `runs.jsonl` sono **record storici immutati** (non si ri-scrivono).
+Le conclusioni ADOTTATE non dipendono dall'etichetta O/U del solo 1819 (1/8
+delle stagioni; e per l'O/U la conclusione era "non si batte la chiusura" —
+conservativa proprio sotto la mis-etichettatura, che rendeva la linea 1819 meno
+affilata e quindi più facile da battere: non battuta lo stesso). Un'eventuale
+ri-validazione completa dei sotto-risultati O/U delle Fasi 50-52 escludendo il
+1819 è disponibile su richiesta, ma non cambia le adozioni.
 
 ### 📐 Il modello in dettaglio
 

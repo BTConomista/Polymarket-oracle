@@ -167,10 +167,12 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   quelle stagioni (coperta dalla stima `ou_close_2017_19.csv`); la caccia al
   dato vero di chiusura resta aperta → **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
 - ~~**quote O/U/1X2 di apertura mancanti sparse**~~ → **FATTO (Fase 69)**: le
-  3 partite sparse (2 di 1X2, 1 di O/U isolata in 2020-21, fuori dal buco
-  sistemico 2017-19) sono stimate in `open_sparse_1x2_ou.csv` (vedi tabella
-  sopra). Un tentativo di ricerca esterna diretta (BetExplorer/OddsPortal da
-  IP italiano) non ha trovato nulla per il blocco geo/ADM — vedi
+  **2 partite sparse** (Torino-Fiorentina recupero 1X2+O/U; Verona-Genoa O/U
+  isolata 2020-21) sono stimate in `open_sparse_1x2_ou.csv` (vedi tabella
+  sopra). *(Erano 3: dalla Fase 73 Alaves-Sociedad ha l'apertura 1X2 reale e la
+  sua stima è stata ritirata.)* Un tentativo di ricerca esterna diretta
+  (BetExplorer/OddsPortal da IP italiano) non ha trovato nulla per il blocco
+  geo/ADM — vedi
   `docs/MANUALE_SOPRAVVIVENZA.md`.
 - eventuali linee di mercati mai pubblicati (GG/NG storico): molto più
   incerto, servirebbe una validazione esterna.
