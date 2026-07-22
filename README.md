@@ -1552,6 +1552,22 @@ chiusa negativa (dettagli in [diario, Fase 71](docs/DIARIO.md) e
 (OddsPortal headless con login) o accettare le stime attuali come tetto dei
 dati per l'O/U 2017-19.
 
+**Spremuta al massimo la stima E3 pooled — imbattuta (Fase 72).** Scelta
+dell'utente: non rincorrere Fase D (rischio/complessità del login), ma
+migliorare il più possibile la stima già pubblicata prima di accettarla.
+Bakeoff di 4 leve nuove e ortogonali sullo stesso protocollo della Fase 62-bis
+(`scripts/_run_fase72_ou_close_est2.py`): interazione tra i movimenti 1X2
+(MAE 0.0117, invariato), effetto di calendario/stagione (0.0117, invariato),
+ridge — peggiora monotonicamente con α (0.0119→0.0155, conferma che non è
+overfitting) — e gradient boosting sulle stesse feature (0.0160, +37%,
+stessa conclusione delle Fasi 21-23 su un compito diverso). **E3 pooled
+resta il migliore**: la stima pubblicata non cambia (dettagli in
+[diario, Fase 72](docs/DIARIO.md)). ⚠️ **Promemoria per il futuro**: la
+Fase A/B hanno esaurito le vie economiche disponibili OGGI, non tutte le vie
+possibili — vedi il promemoria esplicito in testa a
+[`docs/CACCIA_OU_2017_19.md`](docs/CACCIA_OU_2017_19.md) e la voce dedicata in
+[`docs/PISTE.md`](docs/PISTE.md).
+
 ### Congestione vera — calendario di club completo (Fase 4e)
 
 Il riposo di `add_rest_days` vede solo le date di Serie A; la **congestione

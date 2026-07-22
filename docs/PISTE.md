@@ -8,7 +8,7 @@ file deve trovare non "cosa manca" ma **"cosa potrei provare dopo, con che
 cosa, e perché potrebbe funzionare"**. La parte operativa (rete, strumenti,
 Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
-l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 70.
+l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 72.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 
@@ -192,8 +192,22 @@ modello è già scritto per generalizzarci (matrice condizionabile); manca
 solo il dato. Indicato come l'avversario meno efficiente più credibile,
 mai nemmeno abbozzato.
 
-*Le quote O/U 2017-19 (4.564 celle, close+open) hanno già un piano
-dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).*
+### 19. Quote O/U 2017-19 (4.564 celle, close+open) — dato vero, non solo stima
+**Dato**: da procurare — piano dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).
+**Stato (luglio 2026)**: Fase A (dataset già pronti su Kaggle/GitHub/HF) e
+Fase B (scraping BetExplorer) **entrambe chiuse negative** — confermato per
+ispezione diretta, non solo per assenza di risultati. La stima esistente
+(E3 pooled, Fase 62-bis) è stata spremuta al massimo con 4 leve nuove
+ortogonali (Fase 72): nessuna la batte, resta il tetto pratico. **Non è un
+buco chiuso per sempre**: solo le vie economiche note oggi sono esaurite.
+**Da riprovare in futuro** (promemoria esplicito, richiesta utente):
+ri-tentare la Fase A periodicamente (nuovi dataset compaiono nel tempo su
+Kaggle/GitHub/HF — non ripartire dai 6 già controllati, cercarne con fonte
+diversa da football-data.co.uk); valutare la Fase D (OddsPortal headless con
+login) se emerge un modo a basso rischio di gestire le credenziali; valutare
+fonti a pagamento se il progetto passa a un uso più operativo. Dettagli
+completi (numeri, candidati testati, criteri di accettazione) in
+`CACCIA_OU_2017_19.md` e nel diario (Fasi 71-72).
 
 ## 5 · Fatti misurati che condizionano il modeling futuro
 

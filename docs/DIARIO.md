@@ -7161,6 +7161,109 @@ backtest/tuning — stesso trattamento della Fase B).
 
 ---
 
+## Fase 72 — Spremere ANCORA la stima E3 pooled (richiesta esplicita: "al massimo")
+
+**Obiettivo.** Con Fase A e Fase B chiuse negative, l'utente sceglie di NON
+rincorrere Fase D (OddsPortal headless, login) e chiede invece di migliorare
+il più possibile la stima già pubblicata (E3 pooled, Fase 62-bis, MAE
+walk-forward 0.0117) prima di accettarla come tetto dei dati per il 2017-19,
+più un promemoria esplicito per il futuro (vedi PISTE.md e
+CACCIA_OU_2017_19.md).
+
+**Ragionamento/ipotesi.** E3 pooled è lineare in 4 feature (O/U apertura +
+movimento 1X2 nei 3 esiti). Quattro leve ortogonali, mai provate, potrebbero
+catturare segnale che il modello lineare lascia sul tavolo: (1) curvatura —
+un'interazione tra i movimenti home/away; (2) un effetto di calendario reale
+già trovato altrove (Fase 30: il vantaggio-casa crolla a fine stagione); (3)
+regolarizzazione — controllo di robustezza, anche se con 5 parametri su
+~8000 righe l'overfitting è già improbabile; (4) non-linearità generica via
+gradient boosting sulle stesse 4 feature — le Fasi 21-23 hanno già trovato
+che il GBM non batte modelli lineari su mercato/esiti, ma qui il compito è
+diverso (mimare un prezzo di chiusura, non predire un esito), quindi vale il
+test invece di assumere lo stesso risultato per analogia.
+
+**Alternative considerate.** Scartata la regressione L1/MAE-diretta (via
+programmazione lineare): l'obiettivo di valutazione è già MAE ma il fit OLS
+in logit minimizza L2 — un mismatch reale — ma il costo (LP con ~16.000
+vincoli per fold, ripetuto su più fold/candidati) supera il guadagno atteso
+(i residui in spazio logit non hanno code pesanti evidenti, Fase 62-bis).
+Scartato un lag/rolling della linea O/U stessa: nel 2017-19 non esiste una
+seconda lettura O/U pre-match da cui derivarlo.
+
+**Cosa abbiamo fatto.** Stesso protocollo esatto di Fase 62-bis (stesse
+righe 2019-20+/3 leghe, stesso walk-forward `WF_TEST`, stesso pooling
+cross-lega, stesso bootstrap B=10000) — numeri confrontabili 1:1 —
+(`scripts/_run_fase72_ou_close_est2.py`, 1 run `source=fase72_ou_close_est2`):
+
+| candidato | MAE medio 3 leghe |
+|---|--:|
+| **E3 pooled** (riferimento, Fase 62-bis) | **0.0117** |
+| E5 = E3 + dH·dA (interazione) | 0.0117 |
+| E6 = E3 + season_frac (calendario) | 0.0117 |
+| E7 = E3 ridge, α=0.3 | 0.0119 |
+| E7 = E3 ridge, α=1.0 | 0.0124 |
+| E7 = E3 ridge, α=3.0 | 0.0135 |
+| E7 = E3 ridge, α=10.0 | 0.0155 |
+| E8 = GBM(feature di E3), pooled | 0.0160 |
+
+**Risultato.** **E3 pooled resta imbattuto.** L'interazione (E5) e il
+calendario (E6) non cambiano il MAE alla quarta cifra: il movimento 1X2 già
+cattura tutto ciò che quelle due leve avrebbero potuto aggiungere — nessuna
+curvatura o effetto di stagione residuo. Il ridge (E7) **peggiora
+monotonicamente** con α: conferma diretta che il problema non è overfitting
+(la regolarizzazione toglie segnale vero, non rumore) — atteso, dato il
+rapporto righe/parametri (~1600:1), ma verificato invece che assunto. Il GBM
+(E8) è nettamente peggiore (+37% di MAE): stessa conclusione delle Fasi
+21-23 (il tetto è informativo, non di forma funzionale), ora confermata
+anche su questo compito specifico (mimare un prezzo, non predire un esito).
+
+**Lezione/cosa ne consegue.** (1) E3 pooled non è solo "il migliore provato
+finora": è stato messo sotto pressione con 4 leve ortogonali indipendenti e
+nessuna lo sposta — è un tetto **informativo** più solido di quanto fosse
+prima di questa fase (che aveva un solo confronto, M4, nella Fase 62-bis
+originale). (2) La stima pubblicata (`data/estimates/ou_close_2017_19.csv`)
+**non cambia**: stessi coefficienti, stesso MAE atteso 0.012, nessuna
+rigenerazione necessaria. (3) Come richiesto dall'utente, il canale "cerca
+meglio i dati reali" resta esplicitamente APERTO per il futuro (non chiuso
+per sempre): la Fase A/B hanno esaurito le vie economiche/sicure disponibili
+OGGI, non tutte le vie possibili — nuovi dataset possono comparire su
+Kaggle/GitHub/HF nel tempo, e la Fase D (OddsPortal login) resta una
+candidata non tentata. Promemoria scritto in `docs/PISTE.md` e in testa a
+`docs/CACCIA_OU_2017_19.md`.
+
+### 📐 Il modello in dettaglio
+
+Nessuna formula nuova per E3 (vedi Fase 62-bis). Le leve nuove:
+
+```
+E5:  logit(p_close) = a + b·logit(p_open) + cH·ΔH + cD·ΔD + cA·ΔA + cHA·(ΔH·ΔA)
+E6:  logit(p_close) = a + b·logit(p_open) + cH·ΔH + cD·ΔD + cA·ΔA + cS·season_frac
+     season_frac = (rank(data) - 1) / (n_partite_lega_stagione - 1)   in [0,1]
+E7:  stesso disegno di E3; coef = (AᵀA + αP)⁻¹ Aᵀy,  P = diag(0,1,1,1,1)
+     (intercetta non penalizzata, standard per la ridge)
+E8:  GradientBoostingRegressor(n_estimators=100, max_depth=2, lr=0.05,
+     subsample=0.8) su [logit(p_open), ΔH, ΔD, ΔA] → logit(p_close)
+```
+
+**Perché quei valori.** `season_frac` è un rank normalizzato (non la data
+grezza) per essere confrontabile tra leghe con calendari diversi. Gli α della
+ridge sono una grid coarse (0.3→10, decadi mezze) attorno a 1 — sufficiente
+per vedere la direzione (monotona, nessun minimo interno da cercare più
+fine). Il GBM usa alberi shallow (`max_depth=2`) e `subsample=0.8` proprio
+per limitare l'overfitting che ci si aspetterebbe di più da lui che da un
+modello lineare a 5 parametri — anche così, perde nettamente. **MAE
+0.0117 di E3 pooled è identico, alla quarta cifra, al valore già registrato
+nella Fase 62-bis**: conferma che l'implementazione qui è la stessa esatta
+pipeline (stesso fingerprint dati, stesso protocollo), non solo un numero
+simile per caso.
+
+**Riproducibilità.** `python scripts/_run_fase72_ou_close_est2.py` (offline,
+~20s; richiede `scikit-learn` solo per E8 — se assente, lo salta e prosegue
+con gli altri candidati). Registrato in `runs.jsonl`
+(`source=fase72_ou_close_est2`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

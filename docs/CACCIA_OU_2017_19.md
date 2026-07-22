@@ -7,6 +7,25 @@ stima, ma sostituibili con la verità — quelle di **chiusura** delle stagioni
 cercare, DOVE, con quale piano, e contiene un **prompt pronto** da dare a
 un'AI con accesso libero al web.
 
+> ⚠️ **Promemoria per il futuro (luglio 2026).** Fase A (dataset già pronti)
+> e Fase B (scraping BetExplorer) sono **entrambe chiuse negative** — vedi
+> §3. Su richiesta dell'utente, invece di rincorrere la Fase D (OddsPortal
+> headless con login, rischio/complessità più alta) si è scelto di spremere
+> al massimo la stima esistente (Fase 72, `docs/DIARIO.md`): confermata
+> come tetto pratico. **Questo NON significa che il dato vero sia
+> irraggiungibile per sempre** — solo che le vie economiche/sicure note OGGI
+> sono esaurite. Da riprovare in futuro, senza ripartire da zero:
+> - **Fase A, di tanto in tanto**: nuovi dataset compaiono su Kaggle/GitHub/
+>   Hugging Face nel tempo (candidati già controllati e scartati sono elencati
+>   in §3 — non ripartire da quelli, cercarne di nuovi o con fonte diversa da
+>   football-data.co.uk);
+> - **Fase D**: OddsPortal headless con login resta la pista con la
+>   probabilità più alta di successo, mai tentata per il costo/rischio
+>   (credenziali in un secret) — riconsiderarla se emerge un account "usa e
+>   getta" a basso rischio o un partner che lo faccia per noi;
+> - **Fonti a pagamento** (§2.D del piano): mai valutate a fondo (costo vs
+>   2.280 partite) — se il progetto passa a un uso più operativo, rivalutare.
+
 ---
 
 ## 1 · Cosa ci serve, esattamente
