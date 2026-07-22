@@ -29,15 +29,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data import loader                                   # noqa: E402
 from src.evaluation import experiment_log                     # noqa: E402
 # Riuso ESATTO delle funzioni della Fase 26 (stesso protocollo, numeri 1:1)
+from scripts import _run_market_implied as MI                 # noqa: E402
 from scripts._run_market_implied import (                     # noqa: E402
     BINARY, B, MAXG, RHO_MAIN, SEED, baseline_ll, boot,
     dc_lambda_mu, eval_markets, invert_all,
 )
 from src.config import LEAGUE_CONFIGS                         # noqa: E402
 
-TEST_SEASONS = ["2021", "2122", "2223", "2324", "2425", "2526"]
-LEAGUES = ["premier_league", "la_liga"]
+# TUTTE le stagioni con chiusura O/U reale (2019-20 in poi): il market-implied
+# non richiede training, quindi la finestra e' limitata solo dalla disponibilita'
+# della chiusura. Fase 26 usava 2021-2526 per la Serie A -> qui esteso a 1920
+# (2019-20, la prima con chiusura reale) su TUTTE e 3 le leghe. Il 2017-19 non ha
+# chiusura reale (Fase 73) ed e' gia' coperto DALL'APERTURA nella Fase 75.
+TEST_SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
+LEAGUES = ["serie_a", "premier_league", "la_liga"]
 ANCHORS = {"over_2.5"}
+
+# Le funzioni importate iterano sul TEST_SEASONS del LORO modulo: lo allineo a
+# questa finestra estesa (altrimenti il 1920 verrebbe ignorato).
+MI.TEST_SEASONS = TEST_SEASONS
 
 
 def _worker(args):
