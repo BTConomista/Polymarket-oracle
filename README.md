@@ -1533,6 +1533,25 @@ impronta dati invariata; l'O/U di quelle 2 stagioni resta senza apertura
 premier_league la_liga` (bundle). Dettagli e tabella completa per stagione nel
 [diario, Fase 61](docs/DIARIO.md).
 
+### Caccia alle quote O/U 2017-19 — Fase A: dataset già pronti, negativa (Fase 71)
+
+Riprendendo `docs/CACCIA_OU_2017_19.md` (Fase B, scraping BetExplorer, già
+chiusa negativa), tentata la Fase A — dataset già scrappati (Kaggle/GitHub/
+Hugging Face/Zenodo) che coprano O/U 2.5 apertura+chiusura 2017-18/2018-19.
+`WebSearch` conferma (fonte indipendente) che football-data.co.uk — la
+fonte-madre di quasi ogni dataset di quote calcio in giro — raccoglie due
+istantanee apertura/chiusura **solo dalla stagione 2019/20**; probe
+diagnostico via Actions (`scripts/probe_kaggle_ou_datasets.py`, run
+[29881936699](https://github.com/BTConomista/Polymarket-oracle/actions/runs/29881936699))
+su 6 dataset Kaggle candidati conferma per ispezione diretta delle colonne:
+**tutti** quelli con dati quote sono ricostruzioni di football-data.co.uk, e
+su ogni file 2017-19 delle 3 leghe hanno **una sola** istantanea O/U
+(`BbOU`/`BbAv>2.5`/`BbAv<2.5`), zero apertura/chiusura distinte. Fase A
+chiusa negativa (dettagli in [diario, Fase 71](docs/DIARIO.md) e
+`docs/CACCIA_OU_2017_19.md`); con la Fase B già chiusa, restano solo Fase D
+(OddsPortal headless con login) o accettare le stime attuali come tetto dei
+dati per l'O/U 2017-19.
+
 ### Congestione vera — calendario di club completo (Fase 4e)
 
 Il riposo di `add_rest_days` vede solo le date di Serie A; la **congestione

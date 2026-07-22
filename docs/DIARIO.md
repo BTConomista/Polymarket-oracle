@@ -7067,6 +7067,100 @@ bug di bordo: con 0 buchi il costruttore andava in errore su
 
 ---
 
+## Fase 71 — Caccia O/U 2017-19, Fase A: dataset già pronti (Kaggle/GitHub/HF), negativa
+
+**Obiettivo.** Riprendere il piano di `docs/CACCIA_OU_2017_19.md` (Fase B,
+scraping BetExplorer, era già chiusa negativa) partendo dal passo più
+economico non ancora tentato: la Fase A, ricognizione di dataset già
+scrappati che coprano O/U 2.5 apertura+chiusura per Serie A/Premier/La Liga
+2017-18/2018-19, prima di investire in scraping diretto (Fase D, OddsPortal,
+richiede login).
+
+**Ragionamento/ipotesi.** Se qualcuno ha già raccolto e ripubblicato lo
+storico giusto (Kaggle, un repo GitHub con CSV committati, un dataset
+accademico su Zenodo/Hugging Face), è molto più economico di ri-scrappare.
+Ipotesi da verificare: la maggior parte dei dataset di quote calcio in giro
+ripubblica football-data.co.uk — se quella fonte non ha mai avuto l'apertura
+O/U per il 2017-19 (sospetto già in `docs/DATI.md` §2), ogni suo derivato
+eredita lo stesso buco, indipendentemente da quanti se ne trovano.
+
+**Alternative considerate.** (1) Cercare a mano su Kaggle/GitHub via
+`WebSearch` (funzionante in sessione) e fidarsi delle descrizioni — troppo
+debole: le descrizioni Kaggle non dichiarano quasi mai lo schema colonne
+esatto. (2) Leggere le pagine dataset con `WebFetch` — tentato, ma il tool
+rispondeva 403 anche su `example.com` (bug noto, non un blocco dei siti,
+vedi `docs/MANUALE_SOPRAVVIVENZA.md`): scartato per quel giro. (3) **Scelta
+fatta**: `WebSearch` per la ricognizione + un probe via runner GitHub Actions
+(stesso canale-bypass della Fase 67) che scarica i candidati con `kagglehub`
+e ne ispeziona le colonne davvero, senza fidarsi di nulla di non verificato.
+
+**Cosa abbiamo fatto.**
+1. `WebSearch` mirato (query su oddsportal/football-data/Kaggle/Zenodo/
+   OddsPortal opening-odds history). Trovata conferma indipendente dai nostri
+   dati: football-data.co.uk raccoglie due istantanee apertura/chiusura
+   **solo dalla stagione 2019/20** (prima, un'unica media Betbrain) — combacia
+   esattamente col buco già documentato. Nessun repo GitHub con CSV pronti
+   (solo scraper), niente su Hugging Face (`hub_repo_search`, più query),
+   un dataset accademico Zenodo (Whelan & Hegarty 2024) copre 1X2 e Asian
+   handicap, non O/U — scartato.
+2. Probe diagnostico via Actions (`scripts/probe_kaggle_ou_datasets.py`,
+   workflow `kaggle-ou-probe.yml`) su 6 dataset Kaggle candidati (i più
+   citati nei risultati di ricerca per "storico quote calcio"): scarica con
+   `kagglehub` (senza credenziali, stesso pattern Fase 67) e stampa colonne +
+   range date nel log — **nessun dato committato**, solo diagnostica (run
+   [29881936699](https://github.com/BTConomista/Polymarket-oracle/actions/runs/29881936699)).
+
+**Risultato.** Negativo su tutti e 6. I dataset con colonne quote
+(`mexwell/historical-football-resultsbetting-odds-data` — mirror completo
+football-data, centinaia di file stagione×lega; `louischen7/football-
+results-and-betting-odds-data-of-epl`; `thedevastator/uncovering-betting-
+patterns-in-the-premier-leagu`) sono ricostruzioni dirette di
+football-data.co.uk: **ogni singolo file** che copre 2017-18/2018-19 per le
+3 leghe (`E0`/`I1`/`SP1`) ha esattamente `PSH/PSD/PSA` + `PSCH/PSCD/PSCA`
+(Pinnacle 1X2 apertura/chiusura, già nostri dalla Fase 61) e **una sola**
+istantanea O/U — `BbOU, BbMx>2.5, BbAv>2.5, BbMx<2.5, BbAv<2.5` — zero
+colonne apertura/chiusura O/U distinte. Gli altri 3 (`eladsil`,
+`ahmadasadi00`, `rayenjlassi`) non hanno proprio colonne O/U. Non è
+un'inferenza dalla sola ricerca web: è l'ispezione diretta delle colonne di
+ogni file 2017-19 dei 6 candidati, che conferma il meccanismo sospettato —
+il buco è nella fonte a monte (football-data.co.uk non ha mai raccolto
+l'apertura O/U per quelle stagioni), quindi ogni dataset che la ripubblica
+eredita lo stesso buco, per quanti se ne trovino.
+
+**Lezione/cosa ne consegue.** (1) Una ricerca web che "conferma" un'ipotesi
+sulla fonte a monte non basta da sola: senza l'ispezione diretta delle
+colonne (qui via Actions, perché Kaggle è irraggiungibile dalla sessione
+cloud) si rischiava di scartare un dataset valido per pigrizia o, peggio,
+accettarne uno cattivo fidandosi della descrizione. (2) Fase A e Fase B sono
+ora **entrambe chiuse negative**: i due canali "economici" del piano
+(dataset già pronti, scraping diretto d'archivio) sono esauriti. Resta solo
+la Fase D (OddsPortal headless con login, rischio/complessità più alta) o
+accettare le stime attuali (Fase 62-bis, MAE atteso ~0.012 chiusura /
+Fase 69 ~0.016-0.020 le poche righe sparse) come tetto dei dati per l'O/U
+2017-19 — decisione da prendere con l'utente, non un default silenzioso.
+
+### 📐 Il modello in dettaglio
+
+Nessuna nuova matematica: fase di ricognizione dati, non di modellazione. I
+controlli applicati sono quelli già definiti in `docs/CACCIA_OU_2017_19.md`
+§1 (criteri di accettazione: linea 2.5 esatta, quote decimali >1.0, apertura
+≠ chiusura in ≥90% delle righe, overround `1/over + 1/under > 1` su ogni
+riga, copertura ≥95%, provenienza dichiarata) — nessuno dei 6 candidati è
+arrivato al punto di doverli applicare, perché nessuno ha nemmeno la coppia
+di colonne apertura/chiusura O/U richiesta dallo schema §1. Il probe
+(`scripts/probe_kaggle_ou_datasets.py`) si limita a un pattern-match sui nomi
+colonna (`OU_HINTS`, `OPEN_CLOSE_HINTS`) e a un parse di `pandas.to_datetime`
+sulla colonna data per il range stagionale — diagnostica, non stima.
+
+**Riproducibilità.** `python scripts/probe_kaggle_ou_datasets.py` (richiede
+`kagglehub`, rete verso Kaggle — non disponibile dalla sessione cloud, va
+lanciato dal runner Actions via il trigger `.github/kaggle-ou-probe-trigger`
+o `workflow_dispatch` su `kaggle-ou-probe.yml`); nessun dato scritto negli
+snapshot, nessuna riga in `runs.jsonl` (fase di ricognizione, non un
+backtest/tuning — stesso trattamento della Fase B).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

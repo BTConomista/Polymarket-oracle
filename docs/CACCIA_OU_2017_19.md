@@ -102,10 +102,52 @@ spiaggia, valutare costo vs 2.280 partite.
 
 | fase | azione | costo | go/no-go |
 |---|---|---|---|
-| **A** | ricognizione dataset esistenti (prompt AI qui sotto, oppure a mano) | 1-2 ore | trovato un dataset che passa i criteri §1 → salta a INGRESSO |
+| **A** | ❌ **FALLITA** — ricognizione dataset esistenti (WebSearch + probe Kaggle via Actions: vedi sotto) | 1 ora | nessun dataset passa i criteri §1 — chiusa |
 | **B** | ❌ **FALLITA** — tracer BetExplorer via GitHub Actions (probe live, 5 giri: vedi sotto) | mezza giornata | copertura 0% — chiusa, non scala |
-| **C** | scala alle 6 (lega, stagione); bundle `files/ou_2017_19_bundle.json` | — | **salta**: B non ha prodotto dati da scalare |
-| **D** | OddsPortal headless (solo se B fallisce) | 2+ giorni, fragile | B è fallita → candidata, ma con un limite noto (vedi sotto) |
+| **C** | scala alle 6 (lega, stagione); bundle `files/ou_2017_19_bundle.json` | — | **salta**: né A né B hanno prodotto dati da scalare |
+| **D** | OddsPortal headless (solo se B fallisce) | 2+ giorni, fragile | A e B sono fallite → candidata, ma con un limite noto (vedi sotto) |
+
+**Esito Fase A (WebSearch + probe Kaggle via Actions).** Prima ricerca web
+diretta (`WebSearch`, funzionante da questa sessione): confermato — fonte
+indipendente dai nostri dati — che **football-data.co.uk** (la fonte-madre di
+quasi ogni dataset di quote calcio ripubblicato su Kaggle/GitHub) ha iniziato a
+raccogliere due istantanee apertura/chiusura **solo dalla stagione 2019/20**
+(prima, un'unica rilevazione media via Betbrain): combacia esattamente col
+buco già in `docs/DATI.md`. Nessun repo GitHub con CSV già pronti (solo
+scraper/tool, zero dati 2017-19 committati); nulla su Hugging Face (`hub_repo_search`,
+query multiple); un dataset accademico su Zenodo (Whelan & Hegarty 2024,
+"A Tale of Two Markets") copre 1X2 e Asian handicap, non O/U 2.5 — scartato.
+
+Per verificare i 6 dataset Kaggle più promettenti senza fidarsi delle sole
+descrizioni (WebFetch era inutilizzabile in sessione: 403 anche su
+`example.com`, bug noto del tool, non un blocco del sito — vedi
+`docs/MANUALE_SOPRAVVIVENZA.md`), probe diagnostico via runner Actions
+(`scripts/probe_kaggle_ou_datasets.py`, workflow
+`.github/workflows/kaggle-ou-probe.yml`, trigger
+`.github/kaggle-ou-probe-trigger`): scarica ogni dataset con `kagglehub` e
+stampa nel log colonne/copertura, senza committare nulla. Candidati:
+`mexwell/historical-football-resultsbetting-odds-data` (mirror completo
+football-data, tutte le divisioni/stagioni), `louischen7/football-results-
+and-betting-odds-data-of-epl`, `thedevastator/uncovering-betting-patterns-
+in-the-premier-leagu`, `eladsil/football-games-odds`, `ahmadasadi00/football-
+betting-odds`, `rayenjlassi/more-than-20k-footballsoccer-match` (run
+[29881936699](https://github.com/BTConomista/Polymarket-oracle/actions/runs/29881936699)).
+
+**Risultato: negativo su tutti e 6.** I quattro con colonne quote (mexwell,
+louischen7, thedevastator, e le stagioni-EPL dentro eladsil/ahmadasadi00/
+rayenjlassi non hanno affatto colonne quote) sono ricostruzioni dirette di
+football-data.co.uk — stesso schema colonne, incluso **ogni file** che copre
+2017-18/2018-19 per le 3 leghe (`E0`=Premier, `I1`=Serie A, `SP1`=La Liga):
+`PSH/PSD/PSA` + `PSCH/PSCD/PSCA` (Pinnacle 1X2 apertura/chiusura — li abbiamo
+già, Fase 61) e **una sola** istantanea O/U, `BbOU, BbMx>2.5, BbAv>2.5,
+BbMx<2.5, BbAv<2.5` — zero colonne apertura/chiusura O/U distinte, su
+nessuna delle righe ispezionate. Conferma diretta (non solo per inferenza
+dalla ricerca web) che il buco è strutturale nella fonte a monte, non un
+limite di un singolo dataset: chiunque riesporti football-data.co.uk eredita
+lo stesso buco.
+
+**Fase A chiusa, negativa** (principio §1.4: si documenta anche l'esito
+negativo). Nessun dato ingresa negli snapshot.
 
 **Esito Fase B (probe live, runner GitHub Actions, non da questa sessione
 cloud).** Il sito è raggiunto correttamente (pagina risultati OK, 380
