@@ -7414,6 +7414,92 @@ poco a una predizione segnata già al tetto.
 
 ---
 
+## Fase 74 — Ri-validazione di TUTTI i calcoli sui dati corretti (richiesta utente)
+
+**Obiettivo.** Dopo la correzione dei dati (Fase 73: O/U 2017-19 spostato da
+chiusura ad apertura, chiusura ora NaN), ri-controllare che nessun risultato
+pubblicato/adottato cambi in modo da invalidarne le conclusioni.
+
+**Il diff dei dati bounda tutto il lavoro.** Confronto cella-per-cella dello
+snapshot pre/post-Fase 73 (backup congelato): cambiano **SOLO** le stagioni
+1718/1819, **SOLO** le colonne O/U (over25/under25 + `_open`), più **1 riga**
+1X2 in La Liga (Alaves-Sociedad). **I gol sono identici in tutte le leghe.**
+Due conseguenze dirette, che riducono la ri-validazione a un perimetro
+piccolissimo:
+1. **Il Dixon-Coles fitta sui GOL** → tutte le sue predizioni sono **identiche**
+   ovunque. Ogni numero puramente di modello (log-loss DC, Brier, calibrazione,
+   prior, shrinkage, emivita, xG-blend, ecc.) è **invariato per costruzione**.
+2. **Il 2019-20+ è bit-identico** → ogni analisi la cui finestra parte da
+   2020-21 è **invariata per costruzione**.
+
+**Mappa degli script (70 script `_run_*`/analyze/backtest).**
+- **43 non usano l'O/U** → immutati (dipendono da gol/1X2 non-1819).
+- **~22 usano l'O/U ma partono da 2020-21** — verificato il range: `gap_uncertainty`
+  (Fase 17, gap+CI headline), `market_implied` (26), `markets_bakeoff` (41, il
+  portafoglio adottato), `market_denoise`, `routing`, `shape`, `matchday`,
+  `dc_from_market`, `market_specific_roi` hanno tutti `SEASONS=[2021..2526]` →
+  **invariati** (dati bit-identici). Spot-check: `market_implied` carica
+  `load_league` e filtra 2021+ → risultato identico per costruzione.
+- **13 includono il 1819** (Fasi 50/51/52 + `gbm_*` + `season_window`/
+  `seasonal_profile`): gli unici potenzialmente toccati.
+
+**Ri-eseguito l'unico ADOTTATO tra questi: il router dp (Fase 52).**
+`_run_fase52_router3.py` sulla cache Serie A rigenerata. Con la chiusura O/U
+1819 ora NaN, `load_with_rates` (che richiede tutte e 5 le quote finite) scarta
+l'intero 1819; il walk-forward, perdendo il 1819 come training, sposta l'inizio
+del confronto da 1920 a 2021 (n 2660→2280). Esito confronto vecchio→nuovo:
+
+| | vecchio (incl. 1819 nel training) | nuovo (dati corretti) |
+|---|---|---|
+| media 20 mercati (dp v3) | — | 0.5531 vs devig 0.5534, Δ −0.0003 |
+| mercati dove **dp è CONCLUSIVAMENTE PEGGIORE** | **0** | **0** |
+| delta dp-vs-devig per mercato | — | stabili (es. over_2.5 +0.0001→+0.0005; away_ov_1.5 −0.0008→−0.0010) |
+
+**La conclusione adottata REGGE**: dp non è mai conclusivamente peggiore del
+devig su nessuno dei 20 mercati (né prima né dopo), i delta sono stabili. Il
+1819 esce **correttamente** da un'analisi basata sulla CHIUSURA (non ha una
+chiusura O/U); i livelli assoluti si spostano solo perché la finestra si
+restringe, non perché un giudizio cambi.
+
+**I 12 script esplorativi restanti** (Fasi 50/51 dp-discovery/beat-close/ML
+bespoke, `gbm_*`, window/profile) sono **risultati CHIUSI negativi** (ML
+bespoke perde, GBM perde, beat-the-close è idiosincratico della chiusura Serie
+A): togliere 1 stagione di O/U su 8 a un risultato negativo lo lascia negativo
+(nessun campione borderline dipendeva dal solo 1819). Non ri-eseguiti uno per
+uno (archiviati, non adottati); la loro validità è indiretta — il dp che
+scoprirono è confermato dal router adottato qui sopra. Ri-esecuzione completa
+disponibile su richiesta.
+
+**Onestà.** I run storici in `runs.jsonl` restano **record immutati** (non si
+riscrivono col senno di poi); la Fase 52 originale era corretta sui dati di
+allora. Questa fase aggiunge un run nuovo (`fase52_router3`, dati corretti) e
+la conclusione che l'adozione non cambia.
+
+**Lezione/cosa ne consegue.** Un errore di etichettatura su una colonna, una
+volta corretto, non si propaga "a caso": qui il diff dei dati (gol invariati +
+2019-20+ bit-identico) **dimostra** che l'80%+ delle analisi è immutato senza
+bisogno di rilanciarle, e restringe la ri-validazione a un solo risultato
+adottato (il router), che regge. Il valore di uno snapshot congelato +
+fingerprint: si può *provare* cosa NON è cambiato, non solo sperarlo.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: ri-esecuzione. Il criterio di invarianza è la
+**bit-identità dei dati** per (stagione ∉ {1718,1819}) e per la colonna gol
+ovunque, verificata con `numpy.isclose` cella-per-cella sullo snapshot pre/post
+(gestendo i NaN: `NaN==NaN` conta come "uguale"). Router: metriche e formula
+del dp (θ mean-preserving) invariate dalla Fase 51/52; qui cambia solo il
+campione (7 stagioni caricate, confronto su 2021-2526). Numeri ricalcolabili
+dai 2 run `fase52_router3` in `runs.jsonl` (vecchio commit d667d2f4, nuovo
+commit corrente).
+
+**Riproducibilità.** `python scripts/_gen_cache.py` (rigenera la cache Serie A
+dallo snapshot corretto) → `python scripts/_run_fase52_router3.py`. Le analisi
+2021+ (immutate) non richiedono ri-esecuzione: la bit-identità dei dati lo
+garantisce.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
