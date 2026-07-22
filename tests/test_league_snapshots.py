@@ -9,6 +9,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pandas as pd
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -27,7 +28,16 @@ def test_snapshot_integro_e_xg_completo(league):
     # copertura piena = alias tutti riconciliati (nessuna partita orfana di xG)
     assert df["home_xg"].notna().all()
     assert df["away_xg"].notna().all()
-    assert df["odds_home"].notna().all()
+    # Chiusura 1X2 presente ovunque, tranne l'unica eccezione documentata
+    # (Fase 73): La Liga Alaves-Sociedad 14/10/2017 non ha la chiusura Pinnacle
+    # (PSC* vuote nel grezzo) e dalla Fase 73 la chiusura non ripiega piu' sul
+    # fallback pre-match -> resta NaN (l'apertura reale PS* c'e', vedi sotto).
+    missing_close = df[df["odds_home"].isna()]
+    if len(missing_close):
+        assert league == "la_liga" and len(missing_close) == 1
+        row = missing_close.iloc[0]
+        assert str(row["season"]) == "1718" and row["home_team"] == "Alaves"
+        assert pd.notna(row["odds_home_open"])       # apertura reale presente
     # risultato coerente coi gol
     import numpy as np
     exp = np.where(df.home_goals > df.away_goals, "H",

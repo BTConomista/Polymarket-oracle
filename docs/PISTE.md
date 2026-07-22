@@ -192,14 +192,18 @@ modello è già scritto per generalizzarci (matrice condizionabile); manca
 solo il dato. Indicato come l'avversario meno efficiente più credibile,
 mai nemmeno abbozzato.
 
-### 19. Quote O/U 2017-19 (4.564 celle, close+open) — dato vero, non solo stima
+### 19. Quote O/U 2017-19 — CHIUSURA vera (non solo stima)
 **Dato**: da procurare — piano dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).
-**Stato (luglio 2026)**: Fase A (dataset già pronti su Kaggle/GitHub/HF) e
-Fase B (scraping BetExplorer) **entrambe chiuse negative** — confermato per
-ispezione diretta, non solo per assenza di risultati. La stima esistente
-(E3 pooled, Fase 62-bis) è stata spremuta al massimo con 4 leve nuove
-ortogonali (Fase 72): nessuna la batte, resta il tetto pratico. **Non è un
-buco chiuso per sempre**: solo le vie economiche note oggi sono esaurite.
+**Stato (Fase 73)**: il buco si è **dimezzato**. L'**apertura** O/U 2017-19 NON
+mancava: l'unica linea (`BbAv`) è un'apertura reale, prima mal etichettata come
+chiusura, ora nella colonna giusta (`odds_over25_open`, dato reale). Resta da
+procurare solo la **chiusura** O/U (2.280 celle). Fase A (dataset già pronti su
+Kaggle/GitHub/HF) e Fase B (scraping BetExplorer) **chiuse negative** —
+confermato per ispezione diretta. La stima di chiusura (E3 pooled, Fase 62-bis)
+è stata spremuta al massimo con 4 leve (Fase 72) + la dispersione max-vs-media
+sbloccata dalla correzione (Fase 73): **8 leve ortogonali respinte**, E3 resta
+il tetto pratico. **Non è un buco chiuso per sempre**: solo le vie economiche
+note oggi sono esaurite.
 **Da riprovare in futuro** (promemoria esplicito, richiesta utente):
 ri-tentare la Fase A periodicamente (nuovi dataset compaiono nel tempo su
 Kaggle/GitHub/HF — non ripartire dai 6 già controllati, cercarne con fonte
@@ -232,19 +236,18 @@ completi (numeri, candidati testati, criteri di accettazione) in
   Fase 66 mediano 22.5% (range −43%…+77%, coerente col regime d'errore
   dichiarato: conferma che la stima era onesta, non che fosse precisa
   cella-per-cella).
-- **Le 2 partite senza quote d'apertura** (irriducibili, tentata anche una
-  ricerca esterna, senza esito — vedi sotto): Torino-Fiorentina 10/01/2022
-  (recupero COVID, il grezzo non ha NESSUNA colonna pre-match) e
-  Alaves-Sociedad 14/10/2017: nel grezzo PSH/PSD/PSA (Pinnacle pre-match) =
-  3.52/3.55/2.20 sono presenti, ma PSCH/PSCD/PSCA (Pinnacle chiusura) sono
-  vuote — l'unico caso su 2.280 partite (2017-19, 3 leghe) in cui succede.
-  La chiusura pubblicata per questa riga (odds_home=3.37/3.39/2.17) viene
-  quindi dal fallback `BbAvH` (media multi-book, Fase 58), **non** da
-  Pinnacle: NON è la chiusura abbinata al 3.52 di apertura (margini diversi:
-  Pinnacle ~2.0% vs media ~5.3%, coerente con book diversi, non con un
-  movimento di linea). `_open_odds_market()` in `src/data/loader.py` lo sa
-  già e azzera `odds_home_open` a NaN per questa riga — **non è una coppia
-  open/close contaminata nel modello**, è semplicemente NaN dichiarato.
+- **Alaves-Sociedad 14/10/2017 — chiusura 1X2 mancante (aggiornato Fase 73).**
+  Nel grezzo PSH/PSD/PSA (Pinnacle pre-match) = 3.52/3.55/2.20 sono presenti,
+  ma PSCH/PSCD/PSCA (Pinnacle chiusura) sono vuote — l'unico caso su 2.280
+  partite (2017-19, 3 leghe). **Prima della Fase 73**: la chiusura ripiegava sul
+  fallback `BbAvH` (media, ~5.3% margine vs Pinnacle ~2.0% — book diversi, non
+  un movimento) e l'apertura era oscurata → la riga sembrava "senza apertura".
+  **Dalla Fase 73** (chiusura = solo colonne `*C*` genuine, niente fallback):
+  la chiusura 1X2 è onestamente **NaN** e l'apertura reale `PSH` è valorizzata.
+  Quindi non è più "senza apertura" (la stima Fase 69 è stata ritirata); le
+  manca la **chiusura** 1X2 (1 riga, non stimata: movimento 1X2 quasi tutto
+  rumore, Fase 69). Torino-Fiorentina 10/01/2022 (recupero COVID) resta senza
+  NESSUNA colonna pre-match → apertura 1X2+O/U stimata (Fase 69).
   Tentativo di ricerca esterna (sessione utente, luglio 2026): BetExplorer
   e OddsPortal da IP italiano reindirizzano a edizioni ADM-compliant
   (`/it/`, `centroquote.it`) che non pubblicano Pinnacle e nascondono lo

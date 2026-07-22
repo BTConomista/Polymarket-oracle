@@ -80,6 +80,13 @@ EXPECTED_MAE = 0.012
 
 _ODDS = ["odds_home", "odds_draw", "odds_away", "odds_over25", "odds_under25",
          "odds_home_open", "odds_draw_open", "odds_away_open"]
+# Colonne richieste per APPLICARE l'estimatore alle target (2017-19, Fase 73):
+# la chiusura O/U (odds_over25/under25) non c'e' piu' (e' cio' che si stima),
+# l'input O/U e' l'apertura reale (odds_over25_open); il movimento 1X2 usa la
+# chiusura (PSC) e l'apertura (PS) dell'1X2.
+_ODDS_TARGET = ["odds_home", "odds_draw", "odds_away",
+                "odds_home_open", "odds_draw_open", "odds_away_open",
+                "odds_over25_open", "odds_under25_open"]
 
 
 def _logit(p):
@@ -92,7 +99,13 @@ def _sigmoid(z):
 
 
 def _devig(df: pd.DataFrame) -> pd.DataFrame:
-    """Probabilita' devigate (molt., fonte unica metrics.devig_*) + feature."""
+    """Probabilita' devigate (molt., fonte unica metrics.devig_*) + feature.
+
+    ``p_over_line`` = la linea O/U di APERTURA (odds_over25_open). Dalla Fase 73
+    l'unica linea O/U del 2017-19 (BbAv, pre-match) vive correttamente nella
+    colonna di apertura, non piu' in quella di chiusura: l'input dell'estimatore
+    e' quindi uniforme (apertura) sia nel fit (2019-20+) sia nell'applicazione
+    (2017-19)."""
     out = df.copy()
     p_c = np.array([metrics.devig_1x2(r.odds_home, r.odds_draw, r.odds_away)
                     for r in df.itertuples()])
@@ -100,8 +113,9 @@ def _devig(df: pd.DataFrame) -> pd.DataFrame:
                                       r.odds_away_open) for r in df.itertuples()])
     out[["pH_c", "pD_c", "pA_c"]] = p_c
     out[["pH_o", "pD_o", "pA_o"]] = p_o
-    out["p_over_line"] = [metrics.devig_binary(r.odds_over25, r.odds_under25)[0]
-                          for r in df.itertuples()]
+    out["p_over_line"] = [
+        metrics.devig_binary(r.odds_over25_open, r.odds_under25_open)[0]
+        for r in df.itertuples()]
     return out
 
 
@@ -124,12 +138,7 @@ def build_ou_close() -> pd.DataFrame:
         df["season"] = df["season"].astype(str)
         df = df[df["season"].isin(FIT_SEASONS)].dropna(
             subset=_ODDS + ["odds_over25_open", "odds_under25_open"])
-        df = _devig(df)
-        # nel fit l'input O/U e' la linea di APERTURA (nel 2017-19 la linea
-        # unica disponibile e' pre-match: stesso timing)
-        df["p_over_line"] = [
-            metrics.devig_binary(r.odds_over25_open, r.odds_under25_open)[0]
-            for r in df.itertuples()]
+        df = _devig(df)     # p_over_line = apertura O/U (odds_over25_open)
         df["p_over_close"] = [
             metrics.devig_binary(r.odds_over25, r.odds_under25)[0]
             for r in df.itertuples()]
@@ -153,10 +162,14 @@ def build_ou_close() -> pd.DataFrame:
         df["season"] = df["season"].astype(str)
         df = df[df["season"].isin(TARGET_SEASONS)]
         n_tot = len(df)
-        df = df.dropna(subset=_ODDS).copy()
+        # Input per l'applicazione (2017-19): apertura O/U (odds_over25_open,
+        # BbAv reale, Fase 73) + 1X2 chiusura (PSC) e apertura (PS). La chiusura
+        # O/U NON serve (e' cio' che stimiamo). Alaves-Sociedad 14/10/2017
+        # (unica riga 2017-19 senza chiusura 1X2 PSC, Fase 73) cade qui.
+        df = df.dropna(subset=_ODDS_TARGET).copy()
         if n_tot - len(df):
             print(f"  {lg}: {n_tot - len(df)} partite saltate (input mancanti)")
-        df = _devig(df)     # p_over_line = linea unica (pre-match), gia' giusta
+        df = _devig(df)     # p_over_line = apertura O/U (odds_over25_open)
         p_est = _sigmoid(_X(df) @ coef)
         est_frames.append(pd.DataFrame({
             "league": lg, "season": df["season"],

@@ -48,24 +48,32 @@ sulle pre-match. Le quote servono in fase di VALUTAZIONE (benchmark di mercato),
 non per stimare il modello.
 
 Quote "di apertura" (colonne *_open, Fase 14): le colonne football-data SENZA
-suffisso C (AvgH, B365H, ...) sono raccolte GIORNI prima della partita (tipicam.
-venerdi' pomeriggio per i turni del weekend): sono la linea PRE-chiusura, il
-benchmark "battibile" contro cui misurare il Closing Line Value del modello.
-NON e' l'apertura vera del mercato (ora ignota nei dati storici), ma una linea
-intermedia onesta e documentata. REGOLA CRITICA (rafforzata dall'audit Fase 15):
-le colonne *_open NON ripiegano MAI sulle colonne di chiusura (*C*), e sono
-valorizzate SOLO dove la chiusura proviene davvero da una colonna *C* -- se per
-una riga la chiusura e' il fallback pre-match, open e close coinciderebbero per
-costruzione e il confronto open-vs-close (CLV) confronterebbe il mercato con se'
-stesso: in quel caso *_open resta NaN (righe escluse, mai contaminate).
+suffisso C (AvgH, B365H, BbAv*, ...) sono raccolte GIORNI prima della partita
+(il notes.txt di football-data: "collected Friday afternoons" per i turni del
+weekend, "Tuesday afternoons" per gli infrasettimanali): sono la linea
+PRE-chiusura ("apertura"), il benchmark "battibile" contro cui misurare il
+Closing Line Value del modello.
+
+REGOLA (semplificata alla Fase 73): CHIUSURA = SOLO colonne *C* genuine
+(AvgC*/B365C*/PSC*); APERTURA = SOLO colonne pre-match (Avg*/PS*/BbAv*/B365*).
+I due insiemi sono DISGIUNTI, quindi apertura e chiusura non possono mai
+coincidere per costruzione e non serve alcun masking: dove una chiusura genuina
+non esiste, la CHIUSURA resta NaN (mai riempita con una pre-match spacciata per
+chiusura) e la pre-match popola SOLO l'apertura. Prima della Fase 73 la chiusura
+ripiegava sulla pre-match e l'apertura veniva oscurata: per l'O/U 2017-19 (che
+NON ha una chiusura genuina, vedi sotto) questo metteva l'unica linea -- che e'
+un'APERTURA (BbAv, raccolta il venerdi') -- nello slot CHIUSURA e lasciava
+l'apertura a NaN, l'esatto contrario del vero.
 
 Chiusura Pinnacle nelle prime 2 stagioni (Fase 61): 2017-18 e 2018-19 NON hanno
 la chiusura AGGREGATA (AvgC*/B365C*), ma hanno PSC* -- la chiusura di Pinnacle,
-una colonna *C* a tutti gli effetti. Includendola in _ODDS_PREFERENCE, quelle
-stagioni ottengono una chiusura VERA (non piu' il fallback pre-match) e quindi
-anche l'apertura 1X2 (PS*, Pinnacle pre-match) si sblocca -- prima erano NaN.
-L'O/U di quelle 2 stagioni resta senza apertura: Pinnacle non pubblica un O/U
-di chiusura (nessun PSC>2.5), quindi manca la colonna *C* che la sbloccherebbe.
+una colonna *C* a tutti gli effetti. Grazie ad essa l'1X2 di quelle stagioni ha
+una chiusura VERA (PSC*) e un'apertura VERA (PS*, Pinnacle pre-match).
+L'O/U di quelle 2 stagioni, invece, NON ha alcuna colonna *C* (Pinnacle non
+pubblica un O/U di chiusura, nessun PSC>2.5): la sua unica linea e' BbAv>2.5
+(Betbrain media, pre-match). Dalla Fase 73 quella linea popola l'APERTURA O/U
+(odds_over25_open, dato REALE) e la CHIUSURA O/U resta NaN (dato mancante nelle
+fonti -> stima dichiarata in data/estimates/, mai negli snapshot).
 """
 
 from __future__ import annotations
@@ -84,30 +92,31 @@ RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
 # Ordine di preferenza delle colonne per ciascun mercato.
 # Il primo nome presente (e valorizzato) nella riga viene usato.
 #
-# Chiusura Pinnacle PSC* (Fase 61): nelle prime 2 stagioni (2017-18, 2018-19)
-# football-data NON pubblica le colonne di chiusura AGGREGATE (AvgC*, B365C*),
-# ma pubblica PSCH/PSCD/PSCA -- la CHIUSURA di Pinnacle, il book di riferimento
-# per efficienza. Va DOPO Avg/B365 chiusura (cosi' le stagioni 2019-20+, che
-# hanno AvgC*, restano IDENTICHE) ma PRIMA dei fallback pre-match: cosi' quelle
-# 2 stagioni ottengono una chiusura VERA (Pinnacle) invece di una pre-match
-# spacciata per chiusura. Pinnacle NON ha O/U closing nel dataset di quelle
-# stagioni (nessun PSC>2.5), quindi l'O/U resta invariato.
+# CHIUSURA (Fase 73): SOLO colonne di chiusura genuine -- media (*C*), Bet365
+# chiusura (B365C*) e Pinnacle chiusura (PSC*, il book di riferimento, Fase 61).
+# NESSUN fallback pre-match: se per una (lega, stagione) non esiste una chiusura
+# vera, la colonna resta NaN (dato mancante e dichiarato), mai riempita con una
+# pre-match spacciata per chiusura. Verificato (Fase 73): ogni (lega, stagione)
+# ha una chiusura 1X2 genuina (PSC* nel 2017-19, AvgC* dal 2019-20); l'unica
+# chiusura mancante e' l'O/U 2017-19 (Pinnacle non pubblica un O/U di chiusura).
 _ODDS_PREFERENCE: dict[str, list[str]] = {
-    "odds_home":   ["AvgCH", "B365CH", "PSCH", "AvgH", "BbAvH", "B365H"],
-    "odds_draw":   ["AvgCD", "B365CD", "PSCD", "AvgD", "BbAvD", "B365D"],
-    "odds_away":   ["AvgCA", "B365CA", "PSCA", "AvgA", "BbAvA", "B365A"],
-    "odds_over25": ["AvgC>2.5", "B365C>2.5", "Avg>2.5", "BbAv>2.5", "B365>2.5"],
-    "odds_under25": ["AvgC<2.5", "B365C<2.5", "Avg<2.5", "BbAv<2.5", "B365<2.5"],
+    "odds_home":   ["AvgCH", "B365CH", "PSCH"],
+    "odds_draw":   ["AvgCD", "B365CD", "PSCD"],
+    "odds_away":   ["AvgCA", "B365CA", "PSCA"],
+    "odds_over25": ["AvgC>2.5", "B365C>2.5"],
+    "odds_under25": ["AvgC<2.5", "B365C<2.5"],
 }
 
-# Quote PRE-chiusura ("apertura", Fase 14): SOLO colonne senza suffisso C.
-# Mai ripiegare sulla chiusura: un NaN e' onesto, una chiusura spacciata per
-# apertura invaliderebbe il confronto open-vs-close in modo silenzioso.
+# APERTURA (pre-chiusura, Fase 14): SOLO colonne pre-match (senza suffisso C).
+# Insieme DISGIUNTO da quello della chiusura -> apertura e chiusura non possono
+# mai coincidere per costruzione (niente masking, Fase 73).
 #
 # Apertura Pinnacle PS* (Fase 61): va DOPO AvgH (le stagioni 2019-20+ hanno
 # AvgH al 100%, restano identiche) ma PRIMA di BbAvH: cosi' le prime 2 stagioni,
 # prive di AvgH, aprono con la PRE-MATCH di Pinnacle -- lo STESSO book della loro
-# chiusura (PSCH sopra), un CLV pulito Pinnacle->Pinnacle invece di misto.
+# chiusura (PSCH), un CLV pulito Pinnacle->Pinnacle invece di misto.
+# Per l'O/U 2017-19 l'unica pre-match e' BbAv>2.5 (Betbrain media): dalla Fase
+# 73 popola l'apertura O/U (dato REALE), non piu' scambiata per chiusura.
 _ODDS_PREFERENCE_OPEN: dict[str, list[str]] = {
     "odds_home_open":    ["AvgH", "PSH", "BbAvH", "B365H"],
     "odds_draw_open":    ["AvgD", "PSD", "BbAvD", "B365D"],
@@ -199,26 +208,18 @@ def _pick_market_odds(row: pd.Series, targets: list[str],
 
 
 def _open_odds_market(raw: pd.DataFrame, targets: list[str]) -> dict[str, pd.Series]:
-    """Quote di apertura di un intero mercato, oscurate (NaN) dove la CHIUSURA
-    proverrebbe dal fallback pre-match (nessuna colonna *C* valida): li' open e
-    close coinciderebbero per costruzione, e ogni confronto open-vs-close (gap,
-    CLV) confronterebbe il mercato con se' stesso. Overround impossibile ->
-    stesso ripiego in blocco di _pick_market_odds (Fase 58)."""
+    """Quote di APERTURA (pre-match) di un intero mercato.
+
+    Dalla Fase 73 non serve piu' alcun masking: le colonne di apertura
+    (_ODDS_PREFERENCE_OPEN, pre-match) e quelle di chiusura (_ODDS_PREFERENCE,
+    solo *C* genuine) sono insiemi DISGIUNTI, quindi apertura e chiusura non
+    possono coincidere per costruzione. La pre-match popola SEMPRE l'apertura
+    dove esiste (dato reale), indipendentemente dall'esistenza di una chiusura.
+    Overround impossibile -> stesso ripiego in blocco di _pick_market_odds
+    (Fase 58)."""
     picks = raw.apply(
         lambda r: _pick_market_odds(r, targets, _ODDS_PREFERENCE_OPEN), axis=1)
-    open_vals = {t: picks.map(lambda d: d[t]) for t in targets}
-
-    # Mascheramento invariato rispetto a prima (per-colonna, non di gruppo): la
-    # colonna open di UN esito resta NaN solo se LA SUA chiusura specifica non
-    # viene da una colonna *C*, indipendentemente dagli altri esiti dello
-    # stesso mercato.
-    out = {}
-    for t in targets:
-        close_only = [c for c in _ODDS_PREFERENCE[t[: -len("_open")]]
-                      if c not in _ODDS_PREFERENCE_OPEN[t]]
-        close_c = raw.apply(lambda r: _pick_odds(r, close_only), axis=1)
-        out[t] = open_vals[t].where(close_c.notna())
-    return out
+    return {t: picks.map(lambda d: d[t]) for t in targets}
 
 
 def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFrame:

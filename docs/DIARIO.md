@@ -7264,6 +7264,137 @@ con gli altri candidati). Registrato in `runs.jsonl`
 
 ---
 
+## Fase 73 — L'O/U 2017-19 era un'APERTURA, non una chiusura: il dato reale nella colonna giusta
+
+**Obiettivo.** L'utente chiede di capire dov'è DAVVERO il buco O/U 2017-19:
+riguarda l'apertura, la chiusura, o entrambe? E, se il dato che abbiamo è
+un'apertura, spostarlo nella colonna giusta e poi cercare il miglior metodo
+per stimare la chiusura mancante.
+
+**La scoperta.** Fino alla Fase 72 la narrazione era: "nel 2017-19 abbiamo
+una sola linea O/U, di timing ambiguo, tenuta nello slot *chiusura*
+(`odds_over25`) con un ⚠️; l'apertura O/U è un buco (4.564 celle NaN)". La
+verifica ha ribaltato la diagnosi: **quella linea è un'APERTURA reale, e il
+buco vero è sulla CHIUSURA.** Quattro evidenze indipendenti convergono:
+1. **Metodologia documentata**: il `notes.txt` di football-data (recuperato da
+   3 mirror GitHub indipendenti; il sito diretto è irraggiungibile) dichiara le
+   colonne `Bb*` (Betbrain, tra cui `BbAv>2.5`) raccolte "Friday afternoons /
+   Tuesday afternoons" = pre-match = **apertura**.
+2. **Struttura delle colonne**: nel grezzo 2017-19 (verificato su tutte e 3 le
+   leghe, entrambe le stagioni) il suffisso `C` (closing) esiste **solo per
+   l'1X2** (`PSC*` Pinnacle), **mai per l'O/U** (nessun `PSC>2.5`, `AvgC>2.5`,
+   `P>2.5`): non c'è alcuna colonna di chiusura O/U, quindi `BbAv` non *può*
+   essere una chiusura.
+3. **Coerenza di timing**: `BbAv` condivide la raccolta del venerdì con `PS*`,
+   che il progetto già usa come **apertura 1X2** (Fase 61) — stesso timing.
+4. **Margine (overround)**: `BbAv` O/U ~1.055 ≈ apertura `Avg` ~1.053 delle
+   stagioni recenti, leggermente più largo della chiusura `AvgC` ~1.052
+   (coerente con una linea di apertura, meno affilata).
+
+**Cosa abbiamo fatto (la correzione).** Semplificata la politica quote in
+`src/data/loader.py` (una sola regola generale, non un hack per-stagione):
+- **CHIUSURA** = solo colonne di chiusura genuine (`AvgC*/B365C*/PSC*`), NaN se
+  non esistono. Rimossi i fallback pre-match (`Avg*/BbAv*/B365*`) dalle liste di
+  chiusura: erano loro a far passare la pre-match `BbAv` per una chiusura.
+- **APERTURA** = solo colonne pre-match. Insieme **disgiunto** dalla chiusura →
+  apertura e chiusura non coincidono mai per costruzione → **rimosso il masking**
+  (`_open_odds_market`), che prima oscurava l'apertura quando non c'era una
+  chiusura genuina (l'esatto meccanismo che nascondeva l'apertura O/U 2017-19).
+
+Snapshot rigenerati (`build_database.py --refresh-odds`,
+`build_league_snapshot.py --refresh-odds`) e **diff cella-per-cella** contro i
+precedenti per dimostrare il raggio d'impatto:
+- **O/U 2017-19** (3 leghe, 2.280 righe): chiusura (`odds_over25/under25`) →
+  NaN; apertura (`odds_over25_open/under25_open`) → `BbAv` reale. La correzione.
+- **2019-20+**: **bit-identico** ovunque (la chiusura genuina `AvgC` esiste, la
+  politica non cambia nulla).
+- **1 riga 1X2** (La Liga, Alaves-Sociedad 14/10/2017): chiusura → NaN,
+  apertura → `PSH` reale. È l'unico caso su 2.280 con `PSC*` vuote (già
+  segnalato in PISTE.md): prima la chiusura era un *falso* (fallback `BbAvH`) e
+  l'apertura NaN; ora la chiusura è onestamente NaN e l'apertura reale c'è. La
+  stima di apertura 1X2 della Fase 69 per questa riga è stata **ritirata**
+  (`open_sparse` scende da 3 a 2 righe, auto-rilevata dal builder).
+
+**Il metodo per la chiusura (invariato + una leva nuova).** L'estimatore E3
+pooled (Fase 62-bis) leggeva la linea pre-match da `odds_over25` (ora NaN):
+spostato su `odds_over25_open` (stessi numeri, solo la colonna giusta). La
+stima pubblicata `ou_close_2017_19.csv` è risultata **byte-identica** a prima
+(2.279 righe, stessi valori): la correzione è di *etichettatura*, non cambia
+cosa stimiamo. Il reframing sblocca però un input mai usato — la **dispersione
+max-vs-media** dell'O/U all'apertura (`BbMx` vs `BbAv`, disponibile nel
+2017-19; analogo `Max`/`Avg` nel fit 2019-20+): misura il disaccordo tra book,
+un possibile predittore del movimento verso la chiusura. Bakeoff dedicato
+(`_run_fase73_ou_close_disp.py`, stesso protocollo walk-forward di Fase
+62-bis/72):
+
+| candidato (walk-forward pooled) | MAE medio 3 leghe |
+|---|--:|
+| **E3** (riferimento) | **0.0117** |
+| E9 = E3 + dispersione | 0.0117 |
+| E10 = E3 + dispersione×logit(apertura) | 0.0117 |
+| E11 = E3 + entrambe | 0.0117 |
+
+La dispersione **non aiuta** (Δ ±0.0001, trascurabile): E3 pooled resta il
+metodo migliore, ora confermato anche contro l'unico input nuovo che la
+correzione rendeva disponibile. Sommato alla Fase 72 (interazione 1X2,
+calendario, ridge, GBM — tutti falliti), E3 ha ora resistito a **8 leve
+ortogonali**: tetto informativo molto solido.
+
+**Lezione/cosa ne consegue.** (1) Una colonna "sospetta ma usata da mesi"
+(l'O/U 2017-19 nello slot chiusura, con un ⚠️ che diceva *che* era strana ma
+non *perché*) andava verificata alla fonte, non tramandata: il `notes.txt` +
+la struttura delle colonne dicono in modo inequivocabile che è un'apertura.
+(2) Il buco 2017-19 è **metà di quanto si credeva**: l'apertura O/U è un dato
+REALE (era solo mal etichettato), solo la chiusura è mancante — la caccia
+esterna (CACCIA_OU_2017_19.md) ha ora un bersaglio più stretto e onesto.
+(3) La correzione ha reso la politica quote **più semplice** (niente masking,
+insiemi disgiunti) oltre che più corretta: un raro caso in cui il fix riduce
+il codice. (4) Impatto a valle da tenere presente: la chiusura O/U del 2017-19
+è ora NaN negli snapshot — ogni analisi che ne ha bisogno usa l'apertura reale
+(`odds_over25_open`) o la stima (`data/estimates/`), mai più una pre-match
+scambiata per chiusura.
+
+### 📐 Il modello in dettaglio
+
+Nessuna nuova matematica per la stima (E3 invariato, vedi Fase 62-bis). Le
+formule toccate:
+
+**Politica di scelta quote** (`loader._pick_market_odds`, invariata; cambiano
+solo le liste di preferenza):
+```
+CHIUSURA:  odds_over25   <- prima colonna valida tra [AvgC>2.5, B365C>2.5]
+           (nessun fallback pre-match; NaN se nessuna presente)
+APERTURA:  odds_over25_open <- prima valida tra [Avg>2.5, BbAv>2.5, B365>2.5]
+           (sempre popolata dove esiste; insieme disgiunto dalla chiusura)
+overround < 1 -> ripiego in blocco al livello successivo (Fase 58, invariato)
+```
+Prima della Fase 73 la lista chiusura O/U era `[AvgC>2.5, B365C>2.5, Avg>2.5,
+BbAv>2.5, B365>2.5]` (i 3 pre-match in coda): per il 2017-19, prive di `AvgC`,
+la chiusura cadeva su `BbAv` (apertura) e il masking azzerava l'apertura.
+
+**Dispersione** (`_run_fase73_ou_close_disp._dispersion`):
+```
+disp = 0.5 * [ (max_over/avg_over − 1) + (max_under/avg_under − 1) ]
+       (2017-19: max=BbMx, avg=BbAv;  2019-20+: max=Max, avg=Avg)
+E9:  logit(p_close) = E3 + c·disp
+E10: logit(p_close) = E3 + c·(disp · logit(p_open))
+```
+`disp` è una magnitudine (≥0, premio best-vs-media): l'ipotesi era che
+modulasse *quanto* si muove la linea, non la direzione (quella la dà il 1X2,
+già in E3). Distribuzioni confrontabili tra le due ere (premio medio ~0.042
+Betbrain vs ~0.038 panel recente): il fit cross-era è legittimo. Esito: `c`≈0
+utile (Δ MAE ±0.0001), coerente col fatto che una feature non-segnata aggiunge
+poco a una predizione segnata già al tetto.
+
+**Riproducibilità.** `python scripts/_restore_raw_cache.py` →
+`python scripts/build_database.py --refresh-odds` →
+`python scripts/build_league_snapshot.py --refresh-odds premier_league la_liga`
+→ `python scripts/build_estimates.py` (stima byte-identica) →
+`python scripts/_run_fase73_ou_close_disp.py` (bakeoff dispersione) →
+`pytest -q`. Run registrato: `source=fase73_ou_close_disp`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

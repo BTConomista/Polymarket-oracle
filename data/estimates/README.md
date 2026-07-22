@@ -22,13 +22,16 @@ fonti **non hanno**. Sono deliberatamente tenute **fuori dagli snapshot**
 ### `ou_close_2017_19.csv` — chiusura O/U 2.5 stimata, stagioni 2017-18 / 2018-19
 
 **Perché.** In quelle 2 stagioni (Serie A, Premier League, La Liga)
-football-data pubblica **una sola linea O/U** (media pre-match): la chiusura
-O/U non esiste nei dati, mentre l'1X2 ha sia apertura sia chiusura (Pinnacle,
-Fase 61). Il file colma il buco con una stima.
+football-data pubblica **una sola linea O/U** (`BbAv`, Betbrain media): dalla
+Fase 73 sappiamo che è un'**apertura** reale (pre-match, negli snapshot come
+`odds_over25_open`), non una chiusura. La chiusura O/U non esiste nei dati,
+mentre l'1X2 ha sia apertura sia chiusura (Pinnacle, Fase 61). Il file colma il
+buco della **chiusura** con una stima.
 
-**Come (Fasi 62/62-bis).** Regressione in spazio logit della chiusura O/U su
-(linea O/U pre-match + movimento 1X2 apertura→chiusura), fittata pooled su
-7.978 partite 2019-20+ dove la chiusura vera esiste. Convalidata walk-forward:
+**Come (Fasi 62/62-bis; imbattuta in Fasi 72/73).** Regressione in spazio logit
+della chiusura O/U su (linea O/U **di apertura** + movimento 1X2
+apertura→chiusura), fittata pooled su 7.978 partite 2019-20+ dove la chiusura
+vera esiste. Convalidata walk-forward:
 
 | errore atteso | valore |
 |---|---|
@@ -40,7 +43,8 @@ Fase 61). Il file colma il buco con una stima.
 - I coefficienti sono fittati su stagioni **successive** a quelle stimate
   (unico dato possibile): accettabile per un benchmark storico, non per
   predizione.
-- Nel 2017-19 le linee input sono Pinnacle/BbAv; il fit usa le medie `Avg`.
+- Nel 2017-19 la linea O/U di input è `BbAv` (Betbrain media, apertura reale —
+  Fase 73); il fit usa le medie `Avg`. Il movimento 1X2 è Pinnacle (`PS→PSC`).
 - La colonna è `p_over25_close_est` (probabilità devigata stimata);
   `P(Under) = 1 − P(Over)`.
 
@@ -73,14 +77,14 @@ leave-TEAM-out sulle 467 celle note:
 
 ### `open_sparse_1x2_ou.csv` — apertura stimata per le partite sparse (Fase 69)
 
-**Perché.** Oltre al buco sistemico O/U 2017-19 (le fonti non hanno mai
-avuto quella colonna in quelle 2 stagioni — piano di raccolta dati dedicato
-in [`docs/CACCIA_OU_2017_19.md`](../../docs/CACCIA_OU_2017_19.md), NON
-questo file), restano 3 partite "sparse" senza apertura vera, isolate in
-stagioni altrimenti complete: 2 di 1X2 (il grezzo non l'ha mai avuta, o la
-maschera anti-contaminazione l'ha scartata perché non abbinabile a una
-chiusura dello stesso book — vedi `docs/PISTE.md` §5) e 1 di O/U (stagione
-2020-21, isolata).
+**Perché.** Oltre al buco sistemico O/U 2017-19 (le fonti non hanno la
+**chiusura** O/U di quelle 2 stagioni — piano dedicato in
+[`docs/CACCIA_OU_2017_19.md`](../../docs/CACCIA_OU_2017_19.md), NON questo
+file), restano **2 partite "sparse"** senza apertura vera, isolate in stagioni
+altrimenti complete: Torino-Fiorentina (recupero, 1X2+O/U) e Verona-Genoa
+(O/U isolata, 2020-21). *(Erano 3: dalla Fase 73 Alaves-Sociedad 14/10/2017 ha
+l'apertura 1X2 reale `PSH` — prima oscurata dal masking — e non serve più
+stimarla; la sua stima è stata ritirata.)*
 
 **Come (bakeoff, richiesta utente).** 5 metodi confrontati con 5-fold CV su
 **tutte** le coppie apertura/chiusura reali dei 3 snapshot (10.258 per il
@@ -105,11 +109,11 @@ pattern da modellare in modo complesso.
 - I coefficienti sono fittati su **tutte** le coppie reali (comprese quelle
   successive alle date stimate): accettabile per riempire un buco storico
   isolato, non per una predizione live.
-- Per Alaves-Sociedad (14/10/2017) esiste un valore Pinnacle grezzo mai
-  validato (3.52/3.55/2.20, scartato dalla maschera anti-contaminazione
-  perché senza chiusura Pinnacle abbinata): la stima (`p_home≈0.287`) è
-  vicina ma non identica (raw devigato `p_home≈0.278`) — coerenza reciproca,
-  non conferma indipendente della verità.
+- *(Fase 73)* Alaves-Sociedad (14/10/2017) è **uscita** da questo file: il suo
+  `PSH` Pinnacle pre-match (3.52/3.55/2.20) è ora l'apertura 1X2 **reale** dello
+  snapshot (prima oscurato dal masking, quando la sua chiusura era il falso
+  `BbAvH`). Ha però ora una chiusura 1X2 mancante (nessun `PSC`, unico caso su
+  2.280): non stimata (1 riga, movimento 1X2 quasi tutto rumore — Fase 69).
 - Ogni riga stima SOLO il mercato che le manca davvero (colonne dell'altro
   mercato vuote se quella partita aveva già l'apertura vera).
 

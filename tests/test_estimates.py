@@ -55,14 +55,19 @@ def test_aggancio_uno_a_uno_con_gli_snapshot(estimates):
 
 
 def test_snapshot_non_contaminati(estimates):
-    """Guardia: negli snapshot l'O/U di apertura 2017-19 deve restare NaN
-    (il dato reale NON esiste; la stima vive SOLO in data/estimates/)."""
+    """Guardia (aggiornata Fase 73): negli snapshot il buco O/U 2017-19 e' sulla
+    CHIUSURA (odds_over25/under25 = NaN, dato mancante), NON sull'apertura:
+    l'apertura O/U 2017-19 e' un dato REALE (BbAv, pre-match) e deve essere
+    valorizzata. La stima della chiusura vive SOLO in data/estimates/, mai come
+    colonna dello snapshot."""
     for lg in ["serie_a", "premier_league", "la_liga"]:
         snap = database.read_snapshot(database.snapshot_path(lg))
         snap["season"] = snap["season"].astype(str)
         old = snap[snap["season"].isin(["1718", "1819"])]
-        assert old["odds_over25_open"].isna().all(), \
-            f"{lg}: odds_over25_open 2017-19 valorizzato — contaminazione?"
+        assert old["odds_over25"].isna().all(), \
+            f"{lg}: chiusura O/U 2017-19 valorizzata — dovrebbe essere NaN (Fase 73)"
+        assert old["odds_over25_open"].notna().mean() > 0.99, \
+            f"{lg}: apertura O/U 2017-19 mancante — e' un dato REALE (BbAv, Fase 73)"
         assert "p_over25_close_est" not in snap.columns, \
             f"{lg}: colonna di stima dentro lo snapshot — vietato"
 
@@ -166,15 +171,17 @@ def test_open_sparse_non_contamina_gli_snapshot(open_sparse):
 
 
 def test_stima_diversa_dalla_linea_prematch(estimates):
-    """La stima deve MUOVERSI rispetto alla linea pre-match (se coincidesse
-    sempre, il builder starebbe ricopiando l'input invece di stimare)."""
+    """La stima (chiusura) deve MUOVERSI rispetto alla linea pre-match (se
+    coincidesse sempre, il builder starebbe ricopiando l'input invece di
+    stimare). La linea pre-match del 2017-19 e' ora nell'APERTURA
+    (odds_over25_open, dato reale BbAv — Fase 73), non piu' in odds_over25."""
     snap = database.read_snapshot(database.snapshot_path("serie_a"))
     snap["season"] = snap["season"].astype(str)
     old = snap[snap["season"].isin(["1718", "1819"])]
     m = estimates[estimates["league"] == "serie_a"].merge(
         old, on=["season", "home_team", "away_team"], validate="one_to_one")
-    inv = 1 / m["odds_over25"] + 1 / m["odds_under25"]
-    p_line = (1 / m["odds_over25"]) / inv
+    inv = 1 / m["odds_over25_open"] + 1 / m["odds_under25_open"]
+    p_line = (1 / m["odds_over25_open"]) / inv
     diff = (m["p_over25_close_est"] - p_line).abs()
     assert (diff > 1e-4).mean() > 0.95
     assert diff.mean() < 0.10                   # ...ma senza strappi assurdi

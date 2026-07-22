@@ -1,17 +1,25 @@
 # Caccia alle quote O/U 2017-19 — specifica del dato e piano di ricerca
 
-L'**ultimo blocco di dati reali mancante** (vedi [DATI.md](DATI.md)): le quote
-Over/Under 2.5 di **apertura** (4.564 celle, mai avute) e — già coperte da una
-stima, ma sostituibili con la verità — quelle di **chiusura** delle stagioni
-**2017-18 e 2018-19** nelle 3 leghe. Questo documento dice esattamente COSA
-cercare, DOVE, con quale piano, e contiene un **prompt pronto** da dare a
+Il buco di dati reali (vedi [DATI.md](DATI.md)): le quote Over/Under 2.5 di
+**chiusura** delle stagioni **2017-18 e 2018-19** nelle 3 leghe — già coperte
+da una stima, ma sostituibili con la verità. Questo documento dice esattamente
+COSA cercare, DOVE, con quale piano, e contiene un **prompt pronto** da dare a
 un'AI con accesso libero al web.
+
+> ⚠️ **Aggiornamento Fase 73: il bersaglio si è dimezzato.** Si credeva
+> mancasse anche l'**apertura** O/U 2017-19 (4.564 celle). In realtà l'unica
+> linea O/U di quelle stagioni (`BbAv`) è un'**apertura reale** (pre-match),
+> prima erroneamente etichettata come chiusura: ora è nella colonna giusta
+> (`odds_over25_open`), dato reale, **non più da cercare**. Resta da procurare
+> solo la **chiusura** O/U (2.280 celle) — il resto di questo documento vale
+> per quella. La stima di chiusura (E3 pooled) è confermata imbattuta anche
+> dopo la correzione (Fase 73, dispersione `BbMx` inclusa).
 
 > ⚠️ **Promemoria per il futuro (luglio 2026).** Fase A (dataset già pronti)
 > e Fase B (scraping BetExplorer) sono **entrambe chiuse negative** — vedi
 > §3. Su richiesta dell'utente, invece di rincorrere la Fase D (OddsPortal
 > headless con login, rischio/complessità più alta) si è scelto di spremere
-> al massimo la stima esistente (Fase 72, `docs/DIARIO.md`): confermata
+> al massimo la stima esistente (Fasi 72/73, `docs/DIARIO.md`): confermata
 > come tetto pratico. **Questo NON significa che il dato vero sia
 > irraggiungibile per sempre** — solo che le vie economiche/sicure note OGGI
 > sono esaurite. Da riprovare in futuro, senza ripartire da zero:
@@ -42,19 +50,25 @@ Una tabella con **una riga per partita** per queste 6 (lega, stagione):
 
 ```
 data · squadra_casa · squadra_ospite · punteggio_finale (verifica join)
-quota_over25_APERTURA  · quota_under25_APERTURA
-quota_over25_CHIUSURA  · quota_under25_CHIUSURA
+quota_over25_CHIUSURA  · quota_under25_CHIUSURA      <- il dato che manca
+quota_over25_APERTURA  · quota_under25_APERTURA      <- utile per il join/verifica
 fonte (sito/dataset) · book ("average" oppure nome del bookmaker)
 ```
 
-**Bonus** (2 partite sparse senza 1X2 di apertura): Torino-Fiorentina
-10/01/2022 (Serie A, recupero) e Alaves-Real Sociedad 14/10/2017 (La Liga).
-Un tentativo di ricerca esterna diretta (BetExplorer/OddsPortal da IP
-italiano) non ha trovato nulla per un blocco geo/ADM (vedi
-`docs/MANUALE_SOPRAVVIVENZA.md`); nel frattempo **sono stimate** (Fase 69,
-bakeoff di 5 metodi, MAE atteso ~0.016) in
-`data/estimates/open_sparse_1x2_ou.csv` — restano comunque candidate a dato
-vero se mai si trovasse una fonte percorribile.
+Nota (Fase 73): l'**apertura** O/U 2017-19 la abbiamo già (dato reale `BbAv`,
+negli snapshot come `odds_over25_open`) — serve per verificare l'abbinamento
+riga per riga, ma il dato da procurare è la **chiusura**.
+
+**Bonus** (partite sparse senza apertura 1X2 vera): Torino-Fiorentina
+10/01/2022 (Serie A, recupero). *(Alaves-Real Sociedad 14/10/2017 non è più in
+lista: dalla Fase 73 la sua apertura 1X2 reale `PSH` è negli snapshot; le resta
+però una **chiusura 1X2** mancante — `PSC` vuote nel grezzo — che sarebbe un
+bonus da procurare.)* Un tentativo di ricerca esterna diretta (BetExplorer/
+OddsPortal da IP italiano) non ha trovato nulla per un blocco geo/ADM (vedi
+`docs/MANUALE_SOPRAVVIVENZA.md`); nel frattempo Torino-Fiorentina è **stimata**
+(Fase 69, bakeoff di 5 metodi, MAE atteso ~0.016) in
+`data/estimates/open_sparse_1x2_ou.csv` — resta comunque candidata a dato vero
+se mai si trovasse una fonte percorribile.
 
 ### Criteri di accettazione (chi cerca DEVE verificarli)
 

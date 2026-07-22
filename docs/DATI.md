@@ -33,8 +33,8 @@ canonicalizzati via `sources.TEAM_ALIASES`.
 | partita | `date, season, league, home_team, away_team` | football-data | 100% |
 | esito | `home_goals, away_goals, result` | football-data | 100% |
 | tiri in porta | `home_sot, away_sot` | football-data | 100% |
-| **quote chiusura** | `odds_home/draw/away, odds_over25/under25` | football-data (vedi §2) | 100% |
-| **quote apertura** | `odds_*_open` (5 colonne) | football-data (vedi §2) | 1X2: ~100% · O/U: 77.8% (**manca 2017-19**, vedi §5) |
+| **quote chiusura** | `odds_home/draw/away, odds_over25/under25` | football-data (vedi §2) | 1X2: ~100% (−1 riga: Alaves-Sociedad, Fase 73) · O/U: 77.8% (**chiusura assente nel 2017-19**, vedi §5) |
+| **quote apertura** | `odds_*_open` (5 colonne) | football-data (vedi §2) | 1X2: ~100% · O/U: ~100% (dalla Fase 73 l'apertura O/U 2017-19 è reale, `BbAv`) |
 | xG | `home/away_xg, home/away_npxg` | Understat | 100% |
 | stile | `home/away_ppda, home/away_deep` | Understat | 100% |
 | valore rosa | `home/away_squad_value` | **player-scores** (Transfermarkt via Kaggle, Fase 67) + 13 celle 2025-26 da Transfermarkt diretto (Fase 70; vedi §4) | **100% su TUTTE le stagioni, incluse la 2025-26** — zero NaN residui |
@@ -52,19 +52,34 @@ stagione** — questa tabella vale per tutte e 3 le leghe:
 
 | stagioni | chiusura 1X2 | apertura 1X2 | chiusura O/U | apertura O/U |
 |---|---|---|---|---|
-| 2017-18, 2018-19 | **Pinnacle** (`PSC*`, Fase 61) | **Pinnacle** (`PS*`) | media pre-match (`BbAv`) ⚠️ *timing apertura* | **ASSENTE** → stima in §5 |
+| 2017-18, 2018-19 | **Pinnacle** (`PSC*`, Fase 61) | **Pinnacle** (`PS*`) | **ASSENTE** → stima in §5 | **Betbrain media** (`BbAv>2.5`, Fase 73) |
 | 2019-20 → 2025-26 | media di ~10 book (`AvgC*`) | media pre-match (`Avg*`) | media chiusura (`AvgC>2.5`) | media pre-match (`Avg>2.5`) |
 
 Note importanti:
 - Nel 2017-19 la coppia apertura/chiusura 1X2 è **Pinnacle→Pinnacle** (margine
   ~2.5%, più basso della media ~4.9%): CLV pulito, stesso book.
-- ⚠️ Nel 2017-19 la colonna `odds_over25/under25` contiene l'**unica linea O/U
-  esistente** nelle fonti: una **pre-match** (timing "apertura") che occupa lo
-  slot della chiusura. La chiusura O/U vera **non esiste nei dati** — per le
-  analisi che ne hanno bisogno c'è la **stima** (§5).
-- Regola anti-contaminazione (Fasi 14/15): `*_open` non ripiega **mai** sulla
-  chiusura; overround < 1 (arbitraggio impossibile) → ripiego in blocco sul
-  livello di preferenza successivo (Fase 58).
+- **Il buco O/U 2017-19 è sulla CHIUSURA, non sull'apertura (chiarito Fase 73).**
+  L'unica linea O/U che le fonti pubblicano per quelle stagioni è `BbAv>2.5`
+  (Betbrain media): il `notes.txt` di football-data la dichiara raccolta "Friday
+  afternoons / Tuesday afternoons" = **pre-match = apertura** (verificato: stesso
+  timing di `PS*`, l'apertura 1X2; margine ~1.055 ≈ apertura `Avg`, non chiusura
+  `AvgC`; e nel 2017-19 il suffisso `C` esiste solo per l'1X2 Pinnacle, mai per
+  l'O/U — nessuna colonna di chiusura O/U). Prima della Fase 73 quella linea era
+  messa nello slot **chiusura** (`odds_over25`) e l'apertura lasciata a NaN,
+  l'esatto contrario del vero. Dalla Fase 73: `odds_over25_open` = `BbAv` (dato
+  **REALE**), `odds_over25` (chiusura) = **NaN** (dato mancante → stima in §5).
+- **Politica quote (semplificata Fase 73):** la CHIUSURA prende solo colonne di
+  chiusura genuine (`AvgC*/B365C*/PSC*`), NaN se non esistono; l'APERTURA prende
+  solo colonne pre-match (`Avg*/PS*/BbAv*/B365*`). I due insiemi sono
+  **disgiunti** → apertura e chiusura non coincidono mai per costruzione, niente
+  masking (prima la chiusura ripiegava sulla pre-match e l'apertura veniva
+  oscurata: la fonte dell'inversione O/U 2017-19). Overround < 1 (arbitraggio
+  impossibile) → ripiego in blocco sul livello successivo (Fase 58).
+- **Un'eccezione 1X2 (Fase 73):** La Liga **Alaves-Sociedad 14/10/2017** non ha
+  la chiusura Pinnacle (`PSC*` vuote nel grezzo, unico caso su 2.280): dalla
+  Fase 73 la sua chiusura 1X2 resta NaN (niente più fallback pre-match) e
+  l'apertura reale `PS*` è ora valorizzata. La stima di apertura 1X2 della Fase
+  69 per questa riga è stata **ritirata** (l'apertura reale c'è).
 - Devig: **sempre** via `metrics.devig_1x2` / `devig_binary` (fonte unica).
 
 ---
@@ -129,9 +144,9 @@ le tre che contano:
 
 | file | cosa stima | metodo | errore atteso (validato walk-forward) |
 |---|---|---|---|
-| `ou_close_2017_19.csv` (2279 righe, 3 leghe) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti | regressione logit della chiusura su (linea O/U pre-match + movimento 1X2 open→close), fit pooled su 7978 partite 2019-20+ (Fasi 62/62-bis) | **MAE ~0.012** in probabilità; corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile (notizie puro-totali) |
+| `ou_close_2017_19.csv` (2279 righe, 3 leghe) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti (l'**apertura** O/U di quelle stagioni è invece REALE — `BbAv`, Fase 73 — negli snapshot: `odds_over25_open`) | regressione logit della chiusura su (linea O/U **di apertura** + movimento 1X2 open→close), fit pooled su 7978 partite 2019-20+ (Fasi 62/62-bis; imbattuta in Fasi 72/73) | **MAE ~0.012** in probabilità; corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile (notizie puro-totali) |
 | `squad_value_2017_26.csv` (**0 righe** — erano 73 alla Fase 66, 13 alla Fase 67; **svuotato alla Fase 70**: le ultime 13 sostituite da dati REALI Transfermarkt) | ormai nessuna: file mantenuto vuoto e rigenerabile (`build_estimates.py` produce 0 righe se non ci sono buchi) | ibrido validato LOO/leave-team-out (Fase 66), storico se il buco dovesse riaprirsi in futuro | — (nessuna stima attiva) |
-| `open_sparse_1x2_ou.csv` (**3 righe**, Fase 69) | l'**apertura** (1X2 e/o O/U) delle 3 partite sparse senza apertura vera, fuori dal buco sistemico O/U 2017-19 | bakeoff (5 metodi, 5-fold CV su 10.258/7.978 coppie reali): vince la regressione in **spazio logit pooled** (chiusura→apertura); nessun blend migliora | **MAE ~0.016** (1X2, 3 esiti) / **~0.020** (O/U) — molto più affidabile della (ex) stima squad_value; rapporto apertura↔chiusura quasi identità (corr 0.96-0.99) |
+| `open_sparse_1x2_ou.csv` (**2 righe**, Fase 69; era 3, −1 alla Fase 73) | l'**apertura** (1X2 e/o O/U) delle partite sparse senza apertura vera, fuori dal buco sistemico O/U 2017-19 | bakeoff (5 metodi, 5-fold CV su 10.258/7.978 coppie reali): vince la regressione in **spazio logit pooled** (chiusura→apertura); nessun blend migliora | **MAE ~0.016** (1X2, 3 esiti) / **~0.020** (O/U) — molto più affidabile della (ex) stima squad_value; rapporto apertura↔chiusura quasi identità (corr 0.96-0.99) |
 
 Accesso da codice: `loader.read_ou_close_estimates()`. Rigenerazione:
 `python scripts/build_estimates.py`.
@@ -145,9 +160,12 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   73 celle stimate alla Fase 66 sono scese a 13 con la fonte player-scores
   (Fase 67) e infine a **0** con un recupero manuale diretto da Transfermarkt
   (Fase 70): nessuna stima attiva, `squad_value_2017_26.csv` è vuoto.
-- **apertura O/U 2017-19** (l'altra metà del buco di §2): ora ha un piano di
-  ricerca dedicato con specifica del dato e prompt pronto per un'AI con web
-  libero → **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
+- ~~**apertura O/U 2017-19**~~ → **NON era un buco (chiarito Fase 73)**: l'unica
+  linea O/U del 2017-19 (`BbAv`) è un'**apertura reale** (pre-match), prima
+  erroneamente messa nello slot chiusura. Dalla Fase 73 è nella colonna giusta
+  (`odds_over25_open`), dato reale. Resta un buco solo la **chiusura** O/U di
+  quelle stagioni (coperta dalla stima `ou_close_2017_19.csv`); la caccia al
+  dato vero di chiusura resta aperta → **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
 - ~~**quote O/U/1X2 di apertura mancanti sparse**~~ → **FATTO (Fase 69)**: le
   3 partite sparse (2 di 1X2, 1 di O/U isolata in 2020-21, fuori dal buco
   sistemico 2017-19) sono stimate in `open_sparse_1x2_ou.csv` (vedi tabella

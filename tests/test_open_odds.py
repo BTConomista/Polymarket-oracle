@@ -121,10 +121,12 @@ def test_pinnacle_non_tocca_le_stagioni_con_media():
     assert out["odds_home_open"].item() == 2.10    # media, non Pinnacle
 
 
-def test_apertura_oscurata_dove_la_chiusura_e_fallback():
-    """Riga SENZA colonne *C*: la chiusura ripiega sulla pre-match, quindi
-    open==close per costruzione -> l'apertura va oscurata (NaN), riga per riga
-    (audit Fase 15: un CLV=0 spurio verrebbe contato come negativo)."""
+def test_riga_senza_chiusura_C_apertura_reale_chiusura_nan():
+    """Riga SENZA colonne *C* (Fase 73): la CHIUSURA resta NaN (nessuna chiusura
+    genuina, mai il fallback pre-match), e la pre-match popola l'APERTURA (dato
+    reale). Insiemi di colonne disgiunti -> apertura e chiusura non coincidono
+    mai per costruzione, nessun masking. Prima della Fase 73 questa riga aveva
+    una chiusura FINTA (=pre-match) e l'apertura oscurata: l'esatto contrario."""
     raw = pd.DataFrame({
         "Date": ["20/08/2024", "21/08/2024"],
         "HomeTeam": ["Milan", "Parma"], "AwayTeam": ["Inter", "Lecce"],
@@ -137,10 +139,10 @@ def test_apertura_oscurata_dove_la_chiusura_e_fallback():
     out = _normalize(raw, "2425", LEAGUES["serie_a"])
     milan = out[out.home_team == "Milan"].iloc[0]
     parma = out[out.home_team == "Parma"].iloc[0]
-    assert milan["odds_home_open"] == 2.10          # chiusura da colonna C: ok
-    assert milan["odds_home"] == 2.00
-    assert parma["odds_home"] == 2.60               # chiusura = fallback...
-    assert np.isnan(parma["odds_home_open"])        # ...quindi apertura oscurata
+    assert milan["odds_home_open"] == 2.10          # apertura pre-match: ok
+    assert milan["odds_home"] == 2.00               # chiusura da colonna C: ok
+    assert np.isnan(parma["odds_home"])             # nessuna chiusura genuina -> NaN
+    assert parma["odds_home_open"] == 2.60          # ...ma l'apertura reale c'e'
 
 
 # --------------------------------------------- 2. aggancio allo snapshot
