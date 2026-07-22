@@ -41,8 +41,8 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 
 | modello | Serie A | Premier | La Liga | generale (pooled) |
 |---|:-:|:-:|:-:|:-:|
-| **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⬜ ✱1 | ⬜ ✱1 | ⚽ struttura (ρ=−0.06 unico) |
-| **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225) | ❌ F53 (θ=1.069, non paga) | ❌ F53 (θ=1.097, non paga) | ❌ θ decresce con la liquidità |
+| **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F75 (apertura 2017-19; chiusura 2019-26 da fare) | ⚽ F75 (idem) | ⚽ struttura (ρ=−0.06 unico; F75: 17/20 mercati ✓CI su 2.280 partite vergini cross-lega, zero ritarature) |
+| **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225) | ❌ F53 (θ=1.069, non paga) | ❌ F53 (θ=1.097, non paga) | ❌ θ decresce con la liquidità E cresce nel tempo (F75: 1718 ~1.03 → 1819 ~1.16 → 2019+ ~1.2): **per-contesto** (lega × epoca), mai copiarlo |
 | **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ⬜ ✱2 | ⬜ ✱2 | ⬜ |
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |

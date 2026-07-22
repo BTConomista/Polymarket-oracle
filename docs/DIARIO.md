@@ -7500,6 +7500,116 @@ garantisce.
 
 ---
 
+## Fase 75 — Spremere il 2017-19: il motore validato su 2.280 partite vergini (e il θ che cresce nel tempo)
+
+**Obiettivo.** Richiesta utente: trattare il blocco 2017-19 (apertura REALE
+1X2+O/U dopo la Fase 73; chiusura O/U stimata) come terreno di caccia e
+spremerlo in ogni direzione — da solo, con altri dati, come input di modelli —
+per tirarne fuori conclusioni.
+
+**L'osservazione che apre tutto.** Il motore market-implied **non richiede
+training** (inverte le quote della partita stessa): le 6 lega-stagioni
+1718/1819 × 3 leghe (2.280 partite con apertura 1X2+O/U **tutta reale**) sono
+un **test-set vergine** mai visto da nessun fit del progetto. In più: la
+chiusura 1X2 del 1819 è reale (Pinnacle) → l'encompassing (Fase 16) si può
+estendere a una stagione nuova con dati veri; e la chiusura O/U stimata può
+fare da benchmark **dichiarato**.
+
+**Esperimenti** (`scripts/_run_fase75_squeeze_2017_19.py`, 1 run
+`source=fase75_squeeze_2017_19`, B=10.000):
+
+**A. Il motore market-implied dall'apertura, su dati mai visti — VALIDATO.**
+Inversione apertura → (λ,μ) → `price_markets` (Poisson e double-Poisson
+θ=1.225 del router, qui puro out-of-sample) su 20 mercati Tier 1, vs baseline
+in-sample:
+- **MI-Poisson batte la baseline su 17/20 mercati con CI conclusivo** (media
+  20 mercati 0.5618 vs 0.5900; picchi: home_win −0.0967, scarto≥2 −0.0739,
+  total-squadra −0.036…−0.060). Su partite mai viste, cross-lega, condizionato
+  alla SOLA apertura del venerdì. È la conferma out-of-sample più forte mai
+  ottenuta del risultato Fase 26/41 — e copre (per il 2017-19) la pista #4
+  (market-implied mai backtestato multi-mercato su Premier/Liga).
+- Le 3 eccezioni replicano pattern noti: **pari/dispari** (+0.0035, l'unico
+  mercato dove la baseline vince: quasi-casuale, come in Fase 26), mg_2_3 e
+  over_0.5 nel rumore.
+
+**B. La sotto-dispersione θ: il SEGNO regge, il LIVELLO no — e cresce nel
+tempo.** θ fittato sui tassi dell'apertura per lega-stagione:
+
+| lega | 1718 | 1819 | (riferimento 2019+: Fasi 52/53) |
+|---|--:|--:|---|
+| Serie A | 1.104 | 1.157 | 1.218 (open) / 1.225 (close) |
+| Premier | 1.050 | 1.159 | 1.069 (close) |
+| La Liga | **0.950** | 1.160 | 1.097 (close) |
+
+- θ>1 in 5/6 lega-stagioni (l'unica eccezione: Liga 1718, 0.95): il segno
+  della sotto-dispersione è **quasi universale** anche su dati mai visti.
+- Ma il **livello** θ=1.225 del router NON trasferisce: la dp con θ fisso
+  **peggiora** conclusivamente su over_1.5/mg_0_1 (+0.0037) e non migliora
+  quasi nulla (media dp 0.5628 vs Poisson 0.5618) — sovra-affila tassi che
+  qui sono meno sotto-dispersi.
+- **Osservazione NUOVA**: θ cresce monotonicamente nel tempo in tutte e 3 le
+  leghe (1718 ~1.03 medio → 1819 ~1.16 → 2019+ ~1.1-1.22). Non è un artefatto
+  apertura/chiusura (il θ_open 2019+ della Serie A era 1.218, ben sopra il
+  1.13 dell'apertura 2017-19). Ipotesi: le linee diventano più informative
+  col tempo (mercati più liquidi/algoritmici) → tassi più precisi → residuo
+  più sotto-disperso. Da ri-verificare tra qualche stagione.
+
+**C. Il DC contro la chiusura STIMATA (benchmark dichiarato, 1819 SA).**
+Gap +0.0141 [−0.0017,+0.0300]: direzione coerente col gap noto ma non
+conclusivo (1 stagione) e **gonfiato per costruzione** — la stima è fatta di
+informazione di mercato (apertura+movimento 1X2), quindi il confronto è
+parzialmente circolare. Dichiarato; mai ROI su questo benchmark.
+
+**D. Encompassing esteso al 1819: α\*=0 anche qui — perfino contro la stima.**
+- **D1 (dato REALE)**: blend α·DC+(1−α)·closing Pinnacle vero sull'1X2 1819:
+  **α\*=0.00** (DC 0.9721, mercato 0.9444). La Fase 16 (α\*≈0 sul 2021+) si
+  replica su una stagione mai usata, con closing di un singolo book sharp.
+- **D2 (STIMA)**: blend α·DC+(1−α)·chiusura stimata sull'O/U 1819:
+  **α\*=0.00**. Il DC non aggiunge nulla nemmeno alla nostra RICOSTRUZIONE
+  della chiusura — che è fatta solo di apertura+movimento 1X2. Lettura
+  onesta: il tetto informativo del DC è così stringente che perfino un
+  surrogato del mercato lo ingloba completamente.
+
+**Lezione/cosa ne consegue.**
+1. Il **motore market-implied è la cosa più robusta del progetto**: 17/20
+   mercati con CI su 2.280 partite vergini cross-lega, dalla sola apertura.
+   Se un giorno servirà prezzare mercati sui gol senza chiusura, l'apertura
+   basta (conferma indipendente della Fase 52 "l'open affinato vale la
+   chiusura grezza" — qui senza nemmeno affinare).
+2. Il **θ del router va trattato come per-contesto** (lega × epoca), non come
+   costante: fuori dalla Serie A 2019+ meglio Poisson o θ ritarato. Rafforza
+   la Fase 53 (θ decresce con la liquidità) e aggiunge l'asse temporale.
+   → aggiornata la voce dp nella rosa (PANCHINA).
+3. Il **pareggio/dispari resta imprevedibile ovunque** (replica indipendente).
+4. **α\*=0 è ormai un fatto trans-epoca**: 2021+ (Fase 16), 1819 reale (D1),
+   perfino vs una stima (D2). Nessun blend DC+mercato ha mai avuto senso.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: composizione di formule esistenti su dati nuovi.
+- Inversione e pricing: `implied_lambda_mu` + `price_markets` (Fasi 24/26/44/52),
+  ρ=−0.06, con `dp_theta ∈ {None, 1.225}`; per il pricing niente φ35
+  (`phi0=0`) per isolare l'effetto della sola marginale (Poisson vs dp).
+- θ per lega-stagione: `fit_theta` (Fase 51/52) = MLE di
+  `M = dp(λ;θ) ⊗ dp(μ;θ)` con correzione ρ sui punteggi bassi, bounded
+  [0.6, 1.8]. **Perché i valori escono più bassi del 1.225**: θ misura quanto
+  i gol sono meno dispersi di una Poisson DATI i tassi; con tassi meno
+  precisi (apertura 2017-19, mercati meno liquidi di allora) una parte della
+  varianza dei gol è spiegata dall'errore dei tassi → sotto-dispersione
+  residua minore. Il trend temporale (1718→1819→2019+) è coerente con linee
+  sempre più informative.
+- Baseline in-sample: `p = frequenza dell'evento nella (lega, stagione)` —
+  stessa convenzione dichiarata del backtest core.
+- Encompassing: `p(α) = α·p_DC + (1−α)·p_mercato` (rinormalizzato sull'1X2),
+  griglia α∈{0,0.05,…,1}, log-loss sugli esiti reali (blend lineare, come
+  Fase 16).
+- Numeri ricalcolabili dal run `fase75_squeeze_2017_19` in `runs.jsonl`.
+
+**Riproducibilità.** `python scripts/_gen_cache.py 1819` (per C/D) →
+`python scripts/_run_fase75_squeeze_2017_19.py` (~20s, offline).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
