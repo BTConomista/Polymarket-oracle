@@ -1,0 +1,33 @@
+name: Probe dataset Kaggle O/U 2017-19 (Fase A)
+
+# Fase A del piano CACCIA_OU_2017_19.md: prima di rifare scraping diretto,
+# verifica se dataset gia' pubblicati (Kaggle) coprono O/U 2.5
+# apertura+chiusura per Serie A/Premier/La Liga 2017-18/2018-19.
+# Solo diagnostica: stampa colonne/copertura nel log, non committa nulla.
+# Rete Kaggle bloccata dalla sessione cloud -> runner Actions (Fase 67).
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/kaggle-ou-probe-trigger'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install --quiet kagglehub pandas
+
+      - name: Probe candidati
+        run: python scripts/probe_kaggle_ou_datasets.py
