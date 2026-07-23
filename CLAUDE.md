@@ -243,6 +243,10 @@ docs/DATI.md     catalogo di TUTTI i dati (reali e stimati): copertura, semantic
 docs/PANCHINA.md la rosa dei modelli: titolari/panchina/bocciati × 2 fronti (§1.9)
 docs/PISTE.md    idee dato/architettura -> modello NON ancora provate, per costo
                  crescente; aggiornare quando una pista si apre/prova/chiude
+docs/STUDIO_PREMIER_LIGA.md   quaderno di studio dedicato a Premier e La Liga:
+                 dati, differenze strutturali vs Serie A, stato dei test
+                 per-lega e piano ragionato; aggiornare a ogni fase che
+                 tocca le due leghe (Fase 79+)
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)

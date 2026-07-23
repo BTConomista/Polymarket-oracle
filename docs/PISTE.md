@@ -8,7 +8,7 @@ file deve trovare non "cosa manca" ma **"cosa potrei provare dopo, con che
 cosa, e perché potrebbe funzionare"**. La parte operativa (rete, strumenti,
 Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
-l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 72.
+l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 79.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 
@@ -159,6 +159,10 @@ gol/xG storici) mai perseguito.
 **Ipotesi**: la Fase 53-bis è dichiarata aperta nel CLAUDE.md — completare
 il port del DC con blend xG su Premier/Liga e ri-validare il two-front
 (principio §1.9).
+**CHIUSA, positiva (Fasi 54-57)**: snapshot congelati con xG al 100%,
+config per-lega in `LEAGUE_CONFIGS` (δ 0.33/0.22), DC+xG batte la baseline
+su entrambe; la ri-taratura degli altri iperparametri è piatta. Lo studio
+dedicato delle due leghe continua in `docs/STUDIO_PREMIER_LIGA.md`.
 
 ### 15. Altre linee O/U (multi-linea) per vincolare meglio λ,μ
 **Dato**: da procurare — **verificato che football-data.co.uk NON le
