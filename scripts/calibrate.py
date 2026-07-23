@@ -4,8 +4,10 @@ Per ogni stagione di test, il temperature T si TARA sulle predizioni
 walk-forward delle stagioni PRECEDENTI (nessun look-ahead) e si applica alla
 stagione di test. Confronta la log-loss 1X2 del modello prima e dopo.
 
-Config del modello = ufficiale corrente (emivita 365g, shrinkage 1.5,
-shots_blend 0.75, blend xG). Ogni stagione calibrata viene registrata in
+Config del modello = ufficiale corrente, letta da ``src.config.SERIE_A``
+(emivita, shrinkage, blend xG E prior neopromosse — la Fase 6 storica girava
+senza prior perche' il prior non esisteva ancora; da allora la config ufficiale
+lo include, Fase 7/8). Ogni stagione calibrata viene registrata in
 experiments/runs.jsonl (config con calibration=temperature + T).
 
 Uso:  python scripts/calibrate.py
@@ -19,11 +21,16 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from src.config import SERIE_A
 from src.data import loader, sources
 from src.evaluation import calibration, experiment_log
 from scripts.backtest import run_backtest
 
-HALF_LIFE, SHRINK, BLEND, SIGNAL = 365.0, 1.5, 0.75, "xg"
+HALF_LIFE = SERIE_A["half_life_days"]
+SHRINK = SERIE_A["shrinkage"]
+BLEND = SERIE_A["shots_blend"]
+SIGNAL = SERIE_A["blend_signal"]
+PRIOR = SERIE_A["promoted_prior"]
 MIN_PRIOR_SEASONS = 2  # stagioni-predizione minime per tarare T
 PROB_COLS = ["m_home", "m_draw", "m_away"]
 
@@ -41,7 +48,9 @@ def main() -> None:
         print(f"backtest baseline {s} ...", flush=True)
         preds[s] = run_backtest("serie_a", s, HALF_LIFE, shrinkage=SHRINK,
                                  shots_blend=BLEND, blend_signal=SIGNAL,
-                                 covariates=(), verbose=False)
+                                 covariates=(),
+                                 promoted_prior=(PRIOR, PRIOR) if PRIOR else None,
+                                 verbose=False)
 
     # 2) Per ogni stagione di test: tara T sulle PRECEDENTI, applica, misura.
     rows = []
@@ -64,6 +73,7 @@ def main() -> None:
             "league": "serie_a", "test_season": s,
             "half_life_days": HALF_LIFE, "shrinkage": SHRINK,
             "shots_blend": BLEND, "blend_signal": SIGNAL,
+            "promoted_prior": PRIOR or None,
             "calibration": "temperature", "temperature": round(T, 4),
             "source": "calibrate_temperature",
         }

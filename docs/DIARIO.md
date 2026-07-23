@@ -192,7 +192,7 @@ partite mai viste (Fase 75).*
 - [Fase 74 — Ri-validazione di TUTTI i calcoli sui dati corretti (richiesta utente)](#fase-74--ri-validazione-di-tutti-i-calcoli-sui-dati-corretti-richiesta-utente)
 - [Fase 75 — Spremere il 2017-19: il motore validato su 2.280 partite vergini (e il θ che cresce nel tempo)](#fase-75--spremere-il-2017-19-il-motore-validato-su-2280-partite-vergini-e-il-θ-che-cresce-nel-tempo)
 
-### Arco 10 — Il motore per-lega e la verifica finale (Fasi 76–82)
+### Arco 10 — Il motore per-lega e la verifica finale (Fasi 76–83)
 
 *Il market-implied trasferisce identico su 3 leghe (Fase 76); le leve del
 pareggio sono un tratto delle leghe latine (Fase 79-80); il mega-sweep delle
@@ -207,6 +207,7 @@ mercato, non di più.*
 - [Fase 80 — La catena GG/NG del market-implied su Premier/Liga: la φ35 paga in Liga (CI<0), il nudge no](#fase-80--la-catena-ggng-del-market-implied-su-premierliga-la-φ35-paga-in-liga-ci0-il-nudge-no)
 - [Fase 81 — Mega-sweep delle costanti del market-implied per-lega: le curve di risposta complete (e il ribaltamento del router-Liga)](#fase-81--mega-sweep-delle-costanti-del-market-implied-per-lega-le-curve-di-risposta-complete-e-il-ribaltamento-del-router-liga)
 - [Fase 82 — Verifica diretta: ma indoviniamo davvero i risultati? (calibrazione e hit-rate su tutti i mercati)](#fase-82--verifica-diretta-ma-indoviniamo-davvero-i-risultati-calibrazione-e-hit-rate-su-tutti-i-mercati)
+- [Fase 83 — Revisione dei commit esterni (Codex, Fasi 6-13): corretti; 7 difetti minori, 1 fix](#fase-83--revisione-dei-commit-esterni-codex-fasi-6-13-corretti-7-difetti-minori-1-fix)
 
 ---
 
@@ -8383,6 +8384,94 @@ router Fase 52/81, DC config ufficiale, devig moltiplicativo).
 
 **Riproducibilità.** `python scripts/_run_fase82_verifica_predizioni.py`
 (~5 min la prima volta: 6 backtest DC Serie A in cache `outputs/db82_*`).
+
+---
+
+## Fase 83 — Revisione dei commit esterni (Codex, Fasi 6-13): corretti; 7 difetti minori, 1 fix
+
+**Obiettivo.** Su richiesta dell'utente: verificare i **19 commit firmati
+dall'account dell'utente ma prodotti da un'altra AI ("Codex")** il 10-11 luglio
+2026 (range `a605e68…3e18c63`), che hanno costruito le Fasi 4e-bis→13-quater
+(temperature scaling, prior neopromosse, anatomia del gap, ricalibrazione
+per-classe, ensemble di emivite, diagonale inflazionata, stato di forma/streak)
+e riorganizzato il README. Domanda: *ha commesso errori nel tentativo di
+migliorare il codice?*
+
+**Ragionamento.** Il codice di quei commit è ancora il cuore del progetto
+(`dixon_coles.py` prior+diagonale, `calibration.py`, `loader.add_form`): un
+errore lì falserebbe non solo le Fasi 6-13 ma tutto ciò che ci è stato costruito
+sopra. La Fase 15 aveva già auditato i *numeri*; qui l'angolo è diverso e
+complementare: **correttezza del codice e del metodo** (leakage walk-forward,
+uso di dati futuri, formule, normalizzazioni, fonte unica delle metriche),
+verificata sia sui diff storici sia sullo stato attuale di HEAD.
+
+**Alternative.** (a) Fidarsi dell'audit Fase 15 (copre i numeri, non il codice
+riga per riga); (b) ri-eseguire tutti i backtest delle Fasi 6-13 (costoso e
+ridondante: i numeri sono già riprodotti dal registro); (c) revisione
+avversariale del codice + ricalcolo a campione dal registro + smoke-test della
+pipeline. Scelta: (c).
+
+**Risultato.** **Nessun errore di gravità alta: le conclusioni delle Fasi 6-13
+reggono tutte.** Verificati corretti esplicitamente: il prior neopromosse
+(applicato solo alle squadre in `promoted_teams`, bersaglio dello shrinkage
+`att→−δ, dif→+δ`, `promoted_teams` senza look-ahead, δ leave-future-out,
+invarianza di gauge col vincolo `mean(attack)=0`); la diagonale inflazionata
+(matrice clippata e **rinormalizzata** dopo l'inflazione, verosimiglianza di φ
+esatta); il temperature scaling (`q ∝ p^(1/T)` rinormalizzato, T fittato solo
+sul passato); la ricalibrazione per-classe (somma-1, pesi leave-future-out);
+`add_form` e streak (lettura dello stato PRIMA dell'aggiornamento con la gara
+corrente: zero leakage); il walk-forward del backtest; l'uso della fonte unica
+`compute_metrics`; ~15 numeri del README ricampionati dal registro, tutti
+esatti. In più, smoke-test indipendente: 140 test verdi e il backtest ufficiale
+ri-eseguito e registrato (2526: 1X2 0.9925, coerente col registro).
+
+Sette **difetti minori** (nessuno cambia una conclusione):
+
+| # | difetto | dove | stato |
+|---|---|---|---|
+| F1 | streak non azzerate tra stagioni (bin estremi parz. spuri) | `_run_streaks.py` | già dichiarato (Fase 15), diagnostico |
+| F2 | `calibrate.py` fermo alla config pre-Fase 7 (niente prior) | `scripts/calibrate.py` | **CORRETTO in questa fase** |
+| F3 | pesi RECAL col senno di poi nelle combo | `_run_combo_analysis.py` | già dichiarato (Fase 15) |
+| F4 | tier forza-squadra dalla classifica FINALE | `analyze_gap.py` | già dichiarato (diagnostica) |
+| F5 | model_ll su tutte le righe, market_ll solo dove ci sono quote | `evaluation/markets.py` | latente: zero quote mancanti nelle stagioni valutate → impatto nullo |
+| F6 | draw_inflation × covariate: φ fittato senza features | `dixon_coles.py` | latente: mai combinate in nessun esperimento |
+| F7 | Fase 9-bis senza run nel registro | `_run_gap_covid.py` | storico: la regola è nata solo in Fase 15; deriva da run già registrati |
+
+**Il fix (F2).** `scripts/calibrate.py` dichiarava "config = ufficiale corrente"
+ma chiamava `run_backtest` **senza** `promoted_prior`: i numeri storici della
+Fase 6 erano corretti (il prior non esisteva ancora), ma un ri-run odierno
+avrebbe registrato come "ufficiale" una config che non lo è più. Ora legge
+TUTTA la config da `src.config.SERIE_A` (prior incluso) e registra
+`promoted_prior` nel config del run. F5 e F6 restano latenti e documentati qui:
+si correggono solo se/quando un esperimento li attiverà davvero (toccare ora
+`evaluation/markets.py` cambierebbe numeri registrati senza necessità).
+
+**Lezione.** Un contributo esterno di 19 commit è risultato **pulito sul piano
+metodologico** — merito anche del protocollo (walk-forward come idioma unico,
+`compute_metrics` come fonte unica, registro): un metodo che rende gli errori
+difficili vale più di una revisione a posteriori. Il difetto tipico trovato non
+è il bug di calcolo ma la **deriva di configurazione** (script scritti prima di
+un'adozione che nessuno aggiorna dopo): quando la config ufficiale cambia,
+grep degli script che la incorporano.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello nuovo: è una revisione di codice. Le formule verificate riga per
+riga contro `src/` sono quelle già documentate: il bersaglio del prior nello
+shrinkage (Fase 7, `dixon_coles.py`):
+
+```
+penalta' = shrinkage · [ Σ_i (att_i − a_prior_i)² + Σ_i (dif_i − d_prior_i)² ]
+a_prior_i = −δ, d_prior_i = +δ   se i ∈ promosse   (δ=0.23, Fase 7)
+a_prior_i = d_prior_i = 0        altrimenti
+```
+
+il temperature scaling (Fase 6, `calibration.py`): `q_k ∝ p_k^(1/T)` poi
+rinormalizzato (equivalente a dividere i logit per T); l'inflazione della
+diagonale (Fase 12b): `P'(i,i) = (1+φ)·P(i,i)` con clip ≥0 e **rinormalizzazione
+finale a somma 1**. Nessun numero nuovo da motivare: l'unico run prodotto è la
+riproduzione del backtest ufficiale (config invariata da `src/config.py`),
+registrato in `runs.jsonl` con commit e impronta dati.
 
 ---
 
