@@ -43,12 +43,12 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 |---|:-:|:-:|:-:|:-:|
 | **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F76 (13/14 vs DC, chiusura 2019-26) + F75 (apertura) | ⚽ F76 (13/14 vs DC) + F75 | ⚽ struttura (ρ=−0.06 unico; F76: 13/14 su TUTTE e 3 le leghe dalla chiusura, zero ritarature; F75: 17/20 dall'apertura su 2.280 partite vergini) |
 | **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225) | ❌ F53 (θ=1.069, non paga) | ❌ F53 (θ=1.097, non paga) | ❌ θ decresce con la liquidità E cresce nel tempo (F75: 1718 ~1.03 → 1819 ~1.16 → 2019+ ~1.2): **per-contesto** (lega × epoca), mai copiarlo |
-| **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ⬜ ✱2 | ⬜ ✱2 | ⬜ |
+| **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ❌ F80 (nulla, fit sui bound) | 🪑 F80 (**CI<0 sul GG**, φ0 0.32/κ 2.9) ✱2 | ❌ costanti e segno per-lega |
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
 | **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
-| GG/NG φ35+knee34 su market-implied | 🪑 F50 | ⬜ | ⬜ | ⬜ |
+| GG/NG φ35+knee34 su market-implied | 🪑 F50 (riconf. F80: −0.0014 P97%) | ❌ F80 (nulla) | ❌ combo F80 (il k34 PEGGIORA con CI>0: profilo-ospite invertito); φ35-sola 🪑 | ❌ il nudge ha segno per-lega |
 | Ricalibrazione per-classe del mercato (w_D, w_A) | 🪑 F50-ter | ❌ F53 (direzione OPPOSTA, w_D=0.93) | 🪑 F53 (+3.6% P81) | ❌ segno non universale |
 | Devig di Shin | 🪑 F52-ter (P 97%) | 🪑 F53 (P 68%) | 🪑 F53 (P 94%) | 🪑 sempre ≥ moltiplicativo |
 | φ35 sul path DC standalone | 🪑 F35 | ❌ F79 (φ0→0: deficit inesistente) | ❌ F79 (fit ≈SA ma non paga) | ❌ segno non universale (PL invertita) |
@@ -83,12 +83,14 @@ Note della matrice:
   (2019-26), **senza ritarare ρ** — la struttura è davvero universale (solo gli
   input, le quote, sono per-lega). La φ35 resta da testare per-lega (✱2); il θ
   del router NON si trasferisce (F75: per-contesto, lega × epoca).
-- **✱2** Il draw-bias non si replica in Premier (F53) e la F79 ha chiuso il
-  cerchio sul path DC: **φ0 fitta ZERO in Premier** (il deficit-pareggio non
-  esiste lì, il vincolo φ0≥0 impedisce il segno negativo che i dati
-  chiederebbero) mentre in Liga il fit è ≈Serie A ma non paga. Resta ⬜ solo
-  la φ35 dentro il router market-implied (famiglia-pareggio sui tassi del
-  MERCATO): prior sfavorevole dopo la F79, specie in Premier.
+- **✱2** Il draw-bias non si replica in Premier (F53) e le F79/F80 hanno
+  chiuso il cerchio su ENTRAMBI i path: **φ0 fitta ZERO in Premier** sul path
+  DC (F79) e resta instabile/inefficace sui tassi di mercato (F80) — il
+  deficit-pareggio non esiste lì. In **Liga** invece la φ35 di mercato ha il
+  **primo CI<0 per-lega del progetto** (GG −0.0006 [−0.0011,−0.0001], P 99%,
+  φ0≈0.32 κ≈2.9 stabili, F80): in panchina alta, si promuove quando riappare
+  su stagioni nuove o quando `predict.py` diventa per-lega. Il k34 in Liga
+  PEGGIORA con CI>0 (profilo-ospite di fine stagione invertito, ×0.915).
 - **✱3** dp_lvl è nel tool `predict.py` SOLO per la Serie A; è "valore da
   oracolo" (log-loss), NON da scommessa (F51-ter: niente ROI).
 - **✱4** F57: la ri-taratura per lega è PIATTA su emivita/shrinkage/α → gli
@@ -120,7 +122,8 @@ Note della matrice:
 
 | # | leva (fase) | Δ nominale | perché in panchina | attivazione |
 |---|---|---|---|---|
-| 1 | GG/NG: φ35+knee34 sul market-implied (50) | **−0.0010** GG (P 98%) | CI al limite + multiple testing | opt-in engine |
+| 1 | GG/NG: φ35+knee34 sul market-implied (50) | **−0.0010** GG (P 98%); riconf. F80 −0.0014 (P 97%) | CI al limite + multiple testing | opt-in engine |
+| 1-bis | **GG/NG Liga: φ35 sola sul market-implied (80)** | **−0.0006 [−0.0011,−0.0001] CI<0, P 99%** | primo test su quella lega (prudenza F17); tool non ancora per-lega | φ0≈0.32, κ≈2.9 in `price_markets` per la Liga |
 | 2 | Ricalibrazione per-classe del MERCATO (50-ter) | −0.0006 pooled (P 78%) | servono ~20 stagioni; **Premier smentisce il segno** (F53) | `market_denoise` |
 | 3 | Devig di Shin (52-ter) | −0.0007 1X2 (P 97%); direzione confermata su 3/3 leghe (F53) | non concluso; toccherebbe la fonte unica | funzione pronta |
 | 4 | φ(λ−μ) sul path DC standalone (35) | −0.0007 1X2 | CI include 0 | `--draw-balance` |
@@ -144,8 +147,13 @@ Note della matrice:
 - **Perché in panchina**: CI che tocca lo zero dopo ~50 fasi di test sulla
   stessa finestra (disciplina multiple-testing, Fase 17); deriva temporale del
   guadagno sospetta.
-- **Fronti**: solo Serie A. **Promozione se**: il guadagno riappare su stagioni
-  NUOVE (2026-27+) o sul fronte per-lega di Premier/Liga (mai provato lì).
+- **Fronti (aggiornato F80)**: la condizione "riappare su Premier/Liga" è
+  stata TESTATA — esito misto e istruttivo: la combo NON trasferisce (PL
+  nulla; in Liga il k34 peggiora con CI>0, profilo-ospite invertito ×0.915),
+  ma la **φ35 da sola in Liga dà il primo CI<0 per-lega del progetto**
+  (voce 1-bis). In Serie A la combo si riconferma sulla finestra pulita
+  1920-2526 (−0.0014, P 97%). **Promozione se**: il guadagno riappare su
+  stagioni NUOVE (2026-27+).
 
 #### 2 · Ricalibrazione per-classe del MERCATO (w_D≈1.09, w_A≈1.06) — Fase 50-ter
 - **Cosa**: correggere la chiusura stessa per il draw-bias noto (pari e

@@ -114,6 +114,44 @@ però chiuso per test in SA (Fasi 47/48: l'effetto si sgonfia con più dati);
 riaprirlo per la Premier richiederebbe un CI conclusivo lì — annotato come
 pista condizionale, non come test immediato.
 
+## 3-bis · LE DIFFERENZE CON LA SERIE A, in un colpo d'occhio
+
+La tabella-sintesi di TUTTO ciò che è stato misurato finora sulle tre leghe
+(fonte tra parentesi). È la mappa per ragionare sui prossimi modelli: dove la
+colonna è uniforme il fenomeno è "del calcio" (versione generale possibile,
+principio §1.9); dove diverge è per-lega (mai copiare i numeri, §7).
+
+| dimensione | Serie A | Premier | La Liga | universale? |
+|---|--:|--:|--:|:--|
+| γ vantaggio-casa (F55) | 0.150 | 0.185 | **0.272** | ❌ per-lega (auto-fittato dal DC) |
+| γ_t stabilità (F79-EDA) | in calo | **volatile** (0.01 COVID, 0.06 nel 2425) | **alto e stabile** | ❌ |
+| pareggi % (F55) | 26.0% | **23.4%** | 26.5% | ❌ la "firma inglese" |
+| δ neopromosse (F55/57) | 0.23 | **0.33** | 0.22 | ❌ per-lega (in config) |
+| gol/partita · Over% (F55) | 2.72 · 52% | **2.84 · 54%** | **2.58 · 47%** | ❌ |
+| Var/Media gol (F55) | 1.06 | **1.11** | 1.05 | ❌ |
+| corr xG-gol (F55) | 0.61 | 0.64 | 0.62 | ✅ xG di pari qualità |
+| emivita/shrinkage/α ottimi (F57) | 365/1.5/0.75 | uguali | uguali | ✅ **iperparametri DC generali** |
+| margine book (F55) | 4.9% | **4.3%** | 4.8% | ❌ liquidità crescente PL |
+| gap DC vs mercato (F56) | +0.0165 | **+0.0207** | +0.0162 | ~ stesso ordine; peggio dove il book è più liquido |
+| θ sotto-dispersione (F53) | **1.21** | 1.07 | 1.10 | ❌ decresce con la liquidità |
+| dp_lvl batte la chiusura (F52/53) | **sì (CI)** | no | no | ❌ idiosincrasia SA |
+| draw-bias mercato equilibrate (F79-EDA) | **+0.032** | **−0.009 (opposto)** | +0.022 | ❌ segno NON universale |
+| deficit-pareggio del DC: φ0 fittato (F35/79) | 0.39 | **0.00 (bound)** | 0.39 | ❌ tratto LATINO, assente in PL |
+| ROI pari-equilibrio (F40/53) | +4.7% (P83) | **−5.4%** | +3.6% (P81) | ❌ mai giocare il pari in PL |
+| congestione riposo ≤3g (F79-EDA) | 14% | **22% (36% a dic.)** | 18% | ❌ ma covariata = rumore su 3/3 (F79) |
+| profilo fine-stagione tasso-ospite (F80) | ~1.0 (adattivo) | **×1.10 (boost)** | **×0.915 (CALO)** | ❌ segno opposto: in Liga il vantaggio-casa non crolla nel finale |
+| catena GG/NG migliore (F50/80) | φ35+k34 (P 97%) | **liscio** (nulla paga) | **φ35 sola (CI<0, P 99%)** | ❌ stessa cassetta degli attrezzi, assemblaggio per-lega |
+| market-implied multi-mercato (F76) | 13/14 | 13/14 | 13/14 | ✅ **il motore è universale** (ρ=−0.06 unico) |
+| pari/dispari imprevedibile (F26/75/76) | sì | sì | sì | ✅ irriducibile ovunque |
+
+**Sintesi in tre righe.** (1) Tutto ciò che è *struttura* (matrice DC,
+market-implied, iperparametri del fit, xG) trasferisce così com'è. (2) Tutto
+ciò che è *livello* (γ, δ, gol, θ) è per-lega ma o è auto-fittato o è già in
+config. (3) Tutto ciò che è *bias sfruttabile* (draw-bias, sotto-dispersione,
+dp_lvl) è idiosincratico — e la Premier, il mercato più liquido, non ne ha
+nessuno: è la lega dove il book sbaglia meno e il modello serve solo a
+prezzare i mercati non quotati.
+
 ## 4 · Ragionamento: quali modelli/valori usare oggi su PL/Liga
 
 Stato per-mercato (dalla rosa PANCHINA.md, dopo la Fase 76):
@@ -134,7 +172,7 @@ Stato per-mercato (dalla rosa PANCHINA.md, dopo la Fase 76):
 |---|---|---|---|
 | A | **φ35 per-lega** (equilibrio-pareggio, path DC) | unica cella ⬜ del motore titolare; EDA 3a: il deficit-modello può esserci anche dove il mercato non sbaglia; su PL possibile φ0≈0 (il fit stesso è la risposta) | ❌ **bocciata su entrambe (F79, §6)** |
 | B | **covariate congestione** rest_full/midweek | colonne pronte (F59), mai testate fuori SA; PL la lega più esposta (3a); in SA erano rumore | ❌ **rumore ovunque (F79, §6)** |
-| C | GG/NG φ35+knee34 sul market-implied per-lega | panchina #1: la promozione è condizionata proprio al "riappare su PL/Liga"; il GG/NG è il mercato senza tetto dimostrato; **dopo la F79 il prior su PL è sfavorevole** (φ0→0), su Liga plausibile | prossimo candidato |
+| C | GG/NG φ35+knee34 sul market-implied per-lega | panchina #1: la promozione è condizionata proprio al "riappare su PL/Liga"; il GG/NG è il mercato senza tetto dimostrato; **dopo la F79 il prior su PL è sfavorevole** (φ0→0), su Liga plausibile | ✅ **fatto (F80, §6-bis): Liga φ35 CI<0; PL nulla; k34 solo-SA** |
 | D | Devig di Shin per-lega nel motore | direzione già confermata 3/3 leghe (F53); è candidato GENERALE, costo = migrazione fonte unica | in attesa (decisione di progetto, non di lega) |
 | E | Ricalibrazione w_D/w_A per-lega della chiusura | segno OPPOSTO tra PL e SA/Liga (F53 + EDA 3a): mai pooled, solo per-lega; servono più stagioni | raccolta prospettica |
 | F | γ dinamico per la Premier | EDA 3c: γ_t Premier volatile; ma architettura chiusa in SA (F47/48) | condizionale (solo con un meccanismo nuovo) |
@@ -177,6 +215,40 @@ ufficiale per-lega, bootstrap B=10.000). Dettaglio completo nel
 **Conseguenza operativa (aggiorna §4):** confermato in pieno — su PL/Liga il
 listino si prezza col market-implied **liscio** e il fallback DC resta con la
 sola config `LEAGUE_CONFIGS`; nessuna leva Serie A si accende fuori casa.
+*(Aggiornamento F80: per la Liga la famiglia GG/pareggio guadagna una leva
+propria — vedi §6-bis.)*
+
+## 6-bis · La catena GG/NG per-lega (Fase 80) — il primo CI conclusivo fuori dalla Serie A
+
+Run `fase80_ggng_mi_league` (12 run, 3 leghe × 4 varianti; SA rifatta sulla
+stessa finestra 1920→2526 come riferimento). Δ GG/NG vs motore liscio,
+bootstrap B=10.000 (* = CI95 esclude lo zero):
+
+| variante | Serie A | Premier | La Liga |
+|---|--:|--:|--:|
+| φ35 | −0.0003 (P 95%) | +0.0001 (P 16%) | **−0.0006 (P 99%)*** |
+| k34 (nudge-μ) | −0.0012 (P 97%) | −0.0002 (P 62%) | **+0.0008 (P 2%) peggiora*** |
+| φ35+k34 | **−0.0014 (P 97%)** | −0.0002 (P 62%) | +0.0002 (P 28%) |
+
+**Le tre catene GG/NG (una per lega):**
+
+| lega | catena migliore | costanti (medie LFO) |
+|---|---|---|
+| Serie A | market-implied → k34 → φ35 (Fase 50, riconfermata qui) | φ0 0.16-0.20, κ 1.5 |
+| Premier | market-implied **liscio** (nessuna leva paga) | — (fit sui bound: φ0 0.68→0.00) |
+| La Liga | market-implied → **φ35 sola** | **φ0 ≈ 0.32, κ ≈ 2.9** (stabili 5/6 fit) |
+
+**Perché il k34 tradisce in Liga**: il profilo di fine stagione del
+tasso-ospite è **invertito** — boost-38ª 0.915 (l'ospite segna MENO nel
+finale) contro 1.10 della Premier e ~1.0 della Serie A. Coerente col γ_t
+alto e stabile dell'EDA §3c: in Spagna il vantaggio-casa non crolla nelle
+ultime giornate. Applicare la costante Serie A lì spinge nel verso sbagliato
+(+0.0008 con CI>0): l'esempio da manuale del §7 ("mai copiare i numeri").
+
+**Onestà**: il CI<0 della Liga è su test pre-dichiarato, direzionale e su lega
+quasi vergine — ma è il primo risultato lì: prudenza multiple-testing (F17) =
+in **panchina alta**, si promuove in config quando riappare su stagioni nuove
+(2026-27+) o quando `predict.py` diventa per-lega (debito Fase 78).
 
 ## 7 · Prossimi passi / dati che sbloccherebbero altro
 

@@ -7902,6 +7902,103 @@ cache `outputs/db79_*.csv`).
 
 ---
 
+## Fase 80 — La catena GG/NG del market-implied su Premier/Liga: la φ35 paga in Liga (CI<0), il nudge no
+
+**Obiettivo.** Test C dello studio per-lega (STUDIO_PREMIER_LIGA §5): la voce
+#1 della panchina — la miglior stima GG/NG del progetto (market-implied →
+nudge-μ knee34 → φ(|λ−μ|), Fase 50: GG 0.6810, Δ −0.0010, P 98%) — ha la
+promozione condizionata proprio a "il guadagno riappare sul fronte per-lega di
+Premier/Liga". Il GG/NG è l'unico mercato senza quote nei dati (nessun tetto di
+efficienza dimostrato, §1.8): ogni guadagno lì è spendibile.
+
+**Ipotesi dichiarate PRIMA** (dal prior della Fase 79): su Premier la catena
+non pagherà (φ0 del path DC fitta zero, il deficit-pareggio non esiste); su
+Liga può pagare (fit ≈ Serie A). La Serie A è rifatta sulla STESSA finestra
+(1920→2526, chiusure reali post-Fase 73) come riferimento pulito.
+
+**Cosa abbiamo fatto** (`_run_fase80_ggng_mi_league.py`, replica esatta del
+ramo devig=prop della Fase 50: inversione chiusura → λ,μ → varianti tau /
+phi35 / k34 / phi35+k34, parametri leave-future-out, bootstrap B=10.000;
+12 run `fase80_ggng_mi_league`, 3 leghe × 6 stagioni test 2021→2526, n=2280
+per lega).
+
+**Risultato (Δ GG/NG vs motore liscio; * = CI95 esclude lo zero):**
+
+| variante | Serie A | Premier | La Liga |
+|---|--:|--:|--:|
+| φ35 | −0.0003 (P 95%) | +0.0001 (P 16%) | **−0.0006 [−0.0011,−0.0001] (P 99%)*** |
+| k34 | −0.0012 (P 97%) | −0.0002 (P 62%) | **+0.0008 [+0.0000,+0.0016] (P 2%)** peggiora* |
+| φ35+k34 | −0.0014 (P 97%) | −0.0002 (P 62%) | +0.0002 (P 28%) |
+
+Costanti fittate (medie LFO): φ0 SA 0.16 / PL 0.17 (instabile 0.68→0, κ sui
+bound) / **Liga 0.32 (stabile 0.30-0.47, κ≈2.9)**; boost-μ alla 38ª: SA 0.976,
+PL 1.097, **Liga 0.915** (sotto 1!).
+
+**Lettura — tre leghe, tre catene GG/NG diverse:**
+1. **Serie A**: la combo φ35+k34 si RICONFERMA sulla finestra pulita
+   (−0.0014, P 97%; era −0.0010 P 98% in Fase 50) — resta la miglior stima
+   GG/NG, resta in panchina (CI sfiora lo zero).
+2. **La Liga — il primo risultato per-lega conclusivo fuori dalla Serie A**:
+   la φ35 DA SOLA batte il motore liscio con CI95<0 sul test pre-dichiarato
+   (GG −0.0006 [−0.0011,−0.0001]). Ma il **nudge k34 in Liga PEGGIORA con
+   CI>0**: il profilo di fine stagione del tasso-ospite è INVERTITO (boost-38ª
+   0.915: in Liga l'ospite segna MENO nel finale, non di più) — la costante
+   knee34 della Serie A applicata lì spinge nel verso sbagliato, e rovina
+   anche la combo. Catena Liga = **φ35 e basta** (φ0≈0.32, κ≈2.9).
+3. **Premier**: nulla funziona (tutte le P 16-62%, fit sui bound) —
+   quarta conferma che ogni leva-pareggio è fuori posto in Inghilterra.
+   Catena Premier = **motore liscio**.
+
+**Onestà (multiple testing).** Il CI<0 della Liga è sul mercato-headline
+(GG/NG) di un'ipotesi direzionale dichiarata prima, su una lega quasi vergine
+(2 fasi di test, non 50) — le condizioni migliori possibili. Resta il PRIMO
+risultato su questa lega: prudenza = niente config finché non riappare su
+stagioni nuove (2026-27+) o il tool diventa per-lega. Stessa etichetta del δ
+Serie A alla Fase 7: "molto probabile, adottabile, non ancora inciso".
+
+**Lezione / cosa ne consegue.**
+1. Il principio 8 ("valuta PER MERCATO") ora ha anche la dimensione PER-LEGA:
+   la stessa catena di leve si assembla in modo diverso per lega — SA
+   φ35+k34, Liga φ35, PL liscio. Le COSTANTI divergono perché i meccanismi
+   sottostanti divergono (deficit-pareggio latino; profilo stagionale
+   dell'ospite di segno opposto tra SA/PL e Liga).
+2. Il profilo di fine stagione INVERTITO della Liga (0.915 vs 1.097 PL) è un
+   fatto nuovo, coerente col γ_t alto e stabile (EDA 79): in Spagna il
+   vantaggio-casa NON crolla nel finale come in Serie A (Fase 30) — anzi.
+3. Aggiornata la rosa (PANCHINA): φ35-Liga in panchina ALTA (CI<0, condizioni
+   di promozione scritte), combo e k34 bocciati fuori SA, righe per-lega.
+
+### 📐 Il modello in dettaglio
+
+Formule identiche alle Fasi 39/48/50 (verificate sul sorgente), applicate
+per-lega; nessuna matematica nuova.
+- **φ35 di mercato** (`market_implied.fit_balance_phi` / `balance_phi`):
+  `φ(λ,μ) = φ0·exp(−κ·|λ−μ|)` con (λ,μ) INVERTITI dalla chiusura devigata
+  (moltiplicativa, ρ=−0.06), fittata per verosimiglianza dei pareggi sulle
+  stagioni passate (bound φ0∈[0,2], κ∈[0,5]), applicata come `diag_inflation`
+  alla `score_matrix`. **Perché φ0_Liga=0.32**: a |λ−μ|=0 i pareggi liscio
+  sono gonfiati del 32%·(quota diagonale) — è il deficit-pareggio latino
+  misurato sui tassi del MERCATO, stabile in 5/6 fit (0.30-0.47; il primo fit,
+  0.098, ha una sola stagione di dati). **Perché in PL il fit è instabile**
+  (0.68→0.00, κ sul bound 5): likelihood quasi piatta = nessun segnale, come
+  il φ0=0 del path DC (Fase 79).
+- **Nudge k34** (`_fit_nudge`, MLE Poisson con offset ln μ): base
+  `[1, s, tail34]` con `s=(g−19.5)/18.5`, `tail34=max(0,g−34)/4`;
+  boost-38ª = `exp(X(38)·ĉ)`. **Perché 0.915 in Liga**: i coefficienti
+  fittati sui dati spagnoli dicono che il tasso-ospite di fine stagione va
+  RIDOTTO ~8.5% (in SA/PL alzato ~0-10%) — coerente col vantaggio-casa
+  spagnolo che non crolla nel finale (γ_t stabile, EDA 79). Applicare al
+  test una riduzione fittata sul passato produce Δ **+0.0008 CI>0**: il
+  profilo esiste ma è troppo rumoroso per pagare out-of-sample sul GG.
+- **Metriche per-riga** (`_row_ll` = Fase 50): GG = binaria su `btts` della
+  matrice; Δ e CI da bootstrap appaiato per-riga (B=10.000, seed 80).
+  Numeri ricalcolabili dai 12 run `fase80_ggng_mi_league`.
+
+**Riproducibilità.** `python scripts/_run_fase80_ggng_mi_league.py`
+(~2 min con cache `outputs/implied_rates80_*.csv`, ~10 senza).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
