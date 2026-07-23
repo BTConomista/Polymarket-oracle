@@ -42,7 +42,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | modello | Serie A | Premier | La Liga | generale (pooled) |
 |---|:-:|:-:|:-:|:-:|
 | **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F76 (13/14 vs DC, chiusura 2019-26) + F75 (apertura) | ⚽ F76 (13/14 vs DC) + F75 | ⚽ struttura (ρ=−0.06 unico; F76: 13/14 su TUTTE e 3 le leghe dalla chiusura, zero ritarature; F75: 17/20 dall'apertura su 2.280 partite vergini) |
-| **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225) | ❌ F53 (θ=1.069, non paga) | ❌ F53 (θ=1.097, non paga) | ❌ θ decresce con la liquidità E cresce nel tempo (F75: 1718 ~1.03 → 1819 ~1.16 → 2019+ ~1.2): **per-contesto** (lega × epoca), mai copiarlo |
+| **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225; riconf. F81: cs −0.0078 lfo CI<0) | ❌ F53/F81 (curva piatta, θ*≈1.05: nulla) | 🪑 **F81 RIBALTA F53**: θ≈1.2 → cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (tutti lfo CI<0); la F53 testava il θ da MLE-punteggi (1.097), troppo piccolo | ❌ θ per-contesto (lega × epoca); lezione F81: **θ-da-mercati ≠ θ-da-punteggi** |
 | **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ❌ F80 (nulla, fit sui bound) | 🪑 F80 (**CI<0 sul GG**, φ0 0.32/κ 2.9) ✱2 | ❌ costanti e segno per-lega |
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
@@ -123,7 +123,8 @@ Note della matrice:
 | # | leva (fase) | Δ nominale | perché in panchina | attivazione |
 |---|---|---|---|---|
 | 1 | GG/NG: φ35+knee34 sul market-implied (50) | **−0.0010** GG (P 98%); riconf. F80 −0.0014 (P 97%) | CI al limite + multiple testing | opt-in engine |
-| 1-bis | **GG/NG Liga: φ35 sola sul market-implied (80)** | **−0.0006 [−0.0011,−0.0001] CI<0, P 99%** | primo test su quella lega (prudenza F17); tool non ancora per-lega | φ0≈0.32, κ≈2.9 in `price_markets` per la Liga |
+| 1-bis | **GG/NG Liga: φ35 sola sul market-implied (80/81)** | **−0.0006 CI<0 (fit MLE, F80)**; con costanti da griglia (φ0 0.7, κ 0.5) **lfo −0.0019 CI<0 (F81)** | primo test su quella lega (prudenza F17); tool non ancora per-lega | φ per la Liga in `price_markets` (griglia > MLE, come per θ) |
+| 1-ter | **Router θ per la Liga (81)** | **θ≈1.2: cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (lfo CI<0)** | ribalta F53 (che usava il θ MLE 1.097); primo giro di conferme, tool non per-lega | `price_markets(dp_theta≈1.2)` per la Liga |
 | 2 | Ricalibrazione per-classe del MERCATO (50-ter) | −0.0006 pooled (P 78%) | servono ~20 stagioni; **Premier smentisce il segno** (F53) | `market_denoise` |
 | 3 | Devig di Shin (52-ter) | −0.0007 1X2 (P 97%); direzione confermata su 3/3 leghe (F53) | non concluso; toccherebbe la fonte unica | funzione pronta |
 | 4 | φ(λ−μ) sul path DC standalone (35) | −0.0007 1X2 | CI include 0 | `--draw-balance` |
@@ -285,4 +286,10 @@ Note della matrice:
 
 ## Archivio (voci uscite dalla rosa)
 
-*(vuoto — le voci smentite o promosse si spostano qui con data e motivo)*
+- **2026-07-23 (Fase 81)** — *Router v3 su La Liga*: da ❌ (F53) a 🪑 alta.
+  Motivo: la bocciatura F53 usava il θ fittato per MLE sui punteggi (1.097);
+  il mega-sweep F81 mostra che l'ottimo operativo sui mercati è θ≈1.2 (come
+  in Serie A: MLE 1.205 → router 1.225) e con quello il router migliora
+  ris. esatto/1X2/GG con selettore walk-forward e CI<0. La regola nuova:
+  le costanti operative si scelgono sui MERCATI (griglia+lfo), non sulla
+  verosimiglianza dei punteggi.

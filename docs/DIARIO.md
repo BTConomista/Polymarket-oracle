@@ -7999,6 +7999,112 @@ per-lega; nessuna matematica nuova.
 
 ---
 
+## Fase 81 — Mega-sweep delle costanti del market-implied per-lega: le curve di risposta complete (e il ribaltamento del router-Liga)
+
+**Obiettivo (utente).** "Spremere questi dati con un mega backtest che copra
+quante più opzioni possibili per un singolo modello, assegnando vari valori a
+una singola costante." Il modello giusto è il TITOLARE (market-implied): senza
+fit walk-forward costosi si può tracciare la **curva di risposta completa** di
+ogni costante, per lega e per mercato — decine di valori invece dei 2-3 punti
+delle fasi passate. Le curve dicono: dove sta l'ottimo per lega, quanto è
+piatta la valle (= quanto conta la costante), e se le leghe chiedono numeri
+diversi (§7).
+
+**Il metodo** (`_run_fase81_mega_sweep_mi.py`, 12+2 run): 4 assi × 3 leghe ×
+6 mercati (1X2, GG, pareggio, ris. esatto, multigol, O/U), stagioni 1920→2526
+(test 2021→2526, n=2280/lega), ~70 varianti/lega:
+- **ρ** ∈ {−0.22…+0.02} (11 valori, con RI-INVERSIONE delle quote per ogni ρ:
+  coerenza inversione↔matrice);
+- **θ** double-Poisson ∈ {1.00…1.50} (10);
+- **φ0×κ** ∈ {0…0.7}×{0.5…5} (31 combo);
+- **knee** del nudge-μ ∈ {25…37} (5, coefficienti sempre leave-future-out).
+Onestà della selezione: il minimo della curva è selezione in-sample; per ogni
+asse×mercato si valuta anche il **selettore walk-forward "lfo"** (sceglie il
+valore col log-loss migliore sulle sole stagioni passate). Solo un guadagno
+che sopravvive al selettore è reale.
+
+**Risultato 1 — la Premier è GIÀ al suo ottimo su ogni asse.** Le valli
+premier sono centrate esattamente sul riferimento: ρ*=−0.06/−0.04, θ*≈1.05
+(nulla, P≤91% in-sample e il selettore peggiora), φ*=(0,0), knee*=none. Dopo
+~70 varianti: **il motore liscio È il modello Premier** — la sesta conferma,
+stavolta esaustiva, che il mercato più liquido non lascia margini nemmeno
+sulla forma.
+
+**Risultato 2 — Serie A e Liga vogliono θ≈1.2, e per la Liga è un
+RIBALTAMENTO.** Le curve latine hanno ottimi interni netti sul risultato
+esatto: θ*=1.2-1.25 (SA −0.0079, Liga −0.0085, entrambe CI<0 anche col
+selettore lfo). Sull'1X2 il log-loss migliora monotono fino a θ=1.5
+(sharpening: la chiusura devigata è sotto-confidente, Fase 51-bis — non è
+dispersione ma temperatura). In **Liga** anche GG (lfo −0.0025, CI<0) e 1X2
+(lfo −0.0023, CI<0): la **Fase 53 aveva bocciato il router-Liga testando il
+θ fittato per MLE sui punteggi (1.097) — troppo piccolo**; la griglia mostra
+che l'ottimo operativo è ~1.2, come in Serie A (router v3, θ=1.225, dove il
+MLE dava 1.205). Lezione: il θ che minimizza il log-loss dei MERCATI non è il
+θ che massimizza la verosimiglianza dei PUNTEGGI — in Liga la differenza
+(1.097 vs 1.2) decideva il verdetto. Riga della rosa aggiornata: router-Liga
+da ❌ a 🪑 alta (θ≈1.2, promozione con le solite condizioni).
+
+**Risultato 3 — il check congiunto ρ×θ (Fase 81-bis) evita un doppio
+conteggio.** Le curve univariate suggerivano anche "ρ molto negativo aiuta"
+(SA/Liga, fino al bordo −0.22). Ma ρ<0 e θ>1 concentrano ENTRAMBI la matrice:
+griglia congiunta ρ×θ (`_run_fase81_joint_rho_theta.py`) → **a θ ottimo, ρ
+oltre −0.06 PEGGIORA il risultato esatto** (SA +0.0088, Liga +0.0119) e non
+aiuta più l'1X2 (Liga: +0.0014). I guadagni dell'asse ρ erano **θ sotto
+mentite spoglie**: si adotta UNA leva (θ), non due; **ρ=−0.06 resta la
+costante universale** anche dopo il sweep più ampio mai fatto. (Residuo: sul
+solo GG un filo di ρ-in-più aiuta ancora ~−0.0014 — è la stessa massa
+diagonale che la φ gestisce più pulitamente, vedi sotto.)
+
+**Risultato 4 — φ e knee: conferme con numeri migliori.** φ-grid sul GG:
+Liga (φ0 0.7, κ 0.5) lfo −0.0019 CI<0 (più forte del fit-MLE della Fase 80,
+−0.0006: anche qui il MLE sotto-stima la costante operativa; κ piccolo =
+boost quasi costante, non solo sulle equilibrate); SA (0.7, 0.5) lfo −0.0013
+(P 92%); Premier: (0,0), nulla. Knee: SA k34 GG −0.0012 CI<0 (replica F80);
+Liga e Premier: none (il nudge resta solo-SA). Il profilo boost-38ª per lega
+conferma la Fase 80: PL ×1.10, SA ~1.0, Liga ×0.92 (fino a ×0.77 con k37).
+
+**Sintesi operativa per lega (costanti del motore, stato dopo la Fase 81):**
+
+| costante | Serie A | Premier | La Liga |
+|---|---|---|---|
+| ρ | −0.06 (universale) | −0.06 | −0.06 |
+| θ router | ⚽ 1.225 (F52, riconfermato: cs* lfo*) | ❌ 1.0 (liscio) | 🪑→ **~1.2** (F81 ribalta F53: cs/GG/1X2 lfo CI<0) |
+| φ famiglia-pareggio/GG | ⚽ (F41/44) | ❌ 0 | 🪑 alta (φ0~0.3-0.7, F80/81) |
+| nudge-μ (knee) | 🪑 k34 solo GG | ❌ none | ❌ none (profilo invertito) |
+
+### 📐 Il modello in dettaglio
+
+Formule già nel motore (`market_implied.score_matrix`): marginali
+double-Poisson mean-preserving `dp_pmf(rate, θ)` (Fase 51: pmf ∝ exp(θ·(k·ln c·rate
+− c·rate − ln k!)), rinormalizzata e ri-centrata), correzione τ di
+Dixon-Coles con ρ sui punteggi bassi, inflazione diagonale φ. Il sweep
+valuta varianti a costanti FISSE: nessun fit per-riga, quindi ogni variante è
+un modello legittimo out-of-sample; la selezione onesta è delegata al
+selettore lfo (`_lfo_pick`: per la stagione i, argmin del LL medio sulle
+stagioni <i, 1920 inclusa; prima stagione → riferimento).
+- **Perché il θ "da mercati" ≠ θ "da punteggi"**: la MLE sui punteggi pesa
+  tutta la matrice; il log-loss di un mercato pesa solo la partizione
+  rilevante. Con code sottili (dp) l'1X2 guadagna anche oltre il θ vero
+  (effetto temperatura: la chiusura devigata è sotto-confidente di ~T=1.10,
+  Fase 51-bis), mentre il risultato esatto — che vede TUTTE le celle — ha
+  l'ottimo interno al θ di dispersione vera (1.2-1.25). Per questo il
+  router usa il θ ottimizzato sui mercati (1.225 in SA), non il MLE.
+- **Perché ρ e θ si sostituiscono**: per (0,0) il fattore τ è (1−λμρ) →
+  ρ<0 ALZA la massa su 0-0/1-1 (diagonale bassa); la dp θ>1 stringe le
+  marginali attorno alla media, alzando anch'essa i punteggi bassi quando
+  λ,μ<2. Sul GG/pareggio i due effetti quasi coincidono; sul risultato
+  esatto no (ρ distorce le code asimmetricamente) — da cui il verdetto del
+  check congiunto.
+- Δ e CI: bootstrap appaiato per-riga B=10.000, seed 81/8100. Numeri
+  ricalcolabili dai run `fase81_mega_sweep_mi` (12) e
+  `fase81_joint_rho_theta` (2).
+
+**Riproducibilità.** `python scripts/_run_fase81_mega_sweep_mi.py` (~5 min
+con cache inversioni `outputs/implied_rates81_*`; ~15 senza) →
+`python scripts/_run_fase81_joint_rho_theta.py` (~2 min).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

@@ -133,7 +133,8 @@ principio §1.9); dove diverge è per-lega (mai copiare i numeri, §7).
 | emivita/shrinkage/α ottimi (F57) | 365/1.5/0.75 | uguali | uguali | ✅ **iperparametri DC generali** |
 | margine book (F55) | 4.9% | **4.3%** | 4.8% | ❌ liquidità crescente PL |
 | gap DC vs mercato (F56) | +0.0165 | **+0.0207** | +0.0162 | ~ stesso ordine; peggio dove il book è più liquido |
-| θ sotto-dispersione (F53) | **1.21** | 1.07 | 1.10 | ❌ decresce con la liquidità |
+| θ sotto-dispersione MLE (F53) | **1.21** | 1.07 | 1.10 | ❌ decresce con la liquidità |
+| θ OPERATIVO del router (F81, da griglia+lfo) | ⚽ 1.225 | **1.0 (liscio)** | **~1.2 (ribalta F53!)** | ❌ ma SA≈Liga: le latine convergono |
 | dp_lvl batte la chiusura (F52/53) | **sì (CI)** | no | no | ❌ idiosincrasia SA |
 | draw-bias mercato equilibrate (F79-EDA) | **+0.032** | **−0.009 (opposto)** | +0.022 | ❌ segno NON universale |
 | deficit-pareggio del DC: φ0 fittato (F35/79) | 0.39 | **0.00 (bound)** | 0.39 | ❌ tratto LATINO, assente in PL |
@@ -249,6 +250,35 @@ ultime giornate. Applicare la costante Serie A lì spinge nel verso sbagliato
 quasi vergine — ma è il primo risultato lì: prudenza multiple-testing (F17) =
 in **panchina alta**, si promuove in config quando riappare su stagioni nuove
 (2026-27+) o quando `predict.py` diventa per-lega (debito Fase 78).
+
+## 6-ter · Il mega-sweep delle costanti (Fase 81) — le curve di risposta per lega
+
+Run `fase81_mega_sweep_mi` (12) + `fase81_joint_rho_theta` (2): ~70 varianti
+per lega (ρ×11 con ri-inversione, θ×10, φ0×κ×31, knee×5) su 6 mercati, con il
+**selettore walk-forward "lfo"** come guardia di onestà (sceglie la costante
+solo dal passato). Dettaglio nel [DIARIO, Fase 81](DIARIO.md).
+
+**Le costanti operative del motore, lega per lega (stato dopo la F81):**
+
+| costante | Serie A | Premier | La Liga |
+|---|---|---|---|
+| ρ | −0.06 (universale, confermato dal check congiunto) | −0.06 | −0.06 |
+| θ router | ⚽ 1.225 (riconf.: cs −0.0078 lfo CI<0) | ❌ 1.0 — la curva è piatta | 🪑 **~1.2** (cs −0.0069*, 1X2 −0.0023*, GG −0.0025*, lfo CI<0 — **ribalta la F53**) |
+| φ pareggio/GG | ⚽ router (F41/44) | ❌ 0 su tutta la griglia | 🪑 (0.7, 0.5): GG lfo −0.0019* |
+| nudge-μ | 🪑 k34 solo GG (−0.0012*) | ❌ none | ❌ none (profilo invertito) |
+
+**Le tre lezioni della fase:**
+1. **La Premier è già al suo ottimo su ogni asse** (valli centrate sul
+   riferimento, ~70 varianti): il motore liscio non è un ripiego, è il
+   modello giusto per il mercato più liquido.
+2. **θ-da-mercati ≠ θ-da-punteggi**: la F53 bocciò il router-Liga col θ da
+   MLE sui punteggi (1.097); l'ottimo sui MERCATI è ~1.2 — con quello il
+   router paga anche in Liga. Le costanti operative si scelgono con
+   griglia+selettore sui mercati, mai con la sola verosimiglianza.
+3. **Una leva, non due**: ρ molto negativo sembrava aiutare, ma il check
+   congiunto ρ×θ mostra che era θ sotto mentite spoglie (a θ ottimo, ρ
+   oltre −0.06 peggiora il ris. esatto di +0.009/+0.012). ρ=−0.06 resta
+   l'unica costante davvero universale del motore.
 
 ## 7 · Prossimi passi / dati che sbloccherebbero altro
 
