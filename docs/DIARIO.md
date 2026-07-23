@@ -8105,6 +8105,96 @@ con cache inversioni `outputs/implied_rates81_*`; ~15 senza) →
 
 ---
 
+## Fase 82 — Verifica diretta: ma indoviniamo davvero i risultati? (calibrazione e hit-rate su tutti i mercati)
+
+**Domanda (utente).** In tutto il progetto abbiamo confrontato log-loss contro
+il mercato — ma i valori predetti sono GIUSTI in assoluto? Indoviniamo gli
+esiti, non solo sull'1X2 ma su tutti i mercati? È una domanda diversa e
+legittima, mai affrontata in modo sistematico (calibrazione solo a campione:
+Fasi 6/10/35).
+
+**Metodo dichiarato prima** (`_run_fase82_verifica_predizioni.py`, 3 run).
+Due sensi verificabili di "essere nel giusto":
+1. **Calibrazione** — quando diciamo "60%", succede il ~60% delle volte?
+   (bias globale p̄−freq; **ECE** su 10 fasce di probabilità);
+2. **Hit-rate** — quanto spesso l'esito indicato come PIÙ PROBABILE si
+   verifica? (vs baseline "scegli sempre il più frequente", vs mercato).
+Avvertenza onesta, scritta prima: per eventi intrinsecamente incerti il
+hit-rate non può superare di molto mercato e baseline (se il calcio fosse
+prevedibile al 90%, le quote non esisterebbero); la misura giusta per un
+oracolo di probabilità è la calibrazione. Verificati: motore liscio, router
+per-lega (θ F81), mercato devigato, path DC senza quote — 19 mercati binari +
+1X2 + multigol + risultato esatto, 3 leghe × 6 stagioni (n=2280/lega).
+
+**Risultato 1 — SÌ: le probabilità sono giuste (ben calibrate).** Il motore
+ha |bias| ≤ 0.02-0.03 e ECE 0.004-0.04 su quasi tutti i 19 mercati e le 3
+leghe. Perfino sul risultato esatto la confidenza dichiarata è onesta: il
+top-pick indovina il **14.6%** (SA) dichiarando in media 13.9%, 12.3%/12.0%
+(PL), 15.4%/14.2% (Liga) — diciamo quello che sappiamo, né più né meno.
+
+**Risultato 2 — il hit-rate: quanto il mercato, sopra la baseline.**
+1X2 argmax: SA **54.2%** (mercato 54.3%, baseline-casa 40.4%), PL **55.3%**
+(=mercato), Liga **54.3%** (=mercato; baseline 45.0%). Risultato esatto:
+12-15% vs 11-13.7% del "sempre 1-1". Multigol ≈ baseline; pari/dispari al
+coin-flip (49-51%: la quinta replica dell'irriducibilità). Il modello
+indovina QUANTO il mercato — non di più (α*=0, Fase 16), ma nemmeno di meno,
+e molto sopra il tirare a caso informato.
+
+**Risultato 3 — le mis-calibrazioni residue sono ESATTAMENTE i bias noti,
+lega per lega.** La verifica indipendente ritrova, come errori di
+calibrazione, tutto ciò che le Fasi 50-53/79-81 avevano trovato via log-loss:
+- **Serie A**: casa sovra-prezzata +0.024 / pareggio sotto-prezzato −0.020
+  (il tilt del devig, Fasi 50-ter/52-ter) — è la calibrazione del MERCATO
+  stesso, visibile pure nei suoi derivati (scarto-casa≥2 +0.035);
+- **Premier**: calibrazione quasi PERFETTA ovunque (|bias|≤0.016, pareggio
+  +0.001, ECE fino a 0.003) — il mercato più liquido non è solo il più duro
+  da battere: è il meglio calibrato, riga per riga;
+- **Liga**: GG sotto-predetto −0.036 (il deficit-pareggio/NG latino) e
+  clean-sheet sovra-predetti +0.025/+0.027.
+E qui il cerchio si chiude: **il router θ per-lega (F81) MIGLIORA la
+calibrazione proprio dove era storta** — in Liga il bias GG passa da −0.036 a
+−0.008 (ECE 0.036→0.012), cs_home 0.025→0.012, e in generale il router
+riduce l'ECE su quasi tutti i mercati Liga. Una conferma della F81 su una
+metrica indipendente dal log-loss.
+
+**Risultato 4 — il path DC senza quote è un filo peggio, come atteso**:
+1X2 argmax 52.9-53.5% (vs 54-55% del market-implied), GG Liga bias −0.041.
+Coerente con la gerarchia nota (market-implied > DC quando ci sono le quote).
+
+**Lezione.** La risposta alla domanda dell'utente è: **sì, nel senso
+verificabile del termine** — le probabilità sono oneste (calibrate) e l'esito
+più probabile si indovina quanto lo indovina il mercato, sopra ogni baseline.
+Ciò che NON possiamo fare è indovinare *più* del mercato (Fasi 14-20), e la
+Fase 82 mostra il perché in forma nuova: gli errori di calibrazione residui
+del motore sono gli stessi del mercato che gli fa da input. Il valore
+operativo del progetto resta: (a) probabilità calibrate anche sui ~17 mercati
+che il book NON quota, (b) le correzioni per-lega (θ, φ) che raddrizzano le
+mis-calibrazioni locali.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello nuovo: è un AUDIT su predizioni già definite (motore Fase 26,
+router Fase 52/81, DC config ufficiale, devig moltiplicativo).
+- **ECE** = Σ_b w_b·|p̄_b − freq_b| su 10 fasce uguali [0,1] (w_b = quota di
+  righe nella fascia b). 0 = calibrazione perfetta; 0.02 ≈ "quando dico X%
+  sbaglio in media di 2 punti". `_ece` nello script.
+- **Hit-rate binario**: pick = p>0.5; baseline = max(freq, 1−freq) (scegliere
+  sempre l'esito maggioritario — battibile solo dove il modello DISCRIMINA
+  tra partite, non solo nel livello medio). 1X2/multigol: argmax delle 3
+  classi; baseline = classe più frequente. Risultato esatto: argmax della
+  matrice (router per-lega), baseline = "sempre 1-1".
+- **Perché su alcuni mercati hit=base**: quando freq è lontana da 0.5 (es.
+  wtn_away ~0.18) quasi nessuna partita ha p>0.5 → il pick coincide con la
+  baseline e la discriminazione la misura solo l'ECE/log-loss. È atteso, non
+  un difetto.
+- Numeri ricalcolabili dai 3 run `fase82_verifica_predizioni` (le tabelle
+  complete per-mercato sono nelle metriche dei run).
+
+**Riproducibilità.** `python scripts/_run_fase82_verifica_predizioni.py`
+(~5 min la prima volta: 6 backtest DC Serie A in cache `outputs/db82_*`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

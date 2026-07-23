@@ -124,7 +124,7 @@ Note della matrice:
 |---|---|---|---|---|
 | 1 | GG/NG: φ35+knee34 sul market-implied (50) | **−0.0010** GG (P 98%); riconf. F80 −0.0014 (P 97%) | CI al limite + multiple testing | opt-in engine |
 | 1-bis | **GG/NG Liga: φ35 sola sul market-implied (80/81)** | **−0.0006 CI<0 (fit MLE, F80)**; con costanti da griglia (φ0 0.7, κ 0.5) **lfo −0.0019 CI<0 (F81)** | primo test su quella lega (prudenza F17); tool non ancora per-lega | φ per la Liga in `price_markets` (griglia > MLE, come per θ) |
-| 1-ter | **Router θ per la Liga (81)** | **θ≈1.2: cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (lfo CI<0)** | ribalta F53 (che usava il θ MLE 1.097); primo giro di conferme, tool non per-lega | `price_markets(dp_theta≈1.2)` per la Liga |
+| 1-ter | **Router θ per la Liga (81)** | **θ≈1.2: cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (lfo CI<0)**; F82: raddrizza anche la CALIBRAZIONE (GG bias −0.036→−0.008, ECE 0.036→0.012 — metrica indipendente) | ribalta F53 (che usava il θ MLE 1.097); primo giro di conferme, tool non per-lega | `price_markets(dp_theta≈1.2)` per la Liga |
 | 2 | Ricalibrazione per-classe del MERCATO (50-ter) | −0.0006 pooled (P 78%) | servono ~20 stagioni; **Premier smentisce il segno** (F53) | `market_denoise` |
 | 3 | Devig di Shin (52-ter) | −0.0007 1X2 (P 97%); direzione confermata su 3/3 leghe (F53) | non concluso; toccherebbe la fonte unica | funzione pronta |
 | 4 | φ(λ−μ) sul path DC standalone (35) | −0.0007 1X2 | CI include 0 | `--draw-balance` |

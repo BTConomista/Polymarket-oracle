@@ -142,6 +142,8 @@ principio §1.9); dove diverge è per-lega (mai copiare i numeri, §7).
 | congestione riposo ≤3g (F79-EDA) | 14% | **22% (36% a dic.)** | 18% | ❌ ma covariata = rumore su 3/3 (F79) |
 | profilo fine-stagione tasso-ospite (F80) | ~1.0 (adattivo) | **×1.10 (boost)** | **×0.915 (CALO)** | ❌ segno opposto: in Liga il vantaggio-casa non crolla nel finale |
 | catena GG/NG migliore (F50/80) | φ35+k34 (P 97%) | **liscio** (nulla paga) | **φ35 sola (CI<0, P 99%)** | ❌ stessa cassetta degli attrezzi, assemblaggio per-lega |
+| calibrazione del mercato (F82) | tilt casa/pari ±0.02 | **quasi perfetta** (ECE fino a 0.003) | GG −0.036 (raddrizzato dal router θ) | ❌ le mis-calibrazioni sono i bias per-lega noti |
+| hit-rate 1X2 modello (F82) | 54.2% (=mercato) | 55.3% (=mercato) | 54.3% (=mercato) | ✅ si indovina quanto il mercato, ovunque |
 | market-implied multi-mercato (F76) | 13/14 | 13/14 | 13/14 | ✅ **il motore è universale** (ρ=−0.06 unico) |
 | pari/dispari imprevedibile (F26/75/76) | sì | sì | sì | ✅ irriducibile ovunque |
 
@@ -279,6 +281,23 @@ solo dal passato). Dettaglio nel [DIARIO, Fase 81](DIARIO.md).
    congiunto ρ×θ mostra che era θ sotto mentite spoglie (a θ ottimo, ρ
    oltre −0.06 peggiora il ris. esatto di +0.009/+0.012). ρ=−0.06 resta
    l'unica costante davvero universale del motore.
+
+## 6-quater · La verifica diretta (Fase 82): siamo calibrati, e il router raddrizza la Liga
+
+Run `fase82_verifica_predizioni` (3): calibrazione (bias, ECE) e hit-rate su
+19 mercati binari + 1X2 + multigol + risultato esatto. Sintesi cross-lega:
+
+- **le probabilità sono giuste**: |bias|≤0.02-0.03 e ECE 0.004-0.04 quasi
+  ovunque; sul risultato esatto il top-pick indovina il 12-15% dichiarando
+  il 12-14% (confidenza onesta);
+- **hit-rate = mercato** su tutte e 3 le leghe (1X2 54-55% vs baseline
+  40-45%); pari/dispari resta un coin-flip;
+- le mis-calibrazioni residue sono i **bias per-lega noti** (SA tilt
+  casa/pari; PL quasi perfetta; Liga GG −0.036) e il **router θ della F81
+  le raddrizza in Liga** (GG bias −0.036→−0.008, ECE 0.036→0.012):
+  conferma della F81 su una metrica indipendente dal log-loss;
+- il path DC senza quote indovina un filo meno (1X2 52.9-53.5%): la
+  gerarchia market-implied > DC vale anche in hit-rate.
 
 ## 7 · Prossimi passi / dati che sbloccherebbero altro
 
