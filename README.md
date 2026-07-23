@@ -1,7 +1,10 @@
-# Polymarket Oracle
+# Football Oracle
 
 Motore di stima delle **probabilità reali di eventi sportivi** (calcio),
 **indipendente dalle piattaforme** di scommessa.
+
+*(Ex «Polymarket Oracle»: rinominato per riflettere lo scopo reale — un oracolo
+di probabilità sul calcio, non un sistema legato a una piattaforma specifica.)*
 
 Il valore del progetto è il **modello di previsione**, non l'integrazione con una
 piattaforma specifica. Il motore stima la distribuzione dei gol di una partita; da

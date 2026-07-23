@@ -1,4 +1,4 @@
-# Diario di bordo — Polymarket Oracle
+# Diario di bordo — Football Oracle
 
 Resoconto passo-passo di come è stato costruito il progetto, **con il ragionamento
 e le scelte** dietro ogni decisione. È pensato per chiunque (persona o AI) voglia
@@ -7692,6 +7692,49 @@ Nessuna matematica nuova: identica alla Fase 26/44, applicata a dati nuovi.
 **Riproducibilità.** `python scripts/_run_fase76_mi_crossleague.py` (3 leghe ×
 7 stagioni; ~10 min per il walk-forward DC + bootstrap — se serve, una lega per
 volta via `run_league(lega, rng)`).
+
+---
+
+## Fase 77 — Il nome onesto: da «Polymarket Oracle» a «Football Oracle»
+
+**Decisione (utente).** Rinominare il progetto in **Football Oracle**. Non è
+cosmesi: fissa per iscritto una conclusione strategica maturata nelle Fasi
+14-76, così non si perde tra le sessioni.
+
+**Il ragionamento.** Il nome «Polymarket Oracle» sottintendeva un sistema per
+**battere un mercato di scommesse**. Ma il progetto ha dimostrato, in modo
+ripetuto e conclusivo, che questo **non è possibile** con un modello su dati
+pubblici pre-partita contro un book affilato: α\*=0 ovunque (Fase 16, replicato
+trans-epoca nella Fase 75, perfino contro una chiusura stimata), CLV negativo
+(Fase 14), adverse selection (Fase 20), ROI negativo. La chiusura di Pinnacle è
+uno dei prezzi più efficienti che esistano; il nostro modello, nel migliore dei
+casi, la eguaglia. Un edge di scommessa, se esiste, **non sta nel modello** ma
+in informazione nuova/veloce (formazioni, live) o in un avversario meno
+efficiente (book soft, exchange, prediction market) — problemi di *dati e
+accesso*, non di matematica.
+
+**Cosa il progetto È, invece** (e il nome ora lo dice): un **oracolo di
+probabilità sul calcio**. Dato ciò che il mercato affilato prezza (1X2+O/U), il
+motore market-implied restituisce probabilità coerenti e validate per ~20
+mercati — inclusi quelli che il book NON quota — su 3 leghe, apertura e
+chiusura, 2017-2026 (Fasi 26/75/76). Il valore non è battere qualcuno: è
+**stimare bene ogni evento**, con l'errore atteso dichiarato e senza promesse.
+
+**Cosa è cambiato tecnicamente.** Solo i riferimenti al NOME del progetto
+(`README`, `docs/DIARIO`, `src/__init__.py`, `pyproject.toml` →
+`football-oracle`). I riferimenti a **Polymarket come piattaforma** (il progetto
+si dichiara indipendente da Polymarket/bookmaker/exchange) restano: sono
+corretti. Gli URL GitHub `.../Polymarket-oracle/...` restano invariati: GitHub
+reindirizza dal vecchio nome al nuovo dopo il rename lato Settings, quindi
+funzionano in entrambi gli stati (cambiarli prima del rename li romperebbe).
+**Il rename del repository GitHub vero e proprio va fatto dall'utente**
+(Settings → General → Repository name): non è automatizzabile dagli strumenti
+di sessione.
+
+**Lezione.** Un nome onesto è parte della disciplina «onestà sui limiti»
+(§1.6): «Polymarket» prometteva un edge che i dati non danno. «Football Oracle»
+dice cosa la cosa fa davvero. Il tool pratico (`predict.py`) resta la
+culminazione naturale, da fare a valle del lavoro di ricerca (scelta utente).
 
 ---
 

@@ -1,5 +1,5 @@
 [project]
-name = "polymarket-oracle"
+name = "football-oracle"
 version = "0.1.0"
 description = "Motore di stima delle probabilita reali di eventi sportivi (calcio), indipendente dalle piattaforme di scommessa."
 requires-python = ">=3.10"
