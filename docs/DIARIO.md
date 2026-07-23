@@ -7610,6 +7610,91 @@ Nessuna matematica nuova: composizione di formule esistenti su dati nuovi.
 
 ---
 
+## Fase 76 — Il motore market-implied trasferisce cross-lega ANCHE sulla chiusura
+
+**Obiettivo.** Chiudere la pista #4 (PISTE.md): il market-implied — il motore
+più forte del progetto — era backtestato multi-mercato SOLO in Serie A (Fase
+26: batte il DC-da-gol su 13/14 e la baseline su 13/14). La Fase 75 l'ha
+validato sul 2017-19 dall'APERTURA (2.280 partite vergini). Mancava il tassello
+naturale: le stesse 20 famiglie di mercati sulla **chiusura** di Premier e
+Liga, dove le Fasi 26/41 non erano mai arrivate.
+
+**Domanda dell'utente sulle stagioni pre-2021.** Il market-implied non richiede
+training: la finestra è limitata solo dalla disponibilità della chiusura O/U
+reale = **2019-20 in poi** (verificato: 1718/1819 hanno chiusura O/U a 0%, il
+buco della Fase 73; dal 1920 è 100%). Quindi il test è esteso a **1920-2526 (7
+stagioni)** su tutte e 3 le leghe — il 2019-20 era escluso dalla Fase 26 solo
+per convenzione. Il 2017-19, privo di chiusura reale, resta coperto
+dall'apertura nella Fase 75.
+
+**Cosa abbiamo fatto** (`scripts/_run_fase76_mi_crossleague.py`, riusa ESATTO
+le funzioni della Fase 26 → numeri 1:1; 3 run `source=fase76_mi_crossleague`).
+Per ogni lega: inversione chiusura 1X2+O/U → (λ,μ) → matrice DC → ogni mercato,
+vs DC-da-gol vs baseline in-sample; walk-forward per stagione, bootstrap
+appaiato B=10.000, ρ=−0.06 (la costante universale, **non ritarata**).
+
+**Risultato — il motore trasferisce, identico, su tutte e 3 le leghe:**
+
+| lega | batte DC-da-gol | (di cui CI<0) | batte baseline | ris. esatto Δ vs DC |
+|---|:-:|:-:|:-:|--:|
+| Serie A (1920-2526) | **13/14** | 12 | **13/14** | −0.0320 |
+| Premier League | **13/14** | 13 | **13/14** | −0.0302 |
+| La Liga | **13/14** | 11 | **13/14** | −0.0265 |
+
+- **Stesso identico esito della Fase 26** (13/14 in Serie A), replicato su due
+  leghe mai testate multi-mercato. I guadagni maggiori sui mercati ricchi:
+  risultato esatto (−0.027…−0.032), multigol, total-squadra 1.5 (−0.010…
+  −0.013) — le stesse famiglie della Fase 26.
+- **L'unico mercato che NON cede, in tutte e 3 le leghe: pari/dispari**
+  (`odd_total`, Δ≈+0.0001, l'unico dove la baseline pareggia o vince). È la
+  quarta replica indipendente dello stesso fatto (Fasi 26/41/75): la parità dei
+  gol è quasi-casuale, il market-implied non ci aggiunge nulla — un mercato da
+  non prezzare mai con pretese.
+- Il tutto **senza ritarare una sola costante** (ρ=−0.06 identico): conferma
+  che la lega-specificità del motore sta solo negli input (le quote), non nella
+  struttura. Il θ del router, invece, NON si trasferisce (Fase 75): la
+  distinzione regge — la MATRICE è universale, la sotto-dispersione delle
+  MARGINALI è per-contesto.
+
+**Lezione/cosa ne consegue.**
+1. **Pista #4 CHIUSA, positiva.** Il market-implied è ora validato multi-mercato
+   su 3 leghe × chiusura (Fase 76) + 3 leghe × apertura (Fase 75) + Serie A a
+   fondo (Fase 26): ogni asse coperto. È, con ampio margine, il pezzo più
+   robusto e trasferibile del progetto.
+2. **Promozione nella rosa**: market-implied → ⚽ titolare anche su Premier/Liga
+   (era ⬜ mai testato multi-mercato, nota ✱1 di PANCHINA). La ri-taratura
+   temuta non serviva: la struttura è davvero universale.
+3. Resta il fatto trans-mercato: **il pari/dispari è irriducibile** ovunque.
+4. Nessun edge di scommessa qui: il market-implied RIPRODUCE il mercato dove
+   c'è la quota (over_2.5, 1X2 sono ancoraggi) e lo estende ai mercati NON
+   prezzati — è un motore di *pricing coerente*, non un battitore del mercato
+   (α\*=0, Fase 16/75). Il valore è prezzare mercati senza quota, non scommettere.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: identica alla Fase 26/44, applicata a dati nuovi.
+- Inversione: `implied_lambda_mu(pH, pD, pA, pOver, ρ)` (market_implied.py) =
+  cerca (λ,μ) che riproducono le prob 1X2 devigate + P(Over 2.5) devigata,
+  ρ=−0.06 sulla correzione dei punteggi bassi.
+- Derivazione: `score_matrix(λ,μ,ρ)` → `derive_markets(M)` = somme sulle celle
+  della matrice per ogni mercato (over N.5, multigol, total-squadra, ris.
+  esatto = −log M[hg,ag]).
+- Confronto: Δ = LL(market-implied) − LL(DC-da-gol), dove il DC-da-gol usa
+  (exp_home_goals, exp_away_goals) del backtest ufficiale (δ per lega: SA 0.23,
+  PL 0.33, Liga 0.22). Bootstrap appaiato sui per-riga.
+- **Perché over_2.5 e 1X2 non contano come "vittorie"**: sono gli ancoraggi
+  dell'inversione (il motore li riproduce per costruzione) → esclusi dal conteggio
+  (14 mercati non-ancora sui 20 totali). **Perché pari/dispari non migliora**:
+  dipende dalla parità di X+Y, che una matrice Poisson-DC cattura solo al primo
+  ordine; è quasi-indipendente dai λ,μ → né il mercato né il modello battono la
+  frequenza. Numeri ricalcolabili dai 3 run `fase76_mi_crossleague`.
+
+**Riproducibilità.** `python scripts/_run_fase76_mi_crossleague.py` (3 leghe ×
+7 stagioni; ~10 min per il walk-forward DC + bootstrap — se serve, una lega per
+volta via `run_league(lega, rng)`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

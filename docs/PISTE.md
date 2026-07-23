@@ -57,12 +57,14 @@ candidato del fronte per-lega**: "la struttura è la stessa, le costanti
 Serie A (solo il tracer 1X2 della Fase 53). È il motore **più forte** del
 progetto (batte 13/14 mercati in Serie A, Fase 26): portarlo altrove è
 lavoro di ri-taratura, non di raccolta dati.
-**Primo passo FATTO (Fase 75)**: sul 2017-19 (apertura reale, 6 lega-stagioni
-vergini incluse Premier/Liga) MI-Poisson batte la baseline su **17/20 mercati
-con CI conclusivo** — il motore trasferisce cross-lega senza ritarare nulla
-(ρ=−0.06 unico). Resta aperto il backtest sul 2019-26 di Premier/Liga con la
-CHIUSURA (questa fase usava l'apertura del 2017-19); il θ del router NON va
-copiato (vedi Fase 75: per-contesto, lega × epoca).
+**CHIUSA, positiva (Fase 76).** Sul 2017-19 dall'apertura (Fase 75) 17/20
+mercati; e ora sul **2019-26 dalla CHIUSURA** (Fase 76) il motore batte il
+DC-da-gol su **13/14 mercati su tutte e 3 le leghe** (Serie A/Premier/Liga),
+identico alla Serie A della Fase 26, **senza ritarare ρ**. La struttura è
+universale (solo gli input sono per-lega). Unica eccezione trans-lega: il
+pari/dispari (quasi-casuale). Il θ del router NON si trasferisce (per-contesto,
+lega × epoca). Resta da testare per-lega solo la **φ35** sulla famiglia-pareggio
+(PANCHINA ✱2).
 
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 

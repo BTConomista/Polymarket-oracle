@@ -41,7 +41,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 
 | modello | Serie A | Premier | La Liga | generale (pooled) |
 |---|:-:|:-:|:-:|:-:|
-| **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F75 (apertura 2017-19; chiusura 2019-26 da fare) | ⚽ F75 (idem) | ⚽ struttura (ρ=−0.06 unico; F75: 17/20 mercati ✓CI su 2.280 partite vergini cross-lega, zero ritarature) |
+| **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F76 (13/14 vs DC, chiusura 2019-26) + F75 (apertura) | ⚽ F76 (13/14 vs DC) + F75 | ⚽ struttura (ρ=−0.06 unico; F76: 13/14 su TUTTE e 3 le leghe dalla chiusura, zero ritarature; F75: 17/20 dall'apertura su 2.280 partite vergini) |
 | **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225) | ❌ F53 (θ=1.069, non paga) | ❌ F53 (θ=1.097, non paga) | ❌ θ decresce con la liquidità E cresce nel tempo (F75: 1718 ~1.03 → 1819 ~1.16 → 2019+ ~1.2): **per-contesto** (lega × epoca), mai copiarlo |
 | **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ⬜ ✱2 | ⬜ ✱2 | ⬜ |
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
@@ -78,10 +78,11 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ |
 
 Note della matrice:
-- **✱1** Il motore market-implied su Premier/Liga non è mai stato backtestato
-  multi-mercato (solo il tracer market-side F53); la struttura è la stessa,
-  le costanti (ρ, θ, φ) vanno riviste per lega. **Primo candidato del fronte
-  per-lega.**
+- **✱1** ~~mai backtestato multi-mercato su Premier/Liga~~ → **FATTO (F76)**:
+  batte il DC-da-gol su **13/14 mercati dalla chiusura** su tutte e 3 le leghe
+  (2019-26), **senza ritarare ρ** — la struttura è davvero universale (solo gli
+  input, le quote, sono per-lega). La φ35 resta da testare per-lega (✱2); il θ
+  del router NON si trasferisce (F75: per-contesto, lega × epoca).
 - **✱2** Il draw-bias non si replica in Premier (F53): la φ35 lì potrebbe
   avere segno diverso — da testare, non da copiare.
 - **✱3** dp_lvl è nel tool `predict.py` SOLO per la Serie A; è "valore da
