@@ -51,14 +51,14 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | GG/NG φ35+knee34 su market-implied | 🪑 F50 | ⬜ | ⬜ | ⬜ |
 | Ricalibrazione per-classe del mercato (w_D, w_A) | 🪑 F50-ter | ❌ F53 (direzione OPPOSTA, w_D=0.93) | 🪑 F53 (+3.6% P81) | ❌ segno non universale |
 | Devig di Shin | 🪑 F52-ter (P 97%) | 🪑 F53 (P 68%) | 🪑 F53 (P 94%) | 🪑 sempre ≥ moltiplicativo |
-| φ35 sul path DC standalone | 🪑 F35 | ⬜ | ⬜ | ⬜ |
+| φ35 sul path DC standalone | 🪑 F35 | ❌ F79 (φ0→0: deficit inesistente) | ❌ F79 (fit ≈SA ma non paga) | ❌ segno non universale (PL invertita) |
 | Nudge GG/NG fine stagione (path DC) | 🪑 F48 | ⬜ | ⬜ | ⬜ |
 | Ensemble emivite 180+730 | 🪑 F12a | ⬜ | ⬜ | ⬜ |
 | Ricalibrazione per-classe del modello | 🪑 F10 | ⬜ | ⬜ | ⬜ |
 | Diagonale inflazionata (`--draw-inflation`) | 🪑 F12b | ⬜ | ⬜ | ⬜ |
-| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ⬜ colonne pronte F59 | ⬜ colonne pronte F59 | ⬜ |
+| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ❌ rumore su 3/3 leghe |
 | Temperature scaling post-hoc | 🪑 F6 (T≈0.94) | ⬜ | ⬜ | ⬜ |
-| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ⬜ colonne pronte F59 | ⬜ colonne pronte F59 | ⬜ |
+| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ❌ il β stabile SA non si replica |
 | Temperatura sopra dp_lvl (T=1.056) | 🪑 F52-ter | ❌ (dp_lvl bocciato lì) | ❌ | ❌ |
 | GBM (diretto, per mercato, bespoke) | ❌ F21-23/50-quater | ⬜ ✱5 | ⬜ ✱5 | ❌ tetto informativo |
 | Poisson bivariato (λ3) | ❌ F42 | ⬜ | ⬜ | ⬜ |
@@ -83,8 +83,12 @@ Note della matrice:
   (2019-26), **senza ritarare ρ** — la struttura è davvero universale (solo gli
   input, le quote, sono per-lega). La φ35 resta da testare per-lega (✱2); il θ
   del router NON si trasferisce (F75: per-contesto, lega × epoca).
-- **✱2** Il draw-bias non si replica in Premier (F53): la φ35 lì potrebbe
-  avere segno diverso — da testare, non da copiare.
+- **✱2** Il draw-bias non si replica in Premier (F53) e la F79 ha chiuso il
+  cerchio sul path DC: **φ0 fitta ZERO in Premier** (il deficit-pareggio non
+  esiste lì, il vincolo φ0≥0 impedisce il segno negativo che i dati
+  chiederebbero) mentre in Liga il fit è ≈Serie A ma non paga. Resta ⬜ solo
+  la φ35 dentro il router market-implied (famiglia-pareggio sui tassi del
+  MERCATO): prior sfavorevole dopo la F79, specie in Premier.
 - **✱3** dp_lvl è nel tool `predict.py` SOLO per la Serie A; è "valore da
   oracolo" (log-loss), NON da scommessa (F51-ter: niente ROI).
 - **✱4** F57: la ri-taratura per lega è PIATTA su emivita/shrinkage/α → gli
@@ -127,7 +131,7 @@ Note della matrice:
 | 9 | Covariata congestione vera `rest_full` (4e-bis) | −0.0004 | rumore | `--covariates rest_full` |
 | 10 | Temperature scaling post-hoc (6) | −0.0003 | trascurabile (T≈0.94 robusto) | `scripts/calibrate.py` |
 | 11 | GBM + finishing-luck (33) | −0.0022 (P 81%) | non conclusivo, e il GBM di suo perde dal DC | — |
-| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme | `--covariates midweek` |
+| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto) | `--covariates midweek` |
 | 13 | Temperatura sopra dp_lvl (52-ter) | 0.9609→**0.9605** (T=1.056) | si somma a una leva già Serie-A-only e da oracolo | sopra `sharpen_1x2` |
 
 ### Dettaglio delle voci di panchina
@@ -179,8 +183,10 @@ Note della matrice:
 - **Stato particolare**: è **già titolare** nel router market-implied
   (famiglia-pareggio, Fasi 41/44) e in `predict.py`; in panchina resta SOLO
   l'uso sul path DC standalone (senza quote).
-- **Fronti**: mai testata su Premier/Liga; su Premier il draw-bias è OPPOSTO
-  (F53) → sul fronte per-lega potrebbe servire φ0 di segno diverso.
+- **Fronti (aggiornato F79)**: TESTATA su Premier/Liga e **bocciata su
+  entrambe** — Premier φ0→0 (deficit inesistente, il modello sovra-stima già
+  i pareggi equilibrati inglesi), Liga fit ≈SA (φ0 0.39, κ 4.1) ma
+  sovra-corregge e non paga (+0.0002). Resta in panchina SOLO per la Serie A.
 
 #### 5 · Nudge GG/NG di fine stagione (path DC) — Fase 48
 - **Cosa**: boost stagionale dei tassi (giornate 35-38) per il GG/NG derivato
@@ -212,8 +218,11 @@ Note della matrice:
 - **Numeri**: −0.0004 medio (2020-25), inverte il segno del proxy solo-lega ma
   resta nel rumore.
 - **Perché in panchina**: guadagno non distinguibile da zero.
-- **Fronti**: dalla Fase 59 le colonne esistono anche per Premier/Liga, dove la
-  covariata **non è mai stata testata** — il test per-lega più facile in lista.
+- **Fronti (aggiornato F79)**: testata su Premier/Liga e **bocciata** —
+  Premier +0.0005 (P 9%) malgrado sia la lega più congestionata (riposo ≤3g
+  nel 21.6% delle partite) e il β abbia direzione sensata (−0.019, 5/6);
+  Liga β instabile (+0.053…−0.040). Rumore su 3/3 leghe: il fit pesato nel
+  tempo assorbe già la congestione.
 
 #### 10 · Temperature scaling post-hoc — Fase 6
 - **Numeri**: T≈0.94 (sottoconfidenza lieve, robusta), guadagno −0.0003.

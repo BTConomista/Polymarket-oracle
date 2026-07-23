@@ -7791,6 +7791,117 @@ scorato). Numeri riproducibili: `python scripts/_run_prospettico_2627.py`.
 
 ---
 
+## Fase 79 — Studio dedicato Premier/Liga: le prime leve per-lega (φ35 e congestione)
+
+**Obiettivo (utente).** Entrare nel dettaglio delle due leghe non-Serie A:
+studiarne a fondo i dati, ragionare su quali valori/modelli usare, e iniziare i
+test per-lega. Nasce il **quaderno di studio dedicato**
+`docs/STUDIO_PREMIER_LIGA.md` (dati, differenze strutturali, stato dei test,
+piano ragionato — da aggiornare a ogni fase che tocca PL/Liga).
+
+**Ragionamento / scelta delle leve.** Dopo la Fase 76 il motore market-implied
+è titolare ovunque; il lavoro per-lega utile è decidere **leva per leva** cosa
+vale fuori dalla Serie A. Dalla rosa (PANCHINA), le due celle ⬜ più mature:
+1. **φ35 sul path DC** (nota ✱2: il draw-bias di mercato non si replica in
+   Premier → la φ potrebbe avere segno diverso — mai fittata lì);
+2. **covariate di congestione** `rest_full`/`midweek` (colonne pronte dalla
+   Fase 59, mai testate fuori SA — "il test per-lega più facile in lista").
+
+**EDA preliminare** (`_run_fase79_eda_pl_liga.py`, 3 run): tre fatti nuovi.
+- **Pareggio per fascia di equilibrio** (|pH−pA| devig, quartili): il
+  sotto-prezzo dei pareggi equilibrati esiste in Serie A (reale−mercato
+  **+0.032**) e in Liga (**+0.022**), e NON esiste in Premier (**−0.009**,
+  semmai sovra-prezzo — coerente con w_D=0.93 e ROI pari-equilibrio −5.4%
+  della Fase 53). Tre leghe, tre repliche: *il pareggio è dove i mercati
+  differiscono di più*.
+- **Congestione**: la Premier è un'altra categoria — riposo ≤3g nel 21.6%
+  delle partite (SA 14.0%), **36.3% a dicembre** (Boxing Day; SA 15.0%),
+  midweek europeo 14.2%. Se la covariata paga da qualche parte, è lì.
+- **γ_t per stagione**: Liga alto e STABILE (0.18–0.34, perfino nel COVID);
+  Premier VOLATILE (0.29 → 0.01 nel 2021 → 0.29 → 0.06 nel 2425 → 0.22).
+
+**Cosa abbiamo fatto** (`_run_fase79_leve_per_lega.py`, 48 backtest
+walk-forward: 2 leghe × 4 varianti × 6 stagioni 2021→2526, config ufficiale
+per-lega, bootstrap appaiato B=10.000, 8 run `fase79_leve_per_lega`).
+Aspettativa dichiarata prima: su Premier φ0 potrebbe uscire ≈0; in SA le
+covariate erano rumore (−0.0004), qui l'esposizione è maggiore.
+
+**Risultato — quattro bocciature pulite (Δ log-loss 1X2 vs base per-lega):**
+
+| leva | Premier (Δ; P mig.) | La Liga (Δ; P mig.) |
+|---|--:|--:|
+| φ35 equilibrio-pareggio | +0.0006 (7%) | +0.0002 (43%) |
+| covariata `rest_full` | +0.0005 (9%) | +0.0003 (26%) |
+| covariata `midweek` | +0.0001 (38%) | +0.0001 (39%) |
+
+Ma il risultato vero è **strutturale, nei parametri fittati**:
+- **Premier: φ0 sbatte sul bound ZERO in 4/6 stagioni** (media 0.052). Il
+  deficit-pareggio del DC nelle partite equilibrate — il meccanismo della
+  Fase 35 — **non esiste in Premier**: il modello lì i pareggi equilibrati li
+  SOVRA-stima già (reale 0.246 vs base 0.268), e la φ35 spinge nel verso
+  sbagliato (0.277). La "firma inglese" (23.4% di pareggi) è già oltre la
+  Poisson.
+- **La Liga: il fit è quasi IDENTICO alla Serie A** (φ0≈0.39, κ≈4.1 vs
+  φ0≈0.39, κ≈3.6 della Fase 35) e il deficit è reale (equilibrate: reale
+  0.321 vs base 0.294) — ma la φ **sovra-corregge** (0.344) e il log-loss non
+  paga (+0.0002; κ sul bound 5.0 in 4/6 stagioni = fit instabile).
+- **Congestione**: β_rest_full Premier ha direzione sensata (−0.019, negativo
+  5/6 stagioni: riposo corto → meno gol) ma peggiora out-of-sample; in Liga
+  cambia segno anno per anno (+0.053…−0.040). Il **β_midweek stabile della
+  Serie A (−0.020, 6/6) NON si replica**: Premier −0.001 (segno alterno),
+  Liga +0.008 (segno opposto). La covariata-congestione è rumore ovunque.
+
+**Lezione / cosa ne consegue.**
+1. **Il deficit-pareggio del DC è un tratto delle leghe latine** (SA e Liga:
+   fit sovrapponibili), assente in Premier. Ogni leva-pareggio (φ35, strategie
+   draw-bias, ricalibrazioni w_D) va tenuta **lontana dalla Premier** — terza
+   conferma indipendente (F53 mercato, EDA 79 frequenze, F79 fit del modello).
+2. **Anche dove il deficit c'è (Liga), correggerlo non paga** — come in SA
+   (F35: −0.0007, CI include 0). Il tetto informativo si conferma universale.
+3. La congestione resta un **non-segnale** anche nella lega più congestionata
+   d'Europa: il fit pesato nel tempo la assorbe già. Chiude il candidato
+   "più facile" della lista per-lega.
+4. Operativo: su PL/Liga il listino si prezza col **market-implied liscio**
+   (niente θ, niente dp_lvl, niente φ35 sul path DC); il DC fallback resta
+   con la sola config `LEAGUE_CONFIGS`. Resta ⬜ solo la φ35 della
+   famiglia-pareggio DENTRO il router market-implied (test diverso: lì la φ
+   agisce sulla matrice dai tassi del mercato) — ma il prior dopo questa fase
+   è sfavorevole, specie in Premier.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova; formule verificate sul sorgente.
+- **φ35** (`dixon_coles._fit_draw_balance`): inflazione della diagonale
+  per-partita `φ(λ,μ) = φ0·exp(−κ·|λ−μ|)`, fittata in verosimiglianza con
+  bound φ0∈[0,2], κ∈[0,5] (L-BFGS-B, start 0.1/1.0). "φ0=0.000 in 4/6
+  stagioni Premier" = ottimo sul bound INFERIORE: la likelihood inglese non
+  vuole alcun boost-pareggio (il vincolo φ0≥0 impedisce il segno negativo che
+  i dati chiederebbero — il deficit lì è invertito). "κ=5.000 in Liga" =
+  bound SUPERIORE: boost concentrato su |λ−μ|→0; a κ=5 il boost al
+  |λ−μ| mediano (~0.6) è già φ0·e^{−3}≈0.02, quasi nullo → φ0 e κ sono
+  mal-identificati congiuntamente (piatta la likelihood), da cui il fit
+  instabile e la sovra-correzione osservata nelle equilibrate.
+- **Covariate** (`dixon_coles._cov_term`): contributo al log-tasso
+  `log λ += Σ_k β_k(z_casa−z_ospite)`, `log μ` segno opposto; z standardizzati
+  (media/σ del training), NaN→0 neutro. `rest_full` = giorni di riposo dal
+  calendario completo (identity), `midweek` = dummy gara europea
+  infrasettimanale. I β citati sono un fit a inizio stagione per lega
+  (6 per lega, `_fitted_params`).
+- **Perché Δ>0 con β "sensato" (Premier rest_full)**: β=−0.019 su z-score ⇒
+  effetto ~±2% sui tassi per 1σ di riposo; su 2.280 partite il guadagno vero
+  (se c'è) è ≪ del rumore di stima del β walk-forward — la covariata aggiunge
+  varianza di parametro senza abbastanza segnale (stesso meccanismo delle
+  Fasi 4c/13/33).
+- Δ e CI: bootstrap appaiato per-riga B=10.000 sulle stesse partite
+  (`_boot`), identico alle Fasi 35/56/57. Numeri ricalcolabili dai run
+  `fase79_eda_pl_liga` (3) e `fase79_leve_per_lega` (8).
+
+**Riproducibilità.** `python scripts/_run_fase79_eda_pl_liga.py` ·
+`OMP_NUM_THREADS=1 python scripts/_run_fase79_leve_per_lega.py` (~40 min,
+cache `outputs/db79_*.csv`).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

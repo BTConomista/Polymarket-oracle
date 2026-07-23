@@ -132,9 +132,9 @@ Stato per-mercato (dalla rosa PANCHINA.md, dopo la Fase 76):
 
 | # | leva | perché / aspettativa onesta | stato |
 |---|---|---|---|
-| A | **φ35 per-lega** (equilibrio-pareggio, path DC) | unica cella ⬜ del motore titolare; EDA 3a: il deficit-modello può esserci anche dove il mercato non sbaglia; su PL possibile φ0≈0 (il fit stesso è la risposta) | **Fase 79, fatto — vedi §6** |
-| B | **covariate congestione** rest_full/midweek | colonne pronte (F59), mai testate fuori SA; PL la lega più esposta (3a); in SA erano rumore | **Fase 79, fatto — vedi §6** |
-| C | GG/NG φ35+knee34 sul market-implied per-lega | panchina #1: la promozione è condizionata proprio al "riappare su PL/Liga"; il GG/NG è il mercato senza tetto dimostrato | da fare (dopo A: riusa la φ per-lega) |
+| A | **φ35 per-lega** (equilibrio-pareggio, path DC) | unica cella ⬜ del motore titolare; EDA 3a: il deficit-modello può esserci anche dove il mercato non sbaglia; su PL possibile φ0≈0 (il fit stesso è la risposta) | ❌ **bocciata su entrambe (F79, §6)** |
+| B | **covariate congestione** rest_full/midweek | colonne pronte (F59), mai testate fuori SA; PL la lega più esposta (3a); in SA erano rumore | ❌ **rumore ovunque (F79, §6)** |
+| C | GG/NG φ35+knee34 sul market-implied per-lega | panchina #1: la promozione è condizionata proprio al "riappare su PL/Liga"; il GG/NG è il mercato senza tetto dimostrato; **dopo la F79 il prior su PL è sfavorevole** (φ0→0), su Liga plausibile | prossimo candidato |
 | D | Devig di Shin per-lega nel motore | direzione già confermata 3/3 leghe (F53); è candidato GENERALE, costo = migrazione fonte unica | in attesa (decisione di progetto, non di lega) |
 | E | Ricalibrazione w_D/w_A per-lega della chiusura | segno OPPOSTO tra PL e SA/Liga (F53 + EDA 3a): mai pooled, solo per-lega; servono più stagioni | raccolta prospettica |
 | F | γ dinamico per la Premier | EDA 3c: γ_t Premier volatile; ma architettura chiusa in SA (F47/48) | condizionale (solo con un meccanismo nuovo) |
@@ -144,7 +144,39 @@ Regole invariate: una leva alla volta, CI95<0 per adottare, run in
 
 ## 6 · Risultati dei test per-lega (Fase 79)
 
-*(compilato al completamento del run `fase79_leve_per_lega`)*
+Run `fase79_leve_per_lega` (48 backtest walk-forward, 2021→2526, config
+ufficiale per-lega, bootstrap B=10.000). Dettaglio completo nel
+[DIARIO, Fase 79](DIARIO.md).
+
+**Δ log-loss 1X2 vs base (positivo = peggiora); mercato rif. PL 0.9623, Liga 0.9681:**
+
+| leva | Premier (base 0.9830) | La Liga (base 0.9843) | esito |
+|---|--:|--:|:--|
+| φ35 equilibrio-pareggio | +0.0006 (P 7%) | +0.0002 (P 43%) | ❌ entrambe |
+| covariata `rest_full` | +0.0005 (P 9%) | +0.0003 (P 26%) | ❌ entrambe |
+| covariata `midweek` | +0.0001 (P 38%) | +0.0001 (P 39%) | ❌ entrambe |
+
+**Il risultato strutturale (più informativo dei Δ):**
+
+- **Premier: φ0 sbatte sul bound zero in 4/6 stagioni** (media 0.052). Il
+  deficit-pareggio del DC **non esiste** in Premier — il modello lì
+  sovra-stima già i pareggi delle equilibrate (reale 0.246 vs base 0.268;
+  la φ spinge nel verso sbagliato, 0.277). Con l'EDA §3a e la Fase 53 fanno
+  **tre conferme indipendenti** (mercato, frequenze, fit del modello):
+  ogni leva-pareggio va tenuta lontana dalla Premier.
+- **La Liga: fit quasi identico alla Serie A** (φ0≈0.39, κ≈4.1 vs 0.39/3.6
+  della F35) e deficit reale (equilibrate: 0.321 vs 0.294) — il
+  deficit-pareggio è un **tratto delle leghe latine**. Ma la φ sovra-corregge
+  (0.344) e il log-loss non paga; κ sul bound 5.0 in 4/6 (mal-identificato).
+- **Congestione**: β_rest_full PL −0.019 (direzione sensata, 5/6 negativo) ma
+  peggiora out-of-sample; Liga instabile (+0.053…−0.040). Il **β_midweek
+  stabile della SA (−0.020, 6/6) non si replica** (PL −0.001 alterno, Liga
+  +0.008 segno opposto). Rumore anche nella lega più congestionata: il fit
+  pesato nel tempo assorbe già l'effetto.
+
+**Conseguenza operativa (aggiorna §4):** confermato in pieno — su PL/Liga il
+listino si prezza col market-implied **liscio** e il fallback DC resta con la
+sola config `LEAGUE_CONFIGS`; nessuna leva Serie A si accende fuori casa.
 
 ## 7 · Prossimi passi / dati che sbloccherebbero altro
 
