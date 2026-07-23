@@ -35,6 +35,11 @@ Polymarket, bookmaker, exchange o altri mercati di previsione.
 > il quaderno dedicato alle due leghe non-Serie A: dati, differenze
 > strutturali, stato dei test per-lega e piano ragionato dei prossimi
 > esperimenti (Fase 79+).
+>
+> 🧭 **[Playbook nuova lega](docs/PLAYBOOK_NUOVA_LEGA.md)** — la procedura
+> passo-passo per aggiungere un campionato nuovo (dati → EDA → tracer →
+> ri-taratura → motore → leve per-lega), con le lezioni già pagate e la
+> checklist di aggiornamento. Da seguire per ogni lega futura.
 
 ## Stato attuale
 

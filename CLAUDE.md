@@ -247,6 +247,9 @@ docs/STUDIO_PREMIER_LIGA.md   quaderno di studio dedicato a Premier e La Liga:
                  dati, differenze strutturali vs Serie A, stato dei test
                  per-lega e piano ragionato; aggiornare a ogni fase che
                  tocca le due leghe (Fase 79+)
+docs/PLAYBOOK_NUOVA_LEGA.md   procedura operativa per aggiungere una lega
+                 nuova (passi 0-5, finestre di backtest, lezioni acquisite,
+                 checklist): da seguire per ogni campionato futuro
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
@@ -500,6 +503,11 @@ culminazione naturale), o dati davvero nuovi (formazioni, quote live).
 ---
 
 ## 7. Portare il modello su un'altra lega (Premier, ecc.) — NON copiare i numeri
+
+**La procedura completa e collaudata (passi 0-5, EDA, tracer, ri-taratura,
+motore, leve della rosa, scelta delle finestre di backtest, checklist) vive in
+`docs/PLAYBOOK_NUOVA_LEGA.md`** — scritta dopo l'onboarding di Premier e Liga
+(Fasi 53-57, 79-80): per ogni lega futura si parte da lì. Qui sotto i principi.
 
 Le **formule** del modello sono universali; gli **iperparametri no**. Vivono in un
 **unico punto di verità**, `src/config.py` (`LEAGUE_CONFIGS`), da cui `backtest.py`
