@@ -249,13 +249,20 @@ class DixonColesModel:
         if draw_balance and dynamic_rho:
             raise ValueError("draw_balance non si combina con dynamic_rho "
                              "(il fit del pareggio usa il rho base).")
+        if draw_inflation and dynamic_rho:
+            # Il fit di phi (_draw_base_arrays) usa self.rho SCALARE, mentre
+            # _score_matrix applica il rho dinamico: combinarli renderebbe phi
+            # fittato su un rho diverso da quello applicato. Vietato per
+            # simmetria con le guardie sopra (entrambi off di default).
+            raise ValueError("draw_inflation non si combina con dynamic_rho "
+                             "(il fit dell'inflazione usa il rho base scalare).")
 
         # Rho DINAMICO (Fase 18): la correzione sui punteggi bassi diventa
         # funzione della partita, rho_match = rho + rho_slope*(lam+mu - centro),
         # con rho_slope stimato nella verosimiglianza insieme al resto e centro
         # = media pesata dei gol totali del training (costante, non un
-        # parametro). rho fisso e' il caso rho_slope=0. Nota: non combinare con
-        # draw_inflation (il fit di phi usa il rho base).
+        # parametro). rho fisso e' il caso rho_slope=0. Non si combina con
+        # draw_inflation (il fit di phi usa il rho base): ora IMPOSTO sopra.
         self.dynamic_rho = dynamic_rho
         self.rho_slope: float = 0.0
         self.rho_center: float = 0.0

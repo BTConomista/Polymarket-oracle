@@ -28,6 +28,14 @@ bocciature esistenti.
 **Rischio onesto**: piccoli campioni per coppia (poche stagioni comuni,
 specie cross-serie A/B per neopromosse), possibile overfitting; da testare
 con shrinkage forte verso zero, come ogni covariata debole (Fase 13/33).
+**Angolo più promettente (non 1X2)**: puntarla sui **TOTALI/GG**, non
+sull'1X2. Sull'1X2 sarà quasi certamente ridondante (catturato dalla forza,
+come la forma). Ma coppie che producono sistematicamente più/meno gol totali
+o GG di quanto predicono i λ,μ marginali sarebbero un **accoppiamento
+specifico della coppia** che il modello marginale (e il market-implied)
+ignora per costruzione — ed è proprio il mercato dove il DC è debole
+(correlazione/GG, Fase 5). Distinto dalla correlazione **globale** già
+bocciata (bivariato λ3 Fase 42, copula Fase 43): qui è **per-coppia**.
 
 ### 2. Covariate anche nel sotto-modello xG, non solo nei gol
 **Dato**: nessuno nuovo — è un cambio di architettura.
@@ -66,6 +74,32 @@ pari/dispari (quasi-casuale). Il θ del router NON si trasferisce (per-contesto,
 lega × epoca). Resta da testare per-lega solo la **φ35** sulla famiglia-pareggio
 (PANCHINA ✱2).
 
+### 4-bis. θ del router come FUNZIONE del margine, non costante per-lega
+**Dato**: nessuno nuovo — l'overround (margine) di ogni partita si calcola
+dalle quote 1X2 e O/U 2.5 già in snapshot.
+**Ipotesi (unifica due fasi)**: oggi θ (double-Poisson) è una **costante
+per-contesto** scelta a griglia (Serie A/Liga ≈1.2, Premier ≈1.0, Fase 81).
+Due fasi ne spiegano la variazione con la stessa causa mai operazionalizzata:
+la **Fase 53** ("θ decresce con la liquidità della lega") e la **Fase 75**
+("θ cresce nel tempo: linee sempre più informative"). Ma liquidità-di-lega ed
+epoca hanno un **osservabile comune per-partita: il margine** delle quote di
+quella partita. Ipotesi: θ è funzione monotòna decrescente del margine (linee
+più affilate → residuo-gol più sotto-disperso → θ più alto). Se regge, le
+costanti per-lega × epoca **collassano in UNA curva universale θ(margine)** che
+si adatta anche *dentro* la lega (big-match a basso margine vs partita minore) —
+la "versione generale" che il principio §1.9 predilige.
+**Test economico**: `_run_theta_margin.py` — bina le partite per margine
+(quintili), fitta θ via MLE sui punteggi realizzati (`fit_theta`, Fase 51) per
+bin, pooled sulle 3 leghe; verifica se θ(bin) è monotòno e se una curva
+θ(margine) batte out-of-sample le costanti per-lega dentro `price_markets`
+(selettore lfo, su risultato esatto + 1X2 + GG). Disciplina multiple-testing
+(Fase 17): la finestra è iper-testata.
+**Rischio onesto**: se piatto, il margine non è il driver (Fase 53/75 restano
+fenomenologiche) — negativo comunque prezioso. È anche il modo giusto di
+**ri-verificare la monotonìa temporale della Fase 75**, che oggi poggia
+sull'estremo iniziale di **2 sole stagioni** (1718/1819): sostituisce "epoca"
+(2 punti) con "margine" (continuo, tutte le partite). Costo BASSO, un run.
+
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
 Nessuna rete: le colonne sono nei CSV football-data congelati in
@@ -83,6 +117,14 @@ vincolo → inversione più precisa → migliora il motore attivo su tutto il
 listino. Tier 2 dichiarato (principio §1.8). **L'unica pista di questa
 sezione che può migliorare direttamente il titolare**: priorità massima
 tra le "grezzo non estratto".
+**Come attaccarla (economico prima del costoso)**: NON costruire subito
+l'inversione a 3 vincoli. Primo passo da poche righe: inverti l'AH nel
+λ−μ implicito e **confrontalo con la λ−μ da 1X2+O/U** (bias e correlazione per
+lega/stagione). Se concordano, l'AH è ridondante (chiuso a costo minimo); se
+l'AH è più preciso, allora vale l'inversione a 3 vincoli e la ri-misura del
+motore. Guadagno atteso proprio dove la Fase 26 è più forte (total-squadra,
+scarto≥2, risultato esatto — i mercati dell'asimmetria), poco su O/U 2.5 (già
+vincolato).
 
 ### 6. Primo tempo (HTHG/HTAG/HTR) → mercati Tier 3 e fondazione live
 **Dato**: **9/9 stagioni**, mai estratto.
@@ -111,6 +153,16 @@ conclusioni operative (in meglio: il margine effettivo si riduce).
 multi-book — avversario più duro e pulito (niente rumore da book
 ricreativi). Utile per ri-testare il beat-the-close (Fase 52) contro un
 avversario più serio. (Betfair Exchange BFE*: solo 2/9 stagioni, futuro.)
+**Test ad alto valore epistemico (mai fatto)**: ri-verificare l'**unico
+edge del progetto** — `dp_lvl` batte la chiusura devigata in log-loss 1X2
+(Fase 51/52, CI conclusivo) — contro **Pinnacle puro devigato con Shin**
+(`metrics.devig_shin` esiste, `PSC*` in snapshot), non contro la media
+multi-book + devig moltiplicativo. La Fase 51 stessa avverte che parte
+dell'edge potrebbe essere il margine grezzo del devig moltiplicativo, non
+sotto-dispersione vera. Due esiti, entrambi da dichiarare: `dp_lvl`
+sopravvive → l'edge è più solido del dichiarato; svanisce → downgrade onesto.
+La Fase 53 ha testato `dp_lvl` cross-*lega* (bocciato fuori SA) ma **mai
+cross-avversario**: è la caveat auto-dichiarata e mai onorata. Costo BASSO.
 
 ## 3 · Piste che richiedono una fonte esterna nuova
 
@@ -264,6 +316,35 @@ completi (numeri, candidati testati, criteri di accettazione) in
   e OddsPortal da IP italiano reindirizzano a edizioni ADM-compliant
   (`/it/`, `centroquote.it`) che non pubblicano Pinnacle e nascondono lo
   storico apertura/chiusura dietro login — nessun dato recuperato.
+
+## 5-bis · Affinamenti di ragionamento (rigore da irrobustire)
+
+Non sono piste di dati ma punti dove la logica del progetto va tenuta più
+netta — emersi dall'audit del luglio 2026 (Fase 84).
+
+- **«α\*=0» e «la chiusura è mis-calibrata» convivono e vanno tenuti
+  distinti.** Il progetto conclude "non si batte il mercato" da α\*=0 (Fase
+  16/75): il mercato ingloba l'**informazione** del modello. Ma `dp_lvl`
+  (Fase 51) mostra che i **prezzi** della chiusura devigata sono *essi stessi*
+  mis-calibrati (sotto-dispersi) in modo correggibile — e la Fase 82 lo vede
+  come bias residui del devig. Sono due affermazioni diverse: *informazione già
+  inglobata* (α=0) ≠ *prezzi ben calibrati*. «Beat-the-close in log-loss senza
+  edge di ROI» è esattamente "prezzi mis-calibrati ma nessuna informazione
+  nuova da aggiungere". Evitare di fondere le due cose nei testi divulgativi.
+- **θ confonde dispersione e temperatura, e il router ne usa UNO solo per tutto
+  il listino.** Fase 51-bis/81: sull'1X2 il log-loss migliora monotòno fino a
+  θ=1.5 (è **temperatura**: chiusura sotto-confidente ~T=1.10), mentre il
+  risultato esatto ha ottimo interno a θ≈1.2 (è **dispersione**). Il router
+  adotta θ=1.225 su tutto → sotto-affila la famiglia-1X2. Leva testabile
+  (cross-lega mai fatta): separare θ_dispersione≈1.2 sulla matrice + una
+  temperatura T sull'output 1X2, per-famiglia-di-mercato.
+- **Il devig moltiplicativo è la "fonte unica" ma è un benchmark che il
+  progetto stesso sospetta storto.** Ogni gap (+0.0165, ecc.) è vs devig
+  moltiplicativo della media multi-book, mentre Shin è meglio su 3/3 leghe
+  (PANCHINA voce 3). Vale, un giorno, una migrazione one-shot documentata a
+  Shin (tutti i benchmark ricalcolati nello stesso commit) — o almeno
+  dichiarare, accanto a ogni gap chiave, quanto cambia con Shin, così le
+  conclusioni non restano ostaggio di una scelta di devig ammessa sub-ottima.
 
 ## 6 · Come procurarsi i dati
 

@@ -145,8 +145,9 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   una pista dati→modello, aggiorna la voce corrispondente in PISTE.md (anche
   l'esito negativo, principio §1.4); se scopri un fatto operativo nuovo
   sull'ambiente (rete, strumenti, GitHub Actions), aggiungilo al manuale.
-- [ ] **Commit + push** — messaggio chiaro (cosa e perché), sul branch di
-  sviluppo. Non lasciare mai lavoro non committato: il container è effimero.
+- [ ] **Commit + push** — messaggio chiaro (cosa e perché), **su `main`**
+  (regola §3-bis: si pusha SEMPRE E SOLO su `main`). Non lasciare mai lavoro non
+  committato: il container è effimero.
 
 Regola pratica: **il registro `runs.jsonl`** cattura *ogni* run (dati grezzi); **il
 diario** cattura le *decisioni e il perché* (narrazione); il **README** è lo stato
@@ -292,218 +293,61 @@ tests/           test unitari
 
 ## 6. Stato corrente e prossimi passi
 
-Vedi `docs/DIARIO.md` per la storia completa e `README.md` per lo stato sintetico.
-In breve: modello Dixon-Coles sui soli gol, tarato; **batte le baseline ma non il
-mercato**; i tiri in porta grezzi non aiutano (verificato su 6 stagioni).
-**Fase 4a-4e completate:** dati arricchiti (xG/npxG/PPDA/deep, valori rosa,
-assenze); config ufficiale = blend gol/**xG reale** (α=0.75) + emivita ri-tarata
-a **365g** (Fase 4d: col blend xG conviene memoria piu' corta). npxG≈xG; valori
-rosa, assenze e riposo-solo-SerieA (anche in combo) **non aiutano** out-of-sample
-(gia' impliciti in gol+xG, o confusi con la forza): il modello e' al **tetto
-pratico** dei dati attuali. Esiste un layer covariate (off di default) per dati
-futuri davvero indipendenti (es. calendario di club completo per la congestione).
-**Fase 4e:** aggiunto il **calendario di club completo** (coppe+Europa via
-openfootball) → colonne `home/away_rest_days_full` e `home/away_midweek_europe`
-nello snapshot + tabella grezza `data/club_fixtures.csv`. E' la **congestione
-vera** (il proxy solo-lega non la vedeva). **Fase 4e-bis:** validata la covariata
-`rest_full` walk-forward (2020-25): inverte il segno del proxy solo-lega ma il
-guadagno e' nel rumore (−0.0004 medio) → covariata off di default.
-**Fase 6:** ricalibrazione confidenza (temperature scaling, `scripts/calibrate.py`):
-il modello e' un po' **sottoconfidente** (T≈0.94, robusto) ma il guadagno e'
-trascurabile (−0.0003) → non entra nella config; modulo `src/evaluation/calibration.py`
-per l'uso pratico. **Fase 7:** **prior di cold-start neopromosse**
-(`--promoted-prior`, δ≈0.23 stimato leave-future-out): sposta il bersaglio dello
-shrinkage sotto la media per le squadre senza storico. **Miglior guadagno interno**
-(−0.0011 medio, −0.0039 sulle partite delle promosse, 5/6 stagioni): **ADOTTATO
-nella config ufficiale** (δ=0.23). **Fase 8 (ultimo giro economico, NEGATIVO):**
-ri-taratura shrinkage col prior = curva **piatta** 0.75-1.5 (leve ortogonali,
-nessun guadagno); vantaggio-casa per-squadra = **persistenza anno-su-anno r≈0.00**
-(solo rumore stagionale, non generalizza) → niente da spremere.
-**Fase 9:** anatomia del gap col mercato (`scripts/analyze_gap.py`): gap 1X2 medio
-+0.0165, **quasi tutto nel PAREGGIO** (il mercato 12 senza pari e' gia' a livello
-mercato); varia per stagione (peggio COVID 2020-21) e a U per forza-squadra.
-**Fase 10:** ricalibrazione per-classe 1X2 (`scripts/_run_class_recal.py`):
-conferma robusta casa-sovrastimata/pari-sottostimato ma guadagno nel rumore
-(−0.0005) → off. **Fase 11:** griglia combinazioni feature off-di-default
-(`scripts/_run_combo_analysis.py`): **nessuna combo utile** (squad_value peggiora,
-absence/rest_full rumore; l'unico effetto additivo e' la ricalibrazione gia' nota).
-**Fase 12:** ensemble emivite (blend 180+730 = −0.0006, borderline) e il **cambio
-di classe** — modello a **diagonale inflazionata** (`--draw-inflation`, Fase 12b):
-alza i pareggi oltre la correzione DC, fittato sui punteggi. Migliora la
-calibrazione del pareggio ma il log-loss guadagna solo −0.0004 (3/6): *quanti*
-pareggi capitano e' rumore. **Il pareggio e' quasi-casuale per tutti (mercato
-incluso)** → il gap non e' cattiva modellazione ma info che il mercato ha. 7
-esperimenti convergono: **tetto REALE**, non solo pratico. draw_inflation off di
-default. **Fase 13:** stato di forma (`add_form`, covariata `form`,
-`scripts/_run_form.py`): la forma NON predice l'errore del modello (corr +0.035) e
-come covariata peggiora (+0.0002) → gia' catturata dal fit pesato nel tempo,
-nessun pattern nascosto (8 esperimenti convergenti). **Fase 14 (linea di APERTURA + CLV,
-NEGATIVO):** snapshot esteso con le quote pre-chiusura `*_open` (CSV originali
-football-data congelati in `data/football_data_raw/`; il mirror storico di sources.BASE_URL e'
-SPARITO da GitHub → `--refresh` senza fonte a monte;
-`scripts/_restore_raw_cache.py` ricostruisce la cache). Il modello NON batte
-nemmeno l'apertura (gap 1X2 +0.0146, 6/6 stagioni; affilamento open→close solo
-+0.0020) e il CLV e' negativo (−0.0028, 45%>0; ROI@open −17.3%): i dissensi del
-modello dalla linea del venerdi' sono rumore. "Scommetti presto" e' chiusa;
-resta non testabile solo l'apertura vera (serve raccolta prospettica di quote). **Fase 15 (audit dei calcoli):** ogni numero di
-README/DIARIO ricalcolato dal registro; formule tutte corrette, walk-forward
-pulito, backtest ufficiale riprodotto identico. UN errore vero trovato e
-corretto: il ROI del value betting era **−15.7%** (media 6 stagioni, config
-ufficiale), non il −8.5% (valore Fase 1) rimasto nel README. Corrette sbavature
-(O/U 0.6885, ~86%, baseline 1.0834, tabella 2b del diario) e dichiarati i limiti:
-baseline in-sample (ex-ante onesta: 1.0860/0.6961, battuta comunque), costanti
-RECAL_W/δ fisso col senno di poi negli script 10-12, gap identico su stagioni
-pulite (+0.0164) e di tuning (+0.0166) → nessun overfitting di selezione.
-Registrate nel registro le run mancanti (Fasi 11/12a/13); regola: **nessuna
-analisi senza run in `runs.jsonl`**. **Fase 15-bis:** matrice gap per mercato ×
-stagione (`scripts/_run_gap_markets.py`): il 12 (no pari) e' a livello mercato
-in OGNI stagione (−0.0021…+0.0050), il costo del pareggio e' strutturale
-(1X/2X +0.008…+0.018 sempre), l'O/U e' il mercato piu' volatile (−0.0031…
-+0.0168: il gap medio +0.0069 ha poca sostanza operativa). **Fase 16
-(encompassing, definitivo):** blend α·modello+(1−α)·mercato walk-forward
-(`scripts/_run_encompassing.py`): **α*≈0 ovunque, perfino in-sample** → il
-mercato di chiusura ingloba completamente il modello, nessuna informazione
-propria da combinare (converge col CLV negativo della Fase 14). **Fase 17
-(CI bootstrap):** bootstrap appaiato B=10.000
-(`scripts/_run_gap_uncertainty.py`): gap 1X2 +0.0165 [+0.0106,+0.0225] e O/U
-+0.0069 [+0.0022,+0.0116] REALI; gap 12 +0.0020 [−0.0006,+0.0046]
-statisticamente zero; Δ prior −0.0010 [−0.0025,+0.0004] probabile (~93%) ma
-non conclusivo — resta adottato per coerenza e motivazione strutturale, va
-dichiarato "probabilmente utile". Disciplina multiple-testing: dopo ~30 test
-sulle stesse 6 stagioni, un CI che sfiora lo zero = "non concluso".
-**Fase 18 (rho dinamico, NEGATIVA con regola pre-dichiarata):** correzione sui
-punteggi bassi per-partita (`--dynamic-rho`): rho_slope instabile (cambia
-segno, sbatte sui bound) e Δ +0.0003 [−0.0007,+0.0013] → off; terza e ultima
-via strutturale sul pareggio chiusa (dopo Fasi 10 e 12b). **Fase 19 (potenza
-sul prior):** finestra estesa alle stagioni 1819/1920 (mai usate) → 8
-stagioni: Δ prior −0.0013 [−0.0026,+0.0001], P(aiuta) 96.5% (97% sulle
-promosse); entrambe le stagioni nuove confermano → prior confermato, etichetta
-da "probabile" a "molto probabile, formalmente non concluso".
-**Fase 20 (anatomia dei residui):** regressione del residuo del modello su 11
-covariate pre-partita, incluse tre di estremità mai provate
-(`scripts/_run_residuals.py`): R² 0.0055 = **rumore** (vs 0.0051 da feature
-casuali) → nessun segnale nascosto oltre la forma. MA emerge l'**adverse
-selection**: il gap vs mercato cresce col dissenso modello-mercato (r=+0.18;
-quartile alto +0.0539 vs basso +0.0009) → i "value bet" del modello sono i
-suoi errori. E' il meccanismo del ROI negativo, coerente con Fase 16 (α*=0) e
-Fase 14 (CLV<0). **Prossima direzione (Fase 21+): MODELLI NUOVI, valutati
-PER MERCATO** (vedi principio 8). Non piu' tweak al Dixon-Coles ma famiglie
-diverse — es. gradient boosting/logistico che predicono un mercato DIRETTAMENTE
-(senza matrice dei punteggi), o modelli a punteggio con miglior correlazione
-(bivariato Poisson, negative-binomial) per il GG/NG. Regola: giudica ogni
-candidato mercato per mercato; la config ufficiale puo' diventare un portafoglio
-di specialisti; **priorita' al GG/NG** (l'unico mercato senza quote nei dati,
-quindi senza tetto di efficienza dimostrato). Restano validi anche **dati
-davvero nuovi** e **uso pratico**. **Fase 21 (primo modello nuovo):** gradient
-boosting sul GG/NG (`scripts/_run_gbm_btts.py`, sklearn extra "models"). Il GBM
-grezzo perde (+0.0280) ma e' quasi tutto mis-calibrazione: **calibrato (Platt)
-pareggia il DC** (+0.0047, CI [−0.0019,+0.0113]) ma non lo batte, e **nessuno
-batte la baseline** → convergenza sul tetto, non fallimento del modello. Il
-GG/NG e' quasi-impredicibile come il pareggio. LEZIONE METODOLOGICA: per ogni
-modello nuovo, valuta SEMPRE anche la versione calibrata (il log-loss punisce la
-sovra-confidenza; senza il controllo si conclude il falso). Il principio "un
-modello per mercato" resta valido; questo mercato non cede. **Fase 22 (sweep
-GBM completo):** 6 mercati (1X2, O/U, GG/NG, 1X, 2X, 12) × 3 feature-set
-(cov / dc / dc+cov) × calibrazione (`scripts/_run_gbm_sweep.py`). Il GBM **non
-batte il DC su NESSUN mercato** e allarga il gap col mercato (CI<0 escluso su
-5/6; GG/NG pareggia a livello baseline); rende al meglio quando usa SOLO le
-feature del DC (aggiungere covariate peggiora). Conclusione forte: il **tetto e'
-INFORMATIVO, non architetturale** — la forma del Dixon-Coles non e' il collo di
-bottiglia, lo sono i dati pre-partita. Testate 2 famiglie di modelli su 6
-mercati: nessuno cede. Per un edge serve **informazione nuova**, non un modello
-nuovo. **Fase 23 (GBM modello+mercato):** dato al GBM anche le quote di chiusura
-come feature (`scripts/_run_gbm_market.py`, encompassing NON-lineare):
-sull'1X2 il GBM-con-mercato resta a 0.9996 — **peggio del DC da solo** (0.9797)
-e lontano dal mercato (0.9632), P(batte mercato)=0%. Il mercato e' una previsione
-quasi-ottima e un ensemble di alberi la degrada; il mercato come feature aiuta il
-GBM rispetto a se stesso ma non basta. Ridurre il gap a ~0 si puo' solo copiando
-il mercato (lineare, gia' Fase 16); batterlo NO, con nessun metodo. Il GBM e' lo
-strumento sbagliato per combinare modello+mercato. **Fase 24 (DC calcolato DAL
-mercato — PRIMO risultato positivo):** invertire le quote 1X2+O/U per ricavare i
-lambda,mu IMPLICITI nel mercato (che li stima meglio di noi) e derivarci il GG/NG
-con la matrice del DC (`scripts/_run_dc_from_market.py`). Sui mercati con quote
-riproduce il mercato (banale); il valore e' derivare il GG/NG, che il book NON
-prezza: 0.6853 (con rho) vs DC-da-gol 0.6898 vs baseline 0.6871 -> **batte
-entrambi** (Δ vs DC -0.0033, CI [-0.0072,+0.0005], P=95.7%, 6/6 stagioni; prima
-cosa a battere la baseline sul GG/NG). Onesta': CI sfiora lo zero (molto
-probabile, non concluso), guadagno modesto, non verificabile vs un'ipotetica
-linea GG/NG, e RICHIEDE le quote 1X2+O/U al momento della predizione. LEZIONE: la
-leva vera e' l'INFORMAZIONE (qui quella del mercato su un mercato non prezzato),
-non l'architettura; il GG/NG "specialista" (principio 8) diventa
-mercato-implicito -> matrice DC -> P(GG), non il DC-da-gol. **Fase 25 (finestra dei dati):** aggiunti al backtest
-``train_window_days`` (taglio netto) e ``drop_train_seasons``; sweep sulla config
-ufficiale (`scripts/_run_window.py`). Tagliare le stagioni vecchie PEGGIORA
-(finestra 3 stag +0.0011, 2 stag +0.0019, e di piu' sulle recenti +0.0035);
-perfino escludere la stagione COVID anomala costa +0.0007. Piu' storia batte
-meno: rose stabili anno su anno, l'emivita 365g gia' gestisce la recency in modo
-ottimale. Conferma la Fase 2b (memoria lunga). **Fase 26 (market-implied su TUTTI
-i mercati sui gol — il risultato piu' forte):** modulo
-`src/models/market_implied.py` (inversione 1X2+O/U -> lambda,mu del mercato ->
-matrice DC -> ogni mercato) + sweep (`scripts/_run_market_implied.py`). Batte il
-DC-da-gol su 13 mercati su 14 (CI95<0 su 12) e la baseline su 13 su 14; guadagni
-maggiori sui mercati ricchi (risultato esatto -0.0309, multigol, total-squadra).
-Solo il pari/dispari non migliora (quasi-casuale). Strade: rho -0.06 aiuta poco;
-servono 1X2 E O/U (l'O/U aggiunge); blend coi nostri lambda,mu PEGGIORA (mercato
-puro meglio, conferma Fase 16). E' un MOTORE di pricing coerente per ogni mercato
-sui gol, condizionato alle quote 1X2+O/U; non verificabile vs ipotetiche linee di
-quei mercati. **Fase 27 (forma dei punteggi):** i lambda,mu vengono dal mercato,
-ma la forma della distribuzione e' nostra; fittata walk-forward
-(`scripts/_run_shape.py`, modulo esteso con inflazione diagonale + binomiale
-negativa). La forma della Fase 26 (Poisson + rho -0.06) e' gia' ottima: rho
-fittato ~ fisso (nessun guadagno), phi diagonale minuscolo e non conclusivo,
-binomiale negativa RIGETTATA (nb_size->Poisson: i gol con lambda dal mercato non
-sono over-dispersi). Il market-implied ha toccato il tetto anche sulla forma; per
-spingere oltre servirebbero PIU' input di mercato (altre linee O/U, handicap) che
-lo snapshot non ha. **Fase 28 (errore per giornata):** log-loss modello e mercato
-per momento della stagione (`scripts/_run_matchday.py`). Il finale (giornate
-32-38) e' molto piu' difficile per ENTRAMBI (log-loss ~0.96 -> ~1.02): le ultime
-giornate sono ballerine per chiunque (casualita' irriducibile). Il gap raddoppia
-verso la fine (+0.0124 a meta' -> +0.0258 nel finale), indizio che il mercato
-prezzi la posta in palio meglio di noi, MA non conclusivo (Δ gap late-vs-resto
-+0.0104, CI [-0.0196,+0.0395], 240 partite ad alta varianza). **Prossimo bivio:**
-Fase 29. **Fase 29 (posta in palio, NEGATIVA):** feature "dead rubber" derivata
-dalla classifica (`scripts/_run_stakes.py`, euristica 3×gare-rimaste). I dead
-rubber sono rari (0.5% entrambe, 4.3% almeno una) e NON spiegano il finale: sul
-campione affidabile nessun effetto (Δ gap dead-live -0.012, CI [-0.058,+0.035]),
-e la direzione e' negativa (il modello e' semmai migliore nei dead rubber).
-Cercare dati esterni sulla motivazione probabilmente non aiuta. **Fase 30
-(pattern dentro la stagione):** anatomia per periodo
-(`scripts/_run_season_patterns.py`). Il finale piu' difficile NON e' entropia
-(esiti non piu' bilanciati); due cambi strutturali reali (giornate 32-34 tese e
-bloccate; 35-38 col VANTAGGIO-CASA che crolla, casa 40%->36% e trasferta
-31%->38%); nessun pattern-gap robusto (correlazioni ~0, gap fine-inizio positivo
-solo 3/6 stagioni). Candidato concreto emerso: attenuare il vantaggio-casa nelle
-ultime giornate (come nel COVID, Fase 9), piu' promettente della motivazione ma
-marginale. **Fase 31 (posta in palio corretta, 8 stagioni — RIBALTA la 29):** la Fase 29
-sbagliava ai due estremi (una retrocessa contata come "in lotta salvezza", una
-campione come "in corsa titolo"). Definizione corretta (DECISA = nessuna corsa
-aperta, inclusi retrocessa/campione) su 8 stagioni (`scripts/_run_stakes2.py`):
-il segnale e' l'ASIMMETRIA di motivazione -- "una decisa, una in corsa" ha gap
-+0.057 (3x il +0.017 di "entrambe in corsa"), CI esclude lo zero; "entrambe
-decise" niente. Escludendo le partite con >=1 decisa il gap scende (+0.0188 ->
-+0.0172): su di esse il modello va PEGGIO del mercato (il mercato prezza la
-motivazione, noi usiamo la forza stagionale). Primo LEAD azionabile dai dati
-interni. Onesta': campioni piccoli (133/76/44/23) e molti test -> indizio forte,
-non prova. METODO: un classificatore sbagliato ai bordi (Fase 29) ribaltava la
-conclusione. **Fase 32 (validazione covariata stakes su DC e GBM):** covariata `stakes`
-(1=decisa/0=in corsa, `loader.add_stakes`, `--covariates stakes`, off di default)
-testata walk-forward su entrambi i modelli (`scripts/_run_stakes_cov.py`). Sulle
-partite mismatch (n=99) la direzione e' CONFERMATA su entrambi: DC -0.0022, GBM
--0.0127 (il GBM la cattura ~6x meglio, l'effetto e' non-lineare); ma nessuno e'
-conclusivo (CI includono lo zero, il GBM per un pelo). Non adottata (regola CI<0)
-ma e' il LEAD interno piu' credibile: direzione giusta su due architetture,
-meccanismo chiaro, ≠ dai "residui=rumore" delle Fasi 13/20. Serve piu' campione.
-Se si usera', il GBM e' il veicolo giusto. **Fase 33 (ultime covariate interne, RIDONDANTI):** PPDA/deep (tattica) e
-finishing-luck (gol-xG rolling, mean-reversion), mai provate prima
-(`loader.add_style_luck`, covariate `ppda`/`deep`/`luck`, off di default,
-`scripts/_run_style_luck.py`). Sul DC: ppda/deep peggiorano appena (+0.0009),
-luck effetto ESATTAMENTE ZERO (il blend gol/xG e' gia' il meccanismo di
-mean-reversion); GBM estrae un capello (-0.0022, 81%) non conclusivo e
-irrilevante. Con la Fase 33 i DATI INTERNI SONO COMPLETAMENTE ESPLORATI (tutto lo
-snapshot testato): tetto informativo confermato. Ogni altro guadagno richiede
-INFORMAZIONE NUOVA o un avversario meno efficiente. **Prossimo bivio:** piu'
-stagioni/cross-lega per lo stakes, uso pratico (tool di predizione, la
-culminazione naturale), o dati davvero nuovi (formazioni, quote live).
+> Questa sezione è un **istantanea sintetica** dello stato attuale. Il racconto
+> completo e sempre aggiornato vive in `docs/DIARIO.md` (con un **indice per
+> archi narrativi** in testa) e nella tabella «Tutti gli esperimenti» del
+> `README.md`; la rosa dei modelli in `docs/PANCHINA.md`. Aggiorna QUESTA
+> istantanea quando cambia lo stato di fondo, non a ogni fase.
+
+**Dove siamo (Fase 83).** Il progetto è passato da "un modello Dixon-Coles sui
+gol" a **due motori complementari**, su **3 leghe** (Serie A, Premier, La Liga,
+9 stagioni ciascuna):
+
+1. **Dixon-Coles gol+xG** (`src/models/dixon_coles.py`) — il predittore
+   *standalone*, senza quote: config per-lega in `src/config.py`
+   (emivita 365g, shrinkage 1.5, blend xG α=0.75, δ neopromosse 0.23/0.33/0.22),
+   + la **φ(|λ−μ|)** della Fase 35 sulla famiglia-pareggio. Batte nettamente le
+   baseline ma **non il mercato** (gap 1X2 +0.0165 in Serie A; ordine simile
+   nelle altre leghe).
+2. **Market-implied** (`src/models/market_implied.py`) — il *motore di pricing*:
+   inverte le quote 1X2+O/U nei λ,μ del mercato e ne deriva **ogni mercato Tier
+   1** dalla matrice DC. Batte il DC-da-gol su 13/14 mercati su tutte e 3 le
+   leghe (Fasi 26/76). È il **titolare** quando ci sono le quote; il DC è il
+   fallback senza quote.
+
+**Le scoperte che reggono.** (a) Il mercato di **chiusura ingloba il modello**
+(α\*=0 ovunque, Fase 16): non lo si batte in ROI — **non usare per scommettere
+soldi veri**. (b) I gol dati i tassi del mercato sono **sotto-dispersi**
+(double-Poisson θ≈1.2): `sharpen_1x2` batte la chiusura devigata in log-loss con
+CI conclusivo (non in ROI), ed è il **router v3** adottato (`price_markets`,
+θ 1.225 mercato / 1.138 DC). Ma è una proprietà della **chiusura Serie A** (meno
+liquida): non replica su Premier/Liga (Fase 53). (c) Il θ del router è
+**per-contesto** (lega × epoca): ~1.2 in Serie A/Liga, ~1 in Premier, e cresce
+nel tempo (Fasi 75/81). (d) Il **valore residuo** è prezzare *calibrato* i ~17
+mercati che il book non quota (GG/NG, risultato esatto, multigol, total-squadra…)
+e le **correzioni per-lega** (φ35 famiglia-pareggio, θ router); la Fase 82 ha
+verificato per via diretta che l'oracolo è **calibrato e indovina quanto il
+mercato** (non di più).
+
+**Cosa è chiuso (non riproporre senza informazione nuova).** Tutti i dati
+INTERNI sono esplorati (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/forma/
+stakes: ridondanti o rumore, Fasi 4c-33); GBM bespoke per-mercato (bocciato
+4 volte); Poisson bivariato, copule di Frank, ensemble emivite, draw-inflation,
+ρ dinamico, zero-inflazione, Rue-Salvesen, GAS/state-space (tutti chiusi per
+test o per argomento); più-storia-batte-meno (Fase 25). Il tetto è
+**informativo**, non architetturale.
+
+**Prossimi passi (idee, non impegni).** In ordine di rapporto valore/costo,
+dettaglio in `docs/PISTE.md`:
+- **uso pratico**: `scripts/predict.py` è il tool (DC senza quote / market-implied
+  con `--odds`), reso **per-lega** alla Fase 83-bis (M1); resta da rendere
+  per-lega il θ del router nel path market-implied (M2 Premier con θ neutro);
+- **test prospettico 2026-27** (Fase 78, stato APERTO): previsioni congelate
+  prima del kickoff e scorate dopo — il gold standard, da completare al primo
+  turno con quote reali (`experiments/prospettico_2026_27.md`);
+- **informazione DAVVERO nuova** (formazioni ufficiali pre-partita, quote
+  live/di apertura raccolte prospetticamente): l'unica leva non ancora esaurita;
+- **mercati non ancora coperti** (Tier 2 handicap asiatico, Tier 3 HT/FT e tempi).
 
 ---
 

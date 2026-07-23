@@ -279,6 +279,10 @@ def test_draw_balance_conditioned_on_lambda_mu_diff():
         DixonColesModel(draw_balance=True, draw_inflation=True)
     with pytest.raises(ValueError):
         DixonColesModel(draw_balance=True, dynamic_rho=True)
+    # draw_inflation + dynamic_rho: incoerenti (phi fittato sul rho scalare,
+    # applicato col rho dinamico) -> vietato per simmetria con le guardie sopra.
+    with pytest.raises(ValueError):
+        DixonColesModel(draw_inflation=True, dynamic_rho=True)
 
 
 def test_devig_sums_to_one():

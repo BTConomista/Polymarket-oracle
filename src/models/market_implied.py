@@ -305,7 +305,7 @@ def season_mu_factor(matchday, coef=GG_SEASON_MU_COEF) -> float:
 # monetizzabile (l'affinamento è ~0.5-1% per esito, sotto il margine ~5%:
 # value-bet quasi mai attivato — Fase 51-D). Costanti pooled 8 stagioni, da
 # RIFITTARE per lega/periodo (§7).
-DP_THETA = 1.225                    # sotto-dispersione double-Poisson (Fase 51)
+DP_THETA = 1.225                    # sotto-dispersione dp: costante pooled del router v3 (Fase 52; il MLE della Fase 51 dava 1.205)
 RATE_LEVELS = (0.9726, 1.0224)      # fattori di livello (λ, μ) dei tassi impliciti
 # θ sui tassi del DC (Fase 52-D): piu' basso perche' i tassi nostri sono piu'
 # rumorosi del mercato (il rumore di stima aggiunge dispersione apparente);

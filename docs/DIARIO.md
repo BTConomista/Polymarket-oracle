@@ -209,6 +209,7 @@ mercato, non di più.*
 - [Fase 82 — Verifica diretta: ma indoviniamo davvero i risultati? (calibrazione e hit-rate su tutti i mercati)](#fase-82--verifica-diretta-ma-indoviniamo-davvero-i-risultati-calibrazione-e-hit-rate-su-tutti-i-mercati)
 - [Fase 83 — Revisione dei commit esterni (Codex, Fasi 6-13): corretti; 7 difetti minori, 1 fix](#fase-83--revisione-dei-commit-esterni-codex-fasi-6-13-corretti-7-difetti-minori-1-fix)
 - [Fase 83-bis — `predict.py` per-lega: il "passo 2" del test prospettico (parziale)](#fase-83-bis--predictpy-per-lega-il-passo-2-del-test-prospettico-parziale)
+- [Fase 84 — Audit trasversale del repo (4 fronti): numeri OK, codice OK, docs ripuliti, nuove piste](#fase-84--audit-trasversale-del-repo-4-fronti-numeri-ok-codice-ok-docs-ripuliti-nuove-piste)
 
 ---
 
@@ -8526,6 +8527,93 @@ solo il **valore di δ** iniettato: 0.23 (SA) / 0.33 (PL) / 0.22 (Liga), ciascun
 lo fitta il DC dai dati della lega (Liga più alto, Fase 55). Nessun run scorato
 (è un fix di tooling, non un esperimento); riproducibile con
 `python scripts/predict.py --league premier_league Newcastle Liverpool`.
+
+---
+
+## Fase 84 — Audit trasversale del repo (4 fronti): numeri OK, codice OK, docs ripuliti, nuove piste
+
+**Obiettivo (utente).** «Vedi tutto il lavoro svolto: cerca errori (calcoli o
+file), migliora i ragionamenti, pensa a nuove soluzioni/calcoli/costanti,
+migliora i file del repo.» Un audit a 360° del progetto maturo (84 fasi, 3
+leghe, 704 run registrati).
+
+**Metodo.** Quattro revisioni indipendenti in parallelo, ognuna con verifica
+diretta (ri-esecuzione, ricalcolo dal registro, snippet numerici), poi ogni
+finding ri-controllato a mano prima di agire:
+1. **Numeri** — riproducibilità di ogni headline da `runs.jsonl`/dati;
+2. **Codice** — correttezza dei modelli e delle metriche (bug, leakage,
+   normalizzazioni, stabilità);
+3. **File** — coerenza e igiene della documentazione (contraddizioni,
+   affermazioni stantie, link, conteggi);
+4. **Idee** — nuove leve/costanti testabili e affinamenti di ragionamento.
+
+**Risultato — il progetto è in salute.**
+
+- **Numeri (nessun errore).** Ri-eseguito il backtest ufficiale su 6 stagioni:
+  1X2 **0.9797** e O/U **0.6885** esatti; mercato 0.9632/0.6816, baseline
+  in-sample 1.0834/0.6892 e **ex-ante ricalcolata dai dati grezzi**
+  1.0860/0.6961; gap +0.0165, 86.3%/86.6% di distanza chiusa (ricalcolo
+  86.27%/86.56%); ROI −15.67% medio / −15.60% pooled / 864 bet; tabella V0→V4 e
+  i CI bootstrap della Fase 17 tutti riprodotti dal registro. La catena
+  `runs.jsonl → README/DIARIO` è internamente consistente; l'unico errore mai
+  trovato (ROI −8.5%→−15.7%) resta correttamente sistemato ovunque (Fase 15).
+- **Codice (nessun bug attivo).** Il percorso ufficiale (DC-da-gol + metriche) e
+  il motore market-implied sono corretti: double-Poisson mean-preserving
+  (errore <6e-13, θ=1 riduce esattamente alla Poisson), tutte le matrici
+  normalizzate a 1 dopo rho/φ/dp/troncamento, φ35 identica nei due moduli,
+  correzione DC coi segni giusti, **zero look-ahead** (`fit` filtra
+  `date < as_of` stretto), marginali di bivariato/copula preservati. Due sviste
+  **latenti** su percorsi off-di-default: **F1** guardia mancante per
+  `draw_inflation`+`dynamic_rho` (→ **corretta**, con test); **F2** in
+  `implied_lambda_mu` l'O/U è sotto-pesato 3:1 su input incoerenti (innocuo:
+  i chiamanti devigano prima, contratto rispettato — lasciato con nota).
+- **File (ripuliti).** Trovata e corretta la **stantia più grave**: `CLAUDE.md`
+  §6 «Stato corrente» era ferma alla Fase 33 (~210 righe che ignoravano
+  market-implied, Premier/Liga, router θ, `predict.py` per-lega) → **riscritta**
+  come istantanea alla Fase 83 con rimando ai documenti vivi. Corretti: la
+  checklist §2 diceva ancora «commit sul branch di sviluppo» (vs la regola
+  main-only §3-bis); la cella README Fase 66 dava per pieno un file svuotato
+  alla Fase 70; la tabella Fase 5 era intestata «modello (uff.)» ma mostra
+  valori **pre-prior** (0.9807/0.6884) → ri-etichettata; il commento di
+  `DP_THETA` citava la Fase 51 (MLE 1.205) invece della Fase 52 (costante
+  pooled adottata 1.225); riempito `files/README.md` (63 MB di bundle senza
+  spiegazione). Verificato OK: tutti i valori di config/θ coincidono tra
+  `src/config.py`, `market_implied.py`, README, CLAUDE.md, PANCHINA; 3420
+  partite × 9 stagioni coerente; 140 test.
+- **Idee (catalogate in `docs/PISTE.md`).** L'idea nuova più forte:
+  **θ del router come funzione del MARGINE** della partita, non costante
+  per-lega — unifica in una sola curva universale le Fasi 53 («θ decresce con la
+  liquidità») e 75 («θ cresce nel tempo»), che hanno un osservabile comune
+  per-partita (l'overround). È anche il modo giusto di ri-verificare la
+  monotonìa temporale della Fase 75 (oggi su 2 sole stagioni all'estremo).
+  Aggiunte anche: il diagnostico economico dell'handicap asiatico *prima*
+  dell'inversione a 3 vincoli (pista #5); la ri-verifica del beat-the-close vs
+  **Pinnacle+Shin** (l'unico edge del progetto, mai testato contro l'avversario
+  più duro — pista #9); l'H2H puntato sui **totali/GG** e non sull'1X2 (#1); e
+  tre **affinamenti di ragionamento** (§5-bis di PISTE), su tutti la distinzione
+  «α\*=0 (informazione inglobata) ≠ prezzi ben calibrati (la chiusura è
+  mis-calibrata in modo correggibile, dp_lvl/Fase 82)».
+
+**Lezione.** Dopo 84 fasi il progetto regge un audit avversario a 360°: i numeri
+si riproducono, il codice del percorso ufficiale è corretto, e i difetti sono
+**deriva di configurazione** (docs/tool cablati su uno stato passato) più che
+errori di calcolo — la stessa famiglia della Fase 83 (`calibrate.py`) e 83-bis
+(`predict.py`). Il metodo (walk-forward come idioma, `compute_metrics` fonte
+unica, registro, blocchi 📐) rende gli errori di calcolo difficili; la
+manutenzione da fare è tenere i **testi divulgativi** allineati allo stato.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova (è un audit). Le uniche modifiche al codice:
+- **guardia F1** in `DixonColesModel.__init__`: `raise ValueError` se
+  `draw_inflation and dynamic_rho` (simmetria con le due guardie esistenti su
+  `draw_balance`), perché `_draw_base_arrays` fitta φ col `rho` **scalare**
+  mentre `_score_matrix` applicherebbe `rho + rho_slope·(λ+μ−centro)` — φ
+  fittato su un rho diverso da quello applicato. Entrambi off di default.
+- fix di soli **commenti/etichette** altrove (nessun cambiamento di calcolo).
+I 6 run del backtest ufficiale ri-eseguiti per l'audit sono registrati in
+`runs.jsonl` (config c297279f). Numeri riproducibili: `python scripts/backtest.py`
+per ogni stagione 2020-21→2025-26, media = 0.9797.
 
 ---
 
