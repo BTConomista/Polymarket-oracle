@@ -26,7 +26,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.config import SERIE_A                     # noqa: E402
+from src.config import league_config               # noqa: E402
 from src.data import loader                        # noqa: E402
 from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
@@ -99,15 +99,17 @@ def main() -> None:
             raise SystemExit(f"Squadra sconosciuta: {t!r}. Esempi: {sorted(teams)[:8]}...")
     prom = promoted_teams(allm, str(allm["season"].iloc[-1]))
 
+    cfg = league_config(args.league)  # config PER LEGA (§7): δ Premier 0.33, Liga 0.22
+
     print("=" * 74)
     print(f"MODELLO 1 — Dixon-Coles gol+xG  |  {args.home} - {args.away}")
     print(f"allenato fino a {allm['date'].max().date()}, predizione as_of {as_of.date()}")
-    print(f"config ufficiale: {SERIE_A}")
+    print(f"config ufficiale ({args.league}): {cfg}")
     print("=" * 74)
 
-    kw = dict(half_life_days=SERIE_A["half_life_days"], shrinkage=SERIE_A["shrinkage"],
-              shots_blend=SERIE_A["shots_blend"], blend_signal=SERIE_A["blend_signal"],
-              promoted_prior=(SERIE_A["promoted_prior"], SERIE_A["promoted_prior"]))
+    kw = dict(half_life_days=cfg["half_life_days"], shrinkage=cfg["shrinkage"],
+              shots_blend=cfg["shots_blend"], blend_signal=cfg["blend_signal"],
+              promoted_prior=(cfg["promoted_prior"], cfg["promoted_prior"]))
     # Modello DC con φ35 (draw_balance): fornisce λ,μ, rho e (φ0,κ) per il routing.
     m = DixonColesModel(**kw, draw_balance=True).fit(allm, as_of_date=as_of, promoted_teams=prom)
     print("Forza stimata (log-scala, 0 = media lega):")

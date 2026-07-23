@@ -30,10 +30,13 @@ sviluppo, con questi limiti **dichiarati**:
   un'estate di mercato (nuovi acquisti/cessioni non pesati);
 - **niente quote** raggiungibili da qui → **niente Modello 2** (market-implied).
   Solo il DC-da-solo;
-- il tool usa ancora la config Serie A per default (il "passo 2" di
-  consolidamento non è ancora fatto); qui l'anteprima è generata con la **config
-  giusta per lega** (`LEAGUE_CONFIGS`, δ Premier 0.33) via
-  `scripts/_run_prospettico_2627.py`.
+- l'anteprima è generata con la **config giusta per lega** (`LEAGUE_CONFIGS`,
+  δ Premier 0.33) via `scripts/_run_prospettico_2627.py`. **Da Fase 83-bis anche
+  `predict.py` è per-lega** (`--league premier_league` usa δ=0.33 ecc.): il
+  "passo 2" del Modello 1 è chiuso, il tool ufficiale può ora produrre M1 per
+  ogni lega. Resta per-contesto solo il θ del router nel path market-implied
+  (M2): Fase 81 ha trovato θ*≈1 in Premier vs ~1.2 in Serie A/Liga, quindi per
+  Premier il M2 andrà prodotto con `dp_theta` neutro (nota nel protocollo §3).
 
 **Premier League — previsione DC (as_of 2026-08-15, dati fino a 2025-26):**
 
@@ -62,11 +65,14 @@ market-implied riproduce il mercato ed estende ai mercati non quotati.
 
 Per ciascuna delle 3 leghe, giornata 1:
 1. **Fixture ufficiali** (fonte: lega/Wikipedia, verificati).
-2. **Modello 1 — DC**: `scripts/_run_prospettico_2627.py` (config per-lega),
-   congelato PRIMA del kickoff.
+2. **Modello 1 — DC**: `scripts/_run_prospettico_2627.py` oppure, ora che è
+   per-lega, `predict.py --league <lega>` (config δ/γ giusta), congelato PRIMA
+   del kickoff.
 3. **Modello 2 — market-implied**: raccogliere le **quote di chiusura** reali
    (1X2 + O/U 2.5) di ogni match e invertirle (`predict.py --odds …` /
-   `price_markets`). Da fare vicino al calcio d'inizio.
+   `price_markets`). Da fare vicino al calcio d'inizio. **Nota Fase 81**: per la
+   **Premier** il router θ ottimo è ≈1 (non 1.225): produrre il M2 Premier con
+   `dp_theta` neutro; Serie A/Liga tengono θ≈1.2.
 4. **Baseline**: frequenza storica dell'esito (già nota) per riferimento.
 5. **Dopo il full-time**: risultati reali → log-loss/Brier per mercato e per
    lega, di Modello 1, Modello 2 e baseline; controllo di calibrazione

@@ -208,6 +208,7 @@ mercato, non di più.*
 - [Fase 81 — Mega-sweep delle costanti del market-implied per-lega: le curve di risposta complete (e il ribaltamento del router-Liga)](#fase-81--mega-sweep-delle-costanti-del-market-implied-per-lega-le-curve-di-risposta-complete-e-il-ribaltamento-del-router-liga)
 - [Fase 82 — Verifica diretta: ma indoviniamo davvero i risultati? (calibrazione e hit-rate su tutti i mercati)](#fase-82--verifica-diretta-ma-indoviniamo-davvero-i-risultati-calibrazione-e-hit-rate-su-tutti-i-mercati)
 - [Fase 83 — Revisione dei commit esterni (Codex, Fasi 6-13): corretti; 7 difetti minori, 1 fix](#fase-83--revisione-dei-commit-esterni-codex-fasi-6-13-corretti-7-difetti-minori-1-fix)
+- [Fase 83-bis — `predict.py` per-lega: il "passo 2" del test prospettico (parziale)](#fase-83-bis--predictpy-per-lega-il-passo-2-del-test-prospettico-parziale)
 
 ---
 
@@ -7970,7 +7971,8 @@ se resta calibrato su dati mai visti — e mostrare, con le quote, che il
 market-implied riproduce il mercato ed estende ai mercati non quotati. Nessun
 ROI simulato. È anche il primo uso "vivo" che espone il debito del **passo 2**:
 il tool `predict.py` va reso per-lega (config, selezione automatica del modello)
-prima di un uso pratico serio.
+prima di un uso pratico serio. *(Il Modello 1 di `predict.py` è stato reso
+per-lega nella Fase 83-bis — vedi sotto.)*
 
 ### 📐 Il modello in dettaglio
 
@@ -8472,6 +8474,58 @@ diagonale (Fase 12b): `P'(i,i) = (1+φ)·P(i,i)` con clip ≥0 e **rinormalizzaz
 finale a somma 1**. Nessun numero nuovo da motivare: l'unico run prodotto è la
 riproduzione del backtest ufficiale (config invariata da `src/config.py`),
 registrato in `runs.jsonl` con commit e impronta dati.
+
+---
+
+## Fase 83-bis — `predict.py` per-lega: il "passo 2" del test prospettico (parziale)
+
+**Obiettivo.** Rivedendo il commit sulle nuove stagioni (Fase 78, test
+prospettico 2026-27, richiesta utente), è emerso il difetto che il diario di
+quella fase segnalava come **debito del "passo 2"**: il tool ufficiale
+`predict.py` **ignorava `--league`** e usava sempre la config Serie A
+(`from src.config import SERIE_A`, hard-coded in `kw`), anche per Premier/Liga.
+Era proprio la ragione per cui la Fase 78 aveva dovuto scrivere uno script
+separato (`_run_prospettico_2627.py`) per generare l'anteprima con la config
+per-lega giusta.
+
+**Ragionamento.** Il test prospettico (il gold standard, Fase 78) e ogni uso
+pratico su Premier/Liga passano da `predict.py`: se il Modello 1 gira con
+δ=0.23 (Serie A) su una partita di Premier (δ vero 0.33, Fase 55), le neopromosse
+inglesi sono **sotto-corrette** — esattamente l'errore che il §7 del CLAUDE.md
+mette in guardia ("non copiare i numeri della Serie A"). Il fix è a costo zero:
+esiste già `src.config.league_config(league_key)` (fallback esplicito a Serie A
+per leghe ignote).
+
+**Cosa è stato fatto.** `predict.py` ora legge `cfg = league_config(args.league)`
+e ne usa emivita/shrinkage/blend/**δ** per il Modello 1; l'header stampa la lega.
+Verificato su 3 leghe: δ 0.23/0.33/0.22 e γ auto-fittato 0.128/0.191/**0.297**
+(Liga il più alto, come previsto dalla EDA Fase 55). 140 test verdi.
+
+**Cosa resta (dichiarato).** Il **path market-implied (Modello 2)** usa ancora
+costanti di forma rappresentative (φ0=0.30, κ=1.5 — difendibili, Fase 44) e
+`dp_theta=DP_THETA` (1.225). La Fase 81 ha però mostrato che il θ del router è
+**per-contesto**: ottimo ≈1 in Premier (dove la dp neutra è meglio), ≈1.2 in
+Serie A/Liga. Rendere il M2 per-lega (θ da config-lega) è il residuo del passo 2:
+non fatto qui per non aggiungere un iperparametro di config senza un backtest
+dedicato del tool — annotato nel protocollo di `prospettico_2026_27.md §3` così
+che, al primo turno 2026-27, il M2 Premier venga prodotto con θ neutro.
+
+**Lezione.** Stessa famiglia della Fase 83-F2 (`calibrate.py`): la **deriva di
+configurazione**. Un tool scritto quando esisteva una sola lega resta cablato
+sulla Serie A anche dopo che la config è diventata per-lega. Regola operativa:
+i punti d'ingresso utente (`predict.py`, script one-shot) devono leggere da
+`league_config`, mai importare `SERIE_A` direttamente.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: è la stessa `DixonColesModel` + `price_markets` della
+Fase 78, ma con gli iperparametri presi da `league_config(args.league)` invece
+che dalla costante `SERIE_A`. La formula del prior (Fase 7) è invariata; cambia
+solo il **valore di δ** iniettato: 0.23 (SA) / 0.33 (PL) / 0.22 (Liga), ciascuno
+`δ = ln(gol_lega / gol_promosse)` della sua lega (Fase 55/57). γ non è in config:
+lo fitta il DC dai dati della lega (Liga più alto, Fase 55). Nessun run scorato
+(è un fix di tooling, non un esperimento); riproducibile con
+`python scripts/predict.py --league premier_league Newcastle Liverpool`.
 
 ---
 
