@@ -125,6 +125,18 @@ proprio gli esiti meno probabili. Onestà: è calibrazione, non informazione
 la Fase 85 ha misurato la coda direttamente ma non ha ancora provato la
 correzione a due parametri. La COM-Poisson (una-forma) è a tetto, la
 due-parametri no.
+**Esplorazioni preliminari (audit Fase 86, DA RIPRODURRE prima di chiudere).**
+Entrambe le vie sono state tastate dai revisori dell'audit, con esito **non
+incoraggiante**, ma i numeri **non sono stati ancora riprodotti a mano** (a
+differenza del θ_team della 4-quater, riprodotto e chiuso): (a) l'**isotonica
+per-soglia** (PAVA walk-forward sui totali) avrebbe **peggiorato il log-loss OOS**
+su tutte e 4 le soglie (la mis-calibrazione OOS dell'Over 3.5 col router è già
+~0, non il +0.0037 in-sample); (b) la **mistura di due Poisson** sarebbe
+**conclusiva in-sample** (pooled P~99%, ~0.0006 exact-LL) ma **fragile OOS**
+(negativa su 2024-25 e 2025-26) — stesso pattern in-sample-forte/OOS-debole del
+θ_team. Prima di dichiararle chiuse serve la riproduzione col protocollo del
+repo; l'aspettativa, dopo la 86-bis, è che confermino il tetto (calibrazione, non
+edge).
 
 ### 4-quater. Dispersione per-squadra: un θ_team per gli esiti rari (LEAD, Fase 86)
 **Dato**: nessuno nuovo — sugli stessi λ,μ del mercato + i risultati storici.
