@@ -126,6 +126,29 @@ la Fase 85 ha misurato la coda direttamente ma non ha ancora provato la
 correzione a due parametri. La COM-Poisson (una-forma) è a tetto, la
 due-parametri no.
 
+### 4-quater. Dispersione per-squadra: un θ_team per gli esiti rari (LEAD, Fase 86)
+**Dato**: nessuno nuovo — sugli stessi λ,μ del mercato + i risultati storici.
+**Ipotesi (corregge un audit)**: la Fase 86 ha trovato — riproducendo a mano un
+finding che un revisore aveva dichiarato negativo — che la **volatilità-sorpresa**
+di una squadra (std del residuo `diff-reti − (λ−μ)` di mercato) **persiste**
+stagione→stagione (corr +0.25 grezza, **+0.20 controllata per la forza**, fuori
+dalla banda nulla). E la direzione è sfruttabile: classificando le partite per
+volatilità-sorpresa **passata** (OOS), le squadre ad **alta** volatilità sono
+predette meglio da **θ=1.10** (coda più pesante) vs θ=1.225 dei gruppi basso/medio,
+sul risultato esatto. È la prima crepa nel "θ uniforme" (F52-quater aveva escluso
+θ per volume/equilibrio/coda, **mai per identità-squadra**), ed è esattamente sul
+tema degli **esiti meno probabili**: gli upset delle squadre volatili si prevedono
+meglio con una coda più pesante.
+**Test (da fare, il pieno)**: un `θ_team` walk-forward — fit di θ per squadra (o
+per il fattore-partita `½(θ_home+θ_away)`) sulle stagioni passate, con **shrinkage
+verso 1.225** (poche gare/squadra/stagione), applicato al futuro; validazione
+LFO su risultato esatto/Over/multigol + calibrazione (Fase 82). `_run_team_
+dispersion.py` ha già l'infrastruttura (inversione, volatilità-sorpresa, terzili).
+**Onestà**: nella Fase 86 il θ di gruppo è scelto **in-sample** (la classificazione
+è OOS, il θ ottimo no) e i guadagni sono piccoli (~0.001 exact-LL); è un **lead
+forte, non una modifica adottata**. Resta sotto il tetto α\*=0 (è calibrazione
+della coda, non nuova informazione), ma è la pista di coda più promettente aperta.
+
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
 Nessuna rete: le colonne sono nei CSV football-data congelati in
@@ -143,14 +166,15 @@ vincolo → inversione più precisa → migliora il motore attivo su tutto il
 listino. Tier 2 dichiarato (principio §1.8). **L'unica pista di questa
 sezione che può migliorare direttamente il titolare**: priorità massima
 tra le "grezzo non estratto".
-**Come attaccarla (economico prima del costoso)**: NON costruire subito
-l'inversione a 3 vincoli. Primo passo da poche righe: inverti l'AH nel
-λ−μ implicito e **confrontalo con la λ−μ da 1X2+O/U** (bias e correlazione per
-lega/stagione). Se concordano, l'AH è ridondante (chiuso a costo minimo); se
-l'AH è più preciso, allora vale l'inversione a 3 vincoli e la ri-misura del
-motore. Guadagno atteso proprio dove la Fase 26 è più forte (total-squadra,
-scarto≥2, risultato esatto — i mercati dell'asimmetria), poco su O/U 2.5 (già
-vincolato).
+**Come input di inversione: CHIUSA (negativa, Fase 86).** Il diagnostico
+economico è stato eseguito: la supremazia implicita nella linea AH di chiusura
+correla **0.9952** con λ−μ già ricavata da 1X2+O/U (2.660 partite Serie A;
+`AH ≈ 0.94·(λ−μ)`). L'AH è **la stessa supremazia ripackagata** → un'inversione
+a 3 vincoli **non aggiungerebbe informazione**. Coerente coi fatti-chiusi
+(α\*=0). **Resta aperto** solo come **benchmark quotato sharp** (Pinnacle, vig
+~2.7% = metà dell'1X2) per validare la **calibrazione** del router sulla
+famiglia-margine/scarto≥2 (Tier 2, mai aperto) — non ROI, non un secondo canale
+di inversione.
 
 ### 6. Primo tempo (HTHG/HTAG/HTR) → mercati Tier 3 e fondazione live
 **Dato**: **9/9 stagioni**, mai estratto.

@@ -1,7 +1,8 @@
 # Esperimento Mondiali (bassa priorità)
 
 Cartella riservata all'esperimento **parallelo e a bassa fiducia** sui Mondiali,
-tenuto **separato** dal progetto principale (Serie A).
+tenuto **separato** dal progetto principale (Football Oracle: Serie A, Premier
+League e La Liga).
 
 ## Perché è un esperimento separato, non il progetto serio
 

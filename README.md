@@ -25,6 +25,11 @@ Polymarket, bookmaker, exchange o altri mercati di previsione.
 > reale vs cosa è STIMA** (`data/estimates/`). Da consultare prima di ogni
 > analisi sui dati.
 >
+> 📖 **[Glossario](docs/GLOSSARIO.md)** — i termini del progetto (devig,
+> market-implied, θ/sotto-dispersione, φ35, encompassing/α\*, walk-forward,
+> Tier 1/2/3…) in una riga ciascuno, con la fase che li introduce. Il punto
+> d'ingresso per un lettore nuovo.
+>
 > ⚽ **[La rosa dei modelli](docs/PANCHINA.md)** — lo stato di **OGNI** modello
 > del progetto: **titolari, panchina, bocciati**, ciascuno su **due fronti**
 > (versione per-lega e versione generale/pooled), con la matrice
@@ -80,7 +85,12 @@ baseline in-sample, 86.6% su quella ex-ante). Su una singola stagione i numeri
 oscillano → si giudica sulla media. Il *value betting* simulato con la config
 ufficiale dà **ROI medio −15.7%** su 6 stagioni (864 scommesse; per stagione da
 −4.7% a −23.0%; pooled −15.6%): chi non batte la linea di chiusura perde contro
-il margine del bookmaker. E non è questione di "scommettere prima": il modello
+il margine del bookmaker. *(Nota best-price, Fase 86: quel −15.7% è alla quota
+**media** di chiusura; al **best-price** cross-book — col metodo coerente
+seleziona-e-paga al massimo — la perdita si riduce ma resta negativa: es. 2025-26
+da −4.7% a **−2.4%** a soglia 0.05. Il +0.9% che sembrava positivo era un metodo
+incoerente, selezione alla media e pagamento al massimo. Conclusione invariata.)*
+E non è questione di "scommettere prima": il modello
 **non batte nemmeno la linea di apertura** (gap +0.0146, ROI@open −17.3%, CLV
 negativo — Fase 14). **Non usare questo modello per scommettere soldi
 veri.** *(Il "ROI ≈ −8.5%" riportato in precedenza era il valore del primo
@@ -218,6 +228,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 | **83-bis** | **`predict.py` per-lega** (rivedendo il commit sulle nuove stagioni, Fase 78): il tool ignorava `--league` e usava sempre la config Serie A (δ=0.23) | ora legge `league_config(--league)`: Modello 1 con δ 0.23/**0.33**/**0.22** e γ auto-fittato 0.128/0.191/**0.297** (SA/PL/Liga); chiude il "passo 2" del test prospettico per il DC; resta per-contesto il θ del router nel M2 (Fase 81: Premier θ≈1) | ✅ fix tooling (deriva di config); 140 test verdi |
 | **84** | **audit trasversale del repo** (4 fronti in parallelo: numeri, codice, file, idee) — verifica avversaria dopo 84 fasi | **numeri**: ogni headline riprodotto dal registro (0.9797/0.6885/gap +0.0165/ROI −15.67%/CI Fase 17), nessun errore; **codice**: zero bug attivi (dp mean-preserving <6e-13, zero look-ahead, matrici normalizzate), 1 guardia latente aggiunta (`draw_inflation`+`dynamic_rho`); **file**: riscritta CLAUDE.md §6 (ferma alla Fase 33), corretti 4 mislabel minori; **idee**: nuova pista θ(margine) + affinamenti in PISTE.md | ✅ progetto in salute; fix guardia + docs; nuove piste catalogate |
 | **85** | **la chiave per gli esiti meno probabili: la CODA** (`_run_tail_analysis.py`, 7980 partite × 3 leghe): θ diretto sul risultato esatto + COM-Poisson | la Poisson **sovra-stima** i totali alti (Over3.5 +0.0096, Over4.5 +0.0083): la coda reale è sotto-dispersa; **exact-score log-loss minimo ESATTAMENTE a θ=1.225** (= router, conferma indipendente); **tensione di profondità**: Over3.5 vuole θ≈1.35, Over4.5 θ≈1.10 → un solo θ non calibra ogni profondità; **COM-Poisson ν=1.15** pareggia (2.8321) e calibra meglio la coda estrema ma **non batte** la dp | 🔎 la chiave = controllo di dispersione dei gol (già il θ del router, ora validato sulla coda); prossima leva = coda a **2 parametri** (PISTE); COM-Poisson a tetto |
+| **86** | **secondo audit orchestrato** (workflow: 6 finder → verifica avversaria → 14/36 sopravvissuti) + ri-verifica manuale di ogni numero | **fix onestà**: varianza dp ~17%→**~10%** (era l'approx asintotica di Efron); ROI −15.7% è alla quota media, al **best-price −2.4%** (2526, ancora negativo). **Chiuso**: handicap asiatico **ridondante** come input (corr **0.995** con λ−μ). **LEAD nuovo (corregge l'audit)**: la volatilità-sorpresa per-squadra **persiste** (corr +0.20 controllata per forza) e le squadre volatili vogliono **θ=1.10** (coda più pesante) vs 1.225 → **dispersione per-squadra** per gli esiti rari. Docs: glossario + 6 allineamenti | ✅ 2 fix onestà + 1 pista chiusa + glossario; 🔎 **lead θ per-squadra** (`_run_team_dispersion.py`) |
 
 **Adottato**: solo il tuning (2b/4b/4d) e il **prior neopromosse (7)**. Tutto il
 resto è al livello del rumore o dannoso, e resta **off di default** — alcune

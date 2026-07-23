@@ -192,13 +192,18 @@ partite mai viste (Fase 75).*
 - [Fase 74 — Ri-validazione di TUTTI i calcoli sui dati corretti (richiesta utente)](#fase-74--ri-validazione-di-tutti-i-calcoli-sui-dati-corretti-richiesta-utente)
 - [Fase 75 — Spremere il 2017-19: il motore validato su 2.280 partite vergini (e il θ che cresce nel tempo)](#fase-75--spremere-il-2017-19-il-motore-validato-su-2280-partite-vergini-e-il-θ-che-cresce-nel-tempo)
 
-### Arco 10 — Il motore per-lega e la verifica finale (Fasi 76–83)
+### Arco 10 — Il motore per-lega, la verifica finale e gli audit (Fasi 76–86)
 
 *Il market-implied trasferisce identico su 3 leghe (Fase 76); le leve del
 pareggio sono un tratto delle leghe latine (Fase 79-80); il mega-sweep delle
 costanti (Fase 81) dà la mappa per-lega e ribalta il router-Liga; la verifica
 diretta (Fase 82) certifica che l'oracolo è calibrato — indovina quanto il
-mercato, non di più.*
+mercato, non di più. Poi tre giri di audit: la revisione dei commit esterni
+(Fase 83) e del tool per-lega (83-bis), l'audit trasversale del repo (Fase 84),
+l'anatomia della coda per gli esiti meno probabili (Fase 85, la double-Poisson
+è al tetto; COM-Poisson provata e pari) e il secondo audit orchestrato con
+verifica avversaria (Fase 86: fix di onestà, chiusure e il lead della
+dispersione per-squadra).*
 
 - [Fase 76 — Il motore market-implied trasferisce cross-lega ANCHE sulla chiusura](#fase-76--il-motore-market-implied-trasferisce-cross-lega-anche-sulla-chiusura)
 - [Fase 77 — Il nome onesto: da «Polymarket Oracle» a «Football Oracle»](#fase-77--il-nome-onesto-da-polymarket-oracle-a-football-oracle)
@@ -211,6 +216,7 @@ mercato, non di più.*
 - [Fase 83-bis — `predict.py` per-lega: il "passo 2" del test prospettico (parziale)](#fase-83-bis--predictpy-per-lega-il-passo-2-del-test-prospettico-parziale)
 - [Fase 84 — Audit trasversale del repo (4 fronti): numeri OK, codice OK, docs ripuliti, nuove piste](#fase-84--audit-trasversale-del-repo-4-fronti-numeri-ok-codice-ok-docs-ripuliti-nuove-piste)
 - [Fase 85 — La chiave per gli esiti MENO PROBABILI: anatomia della coda (θ diretto sul risultato esatto, e la COM-Poisson)](#fase-85--la-chiave-per-gli-esiti-meno-probabili-anatomia-della-coda-θ-diretto-sul-risultato-esatto-e-la-com-poisson)
+- [Fase 86 — Secondo audit orchestrato (workflow): fix di onestà, chiusure e il LEAD della dispersione per-squadra](#fase-86--secondo-audit-orchestrato-workflow-fix-di-onestà-chiusure-e-il-lead-della-dispersione-per-squadra)
 
 ---
 
@@ -3884,6 +3890,20 @@ ribalterebbe, ma il test era **diluito**: onestà dovuta.
 **Riproducibilità.** `python scripts/_run_audit_diagnostics.py` (6 backtest + D1/D2/D3
 + test economici A/B, 1 run registrato `source=fase34_audit`).
 
+### 📐 Il modello in dettaglio
+
+Un audit, non una nuova matematica: la formula che ne nasce è la **φ(|λ−μ|)**
+sviluppata per esteso nella Fase 35 (`φ(λ,μ) = φ0·exp(−κ·|λ−μ|)`, vedi il suo
+blocco 📐). Il numero-chiave di questa fase — il **deficit-pareggio −0.044 nelle
+partite equilibrate** — è ricalcolabile: è la differenza media `P(pari|modello) −
+freq(pari)` sul quartile a |λ−μ| più basso (partite bilanciate), da
+`scripts/_run_audit_diagnostics.py`; il test economico post-hoc (aggiungere il
+deficit al canale-pareggio) dà **−0.0014, P 77%** (non conclusivo → diventa la
+leva strutturale della Fase 35, non un fix immediato). La ricalibrazione
+per-classe menzionata come confronto è quella della Fase 10 (`calibration.py`,
+pesi w_H/w_D/w_A leave-future-out). Nessuna costante nuova cablata qui: la fase
+**apre** la φ35, non la fissa.
+
 ---
 
 ## Fase 35 — Il pareggio come EQUILIBRIO: φ condizionato a |λ−μ| (il miglior risultato sul pareggio)
@@ -5547,8 +5567,9 @@ Fit walk-forward sui tassi del mercato (8 stagioni, n=2660):
 
 - **La double-Poisson e' la scoperta**: θ>1 in TUTTI e 7 i fit (1.16→1.24,
   cresce con la finestra = stima consistente). I gol, condizionati ai tassi del
-  mercato, hanno varianza ~17% SOTTO la Poisson: la matrice va **concentrata**,
-  non allargata. La Fase 27 non poteva vederlo (la NB va solo nell'altro verso).
+  mercato, hanno varianza **~10% SOTTO la Poisson** (esatto ai tassi reali; il
+  "17%" = 1−1/θ è l'approssimazione asintotica per μ grande, vedi il blocco 📐):
+  la matrice va **concentrata**, non allargata. La Fase 27 non poteva vederlo (la NB va solo nell'altro verso).
   Migliora TUTTO il blocco esiti: 1X2 −0.0021 vs φ35, risultato esatto −0.0078
   (il piu' grande guadagno dal Fase 26), pareggio, GG.
 - **Rue-Salvesen: γ=+0.033 piccolo, nessun guadagno** (il suo lavoro lo fa gia'
@@ -5638,10 +5659,13 @@ dp_lvl:   λ' = λ·0.9726,  μ' = μ·1.0224  (livelli pooled, Fase 50/51), poi
 ```
 
 **Perche' θ ≈ 1.2 (e non 1).** Elevare la PMF a θ>1 e rinormalizzare concentra
-la massa attorno alla media: Var ≈ Var_Poisson/θ. Il fit MLE walk-forward trova
-θ=1.16→1.24 (piu' dati → stima piu' alta e piu' stabile): i punteggi reali,
-condizionati ai tassi del mercato (che sono stime BUONE), oscillano ~17% meno di
-una Poisson. Intuizione: la Poisson assume l'intensita' costante e indipendenza
+la massa attorno alla media. La relazione `Var ≈ Var_Poisson/θ` (da cui verrebbe
+"~17% meno" = 1−1/1.205) è l'**approssimazione asintotica per μ grande** di Efron:
+ai tassi-gol reali (μ≈1.2–1.5) l'esatto sulla `_dp_pmf` dà una riduzione di
+varianza **~10–12%** (a μ=1.24, θ=1.205: Var 1.115, −10.1%; std ~−5%), non 17% —
+servirebbe θ≈1.35 per un vero −17%. Il fit MLE walk-forward trova θ=1.16→1.24
+(piu' dati → stima piu' alta e piu' stabile): i punteggi reali, condizionati ai
+tassi del mercato (che sono stime BUONE), oscillano **~10% meno** di una Poisson. Intuizione: la Poisson assume l'intensita' costante e indipendenza
 tra i gol; nel calcio reale chi conduce gestisce (il 2-0 "si addormenta"), e la
 parte di varianza dovuta all'incertezza sui tassi qui NON c'e' (i tassi sono
 condizionati, non stimati male). La NB della Fase 27 (solo Var>media) non poteva
@@ -7931,6 +7955,15 @@ di sessione.
 dice cosa la cosa fa davvero. Il tool pratico (`predict.py`) resta la
 culminazione naturale, da fare a valle del lavoro di ricerca (scelta utente).
 
+### 📐 Il modello in dettaglio
+
+Nessuna matematica (decisione di naming): il modello è invariato. La convenzione
+del progetto (Fase 15 e Fase 84 tengono il blocco 📐 anche negli audit e nelle
+fasi non-matematiche, §2-bis) vuole comunque il rimando: le formule del motore
+restano quelle delle Fasi 16 (encompassing, α\*) e 24/26 (inversione delle quote
+→ λ,μ → matrice DC → ogni mercato). Il rename non tocca `src/`: cambia solo le
+stringhe-nome (`README`, `pyproject.toml`, `src/__init__.py`).
+
 ---
 
 ## Fase 78 — Test prospettico 2026-27 (giornata 1): impostato, da completare
@@ -8729,6 +8762,113 @@ sovra-correzione della coda estrema. Numeri riproducibili:
 `python scripts/_run_tail_analysis.py` (usa la cache dell'inversione; il θ=1.225
 coincide con `market_implied.DP_THETA`). Analisi diagnostica: nessun run scorato
 in `runs.jsonl` (nessun cambio di config; il router usa già θ=1.225).
+
+---
+
+## Fase 86 — Secondo audit orchestrato (workflow): fix di onestà, chiusure e il LEAD della dispersione per-squadra
+
+**Obiettivo (utente).** «Cerca errori, migliora ragionamenti e file, scopri nuove
+piste e nuovi ragionamenti, vai in profondità sugli esiti meno probabili.»
+Secondo giro d'audit, questa volta **orchestrato**: 6 revisori in parallelo
+(coda, calcoli/ragionamenti, nuovi modelli, nuovi dati, completezza docs,
+microstruttura mercati) → **verifica avversaria** di ogni finding (lente diversa
++ obbligo di citare la fase che eventualmente lo chiude) → sintesi. 36 finding →
+30 verificati → **14 sopravvissuti**, 16 refutati. **Poi ho riprodotto a mano
+ogni numero sostanziale prima di documentarlo** (regola §5): un passaggio che ha
+salvato da un errore dell'audit stesso (vedi il lead sotto).
+
+**La verifica avversaria ha fatto il suo lavoro** (16 refutati), scartando
+artefatti che sembravano scoperte: la «dispersione non-monotona θ\*≈0.8 nella
+coda» è un **artefatto di selezione-sull'esito** (si riproduce identico simulando
+da una Poisson pura); l'«edge strutturale dei combo/parlay» eredita α\*=0 (è
+aritmetica del joint, non informazione); la copula a coda asimmetrica (Clayton/
+Gumbel) non batte Frank a dipendenza ρ≈0.03; il «raddoppio del campione via 1°/2°
+tempo» è fallacia; multi-linea O/U è già PISTE #15 (football-data ha solo la 2.5).
+
+**Errori CONFIRMED e corretti (onestà, §1.6/§2-bis):**
+
+- **E1 — la varianza dp era sovrastimata.** Il blocco 📐 della Fase 51 diceva che
+  i gol «oscillano ~17% meno di una Poisson». Il 17% = 1−1/1.205 è
+  l'**approssimazione asintotica per μ grande** di Efron (`Var≈Var_Poisson/θ`),
+  non l'esatto. Ricalcolato sulla `_dp_pmf` ai tassi reali (μ≈1.2-1.5, θ≈1.2): la
+  riduzione di varianza è **~10%** (a μ=1.24, θ=1.205: Var 1.115, −10.1%; std
+  ~−5%), servirebbe θ≈1.35 per un vero −17%. Corretto a `DIARIO:5550/5643/5641`
+  (segno e scoperta invariati; a valle non cambia nulla).
+- **E2 — il ROI −15.7% è alla quota MEDIA; manca il caveat best-price.** La
+  `value_bet_roi` seleziona e paga su `odds_home/draw/away` = **AvgC** (chiusura
+  media multi-book: verificato `odds_home==AvgCH` esatto, 380/380). Al **best-
+  price** (MaxC) col metodo **coerente** select-max/pay-max il 2526 va da −4.7% a
+  **−2.4%** (thr .05) — resta negativo; a thr .03 è −9.7%. Il **+0.9%** che
+  sembrava un sign-flip è il metodo **incoerente** (seleziona su avg, paga su
+  max: conta due volte il vantaggio del best-price). Aggiunto il caveat al README.
+  **La conclusione (α\*=0, non scommettere) è intatta.** Chiude PISTE #8.
+
+**Chiusure riprodotte (negativi utili, §1.4):**
+
+- **Handicap asiatico ridondante come input.** La supremazia implicita nella
+  linea AH di chiusura correla **0.9952** con λ−μ già ricavata da 1X2+O/U (2.660
+  partite Serie A; regr. `AH ≈ 0.94·(λ−μ)`): è la stessa matrice ripackagata.
+  **Chiude PISTE #5** (l'«inversione a 3 vincoli» non serve). L'AH resta utile
+  solo come **benchmark quotato** della famiglia-margine/scarto≥2 (Tier 2).
+
+**Il LEAD di punta — la dispersione per-squadra (che CORREGGE l'audit).** Un
+revisore aveva concluso «la volatilità-risultato di una squadra NON persiste
+(corr −0.03) → nessun proxy storico degli upset». **Riproducendolo a mano ho
+trovato il contrario.** Misurando la **volatilità-sorpresa** per-squadra (std del
+residuo `diff-reti realizzata − (λ−μ) atteso dal mercato`):
+- **persiste** stagione→stagione: corr **+0.25** grezza, **+0.20** controllata per
+  la forza (n=306), entrambe **fuori dalla banda nulla** [±0.11]. Alcune squadre
+  sono stabilmente più «tutto-o-niente» del punto-stima del mercato.
+- ed è **direzionale e sfruttabile**: classificando le partite per terzile di
+  volatilità-sorpresa **passata** (solo stagioni precedenti → out-of-sample), il
+  gruppo ad **alta** volatilità è predetto meglio da **θ\*=1.10** (coda più
+  pesante) vs **θ\*=1.225** dei gruppi medio/basso — sul risultato esatto
+  (exact-LL 2.9187 vs 2.9199 per l'alto). `scripts/_run_team_dispersion.py`.
+
+È la prima crepa credibile nel «θ uniforme» (F52-quater aveva escluso solo θ per
+volume/equilibrio/coda, **mai per identità-squadra**) ed è esattamente sul tema
+dell'utente: **gli esiti rari delle squadre volatili si prevedono meglio con una
+coda più pesante**. Onestà: il θ di gruppo è scelto **in-sample** (la
+classificazione è OOS, ma il θ ottimo no) e i guadagni sono piccoli (~0.001
+exact-LL) → è un **LEAD forte, non una modifica adottata**: serve un walk-forward
+`θ_team` pieno (fit di θ per squadra/gruppo su passato, con shrinkage verso 1.225,
+applicato al futuro) per stabilirne la sfruttabilità. Va in `docs/PISTE.md` come
+pista di punta.
+
+**Fix di file / completezza (dal fronte docs):** creato **`docs/GLOSSARIO.md`**
+(zero glossari prima, termini come devig/market-implied/encompassing/θ definiti
+solo inline in 8.700 righe); aggiornato l'header **Arco 10** dell'indice (76-83 →
+76-86); `DATI.md` marker Fase 70→73; `worldcup/README.md` (Serie A → 3 leghe);
+aggiunti i **blocchi 📐 mancanti** alle Fasi 34 (rimando a φ35/Fase 10) e 77
+(rename, nessuna matematica) — la convenzione §2-bis vale anche per audit e fasi
+non-matematiche.
+
+**Lezione.** Un audit orchestrato con verifica avversaria **e** ri-verifica
+manuale è più forte di entrambi da soli: la verifica avversaria ha scartato 16
+artefatti plausibili, ma la ri-verifica manuale ha ribaltato un finding
+«CONFIRMED» sbagliato (la non-persistenza della volatilità) — che era anche il
+più interessante. Il valore netto: **due fix di onestà** (E1, E2), **una pista
+chiusa** (AH input), **un glossario e sei allineamenti docs**, e **un lead
+genuinamente nuovo** (dispersione per-squadra) che nessuno dei due metodi da solo
+avrebbe consegnato correttamente. Nessun finding riapre l'edge (α\*=0 intatto).
+
+### 📐 Il modello in dettaglio
+
+- **E1 (varianza dp).** Esatto: per la `_dp_pmf` (mean-preserving), `Var/μ` a
+  μ=1.24, θ=1.205 è **0.899** → riduzione 10.1% (non 17%); a μ=1.5, θ=1.225 è
+  0.879 → 12.1%. La formula `Var≈Var_Poisson/θ` vale solo asintoticamente (μ→∞).
+  Ricalcolabile: `_dp_pmf(rate, theta)` in `src/models/market_implied.py:47-63`.
+- **Volatilità-sorpresa per-squadra.** Per partita: `resid = (gh−ga) − (λ−μ)`,
+  con λ,μ da `implied_lambda_mu(devig(1X2), devig(O/U), ρ=−0.06)`. Per
+  squadra-stagione (≥10 gare): `vol = std(resid)`. Persistenza = `corr(vol_s,
+  vol_{s+1})` su stagioni consecutive (codice-stagione +101); «controllata per
+  forza» = residuo di `vol` regredita su `mean(|λ−μ|)` della squadra (r=0.267 col
+  confondimento-forza). Banda nulla per permutazione (3000). θ\* di gruppo:
+  minimo di `exact-LL(θ) = mean −log P(gol_h,gol_a)` su θ∈{1,1.1,1.225,1.35,1.5},
+  con la matrice `score_matrix(λ,μ,ρ=−0.06,dp_theta=θ)`; terzili sulla
+  volatilità-sorpresa **passata** (media delle stagioni precedenti → OOS).
+  Riproducibile: `python scripts/_run_team_dispersion.py`. Diagnostico, nessun
+  run scorato in `runs.jsonl` (nessun cambio di config).
 
 ---
 

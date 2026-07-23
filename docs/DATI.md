@@ -3,7 +3,7 @@
 Questo documento è la **mappa unica di tutti i dati** del progetto: cosa c'è,
 da dove viene, quanto copre, e — sezione più importante — **cosa è dato reale e
 cosa è STIMA**. Va aggiornato ogni volta che i dati cambiano (nuova fonte,
-nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 70**.
+nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 73**.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e

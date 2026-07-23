@@ -138,6 +138,7 @@ Note della matrice:
 | 11 | GBM + finishing-luck (33) | −0.0022 (P 81%) | non conclusivo, e il GBM di suo perde dal DC | — |
 | 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto) | `--covariates midweek` |
 | 13 | Temperatura sopra dp_lvl (52-ter) | 0.9609→**0.9605** (T=1.056) | si somma a una leva già Serie-A-only e da oracolo | sopra `sharpen_1x2` |
+| 14 | **Dispersione per-squadra: θ_team sulla coda (86)** | volatilità-sorpresa **persiste** (corr +0.20 controllata per forza); alta-vol vuole **θ=1.10** vs 1.225 (exact-LL 2.9187 vs 2.9199) | θ di gruppo scelto **in-sample** (classif. OOS); serve un walk-forward `θ_team` pieno con shrinkage | `_run_team_dispersion.py` → PISTE #4-quater |
 
 ### Dettaglio delle voci di panchina
 
