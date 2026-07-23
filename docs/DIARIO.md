@@ -16,6 +16,197 @@ Filo conduttore metodologico, applicato ovunque:
    quanto sapere cosa funziona.
 5. **Riproducibilità** — ogni numero dev'essere rifacibile da terzi.
 6. **Onestà sui limiti** — soprattutto perché in gioco ci sono soldi veri.
+7. **Validare su più stagioni** — mai concludere da una sola (rumore); default
+   3+, per le conclusioni importanti 6+ (regola maturata nelle prime fasi).
+8. **Il bersaglio è il singolo mercato** — ogni modello si giudica mercato per
+   mercato, non su un solo log-loss aggregato (principio nato con la Fase 5,
+   formalizzato dalla Fase 21).
+9. **Due fronti per ogni modello** — versione per-lega e versione generale
+   (pooled), tracciate nella rosa di `docs/PANCHINA.md` (dalla Fase 65).
+
+*(I principi 7-9 non c'erano dal giorno zero: sono lezioni pagate strada
+facendo, e il diario racconta anche dove sono nati. La versione normativa e
+sempre aggiornata vive nel [`CLAUDE.md`](../CLAUDE.md), §1.)*
+
+---
+
+## Indice del diario
+
+Il diario è **cronologico** (ogni fase costruisce sulla precedente), ma con 80+
+fasi serve una mappa. Qui sotto le fasi sono raggruppate in **archi narrativi**:
+ogni arco ha una domanda di fondo e una conclusione. Se cerchi *un* argomento
+specifico, usa i link; se vuoi capire il progetto, gli archi si leggono anche da
+soli come riassunto della storia.
+
+### Arco 1 — La costruzione del modello (Fasi 0–8)
+
+*Dal tracer bullet al Dixon-Coles tarato: blend gol/xG, emivita, shrinkage,
+prior neopromosse. Esito dell'arco: il modello batte nettamente le baseline ma
+non il mercato; la config ufficiale è fissata qui.*
+
+- [Fase 0 — Visione e prime scelte di fondo](#fase-0--visione-e-prime-scelte-di-fondo)
+- [Fase 1 — Tracer bullet: Dixon-Coles + backtest](#fase-1--tracer-bullet-dixon-coles--backtest)
+- [Fase 2a — Analisi degli errori (e un bug trovato)](#fase-2a--analisi-degli-errori-e-un-bug-trovato)
+- [Fase 2b — Tuning: regolarizzazione e memoria](#fase-2b--tuning-regolarizzazione-e-memoria)
+- [Fase 3 — Informazione nuova: i tiri in porta (risultato NEGATIVO)](#fase-3--informazione-nuova-i-tiri-in-porta-risultato-negativo)
+- [Infrastruttura — Tracciabilità e database interno](#infrastruttura--tracciabilità-e-database-interno)
+- [Dove siamo — cosa sappiamo con onestà](#dove-siamo--cosa-sappiamo-con-onestà)
+- [Fase 4a — I dati per l'xG reale (e per le rose): arricchimento completato](#fase-4a--i-dati-per-lxg-reale-e-per-le-rose-arricchimento-completato)
+- [Fase 4b — xG reale nel blend: primo miglioramento da dati nuovi](#fase-4b--xg-reale-nel-blend-primo-miglioramento-da-dati-nuovi)
+- [Fase 4c — Spremere il resto dei dati: npxG, valori rosa, assenze (NEGATIVO)](#fase-4c--spremere-il-resto-dei-dati-npxg-valori-rosa-assenze-negativo)
+- [Fase 4d — Ri-taratura congiunta: l'emivita si accorcia col blend xG](#fase-4d--ri-taratura-congiunta-lemivita-si-accorcia-col-blend-xg)
+- [Fase 5 — Grande backtest multi-mercato: per cosa il modello serve davvero](#fase-5--grande-backtest-multi-mercato-per-cosa-il-modello-serve-davvero)
+- [Fase 4e — Calendario di club completo: la congestione VERA (dato nuovo)](#fase-4e--calendario-di-club-completo-la-congestione-vera-dato-nuovo)
+- [Fase 4e-bis — Validazione della congestione VERA (walk-forward)](#fase-4e-bis--validazione-della-congestione-vera-walk-forward)
+- [Fase 6 — Ricalibrazione della confidenza (temperature scaling, NEGATIVO-ish)](#fase-6--ricalibrazione-della-confidenza-temperature-scaling-negativo-ish)
+- [Fase 7 — Prior di cold-start per le neopromosse (il miglior guadagno interno)](#fase-7--prior-di-cold-start-per-le-neopromosse-il-miglior-guadagno-interno)
+- [Fase 8 — Ultimo giro economico (shrinkage, vantaggio-casa): niente da spremere](#fase-8--ultimo-giro-economico-shrinkage-vantaggio-casa-niente-da-spremere)
+
+### Arco 2 — L'anatomia del gap col mercato (Fasi 9–20)
+
+*Dove e perché si perde dal mercato. Scoperte chiave: il gap vive quasi tutto
+nel PAREGGIO; il mercato ingloba completamente il modello (α\*=0, Fase 16); i
+"value bet" del modello sono i suoi errori (adverse selection, Fase 20). Qui
+nascono anche le regole statistiche del progetto (CI bootstrap, Fase 17).*
+
+- [Fase 9 — Anatomia del gap col mercato (analisi approfondita)](#fase-9--anatomia-del-gap-col-mercato-analisi-approfondita)
+- [Fase 10 — Ricalibrazione per-classe 1X2 (attacca il pareggio; robusto ma piccolo)](#fase-10--ricalibrazione-per-classe-1x2-attacca-il-pareggio-robusto-ma-piccolo)
+- [Fase 11 — Combinazioni delle feature off-di-default (nessuna e' utile)](#fase-11--combinazioni-delle-feature-off-di-default-nessuna-e-utile)
+- [Fase 12a — Ensemble di emivite (ultimo tweak economico; piccolo, borderline)](#fase-12a--ensemble-di-emivite-ultimo-tweak-economico-piccolo-borderline)
+- [Fase 12b — Il cambio di classe: inflazione della diagonale (bivariato)](#fase-12b--il-cambio-di-classe-inflazione-della-diagonale-bivariato)
+- [Fase 13 — Stato di forma: un pattern nascosto? (NO, gia' catturato)](#fase-13--stato-di-forma-un-pattern-nascosto-no-gia-catturato)
+- [Fase 13-bis — Streak e rendimento recente: ricerca DATA-DRIVEN (nessun pattern)](#fase-13-bis--streak-e-rendimento-recente-ricerca-data-driven-nessun-pattern)
+- [Fase 14 — Il modello contro la linea di APERTURA (CLV) — NEGATIVO, e definitivo](#fase-14--il-modello-contro-la-linea-di-apertura-clv--negativo-e-definitivo)
+- [Fase 15 — Audit dei calcoli (verifica indipendente; 1 errore vero trovato)](#fase-15--audit-dei-calcoli-verifica-indipendente-1-errore-vero-trovato)
+- [Fase 15-bis — Gap per mercato, stagione per stagione (la matrice completa)](#fase-15-bis--gap-per-mercato-stagione-per-stagione-la-matrice-completa)
+- [Fase 16 — Encompassing: il modello ha informazione propria? (NO, α*=0)](#fase-16--encompassing-il-modello-ha-informazione-propria-no-α0)
+- [Fase 17 — Intervalli di confidenza: quali numeri sono reali e quali rumore](#fase-17--intervalli-di-confidenza-quali-numeri-sono-reali-e-quali-rumore)
+- [Fase 18 — Rho dinamico: l'ultima idea strutturale sul pareggio (NEGATIVA)](#fase-18--rho-dinamico-lultima-idea-strutturale-sul-pareggio-negativa)
+- [Fase 19 — Potenza sul prior: 8 stagioni (l'evidenza si rafforza, non conclude)](#fase-19--potenza-sul-prior-8-stagioni-levidenza-si-rafforza-non-conclude)
+- [Fase 20 — Anatomia dei residui: nessun segnale nascosto, ma si scopre il PERCHE'](#fase-20--anatomia-dei-residui-nessun-segnale-nascosto-ma-si-scopre-il-perche)
+
+### Arco 3 — Modelli nuovi e la svolta market-implied (Fasi 21–27)
+
+*Cambio di strategia: non più tweak al DC ma famiglie diverse, giudicate PER
+MERCATO. Il GBM viene bocciato ovunque (il tetto è informativo, non
+architetturale); la svolta è INVERTIRE le quote — i λ,μ impliciti del mercato
+dentro la matrice DC battono i nostri su quasi ogni mercato (Fasi 24/26).*
+
+- [Fase 21 — Un modello diverso sul GG/NG: gradient boosting (pareggia, non batte)](#fase-21--un-modello-diverso-sul-ggng-gradient-boosting-pareggia-non-batte)
+- [Fase 22 — Sweep del GBM su tutti i mercati: il tetto e' informativo, non di modello](#fase-22--sweep-del-gbm-su-tutti-i-mercati-il-tetto-e-informativo-non-di-modello)
+- [Fase 23 — GBM modello + mercato: si puo' ridurre il gap? (no, non con un GBM)](#fase-23--gbm-modello--mercato-si-puo-ridurre-il-gap-no-non-con-un-gbm)
+- [Fase 24 — DC calcolato DAL mercato: il primo risultato positivo dell'arco modelli](#fase-24--dc-calcolato-dal-mercato-il-primo-risultato-positivo-dellarco-modelli)
+- [Fase 25 — Finestra dei dati: piu' storia batte meno (anche per il calcio di oggi)](#fase-25--finestra-dei-dati-piu-storia-batte-meno-anche-per-il-calcio-di-oggi)
+- [Fase 26 — Market-implied su TUTTI i mercati sui gol (il risultato piu' forte)](#fase-26--market-implied-su-tutti-i-mercati-sui-gol-il-risultato-piu-forte)
+- [Fase 27 — Ottimizzare la forma dei punteggi sul market-implied (gia' ottima)](#fase-27--ottimizzare-la-forma-dei-punteggi-sul-market-implied-gia-ottima)
+
+### Arco 4 — Tempo e motivazione (Fasi 28–33)
+
+*Il finale di stagione è più difficile per tutti; la posta in palio conta solo
+come ASIMMETRIA (una squadra decisa, una in corsa — Fase 31, che ribalta la 29).
+Con la Fase 33 i dati interni sono completamente esplorati.*
+
+- [Fase 28 — Quando falliscono i modelli? Errore per momento della stagione](#fase-28--quando-falliscono-i-modelli-errore-per-momento-della-stagione)
+- [Fase 29 — Posta in palio: i "dead rubber" spiegano il finale? (NO)](#fase-29--posta-in-palio-i-dead-rubber-spiegano-il-finale-no)
+- [Fase 30 — Pattern dentro la stagione: anatomia per periodo](#fase-30--pattern-dentro-la-stagione-anatomia-per-periodo)
+- [Fase 31 — Posta in palio corretta (8 stagioni): conta l'ASIMMETRIA](#fase-31--posta-in-palio-corretta-8-stagioni-conta-lasimmetria)
+- [Fase 32 — Validazione della covariata stakes-mismatch (DC e GBM)](#fase-32--validazione-della-covariata-stakes-mismatch-dc-e-gbm)
+- [Fase 33 — Ultime covariate mai provate: PPDA/deep e finishing-luck (ridondanti)](#fase-33--ultime-covariate-mai-provate-ppdadeep-e-finishing-luck-ridondanti)
+
+### Arco 5 — L'audit critico e la forma dei punteggi (Fasi 34–44)
+
+*Un audit avversario trova la leva mai testata: il pareggio come EQUILIBRIO. La
+φ(|λ−μ|) (Fase 35) diventa il miglior risultato sul pareggio; bivariato e copule
+non la battono; il routing di forma per-mercato (Fase 44) entra nel motore.*
+
+- [Fase 34 — Audit critico: caccia a errori, superficialità e leve mai testate](#fase-34--audit-critico-caccia-a-errori-superficialità-e-leve-mai-testate)
+- [Fase 35 — Il pareggio come EQUILIBRIO: φ condizionato a |λ−μ| (il miglior risultato sul pareggio)](#fase-35--il-pareggio-come-equilibrio-φ-condizionato-a-λμ-il-miglior-risultato-sul-pareggio)
+- [Fase 36 — GBM col set di feature COMPLETO: overfitting, non guadagno (ma lo stakes emerge)](#fase-36--gbm-col-set-di-feature-completo-overfitting-non-guadagno-ma-lo-stakes-emerge)
+- [Fase 37 — Covariate nel CANALE-PAREGGIO? (Punto 3: diagnostico economico, NEGATIVO)](#fase-37--covariate-nel-canale-pareggio-punto-3-diagnostico-economico-negativo)
+- [Fase 38 — Denoising cross-stagione del market-implied (Punto 4: motore già maturo)](#fase-38--denoising-cross-stagione-del-market-implied-punto-4-motore-già-maturo)
+- [Fase 39 — Market-implied + φ(|λ−μ|): la sintesi dei due risultati positivi](#fase-39--market-implied--φλμ-la-sintesi-dei-due-risultati-positivi)
+- [Fase 40 — ROI PER MERCATO/ESITO: cosa nascondeva il value-betting 1X2 piatto](#fase-40--roi-per-mercatoesito-cosa-nascondeva-il-value-betting-1x2-piatto)
+- [Fase 41 — Bakeoff per-mercato: un modello cucito su ogni mercato? (specialisti)](#fase-41--bakeoff-per-mercato-un-modello-cucito-su-ogni-mercato-specialisti)
+- [Fase 42 — Poisson bivariato: la correlazione esplicita (5° modello, non batte la φ35)](#fase-42--poisson-bivariato-la-correlazione-esplicita-5-modello-non-batte-la-φ35)
+- [Fase 43 — Spremere la dipendenza: copule flessibili (la φ35 è il tetto)](#fase-43--spremere-la-dipendenza-copule-flessibili-la-φ35-è-il-tetto)
+- [Fase 44 — Routing di forma per-mercato + decisioni di architettura](#fase-44--routing-di-forma-per-mercato--decisioni-di-architettura)
+- [Prossimo passo — il modello e' al tetto REALE dei dati attuali](#prossimo-passo--il-modello-e-al-tetto-reale-dei-dati-attuali)
+
+### Arco 6 — Path senza quote e dinamica stagionale (Fasi 45–50)
+
+*Si chiudono i lead rimasti: lo stakes non è sfruttabile (Fase 45), gli ensemble
+non aiutano, l'architettura dinamica non batte lo statico (Fasi 47-48; resta un
+nudge GG/NG di fine stagione, off di default). Il mega-sweep (Fase 50) trova che
+φ35 e nudge sono additivi: miglior GG/NG del progetto.*
+
+- [Fase 45 — Router "stakes-aware" sul path senza quote (chiude il lead della Fase 32)](#fase-45--router-stakes-aware-sul-path-senza-quote-chiude-il-lead-della-fase-32)
+- [Fase 46 — Ensemble dei predittori standalone (DC + bivariato + GBM), senza quote](#fase-46--ensemble-dei-predittori-standalone-dc--bivariato--gbm-senza-quote)
+- [Fase 47 — Tracer-bullet dinamico: vantaggio-casa tempo-variante (γ per fascia)](#fase-47--tracer-bullet-dinamico-vantaggio-casa-tempo-variante-γ-per-fascia)
+- [Fase 48 — Modello dinamico a profilo stagionale liscio, su 8 stagioni (chiude l'architettura)](#fase-48--modello-dinamico-a-profilo-stagionale-liscio-su-8-stagioni-chiude-larchitettura)
+- [Fase 49 — Perche' solo 35-38? La finestra/forma del nudge GG/NG (non e' binario)](#fase-49--perche-solo-35-38-la-finestraforma-del-nudge-ggng-non-e-binario)
+- [Fase 50 — Mega-sweep combinatorio: le leve OFF, insieme, su tutti i motori](#fase-50--mega-sweep-combinatorio-le-leve-off-insieme-su-tutti-i-motori)
+
+### Arco 7 — La sotto-dispersione e il beat-the-close (Fasi 51–52)
+
+*La scoperta più importante: i gol dati i tassi del mercato sono SOTTO-dispersi
+(double-Poisson θ≈1.2). `sharpen_1x2` batte la chiusura devigata in log-loss con
+CI conclusivo (non in ROI); il router v3 (dp su tutto il listino) viene ADOTTATO.*
+
+- [Fase 51 — Audit delle lacune + modelli mai provati: la sotto-dispersione batte la chiusura](#fase-51--audit-delle-lacune--modelli-mai-provati-la-sotto-dispersione-batte-la-chiusura)
+- [Fase 52 — Spremere la scoperta: la double-Poisson su tutto il listino, i suoi limiti, e il dinamico chiuso per test](#fase-52--spremere-la-scoperta-la-double-poisson-su-tutto-il-listino-i-suoi-limiti-e-il-dinamico-chiuso-per-test)
+
+### Arco 8 — Cross-lega: Premier e La Liga (Fasi 53–57)
+
+*Il modello è trasferibile, l'edge no: il beat-the-close è una proprietà della
+chiusura Serie A (meno liquida), non del calcio. Le due leghe entrano nel
+progetto come configurazione (`LEAGUE_CONFIGS`), non come codice.*
+
+- [Fase 53 (tracer) — Cross-lega: i bias del mercato sono UNIVERSALI o Serie A?](#fase-53-tracer--cross-lega-i-bias-del-mercato-sono-universali-o-serie-a)
+- [Fasi 54-57 — Premier League e La Liga: conoscere due leghe nuove da zero](#fasi-54-57--premier-league-e-la-liga-conoscere-due-leghe-nuove-da-zero)
+
+### Arco 9 — La campagna dei dati (Fasi 58–75)
+
+*Ogni buco dei dati viene chiuso, stimato con protocollo dichiarato, o mappato:
+audit delle quote, aperture Pinnacle 2017-19 recuperate, valori rosa REALI via
+GitHub Actions, la caccia alle O/U 2017-19 e il colpo di scena della Fase 73
+(erano un'APERTURA reale, non una chiusura). Il motore viene validato su 2.280
+partite mai viste (Fase 75).*
+
+- [Fase 58 — Audit dati: overround impossibile nella quota "Avg" (bug, non modello)](#fase-58--audit-dati-overround-impossibile-nella-quota-avg-bug-non-modello)
+- [Fase 59 — Congestione vera anche per Premier League e La Liga (colmato il gap dati)](#fase-59--congestione-vera-anche-per-premier-league-e-la-liga-colmato-il-gap-dati)
+- [Fase 60 — Valore rosa e assenze anche per Premier League e La Liga](#fase-60--valore-rosa-e-assenze-anche-per-premier-league-e-la-liga)
+- [Fase 61 — Quote di apertura 2017-19: la chiusura di Pinnacle era ignorata](#fase-61--quote-di-apertura-2017-19-la-chiusura-di-pinnacle-era-ignorata)
+- [Fase 62 — Ricostruire la chiusura O/U mancante (2017-19) coi nostri modelli?](#fase-62--ricostruire-la-chiusura-ou-mancante-2017-19-coi-nostri-modelli)
+- [Fase 62-bis — La stima migliorata, pubblicata come STIMA (e il catalogo dati)](#fase-62-bis--la-stima-migliorata-pubblicata-come-stima-e-il-catalogo-dati)
+- [Fase 63 — Il bug del matching giocatori: l'inversione nome/cognome](#fase-63--il-bug-del-matching-giocatori-linversione-nomecognome)
+- [Fase 64 — «La panchina»: il registro dei miglioramenti misurati ma non attivati](#fase-64--la-panchina-il-registro-dei-miglioramenti-misurati-ma-non-attivati)
+- [Fase 65 — La rosa completa e la regola dei due fronti](#fase-65--la-rosa-completa-e-la-regola-dei-due-fronti)
+- [Fase 66 — Riempire le celle vuote: il valore rosa stimato (e l'inventario finale)](#fase-66--riempire-le-celle-vuote-il-valore-rosa-stimato-e-linventario-finale)
+- [Fase 67 — I valori rosa REALI: il canale GitHub Actions e la fonte player-scores](#fase-67--i-valori-rosa-reali-il-canale-github-actions-e-la-fonte-player-scores)
+- [Fase 68 — Gli ultimi buchi chiudibili: preludio dei calendari e cron d'import](#fase-68--gli-ultimi-buchi-chiudibili-preludio-dei-calendari-e-cron-dimport)
+- [Fase 69 — Stimare i gap sparsi: bakeoff apertura~chiusura (richiesta utente)](#fase-69--stimare-i-gap-sparsi-bakeoff-aperturachiusura-richiesta-utente)
+- [Fase 70 — Le ultime 13 celle squad_value: dato REALE da Transfermarkt (richiesta utente)](#fase-70--le-ultime-13-celle-squad_value-dato-reale-da-transfermarkt-richiesta-utente)
+- [Fase 71 — Caccia O/U 2017-19, Fase A: dataset già pronti (Kaggle/GitHub/HF), negativa](#fase-71--caccia-ou-2017-19-fase-a-dataset-già-pronti-kagglegithubhf-negativa)
+- [Fase 72 — Spremere ANCORA la stima E3 pooled (richiesta esplicita: "al massimo")](#fase-72--spremere-ancora-la-stima-e3-pooled-richiesta-esplicita-al-massimo)
+- [Fase 73 — L'O/U 2017-19 era un'APERTURA, non una chiusura: il dato reale nella colonna giusta](#fase-73--lou-2017-19-era-unapertura-non-una-chiusura-il-dato-reale-nella-colonna-giusta)
+- [Fase 74 — Ri-validazione di TUTTI i calcoli sui dati corretti (richiesta utente)](#fase-74--ri-validazione-di-tutti-i-calcoli-sui-dati-corretti-richiesta-utente)
+- [Fase 75 — Spremere il 2017-19: il motore validato su 2.280 partite vergini (e il θ che cresce nel tempo)](#fase-75--spremere-il-2017-19-il-motore-validato-su-2280-partite-vergini-e-il-θ-che-cresce-nel-tempo)
+
+### Arco 10 — Il motore per-lega e la verifica finale (Fasi 76–82)
+
+*Il market-implied trasferisce identico su 3 leghe (Fase 76); le leve del
+pareggio sono un tratto delle leghe latine (Fase 79-80); il mega-sweep delle
+costanti (Fase 81) dà la mappa per-lega e ribalta il router-Liga; la verifica
+diretta (Fase 82) certifica che l'oracolo è calibrato — indovina quanto il
+mercato, non di più.*
+
+- [Fase 76 — Il motore market-implied trasferisce cross-lega ANCHE sulla chiusura](#fase-76--il-motore-market-implied-trasferisce-cross-lega-anche-sulla-chiusura)
+- [Fase 77 — Il nome onesto: da «Polymarket Oracle» a «Football Oracle»](#fase-77--il-nome-onesto-da-polymarket-oracle-a-football-oracle)
+- [Fase 78 — Test prospettico 2026-27 (giornata 1): impostato, da completare](#fase-78--test-prospettico-2026-27-giornata-1-impostato-da-completare)
+- [Fase 79 — Studio dedicato Premier/Liga: le prime leve per-lega (φ35 e congestione)](#fase-79--studio-dedicato-premierliga-le-prime-leve-per-lega-φ35-e-congestione)
+- [Fase 80 — La catena GG/NG del market-implied su Premier/Liga: la φ35 paga in Liga (CI<0), il nudge no](#fase-80--la-catena-ggng-del-market-implied-su-premierliga-la-φ35-paga-in-liga-ci0-il-nudge-no)
+- [Fase 81 — Mega-sweep delle costanti del market-implied per-lega: le curve di risposta complete (e il ribaltamento del router-Liga)](#fase-81--mega-sweep-delle-costanti-del-market-implied-per-lega-le-curve-di-risposta-complete-e-il-ribaltamento-del-router-liga)
+- [Fase 82 — Verifica diretta: ma indoviniamo davvero i risultati? (calibrazione e hit-rate su tutti i mercati)](#fase-82--verifica-diretta-ma-indoviniamo-davvero-i-risultati-calibrazione-e-hit-rate-su-tutti-i-mercati)
 
 ---
 

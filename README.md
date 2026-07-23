@@ -1289,20 +1289,42 @@ del DC). Covariate `ppda`/`deep`/`luck` disponibili, off di default.
 testato. Il tetto è **informativo**, confermato per l'ultima volta coi segnali
 rimasti. L'unico lead vivo è lo stakes-mismatch (Fase 32), che serve più stagioni.
 
+> **Le fasi dalla 34 in poi** (audit critico, φ35 sul pareggio, sotto-dispersione
+> e beat-the-close, cross-lega Premier/Liga, campagna dei dati, verifica finale
+> della calibrazione) sono riassunte riga per riga nella tabella
+> [«Tutti gli esperimenti, in un colpo d'occhio»](#tutti-gli-esperimenti-in-un-colpo-docchio)
+> e raccontate per esteso nel [DIARIO](docs/DIARIO.md), che ha un **indice per
+> archi narrativi** in testa: da lì si raggiunge ogni fase in un click.
+
 ## Struttura
 
 ```
 src/
-  data/         raccolta e normalizzazione dati (schema interno pulito)
-    sources.py    UNICO punto con URL e stagioni (cambiare fonte = 1 riga)
-    loader.py     download + parsing + normalizzazione
+  config.py       iperparametri PER LEGA (LEAGUE_CONFIGS) = fonte unica di verità
+  data/           raccolta e normalizzazione dati (schema interno pulito)
+    sources.py      UNICO punto con URL, stagioni e alias squadre
+    loader.py       parsing + normalizzazione + covariate (offline-first)
+    database.py     snapshot CSV congelati + SQLite rigenerabile
   models/
-    dixon_coles.py   il modello (stima + predizione)
+    dixon_coles.py      il modello standalone (fit, blend gol/xG, φ35 pareggio)
+    market_implied.py   il motore di pricing (quote 1X2+O/U → λ,μ → ogni mercato;
+                        router `price_markets`, `sharpen_1x2`, nudge stagionale)
+    market_denoise.py   power-devig + ricalibrazione cross-stagione (Fase 38)
+    bivariate_poisson.py, copula_scores.py   forme alternative (testate, non adottate)
   evaluation/
-    metrics.py    Brier, log-loss, devigging quote, baseline
+    metrics.py        Brier, log-loss, devigging quote, baseline
+    calibration.py    temperature scaling + ricalibrazione per-classe (Fase 6/10)
+    experiment_log.py  compute_metrics (FONTE DI VERITÀ) + registro runs.jsonl
 scripts/
-  download_data.py   scarica i CSV (cache in data/raw/)
-  backtest.py        esegue il backtest walk-forward e stampa il report
+  build_database.py   (ri)costruisce il DB dallo snapshot congelato (offline)
+  backtest.py         backtest walk-forward (registra il run) — supporta --league
+  predict.py          predice una partita (tutti i mercati, con o senza quote)
+  analyze.py / analyze_gap.py / tune.py / calibrate.py / markets.py
+  _run_*.py           driver one-shot di ogni fase (riproducibilità)
+experiments/        runs.jsonl: registro replicabile di OGNI run
+data/               snapshot congelati per lega + estimates/ (stime DICHIARATE)
+docs/               DIARIO (storia), DATI (catalogo), PANCHINA (rosa modelli),
+                    PISTE, PLAYBOOK_NUOVA_LEGA, STUDIO_PREMIER_LIGA, MANUALE
 tests/              test unitari del modello e delle metriche
 worldcup/           esperimento parallelo a bassa priorità (Mondiali)
 ```
@@ -1312,12 +1334,24 @@ worldcup/           esperimento parallelo a bassa priorità (Mondiali)
 ```bash
 pip install -e .            # oppure: pip install numpy pandas scipy pytest
 
-python scripts/download_data.py     # scarica i dati storici (una volta)
-python scripts/backtest.py          # esegue il backtest sulla stagione 2025-26
+python scripts/build_database.py    # (ri)costruisce il DB dallo snapshot (offline)
+python scripts/backtest.py          # backtest walk-forward (config ufficiale Serie A)
+python scripts/backtest.py --league premier_league   # ...o su un'altra lega
 python scripts/analyze.py           # analizza gli errori del backtest
 python scripts/tune.py --sweep shrinkage          # tara un iperparametro su piu' stagioni
 python scripts/markets.py           # grande backtest su TUTTI i mercati (1X2, O/U, GG/NG, doppie chance)
 python -m pytest                    # esegue i test
+```
+
+Predire una partita (il tool pratico, `scripts/predict.py`):
+
+```bash
+# senza quote: Dixon-Coles standalone (+ φ35 sul pareggio)
+python scripts/predict.py Inter Juventus
+
+# con le quote 1X2 (H D A) + O/U 2.5 (Over Under): motore market-implied,
+# router double-Poisson, tutti i mercati Tier 1
+python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95
 ```
 
 Opzioni utili:
@@ -1463,14 +1497,26 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     quote, resta peggio del DC — un ensemble degrada un input near-optimal).
     **Il tetto è informativo, non architetturale**; e il gap col mercato non si
     riduce con un modello (a ~0 solo copiando il mercato, sotto zero mai).
-27. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote di apertura
-    vere) — l'unica leva che le 22 fasi indicano non ancora esaurita — oppure
-    **uso pratico** del modello attuale (comando di predizione).
-28. **Estensione** a nuovi campionati (già predisposto in `sources.py`): non per
-    un edge ma per capire se le conclusioni (gap, tetto, prior) sono robuste
-    fuori dalla Serie A.
-29. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …), dove il
+27. ✅ **Uso pratico** — fatto: `scripts/predict.py` predice ogni partita su
+    tutti i mercati Tier 1 (DC standalone senza quote; motore market-implied +
+    router double-Poisson con le quote 1X2+O/U — Fasi 44/52).
+28. ✅ **Estensione a nuovi campionati** — fatto: **Premier League e La Liga**
+    (Fasi 53-57, 76, 79-81). Esito: le conclusioni (gap, tetto, α*=0) sono
+    robuste fuori dalla Serie A, **il modello trasferisce ma l'edge no** (il
+    beat-the-close è una proprietà della chiusura Serie A); costanti per-lega
+    in `src/config.py` (`LEAGUE_CONFIGS`).
+29. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote live/di
+    apertura vere raccolte prospetticamente) — l'unica leva informativa che
+    tutte le fasi indicano non ancora esaurita. Le piste concrete, ordinate per
+    costo, vivono in [`docs/PISTE.md`](docs/PISTE.md).
+30. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …), dove il
     mercato potrebbe essere meno efficiente della chiusura dei bookmaker.
+
+*(La roadmap per-fase si ferma qui: dalla Fase 24 in poi la storia è tracciata
+riga per riga nella tabella
+[«Tutti gli esperimenti»](#tutti-gli-esperimenti-in-un-colpo-docchio) e nel
+[DIARIO](docs/DIARIO.md); le idee non ancora provate stanno in
+[`docs/PISTE.md`](docs/PISTE.md).)*
 
 ## Archivio dati interno (riproducibilità)
 
