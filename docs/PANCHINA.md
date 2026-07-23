@@ -65,6 +65,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Copula di Frank | ❌ F43/50 | ⬜ | ⬜ | ⬜ |
 | GAS / score-driven (state-space) | ❌ F52-sexies | ⬜ | ⬜ | ⬜ |
 | Binomiale negativa · zero-inflazione · Rue-Salvesen | ❌ F27/51 | ⬜ | ⬜ | ⬜ |
+| COM-Poisson (dispersione principiata a 1 param ν) | ❌ F85 (pareggia dp, non batte) | ⬜ | ⬜ | ❌ F85 (una-forma è a tetto: serve coda a 2 param) |
 | ρ dinamico per-partita | ❌ F18 | ⬜ | ⬜ | ⬜ |
 | Power-devig / denoising cross-stagione | ❌ F38/50 | ⬜ | ⬜ | ⬜ |
 | Covariata stakes + router stakes-aware | ❌ F32/36/45 | ⬜ | ⬜ | ⬜ |
@@ -259,6 +260,7 @@ Note della matrice:
 | GBM modello+mercato (23) | degrada perfino il mercato-feature | 0.9996 vs mercato 0.9632 |
 | Finestre dati corte (25) | più storia batte meno, sempre | 3 stag +0.0011, 2 stag +0.0019 |
 | Binomiale negativa (27) | i gol NON sono sovra-dispersi dati i tassi | nb_size→Poisson |
+| COM-Poisson (85) | dispersione principiata a 1 param: pareggia la dp (exact-LL 2.8321 vs 2.8322) ma non batte; la coda ha bisogno di 2 parametri, non di un'altra forma | ν=1.15 azzera Over4.5 ma non Over3.5 |
 | Power-devig / denoising (38, 50) | motore già non-biased | Platt a≈1.06 peggiora +0.0020; η=0.909 mai utile |
 | Poisson bivariato λ3 (42) | l'equilibrio \|λ−μ\| batte la correlazione globale | perde vs φ35 |
 | Copula di Frank (43, 50) | dipendenza flessibile senza guadagno | tetto = φ35; +compless. per −0.0001 |

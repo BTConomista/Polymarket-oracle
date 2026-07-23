@@ -210,6 +210,7 @@ mercato, non di più.*
 - [Fase 83 — Revisione dei commit esterni (Codex, Fasi 6-13): corretti; 7 difetti minori, 1 fix](#fase-83--revisione-dei-commit-esterni-codex-fasi-6-13-corretti-7-difetti-minori-1-fix)
 - [Fase 83-bis — `predict.py` per-lega: il "passo 2" del test prospettico (parziale)](#fase-83-bis--predictpy-per-lega-il-passo-2-del-test-prospettico-parziale)
 - [Fase 84 — Audit trasversale del repo (4 fronti): numeri OK, codice OK, docs ripuliti, nuove piste](#fase-84--audit-trasversale-del-repo-4-fronti-numeri-ok-codice-ok-docs-ripuliti-nuove-piste)
+- [Fase 85 — La chiave per gli esiti MENO PROBABILI: anatomia della coda (θ diretto sul risultato esatto, e la COM-Poisson)](#fase-85--la-chiave-per-gli-esiti-meno-probabili-anatomia-della-coda-θ-diretto-sul-risultato-esatto-e-la-com-poisson)
 
 ---
 
@@ -8614,6 +8615,120 @@ Nessuna matematica nuova (è un audit). Le uniche modifiche al codice:
 I 6 run del backtest ufficiale ri-eseguiti per l'audit sono registrati in
 `runs.jsonl` (config c297279f). Numeri riproducibili: `python scripts/backtest.py`
 per ogni stagione 2020-21→2025-26, media = 0.9797.
+
+---
+
+## Fase 85 — La chiave per gli esiti MENO PROBABILI: anatomia della coda (θ diretto sul risultato esatto, e la COM-Poisson)
+
+**Obiettivo (utente).** «Trovare la chiave che ci permette di prevedere risultati
+anche meno probabili.» Finora la sotto-dispersione (double-Poisson θ) era stata
+scoperta e adottata guardando l'**1X2** (Fase 51) e l'aggregato del listino
+(Fase 52); il **risultato esatto** e i **totali estremi** — dove vivono gli esiti
+rari — non erano mai stati messi al centro. Qui si punta il microscopio sulla
+**coda della distribuzione dei gol**.
+
+**Metodo.** Su **7.980 partite** con chiusura 1X2+O/U (3 leghe), invertite nei
+λ,μ del mercato (una volta, cache in `outputs/implied_lammu_cache.csv`), si
+valutano più forme dei marginali (tutte **mean-preserving**: λ,μ restano le medie)
+su due metriche di coda: **log-loss del risultato esatto** (la cella realizzata
+della matrice) e **calibrazione dei totali alti** (Over 3.5 = totale ≥4, Over 4.5
+= totale ≥5) contro la frequenza reale. `scripts/_run_tail_analysis.py`.
+
+**Ragionamento / ipotesi.** La domanda-chiave era un dubbio onesto: la
+double-Poisson θ>1 **alleggerisce le code** — quindi aiuta l'1X2 (centro) ma
+**danneggia** la predizione degli esiti rari, che vivono proprio nelle code? Se
+così fosse, per la coda servirebbe l'opposto (più massa, θ<1 o code pesanti).
+
+**Risultato — la Poisson SBAGLIA la coda, e la dp la CORREGGE (non la
+danneggia).**
+
+| forma | exact-LL | Over 3.5 Δ | Over 4.5 Δ |
+|---|--:|--:|--:|
+| Poisson (θ=1) | 2.8369 | **+0.0096** | **+0.0083** |
+| dp θ=1.10 | 2.8329 | +0.0071 | +0.0028 |
+| **dp θ=1.225 (router)** | **2.8322** | +0.0037 | −0.0039 |
+| dp θ=1.35 | 2.8359 | +0.0002 | −0.0103 |
+| dp θ=1.50 | 2.8455 | −0.0042 | −0.0177 |
+
+Tre fatti:
+1. **La Poisson sovra-stima i totali alti** (+0.0096 su Over 3.5, +0.0083 su Over
+   4.5): la distribuzione reale dei gol ha **code più leggere** del previsto.
+   L'intuizione "θ>1 danneggia la coda" era **sbagliata**: la coda reale È
+   sotto-dispersa, la dp la avvicina.
+2. **L'exact-score log-loss ha il minimo ESATTAMENTE a θ=1.225** (curva convessa:
+   2.8369 → 2.8322 → risale a 2.8455). Cioè la costante del router **scelta per il
+   centro** (Fase 52, sul listino) è **anche l'ottimo diretto sul risultato
+   esatto**: una conferma indipendente e non banale che θ≈1.2 è la forma giusta
+   dei gol, non un tuning locale sull'1X2.
+3. **Tensione di profondità (la crepa vera).** Over 3.5 è azzerato a θ≈1.35, Over
+   4.5 a θ≈1.10, il log-loss a θ=1.225: **un solo parametro di dispersione non
+   calibra ogni profondità della coda contemporaneamente**. È il limite
+   strutturale, non un errore.
+
+**La COM-Poisson non rompe il tetto (ma illumina la crepa).** Ho testato la
+dispersione **principiata** a un parametro ν (COM-Poisson, `p(x) ∝ aˣ/(x!)ᵛ`,
+mean-matched), la versione "seria" della sotto-dispersione che la NB (Fase 27) e
+la dp (scorciatoia, Fase 51) non sono:
+
+| forma | exact-LL | Over 3.5 Δ | Over 4.5 Δ |
+|---|--:|--:|--:|
+| dp θ=1.225 | 2.8322 | +0.0037 | −0.0039 |
+| **COM-Poisson ν=1.15** | **2.8321** | +0.0057 | **+0.0001** |
+| COM-Poisson ν=1.35 | 2.8358 | +0.0002 | −0.0103 |
+
+La COM-Poisson ν=1.15 **pareggia** il log-loss (2.8321 vs 2.8322, differenza nel
+rumore) e **calibra la coda ESTREMA meglio** (Over 4.5 +0.0001 vs dp −0.0039), ma
+**non batte**: la dp è già al tetto del log-loss di coda, e anche la COM-Poisson
+ha la stessa tensione di profondità (ν=1.15 azzera Over 4.5 ma +0.0057 su Over
+3.5). Esito onesto: **negativo per il log-loss, informativo per la forma** —
+conferma che la doppia-Poisson è una buona approssimazione della vera dispersione
+dei gol, e che per andare oltre sulla coda serve un **secondo parametro di forma**
+(mistura, o ricalibrazione per-profondità dei totali), non una forma a un
+parametro diversa.
+
+**E l'1X2 improbabile (upset)?** Controprova sul lato esiti: la calibrazione del
+**mercato stesso** (chiusura devigata, 10.259 partite) per fascia di probabilità
+1X2 è **buona anche nella coda** (esiti a P 5-20%: scarti −0.006…−0.015, coerenti
+col mite favorite-longshot bias; la fascia estrema <5% è rumore, n=161). L'unica
+mis-calibrazione ampia è nota: i **favoriti** (fascia 0.5-0.7) rendono 61.3% vs
+prezzato 58.9% (+0.024) — è il tilt che dp_lvl/temperatura già sfruttano. Quindi:
+sul lato **1X2** la coda è market-efficient (poco spazio); sul lato **gol/
+risultato esatto** lo spazio c'è ed è **forma della distribuzione**, non
+informazione.
+
+**Lezione / cosa ne consegue.** La "chiave per gli esiti meno probabili" **non è
+nuova informazione** (il tetto α\*=0 vale anche in coda) ma **controllo di
+dispersione della distribuzione dei gol** — e quel controllo è **già il θ del
+router**, ora validato per la prima volta *direttamente* sul risultato esatto e
+sui totali estremi (non per traslazione dall'1X2). Il margine residuo è tutto
+nella **tensione di profondità**: la prossima leva concreta è un trattamento
+della coda a **due parametri** (es. ricalibrazione isotonica dei mercati-totale
+per soglia, o una mistura di due Poisson per il regime "partita da tanti gol"),
+non un'altra forma a un parametro (COM-Poisson provata e a tetto). Va in
+`docs/PISTE.md` come pista aperta.
+
+### 📐 Il modello in dettaglio
+
+Forme dei marginali confrontate (tutte poi passate alla stessa correzione DC
+`rho=-0.06` e alla matrice `M/M.sum()`):
+```
+Poisson:        p(x) = e^-λ λ^x / x!
+double-Poisson: p(x) ∝ (e^-λ λ^x/x!)^θ · c^x, con c t.c. E[X]=λ (mean-preserving,
+                Fase 51; θ>1 = sotto-dispersa). Codice: market_implied._dp_pmf.
+COM-Poisson:    p(x) ∝ a^x / (x!)^ν, con 'a' t.c. E[X]=λ (mean-matched via
+                bisezione su a; ν=1 → Poisson, ν>1 → sotto-dispersa).
+                Codice: scripts/_run_tail_analysis.py:compois_pmf.
+```
+Perché θ=1.225 è il minimo dell'exact-LL e non un altro valore: il log-loss del
+risultato esatto pesa **ogni cella** per la sua frequenza reale, quindi è
+dominato dagli scoreline comuni (1-1, 1-0, 0-0, 2-1); la Poisson **sotto-stima**
+proprio quelli (fascia di P 0.10-0.20: reale 0.1290 vs Poisson 0.1209, +0.0081)
+perché mette troppa massa in coda — θ>1 la ritira e la rimette sul centro, con
+ottimo a 1.225 (dp) dove il guadagno sul centro non è ancora mangiato dalla
+sovra-correzione della coda estrema. Numeri riproducibili:
+`python scripts/_run_tail_analysis.py` (usa la cache dell'inversione; il θ=1.225
+coincide con `market_implied.DP_THETA`). Analisi diagnostica: nessun run scorato
+in `runs.jsonl` (nessun cambio di config; il router usa già θ=1.225).
 
 ---
 

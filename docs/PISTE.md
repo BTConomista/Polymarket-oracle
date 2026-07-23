@@ -100,6 +100,32 @@ fenomenologiche) — negativo comunque prezioso. È anche il modo giusto di
 sull'estremo iniziale di **2 sole stagioni** (1718/1819): sostituisce "epoca"
 (2 punti) con "margine" (continuo, tutte le partite). Costo BASSO, un run.
 
+### 4-ter. Coda a DUE parametri: la "tensione di profondità" dei totali (Fase 85)
+**Dato**: nessuno nuovo — forma della distribuzione dei gol, sugli stessi λ,μ
+del mercato (cache `outputs/implied_lammu_cache.csv`).
+**Ipotesi**: la Fase 85 ha mostrato che la coda dei gol è **sotto-dispersa** (la
+Poisson sovra-stima i totali alti) e che la double-Poisson θ la corregge, con
+l'exact-score log-loss al minimo esatto a θ=1.225. MA **un solo parametro di
+dispersione non calibra ogni profondità della coda**: Over 3.5 vuole θ≈1.35,
+Over 4.5 θ≈1.10. La COM-Poisson (dispersione principiata a un parametro ν) è
+stata **provata e pareggia** la dp senza batterla (§PANCHINA): una forma a un
+parametro non basta. Serve un **secondo parametro di forma della coda**. Due vie
+economiche: (a) **ricalibrazione isotonica per-soglia dei mercati-totale**
+(Over 1.5/2.5/3.5/4.5) fittata walk-forward — corregge ogni profondità
+separatamente, validata su calibrazione (ECE) non log-loss; (b) **mistura di due
+Poisson** per il regime "partita da tanti gol" (peso π su un λ più alto) — un
+parametro in più che allarga la coda dove serve senza spostare il centro.
+**Test economico**: la cache rende gli esperimenti istantanei; riusa
+`scripts/_run_tail_analysis.py`. Valore atteso: piccolo sul log-loss aggregato
+(la dp è già al tetto) ma reale sui **mercati di coda specifici** (Over 4.5,
+risultato esatto ad alto punteggio, multigol 4+) che il book quota male —
+proprio gli esiti meno probabili. Onestà: è calibrazione, non informazione
+(α\*=0 vale anche in coda).
+**Perché non chiusa**: la Fase 51/52 hanno adottato UN θ (sul centro/listino);
+la Fase 85 ha misurato la coda direttamente ma non ha ancora provato la
+correzione a due parametri. La COM-Poisson (una-forma) è a tetto, la
+due-parametri no.
+
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
 Nessuna rete: le colonne sono nei CSV football-data congelati in
