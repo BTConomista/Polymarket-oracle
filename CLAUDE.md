@@ -205,11 +205,16 @@ cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e dia
 
 ## 3-bis. Git — branch di lavoro
 
-- **Commit e push SOLO sull'ultimo branch di lavoro usato nella sessione**
-  (quello su cui si è già committato/lavorato, es. `claude/data-review-2hu63v`).
-- **Creare un nuovo branch SOLO se esplicitamente richiesto** dall'utente. In
-  assenza di indicazioni, si resta sul branch corrente: niente branch nuovi
-  "per prudenza" o per separare un sotto-task.
+- **REGOLA (decisione utente, luglio 2026): si pusha SEMPRE E SOLO su
+  `main`.** Ogni sessione lavora e committa direttamente su `main`
+  (`git checkout main`, pull all'inizio, push alla fine di ogni blocco di
+  lavoro). Se l'ambiente assegna un branch `claude/...`, NON usarlo: i
+  commit vanno su `main`.
+- **Creare un nuovo branch SOLO se esplicitamente richiesto** dall'utente:
+  niente branch "per prudenza" o per separare un sotto-task.
+- Storia: fino alla Fase 82 si lavorava su branch di sessione (`claude/...`)
+  poi confluiti; il branch `claude/premier-liga-analysis-nqwa5c` è stato
+  rinominato/ricopiato in `main` ed è deprecato.
 
 ---
 
