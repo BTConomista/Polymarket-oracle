@@ -122,12 +122,79 @@ def theta_by_group(d: pd.DataFrame, g: pd.DataFrame) -> None:
     print("Alta volatilita' -> theta piu' BASSO = coda piu' pesante: dispersione per-squadra reale.")
 
 
+def walk_forward(d: pd.DataFrame) -> None:
+    """Verdetto OOS (Fase 86-bis): il theta per-squadra batte il theta globale?
+    Per ogni stagione test s: si fitta il theta ottimo per terzile di
+    volatilita'-sorpresa PASSATA sui dati < s, lo si applica a s, si accumula il
+    log-loss del risultato esatto e lo si confronta col theta globale=1.225."""
+    rows = []
+    for _, r in d.iterrows():
+        rows.append((r.league, r.season, r.home, r.resid))
+        rows.append((r.league, r.season, r.away, -r.resid))
+    tr = pd.DataFrame(rows, columns=["league", "season", "team", "resid"])
+    vs = tr.groupby(["league", "season", "team"]).agg(
+        vol=("resid", "std"), n=("resid", "size")).reset_index()
+    vs = vs[vs["n"] >= 8]
+    # indice past-vol: per (league, team) le vol delle stagioni, per media espandente
+    idx = {}
+    for _, r in vs.iterrows():
+        idx.setdefault((r.league, r.team), []).append((r.season, r.vol))
+
+    def past_vol(lg, team, s):
+        h = [v for (ss, v) in idx.get((lg, team), []) if ss < s]
+        return np.mean(h) if h else np.nan
+
+    def pv_of(sub):
+        return np.array([np.nanmean([past_vol(r.league, r.home, r.season),
+                                     past_vol(r.league, r.away, r.season)])
+                         for r in sub.itertuples()])
+
+    def ll(sub, theta):
+        s = 0.0
+        for r in sub.itertuples():
+            M = mi.score_matrix(r.lam, r.mu, rho=-0.06, dp_theta=(None if theta == 1.0 else theta))
+            s += -np.log(max(M[min(r.hg, K - 1), min(r.ag, K - 1)], 1e-15))
+        return s
+
+    seasons = sorted(d["season"].unique())
+    glob = team = 0.0; n = 0; log = []
+    for s in seasons:
+        past = d[d["season"] < s]
+        if len(past) < 600:
+            continue
+        cur = d[d["season"] == s].copy(); cur["pv"] = pv_of(cur)
+        cur = cur.dropna(subset=["pv"])
+        pc = past.copy(); pc["pv"] = pv_of(pc); pc = pc.dropna(subset=["pv"])
+        if len(cur) < 50 or len(pc) < 200:
+            continue
+        q1, q2 = pc["pv"].quantile([1 / 3, 2 / 3])
+        grp = lambda v: "low" if v <= q1 else ("high" if v >= q2 else "mid")
+        pc["g"] = pc["pv"].map(grp); cur["g"] = cur["pv"].map(grp)
+        tg = {}
+        for gname in ["low", "mid", "high"]:
+            sub = pc[pc["g"] == gname]
+            tg[gname] = min(THETAS, key=lambda th: ll(sub, th)) if len(sub) > 30 else 1.225
+        for gname in ["low", "mid", "high"]:
+            sub = cur[cur["g"] == gname]
+            if len(sub):
+                glob += ll(sub, 1.225); team += ll(sub, tg[gname]); n += len(sub)
+        log.append((s, tg))
+    print(f"\n=== Walk-forward θ_team vs θ globale=1.225 (Fase 86-bis, n={n} OOS) ===")
+    print(f"  exact-LL globale   : {glob/n:.4f}")
+    print(f"  exact-LL θ_team    : {team/n:.4f}")
+    verdict = "MEGLIO" if team < glob else "PEGGIO (non sfruttabile OOS)"
+    print(f"  Δ (team − globale) : {(team-glob)/n:+.5f}  -> {verdict}")
+    for s, tg in log:
+        print(f"    {s}: {tg}")
+
+
 def main() -> None:
     d = invert_all()
     g = _team_seasons(d)
     print(f"partite invertite: {len(d)}  |  squadra-stagioni (>=10 gare): {len(g)}\n")
     persistence(g)
     theta_by_group(d, g)
+    walk_forward(d)
 
 
 if __name__ == "__main__":

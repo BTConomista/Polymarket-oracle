@@ -217,6 +217,7 @@ dispersione per-squadra).*
 - [Fase 84 — Audit trasversale del repo (4 fronti): numeri OK, codice OK, docs ripuliti, nuove piste](#fase-84--audit-trasversale-del-repo-4-fronti-numeri-ok-codice-ok-docs-ripuliti-nuove-piste)
 - [Fase 85 — La chiave per gli esiti MENO PROBABILI: anatomia della coda (θ diretto sul risultato esatto, e la COM-Poisson)](#fase-85--la-chiave-per-gli-esiti-meno-probabili-anatomia-della-coda-θ-diretto-sul-risultato-esatto-e-la-com-poisson)
 - [Fase 86 — Secondo audit orchestrato (workflow): fix di onestà, chiusure e il LEAD della dispersione per-squadra](#fase-86--secondo-audit-orchestrato-workflow-fix-di-onestà-chiusure-e-il-lead-della-dispersione-per-squadra)
+- [Fase 86-bis — Il verdetto walk-forward sul θ per-squadra: NON sfruttabile (il tetto regge anche nella coda)](#fase-86-bis--il-verdetto-walk-forward-sul-θ-per-squadra-non-sfruttabile-il-tetto-regge-anche-nella-coda)
 
 ---
 
@@ -8869,6 +8870,63 @@ avrebbe consegnato correttamente. Nessun finding riapre l'edge (α\*=0 intatto).
   volatilità-sorpresa **passata** (media delle stagioni precedenti → OOS).
   Riproducibile: `python scripts/_run_team_dispersion.py`. Diagnostico, nessun
   run scorato in `runs.jsonl` (nessun cambio di config).
+
+---
+
+## Fase 86-bis — Il verdetto walk-forward sul θ per-squadra: NON sfruttabile (il tetto regge anche nella coda)
+
+**Obiettivo.** La Fase 86 aveva trovato un lead forte ma con un θ di gruppo scelto
+**in-sample**: promesso il test onesto (walk-forward θ_team). Eccolo — la prova
+definitiva che risponde alla domanda dell'utente sugli esiti meno probabili.
+
+**Metodo.** Per ogni stagione di test `s` (dalla terza con quote in poi): si
+classificano le partite in terzili di **volatilità-sorpresa passata** (solo
+stagioni < s), si **fitta il θ ottimo per terzile sui dati passati**, lo si
+applica a `s` e si accumula il log-loss del risultato esatto **out-of-sample**,
+contro il θ globale=1.225. `scripts/_run_team_dispersion.py:walk_forward`.
+
+**Risultato — NEGATIVO, netto.** Su **5.690 partite OOS**:
+
+| | exact-LL |
+|---|--:|
+| θ globale = 1.225 | **2.8212** |
+| θ_team (fit su passato) | 2.8222 |
+| **Δ (team − globale)** | **+0.00096 → PEGGIO** |
+
+Il θ per-squadra **peggiora** la predizione del risultato esatto out-of-sample.
+Il perché è nei θ fittati stagione per stagione: sono **instabili** (il gruppo
+alto va 1.0 nel 2021-22 → 1.1 nelle stagioni dopo; il medio oscilla 1.225↔1.1),
+quindi la classificazione + il contrasto-θ non trasferiscono al futuro. La
+persistenza della volatilità-sorpresa (+0.20, Fase 86) è **reale ma non
+sfruttabile**: è troppo rumorosa anno-su-anno perché un θ per-squadra la
+monetizzi.
+
+**Lezione / cosa ne consegue.** È il finale onesto della caccia agli esiti rari:
+**anche il θ per-squadra — la crepa più credibile nel "θ uniforme" — non batte il
+θ globale OOS.** Conferma per l'ennesima volta, e ora *nella coda e per-squadra*,
+il fatto-cardine del progetto: il tetto è **informativo** (α\*=0), non
+architetturale. La chiave per prevedere gli esiti meno probabili resta quella
+della Fase 85 — il controllo di dispersione **globale** (θ=1.225 del router), già
+al suo ottimo — e non esiste una sotto-struttura (per-squadra, per-profondità,
+per-forma) che aggiunga valore sfruttabile: le hanno provate tutte (θ per
+volume/equilibrio/coda F52-quater; COM-Poisson F85; mistura di regime F86 audit,
+OOS-fragile; θ per-squadra F86-bis). Il lead della Fase 86 passa da 🔎 a **❌
+chiuso**: la volatilità-squadra persiste (fatto vero, documentato) ma il θ_team
+non è adottabile. Nessuna delusione: è esattamente il tipo di risultato negativo
+che il progetto valorizza (§1.4) — e chiude in modo pulito la domanda "si possono
+prevedere meglio i risultati meno probabili?": **no, non oltre la dispersione
+globale già nel motore.**
+
+### 📐 Il modello in dettaglio
+
+Walk-forward espandente: per la stagione `s`, `θ_g = argmin_θ Σ_{past, gruppo g}
+−log P(gol|θ)` con `θ ∈ {1, 1.1, 1.225, 1.35, 1.5}` e i terzili definiti sulla
+distribuzione di `pv = ½(pastvol_home + pastvol_away)` delle partite **passate**;
+poi exact-LL su `s` con `θ_g(gruppo della partita)` vs `θ=1.225`. La media
+espandente `pastvol` usa solo stagioni `< s` (nessun look-ahead). Numeri
+riproducibili: `python scripts/_run_team_dispersion.py` (sezione walk-forward).
+Δ = +0.00096 su n=5.690, θ_g per stagione stampati (instabilità visibile).
+Diagnostico: nessun run in `runs.jsonl`.
 
 ---
 

@@ -138,7 +138,6 @@ Note della matrice:
 | 11 | GBM + finishing-luck (33) | −0.0022 (P 81%) | non conclusivo, e il GBM di suo perde dal DC | — |
 | 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto) | `--covariates midweek` |
 | 13 | Temperatura sopra dp_lvl (52-ter) | 0.9609→**0.9605** (T=1.056) | si somma a una leva già Serie-A-only e da oracolo | sopra `sharpen_1x2` |
-| 14 | **Dispersione per-squadra: θ_team sulla coda (86)** | volatilità-sorpresa **persiste** (corr +0.20 controllata per forza); alta-vol vuole **θ=1.10** vs 1.225 (exact-LL 2.9187 vs 2.9199) | θ di gruppo scelto **in-sample** (classif. OOS); serve un walk-forward `θ_team` pieno con shrinkage | `_run_team_dispersion.py` → PISTE #4-quater |
 
 ### Dettaglio delle voci di panchina
 
@@ -275,6 +274,7 @@ Note della matrice:
 | GAS / score-driven (52-sexies); Kalman chiuso-per-argomento (51) | memoria effettiva troppo corta (~25 partite); l'emivita del DC è già lo steady-state di un Kalman | +0.0027 vs DC batch, P 18% |
 | dp_lvl fuori dalla Serie A (53) | il beat-the-close è idiosincrasia della chiusura SA | Premier +0.0008, Liga +0.0001 |
 | Ri-taratura per-lega di emivita/shrinkage/α (57) | piatta: il gap è informazione, non calibrazione | tutti i Δ entro ±0.0005 |
+| **θ per-squadra sulla coda (86/86-bis)** | la volatilità-sorpresa PERSISTE (corr +0.20 controllata per forza) ma il θ_team **peggiora OOS** (θ di gruppo instabili anno-su-anno): non sfruttabile | walk-forward Δ **+0.00096** su 5.690 partite (exact-LL 2.8222 vs 2.8212) |
 
 ---
 

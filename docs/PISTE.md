@@ -139,15 +139,17 @@ sul risultato esatto. È la prima crepa nel "θ uniforme" (F52-quater aveva escl
 θ per volume/equilibrio/coda, **mai per identità-squadra**), ed è esattamente sul
 tema degli **esiti meno probabili**: gli upset delle squadre volatili si prevedono
 meglio con una coda più pesante.
-**Test (da fare, il pieno)**: un `θ_team` walk-forward — fit di θ per squadra (o
-per il fattore-partita `½(θ_home+θ_away)`) sulle stagioni passate, con **shrinkage
-verso 1.225** (poche gare/squadra/stagione), applicato al futuro; validazione
-LFO su risultato esatto/Over/multigol + calibrazione (Fase 82). `_run_team_
-dispersion.py` ha già l'infrastruttura (inversione, volatilità-sorpresa, terzili).
-**Onestà**: nella Fase 86 il θ di gruppo è scelto **in-sample** (la classificazione
-è OOS, il θ ottimo no) e i guadagni sono piccoli (~0.001 exact-LL); è un **lead
-forte, non una modifica adottata**. Resta sotto il tetto α\*=0 (è calibrazione
-della coda, non nuova informazione), ma è la pista di coda più promettente aperta.
+**Test pieno ESEGUITO → CHIUSA, negativa (Fase 86-bis).** Il walk-forward è stato
+fatto: per ogni stagione test si fitta il θ ottimo per terzile di volatilità-
+sorpresa **passata** sui dati precedenti e lo si applica al futuro. Su **5.690
+partite OOS** il θ_team **peggiora** il risultato esatto: exact-LL 2.8222 vs
+2.8212 del θ globale (**Δ +0.00096**). I θ di gruppo fittati sono **instabili**
+anno-su-anno (l'alto va 1.0→1.1), quindi non trasferiscono. La persistenza (+0.20)
+è reale ma **troppo rumorosa per essere monetizzata da un θ per-squadra**. È
+l'ennesima conferma del tetto informativo (α\*=0), ora *nella coda e per-squadra*:
+nessuna sotto-struttura del θ (volume/equilibrio/coda F52-quater; per-squadra
+F86-bis) batte il θ globale OOS. `scripts/_run_team_dispersion.py` (sez.
+walk-forward). Lead 🔎 → ❌.
 
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
