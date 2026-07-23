@@ -7738,6 +7738,59 @@ culminazione naturale, da fare a valle del lavoro di ricerca (scelta utente).
 
 ---
 
+## Fase 78 — Test prospettico 2026-27 (giornata 1): impostato, da completare
+
+**Obiettivo (utente).** Simulare come ci comporteremmo di fronte al primo turno
+2026-27 di Serie A/Premier/Liga, e **scrivere nel repo che il test si ripeterà
+più avanti**. È il gold standard: previsioni congelate PRIMA del calcio
+d'inizio, scorate DOPO — nessun senno di poi (il progetto insegue dati
+prospettici dalla Fase 14).
+
+**Cosa si è potuto fare oggi (2026-07-23) e cosa no — onestamente.** Dalla
+sessione di sviluppo `WebFetch` è **bloccato del tutto** (403 anche su
+Wikipedia, bug noto) e i siti di quote bloccano i bot: **non** è possibile
+assemblare da qui, in modo affidabile, né i calendari ufficiali 2026-27 (gli
+snippet di ricerca su stagioni future sono speculativi — mescolavano squadre di
+Championship) né le quote decimali reali. Costruire un test prospettico su
+fixture/quote inventate lo renderebbe inutile → **non fatto** (disciplina
+«onestà sui limiti», §1.6).
+
+**Cosa è stato congelato.** Una **anteprima illustrativa** (non il test scorato):
+la previsione del **DC-da-solo** (Modello 1, `scripts/_run_prospettico_2627.py`,
+config per-lega) per 7 partite Premier plausibili tra squadre presenti nei
+nostri dati — es. Newcastle–Liverpool 34/27/40, O2.5 64%, GG 68%. Congelata in
+`experiments/prospettico_2026_27_dc.csv` con i limiti dichiarati (fixture non
+ufficiali; dati fermi a 2025-26 → forze vecchie di un'estate di mercato; niente
+quote → niente Modello 2). Serie A/Liga: calendari non reperiti → slot vuoti.
+
+**Il protocollo del test vero** vive in
+`experiments/prospettico_2026_27.md` (stato: **APERTO**): per ciascuna lega,
+giornata 1, congelare M1 (DC) + M2 (market-implied dalle quote di chiusura
+reali) prima del kickoff, poi scorare M1/M2/baseline sui risultati (log-loss/
+Brier/calibrazione) e registrare un run `prospettico_2627`. Le **quote reali
+vanno raccolte vicino al calcio d'inizio** per un canale che funzioni (GitHub
+Actions, sessione browser Cowork, o bundle manuale). Checklist «da ripetere» in
+§5 del file.
+
+**Lezione.** L'aspettativa dichiarata: il DC-da-solo sarà battuto dal mercato
+(α\*=0 ovunque); il valore del test non è vincere ma **misurare** quanto perde e
+se resta calibrato su dati mai visti — e mostrare, con le quote, che il
+market-implied riproduce il mercato ed estende ai mercati non quotati. Nessun
+ROI simulato. È anche il primo uso "vivo" che espone il debito del **passo 2**:
+il tool `predict.py` va reso per-lega (config, selezione automatica del modello)
+prima di un uso pratico serio.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: `DixonColesModel` (config ufficiale per-lega,
+`LEAGUE_CONFIGS`) + `price_markets(dp_theta=DP_THETA_DC)` (router v3, Fase 52),
+identici a `predict.py`. Le previsioni sono `expected_goals(home, away)` →
+matrice → mercati, con as_of 2026-08-15 (prima del primo turno). Nessun run in
+`runs.jsonl` finché non ci sono i risultati (un'anteprima non è un esperimento
+scorato). Numeri riproducibili: `python scripts/_run_prospettico_2627.py`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

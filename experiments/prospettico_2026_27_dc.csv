@@ -1,0 +1,8 @@
+league,home,away,as_of,lam,mu,p_home,p_draw,p_away,p_over25,p_btts,model,note
+premier_league,Newcastle,Liverpool,2026-08-15,1.562,1.686,0.3406,0.2648,0.3946,0.6402,0.6808,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
+premier_league,Man City,Bournemouth,2026-08-15,2.176,0.966,0.6511,0.2088,0.14,0.6173,0.5772,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
+premier_league,Brighton,Aston Villa,2026-08-15,1.524,1.295,0.4129,0.2806,0.3065,0.5416,0.6036,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
+premier_league,Fulham,Chelsea,2026-08-15,1.33,1.405,0.3351,0.2949,0.37,0.5206,0.5925,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
+premier_league,Brentford,Tottenham,2026-08-15,1.811,1.305,0.4858,0.2532,0.261,0.6114,0.6436,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
+premier_league,Everton,Crystal Palace,2026-08-15,1.258,1.074,0.3894,0.3136,0.297,0.4143,0.5052,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
+premier_league,Nott'm Forest,Leeds,2026-08-15,1.539,1.154,0.4513,0.2798,0.2689,0.51,0.5715,DC_gol_xg_phi35_router_v3,anteprima_illustrativa
