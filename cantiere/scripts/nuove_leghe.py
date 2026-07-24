@@ -125,6 +125,7 @@ BUNDESLIGA_ALIASES: dict[str, str] = {
     # non agganciati, come le Fasi 67/59; l'errore di player_scores.league_rosters
     # li elenca tutti insieme, quindi la lista e' completa per costruzione).
     "1. Fußballclub Heidenheim 1846": "Heidenheim",
+    "1.FC Heidenheim 1846": "Heidenheim",   # variante Transfermarkt web
     "1.FC Köln": "FC Koln",
     "1.FC Nuremberg": "Nurnberg",
     "1.FC Union Berlin": "Union Berlin",

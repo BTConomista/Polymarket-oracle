@@ -4,11 +4,13 @@ Cartella **temporanea e autonoma**, creata su richiesta dell'utente (24 luglio
 2026) per lavorare **senza toccare nessun file già in uso** dal progetto mentre
 su `main` si lavorava in parallelo. Branch: `claude/verify-data-import-leagues-468euv`.
 
-Nulla qui dentro è ancora "ufficiale": quando il lavoro verrà accettato, i
-contenuti si spostano negli alberi del progetto seguendo la procedura del
-`CLAUDE.md` §2 (diario, README, PANCHINA, DATI, runs.jsonl, test) e questa
-cartella sparisce. La checklist di integrazione è in
-[`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) §7 e in
+**Policy di isolamento (decisa dall'utente).** Tutto resta qui: nessuna
+numerazione di fase, nessuna modifica ai documenti condivisi del progetto
+(`DIARIO.md`, `README.md`, `PANCHINA.md`, `DATI.md`, `experiments/runs.jsonl`),
+nessuna modifica a `src/`, `data/`, `scripts/`, `tests/`. Così i due filoni di
+lavoro non possono entrare in conflitto. Le checklist di integrazione nei report
+sono **proposte**, da eseguire solo quando si deciderà di unire i due filoni:
+[`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) §7 e
 [`report/01_audit_dati.md`](report/01_audit_dati.md) §6.
 
 ## I tre lavori, e dove leggerne l'esito
@@ -18,12 +20,15 @@ cartella sparisce. La checklist di integrazione è in
 | 1 | **Audit dei dati esistenti** | [`report/01_audit_dati.md`](report/01_audit_dati.md) | i dati **corrispondono alla fonte riga per riga** (0 differenze su gol/date/tiri/quote/xG); trovate **7 anomalie reali**, tutte nella fonte, 2 da correggere |
 | 2 | **Stime: ritentare l'import del dato vero, e verificarle** | [`report/02_stime.md`](report/02_stime.md) | dato vero **ancora non procurabile** (4 vie battute, con prove); la stima **regge** a 8 prove di falsificazione; 3 precisazioni da riportare |
 | 3 | **Import Bundesliga + Ligue 1** | [`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) | fatti: **2.754 + 3.097 partite**, 38 colonne identiche alle altre leghe, audit superato |
+| 4 | **Istruttoria delle decisioni aperte** | [`report/04_decisioni.md`](report/04_decisioni.md) | Union-Bochum: partita **giocata per intero**, 1-1 sul campo, dati completi; valori rosa 2025-26: **recuperati da Transfermarkt** (16 celle) con la scala misurata; re-import del dataset: via **chiusa** (upstream fermo) |
 
 ## Il fatto nuovo che ha cambiato le regole
 
 `docs/MANUALE_SOPRAVVIVENZA.md` §1 dà `football-data.co.uk` e `understat.com`
-per **bloccati** (403). **Oggi rispondono 200.** Anche `data.jsdelivr.com`,
-`betexplorer.com`, `oddsportal.com` sono raggiungibili. Conseguenze:
+per **bloccati** (403). **Oggi rispondono 200.** Sono raggiungibili anche
+`data.jsdelivr.com`, `betexplorer.com`, `oddsportal.com`, **`transfermarkt.com`**
+(era il motivo del recupero manuale via browser esterno) e **Kaggle via
+`kagglehub`** (prima serviva il runner Actions). Conseguenze:
 
 - si è potuto **verificare gli snapshot contro la fonte-madre**, non solo
   contro se stessi (il controllo forte, mai fatto prima);
@@ -47,6 +52,7 @@ cantiere/
     audit_anomalie.py        audit avversariale: "e se la fonte fosse sbagliata?"
     verifica_stime.py        8 prove di falsificazione sulla stima O/U 2017-19
     riconcilia_nomi.py       riconciliazione nomi squadra per le leghe nuove
+    recupero_squad_value_tm.py  valori rosa da Transfermarkt + validazione della scala
     nuove_leghe.py           config + alias delle 2 leghe nuove (il "sources.py" provvisorio)
     build_new_snapshot.py    costruisce gli snapshot a 38 colonne di Bundesliga e Ligue 1
     eda_nuove_leghe.py       EDA comparativa sulle 5 leghe (passo 1 del playbook)
@@ -54,6 +60,7 @@ cantiere/
     bundesliga_matches.csv       snapshot 38 colonne (2.754 partite)
     ligue_1_matches.csv          snapshot 38 colonne (3.097 partite)
     club_fixtures_*.csv          calendari di club completi
+    squad_value_2526_transfermarkt.csv   16 celle recuperate (dato di riserva, non applicato)
     fonti/                       fonti grezze + manifest con SHA256
   out/              output di ogni run (json + log), rigenerabili
 ```

@@ -1,0 +1,248 @@
+{
+  "bundesliga": {
+    "accordo": {
+      "n": 13,
+      "ratio_mediana": 1.1313929313929314,
+      "ratio_media": 1.1175422543692266,
+      "ratio_min": 0.8154947677620709,
+      "ratio_max": 1.646684527796383,
+      "scarto_assoluto_mediano_pct": 14.809623919644931,
+      "correlazione": 0.9871824122607974,
+      "per_club": [
+        {
+          "team": "Bayern Munich",
+          "ps_value": 899700000.0,
+          "tm_value": 967650000.0,
+          "scarto%": 7.552517505835277
+        },
+        {
+          "team": "Dortmund",
+          "ps_value": 428100000.0,
+          "tm_value": 491500000.0,
+          "scarto%": 14.809623919644931
+        },
+        {
+          "team": "Ein Frankfurt",
+          "ps_value": 332850000.0,
+          "tm_value": 398850000.0,
+          "scarto%": 19.82875168995042
+        },
+        {
+          "team": "Freiburg",
+          "ps_value": 149300000.0,
+          "tm_value": 245850000.0,
+          "scarto%": 64.6684527796383
+        },
+        {
+          "team": "Heidenheim",
+          "ps_value": 69750000.0,
+          "tm_value": 64950000.0,
+          "scarto%": -6.88172043010753
+        },
+        {
+          "team": "Leverkusen",
+          "ps_value": 396100000.0,
+          "tm_value": 458550000.0,
+          "scarto%": 15.766220651350672
+        },
+        {
+          "team": "M'gladbach",
+          "ps_value": 140100000.0,
+          "tm_value": 153600000.0,
+          "scarto%": 9.63597430406853
+        },
+        {
+          "team": "Mainz",
+          "ps_value": 167450000.0,
+          "tm_value": 158450000.0,
+          "scarto%": -5.374738727978501
+        },
+        {
+          "team": "RB Leipzig",
+          "ps_value": 481000000.0,
+          "tm_value": 544200000.0,
+          "scarto%": 13.139293139293141
+        },
+        {
+          "team": "Stuttgart",
+          "ps_value": 329700000.0,
+          "tm_value": 407600000.0,
+          "scarto%": 23.627540188049736
+        },
+        {
+          "team": "Union Berlin",
+          "ps_value": 111450000.0,
+          "tm_value": 129850000.0,
+          "scarto%": 16.509645580978027
+        },
+        {
+          "team": "Werder Bremen",
+          "ps_value": 176200000.0,
+          "tm_value": 172630000.0,
+          "scarto%": -2.0261066969353037
+        },
+        {
+          "team": "Wolfsburg",
+          "ps_value": 272350000.0,
+          "tm_value": 222100000.0,
+          "scarto%": -18.450523223792914
+        }
+      ]
+    },
+    "celle_mancanti": [
+      {
+        "team": "Augsburg",
+        "tm_value": 168450000.0,
+        "squad_size": 30,
+        "avg_age": 26.0
+      },
+      {
+        "team": "FC Koln",
+        "tm_value": 156550000.0,
+        "squad_size": 31,
+        "avg_age": 26.0
+      },
+      {
+        "team": "Hamburg",
+        "tm_value": 179400000.0,
+        "squad_size": 33,
+        "avg_age": 25.1
+      },
+      {
+        "team": "Hoffenheim",
+        "tm_value": 278750000.0,
+        "squad_size": 31,
+        "avg_age": 25.5
+      },
+      {
+        "team": "St Pauli",
+        "tm_value": 64250000.0,
+        "squad_size": 32,
+        "avg_age": 26.3
+      }
+    ]
+  },
+  "ligue_1": {
+    "accordo": {
+      "n": 7,
+      "ratio_mediana": 1.2857813233223838,
+      "ratio_media": 1.2315532134558715,
+      "ratio_min": 0.8185779572749495,
+      "ratio_max": 1.7226502311248073,
+      "scarto_assoluto_mediano_pct": 28.578132332238383,
+      "correlazione": 0.9662723491265196,
+      "per_club": [
+        {
+          "team": "Brest",
+          "ps_value": 99650000.0,
+          "tm_value": 88650000.0,
+          "scarto%": -11.03863522328149
+        },
+        {
+          "team": "Lille",
+          "ps_value": 162250000.0,
+          "tm_value": 279500000.0,
+          "scarto%": 72.26502311248073
+        },
+        {
+          "team": "Marseille",
+          "ps_value": 470450000.0,
+          "tm_value": 385100000.0,
+          "scarto%": -18.142204272505047
+        },
+        {
+          "team": "Monaco",
+          "ps_value": 416500000.0,
+          "tm_value": 398750000.0,
+          "scarto%": -4.261704681872747
+        },
+        {
+          "team": "Paris SG",
+          "ps_value": 1065500000.0,
+          "tm_value": 1370000000.0,
+          "scarto%": 28.578132332238383
+        },
+        {
+          "team": "Rennes",
+          "ps_value": 207400000.0,
+          "tm_value": 281700000.0,
+          "scarto%": 35.824493731919006
+        },
+        {
+          "team": "Strasbourg",
+          "ps_value": 251350000.0,
+          "tm_value": 399300000.0,
+          "scarto%": 58.86214442013129
+        }
+      ]
+    },
+    "celle_mancanti": [
+      {
+        "team": "Angers",
+        "tm_value": 78800000.0,
+        "squad_size": 25,
+        "avg_age": 26.2
+      },
+      {
+        "team": "Auxerre",
+        "tm_value": 92700000.0,
+        "squad_size": 30,
+        "avg_age": 24.5
+      },
+      {
+        "team": "Le Havre",
+        "tm_value": 75000000.0,
+        "squad_size": 29,
+        "avg_age": 25.4
+      },
+      {
+        "team": "Lens",
+        "tm_value": 236800000.0,
+        "squad_size": 30,
+        "avg_age": 26.5
+      },
+      {
+        "team": "Lorient",
+        "tm_value": 127750000.0,
+        "squad_size": 27,
+        "avg_age": 26.0
+      },
+      {
+        "team": "Lyon",
+        "tm_value": 300800000.0,
+        "squad_size": 31,
+        "avg_age": 25.1
+      },
+      {
+        "team": "Metz",
+        "tm_value": 65250000.0,
+        "squad_size": 29,
+        "avg_age": 25.7
+      },
+      {
+        "team": "Nantes",
+        "tm_value": 110300000.0,
+        "squad_size": 31,
+        "avg_age": 27.0
+      },
+      {
+        "team": "Nice",
+        "tm_value": 183850000.0,
+        "squad_size": 32,
+        "avg_age": 25.7
+      },
+      {
+        "team": "Paris FC",
+        "tm_value": 153450000.0,
+        "squad_size": 32,
+        "avg_age": 28.6
+      },
+      {
+        "team": "Toulouse",
+        "tm_value": 165300000.0,
+        "squad_size": 26,
+        "avg_age": 24.2
+      }
+    ]
+  }
+}
