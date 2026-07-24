@@ -261,6 +261,7 @@ Note della matrice:
 | Finestre dati corte (25) | più storia batte meno, sempre | 3 stag +0.0011, 2 stag +0.0019 |
 | Binomiale negativa (27) | i gol NON sono sovra-dispersi dati i tassi | nb_size→Poisson |
 | COM-Poisson (85) | dispersione principiata a 1 param: pareggia la dp (exact-LL 2.8321 vs 2.8322) ma non batte; la coda ha bisogno di 2 parametri, non di un'altra forma | ν=1.15 azzera Over4.5 ma non Over3.5 |
+| Coda a 2 parametri: isotonica per-soglia + mistura di 2 Poisson (87) | (A) l'isotonica peggiora il log-loss OOS su tutte 4 le soglie; (B) la mistura guadagna in-sample ma OOS non conclusiva e si ribalta sulle stagioni recenti | A: +0.0061…+0.0150; B: Δ −0.00042 CI [−0.0015,+0.0006] P 78.6%, 2425/2526 positive |
 | Power-devig / denoising (38, 50) | motore già non-biased | Platt a≈1.06 peggiora +0.0020; η=0.909 mai utile |
 | Poisson bivariato λ3 (42) | l'equilibrio \|λ−μ\| batte la correlazione globale | perde vs φ35 |
 | Copula di Frank (43, 50) | dipendenza flessibile senza guadagno | tetto = φ35; +compless. per −0.0001 |

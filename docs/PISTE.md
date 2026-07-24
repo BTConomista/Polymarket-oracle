@@ -125,18 +125,16 @@ proprio gli esiti meno probabili. Onestà: è calibrazione, non informazione
 la Fase 85 ha misurato la coda direttamente ma non ha ancora provato la
 correzione a due parametri. La COM-Poisson (una-forma) è a tetto, la
 due-parametri no.
-**Esplorazioni preliminari (audit Fase 86, DA RIPRODURRE prima di chiudere).**
-Entrambe le vie sono state tastate dai revisori dell'audit, con esito **non
-incoraggiante**, ma i numeri **non sono stati ancora riprodotti a mano** (a
-differenza del θ_team della 4-quater, riprodotto e chiuso): (a) l'**isotonica
-per-soglia** (PAVA walk-forward sui totali) avrebbe **peggiorato il log-loss OOS**
-su tutte e 4 le soglie (la mis-calibrazione OOS dell'Over 3.5 col router è già
-~0, non il +0.0037 in-sample); (b) la **mistura di due Poisson** sarebbe
-**conclusiva in-sample** (pooled P~99%, ~0.0006 exact-LL) ma **fragile OOS**
-(negativa su 2024-25 e 2025-26) — stesso pattern in-sample-forte/OOS-debole del
-θ_team. Prima di dichiararle chiuse serve la riproduzione col protocollo del
-repo; l'aspettativa, dopo la 86-bis, è che confermino il tetto (calibrazione, non
-edge).
+**CHIUSA (Fase 87): entrambe le vie riprodotte, nessuna adottabile.** (a)
+l'**isotonica per-soglia** (PAVA walk-forward) **peggiora il log-loss OOS su tutte
+e 4 le soglie** (Over 1.5 +0.0150 … Over 4.5 +0.0109): il router è già calibrato
+sui totali, ricalibrare aggiunge solo rumore. (b) la **mistura di due Poisson**
+ha un guadagno **in-sample** (s≈0.15, −0.0006) ma **OOS non conclusivo** (Δ
+−0.00042, CI95 [−0.0015,+0.0006], P 78.6%) e con **segno ribaltato sulle stagioni
+recenti** (2024-25 +0.0014, 2025-26 +0.0013: aiutava l'era porte-chiuse, danneggia
+il calcio di oggi). `scripts/_run_tail_two_param.py`. Terza conferma — dopo
+COM-Poisson (F85) e θ_team (F86-bis) — che **la coda dei gol è al tetto della
+forma**: il singolo θ del router è quanto di meglio senza informazione nuova.
 
 ### 4-quater. Dispersione per-squadra: un θ_team per gli esiti rari (LEAD, Fase 86)
 **Dato**: nessuno nuovo — sugli stessi λ,μ del mercato + i risultati storici.
@@ -184,11 +182,15 @@ tra le "grezzo non estratto".
 economico è stato eseguito: la supremazia implicita nella linea AH di chiusura
 correla **0.9952** con λ−μ già ricavata da 1X2+O/U (2.660 partite Serie A;
 `AH ≈ 0.94·(λ−μ)`). L'AH è **la stessa supremazia ripackagata** → un'inversione
-a 3 vincoli **non aggiungerebbe informazione**. Coerente coi fatti-chiusi
-(α\*=0). **Resta aperto** solo come **benchmark quotato sharp** (Pinnacle, vig
-~2.7% = metà dell'1X2) per validare la **calibrazione** del router sulla
-famiglia-margine/scarto≥2 (Tier 2, mai aperto) — non ROI, non un secondo canale
-di inversione.
+a 3 vincoli **non aggiungerebbe informazione**. Coerente coi fatti-chiusi (α\*=0).
+**Come benchmark Tier 2: APERTO e VALIDATO (Fase 88).** Usato non come input ma
+come **prezzo esterno sharp** contro cui misurare la calibrazione del router sulla
+copertura del margine: su **7.437 partite × 3 leghe** il Brier del router è
+**indistinguibile** da quello del mercato AH (0.2040 vs 0.2041, corr modello-
+mercato 0.91) — dai soli λ,μ del 1X2+O/U il motore eguaglia il mercato che quota
+l'AH. È α\*=0 su un mercato nuovo (il margine). `scripts/_run_ah_benchmark.py`.
+Resta da fare (facoltativo): estrarre l'AH nel loader per esporlo nel tool e
+prezzare handicap/scarto anche dove servono operativamente.
 
 ### 6. Primo tempo (HTHG/HTAG/HTR) → mercati Tier 3 e fondazione live
 **Dato**: **9/9 stagioni**, mai estratto.

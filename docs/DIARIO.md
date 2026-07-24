@@ -218,6 +218,8 @@ dispersione per-squadra).*
 - [Fase 85 — La chiave per gli esiti MENO PROBABILI: anatomia della coda (θ diretto sul risultato esatto, e la COM-Poisson)](#fase-85--la-chiave-per-gli-esiti-meno-probabili-anatomia-della-coda-θ-diretto-sul-risultato-esatto-e-la-com-poisson)
 - [Fase 86 — Secondo audit orchestrato (workflow): fix di onestà, chiusure e il LEAD della dispersione per-squadra](#fase-86--secondo-audit-orchestrato-workflow-fix-di-onestà-chiusure-e-il-lead-della-dispersione-per-squadra)
 - [Fase 86-bis — Il verdetto walk-forward sul θ per-squadra: NON sfruttabile (il tetto regge anche nella coda)](#fase-86-bis--il-verdetto-walk-forward-sul-θ-per-squadra-non-sfruttabile-il-tetto-regge-anche-nella-coda)
+- [Fase 87 — La coda a DUE parametri, riprodotta: isotonica e mistura, entrambe chiuse](#fase-87--la-coda-a-due-parametri-riprodotta-isotonica-e-mistura-entrambe-chiuse)
+- [Fase 88 — Handicap asiatico come benchmark Tier 2: il router prezza il margine come il mercato sharp](#fase-88--handicap-asiatico-come-benchmark-tier-2-il-router-prezza-il-margine-come-il-mercato-sharp)
 
 ---
 
@@ -8927,6 +8929,137 @@ espandente `pastvol` usa solo stagioni `< s` (nessun look-ahead). Numeri
 riproducibili: `python scripts/_run_team_dispersion.py` (sezione walk-forward).
 Δ = +0.00096 su n=5.690, θ_g per stagione stampati (instabilità visibile).
 Diagnostico: nessun run in `runs.jsonl`.
+
+---
+
+## Fase 87 — La coda a DUE parametri, riprodotta: isotonica e mistura, entrambe chiuse
+
+**Obiettivo (utente, punto 1).** Chiudere pulite — col protocollo del repo — le
+due vie della «coda a due parametri» che l'audit della Fase 86 aveva solo tastato
+(PISTE §4-ter): (A) ricalibrazione **isotonica per-soglia** dei totali, (B)
+**mistura di due Poisson** su un fattore-tempo. La Fase 85 aveva mostrato che un
+solo θ non calibra ogni profondità della coda; qui si prova se un secondo
+parametro batte il router θ=1.225 **out-of-sample**.
+
+**Metodo.** `scripts/_run_tail_two_param.py`, sulla cache dei λ,μ del mercato
+(7.980 partite). (A) per ogni soglia Over 1.5/2.5/3.5/4.5, mappa isotonica (PAVA,
+scritto a mano — sklearn assente) fittata sulle stagioni passate e applicata al
+futuro; metro log-loss binario OOS + ECE. (B) `M(s) = ½·q(λ(1+s))⊗q(μ(1+s)) +
+½·q(λ(1−s))⊗q(μ(1−s))` con marginali dp θ=1.225 e ρ=−0.06, mean-preserving; s\*
+fittato sul passato (griglia 0–0.20) e applicato al futuro; metro exact-score
+log-loss OOS con **CI bootstrap appaiato** e scomposizione per-stagione.
+
+**Risultato — (A) isotonica: NEGATIVA su tutte le soglie.** Il router è già
+calibrato sui totali: la mappa isotonica **peggiora il log-loss OOS** ovunque —
+Over 1.5 **+0.0150**, Over 2.5 +0.0061, Over 3.5 +0.0104, Over 4.5 +0.0109 (l'ECE
+migliora solo su Over 1.5, peggiora su Over 3.5/4.5). Riproduce l'audit: la
+mis-calibrazione OOS dei totali col router è già ~0, quindi ricalibrare non fa che
+aggiungere rumore di stima. **Chiude PISTE §4-ter via (a).**
+
+**Risultato — (B) mistura: guadagno in-sample, ma OOS NON conclusivo e fragile.**
+In-sample il minimo è a s≈0.15 (exact-LL Δ **−0.0006**), coerente con l'audit.
+Ma il walk-forward smonta la promessa:
+
+| stagione | s\* | Δ exact-LL (mistura − router) |
+|---|--:|--:|
+| 2020-21 | 0.00 | 0.00000 |
+| 2021-22 | 0.15 | **−0.00301** ✓ |
+| 2022-23 | 0.15 | −0.00164 ✓ |
+| 2023-24 | 0.15 | −0.00055 ✓ |
+| 2024-25 | 0.15 | **+0.00140** ✗ |
+| 2025-26 | 0.15 | **+0.00125** ✗ |
+
+Aggregato Δ −0.00042, **CI95 [−0.00145, +0.00059], P(meglio) 78.6% → nel rumore**;
+e il segno **si ribalta negativo sulle due stagioni recenti** (2024-26). Il
+parametro s\*=0.15 è stabile ma il guadagno no: la mistura aiutava l'era
+porte-chiuse (2021-24, tanti gol) e **danneggia il calcio recente**. Esattamente
+la fragilità OOS che l'audit aveva segnalato — confermata qui con CI e
+scomposizione. **Non adottabile; PISTE §4-ter via (b) chiusa.**
+
+**Lezione.** Il «secondo parametro di forma» della coda — nelle sue due
+incarnazioni economiche — **non batte il singolo θ in modo conclusivo e
+generalizzabile**. È la terza conferma indipendente, dopo COM-Poisson (Fase 85) e
+θ per-squadra (Fase 86-bis), che la coda dei gol è **al tetto della forma**: la
+double-Poisson a un parametro è quanto di meglio si può fare senza informazione
+nuova. Nota di metodo: l'aggregato «−0.00042 MEGLIO» sembrava una vittoria finché
+il CI + la scomposizione per-stagione non l'hanno smontato — **mai concludere da
+una media senza il CI e senza guardare le stagioni recenti** (§1.7).
+
+### 📐 Il modello in dettaglio
+
+- **(A)** PAVA: si ordina per predizione, si poolano i blocchi adiacenti che
+  violano la monotonia (media pesata), si predice per interpolazione (`np.interp`
+  con estremi piatti). Walk-forward: fit su `season < s`, applica a `season == s`.
+- **(B)** mistura mean-preserving: `E[home] = ½λ(1+s)+½λ(1−s) = λ` (idem ospite),
+  quindi λ,μ restano le medie del mercato; la varianza **cresce** del termine
+  fra-componenti ∝ s² → coda più pesante. Marginali `_dp_pmf(·, θ=1.225)`,
+  correzione DC ρ=−0.06 sulla matrice mista, rinormalizzata. `s=0` riproduce
+  esattamente il router. CI bootstrap: 5.000 ricampionamenti della differenza
+  per-partita `ll_mistura − ll_router` sulle predizioni OOS. Riproducibile:
+  `python scripts/_run_tail_two_param.py`. Diagnostico, nessun run in `runs.jsonl`.
+
+---
+
+## Fase 88 — Handicap asiatico come benchmark Tier 2: il router prezza il margine come il mercato sharp
+
+**Obiettivo (utente, punto 4).** L'handicap asiatico (AH) è **ridondante come
+input** dell'inversione (corr 0.995 con λ−μ, Fase 86), ma è l'unico mercato
+**quotato e sharp** (Pinnacle, vig ~2.7%) sulla coda del **margine**. Qui non lo
+si usa per stimare: lo si usa per **validare la calibrazione** del router sulla
+famiglia-margine (copertura handicap / scarto) contro un prezzo esterno — il
+primo test **Tier 2** del progetto, dichiarato ma mai aperto (§1.8).
+
+**Metodo.** `scripts/_run_ah_benchmark.py`, tutte e 3 le leghe (Serie A dai CSV
+grezzi, Premier/Liga dai bundle football-data). Per ogni partita con chiusura
+1X2+O/U+AH: si inverte 1X2+O/U → λ,μ (ρ=−0.06), si costruisce la matrice del
+router (dp θ=1.225), e da lì la **P(la casa copre la linea AH)** come frazione-di-
+copertura attesa (gestisce linee intere/mezze/quarti: push=0.5, quarto=0.25/0.75).
+Il mercato: devig delle due quote AH di chiusura (Pinnacle se presente). Confronto
+su **7.437 partite**: correlazione modello-mercato, **Brier** di ciascuno vs la
+copertura realizzata, calibrazione.
+
+**Risultato — il router è ALLA PARI col mercato sharp.**
+
+| lega | n | corr(mod,mkt) | Brier modello | Brier mercato | reale |
+|---|--:|--:|--:|--:|--:|
+| Serie A | 2.478 | 0.911 | **0.2029** | 0.2029 | 0.474 |
+| Premier | 2.490 | 0.909 | **0.2083** | 0.2084 | 0.492 |
+| La Liga | 2.469 | 0.924 | **0.2007** | 0.2009 | 0.500 |
+| **TUTTE** | **7.437** | **0.915** | **0.2040** | **0.2041** | 0.488 |
+
+Il Brier del router e quello del mercato sono **indistinguibili** (0.2040 vs
+0.2041 in aggregato, e a coppie su ogni lega), con correlazione modello-mercato
+**0.91-0.92**. Cioè: dai soli λ,μ del 1X2+O/U, il motore prezza la copertura
+dell'handicap **con la stessa accuratezza del mercato sharp che quota l'AH
+direttamente** — senza aver mai visto le quote AH. È α\*=0 su un mercato **nuovo**
+(il margine), non più solo su 1X2/O/U: la struttura DC trasferisce l'informazione
+del mercato alla famiglia-margine senza perdite.
+
+**Onestà.** Sia modello sia mercato prevedono una copertura-casa media ~0.502
+contro un realizzato 0.488 (~1.4pp): un lieve ottimismo-casa **condiviso** (in
+parte la mia gestione dei push nel lato-mercato, in parte una proprietà della
+linea AH). Conta che è **identico per i due** → non è un difetto del router, ed è
+sotto il tetto (non si batte il mercato, lo si eguaglia). Il valore Tier 2 è
+quindi di **validazione/copertura del listino**, non di edge: ora il router ha un
+mercato-margine quotato contro cui è dimostrato calibrato, e può prezzare
+handicap e scarto per le leghe/partite dove servono, con l'errore atteso noto.
+
+**Lezione.** Chiude la pista #5 in positivo sul fronte che restava aperto (l'AH
+come **benchmark**, non come input): il router estende l'efficienza del mercato
+alla coda del margine. Insieme alla Fase 87 completa il quadro degli esiti meno
+probabili: **non c'è edge nuovo da spremere** (coda-forma al tetto, Fase 85-87;
+margine alla pari col mercato, qui), ma il **valore di copertura calibrata** è
+confermato su un mercato in più.
+
+### 📐 Il modello in dettaglio
+
+`P(casa copre h) = Σ_{i,j} M[i,j]·cover(i−j, h)` con `M = score_matrix(λ,μ,
+ρ=−0.06, dp_theta=1.225)` e `cover(margine, h)`: 1 se `margine+h ≥ 0.5`, 0.75 se
+`=0.25` (quarto vinto), 0.5 se `=0` (push), 0.25 se `=−0.25`, 0 se `≤−0.5`. Il
+margine atteso del mercato dalla devig delle due quote AH di chiusura; il
+realizzato è `cover(gol_casa − gol_ospite, h)`. Brier `= mean((P − realizzato)²)`.
+λ,μ invertiti da 1X2+O/U (nessun input dall'AH). Riproducibile:
+`python scripts/_run_ah_benchmark.py`. Diagnostico, nessun run in `runs.jsonl`.
 
 ---
 
