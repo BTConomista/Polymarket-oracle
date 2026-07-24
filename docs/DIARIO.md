@@ -9111,30 +9111,52 @@ non è backtestabile, manca lo storico).
    punti in testa capita nel **5.1%** dei casi (nella realtà: 0 volte su 27), e
    le regole **differiscono per lega**: Serie A e Liga usano gli **scontri
    diretti**, la Premier la **differenza reti**. Il caso che lo dimostra è reale
-   e ha conseguenze: nella **Liga 2025-26 Levante e Mallorca chiudono entrambe a
-   42 punti**; ordinando per differenza reti retrocederebbe Levante (−14 vs −10),
-   ma gli **scontri diretti** premiano Levante (4 punti a 1) → retrocede
-   **Mallorca**. Cambia la composizione della Liga 2026-27, e infatti la rosa che
+   e ha conseguenze: nella **Liga 2025-26 Levante, Osasuna e Mallorca chiudono
+   TUTTE E TRE a 42 punti**; la **classifica avulsa** fra le tre (Levante 7 −
+   Osasuna 5 − Mallorca 3) le ordina 16ª/17ª/18ª → retrocede **Mallorca**,
+   mentre con la sola differenza reti generale (−6 / −10 / −14) l'ordine sarebbe
+   esattamente invertito e retrocederebbe **Levante**. *(L'audit della Fase 90 ha
+   corretto il racconto iniziale, che parlava di una parità a due risolta da un
+   duello «4-1»: quel 4-1 è una sotto-cifra vera ma non è il criterio applicato.)* Cambia la composizione della Liga 2026-27, e infatti la rosa che
    Polymarket usa per il «2027 Champion» contiene Levante e non Mallorca: il
    mercato ha ragione, la classifica ingenua no. È in `tests/test_season_sim.py`
    come test di regressione sui dati reali.
 
-**Risultato 1 — il modello batte le baseline, in modo conclusivo.**
+**Risultato 1 — il modello batte le baseline, ma il margine dipende da QUALE
+baseline** *(numeri corretti dall'audit della Fase 90: la prima versione di
+questa fase usava solo le baseline deboli, e la baseline di persistenza —
+promessa nel docstring dello script — non era mai stata implementata)*.
 
 | | log-loss sul campione effettivo |
 |---|--:|
 | **MODELLO (MC dal DC)** | **1.1994** |
-| baseline «vince il campione uscente» (q ottimo leave-one-out) | 2.6515 |
-| baseline «vince il campione uscente» (q=0.33 **in-sample**, favorevole a lei) | 2.5995 |
-| baseline uniforme (1/20) | 2.9957 |
+| persistenza su 2 stagioni (β\*=2.5, w₂\*=1.5, tarati LOO) — **la più forte** | **1.4293** |
+| persistenza su 1 stagione (β\*=2.1, LOO) | 1.6636 |
+| «vince il campione uscente» (q ottimo LOO) | 2.6515 |
+| «vince il campione uscente» (q=0.33 in-sample, favorevole a lei) | 2.5995 |
+| uniforme (1/20) | 2.9957 |
 
-Guadagno vs la baseline più forte: **+1.4521**, IC95% bootstrap
-**[+1.1311, +1.7850]** → **conclusivo**, e il modello è migliore in **24/24
-stagioni** (nessuna eccezione). Brier multiclasse 0.6584; il campione reale
+La baseline di **persistenza** assegna `p_i ∝ exp(β·z_i)` con `z` = punti
+standardizzati delle stagioni precedenti (media pesata delle ultime due, peso
+`w₂` alla più vecchia; neopromosse imputate a `min(punti) − 3`). Usa TUTTA la
+classifica, non solo chi ha vinto: è un avversario molto più serio.
+
+| il modello contro… | guadagno | IC95% | stagioni vinte | esito |
+|---|--:|---|--:|---|
+| «campione uscente» | +1.4521 | [+1.1311, +1.7850] | 24/24 | conclusivo *(ma è la baseline più debole)* |
+| persistenza 1 stagione | +0.4642 | [+0.2022, +0.7397] | 19/24 | conclusivo |
+| **persistenza 2 stagioni** | **+0.2299** | **[+0.0108, +0.4542]** | **14/24** | **conclusivo per un soffio** |
+
+I numeri onesti sono gli ultimi: la baseline debole gonfiava il guadagno di
+**oltre un nat** e portava il conteggio a 24/24. E il vantaggio non è
+distribuito: **è quasi tutto Premier** (+0.5657, 7/8), mentre Serie A (+0.1197,
+4/8) e La Liga (+0.0045, 3/8) sono nel rumore. Cioè: il simulatore aggiunge
+qualcosa di solido dove una squadra domina, poco o nulla dove il titolo è
+conteso. Brier multiclasse 0.6584; il campione reale
 finisce in media al **rank 1.88** della nostra classifica di probabilità.
 Il problema è genuinamente difficile: il campione uscente si ripete solo **8
 volte su 24** (33%), anche se il **75%** dei campioni veniva dai primi 2
-dell'anno prima (caso estremo: Napoli 2024-25, era 9º).
+dell'anno prima (caso estremo: Napoli 2024-25, era 10º).
 
 **Risultato 2 — ma siamo SOVRA-CONFIDENTI, e si vede il meccanismo.**
 
@@ -9157,7 +9179,7 @@ imprevedibile — coerente con l'intuizione, ma qui è misurato.
 **Risultato 3 — la ricalibrazione ingenua NON funziona (negativo, documentato).**
 Se la sovra-confidenza è reale, ammorbidire le probabilità con una temperatura
 (`p^(1/T)` rinormalizzata) dovrebbe pagare. In-sample il T ottimo è 1.15 e
-guadagna 0.0101; ma in **leave-one-out** il log-loss diventa **1.2147**, cioè
+guadagna 0.0088; ma in **leave-one-out** il log-loss diventa **1.2160**, cioè
 **peggio del non fare nulla (1.1994)**. Con 24 osservazioni non c'è abbastanza
 segnale per stimare onestamente nemmeno **un** parametro di calibrazione. La
 correzione, se esiste, va fatta **strutturalmente** (iniettando la varianza
@@ -9213,9 +9235,13 @@ cdf[n] = cumsum(M_n.ravel()) ,  cdf[n] /= cdf[n][-1]      # rinormalizza il tron
 cella  = searchsorted(cdf[n], u) ,  u ~ Uniforme(0,1)
 gol_casa = cella // 11 ,  gol_ospite = cella % 11         # max_goals=10 -> K=11
 ```
-La divisione per `cdf[n][-1]` non è cosmetica: la matrice è troncata a 10 gol e
-la correzione Dixon-Coles rompe la somma a 1, quindi senza rinormalizzare si
-campionerebbe da una densità difettosa.
+La divisione per `cdf[n][-1]` è una **salvaguardia, non una correzione
+necessaria**: `_score_matrix` termina già con `matrix /= matrix.sum()`
+(`dixon_coles.py`), quindi le matrici arrivano normalizzate e la riga sposta
+massa per ~1e-16 (misurato sulle 380 matrici di Serie A 2025-26). Resta perché
+rende il campionamento corretto anche se un domani arrivasse una matrice non
+normalizzata. *(Precisazione dell'audit Fase 90: la prima stesura la dichiarava
+necessaria.)*
 
 **Perché 20.000 simulazioni.** L'errore Monte Carlo su una probabilità `p` è
 `sqrt(p(1−p)/N)`: con N=20.000 e p=0.5 vale **0.35pp**, trascurabile rispetto
@@ -9289,11 +9315,14 @@ di testa, ma nella **scelta dentro il gruppo**:
 |---|--:|--:|--:|
 | P(vince uno dei nostri primi 2) | 82.7% | 79.2% | −3.5pp |
 | P(vince uno dei nostri primi 3) | 92.2% | 95.8% | +3.7pp |
-| **scelta dentro il top-2** | **61.1%** | **53%** (10/19) | **−8pp** |
+| **scelta dentro il top-2** | **71.6%** | **52.6%** (10/19) | **−19pp** |
 
 Siamo **calibrati sul gruppo di testa** e sbagliati solo su come dividiamo la
-probabilità fra i suoi membri: prezziamo al ~61% ciò che nei fatti è un **lancio
-di moneta** (~53%). La sovra-confidenza cresce con la confidenza dichiarata
+probabilità fra i suoi membri: dato che il campione è uno dei nostri primi due,
+diamo al nostro primo il **71.6%** (media di `p₁/(p₁+p₂)`) e ne azzecchiamo il
+**52.6%** — un **lancio di moneta**. *(Audit Fase 90: la prima stesura
+confrontava `p₁` marginale, 61.1%, con una frequenza condizionata: due quantità
+diverse, e la sovra-confidenza ne usciva sottostimata di 10 punti.)* La sovra-confidenza cresce con la confidenza dichiarata
 (sopra il 70%: dichiarato 78.4%, realizzato 55.6%, −22.9pp).
 
 **B. Il valore rosa NON aiuta (negativo).** Ipotesi naturale: serve un segnale
@@ -9306,10 +9335,13 @@ dell'outright pre-stagionale. **Testato: lo copre.**
 | | log-loss | favorito azzeccato | sulle 16 di cambio |
 |---|--:|--:|--:|
 | DC base | **1.1994** | 10/24 | 2/16 |
-| DC + covariata `squad_value` | 1.2438 | 9/24 | 2/16 |
+| DC + covariata `squad_value` | 1.2384 | 9/24 | 2/16 |
 
-Delta **+0.0444** (IC95% [−0.1135, +0.0158], non conclusivo, ma il punto-stima
-è **peggiorativo**). Il β è **sempre positivo** (media +0.115): il segnale
+Guadagno **−0.0390** (IC95% [−0.1055, +0.0205]): non conclusivo, ma il
+punto-stima è **peggiorativo**. *(Audit Fase 90: la prima stesura riportava
+−0.0444 perché le due braccia usavano due simulatori diversi — uno con gli
+spareggi di lega, l'altro con la sola differenza reti; ~9% del delta era
+artefatto. Ora entrambe passano da `simulate_season(features=…)`.)* Il β è **sempre positivo** (media +0.115): il segnale
 esiste — rose più costose segnano di più — ma è **già contenuto nei gol e
 nell'xG**, esattamente come sulle singole partite. Un controllo grezzo lo
 conferma: la squadra col valore rosa più alto è campione 11/24 (46%) contro le
@@ -9364,6 +9396,145 @@ delle 24 differenze appaiate.
 
 Riproducibile: `python scripts/_run_fase89bis_anatomy.py --squad-value`
 (≈4 minuti). Dettaglio in `experiments/fase89bis_anatomy.json`.
+
+---
+
+## Fase 90 — Terzo audit orchestrato: i numeri-titolo della Fase 89 erano gonfiati
+
+**Obiettivo (richiesta utente).** «I dati sono giusti? Ciò che è scritto è
+giusto? Verifica tutti i backtest. Sistema il repo. I ragionamenti sono quelli
+giusti, o ne abbiamo tralasciati? Ci sono punti in sospeso?» Terzo audit del
+progetto dopo le Fasi 84 e 86, ma il primo che arriva **subito dopo** un lavoro
+nuovo (le Fasi 89/89-bis, fatte lo stesso giorno) invece che a distanza.
+
+**Metodo.** Workflow a 13 agenti: **6 lenti indipendenti** (dati, numeri, codice,
+ragionamenti, punti in sospeso, migliorie), ognuna seguita da una
+**contro-verifica avversaria** che prova a *demolire* i reperti invece di
+confermarli, con istruzione esplicita di scartare in caso di dubbio; poi una
+sintesi. Tutti gli agenti in **sola lettura**: le correzioni applicate a mano
+dopo, per non avere scritture concorrenti. ~2h10, 2 milioni di token.
+
+**Risultato 1 — i dati reggono, e con margine.** Le 10.260 righe dei tre snapshot
+sono state **ri-derivate dalle fonti grezze congelate**: zero discrepanze su gol,
+risultato, data e tiri in porta; zero duplicati; ogni coppia (casa, ospite)
+esattamente una volta in tutte e 27 le stagioni-lega; tutte e 24 le transizioni
+fra stagioni sono 3-OUT/3-IN reali (nessun alias mancante, il bug «Hellas Verona»
+non si è ripetuto). Le 27 classifiche finali ricalcolate **senza importare il
+codice del progetto** coincidono al 100% con `final_table`. Trovata **una sola
+anomalia mai dichiarata**: `Udinese-Roma 25/04/2024` è una partita **sospesa
+sull'1-1 e ripresa**, e le sue quote di chiusura prezzano la ripresa — P(pareggio)
+devigata **0.558** contro un massimo di 0.372 su tutte le altre 10.259 partite.
+Il dato è fedele alla fonte, ma accoppia un prezzo condizionato a uno stato di
+gioco con un esito full-match: falsa nella direzione a noi favorevole, e vale
+~9-12% dell'edge beat-the-close della Fase 51 (che resta dello stesso segno).
+Ora è dichiarata in `docs/DATI.md` §2.
+
+**Risultato 2 — il difetto grosso: le baseline della Fase 89 erano uomini di
+paglia.** Il docstring dello script prometteva una baseline «forza dalla
+classifica precedente» che **non era mai stata implementata**. Implementata qui:
+
+| il modello contro… | guadagno | IC95% | stagioni | esito |
+|---|--:|---|--:|---|
+| «vince il campione uscente» | +1.4521 | [+1.1311, +1.7850] | 24/24 | *(baseline debole)* |
+| persistenza 1 stagione | +0.4642 | [+0.2022, +0.7397] | 19/24 | conclusivo |
+| **persistenza 2 stagioni** | **+0.2299** | **[+0.0108, +0.4542]** | **14/24** | **per un soffio** |
+
+La baseline debole gonfiava il guadagno di **oltre un nat** e portava il
+conteggio a 24/24. E il vantaggio **non è distribuito**: +0.5657 in Premier
+(7/8), +0.1197 in Serie A (4/8), **+0.0045 in Liga** (3/8). La conclusione
+«il simulatore batte le baseline» sopravvive; i due numeri-titolo no.
+*(Nota di metodo: la griglia della baseline è stata estesa finché l'ottimo non è
+caduto all'interno — β\*≈2.5, w₂\*≈1.5. Con un tetto a w₂=1 la baseline usciva
+sottostimata e il guadagno del modello sovrastimato: un ottimo al bordo della
+griglia è sempre un sospetto.)*
+
+**Risultato 3 — due bug reali nel tool Polymarket, verificati su dati live.**
+(a) L'1X2 assegnava le domande per **prima parola** del nome squadra: nei derby
+(«Manchester City» / «Manchester United», «Real Madrid» / «Real Betis») la
+domanda dell'ospite finiva nel ramo della casa e **l'intera partita usciva senza
+1X2** — 59 casi su 59 nel campione dell'auditor. (b) I mercati **per-tempo** e
+**per-squadra** («1st Half O/U 2.5», «Roma O/U 2.5») contengono la stessa
+sottostringa del mercato vero e, con una `re.search`, l'ultimo incontrato lo
+**sovrascriveva**: O/U 2.5 sbagliato in 6 partite su 28 (0.500 estratto contro
+0.295 reale). Entrambi corretti, con test di regressione. Aggiunto anche un
+flag `usable`: su book morti (spread bid/ask fino a 0.99) l'«overround» esce
+0.895 o 1.679 e quel prezzo non va dato in pasto a `market_implied`.
+
+**Risultato 4 — tre imprecisioni di misura nelle Fasi 89/89-bis.**
+- Il confronto «61.1% contro 53%» sulla scelta dentro il top-2 metteva una
+  probabilità **marginale** accanto a una frequenza **condizionata**. La quantità
+  giusta è `p₁/(p₁+p₂)` = **71.6%** contro **52.6%**: la sovra-confidenza era
+  sottostimata di 10 punti, non sopravvalutata.
+- Il test su `squad_value` confrontava **due simulatori diversi** (uno con gli
+  spareggi di lega, l'altro con la sola differenza reti): ~9% del delta era
+  artefatto. Rifatto alla pari: −0.0390 invece di −0.0444. Verdetto invariato.
+- `simulate_season` restituiva un `rank` che ignorava gli spareggi e
+  contraddiceva `champion_prob` nell'~1% delle simulazioni. Latente (nessuno lo
+  usava) ma è output pubblico: ora la vetta è coerente per costruzione.
+
+**Risultato 5 — cosa NON era stato ragionato.** Due omissioni sostanziali:
+(a) il simulatore calcola già una matrice `rank` e **la butta via**: da lì
+escono P(top-4) e P(retrocessione), mercati veri, con **480 osservazioni
+binarie** invece delle 24 di cui ci lamentiamo, senza una riga di modellistica
+nuova; (b) diciamo che «battiamo il mercato non è testabile all'indietro»
+sull'outright perché mancano le quote outright storiche — vero alla lettera, ma
+il **parere del mercato sulle forze** c'è in ogni stagione (le quote 1X2+O/U di
+ogni partita, invertibili col motore titolare: 21 stagioni-lega su 24 hanno la
+copertura), e quel benchmark non è mai stato costruito. Inoltre la deriva 0.189
+è per circa il **38% in varianza rumore di stima** (deriva vera ≈0.14-0.15):
+le due leve previste in PISTE **non vanno sommate**.
+
+**Risultato 6 — cosa ha retto.** Tre critiche promettenti sono state **demolite
+in contro-verifica**: il test di Poisson-binomiale non è invalidato dalla
+dipendenza fra stagioni; la spiegazione del fallimento della ricalibrazione era
+già quella giusta; le Fasi 53 e 75 non si contraddicono. E sono stati superati
+controlli mai fatti prima: α\*=0 della Fase 16 tiene anche col **log-pool** (il
+DC aggiunge +0.00005); la bocciatura di `squad_value` tiene anche sull'uso
+alternativo mai provato (delta estivo anno-su-anno); la conclusione della Fase 89
+sopravvive a bootstrap **a blocchi** per lega e per stagione. Riprodotti alla
+sesta cifra tutti i numeri di testa delle fasi precedenti campionati (gap
++0.0165, ROI −15.7% su 864 bet, O/U 0.6885, δ 0.23/0.33/0.22, θ 1.225/1.138,
+Brier AH 0.2040), e le Fasi 89/89-bis sono **riproducibili bit-per-bit** fra
+processi diversi.
+
+**Lezione.** Il valore dell'audit non è stato trovare dati sbagliati — quelli
+erano a posto — ma **il metro**: la Fase 89 misurava contro un avversario che non
+aveva alcuna possibilità, e nessuno se ne era accorto perché il docstring
+prometteva la baseline giusta e il codice non la conteneva. Regola operativa che
+ne esce: **quando una fase dichiara di battere una baseline, la baseline va
+implementata come se dovesse vincere lei** — e se l'ottimo dei suoi
+iperparametri cade al bordo della griglia, la griglia è troppo stretta.
+
+### 📐 Il modello in dettaglio
+
+**La baseline di persistenza** (`persistence_probs` in
+`_run_fase89_season_champion.py`):
+```
+z_i   = (punti_i - media(punti)) / dev.std(punti)        # stagione precedente
+punti = (punti_{S-1} + w2 * punti_{S-2}) / (1 + w2)      # se w2 > 0
+p_i   = exp(beta * z_i) / somma_j exp(beta * z_j)
+```
+Le neopromosse, assenti dalla classifica precedente, sono imputate a
+`min(punti) − 3`: sono in media più deboli dell'ultima classificata, che è
+appena retrocessa. `beta` misura quanto «conta» la classifica passata (β=0 →
+uniforme) e `w2` quanto pesa la penultima stagione. Entrambi tarati in
+**leave-one-out**: per ogni stagione si ottimizza sulle altre 23 e si valuta su
+quella esclusa, così la baseline non è penalizzata da una taratura in-sample
+mentre il modello lo sarebbe. Ottimi: β\*=2.5, w₂\*=1.5 (interni alla griglia
+β∈[0,4], w₂∈{0, 0.5, 1, 1.5, 2}).
+
+**La quota condizionata del top-2.** Dato che il campione è uno dei nostri primi
+due, la nostra probabilità che sia **il primo** è `p₁/(p₁+p₂)`, non `p₁`.
+Confrontare `p₁` (marginale) con la frequenza condizionata 10/19 mescolava due
+quantità diverse. Media di `p₁/(p₁+p₂)` sulle 19 stagioni: **0.716**.
+
+**La temperatura**, ora riproducibile (`temperature_recal`):
+`p_i(T) = p_i^{1/T} / Σ_j p_j^{1/T}`, griglia T∈[0.80, 3.00] passo 0.01.
+T\*=1.15 in-sample (guadagno 0.0088), ma in leave-one-out **1.2160 contro
+1.1994**: peggio del non fare nulla.
+
+Riproducibile: `python scripts/_run_fase89_season_champion.py --nsim 20000` e
+`python scripts/_run_fase89bis_anatomy.py --squad-value`. 158 test verdi.
 
 ---
 

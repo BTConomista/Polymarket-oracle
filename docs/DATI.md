@@ -84,6 +84,24 @@ Note importanti:
 
 ---
 
+### ⚠️ Anomalia nota: Udinese-Roma 25/04/2024 (Serie A 2023-24)
+
+La partita fu **sospesa il 14/04/2024 sull'1-1** (malore in campo) e **ripresa
+l'25/04** per gli ultimi ~18 minuti. Il dato è **fedele alla fonte** (football-data
+riporta davvero `AvgCD` 1.72), ma le **quote di chiusura prezzano la ripresa**,
+non la partita intera: la P(pareggio) devigata vale **0.558**, contro un massimo
+di 0.372 su tutte le altre 10.259 partite del progetto. L'**apertura** sulla
+stessa riga è invece normale (0.291), e lo scarto apertura→chiusura di 0.267 è il
+più grande dell'intero dataset (il secondo è 0.167).
+
+Conseguenza: quella riga accoppia un **prezzo condizionato a uno stato di gioco**
+con un **esito full-match**, e falsa nella direzione a noi favorevole ogni
+confronto «beat-the-close». Impatto misurato (audit Fase 90): sostituendola con
+l'apertura, il log-loss della chiusura devigata passa da 0.962456 a 0.962261
+(+0.000194), cioè ~9-12% dell'edge di `sharpen_1x2` della Fase 51 (0.0016) — che
+resta dello stesso segno. **Da escludere (o usare l'apertura) in ogni analisi
+beat-the-close.**
+
 ## 3 · Calendari di club (congestione vera)
 
 Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
@@ -93,7 +111,7 @@ Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
 |---|--:|---|
 | `data/club_fixtures.csv` (Serie A) | 11657 | Champions (9 stagioni), Europa L. (dal 20-21), Conference (dal 21-22), Coppa Italia (20-21→24-25) + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68) |
 | `data/club_fixtures_premier_league.csv` | 11994 | idem UEFA + **FA Cup, EFL Cup** (18-19→24-25) + preludio: Premier 2016-17, Championship 1617→2425 |
-| `data/club_fixtures_la_liga.csv` | 11643 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
+| `data/club_fixtures_la_liga.csv` | 12102 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
 
 Dove una competizione non è coperta, `rest_days_full` degrada verso il valore
 solo-campionato (mai in direzione sbagliata) e `midweek_europe` può essere un

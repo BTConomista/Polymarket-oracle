@@ -1,10 +1,15 @@
 """Test del simulatore di stagione (Fase 89): classifica, spareggi, Monte Carlo.
 
 Il test piu' importante e' quello sugli SCONTRI DIRETTI: nella Liga 2025-26
-Levante e Mallorca chiudono entrambe a 42 punti e la regola ufficiale (scontri
-diretti PRIMA della differenza reti) decide che retrocede Mallorca — il che
-cambia la composizione della lega 2026-27. Un ordinamento per sola differenza
-reti darebbe la risposta sbagliata.
+Levante, Osasuna e Mallorca chiudono TUTTE E TRE a 42 punti, e la regola
+ufficiale (classifica avulsa fra le squadre a pari punti, PRIMA della differenza
+reti generale) le ordina 16a/17a/18a facendo retrocedere Mallorca — il che cambia
+la composizione della lega 2026-27. Con la sola differenza reti l'ordine sarebbe
+invertito e retrocederebbe Levante.
+
+NB (audit Fase 90): il caso e' una parita' a TRE, non il duello Levante-Mallorca
+"4-1" raccontato inizialmente; il test lo verifica su tutte e tre le squadre,
+altrimenti passerebbe anche con una avulsa implementata male.
 """
 import itertools
 
@@ -64,10 +69,11 @@ def test_tiebreak_rules_per_league():
     assert league_tiebreak("lega_ignota") == ("gd", "gf")
 
 
-def test_real_case_levante_mallorca_la_liga_2526():
-    """Caso reale: entrambe 42 punti; Levante vince gli scontri diretti (4-1) e
-    resta in Liga, Mallorca retrocede. Con la sola differenza reti (Mallorca -10
-    vs Levante -14) l'ordine sarebbe INVERTITO."""
+def test_real_case_three_way_tie_la_liga_2526():
+    """Caso reale: Levante, Osasuna e Mallorca tutte a 42 punti. La classifica
+    avulsa fra le tre (Levante 7 - Osasuna 5 - Mallorca 3) le ordina in
+    quell'ordine; con la sola differenza reti generale (Osasuna -6, Mallorca -10,
+    Levante -14) l'ordine sarebbe ESATTAMENTE INVERTITO e retrocederebbe Levante."""
     pytest.importorskip("pandas")
     from src.data import loader
     df = loader.load_league("la_liga")
@@ -76,9 +82,26 @@ def test_real_case_levante_mallorca_la_liga_2526():
         pytest.skip("snapshot La Liga 2526 non disponibile")
     t = final_table(season, "la_liga")
     pos = list(t.index)
-    assert t.loc["Levante", "pts"] == t.loc["Mallorca", "pts"], "il caso non e' piu' a pari punti"
-    assert t.loc["Mallorca", "gd"] > t.loc["Levante", "gd"], "la DR non e' piu' a favore di Mallorca"
-    assert pos.index("Levante") < pos.index("Mallorca"), "gli scontri diretti non sono applicati"
+    tied = ["Levante", "Osasuna", "Mallorca"]
+    assert {int(t.loc[x, "pts"]) for x in tied} == {42}, "il caso non e' piu' una parita' a tre"
+    # la differenza reti generale darebbe l'ordine opposto: e' cio' che rende
+    # il caso una prova vera della avulsa
+    assert t.loc["Osasuna", "gd"] > t.loc["Mallorca", "gd"] > t.loc["Levante", "gd"]
+    assert pos.index("Levante") < pos.index("Osasuna") < pos.index("Mallorca"), \
+        "la classifica avulsa a TRE non e' applicata correttamente"
+    assert pos[-3:] == ["Mallorca", "Girona", "Oviedo"], "retrocesse sbagliate"
+
+
+def test_rank_is_consistent_with_champion():
+    """`rank` deve dire 1 esattamente per la squadra che `champion_prob` premia:
+    la vetta segue gli spareggi di lega, la chiave punti->DR->gol no."""
+    teams = ["A", "B", "C"]
+    out = simulate_season(_StubModel(), round_robin(teams), teams,
+                          league_key="serie_a", n_sims=100, seed=5)
+    firsts = (out["rank"] == 1).argmax(axis=1)
+    assert (out["rank"] == 1).sum(axis=1).min() == 1     # un solo primo per stagione
+    i = out["teams"].index("A")
+    assert (firsts == i).all()
 
 
 # ------------------------------------------------------------- girone doppio --
@@ -98,7 +121,7 @@ class _StubModel:
     max_goals = 3
     attack = {"A": 0.0, "B": 0.0, "C": 0.0, "D": 0.0}
 
-    def predict_match(self, home, away):
+    def predict_match(self, home, away, features=None):
         M = np.zeros((4, 4))
         if home == "A":
             M[1, 0] = 1.0

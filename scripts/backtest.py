@@ -35,7 +35,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.config import SERIE_A
+from src.config import league_config
 from src.data import loader, sources
 from src.evaluation import experiment_log
 from src.models.dixon_coles import DixonColesModel
@@ -195,20 +195,30 @@ def report(m: dict, n_matches: int) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Backtest Dixon-Coles.")
-    parser.add_argument("--league", default="serie_a")
+    # Pre-parse di --league PRIMA di costruire i default: gli iperparametri
+    # devono venire dalla config di QUELLA lega. Importare SERIE_A e usarlo come
+    # default faceva girare `--league premier_league` con delta=0.23 invece di
+    # 0.33 (audit Fase 90) — lo stesso difetto corretto in predict.py alla
+    # Fase 83-bis, dove vale la regola: i punti d'ingresso utente leggono da
+    # league_config, mai da una costante di lega.
+    pre = argparse.ArgumentParser(add_help=False)
+    pre.add_argument("--league", default="serie_a")
+    cfg = league_config(pre.parse_known_args()[0].league)
+
+    parser = argparse.ArgumentParser(description="Backtest Dixon-Coles.",
+                                     parents=[pre])
     parser.add_argument("--test-season", default=sources.SEASONS[-1],
                         help="stagione di test (default: l'ultima)")
-    parser.add_argument("--half-life-days", type=float, default=SERIE_A["half_life_days"],
+    parser.add_argument("--half-life-days", type=float, default=cfg["half_life_days"],
                         help="emivita del decadimento temporale in giorni "
                              "(default da src/config.py, ri-tarato col blend xG in Fase 4d)")
-    parser.add_argument("--shrinkage", type=float, default=SERIE_A["shrinkage"],
+    parser.add_argument("--shrinkage", type=float, default=cfg["shrinkage"],
                         help="forza della regolarizzazione verso la media "
                              "(default da src/config.py, scelto via scripts/tune.py)")
-    parser.add_argument("--shots-blend", type=float, default=SERIE_A["shots_blend"],
+    parser.add_argument("--shots-blend", type=float, default=cfg["shots_blend"],
                         help="peso alpha gol vs segnale secondario (1=solo gol, "
                              "0=solo segnale; default da src/config.py, Fase 4b)")
-    parser.add_argument("--blend-signal", default=SERIE_A["blend_signal"],
+    parser.add_argument("--blend-signal", default=cfg["blend_signal"],
                         choices=["sot", "xg", "npxg"],
                         help="segnale secondario da mescolare (default xg=xG reale; "
                              "sot=tiri in porta)")
@@ -218,7 +228,7 @@ def main() -> None:
                         help="covariate di partita da aggiungere (Fase 4c/32/33; "
                              "midweek=dummy congestione europea, Punto 2)")
     parser.add_argument("--promoted-prior", type=float,
-                        default=SERIE_A["promoted_prior"], metavar="DELTA",
+                        default=cfg["promoted_prior"], metavar="DELTA",
                         help="prior di cold-start per le neopromosse (Fase 7, config "
                              "ufficiale da src/config.py): sposta il bersaglio dello "
                              "shrinkage a attacco -DELTA / difesa +DELTA (piu' debole). "

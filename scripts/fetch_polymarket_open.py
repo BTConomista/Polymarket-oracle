@@ -134,6 +134,53 @@ def _base_slug(slug):
     return slug
 
 
+def _which_team(question, home, away):
+    """A quale squadra si riferisce «Will X win on ...?» — 'home', 'away' o None.
+
+    Si confronta il nome COMPLETO (vince il piu' lungo). La prima parola e' un
+    criterio ambiguo e va usata solo come ripiego: 'Manchester City' e
+    'Manchester United' la condividono, e con quel criterio la domanda
+    sull'OSPITE finiva nel ramo della casa -> `away` restava None e l'intero
+    1X2 della partita andava perso (audit Fase 90: 59 partite su 59 con prima
+    parola condivisa uscivano senza 1X2; nelle nostre leghe riguarda i derby di
+    Manchester e Real Madrid/Betis/Sociedad).
+    """
+    ql = question.lower()
+    hits = [(len(name), role)
+            for role, name in (("home", home), ("away", away))
+            if name and name.lower() in ql]
+    if hits:
+        hits.sort(reverse=True)
+        if len(hits) > 1 and hits[0][0] == hits[1][0]:
+            return None                      # ambiguita' vera: meglio scartare
+        return hits[0][1]
+    # ripiego sulla prima parola, ma SOLO se ne combacia esattamente una
+    first = [role for role, name in (("home", home), ("away", away))
+             if name and name.split()[0].lower() in ql]
+    return first[0] if len(first) == 1 else None
+
+
+_OU_LABEL = re.compile(r"^O/U\s*(\d+(?:\.\d+)?)$", re.I)
+
+
+def _full_match_label(market):
+    """Etichetta del mercato ripulita dal titolo della partita, o None.
+
+    Serve a distinguere il mercato del MATCH INTERO dai suoi omonimi per-tempo
+    ('1st Half O/U 1.5') e per-squadra ('<squadra> O/U 1.5'), che contengono la
+    stessa sottostringa: con una `re.search` l'ultimo incontrato sovrascriveva
+    la linea vera (audit Fase 90: O/U 2.5 sbagliato in 6 partite su 28, es.
+    0.500 estratto contro 0.295 reale).
+    """
+    git = (market.get("groupItemTitle") or "").strip()
+    if git:
+        return git
+    # senza groupItemTitle l'etichetta e' la coda della domanda,
+    # "Squadra A vs. Squadra B: O/U 2.5"
+    q = (market.get("question") or "")
+    return q.rsplit(":", 1)[-1].strip() if ":" in q else None
+
+
 # --------------------------------------------------------------------------- #
 # Ricostruzione partite di calcio                                             #
 # --------------------------------------------------------------------------- #
@@ -171,34 +218,41 @@ def build_soccer_matches(events):
 
             for m in (ev.get("markets") or []):
                 q = (m.get("question") or "")
-                git = (m.get("groupItemTitle") or "")
                 o = market_outcomes(m)
 
                 # 1X2: tre mercati Yes/No nell'evento base
+                role = None
                 if "end in a draw" in q.lower():
-                    rec.setdefault("_p", {})["draw"] = o.get("Yes")
+                    role = "draw"
                 elif re.match(r"^Will .* win", q) and rec.get("home"):
-                    if rec["home"].split()[0].lower() in q.lower() \
-                            or rec["home"].lower() in q.lower():
-                        rec.setdefault("_p", {})["home"] = o.get("Yes")
-                    elif rec.get("away") and (
-                            rec["away"].split()[0].lower() in q.lower()
-                            or rec["away"].lower() in q.lower()):
-                        rec.setdefault("_p", {})["away"] = o.get("Yes")
+                    role = _which_team(q, rec["home"], rec.get("away"))
+                if role:
+                    rec.setdefault("_p", {})[role] = o.get("Yes")
+                    # spread bid/ask: misura se il prezzo e' VIVO. Su Polymarket
+                    # outcomePrices e' l'ultimo scambio, non un mid: su un book
+                    # morto (spread 0.01-0.99) il "prezzo" e' arbitrario e la
+                    # somma dei tre esiti finisce fuori da ogni margine sensato
+                    # (osservati overround 0.895 e 1.679 su partite illiquide).
+                    try:
+                        sp = float(m.get("bestAsk")) - float(m.get("bestBid"))
+                        rec.setdefault("_spread", []).append(sp)
+                    except (TypeError, ValueError):
+                        rec.setdefault("_spread", []).append(float("nan"))
 
-                # O/U: groupItemTitle "O/U 2.5"
-                mu = re.search(r"O/U\s*([\d.]+)", git) or \
-                    re.search(r"O/U\s*([\d.]+)", q)
-                if mu and "Over" in o:
-                    rec["over_under"][mu.group(1)] = {
-                        "over": o.get("Over"), "under": o.get("Under")}
-
-                # BTTS
-                if "both teams to score" in (git + " " + q).lower() \
-                        and "Yes" in o:
-                    rec["btts"] = {"yes": o.get("Yes"), "no": o.get("No")}
+                # O/U e BTTS: SOLO l'etichetta esatta del match intero
+                # (vedi _full_match_label: 'O/U 2.5' si', '1st Half O/U 2.5' no)
+                label = _full_match_label(m)
+                if label:
+                    mu = _OU_LABEL.match(label)
+                    if mu and "Over" in o:
+                        rec["over_under"][mu.group(1)] = {
+                            "over": o.get("Over"), "under": o.get("Under")}
+                    elif label.lower() == "both teams to score" and "Yes" in o:
+                        rec["btts"] = {"yes": o.get("Yes"), "no": o.get("No")}
 
         p = rec.pop("_p", {})
+        spreads = [s for s in rec.pop("_spread", []) if s == s]   # scarta i NaN
+        rec["max_spread"] = round(max(spreads), 4) if spreads else None
         if all(p.get(k) is not None for k in ("home", "draw", "away")):
             s = p["home"] + p["draw"] + p["away"]
             rec["one_x_two"] = {
@@ -206,6 +260,12 @@ def build_soccer_matches(events):
                 "devig": {k: round(p[k] / s, 4)
                           for k in ("home", "draw", "away")},
                 "overround": round(s, 4),
+                # PREZZO UTILIZZABILE? Un book vivo ha overround > 1 (il vig) e
+                # spread stretti. Fuori da questa banda il prezzo e' l'ultimo
+                # scambio su un book fermo: NON darlo in pasto a market_implied.
+                "usable": bool(1.0 <= s <= 1.6
+                               and (rec["max_spread"] is None
+                                    or rec["max_spread"] <= 0.15)),
             }
         matches.append(rec)
 

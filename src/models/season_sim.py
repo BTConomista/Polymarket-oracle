@@ -26,16 +26,18 @@ DUE PROPRIETA' NON OVVIE, entrambe verificate alla Fase 89:
 (b) **Gli spareggi contano davvero.** Nelle stagioni simulate la parita' di punti
     in testa capita nel ~5% dei casi (molto piu' che nella realta' osservata:
     0 volte su 27 stagioni reali). E le regole DIFFERISCONO per lega: Serie A e
-    La Liga usano gli SCONTRI DIRETTI, la Premier la DIFFERENZA RETI. Non e'
-    pedanteria: nel 2025-26 la Liga ha retrocesso Mallorca invece di Levante
-    proprio per gli scontri diretti (Levante 4 punti a 1), il che cambia la
-    composizione della lega 2026-27.
+    La Liga usano la CLASSIFICA AVULSA fra le squadre a pari punti, la Premier
+    la DIFFERENZA RETI. Non e' pedanteria: nel 2025-26 la Liga ha chiuso con
+    Levante, Osasuna e Mallorca TUTTE E TRE a 42 punti, e l'avulsa fra le tre
+    (Levante 7 - Osasuna 5 - Mallorca 3) le ha ordinate 16a/17a/18a facendo
+    retrocedere Mallorca; con la sola differenza reti generale (-6/-10/-14)
+    sarebbe retrocesso Levante. Cambia la composizione della lega 2026-27.
 
 Limite dichiarato (Fase 89): le forze delle squadre sono stimate a inizio
 stagione e tenute FISSE per 10 mesi. Il simulatore cattura quindi solo
 l'aleatorieta' dei risultati, NON l'incertezza sui parametri ne' la loro
 evoluzione (mercato estivo, infortuni, cambi allenatore). Risultato misurato:
-le probabilita' sul favorito escono SOVRASTIMATE (60.5% dichiarato contro 41.7%
+le probabilita' sul favorito escono SOVRASTIMATE (60.1% dichiarato contro 41.7%
 realizzato sulle 24 stagioni di backtest).
 """
 from __future__ import annotations
@@ -164,6 +166,7 @@ def simulate_season(
     n_sims: int = 20000,
     seed: int = 0,
     chunk: int = 2000,
+    features=None,
 ) -> dict:
     """Campiona ``n_sims`` stagioni intere e ritorna le statistiche finali.
 
@@ -175,11 +178,21 @@ def simulate_season(
         n_sims: numero di stagioni simulate. L'errore Monte Carlo su una
             probabilita' p e' sqrt(p(1-p)/n): con n=20000 e p=0.5 vale 0.35
             punti percentuali, trascurabile rispetto agli scarti che misuriamo.
+        features: opzionale, ``f(casa, ospite) -> dict`` con i valori di partita
+            per le covariate del DC (Fase 4c). Serve per confrontare varianti
+            CON e SENZA covariata usando lo STESSO simulatore: reimplementare il
+            ciclo fuori di qui fa divergere le due braccia (audit Fase 90: il
+            test su squad_value confrontava due regole di spareggio diverse e
+            ~9% del suo delta era artefatto).
 
     Ritorna un dict con:
-        champion_prob : array [n_teams] con P(campione)
+        champion_prob : array [n_teams] con P(campione), con gli spareggi di lega
         points        : matrice [n_sims x n_teams] dei punti finali
-        rank          : matrice [n_sims x n_teams] delle posizioni (1 = primo)
+        rank          : matrice [n_sims x n_teams] delle posizioni (1 = primo).
+            ATTENZIONE: dalla 2a posizione in giu' l'ordine e' punti -> differenza
+            reti -> gol fatti, NON gli spareggi ufficiali (che sono applicati solo
+            alla vetta, l'unica che ci serve). La posizione 1 e' invece sempre
+            coerente con ``champion_prob``.
         tie_rate      : frazione di stagioni con parita' di PUNTI in testa
         teams         : la lista delle squadre (ordine delle colonne)
     """
@@ -205,8 +218,11 @@ def simulate_season(
     K = model.max_goals + 1
     cdfs = np.empty((n_f, K * K))
     for n, (h, a) in enumerate(fixtures):
-        cdfs[n] = np.cumsum(model.predict_match(h, a).score_matrix.ravel())
-    cdfs /= cdfs[:, -1:]          # rinormalizza (il troncamento perde massa)
+        f = features(h, a) if features else None
+        cdfs[n] = np.cumsum(model.predict_match(h, a, features=f).score_matrix.ravel())
+    # _score_matrix rinormalizza gia' a 1: questa divisione e' una salvaguardia
+    # (sposta massa per ~1e-16), non una correzione necessaria.
+    cdfs /= cdfs[:, -1:]
 
     hidx = np.array([ti[h] for h, _ in fixtures])
     aidx = np.array([ti[a] for _, a in fixtures])
@@ -258,6 +274,17 @@ def simulate_season(
            + (gdiff.astype(np.int64) + 200) * 10_000
            + gfor.astype(np.int64))
     rank = (-key).argsort(axis=1).argsort(axis=1) + 1
+    # Coerenza con champion_prob: dove gli spareggi di lega hanno assegnato la
+    # vetta a una squadra diversa da quella che vince per differenza reti, si
+    # scambiano le due posizioni. Senza questo, `rank` e `champion_prob` si
+    # contraddicono nell'~1% delle simulazioni di Serie A/Liga (audit Fase 90).
+    wrong = rank[np.arange(n_sims), champion] != 1
+    if wrong.any():
+        idx = np.flatnonzero(wrong)
+        other = rank[idx].argmin(axis=1)          # chi era in testa per gd/gf
+        r_ch = rank[idx, champion[idx]]
+        rank[idx, other] = r_ch
+        rank[idx, champion[idx]] = 1
 
     counts = np.bincount(champion, minlength=n_t)
     return dict(

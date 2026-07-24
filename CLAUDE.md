@@ -84,8 +84,9 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      pareggi sovra-prezzati, ROI pari-equilibrio −5.4%); **dp_lvl non batte la
      chiusura fuori dalla Serie A** anche rifittata → il beat-the-close è una
      proprietà della chiusura Serie A (meno liquida), non del calcio. Le costanti
-     del motore restano dichiaratamente per-lega (§7). Aperto: port completo DC
-     su Premier/Liga coi bundle Understat (Fase 53-bis).
+     del motore restano dichiaratamente per-lega (§7). Il port su Premier/Liga e'
+     stato poi COMPLETATO (Fasi 54-57): snapshot congelati e config per-lega in
+     LEAGUE_CONFIGS; il seguito vive in docs/STUDIO_PREMIER_LIGA.md.
 9. **Ogni modello si sviluppa su DUE FRONTI e si traccia nella rosa (Fase 65).**
    Per ogni modello/leva vanno considerate e valutate DUE versioni:
    - **per-lega**: costanti/iperparametri ritarati sulla singola lega (es. DC
@@ -336,8 +337,10 @@ mercato** (non di più).
 (outright) è il primo che NON si deriva dalla matrice di una partita: dipende da
 380 partite congiuntamente + la regola di classifica, quindi va **simulato**
 (`src/models/season_sim.py`, Monte Carlo di 20.000 stagioni). Batte le baseline
-in modo conclusivo (log-loss 1.1994 vs 2.6515, migliore in 24/24 stagioni-lega)
-ma è **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecca 41.7%): mancano
+(log-loss 1.1994 contro 1.4293 della più forte — persistenza dalla classifica su
+2 stagioni: guadagno +0.2299, IC95% [+0.0108,+0.4542], 14/24 stagioni, e il
+vantaggio è **quasi tutto Premier**) ma è **sovra-confidente** (dichiara 60.1%
+sul favorito, ne azzecca 41.7%): mancano
 l'incertezza dei parametri e la loro evoluzione in-season. Non esistono quote
 outright storiche → «battiamo il mercato» NON è testabile all'indietro. È una
 pista **ricorrente**: si riprezza a ogni inizio stagione (promemoria operativo in

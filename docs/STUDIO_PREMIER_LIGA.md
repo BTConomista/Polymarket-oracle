@@ -301,9 +301,10 @@ Run `fase82_verifica_predizioni` (3): calibrazione (bias, ECE) e hit-rate su
 
 ## 7 · Prossimi passi / dati che sbloccherebbero altro
 
-1. **Handicap asiatico** (PISTE #5): terzo vincolo d'inversione, presente nei
-   grezzi PL/Liga 2019+ come in SA — migliorerebbe il motore titolare su tutte
-   e tre le leghe insieme.
+1. ~~**Handicap asiatico** come terzo vincolo d'inversione~~ — **CHIUSO
+   NEGATIVO (Fase 86)**: l'AH correla **0.9952** con λ−μ già ricavata da
+   1X2+O/U, quindi non porta informazione nuova. Resta valido come **benchmark**
+   Tier 2 (Fase 88: Brier del router 0.2040 contro 0.2041 del mercato sharp).
 2. **Chiusura O/U 2017-19** (PISTE #19): stesso buco su tutte e tre le leghe.
 3. **Paper-trading draw-bias**: SOLO Serie A (e forse Liga); su PL il segno è
    opposto — ogni strategia-pareggio va tenuta lontana dalla Premier.

@@ -212,6 +212,9 @@ Aspettativa onesta: bassa sul migliorare 1X2/O/U (tetto informativo, Fasi
 utente reale otterrebbe col best-price. Rifare le simulazioni chiave
 (Fasi 14/40/51) al best-price è un test economico che può cambiare le
 conclusioni operative (in meglio: il margine effettivo si riduce).
+**ESITO PARZIALE (Fase 86)**: il ROI 1X2 2025-26 rifatto al best-price coerente
+resta **negativo** (−2.4% a soglia .05, −9.7% a .03). Restano non rifatte le
+simulazioni delle Fasi 14/40/51.
 
 ### 9. Pinnacle puro (PS*/PSC*) come benchmark singolo-book
 **Dato**: 8/9 stagioni piene (2025-26 ~52%).
@@ -353,9 +356,11 @@ completi (numeri, candidati testati, criteri di accettazione) in
 **Lo stato (Fase 89).** Il simulatore esiste ed è validato:
 `src/models/season_sim.py` + `scripts/_run_fase89_season_champion.py`. Monte
 Carlo di 20.000 stagioni dalle matrici del DC, spareggi ufficiali per lega.
-Batte le baseline in modo **conclusivo** (log-loss 1.1994 vs 2.6515, IC95%
-[+1.1311,+1.7850], migliore in 24/24 stagioni) ma è **sovra-confidente**
-(dichiara 60.1% sul favorito, ne azzecca 41.7%).
+Batte la baseline più forte (persistenza dalla classifica su 2 stagioni) di
+**+0.2299**, IC95% [+0.0108,+0.4542], 14/24 stagioni — conclusivo per un soffio
+e con il vantaggio **concentrato in Premier** (+0.57; SA +0.12, Liga +0.004 nel
+rumore). È inoltre **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecca
+41.7%).
 
 **⚠️ PROMEMORIA OPERATIVO — a ogni inizio stagione (luglio/agosto):**
 
@@ -387,12 +392,12 @@ dei 24 errori mostra che il modello **azzecca 8/8 quando il titolo resta e 2/16
 quando cambia mano** (negli errori il campione uscente si riconferma 0/14), ma
 che il campione vero è nel nostro **top-3 nel 96% dei casi** e che P(top-2) e
 P(top-3) sono **già calibrate** (−3.5pp e +3.7pp). L'errore è **tutto nella
-spartizione fra i due-tre leader**: 10/19 = 53% (lancio di moneta) dichiarando
-61.1%. Quindi la correzione da cercare **non è più informazione**, ma un
+spartizione fra i due-tre leader**: 10/19 = 52.6% (lancio di moneta) dichiarando
+71.6% (media di p₁/(p₁+p₂)). Quindi la correzione da cercare **non è più informazione**, ma un
 **appiattimento della spartizione interna al gruppo di testa**.
 
 **La leva 3 qui sotto (valore rosa) è stata TESTATA e BOCCIATA (Fase 89-bis)**:
-log-loss 1.2438 contro 1.1994 del base, e 2/16 sulle stagioni di cambio esattamente
+log-loss 1.2384 contro 1.1994 del base, e 2/16 sulle stagioni di cambio esattamente
 come il base. Il β è sempre positivo (+0.115) ma il segnale è già nei gol/xG: la
 bocciatura delle Fasi 4c/66-70 **si trasferisce** all'outright, contrariamente a
 quanto ipotizzato qui sotto. Resta valido il caveat che il dato è rilevato al 1º
@@ -404,6 +409,26 @@ fra squadre (0.434), con correlazione pre/post 0.903. È la varianza che il
 simulatore ignora, ed è ora un numero, non un'ipotesi: si può iniettare
 direttamente, senza tarare nulla sui 24 esiti (la taratura post-hoc è già
 fallita, Fase 89).
+
+**DUE COSE CHE L'AUDIT (Fase 90) HA VISTO E NOI NO:**
+
+- **`rank` è già lì e lo buttiamo via.** `simulate_season` calcola la matrice
+  delle posizioni di ogni stagione simulata e restituisce solo P(campione). Da
+  quella matrice escono **P(top-4)** e **P(retrocessione)** — mercati veri, e
+  soprattutto **480 osservazioni binarie** per stagione-lega invece delle 24 di
+  cui ci lamentiamo. Zero modellistica nuova: è la via più economica per dare
+  potenza statistica a questa famiglia di mercati.
+- **Un benchmark di mercato per l'outright è costruibile.** Diciamo che
+  «battiamo il mercato non è testabile all'indietro» perché mancano le quote
+  outright storiche: vero alla lettera, ma il **parere del mercato sulle forze**
+  c'è in ogni stagione (le quote 1X2+O/U di ogni partita, invertibili col motore
+  titolare; 21 stagioni-lega su 24 hanno la copertura). Simulare la stagione con
+  i λ,μ del mercato dà l'avversario che ci manca. Non è il prezzo outright vero,
+  e va dichiarato — ma è molto più di niente.
+
+**⚠️ ATTENZIONE sulla deriva:** dei 0.189 misurati, circa il **38% in varianza è
+rumore di stima** (la deriva vera è ≈0.14-0.15). Le leve 1 e 2 qui sotto
+catturano in parte la stessa quantità: **non vanno sommate**.
 
 **Le tre leve da provare, in ordine di costo (nessuna richiede dati nuovi):**
 
