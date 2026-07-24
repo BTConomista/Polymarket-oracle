@@ -17,6 +17,10 @@ venv/
 models/*.json
 outputs/
 
+# Fetch LIVE da Polymarket (scripts/fetch_polymarket_open.py): quote in tempo
+# reale, NON riproducibili -> fuori dagli snapshot congelati, non versionate.
+data/polymarket/
+
 # OS / editor
 .DS_Store
 .idea/

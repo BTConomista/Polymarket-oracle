@@ -29,6 +29,7 @@ Ultimo aggiornamento: Fase 70 (luglio 2026).
 | `raw.githubusercontent.com` | tutti i repo pubblici (openfootball, salimt, …) |
 | `github.com` (pagine HTML) | utile per verifiche di esistenza |
 | pypi / npm / crates | in NO_PROXY, installazioni ok |
+| `gamma-api.polymarket.com` | **RAGGIUNGIBILE** (verificato 2026-07-24): Gamma API di Polymarket, quote LIVE di eventi/mercati aperti. Vedi §2-bis e `scripts/fetch_polymarket_open.py`. È l'unica fonte di quote **prospettiche reali** aperta dall'ambiente cloud → candidata per il test prospettico 2026-27 (Fase 78). |
 
 **Non ancora testati dalla sessione cloud**: `betexplorer.com`,
 `oddsportal.com` (presumibilmente bloccati dal proxy; dal runner Actions
@@ -92,6 +93,38 @@ prima di concludere "sito bloccato" testare un URL banale per escluderlo.
   ed economico è il **polling di `git ls-remote`** sul branch (il workflow
   committa alla fine) — usato col tool Monitor. In alternativa, MCP
   `actions_list`.
+
+## 2-bis · Polymarket: quote LIVE dall'ambiente (script pronto)
+
+`gamma-api.polymarket.com` è **raggiungibile** (§1) → abbiamo uno strumento
+riutilizzabile: **`scripts/fetch_polymarket_open.py`**. Serve a non rifare la
+fatica ogni volta che servono quote reali di partite non ancora giocate.
+
+- **Endpoint**: `GET /events/keyset?closed=false&limit=100`, paginazione
+  **keyset** (`next_cursor` in risposta → si passa come `?after_cursor=`; stop
+  quando manca il cursore o il batch è vuoto). Il 2026-07-24: **13.5k eventi
+  aperti / ~113k mercati**.
+- **Struttura**: un *event* raggruppa più *markets* (`event["markets"]`);
+  `outcomes`/`outcomePrices` sono **stringhe JSON**; una partita è **spezzata
+  in più eventi**: `A vs. B` = 1X2 (3 mercati Yes/No), `A vs. B - More Markets`
+  = O/U 1.5/2.5/3.5/4.5 + BTTS, poi Halftime/Exact Score ecc. I prezzi sono già
+  **probabilità implicite (con vig)**.
+- **Uso**:
+  ```bash
+  python scripts/fetch_polymarket_open.py                  # dump completo
+  python scripts/fetch_polymarket_open.py --tag Soccer     # solo calcio (~5k eventi)
+  python scripts/fetch_polymarket_open.py --soccer-matches # partite -> 1X2+O/U+BTTS
+  ```
+  `--soccer-matches` ricostruisce ogni partita, deviga l'1X2 (normalizza a 1) e
+  produce il record `{one_x_two, over_under, btts}` — **l'input che
+  `market_implied.py` sa invertire** in λ,μ.
+- **Attenzione stagionalità**: a fine luglio Serie A/Premier/La Liga sono **fuori
+  stagione** (solo futures "2027 Champion"); ripartono a metà agosto. Le quote
+  match ci sono per le leghe estive (MLS, Brasile, Sudamerica, ecc.). Overround
+  osservato sui match minori ~1.17 (vig alta).
+- **Output NON versionato**: è un tool LIVE, scrive in `data/polymarket/`
+  (in `.gitignore`) — mai dentro gli snapshot congelati. Test puro delle funzioni
+  in `tests/test_polymarket_fetch.py` (senza rete).
 
 ## 3 · GitHub Actions: fatti operativi
 
