@@ -13,6 +13,12 @@ sono **proposte**, da eseguire solo quando si deciderà di unire i due filoni:
 [`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) §7 e
 [`report/01_audit_dati.md`](report/01_audit_dati.md) §6.
 
+**Le regole decise durante il lavoro** (da aggiungere alle regole generali del
+progetto quando si integrerà) stanno in **[`REGOLE.md`](REGOLE.md)**: dato del
+campo e non del tribunale (R1), valore rosa da Transfermarkt dove la fonte
+primaria non copre (R2), nessuna modifica a mano ai dati (R3), isolamento (R4),
+anomalie sempre dichiarate (R5).
+
 ## I tre lavori, e dove leggerne l'esito
 
 | # | lavoro | report | esito in una riga |
@@ -43,7 +49,8 @@ per **bloccati** (403). **Oggi rispondono 200.** Sono raggiungibili anche
 
 ```
 cantiere/
-  report/           i tre report (sopra)
+  REGOLE.md         le regole decise durante il lavoro (R1-R5)
+  report/           i quattro report (sopra)
   patch/            proposte di modifica al codice di produzione, non applicate
   scripts/
     fetch_sources.py         scarica football-data + Understat (5 leghe x 9 stagioni)
@@ -56,11 +63,14 @@ cantiere/
     nuove_leghe.py           config + alias delle 2 leghe nuove (il "sources.py" provvisorio)
     build_new_snapshot.py    costruisce gli snapshot a 38 colonne di Bundesliga e Ligue 1
     eda_nuove_leghe.py       EDA comparativa sulle 5 leghe (passo 1 del playbook)
+    applica_correzioni.py    applica le correzioni dichiarate (registro + verifica, R1/R3)
+    applica_squad_value_tm.py  riempie le celle vuote di valore rosa (R2)
   data/
     bundesliga_matches.csv       snapshot 38 colonne (2.754 partite)
     ligue_1_matches.csv          snapshot 38 colonne (3.097 partite)
     club_fixtures_*.csv          calendari di club completi
-    squad_value_2526_transfermarkt.csv   16 celle recuperate (dato di riserva, non applicato)
+    correzioni_dichiarate.csv    registro delle correzioni (cosa, perche', fonte, stato)
+    squad_value_2526_transfermarkt.csv   16 celle recuperate da Transfermarkt (applicate)
     fonti/                       fonti grezze + manifest con SHA256
   out/              output di ogni run (json + log), rigenerabili
 ```
@@ -74,6 +84,8 @@ python cantiere/scripts/audit_anomalie.py         # audit avversariale
 python cantiere/scripts/verifica_stime.py         # verifica delle stime
 python cantiere/scripts/build_new_snapshot.py     # ricostruisce i 2 snapshot nuovi
 python cantiere/scripts/eda_nuove_leghe.py        # EDA 5 leghe
+python cantiere/scripts/applica_correzioni.py     # correzioni dichiarate (idempotente)
+python cantiere/scripts/applica_squad_value_tm.py # valore rosa dalle celle TM (idempotente)
 ```
 
 Gli snapshot delle leghe nuove si rigenerano **offline** dalle fonti versionate

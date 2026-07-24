@@ -74,6 +74,20 @@ SNAP_COLUMNS = [
 ]
 KEY = ["season", "home_team", "away_team"]
 
+# Correzioni DICHIARATE (regole R1/R3 di cantiere/REGOLE.md): righe in cui lo
+# snapshot si discosta VOLUTAMENTE dalla fonte. L'audit non deve segnalarle come
+# errori — ma deve continuare a segnalare tutto il resto.
+_CORR_PATH = ROOT / "cantiere" / "data" / "correzioni_dichiarate.csv"
+
+
+def _righe_corrette(league: str) -> set[tuple]:
+    """{(stagione, casa, ospite)} con almeno una correzione applicata."""
+    if not _CORR_PATH.exists():
+        return set()
+    c = pd.read_csv(_CORR_PATH, dtype={"season": str})
+    c = c[(c.league == league) & (c.stato == "applicata")]
+    return set(zip(c.season, c.home_team, c.away_team))
+
 
 class Report:
     """Raccoglitore di esiti: ogni controllo e' (id, livello, messaggio, dati)."""
@@ -319,7 +333,18 @@ def audit_vs_football_data(df: pd.DataFrame, league: str, rep: Report) -> dict:
 
     j = df.merge(fresh, on=KEY, how="inner", suffixes=("", "_src"))
 
-    # B2 — gol e tiri in porta identici
+    # B2 — gol e tiri in porta identici (escluse le correzioni DICHIARATE)
+    corrette = _righe_corrette(league)
+    is_corr = j.apply(lambda r: (r.season, r.home_team, r.away_team) in corrette, axis=1)
+    if corrette:
+        rep.add("B0.correzioni_dichiarate", "INFO",
+                f"{int(is_corr.sum())} righe si discostano VOLUTAMENTE dalla fonte "
+                f"(registro cantiere/data/correzioni_dichiarate.csv, regola R1): "
+                f"escluse dal confronto B2",
+                righe=j.loc[is_corr, KEY + ["home_goals", "away_goals",
+                                            "home_goals_src", "away_goals_src"]]
+                        .to_dict("records"))
+    j = j[~is_corr]
     gol_bad = j[(j.home_goals != j.home_goals_src) | (j.away_goals != j.away_goals_src)]
     sot_bad = j[((j.home_sot != j.home_sot_src) & j.home_sot.notna() & j.home_sot_src.notna())
                 | ((j.away_sot != j.away_sot_src) & j.away_sot.notna() & j.away_sot_src.notna())]

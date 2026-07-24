@@ -179,10 +179,10 @@
     {
       "id": "A12.squad_value",
       "level": "PASS",
-      "msg": "0 coppie (stagione,squadra) con valore rosa NON costante; 150 righe con valore mancante",
+      "msg": "0 coppie (stagione,squadra) con valore rosa NON costante; 0 righe con valore mancante",
       "data": {
         "incoherent": {},
-        "n_nan": 150
+        "n_nan": 0
       }
     },
     {
@@ -198,6 +198,24 @@
       "data": {
         "only_snapshot": [],
         "only_source": []
+      }
+    },
+    {
+      "id": "B0.correzioni_dichiarate",
+      "level": "INFO",
+      "msg": "1 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2",
+      "data": {
+        "righe": [
+          {
+            "season": "2425",
+            "home_team": "Union Berlin",
+            "away_team": "Bochum",
+            "home_goals": 1,
+            "away_goals": 1,
+            "home_goals_src": 0,
+            "away_goals_src": 2
+          }
+        ]
       }
     },
     {
@@ -227,20 +245,10 @@
     },
     {
       "id": "C1.gol_fonte_indipendente",
-      "level": "FAIL",
-      "msg": "1 righe con gol diversi tra football-data e Understat; 0 partite senza corrispondenza Understat (lacuna della fonte)",
+      "level": "PASS",
+      "msg": "0 righe con gol diversi tra football-data e Understat; 0 partite senza corrispondenza Understat (lacuna della fonte)",
       "data": {
-        "examples": [
-          {
-            "season": "2425",
-            "home_team": "Union Berlin",
-            "away_team": "Bochum",
-            "home_goals": 0,
-            "away_goals": 2,
-            "ud_home_goals": 1,
-            "ud_away_goals": 1
-          }
-        ],
+        "examples": [],
         "unmatched": []
       }
     },
@@ -326,9 +334,9 @@
             "gare": 306,
             "gol_gara": 3.134,
             "casa%": 0.386,
-            "pari%": 0.252,
+            "pari%": 0.255,
             "over25%": 0.598,
-            "gamma_ln_casa_ospite": 0.081
+            "gamma_ln_casa_ospite": 0.086
           },
           "2526": {
             "gare": 306,
@@ -344,12 +352,12 @@
     {
       "id": "D2.mercato_calibrato",
       "level": "PASS",
-      "msg": "scarto medio prob.mercato - frequenza osservata: H +0.0077, D -0.0130, A +0.0053 (n=2753)",
+      "msg": "scarto medio prob.mercato - frequenza osservata: H +0.0077, D -0.0134, A +0.0057 (n=2753)",
       "data": {
         "bias": [
           0.007738052816030516,
-          -0.013028117244725024,
-          0.00529006442869584
+          -0.013391357346432264,
+          0.0056533045304030805
         ],
         "n": 2753
       }

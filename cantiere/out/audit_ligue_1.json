@@ -210,10 +210,10 @@
     {
       "id": "A12.squad_value",
       "level": "PASS",
-      "msg": "0 coppie (stagione,squadra) con valore rosa NON costante; 264 righe con valore mancante",
+      "msg": "0 coppie (stagione,squadra) con valore rosa NON costante; 0 righe con valore mancante",
       "data": {
         "incoherent": {},
-        "n_nan": 264
+        "n_nan": 0
       }
     },
     {

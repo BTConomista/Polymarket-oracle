@@ -102,22 +102,23 @@
   [OK  ] A9.copertura_quote: copertura chiusura O/U conforme alla semantica dichiarata (0% nel 2017-19, ~100% dal 2019-20): 0 deviazioni
   [OK  ] A10.apertura_diversa: quota 1 apertura == chiusura nel 4.4% delle righe (n=2753); atteso basso (istantanee diverse)
   [OK  ] A11.xg_stile: copertura xG 100.00%; npxG>xG in 0 righe; 0 xG fuori range; 0 PPDA<=0; 0 deep<0
-  [OK  ] A12.squad_value: 0 coppie (stagione,squadra) con valore rosa NON costante; 150 righe con valore mancante
+  [OK  ] A12.squad_value: 0 coppie (stagione,squadra) con valore rosa NON costante; 0 righe con valore mancante
   [OK  ] A13.congestione_assenze: riposo NaN=0 range=[2.0,14.0]; midweek non binario=0; assenze NaN=0 max=12.0
  B. confronto con football-data.co.uk (ri-scaricato oggi)
   [OK  ] B1.stesse_partite: 0 partite solo nello snapshot, 0 solo nella fonte ri-scaricata (su 2754)
+  [info] B0.correzioni_dichiarate: 1 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2
   [OK  ] B2.gol_e_tiri: 0 righe con GOL diversi dalla fonte; 0 con tiri in porta diversi
   [OK  ] B3.date: 0 righe con data diversa dalla fonte
   [OK  ] B4.quote_riderivate: 0/10 colonne quota differiscono dalla ri-derivazione dalla fonte originale
  C. confronto con Understat (fonte indipendente)
-  [FAIL] C1.gol_fonte_indipendente: 1 righe con gol diversi tra football-data e Understat; 0 partite senza corrispondenza Understat (lacuna della fonte)
+  [OK  ] C1.gol_fonte_indipendente: 0 righe con gol diversi tra football-data e Understat; 0 partite senza corrispondenza Understat (lacuna della fonte)
   [OK  ] C2.xg_riparsato: 0/8 colonne xG/stile differiscono dal ri-parsing della fonte Understat
   [OK  ] C3.date_due_fonti: 0 partite con date football-data/Understat distanti >1 giorno
  D. sanita' statistica
   [OK  ] D1.statistiche_lega: gol/gara 2.79-3.23; vittorie casa 38.6%-47.4% (range plausibili per un campionato)
-  [OK  ] D2.mercato_calibrato: scarto medio prob.mercato - frequenza osservata: H +0.0077, D -0.0130, A +0.0053 (n=2753)
+  [OK  ] D2.mercato_calibrato: scarto medio prob.mercato - frequenza osservata: H +0.0077, D -0.0134, A +0.0057 (n=2753)
   [OK  ] D3.margine_per_stagione: margine 1X2: 2017-19 ['2.27%', '2.83%'] (Pinnacle) vs dal 2019-20 4.27%-6.34% (media book)
- -> 1 FAIL, 0 WARN su 23 controlli
+ -> 0 FAIL, 0 WARN su 24 controlli
 
 === AUDIT ligue_1 ===
  A. controlli interni
@@ -132,7 +133,7 @@
   [OK  ] A9.copertura_quote: copertura chiusura O/U conforme alla semantica dichiarata (0% nel 2017-19, ~100% dal 2019-20): 0 deviazioni
   [OK  ] A10.apertura_diversa: quota 1 apertura == chiusura nel 3.6% delle righe (n=3097); atteso basso (istantanee diverse)
   [OK  ] A11.xg_stile: copertura xG 99.97%; npxG>xG in 0 righe; 0 xG fuori range; 0 PPDA<=0; 0 deep<0
-  [OK  ] A12.squad_value: 0 coppie (stagione,squadra) con valore rosa NON costante; 264 righe con valore mancante
+  [OK  ] A12.squad_value: 0 coppie (stagione,squadra) con valore rosa NON costante; 0 righe con valore mancante
   [OK  ] A13.congestione_assenze: riposo NaN=0 range=[3.0,14.0]; midweek non binario=0; assenze NaN=0 max=13.0
  B. confronto con football-data.co.uk (ri-scaricato oggi)
   [OK  ] B1.stesse_partite: 0 partite solo nello snapshot, 0 solo nella fonte ri-scaricata (su 3097)
@@ -153,5 +154,5 @@
   serie_a          FAIL=0  WARN=1  (23 controlli)
   premier_league   FAIL=1  WARN=0  (23 controlli)
   la_liga          FAIL=1  WARN=0  (23 controlli)
-  bundesliga       FAIL=1  WARN=0  (23 controlli)
+  bundesliga       FAIL=0  WARN=0  (24 controlli)
   ligue_1          FAIL=0  WARN=2  (23 controlli)

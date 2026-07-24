@@ -1,7 +1,7 @@
-# Report 4 — Le tre decisioni: cosa dicono i dati
+# Report 4 — Le tre decisioni: istruttoria, esito e applicazione
 
-Documento di supporto alle tre decisioni aperte. Le prime due sono state
-istruite andando a **cercare i dati**, non ragionando a tavolino.
+Le prime due decisioni sono state istruite andando a **cercare i dati**, non
+ragionando a tavolino. **Tutte e tre sono state prese e applicate** (§4).
 
 ---
 
@@ -56,7 +56,7 @@ dell'evento che il mercato regola», l'esito da usare è **1-1 (pareggio)**.
 
 | opzione | pro | contro |
 |---|---|---|
-| **usare 1-1** (raccomandata) | è ciò che è successo in campo, è ciò su cui il mercato si regola, e i dati sono completi (xG, tiri, minuti) | diverge dal record ufficiale DFB; va dichiarato |
+| **usare 1-1** ✅ **SCELTA** | è ciò che è successo in campo, è ciò su cui il mercato si regola, e i dati sono completi (xG, tiri, minuti) | diverge dal record ufficiale DFB; va dichiarato |
 | tenere 0-2 ed escludere la riga dal fit | non tocca il dato di football-data | butta via una partita vera e completa |
 | tenere 0-2 e usarla normalmente | zero lavoro | il modello impara da un punteggio che nessuno ha segnato |
 
@@ -137,8 +137,8 @@ peggiore) contro ~1.0 nelle tre leghe con copertura migliore.
 
 | opzione | conseguenza |
 |---|---|
-| **riempire con i valori TM** (precedente già seguito) | 16 celle diventano un numero reale e pubblico, verificabile; ma la colonna 2025-26 mescola due scale che nelle leghe nuove differiscono del 13-29% |
-| **NaN dichiarato** (raccomandata) | nessuna scala mista; `squad_value` è comunque **bocciata come covariata**, quindi il buco non costa nulla in predizione; il file coi valori TM resta pronto se un giorno servisse |
+| **riempire con i valori TM** ✅ **SCELTA** | 16 celle diventano un numero reale e pubblico, verificabile; copertura al 100%; la colonna 2025-26 mescola due misure, con il rapporto dichiarato per lega |
+| NaN dichiarato | nessuna scala mista, ma un buco al posto di un dato che esiste |
 | riempire l'INTERA colonna 2025-26 da TM per tutte e 5 le leghe | l'unica soluzione davvero coerente sul piano della scala, ma cambia dati già consolidati e va rifatta ogni volta |
 | stima di modello | errore atteso 17-29%, peggiore del dato TM: non ha senso avendo il TM |
 
@@ -157,3 +157,62 @@ documenti condivisi (`DIARIO.md`, `README.md`, `PANCHINA.md`, `DATI.md`,
 `runs.jsonl`): così non c'è modo di entrare in conflitto con il lavoro in corso
 su `main`. Le checklist di integrazione nei report restano **proposte**, da
 eseguire solo quando si deciderà di unire i due filoni.
+
+
+---
+
+## 4 · Esito: cosa è stato deciso e applicato
+
+**Decisione 1 → si usa il risultato del campo (1-1).** Applicata con
+`scripts/applica_correzioni.py` sul registro
+[`data/correzioni_dichiarate.csv`](../data/correzioni_dichiarate.csv): tre celle
+(`home_goals` 0→1, `away_goals` 2→1, `result` A→D), ognuna con motivo e fonte.
+La regola generale è scritta in [`REGOLE.md`](../REGOLE.md) **R1**, con l'obbligo
+di trattare **ogni caso analogo singolarmente**, mai con un automatismo.
+
+Effetto collaterale positivo, misurato: l'audit sui **gol da fonte indipendente**
+(Understat) ora **coincide** per la Bundesliga, che passa a **0 FAIL e 0 WARN**
+su 24 controlli. Il confronto con football-data, che continua a riportare lo 0-2
+d'ufficio, viene escluso solo per quella riga e segnalato come `INFO`: l'audit
+resta severo su tutto il resto.
+
+*Non applicata* (registrata come proposta): i tiri in porta ricavabili da
+Understat (4 e 3). La definizione Understat non è identica a quella
+football-data della colonna, e mescolare due definizioni dentro una cella è
+peggio di un NaN dichiarato. Il dato è nel registro se si vorrà usarlo.
+
+**Decisione 2 → valori rosa da Transfermarkt.** Applicata con
+`scripts/applica_squad_value_tm.py`: **16 celle** (5 Bundesliga, 11 Ligue 1),
+544 celle-partita riempite, copertura del valore rosa da 94.6%/91.5% a
+**100%/100%**. Lo script rifiuta di sovrascrivere un valore esistente: la fonte
+primaria resta primaria.
+
+Durante l'applicazione è emersa una verifica che **cambia il caveat** che avevo
+scritto prima (§2, punto b). Rifacendo il conto con due date-ancora diverse:
+
+| lega | 2018-19 | 2021-22 | 2025-26 |
+|---|--:|--:|--:|
+| serie_a | 1.353 | **1.033** | 1.055 |
+| premier_league | 1.171 | **1.004** | 1.077 |
+| la_liga | 1.302 | **1.003** | 1.118 |
+| bundesliga | 1.392 | **1.012** | 1.161 |
+| ligue_1 | 1.439 | **1.204** | 1.473 |
+
+1. la pagina Transfermarkt per stagione è **storica**, non odierna: ricalcolando
+   il nostro valore con le valutazioni di oggi il rapporto salirebbe a 1.14-6.67,
+   non a ~1.00. Nessuna contaminazione dal futuro;
+2. in una stagione con dati completi (2021-22) le due definizioni **coincidono**
+   (1.003-1.033 su 4 leghe su 5). Quindi il divario del 2025-26 **non nasce da
+   Transfermarkt**: nasce dal fatto che la fonte primaria in quella stagione
+   sotto-conta, perché le valutazioni non ci sono ancora tutte.
+
+Detto altrimenti: le 16 celle riempite sono, semmai, **più corrette** di quelle
+vicine prese dalla fonte primaria. Il caveat resta (la colonna 2025-26 mescola
+due misure e va dichiarato), ma il segno del rischio è opposto a quello che
+temevo.
+
+**Decisione 3 → isolamento.** Scritta in [`REGOLE.md`](../REGOLE.md) R4.
+
+**Verifiche dopo l'applicazione:** audit sulle 5 leghe (Bundesliga 0 FAIL/0 WARN,
+Ligue 1 0 FAIL/2 WARN noti), audit avversariale invariato, `pytest` verde
+(153 test).

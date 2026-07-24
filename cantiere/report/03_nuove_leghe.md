@@ -80,7 +80,7 @@ Due alias sono stati trovati **da un controllo indiretto**, non da un elenco:
 | quote apertura O/U | 99.96% | 100.00% |
 | xG / npxG | 100.00% | 99.97% |
 | stile (PPDA, deep) | 99.96% | 99.97% |
-| valore rosa | 94.55% | 91.48% |
+| valore rosa | 100.00% | 100.00% |
 | assenze stimate | 100.00% | 100.00% |
 | congestione | 100.00% | 100.00% |
 
@@ -98,9 +98,12 @@ La chiusura O/U al ~76-78% è **lo stesso identico buco delle altre tre leghe**
    ultima l'8 marzo; PSG e Strasburgo ne giocarono 27 invece di 28. Unico grande
    campionato a non riprendere. La stagione è usabile ma **strutturalmente
    corta**.
-4. **Union Berlin-Bochum 14/12/2024** (Bundesliga): risultato **assegnato a
-   tavolino** 0-2 mentre il campo diceva 1-1 (Report 1 §4.3). Unica riga del
-   progetto con gol amministrativi e statistiche assenti.
+4. **Union Berlin-Bochum 14/12/2024** (Bundesliga): risultato assegnato a
+   tavolino 0-2 mentre il campo diceva 1-1 (Report 1 §4.3). Partita **giocata
+   per intero** (interruzione al 92′, poi ripresa e conclusa): per decisione
+   dell'utente lo snapshot porta il **risultato del campo, 1-1** (regola R1),
+   con la correzione tracciata in `data/correzioni_dichiarate.csv`. Resta
+   l'unica riga senza statistiche tiri (NaN dichiarato).
 5. **Bielefeld-Leverkusen 21/11/2020**: xG = 0 per una squadra che ha segnato →
    buco Understat scritto come zero (Report 1 §4.4).
 
@@ -109,7 +112,7 @@ La chiusura O/U al ~76-78% è **lo stesso identico buco delle altre tre leghe**
 | lacuna | dettaglio | effetto |
 |---|---|---|
 | chiusura O/U 2017-19 | assente a monte (5 leghe su 5) | come le altre leghe; la stima E3 può essere estesa qui |
-| valore rosa 2025-26 | **5 celle** Bundesliga (Augsburg, FC Koln, Hamburg, Hoffenheim, St Pauli), **11 celle** Ligue 1 (Angers, Auxerre, Le Havre, Lens, Lorient, Lyon, Metz, Nantes, Nice, Paris FC, Toulouse): valutazioni player-scores sotto la soglia 85% dei minuti | NaN dichiarato. È la stessa situazione delle altre 3 leghe alla Fase 67 (13 celle), risolta poi con recupero manuale da Transfermarkt (Fase 70). Stesse opzioni: recupero manuale, stima dichiarata (Fase 66), o NaN |
+| ~~valore rosa 2025-26~~ | **CHIUSA**: le 16 celle (5 Bundesliga, 11 Ligue 1) sotto la soglia di copertura player-scores sono state riempite col dato **reale Transfermarkt** (regola R2), provenienza riga per riga in `data/squad_value_2526_transfermarkt.csv` | copertura valore rosa ora **100%**; la colonna 2025-26 mescola due misure (rapporto misurato per lega, vedi REGOLE.md R2) |
 | Coppa di Germania | openfootball non ha `cup.txt` per 2016-17 e 2017-18 | `midweek_europe` falso 0 in quelle stagioni per chi giocò la Pokal |
 | Coppa di Francia | openfootball ha **solo** `2024-25_frcup.txt` | idem, su tutte le altre stagioni |
 | Europa/Conference 2025-26 | file assenti in openfootball — **vale per tutte e 5 le leghe** | falso 0 nella stagione in corso |
