@@ -46,6 +46,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ❌ F80 (nulla, fit sui bound) | 🪑 F80 (**CI<0 sul GG**, φ0 0.32/κ 2.9) ✱2 | ❌ costanti e segno per-lega |
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
+| **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | ⚽ struttura universale (spareggi e δ per-lega; batte le baseline su 24/24 stagioni-lega) |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
 | **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
 | GG/NG φ35+knee34 su market-implied | 🪑 F50 (riconf. F80: −0.0014 P97%) | ❌ F80 (nulla) | ❌ combo F80 (il k34 PEGGIORA con CI>0: profilo-ospite invertito); φ35-sola 🪑 | ❌ il nudge ha segno per-lega |
@@ -116,6 +117,7 @@ Note della matrice:
 | **Stimatore E3 chiusura O/U** | `scripts/build_estimates.py` → `data/estimates/` | (per-lega TESTATO e battuto dal pooled) | **pooled: 5 coefficienti unici, MAE 0.0117** |
 | **Stimatore squad_value (ibrido)** | `scripts/build_estimates.py` → `data/estimates/` | A2 per-lega per squadre senza stagioni note (err ~29%) | A3 pooled dove c'è l'ancora adiacente (err ~17%) |
 | **Baseline frequenze H/D/A** | benchmark in ogni backtest | per-lega per costruzione | — |
+| **Simulatore di stagione (mercato campione)** | `season_sim.py`, `_run_fase89_season_champion.py` | spareggi per-lega (h2h SA/Liga, DR Premier) + δ da `LEAGUE_CONFIGS` | struttura unica; **sovra-confidente** (60.1% dichiarato vs 41.7% realizzato): correzione strutturale da fare |
 
 ---
 
@@ -255,6 +257,7 @@ Note della matrice:
 | Covariate squad_value / absence / npxG (4c, 11) | ridondanti con gol+xG; squad_value PEGGIORA in ogni combo | +0.0004…+0.0007 |
 | Forma / streak / rendimento recente (13) | già catturati dal fit pesato nel tempo | corr residui +0.035 |
 | Blend lineare modello+mercato (16) | il mercato INGLOBA il modello | α* ≈ 0 perfino in-sample |
+| Temperatura post-hoc su P(campione) (89) | con n=24 non si stima onestamente nemmeno **1** parametro: guadagna in-sample, **peggiora** in leave-one-out | LOO 1.2147 vs 1.1994 (T=1.15 in-sample) |
 | ρ dinamico per-partita (18) | instabile, sbatte sui bound | +0.0003 [−0.0007,+0.0013] |
 | GBM diretto per mercato (21/22/36) | non batte il DC su NESSUN mercato; col feature-set completo overfitta | CI<0 escluso su 5/6; train 0.913→0.867, test ~1.01 |
 | GBM modello+mercato (23) | degrada perfino il mercato-feature | 0.9996 vs mercato 0.9632 |

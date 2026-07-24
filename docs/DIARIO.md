@@ -9063,6 +9063,199 @@ realizzato è `cover(gol_casa − gol_ospite, h)`. Brier `= mean((P − realizza
 
 ---
 
+## Fase 89 — Il mercato CAMPIONE DI STAGIONE: il primo mercato non derivabile da una matrice
+
+**Obiettivo (richiesta utente).** Su Polymarket esistono tre mercati liquidi
+«2027 Champion» (Premier $4.9M, Liga $2.6M, Serie A $1.1M di liquidità;
+overround **4-7.5%** una volta esclusi i segnaposto morti «Team A/B/C», che
+avevano book vuoto e falsavano la somma a 3.07). È un mercato che il progetto
+**non ha mai toccato in 88 fasi**, e per una ragione strutturale: fino a qui
+ogni mercato (1X2, O/U, GG/NG, esatto, multigol, handicap) si ricavava dalla
+**matrice dei punteggi di una singola partita**. Il campione no: dipende da
+**380 partite congiuntamente** più una regola di classifica. Non si deriva:
+va **simulato**.
+
+**Ragionamento / ipotesi.** La Fase 16 ha dimostrato che la chiusura 1X2
+ingloba il nostro modello (α\*=0). Ma quella prova vale sulla **famiglia della
+singola partita**. L'outright stagionale è fuori da quella famiglia: nessuno ha
+mai verificato se il DC, propagato su una stagione intera, dica qualcosa di
+sensato. Ipotesi: sì sulle baseline ingenue, ma con un difetto prevedibile —
+le forze sono stimate a inizio stagione e tenute **fisse per 10 mesi**, quindi
+il simulatore vede solo l'aleatorietà dei risultati, non l'incertezza dei
+parametri né la loro evoluzione (mercato estivo, infortuni, allenatori).
+
+**Alternative considerate.** (a) Modello diretto sui punti finali senza simulare
+le partite: più semplice ma perde la struttura del calendario e gli spareggi;
+(b) forza latente Elo/Bradley-Terry: aggiungerebbe un modello nuovo da tarare;
+(c) **Monte Carlo dalle matrici del DC** — scelto: riusa il motore esistente
+senza una riga di modellistica nuova, ed è il tracer bullet più corto (§1.1).
+
+**Scelta e protocollo.** `src/models/season_sim.py` +
+`scripts/_run_fase89_season_champion.py`. Per ogni stagione S: si fitta il DC
+**alla data della prima partita di S** (`as_of_date=start`, nessun dato futuro),
+con la config per-lega e il prior neopromosse; si generano le 380 matrici dei
+punteggi; si campionano 20.000 stagioni intere; si compila la classifica con le
+**regole di spareggio ufficiali**; P(campione) = frazione di stagioni vinte.
+Backtest su **24 stagioni-lega** (8 × 3 leghe: la prima stagione di ogni lega
+non è backtestabile, manca lo storico).
+
+**Due proprietà non ovvie, entrambe verificate qui.**
+
+1. **L'ordine del calendario è irrilevante.** Con forze costanti dentro la
+   stagione, i punti finali dipendono solo dall'**insieme** degli incontri (un
+   girone doppio completo), non dalla loro sequenza. Conseguenza pratica: si può
+   simulare una stagione **futura senza conoscerne il calendario** — ed è ciò che
+   permette di prezzare il 2026-27 oggi. (Se un domani il modello avesse dinamica
+   in-season, la proprietà cadrebbe.)
+2. **Gli spareggi non sono pedanteria.** Nelle stagioni simulate la parità di
+   punti in testa capita nel **5.1%** dei casi (nella realtà: 0 volte su 27), e
+   le regole **differiscono per lega**: Serie A e Liga usano gli **scontri
+   diretti**, la Premier la **differenza reti**. Il caso che lo dimostra è reale
+   e ha conseguenze: nella **Liga 2025-26 Levante e Mallorca chiudono entrambe a
+   42 punti**; ordinando per differenza reti retrocederebbe Levante (−14 vs −10),
+   ma gli **scontri diretti** premiano Levante (4 punti a 1) → retrocede
+   **Mallorca**. Cambia la composizione della Liga 2026-27, e infatti la rosa che
+   Polymarket usa per il «2027 Champion» contiene Levante e non Mallorca: il
+   mercato ha ragione, la classifica ingenua no. È in `tests/test_season_sim.py`
+   come test di regressione sui dati reali.
+
+**Risultato 1 — il modello batte le baseline, in modo conclusivo.**
+
+| | log-loss sul campione effettivo |
+|---|--:|
+| **MODELLO (MC dal DC)** | **1.1994** |
+| baseline «vince il campione uscente» (q ottimo leave-one-out) | 2.6515 |
+| baseline «vince il campione uscente» (q=0.33 **in-sample**, favorevole a lei) | 2.5995 |
+| baseline uniforme (1/20) | 2.9957 |
+
+Guadagno vs la baseline più forte: **+1.4521**, IC95% bootstrap
+**[+1.1311, +1.7850]** → **conclusivo**, e il modello è migliore in **24/24
+stagioni** (nessuna eccezione). Brier multiclasse 0.6584; il campione reale
+finisce in media al **rank 1.88** della nostra classifica di probabilità.
+Il problema è genuinamente difficile: il campione uscente si ripete solo **8
+volte su 24** (33%), anche se il **75%** dei campioni veniva dai primi 2
+dell'anno prima (caso estremo: Napoli 2024-25, era 9º).
+
+**Risultato 2 — ma siamo SOVRA-CONFIDENTI, e si vede il meccanismo.**
+
+Dichiariamo in media **60.1%** sul nostro favorito e ne azzecchiamo **41.7%**
+(10/24): scarto **−18.4pp = −1.83 SE** (probabile, **non concluso** con n=24 —
+serve più potenza). Il meccanismo è diretto e misurabile: il campione **reale**
+fa in media **89.1 punti**, il vincitore **simulato** 84.8 (**+4.3**). Con forze
+fisse nessuna squadra «si accende» durante l'anno: la classifica simulata è
+compressa, e la massa si concentra troppo sul favorito.
+
+| lega | log-loss | favorito azzeccato | P media sul favorito |
+|---|--:|--:|--:|
+| Premier | **0.7411** | 62% | 73.9% |
+| La Liga | 1.3651 | 25% | 58.3% |
+| Serie A | 1.4920 | 38% | 47.9% |
+
+La Premier è la più facile (dominio Man City: 6 titoli su 9), la Serie A la più
+imprevedibile — coerente con l'intuizione, ma qui è misurato.
+
+**Risultato 3 — la ricalibrazione ingenua NON funziona (negativo, documentato).**
+Se la sovra-confidenza è reale, ammorbidire le probabilità con una temperatura
+(`p^(1/T)` rinormalizzata) dovrebbe pagare. In-sample il T ottimo è 1.15 e
+guadagna 0.0101; ma in **leave-one-out** il log-loss diventa **1.2147**, cioè
+**peggio del non fare nulla (1.1994)**. Con 24 osservazioni non c'è abbastanza
+segnale per stimare onestamente nemmeno **un** parametro di calibrazione. La
+correzione, se esiste, va fatta **strutturalmente** (iniettando la varianza
+mancante nel simulatore), non post-hoc.
+
+**Risultato 4 — il confronto col mercato di oggi (2026-27).**
+
+| | NOSTRO | MERCATO | scarto |
+|---|--:|--:|--:|
+| Inter (Serie A) | 66.8% | 47.0% | **+19.8** |
+| Milan | 2.9% | 11.6% | −8.7 |
+| Napoli | 5.7% | 12.6% | −7.0 |
+| Arsenal (Premier) | 44.8% | 34.0% | **+10.8** |
+| Man City | 42.9% | 28.3% | **+14.6** |
+| Man United | 0.7% | 11.0% | **−10.3** |
+| Chelsea | 0.8% | 9.1% | −8.3 |
+| Barcelona (Liga) | 62.4% | 51.4% | **+11.0** |
+| Real Madrid | 30.6% | 40.9% | −10.3 |
+
+Il pattern è **lo stesso identificato dal backtest, e per via indipendente**:
+troppa massa in cima, troppo poca sugli inseguitori. Il mercato prezza ciò che
+il nostro modello non può vedere — che Milan, Man United e Chelsea possono
+**rifarsi la squadra in estate**, mentre noi li giudichiamo sui risultati di
+maggio. Non è un edge nostro: è una variabile mancante.
+
+**Lezione.** Il mercato campione è (a) il primo che richiede una **simulazione**
+e non una matrice; (b) uno dei pochi dove le baseline sono battute in modo
+conclusivo, perché il segnale «forza delle squadre» è forte e persistente; (c)
+un mercato in cui il nostro difetto è **strutturale e identificato**: manca la
+varianza dei parametri e la loro evoluzione. È anche il primo mercato del
+progetto con una **finestra d'uso stagionale**: si prezza a inizio stagione, e
+va rivisitato ogni anno (vedi `docs/PISTE.md` §5).
+
+**Onestà obbligatoria.** (1) Non esistono quote outright **storiche** nei nostri
+dati: quindi «battiamo le baseline» è dimostrato, «battiamo il mercato» **non è
+testabile** all'indietro — il confronto 2026-27 è una **fotografia**, non una
+misura di edge, e si potrà scorare solo a maggio 2027. (2) n=24 è poco: la
+sovra-confidenza è probabile ma non conclusiva. (3) Le classifiche sono calcolate
+dai risultati, quindi **senza penalizzazioni di punti** (Juventus 2022-23,
+Everton/Nottingham Forest 2023-24): verificato che **nessuna ha mai toccato la
+vetta** nelle 27 stagioni, quindi il campione non cambia mai; le posizioni di
+metà classifica sì. (4) Le rose 2026-27 vengono dai mercati Polymarket
+(informazione esterna agli snapshot), riconciliate coi nomi interni.
+**Non usare per scommettere soldi veri.**
+
+### 📐 Il modello in dettaglio
+
+**Il campionamento.** Per ogni incontro si prende la matrice del DC
+`M[i,j] = P(gol_casa=i, gol_ospite=j)` (`_score_matrix`, invariata dalla Fase 2),
+la si appiattisce in 121 celle e se ne fa la cumulata:
+```
+cdf[n] = cumsum(M_n.ravel()) ,  cdf[n] /= cdf[n][-1]      # rinormalizza il troncamento
+cella  = searchsorted(cdf[n], u) ,  u ~ Uniforme(0,1)
+gol_casa = cella // 11 ,  gol_ospite = cella % 11         # max_goals=10 -> K=11
+```
+La divisione per `cdf[n][-1]` non è cosmetica: la matrice è troncata a 10 gol e
+la correzione Dixon-Coles rompe la somma a 1, quindi senza rinormalizzare si
+campionerebbe da una densità difettosa.
+
+**Perché 20.000 simulazioni.** L'errore Monte Carlo su una probabilità `p` è
+`sqrt(p(1−p)/N)`: con N=20.000 e p=0.5 vale **0.35pp**, trascurabile rispetto
+agli scarti che misuriamo (10-20pp). Verificato empiricamente su 5 semi diversi
+(Serie A 2025-26): deviazione standard osservata **0.20-0.35pp** contro
+0.22-0.35pp teorici — la teoria regge.
+
+**Gli spareggi.** `TIEBREAK_RULES = {serie_a: (h2h, gd, gf), la_liga: (h2h, gd,
+gf), premier_league: (gd, gf)}`, dove `h2h` = classifica avulsa (punti negli
+scontri diretti fra le sole squadre a pari punti, poi differenza reti negli
+scontri diretti). **Sensibilità misurata**: cambiando la regola da scontri
+diretti a differenza reti, la P(campione) si sposta al massimo di **0.93pp**
+(Serie A 2025-26, su tutte le 20 squadre). Cioè: la regola va implementata
+**giusta** (e cambia chi retrocede, vedi Levante/Mallorca), ma **non muove il
+prezzo dell'outright** — un caso in cui il dettaglio conta per la correttezza
+dei dati, non per la stima.
+
+**Il fit.** Nessun parametro nuovo: `DixonColesModel(half_life_days=365,
+shrinkage=1.5, shots_blend=0.75, blend_signal="xg", promoted_prior=(δ,δ))` con
+δ per-lega (0.23 / 0.33 / 0.22, Fasi 7/57) e `as_of_date` = data della prima
+partita della stagione. Le neopromosse sono `squadre(S) − squadre(S−1)`: è
+informazione **nota prima del via** (le promozioni si decidono a giugno), non
+look-ahead.
+
+**Le metriche.** `log-loss = −ln P(campione effettivo)` e
+`Brier = Σ_j (p_j − y_j)²` con `y` one-hot: sono **multiclasse a ~20 esiti con
+UNA osservazione per stagione**, quindi `experiment_log.compute_metrics` (fonte
+unica per i mercati di singola partita, §5) **non è applicabile** — le formule
+sono definite in `_run_fase89_season_champion.py` e non duplicano nulla.
+IC bootstrap percentile su 10.000 ricampionamenti delle 24 osservazioni.
+
+**Il seed.** `zlib.crc32` invece di `hash()`: l'hash delle stringhe in Python è
+randomizzato per processo, usarlo avrebbe reso i run non riproducibili (§1.5).
+
+Riproducibile: `python scripts/_run_fase89_season_champion.py --nsim 20000`
+(≈2 minuti). Run in `experiments/runs.jsonl`; dettaglio per stagione in
+`experiments/fase89_season_champion.json`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*

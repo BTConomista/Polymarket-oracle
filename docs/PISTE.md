@@ -8,7 +8,7 @@ file deve trovare non "cosa manca" ma **"cosa potrei provare dopo, con che
 cosa, e perché potrebbe funzionare"**. La parte operativa (rete, strumenti,
 Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
-l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 79.
+l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 89.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 
@@ -342,6 +342,66 @@ login) se emerge un modo a basso rischio di gestire le credenziali; valutare
 fonti a pagamento se il progetto passa a un uso più operativo. Dettagli
 completi (numeri, candidati testati, criteri di accettazione) in
 `CACCIA_OU_2017_19.md` e nel diario (Fasi 71-72).
+
+## 4-bis · Il mercato CAMPIONE DI STAGIONE — da riprendere OGNI anno, a inizio stagione
+
+> **Perché sta qui e non fra le piste chiuse**: è l'unica pista del progetto con
+> una **finestra temporale ricorrente**. Non è "da provare una volta": è un
+> mercato che **si riapre ogni estate** e va riprezzato prima del via. Aperto
+> con la **Fase 89**.
+
+**Lo stato (Fase 89).** Il simulatore esiste ed è validato:
+`src/models/season_sim.py` + `scripts/_run_fase89_season_champion.py`. Monte
+Carlo di 20.000 stagioni dalle matrici del DC, spareggi ufficiali per lega.
+Batte le baseline in modo **conclusivo** (log-loss 1.1994 vs 2.6515, IC95%
+[+1.1311,+1.7850], migliore in 24/24 stagioni) ma è **sovra-confidente**
+(dichiara 60.1% sul favorito, ne azzecca 41.7%).
+
+**⚠️ PROMEMORIA OPERATIVO — a ogni inizio stagione (luglio/agosto):**
+
+1. **rilanciare** `python scripts/_run_fase89_season_champion.py` (≈2 minuti)
+   dopo aver aggiornato `PROMOTED_2627` con le rose reali della nuova stagione;
+2. **raccogliere i prezzi outright** con
+   `python scripts/fetch_polymarket_open.py --tag "Serie A"` (i tre mercati
+   «20XX Champion» esistono tutto l'anno, anche fuori stagione) e **congelarli**
+   con la data: sono l'unico modo per costruire, nel tempo, lo storico di quote
+   outright che oggi ci manca (vedi §4 "raccolta prospettica");
+3. **scorare a maggio** la previsione dell'anno prima. Ogni stagione aggiunge
+   **3 osservazioni** (una per lega) al campione da 24: è lento, ma è l'unico
+   modo per far crescere la potenza statistica su questo mercato.
+
+**📌 APPUNTO ESPLICITO (richiesta utente, luglio 2026): rifare questo lavoro sul
+«2027 Champion» dopo aver avanzato con le fasi successive.** La previsione della
+Fase 89 per il 2026-27 (Inter 66.8%, Arsenal 44.8%, Barcellona 62.4%) è stata
+prodotta col simulatore **nella sua prima versione**, che si sa essere
+sovra-confidente. Quando le prossime fasi avranno affrontato la **varianza
+mancante** (sotto), la previsione 2026-27 va **ricalcolata e confrontata** sia
+coi prezzi Polymarket di allora sia con quella di oggi: il confronto fra le due
+versioni dirà quanto valeva la correzione — e la stagione 2026-27 sarà ancora in
+corso o appena conclusa, quindi **scorabile**. È l'occasione migliore che il
+progetto avrà per misurare un miglioramento su questo mercato, e va colta prima
+che la stagione finisca.
+
+**Le tre leve da provare, in ordine di costo (nessuna richiede dati nuovi):**
+
+1. **Incertezza dei parametri** (la più promettente, §1.3 "versione economica"):
+   oggi le forze sono un punto-stima tenuto fisso. Bootstrap delle partite di
+   training → rifit → simulazione con forze diverse a ogni replica. Allarga la
+   distribuzione **nella direzione giusta** e non richiede modellistica nuova.
+   Costo: il fit costa ~3s, quindi 100 repliche ≈ 5 minuti per stagione-lega.
+2. **Deriva delle forze in-season**: un random walk sulle forze per giornata
+   (una sola σ da tarare). Attenzione: fa **cadere** la proprietà "l'ordine del
+   calendario è irrilevante" (Fase 89), quindi servirebbe il calendario vero.
+3. **Mercato estivo**: è la variabile che il confronto col mercato addita a dito
+   (Milan 2.9% nostro vs 11.6%, Man United 0.7% vs 11.0%). `squad_value` è già
+   negli snapshot ed è **aggiornato a inizio stagione**: usarlo come covariata
+   nel fit pre-stagionale è diverso dal test già bocciato sulle singole partite
+   (Fasi 4c/66-70), perché lì l'informazione dai risultati era fresca, qui è
+   vecchia di tre mesi. **Non è coperto da quelle bocciature.**
+
+**Il limite che resta comunque.** Non esistono quote outright **storiche**: si
+può dimostrare "battiamo le baseline", non "battiamo il mercato". Solo la
+raccolta prospettica del punto 2 può cambiarlo, e serviranno anni.
 
 ## 5 · Fatti misurati che condizionano il modeling futuro
 

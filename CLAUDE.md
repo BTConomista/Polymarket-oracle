@@ -235,6 +235,9 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  market_denoise.py (Fase 38/Punto 4: power-devig + recal cross-stagione)
                  bivariate_poisson.py (Fase 42: correlazione esplicita λ3; perde vs φ35)
                  copula_scores.py (Fase 43: copula di Frank, dip. flessibile; tetto = φ35)
+                 season_sim.py (Fase 89: simulazione Monte Carlo di una STAGIONE
+                 intera -> mercato CAMPIONE; classifica con spareggi UFFICIALI
+                 per lega, h2h in SA/Liga, DR in Premier)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
@@ -328,6 +331,18 @@ mercati che il book non quota (GG/NG, risultato esatto, multigol, total-squadra�
 e le **correzioni per-lega** (φ35 famiglia-pareggio, θ router); la Fase 82 ha
 verificato per via diretta che l'oracolo è **calibrato e indovina quanto il
 mercato** (non di più).
+
+**Una famiglia di mercati NUOVA (Fase 89).** Il mercato **campione di stagione**
+(outright) è il primo che NON si deriva dalla matrice di una partita: dipende da
+380 partite congiuntamente + la regola di classifica, quindi va **simulato**
+(`src/models/season_sim.py`, Monte Carlo di 20.000 stagioni). Batte le baseline
+in modo conclusivo (log-loss 1.1994 vs 2.6515, migliore in 24/24 stagioni-lega)
+ma è **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecca 41.7%): mancano
+l'incertezza dei parametri e la loro evoluzione in-season. Non esistono quote
+outright storiche → «battiamo il mercato» NON è testabile all'indietro. È una
+pista **ricorrente**: si riprezza a ogni inizio stagione (promemoria operativo in
+`docs/PISTE.md` §4-bis). Lo strumento per le quote live è
+`scripts/fetch_polymarket_open.py` (Polymarket è raggiungibile dall'ambiente).
 
 **Cosa è chiuso (non riproporre senza informazione nuova).** Tutti i dati
 INTERNI sono esplorati (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/forma/
