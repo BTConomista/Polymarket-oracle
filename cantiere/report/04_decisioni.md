@@ -106,9 +106,10 @@ valori (stagione 2025-26):
 | **ligue_1** | 7 | **1.286** | **28.6%** | 0.966 |
 
 E su stagioni vecchie il divario è ancora maggiore (2018-19: 1.35-1.44 in tutte
-le leghe testate), quindi **non** è una semplice questione di aggiornamento
-recente. Le due misure sono fortemente correlate (0.97-0.99) ma su **scale
-diverse**, e la differenza di scala varia per lega.
+le leghe testate). Le due misure sono fortemente correlate (0.97-0.99) ma su
+**scale diverse**, e la differenza di scala varia per lega. → *questa lettura è
+stata poi affinata: vedi §4, dove si mostra che in una stagione con dati
+completi le due definizioni coincidono.*
 
 **(c) La causa vera del buco: il dataset a monte è indietro sulla 2025-26.** La
 copertura delle valutazioni (quota di minuti giocati da calciatori valutati)
@@ -142,11 +143,10 @@ peggiore) contro ~1.0 nelle tre leghe con copertura migliore.
 | riempire l'INTERA colonna 2025-26 da TM per tutte e 5 le leghe | l'unica soluzione davvero coerente sul piano della scala, ma cambia dati già consolidati e va rifatta ogni volta |
 | stima di modello | errore atteso 17-29%, peggiore del dato TM: non ha senso avendo il TM |
 
-Raccomandazione: **NaN dichiarato**, con il file `squad_value_2526_transfermarkt.csv`
-tenuto nel cantiere come dato di riserva già validato. Se invece la coerenza
-«zero NaN» conta più della coerenza di scala, la seconda scelta è riempire con
-TM dichiarando il rapporto misurato lega per lega (la colonna del file lo
-riporta già).
+*(La raccomandazione che avevo scritto qui — NaN dichiarato — è stata superata
+dalla decisione dell'utente e, come si vede nel §4, anche dai numeri: la verifica
+fatta durante l'applicazione mostra che le celle riempite da Transfermarkt sono
+semmai più corrette di quelle vicine prese dalla fonte primaria.)*
 
 ---
 
