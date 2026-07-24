@@ -1,0 +1,14 @@
+# Cache Transfermarkt (~102 MB): rigenerabile da rete, mai versionata (come data/raw/).
+data/fonti/transfermarkt/
+
+# Copie fresche delle fonti delle TRE leghe gia' in repo: servono solo all'audit
+# ed sono rigenerabili con `python cantiere/scripts/fetch_sources.py --leagues ...`
+# (URL + SHA256 di ognuna sono comunque registrati in data/fonti/manifest.json).
+# Le fonti delle DUE leghe NUOVE (bundesliga_*, ligue_1_*) SONO versionate:
+# sono il materiale grezzo da cui si rigenerano i loro snapshot, offline.
+data/fonti/football_data/serie_a_*.csv
+data/fonti/football_data/premier_league_*.csv
+data/fonti/football_data/la_liga_*.csv
+data/fonti/understat/serie_a_*.json
+data/fonti/understat/premier_league_*.json
+data/fonti/understat/la_liga_*.json

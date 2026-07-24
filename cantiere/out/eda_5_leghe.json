@@ -1,0 +1,111 @@
+{
+  "tabella": [
+    {
+      "lega": "serie_a",
+      "gare": 3420,
+      "stagioni": 9,
+      "gol/gara": 2.719,
+      "casa%": 0.412,
+      "pari%": 0.26,
+      "ospite%": 0.327,
+      "over2.5%": 0.52,
+      "gamma": 0.15,
+      "Var/Media": 0.978,
+      "delta_promosse": 0.229,
+      "corr(xG,gol)": 0.607,
+      "margine1X2": 0.0435
+    },
+    {
+      "lega": "premier_league",
+      "gare": 3420,
+      "stagioni": 9,
+      "gol/gara": 2.839,
+      "casa%": 0.441,
+      "pari%": 0.234,
+      "ospite%": 0.325,
+      "over2.5%": 0.544,
+      "gamma": 0.185,
+      "Var/Media": 0.963,
+      "delta_promosse": 0.329,
+      "corr(xG,gol)": 0.635,
+      "margine1X2": 0.0382
+    },
+    {
+      "lega": "la_liga",
+      "gare": 3420,
+      "stagioni": 9,
+      "gol/gara": 2.582,
+      "casa%": 0.453,
+      "pari%": 0.265,
+      "ospite%": 0.282,
+      "over2.5%": 0.471,
+      "gamma": 0.272,
+      "Var/Media": 1.038,
+      "delta_promosse": 0.218,
+      "corr(xG,gol)": 0.621,
+      "margine1X2": 0.0426
+    },
+    {
+      "lega": "bundesliga",
+      "gare": 2754,
+      "stagioni": 9,
+      "gol/gara": 3.122,
+      "casa%": 0.437,
+      "pari%": 0.249,
+      "ospite%": 0.314,
+      "over2.5%": 0.603,
+      "gamma": 0.216,
+      "Var/Media": 0.962,
+      "delta_promosse": 0.277,
+      "corr(xG,gol)": 0.644,
+      "margine1X2": 0.0427
+    },
+    {
+      "lega": "ligue_1",
+      "gare": 3097,
+      "stagioni": 9,
+      "gol/gara": 2.742,
+      "casa%": 0.433,
+      "pari%": 0.253,
+      "ospite%": 0.314,
+      "over2.5%": 0.522,
+      "gamma": 0.202,
+      "Var/Media": 1.006,
+      "delta_promosse": 0.188,
+      "corr(xG,gol)": 0.631,
+      "margine1X2": 0.0441
+    }
+  ],
+  "deficit_pareggio": {
+    "serie_a": {
+      "Q1 equilibrate": 0.0323,
+      "Q2": 0.0111,
+      "Q3": -0.0031,
+      "Q4 sbilanciate": -0.0105
+    },
+    "premier_league": {
+      "Q1 equilibrate": -0.0092,
+      "Q2": 0.0111,
+      "Q3": -0.0158,
+      "Q4 sbilanciate": -0.0132
+    },
+    "la_liga": {
+      "Q1 equilibrate": 0.0223,
+      "Q2": 0.0035,
+      "Q3": 0.0079,
+      "Q4 sbilanciate": -0.0181
+    },
+    "bundesliga": {
+      "Q1 equilibrate": 0.0108,
+      "Q2": 0.0267,
+      "Q3": 0.0132,
+      "Q4 sbilanciate": 0.0014
+    },
+    "ligue_1": {
+      "Q1 equilibrate": -0.0061,
+      "Q2": -0.0032,
+      "Q3": 0.0128,
+      "Q4 sbilanciate": -0.0137
+    }
+  }
+}

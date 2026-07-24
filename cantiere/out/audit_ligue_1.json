@@ -1,0 +1,403 @@
+{
+  "league": "ligue_1",
+  "n_rows": 3097,
+  "checks": [
+    {
+      "id": "A1.schema",
+      "level": "PASS",
+      "msg": "38 colonne, ordine atteso",
+      "data": {
+        "extra": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "A2.chiave_unica",
+      "level": "PASS",
+      "msg": "0 chiavi (stagione,casa,ospite) duplicate",
+      "data": {
+        "examples": []
+      }
+    },
+    {
+      "id": "A3.round_robin",
+      "level": "INFO",
+      "msg": "1 stagioni con calendario incompleto/anomalo  [ECCEZIONE NOTA: Ligue 1 2019-20 cancellata per COVID (279/380 gare)]",
+      "data": {
+        "problems": [
+          {
+            "season": "1920",
+            "n_teams": 20,
+            "n_matches": 279,
+            "expected": 380,
+            "teams_wrong_count": {
+              "Monaco": 28,
+              "Marseille": 28,
+              "Angers": 28,
+              "Brest": 28,
+              "Dijon": 28,
+              "Montpellier": 28,
+              "Nice": 28,
+              "Lille": 28,
+              "Lyon": 28,
+              "Nantes": 28,
+              "Bordeaux": 28,
+              "Amiens": 28,
+              "Metz": 28,
+              "Toulouse": 28,
+              "Nimes": 28,
+              "St Etienne": 28,
+              "Reims": 28,
+              "Rennes": 28,
+              "Paris SG": 27,
+              "Strasbourg": 27
+            },
+            "pair_dup": 0,
+            "unordered_pairs_not_2": 101
+          }
+        ]
+      }
+    },
+    {
+      "id": "A4.result_vs_gol",
+      "level": "PASS",
+      "msg": "0 risultati incoerenti coi gol, 0 gol negativi, 0 gol >12 (da ispezionare a mano)",
+      "data": {
+        "examples": [],
+        "big": []
+      }
+    },
+    {
+      "id": "A5.date_finestra",
+      "level": "PASS",
+      "msg": "0 date mancanti, 0 stagioni con date fuori finestra",
+      "data": {
+        "bad": []
+      }
+    },
+    {
+      "id": "A6.due_gare_stesso_giorno",
+      "level": "PASS",
+      "msg": "0 casi squadra con 2 gare nello stesso giorno",
+      "data": {
+        "examples": []
+      }
+    },
+    {
+      "id": "A7.nomi_squadra",
+      "level": "PASS",
+      "msg": "30 squadre distinte; 0 nomi con alias non applicato; 0 coppie quasi-duplicate",
+      "data": {
+        "n_teams": 30,
+        "unaliased": [],
+        "near": []
+      }
+    },
+    {
+      "id": "A8.quote_valide",
+      "level": "PASS",
+      "msg": "quote: 1X2_chiusura n=3097 orr[1.017,1.074]; 1X2_apertura n=3097 orr[1.017,1.079]; OU_chiusura n=2337 orr[1.040,1.075]; OU_apertura n=3097 orr[1.037,1.282]",
+      "data": {
+        "1X2_chiusura": {
+          "coperte": 3097,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.0165878643552675,
+          "overround_med": 1.0469400279755208,
+          "overround_max": 1.0737450894556853
+        },
+        "1X2_apertura": {
+          "coperte": 3097,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.0168752345991616,
+          "overround_med": 1.0481513988464353,
+          "overround_max": 1.0785409184083559
+        },
+        "OU_chiusura": {
+          "coperte": 2337,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.0398098633392752,
+          "overround_med": 1.0516653553632311,
+          "overround_max": 1.0754747961250068
+        },
+        "OU_apertura": {
+          "coperte": 3097,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.0372719211028403,
+          "overround_med": 1.0530934620447565,
+          "overround_max": 1.2822620417557125
+        }
+      }
+    },
+    {
+      "id": "A9.copertura_quote",
+      "level": "PASS",
+      "msg": "copertura chiusura O/U conforme alla semantica dichiarata (0% nel 2017-19, ~100% dal 2019-20): 0 deviazioni",
+      "data": {
+        "coverage": {
+          "odds_home": {
+            "1718": 1.0,
+            "1819": 1.0,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          },
+          "odds_over25": {
+            "1718": 0.0,
+            "1819": 0.0,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          },
+          "odds_home_open": {
+            "1718": 1.0,
+            "1819": 1.0,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          },
+          "odds_over25_open": {
+            "1718": 1.0,
+            "1819": 1.0,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          }
+        },
+        "violations": {}
+      }
+    },
+    {
+      "id": "A10.apertura_diversa",
+      "level": "PASS",
+      "msg": "quota 1 apertura == chiusura nel 3.6% delle righe (n=3097); atteso basso (istantanee diverse)",
+      "data": {
+        "frac_identical": 0.03616402970616726
+      }
+    },
+    {
+      "id": "A11.xg_stile",
+      "level": "PASS",
+      "msg": "copertura xG 99.97%; npxG>xG in 0 righe; 0 xG fuori range; 0 PPDA<=0; 0 deep<0",
+      "data": {
+        "coverage": 0.9996771068776235,
+        "npxg_gt_xg": 0
+      }
+    },
+    {
+      "id": "A12.squad_value",
+      "level": "PASS",
+      "msg": "0 coppie (stagione,squadra) con valore rosa NON costante; 264 righe con valore mancante",
+      "data": {
+        "incoherent": {},
+        "n_nan": 264
+      }
+    },
+    {
+      "id": "A13.congestione_assenze",
+      "level": "PASS",
+      "msg": "riposo NaN=0 range=[3.0,14.0]; midweek non binario=0; assenze NaN=0 max=13.0",
+      "data": {}
+    },
+    {
+      "id": "B1.stesse_partite",
+      "level": "PASS",
+      "msg": "0 partite solo nello snapshot, 0 solo nella fonte ri-scaricata (su 3097)",
+      "data": {
+        "only_snapshot": [],
+        "only_source": []
+      }
+    },
+    {
+      "id": "B2.gol_e_tiri",
+      "level": "PASS",
+      "msg": "0 righe con GOL diversi dalla fonte; 0 con tiri in porta diversi",
+      "data": {
+        "gol": [],
+        "sot": []
+      }
+    },
+    {
+      "id": "B3.date",
+      "level": "PASS",
+      "msg": "0 righe con data diversa dalla fonte",
+      "data": {
+        "examples": []
+      }
+    },
+    {
+      "id": "B4.quote_riderivate",
+      "level": "PASS",
+      "msg": "0/10 colonne quota differiscono dalla ri-derivazione dalla fonte originale",
+      "data": {
+        "diffs": {}
+      }
+    },
+    {
+      "id": "C1.gol_fonte_indipendente",
+      "level": "WARN",
+      "msg": "0 righe con gol diversi tra football-data e Understat; 1 partite senza corrispondenza Understat (lacuna della fonte)",
+      "data": {
+        "examples": [],
+        "unmatched": [
+          {
+            "season": "2526",
+            "home_team": "Nantes",
+            "away_team": "Toulouse"
+          }
+        ]
+      }
+    },
+    {
+      "id": "C2.xg_riparsato",
+      "level": "PASS",
+      "msg": "0/8 colonne xG/stile differiscono dal ri-parsing della fonte Understat",
+      "data": {
+        "diffs": {}
+      }
+    },
+    {
+      "id": "C3.date_due_fonti",
+      "level": "WARN",
+      "msg": "3 partite con date football-data/Understat distanti >1 giorno",
+      "data": {
+        "n": 3
+      }
+    },
+    {
+      "id": "D1.statistiche_lega",
+      "level": "PASS",
+      "msg": "gol/gara 2.52-2.98; vittorie casa 37.4%-48.0% (range plausibili per un campionato)",
+      "data": {
+        "per_season": {
+          "1718": {
+            "gare": 380,
+            "gol_gara": 2.718,
+            "casa%": 0.455,
+            "pari%": 0.253,
+            "over25%": 0.518,
+            "gamma_ln_casa_ospite": 0.251
+          },
+          "1819": {
+            "gare": 380,
+            "gol_gara": 2.558,
+            "casa%": 0.432,
+            "pari%": 0.289,
+            "over25%": 0.482,
+            "gamma_ln_casa_ospite": 0.303
+          },
+          "1920": {
+            "gare": 279,
+            "gol_gara": 2.523,
+            "casa%": 0.48,
+            "pari%": 0.251,
+            "over25%": 0.473,
+            "gamma_ln_casa_ospite": 0.374
+          },
+          "2021": {
+            "gare": 380,
+            "gol_gara": 2.761,
+            "casa%": 0.374,
+            "pari%": 0.25,
+            "over25%": 0.542,
+            "gamma_ln_casa_ospite": 0.025
+          },
+          "2122": {
+            "gare": 380,
+            "gol_gara": 2.808,
+            "casa%": 0.426,
+            "pari%": 0.268,
+            "over25%": 0.503,
+            "gamma_ln_casa_ospite": 0.254
+          },
+          "2223": {
+            "gare": 380,
+            "gol_gara": 2.808,
+            "casa%": 0.429,
+            "pari%": 0.242,
+            "over25%": 0.563,
+            "gamma_ln_casa_ospite": 0.122
+          },
+          "2324": {
+            "gare": 306,
+            "gol_gara": 2.699,
+            "casa%": 0.392,
+            "pari%": 0.265,
+            "over25%": 0.529,
+            "gamma_ln_casa_ospite": 0.146
+          },
+          "2425": {
+            "gare": 306,
+            "gol_gara": 2.977,
+            "casa%": 0.467,
+            "pari%": 0.203,
+            "over25%": 0.556,
+            "gamma_ln_casa_ospite": 0.161
+          },
+          "2526": {
+            "gare": 306,
+            "gol_gara": 2.82,
+            "casa%": 0.461,
+            "pari%": 0.245,
+            "over25%": 0.526,
+            "gamma_ln_casa_ospite": 0.245
+          }
+        }
+      }
+    },
+    {
+      "id": "D2.mercato_calibrato",
+      "level": "PASS",
+      "msg": "scarto medio prob.mercato - frequenza osservata: H +0.0034, D +0.0026, A -0.0060 (n=3097)",
+      "data": {
+        "bias": [
+          0.003438526499582817,
+          0.0025656505061116275,
+          -0.006004177005695555
+        ],
+        "n": 3097
+      }
+    },
+    {
+      "id": "D3.margine_per_stagione",
+      "level": "PASS",
+      "msg": "margine 1X2: 2017-19 ['2.33%', '2.73%'] (Pinnacle) vs dal 2019-20 4.63%-6.26% (media book)",
+      "data": {
+        "per_season": {
+          "1718": 0.0233,
+          "1819": 0.0273,
+          "1920": 0.0513,
+          "2021": 0.0514,
+          "2122": 0.0467,
+          "2223": 0.0467,
+          "2324": 0.0463,
+          "2425": 0.0482,
+          "2526": 0.0626
+        }
+      }
+    }
+  ]
+}

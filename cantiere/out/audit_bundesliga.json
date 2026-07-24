@@ -1,0 +1,376 @@
+{
+  "league": "bundesliga",
+  "n_rows": 2754,
+  "checks": [
+    {
+      "id": "A1.schema",
+      "level": "PASS",
+      "msg": "38 colonne, ordine atteso",
+      "data": {
+        "extra": [],
+        "missing": []
+      }
+    },
+    {
+      "id": "A2.chiave_unica",
+      "level": "PASS",
+      "msg": "0 chiavi (stagione,casa,ospite) duplicate",
+      "data": {
+        "examples": []
+      }
+    },
+    {
+      "id": "A3.round_robin",
+      "level": "PASS",
+      "msg": "0 stagioni con calendario incompleto/anomalo",
+      "data": {
+        "problems": []
+      }
+    },
+    {
+      "id": "A4.result_vs_gol",
+      "level": "PASS",
+      "msg": "0 risultati incoerenti coi gol, 0 gol negativi, 0 gol >12 (da ispezionare a mano)",
+      "data": {
+        "examples": [],
+        "big": []
+      }
+    },
+    {
+      "id": "A5.date_finestra",
+      "level": "PASS",
+      "msg": "0 date mancanti, 0 stagioni con date fuori finestra",
+      "data": {
+        "bad": []
+      }
+    },
+    {
+      "id": "A6.due_gare_stesso_giorno",
+      "level": "PASS",
+      "msg": "0 casi squadra con 2 gare nello stesso giorno",
+      "data": {
+        "examples": []
+      }
+    },
+    {
+      "id": "A7.nomi_squadra",
+      "level": "PASS",
+      "msg": "29 squadre distinte; 0 nomi con alias non applicato; 0 coppie quasi-duplicate",
+      "data": {
+        "n_teams": 29,
+        "unaliased": [],
+        "near": []
+      }
+    },
+    {
+      "id": "A8.quote_valide",
+      "level": "PASS",
+      "msg": "quote: 1X2_chiusura n=2753 orr[1.015,1.074]; 1X2_apertura n=2754 orr[1.016,1.077]; OU_chiusura n=2142 orr[1.023,1.073]; OU_apertura n=2753 orr[1.039,1.339]",
+      "data": {
+        "1X2_chiusura": {
+          "coperte": 2753,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.014537680805276,
+          "overround_med": 1.0439174538529705,
+          "overround_max": 1.0739101868708931
+        },
+        "1X2_apertura": {
+          "coperte": 2754,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.016256814409014,
+          "overround_med": 1.0439820339460755,
+          "overround_max": 1.0766187496783841
+        },
+        "OU_chiusura": {
+          "coperte": 2142,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.0227272727272727,
+          "overround_med": 1.0519683313700243,
+          "overround_max": 1.0725284060741211
+        },
+        "OU_apertura": {
+          "coperte": 2753,
+          "parziali": 0,
+          "quote<=1": 0,
+          "overround<1": 0,
+          "overround_min": 1.0393046107331823,
+          "overround_med": 1.053079459631954,
+          "overround_max": 1.3390058217644425
+        }
+      }
+    },
+    {
+      "id": "A9.copertura_quote",
+      "level": "PASS",
+      "msg": "copertura chiusura O/U conforme alla semantica dichiarata (0% nel 2017-19, ~100% dal 2019-20): 0 deviazioni",
+      "data": {
+        "coverage": {
+          "odds_home": {
+            "1718": 1.0,
+            "1819": 0.9967,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          },
+          "odds_over25": {
+            "1718": 0.0,
+            "1819": 0.0,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          },
+          "odds_home_open": {
+            "1718": 1.0,
+            "1819": 1.0,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          },
+          "odds_over25_open": {
+            "1718": 1.0,
+            "1819": 0.9967,
+            "1920": 1.0,
+            "2021": 1.0,
+            "2122": 1.0,
+            "2223": 1.0,
+            "2324": 1.0,
+            "2425": 1.0,
+            "2526": 1.0
+          }
+        },
+        "violations": {}
+      }
+    },
+    {
+      "id": "A10.apertura_diversa",
+      "level": "PASS",
+      "msg": "quota 1 apertura == chiusura nel 4.4% delle righe (n=2753); atteso basso (istantanee diverse)",
+      "data": {
+        "frac_identical": 0.04358881220486742
+      }
+    },
+    {
+      "id": "A11.xg_stile",
+      "level": "PASS",
+      "msg": "copertura xG 100.00%; npxG>xG in 0 righe; 0 xG fuori range; 0 PPDA<=0; 0 deep<0",
+      "data": {
+        "coverage": 1.0,
+        "npxg_gt_xg": 0
+      }
+    },
+    {
+      "id": "A12.squad_value",
+      "level": "PASS",
+      "msg": "0 coppie (stagione,squadra) con valore rosa NON costante; 150 righe con valore mancante",
+      "data": {
+        "incoherent": {},
+        "n_nan": 150
+      }
+    },
+    {
+      "id": "A13.congestione_assenze",
+      "level": "PASS",
+      "msg": "riposo NaN=0 range=[2.0,14.0]; midweek non binario=0; assenze NaN=0 max=12.0",
+      "data": {}
+    },
+    {
+      "id": "B1.stesse_partite",
+      "level": "PASS",
+      "msg": "0 partite solo nello snapshot, 0 solo nella fonte ri-scaricata (su 2754)",
+      "data": {
+        "only_snapshot": [],
+        "only_source": []
+      }
+    },
+    {
+      "id": "B2.gol_e_tiri",
+      "level": "PASS",
+      "msg": "0 righe con GOL diversi dalla fonte; 0 con tiri in porta diversi",
+      "data": {
+        "gol": [],
+        "sot": []
+      }
+    },
+    {
+      "id": "B3.date",
+      "level": "PASS",
+      "msg": "0 righe con data diversa dalla fonte",
+      "data": {
+        "examples": []
+      }
+    },
+    {
+      "id": "B4.quote_riderivate",
+      "level": "PASS",
+      "msg": "0/10 colonne quota differiscono dalla ri-derivazione dalla fonte originale",
+      "data": {
+        "diffs": {}
+      }
+    },
+    {
+      "id": "C1.gol_fonte_indipendente",
+      "level": "FAIL",
+      "msg": "1 righe con gol diversi tra football-data e Understat; 0 partite senza corrispondenza Understat (lacuna della fonte)",
+      "data": {
+        "examples": [
+          {
+            "season": "2425",
+            "home_team": "Union Berlin",
+            "away_team": "Bochum",
+            "home_goals": 0,
+            "away_goals": 2,
+            "ud_home_goals": 1,
+            "ud_away_goals": 1
+          }
+        ],
+        "unmatched": []
+      }
+    },
+    {
+      "id": "C2.xg_riparsato",
+      "level": "PASS",
+      "msg": "0/8 colonne xG/stile differiscono dal ri-parsing della fonte Understat",
+      "data": {
+        "diffs": {}
+      }
+    },
+    {
+      "id": "C3.date_due_fonti",
+      "level": "PASS",
+      "msg": "0 partite con date football-data/Understat distanti >1 giorno",
+      "data": {
+        "n": 0
+      }
+    },
+    {
+      "id": "D1.statistiche_lega",
+      "level": "PASS",
+      "msg": "gol/gara 2.79-3.23; vittorie casa 38.6%-47.4% (range plausibili per un campionato)",
+      "data": {
+        "per_season": {
+          "1718": {
+            "gare": 306,
+            "gol_gara": 2.794,
+            "casa%": 0.454,
+            "pari%": 0.271,
+            "over25%": 0.52,
+            "gamma_ln_casa_ospite": 0.295
+          },
+          "1819": {
+            "gare": 306,
+            "gol_gara": 3.18,
+            "casa%": 0.451,
+            "pari%": 0.239,
+            "over25%": 0.624,
+            "gamma_ln_casa_ospite": 0.254
+          },
+          "1920": {
+            "gare": 306,
+            "gol_gara": 3.209,
+            "casa%": 0.402,
+            "pari%": 0.222,
+            "over25%": 0.65,
+            "gamma_ln_casa_ospite": 0.069
+          },
+          "2021": {
+            "gare": 306,
+            "gol_gara": 3.033,
+            "casa%": 0.422,
+            "pari%": 0.265,
+            "over25%": 0.588,
+            "gamma_ln_casa_ospite": 0.212
+          },
+          "2122": {
+            "gare": 306,
+            "gol_gara": 3.118,
+            "casa%": 0.467,
+            "pari%": 0.239,
+            "over25%": 0.585,
+            "gamma_ln_casa_ospite": 0.261
+          },
+          "2223": {
+            "gare": 306,
+            "gol_gara": 3.173,
+            "casa%": 0.474,
+            "pari%": 0.245,
+            "over25%": 0.605,
+            "gamma_ln_casa_ospite": 0.343
+          },
+          "2324": {
+            "gare": 306,
+            "gol_gara": 3.219,
+            "casa%": 0.438,
+            "pari%": 0.265,
+            "over25%": 0.624,
+            "gamma_ln_casa_ospite": 0.247
+          },
+          "2425": {
+            "gare": 306,
+            "gol_gara": 3.134,
+            "casa%": 0.386,
+            "pari%": 0.252,
+            "over25%": 0.598,
+            "gamma_ln_casa_ospite": 0.081
+          },
+          "2526": {
+            "gare": 306,
+            "gol_gara": 3.235,
+            "casa%": 0.438,
+            "pari%": 0.245,
+            "over25%": 0.637,
+            "gamma_ln_casa_ospite": 0.199
+          }
+        }
+      }
+    },
+    {
+      "id": "D2.mercato_calibrato",
+      "level": "PASS",
+      "msg": "scarto medio prob.mercato - frequenza osservata: H +0.0077, D -0.0130, A +0.0053 (n=2753)",
+      "data": {
+        "bias": [
+          0.007738052816030516,
+          -0.013028117244725024,
+          0.00529006442869584
+        ],
+        "n": 2753
+      }
+    },
+    {
+      "id": "D3.margine_per_stagione",
+      "level": "PASS",
+      "msg": "margine 1X2: 2017-19 ['2.27%', '2.83%'] (Pinnacle) vs dal 2019-20 4.27%-6.34% (media book)",
+      "data": {
+        "per_season": {
+          "1718": 0.0227,
+          "1819": 0.0283,
+          "1920": 0.0477,
+          "2021": 0.0477,
+          "2122": 0.0431,
+          "2223": 0.0427,
+          "2324": 0.0427,
+          "2425": 0.0459,
+          "2526": 0.0634
+        }
+      }
+    }
+  ]
+}

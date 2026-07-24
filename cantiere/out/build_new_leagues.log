@@ -1,0 +1,195 @@
+
+=== Bundesliga ===
+  bundesliga 1718: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 1819: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2  99.7%
+  bundesliga 1920: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 2021: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 2122: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 2223: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 2324: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 2425: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  bundesliga 2526: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  valore rosa (player-scores)...
+  [WARNING] Valore rosa NON pubblicato per bundesliga 2526 Augsburg: copertura 85% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per bundesliga 2526 FC Koln: copertura 74% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per bundesliga 2526 Hamburg: copertura 45% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per bundesliga 2526 Hoffenheim: copertura 63% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per bundesliga 2526 St Pauli: copertura 40% sotto la soglia del 85%
+    copertura valore rosa (entrambi i lati): 94.6%
+  assenze stimate (Transfermarkt + rose Understat)...
+  rose Understat: 4505 righe (giocatore, squadra)
+  calendario di club completo (congestione)...
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2017-09-12]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2017-09-27]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2017-10-18]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2017-10-31]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2017-11-22]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2017-12-05]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2018-02-20]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2018-03-14]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2018-04-03]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2018-04-11]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2018-04-25]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1718 Champions League, 2018-05-01]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2018-09-19]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2018-10-02]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2018-10-23]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2018-11-07]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2018-11-27]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2018-12-12]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2019-02-19]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1819 Champions League, 2019-03-13]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2019-09-18]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2019-10-01]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2019-10-22]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2019-11-06]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2019-11-26]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2019-12-11]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2020-02-25]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2020-08-08]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2020-08-14]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2020-08-19]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [1920 Champions League, 2020-08-23]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2020-10-21]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2020-10-27]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2020-11-03]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2020-11-25]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2020-12-01]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2020-12-09]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2020-10-21]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2020-10-27]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2020-11-03]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2020-11-25]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2020-12-01]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2020-12-09]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2021-02-23]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2021-02-24]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bor. Mönchengladbach' -> 'Bor. Mönchengladbach' [2021 Champions League, 2021-03-16]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2021-03-17]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2021-04-07]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2021 Champions League, 2021-04-13]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2021-09-14]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2021-09-29]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2021-10-20]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2021-11-02]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2021-11-23]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2021-12-08]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2022-02-16]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2022-03-08]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2022-04-06]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2122 Champions League, 2022-04-12]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2022-09-07]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2022-09-13]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2022-10-04]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2022-10-12]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2022-10-26]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2022-11-01]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2023-02-14]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2023-03-08]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2023-04-11]
+  [WARNING] Club GER NON agganciato (alias mancante?): 'Bayern München' -> 'Bayern München' [2223 Champions League, 2023-04-19]
+    10189 righe (squadra, partita) -> club_fixtures_bundesliga.csv
+season  extra_matches  teams_with_extra  2. Bundesliga  Bundesliga 2016-17  Champions League  DFB-Pokal  Europa League  Conference League  Conference League (qual.)
+  1617            850                25          340.0               510.0               0.0        0.0            0.0                0.0                        0.0
+  1718            352                12          340.0                 0.0              12.0        0.0            0.0                0.0                        0.0
+  1819            470                27          374.0                 0.0              22.0       74.0            0.0                0.0                        0.0
+  1920            468                27          374.0                 0.0              24.0       70.0            0.0                0.0                        0.0
+  2021            471                27          374.0                 0.0              18.0       63.0           16.0                0.0                        0.0
+  2122            486                26          374.0                 0.0              18.0       57.0           31.0                6.0                        0.0
+  2223            505                26          374.0                 0.0              30.0       69.0           26.0                6.0                        0.0
+  2324            468                26          340.0                 0.0              39.0       58.0           23.0                8.0                        0.0
+  2425            502                28          340.0                 0.0              54.0       78.0           20.0                8.0                        2.0
+  2526            109                28            0.0                 0.0              44.0       63.0            0.0                0.0                        2.0
+  -> cantiere/data/bundesliga_matches.csv: 2754 partite, 9 stagioni, 38 colonne
+
+=== Ligue 1 ===
+  ligue_1 1718: 380 gare, 20 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 1819: 380 gare, 20 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 1920: 279 gare, 20 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 2021: 380 gare, 20 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 2122: 380 gare, 20 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 2223: 380 gare, 20 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 2324: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 2425: 306 gare, 18 squadre, xG 100.0%, quote chiusura 1X2 100.0%
+  ligue_1 2526: 306 gare, 18 squadre, xG  99.7%, quote chiusura 1X2 100.0%
+  valore rosa (player-scores)...
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Angers: copertura 29% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Auxerre: copertura 61% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Le Havre: copertura 79% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Lens: copertura 84% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Lorient: copertura 68% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Lyon: copertura 74% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Metz: copertura 42% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Nantes: copertura 84% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Nice: copertura 79% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Paris FC: copertura 54% sotto la soglia del 85%
+  [WARNING] Valore rosa NON pubblicato per ligue_1 2526 Toulouse: copertura 84% sotto la soglia del 85%
+    copertura valore rosa (entrambi i lati): 91.5%
+  assenze stimate (Transfermarkt + rose Understat)...
+  rose Understat: 5106 righe (giocatore, squadra)
+  calendario di club completo (congestione)...
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2023-09-19]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Racing Club de Lens' -> 'Racing Club de Lens' [2324 Champions League, 2023-09-20]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Racing Club de Lens' -> 'Racing Club de Lens' [2324 Champions League, 2023-10-03]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2023-10-04]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Racing Club de Lens' -> 'Racing Club de Lens' [2324 Champions League, 2023-10-24]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2023-10-25]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2023-11-07]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Racing Club de Lens' -> 'Racing Club de Lens' [2324 Champions League, 2023-11-08]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2023-11-28]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Racing Club de Lens' -> 'Racing Club de Lens' [2324 Champions League, 2023-11-29]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Racing Club de Lens' -> 'Racing Club de Lens' [2324 Champions League, 2023-12-12]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2023-12-13]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2024-02-14]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2024-03-05]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2024-04-10]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2024-04-16]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2024-05-01]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2324 Champions League, 2024-05-07]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2024-09-18]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2024-10-01]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2024-10-22]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2024-11-06]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2024-11-26]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2024-12-10]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-01-22]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-01-29]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-02-11]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-02-19]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-03-05]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-03-11]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-04-09]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-04-15]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-04-29]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-05-07]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2425 Champions League, 2025-05-31]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2025-09-17]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2025-10-01]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2025-10-21]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2025-11-04]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2025-11-26]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2025-12-10]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-01-20]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-01-28]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-02-17]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-02-25]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-03-11]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-03-17]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-04-08]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-04-14]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-04-28]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-05-06]
+  [WARNING] Club FRA NON agganciato (alias mancante?): 'Paris Saint-Germain FC' -> 'Paris Saint-Germain FC' [2526 Champions League, 2026-05-30]
+    10382 righe (squadra, partita) -> club_fixtures_ligue_1.csv
+season  extra_matches  teams_with_extra  Ligue 1 2016-17  Ligue 2  Champions League  Europa League  Conference League  Champions League (qual.)  Conference League (qual.)  Coupe de France
+  1617           1064                28            684.0    380.0               0.0            0.0                0.0                       0.0                        0.0              0.0
+  1718            356                11              0.0    342.0              14.0            0.0                0.0                       0.0                        0.0              0.0
+  1819            364                12              0.0    342.0              22.0            0.0                0.0                       0.0                        0.0              0.0
+  1920            369                12              0.0    342.0              27.0            0.0                0.0                       0.0                        0.0              0.0
+  2021            380                14              0.0    342.0              24.0           14.0                0.0                       0.0                        0.0              0.0
+  2122            398                15              0.0    342.0              16.0           24.0               16.0                       0.0                        0.0              0.0
+  2223            390                15              0.0    342.0              14.0           24.0               10.0                       0.0                        0.0              0.0
+  2324            422                15              0.0    380.0               0.0           32.0               10.0                       0.0                        0.0              0.0
+  2425            433                28              0.0    306.0              20.0           20.0                0.0                       4.0                        2.0             81.0
+  2526             12                 3              0.0      0.0               8.0            0.0                0.0                       2.0                        2.0              0.0
+  -> cantiere/data/ligue_1_matches.csv: 3097 partite, 9 stagioni, 38 colonne

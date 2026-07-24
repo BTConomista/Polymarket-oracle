@@ -1,0 +1,975 @@
+{
+  "margini": [
+    {
+      "league": "la_liga",
+      "mercato": "OU_apertura",
+      "season": "1819",
+      "date": "2018-10-06",
+      "match": "Alaves-Real Madrid",
+      "overround": 1.2825,
+      "quote": [
+        1.53,
+        1.59
+      ]
+    },
+    {
+      "league": "la_liga",
+      "mercato": "OU_apertura",
+      "season": "1819",
+      "date": "2018-11-24",
+      "match": "Eibar-Real Madrid",
+      "overround": 1.2814,
+      "quote": [
+        1.45,
+        1.69
+      ]
+    },
+    {
+      "league": "la_liga",
+      "mercato": "OU_apertura",
+      "season": "1819",
+      "date": "2019-02-10",
+      "match": "Leganes-Betis",
+      "overround": 1.1279,
+      "quote": [
+        2.48,
+        1.38
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2017-12-02",
+      "match": "Leverkusen-Dortmund",
+      "overround": 1.2814,
+      "quote": [
+        1.45,
+        1.69
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2017-12-02",
+      "match": "Hoffenheim-RB Leipzig",
+      "overround": 1.2868,
+      "quote": [
+        1.59,
+        1.52
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2017-12-09",
+      "match": "Ein Frankfurt-Bayern Munich",
+      "overround": 1.2862,
+      "quote": [
+        1.56,
+        1.55
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2018-02-24",
+      "match": "Bayern Munich-Hertha",
+      "overround": 1.2757,
+      "quote": [
+        1.42,
+        1.75
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2018-05-05",
+      "match": "Werder Bremen-Leverkusen",
+      "overround": 1.2779,
+      "quote": [
+        1.45,
+        1.7
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "mercato": "OU_apertura",
+      "season": "1819",
+      "date": "2019-03-30",
+      "match": "Dortmund-Wolfsburg",
+      "overround": 1.339,
+      "quote": [
+        1.54,
+        1.45
+      ]
+    },
+    {
+      "league": "ligue_1",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2017-10-29",
+      "match": "Lyon-Metz",
+      "overround": 1.2643,
+      "quote": [
+        1.3,
+        2.02
+      ]
+    },
+    {
+      "league": "ligue_1",
+      "mercato": "OU_apertura",
+      "season": "1718",
+      "date": "2018-02-04",
+      "match": "Monaco-Lyon",
+      "overround": 1.2823,
+      "quote": [
+        1.58,
+        1.54
+      ]
+    }
+  ],
+  "coerenza": [
+    {
+      "league": "serie_a",
+      "tipo": "chiusura",
+      "season": "2324",
+      "date": "2024-04-25",
+      "match": "Udinese-Roma",
+      "residuo_over": 0.1135,
+      "totale_implicito": 2.191,
+      "p_over_mercato": 0.4883,
+      "p_over_matrice": 0.3748
+    },
+    {
+      "league": "serie_a",
+      "tipo": "apertura",
+      "season": "1819",
+      "date": "2019-05-26",
+      "match": "Fiorentina-Genoa",
+      "residuo_over": 0.0438,
+      "totale_implicito": 2.214,
+      "p_over_mercato": 0.4249,
+      "p_over_matrice": 0.3811
+    },
+    {
+      "league": "ligue_1",
+      "tipo": "chiusura",
+      "season": "2021",
+      "date": "2021-05-23",
+      "match": "Strasbourg-Lorient",
+      "residuo_over": 0.0562,
+      "totale_implicito": 1.898,
+      "p_over_mercato": 0.3518,
+      "p_over_matrice": 0.2956
+    },
+    {
+      "league": "ligue_1",
+      "tipo": "apertura",
+      "season": "2021",
+      "date": "2021-05-23",
+      "match": "Strasbourg-Lorient",
+      "residuo_over": 0.0691,
+      "totale_implicito": 1.914,
+      "p_over_mercato": 0.3692,
+      "p_over_matrice": 0.3001
+    }
+  ],
+  "fisica": [
+    {
+      "league": "serie_a",
+      "season": "1718",
+      "tipo": "gol>AST",
+      "date": "22/10/17",
+      "match": "Udinese-Juventus",
+      "gol": 6,
+      "sot": 5
+    },
+    {
+      "league": "serie_a",
+      "season": "1819",
+      "tipo": "gol>HST",
+      "date": "24/02/2019",
+      "match": "Fiorentina-Inter",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "serie_a",
+      "season": "2021",
+      "tipo": "gol>HST",
+      "date": "17/01/2021",
+      "match": "Crotone-Benevento",
+      "gol": 4,
+      "sot": 3
+    },
+    {
+      "league": "serie_a",
+      "season": "2021",
+      "tipo": "gol>AST",
+      "date": "04/11/2020",
+      "match": "Genoa-Torino",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "serie_a",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "07/11/2021",
+      "match": "Udinese-Sassuolo",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "serie_a",
+      "season": "2122",
+      "tipo": "gol>AST",
+      "date": "22/12/2021",
+      "match": "Napoli-Spezia",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "serie_a",
+      "season": "2223",
+      "tipo": "gol>HST",
+      "date": "13/05/2023",
+      "match": "Inter-Sassuolo",
+      "gol": 4,
+      "sot": 3
+    },
+    {
+      "league": "serie_a",
+      "season": "2223",
+      "tipo": "gol>AST",
+      "date": "12/02/2023",
+      "match": "Udinese-Sassuolo",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "serie_a",
+      "season": "2324",
+      "tipo": "gol>HST",
+      "date": "02/10/2023",
+      "match": "Fiorentina-Cagliari",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "serie_a",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "06/01/2024",
+      "match": "Frosinone-Monza",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "serie_a",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "05/05/2024",
+      "match": "Milan-Genoa",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "tipo": "gol>HST",
+      "date": "26/11/2017",
+      "match": "Huddersfield-Man City",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "tipo": "gol>HST",
+      "date": "26/12/2017",
+      "match": "Watford-Leicester",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "tipo": "gol>AST",
+      "date": "14/10/2017",
+      "match": "Man City-Stoke",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "1819",
+      "tipo": "gol>HST",
+      "date": "12/01/2019",
+      "match": "Burnley-Fulham",
+      "gol": 2,
+      "sot": 0
+    },
+    {
+      "league": "premier_league",
+      "season": "1819",
+      "tipo": "gol>HST",
+      "date": "27/02/2019",
+      "match": "Chelsea-Tottenham",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "1819",
+      "tipo": "gol>HST",
+      "date": "30/03/2019",
+      "match": "Burnley-Wolves",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "1920",
+      "tipo": "gol>HST",
+      "date": "28/06/2020",
+      "match": "Watford-Southampton",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "premier_league",
+      "season": "1920",
+      "tipo": "gol>AST",
+      "date": "21/09/2019",
+      "match": "Everton-Sheffield United",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "21/08/2021",
+      "match": "Man City-Norwich",
+      "gol": 5,
+      "sot": 4
+    },
+    {
+      "league": "premier_league",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "17/10/2021",
+      "match": "Newcastle-Tottenham",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2122",
+      "tipo": "gol>AST",
+      "date": "21/01/2022",
+      "match": "Watford-Norwich",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "premier_league",
+      "season": "2122",
+      "tipo": "AST>AS",
+      "date": "15/08/2021",
+      "match": "Newcastle-West Ham",
+      "sot": 9,
+      "shots": 8
+    },
+    {
+      "league": "premier_league",
+      "season": "2223",
+      "tipo": "gol>HST",
+      "date": "20/10/2022",
+      "match": "Leicester-Leeds",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2223",
+      "tipo": "gol>AST",
+      "date": "26/04/2023",
+      "match": "Chelsea-Brentford",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2324",
+      "tipo": "gol>HST",
+      "date": "30/09/2023",
+      "match": "Wolves-Man City",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "27/10/2023",
+      "match": "Crystal Palace-Tottenham",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "21/04/2024",
+      "match": "Crystal Palace-West Ham",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2425",
+      "tipo": "gol>HST",
+      "date": "05/12/2024",
+      "match": "Fulham-Brighton",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "premier_league",
+      "season": "2425",
+      "tipo": "gol>AST",
+      "date": "30/11/2024",
+      "match": "Crystal Palace-Newcastle",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "premier_league",
+      "season": "2526",
+      "tipo": "gol>HST",
+      "date": "07/01/2026",
+      "match": "Burnley-Man United",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "premier_league",
+      "season": "2526",
+      "tipo": "gol>AST",
+      "date": "02/12/2025",
+      "match": "Fulham-Man City",
+      "gol": 5,
+      "sot": 4
+    },
+    {
+      "league": "la_liga",
+      "season": "2021",
+      "tipo": "gol>HST",
+      "date": "08/05/2021",
+      "match": "Cadiz-Huesca",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2021",
+      "tipo": "gol>AST",
+      "date": "12/12/2020",
+      "match": "Getafe-Sevilla",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2021",
+      "tipo": "gol>AST",
+      "date": "20/02/2021",
+      "match": "Ath Madrid-Levante",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2021",
+      "tipo": "gol>AST",
+      "date": "22/04/2021",
+      "match": "Barcelona-Getafe",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "28/11/2021",
+      "match": "Cadiz-Ath Madrid",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "05/12/2021",
+      "match": "Vallecano-Espanol",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "05/03/2022",
+      "match": "Espanol-Getafe",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "16/04/2022",
+      "match": "Elche-Mallorca",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tipo": "gol>AST",
+      "date": "05/03/2022",
+      "match": "Valencia-Granada",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tipo": "gol>AST",
+      "date": "11/05/2022",
+      "match": "Osasuna-Getafe",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2223",
+      "tipo": "gol>HST",
+      "date": "22/04/2023",
+      "match": "Sociedad-Vallecano",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2223",
+      "tipo": "gol>AST",
+      "date": "22/10/2022",
+      "match": "Vallecano-Cadiz",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2223",
+      "tipo": "gol>AST",
+      "date": "16/04/2023",
+      "match": "Ath Madrid-Almeria",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2324",
+      "tipo": "gol>HST",
+      "date": "28/09/2023",
+      "match": "Celta-Alaves",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "21/08/2023",
+      "match": "Alaves-Sevilla",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "la_liga",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "19/04/2024",
+      "match": "Ath Bilbao-Granada",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "26/05/2024",
+      "match": "Celta-Valencia",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2425",
+      "tipo": "gol>HST",
+      "date": "01/12/2024",
+      "match": "Sociedad-Betis",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "la_liga",
+      "season": "2425",
+      "tipo": "gol>AST",
+      "date": "15/03/2025",
+      "match": "Mallorca-Espanol",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2526",
+      "tipo": "gol>HST",
+      "date": "09/02/2026",
+      "match": "Villarreal-Espanol",
+      "gol": 4,
+      "sot": 3
+    },
+    {
+      "league": "la_liga",
+      "season": "2526",
+      "tipo": "gol>HST",
+      "date": "13/03/2026",
+      "match": "Alaves-Villarreal",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2526",
+      "tipo": "gol>AST",
+      "date": "13/12/2025",
+      "match": "Mallorca-Elche",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "la_liga",
+      "season": "2526",
+      "tipo": "gol>AST",
+      "date": "11/04/2026",
+      "match": "Sociedad-Alaves",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "la_liga",
+      "season": "2526",
+      "tipo": "gol>AST",
+      "date": "22/04/2026",
+      "match": "Sociedad-Getafe",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "bundesliga",
+      "season": "1920",
+      "tipo": "gol>HST",
+      "date": "31/08/2019",
+      "match": "Schalke 04-Hertha",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "bundesliga",
+      "season": "1920",
+      "tipo": "gol>HST",
+      "date": "05/10/2019",
+      "match": "Freiburg-Dortmund",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "bundesliga",
+      "season": "2122",
+      "tipo": "gol>AST",
+      "date": "22/01/2022",
+      "match": "Hoffenheim-Dortmund",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "bundesliga",
+      "season": "2223",
+      "tipo": "gol>HST",
+      "date": "18/09/2022",
+      "match": "Bochum-FC Koln",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "bundesliga",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "22/09/2023",
+      "match": "Stuttgart-Darmstadt",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "ligue_1",
+      "season": "1718",
+      "tipo": "gol>HST",
+      "date": "19/05/18",
+      "match": "Dijon-Angers",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "ligue_1",
+      "season": "1718",
+      "tipo": "gol>AST",
+      "date": "20/08/17",
+      "match": "Paris SG-Toulouse",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "ligue_1",
+      "season": "1920",
+      "tipo": "gol>HST",
+      "date": "27/10/2019",
+      "match": "St Etienne-Amiens",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "ligue_1",
+      "season": "1920",
+      "tipo": "gol>HST",
+      "date": "02/11/2019",
+      "match": "Marseille-Lille",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "ligue_1",
+      "season": "1920",
+      "tipo": "gol>AST",
+      "date": "08/02/2020",
+      "match": "Dijon-Nantes",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "ligue_1",
+      "season": "2021",
+      "tipo": "gol>HST",
+      "date": "07/02/2021",
+      "match": "Nice-Angers",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "ligue_1",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "08/08/2021",
+      "match": "Montpellier-Marseille",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "ligue_1",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "12/12/2021",
+      "match": "Metz-Lorient",
+      "gol": 4,
+      "sot": 3
+    },
+    {
+      "league": "ligue_1",
+      "season": "2122",
+      "tipo": "gol>HST",
+      "date": "29/04/2022",
+      "match": "Strasbourg-Paris SG",
+      "gol": 3,
+      "sot": 2
+    },
+    {
+      "league": "ligue_1",
+      "season": "2223",
+      "tipo": "gol>AST",
+      "date": "08/10/2022",
+      "match": "Marseille-Ajaccio",
+      "gol": 2,
+      "sot": 1
+    },
+    {
+      "league": "ligue_1",
+      "season": "2223",
+      "tipo": "gol>AST",
+      "date": "24/02/2023",
+      "match": "Lille-Brest",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "ligue_1",
+      "season": "2324",
+      "tipo": "gol>AST",
+      "date": "04/02/2024",
+      "match": "Monaco-Le Havre",
+      "gol": 1,
+      "sot": 0
+    },
+    {
+      "league": "ligue_1",
+      "season": "2425",
+      "tipo": "gol>AST",
+      "date": "29/09/2024",
+      "match": "Toulouse-Lyon",
+      "gol": 2,
+      "sot": 1
+    }
+  ],
+  "impronte": [],
+  "riposo": [],
+  "xg": [
+    {
+      "league": "serie_a",
+      "season": "1718",
+      "date": "2018-04-17",
+      "match": "Inter-Cagliari",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "serie_a",
+      "season": "2021",
+      "date": "2021-01-30",
+      "match": "Inter-Benevento",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "serie_a",
+      "season": "2122",
+      "date": "2021-12-05",
+      "match": "Juventus-Genoa",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "serie_a",
+      "season": "2526",
+      "date": "2026-05-10",
+      "match": "Cremonese-Pisa",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "premier_league",
+      "season": "1819",
+      "date": "2019-03-02",
+      "match": "Bournemouth-Man City",
+      "side": "home",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "date": "2018-03-10",
+      "match": "Huddersfield-Swansea",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "la_liga",
+      "season": "2021",
+      "date": "2021-04-18",
+      "match": "Ath Madrid-Eibar",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "la_liga",
+      "season": "2425",
+      "date": "2025-03-02",
+      "match": "Barcelona-Sociedad",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "bundesliga",
+      "season": "2021",
+      "date": "2020-11-21",
+      "match": "Bielefeld-Leverkusen",
+      "side": "home",
+      "gol": 1,
+      "xg": 0.0,
+      "tiri": 1.0,
+      "IMPOSSIBILE": true
+    },
+    {
+      "league": "bundesliga",
+      "season": "2425",
+      "date": "2024-09-21",
+      "match": "Werder Bremen-Bayern Munich",
+      "side": "home",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "ligue_1",
+      "season": "2021",
+      "date": "2021-05-01",
+      "match": "Lille-Nice",
+      "side": "away",
+      "gol": 0,
+      "xg": 0.0,
+      "tiri": 0.0,
+      "IMPOSSIBILE": false
+    }
+  ]
+}

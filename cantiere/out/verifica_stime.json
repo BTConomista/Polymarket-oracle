@@ -1,0 +1,118 @@
+{
+  "riproducibilita": {
+    "n_committate": 2279,
+    "n_riderivate": 2279,
+    "solo_committate": 0,
+    "solo_riderivate": 0,
+    "scarto_max": 0.0,
+    "ok": true,
+    "coefficienti": [
+      0.02090705163637101,
+      0.9788441287987097,
+      1.245301135880014,
+      -0.8112597799360425,
+      1.2457150474049925
+    ]
+  },
+  "errore": {
+    "in_sample": 0.012218527413770802,
+    "leave_one_season_out": {
+      "1920": 0.01420086922180004,
+      "2021": 0.015190911948232667,
+      "2122": 0.012261383672433812,
+      "2223": 0.010058517322022998,
+      "2324": 0.010096490364261546,
+      "2425": 0.012408756429676326,
+      "2526": 0.01160865934924071
+    },
+    "leave_one_league_out": {
+      "serie_a": 0.012340825965183051,
+      "premier_league": 0.012642368189776215,
+      "la_liga": 0.012319369983758982
+    },
+    "walk_forward": {
+      "2021": 0.01481953193955634,
+      "2122": 0.01193946190286746,
+      "2223": 0.009376290500887065,
+      "2324": 0.009968999722410578,
+      "2425": 0.012558893841224095,
+      "2526": 0.01160865934924071
+    },
+    "dichiarato": 0.012
+  },
+  "alternative": {
+    "identita": 0.021047940127534526,
+    "media": 0.07688036947824607,
+    "solo_logit_ou": 0.020895819750705563,
+    "E3": 0.01226079832966687
+  },
+  "domain_shift": {
+    "mae_stesso_provider": 0.012222155178036346,
+    "mae_provider_diverso": 0.013215087606782859,
+    "n": 7975
+  },
+  "falsificazione": {
+    "fit_ll_open": 0.6752162296228673,
+    "fit_ll_close_vero": 0.6734837164231614,
+    "fit_ll_stima": 0.6741224192052124,
+    "tgt_ll_open": 0.6766705004454519,
+    "tgt_ll_stima": 0.6752274960771566,
+    "tgt_ci95": [
+      -0.000993512929035617,
+      0.003930578671559217
+    ],
+    "tgt_guadagno_medio": 0.00144052399211068
+  },
+  "input_corrotti": [
+    {
+      "league": "la_liga",
+      "season": "1819",
+      "date": "2018-10-06",
+      "match": "Alaves-Real Madrid",
+      "overround": 1.2825,
+      "p_over_input": 0.5096,
+      "p_over_stimata": 0.4852
+    },
+    {
+      "league": "la_liga",
+      "season": "1819",
+      "date": "2018-11-24",
+      "match": "Eibar-Real Madrid",
+      "overround": 1.2814,
+      "p_over_input": 0.5382,
+      "p_over_stimata": 0.5578
+    },
+    {
+      "league": "la_liga",
+      "season": "1819",
+      "date": "2019-02-10",
+      "match": "Leganes-Betis",
+      "overround": 1.1279,
+      "p_over_input": 0.3575,
+      "p_over_stimata": 0.3691
+    }
+  ],
+  "altre_stime": {
+    "open_sparse_n": 2,
+    "squad_value_n": 0,
+    "coerenza": true,
+    "dettaglio": [
+      {
+        "match": "Verona-Genoa",
+        "trovata": true,
+        "manca_apertura_1x2": false,
+        "stima_1x2_presente": false,
+        "manca_apertura_ou": true,
+        "stima_ou_presente": true
+      },
+      {
+        "match": "Torino-Fiorentina",
+        "trovata": true,
+        "manca_apertura_1x2": true,
+        "stima_1x2_presente": true,
+        "manca_apertura_ou": true,
+        "stima_ou_presente": true
+      }
+    ]
+  }
+}

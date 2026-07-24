@@ -1,0 +1,634 @@
+{
+  "files": {
+    "cantiere/data/fonti/football_data/bundesliga_1718.csv": {
+      "bytes": 78641,
+      "fetched_utc": "2026-07-24T20:16:51.944682+00:00",
+      "sha256": "033227408247769568111af49de2a50f6951c87e6d43f9e1a01e73d647bced3e",
+      "url": "https://www.football-data.co.uk/mmz4281/1718/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_1819.csv": {
+      "bytes": 75587,
+      "fetched_utc": "2026-07-24T20:16:56.650168+00:00",
+      "sha256": "f03ee41b741aca9c43cbafb800bbc6f01ca9d7ed19c1a9dd4c309389280cfe11",
+      "url": "https://www.football-data.co.uk/mmz4281/1819/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_1920.csv": {
+      "bytes": 138965,
+      "fetched_utc": "2026-07-24T20:17:01.663841+00:00",
+      "sha256": "0a032b1adc75f7fa018dcfeff7fcdcc0a89014e3fe69f44534f538b6f931aef5",
+      "url": "https://www.football-data.co.uk/mmz4281/1920/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_2021.csv": {
+      "bytes": 139075,
+      "fetched_utc": "2026-07-24T20:17:07.178253+00:00",
+      "sha256": "48ec5d53d2452b6ebdbc07bd78a836d6a4686f99fc020439ee3292e685315e61",
+      "url": "https://www.football-data.co.uk/mmz4281/2021/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_2122.csv": {
+      "bytes": 139177,
+      "fetched_utc": "2026-07-24T20:17:12.100932+00:00",
+      "sha256": "034d0e1296e944dddf25e3c91b85ef5bd1ad25661b89d73878f5c73bfea4b9fc",
+      "url": "https://www.football-data.co.uk/mmz4281/2122/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_2223.csv": {
+      "bytes": 139302,
+      "fetched_utc": "2026-07-24T20:17:16.938186+00:00",
+      "sha256": "b716517b25033ce8e0243e967aa961876425a4c41e97c8aa8fa59f2aca061341",
+      "url": "https://www.football-data.co.uk/mmz4281/2223/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_2324.csv": {
+      "bytes": 135825,
+      "fetched_utc": "2026-07-24T20:17:21.720754+00:00",
+      "sha256": "1de8bc12a133dbbf71bc6ffda62082642f087f61b1b7c15ae9f2d320876fb07e",
+      "url": "https://www.football-data.co.uk/mmz4281/2324/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_2425.csv": {
+      "bytes": 156414,
+      "fetched_utc": "2026-07-24T20:18:50.572225+00:00",
+      "sha256": "a295c58033cfe6393cbbc28f7db85671839b960c5f1153fd3678e20ad2adb92e",
+      "url": "https://www.football-data.co.uk/mmz4281/2425/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/bundesliga_2526.csv": {
+      "bytes": 159944,
+      "fetched_utc": "2026-07-24T20:18:52.992749+00:00",
+      "sha256": "618301a4b39918225a8ccc57f0f839d675e1abd92fa3a3ccd9a67acd7c79dd7f",
+      "url": "https://www.football-data.co.uk/mmz4281/2526/D1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_1718.csv": {
+      "bytes": 96801,
+      "fetched_utc": "2026-07-24T20:16:07.162136+00:00",
+      "sha256": "5786719e06d1a5387cb90fac71597c890f496df19e8e1aa868bbc852f7e730fd",
+      "url": "https://www.football-data.co.uk/mmz4281/1718/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_1819.csv": {
+      "bytes": 92914,
+      "fetched_utc": "2026-07-24T20:16:12.122803+00:00",
+      "sha256": "9b8cece2c85e90e382b30dc4fc5046534f12c6d2b0efa74cd7d1d52e90a0c201",
+      "url": "https://www.football-data.co.uk/mmz4281/1819/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_1920.csv": {
+      "bytes": 171484,
+      "fetched_utc": "2026-07-24T20:16:17.208615+00:00",
+      "sha256": "a05d5d60eee0b1414c56d6d6817f860cdc620e206234069a1886c98a8cb318da",
+      "url": "https://www.football-data.co.uk/mmz4281/1920/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_2021.csv": {
+      "bytes": 171721,
+      "fetched_utc": "2026-07-24T20:16:22.223666+00:00",
+      "sha256": "b4137db923101f464e8403c4973acbfaf7d71724ce93b4336fad580e894d9591",
+      "url": "https://www.football-data.co.uk/mmz4281/2021/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_2122.csv": {
+      "bytes": 172174,
+      "fetched_utc": "2026-07-24T20:16:27.055676+00:00",
+      "sha256": "2d9e619700712823d15716c07715133f8c3b1a09046930dcfc785a38633dee2e",
+      "url": "https://www.football-data.co.uk/mmz4281/2122/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_2223.csv": {
+      "bytes": 172199,
+      "fetched_utc": "2026-07-24T20:16:32.007934+00:00",
+      "sha256": "53348112526b5165539df240be350083989bb258f30c0ff7cacbc0165ca7e4b3",
+      "url": "https://www.football-data.co.uk/mmz4281/2223/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_2324.csv": {
+      "bytes": 168164,
+      "fetched_utc": "2026-07-24T20:16:36.940920+00:00",
+      "sha256": "5323f596c7ed318e4bce95557a369d809d98501fa499ea5f41350cd45cf3c7d9",
+      "url": "https://www.football-data.co.uk/mmz4281/2324/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_2425.csv": {
+      "bytes": 192863,
+      "fetched_utc": "2026-07-24T20:18:45.856330+00:00",
+      "sha256": "c086e96d6a53f6e6c0fce4e35db0d1728c773b4362323da0161a34769e315a36",
+      "url": "https://www.football-data.co.uk/mmz4281/2425/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/la_liga_2526.csv": {
+      "bytes": 197653,
+      "fetched_utc": "2026-07-24T20:18:48.189337+00:00",
+      "sha256": "4ca2e285f3ee0702f6bc55fcaa4f5a15cb3aef6220735a1d15398131e21d63f5",
+      "url": "https://www.football-data.co.uk/mmz4281/2526/SP1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_1718.csv": {
+      "bytes": 95353,
+      "fetched_utc": "2026-07-24T20:17:36.427518+00:00",
+      "sha256": "95997fd3c3e13be3101b216fe9b26a9ce6715ac6b76b115e44926c12b90977e6",
+      "url": "https://www.football-data.co.uk/mmz4281/1718/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_1819.csv": {
+      "bytes": 91888,
+      "fetched_utc": "2026-07-24T20:17:41.623197+00:00",
+      "sha256": "31559a4d8b52eff6f78e13a9b33d7b844e4f41d823dd1cf5c1aaa61c51eaaf9c",
+      "url": "https://www.football-data.co.uk/mmz4281/1819/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_1920.csv": {
+      "bytes": 125011,
+      "fetched_utc": "2026-07-24T20:17:46.758164+00:00",
+      "sha256": "bda566f6aea24bc2f08cceac8f7d6c81d7f9c64cfda9fdae7eb9be2b84dddd2a",
+      "url": "https://www.football-data.co.uk/mmz4281/1920/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_2021.csv": {
+      "bytes": 170539,
+      "fetched_utc": "2026-07-24T20:17:51.929204+00:00",
+      "sha256": "124560ab39a1c256eb6ee5ad2dd1eed250c9780d0cbb34525d9abee41fbf7f70",
+      "url": "https://www.football-data.co.uk/mmz4281/2021/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_2122.csv": {
+      "bytes": 171274,
+      "fetched_utc": "2026-07-24T20:17:56.915001+00:00",
+      "sha256": "9e9eaefb8704264f8d55a718a119d940de4af7d7b4217ac4097b957406e16213",
+      "url": "https://www.football-data.co.uk/mmz4281/2122/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_2223.csv": {
+      "bytes": 171165,
+      "fetched_utc": "2026-07-24T20:18:02.000147+00:00",
+      "sha256": "18ea07d922e8b6360b81189637efd5aaf44779765db856bff208d5b1acf69b2f",
+      "url": "https://www.football-data.co.uk/mmz4281/2223/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_2324.csv": {
+      "bytes": 135000,
+      "fetched_utc": "2026-07-24T20:18:06.803201+00:00",
+      "sha256": "ca0a4bf51d5b1ccfd0e1558ea41de6bb829df6c96c759888a87248d296d5adb7",
+      "url": "https://www.football-data.co.uk/mmz4281/2324/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_2425.csv": {
+      "bytes": 154703,
+      "fetched_utc": "2026-07-24T20:18:55.398574+00:00",
+      "sha256": "fe6ae6a0c30d05f0ac88e0fc4a31452c7203e2b444703dfa941e22f38f20ab63",
+      "url": "https://www.football-data.co.uk/mmz4281/2425/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/ligue_1_2526.csv": {
+      "bytes": 158471,
+      "fetched_utc": "2026-07-24T20:18:57.816384+00:00",
+      "sha256": "898b7ddcd373cfe955ae353b1a98cf7f1c8757ca10b69d53039f4e098e88f192",
+      "url": "https://www.football-data.co.uk/mmz4281/2526/F1.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_1718.csv": {
+      "bytes": 100734,
+      "fetched_utc": "2026-07-24T20:15:19.824585+00:00",
+      "sha256": "4f3389365ef3f7ac966764ed8ba67cf3b79f5aebed18dd224099c4b2c98bc67b",
+      "url": "https://www.football-data.co.uk/mmz4281/1718/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_1819.csv": {
+      "bytes": 96144,
+      "fetched_utc": "2026-07-24T20:15:24.995156+00:00",
+      "sha256": "7c096b3c2ecd54c6993d22eeea73450c2bde11e3457238b226b8f43c62dfc35e",
+      "url": "https://www.football-data.co.uk/mmz4281/1819/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_1920.csv": {
+      "bytes": 175475,
+      "fetched_utc": "2026-07-24T20:15:30.169101+00:00",
+      "sha256": "100037618b94f94057400bb02bf6bac4ef74ddaa58cde4b38370839c39caee61",
+      "url": "https://www.football-data.co.uk/mmz4281/1920/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_2021.csv": {
+      "bytes": 175815,
+      "fetched_utc": "2026-07-24T20:15:35.616751+00:00",
+      "sha256": "5afe63f69401457b8354eaacee24f9a3e520b3c3af6329564a9783e20d789c62",
+      "url": "https://www.football-data.co.uk/mmz4281/2021/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_2122.csv": {
+      "bytes": 175363,
+      "fetched_utc": "2026-07-24T20:18:38.827187+00:00",
+      "sha256": "335afcbabeb2939fa10ab39ba3e8215072d0b577cb8d0705c1e44c56e934e703",
+      "url": "https://www.football-data.co.uk/mmz4281/2122/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_2223.csv": {
+      "bytes": 176180,
+      "fetched_utc": "2026-07-24T20:15:45.662729+00:00",
+      "sha256": "8442792d3b614c94ea3cf381bd2736805889cc1713169035368fff19c3d02380",
+      "url": "https://www.football-data.co.uk/mmz4281/2223/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_2324.csv": {
+      "bytes": 172196,
+      "fetched_utc": "2026-07-24T20:15:50.603240+00:00",
+      "sha256": "b2e057b0ed959f198b0f63d2391c01239f3608e6de5db68edab3f88e04d07ff3",
+      "url": "https://www.football-data.co.uk/mmz4281/2324/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_2425.csv": {
+      "bytes": 197110,
+      "fetched_utc": "2026-07-24T20:18:41.161927+00:00",
+      "sha256": "d0c8ce4a96d886cf60cf101f570f4a3893844226f91c7bd769eb568c49edbfa4",
+      "url": "https://www.football-data.co.uk/mmz4281/2425/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/premier_league_2526.csv": {
+      "bytes": 203438,
+      "fetched_utc": "2026-07-24T20:18:43.521173+00:00",
+      "sha256": "3e3a8352f9ada6789c508d6ca184424421fed56a30400904a4a327c583407e62",
+      "url": "https://www.football-data.co.uk/mmz4281/2526/E0.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_1718.csv": {
+      "bytes": 95137,
+      "fetched_utc": "2026-07-24T20:14:32.888446+00:00",
+      "sha256": "664a8874d3a33923036120c4162e72f13887e0897b51effe27f89969c79c335d",
+      "url": "https://www.football-data.co.uk/mmz4281/1718/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_1819.csv": {
+      "bytes": 91392,
+      "fetched_utc": "2026-07-24T20:14:38.216460+00:00",
+      "sha256": "2baea8a1fb31096960b5f5797d31dbb6b454eb41b00845e6b0b79feb82a0e3d0",
+      "url": "https://www.football-data.co.uk/mmz4281/1819/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_1920.csv": {
+      "bytes": 170130,
+      "fetched_utc": "2026-07-24T20:14:43.715038+00:00",
+      "sha256": "f33233e0c428ebe4f7cb854c4a504e0b59c4e009ee8b679269486e26afdc575b",
+      "url": "https://www.football-data.co.uk/mmz4281/1920/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_2021.csv": {
+      "bytes": 170667,
+      "fetched_utc": "2026-07-24T20:14:48.959565+00:00",
+      "sha256": "c09196fa18877547442807d375317299947abdd6d51a5e0df044cc6026e13f36",
+      "url": "https://www.football-data.co.uk/mmz4281/2021/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_2122.csv": {
+      "bytes": 171204,
+      "fetched_utc": "2026-07-24T20:14:54.108368+00:00",
+      "sha256": "6a9555d5a90e652a883fd2862a52545c06e264016cd770347c067a6d7c993170",
+      "url": "https://www.football-data.co.uk/mmz4281/2122/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_2223.csv": {
+      "bytes": 171573,
+      "fetched_utc": "2026-07-24T20:14:59.253562+00:00",
+      "sha256": "9960837f37a97ae700f876c87b85a8b7a2f5a5d05a53077830c21b9db8880c45",
+      "url": "https://www.football-data.co.uk/mmz4281/2223/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_2324.csv": {
+      "bytes": 167015,
+      "fetched_utc": "2026-07-24T20:15:04.540492+00:00",
+      "sha256": "343a89db026fe4204ebeabd663cdfee8d02a45457828fc1cb63fa630ca170723",
+      "url": "https://www.football-data.co.uk/mmz4281/2324/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_2425.csv": {
+      "bytes": 191722,
+      "fetched_utc": "2026-07-24T20:18:33.902780+00:00",
+      "sha256": "79d87a5b18771e066ac7419b7876bfd9771a68ca117a9712375d6bc9685abee3",
+      "url": "https://www.football-data.co.uk/mmz4281/2425/I1.csv"
+    },
+    "cantiere/data/fonti/football_data/serie_a_2526.csv": {
+      "bytes": 196217,
+      "fetched_utc": "2026-07-24T20:18:36.471410+00:00",
+      "sha256": "709ae279617d16af226312bcceac941e71241745ddaf950bdac2b83afad4fcbb",
+      "url": "https://www.football-data.co.uk/mmz4281/2526/I1.csv"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2017.json": {
+      "bytes": 443045,
+      "fetched_utc": "2026-07-24T20:16:54.476455+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "6b457404f71431068232e6f55ae8527f452ae9d4c0709f140b3b12afa40b0ff1",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2017"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2018.json": {
+      "bytes": 441995,
+      "fetched_utc": "2026-07-24T20:16:59.348074+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "b88510dedab462d322f32bac678e914302c9827a0b11594ed001a527daa25f9d",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2018"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2019.json": {
+      "bytes": 448963,
+      "fetched_utc": "2026-07-24T20:17:04.530893+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "16ab6c73ff4ad3e25018b712ebb4e8cda8100d7a161c95b5ab1572776375dae1",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2019"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2020.json": {
+      "bytes": 452597,
+      "fetched_utc": "2026-07-24T20:17:09.759748+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "563c2387197f37df90ff2695f38445f16825cef9272c61840a37c96d51c4de69",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2020"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2021.json": {
+      "bytes": 456564,
+      "fetched_utc": "2026-07-24T20:17:14.605908+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "69b04e84a7fda771d3aea525f8bc33f1239c3fc6a6ffca6a2367ab30deddaec3",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2021"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2022.json": {
+      "bytes": 454450,
+      "fetched_utc": "2026-07-24T20:17:19.347958+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "b2b8bbf9bf58d19c2b4935cd19fae4d7e012be568525fdc17c4670dcdd52dd1f",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2022"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2023.json": {
+      "bytes": 451171,
+      "fetched_utc": "2026-07-24T20:17:24.424769+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "25284b1ed5bc2c469a49af6d369a6a0f64859d0ebfe71c33a297d230b9f349f0",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2023"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2024.json": {
+      "bytes": 446978,
+      "fetched_utc": "2026-07-24T20:17:29.196930+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "cf74ce4ced626e5f02a1472174a2cbcced499b19c465af519098d0a89c542717",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2024"
+    },
+    "cantiere/data/fonti/understat/bundesliga_2025.json": {
+      "bytes": 453761,
+      "fetched_utc": "2026-07-24T20:17:34.144019+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "c0a30b3e91fcfb780dee08947bd7dc925ddc1888f92b415b6ea75f22908c465b",
+      "url": "https://understat.com/getLeagueData/Bundesliga/2025"
+    },
+    "cantiere/data/fonti/understat/la_liga_2017.json": {
+      "bytes": 535230,
+      "fetched_utc": "2026-07-24T20:16:09.868766+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "8e212f7e073aa7b155f22d2600bfccbd96929b3db5e15ca245b1d211ebbc7e2c",
+      "url": "https://understat.com/getLeagueData/La_liga/2017"
+    },
+    "cantiere/data/fonti/understat/la_liga_2018.json": {
+      "bytes": 528090,
+      "fetched_utc": "2026-07-24T20:16:14.875301+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "52265a1a842e33344015c0e649522a462486aa82a1cc940818802780bcbe9044",
+      "url": "https://understat.com/getLeagueData/La_liga/2018"
+    },
+    "cantiere/data/fonti/understat/la_liga_2019.json": {
+      "bytes": 534890,
+      "fetched_utc": "2026-07-24T20:16:19.810489+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "8aba7d264ed97569ceb4ce2d4a1f64d05ac61d3a4c02ea8a264e07986746c41c",
+      "url": "https://understat.com/getLeagueData/La_liga/2019"
+    },
+    "cantiere/data/fonti/understat/la_liga_2020.json": {
+      "bytes": 540357,
+      "fetched_utc": "2026-07-24T20:16:24.769217+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "e2122b4ff2c1fd68aed81fadeb04470a6c495b5138a03b13e1f3d3b0abf01baa",
+      "url": "https://understat.com/getLeagueData/La_liga/2020"
+    },
+    "cantiere/data/fonti/understat/la_liga_2021.json": {
+      "bytes": 551837,
+      "fetched_utc": "2026-07-24T20:16:29.594754+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "8654cb413cd75e8833a6b7c858729b774d0adf940111b2948b50d9f0ddc2f628",
+      "url": "https://understat.com/getLeagueData/La_liga/2021"
+    },
+    "cantiere/data/fonti/understat/la_liga_2022.json": {
+      "bytes": 544907,
+      "fetched_utc": "2026-07-24T20:16:34.543006+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "93ad8ee7b256949a86487143222acb2f94c82c2f07cc0b1be9afc6379c07e208",
+      "url": "https://understat.com/getLeagueData/La_liga/2022"
+    },
+    "cantiere/data/fonti/understat/la_liga_2023.json": {
+      "bytes": 549156,
+      "fetched_utc": "2026-07-24T20:16:39.714130+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "7fe374ef9f8309fc1ba9ca8cc23e09fd5bdf5cc553cc6e1e62f90e0a0b64f8af",
+      "url": "https://understat.com/getLeagueData/La_liga/2023"
+    },
+    "cantiere/data/fonti/understat/la_liga_2024.json": {
+      "bytes": 547751,
+      "fetched_utc": "2026-07-24T20:16:44.721881+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "38d89176eee51237e48ccd7169a0f8ebf90183d658b6474f3ea52d48c8441232",
+      "url": "https://understat.com/getLeagueData/La_liga/2024"
+    },
+    "cantiere/data/fonti/understat/la_liga_2025.json": {
+      "bytes": 550543,
+      "fetched_utc": "2026-07-24T20:16:49.778295+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "0b69d5d2750e92565cee12b02833e8ac78b2b03815f53e1d4ff0ea27331e7fac",
+      "url": "https://understat.com/getLeagueData/La_liga/2025"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2017.json": {
+      "bytes": 527149,
+      "fetched_utc": "2026-07-24T20:17:39.152999+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "0d7ba4bd25272f6051ac13ca9a990441f589df2bb6b47fe269669dcccab1412d",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2017"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2018.json": {
+      "bytes": 529340,
+      "fetched_utc": "2026-07-24T20:17:44.367133+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "cae813e9475dac13e24c16201fc79af9484574a2bb6846333e7a1d6a9c2b79e1",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2018"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2019.json": {
+      "bytes": 456256,
+      "fetched_utc": "2026-07-24T20:17:49.554291+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "a60aaa2d517c01fb1c454ea2943c5ce1d0239783d92d047cd453570a4f3e94bd",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2019"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2020.json": {
+      "bytes": 538703,
+      "fetched_utc": "2026-07-24T20:17:54.485822+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "73fcb50c98b15f29117bb0044b098a41af8c49d72f48e60dd714ef2736f05e3e",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2020"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2021.json": {
+      "bytes": 543527,
+      "fetched_utc": "2026-07-24T20:17:59.628646+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "3bb3ded24ba5beab3f82376f7168d963a0451fce0784d146bedd90a9ee3c6621",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2021"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2022.json": {
+      "bytes": 543113,
+      "fetched_utc": "2026-07-24T20:18:04.537814+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "0142c4fde4cef63a696f40452675940e8e900de2809681b9173dc33ef6ad08dc",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2022"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2023.json": {
+      "bytes": 456479,
+      "fetched_utc": "2026-07-24T20:18:09.344297+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "5194c113a0f858d066bd7538b49bbdba9053a63b3cb6e7b7bc6e672ed737747f",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2023"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2024.json": {
+      "bytes": 461009,
+      "fetched_utc": "2026-07-24T20:18:14.504772+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "a5349190f4b31fa23a9d94c39cdf6848fd2509ba520e6af97767f3168541c447",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2024"
+    },
+    "cantiere/data/fonti/understat/ligue_1_2025.json": {
+      "bytes": 464079,
+      "fetched_utc": "2026-07-24T20:18:19.261856+00:00",
+      "n_dates": 306,
+      "n_teams": 18,
+      "sha256": "d2cddcc3809263064013788fa1f04488e37fd9aaf78d87e0267c9f5f1b15b9a1",
+      "url": "https://understat.com/getLeagueData/Ligue_1/2025"
+    },
+    "cantiere/data/fonti/understat/premier_league_2017.json": {
+      "bytes": 521428,
+      "fetched_utc": "2026-07-24T20:15:22.632308+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "4919b5106a90cbe96021fb929bb4dcd743d3bebd4acc75ca88b65263e137edfc",
+      "url": "https://understat.com/getLeagueData/EPL/2017"
+    },
+    "cantiere/data/fonti/understat/premier_league_2018.json": {
+      "bytes": 517852,
+      "fetched_utc": "2026-07-24T20:15:27.795577+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "e55c7215521b439e43ca5d21dfc0d3292ad67651fd222f30283ddba612cbe308",
+      "url": "https://understat.com/getLeagueData/EPL/2018"
+    },
+    "cantiere/data/fonti/understat/premier_league_2019.json": {
+      "bytes": 522210,
+      "fetched_utc": "2026-07-24T20:15:33.107668+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "72ae0580a7bd6828f11d52c1400e03e30895a0310c53e44dd37933ebdcc1e066",
+      "url": "https://understat.com/getLeagueData/EPL/2019"
+    },
+    "cantiere/data/fonti/understat/premier_league_2020.json": {
+      "bytes": 525377,
+      "fetched_utc": "2026-07-24T20:15:38.334829+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "6ca30fc522aedc29d65b9d9f70eb517f5908e5de6ce3af7ff56915f704d88ca9",
+      "url": "https://understat.com/getLeagueData/EPL/2020"
+    },
+    "cantiere/data/fonti/understat/premier_league_2021.json": {
+      "bytes": 528968,
+      "fetched_utc": "2026-07-24T20:15:43.279101+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "278297ea4e27dcd7d4bf336b0228ada236c11d9de11c258f8f547d49848ff0d6",
+      "url": "https://understat.com/getLeagueData/EPL/2021"
+    },
+    "cantiere/data/fonti/understat/premier_league_2022.json": {
+      "bytes": 534845,
+      "fetched_utc": "2026-07-24T20:15:48.234420+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "0aadeaec4515c1b93fba3433c748b85b97df09f4fab66a374cad035309ba687b",
+      "url": "https://understat.com/getLeagueData/EPL/2022"
+    },
+    "cantiere/data/fonti/understat/premier_league_2023.json": {
+      "bytes": 540332,
+      "fetched_utc": "2026-07-24T20:15:53.149834+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "a6438fbf4b4aa539aa8d326b541f3b5546683c5f22b714a6625ddae062ef57d8",
+      "url": "https://understat.com/getLeagueData/EPL/2023"
+    },
+    "cantiere/data/fonti/understat/premier_league_2024.json": {
+      "bytes": 538474,
+      "fetched_utc": "2026-07-24T20:15:58.864441+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "5c90d05b8d0bec0cfd848d6393a51e1194225cf772eab2b40408c222aa3987d4",
+      "url": "https://understat.com/getLeagueData/EPL/2024"
+    },
+    "cantiere/data/fonti/understat/premier_league_2025.json": {
+      "bytes": 529950,
+      "fetched_utc": "2026-07-24T20:16:04.603090+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "d401b18a3386d8168f03727b43b1ab5dc9092e0469e77a1561136baf25151f42",
+      "url": "https://understat.com/getLeagueData/EPL/2025"
+    },
+    "cantiere/data/fonti/understat/serie_a_2017.json": {
+      "bytes": 524744,
+      "fetched_utc": "2026-07-24T20:14:35.888107+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "96077940562478f350b699304359c53e2c4dd24e76528505fce52d6a464d8137",
+      "url": "https://understat.com/getLeagueData/Serie_A/2017"
+    },
+    "cantiere/data/fonti/understat/serie_a_2018.json": {
+      "bytes": 528755,
+      "fetched_utc": "2026-07-24T20:14:41.236584+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "a93625ceda10fd7e115d1bdbfd39473cd3f1a5485142332402432d70df4a0e4e",
+      "url": "https://understat.com/getLeagueData/Serie_A/2018"
+    },
+    "cantiere/data/fonti/understat/serie_a_2019.json": {
+      "bytes": 537960,
+      "fetched_utc": "2026-07-24T20:14:46.614882+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "d865ec6d76e24ace677bdbf2404478f1fa54f348ba27d4b17230436ee6a67625",
+      "url": "https://understat.com/getLeagueData/Serie_A/2019"
+    },
+    "cantiere/data/fonti/understat/serie_a_2020.json": {
+      "bytes": 543663,
+      "fetched_utc": "2026-07-24T20:14:51.675858+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "00828384f05817f514ed1bef4835c636347aed3f0e08f1d9ee0606faf72bd83a",
+      "url": "https://understat.com/getLeagueData/Serie_A/2020"
+    },
+    "cantiere/data/fonti/understat/serie_a_2021.json": {
+      "bytes": 548992,
+      "fetched_utc": "2026-07-24T20:14:56.806039+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "51f3fde84c0a87188c96f352b78185005c9bf8ba40bc8d31a72a31c38022aa9c",
+      "url": "https://understat.com/getLeagueData/Serie_A/2021"
+    },
+    "cantiere/data/fonti/understat/serie_a_2022.json": {
+      "bytes": 539762,
+      "fetched_utc": "2026-07-24T20:15:01.912646+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "3f46c1788dcf22deef2673bfd7d9547211ee0fdfec62b0eb3d18e922b2cbdb49",
+      "url": "https://understat.com/getLeagueData/Serie_A/2022"
+    },
+    "cantiere/data/fonti/understat/serie_a_2023.json": {
+      "bytes": 543731,
+      "fetched_utc": "2026-07-24T20:15:07.242737+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "5c424c7a334d9bf43c15fb5f83f0eceec5cfdae8a5891b7b35a61d0b0794731f",
+      "url": "https://understat.com/getLeagueData/Serie_A/2023"
+    },
+    "cantiere/data/fonti/understat/serie_a_2024.json": {
+      "bytes": 547277,
+      "fetched_utc": "2026-07-24T20:15:12.357969+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "56ae389329b7e5ff6b3c7954923bbdfd4b64f0e1ccc5fc091d9453792d084884",
+      "url": "https://understat.com/getLeagueData/Serie_A/2024"
+    },
+    "cantiere/data/fonti/understat/serie_a_2025.json": {
+      "bytes": 543256,
+      "fetched_utc": "2026-07-24T20:15:17.484583+00:00",
+      "n_dates": 380,
+      "n_teams": 20,
+      "sha256": "741bc56ed7f3e9c3a5bb7808cb1a3b2af33bff395e7c22df00aedd91740fd32a",
+      "url": "https://understat.com/getLeagueData/Serie_A/2025"
+    }
+  }
+}

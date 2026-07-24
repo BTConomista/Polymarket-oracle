@@ -1,0 +1,16 @@
+
+=== Ligue 1 ===
+  calendario di club completo (congestione)...
+    10701 righe (squadra, partita) -> club_fixtures_ligue_1.csv
+season  extra_matches  teams_with_extra  Ligue 1 2016-17  Ligue 2  Champions League  Europa League  Conference League  Champions League (qual.)  Conference League (qual.)  Coupe de France
+  1617           1102                29            684.0    418.0               0.0            0.0                0.0                       0.0                        0.0              0.0
+  1718            394                12              0.0    380.0              14.0            0.0                0.0                       0.0                        0.0              0.0
+  1819            402                13              0.0    380.0              22.0            0.0                0.0                       0.0                        0.0              0.0
+  1920            407                13              0.0    380.0              27.0            0.0                0.0                       0.0                        0.0              0.0
+  2021            418                15              0.0    380.0              24.0           14.0                0.0                       0.0                        0.0              0.0
+  2122            436                16              0.0    380.0              16.0           24.0               16.0                       0.0                        0.0              0.0
+  2223            428                16              0.0    380.0              14.0           24.0               10.0                       0.0                        0.0              0.0
+  2324            440                16              0.0    380.0              18.0           32.0               10.0                       0.0                        0.0              0.0
+  2425            451                29              0.0    306.0              37.0           20.0                0.0                       4.0                        2.0             82.0
+  2526             29                 4              0.0      0.0              25.0            0.0                0.0                       2.0                        2.0              0.0
+  -> cantiere/data/ligue_1_matches.csv: 3097 partite, 9 stagioni, 38 colonne

@@ -1,0 +1,3059 @@
+{
+  "bundesliga": {
+    "canonici": [
+      "Augsburg",
+      "Bayern Munich",
+      "Bielefeld",
+      "Bochum",
+      "Darmstadt",
+      "Dortmund",
+      "Ein Frankfurt",
+      "FC Koln",
+      "Fortuna Dusseldorf",
+      "Freiburg",
+      "Greuther Furth",
+      "Hamburg",
+      "Hannover",
+      "Heidenheim",
+      "Hertha",
+      "Hoffenheim",
+      "Holstein Kiel",
+      "Leverkusen",
+      "M'gladbach",
+      "Mainz",
+      "Nurnberg",
+      "Paderborn",
+      "RB Leipzig",
+      "Schalke 04",
+      "St Pauli",
+      "Stuttgart",
+      "Union Berlin",
+      "Werder Bremen",
+      "Wolfsburg"
+    ],
+    "alias": {
+      "FC Heidenheim": "Heidenheim",
+      "Hannover 96": "Hannover",
+      "Mainz 05": "Mainz",
+      "St. Pauli": "St Pauli",
+      "VfB Stuttgart": "Stuttgart",
+      "FC Augsburg": "Augsburg",
+      "FC Schalke 04": "Schalke 04",
+      "FC St. Pauli": "St Pauli",
+      "Fortuna Düsseldorf": "Fortuna Dusseldorf",
+      "SC Freiburg": "Freiburg",
+      "SV Werder Bremen": "Werder Bremen",
+      "TSG 1899 Hoffenheim": "Hoffenheim",
+      "VfL Bochum": "Bochum",
+      "VfL Wolfsburg": "Wolfsburg",
+      "1899 Hoffenheim": "Hoffenheim",
+      "VfL Bochum 1848": "Bochum"
+    },
+    "orfani": [
+      {
+        "nome": "Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Bayer Leverkusen",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Borussia Dortmund",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Borussia M.Gladbach",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Eintracht Frankfurt",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "FC Cologne",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Fortuna Duesseldorf",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Greuther Fuerth",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Hamburger SV",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Hertha Berlin",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Nuernberg",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "RasenBallsport Leipzig",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "1. Fußballclub Heidenheim 1846",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "1.FC Köln",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "1.FC Nuremberg",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "1.FC Union Berlin",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "1.FSV Mainz 05",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Bayer 04 Leverkusen",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Borussia Dortmund",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Borussia Mönchengladbach",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Eintracht Braunschweig",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Eintracht Frankfurt",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "FC Ingolstadt 04",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Hamburger SV",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Hertha BSC",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "SC Paderborn 07",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "SV Darmstadt 98",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "SpVgg Greuther Fürth",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "1. FC Heidenheim 1846",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "1. FC Köln",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "1. FC Nürnberg",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "1. FC Union Berlin",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "1. FSV Mainz 05",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Bayer 04 Leverkusen",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Bayer Leverkusen",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Bayern München",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Bor. Mönchengladbach",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Dortmund",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v 1. FC Heidenheim 1846",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v 1. FC Köln",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v 1. FC Union Berlin",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v 1. FSV Mainz 05",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v Bayer 04 Leverkusen",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v Borussia Dortmund",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v Eintracht Frankfurt",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v FC Augsburg",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v FC Bayern München",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v FC St. Pauli 1910",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v Holstein Kiel",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v RB Leipzig",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v SC Freiburg",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v SV Werder Bremen",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v TSG 1899 Hoffenheim",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v VfB Stuttgart",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v VfL Bochum 1848",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Borussia Mönchengladbach v VfL Wolfsburg",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Eintracht Frankfurt",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "FC Bayern München",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "FC Ingolstadt 04",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "FC St. Pauli 1910",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Hamburger SV",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Hertha BSC",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "SC Paderborn 07",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "SV Darmstadt 98",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "SpVgg Greuther Fürth 1903",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "[awarded]",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "1. FC Heidenheim 1846",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "1. FC Kaiserslautern",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "1. FC Köln",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "1. FC Magdeburg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "1. FC Nürnberg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "1. FC Union Berlin",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Dynamo Dresden",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Eintracht Braunschweig",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Erzgebirge Aue",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "FC Ingolstadt 04",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Hamburger SV",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Hansa Rostock",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Hertha BSC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Jahn Regensburg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Karlsruher SC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "MSV Duisburg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Preußen Münster",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SC Paderborn 07",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SSV Ulm 1846",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SV 07 Elversberg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SV Darmstadt 98",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SV Sandhausen",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SV Wehen Wiesbaden",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SpVgg Greuther Fürth",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "TSV 1860 München",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "VfL Osnabrück",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Würzburger Kickers",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v 1. FC Kaiserslautern",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v 1. FC Magdeburg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v 1. FC Nürnberg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Dynamo Dresden",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Eintracht Braunschweig",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v FC Schalke 04",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Fortuna Düsseldorf",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Hannover 96",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Hertha BSC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Holstein Kiel",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Karlsruher SC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Preußen Münster",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v SC Paderborn 07",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v SV 07 Elversberg",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v SV Darmstadt 98",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v SpVgg Greuther Fürth",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v VfL Bochum",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "0-1 a.e.t. (0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1-0 a.e.t. (0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1-2 a.e.t. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1-2 a.e.t. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1-3 a.e.t. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1-3 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. CfR Pforzheim",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Düren",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Heidenheim 1846",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Kaan-Marienborn",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Kaiserslautern",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Köln",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Lok Leipzig",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Lok Stendal",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Magdeburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Nürnberg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Phönix Lübeck",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Rielasingen-Arlen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Saarbrücken",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Schweinfurt 05",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FC Union Berlin",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "1. FSV Mainz 05",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-1 a.e.t. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 a.e.t. (2-2, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 a.e.t. (2-2, 0-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 a.e.t. (2-2, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 a.e.t. (2-2, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 pen. 0-0 a.e.t. (0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 pen. 3-3 a.e.t. (2-2, 0-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 a.e.t. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 pen. 1-1 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 pen. 2-2 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 pen. 3-3 a.e.t. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 pen. 3-3 a.e.t. (3-3, 0-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-2 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-2 a.e.t. (2-2, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-2 a.e.t. (2-2, 0-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-2 a.e.t. (2-2, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-2 a.e.t. (2-2, 1-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-2 a.e.t. (2-2, 2-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-4 pen. 3-3 a.e.t. (2-2, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 a.e.t. (3-3, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. 0-0 a.e.t. (0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. 1-1 a.e.t. (1-1, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. 2-2 a.e.t. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. 2-2 a.e.t. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-5 pen. 2-2 a.e.t. (1-1, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-5 pen. 3-3 a.e.t. (2-2, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "5-3 pen. 0-0 a.e.t. (0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "5-4 pen. 3-3 a.e.t. (2-2, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "5-6 pen. 1-1 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "5-6 pen. 2-2 a.e.t. (2-2, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "6-5 pen. 2-2 a.e.t. (2-2, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "6-5 pen. 3-3 a.e.t. (3-3, 2-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "7-6 pen. 1-1 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "7-8 pen. 4-4 a.e.t. (3-3, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "8-7 pen. 1-1 a.e.t. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "8-7 pen. 2-2 a.e.t. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Alemannia Aachen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Atlas Delmenhorst",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "BFC Dynamo",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "BSC Hastedt",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "BSG Chemie Leipzig",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Bahlinger SC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Bayer Leverkusen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Bayern München",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Blau-Weiß Lohne",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Bor. Mönchengladbach",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Borussia Dortmund",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Bremer SV",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Chemnitzer FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Dynamo Dresden",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Einheit Wernigerode",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Eintracht Braunschweig",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Eintracht Frankfurt",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Eintracht Norderstedt",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Energie Cottbus",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Erzgebirge Aue",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC 08 Homburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC 08 Villingen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Carl Zeiss Jena",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Gütersloh",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Ingolstadt 04",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Oberneuland",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Teutonia 05",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Viktoria 1889 Berlin",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Viktoria 1889 Berlin v Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Viktoria 1889 Berlin v FC Augsburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC-Astoria Walldorf",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FK Pirmasens",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FSV Frankfurt",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FSV Salmrohr",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FV Engers 07",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FV Illertissen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Germania Halberstadt",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Greifswalder FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Hallescher FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Hamburger SV",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Hansa Rostock",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Hertha BSC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Jahn Regensburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "KFC Uerdingen 05",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "KSV Baunatal",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Karlsruher SC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Kickers Offenbach",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "MSV Duisburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "MTV Eintracht Celle",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "N.N.",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Preußen Münster",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RSV Eintracht 1949",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RSV Meinerzhagen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Rostocker FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Rot-Weiss Essen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Rot-Weiß Koblenz",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Rot-Weiß Oberhausen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SC Paderborn 07",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SC Verl",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SC Wiedenbrück",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SG Sonnenhof Großaspach v Bayer Leverkusen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SSV Jeddeloh II",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SSV Ulm 1846",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV 07 Elversberg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV 19 Straelen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Babelsberg 03",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Darmstadt 98",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Drochtersen/Assel",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Hemelingen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Linx",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Meppen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Oberachern",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Rödinghausen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Sandhausen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Todesfelde",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SV Wehen Wiesbaden",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Schwarz-Weiß Rehden",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SpVgg Bayreuth",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SpVgg Greuther Fürth",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SpVgg Unterhaching",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Sportfreunde Lotte",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stuttgarter Kickers",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TSG Balingen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TSG Neustrelitz",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TSV 1860 München",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TSV Havelse",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TSV Schott Mainz",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TSV Steinbach Haiger",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TuS Bersenbrück",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TuS Dassendorf",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TuS Erndtebrück",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TuS Koblenz",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "TuS Makkabi Berlin",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Türkgücü München",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Union Fürstenwalde",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VSG Altglienicke",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VfB Eichstätt",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VfB Lübeck",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VfL Oldenburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VfL Osnabrück",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VfR Aalen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "VfV Hildesheim",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Viktoria Köln",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Wacker Nordhausen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Waldhof Mannheim",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Weiche Flensburg 08",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Wormatia Worms",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Wuppertaler SV",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Würzburger Kickers",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ZFC Meuselwitz",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "[awarded]",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v 1. FC Kaiserslautern",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v 1. FC Magdeburg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v Bayer Leverkusen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v Bayern München",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v FC St. Pauli",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v Holstein Kiel",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v N.N.",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v SV Darmstadt 98",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "v VfB Stuttgart",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      }
+    ],
+    "orfani_understat": [
+      {
+        "nome": "Arminia Bielefeld",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Bayer Leverkusen",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Borussia Dortmund",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Borussia M.Gladbach",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Eintracht Frankfurt",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "FC Cologne",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Fortuna Duesseldorf",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Greuther Fuerth",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Hamburger SV",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Hertha Berlin",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Nuernberg",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "RasenBallsport Leipzig",
+        "candidati": [],
+        "fonte": "understat"
+      }
+    ]
+  },
+  "ligue_1": {
+    "canonici": [
+      "Ajaccio",
+      "Amiens",
+      "Angers",
+      "Auxerre",
+      "Bordeaux",
+      "Brest",
+      "Caen",
+      "Clermont",
+      "Dijon",
+      "Guingamp",
+      "Le Havre",
+      "Lens",
+      "Lille",
+      "Lorient",
+      "Lyon",
+      "Marseille",
+      "Metz",
+      "Monaco",
+      "Montpellier",
+      "Nantes",
+      "Nice",
+      "Nimes",
+      "Paris FC",
+      "Paris SG",
+      "Reims",
+      "Rennes",
+      "St Etienne",
+      "Strasbourg",
+      "Toulouse",
+      "Troyes"
+    ],
+    "alias": {
+      "AC Ajaccio": "Ajaccio",
+      "AS Monaco": "Monaco",
+      "Amiens SC": "Amiens",
+      "Dijon FCO": "Dijon",
+      "ESTAC Troyes": "Troyes",
+      "FC Lorient": "Lorient",
+      "FC Metz": "Metz",
+      "FC Nantes": "Nantes",
+      "FC Toulouse": "Toulouse",
+      "Le Havre AC": "Le Havre",
+      "OGC Nice": "Nice",
+      "RC Lens": "Lens",
+      "Stade Reims": "Reims",
+      "AS Monaco FC": "Monaco",
+      "Lille OSC": "Lille",
+      "RC Strasbourg": "Strasbourg",
+      "Toulouse FC": "Toulouse"
+    },
+    "orfani": [
+      {
+        "nome": "Clermont Foot",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Paris Saint Germain",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Saint-Etienne",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "AJ Auxerre",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "AS Nancy-Lorraine",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "AS Saint-Étienne",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Angers SCO",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Clermont Foot 63",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "EA Guingamp",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "FC Girondins Bordeaux",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "FC Sochaux-Montbéliard",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "GFC Ajaccio",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "LOSC Lille",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Montpellier HSC",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Nîmes Olympique",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Olympique Lyon",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Olympique Marseille",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Paris Saint-Germain",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "RC Strasbourg Alsace",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "SC Bastia",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "SM Caen",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Stade Brestois 29",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Stade Rennais FC",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Thonon Évian Grand Genève FC",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "Valenciennes FC",
+        "candidati": [],
+        "fonte": "player_scores"
+      },
+      {
+        "nome": "AJ Auxerre",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "AS Nancy Lorraine",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "AS Saint-Étienne",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Angers SCO",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Clermont Foot 63",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "EA Guingamp",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Girondins Bordeaux",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Montpellier HSC",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Nîmes Olympique",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Olympique Lyonnais",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Olympique Marseille",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Olympique de Marseille",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Paris Saint-Germain",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Paris Saint-Germain FC",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "RC Strasbourg Alsace",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Racing Club de Lens",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "SC Bastia",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "SM Caen",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Stade Brestois 29",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Stade Rennais",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Stade Rennais FC 1901",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "Stade de Reims",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "[awarded]",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "[cancelled]",
+        "candidati": [],
+        "fonte": "openfootball_top"
+      },
+      {
+        "nome": "AJ Auxerre",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "AS Béziers",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "AS Nancy Lorraine",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "AS Saint-Étienne",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Angers SCO",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Chamois Niortais",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Clermont Foot 63",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "EA Guingamp",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "FC Annecy",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "FC Bourg-Péronnas",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "FC Chambly",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "FC Martigues",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "FC Sochaux",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Gazélec FC Ajaccio",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Girondins Bordeaux",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Grenoble Foot 38",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Havre AC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "LB Châteauroux",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Le Mans FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Montpellier HSC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Nîmes Olympique",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Pau FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Red Star FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Rodez AF",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SC Bastia",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "SM Caen",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Stade Brestois 29",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Stade Lavallois",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Stade de Reims",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Tours FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "US Boulogne",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "US Concarneau",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "US Orléans",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "US Quevilly-Rouen",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "USL Dunkerque",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "Valenciennes FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "[awarded]",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "[cancelled]",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "[postponed]",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v AS Nancy Lorraine",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v AS Saint-Étienne",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Amiens SC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Clermont Foot 63",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v EA Guingamp",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v ESTAC Troyes",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v FC Annecy",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Grenoble Foot 38",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Le Mans FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Montpellier HSC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Pau FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Red Star FC",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Rodez AF",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v SC Bastia",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Stade Lavallois",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v Stade de Reims",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v US Boulogne",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "v USL Dunkerque",
+        "candidati": [],
+        "fonte": "openfootball_second"
+      },
+      {
+        "nome": "10-9 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 pen. (1-1, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-3 pen. (3-3, 1-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "2-4 pen. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-1 pen. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-1 pen. (2-2, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-4 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-4 pen. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-4 pen. (1-1, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "3-5 pen. (2-2, 2-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-1 pen. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-2 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-2 pen. (1-1, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-2 pen. (2-2, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-2 pen. (2-2, 2-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-3 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-3 pen. (1-1, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-3 pen. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-5 pen. (1-1, 0-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-5 pen. (1-1, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-5 pen. (2-2, 0-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "4-5 pen. (2-2, 1-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "5-3 pen. (2-2, 1-1)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "9-8 pen. (1-1, 1-0)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "9-8 pen. (2-2, 1-2)",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AJ Auxerre",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Beauvais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Cannes",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Dragon",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Ginglin Cesson",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Guereins",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Montferrand",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Saint-Étienne",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "AS Vitré",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ASJR Football",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Aigles d'Or de Mana",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Angers SCO",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Angoulême CFC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Arras Football",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Association Still-Mutzig v FA Illkirch Graffenstaden",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Association Still-Mutzig v Jeunesse Evolution",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Association Still-Mutzig v Stade de Reims",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Avenir Mourenxois",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Aviron Bayonnais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "C'Chartres Football",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "CA Boulay",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "CG Haubourdin",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "CO Les Ulis",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "COBSP Football",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "CS Blénod et Pont-á-Mousson v FCSR Haguenau",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "CS Feytiat",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Calais Beau Marais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Canet Roussillon",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Carnoux FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Cazaux Olympique",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Chambéry SF",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Chamois Niortais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Cluses-Scionzier FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Dinan Léhon",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "EA Guingamp",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ES Beaumont Saint-Cyr",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ES Grau-du-Roi",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ES Thaon",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ESB Marboz",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "ESOF La Roche",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Entente Feignies Aulnoye v Gallia Lucciana",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Entente Feignies Aulnoye v Olympique Lyonnais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Etoile Club Anstaing Chéreng v FCM Aubervilliers",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC 93 Bobigny",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Allobroges Asafia",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Bourgoin-Jallieu",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Bressuire",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Chaumont",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Comtal",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Espaly",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Fief-Gesté",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Fleury 91",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Foron",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Freyming",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Grandvillars",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Gueugnon",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Hettange Grande",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Istres",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Marmande 47",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC PRJ",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Raismes",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Rouen 1899",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Saint-Lô Manche",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Serquigny-Nassandres v EA Guingamp",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Sochaux",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Valdahon Vercel",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FC Vesoul",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FCM Aubervilliers",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FCSR Haguenau",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "FCSR Obernai",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "GFA Rumilly Vallières",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "GOAL FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Gallia Lucciana",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Girondins Bordeaux",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Grenoble Foot 38",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Hauts Lyonnais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Houilles AC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "JA Drancy",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "JS Saint-Pierroise",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Jeunesse Evolution",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Jura Sud",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "L'Union Saint-Jean FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "La Roche VF",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Le Mans FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Le Puy Foot 43",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Le Touquet-Paris-Plage AC v FC Porto Portugais d'Amiens",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Le Touquet-Paris-Plage AC v RC Calais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Lempdes SF",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Liancourt Clermont",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Luneville",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "MOS Caen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "OC Cesson-Sévigné",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Olympique Alès",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Olympique Marseille",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Olympique Saumur",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Olympique de Valence",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Paris Saint-Germain",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RC Calais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RC Labourse",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RC Roubaix",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RC Saint-Joseph",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "RCO Agde",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Ruffiac Malestroit Foot v FC Lorient",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SA Mérignac",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SAS Épinal",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SC Anduzien",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SC Bastia",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SM Caen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SR Colmar",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "SU Dives Cabourg",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Saint-Colomban Locminé",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Saint-Denis FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "St-Pierre de Milizac",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stade Brestois 29",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stade Briochin",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stade Béthunois",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stade Lavallois",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stade Paimpolais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Stade de Reims",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Tours FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "UF Mâconnais",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Boulogne",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Colomiers",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Couzeix-Chaptelat",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Crépy-en-Valois",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Monnaie",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Montagnarde",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Nousseviller",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Noyelles-sous-Lens",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Orléans",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Pays Saint-Omer",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Philibertine",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Quevilly-Rouen",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Raon-l'Etape",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Sarre-Union",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "US Thionville-Lusitanos v Valenciennes FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "USC Corte",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "USL Dunkerque",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Valence FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Valenciennes FC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Vannes OC",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Vendée Fontenay",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Vendée Les Herbiers",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "[awarded]",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Étoile Maritime",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      },
+      {
+        "nome": "Étoile de Matoury",
+        "candidati": [],
+        "fonte": "openfootball_cup"
+      }
+    ],
+    "orfani_understat": [
+      {
+        "nome": "Clermont Foot",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Paris Saint Germain",
+        "candidati": [],
+        "fonte": "understat"
+      },
+      {
+        "nome": "Saint-Etienne",
+        "candidati": [],
+        "fonte": "understat"
+      }
+    ]
+  }
+}
