@@ -1,0 +1,40 @@
+{
+  "anatomy": {
+    "hit_rate": 0.4166666666666667,
+    "hit_when_title_kept": [
+      8,
+      8
+    ],
+    "hit_when_title_changes": [
+      2,
+      16
+    ],
+    "champion_in_top2": 19,
+    "champion_in_top3": 23,
+    "p_top2_declared": 0.8266416666666666,
+    "p_top2_realised": 0.7916666666666666,
+    "pick_within_top2": [
+      10,
+      19
+    ]
+  },
+  "squad_value": {
+    "logloss_base": 1.19940324498676,
+    "logloss_squad_value": 1.243780808622741,
+    "gain": -0.04437756363598111,
+    "ci": [
+      -0.11350331091617706,
+      0.015849106597955763
+    ],
+    "hit_base": 10,
+    "hit_sv": 9,
+    "beta_mean": 0.11517541169506683
+  },
+  "drift": {
+    "n": 480,
+    "drift_sd": 0.1894777141971103,
+    "between_sd": 0.4335714749696581,
+    "ratio": 0.4370160980040723,
+    "corr_pre_post": 0.9032208489876357
+  }
+}

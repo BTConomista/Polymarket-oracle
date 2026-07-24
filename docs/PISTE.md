@@ -382,6 +382,29 @@ corso o appena conclusa, quindi **scorabile**. È l'occasione migliore che il
 progetto avrà per misurare un miglioramento su questo mercato, e va colta prima
 che la stagione finisca.
 
+**⚠️ AGGIORNAMENTO Fase 89-bis — la diagnosi è più precisa di così.** L'anatomia
+dei 24 errori mostra che il modello **azzecca 8/8 quando il titolo resta e 2/16
+quando cambia mano** (negli errori il campione uscente si riconferma 0/14), ma
+che il campione vero è nel nostro **top-3 nel 96% dei casi** e che P(top-2) e
+P(top-3) sono **già calibrate** (−3.5pp e +3.7pp). L'errore è **tutto nella
+spartizione fra i due-tre leader**: 10/19 = 53% (lancio di moneta) dichiarando
+61.1%. Quindi la correzione da cercare **non è più informazione**, ma un
+**appiattimento della spartizione interna al gruppo di testa**.
+
+**La leva 3 qui sotto (valore rosa) è stata TESTATA e BOCCIATA (Fase 89-bis)**:
+log-loss 1.2438 contro 1.1994 del base, e 2/16 sulle stagioni di cambio esattamente
+come il base. Il β è sempre positivo (+0.115) ma il segnale è già nei gol/xG: la
+bocciatura delle Fasi 4c/66-70 **si trasferisce** all'outright, contrariamente a
+quanto ipotizzato qui sotto. Resta valido il caveat che il dato è rilevato al 1º
+settembre (il test era quindi favorevole alla covariata, e perde lo stesso).
+
+**Quantità nuova da usare (Fase 89-bis)**: la **deriva di forza in-stagione**
+misurata su 480 squadra-stagione vale **σ=0.189**, il **44%** della dispersione
+fra squadre (0.434), con correlazione pre/post 0.903. È la varianza che il
+simulatore ignora, ed è ora un numero, non un'ipotesi: si può iniettare
+direttamente, senza tarare nulla sui 24 esiti (la taratura post-hoc è già
+fallita, Fase 89).
+
 **Le tre leve da provare, in ordine di costo (nessuna richiede dati nuovi):**
 
 1. **Incertezza dei parametri** (la più promettente, §1.3 "versione economica"):
@@ -392,7 +415,7 @@ che la stagione finisca.
 2. **Deriva delle forze in-season**: un random walk sulle forze per giornata
    (una sola σ da tarare). Attenzione: fa **cadere** la proprietà "l'ordine del
    calendario è irrilevante" (Fase 89), quindi servirebbe il calendario vero.
-3. **Mercato estivo**: è la variabile che il confronto col mercato addita a dito
+3. ~~**Mercato estivo**~~ **— BOCCIATA (Fase 89-bis), vedi sopra**: è la variabile che il confronto col mercato addita a dito
    (Milan 2.9% nostro vs 11.6%, Man United 0.7% vs 11.0%). `squad_value` è già
    negli snapshot ed è **aggiornato a inizio stagione**: usarlo come covariata
    nel fit pre-stagionale è diverso dal test già bocciato sulle singole partite

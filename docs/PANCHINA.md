@@ -258,6 +258,7 @@ Note della matrice:
 | Forma / streak / rendimento recente (13) | già catturati dal fit pesato nel tempo | corr residui +0.035 |
 | Blend lineare modello+mercato (16) | il mercato INGLOBA il modello | α* ≈ 0 perfino in-sample |
 | Temperatura post-hoc su P(campione) (89) | con n=24 non si stima onestamente nemmeno **1** parametro: guadagna in-sample, **peggiora** in leave-one-out | LOO 1.2147 vs 1.1994 (T=1.15 in-sample) |
+| Covariata `squad_value` sul mercato campione (89-bis) | il mercato estivo NON e' informazione nuova: gia' contenuto nei gol/xG (β>0 ma ridondante), come sulle singole partite (4c/66-70) | log-loss 1.2438 vs **1.1994**; 2/16 sulle stagioni di cambio, identico al base |
 | ρ dinamico per-partita (18) | instabile, sbatte sui bound | +0.0003 [−0.0007,+0.0013] |
 | GBM diretto per mercato (21/22/36) | non batte il DC su NESSUN mercato; col feature-set completo overfitta | CI<0 escluso su 5/6; train 0.913→0.867, test ~1.01 |
 | GBM modello+mercato (23) | degrada perfino il mercato-feature | 0.9996 vs mercato 0.9632 |

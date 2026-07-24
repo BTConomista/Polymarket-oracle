@@ -9256,6 +9256,117 @@ Riproducibile: `python scripts/_run_fase89_season_champion.py --nsim 20000`
 
 ---
 
+## Fase 89-bis — Perché sbagliamo il campione: la separazione «titolo confermato / titolo che cambia»
+
+**Obiettivo (domande dell'utente).** «Quante volte hai indovinato il vincitore?
+Hai imparato perché hai sbagliato le altre? Altri dati potrebbero aiutarti?»
+Il `24/24 meglio della baseline` della Fase 89 nasconde esattamente questo.
+
+**A. L'anatomia — 10/24, ma la distribuzione degli errori è tutt'altro che casuale.**
+
+Il campione vero finisce nella nostra classifica di probabilità al 1º posto
+10/24, al 2º 9/24, al 3º 4/24, al 5º una sola volta (Milan 2021-22): è nel
+**top-3 in 23 casi su 24 (96%)**. Non sbagliamo a riconoscere le contendenti.
+
+La separazione che spiega tutto:
+
+| | stagioni | favorito azzeccato |
+|---|--:|--:|
+| il titolo **resta** alla stessa squadra | 8 | **8/8 = 100%** |
+| il titolo **cambia** mano | 16 | **2/16 = 12%** |
+
+Negli errori il campione uscente si riconferma **0 volte su 14**. E il nostro
+favorito **è** il campione uscente nel 71% dei casi. Cioè: il modello, fittato
+sui risultati passati, dice in sostanza «continua chi comandava» — ed è giusto
+tutte le volte che è vero, sbagliato quasi tutte le volte che non lo è. **Non
+ha alcun meccanismo per anticipare un cambio al vertice**, e non può averlo,
+perché l'informazione che lo anticipa non è nei risultati passati.
+
+**Dove sta davvero l'errore.** Non nella forma della distribuzione sul gruppo
+di testa, ma nella **scelta dentro il gruppo**:
+
+| | dichiarato | reale | scarto |
+|---|--:|--:|--:|
+| P(vince uno dei nostri primi 2) | 82.7% | 79.2% | −3.5pp |
+| P(vince uno dei nostri primi 3) | 92.2% | 95.8% | +3.7pp |
+| **scelta dentro il top-2** | **61.1%** | **53%** (10/19) | **−8pp** |
+
+Siamo **calibrati sul gruppo di testa** e sbagliati solo su come dividiamo la
+probabilità fra i suoi membri: prezziamo al ~61% ciò che nei fatti è un **lancio
+di moneta** (~53%). La sovra-confidenza cresce con la confidenza dichiarata
+(sopra il 70%: dichiarato 78.4%, realizzato 55.6%, −22.9pp).
+
+**B. Il valore rosa NON aiuta (negativo).** Ipotesi naturale: serve un segnale
+che veda il **mercato estivo**, che i risultati di maggio non contengono.
+`squad_value` è già negli snapshot, è rilevato a inizio stagione e il progetto
+lo aveva bocciato solo sulle **singole partite** (Fasi 4c/66-70) — in PISTE.md
+avevo esplicitamente scritto che quel verdetto «non copre» il problema
+dell'outright pre-stagionale. **Testato: lo copre.**
+
+| | log-loss | favorito azzeccato | sulle 16 di cambio |
+|---|--:|--:|--:|
+| DC base | **1.1994** | 10/24 | 2/16 |
+| DC + covariata `squad_value` | 1.2438 | 9/24 | 2/16 |
+
+Delta **+0.0444** (IC95% [−0.1135, +0.0158], non conclusivo, ma il punto-stima
+è **peggiorativo**). Il β è **sempre positivo** (media +0.115): il segnale
+esiste — rose più costose segnano di più — ma è **già contenuto nei gol e
+nell'xG**, esattamente come sulle singole partite. Un controllo grezzo lo
+conferma: la squadra col valore rosa più alto è campione 11/24 (46%) contro le
+nostre 10/24, e il rank medio del nuovo campione è **identico** (2.31) per i due
+segnali. Diverso, non migliore.
+*Caveat dichiarato*: `squad_value` è rilevato attorno al 1º settembre, 2-3
+giornate dopo il via — il test era quindi **favorevole** alla covariata, e
+perde lo stesso.
+
+**C. La varianza che manca, misurata.** Fittando il DC a inizio e a fine
+stagione sulle stesse 480 squadre-stagione, la forza netta (attacco − difesa)
+si sposta con deviazione standard **0.189**, contro una dispersione **fra**
+squadre di 0.434: la deriva vale il **44%** della distanza tipica fra due
+squadre (correlazione pre/post 0.903). Il simulatore, tenendo le forze fisse
+per 10 mesi, ignora esattamente questa quantità. *Limite dichiarato*: la stima
+di inizio stagione è più rumorosa di quella di fine, quindi 0.189 mescola
+deriva vera ed errore di stima — è un **limite superiore**.
+
+**Lezione e conseguenza operativa.** La risposta a «servono altri dati?» è: non
+questi. Il valore rosa è ridondante; ciò che manca (chi cambia allenatore, chi
+si rinforza davvero, chi si infortuna) non è in nessun dato che possediamo. Ma
+la diagnosi indica un rimedio che **non richiede dati nuovi**: poiché siamo
+calibrati sul gruppo di testa e sbagliati solo nella spartizione interna, la
+correzione giusta è **appiattire la spartizione fra i leader** iniettando la
+deriva misurata in C — non tarare un parametro sui 24 esiti (già fallito con la
+temperatura, Fase 89). È anche ciò che il mercato fa: Polymarket dà Inter 47%
+dove noi diamo 66.8%, e distribuisce il resto su Juve/Napoli/Milan.
+
+### 📐 Il modello in dettaglio
+
+**La covariata.** `squad_value` entra nel tasso atteso come
+`λ = exp(att_casa + dif_ospite + γ + β·(z_casa − z_ospite))` e
+`μ = exp(att_ospite + dif_casa − β·(z_casa − z_ospite))`, con
+`z = (log(valore) − media) / dev.std` imparate sul training
+(`_COVARIATES["squad_value"] = (home_squad_value, away_squad_value, "log")`,
+`dixon_coles.py`). β è stimato **insieme** agli altri parametri nella stessa
+verosimiglianza pesata. In simulazione le feature vanno passate a
+`predict_match(h, a, features=...)` per ogni incontro (il valore è costante per
+squadra dentro la stagione: verificato, 1 solo valore distinto per squadra).
+
+**La deriva.** Per ogni squadra-stagione: `forza(t) = attacco(t) − difesa(t)`
+stimata due volte con lo stesso identico modello, cambiando solo `as_of_date`
+(prima partita vs giorno dopo l'ultima). `deriva = forza_fine − forza_inizio`;
+si riportano `sd(deriva) = 0.189`, `sd(forza_inizio) = 0.434` e il loro rapporto
+0.44. La correlazione 0.903 dice che l'ordinamento si conserva in larga parte:
+la deriva sposta, non rimescola.
+
+**Le metriche di calibrazione di gruppo.** `P(top-k) = Σ` delle k probabilità
+più alte del nostro vettore; il realizzato è la frazione di stagioni in cui il
+campione vero ha rank ≤ k. IC bootstrap percentile su 10.000 ricampionamenti
+delle 24 differenze appaiate.
+
+Riproducibile: `python scripts/_run_fase89bis_anatomy.py --squad-value`
+(≈4 minuti). Dettaglio in `experiments/fase89bis_anatomy.json`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
