@@ -47,6 +47,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
 | **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier) |
+| **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⚽ top-4 **calibrato** (ECE 0.0137, batte anche la persistenza, 480 oss.); retrocessione ❌ **non** batte la persistenza (mis-calibrazione tutta sulle neopromosse: −10.1pp) |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
 | **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
 | GG/NG φ35+knee34 su market-implied | 🪑 F50 (riconf. F80: −0.0014 P97%) | ❌ F80 (nulla) | ❌ combo F80 (il k34 PEGGIORA con CI>0: profilo-ospite invertito); φ35-sola 🪑 | ❌ il nudge ha segno per-lega |

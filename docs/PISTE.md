@@ -430,6 +430,17 @@ fallita, Fase 89).
 rumore di stima** (la deriva vera è ≈0.14-0.15). Le leve 1 e 2 qui sotto
 catturano in parte la stessa quantità: **non vanno sommate**.
 
+**NUOVA PISTA (Fase 91) — il prior δ dipende dall'ORIZZONTE di predizione.**
+Sui mercati posizionali la mis-calibrazione è **tutta sulle neopromosse**
+(dichiarato 58.7% di retrocessione, realizzato 48.6%; il resto della lega è
+calibrato a +1.8pp). Il δ attuale (0.23 / 0.33 / 0.22) fu tarato sul **log-loss
+della singola partita** (Fasi 7/57): lì è ottimo, ma propagato su 38 giornate la
+penalizzazione si accumula e diventa troppo severa. È la prima costante ufficiale
+del progetto che si scopre **dipendente dall'orizzonte**. Test proposto: ritarare
+δ sul bersaglio stagionale (P(retrocessione) delle neopromosse, 72 osservazioni)
+tenendo quello attuale per i mercati di partita, e verificare che il top-4 — oggi
+calibrato — non peggiori. Costo: una griglia su δ × 24 stagioni-lega, ~30 minuti.
+
 **Le tre leve da provare, in ordine di costo (nessuna richiede dati nuovi):**
 
 1. **Incertezza dei parametri** (la più promettente, §1.3 "versione economica"):

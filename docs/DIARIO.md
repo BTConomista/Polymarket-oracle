@@ -9538,6 +9538,125 @@ Riproducibile: `python scripts/_run_fase89_season_champion.py --nsim 20000` e
 
 ---
 
+## Fase 91 — I mercati POSIZIONALI: il simulatore è calibrato in alto e sbaglia in basso (ed è colpa del prior)
+
+**Obiettivo.** L'audit della Fase 90 ha notato che `simulate_season` calcola la
+matrice delle **posizioni** di ogni stagione simulata e ne usa solo la prima riga
+(il campione), buttando via il resto. Da lì escono due mercati veri — **zona
+Champions** e **retrocessione** — e soprattutto **480 osservazioni binarie** per
+mercato (20 squadre × 24 stagioni-lega) invece delle 24 del campione, di cui il
+progetto si lamentava. Zero modellistica nuova, stesse simulazioni: è la leva col
+miglior rapporto valore/costo che il progetto avesse aperto.
+
+**Risultato 1 — il TOP-4 è ottimamente calibrato e batte anche la persistenza.**
+
+| | log-loss | Brier | ECE |
+|---|--:|--:|--:|
+| **MODELLO** | **0.2218** | **0.0675** | **0.0137** |
+| persistenza (logistica sui punti precedenti, LOO) | 0.2491 | 0.0769 | — |
+| tasso base (4/20) | 0.5004 | 0.1600 | — |
+
+Guadagno **+0.2786** sul tasso base (IC95% [+0.2208, +0.3345]) e **+0.0273** sulla
+persistenza (IC95% [+0.0037, +0.0502]): **entrambi conclusivi**. E la calibrazione
+è quasi perfetta su tutte le fasce — lo scarto massimo è **1.4pp**:
+
+| dichiarato | n | realizzato | scarto |
+|---|--:|--:|--:|
+| 0-10% | 309 | 1.6% | +0.3pp |
+| 10-30% | 52 | 19.2% | +0.6pp |
+| 30-50% | 32 | 37.5% | −1.0pp |
+| 50-70% | 26 | 57.7% | −0.7pp |
+| 70-90% | 24 | 79.2% | −1.4pp |
+| 90-100% | 37 | 94.6% | −1.4pp |
+
+Con 480 osservazioni questa non è una coincidenza: sul piazzamento in zona
+Champions il simulatore dice il vero.
+
+**Risultato 2 — la RETROCESSIONE è rotta, e in modo spettacolare.**
+
+Batte il tasso base (+0.0875, IC95% [+0.0369, +0.1360]) ma **non batte la
+persistenza** (−0.0116, IC95% [−0.0410, +0.0150]: punto-stima peggiore). E la
+calibrazione crolla proprio dove dovrebbe essere più affidabile:
+
+| dichiarato | n | realizzato | scarto |
+|---|--:|--:|--:|
+| 0-10% | 301 | 4.3% | +2.4pp |
+| 10-30% | 90 | 22.2% | +4.0pp |
+| 30-50% | 37 | 43.2% | +4.5pp |
+| **50-70%** | 32 | **40.6%** | **−19.6pp** |
+| **70-90%** | 15 | **46.7%** | **−30.3pp** |
+| **90-100%** | 5 | **60.0%** | **−32.2pp** |
+
+Quando dichiariamo che una squadra è **quasi certamente** retrocessa, ci
+azzecchiamo il **60%** delle volte.
+
+**Risultato 3 — il colpevole ha un nome: il prior di cold-start.**
+
+Dei **37 casi** con P(retrocessione) > 60%, **36 sono neopromosse (97%)** — e
+**19 si sono salvate**. La calibrazione separata è netta:
+
+| | n | dichiarato | realizzato | scarto |
+|---|--:|--:|--:|--:|
+| **neopromosse** | 72 | **58.7%** | **48.6%** | **−10.1pp** |
+| resto della lega | 408 | 7.3% | 9.1% | +1.8pp |
+
+Il resto della lega è **calibrato**. Tutta la mis-calibrazione sta sulle
+neopromosse. La causa è il prior δ (0.23 / 0.33 / 0.22), che fu tarato sul
+**log-loss della singola partita** (Fasi 7/57): lì è ottimo, ma propagato su **38
+giornate** diventa troppo severo, perché la penalizzazione si accumula.
+
+I nomi lo confermano — e sono gli stessi della Fase 89-bis: Verona 1920 (92.5%
+dichiarato → 9ª), Sunderland 2526 (91.6% → 7ª), Nott'm Forest 2223 (86.2% →
+16ª), Leeds 2021 (79.8% → 9ª), Sheffield United 1920 (75.5% → 9ª). **Leeds,
+Sheffield United e Sunderland sono esattamente tre delle sei derive di forza più
+grandi misurate alla Fase 89-bis** (+0.81, +0.64, +0.63): le squadre che il
+modello condanna sono proprio quelle che si trasformano di più durante l'anno, e
+le forze fisse non possono vederlo. Due fasi indipendenti, stesso meccanismo.
+
+**Lezione.** (a) Il simulatore **non è "sovra-confidente" in generale**: è
+calibrato sul grosso della classifica e sbaglia in due punti precisi — la
+spartizione fra i leader (Fase 89-bis) e le neopromosse (qui). (b) **Un
+iperparametro tarato su un orizzonte non è valido su un altro**: δ è ottimo sulla
+partita e troppo severo sulla stagione. È la prima volta che il progetto trova
+una costante ufficiale che *dipende dall'orizzonte di predizione*, e apre una
+pista concreta: **ritarare δ sul bersaglio stagionale**, tenendo quello attuale
+per i mercati di partita.
+
+**Onestà.** Non esistono quote storiche nemmeno per top-4 e retrocessione: si
+dimostra «battiamo le baseline», non «battiamo il mercato». Le due definizioni
+sono **posizionali** (primi 4 / ultime 3): la corrispondenza con la Champions
+vera cambia per stagione e lega, e non la si insegue.
+
+### 📐 Il modello in dettaglio
+
+**Le probabilità** vengono dalla matrice `rank` già calcolata:
+```
+P(top-4)_i        = media_s [ rank[s, i] <= 4 ]
+P(retrocessione)_i = media_s [ rank[s, i] >= n_squadre - 2 ]
+```
+**La baseline di persistenza**: `p = sigmoide(a + b·z)` con `z` = punti
+standardizzati della stagione precedente (neopromosse imputate a `min(punti)−3`),
+`(a,b)` stimati per massima verosimiglianza in **leave-one-out per
+STAGIONE-LEGA**, non per squadra: le 20 squadre della stessa classifica non sono
+indipendenti (una sola somma-zero le lega), quindi escluderne una lascerebbe le
+altre 19 nel training e la baseline vedrebbe quasi tutto.
+
+**ECE** (Expected Calibration Error) = `Σ_fasce (n_fascia/n) · |media(p) −
+media(y)|` su 10 fasce equispaziate.
+
+**Gli spareggi al confine** (verificato qui): al 4º/5º e al 17º/18º posto la
+parità di punti capita nel **~15%** delle stagioni simulate — tre volte più che
+in vetta — e `rank` la risolve per differenza reti anziché con la classifica
+avulsa di Serie A/Liga. Ma l'impatto sulla probabilità **aggregata** è
+trascurabile: confrontando differenza reti e **sorteggio** (il limite superiore
+della sensibilità), lo scarto medio è **0.14pp** e il massimo **0.91pp** — le
+parità si compensano fra le squadre.
+
+Riproducibile: `python scripts/_run_fase91_positions.py --nsim 20000` (~2 min).
+Run in `experiments/runs.jsonl`, dettaglio in `experiments/fase91_positions.json`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
