@@ -28,6 +28,9 @@ anomalie sempre dichiarate (R5).
 | 3 | **Import Bundesliga + Ligue 1** | [`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) | fatti: **2.754 + 3.097 partite**, 38 colonne identiche alle altre leghe, audit superato |
 | 4 | **Istruttoria delle decisioni aperte** | [`report/04_decisioni.md`](report/04_decisioni.md) | Union-Bochum: partita **giocata per intero**, 1-1 sul campo, dati completi; valori rosa 2025-26: **recuperati da Transfermarkt** (16 celle) con la scala misurata; re-import del dataset: via **chiusa** (upstream fermo) |
 
+| 5 | **Tranche 1 — correzioni dati** | [`report/05_tranche1.md`](report/05_tranche1.md) | 8 linee O/U impossibili e 1 xG impossibile a NaN dichiarato; audit avversariale a **0 anomalie** sulle leghe nuove |
+| 6 | **Tranche 3 — il playbook sulle leghe nuove** | [`report/06_tranche3.md`](report/06_tranche3.md) | il DC batte la baseline e non il mercato (gap +0.018/+0.019, dentro l'attesa); il market-implied batte il DC su **15/15** mercati; curve di taratura **piatte**; φ35 non conclusiva in nessuna lega |
+
 ## Il fatto nuovo che ha cambiato le regole
 
 `docs/MANUALE_SOPRAVVIVENZA.md` §1 dà `football-data.co.uk` e `understat.com`
@@ -50,7 +53,7 @@ per **bloccati** (403). **Oggi rispondono 200.** Sono raggiungibili anche
 ```
 cantiere/
   REGOLE.md         le regole decise durante il lavoro (R1-R5)
-  report/           i quattro report (sopra)
+  report/           i sei report (sopra)
   patch/            proposte di modifica al codice di produzione, non applicate
   scripts/
     fetch_sources.py         scarica football-data + Understat (5 leghe x 9 stagioni)
@@ -65,6 +68,10 @@ cantiere/
     eda_nuove_leghe.py       EDA comparativa sulle 5 leghe (passo 1 del playbook)
     applica_correzioni.py    applica le correzioni dichiarate (registro + verifica, R1/R3)
     applica_squad_value_tm.py  riempie le celle vuote di valore rosa (R2)
+    tranche3_tracer.py       tracer bullet del DC (walk-forward, 5 leghe)
+    tranche3_market_tracer.py  theta/tilt/phi0/ROI dal lato mercato
+    tranche3_ritaratura.py   griglia delta/emivita/shrinkage per-lega
+    tranche3_mercati.py      market-implied multi-mercato + leva phi35
   data/
     bundesliga_matches.csv       snapshot 38 colonne (2.754 partite)
     ligue_1_matches.csv          snapshot 38 colonne (3.097 partite)

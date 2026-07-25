@@ -169,7 +169,45 @@ allargare la finestra o cambiare metrica, non ri-fittare gli stessi dati.
 
 ---
 
-## Passo 3 · Ri-taratura per-lega ⏳ (in corso)
+## Passo 3 · Ri-taratura per-lega: serve ritoccare qualcosa?
+
+Una leva alla volta, le altre ferme al default Serie A. Riferimento: il tracer
+del passo 2 (config Serie A pura). Stessa finestra di 6 stagioni, bootstrap
+appaiato B=10.000 contro il riferimento.
+
+**Aspettativa dichiarata prima:** curve **piatte** su emivita e shrinkage
+(successo su 3/3 leghe finora); δ per-lega adottabile per motivazione
+strutturale anche senza CI conclusivo.
+
+### Bundesliga (riferimento 1X2 = 0.9919)
+
+| variante | 1X2 | Δ vs riferimento | guadagno (CI95) | verdetto |
+|---|--:|--:|---|---|
+| **δ = 0.277** (per-lega) | 0.9919 | −0.0001 | +0.0001 [−0.0002, +0.0004] | nel rumore |
+| emivita 730g | 0.9928 | +0.0009 | −0.0009 [−0.0032, +0.0016] | nel rumore (peggiora) |
+| shrinkage 3.0 | 0.9917 | −0.0002 | +0.0002 [−0.0008, +0.0013] | nel rumore |
+
+### Ligue 1 (riferimento 1X2 = 1.0041)
+
+| variante | 1X2 | Δ vs riferimento | guadagno (CI95) | verdetto |
+|---|--:|--:|---|---|
+| **δ = 0.188** (per-lega) | 1.0040 | −0.0000 | +0.0000 [−0.0002, +0.0003] | nel rumore |
+| emivita 730g | 1.0053 | +0.0012 | −0.0012 [−0.0035, +0.0011] | nel rumore (peggiora) |
+| shrinkage 3.0 | 1.0042 | +0.0001 | −0.0001 [−0.0009, +0.0007] | nel rumore |
+
+**Esito: curve piatte, 5 leghe su 5.** Nessuna delle tre leve produce un CI
+conclusivo. L'emivita a 730 giorni **peggiora** in entrambe (come in tutte le
+altre leghe): i 365 giorni restano.
+
+**Sul δ.** Il valore per-lega calcolato dai dati (0.277 Bundesliga, 0.188
+Ligue 1) non migliora in modo misurabile rispetto allo 0.23 della Serie A —
+esattamente come era successo per Premier e Liga, dove fu adottato **per
+motivazione strutturale**, non per guadagno. Il caso della Ligue 1 è
+istruttivo: il suo δ va nella direzione **opposta** (0.188 < 0.23, le promosse
+francesi sono le meno deboli del campione) e il modello non se ne accorge.
+Raccomandazione: adottare i δ per-lega quando si scriverà `LEAGUE_CONFIGS`
+(coerenza col metodo del progetto e con la struttura della lega), **dichiarando
+che il guadagno misurato è nel rumore** — mai spacciarlo per un miglioramento.
 
 ---
 

@@ -1,0 +1,122 @@
+{
+  "bundesliga": {
+    "riferimento": {
+      "x2": 0.9919366526965623,
+      "ou": 0.6552951180625232
+    },
+    "delta_per_lega": {
+      "config": {
+        "half_life_days": 365.0,
+        "shrinkage": 1.5,
+        "shots_blend": 0.75,
+        "blend_signal": "xg",
+        "delta": 0.277
+      },
+      "x2": 0.9918744075719061,
+      "ou": 0.6552923396399276,
+      "delta_vs_rif": -6.224512465613508e-05,
+      "guadagno": 6.224512465598738e-05,
+      "ci95": [
+        -0.0002442546608759646,
+        0.00036483393475454195
+      ],
+      "verdetto": "nel rumore"
+    },
+    "emivita_730": {
+      "config": {
+        "half_life_days": 730.0,
+        "shrinkage": 1.5,
+        "shots_blend": 0.75,
+        "blend_signal": "xg",
+        "delta": 0.277
+      },
+      "x2": 0.9927881145198408,
+      "ou": 0.6536493916264523,
+      "delta_vs_rif": 0.0008514618232785542,
+      "guadagno": -0.0008514618232785752,
+      "ci95": [
+        -0.003230225449808963,
+        0.0015519145075357083
+      ],
+      "verdetto": "nel rumore"
+    },
+    "shrinkage_3": {
+      "config": {
+        "half_life_days": 365.0,
+        "shrinkage": 3.0,
+        "shots_blend": 0.75,
+        "blend_signal": "xg",
+        "delta": 0.277
+      },
+      "x2": 0.9917157766576422,
+      "ou": 0.6551337879649584,
+      "delta_vs_rif": -0.00022087603892007035,
+      "guadagno": 0.00022087603891995884,
+      "ci95": [
+        -0.0008348539326031845,
+        0.0012889712313451185
+      ],
+      "verdetto": "nel rumore"
+    }
+  },
+  "ligue_1": {
+    "riferimento": {
+      "x2": 1.0040745221657317,
+      "ou": 0.6862589483235877
+    },
+    "delta_per_lega": {
+      "config": {
+        "half_life_days": 365.0,
+        "shrinkage": 1.5,
+        "shots_blend": 0.75,
+        "blend_signal": "xg",
+        "delta": 0.188
+      },
+      "x2": 1.0040245497255815,
+      "ou": 0.6863564125747934,
+      "delta_vs_rif": -4.997244015014779e-05,
+      "guadagno": 4.997244015038498e-05,
+      "ci95": [
+        -0.0001998996853300677,
+        0.000303754043616611
+      ],
+      "verdetto": "nel rumore"
+    },
+    "emivita_730": {
+      "config": {
+        "half_life_days": 730.0,
+        "shrinkage": 1.5,
+        "shots_blend": 0.75,
+        "blend_signal": "xg",
+        "delta": 0.188
+      },
+      "x2": 1.0052884494365493,
+      "ou": 0.6858193175908663,
+      "delta_vs_rif": 0.001213927270817594,
+      "guadagno": -0.0012139272708174941,
+      "ci95": [
+        -0.0035116995162510936,
+        0.0011023309149435301
+      ],
+      "verdetto": "nel rumore"
+    },
+    "shrinkage_3": {
+      "config": {
+        "half_life_days": 365.0,
+        "shrinkage": 3.0,
+        "shots_blend": 0.75,
+        "blend_signal": "xg",
+        "delta": 0.188
+      },
+      "x2": 1.0041774579624565,
+      "ou": 0.6859587124891152,
+      "delta_vs_rif": 0.00010293579672482345,
+      "guadagno": -0.00010293579672481208,
+      "ci95": [
+        -0.0009332446301303217,
+        0.0007408133975085845
+      ],
+      "verdetto": "nel rumore"
+    }
+  }
+}
