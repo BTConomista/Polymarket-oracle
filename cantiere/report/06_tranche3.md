@@ -169,6 +169,38 @@ allargare la finestra o cambiare metrica, non ri-fittare gli stessi dati.
 
 ---
 
-## Passo 2 · Tracer bullet del Dixon-Coles ⏳
+## Passo 3 · Ri-taratura per-lega ⏳ (in corso)
 
-## Passo 3 · Ri-taratura per-lega ⏳
+---
+
+## La rosa dei modelli, per le due leghe nuove
+
+Sintesi in stile `docs/PANCHINA.md` — cosa è **titolare**, cosa resta in
+**panchina**, cosa è **chiuso**, sulla base dei test di questa tranche.
+
+| leva / modello | Bundesliga | Ligue 1 | perché |
+|---|---|---|---|
+| **market-implied** (chiusura 1X2+O/U → matrice) | ⚽ **titolare** | ⚽ **titolare** | batte il DC-da-gol su 15/15 mercati Tier 1 |
+| **DC gol+xG** (config Serie A) | ⚽ titolare *come fallback* | ⚽ titolare *come fallback* | batte la baseline in modo conclusivo, non il mercato (gap +0.018 / +0.019): esattamente il ruolo che ha nelle altre leghe |
+| **φ(\|λ−μ\|)** sulla famiglia-pareggio | 🪑 panchina | ❌ non serve | Bundesliga: segno giusto, CI non conclusivo; Ligue 1: φ0 = 0, la lega non ha deficit-pareggio |
+| **dp / θ del router** | 🪑 panchina | 🪑 panchina | θ misurato 1.080 / 1.103: sopra 1 ma molto sotto Serie A e Liga; da testare come leva solo dopo il passo 3 |
+| **ROI pari-equilibrio** | ❌ chiuso | ❌ chiuso | non conclusivo, come nelle altre 3 leghe |
+| **pari/dispari** | ❌ chiuso | ❌ chiuso | la baseline vince: sesta replica della lezione |
+
+---
+
+## Cosa si porta a casa
+
+1. **Il modello trasferisce, di nuovo.** Cinque leghe, stessa finestra, stesso
+   codice: il DC batte sempre la baseline e non batte mai il mercato, con un gap
+   in una forchetta stretta (+0.0162…+0.0207). Non c'è nulla di speciale nella
+   Serie A, e non c'è nulla di rotto nelle leghe nuove.
+2. **Il motore market-implied è ancora più forte fuori dall'Italia** (15/15 in
+   Liga, Bundesliga e Ligue 1 contro 14/15 in Serie A e Premier).
+3. **Una lezione del playbook va riscritta.** «θ decresce con la liquidità» non
+   regge al test su 5 leghe; quello che regge è che **θ e il deficit-pareggio
+   sono la stessa cosa vista da due angoli** (corr +0.755).
+4. **Una previsione fatta prima si è avverata** (φ0 = 0 in Ligue 1), il che dà
+   fiducia al metodo dell'EDA come strumento di *pronostico* e non solo di
+   descrizione.
+5. **Nessun edge nuovo.** Come sempre: la struttura viaggia, i soldi no.
