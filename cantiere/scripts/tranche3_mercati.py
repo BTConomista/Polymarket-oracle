@@ -47,8 +47,14 @@ from src.models import market_implied as mi  # noqa: E402
 OUT = ROOT / "cantiere" / "out"
 RHO = MI.RHO_MAIN
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
-# La famiglia-pareggio: i mercati che la phi(|lam-mu|) puo' toccare.
-FAMIGLIA_PAREGGIO = ["draw", "dc_1x", "dc_x2"]
+# La famiglia-pareggio: i mercati che la phi(|lam-mu|) puo' toccare. Non stanno
+# in BINARY (che copre solo i mercati sui totali/marginali): gli esiti si
+# calcolano qui.
+FAMIGLIA_PAREGGIO = ["draw", "dc_1x", "dc_2x"]
+
+
+def esiti_pareggio(hg, ag) -> dict:
+    return {"draw": hg == ag, "dc_1x": hg >= ag, "dc_2x": ag >= hg}
 
 
 def carica(league: str, seasons: list[str]) -> dict[str, pd.DataFrame]:
@@ -90,7 +96,7 @@ def main() -> int:
         righe = {}
         for mk in mercati:
             a, b, c = ev_mkt[mk].mean(), ev_dc[mk].mean(), ev_base[mk].mean()
-            d, lo, hi = boot(ev_dc[mk] - ev_mkt[mk], rng)   # >0 = MI meglio
+            d, lo, hi, _ = boot(ev_dc[mk] - ev_mkt[mk], rng)   # >0 = MI meglio
             vinti_dc += int(a < b); vinti_base += int(a < c)
             print(f"{mk:22s} {a:12.4f} {b:11.4f} {c:10.4f}   "
                   f"{d:+.4f} [{lo:+.4f},{hi:+.4f}] "
@@ -120,17 +126,25 @@ def main() -> int:
         for s in dfs:
             phi0, kappa = phi_par[s]
             hg = dfs[s].home_goals.to_numpy(); ag = dfs[s].away_goals.to_numpy()
-            outc = _binary_outcomes(hg, ag)
+            outc = esiti_pareggio(hg, ag)
             pr_phi = [mi.price_markets(l, m, RHO, phi0, kappa) for l, m in lm_mkt[s]]
             pr_no = [mi.price_markets(l, m, RHO) for l, m in lm_mkt[s]]
             for mk in FAMIGLIA_PAREGGIO:
                 y = outc[mk].astype(float)
                 ll_phi[mk].append(ll_bin(np.array([p[mk] for p in pr_phi]), y))
                 ll_no[mk].append(ll_bin(np.array([p[mk] for p in pr_no]), y))
+            # 1X2 a 3 esiti (la metrica principale del progetto)
+            idx = {"H": 0, "D": 1, "A": 2}
+            yi = np.array([idx[o] for o in dfs[s].result])
+            for tag, pr in (("con", pr_phi), ("senza", pr_no)):
+                P = np.array([[p["home_win"], p["draw"], p["away_win"]] for p in pr])
+                P = P / P.sum(axis=1, keepdims=True)
+                ll = -np.log(np.clip(P[np.arange(len(yi)), yi], 1e-15, None))
+                (ll_phi if tag == "con" else ll_no).setdefault("1X2", []).append(ll)
         fam = {}
-        for mk in FAMIGLIA_PAREGGIO:
+        for mk in FAMIGLIA_PAREGGIO + ["1X2"]:
             a = np.concatenate(ll_no[mk]); b = np.concatenate(ll_phi[mk])
-            d, lo, hi = boot(a - b, rng)          # >0 = phi35 MIGLIORA
+            d, lo, hi, _ = boot(a - b, rng)       # >0 = phi35 MIGLIORA
             verdetto = "MEGLIO" if lo > 0 else ("PEGGIO" if hi < 0 else "nel rumore")
             print(f"    {mk:8s} senza phi {a.mean():.4f} -> con phi {b.mean():.4f}   "
                   f"guadagno {d:+.5f} CI95 [{lo:+.5f},{hi:+.5f}] -> {verdetto}")

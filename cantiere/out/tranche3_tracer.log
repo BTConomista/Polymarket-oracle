@@ -47,3 +47,16 @@ Config usata (Serie A, NON ri-tarata): emivita 365g, shrinkage 1.5, blend 0.75 (
   2122: 380 gare in  43.1s  1X2 modello 0.9506 | baseline 1.0686 | mercato 0.9367  (gap +0.0139)
   2223: 380 gare in  51.6s  1X2 modello 0.9967 | baseline 1.0469 | mercato 0.9620  (gap +0.0347)
   2324: 380 gare in  64.1s  1X2 modello 0.9250 | baseline 1.0531 | mercato 0.9007  (gap +0.0243)
+  2425: 380 gare in  71.9s  1X2 modello 0.9847 | baseline 1.0776 | mercato 0.9667  (gap +0.0179)
+  2526: 380 gare in 156.6s  1X2 modello 1.0249 | baseline 1.0793 | mercato 1.0118  (gap +0.0132)
+
+  POOLED (2280 partite, 6 stagioni)
+    1X2  modello 0.9831  baseline 1.0695  mercato 0.9623
+    O/U  modello 0.6814  baseline 0.6871  mercato 0.6748
+    modello vs BASELINE: guadagno +0.0864 CI95 [+0.0710, +0.1017] -> CONCLUSIVO
+    modello vs MERCATO : gap     +0.0207 CI95 [+0.0138, +0.0275] -> il mercato vince, conclusivo
+
+=== la_liga ===
+  2021: 380 gare in  97.6s  1X2 modello 1.0033 | baseline 1.0837 | mercato 0.9806  (gap +0.0227)
+  2122: 380 gare in 122.7s  1X2 modello 1.0041 | baseline 1.0763 | mercato 0.9892  (gap +0.0149)
+  2223: 380 gare in 114.8s  1X2 modello 0.9903 | baseline 1.0508 | mercato 0.9778  (gap +0.0125)
