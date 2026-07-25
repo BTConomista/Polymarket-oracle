@@ -1,0 +1,128 @@
+{
+ "fonte": "footiqo.com",
+ "endpoint": "wp-admin/admin-ajax.php?action=get_wdtable",
+ "book": "1xBet (colonne xbetClose*)",
+ "scaricato": "2026-07-25T19:30:09Z",
+ "file": [
+  {
+   "file": "footiqo_serie_a_2017-2018.json",
+   "lega": "serie_a",
+   "stagione": "2017/2018",
+   "table_id": 575,
+   "righe": 380,
+   "sha256": "0f7bf980097dd71b56210596d9c598b9c822fe7cdab81221318ed7c3525947f9"
+  },
+  {
+   "file": "footiqo_serie_a_2018-2019.json",
+   "lega": "serie_a",
+   "stagione": "2018/2019",
+   "table_id": 575,
+   "righe": 380,
+   "sha256": "60edb5c8a1734fb5fbccc9534bffb3c3912019f309843dea74ac6647ec51ff44"
+  },
+  {
+   "file": "footiqo_serie_a_2019-2020.json",
+   "lega": "serie_a",
+   "stagione": "2019/2020",
+   "table_id": 575,
+   "righe": 380,
+   "sha256": "793b84223a8340c071941a48310079a0fba2a05b7b9c3ab232a14fe0f2b00164"
+  },
+  {
+   "file": "footiqo_premier_league_2017-2018.json",
+   "lega": "premier_league",
+   "stagione": "2017/2018",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "598f2b7a6bdd2b1248a5c2a0c1b86e5784b8bd26b151c62453dda447f7e5cd9a"
+  },
+  {
+   "file": "footiqo_premier_league_2018-2019.json",
+   "lega": "premier_league",
+   "stagione": "2018/2019",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "3822fd24be541f20f10889b11be1ac9fc6512cee0653925613d23bc2334da64f"
+  },
+  {
+   "file": "footiqo_premier_league_2019-2020.json",
+   "lega": "premier_league",
+   "stagione": "2019/2020",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "714252031ba59ad7d086c5010873b728aad5c24ff13cb944db3c36c1899f1d82"
+  },
+  {
+   "file": "footiqo_la_liga_2017-2018.json",
+   "lega": "la_liga",
+   "stagione": "2017/2018",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "5c13db81264ca9cc4b587dd9cb16c22aa0eeccc2609c4a8f251d691351b84d2e"
+  },
+  {
+   "file": "footiqo_la_liga_2018-2019.json",
+   "lega": "la_liga",
+   "stagione": "2018/2019",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "764b85dac4f838ad477a18815ba7cbcaee8e4bf40c9c07436f9d065b1f8033d8"
+  },
+  {
+   "file": "footiqo_la_liga_2019-2020.json",
+   "lega": "la_liga",
+   "stagione": "2019/2020",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "e1d9d3bdb9e24a646724d0cad58985b9534474ca6adbe6e4ec6a9f9f863ad99c"
+  },
+  {
+   "file": "footiqo_bundesliga_2017-2018.json",
+   "lega": "bundesliga",
+   "stagione": "2017/2018",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "671267455ac38a1c7874857bdd48a2dbdcf24f1531d79f1c3649bd71aaef02e9"
+  },
+  {
+   "file": "footiqo_bundesliga_2018-2019.json",
+   "lega": "bundesliga",
+   "stagione": "2018/2019",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "c43e787351c95b66b0c680acbeb298d2e18e9d6f44a3ef1e27424eed53dff3bf"
+  },
+  {
+   "file": "footiqo_bundesliga_2019-2020.json",
+   "lega": "bundesliga",
+   "stagione": "2019/2020",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "c3b3506878d7c170202395d31c884a680ae6ae6e1ea50cfbee1506c9c2b03a8d"
+  },
+  {
+   "file": "footiqo_ligue_1_2017-2018.json",
+   "lega": "ligue_1",
+   "stagione": "2017/2018",
+   "table_id": 585,
+   "righe": 380,
+   "sha256": "ccb23d34bcc9c32c3fec7eaafd28bfbfbd400a69bce1e4d94121bb39429bf1dd"
+  },
+  {
+   "file": "footiqo_ligue_1_2018-2019.json",
+   "lega": "ligue_1",
+   "stagione": "2018/2019",
+   "table_id": 585,
+   "righe": 380,
+   "sha256": "1b6891693d1b7a0b13d4baf098dcd08c41f2ff572f3a511a308cd343930271d6"
+  },
+  {
+   "file": "footiqo_ligue_1_2019-2020.json",
+   "lega": "ligue_1",
+   "stagione": "2019/2020",
+   "table_id": 585,
+   "righe": 279,
+   "sha256": "e3a84c7f0dfa7405e46bdc23cd4ce378f4a5e5efbc151045495f9da09a69b27e"
+  }
+ ]
+}
