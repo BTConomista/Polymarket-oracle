@@ -115,3 +115,34 @@ def market_engine(league_key: str) -> dict:
     e livello per-lega e vanno misurate prima di attivarle (§7)."""
     return MARKET_ENGINE.get(league_key, dict(
         dp_theta=None, dp_theta_dc=None, phi0=0.0, kappa=0.0, sharpen_1x2=False))
+
+
+# --------------------------------------------------------------------------- #
+# DERIVA DI FORZA IN-STAGIONE (Fase 94) — per il simulatore di stagione.
+#
+# La forza di una squadra cambia durante l'anno in modo IMPREVEDIBILE a luglio,
+# e un modello a forze fisse la ignora: la classifica simulata esce piu'
+# schiacciata di quella vera (la dispersione reale supera la simulata in 21
+# stagioni su 24). Misurata su 480 squadre-stagione confrontando il fit di
+# inizio e di fine stagione, e NON e' uniforme:
+#     neopromosse   sd 0.299     (deriva quasi doppia)
+#     tutte le altre sd 0.157
+# Un sigma uniforme perturba troppo le forti e troppo poco le deboli.
+#
+# ADOZIONE PER-MERCATO (§1.8), secondo cio' che l'evidenza sostiene:
+#   RETROCESSIONE -> ADOTTATA: log-loss +0.0095 con IC95% [+0.0020,+0.0180]
+#     (esclude lo zero), calibrazione delle neopromosse da +6.1pp a +2.8pp,
+#     ECE da 0.0479 a 0.0387.
+#   CAMPIONE      -> nessun effetto (+0.0017, meglio in 9 stagioni su 24).
+#   TOP-4         -> NON adottata: peggiora in 17 stagioni su 24 e l'ECE sale
+#     da 0.0140 a 0.0203. Il top-4 era gia' calibrato: aggiungere incertezza a
+#     una previsione gia' giusta puo' solo peggiorarla.
+DRIFT_SD = {"promoted": 0.30, "other": 0.16}
+
+
+def drift_sd_map(teams, promoted) -> dict:
+    """sigma della deriva per squadra (Fase 94). Da passare a simulate_season
+    come ``drift_sd``. Usare per il mercato RETROCESSIONE; per campione e top-4
+    l'evidenza non la sostiene."""
+    return {t: (DRIFT_SD["promoted"] if t in promoted else DRIFT_SD["other"])
+            for t in teams}

@@ -27,6 +27,13 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
    cambierebbe;
 3. i numeri devono essere ricalcolabili da `runs.jsonl` (regola Fase 15).
 
+> **✱7 (Fase 94)** — la deriva di forza in-stagione (σ 0.30 neopromosse / 0.16
+> resto, misurata su 480 squadre-stagione) e' adottata **solo sul mercato
+> retrocessione**: e' l'unico con IC che esclude lo zero. Sul top-4 PEGGIORA
+> (17 stagioni su 24, ECE 0.0140→0.0203) per una ragione istruttiva: quel
+> mercato era **gia' calibrato**, e aggiungere incertezza a una previsione
+> giusta puo' solo peggiorarla. Sul campione non ha effetto.
+
 > **Nota dalla Fase 92**: le leve della famiglia-pareggio (diagonale inflazionata
 > F12b, ρ dinamico F18, φ35) sono state scelte per una diagnosi poi risultata
 > **invertita**: il pareggio è solo il **12%** del gap, l'88% è la discriminazione
@@ -55,6 +62,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
 | **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier) |
 | **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⚽ top-4 **calibrato** (ECE 0.0137, batte anche la persistenza, 480 oss.); retrocessione ❌ **non** batte la persistenza (mis-calibrazione tutta sulle neopromosse: −10.1pp) |
+| **… + deriva di forza in-stagione** (F94) | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽ **solo RETROCESSIONE** (+0.0095, IC [+0.0020,+0.0180]; neopromosse −6.1pp→−2.8pp); ❌ campione (nullo) e top-4 (peggio 17/24) |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
 | **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
 | GG/NG φ35+knee34 su market-implied | 🪑 F50 (riconf. F80: −0.0014 P97%) | ❌ F80 (nulla) | ❌ combo F80 (il k34 PEGGIORA con CI>0: profilo-ospite invertito); φ35-sola 🪑 | ❌ il nudge ha segno per-lega |

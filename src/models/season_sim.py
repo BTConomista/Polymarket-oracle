@@ -167,7 +167,7 @@ def simulate_season(
     seed: int = 0,
     chunk: int = 2000,
     features=None,
-    drift_sd: float = 0.0,
+    drift_sd: float | dict = 0.0,
     n_drift_draws: int = 200,
 ) -> dict:
     """Campiona ``n_sims`` stagioni intere e ritorna le statistiche finali.
@@ -186,7 +186,10 @@ def simulate_season(
             ciclo fuori di qui fa divergere le due braccia (audit Fase 90: il
             test su squad_value confrontava due regole di spareggio diverse e
             ~9% del suo delta era artefatto).
-        drift_sd: DERIVA DI FORZA IN-STAGIONE (Fase 94). Con forze fisse il
+        drift_sd: DERIVA DI FORZA IN-STAGIONE (Fase 94). Scalare (uguale per
+            tutte) oppure dict {squadra: sigma} — la deriva NON e' uniforme:
+            misurata su 480 squadre-stagione vale 0.299 per le neopromosse e
+            0.157 per tutte le altre (1.9x). Con forze fisse il
             simulatore produce classifiche piu' SCHIACCIATE del vero: la
             dispersione reale supera la simulata in 21 stagioni su 24
             (percentile medio 83%, dovrebbe essere 50%). Il motivo non e' che le
@@ -271,14 +274,20 @@ def simulate_season(
     # Con la deriva attiva, le simulazioni si dividono fra `n_drift_draws`
     # estrazioni: dentro un'estrazione le forze sono fisse (la deriva e' una
     # proprieta' della STAGIONE, non della partita), fra estrazioni cambiano.
-    if drift_sd > 0:
+    # sigma per-squadra: uno scalare vale per tutte, un dict permette di dare
+    # PIU' deriva alle squadre che ne hanno di piu' (misurato: neopromosse 0.299
+    # contro 0.157 di tutte le altre, cioe' 1.9x). Un sigma uniforme perturba
+    # troppo le forti e troppo poco le deboli.
+    sd_of = ({t: float(drift_sd) for t in teams} if np.isscalar(drift_sd)
+             else {t: float(drift_sd.get(t, 0.0)) for t in teams})
+    drift_active = any(v > 0 for v in sd_of.values())
+    if drift_active:
         chunk = max(1, int(np.ceil(n_sims / n_drift_draws)))
 
     for s0 in range(0, n_sims, chunk):
         s1 = min(s0 + chunk, n_sims)
-        if drift_sd > 0:
-            cdfs = build_cdfs({t: float(x) for t, x in
-                               zip(teams, rng.normal(0.0, drift_sd, n_t))})
+        if drift_active:
+            cdfs = build_cdfs({t: float(rng.normal(0.0, sd_of[t])) for t in teams})
         u = rng.random((s1 - s0, n_f))
         # cella campionata -> (gol casa, gol ospite)
         cell = np.empty((s1 - s0, n_f), np.int16)

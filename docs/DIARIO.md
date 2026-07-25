@@ -9959,6 +9959,133 @@ affettarlo diversamente).
 
 ---
 
+## Fase 94 — La varianza mancante: la deriva di forza, e perché va adottata su UN solo mercato
+
+**Obiettivo (richiesta utente, «punto 2»).** Ritarare δ sull'orizzonte
+stagionale, perché la Fase 91 aveva trovato le neopromosse troppo condannate
+alla retrocessione (54.7% dichiarato contro 48.6% realizzato).
+
+**La diagnostica ha reindirizzato il lavoro — e questa è la parte che conta.**
+Prima di toccare δ ho verificato l'ipotesi implicita: *le neopromosse sono
+predette troppo deboli sulla singola partita?*
+
+| neopromosse, 2.052 partite-squadra | modello | realtà |
+|---|--:|--:|
+| P(vittoria) | 23.80% | 22.42% |
+| **P(sconfitta)** | **51.71%** | **51.71%** |
+| punti attesi su 38 giornate | 36.4 | 35.4 |
+
+**No.** La probabilità di sconfitta è esatta al centesimo e sui punti siamo
+semmai un filo generosi. δ non è il colpevole: ritararlo avrebbe peggiorato le
+previsioni di partita per aggiustare un sintomo che nasce altrove. *(È la
+seconda volta in tre fasi che una verifica preliminare smentisce l'ipotesi di
+partenza — vedi la regola del §2-bis nata alla Fase 92.)*
+
+**Dove nasce davvero: la classifica simulata è compressa.** La dispersione dei
+punti finali reale supera quella simulata in **21 stagioni su 24**; il valore
+vero cade in media all'**83° percentile** della distribuzione simulata, dove
+dovrebbe cadere al 50°. *(Nota di metodo: il primo confronto che avevo scritto
+era un artefatto — metteva a fronte la dispersione delle ATTESE con quella di
+una REALIZZAZIONE, che è più larga per costruzione anche con un modello
+perfetto. Rifatto confrontando classifiche entrambe realizzate.)*
+
+E il conto si chiude in quadratura: `15.45² ≈ 13.61² + 7.44²` — dispersione
+simulata = differenze fra squadre + rumore dei risultati. Per arrivare ai
+**17.51** reali serve **incertezza in più, non separazione in più**.
+
+**Questo unifica i due difetti noti.** Favorito troppo sicuro in cima (60.1%
+contro 41.7%) e neopromosse troppo condannate in fondo (54.7% contro 48.6%)
+sono **lo stesso difetto ai due estremi della stessa classifica compressa**: le
+forze sono tenute ferme per dieci mesi, quindi nessuno «si accende» e nessuno
+crolla.
+
+**La deriva NON è uniforme** (480 squadre-stagione, fit di inizio contro fit di
+fine stagione):
+
+| | n | deriva (sd) |
+|---|--:|--:|
+| squadre deboli (terzo basso) | 159 | **0.231** |
+| medie | 158 | 0.155 |
+| forti | 163 | 0.156 |
+| **neopromosse** | 72 | **0.299** |
+| tutte le altre | 408 | 0.157 |
+
+Le neopromosse derivano **1.9 volte** più di tutti gli altri (correlazione fra
+forza iniziale e |deriva| −0.205). Un σ **uniforme** perturba quindi troppo le
+forti e troppo poco le deboli — ed è esattamente il danno misurato prima di
+scoprirlo: con σ uniforme 0.18 il top-4 peggiorava in **18 stagioni su 24**
+(p=0.023) mentre la retrocessione migliorava appena.
+
+**Risultato con σ differenziato (0.30 neopromosse / 0.16 resto):**
+
+| mercato | guadagno | IC95% a grappoli | meglio in |
+|---|--:|---|--:|
+| **retrocessione** | **+0.0095** | **[+0.0020, +0.0180]** | 15/24 |
+| campione | +0.0017 | [−0.0356, +0.0431] | 9/24 |
+| top-4 | +0.0007 | [−0.0075, +0.0113] | 7/24 (p=0.064) |
+
+| calibrazione | senza | con |
+|---|--:|--:|
+| neopromosse: scarto dichiarato−realizzato | +6.1pp | **+2.8pp** |
+| ECE retrocessione | 0.0479 | **0.0387** |
+| ECE top-4 | **0.0140** | 0.0203 |
+| favorito: scarto | +18.4pp | +14.6pp |
+
+**Decisione: adozione PER-MERCATO (§1.8).**
+- **Retrocessione → ADOTTATA.** È l'unico mercato con IC che esclude lo zero, e
+  la calibrazione delle neopromosse passa da +6.1pp a +2.8pp.
+- **Campione → nessun effetto** (9/24: dentro il rumore). Il favorito resta
+  sovra-confidente di 14.6pp: la deriva ne toglie 4, non 18.
+- **Top-4 → NON adottata.** Peggiora in 17 stagioni su 24 e l'ECE sale da
+  0.0140 a 0.0203. Il motivo è chiaro e vale come lezione: **il top-4 era già
+  calibrato**, e aggiungere incertezza a una previsione già giusta può solo
+  peggiorarla.
+
+**Onestà su cosa NON è stato risolto.** Anche col σ misurato la compressione si
+chiude solo in parte (83° percentile → ~76°). Per chiuderla tutta servirebbe
+σ≈0.28, cioè **più della deriva fisicamente misurata**, e a quel livello il
+danno supera il beneficio (campione 1.2229, top-4 0.2253: entrambi peggio del
+non fare nulla). Quindi: **la deriva spiega una parte della compressione, non
+tutta.** Il resto è probabilmente la correlazione fra partite — le squadre
+attraversano periodi, e il simulatore le tratta come indipendenti. È la pista
+successiva, e questa volta è indicata da un residuo misurato, non da un'ipotesi.
+
+### 📐 Il modello in dettaglio
+
+**L'iniezione.** In `simulate_season`, per ogni «draw» si estrae per ogni squadra
+`ε_t ~ N(0, σ_t)` e si sposta la **forza netta**:
+```
+attacco_t  ->  attacco_t + ε_t/2
+difesa_t   ->  difesa_t  − ε_t/2
+```
+Metà per colonna, così la forza netta `attacco − difesa` cambia di `ε_t` mentre
+il **livello dei gol della lega non si sposta** (una perturbazione tutta
+sull'attacco farebbe segnare di più tutti). La perturbazione è **costante dentro
+una stagione simulata** (la deriva è una proprietà della stagione, non della
+partita) e ri-estratta a ogni draw; le `n_sims` simulazioni si dividono fra
+`n_drift_draws` estrazioni, quindi il costo scala col numero di draw (ognuno
+ricalcola le 380 matrici) e non col numero di simulazioni.
+
+**σ da dove viene.** Da `forza(fine stagione) − forza(inizio stagione)` sulle
+stesse 480 squadre-stagione, con lo stesso identico modello e solo `as_of_date`
+diverso. Si usa la **deviazione standard**, non la media: la media (+0.072 per
+le neopromosse) misura «fine stagione contro luglio», non «media della stagione
+contro luglio», e iniettarla equivarrebbe ad ammorbidire δ — che la diagnostica
+ha appena escluso. `DRIFT_SD = {promoted: 0.30, other: 0.16}` in `src/config.py`,
+arrotondati dai misurati 0.299 / 0.157.
+
+**Perché σ non è stato calibrato sui mercati.** È tarato sulla **dispersione
+della classifica** (24 osservazioni che non sono gli esiti dei mercati) e
+verificato indipendentemente sulla misura diretta della deriva. Che i due
+criteri indichino lo stesso ordine di grandezza — e che l'ottimo dei mercati
+cada a 0.15-0.18, cioè sulla deriva misurata — è il motivo per cui la si può
+chiamare meccanismo e non fattore di aggiustamento. Il σ che ottimizza la sola
+dispersione (0.28) è invece **fuori** da quel range e danneggia due mercati su
+tre: la calibrazione sulla dispersione, da sola, è il criterio sbagliato.
+
+Riproducibile: `python scripts/_run_fase94_drift.py` (~50 min, 7 valori di σ ×
+24 stagioni-lega). Run in `experiments/runs.jsonl`, griglia completa in
+`experiments/fase94_drift.json`.
 ## Fase 95 — Il primo confronto con un mercato VERO sull'outright: Polymarket quota il campione 2026-27
 
 **Obiettivo.** La Fase 89 ha costruito il simulatore di stagione (mercato

@@ -470,6 +470,28 @@ del progetto che si scopre **dipendente dall'orizzonte**. Test proposto: ritarar
 tenendo quello attuale per i mercati di partita, e verificare che il top-4 — oggi
 calibrato — non peggiori. Costo: una griglia su δ × 24 stagioni-lega, ~30 minuti.
 
+**STATO DOPO LA FASE 94.** La leva 1 (incertezza dei parametri) e' stata
+provata nella forma piu' fondata — la **deriva di forza in-stagione**, misurata
+e non postulata — con esito **parziale e per-mercato**: adottata sulla
+retrocessione (IC esclude lo zero, calibrazione delle neopromosse da +6.1pp a
++2.8pp), nulla sul campione, **dannosa sul top-4** (che era gia' calibrato).
+Due lezioni da portarsi dietro:
+- la deriva **non e' uniforme**: neopromosse σ 0.299 contro 0.157 di tutte le
+  altre. Qualunque futura iniezione di varianza va differenziata, altrimenti
+  perturba troppo le squadre forti;
+- **aggiungere incertezza a una previsione gia' calibrata la peggiora sempre**.
+  Prima di iniettare varianza su un mercato, guardare l'ECE che ha oggi.
+
+**IL RESIDUO, ora quantificato.** Anche col σ misurato la compressione della
+classifica si chiude solo in parte (83° percentile → ~76°); chiuderla tutta
+richiederebbe σ≈0.28, oltre la deriva fisica, e a quel livello il danno supera
+il beneficio. Quindi **manca ancora qualcosa**, e il candidato è la
+**correlazione fra partite**: le squadre attraversano periodi (serie positive e
+negative) mentre il simulatore le tratta come indipendenti date le forze.
+Test economico proposto: misurare l'autocorrelazione dei residui per squadra
+lungo la stagione sui dati che gia' abbiamo, e se e' positiva iniettarla come
+componente AR nella simulazione. Nessun dato nuovo.
+
 **Le tre leve da provare, in ordine di costo (nessuna richiede dati nuovi):**
 
 1. **Incertezza dei parametri** (la più promettente, §1.3 "versione economica"):
