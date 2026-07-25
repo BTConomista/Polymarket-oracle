@@ -1,0 +1,445 @@
+{
+ "congelato_il": "2026-07-25",
+ "fonte_prezzi": "data/polymarket/open_events_20260725.json",
+ "nota": "Previsioni congelate PRIMA dell'inizio della stagione 2026-27 (test prospettico, Fase 78/95). Dati del modello fermi a fine 2025-26. Da scorare a maggio 2027.",
+ "leghe": {
+  "serie_a": {
+   "mercato": "Serie A: 2027 Champion",
+   "overround": 0.07200000000000006,
+   "squadre": [
+    {
+     "team": "Inter",
+     "p_model_base": 0.66435,
+     "p_model_drift": 0.61895,
+     "p_polymarket": 0.47108,
+     "volume_usd": 13295.68
+    },
+    {
+     "team": "Juventus",
+     "p_model_base": 0.0808,
+     "p_model_drift": 0.08945,
+     "p_polymarket": 0.13526,
+     "volume_usd": 1084.61
+    },
+    {
+     "team": "Napoli",
+     "p_model_base": 0.0601,
+     "p_model_drift": 0.06325,
+     "p_polymarket": 0.12593,
+     "volume_usd": 1389.31
+    },
+    {
+     "team": "Milan",
+     "p_model_base": 0.0274,
+     "p_model_drift": 0.03775,
+     "p_polymarket": 0.1166,
+     "volume_usd": 508.59
+    },
+    {
+     "team": "Roma",
+     "p_model_base": 0.05475,
+     "p_model_drift": 0.0681,
+     "p_polymarket": 0.0625,
+     "volume_usd": 4037.5
+    },
+    {
+     "team": "Como",
+     "p_model_base": 0.0535,
+     "p_model_drift": 0.06215,
+     "p_polymarket": 0.03218,
+     "volume_usd": 3919.09
+    },
+    {
+     "team": "Atalanta",
+     "p_model_base": 0.05405,
+     "p_model_drift": 0.04945,
+     "p_polymarket": 0.01772,
+     "volume_usd": 805.17
+    },
+    {
+     "team": "Venezia",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00746,
+     "volume_usd": 248.12
+    },
+    {
+     "team": "Frosinone",
+     "p_model_base": 0.0,
+     "p_model_drift": 5e-05,
+     "p_polymarket": 0.00606,
+     "volume_usd": 574.12
+    },
+    {
+     "team": "Sassuolo",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0001,
+     "p_polymarket": 0.0056,
+     "volume_usd": 174.12
+    },
+    {
+     "team": "Bologna",
+     "p_model_base": 0.00155,
+     "p_model_drift": 0.00395,
+     "p_polymarket": 0.00513,
+     "volume_usd": 566.87
+    },
+    {
+     "team": "Parma",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00233,
+     "volume_usd": 1045.22
+    },
+    {
+     "team": "Fiorentina",
+     "p_model_base": 0.0011,
+     "p_model_drift": 0.0017,
+     "p_polymarket": 0.00233,
+     "volume_usd": 149.12
+    },
+    {
+     "team": "Cagliari",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.0014,
+     "volume_usd": 174.13
+    },
+    {
+     "team": "Genoa",
+     "p_model_base": 0.0001,
+     "p_model_drift": 0.0003,
+     "p_polymarket": 0.0014,
+     "volume_usd": 139.12
+    },
+    {
+     "team": "Lecce",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.0014,
+     "volume_usd": 263.54
+    },
+    {
+     "team": "Lazio",
+     "p_model_base": 0.0022,
+     "p_model_drift": 0.00425,
+     "p_polymarket": 0.0014,
+     "volume_usd": 149.13
+    },
+    {
+     "team": "Torino",
+     "p_model_base": 5e-05,
+     "p_model_drift": 0.00015,
+     "p_polymarket": 0.0014,
+     "volume_usd": 170.24
+    },
+    {
+     "team": "Udinese",
+     "p_model_base": 5e-05,
+     "p_model_drift": 0.0004,
+     "p_polymarket": 0.0014,
+     "volume_usd": 154.12
+    },
+    {
+     "team": "Monza",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.0014,
+     "volume_usd": 149.12
+    }
+   ]
+  },
+  "premier_league": {
+   "mercato": "EPL: 2027 Champion",
+   "overround": 0.058000000000000274,
+   "squadre": [
+    {
+     "team": "Arsenal",
+     "p_model_base": 0.4514,
+     "p_model_drift": 0.43255,
+     "p_polymarket": 0.33554,
+     "volume_usd": 60670.32
+    },
+    {
+     "team": "Man City",
+     "p_model_base": 0.42075,
+     "p_model_drift": 0.38245,
+     "p_polymarket": 0.27883,
+     "volume_usd": 434217.83
+    },
+    {
+     "team": "Liverpool",
+     "p_model_base": 0.08425,
+     "p_model_drift": 0.10685,
+     "p_polymarket": 0.1087,
+     "volume_usd": 28675.27
+    },
+    {
+     "team": "Man United",
+     "p_model_base": 0.00795,
+     "p_model_drift": 0.0131,
+     "p_polymarket": 0.1087,
+     "volume_usd": 61670.3
+    },
+    {
+     "team": "Chelsea",
+     "p_model_base": 0.0096,
+     "p_model_drift": 0.0148,
+     "p_polymarket": 0.08979,
+     "volume_usd": 129447.59
+    },
+    {
+     "team": "Tottenham",
+     "p_model_base": 0.00095,
+     "p_model_drift": 0.00125,
+     "p_polymarket": 0.0397,
+     "volume_usd": 126289.4
+    },
+    {
+     "team": "Aston Villa",
+     "p_model_base": 0.0045,
+     "p_model_drift": 0.00915,
+     "p_polymarket": 0.0156,
+     "volume_usd": 37540.49
+    },
+    {
+     "team": "Newcastle",
+     "p_model_base": 0.00735,
+     "p_model_drift": 0.0129,
+     "p_polymarket": 0.0052,
+     "volume_usd": 49881.37
+    },
+    {
+     "team": "Brighton",
+     "p_model_base": 0.00405,
+     "p_model_drift": 0.00705,
+     "p_polymarket": 0.00236,
+     "volume_usd": 35829.9
+    },
+    {
+     "team": "Bournemouth",
+     "p_model_base": 0.00355,
+     "p_model_drift": 0.0061,
+     "p_polymarket": 0.00142,
+     "volume_usd": 29539.54
+    },
+    {
+     "team": "Brentford",
+     "p_model_base": 0.0031,
+     "p_model_drift": 0.00685,
+     "p_polymarket": 0.00142,
+     "volume_usd": 48492.84
+    },
+    {
+     "team": "Everton",
+     "p_model_base": 0.00045,
+     "p_model_drift": 0.0007,
+     "p_polymarket": 0.00142,
+     "volume_usd": 29805.71
+    },
+    {
+     "team": "Fulham",
+     "p_model_base": 0.00035,
+     "p_model_drift": 0.00105,
+     "p_polymarket": 0.00142,
+     "volume_usd": 41665.62
+    },
+    {
+     "team": "Leeds",
+     "p_model_base": 0.0003,
+     "p_model_drift": 0.00085,
+     "p_polymarket": 0.00142,
+     "volume_usd": 36830.9
+    },
+    {
+     "team": "Crystal Palace",
+     "p_model_base": 0.0004,
+     "p_model_drift": 0.0015,
+     "p_polymarket": 0.00142,
+     "volume_usd": 36845.77
+    },
+    {
+     "team": "Nott'm Forest",
+     "p_model_base": 0.00085,
+     "p_model_drift": 0.00215,
+     "p_polymarket": 0.00142,
+     "volume_usd": 33713.66
+    },
+    {
+     "team": "Sunderland",
+     "p_model_base": 0.0002,
+     "p_model_drift": 0.0007,
+     "p_polymarket": 0.00142,
+     "volume_usd": 33869.39
+    },
+    {
+     "team": "Coventry City",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00142,
+     "volume_usd": 51889.01
+    },
+    {
+     "team": "Ipswich Town",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00142,
+     "volume_usd": 28659.1
+    },
+    {
+     "team": "Hull City",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00142,
+     "volume_usd": 38093.04
+    }
+   ]
+  },
+  "la_liga": {
+   "mercato": "LALIGA: 2027 Champion",
+   "overround": 0.03200000000000003,
+   "squadre": [
+    {
+     "team": "Barcelona",
+     "p_model_base": 0.59325,
+     "p_model_drift": 0.5794,
+     "p_polymarket": 0.51841,
+     "volume_usd": 31887.14
+    },
+    {
+     "team": "Real Madrid",
+     "p_model_base": 0.3115,
+     "p_model_drift": 0.2958,
+     "p_polymarket": 0.40213,
+     "volume_usd": 31160.36
+    },
+    {
+     "team": "Ath Madrid",
+     "p_model_base": 0.055,
+     "p_model_drift": 0.06595,
+     "p_polymarket": 0.0436,
+     "volume_usd": 32686.68
+    },
+    {
+     "team": "Ath Bilbao",
+     "p_model_base": 0.0029,
+     "p_model_drift": 0.00625,
+     "p_polymarket": 0.00533,
+     "volume_usd": 18150.12
+    },
+    {
+     "team": "Villarreal",
+     "p_model_base": 0.0264,
+     "p_model_drift": 0.03355,
+     "p_polymarket": 0.00484,
+     "volume_usd": 19348.52
+    },
+    {
+     "team": "Betis",
+     "p_model_base": 0.00595,
+     "p_model_drift": 0.0086,
+     "p_polymarket": 0.00339,
+     "volume_usd": 16304.46
+    },
+    {
+     "team": "Valencia",
+     "p_model_base": 0.0002,
+     "p_model_drift": 0.00125,
+     "p_polymarket": 0.00242,
+     "volume_usd": 16907.55
+    },
+    {
+     "team": "Sociedad",
+     "p_model_base": 0.0017,
+     "p_model_drift": 0.00265,
+     "p_polymarket": 0.00242,
+     "volume_usd": 16170.8
+    },
+    {
+     "team": "Alaves",
+     "p_model_base": 0.0002,
+     "p_model_drift": 0.00025,
+     "p_polymarket": 0.00145,
+     "volume_usd": 9968.21
+    },
+    {
+     "team": "Espanyol",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00145,
+     "volume_usd": 10577.05
+    },
+    {
+     "team": "Getafe",
+     "p_model_base": 0.0002,
+     "p_model_drift": 0.0003,
+     "p_polymarket": 0.00145,
+     "volume_usd": 15110.2
+    },
+    {
+     "team": "Celta",
+     "p_model_base": 0.00155,
+     "p_model_drift": 0.0034,
+     "p_polymarket": 0.00145,
+     "volume_usd": 15142.37
+    },
+    {
+     "team": "Osasuna",
+     "p_model_base": 0.0004,
+     "p_model_drift": 0.0009,
+     "p_polymarket": 0.00145,
+     "volume_usd": 10149.27
+    },
+    {
+     "team": "Vallecano",
+     "p_model_base": 0.00045,
+     "p_model_drift": 0.0009,
+     "p_polymarket": 0.00145,
+     "volume_usd": 15099.2
+    },
+    {
+     "team": "Sevilla",
+     "p_model_base": 0.00015,
+     "p_model_drift": 0.00025,
+     "p_polymarket": 0.00145,
+     "volume_usd": 15982.6
+    },
+    {
+     "team": "Levante",
+     "p_model_base": 0.00015,
+     "p_model_drift": 0.00025,
+     "p_polymarket": 0.00145,
+     "volume_usd": 10019.18
+    },
+    {
+     "team": "Elche",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0003,
+     "p_polymarket": 0.00145,
+     "volume_usd": 9540.18
+    },
+    {
+     "team": "Racing Santander",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00145,
+     "volume_usd": 7796.07
+    },
+    {
+     "team": "Deportivo La Coruña",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00145,
+     "volume_usd": 8185.43
+    },
+    {
+     "team": "Málaga",
+     "p_model_base": 0.0,
+     "p_model_drift": 0.0,
+     "p_polymarket": 0.00145,
+     "volume_usd": 8074.08
+    }
+   ]
+  }
+ }
+}

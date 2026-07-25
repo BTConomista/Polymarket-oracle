@@ -46,7 +46,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.config import LEAGUE_CONFIGS                # noqa: E402
+from src.config import LEAGUE_CONFIGS, drift_sd_map  # noqa: E402
 from src.data import loader                          # noqa: E402
 from src.models.dixon_coles import DixonColesModel   # noqa: E402
 from src.models.season_sim import simulate_season, round_robin  # noqa: E402
@@ -114,7 +114,8 @@ def market_probs(events: list, title: str) -> pd.DataFrame:
     raise SystemExit(f"Mercato '{title}' non trovato nel dump.")
 
 
-def our_probs(league: str, teams: list[str], n_sims: int, seed: int) -> pd.Series:
+def our_probs(league: str, teams: list[str], n_sims: int, seed: int,
+              drift: bool = False) -> pd.Series:
     cfg = LEAGUE_CONFIGS[league]
     allm = loader.load_league(league)
     as_of = allm["date"].max() + pd.Timedelta(days=1)
@@ -136,13 +137,18 @@ def our_probs(league: str, teams: list[str], n_sims: int, seed: int) -> pd.Serie
         promoted_prior=(d, d),
     ).fit(allm, as_of_date=as_of, promoted_teams=prom)
     fixtures = round_robin(teams)
+    kw = {}
+    if drift:
+        # deriva di forza in-stagione (Fase 94): sigma per-squadra
+        kw["drift_sd"] = drift_sd_map(teams, prom)
     res = simulate_season(model, fixtures, teams, league_key=league,
-                          n_sims=n_sims, seed=seed)
+                          n_sims=n_sims, seed=seed, **kw)
     # champion_prob e' un array allineato all'ordine di `teams`
     return pd.Series(res["champion_prob"], index=teams, name="p_model")
 
 
-def compare(league: str, events: list, n_sims: int, seed: int) -> None:
+def compare(league: str, events: list, n_sims: int, seed: int,
+            with_drift: bool = False) -> None:
     title = OUTRIGHT_TITLE[league]
     print(f"\n{'='*78}\n{title}   ({league})\n{'='*78}")
     mk = market_probs(events, title)
@@ -151,27 +157,51 @@ def compare(league: str, events: list, n_sims: int, seed: int) -> None:
     print(f"esiti quotati con volume>0: {len(mk)} | somma prezzi {over:.4f} "
           f"(overround {100*(over-1):+.1f}%) | volume totale ${mk['volume'].sum():,.0f}")
 
-    ours = our_probs(league, sorted(mk["team"]), n_sims, seed)
-    mk["p_model"] = mk["team"].map(ours).fillna(0.0)
-    # rinormalizza il modello sulle sole squadre quotate
-    if mk["p_model"].sum() > 0:
-        mk["p_model"] = mk["p_model"] / mk["p_model"].sum()
+    teams_q = sorted(mk["team"])
+    variants = {"base": our_probs(league, teams_q, n_sims, seed, drift=False)}
+    if with_drift:
+        variants["deriva"] = our_probs(league, teams_q, n_sims, seed, drift=True)
+    for name, s in variants.items():
+        col = "p_model" if name == "base" else "p_drift"
+        mk[col] = mk["team"].map(s).fillna(0.0)
+        if mk[col].sum() > 0:
+            mk[col] = mk[col] / mk[col].sum()
     mk = mk.sort_values("p_market", ascending=False)
 
-    print(f"\n{'squadra':<18}{'Polymarket':>12}{'noi':>10}{'Δ (noi−PM)':>13}{'volume $':>12}")
+    hasd = "p_drift" in mk.columns
+    head = f"\n{'squadra':<18}{'Polymarket':>12}{'noi':>10}{'Δ':>9}"
+    if hasd:
+        head += f"{'+deriva':>10}{'Δd':>9}"
+    print(head + f"{'volume $':>12}")
     for _, r in mk.iterrows():
-        print(f"{r['team']:<18}{r['p_market']:>11.1%}{r['p_model']:>10.1%}"
-              f"{r['p_model']-r['p_market']:>+13.1%}{r['volume']:>12,.0f}")
+        line = (f"{r['team']:<18}{r['p_market']:>11.1%}{r['p_model']:>10.1%}"
+                f"{r['p_model']-r['p_market']:>+9.1%}")
+        if hasd:
+            line += f"{r['p_drift']:>10.1%}{r['p_drift']-r['p_market']:>+9.1%}"
+        print(line + f"{r['volume']:>12,.0f}")
 
-    a, b = mk["p_model"].to_numpy(), mk["p_market"].to_numpy()
-    mae = float(np.abs(a - b).mean())
-    corr = float(np.corrcoef(a, b)[0, 1]) if len(a) > 2 else float("nan")
-    # divergenza di Kullback-Leibler modello||mercato (quanto "costa" usare noi)
-    m = np.clip(a, 1e-9, 1); k = np.clip(b, 1e-9, 1)
-    kl = float((m * np.log(m / k)).sum())
-    top_pm = mk.iloc[0]["team"]; top_our = mk.sort_values("p_model", ascending=False).iloc[0]["team"]
-    print(f"\n  MAE {mae:.4f} | corr {corr:.4f} | KL(noi‖mercato) {kl:.4f} "
-          f"| favorito: mercato={top_pm}, noi={top_our}")
+    b = mk["p_market"].to_numpy()
+
+    def agreement(a):
+        m = np.clip(a, 1e-9, 1); k = np.clip(b, 1e-9, 1)
+        return (float(np.abs(a - b).mean()),
+                float(np.corrcoef(a, b)[0, 1]) if len(a) > 2 else float("nan"),
+                float((m * np.log(m / k)).sum()))
+
+    top_pm = mk.iloc[0]["team"]
+    print()
+    for col, name in [("p_model", "base"), ("p_drift", "+deriva (F94)")]:
+        if col not in mk.columns:
+            continue
+        mae, corr, kl = agreement(mk[col].to_numpy())
+        top = mk.sort_values(col, ascending=False).iloc[0]["team"]
+        print(f"  {name:<15} MAE {mae:.4f} | corr {corr:.4f} | "
+              f"KL(noi‖mercato) {kl:.4f} | favorito noi={top} (mercato={top_pm})")
+    if "p_drift" in mk.columns:
+        _, _, k0 = agreement(mk["p_model"].to_numpy())
+        _, _, k1 = agreement(mk["p_drift"].to_numpy())
+        verdict = "AVVICINA al mercato" if k1 < k0 else "ALLONTANA dal mercato"
+        print(f"  -> la deriva {verdict}: ΔKL {k1-k0:+.4f}")
 
 
 def main() -> None:
@@ -181,12 +211,14 @@ def main() -> None:
     ap.add_argument("--dump", default=None, help="file dump (default: il piu' recente)")
     ap.add_argument("--n-sims", type=int, default=20000)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--with-drift", action="store_true",
+                    help="confronta anche la variante con deriva di forza (Fase 94)")
     args = ap.parse_args()
 
     events = load_dump(args.dump)
     leagues = sorted(OUTRIGHT_TITLE) if args.all else [args.league]
     for lg in leagues:
-        compare(lg, events, args.n_sims, args.seed)
+        compare(lg, events, args.n_sims, args.seed, with_drift=args.with_drift)
     print("\n⚠ Confronto di ACCORDO, non di edge: la stagione non e' giocata. "
           "I nostri dati si fermano a 2025-26 (nessun mercato estivo 2026).")
 

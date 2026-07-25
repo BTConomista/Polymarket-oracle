@@ -10188,6 +10188,159 @@ KL contro Polymarket: è un bersaglio quantitativo, non un'opinione.
 
 ---
 
+## Fase 95-bis — La deriva di forza messa alla prova dal MERCATO: il backtest non aveva potenza
+
+**Obiettivo.** La Fase 94 ha misurato la deriva di forza in-stagione e l'ha
+adottata **solo sulla retrocessione**, dichiarando che «sul campione non ha
+effetto». Quella conclusione però viene da un backtest con **24 osservazioni**
+(una per lega-stagione): il campione più povero del progetto. La Fase 95 ha
+aperto un secondo metro — i prezzi Polymarket sul campione 2026-27 — che usa
+l'**intera distribuzione su 20 squadre** invece di un solo vincitore. Domanda:
+la deriva avvicina o allontana la nostra stima dal mercato?
+
+**Risultato — la deriva ha eccome un effetto sul campione, e il segno dipende da
+quanto eravamo già allineati.**
+
+| lega | KL base | KL +deriva | Δ | esito |
+|---|--:|--:|--:|---|
+| Serie A | 0.1805 | **0.1445** | **−0.0360** | avvicina |
+| Premier | 0.2418 | **0.2036** | **−0.0382** | avvicina |
+| La Liga | 0.0560 | 0.0740 | +0.0179 | allontana |
+
+Anche MAE e correlazione migliorano dove la KL scende (SA 0.0252→0.0218, corr
+0.956→0.963; PL 0.0265→0.0224, corr 0.948→0.955).
+
+**La regola che emerge è la stessa della Fase 94, su un metro indipendente.** La
+94 aveva trovato che la deriva **peggiora il top-4** «perché quel mercato era già
+calibrato, e aggiungere incertezza a una previsione giusta può solo peggiorarla».
+Qui accade letteralmente lo stesso: la Liga era già la lega più allineata al
+mercato (KL 0.056, un terzo delle altre) e la deriva la **peggiora**; Serie A e
+Premier erano sovra-confidenti e la deriva le **corregge**. Due esperimenti
+diversi, stessa legge: *l'incertezza aggiunta paga solo dove manca davvero.*
+
+**La lezione di metodo (la parte che vale più del risultato).** La Fase 94 non ha
+sbagliato: ha misurato con lo strumento che aveva, e su 24 osservazioni l'effetto
+sul campione era invisibile. Il confronto col mercato ha **molta più potenza** per
+i mercati di stagione, perché confronta 20 probabilità per lega invece di un
+singolo esito realizzato. Conseguenza operativa: **per i mercati outright, il
+prezzo di mercato è un metro più potente del backtest storico** — e ora ce
+l'abbiamo. Non sostituisce la verifica sugli esiti (che resta l'unica prova di
+chi ha ragione), ma la anticipa di una stagione.
+
+**Onestà.** «Più vicino al mercato» non è «più corretto»: se il mercato sbaglia,
+avvicinarsi peggiora. Ma dato che il mercato di chiusura ingloba il modello su
+ogni mercato-partita testato (α\*=0, Fasi 16/88), l'ipotesi di lavoro ragionevole
+è che sia il riferimento migliore disponibile finché la stagione non è giocata.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: `simulate_season(..., drift_sd=drift_sd_map(teams,
+promosse))` con σ 0.30 (neopromosse) / 0.16 (resto) dalla Fase 94, contro la
+stessa simulazione a σ=0. Metro: `KL(noi‖mercato) = Σ p_noi·log(p_noi/p_mkt)` sui
+20 esiti quotati, con `p_mkt` devigato in proporzione. Riproducibile:
+`python scripts/_run_polymarket_outright.py --all --with-drift`. Diagnostico su
+dati LIVE: nessun run in `runs.jsonl`.
+
+---
+
+## Fase 96 — Fuori dalla matrice dei gol: corner e cartellini (e l'arbitro, il primo dato ortogonale)
+
+**Obiettivo.** Tutto ciò che il progetto ha dimostrato — α\*=0, tetto
+informativo, coda al tetto — vale per i mercati **derivabili dalla matrice**
+P(gol_casa, gol_ospite). I mercati con un **processo generatore proprio** (corner
+= pressione territoriale; cartellini = arbitro, tensione, falli) non erano mai
+stati modellati: il tetto non dice nulla su di loro. Qui si apre la famiglia.
+
+**I dati c'erano da sempre**: `HC/AC` (corner), `HY/AY/HR/AR` (cartellini),
+`HS/AS/HST/AST`, `HF/AF`, `Referee` — **copertura 100% su 10.260 partite**
+(3 leghe × 9 stagioni), mai estratti dal loader. L'arbitro è nei bundle
+**Premier** (100%); assente dai grezzi Serie A e Liga.
+
+**1. Sono davvero un processo diverso?** Sì, su due assi:
+
+| lega | corner μ | σ²/μ | cartellini μ | σ²/μ | corr(corner, gol) | corr(cart, gol) |
+|---|--:|--:|--:|--:|--:|--:|
+| Serie A | 9.79 | 1.25 | 4.78 | 1.34 | −0.062 | −0.004 |
+| Premier | 10.35 | 1.12 | 3.72 | 1.24 | −0.040 | −0.032 |
+| La Liga | 9.43 | 1.13 | 5.31 | 1.48 | −0.007 | −0.030 |
+
+(a) sono **SOVRA-dispersi** (σ²/μ = 1.12–1.48), l'opposto dei gol dati i tassi del
+mercato (sotto-dispersi, θ≈1.2 — Fase 51): sono processi di natura diversa, e la
+forma giusta per i gol è quella sbagliata per loro; (b) la correlazione coi gol è
+**praticamente nulla** (|r| ≤ 0.06): non sono ridondanti col motore-gol, sono
+informazione nuova per costruzione.
+
+**2-3. Il modello e la sua calibrazione** (walk-forward, 7.050 partite OOS; forze
+attacco/difesa sul conteggio con emivita 365g e shrinkage, più i fattori
+casa/ospite):
+
+| mercato | MAE vs baseline | R² | calibrazione (scarto medio) |
+|---|--:|--:|--:|
+| **Corner** | 2.688 vs 2.703 (**+0.5%**) | +0.0065 | +0.011…+0.021 |
+| **Cartellini** | 1.700 vs 1.715 (**+0.9%**) | +0.0255 | **+0.005 / −0.003 / +0.001** |
+
+Entrambi **battono la baseline** e il log-loss migliora su quasi tutte le linee
+(corner O8.5–O11.5, cartellini O2.5–O4.5). I **cartellini sono il mercato
+migliore**: calibrazione quasi perfetta (scarti al millesimo) e R² quattro volte
+quello dei corner. I corner restano più difficili: il segnale per-squadra è
+debole e resta un lieve ottimismo (+0.01–0.02).
+
+**Un bug trovato dal bias, e la lezione.** La prima versione mostrava un bias
+sistematico **+0.61 corner/partita** (+0.07 su *tutte* le linee Over). Prima
+ipotesi: deriva temporale — i corner in effetti **calano** (10.17 nelle prime tre
+stagioni → 9.72 nelle ultime tre). Ma accorciare la memoria del livello portava
+il bias solo da +0.612 a +0.549: troppo poco. La causa vera era **mia**:
+applicavo il fattore vantaggio-casa alla squadra di casa senza il fattore
+complementare all'ospite, quindi il totale atteso era gonfiato per costruzione.
+Imposto `hadv + aadv = 2`, il bias è crollato a +0.02. *Un bias costante su tutte
+le linee è la firma di un errore di normalizzazione, non di un fatto sui dati* —
+e la deriva temporale, pur reale, era un depistaggio.
+
+**4. L'arbitro: il primo dato davvero ortogonale.** Sui cartellini di Premier
+(27 arbitri con ≥30 partite): le medie per arbitro vanno da **2.44 a 4.57**
+cartellini/partita, con sd fra arbitri **0.513** contro una banda nulla da
+permutazione **[0.158, 0.296]** → **effetto reale**, ampiezza netta ~**0.46
+cartellini di sd**, il **12.4% della media**. È il primo pezzo di informazione del
+progetto che **nessun modello-gol può contenere**: non passa dai gol, dai tiri o
+dalla forza delle squadre.
+
+**Cosa si può e cosa non si può concludere (la distinzione che conta).** Su
+questi mercati **la calibrazione si misura**: bastano gli esiti, che abbiamo al
+100%. Quello che manca è il **benchmark di efficienza**: nessuna fonte in nostro
+possesso quota corner o cartellini, quindi non possiamo dire «siamo meglio del
+mercato» — solo «le nostre probabilità sono corrette e battono la baseline».
+*(Correzione di una formulazione imprecisa usata in chat: senza quote manca
+l'efficienza, NON la calibrazione.)*
+
+**Cosa ne consegue.** La famiglia fuori-matrice è **aperta e produttiva**: due
+mercati nuovi prezzati e calibrati, con un dato ortogonale (l'arbitro) che merita
+di entrare nel modello-cartellini. È l'unica direzione in cui «spremere i dati che
+già abbiamo» non produce l'ennesima conferma del tetto.
+
+### 📐 Il modello in dettaglio
+
+Per il conteggio `C` di una partita, con `base` = media pesata di lega,
+`hadv/aadv` = fattori casa/ospite (vincolo `hadv+aadv=2`), `att_t`/`dif_t` =
+rapporti prodotti/concessi della squadra rispetto alla media:
+
+```
+E[C_casa]   = base · hadv · att_casa · dif_ospite
+E[C_ospite] = base · aadv · att_ospite · dif_casa
+E[C_tot]    = E[C_casa] + E[C_ospite]
+```
+
+con pesi temporali `w = 0.5^(Δgiorni/365)` e shrinkage verso 1 con massa
+equivalente `1.5·10` partite (le stesse costanti del DC ufficiale, non ri-tarate:
+sarebbe il passo successivo). I mercati Over/Under sono derivati con una Poisson
+di media `E[C_tot]` — approssimazione dichiarata, dato che i conteggi sono
+sovra-dispersi (σ²/μ ≈ 1.2): una binomiale negativa è il candidato naturale del
+prossimo giro, e qui **avrebbe senso** all'opposto dei gol (Fase 27). Effetto
+arbitro: `sd` fra medie per arbitro (≥30 partite) contro 2.000 permutazioni
+dell'etichetta-arbitro; ampiezza netta `√(sd_oss² − sd_nulla²)`. Riproducibile:
+`python scripts/_run_outside_matrix.py`.
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
