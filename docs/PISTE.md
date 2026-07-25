@@ -23,9 +23,21 @@ Liga 85/15). Tutte le piste qui sotto vanno riordinate con questa lente:
   con l'ipotesi «il mercato sa cose sulla singola partita che noi non sappiamo»
   (formazioni, motivazione, notizie): è la direzione già indicata come l'unica
   non esaurita, ma ora è **misurata**, non congetturata;
-- una diagnostica utile e mai fatta: **su quali partite** si concentra il deficit
-  di discriminazione? (per squilibrio atteso |λ−μ|, per fascia di quota, per
-  giornata). Costa una passata sul backtest esistente.
+- ~~una diagnostica utile e mai fatta: su quali partite si concentra il deficit~~
+  **FATTA (Fase 93)**, e il risultato restringe molto la caccia:
+  - il deficit è **104% informazione e −4% calibrazione** (scomposizione di
+    Murphy): siamo perfino **meglio calibrati del mercato** (0.00083 contro
+    0.00125). **Nessuna mappa di ricalibrazione può chiudere questo gap** —
+    non provarci più, è misurato;
+  - **sui mismatch siamo quasi alla pari** (divario di risoluzione −0.00198);
+    **sulle partite equilibrate il mercato stacca** (−0.00793, quattro volte
+    tanto). L'informazione che manca è quella che decide le partite in bilico;
+  - la forbice **si allarga durante la stagione** (−0.00829 nelle prime 5
+    giornate → −0.00991 dalla 26ª): il mercato accumula informazione più in
+    fretta di noi;
+  - quindi il bersaglio non è "informazione sulle partite" ma **informazione
+    sulle partite EQUILIBRATE della seconda metà di stagione**. Qualunque fonte
+    nuova va valutata prima di tutto lì, dove il divario è massimo.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 

@@ -84,9 +84,76 @@ def build(league: str, seasons) -> pd.DataFrame:
     nd["league"] = league
     nd["date"] = pd.to_datetime(nd["date"])
     nd["month"] = nd["date"].dt.month
-    # giornata approssimata: ordine cronologico dentro la stagione / 10 partite
-    nd["matchday"] = nd.groupby("season")["date"].rank(method="dense").astype(int)
+    # giornata approssimata: ordine cronologico dentro la stagione, ~8 partite
+    # non pareggiate per giornata (il rank sulle DATE distinte contava i giorni,
+    # non le giornate, e schiacciava il 75% delle partite in un'unica fascia)
+    nd = nd.sort_values("date")
+    nd["matchday"] = nd.groupby("season").cumcount() // 8 + 1
     return nd
+
+
+def murphy(p, y, bins: int = 12) -> tuple[float, float]:
+    """Scomposizione di Murphy del log-loss binario: (mis-calibrazione, risoluzione).
+
+    - MIS-CALIBRAZIONE (reliability): quanto le probabilita' dichiarate si
+      discostano dalle frequenze realizzate, per fascia. Piu' bassa = meglio.
+      E' il pezzo AGGIUSTABILE: una mappa di ricalibrazione lo azzera.
+    - RISOLUZIONE: quanto le fasce si separano dalla media generale. Piu' alta =
+      meglio. E' l'INFORMAZIONE: nessuna ricalibrazione la crea.
+    Le fasce sono per quantile (non equispaziate) per avere numeri stabili.
+    """
+    p = np.clip(np.asarray(p, float), 1e-9, 1 - 1e-9)
+    y = np.asarray(y, float)
+    ybar = y.mean()
+    edges = np.quantile(p, np.linspace(0, 1, bins + 1))
+    edges[0] -= 1e-9
+    edges[-1] += 1e-9
+    rel = res = 0.0
+    for a, b in zip(edges[:-1], edges[1:]):
+        m = (p > a) & (p <= b)
+        if m.sum() < 10:
+            continue
+        rel += m.mean() * (p[m].mean() - y[m].mean()) ** 2
+        res += m.mean() * (y[m].mean() - ybar) ** 2
+    return float(rel), float(res)
+
+
+def nature_of_deficit(nd: pd.DataFrame) -> dict:
+    """LA DOMANDA DECISIVA: il deficit e' calibrazione (aggiustabile) o
+    informazione (no)?"""
+    print(f"\n{'='*78}\n### IL DEFICIT E' CALIBRAZIONE O INFORMAZIONE?")
+    rm, sm = murphy(nd["m_home_c"], nd["home_won"])
+    rk, sk = murphy(nd["k_home_c"], nd["home_won"])
+    d_cal, d_inf = rm - rk, sk - sm
+    tot = d_cal + d_inf
+    print(f"  MODELLO  mis-calibrazione {rm:.5f}   risoluzione {sm:.5f}")
+    print(f"  MERCATO  mis-calibrazione {rk:.5f}   risoluzione {sk:.5f}")
+    print(f"\n  quota da CALIBRAZIONE (aggiustabile) : {d_cal/tot*100:+5.0f}%")
+    print(f"  quota da INFORMAZIONE (non aggiustabile): {d_inf/tot*100:+5.0f}%")
+    print(f"\n  P(casa | non-pari): modello {nd['m_home_c'].mean()*100:.2f}%  "
+          f"mercato {nd['k_home_c'].mean()*100:.2f}%  reale {nd['home_won'].mean()*100:.2f}%")
+
+    print("\n  esiste una fetta dove abbiamo PIU' informazione del mercato?")
+    def cmp(lab, g):
+        if len(g) < 150:
+            return None
+        _, a = murphy(g["m_home_c"], g["home_won"])
+        _, b = murphy(g["k_home_c"], g["home_won"])
+        print(f"    {lab:28} n={len(g):5d}  noi {a:.5f}  loro {b:.5f}  "
+              f"{a-b:+.5f}{'   <-- NOI MEGLIO' if a > b else ''}")
+        return float(a - b)
+    q = nd["imbalance_market"]
+    res = {"per_lega": {}, "per_fase": {}}
+    for lg in nd["league"].unique():
+        res["per_lega"][lg] = cmp(f"lega {lg}", nd[nd["league"] == lg])
+    res["equilibrate"] = cmp("equilibrate (terzo basso)", nd[q <= q.quantile(.33)])
+    res["mismatch"] = cmp("mismatch (terzo alto)", nd[q > q.quantile(.66)])
+    for lo, hi, lab in [(1, 6, "giornate 1-5"), (6, 13, "6-12"),
+                        (13, 26, "13-25"), (26, 99, "26+")]:
+        res["per_fase"][lab] = cmp(lab, nd[(nd["matchday"] >= lo) & (nd["matchday"] < hi)])
+    return dict(calib_model=rm, calib_market=rk, resol_model=sm, resol_market=sk,
+                share_calibration=float(d_cal / tot), share_information=float(d_inf / tot),
+                slices=res)
 
 
 def slices(nd: pd.DataFrame) -> dict:
@@ -147,6 +214,7 @@ def main(argv=None):
 
     nd = pd.concat([build(lg, args.seasons) for lg in args.league], ignore_index=True)
     out = slices(nd)
+    out["natura"] = nature_of_deficit(nd)
 
     cols = ["league", "season", "date", "home_team", "away_team", "result",
             "m_home_c", "k_home_c", "c_model", "c_market", "deficit", "home_won",

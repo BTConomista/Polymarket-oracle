@@ -9843,6 +9843,122 @@ Riproducibile: `python scripts/_run_fase92_gap_decomposition.py` (anche
 
 ---
 
+## Fase 93 — Dove si perde la discriminazione: è informazione, non calibrazione (e si vede DOVE)
+
+**Obiettivo.** La Fase 92 ha stabilito che l'**88%** del gap col mercato sta
+nella discriminazione casa/ospite, non nella massa del pareggio. Questa fase
+risponde alla domanda successiva, ora che è quella giusta: **su quali partite**
+perdiamo quel termine, e il deficit è **aggiustabile** o è **informazione**?
+
+**Il dato.** Per ogni partita non pareggiata si isola il termine di
+discriminazione (`c_i = −log P(esito | non-pari)`) per modello e mercato, e si
+guarda la differenza. **5.083 partite**, 3 leghe × 6 stagioni. Deficit medio
++0.02153; il mercato fa meglio nel **58.3%** delle partite.
+
+**Risultato 1 — è INFORMAZIONE, non calibrazione. E non di poco.**
+
+Scomposizione di Murphy del log-loss binario «casa vs ospite | non pareggio»:
+
+| | mis-calibrazione | risoluzione |
+|---|--:|--:|
+| **modello** | **0.00083** | 0.05270 |
+| mercato | 0.00125 | **0.06251** |
+
+Le nostre probabilità condizionate sono **meglio calibrate di quelle del
+mercato** (0.00083 contro 0.00125). Perdiamo interamente in **risoluzione**,
+cioè nella capacità di separare i casi. In quote:
+
+> del deficit di discriminazione, **calibrazione −4%, informazione +104%**.
+
+Conferma diretta: P(casa | non-pari) dichiarata dal modello **57.61%**, dal
+mercato 58.02%, realizzata **57.68%**. Non c'è alcun bias sistematico
+casa/ospite da correggere: in media siamo esatti.
+
+**Conseguenza operativa netta**: su questo termine **non esiste una leva di
+ricalibrazione**. Qualunque mappa post-hoc (temperatura, Platt, isotonica) può
+solo togliere lo 0.00083 che già non abbiamo. È la ragione per cui il progetto
+non ha mai trovato una leva che chiudesse il gap: non ce n'è una di quella
+famiglia.
+
+**Risultato 2 — non esiste una sola fetta in cui siamo più informati del
+mercato.** Testate 3 leghe, 6 stagioni, terzili di squilibrio, 4 fasi della
+stagione: **tutte negative**, senza eccezioni. Ma la dimensione del divario
+cambia molto, e in modo istruttivo:
+
+| fetta | risoluzione nostra | del mercato | divario |
+|---|--:|--:|--:|
+| **mismatch** (terzo più squilibrato) | 0.10692 | 0.10891 | **−0.00198** |
+| equilibrate (terzo più incerto) | 0.00419 | 0.01211 | **−0.00793** |
+
+**Sui mismatch siamo quasi alla pari col mercato** (divario 4 volte più piccolo).
+Quando una squadra è nettamente più forte, lo storico basta. **Sulle partite
+equilibrate il mercato ci stacca**: lì il risultato lo decide informazione
+specifica della singola partita — formazioni, condizione, motivazione — che i
+risultati passati non contengono per costruzione.
+
+**Risultato 3 — la forbice si allarga durante la stagione.**
+
+| fase | risoluzione nostra | del mercato | divario |
+|---|--:|--:|--:|
+| giornate 1-5 | 0.06387 | 0.07215 | −0.00829 |
+| 6-12 | 0.05150 | 0.05615 | −0.00465 |
+| 13-25 | 0.05662 | 0.06619 | −0.00957 |
+| **26+** | 0.04895 | 0.05886 | **−0.00991** |
+
+La risoluzione di **entrambi** cala nel finale (più partite senza posta in
+palio, più rotazioni), ma la nostra cala di più: il mercato **accumula
+informazione più in fretta di noi** man mano che la stagione va avanti. È
+coerente con la Fase 89-bis (le forze evolvono e noi le teniamo ferme) e con la
+Fase 32 (la posta in palio, che il mercato prezza e noi no).
+
+**Risultato 4 — l'86.9% del deficit si materializza dove DISSENTIAMO.** Quando
+modello e mercato concordano strettamente il deficit è +0.00134 (2.1% del
+totale); quando dissentono fortemente è +0.05504 (**86.9%**). Non è tautologico
+in modo banale — dice che, ogni volta che ci discostiamo dal mercato, in media
+**abbiamo torto noi**. È la firma dell'adverse selection della Fase 20,
+localizzata sul termine giusto.
+
+**Lezione.** Il gap è **informazione**, ed è ora misurato come tale, non
+congetturato. Ma la caccia ha un bersaglio molto più stretto di prima:
+**le partite equilibrate, nella seconda metà di stagione**. Lì il divario di
+risoluzione è massimo e lì l'informazione mancante è più concentrata. Sui
+mismatch siamo già quasi alla pari e non c'è nulla da guadagnare.
+
+**Onestà.** Questo non è un edge: dire *dove* manca informazione non la procura.
+E la direzione è chiara ma il rimedio no — le formazioni ufficiali escono ~1 ora
+prima del via e andrebbero raccolte prospetticamente (nessuno storico), come già
+scritto in `docs/PISTE.md`. Resta il fatto misurato: **niente ricalibrazione
+chiuderà questo gap**.
+
+### 📐 Il modello in dettaglio
+
+**Il deficit per partita.** Dalla chain rule della Fase 92, per una partita non
+pareggiata il termine di discriminazione è `c_i = −log(P(esito_i)/(1−P_i(X)))`,
+cioè il log-loss del binario «casa vs ospite» condizionato al non-pareggio;
+`deficit_i = c_i(modello) − c_i(mercato)`. La media dei deficit su TUTTE le
+partite (pareggi inclusi, che contribuiscono 0) è esattamente il termine di
+discriminazione del gap della Fase 92 — i due conti si chiudono.
+
+**La scomposizione di Murphy.** Per un binario, con fasce `k` di probabilità:
+```
+LL = incertezza − RISOLUZIONE + MIS-CALIBRAZIONE
+  MIS-CALIBRAZIONE = Σ_k (n_k/n)·( p̄_k − ȳ_k )²      <- aggiustabile
+  RISOLUZIONE      = Σ_k (n_k/n)·( ȳ_k − ȳ )²        <- informazione
+```
+`p̄_k` = probabilità media dichiarata nella fascia, `ȳ_k` = frequenza realizzata,
+`ȳ` = frequenza generale. Le fasce sono per **quantile** (12 fasce equinumerose,
+non equispaziate): con fasce equispaziate le code contengono pochissimi casi e i
+due termini diventano instabili. Una mappa di ricalibrazione azzera il primo
+termine e **non tocca il secondo**: è questo che rende la scomposizione la
+risposta esatta alla domanda «è aggiustabile?».
+
+Riproducibile: `python scripts/_run_fase93_discrimination.py` (~35 min, 18
+backtest walk-forward). Dataset per-partita in
+`experiments/fase93_discrimination.csv` (5.083 righe, con le covariate per
+affettarlo diversamente).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
