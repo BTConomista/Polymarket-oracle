@@ -395,11 +395,15 @@ rumore). È inoltre **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecc
 
 1. **rilanciare** `python scripts/_run_fase89_season_champion.py` (≈2 minuti)
    dopo aver aggiornato `PROMOTED_2627` con le rose reali della nuova stagione;
-2. **raccogliere i prezzi outright** con
-   `python scripts/fetch_polymarket_open.py --tag "Serie A"` (i tre mercati
-   «20XX Champion» esistono tutto l'anno, anche fuori stagione) e **congelarli**
-   con la data: sono l'unico modo per costruire, nel tempo, lo storico di quote
-   outright che oggi ci manca (vedi §4 "raccolta prospettica");
+2. **archiviare i prezzi outright** con **`python scripts/archive_outrights.py`**
+   (Fase 97): un comando, **due fonti** (Polymarket + Smarkets), output
+   **versionato** in `data/outright_snapshots/` (`YYYY-MM-DD.json` +
+   `history.csv`). È l'unico modo per costruire, nel tempo, lo storico di quote
+   outright che oggi ci manca (vedi §4 "raccolta prospettica"). Rieseguirlo
+   nello stesso giorno è idempotente. **Non serve più congelare a mano.**
+   → **Cadenza minima: una istantanea a metà agosto (prima del via) e una a
+   stagione conclusa**; quelle spontanee sono in più e non costano nulla.
+   Copertura al 25/07/2026 e trappole d'uso: `data/outright_snapshots/README.md`;
 3. **scorare a maggio** la previsione dell'anno prima. Ogni stagione aggiunge
    **3 osservazioni** (una per lega) al campione da 24: è lento, ma è l'unico
    modo per far crescere la potenza statistica su questo mercato.
@@ -431,6 +435,36 @@ come il base. Il β è sempre positivo (+0.115) ma il segnale è già nei gol/xG
 bocciatura delle Fasi 4c/66-70 **si trasferisce** all'outright, contrariamente a
 quanto ipotizzato qui sotto. Resta valido il caveat che il dato è rilevato al 1º
 settembre (il test era quindi favorevole alla covariata, e perde lo stesso).
+
+**⚠️ AGGIORNAMENTO Fase 97 — la deriva regge a una verifica ESTERNA, ma il
+residuo ha cambiato natura.** Smarkets quota la **retrocessione** Premier
+(Polymarket no, in nessuna lega): primo confronto della correzione F94 con un
+prezzo di mercato vero. MAE **8.84 → 7.32pp** con la deriva (9.68 → 8.11
+filtrando i libri troppo larghi), corr 0.935: la deriva era stata tarata su una
+statistica *interna* (dispersione della classifica) e migliora anche contro un
+prezzo che non aveva mai visto. **Ma restano +19.6pp** di eccesso sulle
+neopromosse, e lo scarto è **redistribuzione, non scala**: sovra-prezziamo le
+promosse (Ipswich +36.5pp, Coventry +26.2pp) e sotto-prezziamo il resto della
+coda (Sunderland −11.9, Leeds −7.9, Crystal Palace −7.4), con somme che
+coincidono (2.92 contro 2.85 ≈ 3 retrocesse). Il residuo **non è più «varianza
+mancante»**: è **sicurezza mal riposta su QUALI** squadre scendono — lo stesso
+difetto della spartizione fra i leader, all'altro capo della classifica.
+
+**🆕 PISTA APERTA (Fase 97) — la coda a ZERO: incertezza sui PARAMETRI, non sui
+risultati.** Nella stessa misura, diamo **0.0%** di retrocessione a Man City e
+Liverpool; il mercato dà **7.6%** e 1.1% (Man City con libro stretto, bid 6.9% /
+ask 8.3%). Un modello che dichiara zero su un evento non impossibile prende
+log-loss infinito se accade. La causa è strutturale: il simulatore campiona
+l'incertezza dei **risultati** (e ora, con la deriva, quella dell'**evoluzione**)
+ma **non quella delle stime**: le forze del DC sono trattate come note. Test
+economico: ricampionare `(attack, defense)` dalla loro varianza asintotica (o via
+bootstrap sulle partite) una volta per stagione simulata, esattamente come già si
+fa per la deriva — l'infrastruttura `build_cdfs(shift=...)` di `season_sim.py`
+c'è già e non va toccata, cambia solo *da dove* si estrae lo shift. Costo BASSO.
+Bersaglio: le code (retrocessione delle forti, titolo delle non-favorite), dove
+oggi mettiamo massa **esattamente nulla**. Rischio onesto: potrebbe gonfiare
+tutte le probabilità e peggiorare il centro, come è già successo al top-4 con la
+deriva (F94) — si misura per-mercato (§1.8), non si adotta in blocco.
 
 **Quantità nuova da usare (Fase 89-bis)**: la **deriva di forza in-stagione**
 misurata su 480 squadra-stagione vale **σ=0.189**, il **44%** della dispersione

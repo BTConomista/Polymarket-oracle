@@ -197,6 +197,51 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
 
 ---
 
+## 5-bis · Quote OUTRIGHT di stagione (`data/outright_snapshots/`) — Fase 97
+
+Dati di **mercato reali** (non stime), **versionati**, raccolti in avanti nel
+tempo. Sono l'unica cosa in repo che nasce da un fetch LIVE e viene comunque
+congelata: senza archivio, i prezzi di oggi sparirebbero col container.
+
+**A cosa servono.** Il simulatore di stagione (Fase 89) non ha mai potuto
+dimostrare «battiamo il mercato» perché **non esistono quote outright
+storiche** raggiungibili. All'indietro non si rimedia; in avanti sì, una
+istantanea alla volta.
+
+| | |
+|---|---|
+| **fonti** | Polymarket (Gamma API) + **Smarkets** (API v3 pubblica) — entrambe **borse**, non bookmaker |
+| **file** | `YYYY-MM-DD.json` (completo) + `history.csv` (formato lungo: data × fonte × lega × mercato × squadra) |
+| **mercati** | campione (5 leghe, entrambe le fonti); **retrocessione** e Top 2/3/4/5/6 + top-half (**solo Smarkets**); qualificazioni europee (solo Polymarket) |
+| **si scrive con** | `python scripts/archive_outrights.py` (idempotente sulla data) |
+| **documentazione d'uso** | `data/outright_snapshots/README.md` |
+
+**Tre avvertenze che valgono come semantica del dato** (per estese, il README
+della cartella):
+
+1. **`settled_share ≥ 0.9` NON è una previsione**: è la coda di una stagione
+   già conclusa. Il 25/07/2026 tutti i mercati «qualify for UEFA …» erano
+   riferiti alla stagione **appena finita**, non al 2026-27.
+2. **`exclusive=False` non va rinormalizzato**: retrocessione e Top-N sono
+   binari **indipendenti**; la somma vale legittimamente ~3 o ~4. Solo campione
+   e capocannoniere sono a vincitore unico e hanno un `overround`.
+3. **`book="partial"` / `price_side="ask_only"`**: il libro ha un lato solo.
+   L'`best_ask` è un **tetto** al valore equo, non un prezzo, e `prob` è
+   vuota. Anche col mid, uno **spread largo** lo rende poco significativo
+   (visto: bid 0.1% / ask 10.0% → «mid 5.05%» che non vuol dire nulla):
+   filtrare sullo spread prima di usarlo in un'analisi.
+
+**Nomi squadra: NON normalizzati.** L'archivio conserva i nomi **grezzi** di
+ciascuna fonte («Inter Milan» su Polymarket, «Inter Milano» su Smarkets,
+«Inter» da noi). È deliberato: una normalizzazione non validata produrrebbe
+join silenziosamente sbagliati, e i nomi sono stringhe stabili che si possono
+mappare retroattivamente in qualsiasi momento. L'unica mappa esistente e
+verificata a mano è `SMARKETS_TO_OURS` in
+`scripts/_run_fase97_relegation_market.py` (Premier, 20 su 20). **Chi aggiunge
+una lega deve costruire la sua**, non affidarsi a un match approssimato.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 ```bash

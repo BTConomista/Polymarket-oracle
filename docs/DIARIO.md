@@ -10340,6 +10340,191 @@ dell'etichetta-arbitro; ampiezza netta `√(sd_oss² − sd_nulla²)`. Riproduci
 `python scripts/_run_outside_matrix.py`.
 
 ---
+## Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva
+
+**Obiettivo.** Tre cose legate. (1) La Fase 95 ha fatto il primo confronto con
+un mercato outright vero, ma su **una sola fonte** (Polymarket) e **un solo
+mercato** (campione): serviva sapere se esistono altre fonti raggiungibili.
+(2) Qualunque cosa si trovi, va **congelata**: i prezzi outright di oggi sono
+lo storico che non abbiamo (Fase 89: «non esistono quote outright storiche →
+"battiamo il mercato" NON è testabile all'indietro»). Quel limite non si toglie
+all'indietro, ma **smette di crescere** se si archivia ogni volta che si guarda.
+(3) La deriva di forza adottata alla Fase 94 era stata calibrata su una
+statistica **interna** (la dispersione della classifica): non aveva mai visto un
+prezzo di mercato.
+
+**Ragionamento / ipotesi.** Il manuale di sopravvivenza dava `betexplorer.com`
+e `oddsportal.com` per «presumibilmente bloccati» e non li aveva mai testati
+dall'ambiente cloud. Un'etichetta per esclusione non è un fatto: l'ipotesi era
+che **provando davvero l'intera lista** qualcosa saltasse fuori — e che la fonte
+utile non fosse un bookmaker (margine alto, HTML ostile) ma un'altra **borsa**,
+perché una borsa dà prezzi confrontabili con Polymarket per costruzione.
+
+**Alternative considerate (tutte testate col `curl`, non presunte).**
+
+| fonte | esito | perché non si usa |
+|---|---|---|
+| **Smarkets** | API v3 **pubblica, senza chiave** | **ADOTTATA** |
+| OddsPortal | 200, e **nessun** redirect ADM da qui | il feed `/feed/outrights/*.dat` è un **blob base64 cifrato**: chiave da estrarre dal bundle JS a ogni loro rilascio |
+| BetExplorer | 200 sulla home, **404** su `/outrights/` | non ha una sezione outright |
+| The Odds API | 200 ma **401 senza chiave** | serve registrazione |
+| DraftKings / bwin / Betfair | 403 / 000 | geo-blocco o proxy |
+
+Le due etichette «presumibilmente bloccato» erano **entrambe sbagliate**: i siti
+rispondono, sono inutilizzabili per motivi diversi da quelli scritti. È la
+lezione operativa della fase, ed è finita nel manuale (§1).
+
+**Scelta.** Smarkets, e **accanto** a Polymarket, non al suo posto. Il censimento
+del 25/07/2026 dice che nessuna delle due domina:
+
+| | Polymarket | Smarkets |
+|---|---|---|
+| campione (5 leghe) | sì | sì |
+| **retrocessione** | **mai, in nessuna lega** | **Premier** |
+| piazzamenti Top 2/3/4/5/6, top-half | no | Premier, Liga, Ligue 1 |
+| liquidità **Premier** | overround **+5.8%** | spread **0.11pp** |
+| liquidità **Serie A** | overround **+7.1%** | spread **~5-11pp** (illiquido) |
+
+Sulla Premier è nettamente migliore Smarkets, sulla Serie A nettamente
+Polymarket: **complementari**. Da qui l'archivio a **due fonti**
+(`data/outright_snapshots/`, VERSIONATO, con colonna `source`), scritto da
+`scripts/archive_outrights.py` che chiama `fetch_polymarket_open.py` e il nuovo
+`fetch_smarkets_outrights.py`.
+
+**Controllo incrociato fra le due borse (il primo che potevamo fare).** Sul
+mercato campione, appaiando le squadre presenti in entrambe (62 coppie):
+scarto assoluto **mediano 0.13pp**, medio 0.62pp, massimo 5.98pp (PSG: 82.5%
+Polymarket contro 76.6% Smarkets, dove Smarkets ha overround più basso). Due
+mercati indipendenti che concordano a un decimo di punto sono una **verifica
+delle due pipeline**, non solo dei prezzi.
+
+**Risultato principale — un secondo controllo ESTERNO della deriva (Fase 94), sull'altro capo della classifica.** La **Fase 95-bis** ha appena messo la deriva alla prova coi prezzi Polymarket sul mercato CAMPIONE (KL: Serie A −0.0360, Premier −0.0382, Liga +0.0179). Qui la stessa correzione viene giudicata su un mercato diverso (**retrocessione**), da una fonte diversa (**Smarkets**) e con una metrica diversa (MAE sulle probabilità): tre assi indipendenti.
+Smarkets quota la retrocessione Premier: si può finalmente confrontare
+(`scripts/_run_fase96_relegation_market.py`, 20.000 stagioni, 17 esiti con mid
+a due lati su 20).
+
+| | MAE vs mercato | corr | neopromosse: noi vs mercato |
+|---|--:|--:|---|
+| **senza** deriva | 8.84pp | 0.937 | 87.9% vs 61.4% (**+26.5pp**) |
+| **con** deriva (Fase 94) | **7.32pp** | 0.935 | 81.0% vs 61.4% (**+19.6pp**) |
+
+Filtrando i due libri troppo larghi perché il mid significhi qualcosa (Forest
+bid 0.1% / ask 10.0%, Man United 6.6pp di spread) il verdetto **non cambia**:
+9.68pp → **8.11pp**. **La deriva è confermata da una strada indipendente**: era
+stata tarata su una statistica interna (dispersione della classifica) e migliora
+anche contro un prezzo di mercato che non aveva mai visto.
+
+**Ma la correzione è giusta e INSUFFICIENTE.** Restano +19.6pp di eccesso sulle
+neopromosse, e lo scarto ha una forma precisa: sovra-prezziamo le promosse
+(Ipswich **+36.5pp**, Coventry **+26.2pp**) e sotto-prezziamo il resto del
+gruppo di coda (Sunderland −11.9, Leeds −7.9, Crystal Palace −7.4, Brentford
+−6.6, Bournemouth −6.2). Le somme coincidono (2.92 noi contro 2.85 mercato ≈ 3
+retrocesse): non è un problema di scala, è **redistribuzione**. Siamo troppo
+sicuri di *quali* tre scendono.
+
+**E abbiamo una CODA A ZERO.** Man City e Liverpool ricevono da noi
+esattamente **0.0%**; il mercato dà 7.6% e 1.1% (Man City con libro stretto,
+bid 6.9% / ask 8.3%). Un modello che dichiara zero su un evento non impossibile
+prende log-loss infinito se accade: la simulazione non ha **incertezza sui
+parametri**, solo sui risultati, e le forti finiscono in un pozzo di
+probabilità nulla. È la stessa mancanza di varianza della Fase 94, ma sull'altra
+coda — e lì la deriva non arriva.
+
+**Lezione / cosa ne consegue.**
+1. **«Presumibilmente bloccato» non è un dato.** Due host marcati per
+   esclusione da mesi rispondono; la fonte migliore del progetto dopo
+   Polymarket è emersa dal provare la lista intera.
+2. **La deriva della Fase 94 regge a una verifica esterna** — ma copre metà del
+   problema. Il residuo non è più «varianza mancante»: è **sicurezza mal
+   riposta su quali** squadre scendono.
+3. **La coda a zero è un difetto strutturale**, non un dettaglio: serve
+   incertezza sui *parametri* (non solo sui risultati). Pista aperta in
+   `docs/PISTE.md`.
+4. **L'archivio va alimentato**: ogni istantanea è un pezzo dello storico che
+   nel 2028 permetterà di dire «battiamo il mercato» sull'outright. Cadenza in
+   `docs/PISTE.md` §4-bis.
+
+### 📐 Il modello in dettaglio
+
+**1) Dal libro ordini alla probabilità (Smarkets).** L'API dà interi in
+centesimi di punto percentuale. Per il contratto *i* (`book_price`):
+
+```
+bid_i = max(prezzi dei bid)          ask_i = min(prezzi delle offerte)
+price_i = (bid_i + ask_i) / 20000    solo se ESISTONO entrambi i lati
+spread_i = (ask_i - bid_i) / 10000
+```
+
+Il `/20000` è `/2` (il mid) diviso `/10000` (la scala). Con un lato solo
+`price_i = None` e resta `best_ask_i`, marcato `price_side="ask_only"`: è un
+**tetto** al valore equo, non un prezzo. Non è pedanteria — scartando quelle
+righe sparivano 6 mercati interi (tutti i Top-N della Premier hanno solo
+offerte).
+
+**2) Devig, e quando NON si fa.** Solo per i mercati a vincitore unico
+(`EXCLUSIVE = {champion, top_scorer}`):
+
+```
+S = Σ_i price_i          (overround)          prob_i = price_i / S
+```
+
+Per retrocessione e Top-N gli esiti sono **binari indipendenti** e `prob_i =
+price_i`. Verifica di sanità riuscita: la retrocessione Premier somma
+**S = 2.848 ≈ 3** (tre retrocesse) e il Top-4 Liga ≈ 4. Normalizzando a 1 si
+otterrebbe una probabilità di retrocessione **divisa per ~3**. La condizione
+`full = (n_priced ≥ 0.9·n_entries) and S > 0` impedisce di rinormalizzare su un
+libro mezzo vuoto, dove `S` non è l'overround ma una somma parziale.
+
+**3) La deriva iniettata (richiamo della Fase 94, formula verificata in
+`season_sim.build_cdfs`).** Per ogni estrazione *d* (200 estrazioni da 100
+stagioni ciascuna) e per ogni squadra *t*:
+
+```
+ε_t^(d) ~ N(0, σ_t)      indipendente fra squadre, COSTANTE dentro la stagione
+attack_t  ← attack_t  + ε_t^(d)/2
+defense_t ← defense_t − ε_t^(d)/2
+```
+
+La metà su ciascuna colonna serve perché la deriva agisca sulla **forza netta**
+(attacco − difesa) **senza spostare il livello dei gol della lega**: la somma
+`attack + defense` resta invariata, la differenza si sposta di `ε`. Il σ è
+eterosche­dastico (`config.drift_sd_map`):
+
+```
+σ_t = 0.30  se t è neopromossa       σ_t = 0.16  altrimenti
+```
+
+I due numeri **non sono scelti a griglia**: sono la deriva misurata alla Fase
+89-bis stagione su stagione (sd della forza netta 0.299 sulle neopromosse
+contro 0.157 sulle altre, rapporto 1.9×), al netto dell'errore di stima. Un σ
+uniforme perturberebbe troppo le forti e troppo poco le deboli — che è
+esattamente l'errore che si voleva correggere.
+
+**4) La probabilità di retrocessione.** Con `rank` la matrice
+(n_sims × n_squadre) delle posizioni finali e `nt = 20`:
+
+```
+P(retrocessione_t) = (1/n_sims) · #{ s : rank[s, t] ≥ nt − 2 }
+```
+
+`≥ nt−2` = posizioni 18, 19, 20 con `rank` a base 1. Nessuna approssimazione
+analitica: la classifica di ogni stagione simulata è costruita con gli spareggi
+**ufficiali** della lega (Premier: differenza reti — Fase 89).
+
+**5) Perché il filtro sullo spread è a 5pp.** Non è una soglia ottimizzata: è
+il punto sotto il quale, in questo listino, il mid smette di essere ambiguo. Il
+Nottingham Forest quota bid 0.1% / ask 10.0% → «mid 5.05%» che è la media di due
+numeri scollegati, non un prezzo; il Man United ha 6.57pp di spread. Sopra
+quella soglia cadono **2 righe su 17**, ed è dichiarato nell'output insieme al
+conto su tutte e 17 — il taglio si vede, non si nasconde (§1.4).
+
+**6) Riproducibilità.** `python scripts/archive_outrights.py` (istantanea del
+giorno, due fonti) poi `python scripts/_run_fase96_relegation_market.py`.
+L'archivio è versionato, quindi il confronto è **rifacibile identico** anche
+quando i prezzi live saranno cambiati — al contrario della Fase 95, che leggeva
+un dump non versionato. Nessun run in `runs.jsonl`: è un confronto con dati di
+mercato, non un backtest con esiti.
+
 
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
