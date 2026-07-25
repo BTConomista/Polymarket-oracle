@@ -1,0 +1,791 @@
+{
+  "quando": "2026-07-25T20:13:24+00:00",
+  "parametri": {
+    "offline": true,
+    "campione": 120,
+    "coda": 60,
+    "potere": 500,
+    "seed": 20260725
+  },
+  "cache_tiri": "/tmp/caccia_understat",
+  "copertura": {
+    "partite_understat_giocate": 16110,
+    "partite_understat_non_giocate": 102,
+    "partite_football_data": 16111,
+    "solo_understat": 101,
+    "solo_football_data": 0,
+    "elenco_solo_football_data": [],
+    "elenco_non_giocate_secondo_understat": [
+      "ligue_1 1920 Amiens-Angers (2020-03-14)",
+      "ligue_1 1920 Amiens-Nice (2020-07-09)",
+      "ligue_1 1920 Amiens-Nimes (2020-07-09)",
+      "ligue_1 1920 Amiens-Rennes (2020-07-09)",
+      "ligue_1 1920 Amiens-St Etienne (2020-07-09)",
+      "ligue_1 1920 Angers-Lyon (2020-07-09)",
+      "ligue_1 1920 Angers-Paris SG (2020-07-09)",
+      "ligue_1 1920 Angers-Rennes (2020-07-09)",
+      "ligue_1 1920 Angers-Toulouse (2020-03-21)",
+      "ligue_1 1920 Bordeaux-Amiens (2020-07-09)",
+      "ligue_1 1920 Bordeaux-Angers (2020-07-09)",
+      "ligue_1 1920 Bordeaux-Lille (2020-07-09)",
+      "ligue_1 1920 Bordeaux-Reims (2020-07-09)",
+      "ligue_1 1920 Bordeaux-Rennes (2020-03-15)",
+      "ligue_1 1920 Bordeaux-Toulouse (2020-07-09)",
+      "ligue_1 1920 Brest-Lille (2020-03-14)",
+      "ligue_1 1920 Brest-Marseille (2020-07-09)",
+      "ligue_1 1920 Brest-Monaco (2020-07-09)",
+      "ligue_1 1920 Brest-Montpellier (2020-07-09)",
+      "ligue_1 1920 Brest-Nimes (2020-07-09)",
+      "ligue_1 1920 Dijon-Amiens (2020-03-21)",
+      "ligue_1 1920 Dijon-Angers (2020-07-09)",
+      "ligue_1 1920 Dijon-Lyon (2020-07-09)",
+      "ligue_1 1920 Dijon-Nice (2020-07-09)",
+      "ligue_1 1920 Dijon-Reims (2020-07-09)",
+      "ligue_1 1920 Lille-Amiens (2020-07-09)",
+      "ligue_1 1920 Lille-Monaco (2020-03-20)",
+      "ligue_1 1920 Lille-Nice (2020-07-09)",
+      "ligue_1 1920 Lille-Reims (2020-07-09)",
+      "ligue_1 1920 Lyon-Brest (2020-07-09)",
+      "ligue_1 1920 Lyon-Marseille (2020-07-09)",
+      "ligue_1 1920 Lyon-Monaco (2020-07-09)",
+      "ligue_1 1920 Lyon-Montpellier (2020-07-09)",
+      "ligue_1 1920 Lyon-Nimes (2020-07-09)",
+      "ligue_1 1920 Lyon-Reims (2020-03-13)",
+      "ligue_1 1920 Marseille-Dijon (2020-07-09)",
+      "ligue_1 1920 Marseille-Metz (2020-07-09)",
+      "ligue_1 1920 Marseille-Monaco (2020-07-09)",
+      "ligue_1 1920 Marseille-Nice (2020-07-09)",
+      "ligue_1 1920 Marseille-Paris SG (2020-03-22)",
+      "ligue_1 1920 Metz-Angers (2020-07-09)",
+      "ligue_1 1920 Metz-Brest (2020-03-21)",
+      "ligue_1 1920 Metz-Dijon (2020-07-09)",
+      "ligue_1 1920 Metz-Lille (2020-07-09)",
+      "ligue_1 1920 Metz-Nice (2020-07-09)",
+      "ligue_1 1920 Monaco-Bordeaux (2020-07-09)",
+      "ligue_1 1920 Monaco-Metz (2020-07-09)",
+      "ligue_1 1920 Monaco-Nantes (2020-07-09)",
+      "ligue_1 1920 Monaco-St Etienne (2020-03-15)",
+      "ligue_1 1920 Monaco-Toulouse (2020-07-09)",
+      "ligue_1 1920 Montpellier-Bordeaux (2020-07-09)",
+      "ligue_1 1920 Montpellier-Lille (2020-07-09)",
+      "ligue_1 1920 Montpellier-Marseille (2020-03-14)",
+      "ligue_1 1920 Montpellier-Nantes (2020-07-09)",
+      "ligue_1 1920 Montpellier-Reims (2020-07-09)",
+      "ligue_1 1920 Nantes-Amiens (2020-07-09)",
+      "ligue_1 1920 Nantes-Brest (2020-07-09)",
+      "ligue_1 1920 Nantes-Lyon (2020-07-09)",
+      "ligue_1 1920 Nantes-Nimes (2020-03-14)",
+      "ligue_1 1920 Nantes-Strasbourg (2020-07-09)",
+      "ligue_1 1920 Nice-Montpellier (2020-03-21)",
+      "ligue_1 1920 Nice-Nantes (2020-07-09)",
+      "ligue_1 1920 Nice-St Etienne (2020-07-09)",
+      "ligue_1 1920 Nice-Strasbourg (2020-07-09)",
+      "ligue_1 1920 Nimes-Bordeaux (2020-03-21)",
+      "ligue_1 1920 Nimes-Lille (2020-07-09)",
+      "ligue_1 1920 Nimes-Montpellier (2020-07-09)",
+      "ligue_1 1920 Nimes-Paris SG (2020-07-09)",
+      "ligue_1 1920 Nimes-Strasbourg (2020-07-09)",
+      "ligue_1 1920 Paris SG-Brest (2020-07-09)",
+      "ligue_1 1920 Paris SG-Metz (2020-07-09)",
+      "ligue_1 1920 Paris SG-Nice (2020-03-15)",
+      "ligue_1 1920 Paris SG-Rennes (2020-07-09)",
+      "ligue_1 1920 Paris SG-St Etienne (2020-07-09)",
+      "ligue_1 1920 Reims-Amiens (2020-07-09)",
+      "ligue_1 1920 Reims-Marseille (2020-07-09)",
+      "ligue_1 1920 Reims-Nantes (2020-03-22)",
+      "ligue_1 1920 Reims-Paris SG (2020-07-09)",
+      "ligue_1 1920 Reims-Toulouse (2020-07-09)",
+      "ligue_1 1920 Rennes-Dijon (2020-07-09)",
+      "ligue_1 1920 Rennes-Lyon (2020-03-21)",
+      "ligue_1 1920 Rennes-Metz (2020-07-09)",
+      "ligue_1 1920 Rennes-Monaco (2020-07-09)",
+      "ligue_1 1920 Rennes-Strasbourg (2020-07-09)",
+      "ligue_1 1920 St Etienne-Angers (2020-07-09)",
+      "ligue_1 1920 St Etienne-Dijon (2020-07-09)",
+      "ligue_1 1920 St Etienne-Lille (2020-07-09)",
+      "ligue_1 1920 St Etienne-Rennes (2020-07-09)",
+      "ligue_1 1920 St Etienne-Strasbourg (2020-03-22)",
+      "ligue_1 1920 Strasbourg-Angers (2020-07-09)",
+      "ligue_1 1920 Strasbourg-Bordeaux (2020-07-09)",
+      "ligue_1 1920 Strasbourg-Brest (2020-07-09)",
+      "ligue_1 1920 Strasbourg-Dijon (2020-03-14)",
+      "ligue_1 1920 Strasbourg-Marseille (2020-07-09)",
+      "ligue_1 1920 Strasbourg-Paris SG (2020-03-18)",
+      "ligue_1 1920 Toulouse-Metz (2020-03-14)",
+      "ligue_1 1920 Toulouse-Montpellier (2020-07-09)",
+      "ligue_1 1920 Toulouse-Nantes (2020-07-09)",
+      "ligue_1 1920 Toulouse-Nimes (2020-07-09)",
+      "ligue_1 1920 Toulouse-Paris SG (2020-07-09)",
+      "ligue_1 1920 Toulouse-St Etienne (2020-07-09)",
+      "ligue_1 2526 Nantes-Toulouse (2026-05-17)"
+    ]
+  },
+  "A_tassi": {
+    "A1_xg_uguale_gol": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    },
+    "A2_cifre_povere": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    },
+    "A3_forecast_degenere": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    },
+    "A4_ppda_nulla": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    },
+    "A5_deep_zero": {
+      "positivi": 4,
+      "su": 16110,
+      "tasso": 0.00024829
+    },
+    "A6_xpts_intero": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    },
+    "A7_rigore_finto": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    },
+    "A8_history_mancante": {
+      "positivi": 0,
+      "su": 16110,
+      "tasso": 0.0
+    },
+    "A9_xg_zero_con_tiri": {
+      "positivi": 1,
+      "su": 16110,
+      "tasso": 6.207e-05
+    }
+  },
+  "A_candidati": [
+    {
+      "league": "bundesliga",
+      "season": "2021",
+      "mid": "15207",
+      "date": "2020-11-21",
+      "match": "Bielefeld-Leverkusen",
+      "gol": "1-2",
+      "xg": [
+        0.0,
+        1.32693
+      ],
+      "npxg": [
+        0.0,
+        1.32693
+      ],
+      "deep": [
+        1.0,
+        7.0
+      ],
+      "tiri_football_data": [
+        1.0,
+        10.0
+      ],
+      "flag": [
+        "A9_xg_zero_con_tiri"
+      ]
+    },
+    {
+      "league": "bundesliga",
+      "season": "2425",
+      "mid": "27930",
+      "date": "2025-02-09",
+      "match": "Holstein Kiel-Bochum",
+      "gol": "2-2",
+      "xg": [
+        2.0,
+        2.0
+      ],
+      "npxg": [
+        1.25,
+        2.0
+      ],
+      "deep": [
+        0.0,
+        0.0
+      ],
+      "tiri_football_data": [
+        10.0,
+        21.0
+      ],
+      "flag": [
+        "A1_xg_uguale_gol",
+        "A2_cifre_povere",
+        "A3_forecast_degenere",
+        "A4_ppda_nulla",
+        "A5_deep_zero",
+        "A6_xpts_intero",
+        "A7_rigore_finto"
+      ]
+    },
+    {
+      "league": "ligue_1",
+      "season": "2021",
+      "mid": "13993",
+      "date": "2020-08-30",
+      "match": "Reims-Lille",
+      "gol": "0-1",
+      "xg": [
+        0.206627,
+        0.906784
+      ],
+      "npxg": [
+        0.206627,
+        0.906784
+      ],
+      "deep": [
+        0.0,
+        0.0
+      ],
+      "tiri_football_data": [
+        4.0,
+        10.0
+      ],
+      "flag": [
+        "A5_deep_zero"
+      ]
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "mid": "7165",
+      "date": "2017-09-16",
+      "match": "West Brom-West Ham",
+      "gol": "0-0",
+      "xg": [
+        0.781891,
+        0.266344
+      ],
+      "npxg": [
+        0.781891,
+        0.266344
+      ],
+      "deep": [
+        0.0,
+        0.0
+      ],
+      "tiri_football_data": [
+        6.0,
+        9.0
+      ],
+      "flag": [
+        "A5_deep_zero"
+      ]
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "mid": "7183",
+      "date": "2017-09-30",
+      "match": "West Ham-Swansea",
+      "gol": "1-0",
+      "xg": [
+        0.692185,
+        0.178568
+      ],
+      "npxg": [
+        0.692185,
+        0.178568
+      ],
+      "deep": [
+        0.0,
+        0.0
+      ],
+      "tiri_football_data": [
+        9.0,
+        6.0
+      ],
+      "flag": [
+        "A5_deep_zero"
+      ]
+    }
+  ],
+  "B_z": {
+    "n_lati": 32218,
+    "qualita_media_per_tiro": {
+      "serie_a": 0.11634,
+      "premier_league": 0.11653,
+      "la_liga": 0.11664,
+      "bundesliga": 0.11574,
+      "ligue_1": 0.11708
+    },
+    "quantili_z": {
+      "0.0001": -2.165,
+      "0.001": -1.899,
+      "0.01": -1.62,
+      "0.5": -0.143,
+      "0.99": 2.867,
+      "0.999": 4.068
+    }
+  },
+  "B_riconciliazione": [
+    {
+      "league": "serie_a",
+      "season": "1718",
+      "tiri_football_data": 9721.0,
+      "tiri_understat": 9758,
+      "diff": 37.0,
+      "diff_pct": 0.38
+    },
+    {
+      "league": "serie_a",
+      "season": "1819",
+      "tiri_football_data": 7759.0,
+      "tiri_understat": 10556,
+      "diff": 2797.0,
+      "diff_pct": 36.05
+    },
+    {
+      "league": "serie_a",
+      "season": "1920",
+      "tiri_football_data": 8036.0,
+      "tiri_understat": 10866,
+      "diff": 2830.0,
+      "diff_pct": 35.22
+    },
+    {
+      "league": "serie_a",
+      "season": "2021",
+      "tiri_football_data": 8323.0,
+      "tiri_understat": 9486,
+      "diff": 1163.0,
+      "diff_pct": 13.97
+    },
+    {
+      "league": "serie_a",
+      "season": "2122",
+      "tiri_football_data": 9835.0,
+      "tiri_understat": 9896,
+      "diff": 61.0,
+      "diff_pct": 0.62
+    },
+    {
+      "league": "serie_a",
+      "season": "2223",
+      "tiri_football_data": 9646.0,
+      "tiri_understat": 9645,
+      "diff": -1.0,
+      "diff_pct": -0.01
+    },
+    {
+      "league": "serie_a",
+      "season": "2324",
+      "tiri_football_data": 9707.0,
+      "tiri_understat": 9707,
+      "diff": 0.0,
+      "diff_pct": 0.0
+    },
+    {
+      "league": "serie_a",
+      "season": "2425",
+      "tiri_football_data": 9141.0,
+      "tiri_understat": 9205,
+      "diff": 64.0,
+      "diff_pct": 0.7
+    },
+    {
+      "league": "serie_a",
+      "season": "2526",
+      "tiri_football_data": 9371.0,
+      "tiri_understat": 9351,
+      "diff": -20.0,
+      "diff_pct": -0.21
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "tiri_football_data": 9290.0,
+      "tiri_understat": 9257,
+      "diff": -33.0,
+      "diff_pct": -0.36
+    },
+    {
+      "league": "premier_league",
+      "season": "1819",
+      "tiri_football_data": 9606.0,
+      "tiri_understat": 9629,
+      "diff": 23.0,
+      "diff_pct": 0.24
+    },
+    {
+      "league": "premier_league",
+      "season": "1920",
+      "tiri_football_data": 9395.0,
+      "tiri_understat": 9394,
+      "diff": -1.0,
+      "diff_pct": -0.01
+    },
+    {
+      "league": "premier_league",
+      "season": "2021",
+      "tiri_football_data": 9188.0,
+      "tiri_understat": 9198,
+      "diff": 10.0,
+      "diff_pct": 0.11
+    },
+    {
+      "league": "premier_league",
+      "season": "2122",
+      "tiri_football_data": 9722.0,
+      "tiri_understat": 9741,
+      "diff": 19.0,
+      "diff_pct": 0.2
+    },
+    {
+      "league": "premier_league",
+      "season": "2223",
+      "tiri_football_data": 9600.0,
+      "tiri_understat": 9598,
+      "diff": -2.0,
+      "diff_pct": -0.02
+    },
+    {
+      "league": "premier_league",
+      "season": "2324",
+      "tiri_football_data": 10482.0,
+      "tiri_understat": 10474,
+      "diff": -8.0,
+      "diff_pct": -0.08
+    },
+    {
+      "league": "premier_league",
+      "season": "2425",
+      "tiri_football_data": 9849.0,
+      "tiri_understat": 9844,
+      "diff": -5.0,
+      "diff_pct": -0.05
+    },
+    {
+      "league": "premier_league",
+      "season": "2526",
+      "tiri_football_data": 9499.0,
+      "tiri_understat": 9483,
+      "diff": -16.0,
+      "diff_pct": -0.17
+    },
+    {
+      "league": "la_liga",
+      "season": "1718",
+      "tiri_football_data": 9119.0,
+      "tiri_understat": 9144,
+      "diff": 25.0,
+      "diff_pct": 0.27
+    },
+    {
+      "league": "la_liga",
+      "season": "1819",
+      "tiri_football_data": 9237.0,
+      "tiri_understat": 9243,
+      "diff": 6.0,
+      "diff_pct": 0.06
+    },
+    {
+      "league": "la_liga",
+      "season": "1920",
+      "tiri_football_data": 8588.0,
+      "tiri_understat": 8586,
+      "diff": -2.0,
+      "diff_pct": -0.02
+    },
+    {
+      "league": "la_liga",
+      "season": "2021",
+      "tiri_football_data": 8112.0,
+      "tiri_understat": 8101,
+      "diff": -11.0,
+      "diff_pct": -0.14
+    },
+    {
+      "league": "la_liga",
+      "season": "2122",
+      "tiri_football_data": 8949.0,
+      "tiri_understat": 8952,
+      "diff": 3.0,
+      "diff_pct": 0.03
+    },
+    {
+      "league": "la_liga",
+      "season": "2223",
+      "tiri_football_data": 9357.0,
+      "tiri_understat": 9341,
+      "diff": -16.0,
+      "diff_pct": -0.17
+    },
+    {
+      "league": "la_liga",
+      "season": "2324",
+      "tiri_football_data": 9296.0,
+      "tiri_understat": 9306,
+      "diff": 10.0,
+      "diff_pct": 0.11
+    },
+    {
+      "league": "la_liga",
+      "season": "2425",
+      "tiri_football_data": 9003.0,
+      "tiri_understat": 9029,
+      "diff": 26.0,
+      "diff_pct": 0.29
+    },
+    {
+      "league": "la_liga",
+      "season": "2526",
+      "tiri_football_data": 9492.0,
+      "tiri_understat": 9500,
+      "diff": 8.0,
+      "diff_pct": 0.08
+    },
+    {
+      "league": "bundesliga",
+      "season": "1718",
+      "tiri_football_data": 7709.0,
+      "tiri_understat": 7717,
+      "diff": 8.0,
+      "diff_pct": 0.1
+    },
+    {
+      "league": "bundesliga",
+      "season": "1819",
+      "tiri_football_data": 8216.0,
+      "tiri_understat": 8245,
+      "diff": 29.0,
+      "diff_pct": 0.35
+    },
+    {
+      "league": "bundesliga",
+      "season": "1920",
+      "tiri_football_data": 8118.0,
+      "tiri_understat": 8120,
+      "diff": 2.0,
+      "diff_pct": 0.02
+    },
+    {
+      "league": "bundesliga",
+      "season": "2021",
+      "tiri_football_data": 7543.0,
+      "tiri_understat": 7563,
+      "diff": 20.0,
+      "diff_pct": 0.27
+    },
+    {
+      "league": "bundesliga",
+      "season": "2122",
+      "tiri_football_data": 7870.0,
+      "tiri_understat": 7918,
+      "diff": 48.0,
+      "diff_pct": 0.61
+    },
+    {
+      "league": "bundesliga",
+      "season": "2223",
+      "tiri_football_data": 7738.0,
+      "tiri_understat": 7792,
+      "diff": 54.0,
+      "diff_pct": 0.7
+    },
+    {
+      "league": "bundesliga",
+      "season": "2324",
+      "tiri_football_data": 8317.0,
+      "tiri_understat": 8481,
+      "diff": 164.0,
+      "diff_pct": 1.97
+    },
+    {
+      "league": "bundesliga",
+      "season": "2425",
+      "tiri_football_data": 7868.0,
+      "tiri_understat": 7919,
+      "diff": 51.0,
+      "diff_pct": 0.65
+    },
+    {
+      "league": "bundesliga",
+      "season": "2526",
+      "tiri_football_data": 8111.0,
+      "tiri_understat": 8104,
+      "diff": -7.0,
+      "diff_pct": -0.09
+    },
+    {
+      "league": "ligue_1",
+      "season": "1718",
+      "tiri_football_data": 9430.0,
+      "tiri_understat": 9431,
+      "diff": 1.0,
+      "diff_pct": 0.01
+    },
+    {
+      "league": "ligue_1",
+      "season": "1819",
+      "tiri_football_data": 9375.0,
+      "tiri_understat": 9392,
+      "diff": 17.0,
+      "diff_pct": 0.18
+    },
+    {
+      "league": "ligue_1",
+      "season": "1920",
+      "tiri_football_data": 6789.0,
+      "tiri_understat": 6789,
+      "diff": 0.0,
+      "diff_pct": 0.0
+    },
+    {
+      "league": "ligue_1",
+      "season": "2021",
+      "tiri_football_data": 8900.0,
+      "tiri_understat": 8894,
+      "diff": -6.0,
+      "diff_pct": -0.07
+    },
+    {
+      "league": "ligue_1",
+      "season": "2122",
+      "tiri_football_data": 9115.0,
+      "tiri_understat": 9098,
+      "diff": -17.0,
+      "diff_pct": -0.19
+    },
+    {
+      "league": "ligue_1",
+      "season": "2223",
+      "tiri_football_data": 9317.0,
+      "tiri_understat": 9308,
+      "diff": -9.0,
+      "diff_pct": -0.1
+    },
+    {
+      "league": "ligue_1",
+      "season": "2324",
+      "tiri_football_data": 7812.0,
+      "tiri_understat": 7807,
+      "diff": -5.0,
+      "diff_pct": -0.06
+    },
+    {
+      "league": "ligue_1",
+      "season": "2425",
+      "tiri_football_data": 7556.0,
+      "tiri_understat": 7624,
+      "diff": 68.0,
+      "diff_pct": 0.9
+    },
+    {
+      "league": "ligue_1",
+      "season": "2526",
+      "tiri_football_data": 7603.0,
+      "tiri_understat": 7589,
+      "diff": -14.0,
+      "diff_pct": -0.18
+    }
+  ],
+  "B_riconciliazione_fuori_scala": [
+    {
+      "league": "serie_a",
+      "season": "1819",
+      "tiri_football_data": 7759.0,
+      "tiri_understat": 10556,
+      "diff": 2797.0,
+      "diff_pct": 36.05
+    },
+    {
+      "league": "serie_a",
+      "season": "1920",
+      "tiri_football_data": 8036.0,
+      "tiri_understat": 10866,
+      "diff": 2830.0,
+      "diff_pct": 35.22
+    },
+    {
+      "league": "serie_a",
+      "season": "2021",
+      "tiri_football_data": 8323.0,
+      "tiri_understat": 9486,
+      "diff": 1163.0,
+      "diff_pct": 13.97
+    },
+    {
+      "league": "bundesliga",
+      "season": "2324",
+      "tiri_football_data": 8317.0,
+      "tiri_understat": 8481,
+      "diff": 164.0,
+      "diff_pct": 1.97
+    }
+  ],
+  "B_riconciliazione_rumore": {
+    "n_stagioni_sane": 41,
+    "mediana_abs_pct": 0.14,
+    "p95_abs_pct": 0.7
+  },
+  "D_potere": {
+    "n_piantate": 500,
+    "segnaposto_totale_riscoperti": {
+      "quota": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "per_test": {
+        "A1_xg_uguale_gol": 1.0,
+        "A2_cifre_povere": 0.566,
+        "A3_forecast_degenere": 1.0,
+        "A4_ppda_nulla": 1.0,
+        "A5_deep_zero": 1.0,
+        "A6_xpts_intero": 1.0,
+        "A7_rigore_finto": 0.0,
+        "A8_history_mancante": 0.0,
+        "A9_xg_zero_con_tiri": 0.434
+      }
+    },
+    "soglia_z_famiglia_B": -1.899,
+    "troncamento_parziale": {
+      "xG_residuo_0.9": {
+        "riscoperti": 0.002,
+        "ci95": [
+          0.0,
+          0.006
+        ]
+      },
+      "xG_residuo_0.75": {
+        "riscoperti": 0.01,
+        "ci95": [
+          0.002,
+          0.02
+        ]
+      },
+      "xG_residuo_0.5": {
+        "riscoperti": 0.068,
+        "ci95": [
+          0.048,
+          0.09
+        ]
+      },
+      "xG_residuo_0.25": {
+        "riscoperti": 0.284,
+        "ci95": [
+          0.244,
+          0.324
+        ]
+      },
+      "xG_residuo_0": {
+        "riscoperti": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      }
+    }
+  }
+}

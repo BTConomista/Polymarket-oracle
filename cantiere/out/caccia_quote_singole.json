@@ -1,0 +1,527 @@
+{
+  "titolo": "Caccia al dato vero per le celle-quota mancanti, una partita alla volta",
+  "data": "2026-07-25",
+  "regola": "R4 isolamento del cantiere: nessuno snapshot e' stato modificato, nessuna correzione applicata",
+  "script_riproduttivo": "il codice completo e' in appendice a cantiere/out/caccia_quote_singole.md (eseguibile as-is, opzione --offline per usare la cache)",
+  "censimento": {
+    "metodo": "scansione dei 5 snapshot (serie_a, premier_league, la_liga in data/; bundesliga, ligue_1 in cantiere/data/) su tutte le colonne quota, separando i buchi SISTEMICI (>=20 righe per lega-stagione) dai casi SPARSI",
+    "buchi_sistemici": {
+      "ou_close_2017_19": {
+        "righe": 3652,
+        "dettaglio": "serie_a/premier_league/la_liga/ligue_1 380+380, bundesliga 306+306",
+        "nota": "e' il buco gia' noto e documentato in docs/CACCIA_OU_2017_19.md, non oggetto di questa caccia"
+      }
+    },
+    "casi_sparsi_totali": 14,
+    "casi_sparsi_assegnati": 5,
+    "casi_sparsi_nuovi_trovati": 8,
+    "nota_elenco_assegnato": "i 5 casi assegnati sono confermati tutti e cinque; il caso 2 (Bayern-Hoffenheim O/U apertura) NON e' pero' 'cella vuota alla fonte' come indicato nella consegna: alla fonte i numeri ci sono, ma con le etichette Mx/Av scambiate, e sono stati svuotati dal guard overround<1 del loader"
+  },
+  "esiti_per_caso": [
+    {
+      "id": 1,
+      "lega": "bundesliga",
+      "stagione": "1819",
+      "data": "2019-05-04",
+      "partita": "Bayern Munich - Hannover",
+      "cella": "1X2 di CHIUSURA (odds_home, odds_draw, odds_away)",
+      "esito": "DATO VERO TROVATO",
+      "valore_trovato": {
+        "home": 1.03,
+        "draw": 18.43,
+        "away": 43.88
+      },
+      "overround": 1.0479,
+      "fonte": "https://github.com/iredchuk/soccer-bookmaker-odds  file data/csv/germany_bundesliga.csv (licenza MIT, autore Igor Redchuk)",
+      "citazione_testuale": "\"2018-2019\",\"32\",\"Bayern München\",\"Hannover 96\",3,1,1.03,18.43,43.88,0.9264747343787751,0.05177802367933469,0.021747241941890115",
+      "verifica_join": "gol 3-1 identici allo snapshot; unica partita Bayern-Hannover in casa nella stagione; join per impronta-risultati verificato 306/306 righe senza discrepanze sui gol",
+      "caveat": "provider DIVERSO dal resto della colonna (media di mercato, non Pinnacle PSC). Nella stessa riga l'apertura e' BbAvH (media Betbrain): apertura media-mercato -> chiusura media-mercato, quindi la coppia e' internamente coerente",
+      "controprova_indipendente": "footiqo/1xBet chiudeva 1.02 / 26.00 / 34.00: scarto 0.01006 dalla fonte A, il 76o percentile del disaccordo abituale fra le due fonti (ordinario)"
+    },
+    {
+      "id": 2,
+      "lega": "bundesliga",
+      "stagione": "1819",
+      "data": "2018-08-24",
+      "partita": "Bayern Munich - Hoffenheim",
+      "cella": "O/U 2.5 di APERTURA (odds_over25_open, odds_under25_open)",
+      "esito": "DATO VERO NON TROVATO FUORI, MA MECCANISMO DEL GUASTO IDENTIFICATO ALLA FONTE",
+      "diagnosi": "le etichette BbMx (massimo) e BbAv (media) sono scambiate su ENTRAMBI i lati della linea",
+      "prova": [
+        "alla fonte: BbMx>2.5=1.33, BbAv>2.5=1.40, BbMx<2.5=3.30, BbAv<2.5=3.55",
+        "Max < Avg e' impossibile per costruzione (il massimo di un insieme non puo' essere minore della sua media): accade su 2 righe su 3652",
+        "overround con le etichette attuali = 0.9960 (< 1, arbitraggio garantito: impossibile per una media multi-book)",
+        "scambiando Mx<->Av l'overround diventa 1.0549, contro una mediana del corpus di 1.0554 e un intervallo 1%-99% di [1.0472, 1.0666]",
+        "il lato Max scambiato da 1/1.40 + 1/3.55 = 0.9960, che per un MASSIMO multi-book e' normale (e' un'occasione di arbitraggio fra book, non un margine negativo)"
+      ],
+      "ricostruzione_proposta": {
+        "over25_open": 1.33,
+        "under25_open": 3.3
+      },
+      "natura_della_proposta": "RICOSTRUZIONE dalle celle-sorelle della stessa fonte, NON lettura di una fonte esterna. Decide l'utente.",
+      "fonti_esterne_provate": "nessuna fonte con O/U 2.5 per-partita del 2018-19 e' risultata accessibile (vedi piste_chiuse)",
+      "controprova_indipendente": "TENTATA e MUTA: la chiusura 1xBet da' P(over)=0.7261, la ricostruzione 0.7127 e le etichette attuali 0.7172, entrambe dentro la deriva apertura-chiusura tipica (media 0.0223). Lo scambio Mx/Av muove il margine, non la probabilita': il test non puo' discriminare"
+    },
+    {
+      "id": 3,
+      "lega": "la_liga",
+      "stagione": "1718",
+      "data": "2017-10-14",
+      "partita": "Alaves - Sociedad",
+      "cella": "1X2 di CHIUSURA (odds_home, odds_draw, odds_away)",
+      "esito": "DATO VERO TROVATO",
+      "valore_trovato": {
+        "home": 3.4,
+        "draw": 3.34,
+        "away": 2.15
+      },
+      "overround": 1.0586,
+      "fonte": "https://github.com/iredchuk/soccer-bookmaker-odds  file data/csv/spain_primera.csv",
+      "citazione_testuale": "\"2017-2018\",\"8\",\"CD Alavés\",\"Real Sociedad\",0,2,3.4,3.34,2.15,0.2778272139900182,0.28281812202576706,0.43935466398421485",
+      "verifica_join": "gol 0-2 identici allo snapshot; unica partita Alaves-Sociedad in casa nella stagione; join per impronta-risultati verificato 380/380 righe",
+      "caveat": "provider DIVERSO dal resto della colonna. In piu', in questa riga l'apertura e' PSH (Pinnacle): accettare la proposta creerebbe una coppia MISTA apertura-Pinnacle -> chiusura-media-mercato, esattamente cio' che la Fase 61 aveva voluto evitare per avere un CLV pulito Pinnacle->Pinnacle. Da soppesare",
+      "controprova_indipendente": "footiqo/1xBet chiudeva 3.58 / 3.54 / 2.22: scarto 0.00376, il 30o percentile (accordo migliore del tipico)"
+    },
+    {
+      "id": 4,
+      "lega": "serie_a",
+      "stagione": "2122",
+      "data": "2022-01-10",
+      "partita": "Torino - Fiorentina",
+      "cella": "1X2 e O/U 2.5 di APERTURA (tutte e 5 le colonne *_open)",
+      "esito": "PISTA CHIUSA - IL DATO VERO NON ESISTE",
+      "prova": [
+        "nel grezzo football-data ogni colonna pre-match e' vuota (B365H..AvgA, B365>2.5..Avg<2.5, AHh e AH pre-match): 41 celle vuote su una riga che ha invece TUTTE le colonne di chiusura piene",
+        "e' l'UNICA riga su 380 della serie_a 2021-22 senza alcuna quota pre-match 1X2",
+        "il formato alternativo della stessa fonte (all-euro-data-2021-2022.xlsx, foglio I1) e' identico cella per cella: 100 colonne confrontate, 0 differenze",
+        "contesto verificato: la partita era sotto blocco ASL (focolaio Covid nel Torino, ordinanza del 5 gennaio) ed e' stata autorizzata solo dalla sospensione del TAR Piemonte, con spostamento da domenica 9 gennaio a lunedi 10 gennaio. All'istante di raccolta pre-match (il venerdi, per esplicita dichiarazione di notes.txt) il mercato su questa partita NON ERA OFFERTO"
+      ],
+      "conclusione": "non e' un dato perso in raccolta: e' un dato che non e' mai esistito a quell'istante. Resta corretta la scelta gia' fatta dal progetto (stima dichiarata in data/estimates/open_sparse_1x2_ou.csv, MAE atteso ~0.016)"
+    },
+    {
+      "id": 5,
+      "lega": "serie_a",
+      "stagione": "2021",
+      "data": "2020-10-19",
+      "partita": "Verona - Genoa",
+      "cella": "O/U 2.5 di APERTURA (odds_over25_open, odds_under25_open)",
+      "esito": "PISTA CHIUSA - IL DATO VERO NON ESISTE",
+      "prova": [
+        "nel grezzo il 1X2 pre-match esiste (MaxH=AvgH=2.05, MaxD=AvgD=3.40, MaxA=AvgA=3.75) ma TUTTE le colonne O/U pre-match sono vuote (B365>2.5, P>2.5, Max>2.5, Avg>2.5 e i rispettivi <2.5)",
+        "Max == Avg su tutti e tre gli esiti significa che nella media c'era UN SOLO bookmaker: e' l'unica riga su 380 della stagione con questa firma",
+        "ed e' anche l'unica riga su 380 con 1X2 pre-match presente e O/U pre-match assente",
+        "il formato alternativo (all-euro-data-2020-2021.xlsx, foglio I1) e' identico: 100 colonne confrontate, 0 differenze",
+        "contesto coerente: focolaio Covid nel Genoa in ottobre 2020 (16 positivi, 12 giocatori, con Genoa-Torino gia' rinviata il 3 ottobre) e un positivo nel Verona; la partita e' rimasta in dubbio fino a ridosso"
+      ],
+      "conclusione": "all'istante di raccolta il mercato dei totali su questa partita non era offerto da alcun book del paniere. Un solo book quotava perfino l'1X2. Il dato vero non esiste"
+    }
+  ],
+  "casi_nuovi_trovati": {
+    "descrizione": "8 casi sparsi in piu' rispetto ai 5 assegnati, tutti O/U 2.5 di apertura svuotati perche' l'overround alla fonte e' impossibile",
+    "gia_registrati_nel_cantiere": {
+      "n": 8,
+      "dove": "cantiere/data/correzioni_dichiarate.csv (stato applicata) + cantiere/data/stime_ou_corrotte.csv",
+      "righe": [
+        "bundesliga 1718 2017-12-02 Leverkusen-Dortmund (overround 1.2814)",
+        "bundesliga 1718 2017-12-02 Hoffenheim-RB Leipzig (1.2868)",
+        "bundesliga 1718 2017-12-09 Ein Frankfurt-Bayern Munich (1.2862)",
+        "bundesliga 1718 2018-02-24 Bayern Munich-Hertha (1.2757)",
+        "bundesliga 1718 2018-05-05 Werder Bremen-Leverkusen (1.2779)",
+        "bundesliga 1819 2019-03-30 Dortmund-Wolfsburg (1.3390)",
+        "ligue_1 1718 2017-10-29 Lyon-Metz (1.2643)",
+        "ligue_1 1718 2018-02-04 Monaco-Lyon (1.2823)"
+      ],
+      "esito_caccia": "nessuna fonte esterna con O/U 2.5 per-partita 2017-19 e' risultata accessibile: restano coperte dalla stima gia' dichiarata (MAE 0.0267)"
+    },
+    "mai_intercettati_SEGNALAZIONE": {
+      "n": 4,
+      "lega": "la_liga",
+      "dove": "data/la_liga_matches.csv (snapshot di PRODUZIONE, non del cantiere)",
+      "problema": "hanno lo stesso identico difetto delle 8 righe svuotate, ma sono ancora dentro lo snapshot con valori impossibili, perche' il guard di loader._pick_market_odds (Fase 58) scatta solo per overround < 1 e non per overround troppo ALTO",
+      "righe": [
+        {
+          "data": "2018-10-06",
+          "partita": "Alaves - Real Madrid",
+          "over25_open": 1.53,
+          "under25_open": 1.59,
+          "overround": 1.2825
+        },
+        {
+          "data": "2018-11-24",
+          "partita": "Eibar - Real Madrid",
+          "over25_open": 1.45,
+          "under25_open": 1.69,
+          "overround": 1.2814
+        },
+        {
+          "data": "2019-02-10",
+          "partita": "Leganes - Betis",
+          "over25_open": 2.48,
+          "under25_open": 1.38,
+          "overround": 1.1279
+        },
+        {
+          "data": "2018-12-07",
+          "partita": "Leganes - Getafe",
+          "over25_open": 2.89,
+          "under25_open": 1.5,
+          "overround": 1.0127,
+          "nota": "qui il difetto e' uno scambio Mx/Av sul solo lato Under; lo scambio porta l'overround a 1.0357, ancora sotto il 1o percentile (1.0472): ricostruzione NON pulita, a differenza di Bayern-Hoffenheim"
+        }
+      ],
+      "riferimento_di_scala": "sulle 3652 righe con O/U Betbrain completo, l'overround ha mediana 1.0554 e intervallo 1%-99% [1.0472, 1.0666]",
+      "raccomandazione": "NON applicata da me (R4). Da decidere: estendere il guard a un tetto superiore, oppure trattare le 4 righe come le 8 gia' svuotate"
+    }
+  },
+  "fonte_esterna_trovata": {
+    "nome": "soccer-bookmaker-odds",
+    "url": "https://github.com/iredchuk/soccer-bookmaker-odds",
+    "licenza": "MIT",
+    "contenuto": "1X2 medio di mercato per ogni partita di Premier, Liga, Bundesliga, Serie A, Ligue 1 dalla stagione 2005-06 alla 2018-19. NESSUN mercato O/U",
+    "copertura_sulle_nostre_finestre": "3652 partite su 3652 delle 5 leghe nelle stagioni 2017-18 e 2018-19 (100%)",
+    "provenienza_dichiarata": "NO - il repo non dichiara da dove ha scrappato. E' il limite principale, mitigato dall'identificazione empirica qui sotto",
+    "identificazione_apertura_o_chiusura": {
+      "domanda": "queste quote sono un'apertura (come BbAv*, raccolta il venerdi) o una chiusura (come PSC*, Pinnacle al calcio d'inizio)?",
+      "aspettativa_dichiarata_prima": "50/50 con leggera propensione a 'chiusura'; mi aspettavo che il confronto sulle quote grezze fosse confuso dal margine (media multi-book vs Pinnacle), percio' ho misurato su probabilita' DEVIGATE",
+      "metodo": "join per impronta-risultati (abbinamento squadre tramite la sequenza dei risultati stagionali, indipendente dai nomi) verificato 3652/3652 senza discrepanze sui gol; poi due test indipendenti con bootstrap appaiato B=10.000 (boot() di scripts/_fase52_common.py) e metriche da src/evaluation/metrics.py",
+      "T1_distanza": {
+        "mae_repo_vs_apertura_BbAv": 0.01424,
+        "mae_repo_vs_chiusura_PSC": 0.00597,
+        "mae_apertura_vs_chiusura": 0.01755,
+        "differenza": -0.00827,
+        "ci95": [
+          -0.00865,
+          -0.00789
+        ],
+        "conclusivo": true,
+        "lettura": "il repo sta 2.4 volte piu' vicino alla chiusura che all'apertura"
+      },
+      "T2_potere_predittivo": {
+        "log_loss_repo": 0.95303,
+        "log_loss_apertura_BbAv": 0.95505,
+        "log_loss_chiusura_PSC": 0.95233,
+        "brier_repo": 0.56484,
+        "brier_apertura": 0.56633,
+        "brier_chiusura": 0.56441,
+        "repo_vs_apertura": {
+          "diff": -0.00202,
+          "ci95": [
+            -0.00398,
+            -2e-05
+          ],
+          "conclusivo": true
+        },
+        "repo_vs_chiusura": {
+          "diff": 0.0007,
+          "ci95": [
+            -0.00013,
+            0.00152
+          ],
+          "conclusivo": false
+        },
+        "lettura": "batte l'apertura in modo conclusivo ed e' indistinguibile dalla chiusura: si comporta da chiusura"
+      },
+      "conclusione": "e' una CHIUSURA di tipo MEDIA DI MERCATO (overround medio 1.0526, contro 1.0247 di Pinnacle e 1.0489 della media pre-match Betbrain). E' la stessa semantica delle colonne AvgC* di football-data, che sono la PRIMA preferenza della politica-chiusura del progetto (src/data/loader._ODDS_PREFERENCE)"
+    },
+    "confutazione": {
+      "C1_e_una_riesportazione_di_cio_che_gia_abbiamo": {
+        "test": "frazione di righe in cui la terna del repo e' identica a una terna football-data della stessa riga",
+        "risultati": {
+          "B365": 0.0,
+          "BW": 0.0,
+          "IW": 0.0,
+          "WH": 0.00027,
+          "VC": 0.0,
+          "PS_apertura": 0.0,
+          "PSC_chiusura": 0.0,
+          "BbAv_apertura": 0.0,
+          "BbMx": 0.0
+        },
+        "esito": "NO: nessuna colonna coincide. Il dato e' informativamente nuovo. Coerente col fatto che football-data non ha alcuna media-di-mercato di chiusura prima del 2019-20"
+      },
+      "C2_potrebbe_essere_un_modello_e_non_quote_vere": {
+        "test": "distribuzione dell'overround e confronto del log-loss con la chiusura Pinnacle",
+        "overround_min": 1.0363,
+        "overround_max": 1.1074,
+        "frazione_sotto_1": 0.0,
+        "esito": "NO: un output di modello non ha margine, questo ce l'ha sempre e in una banda stretta e plausibile. E il suo log-loss (0.95303) NON e' migliore di quello della chiusura Pinnacle (0.95233): se fosse stato costruito conoscendo i risultati, sarebbe stato migliore. Nessun leakage"
+      },
+      "C3_il_formato_alternativo_della_fonte_madre_conteneva_gia_il_dato": {
+        "test": "confronto cella per cella CSV per-lega vs all-euro-data.xlsx per le 5 righe bersaglio",
+        "risultato": "417 celle confrontate su 5 righe, 0 differenze",
+        "esito": "NO: i due formati di football-data sono la stessa esportazione. Aspettativa dichiarata prima (~15% di trovare una differenza): confermata la previsione negativa"
+      },
+      "C4_esistono_altre_colonne_di_chiusura_legittime_nella_stessa_riga": {
+        "test": "lettura di https://www.football-data.co.uk/notes.txt e di src/data/loader.py, poi elenco delle colonne presenti nelle righe bersaglio",
+        "citazione_notes": "\"The following key to betting odds data is described below. These are for pre-closing odds. For the closing odds, as below but with an additional 'C' character following the bookmaker abbreviation/Max/Avg (e.g. B365CH = closing Bet365 home win odds).\"",
+        "esito": "NO: nei file 2017-18 e 2018-19 le UNICHE colonne con la C sono PSC*, ed e' proprio quella vuota nelle due righe. Tutte le altre colonne piene (B365, BW, IW, LB, WH, VC, BbMx, BbAv) sono pre-match per definizione della fonte, e sono gia' usate dal progetto per popolare l'APERTURA"
+      },
+      "C5_il_join_potrebbe_essere_sbagliato": {
+        "test": "primo tentativo con abbinamento fuzzy sui nomi -> fino a 97 discrepanze sui gol su 380 righe in La Liga; rifatto con abbinamento per impronta-risultati",
+        "risultato": "3652/3652 righe unite, 0 non trovate, 0 discrepanze sui gol",
+        "esito": "il risultato regge, ed e' migliorato: il primo join rumoroso dava gia' lo stesso segno (diff -0.00803) del join pulito (-0.00827)"
+      }
+    },
+    "costo_del_mescolamento_provider": {
+      "domanda": "quanto ci costa mettere una chiusura media-di-mercato in una colonna che nel 2017-19 e' Pinnacle?",
+      "mae_su_probabilita_devigate": 0.00597,
+      "percentili": {
+        "p50": 0.00533,
+        "p75": 0.00798,
+        "p90": 0.01085,
+        "p95": 0.01261,
+        "p99": 0.01654
+      },
+      "bias_con_segno_repo_meno_PSC": {
+        "home": -0.00237,
+        "draw": 0.00076,
+        "away": 0.00161
+      },
+      "alternativa_se_si_lasciasse_il_buco": "usare l'apertura al posto della chiusura costa 0.01755 (differenza -0.01158, CI95 [-0.01196, -0.01119], CONCLUSIVO)",
+      "lettura": "la discrepanza fra i due provider di chiusura e' tre volte piu' piccola della distanza apertura-chiusura: come sostituto della cella mancante e' nettamente il male minore"
+    },
+    "controprova_seconda_fonte_indipendente": {
+      "fonte_B": "footiqo.com -> quote di CHIUSURA di 1xBet, raccolte da un'altra linea di lavoro della STESSA sessione (cantiere/data/ricerca/footiqo_*.json). Indipendente dalla fonte A: book diverso, sito diverso, raccolta diversa",
+      "nota": "non ci si aspetta identita' (media multi-book vs singolo book) ma coerenza; la scala di giudizio e' la distribuzione dello scarto fra le due fonti",
+      "scala": {
+        "righe_con_entrambe": 2591,
+        "mae_A_vs_B": 0.00752,
+        "percentili": {
+          "p50": 0.00572,
+          "p75": 0.00986,
+          "p90": 0.01571,
+          "p95": 0.02017,
+          "p99": 0.0266
+        },
+        "mae_A_vs_PSC": 0.00592,
+        "mae_B_vs_PSC": 0.00817,
+        "lettura": "la fonte A (media di mercato) sta piu' vicina alla chiusura Pinnacle di quanto ci stia 1xBet: e' anche il motivo per cui propongo il valore di A e non quello di B, coerentemente con la politica del progetto che preferisce AvgC* a un singolo book"
+      },
+      "cella_1_bayern_hannover": {
+        "fonte_A": [
+          1.03,
+          18.43,
+          43.88
+        ],
+        "fonte_B_1xBet": [
+          1.02,
+          26.0,
+          34.0
+        ],
+        "mae": 0.01006,
+        "percentile": 76,
+        "lettura": "scarto ordinario, tutto concentrato sul PAREGGIO, dove su quella partita i book erano genuinamente lontanissimi (nel grezzo football-data: B365 21, BW 17.5, IW 15, WH 19, VC 23, massimo Betbrain 25). Una media a 18.43 e un singolo book generoso a 26.00 sono compatibili"
+      },
+      "cella_3_alaves_sociedad": {
+        "fonte_A": [
+          3.4,
+          3.34,
+          2.15
+        ],
+        "fonte_B_1xBet": [
+          3.58,
+          3.54,
+          2.22
+        ],
+        "mae": 0.00376,
+        "percentile": 30,
+        "lettura": "accordo MIGLIORE del tipico fra le due fonti: e' la cella piu' solida delle due"
+      },
+      "controprova_sulla_ricostruzione_MxAv": {
+        "esito": "NON DISCRIMINANTE, e lo dichiaro",
+        "p_over_ricostruita": 0.7127,
+        "p_over_etichette_attuali": 0.7172,
+        "p_over_chiusura_1xBet": 0.7261,
+        "deriva_apertura_chiusura_tipica": {
+          "media": 0.0223,
+          "p90": 0.0461,
+          "p99": 0.0754
+        },
+        "motivo": "scambiare Mx e Av cambia soprattutto il MARGINE (overround 0.9960 -> 1.0549) e quasi nulla la probabilita' implicita: nessuna istantanea di chiusura puo' distinguere le due ipotesi"
+      }
+    }
+  },
+  "proposte_correzione": {
+    "avvertenza": "NON applicate. Vanno inserite in cantiere/data/correzioni_dichiarate.csv (regola R3) e applicate solo con scripts/applica_correzioni.py, che verifica il valore-prima. Decisione all'utente.",
+    "righe": [
+      {
+        "lega": "bundesliga",
+        "stagione": "1819",
+        "data": "2019-05-04",
+        "casa": "Bayern Munich",
+        "ospite": "Hannover",
+        "colonna": "odds_home",
+        "valore_prima": "",
+        "valore_dopo": 1.03,
+        "motivo": "1X2 di chiusura assente alla fonte primaria (PSC* vuote, unica riga su 306). Recuperato da una fonte esterna indipendente, identificata empiricamente come chiusura media-di-mercato (T1 MAE 0.00597 dalla chiusura vs 0.01424 dall'apertura, CI conclusivo; T2 log-loss indistinguibile dalla chiusura Pinnacle e conclusivamente migliore dell'apertura). Provider diverso dal resto della colonna: discrepanza attesa vs Pinnacle 0.00597 in probabilita' devigata, contro 0.01755 se si usasse l'apertura.",
+        "fonte": "github.com/iredchuk/soccer-bookmaker-odds, data/csv/germany_bundesliga.csv, riga \"2018-2019\",\"32\",\"Bayern München\",\"Hannover 96\",3,1,1.03,18.43,43.88",
+        "stato": "proposta"
+      },
+      {
+        "lega": "bundesliga",
+        "stagione": "1819",
+        "data": "2019-05-04",
+        "casa": "Bayern Munich",
+        "ospite": "Hannover",
+        "colonna": "odds_draw",
+        "valore_prima": "",
+        "valore_dopo": 18.43,
+        "motivo": "vedi riga precedente (stessa partita, stesso mercato: la terna si applica in blocco, mai un solo lato)",
+        "fonte": "come sopra",
+        "stato": "proposta"
+      },
+      {
+        "lega": "bundesliga",
+        "stagione": "1819",
+        "data": "2019-05-04",
+        "casa": "Bayern Munich",
+        "ospite": "Hannover",
+        "colonna": "odds_away",
+        "valore_prima": "",
+        "valore_dopo": 43.88,
+        "motivo": "vedi riga precedente (stessa partita, stesso mercato)",
+        "fonte": "come sopra",
+        "stato": "proposta"
+      },
+      {
+        "lega": "la_liga",
+        "stagione": "1718",
+        "data": "2017-10-14",
+        "casa": "Alaves",
+        "ospite": "Sociedad",
+        "colonna": "odds_home",
+        "valore_prima": "",
+        "valore_dopo": 3.4,
+        "motivo": "1X2 di chiusura assente alla fonte primaria (PSC* vuote, unica riga su 2.280 della lega). Stessa fonte e stessa identificazione della riga Bayern-Hannover. ATTENZIONE: in questa riga l'apertura e' Pinnacle (PSH), quindi accettare la proposta crea una coppia apertura-Pinnacle -> chiusura-media-mercato, cioe' il CLV misto che la Fase 61 aveva evitato di proposito.",
+        "fonte": "github.com/iredchuk/soccer-bookmaker-odds, data/csv/spain_primera.csv, riga \"2017-2018\",\"8\",\"CD Alavés\",\"Real Sociedad\",0,2,3.4,3.34,2.15",
+        "stato": "proposta"
+      },
+      {
+        "lega": "la_liga",
+        "stagione": "1718",
+        "data": "2017-10-14",
+        "casa": "Alaves",
+        "ospite": "Sociedad",
+        "colonna": "odds_draw",
+        "valore_prima": "",
+        "valore_dopo": 3.34,
+        "motivo": "vedi riga precedente (stessa partita, stesso mercato)",
+        "fonte": "come sopra",
+        "stato": "proposta"
+      },
+      {
+        "lega": "la_liga",
+        "stagione": "1718",
+        "data": "2017-10-14",
+        "casa": "Alaves",
+        "ospite": "Sociedad",
+        "colonna": "odds_away",
+        "valore_prima": "",
+        "valore_dopo": 2.15,
+        "motivo": "vedi riga precedente (stessa partita, stesso mercato)",
+        "fonte": "come sopra",
+        "stato": "proposta"
+      },
+      {
+        "lega": "bundesliga",
+        "stagione": "1819",
+        "data": "2018-08-24",
+        "casa": "Bayern Munich",
+        "ospite": "Hoffenheim",
+        "colonna": "odds_over25_open",
+        "valore_prima": "",
+        "valore_dopo": 1.33,
+        "motivo": "RICOSTRUZIONE, non lettura esterna. Alla fonte i due numeri esistono ma con le etichette Mx/Av scambiate su entrambi i lati: BbMx>2.5=1.33 < BbAv>2.5=1.40 e BbMx<2.5=3.30 < BbAv<2.5=3.55, mentre il massimo di un insieme non puo' essere minore della sua media (accade su 2 righe su 3652). Con le etichette attuali l'overround e' 0.9960 (arbitraggio garantito, impossibile per una media multi-book: e' per questo che il guard della Fase 58 ha svuotato la cella); scambiando Mx e Av l'overround diventa 1.0549, contro una mediana del corpus di 1.0554. Da decidere se accettare una ricostruzione o lasciare NaN.",
+        "fonte": "cantiere/data/fonti/football_data/bundesliga_1819.csv, riga 24/08/2018 Bayern Munich-Hoffenheim (celle BbMx>2.5 e BbMx<2.5)",
+        "stato": "proposta"
+      },
+      {
+        "lega": "bundesliga",
+        "stagione": "1819",
+        "data": "2018-08-24",
+        "casa": "Bayern Munich",
+        "ospite": "Hoffenheim",
+        "colonna": "odds_under25_open",
+        "valore_prima": "",
+        "valore_dopo": 3.3,
+        "motivo": "vedi riga precedente (stessa partita, stesso mercato: si applica in blocco)",
+        "fonte": "come sopra",
+        "stato": "proposta"
+      }
+    ]
+  },
+  "piste_chiuse": [
+    {
+      "pista": "football-data.co.uk, formato alternativo all-euro-data .xlsx (stagioni 1718, 1819, 2021, 2122)",
+      "esito": "NEGATIVO",
+      "prova": "417 celle confrontate sulle 5 righe bersaglio, 0 differenze rispetto al CSV per-lega. E' la stessa esportazione in due contenitori",
+      "robots": "https://www.football-data.co.uk/robots.txt contiene 'User-agent: *' + 'Disallow:' (vuoto) = tutto permesso"
+    },
+    {
+      "pista": "football-data.co.uk, altre colonne di chiusura nella stessa riga",
+      "esito": "NEGATIVO",
+      "prova": "nel 2017-18 e 2018-19 le uniche colonne con suffisso C sono PSC*, ed e' quella vuota. notes.txt dichiara che tutte le altre sono pre-closing"
+    },
+    {
+      "pista": "BetExplorer (ri-verificata oggi, da questa sessione, su una lega-stagione NUOVA rispetto ai test precedenti)",
+      "esito": "NEGATIVO, conferma indipendente",
+      "prova": "pagina risultati Bundesliga 2018-19 raggiunta (HTTP 200, 254 KB, tutte le partite presenti) ma le colonne quota della tabella risultati sono letteralmente '&nbsp;'. Sulla pagina-partita /football/germany/bundesliga-2018-2019/bayern-munich-hannover/4hyK85mq/: 0 occorrenze di 'match-odds', e il div bettingTabs contiene solo '<span class=\"list-tabs__item__in disabled border0\">1X2</span>' - un unico tab, DISABILITATO, e nessun tab O/U. Estende alla Bundesliga 2018-19 il risultato che il progetto aveva su Serie A/Premier/Liga 2017-18",
+      "robots": "consentito (il robots.txt vieta solo /ad/, /redirect/, /bookmaker/ e le pagine con querystring)"
+    },
+    {
+      "pista": "OddsPortal storico",
+      "esito": "NON PERCORRIBILE PER DIVIETO",
+      "prova": "il robots.txt vieta esplicitamente le pagine storiche (Disallow: *-2017*, *-2018*). Non tentata, ne' direttamente ne' via cache/archivi"
+    },
+    {
+      "pista": "Oddspedia",
+      "esito": "NEGATIVO",
+      "prova": "challenge Cloudflare (HTTP 403) gia' sul robots.txt: non e' possibile nemmeno leggere le condizioni d'uso, quindi non si procede"
+    },
+    {
+      "pista": "footiqo.com (database storico risultati+quote, comparso nelle ricerche)",
+      "esito": "PRODUTTIVA (merito di un'altra linea di lavoro della sessione)",
+      "prova": "il mio sondaggio si era fermato all'HTML statico -- dove non compare alcun nome di colonna-quota e le uniche stagioni citate sono 2015/2016 e 2025/2026 -- e avevo concluso 'non verificabile'. CONCLUSIONE SUPERATA: una linea parallela di questa sessione ha raggiunto l'endpoint ajax ed estratto le quote di chiusura 1xBet (1X2, O/U 0.5-4.5, BTTS) per tutte e 10 le lega-stagione 2017-19, copertura 100%. La uso come controprova indipendente. Le occorrenze di 'AvgC' che avevo visto erano davvero falsi positivi (chiave JSON 'avgColumns')"
+    },
+    {
+      "pista": "ricerca web diretta per le due partite (chiusura 1X2 Bayern-Hannover 2019 e Alaves-Sociedad 2017)",
+      "esito": "NEGATIVO",
+      "prova": "i risultati restituiscono probabilita' implicite e pagine di anteprima, mai le quote decimali per-partita con l'istantanea dichiarata"
+    },
+    {
+      "pista": "Kaggle / mirror di football-data",
+      "esito": "NEGATIVO (gia' chiuso dal progetto, non ripetuto)",
+      "prova": "docs/CACCIA_OU_2017_19.md §3: 6 dataset verificati uno per uno, tutti ri-esportazioni di football-data che ereditano lo stesso buco"
+    }
+  ],
+  "aspettative_dichiarate_prima": [
+    {
+      "su": "formati alternativi football-data",
+      "prevedevo": "~15% di trovare una cella piena dove il CSV e' vuoto (l'xlsx e' quasi certamente la stessa esportazione)",
+      "esito": "confermata la previsione negativa: 0 differenze su 417 celle"
+    },
+    {
+      "su": "ricerca esterna per quote storiche per-partita",
+      "prevedevo": "~10-15% di successo, dato il precedente del progetto (R6 passo 3: 'ricerca web NEGATIVA per le quote')",
+      "esito": "meglio del previsto: 2 celle su 5 recuperate con dato reale, grazie a un dataset GitHub che nessuna ricerca precedente aveva intercettato"
+    },
+    {
+      "su": "identificazione apertura/chiusura del dataset esterno",
+      "prevedevo": "50/50 con leggera propensione a 'chiusura'",
+      "esito": "chiusura, con CI conclusivo su due test indipendenti"
+    },
+    {
+      "su": "controprova con una seconda fonte",
+      "prevedevo": "non l'avevo prevista: e' emersa a lavoro quasi finito, da una linea parallela della sessione",
+      "esito": "conferma entrambe le celle recuperate; smentisce la mia conclusione frettolosa su footiqo, che avevo giudicato solo dall'HTML statico"
+    }
+  ],
+  "limiti": [
+    "la fonte esterna NON dichiara la propria provenienza: l'etichetta 'chiusura media-di-mercato' e' un'INFERENZA statistica dai dati (per quanto conclusiva su due test indipendenti), non una dichiarazione del produttore",
+    "SUPERATO IN CORSA: le due celle bersaglio NON erano verificabili contro nulla, ma la seconda fonte indipendente (footiqo/1xBet) copre entrambe le partite e le conferma (percentile 30 e 76 dello scarto abituale). Resta vero che l'identificazione apertura/chiusura e' fatta sulle righe dove PSC* esiste, mentre in quelle due righe non esiste per definizione",
+    "accettare le proposte mette due provider diversi nella stessa colonna: 6 celle su 16.111 partite, ma va dichiarato in docs/DATI.md e va considerato l'effetto sul CLV della riga Alaves-Sociedad (apertura Pinnacle, chiusura media-mercato)",
+    "il dataset esterno non contiene alcun mercato O/U: non aiuta ne' il buco sistemico 2017-19 ne' le 9 righe O/U corrotte",
+    "la ricostruzione per scambio Mx/Av resta una ricostruzione: la seconda fonte esiste ma il test NON discrimina, perche' lo scambio muove il margine e non la probabilita' implicita",
+    "le 4 righe la_liga con overround impossibile sono una segnalazione, non un'analisi completa: non ho indagato quale lato sia sbagliato ne' proposto valori"
+  ]
+}

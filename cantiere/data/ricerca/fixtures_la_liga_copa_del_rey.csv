@@ -1,0 +1,454 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Elche,2017-08-30,Copa del Rey,A,Badalona,canonical_team,2017–18 Copa del Rey
+1718,Almeria,2017-09-05,Copa del Rey,A,Cadiz,proposta,2017–18 Copa del Rey
+1718,Cadiz,2017-09-05,Copa del Rey,H,Almeria,proposta,2017–18 Copa del Rey
+1718,Elche,2017-09-06,Copa del Rey,H,Cultural Durango,canonical_team,2017–18 Copa del Rey
+1718,Granada,2017-09-06,Copa del Rey,A,Zaragoza,canonical_team,2017–18 Copa del Rey
+1718,Huesca,2017-09-06,Copa del Rey,H,Valladolid,canonical_team,2017–18 Copa del Rey
+1718,Mallorca,2017-09-06,Copa del Rey,H,Lleida Esportiu,canonical_team,2017–18 Copa del Rey
+1718,Oviedo,2017-09-06,Copa del Rey,H,Numancia,canonical_team,2017–18 Copa del Rey
+1718,Valladolid,2017-09-06,Copa del Rey,A,Huesca,canonical_team,2017–18 Copa del Rey
+1718,Vallecano,2017-09-06,Copa del Rey,H,Tenerife,canonical_team,2017–18 Copa del Rey
+1718,Osasuna,2017-09-07,Copa del Rey,H,Albacete,canonical_team,2017–18 Copa del Rey
+1718,Cadiz,2017-09-20,Copa del Rey,H,Osasuna,proposta,2017–18 Copa del Rey
+1718,Elche,2017-09-20,Copa del Rey,A,Hércules,canonical_team,2017–18 Copa del Rey
+1718,Osasuna,2017-09-20,Copa del Rey,A,Cadiz,canonical_team,2017–18 Copa del Rey
+1718,Valladolid,2017-09-20,Copa del Rey,A,Cultural Leonesa,canonical_team,2017–18 Copa del Rey
+1718,Alaves,2017-10-24,Copa del Rey,A,Getafe,proposta,2017–18 Copa del Rey
+1718,Barcelona,2017-10-24,Copa del Rey,A,Murcia,canonical_team,2017–18 Copa del Rey
+1718,Betis,2017-10-24,Copa del Rey,A,Cadiz,canonical_team,2017–18 Copa del Rey
+1718,Cadiz,2017-10-24,Copa del Rey,H,Betis,proposta,2017–18 Copa del Rey
+1718,Getafe,2017-10-24,Copa del Rey,H,Alaves,canonical_team,2017–18 Copa del Rey
+1718,Malaga,2017-10-24,Copa del Rey,A,Numancia,proposta,2017–18 Copa del Rey
+1718,Sevilla,2017-10-24,Copa del Rey,A,Cartagena,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2017-10-24,Copa del Rey,A,Zaragoza,canonical_team,2017–18 Copa del Rey
+1718,Ath Bilbao,2017-10-25,Copa del Rey,A,Formentera,canonical_team,2017–18 Copa del Rey
+1718,Ath Madrid,2017-10-25,Copa del Rey,A,Elche,canonical_team,2017–18 Copa del Rey
+1718,Celta,2017-10-25,Copa del Rey,A,Eibar,canonical_team,2017–18 Copa del Rey
+1718,Eibar,2017-10-25,Copa del Rey,H,Celta,canonical_team,2017–18 Copa del Rey
+1718,Elche,2017-10-25,Copa del Rey,H,Ath Madrid,canonical_team,2017–18 Copa del Rey
+1718,Leganes,2017-10-25,Copa del Rey,A,Valladolid,proposta,2017–18 Copa del Rey
+1718,Valladolid,2017-10-25,Copa del Rey,H,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Villarreal,2017-10-25,Copa del Rey,A,Ponferradina,canonical_team,2017–18 Copa del Rey
+1718,Espanol,2017-10-26,Copa del Rey,A,Tenerife,canonical_team,2017–18 Copa del Rey
+1718,Girona,2017-10-26,Copa del Rey,H,Levante,canonical_team,2017–18 Copa del Rey
+1718,La Coruna,2017-10-26,Copa del Rey,H,Las Palmas,canonical_team,2017–18 Copa del Rey
+1718,Las Palmas,2017-10-26,Copa del Rey,A,La Coruna,canonical_team,2017–18 Copa del Rey
+1718,Levante,2017-10-26,Copa del Rey,A,Girona,canonical_team,2017–18 Copa del Rey
+1718,Real Madrid,2017-10-26,Copa del Rey,A,Fuenlabrada,canonical_team,2017–18 Copa del Rey
+1718,Sociedad,2017-10-26,Copa del Rey,A,Lleida Esportiu,canonical_team,2017–18 Copa del Rey
+1718,Celta,2017-11-28,Copa del Rey,H,Eibar,canonical_team,2017–18 Copa del Rey
+1718,Eibar,2017-11-28,Copa del Rey,A,Celta,canonical_team,2017–18 Copa del Rey
+1718,Girona,2017-11-28,Copa del Rey,A,Levante,canonical_team,2017–18 Copa del Rey
+1718,Leganes,2017-11-28,Copa del Rey,H,Valladolid,proposta,2017–18 Copa del Rey
+1718,Levante,2017-11-28,Copa del Rey,H,Girona,canonical_team,2017–18 Copa del Rey
+1718,Malaga,2017-11-28,Copa del Rey,H,Numancia,proposta,2017–18 Copa del Rey
+1718,Real Madrid,2017-11-28,Copa del Rey,H,Fuenlabrada,canonical_team,2017–18 Copa del Rey
+1718,Valladolid,2017-11-28,Copa del Rey,A,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Ath Bilbao,2017-11-29,Copa del Rey,H,Formentera,canonical_team,2017–18 Copa del Rey
+1718,Ath Madrid,2017-11-29,Copa del Rey,H,Elche,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2017-11-29,Copa del Rey,H,Murcia,canonical_team,2017–18 Copa del Rey
+1718,Elche,2017-11-29,Copa del Rey,A,Ath Madrid,canonical_team,2017–18 Copa del Rey
+1718,La Coruna,2017-11-29,Copa del Rey,A,Las Palmas,canonical_team,2017–18 Copa del Rey
+1718,Las Palmas,2017-11-29,Copa del Rey,H,La Coruna,canonical_team,2017–18 Copa del Rey
+1718,Sevilla,2017-11-29,Copa del Rey,H,Cartagena,canonical_team,2017–18 Copa del Rey
+1718,Sociedad,2017-11-29,Copa del Rey,H,Lleida Esportiu,canonical_team,2017–18 Copa del Rey
+1718,Alaves,2017-11-30,Copa del Rey,H,Getafe,proposta,2017–18 Copa del Rey
+1718,Betis,2017-11-30,Copa del Rey,H,Cadiz,canonical_team,2017–18 Copa del Rey
+1718,Cadiz,2017-11-30,Copa del Rey,A,Betis,proposta,2017–18 Copa del Rey
+1718,Espanol,2017-11-30,Copa del Rey,H,Tenerife,canonical_team,2017–18 Copa del Rey
+1718,Getafe,2017-11-30,Copa del Rey,A,Alaves,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2017-11-30,Copa del Rey,H,Zaragoza,canonical_team,2017–18 Copa del Rey
+1718,Villarreal,2017-11-30,Copa del Rey,H,Ponferradina,canonical_team,2017–18 Copa del Rey
+1718,Alaves,2018-01-03,Copa del Rey,A,Formentera,proposta,2017–18 Copa del Rey
+1718,Ath Madrid,2018-01-03,Copa del Rey,A,Lleida Esportiu,canonical_team,2017–18 Copa del Rey
+1718,Cadiz,2018-01-03,Copa del Rey,H,Sevilla,proposta,2017–18 Copa del Rey
+1718,Las Palmas,2018-01-03,Copa del Rey,H,Valencia,canonical_team,2017–18 Copa del Rey
+1718,Sevilla,2018-01-03,Copa del Rey,A,Cadiz,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2018-01-03,Copa del Rey,A,Las Palmas,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-01-04,Copa del Rey,A,Celta,canonical_team,2017–18 Copa del Rey
+1718,Celta,2018-01-04,Copa del Rey,H,Barcelona,canonical_team,2017–18 Copa del Rey
+1718,Espanol,2018-01-04,Copa del Rey,H,Levante,canonical_team,2017–18 Copa del Rey
+1718,Leganes,2018-01-04,Copa del Rey,H,Villarreal,proposta,2017–18 Copa del Rey
+1718,Levante,2018-01-04,Copa del Rey,A,Espanol,canonical_team,2017–18 Copa del Rey
+1718,Real Madrid,2018-01-04,Copa del Rey,A,Numancia,canonical_team,2017–18 Copa del Rey
+1718,Villarreal,2018-01-04,Copa del Rey,A,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Ath Madrid,2018-01-09,Copa del Rey,H,Lleida Esportiu,canonical_team,2017–18 Copa del Rey
+1718,Las Palmas,2018-01-09,Copa del Rey,A,Valencia,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2018-01-09,Copa del Rey,H,Las Palmas,canonical_team,2017–18 Copa del Rey
+1718,Alaves,2018-01-10,Copa del Rey,H,Formentera,proposta,2017–18 Copa del Rey
+1718,Leganes,2018-01-10,Copa del Rey,A,Villarreal,proposta,2017–18 Copa del Rey
+1718,Real Madrid,2018-01-10,Copa del Rey,H,Numancia,canonical_team,2017–18 Copa del Rey
+1718,Villarreal,2018-01-10,Copa del Rey,H,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-01-11,Copa del Rey,H,Celta,canonical_team,2017–18 Copa del Rey
+1718,Cadiz,2018-01-11,Copa del Rey,A,Sevilla,proposta,2017–18 Copa del Rey
+1718,Celta,2018-01-11,Copa del Rey,A,Barcelona,canonical_team,2017–18 Copa del Rey
+1718,Espanol,2018-01-11,Copa del Rey,A,Levante,canonical_team,2017–18 Copa del Rey
+1718,Levante,2018-01-11,Copa del Rey,H,Espanol,canonical_team,2017–18 Copa del Rey
+1718,Sevilla,2018-01-11,Copa del Rey,H,Cadiz,canonical_team,2017–18 Copa del Rey
+1718,Alaves,2018-01-17,Copa del Rey,A,Valencia,proposta,2017–18 Copa del Rey
+1718,Ath Madrid,2018-01-17,Copa del Rey,H,Sevilla,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-01-17,Copa del Rey,A,Espanol,canonical_team,2017–18 Copa del Rey
+1718,Espanol,2018-01-17,Copa del Rey,H,Barcelona,canonical_team,2017–18 Copa del Rey
+1718,Sevilla,2018-01-17,Copa del Rey,A,Ath Madrid,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2018-01-17,Copa del Rey,H,Alaves,canonical_team,2017–18 Copa del Rey
+1718,Leganes,2018-01-18,Copa del Rey,H,Real Madrid,proposta,2017–18 Copa del Rey
+1718,Real Madrid,2018-01-18,Copa del Rey,A,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Ath Madrid,2018-01-23,Copa del Rey,A,Sevilla,canonical_team,2017–18 Copa del Rey
+1718,Sevilla,2018-01-23,Copa del Rey,H,Ath Madrid,canonical_team,2017–18 Copa del Rey
+1718,Alaves,2018-01-24,Copa del Rey,H,Valencia,proposta,2017–18 Copa del Rey
+1718,Leganes,2018-01-24,Copa del Rey,A,Real Madrid,proposta,2017–18 Copa del Rey
+1718,Real Madrid,2018-01-24,Copa del Rey,H,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2018-01-24,Copa del Rey,A,Alaves,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-01-25,Copa del Rey,H,Espanol,canonical_team,2017–18 Copa del Rey
+1718,Espanol,2018-01-25,Copa del Rey,A,Barcelona,canonical_team,2017–18 Copa del Rey
+1718,Leganes,2018-01-31,Copa del Rey,H,Sevilla,proposta,2017–18 Copa del Rey
+1718,Sevilla,2018-01-31,Copa del Rey,A,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-02-01,Copa del Rey,H,Valencia,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2018-02-01,Copa del Rey,A,Barcelona,canonical_team,2017–18 Copa del Rey
+1718,Leganes,2018-02-07,Copa del Rey,A,Sevilla,proposta,2017–18 Copa del Rey
+1718,Sevilla,2018-02-07,Copa del Rey,H,Leganes,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-02-08,Copa del Rey,A,Valencia,canonical_team,2017–18 Copa del Rey
+1718,Valencia,2018-02-08,Copa del Rey,H,Barcelona,canonical_team,2017–18 Copa del Rey
+1718,Barcelona,2018-04-21,Copa del Rey,A,Sevilla,canonical_team,2018 Copa del Rey Final
+1718,Sevilla,2018-04-21,Copa del Rey,H,Barcelona,canonical_team,2018 Copa del Rey Final
+1819,Almeria,2018-09-11,Copa del Rey,A,Malaga,proposta,2018–19 Copa del Rey
+1819,Malaga,2018-09-11,Copa del Rey,H,Almeria,proposta,2018–19 Copa del Rey
+1819,Mallorca,2018-09-11,Copa del Rey,H,Oviedo,canonical_team,2018–19 Copa del Rey
+1819,Oviedo,2018-09-11,Copa del Rey,A,Mallorca,canonical_team,2018–19 Copa del Rey
+1819,Cadiz,2018-09-12,Copa del Rey,A,Tenerife,proposta,2018–19 Copa del Rey
+1819,La Coruna,2018-09-12,Copa del Rey,A,Zaragoza,canonical_team,2018–19 Copa del Rey
+1819,Osasuna,2018-09-12,Copa del Rey,H,Reus,canonical_team,2018–19 Copa del Rey
+1819,Elche,2018-09-13,Copa del Rey,H,Granada,canonical_team,2018–19 Copa del Rey
+1819,Granada,2018-09-13,Copa del Rey,A,Elche,canonical_team,2018–19 Copa del Rey
+1819,Las Palmas,2018-09-13,Copa del Rey,H,Rayo Majadahonda,canonical_team,2018–19 Copa del Rey
+1819,Elche,2018-10-16,Copa del Rey,H,Córdoba,canonical_team,2018–19 Copa del Rey
+1819,Cadiz,2018-10-17,Copa del Rey,A,Zaragoza,proposta,2018–19 Copa del Rey
+1819,Almeria,2018-10-18,Copa del Rey,H,Reus,proposta,2018–19 Copa del Rey
+1819,Ath Madrid,2018-10-30,Copa del Rey,A,Sant Andreu,canonical_team,2018–19 Copa del Rey
+1819,Leganes,2018-10-30,Copa del Rey,H,Vallecano,proposta,2018–19 Copa del Rey
+1819,Levante,2018-10-30,Copa del Rey,A,Lugo,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2018-10-30,Copa del Rey,A,Ebro,canonical_team,2018–19 Copa del Rey
+1819,Vallecano,2018-10-30,Copa del Rey,A,Leganes,canonical_team,2018–19 Copa del Rey
+1819,Alaves,2018-10-31,Copa del Rey,H,Girona,proposta,2018–19 Copa del Rey
+1819,Barcelona,2018-10-31,Copa del Rey,A,Cultural Leonesa,canonical_team,2018–19 Copa del Rey
+1819,Getafe,2018-10-31,Copa del Rey,A,Córdoba,canonical_team,2018–19 Copa del Rey
+1819,Girona,2018-10-31,Copa del Rey,A,Alaves,canonical_team,2018–19 Copa del Rey
+1819,Mallorca,2018-10-31,Copa del Rey,H,Valladolid,canonical_team,2018–19 Copa del Rey
+1819,Real Madrid,2018-10-31,Copa del Rey,A,Melilla,canonical_team,2018–19 Copa del Rey
+1819,Valladolid,2018-10-31,Copa del Rey,A,Mallorca,canonical_team,2018–19 Copa del Rey
+1819,Almeria,2018-11-01,Copa del Rey,H,Villarreal,proposta,2018–19 Copa del Rey
+1819,Betis,2018-11-01,Copa del Rey,A,Racing Santander,canonical_team,2018–19 Copa del Rey
+1819,Cadiz,2018-11-01,Copa del Rey,H,Espanol,proposta,2018–19 Copa del Rey
+1819,Celta,2018-11-01,Copa del Rey,H,Sociedad,canonical_team,2018–19 Copa del Rey
+1819,Eibar,2018-11-01,Copa del Rey,A,Sporting Gijón,canonical_team,2018–19 Copa del Rey
+1819,Espanol,2018-11-01,Copa del Rey,A,Cadiz,canonical_team,2018–19 Copa del Rey
+1819,Sevilla,2018-11-01,Copa del Rey,A,Villanovense,canonical_team,2018–19 Copa del Rey
+1819,Sociedad,2018-11-01,Copa del Rey,A,Celta,canonical_team,2018–19 Copa del Rey
+1819,Villarreal,2018-11-01,Copa del Rey,A,Almeria,canonical_team,2018–19 Copa del Rey
+1819,Ath Bilbao,2018-11-28,Copa del Rey,H,Huesca,canonical_team,2018–19 Copa del Rey
+1819,Huesca,2018-11-28,Copa del Rey,A,Ath Bilbao,canonical_team,2018–19 Copa del Rey
+1819,Cadiz,2018-12-04,Copa del Rey,A,Espanol,proposta,2018–19 Copa del Rey
+1819,Espanol,2018-12-04,Copa del Rey,H,Cadiz,canonical_team,2018–19 Copa del Rey
+1819,Getafe,2018-12-04,Copa del Rey,H,Córdoba,canonical_team,2018–19 Copa del Rey
+1819,Leganes,2018-12-04,Copa del Rey,A,Vallecano,proposta,2018–19 Copa del Rey
+1819,Valencia,2018-12-04,Copa del Rey,H,Ebro,canonical_team,2018–19 Copa del Rey
+1819,Vallecano,2018-12-04,Copa del Rey,H,Leganes,canonical_team,2018–19 Copa del Rey
+1819,Alaves,2018-12-05,Copa del Rey,A,Girona,proposta,2018–19 Copa del Rey
+1819,Almeria,2018-12-05,Copa del Rey,A,Villarreal,proposta,2018–19 Copa del Rey
+1819,Ath Madrid,2018-12-05,Copa del Rey,H,Sant Andreu,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2018-12-05,Copa del Rey,H,Cultural Leonesa,canonical_team,2018–19 Copa del Rey
+1819,Celta,2018-12-05,Copa del Rey,A,Sociedad,canonical_team,2018–19 Copa del Rey
+1819,Girona,2018-12-05,Copa del Rey,H,Alaves,canonical_team,2018–19 Copa del Rey
+1819,Mallorca,2018-12-05,Copa del Rey,A,Valladolid,canonical_team,2018–19 Copa del Rey
+1819,Sevilla,2018-12-05,Copa del Rey,H,Villanovense,canonical_team,2018–19 Copa del Rey
+1819,Sociedad,2018-12-05,Copa del Rey,H,Celta,canonical_team,2018–19 Copa del Rey
+1819,Valladolid,2018-12-05,Copa del Rey,H,Mallorca,canonical_team,2018–19 Copa del Rey
+1819,Villarreal,2018-12-05,Copa del Rey,H,Almeria,canonical_team,2018–19 Copa del Rey
+1819,Ath Bilbao,2018-12-06,Copa del Rey,A,Huesca,canonical_team,2018–19 Copa del Rey
+1819,Betis,2018-12-06,Copa del Rey,H,Racing Santander,canonical_team,2018–19 Copa del Rey
+1819,Eibar,2018-12-06,Copa del Rey,H,Sporting Gijón,canonical_team,2018–19 Copa del Rey
+1819,Huesca,2018-12-06,Copa del Rey,H,Ath Bilbao,canonical_team,2018–19 Copa del Rey
+1819,Levante,2018-12-06,Copa del Rey,H,Lugo,canonical_team,2018–19 Copa del Rey
+1819,Real Madrid,2018-12-06,Copa del Rey,H,Melilla,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2019-01-08,Copa del Rey,A,Sporting Gijón,canonical_team,2018–19 Copa del Rey
+1819,Ath Madrid,2019-01-09,Copa del Rey,A,Girona,canonical_team,2018–19 Copa del Rey
+1819,Espanol,2019-01-09,Copa del Rey,A,Villarreal,canonical_team,2018–19 Copa del Rey
+1819,Getafe,2019-01-09,Copa del Rey,H,Valladolid,canonical_team,2018–19 Copa del Rey
+1819,Girona,2019-01-09,Copa del Rey,H,Ath Madrid,canonical_team,2018–19 Copa del Rey
+1819,Leganes,2019-01-09,Copa del Rey,A,Real Madrid,proposta,2018–19 Copa del Rey
+1819,Real Madrid,2019-01-09,Copa del Rey,H,Leganes,canonical_team,2018–19 Copa del Rey
+1819,Valladolid,2019-01-09,Copa del Rey,A,Getafe,canonical_team,2018–19 Copa del Rey
+1819,Villarreal,2019-01-09,Copa del Rey,H,Espanol,canonical_team,2018–19 Copa del Rey
+1819,Ath Bilbao,2019-01-10,Copa del Rey,H,Sevilla,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-01-10,Copa del Rey,A,Levante,canonical_team,2018–19 Copa del Rey
+1819,Betis,2019-01-10,Copa del Rey,H,Sociedad,canonical_team,2018–19 Copa del Rey
+1819,Levante,2019-01-10,Copa del Rey,H,Barcelona,canonical_team,2018–19 Copa del Rey
+1819,Sevilla,2019-01-10,Copa del Rey,A,Ath Bilbao,canonical_team,2018–19 Copa del Rey
+1819,Sociedad,2019-01-10,Copa del Rey,A,Betis,canonical_team,2018–19 Copa del Rey
+1819,Getafe,2019-01-15,Copa del Rey,A,Valladolid,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2019-01-15,Copa del Rey,H,Sporting Gijón,canonical_team,2018–19 Copa del Rey
+1819,Valladolid,2019-01-15,Copa del Rey,H,Getafe,canonical_team,2018–19 Copa del Rey
+1819,Ath Bilbao,2019-01-16,Copa del Rey,A,Sevilla,canonical_team,2018–19 Copa del Rey
+1819,Ath Madrid,2019-01-16,Copa del Rey,H,Girona,canonical_team,2018–19 Copa del Rey
+1819,Girona,2019-01-16,Copa del Rey,A,Ath Madrid,canonical_team,2018–19 Copa del Rey
+1819,Leganes,2019-01-16,Copa del Rey,H,Real Madrid,proposta,2018–19 Copa del Rey
+1819,Real Madrid,2019-01-16,Copa del Rey,A,Leganes,canonical_team,2018–19 Copa del Rey
+1819,Sevilla,2019-01-16,Copa del Rey,H,Ath Bilbao,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-01-17,Copa del Rey,H,Levante,canonical_team,2018–19 Copa del Rey
+1819,Betis,2019-01-17,Copa del Rey,A,Sociedad,canonical_team,2018–19 Copa del Rey
+1819,Espanol,2019-01-17,Copa del Rey,H,Villarreal,canonical_team,2018–19 Copa del Rey
+1819,Levante,2019-01-17,Copa del Rey,A,Barcelona,canonical_team,2018–19 Copa del Rey
+1819,Sociedad,2019-01-17,Copa del Rey,H,Betis,canonical_team,2018–19 Copa del Rey
+1819,Villarreal,2019-01-17,Copa del Rey,A,Espanol,canonical_team,2018–19 Copa del Rey
+1819,Getafe,2019-01-22,Copa del Rey,H,Valencia,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2019-01-22,Copa del Rey,A,Getafe,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-01-23,Copa del Rey,A,Sevilla,canonical_team,2018–19 Copa del Rey
+1819,Sevilla,2019-01-23,Copa del Rey,H,Barcelona,canonical_team,2018–19 Copa del Rey
+1819,Betis,2019-01-24,Copa del Rey,A,Espanol,canonical_team,2018–19 Copa del Rey
+1819,Espanol,2019-01-24,Copa del Rey,H,Betis,canonical_team,2018–19 Copa del Rey
+1819,Girona,2019-01-24,Copa del Rey,A,Real Madrid,canonical_team,2018–19 Copa del Rey
+1819,Real Madrid,2019-01-24,Copa del Rey,H,Girona,canonical_team,2018–19 Copa del Rey
+1819,Getafe,2019-01-29,Copa del Rey,A,Valencia,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2019-01-29,Copa del Rey,H,Getafe,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-01-30,Copa del Rey,H,Sevilla,canonical_team,2018–19 Copa del Rey
+1819,Betis,2019-01-30,Copa del Rey,H,Espanol,canonical_team,2018–19 Copa del Rey
+1819,Espanol,2019-01-30,Copa del Rey,A,Betis,canonical_team,2018–19 Copa del Rey
+1819,Sevilla,2019-01-30,Copa del Rey,A,Barcelona,canonical_team,2018–19 Copa del Rey
+1819,Girona,2019-01-31,Copa del Rey,H,Real Madrid,canonical_team,2018–19 Copa del Rey
+1819,Real Madrid,2019-01-31,Copa del Rey,A,Girona,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-02-06,Copa del Rey,H,Real Madrid,canonical_team,2018–19 Copa del Rey
+1819,Real Madrid,2019-02-06,Copa del Rey,A,Barcelona,canonical_team,2018–19 Copa del Rey
+1819,Betis,2019-02-07,Copa del Rey,H,Valencia,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2019-02-07,Copa del Rey,A,Betis,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-02-27,Copa del Rey,A,Real Madrid,canonical_team,2018–19 Copa del Rey
+1819,Real Madrid,2019-02-27,Copa del Rey,H,Barcelona,canonical_team,2018–19 Copa del Rey
+1819,Betis,2019-02-28,Copa del Rey,A,Valencia,canonical_team,2018–19 Copa del Rey
+1819,Valencia,2019-02-28,Copa del Rey,H,Betis,canonical_team,2018–19 Copa del Rey
+1819,Barcelona,2019-05-25,Copa del Rey,H,Valencia,canonical_team,2019 Copa del Rey Final
+1819,Valencia,2019-05-25,Copa del Rey,A,Barcelona,canonical_team,2019 Copa del Rey Final
+1920,Alaves,2019-12-17,Copa del Rey,A,Jaén,proposta,2019–20 Copa del Rey
+1920,Ath Bilbao,2019-12-17,Copa del Rey,A,Intercity,canonical_team,2019–20 Copa del Rey
+1920,Cadiz,2019-12-17,Copa del Rey,A,Lealtad,proposta,2019–20 Copa del Rey
+1920,Eibar,2019-12-17,Copa del Rey,A,SD Logroñés,canonical_team,2019–20 Copa del Rey
+1920,Elche,2019-12-17,Copa del Rey,A,Gimnástica Segoviana,canonical_team,2019–20 Copa del Rey
+1920,Granada,2019-12-17,Copa del Rey,A,L'Hospitalet,canonical_team,2019–20 Copa del Rey
+1920,La Coruna,2019-12-17,Copa del Rey,A,Illueca,canonical_team,2019–20 Copa del Rey
+1920,Las Palmas,2019-12-17,Copa del Rey,A,Castellón,canonical_team,2019–20 Copa del Rey
+1920,Leganes,2019-12-17,Copa del Rey,A,Andorra,proposta,2019–20 Copa del Rey
+1920,Malaga,2019-12-17,Copa del Rey,A,Escobedo,proposta,2019–20 Copa del Rey
+1920,Vallecano,2019-12-17,Copa del Rey,A,Tarazona,canonical_team,2019–20 Copa del Rey
+1920,Getafe,2019-12-18,Copa del Rey,A,El Palmar,canonical_team,2019–20 Copa del Rey
+1920,Mallorca,2019-12-18,Copa del Rey,A,El Álamo,canonical_team,2019–20 Copa del Rey
+1920,Oviedo,2019-12-18,Copa del Rey,A,Badalona,canonical_team,2019–20 Copa del Rey
+1920,Sevilla,2019-12-18,Copa del Rey,A,Bergantiños,canonical_team,2019–20 Copa del Rey
+1920,Valladolid,2019-12-18,Copa del Rey,A,Tolosa,canonical_team,2019–20 Copa del Rey
+1920,Villarreal,2019-12-18,Copa del Rey,A,Comillas,canonical_team,2019–20 Copa del Rey
+1920,Almeria,2019-12-19,Copa del Rey,A,Tamaraceite,proposta,2019–20 Copa del Rey
+1920,Betis,2019-12-19,Copa del Rey,A,Atlético Antoniano,canonical_team,2019–20 Copa del Rey
+1920,Celta,2019-12-19,Copa del Rey,A,Peña Azagresa,canonical_team,2019–20 Copa del Rey
+1920,Espanol,2019-12-19,Copa del Rey,A,Lleida Esportiu,canonical_team,2019–20 Copa del Rey
+1920,Girona,2019-12-19,Copa del Rey,A,Linares,canonical_team,2019–20 Copa del Rey
+1920,Huesca,2019-12-19,Copa del Rey,A,Laredo,canonical_team,2019–20 Copa del Rey
+1920,Levante,2019-12-19,Copa del Rey,A,Melilla CD,canonical_team,2019–20 Copa del Rey
+1920,Osasuna,2019-12-19,Copa del Rey,A,Lorca Deportiva,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2019-12-19,Copa del Rey,A,Becerril,canonical_team,2019–20 Copa del Rey
+1920,Ath Bilbao,2020-01-11,Copa del Rey,A,Sestao River,canonical_team,2019–20 Copa del Rey
+1920,Betis,2020-01-11,Copa del Rey,A,Portugalete,canonical_team,2019–20 Copa del Rey
+1920,Cadiz,2020-01-11,Copa del Rey,A,UD Logroñés,proposta,2019–20 Copa del Rey
+1920,Elche,2020-01-11,Copa del Rey,A,Yeclano,canonical_team,2019–20 Copa del Rey
+1920,Getafe,2020-01-11,Copa del Rey,A,Badalona,canonical_team,2019–20 Copa del Rey
+1920,Girona,2020-01-11,Copa del Rey,A,Cartagena,canonical_team,2019–20 Copa del Rey
+1920,Granada,2020-01-11,Copa del Rey,A,Tamaraceite,canonical_team,2019–20 Copa del Rey
+1920,Huesca,2020-01-11,Copa del Rey,A,Cultural Leonesa,canonical_team,2019–20 Copa del Rey
+1920,Las Palmas,2020-01-11,Copa del Rey,A,Badajoz,canonical_team,2019–20 Copa del Rey
+1920,Leganes,2020-01-11,Copa del Rey,A,Murcia,proposta,2019–20 Copa del Rey
+1920,Mallorca,2020-01-11,Copa del Rey,A,Zamora,canonical_team,2019–20 Copa del Rey
+1920,Osasuna,2020-01-11,Copa del Rey,A,Haro,canonical_team,2019–20 Copa del Rey
+1920,Valladolid,2020-01-11,Copa del Rey,A,Marbella,canonical_team,2019–20 Copa del Rey
+1920,Villarreal,2020-01-11,Copa del Rey,A,Orihuela,canonical_team,2019–20 Copa del Rey
+1920,Celta,2020-01-12,Copa del Rey,A,Mérida,canonical_team,2019–20 Copa del Rey
+1920,Eibar,2020-01-12,Copa del Rey,A,Cacereño,canonical_team,2019–20 Copa del Rey
+1920,Espanol,2020-01-12,Copa del Rey,A,San Sebastián de los Reyes,canonical_team,2019–20 Copa del Rey
+1920,La Coruna,2020-01-12,Copa del Rey,A,Unionistas,canonical_team,2019–20 Copa del Rey
+1920,Levante,2020-01-12,Copa del Rey,A,Jaén,canonical_team,2019–20 Copa del Rey
+1920,Sevilla,2020-01-12,Copa del Rey,A,Escobedo,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2020-01-12,Copa del Rey,A,Ceuta,canonical_team,2019–20 Copa del Rey
+1920,Vallecano,2020-01-12,Copa del Rey,A,Barakaldo,canonical_team,2019–20 Copa del Rey
+1920,Levante,2020-01-21,Copa del Rey,A,Sevilla,canonical_team,2019–20 Copa del Rey
+1920,Mallorca,2020-01-21,Copa del Rey,A,Zaragoza,canonical_team,2019–20 Copa del Rey
+1920,Osasuna,2020-01-21,Copa del Rey,A,Recreativo,canonical_team,2019–20 Copa del Rey
+1920,Sevilla,2020-01-21,Copa del Rey,H,Levante,canonical_team,2019–20 Copa del Rey
+1920,Ath Bilbao,2020-01-22,Copa del Rey,A,Elche,canonical_team,2019–20 Copa del Rey
+1920,Barcelona,2020-01-22,Copa del Rey,A,Ibiza,canonical_team,2019–20 Copa del Rey
+1920,Elche,2020-01-22,Copa del Rey,H,Ath Bilbao,canonical_team,2019–20 Copa del Rey
+1920,Espanol,2020-01-22,Copa del Rey,A,Sociedad,canonical_team,2019–20 Copa del Rey
+1920,Girona,2020-01-22,Copa del Rey,H,Villarreal,canonical_team,2019–20 Copa del Rey
+1920,Granada,2020-01-22,Copa del Rey,A,Badalona,canonical_team,2019–20 Copa del Rey
+1920,Real Madrid,2020-01-22,Copa del Rey,A,Unionistas,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2020-01-22,Copa del Rey,H,Espanol,canonical_team,2019–20 Copa del Rey
+1920,Valencia,2020-01-22,Copa del Rey,A,UD Logroñés,canonical_team,2019–20 Copa del Rey
+1920,Valladolid,2020-01-22,Copa del Rey,A,Tenerife,canonical_team,2019–20 Copa del Rey
+1920,Villarreal,2020-01-22,Copa del Rey,A,Girona,canonical_team,2019–20 Copa del Rey
+1920,Ath Madrid,2020-01-23,Copa del Rey,A,Cultural Leonesa,canonical_team,2019–20 Copa del Rey
+1920,Betis,2020-01-23,Copa del Rey,A,Vallecano,canonical_team,2019–20 Copa del Rey
+1920,Celta,2020-01-23,Copa del Rey,A,Mirandés,canonical_team,2019–20 Copa del Rey
+1920,Eibar,2020-01-23,Copa del Rey,A,Badajoz,canonical_team,2019–20 Copa del Rey
+1920,Leganes,2020-01-23,Copa del Rey,A,Ebro,proposta,2019–20 Copa del Rey
+1920,Vallecano,2020-01-23,Copa del Rey,H,Betis,canonical_team,2019–20 Copa del Rey
+1920,Ath Bilbao,2020-01-28,Copa del Rey,A,Tenerife,canonical_team,2019–20 Copa del Rey
+1920,Granada,2020-01-29,Copa del Rey,A,Badajoz,canonical_team,2019–20 Copa del Rey
+1920,Osasuna,2020-01-29,Copa del Rey,A,Sociedad,canonical_team,2019–20 Copa del Rey
+1920,Real Madrid,2020-01-29,Copa del Rey,A,Zaragoza,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2020-01-29,Copa del Rey,H,Osasuna,canonical_team,2019–20 Copa del Rey
+1920,Valencia,2020-01-29,Copa del Rey,A,Cultural Leonesa,canonical_team,2019–20 Copa del Rey
+1920,Vallecano,2020-01-29,Copa del Rey,H,Villarreal,canonical_team,2019–20 Copa del Rey
+1920,Villarreal,2020-01-29,Copa del Rey,A,Vallecano,canonical_team,2019–20 Copa del Rey
+1920,Barcelona,2020-01-30,Copa del Rey,H,Leganes,canonical_team,2019–20 Copa del Rey
+1920,Leganes,2020-01-30,Copa del Rey,A,Barcelona,proposta,2019–20 Copa del Rey
+1920,Sevilla,2020-01-30,Copa del Rey,A,Mirandés,canonical_team,2019–20 Copa del Rey
+1920,Granada,2020-02-04,Copa del Rey,H,Valencia,canonical_team,2019–20 Copa del Rey
+1920,Valencia,2020-02-04,Copa del Rey,A,Granada,canonical_team,2019–20 Copa del Rey
+1920,Villarreal,2020-02-05,Copa del Rey,A,Mirandés,canonical_team,2019–20 Copa del Rey
+1920,Ath Bilbao,2020-02-06,Copa del Rey,H,Barcelona,canonical_team,2019–20 Copa del Rey
+1920,Barcelona,2020-02-06,Copa del Rey,A,Ath Bilbao,canonical_team,2019–20 Copa del Rey
+1920,Real Madrid,2020-02-06,Copa del Rey,H,Sociedad,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2020-02-06,Copa del Rey,A,Real Madrid,canonical_team,2019–20 Copa del Rey
+1920,Ath Bilbao,2020-02-12,Copa del Rey,H,Granada,canonical_team,2019–20 Copa del Rey
+1920,Granada,2020-02-12,Copa del Rey,A,Ath Bilbao,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2020-02-13,Copa del Rey,H,Mirandés,canonical_team,2019–20 Copa del Rey
+1920,Sociedad,2020-03-04,Copa del Rey,A,Mirandés,canonical_team,2019–20 Copa del Rey
+1920,Ath Bilbao,2020-03-05,Copa del Rey,A,Granada,canonical_team,2019–20 Copa del Rey
+1920,Granada,2020-03-05,Copa del Rey,H,Ath Bilbao,canonical_team,2019–20 Copa del Rey
+2021,Mallorca,2021-01-06,Copa del Rey,A,Fuenlabrada,canonical_team,2020–21 Copa del Rey
+2021,Cadiz,2021-01-07,Copa del Rey,A,Pontevedra,proposta,2020–21 Copa del Rey
+2021,Levante,2021-01-16,Copa del Rey,A,Fuenlabrada,canonical_team,2020–21 Copa del Rey
+2021,Almeria,2021-01-27,Copa del Rey,H,Osasuna,proposta,2020–21 Copa del Rey
+2021,Osasuna,2021-01-27,Copa del Rey,A,Almeria,canonical_team,2020–21 Copa del Rey
+2021,Ath Bilbao,2021-02-04,Copa del Rey,A,Betis,canonical_team,2020–21 Copa del Rey
+2021,Betis,2021-02-04,Copa del Rey,H,Ath Bilbao,canonical_team,2020–21 Copa del Rey
+2021,Ath Bilbao,2021-04-03,Copa del Rey,H,Sociedad,canonical_team,2020 Copa del Rey Final
+2021,Sociedad,2021-04-03,Copa del Rey,A,Ath Bilbao,canonical_team,2020 Copa del Rey Final
+2122,Almeria,2021-11-30,Copa del Rey,A,Águilas,proposta,2021–22 Copa del Rey
+2122,Vallecano,2021-12-02,Copa del Rey,A,Guijuelo,canonical_team,2021–22 Copa del Rey
+2122,Levante,2021-12-14,Copa del Rey,A,Alcoyano,canonical_team,2021–22 Copa del Rey
+2122,Sevilla,2021-12-15,Copa del Rey,A,Andratx,canonical_team,2021–22 Copa del Rey
+2122,Espanol,2022-01-04,Copa del Rey,A,Ponferradina,canonical_team,2021–22 Copa del Rey
+2122,Cadiz,2022-01-15,Copa del Rey,A,Sporting Gijón,proposta,2021–22 Copa del Rey
+2122,Betis,2022-04-23,Copa del Rey,H,Valencia,canonical_team,2022 Copa del Rey Final
+2122,Valencia,2022-04-23,Copa del Rey,A,Betis,canonical_team,2022 Copa del Rey Final
+2223,Leganes,2022-11-12,Copa del Rey,A,Gernika,proposta,2022–23 Copa del Rey
+2223,Huesca,2022-11-13,Copa del Rey,A,Juventud Torremolinos,canonical_team,2022–23 Copa del Rey
+2223,Malaga,2022-11-13,Copa del Rey,A,Peña Deportiva,proposta,2022–23 Copa del Rey
+2223,Vallecano,2022-12-21,Copa del Rey,A,Atlético Saguntino,canonical_team,2022–23 Copa del Rey
+2223,Las Palmas,2022-12-22,Copa del Rey,A,La Nucía,canonical_team,2022–23 Copa del Rey
+2223,Betis,2023-01-18,Copa del Rey,H,Osasuna,canonical_team,2022–23 Copa del Rey
+2223,Osasuna,2023-01-18,Copa del Rey,A,Betis,canonical_team,2022–23 Copa del Rey
+2324,Cadiz,2023-11-01,Copa del Rey,A,Badalona Futur,proposta,2023–24 Copa del Rey
+2324,Malaga,2023-11-01,Copa del Rey,A,Barakaldo,proposta,2023–24 Copa del Rey
+2324,Granada,2023-11-02,Copa del Rey,A,Arosa,canonical_team,2023–24 Copa del Rey
+2324,Eibar,2023-12-07,Copa del Rey,A,Melilla,canonical_team,2023–24 Copa del Rey
+2324,Villarreal,2024-01-08,Copa del Rey,A,Unionistas,canonical_team,2023–24 Copa del Rey
+2324,Mallorca,2024-02-27,Copa del Rey,A,Sociedad,canonical_team,2023–24 Copa del Rey
+2324,Sociedad,2024-02-27,Copa del Rey,H,Mallorca,canonical_team,2023–24 Copa del Rey
+2324,Ath Bilbao,2024-04-06,Copa del Rey,H,Mallorca,canonical_team,2024 Copa del Rey final
+2324,Mallorca,2024-04-06,Copa del Rey,A,Ath Bilbao,canonical_team,2024 Copa del Rey final
+2526,Cadiz,2025-10-28,Copa del Rey,A,UCAM Murcia,proposta,2025–26 Copa del Rey
+2526,Getafe,2025-10-28,Copa del Rey,A,Inter de Valdemoro,canonical_team,2025–26 Copa del Rey
+2526,Girona,2025-10-28,Copa del Rey,A,Constància,canonical_team,2025–26 Copa del Rey
+2526,Granada,2025-10-28,Copa del Rey,A,Roda,canonical_team,2025–26 Copa del Rey
+2526,Huesca,2025-10-28,Copa del Rey,A,Utebo,canonical_team,2025–26 Copa del Rey
+2526,Las Palmas,2025-10-28,Copa del Rey,A,Extremadura,canonical_team,2025–26 Copa del Rey
+2526,Oviedo,2025-10-28,Copa del Rey,A,Ourense CF,canonical_team,2025–26 Copa del Rey
+2526,Sevilla,2025-10-28,Copa del Rey,A,Toledo,canonical_team,2025–26 Copa del Rey
+2526,Sociedad,2025-10-28,Copa del Rey,A,Negreira,canonical_team,2025–26 Copa del Rey
+2526,Valencia,2025-10-28,Copa del Rey,A,Maracena,canonical_team,2025–26 Copa del Rey
+2526,Almeria,2025-10-29,Copa del Rey,A,Lorca Deportiva,proposta,2025–26 Copa del Rey
+2526,Eibar,2025-10-29,Copa del Rey,A,Náxara,canonical_team,2025–26 Copa del Rey
+2526,Elche,2025-10-29,Copa del Rey,A,Los Garres,canonical_team,2025–26 Copa del Rey
+2526,Leganes,2025-10-29,Copa del Rey,A,Azuaga,proposta,2025–26 Copa del Rey
+2526,Mallorca,2025-10-29,Copa del Rey,A,Atlètic Sant Just,canonical_team,2025–26 Copa del Rey
+2526,Osasuna,2025-10-29,Copa del Rey,A,Sant Jordi,canonical_team,2025–26 Copa del Rey
+2526,Valladolid,2025-10-29,Copa del Rey,A,Portugalete,canonical_team,2025–26 Copa del Rey
+2526,Vallecano,2025-10-29,Copa del Rey,A,Yuncos,canonical_team,2025–26 Copa del Rey
+2526,Villarreal,2025-10-29,Copa del Rey,A,Ciudad de Lucena,canonical_team,2025–26 Copa del Rey
+2526,Alaves,2025-10-30,Copa del Rey,A,Getxo,proposta,2025–26 Copa del Rey
+2526,Betis,2025-10-30,Copa del Rey,A,Atlético Palma del Río,canonical_team,2025–26 Copa del Rey
+2526,Celta,2025-10-30,Copa del Rey,A,Puerto de Vega,canonical_team,2025–26 Copa del Rey
+2526,Espanol,2025-10-30,Copa del Rey,A,Atlètic Lleida,canonical_team,2025–26 Copa del Rey
+2526,La Coruna,2025-10-30,Copa del Rey,A,Sámano,canonical_team,2025–26 Copa del Rey
+2526,Levante,2025-10-30,Copa del Rey,A,Orihuela,canonical_team,2025–26 Copa del Rey
+2526,Malaga,2025-10-30,Copa del Rey,A,Estepona,proposta,2025–26 Copa del Rey
+2526,Alaves,2025-12-02,Copa del Rey,A,Portugalete,proposta,2025–26 Copa del Rey
+2526,Getafe,2025-12-02,Copa del Rey,A,Navalcarnero,canonical_team,2025–26 Copa del Rey
+2526,Huesca,2025-12-02,Copa del Rey,A,Racing Ferrol,canonical_team,2025–26 Copa del Rey
+2526,Mallorca,2025-12-02,Copa del Rey,A,Numancia,canonical_team,2025–26 Copa del Rey
+2526,Osasuna,2025-12-02,Copa del Rey,A,Ebro,canonical_team,2025–26 Copa del Rey
+2526,Almeria,2025-12-03,Copa del Rey,A,Eldense,proposta,2025–26 Copa del Rey
+2526,Betis,2025-12-03,Copa del Rey,A,Torrent,canonical_team,2025–26 Copa del Rey
+2526,Cadiz,2025-12-03,Copa del Rey,A,Murcia,proposta,2025–26 Copa del Rey
+2526,Eibar,2025-12-03,Copa del Rey,A,Pontevedra,canonical_team,2025–26 Copa del Rey
+2526,Elche,2025-12-03,Copa del Rey,A,Quintanar del Rey,canonical_team,2025–26 Copa del Rey
+2526,Girona,2025-12-03,Copa del Rey,A,Ourense CF,canonical_team,2025–26 Copa del Rey
+2526,Levante,2025-12-03,Copa del Rey,A,Cieza,canonical_team,2025–26 Copa del Rey
+2526,Malaga,2025-12-03,Copa del Rey,A,Talavera de la Reina,proposta,2025–26 Copa del Rey
+2526,Sociedad,2025-12-03,Copa del Rey,A,Reus FCR,canonical_team,2025–26 Copa del Rey
+2526,Villarreal,2025-12-03,Copa del Rey,A,Atlético Antoniano,canonical_team,2025–26 Copa del Rey
+2526,Celta,2025-12-04,Copa del Rey,A,Sant Andreu,canonical_team,2025–26 Copa del Rey
+2526,Espanol,2025-12-04,Copa del Rey,A,Atlético Baleares,canonical_team,2025–26 Copa del Rey
+2526,Granada,2025-12-04,Copa del Rey,A,Tenerife,canonical_team,2025–26 Copa del Rey
+2526,La Coruna,2025-12-04,Copa del Rey,A,Sabadell,canonical_team,2025–26 Copa del Rey
+2526,Leganes,2025-12-04,Copa del Rey,H,Albacete,proposta,2025–26 Copa del Rey
+2526,Sevilla,2025-12-04,Copa del Rey,A,Extremadura,canonical_team,2025–26 Copa del Rey
+2526,Valencia,2025-12-04,Copa del Rey,A,Cartagena,canonical_team,2025–26 Copa del Rey
+2526,Vallecano,2025-12-04,Copa del Rey,A,Ávila,canonical_team,2025–26 Copa del Rey
+2526,Barcelona,2025-12-16,Copa del Rey,A,Guadalajara,canonical_team,2025–26 Copa del Rey
+2526,Eibar,2025-12-16,Copa del Rey,H,Elche,canonical_team,2025–26 Copa del Rey
+2526,Elche,2025-12-16,Copa del Rey,A,Eibar,canonical_team,2025–26 Copa del Rey
+2526,La Coruna,2025-12-16,Copa del Rey,H,Mallorca,canonical_team,2025–26 Copa del Rey
+2526,Mallorca,2025-12-16,Copa del Rey,A,La Coruna,canonical_team,2025–26 Copa del Rey
+2526,Sociedad,2025-12-16,Copa del Rey,A,Eldense,canonical_team,2025–26 Copa del Rey
+2526,Valencia,2025-12-16,Copa del Rey,A,Sporting Gijón,canonical_team,2025–26 Copa del Rey
+2526,Alaves,2025-12-17,Copa del Rey,H,Sevilla,proposta,2025–26 Copa del Rey
+2526,Ath Madrid,2025-12-17,Copa del Rey,A,Atlético Baleares,canonical_team,2025–26 Copa del Rey
+2526,Celta,2025-12-17,Copa del Rey,A,Albacete,canonical_team,2025–26 Copa del Rey
+2526,Huesca,2025-12-17,Copa del Rey,H,Osasuna,canonical_team,2025–26 Copa del Rey
+2526,Levante,2025-12-17,Copa del Rey,A,Cultural Leonesa,canonical_team,2025–26 Copa del Rey
+2526,Osasuna,2025-12-17,Copa del Rey,A,Huesca,canonical_team,2025–26 Copa del Rey
+2526,Real Madrid,2025-12-17,Copa del Rey,A,Talavera de la Reina,canonical_team,2025–26 Copa del Rey
+2526,Sevilla,2025-12-17,Copa del Rey,A,Alaves,canonical_team,2025–26 Copa del Rey
+2526,Villarreal,2025-12-17,Copa del Rey,A,Racing Santander,canonical_team,2025–26 Copa del Rey
+2526,Ath Bilbao,2025-12-18,Copa del Rey,A,Ourense CF,canonical_team,2025–26 Copa del Rey
+2526,Betis,2025-12-18,Copa del Rey,A,Murcia,canonical_team,2025–26 Copa del Rey
+2526,Getafe,2025-12-18,Copa del Rey,A,Burgos,canonical_team,2025–26 Copa del Rey
+2526,Granada,2026-01-06,Copa del Rey,H,Vallecano,canonical_team,2025–26 Copa del Rey
+2526,Vallecano,2026-01-06,Copa del Rey,A,Granada,canonical_team,2025–26 Copa del Rey
+2526,Ath Bilbao,2026-01-13,Copa del Rey,A,Cultural Leonesa,canonical_team,2025–26 Copa del Rey
+2526,Ath Madrid,2026-01-13,Copa del Rey,A,La Coruna,canonical_team,2025–26 Copa del Rey
+2526,La Coruna,2026-01-13,Copa del Rey,H,Ath Madrid,canonical_team,2025–26 Copa del Rey
+2526,Osasuna,2026-01-13,Copa del Rey,A,Sociedad,canonical_team,2025–26 Copa del Rey
+2526,Sociedad,2026-01-13,Copa del Rey,H,Osasuna,canonical_team,2025–26 Copa del Rey
+2526,Alaves,2026-01-14,Copa del Rey,H,Vallecano,proposta,2025–26 Copa del Rey
+2526,Betis,2026-01-14,Copa del Rey,H,Elche,canonical_team,2025–26 Copa del Rey
+2526,Elche,2026-01-14,Copa del Rey,A,Betis,canonical_team,2025–26 Copa del Rey
+2526,Real Madrid,2026-01-14,Copa del Rey,A,Albacete,canonical_team,2025–26 Copa del Rey
+2526,Vallecano,2026-01-14,Copa del Rey,A,Alaves,canonical_team,2025–26 Copa del Rey
+2526,Barcelona,2026-01-15,Copa del Rey,A,Racing Santander,canonical_team,2025–26 Copa del Rey
+2526,Valencia,2026-01-15,Copa del Rey,A,Burgos,canonical_team,2025–26 Copa del Rey
+2526,Barcelona,2026-02-03,Copa del Rey,A,Albacete,canonical_team,2025–26 Copa del Rey
+2526,Alaves,2026-02-04,Copa del Rey,H,Sociedad,proposta,2025–26 Copa del Rey
+2526,Ath Bilbao,2026-02-04,Copa del Rey,A,Valencia,canonical_team,2025–26 Copa del Rey
+2526,Sociedad,2026-02-04,Copa del Rey,A,Alaves,canonical_team,2025–26 Copa del Rey
+2526,Valencia,2026-02-04,Copa del Rey,H,Ath Bilbao,canonical_team,2025–26 Copa del Rey
+2526,Ath Madrid,2026-02-05,Copa del Rey,A,Betis,canonical_team,2025–26 Copa del Rey
+2526,Betis,2026-02-05,Copa del Rey,H,Ath Madrid,canonical_team,2025–26 Copa del Rey
+2526,Ath Bilbao,2026-02-11,Copa del Rey,H,Sociedad,canonical_team,2025–26 Copa del Rey
+2526,Sociedad,2026-02-11,Copa del Rey,A,Ath Bilbao,canonical_team,2025–26 Copa del Rey
+2526,Ath Madrid,2026-02-12,Copa del Rey,H,Barcelona,canonical_team,2025–26 Copa del Rey
+2526,Barcelona,2026-02-12,Copa del Rey,A,Ath Madrid,canonical_team,2025–26 Copa del Rey
+2526,Ath Madrid,2026-03-03,Copa del Rey,A,Barcelona,canonical_team,2025–26 Copa del Rey
+2526,Barcelona,2026-03-03,Copa del Rey,H,Ath Madrid,canonical_team,2025–26 Copa del Rey
+2526,Ath Bilbao,2026-03-04,Copa del Rey,A,Sociedad,canonical_team,2025–26 Copa del Rey
+2526,Sociedad,2026-03-04,Copa del Rey,H,Ath Bilbao,canonical_team,2025–26 Copa del Rey
+2526,Ath Madrid,2026-04-18,Copa del Rey,H,Sociedad,canonical_team,2026 Copa del Rey final
+2526,Sociedad,2026-04-18,Copa del Rey,A,Ath Madrid,canonical_team,2026 Copa del Rey final

@@ -1,0 +1,115 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,FC Koln,2017-09-14,Europa League,A,Arsenal,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hertha,2017-09-14,Europa League,H,Athletic Bilbao,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hoffenheim,2017-09-14,Europa League,H,Braga,canonical_team,2017–18 UEFA Europa League group stage
+1718,FC Koln,2017-09-28,Europa League,H,Red Star Belgrade,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hertha,2017-09-28,Europa League,A,Östersunds FK,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hoffenheim,2017-09-28,Europa League,A,Ludogorets Razgrad,canonical_team,2017–18 UEFA Europa League group stage
+1718,FC Koln,2017-10-19,Europa League,A,BATE Borisov,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hertha,2017-10-19,Europa League,A,Zorya Luhansk,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hoffenheim,2017-10-19,Europa League,H,İstanbul Başakşehir,canonical_team,2017–18 UEFA Europa League group stage
+1718,FC Koln,2017-11-02,Europa League,H,BATE Borisov,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hertha,2017-11-02,Europa League,H,Zorya Luhansk,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hoffenheim,2017-11-02,Europa League,A,İstanbul Başakşehir,canonical_team,2017–18 UEFA Europa League group stage
+1718,FC Koln,2017-11-23,Europa League,H,Arsenal,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hertha,2017-11-23,Europa League,A,Athletic Bilbao,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hoffenheim,2017-11-23,Europa League,A,Braga,canonical_team,2017–18 UEFA Europa League group stage
+1718,FC Koln,2017-12-07,Europa League,A,Red Star Belgrade,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hertha,2017-12-07,Europa League,H,Östersunds FK,canonical_team,2017–18 UEFA Europa League group stage
+1718,Hoffenheim,2017-12-07,Europa League,H,Ludogorets Razgrad,canonical_team,2017–18 UEFA Europa League group stage
+1718,Dortmund,2018-02-15,Europa League,H,Atalanta,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,RB Leipzig,2018-02-15,Europa League,A,Napoli,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,Dortmund,2018-02-22,Europa League,A,Atalanta,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,RB Leipzig,2018-02-22,Europa League,H,Napoli,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,Dortmund,2018-03-08,Europa League,H,Red Bull Salzburg,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,RB Leipzig,2018-03-08,Europa League,H,Zenit Saint Petersburg,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,Dortmund,2018-03-15,Europa League,A,Red Bull Salzburg,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,RB Leipzig,2018-03-15,Europa League,A,Zenit Saint Petersburg,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,RB Leipzig,2018-04-05,Europa League,H,Marseille,canonical_team,2017–18 UEFA Europa League knockout phase
+1718,RB Leipzig,2018-04-12,Europa League,A,Marseille,canonical_team,2017–18 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2018-09-20,Europa League,A,Marseille,canonical_team,2018–19 UEFA Europa League group stage
+1819,Leverkusen,2018-09-20,Europa League,A,Ludogorets Razgrad,canonical_team,2018–19 UEFA Europa League group stage
+1819,RB Leipzig,2018-09-20,Europa League,H,Red Bull Salzburg,canonical_team,2018–19 UEFA Europa League group stage
+1819,Ein Frankfurt,2018-10-04,Europa League,H,Lazio,canonical_team,2018–19 UEFA Europa League group stage
+1819,Leverkusen,2018-10-04,Europa League,H,AEK Larnaca,canonical_team,2018–19 UEFA Europa League group stage
+1819,RB Leipzig,2018-10-04,Europa League,A,Rosenborg,canonical_team,2018–19 UEFA Europa League group stage
+1819,Ein Frankfurt,2018-10-25,Europa League,H,Apollon Limassol,canonical_team,2018–19 UEFA Europa League group stage
+1819,Leverkusen,2018-10-25,Europa League,A,Zürich,canonical_team,2018–19 UEFA Europa League group stage
+1819,RB Leipzig,2018-10-25,Europa League,H,Celtic,canonical_team,2018–19 UEFA Europa League group stage
+1819,Ein Frankfurt,2018-11-08,Europa League,A,Apollon Limassol,canonical_team,2018–19 UEFA Europa League group stage
+1819,Leverkusen,2018-11-08,Europa League,H,Zürich,canonical_team,2018–19 UEFA Europa League group stage
+1819,RB Leipzig,2018-11-08,Europa League,A,Celtic,canonical_team,2018–19 UEFA Europa League group stage
+1819,Ein Frankfurt,2018-11-29,Europa League,H,Marseille,canonical_team,2018–19 UEFA Europa League group stage
+1819,Leverkusen,2018-11-29,Europa League,H,Ludogorets Razgrad,canonical_team,2018–19 UEFA Europa League group stage
+1819,RB Leipzig,2018-11-29,Europa League,A,Red Bull Salzburg,canonical_team,2018–19 UEFA Europa League group stage
+1819,Ein Frankfurt,2018-12-13,Europa League,A,Lazio,canonical_team,2018–19 UEFA Europa League group stage
+1819,Leverkusen,2018-12-13,Europa League,A,AEK Larnaca,canonical_team,2018–19 UEFA Europa League group stage
+1819,RB Leipzig,2018-12-13,Europa League,H,Rosenborg,canonical_team,2018–19 UEFA Europa League group stage
+1819,Ein Frankfurt,2019-02-14,Europa League,A,Shakhtar Donetsk,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Leverkusen,2019-02-14,Europa League,A,Krasnodar,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-02-21,Europa League,H,Shakhtar Donetsk,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Leverkusen,2019-02-21,Europa League,H,Krasnodar,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-03-07,Europa League,H,Inter Milan,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-03-14,Europa League,A,Inter Milan,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-04-11,Europa League,A,Benfica,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-04-18,Europa League,H,Benfica,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-05-02,Europa League,H,Chelsea,canonical_team,2018–19 UEFA Europa League knockout phase
+1819,Ein Frankfurt,2019-05-09,Europa League,A,Chelsea,canonical_team,2018–19 UEFA Europa League knockout phase
+1920,Ein Frankfurt,2019-09-19,Europa League,H,Arsenal,canonical_team,2019–20 UEFA Europa League group stage
+1920,M'gladbach,2019-09-19,Europa League,H,Wolfsberger AC,canonical_team,2019–20 UEFA Europa League group stage
+1920,Wolfsburg,2019-09-19,Europa League,H,Oleksandriya,canonical_team,2019–20 UEFA Europa League group stage
+1920,Ein Frankfurt,2019-10-03,Europa League,A,Vitória de Guimarães,canonical_team,2019–20 UEFA Europa League group stage
+1920,M'gladbach,2019-10-03,Europa League,A,İstanbul Başakşehir,canonical_team,2019–20 UEFA Europa League group stage
+1920,Wolfsburg,2019-10-03,Europa League,A,Saint-Étienne,canonical_team,2019–20 UEFA Europa League group stage
+1920,Ein Frankfurt,2019-10-24,Europa League,H,Standard Liège,canonical_team,2019–20 UEFA Europa League group stage
+1920,M'gladbach,2019-10-24,Europa League,A,Roma,canonical_team,2019–20 UEFA Europa League group stage
+1920,Wolfsburg,2019-10-24,Europa League,A,Gent,canonical_team,2019–20 UEFA Europa League group stage
+1920,Ein Frankfurt,2019-11-07,Europa League,A,Standard Liège,canonical_team,2019–20 UEFA Europa League group stage
+1920,M'gladbach,2019-11-07,Europa League,H,Roma,canonical_team,2019–20 UEFA Europa League group stage
+1920,Wolfsburg,2019-11-07,Europa League,H,Gent,canonical_team,2019–20 UEFA Europa League group stage
+1920,Ein Frankfurt,2019-11-28,Europa League,A,Arsenal,canonical_team,2019–20 UEFA Europa League group stage
+1920,M'gladbach,2019-11-28,Europa League,A,Wolfsberger AC,canonical_team,2019–20 UEFA Europa League group stage
+1920,Wolfsburg,2019-11-28,Europa League,A,Oleksandriya,canonical_team,2019–20 UEFA Europa League group stage
+1920,Ein Frankfurt,2019-12-12,Europa League,H,Vitória de Guimarães,canonical_team,2019–20 UEFA Europa League group stage
+1920,M'gladbach,2019-12-12,Europa League,H,İstanbul Başakşehir,canonical_team,2019–20 UEFA Europa League group stage
+1920,Wolfsburg,2019-12-12,Europa League,H,Saint-Étienne,canonical_team,2019–20 UEFA Europa League group stage
+1920,Ein Frankfurt,2020-02-20,Europa League,H,Red Bull Salzburg,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Leverkusen,2020-02-20,Europa League,H,Porto,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Wolfsburg,2020-02-20,Europa League,H,Malmö FF,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Leverkusen,2020-02-27,Europa League,A,Porto,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Wolfsburg,2020-02-27,Europa League,A,Malmö FF,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Ein Frankfurt,2020-02-28,Europa League,A,Red Bull Salzburg,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Ein Frankfurt,2020-03-12,Europa League,H,Basel,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Leverkusen,2020-03-12,Europa League,A,Rangers,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Wolfsburg,2020-03-12,Europa League,H,Shakhtar Donetsk,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Wolfsburg,2020-08-05,Europa League,A,Shakhtar Donetsk,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Ein Frankfurt,2020-08-06,Europa League,A,Basel,canonical_team,2019–20 UEFA Europa League knockout phase
+1920,Leverkusen,2020-08-06,Europa League,H,Rangers,canonical_team,2019–20 UEFA Europa League knockout phase
+2021,Leverkusen,2020-08-10,Europa League,A,Inter Milan,canonical_team,2019–20 UEFA Europa League knockout phase
+2526,Freiburg,2025-09-24,Europa League,H,Basel,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2025-09-25,Europa League,H,Celta Vigo,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2025-10-02,Europa League,A,Bologna,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2025-10-02,Europa League,A,Basel,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2025-10-23,Europa League,H,Utrecht,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2025-10-23,Europa League,A,Fenerbahçe,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2025-11-06,Europa League,A,Nice,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2025-11-06,Europa League,H,Feyenoord,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2025-11-27,Europa League,A,Viktoria Plzeň,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2025-11-27,Europa League,A,Go Ahead Eagles,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2025-12-11,Europa League,H,Red Bull Salzburg,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2025-12-11,Europa League,H,Maccabi Tel Aviv,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2026-01-22,Europa League,H,Maccabi Tel Aviv,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2026-01-22,Europa League,A,Roma,canonical_team,2025–26 UEFA Europa League league phase
+2526,Freiburg,2026-01-29,Europa League,A,Lille,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2026-01-29,Europa League,H,Young Boys,canonical_team,2025–26 UEFA Europa League league phase
+2526,Stuttgart,2026-02-19,Europa League,A,Celtic,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Stuttgart,2026-02-26,Europa League,H,Celtic,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-03-12,Europa League,A,Genk,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Stuttgart,2026-03-12,Europa League,H,Porto,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-03-19,Europa League,H,Genk,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Stuttgart,2026-03-19,Europa League,A,Porto,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-04-09,Europa League,H,Celta Vigo,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-04-16,Europa League,A,Celta Vigo,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-04-30,Europa League,A,Braga,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-05-07,Europa League,H,Braga,canonical_team,2025–26 UEFA Europa League knockout phase
+2526,Freiburg,2026-05-20,Europa League,H,Aston Villa,canonical_team,2026 UEFA Europa League final

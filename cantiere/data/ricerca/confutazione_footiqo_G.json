@@ -1,0 +1,38 @@
+{
+ "righe": 3644,
+ "QUANTO_SI_ASSOMIGLIANO_DUE_BOOK_VERI (corr p_home)": {
+  "B365 vs VC (stesso istante, apertura)": 0.99869,
+  "B365 vs WH": 0.99819,
+  "VC vs WH": 0.99859,
+  "B365 vs Pinnacle_apertura": 0.99867,
+  "Pinnacle_apertura vs Pinnacle_chiusura": 0.98977,
+  "footiqo(1xBet chiusura) vs Pinnacle_chiusura": 0.99758,
+  "footiqo(1xBet chiusura) vs Pinnacle_apertura": 0.98974
+ },
+ "identita_riga_per_riga_footiqo_vs_Pinnacle_chiusura": 0.0,
+ "valori_1x2_piu_frequenti_footiqo": {
+  "3.34": 143,
+  "3.64": 119,
+  "3.24": 117,
+  "3.44": 111,
+  "3.4": 100,
+  "3.42": 98,
+  "3.3": 96,
+  "3.54": 96
+ },
+ "valori_1x2_piu_frequenti_Pinnacle_chiusura": {
+  "3.26": 60,
+  "3.27": 59,
+  "3.39": 56,
+  "3.31": 54,
+  "3.48": 52,
+  "3.32": 51,
+  "3.53": 51,
+  "3.22": 50
+ },
+ "scaletta_OU": {
+  "righe": 3493,
+  "quota_monotona_crescente_O05<O15<O25<O35<O45": 1.0,
+  "quota_monotona_decrescente_U05>U15>U25>U35>U45": 1.0
+ }
+}

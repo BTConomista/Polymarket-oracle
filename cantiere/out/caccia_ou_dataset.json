@@ -1,0 +1,270 @@
+{
+ "titolo": "Caccia al dato vero: quote Over/Under 2.5 di CHIUSURA, stagioni 2017-18 e 2018-19, 5 leghe",
+ "data": "2026-07-25",
+ "bersaglio": {
+  "descrizione": "quota Over 2.5 e Under 2.5 di CHIUSURA (al calcio d'inizio), una riga per partita",
+  "partite_richieste": 3652,
+  "dettaglio": {
+   "serie_a": 760,
+   "premier_league": 760,
+   "la_liga": 760,
+   "bundesliga": 612,
+   "ligue_1": 760
+  },
+  "perche_manca": "alla fonte-madre (football-data.co.uk) le sole colonne O/U del 2017-19 sono BbOU/BbMx>2.5/BbAv>2.5/BbMx<2.5/BbAv<2.5, UNA sola istantanea (media Betbrain pre-match = APERTURA, gia' negli snapshot come odds_over25_open). Le colonne di chiusura O/U (B365C>2.5, PC>2.5, MaxC>2.5, AvgC>2.5) compaiono solo dalla stagione 2019/20."
+ },
+
+ "aspettativa_dichiarata_PRIMA_di_guardare": {
+  "esito_atteso": "negativo",
+  "motivo": "il buco e' strutturale nella fonte a monte; le Fasi A e B del piano storico sono gia' chiuse negative (6 dataset Kaggle = riesportazioni di football-data; BetExplorer ha ritirato il confronto quote per le partite di ~8 anni fa; Sofascore e fbref rispondono 403)",
+  "esito_effettivo": "POSITIVO — trovata e validata una fonte che copre il 100% delle 3.652 partite",
+  "nota_onesta": "l'aspettativa era sbagliata. Il motivo per cui il giro nuovo ha funzionato NON e' che le leghe fossero due in piu': e' che tutte le ricerche precedenti erano state fatte sull'asse 'chi riesporta football-data', mentre la fonte trovata pubblica un book (1xBet) che in football-data non c'e' affatto."
+ },
+
+ "verifica_preliminare_sulle_2_leghe_nuove": {
+  "domanda": "il buco esiste anche per Bundesliga (D1) e Ligue 1 (F1), mai controllate prima?",
+  "metodo": "ispezione diretta delle intestazioni dei 4 file grezzi gia' versionati in cantiere/data/fonti/football_data/",
+  "risultato": "SI, identico. bundesliga_1718/1819 e ligue_1_1718/1819 hanno esattamente BbOU, BbMx>2.5, BbAv>2.5, BbMx<2.5, BbAv<2.5 + PSCH/PSCD/PSCA (1X2 chiusura Pinnacle) e NESSUNA colonna O/U di chiusura. Lo schema con le colonne *C* (B365C>2.5, PC>2.5, MaxC>2.5, AvgC>2.5) compare da bundesliga_1920 in poi.",
+  "conclusione": "il buco e' una proprieta' della finestra temporale della fonte, non della lega: 3.652 celle mancanti, non 2.280"
+ },
+
+ "esito": "SUCCESSO",
+
+ "fonte_trovata": {
+  "nome": "footiqo.com — Football Database (tab 'Odds')",
+  "url_esempio": "https://footiqo.com/database/leagues/germany-bundesliga/",
+  "book": "1xBet — colonne xbetClose1FT/XFT/2FT, xbetCloseOver05..Over45, xbetCloseUnder05..Under45, xbetCloseBTTSY/N",
+  "istantanea": "CHIUSURA (il sito dichiara: 'historical match data and closing odds ... Odds are sourced from 1xBet')",
+  "copertura_dichiarata": "stagioni dal 2015/2016 a oggi, 5 leghe target + coppe",
+  "come_si_scarica": "tabella wpDataTables servita in server-side processing via POST a https://footiqo.com/wp-admin/admin-ajax.php?action=get_wdtable&table_id=<id>, con filtro di colonna sulla Season. Il sito offre anche un bottone Export CSV/Excel per la vista filtrata (stessi dati).",
+  "id_tabella_Odds_stagioni_passate": {
+   "premier_league": 545,
+   "la_liga": 555,
+   "bundesliga": 565,
+   "serie_a": 575,
+   "ligue_1": 585
+  },
+  "note_tecniche": "gli id tabella e il nonce (wdtNonceFrontendServerSide_<id>) vanno riletti dall'HTML della pagina-lega a ogni sessione; il nonce scade.",
+  "perche_NON_era_stata_trovata_prima": "non e' una riesportazione di football-data.co.uk (1xBet non e' fra i book di football-data, e le linee 0.5/1.5/3.5/4.5 e il BTTS non esistono li'), quindi non compariva nelle ricerche impostate su 'dataset di quote calcio' derivati dalla fonte-madre"
+ },
+
+ "criteri_di_accettazione": {
+  "C1_linea_esattamente_2.5": {
+   "esito": "PASS",
+   "prova": "colonne dedicate xbetCloseOver25/xbetCloseUnder25, con linee 0.5/1.5/2.5/3.5/4.5 in colonne separate: la 2.5 e' fissa, non una linea asiatica variabile"
+  },
+  "C2_quote_decimali_maggiori_di_1": {
+   "esito": "PASS",
+   "righe_valutate": 3652,
+   "righe_con_quota_minore_uguale_1": 0,
+   "range_over": [1.1, 3.24],
+   "range_under": [1.37, 6.45]
+  },
+  "C3_apertura_e_chiusura_istantanee_diverse": {
+   "esito": "PASS",
+   "quota_righe_in_cui_footiqo_coincide_con_l_apertura_BbAv": 0.0003,
+   "nota": "footiqo fornisce SOLO la chiusura; l'apertura la abbiamo gia' reale (BbAv). Il criterio si verifica confrontando le due istantanee: coincidono nello 0,03% delle righe (1 su 3.643). Correlazione fra le due probabilita' devigate 0.9627, mediana |p_chiusura - p_apertura| 0.0188."
+  },
+  "C4_overround_maggiore_di_1_su_ogni_riga": {
+   "esito": "PASS",
+   "righe_con_overround_minore_uguale_1": 0,
+   "overround_medio": 1.027,
+   "overround_p01": 1.0086,
+   "overround_p99": 1.0637
+  },
+  "C5_copertura_almeno_95_percento": {
+   "esito": "PASS",
+   "copertura_per_lega_stagione": {
+    "serie_a_1718": 1.0, "serie_a_1819": 1.0,
+    "premier_league_1718": 1.0, "premier_league_1819": 1.0,
+    "la_liga_1718": 1.0, "la_liga_1819": 1.0,
+    "bundesliga_1718": 1.0, "bundesliga_1819": 1.0,
+    "ligue_1_1718": 1.0, "ligue_1_1819": 1.0
+   },
+   "totale": "3652 / 3652 = 100%"
+  },
+  "C6_scrape_di_quote_reali_non_ricostruzione": {
+   "esito": "PASS",
+   "prove": [
+    "il margine 1X2 (1.0269) non coincide con nessun book di football-data nelle stesse partite: B365 1.0476, BW 1.0514, IW 1.0573, WH 1.0567, VC 1.0370, BbAv 1.0489, Pinnacle apertura 1.0249, Pinnacle chiusura 1.0247",
+    "la distribuzione dell'ULTIMA CIFRA DECIMALE e' fortemente non uniforme (30,5% finisce per 0, 14,0% per 4): reticolo di prezzo tipico di un book retail. Pinnacle chiusura e' quasi uniforme (12,6% / 9,7% / 9,6% ...), e cosi' sarebbe una media multi-book o l'output di un modello",
+    "la scaletta O/U e' monotona su TUTTE le 3.493 righe complete (O0.5<O1.5<O2.5<O3.5<O4.5 e U0.5>U1.5>U2.5>U3.5>U4.5): coerenza interna di un listino reale",
+    "nessuna riga identica a Pinnacle chiusura (identita' 0.0)",
+    "la stagione 2019-20 di Ligue 1 ha 279 righe, non 380: e' l'esatto troncamento COVID (28 giornate). Un dataset ricostruito a tavolino avrebbe 380 righe."
+   ]
+  },
+  "C7_join_possibile_data_piu_squadre": {
+   "esito": "PASS",
+   "righe_appaiate": "3652 / 3652 = 100%",
+   "delta_giorni_zero": 3652,
+   "delta_giorni_oltre_1": 0,
+   "alias_necessari": 7
+  },
+  "C8_extra_protocollo_INGRESSO_gol_fonte_uguali_snapshot": {
+   "esito": "PASS",
+   "righe_confrontate": 3652,
+   "righe_identiche": 3652,
+   "quota": 1.0,
+   "nota": "la tabella 'Odds' non porta i gol; sono stati scaricati anche i gol dalla tabella 'Scores' della stessa fonte e confrontati riga per riga con gli snapshot"
+  }
+ },
+
+ "confutazione": {
+  "premessa": "trovata una fonte che passa tutti i criteri, il lavoro vero e' stato provare a dimostrare che e' FALSA. Tre ipotesi alternative, tutte respinte da un test.",
+
+  "H1_e_l_apertura_rietichettata": {
+   "test": "confronto riga per riga con l'apertura reale (BbAv) che gia' abbiamo",
+   "risultato": "coincide nello 0,03% delle righe; overround 1.027 contro 1.056 dell'apertura BbAv",
+   "verdetto": "RESPINTA"
+  },
+
+  "H2_e_una_ricostruzione_da_modello_come_la_nostra_stima_E3": {
+   "perche_e_l_ipotesi_seria": "la stima E3 del progetto raggiunge gia' correlazione 0.75-0.86 col movimento vero della linea partendo dal solo movimento 1X2: un modello PUO' assomigliare a una chiusura",
+   "test_decisivo": "per il 2017-19 l'1X2 di apertura E di chiusura sono dati REALI (Pinnacle PSH->PSCH, gia' negli snapshot). footiqo pubblica anche il proprio 1X2 di chiusura. Se e' una fotografia scattata all'ora di chiusura deve somigliare alla chiusura vera piu' che all'apertura vera — DENTRO la finestra bersaglio, non per estrapolazione.",
+   "risultato": {
+    "righe": 3645,
+    "corr_footiqo_vs_CHIUSURA_vera_p_home": 0.9976,
+    "corr_footiqo_vs_APERTURA_vera_p_home": 0.9897,
+    "corr_del_MOVIMENTO_footiqo_vs_movimento_vero": {"home": 0.881, "pareggio": 0.8612, "away": 0.8699},
+    "logloss_1x2_apertura_vera_Pinnacle": 0.9548,
+    "logloss_1x2_footiqo_1xBet": 0.9533,
+    "logloss_1x2_chiusura_vera_Pinnacle": 0.9523
+   },
+   "calibrazione_del_test": {
+    "domanda": "0.9976 e' tanto? Quanto si assomigliano DUE BOOK VERI allo stesso istante?",
+    "corr_B365_vs_VC": 0.99869,
+    "corr_B365_vs_WH": 0.99819,
+    "corr_VC_vs_WH": 0.99859,
+    "corr_Pinnacle_apertura_vs_Pinnacle_chiusura": 0.98977,
+    "corr_footiqo_vs_Pinnacle_CHIUSURA": 0.99758,
+    "corr_footiqo_vs_Pinnacle_APERTURA": 0.98974,
+    "lettura": "footiqo sta rispetto alla chiusura vera come un book sta rispetto a un altro book allo STESSO istante (~0.998), e sta rispetto all'apertura vera esattamente come la chiusura sta rispetto all'apertura (0.98974 contro 0.98977). E' collocato all'ora di chiusura."
+   },
+   "verdetto": "RESPINTA. Un modello costruito per ricostruire la sola O/U non avrebbe motivo di riprodurre anche il movimento 1X2 partita per partita, e il log-loss 1X2 non cadrebbe esattamente fra apertura e chiusura vere."
+  },
+
+  "H3_e_comunque_inutile_perche_non_batte_cio_che_abbiamo": {
+   "test": "log-loss binaria O/U 2.5 contro l'esito reale, sulle stagioni bersaglio dove la verita' (i gol) esiste. Bootstrap appaiato B=10.000, seed 20260725, scripts/_fase52_common.boot",
+   "vs_apertura_reale": {
+    "righe": 3643,
+    "logloss_chiusura_footiqo": 0.6693,
+    "logloss_apertura_reale_BbAv": 0.6716,
+    "brier_chiusura_footiqo": 0.2384,
+    "brier_apertura_reale_BbAv": 0.2394,
+    "delta": -0.00229,
+    "ci95": [-0.00423, -0.00035],
+    "P_delta_negativo": 0.9907,
+    "CONCLUSIVO": true
+   },
+   "vs_stima_E3_del_progetto": {
+    "righe": 2279,
+    "leghe": ["serie_a", "premier_league", "la_liga"],
+    "logloss_stima_E3": 0.6752,
+    "logloss_chiusura_footiqo": 0.675,
+    "logloss_apertura_reale": 0.6767,
+    "delta_footiqo_meno_stima": -0.00021,
+    "ci95": [-0.00278, 0.00243],
+    "P_delta_negativo": 0.5569,
+    "CONCLUSIVO": false
+   },
+   "verdetto": "PARZIALMENTE ACCOLTA, ed e' il risultato piu' onesto di tutta la caccia. Contro l'apertura il dato vero vince con CI conclusivo. Contro la STIMA E3 del progetto NON vince: sono indistinguibili (delta -0.0002, CI attraversa lo zero). La stima era davvero buona, come le Fasi 72/73 avevano concluso."
+  }
+ },
+
+ "limite_piu_importante_da_dichiarare": {
+  "titolo": "e' la chiusura di UN book, non la chiusura del mercato medio",
+  "perche_conta": "dal 2019/20 in poi gli snapshot usano la chiusura di football-data (media multi-book / Pinnacle / B365). Inserire 1xBet nel 2017-19 creerebbe una ROTTURA DI REGIME nella stessa colonna: la serie storica cambierebbe definizione a meta'.",
+  "misura_dello_scarto_su_2019_20_dove_esistono_entrambe": {
+   "righe": 1687,
+   "MAE_1xBetChiusura_vs_MediaChiusura": 0.0156,
+   "bias_medio_1xBet_meno_Media": 0.0088,
+   "MAE_Apertura_vs_MediaChiusura_per_riferimento": 0.0206,
+   "MAE_dichiarato_della_stima_E3_vs_chiusura_vera": 0.012,
+   "overround_1xBet_chiusura": 1.0349,
+   "overround_media_chiusura": 1.0537,
+   "bias_per_lega": {"bundesliga": 0.0085, "la_liga": 0.0096, "ligue_1": 0.0039, "premier_league": 0.0108, "serie_a": 0.01},
+   "dopo_ricalibrazione_logit_lineare_IN_SAMPLE_quindi_ottimistica": 0.0122
+  },
+  "lettura": "come PROXY della chiusura media di mercato il dato grezzo 1xBet (MAE 0.0156) e' PEGGIORE della stima E3 (~0.012); ricalibrato in logit scende a ~0.0122, cioe' alla pari. Il suo vantaggio non e' la precisione contro la media di mercato: e' che e' un PREZZO REALE — quindi utilizzabile dove le stime sono vietate dal protocollo (simulazioni di ROI/CLV) — e che copre anche Bundesliga e Ligue 1, dove la stima E3 non esiste (1.373 partite scoperte su 3.652)."
+ },
+
+ "altre_piste_esplorate_e_scartate": [
+  {"pista": "verifica diretta dei 4 file grezzi football-data D1/F1 2017-19", "esito": "buco confermato identico (nessuna colonna O/U di chiusura)", "chiude": "l'ipotesi che le due leghe nuove avessero uno schema diverso"},
+  {"pista": "iredchuk/soccer-bookmaker-odds (GitHub, 5 leghe 2005-06/2018-19, CSV+JSON committati)", "url": "https://github.com/iredchuk/soccer-bookmaker-odds", "esito": "SCARTATO", "motivo": "solo mercato 1X2 (nessuna linea O/U), e quote medie senza distinzione apertura/chiusura"},
+  {"pista": "win-1x2.com -> odds-office.com, archivio quote Betfair in lingua tedesca", "url": "https://www.win-1x2.com/quotenarchive.html", "esito": "SCARTATO", "motivo": "i file .xls liberi (Bf-Odds-Deu-1.xls, Bf-Odds-Fra-1.xls, ...) hanno last-modified 21/02/2014 -> coprono fino al 2013, fuori finestra. L'archivio aggiornato (Odds-Analyse-23-Ligen.7z, last-modified 21/08/2024) e' stato scaricato: e' PROTETTO DA PASSWORD (py7zr: PasswordRequired), il sito dichiara che la consegna richiede di contattare l'autore. Pista non chiusa in assoluto, ma non percorribile senza contatto umano."},
+  {"pista": "oddalerts.com/downloads", "url": "https://www.oddalerts.com/downloads", "esito": "NON VERIFICABILE", "motivo": "risponde 403 sia via WebFetch sia via curl con User-Agent browser; non forzato (robots.txt non lo vieta, ma il 403 e' un rifiuto esplicito del server)"},
+  {"pista": "the-odds-api.com — storico", "url": "https://the-odds-api.com/historical-odds-data/", "esito": "SCARTATO", "motivo": "lo storico parte dal 6 giugno 2020 e solo su piani a pagamento: il 2017-19 non esiste proprio"},
+  {"pista": "Hugging Face datasets", "esito": "SCARTATO", "motivo": "hub_repo_search su 'football betting odds historical over under closing' non restituisce alcun dataset"},
+  {"pista": "GitHub code search di CSV con colonne di chiusura O/U", "esito": "SCARTATO", "motivo": "la query 'AvgC>2.5 extension:csv' restituisce moltissimi risultati, ma quella colonna ESISTE SOLO dal 2019/20: sono tutte riesportazioni di football-data, ereditano lo stesso buco. Nessun CSV con chiusura O/U 2017-19."},
+  {"pista": "Zenodo / OSF / figshare / dataverse", "esito": "SCARTATO", "motivo": "nessun dataset accademico nuovo rispetto a quelli gia' esclusi (Whelan & Hegarty 2024 copre 1X2 e handicap asiatico, non O/U 2.5)"},
+  {"pista": "archivi francesi (footamax.com) e tedeschi (fussballwitwe.de, sportwettennerd.de)", "esito": "SCARTATO", "motivo": "sono archivi di RISULTATI o pagine editoriali di confronto quote correnti; rimandano tutti a OddsPortal per lo storico"},
+  {"pista": "OddsPortal storico", "esito": "NON TENTATO PER SCELTA ETICA", "motivo": "robots.txt vieta esplicitamente le pagine storiche (Disallow: *-2017*, *-2018*). Vincolo rispettato: nessuna richiesta, nessun aggiramento via cache/archive."},
+  {"pista": "Kaggle (6 dataset gia' verificati nella Fase A storica)", "esito": "GIA' CHIUSO", "motivo": "tutti riesportazioni di football-data.co.uk"},
+  {"pista": "BetExplorer", "esito": "GIA' CHIUSO", "motivo": "ha ritirato il confronto quote per le partite di ~8 anni fa su tutte le leghe testate"}
+ ],
+
+ "come_si_farebbe_il_JOIN_esattamente": {
+  "chiave": "(lega, stagione, home_team, away_team) con i nomi passati per src.data.sources.canonical_team",
+  "verifica_1": "la data footiqo (campo matchDate, formato 'dd-mm-yy HH:MM', ora locale del sito) deve coincidere con date dello snapshot: verificato, delta 0 giorni su tutte e 3.652 le righe",
+  "verifica_2": "i gol della tabella 'Scores' di footiqo devono coincidere con home_goals/away_goals dello snapshot: verificato, 3652/3652",
+  "alias_da_aggiungere_footiqo_verso_nome_canonico": {
+   "Manchester Utd": "Man United",
+   "Atl. Madrid": "Ath Madrid",
+   "Dep. La Coruna": "La Coruna",
+   "B. Monchengladbach": "M'gladbach",
+   "Schalke": "Schalke 04",
+   "Dusseldorf": "Fortuna Dusseldorf",
+   "PSG": "Paris SG"
+  },
+  "colonne_da_prendere": "xbetCloseOver25 -> odds_over25, xbetCloseUnder25 -> odds_under25 (nelle sole stagioni 1718 e 1819)",
+  "avvertenza_obbligatoria": "se si scrive nelle colonne di chiusura degli snapshot, va dichiarato in docs/DATI.md che nel 2017-19 la chiusura O/U e' 1xBet e dal 2019/20 e' la media multi-book: due definizioni diverse nella stessa colonna. In alternativa: colonne dedicate (odds_over25_close_1xbet) oppure ricalibrazione logit con i coefficienti stimati fuori campione."
+ },
+
+ "file_prodotti": {
+  "dati_grezzi": "cantiere/data/ricerca/footiqo_{lega}_{stagione}.json (15 file: 5 leghe x 2017-2018, 2018-2019, 2019-2020) + footiqo_gol_{lega}_{stagione}.json (10 file, per il controllo dei gol) + footiqo_manifest.json (URL, timestamp, sha256, conteggi)",
+  "script_riproducibili": [
+   "cantiere/data/ricerca/_fetch_footiqo.py — scarica le quote",
+   "cantiere/data/ricerca/_fetch_footiqo_gol.py — scarica i gol per il controllo di integrita'",
+   "cantiere/data/ricerca/_valida_footiqo.py — i criteri C1-C8 + confutazioni A/B/C",
+   "cantiere/data/ricerca/_confuta_footiqo.py — confutazioni D/E/F (le decisive)"
+  ],
+  "risultati": [
+   "cantiere/data/ricerca/validazione_footiqo.json",
+   "cantiere/data/ricerca/confutazione_footiqo.json",
+   "cantiere/data/ricerca/confutazione_footiqo_G.json",
+   "cantiere/data/ricerca/scarto_book_2019_20.json",
+   "cantiere/data/ricerca/ricalibrazione_book_2019_20.json"
+  ]
+ },
+
+ "note_legali_ed_etiche": {
+  "robots_txt": "footiqo.com/robots.txt vieta solo /wp-admin/ e PERMETTE esplicitamente /wp-admin/admin-ajax.php (l'endpoint usato). oddsportal.com storico VIETATO dal suo robots.txt: non toccato.",
+  "throttle": "1.8 s fra le richieste, ~200 richieste totali",
+  "export_ufficiale": "il sito offre di suo un bottone Export CSV/Excel della vista filtrata e dichiara 'Can I download the data? Yes': i dati sono destinati al download",
+  "ATTENZIONE_REDISTRIBUZIONE": "i Terms of Use di footiqo (par. 8) dicono: 'You may not copy, reproduce or redistribute content without our prior written permission, except as permitted by fair dealing'. Il par. 9 vieta lo 'scraping at abusive rates' (rispettato). CONSEGUENZA OPERATIVA: i grezzi restano nel repo privato di lavoro; prima di qualunque pubblicazione o ridistribuzione serve il permesso scritto. Il sito invita al contatto (email in fondo alle pagine): chiedere il permesso e' il passo corretto se il dato deve diventare parte pubblica del progetto."
+ },
+
+ "ritrovamento_collaterale_forse_piu_importante_del_bersaglio": {
+  "titolo": "quote di CHIUSURA del mercato GG/NG (BTTS), 3.652 partite, copertura 100%",
+  "perche_conta": "CLAUDE.md §1.8 dichiara: 'il GG/NG non ha quote nei dati (football-data non le include), quindi e' l'unico mercato dove non possiamo dimostrare l'efficienza del mercato — l'unico con spazio non ancora chiuso dai risultati Fasi 14/16/20. Priorita' li'.' Queste quote esistono.",
+  "copertura_misurata_sulle_3652_righe_bersaglio": {
+   "xbetCloseBTTSY": "3652 (100.0%)",
+   "xbetCloseBTTSN": "3652 (100.0%)",
+   "xbetCloseOver15/Under15": "3652 (100.0%)",
+   "xbetCloseOver35/Under35": "3652 (100.0%)",
+   "xbetCloseOver45/Under45": "3647 (99.9%)",
+   "xbetCloseOver05/Under05": "3498 (95.8%)"
+  },
+  "primo_numero": {
+   "righe": 3652,
+   "logloss_mercato_GG_devigato": 0.6852,
+   "logloss_baseline_costante": 0.6928,
+   "overround_GG_NG": 1.0433,
+   "frequenza_GG_osservata": 0.514
+  },
+  "lettura": "il mercato GG/NG batte la baseline costante (0.6852 contro 0.6928). Per la prima volta il progetto ha un termine di paragone REALE su questo mercato: la domanda 'il nostro GG/NG batte il mercato?' diventa finalmente rispondibile su 3.652 partite e 5 leghe. NON e' stato testato qui — e' materiale per una fase a se'.",
+  "avvertenza": "e' un solo book (1xBet) con margine 4,3% sul GG/NG, non una media di mercato: vale come benchmark, non come prezzo a cui scommettere."
+ },
+
+ "raccomandazione": "La pista e' APERTA e il dato e' DISPONIBILE al 100%. Ma la decisione di sostituire la stima E3 col dato vero non e' automatica: contro l'esito reale i due sono indistinguibili (delta -0.0002, CI non conclusivo) e il dato vero cambia definizione di 'chiusura' a meta' serie storica. Il guadagno certo e' altrove: (a) Bundesliga e Ligue 1, 1.373 partite dove NESSUNA stima esiste; (b) e' un prezzo REALE, quindi ammesso in analisi dove il protocollo vieta le stime; (c) porta in dote gratis 5 linee O/U (0.5/1.5/2.5/3.5/4.5) e il BTTS di chiusura — e il BTTS e' il mercato che il progetto dichiara 'senza quote nei dati', l'unico dove l'efficienza del mercato non era mai stata verificabile."
+}

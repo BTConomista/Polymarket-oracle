@@ -1,0 +1,19 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Arsenal,2017-08-06,FA Community Shield,H,Chelsea,canonical_team,2017 FA Community Shield
+1718,Chelsea,2017-08-06,FA Community Shield,A,Arsenal,canonical_team,2017 FA Community Shield
+1819,Chelsea,2018-08-05,FA Community Shield,H,Man City,canonical_team,2018 FA Community Shield
+1819,Man City,2018-08-05,FA Community Shield,A,Chelsea,canonical_team,2018 FA Community Shield
+1920,Liverpool,2019-08-04,FA Community Shield,H,Man City,canonical_team,2019 FA Community Shield
+1920,Man City,2019-08-04,FA Community Shield,A,Liverpool,canonical_team,2019 FA Community Shield
+2021,Arsenal,2020-08-29,FA Community Shield,H,Liverpool,canonical_team,2020 FA Community Shield
+2021,Liverpool,2020-08-29,FA Community Shield,A,Arsenal,canonical_team,2020 FA Community Shield
+2122,Leicester,2021-08-07,FA Community Shield,H,Man City,canonical_team,2021 FA Community Shield
+2122,Man City,2021-08-07,FA Community Shield,A,Leicester,canonical_team,2021 FA Community Shield
+2223,Liverpool,2022-07-30,FA Community Shield,H,Man City,canonical_team,2022 FA Community Shield
+2223,Man City,2022-07-30,FA Community Shield,A,Liverpool,canonical_team,2022 FA Community Shield
+2324,Arsenal,2023-08-06,FA Community Shield,H,Man City,canonical_team,2023 FA Community Shield
+2324,Man City,2023-08-06,FA Community Shield,A,Arsenal,canonical_team,2023 FA Community Shield
+2425,Man City,2024-08-10,FA Community Shield,H,Man United,canonical_team,2024 FA Community Shield
+2425,Man United,2024-08-10,FA Community Shield,A,Man City,canonical_team,2024 FA Community Shield
+2526,Crystal Palace,2025-08-10,FA Community Shield,H,Liverpool,canonical_team,2025 FA Community Shield
+2526,Liverpool,2025-08-10,FA Community Shield,A,Crystal Palace,canonical_team,2025 FA Community Shield

@@ -1,0 +1,23 @@
+{
+ "righe": 1687,
+ "MAE_grezzo": 0.0156,
+ "MAE_dopo_ricalibrazione_logit_lineare (IN-SAMPLE, ottimistico)": 0.0122,
+ "coeff_ricalibrazione": [
+  0.9472,
+  -0.0283
+ ],
+ "bias_per_lega": {
+  "bundesliga": 0.0085,
+  "la_liga": 0.0096,
+  "ligue_1": 0.0039,
+  "premier_league": 0.0108,
+  "serie_a": 0.01
+ },
+ "MAE_per_lega": {
+  "bundesliga": 0.0146,
+  "la_liga": 0.0158,
+  "ligue_1": 0.014,
+  "premier_league": 0.0169,
+  "serie_a": 0.0164
+ }
+}

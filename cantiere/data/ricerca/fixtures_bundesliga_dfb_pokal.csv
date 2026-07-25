@@ -1,0 +1,147 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Holstein Kiel,2017-08-11,DFB-Pokal,H,Eintracht Braunschweig,canonical_team,2017–18 DFB-Pokal
+1718,Leverkusen,2017-08-11,DFB-Pokal,A,Karlsruher SC,canonical_team,2017–18 DFB-Pokal
+1718,M'gladbach,2017-08-11,DFB-Pokal,A,Rot-Weiss Essen,canonical_team,2017–18 DFB-Pokal
+1718,Bayern Munich,2017-08-12,DFB-Pokal,A,Chemnitzer FC,canonical_team,2017–18 DFB-Pokal
+1718,Bielefeld,2017-08-12,DFB-Pokal,H,Fortuna Dusseldorf,canonical_team,2017–18 DFB-Pokal
+1718,Darmstadt,2017-08-12,DFB-Pokal,A,Jahn Regensburg,proposta,2017–18 DFB-Pokal
+1718,Dortmund,2017-08-12,DFB-Pokal,A,1. FC Rielasingen-Arlen,canonical_team,2017–18 DFB-Pokal
+1718,Ein Frankfurt,2017-08-12,DFB-Pokal,A,TuS Erndtebrück,canonical_team,2017–18 DFB-Pokal
+1718,FC Koln,2017-08-12,DFB-Pokal,A,Leher TS,canonical_team,2017–18 DFB-Pokal
+1718,Fortuna Dusseldorf,2017-08-12,DFB-Pokal,A,Bielefeld,canonical_team,2017–18 DFB-Pokal
+1718,Freiburg,2017-08-12,DFB-Pokal,A,Germania Halberstadt,canonical_team,2017–18 DFB-Pokal
+1718,Heidenheim,2017-08-12,DFB-Pokal,A,SpVgg Unterhaching,proposta,2017–18 DFB-Pokal
+1718,Hoffenheim,2017-08-12,DFB-Pokal,A,Rot-Weiß Erfurt,canonical_team,2017–18 DFB-Pokal
+1718,Mainz,2017-08-12,DFB-Pokal,A,LSK Hansa,canonical_team,2017–18 DFB-Pokal
+1718,Werder Bremen,2017-08-12,DFB-Pokal,A,Würzburger Kickers,canonical_team,2017–18 DFB-Pokal
+1718,Augsburg,2017-08-13,DFB-Pokal,A,1. FC Magdeburg,canonical_team,2017–18 DFB-Pokal
+1718,Bochum,2017-08-13,DFB-Pokal,A,FC Nöttingen,canonical_team,2017–18 DFB-Pokal
+1718,Greuther Furth,2017-08-13,DFB-Pokal,A,SV Morlautern,proposta,2017–18 DFB-Pokal
+1718,Hamburg,2017-08-13,DFB-Pokal,A,VfL Osnabrück,canonical_team,2017–18 DFB-Pokal
+1718,Hannover,2017-08-13,DFB-Pokal,A,Bonner SC,canonical_team,2017–18 DFB-Pokal
+1718,RB Leipzig,2017-08-13,DFB-Pokal,A,Sportfreunde Dorfmerkingen,canonical_team,2017–18 DFB-Pokal
+1718,Stuttgart,2017-08-13,DFB-Pokal,A,Energie Cottbus,canonical_team,2017–18 DFB-Pokal
+1718,Union Berlin,2017-08-13,DFB-Pokal,A,1. FC Saarbrücken,canonical_team,2017–18 DFB-Pokal
+1718,Wolfsburg,2017-08-13,DFB-Pokal,A,Eintracht Norderstedt,canonical_team,2017–18 DFB-Pokal
+1718,Hertha,2017-08-14,DFB-Pokal,A,Hansa Rostock,canonical_team,2017–18 DFB-Pokal
+1718,Nurnberg,2017-08-14,DFB-Pokal,A,MSV Duisburg,canonical_team,2017–18 DFB-Pokal
+1718,Paderborn,2017-08-14,DFB-Pokal,H,St Pauli,chiave-normalizzata,2017–18 DFB-Pokal
+1718,Schalke 04,2017-08-14,DFB-Pokal,A,BFC Dynamo,canonical_team,2017–18 DFB-Pokal
+1718,St Pauli,2017-08-14,DFB-Pokal,A,Paderborn,canonical_team,2017–18 DFB-Pokal
+1718,Bochum,2017-10-24,DFB-Pokal,A,Paderborn,canonical_team,2017–18 DFB-Pokal
+1718,Dortmund,2017-10-24,DFB-Pokal,A,1. FC Magdeburg,canonical_team,2017–18 DFB-Pokal
+1718,Ein Frankfurt,2017-10-24,DFB-Pokal,A,Schweinfurt 05,canonical_team,2017–18 DFB-Pokal
+1718,Fortuna Dusseldorf,2017-10-24,DFB-Pokal,H,M'gladbach,canonical_team,2017–18 DFB-Pokal
+1718,Greuther Furth,2017-10-24,DFB-Pokal,H,FC Ingolstadt,proposta,2017–18 DFB-Pokal
+1718,Holstein Kiel,2017-10-24,DFB-Pokal,A,Mainz,canonical_team,2017–18 DFB-Pokal
+1718,Leverkusen,2017-10-24,DFB-Pokal,H,Union Berlin,canonical_team,2017–18 DFB-Pokal
+1718,M'gladbach,2017-10-24,DFB-Pokal,A,Fortuna Dusseldorf,canonical_team,2017–18 DFB-Pokal
+1718,Mainz,2017-10-24,DFB-Pokal,H,Holstein Kiel,canonical_team,2017–18 DFB-Pokal
+1718,Paderborn,2017-10-24,DFB-Pokal,H,Bochum,chiave-normalizzata,2017–18 DFB-Pokal
+1718,Schalke 04,2017-10-24,DFB-Pokal,A,Wehen Wiesbaden,canonical_team,2017–18 DFB-Pokal
+1718,Union Berlin,2017-10-24,DFB-Pokal,A,Leverkusen,canonical_team,2017–18 DFB-Pokal
+1718,Bayern Munich,2017-10-25,DFB-Pokal,A,RB Leipzig,canonical_team,2017–18 DFB-Pokal
+1718,FC Koln,2017-10-25,DFB-Pokal,A,Hertha,canonical_team,2017–18 DFB-Pokal
+1718,Freiburg,2017-10-25,DFB-Pokal,H,Dynamo Dresden,canonical_team,2017–18 DFB-Pokal
+1718,Hannover,2017-10-25,DFB-Pokal,A,Wolfsburg,canonical_team,2017–18 DFB-Pokal
+1718,Heidenheim,2017-10-25,DFB-Pokal,A,Jahn Regensburg,proposta,2017–18 DFB-Pokal
+1718,Hertha,2017-10-25,DFB-Pokal,H,FC Koln,canonical_team,2017–18 DFB-Pokal
+1718,Hoffenheim,2017-10-25,DFB-Pokal,A,Werder Bremen,canonical_team,2017–18 DFB-Pokal
+1718,Nurnberg,2017-10-25,DFB-Pokal,A,VfL Osnabrück,canonical_team,2017–18 DFB-Pokal
+1718,RB Leipzig,2017-10-25,DFB-Pokal,H,Bayern Munich,canonical_team,2017–18 DFB-Pokal
+1718,Stuttgart,2017-10-25,DFB-Pokal,A,1. FC Kaiserslautern,canonical_team,2017–18 DFB-Pokal
+1718,Werder Bremen,2017-10-25,DFB-Pokal,H,Hoffenheim,canonical_team,2017–18 DFB-Pokal
+1718,Wolfsburg,2017-10-25,DFB-Pokal,H,Hannover,canonical_team,2017–18 DFB-Pokal
+1718,FC Koln,2017-12-19,DFB-Pokal,A,Schalke 04,canonical_team,2017–18 DFB-Pokal
+1718,Mainz,2017-12-19,DFB-Pokal,H,Stuttgart,canonical_team,2017–18 DFB-Pokal
+1718,Nurnberg,2017-12-19,DFB-Pokal,H,Wolfsburg,canonical_team,2017–18 DFB-Pokal
+1718,Paderborn,2017-12-19,DFB-Pokal,H,FC Ingolstadt,chiave-normalizzata,2017–18 DFB-Pokal
+1718,Schalke 04,2017-12-19,DFB-Pokal,H,FC Koln,canonical_team,2017–18 DFB-Pokal
+1718,Stuttgart,2017-12-19,DFB-Pokal,A,Mainz,canonical_team,2017–18 DFB-Pokal
+1718,Wolfsburg,2017-12-19,DFB-Pokal,A,Nurnberg,canonical_team,2017–18 DFB-Pokal
+1718,Bayern Munich,2017-12-20,DFB-Pokal,H,Dortmund,canonical_team,2017–18 DFB-Pokal
+1718,Dortmund,2017-12-20,DFB-Pokal,A,Bayern Munich,canonical_team,2017–18 DFB-Pokal
+1718,Ein Frankfurt,2017-12-20,DFB-Pokal,A,Heidenheim,canonical_team,2017–18 DFB-Pokal
+1718,Freiburg,2017-12-20,DFB-Pokal,A,Werder Bremen,canonical_team,2017–18 DFB-Pokal
+1718,Heidenheim,2017-12-20,DFB-Pokal,H,Ein Frankfurt,proposta,2017–18 DFB-Pokal
+1718,Leverkusen,2017-12-20,DFB-Pokal,A,M'gladbach,canonical_team,2017–18 DFB-Pokal
+1718,M'gladbach,2017-12-20,DFB-Pokal,H,Leverkusen,canonical_team,2017–18 DFB-Pokal
+1718,Werder Bremen,2017-12-20,DFB-Pokal,H,Freiburg,canonical_team,2017–18 DFB-Pokal
+1718,Bayern Munich,2018-02-06,DFB-Pokal,A,Paderborn,canonical_team,2017–18 DFB-Pokal
+1718,Leverkusen,2018-02-06,DFB-Pokal,H,Werder Bremen,canonical_team,2017–18 DFB-Pokal
+1718,Paderborn,2018-02-06,DFB-Pokal,H,Bayern Munich,chiave-normalizzata,2017–18 DFB-Pokal
+1718,Werder Bremen,2018-02-06,DFB-Pokal,A,Leverkusen,canonical_team,2017–18 DFB-Pokal
+1718,Ein Frankfurt,2018-02-07,DFB-Pokal,H,Mainz,canonical_team,2017–18 DFB-Pokal
+1718,Mainz,2018-02-07,DFB-Pokal,A,Ein Frankfurt,canonical_team,2017–18 DFB-Pokal
+1718,Schalke 04,2018-02-07,DFB-Pokal,H,Wolfsburg,canonical_team,2017–18 DFB-Pokal
+1718,Wolfsburg,2018-02-07,DFB-Pokal,A,Schalke 04,canonical_team,2017–18 DFB-Pokal
+1718,Bayern Munich,2018-04-17,DFB-Pokal,A,Leverkusen,canonical_team,2017–18 DFB-Pokal
+1718,Leverkusen,2018-04-17,DFB-Pokal,H,Bayern Munich,canonical_team,2017–18 DFB-Pokal
+1718,Ein Frankfurt,2018-04-18,DFB-Pokal,A,Schalke 04,canonical_team,2017–18 DFB-Pokal
+1718,Schalke 04,2018-04-18,DFB-Pokal,H,Ein Frankfurt,canonical_team,2017–18 DFB-Pokal
+1718,Bayern Munich,2018-05-19,DFB-Pokal,H,Ein Frankfurt,canonical_team,2018 DFB-Pokal Final
+1718,Ein Frankfurt,2018-05-19,DFB-Pokal,A,Bayern Munich,canonical_team,2018 DFB-Pokal Final
+2021,Hoffenheim,2020-09-13,DFB-Pokal,A,Chemnitzer FC,canonical_team,2020–21 DFB-Pokal
+2021,Greuther Furth,2020-12-22,DFB-Pokal,A,Hoffenheim,proposta,2020–21 DFB-Pokal
+2021,Hoffenheim,2020-12-22,DFB-Pokal,H,Greuther Furth,canonical_team,2020–21 DFB-Pokal
+2021,Bochum,2020-12-23,DFB-Pokal,A,Mainz,canonical_team,2020–21 DFB-Pokal
+2021,Mainz,2020-12-23,DFB-Pokal,H,Bochum,canonical_team,2020–21 DFB-Pokal
+2021,Bayern Munich,2021-01-13,DFB-Pokal,A,Holstein Kiel,canonical_team,2020–21 DFB-Pokal
+2021,Holstein Kiel,2021-01-13,DFB-Pokal,H,Bayern Munich,canonical_team,2020–21 DFB-Pokal
+2021,Darmstadt,2021-02-02,DFB-Pokal,A,Holstein Kiel,proposta,2020–21 DFB-Pokal
+2021,Holstein Kiel,2021-02-02,DFB-Pokal,H,Darmstadt,canonical_team,2020–21 DFB-Pokal
+2021,FC Koln,2021-02-03,DFB-Pokal,A,Jahn Regensburg,canonical_team,2020–21 DFB-Pokal
+2122,Darmstadt,2021-08-06,DFB-Pokal,A,1860 Munich,proposta,2021–22 DFB-Pokal
+2122,Greuther Furth,2021-08-07,DFB-Pokal,A,SV Babelsberg,proposta,2021–22 DFB-Pokal
+2122,FC Koln,2021-08-08,DFB-Pokal,A,Carl Zeiss Jena,canonical_team,2021–22 DFB-Pokal
+2122,Mainz,2021-08-08,DFB-Pokal,A,SV Elversberg,canonical_team,2021–22 DFB-Pokal
+2122,Wolfsburg,2021-08-08,DFB-Pokal,A,Preußen Münster,canonical_team,2021–22 DFB-Pokal
+2122,Freiburg,2021-10-26,DFB-Pokal,A,VfL Osnabrück,canonical_team,2021–22 DFB-Pokal
+2122,Hamburg,2021-10-26,DFB-Pokal,A,Nurnberg,canonical_team,2021–22 DFB-Pokal
+2122,Nurnberg,2021-10-26,DFB-Pokal,H,Hamburg,canonical_team,2021–22 DFB-Pokal
+2122,Augsburg,2021-10-27,DFB-Pokal,A,Bochum,canonical_team,2021–22 DFB-Pokal
+2122,Bochum,2021-10-27,DFB-Pokal,H,Augsburg,canonical_team,2021–22 DFB-Pokal
+2122,FC Koln,2022-01-18,DFB-Pokal,H,Hamburg,canonical_team,2021–22 DFB-Pokal
+2122,Hamburg,2022-01-18,DFB-Pokal,A,FC Koln,canonical_team,2021–22 DFB-Pokal
+2122,Hamburg,2022-03-02,DFB-Pokal,H,Karlsruher SC,canonical_team,2021–22 DFB-Pokal
+2122,Freiburg,2022-05-21,DFB-Pokal,H,RB Leipzig,canonical_team,2022 DFB-Pokal Final
+2122,RB Leipzig,2022-05-21,DFB-Pokal,A,Freiburg,canonical_team,2022 DFB-Pokal Final
+2223,FC Koln,2022-07-30,DFB-Pokal,A,Jahn Regensburg,canonical_team,2022–23 DFB-Pokal
+2223,Hertha,2022-07-31,DFB-Pokal,A,Eintracht Braunschweig,canonical_team,2022–23 DFB-Pokal
+2223,Holstein Kiel,2022-07-31,DFB-Pokal,A,Waldhof Mannheim,canonical_team,2022–23 DFB-Pokal
+2223,Paderborn,2022-10-19,DFB-Pokal,H,Werder Bremen,chiave-normalizzata,2022–23 DFB-Pokal
+2223,Werder Bremen,2022-10-19,DFB-Pokal,A,Paderborn,canonical_team,2022–23 DFB-Pokal
+2223,Fortuna Dusseldorf,2023-02-08,DFB-Pokal,A,Nurnberg,canonical_team,2022–23 DFB-Pokal
+2223,Nurnberg,2023-02-08,DFB-Pokal,H,Fortuna Dusseldorf,canonical_team,2022–23 DFB-Pokal
+2324,Hannover,2023-08-11,DFB-Pokal,A,SV Sandhausen,canonical_team,2023–24 DFB-Pokal
+2324,Bielefeld,2023-08-12,DFB-Pokal,H,Bochum,canonical_team,2023–24 DFB-Pokal
+2324,Bochum,2023-08-12,DFB-Pokal,A,Bielefeld,canonical_team,2023–24 DFB-Pokal
+2324,Bielefeld,2023-10-31,DFB-Pokal,H,Hamburg,canonical_team,2023–24 DFB-Pokal
+2324,Hamburg,2023-10-31,DFB-Pokal,A,Bielefeld,canonical_team,2023–24 DFB-Pokal
+2324,Holstein Kiel,2023-11-01,DFB-Pokal,H,1. FC Magdeburg,canonical_team,2023–24 DFB-Pokal
+2324,Hamburg,2023-12-06,DFB-Pokal,A,Hertha,canonical_team,2023–24 DFB-Pokal
+2324,Hertha,2023-12-06,DFB-Pokal,H,Hamburg,canonical_team,2023–24 DFB-Pokal
+2324,Fortuna Dusseldorf,2024-01-30,DFB-Pokal,A,St Pauli,canonical_team,2023–24 DFB-Pokal
+2324,St Pauli,2024-01-30,DFB-Pokal,H,Fortuna Dusseldorf,canonical_team,2023–24 DFB-Pokal
+2526,Bayern Munich,2025-12-03,DFB-Pokal,A,Union Berlin,canonical_team,2025–26 DFB-Pokal
+2526,Bochum,2025-12-03,DFB-Pokal,H,Stuttgart,canonical_team,2025–26 DFB-Pokal
+2526,Darmstadt,2025-12-03,DFB-Pokal,A,Freiburg,proposta,2025–26 DFB-Pokal
+2526,Freiburg,2025-12-03,DFB-Pokal,H,Darmstadt,canonical_team,2025–26 DFB-Pokal
+2526,Hamburg,2025-12-03,DFB-Pokal,H,Holstein Kiel,canonical_team,2025–26 DFB-Pokal
+2526,Holstein Kiel,2025-12-03,DFB-Pokal,A,Hamburg,canonical_team,2025–26 DFB-Pokal
+2526,Stuttgart,2025-12-03,DFB-Pokal,A,Bochum,canonical_team,2025–26 DFB-Pokal
+2526,Union Berlin,2025-12-03,DFB-Pokal,H,Bayern Munich,canonical_team,2025–26 DFB-Pokal
+2526,Leverkusen,2026-02-03,DFB-Pokal,H,St Pauli,canonical_team,2025–26 DFB-Pokal
+2526,St Pauli,2026-02-03,DFB-Pokal,A,Leverkusen,canonical_team,2025–26 DFB-Pokal
+2526,Holstein Kiel,2026-02-04,DFB-Pokal,H,Stuttgart,canonical_team,2025–26 DFB-Pokal
+2526,Stuttgart,2026-02-04,DFB-Pokal,A,Holstein Kiel,canonical_team,2025–26 DFB-Pokal
+2526,Freiburg,2026-02-10,DFB-Pokal,A,Hertha,canonical_team,2025–26 DFB-Pokal
+2526,Hertha,2026-02-10,DFB-Pokal,H,Freiburg,canonical_team,2025–26 DFB-Pokal
+2526,Bayern Munich,2026-02-11,DFB-Pokal,H,RB Leipzig,canonical_team,2025–26 DFB-Pokal
+2526,RB Leipzig,2026-02-11,DFB-Pokal,A,Bayern Munich,canonical_team,2025–26 DFB-Pokal
+2526,Bayern Munich,2026-04-22,DFB-Pokal,A,Leverkusen,canonical_team,2025–26 DFB-Pokal
+2526,Leverkusen,2026-04-22,DFB-Pokal,H,Bayern Munich,canonical_team,2025–26 DFB-Pokal
+2526,Freiburg,2026-04-23,DFB-Pokal,A,Stuttgart,canonical_team,2025–26 DFB-Pokal
+2526,Stuttgart,2026-04-23,DFB-Pokal,H,Freiburg,canonical_team,2025–26 DFB-Pokal
+2526,Bayern Munich,2026-05-23,DFB-Pokal,H,Stuttgart,canonical_team,2026 DFB-Pokal final
+2526,Stuttgart,2026-05-23,DFB-Pokal,A,Bayern Munich,canonical_team,2026 DFB-Pokal final

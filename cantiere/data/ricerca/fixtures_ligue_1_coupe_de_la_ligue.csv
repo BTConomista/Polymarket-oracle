@@ -1,0 +1,188 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Ajaccio,2017-08-08,Coupe de la Ligue,A,Lens,canonical_team,2017–18 Coupe de la Ligue
+1718,Auxerre,2017-08-08,Coupe de la Ligue,A,Red Star,canonical_team,2017–18 Coupe de la Ligue
+1718,Brest,2017-08-08,Coupe de la Ligue,A,Paris FC,canonical_team,2017–18 Coupe de la Ligue
+1718,Clermont,2017-08-08,Coupe de la Ligue,A,Châteauroux,canonical_team,2017–18 Coupe de la Ligue
+1718,Le Havre,2017-08-08,Coupe de la Ligue,H,Nimes,canonical_team,2017–18 Coupe de la Ligue
+1718,Lens,2017-08-08,Coupe de la Ligue,H,Ajaccio,canonical_team,2017–18 Coupe de la Ligue
+1718,Lorient,2017-08-08,Coupe de la Ligue,A,Laval,canonical_team,2017–18 Coupe de la Ligue
+1718,Nimes,2017-08-08,Coupe de la Ligue,A,Le Havre,proposta,2017–18 Coupe de la Ligue
+1718,Paris FC,2017-08-08,Coupe de la Ligue,H,Brest,canonical_team,2017–18 Coupe de la Ligue
+1718,Reims,2017-08-08,Coupe de la Ligue,A,Bourg-Péronnas,canonical_team,2017–18 Coupe de la Ligue
+1718,Clermont,2017-08-22,Coupe de la Ligue,A,Paris FC,canonical_team,2017–18 Coupe de la Ligue
+1718,Le Havre,2017-08-22,Coupe de la Ligue,A,Tours,canonical_team,2017–18 Coupe de la Ligue
+1718,Lens,2017-08-22,Coupe de la Ligue,A,Lorient,canonical_team,2017–18 Coupe de la Ligue
+1718,Lorient,2017-08-22,Coupe de la Ligue,H,Lens,canonical_team,2017–18 Coupe de la Ligue
+1718,Paris FC,2017-08-22,Coupe de la Ligue,H,Clermont,canonical_team,2017–18 Coupe de la Ligue
+1718,Reims,2017-08-22,Coupe de la Ligue,A,Valenciennes,canonical_team,2017–18 Coupe de la Ligue
+1718,Caen,2017-10-24,Coupe de la Ligue,A,Lorient,canonical_team,2017–18 Coupe de la Ligue
+1718,Guingamp,2017-10-24,Coupe de la Ligue,H,Montpellier,canonical_team,2017–18 Coupe de la Ligue
+1718,Lorient,2017-10-24,Coupe de la Ligue,H,Caen,canonical_team,2017–18 Coupe de la Ligue
+1718,Montpellier,2017-10-24,Coupe de la Ligue,A,Guingamp,canonical_team,2017–18 Coupe de la Ligue
+1718,Amiens,2017-10-25,Coupe de la Ligue,A,Troyes,canonical_team,2017–18 Coupe de la Ligue
+1718,Angers,2017-10-25,Coupe de la Ligue,H,Nancy,canonical_team,2017–18 Coupe de la Ligue
+1718,Clermont,2017-10-25,Coupe de la Ligue,A,Toulouse,canonical_team,2017–18 Coupe de la Ligue
+1718,Dijon,2017-10-25,Coupe de la Ligue,H,Rennes,canonical_team,2017–18 Coupe de la Ligue
+1718,Lille,2017-10-25,Coupe de la Ligue,H,Valenciennes,canonical_team,2017–18 Coupe de la Ligue
+1718,Metz,2017-10-25,Coupe de la Ligue,H,Red Star,canonical_team,2017–18 Coupe de la Ligue
+1718,Nantes,2017-10-25,Coupe de la Ligue,A,Tours,canonical_team,2017–18 Coupe de la Ligue
+1718,Rennes,2017-10-25,Coupe de la Ligue,A,Dijon,canonical_team,2017–18 Coupe de la Ligue
+1718,St Etienne,2017-10-25,Coupe de la Ligue,A,Strasbourg,proposta,2017–18 Coupe de la Ligue
+1718,Strasbourg,2017-10-25,Coupe de la Ligue,H,St Etienne,canonical_team,2017–18 Coupe de la Ligue
+1718,Toulouse,2017-10-25,Coupe de la Ligue,H,Clermont,canonical_team,2017–18 Coupe de la Ligue
+1718,Troyes,2017-10-25,Coupe de la Ligue,H,Amiens,canonical_team,2017–18 Coupe de la Ligue
+1718,Angers,2017-12-12,Coupe de la Ligue,H,Metz,canonical_team,2017–18 Coupe de la Ligue
+1718,Bordeaux,2017-12-12,Coupe de la Ligue,A,Toulouse,canonical_team,2017–18 Coupe de la Ligue
+1718,Caen,2017-12-12,Coupe de la Ligue,A,Monaco,canonical_team,2017–18 Coupe de la Ligue
+1718,Metz,2017-12-12,Coupe de la Ligue,A,Angers,canonical_team,2017–18 Coupe de la Ligue
+1718,Monaco,2017-12-12,Coupe de la Ligue,H,Caen,canonical_team,2017–18 Coupe de la Ligue
+1718,Toulouse,2017-12-12,Coupe de la Ligue,H,Bordeaux,canonical_team,2017–18 Coupe de la Ligue
+1718,Amiens,2017-12-13,Coupe de la Ligue,H,Tours,canonical_team,2017–18 Coupe de la Ligue
+1718,Lille,2017-12-13,Coupe de la Ligue,H,Nice,canonical_team,2017–18 Coupe de la Ligue
+1718,Lyon,2017-12-13,Coupe de la Ligue,A,Montpellier,canonical_team,2017–18 Coupe de la Ligue
+1718,Marseille,2017-12-13,Coupe de la Ligue,A,Rennes,canonical_team,2017–18 Coupe de la Ligue
+1718,Montpellier,2017-12-13,Coupe de la Ligue,H,Lyon,canonical_team,2017–18 Coupe de la Ligue
+1718,Nice,2017-12-13,Coupe de la Ligue,A,Lille,canonical_team,2017–18 Coupe de la Ligue
+1718,Paris SG,2017-12-13,Coupe de la Ligue,A,Strasbourg,canonical_team,2017–18 Coupe de la Ligue
+1718,Rennes,2017-12-13,Coupe de la Ligue,H,Marseille,canonical_team,2017–18 Coupe de la Ligue
+1718,Strasbourg,2017-12-13,Coupe de la Ligue,H,Paris SG,canonical_team,2017–18 Coupe de la Ligue
+1718,Monaco,2018-01-09,Coupe de la Ligue,A,Nice,canonical_team,2017–18 Coupe de la Ligue
+1718,Nice,2018-01-09,Coupe de la Ligue,H,Monaco,canonical_team,2017–18 Coupe de la Ligue
+1718,Amiens,2018-01-10,Coupe de la Ligue,H,Paris SG,canonical_team,2017–18 Coupe de la Ligue
+1718,Angers,2018-01-10,Coupe de la Ligue,H,Montpellier,canonical_team,2017–18 Coupe de la Ligue
+1718,Montpellier,2018-01-10,Coupe de la Ligue,A,Angers,canonical_team,2017–18 Coupe de la Ligue
+1718,Paris SG,2018-01-10,Coupe de la Ligue,A,Amiens,canonical_team,2017–18 Coupe de la Ligue
+1718,Rennes,2018-01-10,Coupe de la Ligue,H,Toulouse,canonical_team,2017–18 Coupe de la Ligue
+1718,Toulouse,2018-01-10,Coupe de la Ligue,A,Rennes,canonical_team,2017–18 Coupe de la Ligue
+1718,Paris SG,2018-01-30,Coupe de la Ligue,A,Rennes,canonical_team,2017–18 Coupe de la Ligue
+1718,Rennes,2018-01-30,Coupe de la Ligue,H,Paris SG,canonical_team,2017–18 Coupe de la Ligue
+1718,Monaco,2018-01-31,Coupe de la Ligue,H,Montpellier,canonical_team,2017–18 Coupe de la Ligue
+1718,Montpellier,2018-01-31,Coupe de la Ligue,A,Monaco,canonical_team,2017–18 Coupe de la Ligue
+1718,Monaco,2018-03-31,Coupe de la Ligue,A,Paris SG,canonical_team,2018 Coupe de la Ligue Final
+1718,Paris SG,2018-03-31,Coupe de la Ligue,H,Monaco,canonical_team,2018 Coupe de la Ligue Final
+1819,Ajaccio,2018-08-14,Coupe de la Ligue,A,Paris FC,canonical_team,2018–19 Coupe de la Ligue
+1819,Auxerre,2018-08-14,Coupe de la Ligue,H,Gazélec Ajaccio,canonical_team,2018–19 Coupe de la Ligue
+1819,Brest,2018-08-14,Coupe de la Ligue,A,Sochaux,canonical_team,2018–19 Coupe de la Ligue
+1819,Clermont,2018-08-14,Coupe de la Ligue,A,Laval,canonical_team,2018–19 Coupe de la Ligue
+1819,Le Havre,2018-08-14,Coupe de la Ligue,H,Bourg-Péronnas,canonical_team,2018–19 Coupe de la Ligue
+1819,Lens,2018-08-14,Coupe de la Ligue,A,Tours,canonical_team,2018–19 Coupe de la Ligue
+1819,Lorient,2018-08-14,Coupe de la Ligue,A,Valenciennes,canonical_team,2018–19 Coupe de la Ligue
+1819,Metz,2018-08-14,Coupe de la Ligue,H,Grenoble,canonical_team,2018–19 Coupe de la Ligue
+1819,Paris FC,2018-08-14,Coupe de la Ligue,H,Ajaccio,canonical_team,2018–19 Coupe de la Ligue
+1819,Troyes,2018-08-14,Coupe de la Ligue,A,Quevilly-Rouen,canonical_team,2018–19 Coupe de la Ligue
+1819,Ajaccio,2018-08-28,Coupe de la Ligue,H,Lorient,canonical_team,2018–19 Coupe de la Ligue
+1819,Auxerre,2018-08-28,Coupe de la Ligue,H,Châteauroux,canonical_team,2018–19 Coupe de la Ligue
+1819,Brest,2018-08-28,Coupe de la Ligue,A,Le Havre,canonical_team,2018–19 Coupe de la Ligue
+1819,Clermont,2018-08-28,Coupe de la Ligue,A,Troyes,canonical_team,2018–19 Coupe de la Ligue
+1819,Le Havre,2018-08-28,Coupe de la Ligue,H,Brest,canonical_team,2018–19 Coupe de la Ligue
+1819,Lens,2018-08-28,Coupe de la Ligue,H,Metz,canonical_team,2018–19 Coupe de la Ligue
+1819,Lorient,2018-08-28,Coupe de la Ligue,A,Ajaccio,canonical_team,2018–19 Coupe de la Ligue
+1819,Metz,2018-08-28,Coupe de la Ligue,A,Lens,canonical_team,2018–19 Coupe de la Ligue
+1819,Troyes,2018-08-28,Coupe de la Ligue,H,Clermont,canonical_team,2018–19 Coupe de la Ligue
+1819,Lille,2018-10-30,Coupe de la Ligue,A,Strasbourg,canonical_team,2018–19 Coupe de la Ligue
+1819,Montpellier,2018-10-30,Coupe de la Ligue,H,Nantes,canonical_team,2018–19 Coupe de la Ligue
+1819,Nantes,2018-10-30,Coupe de la Ligue,A,Montpellier,canonical_team,2018–19 Coupe de la Ligue
+1819,Strasbourg,2018-10-30,Coupe de la Ligue,H,Lille,canonical_team,2018–19 Coupe de la Ligue
+1819,Amiens,2018-10-31,Coupe de la Ligue,A,Metz,canonical_team,2018–19 Coupe de la Ligue
+1819,Angers,2018-10-31,Coupe de la Ligue,A,Guingamp,canonical_team,2018–19 Coupe de la Ligue
+1819,Auxerre,2018-10-31,Coupe de la Ligue,A,Nice,canonical_team,2018–19 Coupe de la Ligue
+1819,Caen,2018-10-31,Coupe de la Ligue,A,Dijon,canonical_team,2018–19 Coupe de la Ligue
+1819,Dijon,2018-10-31,Coupe de la Ligue,H,Caen,canonical_team,2018–19 Coupe de la Ligue
+1819,Guingamp,2018-10-31,Coupe de la Ligue,H,Angers,canonical_team,2018–19 Coupe de la Ligue
+1819,Le Havre,2018-10-31,Coupe de la Ligue,H,Troyes,canonical_team,2018–19 Coupe de la Ligue
+1819,Lorient,2018-10-31,Coupe de la Ligue,A,Toulouse,canonical_team,2018–19 Coupe de la Ligue
+1819,Metz,2018-10-31,Coupe de la Ligue,H,Amiens,canonical_team,2018–19 Coupe de la Ligue
+1819,Nice,2018-10-31,Coupe de la Ligue,H,Auxerre,canonical_team,2018–19 Coupe de la Ligue
+1819,Reims,2018-10-31,Coupe de la Ligue,H,Orléans,canonical_team,2018–19 Coupe de la Ligue
+1819,Toulouse,2018-10-31,Coupe de la Ligue,H,Lorient,canonical_team,2018–19 Coupe de la Ligue
+1819,Troyes,2018-10-31,Coupe de la Ligue,A,Le Havre,canonical_team,2018–19 Coupe de la Ligue
+1819,Nimes,2018-11-27,Coupe de la Ligue,H,St Etienne,proposta,2018–19 Coupe de la Ligue
+1819,St Etienne,2018-11-27,Coupe de la Ligue,A,Nimes,proposta,2018–19 Coupe de la Ligue
+1819,Paris SG,2018-12-18,Coupe de la Ligue,A,Orléans,canonical_team,2018–19 Coupe de la Ligue
+1819,Amiens,2018-12-19,Coupe de la Ligue,H,Lyon,canonical_team,2018–19 Coupe de la Ligue
+1819,Bordeaux,2018-12-19,Coupe de la Ligue,A,Dijon,canonical_team,2018–19 Coupe de la Ligue
+1819,Dijon,2018-12-19,Coupe de la Ligue,H,Bordeaux,canonical_team,2018–19 Coupe de la Ligue
+1819,Guingamp,2018-12-19,Coupe de la Ligue,A,Nice,canonical_team,2018–19 Coupe de la Ligue
+1819,Le Havre,2018-12-19,Coupe de la Ligue,H,Nimes,canonical_team,2018–19 Coupe de la Ligue
+1819,Lorient,2018-12-19,Coupe de la Ligue,A,Monaco,canonical_team,2018–19 Coupe de la Ligue
+1819,Lyon,2018-12-19,Coupe de la Ligue,A,Amiens,canonical_team,2018–19 Coupe de la Ligue
+1819,Marseille,2018-12-19,Coupe de la Ligue,H,Strasbourg,canonical_team,2018–19 Coupe de la Ligue
+1819,Monaco,2018-12-19,Coupe de la Ligue,H,Lorient,canonical_team,2018–19 Coupe de la Ligue
+1819,Nantes,2018-12-19,Coupe de la Ligue,A,Rennes,canonical_team,2018–19 Coupe de la Ligue
+1819,Nice,2018-12-19,Coupe de la Ligue,H,Guingamp,canonical_team,2018–19 Coupe de la Ligue
+1819,Nimes,2018-12-19,Coupe de la Ligue,A,Le Havre,proposta,2018–19 Coupe de la Ligue
+1819,Rennes,2018-12-19,Coupe de la Ligue,H,Nantes,canonical_team,2018–19 Coupe de la Ligue
+1819,Strasbourg,2018-12-19,Coupe de la Ligue,A,Marseille,canonical_team,2018–19 Coupe de la Ligue
+1819,Lyon,2019-01-08,Coupe de la Ligue,H,Strasbourg,canonical_team,2018–19 Coupe de la Ligue
+1819,Strasbourg,2019-01-08,Coupe de la Ligue,A,Lyon,canonical_team,2018–19 Coupe de la Ligue
+1819,Bordeaux,2019-01-09,Coupe de la Ligue,H,Le Havre,canonical_team,2018–19 Coupe de la Ligue
+1819,Guingamp,2019-01-09,Coupe de la Ligue,A,Paris SG,canonical_team,2018–19 Coupe de la Ligue
+1819,Le Havre,2019-01-09,Coupe de la Ligue,A,Bordeaux,canonical_team,2018–19 Coupe de la Ligue
+1819,Monaco,2019-01-09,Coupe de la Ligue,H,Rennes,canonical_team,2018–19 Coupe de la Ligue
+1819,Paris SG,2019-01-09,Coupe de la Ligue,H,Guingamp,canonical_team,2018–19 Coupe de la Ligue
+1819,Rennes,2019-01-09,Coupe de la Ligue,A,Monaco,canonical_team,2018–19 Coupe de la Ligue
+1819,Guingamp,2019-01-29,Coupe de la Ligue,H,Monaco,canonical_team,2018–19 Coupe de la Ligue
+1819,Monaco,2019-01-29,Coupe de la Ligue,A,Guingamp,canonical_team,2018–19 Coupe de la Ligue
+1819,Bordeaux,2019-01-30,Coupe de la Ligue,A,Strasbourg,canonical_team,2018–19 Coupe de la Ligue
+1819,Strasbourg,2019-01-30,Coupe de la Ligue,H,Bordeaux,canonical_team,2018–19 Coupe de la Ligue
+1819,Guingamp,2019-03-30,Coupe de la Ligue,A,Strasbourg,canonical_team,2019 Coupe de la Ligue Final
+1819,Strasbourg,2019-03-30,Coupe de la Ligue,H,Guingamp,canonical_team,2019 Coupe de la Ligue Final
+1920,Ajaccio,2019-08-13,Coupe de la Ligue,H,Valenciennes,canonical_team,2019–20 Coupe de la Ligue
+1920,Auxerre,2019-08-13,Coupe de la Ligue,H,Béziers,canonical_team,2019–20 Coupe de la Ligue
+1920,Caen,2019-08-13,Coupe de la Ligue,H,Nancy,canonical_team,2019–20 Coupe de la Ligue
+1920,Clermont,2019-08-13,Coupe de la Ligue,H,Le Havre,canonical_team,2019–20 Coupe de la Ligue
+1920,Guingamp,2019-08-13,Coupe de la Ligue,A,Orléans,canonical_team,2019–20 Coupe de la Ligue
+1920,Le Havre,2019-08-13,Coupe de la Ligue,A,Clermont,canonical_team,2019–20 Coupe de la Ligue
+1920,Lens,2019-08-13,Coupe de la Ligue,A,Troyes,canonical_team,2019–20 Coupe de la Ligue
+1920,Lorient,2019-08-13,Coupe de la Ligue,H,Le Mans,canonical_team,2019–20 Coupe de la Ligue
+1920,Paris FC,2019-08-13,Coupe de la Ligue,H,Sochaux,canonical_team,2019–20 Coupe de la Ligue
+1920,Troyes,2019-08-13,Coupe de la Ligue,H,Lens,canonical_team,2019–20 Coupe de la Ligue
+1920,Ajaccio,2019-08-27,Coupe de la Ligue,A,Nancy,canonical_team,2019–20 Coupe de la Ligue
+1920,Clermont,2019-08-27,Coupe de la Ligue,A,Lens,canonical_team,2019–20 Coupe de la Ligue
+1920,Lens,2019-08-27,Coupe de la Ligue,H,Clermont,canonical_team,2019–20 Coupe de la Ligue
+1920,Paris FC,2019-08-27,Coupe de la Ligue,A,Gazélec Ajaccio,canonical_team,2019–20 Coupe de la Ligue
+1920,Bordeaux,2019-10-29,Coupe de la Ligue,H,Dijon,canonical_team,2019–20 Coupe de la Ligue
+1920,Dijon,2019-10-29,Coupe de la Ligue,A,Bordeaux,canonical_team,2019–20 Coupe de la Ligue
+1920,Lens,2019-10-29,Coupe de la Ligue,A,Nimes,canonical_team,2019–20 Coupe de la Ligue
+1920,Nimes,2019-10-29,Coupe de la Ligue,H,Lens,proposta,2019–20 Coupe de la Ligue
+1920,Amiens,2019-10-30,Coupe de la Ligue,H,Angers,canonical_team,2019–20 Coupe de la Ligue
+1920,Angers,2019-10-30,Coupe de la Ligue,A,Amiens,canonical_team,2019–20 Coupe de la Ligue
+1920,Brest,2019-10-30,Coupe de la Ligue,A,Metz,canonical_team,2019–20 Coupe de la Ligue
+1920,Marseille,2019-10-30,Coupe de la Ligue,A,Monaco,canonical_team,2019–20 Coupe de la Ligue
+1920,Metz,2019-10-30,Coupe de la Ligue,H,Brest,canonical_team,2019–20 Coupe de la Ligue
+1920,Monaco,2019-10-30,Coupe de la Ligue,H,Marseille,canonical_team,2019–20 Coupe de la Ligue
+1920,Montpellier,2019-10-30,Coupe de la Ligue,H,Nancy,canonical_team,2019–20 Coupe de la Ligue
+1920,Nantes,2019-10-30,Coupe de la Ligue,H,Paris FC,canonical_team,2019–20 Coupe de la Ligue
+1920,Nice,2019-10-30,Coupe de la Ligue,A,Le Mans,canonical_team,2019–20 Coupe de la Ligue
+1920,Paris FC,2019-10-30,Coupe de la Ligue,A,Nantes,canonical_team,2019–20 Coupe de la Ligue
+1920,Reims,2019-10-30,Coupe de la Ligue,H,Bourg-Péronnas,canonical_team,2019–20 Coupe de la Ligue
+1920,Toulouse,2019-10-30,Coupe de la Ligue,A,Niort,canonical_team,2019–20 Coupe de la Ligue
+1920,Lille,2019-12-17,Coupe de la Ligue,A,Monaco,canonical_team,2019–20 Coupe de la Ligue
+1920,Monaco,2019-12-17,Coupe de la Ligue,H,Lille,canonical_team,2019–20 Coupe de la Ligue
+1920,Montpellier,2019-12-17,Coupe de la Ligue,A,Reims,canonical_team,2019–20 Coupe de la Ligue
+1920,Reims,2019-12-17,Coupe de la Ligue,H,Montpellier,canonical_team,2019–20 Coupe de la Ligue
+1920,Amiens,2019-12-18,Coupe de la Ligue,H,Rennes,canonical_team,2019–20 Coupe de la Ligue
+1920,Bordeaux,2019-12-18,Coupe de la Ligue,A,Brest,canonical_team,2019–20 Coupe de la Ligue
+1920,Brest,2019-12-18,Coupe de la Ligue,H,Bordeaux,canonical_team,2019–20 Coupe de la Ligue
+1920,Lyon,2019-12-18,Coupe de la Ligue,H,Toulouse,canonical_team,2019–20 Coupe de la Ligue
+1920,Nantes,2019-12-18,Coupe de la Ligue,H,Strasbourg,canonical_team,2019–20 Coupe de la Ligue
+1920,Nimes,2019-12-18,Coupe de la Ligue,H,St Etienne,proposta,2019–20 Coupe de la Ligue
+1920,Paris SG,2019-12-18,Coupe de la Ligue,A,Le Mans,canonical_team,2019–20 Coupe de la Ligue
+1920,Rennes,2019-12-18,Coupe de la Ligue,A,Amiens,canonical_team,2019–20 Coupe de la Ligue
+1920,St Etienne,2019-12-18,Coupe de la Ligue,A,Nimes,proposta,2019–20 Coupe de la Ligue
+1920,Strasbourg,2019-12-18,Coupe de la Ligue,A,Nantes,canonical_team,2019–20 Coupe de la Ligue
+1920,Toulouse,2019-12-18,Coupe de la Ligue,A,Lyon,canonical_team,2019–20 Coupe de la Ligue
+1920,Reims,2020-01-07,Coupe de la Ligue,H,Strasbourg,canonical_team,2019–20 Coupe de la Ligue
+1920,Strasbourg,2020-01-07,Coupe de la Ligue,A,Reims,canonical_team,2019–20 Coupe de la Ligue
+1920,Amiens,2020-01-08,Coupe de la Ligue,A,Lille,canonical_team,2019–20 Coupe de la Ligue
+1920,Brest,2020-01-08,Coupe de la Ligue,A,Lyon,canonical_team,2019–20 Coupe de la Ligue
+1920,Lille,2020-01-08,Coupe de la Ligue,H,Amiens,canonical_team,2019–20 Coupe de la Ligue
+1920,Lyon,2020-01-08,Coupe de la Ligue,H,Brest,canonical_team,2019–20 Coupe de la Ligue
+1920,Paris SG,2020-01-08,Coupe de la Ligue,H,St Etienne,canonical_team,2019–20 Coupe de la Ligue
+1920,St Etienne,2020-01-08,Coupe de la Ligue,A,Paris SG,proposta,2019–20 Coupe de la Ligue
+1920,Lille,2020-01-21,Coupe de la Ligue,A,Lyon,canonical_team,2019–20 Coupe de la Ligue
+1920,Lyon,2020-01-21,Coupe de la Ligue,H,Lille,canonical_team,2019–20 Coupe de la Ligue
+1920,Paris SG,2020-01-22,Coupe de la Ligue,A,Reims,canonical_team,2019–20 Coupe de la Ligue
+1920,Reims,2020-01-22,Coupe de la Ligue,H,Paris SG,canonical_team,2019–20 Coupe de la Ligue
+2021,Lyon,2020-07-31,Coupe de la Ligue,A,Paris SG,canonical_team,2020 Coupe de la Ligue Final
+2021,Paris SG,2020-07-31,Coupe de la Ligue,H,Lyon,canonical_team,2020 Coupe de la Ligue Final

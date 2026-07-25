@@ -1,0 +1,19 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Monaco,2017-07-29,Trophee des Champions,H,Paris SG,canonical_team,2017 Trophée des Champions
+1718,Paris SG,2017-07-29,Trophee des Champions,A,Monaco,canonical_team,2017 Trophée des Champions
+1819,Monaco,2018-08-04,Trophee des Champions,A,Paris SG,canonical_team,2018 Trophée des Champions
+1819,Paris SG,2018-08-04,Trophee des Champions,H,Monaco,canonical_team,2018 Trophée des Champions
+1920,Paris SG,2019-08-03,Trophee des Champions,H,Rennes,canonical_team,2019 Trophée des Champions
+1920,Rennes,2019-08-03,Trophee des Champions,A,Paris SG,canonical_team,2019 Trophée des Champions
+2021,Marseille,2021-01-13,Trophee des Champions,A,Paris SG,canonical_team,2020 Trophée des Champions
+2021,Paris SG,2021-01-13,Trophee des Champions,H,Marseille,canonical_team,2020 Trophée des Champions
+2122,Lille,2021-08-01,Trophee des Champions,H,Paris SG,canonical_team,2021 Trophée des Champions
+2122,Paris SG,2021-08-01,Trophee des Champions,A,Lille,canonical_team,2021 Trophée des Champions
+2223,Nantes,2022-07-31,Trophee des Champions,A,Paris SG,canonical_team,2022 Trophée des Champions
+2223,Paris SG,2022-07-31,Trophee des Champions,H,Nantes,canonical_team,2022 Trophée des Champions
+2324,Paris SG,2024-01-03,Trophee des Champions,H,Toulouse,canonical_team,2023 Trophée des Champions
+2324,Toulouse,2024-01-03,Trophee des Champions,A,Paris SG,canonical_team,2023 Trophée des Champions
+2425,Monaco,2025-01-05,Trophee des Champions,A,Paris SG,canonical_team,2024 Trophée des Champions
+2425,Paris SG,2025-01-05,Trophee des Champions,H,Monaco,canonical_team,2024 Trophée des Champions
+2526,Marseille,2026-01-08,Trophee des Champions,A,Paris SG,canonical_team,2025 Trophée des Champions
+2526,Paris SG,2026-01-08,Trophee des Champions,H,Marseille,canonical_team,2025 Trophée des Champions

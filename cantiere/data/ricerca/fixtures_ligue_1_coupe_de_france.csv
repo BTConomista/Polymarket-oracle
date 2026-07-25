@@ -1,0 +1,636 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Lens,2017-11-10,Coupe de France,A,US Nœux-les-Mines,canonical_team,2017–18 Coupe de France
+1718,Auxerre,2017-11-11,Coupe de France,A,FC Chamalières,canonical_team,2017–18 Coupe de France
+1718,Clermont,2017-11-11,Coupe de France,A,AS Yzeure,canonical_team,2017–18 Coupe de France
+1718,Paris FC,2017-11-11,Coupe de France,A,Stade Ygossais,canonical_team,2017–18 Coupe de France
+1718,Ajaccio,2017-11-12,Coupe de France,A,Saint-Amand FC,canonical_team,2017–18 Coupe de France
+1718,Brest,2017-11-12,Coupe de France,A,CS Plédran,canonical_team,2017–18 Coupe de France
+1718,Le Havre,2017-11-12,Coupe de France,A,Évreux FC 27,canonical_team,2017–18 Coupe de France
+1718,Lorient,2017-11-12,Coupe de France,A,Stella Maris Douarnenez,canonical_team,2017–18 Coupe de France
+1718,Nimes,2017-11-12,Coupe de France,H,Marseille Consolat,proposta,2017–18 Coupe de France
+1718,Reims,2017-11-12,Coupe de France,A,FC Geispolsheim 01,canonical_team,2017–18 Coupe de France
+1718,Ajaccio,2017-12-02,Coupe de France,A,Canet Roussillon FC,canonical_team,2017–18 Coupe de France
+1718,Auxerre,2017-12-02,Coupe de France,A,ASF Andrézieux,canonical_team,2017–18 Coupe de France
+1718,Brest,2017-12-02,Coupe de France,A,US Concarneau,canonical_team,2017–18 Coupe de France
+1718,Lorient,2017-12-02,Coupe de France,A,Séné FC,canonical_team,2017–18 Coupe de France
+1718,Paris FC,2017-12-02,Coupe de France,A,L'Entente SSG,canonical_team,2017–18 Coupe de France
+1718,Lens,2017-12-03,Coupe de France,H,Reims,canonical_team,2017–18 Coupe de France
+1718,Nimes,2017-12-03,Coupe de France,A,SC Anduzien,proposta,2017–18 Coupe de France
+1718,Reims,2017-12-03,Coupe de France,A,Lens,canonical_team,2017–18 Coupe de France
+1718,Auxerre,2018-01-06,Coupe de France,A,SC Schiltigheim,canonical_team,2017–18 Coupe de France
+1718,Caen,2018-01-06,Coupe de France,A,SC Hazebrouck,canonical_team,2017–18 Coupe de France
+1718,Guingamp,2018-01-06,Coupe de France,H,Niort,canonical_team,2017–18 Coupe de France
+1718,Lille,2018-01-06,Coupe de France,A,Le Mans FC,canonical_team,2017–18 Coupe de France
+1718,Lyon,2018-01-06,Coupe de France,A,Nancy,canonical_team,2017–18 Coupe de France
+1718,Monaco,2018-01-06,Coupe de France,A,AS Yzeure,canonical_team,2017–18 Coupe de France
+1718,Montpellier,2018-01-06,Coupe de France,A,CA Pontarlier,canonical_team,2017–18 Coupe de France
+1718,Nice,2018-01-06,Coupe de France,A,Toulouse,canonical_team,2017–18 Coupe de France
+1718,Toulouse,2018-01-06,Coupe de France,H,Nice,canonical_team,2017–18 Coupe de France
+1718,Amiens,2018-01-07,Coupe de France,A,Sochaux,canonical_team,2017–18 Coupe de France
+1718,Angers,2018-01-07,Coupe de France,H,Lorient,canonical_team,2017–18 Coupe de France
+1718,Bordeaux,2018-01-07,Coupe de France,A,US Granville,canonical_team,2017–18 Coupe de France
+1718,Dijon,2018-01-07,Coupe de France,A,Strasbourg,canonical_team,2017–18 Coupe de France
+1718,Lorient,2018-01-07,Coupe de France,A,Angers,canonical_team,2017–18 Coupe de France
+1718,Marseille,2018-01-07,Coupe de France,H,Valenciennes,canonical_team,2017–18 Coupe de France
+1718,Metz,2018-01-07,Coupe de France,A,USL Dunkerque,canonical_team,2017–18 Coupe de France
+1718,Nantes,2018-01-07,Coupe de France,A,USM Senlisienne,canonical_team,2017–18 Coupe de France
+1718,Nimes,2018-01-07,Coupe de France,A,St Etienne,proposta,2017–18 Coupe de France
+1718,Paris SG,2018-01-07,Coupe de France,A,Rennes,canonical_team,2017–18 Coupe de France
+1718,Rennes,2018-01-07,Coupe de France,H,Paris SG,canonical_team,2017–18 Coupe de France
+1718,St Etienne,2018-01-07,Coupe de France,H,Nimes,proposta,2017–18 Coupe de France
+1718,Strasbourg,2018-01-07,Coupe de France,H,Dijon,canonical_team,2017–18 Coupe de France
+1718,Troyes,2018-01-07,Coupe de France,A,FC Still 1930,canonical_team,2017–18 Coupe de France
+1718,Lens,2018-01-08,Coupe de France,H,US Boulogne,canonical_team,2017–18 Coupe de France
+1718,Auxerre,2018-01-23,Coupe de France,A,Nantes,canonical_team,2017–18 Coupe de France
+1718,Caen,2018-01-23,Coupe de France,A,Canet Roussillon FC,canonical_team,2017–18 Coupe de France
+1718,Lens,2018-01-23,Coupe de France,A,Stade Briochin,canonical_team,2017–18 Coupe de France
+1718,Marseille,2018-01-23,Coupe de France,A,SAS Épinal,canonical_team,2017–18 Coupe de France
+1718,Nantes,2018-01-23,Coupe de France,H,Auxerre,canonical_team,2017–18 Coupe de France
+1718,Toulouse,2018-01-23,Coupe de France,A,Bourg-en-Bresse,canonical_team,2017–18 Coupe de France
+1718,Guingamp,2018-01-24,Coupe de France,A,Paris SG,canonical_team,2017–18 Coupe de France
+1718,Lorient,2018-01-24,Coupe de France,A,Montpellier,canonical_team,2017–18 Coupe de France
+1718,Lyon,2018-01-24,Coupe de France,A,Monaco,canonical_team,2017–18 Coupe de France
+1718,Metz,2018-01-24,Coupe de France,A,Tours,canonical_team,2017–18 Coupe de France
+1718,Monaco,2018-01-24,Coupe de France,H,Lyon,canonical_team,2017–18 Coupe de France
+1718,Montpellier,2018-01-24,Coupe de France,H,Lorient,canonical_team,2017–18 Coupe de France
+1718,Paris SG,2018-01-24,Coupe de France,H,Guingamp,canonical_team,2017–18 Coupe de France
+1718,St Etienne,2018-01-24,Coupe de France,A,Troyes,proposta,2017–18 Coupe de France
+1718,Troyes,2018-01-24,Coupe de France,H,St Etienne,canonical_team,2017–18 Coupe de France
+1718,Lille,2018-01-25,Coupe de France,A,Strasbourg,canonical_team,2017–18 Coupe de France
+1718,Strasbourg,2018-01-25,Coupe de France,H,Lille,canonical_team,2017–18 Coupe de France
+1718,Auxerre,2018-02-06,Coupe de France,H,Les Herbiers VF,canonical_team,2017–18 Coupe de France
+1718,Marseille,2018-02-06,Coupe de France,A,Bourg-en-Bresse,canonical_team,2017–18 Coupe de France
+1718,Paris SG,2018-02-06,Coupe de France,A,Sochaux,canonical_team,2017–18 Coupe de France
+1718,Caen,2018-02-07,Coupe de France,A,Metz,canonical_team,2017–18 Coupe de France
+1718,Lens,2018-02-07,Coupe de France,H,Troyes,canonical_team,2017–18 Coupe de France
+1718,Lyon,2018-02-07,Coupe de France,A,Montpellier,canonical_team,2017–18 Coupe de France
+1718,Metz,2018-02-07,Coupe de France,H,Caen,canonical_team,2017–18 Coupe de France
+1718,Montpellier,2018-02-07,Coupe de France,H,Lyon,canonical_team,2017–18 Coupe de France
+1718,Troyes,2018-02-07,Coupe de France,A,Lens,canonical_team,2017–18 Coupe de France
+1718,Strasbourg,2018-02-08,Coupe de France,A,Grenoble Foot 38,canonical_team,2017–18 Coupe de France
+1718,Lens,2018-02-27,Coupe de France,A,Les Herbiers VF,canonical_team,2017–18 Coupe de France
+1718,Marseille,2018-02-28,Coupe de France,A,Paris SG,canonical_team,2017–18 Coupe de France
+1718,Paris SG,2018-02-28,Coupe de France,H,Marseille,canonical_team,2017–18 Coupe de France
+1718,Strasbourg,2018-02-28,Coupe de France,A,FC Chambly,canonical_team,2017–18 Coupe de France
+1718,Caen,2018-03-01,Coupe de France,H,Lyon,canonical_team,2017–18 Coupe de France
+1718,Lyon,2018-03-01,Coupe de France,A,Caen,canonical_team,2017–18 Coupe de France
+1718,Caen,2018-04-18,Coupe de France,H,Paris SG,canonical_team,2017–18 Coupe de France
+1718,Paris SG,2018-04-18,Coupe de France,A,Caen,canonical_team,2017–18 Coupe de France
+1718,Paris SG,2018-05-08,Coupe de France,A,Les Herbiers VF,canonical_team,2018 Coupe de France Final
+1819,Paris FC,2018-11-16,Coupe de France,A,Iris Club de Croix,canonical_team,2018–19 Coupe de France
+1819,Ajaccio,2018-11-17,Coupe de France,A,Olympique Alès,canonical_team,2018–19 Coupe de France
+1819,Auxerre,2018-11-17,Coupe de France,A,Angoulême CFC,canonical_team,2018–19 Coupe de France
+1819,Brest,2018-11-17,Coupe de France,A,FC Atlantique Vilaine,canonical_team,2018–19 Coupe de France
+1819,Clermont,2018-11-17,Coupe de France,A,FC Gueugnon,canonical_team,2018–19 Coupe de France
+1819,Le Havre,2018-11-17,Coupe de France,A,AS Gamaches,canonical_team,2018–19 Coupe de France
+1819,Lens,2018-11-17,Coupe de France,A,US Nogent,canonical_team,2018–19 Coupe de France
+1819,Troyes,2018-11-17,Coupe de France,A,AFC Compiègne,canonical_team,2018–19 Coupe de France
+1819,Lorient,2018-11-18,Coupe de France,A,US Saint-Malo,canonical_team,2018–19 Coupe de France
+1819,Metz,2018-11-18,Coupe de France,A,Sarreguemines FC,canonical_team,2018–19 Coupe de France
+1819,Strasbourg,2018-11-18,Coupe de France,H,US Reipertswiller,chiave-normalizzata,2018–19 Coupe de France
+1819,Clermont,2018-12-08,Coupe de France,A,AF Bobigny,canonical_team,2018–19 Coupe de France
+1819,Le Havre,2018-12-08,Coupe de France,A,AS Villers Houlgate Côte Fleurie,canonical_team,2018–19 Coupe de France
+1819,Lens,2018-12-08,Coupe de France,A,FC Versailles 78,canonical_team,2018–19 Coupe de France
+1819,Troyes,2018-12-08,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC,canonical_team,2018–19 Coupe de France
+1819,Brest,2018-12-09,Coupe de France,A,Vannes OC,canonical_team,2018–19 Coupe de France
+1819,Metz,2018-12-09,Coupe de France,A,CMS Oissel,canonical_team,2018–19 Coupe de France
+1819,Nantes,2019-01-04,Coupe de France,H,Châteauroux,canonical_team,2018–19 Coupe de France
+1819,Amiens,2019-01-05,Coupe de France,H,Valenciennes,canonical_team,2018–19 Coupe de France
+1819,Angers,2019-01-05,Coupe de France,A,ES Viry-Châtillon,canonical_team,2018–19 Coupe de France
+1819,Caen,2019-01-05,Coupe de France,A,Red Star,canonical_team,2018–19 Coupe de France
+1819,Clermont,2019-01-05,Coupe de France,A,Marignane Gignac FC,canonical_team,2018–19 Coupe de France
+1819,Dijon,2019-01-05,Coupe de France,A,SC Schiltigheim,canonical_team,2018–19 Coupe de France
+1819,Guingamp,2019-01-05,Coupe de France,A,Stade Pontivyen,canonical_team,2018–19 Coupe de France
+1819,Lyon,2019-01-05,Coupe de France,A,Bourges Foot,canonical_team,2018–19 Coupe de France
+1819,Metz,2019-01-05,Coupe de France,A,Olympique Saint-Quentin,canonical_team,2018–19 Coupe de France
+1819,Montpellier,2019-01-05,Coupe de France,A,L'Entente SSG,canonical_team,2018–19 Coupe de France
+1819,Nimes,2019-01-05,Coupe de France,A,AS Lyon-Duchère,proposta,2018–19 Coupe de France
+1819,Bordeaux,2019-01-06,Coupe de France,H,Le Havre,canonical_team,2018–19 Coupe de France
+1819,Brest,2019-01-06,Coupe de France,A,Rennes,canonical_team,2018–19 Coupe de France
+1819,Le Havre,2019-01-06,Coupe de France,A,Bordeaux,canonical_team,2018–19 Coupe de France
+1819,Lens,2019-01-06,Coupe de France,A,Reims,canonical_team,2018–19 Coupe de France
+1819,Marseille,2019-01-06,Coupe de France,A,ASF Andrézieux,canonical_team,2018–19 Coupe de France
+1819,Monaco,2019-01-06,Coupe de France,A,Canet Roussillon FC,canonical_team,2018–19 Coupe de France
+1819,Nice,2019-01-06,Coupe de France,A,Toulouse,canonical_team,2018–19 Coupe de France
+1819,Paris SG,2019-01-06,Coupe de France,A,GSI Pontivy,canonical_team,2018–19 Coupe de France
+1819,Reims,2019-01-06,Coupe de France,H,Lens,canonical_team,2018–19 Coupe de France
+1819,Rennes,2019-01-06,Coupe de France,H,Brest,canonical_team,2018–19 Coupe de France
+1819,St Etienne,2019-01-06,Coupe de France,A,Strasbourg,proposta,2018–19 Coupe de France
+1819,Strasbourg,2019-01-06,Coupe de France,H,St Etienne,chiave-normalizzata,2018–19 Coupe de France
+1819,Toulouse,2019-01-06,Coupe de France,H,Nice,canonical_team,2018–19 Coupe de France
+1819,Lille,2019-01-07,Coupe de France,H,Sochaux,canonical_team,2018–19 Coupe de France
+1819,Strasbourg,2019-01-16,Coupe de France,A,Grenoble,canonical_team,2018–19 Coupe de France
+1819,Guingamp,2019-01-22,Coupe de France,A,Nancy,canonical_team,2018–19 Coupe de France
+1819,Lille,2019-01-22,Coupe de France,A,FC Sète 34,canonical_team,2018–19 Coupe de France
+1819,Metz,2019-01-22,Coupe de France,A,Monaco,canonical_team,2018–19 Coupe de France
+1819,Monaco,2019-01-22,Coupe de France,H,Metz,canonical_team,2018–19 Coupe de France
+1819,Reims,2019-01-22,Coupe de France,A,Toulouse,canonical_team,2018–19 Coupe de France
+1819,Toulouse,2019-01-22,Coupe de France,H,Reims,canonical_team,2018–19 Coupe de France
+1819,Caen,2019-01-23,Coupe de France,A,ES Viry-Châtillon,canonical_team,2018–19 Coupe de France
+1819,Dijon,2019-01-23,Coupe de France,A,St Etienne,canonical_team,2018–19 Coupe de France
+1819,Paris SG,2019-01-23,Coupe de France,H,Strasbourg,canonical_team,2018–19 Coupe de France
+1819,Rennes,2019-01-23,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC,canonical_team,2018–19 Coupe de France
+1819,St Etienne,2019-01-23,Coupe de France,H,Dijon,proposta,2018–19 Coupe de France
+1819,Strasbourg,2019-01-23,Coupe de France,A,Paris SG,canonical_team,2018–19 Coupe de France
+1819,Amiens,2019-01-24,Coupe de France,H,Lyon,canonical_team,2018–19 Coupe de France
+1819,Le Havre,2019-01-24,Coupe de France,A,AS Vitré,canonical_team,2018–19 Coupe de France
+1819,Lyon,2019-01-24,Coupe de France,A,Amiens,canonical_team,2018–19 Coupe de France
+1819,Nantes,2019-02-02,Coupe de France,A,L'Entente SSG,canonical_team,2018–19 Coupe de France
+1819,Caen,2019-02-05,Coupe de France,A,SC Bastia,canonical_team,2018–19 Coupe de France
+1819,Dijon,2019-02-05,Coupe de France,A,Iris Club de Croix,canonical_team,2018–19 Coupe de France
+1819,Metz,2019-02-05,Coupe de France,H,Orléans,canonical_team,2018–19 Coupe de France
+1819,Nantes,2019-02-05,Coupe de France,H,Toulouse,canonical_team,2018–19 Coupe de France
+1819,Toulouse,2019-02-05,Coupe de France,A,Nantes,canonical_team,2018–19 Coupe de France
+1819,Lille,2019-02-06,Coupe de France,A,Rennes,canonical_team,2018–19 Coupe de France
+1819,Paris SG,2019-02-06,Coupe de France,A,FC Villefranche,canonical_team,2018–19 Coupe de France
+1819,Rennes,2019-02-06,Coupe de France,H,Lille,canonical_team,2018–19 Coupe de France
+1819,Guingamp,2019-02-07,Coupe de France,H,Lyon,canonical_team,2018–19 Coupe de France
+1819,Lyon,2019-02-07,Coupe de France,A,Guingamp,canonical_team,2018–19 Coupe de France
+1819,Dijon,2019-02-26,Coupe de France,A,Paris SG,canonical_team,2018–19 Coupe de France
+1819,Paris SG,2019-02-26,Coupe de France,H,Dijon,canonical_team,2018–19 Coupe de France
+1819,Caen,2019-02-27,Coupe de France,A,Lyon,canonical_team,2018–19 Coupe de France
+1819,Lyon,2019-02-27,Coupe de France,H,Caen,canonical_team,2018–19 Coupe de France
+1819,Rennes,2019-02-27,Coupe de France,H,US Orléans,canonical_team,2018–19 Coupe de France
+1819,Nantes,2019-03-06,Coupe de France,A,AS Vitré,canonical_team,2018–19 Coupe de France
+1819,Lyon,2019-04-02,Coupe de France,H,Rennes,canonical_team,2018–19 Coupe de France
+1819,Rennes,2019-04-02,Coupe de France,A,Lyon,canonical_team,2018–19 Coupe de France
+1819,Nantes,2019-04-03,Coupe de France,A,Paris SG,canonical_team,2018–19 Coupe de France
+1819,Paris SG,2019-04-03,Coupe de France,H,Nantes,canonical_team,2018–19 Coupe de France
+1819,Paris SG,2019-04-27,Coupe de France,A,Rennes,canonical_team,2019 Coupe de France Final
+1819,Rennes,2019-04-27,Coupe de France,H,Paris SG,canonical_team,2019 Coupe de France Final
+1920,Le Havre,2019-11-15,Coupe de France,H,USL Dunkerque,canonical_team,2019–20 Coupe de France
+1920,Troyes,2019-11-15,Coupe de France,A,Football Bourg-en-Bresse Péronnas 01,canonical_team,2019–20 Coupe de France
+1920,Ajaccio,2019-11-16,Coupe de France,A,US Saint-Flour,canonical_team,2019–20 Coupe de France
+1920,Auxerre,2019-11-16,Coupe de France,A,US La Charité,canonical_team,2019–20 Coupe de France
+1920,Caen,2019-11-16,Coupe de France,A,ASI Mûrs-Erigné,canonical_team,2019–20 Coupe de France
+1920,Clermont,2019-11-16,Coupe de France,A,Bergerac Périgord FC,canonical_team,2019–20 Coupe de France
+1920,Guingamp,2019-11-16,Coupe de France,A,Lorient,canonical_team,2019–20 Coupe de France
+1920,Lens,2019-11-16,Coupe de France,H,US Boulogne,canonical_team,2019–20 Coupe de France
+1920,Lorient,2019-11-16,Coupe de France,H,Guingamp,canonical_team,2019–20 Coupe de France
+1920,Lyon,2019-11-16,Coupe de France,H,Athlético Marseille,chiave-normalizzata,2019–20 Coupe de France
+1920,Paris FC,2019-11-16,Coupe de France,A,CSO Amnéville,canonical_team,2019–20 Coupe de France
+1920,Auxerre,2019-12-07,Coupe de France,A,SSEP Hombourg-Haut,canonical_team,2019–20 Coupe de France
+1920,Caen,2019-12-07,Coupe de France,A,C'Chartres Football,canonical_team,2019–20 Coupe de France
+1920,Lorient,2019-12-07,Coupe de France,A,Stade Pontivyen,canonical_team,2019–20 Coupe de France
+1920,Lens,2019-12-08,Coupe de France,A,FC Dieppe,canonical_team,2019–20 Coupe de France
+1920,Paris FC,2019-12-08,Coupe de France,A,Olympique de Valence,canonical_team,2019–20 Coupe de France
+1920,Bordeaux,2020-01-03,Coupe de France,H,Le Mans,canonical_team,2019–20 Coupe de France
+1920,Amiens,2020-01-04,Coupe de France,A,Rennes,canonical_team,2019–20 Coupe de France
+1920,Caen,2020-01-04,Coupe de France,A,FC Guichen,canonical_team,2019–20 Coupe de France
+1920,Lyon,2020-01-04,Coupe de France,A,Football Bourg-en-Bresse 01,canonical_team,2019–20 Coupe de France
+1920,Monaco,2020-01-04,Coupe de France,H,Reims,canonical_team,2019–20 Coupe de France
+1920,Nantes,2020-01-04,Coupe de France,A,Aviron Bayonnais FC,canonical_team,2019–20 Coupe de France
+1920,Nimes,2020-01-04,Coupe de France,A,Tours FC,proposta,2019–20 Coupe de France
+1920,Paris FC,2020-01-04,Coupe de France,A,AS Fabrègues,canonical_team,2019–20 Coupe de France
+1920,Reims,2020-01-04,Coupe de France,A,Monaco,canonical_team,2019–20 Coupe de France
+1920,Rennes,2020-01-04,Coupe de France,H,Amiens,canonical_team,2019–20 Coupe de France
+1920,Strasbourg,2020-01-04,Coupe de France,A,Stade Portelois,canonical_team,2019–20 Coupe de France
+1920,Toulouse,2020-01-04,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC,canonical_team,2019–20 Coupe de France
+1920,Angers,2020-01-05,Coupe de France,A,FC Dieppe,canonical_team,2019–20 Coupe de France
+1920,Brest,2020-01-05,Coupe de France,A,Lorient,canonical_team,2019–20 Coupe de France
+1920,Dijon,2020-01-05,Coupe de France,A,Valenciennes,canonical_team,2019–20 Coupe de France
+1920,Lille,2020-01-05,Coupe de France,A,US Raon-l'Étape,canonical_team,2019–20 Coupe de France
+1920,Lorient,2020-01-05,Coupe de France,H,Brest,canonical_team,2019–20 Coupe de France
+1920,Marseille,2020-01-05,Coupe de France,A,Trélissac FC,canonical_team,2019–20 Coupe de France
+1920,Montpellier,2020-01-05,Coupe de France,A,EF Reims Ste Anne Châtillons,canonical_team,2019–20 Coupe de France
+1920,Nice,2020-01-05,Coupe de France,H,Étoile Fréjus Saint-Raphaël,canonical_team,2019–20 Coupe de France
+1920,Paris SG,2020-01-05,Coupe de France,A,ESA Linas-Montlhéry,canonical_team,2019–20 Coupe de France
+1920,St Etienne,2020-01-05,Coupe de France,A,FC Bastia-Borgo,proposta,2019–20 Coupe de France
+1920,Metz,2020-01-06,Coupe de France,A,FC Rouen,canonical_team,2019–20 Coupe de France
+1920,Bordeaux,2020-01-16,Coupe de France,A,Pau FC,canonical_team,2019–20 Coupe de France
+1920,Marseille,2020-01-17,Coupe de France,A,Granville,canonical_team,2019–20 Coupe de France
+1920,Lille,2020-01-18,Coupe de France,A,ESM Gonfreville,canonical_team,2019–20 Coupe de France
+1920,Lyon,2020-01-18,Coupe de France,A,Nantes,canonical_team,2019–20 Coupe de France
+1920,Nantes,2020-01-18,Coupe de France,H,Lyon,canonical_team,2019–20 Coupe de France
+1920,Nice,2020-01-18,Coupe de France,H,Red Star,canonical_team,2019–20 Coupe de France
+1920,Paris FC,2020-01-18,Coupe de France,H,St Etienne,canonical_team,2019–20 Coupe de France
+1920,St Etienne,2020-01-18,Coupe de France,A,Paris FC,proposta,2019–20 Coupe de France
+1920,Strasbourg,2020-01-18,Coupe de France,A,Angoulême-Soyaux Charente,canonical_team,2019–20 Coupe de France
+1920,Angers,2020-01-19,Coupe de France,A,FC Rouen,canonical_team,2019–20 Coupe de France
+1920,Caen,2020-01-19,Coupe de France,A,Montpellier,canonical_team,2019–20 Coupe de France
+1920,Dijon,2020-01-19,Coupe de France,H,Nimes,canonical_team,2019–20 Coupe de France
+1920,Lorient,2020-01-19,Coupe de France,H,Paris SG,canonical_team,2019–20 Coupe de France
+1920,Montpellier,2020-01-19,Coupe de France,H,Caen,canonical_team,2019–20 Coupe de France
+1920,Nimes,2020-01-19,Coupe de France,A,Dijon,proposta,2019–20 Coupe de France
+1920,Paris SG,2020-01-19,Coupe de France,A,Lorient,canonical_team,2019–20 Coupe de France
+1920,Rennes,2020-01-19,Coupe de France,A,Athlético Marseille,canonical_team,2019–20 Coupe de France
+1920,Monaco,2020-01-20,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC,canonical_team,2019–20 Coupe de France
+1920,Angers,2020-01-28,Coupe de France,H,Rennes,canonical_team,2019–20 Coupe de France
+1920,Dijon,2020-01-28,Coupe de France,A,FC Limonest Saint-Didier,canonical_team,2019–20 Coupe de France
+1920,Monaco,2020-01-28,Coupe de France,H,St Etienne,canonical_team,2019–20 Coupe de France
+1920,Montpellier,2020-01-28,Coupe de France,A,ASM Belfort,canonical_team,2019–20 Coupe de France
+1920,Rennes,2020-01-28,Coupe de France,A,Angers,canonical_team,2019–20 Coupe de France
+1920,St Etienne,2020-01-28,Coupe de France,A,Monaco,proposta,2019–20 Coupe de France
+1920,Lille,2020-01-29,Coupe de France,A,SAS Épinal,canonical_team,2019–20 Coupe de France
+1920,Marseille,2020-01-29,Coupe de France,H,Strasbourg,canonical_team,2019–20 Coupe de France
+1920,Paris SG,2020-01-29,Coupe de France,A,Pau FC,canonical_team,2019–20 Coupe de France
+1920,Strasbourg,2020-01-29,Coupe de France,A,Marseille,canonical_team,2019–20 Coupe de France
+1920,Lyon,2020-01-30,Coupe de France,A,Nice,canonical_team,2019–20 Coupe de France
+1920,Nice,2020-01-30,Coupe de France,H,Lyon,canonical_team,2019–20 Coupe de France
+1920,Rennes,2020-02-11,Coupe de France,A,ASM Belfort,canonical_team,2019–20 Coupe de France
+1920,Dijon,2020-02-12,Coupe de France,H,Paris SG,canonical_team,2019–20 Coupe de France
+1920,Lyon,2020-02-12,Coupe de France,H,Marseille,canonical_team,2019–20 Coupe de France
+1920,Marseille,2020-02-12,Coupe de France,A,Lyon,canonical_team,2019–20 Coupe de France
+1920,Paris SG,2020-02-12,Coupe de France,A,Dijon,canonical_team,2019–20 Coupe de France
+1920,St Etienne,2020-02-13,Coupe de France,A,SAS Épinal,proposta,2019–20 Coupe de France
+1920,Lyon,2020-03-04,Coupe de France,H,Paris SG,canonical_team,2019–20 Coupe de France
+1920,Paris SG,2020-03-04,Coupe de France,A,Lyon,canonical_team,2019–20 Coupe de France
+1920,Rennes,2020-03-05,Coupe de France,A,St Etienne,canonical_team,2019–20 Coupe de France
+1920,St Etienne,2020-03-05,Coupe de France,H,Rennes,proposta,2019–20 Coupe de France
+2021,Paris SG,2020-07-24,Coupe de France,H,St Etienne,canonical_team,2020 Coupe de France Final
+2021,St Etienne,2020-07-24,Coupe de France,A,Paris SG,proposta,2020 Coupe de France Final
+2021,Ajaccio,2021-01-19,Coupe de France,A,Châteauroux,canonical_team,2020–21 Coupe de France
+2021,Amiens,2021-01-19,Coupe de France,A,Dunkerque,canonical_team,2020–21 Coupe de France
+2021,Auxerre,2021-01-19,Coupe de France,H,Troyes,canonical_team,2020–21 Coupe de France
+2021,Le Havre,2021-01-19,Coupe de France,H,Paris FC,canonical_team,2020–21 Coupe de France
+2021,Paris FC,2021-01-19,Coupe de France,A,Le Havre,canonical_team,2020–21 Coupe de France
+2021,Troyes,2021-01-19,Coupe de France,A,Auxerre,canonical_team,2020–21 Coupe de France
+2021,Caen,2021-01-20,Coupe de France,A,Guingamp,canonical_team,2020–21 Coupe de France
+2021,Clermont,2021-01-20,Coupe de France,H,Grenoble,canonical_team,2020–21 Coupe de France
+2021,Guingamp,2021-01-20,Coupe de France,H,Caen,canonical_team,2020–21 Coupe de France
+2021,Toulouse,2021-01-20,Coupe de France,H,Niort,canonical_team,2020–21 Coupe de France
+2021,Amiens,2021-02-07,Coupe de France,A,US Lesquin,chiave-normalizzata,2020–21 Coupe de France
+2021,Ajaccio,2021-02-09,Coupe de France,A,Lyon,canonical_team,2020–21 Coupe de France
+2021,Lorient,2021-02-09,Coupe de France,H,Paris FC,canonical_team,2020–21 Coupe de France
+2021,Lyon,2021-02-09,Coupe de France,H,Ajaccio,canonical_team,2020–21 Coupe de France
+2021,Paris FC,2021-02-09,Coupe de France,A,Lorient,canonical_team,2020–21 Coupe de France
+2021,Reims,2021-02-09,Coupe de France,H,Valenciennes,canonical_team,2020–21 Coupe de France
+2021,Amiens,2021-02-10,Coupe de France,H,Metz,canonical_team,2020–21 Coupe de France
+2021,Auxerre,2021-02-10,Coupe de France,H,Marseille,canonical_team,2020–21 Coupe de France
+2021,Bordeaux,2021-02-10,Coupe de France,H,Toulouse,canonical_team,2020–21 Coupe de France
+2021,Brest,2021-02-10,Coupe de France,H,Rodez,canonical_team,2020–21 Coupe de France
+2021,Caen,2021-02-10,Coupe de France,H,Paris SG,canonical_team,2020–21 Coupe de France
+2021,Dijon,2021-02-10,Coupe de France,H,Lille,canonical_team,2020–21 Coupe de France
+2021,Lens,2021-02-10,Coupe de France,A,Nantes,canonical_team,2020–21 Coupe de France
+2021,Lille,2021-02-10,Coupe de France,A,Dijon,canonical_team,2020–21 Coupe de France
+2021,Marseille,2021-02-10,Coupe de France,A,Auxerre,canonical_team,2020–21 Coupe de France
+2021,Metz,2021-02-10,Coupe de France,A,Amiens,canonical_team,2020–21 Coupe de France
+2021,Monaco,2021-02-10,Coupe de France,A,Grenoble,canonical_team,2020–21 Coupe de France
+2021,Montpellier,2021-02-10,Coupe de France,A,Strasbourg,canonical_team,2020–21 Coupe de France
+2021,Nantes,2021-02-10,Coupe de France,H,Lens,canonical_team,2020–21 Coupe de France
+2021,Nice,2021-02-10,Coupe de France,A,Nimes,canonical_team,2020–21 Coupe de France
+2021,Nimes,2021-02-10,Coupe de France,H,Nice,proposta,2020–21 Coupe de France
+2021,Paris SG,2021-02-10,Coupe de France,A,Caen,canonical_team,2020–21 Coupe de France
+2021,Strasbourg,2021-02-10,Coupe de France,H,Montpellier,canonical_team,2020–21 Coupe de France
+2021,Toulouse,2021-02-10,Coupe de France,A,Bordeaux,canonical_team,2020–21 Coupe de France
+2021,Angers,2021-02-11,Coupe de France,H,Rennes,canonical_team,2020–21 Coupe de France
+2021,Rennes,2021-02-11,Coupe de France,A,Angers,canonical_team,2020–21 Coupe de France
+2021,St Etienne,2021-02-11,Coupe de France,A,Sochaux,proposta,2020–21 Coupe de France
+2021,Amiens,2021-02-14,Coupe de France,A,OS Aire-sur-la-Lys,chiave-normalizzata,2020–21 Coupe de France
+2021,Toulouse,2021-03-05,Coupe de France,A,Aubagne FC,canonical_team,2020–21 Coupe de France
+2021,Brest,2021-03-06,Coupe de France,H,Paris SG,canonical_team,2020–21 Coupe de France
+2021,Lens,2021-03-06,Coupe de France,A,Red Star,canonical_team,2020–21 Coupe de France
+2021,Lorient,2021-03-06,Coupe de France,A,Le Puy Foot 43 Auvergne,canonical_team,2020–21 Coupe de France
+2021,Lyon,2021-03-06,Coupe de France,H,Sochaux,canonical_team,2020–21 Coupe de France
+2021,Metz,2021-03-06,Coupe de France,A,Valenciennes,canonical_team,2020–21 Coupe de France
+2021,Montpellier,2021-03-06,Coupe de France,A,Olympique Alès,canonical_team,2020–21 Coupe de France
+2021,Paris SG,2021-03-06,Coupe de France,A,Brest,canonical_team,2020–21 Coupe de France
+2021,Angers,2021-03-07,Coupe de France,H,Club Franciscain,canonical_team,2020–21 Coupe de France
+2021,Lille,2021-03-07,Coupe de France,A,Gazélec Ajaccio,canonical_team,2020–21 Coupe de France
+2021,Marseille,2021-03-07,Coupe de France,A,Canet Roussillon FC,canonical_team,2020–21 Coupe de France
+2021,Monaco,2021-03-08,Coupe de France,A,Nice,canonical_team,2020–21 Coupe de France
+2021,Nice,2021-03-08,Coupe de France,H,Monaco,canonical_team,2020–21 Coupe de France
+2021,Lille,2021-03-17,Coupe de France,A,Paris SG,canonical_team,2020–21 Coupe de France
+2021,Paris SG,2021-03-17,Coupe de France,H,Lille,canonical_team,2020–21 Coupe de France
+2021,Metz,2021-04-06,Coupe de France,A,Monaco,canonical_team,2020–21 Coupe de France
+2021,Monaco,2021-04-06,Coupe de France,H,Metz,canonical_team,2020–21 Coupe de France
+2021,Angers,2021-04-07,Coupe de France,A,CS Sedan Ardennes,canonical_team,2020–21 Coupe de France
+2021,Montpellier,2021-04-07,Coupe de France,A,Voltigeurs de Châteaubriant,canonical_team,2020–21 Coupe de France
+2021,Toulouse,2021-04-07,Coupe de France,A,Olympique Saumur FC,canonical_team,2020–21 Coupe de France
+2021,Lyon,2021-04-08,Coupe de France,A,Red Star,canonical_team,2020–21 Coupe de France
+2021,Montpellier,2021-04-20,Coupe de France,A,Canet Roussillon FC,canonical_team,2020–21 Coupe de France
+2021,Toulouse,2021-04-20,Coupe de France,A,GFA Rumilly-Vallières,canonical_team,2020–21 Coupe de France
+2021,Angers,2021-04-21,Coupe de France,A,Paris SG,canonical_team,2020–21 Coupe de France
+2021,Lyon,2021-04-21,Coupe de France,H,Monaco,canonical_team,2020–21 Coupe de France
+2021,Monaco,2021-04-21,Coupe de France,A,Lyon,canonical_team,2020–21 Coupe de France
+2021,Paris SG,2021-04-21,Coupe de France,H,Angers,canonical_team,2020–21 Coupe de France
+2021,Montpellier,2021-05-12,Coupe de France,H,Paris SG,canonical_team,2020–21 Coupe de France
+2021,Paris SG,2021-05-12,Coupe de France,A,Montpellier,canonical_team,2020–21 Coupe de France
+2021,Monaco,2021-05-13,Coupe de France,A,GFA Rumilly-Vallières,canonical_team,2020–21 Coupe de France
+2021,Monaco,2021-05-19,Coupe de France,H,Paris SG,canonical_team,2021 Coupe de France Final
+2021,Paris SG,2021-05-19,Coupe de France,A,Monaco,canonical_team,2021 Coupe de France Final
+2122,Ajaccio,2021-11-12,Coupe de France,H,US Orléans,canonical_team,2021–22 Coupe de France
+2122,Amiens,2021-11-13,Coupe de France,A,ES Anzin-Saint-Aubin,canonical_team,2021–22 Coupe de France
+2122,Auxerre,2021-11-13,Coupe de France,A,FC Limonest Saint-Didier,canonical_team,2021–22 Coupe de France
+2122,Caen,2021-11-13,Coupe de France,A,Dinan-Léhon FC,canonical_team,2021–22 Coupe de France
+2122,Dijon,2021-11-13,Coupe de France,A,ASC Saint-Apollinaire,canonical_team,2021–22 Coupe de France
+2122,Guingamp,2021-11-13,Coupe de France,A,US Liffré,canonical_team,2021–22 Coupe de France
+2122,Le Havre,2021-11-13,Coupe de France,A,Vierzon FC,canonical_team,2021–22 Coupe de France
+2122,Nimes,2021-11-13,Coupe de France,A,FC Chusclan-Laudun-l'Ardoise,proposta,2021–22 Coupe de France
+2122,Toulouse,2021-11-13,Coupe de France,A,FC Libourne,canonical_team,2021–22 Coupe de France
+2122,Amiens,2021-11-14,Coupe de France,A,FC Dutemple,chiave-normalizzata,2021–22 Coupe de France
+2122,Paris FC,2021-11-14,Coupe de France,A,CS Sedan Ardennes,canonical_team,2021–22 Coupe de France
+2122,Amiens,2021-11-27,Coupe de France,A,AC Cambrai,canonical_team,2021–22 Coupe de France
+2122,Auxerre,2021-11-27,Coupe de France,A,Chambéry SF,canonical_team,2021–22 Coupe de France
+2122,Dijon,2021-11-27,Coupe de France,A,FC Morteau-Montlebon,canonical_team,2021–22 Coupe de France
+2122,Guingamp,2021-11-27,Coupe de France,H,Stade Briochin,canonical_team,2021–22 Coupe de France
+2122,Nimes,2021-11-27,Coupe de France,A,Aubagne FC,proposta,2021–22 Coupe de France
+2122,Paris FC,2021-11-27,Coupe de France,H,CSC Cayenne,canonical_team,2021–22 Coupe de France
+2122,Le Havre,2021-11-28,Coupe de France,A,US Chauvigny,canonical_team,2021–22 Coupe de France
+2122,Toulouse,2021-11-28,Coupe de France,A,Trélissac-Antonne Périgord FC,canonical_team,2021–22 Coupe de France
+2122,Strasbourg,2021-12-16,Coupe de France,A,Valenciennes,canonical_team,2021–22 Coupe de France
+2122,Lyon,2021-12-17,Coupe de France,A,Paris FC,canonical_team,2021–22 Coupe de France
+2122,Paris FC,2021-12-17,Coupe de France,H,Lyon,canonical_team,2021–22 Coupe de France
+2122,Amiens,2021-12-18,Coupe de France,A,Guingamp,canonical_team,2021–22 Coupe de France
+2122,Auxerre,2021-12-18,Coupe de France,A,Lille,canonical_team,2021–22 Coupe de France
+2122,Clermont,2021-12-18,Coupe de France,A,JS Chemin Bas d'Avignon,canonical_team,2021–22 Coupe de France
+2122,Dijon,2021-12-18,Coupe de France,A,AS Cannes,canonical_team,2021–22 Coupe de France
+2122,Guingamp,2021-12-18,Coupe de France,H,Amiens,canonical_team,2021–22 Coupe de France
+2122,Lille,2021-12-18,Coupe de France,H,Auxerre,canonical_team,2021–22 Coupe de France
+2122,Lorient,2021-12-18,Coupe de France,A,Rennes,canonical_team,2021–22 Coupe de France
+2122,Nantes,2021-12-18,Coupe de France,A,Sochaux,canonical_team,2021–22 Coupe de France
+2122,Nimes,2021-12-18,Coupe de France,A,Toulouse,proposta,2021–22 Coupe de France
+2122,Rennes,2021-12-18,Coupe de France,H,Lorient,canonical_team,2021–22 Coupe de France
+2122,Toulouse,2021-12-18,Coupe de France,H,Nimes,canonical_team,2021–22 Coupe de France
+2122,Troyes,2021-12-18,Coupe de France,H,Nancy,canonical_team,2021–22 Coupe de France
+2122,Angers,2021-12-19,Coupe de France,A,ESA Linas-Montlhéry,canonical_team,2021–22 Coupe de France
+2122,Bordeaux,2021-12-19,Coupe de France,H,AS Jumeaux de M'zouazia,canonical_team,2021–22 Coupe de France
+2122,Brest,2021-12-19,Coupe de France,A,Dinan-Léhon FC,canonical_team,2021–22 Coupe de France
+2122,Lens,2021-12-19,Coupe de France,A,Stade Poitevin FC,canonical_team,2021–22 Coupe de France
+2122,Marseille,2021-12-19,Coupe de France,H,ES Cannet Rocheville,canonical_team,2021–22 Coupe de France
+2122,Metz,2021-12-19,Coupe de France,A,Bergerac Périgord FC,canonical_team,2021–22 Coupe de France
+2122,Monaco,2021-12-19,Coupe de France,A,Red Star,canonical_team,2021–22 Coupe de France
+2122,Montpellier,2021-12-19,Coupe de France,A,Andrézieux-Bouthéon FC,canonical_team,2021–22 Coupe de France
+2122,Nice,2021-12-19,Coupe de France,A,SO Cholet,canonical_team,2021–22 Coupe de France
+2122,Paris SG,2021-12-19,Coupe de France,A,Entente Feignies Aulnoye FC,canonical_team,2021–22 Coupe de France
+2122,Reims,2021-12-19,Coupe de France,A,EF Reims Sainte-Anne Châtillons,canonical_team,2021–22 Coupe de France
+2122,St Etienne,2021-12-19,Coupe de France,A,Lyon La Duchère,proposta,2021–22 Coupe de France
+2122,Amiens,2022-01-02,Coupe de France,A,ESA Linas-Montlhéry,canonical_team,2021–22 Coupe de France
+2122,Bordeaux,2022-01-02,Coupe de France,A,Brest,canonical_team,2021–22 Coupe de France
+2122,Brest,2022-01-02,Coupe de France,H,Bordeaux,canonical_team,2021–22 Coupe de France
+2122,Clermont,2022-01-02,Coupe de France,A,Bastia,canonical_team,2021–22 Coupe de France
+2122,Marseille,2022-01-02,Coupe de France,A,US Chauvigny,canonical_team,2021–22 Coupe de France
+2122,Monaco,2022-01-02,Coupe de France,A,Quevilly-Rouen,canonical_team,2021–22 Coupe de France
+2122,Montpellier,2022-01-02,Coupe de France,H,Strasbourg,canonical_team,2021–22 Coupe de France
+2122,Nantes,2022-01-02,Coupe de France,H,AS Vitré,canonical_team,2021–22 Coupe de France
+2122,Reims,2022-01-02,Coupe de France,A,ES Thaon,canonical_team,2021–22 Coupe de France
+2122,Rennes,2022-01-02,Coupe de France,A,Nancy,canonical_team,2021–22 Coupe de France
+2122,St Etienne,2022-01-02,Coupe de France,A,Jura Sud Foot,proposta,2021–22 Coupe de France
+2122,Strasbourg,2022-01-02,Coupe de France,A,Montpellier,canonical_team,2021–22 Coupe de France
+2122,Toulouse,2022-01-02,Coupe de France,A,Cannes,canonical_team,2021–22 Coupe de France
+2122,Paris SG,2022-01-03,Coupe de France,A,Vannes OC,canonical_team,2021–22 Coupe de France
+2122,Lens,2022-01-04,Coupe de France,H,Lille,canonical_team,2021–22 Coupe de France
+2122,Lille,2022-01-04,Coupe de France,A,Lens,canonical_team,2021–22 Coupe de France
+2122,Brest,2022-01-28,Coupe de France,A,Nantes,canonical_team,2021–22 Coupe de France
+2122,Nantes,2022-01-28,Coupe de France,H,Brest,canonical_team,2021–22 Coupe de France
+2122,Amiens,2022-01-29,Coupe de France,A,Nancy,canonical_team,2021–22 Coupe de France
+2122,Marseille,2022-01-29,Coupe de France,H,Montpellier,canonical_team,2021–22 Coupe de France
+2122,Montpellier,2022-01-29,Coupe de France,A,Marseille,canonical_team,2021–22 Coupe de France
+2122,Reims,2022-01-29,Coupe de France,H,Bastia,canonical_team,2021–22 Coupe de France
+2122,Toulouse,2022-01-29,Coupe de France,H,FC Versailles 78,canonical_team,2021–22 Coupe de France
+2122,Lens,2022-01-30,Coupe de France,H,Monaco,canonical_team,2021–22 Coupe de France
+2122,Monaco,2022-01-30,Coupe de France,A,Lens,canonical_team,2021–22 Coupe de France
+2122,St Etienne,2022-01-30,Coupe de France,A,Bergerac Périgord FC,proposta,2021–22 Coupe de France
+2122,Nice,2022-01-31,Coupe de France,A,Paris SG,canonical_team,2021–22 Coupe de France
+2122,Paris SG,2022-01-31,Coupe de France,H,Nice,canonical_team,2021–22 Coupe de France
+2122,Amiens,2022-02-08,Coupe de France,A,Monaco,canonical_team,2021–22 Coupe de France
+2122,Monaco,2022-02-08,Coupe de France,H,Amiens,canonical_team,2021–22 Coupe de France
+2122,Marseille,2022-02-09,Coupe de France,A,Nice,canonical_team,2021–22 Coupe de France
+2122,Nice,2022-02-09,Coupe de France,H,Marseille,canonical_team,2021–22 Coupe de France
+2122,Nantes,2022-02-10,Coupe de France,H,Bastia,canonical_team,2021–22 Coupe de France
+2122,Nice,2022-03-01,Coupe de France,H,FC Versailles 78,canonical_team,2021–22 Coupe de France
+2122,Monaco,2022-03-02,Coupe de France,A,Nantes,canonical_team,2021–22 Coupe de France
+2122,Nantes,2022-03-02,Coupe de France,H,Monaco,canonical_team,2021–22 Coupe de France
+2122,Nantes,2022-05-07,Coupe de France,A,Nice,canonical_team,2022 Coupe de France Final
+2122,Nice,2022-05-07,Coupe de France,H,Nantes,canonical_team,2022 Coupe de France Final
+2223,Bordeaux,2022-10-29,Coupe de France,A,Stade Bordelais,canonical_team,2022–23 Coupe de France
+2223,Caen,2022-10-29,Coupe de France,A,US Saint-Malo,canonical_team,2022–23 Coupe de France
+2223,Dijon,2022-10-29,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC,canonical_team,2022–23 Coupe de France
+2223,Le Havre,2022-10-29,Coupe de France,A,US Alençon,canonical_team,2022–23 Coupe de France
+2223,Nimes,2022-10-29,Coupe de France,H,FC Borgo,proposta,2022–23 Coupe de France
+2223,Paris FC,2022-10-29,Coupe de France,A,CO Les Ulis,canonical_team,2022–23 Coupe de France
+2223,St Etienne,2022-10-29,Coupe de France,H,Rodez,proposta,2022–23 Coupe de France
+2223,Amiens,2022-10-30,Coupe de France,A,FC Chambly Oise,canonical_team,2022–23 Coupe de France
+2223,Guingamp,2022-10-30,Coupe de France,A,Auray FC,canonical_team,2022–23 Coupe de France
+2223,Metz,2022-11-01,Coupe de France,A,US Raon-l'Étape,canonical_team,2022–23 Coupe de France
+2223,Amiens,2022-11-19,Coupe de France,H,Aiglon du Lamentin FC,canonical_team,2022–23 Coupe de France
+2223,Bordeaux,2022-11-19,Coupe de France,A,Trélissac-Antonne Périgord FC,canonical_team,2022–23 Coupe de France
+2223,Guingamp,2022-11-19,Coupe de France,A,Les Herbiers VF,canonical_team,2022–23 Coupe de France
+2223,Metz,2022-11-19,Coupe de France,A,SAS Épinal,canonical_team,2022–23 Coupe de France
+2223,Nimes,2022-11-19,Coupe de France,A,Montauban FCTG,proposta,2022–23 Coupe de France
+2223,Paris FC,2022-11-19,Coupe de France,A,Union Cosnoise Sportive,canonical_team,2022–23 Coupe de France
+2223,Caen,2022-12-21,Coupe de France,A,AF Virois,canonical_team,2022–23 Coupe de France
+2223,Angers,2023-01-06,Coupe de France,A,Strasbourg,canonical_team,2022–23 Coupe de France
+2223,Montpellier,2023-01-06,Coupe de France,A,Pau,canonical_team,2022–23 Coupe de France
+2223,Nimes,2023-01-06,Coupe de France,A,Grenoble,proposta,2022–23 Coupe de France
+2223,Paris FC,2023-01-06,Coupe de France,H,Valenciennes,canonical_team,2022–23 Coupe de France
+2223,Paris SG,2023-01-06,Coupe de France,A,LB Châteauroux,canonical_team,2022–23 Coupe de France
+2223,Strasbourg,2023-01-06,Coupe de France,H,Angers,canonical_team,2022–23 Coupe de France
+2223,Amiens,2023-01-07,Coupe de France,A,ES Thaon,canonical_team,2022–23 Coupe de France
+2223,Bordeaux,2023-01-07,Coupe de France,H,Rennes,canonical_team,2022–23 Coupe de France
+2223,Brest,2023-01-07,Coupe de France,A,US Avranches,canonical_team,2022–23 Coupe de France
+2223,Clermont,2023-01-07,Coupe de France,A,FCO Strasbourg Koenigshoffen 06,canonical_team,2022–23 Coupe de France
+2223,Lens,2023-01-07,Coupe de France,A,ESA Linas-Montlhéry,canonical_team,2022–23 Coupe de France
+2223,Lyon,2023-01-07,Coupe de France,H,Metz,canonical_team,2022–23 Coupe de France
+2223,Marseille,2023-01-07,Coupe de France,H,Hyères FC,canonical_team,2022–23 Coupe de France
+2223,Metz,2023-01-07,Coupe de France,A,Lyon,canonical_team,2022–23 Coupe de France
+2223,Monaco,2023-01-07,Coupe de France,H,Rodez,canonical_team,2022–23 Coupe de France
+2223,Nantes,2023-01-07,Coupe de France,A,AF Virois,canonical_team,2022–23 Coupe de France
+2223,Nice,2023-01-07,Coupe de France,A,Le Puy Foot 43 Auvergne,canonical_team,2022–23 Coupe de France
+2223,Rennes,2023-01-07,Coupe de France,A,Bordeaux,canonical_team,2022–23 Coupe de France
+2223,Ajaccio,2023-01-08,Coupe de France,A,Jura Sud Foot,canonical_team,2022–23 Coupe de France
+2223,Auxerre,2023-01-08,Coupe de France,A,USL Dunkerque,canonical_team,2022–23 Coupe de France
+2223,Lille,2023-01-08,Coupe de France,H,Troyes,canonical_team,2022–23 Coupe de France
+2223,Lorient,2023-01-08,Coupe de France,A,AS La Châtaigneraie,canonical_team,2022–23 Coupe de France
+2223,Reims,2023-01-08,Coupe de France,A,FC Loon-Plage,canonical_team,2022–23 Coupe de France
+2223,Toulouse,2023-01-08,Coupe de France,A,Lannion FC,canonical_team,2022–23 Coupe de France
+2223,Troyes,2023-01-08,Coupe de France,A,Lille,canonical_team,2022–23 Coupe de France
+2223,Marseille,2023-01-20,Coupe de France,H,Rennes,canonical_team,2022–23 Coupe de France
+2223,Rennes,2023-01-20,Coupe de France,A,Marseille,canonical_team,2022–23 Coupe de France
+2223,Ajaccio,2023-01-21,Coupe de France,A,Toulouse,canonical_team,2022–23 Coupe de France
+2223,Angers,2023-01-21,Coupe de France,A,FCO Strasbourg Koenigshoffen 06,canonical_team,2022–23 Coupe de France
+2223,Lorient,2023-01-21,Coupe de France,A,Bastia,canonical_team,2022–23 Coupe de France
+2223,Lyon,2023-01-21,Coupe de France,A,Chambéry SF,canonical_team,2022–23 Coupe de France
+2223,Paris FC,2023-01-21,Coupe de France,A,FC Chamalières,canonical_team,2022–23 Coupe de France
+2223,Reims,2023-01-21,Coupe de France,A,Les Herbiers VF,canonical_team,2022–23 Coupe de France
+2223,Toulouse,2023-01-21,Coupe de France,H,Ajaccio,canonical_team,2022–23 Coupe de France
+2223,Auxerre,2023-01-22,Coupe de France,A,Niort,canonical_team,2022–23 Coupe de France
+2223,Brest,2023-01-22,Coupe de France,H,Lens,canonical_team,2022–23 Coupe de France
+2223,Lens,2023-01-22,Coupe de France,A,Brest,canonical_team,2022–23 Coupe de France
+2223,Lille,2023-01-22,Coupe de France,H,Pau FC,canonical_team,2022–23 Coupe de France
+2223,Nantes,2023-01-22,Coupe de France,A,ES Thaon,canonical_team,2022–23 Coupe de France
+2223,Paris SG,2023-01-23,Coupe de France,A,US Pays de Cassel,canonical_team,2022–23 Coupe de France
+2223,Angers,2023-02-08,Coupe de France,H,Nantes,canonical_team,2022–23 Coupe de France
+2223,Auxerre,2023-02-08,Coupe de France,H,Rodez,canonical_team,2022–23 Coupe de France
+2223,Lille,2023-02-08,Coupe de France,A,Lyon,canonical_team,2022–23 Coupe de France
+2223,Lyon,2023-02-08,Coupe de France,H,Lille,canonical_team,2022–23 Coupe de France
+2223,Marseille,2023-02-08,Coupe de France,H,Paris SG,canonical_team,2022–23 Coupe de France
+2223,Nantes,2023-02-08,Coupe de France,A,Angers,canonical_team,2022–23 Coupe de France
+2223,Paris FC,2023-02-08,Coupe de France,H,Annecy,canonical_team,2022–23 Coupe de France
+2223,Paris SG,2023-02-08,Coupe de France,A,Marseille,canonical_team,2022–23 Coupe de France
+2223,Reims,2023-02-08,Coupe de France,A,Toulouse,canonical_team,2022–23 Coupe de France
+2223,Toulouse,2023-02-08,Coupe de France,H,Reims,canonical_team,2022–23 Coupe de France
+2223,Lens,2023-02-09,Coupe de France,A,Lorient,canonical_team,2022–23 Coupe de France
+2223,Lorient,2023-02-09,Coupe de France,H,Lens,canonical_team,2022–23 Coupe de France
+2223,Lyon,2023-02-28,Coupe de France,H,Grenoble,canonical_team,2022–23 Coupe de France
+2223,Lens,2023-03-01,Coupe de France,A,Nantes,canonical_team,2022–23 Coupe de France
+2223,Marseille,2023-03-01,Coupe de France,H,Annecy,canonical_team,2022–23 Coupe de France
+2223,Nantes,2023-03-01,Coupe de France,H,Lens,canonical_team,2022–23 Coupe de France
+2223,Toulouse,2023-03-01,Coupe de France,H,Rodez,canonical_team,2022–23 Coupe de France
+2223,Lyon,2023-04-05,Coupe de France,A,Nantes,canonical_team,2022–23 Coupe de France
+2223,Nantes,2023-04-05,Coupe de France,H,Lyon,canonical_team,2022–23 Coupe de France
+2223,Toulouse,2023-04-06,Coupe de France,A,Annecy,canonical_team,2022–23 Coupe de France
+2223,Nantes,2023-04-29,Coupe de France,H,Toulouse,canonical_team,2023 Coupe de France final
+2223,Toulouse,2023-04-29,Coupe de France,A,Nantes,canonical_team,2023 Coupe de France final
+2324,Bordeaux,2023-11-17,Coupe de France,A,Canet Roussillon FC,canonical_team,2023–24 Coupe de France
+2324,Amiens,2023-11-18,Coupe de France,A,SSEP Hombourg-Haut,canonical_team,2023–24 Coupe de France
+2324,Angers,2023-11-18,Coupe de France,A,AC Houilles,canonical_team,2023–24 Coupe de France
+2324,Auxerre,2023-11-18,Coupe de France,A,US Le Pays du Valois,canonical_team,2023–24 Coupe de France
+2324,Caen,2023-11-18,Coupe de France,A,FC Loon-Plage,canonical_team,2023–24 Coupe de France
+2324,Dijon,2023-11-18,Coupe de France,A,RC Doullens,canonical_team,2023–24 Coupe de France
+2324,Guingamp,2023-11-18,Coupe de France,A,US Saint-Malo,canonical_team,2023–24 Coupe de France
+2324,Paris FC,2023-11-18,Coupe de France,A,US Villejuif,canonical_team,2023–24 Coupe de France
+2324,St Etienne,2023-11-18,Coupe de France,A,Football Bourg-en-Bresse Péronnas 01,proposta,2023–24 Coupe de France
+2324,Troyes,2023-11-18,Coupe de France,A,SAS Épinal,canonical_team,2023–24 Coupe de France
+2324,Ajaccio,2023-11-19,Coupe de France,A,Toulouse Métropole FC,canonical_team,2023–24 Coupe de France
+2324,Nimes,2023-11-19,Coupe de France,A,Roannais Foot 42,canonical_team,2023–24 Coupe de France
+2324,Ajaccio,2023-12-09,Coupe de France,H,US Orléans,canonical_team,2023–24 Coupe de France
+2324,Amiens,2023-12-09,Coupe de France,A,ES Thaon,canonical_team,2023–24 Coupe de France
+2324,Angers,2023-12-09,Coupe de France,A,FC Plessis-Robinson,canonical_team,2023–24 Coupe de France
+2324,Auxerre,2023-12-09,Coupe de France,A,FC Saint-Meziery,canonical_team,2023–24 Coupe de France
+2324,Bordeaux,2023-12-09,Coupe de France,A,Angoulême Charente FC,canonical_team,2023–24 Coupe de France
+2324,Caen,2023-12-09,Coupe de France,A,RC Calais,canonical_team,2023–24 Coupe de France
+2324,Dijon,2023-12-09,Coupe de France,A,Quevilly-Rouen,canonical_team,2023–24 Coupe de France
+2324,Guingamp,2023-12-09,Coupe de France,A,AG Caennaise,canonical_team,2023–24 Coupe de France
+2324,Nimes,2023-12-09,Coupe de France,A,St Etienne,canonical_team,2023–24 Coupe de France
+2324,Paris FC,2023-12-09,Coupe de France,H,Saint-Denis FC,canonical_team,2023–24 Coupe de France
+2324,St Etienne,2023-12-09,Coupe de France,H,Nimes,proposta,2023–24 Coupe de France
+2324,Clermont,2024-01-05,Coupe de France,A,Metz,canonical_team,2023–24 Coupe de France
+2324,Metz,2024-01-05,Coupe de France,H,Clermont,canonical_team,2023–24 Coupe de France
+2324,Nantes,2024-01-05,Coupe de France,A,Pau,canonical_team,2023–24 Coupe de France
+2324,Amiens,2024-01-06,Coupe de France,H,Montpellier,canonical_team,2023–24 Coupe de France
+2324,Angers,2024-01-06,Coupe de France,A,Brest,canonical_team,2023–24 Coupe de France
+2324,Auxerre,2024-01-06,Coupe de France,A,Nice,canonical_team,2023–24 Coupe de France
+2324,Bordeaux,2024-01-06,Coupe de France,A,Entente SSG,canonical_team,2023–24 Coupe de France
+2324,Brest,2024-01-06,Coupe de France,H,Angers,canonical_team,2023–24 Coupe de France
+2324,Lille,2024-01-06,Coupe de France,H,Golden Lion FC,canonical_team,2023–24 Coupe de France
+2324,Lorient,2024-01-06,Coupe de France,A,Sochaux,canonical_team,2023–24 Coupe de France
+2324,Montpellier,2024-01-06,Coupe de France,A,Amiens,canonical_team,2023–24 Coupe de France
+2324,Nice,2024-01-06,Coupe de France,H,Auxerre,canonical_team,2023–24 Coupe de France
+2324,Nimes,2024-01-06,Coupe de France,A,US Orléans,proposta,2023–24 Coupe de France
+2324,Paris FC,2024-01-06,Coupe de France,A,Olympique Alès,canonical_team,2023–24 Coupe de France
+2324,Strasbourg,2024-01-06,Coupe de France,A,Avoine OCC,canonical_team,2023–24 Coupe de France
+2324,Caen,2024-01-07,Coupe de France,A,Le Havre,canonical_team,2023–24 Coupe de France
+2324,Guingamp,2024-01-07,Coupe de France,H,Rennes,canonical_team,2023–24 Coupe de France
+2324,Le Havre,2024-01-07,Coupe de France,H,Caen,canonical_team,2023–24 Coupe de France
+2324,Lens,2024-01-07,Coupe de France,H,Monaco,canonical_team,2023–24 Coupe de France
+2324,Lyon,2024-01-07,Coupe de France,A,CA Pontarlier,canonical_team,2023–24 Coupe de France
+2324,Marseille,2024-01-07,Coupe de France,A,US Thionville Lusitanos,canonical_team,2023–24 Coupe de France
+2324,Monaco,2024-01-07,Coupe de France,A,Lens,canonical_team,2023–24 Coupe de France
+2324,Paris SG,2024-01-07,Coupe de France,A,US Revel,canonical_team,2023–24 Coupe de France
+2324,Reims,2024-01-07,Coupe de France,A,Dinan Léhon FC,canonical_team,2023–24 Coupe de France
+2324,Rennes,2024-01-07,Coupe de France,A,Guingamp,canonical_team,2023–24 Coupe de France
+2324,Toulouse,2024-01-07,Coupe de France,A,Chambéry SF,canonical_team,2023–24 Coupe de France
+2324,Lyon,2024-01-19,Coupe de France,A,Bergerac Périgord FC,canonical_team,2023–24 Coupe de France
+2324,Bordeaux,2024-01-20,Coupe de France,H,Nice,canonical_team,2023–24 Coupe de France
+2324,Brest,2024-01-20,Coupe de France,A,Trélissac-Antonne Périgord FC,canonical_team,2023–24 Coupe de France
+2324,Monaco,2024-01-20,Coupe de France,A,Rodez,canonical_team,2023–24 Coupe de France
+2324,Nantes,2024-01-20,Coupe de France,H,Laval,canonical_team,2023–24 Coupe de France
+2324,Nice,2024-01-20,Coupe de France,A,Bordeaux,canonical_team,2023–24 Coupe de France
+2324,Paris FC,2024-01-20,Coupe de France,A,Valenciennes,canonical_team,2023–24 Coupe de France
+2324,Paris SG,2024-01-20,Coupe de France,A,US Orléans,canonical_team,2023–24 Coupe de France
+2324,Clermont,2024-01-21,Coupe de France,H,Strasbourg,canonical_team,2023–24 Coupe de France
+2324,Le Havre,2024-01-21,Coupe de France,A,LB Châteauroux,canonical_team,2023–24 Coupe de France
+2324,Lille,2024-01-21,Coupe de France,A,Racing Club de France Football,canonical_team,2023–24 Coupe de France
+2324,Marseille,2024-01-21,Coupe de France,A,Rennes,canonical_team,2023–24 Coupe de France
+2324,Reims,2024-01-21,Coupe de France,A,Sochaux,canonical_team,2023–24 Coupe de France
+2324,Rennes,2024-01-21,Coupe de France,H,Marseille,canonical_team,2023–24 Coupe de France
+2324,Strasbourg,2024-01-21,Coupe de France,A,Clermont,canonical_team,2023–24 Coupe de France
+2324,Toulouse,2024-01-21,Coupe de France,A,FC Rouen,canonical_team,2023–24 Coupe de France
+2324,Montpellier,2024-01-24,Coupe de France,A,Entente Feignies Aulnoye FC,canonical_team,2023–24 Coupe de France
+2324,Rennes,2024-02-06,Coupe de France,A,Sochaux,canonical_team,2023–24 Coupe de France
+2324,Brest,2024-02-07,Coupe de France,A,Paris SG,canonical_team,2023–24 Coupe de France
+2324,Le Havre,2024-02-07,Coupe de France,A,Strasbourg,canonical_team,2023–24 Coupe de France
+2324,Lille,2024-02-07,Coupe de France,A,Lyon,canonical_team,2023–24 Coupe de France
+2324,Lyon,2024-02-07,Coupe de France,H,Lille,canonical_team,2023–24 Coupe de France
+2324,Montpellier,2024-02-07,Coupe de France,H,Nice,canonical_team,2023–24 Coupe de France
+2324,Nice,2024-02-07,Coupe de France,A,Montpellier,canonical_team,2023–24 Coupe de France
+2324,Paris SG,2024-02-07,Coupe de France,H,Brest,canonical_team,2023–24 Coupe de France
+2324,Strasbourg,2024-02-07,Coupe de France,H,Le Havre,canonical_team,2023–24 Coupe de France
+2324,Monaco,2024-02-08,Coupe de France,A,FC Rouen,canonical_team,2023–24 Coupe de France
+2324,Lyon,2024-02-27,Coupe de France,H,Strasbourg,canonical_team,2023–24 Coupe de France
+2324,Strasbourg,2024-02-27,Coupe de France,A,Lyon,canonical_team,2023–24 Coupe de France
+2324,Rennes,2024-02-29,Coupe de France,A,Le Puy Foot 43 Auvergne,canonical_team,2023–24 Coupe de France
+2324,Nice,2024-03-13,Coupe de France,A,Paris SG,canonical_team,2023–24 Coupe de France
+2324,Paris SG,2024-03-13,Coupe de France,H,Nice,canonical_team,2023–24 Coupe de France
+2324,Lyon,2024-04-02,Coupe de France,H,Valenciennes,canonical_team,2023–24 Coupe de France
+2324,Paris SG,2024-04-03,Coupe de France,H,Rennes,canonical_team,2023–24 Coupe de France
+2324,Rennes,2024-04-03,Coupe de France,A,Paris SG,canonical_team,2023–24 Coupe de France
+2324,Lyon,2024-05-25,Coupe de France,H,Paris SG,canonical_team,2024 Coupe de France final
+2324,Paris SG,2024-05-25,Coupe de France,A,Lyon,canonical_team,2024 Coupe de France final
+2526,Amiens,2025-11-15,Coupe de France,A,Auby,canonical_team,2025–26 Coupe de France
+2526,Reims,2025-11-15,Coupe de France,A,Olympique Charleville Prix AM,canonical_team,2025–26 Coupe de France
+2526,Montpellier,2025-11-29,Coupe de France,A,FCMB,canonical_team,2025–26 Coupe de France
+2526,Reims,2025-11-29,Coupe de France,A,US Torcy,canonical_team,2025–26 Coupe de France
+2526,Angers,2025-12-19,Coupe de France,A,Les Herbiers,canonical_team,2025–26 Coupe de France
+2526,Brest,2025-12-19,Coupe de France,A,Avranches,canonical_team,2025–26 Coupe de France
+2526,Guingamp,2025-12-19,Coupe de France,H,Laval,canonical_team,2025–26 Coupe de France
+2526,Lens,2025-12-19,Coupe de France,H,Feignies,canonical_team,2025–26 Coupe de France
+2526,Montpellier,2025-12-19,Coupe de France,A,Canet Roussillon,canonical_team,2025–26 Coupe de France
+2526,Reims,2025-12-19,Coupe de France,A,IC Croix,canonical_team,2025–26 Coupe de France
+2526,Lille,2025-12-20,Coupe de France,A,Saint-Maur,canonical_team,2025–26 Coupe de France
+2526,Lorient,2025-12-20,Coupe de France,A,AS Gosier,canonical_team,2025–26 Coupe de France
+2526,Metz,2025-12-20,Coupe de France,A,Biesheim,canonical_team,2025–26 Coupe de France
+2526,Paris FC,2025-12-20,Coupe de France,A,Raon-l'Étape,canonical_team,2025–26 Coupe de France
+2526,Paris SG,2025-12-20,Coupe de France,A,Fontenay,canonical_team,2025–26 Coupe de France
+2526,Toulouse,2025-12-20,Coupe de France,A,Lyon-La Duchère,canonical_team,2025–26 Coupe de France
+2526,Troyes,2025-12-20,Coupe de France,A,Olympique Marcquois,canonical_team,2025–26 Coupe de France
+2526,Amiens,2025-12-21,Coupe de France,A,Le Havre,canonical_team,2025–26 Coupe de France
+2526,Auxerre,2025-12-21,Coupe de France,H,Monaco,canonical_team,2025–26 Coupe de France
+2526,Bordeaux,2025-12-21,Coupe de France,A,Le Puy Foot 43,canonical_team,2025–26 Coupe de France
+2526,Le Havre,2025-12-21,Coupe de France,H,Amiens,canonical_team,2025–26 Coupe de France
+2526,Lyon,2025-12-21,Coupe de France,H,Saint-Cyr Collonges,canonical_team,2025–26 Coupe de France
+2526,Marseille,2025-12-21,Coupe de France,A,Bourg-Péronnas,canonical_team,2025–26 Coupe de France
+2526,Monaco,2025-12-21,Coupe de France,A,Auxerre,canonical_team,2025–26 Coupe de France
+2526,Nantes,2025-12-21,Coupe de France,A,Concarneau,canonical_team,2025–26 Coupe de France
+2526,Nice,2025-12-21,Coupe de France,H,St Etienne,canonical_team,2025–26 Coupe de France
+2526,Rennes,2025-12-21,Coupe de France,H,Les Sables,canonical_team,2025–26 Coupe de France
+2526,St Etienne,2025-12-21,Coupe de France,A,Nice,proposta,2025–26 Coupe de France
+2526,Strasbourg,2025-12-21,Coupe de France,H,Dunkerque,canonical_team,2025–26 Coupe de France
+2526,Amiens,2026-01-10,Coupe de France,A,Montreuil,canonical_team,2025–26 Coupe de France
+2526,Angers,2026-01-10,Coupe de France,H,Toulouse,canonical_team,2025–26 Coupe de France
+2526,Lorient,2026-01-10,Coupe de France,A,Hauts Lyonnais,canonical_team,2025–26 Coupe de France
+2526,Monaco,2026-01-10,Coupe de France,A,Orléans,canonical_team,2025–26 Coupe de France
+2526,Reims,2026-01-10,Coupe de France,A,Le Puy,canonical_team,2025–26 Coupe de France
+2526,Strasbourg,2026-01-10,Coupe de France,A,Avranches,canonical_team,2025–26 Coupe de France
+2526,Toulouse,2026-01-10,Coupe de France,A,Angers,canonical_team,2025–26 Coupe de France
+2526,Troyes,2026-01-10,Coupe de France,A,Bastia,canonical_team,2025–26 Coupe de France
+2526,Lens,2026-01-11,Coupe de France,A,Sochaux,canonical_team,2025–26 Coupe de France
+2526,Lille,2026-01-11,Coupe de France,H,Lyon,canonical_team,2025–26 Coupe de France
+2526,Lyon,2026-01-11,Coupe de France,A,Lille,canonical_team,2025–26 Coupe de France
+2526,Metz,2026-01-11,Coupe de France,H,Montpellier,canonical_team,2025–26 Coupe de France
+2526,Montpellier,2026-01-11,Coupe de France,A,Metz,canonical_team,2025–26 Coupe de France
+2526,Nantes,2026-01-11,Coupe de France,H,Nice,canonical_team,2025–26 Coupe de France
+2526,Nice,2026-01-11,Coupe de France,A,Nantes,canonical_team,2025–26 Coupe de France
+2526,Rennes,2026-01-11,Coupe de France,A,Chantilly,canonical_team,2025–26 Coupe de France
+2526,Paris FC,2026-01-12,Coupe de France,A,Paris SG,canonical_team,2025–26 Coupe de France
+2526,Paris SG,2026-01-12,Coupe de France,H,Paris FC,canonical_team,2025–26 Coupe de France
+2526,Marseille,2026-01-13,Coupe de France,A,Bayeux,canonical_team,2025–26 Coupe de France
+2526,Marseille,2026-02-03,Coupe de France,H,Rennes,canonical_team,2025–26 Coupe de France
+2526,Reims,2026-02-03,Coupe de France,H,Le Mans,canonical_team,2025–26 Coupe de France
+2526,Rennes,2026-02-03,Coupe de France,A,Marseille,canonical_team,2025–26 Coupe de France
+2526,Amiens,2026-02-04,Coupe de France,A,Toulouse,canonical_team,2025–26 Coupe de France
+2526,Lens,2026-02-04,Coupe de France,A,Troyes,canonical_team,2025–26 Coupe de France
+2526,Lorient,2026-02-04,Coupe de France,H,Paris FC,canonical_team,2025–26 Coupe de France
+2526,Lyon,2026-02-04,Coupe de France,H,Laval,canonical_team,2025–26 Coupe de France
+2526,Montpellier,2026-02-04,Coupe de France,A,Nice,canonical_team,2025–26 Coupe de France
+2526,Nice,2026-02-04,Coupe de France,H,Montpellier,canonical_team,2025–26 Coupe de France
+2526,Paris FC,2026-02-04,Coupe de France,A,Lorient,canonical_team,2025–26 Coupe de France
+2526,Toulouse,2026-02-04,Coupe de France,H,Amiens,canonical_team,2025–26 Coupe de France
+2526,Troyes,2026-02-04,Coupe de France,H,Lens,canonical_team,2025–26 Coupe de France
+2526,Monaco,2026-02-05,Coupe de France,A,Strasbourg,canonical_team,2025–26 Coupe de France
+2526,Strasbourg,2026-02-05,Coupe de France,H,Monaco,canonical_team,2025–26 Coupe de France
+2526,Reims,2026-03-03,Coupe de France,A,Strasbourg,canonical_team,2025–26 Coupe de France
+2526,Strasbourg,2026-03-03,Coupe de France,H,Reims,canonical_team,2025–26 Coupe de France
+2526,Lorient,2026-03-04,Coupe de France,H,Nice,canonical_team,2025–26 Coupe de France
+2526,Marseille,2026-03-04,Coupe de France,H,Toulouse,canonical_team,2025–26 Coupe de France
+2526,Nice,2026-03-04,Coupe de France,A,Lorient,canonical_team,2025–26 Coupe de France
+2526,Toulouse,2026-03-04,Coupe de France,A,Marseille,canonical_team,2025–26 Coupe de France
+2526,Lens,2026-03-05,Coupe de France,A,Lyon,canonical_team,2025–26 Coupe de France
+2526,Lyon,2026-03-05,Coupe de France,H,Lens,canonical_team,2025–26 Coupe de France
+2526,Lens,2026-04-21,Coupe de France,H,Toulouse,canonical_team,2025–26 Coupe de France
+2526,Toulouse,2026-04-21,Coupe de France,A,Lens,canonical_team,2025–26 Coupe de France
+2526,Nice,2026-04-22,Coupe de France,A,Strasbourg,canonical_team,2025–26 Coupe de France
+2526,Strasbourg,2026-04-22,Coupe de France,H,Nice,canonical_team,2025–26 Coupe de France
+2526,Lens,2026-05-22,Coupe de France,H,Nice,canonical_team,2026 Coupe de France final
+2526,Nice,2026-05-22,Coupe de France,A,Lens,canonical_team,2026 Coupe de France final

@@ -1,0 +1,19 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Bayern Munich,2017-08-05,DFL-Supercup,A,Dortmund,canonical_team,2017 DFL-Supercup
+1718,Dortmund,2017-08-05,DFL-Supercup,H,Bayern Munich,canonical_team,2017 DFL-Supercup
+1819,Bayern Munich,2018-08-12,DFL-Supercup,A,Ein Frankfurt,canonical_team,2018 DFL-Supercup
+1819,Ein Frankfurt,2018-08-12,DFL-Supercup,H,Bayern Munich,canonical_team,2018 DFL-Supercup
+1920,Bayern Munich,2019-08-03,DFL-Supercup,A,Dortmund,canonical_team,2019 DFL-Supercup
+1920,Dortmund,2019-08-03,DFL-Supercup,H,Bayern Munich,canonical_team,2019 DFL-Supercup
+2021,Bayern Munich,2020-09-30,DFL-Supercup,H,Dortmund,canonical_team,2020 DFL-Supercup
+2021,Dortmund,2020-09-30,DFL-Supercup,A,Bayern Munich,canonical_team,2020 DFL-Supercup
+2122,Bayern Munich,2021-08-17,DFL-Supercup,A,Dortmund,canonical_team,2021 DFL-Supercup
+2122,Dortmund,2021-08-17,DFL-Supercup,H,Bayern Munich,canonical_team,2021 DFL-Supercup
+2223,Bayern Munich,2022-07-30,DFL-Supercup,A,RB Leipzig,canonical_team,2022 DFL-Supercup
+2223,RB Leipzig,2022-07-30,DFL-Supercup,H,Bayern Munich,canonical_team,2022 DFL-Supercup
+2324,Bayern Munich,2023-08-12,DFL-Supercup,H,RB Leipzig,canonical_team,2023 DFL-Supercup
+2324,RB Leipzig,2023-08-12,DFL-Supercup,A,Bayern Munich,canonical_team,2023 DFL-Supercup
+2425,Leverkusen,2024-08-17,DFL-Supercup,H,Stuttgart,canonical_team,2024 DFL-Supercup
+2425,Stuttgart,2024-08-17,DFL-Supercup,A,Leverkusen,canonical_team,2024 DFL-Supercup
+2526,Bayern Munich,2025-08-16,DFL-Supercup,A,Stuttgart,canonical_team,2025 DFL-Supercup
+2526,Stuttgart,2025-08-16,DFL-Supercup,H,Bayern Munich,canonical_team,2025 DFL-Supercup

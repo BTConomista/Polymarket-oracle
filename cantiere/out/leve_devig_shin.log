@@ -1,0 +1,100 @@
+====================================================================================================
+DEVIG DI SHIN vs DEVIG MOLTIPLICATIVO — 5 leghe, 7 stagioni (1920→2526)
+ASPETTATIVA DICHIARATA PRIMA: Shin ≥ moltiplicativo in 5/5 leghe; guadagno
+1X2 ~0.0005-0.0010; per-lega NON conclusivo, POOLED conclusivo; O/U ~0;
+a valle il guadagno si diluisce sui mercati DERIVATI.
+====================================================================================================
+
+====================================================================================================
+A MONTE — il devig come MISURA DI VERITA' del mercato (log-loss; − = Shin meglio)
+====================================================================================================
+
+### 1X2
+  lega                 n  margine    molt.     shin    power  Δ shin−molt                  CI95  stag.  verdetto
+  bundesliga        2142   4.76%   0.9739   0.9740   0.9742     +0.00016   [-0.00074,+0.00111]   2/7  nel rumore
+  ligue_1           2337   5.02%   0.9850   0.9848   0.9849     -0.00026   [-0.00101,+0.00052]   5/7  nel rumore
+  serie_a           2660   4.87%   0.9625   0.9617   0.9615     -0.00071   [-0.00145,+0.00002]   5/7  nel rumore
+  premier_league    2660   4.27%   0.9639   0.9639   0.9642     +0.00005   [-0.00065,+0.00079]   3/7  nel rumore
+  la_liga           2660   4.75%   0.9697   0.9688   0.9681     -0.00082   [-0.00151,-0.00009]   5/7  CONCLUSIVO (meglio)
+  POOLED           12459            0.9705   0.9702   0.9701     -0.00034   [-0.00068,+0.00000]         nel rumore  (3/5 leghe)
+    Brier pooled: molt 0.57684 → shin 0.57664  Δ -0.000206 [-0.000395,-0.000015] CONCLUSIVO (meglio)
+    Shin vs power-devig (η LOSO): Δ +0.00009 [-0.00039,+0.00055] nel rumore
+
+### OU25
+  lega                 n  margine    molt.     shin    power  Δ shin−molt                  CI95  stag.  verdetto
+  bundesliga        2142   5.27%   0.6444   0.6436   0.6426     -0.00084   [-0.00148,-0.00019]   6/7  CONCLUSIVO (meglio)
+  ligue_1           2337   5.33%   0.6714   0.6711   0.6710     -0.00027   [-0.00070,+0.00017]   6/7  nel rumore
+  serie_a           2660   5.24%   0.6788   0.6790   0.6795     +0.00015   [-0.00024,+0.00054]   4/7  nel rumore
+  premier_league    2660   4.89%   0.6734   0.6735   0.6740     +0.00004   [-0.00037,+0.00045]   3/7  nel rumore
+  la_liga           2660   5.25%   0.6682   0.6682   0.6683     -0.00003   [-0.00049,+0.00044]   4/7  nel rumore
+  POOLED           12459            0.6681   0.6679   0.6680     -0.00016   [-0.00037,+0.00004]         nel rumore  (3/5 leghe)
+    Brier pooled: molt 0.47553 → shin 0.47538  Δ -0.000150 [-0.000327,+0.000027] nel rumore
+    Shin vs power-devig (η LOSO): Δ -0.00006 [-0.00048,+0.00037] nel rumore
+
+====================================================================================================
+IL PARAMETRO z DI SHIN — livello, epoca, relazione col margine
+====================================================================================================
+  lega             margine 1X2   z medio  z/margine    z sd  z 17-19  z 25-26
+  bundesliga            4.76%    0.0240      0.505  0.0037   0.0128   0.0320
+  ligue_1               5.02%    0.0253      0.504  0.0030   0.0127   0.0317
+  serie_a               4.87%    0.0246      0.504  0.0033   0.0128   0.0317
+  premier_league        4.27%    0.0215      0.505  0.0032   0.0113   0.0286
+  la_liga               4.75%    0.0239      0.504  0.0033   0.0128   0.0311
+  corr(z medio, margine) fra le leghe = +1.000  (n=5; ATTENZIONE: z e' determinato dalle quote, la correlazione e' in gran parte MECCANICA)
+
+  Quanta correzione vogliono i dati? (famiglia t: 0 = moltiplicativo, 1 = Shin)
+  lega              t* in-sample                      t LOSO  Δ vs molt.  verdetto
+  bundesliga                0.10        [0.0, 0.2, 0.3, 0.4]    +0.00012  nel rumore
+  ligue_1                   1.20[0.9, 1.0, 1.1, 1.2, 1.3, 1.5]    -0.00019  nel rumore
+  serie_a                   2.40   [1.9, 2.0, 2.1, 2.3, 2.5]    -0.00086  nel rumore
+  premier_league            0.40[0.0, 0.3, 0.4, 0.5, 0.8, 0.9]    +0.00028  nel rumore
+  la_liga                   2.50                       [2.5]    -0.00145  nel rumore
+
+====================================================================================================
+A VALLE — il listino market-implied re-invertito con l'altro devig
+(Δ = shin − molt sul log-loss del mercato; * = ancora dell'inversione)
+====================================================================================================
+  mercato               molt.     shin   Δ pooled                    CI95   leghe  verdetto
+  home_win *           0.6011   0.6008   -0.00026   [-0.00056,+0.00004]     4/5  nel rumore
+  draw *               0.5566   0.5565   -0.00005   [-0.00022,+0.00012]     3/5  nel rumore
+  away_win *           0.5476   0.5473   -0.00033   [-0.00060,-0.00005]     4/5  CONCLUSIVO (meglio)
+  dc_1x *              0.5476   0.5473   -0.00033   [-0.00060,-0.00005]     4/5  CONCLUSIVO (meglio)
+  dc_2x *              0.6011   0.6008   -0.00026   [-0.00056,+0.00004]     4/5  nel rumore
+  over_0.5             0.2323   0.2322   -0.00007   [-0.00015,+0.00002]     3/5  nel rumore
+  over_1.5             0.5196   0.5195   -0.00007   [-0.00022,+0.00009]     3/5  nel rumore
+  over_2.5 *           0.6682   0.6680   -0.00016   [-0.00036,+0.00004]     2/5  nel rumore
+  over_3.5             0.5940   0.5938   -0.00015   [-0.00037,+0.00007]     2/5  nel rumore
+  over_4.5             0.4107   0.4108   +0.00014   [-0.00007,+0.00034]     1/5  nel rumore
+  btts                 0.6804   0.6806   +0.00017   [-0.00003,+0.00037]     1/5  nel rumore
+  home_ov_0.5          0.4990   0.4987   -0.00028   [-0.00046,-0.00009]     5/5  CONCLUSIVO (meglio)
+  home_ov_1.5          0.6294   0.6293   -0.00017   [-0.00043,+0.00008]     5/5  nel rumore
+  away_ov_0.5          0.5704   0.5705   +0.00014   [-0.00009,+0.00038]     2/5  nel rumore
+  away_ov_1.5          0.6064   0.6066   +0.00023   [-0.00004,+0.00050]     1/5  nel rumore
+  odd_total            0.6931   0.6930   -0.00001   [-0.00001,+0.00000]     3/5  nel rumore
+  home_by_2plus        0.4669   0.4673   +0.00038   [+0.00007,+0.00069]     0/5  CONCLUSIVO (peggio)
+  away_by_2plus        0.3662   0.3662   -0.00001   [-0.00023,+0.00021]     3/5  nel rumore
+  cs_home              0.5704   0.5705   +0.00014   [-0.00009,+0.00038]     2/5  nel rumore
+  cs_away              0.4990   0.4987   -0.00028   [-0.00046,-0.00009]     5/5  CONCLUSIVO (meglio)
+  wtn_home             0.4965   0.4964   -0.00004   [-0.00029,+0.00020]     3/5  nel rumore
+  wtn_away             0.4073   0.4072   -0.00018   [-0.00037,+0.00000]     4/5  nel rumore
+  1X2 *                0.9709   0.9705   -0.00040   [-0.00073,-0.00007]     3/5  CONCLUSIVO (meglio)
+  multigol             1.0258   1.0256   -0.00015   [-0.00038,+0.00008]     2/5  nel rumore
+  risultato_esatto     2.8815   2.8820   +0.00042   [-0.00005,+0.00088]     1/5  nel rumore
+
+  Sui 18 mercati DERIVATI (non ancore): Shin meglio in 11, con CI conclusivo in 2.
+
+====================================================================================================
+REPLICA FUORI-FINESTRA — solo 1X2, 9 stagioni (aggiunge 2017-18 e 2018-19)
+====================================================================================================
+  lega                 n   Δ 9 stag.                  CI95  n extra  Δ solo extra
+  bundesliga        2753    +0.00019   [-0.00056,+0.00095]      611      +0.00029
+  ligue_1           3097    -0.00025   [-0.00086,+0.00036]      760      -0.00022
+  serie_a           3420    -0.00069   [-0.00129,-0.00008]      760      -0.00063
+  premier_league    3420    -0.00006   [-0.00064,+0.00055]      760      -0.00044
+  la_liga           3419    -0.00048   [-0.00107,+0.00011]      759      +0.00069
+
+  Controllo di sanita' (identita' con la fonte unica src/evaluation/metrics):
+    scarto massimo su tutte le leghe e tutte le metriche: 0.00e+00
+
+-> /home/user/Polymarket-oracle/cantiere/out/leve_devig_shin.json
+Tempo totale 1026s

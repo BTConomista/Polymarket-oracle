@@ -62,12 +62,21 @@ ATTESE = {("serie_a", "1718"): 380, ("serie_a", "1819"): 380,
           ("bundesliga", "1718"): 306, ("bundesliga", "1819"): 306,
           ("ligue_1", "1718"): 380, ("ligue_1", "1819"): 380}
 
-# alias residui footiqo -> nome canonico del progetto (scoperti dal join)
-EXTRA_ALIAS = {}
+# alias residui footiqo -> nome canonico del progetto (8 casi, scoperti dal join:
+# sono differenze puramente ortografiche, verificate una per una)
+EXTRA_ALIAS = {
+    "Manchester Utd": "Man United",
+    "Atl. Madrid": "Ath Madrid",
+    "Dep. La Coruna": "La Coruna",
+    "B. Monchengladbach": "M'gladbach",
+    "Schalke": "Schalke 04",
+    "Dusseldorf": "Fortuna Dusseldorf",
+    "PSG": "Paris SG",
+}
 
 
 def canon(name: str) -> str:
-    n = str(name).strip()
+    n = sources.canonical_team(str(name).strip())
     n = EXTRA_ALIAS.get(n, n)
     return sources.canonical_team(n)
 
@@ -298,10 +307,42 @@ def main():
             "overround_medio": round(float((1/gg["o_fq"] + 1/gg["u_fq"]).mean()), 4) if len(gg) else None,
         })
 
-    # verifica gol: la tabella Odds di footiqo non porta i gol -> dichiarato
-    res["nota_gol"] = ("la tabella 'Odds' di footiqo non espone i gol: il controllo "
-                       "'gol fonte == gol snapshot' non e' eseguibile da questa tabella. "
-                       "Il join e' verificato via squadre canonicalizzate + coerenza della data.")
+    # ---------------- C8 (protocollo INGRESSO): gol fonte == gol snapshot ----------------
+    gol_frames = []
+    for lega in SNAP:
+        for lab, st in [("2017/2018", "1718"), ("2018/2019", "1819")]:
+            fp = RIC / f"footiqo_gol_{lega}_{lab.replace('/', '-')}.json"
+            if not fp.exists():
+                continue
+            g = pd.DataFrame(json.loads(fp.read_text(encoding="utf-8")))
+            g["home_team"] = g["homeTeam"].map(canon)
+            g["away_team"] = g["awayTeam"].map(canon)
+            g["fq_hg"] = pd.to_numeric(g["ftHomeTeamGoals"], errors="coerce")
+            g["fq_ag"] = pd.to_numeric(g["ftAwayTeamGoals"], errors="coerce")
+            s = load_snapshot(lega, st)
+            mm = s.merge(g[["home_team", "away_team", "fq_hg", "fq_ag"]],
+                         on=["home_team", "away_team"], how="left")
+            mm["lega"] = lega; mm["stagione"] = st
+            gol_frames.append(mm)
+    G = pd.concat(gol_frames, ignore_index=True)
+    Gv = G.dropna(subset=["fq_hg", "fq_ag"])
+    uguali = int(((Gv["fq_hg"] == Gv["home_goals"]) & (Gv["fq_ag"] == Gv["away_goals"])).sum())
+    diff = Gv[(Gv["fq_hg"] != Gv["home_goals"]) | (Gv["fq_ag"] != Gv["away_goals"])]
+    res["criteri"]["C8_gol_fonte_uguali_snapshot"] = {
+        "esito": "PASS" if uguali == len(Gv) else "PARZIALE",
+        "righe_confrontate": int(len(Gv)),
+        "righe_identiche": uguali,
+        "quota_identiche": round(uguali / max(len(Gv), 1), 4),
+        "discordanze": [
+            {"lega": r.lega, "stagione": r.stagione, "data": str(r.date.date()),
+             "partita": f"{r.home_team}-{r.away_team}",
+             "snapshot": f"{int(r.home_goals)}-{int(r.away_goals)}",
+             "footiqo": f"{int(r.fq_hg)}-{int(r.fq_ag)}"}
+            for r in diff.itertuples()][:30],
+        "nota": ("controllo del protocollo INGRESSO: i gol della fonte candidata devono "
+                 "coincidere con quelli dello snapshot su ogni riga (tabella 'Scores' di "
+                 "footiqo, stessa chiave id della tabella 'Odds')"),
+    }
     print(json.dumps(res, ensure_ascii=False, indent=1))
     (RIC / "validazione_footiqo.json").write_text(
         json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")

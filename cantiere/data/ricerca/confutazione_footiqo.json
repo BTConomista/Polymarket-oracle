@@ -1,0 +1,73 @@
+{
+ "CONF_D_1x2_dentro_la_finestra_bersaglio": {
+  "righe": 3645,
+  "nota": "1X2 2017-19: apertura e chiusura REALI (Pinnacle, gia' negli snapshot). footiqo e' 1xBet: livelli diversi, ma se e' una istantanea di chiusura deve MUOVERSI come la chiusura vera.",
+  "corr_footiqo_vs_CHIUSURA_vera_home": 0.9976,
+  "corr_footiqo_vs_APERTURA_vera_home": 0.9897,
+  "corr_MOVIMENTO_footiqo_vs_vero_home": 0.881,
+  "corr_footiqo_vs_CHIUSURA_vera_draw": 0.9927,
+  "corr_footiqo_vs_APERTURA_vera_draw": 0.9753,
+  "corr_MOVIMENTO_footiqo_vs_vero_draw": 0.8612,
+  "corr_footiqo_vs_CHIUSURA_vera_away": 0.9973,
+  "corr_footiqo_vs_APERTURA_vera_away": 0.9893,
+  "corr_MOVIMENTO_footiqo_vs_vero_away": 0.8699,
+  "logloss_1x2_footiqo": 0.9533,
+  "logloss_1x2_apertura_vera_Pinnacle": 0.9548,
+  "logloss_1x2_chiusura_vera_Pinnacle": 0.9523
+ },
+ "CONF_E_firma_margine": {
+  "margine_1x2_footiqo_1xBet": 1.0269,
+  "margine_1x2_book_di_football_data": {
+   "B365": 1.0476,
+   "BW": 1.0514,
+   "IW": 1.0573,
+   "PS_open": 1.0249,
+   "PS_close": 1.0247,
+   "WH": 1.0567,
+   "VC": 1.037,
+   "BbAv": 1.0489,
+   "BbMx": 0.9992
+  },
+  "margine_OU_footiqo_1xBet": 1.027,
+  "margine_OU_BbAv_apertura": 1.0558,
+  "nota": "se footiqo riesportasse football-data, il margine coinciderebbe con quello di uno dei book elencati; 1xBet non e' fra questi"
+ },
+ "CONF_F_utilita_pratica": {
+  "righe": 3643,
+  "logloss_chiusura_footiqo": 0.6693,
+  "logloss_apertura_reale_BbAv": 0.6716,
+  "brier_chiusura_footiqo": 0.2384,
+  "brier_apertura_reale_BbAv": 0.2394,
+  "delta_logloss_footiqo_meno_apertura": {
+   "media": -0.00229,
+   "ci95": [
+    -0.00423,
+    -0.00035
+   ],
+   "P(delta<0)": 0.9907,
+   "conclusivo": true
+  },
+  "confronto_con_la_STIMA_E3": {
+   "righe_con_stima": 2279,
+   "leghe": [
+    "la_liga",
+    "premier_league",
+    "serie_a"
+   ],
+   "logloss_stima_E3": 0.6752,
+   "logloss_chiusura_footiqo": 0.675,
+   "logloss_apertura_reale": 0.6767,
+   "delta_logloss_footiqo_meno_stima": {
+    "media": -0.00021,
+    "ci95": [
+     -0.00278,
+     0.00243
+    ],
+    "P(delta<0)": 0.5569,
+    "conclusivo": false
+   },
+   "MAE_prob_footiqo_vs_stima": 0.0231,
+   "corr_prob_footiqo_vs_stima": 0.9561
+  }
+ }
+}

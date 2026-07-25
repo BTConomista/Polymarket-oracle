@@ -1,0 +1,6063 @@
+{
+ "nota": "prodotto da caccia_calendari.py; nessuno snapshot modificato",
+ "pausa_estiva_giorni": {
+  "serie_a": {
+   "1718->1819": 90,
+   "1819->1920": 90,
+   "1920->2021": 48,
+   "2021->2122": 90,
+   "2122->2223": 83,
+   "2223->2324": 76,
+   "2324->2425": 76,
+   "2425->2526": 90
+  },
+  "premier_league": {
+   "1718->1819": 89,
+   "1819->1920": 89,
+   "1920->2021": 48,
+   "2021->2122": 82,
+   "2122->2223": 75,
+   "2223->2324": 75,
+   "2324->2425": 89,
+   "2425->2526": 82
+  },
+  "la_liga": {
+   "1718->1819": 89,
+   "1819->1920": 89,
+   "1920->2021": 55,
+   "2021->2122": 82,
+   "2122->2223": 82,
+   "2223->2324": 68,
+   "2324->2425": 81,
+   "2425->2526": 82
+  },
+  "bundesliga": {
+   "1718->1819": 104,
+   "1819->1920": 90,
+   "1920->2021": 83,
+   "2021->2122": 83,
+   "2122->2223": 83,
+   "2223->2324": 83,
+   "2324->2425": 97,
+   "2425->2526": 97
+  },
+  "ligue_1": {
+   "1718->1819": 83,
+   "1819->1920": 77,
+   "1920->2021": 166,
+   "2021->2122": 75,
+   "2122->2223": 76,
+   "2223->2324": 69,
+   "2324->2425": 89,
+   "2425->2526": 90
+  }
+ },
+ "censimento_attuale": [
+  {
+   "lega": "serie_a",
+   "season": "1617",
+   "competition": "Serie A 2016-17",
+   "righe": 684,
+   "squadre": 18
+  },
+  {
+   "lega": "serie_a",
+   "season": "1617",
+   "competition": "Serie B",
+   "righe": 344,
+   "squadre": 8
+  },
+  {
+   "lega": "serie_a",
+   "season": "1718",
+   "competition": "Champions League",
+   "righe": 28,
+   "squadre": 3
+  },
+  {
+   "lega": "serie_a",
+   "season": "1718",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "1718",
+   "competition": "Serie B",
+   "righe": 343,
+   "squadre": 8
+  },
+  {
+   "lega": "serie_a",
+   "season": "1819",
+   "competition": "Champions League",
+   "righe": 30,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "1819",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "1819",
+   "competition": "Serie B",
+   "righe": 336,
+   "squadre": 9
+  },
+  {
+   "lega": "serie_a",
+   "season": "1920",
+   "competition": "Champions League",
+   "righe": 31,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "1920",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "1920",
+   "competition": "Serie B",
+   "righe": 393,
+   "squadre": 10
+  },
+  {
+   "lega": "serie_a",
+   "season": "2021",
+   "competition": "Champions League",
+   "righe": 30,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "2021",
+   "competition": "Coppa Italia",
+   "righe": 69,
+   "squadre": 29
+  },
+  {
+   "lega": "serie_a",
+   "season": "2021",
+   "competition": "Europa League",
+   "righe": 32,
+   "squadre": 3
+  },
+  {
+   "lega": "serie_a",
+   "season": "2021",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "2021",
+   "competition": "Serie B",
+   "righe": 429,
+   "squadre": 11
+  },
+  {
+   "lega": "serie_a",
+   "season": "2122",
+   "competition": "Champions League",
+   "righe": 28,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "2122",
+   "competition": "Conference League",
+   "righe": 13,
+   "squadre": 1
+  },
+  {
+   "lega": "serie_a",
+   "season": "2122",
+   "competition": "Coppa Italia",
+   "righe": 64,
+   "squadre": 27
+  },
+  {
+   "lega": "serie_a",
+   "season": "2122",
+   "competition": "Europa League",
+   "righe": 22,
+   "squadre": 3
+  },
+  {
+   "lega": "serie_a",
+   "season": "2122",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "2122",
+   "competition": "Serie B",
+   "righe": 432,
+   "squadre": 11
+  },
+  {
+   "lega": "serie_a",
+   "season": "2223",
+   "competition": "Champions League",
+   "righe": 41,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "2223",
+   "competition": "Conference League",
+   "righe": 19,
+   "squadre": 2
+  },
+  {
+   "lega": "serie_a",
+   "season": "2223",
+   "competition": "Coppa Italia",
+   "righe": 65,
+   "squadre": 29
+  },
+  {
+   "lega": "serie_a",
+   "season": "2223",
+   "competition": "Europa League",
+   "righe": 29,
+   "squadre": 3
+  },
+  {
+   "lega": "serie_a",
+   "season": "2223",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "2223",
+   "competition": "Serie B",
+   "righe": 390,
+   "squadre": 10
+  },
+  {
+   "lega": "serie_a",
+   "season": "2324",
+   "competition": "Champions League",
+   "righe": 30,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "2324",
+   "competition": "Conference League",
+   "righe": 13,
+   "squadre": 1
+  },
+  {
+   "lega": "serie_a",
+   "season": "2324",
+   "competition": "Coppa Italia",
+   "righe": 59,
+   "squadre": 26
+  },
+  {
+   "lega": "serie_a",
+   "season": "2324",
+   "competition": "Europa League",
+   "righe": 33,
+   "squadre": 3
+  },
+  {
+   "lega": "serie_a",
+   "season": "2324",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "2324",
+   "competition": "Serie B",
+   "righe": 314,
+   "squadre": 8
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Champions League",
+   "righe": 53,
+   "squadre": 5
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Conference League",
+   "righe": 12,
+   "squadre": 1
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Coppa Italia",
+   "righe": 67,
+   "squadre": 28
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Europa League",
+   "righe": 24,
+   "squadre": 2
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "serie_a",
+   "season": "2425",
+   "competition": "Serie B",
+   "righe": 316,
+   "squadre": 8
+  },
+  {
+   "lega": "serie_a",
+   "season": "2526",
+   "competition": "Champions League",
+   "righe": 40,
+   "squadre": 4
+  },
+  {
+   "lega": "serie_a",
+   "season": "2526",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "serie_a",
+   "season": "2526",
+   "competition": "Serie A",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "1617",
+   "competition": "Championship",
+   "righe": 552,
+   "squadre": 12
+  },
+  {
+   "lega": "premier_league",
+   "season": "1617",
+   "competition": "Premier League 2016-17",
+   "righe": 684,
+   "squadre": 18
+  },
+  {
+   "lega": "premier_league",
+   "season": "1718",
+   "competition": "Champions League",
+   "righe": 47,
+   "squadre": 5
+  },
+  {
+   "lega": "premier_league",
+   "season": "1718",
+   "competition": "Championship",
+   "righe": 506,
+   "squadre": 11
+  },
+  {
+   "lega": "premier_league",
+   "season": "1718",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "1819",
+   "competition": "Champions League",
+   "righe": 46,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "1819",
+   "competition": "Championship",
+   "righe": 459,
+   "squadre": 10
+  },
+  {
+   "lega": "premier_league",
+   "season": "1819",
+   "competition": "EFL Cup",
+   "righe": 78,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "1819",
+   "competition": "FA Cup",
+   "righe": 82,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "1819",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "1920",
+   "competition": "Champions League",
+   "righe": 33,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "1920",
+   "competition": "Championship",
+   "righe": 460,
+   "squadre": 10
+  },
+  {
+   "lega": "premier_league",
+   "season": "1920",
+   "competition": "EFL Cup",
+   "righe": 80,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "1920",
+   "competition": "FA Cup",
+   "righe": 90,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "1920",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "2021",
+   "competition": "Champions League",
+   "righe": 42,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2021",
+   "competition": "Championship",
+   "righe": 184,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2021",
+   "competition": "EFL Cup",
+   "righe": 78,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2021",
+   "competition": "Europa League",
+   "righe": 41,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2021",
+   "competition": "FA Cup",
+   "righe": 81,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2021",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "Champions League",
+   "righe": 43,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "Championship",
+   "righe": 140,
+   "squadre": 3
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "Conference League",
+   "righe": 14,
+   "squadre": 2
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "EFL Cup",
+   "righe": 88,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "Europa League",
+   "righe": 18,
+   "squadre": 2
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "FA Cup",
+   "righe": 82,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2122",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "Champions League",
+   "righe": 39,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "Championship",
+   "righe": 140,
+   "squadre": 3
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "Conference League",
+   "righe": 13,
+   "squadre": 1
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "EFL Cup",
+   "righe": 75,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "Europa League",
+   "righe": 20,
+   "squadre": 2
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "FA Cup",
+   "righe": 89,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2223",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "Champions League",
+   "righe": 32,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "Championship",
+   "righe": 141,
+   "squadre": 3
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "Conference League",
+   "righe": 12,
+   "squadre": 1
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "EFL Cup",
+   "righe": 78,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "Europa League",
+   "righe": 28,
+   "squadre": 3
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "FA Cup",
+   "righe": 94,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2324",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "Champions League",
+   "righe": 46,
+   "squadre": 4
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "Championship",
+   "righe": 141,
+   "squadre": 3
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "Conference League",
+   "righe": 13,
+   "squadre": 1
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "EFL Cup",
+   "righe": 83,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "Europa League",
+   "righe": 30,
+   "squadre": 2
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "FA Cup",
+   "righe": 79,
+   "squadre": 32
+  },
+  {
+   "lega": "premier_league",
+   "season": "2425",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "premier_league",
+   "season": "2526",
+   "competition": "Champions League",
+   "righe": 69,
+   "squadre": 6
+  },
+  {
+   "lega": "premier_league",
+   "season": "2526",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "premier_league",
+   "season": "2526",
+   "competition": "Premier League",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "1617",
+   "competition": "La Liga 2016-17",
+   "righe": 722,
+   "squadre": 19
+  },
+  {
+   "lega": "la_liga",
+   "season": "1617",
+   "competition": "Segunda División",
+   "righe": 462,
+   "squadre": 11
+  },
+  {
+   "lega": "la_liga",
+   "season": "1718",
+   "competition": "Champions League",
+   "righe": 39,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "1718",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "1718",
+   "competition": "Segunda División",
+   "righe": 336,
+   "squadre": 8
+  },
+  {
+   "lega": "la_liga",
+   "season": "1819",
+   "competition": "Champions League",
+   "righe": 34,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "1819",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "1819",
+   "competition": "Segunda División",
+   "righe": 420,
+   "squadre": 10
+  },
+  {
+   "lega": "la_liga",
+   "season": "1920",
+   "competition": "Champions League",
+   "righe": 34,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "1920",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "1920",
+   "competition": "Segunda División",
+   "righe": 420,
+   "squadre": 10
+  },
+  {
+   "lega": "la_liga",
+   "season": "2021",
+   "competition": "Champions League",
+   "righe": 36,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "2021",
+   "competition": "Copa del Rey",
+   "righe": 99,
+   "squadre": 30
+  },
+  {
+   "lega": "la_liga",
+   "season": "2021",
+   "competition": "Europa League",
+   "righe": 35,
+   "squadre": 3
+  },
+  {
+   "lega": "la_liga",
+   "season": "2021",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "2021",
+   "competition": "Segunda División",
+   "righe": 378,
+   "squadre": 9
+  },
+  {
+   "lega": "la_liga",
+   "season": "2122",
+   "competition": "Champions League",
+   "righe": 47,
+   "squadre": 5
+  },
+  {
+   "lega": "la_liga",
+   "season": "2122",
+   "competition": "Copa del Rey",
+   "righe": 96,
+   "squadre": 30
+  },
+  {
+   "lega": "la_liga",
+   "season": "2122",
+   "competition": "Europa League",
+   "righe": 28,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "2122",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "2122",
+   "competition": "Segunda División",
+   "righe": 378,
+   "squadre": 9
+  },
+  {
+   "lega": "la_liga",
+   "season": "2223",
+   "competition": "Champions League",
+   "righe": 30,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "2223",
+   "competition": "Conference League",
+   "righe": 8,
+   "squadre": 1
+  },
+  {
+   "lega": "la_liga",
+   "season": "2223",
+   "competition": "Copa del Rey",
+   "righe": 92,
+   "squadre": 28
+  },
+  {
+   "lega": "la_liga",
+   "season": "2223",
+   "competition": "Europa League",
+   "righe": 27,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "2223",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "2223",
+   "competition": "Segunda División",
+   "righe": 378,
+   "squadre": 9
+  },
+  {
+   "lega": "la_liga",
+   "season": "2324",
+   "competition": "Champions League",
+   "righe": 47,
+   "squadre": 5
+  },
+  {
+   "lega": "la_liga",
+   "season": "2324",
+   "competition": "Conference League",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "la_liga",
+   "season": "2324",
+   "competition": "Copa del Rey",
+   "righe": 96,
+   "squadre": 29
+  },
+  {
+   "lega": "la_liga",
+   "season": "2324",
+   "competition": "Europa League",
+   "righe": 14,
+   "squadre": 2
+  },
+  {
+   "lega": "la_liga",
+   "season": "2324",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "2324",
+   "competition": "Segunda División",
+   "righe": 336,
+   "squadre": 8
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "Champions League",
+   "righe": 46,
+   "squadre": 4
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "Conference League",
+   "righe": 15,
+   "squadre": 1
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "Copa del Rey",
+   "righe": 99,
+   "squadre": 30
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "Europa League",
+   "righe": 26,
+   "squadre": 2
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "la_liga",
+   "season": "2425",
+   "competition": "Segunda División",
+   "righe": 420,
+   "squadre": 10
+  },
+  {
+   "lega": "la_liga",
+   "season": "2526",
+   "competition": "Champions League",
+   "righe": 58,
+   "squadre": 5
+  },
+  {
+   "lega": "la_liga",
+   "season": "2526",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "la_liga",
+   "season": "2526",
+   "competition": "La Liga",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1617",
+   "competition": "2. Bundesliga",
+   "righe": 340,
+   "squadre": 10
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1617",
+   "competition": "Bundesliga 2016-17",
+   "righe": 578,
+   "squadre": 17
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1718",
+   "competition": "2. Bundesliga",
+   "righe": 340,
+   "squadre": 10
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1718",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1718",
+   "competition": "Champions League",
+   "righe": 24,
+   "squadre": 3
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1819",
+   "competition": "2. Bundesliga",
+   "righe": 374,
+   "squadre": 11
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1819",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1819",
+   "competition": "Champions League",
+   "righe": 30,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1819",
+   "competition": "DFB-Pokal",
+   "righe": 82,
+   "squadre": 29
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1920",
+   "competition": "2. Bundesliga",
+   "righe": 374,
+   "squadre": 11
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1920",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1920",
+   "competition": "Champions League",
+   "righe": 35,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "1920",
+   "competition": "DFB-Pokal",
+   "righe": 78,
+   "squadre": 29
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2021",
+   "competition": "2. Bundesliga",
+   "righe": 374,
+   "squadre": 11
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2021",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2021",
+   "competition": "Champions League",
+   "righe": 36,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2021",
+   "competition": "DFB-Pokal",
+   "righe": 68,
+   "squadre": 28
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2021",
+   "competition": "Europa League",
+   "righe": 16,
+   "squadre": 2
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2122",
+   "competition": "2. Bundesliga",
+   "righe": 374,
+   "squadre": 11
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2122",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2122",
+   "competition": "Champions League",
+   "righe": 28,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2122",
+   "competition": "Conference League",
+   "righe": 6,
+   "squadre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2122",
+   "competition": "DFB-Pokal",
+   "righe": 62,
+   "squadre": 26
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2122",
+   "competition": "Europa League",
+   "righe": 31,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2223",
+   "competition": "2. Bundesliga",
+   "righe": 374,
+   "squadre": 11
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2223",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2223",
+   "competition": "Champions League",
+   "righe": 40,
+   "squadre": 5
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2223",
+   "competition": "Conference League",
+   "righe": 6,
+   "squadre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2223",
+   "competition": "DFB-Pokal",
+   "righe": 75,
+   "squadre": 26
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2223",
+   "competition": "Europa League",
+   "righe": 26,
+   "squadre": 3
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2324",
+   "competition": "2. Bundesliga",
+   "righe": 340,
+   "squadre": 10
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2324",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2324",
+   "competition": "Champions League",
+   "righe": 39,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2324",
+   "competition": "Conference League",
+   "righe": 8,
+   "squadre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2324",
+   "competition": "DFB-Pokal",
+   "righe": 64,
+   "squadre": 26
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2324",
+   "competition": "Europa League",
+   "righe": 23,
+   "squadre": 2
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "2. Bundesliga",
+   "righe": 340,
+   "squadre": 10
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "Champions League",
+   "righe": 54,
+   "squadre": 5
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "Conference League",
+   "righe": 8,
+   "squadre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "DFB-Pokal",
+   "righe": 83,
+   "squadre": 29
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2425",
+   "competition": "Europa League",
+   "righe": 20,
+   "squadre": 2
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2526",
+   "competition": "Bundesliga",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2526",
+   "competition": "Champions League",
+   "righe": 44,
+   "squadre": 4
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2526",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "season": "2526",
+   "competition": "DFB-Pokal",
+   "righe": 69,
+   "squadre": 29
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1617",
+   "competition": "Ligue 1 2016-17",
+   "righe": 684,
+   "squadre": 18
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1617",
+   "competition": "Ligue 2",
+   "righe": 418,
+   "squadre": 11
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1718",
+   "competition": "Champions League",
+   "righe": 14,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1718",
+   "competition": "Ligue 1",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1718",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1819",
+   "competition": "Champions League",
+   "righe": 22,
+   "squadre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1819",
+   "competition": "Ligue 1",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1819",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1920",
+   "competition": "Champions League",
+   "righe": 27,
+   "squadre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1920",
+   "competition": "Ligue 1",
+   "righe": 558,
+   "squadre": 20
+  },
+  {
+   "lega": "ligue_1",
+   "season": "1920",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2021",
+   "competition": "Champions League",
+   "righe": 24,
+   "squadre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2021",
+   "competition": "Europa League",
+   "righe": 14,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2021",
+   "competition": "Ligue 1",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2021",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2122",
+   "competition": "Champions League",
+   "righe": 16,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2122",
+   "competition": "Conference League",
+   "righe": 16,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2122",
+   "competition": "Europa League",
+   "righe": 24,
+   "squadre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2122",
+   "competition": "Ligue 1",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2122",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2223",
+   "competition": "Champions League",
+   "righe": 14,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2223",
+   "competition": "Conference League",
+   "righe": 10,
+   "squadre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2223",
+   "competition": "Europa League",
+   "righe": 24,
+   "squadre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2223",
+   "competition": "Ligue 1",
+   "righe": 760,
+   "squadre": 20
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2223",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2324",
+   "competition": "Champions League",
+   "righe": 18,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2324",
+   "competition": "Conference League",
+   "righe": 10,
+   "squadre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2324",
+   "competition": "Europa League",
+   "righe": 32,
+   "squadre": 4
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2324",
+   "competition": "Ligue 1",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2324",
+   "competition": "Ligue 2",
+   "righe": 380,
+   "squadre": 10
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Champions League",
+   "righe": 37,
+   "squadre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Champions League (qual.)",
+   "righe": 4,
+   "squadre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Coupe de France",
+   "righe": 82,
+   "squadre": 29
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Europa League",
+   "righe": 20,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Ligue 1",
+   "righe": 612,
+   "squadre": 18
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2425",
+   "competition": "Ligue 2",
+   "righe": 306,
+   "squadre": 9
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2526",
+   "competition": "Champions League",
+   "righe": 25,
+   "squadre": 2
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2526",
+   "competition": "Champions League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2526",
+   "competition": "Conference League (qual.)",
+   "righe": 2,
+   "squadre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "season": "2526",
+   "competition": "Ligue 1",
+   "righe": 612,
+   "squadre": 18
+  }
+ ],
+ "pagine_wikipedia_utili": {
+  "2017–18 UEFA Champions League group stage": 96,
+  "2017–18 UEFA Champions League knockout phase": 28,
+  "2017–18 UEFA Champions League qualifying phase and play-off round": 94,
+  "2018 UEFA Champions League final": 1,
+  "2018 UEFA Champions League Final": 1,
+  "2018–19 UEFA Champions League group stage": 96,
+  "2018–19 UEFA Champions League knockout phase": 28,
+  "2018–19 UEFA Champions League qualifying phase and play-off round": 91,
+  "2019 UEFA Champions League final": 1,
+  "2019 UEFA Champions League Final": 1,
+  "2019–20 UEFA Champions League group stage": 96,
+  "2019–20 UEFA Champions League knockout phase": 22,
+  "2019–20 UEFA Champions League qualifying phase and play-off round": 91,
+  "2020 UEFA Champions League final": 1,
+  "2020 UEFA Champions League Final": 1,
+  "2020–21 UEFA Champions League group stage": 96,
+  "2020–21 UEFA Champions League knockout phase": 28,
+  "2020–21 UEFA Champions League qualifying phase and play-off round": 53,
+  "2021 UEFA Champions League final": 1,
+  "2021 UEFA Champions League Final": 1,
+  "2021–22 UEFA Champions League group stage": 96,
+  "2021–22 UEFA Champions League knockout phase": 28,
+  "2021–22 UEFA Champions League qualifying phase and play-off round": 93,
+  "2022 UEFA Champions League final": 1,
+  "2022 UEFA Champions League Final": 1,
+  "2022–23 UEFA Champions League group stage": 96,
+  "2022–23 UEFA Champions League knockout phase": 28,
+  "2022–23 UEFA Champions League qualifying phase and play-off round": 89,
+  "2023 UEFA Champions League final": 1,
+  "2023 UEFA Champions League Final": 1,
+  "2023–24 UEFA Champions League group stage": 96,
+  "2023–24 UEFA Champions League knockout phase": 28,
+  "2023–24 UEFA Champions League qualifying phase and play-off round": 89,
+  "2024 UEFA Champions League final": 1,
+  "2024 UEFA Champions League Final": 1,
+  "2024–25 UEFA Champions League league phase": 144,
+  "2024–25 UEFA Champions League knockout phase": 44,
+  "2024–25 UEFA Champions League qualifying phase and play-off round": 90,
+  "2025 UEFA Champions League final": 1,
+  "2025 UEFA Champions League Final": 1,
+  "2025–26 UEFA Champions League league phase": 144,
+  "2025–26 UEFA Champions League knockout phase": 44,
+  "2025–26 UEFA Champions League qualifying phase and play-off round": 92,
+  "2026 UEFA Champions League final": 1,
+  "2017–18 UEFA Europa League group stage": 144,
+  "2017–18 UEFA Europa League knockout phase": 60,
+  "2017–18 UEFA Europa League qualifying phase and play-off round": 268,
+  "2018 UEFA Europa League final": 1,
+  "2018 UEFA Europa League Final": 1,
+  "2018–19 UEFA Europa League group stage": 144,
+  "2018–19 UEFA Europa League knockout phase": 60,
+  "2018–19 UEFA Europa League qualifying phase and play-off round": 314,
+  "2019 UEFA Europa League final": 1,
+  "2019 UEFA Europa League Final": 1,
+  "2019–20 UEFA Europa League group stage": 144,
+  "2019–20 UEFA Europa League knockout phase": 52,
+  "2019–20 UEFA Europa League qualifying phase and play-off round": 314,
+  "2020 UEFA Europa League final": 1,
+  "2020 UEFA Europa League Final": 1,
+  "2020–21 UEFA Europa League group stage": 144,
+  "2020–21 UEFA Europa League knockout phase": 60,
+  "2020–21 UEFA Europa League qualifying phase and play-off round": 157,
+  "2021 UEFA Europa League final": 1,
+  "2021 UEFA Europa League Final": 1,
+  "2021–22 UEFA Europa League group stage": 96,
+  "2021–22 UEFA Europa League knockout phase": 44,
+  "2021–22 UEFA Europa League qualifying phase and play-off round": 36,
+  "2022 UEFA Europa League final": 1,
+  "2022 UEFA Europa League Final": 1,
+  "2022–23 UEFA Europa League group stage": 96,
+  "2022–23 UEFA Europa League knockout phase": 44,
+  "2022–23 UEFA Europa League qualifying phase and play-off round": 34,
+  "2023 UEFA Europa League final": 1,
+  "2023 UEFA Europa League Final": 1,
+  "2023–24 UEFA Europa League group stage": 96,
+  "2023–24 UEFA Europa League knockout phase": 44,
+  "2023–24 UEFA Europa League qualifying phase and play-off round": 34,
+  "2024 UEFA Europa League final": 1,
+  "2024 UEFA Europa League Final": 1,
+  "2024–25 UEFA Europa League league phase": 144,
+  "2024–25 UEFA Europa League knockout phase": 44,
+  "2024–25 UEFA Europa League qualifying phase and play-off round": 80,
+  "2025 UEFA Europa League final": 1,
+  "2025 UEFA Europa League Final": 1,
+  "2025–26 UEFA Europa League league phase": 144,
+  "2025–26 UEFA Europa League knockout phase": 44,
+  "2025–26 UEFA Europa League qualifying phase and play-off round": 82,
+  "2026 UEFA Europa League final": 1,
+  "2021–22 UEFA Europa Conference League group stage": 96,
+  "2021–22 UEFA Europa Conference League knockout phase": 44,
+  "2021–22 UEFA Europa Conference League qualifying phase and play-off round": 282,
+  "2022 UEFA Europa Conference League final": 1,
+  "2022 UEFA Europa Conference League Final": 1,
+  "2022–23 UEFA Europa Conference League group stage": 96,
+  "2022–23 UEFA Europa Conference League knockout phase": 44,
+  "2022–23 UEFA Europa Conference League qualifying phase and play-off round": 274,
+  "2023 UEFA Europa Conference League final": 1,
+  "2023 UEFA Europa Conference League Final": 1,
+  "2023–24 UEFA Europa Conference League group stage": 96,
+  "2023–24 UEFA Europa Conference League knockout phase": 44,
+  "2023–24 UEFA Europa Conference League qualifying phase and play-off round": 276,
+  "2024 UEFA Europa Conference League final": 1,
+  "2024 UEFA Europa Conference League Final": 1,
+  "2024–25 UEFA Conference League league phase": 108,
+  "2024–25 UEFA Conference League knockout phase": 44,
+  "2024–25 UEFA Conference League qualifying phase and play-off round": 256,
+  "2025 UEFA Conference League final": 1,
+  "2025–26 UEFA Conference League league phase": 108,
+  "2025–26 UEFA Conference League knockout phase": 44,
+  "2025–26 UEFA Conference League qualifying phase and play-off round": 256,
+  "2026 UEFA Conference League final": 1,
+  "2017–18 Coppa Italia": 78,
+  "2018 Coppa Italia Final": 1,
+  "2018 Coppa Italia final": 1,
+  "2018–19 Coppa Italia": 78,
+  "2019 Coppa Italia Final": 1,
+  "2019 Coppa Italia final": 1,
+  "2019–20 Coppa Italia": 78,
+  "2020 Coppa Italia Final": 1,
+  "2020 Coppa Italia final": 1,
+  "2020–21 Coppa Italia": 78,
+  "2021 Coppa Italia Final": 1,
+  "2021 Coppa Italia final": 1,
+  "2021–22 Coppa Italia": 44,
+  "2022 Coppa Italia Final": 1,
+  "2022 Coppa Italia final": 1,
+  "2022–23 Coppa Italia": 44,
+  "2023 Coppa Italia Final": 1,
+  "2023 Coppa Italia final": 1,
+  "2023–24 Coppa Italia": 44,
+  "2024 Coppa Italia final": 1,
+  "2024–25 Coppa Italia": 44,
+  "2025 Coppa Italia final": 1,
+  "2025–26 Coppa Italia": 44,
+  "2026 Coppa Italia final": 1,
+  "2017–18 Copa del Rey": 111,
+  "2018 Copa del Rey Final": 1,
+  "2018 Copa del Rey final": 1,
+  "2018–19 Copa del Rey": 111,
+  "2019 Copa del Rey Final": 1,
+  "2019 Copa del Rey final": 1,
+  "2019–20 Copa del Rey": 125,
+  "2020 Copa del Rey Final": 1,
+  "2020 Copa del Rey final": 1,
+  "2020–21 Copa del Rey": 126,
+  "2021 Copa del Rey Final": 1,
+  "2021 Copa del Rey final": 1,
+  "2021–22 Copa del Rey": 126,
+  "2022 Copa del Rey Final": 1,
+  "2022 Copa del Rey final": 1,
+  "2022–23 Copa del Rey": 125,
+  "2023 Copa del Rey Final": 1,
+  "2023 Copa del Rey final": 1,
+  "2023–24 Copa del Rey": 125,
+  "2024 Copa del Rey final": 1,
+  "2024–25 Copa del Rey": 125,
+  "2025 Copa del Rey final": 1,
+  "2025–26 Copa del Rey": 136,
+  "2026 Copa del Rey final": 1,
+  "2017–18 FA Cup": 146,
+  "2018 FA Cup Final": 1,
+  "2018 FA Cup final": 1,
+  "2018–19 FA Cup": 149,
+  "2019 FA Cup Final": 1,
+  "2019 FA Cup final": 1,
+  "2019–20 FA Cup": 155,
+  "2020 FA Cup Final": 1,
+  "2020 FA Cup final": 1,
+  "2020–21 FA Cup": 122,
+  "2021 FA Cup Final": 1,
+  "2021 FA Cup final": 1,
+  "2021–22 FA Cup": 136,
+  "2022 FA Cup Final": 1,
+  "2022 FA Cup final": 1,
+  "2022–23 FA Cup": 143,
+  "2023 FA Cup Final": 1,
+  "2023 FA Cup final": 1,
+  "2023–24 FA Cup": 149,
+  "2024 FA Cup final": 1,
+  "2024–25 FA Cup": 122,
+  "2025 FA Cup final": 1,
+  "2025–26 FA Cup": 122,
+  "2026 FA Cup final": 1,
+  "2017–18 EFL Cup": 92,
+  "2018 EFL Cup Final": 1,
+  "2018 EFL Cup final": 1,
+  "2018–19 EFL Cup": 92,
+  "2019 EFL Cup Final": 1,
+  "2019 EFL Cup final": 1,
+  "2019–20 EFL Cup": 92,
+  "2020 EFL Cup Final": 1,
+  "2020 EFL Cup final": 1,
+  "2020–21 EFL Cup": 89,
+  "2021 EFL Cup Final": 1,
+  "2021 EFL Cup final": 1,
+  "2021–22 EFL Cup": 92,
+  "2022 EFL Cup Final": 1,
+  "2022 EFL Cup final": 1,
+  "2022–23 EFL Cup": 92,
+  "2023 EFL Cup final": 1,
+  "2023–24 EFL Cup": 92,
+  "2024 EFL Cup Final": 1,
+  "2024 EFL Cup final": 1,
+  "2024–25 EFL Cup": 92,
+  "2025 EFL Cup final": 1,
+  "2025–26 EFL Cup": 92,
+  "2026 EFL Cup final": 1,
+  "2017–18 DFB-Pokal": 62,
+  "2018 DFB-Pokal Final": 1,
+  "2018 DFB-Pokal final": 1,
+  "2018–19 DFB-Pokal": 62,
+  "2019 DFB-Pokal Final": 1,
+  "2019 DFB-Pokal final": 1,
+  "2019–20 DFB-Pokal": 62,
+  "2020 DFB-Pokal Final": 1,
+  "2020 DFB-Pokal final": 1,
+  "2020–21 DFB-Pokal": 62,
+  "2021 DFB-Pokal Final": 1,
+  "2021 DFB-Pokal final": 1,
+  "2021–22 DFB-Pokal": 62,
+  "2022 DFB-Pokal Final": 1,
+  "2022 DFB-Pokal final": 1,
+  "2022–23 DFB-Pokal": 62,
+  "2023 DFB-Pokal Final": 1,
+  "2023 DFB-Pokal final": 1,
+  "2023–24 DFB-Pokal": 62,
+  "2024 DFB-Pokal Final": 1,
+  "2024 DFB-Pokal final": 1,
+  "2024–25 DFB-Pokal": 62,
+  "2025 DFB-Pokal final": 1,
+  "2025–26 DFB-Pokal": 62,
+  "2026 DFB-Pokal final": 1,
+  "2017–18 Coupe de France": 194,
+  "2018 Coupe de France Final": 1,
+  "2018 Coupe de France final": 1,
+  "2018–19 Coupe de France": 194,
+  "2019 Coupe de France Final": 1,
+  "2019 Coupe de France final": 1,
+  "2019–20 Coupe de France": 194,
+  "2020 Coupe de France Final": 1,
+  "2020 Coupe de France final": 1,
+  "2020–21 Coupe de France": 172,
+  "2021 Coupe de France Final": 1,
+  "2021 Coupe de France final": 1,
+  "2021–22 Coupe de France": 192,
+  "2022 Coupe de France Final": 1,
+  "2022 Coupe de France final": 1,
+  "2022–23 Coupe de France": 194,
+  "2023 Coupe de France final": 1,
+  "2023–24 Coupe de France": 200,
+  "2024 Coupe de France final": 1,
+  "2024–25 Coupe de France": 198,
+  "2025 Coupe de France final": 1,
+  "2025–26 Coupe de France": 78,
+  "2026 Coupe de France final": 1,
+  "2017–18 Coupe de la Ligue": 41,
+  "2018 Coupe de la Ligue Final": 1,
+  "2018 Coupe de la Ligue final": 1,
+  "2018–19 Coupe de la Ligue": 42,
+  "2019 Coupe de la Ligue Final": 1,
+  "2019 Coupe de la Ligue final": 1,
+  "2019–20 Coupe de la Ligue": 43,
+  "2020 Coupe de la Ligue Final": 1,
+  "2020 Coupe de la Ligue final": 1,
+  "2017 Supercoppa Italiana": 1,
+  "2018 Supercoppa Italiana": 1,
+  "2019 Supercoppa Italiana": 1,
+  "2020 Supercoppa Italiana": 1,
+  "2021 Supercoppa Italiana": 1,
+  "2022 Supercoppa Italiana": 1,
+  "2023 Supercoppa Italiana": 2,
+  "2024 Supercoppa Italiana": 2,
+  "2018–19 Supercoppa Italiana": 1,
+  "2020–21 Supercoppa Italiana": 1,
+  "2023–24 Supercoppa Italiana": 2,
+  "2024–25 Supercoppa Italiana": 2,
+  "2025–26 Supercoppa Italiana": 2,
+  "2017 Supercopa de España": 2,
+  "2018 Supercopa de España": 1,
+  "2020 Supercopa de España": 2,
+  "2021 Supercopa de España": 2,
+  "2022 Supercopa de España": 2,
+  "2023 Supercopa de España": 2,
+  "2024 Supercopa de España": 2,
+  "2025 Supercopa de España": 2,
+  "2026 Supercopa de España": 2,
+  "2019–20 Supercopa de España": 2,
+  "2020–21 Supercopa de España": 2,
+  "2021–22 Supercopa de España": 2,
+  "2022–23 Supercopa de España": 2,
+  "2023–24 Supercopa de España": 2,
+  "2017 FA Community Shield": 1,
+  "2018 FA Community Shield": 1,
+  "2019 FA Community Shield": 1,
+  "2020 FA Community Shield": 1,
+  "2021 FA Community Shield": 1,
+  "2022 FA Community Shield": 1,
+  "2023 FA Community Shield": 1,
+  "2024 FA Community Shield": 1,
+  "2025 FA Community Shield": 1,
+  "2026 FA Community Shield": 1,
+  "2017 DFL-Supercup": 1,
+  "2018 DFL-Supercup": 1,
+  "2019 DFL-Supercup": 1,
+  "2020 DFL-Supercup": 1,
+  "2021 DFL-Supercup": 1,
+  "2022 DFL-Supercup": 1,
+  "2023 DFL-Supercup": 1,
+  "2024 DFL-Supercup": 1,
+  "2025 DFL-Supercup": 1,
+  "2026 DFL-Supercup": 1,
+  "2017 Trophée des Champions": 1,
+  "2018 Trophée des Champions": 1,
+  "2019 Trophée des Champions": 1,
+  "2020 Trophée des Champions": 1,
+  "2021 Trophée des Champions": 1,
+  "2022 Trophée des Champions": 1,
+  "2023 Trophée des Champions": 1,
+  "2024 Trophée des Champions": 1,
+  "2025 Trophée des Champions": 1,
+  "2026 Trophée des Champions": 1,
+  "2017 UEFA Super Cup": 1,
+  "2018 UEFA Super Cup": 1,
+  "2019 UEFA Super Cup": 1,
+  "2020 UEFA Super Cup": 1,
+  "2021 UEFA Super Cup": 1,
+  "2022 UEFA Super Cup": 1,
+  "2023 UEFA Super Cup": 1,
+  "2024 UEFA Super Cup": 1,
+  "2025 UEFA Super Cup": 1,
+  "2017 FIFA Club World Cup": 7,
+  "2017 FIFA Club World Cup final": 1,
+  "2017 FIFA Club World Cup Final": 1,
+  "2018 FIFA Club World Cup": 7,
+  "2018 FIFA Club World Cup final": 1,
+  "2018 FIFA Club World Cup Final": 1,
+  "2019 FIFA Club World Cup": 7,
+  "2019 FIFA Club World Cup final": 1,
+  "2019 FIFA Club World Cup Final": 1,
+  "2021 FIFA Club World Cup": 7,
+  "2021 FIFA Club World Cup final": 1,
+  "2021 FIFA Club World Cup Final": 1,
+  "2022 FIFA Club World Cup": 6,
+  "2022 FIFA Club World Cup final": 1,
+  "2022 FIFA Club World Cup Final": 1,
+  "2023 FIFA Club World Cup": 6,
+  "2023 FIFA Club World Cup final": 1,
+  "2025 FIFA Club World Cup": 15,
+  "2025 FIFA Club World Cup final": 1,
+  "2024 FIFA Intercontinental Cup": 4,
+  "2024 FIFA Intercontinental Cup final": 1,
+  "2025 FIFA Intercontinental Cup": 4,
+  "2025 FIFA Intercontinental Cup final": 1,
+  "2025 FIFA Club World Cup Group A": 6,
+  "2025 FIFA Club World Cup Group B": 6,
+  "2025 FIFA Club World Cup Group C": 6,
+  "2025 FIFA Club World Cup Group D": 6,
+  "2025 FIFA Club World Cup Group E": 6,
+  "2025 FIFA Club World Cup Group F": 6,
+  "2025 FIFA Club World Cup Group G": 6,
+  "2025 FIFA Club World Cup Group H": 6,
+  "2025 FIFA Club World Cup knockout stage": 15
+ },
+ "pagine_wikipedia_vuote_o_assenti": [
+  "2017 UEFA Super Cup Final",
+  "2017 UEFA Super Cup final",
+  "2017–18 DFL-Supercup",
+  "2017–18 FA Community Shield",
+  "2017–18 Supercopa de España",
+  "2017–18 Supercoppa Italiana",
+  "2017–18 Trophée des Champions",
+  "2018 UEFA Super Cup Final",
+  "2018 UEFA Super Cup final",
+  "2018–19 DFL-Supercup",
+  "2018–19 FA Community Shield",
+  "2018–19 Supercopa de España",
+  "2018–19 Trophée des Champions",
+  "2019 Supercopa de España",
+  "2019 UEFA Super Cup Final",
+  "2019 UEFA Super Cup final",
+  "2019–20 DFL-Supercup",
+  "2019–20 FA Community Shield",
+  "2019–20 Supercoppa Italiana",
+  "2019–20 Trophée des Champions",
+  "2020 UEFA Super Cup Final",
+  "2020 UEFA Super Cup final",
+  "2020–21 DFL-Supercup",
+  "2020–21 FA Community Shield",
+  "2020–21 Trophée des Champions",
+  "2021 UEFA Super Cup Final",
+  "2021 UEFA Super Cup final",
+  "2021–22 DFL-Supercup",
+  "2021–22 FA Community Shield",
+  "2021–22 Supercoppa Italiana",
+  "2021–22 Trophée des Champions",
+  "2022 UEFA Super Cup Final",
+  "2022 UEFA Super Cup final",
+  "2022–23 DFL-Supercup",
+  "2022–23 FA Community Shield",
+  "2022–23 Supercoppa Italiana",
+  "2022–23 Trophée des Champions",
+  "2023 Coupe de France Final",
+  "2023 EFL Cup Final",
+  "2023 FIFA Club World Cup Final",
+  "2023 UEFA Super Cup Final",
+  "2023 UEFA Super Cup final",
+  "2023–24 DFL-Supercup",
+  "2023–24 FA Community Shield",
+  "2023–24 Trophée des Champions",
+  "2024 Copa del Rey Final",
+  "2024 Coppa Italia Final",
+  "2024 Coupe de France Final",
+  "2024 FA Cup Final",
+  "2024 FIFA Intercontinental Cup Final",
+  "2024 UEFA Super Cup Final",
+  "2024 UEFA Super Cup final",
+  "2024–25 DFL-Supercup",
+  "2024–25 FA Community Shield",
+  "2024–25 Supercopa de España",
+  "2024–25 Trophée des Champions",
+  "2025 Copa del Rey Final",
+  "2025 Coppa Italia Final",
+  "2025 Coupe de France Final",
+  "2025 DFB-Pokal Final",
+  "2025 EFL Cup Final",
+  "2025 FA Cup Final",
+  "2025 FIFA Club World Cup Final",
+  "2025 FIFA Intercontinental Cup Final",
+  "2025 Supercoppa Italiana",
+  "2025 UEFA Conference League Final",
+  "2025 UEFA Super Cup Final",
+  "2025 UEFA Super Cup final",
+  "2025–26 DFL-Supercup",
+  "2025–26 FA Community Shield",
+  "2025–26 Supercopa de España",
+  "2025–26 Trophée des Champions",
+  "2026 Copa del Rey Final",
+  "2026 Coppa Italia Final",
+  "2026 Coupe de France Final",
+  "2026 DFB-Pokal Final",
+  "2026 EFL Cup Final",
+  "2026 FA Cup Final",
+  "2026 Supercoppa Italiana",
+  "2026 UEFA Champions League Final",
+  "2026 UEFA Conference League Final",
+  "2026 UEFA Europa League Final"
+ ],
+ "nomi_non_agganciati": {
+  "serie_a": {},
+  "premier_league": {},
+  "la_liga": {},
+  "bundesliga": {},
+  "ligue_1": {}
+ },
+ "righe_scartate_oltre_finestra_dati": {
+  "serie_a": 0,
+  "premier_league": 2,
+  "la_liga": 0,
+  "bundesliga": 2,
+  "ligue_1": 2
+ },
+ "confronto": [
+  {
+   "lega": "serie_a",
+   "stagione": "1718",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 28,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1718",
+   "competizione": "Coppa Italia",
+   "wikipedia": 72,
+   "nostre": 0,
+   "mancanti": 72,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1718",
+   "competizione": "Europa League",
+   "wikipedia": 36,
+   "nostre": 0,
+   "mancanti": 36,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1718",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1819",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 30,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1819",
+   "competizione": "Coppa Italia",
+   "wikipedia": 77,
+   "nostre": 0,
+   "mancanti": 77,
+   "solo_nostre": 0,
+   "squadre_mancanti": 32
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1819",
+   "competizione": "Europa League",
+   "wikipedia": 30,
+   "nostre": 0,
+   "mancanti": 30,
+   "solo_nostre": 0,
+   "squadre_mancanti": 5
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1819",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1920",
+   "competizione": "Champions League",
+   "wikipedia": 31,
+   "nostre": 31,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1920",
+   "competizione": "Coppa Italia",
+   "wikipedia": 80,
+   "nostre": 0,
+   "mancanti": 80,
+   "solo_nostre": 0,
+   "squadre_mancanti": 31
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1920",
+   "competizione": "Europa League",
+   "wikipedia": 27,
+   "nostre": 0,
+   "mancanti": 27,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "1920",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2021",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 30,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2021",
+   "competizione": "Coppa Italia",
+   "wikipedia": 80,
+   "nostre": 69,
+   "mancanti": 11,
+   "solo_nostre": 0,
+   "squadre_mancanti": 10
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2021",
+   "competizione": "Europa League",
+   "wikipedia": 35,
+   "nostre": 32,
+   "mancanti": 3,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2021",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2122",
+   "competizione": "Champions League",
+   "wikipedia": 28,
+   "nostre": 28,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2122",
+   "competizione": "Conference League",
+   "wikipedia": 15,
+   "nostre": 13,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2122",
+   "competizione": "Coppa Italia",
+   "wikipedia": 71,
+   "nostre": 64,
+   "mancanti": 7,
+   "solo_nostre": 0,
+   "squadre_mancanti": 7
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2122",
+   "competizione": "Europa League",
+   "wikipedia": 22,
+   "nostre": 22,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2122",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2223",
+   "competizione": "Champions League",
+   "wikipedia": 41,
+   "nostre": 41,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2223",
+   "competizione": "Conference League",
+   "wikipedia": 21,
+   "nostre": 19,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2223",
+   "competizione": "Coppa Italia",
+   "wikipedia": 68,
+   "nostre": 65,
+   "mancanti": 3,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2223",
+   "competizione": "Europa League",
+   "wikipedia": 29,
+   "nostre": 29,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2223",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2324",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 30,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2324",
+   "competizione": "Conference League",
+   "wikipedia": 15,
+   "nostre": 13,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2324",
+   "competizione": "Coppa Italia",
+   "wikipedia": 68,
+   "nostre": 59,
+   "mancanti": 9,
+   "solo_nostre": 0,
+   "squadre_mancanti": 7
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2324",
+   "competizione": "Europa League",
+   "wikipedia": 33,
+   "nostre": 33,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2324",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "Champions League",
+   "wikipedia": 53,
+   "nostre": 53,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "Conference League",
+   "wikipedia": 14,
+   "nostre": 14,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "Coppa Italia",
+   "wikipedia": 67,
+   "nostre": 67,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "Europa League",
+   "wikipedia": 24,
+   "nostre": 24,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 8,
+   "nostre": 0,
+   "mancanti": 8,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2425",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2526",
+   "competizione": "Champions League",
+   "wikipedia": 40,
+   "nostre": 40,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2526",
+   "competizione": "Conference League",
+   "wikipedia": 14,
+   "nostre": 2,
+   "mancanti": 12,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2526",
+   "competizione": "Coppa Italia",
+   "wikipedia": 67,
+   "nostre": 0,
+   "mancanti": 67,
+   "solo_nostre": 0,
+   "squadre_mancanti": 26
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2526",
+   "competizione": "Europa League",
+   "wikipedia": 24,
+   "nostre": 0,
+   "mancanti": 24,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2526",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1718",
+   "competizione": "Champions League",
+   "wikipedia": 49,
+   "nostre": 47,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1718",
+   "competizione": "EFL Cup",
+   "wikipedia": 89,
+   "nostre": 0,
+   "mancanti": 89,
+   "solo_nostre": 0,
+   "squadre_mancanti": 32
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1718",
+   "competizione": "Europa League",
+   "wikipedia": 24,
+   "nostre": 0,
+   "mancanti": 24,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1718",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1718",
+   "competizione": "FA Cup",
+   "wikipedia": 84,
+   "nostre": 0,
+   "mancanti": 84,
+   "solo_nostre": 0,
+   "squadre_mancanti": 32
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1718",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1819",
+   "competizione": "Champions League",
+   "wikipedia": 46,
+   "nostre": 46,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1819",
+   "competizione": "EFL Cup",
+   "wikipedia": 78,
+   "nostre": 78,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1819",
+   "competizione": "Europa League",
+   "wikipedia": 36,
+   "nostre": 0,
+   "mancanti": 36,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1819",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1819",
+   "competizione": "FA Cup",
+   "wikipedia": 82,
+   "nostre": 82,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "Champions League",
+   "wikipedia": 33,
+   "nostre": 33,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "EFL Cup",
+   "wikipedia": 80,
+   "nostre": 80,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "Europa League",
+   "wikipedia": 37,
+   "nostre": 0,
+   "mancanti": 37,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "FA Cup",
+   "wikipedia": 90,
+   "nostre": 90,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "1920",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2021",
+   "competizione": "Champions League",
+   "wikipedia": 42,
+   "nostre": 42,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2021",
+   "competizione": "EFL Cup",
+   "wikipedia": 77,
+   "nostre": 78,
+   "mancanti": 0,
+   "solo_nostre": 1,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2021",
+   "competizione": "Europa League",
+   "wikipedia": 44,
+   "nostre": 41,
+   "mancanti": 3,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2021",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2021",
+   "competizione": "FA Cup",
+   "wikipedia": 81,
+   "nostre": 81,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "Champions League",
+   "wikipedia": 43,
+   "nostre": 43,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "Conference League",
+   "wikipedia": 16,
+   "nostre": 14,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "EFL Cup",
+   "wikipedia": 88,
+   "nostre": 88,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "Europa League",
+   "wikipedia": 18,
+   "nostre": 18,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "FA Cup",
+   "wikipedia": 82,
+   "nostre": 82,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2122",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2223",
+   "competizione": "Champions League",
+   "wikipedia": 39,
+   "nostre": 39,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2223",
+   "competizione": "Conference League",
+   "wikipedia": 15,
+   "nostre": 13,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2223",
+   "competizione": "EFL Cup",
+   "wikipedia": 75,
+   "nostre": 75,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2223",
+   "competizione": "Europa League",
+   "wikipedia": 20,
+   "nostre": 20,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2223",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2223",
+   "competizione": "FA Cup",
+   "wikipedia": 89,
+   "nostre": 89,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "Champions League",
+   "wikipedia": 32,
+   "nostre": 32,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "Conference League",
+   "wikipedia": 14,
+   "nostre": 12,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "EFL Cup",
+   "wikipedia": 78,
+   "nostre": 78,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "Europa League",
+   "wikipedia": 28,
+   "nostre": 28,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "FA Cup",
+   "wikipedia": 94,
+   "nostre": 94,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2324",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "Champions League",
+   "wikipedia": 46,
+   "nostre": 46,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "Conference League",
+   "wikipedia": 15,
+   "nostre": 15,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "EFL Cup",
+   "wikipedia": 83,
+   "nostre": 83,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "Europa League",
+   "wikipedia": 30,
+   "nostre": 30,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "FA Cup",
+   "wikipedia": 79,
+   "nostre": 79,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2425",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 9,
+   "nostre": 0,
+   "mancanti": 9,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "Champions League",
+   "wikipedia": 69,
+   "nostre": 69,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "Conference League",
+   "wikipedia": 17,
+   "nostre": 2,
+   "mancanti": 15,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "EFL Cup",
+   "wikipedia": 79,
+   "nostre": 0,
+   "mancanti": 79,
+   "solo_nostre": 0,
+   "squadre_mancanti": 32
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "Europa League",
+   "wikipedia": 31,
+   "nostre": 0,
+   "mancanti": 31,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "FA Community Shield",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "FA Cup",
+   "wikipedia": 79,
+   "nostre": 0,
+   "mancanti": 79,
+   "solo_nostre": 0,
+   "squadre_mancanti": 32
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2526",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1718",
+   "competizione": "Champions League",
+   "wikipedia": 41,
+   "nostre": 39,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1718",
+   "competizione": "Copa del Rey",
+   "wikipedia": 113,
+   "nostre": 0,
+   "mancanti": 113,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1718",
+   "competizione": "Europa League",
+   "wikipedia": 39,
+   "nostre": 0,
+   "mancanti": 39,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1718",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1718",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1718",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1819",
+   "competizione": "Champions League",
+   "wikipedia": 34,
+   "nostre": 34,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1819",
+   "competizione": "Copa del Rey",
+   "wikipedia": 115,
+   "nostre": 0,
+   "mancanti": 115,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1819",
+   "competizione": "Europa League",
+   "wikipedia": 44,
+   "nostre": 0,
+   "mancanti": 44,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1819",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1819",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1819",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1920",
+   "competizione": "Champions League",
+   "wikipedia": 34,
+   "nostre": 34,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1920",
+   "competizione": "Copa del Rey",
+   "wikipedia": 93,
+   "nostre": 0,
+   "mancanti": 93,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1920",
+   "competizione": "Europa League",
+   "wikipedia": 33,
+   "nostre": 0,
+   "mancanti": 33,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "1920",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2021",
+   "competizione": "Champions League",
+   "wikipedia": 36,
+   "nostre": 36,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2021",
+   "competizione": "Copa del Rey",
+   "wikipedia": 108,
+   "nostre": 99,
+   "mancanti": 9,
+   "solo_nostre": 0,
+   "squadre_mancanti": 8
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2021",
+   "competizione": "Europa League",
+   "wikipedia": 40,
+   "nostre": 35,
+   "mancanti": 5,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2021",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2021",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2122",
+   "competizione": "Champions League",
+   "wikipedia": 47,
+   "nostre": 47,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2122",
+   "competizione": "Copa del Rey",
+   "wikipedia": 104,
+   "nostre": 96,
+   "mancanti": 8,
+   "solo_nostre": 0,
+   "squadre_mancanti": 8
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2122",
+   "competizione": "Europa League",
+   "wikipedia": 28,
+   "nostre": 28,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2122",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2122",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 30,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "Conference League",
+   "wikipedia": 10,
+   "nostre": 8,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "Copa del Rey",
+   "wikipedia": 99,
+   "nostre": 92,
+   "mancanti": 7,
+   "solo_nostre": 0,
+   "squadre_mancanti": 7
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "Europa League",
+   "wikipedia": 27,
+   "nostre": 27,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2223",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2324",
+   "competizione": "Champions League",
+   "wikipedia": 47,
+   "nostre": 47,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2324",
+   "competizione": "Conference League",
+   "wikipedia": 4,
+   "nostre": 2,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2324",
+   "competizione": "Copa del Rey",
+   "wikipedia": 105,
+   "nostre": 96,
+   "mancanti": 9,
+   "solo_nostre": 0,
+   "squadre_mancanti": 8
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2324",
+   "competizione": "Europa League",
+   "wikipedia": 14,
+   "nostre": 14,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2324",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2324",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "Champions League",
+   "wikipedia": 46,
+   "nostre": 46,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "Conference League",
+   "wikipedia": 17,
+   "nostre": 17,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "Copa del Rey",
+   "wikipedia": 99,
+   "nostre": 99,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "Europa League",
+   "wikipedia": 26,
+   "nostre": 26,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 8,
+   "nostre": 0,
+   "mancanti": 8,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "FIFA Intercontinental Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2425",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2526",
+   "competizione": "Champions League",
+   "wikipedia": 58,
+   "nostre": 58,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2526",
+   "competizione": "Conference League",
+   "wikipedia": 15,
+   "nostre": 2,
+   "mancanti": 13,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2526",
+   "competizione": "Copa del Rey",
+   "wikipedia": 99,
+   "nostre": 0,
+   "mancanti": 99,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2526",
+   "competizione": "Europa League",
+   "wikipedia": 26,
+   "nostre": 0,
+   "mancanti": 26,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2526",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2526",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1718",
+   "competizione": "Champions League",
+   "wikipedia": 26,
+   "nostre": 24,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1718",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 82,
+   "nostre": 0,
+   "mancanti": 82,
+   "solo_nostre": 0,
+   "squadre_mancanti": 29
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1718",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1718",
+   "competizione": "Europa League",
+   "wikipedia": 30,
+   "nostre": 0,
+   "mancanti": 30,
+   "solo_nostre": 0,
+   "squadre_mancanti": 6
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1819",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 30,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1819",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 82,
+   "nostre": 82,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1819",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1819",
+   "competizione": "Europa League",
+   "wikipedia": 34,
+   "nostre": 0,
+   "mancanti": 34,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1920",
+   "competizione": "Champions League",
+   "wikipedia": 29,
+   "nostre": 35,
+   "mancanti": 0,
+   "solo_nostre": 6,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1920",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 78,
+   "nostre": 78,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1920",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "1920",
+   "competizione": "Europa League",
+   "wikipedia": 36,
+   "nostre": 0,
+   "mancanti": 36,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2021",
+   "competizione": "Champions League",
+   "wikipedia": 42,
+   "nostre": 36,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2021",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 78,
+   "nostre": 68,
+   "mancanti": 10,
+   "solo_nostre": 0,
+   "squadre_mancanti": 8
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2021",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2021",
+   "competizione": "Europa League",
+   "wikipedia": 20,
+   "nostre": 16,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2021",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2122",
+   "competizione": "Champions League",
+   "wikipedia": 28,
+   "nostre": 28,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2122",
+   "competizione": "Conference League",
+   "wikipedia": 8,
+   "nostre": 6,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2122",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 77,
+   "nostre": 62,
+   "mancanti": 15,
+   "solo_nostre": 0,
+   "squadre_mancanti": 11
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2122",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2122",
+   "competizione": "Europa League",
+   "wikipedia": 31,
+   "nostre": 31,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "Champions League",
+   "wikipedia": 40,
+   "nostre": 40,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "Conference League",
+   "wikipedia": 8,
+   "nostre": 6,
+   "mancanti": 3,
+   "solo_nostre": 1,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 82,
+   "nostre": 75,
+   "mancanti": 7,
+   "solo_nostre": 0,
+   "squadre_mancanti": 7
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "Europa League",
+   "wikipedia": 26,
+   "nostre": 26,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2324",
+   "competizione": "Champions League",
+   "wikipedia": 39,
+   "nostre": 39,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2324",
+   "competizione": "Conference League",
+   "wikipedia": 10,
+   "nostre": 8,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2324",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 74,
+   "nostre": 64,
+   "mancanti": 10,
+   "solo_nostre": 0,
+   "squadre_mancanti": 8
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2324",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2324",
+   "competizione": "Europa League",
+   "wikipedia": 23,
+   "nostre": 23,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2425",
+   "competizione": "Champions League",
+   "wikipedia": 54,
+   "nostre": 54,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2425",
+   "competizione": "Conference League",
+   "wikipedia": 10,
+   "nostre": 10,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2425",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 83,
+   "nostre": 83,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2425",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2425",
+   "competizione": "Europa League",
+   "wikipedia": 20,
+   "nostre": 20,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2425",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 8,
+   "nostre": 0,
+   "mancanti": 8,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "Champions League",
+   "wikipedia": 44,
+   "nostre": 44,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "Conference League",
+   "wikipedia": 12,
+   "nostre": 2,
+   "mancanti": 10,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 83,
+   "nostre": 69,
+   "mancanti": 22,
+   "solo_nostre": 8,
+   "squadre_mancanti": 12
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "Europa League",
+   "wikipedia": 27,
+   "nostre": 0,
+   "mancanti": 27,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1718",
+   "competizione": "Champions League",
+   "wikipedia": 18,
+   "nostre": 14,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1718",
+   "competizione": "Coupe de France",
+   "wikipedia": 78,
+   "nostre": 0,
+   "mancanti": 78,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1718",
+   "competizione": "Coupe de la Ligue",
+   "wikipedia": 61,
+   "nostre": 0,
+   "mancanti": 61,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1718",
+   "competizione": "Europa League",
+   "wikipedia": 39,
+   "nostre": 0,
+   "mancanti": 39,
+   "solo_nostre": 0,
+   "squadre_mancanti": 4
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1718",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1819",
+   "competizione": "Champions League",
+   "wikipedia": 22,
+   "nostre": 22,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1819",
+   "competizione": "Coupe de France",
+   "wikipedia": 82,
+   "nostre": 0,
+   "mancanti": 81,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1819",
+   "competizione": "Coupe de la Ligue",
+   "wikipedia": 67,
+   "nostre": 0,
+   "mancanti": 67,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1819",
+   "competizione": "Europa League",
+   "wikipedia": 28,
+   "nostre": 0,
+   "mancanti": 28,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1819",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1920",
+   "competizione": "Champions League",
+   "wikipedia": 21,
+   "nostre": 27,
+   "mancanti": 0,
+   "solo_nostre": 6,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1920",
+   "competizione": "Coupe de France",
+   "wikipedia": 79,
+   "nostre": 0,
+   "mancanti": 79,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1920",
+   "competizione": "Coupe de la Ligue",
+   "wikipedia": 57,
+   "nostre": 0,
+   "mancanti": 57,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1920",
+   "competizione": "Europa League",
+   "wikipedia": 18,
+   "nostre": 0,
+   "mancanti": 18,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "1920",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021",
+   "competizione": "Champions League",
+   "wikipedia": 30,
+   "nostre": 24,
+   "mancanti": 1,
+   "solo_nostre": 1,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021",
+   "competizione": "Coupe de France",
+   "wikipedia": 72,
+   "nostre": 0,
+   "mancanti": 72,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021",
+   "competizione": "Coupe de la Ligue",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021",
+   "competizione": "Europa League",
+   "wikipedia": 16,
+   "nostre": 14,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2122",
+   "competizione": "Champions League",
+   "wikipedia": 20,
+   "nostre": 16,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2122",
+   "competizione": "Conference League",
+   "wikipedia": 18,
+   "nostre": 16,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2122",
+   "competizione": "Coupe de France",
+   "wikipedia": 85,
+   "nostre": 0,
+   "mancanti": 85,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2122",
+   "competizione": "Europa League",
+   "wikipedia": 24,
+   "nostre": 24,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2122",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2223",
+   "competizione": "Champions League",
+   "wikipedia": 16,
+   "nostre": 14,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2223",
+   "competizione": "Conference League",
+   "wikipedia": 12,
+   "nostre": 10,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2223",
+   "competizione": "Coupe de France",
+   "wikipedia": 79,
+   "nostre": 0,
+   "mancanti": 79,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2223",
+   "competizione": "Europa League",
+   "wikipedia": 24,
+   "nostre": 24,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2223",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2324",
+   "competizione": "Champions League",
+   "wikipedia": 20,
+   "nostre": 18,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2324",
+   "competizione": "Conference League",
+   "wikipedia": 12,
+   "nostre": 10,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2324",
+   "competizione": "Coupe de France",
+   "wikipedia": 86,
+   "nostre": 0,
+   "mancanti": 86,
+   "solo_nostre": 0,
+   "squadre_mancanti": 30
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2324",
+   "competizione": "Europa League",
+   "wikipedia": 32,
+   "nostre": 32,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2324",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2425",
+   "competizione": "Champions League",
+   "wikipedia": 51,
+   "nostre": 41,
+   "mancanti": 10,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2425",
+   "competizione": "Conference League",
+   "wikipedia": 2,
+   "nostre": 2,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2425",
+   "competizione": "Coupe de France",
+   "wikipedia": 79,
+   "nostre": 82,
+   "mancanti": 0,
+   "solo_nostre": 3,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2425",
+   "competizione": "Europa League",
+   "wikipedia": 20,
+   "nostre": 20,
+   "mancanti": 0,
+   "solo_nostre": 0,
+   "squadre_mancanti": 0
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2425",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 4,
+   "nostre": 0,
+   "mancanti": 4,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2425",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "Champions League",
+   "wikipedia": 37,
+   "nostre": 27,
+   "mancanti": 10,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "Conference League",
+   "wikipedia": 14,
+   "nostre": 2,
+   "mancanti": 12,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "Coupe de France",
+   "wikipedia": 76,
+   "nostre": 0,
+   "mancanti": 76,
+   "solo_nostre": 0,
+   "squadre_mancanti": 25
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "Europa League",
+   "wikipedia": 30,
+   "nostre": 0,
+   "mancanti": 30,
+   "solo_nostre": 0,
+   "squadre_mancanti": 3
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 3,
+   "nostre": 0,
+   "mancanti": 3,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "FIFA Intercontinental Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0,
+   "squadre_mancanti": 2
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2526",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0,
+   "squadre_mancanti": 1
+  }
+ ],
+ "disaccordi_di_data": [
+  {
+   "lega": "bundesliga",
+   "stagione": "2223",
+   "competizione": "Conference League",
+   "squadra": "FC Koln",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2022-10-28",
+     "2022-10-27"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Bayern Munich",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Bochum",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Darmstadt",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Freiburg",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Hamburg",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Holstein Kiel",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Stuttgart",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2526",
+   "competizione": "DFB-Pokal",
+   "squadra": "Union Berlin",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2025-12-02",
+     "2025-12-03"
+    ]
+   ]
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021",
+   "competizione": "Champions League",
+   "squadra": "Paris SG",
+   "coppie_a_meno_di_3_giorni": [
+    [
+     "2020-12-09",
+     "2020-12-08"
+    ]
+   ]
+  }
+ ],
+ "riconciliazione_globale": [
+  {
+   "lega": "serie_a",
+   "competizione": "Champions League",
+   "wikipedia": 313,
+   "nostre": 311,
+   "mancanti": 2,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Conference League",
+   "wikipedia": 79,
+   "nostre": 61,
+   "mancanti": 18,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Coppa Italia",
+   "wikipedia": 650,
+   "nostre": 324,
+   "mancanti": 326,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Europa League",
+   "wikipedia": 260,
+   "nostre": 140,
+   "mancanti": 120,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 8,
+   "nostre": 0,
+   "mancanti": 8,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Serie A",
+   "wikipedia": 0,
+   "nostre": 6840,
+   "mancanti": 0,
+   "solo_nostre": 6840
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Serie A 2016-17",
+   "wikipedia": 0,
+   "nostre": 684,
+   "mancanti": 0,
+   "solo_nostre": 684
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Serie B",
+   "wikipedia": 0,
+   "nostre": 3297,
+   "mancanti": 0,
+   "solo_nostre": 3297
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "Supercoppa Italiana",
+   "wikipedia": 24,
+   "nostre": 0,
+   "mancanti": 24,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "serie_a",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "Champions League",
+   "wikipedia": 399,
+   "nostre": 397,
+   "mancanti": 2,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "Championship",
+   "wikipedia": 0,
+   "nostre": 2723,
+   "mancanti": 0,
+   "solo_nostre": 2723
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "Conference League",
+   "wikipedia": 77,
+   "nostre": 56,
+   "mancanti": 21,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "EFL Cup",
+   "wikipedia": 727,
+   "nostre": 560,
+   "mancanti": 168,
+   "solo_nostre": 1
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "Europa League",
+   "wikipedia": 268,
+   "nostre": 137,
+   "mancanti": 131,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "FA Community Shield",
+   "wikipedia": 18,
+   "nostre": 0,
+   "mancanti": 18,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "FA Cup",
+   "wikipedia": 760,
+   "nostre": 597,
+   "mancanti": 163,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 17,
+   "nostre": 0,
+   "mancanti": 17,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "Premier League",
+   "wikipedia": 0,
+   "nostre": 6840,
+   "mancanti": 0,
+   "solo_nostre": 6840
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "Premier League 2016-17",
+   "wikipedia": 0,
+   "nostre": 684,
+   "mancanti": 0,
+   "solo_nostre": 684
+  },
+  {
+   "lega": "premier_league",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 6,
+   "nostre": 0,
+   "mancanti": 6,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "Champions League",
+   "wikipedia": 373,
+   "nostre": 371,
+   "mancanti": 2,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "Conference League",
+   "wikipedia": 46,
+   "nostre": 29,
+   "mancanti": 17,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "Copa del Rey",
+   "wikipedia": 935,
+   "nostre": 482,
+   "mancanti": 453,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "Europa League",
+   "wikipedia": 277,
+   "nostre": 130,
+   "mancanti": 147,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 15,
+   "nostre": 0,
+   "mancanti": 15,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "FIFA Intercontinental Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "La Liga",
+   "wikipedia": 0,
+   "nostre": 6840,
+   "mancanti": 0,
+   "solo_nostre": 6840
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "La Liga 2016-17",
+   "wikipedia": 0,
+   "nostre": 722,
+   "mancanti": 0,
+   "solo_nostre": 722
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "Segunda División",
+   "wikipedia": 0,
+   "nostre": 3528,
+   "mancanti": 0,
+   "solo_nostre": 3528
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "Supercopa de Espana",
+   "wikipedia": 34,
+   "nostre": 0,
+   "mancanti": 34,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "la_liga",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 8,
+   "nostre": 0,
+   "mancanti": 8,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "2. Bundesliga",
+   "wikipedia": 0,
+   "nostre": 3230,
+   "mancanti": 0,
+   "solo_nostre": 3230
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "Bundesliga",
+   "wikipedia": 0,
+   "nostre": 5508,
+   "mancanti": 0,
+   "solo_nostre": 5508
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "Bundesliga 2016-17",
+   "wikipedia": 0,
+   "nostre": 578,
+   "mancanti": 0,
+   "solo_nostre": 578
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "Champions League",
+   "wikipedia": 332,
+   "nostre": 330,
+   "mancanti": 2,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "Conference League",
+   "wikipedia": 48,
+   "nostre": 32,
+   "mancanti": 17,
+   "solo_nostre": 1
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "DFB-Pokal",
+   "wikipedia": 719,
+   "nostre": 581,
+   "mancanti": 146,
+   "solo_nostre": 8
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "DFL-Supercup",
+   "wikipedia": 18,
+   "nostre": 0,
+   "mancanti": 18,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "Europa League",
+   "wikipedia": 247,
+   "nostre": 116,
+   "mancanti": 131,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 10,
+   "nostre": 0,
+   "mancanti": 10,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "bundesliga",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 2,
+   "nostre": 0,
+   "mancanti": 2,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Champions League",
+   "wikipedia": 235,
+   "nostre": 203,
+   "mancanti": 33,
+   "solo_nostre": 1
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Conference League",
+   "wikipedia": 58,
+   "nostre": 40,
+   "mancanti": 18,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Coupe de France",
+   "wikipedia": 715,
+   "nostre": 82,
+   "mancanti": 636,
+   "solo_nostre": 3
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Coupe de la Ligue",
+   "wikipedia": 187,
+   "nostre": 0,
+   "mancanti": 187,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Europa League",
+   "wikipedia": 231,
+   "nostre": 114,
+   "mancanti": 117,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "FIFA Club World Cup",
+   "wikipedia": 7,
+   "nostre": 0,
+   "mancanti": 7,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "FIFA Intercontinental Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Ligue 1",
+   "wikipedia": 0,
+   "nostre": 6194,
+   "mancanti": 0,
+   "solo_nostre": 6194
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Ligue 1 2016-17",
+   "wikipedia": 0,
+   "nostre": 684,
+   "mancanti": 0,
+   "solo_nostre": 684
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Ligue 2",
+   "wikipedia": 0,
+   "nostre": 3384,
+   "mancanti": 0,
+   "solo_nostre": 3384
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "Trophee des Champions",
+   "wikipedia": 18,
+   "nostre": 0,
+   "mancanti": 18,
+   "solo_nostre": 0
+  },
+  {
+   "lega": "ligue_1",
+   "competizione": "UEFA Super Cup",
+   "wikipedia": 1,
+   "nostre": 0,
+   "mancanti": 1,
+   "solo_nostre": 0
+  }
+ ],
+ "controlli": {
+  "serie_a": {
+   "righe_nuove": 499,
+   "wiki_gia_presenti": 836,
+   "doppie_stesso_giorno_dopo_merge": 0,
+   "doppie_dentro_le_nuove_prima_del_dedup": 0,
+   "esempi_doppie_nuove": [],
+   "date_fuori_finestra_oltre_60gg": 0,
+   "esempi_fuori_finestra": [],
+   "metodo_aggancio_nome": {
+    "canonical_team": 499
+   },
+   "squadra_non_in_lega_quella_stagione": 97,
+   "esempi_squadra_non_in_lega": [
+    {
+     "season": "1718",
+     "team": "Lecce",
+     "date": "2017-07-30",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Pisa",
+     "date": "2017-07-30",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Empoli",
+     "date": "2017-08-05",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Lecce",
+     "date": "2017-08-05",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Spezia",
+     "date": "2017-08-05",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Brescia",
+     "date": "2017-08-06",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Cremonese",
+     "date": "2017-08-06",
+     "competition": "Coppa Italia"
+    },
+    {
+     "season": "1718",
+     "team": "Frosinone",
+     "date": "2017-08-06",
+     "competition": "Coppa Italia"
+    }
+   ],
+   "per_competizione": {
+    "Coppa Italia": 326,
+    "Europa League": 101,
+    "Supercoppa Italiana": 24,
+    "Europa League (qual.)": 19,
+    "Conference League": 12,
+    "FIFA Club World Cup": 8,
+    "Conference League (qual.)": 6,
+    "Champions League (qual.)": 2,
+    "UEFA Super Cup": 1
+   }
+  },
+  "premier_league": {
+   "righe_nuove": 526,
+   "wiki_gia_presenti": 1746,
+   "doppie_stesso_giorno_dopo_merge": 0,
+   "doppie_dentro_le_nuove_prima_del_dedup": 0,
+   "esempi_doppie_nuove": [],
+   "date_fuori_finestra_oltre_60gg": 0,
+   "esempi_fuori_finestra": [],
+   "metodo_aggancio_nome": {
+    "canonical_team": 526
+   },
+   "squadra_non_in_lega_quella_stagione": 102,
+   "esempi_squadra_non_in_lega": [
+    {
+     "season": "1718",
+     "team": "Brentford",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Cardiff",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Fulham",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Ipswich",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Luton",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Norwich",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Nott'm Forest",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    },
+    {
+     "season": "1718",
+     "team": "Wolves",
+     "date": "2017-08-08",
+     "competition": "EFL Cup"
+    }
+   ],
+   "per_competizione": {
+    "EFL Cup": 168,
+    "FA Cup": 163,
+    "Europa League": 112,
+    "Europa League (qual.)": 19,
+    "FA Community Shield": 18,
+    "FIFA Club World Cup": 17,
+    "Conference League": 15,
+    "UEFA Super Cup": 6,
+    "Conference League (qual.)": 6,
+    "Champions League (qual.)": 2
+   }
+  },
+  "la_liga": {
+   "righe_nuove": 677,
+   "wiki_gia_presenti": 1012,
+   "doppie_stesso_giorno_dopo_merge": 0,
+   "doppie_dentro_le_nuove_prima_del_dedup": 0,
+   "esempi_doppie_nuove": [],
+   "date_fuori_finestra_oltre_60gg": 0,
+   "esempi_fuori_finestra": [],
+   "metodo_aggancio_nome": {
+    "canonical_team": 609,
+    "proposta": 68
+   },
+   "squadra_non_in_lega_quella_stagione": 95,
+   "esempi_squadra_non_in_lega": [
+    {
+     "season": "1718",
+     "team": "Elche",
+     "date": "2017-08-30",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Almeria",
+     "date": "2017-09-05",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Cadiz",
+     "date": "2017-09-05",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Elche",
+     "date": "2017-09-06",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Granada",
+     "date": "2017-09-06",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Huesca",
+     "date": "2017-09-06",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Mallorca",
+     "date": "2017-09-06",
+     "competition": "Copa del Rey"
+    },
+    {
+     "season": "1718",
+     "team": "Oviedo",
+     "date": "2017-09-06",
+     "competition": "Copa del Rey"
+    }
+   ],
+   "per_competizione": {
+    "Copa del Rey": 453,
+    "Europa League": 128,
+    "Supercopa de Espana": 34,
+    "Europa League (qual.)": 19,
+    "FIFA Club World Cup": 15,
+    "Conference League": 13,
+    "UEFA Super Cup": 8,
+    "Conference League (qual.)": 4,
+    "Champions League (qual.)": 2,
+    "FIFA Intercontinental Cup": 1
+   }
+  },
+  "bundesliga": {
+   "righe_nuove": 326,
+   "wiki_gia_presenti": 1050,
+   "doppie_stesso_giorno_dopo_merge": 0,
+   "doppie_dentro_le_nuove_prima_del_dedup": 0,
+   "esempi_doppie_nuove": [],
+   "date_fuori_finestra_oltre_60gg": 0,
+   "esempi_fuori_finestra": [],
+   "metodo_aggancio_nome": {
+    "canonical_team": 310,
+    "proposta": 11,
+    "chiave-normalizzata": 5
+   },
+   "squadra_non_in_lega_quella_stagione": 51,
+   "esempi_squadra_non_in_lega": [
+    {
+     "season": "1718",
+     "team": "Holstein Kiel",
+     "date": "2017-08-11",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Bielefeld",
+     "date": "2017-08-12",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Darmstadt",
+     "date": "2017-08-12",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Fortuna Dusseldorf",
+     "date": "2017-08-12",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Heidenheim",
+     "date": "2017-08-12",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Bochum",
+     "date": "2017-08-13",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Greuther Furth",
+     "date": "2017-08-13",
+     "competition": "DFB-Pokal"
+    },
+    {
+     "season": "1718",
+     "team": "Union Berlin",
+     "date": "2017-08-13",
+     "competition": "DFB-Pokal"
+    }
+   ],
+   "per_competizione": {
+    "DFB-Pokal": 146,
+    "Europa League": 114,
+    "DFL-Supercup": 18,
+    "Europa League (qual.)": 17,
+    "Conference League": 11,
+    "FIFA Club World Cup": 10,
+    "Conference League (qual.)": 6,
+    "Champions League (qual.)": 2,
+    "UEFA Super Cup": 2
+   }
+  },
+  "ligue_1": {
+   "righe_nuove": 1017,
+   "wiki_gia_presenti": 437,
+   "doppie_stesso_giorno_dopo_merge": 0,
+   "doppie_dentro_le_nuove_prima_del_dedup": 1,
+   "esempi_doppie_nuove": [
+    {
+     "team": "Amiens",
+     "date": "2021-11-27",
+     "n": 2
+    }
+   ],
+   "date_fuori_finestra_oltre_60gg": 0,
+   "esempi_fuori_finestra": [],
+   "metodo_aggancio_nome": {
+    "canonical_team": 964,
+    "proposta": 47,
+    "chiave-normalizzata": 6
+   },
+   "squadra_non_in_lega_quella_stagione": 263,
+   "esempi_squadra_non_in_lega": [
+    {
+     "season": "1718",
+     "team": "Ajaccio",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Auxerre",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Brest",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Clermont",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Le Havre",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Lens",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Lorient",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    },
+    {
+     "season": "1718",
+     "team": "Nimes",
+     "date": "2017-08-08",
+     "competition": "Coupe de la Ligue"
+    }
+   ],
+   "per_competizione": {
+    "Coupe de France": 635,
+    "Coupe de la Ligue": 187,
+    "Europa League": 97,
+    "Champions League": 21,
+    "Europa League (qual.)": 20,
+    "Trophee des Champions": 18,
+    "Champions League (qual.)": 12,
+    "Conference League": 12,
+    "FIFA Club World Cup": 7,
+    "Conference League (qual.)": 6,
+    "UEFA Super Cup": 1,
+    "FIFA Intercontinental Cup": 1
+   }
+  }
+ },
+ "file_scritti": [
+  "cantiere/data/ricerca/fixtures_bundesliga_champions_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_conference_league.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_conference_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_dfb_pokal.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_dfl_supercup.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_europa_league.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_europa_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_fifa_club_world_cup.csv",
+  "cantiere/data/ricerca/fixtures_bundesliga_uefa_super_cup.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_champions_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_conference_league.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_conference_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_copa_del_rey.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_europa_league.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_europa_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_fifa_club_world_cup.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_fifa_intercontinental_cup.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_supercopa_de_espana.csv",
+  "cantiere/data/ricerca/fixtures_la_liga_uefa_super_cup.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_champions_league.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_champions_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_conference_league.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_conference_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_coupe_de_france.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_coupe_de_la_ligue.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_europa_league.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_europa_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_fifa_club_world_cup.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_fifa_intercontinental_cup.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_trophee_des_champions.csv",
+  "cantiere/data/ricerca/fixtures_ligue_1_uefa_super_cup.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_champions_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_conference_league.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_conference_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_efl_cup.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_europa_league.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_europa_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_fa_community_shield.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_fa_cup.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_fifa_club_world_cup.csv",
+  "cantiere/data/ricerca/fixtures_premier_league_uefa_super_cup.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_champions_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_conference_league.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_conference_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_coppa_italia.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_europa_league.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_europa_league_qual.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_fifa_club_world_cup.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_supercoppa_italiana.csv",
+  "cantiere/data/ricerca/fixtures_serie_a_uefa_super_cup.csv"
+ ],
+ "impatto": {
+  "serie_a": {
+   "partite_snapshot": 3420,
+   "righe_aggiunte": 499,
+   "celle_midweek_flip_0_1": 236,
+   "righe_snapshot_toccate_da_midweek": 220,
+   "pct_righe_midweek": 6.43,
+   "celle_rest_days_cambiate": 367,
+   "pct_celle_rest_days": 5.37,
+   "delta_rest_medio_su_celle_cambiate": 4.545,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.373,
+    4.728
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 8.57,
+   "midweek_dopo_pct": 12.02
+  },
+  "premier_league": {
+   "partite_snapshot": 3420,
+   "righe_aggiunte": 526,
+   "celle_midweek_flip_0_1": 251,
+   "righe_snapshot_toccate_da_midweek": 216,
+   "pct_righe_midweek": 6.32,
+   "celle_rest_days_cambiate": 355,
+   "pct_celle_rest_days": 5.19,
+   "delta_rest_medio_su_celle_cambiate": 4.499,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.31,
+    4.693
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 13.58,
+   "midweek_dopo_pct": 17.25
+  },
+  "la_liga": {
+   "partite_snapshot": 3420,
+   "righe_aggiunte": 677,
+   "celle_midweek_flip_0_1": 454,
+   "righe_snapshot_toccate_da_midweek": 362,
+   "pct_righe_midweek": 10.58,
+   "celle_rest_days_cambiate": 527,
+   "pct_celle_rest_days": 7.7,
+   "delta_rest_medio_su_celle_cambiate": 4.37,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.216,
+    4.531
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 10.22,
+   "midweek_dopo_pct": 16.86
+  },
+  "bundesliga": {
+   "partite_snapshot": 2754,
+   "righe_aggiunte": 326,
+   "celle_midweek_flip_0_1": 180,
+   "righe_snapshot_toccate_da_midweek": 159,
+   "pct_righe_midweek": 5.77,
+   "celle_rest_days_cambiate": 221,
+   "pct_celle_rest_days": 4.01,
+   "delta_rest_medio_su_celle_cambiate": 4.774,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.575,
+    4.977
+   ],
+   "delta_rest_max": 10.0,
+   "midweek_prima_pct": 12.07,
+   "midweek_dopo_pct": 15.34
+  },
+  "ligue_1": {
+   "partite_snapshot": 3097,
+   "righe_aggiunte": 1017,
+   "celle_midweek_flip_0_1": 482,
+   "righe_snapshot_toccate_da_midweek": 391,
+   "pct_righe_midweek": 12.63,
+   "celle_rest_days_cambiate": 675,
+   "pct_celle_rest_days": 10.9,
+   "delta_rest_medio_su_celle_cambiate": 5.188,
+   "delta_rest_ci95_bootstrap_B10000": [
+    5.015,
+    5.363
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 5.02,
+   "midweek_dopo_pct": 12.8
+  }
+ },
+ "impatto_solo_coppe_ed_europa": {
+  "serie_a": {
+   "righe_aggiunte": 466,
+   "celle_midweek_flip_0_1": 232,
+   "righe_snapshot_toccate_da_midweek": 216,
+   "pct_righe_midweek": 6.32,
+   "celle_rest_days_cambiate": 346,
+   "pct_celle_rest_days": 5.06,
+   "delta_rest_medio_su_celle_cambiate": 4.512,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.335,
+    4.699
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 8.57,
+   "midweek_dopo_pct": 11.96
+  },
+  "premier_league": {
+   "righe_aggiunte": 485,
+   "celle_midweek_flip_0_1": 246,
+   "righe_snapshot_toccate_da_midweek": 211,
+   "pct_righe_midweek": 6.17,
+   "celle_rest_days_cambiate": 330,
+   "pct_celle_rest_days": 4.82,
+   "delta_rest_medio_su_celle_cambiate": 4.285,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.115,
+    4.461
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 13.58,
+   "midweek_dopo_pct": 17.18
+  },
+  "la_liga": {
+   "righe_aggiunte": 619,
+   "celle_midweek_flip_0_1": 446,
+   "righe_snapshot_toccate_da_midweek": 354,
+   "pct_righe_midweek": 10.35,
+   "celle_rest_days_cambiate": 508,
+   "pct_celle_rest_days": 7.43,
+   "delta_rest_medio_su_celle_cambiate": 4.278,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.134,
+    4.429
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 10.22,
+   "midweek_dopo_pct": 16.74
+  },
+  "bundesliga": {
+   "righe_aggiunte": 296,
+   "celle_midweek_flip_0_1": 175,
+   "righe_snapshot_toccate_da_midweek": 154,
+   "pct_righe_midweek": 5.59,
+   "celle_rest_days_cambiate": 207,
+   "pct_celle_rest_days": 3.76,
+   "delta_rest_medio_su_celle_cambiate": 4.691,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.493,
+    4.889
+   ],
+   "delta_rest_max": 10.0,
+   "midweek_prima_pct": 12.07,
+   "midweek_dopo_pct": 15.25
+  },
+  "ligue_1": {
+   "righe_aggiunte": 990,
+   "celle_midweek_flip_0_1": 479,
+   "righe_snapshot_toccate_da_midweek": 388,
+   "pct_righe_midweek": 12.53,
+   "celle_rest_days_cambiate": 660,
+   "pct_celle_rest_days": 10.66,
+   "delta_rest_medio_su_celle_cambiate": 5.147,
+   "delta_rest_ci95_bootstrap_B10000": [
+    4.973,
+    5.323
+   ],
+   "delta_rest_max": 11.0,
+   "midweek_prima_pct": 5.02,
+   "midweek_dopo_pct": 12.75
+  }
+ },
+ "impatto_per_competizione": {
+  "serie_a": {
+   "Coppa Italia": {
+    "righe": 326,
+    "righe_snapshot_toccate_da_midweek": 102,
+    "celle_rest_days_cambiate": 225
+   },
+   "Europa League": {
+    "righe": 120,
+    "righe_snapshot_toccate_da_midweek": 98,
+    "celle_rest_days_cambiate": 103
+   },
+   "Supercoppa Italiana": {
+    "righe": 24,
+    "righe_snapshot_toccate_da_midweek": 4,
+    "celle_rest_days_cambiate": 22
+   },
+   "Conference League": {
+    "righe": 18,
+    "righe_snapshot_toccate_da_midweek": 18,
+    "celle_rest_days_cambiate": 18
+   },
+   "Champions League": {
+    "righe": 2,
+    "righe_snapshot_toccate_da_midweek": 1,
+    "celle_rest_days_cambiate": 2
+   },
+   "UEFA Super Cup": {
+    "righe": 1,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 1
+   },
+   "FIFA Club World Cup": {
+    "righe": 8,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 0
+   }
+  },
+  "premier_league": {
+   "Europa League": {
+    "righe": 131,
+    "righe_snapshot_toccate_da_midweek": 106,
+    "celle_rest_days_cambiate": 110
+   },
+   "EFL Cup": {
+    "righe": 168,
+    "righe_snapshot_toccate_da_midweek": 64,
+    "celle_rest_days_cambiate": 108
+   },
+   "FA Cup": {
+    "righe": 163,
+    "righe_snapshot_toccate_da_midweek": 20,
+    "celle_rest_days_cambiate": 102
+   },
+   "Conference League": {
+    "righe": 21,
+    "righe_snapshot_toccate_da_midweek": 19,
+    "celle_rest_days_cambiate": 19
+   },
+   "FA Community Shield": {
+    "righe": 18,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 16
+   },
+   "UEFA Super Cup": {
+    "righe": 6,
+    "righe_snapshot_toccate_da_midweek": 5,
+    "celle_rest_days_cambiate": 6
+   },
+   "FIFA Club World Cup": {
+    "righe": 17,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 3
+   },
+   "Champions League": {
+    "righe": 2,
+    "righe_snapshot_toccate_da_midweek": 2,
+    "celle_rest_days_cambiate": 2
+   }
+  },
+  "la_liga": {
+   "Copa del Rey": {
+    "righe": 453,
+    "righe_snapshot_toccate_da_midweek": 212,
+    "celle_rest_days_cambiate": 356
+   },
+   "Europa League": {
+    "righe": 147,
+    "righe_snapshot_toccate_da_midweek": 127,
+    "celle_rest_days_cambiate": 134
+   },
+   "Conference League": {
+    "righe": 17,
+    "righe_snapshot_toccate_da_midweek": 15,
+    "celle_rest_days_cambiate": 16
+   },
+   "Supercopa de Espana": {
+    "righe": 34,
+    "righe_snapshot_toccate_da_midweek": 2,
+    "celle_rest_days_cambiate": 14
+   },
+   "UEFA Super Cup": {
+    "righe": 8,
+    "righe_snapshot_toccate_da_midweek": 4,
+    "celle_rest_days_cambiate": 8
+   },
+   "FIFA Club World Cup": {
+    "righe": 15,
+    "righe_snapshot_toccate_da_midweek": 1,
+    "celle_rest_days_cambiate": 3
+   },
+   "Champions League": {
+    "righe": 2,
+    "righe_snapshot_toccate_da_midweek": 1,
+    "celle_rest_days_cambiate": 2
+   },
+   "FIFA Intercontinental Cup": {
+    "righe": 1,
+    "righe_snapshot_toccate_da_midweek": 1,
+    "celle_rest_days_cambiate": 1
+   }
+  },
+  "bundesliga": {
+   "Europa League": {
+    "righe": 131,
+    "righe_snapshot_toccate_da_midweek": 104,
+    "celle_rest_days_cambiate": 113
+   },
+   "DFB-Pokal": {
+    "righe": 146,
+    "righe_snapshot_toccate_da_midweek": 35,
+    "celle_rest_days_cambiate": 77
+   },
+   "Conference League": {
+    "righe": 17,
+    "righe_snapshot_toccate_da_midweek": 16,
+    "celle_rest_days_cambiate": 16
+   },
+   "DFL-Supercup": {
+    "righe": 18,
+    "righe_snapshot_toccate_da_midweek": 3,
+    "celle_rest_days_cambiate": 13
+   },
+   "Champions League": {
+    "righe": 2,
+    "righe_snapshot_toccate_da_midweek": 2,
+    "celle_rest_days_cambiate": 2
+   },
+   "UEFA Super Cup": {
+    "righe": 2,
+    "righe_snapshot_toccate_da_midweek": 2,
+    "celle_rest_days_cambiate": 2
+   },
+   "FIFA Club World Cup": {
+    "righe": 10,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 0
+   }
+  },
+  "ligue_1": {
+   "Coupe de France": {
+    "righe": 635,
+    "righe_snapshot_toccate_da_midweek": 162,
+    "celle_rest_days_cambiate": 409
+   },
+   "Coupe de la Ligue": {
+    "righe": 187,
+    "righe_snapshot_toccate_da_midweek": 82,
+    "celle_rest_days_cambiate": 124
+   },
+   "Europa League": {
+    "righe": 117,
+    "righe_snapshot_toccate_da_midweek": 102,
+    "celle_rest_days_cambiate": 111
+   },
+   "Champions League": {
+    "righe": 33,
+    "righe_snapshot_toccate_da_midweek": 29,
+    "celle_rest_days_cambiate": 31
+   },
+   "Trophee des Champions": {
+    "righe": 18,
+    "righe_snapshot_toccate_da_midweek": 2,
+    "celle_rest_days_cambiate": 18
+   },
+   "Conference League": {
+    "righe": 18,
+    "righe_snapshot_toccate_da_midweek": 16,
+    "celle_rest_days_cambiate": 16
+   },
+   "UEFA Super Cup": {
+    "righe": 1,
+    "righe_snapshot_toccate_da_midweek": 1,
+    "celle_rest_days_cambiate": 1
+   },
+   "FIFA Club World Cup": {
+    "righe": 7,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 0
+   },
+   "FIFA Intercontinental Cup": {
+    "righe": 1,
+    "righe_snapshot_toccate_da_midweek": 0,
+    "celle_rest_days_cambiate": 0
+   }
+  }
+ },
+ "caso_monaco": {
+  "righe_europee_wikipedia": 54,
+  "righe_europee_mancanti_da_noi": 26,
+  "per_stagione": {
+   "1718": 7,
+   "1819": 6,
+   "1920": 5,
+   "2021": 6,
+   "2122": 9,
+   "2223": 3,
+   "2324": 3,
+   "2425": 11,
+   "2526": 13
+  }
+ },
+ "confutazione_openligadb": {
+  "1718": {
+   "openligadb": 82,
+   "openfootball_attuale": 0,
+   "recuperate_da_wikipedia": 82,
+   "recuperate_NON_confermate": [],
+   "openfootball_NON_confermate": [],
+   "openligadb_non_coperte_da_nessuno": []
+  },
+  "2021": {
+   "openligadb": 78,
+   "openfootball_attuale": 68,
+   "recuperate_da_wikipedia": 10,
+   "recuperate_NON_confermate": [],
+   "openfootball_NON_confermate": [],
+   "openligadb_non_coperte_da_nessuno": []
+  },
+  "2526": {
+   "openligadb": 83,
+   "openfootball_attuale": 69,
+   "recuperate_da_wikipedia": 22,
+   "recuperate_NON_confermate": [],
+   "openfootball_NON_confermate": [
+    [
+     "Bayern Munich",
+     "2025-12-02"
+    ],
+    [
+     "Bochum",
+     "2025-12-02"
+    ],
+    [
+     "Darmstadt",
+     "2025-12-02"
+    ],
+    [
+     "Freiburg",
+     "2025-12-02"
+    ],
+    [
+     "Hamburg",
+     "2025-12-02"
+    ],
+    [
+     "Holstein Kiel",
+     "2025-12-02"
+    ],
+    [
+     "Stuttgart",
+     "2025-12-02"
+    ],
+    [
+     "Union Berlin",
+     "2025-12-02"
+    ]
+   ],
+   "openligadb_non_coperte_da_nessuno": []
+  }
+ }
+}

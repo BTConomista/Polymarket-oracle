@@ -1,0 +1,9 @@
+{
+ "righe_2019_20": 1687,
+ "MAE_1xBetClose_vs_AvgClose": 0.0156,
+ "bias_medio_1xBetClose_meno_AvgClose": 0.0088,
+ "MAE_Apertura_vs_AvgClose (riferimento: quanto vale non avere la chiusura)": 0.0206,
+ "MAE_dichiarato_della_stima_E3_vs_chiusura_vera": "~0.012 (data/estimates/README.md)",
+ "overround_AvgClose": 1.0537,
+ "overround_1xBetClose": 1.0349
+}

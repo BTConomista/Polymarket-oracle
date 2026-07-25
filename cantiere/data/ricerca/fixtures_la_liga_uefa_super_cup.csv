@@ -1,0 +1,9 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Real Madrid,2017-08-08,UEFA Super Cup,H,Manchester United,canonical_team,2017 UEFA Super Cup
+1819,Ath Madrid,2018-08-15,UEFA Super Cup,A,Real Madrid,canonical_team,2018 UEFA Super Cup
+1819,Real Madrid,2018-08-15,UEFA Super Cup,H,Ath Madrid,canonical_team,2018 UEFA Super Cup
+2021,Sevilla,2020-09-24,UEFA Super Cup,A,Bayern Munich,canonical_team,2020 UEFA Super Cup
+2122,Villarreal,2021-08-11,UEFA Super Cup,A,Chelsea,canonical_team,2021 UEFA Super Cup
+2223,Real Madrid,2022-08-10,UEFA Super Cup,H,Eintracht Frankfurt,canonical_team,2022 UEFA Super Cup
+2324,Sevilla,2023-08-16,UEFA Super Cup,A,Manchester City,canonical_team,2023 UEFA Super Cup
+2425,Real Madrid,2024-08-14,UEFA Super Cup,H,Atalanta,canonical_team,2024 UEFA Super Cup

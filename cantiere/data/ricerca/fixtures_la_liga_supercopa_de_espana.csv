@@ -1,0 +1,35 @@
+season,team,date,competition,home_away,opponent,metodo_nome,pagina
+1718,Barcelona,2017-08-13,Supercopa de Espana,H,Real Madrid,canonical_team,2017 Supercopa de España
+1718,Real Madrid,2017-08-13,Supercopa de Espana,A,Barcelona,canonical_team,2017 Supercopa de España
+1718,Barcelona,2017-08-16,Supercopa de Espana,A,Real Madrid,canonical_team,2017 Supercopa de España
+1718,Real Madrid,2017-08-16,Supercopa de Espana,H,Barcelona,canonical_team,2017 Supercopa de España
+1819,Barcelona,2018-08-12,Supercopa de Espana,A,Sevilla,canonical_team,2018 Supercopa de España
+1819,Sevilla,2018-08-12,Supercopa de Espana,H,Barcelona,canonical_team,2018 Supercopa de España
+1920,Real Madrid,2020-01-08,Supercopa de Espana,A,Valencia,canonical_team,2020 Supercopa de España
+1920,Valencia,2020-01-08,Supercopa de Espana,H,Real Madrid,canonical_team,2020 Supercopa de España
+1920,Ath Madrid,2020-01-09,Supercopa de Espana,A,Barcelona,canonical_team,2020 Supercopa de España
+1920,Barcelona,2020-01-09,Supercopa de Espana,H,Ath Madrid,canonical_team,2020 Supercopa de España
+2021,Barcelona,2021-01-13,Supercopa de Espana,A,Sociedad,canonical_team,2021 Supercopa de España
+2021,Sociedad,2021-01-13,Supercopa de Espana,H,Barcelona,canonical_team,2021 Supercopa de España
+2021,Ath Bilbao,2021-01-14,Supercopa de Espana,A,Real Madrid,canonical_team,2021 Supercopa de España
+2021,Real Madrid,2021-01-14,Supercopa de Espana,H,Ath Bilbao,canonical_team,2021 Supercopa de España
+2122,Barcelona,2022-01-12,Supercopa de Espana,H,Real Madrid,canonical_team,2022 Supercopa de España
+2122,Real Madrid,2022-01-12,Supercopa de Espana,A,Barcelona,canonical_team,2022 Supercopa de España
+2122,Ath Bilbao,2022-01-13,Supercopa de Espana,A,Ath Madrid,canonical_team,2022 Supercopa de España
+2122,Ath Madrid,2022-01-13,Supercopa de Espana,H,Ath Bilbao,canonical_team,2022 Supercopa de España
+2223,Real Madrid,2023-01-11,Supercopa de Espana,H,Valencia,canonical_team,2023 Supercopa de España
+2223,Valencia,2023-01-11,Supercopa de Espana,A,Real Madrid,canonical_team,2023 Supercopa de España
+2223,Barcelona,2023-01-12,Supercopa de Espana,A,Betis,canonical_team,2023 Supercopa de España
+2223,Betis,2023-01-12,Supercopa de Espana,H,Barcelona,canonical_team,2023 Supercopa de España
+2324,Ath Madrid,2024-01-10,Supercopa de Espana,A,Real Madrid,canonical_team,2024 Supercopa de España
+2324,Real Madrid,2024-01-10,Supercopa de Espana,H,Ath Madrid,canonical_team,2024 Supercopa de España
+2324,Barcelona,2024-01-11,Supercopa de Espana,H,Osasuna,canonical_team,2024 Supercopa de España
+2324,Osasuna,2024-01-11,Supercopa de Espana,A,Barcelona,canonical_team,2024 Supercopa de España
+2425,Ath Bilbao,2025-01-08,Supercopa de Espana,H,Barcelona,canonical_team,2025 Supercopa de España
+2425,Barcelona,2025-01-08,Supercopa de Espana,A,Ath Bilbao,canonical_team,2025 Supercopa de España
+2425,Mallorca,2025-01-09,Supercopa de Espana,A,Real Madrid,canonical_team,2025 Supercopa de España
+2425,Real Madrid,2025-01-09,Supercopa de Espana,H,Mallorca,canonical_team,2025 Supercopa de España
+2526,Ath Bilbao,2026-01-07,Supercopa de Espana,A,Barcelona,canonical_team,2026 Supercopa de España
+2526,Barcelona,2026-01-07,Supercopa de Espana,H,Ath Bilbao,canonical_team,2026 Supercopa de España
+2526,Ath Madrid,2026-01-08,Supercopa de Espana,H,Real Madrid,canonical_team,2026 Supercopa de España
+2526,Real Madrid,2026-01-08,Supercopa de Espana,A,Ath Madrid,canonical_team,2026 Supercopa de España
