@@ -9959,6 +9959,108 @@ affettarlo diversamente).
 
 ---
 
+## Fase 95 — Il primo confronto con un mercato VERO sull'outright: Polymarket quota il campione 2026-27
+
+**Obiettivo.** La Fase 89 ha costruito il simulatore di stagione (mercato
+CAMPIONE) e ha dichiarato il suo limite più duro: **«non esistono quote outright
+storiche → "battiamo il mercato" NON è testabile all'indietro»**. Questa fase
+rimuove quel limite, ma in avanti: **Polymarket quota LIVE il campione 2026-27**
+di tutte le nostre leghe, e la stagione non è ancora iniziata. Per la prima volta
+possiamo confrontare la nostra stima outright con un prezzo di mercato reale.
+
+**Cosa c'è davvero su Polymarket (verificato oggi, 2026-07-25).** Dump completo
+via `scripts/fetch_polymarket_open.py --tag Soccer`: **4.854 eventi calcio,
+56.865 mercati**, 781 partite ricostruite (708 con 1X2 completo). Ma il grosso
+delle *singole partite* è **illiquido** (prezzi degeneri 0.33/0.33/0.33 e
+O2.5=0.50 = nessuno scambio) e riguarda leghe minori. Il valore vero è altrove:
+gli **outright di stagione**, che esistono per tutte e 5 le leghe del progetto —
+`Serie A: 2027 Champion`, `EPL: 2027 Champion`, `LALIGA: 2027 Champion`,
+`Bundesliga: 2027 Champion`, `Ligue 1: 2027 Champion` — più i **posizionali**
+(`Team to qualify for UEFA Champions/Europa/Conference League`), che sono
+esattamente i mercati della **Fase 91**.
+
+Qualità della fonte: escludendo i placeholder senza scambi (`Team A/B/C`,
+`Other`, volume 0, prezzo fisso 0.50) gli overround sono **ragionevoli** —
+Serie A **+7.2%**, EPL **+5.8%**, LaLiga **+3.2%** — con liquidità reale
+(EPL: volume 1,37 M$; LaLiga 318 k$; Serie A 29 k$).
+
+**Il confronto (`scripts/_run_polymarket_outright.py`).** DC per-lega fittato sui
+dati fino a fine 2025-26, `simulate_season` (20.000 stagioni) sulle **squadre che
+Polymarket quota** (= rosa 2026-27 reale, promosse incluse col prior δ), contro i
+prezzi devigati in proporzione:
+
+| lega | MAE | corr | KL(noi‖mercato) | favorito |
+|---|--:|--:|--:|---|
+| Serie A | 0.0252 | 0.956 | 0.181 | Inter (entrambi) |
+| Premier | 0.0265 | 0.948 | 0.242 | Arsenal (entrambi) |
+| La Liga | 0.0110 | 0.982 | 0.056 | Barcelona (entrambi) |
+
+**Risultato — accordo forte sull'ordinamento, ma sovra-confidenza confermata
+dall'esterno.** La correlazione è 0.95-0.98 e il favorito coincide in tutte e
+tre le leghe: la struttura della nostra stima è giusta. Ma il pattern degli
+scarti è sistematico e nella direzione già nota: **concentriamo troppa massa sul
+favorito** — Inter 66.4% contro 47.1%, Arsenal 45.1% vs 33.6%, Man City 42.1% vs
+27.9%, Barcelona 59.3% vs 51.8% — e ne togliamo agli inseguitori (Man United
+0.8% vs 10.9%, Chelsea 1.0% vs 9.0%, Milan 2.7% vs 11.7%). È la **stessa
+sovra-confidenza misurata dalla Fase 89 sul backtest** («dichiara 60.1% sul
+favorito, ne azzecca 41.7%»), ora **confermata contro un mercato vero e su dati
+mai visti**: due strade indipendenti, stesso difetto. La Liga è la più allineata
+(KL 0.056), la Premier la più distante (KL 0.242).
+
+**Perché sbagliamo così.** Due cause, entrambe già dichiarate: (a) il simulatore
+tratta i parametri di forza come **noti** — manca l'incertezza dei parametri e la
+loro evoluzione in-season (Fase 89), e questo *comprime* la distribuzione della
+classifica finale verso il favorito; (b) i nostri dati si fermano a **fine
+2025-26**: non vediamo il mercato estivo 2026, mentre il prezzo sì — il caso
+Man United (mercato 10.9%, noi 0.8%) è il sospetto naturale.
+
+**Cosa NON è questa fase.** Non è un test di edge: la stagione non è giocata,
+quindi si misura **accordo**, non chi ha ragione. Il verdetto vero arriva a
+maggio 2027. E lo scarto sul favorito **non è un'occasione di scommessa**: è più
+probabile che l'errore sia nostro (la sovra-confidenza è documentata) che del
+mercato.
+
+**Cosa ne consegue (operativo).** Il test prospettico (Fase 78) ha ora un
+**secondo binario, già eseguibile oggi**: congelare le nostre P(campione) e
+P(top-4) per il 2026-27 *prima* del via e scorarle a fine stagione, contro un
+mercato che le quota. È il primo mercato in cui il progetto può misurarsi
+prospetticamente senza aspettare le quote di chiusura partita per partita. La
+priorità immediata diventa **correggere la sovra-confidenza** del simulatore
+(incertezza dei parametri via bootstrap/posterior sulle forze) e ri-misurare la
+KL contro Polymarket: è un bersaglio quantitativo, non un'opinione.
+
+> **Convergenza con la Fase 94** (sviluppata in parallelo da un'altra sessione):
+> la 94 sta iniettando la **deriva di forza** nel simulatore — cioè proprio il
+> meccanismo che qui risulta mancante (le forze trattate come note comprimono la
+> classifica verso il favorito). Le due fasi si incastrano: la 94 fornisce la
+> **correzione**, questa fase fornisce il **metro esterno** per misurarne
+> l'effetto. Test naturale una volta che la 94 è chiusa: **ri-eseguire
+> `_run_polymarket_outright.py` e verificare che la KL scenda** (attesa: Serie A
+> da 0.181, Premier da 0.242 verso il basso). Se la deriva è la causa giusta, la
+> distanza dal mercato deve ridursi senza ritarare nulla sui prezzi.
+
+### 📐 Il modello in dettaglio
+
+- **Prezzi di mercato**: `p_market_i = p_raw_i / Σ_j p_raw_j` (devig
+  proporzionale) sui soli esiti con `volume > 0` — i placeholder a 0.50 senza
+  scambi sono scartati, non devigati (falserebbero l'overround: con loro la somma
+  sarebbe ~3.07 invece di 1.07).
+- **Nostra stima**: `champion_prob` da `simulate_season(model, round_robin(teams),
+  teams, league_key, n_sims=20000)` (Fase 89: Monte Carlo di stagioni intere con
+  classifica e spareggi ufficiali per lega), poi rinormalizzata sulle squadre
+  quotate. Il DC è quello di config (`LEAGUE_CONFIGS`), fittato con `as_of` =
+  ultima data nota + 1 giorno; le promosse 2026-27 (Frosinone, Monza, Venezia in
+  Serie A) ricevono il prior δ della lega.
+- **Metriche di accordo**: `MAE = mean|p_noi − p_mkt|`; `corr` di Pearson;
+  `KL(noi‖mercato) = Σ p_noi·log(p_noi/p_mkt)` — quest'ultima è la più adatta
+  perché penalizza proprio l'eccesso di massa dove il mercato non la mette
+  (la nostra sovra-confidenza sul favorito).
+- Riproducibile: `python scripts/fetch_polymarket_open.py --tag Soccer` poi
+  `python scripts/_run_polymarket_outright.py --all`. Diagnostico su dati LIVE:
+  nessun run in `runs.jsonl` (il dump non è versionato, cambia ogni giorno).
+
+---
+
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
