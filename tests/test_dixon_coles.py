@@ -380,3 +380,99 @@ def test_style_luck_covariate_usabile():
                             covariates=("ppda", "deep", "luck")).fit(m)
     for c in ("ppda", "deep", "luck"):
         assert c in model.beta
+
+
+def test_promoted_prior_lands_exactly_on_prior():
+    """Il docstring promette: «una neopromossa con 0 partite finisce ESATTAMENTE
+    sul prior». Regressione dall'audit Fase 92: il vincolo di identificabilita'
+    (media attacco = 0) si scaricava sulle squadre senza dati — le uniche senza
+    curvatura di verosimiglianza — e l'attacco atterrava fra -0.28 e -0.39 invece
+    di -0.23, con un valore diverso per stagione. La difesa era esatta: e'
+    l'asimmetria fra le due colonne che smaschera il difetto."""
+    import numpy as np
+    import pandas as pd
+    from src.models.dixon_coles import DixonColesModel
+    rng = np.random.default_rng(0)
+    teams = [f"T{i}" for i in range(8)]
+    rows = []
+    d0 = pd.Timestamp("2024-08-01")
+    for k, (h, a) in enumerate([(h, a) for h in teams for a in teams if h != a]):
+        rows.append(dict(date=d0 + pd.Timedelta(days=k), home_team=h, away_team=a,
+                         home_goals=int(rng.poisson(1.4)), away_goals=int(rng.poisson(1.1))))
+    df = pd.DataFrame(rows)
+    delta = 0.23
+    m = DixonColesModel(half_life_days=365, shrinkage=1.5, promoted_prior=(delta, delta))
+    m.fit(df, as_of_date=df["date"].max() + pd.Timedelta(days=1),
+          promoted_teams={"NUOVA"})                     # zero partite nei dati
+    assert m.attack["NUOVA"] == pytest.approx(-delta, abs=1e-3), \
+        f"attacco {m.attack['NUOVA']:.4f} invece di {-delta}"
+    assert m.defense["NUOVA"] == pytest.approx(+delta, abs=1e-3), \
+        f"difesa {m.defense['NUOVA']:.4f} invece di {delta}"
+
+
+# --------------------------------------------------------------------------- #
+# La regola non negoziabile n.1 del progetto: NIENTE LOOK-AHEAD.
+# Audit Fase 92: nessun test passava `as_of_date` a fit(), e mutando il filtro
+# da `date < as_of` a `date <= as_of` la suite restava tutta verde MENTRE il
+# log-loss migliorava del 40% del gap col mercato — una contaminazione futura si
+# sarebbe presentata come una scoperta.
+# --------------------------------------------------------------------------- #
+def _toy_two_eras():
+    """Due ere opposte: prima A domina, dopo la data di taglio domina B."""
+    import pandas as pd
+    rows, d0 = [], pd.Timestamp("2024-01-01")
+    for k in range(30):                       # era 1: A segna tanto, B poco
+        rows.append(dict(date=d0 + pd.Timedelta(days=k), home_team="A", away_team="B",
+                         home_goals=4, away_goals=0))
+    cut = d0 + pd.Timedelta(days=100)
+    for k in range(30):                       # era 2 (dopo il taglio): invertita
+        rows.append(dict(date=cut + pd.Timedelta(days=k), home_team="A", away_team="B",
+                         home_goals=0, away_goals=4))
+    return pd.DataFrame(rows), cut
+
+
+def test_fit_ignores_matches_on_and_after_as_of_date():
+    """Le partite CON DATA >= as_of_date non devono entrare nella stima."""
+    import pandas as pd
+    from src.models.dixon_coles import DixonColesModel
+    df, cut = _toy_two_eras()
+    m = DixonColesModel(half_life_days=None).fit(df, as_of_date=cut)
+    lam, mu = m.expected_goals("A", "B")
+    # con i soli dati dell'era 1, A deve segnare MOLTO piu' di B
+    assert lam > 3 * mu, f"lam={lam:.3f} mu={mu:.3f}: sembra aver visto il futuro"
+
+    # la partita ESATTAMENTE sulla data di taglio non deve entrare (filtro <, non <=)
+    edge = pd.DataFrame([dict(date=cut, home_team="A", away_team="B",
+                              home_goals=0, away_goals=9)])
+    m2 = DixonColesModel(half_life_days=None).fit(pd.concat([df, edge]), as_of_date=cut)
+    assert m2.expected_goals("A", "B") == pytest.approx(m.expected_goals("A", "B"), abs=1e-6), \
+        "una partita datata esattamente as_of_date e' entrata nel fit"
+
+
+def test_fit_on_full_history_sees_the_reversal():
+    """Controprova: senza taglio, la stessa serie deve dare il risultato OPPOSTO.
+    Senza questo, il test sopra passerebbe anche con un modello che ignora i dati."""
+    from src.models.dixon_coles import DixonColesModel
+    df, cut = _toy_two_eras()
+    m = DixonColesModel(half_life_days=None).fit(df)         # tutta la storia
+    lam, mu = m.expected_goals("A", "B")
+    assert lam == pytest.approx(mu, rel=0.2), \
+        f"lam={lam:.3f} mu={mu:.3f}: le due ere opposte dovrebbero compensarsi"
+
+
+def test_time_decay_halves_weight_at_half_life():
+    """L'emivita: peso 0.5 esatto a half_life giorni, monotonia, e None = nessun
+    decadimento. Audit Fase 92: invertendo il segno dell'esponente o azzerando xi
+    la suite restava verde."""
+    import numpy as np
+    import pandas as pd
+    from src.models.dixon_coles import DixonColesModel
+    as_of = pd.Timestamp("2025-01-01")
+    dates = pd.Series([as_of - pd.Timedelta(days=d) for d in [0, 365, 730]])
+    w = DixonColesModel(half_life_days=365)._time_weights(dates, as_of)
+    assert w[0] == pytest.approx(1.0)
+    assert w[1] == pytest.approx(0.5, abs=1e-9)      # esattamente meta'
+    assert w[2] == pytest.approx(0.25, abs=1e-9)
+    assert w[0] > w[1] > w[2]                        # monotonia: piu' vecchio = meno peso
+    wn = DixonColesModel(half_life_days=None)._time_weights(dates, as_of)
+    assert np.allclose(wn, 1.0)

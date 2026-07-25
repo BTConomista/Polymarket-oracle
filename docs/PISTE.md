@@ -10,6 +10,23 @@ Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
 l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 89.
 
+## 0 · ⚠️ DOVE CERCARE, dopo la correzione della Fase 92
+
+La Fase 92 ha ribaltato la diagnosi che orientava le piste: il gap col mercato è
+**88% discriminazione casa/ospite, 12% massa del pareggio** (Premier 94.5/5.5,
+Liga 85/15). Tutte le piste qui sotto vanno riordinate con questa lente:
+
+- **cercare informazione che distingua CHI VINCE fra due squadre**, non che
+  aggiusti la massa del pareggio. Le leve-pareggio hanno un tetto di guadagno
+  pari al 12% del gap, e sono già state spremute (12b, 18, φ35);
+- il fatto che il mercato ci batta soprattutto sulla discriminazione è coerente
+  con l'ipotesi «il mercato sa cose sulla singola partita che noi non sappiamo»
+  (formazioni, motivazione, notizie): è la direzione già indicata come l'unica
+  non esaurita, ma ora è **misurata**, non congetturata;
+- una diagnostica utile e mai fatta: **su quali partite** si concentra il deficit
+  di discriminazione? (per squilibrio atteso |λ−μ|, per fascia di quota, per
+  giornata). Costa una passata sul backtest esistente.
+
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 
 Le più economiche: nessuna rete, nessun import — solo codice sugli snapshot

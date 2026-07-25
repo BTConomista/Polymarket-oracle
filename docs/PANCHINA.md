@@ -27,6 +27,13 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
    cambierebbe;
 3. i numeri devono essere ricalcolabili da `runs.jsonl` (regola Fase 15).
 
+> **Nota dalla Fase 92**: le leve della famiglia-pareggio (diagonale inflazionata
+> F12b, ρ dinamico F18, φ35) sono state scelte per una diagnosi poi risultata
+> **invertita**: il pareggio è solo il **12%** del gap, l'88% è la discriminazione
+> casa/ospite. Non è una bocciatura retroattiva — φ35 resta titolare dove misurata
+> positiva — ma spiega perché i guadagni siano stati minuscoli, e dice dove NON
+> cercare la prossima leva.
+
 > Nota di metodo — l'eccezione che definisce i criteri: il **prior neopromosse
 > δ** fu adottato (Fase 7) *nonostante* un CI non conclusivo, per **motivazione
 > strutturale** (meccanismo chiaro, direzione confermata su ogni finestra,

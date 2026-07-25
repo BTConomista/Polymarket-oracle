@@ -178,6 +178,15 @@ implicito. Non basta la narrazione del *cosa*: serve il *come* (la matematica) e
 4. **Coerenza col registro**: ogni numero citato deve essere ricalcolabile da
    `runs.jsonl` o da uno script `_run_*` (regola Fase 15).
 
+**Regola aggiunta dalla Fase 92 (deduzioni da misure indirette).** Quando una
+fase deduce «il problema è X» da una misura indiretta (un mercato derivato, un
+proxy, un confronto), la deduzione va scritta come **identità o scomposizione
+esatta**, non come ragionamento in prosa. Motivo: per 80 fasi il progetto ha
+letto al contrario il proprio dato-chiave sul gap, perché il passaggio da
+«gap del mercato 12 ≈ 0» a «sappiamo prezzare chi vince» non era mai stato
+messo in formule — e `P(12)=1−P(X)` lo rende falso per identità. Una
+scomposizione che ricompone a sei decimali non si può leggere al contrario.
+
 Questo standard è retroattivo (tutte le fasi 0-33 lo rispettano) e prospettico:
 **nessuna fase futura è "chiusa" senza il suo blocco 📐.** Lo stesso vale quando si
 porta il modello su un'altra lega: le formule non cambiano, ma il *ragionamento sul
@@ -318,6 +327,15 @@ gol" a **due motori complementari**, su **3 leghe** (Serie A, Premier, La Liga,
    1** dalla matrice DC. Batte il DC-da-gol su 13/14 mercati su tutte e 3 le
    leghe (Fasi 26/76). È il **titolare** quando ci sono le quote; il DC è il
    fallback senza quote.
+
+**⚠️ Diagnosi CORRETTA alla Fase 92 (era invertita per 80 fasi).** Il gap col
+mercato **NON** «vive quasi tutto nel pareggio»: la scomposizione esatta
+(chain rule, ricompone a 6 decimali) dice **12% massa-pareggio / 88%
+discriminazione casa-ospite** in Serie A (5.5/94.5 in Premier, 15/85 in Liga).
+L'errore era logico: `P(12)=1−P(X)` è un'identità, quindi il mercato «12» —
+usato come prova che «chi vince» fosse a posto — misura ESATTAMENTE la massa del
+pareggio. Conseguenza: le leve sul pareggio (12b, 18, φ35) rendevano poco perché
+aggredivano il 12%. Cercare l'informazione mancante nella **discriminazione**.
 
 **Le scoperte che reggono.** (a) Il mercato di **chiusura ingloba il modello**
 (α\*=0 ovunque, Fase 16): non lo si batte in ROI — **non usare per scommettere

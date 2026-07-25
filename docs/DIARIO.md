@@ -64,10 +64,13 @@ non il mercato; la config ufficiale è fissata qui.*
 
 ### Arco 2 — L'anatomia del gap col mercato (Fasi 9–20)
 
-*Dove e perché si perde dal mercato. Scoperte chiave: il gap vive quasi tutto
-nel PAREGGIO; il mercato ingloba completamente il modello (α\*=0, Fase 16); i
+*Dove e perché si perde dal mercato. Scoperte chiave: il mercato ingloba
+completamente il modello (α\*=0, Fase 16); i
 "value bet" del modello sono i suoi errori (adverse selection, Fase 20). Qui
-nascono anche le regole statistiche del progetto (CI bootstrap, Fase 17).*
+nascono anche le regole statistiche del progetto (CI bootstrap, Fase 17).
+**Attenzione**: la conclusione «il gap vive quasi tutto nel pareggio», nata in
+questo arco e ripetuta per 80 fasi, è stata **rovesciata dalla Fase 92**: l'88%
+del gap sta nella discriminazione casa/ospite, il 12% nel pareggio.*
 
 - [Fase 9 — Anatomia del gap col mercato (analisi approfondita)](#fase-9--anatomia-del-gap-col-mercato-analisi-approfondita)
 - [Fase 10 — Ricalibrazione per-classe 1X2 (attacca il pareggio; robusto ma piccolo)](#fase-10--ricalibrazione-per-classe-1x2-attacca-il-pareggio-robusto-ma-piccolo)
@@ -1657,6 +1660,27 @@ pareggio*), e il primo termine è ~0 (lo dice il 12), **il grosso del gap è il 
 termine**: prezzare i pareggi (= i punteggi bassi correlati). È la firma matematica
 che indirizza il "cambio di classe" verso la correlazione dei punteggi (Fase 12b/18),
 non verso più feature di forza.
+
+> **⚠️ CORREZIONE (Fase 92).** Questa lettura è **rovesciata**, e l'errore è
+> logico, non numerico. `P(12) = P(1) + P(2) = 1 − P(X)` è un'**identità**
+> (verificata: scarto max 4e-16): prezzare il "12" **è** prezzare la massa del
+> pareggio, non "chi vince". Quindi il suo gap quasi-nullo (+0.0020) non dice
+> che sappiamo prezzare chi vince — dice che sappiamo prezzare **il pareggio**.
+> La scomposizione esatta (chain rule, ricompone a 6 decimali su 2.280 partite):
+>
+> | | log-loss | quota del gap |
+> |---|--:|--:|
+> | gap totale | **+0.016699** | 100% |
+> | massa-pareggio (= il mercato "12") | +0.002010 | **12.0%** |
+> | discriminazione casa vs ospite | +0.014690 | **88.0%** |
+>
+> Cioè: **l'88% del gap sta nel distinguere chi vince fra le due squadre**, non
+> nel pareggio. Questa correzione spiega a posteriori perché tutte le leve
+> costruite su questa diagnosi (inflazione della diagonale Fase 12b, ρ dinamico
+> Fase 18, φ(|λ−μ|) Fase 35) abbiano prodotto guadagni minuscoli o nulli:
+> aggredivano il **12%**. Il numero +0.0020 resta corretto — cambia
+> completamente cosa significa.
+
 
 **La "U" per forza squadra** (deboli +0.0206, forti +0.0180, medie +0.0123) e il
 picco sulle **stagioni rumorose** (COVID 2020-21 +0.0202) sono coerenti con
@@ -9654,6 +9678,161 @@ parità si compensano fra le squadre.
 
 Riproducibile: `python scripts/_run_fase91_positions.py --nsim 20000` (~2 min).
 Run in `experiments/runs.jsonl`, dettaglio in `experiments/fase91_positions.json`.
+
+---
+
+## Fase 92 — Quarto audit (per aree): la diagnosi centrale era invertita, e il prior non atterrava dove diceva
+
+**Obiettivo (richiesta utente).** «Fai un audit completo di tutto il branch
+main.» Quarto audit del progetto, ma il primo organizzato **per AREA del repo**
+(motori matematici, pipeline dati, script, test, documentazione, artefatti)
+invece che per domanda — apposta per coprire angoli che gli audit precedenti,
+tutti organizzati per domanda, non avevano toccato. 13 agenti, ~3h20, contro-
+verifica avversaria su ogni reperto, tutti in sola lettura.
+
+**Risultato 1 — LA DIAGNOSI CENTRALE DEL PROGETTO ERA ROVESCIATA.**
+
+Per 80 fasi il progetto ha ripetuto che «il gap col mercato vive quasi tutto nel
+PAREGGIO». È il titolo dell'Arco 2, sta nel GLOSSARIO, ed è la motivazione
+esplicita di tre leve: inflazione della diagonale (12b), ρ dinamico (18),
+φ(|λ−μ|) (35). Il ragionamento originale (Fase 9) era:
+
+> «il mercato *12* non richiede di stimare la **massa** del pareggio, solo chi
+> vince; il suo gap è quasi nullo (+0.0020) → il termine "chi vince" è ~0 → il
+> grosso del gap è il pareggio».
+
+**`P(12) = P(1) + P(2) = 1 − P(X)` è un'identità.** Prezzare il "12" *è*
+prezzare la massa del pareggio. Quel +0.0020 non dice che sappiamo prezzare chi
+vince: dice che sappiamo prezzare **il pareggio**. L'errore è logico, non
+numerico — il numero era giusto, il significato opposto.
+
+La scomposizione corretta è la chain rule del log-loss, e ricompone a **sei
+decimali**:
+
+```
+LL(1X2) = LL(pari vs non-pari) + P(non-pari)·LL(casa vs ospite | non-pari)
+          \___ massa-pareggio ___/   \______ discriminazione ______/
+```
+
+| Serie A, 2.280 partite | log-loss | quota del gap |
+|---|--:|--:|
+| gap totale | **+0.016699** | 100% |
+| massa-pareggio *(= il mercato «12»)* | +0.002010 | **12.0%** |
+| discriminazione casa/ospite | +0.014690 | **88.0%** |
+
+E vale su **tutte e tre le leghe**, anzi è più forte altrove:
+
+| lega | gap totale | massa-pareggio | discriminazione |
+|---|--:|--:|--:|
+| Serie A | +0.016699 | 12.0% | **88.0%** |
+| Premier | +0.020632 | 5.5% | **94.5%** |
+| La Liga | +0.016250 | 15.0% | **85.0%** |
+
+**La conseguenza retroattiva è la parte interessante**: spiega perché *tutte* le
+leve costruite su quella diagnosi abbiano prodotto guadagni minuscoli o nulli
+(12b −0.0004 non robusto, 18 instabile sui bound, 35 +0.0006 in Premier).
+**Aggredivano il 12%.** Non erano leve sbagliate in sé: erano puntate sul
+termine piccolo. Il verdetto «siamo al tetto» resta valido — ma ora si sa che il
+tetto è nella **discriminazione casa/ospite**, ed è lì che va cercata
+l'informazione mancante, non nella correlazione dei punteggi.
+
+**Risultato 2 — il prior neopromosse non atterrava dove dichiarato.**
+
+Il docstring del modello promette: «una neopromossa con 0 partite finisce
+**esattamente** sul prior». Vero per la difesa (+0.2300 esatto), **falso per
+l'attacco**: le squadre a zero partite atterravano fra −0.28 e −0.39 invece di
+−0.23. Il meccanismo: la penalità di identificabilità
+`P·media(attacco)²` spinge tutte le squadre con la stessa forza, ma quelle con
+dati la resistono (hanno curvatura di verosimiglianza) mentre **una squadra
+senza partite non ha altra curvatura che lo shrinkage** — è l'unico punto
+cedevole del sistema e assorbiva quasi tutto lo spostamento. L'asimmetria fra
+attacco (sbagliato) e difesa (esatta) è la firma: la penalità tocca solo
+l'attacco.
+
+Il δ *effettivamente applicato* valeva quindi 0.31-0.39 invece di 0.23 — dal 35%
+al 68% più severo — **e cambiava da stagione a stagione**, cioè non era
+ri-derivabile (§2-bis). Corretto calcolando il vincolo sulle sole squadre con
+dati: ora tutte e 5 le neopromosse a zero partite atterrano su −0.2300 /
++0.2300 esatti, con test di regressione.
+
+**Impatto misurato**: sui mercati di partita è trascurabile (1X2 2025-26
+0.9925 → 0.9924; Premier 1.0259 → 1.0255; Liga invariato) — le conclusioni
+pubblicate reggono. Ma sui **mercati stagionali** no: la Fase 91 aveva
+attribuito al prior una mis-calibrazione delle neopromosse di **−10.1pp**;
+corretto il bug, scende a **−6.1pp** (ECE 0.0589 → 0.0479, e sparisce del tutto
+la fascia «oltre il 90%»). Cioè **il 40% di quella mis-calibrazione era questo
+difetto**, non l'effetto-orizzonte che le avevo attribuito. Il resto è reale e
+la pista resta aperta, ridimensionata.
+
+**Risultato 3 — la regola non negoziabile n.1 non era protetta da alcun test.**
+
+`grep -rn as_of_date tests/` non restituiva nulla: nessun test passava mai la
+data di taglio a `fit()`. Mutando il filtro da `date < as_of` a `date <= as_of`
+la suite restava **158/158 verde** e il backtest **migliorava** (1X2 0.9925 →
+0.9863, gap col mercato +0.0141 → +0.0079). Cioè: una contaminazione futura si
+sarebbe presentata come una **scoperta**. Aggiunti tre test (no-look-ahead con
+il caso di bordo sulla data esatta, la controprova su tutta la storia, e
+l'emivita con il rapporto 0.5 esatto), e **verificato per mutazione** che ora
+prendono il difetto: `<`→`<=` fallisce, il segno del decadimento invertito
+fallisce, il prior col leak fallisce.
+
+**Risultato 4 — un cron diventato attivo in silenzio.** Lo schedule mensile di
+`import_dataset.yml` (`0 5 1 * *`) era stato scritto quando il file non stava sul
+branch di default e non poteva partire; col passaggio a main (Fase 82) è
+diventato attivo, e il primo fire sarebbe stato il **2026-08-01**. Avrebbe
+committato ~51 MB di dataset aggiornato **senza rigenerare gli snapshot**,
+creando una divergenza silenziosa fra la fonte grezza (nuova) e i dati su cui
+girano tutti i backtest (vecchi), e senza una riga nel registro. Disattivato,
+lasciando l'esecuzione a comando.
+
+**Risultato 5 — cosa ha retto.** L'audit ha ri-verificato *eseguendo*: il
+walk-forward ufficiale riproduce 0.979687 / 0.963191 / **+0.016496** (il
++0.0165 del README), α\*=0 della Fase 16, i CI della Fase 17, il backtest
+2025-26, le impronte dati, le correzioni della Fase 90 (tutte atterrate: i
+numeri ritirati non esistono più in alcun file, i due bug Polymarket sono
+corretti *e* protetti da test veri verificati su 13.597 eventi live). Aree
+pulite e verificate numericamente: l'inversione 1X2+O/U (soluzione unica,
+multi-start concorde, nessun bound toccato su 7.980 partite), la double-Poisson
+(mean-preserving a 1e-13), copula e bivariato (marginali preservati a ≤1.6e-5),
+la coerenza interna del DC (P(1X)=P(1)+P(X) a 0.00e+00), gli snapshot congelati
+rigenerabili bit-identici.
+
+**Lezione.** Tre audit avevano guardato *le stesse cose da angolazioni diverse*
+e nessuno aveva messo in dubbio **la frase che dà il titolo a un intero arco**.
+Il difetto non era in un numero — ogni numero era giusto — ma nel **passaggio
+logico** fra un numero e la sua interpretazione, e quel passaggio non era mai
+stato riscritto in formule. Regola che ne esce, da aggiungere allo standard
+§2-bis: **quando una fase deduce "il problema è X" da una misura indiretta, la
+deduzione va scritta come identità o scomposizione esatta**, non come
+ragionamento in prosa. Una scomposizione che ricompone a sei decimali non si può
+leggere al contrario.
+
+### 📐 Il modello in dettaglio
+
+**La scomposizione** (chain rule del log-loss multiclasse). Per ogni partita, se
+l'esito è il pareggio `−log P(X)`; se è casa `−log P(H) = −log(1−P(X)) −
+log(P(H)/(1−P(X)))`. Mediando su N partite:
+```
+LL = (1/N)·Σ −[y_X·log P(X) + (1−y_X)·log(1−P(X))]          <- massa-pareggio
+   + (1/N)·Σ_{non pari} −log( P(esito) / (1−P(X)) )          <- discriminazione
+```
+Il secondo termine è già pesato da P(non-pari) perché somma sui soli non-pari e
+divide per tutte le partite: i due addendi ricompongono il totale **esattamente**
+(verificato: 0.576618 + 0.403273 = 0.979890).
+
+**La correzione del prior.** In `_fit_counts` il vincolo di identificabilità era
+`P·media(attacco)²` su TUTTE le squadre; ora è su `attack[seen]`, con `seen`
+costruito dagli indici delle partite di training. La penalità resta 1e4 e
+l'indeterminazione resta fissata (il modello è invariante per
+`attacco_i += c, difesa_i −= c`: basta vincolare la media di un sottoinsieme
+non vuoto). Prova del meccanismo, a parità di tutto il resto: con penalità 1e4
+l'attacco atterrava a −0.3376, con 1e2 a −0.2892, con 1e0 a −0.2313 (= il
+prior) — il leak scalava con la penalità, quindi era la penalità.
+**Attenzione**: NON centrare su `(attacco − prior).mean()²`, che sposta l'intera
+scala di `media(prior)` e peggiora.
+
+Riproducibile: `python scripts/_run_fase92_gap_decomposition.py` (anche
+`--league premier_league`). Test di regressione in `tests/test_dixon_coles.py`.
 
 ---
 

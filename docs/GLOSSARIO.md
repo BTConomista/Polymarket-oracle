@@ -88,7 +88,9 @@ ognuno ha 1-2 righe e la fase che lo introduce. Ordine tematico.
 - **CLV (closing line value)** — quanto si guadagna/perde rispetto alla linea di
   chiusura: il metro d'oro dell'edge. Negativo per il modello. *(Fase 14)*
 - **gap (col mercato)** — la differenza di log-loss tra modello e mercato di
-  chiusura (1X2: +0.0165 in Serie A). Vive quasi tutto nel pareggio. *(Fase 9)*
+  chiusura (1X2: +0.0165 in Serie A). **L'88% vive nella discriminazione casa/ospite,
+  solo il 12% nella massa del pareggio** — la lettura opposta della Fase 9 era
+  invertita, vedi la correzione nella Fase 92. *(Fasi 9, 92)*
 - **ROI / value-bet** — il rendimento simulato scommettendo dove il modello vede
   "valore". **−15.7%** alla quota media: non si batte il margine. *(Fase 15)*
 - **CI bootstrap / P(aiuta)** — intervallo di confidenza appaiato (per-stagione)

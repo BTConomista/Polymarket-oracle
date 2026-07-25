@@ -545,6 +545,20 @@ class DixonColesModel:
         k = 0 if cov_lam is None else cov_lam.shape[1]
         r = 1 if (dynamic_rho and use_correction) else 0  # param. rho_slope
 
+        # Il vincolo di identificabilita' (media dell'attacco = 0) va calcolato
+        # sulle sole squadre CON dati. Una squadra senza partite non ha curvatura
+        # di verosimiglianza: e' l'unico punto cedevole del sistema e assorbiva
+        # quasi tutto lo spostamento richiesto dal vincolo, finendo su un attacco
+        # fra -0.28 e -0.39 invece che sul prior -0.23 dichiarato (e con un valore
+        # DIVERSO per stagione, quindi non ri-derivabile, §2-bis). La difesa era
+        # immune perche' la penalita' non la tocca: l'asimmetria fra le due
+        # colonne era la firma del difetto. Trovato dall'audit della Fase 92.
+        seen = np.zeros(n, bool)
+        seen[home_idx] = True
+        seen[away_idx] = True
+        if not seen.any():
+            seen[:] = True
+
         def neg_log_likelihood(params: np.ndarray) -> float:
             attack = params[:n]
             defense = params[n:2 * n]
@@ -568,7 +582,7 @@ class DixonColesModel:
 
             # Indeterminazione: invariante per attack_i += c, defense_i -= c.
             # La fissiamo imponendo media(attacco) = 0.
-            penalty = _IDENTIFIABILITY_PENALTY * attack.mean() ** 2
+            penalty = _IDENTIFIABILITY_PENALTY * attack[seen].mean() ** 2
             if self.shrinkage > 0.0:
                 penalty += self.shrinkage * (np.sum((attack - a_prior) ** 2)
                                              + np.sum((defense - d_prior) ** 2))
