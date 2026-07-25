@@ -254,6 +254,9 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
 scripts/         download_data, build_database, backtest, analyze, tune, calibrate,
                  markets (multi-mercato), analyze_gap (anatomia del gap col mercato)
 experiments/     runs.jsonl (registro replicabile) + README (formato)
+                 fase93_discrimination.csv: deficit di discriminazione per
+                 PARTITA (5.083 righe, Fase 93) — input riutilizzabile per
+                 affettare il gap in altri modi senza rifare 18 backtest
 data/            serie_a_matches.csv (SNAPSHOT congelato, versionato)
                  football.db (SQLite, rigenerabile, NON versionato)
 docs/DIARIO.md   narrazione passo-passo con ragionamento (le decisioni e il perché)
