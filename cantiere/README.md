@@ -36,6 +36,8 @@ misurato, registrare anche gli errori).
 
 | 7 | **Righe corrotte: recupero, ritiro di un errore, stima** | [`report/07_dati_corrotti.md`](report/07_dati_corrotti.md) | una mia «correzione» era un **falso positivo** (autogol) ed è stata ritirata; le 8 quote non sono recuperabili da nessuna fonte lecita → **stimate** con MAE 0.0267 contro 0.0743 di baseline |
 | 8 | **I buchi: quanti, dove, come si chiudono** | [`report/08_buchi.md`](report/08_buchi.md) | 7.353 celle vuote su 612.218 (1.20%), ma il **99.3% è un buco solo** (O/U chiusura 2017-19, assente alla fonte per tutte e 5 le leghe); tolto quello restano **49 celle**, ognuna con nome e causa. Trovato e chiuso un buco **travestito da dato** (xG segnaposto) |
+| 9 | **Chiudere i buchi: dato vero + stime** | [`report/09_chiusura_buchi.md`](report/09_chiusura_buchi.md) | **1.362 partite stimate** (chiusura O/U delle 2 leghe nuove, MAE 0.0122/0.0110); **trovato il dato REALE** della chiusura O/U 2017-19 su 3.652 partite (1xBet) — ma NON batte la stima e non va inserito; **quote GG/NG reali** per 3.652 partite, mercato che il progetto dichiarava senza quote; **3.045 righe di calendario coppe** recuperate; lo stimatore passa da pooled a **per-lega** (CI conclusivo) |
+| 10 | **La rosa dei modelli sulle 2 leghe nuove** | [`report/10_modelli_nuove_leghe.md`](report/10_modelli_nuove_leghe.md) | 4 fronti: router θ **negativo** (0/25), φ35 **bocciata** (una φ costante fa meglio), Shin conclusivo solo su Brier, ricalibrazioni nel rumore. Unico segnale: **ricalibrazione-μ sul GG/NG in Bundesliga** (+0.00059, CI conclusivo). Due lezioni del progetto da riscrivere (§2.2) |
 
 ## Il fatto nuovo che ha cambiato le regole
 
