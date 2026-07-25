@@ -65,7 +65,7 @@
     {
       "id": "A8.quote_valide",
       "level": "PASS",
-      "msg": "quote: 1X2_chiusura n=2753 orr[1.015,1.074]; 1X2_apertura n=2754 orr[1.016,1.077]; OU_chiusura n=2142 orr[1.023,1.073]; OU_apertura n=2753 orr[1.039,1.339]",
+      "msg": "quote: 1X2_chiusura n=2753 orr[1.015,1.074]; 1X2_apertura n=2754 orr[1.016,1.077]; OU_chiusura n=2142 orr[1.023,1.073]; OU_apertura n=2747 orr[1.039,1.095]",
       "data": {
         "1X2_chiusura": {
           "coperte": 2753,
@@ -95,13 +95,13 @@
           "overround_max": 1.0725284060741211
         },
         "OU_apertura": {
-          "coperte": 2753,
+          "coperte": 2747,
           "parziali": 0,
           "quote<=1": 0,
           "overround<1": 0,
           "overround_min": 1.0393046107331823,
           "overround_med": 1.053079459631954,
-          "overround_max": 1.3390058217644425
+          "overround_max": 1.0947007124655468
         }
       }
     },
@@ -145,8 +145,8 @@
             "2526": 1.0
           },
           "odds_over25_open": {
-            "1718": 1.0,
-            "1819": 0.9967,
+            "1718": 0.9837,
+            "1819": 0.9935,
             "1920": 1.0,
             "2021": 1.0,
             "2122": 1.0,
@@ -170,9 +170,9 @@
     {
       "id": "A11.xg_stile",
       "level": "PASS",
-      "msg": "copertura xG 100.00%; npxG>xG in 0 righe; 0 xG fuori range; 0 PPDA<=0; 0 deep<0",
+      "msg": "copertura xG 99.96%; npxG>xG in 0 righe; 0 xG fuori range; 0 PPDA<=0; 0 deep<0",
       "data": {
-        "coverage": 1.0,
+        "coverage": 0.9996368917937546,
         "npxg_gt_xg": 0
       }
     },
@@ -203,9 +203,72 @@
     {
       "id": "B0.correzioni_dichiarate",
       "level": "INFO",
-      "msg": "1 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2",
+      "msg": "8 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2",
       "data": {
         "righe": [
+          {
+            "season": "1718",
+            "home_team": "Leverkusen",
+            "away_team": "Dortmund",
+            "home_goals": 1,
+            "away_goals": 1,
+            "home_goals_src": 1,
+            "away_goals_src": 1
+          },
+          {
+            "season": "1718",
+            "home_team": "Hoffenheim",
+            "away_team": "RB Leipzig",
+            "home_goals": 4,
+            "away_goals": 0,
+            "home_goals_src": 4,
+            "away_goals_src": 0
+          },
+          {
+            "season": "1718",
+            "home_team": "Ein Frankfurt",
+            "away_team": "Bayern Munich",
+            "home_goals": 0,
+            "away_goals": 1,
+            "home_goals_src": 0,
+            "away_goals_src": 1
+          },
+          {
+            "season": "1718",
+            "home_team": "Bayern Munich",
+            "away_team": "Hertha",
+            "home_goals": 0,
+            "away_goals": 0,
+            "home_goals_src": 0,
+            "away_goals_src": 0
+          },
+          {
+            "season": "1718",
+            "home_team": "Werder Bremen",
+            "away_team": "Leverkusen",
+            "home_goals": 0,
+            "away_goals": 0,
+            "home_goals_src": 0,
+            "away_goals_src": 0
+          },
+          {
+            "season": "1819",
+            "home_team": "Dortmund",
+            "away_team": "Wolfsburg",
+            "home_goals": 2,
+            "away_goals": 0,
+            "home_goals_src": 2,
+            "away_goals_src": 0
+          },
+          {
+            "season": "2021",
+            "home_team": "Bielefeld",
+            "away_team": "Leverkusen",
+            "home_goals": 1,
+            "away_goals": 2,
+            "home_goals_src": 1,
+            "away_goals_src": 2
+          },
           {
             "season": "2425",
             "home_team": "Union Berlin",

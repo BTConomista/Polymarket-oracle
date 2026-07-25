@@ -24,15 +24,15 @@
   6. xG a zero/estremi: 2 (di cui IMPOSSIBILI, cioe' con gol o tiri: 0)
 
 === bundesliga ===
-  1. margini impossibili (>1.12): 6
+  1. margini impossibili (>1.12): 0
   2. coppie 1X2/OU incoerenti: 0
   3. anomalie fisiche (gol>tiri in porta, tiri in porta>tiri): 5 su 2754 righe grezze
   4. impronte-quota duplicate nello stesso giorno: 0
   5. riposo incoerente col calendario di campionato: 0
-  6. xG a zero/estremi: 2 (di cui IMPOSSIBILI, cioe' con gol o tiri: 1)
+  6. xG a zero/estremi: 1 (di cui IMPOSSIBILI, cioe' con gol o tiri: 0)
 
 === ligue_1 ===
-  1. margini impossibili (>1.12): 2
+  1. margini impossibili (>1.12): 0
   2. coppie 1X2/OU incoerenti: 2
   3. anomalie fisiche (gol>tiri in porta, tiri in porta>tiri): 13 su 3097 righe grezze
   4. impronte-quota duplicate nello stesso giorno: 0
@@ -41,18 +41,10 @@
 
 === DETTAGLIO ANOMALIE ===
 
-[margini] 11 casi:
+[margini] 3 casi:
     {"league": "la_liga", "mercato": "OU_apertura", "season": "1819", "date": "2018-10-06", "match": "Alaves-Real Madrid", "overround": 1.2825, "quote": [1.53, 1.59]}
     {"league": "la_liga", "mercato": "OU_apertura", "season": "1819", "date": "2018-11-24", "match": "Eibar-Real Madrid", "overround": 1.2814, "quote": [1.45, 1.69]}
     {"league": "la_liga", "mercato": "OU_apertura", "season": "1819", "date": "2019-02-10", "match": "Leganes-Betis", "overround": 1.1279, "quote": [2.48, 1.38]}
-    {"league": "bundesliga", "mercato": "OU_apertura", "season": "1718", "date": "2017-12-02", "match": "Leverkusen-Dortmund", "overround": 1.2814, "quote": [1.45, 1.69]}
-    {"league": "bundesliga", "mercato": "OU_apertura", "season": "1718", "date": "2017-12-02", "match": "Hoffenheim-RB Leipzig", "overround": 1.2868, "quote": [1.59, 1.52]}
-    {"league": "bundesliga", "mercato": "OU_apertura", "season": "1718", "date": "2017-12-09", "match": "Ein Frankfurt-Bayern Munich", "overround": 1.2862, "quote": [1.56, 1.55]}
-    {"league": "bundesliga", "mercato": "OU_apertura", "season": "1718", "date": "2018-02-24", "match": "Bayern Munich-Hertha", "overround": 1.2757, "quote": [1.42, 1.75]}
-    {"league": "bundesliga", "mercato": "OU_apertura", "season": "1718", "date": "2018-05-05", "match": "Werder Bremen-Leverkusen", "overround": 1.2779, "quote": [1.45, 1.7]}
-    {"league": "bundesliga", "mercato": "OU_apertura", "season": "1819", "date": "2019-03-30", "match": "Dortmund-Wolfsburg", "overround": 1.339, "quote": [1.54, 1.45]}
-    {"league": "ligue_1", "mercato": "OU_apertura", "season": "1718", "date": "2017-10-29", "match": "Lyon-Metz", "overround": 1.2643, "quote": [1.3, 2.02]}
-    {"league": "ligue_1", "mercato": "OU_apertura", "season": "1718", "date": "2018-02-04", "match": "Monaco-Lyon", "overround": 1.2823, "quote": [1.58, 1.54]}
 
 [coerenza] 4 casi:
     {"league": "serie_a", "tipo": "chiusura", "season": "2324", "date": "2024-04-25", "match": "Udinese-Roma", "residuo_over": 0.1135, "totale_implicito": 2.191, "p_over_mercato": 0.4883, "p_over_matrice": 0.3748}
@@ -74,7 +66,7 @@
     {"league": "serie_a", "season": "2324", "tipo": "gol>AST", "date": "05/05/2024", "match": "Milan-Genoa", "gol": 3, "sot": 2}
     {"league": "premier_league", "season": "1718", "tipo": "gol>HST", "date": "26/11/2017", "match": "Huddersfield-Man City", "gol": 1, "sot": 0}
 
-[xg] 11 casi:
+[xg] 10 casi:
     {"league": "serie_a", "season": "1718", "date": "2018-04-17", "match": "Inter-Cagliari", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
     {"league": "serie_a", "season": "2021", "date": "2021-01-30", "match": "Inter-Benevento", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
     {"league": "serie_a", "season": "2122", "date": "2021-12-05", "match": "Juventus-Genoa", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
@@ -83,6 +75,5 @@
     {"league": "premier_league", "season": "1718", "date": "2018-03-10", "match": "Huddersfield-Swansea", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
     {"league": "la_liga", "season": "2021", "date": "2021-04-18", "match": "Ath Madrid-Eibar", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
     {"league": "la_liga", "season": "2425", "date": "2025-03-02", "match": "Barcelona-Sociedad", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "bundesliga", "season": "2021", "date": "2020-11-21", "match": "Bielefeld-Leverkusen", "side": "home", "gol": 1, "xg": 0.0, "tiri": 1.0, "IMPOSSIBILE": true}
     {"league": "bundesliga", "season": "2425", "date": "2024-09-21", "match": "Werder Bremen-Bayern Munich", "side": "home", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
     {"league": "ligue_1", "season": "2021", "date": "2021-05-01", "match": "Lille-Nice", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}

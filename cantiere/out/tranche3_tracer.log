@@ -1,0 +1,49 @@
+Config usata (Serie A, NON ri-tarata): emivita 365g, shrinkage 1.5, blend 0.75 (xg), delta neopromosse 0.23
+
+=== bundesliga ===
+  2021: 306 gare in  25.0s  1X2 modello 1.0017 | baseline 1.0797 | mercato 0.9833  (gap +0.0184)
+  2122: 306 gare in  34.6s  1X2 modello 0.9933 | baseline 1.0573 | mercato 0.9814  (gap +0.0119)
+  2223: 306 gare in  40.2s  1X2 modello 0.9957 | baseline 1.0552 | mercato 0.9955  (gap +0.0002)
+  2324: 306 gare in  92.4s  1X2 modello 0.9771 | baseline 1.0741 | mercato 0.9459  (gap +0.0312)
+  2425: 306 gare in 104.6s  1X2 modello 1.0138 | baseline 1.0837 | mercato 0.9860  (gap +0.0279)
+  2526: 306 gare in  74.5s  1X2 modello 0.9699 | baseline 1.0704 | mercato 0.9510  (gap +0.0189)
+
+  POOLED (1836 partite, 6 stagioni)
+    1X2  modello 0.9919  baseline 1.0722  mercato 0.9738
+    O/U  modello 0.6553  baseline 0.6704  mercato 0.6459
+    modello vs BASELINE: guadagno +0.0803 CI95 [+0.0622, +0.0987] -> CONCLUSIVO
+    modello vs MERCATO : gap     +0.0181 CI95 [+0.0109, +0.0253] -> il mercato vince, conclusivo
+
+=== ligue_1 ===
+  2021: 380 gare in  60.1s  1X2 modello 1.0257 | baseline 1.0822 | mercato 0.9939  (gap +0.0318)
+  2122: 380 gare in  66.0s  1X2 modello 1.0101 | baseline 1.0787 | mercato 0.9999  (gap +0.0102)
+  2223: 380 gare in  89.9s  1X2 modello 0.9858 | baseline 1.0722 | mercato 0.9697  (gap +0.0161)
+  2324: 306 gare in  58.6s  1X2 modello 1.0333 | baseline 1.0860 | mercato 1.0137  (gap +0.0196)
+  2425: 306 gare in  58.0s  1X2 modello 0.9734 | baseline 1.0448 | mercato 0.9556  (gap +0.0178)
+  2526: 306 gare in  78.7s  1X2 modello 0.9939 | baseline 1.0616 | mercato 0.9755  (gap +0.0184)
+
+  POOLED (2058 partite, 6 stagioni)
+    1X2  modello 1.0041  baseline 1.0750  mercato 0.9851
+    O/U  modello 0.6863  baseline 0.6905  mercato 0.6730
+    modello vs BASELINE: guadagno +0.0709 CI95 [+0.0557, +0.0857] -> CONCLUSIVO
+    modello vs MERCATO : gap     +0.0190 CI95 [+0.0121, +0.0258] -> il mercato vince, conclusivo
+
+=== serie_a ===
+  2021: 380 gare in  32.7s  1X2 modello 0.9532 | baseline 1.0809 | mercato 0.9331  (gap +0.0202)
+  2122: 380 gare in  40.0s  1X2 modello 0.9860 | baseline 1.0843 | mercato 0.9715  (gap +0.0145)
+  2223: 380 gare in  49.5s  1X2 modello 0.9916 | baseline 1.0788 | mercato 0.9770  (gap +0.0146)
+  2324: 380 gare in  72.5s  1X2 modello 0.9854 | baseline 1.0828 | mercato 0.9668  (gap +0.0187)
+  2425: 380 gare in  67.6s  1X2 modello 0.9693 | baseline 1.0887 | mercato 0.9523  (gap +0.0170)
+  2526: 380 gare in  68.9s  1X2 modello 0.9925 | baseline 1.0851 | mercato 0.9784  (gap +0.0141)
+
+  POOLED (2280 partite, 6 stagioni)
+    1X2  modello 0.9797  baseline 1.0849  mercato 0.9632
+    O/U  modello 0.6885  baseline 0.6931  mercato 0.6816
+    modello vs BASELINE: guadagno +0.1052 CI95 [+0.0893, +0.1207] -> CONCLUSIVO
+    modello vs MERCATO : gap     +0.0165 CI95 [+0.0107, +0.0225] -> il mercato vince, conclusivo
+
+=== premier_league ===
+  2021: 380 gare in  31.9s  1X2 modello 1.0164 | baseline 1.0663 | mercato 0.9961  (gap +0.0203)
+  2122: 380 gare in  43.1s  1X2 modello 0.9506 | baseline 1.0686 | mercato 0.9367  (gap +0.0139)
+  2223: 380 gare in  51.6s  1X2 modello 0.9967 | baseline 1.0469 | mercato 0.9620  (gap +0.0347)
+  2324: 380 gare in  64.1s  1X2 modello 0.9250 | baseline 1.0531 | mercato 0.9007  (gap +0.0243)

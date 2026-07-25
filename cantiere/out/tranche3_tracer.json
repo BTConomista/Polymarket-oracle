@@ -1,0 +1,89 @@
+{
+  "bundesliga": {
+    "n_partite": 306,
+    "stagioni": [
+      "2526"
+    ],
+    "config": {
+      "half_life_days": 365.0,
+      "shrinkage": 1.5,
+      "shots_blend": 0.75,
+      "blend_signal": "xg",
+      "promoted_prior": 0.23
+    },
+    "pooled": {
+      "n_matches": 306,
+      "x2_model_logloss": 0.9699185008485259,
+      "x2_model_brier": 0.5740444540816775,
+      "x2_market_logloss": 0.9510054747507788,
+      "x2_market_brier": 0.5618184045532181,
+      "x2_baseline_logloss": 1.0704180868429902,
+      "x2_baseline_brier": 0.647678243410654,
+      "ou_model_logloss": 0.6549145464054033,
+      "ou_model_brier": 0.2321090440347357,
+      "ou_market_logloss": 0.6374195797347039,
+      "ou_market_brier": 0.22354894112996732,
+      "ou_baseline_logloss": 0.6549812906268915,
+      "value_bet_n": 113,
+      "value_bet_roi_pct": -18.530973451327434,
+      "x2_market_open_logloss": 0.953253844154854,
+      "x2_market_open_brier": 0.5629483930576981,
+      "x2_model_open_logloss": 0.9699185008485259,
+      "x2_model_open_brier": 0.5740444540816775,
+      "value_bet_open_n": 88,
+      "value_bet_open_roi_pct": -31.75,
+      "clv_n": 88,
+      "clv_mean_prob": -0.007212545635747391,
+      "clv_positive_share": 0.4318181818181818,
+      "ou_market_open_logloss": 0.6393676272246754,
+      "ou_market_open_brier": 0.22447691046568113,
+      "ou_model_open_logloss": 0.6549145464054033,
+      "ou_model_open_brier": 0.2321090440347357
+    },
+    "vs_baseline": {
+      "guadagno": 0.10049958599446424,
+      "ci95": [
+        0.05779978139191669,
+        0.13988393239698527
+      ]
+    },
+    "vs_mercato": {
+      "gap": 0.018913026097747056,
+      "ci95": [
+        0.0016332868541896965,
+        0.037443274267096996
+      ]
+    },
+    "per_stagione": {
+      "2526": {
+        "n_matches": 306,
+        "x2_model_logloss": 0.9699185008485259,
+        "x2_model_brier": 0.5740444540816775,
+        "x2_market_logloss": 0.9510054747507788,
+        "x2_market_brier": 0.5618184045532181,
+        "x2_baseline_logloss": 1.0704180868429902,
+        "x2_baseline_brier": 0.647678243410654,
+        "ou_model_logloss": 0.6549145464054033,
+        "ou_model_brier": 0.2321090440347357,
+        "ou_market_logloss": 0.6374195797347039,
+        "ou_market_brier": 0.22354894112996732,
+        "ou_baseline_logloss": 0.6549812906268915,
+        "value_bet_n": 113,
+        "value_bet_roi_pct": -18.530973451327434,
+        "x2_market_open_logloss": 0.953253844154854,
+        "x2_market_open_brier": 0.5629483930576981,
+        "x2_model_open_logloss": 0.9699185008485259,
+        "x2_model_open_brier": 0.5740444540816775,
+        "value_bet_open_n": 88,
+        "value_bet_open_roi_pct": -31.75,
+        "clv_n": 88,
+        "clv_mean_prob": -0.007212545635747391,
+        "clv_positive_share": 0.4318181818181818,
+        "ou_market_open_logloss": 0.6393676272246754,
+        "ou_market_open_brier": 0.22447691046568113,
+        "ou_model_open_logloss": 0.6549145464054033,
+        "ou_model_open_brier": 0.2321090440347357
+      }
+    }
+  }
+}

@@ -96,7 +96,7 @@
     {
       "id": "A8.quote_valide",
       "level": "PASS",
-      "msg": "quote: 1X2_chiusura n=3097 orr[1.017,1.074]; 1X2_apertura n=3097 orr[1.017,1.079]; OU_chiusura n=2337 orr[1.040,1.075]; OU_apertura n=3097 orr[1.037,1.282]",
+      "msg": "quote: 1X2_chiusura n=3097 orr[1.017,1.074]; 1X2_apertura n=3097 orr[1.017,1.079]; OU_chiusura n=2337 orr[1.040,1.075]; OU_apertura n=3095 orr[1.037,1.082]",
       "data": {
         "1X2_chiusura": {
           "coperte": 3097,
@@ -126,13 +126,13 @@
           "overround_max": 1.0754747961250068
         },
         "OU_apertura": {
-          "coperte": 3097,
+          "coperte": 3095,
           "parziali": 0,
           "quote<=1": 0,
           "overround<1": 0,
           "overround_min": 1.0372719211028403,
           "overround_med": 1.0530934620447565,
-          "overround_max": 1.2822620417557125
+          "overround_max": 1.0818120351588911
         }
       }
     },
@@ -176,7 +176,7 @@
             "2526": 1.0
           },
           "odds_over25_open": {
-            "1718": 1.0,
+            "1718": 0.9947,
             "1819": 1.0,
             "1920": 1.0,
             "2021": 1.0,
@@ -229,6 +229,33 @@
       "data": {
         "only_snapshot": [],
         "only_source": []
+      }
+    },
+    {
+      "id": "B0.correzioni_dichiarate",
+      "level": "INFO",
+      "msg": "2 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2",
+      "data": {
+        "righe": [
+          {
+            "season": "1718",
+            "home_team": "Lyon",
+            "away_team": "Metz",
+            "home_goals": 2,
+            "away_goals": 0,
+            "home_goals_src": 2,
+            "away_goals_src": 0
+          },
+          {
+            "season": "1718",
+            "home_team": "Monaco",
+            "away_team": "Lyon",
+            "home_goals": 3,
+            "away_goals": 2,
+            "home_goals_src": 3,
+            "away_goals_src": 2
+          }
+        ]
       }
     },
     {

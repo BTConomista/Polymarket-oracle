@@ -423,9 +423,14 @@ def audit_vs_understat(df: pd.DataFrame, league: str, rep: Report) -> None:
                                 "ud_away_goals"]].head(10).to_dict("records"),
             unmatched=j.loc[~matched, KEY].head(10).to_dict("records"))
 
-    # C2 — xG/npxG/PPDA/deep ri-parsati == snapshot
+    # C2 — xG/npxG/PPDA/deep ri-parsati == snapshot (escluse le correzioni
+    #      dichiarate: quelle righe si discostano VOLUTAMENTE dalla fonte)
     jx = df.merge(xg.rename(columns={"date": "ud_date"}), on=KEY, how="left",
                   suffixes=("", "_src"), validate="one_to_one")
+    corrette = _righe_corrette(league)
+    if corrette:
+        jx = jx[~jx.apply(
+            lambda r: (r.season, r.home_team, r.away_team) in corrette, axis=1)]
     diffs = {}
     for c in understat.XG_COLUMNS:
         a, b = jx[c], jx[f"{c}_src"]
