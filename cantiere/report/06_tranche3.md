@@ -84,8 +84,9 @@ mercati (la matrice è universale: 3/3 leghe finora).
 | guadagno più piccolo (pari/dispari) | +0.0002 | +0.0000 |
 
 L'unico mercato dove la baseline vince è, in entrambe le leghe, il
-**pari/dispari** — quinta replica consecutiva della lezione «il pari/dispari non
-si predice in nessuna lega». Non prezzarlo con pretese.
+**pari/dispari**: coerente con la lezione già registrata dal playbook («il
+pari/dispari non si predice in nessuna lega», 4 repliche), che con queste due
+leghe arriva a **sei**. Non prezzarlo con pretese.
 
 ---
 
@@ -101,6 +102,10 @@ Riprezzatura con `price_markets(phi0, kappa)`, parametri fittati
 |---|---|--:|--:|--:|---|
 | bundesliga | 0.175 – 0.334 | 0.9747 | 0.9735 | +0.00122 [−0.0016, +0.0040] | nel rumore |
 | ligue_1 | 0.000 – 0.130 | 0.9850 | 0.9854 | −0.00036 [−0.0008, +0.0001] | nel rumore |
+
+*(I φ0 di questa tabella sono fittati sulle 6 stagioni di questo passo; quelli
+del passo 2b — 0.183 e 0.000 — sulle 7 stagioni con chiusura O/U reale. Finestre
+diverse, stessa storia: positivo in Bundesliga, nullo in Ligue 1.)*
 
 Stesso esito su `draw`, `dc_1x`, `dc_2x`: nessun CI conclusivo.
 
