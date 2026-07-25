@@ -908,5 +908,43 @@
       "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     }
+  ],
+  "xg_segnaposto": [
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "date": "2017-09-16",
+      "match": "West Brom-West Ham",
+      "gol": "0-0",
+      "xg": "0.781891-0.266344",
+      "tiri_understat": "6-9",
+      "tiri_in_porta_football_data": 2.0,
+      "verificato_tiro_per_tiro": true,
+      "SEGNAPOSTO": false
+    },
+    {
+      "league": "premier_league",
+      "season": "1718",
+      "date": "2017-09-30",
+      "match": "West Ham-Swansea",
+      "gol": "1-0",
+      "xg": "0.692185-0.178568",
+      "tiri_understat": "9-6",
+      "tiri_in_porta_football_data": 5.0,
+      "verificato_tiro_per_tiro": true,
+      "SEGNAPOSTO": false
+    },
+    {
+      "league": "ligue_1",
+      "season": "2021",
+      "date": "2020-08-30",
+      "match": "Reims-Lille",
+      "gol": "0-1",
+      "xg": "0.206627-0.906784",
+      "tiri_understat": "4-10",
+      "tiri_in_porta_football_data": 3.0,
+      "verificato_tiro_per_tiro": true,
+      "SEGNAPOSTO": false
+    }
   ]
 }

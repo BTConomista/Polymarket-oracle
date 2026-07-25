@@ -26,7 +26,7 @@ misurato, registrare anche gli errori).
 
 | # | lavoro | report | esito in una riga |
 |---|---|---|---|
-| 1 | **Audit dei dati esistenti** | [`report/01_audit_dati.md`](report/01_audit_dati.md) | i dati **corrispondono alla fonte riga per riga** (0 differenze su gol/date/tiri/quote/xG); trovate **7 anomalie reali**, tutte nella fonte, 2 da correggere |
+| 1 | **Audit dei dati esistenti** | [`report/01_audit_dati.md`](report/01_audit_dati.md) | i dati **corrispondono alla fonte riga per riga** (0 differenze su gol/date/tiri/quote/xG); trovate **8 anomalie reali**, tutte nella fonte |
 | 2 | **Stime: ritentare l'import del dato vero, e verificarle** | [`report/02_stime.md`](report/02_stime.md) | dato vero **ancora non procurabile** (4 vie battute, con prove); la stima **regge** a 8 prove di falsificazione; 3 precisazioni da riportare |
 | 3 | **Import Bundesliga + Ligue 1** | [`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) | fatti: **2.754 + 3.097 partite**, 38 colonne identiche alle altre leghe, audit superato |
 | 4 | **Istruttoria delle decisioni aperte** | [`report/04_decisioni.md`](report/04_decisioni.md) | Union-Bochum: partita **giocata per intero**, 1-1 sul campo, dati completi; valori rosa 2025-26: **recuperati da Transfermarkt** (16 celle) con la scala misurata; re-import del dataset: via **chiusa** (upstream fermo) |
@@ -35,6 +35,7 @@ misurato, registrare anche gli errori).
 | 6 | **Tranche 3 — il playbook sulle leghe nuove** | [`report/06_tranche3.md`](report/06_tranche3.md) | il DC batte la baseline e non il mercato (gap +0.018/+0.019, dentro l'attesa); il market-implied batte il DC su **15/15** mercati; curve di taratura **piatte**; φ35 non conclusiva in nessuna lega |
 
 | 7 | **Righe corrotte: recupero, ritiro di un errore, stima** | [`report/07_dati_corrotti.md`](report/07_dati_corrotti.md) | una mia «correzione» era un **falso positivo** (autogol) ed è stata ritirata; le 8 quote non sono recuperabili da nessuna fonte lecita → **stimate** con MAE 0.0267 contro 0.0743 di baseline |
+| 8 | **I buchi: quanti, dove, come si chiudono** | [`report/08_buchi.md`](report/08_buchi.md) | 7.353 celle vuote su 612.218 (1.20%), ma il **99.3% è un buco solo** (O/U chiusura 2017-19, assente alla fonte per tutte e 5 le leghe); tolto quello restano **49 celle**, ognuna con nome e causa. Trovato e chiuso un buco **travestito da dato** (xG segnaposto) |
 
 ## Il fatto nuovo che ha cambiato le regole
 
@@ -57,8 +58,8 @@ per **bloccati** (403). **Oggi rispondono 200.** Sono raggiungibili anche
 
 ```
 cantiere/
-  REGOLE.md         le regole decise durante il lavoro (R1-R5)
-  report/           i sette report (sopra)
+  REGOLE.md         le regole decise durante il lavoro (R1-R6)
+  report/           gli otto report (sopra)
   patch/            proposte di modifica al codice di produzione, non applicate
   scripts/
     fetch_sources.py         scarica football-data + Understat (5 leghe x 9 stagioni)

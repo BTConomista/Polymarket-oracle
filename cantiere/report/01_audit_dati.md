@@ -37,22 +37,27 @@ conta davvero** — non «lo snapshot è internamente coerente?» ma «lo snapsh
 | **A. interno** | schema, duplicati, girone all'italiana, range, copertura, coerenza gol↔risultato, overround, nomi squadra | `audit_snapshots.py` |
 | **B. esterno** | confronto **riga per riga** con football-data ri-scaricato oggi; le 10 colonne quota **ri-derivate** con il codice di produzione (`loader._odds_from_raw`) | idem |
 | **C. indipendente** | i **gol secondo Understat** (fonte terza) contro quelli dello snapshot | idem |
-| **D. avversariale** | «e se la fonte fosse sbagliata?»: margini impossibili, incoerenza 1X2↔O/U, fisica (gol > tiri in porta), impronte-quota duplicate, riposo, xG impossibile | `audit_anomalie.py` |
+| **D. avversariale** | «e se la fonte fosse sbagliata?»: margini impossibili, incoerenza 1X2↔O/U, fisica (gol > tiri in porta), impronte-quota duplicate, riposo, xG impossibile, **xG segnaposto** (§4.8: un dato che la fonte ha inventato al posto della misura — l'unico livello che nemmeno B e C possono vedere) | `audit_anomalie.py` |
 
 Provenienza tracciata: `cantiere/data/fonti/manifest.json` registra URL,
 timestamp UTC, byte e **SHA256** di ognuno dei 90 file scaricati.
 
 ## 3 · Esito dei controlli
 
-23 controlli × 5 leghe. Riassunto (dettaglio in `cantiere/out/audit_*.json`):
+23-24 controlli × 5 leghe. Riassunto (dettaglio in `cantiere/out/audit_*.json`):
 
 | lega | FAIL | WARN | note |
 |---|--:|--:|---|
 | serie_a | 0 | 1 | data discordante Udinese-Roma (§4.2) |
 | premier_league | 1 | 0 | ordine colonne (§4.6) |
 | la_liga | 1 | 0 | ordine colonne (§4.6) |
-| bundesliga | 1 | 0 | risultato assegnato Union-Bochum (§4.3) |
+| bundesliga | 1 → **0** | 0 | risultato assegnato Union-Bochum (§4.3), poi corretto |
 | ligue_1 | 0 | 2 | xG mancante + date discordanti (§4.7) |
+
+Colonna FAIL/WARN = esito del **primo** giro. Dopo le correzioni del cantiere
+(§4.1, §4.3, §4.8) le due leghe nuove sono a **0 FAIL**; i FAIL di Premier/Liga
+(ordine colonne) e il WARN Serie A restano perché toccano file fuori dal
+cantiere (regola R4 → tranche 2).
 
 **I controlli che contano sono tutti verdi, su tutte e 5 le leghe:**
 
@@ -79,7 +84,7 @@ squadre con due gare lo stesso giorno (0), nomi squadra quasi-duplicati (0).
 
 ---
 
-## 4 · Le 7 anomalie trovate (tutte reali, tutte nella fonte)
+## 4 · Le 8 anomalie trovate (tutte reali, tutte nella fonte)
 
 ### 4.1 · 11 righe con margine IMPOSSIBILE nella linea O/U 2017-19 → **da correggere**
 
@@ -227,6 +232,38 @@ non lo fa).
   Jesus: 1 gol, 0 tiri in porta). Zero casi dell'anomalia opposta (tiri in porta
   > tiri), che sarebbe invece un errore vero.
 
+### 4.8 · Holstein Kiel-Bochum 09/02/2025: un xG **finto** che sembrava vero → **corretto**
+
+Il caso opposto al §4.4, e più insidioso: lì un dato *strano* era giusto, qui un
+dato **normalissimo** era falso. Nessuno dei controlli precedenti poteva vederlo,
+perché il valore **coincide con la fonte**: era la fonte a non avere il dato.
+
+Understat non ha mai acquisito questa partita — la lista tiro-per-tiro
+(`getMatchData/27930`) è **vuota su entrambi i lati**, mentre football-data conta
+3 + 6 tiri in porta e i gol sono 2-2. Al posto della misura la fonte ha scritto
+valori di comodo, tutti riconoscibili solo se messi in fila:
+
+| campo | valore pubblicato | cosa tradisce |
+|---|---|---|
+| `xG` | **2.0 / 2.0** | interi *identici ai gol* su entrambe le squadre: un modello xG non produce mai questo |
+| `npxG` | 1.25 / 2.0 | gol meno un rigore forfettario (0.75), non una somma di tiri |
+| `ppda` | `att=0, def=0` | contatori azzerati → NaN nello snapshot |
+| `deep` | 0 / 0 | idem |
+| `forecast` | 0 / 1 / 0 | previsione degenere della fonte stessa |
+
+**Fatto:** portati a NaN `home/away_xg`, `home/away_npxg`, `home/away_deep`
+(registro, regola R3). Il modello scarta le righe senza segnale secondario
+(`dropna` in `dixon_coles._fit`), quindi la partita **continua a contare nel
+modello-gol** e smette di iniettare un xG inventato.
+
+**Il controllo che ora lo intercetta** (`audit_anomalie.check_xg_segnaposto`,
+n. 7): candidati = `deep = 0` su *entrambe* le squadre (4 casi su 15.788 — filtro
+economico, un segnaposto lo soddisfa sempre); verdetto = lista tiri **vuota**
+mentre gol o tiri in porta esistono. Esito: **1 segnaposto** (questo), gli altri
+3 candidati verificati e **legittimi** (West Brom-West Ham e West Ham-Swansea
+2017, Reims-Lille 2020: tiri regolarmente presenti, erano solo partite sterili).
+Dopo la correzione: **0 segnaposto su 5 leghe**.
+
 ---
 
 ## 5 · Cosa è stato provato e NON è risultato sbagliato
@@ -241,8 +278,9 @@ errore **respinte dai dati**:
   ri-derivate dal grezzo coincidono al bit;
 - «i risultati potrebbero essere sbagliati alla fonte» → **no**: confermati da
   una seconda fonte indipendente (Understat) su 15.787 partite su 15.788;
-- «gli xG a zero sono buchi mascherati» → **no** in 10 casi su 11 (0 tiri
-  confermati dalla fonte indipendente); sì in 1 (§4.4);
+- «gli xG a zero sono buchi mascherati» → **no**, tutti e 11 legittimi (0 tiri
+  confermati sul dato tiro-per-tiro, autogol inclusi — §4.4). Il buco mascherato
+  c'era, ma altrove e travestito da dato *normale*: §4.8;
 - «potrebbero esserci quote copiate da una partita all'altra» → **no**: zero
   impronte-quota duplicate nello stesso giorno;
 - «il calendario di club potrebbe gonfiare il riposo» → **no**: `rest_days_full`

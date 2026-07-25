@@ -24,6 +24,12 @@ Controlli (ognuno con la sua soglia motivata):
      accorciare la pausa).
   6. xG IMPOSSIBILE — xG negativo, o gol molto sopra/sotto l'xG oltre i limiti
      fisici plausibili.
+  7. xG SEGNAPOSTO — il caso opposto e piu' insidioso del 6: un xG *plausibile*
+     che pero' non e' una misura. Se la fonte non ha acquisito la partita puo'
+     scriverci dentro un valore di comodo (tipicamente xG = gol esatti) invece
+     di lasciare vuoto. Nessun confronto con la fonte lo scopre — il dato la
+     rispecchia fedelmente. Lo si smaschera solo scendendo al dato
+     tiro-per-tiro: lista tiri VUOTA mentre gol/tiri esistono altrove.
 
 Uso: python cantiere/scripts/audit_anomalie.py
 """
@@ -286,11 +292,53 @@ def check_xg(df: pd.DataFrame, league: str) -> list[dict]:
     return bad
 
 
+def check_xg_segnaposto(df: pd.DataFrame, league: str) -> list[dict]:
+    """xG PRESENTE ma NON MISURATO (segnaposto della fonte).
+
+    Il controllo 6 cerca l'xG *impossibile*. Questo cerca il caso opposto e piu'
+    insidioso: un xG perfettamente plausibile che pero' non e' il risultato di
+    una misura. Quando Understat non acquisisce una partita, invece di lasciare
+    il campo vuoto ci scrive un valore di comodo -- tipicamente xG = gol esatti.
+    Nessun confronto snapshot-vs-fonte puo' scoprirlo: il dato E' quello della
+    fonte. L'unico giudice e' il dato tiro-per-tiro.
+
+    Candidati (filtro economico, per non scaricare 15.788 partite): `deep = 0`
+    su ENTRAMBE le squadre -- nessuna delle due ha mai portato palla in zona
+    pericolosa. E' gia' raro di suo (4 casi su 5 leghe) e un segnaposto lo
+    soddisfa sempre, perche' i contatori azzerati vengono da li'.
+
+    Verdetto: lista tiri VUOTA su entrambi i lati mentre gol o tiri in porta
+    esistono -> il record e' un segnaposto. Se invece i tiri ci sono, il
+    `deep = 0` e' una partita davvero sterile e il dato e' buono.
+    """
+    ids = _understat_match_ids(league)
+    cand = df[(df["home_deep"] == 0) & (df["away_deep"] == 0)]
+    out = []
+    for r in cand.itertuples():
+        key = (r.season, r.home_team, r.away_team)
+        data = _match_shots(ids[key]) if key in ids else None
+        tiri_h = tiri_a = None
+        if data:
+            tiri_h, tiri_a = len(data["shots"]["h"]), len(data["shots"]["a"])
+        gol = int(r.home_goals) + int(r.away_goals)
+        sot = float(np.nan_to_num(r.home_sot) + np.nan_to_num(r.away_sot))
+        segnaposto = bool(data and tiri_h == 0 and tiri_a == 0 and (gol > 0 or sot > 0))
+        out.append({"league": league, "season": r.season, "date": str(r.date.date()),
+                    "match": f"{r.home_team}-{r.away_team}",
+                    "gol": f"{int(r.home_goals)}-{int(r.away_goals)}",
+                    "xg": f"{r.home_xg}-{r.away_xg}",
+                    "tiri_understat": None if data is None else f"{tiri_h}-{tiri_a}",
+                    "tiri_in_porta_football_data": sot,
+                    "verificato_tiro_per_tiro": bool(data),
+                    "SEGNAPOSTO": segnaposto})
+    return out
+
+
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)
     report: dict[str, list | dict] = {k: [] for k in
                                       ("margini", "coerenza", "fisica", "impronte",
-                                       "riposo", "xg")}
+                                       "riposo", "xg", "xg_segnaposto")}
     for league in LEAGUES:
         print(f"\n=== {league} ===")
         df = pd.read_csv(SNAP_DIR[league] / f"{league}_matches.csv",
@@ -316,6 +364,11 @@ def main() -> int:
         print(f"  6. xG a zero/estremi: {len(x)} (di cui IMPOSSIBILI, "
               f"cioe' con gol o tiri: {n_imp})")
         report["xg"] += x
+        sp = check_xg_segnaposto(df, league)
+        n_sp = sum(1 for i in sp if i["SEGNAPOSTO"])
+        print(f"  7. xG candidati segnaposto (deep=0 su entrambi): {len(sp)} "
+              f"(di cui SEGNAPOSTO confermati, con lista tiri vuota: {n_sp})")
+        report["xg_segnaposto"] += sp
 
     (OUT / "audit_anomalie.json").write_text(json.dumps(report, indent=2, default=str))
     print("\n=== DETTAGLIO ANOMALIE ===")

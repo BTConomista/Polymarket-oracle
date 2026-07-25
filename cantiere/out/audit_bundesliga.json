@@ -203,7 +203,7 @@
     {
       "id": "B0.correzioni_dichiarate",
       "level": "INFO",
-      "msg": "8 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2",
+      "msg": "9 righe si discostano VOLUTAMENTE dalla fonte (registro cantiere/data/correzioni_dichiarate.csv, regola R1): escluse dal confronto B2",
       "data": {
         "righe": [
           {
@@ -276,6 +276,15 @@
             "home_goals": 1,
             "away_goals": 1,
             "home_goals_src": 0,
+            "away_goals_src": 2
+          },
+          {
+            "season": "2425",
+            "home_team": "Holstein Kiel",
+            "away_team": "Bochum",
+            "home_goals": 2,
+            "away_goals": 2,
+            "home_goals_src": 2,
             "away_goals_src": 2
           }
         ]
