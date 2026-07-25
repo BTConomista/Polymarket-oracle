@@ -163,3 +163,54 @@ def test_simulate_season_rejects_unknown_team():
     with pytest.raises(ValueError, match="assenti dal modello"):
         simulate_season(_Partial(), round_robin(["A", "B", "C"]), ["A", "B", "C"],
                         n_sims=10, seed=0)
+
+
+# --- il ramo degli spareggi DENTRO la simulazione (audit Fase 92) ------------
+# Lo stub principale fa vincere sempre A 1-0: tie_rate=0 e `_resolve_sim_tie`
+# non parte MAI. Serve un modello che FORZI la parita' in testa, altrimenti
+# 30 righe di codice (e il fix rank/campione della Fase 90) restano non eseguite.
+# I risultati sono gli STESSI del fixture gia' validato per final_table sopra:
+# A e B chiudono a 8 punti, A vince gli scontri diretti (4 a 1), B ha la
+# differenza reti generale migliore (+5 contro +1).
+_TIE_SCORES = {
+    ("A", "B"): (1, 0), ("B", "A"): (0, 0),
+    ("A", "C"): (0, 0), ("C", "A"): (0, 0),
+    ("A", "D"): (0, 0), ("D", "A"): (0, 0),
+    ("B", "C"): (4, 0), ("C", "B"): (0, 0),
+    ("B", "D"): (3, 0), ("D", "B"): (1, 0),
+    ("C", "D"): (0, 0), ("D", "C"): (0, 0),
+}
+
+
+class _TieModel:
+    """Ogni incontro ha un punteggio DETERMINISTICO (probabilita' 1)."""
+    fitted = True
+    max_goals = 5
+    attack = {"A": 0.0, "B": 0.0, "C": 0.0, "D": 0.0}
+
+    def predict_match(self, home, away, features=None):
+        M = np.zeros((6, 6))
+        hg, ag = _TIE_SCORES[(home, away)]
+        M[hg, ag] = 1.0
+        return type("P", (), {"score_matrix": M})()
+
+
+def test_simulated_tie_is_resolved_by_league_rule():
+    """A e B finiscono a pari punti in testa: la Serie A usa la classifica avulsa
+    (A avanti, 4 punti a 1 negli scontri diretti), la Premier la differenza reti
+    generale (B avanti, +5 contro +1). Senza questo test il ramo `_resolve_sim_tie`
+    non veniva MAI eseguito e le mutazioni che lo cancellano passavano."""
+    teams = ["A", "B", "C", "D"]
+    fx = round_robin(teams)
+    out_it = simulate_season(_TieModel(), fx, teams, league_key="serie_a",
+                             n_sims=40, seed=1)
+    out_en = simulate_season(_TieModel(), fx, teams, league_key="premier_league",
+                             n_sims=40, seed=1)
+    ia, ib = teams.index("A"), teams.index("B")
+    assert out_it["tie_rate"] == 1.0, "il fixture non produce piu' la parita' in testa"
+    assert out_it["points"][:, ia].max() == out_it["points"][:, ib].max() == 8
+    assert out_it["champion_prob"][ia] == 1.0, "classifica avulsa non applicata (Serie A)"
+    assert out_en["champion_prob"][ib] == 1.0, "differenza reti non applicata (Premier)"
+    # e `rank` deve seguire il campione, non la sola differenza reti
+    assert (out_it["rank"][:, ia] == 1).all()
+    assert (out_en["rank"][:, ib] == 1).all()

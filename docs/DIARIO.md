@@ -6047,8 +6047,15 @@ iperparametro (il DC lo fitta). Griglie: δ {0, 0.15, 0.23, 0.33, 0.45}, emivita
 
 **Lezione / cosa ne consegue.**
 1. **Gli iperparametri sono PIATTI su entrambe le leghe** — tutti i Δ entro
-   ±0.0005, nessun CI conclusivo. È la Fase 8 della Serie A che si ripete: le
-   leve sono ortogonali e la config è già vicina all'ottimo. Il gap col mercato
+   ±0.0005, nessun CI conclusivo… **con una eccezione, corretta dall'audit della
+   Fase 92: l'EMIVITA non è piatta.** Il registro (`fase57_retune`) dà per la
+   Premier `half_life_730 = +0.005686` con `p_better = 0.0001`, cioè **11 volte**
+   il limite dichiarato e **conclusivo**, non «nessun CI conclusivo» (è il 27%
+   del gap col mercato di quella lega); in Liga +0.001544. Tutti gli altri Δ sono
+   effettivamente ≤0.000505. La conclusione operativa non cambia — l'emivita
+   adottata resta 365g, che è la migliore — ma la frase «tutti i Δ entro ±0.0005»
+   era falsa e nascondeva l'unico asse su cui la ri-taratura *conta*.
+   Al netto di questo: le leve sono ortogonali e la config è già vicina all'ottimo. Il gap col mercato
    (Premier +0.0207, Liga +0.0162) **non si chiude ritarando**: è informazione,
    non cattiva calibrazione. La stessa conclusione della Serie A, confermata su
    due leghe indipendenti.

@@ -181,5 +181,11 @@ def add_squad_values(matches: pd.DataFrame, league_key: str) -> pd.DataFrame:
     log.info("player_scores %s: %d/%d partite con valore rosa su entrambi i "
              "lati", league_key, int(covered.sum()), n_before)
     # Ordine colonne originale (il drop+merge sposterebbe le squad_value in
-    # fondo; lo snapshot ha un ordine stabile e testato).
-    return out[list(matches.columns)]
+    # fondo; lo snapshot ha un ordine stabile e testato). ATTENZIONE (audit
+    # Fase 92): se lo snapshot in ingresso NON aveva gia' le colonne squad_value
+    # — caso reale dopo un rebuild — reindicizzare sulle sole colonne originali
+    # BUTTAVA VIA quelle appena calcolate, e lo snapshot veniva riscritto vuoto
+    # prima che qualcuno se ne accorgesse.
+    cols = list(matches.columns) + [c for c in ("home_squad_value", "away_squad_value")
+                                    if c not in matches.columns]
+    return out[cols]

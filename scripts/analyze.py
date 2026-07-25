@@ -51,7 +51,11 @@ def _promoted_teams(league_key: str, test_season: str) -> set[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Analisi errori del backtest.")
     parser.add_argument("--predictions", default="outputs/backtest_predictions.csv")
-    parser.add_argument("--league", default="serie_a")
+    parser.add_argument("--league", default="serie_a",
+                        help="DEVE coincidere con la lega del backtest che ha "
+                             "prodotto il CSV: le squadre di un'altra lega non "
+                             "vengono riconosciute e le diagnostiche per-squadra "
+                             "escono vuote in silenzio (audit Fase 92)")
     parser.add_argument("--test-season", default=None,
                         help="default: la stagione salvata nel CSV delle predizioni "
                              "(fallback: l'ultima in sources.SEASONS)")

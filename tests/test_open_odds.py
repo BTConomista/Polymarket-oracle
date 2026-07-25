@@ -327,3 +327,58 @@ def test_snapshot_apertura_plausibile(snapshot):
     quote = pd.concat([snapshot["odds_home_open"], snapshot["odds_draw_open"],
                        snapshot["odds_away_open"]]).dropna()
     assert (quote > 1.0).all() and (quote < 100).all()
+
+
+# --------------------------------------------------------------------------- #
+# ROI dei value-bet: il VALORE, non solo la forma (audit Fase 92).
+# Il ROI finisce in ogni riga del registro, ma l'unico assert esistente
+# confrontava la funzione con se stessa: invertendo il segno del profitto o la
+# direzione dell'edge (market-model invece di model-market) la suite restava
+# verde. Qui si costruisce un caso a mano dove il risultato e' calcolabile a
+# penna, cosi' una mutazione del segno o della direzione fallisce.
+# --------------------------------------------------------------------------- #
+def _roi_fixture():
+    """3 partite. Il modello vede valore SOLO sulla casa della prima e della
+    seconda (edge +0.20 e +0.20); la terza e' sotto soglia e non va scommessa.
+    Quota 3.0: la prima e' vinta (+2.0), la seconda persa (-1.0).
+    Attesi: n=2, profitto +1.0 su stake 2.0  ->  ROI +50%."""
+    return pd.DataFrame([
+        # quote 3.0/3.0/3.0 -> mercato devigato 1/3 su ogni esito
+        dict(result="H", odds_home=3.0, odds_draw=3.0, odds_away=3.0,
+             m_home=0.533, m_draw=0.234, m_away=0.233),
+        dict(result="A", odds_home=3.0, odds_draw=3.0, odds_away=3.0,
+             m_home=0.533, m_draw=0.234, m_away=0.233),
+        dict(result="H", odds_home=3.0, odds_draw=3.0, odds_away=3.0,
+             m_home=0.353, m_draw=0.324, m_away=0.323),   # edge +0.02 < soglia
+    ])
+
+
+def test_value_bet_roi_value_and_direction():
+    df = _roi_fixture()
+    n, roi = experiment_log.value_bet_roi(df, threshold=0.05)
+    assert n == 2, f"scommesse selezionate {n}, attese 2 (solo dove edge > soglia)"
+    assert roi == pytest.approx(50.0, abs=0.5), \
+        f"ROI {roi:.1f}%, atteso +50% (vinta a 3.0 = +2, persa = -1, su stake 2)"
+
+
+def test_value_bet_roi_edge_direction_is_model_minus_market():
+    """Se la direzione dell'edge fosse invertita (mercato - modello), verrebbero
+    scommessi gli esiti che il modello ritiene MENO probabili del mercato."""
+    df = _roi_fixture()
+    # qui il modello e' SOTTO il mercato su ogni esito tranne la casa:
+    # con la direzione giusta si scommette solo la casa, con quella invertita
+    # si scommetterebbero pareggio e ospite.
+    n, _ = experiment_log.value_bet_roi(df, threshold=0.05)
+    assert n == 2
+    df2 = df.copy()
+    df2[["m_home", "m_draw", "m_away"]] = df2[["m_away", "m_draw", "m_home"]].to_numpy()
+    n2, _ = experiment_log.value_bet_roi(df2, threshold=0.05)
+    assert n2 == 2, "scambiando casa/ospite nel modello devono cambiare le scommesse, non il numero"
+
+
+def test_value_bet_roi_no_bets_when_model_equals_market():
+    """Modello = mercato -> nessun edge -> nessuna scommessa e ROI 0."""
+    df = _roi_fixture()
+    df[["m_home", "m_draw", "m_away"]] = 1 / 3
+    n, roi = experiment_log.value_bet_roi(df, threshold=0.05)
+    assert n == 0 and roi == 0.0

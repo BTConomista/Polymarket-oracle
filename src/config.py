@@ -69,3 +69,49 @@ def league_config(league_key: str) -> dict:
     """Config ufficiale di una lega. Ignota → SERIE_A come fallback esplicito,
     ma va TARATA prima di fidarsi dei numeri su una lega nuova (§7)."""
     return LEAGUE_CONFIGS.get(league_key, SERIE_A)
+
+
+# --------------------------------------------------------------------------- #
+# Costanti del MOTORE market-implied, per lega (audit Fase 92).
+#
+# Fino alla Fase 92 `predict.py` applicava a TUTTE le leghe le costanti tarate
+# sulla chiusura Serie A (θ=1.225, θ_DC=1.138, φ0=0.30, κ=1.5, sharpen_1x2),
+# benche' la mappa per-lega fosse gia' stata misurata. Costo verificato in
+# Premier: 1X2 0.9665 col router contro 0.9640 del motore liscio (e 0.9639 del
+# mercato), pareggio previsto +2.7pp sopra il realizzato — e il danno viene
+# dalla φ35, non dal θ.
+#
+# Regola: qui stanno solo le leve ADOTTATE. Quelle misurate positive ma ancora
+# in panchina (PANCHINA.md) restano OFF di default, anche se promettenti.
+#   Serie A  — tutto adottato (Fasi 41/44/51/52).
+#   Premier  — motore LISCIO: la Fase 81 ha misurato che e' gia' l'ottimo su
+#              ogni asse (ρ*=−0.06, θ*≈1, φ*=0); la Fase 79 che la φ35 li'
+#              peggiora (il DC sovra-stima gia' i pareggi equilibrati inglesi).
+#   La Liga  — motore LISCIO: θ≈1.2 (Fase 81) e φ35-sola sul GG (Fase 80) sono
+#              misurate positive ma sono in PANCHINA, non adottate.
+# Cambiare uno stato qui = spostare una voce in PANCHINA.md, con la fase.
+MARKET_ENGINE: dict[str, dict] = {
+    "serie_a": {
+        "dp_theta": 1.225,      # Fase 52 (router v3 sul path market-implied)
+        "dp_theta_dc": 1.138,   # Fase 52 (router v3 sul path DC)
+        "phi0": 0.30,           # Fase 39/44 (φ35 sul market-implied)
+        "kappa": 1.5,
+        "sharpen_1x2": True,    # Fase 51 (dp_lvl: batte la chiusura in log-loss)
+    },
+    "premier_league": {
+        "dp_theta": None, "dp_theta_dc": None,
+        "phi0": 0.0, "kappa": 0.0, "sharpen_1x2": False,
+    },
+    "la_liga": {
+        "dp_theta": None, "dp_theta_dc": None,
+        "phi0": 0.0, "kappa": 0.0, "sharpen_1x2": False,
+    },
+}
+
+
+def market_engine(league_key: str) -> dict:
+    """Costanti del motore market-implied per la lega. Ignota -> motore LISCIO
+    (nessuna correzione), che e' la scelta prudente: le correzioni hanno segno
+    e livello per-lega e vanno misurate prima di attivarle (§7)."""
+    return MARKET_ENGINE.get(league_key, dict(
+        dp_theta=None, dp_theta_dc=None, phi0=0.0, kappa=0.0, sharpen_1x2=False))

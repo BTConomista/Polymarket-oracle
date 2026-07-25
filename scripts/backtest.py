@@ -289,6 +289,13 @@ def main() -> None:
         "covariates": list(args.covariates),
         "promoted_prior": (prior[0] if prior else None),
         "dynamic_rho": args.dynamic_rho,
+        # audit Fase 92: senza queste quattro, due run con leve diverse
+        # diventavano indistinguibili nel registro (un record del 2026-07-13
+        # sembrava irriproducibile ed era solo una config incompleta).
+        "draw_balance": bool(args.draw_balance),
+        "draw_inflation": bool(args.draw_inflation),
+        "train_window_days": args.train_window_days,
+        "drop_train_seasons": list(args.drop_train_seasons or ()),
     }
     all_matches = loader.load_league(args.league)
     record = experiment_log.make_record(

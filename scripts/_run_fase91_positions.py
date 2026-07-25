@@ -132,6 +132,22 @@ def _logistic_loo(z, y, groups):
     return out
 
 
+def _cluster_ci(values, groups, n_boot=10000, seed=1, alpha=0.05):
+    """IC bootstrap A GRAPPOLI: ricampiona le stagioni-lega intere, non le righe.
+    Le 20 squadre di una stessa classifica sono legate da vincoli di somma
+    (4 top-4 e 3 retrocesse per stagione): trattarle come indipendenti
+    sottostima la varianza (audit Fase 92)."""
+    values = np.asarray(values, float)
+    uniq = np.unique(groups)
+    by_g = [values[groups == g] for g in uniq]
+    rng = np.random.default_rng(seed)
+    means = np.empty(n_boot)
+    for b in range(n_boot):
+        pick = rng.integers(0, len(uniq), size=len(uniq))
+        means[b] = np.concatenate([by_g[i] for i in pick]).mean()
+    return float(np.quantile(means, alpha / 2)), float(np.quantile(means, 1 - alpha / 2))
+
+
 def report(df: pd.DataFrame) -> dict:
     groups = (df["league"] + df["season"]).to_numpy()
     z = df["z_prev"].to_numpy()
@@ -156,8 +172,17 @@ def report(df: pd.DataFrame) -> dict:
                            for bb, yy in zip(pers, y)]) \
             - np.array([-(yy * np.log(max(pp, 1e-9)) + (1 - yy) * np.log(max(1 - pp, 1e-9)))
                         for pp, yy in zip(p, y)])
-        lo_b, hi_b = bootstrap_ci(d_base)
-        lo_p, hi_p = bootstrap_ci(d_pers)
+        # IC A GRAPPOLI: le 480 righe NON sono indipendenti — dentro ogni
+        # stagione-lega ci sono esattamente 4 top-4 e 3 retrocesse (vincolo di
+        # somma), quindi un bootstrap iid sottostima la varianza. Si ricampionano
+        # le 24 STAGIONI-LEGA intere (audit Fase 92).
+        lo_b, hi_b = _cluster_ci(d_base, groups)
+        lo_p, hi_p = _cluster_ci(d_pers, groups)
+        # test dei segni sulle stagioni-lega: non assume nulla sulla forma
+        per_season = np.array([d_pers[groups == g].mean() for g in np.unique(groups)])
+        n_pos = int((per_season > 0).sum())
+        from scipy.stats import binomtest
+        p_sign = float(binomtest(n_pos, len(per_season), 0.5).pvalue)
         e = ece(p, y)
         print(f"\n  {label}   (tasso base reale {y.mean()*100:.1f}%)")
         print(f"    MODELLO          log-loss {m['logloss']:.4f}   Brier {m['brier']:.4f}   ECE {e:.4f}")
@@ -165,8 +190,10 @@ def report(df: pd.DataFrame) -> dict:
         print(f"    persistenza LOO  log-loss {mp['logloss']:.4f}   Brier {mp['brier']:.4f}")
         print(f"    guadagno vs tasso base : {d_base.mean():+.4f}  IC95% [{lo_b:+.4f}, {hi_b:+.4f}]"
               f"  -> {'CONCLUSIVO' if lo_b > 0 else 'non conclusivo'}")
-        print(f"    guadagno vs persistenza: {d_pers.mean():+.4f}  IC95% [{lo_p:+.4f}, {hi_p:+.4f}]"
-              f"  -> {'CONCLUSIVO' if lo_p > 0 else 'non conclusivo'}")
+        print(f"    guadagno vs persistenza: {d_pers.mean():+.4f}  IC95% a grappoli "
+              f"[{lo_p:+.4f}, {hi_p:+.4f}]  -> {'CONCLUSIVO' if lo_p > 0 else 'non conclusivo'}")
+        print(f"      test dei segni sulle stagioni-lega: meglio in {n_pos}/{len(per_season)}"
+              f"  p={p_sign:.4f}  -> {'CONCLUSIVO' if p_sign < 0.05 else 'non conclusivo'}")
         print("    calibrazione per fascia (dichiarato -> realizzato):")
         for a, b in [(0, .1), (.1, .3), (.3, .5), (.5, .7), (.7, .9), (.9, 1.01)]:
             mm = (p >= a) & (p < b)
@@ -177,6 +204,7 @@ def report(df: pd.DataFrame) -> dict:
         rep[key] = dict(model=m, base=mb, persistence=mp, ece=e,
                         gain_vs_base=float(d_base.mean()), ci_base=[lo_b, hi_b],
                         gain_vs_persistence=float(d_pers.mean()), ci_persistence=[lo_p, hi_p],
+                        sign_test=[n_pos, int(len(per_season)), p_sign],
                         base_rate=float(y.mean()))
         rep[key]["by_league"] = {}
         for lg in LEAGUES:

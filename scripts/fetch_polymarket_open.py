@@ -51,6 +51,8 @@ GAMMA_URL = "https://gamma-api.polymarket.com/events/keyset"
 _SUB_SUFFIXES = (
     "more-markets", "halftime-result", "second-half-result",
     "exact-score", "first-to-score", "corners", "cards",
+    "total",          # "Total Corners" ha slug ...-total (audit Fase 92: senza
+                      # questo il conteggio delle partite usciva gonfiato del ~67%)
 )
 
 

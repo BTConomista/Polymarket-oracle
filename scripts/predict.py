@@ -26,7 +26,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.config import league_config               # noqa: E402
+from src.config import league_config, market_engine  # noqa: E402
 from src.data import loader                        # noqa: E402
 from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
@@ -118,9 +118,12 @@ def main() -> None:
     print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}   "
           f"[φ35: φ0={m.draw_phi0:.3f}, κ={m.draw_kappa:.3f}]")
     lam_dc, mu_dc = m.expected_goals(args.home, args.away)
-    # Router v3 (Fase 52): marginali double-Poisson sotto-dispersi (θ_DC=1.138).
+    # Costanti del motore PER LEGA (Fase 92): fino ad allora si applicavano a
+    # ogni lega quelle della Serie A. In Premier il motore LISCIO e' l'ottimo
+    # misurato (Fase 81) e la φ35 peggiora (Fase 79).
+    eng = market_engine(args.league)
     d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=m.draw_phi0,
-                            kappa=m.draw_kappa, dp_theta=mi.DP_THETA_DC)
+                            kappa=m.draw_kappa, dp_theta=eng["dp_theta_dc"])
     _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (router v3: dp + forma per-mercato)",
                   rho=m.rho, matchday=args.matchday)
 
@@ -138,16 +141,21 @@ def main() -> None:
         # φ del mercato: valori rappresentativi (Fase 39); il guadagno di un fit
         # esatto e' trascurabile (Fase 44).
         # Router v3 (Fase 52): θ del mercato = 1.225 (DP_THETA).
-        d = mi.price_markets(lam, mu, rho=-0.06, phi0=0.30, kappa=1.5,
-                             dp_theta=mi.DP_THETA)
+        d = mi.price_markets(lam, mu, rho=-0.06, phi0=eng["phi0"],
+                             kappa=eng["kappa"], dp_theta=eng["dp_theta"])
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
         _show_markets(d, "Modello 2: market-implied + φ35 (router v3: dp + forma per-mercato)",
                       rho=-0.06, matchday=args.matchday, nudge=False)
-        # 1X2 "affinato" dp_lvl (Fase 51): sotto-dispersione + livelli dei tassi.
-        # Batte la chiusura in log-loss (CI conclusivo) ma NON e' un edge di ROI.
-        sH, sD, sA = mi.sharpen_1x2(lam, mu)
-        print(f"\n  1X2 affinato (dp_lvl, Fase 51):  1 {sH:6.1%}   X {sD:6.1%}   "
-              f"2 {sA:6.1%}   [miglior stima; non un edge di scommessa]")
+        # 1X2 "affinato" dp_lvl (Fase 51): batte la chiusura in log-loss (CI
+        # conclusivo) ma SOLO in Serie A — la Fase 53 ha misurato che fuori non
+        # regge, quindi si mostra solo dove e' stato validato.
+        if eng["sharpen_1x2"]:
+            sH, sD, sA = mi.sharpen_1x2(lam, mu)
+            print(f"\n  1X2 affinato (dp_lvl, Fase 51):  1 {sH:6.1%}   X {sD:6.1%}   "
+                  f"2 {sA:6.1%}   [miglior stima; non un edge di scommessa]")
+        else:
+            print(f"\n  [motore LISCIO per {args.league}: dp/φ35/dp_lvl sono tarati o "
+                  f"validati solo sulla Serie A (Fasi 53/79/81) e restano off]")
 
 
 if __name__ == "__main__":
