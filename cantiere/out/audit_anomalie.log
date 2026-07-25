@@ -29,7 +29,7 @@
   3. anomalie fisiche (gol>tiri in porta, tiri in porta>tiri): 5 su 2754 righe grezze
   4. impronte-quota duplicate nello stesso giorno: 0
   5. riposo incoerente col calendario di campionato: 0
-  6. xG a zero/estremi: 1 (di cui IMPOSSIBILI, cioe' con gol o tiri: 0)
+  6. xG a zero/estremi: 2 (di cui IMPOSSIBILI, cioe' con gol o tiri: 0)
 
 === ligue_1 ===
   1. margini impossibili (>1.12): 0
@@ -66,14 +66,15 @@
     {"league": "serie_a", "season": "2324", "tipo": "gol>AST", "date": "05/05/2024", "match": "Milan-Genoa", "gol": 3, "sot": 2}
     {"league": "premier_league", "season": "1718", "tipo": "gol>HST", "date": "26/11/2017", "match": "Huddersfield-Man City", "gol": 1, "sot": 0}
 
-[xg] 10 casi:
-    {"league": "serie_a", "season": "1718", "date": "2018-04-17", "match": "Inter-Cagliari", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "serie_a", "season": "2021", "date": "2021-01-30", "match": "Inter-Benevento", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "serie_a", "season": "2122", "date": "2021-12-05", "match": "Juventus-Genoa", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "serie_a", "season": "2526", "date": "2026-05-10", "match": "Cremonese-Pisa", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "premier_league", "season": "1819", "date": "2019-03-02", "match": "Bournemouth-Man City", "side": "home", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "premier_league", "season": "1718", "date": "2018-03-10", "match": "Huddersfield-Swansea", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "la_liga", "season": "2021", "date": "2021-04-18", "match": "Ath Madrid-Eibar", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "la_liga", "season": "2425", "date": "2025-03-02", "match": "Barcelona-Sociedad", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "bundesliga", "season": "2425", "date": "2024-09-21", "match": "Werder Bremen-Bayern Munich", "side": "home", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
-    {"league": "ligue_1", "season": "2021", "date": "2021-05-01", "match": "Lille-Nice", "side": "away", "gol": 0, "xg": 0.0, "tiri": 0.0, "IMPOSSIBILE": false}
+[xg] 11 casi:
+    {"league": "serie_a", "season": "1718", "date": "2018-04-17", "match": "Inter-Cagliari", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "serie_a", "season": "2021", "date": "2021-01-30", "match": "Inter-Benevento", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "serie_a", "season": "2122", "date": "2021-12-05", "match": "Juventus-Genoa", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "serie_a", "season": "2526", "date": "2026-05-10", "match": "Cremonese-Pisa", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "premier_league", "season": "1819", "date": "2019-03-02", "match": "Bournemouth-Man City", "side": "home", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "premier_league", "season": "1718", "date": "2018-03-10", "match": "Huddersfield-Swansea", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "la_liga", "season": "2021", "date": "2021-04-18", "match": "Ath Madrid-Eibar", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "la_liga", "season": "2425", "date": "2025-03-02", "match": "Barcelona-Sociedad", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "bundesliga", "season": "2021", "date": "2020-11-21", "match": "Bielefeld-Leverkusen", "side": "home", "gol": 1, "xg": 0.0, "tiri_football_data": 1.0, "tiri_understat": 0, "autogol_ricevuti": 1, "verificato_tiro_per_tiro": true, "IMPOSSIBILE": false}
+    {"league": "bundesliga", "season": "2425", "date": "2024-09-21", "match": "Werder Bremen-Bayern Munich", "side": "home", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}
+    {"league": "ligue_1", "season": "2021", "date": "2021-05-01", "match": "Lille-Nice", "side": "away", "gol": 0, "xg": 0.0, "tiri_football_data": 0.0, "tiri_understat": null, "autogol_ricevuti": 0, "verificato_tiro_per_tiro": false, "IMPOSSIBILE": false}

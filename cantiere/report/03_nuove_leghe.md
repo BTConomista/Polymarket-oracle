@@ -104,8 +104,10 @@ La chiusura O/U al ~76-78% è **lo stesso identico buco delle altre tre leghe**
    dell'utente lo snapshot porta il **risultato del campo, 1-1** (regola R1),
    con la correzione tracciata in `data/correzioni_dichiarate.csv`. Resta
    l'unica riga senza statistiche tiri (NaN dichiarato).
-5. **Bielefeld-Leverkusen 21/11/2020**: xG = 0 per una squadra che ha segnato →
-   buco Understat scritto come zero (Report 1 §4.4).
+5. **Bielefeld-Leverkusen 21/11/2020**: xG = 0 per una squadra che ha segnato —
+   sembra un buco, **non lo è**: il gol è un autogol avversario e il Bielefeld
+   non ha tirato (Report 7 §1). Utile saperlo: è il tipo di riga che fa scattare
+   i controlli automatici a vuoto.
 
 ## 5 · Lacune dichiarate (mai numeri inventati)
 

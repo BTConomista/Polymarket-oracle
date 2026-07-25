@@ -17,7 +17,10 @@ sono **proposte**, da eseguire solo quando si deciderà di unire i due filoni:
 progetto quando si integrerà) stanno in **[`REGOLE.md`](REGOLE.md)**: dato del
 campo e non del tribunale (R1), valore rosa da Transfermarkt dove la fonte
 primaria non copre (R2), nessuna modifica a mano ai dati (R3), isolamento (R4),
-anomalie sempre dichiarate (R5).
+anomalie sempre dichiarate (R5), e la **procedura per le partite con dati
+corrotti** (R6: spiegare prima di accusare, diagnosticare con informazione
+indipendente, cercare il dato vero nell'ordine giusto, stimare con errore
+misurato, registrare anche gli errori).
 
 ## I tre lavori, e dove leggerne l'esito
 
@@ -30,6 +33,8 @@ anomalie sempre dichiarate (R5).
 
 | 5 | **Tranche 1 — correzioni dati** | [`report/05_tranche1.md`](report/05_tranche1.md) | 8 linee O/U impossibili e 1 xG impossibile a NaN dichiarato; audit avversariale a **0 anomalie** sulle leghe nuove |
 | 6 | **Tranche 3 — il playbook sulle leghe nuove** | [`report/06_tranche3.md`](report/06_tranche3.md) | il DC batte la baseline e non il mercato (gap +0.018/+0.019, dentro l'attesa); il market-implied batte il DC su **15/15** mercati; curve di taratura **piatte**; φ35 non conclusiva in nessuna lega |
+
+| 7 | **Righe corrotte: recupero, ritiro di un errore, stima** | [`report/07_dati_corrotti.md`](report/07_dati_corrotti.md) | una mia «correzione» era un **falso positivo** (autogol) ed è stata ritirata; le 8 quote non sono recuperabili da nessuna fonte lecita → **stimate** con MAE 0.0267 contro 0.0743 di baseline |
 
 ## Il fatto nuovo che ha cambiato le regole
 
@@ -53,7 +58,7 @@ per **bloccati** (403). **Oggi rispondono 200.** Sono raggiungibili anche
 ```
 cantiere/
   REGOLE.md         le regole decise durante il lavoro (R1-R5)
-  report/           i sei report (sopra)
+  report/           i sette report (sopra)
   patch/            proposte di modifica al codice di produzione, non applicate
   scripts/
     fetch_sources.py         scarica football-data + Understat (5 leghe x 9 stagioni)
@@ -72,12 +77,14 @@ cantiere/
     tranche3_market_tracer.py  theta/tilt/phi0/ROI dal lato mercato
     tranche3_ritaratura.py   griglia delta/emivita/shrinkage per-lega
     tranche3_mercati.py      market-implied multi-mercato + leva phi35
+    stima_ou_corrotte.py     stima P(Over) dall'1X2 per le righe corrotte (R6)
   data/
     bundesliga_matches.csv       snapshot 38 colonne (2.754 partite)
     ligue_1_matches.csv          snapshot 38 colonne (3.097 partite)
     club_fixtures_*.csv          calendari di club completi
     correzioni_dichiarate.csv    registro delle correzioni (cosa, perche', fonte, stato)
     squad_value_2526_transfermarkt.csv   16 celle recuperate da Transfermarkt (applicate)
+    stime_ou_corrotte.csv        8 P(Over) stimate (probabilita', FUORI dagli snapshot)
     fonti/                       fonti grezze + manifest con SHA256
   out/              output di ogni run (json + log), rigenerabili
 ```

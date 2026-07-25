@@ -29,18 +29,25 @@ Il mercato si scarta **in blocco** (mai un solo lato), come già fa il guard
 esistente per l'overround < 1: 16 celle a NaN. Soglia 1.12, motivata dal fatto
 che nell'era `Avg` il massimo mai osservato su 12.457 righe è **1.0765**.
 
-### 1.2 · Un xG impossibile → NaN dichiarato
+### 1.2 · Un xG «impossibile» che impossibile non era → correzione RITIRATA
 
-Bielefeld-Leverkusen 21/11/2020: `home_xg` e `home_npxg` erano **0.0** per una
-squadra che ha **segnato 1 gol** e tirato 1 volta in porta. Lasciare 0.0
-significa dire al modello «zero occasioni create»: è un buco della fonte, non un
-valore.
+Avevo portato a NaN `home_xg`/`home_npxg` di Bielefeld-Leverkusen 21/11/2020
+(xG 0.0 con un gol segnato). Approfondendo su richiesta, il dato è risultato
+**corretto**: il gol era un **autogol del portiere avversario** e il Bielefeld
+non ha tirato nemmeno una volta. La correzione è stata **ritirata** e lo 0.0
+ripristinato; il registro conserva sia le righe sbagliate (`stato = ritirata`,
+col motivo) sia quelle di ripristino. Dettaglio in
+[`07_dati_corrotti.md`](07_dati_corrotti.md) §1.
+
+Il controllo automatico è stato corretto: ora verifica gli autogol sul dato
+tiro-per-tiro prima di dichiarare un'impossibilità.
 
 ### 1.3 · Verifica dopo le correzioni
 
 ```
 audit avversariale, leghe nuove:   margini impossibili 0 (erano 8)
-                                   xG impossibili      0 (era 1)
+                                   xG impossibili      0 (su 5 leghe, con la
+                                                       verifica degli autogol)
 audit A/B/C/D, bundesliga:         0 FAIL, 0 WARN su 24 controlli
 audit A/B/C/D, ligue_1:            0 FAIL, 2 WARN (lacune note della fonte)
 pytest:                            153 test verdi

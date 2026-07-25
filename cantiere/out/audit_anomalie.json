@@ -762,7 +762,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -773,7 +776,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -784,7 +790,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -795,7 +804,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -806,7 +818,10 @@
       "side": "home",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -817,7 +832,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -828,7 +846,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -839,7 +860,24 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
+      "IMPOSSIBILE": false
+    },
+    {
+      "league": "bundesliga",
+      "season": "2021",
+      "date": "2020-11-21",
+      "match": "Bielefeld-Leverkusen",
+      "side": "home",
+      "gol": 1,
+      "xg": 0.0,
+      "tiri_football_data": 1.0,
+      "tiri_understat": 0,
+      "autogol_ricevuti": 1,
+      "verificato_tiro_per_tiro": true,
       "IMPOSSIBILE": false
     },
     {
@@ -850,7 +888,10 @@
       "side": "home",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     },
     {
@@ -861,7 +902,10 @@
       "side": "away",
       "gol": 0,
       "xg": 0.0,
-      "tiri": 0.0,
+      "tiri_football_data": 0.0,
+      "tiri_understat": null,
+      "autogol_ricevuti": 0,
+      "verificato_tiro_per_tiro": false,
       "IMPOSSIBILE": false
     }
   ]

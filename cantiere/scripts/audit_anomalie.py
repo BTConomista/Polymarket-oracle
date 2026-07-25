@@ -29,8 +29,11 @@ Uso: python cantiere/scripts/audit_anomalie.py
 """
 from __future__ import annotations
 
+import gzip
 import json
 import sys
+import time
+import urllib.request
 from pathlib import Path
 
 import numpy as np
@@ -186,14 +189,60 @@ def check_riposo(df: pd.DataFrame, league: str) -> list[dict]:
     return bad
 
 
-def check_xg(df: pd.DataFrame, league: str) -> list[dict]:
-    """xG IMPOSSIBILE, non solo 'strano'.
+def _understat_match_ids(league: str) -> dict:
+    """{(stagione, casa, ospite): id partita Understat} dal JSON di lega."""
+    out = {}
+    for season in sources.SEASONS:
+        year = 2000 + int(season[:2])
+        path = FONTI.parent / "understat" / f"{league}_{year}.json"
+        if not path.exists():
+            continue
+        for m in json.loads(path.read_text()).get("dates", []):
+            if not m.get("isResult"):
+                continue
+            out[(season,
+                 sources.canonical_team(str(m["h"]["title"]).strip()),
+                 sources.canonical_team(str(m["a"]["title"]).strip()))] = m["id"]
+    return out
 
-    Un xG di ESATTAMENTE 0 e' legittimo solo se la squadra non ha tirato e non
-    ha segnato. Se ha segnato (o ha tirato), un xG nullo e' un buco della fonte
-    scritto come zero: il modello lo leggerebbe come 'occasioni zero'.
-    Il controllo incrocia l'xG (Understat) coi TIRI (football-data), cioe' due
-    fonti indipendenti."""
+
+def _match_shots(match_id: str) -> dict | None:
+    """Dati tiro-per-tiro di UNA partita (cache su disco). None se non scaricabili."""
+    cache = FONTI.parent / "understat_match" / f"{match_id}.json"
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    if not cache.exists():
+        url = f"https://understat.com/getMatchData/{match_id}"
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0", "Accept-Encoding": "gzip",
+            "X-Requested-With": "XMLHttpRequest"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                raw = r.read()
+                if r.headers.get("Content-Encoding") == "gzip":
+                    raw = gzip.decompress(raw)
+            cache.write_bytes(raw)
+            time.sleep(1.5)
+        except Exception:
+            return None
+    try:
+        return json.loads(cache.read_text())
+    except Exception:
+        return None
+
+
+def check_xg(df: pd.DataFrame, league: str) -> list[dict]:
+    """xG IMPOSSIBILE — con la verifica degli AUTOGOL.
+
+    Un xG di ESATTAMENTE 0 sembra impossibile se la squadra ha segnato. Ma NON
+    lo e' se il gol e' un AUTOGOL dell'avversario: chi ne beneficia puo' non
+    aver tirato nemmeno una volta. (Lezione pagata: questo controllo, senza la
+    verifica, aveva prodotto un falso positivo -- Bielefeld-Leverkusen
+    21/11/2020, autogol di Hradecky al 47'.)
+
+    Nemmeno i TIRI di football-data bastano a smentirlo: quella fonte conta
+    l'autogol come tiro in porta della squadra che ne beneficia, Understat no.
+    L'unico giudice e' il dato tiro-per-tiro della STESSA fonte dell'xG.
+    """
     shots = {}
     for season in sources.SEASONS:
         raw = pd.read_csv(FONTI / f"{league}_{season}.csv", encoding="latin-1")
@@ -202,21 +251,38 @@ def check_xg(df: pd.DataFrame, league: str) -> list[dict]:
             k = (season, sources.canonical_team(str(r.HomeTeam).strip()),
                  sources.canonical_team(str(r.AwayTeam).strip()))
             shots[k] = (getattr(r, "HS", float("nan")), getattr(r, "AS", float("nan")))
+    ids = _understat_match_ids(league)
 
     bad = []
     for side, idx in (("home", 0), ("away", 1)):
         sub = df[(df[f"{side}_xg"] <= 0)
                  | ((df[f"{side}_goals"] >= 5) & (df[f"{side}_xg"] < 0.5))]
         for r in sub.itertuples():
-            sh = shots.get((r.season, r.home_team, r.away_team), (None, None))[idx]
+            key = (r.season, r.home_team, r.away_team)
+            sh = shots.get(key, (None, None))[idx]
             gol = int(getattr(r, f"{side}_goals"))
             xg = float(getattr(r, f"{side}_xg"))
-            impossibile = (xg <= 0) and (gol > 0 or (pd.notna(sh) and sh > 0))
+            sospetto = (xg <= 0) and (gol > 0 or (pd.notna(sh) and sh > 0))
+            autogol, tiri_ud, verificato = 0, None, False
+            if sospetto and key in ids:
+                data = _match_shots(ids[key])
+                if data:
+                    verificato = True
+                    mine = "h" if side == "home" else "a"
+                    other = "a" if side == "home" else "h"
+                    tiri_ud = len(data["shots"][mine])
+                    autogol = sum(1 for x in data["shots"][other]
+                                  if x.get("result") == "OwnGoal")
+            # impossibile solo se resta inspiegato DOPO aver tolto gli autogol
+            impossibile = bool(sospetto and (gol - autogol > 0 or (tiri_ud or 0) > 0)
+                               ) if verificato else bool(sospetto)
             bad.append({"league": league, "season": r.season,
                         "date": str(r.date.date()),
                         "match": f"{r.home_team}-{r.away_team}", "side": side,
-                        "gol": gol, "xg": xg, "tiri": None if sh is None else float(sh),
-                        "IMPOSSIBILE": bool(impossibile)})
+                        "gol": gol, "xg": xg, "tiri_football_data": None if sh is None else float(sh),
+                        "tiri_understat": tiri_ud, "autogol_ricevuti": autogol,
+                        "verificato_tiro_per_tiro": verificato,
+                        "IMPOSSIBILE": impossibile})
     return bad
 
 

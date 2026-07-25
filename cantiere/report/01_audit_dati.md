@@ -162,19 +162,24 @@ del match giocato**.
 d'ufficio non è una realizzazione del processo che il modello stima). Riga
 nuova, arrivata con la Bundesliga.
 
-### 4.4 · Bielefeld-Leverkusen 21/11/2020: xG = 0 con un gol segnato → **da dichiarare**
+### 4.4 · Bielefeld-Leverkusen 21/11/2020: NON era un errore — **falso positivo, ritirato**
 
-Understat pubblica `xG: 0` (e `npxG: 0`) per il Bielefeld, che però **ha segnato
-1 gol** e ha registrato **1 tiro in porta** (football-data). Un xG nullo con un
-gol è fisicamente impossibile: è un buco della fonte scritto come zero.
+> ⚠️ **Questa voce è stata corretta dopo un approfondimento: il dato era giusto,
+> era il mio controllo a essere cieco.** Storia completa in
+> [`07_dati_corrotti.md`](07_dati_corrotti.md) §1.
 
-Unica occorrenza su 15.788 partite × 2 lati. Gli altri 10 casi di `xG = 0.00`
-del progetto sono **legittimi**: verificato che in tutti la squadra ha
-**0 tiri** nella fonte indipendente.
+Understat pubblica `xG: 0` per il Bielefeld, che però ha **segnato 1 gol** e che
+football-data dà con **1 tiro in porta**. Sembrava impossibile. Non lo è: il dato
+tiro-per-tiro della stessa fonte (`getMatchData/15207`) mostra che il Bielefeld
+ha **0 tiri** e che il suo gol è un **autogol del portiere avversario**
+(Hrádecky, 47′ — confermato da fonte indipendente). Una squadra che non tira e
+segna solo per un autogol avversario ha davvero xG = 0.00. Il «tiro in porta» di
+football-data è solo una convenzione diversa sullo stesso autogol.
 
-**Raccomandazione:** portare il valore a NaN (dato mancante dichiarato) invece
-che 0.0, che il modello leggerebbe come «zero occasioni». Controllo aggiunto in
-`audit_anomalie.check_xg` (incrocia xG Understat × tiri football-data).
+Il controllo `audit_anomalie.check_xg` ora **verifica gli autogol** sul dato
+tiro-per-tiro prima di dichiarare un'impossibilità: con la verifica attiva, gli
+xG impossibili sono **0 su tutte e 5 le leghe**. Gli altri 10 casi di `xG = 0.00`
+restano legittimi (squadre con 0 tiri).
 
 ### 4.5 · Ligue 1 2019-20: campionato CANCELLATO → **fatto reale, da dichiarare**
 
@@ -249,7 +254,9 @@ errore **respinte dai dati**:
 
 1. **Guard sull'overround alto** in `loader._pick_market_odds` (§4.1) →
    11 celle a NaN, e rigenerare le stime che vi poggiano.
-2. **Portare a NaN** l'xG impossibile di Bielefeld-Leverkusen (§4.4).
+2. ~~Portare a NaN l'xG di Bielefeld-Leverkusen~~ → **non serve**: falso
+   positivo, ritirato (§4.4). Va invece portato in produzione il controllo
+   corretto, quello che verifica gli autogol.
 3. **Dichiarare** in `docs/DATI.md`: Udinese-Roma (§4.2), Union-Bochum (§4.3),
    Ligue 1 2019-20 (§4.5), lacuna EL/Conference 2025-26 (§4.7).
 4. **Uniformare l'ordine colonne** di Premier/Liga + test cross-lega (§4.6).

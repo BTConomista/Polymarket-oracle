@@ -121,6 +121,80 @@ file si ostacolano. Le checklist di integrazione nei report restano **proposte**
 
 ---
 
+## R6 · Partite con dati corrotti: la procedura (in quest'ordine)
+
+Quando una riga sembra sbagliata — un margine impossibile, un xG a zero, un
+risultato che due fonti raccontano in modo diverso — si segue **questa
+sequenza**, mai una scorciatoia. Ogni passo è stato pagato con un errore vero.
+
+### Passo 1 · Prima di dichiararlo un errore, prova a spiegarlo
+
+L'impossibilità «fisica» va verificata sul **dato più fine della STESSA fonte**,
+non dedotta da una regola generale. Il caso che ha insegnato la lezione:
+Bielefeld-Leverkusen 21/11/2020, `xG = 0` per una squadra che aveva **segnato**.
+Sembrava impossibile. Non lo era: il gol era un **autogol** del portiere
+avversario, e il Bielefeld non aveva tirato nemmeno una volta. Il dato
+tiro-per-tiro (`understat.com/getMatchData/{id}`) lo dice in chiaro; il conteggio
+tiri di football-data no, perché quella fonte conta l'autogol come tiro in porta
+di chi ne beneficia e Understat no.
+
+→ **Regola: un xG nullo con gol segnati è legittimo se i gol sono autogol.**
+   Il controllo automatico deve verificarlo prima di gridare all'errore
+   (implementato in `scripts/audit_anomalie.check_xg`).
+
+### Passo 2 · Diagnostica QUALE parte è rotta, con un'informazione indipendente
+
+Non fidarsi della riga sospetta per giudicare sé stessa. Le colonne di una
+partita vengono da provider diversi: usane una integra per giudicare l'altra.
+Esempio riuscito: le 8 linee O/U con overround impossibile. Invertendo l'**1X2
+della stessa partita** nei tassi (λ, μ) e leggendo dalla matrice la P(Over), si
+è visto che in tutti i casi il lato **Over** era coerente e il lato **Under** no
+→ i due numeri non appartengono alla stessa linea. Senza questo passo si
+sarebbe potuto «aggiustare» il lato sbagliato.
+
+### Passo 3 · Prova a procurare il dato VERO (ordine di costo crescente)
+
+Stato verificato a luglio 2026 — aggiornare questa tabella a ogni tentativo:
+
+| fonte | esito | note operative |
+|---|---|---|
+| **la fonte stessa, ri-scaricata** | primo tentativo sempre | i provider correggono lo storico: vale la pena riscaricare prima di dare per persa una riga |
+| **Understat `getMatchData/{id}`** | ✅ **funziona** | dati tiro-per-tiro, con autogol e situazione; header `X-Requested-With: XMLHttpRequest` obbligatorio; l'id sta nel JSON di lega |
+| **FotMob** (pagine HTML) | ✅ raggiungibile | `robots.txt` vieta `/api/*` a noi: usare solo le pagine. ⚠️ l'URL senza frammento `#matchId` rende un'ALTRA partita della stessa coppia — verificare sempre `general.matchTimeUTC` prima di leggere i numeri. ⚠️ il loro xG è un **modello diverso** da Understat: non mescolare i due dentro la stessa colonna |
+| **diretta.it / Flashscore** | ⚠️ raggiungibile ma inutile qui | `robots.txt` consente le pagine partita, ma i dati arrivano da feed interni; e le quote storiche vengono dallo stesso gruppo di BetExplorer, che le ha ritirate |
+| **BetExplorer** | ❌ | per le stagioni 2017-19 la funzione confronto-quote è stata ritirata: il tab «1X2» è disabilitato e non esiste alcun tab O/U |
+| **OddsPortal** | ❌ **vietato** | il `robots.txt` contiene `Disallow: *-2017*`, `*-2018*`…: esattamente le pagine storiche che servirebbero. Non si scrape, punto |
+| **Sofascore** | ❌ | risponde 403 anche al `robots.txt`: bloccati a monte |
+| **fbref** | ❌ | 403 dal proxy |
+| **ricerca web** | ❌ per le quote | i risultati e i marcatori si trovano ovunque; le **quote storiche per singola partita** no |
+
+### Passo 4 · Se il dato vero non c'è: stima, con l'errore misurato
+
+Mai lasciare un numero sbagliato «perché tanto è uno solo», e mai inventarne uno.
+La stima:
+
+1. usa **solo informazione integra** (nel nostro caso: l'1X2, mai la riga rotta);
+2. ha un **errore misurato dove la verità esiste** — stessa epoca, stessa fonte,
+   stesse leghe — e confrontato con una baseline banale;
+3. è una **probabilità**, non una quota, e vive **fuori dallo snapshot**;
+4. dichiara il metodo riga per riga.
+
+Esempio già fatto (`scripts/stima_ou_corrotte.py`, uscita
+`data/stime_ou_corrotte.csv`): P(Over 2.5) dedotta dall'1X2 di apertura,
+debiasata con una correzione fittata leave-one-league-out.
+**MAE 0.0267** contro **0.0743** della baseline «media della lega» — misurato su
+3.643 partite 2017-19 dove la linea O/U è integra. Errore ~2× più grande della
+stima di chiusura O/U del progetto (0.012): va usata sapendolo.
+
+### Passo 5 · Registra tutto
+
+Riga nel registro delle correzioni con motivo e fonte (R3), e — se una
+correzione si rivela sbagliata — **non si cancella**: si marca `ritirata`, si
+aggiunge la riga di ripristino e si scrive perché. Il registro deve raccontare
+anche gli errori, altrimenti la prossima sessione li rifà.
+
+---
+
 ## R5 · Le anomalie si dichiarano, anche quando NON sono errori
 
 **Regola.** Ogni anomalia trovata da un audit va scritta con la prova e
