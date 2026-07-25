@@ -60,3 +60,14 @@ Config usata (Serie A, NON ri-tarata): emivita 365g, shrinkage 1.5, blend 0.75 (
   2021: 380 gare in  97.6s  1X2 modello 1.0033 | baseline 1.0837 | mercato 0.9806  (gap +0.0227)
   2122: 380 gare in 122.7s  1X2 modello 1.0041 | baseline 1.0763 | mercato 0.9892  (gap +0.0149)
   2223: 380 gare in 114.8s  1X2 modello 0.9903 | baseline 1.0508 | mercato 0.9778  (gap +0.0125)
+  2324: 380 gare in 117.5s  1X2 modello 0.9619 | baseline 1.0743 | mercato 0.9498  (gap +0.0121)
+  2425: 380 gare in 130.0s  1X2 modello 0.9702 | baseline 1.0701 | mercato 0.9462  (gap +0.0240)
+  2526: 380 gare in 153.2s  1X2 modello 0.9761 | baseline 1.0464 | mercato 0.9648  (gap +0.0112)
+
+  POOLED (2280 partite, 6 stagioni)
+    1X2  modello 0.9843  baseline 1.0689  mercato 0.9681
+    O/U  modello 0.6781  baseline 0.6911  mercato 0.6683
+    modello vs BASELINE: guadagno +0.0845 CI95 [+0.0699, +0.0988] -> CONCLUSIVO
+    modello vs MERCATO : gap     +0.0162 CI95 [+0.0103, +0.0223] -> il mercato vince, conclusivo
+
+-> cantiere/out/tranche3_tracer.json

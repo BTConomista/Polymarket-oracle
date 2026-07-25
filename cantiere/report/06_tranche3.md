@@ -5,7 +5,42 @@ mette alla prova il modello. Tutto con il protocollo di sempre — walk-forward,
 metriche dalla fonte unica, bootstrap appaiato B=10.000, **aspettativa dichiarata
 prima** di guardare i numeri.
 
-*(Le sezioni contrassegnate ⏳ sono in corso e verranno completate.)*
+---
+
+## Passo 2 · Tracer bullet: il Dixon-Coles **così com'è** sulle leghe nuove
+
+Config Serie A senza ritoccare nulla (emivita 365g, shrinkage 1.5, blend xG
+α=0.75, δ=0.23), walk-forward settimanale, 6 stagioni di test (2020-21 →
+2025-26). Le **cinque** leghe girate con la stessa finestra e lo stesso codice,
+così il confronto è pulito.
+
+**Aspettative dichiarate prima:** il DC batte la baseline; **non** batte il
+mercato, con gap atteso +0.015…+0.021.
+
+| lega | partite | 1X2 modello | baseline | mercato | **gap vs mercato** | CI95 |
+|---|--:|--:|--:|--:|--:|---|
+| serie_a | 2.280 | 0.9797 | 1.0849 | 0.9632 | **+0.0165** | [+0.0107, +0.0225] |
+| premier_league | 2.280 | 0.9831 | 1.0695 | 0.9623 | **+0.0207** | [+0.0138, +0.0275] |
+| la_liga | 2.280 | 0.9843 | 1.0689 | 0.9681 | **+0.0162** | [+0.0103, +0.0225] |
+| **bundesliga** | 1.836 | 0.9919 | 1.0722 | 0.9738 | **+0.0181** | [+0.0109, +0.0253] |
+| **ligue_1** | 2.058 | 1.0041 | 1.0750 | 0.9851 | **+0.0190** | [+0.0121, +0.0258] |
+
+**Controllo che vale più di tutto il resto:** il gap che misuro in Serie A è
+**+0.0165**, identico alla quarta cifra a quello pubblicato dal progetto
+(CLAUDE.md §6: «gap 1X2 +0.0165 in Serie A»). Non l'ho preso da lì: esce dalla
+mia pipeline, con i miei snapshot e il mio codice di valutazione. È la prova che
+l'intero apparato — dati, percorsi, metriche — riproduce i numeri noti.
+
+**Esito.** Entrambe le aspettative si avverano su entrambe le leghe nuove:
+
+- il DC **batte la baseline** in modo conclusivo (guadagno +0.0803 Bundesliga,
+  +0.0709 Ligue 1; CI95 lontani da zero);
+- il DC **non batte il mercato**, e il gap cade **dentro la forchetta prevista**
+  (+0.0181 e +0.0190 contro +0.015…+0.021 attesi). Nessuna sorpresa: il modello
+  trasferisce, il tetto informativo pure.
+
+Sull'Over/Under lo stesso quadro (Bundesliga 0.6553 modello vs 0.6459 mercato;
+Ligue 1 0.6863 vs 0.6730).
 
 ---
 
@@ -75,13 +110,18 @@ mercati (la matrice è universale: 3/3 leghe finora).
 
 **Risultato: 15/15 su entrambe le leghe nuove.** Superata.
 
-| | Bundesliga | Ligue 1 |
-|---|--:|--:|
-| partite | 1.836 | 2.058 |
-| market-implied batte il **DC-da-gol** | **15/15** | **15/15** |
-| market-implied batte la **baseline** | 14/15 | 14/15 |
-| guadagno più grande (risultato esatto) | +0.0283 | +0.0364 |
-| guadagno più piccolo (pari/dispari) | +0.0002 | +0.0000 |
+| lega | partite | batte il **DC-da-gol** | batte la **baseline** |
+|---|--:|--:|--:|
+| serie_a | 2.280 | 14/15 | 14/15 |
+| premier_league | 2.280 | 14/15 | 14/15 |
+| la_liga | 2.280 | 15/15 | 14/15 |
+| **bundesliga** | 1.836 | **15/15** | 14/15 |
+| **ligue_1** | 2.058 | **15/15** | 14/15 |
+
+Le due leghe nuove sono, se possibile, il caso **migliore** del campione: il
+motore le prezza meglio di quanto prezzi Serie A e Premier. Guadagno più grande
+sul risultato esatto (+0.0283 Bundesliga, +0.0364 Ligue 1), più piccolo sul
+pari/dispari (+0.0002 e +0.0000).
 
 L'unico mercato dove la baseline vince è, in entrambe le leghe, il
 **pari/dispari**: coerente con la lezione già registrata dal playbook («il
@@ -100,8 +140,11 @@ Riprezzatura con `price_markets(phi0, kappa)`, parametri fittati
 
 | lega | φ0 LOSO | 1X2 senza φ | 1X2 con φ | guadagno | verdetto |
 |---|---|--:|--:|--:|---|
-| bundesliga | 0.175 – 0.334 | 0.9747 | 0.9735 | +0.00122 [−0.0016, +0.0040] | nel rumore |
-| ligue_1 | 0.000 – 0.130 | 0.9850 | 0.9854 | −0.00036 [−0.0008, +0.0001] | nel rumore |
+| serie_a | 0.235 – 0.370 | 0.9642 | 0.9628 | +0.00135 [−0.0010, +0.0038] | nel rumore |
+| premier_league | 0.000 – 0.026 | 0.9622 | 0.9623 | −0.00014 [−0.0003, +0.0000] | nel rumore |
+| la_liga | 0.198 – 0.423 | 0.9688 | 0.9685 | +0.00031 [−0.0016, +0.0023] | nel rumore |
+| **bundesliga** | 0.175 – 0.334 | 0.9747 | 0.9735 | +0.00122 [−0.0016, +0.0040] | nel rumore |
+| **ligue_1** | 0.000 – 0.130 | 0.9850 | 0.9854 | −0.00036 [−0.0008, +0.0001] | nel rumore |
 
 *(I φ0 di questa tabella sono fittati sulle 6 stagioni di questo passo; quelli
 del passo 2b — 0.183 e 0.000 — sulle 7 stagioni con chiusura O/U reale. Finestre
@@ -112,9 +155,17 @@ Stesso esito su `draw`, `dc_1x`, `dc_2x`: nessun CI conclusivo.
 **Lettura.** In **Ligue 1** l'esito è quello previsto e va scritto come chiusura:
 φ35 **non serve** (φ0 fittato ≈ 0, guadagno nullo o leggermente negativo). In
 **Bundesliga** il segno è giusto e la grandezza plausibile, ma con 1.836 partite
-il CI non conclude: la leva resta **in panchina**, promuovibile solo con più
-dati (o con la finestra a 7 stagioni). Nessuna delle due entra nella
-configurazione operativa.
+il CI non conclude: la leva resta **in panchina**.
+
+**E un risultato scomodo che va detto:** su questo percorso — market-implied,
+finestra 6 stagioni, parametri leave-one-season-out — φ35 **non è conclusiva in
+nessuna delle cinque leghe**, Serie A compresa (+0.00135, CI [−0.0010, +0.0038]),
+dove pure φ0 si fitta stabilmente fra 0.235 e 0.370. Non è una smentita della
+leva (nel progetto è documentata su percorsi e finestre diverse, e il **segno**
+qui è quello giusto in tutte le leghe «latine»): è la constatazione che, con
+~2.000 partite per lega, il guadagno atteso di 1-1.5 millesimi di log-loss è
+**sotto la soglia di risoluzione** del test. Chi vorrà promuoverla deve o
+allargare la finestra o cambiare metrica, non ri-fittare gli stessi dati.
 
 ---
 
