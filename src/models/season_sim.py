@@ -167,6 +167,8 @@ def simulate_season(
     seed: int = 0,
     chunk: int = 2000,
     features=None,
+    drift_sd: float = 0.0,
+    n_drift_draws: int = 200,
 ) -> dict:
     """Campiona ``n_sims`` stagioni intere e ritorna le statistiche finali.
 
@@ -184,6 +186,19 @@ def simulate_season(
             ciclo fuori di qui fa divergere le due braccia (audit Fase 90: il
             test su squad_value confrontava due regole di spareggio diverse e
             ~9% del suo delta era artefatto).
+        drift_sd: DERIVA DI FORZA IN-STAGIONE (Fase 94). Con forze fisse il
+            simulatore produce classifiche piu' SCHIACCIATE del vero: la
+            dispersione reale supera la simulata in 21 stagioni su 24
+            (percentile medio 83%, dovrebbe essere 50%). Il motivo non e' che le
+            squadre siano piu' diverse di quanto stimiamo, ma che la loro forza
+            CAMBIA durante l'anno in modo imprevedibile a luglio — e quella e'
+            incertezza, non separazione. Qui si aggiunge alla forza netta di
+            ogni squadra una perturbazione ``N(0, drift_sd)`` costante dentro
+            una stagione simulata e ri-estratta a ogni "draw". 0 = disattivata.
+        n_drift_draws: quante estrazioni della deriva (le simulazioni si
+            dividono equamente fra loro). Ogni draw costa il ricalcolo delle
+            matrici dei punteggi, quindi il costo scala con questo numero, non
+            con n_sims.
 
     Ritorna un dict con:
         champion_prob : array [n_teams] con P(campione), con gli spareggi di lega
@@ -216,13 +231,29 @@ def simulate_season(
 
     # CDF cumulata sulle 121 celle della matrice dei punteggi, una per incontro.
     K = model.max_goals + 1
-    cdfs = np.empty((n_f, K * K))
-    for n, (h, a) in enumerate(fixtures):
-        f = features(h, a) if features else None
-        cdfs[n] = np.cumsum(model.predict_match(h, a, features=f).score_matrix.ravel())
-    # _score_matrix rinormalizza gia' a 1: questa divisione e' una salvaguardia
-    # (sposta massa per ~1e-16), non una correzione necessaria.
-    cdfs /= cdfs[:, -1:]
+
+    def build_cdfs(shift: dict | None = None) -> np.ndarray:
+        """Matrici dei punteggi -> cumulate, eventualmente con la forza di ogni
+        squadra spostata di ``shift[t]`` (deriva in-stagione)."""
+        if shift:
+            base_a = dict(model.attack)
+            base_d = dict(model.defense)
+            # la deriva agisce sulla forza NETTA (attacco - difesa): meta' su
+            # ciascuna colonna, cosi' il livello dei gol della lega non si sposta
+            for t, s in shift.items():
+                model.attack[t] = base_a.get(t, 0.0) + s / 2.0
+                model.defense[t] = base_d.get(t, 0.0) - s / 2.0
+        out = np.empty((n_f, K * K))
+        for n, (h, a) in enumerate(fixtures):
+            f = features(h, a) if features else None
+            out[n] = np.cumsum(model.predict_match(h, a, features=f).score_matrix.ravel())
+        if shift:
+            model.attack, model.defense = base_a, base_d      # ripristina
+        # _score_matrix rinormalizza gia' a 1: questa divisione e' una
+        # salvaguardia (sposta massa per ~1e-16), non una correzione necessaria.
+        return out / out[:, -1:]
+
+    cdfs = build_cdfs()
 
     hidx = np.array([ti[h] for h, _ in fixtures])
     aidx = np.array([ti[a] for _, a in fixtures])
@@ -237,8 +268,17 @@ def simulate_season(
     champion = np.zeros(n_sims, np.int16)
     tied_top = np.zeros(n_sims, bool)
 
+    # Con la deriva attiva, le simulazioni si dividono fra `n_drift_draws`
+    # estrazioni: dentro un'estrazione le forze sono fisse (la deriva e' una
+    # proprieta' della STAGIONE, non della partita), fra estrazioni cambiano.
+    if drift_sd > 0:
+        chunk = max(1, int(np.ceil(n_sims / n_drift_draws)))
+
     for s0 in range(0, n_sims, chunk):
         s1 = min(s0 + chunk, n_sims)
+        if drift_sd > 0:
+            cdfs = build_cdfs({t: float(x) for t, x in
+                               zip(teams, rng.normal(0.0, drift_sd, n_t))})
         u = rng.random((s1 - s0, n_f))
         # cella campionata -> (gol casa, gol ospite)
         cell = np.empty((s1 - s0, n_f), np.int16)

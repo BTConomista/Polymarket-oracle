@@ -214,3 +214,53 @@ def test_simulated_tie_is_resolved_by_league_rule():
     # e `rank` deve seguire il campione, non la sola differenza reti
     assert (out_it["rank"][:, ia] == 1).all()
     assert (out_en["rank"][:, ib] == 1).all()
+
+
+# --- la deriva di forza in-stagione (Fase 94) --------------------------------
+def _toy_league(seed=0):
+    """Campionato giocattolo a 6 squadre con forze chiaramente diverse."""
+    rng = np.random.default_rng(seed)
+    teams = [f"T{i}" for i in range(6)]
+    strength = {t: 1.8 - 0.22 * i for i, t in enumerate(teams)}   # T0 la piu' forte
+    rows, d0 = [], pd.Timestamp("2024-08-01")
+    for k, (h, a) in enumerate([(h, a) for h in teams for a in teams if h != a]):
+        for rep in range(6):                     # storico sufficiente a stimare
+            rows.append(dict(date=d0 + pd.Timedelta(days=k * 6 + rep),
+                             home_team=h, away_team=a,
+                             home_goals=int(rng.poisson(strength[h])),
+                             away_goals=int(rng.poisson(strength[a]))))
+    return teams, pd.DataFrame(rows)
+
+
+def test_drift_zero_is_identical_to_no_drift():
+    """drift_sd=0 non deve cambiare NULLA rispetto al comportamento storico."""
+    from src.models.dixon_coles import DixonColesModel
+    teams, df = _toy_league()
+    m = DixonColesModel(half_life_days=None).fit(df)
+    fx = round_robin(teams)
+    a = simulate_season(m, fx, teams, n_sims=300, seed=7)
+    b = simulate_season(m, fx, teams, n_sims=300, seed=7, drift_sd=0.0)
+    assert np.array_equal(a["champion_prob"], b["champion_prob"])
+    assert np.array_equal(a["points"], b["points"])
+
+
+def test_drift_widens_the_table_and_flattens_the_favourite():
+    """La deriva e' INCERTEZZA in piu': deve (a) allargare la dispersione dei
+    punti finali e (b) abbassare la probabilita' del favorito. E' la correzione
+    del difetto misurato alla Fase 94 (classifica simulata troppo schiacciata,
+    favorito troppo sicuro)."""
+    from src.models.dixon_coles import DixonColesModel
+    teams, df = _toy_league()
+    m = DixonColesModel(half_life_days=None).fit(df)
+    fx = round_robin(teams)
+    base = simulate_season(m, fx, teams, n_sims=2000, seed=11, drift_sd=0.0)
+    drift = simulate_season(m, fx, teams, n_sims=2000, seed=11,
+                            drift_sd=0.35, n_drift_draws=100)
+    sd_base = base["points"].std(axis=1).mean()
+    sd_drift = drift["points"].std(axis=1).mean()
+    assert sd_drift > sd_base, \
+        f"la deriva non allarga la classifica ({sd_drift:.2f} vs {sd_base:.2f})"
+    assert drift["champion_prob"].max() < base["champion_prob"].max(), \
+        "la deriva non abbassa la probabilita' del favorito"
+    # e resta una distribuzione di probabilita' valida
+    assert drift["champion_prob"].sum() == pytest.approx(1.0)
