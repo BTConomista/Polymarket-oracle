@@ -4,7 +4,7 @@ Richiesta: *«risolviamo quanti più buchi nei dati abbiamo (o trovandoli su
 internet o da qualche parte, o facendo delle stime quanto più accurate)»*.
 
 Il bilancio in una riga: **il buco più grande è chiuso** — 1.362 partite delle
-due leghe nuove hanno ora una chiusura O/U stimata con errore misurato ~0.012, e
+due leghe nuove hanno ora una chiusura O/U stimata con errore misurato ~0.013, e
 per il 2017-19 esiste anche un **dato reale** che prima si riteneva
 irrecuperabile. Ma il risultato più onesto è che il dato reale trovato **non
 batte la stima**, e va usato per quello che è.
@@ -18,8 +18,9 @@ risultato più grande — la scoperta che **il buco maggiore rimasto non è un
 
 Una verifica avversariale successiva ha poi **ritirato una conclusione** di
 questo report: lo stimatore della chiusura O/U **non** passa da pooled a
-per-lega (§3), e l'errore atteso delle 1.362 stime va dichiarato più alto di
-quanto scritto qui sotto.
+per-lega (§3). Le 1.362 stime **sono state rigenerate** col pooled e l'errore
+dichiarato è ora quello del regime d'uso — 0.0143 e 0.0125, non 0.0122 e 0.0110
+(§3-bis).
 
 ---
 
@@ -27,7 +28,7 @@ quanto scritto qui sotto.
 
 | buco | prima | dopo | come |
 |---|--:|--:|---|
-| chiusura O/U 2017-19, bundesliga + ligue_1 | 2.744 celle vuote | **1.362 partite stimate** (MAE 0.0122 / 0.0110 in interpolazione, **15-25% più alto** nel regime d'uso) | stima E3 **pooled** (§3) |
+| chiusura O/U 2017-19, bundesliga + ligue_1 | 2.744 celle vuote | **1.362 partite stimate** (MAE **0.0143 / 0.0125** nel regime d'uso; 0.0124/0.0114 in interpolazione) | stima E3 **pooled** (§3) |
 | chiusura O/U 2017-19, tutte e 5 le leghe | nessun dato reale | **3.652 partite di dato reale** (1xBet) | fonte esterna nuova |
 | quote GG/NG 2017-19 | **inesistenti** in tutto il progetto | **3.652 partite** → misurate in [`11_ggng.md`](11_ggng.md) | stessa fonte |
 | calendari di coppa | 3.045 righe mancanti | **3.045 righe recuperate** (50 CSV) | Wikipedia + terza fonte |
@@ -171,23 +172,59 @@ separatamente e con 4, 5 o 6 stagioni di training — quindi non è una question
 di taglia del campione di fit.
 
 **Conseguenza:** lo stimatore ufficiale resta **E3 pooled**; il per-lega è
-bocciato per questo uso. Le 1.362 stime già scritte nel CSV vanno rigenerate col
-pooled (costo dell'errore stimato: ~+5% di MAE), e il **MAE atteso dichiarato va
-alzato del 15-25%** — nel regime all'indietro la Bundesliga misura 0.0141-0.0144
-contro lo 0.0122 pubblicato qui sotto.
+bocciato per questo uso.
 
-**Errore atteso, misurato lega per lega** (non ereditato dalle altre):
+### 3-bis · Il file è stato rigenerato (e il criterio di scelta corretto)
 
-| lega | MAE atteso | | lega | MAE atteso |
+Non bastava correggere il testo: il CSV che finirà in produzione era stato
+prodotto col per-lega. Lo script è stato **riscritto nel punto che contava** —
+la scelta non si fa più in interpolazione ma **nel regime d'uso**, e ogni
+candidato viene rifittato lì.
+
+Nel farlo è saltato fuori un difetto **del nuovo protocollo**, ed è giusto
+scriverlo perché è lo stesso errore che la verifica aveva punito altrove: il
+candidato «finestra vicina» si allenava sulle stagioni 2019-20 e 2020-21, cioè
+**proprio quelle su cui veniva valutato**, e con quel vantaggio vinceva. Chiuso
+alla radice: ora nessun candidato vede la stagione di test.
+
+Rifatto pulito, il quadro nel regime d'uso (MAE, 2 leghe nuove insieme):
+
+| candidato | MAE | vs pooled | CI95 | Bonferroni (4 test) |
+|---|--:|--:|---|---|
+| finestra vicina 2019-21 | 0.01307 | −0.00031 | [−0.00055, −0.00007] | [−0.00061, **−0.0000006**] |
+| pooled 4 leghe (LOLO) | 0.01336 | −0.00002 | [−0.00007, +0.00004] | nel rumore |
+| **pooled 5 leghe** | **0.01338** | — | — | — |
+| pooled 3 storiche | 0.01338 | +0.00000 | [−0.00012, +0.00013] | nel rumore |
+| per-lega | 0.01442 | **+0.00104** | [+0.00072, +0.00136] | **conclusivo: peggiora** |
+
+La «finestra vicina» è nominalmente prima, ma il suo intervallo di Bonferroni
+**tocca lo zero** (limite superiore −6 × 10⁻⁷: un risultato che non esiste). E
+soprattutto **il segno non si replica**: −0.00102 in Bundesliga, **+0.00035 in
+Ligue 1**. Vale qui la stessa regola che il progetto applica a ogni leva — se
+non regge su entrambe le leghe, non è una leva. Scelto **E3 pooled a 5 leghe**,
+che è anche la formula già in produzione.
+
+**L'errore dichiarato ora è quello del regime d'uso**, non quello ottimistico:
+
+| lega | MAE dichiarato (regime d'uso) | (in interpolazione sarebbe) |
+|---|--:|--:|
+| bundesliga | **0.0143** | 0.0124 |
+| ligue_1 | **0.0125** | 0.0114 |
+
+Entrambi i valori sono scritti riga per riga nel CSV, in due colonne distinte,
+perché non si possano confondere.
+
+**Errore in interpolazione, lega per lega** (il numero *ottimistico*, tenuto qui
+solo per confronto — quello che vale è la tabella del §3-bis):
+
+| lega | MAE (interpolazione) | | lega | MAE (interpolazione) |
 |---|--:|---|---|--:|
-| **bundesliga** | **0.0122** | | serie_a | 0.0134 |
-| **ligue_1** | **0.0110** | | premier_league | 0.0122 |
+| bundesliga | 0.0124 | | serie_a | 0.0134 |
+| ligue_1 | 0.0114 | | premier_league | 0.0122 |
 | | | | la_liga | 0.0115 |
 
 Le due leghe nuove non sono più difficili delle altre: la Ligue 1 è anzi la
-**più facile** del campione. Ma questi numeri sono misurati in interpolazione:
-nel regime d'uso vero (fit su stagioni successive) vanno letti **15-25% più
-alti**, come mostra la tabella qui sopra.
+**più facile** del campione.
 
 **Due prove di stress, entrambe superate.** (a) *Fit solo su stagioni
 successive*, che è la condizione reale dell'applicazione: MAE 0.0140 contro

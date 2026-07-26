@@ -1,5 +1,5 @@
 {
-  "generato": "2026-07-25 20:24",
+  "generato": "2026-07-26 13:52",
   "seed": 6219,
   "bootstrap_B": 10000,
   "n_fit": 12457,
@@ -1221,111 +1221,199 @@
       }
     }
   },
-  "stress_indietro": {
+  "regime_uso_indietro": {
     "bundesliga|1920": {
-      "mae_indietro": 0.014001117125683046,
-      "mae_loso": 0.013402553794547164,
-      "n": 306
+      "n": 306,
+      "E3_per_lega": 0.015552624949298922,
+      "E3_pooled3_storiche": 0.013662251870106171,
+      "E3_pooled4_LOLO": 0.013862964341306643,
+      "E3_pooled5": 0.014001117125683046,
+      "E3_finestra_1921": 0.012975753155519491,
+      "mae_loso_pooled5": 0.013402553794547164
     },
     "ligue_1|1920": {
-      "mae_indietro": 0.011237114976741475,
-      "mae_loso": 0.011214450210486997,
-      "n": 279
+      "n": 279,
+      "E3_per_lega": 0.012513102088711581,
+      "E3_pooled3_storiche": 0.011313869299289351,
+      "E3_pooled4_LOLO": 0.011240333072156446,
+      "E3_pooled5": 0.011237114976741475,
+      "E3_finestra_1921": 0.011394583937280846,
+      "mae_loso_pooled5": 0.011214450210486997
     },
     "bundesliga|2021": {
-      "mae_indietro": 0.014574313873835933,
-      "mae_loso": 0.014053104037634014,
-      "n": 306
+      "n": 306,
+      "E3_per_lega": 0.014700724081699182,
+      "E3_pooled3_storiche": 0.014712765791354356,
+      "E3_pooled4_LOLO": 0.014620632115007214,
+      "E3_pooled5": 0.014574313873835933,
+      "E3_finestra_1921": 0.013552535052153649,
+      "mae_loso_pooled5": 0.014053104037634014
     },
     "ligue_1|2021": {
-      "mae_indietro": 0.013498949129597516,
-      "mae_loso": 0.013559992864611821,
-      "n": 380
+      "n": 380,
+      "E3_per_lega": 0.014689034025060943,
+      "E3_pooled3_storiche": 0.01361115006785057,
+      "E3_pooled4_LOLO": 0.01351172488607827,
+      "E3_pooled5": 0.013498949129597516,
+      "E3_finestra_1921": 0.013996849170742254,
+      "mae_loso_pooled5": 0.013559992864611821
     }
   },
-  "scelto": "E3_per_lega",
+  "mae_regime_uso": {
+    "E3_per_lega": 0.01442,
+    "E3_pooled3_storiche": 0.01338,
+    "E3_pooled4_LOLO": 0.01336,
+    "E3_pooled5": 0.01338,
+    "E3_finestra_1921": 0.01307
+  },
+  "confronti_regime_uso": {
+    "_nota": "4 confronti, Bonferroni alpha=0.0125",
+    "E3_per_lega vs E3_pooled5": {
+      "delta_mae": 0.00104,
+      "ci95": [
+        0.000717,
+        0.001358
+      ],
+      "ci_bonferroni": [
+        0.000621,
+        0.001442
+      ],
+      "conclusivo": true,
+      "conclusivo_bonferroni": true
+    },
+    "E3_pooled3_storiche vs E3_pooled5": {
+      "delta_mae": 2e-06,
+      "ci95": [
+        -0.000121,
+        0.000125
+      ],
+      "ci_bonferroni": [
+        -0.000158,
+        0.00016
+      ],
+      "conclusivo": false,
+      "conclusivo_bonferroni": false
+    },
+    "E3_pooled4_LOLO vs E3_pooled5": {
+      "delta_mae": -1.8e-05,
+      "ci95": [
+        -7.4e-05,
+        4.1e-05
+      ],
+      "ci_bonferroni": [
+        -8.9e-05,
+        5.3e-05
+      ],
+      "conclusivo": false,
+      "conclusivo_bonferroni": false
+    },
+    "E3_finestra_1921 vs E3_pooled5": {
+      "delta_mae": -0.000309,
+      "ci95": [
+        -0.000552,
+        -6.8e-05
+      ],
+      "ci_bonferroni": [
+        -0.000614,
+        -0.0
+      ],
+      "conclusivo": true,
+      "conclusivo_bonferroni": true,
+      "delta_per_lega": {
+        "bundesliga": -0.001024,
+        "ligue_1": 0.000354
+      },
+      "replica_su_entrambe": false
+    }
+  },
+  "scelto": "E3_pooled5",
+  "scelto_criterio": "MAE nell'estrapolazione all'indietro (fit su stagioni tarde -> stima sul 2017-19), che e' il regime in cui la stima viene davvero usata; in interpolazione vincerebbe E3_per_lega, ma quel confronto non e' il regime d'uso (verifica avversariale, report 10 §15)",
+  "mae_atteso_regime_uso": {
+    "bundesliga": 0.0143,
+    "ligue_1": 0.0125
+  },
   "coefficienti_finali": {
     "bundesliga": {
       "coef": [
-        0.022167132346599984,
-        0.9834938147181594,
-        1.7522499766686181,
-        -0.8856787690571858,
-        1.749609237047114
+        0.024792912695164315,
+        0.9798352219201266,
+        1.3928644639302448,
+        -0.839769336825252,
+        1.393282790744501
       ],
-      "n_train": 2142
+      "n_train": 12457
     },
     "ligue_1": {
       "coef": [
-        0.04007328286088668,
-        0.9930927725456877,
-        1.8371882405071638,
-        -0.8764652998418903,
-        1.8296631553983613
+        0.024792912695164315,
+        0.9798352219201266,
+        1.3928644639302448,
+        -0.839769336825252,
+        1.393282790744501
       ],
-      "n_train": 2337
+      "n_train": 12457
     }
   },
   "sensibilita_scelta": {
     "E3_pooled3_storiche": {
-      "mean_abs_diff": 0.005831137000697855,
-      "p95": 0.015064235211804498
+      "mean_abs_diff": 0.0017302441253348566,
+      "p95": 0.004300656644245457
     },
     "E3_per_lega": {
-      "mean_abs_diff": 0.0,
-      "p95": 0.0
+      "mean_abs_diff": 0.0042193709665678,
+      "p95": 0.011004891479226626
     },
     "E3_pooled4_LOLO": {
-      "mean_abs_diff": 0.00495912614108186,
-      "p95": 0.013052009983993529
+      "mean_abs_diff": 0.0007548378068783822,
+      "p95": 0.0020159836773733066
     },
     "E3_finestra_1921": {
-      "mean_abs_diff": 0.004216734981113522,
-      "p95": 0.011160081835123774
+      "mean_abs_diff": 0.0022192652496747537,
+      "p95": 0.005474851768007407
     }
   },
   "confutazione_1719": {
     "bundesliga": {
       "stima_vs_apertura_1719": [
-        0.0011864475588457858,
-        -0.0036010500701620625,
-        0.0061105661373025135,
-        0.3061
+        0.0009406718404792535,
+        -0.0033329300276312116,
+        0.005263525209712645,
+        0.3311
       ],
-      "stima_vs_apertura_txt": "+0.00119 [-0.00360,+0.00611] nel rumore",
+      "stima_vs_apertura_txt": "+0.00094 [-0.00333,+0.00526] nel rumore",
       "chiusura_vera_vs_apertura_1926": [
         -0.0037297072833856167,
-        -0.006026408255570699,
-        -0.0014657390860230864,
+        -0.006015029781331719,
+        -0.0014793655017964747,
         0.9998
       ],
-      "chiusura_vera_vs_apertura_txt": "-0.00373 [-0.00603,-0.00147] CONCLUSIVO"
+      "chiusura_vera_vs_apertura_txt": "-0.00373 [-0.00602,-0.00148] CONCLUSIVO"
     },
     "ligue_1": {
       "stima_vs_apertura_1719": [
-        -0.007197892241564295,
-        -0.012136506705314107,
-        -0.002140473996292799,
-        0.9979
+        -0.006396281449754611,
+        -0.010526227258473549,
+        -0.0021619824473921136,
+        0.9983
       ],
-      "stima_vs_apertura_txt": "-0.00720 [-0.01214,-0.00214] CONCLUSIVO",
+      "stima_vs_apertura_txt": "-0.00640 [-0.01053,-0.00216] CONCLUSIVO",
       "chiusura_vera_vs_apertura_1926": [
         -0.004929875382680854,
-        -0.007284930682319644,
-        -0.002529163673348895,
+        -0.007330103726069797,
+        -0.0025663392891554886,
         1.0
       ],
-      "chiusura_vera_vs_apertura_txt": "-0.00493 [-0.00728,-0.00253] CONCLUSIVO"
+      "chiusura_vera_vs_apertura_txt": "-0.00493 [-0.00733,-0.00257] CONCLUSIVO"
     }
   },
   "n_stime_scritte": 1362,
   "mae_atteso_per_lega": {
-    "bundesliga": 0.0122,
-    "ligue_1": 0.011
+    "bundesliga": 0.0124,
+    "ligue_1": 0.0114
   },
   "mae_atteso_leghe_storiche": {
-    "serie_a": 0.0134,
-    "premier_league": 0.0122,
-    "la_liga": 0.0115
+    "serie_a": 0.0123,
+    "premier_league": 0.0123,
+    "la_liga": 0.0116
   }
 }

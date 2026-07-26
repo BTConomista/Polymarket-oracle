@@ -442,46 +442,160 @@ def main() -> int:
             f"{'*' if (row[lg]['mae'][1] > 0 or row[lg]['mae'][2] < 0) else ' '}"
             for lg in LEAGUES) + "     (* = CI conclusivo)")
 
-    # ---- 3. stress test: estrapolazione ALL'INDIETRO ------------------------
-    print("\n=== 3. STRESS TEST: fit sulle stagioni TARDE, predizione sulle "
-          "PRIME (come nell'applicazione reale, che va all'indietro) ===")
+    # ---- 3. il REGIME D'USO: estrapolazione ALL'INDIETRO ---------------------
+    #
+    # Questo blocco e' stato riscritto dopo la verifica avversariale (report 10
+    # §15). Prima confrontava i candidati solo in INTERPOLAZIONE (il fit vede
+    # stagioni prima e dopo la riga stimata) e su quel confronto sceglieva: cosi'
+    # il per-lega vinceva. Ma la chiusura O/U del 2017-19 NON esiste, quindi i
+    # coefficienti possono venire SOLO da stagioni successive: il regime d'uso e'
+    # l'estrapolazione all'indietro, e li' il verdetto si capovolge.
+    # Ora ogni candidato e' valutato in QUEL regime, e la scelta si fa li'.
+    print("\n=== 3. REGIME D'USO: fit sulle stagioni TARDE, predizione sulle "
+          "PRIME (e' cosi' che la stima viene davvero usata) ===")
     X, yv = _X(fit), _logit(fit["p_over_close"])
     S = fit["season"].to_numpy()
+    pc_all = fit["p_over_close"].to_numpy()
     tr_late = np.isin(S, LATE_SEASONS)
+
+    def _tr_indietro(variant: str, lg: str, s_test: str) -> np.ndarray:
+        """Righe di training del candidato NEL REGIME D'USO.
+
+        Vincolo che vale per TUTTI i candidati: la stagione su cui si valuta non
+        entra mai nel fit. Sembra ovvio, e infatti la prima stesura di questo
+        blocco lo violava per il solo candidato "finestra vicina" (che si
+        allenava sulle stesse stagioni 1920/2021 su cui veniva valutato) e lo
+        faceva vincere. E' lo stesso difetto di protocollo che la verifica
+        avversariale aveva trovato altrove: qui viene chiuso alla radice.
+
+        Nota onesta sul candidato "finestra vicina": escludendo la stagione di
+        test gli resta una sola stagione di training invece di due, quindi il
+        confronto lo PENALIZZA rispetto al suo uso reale. E' il prezzo da pagare
+        per non barare; se vincesse comunque, sarebbe un risultato solido.
+        """
+        base = {"E3_pooled5": np.ones(len(fit), bool),
+                "E3_pooled4_LOLO": L != lg,
+                "E3_pooled3_storiche": np.isin(L, HIST),
+                "E3_per_lega": L == lg,
+                "E3_finestra_1921": np.isin(S, WINDOW_SEASONS)}[variant]
+        finestra = variant == "E3_finestra_1921"
+        return (base & (S != s_test)) if finestra else (base & tr_late)
+
+    # l'effetto fisso per-lega non e' applicabile al 2017-19 (l'intercetta della
+    # lega bersaglio non e' stimabile fuori campione): resta fuori dalla scelta,
+    # coerentemente con fit_finale, ed era gia' risultato nel rumore (Q2).
+    CAND = [v for v in VARIANTS if v.startswith("E3") and v != "E3_pooled5_FE"]
+    err_ind = {v: {lg: [] for lg in NEW} for v in CAND}
     stress = {}
     for s_test in WINDOW_SEASONS:
         for lg in NEW:
             te = np.where((L == lg) & (S == s_test))[0]
             if len(te) == 0:
                 continue
-            coef = _ols(X[tr_late], yv[tr_late])
-            ph = _sigmoid(X[te] @ coef)
-            pc = fit["p_over_close"].to_numpy()[te]
-            mae_back = float(np.abs(ph - pc).mean())
-            mae_loso = float(np.abs(preds["E3_pooled5"][te] - pc).mean())
-            stress[f"{lg}|{s_test}"] = {"mae_indietro": mae_back,
-                                        "mae_loso": mae_loso, "n": int(len(te))}
-            print(f"  {lg:12s} {s_test}  MAE fit-sul-tardi {mae_back:.5f}  vs "
-                  f"MAE leave-one-out {mae_loso:.5f}  "
-                  f"({mae_back - mae_loso:+.5f})")
-    res["stress_indietro"] = stress
+            riga = {"n": int(len(te))}
+            for v in CAND:
+                tr = _tr_indietro(v, lg, s_test)
+                ph = _sigmoid(X[te] @ _ols(X[tr], yv[tr]))
+                e = ph - pc_all[te]
+                err_ind[v][lg].append(e)
+                riga[v] = float(np.abs(e).mean())
+            riga["mae_loso_pooled5"] = float(
+                np.abs(preds["E3_pooled5"][te] - pc_all[te]).mean())
+            stress[f"{lg}|{s_test}"] = riga
+            print(f"  {lg:12s} {s_test} (n={len(te):3d})  " + "  ".join(
+                f"{v.replace('E3_', ''):16s}{riga[v]:.5f}" for v in CAND))
+    res["regime_uso_indietro"] = stress
+
+    # confronto appaiato fra candidati NEL REGIME D'USO
+    err_pool = {v: np.concatenate([np.concatenate(err_ind[v][lg]) for lg in NEW])
+                for v in CAND}
+    mae_ind = {v: float(np.abs(err_pool[v]).mean()) for v in CAND}
+    print("\n  MAE nel REGIME D'USO, 2 leghe nuove insieme:")
+    for v in sorted(CAND, key=lambda k: mae_ind[k]):
+        print(f"    {v:24s} {mae_ind[v]:.5f}")
+    res["mae_regime_uso"] = {v: round(mae_ind[v], 5) for v in CAND}
+
+    # Il confronto e' fra 4 candidati e il pooled: sono 4 test, non uno. Senza
+    # correzione, un CI appena conclusivo su 4 tentativi e' quello che il caso
+    # produce da solo. E' la lezione procedurale della verifica avversariale
+    # ("ogni statistica di testa deve avere il suo intervallo"), applicata qui.
+    K_TEST = len(CAND) - 1
+    ALPHA_B = 0.05 / K_TEST
+
+    def _boot_pair(a, b):
+        n = len(a)
+        idx = rng.integers(0, n, size=(B, n))
+        d = np.abs(a)[idx].mean(1) - np.abs(b)[idx].mean(1)
+        return (float(np.abs(a).mean() - np.abs(b).mean()),
+                float(np.percentile(d, 2.5)), float(np.percentile(d, 97.5)),
+                float(np.percentile(d, 100 * ALPHA_B / 2)),
+                float(np.percentile(d, 100 * (1 - ALPHA_B / 2))))
+
+    res["confronti_regime_uso"] = {"_nota": f"{K_TEST} confronti, "
+                                   f"Bonferroni alpha={ALPHA_B:.4f}"}
+    for v in CAND:
+        if v == "E3_pooled5":
+            continue
+        d, lo, hi, blo, bhi = _boot_pair(err_pool[v], err_pool["E3_pooled5"])
+        concl = lo > 0 or hi < 0
+        concl_b = blo > 0 or bhi < 0
+        res["confronti_regime_uso"][f"{v} vs E3_pooled5"] = {
+            "delta_mae": round(d, 6), "ci95": [round(lo, 6), round(hi, 6)],
+            "ci_bonferroni": [round(blo, 6), round(bhi, 6)],
+            "conclusivo": bool(concl), "conclusivo_bonferroni": bool(concl_b)}
+        print(f"    {v:24s} vs pooled5: {d:+.5f} [{lo:+.5f},{hi:+.5f}] "
+              f"{'CONCLUSIVO' if concl else 'nel rumore'}"
+              f"  | Bonf [{blo:+.5f},{bhi:+.5f}] "
+              f"{'CONCLUSIVO' if concl_b else 'no'}")
 
     # ---- 4. scelta e applicazione -----------------------------------------
-    ordine = sorted([v for v in VARIANTS if v.startswith("E3")],
-                    key=lambda k: stats[k]["NUOVE"]["mae"])
+    # La scelta si fa nel REGIME D'USO (§3), non in interpolazione: e' la
+    # correzione imposta dalla verifica avversariale. Resta la disciplina del
+    # multiple testing: se il migliore non batte il pooled con CI conclusivo,
+    # si tiene il pooled (piu' semplice, ed e' la formula gia' in produzione).
+    ordine = sorted(CAND, key=lambda k: mae_ind[k])
     best = ordine[0]
-    # disciplina multiple testing (Fase 17): se il migliore non batte il
-    # pooled5 con CI conclusivo, si tiene il piu' semplice/robusto = pooled5.
     if best != "E3_pooled5":
-        c = confronto(preds, fit, best, "E3_pooled5", m_new, rng)
-        conclusivo = c["mae"][1] > 0 or c["mae"][2] < 0
-        print(f"\n  migliore nominale {best} vs E3_pooled5: MAE {c['mae_txt']}")
-        if not conclusivo:
-            print("  -> differenza NON conclusiva: si sceglie il piu' semplice "
+        cc = res["confronti_regime_uso"][f"{best} vs E3_pooled5"]
+        # Seconda condizione, oltre al CI corretto: il SEGNO deve reggere su
+        # ENTRAMBE le leghe separatamente. E' la regola di replica che il
+        # progetto usa gia' per ogni leva ("si replica sull'altra lega?"), e
+        # qui serve perche' un CI di Bonferroni che sfiora lo zero non
+        # distingue un effetto vero da un caso fortunato.
+        per_lega = {lg: (float(np.abs(np.concatenate(err_ind[best][lg])).mean())
+                         - float(np.abs(np.concatenate(
+                             err_ind["E3_pooled5"][lg])).mean()))
+                    for lg in NEW}
+        replica = all(v < 0 for v in per_lega.values())
+        cc["delta_per_lega"] = {lg: round(v, 6) for lg, v in per_lega.items()}
+        cc["replica_su_entrambe"] = bool(replica)
+        print(f"\n  migliore nominale nel regime d'uso: {best} "
+              f"({cc['delta_mae']:+.5f} {cc['ci95']}, "
+              f"Bonferroni {cc['ci_bonferroni']})")
+        print("     per lega: " + "  ".join(
+            f"{lg} {per_lega[lg]:+.5f}" for lg in NEW)
+            + f"   -> segno {'replicato' if replica else 'NON replicato'}")
+        if not cc["conclusivo_bonferroni"] or not replica:
+            motivo = ("non conclusiva dopo la correzione per i "
+                      f"{K_TEST} confronti" if not cc["conclusivo_bonferroni"]
+                      else "il segno non si replica su entrambe le leghe")
+            print(f"  -> {motivo}: si sceglie il piu' semplice "
                   "(E3_pooled5, stessa formula gia' in produzione).")
             best = "E3_pooled5"
-    print(f"\n=== 4. STIMATORE SCELTO: {best} ===")
+    print(f"\n=== 4. STIMATORE SCELTO (nel regime d'uso): {best} ===")
     res["scelto"] = best
+    res["scelto_criterio"] = ("MAE nell'estrapolazione all'indietro (fit su "
+                              "stagioni tarde -> stima sul 2017-19), che e' il "
+                              "regime in cui la stima viene davvero usata; "
+                              "in interpolazione vincerebbe E3_per_lega, ma "
+                              "quel confronto non e' il regime d'uso "
+                              "(verifica avversariale, report 10 §15)")
+    # errore atteso DICHIARATO = quello del regime d'uso, per lega
+    mae_uso_lega = {lg: float(np.abs(np.concatenate(err_ind[best][lg])).mean())
+                    for lg in NEW}
+    res["mae_atteso_regime_uso"] = {lg: round(v, 4) for lg, v in mae_uso_lega.items()}
+    print("  errore atteso DICHIARATO (regime d'uso): " + "  ".join(
+        f"{lg} {mae_uso_lega[lg]:.4f}" for lg in NEW))
 
     rows = []
     coefs = {}
@@ -490,9 +604,14 @@ def main() -> int:
         coefs[lg] = {"coef": [float(c) for c in coef], "n_train": n_tr}
         sub = target[target["league"] == lg]
         p_est = _sigmoid(_X(sub) @ coef)
-        mae_lg = stats[best][lg]["mae"]
+        # errore DICHIARATO = quello del regime d'uso (estrapolazione
+        # all'indietro), non quello in interpolazione: il secondo e' 15-25% piu'
+        # ottimistico e descrive una situazione che qui non si verifica mai.
+        mae_lg = mae_uso_lega[lg]
+        mae_interp = stats[best][lg]["mae"]
         print(f"  {lg:12s} coef {np.array2string(coef, precision=4)} "
-              f"(n_train {n_tr}) -> {len(sub)} stime, MAE atteso {mae_lg:.4f}")
+              f"(n_train {n_tr}) -> {len(sub)} stime, MAE atteso {mae_lg:.4f} "
+              f"(in interpolazione sarebbe {mae_interp:.4f})")
         for r, p in zip(sub.itertuples(), p_est):
             rows.append({
                 "league": lg, "season": r.season,
@@ -502,8 +621,15 @@ def main() -> int:
                 "metodo": f"E3 ({best}): logit(close) ~ 1 + logit(open O/U) + "
                           f"Dlogit(H,D,A) 1X2, fit su {n_tr} partite 2019-20+",
                 "mae_atteso": round(mae_lg, 4),
-                "note": "coefficienti fittati su stagioni SUCCESSIVE; input O/U "
-                        "2017-19 = BbAv (Betbrain), movimento 1X2 = Pinnacle",
+                "mae_interpolazione": round(mae_interp, 4),
+                "note": "coefficienti fittati su stagioni SUCCESSIVE (l'unico "
+                        "dato possibile: la chiusura O/U 2017-19 non esiste). "
+                        "mae_atteso e' misurato in quello STESSO regime "
+                        "(fit sul tardi -> stima sul 2017-19); "
+                        "mae_interpolazione e' il valore piu' ottimistico che "
+                        "si otterrebbe se il fit vedesse anche stagioni "
+                        "precedenti, e NON si applica qui. Input O/U 2017-19 = "
+                        "BbAv (Betbrain), movimento 1X2 = Pinnacle.",
             })
     res["coefficienti_finali"] = coefs
 
