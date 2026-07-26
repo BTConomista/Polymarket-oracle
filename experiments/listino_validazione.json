@@ -1,0 +1,1805 @@
+{
+ "meta": {
+  "titolo": "Listino dei mercati con etichetta di validazione (Fronte 7)",
+  "commit": "f71ca9f",
+  "leghe": [
+   "serie_a",
+   "premier_league",
+   "la_liga"
+  ],
+  "stagioni_test": [
+   2021,
+   2122,
+   2223,
+   2324,
+   2425,
+   2526
+  ],
+  "n_partite_test": 6840,
+  "rho": -0.06,
+  "theta_grid": [
+   1.0,
+   1.075,
+   1.15,
+   1.225,
+   1.3,
+   1.375,
+   1.45
+  ],
+  "n_bootstrap": 1000,
+  "motore": "market-implied + router v3 (mi.price_markets), costanti (phi0,kappa,theta) ri-fittate walk-forward sulle sole stagioni passate della stessa lega",
+  "baseline": "frequenza dell'esito nelle sole stagioni passate della stessa lega (ex-ante)",
+  "limiti": [
+   "bootstrap a livello di partita: IC ottimistici (ignora la correlazione intra-stagione)",
+   "livello A° = la quota e' l'INPUT del modello: confronto circolare",
+   "finestra 2020-21..2025-26; il 2017-19 non ha O/U di chiusura",
+   "calibrato non vuol dire vincente: alpha*=0 resta il fatto centrale",
+   "le righe outright NON sono ricalcolate qui: importate dal registro"
+  ]
+ },
+ "livelli": {
+  "A": "validato contro una quota ESTERNA e INDIPENDENTE (non usata come input)",
+  "A°": "la quota esiste ma e' l'INPUT del motore: confronto CIRCOLARE",
+  "B": "nessuna quota nei dati, esito osservabile: calibrazione si', efficienza no",
+  "C": "non validato / fuori portata"
+ },
+ "onesta": {
+  "A": "possiamo dire se prezziamo bene quanto il book sharp su questo mercato; NON che ci guadagniamo (alpha*=0)",
+  "A°": "la quota di questo mercato ENTRA nel modello: il confronto misura solo l'affinamento del router sul devig grezzo, mai un edge indipendente",
+  "B": "possiamo affermare che le probabilita' sono calibrate e che battono la baseline; NON possiamo dire se sono efficienti quanto un mercato, perche' un mercato non c'e' nei dati"
+ },
+ "folds": [
+  {
+   "league": "serie_a",
+   "test_season": 2021,
+   "n_train": 380,
+   "n_test": 380,
+   "phi0": 0.0,
+   "kappa": 1.1888297363291365,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.953264915556359,
+    "1.075": 2.9483036891319983,
+    "1.15": 2.9453497417462504,
+    "1.225": 2.944277766423952,
+    "1.3": 2.944971114722665,
+    "1.375": 2.9473236019281455,
+    "1.45": 2.9512382353670628
+   }
+  },
+  {
+   "league": "serie_a",
+   "test_season": 2122,
+   "n_train": 760,
+   "n_test": 380,
+   "phi0": 0.14621225118228187,
+   "kappa": 2.0199303360667016,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.953833092812459,
+    "1.075": 2.949197492182972,
+    "1.15": 2.946588661182861,
+    "1.225": 2.9458719416588877,
+    "1.3": 2.9469289076889487,
+    "1.375": 2.9496517975311165,
+    "1.45": 2.953942222498631
+   }
+  },
+  {
+   "league": "serie_a",
+   "test_season": 2223,
+   "n_train": 1140,
+   "n_test": 380,
+   "phi0": 0.1959111369061258,
+   "kappa": 1.6248719565462904,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.931823815533223,
+    "1.075": 2.927533419456622,
+    "1.15": 2.92523571758799,
+    "1.225": 2.924804381143464,
+    "1.3": 2.926122933539212,
+    "1.375": 2.9290853406474717,
+    "1.45": 2.933594736384523
+   }
+  },
+  {
+   "league": "serie_a",
+   "test_season": 2324,
+   "n_train": 1520,
+   "n_test": 380,
+   "phi0": 0.15924389846553136,
+   "kappa": 1.3543825231123714,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.888565583187491,
+    "1.075": 2.8841308943164496,
+    "1.15": 2.8816139039542175,
+    "1.225": 2.8808958629707315,
+    "1.3": 2.8818664500230127,
+    "1.375": 2.884425196515133,
+    "1.45": 2.888480283305379
+   }
+  },
+  {
+   "league": "serie_a",
+   "test_season": 2425,
+   "n_train": 1900,
+   "n_test": 380,
+   "phi0": 0.20643114934006523,
+   "kappa": 1.3602524989589784,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.86056032226444,
+    "1.075": 2.8560036082424665,
+    "1.15": 2.8533302315614377,
+    "1.225": 2.8524253214891173,
+    "1.3": 2.853180733266805,
+    "1.375": 2.8554979649275185,
+    "1.45": 2.8592869782529156
+   }
+  },
+  {
+   "league": "serie_a",
+   "test_season": 2526,
+   "n_train": 2280,
+   "n_test": 380,
+   "phi0": 0.25958160635262495,
+   "kappa": 1.6678017552231597,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.8386750434915977,
+    "1.075": 2.833986819901299,
+    "1.15": 2.8311541855144355,
+    "1.225": 2.830064435938802,
+    "1.3": 2.8306116370274736,
+    "1.375": 2.832699281542614,
+    "1.45": 2.836239135094556
+   }
+  },
+  {
+   "league": "premier_league",
+   "test_season": 2021,
+   "n_train": 380,
+   "n_test": 380,
+   "phi0": 0.680768551875425,
+   "kappa": 5.0,
+   "theta": 1.15,
+   "theta_grid_ll": {
+    "1.0": 2.8370967371005094,
+    "1.075": 2.834503977506341,
+    "1.15": 2.8337077645264848,
+    "1.225": 2.8346042823601425,
+    "1.3": 2.83709155648677,
+    "1.375": 2.841076728912332,
+    "1.45": 2.846474952148201
+   }
+  },
+  {
+   "league": "premier_league",
+   "test_season": 2122,
+   "n_train": 760,
+   "n_test": 380,
+   "phi0": 0.1880968377740024,
+   "kappa": 5.0,
+   "theta": 1.0,
+   "theta_grid_ll": {
+    "1.0": 2.895087709509008,
+    "1.075": 2.896029241871879,
+    "1.15": 2.8987420616425474,
+    "1.225": 2.9031331115788195,
+    "1.3": 2.909102952634516,
+    "1.375": 2.916560980986336,
+    "1.45": 2.925424351262868
+   }
+  },
+  {
+   "league": "premier_league",
+   "test_season": 2223,
+   "n_train": 1140,
+   "n_test": 380,
+   "phi0": 0.15805872638271454,
+   "kappa": 5.0,
+   "theta": 1.0,
+   "theta_grid_ll": {
+    "1.0": 2.893711605150894,
+    "1.075": 2.894116489499909,
+    "1.15": 2.896319343787508,
+    "1.225": 2.9002133608155978,
+    "1.3": 2.9056971217032475,
+    "1.375": 2.9126782469419994,
+    "1.45": 2.9210722995838276
+   }
+  },
+  {
+   "league": "premier_league",
+   "test_season": 2324,
+   "n_train": 1520,
+   "n_test": 380,
+   "phi0": 0.0,
+   "kappa": 1.8566241323940131,
+   "theta": 1.0,
+   "theta_grid_ll": {
+    "1.0": 2.9157440917243687,
+    "1.075": 2.9166926365117267,
+    "1.15": 2.919458596292198,
+    "1.225": 2.9239281130011077,
+    "1.3": 2.9299991573393593,
+    "1.375": 2.937578786292864,
+    "1.45": 2.9465820396114193
+   }
+  },
+  {
+   "league": "premier_league",
+   "test_season": 2425,
+   "n_train": 1900,
+   "n_test": 380,
+   "phi0": 0.0,
+   "kappa": 2.084222895836484,
+   "theta": 1.075,
+   "theta_grid_ll": {
+    "1.0": 2.9392352640624924,
+    "1.075": 2.9391117849057236,
+    "1.15": 2.940868599959352,
+    "1.225": 2.944387957298315,
+    "1.3": 2.949562033984821,
+    "1.375": 2.9562926707033577,
+    "1.45": 2.9644902039451564
+   }
+  },
+  {
+   "league": "premier_league",
+   "test_season": 2526,
+   "n_train": 2280,
+   "n_test": 380,
+   "phi0": 0.0,
+   "kappa": 1.8996345167985051,
+   "theta": 1.075,
+   "theta_grid_ll": {
+    "1.0": 2.9394489596269775,
+    "1.075": 2.938785349711335,
+    "1.15": 2.9400086873333877,
+    "1.225": 2.9430060510531257,
+    "1.3": 2.947668882623383,
+    "1.375": 2.9538983455964387,
+    "1.45": 2.9616041470497643
+   }
+  },
+  {
+   "league": "la_liga",
+   "test_season": 2021,
+   "n_train": 380,
+   "n_test": 380,
+   "phi0": 0.09835663976780401,
+   "kappa": 0.18983634154349738,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.7326532429749237,
+    "1.075": 2.7291734406635753,
+    "1.15": 2.7273234721655526,
+    "1.225": 2.7270217806236534,
+    "1.3": 2.728179989524387,
+    "1.375": 2.730717489695874,
+    "1.45": 2.7345604854809746
+   }
+  },
+  {
+   "league": "la_liga",
+   "test_season": 2122,
+   "n_train": 760,
+   "n_test": 380,
+   "phi0": 0.3107776191823332,
+   "kappa": 1.9665340444603718,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.728795839511547,
+    "1.075": 2.724834764290421,
+    "1.15": 2.7225188851647246,
+    "1.225": 2.7217705143904283,
+    "1.3": 2.722499454747821,
+    "1.375": 2.7246234247511834,
+    "1.45": 2.728067082258068
+   }
+  },
+  {
+   "league": "la_liga",
+   "test_season": 2223,
+   "n_train": 1140,
+   "n_test": 380,
+   "phi0": 0.4733304247526615,
+   "kappa": 2.9867772460331006,
+   "theta": 1.15,
+   "theta_grid_ll": {
+    "1.0": 2.753726576454083,
+    "1.075": 2.751627494258822,
+    "1.15": 2.7511837885928174,
+    "1.225": 2.75231343068495,
+    "1.3": 2.7549257544226746,
+    "1.375": 2.7589380407346904,
+    "1.45": 2.764274535565817
+   }
+  },
+  {
+   "league": "la_liga",
+   "test_season": 2324,
+   "n_train": 1520,
+   "n_test": 380,
+   "phi0": 0.40553517473764494,
+   "kappa": 5.0,
+   "theta": 1.15,
+   "theta_grid_ll": {
+    "1.0": 2.7481765019146147,
+    "1.075": 2.7453172252815707,
+    "1.15": 2.7441030202444083,
+    "1.225": 2.7444500796737192,
+    "1.3": 2.7462689601196932,
+    "1.375": 2.7494780506023058,
+    "1.45": 2.754002606058906
+   }
+  },
+  {
+   "league": "la_liga",
+   "test_season": 2425,
+   "n_train": 1900,
+   "n_test": 380,
+   "phi0": 0.32981283433876146,
+   "kappa": 3.5052755420304647,
+   "theta": 1.15,
+   "theta_grid_ll": {
+    "1.0": 2.7633405537984324,
+    "1.075": 2.760849643853632,
+    "1.15": 2.7600252583507854,
+    "1.225": 2.7607781766872206,
+    "1.3": 2.7630172248947584,
+    "1.375": 2.766659240256535,
+    "1.45": 2.7716280864278153
+   }
+  },
+  {
+   "league": "la_liga",
+   "test_season": 2526,
+   "n_train": 2280,
+   "n_test": 380,
+   "phi0": 0.3043858071356942,
+   "kappa": 3.666924394234897,
+   "theta": 1.225,
+   "theta_grid_ll": {
+    "1.0": 2.756214238074312,
+    "1.075": 2.7528461415666805,
+    "1.15": 2.751148160223934,
+    "1.225": 2.7510298017815535,
+    "1.3": 2.752399357867077,
+    "1.375": 2.755173200104188,
+    "1.45": 2.7592747914653133
+   }
+  }
+ ],
+ "listino": [
+  {
+   "key": "asian_handicap",
+   "label": "handicap asiatico (linea di chiusura)",
+   "family": "matrice dei gol",
+   "level": "A",
+   "n": 6839,
+   "p_mean": 0.5005119176199064,
+   "freq": 0.4893990349466296,
+   "bias": 0.011112882673276814,
+   "ece": 0.01198182262782655,
+   "ll_model": 0.6945030693986008,
+   "ll_base": null,
+   "delta_base": null,
+   "ci_delta_base": null,
+   "p_model_better_base": null,
+   "ll_market": 0.6941256419324662,
+   "delta_market": 0.00037742746613467215,
+   "ci_delta_market": null,
+   "ece_market": 0.012970462615597828,
+   "bias_market": 0.01204741039766244,
+   "brier_model": 0.20439890470374966,
+   "brier_market": 0.20440899545866265,
+   "delta_brier_vs_market": -1.0090754912986965e-05,
+   "ci_delta_brier_vs_market": [
+    -0.0002549027721633786,
+    0.0002319331998903454
+   ],
+   "corr_model_market": 0.9009436746430759
+  },
+  {
+   "key": "away_win",
+   "label": "2 (ospite vince)",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.30672664262577565,
+   "freq": 0.3144736842105263,
+   "bias": -0.007747041584750647,
+   "ece": 0.015731345733225995,
+   "ll_model": 0.5409312589344271,
+   "ll_base": 0.6227707207034102,
+   "delta_base": -0.08183946176898306,
+   "ci_delta_base": [
+    -0.09025047171680253,
+    -0.07383070345246508
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.5410900393963659,
+   "delta_market": -0.00015878046193887373,
+   "ci_delta_market": [
+    -0.0007927303942383634,
+    0.0005058518614758547
+   ],
+   "ece_market": 0.021244255174816224,
+   "bias_market": -0.0011663201475890506,
+   "p_model_better_market": 0.664
+  },
+  {
+   "key": "dc_1x",
+   "label": "doppia chance 1X",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.6932733573742245,
+   "freq": 0.6855263157894737,
+   "bias": 0.007747041584750813,
+   "ece": 0.01573134573322594,
+   "ll_model": 0.5409312589344271,
+   "ll_base": 0.6227707207034102,
+   "delta_base": -0.08183946176898307,
+   "ci_delta_base": [
+    -0.09025047171680255,
+    -0.07383070345246508
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.5410900393963659,
+   "delta_market": -0.00015878046193887953,
+   "ci_delta_market": [
+    -0.0007927303942383571,
+    0.0005058518614758547
+   ],
+   "ece_market": 0.021244255174816203,
+   "bias_market": 0.001166320147589106,
+   "p_model_better_market": 0.664
+  },
+  {
+   "key": "draw",
+   "label": "X (pareggio)",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.2635586777518411,
+   "freq": 0.25687134502923975,
+   "bias": 0.006687332722601358,
+   "ece": 0.006967183132273727,
+   "ll_model": 0.5611728569051242,
+   "ll_base": 0.5698409445192143,
+   "delta_base": -0.008668087614090028,
+   "ci_delta_base": [
+    -0.011671452394829085,
+    -0.005346265593415271
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.560784685764731,
+   "delta_market": 0.0003881711403932759,
+   "ci_delta_market": [
+    -0.0005784856006421991,
+    0.0013592820858177998
+   ],
+   "ece_market": 0.005622961106067404,
+   "bias_market": -0.003030413598459014,
+   "p_model_better_market": 0.207
+  },
+  {
+   "key": "dc_12",
+   "label": "doppia chance 12",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.736441322248159,
+   "freq": 0.7431286549707602,
+   "bias": -0.006687332722601247,
+   "ece": 0.006967183132273739,
+   "ll_model": 0.5611728569051242,
+   "ll_base": 0.5698409445192143,
+   "delta_base": -0.00866808761409004,
+   "ci_delta_base": [
+    -0.011671452394829094,
+    -0.0053462655934152815
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.560784685764731,
+   "delta_market": 0.0003881711403932722,
+   "ci_delta_market": [
+    -0.0005784856006422062,
+    0.001359282085817799
+   ],
+   "ece_market": 0.005622961106067371,
+   "bias_market": 0.003030413598459014,
+   "p_model_better_market": 0.207
+  },
+  {
+   "key": "home_win",
+   "label": "1 (casa vince)",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.4297146796223833,
+   "freq": 0.4286549707602339,
+   "bias": 0.0010597088621494,
+   "ece": 0.013733938736798469,
+   "ll_model": 0.5931078576345796,
+   "ll_base": 0.6829603440299193,
+   "delta_base": -0.08985248639533983,
+   "ci_delta_base": [
+    -0.09848073296992214,
+    -0.0810396242067993
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.5937015778027469,
+   "delta_market": -0.0005937201681672597,
+   "ci_delta_market": [
+    -0.0011731432198765946,
+    1.889675453599677e-05
+   ],
+   "ece_market": 0.018552442847001218,
+   "bias_market": 0.004196733746048176,
+   "p_model_better_market": 0.971
+  },
+  {
+   "key": "dc_2x",
+   "label": "doppia chance 2X",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.5702853203776167,
+   "freq": 0.571345029239766,
+   "bias": -0.0010597088621493445,
+   "ece": 0.013733938736798467,
+   "ll_model": 0.5931078576345796,
+   "ll_base": 0.6829603440299195,
+   "delta_base": -0.08985248639533983,
+   "ci_delta_base": [
+    -0.09848073296992214,
+    -0.0810396242067993
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.5937015778027469,
+   "delta_market": -0.0005937201681672594,
+   "ci_delta_market": [
+    -0.0011731432198765993,
+    1.8896754535991982e-05
+   ],
+   "ece_market": 0.018552442847001253,
+   "bias_market": -0.004196733746048009,
+   "p_model_better_market": 0.971
+  },
+  {
+   "key": "over_2.5",
+   "label": "Over 2.5",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": 0.5128956303132474,
+   "freq": 0.508187134502924,
+   "bias": 0.004708495810323399,
+   "ece": 0.011563802682641034,
+   "ll_model": 0.6753067870241619,
+   "ll_base": 0.6936334889662669,
+   "delta_base": -0.018326701942104964,
+   "ci_delta_base": [
+    -0.02318506214230413,
+    -0.013654279264388515
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.6749316164418708,
+   "delta_market": 0.00037517058229092704,
+   "ci_delta_market": [
+    -8.751019979897055e-06,
+    0.0007728069802104829
+   ],
+   "ece_market": 0.012543517386387861,
+   "bias_market": 0.0014508528640923002,
+   "p_model_better_market": 0.028
+  },
+  {
+   "key": "1x2_multi",
+   "label": "1X2 (multiclasse, 3 esiti)",
+   "family": "matrice dei gol",
+   "level": "A°",
+   "n": 6840,
+   "p_mean": null,
+   "freq": null,
+   "bias": 0.0,
+   "ece": 0.009235919949020841,
+   "ll_model": 0.964227800298356,
+   "ll_base": 1.076197681996882,
+   "delta_base": -0.11196988169852598,
+   "ci_delta_base": [
+    -0.1219577515382187,
+    -0.10216147479031945
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": 0.9645403599498191,
+   "delta_market": -0.0003125596514630723,
+   "ci_delta_market": [
+    -0.0013994823196455156,
+    0.0007582109304855128
+   ],
+   "p_model_better_market": 0.69,
+   "ece_market": 0.011683584643053009,
+   "bias_market": 0.0
+  },
+  {
+   "key": "over_0.5",
+   "label": "Over 0.5",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.9324382713780183,
+   "freq": 0.9340643274853802,
+   "bias": -0.001626056107361884,
+   "ece": 0.0016260561073618176,
+   "ll_model": 0.23853869979693348,
+   "ll_base": 0.24352884163829452,
+   "delta_base": -0.004990141841361057,
+   "ci_delta_base": [
+    -0.0071530863967958725,
+    -0.0025988243967205653
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "away_by_2plus",
+   "label": "ospite vince con >=2 gol",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.14218325786741398,
+   "freq": 0.14166666666666666,
+   "bias": 0.0005165912007473183,
+   "ece": 0.006856675931101408,
+   "ll_model": 0.353810217520832,
+   "ll_base": 0.4072336629957212,
+   "delta_base": -0.05342344547488927,
+   "ci_delta_base": [
+    -0.06144541061483286,
+    -0.046070994710325545
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "over_4.5",
+   "label": "Over 4.5",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.13811070615714052,
+   "freq": 0.1412280701754386,
+   "bias": -0.003117364018298069,
+   "ece": 0.005529859445109613,
+   "ll_model": 0.3927691704478529,
+   "ll_base": 0.40826477441487546,
+   "delta_base": -0.01549560396702267,
+   "ci_delta_base": [
+    -0.01949778339552847,
+    -0.011234279459719054
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "wtn_away",
+   "label": "ospite vince a zero",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.16065503352138713,
+   "freq": 0.17002923976608186,
+   "bias": -0.009374206244694733,
+   "ece": 0.013109352180545743,
+   "ll_model": 0.4153412412641626,
+   "ll_base": 0.4568115978466518,
+   "delta_base": -0.04147035658248927,
+   "ci_delta_base": [
+    -0.04767173549009966,
+    -0.035602470336233365
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "home_by_2plus",
+   "label": "casa vince con >=2 gol",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.2297611773485774,
+   "freq": 0.21154970760233918,
+   "bias": 0.018211469746238218,
+   "ece": 0.020177517626382726,
+   "ll_model": 0.447334688157332,
+   "ll_base": 0.5160411930480516,
+   "delta_base": -0.06870650489071965,
+   "ci_delta_base": [
+    -0.07639277937027585,
+    -0.06023732662689635
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "wtn_home",
+   "label": "casa vince a zero",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.2339626494112033,
+   "freq": 0.23450292397660819,
+   "bias": -0.0005402745654048968,
+   "ece": 0.011872478997039701,
+   "ll_model": 0.4992621717946439,
+   "ll_base": 0.5455814162579561,
+   "delta_base": -0.04631924446331223,
+   "ci_delta_base": [
+    -0.05259303922986815,
+    -0.04028718302771057
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "home_ov_0.5",
+   "label": "casa segna (Over 0.5 casa)",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.7684803584809407,
+   "freq": 0.7640350877192983,
+   "bias": 0.0044452707616423615,
+   "ece": 0.011094152078197802,
+   "ll_model": 0.5070327227048105,
+   "ll_base": 0.5477755485745915,
+   "delta_base": -0.04074282586978107,
+   "ci_delta_base": [
+    -0.046598858404407376,
+    -0.03479221940633618
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "cs_away",
+   "label": "clean sheet ospite",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.2315196415190594,
+   "freq": 0.23596491228070177,
+   "bias": -0.0044452707616423615,
+   "ece": 0.011094152078197757,
+   "ll_model": 0.5070327227048105,
+   "ll_base": 0.5477755485745915,
+   "delta_base": -0.04074282586978106,
+   "ci_delta_base": [
+    -0.046598858404407376,
+    -0.03479221940633617
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "cards_ov_2.5",
+   "label": "Over 2.5 cartellini",
+   "family": "cartellini",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.780773582259553,
+   "freq": 0.7725806451612903,
+   "bias": 0.008192937098262632,
+   "ece": 0.028715797978810183,
+   "ll_model": 0.5230773610336281,
+   "ll_base": 0.5294987267225582,
+   "delta_base": -0.006421365688930177,
+   "ci_delta_base": [
+    -0.009851608298237904,
+    -0.002894816715094159
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "over_1.5",
+   "label": "Over 1.5",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.7672550922765673,
+   "freq": 0.7568713450292398,
+   "bias": 0.01038374724732749,
+   "ece": 0.01072305722621227,
+   "ll_model": 0.5428252534020027,
+   "ll_base": 0.5548376654771054,
+   "delta_base": -0.012012412075102665,
+   "ci_delta_base": [
+    -0.01567473510076849,
+    -0.008144807623439691
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "mg_0_1",
+   "label": "multigol 0-1",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.23274490772343268,
+   "freq": 0.24312865497076022,
+   "bias": -0.010383747247327546,
+   "ece": 0.01072305722621223,
+   "ll_model": 0.5428252534020027,
+   "ll_base": 0.5548376654771054,
+   "delta_base": -0.012012412075102664,
+   "ci_delta_base": [
+    -0.015674735100768493,
+    -0.008144807623439696
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "away_ov_0.5",
+   "label": "ospite segna (Over 0.5 osp.)",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.6947315047226769,
+   "freq": 0.6995614035087719,
+   "bias": -0.004829898786095077,
+   "ece": 0.007493054008764611,
+   "ll_model": 0.5744830774853371,
+   "ll_base": 0.6121617973652516,
+   "delta_base": -0.03767871987991436,
+   "ci_delta_base": [
+    -0.043402155445831876,
+    -0.031387760069305264
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "cs_home",
+   "label": "clean sheet casa",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.3052684952773232,
+   "freq": 0.30043859649122806,
+   "bias": 0.004829898786095133,
+   "ece": 0.007493054008764691,
+   "ll_model": 0.5744830774853371,
+   "ll_base": 0.6121617973652516,
+   "delta_base": -0.03767871987991435,
+   "ci_delta_base": [
+    -0.04340215544583186,
+    -0.03138776006930524
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "over_3.5",
+   "label": "Over 3.5",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.28877203593937095,
+   "freq": 0.2862573099415205,
+   "bias": 0.0025147259978504644,
+   "ece": 0.010046335039393972,
+   "ll_model": 0.5795644309452871,
+   "ll_base": 0.5983724189485773,
+   "delta_base": -0.01880798800329027,
+   "ci_delta_base": [
+    -0.02313445141838642,
+    -0.01421152575866884
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "mg_4plus",
+   "label": "multigol 4+",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.28877203593937095,
+   "freq": 0.2862573099415205,
+   "bias": 0.0025147259978504644,
+   "ece": 0.010046335039393972,
+   "ll_model": 0.5795644309452871,
+   "ll_base": 0.5983724189485773,
+   "delta_base": -0.01880798800329027,
+   "ci_delta_base": [
+    -0.02313445141838642,
+    -0.01421152575866884
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "corners_ov_11.5",
+   "label": "Over 11.5 corner",
+   "family": "corner",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.28706817795362705,
+   "freq": 0.27580645161290324,
+   "bias": 0.01126172634072381,
+   "ece": 0.02203435161823273,
+   "ll_model": 0.5842288847212506,
+   "ll_base": 0.5858105161807889,
+   "delta_base": -0.001581631459538429,
+   "ci_delta_base": [
+    -0.004801392887328967,
+    0.0016645626264293523
+   ],
+   "p_model_better_base": 0.805,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "away_ov_1.5",
+   "label": "ospite Over 1.5",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.33732768454779066,
+   "freq": 0.35,
+   "bias": -0.012672315452209315,
+   "ece": 0.014614370709137089,
+   "ll_model": 0.5984039538574807,
+   "ll_base": 0.6464879986534571,
+   "delta_base": -0.04808404479597636,
+   "ci_delta_base": [
+    -0.05496671701970406,
+    -0.04085459876628937
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "home_ov_1.5",
+   "label": "casa Over 1.5",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.43496699821180274,
+   "freq": 0.427046783625731,
+   "bias": 0.007920214586071728,
+   "ece": 0.010024692483495641,
+   "ll_model": 0.6246922664482584,
+   "ll_base": 0.6832639386008916,
+   "delta_base": -0.058571672152633154,
+   "ci_delta_base": [
+    -0.06581699991688042,
+    -0.05174277490802634
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "cards_ov_3.5",
+   "label": "Over 3.5 cartellini",
+   "family": "cartellini",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.6058093957343869,
+   "freq": 0.6025806451612903,
+   "bias": 0.0032287505730965727,
+   "ece": 0.02910651640090752,
+   "ll_model": 0.6509866725534288,
+   "ll_base": 0.6612744685831008,
+   "delta_base": -0.010287796029671963,
+   "ci_delta_base": [
+    -0.014262091292150109,
+    -0.006751660935078691
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "corners_ov_8.5",
+   "label": "Over 8.5 corner",
+   "family": "corner",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.6410468466868544,
+   "freq": 0.6224193548387097,
+   "bias": 0.018627491848144717,
+   "ece": 0.02233369960227997,
+   "ll_model": 0.6567133929279685,
+   "ll_base": 0.6610025341008364,
+   "delta_base": -0.004289141172867999,
+   "ci_delta_base": [
+    -0.007806464540761961,
+    -0.0008865337825224343
+   ],
+   "p_model_better_base": 0.989,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "cards_ov_4.5",
+   "label": "Over 4.5 cartellini",
+   "family": "cartellini",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.4248046837092026,
+   "freq": 0.41596774193548386,
+   "bias": 0.008836941773718743,
+   "ece": 0.03350464958682008,
+   "ll_model": 0.6583940768572994,
+   "ll_base": 0.6686963502211276,
+   "delta_base": -0.010302273363828366,
+   "ci_delta_base": [
+    -0.014429911390943522,
+    -0.006458366383795891
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "corners_ov_10.5",
+   "label": "Over 10.5 corner",
+   "family": "corner",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.39559062187695243,
+   "freq": 0.38467741935483873,
+   "bias": 0.010913202522113696,
+   "ece": 0.0343063954461227,
+   "ll_model": 0.6647272531844506,
+   "ll_base": 0.6636086738664816,
+   "delta_base": 0.0011185793179689515,
+   "ci_delta_base": [
+    -0.0023779839590967163,
+    0.004523550198441139
+   ],
+   "p_model_better_base": 0.272,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "btts",
+   "label": "GG (entrambe segnano)",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.5341645927014443,
+   "freq": 0.5295321637426901,
+   "bias": 0.004632428958754264,
+   "ece": 0.010681927814358186,
+   "ll_model": 0.6827920175319176,
+   "ll_base": 0.6932919337091386,
+   "delta_base": -0.010499916177220847,
+   "ci_delta_base": [
+    -0.013749861540334704,
+    -0.007216929520387034
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "corners_ov_9.5",
+   "label": "Over 9.5 corner",
+   "family": "corner",
+   "level": "B",
+   "n": 6200,
+   "p_mean": 0.5169563402550366,
+   "freq": 0.5025806451612903,
+   "bias": 0.014375695093746255,
+   "ece": 0.024617745215014537,
+   "ll_model": 0.6874550293288031,
+   "ll_base": 0.6901948599697608,
+   "delta_base": -0.002739830640957809,
+   "ci_delta_base": [
+    -0.0062691591730174015,
+    0.0011687167280267667
+   ],
+   "p_model_better_base": 0.923,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null
+  },
+  {
+   "key": "mg_2_3",
+   "label": "multigol 2-3",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.4784830563371964,
+   "freq": 0.4706140350877193,
+   "bias": 0.007869021249477082,
+   "ece": 0.01034414303779629,
+   "ll_model": 0.6907195721941383,
+   "ll_base": 0.6923549658519932,
+   "delta_base": -0.001635393657854853,
+   "ci_delta_base": [
+    -0.003086971971909146,
+    -0.00025680734112790973
+   ],
+   "p_model_better_base": 0.99,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "odd_total",
+   "label": "totale DISPARI",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": 0.4858329215924424,
+   "freq": 0.4994152046783626,
+   "bias": -0.013582283085920188,
+   "ece": 0.013582283085920188,
+   "ll_model": 0.6935011349599299,
+   "ll_base": 0.6938054789306753,
+   "delta_base": -0.0003043439707453537,
+   "ci_delta_base": [
+    -0.000959421616058596,
+    0.0004152385238292278
+   ],
+   "p_model_better_base": 0.799,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "exact_score",
+   "label": "risultato esatto (121 esiti)",
+   "family": "matrice dei gol",
+   "level": "B",
+   "n": 6840,
+   "p_mean": null,
+   "freq": null,
+   "bias": 0.0,
+   "ece": null,
+   "ll_model": 2.831303674746111,
+   "ll_base": 3.043032621494179,
+   "delta_base": -0.21172894674806722,
+   "ci_delta_base": [
+    -0.22386451119337492,
+    -0.19830972472593683
+   ],
+   "p_model_better_base": 1.0,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "ece_market": null,
+   "bias_market": null
+  },
+  {
+   "key": "relegation",
+   "label": "retrocessione (outright)",
+   "family": "stagione",
+   "level": "B-limitato",
+   "n": 24,
+   "p_mean": 0.5474402777777778,
+   "freq": 0.4861111111111111,
+   "bias": 0.06132916666666671,
+   "ece": null,
+   "ll_model": 0.3301965674124997,
+   "ll_base": null,
+   "delta_base": null,
+   "ci_delta_base": null,
+   "p_model_better_base": null,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "source": "experiments/fase94_drift.json, deriva 0.0 (importato); bias e log-loss sono per-squadra, non per-stagione"
+  },
+  {
+   "key": "champion",
+   "label": "campione di stagione (outright)",
+   "family": "stagione",
+   "level": "B-limitato",
+   "n": 24,
+   "p_mean": 0.6006583333333334,
+   "freq": 0.4166666666666667,
+   "bias": 0.18399166666666672,
+   "ece": null,
+   "ll_model": 1.2010612629342141,
+   "ll_base": 1.429349305603943,
+   "delta_base": -0.2282880426697289,
+   "ci_delta_base": [
+    -0.45300221847320876,
+    -0.009002507739049717
+   ],
+   "p_model_better_base": null,
+   "ll_market": null,
+   "delta_market": null,
+   "ci_delta_market": null,
+   "source": "experiments/fase89_season_champion.json (importato)"
+  }
+ ],
+ "handicap_asiatico_dettaglio": {
+  "n": 6839,
+  "brier_model": 0.20439890470374966,
+  "brier_market": 0.20440899545866265,
+  "delta_brier": -1.0090754912986965e-05,
+  "ci_delta_brier": [
+   -0.0002549027721633786,
+   0.0002319331998903454
+  ],
+  "p_model_better": 0.499,
+  "corr_model_market": 0.9009436746430759,
+  "p_media_modello": 0.5005119176199064,
+  "p_media_mercato": 0.5014464453442921,
+  "copertura_reale": 0.4893990349466296,
+  "n_linee_binarie": 5329,
+  "ll_model_half": 0.6945030693986008,
+  "ll_market_half": 0.6941256419324662,
+  "ece_model_half": 0.01198182262782655,
+  "ece_market_half": 0.012970462615597828,
+  "ci_bias_modello": [
+   0.0003573036239454791,
+   0.02119677954051028
+  ],
+  "ci_bias_mercato": [
+   0.0013396799361412284,
+   0.021931723930219103
+  ],
+  "delta_ll_half": 0.0003774274661346957,
+  "ci_delta_ll_half": [
+   -0.00020530561897224732,
+   0.0010185077889105876
+  ],
+  "p_model_better_ll_half": 0.096
+ },
+ "diagnosi_livello_conteggi": {
+  "corner": {
+   "media_attesa_modello": 9.823540827049882,
+   "media_attesa_baseline": 9.849079373594117,
+   "media_reale": 9.706612903225807,
+   "scarto_livello_modello": 0.11692792382407546,
+   "scarto_livello_baseline": 0.14246647036831028,
+   "n": 6200
+  },
+  "cartellini": {
+   "media_attesa_modello": 4.286118875463689,
+   "media_attesa_baseline": 4.264723263709658,
+   "media_reale": 4.207419354838709,
+   "scarto_livello_modello": 0.07869952062497987,
+   "scarto_livello_baseline": 0.057303908870948383,
+   "n": 6200
+  }
+ },
+ "calibrazione_per_lega": {
+  "serie_a": {
+   "n": 2280,
+   "mercati": {
+    "home_win": {
+     "bias": 0.017263719961673585,
+     "ece": 0.023103399449836404,
+     "ll_model": 0.5822002453060389
+    },
+    "draw": {
+     "bias": -0.002976218353591742,
+     "ece": 0.0029762183535917406,
+     "ll_model": 0.5741782381409924
+    },
+    "away_win": {
+     "bias": -0.014287501608081843,
+     "ece": 0.025807372008113293,
+     "ll_model": 0.5362102799624162
+    },
+    "over_0.5": {
+     "bias": 0.005006653290938412,
+     "ece": 0.005006653290938541,
+     "ll_model": 0.24654268326669138
+    },
+    "over_1.5": {
+     "bias": 0.014670831729945655,
+     "ece": 0.015381078590732209,
+     "ll_model": 0.5445837850792337
+    },
+    "over_2.5": {
+     "bias": 0.010869169291292224,
+     "ece": 0.02145624269090013,
+     "ll_model": 0.6822761928298886
+    },
+    "over_3.5": {
+     "bias": 0.002994996635828806,
+     "ece": 0.012210317308597661,
+     "ll_model": 0.575937444267675
+    },
+    "over_4.5": {
+     "bias": -0.0012558666778873517,
+     "ece": 0.003118446096786987,
+     "ll_model": 0.3758096034099964
+    },
+    "btts": {
+     "bias": 0.015630552111894458,
+     "ece": 0.01870532950296721,
+     "ll_model": 0.684625499760124
+    },
+    "home_ov_0.5": {
+     "bias": 0.014917736708985774,
+     "ece": 0.01894645611877347,
+     "ll_model": 0.5149592665260125
+    },
+    "home_ov_1.5": {
+     "bias": 0.015319942427603706,
+     "ece": 0.025636054043047703,
+     "ll_model": 0.624628187112174
+    },
+    "away_ov_0.5": {
+     "bias": 0.0019618728467275526,
+     "ece": 0.020956717267067135,
+     "ll_model": 0.5638707511010252
+    },
+    "away_ov_1.5": {
+     "bias": -0.02335854128940784,
+     "ece": 0.02516624962385986,
+     "ll_model": 0.5975261666015327
+    },
+    "odd_total": {
+     "bias": -0.0038565439667301304,
+     "ece": 0.0038565439667301304,
+     "ll_model": 0.6931028222883355
+    },
+    "home_by_2plus": {
+     "bias": 0.024342930554589554,
+     "ece": 0.024342930554589554,
+     "ll_model": 0.4290036552011472
+    },
+    "away_by_2plus": {
+     "bias": -0.0008163807598860207,
+     "ece": 0.015028146644062471,
+     "ll_model": 0.34469466450755476
+    },
+    "mg_0_1": {
+     "bias": -0.01467083172994571,
+     "ece": 0.01538107859073221,
+     "ll_model": 0.5445837850792337
+    },
+    "mg_2_3": {
+     "bias": 0.01167583509411696,
+     "ece": 0.011675835094116918,
+     "ll_model": 0.6918176208036639
+    },
+    "mg_4plus": {
+     "bias": 0.002994996635828806,
+     "ece": 0.012210317308597661,
+     "ll_model": 0.575937444267675
+    },
+    "dc_1x": {
+     "bias": 0.014287501608081787,
+     "ece": 0.025807372008113276,
+     "ll_model": 0.5362102799624162
+    },
+    "dc_2x": {
+     "bias": -0.01726371996167353,
+     "ece": 0.023103399449836415,
+     "ll_model": 0.5822002453060389
+    },
+    "dc_12": {
+     "bias": 0.002976218353591742,
+     "ece": 0.002976218353591768,
+     "ll_model": 0.5741782381409924
+    },
+    "cs_home": {
+     "bias": -0.001961872846727497,
+     "ece": 0.02095671726706714,
+     "ll_model": 0.5638707511010252
+    },
+    "cs_away": {
+     "bias": -0.01491773670898569,
+     "ece": 0.01894645611877346,
+     "ll_model": 0.5149592665260125
+    },
+    "wtn_home": {
+     "bias": -0.0009138459988829728,
+     "ece": 0.017331541199373177,
+     "ll_model": 0.4819220691221379
+    },
+    "wtn_away": {
+     "bias": -0.013390311772726704,
+     "ece": 0.023668247659658047,
+     "ll_model": 0.41841326774344895
+    }
+   },
+   "bias_assoluto_medio": 0.01017624342021639,
+   "ece_medio": 0.01668289763694056
+  },
+  "premier_league": {
+   "n": 2280,
+   "mercati": {
+    "home_win": {
+     "bias": 0.0033505456110095033,
+     "ece": 0.020830677631167208,
+     "ll_model": 0.5921704196600056
+    },
+    "draw": {
+     "bias": 0.006880434146198627,
+     "ece": 0.01247222121883128,
+     "ll_model": 0.5413312204108344
+    },
+    "away_win": {
+     "bias": -0.010230979757208103,
+     "ece": 0.017631410076388934,
+     "ll_model": 0.559236617598237
+    },
+    "over_0.5": {
+     "bias": -0.005610294150303674,
+     "ece": 0.005610294150303575,
+     "ll_model": 0.21370045289900746
+    },
+    "over_1.5": {
+     "bias": 0.0013138173829824185,
+     "ece": 0.008962775588061501,
+     "ll_model": 0.5083248909740908
+    },
+    "over_2.5": {
+     "bias": -0.004391614143518963,
+     "ece": 0.013763332002530762,
+     "ll_model": 0.6751515799143856
+    },
+    "over_3.5": {
+     "bias": -0.0007992401928961224,
+     "ece": 0.011905825967722227,
+     "ll_model": 0.6203767046345421
+    },
+    "over_4.5": {
+     "bias": 0.0032211047047251973,
+     "ece": 0.0066284434108290205,
+     "ll_model": 0.4400145122586813
+    },
+    "btts": {
+     "bias": 0.0023793414177950556,
+     "ece": 0.007621289997205384,
+     "ll_model": 0.6836610019890049
+    },
+    "home_ov_0.5": {
+     "bias": 0.0057624508953731945,
+     "ece": 0.012693828952030299,
+     "ll_model": 0.5011866370971804
+    },
+    "home_ov_1.5": {
+     "bias": 0.0022380162744664034,
+     "ece": 0.011498963254719278,
+     "ll_model": 0.6271617117969341
+    },
+    "away_ov_0.5": {
+     "bias": -0.01027810692178921,
+     "ece": 0.0145603193027717,
+     "ll_model": 0.5635602865796056
+    },
+    "away_ov_1.5": {
+     "bias": -0.011273391880001704,
+     "ece": 0.014248751779286691,
+     "ll_model": 0.622011015995783
+    },
+    "odd_total": {
+     "bias": -0.015254262918532657,
+     "ece": 0.015254262918532657,
+     "ll_model": 0.6936284073813791
+    },
+    "home_by_2plus": {
+     "bias": 0.009441695209144951,
+     "ece": 0.013378797314254402,
+     "ll_model": 0.4716945381959306
+    },
+    "away_by_2plus": {
+     "bias": -0.004764215130690724,
+     "ece": 0.010061808583609437,
+     "ll_model": 0.4000500909791561
+    },
+    "mg_0_1": {
+     "bias": -0.0013138173829823352,
+     "ece": 0.008962775588061498,
+     "ll_model": 0.5083248909740907
+    },
+    "mg_2_3": {
+     "bias": 0.002113057575878541,
+     "ece": 0.007581254372582037,
+     "ll_model": 0.6894248347900833
+    },
+    "mg_4plus": {
+     "bias": -0.0007992401928961224,
+     "ece": 0.011905825967722227,
+     "ll_model": 0.6203767046345421
+    },
+    "dc_1x": {
+     "bias": 0.010230979757208214,
+     "ece": 0.01763141007638891,
+     "ll_model": 0.559236617598237
+    },
+    "dc_2x": {
+     "bias": -0.003350545611009448,
+     "ece": 0.02083067763116718,
+     "ll_model": 0.5921704196600057
+    },
+    "dc_12": {
+     "bias": -0.006880434146198655,
+     "ece": 0.012472221218831295,
+     "ll_model": 0.5413312204108343
+    },
+    "cs_home": {
+     "bias": 0.01027810692178921,
+     "ece": 0.014560319302771713,
+     "ll_model": 0.5635602865796056
+    },
+    "cs_away": {
+     "bias": -0.005762450895373333,
+     "ece": 0.012693828952030294,
+     "ll_model": 0.5011866370971804
+    },
+    "wtn_home": {
+     "bias": 0.0032928985864315863,
+     "ece": 0.014882532124940133,
+     "ll_model": 0.4936797149069219
+    },
+    "wtn_away": {
+     "bias": -0.012717603434167918,
+     "ece": 0.013359093106716248,
+     "ll_model": 0.4241870397267492
+    }
+   },
+   "bias_assoluto_medio": 0.0059203325092527645,
+   "ece_medio": 0.012769343864979073
+  },
+  "la_liga": {
+   "n": 2280,
+   "mercati": {
+    "home_win": {
+     "bias": -0.017435138986234944,
+     "ece": 0.027918353547727853,
+     "ll_model": 0.6049529079376944
+    },
+    "draw": {
+     "bias": 0.01615778237519716,
+     "ece": 0.016944700747040575,
+     "ll_model": 0.5680091121635461
+    },
+    "away_win": {
+     "bias": 0.0012773566110378387,
+     "ece": 0.02230136572092594,
+     "ll_model": 0.5273468792426279
+    },
+    "over_0.5": {
+     "bias": -0.004274527462720279,
+     "ece": 0.004274527462720383,
+     "ll_model": 0.25537296322510156
+    },
+    "over_1.5": {
+     "bias": 0.01516659262905462,
+     "ece": 0.015166592629054728,
+     "ll_model": 0.575567084152684
+    },
+    "over_2.5": {
+     "bias": 0.007647932283196657,
+     "ece": 0.019535105503772764,
+     "ll_model": 0.6684925883282113
+    },
+    "over_3.5": {
+     "bias": 0.005348421550618765,
+     "ece": 0.010819029038386514,
+     "ll_model": 0.5423791439336441
+    },
+    "over_4.5": {
+     "bias": -0.011317330081732094,
+     "ece": 0.013877030041159213,
+     "ll_model": 0.3624833956748808
+    },
+    "btts": {
+     "bias": -0.004112606653426387,
+     "ece": 0.015319605964315329,
+     "ll_model": 0.680089550846624
+    },
+    "home_ov_0.5": {
+     "bias": -0.007344375319431884,
+     "ece": 0.018980506119609303,
+     "ll_model": 0.5049522644912385
+    },
+    "home_ov_1.5": {
+     "bias": 0.006202685056144963,
+     "ece": 0.024054332022340585,
+     "ll_model": 0.6222869004356671
+    },
+    "away_ov_0.5": {
+     "bias": -0.006173462283223685,
+     "ece": 0.013155989891960264,
+     "ll_model": 0.5960181947753808
+    },
+    "away_ov_1.5": {
+     "bias": -0.0033850131872185663,
+     "ece": 0.023200843188825766,
+     "ll_model": 0.5756746789751261
+    },
+    "odd_total": {
+     "bias": -0.021636042372497777,
+     "ece": 0.021636042372497777,
+     "ll_model": 0.6937721752100752
+    },
+    "home_by_2plus": {
+     "bias": 0.02084978347498026,
+     "ece": 0.026776369388866437,
+     "ll_model": 0.4413058710749183
+    },
+    "away_by_2plus": {
+     "bias": 0.0071303694928187,
+     "ece": 0.008889996202294585,
+     "ll_model": 0.3166858970757851
+    },
+    "mg_0_1": {
+     "bias": -0.015166592629054676,
+     "ece": 0.015166592629054655,
+     "ll_model": 0.575567084152684
+    },
+    "mg_2_3": {
+     "bias": 0.009818171078435856,
+     "ece": 0.011904742753176012,
+     "ll_model": 0.6909162609886677
+    },
+    "mg_4plus": {
+     "bias": 0.005348421550618765,
+     "ece": 0.010819029038386514,
+     "ll_model": 0.5423791439336441
+    },
+    "dc_1x": {
+     "bias": -0.0012773566110377832,
+     "ece": 0.022301365720925986,
+     "ll_model": 0.5273468792426279
+    },
+    "dc_2x": {
+     "bias": 0.017435138986234944,
+     "ece": 0.027918353547727832,
+     "ll_model": 0.6049529079376945
+    },
+    "dc_12": {
+     "bias": -0.01615778237519705,
+     "ece": 0.01694470074704054,
+     "ll_model": 0.5680091121635461
+    },
+    "cs_home": {
+     "bias": 0.006173462283223685,
+     "ece": 0.013155989891960299,
+     "ll_model": 0.5960181947753808
+    },
+    "cs_away": {
+     "bias": 0.007344375319431856,
+     "ece": 0.018980506119609317,
+     "ll_model": 0.5049522644912386
+    },
+    "wtn_home": {
+     "bias": -0.0039998762837633595,
+     "ece": 0.011876745923889287,
+     "ll_model": 0.5221847313548719
+    },
+    "wtn_away": {
+     "bias": -0.002014703527189604,
+     "ece": 0.015417922661331214,
+     "ll_model": 0.4034234163222895
+    }
+   },
+   "bias_assoluto_medio": 0.009238280787066237,
+   "ece_medio": 0.017205243802869218
+  }
+ },
+ "identita": "1X = 1 − P(2), 2X = 1 − P(1), 12 = 1 − P(X): le doppie chance non sono validazioni indipendenti dell'1X2 (lezione Fase 92)",
+ "livello_C": [
+  {
+   "mercato": "handicap asiatico su linee NON quotate",
+   "perche": "il motore le prezza dalla matrice, ma senza una quota esterna per quella linea non c'e' verifica di efficienza; resta la calibrazione implicita della famiglia-margine (riga A dell'AH)"
+  },
+  {
+   "mercato": "Primo/Secondo tempo, HT/FT, gol nei 15'",
+   "perche": "i gol di primo tempo esistono nei dati grezzi (HTHG/HTAG) ma il motore NON ha una matrice per tempo: Tier 3 mai costruito"
+  },
+  {
+   "mercato": "corner/cartellini PER SQUADRA o per tempo",
+   "perche": "il modello di conteggio della Fase 96 prezza solo il TOTALE di partita: le marginali per squadra non sono state validate"
+  },
+  {
+   "mercato": "cartellini con l'arbitro designato",
+   "perche": "l'effetto arbitro e' REALE e misurato (Fase 96, sd 0.513 fra arbitri in Premier) ma NON e' dentro il prezzo: la designazione arbitrale non e' nei dati storici in modo utilizzabile ex-ante"
+  },
+  {
+   "mercato": "marcatori, primo gol, minuto del gol",
+   "perche": "nessun dato a livello giocatore/evento nel progetto"
+  },
+  {
+   "mercato": "campione/retrocessione contro un MERCATO",
+   "perche": "non esistono quote outright storiche: l'efficienza non e' testabile all'indietro (Fasi 89/95/97); il confronto con Polymarket/Smarkets misura l'ACCORDO oggi, non chi ha ragione"
+  },
+  {
+   "mercato": "qualunque mercato LIVE / in-play",
+   "perche": "nessun dato intra-partita"
+  }
+ ]
+}

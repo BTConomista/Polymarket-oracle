@@ -60,7 +60,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ❌ F80 (nulla, fit sui bound) | 🪑 F80 (**CI<0 sul GG**, φ0 0.32/κ 2.9) ✱2 | ❌ costanti e segno per-lega |
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
-| **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier) |
+| **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier). ⚠️ **F98: fragile alla specificazione della baseline** — cambiando la griglia LOO la baseline passa 1.4293→1.3816 e l'IC include lo zero; non è una smentita (la griglia F89 è un superset e dà il risultato *peggiore* = instabilità LOO a n=24) ma il segno dipende da una scelta arbitraria. Il mercato è **non testabile prospetticamente**: servirebbero ~57 stagioni-lega, 3 leghe in una stagione danno **9,8% di potenza** |
 | **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⚽ top-4 **calibrato** (ECE 0.0137, batte anche la persistenza, 480 oss.); retrocessione ❌ **non** batte la persistenza (mis-calibrazione tutta sulle neopromosse: −10.1pp) |
 | **… + deriva di forza in-stagione** (F94) | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽ **solo RETROCESSIONE** (+0.0095, IC [+0.0020,+0.0180]; neopromosse −6.1pp→−2.8pp); ❌ campione (nullo) e top-4 (peggio 17/24) |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
@@ -94,6 +94,13 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Profilo stagionale dinamico (γ/λ,μ nel tempo) | ❌ F47/48 | ⬜ | ⬜ | ⬜ |
 | Tiri in porta grezzi nel blend | ❌ F3 | ⬜ | ⬜ | ⬜ |
 | Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ |
+| **Modello di conteggio corner/cartellini** (fuori matrice, F96) | ⚽ F96 | ⚽ F96 | ⚽ F96 | ⚽ struttura unica (attacco/difesa moltiplicativi, vincolo `hadv+aadv=2`); processo DIVERSO dai gol, non ridondante |
+| **… + binomiale negativa sui conteggi** (F98) | ⚽/❌ ✱8 | ⚽ F98 | ⚽ F98 | 🪑 conclusiva ma trascurabile (corner +0.00103 [+0.00062,+0.00143], cartellini +0.00088 [+0.00033,+0.00142]) |
+| **… + correzione di LIVELLO train-only** (lead F98) | ⬜ | ⬜ | ⬜ | ⬜ **il lead aperto**: bias di media misurato su 3 fronti (PL cartellini −0.201, SA corner +0.352, listino corner +0.117); vale ~5× l'arbitro e un ordine di grandezza più della NB — **da implementare e misurare** |
+| **Mercati Tier 3 dal ri-scalamento 1T/2T** (Halftime, Second Half, risultato esatto — F98) | ⚽ F98 | ⚽ F98 | ⚽ F98 | ⚽ fondazione misurata (f=0.4396 [0.4338,0.4458], 1T Poisson-compatibile, tempi quasi indipendenti); batte la baseline con IC conclusivo (HT +0.0537, 2T +0.0578, esatto +0.1940). ⚠️ **il 2T è mal calibrato** (pareggio 0.3671 vs 0.3427) mentre il 1T no → game-state, non normalizzazione |
+| Arbitro come feature moltiplicativa (cartellini) | ⬜ dato assente (0/3420) | ❌ F98 (nessun IC esclude lo zero; **85% del guadagno era solo livello**) | ⬜ dato assente (0/3420) | ❌ il dato `Referee` esiste solo in Premier |
+| Proxy storico delle formazioni (undici attesi, disponibilità del nucleo) | ❌ F98 | ❌ F98 | ❌ F98 | ❌ la parte che funziona correla +0.9603 col valore rosa (già bocciato F4c/11); la disponibilità correla −0.1227 col logit della chiusura = **il mercato le assenze le prezza già** |
+| Anticipo del movimento apertura→chiusura | ❌ F98 (β −0.0039, R² 0.0001; CLV −0.0022 CI<0) | ❌ F98 | ❌ F98 | ❌ non anticipabile; il movimento vale 15,6% del gap anche se lo si prendesse tutto |
 
 Note della matrice:
 - **✱1** ~~mai backtestato multi-mercato su Premier/Liga~~ → **FATTO (F76)**:
@@ -120,6 +127,13 @@ Note della matrice:
   fronte VINCENTE dipende dal regime — con l'ancora adiacente vince il pooled
   (17% vs 17.8%), senza ancore vince il per-lega (28.5% vs 31.4%, leave-team-out
   F66). Nessun fronte domina: si misura caso per caso.
+- **✱8** La NB sui conteggi è **per-lega di fatto**: i gialli di Serie A sono
+  **sotto-dispersi** (var/μ condizionata 0.901) e lì la stima di `r` collassa da
+  sola sulla Poisson (Δ esattamente 0.00000) — la forma NB è auto-protettiva, non
+  dannosa. In 3 celle su 21 però PEGGIORA con IC conclusivo, e la causa è
+  identificata: dove la media walk-forward è storta per **deriva di livello**,
+  allargare la distribuzione sposta massa dal lato sbagliato. Promozione piena
+  **dopo** la correzione di livello, non prima.
 
 ---
 

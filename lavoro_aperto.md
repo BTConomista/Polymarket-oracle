@@ -11,7 +11,8 @@
 > canonica** e poi questa riga. Se questo file e PISTE/PANCHINA divergono,
 > **hanno ragione loro**.
 >
-> Scritto il **26 luglio 2026**, dopo la Fase 97. Il piano *datato* per l'inizio
+> Scritto il **26 luglio 2026**, dopo la Fase 97; **aggiornato dopo la Fase 98**
+> (sette fronti: vedi il registro del README e l'arco 11 del diario). Il piano *datato* per l'inizio
 > stagione sta in [`newseason.md`](newseason.md): quello ha una scadenza
 > (16 agosto), questo no.
 
@@ -71,16 +72,17 @@ Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 | # | pista | stato |
 |--:|---|---|
 | 5 | **Handicap asiatico** → terzo vincolo per l'inversione market-implied | 🟢 mai estratta. È anche il **Tier 2** (§5) |
-| 6 | **Primo tempo** (HTHG/HTAG/HTR) → Tier 3 + fondazione live | 🟢 mai estratta |
+| 6 | **Primo tempo** (HTHG/HTAG/HTR) → Tier 3 + fondazione live | ✅ **chiusa positiva (F98)**: f=0.4396 misurata, 3 mercati Tier 3 validati con IC conclusivo. 🟢 **resta aperto il residuo**: il 2T è mal calibrato (game-state) → modello a due stadi |
 | 8 | **Quota massima** (MaxC\*/Max\*) → ROI realistico | 🟢 mai estratta. Tutti i ROI del progetto usano la media: col massimo cambierebbero |
 | 9 | **Pinnacle puro** (PS\*/PSC\*) come benchmark singolo-book | 🟢 mai estratta. È *il* riferimento di efficienza |
-| 7 | Statistiche partita (corner, tiri, falli, cartellini) | 🟡 **parziale**: corner e cartellini fatti (F96); **tiri totali e falli no** |
+| 7 | Statistiche partita (corner, tiri, falli, cartellini) | 🟡 **parziale**: corner e cartellini fatti (F96) + NB (F98, trascurabile); **tiri totali e falli no**; arbitro ❌ chiuso (F98) |
+| **7-bis** | ⭐ **Correzione di LIVELLO dei conteggi** (LEAD, F98) | 🟢 **mai provata — il miglior valore/costo aperto**: bias misurato su 3 fronti indipendenti (PL cartellini −0.201, SA corner +0.352, listino +0.117); vale **5× l'arbitro** e un ordine di grandezza più della NB. Una costante train-only |
 
 ### Fonte esterna nuova
 
 | # | pista | stato |
 |--:|---|---|
-| 10 | **Formazioni ufficiali** → assenze VERE | 🟢 aperta — *la più preziosa* (§4) |
+| 10 | **Formazioni ufficiali** → assenze VERE | 🟢 aperta — *la più preziosa* (§4). **F98: il surrogato storico è BOCCIATO** (correla +0.9603 col valore rosa; nulla sul bersaglio F93) → resta solo la **formazione ufficiale a T−1h raccolta prospetticamente**. È un argomento *a favore* della raccolta: esclude la scorciatoia |
 | 11 | `transfers.csv` → shock di gennaio | 🟢 aperta (va raccolto **a gennaio**) |
 | 12 | Risultati di seconda serie → prior neopromosse individualizzato | 🟢 aperta. Puntuale dopo la F97: sbagliamo di **+19.6pp** proprio sulle neopromosse |
 | 13 | **Meteo pre-partita** | 🟢 aperta — ferma per mancanza di fonte, ma **open-meteo è gratis e senza chiave** (§6.2) |
@@ -93,7 +95,7 @@ Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 |--:|---|---|
 | 16 | **GG/NG quotato + aperture vere** | 🟢 aperta — **e sbloccabile subito**: vedi §6.3 |
 | 17 | Paper-trading della strategia draw-bias | 🟢 aperta |
-| 18 | **Dati in-play** (quote minuto per minuto) | 🟢 aperta — esiste solo *durante* la stagione |
+| 18 | **Dati in-play** (quote minuto per minuto) | 🟢 aperta — esiste solo *durante* la stagione. **F98: la fondazione offline c'è** (pista 6) e il modello a due stadi si può provare **senza rete** |
 | 19 | Quote O/U 2017-19, chiusura vera | 🟡 **dimezzata** (F73): l'apertura è recuperata |
 
 ---
@@ -136,6 +138,25 @@ Non è un'opinione, è la Fase 93:
 sulle partite equilibrate della seconda metà di stagione**. È lì che c'è il
 divario, ed è il criterio con cui ordinare tutto il §2.
 
+**Aggiornamento Fase 98 — il primo indizio su COSA sia quell'informazione.** Il
+movimento apertura→chiusura è stato misurato: non sappiamo anticiparlo (β
+−0.0039, R² 0.0001) e il CLV è **negativo con IC conclusivo** (−0.0022
+[−0.0033,−0.0012], 45,7% positivi — coerente col −0.0028 della Fase 14). Ma:
+
+- corr(nostro deficit, deficit dell'**apertura**) = **+0.4270**, pendenza
+  +1.0336 [+0.9291,+1.1318], contro un placebo per permutazione di **+0.0884**;
+- il guadagno del movimento è concentrato sulle **equilibrate** (Q1 +0.0039 vs
+  Q4 +0.0007) e nella **seconda metà** (+0.0038 vs +0.0020).
+
+Cioè: **lo stesso profilo del deficit F93**. L'informazione che manca è in buona
+parte quella che **arriva nelle ultime ore prima del fischio** — che è
+esattamente ciò che le formazioni ufficiali a T−1h (pista 10) contengono. Ordine
+di grandezza onesto: tutto il movimento vale **15,6% del nostro gap**;
+prendendolo *interamente* (impossibile) resteremmo a +0.0151 contro +0.0179. È
+una direzione, non una soluzione.
+*(Autocorrezione: l'ipotesi «il deficit è 4× più grande sulle partite più mosse»
+NON sopravvive al placebo — vera +0.0311 contro artefatto +0.0524.)*
+
 ---
 
 ## 5 · Mercati mai coperti — Tier 2 e Tier 3
@@ -147,8 +168,8 @@ posizionali** (F89/F91) e **corner/cartellini** (F96).
 
 | tier | mercati | stato | prerequisito |
 |---|---|---|---|
-| **Tier 2** | **handicap asiatico** | ❌ scoperto | pista 5 (dato già nei grezzi) |
-| **Tier 3** | **HT/FT**, mercati per tempo | ❌ scoperto | pista 6 (dato già nei grezzi) |
+| **Tier 2** | **handicap asiatico** | ✅ **coperto** (F88 benchmark + F98 listino: Brier 0.2044 vs 0.2044, Δ −0.0000 — **l'unica riga del listino che regge un'affermazione di efficienza**) | — |
+| **Tier 3** | **HT/FT**, mercati per tempo | 🟡 **tre mercati coperti** (F98: Halftime +0.0537, Second Half +0.0578, risultato esatto +0.1940, tutti IC conclusivo vs baseline); mancano HT/FT congiunto e le altre combinazioni | — |
 | Tier 3+ | **live / in-play** | ❌ scoperto | pista 18 (raccolta prospettica) |
 
 Il Tier 3 è anche la **fondazione dei mercati live**, che è la direzione con più
@@ -304,11 +325,19 @@ segnalare?
    pre-registrazione dei criteri → raccoglitore → previsioni congelate.
    **Entro il 16 agosto**, il resto no.
 2. **`probe.yml` dal runner** (§6.1) — un'ora, può sbloccare mezza lista.
-3. **Le piste nei grezzi già scaricati** (§2: 5, 6, 8, 9): nessuna rete,
-   nessuna attesa, e la 5 e la 6 aprono **Tier 2 e Tier 3**.
-4. **La coda a zero** (`docs/PISTE.md`, pista aperta dalla F97) — costo basso,
+3. **La correzione di LIVELLO dei conteggi** (§2, pista 7-bis — nuova con la
+   F98): una costante train-only, nessuna rete, e vale più di tutto ciò che è
+   stato provato sui conteggi finora. ⭐ **Il miglior rapporto valore/costo
+   attualmente aperto.**
+4. **Il modello a DUE STADI per il secondo tempo** (pista 6, residuo F98): il
+   primo residuo *localizzato e non-artefatto* trovato da parecchie fasi, ed è
+   anche il primo mattone dell'in-play — sui dati che già abbiamo.
+5. **Le piste nei grezzi già scaricati rimaste** (§2: 8, 9): nessuna rete,
+   nessuna attesa. *(La 5 e la 6 sono state aperte da F88/F98: Tier 2 e Tier 3
+   non sono più scoperti.)*
+6. **La coda a zero** (`docs/PISTE.md`, pista aperta dalla F97) — costo basso,
    infrastruttura già presente.
-5. Il resto, senza fretta.
+7. Il resto, senza fretta.
 
 **Da non fare adesso**: aggiungere le leghe nuove (Ligue 1/Bundesliga come leghe
 *modellate*, Serie B, Championship). Valore reale, **nessuna scadenza**,

@@ -222,10 +222,24 @@ Resta da fare (facoltativo): estrarre l'AH nel loader per esporlo nel tool e
 prezzare handicap/scarto anche dove servono operativamente.
 
 ### 6. Primo tempo (HTHG/HTAG/HTR) → mercati Tier 3 e fondazione live
-**Dato**: **9/9 stagioni**, mai estratto.
+**Dato**: **9/9 stagioni**.
 **Ipotesi**: mercati HT/FT e per-tempo (Tier 3, principio §1.8) con lo
 stesso motore market-implied riscalato sul tempo; propedeutico alla pista
 18 (in-play).
+**ESITO (Fase 98) — APERTA E PRODUTTIVA, con un residuo localizzato.** La
+fondazione è **misurata, non assunta**: frazione di gol nel primo tempo
+**f = 0.4396** [0.4338, 0.4458] (SA 0.4365 / PL 0.4464 / LL 0.4356), primo tempo
+Poisson-compatibile (dispersione 0.9857) e tempi quasi indipendenti (+0.0485) →
+il ri-scalamento `λ_1T = f·λ` è **lecito**. Tre mercati nuovi battono la
+baseline con IC conclusivo su 6.840 partite: Halftime **+0.0537**
+[+0.0461,+0.0612], Second Half **+0.0578**, risultato esatto **+0.1940**.
+**Il residuo è la pista viva**: il **secondo tempo è mal calibrato**
+(pareggio 0.3671 dichiarato vs 0.3427 reale) mentre il primo passa per *lo
+stesso codice* ed è calibrato a <0.006 → non è normalizzazione, è **game-state**
+(il punteggio all'intervallo cambia il modo di giocare). Prossimo passo: modello
+a **due stadi** (1T indipendente → 2T condizionato al punteggio dell'intervallo).
+Costo BASSO, e ha il pregio di essere il primo residuo *localizzato e
+non-artefatto* trovato da parecchie fasi.
 
 ### 7. Statistiche partita (corner, tiri totali, falli, cartellini)
 **Dato**: 9/9 stagioni, mai estratte (solo i tiri in porta furono testati
@@ -234,6 +248,34 @@ e bocciati, Fase 2/3 — quelli sono un segnale diverso e già chiuso).
 mercati corner/cartellini sono un listino a sé che il motore non copre.
 Aspettativa onesta: bassa sul migliorare 1X2/O/U (tetto informativo, Fasi
 20-22), più sensata come **nuovi mercati** da prezzare.
+**ESITO (Fasi 96/98) — APERTA, ed è la famiglia più promettente rimasta.** Il
+processo dei conteggi è **diverso** da quello dei gol (non ridondante) e i
+mercati corner/cartellini sono prezzabili walk-forward. La forma **binomiale
+negativa** (Fase 98) è la giusta — i conteggi sono SOVRA-dispersi, l'opposto dei
+gol (Fase 27) — ma il guadagno è **conclusivo e trascurabile** (corner +0.00103,
+cartellini +0.00088). **La leva vera scoperta qui è un'altra**: la **deriva di
+livello** (vedi pista 7-bis).
+**Chiuso**: l'**arbitro** come feature moltiplicativa (Fase 98) — il dato
+`Referee` esiste solo in Premier (3420/3420, 0/3420 in SA e Liga) e nessun IC
+esclude lo zero; l'85% del guadagno apparente era **solo livello**. Il segnale
+esiste ma è sovra-esteso ~2.5× (`b = 0.401` [+0.096,+0.706]) e vale il 3.7%
+della varianza: non ripescabile senza una modellazione dell'evoluzione temporale
+del tasso di un arbitro.
+
+### 7-bis. Correzione di LIVELLO dei conteggi (LEAD, Fase 98)
+**Dato**: nessun dato nuovo — è una costante train-only sopra il modello di
+conteggio della Fase 96.
+**Perché**: tre fronti della Fase 98 che non si parlavano hanno misurato lo
+stesso difetto — bias di media walk-forward **Premier cartellini −0.201**,
+**Serie A corner +0.352**, **listino corner +0.117** su tutte e quattro le
+soglie. L'**emivita 365g non insegue la deriva temporale dei conteggi** (i
+cartellini crescono, i corner calano), e il bias residuo è ciò che *causa* i
+3 peggioramenti conclusivi della NB e le 3 uniche linee non conclusive del
+listino.
+**Valore atteso**: sui cartellini Premier la sola costante di livello vale
+**−0.00308** contro i −0.00041 dell'arbitro (**5×**) e **un ordine di
+grandezza più** del passaggio Poisson→NB. **Miglior rapporto valore/costo
+emerso dalla Fase 98, e nessuno la stava cercando.** Costo BASSO.
 
 ### 8. Quota massima (MaxC*/Max*) → ROI realistico
 **Dato**: 7/9 stagioni.
@@ -275,6 +317,20 @@ le formazioni vere si calcola la **forza della formazione schierata**
 (valore/minuti dei titolari effettivi vs rosa piena). Attenzione al
 timing: le formazioni escono ~1h prima del fischio → utilizzabili solo
 contro le quote di **chiusura**.
+**ESITO (Fase 98) — il SURROGATO è bocciato, la pista vera resta aperta.** Il
+proxy storico (undici attesi ricostruiti dai minuti, disponibilità del nucleo,
+continuità dell'undici) è stato testato su 9.159 partite: la parte che
+"funziona" **non è nuova** (correla **+0.9603** col valore rosa, già bocciato
+F4c/F11; +0.898 col logit del DC) e fuori campione dà +0.00136
+[−0.00086,+0.00350], 2/4 stagioni; la parte concettualmente nuova è **nulla
+ovunque**, e **sul bersaglio della Fase 93** (equilibrate, seconda metà) tutti
+gli IC attraversano lo zero con |r| ≤ 0.034 contro il deficit. Dettaglio di
+sanità: la disponibilità correla **−0.1227** col logit della chiusura → **il
+mercato le assenze le prezza già**.
+**Conseguenza**: resta aperta **solo** la versione che conterebbe — la
+**formazione ufficiale a T−1h, raccolta prospetticamente**. Questo esperimento
+non è un argomento contro quella raccolta: è un argomento **a favore**, perché
+esclude la scorciatoia storica.
 
 ### 11. `transfers.csv` → shock di gennaio
 **Dato**: nello stesso upstream player-scores (pista 10).
@@ -353,6 +409,13 @@ in-play è l'avversario più morbido — ma nessuno dei due è nei dati". Il
 modello è già scritto per generalizzarci (matrice condizionabile); manca
 solo il dato. Indicato come l'avversario meno efficiente più credibile,
 mai nemmeno abbozzato.
+**Aggiornamento (Fase 98)**: la **fondazione** ora c'è (pista 6: f=0.4396
+misurata, primo tempo Poisson-compatibile, tempi quasi indipendenti) e con essa
+il primo pezzo di in-play *offline* — la mis-calibrazione del secondo tempo
+**è** un effetto di game-state, cioè esattamente ciò che un modello live deve
+catturare. Prima di raccogliere quote minuto-per-minuto conviene chiudere il
+modello a due stadi sui dati che già abbiamo: costa nulla e dice se il
+condizionamento al punteggio produce segnale.
 
 ### 19. Quote O/U 2017-19 — CHIUSURA vera (non solo stima)
 **Dato**: da procurare — piano dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).
@@ -390,6 +453,21 @@ Batte la baseline più forte (persistenza dalla classifica su 2 stagioni) di
 e con il vantaggio **concentrato in Premier** (+0.57; SA +0.12, Liga +0.004 nel
 rumore). È inoltre **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecca
 41.7%).
+
+> **⚠️ Aggiornamento Fase 98 — quanto è solido quel "+0.2299".** Cambiando la
+> griglia su cui la baseline di persistenza tara (β, w₂) in leave-one-out, la
+> baseline passa da 1.4293 a **1.3816** e l'IC del guadagno **include lo zero**
+> ([−0.3750, +0.0114]). Non è una smentita: la griglia della Fase 89 è un
+> **superset** di quella alternativa sull'asse w₂ e produce comunque il risultato
+> *peggiore*, il che è la firma dell'**instabilità della selezione LOO con
+> n = 24**, non di una taratura migliore. La lettura onesta è: **il risultato
+> della Fase 89 è fragile alla specificazione della baseline**, e il segno
+> dipende da una scelta arbitraria. Coerente col calcolo di potenza della stessa
+> fase: per concludere sull'outright servirebbero **~57 stagioni-lega**, mentre
+> 3 leghe in una stagione danno **9,8% di potenza**. L'outright va dichiarato
+> **non testabile prospetticamente** — non «perdente». Ragione in più per
+> archiviare i prezzi ogni anno (punto 2 qui sotto): l'unica via per costruire
+> il campione che serve.
 
 > **Stagione 2026-27: il piano datato vive in [`newseason.md`](../newseason.md)**
 > (radice del repo, file deperibile) — checklist con le date, sondaggi di

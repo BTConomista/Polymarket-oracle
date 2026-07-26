@@ -195,7 +195,7 @@ partite mai viste (Fase 75).*
 - [Fase 74 — Ri-validazione di TUTTI i calcoli sui dati corretti (richiesta utente)](#fase-74--ri-validazione-di-tutti-i-calcoli-sui-dati-corretti-richiesta-utente)
 - [Fase 75 — Spremere il 2017-19: il motore validato su 2.280 partite vergini (e il θ che cresce nel tempo)](#fase-75--spremere-il-2017-19-il-motore-validato-su-2280-partite-vergini-e-il-θ-che-cresce-nel-tempo)
 
-### Arco 10 — Il motore per-lega, la verifica finale e gli audit (Fasi 76–86)
+### Arco 10 — Il motore per-lega, la verifica finale e gli audit (Fasi 76–88)
 
 *Il market-implied trasferisce identico su 3 leghe (Fase 76); le leve del
 pareggio sono un tratto delle leghe latine (Fase 79-80); il mega-sweep delle
@@ -223,6 +223,36 @@ dispersione per-squadra).*
 - [Fase 86-bis — Il verdetto walk-forward sul θ per-squadra: NON sfruttabile (il tetto regge anche nella coda)](#fase-86-bis--il-verdetto-walk-forward-sul-θ-per-squadra-non-sfruttabile-il-tetto-regge-anche-nella-coda)
 - [Fase 87 — La coda a DUE parametri, riprodotta: isotonica e mistura, entrambe chiuse](#fase-87--la-coda-a-due-parametri-riprodotta-isotonica-e-mistura-entrambe-chiuse)
 - [Fase 88 — Handicap asiatico come benchmark Tier 2: il router prezza il margine come il mercato sharp](#fase-88--handicap-asiatico-come-benchmark-tier-2-il-router-prezza-il-margine-come-il-mercato-sharp)
+
+---
+
+### Arco 11 — I mercati non derivabili da una matrice, e la revisione della diagnosi (Fasi 89–98)
+
+*Il simulatore di stagione apre la prima famiglia di mercati che NON si deriva
+dalla matrice di una partita (Fase 89), subito ridimensionata dall'audit (Fase
+90) e portata sui mercati posizionali (Fase 91). Poi il quarto audit ROVESCIA la
+diagnosi centrale del progetto: il gap è 88% discriminazione casa/ospite, non
+pareggio (Fase 92), e la Fase 93 mostra che è informazione, non calibrazione,
+concentrata sulle equilibrate e nella seconda metà di stagione. La deriva di
+forza in-season (Fase 94) è la prima correzione adottata su un solo mercato;
+Polymarket e Smarkets diventano il primo benchmark ESTERNO sugli outright (Fasi
+95, 95-bis, 97). Fuori dalla matrice dei gol si aprono corner e cartellini (Fase
+96). La Fase 98 chiude sette fronti in parallelo e trova, per via trasversale,
+la **deriva di livello** dei conteggi: la leva col miglior rapporto
+valore/costo, che nessuno stava cercando.*
+
+- [Fase 89 — Il mercato CAMPIONE DI STAGIONE: il primo mercato non derivabile da una matrice](#fase-89--il-mercato-campione-di-stagione-il-primo-mercato-non-derivabile-da-una-matrice)
+- [Fase 89-bis — Perché sbagliamo il campione: la separazione «titolo confermato / titolo che cambia»](#fase-89-bis--perché-sbagliamo-il-campione-la-separazione-titolo-confermato--titolo-che-cambia)
+- [Fase 90 — Terzo audit orchestrato: i numeri-titolo della Fase 89 erano gonfiati](#fase-90--terzo-audit-orchestrato-i-numeri-titolo-della-fase-89-erano-gonfiati)
+- [Fase 91 — I mercati POSIZIONALI: il simulatore è calibrato in alto e sbaglia in basso (ed è colpa del prior)](#fase-91--i-mercati-posizionali-il-simulatore-è-calibrato-in-alto-e-sbaglia-in-basso-ed-è-colpa-del-prior)
+- [Fase 92 — Quarto audit (per aree): la diagnosi centrale era invertita, e il prior non atterrava dove diceva](#fase-92--quarto-audit-per-aree-la-diagnosi-centrale-era-invertita-e-il-prior-non-atterrava-dove-diceva)
+- [Fase 93 — Dove si perde la discriminazione: è informazione, non calibrazione (e si vede DOVE)](#fase-93--dove-si-perde-la-discriminazione-è-informazione-non-calibrazione-e-si-vede-dove)
+- [Fase 94 — La varianza mancante: la deriva di forza, e perché va adottata su UN solo mercato](#fase-94--la-varianza-mancante-la-deriva-di-forza-e-perché-va-adottata-su-un-solo-mercato)
+- [Fase 95 — Il primo confronto con un mercato VERO sull'outright: Polymarket quota il campione 2026-27](#fase-95--il-primo-confronto-con-un-mercato-vero-sulloutright-polymarket-quota-il-campione-2026-27)
+- [Fase 95-bis — La deriva di forza messa alla prova dal MERCATO: il backtest non aveva potenza](#fase-95-bis--la-deriva-di-forza-messa-alla-prova-dal-mercato-il-backtest-non-aveva-potenza)
+- [Fase 96 — Fuori dalla matrice dei gol: corner e cartellini (e l'arbitro, il primo dato ortogonale)](#fase-96--fuori-dalla-matrice-dei-gol-corner-e-cartellini-e-larbitro-il-primo-dato-ortogonale)
+- [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
+- [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 
 ---
 
@@ -10525,6 +10555,248 @@ quando i prezzi live saranno cambiati — al contrario della Fase 95, che leggev
 un dump non versionato. Nessun run in `runs.jsonl`: è un confronto con dati di
 mercato, non un backtest con esiti.
 
+
+---
+
+## Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava
+
+**Obiettivo (utente).** «Porta avanti ognuno dei discorsi, entra nel dettaglio di
+tutto, non lasciare nulla da parte.» Sette fronti aperti, eseguiti in parallelo
+come esperimenti veri (uno script ciascuno, walk-forward, CI dove serve), poi
+**ri-verificati a mano** prima di scriverli qui — e la ri-verifica ha cambiato la
+conclusione di uno di essi.
+
+### 1 · Binomiale negativa sui conteggi (`_run_counts_nb.py`) — MISTO
+
+I conteggi sono sovra-dispersi (Fase 96), quindi la NB è la forma giusta —
+l'opposto dei gol, dove la Fase 27 l'aveva bocciata. Su 7.050 partite OOS:
+
+| mercato | LL Poisson | LL NB | Δ | IC95 |
+|---|--:|--:|--:|---|
+| corner | 0.6490 | **0.6480** | +0.00103 | [+0.00062, +0.00143] |
+| cartellini | 0.6069 | **0.6060** | +0.00088 | [+0.00033, +0.00142] |
+
+**Conclusivo ma trascurabile** (+0.16% / +0.14% relativo). La calibrazione
+migliora sulle linee sotto la media (corner O8.5 da +0.021 a +0.005). **Due
+scoperte oltre il titolo**: (a) i **gialli di Serie A sono SOTTO-dispersi**
+(var/μ condizionata 0.901) e lì la NB collassa da sola sulla Poisson (Δ esattamente
+0.00000) — la stima è auto-protettiva; (b) in 3 celle su 21 la NB **peggiora con
+IC conclusivo**, e la causa è identificata: dove la media walk-forward è storta
+per **deriva temporale** (Premier cartellini −0.201, Serie A corner +0.352),
+allargare la distribuzione sposta massa dal lato sbagliato. Verificata ed
+**esclusa** l'ipotesi bug: il bias non è costante né di segno unico.
+
+### 2 · L'arbitro come feature (`_run_referee_feature.py`) — NEGATIVO, con una regola nuova
+
+Copertura verificata, non assunta: `Referee` esiste **solo in Premier**
+(3420/3420); La Liga e Serie A **0/3420**. Su 2.324 partite OOS, **nessun IC
+esclude lo zero** su nessuna linea (miglior caso: O3.5 gialli Δ −0.00364
+[−0.00853, +0.00133]).
+
+**Il risultato vero è il controllo anti-artefatto.** Il modello-base sotto-stima
+di −0.20 cartellini (in Premier i cartellini crescono) e il fattore-arbitro medio
+vale 1.0247 > 1. Scomponendo con una costante di **solo livello** stimata
+train-only: il livello da solo vale **−0.00308 dei −0.00364**. L'arbitro al netto
+del livello vale **−0.00041** [−0.00511, +0.00414]. **L'85% del guadagno apparente
+non era informazione sull'arbitro.**
+
+Il segnale però **esiste ed è misurato OOS per la prima volta**: regressione
+`real/base = a + b·(f_arb−1)` dà **b = 0.401** [+0.096, +0.706] — conclusivamente
+>0 *e* conclusivamente <1: il fattore grezzo è **sovra-esteso ~2.5×** (il tasso di
+un arbitro deriva nel tempo). Componenti di varianza: arbitro **3.7%**, casa 2.5%,
+ospite 2.2%, accoppiamento 4.9% — l'arbitro conta più di ogni singola squadra ma
+meno dell'accoppiamento, e **~95% resta rumore irriducibile**.
+
+> **Regola di metodo (nuova, da applicare sempre).** Ogni feature *moltiplicativa*
+> va confrontata col suo **controllo di solo livello**: altrimenti si misura la
+> deriva del modello base e la si attribuisce alla feature.
+
+### 3 · Potenza del test prospettico (`_run_prospective_power.py`) — il vincolo di disegno
+
+Calcolo fatto sui dati veri (6.840 partite, differenze appaiate per-partita).
+Controllo di validità superato: gap 1X2 pooled +0.0179 (riproduce il +0.0165).
+
+**Le partite sono indipendenti**: acf1 +0.007, ICC ≈ 0, **DEFF = 1.00** — nessuna
+penalità da clustering. Ma il rapporto segnale/rumore è **1:8,5** (sd 0.1527
+contro gap 0.0179):
+
+| campione | potenza sul gap | verdetto |
+|---|--:|---|
+| 30 partite (1 giornata × 3 leghe) | **9,8%** | MDE 0.0781 = 4,7× il gap: **non conclude mai** |
+| 380 (1 stagione, 1 lega) | 62,5% | sotto-dimensionato |
+| **574** | **80%** | ≈19 giornate su 3 leghe |
+| 1140 (1 stagione × 3 leghe) | 97,7% | disegno giusto |
+
+Gerarchia netta fra mercati: contro la **baseline** bastano 184 partite (6
+giornate); contro il **mercato** servono 574 sull'1X2, 2.254 sul GG/NG, 2.988
+sull'O/U 2.5. **L'1X2 dà potenza 4-5× prima degli altri.**
+
+**La correzione che ho verificato a mano — e che cambia la conclusione del
+fronte.** Il fronte riportava che il vantaggio del simulatore di stagione (Fase
+89) «non regge a una baseline meglio tarata»: LL baseline 1.3816 invece di
+1.4293, Δ −0.1806, IC [−0.3750, +0.0114] che include lo zero. Ho riprodotto i
+numeri — sono giusti — ma la **spiegazione era sbagliata**. Eseguendo entrambe le
+griglie sullo **stesso identico dataframe**:
+
+| griglia della baseline di persistenza | LL LOO | (β, w₂) scelti |
+|---|--:|---|
+| Fase 89: β∈[0,4], **w₂∈{0, 0.5, 1, 1.5, 2}** | 1.4293 | (2.5, **1.5**) |
+| fronte 3: β∈[0.5,4], **w₂∈{0, 0.5, 1}** | **1.3816** | (2.5, **1.0**) |
+
+La griglia della Fase 89 è un **superset** di quella del fronte 3 sull'asse w₂,
+eppure produce una baseline **peggiore**. Non è «meglio tarata»: è
+**instabilità della selezione leave-one-out con n=24** — aggiungere opzioni alla
+griglia fa scegliere, sulle 23 stagioni di train, un parametro che generalizza
+peggio sulla 24ª. La lettura corretta **non** è «la Fase 89 è smentita», ma:
+**il risultato della Fase 89 è fragile alla specificazione della baseline**, e il
+segno della conclusione dipende da una scelta arbitraria della griglia. Coerente
+col resto del fronte: per concludere sull'outright servirebbero **57
+stagioni-lega** (con 3 leghe in una stagione la potenza è **9,8%**). L'outright va
+dichiarato **non testabile prospetticamente** — non «perdente».
+
+*(Nota di metodo: è la seconda volta in questo giro che una verifica manuale
+ribalta la lettura di un risultato prodotto da un agente — nella Fase 86 accadde
+il contrario. Il numero era giusto in entrambi i casi; la **spiegazione** no.)*
+
+### 4 · Tier 3 contro Polymarket (`_run_polymarket_tier3.py`) — bersaglio fallito, fondazione posata
+
+Il template della Fase 88 **non è replicabile ora**, per due motivi documentati:
+su 4.854 eventi Soccer e 2.840 eventi Tier 3, **zero sulle nostre 3 leghe**
+(pausa estiva) e gli eventi aperti **non hanno esito**. Trappola scoperta:
+**65 su 78 eventi con volume >1.000$ sono partite già giocate** con prezzi
+degeneri (0.9995/0.005) — **il volume non è un filtro di liquidità.**
+
+I due risultati ottenibili sono stati prodotti:
+- **fondazione misurata**: frazione di gol nel primo tempo **f = 0.4396**
+  [0.4338, 0.4458] (SA 0.4365 / PL 0.4464 / LL 0.4356), primo tempo
+  Poisson-compatibile (dispersione 0.9857), tempi quasi indipendenti (+0.0485)
+  → **il ri-scalamento dei tassi è lecito**;
+- **validazione storica conclusiva** su 6.840 partite: Halftime 1.0251 vs 1.0787
+  di baseline (**+0.0537** [+0.0461, +0.0612]), Second Half **+0.0578**,
+  risultato esatto **+0.1940**;
+- **residuo localizzato e non-artefatto**: il **secondo tempo è mal calibrato**
+  (pareggio 0.3671 dichiarato vs 0.3427 reale) mentre il primo passa per **lo
+  stesso codice** ed è calibrato a <0.006 → è **game-state**, non normalizzazione;
+- accordo prezzo-contro-prezzo dove esiste (n=115/96): corr 0.997/0.983, distanza
+  mediana ~0.014, **f implicita nel book 0.4580**.
+
+### 5 · Proxy delle formazioni (`_run_lineup_proxy.py`) — NEGATIVO pieno
+
+Copertura ampia (9.159/10.260 partite testate): il nullo è un vero nullo. La
+parte che «funziona» **non è nuova** — la forza degli undici attesi correla
+**+0.9603** col valore rosa (già bocciato F4c/F11) e +0.898 col logit del DC;
+fuori campione vs DC +0.00136 [−0.00086, +0.00350], 2/4 stagioni. La parte
+concettualmente nuova (disponibilità del nucleo, continuità dell'undici) è
+**nulla ovunque**. E **sul bersaglio della Fase 93** (equilibrate, seconda metà)
+tutti gli IC attraversano lo zero, con correlazioni col deficit |r| ≤ 0.034.
+Dettaglio di sanità: la disponibilità correla **−0.1227** col logit della
+chiusura → **il mercato le assenze le prezza già**.
+
+**Conseguenza importante**: resta aperta **solo** la versione che conterebbe — la
+**formazione ufficiale a T−1h** — e questo esperimento dimostra che *il surrogato
+storico non la sostituisce*. Non è un argomento contro la raccolta prospettica: è
+un argomento a favore, perché esclude la scorciatoia.
+
+### 6 · Movimento apertura→chiusura (`_run_line_movement.py`) — MISTO
+
+**Non sappiamo anticiparlo**: β vincolato −0.0039 [−0.0162, +0.0085], R² 0.0001.
+**CLV negativo conclusivo**: −0.0022 [−0.0033, −0.0012], 45.7% positivi su 2.373
+selezioni (Serie A −0.0027/44.7% contro il −0.0028/45% della Fase 14: **combacia**).
+Il movimento **vale poco**: +0.0029 [+0.0016, +0.0042] = **15,6% del nostro gap**
+— anticipandolo *tutto* (impossibile) resteremmo a +0.0151 contro +0.0179.
+
+**Il pezzo interessante è il link con la Fase 93**: corr(nostro deficit, deficit
+dell'apertura) = **+0.4270**, pendenza +1.0336 [+0.9291, +1.1318], contro un
+placebo per permutazione di +0.0884. E il guadagno del movimento è concentrato
+sulle **equilibrate** (Q1 +0.0039 vs Q4 +0.0007) e nella **seconda metà**
+(+0.0038 vs +0.0020): **lo stesso profilo del deficit F93**. L'informazione che
+arriva nelle ultime ore è in parte proprio quella che ci manca.
+**Autocorrezione onesta del fronte**: il «deficit 4× più grande sulle partite più
+mosse» **non sopravvive al placebo** (vera +0.0311 contro artefatto +0.0524).
+
+### 7 · Il listino come prodotto (`_run_listino_validazione.py`) — POSITIVO
+
+38 mercati prezzati walk-forward col motore vero, costanti ri-fittate a ogni fold.
+**I livelli di validazione sono QUATTRO, non tre** — la scoperta che rende onesto
+il prodotto:
+
+| livello | significato | n |
+|---|---|--:|
+| **A** | quota esterna **indipendente** → si può parlare di efficienza | **1** |
+| **A°** | quota esiste ma **è l'INPUT del motore** → confronto **circolare** | 8 |
+| **B** | nessuna quota, ma **esito osservabile** → si misura la calibrazione | 27 |
+| **C** | non validabile | 7 famiglie |
+
+**L'unica riga che regge un'affermazione di efficienza è l'handicap asiatico**:
+Brier **0.2044 vs 0.2044**, Δ −0.0000 [−0.0003, +0.0002]. **32/36 mercati battono
+la baseline ex-ante con IC conclusivo, 0 perdono**; i 4 non conclusivi sono tre
+linee corner e il **totale dispari** (−0.0003, controllo negativo atteso).
+Il fit walk-forward ha **ri-scoperto da solo** due fatti noti: θ=1.225 in 6/6 fold
+Serie A ma 1.000-1.150 in Premier; φ0 collassa a 0.000 negli ultimi 3 fold Premier.
+**Due correzioni obbligatorie**: le tre doppie chance vanno marcate come
+**IDENTITÀ** delle 1X2 (non validazioni indipendenti: è la stessa trappola del
+mercato «12» della Fase 92), e le righe outright vanno riscritte alla luce del
+fronte 3.
+
+### Cosa è cambiato davvero
+
+**La scoperta trasversale: la DERIVA DI LIVELLO.** Tre fronti che non si
+parlavano hanno misurato lo stesso difetto:
+- fronte 1: bias di media Premier cartellini **−0.201**, Serie A corner **+0.352**
+  — ed è ciò che *causa* i 3 peggioramenti conclusivi della NB;
+- fronte 2: la costante di solo-livello vale **−0.00308 dei −0.00364** attribuiti
+  all'arbitro, e sale da 1.0062 a 1.0559 in 7 fold;
+- fronte 7: bias corner +0.117 su tutte e quattro le soglie — le uniche 3 linee
+  non conclusive del listino.
+
+**L'emivita 365g non insegue la deriva temporale dei conteggi.** È una correzione
+a costo quasi nullo (una costante train-only) che vale, sui cartellini Premier,
+**5× più dell'arbitro** e, sui conteggi, **un ordine di grandezza più del
+passaggio Poisson→NB**. È la leva col miglior rapporto valore/costo emersa qui —
+e nessuno la stava cercando.
+
+**Tre mercati Tier 3 nuovi** (Halftime, Second Half, risultato esatto) sono
+validati contro baseline con IC conclusivo su tutte e tre le leghe, su una
+fondazione misurata. E **la mis-calibrazione del secondo tempo** è il primo
+residuo *localizzato e non-artefatto* trovato da parecchie fasi: la strada è un
+modello a due stadi (1T indipendente → 2T condizionato al punteggio).
+
+### Onestà
+
+Un fronte ha **fallito sul bersaglio** (Tier 3 contro Polymarket: 0 eventi sulle
+nostre leghe in pausa estiva, nessun esito sugli eventi aperti); due sono
+**negativi** sulla domanda posta (arbitro, formazioni). α\*=0 esce **confermato da
+tre fronti indipendenti** (CLV −0.0022 conclusivo; proxy formazioni −0.00034;
+accordo Polymarket entro 0.01 con f implicita 0.458). Le correzioni di sola forma
+restano trascurabili anche quando il segno è giusto.
+
+### 📐 Il modello in dettaglio
+
+- **NB sui conteggi**: `Y ~ NB(m, r)` con media `m` dal modello di conteggio
+  (Fase 96, vincolo `hadv+aadv=2`) e `r` stimato walk-forward per lega×mercato
+  (MLE a medie fissate, MoM come inizializzazione); `r→∞` riduce alla Poisson.
+  Dispersione condizionata OOS `Σ(y−m)²/Σm`: corner 1.152, cartellini 1.068,
+  **gialli Serie A 0.901**.
+- **Fattore-arbitro**: `f_arb = (media cartellini dell'arbitro)/(media di lega)`
+  con shrinkage empirico-Bayes proporzionale alle partite arbitrate; arbitri mai
+  visti → 1 (3,1% dei casi). Controllo di livello: `c_fold` = media dei fattori
+  pesata per le partite dell'ultima stagione di train, **stimata train-only**.
+  Verifica OOS: `real/base = a + b·(f_arb−1)`.
+- **Potenza**: `n* = (z_{1−α/2}+z_{power})²·sd²/Δ²` con `sd` empirica delle
+  differenze appaiate per-partita e `DEFF` da bootstrap a cluster (giornata,
+  stagione) — risultato DEFF=1.00, quindi nessuna correzione.
+- **Baseline outright**: `_persistence_loo(df, betas, w2s)` in
+  `_run_fase89_season_champion.py` — per ogni stagione tara (β,w₂) sulle altre 23
+  e valuta sull'esclusa. La differenza 1.4293 vs 1.3816 dipende **solo** dalla
+  griglia `w2s` (superset ⇒ risultato peggiore = instabilità LOO a n=24),
+  verificato eseguendo entrambe sullo stesso dataframe.
+- **Frazione primo tempo**: `f = Σ gol 1T / Σ gol totali`, IC bootstrap; il
+  ri-scalamento usa `λ_1T = f·λ`, `μ_1T = f·μ` nella stessa `score_matrix`.
+
+Script: `_run_counts_nb.py`, `_run_referee_feature.py`,
+`_run_prospective_power.py`, `_run_polymarket_tier3.py`, `_run_lineup_proxy.py`,
+`_run_line_movement.py`, `_run_listino_validazione.py`. Output dati:
+`experiments/listino_validazione.json`. Diagnostici: nessun run in `runs.jsonl`.
 
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
