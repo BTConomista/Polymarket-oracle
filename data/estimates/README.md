@@ -122,4 +122,30 @@ pattern da modellare in modo complesso.
 - Ogni riga stima SOLO il mercato che le manca davvero (colonne dell'altro
   mercato vuote se quella partita aveva già l'apertura vera).
 
+
+### `ou_open_corrotte_2017_19.csv` — apertura O/U per le 9 linee corrotte
+
+**Perché.** Nove partite del 2017-19 (6 Bundesliga, 2 Ligue 1, 1 assente alla
+fonte) non hanno l'apertura O/U: la loro linea aveva un overround impossibile
+(fino a 1.339) ed è stata svuotata dal guard bilaterale di
+`loader._pick_market_odds`. Sono l'unico buco di *apertura* rimasto.
+
+**Come.** Bakeoff di 26 varianti, k-fold k=5 su 3.643 partite della stessa epoca
+con la linea integra. Il metodo storico (inversione del solo 1X2 nei tassi +
+debias costante leave-one-league-out, MAE 0.0267) **non era al suo tetto**: il
+suo limite non è l'inversione ma il **bias costante**, perché il bias dipende dal
+totale atteso. Vincitore: una regressione che usa anche la **scaletta di
+chiusura 1xBet** trovata durante l'audit (MAE **0.0143**). Il miglior metodo che
+usa la sola informazione di apertura arriva a 0.0197.
+
+**⚠️ Limite specifico:** il vincitore usa una quota di **chiusura** per stimare
+un'**apertura**. Resta una stima dell'apertura, non l'apertura — e il file lo
+dichiara riga per riga.
+
+### `celle_residue.csv` — il censimento delle celle che restano vuote
+
+Non è una stima di mercato: è il **registro delle celle che NON si stimano**, con
+la prova che non stimarle è la scelta giusta (errore sopra soglia, o fonte non
+consolidata). Serve perché la sessione successiva non ci riprovi da capo.
+
 Documentazione completa dei dati e delle stime: **[docs/DATI.md](../../docs/DATI.md)**.

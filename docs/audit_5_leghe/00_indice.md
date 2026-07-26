@@ -1,26 +1,33 @@
-# `cantiere/` — lavoro isolato: audit dei dati, verifica delle stime, 2 leghe nuove
+# Audit delle 5 leghe — i report integrali
 
-Cartella **temporanea e autonoma**, creata su richiesta dell'utente (24 luglio
-2026) per lavorare **senza toccare nessun file già in uso** dal progetto mentre
-su `main` si lavorava in parallelo. Branch: `claude/verify-data-import-leagues-468euv`.
+Questi undici report sono il **verbale esteso** del lavoro riassunto nella voce
+di diario «Cinque leghe» (`docs/DIARIO.md`): audit riga-per-riga dei dati contro
+la fonte-madre, caccia ai dati coperti da stime, import di Bundesliga e Ligue 1,
+valutazione della rosa dei modelli sulle due leghe nuove, e la verifica
+avversariale che ha smontato cinque affermazioni — tre delle quali nostre.
 
-**Policy di isolamento (decisa dall'utente).** Tutto resta qui: nessuna
-numerazione di fase, nessuna modifica ai documenti condivisi del progetto
-(`DIARIO.md`, `README.md`, `PANCHINA.md`, `DATI.md`, `experiments/runs.jsonl`),
-nessuna modifica a `src/`, `data/`, `scripts/`, `tests/`. Così i due filoni di
-lavoro non possono entrare in conflitto. Le checklist di integrazione nei report
-sono **proposte**, da eseguire solo quando si deciderà di unire i due filoni:
-[`report/03_nuove_leghe.md`](report/03_nuove_leghe.md) §7 e
-[`report/01_audit_dati.md`](report/01_audit_dati.md) §6.
+Sono conservati perché contengono i **numeri e le prove** che il diario riassume:
+chi vuole rifare un conto o contestare una conclusione parte da qui. I file citati
+nei report come `cantiere/...` vivono ora nella struttura del progetto:
 
-**Le regole decise durante il lavoro** (da aggiungere alle regole generali del
-progetto quando si integrerà) stanno in **[`REGOLE.md`](REGOLE.md)**: dato del
-campo e non del tribunale (R1), valore rosa da Transfermarkt dove la fonte
-primaria non copre (R2), nessuna modifica a mano ai dati (R3), isolamento (R4),
-anomalie sempre dichiarate (R5), e la **procedura per le partite con dati
-corrotti** (R6: spiegare prima di accusare, diagnosticare con informazione
-indipendente, cercare il dato vero nell'ordine giusto, stimare con errore
-misurato, registrare anche gli errori).
+| dove era | dove è ora |
+|---|---|
+| `cantiere/report/*.md` | `docs/audit_5_leghe/*.md` (questi) |
+| `cantiere/REGOLE.md` | `docs/audit_5_leghe/REGOLE.md` — promosse a **§5-bis del `CLAUDE.md`** |
+| `cantiere/out/*.json` | `docs/audit_5_leghe/numeri/` (i numeri grezzi dietro le tabelle) |
+| `cantiere/scripts/*.py` | `scripts/` |
+| `cantiere/data/{bundesliga,ligue_1}_matches.csv` | `data/` (snapshot di produzione) |
+| `cantiere/data/ricerca/` | `data/ricerca_esterna/` |
+| `cantiere/data/correzioni_dichiarate.csv` | `data/correzioni_dichiarate.csv` |
+| `cantiere/data/stime/` | `data/estimates/` |
+| `cantiere/data/fonti/` | **rimossi** (135 MB ri-scaricabili); l'impronta SHA256 di ognuno resta in `data/ricerca_esterna/manifest_fonti_audit.json` |
+
+**Attenzione leggendoli:** i report 09 e 10 contengono conclusioni poi
+**ritirate** dalla verifica avversariale (§15 del report 10). Le ritirate sono
+segnalate dentro i report stessi; in caso di conflitto fa fede il `CLAUDE.md` e
+il diario, non questi file.
+
+---
 
 ## I lavori, e dove leggerne l'esito
 
