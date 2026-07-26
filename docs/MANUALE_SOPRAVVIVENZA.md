@@ -1,5 +1,45 @@
 # Manuale di sopravvivenza — l'ambiente di lavoro, verificato sul campo
 
+## ⚠️ AGGIORNAMENTO — la rete è tornata raggiungibile (integrazione delle 5 leghe)
+
+Molto di ciò che questo manuale dà per bloccato **oggi risponde 200**. Verificato
+scaricando davvero, non solo pingando:
+
+| dominio | prima | oggi |
+|---|---|---|
+| `football-data.co.uk` | 403 | **200** — 45 stagioni ri-scaricate |
+| `understat.com` | 403 | **200**, ma dietro `GET /main/getLeagueData/{Lega}/{anno}` con header `X-Requested-With: XMLHttpRequest` (senza header → 404) e risposta **gzip** |
+| `transfermarkt.com` | bloccato | **200** |
+| Kaggle via `kagglehub` | serviva il runner Actions | **funziona in sessione** |
+| `betexplorer.com`, `oddsportal.com` | — | raggiungibili, ma vedi sotto |
+
+**Conseguenza principale:** si può verificare gli snapshot **contro la
+fonte-madre**, non solo contro sé stessi. È il controllo forte, e non era mai
+stato fatto.
+
+**Vincoli che restano, e vanno rispettati:**
+- `oddsportal.com` **vieta le pagine storiche** nel suo `robots.txt`
+  (`Disallow: *-2017*`, `*-2018*`): non si scrapano, e non si aggira il divieto
+  passando da cache o archivi;
+- `betexplorer.com` ha **ritirato** il confronto-quote per le partite di ~8 anni
+  fa (tab 1X2 disabilitato, nessun tab O/U): ri-verificato, non è un problema di
+  parsing;
+- `sofascore.com` e `fbref.com` rispondono **403** anche sul `robots.txt`;
+- throttle ≥ 1,5 s fra richieste, sempre.
+
+**Una fonte nuova che funziona:** `footiqo.com` pubblica le quote di chiusura del
+book **1xBet** (1X2, O/U 0.5/1.5/2.5/3.5/4.5, **GG/NG**) per stagione, servite
+via `admin-ajax.php` — endpoint esplicitamente **permesso** dal suo `robots.txt`,
+e il sito offre di suo l'export CSV.
+
+**Trappola scoperta sul campo (FotMob):** il `robots.txt` vieta il loro `/api/*`,
+quindi si usano solo le pagine; e l'URL senza il frammento `#matchId` **rende
+un'altra partita** della stessa coppia. Verificare sempre `matchTimeUTC` prima di
+leggere i numeri. Nota di merito: il loro xG è un **modello diverso** da
+Understat, quindi non va mescolato nella stessa colonna.
+
+---
+
 Questo file raccoglie la conoscenza **operativa** dell'ambiente di sviluppo
 cloud: cosa è raggiungibile e cosa no, i limiti reali degli strumenti, i
 trucchi di GitHub Actions, le fonti già valutate (e scartate). Serve a NON

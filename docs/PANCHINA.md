@@ -53,54 +53,54 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 
 ⚽ titolare · 🪑 panchina · ❌ bocciato · ⬜ mai testato · ✱ vedi nota
 
-| modello | Serie A | Premier | La Liga | generale (pooled) |
-|---|:-:|:-:|:-:|:-:|
-| **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F76 (13/14 vs DC, chiusura 2019-26) + F75 (apertura) | ⚽ F76 (13/14 vs DC) + F75 | ⚽ struttura (ρ=−0.06 unico; F76: 13/14 su TUTTE e 3 le leghe dalla chiusura, zero ritarature; F75: 17/20 dall'apertura su 2.280 partite vergini) |
-| **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225; riconf. F81: cs −0.0078 lfo CI<0) | ❌ F53/F81 (curva piatta, θ*≈1.05: nulla) | 🪑 **F81 RIBALTA F53**: θ≈1.2 → cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (tutti lfo CI<0); la F53 testava il θ da MLE-punteggi (1.097), troppo piccolo | ❌ θ per-contesto (lega × epoca); lezione F81: **θ-da-mercati ≠ θ-da-punteggi** |
-| **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ❌ F80 (nulla, fit sui bound) | 🪑 F80 (**CI<0 sul GG**, φ0 0.32/κ 2.9) ✱2 | ❌ costanti e segno per-lega |
-| **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ proprietà della chiusura SA |
-| **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ ✱4 iperparametri comuni |
-| **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier). ⚠️ **F98: fragile alla specificazione della baseline** — cambiando la griglia LOO la baseline passa 1.4293→1.3816 e l'IC include lo zero; non è una smentita (la griglia F89 è un superset e dà il risultato *peggiore* = instabilità LOO a n=24) ma il segno dipende da una scelta arbitraria. Il mercato è **non testabile prospetticamente**: servirebbero ~57 stagioni-lega, 3 leghe in una stagione danno **9,8% di potenza** |
-| **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⚽ top-4 **calibrato** (ECE 0.0137, batte anche la persistenza, 480 oss.); retrocessione ❌ **non** batte la persistenza (mis-calibrazione tutta sulle neopromosse: −10.1pp) |
-| **… + deriva di forza in-stagione** (F94) | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽ **solo RETROCESSIONE** (+0.0095, IC [+0.0020,+0.0180]; neopromosse −6.1pp→−2.8pp); ❌ campione (nullo) e top-4 (peggio 17/24) |
-| **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ F62-bis (il pooled VINCE) |
-| **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
-| GG/NG φ35+knee34 su market-implied | 🪑 F50 (riconf. F80: −0.0014 P97%) | ❌ F80 (nulla) | ❌ combo F80 (il k34 PEGGIORA con CI>0: profilo-ospite invertito); φ35-sola 🪑 | ❌ il nudge ha segno per-lega |
-| Ricalibrazione per-classe del mercato (w_D, w_A) | 🪑 F50-ter | ❌ F53 (direzione OPPOSTA, w_D=0.93) | 🪑 F53 (+3.6% P81) | ❌ segno non universale |
-| Devig di Shin | 🪑 F52-ter (P 97%) | 🪑 F53 (P 68%) | 🪑 F53 (P 94%) | 🪑 sempre ≥ moltiplicativo |
-| φ35 sul path DC standalone | 🪑 F35 | ❌ F79 (φ0→0: deficit inesistente) | ❌ F79 (fit ≈SA ma non paga) | ❌ segno non universale (PL invertita) |
-| Nudge GG/NG fine stagione (path DC) | 🪑 F48 | ⬜ | ⬜ | ⬜ |
-| Ensemble emivite 180+730 | 🪑 F12a | ⬜ | ⬜ | ⬜ |
-| Ricalibrazione per-classe del modello | 🪑 F10 | ⬜ | ⬜ | ⬜ |
-| Diagonale inflazionata (`--draw-inflation`) | 🪑 F12b | ⬜ | ⬜ | ⬜ |
-| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ❌ rumore su 3/3 leghe |
-| Temperature scaling post-hoc | 🪑 F6 (T≈0.94) | ⬜ | ⬜ | ⬜ |
-| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ❌ il β stabile SA non si replica |
-| Temperatura sopra dp_lvl (T=1.056) | 🪑 F52-ter | ❌ (dp_lvl bocciato lì) | ❌ | ❌ |
-| GBM (diretto, per mercato, bespoke) | ❌ F21-23/50-quater | ⬜ ✱5 | ⬜ ✱5 | ❌ tetto informativo |
-| Poisson bivariato (λ3) | ❌ F42 | ⬜ | ⬜ | ⬜ |
-| Copula di Frank | ❌ F43/50 | ⬜ | ⬜ | ⬜ |
-| GAS / score-driven (state-space) | ❌ F52-sexies | ⬜ | ⬜ | ⬜ |
-| Binomiale negativa · zero-inflazione · Rue-Salvesen | ❌ F27/51 | ⬜ | ⬜ | ⬜ |
-| COM-Poisson (dispersione principiata a 1 param ν) | ❌ F85 (pareggia dp, non batte) | ⬜ | ⬜ | ❌ F85 (una-forma è a tetto: serve coda a 2 param) |
-| ρ dinamico per-partita | ❌ F18 | ⬜ | ⬜ | ⬜ |
-| Power-devig / denoising cross-stagione | ❌ F38/50 | ⬜ | ⬜ | ⬜ |
-| Covariata stakes + router stakes-aware | ❌ F32/36/45 | ⬜ | ⬜ | ⬜ |
-| Vantaggio-casa per-squadra | ❌ F8 (r≈0.00) | ⬜ | ⬜ | ⬜ |
-| Covariate nel canale-pareggio | ❌ F37 | ⬜ | ⬜ | ⬜ |
-| Ricalibrazione O/U del mercato | ❌ F51-quater | ⬜ | ⬜ | ⬜ |
-| Ensemble standalone (DC+biv+GBM) | ❌ F46 | ⬜ | ⬜ | ⬜ |
-| Blend modello+mercato (lineare α / GBM) | ❌ F16 (α*≈0) / F23 | ⬜ | ⬜ | ⬜ |
-| Profilo stagionale dinamico (γ/λ,μ nel tempo) | ❌ F47/48 | ⬜ | ⬜ | ⬜ |
-| Tiri in porta grezzi nel blend | ❌ F3 | ⬜ | ⬜ | ⬜ |
-| Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ |
-| **Modello di conteggio corner/cartellini** (fuori matrice, F96) | ⚽ F96 | ⚽ F96 | ⚽ F96 | ⚽ struttura unica (attacco/difesa moltiplicativi, vincolo `hadv+aadv=2`); processo DIVERSO dai gol, non ridondante |
-| **… + binomiale negativa sui conteggi** (F98) | ⚽/❌ ✱8 | ⚽ F98 | ⚽ F98 | 🪑 conclusiva ma trascurabile (corner +0.00103 [+0.00062,+0.00143], cartellini +0.00088 [+0.00033,+0.00142]) |
-| **… + correzione di LIVELLO train-only** (F98 lead → **F99 bocciato**) | ❌ F99 | ❌ F99 | ❌ F99 | ❌ **F99: il lead era falso.** 5 stimatori walk-forward + emivita alla radice: nessuno migliora, 6/8 celle peggiorano con IC conclusivo. Causa: **il bias di fold NON persiste** (corr lag-1 +0.23/+0.19, IC attraversa lo zero, **10/18 stesso segno**; sd del bias 2,6×/10× il bias pooled) → non era deriva, era rumore aggregato |
-| **Mercati Tier 3 dal ri-scalamento 1T/2T** (Halftime, Second Half, risultato esatto — F98) | ⚽ F98 | ⚽ F98 | ⚽ F98 | ⚽ fondazione misurata (f=0.4396 [0.4338,0.4458], 1T Poisson-compatibile, tempi quasi indipendenti); batte la baseline con IC conclusivo (HT +0.0537, 2T +0.0578, esatto +0.1940). ⚠️ **il 2T è mal calibrato** (pareggio 0.3671 vs 0.3427) mentre il 1T no → game-state, non normalizzazione |
-| Arbitro come feature moltiplicativa (cartellini) | ⬜ dato assente (0/3420) | ❌ F98 (nessun IC esclude lo zero; **85% del guadagno era solo livello**) | ⬜ dato assente (0/3420) | ❌ il dato `Referee` esiste solo in Premier |
-| Proxy storico delle formazioni (undici attesi, disponibilità del nucleo) | ❌ F98 | ❌ F98 | ❌ F98 | ❌ la parte che funziona correla +0.9603 col valore rosa (già bocciato F4c/11); la disponibilità correla −0.1227 col logit della chiusura = **il mercato le assenze le prezza già** |
-| Anticipo del movimento apertura→chiusura | ❌ F98 (β −0.0039, R² 0.0001; CLV −0.0022 CI<0) | ❌ F98 | ❌ F98 | ❌ non anticipabile; il movimento vale 15,6% del gap anche se lo si prendesse tutto |
+| modello | Serie A | Premier | La Liga | **Bundesliga** | **Ligue 1** | generale (pooled) |
+|---|---|---|---|---|---|---|
+| **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F76 (13/14 vs DC, chiusura 2019-26) + F75 (apertura) | ⚽ F76 (13/14 vs DC) + F75 | ⚽ 15/15 vs DC | ⚽ 15/15 vs DC | ⚽ struttura (ρ=−0.06 unico; F76: 13/14 su TUTTE e 3 le leghe dalla chiusura, zero ritarature; F75: 17/20 dall'apertura su 2.280 partite vergini) |
+| **+ router v3 (double-Poisson θ)** | ⚽ F52 (θ=1.225; riconf. F81: cs −0.0078 lfo CI<0) | ❌ F53/F81 (curva piatta, θ*≈1.05: nulla) | 🪑 **F81 RIBALTA F53**: θ≈1.2 → cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (tutti lfo CI<0); la F53 testava il θ da MLE-punteggi (1.097), troppo piccolo | ❌ 0/25 mercati (θ 1.080, valle 6× più piatta della SA) | ❌ 0/25 mercati (θ 1.103) | ❌ θ per-contesto (lega × epoca); lezione F81: **θ-da-mercati ≠ θ-da-punteggi** |
+| **+ φ35 famiglia-pareggio** | ⚽ F41/44 | ❌ F80 (nulla, fit sui bound) | 🪑 F80 (**CI<0 sul GG**, φ0 0.32/κ 2.9) ✱2 | ❌ nel rumore; peggiora la doppia 1X (CI<0) | ❌ φ0 fittato = 0: la lega non ha deficit-pareggio | ❌ costanti e segno per-lega |
+| **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ PEGGIORA la chiusura (CI conclusivo), ROI −22% | ❌ nel rumore/peggiorativa, ROI −13% | ❌ proprietà della chiusura SA |
+| **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ δ=0.28 | ⚽ δ=0.19 | ⚽ ✱4 iperparametri comuni |
+| **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | 🪑 batte le baseline ma non «vince il Bayern» | 🪑 idem, non batte «vince il PSG» | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier). ⚠️ **F98: fragile alla specificazione della baseline** — cambiando la griglia LOO la baseline passa 1.4293→1.3816 e l'IC include lo zero; non è una smentita (la griglia F89 è un superset e dà il risultato *peggiore* = instabilità LOO a n=24) ma il segno dipende da una scelta arbitraria. Il mercato è **non testabile prospetticamente**: servirebbero ~57 stagioni-lega, 3 leghe in una stagione danno **9,8% di potenza** |
+| **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⬜ | ⬜ | ⚽ top-4 **calibrato** (ECE 0.0137, batte anche la persistenza, 480 oss.); retrocessione ❌ **non** batte la persistenza (mis-calibrazione tutta sulle neopromosse: −10.1pp) |
+| **… + deriva di forza in-stagione** (F94) | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⬜ | ⬜ | ⚽ **solo RETROCESSIONE** (+0.0095, IC [+0.0020,+0.0180]; neopromosse −6.1pp→−2.8pp); ❌ campione (nullo) e top-4 (peggio 17/24) |
+| **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime (MAE 0.0143 regime d'uso) | ⚽ tool stime (MAE 0.0125) | ⚽ F62-bis (il pooled VINCE) |
+| **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⬜ | ⬜ | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
+| GG/NG φ35+knee34 su market-implied | 🪑 F50 (riconf. F80: −0.0014 P97%) | ❌ F80 (nulla) | ❌ combo F80 (il k34 PEGGIORA con CI>0: profilo-ospite invertito); φ35-sola 🪑 | ⬜ | ⬜ | ❌ il nudge ha segno per-lega |
+| Ricalibrazione per-classe del mercato (w_D, w_A) | 🪑 F50-ter | ❌ F53 (direzione OPPOSTA, w_D=0.93) | 🪑 F53 (+3.6% P81) | 🪑 w_D=1.089 («latina») ma guadagno negativo | ❌ w_D=0.981 («inglese») | ❌ segno non universale |
+| Devig di Shin | 🪑 F52-ter (P 97%) | 🪑 F53 (P 68%) | 🪑 F53 (P 94%) | 🪑 pooled 5 leghe: CI conclusivo sul Brier, p=0.052 sul log-loss | 🪑 idem | 🪑 sempre ≥ moltiplicativo |
+| φ35 sul path DC standalone | 🪑 F35 | ❌ F79 (φ0→0: deficit inesistente) | ❌ F79 (fit ≈SA ma non paga) | ⬜ | ⬜ | ❌ segno non universale (PL invertita) |
+| Nudge GG/NG fine stagione (path DC) | 🪑 F48 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Ensemble emivite 180+730 | 🪑 F12a | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Ricalibrazione per-classe del modello | 🪑 F10 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Diagonale inflazionata (`--draw-inflation`) | 🪑 F12b | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ⬜ | ⬜ | ❌ rumore su 3/3 leghe |
+| Temperature scaling post-hoc | 🪑 F6 (T≈0.94) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ⬜ | ⬜ | ❌ il β stabile SA non si replica |
+| Temperatura sopra dp_lvl (T=1.056) | 🪑 F52-ter | ❌ (dp_lvl bocciato lì) | ❌ | ⬜ | ⬜ | ❌ |
+| GBM (diretto, per mercato, bespoke) | ❌ F21-23/50-quater | ⬜ ✱5 | ⬜ ✱5 | ⬜ | ⬜ | ❌ tetto informativo |
+| Poisson bivariato (λ3) | ❌ F42 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Copula di Frank | ❌ F43/50 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| GAS / score-driven (state-space) | ❌ F52-sexies | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Binomiale negativa · zero-inflazione · Rue-Salvesen | ❌ F27/51 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| COM-Poisson (dispersione principiata a 1 param ν) | ❌ F85 (pareggia dp, non batte) | ⬜ | ⬜ | ⬜ | ⬜ | ❌ F85 (una-forma è a tetto: serve coda a 2 param) |
+| ρ dinamico per-partita | ❌ F18 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Power-devig / denoising cross-stagione | ❌ F38/50 | ⬜ | ⬜ | ❌ PEGGIORA (CI conclusivo) | ❌ nel rumore | ⬜ |
+| Covariata stakes + router stakes-aware | ❌ F32/36/45 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Vantaggio-casa per-squadra | ❌ F8 (r≈0.00) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Covariate nel canale-pareggio | ❌ F37 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Ricalibrazione O/U del mercato | ❌ F51-quater | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Ensemble standalone (DC+biv+GBM) | ❌ F46 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Blend modello+mercato (lineare α / GBM) | ❌ F16 (α*≈0) / F23 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Profilo stagionale dinamico (γ/λ,μ nel tempo) | ❌ F47/48 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Tiri in porta grezzi nel blend | ❌ F3 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| **Modello di conteggio corner/cartellini** (fuori matrice, F96) | ⚽ F96 | ⚽ F96 | ⚽ F96 | ⬜ | ⬜ | ⚽ struttura unica (attacco/difesa moltiplicativi, vincolo `hadv+aadv=2`); processo DIVERSO dai gol, non ridondante |
+| **… + binomiale negativa sui conteggi** (F98) | ⚽/❌ ✱8 | ⚽ F98 | ⚽ F98 | ⬜ | ⬜ | 🪑 conclusiva ma trascurabile (corner +0.00103 [+0.00062,+0.00143], cartellini +0.00088 [+0.00033,+0.00142]) |
+| **… + correzione di LIVELLO train-only** (F98 lead → **F99 bocciato**) | ❌ F99 | ❌ F99 | ❌ F99 | ⬜ | ⬜ | ❌ **F99: il lead era falso.** 5 stimatori walk-forward + emivita alla radice: nessuno migliora, 6/8 celle peggiorano con IC conclusivo. Causa: **il bias di fold NON persiste** (corr lag-1 +0.23/+0.19, IC attraversa lo zero, **10/18 stesso segno**; sd del bias 2,6×/10× il bias pooled) → non era deriva, era rumore aggregato |
+| **Mercati Tier 3 dal ri-scalamento 1T/2T** (Halftime, Second Half, risultato esatto — F98) | ⚽ F98 | ⚽ F98 | ⚽ F98 | ⬜ | ⬜ | ⚽ fondazione misurata (f=0.4396 [0.4338,0.4458], 1T Poisson-compatibile, tempi quasi indipendenti); batte la baseline con IC conclusivo (HT +0.0537, 2T +0.0578, esatto +0.1940). ⚠️ **il 2T è mal calibrato** (pareggio 0.3671 vs 0.3427) mentre il 1T no → game-state, non normalizzazione |
+| Arbitro come feature moltiplicativa (cartellini) | ⬜ dato assente (0/3420) | ❌ F98 (nessun IC esclude lo zero; **85% del guadagno era solo livello**) | ⬜ dato assente (0/3420) | ⬜ | ⬜ | ❌ il dato `Referee` esiste solo in Premier |
+| Proxy storico delle formazioni (undici attesi, disponibilità del nucleo) | ❌ F98 | ❌ F98 | ❌ F98 | ⬜ | ⬜ | ❌ la parte che funziona correla +0.9603 col valore rosa (già bocciato F4c/11); la disponibilità correla −0.1227 col logit della chiusura = **il mercato le assenze le prezza già** |
+| Anticipo del movimento apertura→chiusura | ❌ F98 (β −0.0039, R² 0.0001; CLV −0.0022 CI<0) | ❌ F98 | ❌ F98 | ⬜ | ⬜ | ❌ non anticipabile; il movimento vale 15,6% del gap anche se lo si prendesse tutto |
 
 Note della matrice:
 - **✱1** ~~mai backtestato multi-mercato su Premier/Liga~~ → **FATTO (F76)**:

@@ -10943,3 +10943,192 @@ costante). Diagnostico: nessun run in `runs.jsonl`.
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili
 `experiments/runs.jsonl`.*
+
+---
+
+## Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade
+
+### 1 · Obiettivo
+
+Tre richieste dell'utente, in ordine: **verificare che i dati raccolti siano
+tutti giusti**; **riprovare a procurare i dati oggi coperti da stime**, e se non
+si riesce verificare che le stime (e il ragionamento che le ha prodotte) siano
+corrette; **aggiungere Bundesliga e Ligue 1** con lo stesso schema. Con un
+vincolo di metodo esplicito: *«verifica i risultati con un'analisi che cerchi di
+provare il contrario del risultato»*.
+
+Il lavoro è stato svolto in una cartella isolata (`cantiere/`, poi integrata) e
+ha prodotto undici report; questa voce ne è la sintesi, con i numeri.
+
+### 2 · Ragionamento e ipotesi
+
+**Sull'audit.** Il progetto aveva sempre verificato i dati *contro sé stessi*
+(coerenza interna, range, duplicati). Mai contro la **fonte-madre**, perché la
+rete la dava per irraggiungibile. Prima ipotesi da testare: che sia ancora vero.
+
+**Sulle stime.** Due cacce precedenti alla chiusura O/U 2017-19 erano state
+chiuse negative. L'ipotesi implicita era che il dato non esistesse. L'ipotesi
+alternativa, mai formulata: che esistesse ma fuori dall'asse lungo cui si era
+cercato.
+
+**Sulle leghe nuove.** Ipotesi del playbook (§7): le formule trasferiscono, gli
+iperparametri no. Da ri-tarare e ri-motivare numero per numero.
+
+### 3 · Alternative considerate
+
+Per l'audit: fidarsi dello snapshot congelato (economico, ma non risponde alla
+domanda) contro ri-scaricare tutto e confrontare riga per riga (costoso, ma è
+l'unico controllo forte). Scelto il secondo.
+
+Per le quote mancanti: rassegnarsi alla stima; ritentare le stesse fonti;
+oppure cambiare **asse di ricerca**. Scelto il terzo.
+
+Per le leghe nuove: copiare la config della Serie A (veloce, ma il §7 lo vieta)
+contro ri-tarare tutto. Scelto il secondo — e la ri-taratura è risultata piatta,
+il che è a sua volta un risultato.
+
+### 4 · Scelta
+
+Audit a quattro livelli (interno → confronto con la fonte ri-scaricata →
+confronto con una fonte indipendente → avversariale «e se la fonte fosse
+sbagliata?»), poi caccia al dato vero su assi nuovi, poi il playbook completo
+sulle due leghe, e infine una **verifica avversariale sistematica** di ogni
+risultato — inclusi i miei.
+
+### 5 · Risultato
+
+**L'audit.** La rete è tornata raggiungibile, quindi il controllo forte si è
+potuto fare per la prima volta: **0 differenze** su gol, date, tiri, 10 colonne
+quota e 8 colonne xG, ri-scaricando tutte e 45 le stagioni; i gol confermati da
+una seconda fonte indipendente su 15.787 partite su 15.788. Trovate **8 anomalie
+reali, tutte nella fonte**, non nostre.
+
+**Il dato che si credeva perduto.** La chiusura O/U 2017-19 esiste:
+`footiqo.com` pubblica il book **1xBet**, che football-data non contiene —
+3.652 partite su 3.652, copertura 100%. Validata come chiusura vera (corr 0.9977
+con la chiusura Pinnacle contro 0.9909 con l'apertura; riproduce il movimento
+1X2 partita per partita; margine e distribuzione dell'ultima cifra da book
+vero, non da media né da modello). **Ma non è stata inserita**: è un solo book, e
+come proxy della media multi-book è *peggiore della stima* (MAE 0.0156 contro
+0.012). Trovare il dato vero non basta: bisogna chiedersi se è il dato giusto.
+
+**Il collaterale che vale più del bersaglio.** La stessa fonte porta le quote
+**GG/NG** al 100%. Il progetto dichiarava quel mercato «l'unico con spazio non
+ancora chiuso». Misurato: il mercato GG/NG è informativo (log-loss 0.6840 contro
+0.6921, CI conclusivo) ma vale **un terzo** dell'O/U dello stesso book; il nostro
+prezzo lo **pareggia** (6 varianti, tutte con CI a cavallo dello zero); il DC
+**perde di netto** (+0.0104) e il book lo **ingloba** (α\*=0 nel 70% dei fit).
+
+**Le due leghe nuove.** 2.754 + 3.097 partite, 38 colonne identiche. Il DC batte
+la baseline e non il mercato (gap **+0.0181** e **+0.0190**, dentro la forchetta
+delle altre tre); il market-implied batte il DC su **15/15** mercati; le curve di
+ri-taratura sono **piatte**, 5 leghe su 5. E **nessuna leva del mercato si
+replica**: router θ 0/25 mercati conclusivi, φ(|λ−μ|) e power-devig bocciati,
+beat-the-close chiuso (in Bundesliga *peggiora* con CI conclusivo, ROI −22%).
+
+**La verifica avversariale ha smontato cinque affermazioni**, tre delle quali
+mie. In cinque casi su sette il difetto non era il numero — la riproducibilità è
+risultata impeccabile, delta identici a 10⁻¹⁶ — ma **la statistica scelta per
+raccontarlo**.
+
+### 6 · Lezione
+
+Tre, in ordine di durata.
+
+**Sul metodo di ricerca dati:** una pista chiusa due volte può essere chiusa
+lungo l'asse sbagliato. «Non esiste» e «non esiste dove ho cercato» sono
+affermazioni diverse, e solo la seconda era dimostrata.
+
+**Sui dati:** il buco peggiore non è il `NaN`. È il valore che *sembra* una
+misura — un segnaposto della fonte, uno zero che significa «non lo so» — perché
+coincide con la fonte e nessun confronto lo vede. Trovato un xG segnaposto su
+16.110 partite e 1.603 falsi zero di `midweek_europe`.
+
+**Sul metodo statistico:** ogni statistica di testa deve avere il suo
+intervallo, e ogni «non c'è effetto» la sua misura di potenza. È diventata la
+regola R7 del protocollo.
+
+E una conferma: **il tetto è informativo**, e ora è misurato su cinque
+campionati invece che su uno.
+
+### 📐 Il modello in dettaglio
+
+**Nessuna formula nuova.** Le due leghe nuove usano le stesse del resto del
+progetto; quello che cambia sono i numeri, e ognuno va motivato (§2-bis).
+
+**δ, prior di cold-start delle neopromosse.** Definizione invariata:
+
+```
+δ = ln( gol_medi_della_lega / gol_medi_delle_promosse_alla_prima_stagione )
+```
+
+| lega | δ | lettura |
+|---|--:|---|
+| Serie A | 0.23 | ln(1.36/1.08) |
+| Premier | 0.33 | promosse inglesi molto più deboli |
+| La Liga | 0.22 | ln(1.291/1.038) |
+| **Bundesliga** | **0.28** | promosse tedesche più deboli della media |
+| **Ligue 1** | **0.19** | **direzione opposta**: le promosse francesi sono le meno deboli del campione |
+
+Il guadagno misurato dell'adozione è **+0.0001 e +0.0000** di log-loss, cioè
+nulla: i δ sono adottati per **motivazione strutturale**, non per miglioramento,
+ed è scritto così anche nel commento di `src/config.py`. La Ligue 1 è il caso
+istruttivo: il suo δ va nella direzione opposta a tutte le altre leghe e il
+modello non se ne accorge — la leva è reale ma la sua ampiezza è sotto la
+risoluzione del test.
+
+**θ, sotto-dispersione double-Poisson.** Stimato per massima verosimiglianza sui
+punteggi dati i tassi del mercato:
+
+| lega | θ | il router paga? | profondità della valle |
+|---|--:|:-:|--:|
+| Serie A | 1.232 | sì | −0.0081 |
+| La Liga | 1.242 | sì | −0.0081 |
+| Premier | 1.085 | no | −0.0012 |
+| **Bundesliga** | **1.080** | **no** | **−0.0012** |
+| **Ligue 1** | **1.103** | **no** | **−0.0017** |
+
+Due famiglie nette. E una correzione di metodo: la tesi «la griglia stima θ
+meglio della massima verosimiglianza» **non regge come enunciata** — sul
+risultato esatto la griglia ricade sul θ MLE entro mezzo passo in 5 leghe su 5,
+perché `fit_theta` minimizza *esattamente* quella log-loss. Griglia e MLE
+divergono solo quando si cambia **metrica**: la frase giusta è «mercati diversi
+vogliono θ diversi».
+
+**Il guard sull'overround.** Bilaterale, con soglia motivata dai dati:
+
+```
+orr = Σ 1/quota_i          # su TUTTE le quote dello stesso mercato
+scarta il mercato IN BLOCCO se  orr < 1.0  oppure  orr > ORR_MAX = 1.12
+```
+
+`ORR_MAX = 1.12` non è scelto a occhio: nell'era `Avg` il massimo mai osservato
+su 12.457 righe è **1.0765**, quindi 1.12 sta ~6 σ oltre la mediana sana e 4
+punti percentuali sopra quel massimo — non può scartare una riga buona. Provato:
+ri-derivando tutte e 10 le colonne quota delle 5 leghe col codice di produzione,
+il guard cambia **6 celle** (La Liga 2018-19, overround fino a 1.283) e **zero**
+altrove su 15.788 partite.
+
+**Lo stimatore della chiusura O/U.** Formula invariata (E3, regressione logit):
+
+```
+logit(p_close) = β0 + β1·logit(p_open) + β2·Δlogit(H) + β3·Δlogit(D) + β4·Δlogit(A)
+```
+
+con Δlogit(·) = movimento 1X2 apertura→chiusura. Fit pooled, ora su 12.457
+partite e 5 leghe: coefficienti `[0.0248, 0.9798, 1.3929, −0.8398, 1.3933]`.
+
+Il numero che è cambiato è **l'errore dichiarato**, e vale la pena spiegarne il
+perché. Con un protocollo di *interpolazione* (il fit vede stagioni prima e dopo
+la riga stimata) il MAE è ~0.012, ed è il valore storicamente pubblicato. Ma
+questa stima non viene mai usata così: la chiusura O/U del 2017-19 **non
+esiste**, quindi i coefficienti possono venire solo da stagioni successive.
+Misurato in quel regime — fit sulle stagioni tarde, stima sul 2017-19 — l'errore
+è **0.0143 in Bundesliga e 0.0125 in Ligue 1**, il 15-25% più alto. Si dichiara
+quello.
+
+È anche il motivo per cui il ribaltamento «lo stimatore passa da pooled a
+per-lega» **non regge**: vinceva in interpolazione (−0.00031, CI conclusivo) e
+**perde nel regime d'uso** (+0.00104, CI conclusivo). Il protocollo di
+validazione non era sbagliato in astratto: era il protocollo sbagliato *per
+questa domanda*.
