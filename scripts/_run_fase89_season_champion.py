@@ -30,7 +30,6 @@ import argparse
 import json
 import sys
 import zlib
-from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -48,7 +47,8 @@ LEAGUES = ("serie_a", "premier_league", "la_liga")
 
 # Rose 2026-27: 17 squadre rimaste + 3 promosse. Le retrocesse sono le ultime 3
 # della classifica 2025-26 CON gli spareggi ufficiali (per la Liga cambia
-# l'esito: retrocede Mallorca, non Levante — scontri diretti 4-1).
+# l'esito: Levante, Osasuna e Mallorca chiudono tutte a 42 punti e la classifica
+# avulsa fra le tre retrocede Mallorca, non Levante).
 # Fonte delle promosse: i mercati "2027 Champion" di Polymarket (24/07/2026),
 # riconciliati coi nomi interni. E' un'informazione ESTERNA agli snapshot: va
 # aggiornata quando il calendario ufficiale 2026-27 sara' pubblico.
@@ -138,6 +138,17 @@ def run_backtest(nsim: int, verbose=True) -> pd.DataFrame:
             champ = table.index[0]
             k = teams.index(champ)
             prev_tab = final_table(allm[allm["season"] == seasons[i - 1]], lg)
+            # Punti delle stagioni precedenti, per la baseline di PERSISTENZA
+            # (vedi report()). Le squadre assenti da quella stagione (neopromosse)
+            # vengono imputate a min(punti) - 3: sono in media piu' deboli
+            # dell'ultima classificata, che e' appena retrocessa.
+            def prev_points(table):
+                lo = float(table["pts"].min()) - 3.0
+                return {t: float(table["pts"][t]) if t in table.index else lo
+                        for t in teams}
+            prev_pts = prev_points(prev_tab)
+            prev2_pts = (prev_points(final_table(allm[allm["season"] == seasons[i - 2]], lg))
+                         if i >= 2 else None)
             rows.append(dict(
                 league=lg, season=S, n_train_seasons=i, start=str(start.date()),
                 champion=champ, p_champion=float(p[k]),
@@ -152,6 +163,7 @@ def run_backtest(nsim: int, verbose=True) -> pd.DataFrame:
                 pts_real_champion=int(table["pts"].iloc[0]),
                 pts_sim_winner_mean=float(out["points"].max(axis=1).mean()),
                 probs={t: round(float(p[j]), 5) for j, t in enumerate(teams)},
+                prev_points=prev_pts, prev2_points=prev2_pts,
             ))
             if verbose:
                 r = rows[-1]
@@ -159,6 +171,56 @@ def run_backtest(nsim: int, verbose=True) -> pd.DataFrame:
                       f"rank={r['rank_of_champion']:2d}  favorito {r['favourite']:14} "
                       f"{r['p_favourite']*100:5.1f}%  parita={r['tie_rate']*100:4.1f}%", flush=True)
     return pd.DataFrame(rows)
+
+
+def persistence_probs(row, beta: float, w2: float = 0.0) -> np.ndarray:
+    """Baseline di PERSISTENZA: probabilita' dai punti delle stagioni passate.
+
+    E' la baseline promessa dal docstring di questa fase e mai implementata fino
+    all'audit della Fase 90. E' molto piu' forte del "vince il campione uscente":
+    usa TUTTA la classifica, non solo chi ha vinto.
+
+        z_i   = punti standardizzati della squadra i (media 0, dev.std 1)
+        p_i   = exp(beta * z_i) / somma_j exp(beta * z_j)
+
+    Con ``w2 > 0`` i punti sono una media pesata delle ULTIME DUE stagioni
+    (peso 1 alla piu' recente, w2 alla precedente): due stagioni sono una stima
+    meno rumorosa della forza di una.
+    ``beta`` = quanto la classifica passata "conta": beta=0 da' l'uniforme,
+    beta grande concentra tutto sulla prima dell'anno prima.
+    """
+    teams = list(row["probs"])
+    pts = np.array([row["prev_points"][t] for t in teams], float)
+    if w2 and row.get("prev2_points"):
+        p2 = np.array([row["prev2_points"][t] for t in teams], float)
+        pts = (pts + w2 * p2) / (1.0 + w2)
+    sd = pts.std()
+    z = (pts - pts.mean()) / (sd if sd > 1e-9 else 1.0)
+    e = np.exp(beta * z)
+    return e / e.sum()
+
+
+def _persistence_logloss(df: pd.DataFrame, beta: float, w2: float = 0.0) -> np.ndarray:
+    out = []
+    for _, r in df.iterrows():
+        p = persistence_probs(r, beta, w2)
+        k = list(r["probs"]).index(r["champion"])
+        out.append(-np.log(max(float(p[k]), 1e-12)))
+    return np.array(out)
+
+
+def _persistence_loo(df: pd.DataFrame, betas, w2s) -> tuple[np.ndarray, tuple]:
+    """Log-loss LEAVE-ONE-OUT della baseline: per ogni stagione si tarano
+    (beta, w2) sulle ALTRE 23 e si valuta su quella esclusa. Cosi' la baseline
+    non e' penalizzata da una taratura in-sample del modello che la batte."""
+    grid = [(b, w) for b in betas for w in w2s]
+    per_case = np.empty(len(df))
+    for i in range(len(df)):
+        sub = df.drop(df.index[i])
+        best = min(grid, key=lambda bw: _persistence_logloss(sub, *bw).mean())
+        per_case[i] = _persistence_logloss(df.iloc[[i]], *best)[0]
+    best_all = min(grid, key=lambda bw: _persistence_logloss(df, *bw).mean())
+    return per_case, best_all
 
 
 def report(df: pd.DataFrame) -> dict:
@@ -186,6 +248,20 @@ def report(df: pd.DataFrame) -> dict:
     lo, hi = bootstrap_ci(diff)
     wins = int((df["logloss"].to_numpy() < np.array(loo)).sum())
 
+    # --- baseline di PERSISTENZA (la piu' forte; audit Fase 90) ---
+    # griglia scelta perche' l'ottimo cada all'INTERNO (verificato: beta*~2.5,
+    # w2*~1.5; con un tetto a w2=1.0 la baseline usciva sottostimata e il
+    # guadagno del modello sovrastimato)
+    betas = np.arange(0.0, 4.05, 0.1)
+    pers1, best1 = _persistence_loo(df, betas, [0.0])
+    pers2, best2 = _persistence_loo(df, betas, [0.0, 0.5, 1.0, 1.5, 2.0])
+    d1 = pers1 - df["logloss"].to_numpy()
+    d2 = pers2 - df["logloss"].to_numpy()
+    lo1, hi1 = bootstrap_ci(d1)
+    lo2, hi2 = bootstrap_ci(d2)
+    w1 = int((df["logloss"].to_numpy() < pers1).sum())
+    w2n = int((df["logloss"].to_numpy() < pers2).sum())
+
     p_fav = float(df["p_favourite"].mean())
     hit = float(df["favourite_correct"].mean())
     se = float(np.sqrt(hit * (1 - hit) / n))
@@ -196,6 +272,16 @@ def report(df: pd.DataFrame) -> dict:
         logloss_reigning_loo=ll_rep_loo,
         gain_vs_reigning=float(diff.mean()), gain_ci=[lo, hi],
         seasons_model_better=wins,
+        logloss_persistence1_loo=float(pers1.mean()), beta1=float(best1[0]),
+        logloss_persistence2_loo=float(pers2.mean()),
+        beta2=float(best2[0]), w2=float(best2[1]),
+        gain_vs_persistence1=float(d1.mean()), gain_ci_persistence1=[lo1, hi1],
+        seasons_better_persistence1=w1,
+        gain_vs_persistence2=float(d2.mean()), gain_ci_persistence2=[lo2, hi2],
+        seasons_better_persistence2=w2n,
+        gain_persistence2_by_league={
+            lg: float(d2[(df["league"] == lg).to_numpy()].mean())
+            for lg in LEAGUES if (df["league"] == lg).any()},
         brier_model=float(df["brier"].mean()),
         rank_mean=float(df["rank_of_champion"].mean()),
         favourite_hit_rate=hit, favourite_claimed=p_fav,
@@ -209,12 +295,28 @@ def report(df: pd.DataFrame) -> dict:
     print("\n" + "=" * 78)
     print("### METRICHE (log-loss sul campione effettivo; piu basso = meglio)")
     print(f"  MODELLO (MC dal DC)          : {rep['logloss_model']:.4f}   (n={n})")
-    print(f"  baseline uniforme (1/20)     : {rep['logloss_uniform']:.4f}")
-    print(f"  baseline 'campione uscente'  : {rep['logloss_reigning_insample']:.4f} "
-          f"(q={q_in:.2f} IN-SAMPLE) | {rep['logloss_reigning_loo']:.4f} (leave-one-out)")
-    print(f"  guadagno vs 'uscente' (LOO)  : {rep['gain_vs_reigning']:+.4f}  "
-          f"IC95% [{lo:+.4f}, {hi:+.4f}]  -> {'CONCLUSIVO' if lo > 0 else 'non conclusivo'}")
-    print(f"  stagioni in cui il modello e' migliore: {wins}/{n}")
+    print("  --- baseline, dalla piu' debole alla piu' forte ---")
+    print(f"  uniforme (1/20)              : {rep['logloss_uniform']:.4f}")
+    print(f"  'vince il campione uscente'  : {rep['logloss_reigning_insample']:.4f} "
+          f"(q={q_in:.2f} IN-SAMPLE) | {rep['logloss_reigning_loo']:.4f} (LOO)")
+    print(f"  PERSISTENZA 1 stagione       : {pers1.mean():.4f} (LOO, beta*={best1[0]:.1f})")
+    print(f"  PERSISTENZA 2 stagioni       : {pers2.mean():.4f} (LOO, beta*={best2[0]:.1f}, "
+          f"w2*={best2[1]:.2f})   <-- LA PIU' FORTE")
+    print("  --- guadagno del modello su ciascuna ---")
+    print(f"  vs 'uscente'   : {rep['gain_vs_reigning']:+.4f}  IC95% [{lo:+.4f}, {hi:+.4f}]"
+          f"  {wins}/{n} stagioni  -> {'CONCLUSIVO' if lo > 0 else 'non conclusivo'}")
+    print(f"  vs persistenza1: {d1.mean():+.4f}  IC95% [{lo1:+.4f}, {hi1:+.4f}]"
+          f"  {w1}/{n} stagioni  -> {'CONCLUSIVO' if lo1 > 0 else 'non conclusivo'}")
+    print(f"  vs persistenza2: {d2.mean():+.4f}  IC95% [{lo2:+.4f}, {hi2:+.4f}]"
+          f"  {w2n}/{n} stagioni  -> {'CONCLUSIVO' if lo2 > 0 else 'non conclusivo'}")
+    print("  (i due numeri onesti sono gli ULTIMI: la baseline debole gonfia il")
+    print("   guadagno di oltre un nat e porta il conteggio a 24/24)")
+    print("\n  guadagno vs persistenza2, PER LEGA:")
+    for lg in LEAGUES:
+        mask = (df["league"] == lg).to_numpy()
+        if mask.any():
+            print(f"    {lg:16} {d2[mask].mean():+.4f}   "
+                  f"{int((df['logloss'].to_numpy()[mask] < pers2[mask]).sum())}/{int(mask.sum())}")
     print(f"\n  Brier multiclasse            : {rep['brier_model']:.4f}")
     print(f"  rank medio del campione reale: {rep['rank_mean']:.2f}")
     print("\n### CALIBRAZIONE DEL FAVORITO (la sovra-confidenza)")
@@ -290,13 +392,18 @@ def main(argv=None):
     print(f"\nDettaglio scritto in {out}")
 
     if not args.no_log:
-        experiment_log.append_run(dict(
-            timestamp=datetime.now(timezone.utc).isoformat(),
-            script="_run_fase89_season_champion.py", phase="89",
+        # make_record (invece di un dict a mano) per avere l'IMPRONTA DATI come
+        # tutti gli altri 713 run: senza, un cambio silenzioso degli snapshot non
+        # sarebbe rilevabile a posteriori (audit Fase 90).
+        fp = "|".join(f"{lg}:{experiment_log.data_fingerprint(loader.load_league(lg))}"
+                      for lg in LEAGUES)
+        rec = experiment_log.make_record(
             config=dict(nsim=args.nsim, model="dixon_coles+montecarlo_stagione",
-                        leagues=list(LEAGUES)),
-            metrics=rep, git_commit=experiment_log.git_commit(),
-            note="Mercato campione di stagione: primo backtest (24 stagioni-lega)."))
+                        leagues=list(LEAGUES), phase="89",
+                        script="_run_fase89_season_champion.py"),
+            metrics_dict=rep, fingerprint=fp)
+        rec["note"] = "Mercato campione di stagione: backtest su 24 stagioni-lega."
+        experiment_log.append_run(rec)
         print("Run registrato in experiments/runs.jsonl")
     return 0
 

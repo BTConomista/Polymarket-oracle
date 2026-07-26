@@ -32,6 +32,21 @@ def main() -> None:
         print(f"\n=== {sources.LEAGUES[key].name} ===")
         snap = database.read_snapshot(database.snapshot_path(key))
         out = player_scores.add_squad_values(snap, key)
+        # GUARDIA (audit Fase 92): il refill riempie TUTTA la colonna, e le celle
+        # 2025-26 recuperate A MANO da Transfermarkt nella Fase 70 (dato REALE,
+        # non rigenerabile da script) cadono sotto la soglia di copertura e
+        # tornerebbero NaN. Se il rebuild PERDE celle che c'erano, si ferma:
+        # per riapplicarle c'e' scripts/_apply_fase70_squad_value_real.py.
+        for col in ("home_squad_value", "away_squad_value"):
+            if col in snap.columns:
+                lost = int((snap[col].notna() & out[col].isna()).sum())
+                if lost:
+                    raise SystemExit(
+                        f"STOP: il rebuild perderebbe {lost} celle {col} gia' "
+                        f"presenti in {key} (probabilmente il dato reale della "
+                        f"Fase 70). Snapshot NON riscritto. Riapplicale con "
+                        f"scripts/_apply_fase70_squad_value_real.py dopo il rebuild, "
+                        f"oppure forza consapevolmente rimuovendo questa guardia.")
         database.write_snapshot(out, database.snapshot_path(key))
         both = out["home_squad_value"].notna() & out["away_squad_value"].notna()
         results[key] = round(float(both.mean()), 4)

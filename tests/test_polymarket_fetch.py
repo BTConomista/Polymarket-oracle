@@ -86,3 +86,69 @@ def test_build_soccer_matches_ignores_outrights():
     outright = {"title": "Serie A: 2027 Champion", "slug": "serie-a-2027-champion",
                 "tags": [{"label": "Soccer"}], "markets": []}
     assert pm.build_soccer_matches([outright]) == []
+
+
+# ---- regressioni dall'audit Fase 90 (bug reali, verificati su dati live) ----
+DERBY_BASE = {
+    "title": "Manchester City vs. Manchester United",
+    "slug": "epl-mci-mun-2026-09-12",
+    "endDate": "2026-09-12T14:00:00Z",
+    "tags": [{"label": "Soccer"}, {"label": "EPL"}],
+    "markets": [
+        _mkt("Will Manchester City win on 2026-09-12?", ["Yes", "No"], [0.55, 0.45]),
+        _mkt("Will Manchester City vs. Manchester United end in a draw?",
+             ["Yes", "No"], [0.25, 0.75]),
+        _mkt("Will Manchester United win on 2026-09-12?", ["Yes", "No"], [0.20, 0.80]),
+    ],
+}
+
+
+def test_derby_with_shared_first_word_keeps_1x2():
+    """Bug Fase 90(a): col match sulla PRIMA PAROLA la domanda sull'ospite
+    finiva nel ramo della casa e l'intera partita usciva senza 1X2."""
+    m = pm.build_soccer_matches([DERBY_BASE])[0]
+    assert m["one_x_two"] is not None, "1X2 perso sul derby"
+    assert m["one_x_two"]["raw"] == {"home": 0.55, "draw": 0.25, "away": 0.20}
+
+
+def test_which_team_prefers_longest_full_name():
+    assert pm._which_team("Will Manchester United win?", "Manchester City",
+                          "Manchester United") == "away"
+    assert pm._which_team("Will Manchester City win?", "Manchester City",
+                          "Manchester United") == "home"
+    assert pm._which_team("Will Real Betis win?", "Real Madrid", "Real Betis") == "away"
+    # nessuna delle due riconoscibile -> nessuna assegnazione (meglio del falso)
+    assert pm._which_team("Will Someone Else win?", "Roma", "Lazio") is None
+
+
+def test_half_and_team_markets_do_not_overwrite_full_match():
+    """Bug Fase 90(b): '1st Half O/U 2.5' e '<squadra> O/U 2.5' contengono la
+    stessa sottostringa e con re.search sovrascrivevano la linea vera."""
+    ev = {
+        "title": "Roma vs. Lazio - More Markets",
+        "slug": "ita-rom-laz-2026-08-24-more-markets",
+        "tags": [{"label": "Soccer"}],
+        "markets": [
+            _mkt("Roma vs. Lazio: O/U 2.5", ["Over", "Under"], [0.295, 0.705], "O/U 2.5"),
+            _mkt("Roma vs. Lazio: 1st Half O/U 2.5", ["Over", "Under"],
+                 [0.500, 0.500], "1st Half O/U 2.5"),
+            _mkt("Roma vs. Lazio: Roma O/U 2.5", ["Over", "Under"],
+                 [0.111, 0.889], "Roma O/U 2.5"),
+            _mkt("Roma vs. Lazio: Both Teams to Score", ["Yes", "No"],
+                 [0.60, 0.40], "Both Teams to Score"),
+            _mkt("Roma vs. Lazio: 1st Half Both Teams to Score", ["Yes", "No"],
+                 [0.30, 0.70], "1st Half Both Teams to Score"),
+        ],
+    }
+    ev_base = dict(BASE, markets=BASE["markets"])
+    m = pm.build_soccer_matches([ev_base, ev])[0]
+    assert m["over_under"]["2.5"] == {"over": 0.295, "under": 0.705}, "linea O/U sovrascritta"
+    assert m["btts"] == {"yes": 0.60, "no": 0.40}, "BTTS sovrascritto dal primo tempo"
+
+
+def test_full_match_label_filters():
+    assert pm._full_match_label({"groupItemTitle": "O/U 2.5"}) == "O/U 2.5"
+    assert pm._full_match_label({"groupItemTitle": "1st Half O/U 2.5"}) == "1st Half O/U 2.5"
+    assert pm._OU_LABEL.match("O/U 2.5") is not None
+    assert pm._OU_LABEL.match("1st Half O/U 2.5") is None
+    assert pm._OU_LABEL.match("Roma O/U 2.5") is None

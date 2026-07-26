@@ -24,13 +24,22 @@ on:
     paths:
       - '.github/import-dataset-trigger'
   workflow_dispatch:
-  # Re-import mensile (1° del mese, 05:00 UTC): il dataset a monte si aggiorna
-  # settimanalmente e BACKFILLA lo storico valutazioni — le celle squad_value
-  # della stagione in corso si chiudono da sole col tempo (Fase 68).
-  # NOTA: come workflow_dispatch, lo schedule parte SOLO dal branch di default:
-  # diventera' attivo quando questo file sara' su main.
-  schedule:
-    - cron: '0 5 1 * *'
+  # Re-import mensile: DISATTIVATO (audit Fase 92).
+  #
+  # Il cron '0 5 1 * *' era scritto quando questo file NON stava sul branch di
+  # default e quindi non poteva partire. Col passaggio a main (Fase 82) e'
+  # diventato attivo in silenzio, e il primo fire sarebbe stato il 2026-08-01.
+  # Il problema non e' il costo: e' che avrebbe committato ~51 MB di dataset
+  # aggiornato in files/player_scores/ SENZA rigenerare gli snapshot congelati,
+  # creando una divergenza silenziosa fra la fonte grezza (nuova) e i dati su
+  # cui girano tutti i backtest (vecchi) — e senza una riga nel registro ne' una
+  # fase nel diario, contro il principio offline-first (§5).
+  # L'import resta disponibile a comando (workflow_dispatch e il file-segnale),
+  # come atto deliberato a cui far seguire il refill degli snapshot.
+  # Per riattivarlo: togliere il commento qui sotto E prevedere nel job il
+  # rebuild degli snapshot + la registrazione del run.
+  # schedule:
+  #   - cron: '0 5 1 * *'
 
 permissions:
   contents: write

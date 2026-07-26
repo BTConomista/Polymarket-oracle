@@ -78,11 +78,20 @@ def anatomy(df: pd.DataFrame) -> dict:
     print(f"    P(vince uno dei nostri primi 3): dichiarata {df.p_top3.mean()*100:.1f}%  "
           f"reale {(df.rank_of_champion<=3).mean()*100:.1f}%  "
           f"scarto {((df.rank_of_champion<=3).mean()-df.p_top3.mean())*100:+.1f}pp")
+    # Confronto CONDIZIONATO: dato che il campione e' uno dei nostri primi due,
+    # la nostra probabilita' che sia il PRIMO e' p1/(p1+p2), non p1 (che e'
+    # marginale). Confrontare p1 con una frequenza condizionata mescolava due
+    # quantita' diverse e sottostimava la sovra-confidenza (audit Fase 90).
+    def _share_top1(r):
+        p = sorted(r["probs"].values(), reverse=True)
+        return p[0] / (p[0] + p[1])
+    share = t2.apply(_share_top1, axis=1).mean()
     print(f"    scelta DENTRO il top-2: giusta {(t2.rank_of_champion==1).sum()}/{len(t2)} = "
-          f"{(t2.rank_of_champion==1).mean()*100:.0f}%  "
-          f"(ma dichiaravamo {t2.p_favourite.mean()*100:.1f}% sul favorito)")
+          f"{(t2.rank_of_champion==1).mean()*100:.1f}%  "
+          f"(dichiaravamo {share*100:.1f}% = media di p1/(p1+p2))")
     print("    -> calibrati sul GRUPPO di testa, sbagliati nella SCELTA fra i suoi membri:")
-    print("       prezziamo al ~61% quello che nei fatti e' un lancio di moneta (~53%).")
+    print(f"       diamo {share*100:.0f}% al nostro primo contro i due, ne azzecchiamo "
+          f"{(t2.rank_of_champion==1).mean()*100:.0f}%.")
 
     print("\n  Calibrazione per fascia di confidenza:")
     for lo, hi, lab in [(0, .5, "sotto 50%"), (.5, .7, "50-70%"), (.7, 1.01, "sopra 70%")]:
@@ -99,35 +108,56 @@ def anatomy(df: pd.DataFrame) -> dict:
                 champion_in_top3=int((df.rank_of_champion <= 3).sum()),
                 p_top2_declared=float(df.p_top2.mean()),
                 p_top2_realised=float((df.rank_of_champion <= 2).mean()),
-                pick_within_top2=[int((t2.rank_of_champion == 1).sum()), int(len(t2))])
+                pick_within_top2=[int((t2.rank_of_champion == 1).sum()), int(len(t2))],
+                pick_within_top2_declared=float(share))
+
+
+def temperature_recal(df: pd.DataFrame) -> dict:
+    """La sovra-confidenza si corregge ammorbidendo le probabilita' post-hoc?
+
+    p_i(T) = p_i^(1/T) / somma_j p_j^(1/T).  T>1 appiattisce.
+    Si riporta il T ottimo IN-SAMPLE (ottimistico) e il log-loss LEAVE-ONE-OUT
+    (onesto: T tarato sulle altre 23 stagioni). Aggiunto qui alla Fase 90:
+    i numeri erano stati calcolati a mano e non erano riproducibili da alcuno
+    script, contro la regola di riproducibilita' del progetto.
+    """
+    P, y = [], []
+    for _, r in df.iterrows():
+        teams = list(r["probs"])
+        P.append(np.array([r["probs"][t] for t in teams], float))
+        y.append(teams.index(r["champion"]))
+
+    def ll(T, idx):
+        tot = 0.0
+        for i in idx:
+            q = np.power(np.clip(P[i], 1e-12, None), 1.0 / T)
+            q /= q.sum()
+            tot += -np.log(max(q[y[i]], 1e-12))
+        return tot / len(idx)
+
+    grid = np.arange(0.80, 3.005, 0.01)
+    allidx = list(range(len(P)))
+    T_in = float(grid[int(np.argmin([ll(T, allidx) for T in grid]))])
+    base, best_in = ll(1.0, allidx), ll(T_in, allidx)
+    loo = []
+    for i in allidx:
+        rest = [j for j in allidx if j != i]
+        T = float(grid[int(np.argmin([ll(T, rest) for T in grid]))])
+        loo.append(ll(T, [i]))
+    loo_mean = float(np.mean(loo))
+    print("\n" + "=" * 74)
+    print("### D. RICALIBRAZIONE A TEMPERATURA (basta ammorbidire post-hoc?)")
+    print(f"  nessuna correzione (T=1)     : {base:.4f}")
+    print(f"  T ottimo IN-SAMPLE = {T_in:.2f}     : {best_in:.4f}  (guadagno {base-best_in:.4f})")
+    print(f"  LEAVE-ONE-OUT (onesto)       : {loo_mean:.4f}  "
+          f"-> {'PEGGIO' if loo_mean > base else 'meglio'} del non fare nulla")
+    print("  con n=24 non si stima onestamente nemmeno UN parametro:")
+    print("  la correzione va fatta strutturalmente, non post-hoc.")
+    return dict(base=float(base), T_insample=T_in, ll_insample=float(best_in),
+                gain_insample=float(base - best_in), ll_loo=loo_mean)
 
 
 # ------------------------------------------------------------------ B ------ #
-def _sim_with_features(model, fixtures, teams, feats, nsim, seed):
-    K = model.max_goals + 1
-    cdfs = np.empty((len(fixtures), K * K))
-    for n, (h, a) in enumerate(fixtures):
-        f = {"home_squad_value": feats[h], "away_squad_value": feats[a]}
-        cdfs[n] = np.cumsum(model.predict_match(h, a, features=f).score_matrix.ravel())
-    cdfs /= cdfs[:, -1:]
-    ti = {t: k for k, t in enumerate(teams)}
-    hidx = np.array([ti[h] for h, _ in fixtures]); aidx = np.array([ti[a] for _, a in fixtures])
-    rng = np.random.default_rng(seed); NT = len(teams)
-    pts = np.zeros((nsim, NT), np.int32); gd = np.zeros((nsim, NT), np.int32)
-    for s0 in range(0, nsim, 2000):
-        s1 = min(s0 + 2000, nsim)
-        u = rng.random((s1 - s0, len(fixtures)))
-        cell = np.array([np.searchsorted(cdfs[n], u[:, n]) for n in range(len(fixtures))]).T
-        hg, ag = cell // K, cell % K
-        hw, aw, dr = hg > ag, hg < ag, hg == ag
-        for n in range(len(fixtures)):
-            pts[s0:s1, hidx[n]] += 3 * hw[:, n] + dr[:, n]
-            pts[s0:s1, aidx[n]] += 3 * aw[:, n] + dr[:, n]
-            gd[s0:s1, hidx[n]] += hg[:, n] - ag[:, n]
-            gd[s0:s1, aidx[n]] += ag[:, n] - hg[:, n]
-    return np.bincount(np.argmax(pts * 10000 + gd, axis=1), minlength=NT) / nsim
-
-
 def squad_value_test(nsim=20000) -> dict:
     """La covariata squad_value (= mercato estivo) migliora la previsione?"""
     print("\n" + "=" * 74)
@@ -162,9 +192,15 @@ def squad_value_test(nsim=20000) -> dict:
                                     shots_blend=cfg["shots_blend"], blend_signal=cfg["blend_signal"],
                                     promoted_prior=(d, d), covariates=covs)
                 m.fit(allm, as_of_date=start, promoted_teams=promoted)
-                p = (_sim_with_features(m, fixtures, teams, feats, nsim, seed_for(lg, S)) if covs
-                     else simulate_season(m, fixtures, teams, league_key=lg,
-                                          n_sims=nsim, seed=seed_for(lg, S))["champion_prob"])
+                # STESSO simulatore per le due braccia (stessi spareggi, stessi
+                # semi): l'unica differenza dev'essere la covariata. Con due
+                # implementazioni diverse ~9% del delta era artefatto di
+                # spareggio (audit Fase 90).
+                fn = (lambda h, a: {"home_squad_value": feats[h],
+                                    "away_squad_value": feats[a]}) if covs else None
+                p = simulate_season(m, fixtures, teams, league_key=lg,
+                                    n_sims=nsim, seed=seed_for(lg, S),
+                                    features=fn)["champion_prob"]
                 res[name] = (float(p[k]), bool(teams[int(p.argmax())] == champ),
                              m.beta.get("squad_value"))
             rows.append(dict(league=lg, season=S, repeat=(champ == prev_champ),
@@ -249,7 +285,7 @@ def main(argv=None):
         return 1
     df = pd.DataFrame(json.load(open(RESULTS))["backtest"])
 
-    out = {"anatomy": anatomy(df)}
+    out = {"anatomy": anatomy(df), "temperature": temperature_recal(df)}
     if args.squad_value:
         out["squad_value"] = squad_value_test(args.nsim)
     out["drift"] = strength_drift()

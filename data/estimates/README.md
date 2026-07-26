@@ -1,3 +1,8 @@
+> ⚠️ **Nessuna stima `squad_value` attiva dalla Fase 70**: le ultime 13 celle
+> sono state sostituite da dato REALE (Transfermarkt) e il file CSV è a 0
+> righe. Quanto segue resta il metodo storico, valido se il buco si
+> riaprisse.
+
 # ⚠️ `data/estimates/` — STIME di modello, NON dati di mercato
 
 Questa cartella contiene **stime prodotte dai nostri modelli** per dati che le

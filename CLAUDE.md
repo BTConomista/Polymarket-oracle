@@ -84,8 +84,9 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      pareggi sovra-prezzati, ROI pari-equilibrio −5.4%); **dp_lvl non batte la
      chiusura fuori dalla Serie A** anche rifittata → il beat-the-close è una
      proprietà della chiusura Serie A (meno liquida), non del calcio. Le costanti
-     del motore restano dichiaratamente per-lega (§7). Aperto: port completo DC
-     su Premier/Liga coi bundle Understat (Fase 53-bis).
+     del motore restano dichiaratamente per-lega (§7). Il port su Premier/Liga e'
+     stato poi COMPLETATO (Fasi 54-57): snapshot congelati e config per-lega in
+     LEAGUE_CONFIGS; il seguito vive in docs/STUDIO_PREMIER_LIGA.md.
 9. **Ogni modello si sviluppa su DUE FRONTI e si traccia nella rosa (Fase 65).**
    Per ogni modello/leva vanno considerate e valutate DUE versioni:
    - **per-lega**: costanti/iperparametri ritarati sulla singola lega (es. DC
@@ -177,6 +178,15 @@ implicito. Non basta la narrazione del *cosa*: serve il *come* (la matematica) e
 4. **Coerenza col registro**: ogni numero citato deve essere ricalcolabile da
    `runs.jsonl` o da uno script `_run_*` (regola Fase 15).
 
+**Regola aggiunta dalla Fase 92 (deduzioni da misure indirette).** Quando una
+fase deduce «il problema è X» da una misura indiretta (un mercato derivato, un
+proxy, un confronto), la deduzione va scritta come **identità o scomposizione
+esatta**, non come ragionamento in prosa. Motivo: per 80 fasi il progetto ha
+letto al contrario il proprio dato-chiave sul gap, perché il passaggio da
+«gap del mercato 12 ≈ 0» a «sappiamo prezzare chi vince» non era mai stato
+messo in formule — e `P(12)=1−P(X)` lo rende falso per identità. Una
+scomposizione che ricompone a sei decimali non si può leggere al contrario.
+
 Questo standard è retroattivo (tutte le fasi 0-33 lo rispettano) e prospettico:
 **nessuna fase futura è "chiusa" senza il suo blocco 📐.** Lo stesso vale quando si
 porta il modello su un'altra lega: le formule non cambiano, ma il *ragionamento sul
@@ -244,6 +254,9 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
 scripts/         download_data, build_database, backtest, analyze, tune, calibrate,
                  markets (multi-mercato), analyze_gap (anatomia del gap col mercato)
 experiments/     runs.jsonl (registro replicabile) + README (formato)
+                 fase93_discrimination.csv: deficit di discriminazione per
+                 PARTITA (5.083 righe, Fase 93) — input riutilizzabile per
+                 affettare il gap in altri modi senza rifare 18 backtest
 data/            serie_a_matches.csv (SNAPSHOT congelato, versionato)
                  football.db (SQLite, rigenerabile, NON versionato)
 docs/DIARIO.md   narrazione passo-passo con ragionamento (le decisioni e il perché)
@@ -264,6 +277,18 @@ docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  Actions, fonti esterne valutate/scartate)
 docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
                  apertura 2017-19)
+lavoro_aperto.md (RADICE) INDICE unico del lavoro aperto: Fase 78, le 17 piste
+                 ancora aperte, le 24 caselle vuote della PANCHINA, Tier 2/3,
+                 i tre punti operativi e il brainstorming sulla routine
+                 (aggiornamento giornaliero, movimento quote, notizie e
+                 formazioni). NON e' una fonte di verita': se diverge da
+                 PISTE/PANCHINA, hanno ragione loro
+newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
+                 stagione 2026-27 + brainstorming su fonti nuove e automazione.
+                 Contiene cio' che NON si recupera dopo il calcio d'inizio
+                 (previsioni congelate, traiettoria delle quote, formazioni).
+                 Da archiviare a stagione avviata: cio' che sopravvive va
+                 spostato in PISTE/DIARIO/MANUALE
 tests/           test unitari
 ```
 
@@ -302,7 +327,7 @@ tests/           test unitari
 > `README.md`; la rosa dei modelli in `docs/PANCHINA.md`. Aggiorna QUESTA
 > istantanea quando cambia lo stato di fondo, non a ogni fase.
 
-**Dove siamo (Fase 83).** Il progetto è passato da "un modello Dixon-Coles sui
+**Dove siamo (istantanea aggiornata alla Fase 99).** Il progetto è passato da "un modello Dixon-Coles sui
 gol" a **due motori complementari**, su **3 leghe** (Serie A, Premier, La Liga,
 9 stagioni ciascuna):
 
@@ -317,6 +342,15 @@ gol" a **due motori complementari**, su **3 leghe** (Serie A, Premier, La Liga,
    1** dalla matrice DC. Batte il DC-da-gol su 13/14 mercati su tutte e 3 le
    leghe (Fasi 26/76). È il **titolare** quando ci sono le quote; il DC è il
    fallback senza quote.
+
+**⚠️ Diagnosi CORRETTA alla Fase 92 (era invertita per 80 fasi).** Il gap col
+mercato **NON** «vive quasi tutto nel pareggio»: la scomposizione esatta
+(chain rule, ricompone a 6 decimali) dice **12% massa-pareggio / 88%
+discriminazione casa-ospite** in Serie A (5.5/94.5 in Premier, 15/85 in Liga).
+L'errore era logico: `P(12)=1−P(X)` è un'identità, quindi il mercato «12» —
+usato come prova che «chi vince» fosse a posto — misura ESATTAMENTE la massa del
+pareggio. Conseguenza: le leve sul pareggio (12b, 18, φ35) rendevano poco perché
+aggredivano il 12%. Cercare l'informazione mancante nella **discriminazione**.
 
 **Le scoperte che reggono.** (a) Il mercato di **chiusura ingloba il modello**
 (α\*=0 ovunque, Fase 16): non lo si batte in ROI — **non usare per scommettere
@@ -336,13 +370,40 @@ mercato** (non di più).
 (outright) è il primo che NON si deriva dalla matrice di una partita: dipende da
 380 partite congiuntamente + la regola di classifica, quindi va **simulato**
 (`src/models/season_sim.py`, Monte Carlo di 20.000 stagioni). Batte le baseline
-in modo conclusivo (log-loss 1.1994 vs 2.6515, migliore in 24/24 stagioni-lega)
-ma è **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecca 41.7%): mancano
+(log-loss 1.1994 contro 1.4293 della più forte — persistenza dalla classifica su
+2 stagioni: guadagno +0.2299, IC95% [+0.0108,+0.4542], 14/24 stagioni, e il
+vantaggio è **quasi tutto Premier**) ma è **sovra-confidente** (dichiara 60.1%
+sul favorito, ne azzecca 41.7%): mancano
 l'incertezza dei parametri e la loro evoluzione in-season. Non esistono quote
 outright storiche → «battiamo il mercato» NON è testabile all'indietro. È una
 pista **ricorrente**: si riprezza a ogni inizio stagione (promemoria operativo in
 `docs/PISTE.md` §4-bis). Lo strumento per le quote live è
 `scripts/fetch_polymarket_open.py` (Polymarket è raggiungibile dall'ambiente).
+
+**Le famiglie FUORI dalla matrice dei gol (Fasi 96-99).** Corner e cartellini
+sono un processo **diverso** dai gol (non ridondante) e sono prezzabili
+walk-forward su tutte e 3 le leghe; i mercati **Tier 3** (Halftime, Second Half,
+risultato esatto) si ottengono ri-scalando i tassi con la frazione di gol nel
+primo tempo, **misurata** (f = 0.4396 [0.4338, 0.4458], primo tempo
+Poisson-compatibile, tempi quasi indipendenti) e battono la baseline con IC
+conclusivo. Il **Tier 2** (handicap asiatico) è l'**unico** mercato del listino
+validato contro una quota esterna e indipendente: Brier 0.2044 vs 0.2044 — il
+router prezza il margine come il mercato sharp. Su queste famiglie le correzioni
+di forma (binomiale negativa, Fase 98) e di centro (correzione di livello, Fase
+99) valgono il terzo decimale o meno: **il tetto informativo vale anche qui**.
+Il residuo vivo è uno solo, ed è localizzato: il **secondo tempo è mal
+calibrato** mentre il primo, che passa per lo stesso codice, non lo è → è
+**game-state**, e chiede un modello a due stadi (1T indipendente → 2T
+condizionato al punteggio dell'intervallo). È anche il primo mattone dell'in-play.
+
+**Due regole di metodo nate qui, valide ovunque.** (1) Ogni feature
+*moltiplicativa* va confrontata col suo **controllo di solo livello**, altrimenti
+si misura la deriva del modello base e la si attribuisce alla feature (Fase 98:
+l'85% del guadagno apparente dell'arbitro era livello). (2) Un bias misurato su
+un **pool** non autorizza una correzione **prospettica**: prima si misura se
+**persiste** (autocorrelazione fra fold, con CI). Fase 99: il bias di livello dei
+conteggi non persiste (10/18 stesso segno) e correggerlo **peggiora** con IC
+conclusivo in 6 celle su 8. **Misurato ≠ prevedibile.**
 
 **Cosa è chiuso (non riproporre senza informazione nuova).** Tutti i dati
 INTERNI sono esplorati (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/forma/

@@ -29,11 +29,31 @@ Ultimo aggiornamento: Fase 70 (luglio 2026).
 | `raw.githubusercontent.com` | tutti i repo pubblici (openfootball, salimt, …) |
 | `github.com` (pagine HTML) | utile per verifiche di esistenza |
 | pypi / npm / crates | in NO_PROXY, installazioni ok |
-| `gamma-api.polymarket.com` | **RAGGIUNGIBILE** (verificato 2026-07-24): Gamma API di Polymarket, quote LIVE di eventi/mercati aperti. Vedi §2-bis e `scripts/fetch_polymarket_open.py`. È l'unica fonte di quote **prospettiche reali** aperta dall'ambiente cloud → candidata per il test prospettico 2026-27 (Fase 78). |
+| `gamma-api.polymarket.com` | **RAGGIUNGIBILE** (verificato 2026-07-24): Gamma API di Polymarket, quote LIVE di eventi/mercati aperti. Vedi §2-bis e `scripts/fetch_polymarket_open.py`. |
+| `api.smarkets.com` | **RAGGIUNGIBILE** (verificato 2026-07-25): API v3 **pubblica, senza chiave**, JSON. Borsa scommesse a soldi veri. Quota gli **outright** (campione, retrocessione, Top 2/3/4/5/6, top-half) delle 5 leghe. Vedi §1-bis e `scripts/fetch_smarkets_outrights.py`. |
 
-**Non ancora testati dalla sessione cloud**: `betexplorer.com`,
-`oddsportal.com` (presumibilmente bloccati dal proxy; dal runner Actions
-sono comunque liberi — vedi vincolo geo/ADM sotto, diverso da questo).
+Polymarket e Smarkets sono le **due** fonti di quote **prospettiche reali**
+aperte dall'ambiente cloud (test prospettico 2026-27, Fase 78).
+
+**~~Non ancora testati~~ → TESTATI il 2026-07-25 (Fase 97): la previsione era
+SBAGLIATA.** `betexplorer.com` e `oddsportal.com` **NON sono bloccati** dal
+proxy cloud, e `oddsportal.com` **non** subisce il redirect ADM da qui (l'IP
+del container non è italiano: il vincolo geo descritto sotto vale per il
+browser dell'utente, non per questa sessione). Sono comunque **inutilizzabili**,
+per motivi diversi da quelli attesi:
+
+| host | esito reale | perché non si usa |
+|---|---|---|
+| `oddsportal.com` | 200, pagina outright servita | il feed `/feed/outrights/1-*.dat` restituisce un **blob base64 cifrato (AES)**: servirebbe estrarre la chiave dal bundle JS a ogni loro rilascio — fragile e sproporzionato |
+| `betexplorer.com` | 200 sulla home, **404** su `/outrights/` e `/winner/` | non ha proprio una sezione outright |
+| `api.the-odds-api.com` | 200 ma **401 senza chiave** | serve una registrazione (nessuna chiave disponibile) |
+| `sportsbook-nash.draftkings.com` | 403 | geo-blocco |
+| `cds-api.bwin.com`, `*.betfair.com` | 000 / 403 | bloccati |
+
+**Lezione operativa**: «presumibilmente bloccato» non è un fatto. Questi due
+host erano marcati per esclusione da mesi e bastava un `curl` per smentirlo —
+e la sorpresa vera (Smarkets, §1-bis) è arrivata proprio dal provare tutta la
+lista invece di fidarsi delle etichette.
 
 **Vincolo geo/ADM (testato da IP italiano, browser utente, non dalla
 sessione cloud)**: `betexplorer.com` forza l'edizione `/it/` per IP
@@ -125,6 +145,36 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
 - **Output NON versionato**: è un tool LIVE, scrive in `data/polymarket/`
   (in `.gitignore`) — mai dentro gli snapshot congelati. Test puro delle funzioni
   in `tests/test_polymarket_fetch.py` (senza rete).
+
+## 1-bis · Smarkets: la SECONDA borsa (Fase 97)
+
+`api.smarkets.com` è raggiungibile e la sua **API v3 è pubblica e senza
+chiave** → **`scripts/fetch_smarkets_outrights.py`**. Smarkets è una *borsa*
+(come Polymarket, non come un bookmaker): i prezzi sono ordini di utenti,
+somma dei mercati esclusivi ~100-104% invece di 108-115%.
+
+- **Navigazione dell'albero**: `GET /v3/events/?parent_id=N` — attenzione,
+  `/v3/events/N/children/` **non esiste** (404). Radice calcio `121005`;
+  gli outright di stagione vivono TUTTI sotto il nodo **`649058`**
+  (`/sport/football/outright`), non sotto la lega.
+- **Prezzi**: `/v3/markets/{id}/contracts/` (gli esiti) + `/v3/markets/{id}/quotes/`
+  (libro ordini). Gli interi sono **centesimi di punto percentuale**: `3448` =
+  34.48%.
+- **Rate limit**: senza pause il giro completo prende un **429** a metà. Lo
+  script mette 0.35 s fra le chiamate e ritenta con backoff.
+- **Cosa aggiunge rispetto a Polymarket** (misurato il 2026-07-25):
+  la **retrocessione** (che Polymarket non quota in nessuna lega) e i
+  piazzamenti **Top 2/3/4/5/6 e top-half**. Sulla **Premier** è molto più
+  liquido (spread 0.11pp contro un overround Polymarket del 5.8%); sulla
+  **Serie A** è il contrario (spread ~5-11pp). **Le due fonti sono
+  complementari: nessuna domina.**
+- **Trappola dei libri monchi**: molti mercati Top-N hanno **solo offerte**.
+  Un ask senza bid non è un prezzo (è un *tetto* al valore equo) e va marcato,
+  non buttato — buttandolo sparivano 6 mercati interi.
+- **Omonimie**: esistono due eventi `Championship 26/27` (inglese e scozzese)
+  con **slug identico** e nessun campo che li distingua, e un `Serie A Women
+  26/27` che un match ingenuo sul prefisso archivierebbe come Serie A. Vedi i
+  filtri `EXCLUDE_COMP` / `LEAGUE_EVENTS` nello script.
 
 ## 3 · GitHub Actions: fatti operativi
 

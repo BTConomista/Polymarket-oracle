@@ -84,6 +84,24 @@ Note importanti:
 
 ---
 
+### ⚠️ Anomalia nota: Udinese-Roma 25/04/2024 (Serie A 2023-24)
+
+La partita fu **sospesa il 14/04/2024 sull'1-1** (malore in campo) e **ripresa
+l'25/04** per gli ultimi ~18 minuti. Il dato è **fedele alla fonte** (football-data
+riporta davvero `AvgCD` 1.72), ma le **quote di chiusura prezzano la ripresa**,
+non la partita intera: la P(pareggio) devigata vale **0.558**, contro un massimo
+di 0.372 su tutte le altre 10.259 partite del progetto. L'**apertura** sulla
+stessa riga è invece normale (0.291), e lo scarto apertura→chiusura di 0.267 è il
+più grande dell'intero dataset (il secondo è 0.167).
+
+Conseguenza: quella riga accoppia un **prezzo condizionato a uno stato di gioco**
+con un **esito full-match**, e falsa nella direzione a noi favorevole ogni
+confronto «beat-the-close». Impatto misurato (audit Fase 90): sostituendola con
+l'apertura, il log-loss della chiusura devigata passa da 0.962456 a 0.962261
+(+0.000194), cioè ~9-12% dell'edge di `sharpen_1x2` della Fase 51 (0.0016) — che
+resta dello stesso segno. **Da escludere (o usare l'apertura) in ogni analisi
+beat-the-close.**
+
 ## 3 · Calendari di club (congestione vera)
 
 Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
@@ -93,7 +111,7 @@ Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
 |---|--:|---|
 | `data/club_fixtures.csv` (Serie A) | 11657 | Champions (9 stagioni), Europa L. (dal 20-21), Conference (dal 21-22), Coppa Italia (20-21→24-25) + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68) |
 | `data/club_fixtures_premier_league.csv` | 11994 | idem UEFA + **FA Cup, EFL Cup** (18-19→24-25) + preludio: Premier 2016-17, Championship 1617→2425 |
-| `data/club_fixtures_la_liga.csv` | 11643 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
+| `data/club_fixtures_la_liga.csv` | 12102 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
 
 Dove una competizione non è coperta, `rest_days_full` degrada verso il valore
 solo-campionato (mai in direzione sbagliata) e `midweek_europe` può essere un
@@ -176,6 +194,51 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   `docs/MANUALE_SOPRAVVIVENZA.md`.
 - eventuali linee di mercati mai pubblicati (GG/NG storico): molto più
   incerto, servirebbe una validazione esterna.
+
+---
+
+## 5-bis · Quote OUTRIGHT di stagione (`data/outright_snapshots/`) — Fase 97
+
+Dati di **mercato reali** (non stime), **versionati**, raccolti in avanti nel
+tempo. Sono l'unica cosa in repo che nasce da un fetch LIVE e viene comunque
+congelata: senza archivio, i prezzi di oggi sparirebbero col container.
+
+**A cosa servono.** Il simulatore di stagione (Fase 89) non ha mai potuto
+dimostrare «battiamo il mercato» perché **non esistono quote outright
+storiche** raggiungibili. All'indietro non si rimedia; in avanti sì, una
+istantanea alla volta.
+
+| | |
+|---|---|
+| **fonti** | Polymarket (Gamma API) + **Smarkets** (API v3 pubblica) — entrambe **borse**, non bookmaker |
+| **file** | `YYYY-MM-DD.json` (completo) + `history.csv` (formato lungo: data × fonte × lega × mercato × squadra) |
+| **mercati** | campione (5 leghe, entrambe le fonti); **retrocessione** e Top 2/3/4/5/6 + top-half (**solo Smarkets**); qualificazioni europee (solo Polymarket) |
+| **si scrive con** | `python scripts/archive_outrights.py` (idempotente sulla data) |
+| **documentazione d'uso** | `data/outright_snapshots/README.md` |
+
+**Tre avvertenze che valgono come semantica del dato** (per estese, il README
+della cartella):
+
+1. **`settled_share ≥ 0.9` NON è una previsione**: è la coda di una stagione
+   già conclusa. Il 25/07/2026 tutti i mercati «qualify for UEFA …» erano
+   riferiti alla stagione **appena finita**, non al 2026-27.
+2. **`exclusive=False` non va rinormalizzato**: retrocessione e Top-N sono
+   binari **indipendenti**; la somma vale legittimamente ~3 o ~4. Solo campione
+   e capocannoniere sono a vincitore unico e hanno un `overround`.
+3. **`book="partial"` / `price_side="ask_only"`**: il libro ha un lato solo.
+   L'`best_ask` è un **tetto** al valore equo, non un prezzo, e `prob` è
+   vuota. Anche col mid, uno **spread largo** lo rende poco significativo
+   (visto: bid 0.1% / ask 10.0% → «mid 5.05%» che non vuol dire nulla):
+   filtrare sullo spread prima di usarlo in un'analisi.
+
+**Nomi squadra: NON normalizzati.** L'archivio conserva i nomi **grezzi** di
+ciascuna fonte («Inter Milan» su Polymarket, «Inter Milano» su Smarkets,
+«Inter» da noi). È deliberato: una normalizzazione non validata produrrebbe
+join silenziosamente sbagliati, e i nomi sono stringhe stabili che si possono
+mappare retroattivamente in qualsiasi momento. L'unica mappa esistente e
+verificata a mano è `SMARKETS_TO_OURS` in
+`scripts/_run_fase97_relegation_market.py` (Premier, 20 su 20). **Chi aggiunge
+una lega deve costruire la sua**, non affidarsi a un match approssimato.
 
 ---
 

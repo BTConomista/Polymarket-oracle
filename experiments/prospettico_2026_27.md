@@ -91,6 +91,49 @@ reali vanno raccolte per un canale diverso** vicino al kickoff:
 - una **sessione browser reale** (Cowork, pattern Fase 70),
 - o inserite a mano dall'utente in un piccolo bundle in `files/`.
 
+## 4-bis · Quanta POTENZA ha questo test (Fase 98) — il vincolo di disegno
+
+Il calcolo è stato fatto sui dati veri (6.840 partite, differenze appaiate
+per-partita, `scripts/_run_prospective_power.py`). Controllo di validità
+superato: gap 1X2 pooled +0.0179, che riproduce il +0.0165 noto.
+
+**Buona notizia**: le partite sono **indipendenti** — autocorrelazione di ordine
+1 +0.007, ICC ≈ 0, **DEFF = 1.00**. Non c'è penalità da clustering (per giornata
+o per stagione): ogni partita raccolta conta per una.
+
+**Cattiva notizia**: il rapporto segnale/rumore è **1:8,5** (sd delle differenze
+0.1527 contro un gap di 0.0179). Da cui:
+
+| campione | potenza sul gap col mercato | verdetto |
+|---|--:|---|
+| **30 partite** (1 giornata × 3 leghe) | **9,8%** | MDE 0.0781 = 4,7× il gap: **non conclude mai** |
+| 380 (1 stagione, 1 lega) | 62,5% | sotto-dimensionato |
+| **574** | **80%** | ≈ 19 giornate su 3 leghe |
+| 1140 (1 stagione × 3 leghe) | 97,7% | il disegno giusto |
+
+Gerarchia netta fra i bersagli: contro la **baseline** bastano **184** partite
+(6 giornate); contro il **mercato** ne servono **574** sull'1X2, **2.254** sul
+GG/NG, **2.988** sull'O/U 2.5.
+
+**Conseguenze operative su questo test:**
+
+1. **la giornata 1 da sola non può concludere nulla** contro il mercato. Va
+   trattata per quello che è: il **collaudo del protocollo** (fixture veri,
+   quote reali, congelamento, scoring) — non la prova.
+2. **il bersaglio realistico della giornata 1 è la baseline**, non il mercato:
+   con 30 partite nemmeno quella conclude (servono 184), ma la direzione è
+   leggibile e i 6 turni si accumulano in fretta.
+3. **si scora l'1X2 per primo**: dà potenza **4-5×** prima di GG/NG e O/U.
+   Riportare gli altri mercati va bene, ma dichiarando che sono
+   sotto-dimensionati.
+4. **il piano va esteso a ~19 giornate su 3 leghe** (≈ metà stagione) per una
+   prima conclusione onesta sul mercato, e a una stagione intera per il 97,7%.
+   Cioè: questo file resta APERTO per mesi, per costruzione.
+5. **l'outright NON è testabile qui**: servirebbero ~57 stagioni-lega, 3 leghe in
+   una stagione danno **9,8%** di potenza (vedi Fase 98 e `docs/PISTE.md` §4-bis).
+
+---
+
 ## 5 · «DA RIPETERE / COMPLETARE PIÙ AVANTI» — checklist
 
 - [ ] **Vicino al primo turno 2026-27** (Premier ~21/8, Liga ~15/8, SA ~23/8):
@@ -103,7 +146,9 @@ reali vanno raccolte per un canale diverso** vicino al kickoff:
   voce nel diario (nuova fase) con i numeri.
 - [ ] Confrontare l'anteprima DC congelata oggi (§2) coi risultati reali: quanto
   è costata l'estate di mercato non vista + la config non ancora per-lega.
-- [ ] (Opzionale) ripetere a più giornate/stagioni per potenza statistica.
+- [ ] **(NON opzionale, Fase 98) estendere a ≥19 giornate su 3 leghe** (~574
+  partite) prima di dichiarare qualsiasi cosa sul confronto col mercato: con 30
+  partite la potenza è 9,8% (vedi §4-bis).
 
 ---
 
