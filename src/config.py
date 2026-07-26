@@ -57,11 +57,42 @@ LA_LIGA: dict = {
     "promoted_prior": 0.22,    # Fase 55/57: δ = ln(1.291/1.038) ≈ 0.22
 }
 
+# Config Bundesliga e Ligue 1 (ri-tarate con lo stesso protocollo, §7).
+#
+# ESITO: curve PIATTE anche qui — 5 leghe su 5. Nessuna delle tre leve (emivita,
+# shrinkage, δ) produce un CI conclusivo; l'emivita a 730 giorni PEGGIORA in
+# entrambe (+0.0009 Bundesliga, +0.0012 Ligue 1), come in tutte le altre leghe.
+# Il δ per-lega e' adottato per MOTIVAZIONE STRUTTURALE, non per guadagno
+# misurato (che e' nel rumore: +0.0001 e +0.0000):
+#   Bundesliga δ=0.28: promosse tedesche piu' deboli della media di lega.
+#   Ligue 1   δ=0.19: caso istruttivo — va nella direzione OPPOSTA alle altre
+#                     (le promosse francesi sono le MENO deboli del campione) e
+#                     il modello non se ne accorge. Adottarlo per coerenza col
+#                     metodo, mai spacciarlo per un miglioramento.
+# γ (vantaggio-casa) non e' qui: il DC lo fitta dai dati.
+BUNDESLIGA: dict = {
+    "half_life_days": 365.0,   # 730 peggiora (+0.0009)
+    "shrinkage": 1.5,          # shrink 3.0 nel rumore (−0.0002)
+    "shots_blend": 0.75,
+    "blend_signal": "xg",
+    "promoted_prior": 0.28,    # δ = ln(gol lega / gol promosse) ≈ 0.277
+}
+
+LIGUE_1: dict = {
+    "half_life_days": 365.0,   # 730 peggiora (+0.0012)
+    "shrinkage": 1.5,          # shrink 3.0 nel rumore (+0.0001)
+    "shots_blend": 0.75,
+    "blend_signal": "xg",
+    "promoted_prior": 0.19,    # δ = ln(gol lega / gol promosse) ≈ 0.188
+}
+
 # Registro delle configurazioni per lega. Nuova lega = nuova voce (ri-tarata).
 LEAGUE_CONFIGS: dict[str, dict] = {
     "serie_a": SERIE_A,
     "premier_league": PREMIER_LEAGUE,
     "la_liga": LA_LIGA,
+    "bundesliga": BUNDESLIGA,
+    "ligue_1": LIGUE_1,
 }
 
 

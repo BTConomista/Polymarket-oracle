@@ -43,6 +43,7 @@ DATA_DIR = Path(__file__).resolve().parents[2] / "files" / "player_scores"
 # competition_id del dataset -> chiave lega interna
 COMPETITION_IDS: dict[str, str] = {
     "IT1": "serie_a", "GB1": "premier_league", "ES1": "la_liga",
+    "L1": "bundesliga", "FR1": "ligue_1",
 }
 SEASON_START = "09-01"          # come transfermarkt.SEASON_START
 
