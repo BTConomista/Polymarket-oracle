@@ -1,0 +1,750 @@
+{
+ "titolo": "Verifica avversariale delle cinque analisi del blocco precedente (leve theta/phi/Shin/ricalibrazioni + stima O/U)",
+ "generato": "2026-07-26",
+ "git_commit": "a4ba7365c5cc66fcbd3de5f8c3ebc25314965fee",
+ "mandato": "provare che i cinque risultati sono SBAGLIATI, non confermarli. Riprodurre gli script, cercare leakage, multiple testing, bootstrap difettoso, riferimento sbagliato; ricalcolare almeno due numeri chiave per una via indipendente.",
+ "metodo": {
+  "riproduzione": "gli script sono stati RIESEGUITI (import del modulo, nessuna scrittura sui file altrui: regola R4) e i numeri chiave RICALCOLATI da zero con una pipeline scritta qui, che re-inverte le quote e ricostruisce le matrici con _fase52_common.dp_matrices invece di market_implied.price_markets",
+  "metriche": "src/evaluation/metrics + scripts/_fase52_common (fonte unica del progetto)",
+  "bootstrap": "appaiato, B=10.000, CI95 sulla differenza; in piu' 60 SEMI diversi per misurare la fragilita' del verdetto e un bootstrap a CLUSTER di lega dove il pooled ignora la struttura",
+  "cosa NON e' stato rifatto": [
+   "la griglia phi a 341 punti (troppo costosa nel tempo disponibile): verificata solo dal JSON e via il blocco ricalibrazione_tassi, che e' stato ricalcolato",
+   "il blocco a valle (25 mercati) di leve_devig_shin"
+  ],
+  "file_di_lavoro_effimeri": [
+   "scratchpad/v1_theta.py",
+   "v2_window.py",
+   "v3_ggng.py",
+   "v4_f53.py",
+   "v5_shin.py",
+   "v6_stimatore.py",
+   "v7_indietro.py",
+   "v8_theta_rerun.py"
+  ]
+ },
+ "analisi_1_router_theta": {
+  "file": [
+   "cantiere/scripts/leve_theta_griglia.py",
+   "cantiere/out/leve_theta_griglia.json"
+  ],
+  "verdetto": "REGGE CON RISERVA",
+  "riproducibilita": {
+   "esito": "PIENA",
+   "riesecuzione_run_league": {
+    "bundesliga": {
+     "max_diff_delta_vs_json": 1.2977900004651488e-16,
+     "theta_scelti_identici": true,
+     "conclusivi_loso": [],
+     "peggiorati_loso": [
+      "home_by_2plus",
+      "away_by_2plus"
+     ]
+    },
+    "ligue_1": {
+     "max_diff_delta_vs_json": 7.827939685345342e-17,
+     "theta_scelti_identici": true,
+     "conclusivi_loso": [],
+     "peggiorati_loso": [
+      "over_1.5",
+      "away_ov_1.5",
+      "away_by_2plus",
+      "multigol"
+     ]
+    }
+   },
+   "ricalcolo_indipendente_theta": {
+    "la_liga": {
+     "mle_mio": 1.2420455094186351,
+     "mle_json": 1.2420455094186351,
+     "griglia_ris_esatto_mia": 1.25,
+     "profondita_valle": -0.008130336684165851
+    },
+    "bundesliga": {
+     "mle_mio": 1.0796372556753868,
+     "mle_json": 1.0796372556753868,
+     "griglia_ris_esatto_mia": 1.075,
+     "profondita_valle": -0.0011983883912458637
+    }
+   },
+   "controllo_sanita_18_numeri": {
+    "cosa": "replica_fase81 del cantiere vs i valori a piena precisione in experiments/runs.jsonl (source=fase81_mega_sweep_mi, axis=theta, griglia con 1.5)",
+    "n_confronti": 18,
+    "max_diff_delta": 2.98e-17,
+    "picks_per_stagione_identici": true,
+    "nota": "il report dichiara 4.9e-10: la verifica indipendente e' anche piu' favorevole (3e-17, precisione macchina). Il controllo di sanita' e' REALE e forte."
+   }
+  },
+  "attacchi": {
+   "A1_griglia_uguale_MLE_e_una_TAUTOLOGIA": {
+    "tesi_attaccata": "«sul risultato esatto la griglia ricade sul theta di massima verosimiglianza entro mezzo passo in 5 leghe su 5»",
+    "prova": "mi.price_markets(...,dp_theta).score_matrix e _fase52_common.dp_matrices sono BIT-IDENTICHE (max|differenza| = 0.0e+00 su 300 matrici, entrambe le leghe). Quindi il minimo di griglia del log-loss sul risultato esatto E' l'argmin discretizzato della stessa funzione che fit_theta minimizza: l'accordo entro mezzo passo e' una necessita' algebrica, non un fatto empirico.",
+    "conseguenza": "«5 leghe su 5» non sono 5 conferme indipendenti ma una identita' algebrica ripetuta 5 volte. Il report lo ammette in una riga («fit_theta minimizza esattamente quel log-loss») ma la tabella la presenta come evidenza. La conclusione operativa («mercati diversi vogliono theta diversi») resta valida.",
+    "verdetto": "la tesi e' vera ma vuota: da declassare da «lezione» a «nota di coerenza»"
+   },
+   "A2_il_ribaltamento_della_Liga_NON_e_la_finestra": {
+    "tesi_attaccata": "«il ribaltamento sulla Liga era la finestra dati, non lo stimatore: qui il MLE della Liga e' 1.242, non 1.097»",
+    "cosa_ho_fatto": "ricostruito il numero 1.097. In scripts/_run_fase53_crossleague.py il theta pubblicato e' `theta_mean` = MEDIA di 8 fit MLE a finestra ESPANDENTE (train = stagioni passate), non un MLE pooled. Ho rifatto entrambe le cose sugli stessi dati.",
+    "numeri": {
+     "la_liga": {
+      "media_fit_espandenti_stile_F53": 1.1026082638427086,
+      "sequenza": [
+       0.9599348835434037,
+       1.062657559077498,
+       1.1076035417238708,
+       1.1453495732447403,
+       1.1115696719756396,
+       1.138098380027108,
+       1.1308206628789765,
+       1.1648318382704312
+      ],
+      "pooled_9_stagioni": 1.1988589776439154,
+      "pooled_7_stagioni": 1.2420455094173826
+     },
+     "premier_league": {
+      "media_fit_espandenti_stile_F53": 1.0747232366288573,
+      "sequenza": [
+       1.0639588496076438,
+       1.1145340609987686,
+       1.129812762206578,
+       1.0573131844524388,
+       1.0588318438396958,
+       1.0363325598473632,
+       1.0616336024921087,
+       1.0753690295862601
+      ],
+      "pooled_9_stagioni": 1.091472719197597,
+      "pooled_7_stagioni": 1.0853377480058797
+     },
+     "serie_a": {
+      "media_fit_espandenti_stile_F53": 1.1743969859628625,
+      "sequenza": [
+       1.1102959614800942,
+       1.1315749522047405,
+       1.167314529554784,
+       1.1795871403319267,
+       1.1827469813802647,
+       1.195939822412679,
+       1.2080609148524135,
+       1.2196555854859974
+      ],
+      "pooled_9_stagioni": 1.2096489062185782,
+      "pooled_7_stagioni": 1.2323548264132977
+     },
+     "bundesliga": {
+      "media_fit_espandenti_stile_F53": 1.0752791446629038,
+      "sequenza": [
+       1.1975028978850546,
+       1.0478911049983566,
+       1.033621802040504,
+       1.0706848728486174,
+       1.074708314423161,
+       1.049507091483042,
+       1.06726795196301,
+       1.0610491216614848
+      ],
+      "pooled_9_stagioni": 1.0729714459299988,
+      "pooled_7_stagioni": 1.0796372556753893
+     },
+     "ligue_1": {
+      "media_fit_espandenti_stile_F53": 1.1720184219139282,
+      "sequenza": [
+       1.2173038494032353,
+       1.1772919558010844,
+       1.1720148195590965,
+       1.1763675900155028,
+       1.1587973837292465,
+       1.1606449146165732,
+       1.159771214933802,
+       1.1539556472528847
+      ],
+      "pooled_9_stagioni": 1.1194338786928821,
+      "pooled_7_stagioni": 1.102509224014078
+     }
+    },
+    "riproduzione_dei_numeri_pubblicati": {
+     "la_liga_F53_pubblicato": 1.097,
+     "la_liga_mio_stile_F53": 1.1026082638427086,
+     "premier_F53_pubblicato": 1.069,
+     "premier_mio_stile_F53": 1.0747232366288573
+    },
+    "decomposizione_del_divario_Liga_1.242_vs_1.097": {
+     "quota_finestra_7->9_stagioni": 0.0431,
+     "quota_stimatore_pooled->media_di_fit_espandenti": 0.0963,
+     "lettura": "circa 1/3 finestra, circa 2/3 stimatore/aggregazione"
+    },
+    "controprova_con_DATO_NUOVO": "sulle sole 2017-19 il theta della Liga e' 1.062 con la chiusura VERA 1xBet (footiqo, 760 partite) e 1.049 con l'apertura: l'epoca 2017-19 e' davvero a theta basso, ma nemmeno cosi' il pooled a 9 stagioni scende sotto 1.199. Il 1.097 NON e' ottenibile con un MLE pooled su nessuna delle due finestre.",
+    "verdetto": "TESI FALSA COSI' COM'E' SCRITTA: la differenza e' in maggioranza lo STIMATORE (media di fit espandenti vs pooled), non la finestra. Riga di report 10 §2.2(b) da riscrivere."
+   },
+   "A3_lo_0_su_25_e_in_parte_il_SELETTORE": {
+    "tesi_attaccata": "«0/25 mercati con CI conclusivo -> non e' mancanza di potenza, e' mancanza di effetto»",
+    "prova": "nello stesso JSON la modalita' theta FISSO (nessuna selezione, il test piu' severo) da' in Bundesliga: over_2.5 CI<0 a theta 1.10/1.20/1.225 (Delta -0.00076/-0.00129/-0.00139) e over_1.5 CI<0 a theta 1.10/1.15. Il selettore LOSO su quei mercati sceglie theta 1.25-1.40 (lontanissimo dal MLE 1.080) e brucia il guadagno in varianza di selezione.",
+    "conteggio_theta_fisso_CI_sotto_zero_su_25": {
+     "bundesliga": {
+      "1.10": 2,
+      "1.20": 1,
+      "1.225": 1
+     },
+     "ligue_1": {
+      "1.10": 0,
+      "1.20": 0,
+      "1.225": 0
+     },
+     "premier_league": {
+      "1.10": 0
+     },
+     "serie_a": {
+      "1.10": 13,
+      "1.225": 10
+     },
+     "la_liga": {
+      "1.10": 15,
+      "1.225": 11
+     }
+    },
+    "ma": "p a due code 0.011-0.014: NON sopravvive a Bonferroni(25)=0.002. La conclusione finale (leva non adottabile) resta.",
+    "verdetto": "la conclusione regge, la MOTIVAZIONE («mancanza di effetto») e' troppo forte per la Bundesliga: c'e' un effetto piccolo sui totali che il selettore non sa prendere"
+   },
+   "A4_confronto_fra_modalita_diverse": {
+    "tesi_attaccata": "«over 1.5 -0.0013 e over 2.5 -0.0008 in Bundesliga ... rovesciato in modo conclusivo in Ligue 1 (over 1.5 +0.0008, CI [+0.0002,+0.0015])»",
+    "prova": "i due numeri della Bundesliga sono della modalita' theta FISSO=1.10 (LOSO da' -0.00202/-0.00179), mentre il numero della Ligue 1 e' LOSO. A theta fisso 1.10 la Ligue 1 da' over_1.5 +0.00009 (p=0.855) e over_2.5 -0.00031 (p=0.144): non un rovesciamento, un nulla.",
+    "verdetto": "confronto apples-to-oranges: la frase va corretta (stessa modalita' su entrambe le leghe)"
+   }
+  },
+  "leakage": "nessuno trovato: LOSO e LFO escludono davvero la stagione valutata; theta=1.0 riproduce esattamente il router Poisson di riferimento (flag verificato); la cache dei tassi su scratch, validata solo dal conteggio righe, NON e' stale (max|diff| 4.4e-16 contro una re-inversione fresca)",
+  "bootstrap": "appaiato, B=10.000, CI sulla differenza: corretto. Caso degenere (selettore che sceglie sempre theta=1) trattato esplicitamente come p=1, corretto."
+ },
+ "analisi_2_phi": {
+  "file": [
+   "cantiere/scripts/leve_phi_griglia.py",
+   "cantiere/out/leve_phi_griglia.json"
+  ],
+  "verdetto": "REGGE la bocciatura della phi35; NON REGGE la tesi «una phi COSTANTE fa meglio»",
+  "attacchi": {
+   "B1_nessun_intervallo_di_confidenza": {
+    "prova": "il blocco confutazione_phi_costante contiene SOLO delta puntuali: nessun CI, nessun p, in nessuna delle 5 leghe.",
+    "taglia_degli_effetti": {
+     "bundesliga": {
+      "pareggio": 0.000217,
+      "dc_1x": 5.15e-05,
+      "dc_2x": -0.000143,
+      "btts": -2.32e-05
+     },
+     "ligue_1": {
+      "pareggio": 0.000158,
+      "dc_2x": -0.000221,
+      "over_2.5": 0.000388,
+      "cs_home": -7.3e-06
+     }
+    },
+    "conseguenza": "tutti gli effetti stanno fra 7e-6 e 4e-4, cioe' da 5 a 100 volte SOTTO la soglia di risoluzione (1-2e-3) che il report stesso dichiara nella sua prima pagina. Per la regola del progetto la lettura corretta e' «indistinguibili», non «la costante fa meglio»."
+   },
+   "B2_i_suoi_stessi_numeri_la_contraddicono": {
+    "prova": "su dc_2x la phi35 e' MIGLIORE della costante in ENTRAMBE le leghe (-0.000143 bundesliga, -0.000221 ligue_1) e su btts in bundesliga (-0.0000232); su over_1.5/over_2.5/multigol i due sono identici perche' il selettore sceglie phi0=0 ovunque.",
+    "conseguenza": "il segno non e' uniforme nemmeno dentro le due leghe: la frase «fa meglio o uguale sui mercati principali» seleziona i mercati favorevoli"
+   },
+   "B3_confondimento_di_progetto": {
+    "prova": "il confronto e' fra due SELEZIONI su griglie di taglia diversa (21 punti per kappa=0 contro 341 punti): una griglia 16 volte piu' grande paga piu' varianza di selezione a parita' di segnale.",
+    "conseguenza": "l'esperimento non separa «la dipendenza da |lambda-mu| non vale nulla» (tesi del report) da «una griglia 16x piu' grande costa piu' rumore di selezione di quanto la flessibilita' renda». Per testare la FORMA servirebbe (phi0,kappa) fittati per MLE o griglie di pari cardinalita'."
+   }
+  },
+  "cosa_regge": "la bocciatura della phi35 sulle due leghe nuove (nel rumore, e 1 mercato in bundesliga / 3 in ligue_1 conclusivamente peggiorati) e la previsione dichiarata in anticipo phi0=0 in Ligue 1: quelle restano.",
+  "nota_di_processo": "il blocco che contiene il segnale GG/NG attribuito nel compito all'analisi 4 (ricalibrazione_tassi) sta DENTRO questo script, non dentro leve_ricalibrazioni.py"
+ },
+ "analisi_3_shin": {
+  "file": [
+   "cantiere/scripts/leve_devig_shin.py",
+   "cantiere/out/leve_devig_shin.json"
+  ],
+  "verdetto": "REGGE CON RISERVA (i numeri sono giusti, la parola «conclusivo» e' troppo forte)",
+  "ricalcolo_indipendente": {
+   "n": 12459,
+   "ll_moltiplicativo": 0.9704941571913116,
+   "ll_shin": 0.9701588268850856,
+   "delta_logloss": -0.00033533030622602176,
+   "p_t_logloss": 0.05291529758445417,
+   "delta_brier": -0.00020636274491483972,
+   "p_t_brier": 0.03402909618064565,
+   "z_medio": 0.023840314303033835,
+   "confronto_col_report": "report: log-loss -0.00034 p=0.052 / Brier -0.00021. Mio: -0.00034 p=0.053 / -0.00021. Riprodotto."
+  },
+  "attacchi": {
+   "C1_fragilita_al_seme": {
+    "esito": "NON fragile",
+    "prova": "su 60 semi diversi il CI95 del Brier ha estremo superiore < 0 in 60/60 casi (min -1.97e-5, max -9.45e-6)"
+   },
+   "C2_clustering_per_lega": {
+    "prova": "bootstrap a cluster di lega (si ricampionano le 5 leghe, non le righe): CI95 Brier = [-0.000414, -0.000001] — TOCCA lo zero.",
+    "conseguenza": "la conclusivita' del pooled dipende dal trattare 12.459 partite come 12.459 unita' indipendenti; sulla variabilita' FRA leghe il risultato non e' piu' conclusivo"
+   },
+   "C3_eterogeneita": {
+    "delta_brier_per_lega": {
+     "serie_a": -0.0003825293799078737,
+     "premier_league": 1.6904447407150478e-05,
+     "la_liga": -0.0005426527731778809,
+     "bundesliga": 2.586545860993772e-05,
+     "ligue_1": -9.00550081863022e-05
+    },
+    "delta_logloss_per_lega": {
+     "serie_a": -0.0007081126710459978,
+     "premier_league": 5.301066081640247e-05,
+     "la_liga": -0.0008189457758765626,
+     "bundesliga": 0.00016145759419413153,
+     "ligue_1": -0.0002579184171978837
+    },
+    "conseguenza": "solo 3/5 leghe migliorano e il guadagno e' quasi tutto di serie_a e la_liga; premier e bundesliga peggiorano. Il pooled media leghe eterogenee — lo stesso difetto che il progetto contesta ad altre leve"
+   },
+   "C4_test_multipli": {
+    "prova": "2 metriche x 3 confronti di devig; la sola cella conclusiva ha p=0.034: non sopravvive nemmeno alla correzione piu' blanda (x2 metriche -> 0.068)"
+   }
+  },
+  "cosa_regge": "la DIREZIONE (Shin >= moltiplicativo) e la lettura finale del report («non basta per toccare la fonte unica delle metriche»): quella e' corretta e va tenuta",
+  "correzione_da_fare": "in report 10 §4 la riga «Brier: conclusivo (meglio)» va accompagnata dal CI a cluster di lega e dal fatto che 2/5 leghe peggiorano"
+ },
+ "analisi_4_ricalibrazioni_e_GGNG": {
+  "file": [
+   "cantiere/scripts/leve_ricalibrazioni.py",
+   "cantiere/out/leve_ricalibrazioni.json",
+   "cantiere/out/leve_phi_griglia.json"
+  ],
+  "verdetto": "il NUMERO regge (riprodotto a 7 cifre), il SEGNALE no: non e' l'unica cella conclusiva, non replica, cambia verdetto con una variante contigua, e il conteggio delle celle e' compatibile col puro rumore",
+  "errore_di_provenienza": {
+   "cosa": "il +0.00059 CI[+0.00006,+0.00113] NON esiste in leve_ricalibrazioni.json",
+   "dove_sta_davvero": "leve_phi_griglia.json -> bundesliga/ricalibrazione_tassi/loso/lvl_mu/btts (guadagno 0.000589, ci95 [6.01e-05, 1.128e-03], conclusivo_bonf=False)",
+   "cella_omologa_in_leve_ricalibrazioni": "bundesliga/B/mle_loso/mercati/btts: delta -0.00078, ci95 [-0.00162, +0.00008], verdetto «nel rumore»",
+   "differenza_fra_le_due": "lvl_mu ricalibra il SOLO mu; la leva B ricalibra lambda E mu. Stessa idea, stessi dati, stessa finestra: una e' «conclusiva», l'altra «nel rumore»"
+  },
+  "ricalcolo_indipendente_lvl_mu_su_btts": {
+   "bundesliga": {
+    "n": 2142,
+    "guadagno": 0.0005890980160269366,
+    "ll_ref": 0.6654227880765087,
+    "ll_recal": 0.6648336900604818,
+    "t": 2.1778945340406395,
+    "p_t_due_code": 0.029522701764082022,
+    "stagioni_migliorate": 6,
+    "quota_semi_con_CI_sopra_zero": 1.0
+   },
+   "ligue_1": {
+    "n": 2337,
+    "guadagno": 0.0002301503909343324,
+    "ll_ref": 0.6847138167044146,
+    "ll_recal": 0.6844836663134802,
+    "t": 0.915109885582253,
+    "p_t_due_code": 0.36022839581032273,
+    "stagioni_migliorate": 5,
+    "quota_semi_con_CI_sopra_zero": 0.0
+   },
+   "serie_a": {
+    "n": 2660,
+    "guadagno": 0.000548738987084424,
+    "ll_ref": 0.6831366540209547,
+    "ll_recal": 0.6825879150338703,
+    "t": 1.9981928915694143,
+    "p_t_due_code": 0.0457974230837823,
+    "stagioni_migliorate": 5,
+    "quota_semi_con_CI_sopra_zero": 0.9
+   },
+   "premier_league": {
+    "n": 2660,
+    "guadagno": -6.980216670128927e-05,
+    "ll_ref": 0.6828133407328919,
+    "ll_recal": 0.6828831428995932,
+    "t": -0.5464932924130149,
+    "p_t_due_code": 0.584772749592401,
+    "stagioni_migliorate": 2,
+    "quota_semi_con_CI_sopra_zero": 0.0
+   },
+   "la_liga": {
+    "n": 2660,
+    "guadagno": -0.000259887636312022,
+    "ll_ref": 0.6835032788029312,
+    "ll_recal": 0.6837631664392431,
+    "t": -2.7771077115095912,
+    "p_t_due_code": 0.005522949880338113,
+    "stagioni_migliorate": 1,
+    "quota_semi_con_CI_sopra_zero": 0.0
+   }
+  },
+  "attacchi": {
+   "D1_fragilita_al_seme": {
+    "esito": "NON fragile",
+    "prova": "60 semi: estremo inferiore del CI sempre > 0 in bundesliga (4.2e-5..7.6e-5); t-test appaiato p=0.0295"
+   },
+   "D2_replica_fra_leghe": {
+    "prova": "bundesliga +0.00059 (p .030) | serie_a +0.00055 (p .046) | ligue_1 +0.00023 (p .36) | premier -0.00007 (p .58) | la_liga -0.00026 (p .0055, conclusivamente PEGGIO)",
+    "conseguenza": "segno NON universale: identico destino della leva w_D che il progetto ha archiviato come «segno non universale»"
+   },
+   "D3_test_multipli_veri": {
+    "prova": "il blocco ricalibrazione_tassi contiene 300 celle (5 leghe x 2 selettori x 6 varianti x 5 mercati). Conclusive POSITIVE: 7. Conclusive NEGATIVE: 38.",
+    "conseguenza": "con 300 test al 5% bilaterale il rumore puro ne produrrebbe ~7.5 positive: le 7 osservate sono ESATTAMENTE il numero atteso per caso. (Che siano tutte su btts e' l'unico indizio a favore, ma sono celle fortemente correlate fra loro: 4 sono la stessa la_liga+phi)"
+   },
+   "D4_non_e_l_unica_cella": {
+    "prova": "il report dice «l'unica cella conclusiva positiva di tutto il blocco»: sono 7 — bundesliga lvl_mu e k34_mu, serie_a lvl_mu, la_liga k34_mu+phi / lvl_mu+phi / lvl_both+phi / k34_mu+phi(lfo)"
+   },
+   "D5_errore_di_tabella_su_w_D": {
+    "cosa": "report 10 §5A classifica la_liga come «w_D > 1, latina»",
+    "dato_vero_dello_stesso_run": {
+     "serie_a": 1.0926,
+     "premier_league": 0.9887,
+     "la_liga": 0.9778,
+     "bundesliga": 1.0888,
+     "ligue_1": 0.9814
+    },
+    "conseguenza": "la_liga ha w_D < 1. Con il numero giusto la tassonomia «latine sopra 1 / inglesi sotto 1» crolla: sopra 1 restano Serie A e Bundesliga, sotto 1 Liga, Premier e Ligue 1. La frase «e' una regolarita', non un rumore» non e' sostenuta dai dati del run"
+   }
+  },
+  "cosa_regge": [
+   "power-devig peggiora in bundesliga con CI conclusivo (verificato: +0.000347, CI [+0.0000367,+0.000658], e anche a 9 stagioni)",
+   "ricalibrazione per-classe nel rumore in entrambe le leghe nuove (verificato)",
+   "il numero +0.00059 in se', riprodotto per via indipendente a 7 cifre"
+  ]
+ },
+ "analisi_5_stima_ou_close": {
+  "file": [
+   "cantiere/scripts/stima_ou_close_nuove.py",
+   "cantiere/out/stima_ou_close_nuove.json",
+   "cantiere/data/stime/ou_close_2017_19_nuove_leghe.csv"
+  ],
+  "verdetto": "NON REGGE: il «ribaltamento» e' un artefatto del protocollo di validazione; nel regime dell'applicazione vera il POOLED vince, con CI conclusivo",
+  "riproduzione": {
+   "per_lega_vs_pooled5_scope_NUOVE": {
+    "n": 4479,
+    "mae_per_lega": 0.011579118817242813,
+    "mae_pooled": 0.011888503389214508,
+    "delta": -0.0003093845719716958,
+    "ci95": [
+     -0.00042478456109560486,
+     -0.00019278048355698526
+    ],
+    "verdetto": "per-lega MEGLIO"
+   },
+   "serie_a": {
+    "n": 2658,
+    "mae_per_lega": 0.013366302964706764,
+    "mae_pooled": 0.012261810101472464,
+    "delta": 0.001104492863234297,
+    "ci95": [
+     0.0008934768892776356,
+     0.001309010821746165
+    ],
+    "verdetto": "pooled MEGLIO"
+   },
+   "commento": "reimplementato E3 da zero (feature, OLS, protocollo): -0.000309 contro il -0.00031 pubblicato, e +0.001104 contro il +0.00110 della Serie A. Riprodotto."
+  },
+  "attacchi": {
+   "E1_lo_scope_scelto_e_quello_che_conviene": {
+    "prova": "il -0.00031 e' sullo scope NUOVE (n=4479). Sul campione INTERO (n=12.457) vince il POOLED: Delta +0.000078, CI [+0.000010,+0.000147], conclusivo. In Serie A il per-lega e' peggio di +0.00110 (CI conclusivo), cioe' 3,5 volte il guadagno rivendicato.",
+    "conseguenza": "«ribalta la scelta ufficiale del progetto» non e' sostenibile: la scelta ufficiale e' stata presa sulle 3 leghe storiche, e su quelle il per-lega perde"
+   },
+   "E2_protocollo_alternativo_richiesto": {
+    "protocolli": {
+     "cella": {
+      "TUTTE": {
+       "n": 12457,
+       "mae_per_lega": 0.012083319479683927,
+       "mae_pooled": 0.012005721276597625,
+       "delta": 7.759820308630581e-05,
+       "ci95": [
+        1.0451945572824058e-05,
+        0.00014713072253652351
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "NUOVE": {
+       "n": 4479,
+       "mae_per_lega": 0.011579118817242813,
+       "mae_pooled": 0.011888503389214508,
+       "delta": -0.0003093845719716958,
+       "ci95": [
+        -0.00042478456109560486,
+        -0.00019278048355698526
+       ],
+       "verdetto": "per-lega MEGLIO"
+      }
+     },
+     "kfold": {
+      "TUTTE": {
+       "n": 12457,
+       "mae_per_lega": 0.011960111076506033,
+       "mae_pooled": 0.01198471729933546,
+       "delta": -2.460622282942653e-05,
+       "ci95": [
+        -8.929681448515814e-05,
+        4.1459991545767304e-05
+       ],
+       "verdetto": "nel rumore"
+      },
+      "NUOVE": {
+       "n": 4479,
+       "mae_per_lega": 0.011377958149926561,
+       "mae_pooled": 0.011852579642549007,
+       "delta": -0.0004746214926224443,
+       "ci95": [
+        -0.0005835824433314427,
+        -0.000364626202597733
+       ],
+       "verdetto": "per-lega MEGLIO"
+      }
+     },
+     "stagione": {
+      "TUTTE": {
+       "n": 12457,
+       "mae_per_lega": 0.012083319479683927,
+       "mae_pooled": 0.01202344497808529,
+       "delta": 5.9874501598639736e-05,
+       "ci95": [
+        -6.21113715304915e-06,
+        0.0001278579196697288
+       ],
+       "verdetto": "nel rumore"
+      },
+      "NUOVE": {
+       "n": 4479,
+       "mae_per_lega": 0.011579118817242813,
+       "mae_pooled": 0.011899378287322926,
+       "delta": -0.0003202594700801124,
+       "ci95": [
+        -0.00043610243068388705,
+        -0.0002065611406134887
+       ],
+       "verdetto": "per-lega MEGLIO"
+      }
+     },
+     "indietro": {
+      "TUTTE": {
+       "n": 5375,
+       "mae_per_lega": 0.014359030298670606,
+       "mae_pooled": 0.013709108032351572,
+       "delta": 0.0006499222663190313,
+       "ci95": [
+        0.0005103298513774973,
+        0.0007898776432695925
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "NUOVE": {
+       "n": 1957,
+       "mae_per_lega": 0.013875163022589143,
+       "mae_pooled": 0.013212916183326266,
+       "delta": 0.0006622468392628796,
+       "ci95": [
+        0.0004022905931768435,
+        0.0009157508781794531
+       ],
+       "verdetto": "pooled MEGLIO"
+      }
+     }
+    },
+    "lettura": "k-fold casuale per partita e leave-one-stagione-out (interpolazione, come il leave-one-cella-out del cantiere) confermano il per-lega sulle 2 leghe nuove; l'estrapolazione TEMPORALE lo ROVESCIA"
+   },
+   "E3_il_protocollo_che_conta": {
+    "cosa": "l'applicazione vera e' estrapolare all'INDIETRO: si fitta su 2019-26 e si stima il 2017-19. Nessuno dei protocolli del cantiere e' di questo tipo (il loro «stress_indietro» confronta per-lega-indietro con per-lega-loso, mai per-lega contro pooled).",
+    "risultato": {
+     "indietro_4st": {
+      "NUOVE": {
+       "n": 1957,
+       "mae_per_lega": 0.013875163022589143,
+       "mae_pooled": 0.013212916183326266,
+       "delta": 0.0006622468392628796,
+       "ci95": [
+        0.0004026326082179747,
+        0.0009193372649234778
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "bundesliga": {
+       "n": 918,
+       "mae_per_lega": 0.014439483084787362,
+       "mae_pooled": 0.013968320413226562,
+       "delta": 0.00047116267156080156,
+       "ci95": [
+        0.00015061562108796488,
+        0.0007873693410710376
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "ligue_1": {
+       "n": 1039,
+       "mae_per_lega": 0.013376562621147408,
+       "mae_pooled": 0.0125454849195645,
+       "delta": 0.0008310777015829062,
+       "ci95": [
+        0.00043368511842182167,
+        0.0012189546720711897
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "n_train": 7082
+     },
+     "indietro_5st": {
+      "NUOVE": {
+       "n": 1271,
+       "mae_per_lega": 0.013907587804793486,
+       "mae_pooled": 0.01325145651325598,
+       "delta": 0.000656131291537505,
+       "ci95": [
+        0.00038394949471089,
+        0.0009301228684177044
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "bundesliga": {
+       "n": 612,
+       "mae_per_lega": 0.01435529797685925,
+       "mae_pooled": 0.014020157749843944,
+       "delta": 0.0003351402270153066,
+       "ci95": [
+        1.8033161634891593e-05,
+        0.0006556888580650775
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "ligue_1": {
+       "n": 659,
+       "mae_per_lega": 0.013491808403724822,
+       "mae_pooled": 0.012537579188837418,
+       "delta": 0.0009542292148874069,
+       "ci95": [
+        0.0005218404785825425,
+        0.0013831411227629672
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "n_train": 8907
+     },
+     "indietro_6st": {
+      "NUOVE": {
+       "n": 585,
+       "mae_per_lega": 0.013127199062452667,
+       "mae_pooled": 0.01243740126758799,
+       "delta": 0.0006897977948646761,
+       "ci95": [
+        0.00038805323085458287,
+        0.001004111156488452
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "bundesliga": {
+       "n": 306,
+       "mae_per_lega": 0.01409751439385814,
+       "mae_pooled": 0.013534611347888472,
+       "delta": 0.0005629030459696657,
+       "ci95": [
+        0.00016659618382460574,
+        0.0009359473524605754
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "ligue_1": {
+       "n": 279,
+       "mae_per_lega": 0.012062982247362793,
+       "mae_pooled": 0.01123400956661327,
+       "delta": 0.0008289726807495262,
+       "ci95": [
+        0.0003153981921797058,
+        0.0013362440260395517
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "n_train": 10732
+     },
+     "avanti_4st": {
+      "NUOVE": {
+       "n": 1836,
+       "mae_per_lega": 0.0112696334375431,
+       "mae_pooled": 0.011157505245846576,
+       "delta": 0.00011212819169652474,
+       "ci95": [
+        -7.894999767378254e-05,
+        0.00030036733019604337
+       ],
+       "verdetto": "nel rumore"
+      },
+      "bundesliga": {
+       "n": 918,
+       "mae_per_lega": 0.012340035997597417,
+       "mae_pooled": 0.012051531669450308,
+       "delta": 0.00028850432814710733,
+       "ci95": [
+        0.00013188170625604085,
+        0.0004443592752071527
+       ],
+       "verdetto": "pooled MEGLIO"
+      },
+      "ligue_1": {
+       "n": 918,
+       "mae_per_lega": 0.010199230877488781,
+       "mae_pooled": 0.01026347882224284,
+       "delta": -6.424794475405787e-05,
+       "ci95": [
+        -0.00040912691290865037,
+        0.0002759392241159633
+       ],
+       "verdetto": "nel rumore"
+      },
+      "n_train": 7201
+     }
+    },
+    "conclusione": "con 4, 5 o 6 stagioni di training (fino a ~2.100 righe per lega, la stessa taglia dell'applicazione reale) il POOLED vince sulle due leghe nuove di +0.00066/+0.00066/+0.00069 MAE, CI sempre conclusivo, e vince su ciascuna delle due leghe separatamente. Anche in avanti il pooled vince sul campione intero. Quindi non e' un artefatto di taglia del training."
+   },
+   "E4_conseguenza_operativa": {
+    "cosa": "le 1.362 stime consegnate (cantiere/data/stime/ou_close_2017_19_nuove_leghe.csv) sono state prodotte con E3_per_lega",
+    "costo_stimato": "MAE peggiore di ~0.0007 (circa +5% relativo) rispetto a E3_pooled5 nel regime in cui la stima e' stata usata",
+    "azione": "rigenerare il CSV con lo stimatore pooled (o almeno dichiarare la scelta come non validata nel regime d'uso)"
+   },
+   "E5_errore_atteso_sottostimato": {
+    "prova": "il MAE dichiarato (bundesliga 0.0122, ligue_1 0.0110) viene dal protocollo di interpolazione. All'indietro, con lo stesso stimatore per-lega, e' 0.0141-0.0144 (bundesliga) e 0.0121-0.0135 (ligue_1).",
+    "conseguenza": "l'errore atteso dichiarato nel CSV e nel report 09 §3 sottostima di circa il 15-25%"
+   }
+  },
+  "leakage": "nessun leakage di riga: in tutti i protocolli la cella valutata resta fuori dal fit. Il fit su stagioni SUCCESSIVE e' dichiarato nel report e nel CSV (corretto). Il difetto e' la scelta del protocollo, non un leakage."
+ },
+ "tabella_verdetti": [
+  {
+   "analisi": "1 router theta (griglia)",
+   "riproducibile": "si (1e-16)",
+   "verdetto": "REGGE CON RISERVA",
+   "riserve": "tesi «griglia=MLE» tautologica; tesi «era la finestra dati» FALSA (e' lo stimatore, 2/3 del divario); lo 0/25 e' in parte il selettore (a theta fisso la Bundesliga ha 1-2 mercati CI<0)"
+  },
+  {
+   "analisi": "2 phi(|lambda-mu|)",
+   "riproducibile": "parziale (blocco ricalibrazione ricalcolato)",
+   "verdetto": "REGGE la bocciatura / NON REGGE «la phi costante fa meglio»",
+   "riserve": "nessun CI, effetti 5-100x sotto la soglia dichiarata, segno non uniforme, griglie di taglia diversa"
+  },
+  {
+   "analisi": "3 devig di Shin",
+   "riproducibile": "si (indipendente)",
+   "verdetto": "REGGE CON RISERVA",
+   "riserve": "CI a cluster di lega tocca lo zero; 2/5 leghe peggiorano; p=0.034 non regge a test multipli"
+  },
+  {
+   "analisi": "4 ricalibrazioni + GG/NG",
+   "riproducibile": "si (7 cifre)",
+   "verdetto": "NON REGGE come «segnale»",
+   "riserve": "7 celle conclusive su 300 = il numero atteso per caso; non replica (la_liga peggiora con CI); la variante contigua lambda+mu e' «nel rumore»; errore di tabella su w_D la_liga"
+  },
+  {
+   "analisi": "5 stima O/U per-lega vs pooled",
+   "riproducibile": "si (reimplementato)",
+   "verdetto": "NON REGGE",
+   "riserve": "scope favorevole (2 leghe su 5); nel regime d'uso (estrapolazione all'indietro) vince il pooled con CI conclusivo su entrambe le leghe nuove"
+  }
+ ],
+ "correzioni_proposte_ai_report": [
+  "report 10 §2.2(b): riscrivere — il 1.097 della F53 e' la MEDIA di 8 fit MLE a finestra espandente; il pooled sulla stessa finestra a 9 stagioni da' 1.199. La differenza e' per ~2/3 lo stimatore e per ~1/3 la finestra.",
+  "report 10 §2.1: la frase sui totali in Bundesliga mescola modalita' theta-fisso (bundesliga) e LOSO (ligue_1); a theta fisso uguale la Ligue 1 non rovescia nulla (p=0.86).",
+  "report 10 §2.1: aggiungere che in modalita' theta FISSO la Bundesliga ha 1-2 mercati con CI<0 sui totali (p 0.011-0.014, non Bonferroni): la leva e' inadottabile, ma «mancanza di effetto» e' troppo forte.",
+  "report 10 §3: «una phi costante fa meglio» va declassato a «indistinguibile»: nessun CI e effetti sotto la soglia di risoluzione.",
+  "report 10 §4: affiancare al Brier pooled il CI a cluster di lega ([-0.00041, -0.0000008]) e il fatto che 2/5 leghe peggiorano.",
+  "report 10 §5A: correggere w_D della Liga (0.978, non >1) e ritirare la frase «il segno segue la natura della lega».",
+  "report 10 §6: correggere la provenienza (leve_phi_griglia.json, non leve_ricalibrazioni.json), togliere «unica cella conclusiva» (sono 7 su 300, quante ne fa il caso) e riportare la_liga -0.00026 con CI conclusivo NEGATIVO.",
+  "report 09 §3: il «per-lega vince» vale solo sulle 2 leghe nuove e solo in interpolazione; nel regime d'uso vince il pooled (+0.00066, CI conclusivo). Rigenerare o declassare le 1.362 stime; alzare il MAE atteso dichiarato."
+ ],
+ "controlli_di_sanita_superati": [
+  "18/18 quantita' della Fase 81 riprodotte dal cantiere a 3e-17 dai valori a piena precisione di experiments/runs.jsonl (verificato in modo indipendente)",
+  "theta MLE la_liga 1.242 e bundesliga 1.0796 riprodotti con inversione e matrici mie",
+  "cache dei tassi su scratch NON stale (4.4e-16 contro re-inversione fresca)",
+  "riesecuzione di leve_theta_griglia su 2 leghe: delta identici a 1e-16, theta scelti identici"
+ ]
+}

@@ -721,27 +721,49 @@ def tabella_finale(tutto: dict) -> dict:
     return tutto
 
 
-def confuta_rho(leghe: list[str]) -> dict:
-    """CONFUTAZIONE del risultato principale (GG/NG sotto-prezzato).
+RHO_GRID = [0.0, -0.03, -0.06, -0.10, -0.15, -0.20, -0.25]
+# mercati su cui misuro il COSTO di un rho grande (oltre al GG che dovrebbe curare)
+MK_RHO = ["btts", "home_win", "draw", "away_win", "over_1.5", "over_2.5",
+          "over_3.5", "cs_home", "cs_away", "home_by_2plus"]
+
+
+def confuta_rho(leghe: list[str], tutto: dict | None = None) -> dict:
+    """CONFUTAZIONE del risultato principale (GG/NG sotto-prezzato, curato da θ).
 
     Spiegazione alternativa: non e' la dispersione dei marginali, e' la
     correzione di Dixon-Coles rho = −0.06 (fissa, mai ri-tarata fuori dalla
     Serie A) che sposta proprio le celle 0-0/0-1/1-0/1-1, cioe' esattamente
     quelle che decidono il GG/NG. Se bastasse un rho diverso a raddrizzare il
-    GG, la lettura «sotto-dispersione» cadrebbe.
+    GG, la lettura «serve una leva di forma (θ)» cadrebbe: basterebbe ri-tarare
+    un parametro che il motore ha GIA'.
 
-    Rifaccio inversione E matrice con rho coerente in {0, −0.03, −0.06, −0.10}
-    e guardo il bias del GG/NG. Riporto anche il rho che azzererebbe il bias."""
-    fuori = {}
-    rng = np.random.default_rng(SEED)
+    Nota di metodo (CORRETTA dopo la misura — la mia attesa era sbagliata).
+    Credevo che cambiare rho non spostasse l'1X2/O/U, perche' l'inversione
+    ri-fitta (lam, mu) su quelle stesse quote. FALSO: `implied_lambda_mu` e' un
+    MINIMO QUADRATI con 2 parametri liberi (lam, mu) e 4 bersagli (pH, pD, pA,
+    pOver) — non puo' centrarli tutti. Cambiare rho non «lascia fermi gli
+    ancoraggi»: ridistribuisce il residuo fra di essi. Infatti il bias del
+    PAREGGIO si muove di 0.03-0.04 lungo la griglia. Questo e' proprio cio' che
+    distingue le due leve, e va misurato invece che assunto.
+
+    Misuro l'INTERA griglia rho, non solo il segno della pendenza, e riporto:
+      - il rho* che AZZEREREBBE il bias del GG (interpolato sui punti misurati);
+      - il COSTO di quel rho sugli altri mercati (cs, scarto>=2, over);
+      - il confronto diretto con la leva θ a rho fisso −0.06.
+    Salva dopo OGNI punto (macchina condivisa: il lavoro non si perde)."""
+    fuori = {} if tutto is None else dict(tutto.get("confutazione_rho", {}).get("punti", {}))
     for league in leghe:
         df = carica(league, SEASONS7)
         hg = df.home_goals.astype(int).to_numpy()
         ag = df.away_goals.astype(int).to_numpy()
-        y = ((hg >= 1) & (ag >= 1)).astype(float)
+        esiti = {m: f(hg, ag).astype(float) for m, f in BIN_MARKETS}
         n = len(df)
-        riga = {}
-        for rho in [0.0, -0.03, -0.06, -0.10, -0.15]:
+        riga = dict(fuori.get(league, {}))
+        for rho in RHO_GRID:
+            k = f"{rho:+.2f}"
+            if k in riga and "mercati" in riga[k]:
+                print(f"  {league:<12} rho {k}: gia' fatto", flush=True)
+                continue
             fp = CACHE / f"rates_{league}_{n}_rho{rho:+.2f}.csv"
             if fp.exists() and len(pd.read_csv(fp)) == n:
                 c = pd.read_csv(fp)
@@ -755,17 +777,107 @@ def confuta_rho(leghe: list[str]) -> dict:
                     lam[i], mu[i] = mi.implied_lambda_mu(pH, pD, pA, pO, rho)
                 CACHE.mkdir(parents=True, exist_ok=True)
                 pd.DataFrame({"lam": lam, "mu": mu}).to_csv(fp, index=False)
-            p = np.array([mi.price_markets(float(lam[i]), float(mu[i]), rho)["btts"]
-                          for i in range(n)])
-            riga[f"{rho:+.2f}"] = {"bias": float(p.mean() - y.mean()),
-                                   "ece": float(ece_progetto(p, y)),
-                                   "ll": float(C.ll_bin(p, y).mean())}
-            print(f"  {league:<12} rho {rho:+.2f}: GG bias "
-                  f"{riga[f'{rho:+.2f}']['bias']:+.4f}  ECE "
-                  f"{riga[f'{rho:+.2f}']['ece']:.4f}  LL "
-                  f"{riga[f'{rho:+.2f}']['ll']:.4f}", flush=True)
+            P = {m: np.zeros(n) for m in MK_RHO}
+            for i in range(n):
+                d = mi.price_markets(float(lam[i]), float(mu[i]), rho)
+                for m in MK_RHO:
+                    P[m][i] = d[m]
+            riga[k] = {"mercati": {
+                m: {"bias": float(P[m].mean() - esiti[m].mean()),
+                    "ece": float(ece_progetto(P[m], esiti[m])),
+                    "ll": float(C.ll_bin(P[m], esiti[m]).mean())}
+                for m in MK_RHO}}
+            # retro-compatibilita' con i punti gia' scritti (GG in chiaro)
+            riga[k].update(riga[k]["mercati"]["btts"])
+            g = riga[k]["mercati"]["btts"]
+            print(f"  {league:<12} rho {k}: GG bias {g['bias']:+.4f}  "
+                  f"ECE {g['ece']:.4f}  LL {g['ll']:.4f}  |  "
+                  f"cs_home bias {riga[k]['mercati']['cs_home']['bias']:+.4f}  "
+                  f"over1.5 {riga[k]['mercati']['over_1.5']['bias']:+.4f}",
+                  flush=True)
+            fuori[league] = riga
+            if tutto is not None:
+                tutto["confutazione_rho"] = {"griglia": RHO_GRID, "punti": fuori}
+                with open(OUT / "nuovo_calibrazione.json", "w") as f:
+                    json.dump(tutto, f, indent=1, default=float)
         fuori[league] = riga
+    # --- rho* che azzera il bias del GG, per interpolazione ----------------- #
+    for league, riga in fuori.items():
+        pts = sorted(((float(k), v["mercati"]["btts"]["bias"])
+                      for k, v in riga.items()
+                      if not k.startswith("_") and isinstance(v, dict)
+                      and "mercati" in v),
+                     key=lambda t: -t[0])
+        if len(pts) < 2:
+            continue
+        xs = np.array([p[0] for p in pts]); ys = np.array([p[1] for p in pts])
+        rstar = None
+        for i in range(len(xs) - 1):
+            if ys[i] * ys[i + 1] <= 0 and ys[i] != ys[i + 1]:
+                rstar = float(xs[i] - ys[i] * (xs[i + 1] - xs[i]) /
+                              (ys[i + 1] - ys[i]))
+                break
+        if rstar is None:      # nessun cambio di segno: estrapolo la pendenza
+            sl = float(np.polyfit(xs, ys, 1)[0])
+            rstar = float(xs[-1] - ys[-1] / sl) if sl != 0 else float("nan")
+            riga["_rho_star_estrapolato"] = True
+        else:
+            riga["_rho_star_estrapolato"] = False
+        riga["_rho_star"] = rstar
+        print(f"  {league:<12} rho* che azzera il bias GG = {rstar:+.3f}"
+              f"{'  (ESTRAPOLATO, fuori griglia)' if riga['_rho_star_estrapolato'] else ''}")
     return fuori
+
+
+def sintesi_confutazione(tutto: dict) -> dict:
+    """Verdetto della confutazione: rho ri-tarato spiega il GG meglio di theta?
+
+    Metro: media dei |bias| sui mercati INDIPENDENTI fra quelli tracciati lungo
+    la griglia rho (niente complementi: darebbero peso doppio allo stesso
+    evento). Confronto: motore a rho=-0.06, rho* che azzera il GG, theta LOSO.
+    Il confronto e' SBILANCIATO A FAVORE DI RHO, e va detto: rho* e' scelto a
+    posteriori proprio sulla statistica in esame (il bias del GG, su tutte e 7
+    le stagioni), mentre theta e' fittato leave-one-season-out e non ha mai
+    visto il GG. Se malgrado questo vantaggio rho non vince, la confutazione
+    fallisce."""
+    IND = ["btts", "over_1.5", "over_2.5", "over_3.5", "cs_home", "cs_away",
+           "home_by_2plus", "home_win", "draw"]
+    cr = tutto.get("confutazione_rho", {}).get("punti", {})
+    out = {"mercati_usati": IND, "nota":
+           "media |bias| sui mercati indipendenti; rho* e' fittato IN-SAMPLE "
+           "sul bias del GG, theta e' LOSO: vantaggio a rho."}
+    print(f"\n{'='*104}\nSINTESI DELLA CONFUTAZIONE — media |bias| su "
+          f"{len(IND)} mercati indipendenti\n{'='*104}")
+    print(f"  {'lega':<12}{'rho -0.06':>11}{'rho*':>11}{'theta':>11}"
+          f"{'theta+phi':>11}   verdetto")
+    for lg, riga in cr.items():
+        if "_rho_star" not in riga:
+            continue
+        def med(dd):
+            return float(np.mean([abs(dd[m]["bias"]) for m in IND]))
+        base = med(riga["-0.06"]["mercati"])
+        # punto della griglia piu' vicino a rho*
+        rs = min((k for k in riga if k.startswith(("+", "-"))),
+                 key=lambda k: abs(float(k) - riga["_rho_star"]))
+        mstar = med(riga[rs]["mercati"])
+        mth = float(np.mean([abs(tutto["leghe"][lg]["varianti"]["theta"][m]["bias"])
+                             for m in IND]))
+        mtp = float(np.mean([abs(tutto["leghe"][lg]["varianti"]["theta_phi"][m]["bias"])
+                             for m in IND]))
+        vince = "rho ri-tarato" if mstar < mth else "theta"
+        out[lg] = {"rho_star": riga["_rho_star"], "punto_griglia": rs,
+                   "media_abs_bias": {"rho_-0.06": base, "rho_star": mstar,
+                                      "theta": mth, "theta_phi": mtp},
+                   "vince": vince,
+                   "draw_bias_rho_star": riga[rs]["mercati"]["draw"]["bias"],
+                   "draw_bias_theta":
+                       tutto["leghe"][lg]["varianti"]["theta"]["draw"]["bias"]}
+        print(f"  {lg:<12}{base:>11.4f}{mstar:>11.4f}{mth:>11.4f}{mtp:>11.4f}"
+              f"   {vince}  (rho*={riga['_rho_star']:+.3f}; il pareggio paga: "
+              f"{riga[rs]['mercati']['draw']['bias']:+.4f} contro "
+              f"{tutto['leghe'][lg]['varianti']['theta']['draw']['bias']:+.4f} con theta)")
+    tutto.setdefault("confutazione_rho", {})["sintesi"] = out
+    return tutto
 
 
 def replica_pubblicata(tutto: dict) -> dict:
@@ -899,8 +1011,10 @@ def main() -> int:
         with open(OUT / "nuovo_calibrazione.json") as f:
             tutto = json.load(f)
         print("CONFUTAZIONE — il GG/NG sotto-prezzato e' colpa del rho fisso?")
-        tutto["confutazione_rho"] = confuta_rho(
-            [l for l in args.leagues if l in tutto["leghe"]])
+        punti = confuta_rho([l for l in args.leagues if l in tutto["leghe"]],
+                            tutto)
+        tutto["confutazione_rho"] = {"griglia": RHO_GRID, "punti": punti}
+        tutto = sintesi_confutazione(tutto)
         with open(OUT / "nuovo_calibrazione.json", "w") as f:
             json.dump(tutto, f, indent=1, default=float)
         return 0

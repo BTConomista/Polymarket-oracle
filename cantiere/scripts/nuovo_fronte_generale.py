@@ -869,6 +869,185 @@ def cmd_dc(args) -> int:
 
 
 # --------------------------------------------------------------------------- #
+#  4-bis · IPERPARAMETRI DEL DC — APPARATO ECONOMICO (fit a inizio stagione)
+# --------------------------------------------------------------------------- #
+# PERCHE' UN SECONDO APPARATO. Il walk-forward di `run_backtest` ri-allena una
+# volta a settimana: ~38 fit per stagione-lega, ~100-250s a run. La griglia
+# completa (7 config x 5 leghe x 6 stagioni = 210 run) e' fuori budget su una
+# macchina a 4 core condivisa con altri lavori. L'apparato economico fa UN SOLO
+# fit per (lega, stagione), datato al giorno della prima giornata, e predice
+# tutta la stagione con quello: 3s invece di 150s, cioe' 50 volte meno.
+#
+# COSA CAMBIA E COSA NO. Il modello economico e' PEGGIORE in assoluto (non
+# impara in-season: e' lo stesso handicap in tutti i bracci). Ma la domanda del
+# fronte generale non e' «quanto vale il DC», e' «la SCELTA degli iperparametri
+# va fatta per lega o in comune»: per quella conta solo che l'apparato ORDINI le
+# config nello stesso modo. Questo e' verificabile, e va verificato: le due
+# config `rif` e `hl_730` esistono in ENTRAMBI gli apparati su tutte e 5 le
+# leghe, quindi si confronta il segno e l'ordine di grandezza del loro divario.
+# Se i due apparati ordinano diversamente, l'apparato economico NON e' valido e
+# va detto — non usato lo stesso.
+DC_FAST_CONFIGS: dict[str, dict] = {
+    "rif":        dict(half_life_days=365.0, shrinkage=1.5, shots_blend=0.75),
+    "hl_180":     dict(half_life_days=180.0, shrinkage=1.5, shots_blend=0.75),
+    "hl_730":     dict(half_life_days=730.0, shrinkage=1.5, shots_blend=0.75),
+    "hl_1460":    dict(half_life_days=1460.0, shrinkage=1.5, shots_blend=0.75),
+    "shr_0.0":    dict(half_life_days=365.0, shrinkage=0.0, shots_blend=0.75),
+    "shr_0.5":    dict(half_life_days=365.0, shrinkage=0.5, shots_blend=0.75),
+    "shr_3.0":    dict(half_life_days=365.0, shrinkage=3.0, shots_blend=0.75),
+    "blend_0.00": dict(half_life_days=365.0, shrinkage=1.5, shots_blend=0.00),
+    "blend_0.50": dict(half_life_days=365.0, shrinkage=1.5, shots_blend=0.50),
+    "blend_1.00": dict(half_life_days=365.0, shrinkage=1.5, shots_blend=1.00),
+}
+# Gli ASSI, per leggere la griglia un fattore alla volta (§1.2 del CLAUDE.md).
+DC_ASSI = {"emivita": ["hl_180", "rif", "hl_730", "hl_1460"],
+           "shrinkage": ["shr_0.0", "shr_0.5", "rif", "shr_3.0"],
+           "blend_xg": ["blend_0.00", "blend_0.50", "rif", "blend_1.00"]}
+
+
+def cmd_dc_fast(args) -> int:
+    from src.models.dixon_coles import DixonColesModel
+    rng = np.random.default_rng(SEED + 6)
+    t0 = time.time()
+    print("ASPETTATIVA DICHIARATA PRIMA DI MISURARE\n"
+          "  Le curve di ri-taratura sono piatte su tutte e 5 le leghe (Fasi 8/57 e\n"
+          "  tranche 3). Mi aspetto un PAREGGIO fra pooled e per-lega, con una leggera\n"
+          "  preferenza per il POOLED: se il segnale e' piatto, la selezione per-lega\n"
+          "  su 6 stagioni pesca rumore mentre il pooled su ~10.000 partite no.\n"
+          "  Mi aspetto inoltre che i DUE apparati (economico e walk-forward) ordinino\n"
+          "  `rif` e `hl_730` nello stesso modo: se non lo fanno, l'apparato economico\n"
+          "  e' invalido e lo dichiaro.\n")
+    base = SCRATCH / "dc_fast"; base.mkdir(parents=True, exist_ok=True)
+    tutte, promoted_teams = _prep_leghe()
+    # `_prep_leghe` prefissa i nomi con la lega: qui non serve, ma e' innocuo
+    # (le squadre restano disgiunte e il fit e' per lega).
+    for lg in LEAGUES:
+        d = tutte[lg]
+        for s in DC_SEASONS:
+            test = d[d.season == s]
+            if test.empty:
+                continue
+            promo = promoted_teams(d, s)
+            for c, cfg in DC_FAST_CONFIGS.items():
+                fp = base / f"{lg}_{s}_{c}.csv"
+                if fp.exists():
+                    continue
+                m = DixonColesModel(blend_signal="xg",
+                                    promoted_prior=(DC_DELTA, DC_DELTA), **cfg)
+                m.fit(d, as_of_date=test.date.min(), promoted_teams=promo)
+                r = []
+                for x in test.itertuples():
+                    p = m.predict_match(x.home_team, x.away_team)
+                    r.append({"date": x.date, "res": ("H" if x.home_goals > x.away_goals
+                                                      else ("D" if x.home_goals == x.away_goals
+                                                            else "A")),
+                              "tot": int(x.home_goals + x.away_goals),
+                              "pH": p.prob_home_win, "pD": p.prob_draw,
+                              "pA": p.prob_away_win, "pO": p.prob_over_2_5,
+                              "pGG": p.prob_btts_yes})
+                pd.DataFrame(r).to_csv(fp, index=False)
+        print(f"  {lg:<16} fatto ({time.time()-t0:.0f}s)", flush=True)
+
+    # ---- log-loss per riga -------------------------------------------------- #
+    def _ll_blocco(d):
+        p = d[["pH", "pD", "pA"]].to_numpy(float); p = p / p.sum(1, keepdims=True)
+        y = np.where(d.res.to_numpy() == "H", 0, np.where(d.res.to_numpy() == "D", 1, 2))
+        l3 = -np.log(np.clip(p[np.arange(len(d)), y], 1e-15, None))
+        ov = (d.tot.to_numpy() >= 3).astype(float)
+        po = np.clip(d.pO.to_numpy(float), 1e-15, 1 - 1e-15)
+        lo = -(ov * np.log(po) + (1 - ov) * np.log(1 - po))
+        return {"1X2": l3, "over_2.5": lo}
+
+    ll = {}; seasons = {}
+    for lg in LEAGUES:
+        blocchi = {}
+        for c in DC_FAST_CONFIGS:
+            fr = []
+            for s in DC_SEASONS:
+                f = base / f"{lg}_{s}_{c}.csv"
+                if not f.exists():
+                    fr = None; break
+                x = pd.read_csv(f); x["season"] = s; fr.append(x)
+            if fr:
+                blocchi[c] = pd.concat(fr, ignore_index=True)
+        if len(blocchi) < len(DC_FAST_CONFIGS):
+            print(f"  {lg}: config incomplete, salto ({sorted(blocchi)})")
+            continue
+        seasons[lg] = blocchi["rif"]["season"].to_numpy()
+        ll[lg] = {c: _ll_blocco(d) for c, d in blocchi.items()}
+
+    valori = ["rif"] + [c for c in DC_FAST_CONFIGS if c != "rif"]
+    mercati = ["1X2", "over_2.5"]
+
+    # ---- VALIDITA' DELL'APPARATO: confronto coi run walk-forward ------------ #
+    print(f"\n{'='*112}\nVALIDITA' DELL'APPARATO ECONOMICO — le due config presenti "
+          f"in ENTRAMBI gli apparati\n{'='*112}")
+    wf = {}
+    for lg in LEAGUES:
+        for c in ("rif", "hl_730"):
+            fs = [SCRATCH / "dc" / f"{lg}_{s}_{c}.csv" for s in DC_SEASONS]
+            if not all(f.exists() for f in fs):
+                continue
+            d = pd.concat([pd.read_csv(f) for f in fs], ignore_index=True)
+            p = d[["m_home", "m_draw", "m_away"]].to_numpy(float)
+            p = p / p.sum(1, keepdims=True)
+            y = np.where(d.result.to_numpy() == "H", 0,
+                         np.where(d.result.to_numpy() == "D", 1, 2))
+            wf[(lg, c)] = float((-np.log(np.clip(p[np.arange(len(d)), y],
+                                                 1e-15, None))).mean())
+    print(f"  {'lega':<16}{'WF rif':>9}{'WF 730':>9}{'WF Δ':>9}   "
+          f"{'FAST rif':>9}{'FAST 730':>9}{'FAST Δ':>9}   segno")
+    val = {}
+    for lg in LEAGUES:
+        if (lg, "rif") not in wf or (lg, "hl_730") not in wf or lg not in ll:
+            continue
+        dw = wf[(lg, "hl_730")] - wf[(lg, "rif")]
+        df_ = ll[lg]["hl_730"]["1X2"].mean() - ll[lg]["rif"]["1X2"].mean()
+        val[lg] = {"wf_rif": wf[(lg, "rif")], "wf_hl730": wf[(lg, "hl_730")],
+                   "fast_rif": float(ll[lg]["rif"]["1X2"].mean()),
+                   "fast_hl730": float(ll[lg]["hl_730"]["1X2"].mean()),
+                   "delta_wf": dw, "delta_fast": float(df_),
+                   "stesso_segno": bool(dw * df_ > 0)}
+        print(f"  {lg:<16}{wf[(lg,'rif')]:>9.4f}{wf[(lg,'hl_730')]:>9.4f}{dw:>+9.4f}   "
+              f"{ll[lg]['rif']['1X2'].mean():>9.4f}{ll[lg]['hl_730']['1X2'].mean():>9.4f}"
+              f"{df_:>+9.4f}   {'CONCORDE' if dw*df_>0 else 'DISCORDE'}")
+    ok = sum(v["stesso_segno"] for v in val.values())
+    print(f"  -> segno concorde in {ok}/{len(val)} leghe. "
+          f"{'apparato USABILE per ORDINARE le config' if ok >= 4 else 'ATTENZIONE: apparato NON validato'}")
+
+    # ---- il confronto pooled vs per-lega ------------------------------------ #
+    res = confronta(ll, seasons, valori, mercati, rng)
+    glob = pool_5_leghe(res, ll, seasons, valori, mercati, rng)
+    stampa_tabella(res, glob, mercati,
+                   "IPERPARAMETRI DC (apparato economico) — POOLED (LOLO) vs PER-LEGA (LOSO)")
+    print("\n  --- config scelte ---")
+    for m in mercati:
+        print(f"    {m}")
+        for lg in ll:
+            b = res[lg][m]
+            print(f"      {lg:<16} pooled {b['pooled']['scelta']:<12} "
+                  f"per-lega {list(b['per_lega']['scelte'].values())}")
+    print("\n  --- la griglia grezza (log-loss 1X2), un asse alla volta ---")
+    for asse, cs in DC_ASSI.items():
+        print(f"    {asse:<10}" + "".join(f"{lg[:11]:>12}" for lg in ll))
+        for c in cs:
+            print(f"      {c:<8}" + "".join(f"{ll[lg][c]['1X2'].mean():>12.4f}"
+                                            for lg in ll))
+    salva("dc_fast", {"_meta": {"config": DC_FAST_CONFIGS, "assi": DC_ASSI,
+                                "delta_fisso": DC_DELTA, "stagioni": DC_SEASONS,
+                                "mercati": mercati, "bootstrap_B": B_BOOT,
+                                "seed": SEED + 6, "apparato":
+                                "un fit per (lega,stagione) datato alla prima "
+                                "giornata; nessun re-fit settimanale",
+                                "secondi": round(time.time() - t0, 1)},
+                      "validita_vs_walkforward": val,
+                      "griglia_ll_1x2": {lg: {c: float(ll[lg][c]["1X2"].mean())
+                                              for c in valori} for lg in ll},
+                      "per_lega": res, "pool_5_leghe": glob})
+    return 0
+
+
+# --------------------------------------------------------------------------- #
 #  5 · LA DOMANDA ARCHITETTURALE: 1 DC su 5 leghe insieme vs 5 DC separati
 # --------------------------------------------------------------------------- #
 # PREMESSA MATEMATICA (verificata riga per riga su src/models/dixon_coles.py,
@@ -1020,9 +1199,317 @@ def cmd_sanita(args) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------- #
+#  6 · CONFUTAZIONE — provare a dimostrare che il risultato e' SBAGLIATO
+# --------------------------------------------------------------------------- #
+# Il risultato principale del fronte θ e' un PAREGGIO fra pooled e per-lega.
+# Un pareggio e' l'esito piu' facile da ottenere per il motivo sbagliato: basta
+# che l'apparato sia cieco. Quattro attacchi, dichiarati prima di eseguirli:
+#
+#   A) ORACOLO PER-LEGA (in-sample). Il fronte per-lega e' misurato in LOSO, che
+#      e' onesto ma rumoroso. Se il pooled pareggia anche il θ scelto sulla lega
+#      stessa guardando TUTTI i suoi dati (impossibile da giocare, e' un TETTO),
+#      allora il per-lega non ha proprio spazio: il pareggio non e' un artefatto
+#      della selezione rumorosa. Se invece l'oracolo vince nettamente, il
+#      pareggio misurato dice solo che «non sappiamo scegliere», non che «non
+#      c'e' niente da scegliere». Sono due conclusioni molto diverse.
+#   B) PLACEBO DELLE FAMIGLIE. Le 15 bipartizioni non banali delle 5 leghe. Se
+#      la partizione «latine / non latine» non e' nettamente la migliore, la
+#      divisione in famiglie e' un pattern letto a posteriori su 5 punti.
+#   C) POTENZA DICHIARATA. La semi-larghezza del CI95: qualunque effetto piu'
+#      piccolo di quella soglia questo apparato NON lo vede, e «non dimostrato»
+#      non e' «dimostrato nullo».
+#   D) CAMBIO DI METRICA. Tutto e' deciso in log-loss. Se il verdetto si
+#      capovolge in Brier, non e' un verdetto sul modello ma sulla metrica.
+def _media_builder(ll, seasons, valori, mercati):
+    somme = {lg: {v: {m: {} for m in mercati} for v in valori} for lg in ll}
+    n_st = {lg: {} for lg in ll}
+    for lg in ll:
+        s = seasons[lg]
+        for st in sorted(set(s)):
+            idx = s == st
+            n_st[lg][st] = int(idx.sum())
+            for v in valori:
+                for m in mercati:
+                    somme[lg][v][m][st] = float(ll[lg][v][m][idx].sum())
+
+    def media_su(ls, v, m):
+        return (sum(somme[lg][v][m][st] for lg, st in ls)
+                / sum(n_st[lg][st] for lg, st in ls))
+    return media_su
+
+
+def _bipartizioni(leghe):
+    """Tutte le bipartizioni non banali (gruppo, complemento) di `leghe`,
+    senza doppioni per simmetria."""
+    out = []
+    n = len(leghe)
+    for mask in range(1, 2 ** n - 1):
+        g = frozenset(leghe[i] for i in range(n) if mask >> i & 1)
+        c = frozenset(leghe) - g
+        if (c, g) not in out and (g, c) not in out:
+            out.append((g, c))
+    return out
+
+
+def cmd_confuta(args) -> int:
+    from scripts._fase52_common import dp_matrices
+    rng = np.random.default_rng(SEED + 5)
+    t0 = time.time()
+    print("CONFUTAZIONE DEL FRONTE θ — quattro attacchi dichiarati prima\n")
+    ll, seasons, dati = _carica_path_mercato(RHO_PROD, THETAS, ALL_MK)
+    media_su = _media_builder(ll, seasons, THETAS, ALL_MK)
+    st_di = {lg: sorted(set(seasons[lg])) for lg in LEAGUES}
+    fuori = {lg: [(l2, st) for l2 in LEAGUES if l2 != lg for st in st_di[l2]]
+             for lg in LEAGUES}
+    dentro = {lg: [(lg, st) for st in st_di[lg]] for lg in LEAGUES}
+    res = {}
+
+    # ---- A) oracolo per-lega in-sample -------------------------------------- #
+    print(f"\n{'='*112}\nA) ORACOLO PER-LEGA (θ scelto IN-SAMPLE sulla lega: tetto "
+          f"superiore, non giocabile)\n{'='*112}")
+    print(f"  {'mercato':<18}{'lega':<16}{'θ orac':>8}{'LOSO':>10}{'oracolo':>10}"
+          f"{'pooled':>10}{'Δ(pool−orac)':>14}{'CI95':>24}  verdetto")
+    A = {}
+    for m in PRIMARI:
+        dpo, dor = [], []
+        A[m] = {}
+        for lg in LEAGUES:
+            t_or = min(THETAS, key=lambda t: media_su(dentro[lg], t, m))
+            t_po = min(THETAS, key=lambda t: media_su(fuori[lg], t, m))
+            sel_or = ll[lg][t_or][m]; sel_po = ll[lg][t_po][m]
+            sel_pl = np.zeros(len(seasons[lg]))
+            for st in st_di[lg]:
+                tr = [(lg, s2) for s2 in st_di[lg] if s2 != st]
+                b = min(THETAS, key=lambda t: media_su(tr, t, m))
+                sel_pl[seasons[lg] == st] = ll[lg][b][m][seasons[lg] == st]
+            v = verdetto(sel_po - sel_or, rng, len(PRIMARI))
+            A[m][lg] = {"theta_oracolo": t_or, "ll_oracolo": float(sel_or.mean()),
+                        "ll_loso": float(sel_pl.mean()),
+                        "ll_pooled": float(sel_po.mean()), "pooled_vs_oracolo": v}
+            print(f"  {m:<18}{lg:<16}{t_or:>8.3f}{sel_pl.mean():>10.4f}"
+                  f"{sel_or.mean():>10.4f}{sel_po.mean():>10.4f}{v['delta']:>+14.5f}"
+                  f"  [{v['ci95'][0]:+.5f},{v['ci95'][1]:+.5f}]  {v['verdetto']}")
+            dpo.append(sel_po); dor.append(sel_or)
+        g = verdetto(np.concatenate(dpo) - np.concatenate(dor), rng, len(PRIMARI))
+        A[m]["POOL"] = {"ll_oracolo": float(np.concatenate(dor).mean()),
+                        "ll_pooled": float(np.concatenate(dpo).mean()),
+                        "pooled_vs_oracolo": g}
+        print(f"  {m:<18}{'POOL 5 LEGHE':<16}{'':>8}{'':>10}"
+              f"{np.concatenate(dor).mean():>10.4f}"
+              f"{np.concatenate(dpo).mean():>10.4f}{g['delta']:>+14.5f}"
+              f"  [{g['ci95'][0]:+.5f},{g['ci95'][1]:+.5f}]  {g['verdetto']}\n")
+    res["A_oracolo_per_lega"] = A
+
+    # ---- B) placebo delle famiglie ------------------------------------------ #
+    print(f"{'='*112}\nB) PLACEBO DELLE FAMIGLIE — tutte le 15 bipartizioni, "
+          f"la vera e' {sorted(k for k,v in FAMIGLIA_ORACOLO.items() if v=='A')}"
+          f"\n{'='*112}")
+    parts = _bipartizioni(LEAGUES)
+    B = {}
+    for m in PRIMARI:
+        righe = []
+        # riferimento: il pooled semplice (una famiglia sola)
+        sel_po = {lg: ll[lg][min(THETAS, key=lambda t: media_su(fuori[lg], t, m))][m]
+                  for lg in LEAGUES}
+        ll_po = float(np.concatenate([sel_po[lg] for lg in LEAGUES]).mean())
+        for g, c in parts:
+            sel = []
+            for lg in LEAGUES:
+                fam = g if lg in g else c
+                tr = [(l2, st) for l2 in fam if l2 != lg for st in st_di[l2]]
+                if not tr:                       # famiglia singoletto -> pooled
+                    sel.append(sel_po[lg]); continue
+                b = min(THETAS, key=lambda t: media_su(tr, t, m))
+                sel.append(ll[lg][b][m])
+            righe.append((float(np.concatenate(sel).mean()),
+                          "+".join(sorted(g)) + " | " + "+".join(sorted(c))))
+        righe.sort()
+        vera = ("la_liga+serie_a | bundesliga+ligue_1+premier_league")
+        rank = [i for i, r in enumerate(righe) if r[1] == vera]
+        rank = rank[0] + 1 if rank else None
+        B[m] = {"ll_pooled_unica_famiglia": ll_po,
+                "classifica": [{"ll": r[0], "partizione": r[1]} for r in righe],
+                "rango_partizione_vera": rank, "n_partizioni": len(righe)}
+        print(f"\n  --- {m} --- (pooled a una famiglia: {ll_po:.4f})")
+        for i, (v, nome) in enumerate(righe[:4], 1):
+            print(f"    {i:>2}. {v:.4f}  {nome}")
+        print(f"    ...")
+        print(f"    rango della partizione VERA (latine|altre): "
+              f"{rank}/{len(righe)}  (ll {dict((n,v) for v,n in righe)[vera]:.4f})")
+    res["B_placebo_famiglie"] = B
+
+    # ---- C) potenza --------------------------------------------------------- #
+    print(f"\n{'='*112}\nC) POTENZA DICHIARATA — soglia di risoluzione "
+          f"dell'apparato\n{'='*112}")
+    prev = json.loads(OUT.read_text()) if OUT.exists() else {}
+    C = {}
+    for leva in ("theta", "phi", "rho", "dc"):
+        if leva not in prev or "pool_5_leghe" not in prev[leva]:
+            continue
+        C[leva] = {}
+        for m, blk in prev[leva]["pool_5_leghe"].items():
+            v = blk["pooled_vs_per_lega"]
+            C[leva][m] = {"delta": v["delta"],
+                          "semiampiezza_ci95": (v["ci95"][1] - v["ci95"][0]) / 2}
+        for m in [x for x in PRIMARI if x in C[leva]]:
+            print(f"  {leva:<7}{m:<18}Δ {C[leva][m]['delta']:+.5f}  "
+                  f"soglia ±{C[leva][m]['semiampiezza_ci95']:.5f}")
+    res["C_potenza"] = C
+
+    # ---- D) cambio di metrica: Brier ---------------------------------------- #
+    print(f"\n{'='*112}\nD) CAMBIO DI METRICA — lo stesso confronto in BRIER "
+          f"(1X2) invece che in log-loss\n{'='*112}")
+    br = {}
+    for lg in LEAGUES:
+        d = dati[lg]; br[lg] = {}
+        y3 = np.where(d["hg"] > d["ag"], 0, np.where(d["hg"] == d["ag"], 1, 2))
+        Y = np.zeros((len(y3), 3)); Y[np.arange(len(y3)), y3] = 1.0
+        for t in THETAS:
+            M = dp_matrices(d["lam"], d["mu"], RHO_PROD, t)
+            P = np.column_stack([(M * MASKS[k][None]).sum(axis=(1, 2))
+                                 for k in ("home_win", "draw", "away_win")])
+            P = P / P.sum(1, keepdims=True)
+            br[lg][t] = {"1X2": ((P - Y) ** 2).sum(1)}
+    ms_b = _media_builder(br, seasons, THETAS, ["1X2"])
+    dpo, dpl = [], []
+    print(f"  {'lega':<16}{'per-lega':>10}{'pooled':>10}{'Δ':>12}{'CI95':>24}  verdetto")
+    D = {}
+    for lg in LEAGUES:
+        t_po = min(THETAS, key=lambda t: ms_b(fuori[lg], t, "1X2"))
+        sel_po = br[lg][t_po]["1X2"]
+        sel_pl = np.zeros(len(seasons[lg]))
+        for st in st_di[lg]:
+            tr = [(lg, s2) for s2 in st_di[lg] if s2 != st]
+            b = min(THETAS, key=lambda t: ms_b(tr, t, "1X2"))
+            sel_pl[seasons[lg] == st] = br[lg][b]["1X2"][seasons[lg] == st]
+        v = verdetto(sel_po - sel_pl, rng, 1)
+        D[lg] = {"theta_pooled": t_po, "brier_pooled": float(sel_po.mean()),
+                 "brier_per_lega": float(sel_pl.mean()), "pooled_vs_per_lega": v}
+        print(f"  {lg:<16}{sel_pl.mean():>10.4f}{sel_po.mean():>10.4f}"
+              f"{v['delta']:>+12.5f}  [{v['ci95'][0]:+.5f},{v['ci95'][1]:+.5f}]"
+              f"  {v['verdetto']}")
+        dpo.append(sel_po); dpl.append(sel_pl)
+    g = verdetto(np.concatenate(dpo) - np.concatenate(dpl), rng, 1)
+    D["POOL"] = {"brier_pooled": float(np.concatenate(dpo).mean()),
+                 "brier_per_lega": float(np.concatenate(dpl).mean()),
+                 "pooled_vs_per_lega": g}
+    print(f"  {'POOL 5 LEGHE':<16}{np.concatenate(dpl).mean():>10.4f}"
+          f"{np.concatenate(dpo).mean():>10.4f}{g['delta']:>+12.5f}"
+          f"  [{g['ci95'][0]:+.5f},{g['ci95'][1]:+.5f}]  {g['verdetto']}")
+    res["D_brier"] = D
+
+    res["_meta"] = {"bootstrap_B": B_BOOT, "seed": SEED + 5,
+                    "secondi": round(time.time() - t0, 1)}
+    salva("confutazione", res)
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+#  7 · SINTESI — la risposta in una tabella, e il test dei segni aggregato
+# --------------------------------------------------------------------------- #
+# Ogni leva produce una matrice di celle (lega x mercato) con tre esiti: pooled
+# meglio / per-lega meglio / nel rumore. Il singolo CI e' debole (soglia ~0.5
+# millesimi, §C della confutazione), ma la DIREZIONE aggregata no: sotto l'ipotesi
+# nulla «i due fronti sono equivalenti» le celle conclusive dovrebbero dividersi
+# a meta'. Un test dei segni binomiale su quelle celle e' il modo giusto di
+# leggere 30 test deboli tutti nella stessa direzione.
+# ATTENZIONE (dichiarato): i mercati NON sono indipendenti — sono proiezioni
+# della stessa matrice — quindi il p-value binomiale e' OTTIMISTICO. Va letto
+# come «la direzione e' sistematica», non come «p = 10^-6».
+def cmd_sintesi(args) -> int:
+    from math import comb
+    d = json.loads(OUT.read_text())
+    print(f"{'='*104}\nSINTESI — il fronte GENERALE (pooled, leave-one-league-out) "
+          f"contro il fronte PER-LEGA (LOSO)\n{'='*104}")
+    print(f"  {'leva':<12}{'celle':>7}{'pooled':>9}{'per-lega':>10}{'rumore':>9}"
+          f"{'p segni':>10}   pool-5-leghe sui mercati primari")
+    out = {}
+    for leva, primari in (("theta", PRIMARI), ("phi", PHI_PRIMARI),
+                          ("rho", PRIMARI), ("dc", ["1X2", "over_2.5"]),
+                          ("dc_fast", ["1X2", "over_2.5"])):
+        if leva not in d:
+            continue
+        a = b = n = 0
+        for lg, blk in d[leva]["per_lega"].items():
+            for m, x in blk.items():
+                v = x["pooled_vs_per_lega"]["verdetto"]
+                n += 1
+                a += v == "A MEGLIO"; b += v == "B MEGLIO"
+        k = a + b
+        p = (sum(comb(k, i) for i in range(min(a, b) + 1)) / 2 ** k * 2
+             if k else 1.0)
+        p = min(1.0, p)
+        g = d[leva]["pool_5_leghe"]
+        sintesi_pr = "; ".join(
+            f"{m} {g[m]['pooled_vs_per_lega']['delta']:+.5f}"
+            f"({g[m]['pooled_vs_per_lega']['verdetto'][:9]})"
+            for m in primari if m in g)
+        out[leva] = {"celle": n, "pooled_meglio": a, "per_lega_meglio": b,
+                     "rumore": n - k, "p_test_segni": p,
+                     "pool_5_leghe_primari": {m: g[m]["pooled_vs_per_lega"]
+                                              for m in primari if m in g}}
+        print(f"  {leva:<12}{n:>7}{a:>9}{b:>10}{n-k:>9}{p:>10.2}   {sintesi_pr}")
+    if "dc_congiunto" in d:
+        r = d["dc_congiunto"]["risultati"]["TUTTE"]
+        print(f"\n  DC CONGIUNTO (γ/ρ/livello comuni) vs 5 DC separati: "
+              f"Δ {r['delta']:+.5f} [{r['ci95'][0]:+.5f},{r['ci95'][1]:+.5f}] "
+              f"{r['verdetto']} (n={r['n']})")
+        out["dc_congiunto"] = r
+    tot_a = sum(v["pooled_meglio"] for v in out.values() if "celle" in v)
+    tot_b = sum(v["per_lega_meglio"] for v in out.values() if "celle" in v)
+    k = tot_a + tot_b
+    p = min(1.0, sum(comb(k, i) for i in range(min(tot_a, tot_b) + 1)) / 2 ** k * 2)
+    print(f"\n  AGGREGATO su tutte le leve: pooled meglio {tot_a}, per-lega meglio "
+          f"{tot_b}, test dei segni p = {p:.2}")
+    print("  (mercati NON indipendenti: il p e' ottimistico, leggilo come "
+          "«la direzione e' sistematica»)")
+    out["_aggregato"] = {"pooled_meglio": tot_a, "per_lega_meglio": tot_b,
+                         "p_test_segni": p,
+                         "avvertenza": "mercati correlati: p ottimistico"}
+
+    # ---- E) la contro-obiezione: il pooled vince perche' la griglia e' larga? --
+    # Se il fronte per-lega perde solo perche' il suo selettore e' instabile su
+    # griglie ampie, allora non e' il fronte a essere sbagliato ma la griglia.
+    # Si misura: quanto spesso la scelta per-lega CAMBIA fra stagioni, e quanto
+    # spesso finisce sul BORDO (segno che l'ottimo e' fuori griglia).
+    print(f"\n{'='*104}\nE) CONTRO-OBIEZIONE — il fronte per-lega perde perche' il "
+          f"suo selettore e' instabile?\n{'='*104}")
+    bordi = {"theta": (THETAS[0], THETAS[-1]), "rho": (min(RHOS), max(RHOS))}
+    E = {}
+    for leva in ("theta", "phi", "rho", "dc", "dc_fast"):
+        if leva not in d:
+            continue
+        tot = div = bord = nb = 0
+        for lg, blk in d[leva]["per_lega"].items():
+            for m, b in blk.items():
+                sc = list(b["per_lega"]["scelte"].values())
+                tot += 1
+                div += len(set(map(str, sc))) > 1
+                if leva in bordi:
+                    for v in sc:
+                        nb += 1
+                        bord += float(v) in bordi[leva]
+        E[leva] = {"celle": tot, "scelta_instabile": div,
+                   "quota_instabile": div / tot,
+                   "scelte_sul_bordo": bord, "scelte_totali": nb,
+                   "quota_bordo": (bord / nb) if nb else None}
+        b_txt = f"   sul bordo {bord}/{nb} = {100*bord/nb:.0f}%" if nb else ""
+        print(f"  {leva:<9} celle {tot:3d}: la scelta per-lega CAMBIA fra stagioni "
+              f"in {div:3d} ({100*div/tot:3.0f}%){b_txt}")
+    print("  LETTURA: il selettore per-lega e' ad alta varianza (6-7 stagioni per\n"
+          "  lega non bastano). Parte del vantaggio del pooled e' quindi varianza\n"
+          "  risparmiata, non bias evitato — ma e' comunque il vantaggio che si\n"
+          "  incassa in pratica, perche' piu' stagioni per lega non esistono.")
+    out["E_instabilita_selettore_per_lega"] = E
+    salva("sintesi", out)
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["dc-run", "theta", "phi", "rho", "dc", "pool", "sanita"])
+    ap.add_argument("cmd", choices=["dc-run", "theta", "phi", "rho", "dc", "dc-fast",
+                                    "pool", "sanita", "confuta", "sintesi"])
     ap.add_argument("--jobs", type=int, default=2)
     ap.add_argument("--leagues", nargs="*", default=LEAGUES)
     ap.add_argument("--configs", nargs="*", default=list(DC_CONFIGS))
@@ -1032,7 +1519,8 @@ def main() -> int:
         dc_run(args.jobs, args.leagues, args.configs)
         return 0
     fn = {"theta": cmd_theta, "phi": cmd_phi, "rho": cmd_rho, "dc": cmd_dc,
-          "pool": cmd_pool, "sanita": cmd_sanita}[args.cmd]
+          "dc-fast": cmd_dc_fast, "pool": cmd_pool, "sanita": cmd_sanita,
+          "confuta": cmd_confuta, "sintesi": cmd_sintesi}[args.cmd]
     return fn(args)
 
 

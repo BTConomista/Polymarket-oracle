@@ -1,0 +1,3115 @@
+{
+  "titolo": "Le leve di panchina e le covariate sul path Dixon-Coles standalone, su Bundesliga e Ligue 1",
+  "regola": "R4 isolamento: scrive solo cantiere/out/leve_dc_panchina.json; nessun git; metriche dalla fonte unica experiment_log/metrics.",
+  "impostazione": {
+    "leghe": [
+      "bundesliga",
+      "ligue_1"
+    ],
+    "stagioni_test": [
+      "2021",
+      "2122",
+      "2223",
+      "2324",
+      "2425",
+      "2526"
+    ],
+    "stagioni_taratura_leve_posthoc": [
+      "1819",
+      "1920"
+    ],
+    "config": {
+      "half_life_days": 365.0,
+      "shrinkage": 1.5,
+      "shots_blend": 0.75,
+      "blend_signal": "xg",
+      "promoted_prior": 0.23
+    },
+    "config_nota": "config Serie A PURA, non ri-tarata: e' il riferimento pubblicato (report 06, curve di taratura piatte)",
+    "bootstrap": {
+      "B": 10000,
+      "seed": 4242,
+      "tipo": "appaiato per-partita"
+    },
+    "riferimento_pubblicato_1x2": {
+      "bundesliga": 0.9919,
+      "ligue_1": 1.0041
+    }
+  },
+  "aspettative_dichiarate_prima": {
+    "A_temperature": "il DC ha log-loss PEGGIORE sulle leghe nuove: se il peggioramento fosse sovra-confidenza, T>1. Ma in Serie A T~0.94 (SOTTO-confidenza): mi aspetto T<1 anche qui e un guadagno dell'ordine di -0.0003, cioe' NEL RUMORE.",
+    "B_class_recal": "in Serie A il bias per classe (casa alta, pareggio basso) e' robusto. Bundesliga e' 'latina' sul draw-bias di mercato (w_D=1.089) e Ligue 1 'inglese' (0.981): mi aspetto w_D>1 in Bundesliga e w_D~1 o <1 in Ligue 1, guadagno nel rumore.",
+    "C_draw_inflation": "il blocco precedente ha mostrato che una phi COSTANTE fa meglio della phi(|lam-mu|): questa e' la phi costante sul path DC. E' la leva con la probabilita' a priori piu' alta delle quattro. In Ligue 1 pero' la selezione della phi35 sceglieva phi0=0 in 7/7 stagioni (nessun deficit di pareggi): li' mi aspetto ~0.",
+    "D_ensemble": "in Serie A -0.0006 in 4/6 stagioni, borderline. Nessun motivo per cui debba replicarsi: mi aspetto nel rumore.",
+    "covariate": "NEGATIVA. Il progetto le ha bocciate su 3 leghe su 3. Le due cose che rendono il test non inutile: il calendario di club delle leghe nuove e' appena stato costruito, e la Bundesliga ha 18 squadre (meno congestione di campionato, piu' coppa).",
+    "midweek_ricostruito": "il difetto noto (coppe mancanti) rende la covariata RUMOROSA, non sbagliata in una direzione: correggerla dovrebbe rendere il beta piu' netto e piu' stabile, non necessariamente far guadagnare log-loss."
+  },
+  "controllo_di_sanita": {
+    "riferimento_1x2_bundesliga": {
+      "atteso": 0.9919,
+      "ricalcolato": 0.991937,
+      "scarto": 3.665e-05,
+      "n_partite": 1836,
+      "mercato": 0.973849
+    },
+    "identita_logloss_bundesliga": 0.0,
+    "riferimento_1x2_ligue_1": {
+      "atteso": 1.0041,
+      "ricalcolato": 1.004075,
+      "scarto": -2.548e-05,
+      "n_partite": 2058,
+      "mercato": 0.985055
+    },
+    "identita_logloss_ligue_1": 0.0,
+    "calendario_base_riproduce_snapshot_bundesliga": true,
+    "calendario_base_riproduce_snapshot_ligue_1": true
+  },
+  "diagnosi_covariata_midweek": {
+    "bundesliga": {
+      "per_stagione": {
+        "1718": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 56,
+          "quota_celle": 0.0915,
+          "partite_con_riposo_diverso": 53,
+          "affetta": true
+        },
+        "1819": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 30,
+          "quota_celle": 0.049,
+          "partite_con_riposo_diverso": 27,
+          "affetta": true
+        },
+        "1920": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 26,
+          "quota_celle": 0.0425,
+          "partite_con_riposo_diverso": 24,
+          "affetta": true
+        },
+        "2021": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 8,
+          "quota_celle": 0.0131,
+          "partite_con_riposo_diverso": 11,
+          "affetta": true
+        },
+        "2122": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 7,
+          "quota_celle": 0.0114,
+          "partite_con_riposo_diverso": 12,
+          "affetta": true
+        },
+        "2223": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 4,
+          "quota_celle": 0.0065,
+          "partite_con_riposo_diverso": 8,
+          "affetta": true
+        },
+        "2324": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 2,
+          "quota_celle": 0.0033,
+          "partite_con_riposo_diverso": 5,
+          "affetta": true
+        },
+        "2425": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 0,
+          "quota_celle": 0.0,
+          "partite_con_riposo_diverso": 2,
+          "affetta": true
+        },
+        "2526": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 47,
+          "quota_celle": 0.0768,
+          "partite_con_riposo_diverso": 47,
+          "affetta": true
+        }
+      },
+      "finestra_test": {
+        "partite": 1836,
+        "celle_midweek_da_0_a_1": 68,
+        "partite_con_riposo_diverso": 85,
+        "stagioni_NON_affette": []
+      },
+      "tasso_midweek_medio": {
+        "base": 0.1207,
+        "ricostruito": 0.1534
+      }
+    },
+    "ligue_1": {
+      "per_stagione": {
+        "1718": {
+          "partite": 380,
+          "celle_midweek_da_0_a_1": 108,
+          "quota_celle": 0.1421,
+          "partite_con_riposo_diverso": 94,
+          "affetta": true
+        },
+        "1819": {
+          "partite": 380,
+          "celle_midweek_da_0_a_1": 90,
+          "quota_celle": 0.1184,
+          "partite_con_riposo_diverso": 90,
+          "affetta": true
+        },
+        "1920": {
+          "partite": 279,
+          "celle_midweek_da_0_a_1": 72,
+          "quota_celle": 0.129,
+          "partite_con_riposo_diverso": 74,
+          "affetta": true
+        },
+        "2021": {
+          "partite": 380,
+          "celle_midweek_da_0_a_1": 39,
+          "quota_celle": 0.0513,
+          "partite_con_riposo_diverso": 37,
+          "affetta": true
+        },
+        "2122": {
+          "partite": 380,
+          "celle_midweek_da_0_a_1": 33,
+          "quota_celle": 0.0434,
+          "partite_con_riposo_diverso": 44,
+          "affetta": true
+        },
+        "2223": {
+          "partite": 380,
+          "celle_midweek_da_0_a_1": 40,
+          "quota_celle": 0.0526,
+          "partite_con_riposo_diverso": 44,
+          "affetta": true
+        },
+        "2324": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 19,
+          "quota_celle": 0.031,
+          "partite_con_riposo_diverso": 36,
+          "affetta": true
+        },
+        "2425": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 9,
+          "quota_celle": 0.0147,
+          "partite_con_riposo_diverso": 12,
+          "affetta": true
+        },
+        "2526": {
+          "partite": 306,
+          "celle_midweek_da_0_a_1": 72,
+          "quota_celle": 0.1176,
+          "partite_con_riposo_diverso": 77,
+          "affetta": true
+        }
+      },
+      "finestra_test": {
+        "partite": 2058,
+        "celle_midweek_da_0_a_1": 212,
+        "partite_con_riposo_diverso": 250,
+        "stagioni_NON_affette": []
+      },
+      "tasso_midweek_medio": {
+        "base": 0.0502,
+        "ricostruito": 0.128
+      }
+    }
+  },
+  "parte1_leve_panchina": {
+    "_mercato": {
+      "bundesliga": 0.97385,
+      "ligue_1": 0.98506
+    },
+    "A_temperature_scaling": {
+      "bundesliga": {
+        "protocollo": "scripts/calibrate.py",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.9917,
+        "delta_1x2": -0.000236,
+        "ci95": [
+          -0.001629,
+          0.001155
+        ],
+        "P_migliora": 0.624,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 5,
+        "per_stagione": [
+          {
+            "stagione": "2021",
+            "parametro": 1.0501,
+            "base": 1.00174,
+            "variante": 1.00127,
+            "delta": -0.00047,
+            "n_prior": 612
+          },
+          {
+            "stagione": "2122",
+            "parametro": 1.0597,
+            "base": 0.9933,
+            "variante": 0.99221,
+            "delta": -0.00109,
+            "n_prior": 918
+          },
+          {
+            "stagione": "2223",
+            "parametro": 1.0781,
+            "base": 0.9957,
+            "variante": 0.99528,
+            "delta": -0.00042,
+            "n_prior": 1224
+          },
+          {
+            "stagione": "2324",
+            "parametro": 1.0763,
+            "base": 0.97714,
+            "variante": 0.97712,
+            "delta": -2e-05,
+            "n_prior": 1530
+          },
+          {
+            "stagione": "2425",
+            "parametro": 1.0693,
+            "base": 1.01382,
+            "variante": 1.01205,
+            "delta": -0.00177,
+            "n_prior": 1836
+          },
+          {
+            "stagione": "2526",
+            "parametro": 1.0855,
+            "base": 0.96992,
+            "variante": 0.97227,
+            "delta": 0.00235,
+            "n_prior": 2142
+          }
+        ],
+        "calibrazione_base": {
+          "ECE": 0.014920634325150017,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412737,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.014636135969190315,
+          "MCE": 0.08331029809082591,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4398457985390904,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.2523720747695141,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.30778212669139554,
+              "reale": 0.3104575163398693
+            }
+          }
+        }
+      },
+      "ligue_1": {
+        "protocollo": "scripts/calibrate.py",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00444,
+        "delta_1x2": 0.00037,
+        "ci95": [
+          -0.000716,
+          0.001439
+        ],
+        "P_migliora": 0.251,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": [
+          {
+            "stagione": "2021",
+            "parametro": 1.0885,
+            "base": 1.02574,
+            "variante": 1.02469,
+            "delta": -0.00105,
+            "n_prior": 659
+          },
+          {
+            "stagione": "2122",
+            "parametro": 1.104,
+            "base": 1.01012,
+            "variante": 1.01151,
+            "delta": 0.00139,
+            "n_prior": 1039
+          },
+          {
+            "stagione": "2223",
+            "parametro": 1.0627,
+            "base": 0.98578,
+            "variante": 0.98658,
+            "delta": 0.0008,
+            "n_prior": 1419
+          },
+          {
+            "stagione": "2324",
+            "parametro": 1.0363,
+            "base": 1.03327,
+            "variante": 1.03304,
+            "delta": -0.00023,
+            "n_prior": 1799
+          },
+          {
+            "stagione": "2425",
+            "parametro": 1.0402,
+            "base": 0.97339,
+            "variante": 0.97467,
+            "delta": 0.00128,
+            "n_prior": 2105
+          },
+          {
+            "stagione": "2526",
+            "parametro": 1.0105,
+            "base": 0.99389,
+            "variante": 0.9939,
+            "delta": 2e-05,
+            "n_prior": 2411
+          }
+        ],
+        "calibrazione_base": {
+          "ECE": 0.011077165214533773,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.31815386596261047,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.011047616415254317,
+          "MCE": 0.16318682344225888,
+          "per_classe": {
+            "H": {
+              "predetta": 0.42655237819202346,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.25490279479304095,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3185448270149355,
+              "reale": 0.3304178814382896
+            }
+          }
+        }
+      }
+    },
+    "B_ricalibrazione_per_classe": {
+      "bundesliga": {
+        "protocollo": "scripts/_run_class_recal.py",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99474,
+        "delta_1x2": 0.002807,
+        "ci95": [
+          -9.2e-05,
+          0.00572
+        ],
+        "P_migliora": 0.029,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 1,
+        "per_stagione": [
+          {
+            "stagione": "2021",
+            "parametro": [
+              0.9395,
+              0.8883,
+              1.1982
+            ],
+            "base": 1.00174,
+            "variante": 1.01207,
+            "delta": 0.01034,
+            "n_prior": 612
+          },
+          {
+            "stagione": "2122",
+            "parametro": [
+              0.9571,
+              0.9382,
+              1.1136
+            ],
+            "base": 0.9933,
+            "variante": 0.99746,
+            "delta": 0.00416,
+            "n_prior": 918
+          },
+          {
+            "stagione": "2223",
+            "parametro": [
+              0.9862,
+              0.9441,
+              1.0741
+            ],
+            "base": 0.9957,
+            "variante": 0.99848,
+            "delta": 0.00278,
+            "n_prior": 1224
+          },
+          {
+            "stagione": "2324",
+            "parametro": [
+              0.9995,
+              0.9567,
+              1.0458
+            ],
+            "base": 0.97714,
+            "variante": 0.97844,
+            "delta": 0.0013,
+            "n_prior": 1530
+          },
+          {
+            "stagione": "2425",
+            "parametro": [
+              0.9821,
+              0.9781,
+              1.041
+            ],
+            "base": 1.01382,
+            "variante": 1.01081,
+            "delta": -0.00301,
+            "n_prior": 1836
+          },
+          {
+            "stagione": "2526",
+            "parametro": [
+              0.956,
+              0.983,
+              1.0641
+            ],
+            "base": 0.96992,
+            "variante": 0.9712,
+            "delta": 0.00128,
+            "n_prior": 2142
+          }
+        ],
+        "calibrazione_base": {
+          "ECE": 0.014920634325150017,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412737,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.015647208213668905,
+          "MCE": 0.17623927495543856,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4361706154793649,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.2329458998946776,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3308834846259576,
+              "reale": 0.3104575163398693
+            }
+          }
+        }
+      },
+      "ligue_1": {
+        "protocollo": "scripts/_run_class_recal.py",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00627,
+        "delta_1x2": 0.0022,
+        "ci95": [
+          0.000361,
+          0.004019
+        ],
+        "P_migliora": 0.011,
+        "verdetto": "CONCLUSIVO: peggiora",
+        "stagioni_migliorate": 1,
+        "per_stagione": [
+          {
+            "stagione": "2021",
+            "parametro": [
+              1.0027,
+              1.0733,
+              0.9292
+            ],
+            "base": 1.02574,
+            "variante": 1.03154,
+            "delta": 0.0058,
+            "n_prior": 659
+          },
+          {
+            "stagione": "2122",
+            "parametro": [
+              0.9241,
+              1.0478,
+              1.0328
+            ],
+            "base": 1.01012,
+            "variante": 1.01183,
+            "delta": 0.00171,
+            "n_prior": 1039
+          },
+          {
+            "stagione": "2223",
+            "parametro": [
+              0.9458,
+              1.0459,
+              1.011
+            ],
+            "base": 0.98578,
+            "variante": 0.98693,
+            "delta": 0.00115,
+            "n_prior": 1419
+          },
+          {
+            "stagione": "2324",
+            "parametro": [
+              0.9581,
+              1.0321,
+              1.0113
+            ],
+            "base": 1.03327,
+            "variante": 1.03211,
+            "delta": -0.00116,
+            "n_prior": 1799
+          },
+          {
+            "stagione": "2425",
+            "parametro": [
+              0.9512,
+              1.0252,
+              1.0254
+            ],
+            "base": 0.97339,
+            "variante": 0.97732,
+            "delta": 0.00393,
+            "n_prior": 2105
+          },
+          {
+            "stagione": "2526",
+            "parametro": [
+              0.9739,
+              0.9995,
+              1.0273
+            ],
+            "base": 0.99389,
+            "variante": 0.99514,
+            "delta": 0.00126,
+            "n_prior": 2411
+          }
+        ],
+        "calibrazione_base": {
+          "ECE": 0.011077165214533773,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.31815386596261047,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.013550212823661338,
+          "MCE": 0.16107869373911188,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4180818044164626,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2613700998770245,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.32054809570651294,
+              "reale": 0.3304178814382896
+            }
+          }
+        }
+      }
+    },
+    "C_diagonale_inflazionata": {
+      "bundesliga": {
+        "nome": "draw_inflation",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99262,
+        "delta_1x2": 0.000687,
+        "ci95": [
+          -0.000184,
+          0.001536
+        ],
+        "P_migliora": 0.06,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.00388,
+            "delta": 0.00214
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.99308,
+            "delta": -0.00023
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.99716,
+            "delta": 0.00146
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.97646,
+            "delta": -0.00068
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01425,
+            "delta": 0.00043
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.97091,
+            "delta": 0.00099
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.65557,
+        "delta_ou": 0.000271,
+        "ou_ci95": [
+          -3.6e-05,
+          0.000579
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.042,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.016272542723801943,
+          "MCE": 0.07469302496765284,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4450789211257794,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24906235447527414,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3058587243989464,
+              "reale": 0.3104575163398693
+            }
+          }
+        }
+      },
+      "ligue_1": {
+        "nome": "draw_inflation",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00402,
+        "delta_1x2": -5.6e-05,
+        "ci95": [
+          -0.001202,
+          0.001064
+        ],
+        "P_migliora": 0.542,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.02614,
+            "delta": 0.0004
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01093,
+            "delta": 0.00082
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98621,
+            "delta": 0.00043
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03289,
+            "delta": -0.00038
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97041,
+            "delta": -0.00298
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99482,
+            "delta": 0.00093
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68651,
+        "delta_ou": 0.000255,
+        "ou_ci95": [
+          -0.00011,
+          0.000618
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.082,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.007726857266122412,
+          "MCE": 0.09667583264084201,
+          "per_classe": {
+            "H": {
+              "predetta": 0.42952438509243024,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2539830773176524,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.31649253758991724,
+              "reale": 0.3304178814382896
+            }
+          }
+        }
+      }
+    },
+    "D_ensemble_emivite": {
+      "bundesliga": {
+        "x2_base_365g": 0.99194,
+        "n_partite": 1836,
+        "varianti": {
+          "singola 180g": {
+            "x2": 0.99349,
+            "delta_1x2": 0.001555,
+            "ci95": [
+              -0.001654,
+              0.004876
+            ],
+            "P_migliora": 0.176,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 2,
+            "per_stagione": {
+              "2021": -0.00085,
+              "2122": 0.00103,
+              "2223": 0.00627,
+              "2324": -0.00822,
+              "2425": 0.00626,
+              "2526": 0.00483
+            },
+            "calibrazione": {
+              "ECE": 0.014445820123936396,
+              "MCE": 0.2596392535580532,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.45013215856969396,
+                  "reale": 0.43736383442265797
+                },
+                "D": {
+                  "predetta": 0.2462090321130468,
+                  "reale": 0.25217864923747274
+                },
+                "A": {
+                  "predetta": 0.30365880931725914,
+                  "reale": 0.3104575163398693
+                }
+              }
+            }
+          },
+          "singola 730g": {
+            "x2": 0.99289,
+            "delta_1x2": 0.000951,
+            "ci95": [
+              -0.001391,
+              0.00328
+            ],
+            "P_migliora": 0.218,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 4,
+            "per_stagione": {
+              "2021": 0.00386,
+              "2122": -0.00023,
+              "2223": -3e-05,
+              "2324": 0.00618,
+              "2425": -0.00064,
+              "2526": -0.00343
+            },
+            "calibrazione": {
+              "ECE": 0.016625245389345452,
+              "MCE": 0.06871857498871214,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.4441417793496252,
+                  "reale": 0.43736383442265797
+                },
+                "D": {
+                  "predetta": 0.24775802905237004,
+                  "reale": 0.25217864923747274
+                },
+                "A": {
+                  "predetta": 0.3081001915980047,
+                  "reale": 0.3104575163398693
+                }
+              }
+            }
+          },
+          "ensemble 180+730 (50/50)": {
+            "x2": 0.99144,
+            "delta_1x2": -0.000496,
+            "ci95": [
+              -0.001372,
+              0.000373
+            ],
+            "P_migliora": 0.872,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 4,
+            "per_stagione": {
+              "2021": -0.00023,
+              "2122": -0.00109,
+              "2223": 0.00123,
+              "2324": -0.00293,
+              "2425": 0.00079,
+              "2526": -0.00074
+            },
+            "calibrazione": {
+              "ECE": 0.01766713270008954,
+              "MCE": 0.17534697212409012,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.44713696895965954,
+                  "reale": 0.43736383442265797
+                },
+                "D": {
+                  "predetta": 0.24698353058270842,
+                  "reale": 0.25217864923747274
+                },
+                "A": {
+                  "predetta": 0.30587950045763196,
+                  "reale": 0.3104575163398693
+                }
+              }
+            }
+          },
+          "ensemble 180+365+730 (1/3)": {
+            "x2": 0.99157,
+            "delta_1x2": -0.000371,
+            "ci95": [
+              -0.000962,
+              0.000205
+            ],
+            "P_migliora": 0.898,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 4,
+            "per_stagione": {
+              "2021": -0.00018,
+              "2122": -0.00076,
+              "2223": 0.00077,
+              "2324": -0.002,
+              "2425": 0.00049,
+              "2526": -0.00055
+            },
+            "calibrazione": {
+              "ECE": 0.01713916076946262,
+              "MCE": 0.17548350613004204,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.44697708134710756,
+                  "reale": 0.43736383442265797
+                },
+                "D": {
+                  "predetta": 0.2467641795665147,
+                  "reale": 0.25217864923747274
+                },
+                "A": {
+                  "predetta": 0.3062587390863776,
+                  "reale": 0.3104575163398693
+                }
+              }
+            }
+          },
+          "ensemble 365+730 (50/50)": {
+            "x2": 0.99208,
+            "delta_1x2": 0.000141,
+            "ci95": [
+              -0.001047,
+              0.001322
+            ],
+            "P_migliora": 0.406,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 4,
+            "per_stagione": {
+              "2021": 0.00162,
+              "2122": -0.00032,
+              "2223": -0.0004,
+              "2324": 0.00275,
+              "2425": -0.00076,
+              "2526": -0.00204
+            },
+            "calibrazione": {
+              "ECE": 0.01628585013026451,
+              "MCE": 0.07004511065715102,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.4453995427358145,
+                  "reale": 0.43736383442265797
+                },
+                "D": {
+                  "predetta": 0.2470417532932487,
+                  "reale": 0.25217864923747274
+                },
+                "A": {
+                  "predetta": 0.3075587039709368,
+                  "reale": 0.3104575163398693
+                }
+              }
+            }
+          }
+        },
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        }
+      },
+      "ligue_1": {
+        "x2_base_365g": 1.00407,
+        "n_partite": 2058,
+        "varianti": {
+          "singola 180g": {
+            "x2": 1.00456,
+            "delta_1x2": 0.000481,
+            "ci95": [
+              -0.002608,
+              0.003691
+            ],
+            "P_migliora": 0.389,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 2,
+            "per_stagione": {
+              "2021": -0.00274,
+              "2122": 0.00108,
+              "2223": -0.00486,
+              "2324": 0.00492,
+              "2425": 0.00248,
+              "2526": 0.00394
+            },
+            "calibrazione": {
+              "ECE": 0.005120926300175979,
+              "MCE": 0.0889986702144715,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.4318583432867634,
+                  "reale": 0.4232264334305151
+                },
+                "D": {
+                  "predetta": 0.2506853218164177,
+                  "reale": 0.24635568513119532
+                },
+                "A": {
+                  "predetta": 0.3174563348968188,
+                  "reale": 0.3304178814382896
+                }
+              }
+            }
+          },
+          "singola 730g": {
+            "x2": 1.00534,
+            "delta_1x2": 0.001261,
+            "ci95": [
+              -0.001061,
+              0.003544
+            ],
+            "P_migliora": 0.143,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 2,
+            "per_stagione": {
+              "2021": 0.0044,
+              "2122": 0.00137,
+              "2223": 0.00321,
+              "2324": -0.00058,
+              "2425": 0.00075,
+              "2526": -0.00284
+            },
+            "calibrazione": {
+              "ECE": 0.009574346827703683,
+              "MCE": 0.09388736081317839,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.43436778521254643,
+                  "reale": 0.4232264334305151
+                },
+                "D": {
+                  "predetta": 0.24891702018397854,
+                  "reale": 0.24635568513119532
+                },
+                "A": {
+                  "predetta": 0.31671519460347497,
+                  "reale": 0.3304178814382896
+                }
+              }
+            }
+          },
+          "ensemble 180+730 (50/50)": {
+            "x2": 1.00314,
+            "delta_1x2": -0.000938,
+            "ci95": [
+              -0.001761,
+              -0.000133
+            ],
+            "P_migliora": 0.988,
+            "verdetto": "CONCLUSIVO: migliora",
+            "stagioni_migliorate": 5,
+            "per_stagione": {
+              "2021": -0.00103,
+              "2122": -0.00029,
+              "2223": -0.00218,
+              "2324": 0.00016,
+              "2425": -0.001,
+              "2526": -0.00112
+            },
+            "calibrazione": {
+              "ECE": 0.005815377675909069,
+              "MCE": 0.0874459598701589,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.4331130642496549,
+                  "reale": 0.4232264334305151
+                },
+                "D": {
+                  "predetta": 0.24980117100019814,
+                  "reale": 0.24635568513119532
+                },
+                "A": {
+                  "predetta": 0.3170857647501469,
+                  "reale": 0.3304178814382896
+                }
+              }
+            }
+          },
+          "ensemble 180+365+730 (1/3)": {
+            "x2": 1.00341,
+            "delta_1x2": -0.000665,
+            "ci95": [
+              -0.001198,
+              -0.000121
+            ],
+            "P_migliora": 0.991,
+            "verdetto": "CONCLUSIVO: migliora",
+            "stagioni_migliorate": 5,
+            "per_stagione": {
+              "2021": -0.00072,
+              "2122": -0.00023,
+              "2223": -0.00149,
+              "2324": 7e-05,
+              "2425": -0.00072,
+              "2526": -0.0008
+            },
+            "calibrazione": {
+              "ECE": 0.006748658273523419,
+              "MCE": 0.09665778123206525,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.43266515994389176,
+                  "reale": 0.4232264334305151
+                },
+                "D": {
+                  "predetta": 0.24989304156847336,
+                  "reale": 0.24635568513119532
+                },
+                "A": {
+                  "predetta": 0.31744179848763476,
+                  "reale": 0.3304178814382896
+                }
+              }
+            }
+          },
+          "ensemble 365+730 (50/50)": {
+            "x2": 1.00435,
+            "delta_1x2": 0.000275,
+            "ci95": [
+              -0.000883,
+              0.001416
+            ],
+            "P_migliora": 0.321,
+            "verdetto": "nel rumore",
+            "stagioni_migliorate": 3,
+            "per_stagione": {
+              "2021": 0.00188,
+              "2122": 0.0004,
+              "2223": 0.00133,
+              "2324": -0.00069,
+              "2425": -0.00024,
+              "2526": -0.00171
+            },
+            "calibrazione": {
+              "ECE": 0.010955371647258433,
+              "MCE": 0.09953169811846596,
+              "per_classe": {
+                "H": {
+                  "predetta": 0.433068568272456,
+                  "reale": 0.4232264334305151
+                },
+                "D": {
+                  "predetta": 0.2494969014445012,
+                  "reale": 0.24635568513119532
+                },
+                "A": {
+                  "predetta": 0.31743453028304275,
+                  "reale": 0.3304178814382896
+                }
+              }
+            }
+          }
+        },
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        }
+      }
+    }
+  },
+  "parte2_covariate": {
+    "cov_rest_full": {
+      "bundesliga": {
+        "nome": "cov_rest_full",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99273,
+        "delta_1x2": 0.000796,
+        "ci95": [
+          -0.000214,
+          0.001842
+        ],
+        "P_migliora": 0.063,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.00177,
+            "delta": 4e-05
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.99586,
+            "delta": 0.00256
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.99691,
+            "delta": 0.00121
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.97686,
+            "delta": -0.00028
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01591,
+            "delta": 0.00209
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.96907,
+            "delta": -0.00084
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.65511,
+        "delta_ou": -0.000182,
+        "ou_ci95": [
+          -0.000496,
+          0.000122
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.874,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.017807938370560144,
+          "MCE": 0.14373945589973258,
+          "per_classe": {
+            "H": {
+              "predetta": 0.446553387132216,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24612943152067554,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3073171813471084,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "beta_per_stagione": [
+          -0.03399591015135584,
+          -0.06558655826485675,
+          -0.04037749904087356,
+          0.009116731521105651,
+          -0.03305940518547336,
+          -0.010438326372792631
+        ],
+        "beta_media": -0.02906,
+        "beta_segno_stabile": "5/6"
+      },
+      "ligue_1": {
+        "nome": "cov_rest_full",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00445,
+        "delta_1x2": 0.000371,
+        "ci95": [
+          -0.000272,
+          0.001031
+        ],
+        "P_migliora": 0.13,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 1,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.02618,
+            "delta": 0.00045
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01099,
+            "delta": 0.00088
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98607,
+            "delta": 0.0003
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03383,
+            "delta": 0.00056
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97316,
+            "delta": -0.00023
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99404,
+            "delta": 0.00015
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68626,
+        "delta_ou": -2e-06,
+        "ou_ci95": [
+          -0.000172,
+          0.000166
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.501,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.01267517814173043,
+          "MCE": 0.09810613510468635,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43180888630274483,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500417635114825,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181493501857726,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.022471066075532477,
+          0.017563846501068816,
+          -0.0004203331554153421,
+          -0.002313263530292981,
+          -0.0009388606598979099,
+          -0.022972267321681818
+        ],
+        "beta_media": 0.00223,
+        "beta_segno_stabile": "4/6"
+      }
+    },
+    "cov_midweek": {
+      "bundesliga": {
+        "nome": "cov_midweek",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99154,
+        "delta_1x2": -0.000393,
+        "ci95": [
+          -0.001604,
+          0.000863
+        ],
+        "P_migliora": 0.736,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 3,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.00336,
+            "delta": 0.00163
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.99395,
+            "delta": 0.00064
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.99514,
+            "delta": -0.00056
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.97635,
+            "delta": -0.00079
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01386,
+            "delta": 4e-05
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.96661,
+            "delta": -0.00331
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.6548,
+        "delta_ou": -0.000491,
+        "ou_ci95": [
+          -0.000877,
+          -0.000104
+        ],
+        "ou_verdetto": "CONCLUSIVO: migliora",
+        "ou_P_migliora": 0.993,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.020705078692403574,
+          "MCE": 0.03444322640053982,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44659814899118033,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24600121229896682,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3074006387098528,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.03283951431654806,
+          0.01722157242267399,
+          0.006515987248191148,
+          -0.024806295875811346,
+          0.011060285471830491,
+          -0.017123283842423495
+        ],
+        "beta_media": 0.00428,
+        "beta_segno_stabile": "4/6"
+      },
+      "ligue_1": {
+        "nome": "cov_midweek",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.0044,
+        "delta_1x2": 0.000321,
+        "ci95": [
+          -0.000491,
+          0.001166
+        ],
+        "P_migliora": 0.216,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.02735,
+            "delta": 0.00162
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01087,
+            "delta": 0.00076
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98581,
+            "delta": 4e-05
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03266,
+            "delta": -0.00061
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97313,
+            "delta": -0.00026
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99393,
+            "delta": 4e-05
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68622,
+        "delta_ou": -4.3e-05,
+        "ou_ci95": [
+          -0.000292,
+          0.000194
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.633,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.008938817077761918,
+          "MCE": 0.06264413131367785,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4318384302730056,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.24992064588790014,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3182409238390941,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.026950665966298835,
+          -0.0006734596363734521,
+          0.0071939796999570755,
+          0.0018592591312151779,
+          0.0124915904601888,
+          0.0022714049794193346
+        ],
+        "beta_media": 0.00835,
+        "beta_segno_stabile": "5/6"
+      }
+    },
+    "cov_squad_value": {
+      "bundesliga": {
+        "nome": "cov_squad_value",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99281,
+        "delta_1x2": 0.000873,
+        "ci95": [
+          -0.000108,
+          0.001821
+        ],
+        "P_migliora": 0.041,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 0,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.00306,
+            "delta": 0.00132
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.99455,
+            "delta": 0.00124
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.99631,
+            "delta": 0.00061
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.97813,
+            "delta": 0.00099
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01414,
+            "delta": 0.00032
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.97067,
+            "delta": 0.00075
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.65546,
+        "delta_ou": 0.000164,
+        "ou_ci95": [
+          -0.000145,
+          0.000486
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.153,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.014607111352255321,
+          "MCE": 0.19435367951675175,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4467960715959505,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24580803274390114,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3073958956601483,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.06651158375614122,
+          0.07719306466942395,
+          0.05022705299418556,
+          0.05928750575732467,
+          0.039238103173655316,
+          0.040341426761657216
+        ],
+        "beta_media": 0.05547,
+        "beta_segno_stabile": "6/6"
+      },
+      "ligue_1": {
+        "nome": "cov_squad_value",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00487,
+        "delta_1x2": 0.000799,
+        "ci95": [
+          -0.000684,
+          0.002285
+        ],
+        "P_migliora": 0.146,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 3,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.02567,
+            "delta": -7e-05
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01145,
+            "delta": 0.00134
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98522,
+            "delta": -0.00056
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03764,
+            "delta": 0.00437
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97448,
+            "delta": 0.00109
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99292,
+            "delta": -0.00097
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68608,
+        "delta_ou": -0.00018,
+        "ou_ci95": [
+          -0.000572,
+          0.000214
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.819,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.008223247233681787,
+          "MCE": 0.0941962526243062,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4319859673104723,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.24936663566402853,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3186473970254991,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.1083630653643002,
+          0.1139310159428391,
+          0.10470313777745466,
+          0.11290125063827806,
+          0.057356164157011495,
+          0.07521697104121101
+        ],
+        "beta_media": 0.09541,
+        "beta_segno_stabile": "6/6"
+      }
+    },
+    "cov_absence": {
+      "bundesliga": {
+        "nome": "cov_absence",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99219,
+        "delta_1x2": 0.000252,
+        "ci95": [
+          -0.000601,
+          0.001129
+        ],
+        "P_migliora": 0.28,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.004,
+            "delta": 0.00226
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.9913,
+            "delta": -0.002
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.9952,
+            "delta": -0.0005
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.97806,
+            "delta": 0.00092
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01428,
+            "delta": 0.00046
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.97029,
+            "delta": 0.00037
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.65547,
+        "delta_ou": 0.000177,
+        "ou_ci95": [
+          -8.3e-05,
+          0.000465
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.099,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.01756483622490515,
+          "MCE": 0.17437251671321885,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44654632338243455,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24647715301032788,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3069765236072375,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "beta_per_stagione": [
+          -0.01674919939640674,
+          -0.009809916752518444,
+          -0.021084662721123613,
+          -0.01878899255829048,
+          0.0072246620367508035,
+          0.004315982685490032
+        ],
+        "beta_media": -0.00915,
+        "beta_segno_stabile": "4/6"
+      },
+      "ligue_1": {
+        "nome": "cov_absence",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00439,
+        "delta_1x2": 0.000313,
+        "ci95": [
+          -0.000112,
+          0.000733
+        ],
+        "P_migliora": 0.075,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 1,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.0257,
+            "delta": -3e-05
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01078,
+            "delta": 0.00067
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98613,
+            "delta": 0.00036
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03353,
+            "delta": 0.00026
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97383,
+            "delta": 0.00044
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99406,
+            "delta": 0.00017
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68629,
+        "delta_ou": 2.7e-05,
+        "ou_ci95": [
+          -8.6e-05,
+          0.000141
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.324,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.00953770811921663,
+          "MCE": 0.09685281085751118,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4316476232389404,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.25012586930829217,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.31822650745276737,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.00012650103599772328,
+          0.017881741762312022,
+          0.005372326126103108,
+          -0.008879545914513478,
+          -0.0030972222455061243,
+          0.0033961390778729336
+        ],
+        "beta_media": 0.00247,
+        "beta_segno_stabile": "4/6"
+      }
+    },
+    "cov_rest_full_fix": {
+      "bundesliga": {
+        "nome": "cov_rest_full_fix",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99244,
+        "delta_1x2": 0.000503,
+        "ci95": [
+          -0.000226,
+          0.001237
+        ],
+        "P_migliora": 0.088,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.00189,
+            "delta": 0.00015
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.99328,
+            "delta": -2e-05
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.99686,
+            "delta": 0.00115
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.9766,
+            "delta": -0.00054
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01598,
+            "delta": 0.00216
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.97003,
+            "delta": 0.00011
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.65525,
+        "delta_ou": -4.4e-05,
+        "ou_ci95": [
+          -0.000263,
+          0.000177
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.645,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.01675542208209212,
+          "MCE": 0.14484147103078937,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44640254993400225,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.2462977805397304,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3072996695262673,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.0007941260936321215,
+          -0.03402694958998301,
+          -0.038613370970608525,
+          0.0035331622898477433,
+          -0.04030422312577839,
+          -0.007369625598447189
+        ],
+        "beta_media": -0.01933,
+        "beta_segno_stabile": "4/6"
+      },
+      "ligue_1": {
+        "nome": "cov_rest_full_fix",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.00442,
+        "delta_1x2": 0.000342,
+        "ci95": [
+          -0.000551,
+          0.001256
+        ],
+        "P_migliora": 0.227,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 1,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.02558,
+            "delta": -0.00015
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01046,
+            "delta": 0.00034
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98636,
+            "delta": 0.00059
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03377,
+            "delta": 0.00051
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97373,
+            "delta": 0.00034
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99437,
+            "delta": 0.00048
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68616,
+        "delta_ou": -9.5e-05,
+        "ou_ci95": [
+          -0.000326,
+          0.000127
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.8,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.00984719164809248,
+          "MCE": 0.09868694867827954,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4319353171980522,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500835905397981,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.31798109226214955,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.03779704402606882,
+          0.03135151601506289,
+          0.00894775707999419,
+          -0.004545558866913948,
+          0.009511330636270089,
+          -0.013862981003393693
+        ],
+        "beta_media": 0.01153,
+        "beta_segno_stabile": "4/6"
+      }
+    },
+    "cov_midweek_fix": {
+      "bundesliga": {
+        "nome": "cov_midweek_fix",
+        "n_partite": 1836,
+        "x2_base": 0.99194,
+        "x2_variante": 0.99159,
+        "delta_1x2": -0.000345,
+        "ci95": [
+          -0.001359,
+          0.0007
+        ],
+        "P_migliora": 0.745,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 4,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00174,
+            "variante": 1.00264,
+            "delta": 0.0009
+          },
+          "2122": {
+            "base": 0.9933,
+            "variante": 0.99358,
+            "delta": 0.00028
+          },
+          "2223": {
+            "base": 0.9957,
+            "variante": 0.99479,
+            "delta": -0.00091
+          },
+          "2324": {
+            "base": 0.97714,
+            "variante": 0.97631,
+            "delta": -0.00083
+          },
+          "2425": {
+            "base": 1.01382,
+            "variante": 1.01375,
+            "delta": -7e-05
+          },
+          "2526": {
+            "base": 0.96992,
+            "variante": 0.96847,
+            "delta": -0.00145
+          }
+        },
+        "ou_base": 0.6553,
+        "ou_variante": 0.65501,
+        "delta_ou": -0.000282,
+        "ou_ci95": [
+          -0.00059,
+          2.4e-05
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.965,
+        "calibrazione_base": {
+          "ECE": 0.01492063432515003,
+          "MCE": 0.17575657414194557,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44665730612200377,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24632547753412734,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3070172163438688,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.02013919555515448,
+          "MCE": 0.04100107878651171,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44656478536038324,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24629459447513782,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3071406201644788,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "beta_per_stagione": [
+          0.015242818279621406,
+          0.005897354845527538,
+          0.006228079889485664,
+          -0.027971875606056233,
+          0.011410480560525314,
+          -0.01872243222132016
+        ],
+        "beta_media": -0.00132,
+        "beta_segno_stabile": "4/6"
+      },
+      "ligue_1": {
+        "nome": "cov_midweek_fix",
+        "n_partite": 2058,
+        "x2_base": 1.00407,
+        "x2_variante": 1.0043,
+        "delta_1x2": 0.000227,
+        "ci95": [
+          -0.000548,
+          0.001018
+        ],
+        "P_migliora": 0.282,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 2,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02574,
+            "variante": 1.02517,
+            "delta": -0.00056
+          },
+          "2122": {
+            "base": 1.01012,
+            "variante": 1.01128,
+            "delta": 0.00117
+          },
+          "2223": {
+            "base": 0.98578,
+            "variante": 0.98607,
+            "delta": 0.0003
+          },
+          "2324": {
+            "base": 1.03327,
+            "variante": 1.03368,
+            "delta": 0.00041
+          },
+          "2425": {
+            "base": 0.97339,
+            "variante": 0.97319,
+            "delta": -0.0002
+          },
+          "2526": {
+            "base": 0.99389,
+            "variante": 0.99409,
+            "delta": 0.0002
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68637,
+        "delta_ou": 0.000114,
+        "ou_ci95": [
+          -9.5e-05,
+          0.000328
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.149,
+        "calibrazione_base": {
+          "ECE": 0.01107716521453375,
+          "MCE": 0.09330811635414071,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43176935133236566,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500767827050238,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181538659626105,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.009762479127270948,
+          "MCE": 0.0983276880524776,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4316952572974619,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.25003893583238035,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3182658068701577,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "beta_per_stagione": [
+          -0.01298184977914719,
+          -0.0207525854170257,
+          0.0015223672631023576,
+          0.0115499223750219,
+          0.010635465914605435,
+          0.007401359075289016
+        ],
+        "beta_media": -0.00044,
+        "beta_segno_stabile": "4/6"
+      }
+    },
+    "cov_midweek_fix_VS_cov_midweek": {
+      "bundesliga": {
+        "nome": "cov_midweek_fix vs cov_midweek",
+        "n_partite": 1836,
+        "x2_base": 0.99154,
+        "x2_variante": 0.99159,
+        "delta_1x2": 4.8e-05,
+        "ci95": [
+          -0.000744,
+          0.000825
+        ],
+        "P_migliora": 0.449,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 5,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00336,
+            "variante": 1.00264,
+            "delta": -0.00072
+          },
+          "2122": {
+            "base": 0.99395,
+            "variante": 0.99358,
+            "delta": -0.00037
+          },
+          "2223": {
+            "base": 0.99514,
+            "variante": 0.99479,
+            "delta": -0.00035
+          },
+          "2324": {
+            "base": 0.97635,
+            "variante": 0.97631,
+            "delta": -4e-05
+          },
+          "2425": {
+            "base": 1.01386,
+            "variante": 1.01375,
+            "delta": -0.0001
+          },
+          "2526": {
+            "base": 0.96661,
+            "variante": 0.96847,
+            "delta": 0.00186
+          }
+        },
+        "ou_base": 0.6548,
+        "ou_variante": 0.65501,
+        "delta_ou": 0.000209,
+        "ou_ci95": [
+          -2.2e-05,
+          0.000446
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.038,
+        "calibrazione_base": {
+          "ECE": 0.020705078692403574,
+          "MCE": 0.03444322640053982,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44659814899118033,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24600121229896682,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3074006387098528,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.02013919555515448,
+          "MCE": 0.04100107878651171,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44656478536038324,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24629459447513782,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3071406201644788,
+              "reale": 0.3104575163398693
+            }
+          }
+        }
+      },
+      "ligue_1": {
+        "nome": "cov_midweek_fix vs cov_midweek",
+        "n_partite": 2058,
+        "x2_base": 1.0044,
+        "x2_variante": 1.0043,
+        "delta_1x2": -9.4e-05,
+        "ci95": [
+          -0.001268,
+          0.001036
+        ],
+        "P_migliora": 0.569,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 1,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02735,
+            "variante": 1.02517,
+            "delta": -0.00218
+          },
+          "2122": {
+            "base": 1.01087,
+            "variante": 1.01128,
+            "delta": 0.00041
+          },
+          "2223": {
+            "base": 0.98581,
+            "variante": 0.98607,
+            "delta": 0.00026
+          },
+          "2324": {
+            "base": 1.03266,
+            "variante": 1.03368,
+            "delta": 0.00102
+          },
+          "2425": {
+            "base": 0.97313,
+            "variante": 0.97319,
+            "delta": 6e-05
+          },
+          "2526": {
+            "base": 0.99393,
+            "variante": 0.99409,
+            "delta": 0.00016
+          }
+        },
+        "ou_base": 0.68622,
+        "ou_variante": 0.68637,
+        "delta_ou": 0.000157,
+        "ou_ci95": [
+          -0.000162,
+          0.000479
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.166,
+        "calibrazione_base": {
+          "ECE": 0.008938817077761918,
+          "MCE": 0.06264413131367785,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4318384302730056,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.24992064588790014,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3182409238390941,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.009762479127270948,
+          "MCE": 0.0983276880524776,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4316952572974619,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.25003893583238035,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3182658068701577,
+              "reale": 0.3304178814382896
+            }
+          }
+        }
+      }
+    },
+    "cov_rest_full_fix_VS_cov_rest_full": {
+      "bundesliga": {
+        "nome": "cov_rest_full_fix vs cov_rest_full",
+        "n_partite": 1836,
+        "x2_base": 0.99273,
+        "x2_variante": 0.99244,
+        "delta_1x2": -0.000293,
+        "ci95": [
+          -0.001079,
+          0.000483
+        ],
+        "P_migliora": 0.776,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 3,
+        "per_stagione": {
+          "2021": {
+            "base": 1.00177,
+            "variante": 1.00189,
+            "delta": 0.00012
+          },
+          "2122": {
+            "base": 0.99586,
+            "variante": 0.99328,
+            "delta": -0.00258
+          },
+          "2223": {
+            "base": 0.99691,
+            "variante": 0.99686,
+            "delta": -6e-05
+          },
+          "2324": {
+            "base": 0.97686,
+            "variante": 0.9766,
+            "delta": -0.00027
+          },
+          "2425": {
+            "base": 1.01591,
+            "variante": 1.01598,
+            "delta": 8e-05
+          },
+          "2526": {
+            "base": 0.96907,
+            "variante": 0.97003,
+            "delta": 0.00095
+          }
+        },
+        "ou_base": 0.65511,
+        "ou_variante": 0.65525,
+        "delta_ou": 0.000138,
+        "ou_ci95": [
+          -9.2e-05,
+          0.000379
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.127,
+        "calibrazione_base": {
+          "ECE": 0.017807938370560144,
+          "MCE": 0.14373945589973258,
+          "per_classe": {
+            "H": {
+              "predetta": 0.446553387132216,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.24612943152067554,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3073171813471084,
+              "reale": 0.3104575163398693
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.01675542208209212,
+          "MCE": 0.14484147103078937,
+          "per_classe": {
+            "H": {
+              "predetta": 0.44640254993400225,
+              "reale": 0.43736383442265797
+            },
+            "D": {
+              "predetta": 0.2462977805397304,
+              "reale": 0.25217864923747274
+            },
+            "A": {
+              "predetta": 0.3072996695262673,
+              "reale": 0.3104575163398693
+            }
+          }
+        }
+      },
+      "ligue_1": {
+        "nome": "cov_rest_full_fix vs cov_rest_full",
+        "n_partite": 2058,
+        "x2_base": 1.00445,
+        "x2_variante": 1.00442,
+        "delta_1x2": -2.9e-05,
+        "ci95": [
+          -0.00062,
+          0.00055
+        ],
+        "P_migliora": 0.534,
+        "verdetto": "nel rumore",
+        "stagioni_migliorate": 3,
+        "per_stagione": {
+          "2021": {
+            "base": 1.02618,
+            "variante": 1.02558,
+            "delta": -0.0006
+          },
+          "2122": {
+            "base": 1.01099,
+            "variante": 1.01046,
+            "delta": -0.00053
+          },
+          "2223": {
+            "base": 0.98607,
+            "variante": 0.98636,
+            "delta": 0.00029
+          },
+          "2324": {
+            "base": 1.03383,
+            "variante": 1.03377,
+            "delta": -5e-05
+          },
+          "2425": {
+            "base": 0.97316,
+            "variante": 0.97373,
+            "delta": 0.00057
+          },
+          "2526": {
+            "base": 0.99404,
+            "variante": 0.99437,
+            "delta": 0.00033
+          }
+        },
+        "ou_base": 0.68626,
+        "ou_variante": 0.68616,
+        "delta_ou": -9.3e-05,
+        "ou_ci95": [
+          -0.00025,
+          6.2e-05
+        ],
+        "ou_verdetto": "nel rumore",
+        "ou_P_migliora": 0.886,
+        "calibrazione_base": {
+          "ECE": 0.01267517814173043,
+          "MCE": 0.09810613510468635,
+          "per_classe": {
+            "H": {
+              "predetta": 0.43180888630274483,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500417635114825,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.3181493501857726,
+              "reale": 0.3304178814382896
+            }
+          }
+        },
+        "calibrazione_variante": {
+          "ECE": 0.00984719164809248,
+          "MCE": 0.09868694867827954,
+          "per_classe": {
+            "H": {
+              "predetta": 0.4319353171980522,
+              "reale": 0.4232264334305151
+            },
+            "D": {
+              "predetta": 0.2500835905397981,
+              "reale": 0.24635568513119532
+            },
+            "A": {
+              "predetta": 0.31798109226214955,
+              "reale": 0.3304178814382896
+            }
+          }
+        }
+      }
+    }
+  },
+  "confutazioni": {
+    "1_temperatura_in_sample_5_leghe": {
+      "nota": "T>1 = modello SOVRA-confidente (apply_temperature usa p^(1/T)).",
+      "controllo_di_sanita": "serie_a deve dare T~0.94 (Fase 6, PANCHINA.md voce 10)",
+      "tabella": {
+        "serie_a": {
+          "T_pooled_in_sample": 0.9414,
+          "T_per_stagione": {
+            "2021": 0.8561,
+            "2122": 1.0581,
+            "2223": 1.0358,
+            "2324": 0.9335,
+            "2425": 0.8454,
+            "2526": 0.9246
+          },
+          "stagioni_con_T_maggiore_di_1": 2
+        },
+        "premier_league": {
+          "T_pooled_in_sample": 0.9918,
+          "T_per_stagione": {
+            "2021": 1.1814,
+            "2122": 0.8751,
+            "2223": 1.0758,
+            "2324": 0.8492,
+            "2425": 1.0072,
+            "2526": 1.0662
+          },
+          "stagioni_con_T_maggiore_di_1": 4
+        },
+        "la_liga": {
+          "T_pooled_in_sample": 0.8903,
+          "T_per_stagione": {
+            "2021": 0.9624,
+            "2122": 0.965,
+            "2223": 0.9295,
+            "2324": 0.7822,
+            "2425": 0.8679,
+            "2526": 0.864
+          },
+          "stagioni_con_T_maggiore_di_1": 0
+        },
+        "bundesliga": {
+          "T_pooled_in_sample": 1.0627,
+          "T_per_stagione": {
+            "2021": 1.0794,
+            "2122": 1.1299,
+            "2223": 1.0689,
+            "2324": 1.0382,
+            "2425": 1.1906,
+            "2526": 0.8867
+          },
+          "stagioni_con_T_maggiore_di_1": 5
+        },
+        "ligue_1": {
+          "T_pooled_in_sample": 0.9851,
+          "T_per_stagione": {
+            "2021": 1.1322,
+            "2122": 0.9496,
+            "2223": 0.9579,
+            "2324": 1.0681,
+            "2425": 0.8466,
+            "2526": 0.9972
+          },
+          "stagioni_con_T_maggiore_di_1": 2
+        }
+      }
+    },
+    "2_ensemble_emivite_robustezza": {
+      "bundesliga": {
+        "loso": {
+          "senza_2021": {
+            "delta": -0.000548,
+            "ci95": [
+              -0.00157,
+              0.000429
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2122": {
+            "delta": -0.000378,
+            "ci95": [
+              -0.001338,
+              0.000576
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2223": {
+            "delta": -0.00084,
+            "ci95": [
+              -0.001802,
+              0.000106
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2324": {
+            "delta": -9e-06,
+            "ci95": [
+              -0.000973,
+              0.000955
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2425": {
+            "delta": -0.000753,
+            "ci95": [
+              -0.001728,
+              0.000208
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2526": {
+            "delta": -0.000446,
+            "ci95": [
+              -0.001383,
+              0.000478
+            ],
+            "verdetto": "nel rumore"
+          }
+        },
+        "sottoinsiemi_con_segno_negativo": "6/6",
+        "per_match_delta": -0.000496
+      },
+      "ligue_1": {
+        "loso": {
+          "senza_2021": {
+            "delta": -0.000917,
+            "ci95": [
+              -0.001839,
+              2.1e-05
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2122": {
+            "delta": -0.001085,
+            "ci95": [
+              -0.002026,
+              -0.000173
+            ],
+            "verdetto": "CONCLUSIVO: migliora"
+          },
+          "senza_2223": {
+            "delta": -0.000656,
+            "ci95": [
+              -0.001557,
+              0.00026
+            ],
+            "verdetto": "nel rumore"
+          },
+          "senza_2324": {
+            "delta": -0.001131,
+            "ci95": [
+              -0.001997,
+              -0.000258
+            ],
+            "verdetto": "CONCLUSIVO: migliora"
+          },
+          "senza_2425": {
+            "delta": -0.000927,
+            "ci95": [
+              -0.00178,
+              -8.2e-05
+            ],
+            "verdetto": "CONCLUSIVO: migliora"
+          },
+          "senza_2526": {
+            "delta": -0.000907,
+            "ci95": [
+              -0.001756,
+              -4.9e-05
+            ],
+            "verdetto": "CONCLUSIVO: migliora"
+          }
+        },
+        "sottoinsiemi_con_segno_negativo": "6/6",
+        "per_match_delta": -0.000938
+      },
+      "pooled_2_leghe": {
+        "n_partite": 3894,
+        "delta": -0.00073,
+        "ci95": [
+          -0.001334,
+          -0.000137
+        ],
+        "P_migliora": 0.9904,
+        "p_due_code": 0.0192,
+        "verdetto": "CONCLUSIVO: migliora",
+        "bonferroni": {
+          "n_test_pre_dichiarati": 8,
+          "soglia": 0.00625,
+          "supera": false
+        }
+      }
+    },
+    "3_squad_value_inizio_stagione": {
+      "bundesliga": {
+        "prime_5_giornate": {
+          "n": 95,
+          "delta": -0.005146,
+          "ci95": [
+            -0.014529,
+            0.003823
+          ],
+          "verdetto": "nel rumore"
+        },
+        "dalla_6a_in_poi": {
+          "n": 1741,
+          "delta": 0.001201,
+          "ci95": [
+            0.000334,
+            0.002067
+          ],
+          "verdetto": "CONCLUSIVO: peggiora"
+        }
+      },
+      "ligue_1": {
+        "prime_5_giornate": {
+          "n": 74,
+          "delta": 0.003728,
+          "ci95": [
+            -0.009281,
+            0.017704
+          ],
+          "verdetto": "nel rumore"
+        },
+        "dalla_6a_in_poi": {
+          "n": 1984,
+          "delta": 0.00069,
+          "ci95": [
+            -0.000771,
+            0.002147
+          ],
+          "verdetto": "nel rumore"
+        }
+      }
+    }
+  }
+}

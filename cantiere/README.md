@@ -22,7 +22,7 @@ corrotti** (R6: spiegare prima di accusare, diagnosticare con informazione
 indipendente, cercare il dato vero nell'ordine giusto, stimare con errore
 misurato, registrare anche gli errori).
 
-## I tre lavori, e dove leggerne l'esito
+## I lavori, e dove leggerne l'esito
 
 | # | lavoro | report | esito in una riga |
 |---|---|---|---|
@@ -36,8 +36,9 @@ misurato, registrare anche gli errori).
 
 | 7 | **Righe corrotte: recupero, ritiro di un errore, stima** | [`report/07_dati_corrotti.md`](report/07_dati_corrotti.md) | una mia «correzione» era un **falso positivo** (autogol) ed è stata ritirata; le 8 quote non sono recuperabili da nessuna fonte lecita → **stimate** con MAE 0.0267 contro 0.0743 di baseline |
 | 8 | **I buchi: quanti, dove, come si chiudono** | [`report/08_buchi.md`](report/08_buchi.md) | 7.353 celle vuote su 612.218 (1.20%), ma il **99.3% è un buco solo** (O/U chiusura 2017-19, assente alla fonte per tutte e 5 le leghe); tolto quello restano **49 celle**, ognuna con nome e causa. Trovato e chiuso un buco **travestito da dato** (xG segnaposto) |
-| 9 | **Chiudere i buchi: dato vero + stime** | [`report/09_chiusura_buchi.md`](report/09_chiusura_buchi.md) | **1.362 partite stimate** (chiusura O/U delle 2 leghe nuove, MAE 0.0122/0.0110); **trovato il dato REALE** della chiusura O/U 2017-19 su 3.652 partite (1xBet) — ma NON batte la stima e non va inserito; **quote GG/NG reali** per 3.652 partite, mercato che il progetto dichiarava senza quote; **3.045 righe di calendario coppe** recuperate; lo stimatore passa da pooled a **per-lega** (CI conclusivo) |
-| 10 | **La rosa dei modelli sulle 2 leghe nuove** | [`report/10_modelli_nuove_leghe.md`](report/10_modelli_nuove_leghe.md) | 4 fronti: router θ **negativo** (0/25), φ35 **bocciata** (una φ costante fa meglio), Shin conclusivo solo su Brier, ricalibrazioni nel rumore. Unico segnale: **ricalibrazione-μ sul GG/NG in Bundesliga** (+0.00059, CI conclusivo). Due lezioni del progetto da riscrivere (§2.2) |
+| 9 | **Chiudere i buchi: dato vero + stime** | [`report/09_chiusura_buchi.md`](report/09_chiusura_buchi.md) | **1.362 partite stimate** (chiusura O/U delle 2 leghe nuove); **trovato il dato REALE** della chiusura O/U 2017-19 su 3.652 partite (1xBet) — ma NON batte la stima e non va inserito; **quote GG/NG reali** per 3.652 partite, mercato che il progetto dichiarava senza quote; **3.045 righe di calendario coppe** recuperate. Secondo giro: le 9 linee O/U corrotte **ristimate** (MAE 0.0267 → 0.0143), il tiro in porta **ricostruibile all'86,4%** da Understat, 2 celle chiuse con dato vero e 2 lasciate `NaN` con la prova — e il buco più grande rimasto **non è un `NaN`**: 1.603 falsi zero di `midweek_europe`. Lo stimatore O/U **resta pooled**: il ribaltamento per-lega non regge nel regime d'uso |
+| 10 | **La rosa dei modelli sulle 2 leghe nuove** | [`report/10_modelli_nuove_leghe.md`](report/10_modelli_nuove_leghe.md) | **10 fronti**. Nessuna leva del mercato si replica: router θ **negativo** (0/25 su chiusura *e* apertura), φ35 e power-devig **bocciati**, Shin non regge a cluster, beat-the-close **chiuso** (ROI −22% e −13%), mercato campione battuto da «vince il Bayern/PSG». Il motore invece **funziona anche dall'apertura** (25/25 sul DC). La verifica avversariale ha smontato **2 analisi su 5** del primo giro e 3 dei fronti nuovi: il segnale GG/NG in Bundesliga è **non dimostrato**, il «fronte generale» è **non deciso**, la calibrazione ha un difetto di **forma** che era stato dichiarato assente (§15) |
+| 11 | **Il GG/NG contro le quote vere** | [`report/11_ggng.md`](report/11_ggng.md) | cade una premessa del progetto: le quote GG/NG **ora esistono** (5 leghe × 3 stagioni, 5.337 partite). Il mercato **è informativo** ma vale 1/3 dell'O/U 2.5 dello stesso book e costa 1,7 pt di margine in più; il nostro market-implied lo **pareggia** (Δ nel rumore in 6 varianti su 6) e il **DC perde di netto** (+0.0104, il book lo ingloba: α\* = 0 nel 70% dei fit). Nessuna leva aiuta su nessuno dei due fronti. Lo «spazio» che `CLAUDE.md` §1.8 attribuiva al GG/NG **era la nostra ignoranza** |
 
 ## Il fatto nuovo che ha cambiato le regole
 
@@ -61,7 +62,7 @@ per **bloccati** (403). **Oggi rispondono 200.** Sono raggiungibili anche
 ```
 cantiere/
   REGOLE.md         le regole decise durante il lavoro (R1-R6)
-  report/           gli otto report (sopra)
+  report/           gli undici report (sopra)
   patch/            proposte di modifica al codice di produzione, non applicate
   scripts/
     fetch_sources.py         scarica football-data + Understat (5 leghe x 9 stagioni)

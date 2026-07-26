@@ -217,6 +217,11 @@ def _worker(job):
         return job, 0.0
     kw = dict(VARIANTS[variant])
     hl = kw.pop("_half_life", SERIE_A["half_life_days"])
+    # I worker del Pool sono PERSISTENTI e ricevono job di varianti diverse: se
+    # non si ripristinasse il loader, un job `_fix` contaminerebbe tutti i job
+    # successivi dello stesso worker (compreso il suo stesso controllo). Si
+    # riparte SEMPRE dal loader originale.
+    loader.load_league = _orig_load_league
     if kw.pop("_fix_fixtures", False):
         _patch_loader_fixed()
     t0 = time.time()
@@ -613,6 +618,109 @@ def leva_ensemble(league: str, rng) -> dict | None:
     return res
 
 
+def confutazioni(rng) -> dict:
+    """Prove esplicite per DEMOLIRE i risultati positivi (richiesta dell'utente).
+
+    1) La T del temperature scaling e' davvero >1 sulle leghe nuove, o e' un
+       artefatto della finestra CUMULATIVA su cui si tara? Si rifa' il fit
+       IN-SAMPLE su ciascuna delle 6 stagioni di test, per tutte e 5 le leghe
+       (le predizioni del tracer esistono gia'). Controllo di sanita' incluso:
+       la Serie A deve restituire il T~0.94 pubblicato dal progetto (Fase 6).
+    2) L'ensemble di emivite: il guadagno regge togliendo una stagione (LOSO)?
+       E viene da una emivita migliore o dalla MEDIA? (se 180 e 730 da sole
+       sono peggiori della base, il guadagno e' riduzione di varianza).
+    3) squad_value ha il beta piu' stabile di tutti (6/6) e non guadagna:
+       almeno aiuta nelle PRIME GIORNATE, dove i rating sono poco informati?
+    """
+    out: dict = {}
+
+    all_leagues = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
+    T_tab = {}
+    for lg in all_leagues:
+        fp = TRACER / f"tracer_pred_{lg}.csv"
+        if not fp.exists():
+            continue
+        d = pd.read_csv(fp)
+        per = {str(s): round(float(calibration.fit_temperature(
+                   g[PC].to_numpy(), g["result"].tolist())), 4)
+               for s, g in d.groupby("test_season")}
+        T_tab[lg] = {
+            "T_pooled_in_sample": round(float(calibration.fit_temperature(
+                d[PC].to_numpy(), d["result"].tolist())), 4),
+            "T_per_stagione": per,
+            "stagioni_con_T_maggiore_di_1": int(sum(v > 1 for v in per.values())),
+        }
+    out["1_temperatura_in_sample_5_leghe"] = {
+        "nota": "T>1 = modello SOVRA-confidente (apply_temperature usa p^(1/T)).",
+        "controllo_di_sanita": "serie_a deve dare T~0.94 (Fase 6, PANCHINA.md voce 10)",
+        "tabella": T_tab}
+
+    ens: dict = {}
+    for league in LEAGUES:
+        P = {v: load_variant(league, v, TEST_SEASONS)
+             for v in ("hl180", "base", "hl730")}
+        if any(v is None for v in P.values()):
+            continue
+        b = P["base"]
+        o = b["result"].tolist()
+        e = 0.5 * P["hl180"][PC].to_numpy() + 0.5 * P["hl730"][PC].to_numpy()
+        d = ll_1x2(e, o) - ll_1x2(b[PC].to_numpy(), o)
+        loso = {}
+        for s in TEST_SEASONS:
+            m = (b["season"] != s).to_numpy()
+            mean, lo, hi, _ = boot(d[m], rng)
+            loso[f"senza_{s}"] = {"delta": round(mean, 6),
+                                  "ci95": [round(lo, 6), round(hi, 6)],
+                                  "verdetto": verdetto(lo, hi)}
+        ens[league] = {"loso": loso,
+                       "sottoinsiemi_con_segno_negativo":
+                           f"{sum(v['delta'] < 0 for v in loso.values())}/{len(loso)}",
+                       "per_match_delta": round(float(d.mean()), 6)}
+    # pooled sulle due leghe (stessa leva, stesso protocollo)
+    pool = []
+    for league in LEAGUES:
+        P = {v: load_variant(league, v, TEST_SEASONS)
+             for v in ("hl180", "base", "hl730")}
+        if any(v is None for v in P.values()):
+            continue
+        b = P["base"]
+        o = b["result"].tolist()
+        e = 0.5 * P["hl180"][PC].to_numpy() + 0.5 * P["hl730"][PC].to_numpy()
+        pool.append(ll_1x2(e, o) - ll_1x2(b[PC].to_numpy(), o))
+    if pool:
+        d = np.concatenate(pool)
+        mean, lo, hi, p = boot(d, rng)
+        ens["pooled_2_leghe"] = {
+            "n_partite": int(len(d)), "delta": round(mean, 6),
+            "ci95": [round(lo, 6), round(hi, 6)], "P_migliora": round(p, 4),
+            "p_due_code": round(2 * (1 - p), 4), "verdetto": verdetto(lo, hi),
+            "bonferroni": {
+                "n_test_pre_dichiarati": 8, "soglia": 0.00625,
+                "supera": bool(2 * (1 - p) < 0.00625)}}
+    out["2_ensemble_emivite_robustezza"] = ens
+
+    sv: dict = {}
+    for league in LEAGUES:
+        b = load_variant(league, "base", TEST_SEASONS)
+        v = load_variant(league, "cov_squad_value", TEST_SEASONS)
+        if b is None or v is None:
+            continue
+        b = b.copy()
+        b["giornata"] = b.groupby("season")["date"].rank(method="dense")
+        d = (ll_1x2(v[PC].to_numpy(), b["result"].tolist())
+             - ll_1x2(b[PC].to_numpy(), b["result"].tolist()))
+        r = {}
+        for tag, m in (("prime_5_giornate", (b.giornata <= 5).to_numpy()),
+                       ("dalla_6a_in_poi", (b.giornata > 5).to_numpy())):
+            mean, lo, hi, _ = boot(d[m], rng)
+            r[tag] = {"n": int(m.sum()), "delta": round(mean, 6),
+                      "ci95": [round(lo, 6), round(hi, 6)],
+                      "verdetto": verdetto(lo, hi)}
+        sv[league] = r
+    out["3_squad_value_inizio_stagione"] = sv
+    return out
+
+
 def stage_analyze() -> None:
     rng = np.random.default_rng(SEED)
     res: dict = {
@@ -708,6 +816,7 @@ def stage_analyze() -> None:
             p2.setdefault(f"{b}_VS_{a}", {})[league] = confronto(
                 league, da, db, rng, f"{b} vs {a}")
     res["parte2_covariate"] = p2
+    res["confutazioni"] = confutazioni(rng)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(res, indent=2, default=str))
