@@ -13,18 +13,25 @@ nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 73**.
 
 ## 1 · Gli snapshot partita (la fonte di verità)
 
-Tre file **versionati in git** — chi clona il repo ha esattamente gli stessi
-dati, senza rete (offline-first, §5 del CLAUDE.md):
+**Cinque** file **versionati in git** — chi clona il repo ha esattamente gli
+stessi dati, senza rete (offline-first, §5 del CLAUDE.md):
 
-| file | partite | stagioni | colonne |
-|---|--:|--:|--:|
-| `data/serie_a_matches.csv` | 3420 | 9 (2017-18 → 2025-26) | 38 |
-| `data/premier_league_matches.csv` | 3420 | 9 | 38 |
-| `data/la_liga_matches.csv` | 3420 | 9 | 38 |
+| file | partite | stagioni | colonne | note |
+|---|--:|--:|--:|---|
+| `data/serie_a_matches.csv` | 3420 | 9 (2017-18 → 2025-26) | 38 | |
+| `data/premier_league_matches.csv` | 3420 | 9 | 38 | |
+| `data/la_liga_matches.csv` | 3420 | 9 | 38 | |
+| `data/bundesliga_matches.csv` | **2754** | 9 | 38 | 18 squadre → 306 partite/stagione |
+| `data/ligue_1_matches.csv` | **3097** | 9 | 38 | 380 fino al 2022-23, 306 dal 2023-24 (riforma), **279 nel 2019-20** (campionato cancellato per COVID: dato reale, non un buco) |
 
-Lo **schema è identico** su tutte e tre le leghe (dalla Fase 60). Chiave di
-partita in tutto il progetto: `(season, home_team, away_team)`, nomi squadra
-canonicalizzati via `sources.TEAM_ALIASES`.
+Lo **schema è identico** su tutte e cinque le leghe — stesse colonne **e stesso
+ordine**. L'affermazione era imprecisa fino all'integrazione delle 5 leghe:
+Premier e Liga avevano le 5 colonne `*_open` in posizione 15-19 e la Serie A in
+29-33. Riordinate; e ora lo verifica `test_schema_identico_tra_leghe`.
+
+Chiave di partita in tutto il progetto: `(season, home_team, away_team)`, nomi
+squadra canonicalizzati via `sources.TEAM_ALIASES` (234 alias, di cui 104 per le
+due leghe nuove, verificati per identità).
 
 ### Le 38 colonne, per gruppo
 
@@ -33,13 +40,46 @@ canonicalizzati via `sources.TEAM_ALIASES`.
 | partita | `date, season, league, home_team, away_team` | football-data | 100% |
 | esito | `home_goals, away_goals, result` | football-data | 100% |
 | tiri in porta | `home_sot, away_sot` | football-data | 100% |
-| **quote chiusura** | `odds_home/draw/away, odds_over25/under25` | football-data (vedi §2) | 1X2: ~100% (−1 riga: Alaves-Sociedad, Fase 73) · O/U: 77.8% (**chiusura assente nel 2017-19**, vedi §5) |
+| **quote chiusura** | `odds_home/draw/away, odds_over25/under25` | football-data (vedi §2) | 1X2: ~100% (−2 righe dichiarate: Alaves-Sociedad 14/10/2017 e Bayern-Hannover 04/05/2019, entrambe senza `PSC*` alla fonte) · O/U: ~77% (**chiusura assente nel 2017-19 su tutte e 5 le leghe**, vedi §5) |
 | **quote apertura** | `odds_*_open` (5 colonne) | football-data (vedi §2) | 1X2: ~100% · O/U: ~100% (dalla Fase 73 l'apertura O/U 2017-19 è reale, `BbAv`) |
-| xG | `home/away_xg, home/away_npxg` | Understat | 100% |
-| stile | `home/away_ppda, home/away_deep` | Understat | 100% |
+| xG | `home/away_xg, home/away_npxg` | Understat | 100% meno **2 partite dichiarate**: Nantes-Toulouse 17/05/2026 (Ligue 1, `isResult=false`) e Holstein Kiel-Bochum 09/02/2025 (Bundesliga, **record segnaposto**: vedi §4-bis) |
+| stile | `home/away_ppda, home/away_deep` | Understat | come sopra |
 | valore rosa | `home/away_squad_value` | **player-scores** (Transfermarkt via Kaggle, Fase 67) + 13 celle 2025-26 da Transfermarkt diretto (Fase 70; vedi §4) | **100% su TUTTE le stagioni, incluse la 2025-26** — zero NaN residui |
 | assenze (STIMA, suffisso `_est`) | `home/away_absent_count_est, home/away_absent_value_est` | Transfermarkt + rose Understat | 100% (ma è una **stima dichiarata**, vedi §4) |
 | congestione | `home/away_rest_days_full, home/away_midweek_europe` | openfootball + snapshot | **100%** (Fase 68: gli esordi sono radicati coi calendari 'preludio' — massima serie 2016-17 + seconde serie) |
+
+---
+
+## 1-bis · I buchi, tutti quanti — e quelli che non sembrano buchi
+
+Censimento completo (integrazione delle 5 leghe): **7.353 celle vuote su
+612.218**, cioè l'1,2%. Ma il numero da solo inganna: il **99,3%** è **un buco
+solo**, la chiusura O/U del 2017-19, che non esiste alla fonte per nessuna delle
+cinque leghe (§5). Tolto quello restano **una cinquantina di celle**, ognuna con
+un nome e una causa:
+
+| cosa | dove | perché |
+|---|---|---|
+| 11 linee O/U di apertura | 3 La Liga, 6 Bundesliga, 2 Ligue 1 (2017-19) | overround impossibile alla fonte (fino a 1.339): svuotate dal guard bilaterale di `loader._pick_market_odds` |
+| 1 linea O/U di apertura | Bayern-Hoffenheim 24/08/2018 | assente alla fonte |
+| 2 terne 1X2 di chiusura | Alaves-Sociedad, Bayern-Hannover | colonne `PSC*` vuote nel grezzo |
+| 5 celle quota | Torino-Fiorentina 10/01/2022, Verona-Genoa 19/10/2020 | partite rinviate, quote mai aperte |
+| 12 celle xG/stile | 2 partite (vedi §1) | fonte non consolidata / record segnaposto |
+
+**E i buchi che NON sono `NaN`** — la categoria pericolosa, perché un valore che
+*sembra* una misura non lo dichiara mai:
+
+- **`midweek_europe` = 0 quando invece si giocava**: il calendario di club viene
+  da openfootball, che non copre tutte le coppe. Censite **1.603 celle** a zero
+  che dovrebbero essere 1, e ~1.700 valori di riposo sbagliati di conseguenza
+  (lacune: Europa/Conference League 2025-26 su tutte e 5 le leghe, DFB-Pokal
+  2016-18, Coupe de France quasi ovunque). Non ancora corretto: le righe di
+  recupero esistono ma la fonte (Wikipedia) non è primaria. **Dichiarato.**
+- **un xG segnaposto** su 16.110 partite (§4-bis), ora intercettato da un guard.
+- **i conteggi tiri di football-data non sono confrontabili fra stagioni**: in
+  Serie A la somma passa da 5.359 (2017-18) a 4.269 (2018-19) e torna a 5.326
+  (2021-22), con tutte le righe popolate. Non è un buco: è un cambio di raccolta
+  a monte. Poco rilevante oggi (il blend usa l'xG, non i tiri), ma va saputo.
 
 ---
 
@@ -146,6 +186,31 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 
 ---
 
+## 4-bis · Il record SEGNAPOSTO, e il guard che lo intercetta
+
+Un caso solo, ma insegna una categoria intera. **Holstein Kiel-Bochum
+09/02/2025** (Bundesliga) aveva `xG 2.0 / 2.0`: plausibile, e **identico alla
+fonte** — nessun confronto snapshot↔fonte poteva accorgersene. Ma la lista
+tiro-per-tiro di Understat è **vuota su entrambi i lati**, mentre football-data
+conta 3+6 tiri in porta. La fonte non ha mai acquisito la partita e ha scritto
+valori di comodo: xG = gol esatti, npxG = gol meno un rigore forfettario, `ppda`
+`att=0 def=0`, `deep` 0, previsione degenere 0/1/0.
+
+Le celle sono ora **`NaN` dichiarato**, e `understat._e_segnaposto` intercetta il
+caso in ingresso richiedendo **tutte** le firme insieme — così su 16.110 partite
+accende una riga sola e lascia intatte le tre partite davvero sterili con
+`deep = 0`.
+
+Cercato con **nove firme indipendenti** (xG intero uguale ai gol, cifre povere,
+forecast degenere, ppda nulla, deep zero, xPts intero, rigore finto, history
+mancante, xG zero con tiri) su tutte le 16.110 partite: **una sola riga**
+positiva, che ne accende 7 su 9. Prova di potenza con 500 segnaposto piantati
+artificialmente: la batteria li riscopre tutti. Limite dichiarato: riscopre i
+segnaposto *totali*, non le degradazioni parziali (con xG residuo al 90% ne
+riscopre lo 0,2%).
+
+---
+
 ## 5 · ⚠️ STIME dichiarate (`data/estimates/`)
 
 Dove un dato di mercato **non esiste nelle fonti**, il progetto può stimarlo
@@ -162,7 +227,7 @@ le tre che contano:
 
 | file | cosa stima | metodo | errore atteso (validato walk-forward) |
 |---|---|---|---|
-| `ou_close_2017_19.csv` (2279 righe, 3 leghe) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti (l'**apertura** O/U di quelle stagioni è invece REALE — `BbAv`, Fase 73 — negli snapshot: `odds_over25_open`) | regressione logit della chiusura su (linea O/U **di apertura** + movimento 1X2 open→close), fit pooled su 7978 partite 2019-20+ (Fasi 62/62-bis; imbattuta in Fasi 72/73) | **MAE ~0.012** in probabilità; corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile (notizie puro-totali) |
+| `ou_close_2017_19.csv` (**3638 righe, 5 leghe**) | la **chiusura O/U 2.5** delle stagioni 2017-18/2018-19, assente nelle fonti su tutte e cinque le leghe (l'**apertura** O/U di quelle stagioni è invece REALE — `BbAv`, Fase 73 — negli snapshot: `odds_over25_open`) | regressione logit della chiusura su (linea O/U **di apertura** + movimento 1X2 open→close), fit pooled su **12.457** partite 2019-20+ e **5 leghe** (il pooled a 5 batte quello a 3 con CI conclusivo: le due leghe nuove migliorano la stima anche per le tre storiche) | **MAE ~0.014 nel REGIME D'USO**, ~0.012 in interpolazione — e conta il primo: la chiusura O/U del 2017-19 non esiste, quindi i coefficienti vengono per forza da stagioni SUCCESSIVE, e in quel regime l'errore è 15-25% più alto. Corr col movimento vero 0.75-0.86; ~35-45% del movimento resta incatturabile |
 | `squad_value_2017_26.csv` (**0 righe** — erano 73 alla Fase 66, 13 alla Fase 67; **svuotato alla Fase 70**: le ultime 13 sostituite da dati REALI Transfermarkt) | ormai nessuna: file mantenuto vuoto e rigenerabile (`build_estimates.py` produce 0 righe se non ci sono buchi) | ibrido validato LOO/leave-team-out (Fase 66), storico se il buco dovesse riaprirsi in futuro | — (nessuna stima attiva) |
 | `open_sparse_1x2_ou.csv` (**2 righe**, Fase 69; era 3, −1 alla Fase 73) | l'**apertura** (1X2 e/o O/U) delle partite sparse senza apertura vera, fuori dal buco sistemico O/U 2017-19 | bakeoff (5 metodi, 5-fold CV su 10.258/7.978 coppie reali): vince la regressione in **spazio logit pooled** (chiusura→apertura); nessun blend migliora | **MAE ~0.016** (1X2, 3 esiti) / **~0.020** (O/U) — molto più affidabile della (ex) stima squad_value; rapporto apertura↔chiusura quasi identità (corr 0.96-0.99) |
 

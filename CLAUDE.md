@@ -42,10 +42,24 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      probabilità di modelli diversi non si sommano più in modo consistente): è
      un trade-off da fare **consapevolmente**, accettabile se il bersaglio è la
      bontà per-caso e non un prezzo arbitrage-free su tutti i mercati insieme;
-   - alcuni mercati sono più promettenti di altri per un modello nuovo: il
-     **GG/NG non ha quote nei dati** (football-data non le include), quindi è
-     l'unico dove non possiamo dimostrare l'efficienza del mercato — l'unico con
-     "spazio" non ancora chiuso dai risultati Fasi 14/16/20. Priorità lì.
+   - ~~alcuni mercati sono più promettenti di altri: il **GG/NG non ha quote nei
+     dati**, quindi è l'unico dove non possiamo dimostrare l'efficienza del
+     mercato — l'unico con "spazio" non ancora chiuso. Priorità lì.~~
+     **PREMESSA CADUTA (integrazione delle 5 leghe).** Le quote GG/NG di
+     chiusura sono state trovate — un book (1xBet) che football-data non
+     contiene, 3.652 partite del 2017-19 su tutte e 5 le leghe — e la domanda
+     è stata misurata invece che rimandata. Risposta: **il mercato GG/NG è
+     informativo** (log-loss 0.6840 contro 0.6921 di baseline, CI conclusivo)
+     anche se vale **un terzo** dell'O/U 2.5 dello stesso book e costa 1,7 punti
+     di margine in più; **il nostro miglior prezzo lo pareggia e non lo batte**
+     (6 varianti su 6 con CI a cavallo dello zero); **il DC perde di netto**
+     (+0.0104, CI [+0.0063, +0.0145]) e il test di encompassing mostra che il
+     book lo **ingloba** (α\*=0 nel 70% dei fit — esattamente come la Fase 16
+     sull'1X2). Nessuna leva aiuta su nessuno dei due fronti (§1.9).
+     **Lo "spazio" non era una proprietà del mercato: era la nostra ignoranza.**
+     Il GG/NG resta interessante perché il book non lo quota nelle stagioni
+     recenti — ma va trattato come gli altri mercati derivati, non come una
+     frontiera.
    - **Mercati standard = Tier 1** (d'ora in poi): 1X2, O/U 1.5/2.5/3.5, GG/NG,
      doppie chance, total-squadra (casa/ospite O0.5/1.5), clean sheet, vince-a-zero,
      scarto ≥2, multigol, risultato esatto. Ogni backtest/analisi li copre tutti
@@ -257,7 +271,9 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fase93_discrimination.csv: deficit di discriminazione per
                  PARTITA (5.083 righe, Fase 93) — input riutilizzabile per
                  affettare il gap in altri modi senza rifare 18 backtest
-data/            serie_a_matches.csv (SNAPSHOT congelato, versionato)
+data/            {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
+                 (SNAPSHOT congelati, versionati — schema IDENTICO, ordine
+                 colonne compreso: lo verifica test_schema_identico_tra_leghe)
                  football.db (SQLite, rigenerabile, NON versionato)
 docs/DIARIO.md   narrazione passo-passo con ragionamento (le decisioni e il perché)
 docs/DATI.md     catalogo di TUTTI i dati (reali e stimati): copertura, semantica
@@ -319,6 +335,66 @@ tests/           test unitari
 
 ---
 
+## 5-bis. Regole sui dati sporchi (non negoziabili)
+
+Nate durante l'audit riga-per-riga delle 5 leghe, pagate tutte con un errore
+vero. Valgono per ogni dato che entra nel progetto.
+
+**R1 · Il dato è il risultato del CAMPO, non quello del tribunale.** Dove una
+partita è stata riassegnata a tavolino, lo snapshot registra ciò che è successo
+in campo: i mercati si regolano sul fischio finale, ed è quello il processo che
+il modello stima. Ogni caso analogo va istruito **singolarmente** — mai una
+regola automatica — e registrato. *(Caso: Union Berlin-Bochum 14/12/2024, 1-1
+sul campo, 0-2 assegnato dal tribunale sportivo.)*
+
+**R2 · Dove la fonte primaria non copre, si usa una fonte secondaria
+dichiarata**, con la scala misurata contro la primaria dove entrambe esistono —
+mai innestata in silenzio. *(Caso: valori rosa 2025-26 da Transfermarkt.)*
+
+**R3 · Nessuna modifica a mano ai dati, mai.** Ogni correzione vive in un
+registro (cosa, perché, fonte, chi ha deciso, quando) e viene applicata da uno
+script **idempotente** che verifica il valore-prima cella per cella e si ferma
+se non corrisponde. Un numero cambiato a mano è un numero che nessuno potrà più
+spiegare.
+
+**R4 · Un'anomalia si dichiara anche quando NON è un errore.** Metà delle cose
+trovate in un audit sono legittime e sorprendenti: vanno scritte lo stesso,
+altrimenti la sessione dopo le ri-trova e le "corregge".
+
+**R5 · Procedura per una riga che sembra corrotta**, in quest'ordine:
+  1. **spiegare prima di accusare** — l'impossibilità fisica va verificata sul
+     dato più fine della *stessa* fonte, mai dedotta da una regola generale.
+     *(Lezione pagata: un xG di 0.00 con un gol segnato sembrava impossibile;
+     il dato tiro-per-tiro mostrava 0 tiri e un autogol avversario. Il dato era
+     giusto, era il controllo a essere cieco.)*
+  2. **diagnosticare con informazione indipendente** — un'altra colonna, un'altra
+     fonte, un altro mercato della stessa partita;
+  3. **cercare il dato vero**, e cercarlo davvero: prima dentro la fonte (altri
+     formati, altre colonne), poi fuori, rispettando i `robots.txt`;
+  4. **stimare solo se il dato vero non esiste**, con errore misurato dove la
+     verità esiste e una baseline onesta di confronto;
+  5. **registrare tutto, errori compresi** — le correzioni ritirate restano nel
+     registro con il motivo, altrimenti la sessione dopo le rifà.
+
+**R6 · Il buco peggiore non è il `NaN`: è il finto pieno.** Un dato mancante e
+dichiarato è innocuo. Il pericolo è il valore che *sembra* una misura e non lo
+è: un segnaposto della fonte, uno zero che significa "non lo so", una colonna
+copiata da un'altra epoca. Nessun confronto snapshot-contro-fonte lo vede,
+perché il dato **coincide** con la fonte. Si scopre solo scendendo al livello
+più fine (il tiro-per-tiro sotto l'xG aggregato) o incrociando fonti
+indipendenti. Ogni audit deve cercarli esplicitamente. *(Casi trovati: un xG
+segnaposto su 16.110 partite; 1.603 celle `midweek_europe` a 0 per partite di
+coppa che il calendario non copriva.)*
+
+**R7 · Ogni statistica di testa deve avere il suo intervallo, e ogni "non c'è
+effetto" la sua misura di potenza.** In cinque casi su sette, in una verifica
+avversariale sistematica, il difetto non era il numero ma la statistica scelta
+per raccontarlo: un conteggio di celle che non distingue il vero dal placebo, un
+ECE senza intervallo letto come conferma, una dicotomia fra "significativo" e
+"non significativo" mai testata come differenza.
+
+---
+
 ## 6. Stato corrente e prossimi passi
 
 > Questa sezione è un **istantanea sintetica** dello stato attuale. Il racconto
@@ -327,21 +403,33 @@ tests/           test unitari
 > `README.md`; la rosa dei modelli in `docs/PANCHINA.md`. Aggiorna QUESTA
 > istantanea quando cambia lo stato di fondo, non a ogni fase.
 
-**Dove siamo (istantanea aggiornata alla Fase 99).** Il progetto è passato da "un modello Dixon-Coles sui
-gol" a **due motori complementari**, su **3 leghe** (Serie A, Premier, La Liga,
-9 stagioni ciascuna):
+**Dove siamo (istantanea aggiornata alla Fase 99 + integrazione delle 5 leghe).**
+Il progetto è passato da "un modello Dixon-Coles sui gol" a **due motori
+complementari**, su **5 leghe** (Serie A, Premier, La Liga, **Bundesliga,
+Ligue 1**), 9 stagioni ciascuna, **16.111 partite**:
 
 1. **Dixon-Coles gol+xG** (`src/models/dixon_coles.py`) — il predittore
    *standalone*, senza quote: config per-lega in `src/config.py`
-   (emivita 365g, shrinkage 1.5, blend xG α=0.75, δ neopromosse 0.23/0.33/0.22),
+   (emivita 365g, shrinkage 1.5, blend xG α=0.75, δ neopromosse
+   0.23/0.33/0.22/**0.28/0.19**),
    + la **φ(|λ−μ|)** della Fase 35 sulla famiglia-pareggio. Batte nettamente le
    baseline ma **non il mercato** (gap 1X2 +0.0165 in Serie A; ordine simile
    nelle altre leghe).
 2. **Market-implied** (`src/models/market_implied.py`) — il *motore di pricing*:
    inverte le quote 1X2+O/U nei λ,μ del mercato e ne deriva **ogni mercato Tier
-   1** dalla matrice DC. Batte il DC-da-gol su 13/14 mercati su tutte e 3 le
-   leghe (Fasi 26/76). È il **titolare** quando ci sono le quote; il DC è il
-   fallback senza quote.
+   1** dalla matrice DC. Batte il DC-da-gol su 13/14 mercati sulle 3 leghe
+   storiche (Fasi 26/76) e su **15/15** nelle due nuove; funziona anche
+   partendo dall'**apertura** (25/25 mercati contro il DC). È il **titolare**
+   quando ci sono le quote; il DC è il fallback senza quote.
+
+**Le due leghe nuove non hanno cambiato le conclusioni: le hanno replicate.**
+Il DC batte la baseline e non il mercato (gap +0.0181 e +0.0190, dentro la
+forchetta delle altre); le curve di ri-taratura sono piatte 5 leghe su 5; e
+**nessuna leva del mercato si replica**: router θ negativo (0/25 mercati),
+φ(|λ−μ|) e power-devig bocciati, beat-the-close chiuso (in Bundesliga
+*peggiora* con CI conclusivo). Il θ divide le leghe in due famiglie — "latine"
+≈1.24 dove la sotto-dispersione paga, e Premier/Bundesliga/Ligue 1 ≈1.08-1.10
+dove non paga. Il tetto è **informativo**, e ora è misurato su 5 campionati.
 
 **⚠️ Diagnosi CORRETTA alla Fase 92 (era invertita per 80 fasi).** Il gap col
 mercato **NON** «vive quasi tutto nel pareggio»: la scomposizione esatta
@@ -455,6 +543,14 @@ numero** (regola §2-bis), perché ognuno dipende dai dati di *quella* lega:
 
 Ogni ri-taratura è una fase a sé, con blocco 📐 e riga nel registro. Non esiste "il
 modello": esiste *il modello tarato per la lega X*.
+
+**Bundesliga e Ligue 1 sono state aggiunte** dopo Premier e Liga, con la stessa
+procedura ma senza bundle manuali: il provider era tornato raggiungibile, quindi
+i dati vengono scaricati e sono stati **verificati riga per riga contro la
+fonte** (0 differenze su gol/date/tiri/quote/xG). δ per-lega 0.28 e 0.19; tutto
+il resto identico. Esito: il modello trasferisce, l'edge no — 5 leghe su 5.
+Il dettaglio in `docs/DIARIO.md`; le regole sui dati sporchi nate da quel lavoro
+in §5-bis.
 
 **Premier League e La Liga sono state aggiunte (Fasi 54-57).** Dati grezzi caricati
 a mano come bundle in `files/` (rete bloccata) → snapshot congelati

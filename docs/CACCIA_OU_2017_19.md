@@ -1,4 +1,51 @@
-# Caccia alle quote O/U 2017-19 — specifica del dato e piano di ricerca
+# Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
+
+> ## ✅ ESITO FINALE — pista chiusa con successo, e con un risultato scomodo
+>
+> **Il dato vero esiste ed è stato scaricato**: `footiqo.com` pubblica le quote
+> di **chiusura del book 1xBet** — un bookmaker che football-data non contiene —
+> per **3.652 partite su 3.652** della finestra bersaglio, su **cinque** leghe
+> (nel frattempo sono diventate cinque), copertura 100% su tutte e 10 le coppie
+> lega-stagione, endpoint permesso dal suo `robots.txt`.
+>
+> **L'errore che aveva chiuso le due cacce precedenti era l'asse di ricerca**:
+> si era sempre cercato *chi ri-esporta football-data*, e ogni candidato
+> ereditava lo stesso buco perché la sorgente a monte è la stessa. Bastava
+> cercare **un book che football-data non ha**.
+>
+> **Validazione** (dettaglio in `docs/DIARIO.md`): è davvero una chiusura, non
+> l'apertura rietichettata né una ricostruzione da modello. Correlazione 0.9977
+> con la chiusura vera Pinnacle contro 0.9909 con l'apertura — e la scala di
+> riferimento è che due book *veri* allo stesso istante correlano 0.998, mentre
+> apertura-contro-chiusura sta a 0.991. Riproduce il **movimento 1X2 partita per
+> partita** (corr 0.88), ha un margine (1.0269) che non coincide con nessun book
+> di football-data, e l'ultima cifra decimale è non uniforme (30,5% finisce per
+> 0) come un book vero e non come una media o un modello. Zero righe identiche a
+> Pinnacle. Ligue 1 2019-20 ha 279 righe: il troncamento COVID esatto.
+>
+> **E però NON è stato inserito negli snapshot**, per una ragione che vale la
+> pena di scrivere: è la chiusura di **un solo book**, mentre gli snapshot dal
+> 2019-20 contengono la **media multi-book**. Come proxy di quella media il book
+> grezzo è *peggiore della stima che già avevamo* (MAE 0.0156 contro ~0.012,
+> misurato sulla stagione 2019-20 dove esistono entrambi), e inserirlo creerebbe
+> una **rottura di regime a metà colonna**. Trovare il dato vero non significa
+> automaticamente che sia il dato giusto da usare.
+>
+> **Il ritrovamento collaterale vale più del bersaglio**: la stessa fonte porta
+> le quote di chiusura **GG/NG** al 100%. Il progetto dichiarava quel mercato
+> «l'unico dove non possiamo dimostrare l'efficienza del mercato». Ora si può, e
+> la risposta è che il mercato GG/NG è informativo e il nostro prezzo lo pareggia
+> senza batterlo (`CLAUDE.md` §1.8, riscritto).
+>
+> **Cosa resta aperto**: la chiusura O/U 2017-19 come *media multi-book* non
+> esiste da nessuna parte, e resta coperta dalla stima dichiarata in
+> `data/estimates/ou_close_2017_19.csv` (ora su 5 leghe, 3.638 righe).
+>
+> Il resto del documento è la storia della caccia, conservata perché il metodo —
+> e soprattutto gli esiti negativi — restano validi per la prossima ricerca.
+
+---
+
 
 Il buco di dati reali (vedi [DATI.md](DATI.md)): le quote Over/Under 2.5 di
 **chiusura** delle stagioni **2017-18 e 2018-19** nelle 3 leghe — già coperte

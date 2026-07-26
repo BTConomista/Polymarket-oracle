@@ -54,10 +54,21 @@ import pandas as pd
 # Serie A e La Liga: scontri diretti PRIMA della differenza reti generale.
 # Premier League: differenza reti, poi gol fatti (gli scontri diretti NON sono
 # un criterio di classifica; a parita' totale e' previsto uno spareggio).
+# Bundesliga: DFL-Spielordnung §2 c.3 lett. c) — differenza reti generale, poi
+#   gol fatti, poi scontri diretti. Come la Premier, NON come la Serie A.
+# Ligue 1: LFP Reglement des Competitions, art. 518 ter — differenza reti
+#   generale, poi punti negli scontri diretti, poi differenza reti negli
+#   scontri diretti, ... , gol fatti. E' un TERZO ordine, diverso da entrambi
+#   quelli gia' presenti: la differenza reti viene prima degli scontri diretti
+#   (come in Premier) ma gli scontri diretti vengono prima dei gol fatti (come
+#   in Serie A). I primi tre criteri sono stabili su tutta la finestra dati
+#   2017-18 -> 2025-26; la riforma 2025-26 tocca solo i criteri dal 4o in giu'.
 TIEBREAK_RULES: dict[str, tuple[str, ...]] = {
     "serie_a": ("h2h", "gd", "gf"),
     "la_liga": ("h2h", "gd", "gf"),
     "premier_league": ("gd", "gf"),
+    "bundesliga": ("gd", "gf", "h2h"),
+    "ligue_1": ("gd", "h2h", "gf"),
 }
 DEFAULT_TIEBREAK = ("gd", "gf")
 
