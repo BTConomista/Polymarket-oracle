@@ -226,7 +226,7 @@ dispersione per-squadra).*
 
 ---
 
-### Arco 11 — I mercati non derivabili da una matrice, e la revisione della diagnosi (Fasi 89–98)
+### Arco 11 — I mercati non derivabili da una matrice, e la revisione della diagnosi (Fasi 89–99)
 
 *Il simulatore di stagione apre la prima famiglia di mercati che NON si deriva
 dalla matrice di una partita (Fase 89), subito ridimensionata dall'audit (Fase
@@ -238,8 +238,9 @@ forza in-season (Fase 94) è la prima correzione adottata su un solo mercato;
 Polymarket e Smarkets diventano il primo benchmark ESTERNO sugli outright (Fasi
 95, 95-bis, 97). Fuori dalla matrice dei gol si aprono corner e cartellini (Fase
 96). La Fase 98 chiude sette fronti in parallelo e trova, per via trasversale,
-la **deriva di livello** dei conteggi: la leva col miglior rapporto
-valore/costo, che nessuno stava cercando.*
+la **deriva di livello** dei conteggi — che la Fase 99 misura e **boccia**:
+il bias di fold non persiste (10/18 stesso segno), quindi non era una deriva ma
+rumore aggregato. Misurato ≠ prevedibile.*
 
 - [Fase 89 — Il mercato CAMPIONE DI STAGIONE: il primo mercato non derivabile da una matrice](#fase-89--il-mercato-campione-di-stagione-il-primo-mercato-non-derivabile-da-una-matrice)
 - [Fase 89-bis — Perché sbagliamo il campione: la separazione «titolo confermato / titolo che cambia»](#fase-89-bis--perché-sbagliamo-il-campione-la-separazione-titolo-confermato--titolo-che-cambia)
@@ -253,6 +254,7 @@ valore/costo, che nessuno stava cercando.*
 - [Fase 96 — Fuori dalla matrice dei gol: corner e cartellini (e l'arbitro, il primo dato ortogonale)](#fase-96--fuori-dalla-matrice-dei-gol-corner-e-cartellini-e-larbitro-il-primo-dato-ortogonale)
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
+- [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
 
 ---
 
@@ -10797,6 +10799,146 @@ Script: `_run_counts_nb.py`, `_run_referee_feature.py`,
 `_run_prospective_power.py`, `_run_polymarket_tier3.py`, `_run_lineup_proxy.py`,
 `_run_line_movement.py`, `_run_listino_validazione.py`. Output dati:
 `experiments/listino_validazione.json`. Diagnostici: nessun run in `runs.jsonl`.
+
+---
+
+## Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)
+
+**Obiettivo.** La Fase 98 aveva chiuso indicando la **deriva di livello** dei
+conteggi come *«la leva col miglior rapporto valore/costo, e nessuno la stava
+cercando»*: tre fronti indipendenti avevano misurato lo stesso difetto (bias di
+media fuori campione: Premier cartellini **−0.201**, Serie A corner **+0.352**,
+listino corner **+0.117** su tutte e quattro le soglie). Un bias costante su
+tutte le linee è la firma di un **centro sbagliato**, non di un fatto sui dati.
+Qui la si implementa e si misura. Risultato: **il lead non regge**, e il motivo
+è più istruttivo del lead stesso.
+
+**Ragionamento / ipotesi.** L'emivita 365g è tarata sui **gol**; i conteggi
+derivano nel tempo (i cartellini crescono, i corner calano), quindi il livello
+del modello della Fase 96 dovrebbe restare indietro. Se è così, una costante
+moltiplicativa `c` stimata **solo sul passato** deve (a) azzerare il bias e
+(b) migliorare il log-loss sui mercati Over/Under.
+
+**Alternative considerate — cinque, tutte walk-forward.**
+
+| stimatore | come |
+|---|---|
+| `c=1` | controllo: il modello della Fase 96 così com'è |
+| `c_oos` | Σreali/Σattesi su **tutte** le stagioni di test già passate |
+| `c_last2` | idem sulle **ultime due** (compromesso memoria/rumore) |
+| `c_last` | idem sulla **sola** stagione precedente (insegue di più, più rumoroso) |
+| `c_trend` | OLS della media stagionale sull'indice di stagione, **solo train**, estrapolata di un passo — l'unico disponibile già dal primo fold |
+
+più la versione **alla radice** invece che a valle: l'**emivita scelta fold per
+fold** minimizzando il log-loss sulle stagioni di test già passate (griglia
+60–720g), che è la forma onesta dello sweep diagnostico (leggere la curva del
+bias e prenderne il minimo sarebbe selezione sui dati di test).
+
+**Risultato — negativo su tutta la linea.** 7.050 partite OOS, 21 fold, CI
+bootstrap appaiato per-partita (5.000 ricampionamenti), `Δ > 0` = migliora.
+
+| mercato | stimatore | bias dopo | log-loss | Δ | IC95 | esito |
+|---|---|--:|--:|--:|---|---|
+| corner | `c=1` | +0.1234 | 0.64900 | — | — | controllo |
+| corner | `c_oos` | −0.0567 | 0.64961 | −0.00062 | [−0.00198, +0.00077] | no |
+| corner | `c_last2` | +0.0162 | 0.64990 | −0.00091 | [−0.00239, +0.00056] | no |
+| corner | `c_last` | +0.0239 | 0.65075 | −0.00176 | [−0.00360, +0.00006] | no |
+| corner | `c_trend` | −0.0284 | 0.65216 | −0.00316 | [−0.00475, −0.00155] | **peggiora, conclusivo** |
+| cartellini | `c=1` | +0.0424 | 0.60692 | — | — | controllo |
+| cartellini | `c_oos` | +0.0724 | 0.60865 | −0.00173 | [−0.00318, −0.00027] | **peggiora, conclusivo** |
+| cartellini | `c_last2` | +0.0849 | 0.60917 | −0.00225 | [−0.00443, −0.00005] | **peggiora, conclusivo** |
+| cartellini | `c_last` | +0.0527 | 0.61180 | −0.00488 | [−0.00759, −0.00206] | **peggiora, conclusivo** |
+| cartellini | `c_trend` | +0.1692 | 0.61155 | −0.00464 | [−0.00644, −0.00293] | **peggiora, conclusivo** |
+
+**Nessuno** dei cinque migliora; **sei celle su otto peggiorano con IC
+conclusivo**. E la versione alla radice non salva nulla: l'emivita scelta fold
+per fold sul solo passato dà **−0.00004** [−0.00191, +0.00183] sui corner e
+**−0.00034** [−0.00179, +0.00109] sui cartellini — un lancio di moneta
+(P>0 = 0.484 e 0.325).
+
+**La spiegazione, in un numero: il bias di fold NON persiste.** È la diagnosi
+che decide tutto, perché *qualunque* correzione stimata sul passato funziona se e
+solo se il bias è persistente:
+
+| mercato | corr(bias_t, bias_{t−1}) | IC95 | stesso segno | sd del bias | bias pooled |
+|---|--:|---|:-:|--:|--:|
+| corner | +0.2299 | [−0.2544, +0.6715] | **10/18** | 0.3558 | +0.1387 |
+| cartellini | +0.1915 | [−0.3446, +0.5830] | **10/18** | 0.3841 | +0.0383 |
+
+Dieci volte su diciotto il segno si ripete: **una monetina**. E la deviazione
+standard del bias per fold è **2,6×** il bias pooled sui corner e **10×** sui
+cartellini. Cioè: il «bias costante su tutte le linee» visto da tre fronti della
+Fase 98 era costante **fra le linee di uno stesso pool**, non **nel tempo** — è
+la media di una serie che cambia segno di stagione in stagione. Sui corner della
+Liga i bias per fold sono +0.41, +0.73, −0.42, −0.27, −0.07, −0.20, −0.17: la
+media pooled (−0.03) non descrive nessuna stagione.
+
+**La seconda lezione: un bias sulla MEDIA non è un bias sulle PROBABILITÀ.** I
+cartellini lo mostrano in modo netto. Il modello sovrastima il conteggio di
+**+0.042** cartellini/partita, eppure la calibrazione dei mercati era già
+ottima: scarto **+0.0047 / −0.0034 / +0.0008** sulle tre linee. Applicare `c_oos`
+(1.0092 medio) ha **rotto** una calibrazione che era a posto: **+0.0097 / +0.0026
+/ +0.0064**. Il passaggio media → P(Over) è non lineare e mediato sulla
+dispersione delle medie per-partita: correggere il centro *aggregato* non
+corregge — e può guastare — le probabilità *marginali*.
+
+**L'unica cella dove la correzione ha senso è quella dove il bias era enorme.**
+Serie A corner: bias **+0.352 → +0.031**, Δ **+0.00271** [−0.00051, +0.00590],
+P>0 = 0.95 — **non conclusivo**, e le altre due leghe peggiorano con IC
+conclusivo (Liga −0.00342, Premier −0.00105). Quindi nemmeno una versione
+per-lega si salva: sarebbe selezione a posteriori su 7 fold.
+
+**La domanda della Fase 98 («la forma NB serve dopo che il centro è a posto?»)
+resta senza il suo controfattuale**, perché il centro non si mette a posto. Per
+quel che vale, il guadagno della NB è **invariante** alla correzione: +0.00103 →
++0.00106 sui corner, +0.00088 → +0.00067 sui cartellini. Le due leve non si
+sovrappongono, semplicemente nessuna delle due sposta molto.
+
+**Lezione / cosa ne consegue.**
+
+1. **Il lead della Fase 98 è chiuso, negativo.** Va scritto dov'era stato
+   annunciato (README, PISTE §7-bis, PANCHINA, `lavoro_aperto.md` §8): l'avevo
+   indicato come «il miglior rapporto valore/costo aperto», e non lo è.
+2. **Regola di metodo, nuova.** Un bias misurato su un **pool** non autorizza una
+   correzione **prospettica**: prima si misura se **persiste** (autocorrelazione
+   fra fold, con CI). È l'analogo, sui conteggi, di ciò che la Fase 86-bis aveva
+   trovato sul θ per-squadra (la volatilità *persiste* ma non è *sfruttabile*) e
+   di quello che la Fase 98 stessa aveva imposto per le feature moltiplicative
+   (il controllo di solo livello). Tre casi diversi, la stessa forma: **misurato
+   ≠ prevedibile**.
+3. **Il tetto regge anche qui.** Fuori dalla matrice dei gol il modello di
+   conteggio della Fase 96 è già al suo limite: né la forma (NB, Fase 98) né il
+   centro (questa fase) spostano più del terzo decimale.
+
+### 📐 Il modello in dettaglio
+
+- **Media del conteggio (invariata, Fase 96)** — per la coppia (h, a):
+  `m = base·hadv·att[h]·dfn[a] + base·aadv·att[a]·dfn[h]`, con `base` media
+  pesata per emivita 365g, `att`/`dfn` in forma chiusa con shrinkage `k = 1.5·10`
+  verso `base`, e il vincolo `hadv + aadv = 2` (il fix della Fase 96: senza il
+  fattore-ospite complementare compare un bias costante su tutte le linee — la
+  stessa firma che questa fase ha poi dimostrato essere, nel resto, rumore).
+- **Correzione di livello**: `m' = c·m`, con
+  `c_oos = Σ_{fold passati} y / Σ_{fold passati} m` (e le varianti `c_last2`,
+  `c_last` sugli ultimi 2 e 1 fold). Al primo fold, che non ha passato OOS,
+  `c = 1` per costruzione: nessun look-ahead.
+- **`c_trend`**: `ȳ_s = a + b·s` stimata OLS sulle medie stagionali delle sole
+  stagioni di **train**; `c_trend = (a + b·S) / mean(m_train)` dove `S` è
+  l'indice della stagione di test. È l'unico che modella la deriva invece di
+  mediarla; è anche il **peggiore** (Δ −0.00316 e −0.00464, entrambi conclusivi),
+  perché estrapola una retta da una serie che non ha pendenza stabile.
+- **Emivita walk-forward**: per ogni fold `t`,
+  `hl*(t) = argmin_{hl ∈ {60…720}} mean(logloss sulle stagioni di test < t)`;
+  al primo fold `hl* = 365`. Le scelte oscillano (60g in 8 fold, 720g in 3):
+  ulteriore sintomo dell'assenza di un vero segnale temporale.
+- **Persistenza del bias**: `bias(l, s) = mean(m) − mean(y)` per lega × stagione;
+  `corr(bias_t, bias_{t−1})` sulle 18 coppie consecutive (3 leghe × 6 transizioni),
+  CI bootstrap sulle coppie. `P(Over ln) = 1 − F_Poisson(⌊ln⌋; m)` e
+  `1 − F_NB(⌊ln⌋; r, r/(r+m))`, con `r` stimato MLE sul solo passato (Fase 98).
+
+Script: `scripts/_run_counts_level.py` (riusa `_run_counts_nb.py` per modello,
+stima di `r` e metriche: la media è **la stessa** della Fase 96, cambia solo la
+costante). Diagnostico: nessun run in `runs.jsonl`.
 
 *Questo diario viene aggiornato ad ogni fase. Per i dettagli tecnici e i comandi
 vedi il [README](../README.md); per i risultati grezzi e replicabili

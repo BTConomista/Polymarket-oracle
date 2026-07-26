@@ -254,7 +254,7 @@ mercati corner/cartellini sono prezzabili walk-forward. La forma **binomiale
 negativa** (Fase 98) è la giusta — i conteggi sono SOVRA-dispersi, l'opposto dei
 gol (Fase 27) — ma il guadagno è **conclusivo e trascurabile** (corner +0.00103,
 cartellini +0.00088). **La leva vera scoperta qui è un'altra**: la **deriva di
-livello** (vedi pista 7-bis).
+livello** (vedi pista 7-bis) — che la **Fase 99 ha però misurato e bocciato**.
 **Chiuso**: l'**arbitro** come feature moltiplicativa (Fase 98) — il dato
 `Referee` esiste solo in Premier (3420/3420, 0/3420 in SA e Liga) e nessun IC
 esclude lo zero; l'85% del guadagno apparente era **solo livello**. Il segnale
@@ -262,7 +262,7 @@ esiste ma è sovra-esteso ~2.5× (`b = 0.401` [+0.096,+0.706]) e vale il 3.7%
 della varianza: non ripescabile senza una modellazione dell'evoluzione temporale
 del tasso di un arbitro.
 
-### 7-bis. Correzione di LIVELLO dei conteggi (LEAD, Fase 98)
+### 7-bis. Correzione di LIVELLO dei conteggi — ❌ **CHIUSA NEGATIVA (Fase 99)**
 **Dato**: nessun dato nuovo — è una costante train-only sopra il modello di
 conteggio della Fase 96.
 **Perché**: tre fronti della Fase 98 che non si parlavano hanno misurato lo
@@ -272,10 +272,32 @@ soglie. L'**emivita 365g non insegue la deriva temporale dei conteggi** (i
 cartellini crescono, i corner calano), e il bias residuo è ciò che *causa* i
 3 peggioramenti conclusivi della NB e le 3 uniche linee non conclusive del
 listino.
-**Valore atteso**: sui cartellini Premier la sola costante di livello vale
-**−0.00308** contro i −0.00041 dell'arbitro (**5×**) e **un ordine di
-grandezza più** del passaggio Poisson→NB. **Miglior rapporto valore/costo
-emerso dalla Fase 98, e nessuno la stava cercando.** Costo BASSO.
+**Valore atteso (Fase 98)**: sui cartellini Premier la sola costante di livello
+valeva **−0.00308** contro i −0.00041 dell'arbitro (**5×**) e un ordine di
+grandezza più del passaggio Poisson→NB. Era indicata come il miglior rapporto
+valore/costo aperto.
+**ESITO (Fase 99) — ❌ NEGATIVO, il lead era falso.** Implementata e misurata
+(`scripts/_run_counts_level.py`, 7.050 partite OOS, 21 fold): **cinque**
+stimatori walk-forward (`c_oos`, `c_last2`, `c_last`, `c_trend`) più la versione
+**alla radice** (emivita scelta fold per fold sul solo passato). Nessuno
+migliora; **6 celle su 8 peggiorano con IC conclusivo**; l'emivita walk-forward
+è un lancio di moneta (−0.00004 corner, −0.00034 cartellini, P>0 = 0.48 e 0.33).
+**Causa**: il bias di fold **non persiste** — corr(bias_t, bias_{t−1}) +0.2299
+[−0.2544,+0.6715] sui corner e +0.1915 [−0.3446,+0.5830] sui cartellini,
+**10/18 stesso segno**, con sd del bias per fold **2,6×** (corner) e **10×**
+(cartellini) il bias pooled. Il «bias costante su tutte le linee» era costante
+*fra le linee*, non *nel tempo*.
+**Due lezioni che restano** (e valgono oltre questa pista):
+1. un bias sulla **media** non è un bias sulle **probabilità** — i cartellini
+   sovrastimano di +0.042 conteggi ma i mercati erano già calibrati
+   (+0.0047/−0.0034/+0.0008) e la correzione li ha **guastati**;
+2. **regola di metodo**: un bias misurato su un *pool* non autorizza una
+   correzione *prospettica* — prima si misura se **persiste** (autocorrelazione
+   fra fold, con CI). Stessa forma della Fase 86-bis (θ per-squadra: persiste ma
+   non è sfruttabile) e del controllo-di-livello della Fase 98.
+Riaprirla richiede **informazione nuova** (una covariata che spieghi *perché* una
+stagione ha più cartellini: regolamento, direttive arbitrali, VAR), non un
+estimatore migliore.
 
 ### 8. Quota massima (MaxC*/Max*) → ROI realistico
 **Dato**: 7/9 stagioni.

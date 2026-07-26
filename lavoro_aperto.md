@@ -11,7 +11,7 @@
 > canonica** e poi questa riga. Se questo file e PISTE/PANCHINA divergono,
 > **hanno ragione loro**.
 >
-> Scritto il **26 luglio 2026**, dopo la Fase 97; **aggiornato dopo la Fase 98**
+> Scritto il **26 luglio 2026**, dopo la Fase 97; **aggiornato dopo le Fasi 98-99**
 > (sette fronti: vedi il registro del README e l'arco 11 del diario). Il piano *datato* per l'inizio
 > stagione sta in [`newseason.md`](newseason.md): quello ha una scadenza
 > (16 agosto), questo no.
@@ -76,7 +76,7 @@ Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 | 8 | **Quota massima** (MaxC\*/Max\*) → ROI realistico | 🟢 mai estratta. Tutti i ROI del progetto usano la media: col massimo cambierebbero |
 | 9 | **Pinnacle puro** (PS\*/PSC\*) come benchmark singolo-book | 🟢 mai estratta. È *il* riferimento di efficienza |
 | 7 | Statistiche partita (corner, tiri, falli, cartellini) | 🟡 **parziale**: corner e cartellini fatti (F96) + NB (F98, trascurabile); **tiri totali e falli no**; arbitro ❌ chiuso (F98) |
-| **7-bis** | ⭐ **Correzione di LIVELLO dei conteggi** (LEAD, F98) | 🟢 **mai provata — il miglior valore/costo aperto**: bias misurato su 3 fronti indipendenti (PL cartellini −0.201, SA corner +0.352, listino +0.117); vale **5× l'arbitro** e un ordine di grandezza più della NB. Una costante train-only |
+| **7-bis** | **Correzione di LIVELLO dei conteggi** (lead F98) | ❌ **chiusa NEGATIVA (F99)**: 5 stimatori + emivita alla radice, nessuno migliora, 6/8 celle peggiorano con IC conclusivo. Il bias di fold **non persiste** (10/18 stesso segno) → era rumore aggregato, non deriva. Riaprirla richiede informazione nuova (regolamento/direttive arbitrali), non un estimatore migliore |
 
 ### Fonte esterna nuova
 
@@ -325,19 +325,15 @@ segnalare?
    pre-registrazione dei criteri → raccoglitore → previsioni congelate.
    **Entro il 16 agosto**, il resto no.
 2. **`probe.yml` dal runner** (§6.1) — un'ora, può sbloccare mezza lista.
-3. **La correzione di LIVELLO dei conteggi** (§2, pista 7-bis — nuova con la
-   F98): una costante train-only, nessuna rete, e vale più di tutto ciò che è
-   stato provato sui conteggi finora. ⭐ **Il miglior rapporto valore/costo
-   attualmente aperto.**
-4. **Il modello a DUE STADI per il secondo tempo** (pista 6, residuo F98): il
+3. ⭐ **Il modello a DUE STADI per il secondo tempo** (pista 6, residuo F98): il
    primo residuo *localizzato e non-artefatto* trovato da parecchie fasi, ed è
    anche il primo mattone dell'in-play — sui dati che già abbiamo.
-5. **Le piste nei grezzi già scaricati rimaste** (§2: 8, 9): nessuna rete,
+4. **Le piste nei grezzi già scaricati rimaste** (§2: 8, 9): nessuna rete,
    nessuna attesa. *(La 5 e la 6 sono state aperte da F88/F98: Tier 2 e Tier 3
    non sono più scoperti.)*
-6. **La coda a zero** (`docs/PISTE.md`, pista aperta dalla F97) — costo basso,
+5. **La coda a zero** (`docs/PISTE.md`, pista aperta dalla F97) — costo basso,
    infrastruttura già presente.
-7. Il resto, senza fretta.
+6. Il resto, senza fretta.
 
 **Da non fare adesso**: aggiungere le leghe nuove (Ligue 1/Bundesliga come leghe
 *modellate*, Serie B, Championship). Valore reale, **nessuna scadenza**,

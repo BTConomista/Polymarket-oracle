@@ -96,7 +96,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ |
 | **Modello di conteggio corner/cartellini** (fuori matrice, F96) | ⚽ F96 | ⚽ F96 | ⚽ F96 | ⚽ struttura unica (attacco/difesa moltiplicativi, vincolo `hadv+aadv=2`); processo DIVERSO dai gol, non ridondante |
 | **… + binomiale negativa sui conteggi** (F98) | ⚽/❌ ✱8 | ⚽ F98 | ⚽ F98 | 🪑 conclusiva ma trascurabile (corner +0.00103 [+0.00062,+0.00143], cartellini +0.00088 [+0.00033,+0.00142]) |
-| **… + correzione di LIVELLO train-only** (lead F98) | ⬜ | ⬜ | ⬜ | ⬜ **il lead aperto**: bias di media misurato su 3 fronti (PL cartellini −0.201, SA corner +0.352, listino corner +0.117); vale ~5× l'arbitro e un ordine di grandezza più della NB — **da implementare e misurare** |
+| **… + correzione di LIVELLO train-only** (F98 lead → **F99 bocciato**) | ❌ F99 | ❌ F99 | ❌ F99 | ❌ **F99: il lead era falso.** 5 stimatori walk-forward + emivita alla radice: nessuno migliora, 6/8 celle peggiorano con IC conclusivo. Causa: **il bias di fold NON persiste** (corr lag-1 +0.23/+0.19, IC attraversa lo zero, **10/18 stesso segno**; sd del bias 2,6×/10× il bias pooled) → non era deriva, era rumore aggregato |
 | **Mercati Tier 3 dal ri-scalamento 1T/2T** (Halftime, Second Half, risultato esatto — F98) | ⚽ F98 | ⚽ F98 | ⚽ F98 | ⚽ fondazione misurata (f=0.4396 [0.4338,0.4458], 1T Poisson-compatibile, tempi quasi indipendenti); batte la baseline con IC conclusivo (HT +0.0537, 2T +0.0578, esatto +0.1940). ⚠️ **il 2T è mal calibrato** (pareggio 0.3671 vs 0.3427) mentre il 1T no → game-state, non normalizzazione |
 | Arbitro come feature moltiplicativa (cartellini) | ⬜ dato assente (0/3420) | ❌ F98 (nessun IC esclude lo zero; **85% del guadagno era solo livello**) | ⬜ dato assente (0/3420) | ❌ il dato `Referee` esiste solo in Premier |
 | Proxy storico delle formazioni (undici attesi, disponibilità del nucleo) | ❌ F98 | ❌ F98 | ❌ F98 | ❌ la parte che funziona correla +0.9603 col valore rosa (già bocciato F4c/11); la disponibilità correla −0.1227 col logit della chiusura = **il mercato le assenze le prezza già** |
@@ -132,8 +132,11 @@ Note della matrice:
   sola sulla Poisson (Δ esattamente 0.00000) — la forma NB è auto-protettiva, non
   dannosa. In 3 celle su 21 però PEGGIORA con IC conclusivo, e la causa è
   identificata: dove la media walk-forward è storta per **deriva di livello**,
-  allargare la distribuzione sposta massa dal lato sbagliato. Promozione piena
-  **dopo** la correzione di livello, non prima.
+  allargare la distribuzione sposta massa dal lato sbagliato. La promozione piena era
+  condizionata alla correzione di livello: la **Fase 99 l'ha bocciata** (il bias
+  non persiste fra i fold), quindi quelle 3 celle restano tali e il guadagno
+  della NB è **invariante** alla correzione (+0.00103→+0.00106 corner,
+  +0.00088→+0.00067 cartellini). La NB resta titolare per forma, non per centro.
 
 ---
 

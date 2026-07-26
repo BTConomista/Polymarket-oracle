@@ -327,7 +327,7 @@ tests/           test unitari
 > `README.md`; la rosa dei modelli in `docs/PANCHINA.md`. Aggiorna QUESTA
 > istantanea quando cambia lo stato di fondo, non a ogni fase.
 
-**Dove siamo (Fase 83).** Il progetto è passato da "un modello Dixon-Coles sui
+**Dove siamo (istantanea aggiornata alla Fase 99).** Il progetto è passato da "un modello Dixon-Coles sui
 gol" a **due motori complementari**, su **3 leghe** (Serie A, Premier, La Liga,
 9 stagioni ciascuna):
 
@@ -379,6 +379,31 @@ outright storiche → «battiamo il mercato» NON è testabile all'indietro. È 
 pista **ricorrente**: si riprezza a ogni inizio stagione (promemoria operativo in
 `docs/PISTE.md` §4-bis). Lo strumento per le quote live è
 `scripts/fetch_polymarket_open.py` (Polymarket è raggiungibile dall'ambiente).
+
+**Le famiglie FUORI dalla matrice dei gol (Fasi 96-99).** Corner e cartellini
+sono un processo **diverso** dai gol (non ridondante) e sono prezzabili
+walk-forward su tutte e 3 le leghe; i mercati **Tier 3** (Halftime, Second Half,
+risultato esatto) si ottengono ri-scalando i tassi con la frazione di gol nel
+primo tempo, **misurata** (f = 0.4396 [0.4338, 0.4458], primo tempo
+Poisson-compatibile, tempi quasi indipendenti) e battono la baseline con IC
+conclusivo. Il **Tier 2** (handicap asiatico) è l'**unico** mercato del listino
+validato contro una quota esterna e indipendente: Brier 0.2044 vs 0.2044 — il
+router prezza il margine come il mercato sharp. Su queste famiglie le correzioni
+di forma (binomiale negativa, Fase 98) e di centro (correzione di livello, Fase
+99) valgono il terzo decimale o meno: **il tetto informativo vale anche qui**.
+Il residuo vivo è uno solo, ed è localizzato: il **secondo tempo è mal
+calibrato** mentre il primo, che passa per lo stesso codice, non lo è → è
+**game-state**, e chiede un modello a due stadi (1T indipendente → 2T
+condizionato al punteggio dell'intervallo). È anche il primo mattone dell'in-play.
+
+**Due regole di metodo nate qui, valide ovunque.** (1) Ogni feature
+*moltiplicativa* va confrontata col suo **controllo di solo livello**, altrimenti
+si misura la deriva del modello base e la si attribuisce alla feature (Fase 98:
+l'85% del guadagno apparente dell'arbitro era livello). (2) Un bias misurato su
+un **pool** non autorizza una correzione **prospettica**: prima si misura se
+**persiste** (autocorrelazione fra fold, con CI). Fase 99: il bias di livello dei
+conteggi non persiste (10/18 stesso segno) e correggerlo **peggiora** con IC
+conclusivo in 6 celle su 8. **Misurato ≠ prevedibile.**
 
 **Cosa è chiuso (non riproporre senza informazione nuova).** Tutti i dati
 INTERNI sono esplorati (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/forma/
