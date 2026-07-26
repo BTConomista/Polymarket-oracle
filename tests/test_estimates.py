@@ -28,11 +28,23 @@ def test_schema_e_copertura(estimates):
                                        "away_team", "p_over25_close_est"]
     # SOLO le stagioni senza chiusura O/U reale: mai sovrapporsi ai dati veri.
     assert set(estimates["season"].unique()) == {"1718", "1819"}
-    assert set(estimates["league"].unique()) == {"serie_a", "premier_league",
-                                                 "la_liga"}
-    # ~760 per lega (2 stagioni x 380; 1 partita Liga senza input -> saltata)
+    # Tutte e 5 le leghe: il buco della chiusura O/U 2017-19 e' identico su
+    # ognuna (la fonte non pubblica una chiusura O/U in quelle 2 stagioni).
+    assert set(estimates["league"].unique()) == {
+        "serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"}
+    # Il massimo per lega e' 2 stagioni x le partite di quella lega: 760 dove
+    # si gioca a 20 squadre, 612 in Bundesliga (18 squadre, 306 a stagione).
+    # Sotto il massimo ci sono solo le righe SALTATE perche' prive dell'input
+    # (linea O/U pre-match assente o svuotata dal guard sull'overround), e sono
+    # dichiarate una per una nel diario: mai piu' di una decina per lega.
+    MASSIMO = {lg: 760 for lg in ("serie_a", "premier_league", "la_liga", "ligue_1")}
+    MASSIMO["bundesliga"] = 612
     per_lega = estimates.groupby("league").size()
-    assert (per_lega >= 755).all() and (per_lega <= 760).all()
+    for lg, n in per_lega.items():
+        assert n <= MASSIMO[lg], f"{lg}: {n} stime, piu' delle {MASSIMO[lg]} partite"
+        assert MASSIMO[lg] - n <= 10, (
+            f"{lg}: {MASSIMO[lg] - n} righe senza input, troppe per essere "
+            f"le eccezioni dichiarate")
 
 
 def test_probabilita_plausibili(estimates):

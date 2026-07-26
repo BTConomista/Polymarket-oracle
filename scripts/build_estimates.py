@@ -72,11 +72,20 @@ ROOT = Path(__file__).resolve().parents[1]
 ESTIMATES_DIR = ROOT / "data" / "estimates"
 OU_CLOSE_PATH = ESTIMATES_DIR / "ou_close_2017_19.csv"
 
-LEAGUES = ["serie_a", "premier_league", "la_liga"]
+LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
 FIT_SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 TARGET_SEASONS = ["1718", "1819"]
-# Errore atteso della stima, misurato WALK-FORWARD nella Fase 62-bis (E3 pooled).
-EXPECTED_MAE = 0.012
+# Errore atteso della stima.
+#
+# Due numeri, e conta il secondo. In INTERPOLAZIONE (il fit vede stagioni prima
+# e dopo la riga stimata) il MAE e' ~0.012, ed e' il numero storicamente
+# pubblicato. Ma questa stima non viene mai usata cosi': la chiusura O/U del
+# 2017-19 non esiste, quindi i coefficienti possono venire SOLO da stagioni
+# successive. Misurato in QUEL regime (fit sulle stagioni tarde -> stima sul
+# 2017-19) l'errore e' 15-25% piu' alto. Si dichiara il secondo, perche' e'
+# quello che descrive l'uso reale.
+EXPECTED_MAE_INTERPOLAZIONE = 0.012
+EXPECTED_MAE = 0.014
 
 _ODDS = ["odds_home", "odds_draw", "odds_away", "odds_over25", "odds_under25",
          "odds_home_open", "odds_draw_open", "odds_away_open"]
@@ -149,11 +158,12 @@ def build_ou_close() -> pd.DataFrame:
     y = _logit(fit["p_over_close"])
     coef, *_ = np.linalg.lstsq(A, y, rcond=None)
     in_mae = float(np.abs(_sigmoid(A @ coef) - fit["p_over_close"]).mean())
-    print(f"fit E3 pooled su {len(fit)} partite ({len(FIT_SEASONS)} stagioni x 3 leghe)")
+    print(f"fit E3 pooled su {len(fit)} partite "
+          f"({len(FIT_SEASONS)} stagioni x {len(LEAGUES)} leghe)")
     print(f"  coefficienti [1, logit(OU), dH, dD, dA] = "
           f"{np.array2string(coef, precision=4)}")
-    print(f"  MAE in-sample {in_mae:.4f} (atteso out-of-sample ~{EXPECTED_MAE}, "
-          f"walk-forward Fase 62-bis)")
+    print(f"  MAE in-sample {in_mae:.4f} (atteso nel REGIME D'USO ~{EXPECTED_MAE}, "
+          f"in interpolazione ~{EXPECTED_MAE_INTERPOLAZIONE})")
 
     # ---- applica alle stagioni SENZA chiusura O/U ---------------------------
     est_frames = []

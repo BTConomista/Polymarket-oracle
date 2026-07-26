@@ -139,3 +139,101 @@ def test_schema_identico_tra_leghe():
             f"Solo in {league}: {set(cols) - set(base)}; "
             f"solo in {riferimento}: {set(base) - set(cols)}; "
             f"stesso insieme ma ordine diverso: {set(cols) == set(base)}")
+
+
+def test_overround_impossibilmente_alto_scartato():
+    """Il guard protegge ENTRAMBI i lati: anche un margine troppo ALTO e' un
+    dato corrotto, non un prezzo.
+
+    Il caso reale da cui nasce: La Liga 2018-19 Alaves-Real Madrid, linea O/U
+    pre-match 1.53/1.59 = overround 1.283, cioe' il 28% di margine su un
+    mercato a due esiti. Il guard originale vedeva solo l'overround < 1 e
+    lasciava passare questi. I valori qui sotto sono quelli veri di quella riga.
+    """
+    from src.data import loader
+
+    corrotta = pd.Series({"Avg>2.5": 1.53, "Avg<2.5": 1.59})
+    picks = loader._pick_market_odds(
+        corrotta, ["odds_over25_open", "odds_under25_open"],
+        loader._ODDS_PREFERENCE_OPEN)
+    assert all(pd.isna(v) for v in picks.values()), \
+        "una linea con overround 1.283 non deve entrare nello snapshot"
+
+    # e una linea sana deve passare indisturbata (il guard non e' un colino)
+    sana = pd.Series({"Avg>2.5": 1.90, "Avg<2.5": 1.95})
+    picks = loader._pick_market_odds(
+        sana, ["odds_over25_open", "odds_under25_open"],
+        loader._ODDS_PREFERENCE_OPEN)
+    assert picks["odds_over25_open"] == 1.90 and picks["odds_under25_open"] == 1.95
+
+
+@pytest.mark.parametrize("league", TUTTE)
+def test_nessun_margine_impossibile_negli_snapshot(league):
+    """Nessuna riga, in nessuna delle 5 leghe, ha un margine fuori dai limiti
+    credibili — ne' sotto 1 (arbitraggio) ne' sopra ORR_MAX (dato corrotto)."""
+    from src.data.loader import ORR_MAX
+
+    if not database.snapshot_path(league).exists():
+        pytest.skip(f"snapshot {league} non costruito")
+    df = loader.load_league(league)
+    mercati = [("odds_home", "odds_draw", "odds_away"),
+               ("odds_home_open", "odds_draw_open", "odds_away_open"),
+               ("odds_over25", "odds_under25"),
+               ("odds_over25_open", "odds_under25_open")]
+    for cols in mercati:
+        sub = df[list(cols)].dropna()
+        if not len(sub):
+            continue
+        orr = sum(1.0 / sub[c] for c in cols)
+        assert (orr >= 1.0).all() and (orr <= ORR_MAX).all(), (
+            f"{league}/{cols[0]}: {int(((orr < 1) | (orr > ORR_MAX)).sum())} "
+            f"righe con margine impossibile (min {orr.min():.4f}, max {orr.max():.4f})")
+
+
+def test_xg_segnaposto_scartato():
+    """Un record SEGNAPOSTO della fonte xG non deve entrare come se fosse una
+    misura — ed e' il caso piu' insidioso, perche' il dato coincide con la
+    fonte e nessun confronto snapshot-vs-fonte lo vede.
+
+    Caso reale: Holstein Kiel-Bochum 09/02/2025. Understat non ha acquisito la
+    partita (lista tiro-per-tiro VUOTA, mentre football-data conta 3+6 tiri in
+    porta) e ha pubblicato xG = gol esatti, ppda azzerata, deep 0.
+    """
+    from src.data import understat
+
+    segnaposto = {
+        "teams": {"1": {"title": "Holstein Kiel", "history": [
+                      {"date": "2025-02-09 13:30:00", "npxG": "1.25",
+                       "ppda": {"att": 0, "def": 0}, "deep": 0}]},
+                  "2": {"title": "Bochum", "history": [
+                      {"date": "2025-02-09 13:30:00", "npxG": "2",
+                       "ppda": {"att": 0, "def": 0}, "deep": 0}]}},
+        "dates": [{"isResult": True,
+                   "h": {"title": "Holstein Kiel"}, "a": {"title": "Bochum"},
+                   "goals": {"h": "2", "a": "2"}, "xG": {"h": "2", "a": "2"},
+                   "datetime": "2025-02-09 13:30:00"}],
+    }
+    df = understat.parse_season_xg(segnaposto, "2425")
+    assert len(df) == 1
+    for c in ("home_xg", "away_xg", "home_npxg", "away_npxg",
+              "home_deep", "away_deep"):
+        assert pd.isna(df.iloc[0][c]), f"{c} doveva essere NaN"
+
+    # Una partita davvero sterile (deep 0 su entrambi) ma con xG MISURATO non
+    # deve essere toccata: il guard e' conservativo, non un colino.
+    vera = {
+        "teams": {"1": {"title": "Reims", "history": [
+                      {"date": "2020-08-30 15:00:00", "npxG": "0.206627",
+                       "ppda": {"att": 108, "def": 10}, "deep": 0}]},
+                  "2": {"title": "Lille", "history": [
+                      {"date": "2020-08-30 15:00:00", "npxG": "0.906784",
+                       "ppda": {"att": 164, "def": 10}, "deep": 0}]}},
+        "dates": [{"isResult": True,
+                   "h": {"title": "Reims"}, "a": {"title": "Lille"},
+                   "goals": {"h": "0", "a": "1"},
+                   "xG": {"h": "0.206627", "a": "0.906784"},
+                   "datetime": "2020-08-30 15:00:00"}],
+    }
+    df2 = understat.parse_season_xg(vera, "2021")
+    assert df2.iloc[0]["home_xg"] == pytest.approx(0.206627)
+    assert df2.iloc[0]["away_xg"] == pytest.approx(0.906784)

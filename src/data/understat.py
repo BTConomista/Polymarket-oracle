@@ -131,9 +131,49 @@ def parse_season_xg(data: dict, season_code: str) -> pd.DataFrame:
                     "Understat %s: history mancante per %s @ %s",
                     season_code, team, when,
                 )
+        if _e_segnaposto(row, match):
+            log.warning(
+                "Understat %s: %s-%s @ %s ha un record SEGNAPOSTO (xG = gol "
+                "esatti, deep 0, ppda nulla): la fonte non ha acquisito la "
+                "partita. Metriche di stile a NaN dichiarato.",
+                season_code, home, away, when,
+            )
+            for c in ("home_xg", "away_xg", "home_npxg", "away_npxg",
+                      "home_deep", "away_deep"):
+                row[c] = float("nan")
         rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+def _e_segnaposto(row: dict, match: dict) -> bool:
+    """La riga e' un SEGNAPOSTO della fonte invece di una misura?
+
+    Il caso opposto — e piu' insidioso — dell'xG impossibile. Quando Understat
+    non acquisisce una partita, invece di lasciare il campo vuoto ci scrive un
+    valore di comodo. Nessun confronto snapshot-vs-fonte puo' accorgersene: il
+    dato E' quello della fonte. Le firme, tutte presenti insieme nell'unico caso
+    reale trovato (Holstein Kiel-Bochum 09/02/2025, dove la lista tiro-per-tiro
+    e' VUOTA mentre football-data conta 3+6 tiri in porta):
+
+      - xG INTERO e identico ai gol su ENTRAMBE le squadre (un modello xG non
+        produce mai due interi esatti);
+      - deep = 0 su entrambe (nessuna delle due ha mai portato palla in zona
+        pericolosa: raro di suo, e sempre vero nei segnaposto);
+      - ppda azzerata (att=0, def=0 -> NaN qui).
+
+    Richiederle TUTTE insieme rende il test conservativo: su 16.110 partite
+    delle 5 leghe accende una sola riga, e le altre tre con deep=0 su entrambi i
+    lati (partite davvero sterili) restano correttamente intatte.
+    """
+    gol_h, gol_a = float(match["goals"]["h"]), float(match["goals"]["a"])
+    xg_h, xg_a = row["home_xg"], row["away_xg"]
+    return bool(
+        xg_h == gol_h and xg_a == gol_a
+        and float(xg_h).is_integer() and float(xg_a).is_integer()
+        and row["home_deep"] == 0 and row["away_deep"] == 0
+        and pd.isna(row["home_ppda"]) and pd.isna(row["away_ppda"])
+    )
 
 
 def season_xg(

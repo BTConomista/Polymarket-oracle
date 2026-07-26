@@ -89,6 +89,15 @@ from .sources import League
 # Cartella di cache dei CSV grezzi.
 RAW_DIR = Path(__file__).resolve().parents[2] / "data" / "raw"
 
+# Margine massimo credibile per una media multi-book (audit 2026-07).
+#
+# Distribuzione dell'overround O/U sulle 5 leghe: nell'era "Avg" (12.457 righe)
+# il MASSIMO mai osservato e' 1.0765; nell'era Betbrain 2017-19 si arriva a
+# 1.339. Una soglia a 1.12 sta ~6 sigma oltre la mediana sana e 4 punti
+# percentuali sopra quel massimo: non puo' scartare una riga buona. Stesso
+# ragionamento per l'1X2 a 3 vie (massimo osservato 1.080).
+ORR_MAX = 1.12
+
 # Ordine di preferenza delle colonne per ciascun mercato.
 # Il primo nome presente (e valorizzato) nella riga viene usato.
 #
@@ -194,14 +203,24 @@ def _pick_market_odds(row: pd.Series, targets: list[str],
     (mai un solo lato) e si ritenta col livello di preferenza successivo per
     OGNI colonna del mercato; se anche il ripiego resta impossibile, NaN
     dichiarato (mai un numero corretto a mano).
+
+    Il guard protegge ENTRAMBI i lati (audit 2026-07). Quello originale vedeva
+    solo l'overround < 1; ma anche un margine impossibilmente ALTO segnala che
+    le quote di quella riga non appartengono alla stessa linea. Trovati 11 casi
+    reali, tutti nella linea O/U pre-match del 2017-19 (fonte Betbrain), fino a
+    un overround di 1.339 — il 34% di margine su un mercato a due esiti, che
+    nessun book pratica. In ognuno il lato Under risultava incompatibile con
+    l'1X2 della stessa partita.
     """
     picks = {t: _pick_odds(row, preference[t]) for t in targets}
     if all(pd.notna(v) for v in picks.values()):
-        if sum(1.0 / v for v in picks.values()) < 1.0:
+        orr = sum(1.0 / v for v in picks.values())
+        if orr < 1.0 or orr > ORR_MAX:
             retry = {t: _pick_odds(row, preference[t][1:]) for t in targets}
-            if all(pd.notna(v) for v in retry.values()) and \
-                    sum(1.0 / v for v in retry.values()) >= 1.0:
-                picks = retry
+            if all(pd.notna(v) for v in retry.values()):
+                orr_retry = sum(1.0 / v for v in retry.values())
+                picks = (retry if 1.0 <= orr_retry <= ORR_MAX
+                         else {t: float("nan") for t in targets})
             else:
                 picks = {t: float("nan") for t in targets}
     return picks
