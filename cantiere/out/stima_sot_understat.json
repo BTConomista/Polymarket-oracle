@@ -1,0 +1,2114 @@
+{
+ "copertura": {
+  "partite_snapshot": 16111,
+  "con_id_understat": 16110,
+  "gol_coerenti": 16110,
+  "sot_mancanti_snapshot": 2,
+  "partite_senza_sot": [
+   {
+    "league": "bundesliga",
+    "season": "2425",
+    "date": "2024-12-14",
+    "match": "Union Berlin-Bochum",
+    "understat_id": "27866"
+   }
+  ]
+ },
+ "campione": {
+  "per_cella": 20,
+  "partite": 900,
+  "squadra_partita": 1800,
+  "per_lega": {
+   "bundesliga": 360,
+   "la_liga": 360,
+   "ligue_1": 360,
+   "premier_league": 360,
+   "serie_a": 360
+  },
+  "per_stagione": {
+   "1718": 200,
+   "1819": 200,
+   "1920": 200,
+   "2021": 200,
+   "2122": 200,
+   "2223": 200,
+   "2324": 200,
+   "2425": 200,
+   "2526": 200
+  }
+ },
+ "regole": {
+  "R1_goal_saved": {
+   "n": 1800,
+   "esatte": 0.8644444444444445,
+   "entro_1": 0.9772222222222222,
+   "mae": 0.17055555555555554,
+   "bias": -0.13944444444444445,
+   "sd_scarto": 0.5100433471014263
+  },
+  "R2_R1_post": {
+   "n": 1800,
+   "esatte": 0.71,
+   "entro_1": 0.9588888888888889,
+   "mae": 0.3433333333333333,
+   "bias": 0.11,
+   "sd_scarto": 0.6874641837150868
+  },
+  "R3_R1_og": {
+   "n": 1800,
+   "esatte": 0.8355555555555556,
+   "entro_1": 0.9772222222222222,
+   "mae": 0.1988888888888889,
+   "bias": -0.09333333333333334,
+   "sd_scarto": 0.5429419786845541
+  },
+  "R4_R1_post_og": {
+   "n": 1800,
+   "esatte": 0.6844444444444444,
+   "entro_1": 0.9516666666666667,
+   "mae": 0.37722222222222224,
+   "bias": 0.15611111111111112,
+   "sd_scarto": 0.715559145264173
+  },
+  "R5_R3_blocked": {
+   "n": 1800,
+   "esatte": 0.08388888888888889,
+   "entro_1": 0.255,
+   "mae": 3.1905555555555556,
+   "bias": 3.1783333333333332,
+   "sd_scarto": 2.3010927389434905
+  },
+  "R6_tutto_meno_fuori": {
+   "n": 1800,
+   "esatte": 0.06888888888888889,
+   "entro_1": 0.22666666666666666,
+   "mae": 3.4355555555555557,
+   "bias": 3.4277777777777776,
+   "sd_scarto": 2.40397705396554
+  },
+  "R7_solo_gol": {
+   "n": 1800,
+   "esatte": 0.06833333333333333,
+   "entro_1": 0.24222222222222223,
+   "mae": 3.0494444444444446,
+   "bias": -3.0483333333333333,
+   "sd_scarto": 2.0301774170342624
+  },
+  "R8_tutti_i_tiri": {
+   "n": 1800,
+   "esatte": 0.0022222222222222222,
+   "entro_1": 0.020555555555555556,
+   "mae": 8.117222222222223,
+   "bias": 8.116111111111111,
+   "sd_scarto": 3.9985220155623833
+  }
+ },
+ "classifica": [
+  "R1_goal_saved",
+  "R3_R1_og",
+  "R2_R1_post",
+  "R4_R1_post_og",
+  "R5_R3_blocked",
+  "R6_tutto_meno_fuori",
+  "R7_solo_gol",
+  "R8_tutti_i_tiri"
+ ],
+ "migliore": "R1_goal_saved",
+ "per_lega": {
+  "bundesliga": {
+   "R1_goal_saved": {
+    "n": 360,
+    "esatte": 0.8361111111111111,
+    "entro_1": 0.9861111111111112,
+    "mae": 0.19722222222222222,
+    "bias": -0.1527777777777778,
+    "sd_scarto": 0.574764629608579
+   },
+   "R3_R1_og": {
+    "n": 360,
+    "esatte": 0.8055555555555556,
+    "entro_1": 0.9888888888888889,
+    "mae": 0.2222222222222222,
+    "bias": -0.10555555555555556,
+    "sd_scarto": 0.5829253116056584
+   },
+   "R2_R1_post": {
+    "n": 360,
+    "esatte": 0.6777777777777778,
+    "entro_1": 0.9583333333333334,
+    "mae": 0.38333333333333336,
+    "bias": 0.08333333333333333,
+    "sd_scarto": 0.756586676018479
+   },
+   "R4_R1_post_og": {
+    "n": 360,
+    "esatte": 0.6555555555555556,
+    "entro_1": 0.9527777777777777,
+    "mae": 0.4083333333333333,
+    "bias": 0.13055555555555556,
+    "sd_scarto": 0.7590932299289229
+   },
+   "_n_squadra_partita": 360
+  },
+  "la_liga": {
+   "R1_goal_saved": {
+    "n": 360,
+    "esatte": 0.9083333333333333,
+    "entro_1": 0.9888888888888889,
+    "mae": 0.11388888888888889,
+    "bias": -0.08055555555555556,
+    "sd_scarto": 0.4244081210019342
+   },
+   "R3_R1_og": {
+    "n": 360,
+    "esatte": 0.8861111111111111,
+    "entro_1": 0.9888888888888889,
+    "mae": 0.1361111111111111,
+    "bias": -0.04722222222222222,
+    "sd_scarto": 0.45461797063715564
+   },
+   "R2_R1_post": {
+    "n": 360,
+    "esatte": 0.7583333333333333,
+    "entro_1": 0.9722222222222222,
+    "mae": 0.275,
+    "bias": 0.16944444444444445,
+    "sd_scarto": 0.570060566808277
+   },
+   "R4_R1_post_og": {
+    "n": 360,
+    "esatte": 0.7277777777777777,
+    "entro_1": 0.9694444444444444,
+    "mae": 0.30833333333333335,
+    "bias": 0.20277777777777778,
+    "sd_scarto": 0.5928948438666231
+   },
+   "_n_squadra_partita": 360
+  },
+  "ligue_1": {
+   "R1_goal_saved": {
+    "n": 360,
+    "esatte": 0.9277777777777778,
+    "entro_1": 0.9944444444444445,
+    "mae": 0.08055555555555556,
+    "bias": -0.06944444444444445,
+    "sd_scarto": 0.31341362885899704
+   },
+   "R3_R1_og": {
+    "n": 360,
+    "esatte": 0.8861111111111111,
+    "entro_1": 0.9916666666666667,
+    "mae": 0.125,
+    "bias": -0.025,
+    "sd_scarto": 0.39061054987200383
+   },
+   "R2_R1_post": {
+    "n": 360,
+    "esatte": 0.7277777777777777,
+    "entro_1": 0.9527777777777777,
+    "mae": 0.33055555555555555,
+    "bias": 0.20833333333333334,
+    "sd_scarto": 0.6578749447250107
+   },
+   "R4_R1_post_og": {
+    "n": 360,
+    "esatte": 0.6916666666666667,
+    "entro_1": 0.9472222222222222,
+    "mae": 0.375,
+    "bias": 0.25277777777777777,
+    "sd_scarto": 0.6921711475891903
+   },
+   "_n_squadra_partita": 360
+  },
+  "premier_league": {
+   "R1_goal_saved": {
+    "n": 360,
+    "esatte": 0.8916666666666667,
+    "entro_1": 0.9972222222222222,
+    "mae": 0.1111111111111111,
+    "bias": -0.1111111111111111,
+    "sd_scarto": 0.3234371273735662
+   },
+   "R3_R1_og": {
+    "n": 360,
+    "esatte": 0.8361111111111111,
+    "entro_1": 0.9972222222222222,
+    "mae": 0.16666666666666666,
+    "bias": -0.03888888888888889,
+    "sd_scarto": 0.413745563746191
+   },
+   "R2_R1_post": {
+    "n": 360,
+    "esatte": 0.7416666666666667,
+    "entro_1": 0.9833333333333333,
+    "mae": 0.2777777777777778,
+    "bias": 0.11666666666666667,
+    "sd_scarto": 0.5563009546002384
+   },
+   "R4_R1_post_og": {
+    "n": 360,
+    "esatte": 0.6972222222222222,
+    "entro_1": 0.9694444444444444,
+    "mae": 0.3388888888888889,
+    "bias": 0.18888888888888888,
+    "sd_scarto": 0.6225913040748525
+   },
+   "_n_squadra_partita": 360
+  },
+  "serie_a": {
+   "R1_goal_saved": {
+    "n": 360,
+    "esatte": 0.7583333333333333,
+    "entro_1": 0.9194444444444444,
+    "mae": 0.35,
+    "bias": -0.2833333333333333,
+    "sd_scarto": 0.7484431380667607
+   },
+   "R3_R1_og": {
+    "n": 360,
+    "esatte": 0.7638888888888888,
+    "entro_1": 0.9194444444444444,
+    "mae": 0.34444444444444444,
+    "bias": -0.25,
+    "sd_scarto": 0.756586676018479
+   },
+   "R2_R1_post": {
+    "n": 360,
+    "esatte": 0.6444444444444445,
+    "entro_1": 0.9277777777777778,
+    "mae": 0.45,
+    "bias": -0.027777777777777776,
+    "sd_scarto": 0.8340294214402253
+   },
+   "R4_R1_post_og": {
+    "n": 360,
+    "esatte": 0.65,
+    "entro_1": 0.9194444444444444,
+    "mae": 0.45555555555555555,
+    "bias": 0.005555555555555556,
+    "sd_scarto": 0.8575226494956383
+   },
+   "_n_squadra_partita": 360
+  }
+ },
+ "per_stagione": {
+  "1718": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.92,
+    "entro_1": 1.0,
+    "mae": 0.08,
+    "bias": -0.07,
+    "sd_scarto": 0.2747314815136288
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.885,
+    "entro_1": 1.0,
+    "mae": 0.115,
+    "bias": -0.025,
+    "sd_scarto": 0.33904239962535454
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.76,
+    "entro_1": 0.965,
+    "mae": 0.28,
+    "bias": 0.17,
+    "sd_scarto": 0.5855032624603888
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.73,
+    "entro_1": 0.96,
+    "mae": 0.315,
+    "bias": 0.215,
+    "sd_scarto": 0.6087923625535373
+   },
+   "_n_squadra_partita": 200
+  },
+  "1819": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.825,
+    "entro_1": 0.94,
+    "mae": 0.245,
+    "bias": -0.185,
+    "sd_scarto": 0.610440980730139
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.805,
+    "entro_1": 0.94,
+    "mae": 0.265,
+    "bias": -0.155,
+    "sd_scarto": 0.6348148940823173
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.69,
+    "entro_1": 0.955,
+    "mae": 0.365,
+    "bias": 0.055,
+    "sd_scarto": 0.7031694221031689
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.66,
+    "entro_1": 0.955,
+    "mae": 0.395,
+    "bias": 0.085,
+    "sd_scarto": 0.7213715300884216
+   },
+   "_n_squadra_partita": 200
+  },
+  "1920": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.81,
+    "entro_1": 0.95,
+    "mae": 0.26,
+    "bias": -0.22,
+    "sd_scarto": 0.6353094446427358
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.775,
+    "entro_1": 0.95,
+    "mae": 0.295,
+    "bias": -0.175,
+    "sd_scarto": 0.6757649676161723
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.71,
+    "entro_1": 0.955,
+    "mae": 0.35,
+    "bias": 0.02,
+    "sd_scarto": 0.7156541092036715
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.675,
+    "entro_1": 0.945,
+    "mae": 0.395,
+    "bias": 0.065,
+    "sd_scarto": 0.7573923792067108
+   },
+   "_n_squadra_partita": 200
+  },
+  "2021": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.78,
+    "entro_1": 0.965,
+    "mae": 0.27,
+    "bias": -0.24,
+    "sd_scarto": 0.5951225539931727
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.755,
+    "entro_1": 0.965,
+    "mae": 0.295,
+    "bias": -0.165,
+    "sd_scarto": 0.6401750702761043
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.64,
+    "entro_1": 0.94,
+    "mae": 0.425,
+    "bias": 0.005,
+    "sd_scarto": 0.7535343856465734
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.61,
+    "entro_1": 0.925,
+    "mae": 0.47,
+    "bias": 0.08,
+    "sd_scarto": 0.7979874181952933
+   },
+   "_n_squadra_partita": 200
+  },
+  "2122": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.9,
+    "entro_1": 1.0,
+    "mae": 0.1,
+    "bias": -0.1,
+    "sd_scarto": 0.30075282427025135
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.865,
+    "entro_1": 1.0,
+    "mae": 0.135,
+    "bias": -0.055,
+    "sd_scarto": 0.36419526487143394
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.7,
+    "entro_1": 0.965,
+    "mae": 0.355,
+    "bias": 0.215,
+    "sd_scarto": 0.6790290141150452
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.68,
+    "entro_1": 0.96,
+    "mae": 0.39,
+    "bias": 0.26,
+    "sd_scarto": 0.7314884666790189
+   },
+   "_n_squadra_partita": 200
+  },
+  "2223": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.885,
+    "entro_1": 0.975,
+    "mae": 0.185,
+    "bias": -0.175,
+    "sd_scarto": 0.6977170237468273
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.86,
+    "entro_1": 0.975,
+    "mae": 0.205,
+    "bias": -0.145,
+    "sd_scarto": 0.6901860502209517
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.71,
+    "entro_1": 0.94,
+    "mae": 0.38,
+    "bias": 0.08,
+    "sd_scarto": 0.8227909361576096
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.7,
+    "entro_1": 0.93,
+    "mae": 0.4,
+    "bias": 0.11,
+    "sd_scarto": 0.8314786731598098
+   },
+   "_n_squadra_partita": 200
+  },
+  "2324": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.885,
+    "entro_1": 0.995,
+    "mae": 0.12,
+    "bias": -0.08,
+    "sd_scarto": 0.35245014615919545
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.83,
+    "entro_1": 0.995,
+    "mae": 0.175,
+    "bias": -0.015,
+    "sd_scarto": 0.4309333099076233
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.72,
+    "entro_1": 0.965,
+    "mae": 0.315,
+    "bias": 0.165,
+    "sd_scarto": 0.5996439479571256
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.67,
+    "entro_1": 0.96,
+    "mae": 0.37,
+    "bias": 0.23,
+    "sd_scarto": 0.6317400394046072
+   },
+   "_n_squadra_partita": 200
+  },
+  "2425": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.88,
+    "entro_1": 0.985,
+    "mae": 0.145,
+    "bias": -0.065,
+    "sd_scarto": 0.47104609340334497
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.86,
+    "entro_1": 0.985,
+    "mae": 0.165,
+    "bias": -0.015,
+    "sd_scarto": 0.4959889364951885
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.72,
+    "entro_1": 0.98,
+    "mae": 0.31,
+    "bias": 0.15,
+    "sd_scarto": 0.6159520962904689
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.71,
+    "entro_1": 0.97,
+    "mae": 0.33,
+    "bias": 0.2,
+    "sd_scarto": 0.6340426249482414
+   },
+   "_n_squadra_partita": 200
+  },
+  "2526": {
+   "R1_goal_saved": {
+    "n": 200,
+    "esatte": 0.895,
+    "entro_1": 0.985,
+    "mae": 0.13,
+    "bias": -0.12,
+    "sd_scarto": 0.43189427330839075
+   },
+   "R3_R1_og": {
+    "n": 200,
+    "esatte": 0.885,
+    "entro_1": 0.985,
+    "mae": 0.14,
+    "bias": -0.09,
+    "sd_scarto": 0.4504604009947175
+   },
+   "R2_R1_post": {
+    "n": 200,
+    "esatte": 0.74,
+    "entro_1": 0.965,
+    "mae": 0.31,
+    "bias": 0.13,
+    "sd_scarto": 0.6597547892282009
+   },
+   "R4_R1_post_og": {
+    "n": 200,
+    "esatte": 0.725,
+    "entro_1": 0.96,
+    "mae": 0.33,
+    "bias": 0.16,
+    "sd_scarto": 0.675783557868514
+   },
+   "_n_squadra_partita": 200
+  }
+ },
+ "per_epoca": {
+  "1819-1920": {
+   "R1_goal_saved": {
+    "n": 400,
+    "esatte": 0.8175,
+    "entro_1": 0.945,
+    "mae": 0.2525,
+    "bias": -0.2025,
+    "sd_scarto": 0.6224647829516442
+   },
+   "R3_R1_og": {
+    "n": 400,
+    "esatte": 0.79,
+    "entro_1": 0.945,
+    "mae": 0.28,
+    "bias": -0.165,
+    "sd_scarto": 0.6548641979788529
+   },
+   "R2_R1_post": {
+    "n": 400,
+    "esatte": 0.7,
+    "entro_1": 0.955,
+    "mae": 0.3575,
+    "bias": 0.0375,
+    "sd_scarto": 0.7087662689915134
+   },
+   "R4_R1_post_og": {
+    "n": 400,
+    "esatte": 0.6675,
+    "entro_1": 0.95,
+    "mae": 0.395,
+    "bias": 0.075,
+    "sd_scarto": 0.7387417331997208
+   },
+   "_n_squadra_partita": 400
+  },
+  "altre": {
+   "R1_goal_saved": {
+    "n": 1400,
+    "esatte": 0.8778571428571429,
+    "entro_1": 0.9864285714285714,
+    "mae": 0.14714285714285713,
+    "bias": -0.12142857142857143,
+    "sd_scarto": 0.4717593967461146
+   },
+   "R3_R1_og": {
+    "n": 1400,
+    "esatte": 0.8485714285714285,
+    "entro_1": 0.9864285714285714,
+    "mae": 0.1757142857142857,
+    "bias": -0.07285714285714286,
+    "sd_scarto": 0.5048503634869618
+   },
+   "R2_R1_post": {
+    "n": 1400,
+    "esatte": 0.7128571428571429,
+    "entro_1": 0.96,
+    "mae": 0.3392857142857143,
+    "bias": 0.13071428571428573,
+    "sd_scarto": 0.6800954846734805
+   },
+   "R4_R1_post_og": {
+    "n": 1400,
+    "esatte": 0.6892857142857143,
+    "entro_1": 0.9521428571428572,
+    "mae": 0.37214285714285716,
+    "bias": 0.1792857142857143,
+    "sd_scarto": 0.7073590937937789
+   },
+   "_n_squadra_partita": 1400
+  }
+ },
+ "confronti_appaiati": {
+  "R1_goal_saved_vs_R3_R1_og": {
+   "delta_mae": -0.028333333333333332,
+   "ci95": [
+    -0.03833333333333333,
+    -0.01888888888888889
+   ],
+   "frac_neg": 1.0,
+   "conclusivo": true
+  },
+  "R3_R1_og_vs_R1_goal_saved": {
+   "delta_mae": 0.028333333333333332,
+   "ci95": [
+    0.01888888888888889,
+    0.03833333333333333
+   ],
+   "frac_neg": 0.0,
+   "conclusivo": true
+  },
+  "R4_R1_post_og_vs_R3_R1_og": {
+   "delta_mae": 0.17833333333333334,
+   "ci95": [
+    0.15444444444444444,
+    0.20333333333333334
+   ],
+   "frac_neg": 0.0,
+   "conclusivo": true
+  },
+  "R5_R3_blocked_vs_R3_R1_og": {
+   "delta_mae": 2.9916666666666667,
+   "ci95": [
+    2.885,
+    3.099458333333333
+   ],
+   "frac_neg": 0.0,
+   "conclusivo": true
+  }
+ },
+ "regola_stimata_loo_lega": {
+  "pesi_per_fold": {
+   "bundesliga": {
+    "n_Goal": 1.0182,
+    "n_SavedShot": 0.9887,
+    "n_MissedShots": 0.0014,
+    "n_BlockedShot": 0.0316,
+    "n_ShotOnPost": 0.1064,
+    "n_og_opp": 0.0737
+   },
+   "la_liga": {
+    "n_Goal": 1.0225,
+    "n_SavedShot": 0.9921,
+    "n_MissedShots": 0.0027,
+    "n_BlockedShot": 0.031,
+    "n_ShotOnPost": 0.0557,
+    "n_og_opp": 0.1422
+   },
+   "ligue_1": {
+    "n_Goal": 1.0149,
+    "n_SavedShot": 0.9939,
+    "n_MissedShots": 0.0046,
+    "n_BlockedShot": 0.0286,
+    "n_ShotOnPost": 0.1129,
+    "n_og_opp": 0.1739
+   },
+   "premier_league": {
+    "n_Goal": 1.0204,
+    "n_SavedShot": 0.9959,
+    "n_MissedShots": 0.0018,
+    "n_BlockedShot": 0.0266,
+    "n_ShotOnPost": 0.0963,
+    "n_og_opp": 0.1861
+   },
+   "serie_a": {
+    "n_Goal": 1.013,
+    "n_SavedShot": 0.9974,
+    "n_MissedShots": 0.0,
+    "n_BlockedShot": 0.0263,
+    "n_ShotOnPost": 0.0322,
+    "n_og_opp": 0.0991
+   }
+  },
+  "pesi_su_tutto": {
+   "n_Goal": 1.0182,
+   "n_SavedShot": 0.9943,
+   "n_MissedShots": 0.0009,
+   "n_BlockedShot": 0.0295,
+   "n_ShotOnPost": 0.081,
+   "n_og_opp": 0.134
+  },
+  "oos_continuo": {
+   "n": 1800,
+   "esatte": 0.0011111111111111111,
+   "entro_1": 0.9672222222222222,
+   "mae": 0.2658778540762394,
+   "bias": -0.0033580626632631174,
+   "sd_scarto": 0.5087479176531846
+  },
+  "oos_arrotondato": {
+   "n": 1800,
+   "esatte": 0.8611111111111112,
+   "entro_1": 0.9772222222222222,
+   "mae": 0.1738888888888889,
+   "bias": -0.135,
+   "sd_scarto": 0.5144898767135164
+  }
+ },
+ "regola_stimata_loo_stagione": {
+  "pesi_per_fold": {
+   "1718": {
+    "n_Goal": 1.0181,
+    "n_SavedShot": 0.9945,
+    "n_MissedShots": 0.0013,
+    "n_BlockedShot": 0.0304,
+    "n_ShotOnPost": 0.0858,
+    "n_og_opp": 0.1426
+   },
+   "1819": {
+    "n_Goal": 1.0227,
+    "n_SavedShot": 0.9923,
+    "n_MissedShots": 0.0,
+    "n_BlockedShot": 0.031,
+    "n_ShotOnPost": 0.0667,
+    "n_og_opp": 0.1426
+   },
+   "1920": {
+    "n_Goal": 1.0232,
+    "n_SavedShot": 0.9939,
+    "n_MissedShots": 0.0,
+    "n_BlockedShot": 0.0274,
+    "n_ShotOnPost": 0.0545,
+    "n_og_opp": 0.1617
+   },
+   "2021": {
+    "n_Goal": 1.0084,
+    "n_SavedShot": 1.0021,
+    "n_MissedShots": 0.0,
+    "n_BlockedShot": 0.0248,
+    "n_ShotOnPost": 0.0868,
+    "n_og_opp": 0.1093
+   },
+   "2122": {
+    "n_Goal": 1.0159,
+    "n_SavedShot": 0.9935,
+    "n_MissedShots": 0.0017,
+    "n_BlockedShot": 0.0301,
+    "n_ShotOnPost": 0.0979,
+    "n_og_opp": 0.148
+   },
+   "2223": {
+    "n_Goal": 1.0148,
+    "n_SavedShot": 0.9887,
+    "n_MissedShots": 0.0053,
+    "n_BlockedShot": 0.0284,
+    "n_ShotOnPost": 0.0793,
+    "n_og_opp": 0.1031
+   },
+   "2324": {
+    "n_Goal": 1.0209,
+    "n_SavedShot": 0.994,
+    "n_MissedShots": 0.0012,
+    "n_BlockedShot": 0.0309,
+    "n_ShotOnPost": 0.0858,
+    "n_og_opp": 0.1541
+   },
+   "2425": {
+    "n_Goal": 1.02,
+    "n_SavedShot": 0.9961,
+    "n_MissedShots": 0.0003,
+    "n_BlockedShot": 0.0305,
+    "n_ShotOnPost": 0.0843,
+    "n_og_opp": 0.122
+   },
+   "2526": {
+    "n_Goal": 1.0186,
+    "n_SavedShot": 0.9914,
+    "n_MissedShots": 0.0023,
+    "n_BlockedShot": 0.0301,
+    "n_ShotOnPost": 0.0867,
+    "n_og_opp": 0.119
+   }
+  },
+  "pesi_su_tutto": {
+   "n_Goal": 1.0182,
+   "n_SavedShot": 0.9943,
+   "n_MissedShots": 0.0009,
+   "n_BlockedShot": 0.0295,
+   "n_ShotOnPost": 0.081,
+   "n_og_opp": 0.134
+  },
+  "oos_continuo": {
+   "n": 1800,
+   "esatte": 0.0022222222222222222,
+   "entro_1": 0.9666666666666667,
+   "mae": 0.26476642676103557,
+   "bias": -0.002906673824251962,
+   "sd_scarto": 0.5061032524762973
+  },
+  "oos_arrotondato": {
+   "n": 1800,
+   "esatte": 0.8611111111111112,
+   "entro_1": 0.9772222222222222,
+   "mae": 0.1738888888888889,
+   "bias": -0.1361111111111111,
+   "sd_scarto": 0.5141968798303088
+  }
+ },
+ "matrice_lega_stagione": {
+  "esatte": {
+   "1718": {
+    "bundesliga": 0.975,
+    "la_liga": 0.975,
+    "ligue_1": 0.825,
+    "premier_league": 0.875,
+    "serie_a": 0.95
+   },
+   "1819": {
+    "bundesliga": 0.925,
+    "la_liga": 0.925,
+    "ligue_1": 0.975,
+    "premier_league": 0.925,
+    "serie_a": 0.375
+   },
+   "1920": {
+    "bundesliga": 1.0,
+    "la_liga": 0.925,
+    "ligue_1": 0.875,
+    "premier_league": 0.925,
+    "serie_a": 0.325
+   },
+   "2021": {
+    "bundesliga": 0.625,
+    "la_liga": 0.9,
+    "ligue_1": 0.975,
+    "premier_league": 0.9,
+    "serie_a": 0.5
+   },
+   "2122": {
+    "bundesliga": 0.85,
+    "la_liga": 0.9,
+    "ligue_1": 0.925,
+    "premier_league": 0.875,
+    "serie_a": 0.95
+   },
+   "2223": {
+    "bundesliga": 0.7,
+    "la_liga": 0.9,
+    "ligue_1": 0.925,
+    "premier_league": 0.9,
+    "serie_a": 1.0
+   },
+   "2324": {
+    "bundesliga": 0.75,
+    "la_liga": 0.925,
+    "ligue_1": 0.925,
+    "premier_league": 0.85,
+    "serie_a": 0.975
+   },
+   "2425": {
+    "bundesliga": 0.825,
+    "la_liga": 0.875,
+    "ligue_1": 0.975,
+    "premier_league": 0.9,
+    "serie_a": 0.825
+   },
+   "2526": {
+    "bundesliga": 0.875,
+    "la_liga": 0.85,
+    "ligue_1": 0.95,
+    "premier_league": 0.875,
+    "serie_a": 0.925
+   }
+  },
+  "bias": {
+   "1718": {
+    "bundesliga": -0.025,
+    "la_liga": -0.025,
+    "ligue_1": -0.125,
+    "premier_league": -0.125,
+    "serie_a": -0.05
+   },
+   "1819": {
+    "bundesliga": -0.025,
+    "la_liga": 0.025,
+    "ligue_1": -0.025,
+    "premier_league": -0.075,
+    "serie_a": -0.825
+   },
+   "1920": {
+    "bundesliga": 0.0,
+    "la_liga": -0.025,
+    "ligue_1": -0.125,
+    "premier_league": -0.075,
+    "serie_a": -0.875
+   },
+   "2021": {
+    "bundesliga": -0.275,
+    "la_liga": -0.1,
+    "ligue_1": -0.025,
+    "premier_league": -0.1,
+    "serie_a": -0.7
+   },
+   "2122": {
+    "bundesliga": -0.15,
+    "la_liga": -0.1,
+    "ligue_1": -0.075,
+    "premier_league": -0.125,
+    "serie_a": -0.05
+   },
+   "2223": {
+    "bundesliga": -0.5,
+    "la_liga": -0.175,
+    "ligue_1": -0.1,
+    "premier_league": -0.1,
+    "serie_a": 0.0
+   },
+   "2324": {
+    "bundesliga": -0.075,
+    "la_liga": -0.075,
+    "ligue_1": -0.075,
+    "premier_league": -0.15,
+    "serie_a": -0.025
+   },
+   "2425": {
+    "bundesliga": -0.175,
+    "la_liga": -0.05,
+    "ligue_1": -0.025,
+    "premier_league": -0.125,
+    "serie_a": 0.05
+   },
+   "2526": {
+    "bundesliga": -0.15,
+    "la_liga": -0.2,
+    "ligue_1": -0.05,
+    "premier_league": -0.125,
+    "serie_a": -0.075
+   }
+  }
+ },
+ "distribuzione_scarto": {
+  "-6": 1,
+  "-5": 1,
+  "-4": 3,
+  "-3": 6,
+  "-2": 27,
+  "-1": 184,
+  "0": 1556,
+  "1": 19,
+  "2": 1,
+  "3": 1,
+  "4": 1
+ },
+ "diagnostica_autogol": {
+  "n_squadra_partita_con_autogol_avversario": 80,
+  "R1_esatte": 0.8,
+  "R3_esatte": 0.15,
+  "R1_bias": -0.2625,
+  "R3_bias": 0.775,
+  "quota_compatibile_con_conteggio_autogol": 0.15,
+  "quota_incompatibile_R1_esatta": 0.8,
+  "esatte_globali_per_confronto": 0.8644444444444445
+ },
+ "diagnostica_completezza": {
+  "n": 1800,
+  "corr_err_sot_vs_err_totali": -0.07135571780778911,
+  "R1_esatta": {
+   "n": 1556,
+   "media_tiri_understat": 12.248714652956298,
+   "media_tiri_fd": 12.123393316195372,
+   "media_scarto_tiri_totali": 0.12532133676092544
+  },
+  "R1_sbagliata": {
+   "n": 244,
+   "media_tiri_understat": 14.557377049180328,
+   "media_tiri_fd": 13.762295081967213,
+   "media_scarto_tiri_totali": 0.7950819672131147
+  },
+  "serie_a_per_stagione": {
+   "1718": {
+    "sot_fd": 4.35,
+    "R1": 4.3,
+    "tiri_fd": 12.05,
+    "tiri_understat": 12.03,
+    "tiri_understat_meno_bloccati": 9.47,
+    "bloccati_understat": 2.55,
+    "bias_sot": -0.05,
+    "esatte": 0.95
+   },
+   "1819": {
+    "sot_fd": 5.47,
+    "R1": 4.65,
+    "tiri_fd": 10.15,
+    "tiri_understat": 13.55,
+    "tiri_understat_meno_bloccati": 10.07,
+    "bloccati_understat": 3.48,
+    "bias_sot": -0.825,
+    "esatte": 0.375
+   },
+   "1920": {
+    "sot_fd": 5.7,
+    "R1": 4.83,
+    "tiri_fd": 10.45,
+    "tiri_understat": 14.1,
+    "tiri_understat_meno_bloccati": 10.7,
+    "bloccati_understat": 3.4,
+    "bias_sot": -0.875,
+    "esatte": 0.325
+   },
+   "2021": {
+    "sot_fd": 4.65,
+    "R1": 3.95,
+    "tiri_fd": 10.15,
+    "tiri_understat": 11.2,
+    "tiri_understat_meno_bloccati": 8.2,
+    "bloccati_understat": 3.0,
+    "bias_sot": -0.7,
+    "esatte": 0.5
+   },
+   "2122": {
+    "sot_fd": 4.4,
+    "R1": 4.35,
+    "tiri_fd": 12.97,
+    "tiri_understat": 13.18,
+    "tiri_understat_meno_bloccati": 9.93,
+    "bloccati_understat": 3.25,
+    "bias_sot": -0.05,
+    "esatte": 0.95
+   },
+   "2223": {
+    "sot_fd": 4.03,
+    "R1": 4.03,
+    "tiri_fd": 12.55,
+    "tiri_understat": 12.55,
+    "tiri_understat_meno_bloccati": 9.15,
+    "bloccati_understat": 3.4,
+    "bias_sot": 0.0,
+    "esatte": 1.0
+   },
+   "2324": {
+    "sot_fd": 4.3,
+    "R1": 4.28,
+    "tiri_fd": 12.93,
+    "tiri_understat": 12.97,
+    "tiri_understat_meno_bloccati": 8.95,
+    "bloccati_understat": 4.03,
+    "bias_sot": -0.025,
+    "esatte": 0.975
+   },
+   "2425": {
+    "sot_fd": 4.4,
+    "R1": 4.45,
+    "tiri_fd": 12.38,
+    "tiri_understat": 12.82,
+    "tiri_understat_meno_bloccati": 9.07,
+    "bloccati_understat": 3.75,
+    "bias_sot": 0.05,
+    "esatte": 0.825
+   },
+   "2526": {
+    "sot_fd": 4.17,
+    "R1": 4.1,
+    "tiri_fd": 12.62,
+    "tiri_understat": 12.57,
+    "tiri_understat_meno_bloccati": 9.22,
+    "bloccati_understat": 3.35,
+    "bias_sot": -0.075,
+    "esatte": 0.925
+   }
+  },
+  "scarto_tiri_totali_per_lega_stagione": {
+   "1718": {
+    "bundesliga": 0.0,
+    "la_liga": -0.03,
+    "ligue_1": 0.05,
+    "premier_league": 0.03,
+    "serie_a": -0.03
+   },
+   "1819": {
+    "bundesliga": 0.1,
+    "la_liga": 0.12,
+    "ligue_1": -0.03,
+    "premier_league": 0.0,
+    "serie_a": 3.4
+   },
+   "1920": {
+    "bundesliga": 0.12,
+    "la_liga": -0.1,
+    "ligue_1": 0.03,
+    "premier_league": -0.05,
+    "serie_a": 3.65
+   },
+   "2021": {
+    "bundesliga": -0.2,
+    "la_liga": 0.0,
+    "ligue_1": -0.03,
+    "premier_league": 0.0,
+    "serie_a": 1.05
+   },
+   "2122": {
+    "bundesliga": 0.17,
+    "la_liga": -0.03,
+    "ligue_1": -0.05,
+    "premier_league": 0.0,
+    "serie_a": 0.2
+   },
+   "2223": {
+    "bundesliga": 0.03,
+    "la_liga": -0.03,
+    "ligue_1": 0.0,
+    "premier_league": 0.1,
+    "serie_a": 0.0
+   },
+   "2324": {
+    "bundesliga": 0.5,
+    "la_liga": 0.0,
+    "ligue_1": -0.03,
+    "premier_league": 0.07,
+    "serie_a": 0.05
+   },
+   "2425": {
+    "bundesliga": -0.12,
+    "la_liga": 0.23,
+    "ligue_1": 0.2,
+    "premier_league": 0.0,
+    "serie_a": 0.45
+   },
+   "2526": {
+    "bundesliga": -0.07,
+    "la_liga": 0.0,
+    "ligue_1": 0.03,
+    "premier_league": -0.03,
+    "serie_a": -0.05
+   }
+  }
+ },
+ "controlli_negativi": {
+  "placebo_altra_partita": {
+   "n": 1800,
+   "esatte": 0.11722222222222223,
+   "entro_1": 0.33611111111111114,
+   "mae": 2.743888888888889,
+   "bias": -0.13944444444444445,
+   "sd_scarto": 3.5369878685139278
+  },
+  "baseline_media_lega_stagione": {
+   "n": 1800,
+   "esatte": 0.1688888888888889,
+   "entro_1": 0.46166666666666667,
+   "mae": 1.9327777777777777,
+   "bias": -0.06944444444444445,
+   "sd_scarto": 2.517787686230091
+  },
+  "baseline_moda_lega_stagione": {
+   "n": 1800,
+   "esatte": 0.22444444444444445,
+   "entro_1": 0.48055555555555557,
+   "mae": 2.0172222222222222,
+   "bias": -0.7583333333333333,
+   "sd_scarto": 2.676548244630867
+  },
+  "R1_per_confronto": {
+   "n": 1800,
+   "esatte": 0.8644444444444445,
+   "entro_1": 0.9772222222222222,
+   "mae": 0.17055555555555554,
+   "bias": -0.13944444444444445,
+   "sd_scarto": 0.5100433471014263
+  }
+ },
+ "sensibilita_volume_tiri": {
+  "0-7": {
+   "n": 282,
+   "esatte": 0.926,
+   "entro_1": 0.993,
+   "bias": -0.082
+  },
+  "8-10": {
+   "n": 421,
+   "esatte": 0.895,
+   "entro_1": 0.988,
+   "bias": -0.114
+  },
+  "11-13": {
+   "n": 418,
+   "esatte": 0.883,
+   "entro_1": 0.974,
+   "bias": -0.127
+  },
+  "14-16": {
+   "n": 290,
+   "esatte": 0.834,
+   "entro_1": 0.962,
+   "bias": -0.145
+  },
+  "17-19": {
+   "n": 203,
+   "esatte": 0.818,
+   "entro_1": 0.985,
+   "bias": -0.148
+  },
+  "20+": {
+   "n": 186,
+   "esatte": 0.758,
+   "entro_1": 0.952,
+   "bias": -0.296
+  }
+ },
+ "quante_regole_provate": {
+  "fisse": 8,
+  "stimate": 2,
+  "nota": "R1 e' definita a priori dalla semantica, non scelta per griglia; la stimata NNLS converge su R1"
+ },
+ "sanita": {
+  "controllo_numeri_noti_serie_a_HS": {
+   "1718": {
+    "atteso_HS": 5359,
+    "misurato_HS": 5359,
+    "ok": true
+   },
+   "1819": {
+    "atteso_HS": 4269,
+    "misurato_HS": 4269,
+    "ok": true
+   },
+   "2122": {
+    "atteso_HS": 5326,
+    "misurato_HS": 5326,
+    "ok": true
+   }
+  },
+  "tabella_tiri_football_data": [
+   {
+    "league": "serie_a",
+    "season": "1718",
+    "n": 380,
+    "HS": 5359.0,
+    "HST": 1839.0,
+    "AS": 4362.0,
+    "AST": 1482.0,
+    "quota_in_porta": 0.3416
+   },
+   {
+    "league": "serie_a",
+    "season": "1819",
+    "n": 380,
+    "HS": 4269.0,
+    "HST": 2180.0,
+    "AS": 3490.0,
+    "AST": 1800.0,
+    "quota_in_porta": 0.513
+   },
+   {
+    "league": "serie_a",
+    "season": "1920",
+    "n": 380,
+    "HS": 4362.0,
+    "HST": 2351.0,
+    "AS": 3674.0,
+    "AST": 1987.0,
+    "quota_in_porta": 0.5398
+   },
+   {
+    "league": "serie_a",
+    "season": "2021",
+    "n": 380,
+    "HS": 4411.0,
+    "HST": 2148.0,
+    "AS": 3912.0,
+    "AST": 1877.0,
+    "quota_in_porta": 0.4836
+   },
+   {
+    "league": "serie_a",
+    "season": "2122",
+    "n": 380,
+    "HS": 5326.0,
+    "HST": 1783.0,
+    "AS": 4509.0,
+    "AST": 1594.0,
+    "quota_in_porta": 0.3434
+   },
+   {
+    "league": "serie_a",
+    "season": "2223",
+    "n": 380,
+    "HS": 5215.0,
+    "HST": 1659.0,
+    "AS": 4431.0,
+    "AST": 1449.0,
+    "quota_in_porta": 0.3222
+   },
+   {
+    "league": "serie_a",
+    "season": "2324",
+    "n": 380,
+    "HS": 5346.0,
+    "HST": 1761.0,
+    "AS": 4361.0,
+    "AST": 1396.0,
+    "quota_in_porta": 0.3252
+   },
+   {
+    "league": "serie_a",
+    "season": "2425",
+    "n": 380,
+    "HS": 4990.0,
+    "HST": 1630.0,
+    "AS": 4151.0,
+    "AST": 1437.0,
+    "quota_in_porta": 0.3355
+   },
+   {
+    "league": "serie_a",
+    "season": "2526",
+    "n": 380,
+    "HS": 5191.0,
+    "HST": 1684.0,
+    "AS": 4180.0,
+    "AST": 1379.0,
+    "quota_in_porta": 0.3269
+   },
+   {
+    "league": "premier_league",
+    "season": "1718",
+    "n": 380,
+    "HS": 5164.0,
+    "HST": 1759.0,
+    "AS": 4126.0,
+    "AST": 1431.0,
+    "quota_in_porta": 0.3434
+   },
+   {
+    "league": "premier_league",
+    "season": "1819",
+    "n": 380,
+    "HS": 5371.0,
+    "HST": 1816.0,
+    "AS": 4235.0,
+    "AST": 1493.0,
+    "quota_in_porta": 0.3445
+   },
+   {
+    "league": "premier_league",
+    "season": "1920",
+    "n": 380,
+    "HS": 5063.0,
+    "HST": 1731.0,
+    "AS": 4332.0,
+    "AST": 1518.0,
+    "quota_in_porta": 0.3458
+   },
+   {
+    "league": "premier_league",
+    "season": "2021",
+    "n": 380,
+    "HS": 4870.0,
+    "HST": 1727.0,
+    "AS": 4318.0,
+    "AST": 1552.0,
+    "quota_in_porta": 0.3569
+   },
+   {
+    "league": "premier_league",
+    "season": "2122",
+    "n": 380,
+    "HS": 5262.0,
+    "HST": 1778.0,
+    "AS": 4460.0,
+    "AST": 1574.0,
+    "quota_in_porta": 0.3448
+   },
+   {
+    "league": "premier_league",
+    "season": "2223",
+    "n": 380,
+    "HS": 5302.0,
+    "HST": 1865.0,
+    "AS": 4298.0,
+    "AST": 1480.0,
+    "quota_in_porta": 0.3484
+   },
+   {
+    "league": "premier_league",
+    "season": "2324",
+    "n": 380,
+    "HS": 5853.0,
+    "HST": 2066.0,
+    "AS": 4629.0,
+    "AST": 1684.0,
+    "quota_in_porta": 0.3578
+   },
+   {
+    "league": "premier_league",
+    "season": "2425",
+    "n": 380,
+    "HS": 5226.0,
+    "HST": 1837.0,
+    "AS": 4623.0,
+    "AST": 1621.0,
+    "quota_in_porta": 0.3511
+   },
+   {
+    "league": "premier_league",
+    "season": "2526",
+    "n": 380,
+    "HS": 5259.0,
+    "HST": 1711.0,
+    "AS": 4240.0,
+    "AST": 1471.0,
+    "quota_in_porta": 0.335
+   },
+   {
+    "league": "la_liga",
+    "season": "1718",
+    "n": 380,
+    "HS": 5140.0,
+    "HST": 1808.0,
+    "AS": 3979.0,
+    "AST": 1446.0,
+    "quota_in_porta": 0.3568
+   },
+   {
+    "league": "la_liga",
+    "season": "1819",
+    "n": 380,
+    "HS": 5272.0,
+    "HST": 1837.0,
+    "AS": 3965.0,
+    "AST": 1364.0,
+    "quota_in_porta": 0.3465
+   },
+   {
+    "league": "la_liga",
+    "season": "1920",
+    "n": 380,
+    "HS": 4736.0,
+    "HST": 1648.0,
+    "AS": 3852.0,
+    "AST": 1334.0,
+    "quota_in_porta": 0.3472
+   },
+   {
+    "league": "la_liga",
+    "season": "2021",
+    "n": 380,
+    "HS": 4338.0,
+    "HST": 1512.0,
+    "AS": 3774.0,
+    "AST": 1302.0,
+    "quota_in_porta": 0.3469
+   },
+   {
+    "league": "la_liga",
+    "season": "2122",
+    "n": 380,
+    "HS": 4951.0,
+    "HST": 1669.0,
+    "AS": 3998.0,
+    "AST": 1354.0,
+    "quota_in_porta": 0.3378
+   },
+   {
+    "league": "la_liga",
+    "season": "2223",
+    "n": 380,
+    "HS": 5298.0,
+    "HST": 1834.0,
+    "AS": 4059.0,
+    "AST": 1355.0,
+    "quota_in_porta": 0.3408
+   },
+   {
+    "league": "la_liga",
+    "season": "2324",
+    "n": 380,
+    "HS": 5267.0,
+    "HST": 1869.0,
+    "AS": 4029.0,
+    "AST": 1406.0,
+    "quota_in_porta": 0.3523
+   },
+   {
+    "league": "la_liga",
+    "season": "2425",
+    "n": 380,
+    "HS": 4986.0,
+    "HST": 1742.0,
+    "AS": 4017.0,
+    "AST": 1350.0,
+    "quota_in_porta": 0.3434
+   },
+   {
+    "league": "la_liga",
+    "season": "2526",
+    "n": 380,
+    "HS": 5283.0,
+    "HST": 1869.0,
+    "AS": 4209.0,
+    "AST": 1426.0,
+    "quota_in_porta": 0.3471
+   },
+   {
+    "league": "bundesliga",
+    "season": "1718",
+    "n": 306,
+    "HS": 4286.0,
+    "HST": 1535.0,
+    "AS": 3423.0,
+    "AST": 1221.0,
+    "quota_in_porta": 0.3575
+   },
+   {
+    "league": "bundesliga",
+    "season": "1819",
+    "n": 306,
+    "HS": 4466.0,
+    "HST": 1570.0,
+    "AS": 3750.0,
+    "AST": 1390.0,
+    "quota_in_porta": 0.3603
+   },
+   {
+    "league": "bundesliga",
+    "season": "1920",
+    "n": 306,
+    "HS": 4373.0,
+    "HST": 1581.0,
+    "AS": 3745.0,
+    "AST": 1364.0,
+    "quota_in_porta": 0.3628
+   },
+   {
+    "league": "bundesliga",
+    "season": "2021",
+    "n": 306,
+    "HS": 3967.0,
+    "HST": 1502.0,
+    "AS": 3576.0,
+    "AST": 1341.0,
+    "quota_in_porta": 0.3769
+   },
+   {
+    "league": "bundesliga",
+    "season": "2122",
+    "n": 306,
+    "HS": 4307.0,
+    "HST": 1600.0,
+    "AS": 3563.0,
+    "AST": 1305.0,
+    "quota_in_porta": 0.3691
+   },
+   {
+    "league": "bundesliga",
+    "season": "2223",
+    "n": 306,
+    "HS": 4291.0,
+    "HST": 1679.0,
+    "AS": 3447.0,
+    "AST": 1252.0,
+    "quota_in_porta": 0.3788
+   },
+   {
+    "league": "bundesliga",
+    "season": "2324",
+    "n": 306,
+    "HS": 4670.0,
+    "HST": 1710.0,
+    "AS": 3647.0,
+    "AST": 1320.0,
+    "quota_in_porta": 0.3643
+   },
+   {
+    "league": "bundesliga",
+    "season": "2425",
+    "n": 306,
+    "HS": 4330.0,
+    "HST": 1532.0,
+    "AS": 3538.0,
+    "AST": 1286.0,
+    "quota_in_porta": 0.3582
+   },
+   {
+    "league": "bundesliga",
+    "season": "2526",
+    "n": 306,
+    "HS": 4482.0,
+    "HST": 1637.0,
+    "AS": 3629.0,
+    "AST": 1283.0,
+    "quota_in_porta": 0.36
+   },
+   {
+    "league": "ligue_1",
+    "season": "1718",
+    "n": 380,
+    "HS": 5174.0,
+    "HST": 1799.0,
+    "AS": 4256.0,
+    "AST": 1468.0,
+    "quota_in_porta": 0.3464
+   },
+   {
+    "league": "ligue_1",
+    "season": "1819",
+    "n": 380,
+    "HS": 5140.0,
+    "HST": 1785.0,
+    "AS": 4235.0,
+    "AST": 1381.0,
+    "quota_in_porta": 0.3377
+   },
+   {
+    "league": "ligue_1",
+    "season": "1920",
+    "n": 279,
+    "HS": 3748.0,
+    "HST": 1289.0,
+    "AS": 3041.0,
+    "AST": 1037.0,
+    "quota_in_porta": 0.3426
+   },
+   {
+    "league": "ligue_1",
+    "season": "2021",
+    "n": 380,
+    "HS": 4809.0,
+    "HST": 1655.0,
+    "AS": 4091.0,
+    "AST": 1438.0,
+    "quota_in_porta": 0.3475
+   },
+   {
+    "league": "ligue_1",
+    "season": "2122",
+    "n": 380,
+    "HS": 5034.0,
+    "HST": 1750.0,
+    "AS": 4081.0,
+    "AST": 1452.0,
+    "quota_in_porta": 0.3513
+   },
+   {
+    "league": "ligue_1",
+    "season": "2223",
+    "n": 380,
+    "HS": 4954.0,
+    "HST": 1827.0,
+    "AS": 4363.0,
+    "AST": 1620.0,
+    "quota_in_porta": 0.37
+   },
+   {
+    "league": "ligue_1",
+    "season": "2324",
+    "n": 306,
+    "HS": 4282.0,
+    "HST": 1515.0,
+    "AS": 3530.0,
+    "AST": 1281.0,
+    "quota_in_porta": 0.3579
+   },
+   {
+    "league": "ligue_1",
+    "season": "2425",
+    "n": 306,
+    "HS": 4081.0,
+    "HST": 1519.0,
+    "AS": 3475.0,
+    "AST": 1331.0,
+    "quota_in_porta": 0.3772
+   },
+   {
+    "league": "ligue_1",
+    "season": "2526",
+    "n": 306,
+    "HS": 4195.0,
+    "HST": 1454.0,
+    "AS": 3408.0,
+    "AST": 1189.0,
+    "quota_in_porta": 0.3476
+   }
+  ]
+ },
+ "regola_stimata_per_epoca": {
+  "1819-1920": {
+   "pesi_per_fold": {
+    "1819": {
+     "n_Goal": 0.9908,
+     "n_SavedShot": 0.9848,
+     "n_MissedShots": 0.0144,
+     "n_BlockedShot": 0.0448,
+     "n_ShotOnPost": 0.2751,
+     "n_og_opp": 0.0
+    },
+    "1920": {
+     "n_Goal": 0.9695,
+     "n_SavedShot": 1.0168,
+     "n_MissedShots": 0.0151,
+     "n_BlockedShot": 0.0019,
+     "n_ShotOnPost": 0.2522,
+     "n_og_opp": 0.0383
+    }
+   },
+   "pesi_su_tutto": {
+    "n_Goal": 0.9834,
+    "n_SavedShot": 0.999,
+    "n_MissedShots": 0.0146,
+    "n_BlockedShot": 0.025,
+    "n_ShotOnPost": 0.252,
+    "n_og_opp": 0.0
+   },
+   "oos_continuo": {
+    "n": 400,
+    "esatte": 0.0,
+    "entro_1": 0.925,
+    "mae": 0.3617379312797398,
+    "bias": -0.016357017400400745,
+    "sd_scarto": 0.6166873664947105
+   },
+   "oos_arrotondato": {
+    "n": 400,
+    "esatte": 0.78,
+    "entro_1": 0.95,
+    "mae": 0.2825,
+    "bias": -0.1425,
+    "sd_scarto": 0.6467142710431921
+   }
+  },
+  "altre": {
+   "pesi_per_fold": {
+    "1718": {
+     "n_Goal": 1.0299,
+     "n_SavedShot": 0.9906,
+     "n_MissedShots": 0.0,
+     "n_BlockedShot": 0.0297,
+     "n_ShotOnPost": 0.0325,
+     "n_og_opp": 0.1913
+    },
+    "2021": {
+     "n_Goal": 1.0174,
+     "n_SavedShot": 0.9996,
+     "n_MissedShots": 0.0,
+     "n_BlockedShot": 0.0212,
+     "n_ShotOnPost": 0.0342,
+     "n_og_opp": 0.1516
+    },
+    "2122": {
+     "n_Goal": 1.0281,
+     "n_SavedShot": 0.9894,
+     "n_MissedShots": 0.0,
+     "n_BlockedShot": 0.0293,
+     "n_ShotOnPost": 0.0441,
+     "n_og_opp": 0.1943
+    },
+    "2223": {
+     "n_Goal": 1.0279,
+     "n_SavedShot": 0.9847,
+     "n_MissedShots": 0.0017,
+     "n_BlockedShot": 0.0286,
+     "n_ShotOnPost": 0.0268,
+     "n_og_opp": 0.1445
+    },
+    "2324": {
+     "n_Goal": 1.0348,
+     "n_SavedShot": 0.99,
+     "n_MissedShots": 0.0,
+     "n_BlockedShot": 0.0294,
+     "n_ShotOnPost": 0.0326,
+     "n_og_opp": 0.2088
+    },
+    "2425": {
+     "n_Goal": 1.0329,
+     "n_SavedShot": 0.9922,
+     "n_MissedShots": 0.0,
+     "n_BlockedShot": 0.0281,
+     "n_ShotOnPost": 0.0329,
+     "n_og_opp": 0.1657
+    },
+    "2526": {
+     "n_Goal": 1.0318,
+     "n_SavedShot": 0.9875,
+     "n_MissedShots": 0.0,
+     "n_BlockedShot": 0.0293,
+     "n_ShotOnPost": 0.0337,
+     "n_og_opp": 0.1618
+    }
+   },
+   "pesi_su_tutto": {
+    "n_Goal": 1.029,
+    "n_SavedShot": 0.9907,
+    "n_MissedShots": 0.0,
+    "n_BlockedShot": 0.028,
+    "n_ShotOnPost": 0.034,
+    "n_og_opp": 0.1743
+   },
+   "oos_continuo": {
+    "n": 1400,
+    "esatte": 0.0014285714285714286,
+    "entro_1": 0.9771428571428571,
+    "mae": 0.23478117167986398,
+    "bias": 0.002057648369873451,
+    "sd_scarto": 0.46675058710470047
+   },
+   "oos_arrotondato": {
+    "n": 1400,
+    "esatte": 0.8771428571428571,
+    "entro_1": 0.9864285714285714,
+    "mae": 0.14785714285714285,
+    "bias": -0.12071428571428572,
+    "sd_scarto": 0.4726994896502136
+   }
+  }
+ },
+ "censimento_cella": {
+  "league": "bundesliga",
+  "season": "2425",
+  "partite": 305,
+  "R1_goal_saved": {
+   "n": 610,
+   "esatte": 0.8573770491803279,
+   "entro_1": 0.9885245901639345,
+   "mae": 0.16229508196721312,
+   "bias": -0.14590163934426228,
+   "sd_scarto": 0.4655888693207811
+  },
+  "R3_R1_og": {
+   "n": 610,
+   "esatte": 0.8360655737704918,
+   "entro_1": 0.9885245901639345,
+   "mae": 0.18360655737704917,
+   "bias": -0.10491803278688525,
+   "sd_scarto": 0.4984133213698727
+  },
+  "R2_R1_post": {
+   "n": 610,
+   "esatte": 0.6983606557377049,
+   "entro_1": 0.9524590163934427,
+   "mae": 0.36065573770491804,
+   "bias": 0.12786885245901639,
+   "sd_scarto": 0.7111892829878529
+  },
+  "distribuzione_scarto_R1": {
+   "-6": 1,
+   "-3": 1,
+   "-2": 5,
+   "-1": 75,
+   "0": 523,
+   "1": 5
+  },
+  "esatte_ci95": [
+   0.8295081967213115,
+   0.8852459016393442
+  ],
+  "per_volume_tiri": {
+   "0-7": {
+    "n": 95,
+    "esatte": 0.842,
+    "entro_1": 0.979,
+    "bias": -0.232
+   },
+   "8-10": {
+    "n": 116,
+    "esatte": 0.862,
+    "entro_1": 1.0,
+    "bias": -0.138
+   },
+   "11-13": {
+    "n": 136,
+    "esatte": 0.89,
+    "entro_1": 0.993,
+    "bias": -0.103
+   },
+   "14-16": {
+    "n": 126,
+    "esatte": 0.873,
+    "entro_1": 1.0,
+    "bias": -0.095
+   },
+   "17-19": {
+    "n": 69,
+    "esatte": 0.855,
+    "entro_1": 0.971,
+    "bias": -0.145
+   },
+   "20+": {
+    "n": 68,
+    "esatte": 0.779,
+    "entro_1": 0.971,
+    "bias": -0.221
+   }
+  },
+  "riga_intera_esatta": {
+   "quota": 0.7508196721311475,
+   "ci95": [
+    0.7016393442622951,
+    0.7967213114754098
+   ],
+   "entro_1_su_entrambi": 0.980327868852459,
+   "n_partite": 305
+  }
+ },
+ "partita_mancante": {
+  "league": "bundesliga",
+  "season": "2425",
+  "understat_id": "27866",
+  "home_team": "Union Berlin",
+  "away_team": "Bochum",
+  "date": "2024-12-14",
+  "conteggi_casa": {
+   "Goal": 1,
+   "SavedShot": 3,
+   "MissedShots": 14,
+   "BlockedShot": 4,
+   "ShotOnPost": 0,
+   "OwnGoal": 0
+  },
+  "conteggi_trasferta": {
+   "Goal": 1,
+   "SavedShot": 2,
+   "MissedShots": 4,
+   "BlockedShot": 6,
+   "ShotOnPost": 0,
+   "OwnGoal": 0
+  },
+  "per_regola": {
+   "R1_goal_saved": {
+    "home_sot": 4,
+    "away_sot": 3
+   },
+   "R2_R1_post": {
+    "home_sot": 4,
+    "away_sot": 3
+   },
+   "R3_R1_og": {
+    "home_sot": 4,
+    "away_sot": 3
+   },
+   "R4_R1_post_og": {
+    "home_sot": 4,
+    "away_sot": 3
+   },
+   "R5_R3_blocked": {
+    "home_sot": 8,
+    "away_sot": 9
+   },
+   "R6_tutto_meno_fuori": {
+    "home_sot": 8,
+    "away_sot": 9
+   },
+   "R7_solo_gol": {
+    "home_sot": 1,
+    "away_sot": 1
+   },
+   "R8_tutti_i_tiri": {
+    "home_sot": 22,
+    "away_sot": 13
+   }
+  },
+  "contesto_football_data": {
+   "football_data_risultato": [
+    0,
+    2
+   ],
+   "snapshot_risultato_campo": [
+    1,
+    1
+   ],
+   "football_data_statistiche": {
+    "HS": null,
+    "AS": null,
+    "HST": null,
+    "AST": null,
+    "HC": null,
+    "AC": null,
+    "HF": null,
+    "AF": null,
+    "HY": null,
+    "AY": null,
+    "HR": null,
+    "AR": null
+   },
+   "tutte_le_statistiche_vuote": true,
+   "nota": "football-data riporta il risultato del TRIBUNALE (0-2) e lascia vuoto TUTTO il blocco statistico, non solo i tiri in porta. Lo snapshot tiene il risultato del CAMPO (1-1, regola R1 del cantiere): la lista tiri di Understat e' l'unico record del campo."
+  },
+  "regola_scelta": "R1_goal_saved",
+  "stima_home_sot": 4,
+  "stima_away_sot": 3,
+  "errore_atteso_dal_censimento": {
+   "n": 610,
+   "esatte": 0.8573770491803279,
+   "entro_1": 0.9885245901639345,
+   "mae": 0.16229508196721312,
+   "bias": -0.14590163934426228,
+   "sd_scarto": 0.4655888693207811
+  },
+  "errore_atteso_per_lato": {
+   "home_22_tiri": {
+    "n": 186,
+    "esatte": 0.758,
+    "entro_1": 0.952,
+    "bias": -0.296
+   },
+   "away_13_tiri": {
+    "n": 418,
+    "esatte": 0.883,
+    "entro_1": 0.974,
+    "bias": -0.127
+   }
+  },
+  "errore_atteso_dal_campione_stessa_lega": {
+   "bundesliga": {
+    "R1_goal_saved": {
+     "n": 360,
+     "esatte": 0.8361111111111111,
+     "entro_1": 0.9861111111111112,
+     "mae": 0.19722222222222222,
+     "bias": -0.1527777777777778,
+     "sd_scarto": 0.574764629608579
+    },
+    "_n_squadra_partita": 360
+   }
+  },
+  "verdetto": "PROPONIBILE (corrispondenza esatta >= 0.70 nella cella): resta una STIMA, non un conteggio",
+  "riga_di_correzione_PROPOSTA": {
+   "file": "cantiere/data/bundesliga_matches.csv",
+   "chiave": "2425 2024-12-14 Union Berlin-Bochum",
+   "home_sot": 4,
+   "away_sot": 3,
+   "natura": "STIMA (ricostruzione da Understat), non un conteggio",
+   "stato": "PROPOSTA \u2014 non applicata (decide l'utente)"
+  }
+ }
+}

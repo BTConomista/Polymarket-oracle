@@ -1,0 +1,1285 @@
+{
+ "seed": 20260726,
+ "k_fold": 5,
+ "B_bootstrap": 10000,
+ "generato": "2026-07-26T03:27:08",
+ "n_valutazione": 3643,
+ "n_bersaglio": 9,
+ "copertura_footiqo_valutazione": 1.0,
+ "copertura_footiqo_bersaglio": 1.0,
+ "sanita": {
+  "mae_M1_originale_LOLO_insample": 0.0267,
+  "atteso_dal_progetto": 0.0267,
+  "mae_baseline_media_lega": 0.0743,
+  "atteso_baseline": 0.0743,
+  "mae_grezzo_senza_debias": 0.0345,
+  "bias_grezzo": -0.0225,
+  "p90_M1_originale": 0.0561,
+  "riprodotto": true,
+  "inversione_custom_vs_produzione_maxdiff": 0.0
+ },
+ "bakeoff": {
+  "M0 baseline media di lega": {
+   "mae": 0.07437984981340127,
+   "rmse": 0.09197827264886219,
+   "p90": 0.14356625799214628,
+   "p99": 0.25055176228039056,
+   "max": 0.3287528386617714,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.05926720085131521,
+    "premier_league": 0.07575939859714544,
+    "la_liga": 0.08521913085124842,
+    "bundesliga": 0.06860892728685168,
+    "ligue_1": 0.08188738368587953
+   },
+   "mae_leghe_nuove": 0.07599342468264267,
+   "famiglia": "M0",
+   "scope": "per_lega"
+  },
+  "M1 bias costante (LOLO)": {
+   "mae": 0.026739647857938566,
+   "rmse": 0.036103324331340406,
+   "p90": 0.05587900386566504,
+   "p99": 0.12019513199314728,
+   "max": 0.25244761197699206,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.03042440813520561,
+    "premier_league": 0.028620440370442892,
+    "la_liga": 0.02488216068334844,
+    "bundesliga": 0.02337479604352561,
+    "ligue_1": 0.025707465114115473
+   },
+   "mae_leghe_nuove": 0.024672054411469198,
+   "famiglia": "M1",
+   "scope": "lolo"
+  },
+  "M1b bias costante (per-lega)": {
+   "mae": 0.026060082085085853,
+   "rmse": 0.035318839794884135,
+   "p90": 0.055797826421611386,
+   "p99": 0.11857149187326028,
+   "max": 0.2429539909275744,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.029026273925608387,
+    "premier_league": 0.02920390334055085,
+    "la_liga": 0.02458998058199572,
+    "bundesliga": 0.020432321463039634,
+    "ligue_1": 0.025899742198193968
+   },
+   "mae_leghe_nuove": 0.02347289733776229,
+   "famiglia": "M1",
+   "scope": "per_lega"
+  },
+  "M1c bias costante (pooled)": {
+   "mae": 0.026486756887222355,
+   "rmse": 0.03581897744424168,
+   "p90": 0.05547865078475624,
+   "p99": 0.12010546043432509,
+   "max": 0.2505286885733864,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.029970572070633177,
+    "premier_league": 0.028706755756811093,
+    "la_liga": 0.024678115080202696,
+    "bundesliga": 0.02261372616211001,
+    "ligue_1": 0.025672578367101306
+   },
+   "mae_leghe_nuove": 0.024314833991444858,
+   "famiglia": "M1",
+   "scope": "pooled"
+  },
+  "M2 logit~1X2 (pooled)": {
+   "mae": 0.022290999586067305,
+   "rmse": 0.02927459353729022,
+   "p90": 0.0462395401111877,
+   "p99": 0.08623072664191807,
+   "max": 0.2638270760069896,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.022976454393277015,
+    "premier_league": 0.020748487573201167,
+    "la_liga": 0.023444220131122694,
+    "bundesliga": 0.02121400850341172,
+    "ligue_1": 0.022853658513591616
+   },
+   "mae_leghe_nuove": 0.022125860820151534,
+   "famiglia": "M2",
+   "scope": "pooled"
+  },
+  "M2b logit~1X2 (per-lega)": {
+   "mae": 0.02108789286076667,
+   "rmse": 0.0278020668136735,
+   "p90": 0.044457106290274856,
+   "p99": 0.08352210379718207,
+   "max": 0.22172438506519715,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.02274755376120782,
+    "premier_league": 0.020713158113871637,
+    "la_liga": 0.022234935384497112,
+    "bundesliga": 0.017984024266714613,
+    "ligue_1": 0.02112686951600587
+   },
+   "mae_leghe_nuove": 0.019731842827949223,
+   "famiglia": "M2",
+   "scope": "per_lega"
+  },
+  "M2c logit~1X2+|H-A| (pooled)": {
+   "mae": 0.022327884800639197,
+   "rmse": 0.02931845048284869,
+   "p90": 0.04638087271918701,
+   "p99": 0.08601420955267301,
+   "max": 0.26417318022450126,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.023157587571878253,
+    "premier_league": 0.020773146535870767,
+    "la_liga": 0.023505169437201986,
+    "bundesliga": 0.02116891612564809,
+    "ligue_1": 0.02279947675270283
+   },
+   "mae_leghe_nuove": 0.022075713598360854,
+   "famiglia": "M2",
+   "scope": "pooled"
+  },
+  "M2d logit~1X2+|H-A| (per-lega)": {
+   "mae": 0.02111261623222291,
+   "rmse": 0.027835890215702347,
+   "p90": 0.04462002222171791,
+   "p99": 0.08327393698355043,
+   "max": 0.2218139407216169,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.02264015542461487,
+    "premier_league": 0.02074639197853788,
+    "la_liga": 0.02244064318961951,
+    "bundesliga": 0.018000378291219216,
+    "ligue_1": 0.0211007483077751
+   },
+   "mae_leghe_nuove": 0.019724575263008914,
+   "famiglia": "M2",
+   "scope": "per_lega"
+  },
+  "M2e prob~1X2 (per-lega)": {
+   "mae": 0.022049828566080214,
+   "rmse": 0.02963888879865916,
+   "p90": 0.046151897029637234,
+   "p99": 0.08982994638039991,
+   "max": 0.25798270440263515,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.02318190112651685,
+    "premier_league": 0.021493498735432423,
+    "la_liga": 0.0241459734871572,
+    "bundesliga": 0.018911807646835834,
+    "ligue_1": 0.02187551199811824
+   },
+   "mae_leghe_nuove": 0.020560001262589365,
+   "famiglia": "M2",
+   "scope": "per_lega"
+  },
+  "M3 bias=a+b*T (per-lega)": {
+   "mae": 0.020867771042752607,
+   "rmse": 0.02723205352724891,
+   "p90": 0.043425161099376955,
+   "p99": 0.07899000607815097,
+   "max": 0.15849552774750747,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.021835730788924142,
+    "premier_league": 0.021693164349783155,
+    "la_liga": 0.02136899337734704,
+    "bundesliga": 0.01853629695475314,
+    "ligue_1": 0.020428014484064394
+   },
+   "mae_leghe_nuove": 0.019588330621090583,
+   "famiglia": "M3",
+   "scope": "per_lega"
+  },
+  "M3b bias=a+b*T (pooled)": {
+   "mae": 0.02214802096820501,
+   "rmse": 0.028843694107040366,
+   "p90": 0.04554791269776886,
+   "p99": 0.08302723973477859,
+   "max": 0.19266398421125008,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.022585124320570915,
+    "premier_league": 0.021794872847129873,
+    "la_liga": 0.02277941057377702,
+    "bundesliga": 0.021864457053745692,
+    "ligue_1": 0.021657116076690738
+   },
+   "mae_leghe_nuove": 0.021749149305684317,
+   "famiglia": "M3",
+   "scope": "pooled"
+  },
+  "M3c logit-bias=a+b*T (per-lega)": {
+   "mae": 0.021535884495841914,
+   "rmse": 0.02807664192427049,
+   "p90": 0.04471785389995289,
+   "p99": 0.08094823764941825,
+   "max": 0.19448584060435894,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.022295693841815213,
+    "premier_league": 0.02222088349132013,
+    "la_liga": 0.02252178708263818,
+    "bundesliga": 0.0192734083171339,
+    "ligue_1": 0.020904562309364383
+   },
+   "mae_leghe_nuove": 0.020180535775762443,
+   "famiglia": "M3",
+   "scope": "per_lega"
+  },
+  "M3d logit-bias=a+b*T (pooled)": {
+   "mae": 0.02274402212905882,
+   "rmse": 0.029584882273676526,
+   "p90": 0.04681364042973361,
+   "p99": 0.08628315722935165,
+   "max": 0.2177018824624423,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.022393735896145368,
+    "premier_league": 0.021843689863293818,
+    "la_liga": 0.023911268078748053,
+    "bundesliga": 0.023235013763679518,
+    "ligue_1": 0.02243572819539956
+   },
+   "mae_leghe_nuove": 0.02279051012409316,
+   "famiglia": "M3",
+   "scope": "pooled"
+  },
+  "M4 logit-bias su (T,D) quad (per-lega)": {
+   "mae": 0.01974426920816806,
+   "rmse": 0.026199877689169718,
+   "p90": 0.04106319661705905,
+   "p99": 0.08052631609292064,
+   "max": 0.2008482792348636,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.021606021579003896,
+    "premier_league": 0.019071590339173515,
+    "la_liga": 0.020588897024294693,
+    "bundesliga": 0.015989131761195447,
+    "ligue_1": 0.02070237627117968
+   },
+   "mae_leghe_nuove": 0.018610290483549112,
+   "famiglia": "M4",
+   "scope": "per_lega"
+  },
+  "M4b logit-bias su (T,D) quad (pooled)": {
+   "mae": 0.020826447033045783,
+   "rmse": 0.027680293254093716,
+   "p90": 0.043335099486706184,
+   "p99": 0.08479533586232613,
+   "max": 0.25253907755135196,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.022233001533177033,
+    "premier_league": 0.01942933187000264,
+    "la_liga": 0.022059842382937542,
+    "bundesliga": 0.01808234436020634,
+    "ligue_1": 0.021770546973630428
+   },
+   "mae_leghe_nuove": 0.020133450435756935,
+   "famiglia": "M4",
+   "scope": "pooled"
+  },
+  "M4c logit-bias su (T,D) lin (per-lega)": {
+   "mae": 0.02082185249304364,
+   "rmse": 0.027353040310352975,
+   "p90": 0.043064283089120976,
+   "p99": 0.08183856112212322,
+   "max": 0.20704382230791016,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.021749976932433964,
+    "premier_league": 0.020723891578394653,
+    "la_liga": 0.021873826166491996,
+    "bundesliga": 0.018293450768206328,
+    "ligue_1": 0.020952800742255247
+   },
+   "mae_leghe_nuove": 0.019772384943062583,
+   "famiglia": "M4",
+   "scope": "per_lega"
+  },
+  "M4d isotonica su p_raw (per-lega)": {
+   "mae": 0.02042362279893032,
+   "rmse": 0.026739226152301388,
+   "p90": 0.04331430142082036,
+   "p99": 0.07989721689151405,
+   "max": 0.17091957426582832,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.021440749019704632,
+    "premier_league": 0.020463250641150777,
+    "la_liga": 0.021464168471826684,
+    "bundesliga": 0.017423553266593676,
+    "ligue_1": 0.020715303890996812
+   },
+   "mae_leghe_nuove": 0.0192541820070908,
+   "famiglia": "M4",
+   "scope": "per_lega"
+  },
+  "M4e GBM su 1X2+inversione (pooled)": {
+   "mae": 0.021236392929181738,
+   "rmse": 0.02780026104243741,
+   "p90": 0.04403681245029763,
+   "p99": 0.08296902868603313,
+   "max": 0.16765059507610802,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.022629874903566365,
+    "premier_league": 0.02017344529172694,
+    "la_liga": 0.022508738389847557,
+    "bundesliga": 0.018746994049518798,
+    "ligue_1": 0.021616205166679617
+   },
+   "mae_leghe_nuove": 0.020342637502789453,
+   "famiglia": "M4",
+   "scope": "pooled"
+  },
+  "M5 chiusura 1xBet grezza": {
+   "mae": 0.022825242274415805,
+   "rmse": 0.02902685884137238,
+   "p90": 0.04708052687995399,
+   "p99": 0.07592155295719587,
+   "max": 0.15705128205128216,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.024100485487073497,
+    "premier_league": 0.02112636411388927,
+    "la_liga": 0.023607227447976914,
+    "bundesliga": 0.02309807011806208,
+    "ligue_1": 0.02224818816236817
+   },
+   "mae_leghe_nuove": 0.02262542850220296,
+   "famiglia": "M5",
+   "scope": "pooled"
+  },
+  "M5b logit~chiusura (per-lega)": {
+   "mae": 0.019623150426405233,
+   "rmse": 0.025339297433024415,
+   "p90": 0.040886877981220315,
+   "p99": 0.07087041386536767,
+   "max": 0.13434165940211273,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.02047665538650775,
+    "premier_league": 0.01812784841962512,
+    "la_liga": 0.020332407262165127,
+    "bundesliga": 0.020209100590148705,
+    "ligue_1": 0.01908783474201559
+   },
+   "mae_leghe_nuove": 0.0195855352835567,
+   "famiglia": "M5",
+   "scope": "per_lega"
+  },
+  "M5c logit~chiusura (pooled)": {
+   "mae": 0.019781149157072173,
+   "rmse": 0.025501182753548308,
+   "p90": 0.04144206398600873,
+   "p99": 0.07175173462195902,
+   "max": 0.1356863960127238,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.020813696519238215,
+    "premier_league": 0.01819325469607062,
+    "la_liga": 0.020779204085674945,
+    "bundesliga": 0.02015037970405254,
+    "ligue_1": 0.01904257075133836
+   },
+   "mae_leghe_nuove": 0.019534298129469014,
+   "famiglia": "M5",
+   "scope": "pooled"
+  },
+  "M5d logit~chiusura+1X2ap (per-lega)": {
+   "mae": 0.015477879198234458,
+   "rmse": 0.02005347129808048,
+   "p90": 0.031758013357902605,
+   "p99": 0.05732410754291453,
+   "max": 0.1145107936993136,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.01692637759730624,
+    "premier_league": 0.014787730320288914,
+    "la_liga": 0.01574556468250746,
+    "bundesliga": 0.01443195978457596,
+    "ligue_1": 0.015283940730107777
+   },
+   "mae_leghe_nuove": 0.014905768703661153,
+   "famiglia": "M5",
+   "scope": "per_lega"
+  },
+  "M5e logit~chiusura+1X2ap (pooled)": {
+   "mae": 0.015904205600735088,
+   "rmse": 0.020630831302360937,
+   "p90": 0.0329855092786654,
+   "p99": 0.05906630944577889,
+   "max": 0.13696774650792204,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.017240858651330203,
+    "premier_league": 0.014886997128509069,
+    "la_liga": 0.016218594660932034,
+    "bundesliga": 0.015530276779288423,
+    "ligue_1": 0.015567152001348585
+   },
+   "mae_leghe_nuove": 0.015550784056120119,
+   "famiglia": "M5",
+   "scope": "pooled"
+  },
+  "M5f logit~scaletta1xBet+1X2ap (pooled)": {
+   "mae": 0.014665209502674574,
+   "rmse": 0.019092459970918404,
+   "p90": 0.030623933426361476,
+   "p99": 0.054152508438225756,
+   "max": 0.1248826575715894,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.016119896182073733,
+    "premier_league": 0.01337953261424127,
+    "la_liga": 0.014704167034564845,
+    "bundesliga": 0.014259062591129957,
+    "ligue_1": 0.014780860843194151
+   },
+   "mae_leghe_nuove": 0.014549248266159054,
+   "famiglia": "M5",
+   "scope": "pooled"
+  },
+  "M5g logit~scaletta1xBet+1X2ap (per-lega)": {
+   "mae": 0.014341078251481579,
+   "rmse": 0.018679292336317724,
+   "p90": 0.02985834394148555,
+   "p99": 0.053009606756778016,
+   "max": 0.10986200758531839,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.01577689873623679,
+    "premier_league": 0.01343013053294804,
+    "la_liga": 0.014436644721906413,
+    "bundesliga": 0.01315209669483595,
+    "ligue_1": 0.014667991209158703
+   },
+   "mae_leghe_nuove": 0.013995125338898053,
+   "famiglia": "M5",
+   "scope": "per_lega"
+  },
+  "M5h GBM su scaletta1xBet+1X2ap (pooled)": {
+   "mae": 0.014962449585051628,
+   "rmse": 0.019401321034579887,
+   "p90": 0.03108507913630128,
+   "p99": 0.05490701321431592,
+   "max": 0.11361831534730071,
+   "n": 3643,
+   "mae_per_lega": {
+    "serie_a": 0.016190852361197952,
+    "premier_league": 0.01389577155453615,
+    "la_liga": 0.01515971730964175,
+    "bundesliga": 0.014306682827673453,
+    "ligue_1": 0.01512591213234168
+   },
+   "mae_leghe_nuove": 0.01476227770143612,
+   "famiglia": "M5",
+   "scope": "pooled"
+  }
+ },
+ "n_varianti_provate": 26,
+ "vincitore": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+ "vincitore_solo_apertura": "M4 logit-bias su (T,D) quad (per-lega)",
+ "per_lega_vs_generale": {
+  "M5g logit~scaletta1xBet+1X2ap (per-lega) vs M5f logit~scaletta1xBet+1X2ap (pooled)": {
+   "mae_per_lega": 0.01434,
+   "mae_pooled": 0.01467,
+   "delta": -0.00032,
+   "ci95": [
+    -0.00048,
+    -0.00016
+   ],
+   "verdetto": "per-lega MEGLIO (conclusivo)"
+  },
+  "M4 logit-bias su (T,D) quad (per-lega) vs M4b logit-bias su (T,D) quad (pooled)": {
+   "mae_per_lega": 0.01974,
+   "mae_pooled": 0.02083,
+   "delta": -0.00108,
+   "ci95": [
+    -0.00139,
+    -0.00078
+   ],
+   "verdetto": "per-lega MEGLIO (conclusivo)"
+  },
+  "M2b logit~1X2 (per-lega) vs M2 logit~1X2 (pooled)": {
+   "mae_per_lega": 0.02109,
+   "mae_pooled": 0.02229,
+   "delta": -0.0012,
+   "ci95": [
+    -0.0015,
+    -0.0009
+   ],
+   "verdetto": "per-lega MEGLIO (conclusivo)"
+  },
+  "M1b bias costante (per-lega) vs M1c bias costante (pooled)": {
+   "mae_per_lega": 0.02606,
+   "mae_pooled": 0.02649,
+   "delta": -0.00043,
+   "ci95": [
+    -0.00062,
+    -0.00024
+   ],
+   "verdetto": "per-lega MEGLIO (conclusivo)"
+  },
+  "M3 bias=a+b*T (per-lega) vs M3b bias=a+b*T (pooled)": {
+   "mae_per_lega": 0.02087,
+   "mae_pooled": 0.02215,
+   "delta": -0.00128,
+   "ci95": [
+    -0.00158,
+    -0.00098
+   ],
+   "verdetto": "per-lega MEGLIO (conclusivo)"
+  }
+ },
+ "confronti": {
+  "M5g logit~scaletta1xBet+1X2ap (per-lega) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.0124,
+   "ci95": [
+    -0.01314,
+    -0.01165
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M4 logit-bias su (T,D) quad (per-lega) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.007,
+   "ci95": [
+    -0.00764,
+    -0.00636
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M5f logit~scaletta1xBet+1X2ap (pooled) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.01207,
+   "ci95": [
+    -0.01282,
+    -0.01132
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M5h GBM su scaletta1xBet+1X2ap (pooled) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.01178,
+   "ci95": [
+    -0.01251,
+    -0.01103
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M5d logit~chiusura+1X2ap (per-lega) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.01126,
+   "ci95": [
+    -0.012,
+    -0.01052
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M5e logit~chiusura+1X2ap (pooled) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.01084,
+   "ci95": [
+    -0.01157,
+    -0.01007
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M5b logit~chiusura (per-lega) vs M1 bias costante (LOLO)": {
+   "delta_mae": -0.00712,
+   "ci95": [
+    -0.00803,
+    -0.0062
+   ],
+   "p_una_coda": 0.0,
+   "p_bonferroni": 0.0,
+   "verdetto": "CONCLUSIVO",
+   "conclusivo_dopo_bonferroni": true
+  },
+  "M5g logit~scaletta1xBet+1X2ap (per-lega) vs M4 logit-bias su (T,D) quad (per-lega)": {
+   "delta_mae": -0.0054,
+   "ci95": [
+    -0.00593,
+    -0.00488
+   ],
+   "verdetto": "CONCLUSIVO"
+  }
+ },
+ "curva_rho": {
+  "-0.20": {
+   "mae_grezzo": 0.09777,
+   "bias_grezzo": 0.09741,
+   "mae_debias_costante": 0.02186,
+   "mae_debias_superficie_M4": 0.01978
+  },
+  "-0.16": {
+   "mae_grezzo": 0.06683,
+   "bias_grezzo": 0.06596,
+   "mae_debias_costante": 0.02311,
+   "mae_debias_superficie_M4": 0.01978
+  },
+  "-0.12": {
+   "mae_grezzo": 0.03676,
+   "bias_grezzo": 0.03191,
+   "mae_debias_costante": 0.02458,
+   "mae_debias_superficie_M4": 0.01978
+  },
+  "-0.10": {
+   "mae_grezzo": 0.02728,
+   "bias_grezzo": 0.0141,
+   "mae_debias_costante": 0.02521,
+   "mae_debias_superficie_M4": 0.01976
+  },
+  "-0.08": {
+   "mae_grezzo": 0.02668,
+   "bias_grezzo": -0.00408,
+   "mae_debias_costante": 0.02571,
+   "mae_debias_superficie_M4": 0.01976
+  },
+  "-0.06": {
+   "mae_grezzo": 0.03448,
+   "bias_grezzo": -0.02252,
+   "mae_debias_costante": 0.02606,
+   "mae_debias_superficie_M4": 0.01974
+  },
+  "-0.04": {
+   "mae_grezzo": 0.0475,
+   "bias_grezzo": -0.04106,
+   "mae_debias_costante": 0.02626,
+   "mae_debias_superficie_M4": 0.01974
+  },
+  "-0.02": {
+   "mae_grezzo": 0.06325,
+   "bias_grezzo": -0.05955,
+   "mae_debias_costante": 0.02631,
+   "mae_debias_superficie_M4": 0.01973
+  },
+  "+0.00": {
+   "mae_grezzo": 0.08002,
+   "bias_grezzo": -0.07785,
+   "mae_debias_costante": 0.02626,
+   "mae_debias_superficie_M4": 0.01972
+  },
+  "+0.04": {
+   "mae_grezzo": 0.11422,
+   "bias_grezzo": -0.11324,
+   "mae_debias_costante": 0.0262,
+   "mae_debias_superficie_M4": 0.01972
+  },
+  "+0.08": {
+   "mae_grezzo": 0.14673,
+   "bias_grezzo": -0.14626,
+   "mae_debias_costante": 0.02652,
+   "mae_debias_superficie_M4": 0.01975
+  },
+  "+0.12": {
+   "mae_grezzo": 0.17649,
+   "bias_grezzo": -0.17628,
+   "mae_debias_costante": 0.02736,
+   "mae_debias_superficie_M4": 0.0198
+  }
+ },
+ "curva_theta": {
+  "0.90": {
+   "mae_grezzo": 0.04145,
+   "bias_grezzo": -0.03365,
+   "mae_debias_costante": 0.02599
+  },
+  "0.95": {
+   "mae_grezzo": 0.03802,
+   "bias_grezzo": -0.02851,
+   "mae_debias_costante": 0.02595
+  },
+  "1.00": {
+   "mae_grezzo": 0.03448,
+   "bias_grezzo": -0.02252,
+   "mae_debias_costante": 0.02606
+  },
+  "1.05": {
+   "mae_grezzo": 0.03121,
+   "bias_grezzo": -0.01564,
+   "mae_debias_costante": 0.02634
+  },
+  "1.10": {
+   "mae_grezzo": 0.0287,
+   "bias_grezzo": -0.00785,
+   "mae_debias_costante": 0.02678
+  },
+  "1.15": {
+   "mae_grezzo": 0.02747,
+   "bias_grezzo": 0.00089,
+   "mae_debias_costante": 0.0274
+  },
+  "1.22": {
+   "mae_grezzo": 0.03009,
+   "bias_grezzo": 0.01478,
+   "mae_debias_costante": 0.02855
+  },
+  "1.30": {
+   "mae_grezzo": 0.04032,
+   "bias_grezzo": 0.03303,
+   "mae_debias_costante": 0.0301
+  }
+ },
+ "confutazioni": {
+  "C1_permutazione": {
+   "cosa": "chiusura 1xBet permutata",
+   "mae_vincitore": 0.01434,
+   "mae_con_feature_permutata": 0.02118,
+   "atteso": "il MAE deve degradare fino alla baseline: se non degrada, il vantaggio non veniva da quella feature"
+  },
+  "C2_leave_one_season_out": {
+   "M5g logit~scaletta1xBet+1X2ap (per-lega)": {
+    "mae": 0.01729,
+    "scope_usato": "per_lega",
+    "delta_vs_M1": -0.00927,
+    "ci95": [
+     -0.01004,
+     -0.0085
+    ],
+    "verdetto": "CONCLUSIVO"
+   },
+   "M4 logit-bias su (T,D) quad (per-lega)": {
+    "mae": 0.02293,
+    "scope_usato": "per_lega",
+    "delta_vs_M1": -0.00363,
+    "ci95": [
+     -0.00429,
+     -0.00297
+    ],
+    "verdetto": "CONCLUSIVO"
+   },
+   "M1 bias costante (LOLO)": {
+    "mae": 0.02656,
+    "scope_usato": "lolo"
+   }
+  },
+  "C3_leave_one_league_out": {
+   "M5g logit~scaletta1xBet+1X2ap (per-lega)": {
+    "mae": 0.01493,
+    "scope_usato": "pooled",
+    "delta_vs_M1": -0.01181,
+    "ci95": [
+     -0.01256,
+     -0.01106
+    ],
+    "verdetto": "CONCLUSIVO"
+   },
+   "M4 logit-bias su (T,D) quad (per-lega)": {
+    "mae": 0.02162,
+    "scope_usato": "pooled",
+    "delta_vs_M1": -0.00512,
+    "ci95": [
+     -0.00573,
+     -0.00452
+    ],
+    "verdetto": "CONCLUSIVO"
+   },
+   "M1 bias costante (LOLO)": {
+    "mae": 0.02674,
+    "scope_usato": "pooled"
+   }
+  },
+  "C4_verita_devig_Shin": {
+   "M5g logit~scaletta1xBet+1X2ap (per-lega)": 0.01514,
+   "M4 logit-bias su (T,D) quad (per-lega)": 0.02087,
+   "M1 bias costante (LOLO)": 0.0261,
+   "nota": "cambia la definizione della verita': serve a vedere se la graduatoria dipende dal devig moltiplicativo"
+  },
+  "C5_strato_simili_alle_9": {
+   "n_strato": 668,
+   "M5g logit~scaletta1xBet+1X2ap (per-lega)": 0.01514,
+   "M4 logit-bias su (T,D) quad (per-lega)": 0.02174,
+   "M1 bias costante (LOLO)": 0.03017,
+   "delta_vincitore_vs_M1": -0.01503,
+   "ci95": [
+    -0.01679,
+    -0.01326
+   ],
+   "verdetto": "CONCLUSIVO"
+  },
+  "C6_sanita_chiusura_sulle_9": {
+   "overround_medio_bersaglio": 1.0385,
+   "overround_medio_valutazione": 1.027,
+   "scaletta_monotona": "9/9",
+   "coperte": 9
+  },
+  "C8_dove_cadono_le_9": {
+   "per_partita": {
+    "Hoffenheim-RB Leipzig": {
+     "T": 2.819,
+     "perc_T": 0.675,
+     "D": 0.323,
+     "perc_D": 0.295,
+     "p_c25": 0.61,
+     "perc_p_c25": 0.785
+    },
+    "Leverkusen-Dortmund": {
+     "T": 3.071,
+     "perc_T": 0.813,
+     "D": 0.214,
+     "perc_D": 0.194,
+     "p_c25": 0.688,
+     "perc_p_c25": 0.924
+    },
+    "Ein Frankfurt-Bayern Munich": {
+     "T": 3.174,
+     "perc_T": 0.851,
+     "D": 1.32,
+     "perc_D": 0.804,
+     "p_c25": 0.586,
+     "perc_p_c25": 0.722
+    },
+    "Bayern Munich-Hertha": {
+     "T": 3.524,
+     "perc_T": 0.933,
+     "D": 2.246,
+     "perc_D": 0.959,
+     "p_c25": 0.742,
+     "perc_p_c25": 0.965
+    },
+    "Werder Bremen-Leverkusen": {
+     "T": 3.396,
+     "perc_T": 0.907,
+     "D": 0.61,
+     "perc_D": 0.495,
+     "p_c25": 0.696,
+     "perc_p_c25": 0.927
+    },
+    "Bayern Munich-Hoffenheim": {
+     "T": 3.82,
+     "perc_T": 0.964,
+     "D": 2.213,
+     "perc_D": 0.957,
+     "p_c25": 0.726,
+     "perc_p_c25": 0.955
+    },
+    "Dortmund-Wolfsburg": {
+     "T": 2.944,
+     "perc_T": 0.75,
+     "D": 1.187,
+     "perc_D": 0.765,
+     "p_c25": 0.644,
+     "perc_p_c25": 0.855
+    },
+    "Lyon-Metz": {
+     "T": 4.22,
+     "perc_T": 0.983,
+     "D": 2.265,
+     "perc_D": 0.96,
+     "p_c25": 0.744,
+     "perc_p_c25": 0.967
+    },
+    "Monaco-Lyon": {
+     "T": 2.763,
+     "perc_T": 0.641,
+     "D": 0.222,
+     "perc_D": 0.201,
+     "p_c25": 0.64,
+     "perc_p_c25": 0.85
+    }
+   },
+   "range_T_valutazione": [
+    1.341,
+    5.587
+   ],
+   "range_T_bersaglio": [
+    2.763,
+    4.22
+   ],
+   "extrapolazione": false,
+   "nota": "le 9 sono partite da TOTALE ALTO (percentili 64-98): il MAE medio del bakeoff NON e' l'errore atteso su di loro -- vale lo strato C5"
+  },
+  "C7_stabilita_su_10_semi": {
+   "delta_medio": -0.0124,
+   "delta_min": -0.01245,
+   "delta_max": -0.01233,
+   "segno_costante": true
+  }
+ },
+ "fuori_concorso_lato_over": {
+  "overround_medio": 1.0558,
+  "overround_sd": 0.0069,
+  "overround_sd_entro_lega_stagione": 0.005,
+  "mae_lettura_solo_lato_over": 0.00157,
+  "p90_lettura_solo_lato_over": 0.00309,
+  "mae_lettura_solo_lato_under": 0.00132,
+  "nota": "l'overround della linea O/U Betbrain 2017-19 e' quasi costante: leggere UN SOLO lato e imputare l'overround della cella lega-stagione ricostruisce la probabilita' vera con un errore di ~0.0016, un ordine di grandezza sotto qualunque stima.",
+  "righe_corrotte": [
+   {
+    "partita": "Bayern Munich-Hertha",
+    "league": "bundesliga",
+    "season": "1718",
+    "quota_over_corrotta": 1.42,
+    "quota_under_corrotta": 1.75,
+    "overround_corrotto": 1.2757,
+    "p_over_da_lato_over": 0.6674,
+    "p_over_da_lato_under": 0.4585,
+    "p_over_vincitore": 0.6911,
+    "p_over_chiusura_1xbet": 0.7419,
+    "scarto_lato_over_vs_vincitore": -0.0238,
+    "perc_nella_distribuzione_di_riferimento": 0.813,
+    "perc_nello_strato_simile": 0.789,
+    "scarto_lato_under_vs_vincitore": -0.2327,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Ein Frankfurt-Bayern Munich",
+    "league": "bundesliga",
+    "season": "1718",
+    "quota_over_corrotta": 1.56,
+    "quota_under_corrotta": 1.55,
+    "overround_corrotto": 1.2862,
+    "p_over_da_lato_over": 0.6075,
+    "p_over_da_lato_under": 0.3886,
+    "p_over_vincitore": 0.6092,
+    "p_over_chiusura_1xbet": 0.5862,
+    "scarto_lato_over_vs_vincitore": -0.0017,
+    "perc_nella_distribuzione_di_riferimento": 0.08,
+    "perc_nello_strato_simile": 0.078,
+    "scarto_lato_under_vs_vincitore": -0.2206,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Hoffenheim-RB Leipzig",
+    "league": "bundesliga",
+    "season": "1718",
+    "quota_over_corrotta": 1.59,
+    "quota_under_corrotta": 1.52,
+    "overround_corrotto": 1.2868,
+    "p_over_da_lato_over": 0.596,
+    "p_over_da_lato_under": 0.3765,
+    "p_over_vincitore": 0.5837,
+    "p_over_chiusura_1xbet": 0.6096,
+    "scarto_lato_over_vs_vincitore": 0.0123,
+    "perc_nella_distribuzione_di_riferimento": 0.527,
+    "perc_nello_strato_simile": 0.522,
+    "scarto_lato_under_vs_vincitore": -0.2072,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Leverkusen-Dortmund",
+    "league": "bundesliga",
+    "season": "1718",
+    "quota_over_corrotta": 1.45,
+    "quota_under_corrotta": 1.69,
+    "overround_corrotto": 1.2814,
+    "p_over_da_lato_over": 0.6536,
+    "p_over_da_lato_under": 0.4392,
+    "p_over_vincitore": 0.6454,
+    "p_over_chiusura_1xbet": 0.6885,
+    "scarto_lato_over_vs_vincitore": 0.0082,
+    "perc_nella_distribuzione_di_riferimento": 0.364,
+    "perc_nello_strato_simile": 0.352,
+    "scarto_lato_under_vs_vincitore": -0.2061,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Werder Bremen-Leverkusen",
+    "league": "bundesliga",
+    "season": "1718",
+    "quota_over_corrotta": 1.45,
+    "quota_under_corrotta": 1.7,
+    "overround_corrotto": 1.2779,
+    "p_over_da_lato_over": 0.6536,
+    "p_over_da_lato_under": 0.4425,
+    "p_over_vincitore": 0.6728,
+    "p_over_chiusura_1xbet": 0.6962,
+    "scarto_lato_over_vs_vincitore": -0.0193,
+    "perc_nella_distribuzione_di_riferimento": 0.725,
+    "perc_nello_strato_simile": 0.696,
+    "scarto_lato_under_vs_vincitore": -0.2303,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Dortmund-Wolfsburg",
+    "league": "bundesliga",
+    "season": "1819",
+    "quota_over_corrotta": 1.54,
+    "quota_under_corrotta": 1.45,
+    "overround_corrotto": 1.339,
+    "p_over_da_lato_over": 0.6145,
+    "p_over_da_lato_under": 0.3473,
+    "p_over_vincitore": 0.6132,
+    "p_over_chiusura_1xbet": 0.6435,
+    "scarto_lato_over_vs_vincitore": 0.0013,
+    "perc_nella_distribuzione_di_riferimento": 0.057,
+    "perc_nello_strato_simile": 0.046,
+    "scarto_lato_under_vs_vincitore": -0.2659,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Lyon-Metz",
+    "league": "ligue_1",
+    "season": "1718",
+    "quota_over_corrotta": 1.3,
+    "quota_under_corrotta": 2.02,
+    "overround_corrotto": 1.2643,
+    "p_over_da_lato_over": 0.7266,
+    "p_over_da_lato_under": 0.5324,
+    "p_over_vincitore": 0.7344,
+    "p_over_chiusura_1xbet": 0.7445,
+    "scarto_lato_over_vs_vincitore": -0.0077,
+    "perc_nella_distribuzione_di_riferimento": 0.345,
+    "perc_nello_strato_simile": 0.328,
+    "scarto_lato_under_vs_vincitore": -0.202,
+    "perc_lato_under": 1.0
+   },
+   {
+    "partita": "Monaco-Lyon",
+    "league": "ligue_1",
+    "season": "1718",
+    "quota_over_corrotta": 1.58,
+    "quota_under_corrotta": 1.54,
+    "overround_corrotto": 1.2823,
+    "p_over_da_lato_over": 0.5979,
+    "p_over_da_lato_under": 0.3866,
+    "p_over_vincitore": 0.5878,
+    "p_over_chiusura_1xbet": 0.64,
+    "scarto_lato_over_vs_vincitore": 0.01,
+    "perc_nella_distribuzione_di_riferimento": 0.436,
+    "perc_nello_strato_simile": 0.422,
+    "scarto_lato_under_vs_vincitore": -0.2012,
+    "perc_lato_under": 1.0
+   }
+  ],
+  "verdetto": "il lato OVER e' COMPATIBILE con una quota integra (tutti gli 8 scarti dal vincitore cadono entro il percentile 0.81 della distribuzione misurata su righe integre), mentre il lato UNDER NON lo e' (tutti oltre il percentile 1.00). Diagnosi: la corruzione sta nel lato UNDER, non nella riga intera.",
+  "conseguenza": "SE si accettasse di leggere il solo lato Over (cosa che la regola R6, approvata dall'utente, oggi VIETA: 'il mercato si scarta IN BLOCCO'), l'errore atteso su 8 delle 9 righe scenderebbe da 0.0143 a 0.0016, cioe' non sarebbe piu' una stima ma quasi il dato. La 9a riga (bundesliga 1819 Bayern Munich-Hoffenheim) non ha nessun lato: per quella resta la stima. DECISIONE DELL'UTENTE, non mia: qui c'e' solo la misura.",
+  "meccanismo_quota_under": {
+   "mae_contro_ogni_linea_della_chiusura_1xbet": {
+    "U1.5": 0.4241,
+    "U2.5": 0.2474,
+    "U3.5": 0.0371,
+    "U4.5": 0.1494
+   },
+   "linea_piu_vicina": "U3.5",
+   "verdetto": "la quota finita nella colonna Under 2.5 e' quella dell'U3.5 (MAE 0.0371 contro 0.2474 dell'Under 2.5): non e' un numero casuale, e' uno SLITTAMENTO DI LINEA. Cio' spiega l'overround 1.26-1.34 senza chiamare in causa il lato Over."
+  }
+ },
+ "stime": [
+  {
+   "league": "bundesliga",
+   "season": "1718",
+   "date": "2017-12-02",
+   "home_team": "Hoffenheim",
+   "away_team": "RB Leipzig",
+   "p_over25_open_est": 0.5837,
+   "p_under25_open_est": 0.4163,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.5778,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.556,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.596,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "bundesliga",
+   "season": "1718",
+   "date": "2017-12-02",
+   "home_team": "Leverkusen",
+   "away_team": "Dortmund",
+   "p_over25_open_est": 0.6454,
+   "p_under25_open_est": 0.3546,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.6411,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.6135,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.6536,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "bundesliga",
+   "season": "1718",
+   "date": "2017-12-09",
+   "home_team": "Ein Frankfurt",
+   "away_team": "Bayern Munich",
+   "p_over25_open_est": 0.6092,
+   "p_under25_open_est": 0.3908,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.6343,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.6354,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.6075,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "bundesliga",
+   "season": "1718",
+   "date": "2018-02-24",
+   "home_team": "Bayern Munich",
+   "away_team": "Hertha",
+   "p_over25_open_est": 0.6911,
+   "p_under25_open_est": 0.3089,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.6881,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.7043,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.6674,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "bundesliga",
+   "season": "1718",
+   "date": "2018-05-05",
+   "home_team": "Werder Bremen",
+   "away_team": "Leverkusen",
+   "p_over25_open_est": 0.6728,
+   "p_under25_open_est": 0.3272,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.6894,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.6802,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.6536,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "bundesliga",
+   "season": "1819",
+   "date": "2018-08-24",
+   "home_team": "Bayern Munich",
+   "away_team": "Hoffenheim",
+   "p_over25_open_est": 0.7225,
+   "p_under25_open_est": 0.2775,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.7168,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.7551,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": "",
+   "mae_atteso_lettura_lato_over": "",
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "bundesliga",
+   "season": "1819",
+   "date": "2019-03-30",
+   "home_team": "Dortmund",
+   "away_team": "Wolfsburg",
+   "p_over25_open_est": 0.6132,
+   "p_under25_open_est": 0.3868,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.5929,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.5849,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0132,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.6145,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "ligue_1",
+   "season": "1718",
+   "date": "2017-10-29",
+   "home_team": "Lyon",
+   "away_team": "Metz",
+   "p_over25_open_est": 0.7344,
+   "p_under25_open_est": 0.2656,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.7331,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.8159,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0147,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.7266,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  },
+  {
+   "league": "ligue_1",
+   "season": "1718",
+   "date": "2018-02-04",
+   "home_team": "Monaco",
+   "away_team": "Lyon",
+   "p_over25_open_est": 0.5878,
+   "p_under25_open_est": 0.4122,
+   "metodo": "M5g logit~scaletta1xBet+1X2ap (per-lega)",
+   "p_over25_open_est_solo1x2": 0.5407,
+   "metodo_solo1x2": "M4 logit-bias su (T,D) quad (per-lega)",
+   "p_over25_open_est_M1_precedente": 0.5453,
+   "mae_atteso": 0.0143,
+   "mae_atteso_lega": 0.0147,
+   "mae_atteso_strato_simili": 0.0151,
+   "p90_err_atteso": 0.0299,
+   "p_over25_lettura_lato_over_FUORI_CONCORSO": 0.5979,
+   "mae_atteso_lettura_lato_over": 0.0016,
+   "fonte_informazione": "1X2 di apertura (Betbrain) + chiusura 1xBet (footiqo)",
+   "avvertenza": "STIMA dell'apertura, non l'apertura: usa anche la CHIUSURA di un altro book (1xBet), quindi assorbe il movimento apertura->chiusura. NON usare questa riga per misurare il movimento apertura->chiusura.",
+   "motivo": "linea O/U di apertura corrotta (overround impossibile) o assente alla fonte; dato vero non recuperabile"
+  }
+ ],
+ "secondi": 15.8
+}

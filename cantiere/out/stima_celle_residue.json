@@ -1,0 +1,1631 @@
+{
+ "titolo": "Le celle residue: stimabili in modo difendibile, o la risposta e' no?",
+ "regola": "R4 isolamento: nessuno snapshot modificato; scrivo solo cantiere/data/stime/celle_residue.csv e cantiere/out/stima_celle_residue.json",
+ "controllo_di_sanita_bootstrap": {
+  "riproduce_scripts/_fase52_common.boot": true,
+  "riferimento": [
+   0.000952872169508129,
+   0.00024032791915481262,
+   0.0016673859634032478
+  ],
+  "a_blocchi": [
+   0.000952872169508129,
+   0.00024032791915481262,
+   0.0016673859634032478
+  ]
+ },
+ "aspettative_dichiarate_prima": {
+  "A_i": "mi aspetto di CONFERMARE che la fonte e' una chiusura, ma di non poter dimostrare 'media di mercato' contro 'book singolo sharp' senza un test nuovo",
+  "A_ii": "mi aspetto che la regressione batta l'identita' in modo conclusivo ma per pochissimo (~0,001 di MAE), e che la stima cada entro ~0,02 dal dato reale",
+  "B": "mi aspetto MAE 0,45-0,55 e R2 0,35-0,45 -> sopra la soglia di 0,4: NON stimabile",
+  "C": "mi aspetto che la partita NON sia ancora consolidata",
+  "D": "mi aspetto zero celle vuote nuove, e di trovare almeno un 'finto pieno' quantificabile"
+ },
+ "CASO_A_natura_della_fonte": {
+  "join": {
+   "bundesliga_1718": {
+    "snapshot": 306,
+    "uniti": 306,
+    "gol_discordanti": 0
+   },
+   "bundesliga_1819": {
+    "snapshot": 306,
+    "uniti": 306,
+    "gol_discordanti": 0
+   },
+   "la_liga_1718": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "la_liga_1819": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "serie_a_1718": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "serie_a_1819": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "premier_league_1718": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "premier_league_1819": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "ligue_1_1718": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   },
+   "ligue_1_1819": {
+    "snapshot": 380,
+    "uniti": 380,
+    "gol_discordanti": 0
+   }
+  },
+  "V1_margine": {
+   "fonte_esterna": [
+    1.0526293443466628,
+    0.0062756966480920755
+   ],
+   "PSC_chiusura_pinnacle": [
+    1.0247487297259577,
+    0.004281129331337276
+   ],
+   "PS_apertura_pinnacle": [
+    1.0249217068313266,
+    0.004235347154456034
+   ],
+   "BbAv_media_prematch": [
+    1.0488804294696004,
+    0.004504067703640761
+   ],
+   "B365_prematch": [
+    1.0475604817964204,
+    0.011551630767533513
+   ]
+  },
+  "V2_distanza": {
+   "n": 3650,
+   "mae_fonte_vs_chiusura_PSC": 0.005970320859106016,
+   "mae_fonte_vs_apertura_BbAv": 0.014237454420073261,
+   "mae_apertura_vs_chiusura": 0.01754687073080396,
+   "delta": {
+    "diff": -0.008267133560967246,
+    "ci95": [
+     -0.008650258404052799,
+     -0.007887439458233204
+    ],
+    "conclusivo": true,
+    "p_neg": 1.0
+   }
+  },
+  "V3_potere_predittivo": {
+   "logloss_fonte": 0.9530273519167105,
+   "logloss_chiusura_PSC": 0.9523319241136805,
+   "logloss_apertura_BbAv": 0.9550522864508914,
+   "fonte_vs_apertura": {
+    "diff": -0.0020249345341809186,
+    "ci95": [
+     -0.0039627436006446,
+     -4.844435763116895e-05
+    ],
+    "conclusivo": true,
+    "p_neg": 0.9772
+   },
+   "fonte_vs_chiusura": {
+    "diff": 0.0006954278030299665,
+    "ci95": [
+     -0.00012754315290506308,
+     0.0014985724230664318
+    ],
+    "conclusivo": false,
+    "p_neg": 0.0498
+   }
+  },
+  "V4_identita_con_colonne_footballdata": {
+   "B365": 0.0,
+   "BW": 0.0,
+   "IW": 0.0,
+   "PS_apertura": 0.0,
+   "WH": 0.0002738225629791895,
+   "VC": 0.0,
+   "BbAv": 0.0,
+   "BbMx": 0.0,
+   "PSC": 0.0
+  },
+  "V5_granularita_prezzi": {
+   "scaletta_quote_lunghe": {
+    "fonte_esterna": {
+     "n": 776,
+     "frazione_che_finisce_per_00": 0.006443298969072165,
+     "frazione_00_o_50": 0.019329896907216496
+    },
+    "BbAv_media": {
+     "n": 754,
+     "frazione_che_finisce_per_00": 0.013262599469496022,
+     "frazione_00_o_50": 0.025198938992042442
+    },
+    "B365_book_singolo": {
+     "n": 848,
+     "frazione_che_finisce_per_00": 0.8773584905660378,
+     "frazione_00_o_50": 1.0
+    },
+    "PSC_pinnacle": {
+     "n": 892,
+     "frazione_che_finisce_per_00": 0.1132286995515695,
+     "frazione_00_o_50": 0.1804932735426009
+    }
+   },
+   "massima_frequenza_ultima_cifra": {
+    "fonte_esterna": 0.10669952537422417,
+    "BbAv_media": 0.10633442862358525,
+    "B365_book_singolo": 0.6119021540708288,
+    "PSC_pinnacle": 0.12593607305936072
+   },
+   "lettura": "uniforme (~0.10) = prezzo continuo / media; picco alto = scaletta di un book"
+  },
+  "V6_firma_apertura_chiusura": {
+   "media->media_ETICHETTATA_Avg->AvgC_2019_26": {
+    "coppia": "Avg -> AvgC",
+    "n": 12458,
+    "mae_movimento": 0.015878992960954366,
+    "corr_prob_casa": 0.9890130165119386,
+    "delta_margine": -0.0011731777106564342
+   },
+   "pinnacle->pinnacle_2019_26": {
+    "coppia": "PS -> PSC",
+    "n": 11597,
+    "mae_movimento": 0.01776002402619283,
+    "corr_prob_casa": 0.9875648995055523,
+    "delta_margine": -0.0029472809106524684
+   },
+   "FONTE_ESTERNA_BbAv->fonte_2017_19": {
+    "coppia": "BbAv -> fonte",
+    "n": 3652,
+    "mae_movimento": 0.014230963381932304,
+    "corr_prob_casa": 0.991769358953962,
+    "delta_margine": 0.003748914877062445
+   },
+   "CAMBIO_PROVIDER_BbAv->PSC_2017_19": {
+    "coppia": "BbAv -> PSC",
+    "n": 3650,
+    "mae_movimento": 0.01754687073080396,
+    "corr_prob_casa": 0.989749777772698,
+    "delta_margine": -0.024132901580816095
+   }
+  },
+  "V7_movimento": {
+   "fonte_vs_pinnacle_2017_19": {
+    "n": 3645,
+    "corr_H_D_A": [
+     0.9587514203024367,
+     0.9014112162615884,
+     0.9568147628984089
+    ]
+   },
+   "riferimento_due_provider_veri_2019_26": {
+    "n": 11597,
+    "corr_H_D_A": [
+     0.9640927933520237,
+     0.9027937636103794,
+     0.9613036703919838
+    ]
+   },
+   "pavimento_due_APERTURE_simultanee": {
+    "n": 3645,
+    "corr_H_D_A": [
+     -0.0456013019977308,
+     -0.17539350983486607,
+     -0.04950718598945524
+    ]
+   },
+   "lettura": "se la fonte fosse una seconda APERTURA il suo 'movimento' sarebbe rumore (pavimento ~0); se e' una fotografia all'ora di chiusura deve correlare col movimento vero di Pinnacle quanto ci correla un'altra media di mercato"
+  },
+  "V8_incapsulamento": {
+   "peso_ottimo_della_fonte_contro_PSC": {
+    "alpha_star": 0.0,
+    "logloss": 0.9523319241136805
+   },
+   "peso_ottimo_della_fonte_contro_apertura": {
+    "alpha_star": 1.0,
+    "logloss": 0.9527515474537337
+   }
+  }
+ },
+ "CASO_A_stima": {
+  "n_coppie_reali": 16108,
+  "per_lega": {
+   "bundesliga": 2753,
+   "la_liga": 3419,
+   "ligue_1": 3097,
+   "premier_league": 3420,
+   "serie_a": 3419
+  },
+  "A2_fronte_generale": {
+   "kfold10": {
+    "schema": "k-fold 10 casuale (pooled 5 leghe)",
+    "mae_stima": 0.016029284253067915,
+    "mae_identita": 0.016139022648196687,
+    "delta_mae": {
+     "diff": -0.00010973839512876948,
+     "ci95": [
+      -0.00012621067864175634,
+      -9.306272209775997e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    },
+    "logloss_stima": 0.9686517061596717,
+    "logloss_identita": 0.9688012414853434,
+    "delta_logloss": {
+     "diff": -0.00014953532567187492,
+     "ci95": [
+      -0.0002453412322701919,
+      -5.358840544618512e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 0.9985
+    }
+   },
+   "leave_one_season_out": {
+    "schema": "leave-one-season-out",
+    "mae_stima": 0.01605285261766064,
+    "mae_identita": 0.016139022648196687,
+    "delta_mae": {
+     "diff": -8.617003053604281e-05,
+     "ci95": [
+      -0.00010280433059129667,
+      -6.939341717204562e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    },
+    "logloss_stima": 0.9686629264391861,
+    "logloss_identita": 0.9688012414853434,
+    "delta_logloss": {
+     "diff": -0.0001383150461573667,
+     "ci95": [
+      -0.00023542697852291258,
+      -4.110124159348395e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 0.9969
+    }
+   },
+   "leave_one_league_out": {
+    "schema": "leave-one-league-out",
+    "mae_stima": 0.016048831862928804,
+    "mae_identita": 0.016139022648196687,
+    "delta_mae": {
+     "diff": -9.019078526788495e-05,
+     "ci95": [
+      -0.0001078589262100069,
+      -7.23337063450246e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    },
+    "logloss_stima": 0.968679300928783,
+    "logloss_identita": 0.9688012414853434,
+    "delta_logloss": {
+     "diff": -0.00012194055656050481,
+     "ci95": [
+      -0.00022058640158238488,
+      -2.1834173168331076e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 0.9924
+    }
+   }
+  },
+  "A2_fronte_per_lega": {
+   "schema": "k-fold 10 dentro ogni lega",
+   "mae_stima": 0.01600424181298193,
+   "mae_identita": 0.016139022648196687,
+   "delta_vs_identita": {
+    "diff": -0.00013478083521475668,
+    "ci95": [
+     -0.0001561037937519712,
+     -0.0001128468873471114
+    ],
+    "conclusivo": true,
+    "p_neg": 1.0
+   },
+   "delta_vs_pooled": {
+    "diff": -2.50424400859872e-05,
+    "ci95": [
+     -3.963375653745921e-05,
+     -1.047862939029448e-05
+    ],
+    "conclusivo": true,
+    "p_neg": 0.9997
+   }
+  },
+  "A2_coefficienti": {
+   "pooled": {
+    "logit_H_su_D": [
+     -0.02649608961171277,
+     1.0243378031628665,
+     0.018412989939222395
+    ],
+    "logit_A_su_D": [
+     -0.01753600840871387,
+     0.007655436555043055,
+     1.0132780904849523
+    ]
+   },
+   "identita_sarebbe": {
+    "logit_H_su_D": [
+     0,
+     1,
+     0
+    ],
+    "logit_A_su_D": [
+     0,
+     0,
+     1
+    ]
+   },
+   "per_lega": {
+    "serie_a": {
+     "logit_H_su_D": [
+      -0.03763341491023515,
+      1.0345826993516656,
+      0.023194336548550142
+     ],
+     "logit_A_su_D": [
+      -0.023307116185525716,
+      0.009189558853797603,
+      1.0116540958081712
+     ]
+    },
+    "premier_league": {
+     "logit_H_su_D": [
+      -0.032767917705702254,
+      1.0323106901399746,
+      0.03522871916815015
+     ],
+     "logit_A_su_D": [
+      -0.009575510708781728,
+      0.008744833722455991,
+      1.0047984458612362
+     ]
+    },
+    "la_liga": {
+     "logit_H_su_D": [
+      -0.018252837249760248,
+      1.0189039916250302,
+      0.008942340630358874
+     ],
+     "logit_A_su_D": [
+      -0.01923337308785371,
+      -0.005794918530422135,
+      1.0114254416422408
+     ]
+    },
+    "bundesliga": {
+     "logit_H_su_D": [
+      -0.01502555088953662,
+      1.0118293692494804,
+      0.014349980566047311
+     ],
+     "logit_A_su_D": [
+      -0.005056685817330591,
+      0.0005402446113647597,
+      1.0004585025436372
+     ]
+    },
+    "ligue_1": {
+     "logit_H_su_D": [
+      -0.02840080032441091,
+      1.0238388616427505,
+      0.009299938622337528
+     ],
+     "logit_A_su_D": [
+      -0.010194785992077128,
+      -0.004593596469760042,
+      1.0072694682689178
+     ]
+    }
+   }
+  },
+  "A2_modelli_provider_appaiati": {
+   "BbAv_open->PSC": {
+    "n": 3650,
+    "mae_stima_oos": 0.016948169840390364,
+    "mae_identita": 0.01754687073080396,
+    "delta": {
+     "diff": -0.0005987008904135946,
+     "ci95": [
+      -0.0007252593344539096,
+      -0.0004711141602063032
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    }
+   },
+   "PS_open->PSC": {
+    "n": 3645,
+    "mae_stima_oos": 0.0169563560245496,
+    "mae_identita": 0.017026507510957065,
+    "delta": {
+     "diff": -7.01514864074683e-05,
+     "ci95": [
+      -0.00012161476304295924,
+      -1.8643597468995096e-05
+     ],
+     "conclusivo": true,
+     "p_neg": 0.996
+    }
+   }
+  },
+  "A1_simulazione_del_buco": {
+   "n": 3650,
+   "mae_dato_esterno": 0.005970320859106016,
+   "mae_stima_kfold": 0.01694852595154722,
+   "mae_identita": 0.017023995787561176,
+   "dato_esterno_meno_stima": {
+    "diff": -0.010978205092441202,
+    "ci95": [
+     -0.011384926877851378,
+     -0.010577363143028626
+    ],
+    "conclusivo": true,
+    "p_neg": 1.0
+   },
+   "stima_meno_identita": {
+    "diff": -7.546983601395699e-05,
+    "ci95": [
+     -0.00012748999151682762,
+     -2.340633609602852e-05
+    ],
+    "conclusivo": true,
+    "p_neg": 0.9976
+   },
+   "quante_volte_meglio_il_dato_vero": 2.838796498800746
+  },
+  "A3_due_partite": [
+   {
+    "partita": "bundesliga Bayern Munich-Hannover 2019-05-04",
+    "provider_apertura": "BbAv (media prematch Betbrain)",
+    "quote_apertura": [
+     1.04,
+     17.52,
+     45.03
+    ],
+    "quote_dato_reale": [
+     1.03,
+     18.43,
+     43.88
+    ],
+    "p_dato_reale": [
+     0.92647,
+     0.05178,
+     0.02175
+    ],
+    "p_stima_pooled": [
+     0.92572,
+     0.0536,
+     0.02068
+    ],
+    "MAE_stima_pooled_vs_dato_reale": 0.0012161838736250337,
+    "p_stima_per_lega": [
+     0.92424,
+     0.0546,
+     0.02116
+    ],
+    "MAE_stima_per_lega_vs_dato_reale": 0.0018806553202002085,
+    "p_stima_provider_appaiato": [
+     0.93334,
+     0.04833,
+     0.01833
+    ],
+    "MAE_stima_provider_appaiato_vs_dato_reale": 0.004575938955045173,
+    "p_identita": [
+     0.92382,
+     0.05484,
+     0.02134
+    ],
+    "MAE_identita_vs_dato_reale": 0.0020405902961846954,
+    "terza_fonte_footiqo_1xBet": [
+     1.02,
+     26.0,
+     34.0
+    ],
+    "MAE_dato_reale_vs_terza_fonte": 0.010058250798213575,
+    "MAE_identita_vs_terza_fonte": 0.012098841094398271,
+    "percentile_dell_accordo_nel_movimento_tipico": 0.010136986301369864
+   },
+   {
+    "partita": "la_liga Alaves-Sociedad 2017-10-14",
+    "provider_apertura": "PS (Pinnacle prematch)",
+    "quote_apertura": [
+     3.52,
+     3.55,
+     2.2
+    ],
+    "quote_dato_reale": [
+     3.4,
+     3.34,
+     2.15
+    ],
+    "p_dato_reale": [
+     0.27783,
+     0.28282,
+     0.43935
+    ],
+    "p_stima_pooled": [
+     0.2763,
+     0.2788,
+     0.4449
+    ],
+    "MAE_stima_pooled_vs_dato_reale": 0.003698592838599468,
+    "p_stima_per_lega": [
+     0.27737,
+     0.27885,
+     0.44379
+    ],
+    "MAE_stima_per_lega_vs_dato_reale": 0.0029539045039032965,
+    "p_stima_provider_appaiato": [
+     0.27575,
+     0.27743,
+     0.44683
+    ],
+    "MAE_stima_provider_appaiato_vs_dato_reale": 0.004980284497896855,
+    "p_identita": [
+     0.27843,
+     0.27608,
+     0.44549
+    ],
+    "MAE_identita_vs_dato_reale": 0.004493127102145315,
+    "terza_fonte_footiqo_1xBet": [
+     3.58,
+     3.54,
+     2.22
+    ],
+    "MAE_dato_reale_vs_terza_fonte": 0.003758360641655911,
+    "MAE_identita_vs_terza_fonte": 0.001989651209575819,
+    "percentile_dell_accordo_nel_movimento_tipico": 0.07808219178082192
+   }
+  ]
+ },
+ "CASO_B_xg": {
+  "B1_dati": {
+   "n_squadra_partita": 32216,
+   "media_xg": 1.4339836790479887,
+   "sd_xg": 0.8926272126802776
+  },
+  "B2_regressione": [
+   {
+    "schema": "k-fold 10 per PARTITA (le 2 squadre nello stesso fold)",
+    "MAE": 0.4525257907058587,
+    "RMSE": 0.5855915124093682,
+    "R2": 0.569622754594596
+   },
+   {
+    "schema": "leave-one-league-out",
+    "MAE": 0.4643255538618726,
+    "RMSE": 0.5924100904214116,
+    "R2": 0.5595418512727794
+   },
+   {
+    "schema": "leave-one-league-season-out",
+    "MAE": 0.453316420168604,
+    "RMSE": 0.5866836505885233,
+    "R2": 0.568015935781502
+   }
+  ],
+  "B3_baseline": {
+   "media_di_lega_e_campo": {
+    "MAE": 0.6864095220951476,
+    "RMSE": 0.8754171806530314,
+    "R2": 0.038188675736675504,
+    "delta_MAE_regressione_meno_baseline": {
+     "diff": -0.23388373138928906,
+     "ci95": [
+      -0.23953581805637358,
+      -0.22830783211496888
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    }
+   },
+   "xg_uguale_ai_gol": {
+    "MAE": 0.7581631438791284,
+    "RMSE": 0.9732120179230065,
+    "R2": -0.18870661986753823,
+    "delta_MAE_regressione_meno_baseline": {
+     "diff": -0.3056373531732697,
+     "ci95": [
+      -0.31181033141349285,
+      -0.2994235637477407
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    }
+   },
+   "xg_035_x_tiri_in_porta": {
+    "MAE": 0.5545080959588403,
+    "RMSE": 0.715386931429838,
+    "R2": 0.35769432486426744,
+    "delta_MAE_regressione_meno_baseline": {
+     "diff": -0.1019823052529816,
+     "ci95": [
+      -0.10579845331501399,
+      -0.09820338830743168
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    }
+   },
+   "media_della_squadra_nella_stagione": {
+    "MAE": 0.64479673086761,
+    "RMSE": 0.8228857592082552,
+    "R2": 0.15015671385257956,
+    "delta_MAE_regressione_meno_baseline": {
+     "diff": -0.19227094016175128,
+     "ci95": [
+      -0.197621327237097,
+      -0.18705043706128938
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    }
+   },
+   "k_x_tiri_in_porta_con_k_ottimo_0.3040": {
+    "MAE": 0.5187798118793786,
+    "R2": 0.42641612693203945,
+    "delta_MAE_regressione_meno_baseline": {
+     "diff": -0.06625402117351985,
+     "ci95": [
+      -0.06945314380304032,
+      -0.06313787244358027
+     ],
+     "conclusivo": true,
+     "p_neg": 1.0
+    }
+   }
+  },
+  "B4_tetto_gradient_boosting": {
+   "MAE": 0.45224302929360727,
+   "R2": 0.569996224635585,
+   "delta_vs_lineare": {
+    "diff": -0.0002827614122514627,
+    "ci95": [
+     -0.0012784610185924965,
+     0.0007448127888880011
+    ],
+    "conclusivo": false,
+    "p_neg": 0.6969
+   },
+   "lettura": "se il GBM non batte la retta, il limite e' INFORMATIVO e non del modello"
+  },
+  "B5_errore_condizionato_al_profilo": {
+   "tiri_in_porta=1": {
+    "n": 2464,
+    "MAE": 0.30235496365627546,
+    "media_xg_reale": 0.6193413852272727,
+    "sd_xg_reale": 0.4084438626008072,
+    "banda_errore_p10_p90": [
+     -0.5070353459561256,
+     0.42066602372552264
+    ]
+   },
+   "tiri_in_porta=3": {
+    "n": 5312,
+    "MAE": 0.40324486343282173,
+    "media_xg_reale": 1.0767749635730421,
+    "sd_xg_reale": 0.5582926996485152,
+    "banda_errore_p10_p90": [
+     -0.673157149014477,
+     0.6055415562426527
+    ]
+   },
+   "tiri_in_porta=6": {
+    "n": 3456,
+    "MAE": 0.5134619289534195,
+    "media_xg_reale": 1.7931336333912034,
+    "sd_xg_reale": 0.7214340443007871,
+    "banda_errore_p10_p90": [
+     -0.8499061303904578,
+     0.7901328055098248
+    ]
+   },
+   "gol=2 e tiri_in_porta=3": {
+    "n": 1203,
+    "MAE": 0.4456666843863911,
+    "media_xg_reale": 1.3090856101413133,
+    "sd_xg_reale": 0.5758636892163692,
+    "banda_errore_p10_p90": [
+     -0.6897090169164657,
+     0.7131058963327023
+    ]
+   },
+   "gol=0 e tiri_in_porta=1": {
+    "n": 1622,
+    "MAE": 0.27846644746784865,
+    "media_xg_reale": 0.5474381762022195,
+    "sd_xg_reale": 0.3767512846712185,
+    "banda_errore_p10_p90": [
+     -0.48565643529601005,
+     0.3642703509638374
+    ]
+   }
+  },
+  "B6_quantili_errore": {
+   "p50": 0.36454215272507184,
+   "p90": 0.9425512063213527,
+   "frazione_errore_sopra_0.5_gol": 0.3564377948845294
+  },
+  "B7_applicazione_alle_celle": [
+   {
+    "lega": "bundesliga",
+    "stagione": "2425",
+    "squadra": "Holstein Kiel",
+    "avversario": "Bochum",
+    "in_casa": true,
+    "tiri_in_porta": 3,
+    "gol": 2,
+    "xg_stimato": 1.2477317730525583,
+    "MAE_atteso_globale": 0.4525257907058587
+   },
+   {
+    "lega": "bundesliga",
+    "stagione": "2425",
+    "squadra": "Bochum",
+    "avversario": "Holstein Kiel",
+    "in_casa": false,
+    "tiri_in_porta": 6,
+    "gol": 2,
+    "xg_stimato": 1.7574525445717841,
+    "MAE_atteso_globale": 0.4525257907058587
+   },
+   {
+    "lega": "ligue_1",
+    "stagione": "2526",
+    "squadra": "Nantes",
+    "avversario": "Toulouse",
+    "in_casa": true,
+    "tiri_in_porta": 1,
+    "gol": 0,
+    "xg_stimato": 0.6738614347540494,
+    "MAE_atteso_globale": 0.4525257907058587
+   },
+   {
+    "lega": "ligue_1",
+    "stagione": "2526",
+    "squadra": "Toulouse",
+    "avversario": "Nantes",
+    "in_casa": false,
+    "tiri_in_porta": 1,
+    "gol": 0,
+    "xg_stimato": 0.6330917363944599,
+    "MAE_atteso_globale": 0.4525257907058587
+   }
+  ]
+ },
+ "CASO_C_understat": {
+  "url": "https://understat.com/main/getLeagueData/Ligue_1/2025",
+  "n_partite_nel_json": 306,
+  "non_consolidate": [
+   {
+    "data": "2026-05-17 18:00:00",
+    "partita": "Nantes - Toulouse",
+    "xG": {
+     "h": null,
+     "a": null
+    }
+   }
+  ],
+  "ultima_giornata": [
+   {
+    "id": "29840",
+    "data": "2026-05-17 18:00:00",
+    "partita": "Nantes - Toulouse",
+    "gol": {
+     "h": "0",
+     "a": "0"
+    },
+    "xG": {
+     "h": null,
+     "a": null
+    },
+    "isResult": false
+   },
+   {
+    "id": "29835",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Brest - Angers",
+    "gol": {
+     "h": "1",
+     "a": "1"
+    },
+    "xG": {
+     "h": "2.38724",
+     "a": "1.06418"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29836",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Lille - Auxerre",
+    "gol": {
+     "h": "0",
+     "a": "2"
+    },
+    "xG": {
+     "h": "1.22445",
+     "a": "0.615778"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29837",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Lorient - Le Havre",
+    "gol": {
+     "h": "0",
+     "a": "2"
+    },
+    "xG": {
+     "h": "1.26937",
+     "a": "1.28765"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29838",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Lyon - Lens",
+    "gol": {
+     "h": "0",
+     "a": "4"
+    },
+    "xG": {
+     "h": "1.12358",
+     "a": "2.01573"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29839",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Marseille - Rennes",
+    "gol": {
+     "h": "3",
+     "a": "1"
+    },
+    "xG": {
+     "h": "3.90151",
+     "a": "2.20696"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29841",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Nice - Metz",
+    "gol": {
+     "h": "0",
+     "a": "0"
+    },
+    "xG": {
+     "h": "1.216",
+     "a": "0.836784"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29842",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Paris FC - Paris Saint Germain",
+    "gol": {
+     "h": "2",
+     "a": "1"
+    },
+    "xG": {
+     "h": "2.32862",
+     "a": "0.863934"
+    },
+    "isResult": true
+   },
+   {
+    "id": "29843",
+    "data": "2026-05-17 19:00:00",
+    "partita": "Strasbourg - Monaco",
+    "gol": {
+     "h": "5",
+     "a": "4"
+    },
+    "xG": {
+     "h": "2.11536",
+     "a": "1.44729"
+    },
+    "isResult": true
+   }
+  ],
+  "history_squadre": {
+   "Nantes": {
+    "n_partite_in_history": 33,
+    "ultima_data": "2026-05-08 18:45:00"
+   },
+   "Toulouse": {
+    "n_partite_in_history": 33,
+    "ultima_data": "2026-05-10 19:00:00"
+   }
+  },
+  "endpoint_di_partita": {
+   "29840": "404 / non disponibile",
+   "29835": {
+    "tiri_casa": 18,
+    "tiri_ospiti": 8
+   },
+   "29836": {
+    "tiri_casa": 12,
+    "tiri_ospiti": 7
+   },
+   "29837": {
+    "tiri_casa": 13,
+    "tiri_ospiti": 7
+   },
+   "29838": {
+    "tiri_casa": 16,
+    "tiri_ospiti": 14
+   },
+   "29839": {
+    "tiri_casa": 27,
+    "tiri_ospiti": 27
+   },
+   "29841": {
+    "tiri_casa": 22,
+    "tiri_ospiti": 16
+   },
+   "29842": {
+    "tiri_casa": 17,
+    "tiri_ospiti": 9
+   },
+   "29843": {
+    "tiri_casa": 16,
+    "tiri_ospiti": 21
+   }
+  },
+  "controllo_resto_ultima_giornata": {
+   "partite_confrontate": 8,
+   "discrepanze_xg_con_la_fonte": [],
+   "lettura": "0 discrepanze = le altre partite dell'ultima giornata sono gia' corrette"
+  }
+ },
+ "CASO_D_censimento": {
+  "D1_censimento": {
+   "per_lega": {
+    "serie_a": {
+     "righe": 3420,
+     "celle": 129960,
+     "NaN": 1527,
+     "per_colonna": {
+      "odds_over25": 760,
+      "odds_under25": 760,
+      "odds_home_open": 1,
+      "odds_draw_open": 1,
+      "odds_away_open": 1,
+      "odds_over25_open": 2,
+      "odds_under25_open": 2
+     }
+    },
+    "premier_league": {
+     "righe": 3420,
+     "celle": 129960,
+     "NaN": 1520,
+     "per_colonna": {
+      "odds_over25": 760,
+      "odds_under25": 760
+     }
+    },
+    "la_liga": {
+     "righe": 3420,
+     "celle": 129960,
+     "NaN": 1523,
+     "per_colonna": {
+      "odds_home": 1,
+      "odds_draw": 1,
+      "odds_away": 1,
+      "odds_over25": 760,
+      "odds_under25": 760
+     }
+    },
+    "bundesliga": {
+     "righe": 2754,
+     "celle": 104652,
+     "NaN": 1251,
+     "per_colonna": {
+      "home_sot": 1,
+      "away_sot": 1,
+      "odds_home": 1,
+      "odds_draw": 1,
+      "odds_away": 1,
+      "odds_over25": 612,
+      "odds_under25": 612,
+      "home_xg": 1,
+      "away_xg": 1,
+      "home_npxg": 1,
+      "home_ppda": 1,
+      "home_deep": 1,
+      "away_npxg": 1,
+      "away_ppda": 1,
+      "away_deep": 1,
+      "odds_over25_open": 7,
+      "odds_under25_open": 7
+     }
+    },
+    "ligue_1": {
+     "righe": 3097,
+     "celle": 117686,
+     "NaN": 1532,
+     "per_colonna": {
+      "odds_over25": 760,
+      "odds_under25": 760,
+      "home_xg": 1,
+      "away_xg": 1,
+      "home_npxg": 1,
+      "home_ppda": 1,
+      "home_deep": 1,
+      "away_npxg": 1,
+      "away_ppda": 1,
+      "away_deep": 1,
+      "odds_over25_open": 2,
+      "odds_under25_open": 2
+     }
+    }
+   },
+   "celle_totali": 612218,
+   "NaN_totali": 7353,
+   "frazione": 0.01201
+  },
+  "D2_celle_sparse": {
+   "n": 49,
+   "buco_sistemico_OU_chiusura_2017_19": 7304,
+   "elenco": [
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2024-12-14",
+     "partita": "Union Berlin - Bochum",
+     "colonna": "home_sot"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2024-12-14",
+     "partita": "Union Berlin - Bochum",
+     "colonna": "away_sot"
+    },
+    {
+     "lega": "la_liga",
+     "stagione": "1718",
+     "data": "2017-10-14",
+     "partita": "Alaves - Sociedad",
+     "colonna": "odds_home"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2019-05-04",
+     "partita": "Bayern Munich - Hannover",
+     "colonna": "odds_home"
+    },
+    {
+     "lega": "la_liga",
+     "stagione": "1718",
+     "data": "2017-10-14",
+     "partita": "Alaves - Sociedad",
+     "colonna": "odds_draw"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2019-05-04",
+     "partita": "Bayern Munich - Hannover",
+     "colonna": "odds_draw"
+    },
+    {
+     "lega": "la_liga",
+     "stagione": "1718",
+     "data": "2017-10-14",
+     "partita": "Alaves - Sociedad",
+     "colonna": "odds_away"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2019-05-04",
+     "partita": "Bayern Munich - Hannover",
+     "colonna": "odds_away"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "home_xg"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "home_xg"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "away_xg"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "away_xg"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "home_npxg"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "home_npxg"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "home_ppda"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "home_ppda"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "home_deep"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "home_deep"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "away_npxg"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "away_npxg"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "away_ppda"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "away_ppda"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "2425",
+     "data": "2025-02-09",
+     "partita": "Holstein Kiel - Bochum",
+     "colonna": "away_deep"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "2526",
+     "data": "2026-05-17",
+     "partita": "Nantes - Toulouse",
+     "colonna": "away_deep"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2122",
+     "data": "2022-01-10",
+     "partita": "Torino - Fiorentina",
+     "colonna": "odds_home_open"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2122",
+     "data": "2022-01-10",
+     "partita": "Torino - Fiorentina",
+     "colonna": "odds_draw_open"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2122",
+     "data": "2022-01-10",
+     "partita": "Torino - Fiorentina",
+     "colonna": "odds_away_open"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2021",
+     "data": "2020-10-19",
+     "partita": "Verona - Genoa",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2122",
+     "data": "2022-01-10",
+     "partita": "Torino - Fiorentina",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2017-12-02",
+     "partita": "Leverkusen - Dortmund",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2017-12-02",
+     "partita": "Hoffenheim - RB Leipzig",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2017-12-09",
+     "partita": "Ein Frankfurt - Bayern Munich",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2018-02-24",
+     "partita": "Bayern Munich - Hertha",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2018-05-05",
+     "partita": "Werder Bremen - Leverkusen",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2018-08-24",
+     "partita": "Bayern Munich - Hoffenheim",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2019-03-30",
+     "partita": "Dortmund - Wolfsburg",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "1718",
+     "data": "2017-10-29",
+     "partita": "Lyon - Metz",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "1718",
+     "data": "2018-02-04",
+     "partita": "Monaco - Lyon",
+     "colonna": "odds_over25_open"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2021",
+     "data": "2020-10-19",
+     "partita": "Verona - Genoa",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "serie_a",
+     "stagione": "2122",
+     "data": "2022-01-10",
+     "partita": "Torino - Fiorentina",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2017-12-02",
+     "partita": "Leverkusen - Dortmund",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2017-12-02",
+     "partita": "Hoffenheim - RB Leipzig",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2017-12-09",
+     "partita": "Ein Frankfurt - Bayern Munich",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2018-02-24",
+     "partita": "Bayern Munich - Hertha",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1718",
+     "data": "2018-05-05",
+     "partita": "Werder Bremen - Leverkusen",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2018-08-24",
+     "partita": "Bayern Munich - Hoffenheim",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "bundesliga",
+     "stagione": "1819",
+     "data": "2019-03-30",
+     "partita": "Dortmund - Wolfsburg",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "1718",
+     "data": "2017-10-29",
+     "partita": "Lyon - Metz",
+     "colonna": "odds_under25_open"
+    },
+    {
+     "lega": "ligue_1",
+     "stagione": "1718",
+     "data": "2018-02-04",
+     "partita": "Monaco - Lyon",
+     "colonna": "odds_under25_open"
+    }
+   ]
+  },
+  "D3_finto_pieno": {
+   "xg_identico_ai_gol_su_ENTRAMBI_i_lati": {
+    "n": 0,
+    "righe": [],
+    "lettura": "e' la firma del segnaposto trovato nel report 8; 0 = nessun nuovo segnaposto"
+   },
+   "xg_esattamente_zero": {
+    "n": 11,
+    "con_zero_tiri_in_porta_dallo_stesso_lato": 10,
+    "righe": [
+     "serie_a 2018-04-17 Inter-Cagliari tiri 9/0 xg 2.351/0.000",
+     "serie_a 2021-01-30 Inter-Benevento tiri 8/0 xg 1.657/0.000",
+     "serie_a 2021-12-05 Juventus-Genoa tiri 12/0 xg 3.005/0.000",
+     "serie_a 2026-05-10 Cremonese-Pisa tiri 6/0 xg 1.267/0.000",
+     "premier_league 2018-03-10 Huddersfield-Swansea tiri 4/0 xg 1.394/0.000",
+     "premier_league 2019-03-02 Bournemouth-Man City tiri 0/7 xg 0.000/1.595",
+     "la_liga 2021-04-18 Ath Madrid-Eibar tiri 7/0 xg 2.750/0.000",
+     "la_liga 2025-03-02 Barcelona-Sociedad tiri 10/0 xg 3.637/0.000",
+     "bundesliga 2020-11-21 Bielefeld-Leverkusen tiri 1/4 xg 0.000/1.327",
+     "bundesliga 2024-09-21 Werder Bremen-Bayern Munich tiri 0/7 xg 0.000/3.345",
+     "ligue_1 2021-05-01 Lille-Nice tiri 4/0 xg 0.685/0.000"
+    ],
+    "lettura": "xG = 0 esatto e' legittimo se quel lato non ha tirato. L'unica riga con tiri in porta > 0 e xG = 0 e' bundesliga 2020-11-21 Bielefeld-Leverkusen: alla fonte xG=0, npxG=0, deep=1, ppda att=435/def=19 (numeri VERI, non un segnaposto) -> il gol del Bielefeld e' un AUTOGOL, che Understat non attribuisce all'xG di chi segna. Non e' un buco"
+   },
+   "tiri_in_porta_zero_su_entrambi": 3,
+   "deep_zero_su_entrambi": 3,
+   "squad_value_zero": 0,
+   "righe_duplicate": 0,
+   "rest_days_full_al_tetto_14": {
+    "n_squadra_partita": 3911,
+    "massimo_osservato": 14.0,
+    "lettura": "il tetto e' VOLUTO (loader.add_rest_days_full, cap=14): 14 significa '>=14 giorni', non 'esattamente 14'. Censura dichiarata, non un buco"
+   }
+  },
+  "D4_margine_fuori_scala": {
+   "1X2_chiusura": {
+    "mercato": "1X2 chiusura",
+    "mediana_2017_19": 1.0248323776874764,
+    "mediana_2019_26": 1.0458330230835586,
+    "righe_fuori_scala_per_soglia": {
+     "|z|>6": 0,
+     "|z|>8": 0,
+     "|z|>10": 0
+    },
+    "anomalie_z_oltre_10": []
+   },
+   "1X2_apertura": {
+    "mercato": "1X2 apertura",
+    "mediana_2017_19": 1.024991611798848,
+    "mediana_2019_26": 1.0466584249030784,
+    "righe_fuori_scala_per_soglia": {
+     "|z|>6": 16,
+     "|z|>8": 0,
+     "|z|>10": 0
+    },
+    "anomalie_z_oltre_10": []
+   },
+   "OU25_chiusura": {
+    "mercato": "O/U 2.5 chiusura",
+    "mediana_2017_19": null,
+    "mediana_2019_26": 1.050284731922209,
+    "righe_fuori_scala_per_soglia": {
+     "|z|>6": 0,
+     "|z|>8": 0,
+     "|z|>10": 0
+    },
+    "anomalie_z_oltre_10": []
+   },
+   "OU25_apertura": {
+    "mercato": "O/U 2.5 apertura",
+    "mediana_2017_19": 1.0553527170002397,
+    "mediana_2019_26": 1.050666002738703,
+    "righe_fuori_scala_per_soglia": {
+     "|z|>6": 9,
+     "|z|>8": 6,
+     "|z|>10": 5
+    },
+    "anomalie_z_oltre_10": [
+     {
+      "lega": "la_liga",
+      "stagione": "1819",
+      "data": "2018-10-06",
+      "partita": "Alaves - Real Madrid",
+      "quote": [
+       1.53,
+       1.59
+      ],
+      "overround": 1.282525588851893,
+      "z_robusto": 59.48012268457831,
+      "mediana_epoca": 1.0553527170002397
+     },
+     {
+      "lega": "la_liga",
+      "stagione": "1819",
+      "data": "2018-11-24",
+      "partita": "Eibar - Real Madrid",
+      "quote": [
+       1.45,
+       1.69
+      ],
+      "overround": 1.281371148745154,
+      "z_robusto": 59.17785842819443,
+      "mediana_epoca": 1.0553527170002397
+     },
+     {
+      "lega": "la_liga",
+      "stagione": "1819",
+      "data": "2018-12-07",
+      "partita": "Leganes - Getafe",
+      "quote": [
+       2.89,
+       1.5
+      ],
+      "overround": 1.0126874279123412,
+      "z_robusto": -11.170949280327692,
+      "mediana_epoca": 1.0553527170002397
+     },
+     {
+      "lega": "la_liga",
+      "stagione": "1819",
+      "data": "2019-02-10",
+      "partita": "Leganes - Betis",
+      "quote": [
+       2.48,
+       1.38
+      ],
+      "overround": 1.1278634876110334,
+      "z_robusto": 18.98531940336492,
+      "mediana_epoca": 1.0553527170002397
+     },
+     {
+      "lega": "bundesliga",
+      "stagione": "1819",
+      "data": "2019-01-26",
+      "partita": "Dortmund - Hannover",
+      "quote": [
+       1.34,
+       2.87
+      ],
+      "overround": 1.0947007124655468,
+      "z_robusto": 10.302390327648908,
+      "mediana_epoca": 1.0553527170002397
+     }
+    ]
+   },
+   "criterio": "|z robusto| rispetto alla mediana dell'epoca (scala MAD): NON un percentile (un percentile marca sempre l'1% delle righe, anche quando sono tutte sane). L'elenco esteso e' a |z|>10; il conteggio a 6 e 8 serve a mostrare quanto e' ripida la coda (a |z|>6 entrano righe legittime dell'epoca 2025-26, che ha margini piu' larghi)"
+  },
+  "D5_midweek_europe_falsi_zero": {
+   "per_lega": {
+    "serie_a": {
+     "righe_calendario_nuove": 499,
+     "midweek_europe_falsi_zero": 236,
+     "partite_con_riposo_che_cambia": 314,
+     "riproduco_lo_snapshot_attuale": true
+    },
+    "premier_league": {
+     "righe_calendario_nuove": 526,
+     "midweek_europe_falsi_zero": 251,
+     "partite_con_riposo_che_cambia": 282,
+     "riproduco_lo_snapshot_attuale": true
+    },
+    "la_liga": {
+     "righe_calendario_nuove": 677,
+     "midweek_europe_falsi_zero": 454,
+     "partite_con_riposo_che_cambia": 407,
+     "riproduco_lo_snapshot_attuale": true
+    },
+    "bundesliga": {
+     "righe_calendario_nuove": 326,
+     "midweek_europe_falsi_zero": 180,
+     "partite_con_riposo_che_cambia": 189,
+     "riproduco_lo_snapshot_attuale": true
+    },
+    "ligue_1": {
+     "righe_calendario_nuove": 1017,
+     "midweek_europe_falsi_zero": 482,
+     "partite_con_riposo_che_cambia": 508,
+     "riproduco_lo_snapshot_attuale": true
+    }
+   },
+   "totale_celle": 1603,
+   "totale_partite_con_riposo_che_cambia": 1700,
+   "fonte_del_rimedio": "cantiere/data/ricerca/fixtures_*.csv (3.045 righe gia' su disco)"
+  }
+ }
+}

@@ -1,0 +1,1874 @@
+{
+ "titolo": "GG/NG contro quote reali (1xBet chiusura, 2017-20, 5 leghe)",
+ "aspettativa_dichiarata_prima": {
+  "D1": "mercato GG/NG informativo ma MENO lavorato dell'1X2",
+  "D2a": "il market-implied dalle quote dello STESSO book sara' molto vicino al prezzo GG/NG del book",
+  "D2c": "il DC standalone perdera'",
+  "cautela": "un edge, se appare, e' quasi certamente il margine del book letto male: cercarlo prima di crederci"
+ },
+ "lucchetti": {
+  "gol_confrontati": 3652,
+  "gol_identici": 3652,
+  "discordanze_gol": [],
+  "join": {
+   "serie_a_1718": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "serie_a_1819": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "serie_a_1920": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "premier_league_1718": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "premier_league_1819": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "premier_league_1920": {
+    "righe_snapshot": 380,
+    "appaiate": 342,
+    "delta_giorni_oltre_1": 0
+   },
+   "la_liga_1718": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "la_liga_1819": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "la_liga_1920": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "bundesliga_1718": {
+    "righe_snapshot": 306,
+    "appaiate": 306,
+    "delta_giorni_oltre_1": 0
+   },
+   "bundesliga_1819": {
+    "righe_snapshot": 306,
+    "appaiate": 306,
+    "delta_giorni_oltre_1": 0
+   },
+   "bundesliga_1920": {
+    "righe_snapshot": 306,
+    "appaiate": 306,
+    "delta_giorni_oltre_1": 0
+   },
+   "ligue_1_1718": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "ligue_1_1819": {
+    "righe_snapshot": 380,
+    "appaiate": 380,
+    "delta_giorni_oltre_1": 0
+   },
+   "ligue_1_1920": {
+    "righe_snapshot": 279,
+    "appaiate": 279,
+    "delta_giorni_oltre_1": 0
+   }
+  },
+  "scartate": {
+   "senza_quota_GGNG": 38,
+   "senza_1X2_o_OU25_del_book": 0,
+   "senza_1X2_snapshot": 2,
+   "data_incoerente_oltre_1_giorno": 0
+  },
+  "n_finale": 5337,
+  "n_per_stagione": {
+   "1718": 1825,
+   "1819": 1825,
+   "1920": 1687
+  },
+  "n_per_lega": {
+   "bundesliga": 917,
+   "la_liga": 1139,
+   "ligue_1": 1039,
+   "premier_league": 1102,
+   "serie_a": 1140
+  }
+ },
+ "D1_efficienza_mercato_GGNG": {
+  "GG/NG": {
+   "n": 5337,
+   "log_loss_mercato": 0.6839931459730537,
+   "brier_mercato": 0.24546192020375543,
+   "log_loss_baseline_insample": 0.6884734802780458,
+   "log_loss_baseline_LOSO": 0.6921342750122405,
+   "brier_baseline_insample": 0.24767862233488425,
+   "guadagno_vs_baseline_insample": {
+    "etichetta": "GG/NG: book vs baseline in-sample",
+    "n": 5337,
+    "ll_a": 0.6839931459730537,
+    "ll_b": 0.6884734802780458,
+    "delta": -0.0044803343049920515,
+    "ci95": [
+     -0.007932037820102706,
+     -0.0010626494628806651
+    ],
+    "P(A_meglio)": 0.9947,
+    "verdetto": "MEGLIO (CI95 conclusivo)"
+   },
+   "guadagno_vs_baseline_LOSO": {
+    "etichetta": "GG/NG: book vs baseline LOSO",
+    "n": 5337,
+    "ll_a": 0.6839931459730537,
+    "ll_b": 0.6921342750122405,
+    "delta": -0.008141129039186616,
+    "ci95": [
+     -0.011640936099393826,
+     -0.004641987937722276
+    ],
+    "P(A_meglio)": 1.0,
+    "verdetto": "MEGLIO (CI95 conclusivo)"
+   },
+   "skill_%_vs_baseline_insample": 0.6507635273304446,
+   "calibrazione": {
+    "p_medio": 0.5317474393983107,
+    "freq_reale": 0.523327712197864,
+    "bias": 0.008419727200446703,
+    "intercetta": -0.031367257341081686,
+    "pendenza": 0.9758863905281348
+   }
+  },
+  "O/U 2.5": {
+   "n": 5337,
+   "log_loss_mercato": 0.6661362616177553,
+   "brier_mercato": 0.23682012537934075,
+   "log_loss_baseline_insample": 0.6851459553826701,
+   "log_loss_baseline_LOSO": 0.6913055508852952,
+   "brier_baseline_insample": 0.2460426262933952,
+   "guadagno_vs_baseline_insample": {
+    "etichetta": "O/U 2.5: book vs baseline in-sample",
+    "n": 5337,
+    "ll_a": 0.6661362616177553,
+    "ll_b": 0.6851459553826701,
+    "delta": -0.019009693764914855,
+    "ci95": [
+     -0.024604363507614913,
+     -0.013523674337500215
+    ],
+    "P(A_meglio)": 1.0,
+    "verdetto": "MEGLIO (CI95 conclusivo)"
+   },
+   "guadagno_vs_baseline_LOSO": {
+    "etichetta": "O/U 2.5: book vs baseline LOSO",
+    "n": 5337,
+    "ll_a": 0.6661362616177553,
+    "ll_b": 0.6913055508852952,
+    "delta": -0.025169289267539915,
+    "ci95": [
+     -0.030853355531958174,
+     -0.01950272676256447
+    ],
+    "P(A_meglio)": 1.0,
+    "verdetto": "MEGLIO (CI95 conclusivo)"
+   },
+   "skill_%_vs_baseline_insample": 2.774546593403948,
+   "calibrazione": {
+    "p_medio": 0.5307013701407582,
+    "freq_reale": 0.5289488476672288,
+    "bias": 0.0017525224735294165,
+    "intercetta": -0.013031304026321206,
+    "pendenza": 1.0505141628167367
+   }
+  },
+  "overround_del_book": {
+   "GG/NG": 1.0461244316623834,
+   "O/U 2.5": 1.0294755799894484,
+   "1X2": 1.0283596711472829
+  },
+  "lettura": "confronto fra due letture della STESSA distribuzione di gol: lo scarto di skill fra GG/NG e O/U 2.5 dice quanto il book lavora il GG/NG",
+  "ROI_strategie_cieche": {
+   "sempre_GG": {
+    "ROI_%": -5.923,
+    "ci95_%": [
+     -8.326,
+     -3.481
+    ]
+   },
+   "sempre_NG": {
+    "ROI_%": -2.588,
+    "ci95_%": [
+     -5.337,
+     0.189
+    ]
+   },
+   "sempre_il_favorito": {
+    "ROI_%": -5.206,
+    "ci95_%": [
+     -7.513,
+     -2.863
+    ]
+   },
+   "atteso_se_efficiente": "circa -4.41% (= il margine del book)"
+  },
+  "calibrazione_per_decile": [
+   {
+    "decile": 0,
+    "n": 535,
+    "p_medio": 0.4198752190152966,
+    "freq_reale": 0.411214953271028
+   },
+   {
+    "decile": 1,
+    "n": 536,
+    "p_medio": 0.4640299707226777,
+    "freq_reale": 0.45149253731343286
+   },
+   {
+    "decile": 2,
+    "n": 589,
+    "p_medio": 0.48722423096977324,
+    "freq_reale": 0.4855687606112054
+   },
+   {
+    "decile": 3,
+    "n": 530,
+    "p_medio": 0.5056196574574833,
+    "freq_reale": 0.5094339622641509
+   },
+   {
+    "decile": 4,
+    "n": 572,
+    "p_medio": 0.5247124486610926,
+    "freq_reale": 0.506993006993007
+   },
+   {
+    "decile": 5,
+    "n": 441,
+    "p_medio": 0.5420863544830798,
+    "freq_reale": 0.5419501133786848
+   },
+   {
+    "decile": 6,
+    "n": 545,
+    "p_medio": 0.5582485221057969,
+    "freq_reale": 0.563302752293578
+   },
+   {
+    "decile": 7,
+    "n": 522,
+    "p_medio": 0.576226148514786,
+    "freq_reale": 0.5498084291187739
+   },
+   {
+    "decile": 8,
+    "n": 558,
+    "p_medio": 0.6015707955802265,
+    "freq_reale": 0.5734767025089605
+   },
+   {
+    "decile": 9,
+    "n": 509,
+    "p_medio": 0.6477832733344894,
+    "freq_reale": 0.6522593320235757
+   }
+  ]
+ },
+ "D1_per_lega": {
+  "serie_a": {
+   "n": 1140,
+   "ll_book": 0.6809313495442416,
+   "ll_baseline_insample": 0.6824809562490252,
+   "freq_GG": 0.55,
+   "p_medio_book": 0.5366993577754511
+  },
+  "premier_league": {
+   "n": 1102,
+   "ll_book": 0.6868370157142246,
+   "ll_baseline_insample": 0.6926115938635024,
+   "freq_GG": 0.5081669691470054,
+   "p_medio_book": 0.526428942998912
+  },
+  "la_liga": {
+   "n": 1139,
+   "ll_book": 0.6835380667222162,
+   "ll_baseline_insample": 0.692191646284999,
+   "freq_GG": 0.4942932396839333,
+   "p_medio_book": 0.5174012236021313
+  },
+  "bundesliga": {
+   "n": 917,
+   "ll_book": 0.6796202623073714,
+   "ll_baseline_insample": 0.6812235492266464,
+   "freq_GG": 0.5747001090512541,
+   "p_medio_book": 0.5798942368139434
+  },
+  "ligue_1": {
+   "n": 1039,
+   "ll_book": 0.6886945637422649,
+   "ll_baseline_insample": 0.6929821154215723,
+   "freq_GG": 0.4966313763233879,
+   "p_medio_book": 0.5051887508938929
+  }
+ },
+ "controllo_di_sanita": {
+  "riferimento": "cantiere/report/09_chiusura_buchi.md §2.4 (primo sguardo, finestra 2017-19, 5 leghe)",
+  "atteso": {
+   "p_medio_GG": 0.526,
+   "freq_GG": 0.516,
+   "ll_mercato": 0.687,
+   "ll_baseline": 0.693,
+   "overround": 1.043,
+   "n": 3652
+  },
+  "ottenuto": {
+   "p_medio_GG": 0.5267572502419778,
+   "freq_GG": 0.513972602739726,
+   "ll_mercato": 0.6850768385534649,
+   "ll_baseline_costante_globale": 0.69275666246786,
+   "overround": 1.0433479835457231,
+   "n": 3650
+  }
+ },
+ "D2_nostro_prezzo_vs_book": {
+  "note": {
+   "b1": "PRIMARIA per il 2017-19: O/U di APERTURA REALE (nessuna stima)",
+   "b2": "SECONDARIA: stima di chiusura O/U del progetto, coefficienti fittati su stagioni SUCCESSIVE (anti-causale) -> benchmark storico, non predizione",
+   "b0": "solo 2019-20: O/U di CHIUSURA reale (dal 2019-20 esiste)",
+   "c": "solo 2018-19 e 2019-20: per il 2017-18 non c'e' storico -> run_backtest fallisce (verificato)"
+  },
+  "2017-19 (principale)": {
+   "n_blocco": 3650,
+   "ll_book": 0.6850768385534649,
+   "a_MI_book_1X2+OU2.5": {
+    "etichetta": "a_MI_book_1X2+OU2.5 vs book [2017-19 (principale)]",
+    "n": 3650,
+    "ll_a": 0.6846281307228311,
+    "ll_b": 0.6850768385534649,
+    "delta": -0.00044870783063391404,
+    "ci95": [
+     -0.002074909984178289,
+     0.0012094829685141788
+    ],
+    "P(A_meglio)": 0.7076,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.245797333468104,
+    "brier_book": 0.24601790001720655,
+    "calibrazione_nostra": {
+     "p_medio": 0.5099713255306373,
+     "freq_reale": 0.513972602739726,
+     "bias": -0.004001277209088716,
+     "intercetta": 0.015927519196596407,
+     "pendenza": 1.0095682217091348
+    },
+    "corr_col_book": 0.9559448337146499,
+    "MAE_dal_book": 0.019371356052298054
+   },
+   "a2_MI_book_scaletta_completa": {
+    "etichetta": "a2_MI_book_scaletta_completa vs book [2017-19 (principale)]",
+    "n": 3650,
+    "ll_a": 0.6844902389869695,
+    "ll_b": 0.6850768385534649,
+    "delta": -0.0005865995664956765,
+    "ci95": [
+     -0.0020239760445996987,
+     0.0008604225900813578
+    ],
+    "P(A_meglio)": 0.7813,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24572493759954556,
+    "brier_book": 0.24601790001720655,
+    "calibrazione_nostra": {
+     "p_medio": 0.5143926372128758,
+     "freq_reale": 0.513972602739726,
+     "bias": 0.00042003447314975517,
+     "intercetta": -0.002235791400801262,
+     "pendenza": 1.0087905230394685
+    },
+    "corr_col_book": 0.9576558658590327,
+    "MAE_dal_book": 0.016159067026918866
+   },
+   "b1_MI_snap_1X2close+OUopen": {
+    "etichetta": "b1_MI_snap_1X2close+OUopen vs book [2017-19 (principale)]",
+    "n": 3641,
+    "ll_a": 0.6849001380157012,
+    "ll_b": 0.6849550477508003,
+    "delta": -5.490973509902277e-05,
+    "ci95": [
+     -0.0022291456205612036,
+     0.002169536301406567
+    ],
+    "P(A_meglio)": 0.5273,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24593142405600554,
+    "brier_book": 0.24595816056832923,
+    "calibrazione_nostra": {
+     "p_medio": 0.505850286141358,
+     "freq_reale": 0.5144191156275748,
+     "bias": -0.008568829486216845,
+     "intercetta": 0.03386994663557936,
+     "pendenza": 1.0430955934103006
+    },
+    "corr_col_book": 0.9098429616099049,
+    "MAE_dal_book": 0.026164658157558283
+   },
+   "b2_MI_snap_1X2close+OUstima": {
+    "etichetta": "b2_MI_snap_1X2close+OUstima vs book [2017-19 (principale)]",
+    "n": 3641,
+    "ll_a": 0.6848074386751071,
+    "ll_b": 0.6849550477508003,
+    "delta": -0.00014760907569321717,
+    "ci95": [
+     -0.00263295289287892,
+     0.002421327028133975
+    ],
+    "P(A_meglio)": 0.5458,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24586181004797963,
+    "brier_book": 0.24595816056832923,
+    "calibrazione_nostra": {
+     "p_medio": 0.5057157631989381,
+     "freq_reale": 0.5144191156275748,
+     "bias": -0.008703352428636735,
+     "intercetta": 0.03594686573897742,
+     "pendenza": 0.9772426922888774
+    },
+    "corr_col_book": 0.8846173682655154,
+    "MAE_dal_book": 0.028072025014393712
+   },
+   "b0_MI_snap_1X2close+OUclose": {
+    "n": 0,
+    "verdetto": "non applicabile"
+   },
+   "c_DC_gol+xG_walkforward": {
+    "etichetta": "c_DC_gol+xG_walkforward vs book [2017-19 (principale)]",
+    "n": 1825,
+    "ll_a": 0.6935985822055181,
+    "ll_b": 0.6843338254552725,
+    "delta": 0.009264756750245396,
+    "ci95": [
+     0.0030000563908510708,
+     0.01560772899180422
+    ],
+    "P(A_meglio)": 0.0018,
+    "verdetto": "PEGGIO (CI95 conclusivo)",
+    "brier_nostro": 0.25010073132995797,
+    "brier_book": 0.24564096210703956,
+    "calibrazione_nostra": {
+     "p_medio": 0.5014175311832068,
+     "freq_reale": 0.5287671232876713,
+     "bias": -0.027349592104464526,
+     "intercetta": 0.11323306994161605,
+     "pendenza": 0.47653392669167455
+    },
+    "corr_col_book": 0.6995213289095827,
+    "MAE_dal_book": 0.05411670392277951
+   }
+  },
+  "2019-20 (controllo)": {
+   "n_blocco": 1687,
+   "ll_book": 0.6816484643379019,
+   "a_MI_book_1X2+OU2.5": {
+    "etichetta": "a_MI_book_1X2+OU2.5 vs book [2019-20 (controllo)]",
+    "n": 1687,
+    "ll_a": 0.6813291288300595,
+    "ll_b": 0.6816484643379019,
+    "delta": -0.0003193355078424169,
+    "ci95": [
+     -0.002371373863965784,
+     0.001723376264310754
+    ],
+    "P(A_meglio)": 0.6175,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24412108895609796,
+    "brier_book": 0.24425900003831583,
+    "calibrazione_nostra": {
+     "p_medio": 0.5281786352754918,
+     "freq_reale": 0.5435684647302904,
+     "bias": -0.01538982945479861,
+     "intercetta": 0.0701568764593622,
+     "pendenza": 0.9353044537512806
+    },
+    "corr_col_book": 0.973420061912688,
+    "MAE_dal_book": 0.017021957109544936
+   },
+   "a2_MI_book_scaletta_completa": {
+    "etichetta": "a2_MI_book_scaletta_completa vs book [2019-20 (controllo)]",
+    "n": 1687,
+    "ll_a": 0.680809292464595,
+    "ll_b": 0.6816484643379019,
+    "delta": -0.0008391718733069024,
+    "ci95": [
+     -0.0027379771151485803,
+     0.0010619820893006642
+    ],
+    "P(A_meglio)": 0.8063,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24385677775361495,
+    "brier_book": 0.24425900003831583,
+    "calibrazione_nostra": {
+     "p_medio": 0.5304717768582711,
+     "freq_reale": 0.5435684647302904,
+     "bias": -0.013096687872019341,
+     "intercetta": 0.06064916496158784,
+     "pendenza": 0.9416082998709129
+    },
+    "corr_col_book": 0.974939960004333,
+    "MAE_dal_book": 0.015352018788370773
+   },
+   "b1_MI_snap_1X2close+OUopen": {
+    "etichetta": "b1_MI_snap_1X2close+OUopen vs book [2019-20 (controllo)]",
+    "n": 1687,
+    "ll_a": 0.6836620634756437,
+    "ll_b": 0.6816484643379019,
+    "delta": 0.0020135991377417443,
+    "ci95": [
+     -0.0013511475025839367,
+     0.005358472980492737
+    ],
+    "P(A_meglio)": 0.1189,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.2452578992136513,
+    "brier_book": 0.24425900003831583,
+    "calibrazione_nostra": {
+     "p_medio": 0.522231053225982,
+     "freq_reale": 0.5435684647302904,
+     "bias": -0.021337411504308457,
+     "intercetta": 0.09708445443162757,
+     "pendenza": 0.8843950602444307
+    },
+    "corr_col_book": 0.9042569832423957,
+    "MAE_dal_book": 0.028074493236781087
+   },
+   "b2_MI_snap_1X2close+OUstima": {
+    "n": 0,
+    "verdetto": "non applicabile"
+   },
+   "b0_MI_snap_1X2close+OUclose": {
+    "etichetta": "b0_MI_snap_1X2close+OUclose vs book [2019-20 (controllo)]",
+    "n": 1687,
+    "ll_a": 0.6819997678801417,
+    "ll_b": 0.6816484643379019,
+    "delta": 0.00035130354223981313,
+    "ci95": [
+     -0.002049648145318787,
+     0.0027303633107186656
+    ],
+    "P(A_meglio)": 0.3888,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24444008891239818,
+    "brier_book": 0.24425900003831583,
+    "calibrazione_nostra": {
+     "p_medio": 0.5238012600998557,
+     "freq_reale": 0.5435684647302904,
+     "bias": -0.019767204630434687,
+     "intercetta": 0.085193358952701,
+     "pendenza": 0.9527982189312693
+    },
+    "corr_col_book": 0.9675058471163539,
+    "MAE_dal_book": 0.020475222187981198
+   },
+   "c_DC_gol+xG_walkforward": {
+    "etichetta": "c_DC_gol+xG_walkforward vs book [2019-20 (controllo)]",
+    "n": 1687,
+    "ll_a": 0.6931985129748447,
+    "ll_b": 0.6816484643379019,
+    "delta": 0.011550048636942778,
+    "ci95": [
+     0.0062286165865475356,
+     0.01681536945279251
+    ],
+    "P(A_meglio)": 0.0,
+    "verdetto": "PEGGIO (CI95 conclusivo)",
+    "brier_nostro": 0.2498879490821228,
+    "brier_book": 0.24425900003831583,
+    "calibrazione_nostra": {
+     "p_medio": 0.5202827596687354,
+     "freq_reale": 0.5435684647302904,
+     "bias": -0.02328570506155503,
+     "intercetta": 0.14430384256077342,
+     "pendenza": 0.37403333926391047
+    },
+    "corr_col_book": 0.7475540147419294,
+    "MAE_dal_book": 0.04306422175333104
+   }
+  },
+  "tutte e 3 le stagioni": {
+   "n_blocco": 5337,
+   "ll_book": 0.6839931459730537,
+   "a_MI_book_1X2+OU2.5": {
+    "etichetta": "a_MI_book_1X2+OU2.5 vs book [tutte e 3 le stagioni]",
+    "n": 5337,
+    "ll_a": 0.6835853321106696,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.0004078138623841004,
+    "ci95": [
+     -0.0017356010704164889,
+     0.0008600752935561843
+    ],
+    "P(A_meglio)": 0.729,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24526748064971274,
+    "brier_book": 0.24546192020375543,
+    "calibrazione_nostra": {
+     "p_medio": 0.5157265684647894,
+     "freq_reale": 0.523327712197864,
+     "bias": -0.007601143733074633,
+     "intercetta": 0.03141429480710544,
+     "pendenza": 0.9933748625857822
+    },
+    "corr_col_book": 0.9620215077621962,
+    "MAE_dal_book": 0.018628722359881996
+   },
+   "a2_MI_book_scaletta_completa": {
+    "etichetta": "a2_MI_book_scaletta_completa vs book [tutte e 3 le stagioni]",
+    "n": 5337,
+    "ll_a": 0.6833267095166217,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.0006664364564320709,
+    "ci95": [
+     -0.001821689324771376,
+     0.0004786574661920684
+    ],
+    "P(A_meglio)": 0.8692,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24513442126825738,
+    "brier_book": 0.24546192020375543,
+    "calibrazione_nostra": {
+     "p_medio": 0.5194751758266629,
+     "freq_reale": 0.523327712197864,
+     "bias": -0.0038525363712010874,
+     "intercetta": 0.01609620820084177,
+     "pendenza": 0.9951576743230949
+    },
+    "corr_col_book": 0.9636210153581902,
+    "MAE_dal_book": 0.015903962965005687
+   },
+   "b1_MI_snap_1X2close+OUopen": {
+    "etichetta": "b1_MI_snap_1X2close+OUopen vs book [tutte e 3 le stagioni]",
+    "n": 5328,
+    "ll_a": 0.6845081275522858,
+    "ll_b": 0.6839080871243814,
+    "delta": 0.0006000404279044263,
+    "ci95": [
+     -0.0012315270793427794,
+     0.002440234208428603
+    ],
+    "P(A_meglio)": 0.2596,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.2457181664717241,
+    "brier_book": 0.24542015684946045,
+    "calibrazione_nostra": {
+     "p_medio": 0.5110369141578296,
+     "freq_reale": 0.5236486486486487,
+     "bias": -0.012611734490819093,
+     "intercetta": 0.051360672597720675,
+     "pendenza": 0.9988806553267978
+    },
+    "corr_col_book": 0.909040939990324,
+    "MAE_dal_book": 0.02676936757547286
+   },
+   "b2_MI_snap_1X2close+OUstima": {
+    "etichetta": "b2_MI_snap_1X2close+OUstima vs book [tutte e 3 le stagioni]",
+    "n": 3641,
+    "ll_a": 0.6848074386751071,
+    "ll_b": 0.6849550477508003,
+    "delta": -0.00014760907569321717,
+    "ci95": [
+     -0.0026721056837522555,
+     0.002312919002660414
+    ],
+    "P(A_meglio)": 0.5556,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24586181004797963,
+    "brier_book": 0.24595816056832923,
+    "calibrazione_nostra": {
+     "p_medio": 0.5057157631989381,
+     "freq_reale": 0.5144191156275748,
+     "bias": -0.008703352428636735,
+     "intercetta": 0.03594686573897742,
+     "pendenza": 0.9772426922888774
+    },
+    "corr_col_book": 0.8846173682655154,
+    "MAE_dal_book": 0.028072025014393712
+   },
+   "b0_MI_snap_1X2close+OUclose": {
+    "etichetta": "b0_MI_snap_1X2close+OUclose vs book [tutte e 3 le stagioni]",
+    "n": 1687,
+    "ll_a": 0.6819997678801417,
+    "ll_b": 0.6816484643379019,
+    "delta": 0.00035130354223981313,
+    "ci95": [
+     -0.002089502623528311,
+     0.002737879014505932
+    ],
+    "P(A_meglio)": 0.3905,
+    "verdetto": "nel rumore",
+    "brier_nostro": 0.24444008891239818,
+    "brier_book": 0.24425900003831583,
+    "calibrazione_nostra": {
+     "p_medio": 0.5238012600998557,
+     "freq_reale": 0.5435684647302904,
+     "bias": -0.019767204630434687,
+     "intercetta": 0.085193358952701,
+     "pendenza": 0.9527982189312693
+    },
+    "corr_col_book": 0.9675058471163539,
+    "MAE_dal_book": 0.020475222187981198
+   },
+   "c_DC_gol+xG_walkforward": {
+    "etichetta": "c_DC_gol+xG_walkforward vs book [tutte e 3 le stagioni]",
+    "n": 3512,
+    "ll_a": 0.6934064077202831,
+    "ll_b": 0.6830439039845995,
+    "delta": 0.010362503735683462,
+    "ci95": [
+     0.00631785042148069,
+     0.014540078062582453
+    ],
+    "P(A_meglio)": 0.0,
+    "verdetto": "PEGGIO (CI95 conclusivo)",
+    "brier_nostro": 0.2499985207228686,
+    "brier_book": 0.24497713237755864,
+    "calibrazione_nostra": {
+     "p_medio": 0.5104795017000311,
+     "freq_reale": 0.535876993166287,
+     "bias": -0.025397491466255917,
+     "intercetta": 0.12575796358869026,
+     "pendenza": 0.4383258684414457
+    },
+    "corr_col_book": 0.7205865231171199,
+    "MAE_dal_book": 0.04880761012441403
+   }
+  }
+ },
+ "D2bis_encompassing": {
+  "domanda": "il prezzo GG/NG del book INGLOBA il nostro? (Fase 16 sul GG/NG)",
+  "forma": "logit(p) = (1-alpha)*logit(p_book) + alpha*logit(p_nostro), alpha su griglia 0..1 passo 0.05, scelto LOSO per-lega",
+  "con_a_MI_book": {
+   "alpha_per_lega_stagione": {
+    "serie_a_1718": 0.0,
+    "serie_a_1819": 0.1,
+    "serie_a_1920": 0.6,
+    "premier_league_1718": 0.6,
+    "premier_league_1819": 0.7,
+    "premier_league_1920": 0.6,
+    "la_liga_1718": 1.0,
+    "la_liga_1819": 1.0,
+    "la_liga_1920": 0.8,
+    "bundesliga_1718": 1.0,
+    "bundesliga_1819": 1.0,
+    "bundesliga_1920": 0.85,
+    "ligue_1_1718": 1.0,
+    "ligue_1_1819": 0.9,
+    "ligue_1_1920": 0.6
+   },
+   "alpha_medio": 0.7166666666666667,
+   "quota_alpha_zero": 0.06666666666666667,
+   "blend_vs_book": {
+    "etichetta": "blend(book,a) vs book",
+    "n": 5337,
+    "ll_a": 0.6835268160306459,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.00046632994240786477,
+    "ci95": [
+     -0.001435287938583229,
+     0.00048401557233658375
+    ],
+    "P(A_meglio)": 0.8336,
+    "verdetto": "nel rumore"
+   }
+  },
+  "con_c_DC": {
+   "alpha_per_lega_stagione": {
+    "serie_a_1819": 0.0,
+    "serie_a_1920": 0.0,
+    "premier_league_1819": 0.0,
+    "premier_league_1920": 0.25,
+    "la_liga_1819": 0.0,
+    "la_liga_1920": 0.1,
+    "bundesliga_1819": 0.0,
+    "bundesliga_1920": 0.25,
+    "ligue_1_1819": 0.0,
+    "ligue_1_1920": 0.0
+   },
+   "alpha_medio": 0.06,
+   "quota_alpha_zero": 0.7,
+   "blend_vs_book": {
+    "etichetta": "blend(book,DC) vs book",
+    "n": 3512,
+    "ll_a": 0.6832648060366815,
+    "ll_b": 0.6830439039845995,
+    "delta": 0.0002209020520820871,
+    "ci95": [
+     -0.00016002013456753726,
+     0.000599384414527731
+    ],
+    "P(A_meglio)": 0.1257,
+    "verdetto": "nel rumore"
+   }
+  },
+  "con_b1_MI_snap": {
+   "alpha_per_lega_stagione": {
+    "serie_a_1718": 0.0,
+    "serie_a_1819": 0.0,
+    "serie_a_1920": 0.25,
+    "premier_league_1718": 0.45,
+    "premier_league_1819": 1.0,
+    "premier_league_1920": 0.7,
+    "la_liga_1718": 0.9,
+    "la_liga_1819": 0.6,
+    "la_liga_1920": 0.95,
+    "bundesliga_1718": 0.3,
+    "bundesliga_1819": 0.05,
+    "bundesliga_1920": 0.15,
+    "ligue_1_1718": 0.65,
+    "ligue_1_1819": 0.55,
+    "ligue_1_1920": 0.35
+   },
+   "alpha_medio": 0.46,
+   "quota_alpha_zero": 0.13333333333333333,
+   "blend_vs_book": {
+    "etichetta": "blend(book,b1) vs book",
+    "n": 5328,
+    "ll_a": 0.6835544366719832,
+    "ll_b": 0.6839080871243814,
+    "delta": -0.0003536504523982308,
+    "ci95": [
+     -0.0014717803918493082,
+     0.0007198364304990046
+    ],
+    "P(A_meglio)": 0.7396,
+    "verdetto": "nel rumore"
+   }
+  }
+ },
+ "D2ter_scarto_book_meno_nostro": {
+  "in_logit": {
+   "media": 0.06519737050070777,
+   "sd": 0.0733870583168031,
+   "quota_varianza_spiegata_dalla_media": 0.44111036176059765
+  },
+  "in_probabilita": {
+   "MAE": 0.018628722359881996,
+   "bias_medio": 0.01602087093352131
+  },
+  "per_lega": {
+   "serie_a": {
+    "bias_logit": 0.07811870345778361,
+    "sd_logit": 0.07227976465216841
+   },
+   "premier_league": {
+    "bias_logit": 0.0712518790859543,
+    "sd_logit": 0.07858653891615246
+   },
+   "la_liga": {
+    "bias_logit": 0.06628103936303432,
+    "sd_logit": 0.07433130297142507
+   },
+   "bundesliga": {
+    "bias_logit": 0.04783628452032543,
+    "sd_logit": 0.06722709502270822
+   },
+   "ligue_1": {
+    "bias_logit": 0.05873291330899702,
+    "sd_logit": 0.0693176725085774
+   }
+  },
+  "lettura": "se quasi tutta la varianza dello scarto e' nella MEDIA, il prezzo GG/NG del book e' la nostra stessa matrice piu' un offset (gusto/margine); se e' nella dispersione, il book prezza partita per partita qualcosa che noi non abbiamo"
+ },
+ "D2quater_livello": {
+  "domanda": "il book sovra-prezza il GG, o e' la nostra proiezione a sotto-prezzarlo? con 5.337 partite si puo' dire?",
+  "frequenza_reale_GG": 0.523327712197864,
+  "bias_del_book": {
+   "bias": 0.00841972720044665,
+   "ci95": [
+    -0.004913686724512546,
+    0.021818530092284093
+   ],
+   "conclusivo": false,
+   "n": 5337
+  },
+  "bias_del_nostro_a": {
+   "bias": -0.007601143733074659,
+   "ci95": [
+    -0.020768488940794666,
+    0.005647695296627549
+   ],
+   "conclusivo": false,
+   "n": 5337
+  },
+  "bias_del_nostro_a2": {
+   "bias": -0.0038525363712010583,
+   "ci95": [
+    -0.016961453380425602,
+    0.00936536789656997
+   ],
+   "conclusivo": false,
+   "n": 5337
+  },
+  "differenza_appaiata_book_meno_a": {
+   "bias": 0.01602087093352131,
+   "ci95_lo": 0.015541023639774285,
+   "ci95_hi": 0.016511388150231007,
+   "P(<0)": 0.0
+  },
+  "lettura": "la differenza APPAIATA fra i due prezzi ha varianza ~10x minore del bias di ciascuno contro l'esito: si dimostra CHE differiscono, non CHI dei due ha ragione",
+  "offset_puro_LOLO": {
+   "offset_logit_per_lega": {
+    "serie_a": -0.0585,
+    "premier_league": -0.0239,
+    "la_liga": -0.0181,
+    "bundesliga": -0.037,
+    "ligue_1": -0.0343
+   },
+   "vs_book": {
+    "etichetta": "offset LOLO vs book",
+    "n": 5337,
+    "ll_a": 0.6840588093742321,
+    "ll_b": 0.6839931459730537,
+    "delta": 6.566340117837593e-05,
+    "ci95": [
+     -0.0004255795127972237,
+     0.000553095618802624
+    ],
+    "P(A_meglio)": 0.392,
+    "verdetto": "nel rumore"
+   }
+  }
+ },
+ "D3_leve_sul_GGNG": {
+  "path": "a_MI_book_1X2+OU2.5",
+  "rho": -0.06,
+  "note": "parametri sempre fuori campione (LOSO per-lega, LOLO pooled cross-lega)",
+  "L1a_livelli_lambda_mu_LOSO_per_lega": {
+   "parametri": {
+    "serie_a_1718": [
+     -0.01613,
+     0.02646
+    ],
+    "serie_a_1819": [
+     -0.04674,
+     0.02051
+    ],
+    "serie_a_1920": [
+     -0.06148,
+     -0.0081
+    ],
+    "premier_league_1718": [
+     -0.0324,
+     -0.02605
+    ],
+    "premier_league_1819": [
+     -0.03632,
+     -0.05188
+    ],
+    "premier_league_1920": [
+     -0.0181,
+     -0.02626
+    ],
+    "la_liga_1718": [
+     -0.05877,
+     -0.05358
+    ],
+    "la_liga_1819": [
+     -0.05063,
+     -0.059
+    ],
+    "la_liga_1920": [
+     -0.07192,
+     -0.04113
+    ],
+    "bundesliga_1718": [
+     -0.01181,
+     0.0318
+    ],
+    "bundesliga_1819": [
+     -0.03986,
+     -0.0026
+    ],
+    "bundesliga_1920": [
+     0.01929,
+     -0.02413
+    ],
+    "ligue_1_1718": [
+     0.00072,
+     -0.0532
+    ],
+    "ligue_1_1819": [
+     -0.00357,
+     -0.01751
+    ],
+    "ligue_1_1920": [
+     -0.01235,
+     -0.00826
+    ]
+   },
+   "vs_noi_senza_leva": {
+    "etichetta": "L1a_livelli_lambda_mu_LOSO_per_lega vs path a",
+    "n": 5337,
+    "ll_a": 0.6845083010621188,
+    "ll_b": 0.6835853321106696,
+    "delta": 0.0009229689514492124,
+    "ci95": [
+     7.24590575559957e-05,
+     0.0017814284326203935
+    ],
+    "P(A_meglio)": 0.0175,
+    "verdetto": "PEGGIO (CI95 conclusivo)"
+   },
+   "vs_book": {
+    "etichetta": "L1a_livelli_lambda_mu_LOSO_per_lega vs book",
+    "n": 5337,
+    "ll_a": 0.6845083010621188,
+    "ll_b": 0.6839931459730537,
+    "delta": 0.0005151550890651119,
+    "ci95": [
+     -0.0013382255040855326,
+     0.0024284197977716172
+    ],
+    "P(A_meglio)": 0.2897,
+    "verdetto": "nel rumore"
+   }
+  },
+  "L1b_livello_solo_mu_LOSO_per_lega": {
+   "parametri": {
+    "serie_a_1718": [
+     0.0,
+     0.02646
+    ],
+    "serie_a_1819": [
+     0.0,
+     0.02051
+    ],
+    "serie_a_1920": [
+     0.0,
+     -0.0081
+    ],
+    "premier_league_1718": [
+     0.0,
+     -0.02605
+    ],
+    "premier_league_1819": [
+     0.0,
+     -0.05188
+    ],
+    "premier_league_1920": [
+     0.0,
+     -0.02626
+    ],
+    "la_liga_1718": [
+     0.0,
+     -0.05358
+    ],
+    "la_liga_1819": [
+     0.0,
+     -0.059
+    ],
+    "la_liga_1920": [
+     0.0,
+     -0.04113
+    ],
+    "bundesliga_1718": [
+     0.0,
+     0.0318
+    ],
+    "bundesliga_1819": [
+     0.0,
+     -0.0026
+    ],
+    "bundesliga_1920": [
+     0.0,
+     -0.02413
+    ],
+    "ligue_1_1718": [
+     0.0,
+     -0.0532
+    ],
+    "ligue_1_1819": [
+     0.0,
+     -0.01751
+    ],
+    "ligue_1_1920": [
+     0.0,
+     -0.00826
+    ]
+   },
+   "vs_noi_senza_leva": {
+    "etichetta": "L1b_livello_solo_mu_LOSO_per_lega vs path a",
+    "n": 5337,
+    "ll_a": 0.6836698912787585,
+    "ll_b": 0.6835853321106696,
+    "delta": 8.455916808882618e-05,
+    "ci95": [
+     -0.0004331379613739775,
+     0.0005975703716605662
+    ],
+    "P(A_meglio)": 0.3678,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "L1b_livello_solo_mu_LOSO_per_lega vs book",
+    "n": 5337,
+    "ll_a": 0.6836698912787585,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.00032325469429527414,
+    "ci95": [
+     -0.0018513958683700003,
+     0.0012463848794986815
+    ],
+    "P(A_meglio)": 0.6573,
+    "verdetto": "nel rumore"
+   }
+  },
+  "L1c_livelli_lambda_mu_LOLO_pooled": {
+   "parametri": {
+    "serie_a": [
+     -0.02737,
+     -0.02736
+    ],
+    "premier_league": [
+     -0.03072,
+     -0.01406
+    ],
+    "la_liga": [
+     -0.02237,
+     -0.01023
+    ],
+    "bundesliga": [
+     -0.03478,
+     -0.02334
+    ],
+    "ligue_1": [
+     -0.03603,
+     -0.01686
+    ]
+   },
+   "vs_noi_senza_leva": {
+    "etichetta": "L1c_livelli_lambda_mu_LOLO_pooled vs path a",
+    "n": 5337,
+    "ll_a": 0.6843306535950086,
+    "ll_b": 0.6835853321106696,
+    "delta": 0.0007453214843388864,
+    "ci95": [
+     0.00012314047672583504,
+     0.0013653990422291735
+    ],
+    "P(A_meglio)": 0.0086,
+    "verdetto": "PEGGIO (CI95 conclusivo)"
+   },
+   "vs_book": {
+    "etichetta": "L1c_livelli_lambda_mu_LOLO_pooled vs book",
+    "n": 5337,
+    "ll_a": 0.6843306535950086,
+    "ll_b": 0.6839931459730537,
+    "delta": 0.0003375076219547859,
+    "ci95": [
+     -0.0013757922660594033,
+     0.0020826337996302058
+    ],
+    "P(A_meglio)": 0.3494,
+    "verdetto": "nel rumore"
+   }
+  },
+  "L1d_livello_solo_mu_LOLO_pooled": {
+   "parametri": {
+    "serie_a": [
+     0.0,
+     -0.02736
+    ],
+    "premier_league": [
+     0.0,
+     -0.01406
+    ],
+    "la_liga": [
+     0.0,
+     -0.01023
+    ],
+    "bundesliga": [
+     0.0,
+     -0.02334
+    ],
+    "ligue_1": [
+     0.0,
+     -0.01686
+    ]
+   },
+   "vs_noi_senza_leva": {
+    "etichetta": "L1d_livello_solo_mu_LOLO_pooled vs path a",
+    "n": 5337,
+    "ll_a": 0.6838516672731313,
+    "ll_b": 0.6835853321106696,
+    "delta": 0.00026633516246167386,
+    "ci95": [
+     -1.0590442153566815e-05,
+     0.0005485190205338473
+    ],
+    "P(A_meglio)": 0.0292,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "L1d_livello_solo_mu_LOLO_pooled vs book",
+    "n": 5337,
+    "ll_a": 0.6838516672731313,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.00014147869992242658,
+    "ci95": [
+     -0.0016420920850478099,
+     0.001380951012141217
+    ],
+    "P(A_meglio)": 0.5752,
+    "verdetto": "nel rumore"
+   }
+  },
+  "L2a_phi35_|lambda-mu|_LOSO": {
+   "parametri": {
+    "serie_a_1718": [
+     0.4074,
+     2.0276
+    ],
+    "serie_a_1819": [
+     0.1372,
+     5.0
+    ],
+    "serie_a_1920": [
+     0.618,
+     3.0172
+    ],
+    "premier_league_1718": [
+     0.0,
+     1.6408
+    ],
+    "premier_league_1819": [
+     0.5575,
+     3.5514
+    ],
+    "premier_league_1920": [
+     0.026,
+     2.6068
+    ],
+    "la_liga_1718": [
+     0.3653,
+     1.1319
+    ],
+    "la_liga_1819": [
+     0.0,
+     0.991
+    ],
+    "la_liga_1920": [
+     0.3848,
+     5.0
+    ],
+    "bundesliga_1718": [
+     0.0,
+     0.8828
+    ],
+    "bundesliga_1819": [
+     0.0943,
+     0.0
+    ],
+    "bundesliga_1920": [
+     0.117,
+     0.0
+    ],
+    "ligue_1_1718": [
+     0.1132,
+     0.6744
+    ],
+    "ligue_1_1819": [
+     0.0,
+     1.1522
+    ],
+    "ligue_1_1920": [
+     0.1564,
+     0.6676
+    ]
+   },
+   "vs_noi_senza_leva": {
+    "etichetta": "L2a_phi35_|lambda-mu|_LOSO vs path a",
+    "n": 5337,
+    "ll_a": 0.6835256695527433,
+    "ll_b": 0.6835853321106696,
+    "delta": -5.966255792640864e-05,
+    "ci95": [
+     -0.00033624229560092703,
+     0.00022376164238059888
+    ],
+    "P(A_meglio)": 0.6636,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "L2a_phi35_|lambda-mu|_LOSO vs book",
+    "n": 5337,
+    "ll_a": 0.6835256695527433,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.0004674764203105089,
+    "ci95": [
+     -0.001690251303125585,
+     0.0007500574244131355
+    ],
+    "P(A_meglio)": 0.7743,
+    "verdetto": "nel rumore"
+   }
+  },
+  "L2b_phi_COSTANTE_kappa0_LOSO": {
+   "parametri": {
+    "serie_a_1718": [
+     0.1013,
+     0.0
+    ],
+    "serie_a_1819": [
+     0.0,
+     0.0
+    ],
+    "serie_a_1920": [
+     0.0842,
+     0.0
+    ],
+    "premier_league_1718": [
+     0.0,
+     0.0
+    ],
+    "premier_league_1819": [
+     0.0839,
+     0.0
+    ],
+    "premier_league_1920": [
+     0.0,
+     0.0
+    ],
+    "la_liga_1718": [
+     0.1802,
+     0.0
+    ],
+    "la_liga_1819": [
+     0.0271,
+     0.0
+    ],
+    "la_liga_1920": [
+     0.0935,
+     0.0
+    ],
+    "bundesliga_1718": [
+     0.0511,
+     0.0
+    ],
+    "bundesliga_1819": [
+     0.0943,
+     0.0
+    ],
+    "bundesliga_1920": [
+     0.117,
+     0.0
+    ],
+    "ligue_1_1718": [
+     0.072,
+     0.0
+    ],
+    "ligue_1_1819": [
+     0.0,
+     0.0
+    ],
+    "ligue_1_1920": [
+     0.099,
+     0.0
+    ]
+   },
+   "vs_noi_senza_leva": {
+    "etichetta": "L2b_phi_COSTANTE_kappa0_LOSO vs path a",
+    "n": 5337,
+    "ll_a": 0.683601742666014,
+    "ll_b": 0.6835853321106696,
+    "delta": 1.6410555344329276e-05,
+    "ci95": [
+     -0.00017566967120537187,
+     0.0002155450052783104
+    ],
+    "P(A_meglio)": 0.4303,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "L2b_phi_COSTANTE_kappa0_LOSO vs book",
+    "n": 5337,
+    "ll_a": 0.683601742666014,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.00039140330703977107,
+    "ci95": [
+     -0.0016369660280206506,
+     0.0008251535534081659
+    ],
+    "P(A_meglio)": 0.7281,
+    "verdetto": "nel rumore"
+   }
+  },
+  "L3a_ricalibrazione_del_BOOK_LOSO_per_lega": {
+   "parametri_[a,b]": {
+    "serie_a_1718": [
+     0.0613,
+     1.4321
+    ],
+    "serie_a_1819": [
+     0.0821,
+     0.9006
+    ],
+    "serie_a_1920": [
+     -0.0095,
+     0.7111
+    ],
+    "premier_league_1718": [
+     -0.063,
+     0.8498
+    ],
+    "premier_league_1819": [
+     -0.0887,
+     1.1554
+    ],
+    "premier_league_1920": [
+     -0.0517,
+     0.8361
+    ],
+    "la_liga_1718": [
+     -0.0189,
+     0.8068
+    ],
+    "la_liga_1819": [
+     -0.1217,
+     1.1079
+    ],
+    "la_liga_1920": [
+     -0.1601,
+     1.2304
+    ],
+    "bundesliga_1718": [
+     0.2078,
+     0.388
+    ],
+    "bundesliga_1819": [
+     0.0716,
+     0.6075
+    ],
+    "bundesliga_1920": [
+     0.0009,
+     1.0192
+    ],
+    "ligue_1_1718": [
+     -0.0545,
+     0.8376
+    ],
+    "ligue_1_1819": [
+     -0.0263,
+     0.8797
+    ],
+    "ligue_1_1920": [
+     -0.0182,
+     0.929
+    ]
+   },
+   "vs_book": {
+    "etichetta": "L3a_ricalibrazione_del_BOOK_LOSO_per_lega vs book",
+    "n": 5337,
+    "ll_a": 0.685972704684643,
+    "ll_b": 0.6839931459730537,
+    "delta": 0.0019795587115892556,
+    "ci95": [
+     0.0006378742206031852,
+     0.00329440592004743
+    ],
+    "P(A_meglio)": 0.0018,
+    "verdetto": "PEGGIO (CI95 conclusivo)"
+   }
+  },
+  "L3b_ricalibrazione_del_BOOK_LOLO_pooled": {
+   "parametri_[a,b]": {
+    "serie_a": [
+     -0.0528,
+     0.953
+    ],
+    "premier_league": [
+     -0.0214,
+     0.9802
+    ],
+    "la_liga": [
+     -0.0092,
+     0.9366
+    ],
+    "bundesliga": [
+     -0.038,
+     1.0113
+    ],
+    "ligue_1": [
+     -0.0328,
+     0.9896
+    ]
+   },
+   "vs_book": {
+    "etichetta": "L3b_ricalibrazione_del_BOOK_LOLO_pooled vs book",
+    "n": 5337,
+    "ll_a": 0.6841145057556995,
+    "ll_b": 0.6839931459730537,
+    "delta": 0.00012135978264577747,
+    "ci95": [
+     -0.00037426961065641534,
+     0.000627897989147344
+    ],
+    "P(A_meglio)": 0.3121,
+    "verdetto": "nel rumore"
+   }
+  }
+ },
+ "D3bis_L1b_per_lega": {
+  "serie_a": {
+   "vs_noi": {
+    "etichetta": "serie_a",
+    "n": 1140,
+    "ll_a": 0.6823307578828809,
+    "ll_b": 0.6823070163168286,
+    "delta": 2.3741566052391244e-05,
+    "ci95": [
+     -0.0005820252444386384,
+     0.0006553293647138469
+    ],
+    "P(A_meglio)": 0.4701,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "serie_a",
+    "n": 1140,
+    "ll_a": 0.6823307578828809,
+    "ll_b": 0.6809313495442416,
+    "delta": 0.0013994083386394448,
+    "ci95": [
+     -0.0013741804757431372,
+     0.004180602296033563
+    ],
+    "P(A_meglio)": 0.1588,
+    "verdetto": "nel rumore"
+   }
+  },
+  "premier_league": {
+   "vs_noi": {
+    "etichetta": "premier_league",
+    "n": 1102,
+    "ll_a": 0.6867528799193335,
+    "ll_b": 0.6865016983420849,
+    "delta": 0.00025118157724873135,
+    "ci95": [
+     -0.0009116948298681238,
+     0.0014378045390790871
+    ],
+    "P(A_meglio)": 0.3344,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "premier_league",
+    "n": 1102,
+    "ll_a": 0.6867528799193335,
+    "ll_b": 0.6868370157142246,
+    "delta": -8.41357948909629e-05,
+    "ci95": [
+     -0.004023824277142364,
+     0.003865625825052017
+    ],
+    "P(A_meglio)": 0.5183,
+    "verdetto": "nel rumore"
+   }
+  },
+  "la_liga": {
+   "vs_noi": {
+    "etichetta": "la_liga",
+    "n": 1139,
+    "ll_a": 0.6820814482825922,
+    "ll_b": 0.6822483861690717,
+    "delta": -0.00016693788647951263,
+    "ci95": [
+     -0.0018500450376786079,
+     0.001468206586398878
+    ],
+    "P(A_meglio)": 0.5768,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "la_liga",
+    "n": 1139,
+    "ll_a": 0.6820814482825922,
+    "ll_b": 0.6835380667222162,
+    "delta": -0.0014566184396238992,
+    "ci95": [
+     -0.005570699096930873,
+     0.002665885073858599
+    ],
+    "P(A_meglio)": 0.7547,
+    "verdetto": "nel rumore"
+   }
+  },
+  "bundesliga": {
+   "vs_noi": {
+    "etichetta": "bundesliga",
+    "n": 917,
+    "ll_a": 0.6784620693390879,
+    "ll_b": 0.6785450858224394,
+    "delta": -8.301648335166371e-05,
+    "ci95": [
+     -0.0009160245168477327,
+     0.0007488138920118777
+    ],
+    "P(A_meglio)": 0.574,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "bundesliga",
+    "n": 917,
+    "ll_a": 0.6784620693390879,
+    "ll_b": 0.6796202623073714,
+    "delta": -0.0011581929682837194,
+    "ci95": [
+     -0.0039370936856612864,
+     0.0015721082105874789
+    ],
+    "P(A_meglio)": 0.7881,
+    "verdetto": "nel rumore"
+   }
+  },
+  "ligue_1": {
+   "vs_noi": {
+    "etichetta": "ligue_1",
+    "n": 1039,
+    "ll_a": 0.6882069152255323,
+    "ll_b": 0.6878087504857865,
+    "delta": 0.00039816473974579165,
+    "ci95": [
+     -0.0007232542712139291,
+     0.0015393450976981808
+    ],
+    "P(A_meglio)": 0.2454,
+    "verdetto": "nel rumore"
+   },
+   "vs_book": {
+    "etichetta": "ligue_1",
+    "n": 1039,
+    "ll_a": 0.6882069152255323,
+    "ll_b": 0.6886945637422649,
+    "delta": -0.0004876485167326397,
+    "ci95": [
+     -0.0037869087260086493,
+     0.002907299311815234
+    ],
+    "P(A_meglio)": 0.6133,
+    "verdetto": "nel rumore"
+   }
+  }
+ },
+ "D4_ROI": {
+  "regola_pre_dichiarata": "il ROI si misura SOLO se un nostro prezzo batte il book in log-loss con CI95 conclusivo",
+  "candidati_che_battono_il_book": [],
+  "esito": "NON misurato: nessun nostro prezzo batte il book in log-loss con CI95 conclusivo. Come da regola del progetto: si dichiara e si chiude, senza promettere edge."
+ },
+ "confutazioni": {
+  "C1_devig_additivo": {
+   "etichetta": "devig_additivo vs devig moltiplicativo",
+   "n": 5337,
+   "ll_a": 0.6840955624994737,
+   "ll_b": 0.6839931459730537,
+   "delta": 0.0001024165264199289,
+   "ci95": [
+    -9.450368982262747e-05,
+    0.0002968897090899193
+   ],
+   "P(A_meglio)": 0.1486,
+   "verdetto": "nel rumore"
+  },
+  "C1_devig_power": {
+   "etichetta": "devig_power vs devig moltiplicativo",
+   "n": 5337,
+   "ll_a": 0.6876974082943663,
+   "ll_b": 0.6839931459730537,
+   "delta": 0.0037042623213124543,
+   "ci95": [
+    0.0011090745051983402,
+    0.0062947624383230105
+   ],
+   "P(A_meglio)": 0.0024,
+   "verdetto": "PEGGIO (CI95 conclusivo)"
+  },
+  "C1_lettura": "se il vantaggio di un nostro prezzo sparisse cambiando solo il metodo di devig, non sarebbe informazione ma margine letto male",
+  "C2_informazione_extra_del_book": {
+   "modello": "y ~ 1 + logit(p_nostro_a) + [logit(p_book) - logit(p_nostro_a)]",
+   "coef_scarto": 0.21180043669663662,
+   "ci95_bootstrap400": [
+    -0.48680989773224553,
+    0.9725374099309738
+   ],
+   "lettura": "coef ~ 0 => il prezzo GG/NG del book NON aggiunge nulla ai suoi stessi marginali (e' una proiezione meccanica); coef > 0 => il book sa qualcosa in piu' sulla CORRELAZIONE"
+  },
+  "C3_scaletta_vs_2linee": {
+   "etichetta": "a2 (scaletta) vs a (1X2+O2.5)",
+   "n": 5337,
+   "ll_a": 0.6833267095166217,
+   "ll_b": 0.6835853321106696,
+   "delta": -0.0002586225940479706,
+   "ci95": [
+    -0.0006658122326443345,
+    0.0001592970235233316
+   ],
+   "P(A_meglio)": 0.8905,
+   "verdetto": "nel rumore"
+  },
+  "C4_stabilita_a_vs_book": {
+   "stagione_1718": -0.0007862921172671863,
+   "stagione_1819": -0.00011112354400064195,
+   "stagione_1920": -0.0003193355078424169,
+   "lega_bundesliga": -0.0010751764849320556,
+   "lega_la_liga": -0.0012896805531443865,
+   "lega_ligue_1": -0.0008858132564784315,
+   "lega_premier_league": -0.0003353173721396943,
+   "lega_serie_a": 0.0013756667725870538
+  },
+  "C5_ordine_di_grandezza_del_margine": {
+   "overround_medio_GGNG": 1.0461244316623834,
+   "margine_per_lato_%": 2.3062215831191724,
+   "nota": "il devig moltiplicativo toglie il margine in proporzione: se il book lo carica asimmetricamente, il residuo e' dell'ordine di 0.001-0.005 in probabilita', cioe' ~1e-4..1e-3 di log-loss: sotto la soglia di risoluzione del bootstrap con questo n"
+  },
+  "C6_roundtrip_inversione": {
+   "domanda": "la matrice DC riproduce i bersagli del book? se no, il 'nostro' prezzo non e' la proiezione dei suoi marginali e lo scarto di 1.6pp sarebbe un artefatto",
+   "residuo_medio_assoluto_1X2": [
+    0.0037632274660825936,
+    0.008664031946797615,
+    0.004916348364583947
+   ],
+   "residuo_p99_assoluto_1X2": [
+    0.015013540961877101,
+    0.0277895577402447,
+    0.018104728456658656
+   ],
+   "residuo_medio_assoluto_over25": 0.0030037959129906614,
+   "residuo_p99_assoluto_over25": 0.010012836452296723,
+   "scarto_da_spiegare_sul_GGNG": 0.01602087093352131,
+   "residuo_MEDIO_CON_SEGNO_1X2": [
+    0.0030416709332137227,
+    -0.00669536484012101,
+    0.0036536939069072845
+   ],
+   "residuo_MEDIO_CON_SEGNO_over25": -0.0023871637883972566,
+   "corr_residuo_pareggio_vs_scarto_GGNG": -0.20358118231317018,
+   "verdetto": "ARTEFATTO se i residui sono dello stesso ordine dello scarto (0.016); PROPRIETA' DEL BOOK se sono un ordine di grandezza sotto"
+  },
+  "C7_inversione_a_rho_libero": {
+   "domanda": "liberando rho l'inversione centra i marginali del book: lo scarto di 1.6pp sul GG/NG sopravvive?",
+   "residuo_medio_assoluto_[H,D,A,O2.5]": [
+    2.447282643055048e-06,
+    1.8429984414771177e-06,
+    2.5996679063125815e-06,
+    3.8959062046170265e-06
+   ],
+   "rho_fittato": {
+    "media": -0.09278950919897966,
+    "sd": 0.05048896808586389,
+    "p05": -0.170298332169536,
+    "p95": -0.010140311972552142
+   },
+   "scarto_book_meno_nostro_con_rho_libero": 0.010650135586169911,
+   "scarto_book_meno_nostro_con_rho_fisso": 0.01602087093352131,
+   "bias_del_nostro_rho_libero": {
+    "bias": -0.002230408385723263,
+    "ci95": [
+     -0.01522497554977662,
+     0.011228808804144034
+    ],
+    "conclusivo": false,
+    "n": 5337
+   },
+   "vs_book_logloss": {
+    "etichetta": "rho libero vs book",
+    "n": 5337,
+    "ll_a": 0.6834957777373338,
+    "ll_b": 0.6839931459730537,
+    "delta": -0.0004973682357198498,
+    "ci95": [
+     -0.0016522428388013903,
+     0.000593200443053399
+    ],
+    "P(A_meglio)": 0.8139,
+    "verdetto": "nel rumore"
+   },
+   "vs_a_logloss": {
+    "etichetta": "rho libero vs a",
+    "n": 5337,
+    "ll_a": 0.6834957777373338,
+    "ll_b": 0.6835853321106696,
+    "delta": -8.955437333574932e-05,
+    "ci95": [
+     -0.0005513100835453704,
+     0.0003733402963799072
+    ],
+    "P(A_meglio)": 0.6561,
+    "verdetto": "nel rumore"
+   }
+  },
+  "C8_le_altre_linee_OU_del_book": {
+   "domanda": "la matrice a rho libero riproduce le linee O/U che NON ha usato come bersaglio (0.5, 1.5, 3.5, 4.5)?",
+   "linee": {
+    "over_0.5": {
+     "n": 5135,
+     "residuo_medio_con_segno": 0.010744568743311868,
+     "residuo_medio_assoluto": 0.012003253172278568
+    },
+    "over_1.5": {
+     "n": 5337,
+     "residuo_medio_con_segno": 0.013187090356696258,
+     "residuo_medio_assoluto": 0.015314723723356067
+    },
+    "over_3.5": {
+     "n": 5337,
+     "residuo_medio_con_segno": -0.010192748775615641,
+     "residuo_medio_assoluto": 0.013041515624560858
+    },
+    "over_4.5": {
+     "n": 5332,
+     "residuo_medio_con_segno": -0.015065338007622156,
+     "residuo_medio_assoluto": 0.01572508744740062
+    }
+   },
+   "residuo_GGNG_da_attribuire": 0.010650135586169911,
+   "lettura": "residui sulle altre linee << 0.011 => i marginali del book sono ben riprodotti e il residuo GG/NG e' una differenza di CORRELAZIONE fra noi e il book; residui dello stesso ordine => la famiglia Poisson e' la colpevole e il residuo non e' attribuibile al book"
+  }
+ },
+ "soglia_di_risoluzione": {
+  "n": 5337,
+  "sd_differenza_per_riga_(a - book)": 0.048462126409858974,
+  "semi_ampiezza_CI95_attesa": 0.0013001993244222357,
+  "lettura": "con questo n il bootstrap risolve differenze di log-loss dell'ordine del millesimo: sotto quella soglia «non dimostrato» NON e' «dimostrato nullo»"
+ },
+ "multiple_testing": {
+  "predittori_confrontati_col_book": 6,
+  "blocchi_temporali": 3,
+  "leve_provate": 6,
+  "confronti_totali_vs_book": 24,
+  "famiglia_pre_registrata_headline": [
+   "a_MI_book_1X2+OU2.5 sul blocco 2017-19",
+   "b1_MI_snap_1X2close+OUopen sul blocco 2017-19",
+   "c_DC_gol+xG_walkforward sul blocco 2017-19",
+   "L1b (livello mu, la leva che il blocco precedente indicava)"
+  ],
+  "bonferroni_alpha_famiglia_headline": 0.0125,
+  "bonferroni_alpha_tutti_i_confronti": 0.00208,
+  "regola": "un confronto conclusivo al 95% dentro una famiglia di 24 test non basta: serve Bonferroni o la replica su un blocco indipendente (2019-20) o su un'altra lega"
+ },
+ "_meta": {
+  "seed": 20260726,
+  "B_bootstrap": 10000,
+  "rho": -0.06,
+  "secondi": 64.3,
+  "script": "cantiere/scripts/ggng_contro_quote.py"
+ }
+}
