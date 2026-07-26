@@ -391,6 +391,11 @@ e con il vantaggio **concentrato in Premier** (+0.57; SA +0.12, Liga +0.004 nel
 rumore). È inoltre **sovra-confidente** (dichiara 60.1% sul favorito, ne azzecca
 41.7%).
 
+> **Stagione 2026-27: il piano datato vive in [`newseason.md`](../newseason.md)**
+> (radice del repo, file deperibile) — checklist con le date, sondaggi di
+> fonti nuove e proposta di automazione. Questa sezione resta la regola
+> permanente; quel file è l'esecuzione di quest'anno.
+
 **⚠️ PROMEMORIA OPERATIVO — a ogni inizio stagione (luglio/agosto):**
 
 1. **rilanciare** `python scripts/_run_fase89_season_champion.py` (≈2 minuti)

@@ -277,6 +277,12 @@ docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  Actions, fonti esterne valutate/scartate)
 docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
                  apertura 2017-19)
+newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
+                 stagione 2026-27 + brainstorming su fonti nuove e automazione.
+                 Contiene cio' che NON si recupera dopo il calcio d'inizio
+                 (previsioni congelate, traiettoria delle quote, formazioni).
+                 Da archiviare a stagione avviata: cio' che sopravvive va
+                 spostato in PISTE/DIARIO/MANUALE
 tests/           test unitari
 ```
 
