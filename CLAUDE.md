@@ -277,6 +277,12 @@ docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  Actions, fonti esterne valutate/scartate)
 docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
                  apertura 2017-19)
+lavoro_aperto.md (RADICE) INDICE unico del lavoro aperto: Fase 78, le 17 piste
+                 ancora aperte, le 24 caselle vuote della PANCHINA, Tier 2/3,
+                 i tre punti operativi e il brainstorming sulla routine
+                 (aggiornamento giornaliero, movimento quote, notizie e
+                 formazioni). NON e' una fonte di verita': se diverge da
+                 PISTE/PANCHINA, hanno ragione loro
 newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  stagione 2026-27 + brainstorming su fonti nuove e automazione.
                  Contiene cio' che NON si recupera dopo il calcio d'inizio
