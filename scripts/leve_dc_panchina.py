@@ -2,7 +2,7 @@
 """Le leve di PANCHINA e le COVARIATE sul path Dixon-Coles standalone (senza
 quote), portate per la prima volta fuori dalla Serie A: Bundesliga e Ligue 1.
 
-Contesto: `cantiere/report/10_modelli_nuove_leghe.md` §8 punto 7 lascia aperto
+Contesto: `docs/audit_5_leghe/10_modelli_nuove_leghe.md` §8 punto 7 lascia aperto
 esattamente questo fronte. Tutte le leve testate finora sulle due leghe nuove
 stavano dal lato MERCATO (router θ, φ35 sul market-implied, devig, ricalibrazioni)
 e sono risultate negative o nel rumore. Qui si guarda l'ALTRO motore: il DC
@@ -19,7 +19,7 @@ PARTE 1 — le quattro leve di panchina (tutte gia' in produzione, riusate):
 PARTE 2 — le covariate (rest_full, midweek, squad_value, absence), col
 protocollo della Fase 79 (scripts/_run_fase79_leve_per_lega.py), PIU' la
 variante nuova: le covariate di congestione RICOSTRUITE con i 3.045 calendari
-di coppa recuperati (cantiere/data/ricerca/fixtures_*.csv) e mai integrati.
+di coppa recuperati (data/ricerca_esterna/fixtures_*.csv) e mai integrati.
 E' la prima volta che `midweek_europe` viene misurata su un calendario completo.
 
 METODO (vincolante, CLAUDE.md + regole di sessione)
@@ -40,15 +40,15 @@ METODO (vincolante, CLAUDE.md + regole di sessione)
     leva: una leva puo' non guadagnare in log-loss e raddrizzare la calibrazione.
 
 ISOLAMENTO (R4): questo script LEGGE tutto e SCRIVE solo
-  cantiere/out/leve_dc_panchina.json
+  docs/audit_5_leghe/numeri/leve_dc_panchina.json
 piu' una cache di predizioni intermedie in una directory temporanea FUORI dal
 repo (--cache, default nello scratchpad di sessione). Nessuno snapshot, nessun
 file di produzione, nessun file di altri agenti viene toccato. Nessun git.
 
 Uso:
-    python cantiere/scripts/leve_dc_panchina.py --stage wf       # backtest (lungo)
-    python cantiere/scripts/leve_dc_panchina.py --stage betas    # beta per stagione
-    python cantiere/scripts/leve_dc_panchina.py --stage analyze  # -> JSON
+    python scripts/leve_dc_panchina.py --stage wf       # backtest (lungo)
+    python scripts/leve_dc_panchina.py --stage betas    # beta per stagione
+    python scripts/leve_dc_panchina.py --stage analyze  # -> JSON
 """
 from __future__ import annotations
 
@@ -64,9 +64,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -77,9 +77,9 @@ from src.config import SERIE_A                       # noqa: E402
 from src.data import database, fixtures as fxmod, loader  # noqa: E402
 from src.evaluation import calibration, experiment_log, metrics  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out" / "leve_dc_panchina.json"
-CANTIERE_DATA = ROOT / "cantiere" / "data"
-TRACER = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_dc_panchina.json"
+CANTIERE_DATA = ROOT / "data"
+TRACER = ROOT / "docs" / "audit_5_leghe" / "numeri"
 
 # --------------------------------------------------------------------------- #
 # Le due leghe nuove vivono nel cantiere: si dirotta il percorso dello snapshot
@@ -113,7 +113,7 @@ PC = ["m_home", "m_draw", "m_away"]
 _IDX = {"H": 0, "D": 1, "A": 2}
 B, SEED = 10_000, 4242
 
-# Riferimento pubblicato (report 06 / cantiere/out/tranche3_tracer.json).
+# Riferimento pubblicato (report 06 / docs/audit_5_leghe/numeri/tranche3_tracer.json).
 RIFERIMENTO = {"bundesliga": 0.9919, "ligue_1": 1.0041}
 
 # Calendari di club: base (quelli usati per costruire gli snapshot) e nome del
@@ -163,7 +163,7 @@ def cache_dir() -> Path:
 def merged_fixtures(league: str) -> pd.DataFrame:
     """Calendario base + i file `fixtures_{lega}_*.csv` recuperati, deduplicati
     su (squadra, data, competizione). Stessa ricetta di
-    `cantiere/scripts/stima_celle_residue.py` (blocco D5), che ha verificato che
+    `scripts/stima_celle_residue.py` (blocco D5), che ha verificato che
     il SOLO calendario base riproduce esattamente le colonne dello snapshot."""
     cf, _ = FIXT[league]
     F = pd.read_csv(cf)
@@ -726,7 +726,7 @@ def stage_analyze() -> None:
     res: dict = {
         "titolo": "Le leve di panchina e le covariate sul path Dixon-Coles "
                   "standalone, su Bundesliga e Ligue 1",
-        "regola": "R4 isolamento: scrive solo cantiere/out/leve_dc_panchina.json; "
+        "regola": "R4 isolamento: scrive solo docs/audit_5_leghe/numeri/leve_dc_panchina.json; "
                   "nessun git; metriche dalla fonte unica experiment_log/metrics.",
         "impostazione": {
             "leghe": LEAGUES, "stagioni_test": TEST_SEASONS,

@@ -64,7 +64,7 @@ assert di identita' numerica a ogni esecuzione. Bootstrap:
 (n≈12.500) una versione a blocchi identica nella distribuzione ma che non
 alloca 2 GB.
 
-Uso:  python cantiere/scripts/leve_devig_shin.py [--leagues ...] [--jobs 2]
+Uso:  python scripts/leve_devig_shin.py [--leagues ...] [--jobs 2]
       [--no-downstream]
 """
 from __future__ import annotations
@@ -80,9 +80,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -94,15 +94,15 @@ from src.evaluation import metrics                 # noqa: E402
 from src.models import market_denoise as MD        # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 CACHE = Path(os.environ.get(
     "SCRATCH",
     "/tmp/claude-0/-home-user-Polymarket-oracle/"
     "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "devig_shin"
 
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
 
 # Finestra standard del path-mercato: tutte le stagioni con chiusura O/U reale.

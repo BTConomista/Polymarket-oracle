@@ -42,7 +42,7 @@ prescindere dalle credenziali. Il documento va aggiornato.
 ## 3 · Verifica della stima (otto prove, cercando di falsificarla)
 
 Re-implementazione **indipendente** dalla formula documentata, senza chiamare
-`scripts/build_estimates.py` (`cantiere/scripts/verifica_stime.py`).
+`scripts/build_estimates.py` (`scripts/verifica_stime.py`).
 
 ### 3.1 Riproducibilità — ✅
 2.279 righe ri-derivate, **2.279 combaciano**, scarto massimo **0.000000**.

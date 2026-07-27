@@ -5,20 +5,20 @@ PRODUZIONE senza modificarlo: `loader._normalize` (risultati + le 10 colonne
 quota con la politica Fase 73), `understat.parse_season_xg` (xG/npxG/PPDA/deep),
 `player_scores.add_squad_values` (valore rosa), `transfermarkt.add_absences`
 (assenze stimate), `fixtures.*` (congestione vera). Le leghe nuove sono
-registrate a runtime da `cantiere/scripts/nuove_leghe.registra()`.
+registrate a runtime da `scripts/nuove_leghe.registra()`.
 
 Differenze rispetto a Premier/Liga (Fase 54): niente bundle caricati a mano —
-le fonti si scaricano direttamente (`cantiere/scripts/fetch_sources.py`), perche'
+le fonti si scaricano direttamente (`scripts/fetch_sources.py`), perche'
 in questa sessione football-data.co.uk e understat.com sono raggiungibili.
 
 Uscite (nel cantiere, non negli alberi ufficiali):
-    cantiere/data/{lega}_matches.csv          snapshot 38 colonne
-    cantiere/data/club_fixtures_{lega}.csv    calendario di club completo
+    data/{lega}_matches.csv          snapshot 38 colonne
+    data/club_fixtures_{lega}.csv    calendario di club completo
 
 Uso:
-    python cantiere/scripts/build_new_snapshot.py                  # tutto
-    python cantiere/scripts/build_new_snapshot.py --step core      # solo base+xG
-    python cantiere/scripts/build_new_snapshot.py --leagues bundesliga
+    python scripts/build_new_snapshot.py                  # tutto
+    python scripts/build_new_snapshot.py --step core      # solo base+xG
+    python scripts/build_new_snapshot.py --leagues bundesliga
 """
 from __future__ import annotations
 
@@ -32,16 +32,16 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 from src.data import fixtures as fx_mod  # noqa: E402
 from src.data import loader, sources, understat  # noqa: E402
 
-FONTI = ROOT / "cantiere" / "data" / "fonti"
-OUTDIR = ROOT / "cantiere" / "data"
+FONTI = ROOT / "data" / "fonti"
+OUTDIR = ROOT / "data"
 CACHE = FONTI / "openfootball"
 
 # Ordine colonne UFFICIALE del progetto (== data/serie_a_matches.csv).

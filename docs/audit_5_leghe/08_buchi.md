@@ -92,7 +92,7 @@ di comodo: xG = gol esatti, npxG = gol meno un rigore forfettario, ppda `att=0
 def=0`, deep 0, previsione 0/1/0. Le sei celle sono ora **NaN dichiarato**
 (registro); il modello scarta le righe senza segnale secondario, quindi la
 partita continua a contare nel modello-gol. Il controllo che lo intercetta
-(`check_xg_segnaposto`) è nell'audit: **1 segnaposto su 15.788 partite**, gli
+(`check_xg_segnaposto`) è nell'audit: **1 segnaposto su 16.111 partite**, gli
 altri 3 candidati verificati e legittimi. Dopo la correzione: **0**.
 
 **4.2 · `midweek_europe` = 0 quando invece si giocava.** Il calendario di club

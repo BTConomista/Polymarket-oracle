@@ -9,7 +9,7 @@ Il protocollo del progetto (CLAUDE.md §1.8) poggia su una premessa:
      l'unico mercato dove non possiamo dimostrare l'efficienza del mercato —
      l'unico con "spazio" non ancora chiuso. Priorita' li'.»
 
-Le quote GG/NG ORA esistono: `cantiere/data/ricerca/footiqo_*.json` porta la
+Le quote GG/NG ORA esistono: `data/ricerca_esterna/footiqo_*.json` porta la
 CHIUSURA 1xBet di 1X2, O/U 0.5/1.5/2.5/3.5/4.5 e GG/NG (xbetCloseBTTSY /
 xbetCloseBTTSN) per 5 leghe x 3 stagioni (2017-18, 2018-19, 2019-20).
 La premessa e' caduta: questo script la verifica.
@@ -31,7 +31,7 @@ LE DOMANDE (nell'ordine del compito)
             football-data) + O/U di APERTURA (reale). PRIMARIA per il 2017-19,
             perche' e' l'unico input O/U REALE che il progetto ha in quegli anni.
        (b2) stessa cosa ma con la STIMA di chiusura O/U del progetto
-            (data/estimates/ou_close_2017_19.csv + cantiere/data/stime/...).
+            (data/estimates/ou_close_2017_19.csv + data/estimates/...).
             SECONDARIA e dichiarata: i coefficienti della stima sono fittati su
             stagioni SUCCESSIVE (anti-causale) -> va letta come benchmark
             storico, non come predizione.
@@ -75,10 +75,10 @@ blocco principale (a, a2, b1, b2, c, + il migliore delle leve). Bonferroni a
 
 USO
 ---
-  python cantiere/scripts/ggng_contro_quote.py --step dati
-  python cantiere/scripts/ggng_contro_quote.py --step dc      # ~10 min, 2 proc
-  python cantiere/scripts/ggng_contro_quote.py --step analisi
-  python cantiere/scripts/ggng_contro_quote.py                # tutto
+  python scripts/ggng_contro_quote.py --step dati
+  python scripts/ggng_contro_quote.py --step dc      # ~10 min, 2 proc
+  python scripts/ggng_contro_quote.py --step analisi
+  python scripts/ggng_contro_quote.py                # tutto
 """
 from __future__ import annotations
 
@@ -96,7 +96,7 @@ from scipy.optimize import minimize
 
 ROOT = Path("/home/user/Polymarket-oracle")
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -111,8 +111,8 @@ from _fase52_common import boot, fit_level  # noqa: E402
 # --------------------------------------------------------------------------- #
 # Costanti
 # --------------------------------------------------------------------------- #
-OUT = ROOT / "cantiere" / "out"
-RIC = ROOT / "cantiere" / "data" / "ricerca"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
+RIC = ROOT / "data" / "ricerca_esterna"
 SCRATCH = Path(os.environ.get(
     "GGNG_SCRATCH",
     "/tmp/claude-0/-home-user-Polymarket-oracle/"
@@ -129,11 +129,11 @@ SNAP = {
     "serie_a": ROOT / "data" / "serie_a_matches.csv",
     "premier_league": ROOT / "data" / "premier_league_matches.csv",
     "la_liga": ROOT / "data" / "la_liga_matches.csv",
-    "bundesliga": ROOT / "cantiere" / "data" / "bundesliga_matches.csv",
-    "ligue_1": ROOT / "cantiere" / "data" / "ligue_1_matches.csv",
+    "bundesliga": ROOT / "data" / "bundesliga_matches.csv",
+    "ligue_1": ROOT / "data" / "ligue_1_matches.csv",
 }
 STIME = [ROOT / "data" / "estimates" / "ou_close_2017_19.csv",
-         ROOT / "cantiere" / "data" / "stime" / "ou_close_2017_19_nuove_leghe.csv"]
+         ROOT / "data" / "estimates" / "ou_close_2017_19_nuove_leghe.csv"]
 
 RHO = -0.06
 B = 10_000
@@ -336,7 +336,7 @@ _orig_snapshot_path = database.snapshot_path
 
 def _snapshot_path(league_key: str = "serie_a") -> Path:
     if league_key in nuove_leghe.NEW_LEAGUES:
-        return ROOT / "cantiere" / "data" / f"{league_key}_matches.csv"
+        return ROOT / "data" / f"{league_key}_matches.csv"
     return _orig_snapshot_path(league_key)
 
 
@@ -632,7 +632,7 @@ def analisi(A: pd.DataFrame, lock: dict) -> dict:
     # --------------------------------------------------- controllo di sanita'
     m1719 = np.isin(stag, BLOCCO_PRINC)
     res["controllo_di_sanita"] = {
-        "riferimento": "cantiere/report/09_chiusura_buchi.md §2.4 (primo sguardo, "
+        "riferimento": "docs/audit_5_leghe/09_chiusura_buchi.md §2.4 (primo sguardo, "
                        "finestra 2017-19, 5 leghe)",
         "atteso": {"p_medio_GG": 0.526, "freq_GG": 0.516,
                    "ll_mercato": 0.687, "ll_baseline": 0.693,
@@ -1474,7 +1474,7 @@ def main() -> int:
     res = analisi(A, lock)
     res["_meta"] = {"seed": SEED, "B_bootstrap": B, "rho": RHO,
                     "secondi": round(time.time() - t0, 1),
-                    "script": "cantiere/scripts/ggng_contro_quote.py"}
+                    "script": "scripts/ggng_contro_quote.py"}
     JSON_OUT.write_text(json.dumps(res, ensure_ascii=False, indent=1,
                                    default=float), encoding="utf-8")
     stampa(res)

@@ -55,17 +55,17 @@ D. SIMULAZIONE DI POTERE (gratis) - la parte che rende onesti i numeri sopra.
 
 --------------------------------------------------------------------------- #
 Uso:
-    python cantiere/scripts/cerca_segnaposto.py                # tutto
-    python cantiere/scripts/cerca_segnaposto.py --offline      # senza rete
-    python cantiere/scripts/cerca_segnaposto.py --campione 200 --coda 80
+    python scripts/cerca_segnaposto.py                # tutto
+    python scripts/cerca_segnaposto.py --offline      # senza rete
+    python scripts/cerca_segnaposto.py --campione 200 --coda 80
 
 I download vanno in una cartella temporanea (variabile d'ambiente CACCIA_CACHE,
 default <tmp>/caccia_understat): lo script NON scrive dentro i dati versionati.
 Di ogni payload scaricato viene registrato lo SHA256 nell'uscita JSON, cosi' un
 terzo puo' verificare di aver visto la stessa cosa.
 
-Uscite: cantiere/out/caccia_understat.json  (tutti i numeri, riproducibili)
-        cantiere/out/caccia_understat.md    (la lettura per un umano)
+Uscite: docs/audit_5_leghe/numeri/caccia_understat.json  (tutti i numeri, riproducibili)
+        docs/audit_5_leghe/numeri/caccia_understat.md    (la lettura per un umano)
 """
 from __future__ import annotations
 
@@ -84,9 +84,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -96,12 +96,12 @@ from src.data import sources  # noqa: E402
 
 from _fase52_common import boot  # noqa: E402
 
-FONTI = ROOT / "cantiere" / "data" / "fonti"
+FONTI = ROOT / "data" / "fonti"
 FD_DIR = FONTI / "football_data"
 US_DIR = FONTI / "understat"
 CACHE_TIRI = Path(os.environ.get(
     "CACCIA_CACHE", str(Path(tempfile.gettempdir()) / "caccia_understat")))
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 
 LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
 # nome della lega nello stile Understat (per l'URL del JSON di lega)
@@ -537,7 +537,7 @@ def scrivi_md(rep: dict) -> None:
     L = []
     A = L.append
     A("# Caccia ai segnaposto di Understat (5 leghe x 9 stagioni)\n")
-    A(f"Generato da `cantiere/scripts/cerca_segnaposto.py` il "
+    A(f"Generato da `scripts/cerca_segnaposto.py` il "
       f"{rep['quando']} (UTC). Parametri: `{json.dumps(rep['parametri'])}`.\n")
     A("**La domanda.** Un buco (NaN) si vede. Un dato *finto* no: quando la fonte "
       "non acquisisce una partita non lascia il campo vuoto, ci scrive un valore "

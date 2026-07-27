@@ -26,7 +26,8 @@ fonti **non hanno**. Sono deliberatamente tenute **fuori dagli snapshot**
 
 ### `ou_close_2017_19.csv` — chiusura O/U 2.5 stimata, stagioni 2017-18 / 2018-19
 
-**Perché.** In quelle 2 stagioni (Serie A, Premier League, La Liga)
+**Perché.** In quelle 2 stagioni (tutte e 5 le leghe: Serie A, Premier League,
+La Liga, Bundesliga, Ligue 1 — **3.638 righe**)
 football-data pubblica **una sola linea O/U** (`BbAv`, Betbrain media): dalla
 Fase 73 sappiamo che è un'**apertura** reale (pre-match, negli snapshot come
 `odds_over25_open`), non una chiusura. La chiusura O/U non esiste nei dati,
@@ -35,12 +36,14 @@ buco della **chiusura** con una stima.
 
 **Come (Fasi 62/62-bis; imbattuta in Fasi 72/73).** Regressione in spazio logit
 della chiusura O/U su (linea O/U **di apertura** + movimento 1X2
-apertura→chiusura), fittata pooled su 7.978 partite 2019-20+ dove la chiusura
-vera esiste. Convalidata walk-forward:
+apertura→chiusura), fittata pooled su **12.457** partite 2019-20+ e **5 leghe**
+dove la chiusura vera esiste (era 7.978 su 3 leghe fino alla Fase 100).
+Convalidata walk-forward:
 
 | errore atteso | valore |
 |---|---|
-| MAE vs chiusura vera (prob.) | **~0.012** |
+| MAE vs chiusura vera (prob.), **regime d'uso** (fit su stagioni successive) | **~0.014** (0.0143 Bundesliga, 0.0125 Ligue 1) |
+| MAE in *interpolazione* (fit che vede anche stagioni precedenti) | ~0.012 — è il numero storicamente pubblicato, ma **non** è il regime in cui la stima viene usata |
 | correlazione col movimento vero della linea | 0.75–0.86 |
 | quota del movimento NON catturabile | ~35-45% (notizie puro-totali, ignote all'1X2) |
 
@@ -55,11 +58,16 @@ vera esiste. Convalidata walk-forward:
 
 ### `squad_value_2017_26.csv` — valore rosa stimato per le celle mancanti
 
-**Perché (ridimensionato dalla Fase 67).** Con la fonte player-scores i valori
-rosa REALI coprono il 100% delle stagioni concluse: restano **13 celle**, tutte
-della stagione in corso 2025-26 (valutazioni di inizio stagione ancora
-incomplete nel dataset per alcune neopromosse/club). Erano 73 prima della
-Fase 67: 60 stime sono state SOSTITUITE da dati reali.
+**Perché (ridimensionato dalla Fase 67, azzerato dalla Fase 70).** Con la fonte
+player-scores i valori rosa REALI coprono il 100% delle stagioni concluse; le
+ultime 13 celle 2025-26 sono state recuperate da Transfermarkt alla Fase 70
+(regola R2, fonte secondaria dichiarata), quindi **il file è vuoto: 0 righe di
+stima attiva**. Erano 73 prima della Fase 67 e 13 prima della Fase 70. Il file
+resta versionato (con la sua intestazione) perché la procedura sotto è la
+ricetta da riusare se un buco si riapre.
+> Nota di allineamento (audit Fase 101): con le 5 leghe le celle recuperate a
+> mano da Transfermarkt sono **16**, non 13 — vedi
+> `data/squad_value_2526_transfermarkt.csv`.
 
 **Come (Fase 66).** Stimatore ibrido, scelto con leave-one-out e
 leave-TEAM-out sulle 467 celle note:

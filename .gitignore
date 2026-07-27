@@ -25,3 +25,7 @@ data/polymarket/
 .DS_Store
 .idea/
 .vscode/
+
+# Fonti grezze ri-scaricabili dell'audit (scripts/fetch_sources.py):
+# 135 MB, rigenerabili, impronta SHA256 in data/ricerca_esterna/manifest_fonti_audit.json
+data/fonti/

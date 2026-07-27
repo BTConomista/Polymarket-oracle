@@ -7,7 +7,7 @@ Quattro casi indipendenti, ognuno con la sua domanda:
           la_liga Alaves-Sociedad 14/10/2017). Per queste due righe esiste gia'
           un DATO REALE proposto da una fonte esterna
           (github.com/iredchuk/soccer-bookmaker-odds, vedi
-          cantiere/out/caccia_quote_singole.json). Qui NON si stima al buio:
+          docs/audit_5_leghe/numeri/caccia_quote_singole.json). Qui NON si stima al buio:
             (i)  si verifica in modo INDIPENDENTE che quella fonte sia davvero
                  una chiusura di tipo media-di-mercato e non altro;
             (ii) si misura quanto una STIMA (regressione logit apertura->
@@ -38,12 +38,12 @@ METODO (vincolante, CLAUDE.md):
     ``_autotest_boot()``.
 
 ISOLAMENTO (R4): questo script LEGGE tutto e SCRIVE solo
-  cantiere/data/stime/celle_residue.csv  e  cantiere/out/stima_celle_residue.json.
+  data/estimates/celle_residue.csv  e  docs/audit_5_leghe/numeri/stima_celle_residue.json.
 Nessuno snapshot, nessuna correzione, nessun file di altri viene toccato.
 
 Uso:
-    python cantiere/scripts/stima_celle_residue.py            # tutto (usa la rete)
-    python cantiere/scripts/stima_celle_residue.py --offline  # salta A-i e C
+    python scripts/stima_celle_residue.py            # tutto (usa la rete)
+    python scripts/stima_celle_residue.py --offline  # salta A-i e C
 """
 from __future__ import annotations
 
@@ -59,32 +59,32 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from src.evaluation import metrics                     # noqa: E402
 from src.data import fixtures as fx                    # noqa: E402
 
-OUT_JSON = ROOT / "cantiere" / "out" / "stima_celle_residue.json"
-OUT_CSV = ROOT / "cantiere" / "data" / "stime" / "celle_residue.csv"
+OUT_JSON = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_celle_residue.json"
+OUT_CSV = ROOT / "data" / "estimates" / "celle_residue.csv"
 CACHE = Path(tempfile.gettempdir()) / "celle_residue_cache"
 
 SNAP = {
     "serie_a":        ROOT / "data" / "serie_a_matches.csv",
     "premier_league": ROOT / "data" / "premier_league_matches.csv",
     "la_liga":        ROOT / "data" / "la_liga_matches.csv",
-    "bundesliga":     ROOT / "cantiere" / "data" / "bundesliga_matches.csv",
-    "ligue_1":        ROOT / "cantiere" / "data" / "ligue_1_matches.csv",
+    "bundesliga":     ROOT / "data" / "bundesliga_matches.csv",
+    "ligue_1":        ROOT / "data" / "ligue_1_matches.csv",
 }
 FIXT = {
     "serie_a":        (ROOT / "data" / "club_fixtures.csv", "Serie A"),
     "premier_league": (ROOT / "data" / "club_fixtures_premier_league.csv", "Premier League"),
     "la_liga":        (ROOT / "data" / "club_fixtures_la_liga.csv", "La Liga"),
-    "bundesliga":     (ROOT / "cantiere" / "data" / "club_fixtures_bundesliga.csv", "Bundesliga"),
-    "ligue_1":        (ROOT / "cantiere" / "data" / "club_fixtures_ligue_1.csv", "Ligue 1"),
+    "bundesliga":     (ROOT / "data" / "club_fixtures_bundesliga.csv", "Bundesliga"),
+    "ligue_1":        (ROOT / "data" / "club_fixtures_ligue_1.csv", "Ligue 1"),
 }
-RAW_FD = ROOT / "cantiere" / "data" / "fonti" / "football_data"
+RAW_FD = ROOT / "data" / "fonti" / "football_data"
 IRED = {  # nomi dei file nel repo esterno
     "bundesliga": "germany_bundesliga", "la_liga": "spain_primera",
     "serie_a": "italy_serie-a", "premier_league": "england_premier-league",
@@ -530,7 +530,7 @@ def caso_A_stima(D: pd.DataFrame, M: pd.DataFrame | None) -> tuple[dict, list]:
 
     # le due partite bersaglio
     def footiqo(lg, seas, home, away, day):
-        f = ROOT / "cantiere" / "data" / "ricerca" / f"footiqo_{lg}_{seas}.json"
+        f = ROOT / "data" / "ricerca_esterna" / f"footiqo_{lg}_{seas}.json"
         if not f.exists():
             return None
         for mm in json.load(open(f)):
@@ -873,7 +873,7 @@ def caso_D(D: pd.DataFrame) -> dict:
         F = pd.read_csv(cf)
         F["date"] = pd.to_datetime(F["date"])
         add = []
-        for f in sorted(glob.glob(str(ROOT / "cantiere" / "data" / "ricerca" / f"fixtures_{lg}_*.csv"))):
+        for f in sorted(glob.glob(str(ROOT / "data" / "ricerca_esterna" / f"fixtures_{lg}_*.csv"))):
             t = pd.read_csv(f)
             t["date"] = pd.to_datetime(t["date"])
             add.append(t[["season", "team", "date", "competition", "home_away", "opponent"]])
@@ -897,7 +897,7 @@ def caso_D(D: pd.DataFrame) -> dict:
         "per_lega": mid,
         "totale_celle": int(sum(v.get("midweek_europe_falsi_zero", 0) for v in mid.values())),
         "totale_partite_con_riposo_che_cambia": int(sum(v.get("partite_con_riposo_che_cambia", 0) for v in mid.values())),
-        "fonte_del_rimedio": "cantiere/data/ricerca/fixtures_*.csv (3.045 righe gia' su disco)"}
+        "fonte_del_rimedio": "data/ricerca_esterna/fixtures_*.csv (3.045 righe gia' su disco)"}
     return res
 
 
@@ -984,7 +984,7 @@ def scrivi_csv(A: dict, Ar: list, B: dict, Bd: dict, C: dict, Dd: dict) -> pd.Da
                 "verdetto": "FINTO PIENO: valori presenti ma fuori scala. Il guard della Fase 58 "
                             "scatta solo per overround < 1 e non li intercetta. Da svuotare come le "
                             "8 righe gemelle, oppure estendere il guard con un tetto superiore",
-                "note": ("gia' segnalata in cantiere/out/caccia_quote_singole.json"
+                "note": ("gia' segnalata in docs/audit_5_leghe/numeri/caccia_quote_singole.json"
                          if gia else
                          "NUOVA: non era nell'elenco precedente, che guardava solo la_liga")})
     tot = Dd["D5_midweek_europe_falsi_zero"]["totale_celle"]
@@ -996,7 +996,7 @@ def scrivi_csv(A: dict, Ar: list, B: dict, Bd: dict, C: dict, Dd: dict) -> pd.Da
             "colonna": "home_midweek_europe / away_midweek_europe",
             "valore_attuale": "0", "valore_proposto": "1",
             "metodo": "ricalcolo di fixtures.add_rest_days_full con i calendari di coppa gia' "
-                      "recuperati in cantiere/data/ricerca/fixtures_*.csv",
+                      "recuperati in data/ricerca_esterna/fixtures_*.csv",
             "errore_atteso": 0.0, "unita_errore": "nessuno: e' dato di calendario, non stima",
             "alternativa_stimata": "", "errore_alternativa": "",
             "verdetto": f"CHIUDIBILE SUBITO E SENZA STIMA: {v['midweek_europe_falsi_zero']} celle "
@@ -1020,7 +1020,7 @@ def main() -> None:
     out = {
         "titolo": "Le celle residue: stimabili in modo difendibile, o la risposta e' no?",
         "regola": "R4 isolamento: nessuno snapshot modificato; scrivo solo "
-                  "cantiere/data/stime/celle_residue.csv e cantiere/out/stima_celle_residue.json",
+                  "data/estimates/celle_residue.csv e docs/audit_5_leghe/numeri/stima_celle_residue.json",
         "controllo_di_sanita_bootstrap": _autotest_boot(),
         "aspettative_dichiarate_prima": {
             "A_i": "mi aspetto di CONFERMARE che la fonte e' una chiusura, ma di non poter "

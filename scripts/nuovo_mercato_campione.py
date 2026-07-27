@@ -38,7 +38,7 @@ Il confronto e' SOLO contro le baseline, e viene detto cosi'.
 
 ------------------------------------------------------------------------------
 ESITO MISURATO (run del 26/07/2026, nsim=20.000; tutti i numeri in
-`cantiere/out/nuovo_mercato_campione.json`).
+`docs/audit_5_leghe/numeri/nuovo_mercato_campione.json`).
 
   * CONTROLLO DI SANITA' SUPERATO: le 6 quantita' della Fase 89 riprodotte con
     scarto ESATTAMENTE 0.0 (24 stagioni-lega).
@@ -74,9 +74,9 @@ ESITO MISURATO (run del 26/07/2026, nsim=20.000; tutti i numeri in
 ------------------------------------------------------------------------------
 
 Uso:
-    python cantiere/scripts/nuovo_mercato_campione.py               # tutto
-    python cantiere/scripts/nuovo_mercato_campione.py --nsim 20000
-    python cantiere/scripts/nuovo_mercato_campione.py --skip-sanity
+    python scripts/nuovo_mercato_campione.py               # tutto
+    python scripts/nuovo_mercato_campione.py --nsim 20000
+    python scripts/nuovo_mercato_campione.py --skip-sanity
 """
 from __future__ import annotations
 
@@ -91,9 +91,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -109,7 +109,7 @@ _orig_snapshot_path = database.snapshot_path
 
 def _snapshot_path(league_key: str = "serie_a") -> Path:
     if league_key in nuove_leghe.NEW_LEAGUES:
-        return ROOT / "cantiere" / "data" / f"{league_key}_matches.csv"
+        return ROOT / "data" / f"{league_key}_matches.csv"
     return _orig_snapshot_path(league_key)
 
 
@@ -130,7 +130,7 @@ _spec.loader.exec_module(F89)
 
 from _fase52_common import boot  # noqa: E402  (bootstrap appaiato del progetto)
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 OUT_JSON = OUT / "nuovo_mercato_campione.json"
 
 NUOVE = ("bundesliga", "ligue_1")

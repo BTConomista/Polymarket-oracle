@@ -1,7 +1,7 @@
 """Applica le CORREZIONI DICHIARATE agli snapshot (regole R1 e R3 di REGOLE.md).
 
 Nessun dato cambia a mano: il *cosa* e il *perche'* stanno in
-`cantiere/data/correzioni_dichiarate.csv`, il *come* e' questo script.
+`data/correzioni_dichiarate.csv`, il *come* e' questo script.
 
 Garanzie (se una salta, lo script si ferma senza scrivere nulla):
   1. ogni correzione deve trovare ESATTAMENTE una riga nello snapshot;
@@ -13,8 +13,8 @@ Garanzie (se una salta, lo script si ferma senza scrivere nulla):
      saltata e segnalata.
 
 Uso:
-    python cantiere/scripts/applica_correzioni.py            # applica
-    python cantiere/scripts/applica_correzioni.py --dry-run  # mostra e basta
+    python scripts/applica_correzioni.py            # applica
+    python scripts/applica_correzioni.py --dry-run  # mostra e basta
 """
 from __future__ import annotations
 
@@ -24,8 +24,8 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
-DATA = ROOT / "cantiere" / "data"
+ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT / "data"
 REGISTRO = DATA / "correzioni_dichiarate.csv"
 
 # Solo gli snapshot del cantiere: le leghe gia' in repo non si toccano (R4).

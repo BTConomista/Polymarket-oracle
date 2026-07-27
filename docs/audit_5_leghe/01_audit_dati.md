@@ -39,12 +39,12 @@ conta davvero** — non «lo snapshot è internamente coerente?» ma «lo snapsh
 | **C. indipendente** | i **gol secondo Understat** (fonte terza) contro quelli dello snapshot | idem |
 | **D. avversariale** | «e se la fonte fosse sbagliata?»: margini impossibili, incoerenza 1X2↔O/U, fisica (gol > tiri in porta), impronte-quota duplicate, riposo, xG impossibile, **xG segnaposto** (§4.8: un dato che la fonte ha inventato al posto della misura — l'unico livello che nemmeno B e C possono vedere) | `audit_anomalie.py` |
 
-Provenienza tracciata: `cantiere/data/fonti/manifest.json` registra URL,
+Provenienza tracciata: `data/ricerca_esterna/manifest_fonti_audit.json` registra URL,
 timestamp UTC, byte e **SHA256** di ognuno dei 90 file scaricati.
 
 ## 3 · Esito dei controlli
 
-23-24 controlli × 5 leghe. Riassunto (dettaglio in `cantiere/out/audit_*.json`):
+23-24 controlli × 5 leghe. Riassunto (dettaglio in `docs/audit_5_leghe/numeri/audit_*.json`):
 
 | lega | FAIL | WARN | note |
 |---|--:|--:|---|
@@ -62,7 +62,7 @@ cantiere (regola R4 → tranche 2).
 **I controlli che contano sono tutti verdi, su tutte e 5 le leghe:**
 
 ```
-B1 stesse partite ............ 0 differenze  (15.788 partite)
+B1 stesse partite ............ 0 differenze  (16.111 partite)
 B2 gol e tiri in porta ....... 0 differenze
 B3 date ...................... 0 differenze
 B4 10 colonne quota .......... 0 differenze  (ri-derivate dal grezzo)
@@ -84,7 +84,7 @@ squadre con due gare lo stesso giorno (0), nomi squadra quasi-duplicati (0).
 
 ---
 
-## 4 · Le 8 anomalie trovate (tutte reali, tutte nella fonte)
+## 4 · Le anomalie trovate (7 reali: 6 nella fonte, 1 nostra; +1 ritirata)
 
 ### 4.1 · 11 righe con margine IMPOSSIBILE nella linea O/U 2017-19 → **da correggere**
 
@@ -122,8 +122,8 @@ analisi che deviga l'apertura O/U di quelle stagioni.
 simmetrico a quello della Fase 58 — se l'overround supera una soglia
 (proposta: **1.12**, ~6σ oltre la mediana sana), si ritenta col livello di
 preferenza successivo e, se anche quello è impossibile, **NaN dichiarato**
-(mai un numero corretto a mano: §5 del CLAUDE.md). Costo: 11 celle su 15.788
-partite (0.07%). Bozza di patch in `cantiere/patch/guard_overround.md`.
+(mai un numero corretto a mano: §5 del CLAUDE.md). Costo: 11 righe (22 celle)
+su 16.111 partite (0.07%). Bozza di patch in `docs/audit_5_leghe/patch_guard_overround_APPLICATA.md`.
 
 ### 4.2 · Udinese-Roma 25/04/2024: quote di chiusura di una partita di 19 minuti → **da dichiarare**
 
@@ -150,7 +150,7 @@ escluderla dalle analisi basate sulla chiusura (o marcarla con una colonna-flag)
 
 ### 4.3 · Union Berlin-Bochum 14/12/2024: risultato ASSEGNATO a tavolino → **da dichiarare**
 
-Unica riga su 15.788 con **tutte le statistiche assenti** (tiri, tiri in porta,
+Unica riga su 16.111 con **tutte le statistiche assenti** (tiri, tiri in porta,
 gol primo tempo: NaN) — la firma tipica del risultato d'ufficio.
 
 | fonte | risultato | xG |
@@ -158,7 +158,8 @@ gol primo tempo: NaN) — la firma tipica del risultato d'ufficio.
 | football-data | **0-2** (assegnato) | — |
 | Understat | **1-1** (giocato) | 3.01 – 1.24 |
 
-È l'unica differenza di risultato tra due fonti indipendenti su 15.788 partite:
+È l'unica differenza di risultato tra due fonti indipendenti su 16.110 partite
+appaiate (una sola partita, in Ligue 1, non ha corrispondenza Understat):
 il campo dice 1-1, il giudice sportivo 0-2 (accensino lanciato dagli spalti sul
 portiere del Bochum). Lo snapshot mette insieme **gol amministrativi** e **xG
 del match giocato**.
@@ -257,7 +258,7 @@ valori di comodo, tutti riconoscibili solo se messi in fila:
 modello-gol** e smette di iniettare un xG inventato.
 
 **Il controllo che ora lo intercetta** (`audit_anomalie.check_xg_segnaposto`,
-n. 7): candidati = `deep = 0` su *entrambe* le squadre (4 casi su 15.788 — filtro
+n. 7): candidati = `deep = 0` su *entrambe* le squadre (4 casi su 16.111 — filtro
 economico, un segnaposto lo soddisfa sempre); verdetto = lista tiri **vuota**
 mentre gol o tiri in porta esistono. Esito: **1 segnaposto** (questo), gli altri
 3 candidati verificati e **legittimi** (West Brom-West Ham e West Ham-Swansea
@@ -277,7 +278,8 @@ errore **respinte dai dati**:
 - «la politica quote apertura/chiusura è applicata male» → **no**: le 10 colonne
   ri-derivate dal grezzo coincidono al bit;
 - «i risultati potrebbero essere sbagliati alla fonte» → **no**: confermati da
-  una seconda fonte indipendente (Understat) su 15.787 partite su 15.788;
+  una seconda fonte indipendente (Understat) su 16.109 partite su 16.110
+  appaiate (l'unica difformita' e' §4.3, poi registrata come correzione R1);
 - «gli xG a zero sono buchi mascherati» → **no**, tutti e 11 legittimi (0 tiri
   confermati sul dato tiro-per-tiro, autogol inclusi — §4.4). Il buco mascherato
   c'era, ma altrove e travestito da dato *normale*: §4.8;
@@ -302,4 +304,4 @@ errore **respinte dai dati**:
    ordine da uniformare».
 
 Tutti gli script dell'audit sono riutilizzabili e parametrici sulle 5 leghe:
-`cantiere/scripts/audit_snapshots.py`, `cantiere/scripts/audit_anomalie.py`.
+`scripts/audit_snapshots.py`, `scripts/audit_anomalie.py`.

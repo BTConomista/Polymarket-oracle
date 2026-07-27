@@ -33,7 +33,7 @@ Metriche: log-loss per riga, calcolata con le stesse formule di
 `scripts/_run_market_implied.ll_bin` / `_run_fase81_mega_sweep_mi._row_ll`.
 Bootstrap: `scripts/_fase52_common.boot` (fonte del progetto).
 
-Uso:  python cantiere/scripts/leve_theta_griglia.py [--leagues ...] [--jobs 2]
+Uso:  python scripts/leve_theta_griglia.py [--leagues ...] [--jobs 2]
 """
 from __future__ import annotations
 
@@ -48,9 +48,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -61,15 +61,15 @@ from scripts import _fase52_common as C            # noqa: E402
 from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 CACHE = Path(os.environ.get(
     "SCRATCH",
     "/tmp/claude-0/-home-user-Polymarket-oracle/"
     "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "theta_griglia"
 
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
 
 SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]

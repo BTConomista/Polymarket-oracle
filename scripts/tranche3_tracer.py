@@ -17,9 +17,9 @@ ASPETTATIVE DICHIARATE PRIMA (playbook, passo 2):
 Le due leghe nuove leggono lo snapshot dal cantiere (R4: non si tocca `data/`).
 
 Uso:
-    python cantiere/scripts/tranche3_tracer.py                      # 2 leghe nuove
-    python cantiere/scripts/tranche3_tracer.py --leagues serie_a    # controllo
-    python cantiere/scripts/tranche3_tracer.py --seasons 2526
+    python scripts/tranche3_tracer.py                      # 2 leghe nuove
+    python scripts/tranche3_tracer.py --leagues serie_a    # controllo
+    python scripts/tranche3_tracer.py --seasons 2526
 """
 from __future__ import annotations
 
@@ -32,9 +32,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -45,8 +45,8 @@ from src.config import SERIE_A  # noqa: E402
 from src.data import database  # noqa: E402
 from src.evaluation import experiment_log  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
-CANTIERE_DATA = ROOT / "cantiere" / "data"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
+CANTIERE_DATA = ROOT / "data"
 
 # Le due leghe nuove vivono nel cantiere: si dirotta il percorso dello snapshot
 # senza toccare il codice di produzione (R4).

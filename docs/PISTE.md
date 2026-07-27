@@ -8,7 +8,8 @@ file deve trovare non "cosa manca" ma **"cosa potrei provare dopo, con che
 cosa, e perché potrebbe funzionare"**. La parte operativa (rete, strumenti,
 Actions) sta nel [MANUALE_SOPRAVVIVENZA.md](MANUALE_SOPRAVVIVENZA.md).
 **Va aggiornato quando una pista si apre, si prova o si chiude** (anche
-l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: Fase 89.
+l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento: **Fase 101**
+(le piste 16 e 19 chiuse dalla Fase 100, allineate dall'audit).
 
 ## 0 · ⚠️ DOVE CERCARE, dopo la correzione della Fase 92
 
@@ -280,7 +281,7 @@ valore/costo aperto.
 (`scripts/_run_counts_level.py`, 7.050 partite OOS, 21 fold): **cinque**
 stimatori walk-forward (`c_oos`, `c_last2`, `c_last`, `c_trend`) più la versione
 **alla radice** (emivita scelta fold per fold sul solo passato). Nessuno
-migliora; **6 celle su 8 peggiorano con IC conclusivo**; l'emivita walk-forward
+migliora; **5 celle su 8 peggiorano con IC conclusivo**; l'emivita walk-forward
 è un lancio di moneta (−0.00004 corner, −0.00034 cartellini, P>0 = 0.48 e 0.33).
 **Causa**: il bias di fold **non persiste** — corr(bias_t, bias_{t−1}) +0.2299
 [−0.2544,+0.6715] sui corner e +0.1915 [−0.3446,+0.5830] sui cartellini,
@@ -404,12 +405,21 @@ fonte candidata nota, va cercata da zero.
 
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 
-### 16. GG/NG quotato + aperture vere
-**Dato**: NON esiste in nessun archivio (verificato); solo raccolta da
-oggi in avanti (foto periodiche delle quote).
-**Ipotesi**: il GG/NG è l'unico mercato senza tetto di efficienza
-dimostrato (principio §1.8) e le "aperture vere" (prima quota pubblicata,
-non il venerdì di football-data) sono l'unico test rimasto della Fase 14.
+### 16. GG/NG quotato + aperture vere — ✅ **CHIUSA nella premessa (Fase 100)**
+**Dato**: ~~NON esiste in nessun archivio (verificato); solo raccolta da oggi in
+avanti~~ → **esiste**: la chiusura GG/NG di 1xBet (via footiqo) copre **5.337
+partite** (2017-20, 5 leghe), più le quote O/U dello stesso book su 3.652.
+**Ipotesi caduta**: il GG/NG NON è «l'unico mercato senza tetto di efficienza
+dimostrato». Misurato: il mercato GG/NG **è informativo** (log-loss 0.6840 contro
+0.6921 di baseline LOSO, CI conclusivo) benché valga **un terzo** dell'O/U 2.5
+dello stesso book; il nostro miglior prezzo lo **pareggia** (6 varianti su 6 con
+CI a cavallo dello zero); il **DC perde** (+0.0104) e il book lo **ingloba**
+(α\*=0 nel 70% dei fit). Nessuna leva aiuta. Numeri:
+`docs/audit_5_leghe/11_ggng.md` e `numeri/ggng_contro_quote.json`.
+**Cosa resta aperto**: solo la raccolta **prospettica** — il book non quota il
+GG/NG nelle stagioni recenti, e le "aperture vere" (prima quota pubblicata, non
+il venerdì di football-data) restano l'unico test rimasto della Fase 14. Il
+motivo però non è più «non abbiamo quote»: è «non abbiamo quote *recenti*».
 Canale già pronto (cron Actions).
 
 ### 17. Paper-trading della strategia draw-bias
@@ -439,8 +449,21 @@ catturare. Prima di raccogliere quote minuto-per-minuto conviene chiudere il
 modello a due stadi sui dati che già abbiamo: costa nulla e dice se il
 condizionamento al punteggio produce segnale.
 
-### 19. Quote O/U 2017-19 — CHIUSURA vera (non solo stima)
-**Dato**: da procurare — piano dedicato: [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).
+### 19. Quote O/U 2017-19 — CHIUSURA vera — ✅ **CHIUSA (Fase 100): trovata, e NON inserita**
+**Esito (Fase 100)**: il dato **esiste** — `footiqo.com` pubblica il book
+**1xBet**, che football-data non contiene: **3.652 partite su 3.652**, copertura
+100%, validato come chiusura vera (corr **0.9977** con la chiusura Pinnacle
+contro 0.9909 con l'apertura; riproduce il movimento 1X2 partita per partita;
+margine e ultima cifra da book vero). **Non è stato inserito**, ed è una
+decisione da NON rifare da capo: è **un solo book**, e come proxy della media
+multi-book è **peggiore della stima** (MAE 0.0156 contro 0.012). Vive in
+`data/ricerca_esterna/`, fuori dagli snapshot. Lezione: «non esiste» ≠ «non
+esiste dove ho cercato» — l'errore delle due cacce precedenti era l'asse di
+ricerca (si cercava chi ri-esporta football-data, ereditandone il buco).
+**Dato**: piano dedicato (CHIUSO): [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).
+
+<details><summary>Storico pre-Fase 100 (perché la caccia sembrava chiusa)</summary>
+
 **Stato (Fase 73)**: il buco si è **dimezzato**. L'**apertura** O/U 2017-19 NON
 mancava: l'unica linea (`BbAv`) è un'apertura reale, prima mal etichettata come
 chiusura, ora nella colonna giusta (`odds_over25_open`, dato reale). Resta da
@@ -459,6 +482,7 @@ login) se emerge un modo a basso rischio di gestire le credenziali; valutare
 fonti a pagamento se il progetto passa a un uso più operativo. Dettagli
 completi (numeri, candidati testati, criteri di accettazione) in
 `CACCIA_OU_2017_19.md` e nel diario (Fasi 71-72).
+</details>
 
 ## 4-bis · Il mercato CAMPIONE DI STAGIONE — da riprendere OGNI anno, a inizio stagione
 

@@ -9,10 +9,10 @@ ordine) a `data/serie_a_matches.csv`**, 9 stagioni (2017-18 → 2025-26):
 
 | file | partite | stagioni | squadre | colonne |
 |---|--:|--:|--:|--:|
-| `cantiere/data/bundesliga_matches.csv` | **2.754** | 9 | 29 | 38 |
-| `cantiere/data/ligue_1_matches.csv` | **3.097** | 9 | 30 | 38 |
-| `cantiere/data/club_fixtures_bundesliga.csv` | 10.375 righe squadra-partita | | | |
-| `cantiere/data/club_fixtures_ligue_1.csv` | 10.701 righe squadra-partita | | | |
+| `data/bundesliga_matches.csv` | **2.754** | 9 | 29 | 38 |
+| `data/ligue_1_matches.csv` | **3.097** | 9 | 30 | 38 |
+| `data/club_fixtures_bundesliga.csv` | 10.375 righe squadra-partita | | | |
+| `data/club_fixtures_ligue_1.csv` | 10.701 righe squadra-partita | | | |
 
 Entrambi passano l'intero audit (Report 1): **0 differenze** rispetto alle fonti
 su gol, date, tiri, 10 colonne quota e 8 colonne xG.
@@ -29,7 +29,7 @@ su gol, date, tiri, 10 colonne quota e 8 colonne xG.
 | assenze stimate | Transfermarkt (mirror salimt) + rose Understat | rete |
 | calendario di club | openfootball: `deutschland/{stagione}/1-bundesliga.txt`, `2-bundesliga2.txt`, `cup.txt`; `france/france/{stagione}_fr{1,2}.txt`, `_frcup.txt`; coppe UEFA condivise | rete |
 
-`cantiere/data/fonti/manifest.json`: URL, timestamp UTC, byte e **SHA256** di
+`data/ricerca_esterna/manifest_fonti_audit.json`: URL, timestamp UTC, byte e **SHA256** di
 ogni file. Le fonti delle due leghe nuove sono **versionate** nel cantiere
 (≈11 MB): gli snapshot si rigenerano **offline**, come per Premier/Liga dai
 bundle di `files/`.
@@ -45,7 +45,7 @@ bundle di `files/`.
 Riuso integrale del codice di produzione — `loader._normalize` (risultati + le
 10 colonne quota con la politica Fase 73), `understat.parse_season_xg`,
 `player_scores.add_squad_values`, `transfermarkt.add_absences`, `fixtures.*` —
-con le due leghe **registrate a runtime** (`cantiere/scripts/nuove_leghe.registra()`).
+con le due leghe **registrate a runtime** (`scripts/nuove_leghe.registra()`).
 All'integrazione, quelle voci si spostano in `src/data/sources.py` e
 `src/config.py`: **nessuna riga di modello cambia** (CLAUDE.md §7).
 
@@ -181,13 +181,13 @@ quella latina.
 
 1. `src/data/sources.py`: aggiungere le 2 voci a `LEAGUES`, `UNDERSTAT_LEAGUES`,
    `UEFA_COUNTRY_CODE`, `SECOND_TIER_NAMES`, `DOMESTIC_CUP_COMPETITIONS`,
-   `OPENFOOTBALL_DOMESTIC_REPO` + i 103 alias (da `cantiere/scripts/nuove_leghe.py`),
+   `OPENFOOTBALL_DOMESTIC_REPO` + i 103 alias (da `scripts/nuove_leghe.py`),
    e generalizzare l'URL openfootball per lo schema francese;
 2. `src/data/player_scores.py`: `COMPETITION_IDS` += `{"L1": "bundesliga", "FR1": "ligue_1"}`;
 3. `src/config.py`: 2 voci in `LEAGUE_CONFIGS` — **dopo** la ri-taratura (passo 3
    del playbook), con blocco 📐 per ogni numero; i δ del §6 sono il punto di
    partenza;
-4. spostare `cantiere/data/{bundesliga,ligue_1}_matches.csv` e
+4. spostare `data/{bundesliga,ligue_1}_matches.csv` e
    `club_fixtures_*.csv` in `data/`, e le fonti in `files/` (o mantenere il
    download diretto ora che la rete è aperta: aggiornare
    `docs/MANUALE_SOPRAVVIVENZA.md` §1);

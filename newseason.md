@@ -148,10 +148,12 @@ ha ribaltato la conclusione (Fase 95-bis). Da fissare **per iscritto adesso**:
 
 ## 7 · Cosa NON farei adesso
 
-**Aggiungere le leghe nuove** (Ligue 1 e Bundesliga come leghe *modellate*,
-Serie B, Championship). Il valore è reale — a parità di stagioni si passerebbe
-da 27 a oltre 45 stagioni-lega — ma **non ha scadenza**, e mangerebbe esattamente
-le tre settimane che servono al Blocco A. **Dopo settembre.**
+~~**Aggiungere le leghe nuove** (Ligue 1 e Bundesliga come leghe *modellate*)~~
+→ **FATTO alla Fase 100**, lo stesso giorno: sono in `LEAGUE_CONFIGS` con
+snapshot congelati (2.754 + 3.097 partite), δ 0.28/0.19, e le 45 stagioni-lega
+ci sono davvero. Resta valido per **Serie B e Championship**: valore reale,
+**nessuna scadenza**, e mangerebbe le tre settimane che servono al Blocco A.
+**Dopo settembre.**
 
 ---
 
@@ -173,6 +175,15 @@ Candidati per cui cambierebbe qualcosa davvero:
 
 | fonte | cosa darebbe | qui | da Actions |
 |---|---|---|---|
+> ⚠️ **SUPERATA dalla Fase 100** (verificato il 26/07/2026, audit Fase 101):
+> la rete **è tornata raggiungibile**. Rispondono 200 `football-data.co.uk`,
+> `understat.com`, `transfermarkt.com` e Kaggle via `kagglehub` — infatti
+> Bundesliga e Ligue 1 sono state scaricate direttamente, senza bundle a
+> mano. Restano davvero da provare solo **Betfair** e **SofaScore**; per
+> `oddsportal.com` il vincolo non è tecnico ma il `robots.txt` (pagine
+> storiche vietate) e BetExplorer ha ritirato le quote vecchie.
+> Stato aggiornato in `docs/MANUALE_SOPRAVVIVENZA.md` §1.
+
 | **Betfair Exchange** | la borsa più liquida del mondo: prezzi migliori di Smarkets su tutto | 403 | **da provare** |
 | **football-data.co.uk** | è la **nostra fonte primaria**: oggi viviamo di bundle caricati a mano | 403 | **da provare** |
 | SofaScore | formazioni, statistiche live | 403 | da provare |
@@ -201,7 +212,14 @@ Candidati per cui cambierebbe qualcosa davvero:
 
 ### 8.4 · Il mercato che solo questa stagione può aprire
 
-**GG/NG quotato.** È il punto §1.8 del `CLAUDE.md`: il GG/NG è **l'unico
+> ⚠️ **Premessa CADUTA alla Fase 100** (allineato dall'audit della Fase 101):
+> le quote GG/NG **esistono** per il 2017-20 (1xBet via footiqo, 5.337 partite,
+> 5 leghe) e la domanda è già misurata — il mercato è informativo, il nostro
+> prezzo lo pareggia, il DC perde. Raccogliere le quote GG/NG di questa stagione
+> resta utile (**book diverso, stagioni recenti che nessun archivio copre**), ma
+> non è più «il mercato che nessuno ha mai quotato».
+
+**GG/NG quotato.** Era il punto §1.8 del `CLAUDE.md`: il GG/NG sarebbe **l'unico
 mercato senza quote nei dati** (football-data non le include), quindi l'unico
 dove non abbiamo mai potuto dimostrare l'efficienza del mercato — «l'unico con
 spazio non ancora chiuso». **Polymarket lo quota** (`BTTS`, negli eventi

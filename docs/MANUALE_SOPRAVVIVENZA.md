@@ -46,7 +46,7 @@ trucchi di GitHub Actions, le fonti già valutate (e scartate). Serve a NON
 ri-scoprire da zero questi fatti a ogni sessione. Le **piste di
 miglioramento dei modelli** stanno invece in [PISTE.md](PISTE.md).
 **Va aggiornato ogni volta che si scopre un fatto operativo nuovo.**
-Ultimo aggiornamento: Fase 70 (luglio 2026).
+Ultimo aggiornamento: **Fase 100** (integrazione delle 5 leghe: la rete e' tornata raggiungibile, vedi il banner in testa) — verificato dall'audit della Fase 101.
 
 ## 1 · Mappa della rete dall'ambiente cloud (tutta verificata, mai presunta)
 

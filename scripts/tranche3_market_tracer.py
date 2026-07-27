@@ -21,7 +21,7 @@ ASPETTATIVE DICHIARATE PRIMA (playbook, «cosa aspettarsi»):
   - dall'EDA (report 3 §6): Ligue 1 φ0 ≈ 0 (lega «inglese»), Bundesliga φ0
     piccolo e positivo.
 
-Uso: python cantiere/scripts/tranche3_market_tracer.py
+Uso: python scripts/tranche3_market_tracer.py
 """
 from __future__ import annotations
 
@@ -32,9 +32,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
@@ -44,10 +44,10 @@ from scripts import _fase52_common as C  # noqa: E402
 from src.evaluation import metrics  # noqa: E402
 from src.models import market_implied as mi  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 # Tutte le stagioni con chiusura O/U reale (serve per invertire 1X2+O/U).
 SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 RHO = -0.06

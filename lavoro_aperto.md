@@ -93,18 +93,23 @@ Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 
 | # | pista | stato |
 |--:|---|---|
-| 16 | **GG/NG quotato + aperture vere** | 🟢 aperta — **e sbloccabile subito**: vedi §6.3 |
+| 16 | **GG/NG quotato + aperture vere** | ✅ **premessa CADUTA (F100)**: le quote GG/NG esistono (1xBet, 5.337 partite 2017-20) e la domanda è misurata — mercato informativo, il nostro prezzo lo pareggia, il DC perde. Resta aperta **solo** la raccolta prospettica sulle stagioni recenti |
 | 17 | Paper-trading della strategia draw-bias | 🟢 aperta |
 | 18 | **Dati in-play** (quote minuto per minuto) | 🟢 aperta — esiste solo *durante* la stagione. **F98: la fondazione offline c'è** (pista 6) e il modello a due stadi si può provare **senza rete** |
-| 19 | Quote O/U 2017-19, chiusura vera | 🟡 **dimezzata** (F73): l'apertura è recuperata |
+| 19 | Quote O/U 2017-19, chiusura vera | ✅ **CHIUSA (F100)**: dato trovato (1xBet via footiqo, 3.652/3.652) ma **non inserito** — un solo book, peggiore della stima come proxy multi-book |
 
 ---
 
-## 3 · `docs/PANCHINA.md` — **24 caselle ⬜** (mai testato lì)
+## 3 · `docs/PANCHINA.md` — **138 caselle ⬜** (mai testato lì)
 
 Il principio §1.9 impone due fronti per ogni modello: **per-lega** e
-**generale**. La matrice ha 24 celle `⬜` — e la legenda del file lo dice
+**generale**. La matrice ha **138** celle `⬜` — e la legenda del file lo dice
 esplicitamente: *«è lavoro potenziale, non un'assoluzione»*.
+
+> Il conteggio era **24** e vale 138 dal 26/07/2026 (ri-contato dall'audit della
+> Fase 101): non è lavoro andato perduto, è la matrice che è passata da 4 a 6
+> colonne quando Bundesliga e Ligue 1 sono entrate in produzione (Fase 100).
+> Ogni modello ha ora due colonne-lega in più da riempire.
 
 **La forma del buco**: quasi tutti i modelli in **panchina** o **bocciati** sono
 stati provati **solo sulla Serie A**. Nessuno sa cosa facciano altrove.
@@ -192,6 +197,15 @@ provato. Due candidati cambierebbero parecchio:
 
 | fonte | cosa darebbe | qui | da Actions |
 |---|---|---|---|
+> ⚠️ **SUPERATA dalla Fase 100** (verificato il 26/07/2026, audit Fase 101):
+> la rete **è tornata raggiungibile**. Rispondono 200 `football-data.co.uk`,
+> `understat.com`, `transfermarkt.com` e Kaggle via `kagglehub` — infatti
+> Bundesliga e Ligue 1 sono state scaricate direttamente, senza bundle a
+> mano. Restano davvero da provare solo **Betfair** e **SofaScore**; per
+> `oddsportal.com` il vincolo non è tecnico ma il `robots.txt` (pagine
+> storiche vietate) e BetExplorer ha ritirato le quote vecchie.
+> Stato aggiornato in `docs/MANUALE_SOPRAVVIVENZA.md` §1.
+
 | **Betfair Exchange** | la borsa più liquida al mondo; **movimento quote pre-partita** (§7.2) | 403 | ❓ |
 | **football-data.co.uk** | è la **nostra fonte primaria**: oggi vive solo di bundle caricati a mano | 403 | ❓ |
 | SofaScore | formazioni, statistiche live | 403 | ❓ |
@@ -209,7 +223,16 @@ provato. Due candidati cambierebbero parecchio:
 
 ### 6.3 · GG/NG: il mercato che si può aprire **subito**
 
-Il `CLAUDE.md` §1.8 dice che il GG/NG è **l'unico mercato senza quote nei
+> ⚠️ **La premessa di questo paragrafo è CADUTA (Fase 100).** Il `CLAUDE.md`
+> §1.8 diceva che il GG/NG è «l'unico mercato senza quote nei dati, quindi
+> l'unico con spazio non ancora chiuso»: le quote **esistono** (1xBet via
+> footiqo, 5.337 partite 2017-20 su 5 leghe) e la domanda è stata **misurata**.
+> Il mercato GG/NG è informativo (0.6840 contro 0.6921), il nostro prezzo lo
+> **pareggia** e il DC **perde** (+0.0104, con il book che lo ingloba).
+> La raccolta prospettica resta utile — book diverso, stagioni recenti che
+> nessuno quota — ma **non** perché «non abbiamo quote».
+
+Il `CLAUDE.md` §1.8 diceva che il GG/NG è **l'unico mercato senza quote nei
 dati** (football-data non le include), quindi **l'unico dove non abbiamo mai
 potuto dimostrare l'efficienza del mercato** — *«l'unico con spazio non ancora
 chiuso dai risultati delle Fasi 14/16/20»*.
@@ -335,6 +358,8 @@ segnalare?
    infrastruttura già presente.
 6. Il resto, senza fretta.
 
-**Da non fare adesso**: aggiungere le leghe nuove (Ligue 1/Bundesliga come leghe
-*modellate*, Serie B, Championship). Valore reale, **nessuna scadenza**,
+**Da non fare adesso**: ~~aggiungere le leghe nuove (Ligue 1/Bundesliga come
+leghe *modellate*)~~ → **FATTO alla Fase 100**: sono in `LEAGUE_CONFIGS`, con
+snapshot congelati (2.754 e 3.097 partite) e δ 0.28/0.19. Resta valido per
+Serie B e Championship. Valore reale, **nessuna scadenza**,
 mangerebbe le settimane che servono al punto 1. Dopo settembre.

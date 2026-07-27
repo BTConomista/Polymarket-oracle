@@ -89,7 +89,7 @@ METODO
   (theta MLE 1.080 bundesliga / 1.103 ligue_1, report 10 §2.1).
 
 Uso:
-    python cantiere/scripts/leve_apertura.py --blocchi A B C D E
+    python scripts/leve_apertura.py --blocchi A B C D E
 """
 from __future__ import annotations
 
@@ -104,7 +104,7 @@ import pandas as pd
 
 ROOT = Path("/home/user/Polymarket-oracle")
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -115,12 +115,12 @@ from scripts import _fase52_common as C            # noqa: E402
 from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
 
-OUT = ROOT / "cantiere" / "out" / "leve_apertura.json"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_apertura.json"
 SCRATCH = Path("/tmp/claude-0/-home-user-Polymarket-oracle/"
                "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad") / "apertura"
-SNAP = {"bundesliga": ROOT / "cantiere/data/bundesliga_matches.csv",
-        "ligue_1": ROOT / "cantiere/data/ligue_1_matches.csv"}
-TRACER = {lg: ROOT / f"cantiere/out/tracer_pred_{lg}.csv" for lg in SNAP}
+SNAP = {"bundesliga": ROOT / "data/bundesliga_matches.csv",
+        "ligue_1": ROOT / "data/ligue_1_matches.csv"}
+TRACER = {lg: ROOT / f"docs/audit_5_leghe/numeri/tracer_pred_{lg}.csv" for lg in SNAP}
 LEAGUES = ["bundesliga", "ligue_1"]
 
 SEASONS9 = ["1718", "1819", "1920", "2021", "2122", "2223", "2324", "2425", "2526"]
@@ -134,7 +134,7 @@ MAXG = mi.MAX_GOALS
 K = np.arange(MAXG + 1)
 
 # --------------------------------------------------------------------------- #
-# Il listino Tier 1 (le stesse 25 voci di cantiere/scripts/leve_theta_griglia.py)
+# Il listino Tier 1 (le stesse 25 voci di scripts/leve_theta_griglia.py)
 # --------------------------------------------------------------------------- #
 _I, _J = np.meshgrid(K, K, indexing="ij")
 _TOT = _I + _J
@@ -1191,7 +1191,7 @@ def blocco_F(dati: dict, rng) -> dict:
 # chiusura) esistono in TUTTE e 9 le stagioni del file grezzo football-data.
 # Quindi si puo' costruire l'apertura con i DUE provider sulle STESSE partite:
 # ogni differenza e' allora provider puro, non stagione.
-FD = ROOT / "cantiere" / "data" / "fonti" / "football_data"
+FD = ROOT / "data" / "fonti" / "football_data"
 COLS_G = {
     "ps_open":  ["PSH", "PSD", "PSA"], "ps_open_ou": ["P>2.5", "P<2.5"],
     "ps_close": ["PSCH", "PSCD", "PSCA"],
@@ -1494,9 +1494,9 @@ def main() -> int:
         salva("sanity_router", {k: float(v) for k, v in w.items()})
         # 2o controllo di sanita': il devig di questo script deve riprodurre il
         # log-loss di mercato della FONTE UNICA (experiment_log.compute_metrics),
-        # gia' pubblicato nel tracer (cantiere/out/tranche3_tracer.json).
+        # gia' pubblicato nel tracer (docs/audit_5_leghe/numeri/tranche3_tracer.json).
         import json as _json
-        tr = _json.loads((ROOT / "cantiere/out/tranche3_tracer.json").read_text())
+        tr = _json.loads((ROOT / "docs/audit_5_leghe/numeri/tranche3_tracer.json").read_text())
         san2 = {}
         for lg in args.leagues:
             s = dati[lg]

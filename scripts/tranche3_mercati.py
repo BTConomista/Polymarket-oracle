@@ -18,7 +18,7 @@ ASPETTATIVA DICHIARATA PRIMA (dall'EDA, report 3 §6, e dal tracer market-side):
 Ligue 1 φ0 = 0 → nessun guadagno atteso; Bundesliga φ0 ≈ 0.18 → guadagno
 possibile ma piccolo.
 
-Uso: python cantiere/scripts/tranche3_mercati.py [--leagues ...]
+Uso: python scripts/tranche3_mercati.py [--leagues ...]
 """
 from __future__ import annotations
 
@@ -30,9 +30,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
@@ -44,7 +44,7 @@ from scripts._run_market_implied import (  # noqa: E402
     ll_bin, _binary_outcomes)
 from src.models import market_implied as mi  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 RHO = MI.RHO_MAIN
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
 # La famiglia-pareggio: i mercati che la phi(|lam-mu|) puo' toccare. Non stanno

@@ -59,44 +59,59 @@ def main() -> None:
     parser.add_argument("--league", default="serie_a")
     args = parser.parse_args()
 
-    if args.refresh or not database.SNAPSHOT_PATH.exists():
+    # Lo snapshot su cui si legge/scrive e' quello DELLA LEGA richiesta. Fino
+    # all'audit della Fase 101 ogni ramo usava `database.SNAPSHOT_PATH`, cablato
+    # sulla Serie A: `--league bundesliga --refresh` scaricava la Bundesliga e
+    # la scriveva sopra data/serie_a_matches.csv, distruggendo uno snapshot
+    # congelato e versionato. Per serie_a il percorso e' identico a prima.
+    snap_path = database.snapshot_path(args.league)
+
+    if args.refresh or not snap_path.exists():
         print("Carico i dati dalle fonti (download)...")
         matches = loader.load_league(args.league, force_download=args.refresh)
         # Il riposo solo-Serie-A viene ricalcolato al load; qui aggiungiamo anche
         # la CONGESTIONE VERA dal calendario di club completo, cosi' un refresh
         # non perde le colonne rest_days_full/midweek_europe.
-        if args.league == "serie_a":
-            from src.data import fixtures as fixtures_mod
-            fx = fixtures_mod.build_club_fixtures(matches, force=args.refresh)
-            fixtures_mod.write_club_fixtures(fx)
-            matches = fixtures_mod.add_rest_days_full(matches, fx)
+        from src.data import fixtures as fixtures_mod, sources as sources_mod
+        fx = fixtures_mod.build_club_fixtures(
+            matches, league_key=args.league, force=args.refresh)
+        fixtures_mod.write_club_fixtures(
+            fx, fixtures_mod.club_fixtures_path(args.league))
+        matches = fixtures_mod.add_rest_days_full(
+            matches, fx,
+            own_competition=sources_mod.own_league_competition(args.league))
         # Il riposo solo-Serie-A si ricalcola al load (non si versiona): lo si
         # toglie dallo snapshot per non congelarlo (rest_days_full invece SI').
         matches = matches.drop(
             columns=["home_rest_days", "away_rest_days"], errors="ignore"
         )
-        path = database.write_snapshot(matches)
+        path = database.write_snapshot(matches, snap_path)
         print(f"  snapshot aggiornato: {path}  ({len(matches)} partite)")
     elif args.enrich:
         # Arricchisce lo snapshot esistente SENZA riscaricare la base
         # football-data: la base resta congelata, si aggiungono/ricalcolano
         # solo le colonne xG / valori rosa / assenze.
-        print(f"Arricchisco lo snapshot congelato: {database.SNAPSHOT_PATH}")
-        matches = loader.enrich(database.read_snapshot())
-        path = database.write_snapshot(matches)
+        print(f"Arricchisco lo snapshot congelato: {snap_path}")
+        matches = loader.enrich(database.read_snapshot(snap_path))
+        path = database.write_snapshot(matches, snap_path)
         print(f"  snapshot arricchito: {path}  ({len(matches)} partite)")
     elif args.fixtures:
         # Assembla il CALENDARIO DI CLUB completo (Serie A dallo snapshot +
         # coppe/Europa da openfootball) e aggiunge le colonne di congestione
         # calcolate sul calendario COMPLETO. La base football-data resta congelata.
-        from src.data import fixtures as fixtures_mod
-        print("Assemblo il calendario di club completo (Serie A + coppe + Europa)...")
-        snap = database.read_snapshot()
-        fx = fixtures_mod.build_club_fixtures(snap, force=False)
-        fx_path = fixtures_mod.write_club_fixtures(fx)
+        from src.data import fixtures as fixtures_mod, sources as sources_mod
+        print(f"Assemblo il calendario di club completo "
+              f"({args.league} + coppe + Europa)...")
+        snap = database.read_snapshot(snap_path)
+        fx = fixtures_mod.build_club_fixtures(
+            snap, league_key=args.league, force=False)
+        fx_path = fixtures_mod.write_club_fixtures(
+            fx, fixtures_mod.club_fixtures_path(args.league))
         print(f"  calendario di club: {fx_path}  ({len(fx)} righe squadra-partita)")
-        matches = fixtures_mod.add_rest_days_full(snap, fx)
-        path = database.write_snapshot(matches)
+        matches = fixtures_mod.add_rest_days_full(
+            snap, fx,
+            own_competition=sources_mod.own_league_competition(args.league))
+        path = database.write_snapshot(matches, snap_path)
         print(f"  snapshot aggiornato con congestione vera: {path}")
         print("\nCopertura calendario extra (coppe/Europa) per stagione:")
         print(fixtures_mod.coverage_report(fx).to_string(index=False))
@@ -104,9 +119,9 @@ def main() -> None:
         # Aggancia le quote PRE-chiusura (linea "di apertura") allo snapshot
         # esistente, dai CSV grezzi. La base congelata NON viene toccata: si
         # aggiungono solo le colonne *_open (impronta dati invariata).
-        print(f"Aggancio le quote di apertura allo snapshot: {database.SNAPSHOT_PATH}")
-        matches = loader.add_open_odds(database.read_snapshot())
-        path = database.write_snapshot(matches)
+        print(f"Aggancio le quote di apertura allo snapshot: {snap_path}")
+        matches = loader.add_open_odds(database.read_snapshot(snap_path))
+        path = database.write_snapshot(matches, snap_path)
         print(f"  snapshot aggiornato con quote di apertura: {path}")
     elif args.refresh_odds:
         # Ricalcola TUTTE le quote (chiusura + apertura) dai CSV grezzi congelati
@@ -114,18 +129,18 @@ def main() -> None:
         # (xG, rose, congestione, gol) NON vengono toccate.
         from src.data import sources
         league = sources.LEAGUES[args.league]
-        print(f"Ricalcolo tutte le quote dallo snapshot: {database.SNAPSHOT_PATH}")
-        snap = database.read_snapshot()
+        print(f"Ricalcolo tutte le quote dallo snapshot: {snap_path}")
+        snap = database.read_snapshot(snap_path)
         raw_by_season = {}
         for code in sorted(snap["season"].astype(str).unique()):
             path = loader.download_season(code, league)
             raw_by_season[code] = pd.read_csv(path, encoding="latin-1")
         matches = loader.refresh_odds(snap, raw_by_season)
-        path = database.write_snapshot(matches)
+        path = database.write_snapshot(matches, snap_path)
         print(f"  snapshot aggiornato (quote ricalcolate): {path}")
     else:
-        print(f"Uso lo snapshot congelato: {database.SNAPSHOT_PATH}")
-        matches = database.read_snapshot()
+        print(f"Uso lo snapshot congelato: {snap_path}")
+        matches = database.read_snapshot(snap_path)
 
     if "home_xg" in matches.columns:
         both_sq = (matches["home_squad_value"].notna()

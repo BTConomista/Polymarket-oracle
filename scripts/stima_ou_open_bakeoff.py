@@ -5,11 +5,11 @@ IL PROBLEMA
 -----------
 Nove partite del 2017-19 non hanno la linea Over/Under 2.5 di APERTURA:
   - 8 avevano una linea con overround impossibile (1.26-1.34 su una media
-    multi-book: registro `cantiere/data/correzioni_dichiarate.csv`), svuotata;
+    multi-book: registro `data/correzioni_dichiarate.csv`), svuotata;
   - 1 (bundesliga 1819, Bayern Munich-Hoffenheim 2018-08-24) e' vuota alla fonte.
 Per tutte e 9 l'1X2 di APERTURA e' integro (colonna diversa, altro provider).
 
-Esiste gia' uno stimatore (`cantiere/scripts/stima_ou_corrotte.py`, qui = M1):
+Esiste gia' uno stimatore (`scripts/stima_ou_corrotte.py`, qui = M1):
 inverte il solo 1X2 nei tassi (lambda, mu) con `market_implied.implied_lambda_mu`
 (rho = -0.06), legge P(Over 2.5) dalla matrice DC e sottrae un bias costante
 fittato leave-one-league-out. Errore dichiarato: MAE 0.0267 contro 0.0743 di
@@ -48,10 +48,10 @@ METODO (vincolante, regole del progetto)
     devig alternativo (Shin) per la verita', strato "partite simili alle 9".
 
 Uscite (gli unici file scritti):
-  cantiere/data/stime/ou_open_corrotte_v2.csv   9 righe, probabilita' mai quote
-  cantiere/out/stima_ou_open_bakeoff.json       tutti i numeri, riproducibili
+  data/estimates/ou_open_corrotte_v2.csv   9 righe, probabilita' mai quote
+  docs/audit_5_leghe/numeri/stima_ou_open_bakeoff.json       tutti i numeri, riproducibili
 
-Uso: python cantiere/scripts/stima_ou_open_bakeoff.py
+Uso: python scripts/stima_ou_open_bakeoff.py
      (cache delle inversioni in $OU_BAKEOFF_CACHE, default sotto tempdir)
 """
 from __future__ import annotations
@@ -68,7 +68,7 @@ import pandas as pd
 
 ROOT = Path("/home/user/Polymarket-oracle")
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -96,17 +96,17 @@ LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
 NEW = ["bundesliga", "ligue_1"]
 SEASONS = ["1718", "1819"]         # l'epoca Betbrain: 1X2 apertura + O/U apertura
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
-RIC = ROOT / "cantiere" / "data" / "ricerca"
-OUT_JSON = ROOT / "cantiere" / "out" / "stima_ou_open_bakeoff.json"
-OUT_CSV = ROOT / "cantiere" / "data" / "stime" / "ou_open_corrotte_v2.csv"
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
+RIC = ROOT / "data" / "ricerca_esterna"
+OUT_JSON = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_ou_open_bakeoff.json"
+OUT_CSV = ROOT / "data" / "estimates" / "ou_open_corrotte_v2.csv"
 CACHE = Path(os.environ.get("OU_BAKEOFF_CACHE",
                             Path(tempfile.gettempdir()) / "ou_open_bakeoff_cache"))
 CACHE.mkdir(parents=True, exist_ok=True)
 
 FOOTIQO_SEASONS = {"2017-2018": "1718", "2018-2019": "1819", "2019-2020": "1920"}
-# alias residui footiqo -> nome canonico (da cantiere/data/ricerca/_valida_footiqo.py)
+# alias residui footiqo -> nome canonico (da data/ricerca_esterna/_valida_footiqo.py)
 EXTRA_ALIAS = {"Manchester Utd": "Man United", "Atl. Madrid": "Ath Madrid",
                "Dep. La Coruna": "La Coruna", "B. Monchengladbach": "M'gladbach",
                "Schalke": "Schalke 04", "Dusseldorf": "Fortuna Dusseldorf",
@@ -861,7 +861,7 @@ def main() -> int:
           f"(overround sd entro cella {sei['overround_sd_entro_lega_stagione']:.4f})")
 
     # le 8 righe corrotte: cosa dicono i due lati, letti uno alla volta?
-    reg = pd.read_csv(ROOT / "cantiere" / "data" / "correzioni_dichiarate.csv",
+    reg = pd.read_csv(ROOT / "data" / "correzioni_dichiarate.csv",
                       dtype={"season": str})
     reg = reg[(reg.stato == "applicata")
               & reg.colonna.isin(["odds_over25_open", "odds_under25_open"])].copy()

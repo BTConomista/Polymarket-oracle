@@ -31,7 +31,7 @@ Controlli (ognuno con la sua soglia motivata):
      rispecchia fedelmente. Lo si smaschera solo scendendo al dato
      tiro-per-tiro: lista tiri VUOTA mentre gol/tiri esistono altrove.
 
-Uso: python cantiere/scripts/audit_anomalie.py
+Uso: python scripts/audit_anomalie.py
 """
 from __future__ import annotations
 
@@ -45,12 +45,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.data import sources  # noqa: E402
 
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 import nuove_leghe  # noqa: E402
 
 nuove_leghe.registra()
@@ -58,12 +58,12 @@ from src.evaluation.metrics import devig_1x2, devig_binary  # noqa: E402
 from src.models.market_implied import (  # noqa: E402
     _1x2_over, implied_lambda_mu, score_matrix)
 
-FONTI = ROOT / "cantiere" / "data" / "fonti" / "football_data"
-OUT = ROOT / "cantiere" / "out"
+FONTI = ROOT / "data" / "fonti" / "football_data"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
 SNAP_DIR = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-            "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-            "ligue_1": ROOT / "cantiere" / "data"}
+            "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+            "ligue_1": ROOT / "data"}
 
 # Soglie. Il margine di una media multi-book sta storicamente in [1.01, 1.09]
 # (misurato: mediana 1.045 sull'1X2, 1.051 sull'O/U). 1.12 e' ~6 deviazioni
@@ -302,7 +302,7 @@ def check_xg_segnaposto(df: pd.DataFrame, league: str) -> list[dict]:
     Nessun confronto snapshot-vs-fonte puo' scoprirlo: il dato E' quello della
     fonte. L'unico giudice e' il dato tiro-per-tiro.
 
-    Candidati (filtro economico, per non scaricare 15.788 partite): `deep = 0`
+    Candidati (filtro economico, per non scaricare 16.111 partite): `deep = 0`
     su ENTRAMBE le squadre -- nessuna delle due ha mai portato palla in zona
     pericolosa. E' gia' raro di suo (4 casi su 5 leghe) e un segnaposto lo
     soddisfa sempre, perche' i contatori azzerati vengono da li'.

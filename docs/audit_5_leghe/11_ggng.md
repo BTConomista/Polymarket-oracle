@@ -355,4 +355,4 @@ delle leghe.
 4. **Il valore residuo del GG/NG resta quello dichiarato altrove:** prezzarlo
    *calibrato* dove il book non lo quota. Non batterlo dove lo quota.
 
-→ `cantiere/scripts/ggng_contro_quote.py`, `cantiere/out/ggng_contro_quote.json`
+→ `scripts/ggng_contro_quote.py`, `docs/audit_5_leghe/numeri/ggng_contro_quote.json`

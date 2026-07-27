@@ -1,6 +1,6 @@
 """Riempie le celle `squad_value` vuote con i valori Transfermarkt (regola R2).
 
-Sorgente: `cantiere/data/squad_value_2526_transfermarkt.csv` (prodotto e
+Sorgente: `data/squad_value_2526_transfermarkt.csv` (prodotto e
 VALIDATO da `recupero_squad_value_tm.py`: il rapporto con la fonte primaria e'
 misurato sui club dove esistono entrambi i valori, e riportato riga per riga).
 
@@ -13,7 +13,7 @@ Garanzie (se una salta, lo script si ferma senza scrivere):
      in quella stagione (in casa e fuori), come per gli altri valori rosa.
 
 Uso:
-    python cantiere/scripts/applica_squad_value_tm.py [--dry-run]
+    python scripts/applica_squad_value_tm.py [--dry-run]
 """
 from __future__ import annotations
 
@@ -23,8 +23,8 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
-DATA = ROOT / "cantiere" / "data"
+ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT / "data"
 SORGENTE = DATA / "squad_value_2526_transfermarkt.csv"
 SNAPSHOTS = {"bundesliga": DATA / "bundesliga_matches.csv",
              "ligue_1": DATA / "ligue_1_matches.csv"}

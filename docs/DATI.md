@@ -3,7 +3,17 @@
 Questo documento è la **mappa unica di tutti i dati** del progetto: cosa c'è,
 da dove viene, quanto copre, e — sezione più importante — **cosa è dato reale e
 cosa è STIMA**. Va aggiornato ogni volta che i dati cambiano (nuova fonte,
-nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 73**.
+nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 100** (5 leghe).
+
+> ⚠️ **Allineamento incompleto, dichiarato dall'audit della Fase 101.** Questo
+> catalogo NON elenca ancora tre insiemi di dati versionati entrati con
+> l'integrazione: `data/ricerca_esterna/` (86 file — le quote di chiusura 1xBet
+> 1X2/O/U/GG-NG del 2017-20, 3.045 righe di calendario coppe da Wikipedia, e il
+> manifest SHA256 delle fonti), `data/correzioni_dichiarate.csv` (31 righe,
+> registro R3) e `data/squad_value_2526_transfermarkt.csv` (16 celle, fonte
+> secondaria R2); mancano inoltre 2 calendari di club su 5 e 2 stime su 5, e il
+> censimento dei buchi (§1-bis) è **pre-guard** (7.353 contro 7.359 effettive).
+> Elenco puntuale in `docs/AUDIT_FASI_80_100.md` §4.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
@@ -88,7 +98,7 @@ un nome e una causa:
 Due istantanee per mercato: **apertura** (`*_open`, raccolta giorni prima
 della partita, tipicamente il venerdì) e **chiusura** (al calcio d'inizio, lo
 stimatore di mercato più efficiente). La provenienza **cambia con la
-stagione** — questa tabella vale per tutte e 3 le leghe:
+stagione** — questa tabella vale per tutte e 5 le leghe:
 
 | stagioni | chiusura 1X2 | apertura 1X2 | chiusura O/U | apertura O/U |
 |---|---|---|---|---|
@@ -163,7 +173,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 
 | fonte | dove | stato |
 |---|---|---|
-| football-data (Serie A, CSV originali completi) | `data/football_data_raw/` (versionata) | ✅ congelata; il sito originale non è raggiungibile dal cloud |
+| football-data (Serie A, CSV originali completi) | `data/football_data_raw/` (versionata) | ✅ congelata; il sito originale **è tornato raggiungibile** (200, verificato alla Fase 100: le due leghe nuove sono state scaricate direttamente) |
 | football-data (Premier/Liga) | `files/football_data_*_bundle.json` (caricati a mano, Fase 54) | ✅ congelata |
 | Understat (xG + rose giocatori) | `files/understat_*_bundle.json` (Premier/Liga); Serie A: **solo lo snapshot** | ⚠️ il mirror per-stagione è **sparito** (Fase 14): le rose Serie A NON sono rigenerabili — `--enrich`/ri-matching valgono solo per Premier/Liga finché non viene caricato un bundle Understat Serie A (come Fase 54) |
 | **player-scores** (valutazioni complete + presenze/rose, 3 leghe) | `files/player_scores/*.csv.gz` (versionati; import via **workflow GitHub Actions** `.github/workflows/import_dataset.yml` — il runner ha rete libera, l'ambiente cloud no) | ✅ fonte UFFICIALE dei valori rosa dalla Fase 67 (CC0, `dcaribou/transfermarkt-datasets`); rigenerabile: push di `.github/import-dataset-trigger` |
@@ -248,7 +258,11 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   erroneamente messa nello slot chiusura. Dalla Fase 73 è nella colonna giusta
   (`odds_over25_open`), dato reale. Resta un buco solo la **chiusura** O/U di
   quelle stagioni (coperta dalla stima `ou_close_2017_19.csv`); la caccia al
-  dato vero di chiusura resta aperta → **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
+  dato vero di chiusura è **CHIUSA dalla Fase 100** → il dato esiste (book 1xBet
+  via footiqo, 3.652/3.652 partite, in `data/ricerca_esterna/`) ma **non è stato
+  inserito**: è un solo book e come proxy della media multi-book è peggiore
+  della stima (MAE 0.0156 contro 0.012). Dettaglio:
+  **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
 - ~~**quote O/U/1X2 di apertura mancanti sparse**~~ → **FATTO (Fase 69)**: le
   **2 partite sparse** (Torino-Fiorentina recupero 1X2+O/U; Verona-Genoa O/U
   isolata 2020-21) sono stimate in `open_sparse_1x2_ou.csv` (vedi tabella
@@ -257,8 +271,12 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   (BetExplorer/OddsPortal da IP italiano) non ha trovato nulla per il blocco
   geo/ADM — vedi
   `docs/MANUALE_SOPRAVVIVENZA.md`.
-- eventuali linee di mercati mai pubblicati (GG/NG storico): molto più
-  incerto, servirebbe una validazione esterna.
+- ~~eventuali linee di mercati mai pubblicati (GG/NG storico): molto più
+  incerto, servirebbe una validazione esterna.~~ → **validato (Fase 100)**: le
+  quote GG/NG di chiusura esistono per il 2017-20 (1xBet, 5.337 partite su 5
+  leghe) e il mercato è risultato informativo (log-loss 0.6840 contro 0.6921 di
+  baseline). Restano fuori dagli snapshot per la stessa ragione dell'O/U: un
+  solo book.
 
 ---
 

@@ -8311,7 +8311,7 @@ diversi (§7).
 - **ρ** ∈ {−0.22…+0.02} (11 valori, con RI-INVERSIONE delle quote per ogni ρ:
   coerenza inversione↔matrice);
 - **θ** double-Poisson ∈ {1.00…1.50} (10);
-- **φ0×κ** ∈ {0…0.7}×{0.5…5} (31 combo);
+- **φ0×κ** ∈ {0…0.7}×{0.5…5} (37 combo: la coppia neutra + 6×6);
 - **knee** del nudge-μ ∈ {25…37} (5, coefficienti sempre leave-future-out).
 Onestà della selezione: il minimo della curva è selezione in-sample; per ogni
 asse×mercato si valuta anche il **selettore walk-forward "lfo"** (sceglie il
@@ -9611,6 +9611,29 @@ mercato (20 squadre × 24 stagioni-lega) invece delle 24 del campione, di cui il
 progetto si lamentava. Zero modellistica nuova, stesse simulazioni: è la leva col
 miglior rapporto valore/costo che il progetto avesse aperto.
 
+> ⚠️ **RETTIFICA (Fasi 92 e 92-bis, verificata dall'audit della Fase 101).** I
+> numeri dei Risultati 1-3 qui sotto sono quelli **pre-fix del prior** (Fase 92)
+> e **pre-bootstrap a grappoli** (Fase 92-bis). Come si è fatto con la Fase 89,
+> il testo storico resta; questi sono i valori dell'artefatto corrente
+> `experiments/fase91_positions.json`:
+>
+> | quantità | qui sotto (pre-fix) | artefatto corrente |
+> |---|--:|--:|
+> | top-4: guadagno vs tasso base | +0.2786 [+0.2208, +0.3345] | **+0.2787 [+0.2130, +0.3304]** |
+> | top-4: guadagno vs persistenza | +0.0273 [+0.0037, +0.0502] «conclusivo» | **+0.0274 [−0.0006, +0.0522] — NON conclusivo per IC**; test dei segni 19/24, p=0.0066 |
+> | retrocessione: vs tasso base | +0.0875 [+0.0369, +0.1360] | **+0.0925 [+0.0465, +0.1341]** |
+> | retrocessione: vs persistenza | −0.0116 [−0.0410, +0.0150] | **−0.0066 [−0.0364, +0.0208]** |
+> | neopromosse: dichiarato → realizzato | 58.7% → 48.6% (−10.1pp) | **54.7% → 48.6% (−6.1pp)** |
+> | resto della lega | 7.3% → 9.1% (+1.8pp) | **8.0% → 9.1% (+1.1pp)** |
+> | ECE retrocessione / top-4 | 0.0589 / 0.0137 | **0.0479 / 0.0140** |
+> | casi con P(retro) > 60% | 37, di cui 36 neopromosse, 19 salvate | **30, di cui 29 neopromosse, 15 salvate** |
+>
+> La **conclusione non cambia** (il top-4 è calibrato, la retrocessione no, il
+> colpevole è il prior), ma «entrambi conclusivi» sul top-4 **non regge**: a
+> reggere è il test dei segni, non l'intervallo. E la fascia oltre il 90% non
+> «sparisce» (Fase 92): scende a 3 casi — 94.3% dichiarato contro 66.7%
+> realizzato — e semplicemente non viene più stampata (soglia n≥5).
+
 **Risultato 1 — il TOP-4 è ottimamente calibrato e batte anche la persistenza.**
 
 | | log-loss | Brier | ECE |
@@ -9872,6 +9895,142 @@ scala di `media(prior)` e peggiora.
 
 Riproducibile: `python scripts/_run_fase92_gap_decomposition.py` (anche
 `--league premier_league`). Test di regressione in `tests/test_dixon_coles.py`.
+
+---
+
+## Fase 92-bis — I fix dell'audit, verificati per mutazione (e l'IC della Fase 91 che si sgonfia)
+
+> *Voce scritta a posteriori dall'audit della **Fase 101**: questa fase esisteva
+> come commit (`1ad6c30`) e aveva cambiato codice di produzione, ma non aveva
+> voce nel diario né riga nel registro — la stringa «92-bis» non compariva in
+> nessun documento. È il caso limite che la checklist §2 vuole impedire: una
+> conclusione ritirata **qui** non poteva propagarsi altrove, perché il «qui»
+> non esisteva. I contenuti sono quelli del commit, ri-verificati nel codice.*
+
+### 1 · Obiettivo
+
+Chiudere i fix aperti dalla Fase 92, con un vincolo di metodo: ogni correzione
+che riguarda un test va verificata **per mutazione** — si rompe di proposito il
+codice che il test dovrebbe proteggere, e il test *deve* diventare rosso.
+Altrimenti non è un test, è una decorazione.
+
+### 2 · Ragionamento e ipotesi
+
+Un audit produce due tipi di rilievo: quelli che si vedono (un numero sbagliato)
+e quelli che **non si vedono perché nessuno guarda** — un ramo di codice che
+nessun test esegue, una colonna che sparisce in silenzio, un IC calcolato con
+l'assunzione sbagliata. I secondi sono i pericolosi, e si trovano solo
+chiedendosi «se questo fosse rotto, chi se ne accorgerebbe?».
+
+### 3 · Alternative considerate
+
+Sulla metrica della Fase 91: tenere il bootstrap iid (più semplice, e dava un
+risultato più forte) contro sostituirlo con un bootstrap **a grappoli**. Le
+osservazioni non sono indipendenti: dentro ogni stagione ci sono esattamente 4
+squadre in top-4 e 3 retrocesse — un vincolo di somma che l'iid ignora. Scelto
+il secondo, sapendo che avrebbe *indebolito* la conclusione.
+
+### 4 · Scelta
+
+Sette correzioni al codice, due famiglie di test nuove, una metrica rifatta.
+
+### 5 · Risultato
+
+**Il tool era per-lega a metà.** `predict.py` applicava a Premier e Liga le
+costanti tarate sulla chiusura Serie A (θ=1.225, φ0=0.30, κ=1.5, `sharpen_1x2`)
+benché la mappa per-lega fosse già stata misurata alle Fasi 79/81. Costo
+verificato in Premier: **+0.0025** di log-loss 1X2 contro il motore liscio
+(0.9665 contro 0.9640; il mercato sta a 0.9639) e **+2.7pp** di pareggio
+previsto sopra il realizzato. Nasce `MARKET_ENGINE` in `src/config.py` — unico
+punto di verità, §7 — e il tool dichiara a video quale motore sta usando.
+
+**Tre difetti che degradavano in silenzio.** `_SUB_SUFFIXES` di
+`fetch_polymarket_open.py` non conteneva `"total"`: il sotto-evento «Total
+Corners» formava un gruppo a sé e **gonfiava del ~67%** il conteggio delle
+partite. `player_scores.add_squad_values` buttava via le colonne appena
+calcolate quando lo snapshot in ingresso non le aveva già — caso reale dopo un
+rebuild — e lo snapshot veniva riscritto *prima* dell'errore.
+`build_squad_values.py` ora si **ferma** se un rebuild perderebbe celle
+`squad_value` già presenti: sono le 13 recuperate a mano da Transfermarkt alla
+Fase 70, dato reale non rigenerabile da script.
+
+**Due test che non testavano.** Il ramo degli spareggi dentro la simulazione non
+veniva **mai** eseguito (lo stub aveva `tie_rate=0`): cancellando
+`_resolve_sim_tie` la suite restava verde. E il `value_bet_roi` finiva in ogni
+riga del registro senza che il suo **valore** fosse mai asserito — l'unico
+assert confrontava la funzione con sé stessa. Ora invertire il segno del profitto
+o la direzione dell'edge rende la suite rossa.
+
+**La metrica della Fase 91 si sgonfia.** Col bootstrap a grappoli il guadagno
+del top-4 sulla persistenza passa da «conclusivo per IC» a **IC [−0.0006,
++0.0522], che include lo zero**. A reggere resta il **test dei segni**: 19
+stagioni-lega su 24, p=0.0066. La sostanza tiene, l'etichetta era troppo forte.
+*(Questa correzione non era mai arrivata nel diario né nel README: l'ha
+propagata la Fase 101.)*
+
+**Un numero falso nella Fase 57.** «Tutti i Δ entro ±0.0005» non era vero:
+l'emivita 730 in Premier costa **+0.005686** con p_better 0.0001 (conclusivo, il
+27% del gap di quella lega). Corretto; la scelta operativa (365g) non cambia.
+
+166 test verdi, 8 nuovi.
+
+### 6 · Lezione
+
+Un test che non può fallire è peggio di un test assente: dà la stessa fiducia e
+nessuna protezione. La **verifica per mutazione** costa un minuto e la
+distingue. E una fase che tocca «solo il tooling» va scritta come le altre —
+questa non lo è stata, e la sua correzione più importante (l'IC del top-4) è
+rimasta invisibile per nove fasi.
+
+### 📐 Il modello in dettaglio
+
+**Nessuna matematica nuova sul modello.** Cambia *quali costanti* riceve
+`price_markets`, che resta la funzione della Fase 44/52:
+
+```
+d = mi.price_markets(lam, mu, rho, phi0, kappa, dp_theta)
+```
+
+Prima della Fase 92-bis i quattro parametri erano **costanti di modulo** tarate
+sulla Serie A. Ora vengono da una mappa per-lega (`src/config.py:125`):
+
+```
+MARKET_ENGINE[lega] = {dp_theta, dp_theta_dc, phi0, kappa, sharpen_1x2}
+market_engine(lega)  ->  default LISCIO: {None, None, 0.0, 0.0, False}
+```
+
+Il ragionamento su ogni valore (§2-bis):
+- **Serie A** — `dp_theta=1.225` e `dp_theta_dc=1.138` sono i θ della Fase 52
+  (massima verosimiglianza sui punteggi dati i tassi, rispettivamente del
+  mercato e del DC); `phi0=0.30`, `kappa=1.5` sono i valori rappresentativi
+  della φ(|λ−μ|) (Fase 39/44); `sharpen_1x2=True` perché la Fase 51 misura che
+  `dp_lvl` batte la chiusura devigata in log-loss con CI conclusivo.
+- **Premier** — tutto neutro: la Fase 81 misura che l'ottimo su ogni asse è già
+  il motore liscio (ρ\*=−0.06, θ\*≈1, φ\*=0) e la Fase 79 che la φ35 **peggiora**
+  (il DC sovra-stima già i pareggi equilibrati inglesi).
+- **La Liga** — tutto neutro **per scelta**, non per misura: θ≈1.2 (Fase 81) e
+  φ35-sola sul GG (Fase 80) sono misurate positive ma stanno in PANCHINA, e la
+  regola del progetto è che una voce in panchina resta off di default.
+- **Bundesliga e Ligue 1** — voci aggiunte dalla Fase 101 con lo stesso stato
+  neutro, che qui è **misurato** (Fase 100: router θ negativo su 0/25 mercati in
+  entrambe).
+
+**Bootstrap a grappoli** (la correzione della metrica). Con `S` stagioni-lega e
+`n_s` osservazioni ciascuna, invece di ricampionare le `Σ n_s` righe si
+ricampionano le **stagioni** con reinserimento:
+
+```
+per b in 1..B:   S* = campione con reinserimento di {1..S}
+                 delta_b = LL_persistenza(righe di S*) - LL_modello(righe di S*)
+IC95 = percentili 2.5 e 97.5 di {delta_b}
+```
+
+È l'unica forma corretta qui perché dentro una stagione le righe **non sono
+indipendenti**: le squadre in top-4 sono esattamente 4 e le retrocesse
+esattamente 3, quindi un errore su una squadra ne implica uno di segno opposto
+su un'altra. L'iid ignora questo vincolo e **sottostima** la varianza: infatti
+l'IC passa da [+0.0037, +0.0502] a [−0.0006, +0.0522], quasi il doppio in
+ampiezza sul lato basso.
 
 ---
 
@@ -10432,7 +10591,7 @@ delle due pipeline**, non solo dei prezzi.
 
 **Risultato principale — un secondo controllo ESTERNO della deriva (Fase 94), sull'altro capo della classifica.** La **Fase 95-bis** ha appena messo la deriva alla prova coi prezzi Polymarket sul mercato CAMPIONE (KL: Serie A −0.0360, Premier −0.0382, Liga +0.0179). Qui la stessa correzione viene giudicata su un mercato diverso (**retrocessione**), da una fonte diversa (**Smarkets**) e con una metrica diversa (MAE sulle probabilità): tre assi indipendenti.
 Smarkets quota la retrocessione Premier: si può finalmente confrontare
-(`scripts/_run_fase96_relegation_market.py`, 20.000 stagioni, 17 esiti con mid
+(`scripts/_run_fase97_relegation_market.py`, 20.000 stagioni, 17 esiti con mid
 a due lati su 20).
 
 | | MAE vs mercato | corr | neopromosse: noi vs mercato |
@@ -10551,7 +10710,7 @@ quella soglia cadono **2 righe su 17**, ed è dichiarato nell'output insieme al
 conto su tutte e 17 — il taglio si vede, non si nasconde (§1.4).
 
 **6) Riproducibilità.** `python scripts/archive_outrights.py` (istantanea del
-giorno, due fonti) poi `python scripts/_run_fase96_relegation_market.py`.
+giorno, due fonti) poi `python scripts/_run_fase97_relegation_market.py`.
 L'archivio è versionato, quindi il confronto è **rifacibile identico** anche
 quando i prezzi live saranno cambiati — al contrario della Fase 95, che leggeva
 un dump non versionato. Nessun run in `runs.jsonl`: è un confronto con dati di
@@ -10850,7 +11009,7 @@ bootstrap appaiato per-partita (5.000 ricampionamenti), `Δ > 0` = migliora.
 | cartellini | `c_last` | +0.0527 | 0.61180 | −0.00488 | [−0.00759, −0.00206] | **peggiora, conclusivo** |
 | cartellini | `c_trend` | +0.1692 | 0.61155 | −0.00464 | [−0.00644, −0.00293] | **peggiora, conclusivo** |
 
-**Nessuno** dei cinque migliora; **sei celle su otto peggiorano con IC
+**Nessuno** dei cinque migliora; **cinque celle su otto peggiorano con IC
 conclusivo**. E la versione alla radice non salva nulla: l'emivita scelta fold
 per fold sul solo passato dà **−0.00004** [−0.00191, +0.00183] sui corner e
 **−0.00034** [−0.00179, +0.00109] sui cartellini — un lancio di moneta
@@ -11000,8 +11159,10 @@ risultato — inclusi i miei.
 **L'audit.** La rete è tornata raggiungibile, quindi il controllo forte si è
 potuto fare per la prima volta: **0 differenze** su gol, date, tiri, 10 colonne
 quota e 8 colonne xG, ri-scaricando tutte e 45 le stagioni; i gol confermati da
-una seconda fonte indipendente su 15.787 partite su 15.788. Trovate **8 anomalie
-reali, tutte nella fonte**, non nostre.
+una seconda fonte indipendente su 16.109 partite su 16.110 appaiate. Trovate **7 anomalie
+reali**: 6 nella fonte e 1 nostra (l'ordine delle colonne fra snapshot, poi
+uniformato); un ottavo caso segnalato si e' rivelato un falso positivo (l'xG a
+0.00 di Bielefeld-Leverkusen: era un autogol) ed e' stato ritirato.
 
 **Il dato che si credeva perduto.** La chiusura O/U 2017-19 esiste:
 `footiqo.com` pubblica il book **1xBet**, che football-data non contiene —
@@ -11107,7 +11268,7 @@ su 12.457 righe è **1.0765**, quindi 1.12 sta ~6 σ oltre la mediana sana e 4
 punti percentuali sopra quel massimo — non può scartare una riga buona. Provato:
 ri-derivando tutte e 10 le colonne quota delle 5 leghe col codice di produzione,
 il guard cambia **6 celle** (La Liga 2018-19, overround fino a 1.283) e **zero**
-altrove su 15.788 partite.
+altrove su 16.111 partite.
 
 **Lo stimatore della chiusura O/U.** Formula invariata (E3, regressione logit):
 
@@ -11132,3 +11293,184 @@ per-lega» **non regge**: vinceva in interpolazione (−0.00031, CI conclusivo) 
 **perde nel regime d'uso** (+0.00104, CI conclusivo). Il protocollo di
 validazione non era sbagliato in astratto: era il protocollo sbagliato *per
 questa domanda*.
+
+---
+
+## Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita
+
+### 1 · Obiettivo
+
+Richiesta dell'utente, testuale: *ricontrollare completamente le ultime 20 fasi
+alla ricerca di errori, calcoli sbagliati, cose importate male o qualsiasi altro
+problema*, e in più *cercare se abbiamo lasciato qualcosa a metà, se abbiamo
+dimenticato di scrivere qualcosa che compare da una parte ma non dall'altra*.
+
+Il perimetro sono le **Fasi 80-100** e — soprattutto — l'**integrazione del
+lavoro dal branch di cantiere a `main`** (5 commit, `03d5bec`→`6c9b377`), che è
+il tipo di operazione dove si perde roba senza che nessun test se ne accorga.
+
+### 2 · Ragionamento e ipotesi
+
+Tre ipotesi, in ordine di sospetto.
+
+**(a) Gli errori non sono nei modelli.** Le fasi recenti sono state controllate
+da quattro audit precedenti (84, 86, 90, 92) e le formule hanno il blocco 📐 che
+le lega al codice. Se c'è un guasto, sta nei **giunti**: fra un documento e
+l'altro, fra il cantiere e il progetto, fra una conclusione ritirata e i posti
+dove era stata copiata.
+
+**(b) Un'integrazione dichiarata non è un'integrazione verificata.** Il commit
+finale elenca ogni spostamento e pubblica perfino la tabella di corrispondenza
+vecchio→nuovo percorso. Ma dichiarare dove va un file non è la stessa cosa che
+**eseguirlo** da lì.
+
+**(c) Le auto-correzioni si propagano peggio delle scoperte.** Una scoperta
+viene scritta ovunque con entusiasmo; una ritrattazione viene scritta dove è
+nata e poi dimenticata. Cercare nei documenti *le frasi che nessuno ha
+aggiornato* è più redditizio che ricontrollare i conti.
+
+### 3 · Alternative considerate
+
+Rileggere tutto in sequenza (esaustivo ma lento, e con un solo punto di vista)
+contro **13 fronti in parallelo**, ognuno con un mandato diverso e un
+**verificatore avversariale** incaricato di smontare i rilievi del proprio
+fronte. Scelto il secondo, con una regola esplicita per i verificatori: *meglio
+smontare un rilievo vero che lasciar passare un rilievo falso*, perché in questo
+progetto un falso positivo fa «correggere» cose giuste alla sessione dopo.
+
+Sui rilievi trovati: limitarsi a elencarli (è ciò che era stato chiesto) contro
+correggere anche. Scelto **entrambi**, con un taglio netto: si correggono le
+**rotture** (codice che non parte, dati a rischio, link morti) e i **numeri
+sbagliati e certi**; si lasciano alla decisione dell'utente i punti che
+richiedono un ricalcolo o un giudizio, elencati uno per uno.
+
+### 4 · Scelta
+
+Verbale completo in **`docs/AUDIT_FASI_80_100.md`**: 198 rilievi con evidenza,
+verdetto della contro-verifica, e stato (corretto qui / da decidere).
+
+### 5 · Risultato
+
+**198 rilievi, 16 gravi. Nessuno nei modelli.** Le formule del blocco 📐
+corrispondono al codice, gli snapshot corrispondono alla fonte, i conteggi delle
+partite tornano (16.111 = 3.420×3 + 2.754 + 3.097, con le irregolarità vere), le
+regole di spareggio corrispondono ai regolamenti citati. Gli errori stanno tutti
+nei giunti, come da ipotesi (a).
+
+**L'integrazione aveva portato in `main` 32 script che non partivano.** Spostati
+da `cantiere/scripts/` a `scripts/`, avevano conservato
+`ROOT = Path(__file__).resolve().parents[2]`: corretto un livello più in basso,
+`/home/user` da qui — **fuori dal repository**. 24 morivano su `import src`;
+tutti e 32 leggevano e scrivevano dentro `cantiere/`, cancellata dallo stesso
+commit. Conseguenza non teorica: la Fase 100 **non era riproducibile** — né
+l'audit dei dati, né le correzioni dichiarate (R3), né gli snapshot delle due
+leghe nuove; e `fetch_sources.py` avrebbe scaricato 135 MB in
+`/home/user/cantiere/`, un albero fantasma invisibile a git. Corretto: tutti e
+32 partono, e `applica_correzioni.py --dry-run` ripercorre le 31 correzioni
+dichiarate confermando che sono già applicate — l'idempotenza R3 è di nuovo
+**dimostrabile**, non solo affermata.
+
+**Un bug distruttivo latente.** `build_database.py --league <lega>` onorava la
+lega solo nel download: ogni lettura e ogni scrittura passavano da
+`database.SNAPSHOT_PATH`, cablato sulla Serie A. `--league bundesliga --refresh`
+avrebbe scritto la Bundesliga **sopra** `data/serie_a_matches.csv`. Corretto, e
+i rami `--fixtures`/`--refresh` sono diventati per-lega invece che solo-Serie-A.
+
+**Il denominatore dell'audit era sbagliato: 15.788 invece di 16.111.** Non
+corrisponde a nessun universo del progetto — verificato provando xG, quote,
+apertura, tiri, valore rosa e l'esclusione di ogni singola stagione — mentre gli
+artefatti **dell'audit stesso** sommano a 16.111. Era il numero-titolo della
+Fase 100, ripetuto in 11 punti. Corretto ovunque; «0 differenze» non cambia.
+
+**«8 anomalie reali, tutte nella fonte» non regge sui suoi stessi report:** una
+è un falso positivo ritirato (l'xG a 0.00 era un autogol) e una è un difetto
+**nostro** (l'ordine delle colonne). Sono 7: 6 nella fonte + 1 nostra.
+
+**Cinque conclusioni ritirate erano ancora vive altrove:** la diagnosi rovesciata
+dalla Fase 92 (in tre punti del README, in contraddizione con la correzione
+scritta 300 righe più su nello stesso file), il lead della Fase 98, la premessa
+GG/NG caduta con la Fase 100, la rete «bloccata», e il residuo M2 già chiuso.
+
+**Ed è emersa una fase fantasma.** La **Fase 92-bis** aveva cambiato codice di
+produzione (`MARKET_ENGINE` per-lega, il bootstrap a grappoli che toglie la
+conclusività all'IC del top-4 della Fase 91) senza voce nel diario, riga nel
+README o stato in PANCHINA: «92-bis» non compariva in nessun `.md`. Per questo
+la Fase 91 e il README hanno continuato per nove fasi a dichiarare «entrambi
+conclusivi» su un intervallo che **include lo zero**. La voce mancante è stata
+scritta; la Fase 91 porta ora il suo blocco di rettifica.
+
+**Due bug nel tool.** `predict.py` applicava la φ35 al path DC anche su Premier
+e Liga, dove la Fase 79 la misura dannosa (+1.0pp di pareggio nella direzione
+sbagliata) — lo stesso difetto che la Fase 92-bis aveva corretto sull'altro
+path; e `--no-draw-balance` era dichiarato nel parser e mai letto (due
+esecuzioni con e senza davano output identici byte per byte).
+
+**Tre test nuovi dove un errore sarebbe passato:** la copertura delle mappe
+per-lega (`MARKET_ENGINE` ne aveva 3 su 5) e due che **distinguono** le tuple di
+spareggio di Bundesliga e Ligue 1 — differiscono solo per la posizione di `h2h`,
+e finora scambiarle passava la suite. 197 test verdi.
+
+### 6 · Lezione
+
+**Un'integrazione va eseguita, non solo spostata.** Il difetto era di una riga e
+il costo è stato la riproducibilità della fase più grande del progetto. Dopo
+ogni spostamento di file eseguibili serve uno smoke test che li importi tutti.
+
+**Una conclusione ritirata va inseguita.** Cinque catene su cinque erano state
+corrette all'origine e lasciate vive altrove; e il caso peggiore è nato da una
+fase mai scritta, perché una correzione non può propagarsi da un posto che non
+esiste. La checklist §2 non è burocrazia: è il meccanismo che impedisce a una
+ritrattazione di perdersi.
+
+**Corollario per gli audit:** i quattro precedenti cercavano errori nei
+*calcoli*. Questo li ha cercati nei *giunti*, e lì ne ha trovati sedici gravi
+mentre nei calcoli non ce n'era nemmeno uno.
+
+### 📐 Il modello in dettaglio
+
+**Nessuna matematica nuova**: è una fase di verifica. Le due formule toccate
+sono richiami, e la terza è la ricetta di controllo che questa fase introduce.
+
+**(1) Il motore per-lega sul path DC** (`scripts/predict.py`, corretto qui). Era:
+
+```
+d_dc = price_markets(lam_dc, mu_dc, rho, phi0=m.draw_phi0, kappa=m.draw_kappa,
+                     dp_theta=MARKET_ENGINE[lega]["dp_theta_dc"])
+```
+
+cioè θ per-lega ma **φ dal fit, sempre**. Ora la φ segue lo stesso motore:
+
+```
+use_phi = bool(MARKET_ENGINE[lega]["phi0"]) and not args.no_draw_balance
+phi0  = m.draw_phi0  se use_phi  altrimenti 0
+kappa = m.draw_kappa se use_phi  altrimenti 0
+```
+
+Perché `bool(eng["phi0"])` e non un flag dedicato: la mappa già distingue
+«motore con correzioni» (Serie A, φ0=0.30) da «motore liscio» (le altre quattro,
+φ0=0.0), e aggiungere un secondo interruttore avrebbe creato due fonti di verità
+per lo stesso stato. Effetto misurato su Newcastle-Liverpool (Premier): il
+pareggio passa da 25.4% a **24.8%** (−0.6pp) e l'1X2 torna quello del motore
+liscio; sulla Serie A l'output è invariato.
+
+**(2) Il denominatore.** L'universo dell'audit è l'unione degli snapshot:
+
+```
+N = Σ_lega |snapshot_lega| = 3.420·3 + 2.754 + 3.097 = 16.111
+N_understat = 16.111 − 1 = 16.110   (una gara di Ligue 1 senza corrispondenza)
+```
+
+Il 16.110 non è una scelta di comodo: è il numero che compare nei check `C1` dei
+cinque `audit_*.json` («0 righe con gol diversi tra football-data e Understat; N
+partite senza corrispondenza»). Il 15.788 non è ottenibile da nessun filtro
+(provati: `home_xg` non nullo → 16.109; `odds_home` → 16.109; `odds_over25` →
+12.459; `odds_home_open` → 16.110; `home_sot` → 16.110; esclusione di ciascuna
+delle 9 stagioni → 14.285…14.386). È un numero senza padre.
+
+**(3) La ricetta di controllo di questa fase**, perché sia ripetibile: per ogni
+rilievo si esige la tripletta *(dove, atteso, trovato)* con il comando che la
+produce, e il rilievo passa solo se un secondo agente, incaricato di
+**confutarlo**, non ci riesce. Su 198 rilievi la confutazione ha smontato 2
+rilievi interi e ridimensionato 35: circa **il 19% di ciò che un auditor
+scrive** non sopravvive a chi prova a smontarlo — che è la ragione per cui il
+passo esiste.

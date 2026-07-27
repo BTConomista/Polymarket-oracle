@@ -71,11 +71,11 @@ un cambio di schema.
 
 Il manuale lo dà tra gli host **bloccati** (fu la ragione del recupero manuale
 via browser esterno). Oggi risponde **200**: il recupero è diventato
-**scriptabile** (`cantiere/scripts/recupero_squad_value_tm.py`).
+**scriptabile** (`scripts/recupero_squad_value_tm.py`).
 
 ### I 16 valori mancanti: recuperati
 
-`cantiere/data/squad_value_2526_transfermarkt.csv` — 5 celle Bundesliga
+`data/squad_value_2526_transfermarkt.csv` — 5 celle Bundesliga
 (Augsburg 168.4 M€, FC Koln 156.6, Hamburg 179.4, Hoffenheim 278.8, St Pauli
 64.2) e 11 Ligue 1 (Angers 78.8, Auxerre 92.7, Le Havre 75.0, Lens 236.8,
 Lorient 127.8, Lyon 300.8, Metz 65.2, Nantes 110.3, Nice 183.8, Paris FC 153.4,
@@ -165,9 +165,9 @@ eseguire solo quando si deciderà di unire i due filoni.
 
 **Decisione 1 → si usa il risultato del campo (1-1).** Applicata con
 `scripts/applica_correzioni.py` sul registro
-[`data/correzioni_dichiarate.csv`](../data/correzioni_dichiarate.csv): tre celle
+[`data/correzioni_dichiarate.csv`](../../data/correzioni_dichiarate.csv): tre celle
 (`home_goals` 0→1, `away_goals` 2→1, `result` A→D), ognuna con motivo e fonte.
-La regola generale è scritta in [`REGOLE.md`](../REGOLE.md) **R1**, con l'obbligo
+La regola generale è scritta in [`REGOLE.md`](REGOLE.md) **R1**, con l'obbligo
 di trattare **ogni caso analogo singolarmente**, mai con un automatismo.
 
 Effetto collaterale positivo, misurato: l'audit sui **gol da fonte indipendente**
@@ -211,7 +211,7 @@ vicine prese dalla fonte primaria. Il caveat resta (la colonna 2025-26 mescola
 due misure e va dichiarato), ma il segno del rischio è opposto a quello che
 temevo.
 
-**Decisione 3 → isolamento.** Scritta in [`REGOLE.md`](../REGOLE.md) R4.
+**Decisione 3 → isolamento.** Scritta in [`REGOLE.md`](REGOLE.md) R4.
 
 **Verifiche dopo l'applicazione:** audit sulle 5 leghe (Bundesliga 0 FAIL/0 WARN,
 Ligue 1 0 FAIL/2 WARN noti), audit avversariale invariato, `pytest` verde

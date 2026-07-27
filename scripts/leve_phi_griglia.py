@@ -1,6 +1,6 @@
 """La leva phi(|lambda-mu|) sulle due leghe nuove, con costanti scelte per GRIGLIA.
 
-CONTESTO. Nel tracer della tranche 3 (cantiere/report/06_tranche3.md, passo 5) la
+CONTESTO. Nel tracer della tranche 3 (docs/audit_5_leghe/06_tranche3.md, passo 5) la
 phi35 e' stata provata sulle leghe nuove con i parametri fittati per MASSIMA
 VEROSIMIGLIANZA sui pareggi (`mi.fit_balance_phi`): bundesliga +0.00122 sull'1X2
 (CI non conclusivo), ligue_1 -0.00036 (phi0 fittato = 0). Il progetto ha pero'
@@ -42,7 +42,7 @@ METODO
   - bootstrap appaiato B=10.000 (boot di scripts/_fase52_common.py) e verdetto
     esplicito CONCLUSIVO / nel rumore, piu' una soglia Bonferroni dichiarata.
 
-Uso: python cantiere/scripts/leve_phi_griglia.py [--leagues ...] [--quick]
+Uso: python scripts/leve_phi_griglia.py [--leagues ...] [--quick]
 """
 from __future__ import annotations
 
@@ -57,7 +57,7 @@ import pandas as pd
 
 ROOT = Path("/home/user/Polymarket-oracle")
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -69,13 +69,13 @@ from src.evaluation import metrics                   # noqa: E402
 from src.models import market_implied as mi          # noqa: E402
 from scripts._fase52_common import boot, dp_matrices  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out" / "leve_phi_griglia.json"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_phi_griglia.json"
 SCRATCH = Path("/tmp/claude-0/-home-user-Polymarket-oracle/"
                "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")
 SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
-SNAPSHOT = {"bundesliga": ROOT / "cantiere/data/bundesliga_matches.csv",
-            "ligue_1": ROOT / "cantiere/data/ligue_1_matches.csv"}
+SNAPSHOT = {"bundesliga": ROOT / "data/bundesliga_matches.csv",
+            "ligue_1": ROOT / "data/ligue_1_matches.csv"}
 RHO = -0.06
 SEED = 3535
 MAXG = mi.MAX_GOALS

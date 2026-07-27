@@ -15,7 +15,7 @@ shrinkage (successo su 3/3 leghe finora: il tetto e' informativo, non di
 taratura); δ per-lega adottabile per motivazione strutturale anche con CI non
 conclusivo (precedente: Fasi 7/17/57).
 
-Uso: python cantiere/scripts/tranche3_ritaratura.py [--leagues ...]
+Uso: python scripts/tranche3_ritaratura.py [--leagues ...]
 """
 from __future__ import annotations
 
@@ -28,9 +28,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -41,8 +41,8 @@ from src.config import SERIE_A  # noqa: E402
 from src.data import database  # noqa: E402
 from src.evaluation import experiment_log  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
-CANTIERE_DATA = ROOT / "cantiere" / "data"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
+CANTIERE_DATA = ROOT / "data"
 _orig = database.snapshot_path
 database.snapshot_path = lambda k="serie_a": (
     CANTIERE_DATA / f"{k}_matches.csv" if k in nuove_leghe.NEW_LEAGUES else _orig(k))

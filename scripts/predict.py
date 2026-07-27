@@ -110,21 +110,36 @@ def main() -> None:
     kw = dict(half_life_days=cfg["half_life_days"], shrinkage=cfg["shrinkage"],
               shots_blend=cfg["shots_blend"], blend_signal=cfg["blend_signal"],
               promoted_prior=(cfg["promoted_prior"], cfg["promoted_prior"]))
+    eng = market_engine(args.league)
+    # φ35 sul path DC: si applica dove il motore per-lega la prevede. Fuori dalla
+    # Serie A il motore e' LISCIO (Fase 79: in Premier la φ35 peggiora) e il flag
+    # --no-draw-balance la spegne comunque. Fino all'audit della Fase 101 la φ35
+    # era applicata sempre, anche dove il motore la dichiara off: su Premier
+    # spostava il pareggio di +1.0pp nella direzione misurata come sbagliata.
+    use_phi_dc = bool(eng["phi0"]) and not args.no_draw_balance
     # Modello DC con φ35 (draw_balance): fornisce λ,μ, rho e (φ0,κ) per il routing.
-    m = DixonColesModel(**kw, draw_balance=True).fit(allm, as_of_date=as_of, promoted_teams=prom)
+    m = DixonColesModel(**kw, draw_balance=use_phi_dc).fit(
+        allm, as_of_date=as_of, promoted_teams=prom)
     print("Forza stimata (log-scala, 0 = media lega):")
     for t in (args.home, args.away):
         print(f"  {t:<14} attacco {m.attack.get(t, 0.0):+.3f}   difesa {m.defense.get(t, 0.0):+.3f}")
-    print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}   "
-          f"[φ35: φ0={m.draw_phi0:.3f}, κ={m.draw_kappa:.3f}]")
+    if use_phi_dc:
+        print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}   "
+              f"[φ35: φ0={m.draw_phi0:.3f}, κ={m.draw_kappa:.3f}]")
+    else:
+        print(f"  vantaggio-casa globale γ = {m.home_advantage:+.3f}   "
+              f"[φ35 OFF per {args.league}]")
     lam_dc, mu_dc = m.expected_goals(args.home, args.away)
-    # Costanti del motore PER LEGA (Fase 92): fino ad allora si applicavano a
+    # Costanti del motore PER LEGA (Fase 92-bis): fino ad allora si applicavano a
     # ogni lega quelle della Serie A. In Premier il motore LISCIO e' l'ottimo
     # misurato (Fase 81) e la φ35 peggiora (Fase 79).
-    eng = market_engine(args.league)
-    d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=m.draw_phi0,
-                            kappa=m.draw_kappa, dp_theta=eng["dp_theta_dc"])
-    _show_markets(d_dc, "Modello 1: DC gol+xG + φ35 (router v3: dp + forma per-mercato)",
+    phi0_dc = m.draw_phi0 if use_phi_dc else 0.0
+    kappa_dc = m.draw_kappa if use_phi_dc else 0.0
+    d_dc = mi.price_markets(lam_dc, mu_dc, rho=m.rho, phi0=phi0_dc,
+                            kappa=kappa_dc, dp_theta=eng["dp_theta_dc"])
+    _show_markets(d_dc, "Modello 1: DC gol+xG"
+                  + (" + φ35" if use_phi_dc else "")
+                  + " (router v3: dp + forma per-mercato)",
                   rho=m.rho, matchday=args.matchday)
 
     print("\n" + "=" * 74)

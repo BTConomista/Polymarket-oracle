@@ -85,8 +85,8 @@ scommettere soldi veri. Un vantaggio in log-loss di qualche millesimo è 25-50
 volte più piccolo del margine del bookmaker: non è denaro. Il progetto ha già
 mostrato (Fase 16) che la chiusura ingloba il modello.
 
-Uso:  python cantiere/scripts/leve_beat_close.py [--leagues ...] [--skip-sanity]
-Scrive: cantiere/out/leve_beat_close.json
+Uso:  python scripts/leve_beat_close.py [--leagues ...] [--skip-sanity]
+Scrive: docs/audit_5_leghe/numeri/leve_beat_close.json
 """
 from __future__ import annotations
 
@@ -100,9 +100,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -114,7 +114,7 @@ from src.data import loader                        # noqa: E402
 from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
 
-OUT_FP = ROOT / "cantiere" / "out" / "leve_beat_close.json"
+OUT_FP = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_beat_close.json"
 SCRATCH = Path(os.environ.get(
     "SCRATCH",
     "/tmp/claude-0/-home-user-Polymarket-oracle/"
@@ -124,8 +124,8 @@ SCRATCH = Path(os.environ.get(
 CACHE_MULT = SCRATCH.parent / "theta_griglia"
 
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
 NUOVE = ("bundesliga", "ligue_1")
 

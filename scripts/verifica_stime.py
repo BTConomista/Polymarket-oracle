@@ -31,7 +31,7 @@ Cosa fa, in ordine:
   8. ALTRE STIME — open_sparse_1x2_ou.csv e squad_value_2017_26.csv:
      coerenza con quanto dichiarato in docs/DATI.md.
 
-Uso: python cantiere/scripts/verifica_stime.py
+Uso: python scripts/verifica_stime.py
 """
 from __future__ import annotations
 
@@ -42,12 +42,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.evaluation import metrics  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 LEAGUES = ["serie_a", "premier_league", "la_liga"]
 FIT_SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 TARGET_SEASONS = ["1718", "1819"]
@@ -225,7 +225,7 @@ def main() -> int:
     raw_b365 = []
     for lg in LEAGUES:
         for s in FIT_SEASONS:
-            r = pd.read_csv(ROOT / "cantiere" / "data" / "fonti" / "football_data"
+            r = pd.read_csv(ROOT / "data" / "fonti" / "football_data"
                             / f"{lg}_{s}.csv", encoding="latin-1")
             r = r.dropna(subset=["HomeTeam", "AwayTeam", "FTHG", "FTAG"])
             from src.data import sources

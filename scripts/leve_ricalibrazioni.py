@@ -58,7 +58,7 @@ FINESTRE
     1718→2526: +29% di partite, cioè più risoluzione su una leva che vive
     proprio sotto la soglia.
 
-Uso:  python cantiere/scripts/leve_ricalibrazioni.py [--leagues ...] [--jobs 2]
+Uso:  python scripts/leve_ricalibrazioni.py [--leagues ...] [--jobs 2]
 """
 from __future__ import annotations
 
@@ -74,9 +74,9 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -88,15 +88,15 @@ from src.evaluation import metrics                   # noqa: E402
 from src.models import market_denoise as MD          # noqa: E402
 from src.models import market_implied as mi          # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 CACHE = Path(os.environ.get(
     "SCRATCH",
     "/tmp/claude-0/-home-user-Polymarket-oracle/"
     "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "ricalibrazioni"
 
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
 
 SEASONS_MKT = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]

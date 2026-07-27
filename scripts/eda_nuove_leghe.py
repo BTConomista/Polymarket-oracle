@@ -12,7 +12,7 @@ Indicatori (uno per colonna della tabella finale):
   per quartile di equilibrio (reale - mercato), che dice se la lega e' "latina"
   (mercato che sotto-prezza il pareggio nelle gare equilibrate) o "inglese".
 
-Uso: python cantiere/scripts/eda_nuove_leghe.py
+Uso: python scripts/eda_nuove_leghe.py
 """
 from __future__ import annotations
 
@@ -23,19 +23,19 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
 nuove_leghe.registra()
 from src.evaluation.metrics import devig_1x2  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 
 
 def promoted_delta(df: pd.DataFrame) -> float:

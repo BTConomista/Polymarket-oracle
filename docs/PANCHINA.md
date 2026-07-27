@@ -96,7 +96,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Covariate squad_value/absence/npxG/forma/luck/ppda/deep | ❌ F4c/11/13/33 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | **Modello di conteggio corner/cartellini** (fuori matrice, F96) | ⚽ F96 | ⚽ F96 | ⚽ F96 | ⬜ | ⬜ | ⚽ struttura unica (attacco/difesa moltiplicativi, vincolo `hadv+aadv=2`); processo DIVERSO dai gol, non ridondante |
 | **… + binomiale negativa sui conteggi** (F98) | ⚽/❌ ✱8 | ⚽ F98 | ⚽ F98 | ⬜ | ⬜ | 🪑 conclusiva ma trascurabile (corner +0.00103 [+0.00062,+0.00143], cartellini +0.00088 [+0.00033,+0.00142]) |
-| **… + correzione di LIVELLO train-only** (F98 lead → **F99 bocciato**) | ❌ F99 | ❌ F99 | ❌ F99 | ⬜ | ⬜ | ❌ **F99: il lead era falso.** 5 stimatori walk-forward + emivita alla radice: nessuno migliora, 6/8 celle peggiorano con IC conclusivo. Causa: **il bias di fold NON persiste** (corr lag-1 +0.23/+0.19, IC attraversa lo zero, **10/18 stesso segno**; sd del bias 2,6×/10× il bias pooled) → non era deriva, era rumore aggregato |
+| **… + correzione di LIVELLO train-only** (F98 lead → **F99 bocciato**) | ❌ F99 | ❌ F99 | ❌ F99 | ⬜ | ⬜ | ❌ **F99: il lead era falso.** 5 stimatori walk-forward + emivita alla radice: nessuno migliora, 5/8 celle peggiorano con IC conclusivo. Causa: **il bias di fold NON persiste** (corr lag-1 +0.23/+0.19, IC attraversa lo zero, **10/18 stesso segno**; sd del bias 2,6×/10× il bias pooled) → non era deriva, era rumore aggregato |
 | **Mercati Tier 3 dal ri-scalamento 1T/2T** (Halftime, Second Half, risultato esatto — F98) | ⚽ F98 | ⚽ F98 | ⚽ F98 | ⬜ | ⬜ | ⚽ fondazione misurata (f=0.4396 [0.4338,0.4458], 1T Poisson-compatibile, tempi quasi indipendenti); batte la baseline con IC conclusivo (HT +0.0537, 2T +0.0578, esatto +0.1940). ⚠️ **il 2T è mal calibrato** (pareggio 0.3671 vs 0.3427) mentre il 1T no → game-state, non normalizzazione |
 | Arbitro come feature moltiplicativa (cartellini) | ⬜ dato assente (0/3420) | ❌ F98 (nessun IC esclude lo zero; **85% del guadagno era solo livello**) | ⬜ dato assente (0/3420) | ⬜ | ⬜ | ❌ il dato `Referee` esiste solo in Premier |
 | Proxy storico delle formazioni (undici attesi, disponibilità del nucleo) | ❌ F98 | ❌ F98 | ❌ F98 | ⬜ | ⬜ | ❌ la parte che funziona correla +0.9603 col valore rosa (già bocciato F4c/11); la disponibilità correla −0.1227 col logit della chiusura = **il mercato le assenze le prezza già** |
@@ -114,7 +114,9 @@ Note della matrice:
   deficit-pareggio non esiste lì. In **Liga** invece la φ35 di mercato ha il
   **primo CI<0 per-lega del progetto** (GG −0.0006 [−0.0011,−0.0001], P 99%,
   φ0≈0.32 κ≈2.9 stabili, F80): in panchina alta, si promuove quando riappare
-  su stagioni nuove o quando `predict.py` diventa per-lega. Il k34 in Liga
+  su stagioni nuove. *(La seconda condizione — «quando `predict.py` diventa
+  per-lega» — è **soddisfatta** dalla Fase 92-bis: `src.config.MARKET_ENGINE`.
+  Resta quindi la sola conferma su stagioni nuove. Allineato dalla Fase 101.)* Il k34 in Liga
   PEGGIORA con CI>0 (profilo-ospite di fine stagione invertito, ×0.915).
 - **✱3** dp_lvl è nel tool `predict.py` SOLO per la Serie A; è "valore da
   oracolo" (log-loss), NON da scommessa (F51-ter: niente ROI).
@@ -144,13 +146,13 @@ Note della matrice:
 
 | modello | dove è attivo | fronte per-lega | fronte generale |
 |---|---|---|---|
-| **Market-implied + router v3 + φ35** | pricing con quote 1X2+O/U (`price_markets(dp_theta)`, `predict.py`) | costanti Serie A (θ=1.225/1.138, φ0, κ); **altre leghe da ritarare** | struttura universale; ρ=−0.06 unico |
-| **Dixon-Coles + blend xG** | fallback senza quote; `backtest.py` | `LEAGUE_CONFIGS`: δ 0.23/0.33/0.22; il resto è comune (F57) | iperparametri comuni = versione generale di fatto |
+| **Market-implied + router v3 + φ35** | pricing con quote 1X2+O/U (`price_markets(dp_theta)`, `predict.py`) | costanti Serie A (θ=1.225/1.138, φ0, κ); le **altre quattro leghe sono ritarate**: motore LISCIO, dichiarato in `MARKET_ENGINE` (F92-bis per Premier/Liga, F101 per BL/L1) | struttura universale; ρ=−0.06 unico |
+| **Dixon-Coles + blend xG** | fallback senza quote; `backtest.py` | `LEAGUE_CONFIGS`: δ 0.23/0.33/0.22/**0.28/0.19** (5 leghe, F100); il resto è comune (F57) | iperparametri comuni = versione generale di fatto |
 | **sharpen_1x2 (dp_lvl)** | `predict.py`, solo Serie A | SA only | bocciato fuori SA (F53) |
 | **Stimatore E3 chiusura O/U** | `scripts/build_estimates.py` → `data/estimates/` | (per-lega TESTATO e battuto dal pooled) | **pooled: 5 coefficienti unici, MAE 0.0117** |
 | **Stimatore squad_value (ibrido)** | `scripts/build_estimates.py` → `data/estimates/` | A2 per-lega per squadre senza stagioni note (err ~29%) | A3 pooled dove c'è l'ancora adiacente (err ~17%) |
 | **Baseline frequenze H/D/A** | benchmark in ogni backtest | per-lega per costruzione | — |
-| **Simulatore di stagione (mercato campione)** | `season_sim.py`, `_run_fase89_season_champion.py` | spareggi per-lega (h2h SA/Liga, DR Premier) + δ da `LEAGUE_CONFIGS` | struttura unica; **sovra-confidente** (60.1% dichiarato vs 41.7% realizzato): correzione strutturale da fare |
+| **Simulatore di stagione (mercato campione)** | `season_sim.py`, `_run_fase89_season_champion.py` | spareggi per-lega a **5 leghe**: h2h prima in SA/Liga, DR in Premier, `('gd','gf','h2h')` in Bundesliga e `('gd','h2h','gf')` in Ligue 1 (F100; test che le distinguono dalla F101) + δ da `LEAGUE_CONFIGS` | struttura unica; **sovra-confidente** (60.1% dichiarato vs 41.7% realizzato): correzione strutturale da fare |
 
 ---
 
@@ -159,8 +161,8 @@ Note della matrice:
 | # | leva (fase) | Δ nominale | perché in panchina | attivazione |
 |---|---|---|---|---|
 | 1 | GG/NG: φ35+knee34 sul market-implied (50) | **−0.0010** GG (P 98%); riconf. F80 −0.0014 (P 97%) | CI al limite + multiple testing | opt-in engine |
-| 1-bis | **GG/NG Liga: φ35 sola sul market-implied (80/81)** | **−0.0006 CI<0 (fit MLE, F80)**; con costanti da griglia (φ0 0.7, κ 0.5) **lfo −0.0019 CI<0 (F81)** | primo test su quella lega (prudenza F17); tool non ancora per-lega | φ per la Liga in `price_markets` (griglia > MLE, come per θ) |
-| 1-ter | **Router θ per la Liga (81)** | **θ≈1.2: cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (lfo CI<0)**; F82: raddrizza anche la CALIBRAZIONE (GG bias −0.036→−0.008, ECE 0.036→0.012 — metrica indipendente) | ribalta F53 (che usava il θ MLE 1.097); primo giro di conferme, tool non per-lega | `price_markets(dp_theta≈1.2)` per la Liga |
+| 1-bis | **GG/NG Liga: φ35 sola sul market-implied (80/81)** | **−0.0006 CI<0 (fit MLE, F80)**; con costanti da griglia (φ0 0.7, κ 0.5) **lfo −0.0019 CI<0 (F81)** | primo test su quella lega (prudenza F17); ~~tool non ancora per-lega~~ (il tool **è** per-lega dalla F92-bis) | φ per la Liga in `price_markets` (griglia > MLE, come per θ) |
+| 1-ter | **Router θ per la Liga (81)** | **θ≈1.2: cs −0.0069*, 1X2 −0.0023*, GG −0.0025* (lfo CI<0)**; F82: raddrizza anche la CALIBRAZIONE (GG bias −0.036→−0.008, ECE 0.036→0.012 — metrica indipendente) | ribalta F53 (che usava il θ MLE 1.097); primo giro di conferme. ~~tool non per-lega~~: il tool **è** per-lega dalla F92-bis, quindi la promozione richiede solo la conferma su stagioni nuove | `price_markets(dp_theta≈1.2)` per la Liga |
 | 2 | Ricalibrazione per-classe del MERCATO (50-ter) | −0.0006 pooled (P 78%) | servono ~20 stagioni; **Premier smentisce il segno** (F53) | `market_denoise` |
 | 3 | Devig di Shin (52-ter) | −0.0007 1X2 (P 97%); direzione confermata su 3/3 leghe (F53) | non concluso; toccherebbe la fonte unica | funzione pronta |
 | 4 | φ(λ−μ) sul path DC standalone (35) | −0.0007 1X2 | CI include 0 | `--draw-balance` |

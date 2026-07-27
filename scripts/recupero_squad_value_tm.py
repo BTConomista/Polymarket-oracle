@@ -19,7 +19,7 @@ definizioni sui club della STESSA stagione per cui il valore player-scores
 esiste (13 Bundesliga + 7 Ligue 1). Quell'accordo e' il criterio per decidere
 se i valori TM sono usabili per riempire i buchi — e con quale errore dichiarato.
 
-Uso: python cantiere/scripts/recupero_squad_value_tm.py
+Uso: python scripts/recupero_squad_value_tm.py
 """
 from __future__ import annotations
 
@@ -34,17 +34,17 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
 nuove_leghe.registra()
 from src.data import sources  # noqa: E402
 
-OUT = ROOT / "cantiere" / "out"
-CACHE = ROOT / "cantiere" / "data" / "fonti" / "transfermarkt_web"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
+CACHE = ROOT / "data" / "fonti" / "transfermarkt_web"
 SEASON = "2526"
 SAISON_ID = 2025            # 2025-26 nella nomenclatura Transfermarkt
 
@@ -115,7 +115,7 @@ def main() -> int:
     for league_key in COMPETITIONS:
         print(f"\n=== {league_key} (stagione {SEASON}) ===")
         tm = parse_clubs(fetch(league_key))
-        snap = pd.read_csv(ROOT / "cantiere" / "data" / f"{league_key}_matches.csv",
+        snap = pd.read_csv(ROOT / "data" / f"{league_key}_matches.csv",
                            dtype={"season": str})
         snap = snap[snap.season == SEASON]
         ours = pd.concat([

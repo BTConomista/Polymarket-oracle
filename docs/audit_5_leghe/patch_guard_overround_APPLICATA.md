@@ -1,7 +1,9 @@
-# Proposta di patch — guard sull'overround TROPPO ALTO
+# Guard sull'overround TROPPO ALTO — APPLICATA
 
-**Non applicata**: il lavoro di questa sessione non tocca `src/`. Da valutare
-all'integrazione. Motivazione completa: `cantiere/report/01_audit_dati.md` §4.1.
+**APPLICATA all'integrazione** (commit `ec85314`): il guard bilaterale vive in
+`src/data/loader.py` (`ORR_MAX = 1.12`, usato in `_pick_market_odds`). Questo
+documento resta come verbale della proposta e della sua verifica. Motivazione
+completa: [`01_audit_dati.md`](01_audit_dati.md) §4.1.
 
 ## Il problema
 
@@ -58,7 +60,7 @@ def _pick_market_odds(row, targets, preference):
 
 ## Effetto atteso
 
-- **11 celle** su 15.788 partite (0.07%) passano da valore impossibile a **NaN
+- **11 righe (22 celle)** su 16.111 partite (0.07%) passano da valore impossibile a **NaN
   dichiarato**: 3 La Liga, 6 Bundesliga, 2 Ligue 1, tutte in `odds_over25_open`/
   `odds_under25_open` del 2017-19;
 - **3 stime** di `data/estimates/ou_close_2017_19.csv` spariscono da sole
@@ -84,5 +86,7 @@ def test_overround_impossibile_scartato():
 python scripts/build_database.py --refresh-odds        # Serie A
 python scripts/build_league_snapshot.py --refresh-odds # Premier/Liga
 python scripts/build_estimates.py                      # le 3 stime cadono
-python cantiere/scripts/audit_anomalie.py              # atteso: 0 margini impossibili
+python scripts/audit_anomalie.py                       # atteso: 0 margini impossibili
+                                                       # (richiede le fonti grezze:
+                                                       #  python scripts/fetch_sources.py)
 ```

@@ -964,7 +964,7 @@ diverso, e per la maggior parte è **rifare bene** cose fatte una volta sola:
 
 I quattro fronti del primo giro (§2-§6) erano stati eseguiti da agenti che
 avevano **completato i calcoli** ma erano stati interrotti prima di riportare: i
-numeri erano stati estratti dai loro output grezzi (`cantiere/out/leve_*.json`) e
+numeri erano stati estratti dai loro output grezzi (`docs/audit_5_leghe/numeri/leve_*.json`) e
 **non erano passati dalla verifica avversariale prevista**. Quella verifica è
 stata fatta. Esito: **tre analisi su cinque reggono con riserva, due non
 reggono.**

@@ -15,9 +15,9 @@ Tre livelli di controllo, dal piu' debole al piu' forte:
                     improbabile.
 
 Ogni controllo produce PASS / WARN / FAIL con i numeri. L'esito completo va in
-cantiere/out/audit_<lega>.json e il riassunto a schermo.
+docs/audit_5_leghe/numeri/audit_<lega>.json e il riassunto a schermo.
 
-Uso:  python cantiere/scripts/audit_snapshots.py [serie_a premier_league la_liga]
+Uso:  python scripts/audit_snapshots.py [serie_a premier_league la_liga]
 """
 from __future__ import annotations
 
@@ -28,18 +28,18 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.data import loader, sources, understat  # noqa: E402
 
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 import nuove_leghe  # noqa: E402
 
 nuove_leghe.registra()
 
-FONTI = ROOT / "cantiere" / "data" / "fonti"
-OUT = ROOT / "cantiere" / "out"
+FONTI = ROOT / "data" / "fonti"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 
 SEASONS = sources.SEASONS
 
@@ -47,8 +47,8 @@ SEASONS = sources.SEASONS
 SNAP_DIR = {
     "serie_a": ROOT / "data", "premier_league": ROOT / "data",
     "la_liga": ROOT / "data",
-    "bundesliga": ROOT / "cantiere" / "data",
-    "ligue_1": ROOT / "cantiere" / "data",
+    "bundesliga": ROOT / "data",
+    "ligue_1": ROOT / "data",
 }
 
 # ECCEZIONI REALI, verificate una per una: non sono errori di dato, sono fatti
@@ -74,10 +74,10 @@ SNAP_COLUMNS = [
 ]
 KEY = ["season", "home_team", "away_team"]
 
-# Correzioni DICHIARATE (regole R1/R3 di cantiere/REGOLE.md): righe in cui lo
+# Correzioni DICHIARATE (regole R1/R3 di docs/audit_5_leghe/REGOLE.md): righe in cui lo
 # snapshot si discosta VOLUTAMENTE dalla fonte. L'audit non deve segnalarle come
 # errori — ma deve continuare a segnalare tutto il resto.
-_CORR_PATH = ROOT / "cantiere" / "data" / "correzioni_dichiarate.csv"
+_CORR_PATH = ROOT / "data" / "correzioni_dichiarate.csv"
 
 
 def _righe_corrette(league: str) -> set[tuple]:
@@ -339,7 +339,7 @@ def audit_vs_football_data(df: pd.DataFrame, league: str, rep: Report) -> dict:
     if corrette:
         rep.add("B0.correzioni_dichiarate", "INFO",
                 f"{int(is_corr.sum())} righe si discostano VOLUTAMENTE dalla fonte "
-                f"(registro cantiere/data/correzioni_dichiarate.csv, regola R1): "
+                f"(registro data/correzioni_dichiarate.csv, regola R1): "
                 f"escluse dal confronto B2",
                 righe=j.loc[is_corr, KEY + ["home_goals", "away_goals",
                                             "home_goals_src", "away_goals_src"]]

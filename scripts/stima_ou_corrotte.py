@@ -16,10 +16,17 @@ audit, si è dimostrato QUALE dei due lati fosse rotto.
 Errore atteso: misurato sulle partite della STESSA epoca (2017-19, 5 leghe) dove
 la linea O/U è integra — lì la stima si può confrontare col dato vero.
 
-Uscita: `cantiere/data/stime_ou_corrotte.csv` (probabilità, mai quote), con
+SUPERATO dalla Fase 100: la stima pubblicata è quella del bakeoff
+(`scripts/stima_ou_open_bakeoff.py` -> `data/estimates/ou_open_corrotte_2017_19.csv`,
+MAE 0.0143 contro lo 0.0267 di questo metodo). Questo script resta come
+diagnostico e come termine di paragone: la sua uscita NON va in `data/estimates/`
+(l'audit della Fase 101 l'ha trovata ri-creata per sbaglio nella radice di data/).
+
+Uscita: `docs/audit_5_leghe/numeri/stima_ou_corrotte_metodo_storico.csv`
+(probabilità, mai quote), con
 l'errore atteso scritto riga per riga.
 
-Uso: python cantiere/scripts/stima_ou_corrotte.py
+Uso: python scripts/stima_ou_corrotte.py
 """
 from __future__ import annotations
 
@@ -29,9 +36,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
@@ -40,7 +47,7 @@ nuove_leghe.registra()
 from src.evaluation import metrics  # noqa: E402
 from src.models import market_implied as mi  # noqa: E402
 
-DATA = ROOT / "cantiere" / "data"
+DATA = ROOT / "data"
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
         "la_liga": ROOT / "data", "bundesliga": DATA, "ligue_1": DATA}
 EPOCA = ["1718", "1819"]      # l'era Betbrain: stessa fonte, stessa semantica
@@ -118,11 +125,12 @@ def main() -> int:
             "motivo": "linea O/U originale corrotta (overround impossibile), dato vero non recuperabile",
         })
     out = pd.DataFrame(rows)
-    out.to_csv(DATA / "stime_ou_corrotte.csv", index=False)
+    dest = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_ou_corrotte_metodo_storico.csv"
+    out.to_csv(dest, index=False)
     print(f"\nSTIME prodotte ({len(out)} partite):")
     print(out[["league", "season", "home_team", "away_team",
                "p_over25_open_est"]].to_string(index=False))
-    print(f"\n-> {(DATA / 'stime_ou_corrotte.csv').relative_to(ROOT)}")
+    print(f"\n-> {dest.relative_to(ROOT)}  (metodo STORICO, superato dal bakeoff)")
     print("   ⚠️  probabilità STIMATE, non quote: restano FUORI dagli snapshot.")
     return 0
 

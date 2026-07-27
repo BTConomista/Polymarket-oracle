@@ -206,3 +206,24 @@ def test_price_markets_router_v3_dp():
     # dp_theta=None riproduce il router Fase 44
     d_none = mi.price_markets(1.6, 1.2, rho=-0.06, phi0=0.3, kappa=1.5, dp_theta=None)
     assert d_none["over_2.5"] == pytest.approx(d_p["over_2.5"], abs=1e-12)
+
+
+# --------------------------------------------------------------------------- #
+# Fase 101 (audit): le mappe per-lega devono coprire TUTTE le leghe di
+# LEAGUE_CONFIGS. MARKET_ENGINE ne copriva 3 su 5: Bundesliga e Ligue 1 cadevano
+# sul default (giusto nel merito, ma indistinguibile da una dimenticanza).
+def test_mappe_per_lega_coprono_tutte_le_leghe():
+    from src.config import LEAGUE_CONFIGS, MARKET_ENGINE, market_engine
+    assert set(MARKET_ENGINE) == set(LEAGUE_CONFIGS), (
+        "MARKET_ENGINE e LEAGUE_CONFIGS devono elencare le stesse leghe: "
+        f"mancano {set(LEAGUE_CONFIGS) - set(MARKET_ENGINE)}")
+    for key in LEAGUE_CONFIGS:
+        eng = market_engine(key)
+        assert set(eng) == {"dp_theta", "dp_theta_dc", "phi0", "kappa", "sharpen_1x2"}
+    # Solo la Serie A ha le correzioni adottate (Fasi 51/52); le altre quattro
+    # sono motore LISCIO (Fasi 79/81/100).
+    assert market_engine("serie_a")["dp_theta"] == 1.225
+    for key in ("premier_league", "la_liga", "bundesliga", "ligue_1"):
+        eng = market_engine(key)
+        assert eng["dp_theta"] is None and eng["phi0"] == 0.0
+        assert eng["sharpen_1x2"] is False

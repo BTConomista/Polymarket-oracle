@@ -67,11 +67,11 @@ Se un controllo non torna, lo script lo dichiara e non nasconde il numero.
 
 USO
 ---
-  python cantiere/scripts/nuovo_fronte_generale.py dc-run     # griglia DC (lunga)
-  python cantiere/scripts/nuovo_fronte_generale.py theta
-  python cantiere/scripts/nuovo_fronte_generale.py phi
-  python cantiere/scripts/nuovo_fronte_generale.py rho
-  python cantiere/scripts/nuovo_fronte_generale.py dc         # analisi della griglia
+  python scripts/nuovo_fronte_generale.py dc-run     # griglia DC (lunga)
+  python scripts/nuovo_fronte_generale.py theta
+  python scripts/nuovo_fronte_generale.py phi
+  python scripts/nuovo_fronte_generale.py rho
+  python scripts/nuovo_fronte_generale.py dc         # analisi della griglia
 """
 from __future__ import annotations
 
@@ -87,22 +87,22 @@ import pandas as pd
 
 ROOT = Path("/home/user/Polymarket-oracle")
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
 nuove_leghe.registra()
 
-OUT = ROOT / "cantiere" / "out" / "nuovo_fronte_generale.json"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "nuovo_fronte_generale.json"
 SCRATCH = Path("/tmp/claude-0/-home-user-Polymarket-oracle/"
                "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad") / "fronte_generale"
 SCRATCH.mkdir(parents=True, exist_ok=True)
 
 LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 
 MKT_SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 DC_SEASONS = ["2021", "2122", "2223", "2324", "2425", "2526"]
@@ -404,7 +404,7 @@ def _dc_job(arg):
 
     def _sp(key="serie_a"):
         if key in nuove_leghe.NEW_LEAGUES:
-            return ROOT / "cantiere" / "data" / f"{key}_matches.csv"
+            return ROOT / "data" / f"{key}_matches.csv"
         return _orig(key)
     database.snapshot_path = _sp
     from backtest import run_backtest
@@ -1075,7 +1075,7 @@ def _prep_leghe():
 
     def _sp(key="serie_a"):
         if key in nuove_leghe.NEW_LEAGUES:
-            return ROOT / "cantiere" / "data" / f"{key}_matches.csv"
+            return ROOT / "data" / f"{key}_matches.csv"
         return _orig(key)
     database.snapshot_path = _sp
     from src.data import loader

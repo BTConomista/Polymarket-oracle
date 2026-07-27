@@ -8,7 +8,7 @@ e quindi aspetta l'integrazione. Qui la prima parte, **fatta**.
 
 ## 1 · Cosa è stato corretto
 
-Tutto tramite il registro [`data/correzioni_dichiarate.csv`](../data/correzioni_dichiarate.csv)
+Tutto tramite il registro [`data/correzioni_dichiarate.csv`](../../data/correzioni_dichiarate.csv)
 e lo script `scripts/applica_correzioni.py` (regole R1/R3: nessuna modifica a
 mano, verifica del valore-prima cella per cella, idempotente).
 
@@ -63,7 +63,7 @@ giustificazione), e tutto il resto resta severo.
 
 | # | cosa | perché è bloccato |
 |---|---|---|
-| 1 | il **guard sull'overround** in `loader._pick_market_odds` (patch pronta in [`patch/guard_overround.md`](../patch/guard_overround.md)) | tocca `src/` |
+| 1 | il **guard sull'overround** in `loader._pick_market_odds` (patch pronta in [`patch/guard_overround.md`](patch_guard_overround_APPLICATA.md)) | tocca `src/` |
 | 2 | le **3 celle La Liga** con lo stesso difetto (Alaves-Real Madrid, Eibar-Real Madrid, Leganes-Betis) e le **3 stime** che ne dipendono | tocca `data/` e `data/estimates/` |
 | 3 | il guard generale sull'**xG impossibile** in `understat.parse_season_xg` | tocca `src/` |
 | 4 | l'**ordine colonne** di Premier/Liga + il test cross-lega | tocca `data/` e `tests/` |

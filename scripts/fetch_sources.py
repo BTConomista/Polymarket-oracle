@@ -21,9 +21,9 @@ dimensione e SHA256: la provenienza di ogni numero deve essere ricostruibile
 (CLAUDE.md §1.5). Cache: non riscarica se il file esiste (usare --force).
 
 Uso:
-    python cantiere/scripts/fetch_sources.py                 # 5 leghe, 9 stagioni
-    python cantiere/scripts/fetch_sources.py --leagues bundesliga ligue_1
-    python cantiere/scripts/fetch_sources.py --force
+    python scripts/fetch_sources.py                 # 5 leghe, 9 stagioni
+    python scripts/fetch_sources.py --leagues bundesliga ligue_1
+    python scripts/fetch_sources.py --force
 """
 from __future__ import annotations
 
@@ -38,8 +38,8 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "cantiere" / "data" / "fonti"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "data" / "fonti"
 FD_DIR = OUT / "football_data"
 UD_DIR = OUT / "understat"
 MANIFEST = OUT / "manifest.json"

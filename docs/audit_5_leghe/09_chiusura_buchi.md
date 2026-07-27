@@ -239,7 +239,7 @@ stagioni *successive* a quelle stimate (unico dato possibile: va bene per un
 benchmark storico, non per una predizione); nel 2017-19 l'input O/U è Betbrain e
 il movimento 1X2 è Pinnacle, mentre il fit usa le medie — semantiche diverse.
 
-→ `cantiere/data/stime/ou_close_2017_19_nuove_leghe.csv` (1.362 righe,
+→ `data/estimates/ou_close_2017_19_nuove_leghe.csv` (1.362 righe,
 probabilità, mai quote).
 
 ---
@@ -336,7 +336,7 @@ U2.5, 0.4241 per U1.5, 0.1494 per U4.5). **Slittamento di linea sul solo lato
 Under.**
 
 **Questo non è nuovo, ed è giusto dirlo.** La stessa diagnosi — Over coerente,
-Under no — è già scritta in [`REGOLE.md`](../REGOLE.md) R6 Passo 2 e nel `motivo`
+Under no — è già scritta in [`REGOLE.md`](REGOLE.md) R6 Passo 2 e nel `motivo`
 di tutte e 16 le righe di `correzioni_dichiarate.csv`. Nuove sono la
 **quantificazione** della lettura di un lato e l'**identificazione della linea**
 (U3.5), ottenute qui per due vie indipendenti (dalla scaletta 1xBet e — nella
@@ -375,7 +375,7 @@ costante ha l'ottimo **al bordo** (−0.20) e non è identificata, e θ non è m
 stato provato *sotto* la superficie M4 — quindi il suo verdetto vale solo per il
 debias povero.
 
-→ `cantiere/data/stime/ou_open_corrotte_v2.csv` (9 righe, probabilità, con
+→ `data/estimates/ou_open_corrotte_v2.csv` (9 righe, probabilità, con
 entrambe le colonne M5g e M4)
 
 ---
@@ -467,8 +467,8 @@ l'errore condizionato al volume.
 il `blend_signal = 'sot'`, superato dal blend su xG che è la configurazione
 ufficiale. Riempire questa cella non muove nessun backtest.
 
-→ `cantiere/scripts/stima_sot_understat.py`,
-`cantiere/out/stima_sot_understat.json`
+→ `scripts/stima_sot_understat.py`,
+`docs/audit_5_leghe/numeri/stima_sot_understat.json`
 
 ---
 
@@ -605,8 +605,8 @@ robusto| = 10.3), ma la coppia `BbMx` corrispondente (1.40 / 3.10) ha overround
 corrotta: le 8 righe gemelle già svuotate arrivavano a 1.339, cioè
 aritmeticamente impossibili. Svuotarla svuoterebbe plausibilmente una cella vera.
 
-→ `cantiere/data/stime/celle_residue.csv`,
-`cantiere/out/stima_celle_residue.json`
+→ `data/estimates/celle_residue.csv`,
+`docs/audit_5_leghe/numeri/stima_celle_residue.json`
 
 ---
 
@@ -668,7 +668,7 @@ inclusa. Poco rilevante oggi (il blend ufficiale usa l'xG), ma va scritto.
 | 8 | pubblicare la **stima delle 9 righe O/U di apertura v2** (M5g 0.0143, o M4 0.0197 senza contaminazione) | `data/estimates/` | sostituisce una stima peggiore già pubblicata (§5) |
 | 9 | leggere il **solo lato Over** delle 8 righe corrotte | `REGOLE.md` R6 | contraddice una regola approvata dall'utente: decisione sua (§5.1) |
 | 10 | riempire o no il **tiro in porta** di Union-Bochum | `data/estimates/` | affidabilità condizionata 0,69-0,72, al limite della soglia che lo script stesso si dà (§6.2) |
-| 11 | riscrivere la **nota sugli autogol** in `audit_anomalie.check_xg` | `cantiere/scripts/` | «capita in un caso su sei», non «è la regola» (§6.1) |
+| 11 | riscrivere la **nota sugli autogol** in `audit_anomalie.check_xg` | `scripts/` | «capita in un caso su sei», non «è la regola» (§6.1) |
 
 ---
 

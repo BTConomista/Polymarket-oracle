@@ -12,7 +12,7 @@ Fonti confrontate, per Bundesliga e Ligue 1:
   4. player-scores        (valori rosa, tabella clubs)
 
 Uscita: la lista degli alias da aggiungere, e le squadre non agganciate.
-Uso: python cantiere/scripts/riconcilia_nomi.py
+Uso: python scripts/riconcilia_nomi.py
 """
 from __future__ import annotations
 
@@ -25,13 +25,13 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from src.data import sources  # noqa: E402
 
-FONTI = ROOT / "cantiere" / "data" / "fonti"
-OUT = ROOT / "cantiere" / "out"
+FONTI = ROOT / "data" / "fonti"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 SEASONS = sources.SEASONS
 
 NUOVE = {

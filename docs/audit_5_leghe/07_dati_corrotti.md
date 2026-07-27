@@ -12,7 +12,7 @@ Tre risposte, in ordine di importanza:
    baseline banale (§3).
 
 La procedura completa per i casi futuri è la regola **R6** di
-[`REGOLE.md`](../REGOLE.md).
+[`REGOLE.md`](REGOLE.md).
 
 ---
 
@@ -125,7 +125,7 @@ linea O/U vera e aggiunge il movimento; questa deve dedurre il totale dal solo
 1X2. Va usata sapendo che è più grezza.
 
 **Le 8 stime** (probabilità, mai quote), in
-[`data/stime_ou_corrotte.csv`](../data/stime_ou_corrotte.csv):
+[`data/stime_ou_corrotte.csv`](../../data/estimates/ou_open_corrotte_2017_19.csv):
 
 | lega | stagione | partita | P(Over 2.5) stimata |
 |---|---|---|--:|

@@ -103,7 +103,8 @@ def league_config(league_key: str) -> dict:
 
 
 # --------------------------------------------------------------------------- #
-# Costanti del MOTORE market-implied, per lega (audit Fase 92).
+# Costanti del MOTORE market-implied, per lega (audit Fase 92, chiuse dalla
+# Fase 92-bis; Bundesliga e Ligue 1 esplicitate dalla Fase 101).
 #
 # Fino alla Fase 92 `predict.py` applicava a TUTTE le leghe le costanti tarate
 # sulla chiusura Serie A (θ=1.225, θ_DC=1.138, φ0=0.30, κ=1.5, sharpen_1x2),
@@ -134,6 +135,20 @@ MARKET_ENGINE: dict[str, dict] = {
         "phi0": 0.0, "kappa": 0.0, "sharpen_1x2": False,
     },
     "la_liga": {
+        "dp_theta": None, "dp_theta_dc": None,
+        "phi0": 0.0, "kappa": 0.0, "sharpen_1x2": False,
+    },
+    # Bundesliga e Ligue 1 (Fase 100, esplicitate alla Fase 101): il default di
+    # market_engine() le serviva gia' col motore liscio, ma restavano le uniche
+    # due leghe di LEAGUE_CONFIGS senza voce propria — cioe' senza traccia del
+    # fatto che quello stato e' MISURATO e non solo prudenziale. Il router θ e'
+    # negativo su 0/25 mercati in entrambe (θ 1.080 e 1.103, valle −0.0012 e
+    # −0.0017), la φ35 e il power-devig sono bocciati, il beat-the-close chiuso.
+    "bundesliga": {
+        "dp_theta": None, "dp_theta_dc": None,
+        "phi0": 0.0, "kappa": 0.0, "sharpen_1x2": False,
+    },
+    "ligue_1": {
         "dp_theta": None, "dp_theta_dc": None,
         "phi0": 0.0, "kappa": 0.0, "sharpen_1x2": False,
     },

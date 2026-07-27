@@ -47,7 +47,8 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      mercato — l'unico con "spazio" non ancora chiuso. Priorità lì.~~
      **PREMESSA CADUTA (integrazione delle 5 leghe).** Le quote GG/NG di
      chiusura sono state trovate — un book (1xBet) che football-data non
-     contiene, 3.652 partite del 2017-19 su tutte e 5 le leghe — e la domanda
+     contiene, **5.337 partite del 2017-20** su tutte e 5 le leghe (la finestra
+     2017-19 della caccia O/U ne conta 3.652) — e la domanda
      è stata misurata invece che rimandata. Risposta: **il mercato GG/NG è
      informativo** (log-loss 0.6840 contro 0.6921 di baseline, CI conclusivo)
      anche se vale **un terzo** dell'O/U 2.5 dello stesso book e costa 1,7 punti
@@ -63,8 +64,12 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
    - **Mercati standard = Tier 1** (d'ora in poi): 1X2, O/U 1.5/2.5/3.5, GG/NG,
      doppie chance, total-squadra (casa/ospite O0.5/1.5), clean sheet, vince-a-zero,
      scarto ≥2, multigol, risultato esatto. Ogni backtest/analisi li copre tutti
-     (`scripts/_run_markets_bakeoff.py`, `derive_markets`). Tier 2 (handicap
-     asiatico) e Tier 3 (HT/FT, tempi → fondazione live) in futuro.
+     (`scripts/_run_markets_bakeoff.py`, `derive_markets`). Il **Tier 2**
+     (handicap asiatico) è **coperto e validato** contro una quota esterna
+     (Fase 88); il **Tier 3** è coperto per Halftime, Second Half e risultato
+     esatto (Fase 96/98). Restano scoperti: HT/FT congiunto, le combinazioni, e
+     il live (Tier 3+) — per cui serve prima il modello a due stadi del secondo
+     tempo (residuo aperto della Fase 96/99).
    - **Esito del bakeoff (Fase 41):** il "portafoglio di specialisti" NON è 20
      modelli bespoke — **collassa a UN motore**: il **market-implied** è il migliore
      su 19/20 mercati Tier 1 (il DC-da-gol non vince mai), perché i mercati sono
@@ -292,9 +297,20 @@ docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
 docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
-                 apertura 2017-19)
+                 di CHIUSURA 2017-19; l'apertura e' dato reale dalla Fase 73).
+                 CHIUSO alla Fase 100: il dato esiste (1xBet via footiqo) ma NON
+                 e' stato inserito — un solo book, peggiore della stima come
+                 proxy della media multi-book
+docs/audit_5_leghe/   gli 11 report integrali dell'audit a 5 leghe (Fase 100) +
+                 REGOLE.md + numeri/ (i JSON grezzi dietro ogni tabella).
+                 Verbale esteso di cio' che il DIARIO riassume
+docs/AUDIT_FASI_80_100.md   verbale dell'audit delle ultime 20 fasi (Fase 101):
+                 ogni rilievo con evidenza, stato (corretto / da decidere) e
+                 rimando al punto del repo
 lavoro_aperto.md (RADICE) INDICE unico del lavoro aperto: Fase 78, le 17 piste
-                 ancora aperte, le 24 caselle vuote della PANCHINA, Tier 2/3,
+                 ancora aperte, le caselle vuote della PANCHINA (138 dopo
+                 l'ingresso di Bundesliga e Ligue 1: la matrice e' passata da 4
+                 a 6 colonne), Tier 2/3,
                  i tre punti operativi e il brainstorming sulla routine
                  (aggiornamento giornaliero, movimento quote, notizie e
                  formazioni). NON e' una fonte di verita': se diverge da
@@ -491,7 +507,7 @@ l'85% del guadagno apparente dell'arbitro era livello). (2) Un bias misurato su
 un **pool** non autorizza una correzione **prospettica**: prima si misura se
 **persiste** (autocorrelazione fra fold, con CI). Fase 99: il bias di livello dei
 conteggi non persiste (10/18 stesso segno) e correggerlo **peggiora** con IC
-conclusivo in 6 celle su 8. **Misurato ≠ prevedibile.**
+conclusivo in 5 celle su 8. **Misurato ≠ prevedibile.**
 
 **Cosa è chiuso (non riproporre senza informazione nuova).** Tutti i dati
 INTERNI sono esplorati (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/forma/
@@ -504,14 +520,18 @@ test o per argomento); più-storia-batte-meno (Fase 25). Il tetto è
 **Prossimi passi (idee, non impegni).** In ordine di rapporto valore/costo,
 dettaglio in `docs/PISTE.md`:
 - **uso pratico**: `scripts/predict.py` è il tool (DC senza quote / market-implied
-  con `--odds`), reso **per-lega** alla Fase 83-bis (M1); resta da rendere
-  per-lega il θ del router nel path market-implied (M2 Premier con θ neutro);
+  con `--odds`), reso **per-lega** su ENTRAMBI i modelli: M1 alla Fase 83-bis,
+  M2 (θ/φ0/κ/sharpen del router) alla **Fase 92-bis** con la mappa
+  `src.config.MARKET_ENGINE` — Premier e Liga escono col motore LISCIO. Residuo
+  vero: `MARKET_ENGINE` non ha ancora una voce esplicita per Bundesliga e
+  Ligue 1 (cadono sul default liscio, che è la scelta giusta ma non dichiarata);
 - **test prospettico 2026-27** (Fase 78, stato APERTO): previsioni congelate
   prima del kickoff e scorate dopo — il gold standard, da completare al primo
   turno con quote reali (`experiments/prospettico_2026_27.md`);
 - **informazione DAVVERO nuova** (formazioni ufficiali pre-partita, quote
   live/di apertura raccolte prospetticamente): l'unica leva non ancora esaurita;
-- **mercati non ancora coperti** (Tier 2 handicap asiatico, Tier 3 HT/FT e tempi).
+- **mercati non ancora coperti**: HT/FT congiunto, le combinazioni e il live —
+  il Tier 2 (handicap asiatico) e il Tier 3 di base sono già coperti (Fasi 88/96/98).
 
 ---
 

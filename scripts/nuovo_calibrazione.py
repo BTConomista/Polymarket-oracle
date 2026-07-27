@@ -29,7 +29,7 @@ CHE COSA FA
    0.012) guadagnando pochissimo in log-loss: se succede anche qui e' un
    argomento per adottare la leva anche senza CI conclusivo sul log-loss.
 5. Path DC senza quote (walk-forward, 6 stagioni 2021->2526, predizioni gia' in
-   `cantiere/out/tracer_pred_*.csv`): quanto e' onesto il predittore standalone.
+   `docs/audit_5_leghe/numeri/tracer_pred_*.csv`): quanto e' onesto il predittore standalone.
 6. Tabella finale mercato x lega -> affidabile / cautela / non affidabile, col
    criterio NUMERICO dichiarato prima di misurare (sotto).
 
@@ -80,10 +80,10 @@ C3. il bias e' stabile o e' una stagione? -> bias per stagione, sd e min/max.
 C4. multiple testing: 24 mercati x 5 leghe = 120 test sul bias. Soglia di
     Bonferroni dichiarata (alpha 0.05/120 -> z = 3.29): quali sopravvivono.
 C5. sanita' A1 sopra + riproduzione dei parametri (theta, phi) gia' registrati
-    in cantiere/out/tranche3_market_tracer.json.
+    in docs/audit_5_leghe/numeri/tranche3_market_tracer.json.
 
-Uso:  python cantiere/scripts/nuovo_calibrazione.py [--leagues ...] [--quick]
-Output: cantiere/out/nuovo_calibrazione.json  (+ stampa leggibile)
+Uso:  python scripts/nuovo_calibrazione.py [--leagues ...] [--quick]
+Output: docs/audit_5_leghe/numeri/nuovo_calibrazione.json  (+ stampa leggibile)
 """
 from __future__ import annotations
 
@@ -97,9 +97,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -115,14 +115,14 @@ from src.models import market_implied as mi       # noqa: E402
 from scripts._run_fase82_verifica_predizioni import (  # noqa: E402
     _ece as ece_progetto, _binary_stats)
 
-OUT = ROOT / "cantiere" / "out"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 CACHE = Path(os.environ.get(
     "SCRATCH",
     "/tmp/claude-0/-home-user-Polymarket-oracle/"
     "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "calibrazione"
 SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
-        "la_liga": ROOT / "data", "bundesliga": ROOT / "cantiere" / "data",
-        "ligue_1": ROOT / "cantiere" / "data"}
+        "la_liga": ROOT / "data", "bundesliga": ROOT / "data",
+        "ligue_1": ROOT / "data"}
 NUOVE = ["bundesliga", "ligue_1"]
 LEAGUES = NUOVE + ["serie_a", "premier_league", "la_liga"]
 SEASONS7 = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
@@ -142,7 +142,7 @@ SOGLIA_R_OK, SOGLIA_R_KO = 1.5, 3.0
 
 # --------------------------------------------------------------------------- #
 # Il listino Tier 1: nome della probabilita' in derive_markets -> esito reale.
-# Ricalca cantiere/scripts/leve_theta_griglia.BIN_MARKETS (+ dc_12).
+# Ricalca scripts/leve_theta_griglia.BIN_MARKETS (+ dc_12).
 # --------------------------------------------------------------------------- #
 BIN_MARKETS: list[tuple[str, object]] = [
     ("home_win",      lambda h, a: h > a),

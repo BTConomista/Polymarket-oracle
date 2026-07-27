@@ -29,14 +29,14 @@ diversa da una sospesa al 30′ e ripresa un mese dopo, che è diversa da una ma
 disputata.
 
 **Registro obbligatorio.** Ogni intervento vive in
-[`data/correzioni_dichiarate.csv`](data/correzioni_dichiarate.csv), una riga per
+[`data/correzioni_dichiarate.csv`](../../data/correzioni_dichiarate.csv), una riga per
 cella modificata, con: partita, colonna, valore prima, valore dopo, **motivo**,
 **fonte**, stato (`applicata`/`proposta`), chi ha deciso e quando. Le correzioni
 si applicano **solo** con `scripts/applica_correzioni.py`, che verifica il
 valore-prima di ogni cella e si ferma se non combacia: nessuna modifica a mano,
 nessun numero che appare senza tracciamento.
 
-**Casi già istruiti:** vedi `report/04_decisioni.md` §1 (Union Berlin-Bochum
+**Casi già istruiti:** vedi `04_decisioni.md` §1 (Union Berlin-Bochum
 14/12/2024: partita giocata per intero, 1-1 sul campo, 0-2 a tavolino → si usa
 1-1).
 
@@ -93,7 +93,7 @@ approfondito perché lì la colonna è già piena di dato primario.
 (misura il rapporto sui club dove esistono entrambi i valori);
 `scripts/applica_squad_value_tm.py` riempie **solo** le celle vuote e rifiuta di
 sovrascrivere un valore esistente. Provenienza riga per riga in
-[`data/squad_value_2526_transfermarkt.csv`](data/squad_value_2526_transfermarkt.csv).
+[`data/squad_value_2526_transfermarkt.csv`](../../data/squad_value_2526_transfermarkt.csv).
 
 ---
 
@@ -203,5 +203,5 @@ dato è corretto.
 
 **Perché.** «Ho controllato e va bene» senza il numero non vale nulla, e la
 prossima sessione rifarà lo stesso controllo da zero. Esempi già in
-`report/01_audit_dati.md` §5: le 74 righe con gol > tiri in porta (autogol, non
+`01_audit_dati.md` §5: le 74 righe con gol > tiri in porta (autogol, non
 errori) e i 10 xG a zero legittimi (squadre con zero tiri).

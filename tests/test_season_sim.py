@@ -264,3 +264,44 @@ def test_drift_widens_the_table_and_flattens_the_favourite():
         "la deriva non abbassa la probabilita' del favorito"
     # e resta una distribuzione di probabilita' valida
     assert drift["champion_prob"].sum() == pytest.approx(1.0)
+
+
+def test_tiebreak_distingue_bundesliga_da_ligue_1():
+    """Le due tuple nuove (Fase 100) differiscono SOLO per la posizione di `h2h`:
+    Bundesliga ('gd','gf','h2h'), Ligue 1 ('gd','h2h','gf'). Fino alla Fase 101
+    nessun test le nominava: scambiarle passava la suite.
+
+    A e B: 10 punti e stessa differenza reti (+2). A vince gli scontri diretti
+    (6 punti a 0), B ha segnato molto di più (8 contro 2).
+      Ligue 1  -> h2h prima di gf: A davanti.
+      Bundesliga -> gf prima di h2h: B davanti.
+    """
+    rows = [
+        ("A", "B", 1, 0), ("B", "A", 0, 1),     # h2h: A 6 punti, B 0
+        ("A", "C", 0, 0), ("C", "A", 0, 0),
+        ("A", "D", 0, 0), ("D", "A", 0, 0),
+        ("B", "C", 2, 1), ("C", "B", 1, 2),
+        ("B", "D", 3, 1), ("D", "B", 1, 1),
+        ("C", "D", 0, 0), ("D", "C", 0, 0),
+    ]
+    df = _matches(rows)
+    base = final_table(df, "serie_a")
+    assert base.loc["A", "pts"] == base.loc["B", "pts"] == 10
+    assert base.loc["A", "gd"] == base.loc["B", "gd"] == 2
+    assert base.loc["A", "gf"] == 2 and base.loc["B", "gf"] == 8
+
+    t_de = final_table(df, "bundesliga")
+    t_fr = final_table(df, "ligue_1")
+    assert list(t_de.index).index("B") < list(t_de.index).index("A"), \
+        "Bundesliga: i gol fatti vengono prima degli scontri diretti"
+    assert list(t_fr.index).index("A") < list(t_fr.index).index("B"), \
+        "Ligue 1: gli scontri diretti vengono prima dei gol fatti"
+
+
+def test_tiebreak_rules_tuple_complete():
+    """Le tuple per-lega, per intero: un riordino passa solo se qualcuno lo vuole."""
+    assert league_tiebreak("serie_a") == ("h2h", "gd", "gf")
+    assert league_tiebreak("la_liga") == ("h2h", "gd", "gf")
+    assert league_tiebreak("premier_league") == ("gd", "gf")
+    assert league_tiebreak("bundesliga") == ("gd", "gf", "h2h")
+    assert league_tiebreak("ligue_1") == ("gd", "h2h", "gf")

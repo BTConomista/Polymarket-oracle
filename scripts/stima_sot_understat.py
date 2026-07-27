@@ -53,13 +53,13 @@ bundesliga 2024-25):
   2020-21 (+1.05): esattamente i tiri BLOCCATI (3.48 / 3.40 / 3.00), che quel
   fornitore non contava fra i tiri e contava, in parte, fra quelli in porta.
 
-ISOLAMENTO (R4): questo script scrive SOLO in cantiere/out/stima_sot_understat.json.
+ISOLAMENTO (R4): questo script scrive SOLO in docs/audit_5_leghe/numeri/stima_sot_understat.json.
 La cache dei JSON scaricati va nello scratchpad di sessione (variabile SOT_CACHE),
-NON in cantiere/data/fonti/understat_match/ (che viene solo LETTA).
+NON in data/fonti/understat_match/ (che viene solo LETTA).
 
 Uso:
-    python cantiere/scripts/stima_sot_understat.py --per-cella 20   # scarica + analizza
-    python cantiere/scripts/stima_sot_understat.py --solo-analisi   # solo cache
+    python scripts/stima_sot_understat.py --per-cella 20   # scarica + analizza
+    python scripts/stima_sot_understat.py --solo-analisi   # solo cache
 Il download completo (900 + 305 partite) e' ~2 s a partita con throttle 1.5 s:
 conviene popolare la cache a blocchi (SOT_CACHE=<dir>) e poi girare --solo-analisi.
 """
@@ -78,9 +78,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from src.data import sources  # noqa: E402
@@ -95,13 +95,13 @@ SNAP = {
     "serie_a": ROOT / "data" / "serie_a_matches.csv",
     "premier_league": ROOT / "data" / "premier_league_matches.csv",
     "la_liga": ROOT / "data" / "la_liga_matches.csv",
-    "bundesliga": ROOT / "cantiere" / "data" / "bundesliga_matches.csv",
-    "ligue_1": ROOT / "cantiere" / "data" / "ligue_1_matches.csv",
+    "bundesliga": ROOT / "data" / "bundesliga_matches.csv",
+    "ligue_1": ROOT / "data" / "ligue_1_matches.csv",
 }
-UND_DIR = ROOT / "cantiere" / "data" / "fonti" / "understat"
-UND_MATCH_RO = ROOT / "cantiere" / "data" / "fonti" / "understat_match"  # sola lettura
-FD_DIR = ROOT / "cantiere" / "data" / "fonti" / "football_data"
-OUT = ROOT / "cantiere" / "out" / "stima_sot_understat.json"
+UND_DIR = ROOT / "data" / "fonti" / "understat"
+UND_MATCH_RO = ROOT / "data" / "fonti" / "understat_match"  # sola lettura
+FD_DIR = ROOT / "data" / "fonti" / "football_data"
+OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_sot_understat.json"
 
 _SCRATCH = os.environ.get(
     "SOT_CACHE",
@@ -700,7 +700,7 @@ def main() -> None:
                               if float(cens.get("esatte", 0.0)) >= 0.70
                               else "NON RIEMPIRE: corrispondenza esatta sotto il 70%"),
                  "riga_di_correzione_PROPOSTA": {
-                     "file": "cantiere/data/bundesliga_matches.csv",
+                     "file": "data/bundesliga_matches.csv",
                      "chiave": f"{TARGET['season']} {TARGET['date']} "
                                f"{TARGET['home_team']}-{TARGET['away_team']}",
                      "home_sot": int(RULES[best](ch, ca)),

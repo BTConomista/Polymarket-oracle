@@ -73,11 +73,11 @@ TRAPPOLE DICHIARATE (il progetto ci e' gia' inciampato):
     con questo metodo e sono trattate a parte.
 
 USCITE
-  cantiere/data/stime/ou_close_2017_19_nuove_leghe.csv   (probabilita', mai quote)
-  cantiere/out/stima_ou_close_nuove.json                 (tutti i numeri)
+  data/estimates/ou_close_2017_19_nuove_leghe.csv   (probabilita', mai quote)
+  docs/audit_5_leghe/numeri/stima_ou_close_nuove.json                 (tutti i numeri)
 
-Uso:  python cantiere/scripts/stima_ou_close_nuove.py
-      python cantiere/scripts/stima_ou_close_nuove.py --no-chained   (salta la
+Uso:  python scripts/stima_ou_close_nuove.py
+      python scripts/stima_ou_close_nuove.py --no-chained   (salta la
           misura dell'errore composto per le 8 righe con apertura stimata)
 """
 from __future__ import annotations
@@ -91,9 +91,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
+sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -103,15 +103,15 @@ nuove_leghe.registra()
 from src.evaluation import metrics  # noqa: E402
 from _fase52_common import boot, ll_bin  # noqa: E402
 
-OUT_JSON = ROOT / "cantiere" / "out" / "stima_ou_close_nuove.json"
-OUT_CSV = ROOT / "cantiere" / "data" / "stime" / "ou_close_2017_19_nuove_leghe.csv"
-CORROTTE = ROOT / "cantiere" / "data" / "stime_ou_corrotte.csv"
+OUT_JSON = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_ou_close_nuove.json"
+OUT_CSV = ROOT / "data" / "estimates" / "ou_close_2017_19_nuove_leghe.csv"
+CORROTTE = ROOT / "data" / "stime_ou_corrotte.csv"
 
 HIST = ["serie_a", "premier_league", "la_liga"]
 NEW = ["bundesliga", "ligue_1"]
 LEAGUES = HIST + NEW
 SNAP_DIR = {lg: (ROOT / "data") for lg in HIST}
-SNAP_DIR.update({lg: (ROOT / "cantiere" / "data") for lg in NEW})
+SNAP_DIR.update({lg: (ROOT / "data") for lg in NEW})
 
 FIT_SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 TARGET_SEASONS = ["1718", "1819"]
@@ -710,7 +710,7 @@ def main() -> int:
 
 def stima_concatenata(fit: pd.DataFrame, best: str, rng, n_sample: int = 900):
     """Le 8 righe con apertura O/U corrotta hanno gia' una STIMA dell'apertura
-    (cantiere/data/stime_ou_corrotte.csv, inversione del solo 1X2). Applicarci
+    (data/stime_ou_corrotte.csv, inversione del solo 1X2). Applicarci
     sopra E3 e' una stima-su-stima: l'errore va MISURATO, non assunto.
 
     Misura: su un campione delle righe 2019-20+ si sostituisce l'apertura vera
