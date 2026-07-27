@@ -257,8 +257,24 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
+### Arco 12 — I cinque campionati, e gli audit dell'integrazione (Fasi 100–102)
+
+*Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
+entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
+nascono le regole sui dati sporchi (Fase 100). Le due leghe nuove non cambiano
+le conclusioni, le **replicano**: il modello trasferisce, l'edge no — 5 leghe su
+5. Nello stesso arco cade la premessa GG/NG (le quote esistevano) e si scopre
+che l'integrazione in `main` aveva portato 32 script che non partivano (Fase
+101). Le tre fasi seguenti sono di **manutenzione della verità**: il
+numero-bandiera rimisurato dopo un fix mai propagato (+0.0167, non +0.0165),
+quattro conclusioni declassate senza che un solo calcolo fosse sbagliato (Fase
+101-bis), i numeri orfani e le trappole che colpivano chi verifica (Fase
+101-ter), e infine l'allineamento di ogni file del repo (Fase 102). Esito
+dell'arco: nessun edge nuovo, e un repo che dice di sé la verità.*
+
 - [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
 - [Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita](#fase-101--quinto-audit-le-ultime-20-fasi-e-lintegrazione-che-non-era-stata-eseguita)
+- [Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato](#fase-101-bis--applicare-le-correzioni-dellaudit-quattro-conclusioni-declassate-e-il-numero-bandiera-rimisurato)
 - [Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA](#fase-101-ter--chiudere-i-punti-aperti-i-numeri-orfani-e-tre-trappole-che-colpivano-chi-verifica)
 
 ---
@@ -11698,6 +11714,154 @@ produce, e il rilievo passa solo se un secondo agente, incaricato di
 rilievi interi e ridimensionato 35: circa **il 19% di ciò che un auditor
 scrive** non sopravvive a chi prova a smontarlo — che è la ragione per cui il
 passo esiste.
+
+---
+
+## Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato
+
+> **Questa voce è stata scritta alla Fase 102**, non alla Fase 101-bis. La fase
+> aveva una riga nel registro del README e le sue rettifiche sparse come note
+> dentro le fasi corrette, ma **nessuna sezione qui** — cioè esattamente la
+> «fase fantasma» che l'audit della Fase 101 aveva rimproverato alla Fase 92-bis,
+> ripetuta a due fasi di distanza. I numeri qui sotto provengono dalla riga di
+> registro della Fase 101-bis nel README e dai punti ✅ di
+> `docs/AUDIT_FASI_80_100.md` §4, che sono le fonti contemporanee alla fase.
+
+**Obiettivo.** Applicare i 13 punti che la Fase 101 aveva lasciato aperti perché
+richiedevano una **decisione** o un **ricalcolo**. Criterio dichiarato in
+apertura, e vale la pena isolarlo perché ha guidato tutto il resto: **un falso
+positivo applicato costa più di un difetto lasciato**. Da cui la regola operativa
+della fase — ogni patch va ri-verificata *indipendentemente* prima di essere
+applicata, anche quando l'audit che la propone è lo stesso di ieri.
+
+**Ragionamento / ipotesi.** Un audit produce due categorie di rilievi che si
+somigliano e non vanno trattate uguale: quelli in cui **il numero è sbagliato**
+(si corregge) e quelli in cui **il numero è giusto ma la frase che lo racconta
+promette più di quanto il numero sostenga** (si declassa). La seconda categoria è
+la più insidiosa, perché niente nel repo è formalmente falso: sono affermazioni
+vere-ma-troppo-forti, e sopravvivono agli audit proprio perché ogni singola cifra
+regge al controllo. Quattro delle cinque rettifiche di questa fase sono di questo
+tipo.
+
+### Risultato 1 — il numero più citato del progetto è cambiato alla quarta cifra
+
+Il gap 1X2 col mercato in Serie A era dichiarato **+0.0165** (log-loss 0.9797) in
+17 punti fra README e `CLAUDE.md`. Ma il fix del prior della Fase 92 aveva
+cambiato il codice **senza** che nessuno rifacesse la misura. Rieseguito il
+walk-forward ufficiale al codice di HEAD (6 stagioni Serie A, config ufficiale):
+
+| | dichiarato (PRE-fix) | rimisurato (HEAD) |
+|---|--:|--:|
+| log-loss DC | 0.9797 | **0.9799** |
+| log-loss mercato | — | **0.9632** |
+| **gap** | +0.0165 | **+0.0167** |
+| ROI | −15.67% | **−15.8%** (su **866** scommesse) |
+
+La differenza è **irrilevante nel merito e grave nel metodo**: non cambia una
+conclusione — il modello non batte il mercato prima e non lo batte adesso — ma
+era il numero più ripetuto del repo, e per nove fasi ha misurato una versione del
+codice che non esisteva più. La regola che ne esce è nella lezione in fondo.
+
+Distinzione adottata, e mantenuta da qui in avanti: dove `+0.0165` compare come
+**misura interna a una fase vecchia** resta, marcato «PRE-fix Fase 92» (è un
+confronto legittimo fra varianti misurate insieme); dove compariva come **stato
+attuale del progetto** è diventato `+0.0167`.
+
+### Risultato 2 — quattro conclusioni declassate (nessuna era un errore di calcolo)
+
+| # | conclusione com'era | com'è dopo il ricalcolo |
+|--:|---|---|
+| 1 | **F85**: la COM-Poisson è una famiglia diversa dalla dp e la **conferma** | è la **stessa** dp riparametrizzata → non è una conferma indipendente, è la dp contro sé stessa. E su griglia fine l'argmin è **θ=1.18**, non 1.225 (Δ −0.00027, IC95 [−0.00083, +0.00027]: nel rumore) |
+| 2 | **F88**: «α\*=0 su un mercato NUOVO» (il margine) | l'encompassing **non era mai stato calcolato**. Rifatto sui 7.437 casi: α\* = **1.08** [+0.147, +2.052], IC che **esclude** lo zero. Conclusione onesta: «**pareggio in Brier** col mercato sharp» (ΔBrier −0.000136 [−0.000362, +0.000083]) |
+| 3 | **F93**: «siamo **meglio calibrati** del mercato» (0.00083 vs 0.00125) | **non conclusivo**: IC95 [−0.00135, +0.00049], e il segno **si inverte** passando a 50 e 100 fasce. Entrambi i valori sono al pavimento di rumore (p95 = 0.00083) |
+| 4 | **F93**: «calibrazione −4%, informazione +104%» | le quote sono normalizzate su 0.0094, cioè il **44%** del deficit di 0.0215 che la frase nomina. Il **56% resta non attribuito** |
+
+Il termine che regge, in F93, è uno solo: la **risoluzione**, +0.00981 [+0.00747,
++0.01246] — l'unico con IC che esclude lo zero. Cioè: il mercato ci batte perché
+sa **discriminare** meglio, non perché sia meglio calibrato. Che è la diagnosi
+della Fase 92, e resta in piedi.
+
+### Risultato 3 — una riga del registro che mescolava due epoche
+
+La riga della Fase 91 nel README è stata **ri-letta interamente** sull'artefatto
+post-fix, perché la prima stesura mescolava numeri pre- e post-fix del prior
+nella stessa frase:
+
+- ECE **0.0140**;
+- mercato retrocessione: **+0.0925** [+0.0465, +0.1341] contro il tasso base, ma
+  **−0.0066** [−0.0364, +0.0208] contro la persistenza — cioè batte la baseline
+  ingenua e **non** quella seria;
+- **30** casi sopra il 60% dichiarato, non 37.
+
+E la conclusione «top-4 batte la persistenza, entrambi conclusivi» era già stata
+ritirata dalla Fase 92-bis (IC a grappoli [−0.0006, +0.0522], include lo zero) ma
+**era sopravvissuta nei documenti per nove fasi** — perché la fase che la ritirava
+non aveva una voce di diario. Lo stesso difetto che questa voce, scritta alla
+Fase 102, sta rimediando per la Fase 101-bis.
+
+### Risultato 4 — come si legge «198 rilievi»
+
+Il verbale stesso è stato corretto, ed è la correzione più utile a chi legge
+l'audit domani: i **198 rilievi** vanno letti come **~143 difetti distinti in 6
+famiglie gravi** — 10 dei 16 rilievi gravi sono *la stessa* rottura degli script
+contata dieci volte. Altre rettifiche al verbale: 53 rilievi non
+contro-verificati (non 51), «31 correzioni» → **27 applicate** su 31 righe,
+manifest **36 dei 140** grezzi cancellati con impronta.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica **nuova**: la fase ricalcola. Ma la conclusione 1 del
+Risultato 2 merita di essere dimostrata invece che misurata, e alla Fase 101-bis
+non lo era: era sostenuta da un'evidenza *numerica* (dp e COM coincidono a
+≤5e-06 sull'exact-score log-loss, ≤2e-05 sulle code). Un accordo a 5e-06 è una
+prova debole — potrebbe essere due famiglie diverse che quasi coincidono nel
+regime dei gol. **È invece un'identità algebrica esatta**, e si vede in tre righe.
+
+La double-Poisson di Efron come è implementata (`src/models/market_implied.py`,
+`_dp_pmf`, righe 47-63), mean-preserving con `c` risolto per bisezione perché la
+media resti `rate`:
+
+```
+q_k ∝ [ Poisson_k(c·rate) ]^θ = [ (c·rate)^k · e^(−c·rate) / k! ]^θ
+```
+
+Si sviluppa la potenza e si separa ciò che dipende da `k` da ciò che non dipende:
+
+```
+q_k ∝ (c·rate)^(θk) · e^(−θ·c·rate) / (k!)^θ
+        \_________/   \____________/   \____/
+         dipende da k   COSTANTE in k    (k!)^θ
+```
+
+Il fattore `e^(−θ·c·rate)` **non dipende da k**: sparisce nella
+rinormalizzazione. Resta
+
+```
+q_k ∝ [ (c·rate)^θ ]^k / (k!)^θ
+```
+
+che è **esattamente** la COM-Poisson `P(k) ∝ λ^k / (k!)^ν` con
+
+```
+λ_COM = (c·rate)^θ        ν = θ
+```
+
+*Perché questo chiude la questione.* Non è «due modelli che danno numeri simili»:
+è **un solo modello con due parametrizzazioni**, e la mappa fra le due è in forma
+chiusa. Verificato eseguendo, sui tassi che il progetto usa davvero: `max|dp −
+COM|` = **1.8e-14** a (rate 1.35, θ 1.225), **4.1e-14** a (0.90, 1.138), **1.2e-14**
+a (2.10, 1.18) e **3.3e-15** a (1.00, 0.85) — precisione macchina, tre ordini di
+grandezza più stringente del ≤5e-06 empirico, e vale anche in sovra-dispersione
+(θ<1), dove nessuno aveva guardato. Un «bakeoff» fra dp e COM-Poisson non può
+quindi dare altro che pareggio: **è la stessa distribuzione**. Il ν della
+COM-Poisson *è* il θ del router.
+
+**Lezione.** Un fix del codice che non fa rimisurare i numeri pubblicati lascia
+il repo in uno stato peggiore di prima: prima c'era un numero giusto, dopo c'è un
+numero *plausibile*. E un numero plausibile non si scopre leggendo — solo
+rieseguendo. Da cui la regola che questa fase consegna alle successive: **chi
+tocca il codice che produce un numero-bandiera lo rimisura nello stesso commit,
+o dichiara che non l'ha fatto.**
 
 ---
 
