@@ -9,7 +9,18 @@ dei prossimi test. Va aggiornato a ogni fase che tocca Premier/Liga (stessa
 regola del CLAUDE.md §2: le decisioni nel DIARIO, i run in `runs.jsonl`, qui la
 **visione d'insieme per-lega**).
 
-Ultimo aggiornamento: **Fase 82** (contiene §6-bis F80, §6-ter F81, §6-quater F82). ⚠️ La **Fase 100** ha ri-misurato entrambe le leghe dentro il bakeoff a 5 (stima O/U pooled a 5 leghe, GG/NG contro quote vere, leve del mercato): quei risultati vivono in `docs/audit_5_leghe/` e non sono ancora stati riportati qui — vedi `docs/AUDIT_FASI_80_100.md` §4.
+Ultimo aggiornamento: **Fase 101-bis** nei rimandi; il *corpo* dello studio è
+fermo alla **Fase 82** (contiene §6-bis F80, §6-ter F81, §6-quater F82).
+
+> ⚠️ **Cosa NON è ancora entrato in questo quaderno.** La **Fase 100** ha
+> ri-misurato entrambe le leghe dentro il bakeoff a 5 (stima O/U pooled a 5
+> leghe, GG/NG contro quote vere, leve del mercato) e quei risultati vivono in
+> `docs/audit_5_leghe/`. La **Fase 92-bis** ha chiuso il residuo sul Modello 2
+> (Premier e Liga escono col motore LISCIO via `src.config.MARKET_ENGINE`). La
+> **Fase 101-bis** ha rimisurato il numero-bandiera della Serie A (+0.0167) —
+> i gap di Premier e Liga in questo file restano **PRE-fix del prior della
+> Fase 92** e vanno letti così. Riportare tutto qui è un lavoro aperto:
+> `docs/AUDIT_FASI_80_100.md` §4 punto 13.
 
 ---
 

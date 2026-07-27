@@ -1644,18 +1644,24 @@ Per non dipendere dalla disponibilità *in tempo reale* di una fonte esterna (ch
 può cambiare o sparire) e permettere a chiunque di rieseguire gli stessi calcoli,
 i dati sono **congelati** in un archivio interno con due artefatti:
 
-- **snapshot** `data/serie_a_matches.csv` — **versionato in git**, testo diffabile:
-  è la fonte di verità congelata (3420 partite, 9 stagioni). Chi clona il repo ha
-  esattamente gli stessi dati, **senza rete**.
-- **database** `data/football.db` — SQLite queryable, **rigenerabile** dallo
-  snapshot (non versionato).
+- **snapshot** `data/<lega>_matches.csv` — **versionati in git**, testo
+  diffabile: sono la fonte di verità congelata, **cinque** file con schema
+  identico (Serie A 3.420 partite; Premier, La Liga, Bundesliga e Ligue 1 per un
+  totale di **16.111** su 9 stagioni). Chi clona il repo ha esattamente gli
+  stessi dati, **senza rete**.
+- **database** `data/football.db` (Serie A, nome storico) e
+  `data/football_<lega>.db` (le altre quattro) — SQLite queryable,
+  **rigenerabili** dallo snapshot, non versionati.
 
 ```bash
 python scripts/build_database.py            # ricostruisce il DB dallo snapshot (offline)
 python scripts/build_database.py --enrich   # ricalcola xG/rose/assenze sullo snapshot esistente
 python scripts/build_database.py --fixtures # assembla il calendario di club completo + congestione vera
 python scripts/build_database.py --refresh  # riscarica TUTTO dalle fonti e aggiorna lo snapshot
+# ogni comando accetta --league: senza, e' Serie A
+python scripts/build_database.py --league bundesliga
 sqlite3 data/football.db "SELECT season, COUNT(*) FROM matches GROUP BY season"
+sqlite3 data/football_bundesliga.db "SELECT season, COUNT(*) FROM matches GROUP BY season"
 ```
 
 ### Colonne di arricchimento (Fase 4a)

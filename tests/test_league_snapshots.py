@@ -50,25 +50,37 @@ def test_snapshot_integro_e_xg_completo(league):
     atteso = XG_MANCANTI_DICHIARATI.get(league, 0)
     assert int(df["home_xg"].isna().sum()) == atteso
     assert int(df["away_xg"].isna().sum()) == atteso
-    # Chiusura 1X2 presente ovunque, tranne l'unica eccezione documentata
-    # (Fase 73): La Liga Alaves-Sociedad 14/10/2017 non ha la chiusura Pinnacle
-    # (PSC* vuote nel grezzo) e dalla Fase 73 la chiusura non ripiega piu' sul
-    # fallback pre-match -> resta NaN (l'apertura reale PS* c'e', vedi sotto).
-    # Le eccezioni sono DICHIARATE una per una: se ne compare una nuova, il test
-    # deve rompersi (e' il suo scopo). In entrambi i casi l'apertura reale c'e'.
-    CHIUSURA_1X2_MANCANTE = {
-        "la_liga": [("1718", "Alaves", "Sociedad")],
-        "bundesliga": [("1819", "Bayern Munich", "Hannover")],
+    # Chiusura 1X2: dalla Fase 101-bis e' presente su OGNI riga di ogni lega.
+    #
+    # Storia (serve a capire perche' il test e' cambiato): le due partite qui
+    # sotto erano le uniche due senza chiusura — La Liga Alaves-Sociedad
+    # 14/10/2017 e Bundesliga Bayern Munich-Hannover 04/05/2019 — perche' le
+    # PSC* erano vuote nel grezzo e dalla Fase 73 la chiusura non ripiega piu'
+    # sul fallback pre-match. Alla Fase 101-bis il dato REALE e' stato trovato
+    # su una fonte secondaria dichiarata (iredchuk, confermata da una seconda
+    # fonte indipendente) e inserito via il registro delle correzioni.
+    #
+    # Il test ora verifica il nuovo invariante — zero buchi — E che quelle due
+    # partite portino davvero i valori del registro: se qualcuno ritira la
+    # correzione senza aggiornare la documentazione, o se i valori cambiano
+    # sotto i piedi, questo test lo dice.
+    n_senza_chiusura = int(df["odds_home"].isna().sum())
+    assert n_senza_chiusura == 0, (
+        f"{league}: {n_senza_chiusura} righe senza chiusura 1X2, attese 0")
+    DA_FONTE_SECONDARIA = {
+        "la_liga": [("1718", "Alaves", "Sociedad", 3.40, 3.34, 2.15)],
+        "bundesliga": [("1819", "Bayern Munich", "Hannover", 1.03, 18.43, 43.88)],
     }
-    attese = CHIUSURA_1X2_MANCANTE.get(league, [])
-    missing_close = df[df["odds_home"].isna()]
-    assert len(missing_close) == len(attese), (
-        f"{league}: {len(missing_close)} righe senza chiusura 1X2, "
-        f"{len(attese)} dichiarate")
-    for row, (season, casa, ospite) in zip(
-            missing_close.itertuples(), attese):
-        assert (str(row.season), row.home_team, row.away_team) == (season, casa, ospite)
-        assert pd.notna(row.odds_home_open)          # apertura reale presente
+    for season, casa, ospite, qh, qd, qa in DA_FONTE_SECONDARIA.get(league, []):
+        m = df[(df.season.astype(str) == season) & (df.home_team == casa)
+               & (df.away_team == ospite)]
+        assert len(m) == 1, f"{league}: {casa}-{ospite} {season} non trovata"
+        r = m.iloc[0]
+        assert (round(float(r.odds_home), 2), round(float(r.odds_draw), 2),
+                round(float(r.odds_away), 2)) == (qh, qd, qa), (
+            f"{league} {casa}-{ospite}: quote di chiusura diverse da quelle "
+            f"dichiarate in data/correzioni_dichiarate.csv")
+        assert pd.notna(r.odds_home_open)            # apertura reale presente
     # risultato coerente coi gol
     import numpy as np
     exp = np.where(df.home_goals > df.away_goals, "H",

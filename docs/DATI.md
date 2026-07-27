@@ -185,7 +185,38 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 | openfootball (coppe/Europa) | cache `data/raw/fixtures_*` | ✅ raggiungibile |
 | **1xBet via `footiqo.com`** (quote di CHIUSURA 1X2 + O/U + GG/NG, 2017-20, 5 leghe) | `data/ricerca_esterna/footiqo_*.json` (18 file) + `footiqo_gol_*.json` (10) + manifest e validazioni | ✅ dato esterno REALE, **NON integrato** negli snapshot: è un solo book, e come proxy della media multi-book è peggiore della stima (MAE 0.0156 contro 0.012) — vedi [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md) |
 | **Wikipedia (calendari di coppa)** | `data/ricerca_esterna/fixtures_*.csv` (50 file, **3.045 righe**) | ⚠️ fonte NON primaria: righe di recupero per il falso 0 di `midweek_europe` (§1-bis), raccolte ma **non applicate** |
+| **iredchuk/soccer-bookmaker-odds** (chiusura 1X2) | usato per **6 celle**, in 2 partite | ⚠️ **provider SECONDARIO, dichiarato (R2)** — l'unico punto degli snapshot dove una cella-quota non viene da football-data. Vedi il riquadro qui sotto |
 | **manifest delle fonti dell'audit** | `data/ricerca_esterna/manifest_fonti_audit.json` | ✅ 90 impronte SHA256 (45 CSV football-data + 45 JSON Understat-lega). Le chiavi sono nella forma `cantiere/data/fonti/…`: per confrontarle con quelle che `scripts/fetch_sources.py` scrive oggi va tolto il prefisso `cantiere/` |
+
+> ### ⚠️ Le 6 celle 1X2 di provenienza NON-football-data (Fase 101-bis)
+>
+> Due partite, sei celle, e sono **le uniche** dello schema in cui una quota non
+> viene dalla fonte primaria:
+>
+> | partita | quote inserite (H/X/A) | overround |
+> |---|---|--:|
+> | bundesliga 1819 · **Bayern Munich–Hannover** · 04/05/2019 | 1.03 / 18.43 / 43.88 | 1.0479 |
+> | la_liga 1718 · **Alaves–Sociedad** · 14/10/2017 | 3.40 / 3.34 / 2.15 | 1.0586 |
+>
+> **Perché sono state inserite invece di restare `NaN`.** Il dato è **reale**,
+> non stimato: viene dal dataset `iredchuk/soccer-bookmaker-odds`, identificato
+> per via statistica come **chiusura media-di-mercato** (due test indipendenti,
+> entrambi con CI conclusivo) e **confermato da una seconda fonte del tutto
+> indipendente**. È 2,8 volte più preciso della stima che avremmo prodotto noi
+> (MAE 0.0060 contro 0.0160 su probabilità devigata), e la nostra stima
+> indipendente cade a −0.0008…+0.0056 dal dato reale: conferma reciproca.
+>
+> **Il costo, detto chiaro.** Per queste due partite la colonna cambia
+> *semantica*: non è più «media football-data» ma «chiusura media di un altro
+> aggregatore». Su 16.111 partite è irrilevante per qualunque metrica, ma è il
+> tipo di cosa che va scritta, non lasciata implicita (R2 e R6).
+>
+> **Come si torna indietro.** Le righe stanno in
+> `data/correzioni_dichiarate.csv` con `stato = applicata`: portarle a
+> `ritirata` e rigenerare gli snapshot rimette il `NaN`. Il verdetto originale
+> e le misure che l'hanno motivato restano in
+> `data/estimates/celle_residue.csv` (caso A) e in
+> `docs/audit_5_leghe/numeri/caccia_quote_singole.md` §3.5.
 
 **Limiti noti dei dati reali** (dichiarati, non aggirati):
 - `squad_value`: pubblicato solo se i giocatori valutati coprono ≥85% dei

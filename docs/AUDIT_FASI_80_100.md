@@ -302,6 +302,10 @@ metà non corretta del 🔴 `F13-03` (il ramo «registro assente» di
    buchi è pre-guard (7.353 contro 7.359) e la tabella di dettaglio somma 47
    celle su 55. *(`F9-dati-header-e-omissioni`, `F12-02-censimento-buchi-7353`,
    `F13-10-DATI-catalogo-incompleto`)*
+   → **✅ CHIUSO** (verificato voce per voce alla Fase 101-bis): §3 elenca tutti
+   e **5** i calendari di club, §5 tutte e **5** le stime, §4 ha le tre righe di
+   `data/ricerca_esterna/` (footiqo, calendari Wikipedia, manifest); il
+   censimento è **7.359** post-guard e la tabella di dettaglio somma **55**.
 6. **La PANCHINA ha 18 celle `⬜` che l'audit integrato ha già misurato**, quattro
    leve misurate senza riga, la sezione «I titolari» ferma a 3 leghe, e usa
    «CI<0» col significato opposto in celle diverse. *(fronte PANCHINA)*
@@ -309,6 +313,10 @@ metà non corretta del 🔴 `F13-03` (il ramo «registro assente» di
    100 non hanno né un run né la dichiarazione «nessun run». Per la Fase 100 la
    fonte grezza è di fatto `docs/audit_5_leghe/numeri/`: va detto, o vanno
    registrati i run a posteriori. *(`F100-runs-jsonl`, `F13-14-registro-run-mancanti`)*
+   → **✅ CHIUSO**: tutte e cinque le fasi portano ora la dichiarazione
+   esplicita «Diagnostico: nessun run in `experiments/runs.jsonl`» col motivo
+   (riverificato una per una alla Fase 101-bis). La distinzione fra «non
+   registrato per scelta» e «dimenticato» è tornata leggibile.
 8. **Sei celle con verdetto «USARE IL DATO REALE»** in
    `data/estimates/celle_residue.csv` non sono state né inserite né dichiarate:
    la decisione vive solo dentro un CSV. E il registro stesso è stantio (3 righe
@@ -317,13 +325,25 @@ metà non corretta del 🔴 `F13-03` (il ramo «registro assente» di
 9. **Riproducibilità della Fase 97**: «il confronto è rifacibile identico» è
    falso finché `_run_fase97_relegation_market.py` legge sempre l'**ultimo**
    snapshot; basta un `--date`. *(`F97-riproducibilita-data`)*
+   → **✅ CHIUSO (Fase 101-bis)**: `--date YYYY-MM-DD` aggiunto; senza, resta
+   l'ultimo. Una data assente elenca quelle disponibili invece di fallire muta.
 10. **Il σ differenziato della Fase 94 (0.30/0.16) non è ri-derivabile** da nulla
     di committato: lo script accetta solo uno scalare e non calcola IC.
     *(`F94-sigma-differenziato-non-riproducibile`)*
+    → **✅ CHIUSO**: `--sd-map` + IC + conteggi X/24 (seconda passata), e alla
+    Fase 101-bis è stato **verificato anche il numero che si diceva non
+    verificabile**: con σ uniforme 0.18 il top-4 è migliore in **6/24**, cioè
+    peggiore in 18/24 come pubblicato, e il test dei segni dà **p = 0.0227**
+    (dichiarato 0.023). Aggiunta una guardia: solo `--sd-map` scrive
+    l'artefatto ufficiale, le varianti scrivono un file separato — l'artefatto
+    era stato sovrascritto da due sessioni di seguito *durante una verifica*.
 11. **`BASE_URL` punta ancora al mirror morto** (404) mentre la fonte ufficiale
     risponde 200: è una scelta legittima solo se dichiarata, oggi il commento
     dice il contrario di quello che il progetto ha verificato.
     *(`F10-base-url-mirror-morto`)*
+    → **✅ CHIUSO**: riverificato (ufficiale 200, mirror 404) e `BASE_URL` ora
+    punta all'ufficiale. Prima `--refresh` puntava all'unica delle due che non
+    risponde.
 12. **`recupero_squad_value_tm.py` non riproduce più i suoi numeri, ed è
     corretto così.** Rieseguendolo oggi la «scala misurata» fra Transfermarkt e
     player-scores passa da mediana **1.131 su 13 club** a **1.038 su 18**, con lo
@@ -336,6 +356,10 @@ metà non corretta del 🔴 `F13-03` (il ramo «registro assente» di
     provenienza Transfermarkt dal confronto, o che dichiari di non essere
     ri-eseguibile dopo l'applicazione. *(rilievo emerso durante questa sessione,
     non presente nei 198)*
+    → **✅ CHIUSO (Fase 101-bis)**: lo script esclude ora dal confronto i club
+    elencati in `data/squad_value_2526_transfermarkt.csv`, cioè quelli la cui
+    cella *è* il valore Transfermarkt. Restano 13 club indipendenti in
+    Bundesliga e 7 in Ligue 1 su cui il paragone significa ancora qualcosa.
 13. Documenti da rinfrescare: `PLAYBOOK_NUOVA_LEGA.md` (non ha incorporato
     l'onboarding che pure lo ha usato), `STUDIO_PREMIER_LIGA.md` (header fermo
     alla Fase 79), `MANUALE_SOPRAVVIVENZA.md` (header alla Fase 70),
