@@ -8315,7 +8315,8 @@ diversi (§7).
 
 **Il metodo** (`_run_fase81_mega_sweep_mi.py`, 12+2 run): 4 assi × 3 leghe ×
 6 mercati (1X2, GG, pareggio, ris. esatto, multigol, O/U), stagioni 1920→2526
-(test 2021→2526, n=2280/lega), ~70 varianti/lega:
+(test 2021→2526, n=2280/lega), **63 varianti/lega** (11 ρ + 10 θ + 37 φ0×κ +
+5 knee, contate dagli assi qui sotto):
 - **ρ** ∈ {−0.22…+0.02} (11 valori, con RI-INVERSIONE delle quote per ogni ρ:
   coerenza inversione↔matrice);
 - **θ** double-Poisson ∈ {1.00…1.50} (10);
@@ -8329,7 +8330,7 @@ che sopravvive al selettore è reale.
 **Risultato 1 — la Premier è GIÀ al suo ottimo su ogni asse.** Le valli
 premier sono centrate esattamente sul riferimento: ρ*=−0.06/−0.04, θ*≈1.05
 (nulla, P≤91% in-sample e il selettore peggiora), φ*=(0,0), knee*=none. Dopo
-~70 varianti: **il motore liscio È il modello Premier** — la sesta conferma,
+63 varianti: **il motore liscio È il modello Premier** — la sesta conferma,
 stavolta esaustiva, che il mercato più liquido non lascia margini nemmeno
 sulla forma.
 
@@ -9200,9 +9201,30 @@ realizzato è `cover(gol_casa − gol_ospite, h)`. Brier `= mean((P − realizza
 `k` = P(copre) del mercato devigato, `y` = copertura realizzata, il blend
 `p(α) = k + α·(m − k)` ha per minimo del Brier
 `α* = mean((y − k)(m − k)) / mean((m − k)²)` — soluzione in forma chiusa, non
-una griglia. Non è prodotto da `_run_ah_benchmark.py`, che si ferma a corr/Brier/
-medie: va ricalcolato dalle colonne `model_p / market_p / realized` del suo
-DataFrame interno (bootstrap iid B=5.000 sulle 7.437 righe per l'IC).
+una griglia.
+
+**Riproducibilità (chiusa alla Fase 101-bis).** Alla stesura della Fase 101 il
+numero *non* era prodotto da `_run_ah_benchmark.py`, che si fermava a
+corr/Brier/medie: era stato ricalcolato a mano dalle colonne interne. Restava
+quindi un numero pubblicato e non ri-derivabile — esattamente ciò che il §2-bis
+punto 4 vieta. Il blocco è ora **dentro lo script** (`encompassing()`), e
+`python scripts/_run_ah_benchmark.py` stampa α\* con IC e il walk-forward.
+
+**Il protocollo di stima di α conta più del risultato.** Il walk-forward ha due
+varianti legittime, e danno Δ di **segno opposto**:
+
+| variante | n fuori campione | Δ Brier (blend − mercato) | IC95 | P(Δ<0) |
+|---|--:|--:|---|--:|
+| α **pooled** su tutte le leghe (pubblicata) | 6.297 | **−0.000064** | [−0.000271, +0.000139] | 0.73 |
+| α dalla **sola lega** valutata | 6.297 | +0.000011 | [−0.000236, +0.000265] | 0.46 |
+
+Entrambe sono ampiamente dentro il rumore, e la conclusione («il blend non
+batte il mercato fuori campione») non cambia. Ma il segno sì: con un effetto di
+questa taglia — 6·10⁻⁵ di Brier — la scelta del pool su cui si stima α pesa
+quanto la misura. Motivo per cui adesso lo script le stampa **tutte e due**
+invece di una sola: una lettura che cambia segno col protocollo non va
+riportata come se il protocollo fosse ovvio. *(Le 1.140 righe escluse sono la
+prima stagione di ciascuna delle 3 leghe: non hanno passato da cui stimare α.)*
 
 ---
 

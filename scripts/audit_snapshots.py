@@ -43,7 +43,7 @@ OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
 
 SEASONS = sources.SEASONS
 
-# Dove vive lo snapshot di ogni lega (le due nuove sono ancora nel cantiere).
+# Dove vive lo snapshot di ogni lega (dall'integrazione: tutte in `data/`).
 SNAP_DIR = {
     "serie_a": ROOT / "data", "premier_league": ROOT / "data",
     "la_liga": ROOT / "data",

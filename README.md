@@ -597,9 +597,15 @@ il modello ha chiuso ~86% della distanza baseline→mercato. Tre tagli:
 
 **Per mercato** — il gap è **quasi tutto nel PAREGGIO**:
 
-| 1X2 | 1X | 2X | **12 (no pari)** | O/U 2.5 | GG/NG |
+| 1X2 | 1X | 2X | **12 (no pari)** | O/U 2.5 | GG/NG (vs baseline) |
 |--:|--:|--:|--:|--:|--:|
-| +0.0167 | +0.0118 | +0.0129 | **+0.0020** | +0.0067 | −0.0018 |
+| +0.0167 | +0.0118 | +0.0129 | **+0.0020** | +0.0067 | +0.0026 |
+
+*(Riga ri-derivata alla Fase 101-bis con `scripts/_run_gap_markets.py` al codice
+di HEAD: coincide cella per cella con la matrice 15-bis qui sotto. La versione
+precedente dava **−0.0018** sul GG/NG — un orfano, prodotto contro un
+riferimento diverso mai dichiarato; il GG/NG non ha quote, quindi il confronto
+è **contro la baseline**, come nella matrice.)*
 
 Escluso il pari (mercato 12) il modello è **a livello mercato**: la debolezza è
 prezzare i pareggi, non stimare chi è più forte. *(⚠️ conclusione rovesciata
@@ -811,13 +817,15 @@ pre-fix — 1X2 log-loss):
   righe diverse. Corretti entrambi prima dell'arrivo dei dati `*_open`.
 
 **Conclusione dell'audit: nessuna conclusione del progetto cambia.** Il modello
-batte la baseline (anche quella ex-ante), non batte il mercato (+0.0165), il
+batte la baseline (anche quella ex-ante), non batte il mercato (+0.0165 —
+valore PRE-fix del prior della Fase 92, oggi +0.0167), il
 value betting perde (più di quanto scritto prima: −15.7%, non −8.5%). Il tetto
 resta reale. **Non usare il modello per scommettere soldi veri.**
 
 ### Il mercato ingloba il modello — Fase 16 (encompassing, il test definitivo)
 
-La domanda che il gap non può dire: un modello a +0.0165 dal mercato contiene
+La domanda che il gap non può dire: un modello a +0.0165 dal mercato (valore
+PRE-fix del prior della Fase 92; oggi +0.0167 — il test non cambia) contiene
 **informazione che il mercato non ha** (utile in combinazione, anche se da solo
 perde) oppure è solo mercato + rumore? Test standard di *forecast encompassing*
 (`scripts/_run_encompassing.py`): si mescola `p = α·modello + (1−α)·mercato` e
@@ -1066,6 +1074,11 @@ linea, o almeno riprodurla (gap → 0)?
 | **GBM con mercato** | 0.9996 | +0.0364 |
 | Mercato (chiusura) | 0.9632 | 0 |
 
+*(Il DC di questa tabella è il valore **PRE-fix** del prior della Fase 92 —
+0.9797 / +0.0165; al codice di HEAD sarebbe 0.9799 / +0.0167. Le righe GBM non
+sono state rifatte, quindi la tabella è lasciata coerente com'è stata misurata:
+lo scarto in gioco, ~0.03, è due ordini di grandezza sopra la differenza.)*
+
 (O/U analogo: GBM con mercato 0.6956 vs DC 0.6885 vs mercato 0.6816.)
 
 Risultato controintuitivo e istruttivo: **anche ricevendo le probabilità di
@@ -1088,7 +1101,8 @@ col GBM.
 ### Il DC calcolato DAL mercato — Fase 24 (il primo risultato positivo)
 
 Idea nuova: finora il DC stima i gol attesi λ,μ dai GOL; ma il mercato li stima
-**meglio** (batte il DC di +0.0165 sull'1X2). E se **invertissimo** le quote per
+**meglio** (batte il DC di +0.0165 sull'1X2 — pre-fix Fase 92; oggi +0.0167).
+E se **invertissimo** le quote per
 ricavare i λ,μ *impliciti nel mercato*, e ci facessimo girare sopra la matrice
 dei punteggi del DC? (`scripts/_run_dc_from_market.py`). Sui mercati *con* quote
 (1X2, O/U) l'inversione riproduce il mercato (gap ~0 banale); il valore è tutto
@@ -1133,6 +1147,10 @@ chiuse (anomala) — aiuta, o l'emivita basta? Sweep sulla config ufficiale
 | finestra 3 stagioni | 0.9808 | +0.0176 | +0.0014 |
 | finestra 2 stagioni | 0.9816 | +0.0184 | **+0.0035** |
 | senza COVID 2020-21 | 0.9803 | +0.0172 | +0.0003 |
+
+*(Tutta la colonna è **PRE-fix** del prior della Fase 92: la riga «tutto» oggi
+vale 0.9799 / +0.0167. È uno sweep di confronti interni — il fix sposta le
+quattro righe insieme, quindi i Δ, che sono il punto della tabella, reggono.)*
 
 Risultato controintuitivo: **tagliare i dati vecchi peggiora, non aiuta** — e la
 finestra corta danneggia *di più proprio le stagioni recenti* (+0.0035 sul

@@ -1,9 +1,11 @@
 """Configurazione delle leghe NUOVE (Bundesliga, Ligue 1) — modulo condiviso.
 
-Questo file e' il "src/config.py + sources.py" provvisorio delle due leghe
-nuove: vive nel cantiere finche' il lavoro non viene integrato secondo la
-procedura del progetto (allora queste voci si spostano in `src/data/sources.py`
-e `src/config.py`, senza cambiare una riga di codice del modello — CLAUDE.md §7).
+Questo file ERA il "src/config.py + sources.py" provvisorio delle due leghe
+nuove, finche' il lavoro viveva nel cantiere. **L'integrazione e' avvenuta**
+(Fase 100): le voci vivono in `src/data/sources.py`, `src/config.py` e
+`src/data/player_scores.py`, e `registra()` qui sotto e' un NO-OP verificato
+(vedi la sua docstring). Il modulo sopravvive solo come controllo di coerenza
+a costo zero per i 26 script che lo chiamano — CLAUDE.md §7.
 
 Contiene:
   - la definizione delle leghe (codice football-data, nome Understat, codice

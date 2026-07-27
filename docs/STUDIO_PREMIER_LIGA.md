@@ -261,7 +261,7 @@ in **panchina alta**, si promuove in config quando riappare su stagioni nuove
 
 ## 6-ter · Il mega-sweep delle costanti (Fase 81) — le curve di risposta per lega
 
-Run `fase81_mega_sweep_mi` (12) + `fase81_joint_rho_theta` (2): ~70 varianti
+Run `fase81_mega_sweep_mi` (12) + `fase81_joint_rho_theta` (2): 63 varianti
 per lega (ρ×11 con ri-inversione, θ×10, φ0×κ×31, knee×5) su 6 mercati, con il
 **selettore walk-forward "lfo"** come guardia di onestà (sceglie la costante
 solo dal passato). Dettaglio nel [DIARIO, Fase 81](DIARIO.md).
@@ -277,7 +277,7 @@ solo dal passato). Dettaglio nel [DIARIO, Fase 81](DIARIO.md).
 
 **Le tre lezioni della fase:**
 1. **La Premier è già al suo ottimo su ogni asse** (valli centrate sul
-   riferimento, ~70 varianti): il motore liscio non è un ripiego, è il
+   riferimento, 63 varianti): il motore liscio non è un ripiego, è il
    modello giusto per il mercato più liquido.
 2. **θ-da-mercati ≠ θ-da-punteggi**: la F53 bocciò il router-Liga col θ da
    MLE sui punteggi (1.097); l'ottimo sui MERCATI è ~1.2 — con quello il

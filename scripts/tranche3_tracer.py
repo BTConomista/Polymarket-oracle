@@ -14,7 +14,8 @@ ASPETTATIVE DICHIARATE PRIMA (playbook, passo 2):
   - NON deve battere il mercato: gap atteso +0.015…+0.021 di log-loss 1X2,
     piu' largo dove il book e' piu' liquido.
 
-Le due leghe nuove leggono lo snapshot dal cantiere (R4: non si tocca `data/`).
+Le due leghe nuove leggevano lo snapshot dal cantiere (R4: non si toccava
+`data/`); dall'integrazione leggono `data/<lega>_matches.csv` come le altre.
 
 Uso:
     python scripts/tranche3_tracer.py                      # 2 leghe nuove
@@ -35,7 +36,6 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
@@ -46,22 +46,13 @@ from src.data import database  # noqa: E402
 from src.evaluation import experiment_log  # noqa: E402
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
-CANTIERE_DATA = ROOT / "data"
 
-# Le due leghe nuove vivono nel cantiere: si dirotta il percorso dello snapshot
-# senza toccare il codice di produzione (R4).
-_orig_snapshot_path = database.snapshot_path
+# STORICO (Fase 101-bis): qui viveva un dirottamento di `database.snapshot_path`
+# verso il cantiere, perche' Bundesliga e Ligue 1 non erano ancora in `data/`.
+# Dall'integrazione e' un NO-OP dimostrato — `snapshot_path` restituisce gia'
+# `data/<lega>_matches.csv` per tutte e 5 le leghe — quindi e' stato rimosso.
 
-
-def _snapshot_path(league_key: str = "serie_a") -> Path:
-    if league_key in nuove_leghe.NEW_LEAGUES:
-        return CANTIERE_DATA / f"{league_key}_matches.csv"
-    return _orig_snapshot_path(league_key)
-
-
-database.snapshot_path = _snapshot_path
-
-from backtest import run_backtest  # noqa: E402  (dopo il patch del percorso)
+from backtest import run_backtest  # noqa: E402
 
 # Finestra di test standard del progetto: 6 stagioni.
 TEST_SEASONS = ["2021", "2122", "2223", "2324", "2425", "2526"]

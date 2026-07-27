@@ -36,6 +36,11 @@ fantasma fuori da git. ✅ **Corretto e verificato**: tutti e 32 partono, e
 `applica_correzioni.py --dry-run` ripercorre le **27 correzioni con stato
 `applicata`** del registro (31 righe in tutto: 2 `proposta` e 2 `ritirata` non lo
 sono) e le trova già applicate cella per cella — l'idempotenza R3 è tornata
+*(aggiornamento Fase 101-bis: il registro è poi cresciuto a **37 righe, 33
+`applicata`**, con le 6 celle La Liga che erano state svuotate senza finire nel
+registro; e lo script, che copriva le sole Bundesliga/Ligue 1 del cantiere, ora
+copre tutte e 5 le leghe — altrimenti quelle 6 righe restavano dichiarate ma
+non verificabili da nulla)*
 dimostrabile.
 
 **2. `build_database.py --league <lega>` distruggeva lo snapshot della Serie A.**

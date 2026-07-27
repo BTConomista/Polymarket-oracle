@@ -74,10 +74,15 @@ un'AI con accesso libero al web.
 >   Hugging Face nel tempo (candidati già controllati e scartati sono elencati
 >   in §3 — non ripartire da quelli, cercarne di nuovi o con fonte diversa da
 >   football-data.co.uk);
-> - **Fase D**: OddsPortal headless con login resta la pista con la
->   probabilità più alta di successo, mai tentata per il costo/rischio
->   (credenziali in un secret) — riconsiderarla se emerge un account "usa e
->   getta" a basso rischio o un partner che lo faccia per noi;
+> - ~~**Fase D**: OddsPortal headless con login resta la pista con la
+>   probabilità più alta di successo~~ — **RITIRATA alla Fase 101-bis, due
+>   volte.** (1) È superata: la caccia è chiusa, il dato è stato trovato
+>   altrove (footiqo/1xBet, vedi l'esito in testa). (2) Non andava
+>   raccomandata comunque: il `robots.txt` di `oddsportal.com` **vieta le
+>   pagine storiche** (`docs/MANUALE_SOPRAVVIVENZA.md`), e la regola R5.3 del
+>   protocollo impone di cercare il dato «rispettando i `robots.txt`». Una
+>   pista che chiede di aggirarli non è «costosa»: è fuori dalle regole del
+>   progetto, e va detto qui invece che nel file che la contraddice;
 > - **Fonti a pagamento** (§2.D del piano): mai valutate a fondo (costo vs
 >   2.280 partite) — se il progetto passa a un uso più operativo, rivalutare.
 

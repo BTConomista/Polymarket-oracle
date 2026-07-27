@@ -54,19 +54,22 @@ def load_raw() -> pd.DataFrame:
     bundle JSON che contengono i CSV come stringhe)."""
     frames = []
     for f in sorted(glob.glob("data/football_data_raw/serie_a_*.csv")):
+        season = Path(f).stem.split("_")[-1]
         try:
-            frames.append(pd.read_csv(f, encoding="latin-1").assign(league="serie_a"))
+            d = pd.read_csv(f, encoding="latin-1")
         except Exception:
-            frames.append(pd.read_csv(f).assign(league="serie_a"))
+            d = pd.read_csv(f)
+        frames.append(d.assign(league="serie_a", season=season))
     for lg, path in [("premier_league", "files/football_data_premier_league_bundle.json"),
                      ("la_liga", "files/football_data_la_liga_bundle.json")]:
         bundle = json.load(open(path))
-        for _, csv_str in bundle.items():
+        for name, csv_str in bundle.items():
             if not isinstance(csv_str, str):
                 continue
             d = pd.read_csv(io.StringIO(csv_str))
             d.columns = [c.lstrip("﻿") for c in d.columns]
-            frames.append(d.assign(league=lg))
+            # la chiave e' del tipo "<lega>_<stagione>.csv"
+            frames.append(d.assign(league=lg, season=Path(name).stem.split("_")[-1]))
     return frames
 
 
@@ -108,7 +111,7 @@ def main():
         need = [cH, cD, cA, cO, cU, cLine, cAHH, cAHA, cFH, cFA]
         if not all(need):
             continue
-        sub = d[need + ["league"]].dropna()
+        sub = d[need + ["league", "season"]].dropna()
         for _, r in sub.iterrows():
             try:
                 pH, pD, pA = metrics.devig_1x2(r[cH], r[cD], r[cA])
@@ -120,10 +123,11 @@ def main():
                 mkH, _ = metrics.devig_binary(r[cAHH], r[cAHA])
                 margin = int(r[cFH] - r[cFA])
                 realized = cover_fraction(margin, h)
-                recs.append((r["league"], h, mp, mkH, realized))
+                recs.append((r["league"], r["season"], h, mp, mkH, realized))
             except Exception:
                 continue
-    a = pd.DataFrame(recs, columns=["league", "h", "model_p", "market_p", "realized"])
+    a = pd.DataFrame(recs, columns=["league", "season", "h", "model_p",
+                                    "market_p", "realized"])
     print(f"Partite con 1X2+O/U+AH di chiusura: {len(a)}")
     print(f"\n{'lega':>14} {'n':>6} {'corr(mod,mkt)':>14} "
           f"{'Brier mod':>10} {'Brier mkt':>10} {'cal mod':>9} {'cal mkt':>9} {'reale':>7}")
@@ -139,7 +143,89 @@ def main():
         block(a[a["league"] == lg], lg)
     block(a, "TUTTE")
     print("\nLettura: corr alta + Brier(mod)~Brier(mkt) = il router prezza la coda "
-          "del margine bene quanto il mercato sharp (Tier 2 validato, sotto alpha*=0).")
+          "del margine bene quanto il mercato sharp (Tier 2 validato).")
+
+    encompassing(a)
+
+
+# --------------------------------------------------------------------------- #
+# ENCOMPASSING (aggiunto alla Fase 101-bis)
+#
+# Perche' esiste: la Fase 88 concludeva «e' alpha*=0 su un mercato nuovo (il
+# margine)» SENZA aver mai calcolato l'encompassing — l'audit della Fase 101 lo
+# ha rilevato e la rettifica (alpha*=1.08) e' stata scritta nel DIARIO e nel
+# README, ma restava non ri-derivabile da nessuno script: viola CLAUDE.md
+# §2-bis punto 4. Qui il numero diventa riproducibile.
+#
+# Il modello e' il blend p = k + alpha*(m - k) con k = mercato, m = router:
+#   alpha* = mean((y-k)(m-k)) / mean((m-k)^2)      [minimi quadrati, forma chiusa]
+# alpha*=0 -> il mercato INGLOBA il modello (Fase 16). Attenzione all'inter-
+# pretazione: qui m e' una TRADUZIONE delle stesse quote 1X2+O/U da cui si
+# ricava il prezzo, non un previsore indipendente, quindi alpha*>0 non dice
+# «battiamo il mercato» — dice solo che le due letture non sono la stessa cosa.
+# --------------------------------------------------------------------------- #
+def _alpha_star(y, k, m):
+    """Coefficiente di encompassing in forma chiusa (nan se il denominatore e' 0)."""
+    num = float(np.mean((y - k) * (m - k)))
+    den = float(np.mean((m - k) ** 2))
+    return num / den if den > 0 else float("nan")
+
+
+def encompassing(a: pd.DataFrame, B: int = 10000, seed: int = 88) -> None:
+    y = a["realized"].to_numpy()
+    k = a["market_p"].to_numpy()
+    m = a["model_p"].to_numpy()
+
+    alpha = _alpha_star(y, k, m)
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(y), (B, len(y)))
+    boots = np.array([_alpha_star(y[i], k[i], m[i]) for i in idx])
+    lo, hi = np.percentile(boots, [2.5, 97.5])
+    print(f"\nENCOMPASSING in-sample (n={len(y)}): alpha* = {alpha:+.3f} "
+          f"IC95 [{lo:+.3f}, {hi:+.3f}] -> "
+          f"{'lo zero e ESCLUSO' if lo > 0 else 'lo zero e incluso'}")
+
+    # Walk-forward col protocollo della Fase 16: alpha e' stimato SOLO sulle
+    # stagioni precedenti. Due varianti, e la differenza NON e' cosmetica:
+    #   pooled=True  -> alpha da tutte le leghe insieme (protocollo PUBBLICATO
+    #                   dalla Fase 88/101: e' il numero che sta nel README);
+    #   pooled=False -> alpha dalla sola lega valutata.
+    # Le due danno Delta di segno opposto (-0.000064 contro +0.000011), en-
+    # trambi ampiamente dentro il rumore: e' il promemoria che con un effetto
+    # di questa taglia il protocollo di stima pesa quanto il risultato.
+    def _wf(pooled: bool):
+        rows, esclusi = [], 0
+        for s in sorted(a["season"].unique()):
+            cur_s = a[a["season"] == s]
+            for lg, g in cur_s.groupby("league"):
+                past = (a[a["season"] < s] if pooled
+                        else a[(a["season"] < s) & (a["league"] == lg)])
+                if past.empty:
+                    esclusi += len(g)
+                    continue
+                al = _alpha_star(past["realized"].to_numpy(),
+                                 past["market_p"].to_numpy(),
+                                 past["model_p"].to_numpy())
+                al = 0.0 if not np.isfinite(al) else al
+                kk = g["market_p"].to_numpy(); mm = g["model_p"].to_numpy()
+                yy = g["realized"].to_numpy()
+                blend = kk + al * (mm - kk)
+                rows.append((blend - yy) ** 2 - (kk - yy) ** 2)
+        return np.concatenate(rows), esclusi
+
+    for pooled in (True, False):
+        d, esclusi = _wf(pooled)
+        bi = rng.integers(0, len(d), (B, len(d)))
+        bd = d[bi].mean(axis=1)
+        blo, bhi = np.percentile(bd, [2.5, 97.5])
+        eti = "alpha pooled (protocollo pubblicato)" if pooled else "alpha per-lega"
+        print(f"ENCOMPASSING walk-forward — {eti}: n={len(d)} fuori campione "
+              f"({esclusi} casi della prima stagione esclusi)")
+        print(f"  Delta Brier (blend - mercato) = {float(d.mean()):+.6f} "
+              f"IC95 [{blo:+.6f}, {bhi:+.6f}]  "
+              f"P(Delta<0) = {float((bd < 0).mean()):.2f}")
+    print("  Delta<0 = il blend batte il mercato fuori campione; l'IC che "
+          "include lo zero = non concluso.")
 
 
 if __name__ == "__main__":

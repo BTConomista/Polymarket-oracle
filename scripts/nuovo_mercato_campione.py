@@ -94,26 +94,16 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
 nuove_leghe.registra()
 
-from src.data import database  # noqa: E402
+from src.data import database  # noqa: E402,F401
 
-# Le due leghe nuove vivono nel cantiere: si dirotta il percorso dello snapshot
-# senza toccare il codice di produzione (regola R4).
-_orig_snapshot_path = database.snapshot_path
-
-
-def _snapshot_path(league_key: str = "serie_a") -> Path:
-    if league_key in nuove_leghe.NEW_LEAGUES:
-        return ROOT / "data" / f"{league_key}_matches.csv"
-    return _orig_snapshot_path(league_key)
-
-
-database.snapshot_path = _snapshot_path
+# STORICO (Fase 101-bis): qui viveva un dirottamento di `database.snapshot_path`
+# verso il cantiere, perche' Bundesliga e Ligue 1 non erano ancora in `data/`.
+# Dall'integrazione e' un NO-OP dimostrato, quindi e' stato rimosso.
 
 from src.config import league_config                          # noqa: E402
 from src.data import loader                                    # noqa: E402

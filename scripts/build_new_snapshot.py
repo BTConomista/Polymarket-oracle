@@ -11,7 +11,8 @@ Differenze rispetto a Premier/Liga (Fase 54): niente bundle caricati a mano —
 le fonti si scaricano direttamente (`scripts/fetch_sources.py`), perche'
 in questa sessione football-data.co.uk e understat.com sono raggiungibili.
 
-Uscite (nel cantiere, non negli alberi ufficiali):
+Uscite (scritte nel cantiere quando lo script e' nato; dall'integrazione sono
+gli alberi ufficiali del progetto):
     data/{lega}_matches.csv          snapshot 38 colonne
     data/club_fixtures_{lega}.csv    calendario di club completo
 

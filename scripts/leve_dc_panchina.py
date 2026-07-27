@@ -67,7 +67,6 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
@@ -78,23 +77,14 @@ from src.data import database, fixtures as fxmod, loader  # noqa: E402
 from src.evaluation import calibration, experiment_log, metrics  # noqa: E402
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_dc_panchina.json"
-CANTIERE_DATA = ROOT / "data"
+DATA_DIR = ROOT / "data"
 TRACER = ROOT / "docs" / "audit_5_leghe" / "numeri"
 
 # --------------------------------------------------------------------------- #
-# Le due leghe nuove vivono nel cantiere: si dirotta il percorso dello snapshot
-# senza toccare il codice di produzione (R4). Identico a tranche3_tracer.py.
+# STORICO (Fase 101-bis): qui viveva un dirottamento di `database.snapshot_path`
+# verso il cantiere, perche' Bundesliga e Ligue 1 non erano ancora in `data/`.
+# Dall'integrazione e' un NO-OP dimostrato, quindi e' stato rimosso.
 # --------------------------------------------------------------------------- #
-_orig_snapshot_path = database.snapshot_path
-
-
-def _snapshot_path(league_key: str = "serie_a") -> Path:
-    if league_key in nuove_leghe.NEW_LEAGUES:
-        return CANTIERE_DATA / f"{league_key}_matches.csv"
-    return _orig_snapshot_path(league_key)
-
-
-database.snapshot_path = _snapshot_path
 
 from backtest import run_backtest, promoted_teams     # noqa: E402
 from src.models.dixon_coles import DixonColesModel    # noqa: E402
@@ -119,8 +109,8 @@ RIFERIMENTO = {"bundesliga": 0.9919, "ligue_1": 1.0041}
 # Calendari di club: base (quelli usati per costruire gli snapshot) e nome del
 # campionato "di casa" dentro il calendario.
 FIXT = {
-    "bundesliga": (CANTIERE_DATA / "club_fixtures_bundesliga.csv", "Bundesliga"),
-    "ligue_1": (CANTIERE_DATA / "club_fixtures_ligue_1.csv", "Ligue 1"),
+    "bundesliga": (DATA_DIR / "club_fixtures_bundesliga.csv", "Bundesliga"),
+    "ligue_1": (DATA_DIR / "club_fixtures_ligue_1.csv", "Ligue 1"),
 }
 
 # Le varianti di walk-forward. Chiave -> kwargs extra di run_backtest.
@@ -170,7 +160,7 @@ def merged_fixtures(league: str) -> pd.DataFrame:
     F["date"] = pd.to_datetime(F["date"])
     cols = ["season", "team", "date", "competition", "home_away", "opponent"]
     add = []
-    for f in sorted(glob.glob(str(CANTIERE_DATA / "ricerca_esterna" / f"fixtures_{league}_*.csv"))):
+    for f in sorted(glob.glob(str(DATA_DIR / "ricerca_esterna" / f"fixtures_{league}_*.csv"))):
         t = pd.read_csv(f)
         t["date"] = pd.to_datetime(t["date"])
         add.append(t[cols])
@@ -434,7 +424,7 @@ def _sanity(rng) -> dict:
                 - metrics.log_loss_1x2(d[PC].to_numpy(), d["result"].tolist())))
     # 3) il calendario di club BASE riproduce le colonne dello snapshot
     for league in LEAGUES:
-        M = pd.read_csv(CANTIERE_DATA / f"{league}_matches.csv")
+        M = pd.read_csv(DATA_DIR / f"{league}_matches.csv")
         M["date"] = pd.to_datetime(M["date"])
         _, own = FIXT[league]
         rec = fxmod.add_rest_days_full(M, base_fixtures(league), own_competition=own)
@@ -451,7 +441,7 @@ def diagnosi_midweek() -> dict:
     covariata (coppe mancanti nel calendario di club)."""
     res = {}
     for league in LEAGUES:
-        M = pd.read_csv(CANTIERE_DATA / f"{league}_matches.csv")
+        M = pd.read_csv(DATA_DIR / f"{league}_matches.csv")
         M["date"] = pd.to_datetime(M["date"])
         _, own = FIXT[league]
         base = fxmod.add_rest_days_full(M, base_fixtures(league), own_competition=own)

@@ -2,8 +2,11 @@
 data/raw/
 
 # Database SQLite: rigenerabile dallo snapshot con scripts/build_database.py.
-# Lo SNAPSHOT (data/serie_a_matches.csv) invece E' versionato: fonte congelata.
+# Lo SNAPSHOT (data/<lega>_matches.csv) invece E' versionato: fonte congelata.
+# Dalla Fase 101-bis il DB e' PER LEGA: serie_a resta su football.db (nome
+# storico, retrocompatibile), le altre quattro su football_<lega>.db.
 data/football.db
+data/football_*.db
 
 # Python
 __pycache__/

@@ -28,9 +28,15 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 REGISTRO = DATA / "correzioni_dichiarate.csv"
 
-# Solo gli snapshot del cantiere: le leghe gia' in repo non si toccano (R4).
-SNAPSHOTS = {"bundesliga": DATA / "bundesliga_matches.csv",
-             "ligue_1": DATA / "ligue_1_matches.csv"}
+# TUTTE le leghe del progetto. Fino alla Fase 101-bis qui c'erano solo
+# Bundesliga e Ligue 1 ("solo gli snapshot del cantiere, le leghe gia' in repo
+# non si toccano" — R4): giusto quando il cantiere esisteva, sbagliato dopo
+# l'integrazione. Il registro ha nel frattempo acquisito 6 righe La Liga, che
+# restavano fuori dalla portata dello script — cioe' correzioni dichiarate che
+# nessuno strumento poteva piu' verificare, contro la regola R3. Le leghe senza
+# righe nel registro sono semplicemente saltate dal ciclo.
+SNAPSHOTS = {lg: DATA / f"{lg}_matches.csv" for lg in
+             ("serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1")}
 KEY = ["season", "home_team", "away_team"]
 
 

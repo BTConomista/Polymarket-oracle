@@ -331,17 +331,11 @@ def costruisci_dati() -> tuple[pd.DataFrame, dict]:
 
 # --------------------------------------------------------------------------- #
 # PASSO 2 — Dixon-Coles walk-forward (path c)
+#
+# STORICO (Fase 101-bis): qui viveva un dirottamento di `database.snapshot_path`
+# verso il cantiere, perche' Bundesliga e Ligue 1 non erano ancora in `data/`.
+# Dall'integrazione e' un NO-OP dimostrato, quindi e' stato rimosso.
 # --------------------------------------------------------------------------- #
-_orig_snapshot_path = database.snapshot_path
-
-
-def _snapshot_path(league_key: str = "serie_a") -> Path:
-    if league_key in nuove_leghe.NEW_LEAGUES:
-        return ROOT / "data" / f"{league_key}_matches.csv"
-    return _orig_snapshot_path(league_key)
-
-
-database.snapshot_path = _snapshot_path
 
 
 def _dc_worker(arg):

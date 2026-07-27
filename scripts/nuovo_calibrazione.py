@@ -100,7 +100,6 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
 
@@ -178,7 +177,8 @@ QUOTATI = {"home_win", "draw", "away_win", "over_2.5"}
 def carica(league: str, seasons: list[str]) -> pd.DataFrame:
     """Righe con chiusura 1X2 + O/U 2.5 reale. Per le 3 leghe storiche passa dal
     loader di produzione (identico a `_run_fase81_mega_sweep_mi._load`), per le
-    due nuove legge lo snapshot del cantiere con la STESSA logica."""
+    due nuove legge lo snapshot direttamente, con la STESSA logica (il percorso
+    era quello del cantiere; dall'integrazione e' `data/<lega>_matches.csv`)."""
     if league in NUOVE:
         df = pd.read_csv(SNAP[league] / f"{league}_matches.csv",
                          dtype={"season": str}, parse_dates=["date"])
