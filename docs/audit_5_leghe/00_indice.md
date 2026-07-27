@@ -157,4 +157,7 @@ versionata).
 - ogni anomalia trovata è documentata con la prova e l'impatto quantificato,
   anche quando l'esito è "non è un errore" (§1.4 e §1.6 del CLAUDE.md);
 - `pytest` restava verde con **153** test alla chiusura del cantiere; sono
-  **197** al commit `174f78c` (fine Fase 101).
+  **197** al commit `174f78c` (fine Fase 101) e **841** alla Fase 101-bis
+  (i due file di test aggiunti dalla seconda passata sono parametrizzati su
+  tutti i 159 script, quindi il conteggio sale molto più del lavoro svolto:
+  è un numero di *casi*, non di controlli concettuali).

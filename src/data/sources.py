@@ -27,15 +27,19 @@ from dataclasses import dataclass
 # ORIGINALI football-data (tutte le colonne quote) sono congelati in
 # data/football_data_raw/ (versionata) e `python scripts/_restore_raw_cache.py`
 # ricostruisce da li' la cache data/raw/.
-# Per un refresh futuro serve una fonte nuova: in locale basta puntare
-# BASE_URL a OFFICIAL_BASE_URL (raggiungibile da una rete normale).
+# AGGIORNAMENTO Fase 100/101-bis: la fonte UFFICIALE e' tornata raggiungibile
+# anche da qui (200 verificato; e' cosi' che Bundesliga e Ligue 1 sono state
+# scaricate). Il mirror invece resta 404. Fino alla Fase 101-bis il default era
+# ancora il mirror morto: `--refresh` puntava all'unica delle due URL che NON
+# risponde. Ora il default e' l'ufficiale, e il mirror resta solo come
+# riferimento storico del formato.
 OFFICIAL_BASE_URL = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
-MIRROR_BASE_URL = (  # MORTO — tenuto come riferimento storico del formato
+MIRROR_BASE_URL = (  # MORTO (404, riverificato alla Fase 101-bis)
     "https://raw.githubusercontent.com/Mentaturan/ScoutFootball_for_World_Cup"
     "/main/data/raw/football_data/{season}/{code}.csv"
 )
 
-BASE_URL = MIRROR_BASE_URL
+BASE_URL = OFFICIAL_BASE_URL
 
 
 @dataclass(frozen=True)

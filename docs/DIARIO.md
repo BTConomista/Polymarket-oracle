@@ -10362,6 +10362,15 @@ forti e troppo poco le deboli — ed è esattamente il danno misurato prima di
 scoprirlo: con σ uniforme 0.18 il top-4 peggiorava in **18 stagioni su 24**
 (p=0.023) mentre la retrocessione migliorava appena.
 
+> ✅ **Verificato alla Fase 101-bis** (era rimasto fra i numeri non
+> ri-derivabili: `markets()` non emetteva i conteggi per stagione). Con lo
+> script che ora stampa il verdetto per mercato,
+> `python scripts/_run_fase94_drift.py --sd 0.18 --nsim 20000` dà top-4
+> **migliore in 6/24** stagioni — cioè peggiore in **18/24**, la cifra
+> pubblicata — e il test dei segni bilaterale su 18/24 dà **p = 0.0227**, che
+> arrotonda allo 0.023 dichiarato. Retrocessione +0.0071 [+0.0001, +0.0150]
+> 12/24, l'unico mercato conclusivo: «migliorava appena» regge.
+
 **Risultato con σ differenziato (0.30 neopromosse / 0.16 resto):**
 
 | mercato | guadagno | IC95% a grappoli | meglio in |
@@ -10432,6 +10441,13 @@ tre: la calibrazione sulla dispersione, da sola, è il criterio sbagliato.
 Riproducibile: `python scripts/_run_fase94_drift.py` per la **calibrazione**
 (~50 min, 7 valori di σ *uniforme* × 24 stagioni-lega; griglia completa in
 `experiments/fase94_drift.json`, run in `experiments/runs.jsonl` con σ=0.28).
+
+> 🔒 **Guardia aggiunta alla Fase 101-bis.** Solo `--sd-map` (la config
+> adottata) scrive `experiments/fase94_drift.json`; ogni altra config scrive
+> `experiments/fase94_drift_variante_<σ>.json`. Prima qualunque esecuzione
+> sovrascriveva l'artefatto ufficiale, e **due sessioni di seguito** hanno
+> dovuto ripristinarlo da git dopo aver semplicemente *controllato* un numero.
+> Chi verifica una cifra non deve poter distruggere la fonte di quella cifra.
 
 ⚠️ Il risultato **adottato** — il σ per-squadra 0.30/0.16 con gli IC e i conteggi
 X/24 — richiede `--sd-map`, e fino alla Fase 101 **non era ri-derivabile da

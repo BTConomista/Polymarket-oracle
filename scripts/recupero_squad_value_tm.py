@@ -44,6 +44,9 @@ nuove_leghe.registra()
 from src.data import sources  # noqa: E402
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri"
+# Le celle gia' recuperate da Transfermarkt e APPLICATE allo snapshot: vanno
+# escluse dal confronto, altrimenti si misura TM contro TM (vedi main()).
+TM_APPLICATE = ROOT / "data" / "squad_value_2526_transfermarkt.csv"
 CACHE = ROOT / "data" / "fonti" / "transfermarkt_web"
 SEASON = "2526"
 SAISON_ID = 2025            # 2025-26 nella nomenclatura Transfermarkt
@@ -131,7 +134,26 @@ def main() -> int:
             print("  ⚠️  club non appaiati (alias?):")
             print(orfane[["team", "team_tm", "_merge"]].to_string(index=False))
 
+        # ANTI-CIRCOLARITA' (Fase 101-bis). Le celle recuperate da Transfermarkt
+        # sono state APPLICATE allo snapshot: da allora `ps_value` per quei club
+        # *e'* il valore Transfermarkt, e confrontarli misura TM contro se
+        # stesso. Effetto reale, misurato: la "scala misurata" passava da
+        # mediana 1.131 su 13 club a 1.038 su 18, con lo scarto mediano da 14.8%
+        # a 8.6% — un avvicinamento che sembra accordo fra due fonti e invece e'
+        # solo il riflesso della fonte in se stessa. Le righe di provenienza TM
+        # vengono quindi ESCLUSE dal confronto, e il numero pubblicato torna
+        # ri-derivabile.
+        gia_tm = set()
+        if TM_APPLICATE.exists():
+            _ap = pd.read_csv(TM_APPLICATE)
+            gia_tm = set(_ap[_ap.league == league_key]["team"].astype(str))
         both = j[j.ps_value.notna() & j.tm_value.notna()].copy()
+        if gia_tm:
+            n_pre = len(both)
+            both = both[~both["team"].astype(str).isin(gia_tm)].copy()
+            print(f"\n  [anti-circolarita'] escluse {n_pre - len(both)} righe gia'"
+                  f" riempite da Transfermarkt: il confronto usa solo club dove"
+                  f" player-scores e' indipendente")
         both["ratio"] = both.tm_value / both.ps_value
         both["scarto%"] = (both.tm_value / both.ps_value - 1) * 100
         print(f"\n  ACCORDO tra le due definizioni su {len(both)} club con ENTRAMBI i valori:")

@@ -1,9 +1,18 @@
 # `files/` — bundle dati grezzi caricati a mano (offline-first)
 
 Questa cartella contiene i **dati grezzi versionati** da cui si costruiscono gli
-snapshot congelati di Premier League e La Liga (la rete è bloccata nell'ambiente
-di sviluppo, quindi i dati arrivano come bundle caricati a mano o importati via
-GitHub Actions — vedi `docs/MANUALE_SOPRAVVIVENZA.md` e Fase 54/67).
+snapshot congelati di Premier League e La Liga. Nacquero come bundle caricati a
+mano perché all'epoca (Fase 54/67) la rete era bloccata nell'ambiente di
+sviluppo.
+
+> ⚠️ **Aggiornamento Fase 101-bis.** La premessa è caduta: `football-data.co.uk`
+> e `understat.com` sono **tornati raggiungibili** (per questo Bundesliga e
+> Ligue 1 sono state scaricate direttamente, senza bundle — CLAUDE.md §7). I
+> bundle **restano** e non vanno rimossi: sono la fonte congelata di Premier e
+> Liga, e `_run_ah_benchmark.py` e altri 9 script li leggono direttamente. Il
+> loro valore ora è la **riproducibilità** (la fonte non cambia sotto i piedi),
+> non l'irraggiungibilità della rete. Stato aggiornato in
+> `docs/MANUALE_SOPRAVVIVENZA.md`.
 
 Pesa ~63 MB: è **intenzionale** (riproducibilità senza rete). Contenuto:
 

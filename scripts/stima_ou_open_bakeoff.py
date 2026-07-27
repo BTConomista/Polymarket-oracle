@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BAKEOFF della stima delle 9 linee O/U di APERTURA mancanti (2017-19).
+"""BAKEOFF della stima delle linee O/U di APERTURA mancanti (2017-19).
 
 IL PROBLEMA
 -----------
@@ -180,7 +180,7 @@ def carica() -> tuple[pd.DataFrame, pd.DataFrame]:
     d1 = np.array([metrics.devig_1x2(r.odds_home_open, r.odds_draw_open,
                                      r.odds_away_open) for r in S.itertuples()])
     S["pH"], S["pD"], S["pA"] = d1[:, 0], d1[:, 1], d1[:, 2]
-    # --- verita' (NaN sulle 9 bersaglio)
+    # --- verita' (NaN sulle bersaglio)
     ok = S.odds_over25_open.notna() & S.odds_under25_open.notna()
     S["y"] = np.nan
     S.loc[ok, "y"] = [metrics.devig_binary(a, b)[0] for a, b in
@@ -393,7 +393,7 @@ F1X2B = ["lH", "lD", "lA", "absHA"]
 FCLOSE = ["lc25"]
 # scaletta 1xBet completa. NOTA: l'Over 4.5 (lc45) e' ESCLUSO -- 5 righe su 3.643
 # non hanno quella quota, e imputarle sarebbe un modello dentro il modello; le
-# altre linee della scaletta hanno copertura 100% sia in valutazione sia sulle 9.
+# altre linee della scaletta hanno copertura 100% sia in valutazione sia sulle bersaglio.
 FCLOSEP = ["lc25", "lc15", "lc35", "lcbtts", "lHc", "lDc", "lAc"]
 
 # catalogo: nome -> (famiglia, costruttore, scope). LO DICHIARO TUTTO: e' il
@@ -498,7 +498,19 @@ def main() -> int:
     ev0, tg0 = carica()
     print(f"   valutazione: {len(ev0)} partite (2017-19, 5 leghe, linea O/U integra)")
     print(f"   bersaglio  : {len(tg0)} partite senza linea O/U di apertura")
-    assert len(tg0) == 9, f"attese 9 bersaglio, trovate {len(tg0)}"
+    # Le bersaglio si auto-selezionano (`S.y.isna()`): NON vanno cablate. Qui
+    # c'era `assert len(tg0) == 9`, il numero al momento della prima stesura, e
+    # ha bloccato lo script appena le 3 righe La Liga svuotate dal guard sono
+    # entrate nel conteggio (Fase 101-bis). Il controllo di sanita' utile non e'
+    # "quante sono" ma "sono dove ce le aspettiamo": stagioni bersaglio e nessun
+    # duplicato. Il conteggio si stampa e basta.
+    da_lega = tg0.groupby("league", observed=True).size().to_dict()
+    print(f"                (per lega: {da_lega})")
+    assert len(tg0) > 0, "nessuna bersaglio: la selezione e' rotta"
+    assert set(tg0.season) <= set(SEASONS), \
+        f"bersaglio fuori dalle stagioni attese: {sorted(set(tg0.season) - set(SEASONS))}"
+    assert not tg0.duplicated(["league", "season", "home_team", "away_team"]).any(), \
+        "bersaglio duplicate"
     res["n_valutazione"] = int(len(ev0))
     res["n_bersaglio"] = int(len(tg0))
     res["copertura_footiqo_valutazione"] = float(ev0.p_c25.notna().mean())
@@ -738,8 +750,8 @@ def main() -> int:
     print(f"   C4 verita' Shin: " + "; ".join(f"{k.split()[0]} {v:.4f}"
                                               for k, v in blocco.items()))
 
-    # C5 - strato "partite simili alle 9 bersaglio" (le 9 NON sono un campione
-    #      casuale: 4 su 9 sono favoriti estremi)
+    # C5 - strato "partite simili alle bersaglio" (NON sono un campione
+    #      casuale: sono in maggioranza favoriti estremi)
     z_ev = np.column_stack([_logit(ev.pD), _logit(ev.pH) - _logit(ev.pA)])
     z_tg = np.column_stack([_logit(tg.pD), _logit(tg.pH) - _logit(tg.pA)])
     sd = z_ev.std(axis=0)
@@ -762,18 +774,18 @@ def main() -> int:
           "; ".join(f"{k.split()[0]} {v}" for k, v in blocco.items()
                     if k in (M1, vincitore, vincitore_ap)))
 
-    # C6 - sanita' della chiusura 1xBet sulle 9 bersaglio (se il vincitore la usa)
+    # C6 - sanita' della chiusura 1xBet sulle bersaglio (se il vincitore la usa)
     ladder_ok = int(((tg.p_c15 >= tg.p_c25) & (tg.p_c25 >= tg.p_c35)
                      & (tg.p_c35 >= tg.p_c45)).sum())
-    conf_out["C6_sanita_chiusura_sulle_9"] = {
+    conf_out["C6_sanita_chiusura_sulle_bersaglio"] = {
         "overround_medio_bersaglio": round(float(tg.overround_fq.mean()), 4),
         "overround_medio_valutazione": round(float(ev.overround_fq.mean()), 4),
         "scaletta_monotona": f"{ladder_ok}/{len(tg)}",
         "coperte": int(tg.p_c25.notna().sum())}
-    print(f"   C6 chiusura sulle 9: overround {tg.overround_fq.mean():.4f}, "
+    print(f"   C6 chiusura sulle bersaglio: overround {tg.overround_fq.mean():.4f}, "
           f"scaletta monotona {ladder_ok}/{len(tg)}")
 
-    # C8 - le 9 bersaglio NON sono un campione casuale: dove cadono?
+    # C8 - le bersaglio NON sono un campione casuale: dove cadono?
     #      (e il vincitore sta EXTRAPOLANDO o interpolando?)
     perc = {}
     for r in tg.itertuples():
@@ -814,8 +826,8 @@ def main() -> int:
     res["confutazioni"] = conf_out
     OUT_JSON.write_text(json.dumps(res, indent=1, ensure_ascii=False))
 
-    # ------------------------------------------------- stima finale sulle 9
-    print("\n== 5. stima finale delle 9 partite bersaglio ==")
+    # --------------------------------------------- stima finale sulle bersaglio
+    print(f"\n== 5. stima finale delle {len(tg)} partite bersaglio ==")
     righe = []
     for nome, colonna in [(vincitore, "p_over25_open_est"),
                           (vincitore_ap, "p_over25_open_est_solo1x2"),
@@ -908,7 +920,8 @@ def main() -> int:
     p_over_max = max(d["perc_nella_distribuzione_di_riferimento"] for d in dettaglio)
     p_under_min = min(d["perc_lato_under"] for d in dettaglio)
     sei["verdetto"] = (
-        "il lato OVER e' COMPATIBILE con una quota integra (tutti gli 8 scarti "
+        f"il lato OVER e' COMPATIBILE con una quota integra (tutti i "
+        f"{len(dettaglio)} scarti "
         f"dal vincitore cadono entro il percentile {p_over_max:.2f} della "
         "distribuzione misurata su righe integre), mentre il lato UNDER NON lo e' "
         f"(tutti oltre il percentile {p_under_min:.2f}). Diagnosi: la corruzione "
@@ -918,10 +931,11 @@ def main() -> int:
     sei["conseguenza"] = (
         "SE si accettasse di leggere il solo lato Over (cosa che la regola R6, "
         "approvata dall'utente, oggi VIETA: 'il mercato si scarta IN BLOCCO'), "
-        "l'errore atteso su 8 delle 9 righe scenderebbe da "
+        f"l'errore atteso su {len(dettaglio)} delle {len(tg)} righe scenderebbe da "
         f"{tabella[vincitore]['mae']:.4f} a {sei['mae_lettura_solo_lato_over']:.4f}, "
-        "cioe' non sarebbe piu' una stima ma quasi il dato. La 9a riga "
-        "(bundesliga 1819 Bayern Munich-Hoffenheim) non ha nessun lato: per "
+        f"cioe' non sarebbe piu' una stima ma quasi il dato. Le restanti "
+        f"{len(tg) - len(dettaglio)} "
+        "(fra cui bundesliga 1819 Bayern Munich-Hoffenheim) non hanno nessun lato: per "
         "quella resta la stima. DECISIONE DELL'UTENTE, non mia: qui c'e' solo "
         "la misura.")
     print(f"   -> {sei['verdetto']}")
@@ -956,7 +970,7 @@ def main() -> int:
     lato_by_key = {(d["league"], d["season"], d["partita"]): d for d in dettaglio}
     assert len(lato_by_key) == len(dettaglio) == 8
 
-    print("\n== 5-bis. tabella finale delle 9 partite bersaglio ==")
+    print(f"\n== 5-bis. tabella finale delle {len(tg)} partite bersaglio ==")
     for r in tg.itertuples():
         chiave = (r.league, r.season, f"{r.home_team}-{r.away_team}")
         dd = lato_by_key.get(chiave)

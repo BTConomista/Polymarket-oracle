@@ -299,7 +299,18 @@ def main(argv=None):
             "CONCLUSIVO" if v["conclusivo"] else "nel rumore"))
     results[sd_star]["verdetto_per_mercato"] = ver
 
-    dest = Path("experiments/fase94_drift.json")
+    # L'artefatto UFFICIALE della Fase 94 e' quello del sigma per-squadra
+    # (--sd-map: 0.30 neopromosse / 0.16 resto). Qualunque altra config e' una
+    # VARIANTE e non deve sovrascriverlo: succedeva, e due sessioni di seguito
+    # hanno dovuto ripristinarlo da git dopo un semplice controllo. Chi verifica
+    # un numero non deve poter distruggere la fonte di quel numero.
+    if args.sd_map:
+        dest = Path("experiments/fase94_drift.json")
+    else:
+        etichetta = f"sd{args.sd:g}".replace(".", "") if args.sd is not None else "griglia"
+        dest = Path(f"experiments/fase94_drift_variante_{etichetta}.json")
+        print(f"\n[variante, non e' la config ufficiale: NON tocco "
+              f"experiments/fase94_drift.json]")
     dest.write_text(json.dumps({str(k): v for k, v in results.items()}, indent=2))
     print(f"\nScritto {dest}")
 

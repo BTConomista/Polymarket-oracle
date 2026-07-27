@@ -68,13 +68,29 @@ SMARKETS_TO_OURS = {
 }
 
 
-def market_rows(league="premier_league", market="relegation") -> pd.DataFrame:
+def market_rows(league="premier_league", market="relegation",
+                date: str | None = None) -> pd.DataFrame:
+    """Righe di mercato di UNA data. Senza `date` prende l'ultimo snapshot.
+
+    Il `--date` esiste per la riproducibilita' (rilievo dell'audit della Fase
+    101): finche' la funzione leggeva sempre l'ULTIMO snapshot, la frase «il
+    confronto e' rifacibile identico» era falsa — bastava che
+    `archive_outrights.py` girasse di nuovo e il confronto cambiava sotto i
+    piedi, senza che nulla nel comando lo dicesse.
+    """
     rows = [r for r in csv.DictReader(open(HIST))
             if r["source"] == "smarkets" and r["league"] == league
             and r["market"] == market and r["prob"]]
     if not rows:
         raise SystemExit("Archivio vuoto: esegui prima scripts/archive_outrights.py")
-    last = max(r["snapshot_date"] for r in rows)
+    disponibili = sorted({r["snapshot_date"] for r in rows})
+    if date is None:
+        last = disponibili[-1]
+    elif date in disponibili:
+        last = date
+    else:
+        raise SystemExit(
+            f"snapshot del {date} assente. Date disponibili: {disponibili}")
     rows = [r for r in rows if r["snapshot_date"] == last]
     df = pd.DataFrame(dict(
         team_market=[r["team"] for r in rows],
@@ -119,9 +135,13 @@ def main(argv=None):
     ap.add_argument("--seed", type=int, default=96)
     ap.add_argument("--max-spread", type=float, default=0.05,
                     help="scarta i mid con spread piu' largo di cosi' (default 5pp)")
+    ap.add_argument("--date", default=None,
+                    help="snapshot di mercato da usare (YYYY-MM-DD). Senza, "
+                         "l'ultimo disponibile: passalo per rifare un confronto "
+                         "IDENTICO a uno gia' pubblicato")
     args = ap.parse_args(argv)
 
-    mk = market_rows()
+    mk = market_rows(date=args.date)
     teams = sorted(SMARKETS_TO_OURS.values())     # tutte e 20: la classifica
     print(f"### RETROCESSIONE PREMIER 2026-27 — nostra stima vs Smarkets "
           f"({mk['date'].iloc[0]})")

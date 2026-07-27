@@ -53,6 +53,14 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 
 ⚽ titolare · 🪑 panchina · ❌ bocciato · ⬜ mai testato · ✱ vedi nota
 
+> **Convenzione dei segni** (esplicitata alla Fase 101-bis: era coerente in
+> tutte le celle ma non scritta da nessuna parte, e l'audit l'aveva segnalata
+> come ambigua). I guadagni sono **Δ log-loss = con-la-leva − senza**, quindi
+> **negativo = la leva migliora**. Di conseguenza «**CI<0**» significa
+> *intervallo interamente sotto lo zero* = **miglioramento conclusivo**, e
+> «**CI>0**» = **peggioramento conclusivo**. Dove si legge «CI<0 escluso» va
+> inteso «non raggiunge la conclusività», non il contrario.
+
 | modello | Serie A | Premier | La Liga | **Bundesliga** | **Ligue 1** | generale (pooled) |
 |---|---|---|---|---|---|---|
 | **Market-implied → matrice DC** (con quote 1X2+O/U) | ⚽ F26/41 | ⚽ F76 (13/14 vs DC, chiusura 2019-26) + F75 (apertura) | ⚽ F76 (13/14 vs DC) + F75 | ⚽ 15/15 vs DC | ⚽ 15/15 vs DC | ⚽ struttura (ρ=−0.06 unico; F76: 13/14 su TUTTE e 3 le leghe dalla chiusura, zero ritarature; F75: 17/20 dall'apertura su 2.280 partite vergini) |

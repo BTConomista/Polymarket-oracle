@@ -27,7 +27,14 @@ analisi senza run nel registro**). Ogni record contiene:
 import json
 runs = [json.loads(l) for l in open("experiments/runs.jsonl")]
 # es. tutti i backtest della stagione 2025-26 ordinati per log-loss 1X2
-r = [x for x in runs if x["config"]["test_season"] == "2526"]
+#
+# NB: il registro NON e' omogeneo — accanto ai backtest ci sono tuning, sweep e
+# run diagnostici con config e metriche diverse. Su 747 run, 182 non hanno
+# `test_season` e 174 non hanno `x2_model_logloss`: si accede sempre con .get(),
+# mai con la parentesi quadra. (Lo snippet precedente usava le quadre e
+# sollevava KeyError alla prima riga senza quella chiave.)
+r = [x for x in runs if x.get("config", {}).get("test_season") == "2526"
+     and "x2_model_logloss" in x.get("metrics", {})]
 r.sort(key=lambda x: x["metrics"]["x2_model_logloss"])
 ```
 
