@@ -18,6 +18,13 @@
 
 ---
 
+> 🗓️ **Stato dell'audit al 27/07/2026 (Fase 101-ter).** Dei 13 punti aperti di
+> `docs/AUDIT_FASI_80_100.md` §4 ne restano **3**: le 18 celle `⬜` della
+> PANCHINA che l'audit integrato ha già misurato (punto 6), il refresh dei
+> documenti storici (punto 13, parziale), e il riporto della Fase 100 dentro
+> `STUDIO_PREMIER_LIGA.md`. Tutto il resto è chiuso ed è datato nel verbale.
+> **Nessuno dei tre tocca il modello**: sono documentazione.
+
 ## 0 · Il quadro in tre righe
 
 Il tetto del progetto è **informativo, non architetturale**: tutti i dati

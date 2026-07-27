@@ -259,6 +259,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
 - [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
 - [Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita](#fase-101--quinto-audit-le-ultime-20-fasi-e-lintegrazione-che-non-era-stata-eseguita)
+- [Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA](#fase-101-ter--chiudere-i-punti-aperti-i-numeri-orfani-e-tre-trappole-che-colpivano-chi-verifica)
 
 ---
 
@@ -11697,3 +11698,144 @@ produce, e il rilievo passa solo se un secondo agente, incaricato di
 rilievi interi e ridimensionato 35: circa **il 19% di ciò che un auditor
 scrive** non sopravvive a chi prova a smontarlo — che è la ragione per cui il
 passo esiste.
+
+---
+
+## Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA
+
+**Obiettivo (utente).** «Sistema ogni problema e correggi ogni numero sbagliato,
+poi riordina `main`.» Cioè: portare a conclusione i 13 punti che l'audit della
+Fase 101 aveva lasciato aperti perché richiedevano *una decisione* o *un
+ricalcolo*, non una riscrittura — e fare ordine nel branch.
+
+**Ragionamento / ipotesi.** I punti aperti erano di tre nature diverse, e
+mescolarle sarebbe stato l'errore: (a) **numeri orfani**, cioè pubblicati ma non
+ri-derivabili da nulla di committato — vietati dal §2-bis punto 4, e l'unico modo
+di chiuderli è *calcolarli*; (b) **decisioni sui dati**, dove il lavoro è
+scegliere e dichiarare, non misurare; (c) **manutenzione**, dove basta fare.
+
+### Risultato 1 — un numero orfano si scopre solo provando a rifarlo
+
+Tre numeri pubblicati non erano ri-derivabili. Rifacendoli, due hanno retto e
+uno era sbagliato:
+
+| numero | dove | esito del ricalcolo |
+|---|---|---|
+| gap **GG/NG −0.0018** (riga pooled F9) | README | ❌ **orfano**: ri-derivato dà **+0.0026**. Le altre cinque celle della riga coincidevano già con la matrice F15-bis; questa no, perché misurata contro un riferimento diverso **mai dichiarato** |
+| **α\*=1.08** dell'encompassing F88 | DIARIO, README | ✅ riprodotto alla cifra, ma **non lo produceva nessuno script** |
+| **«18 stagioni su 24»** con σ 0.18 (F94) | DIARIO | ✅ **regge**: top-4 migliore in **6/24**, test dei segni **p = 0.0227** |
+
+Il primo è il caso interessante: non era «un numero un po' diverso», era un
+numero che misurava **un'altra cosa** — e nessuno poteva accorgersene, perché il
+riferimento non era scritto. È esattamente il difetto che il §2-bis punto 3
+prescrive di dichiarare.
+
+### Risultato 2 — il protocollo di stima può cambiare il SEGNO del risultato
+
+Portando l'encompassing della Fase 88 dentro `_run_ah_benchmark.py`, il
+walk-forward non tornava: ottenevo **+0.000011** dove il README dichiara
+**−0.000064**. Non era un errore di nessuno dei due: sono **due protocolli
+diversi** di stima di α, entrambi legittimi.
+
+| variante | n fuori campione | Δ Brier (blend − mercato) | IC95 | P(Δ<0) |
+|---|--:|--:|---|--:|
+| α **pooled** su tutte le leghe (è quella pubblicata) | 6.297 | **−0.000064** | [−0.000271, +0.000139] | 0.73 |
+| α dalla **sola lega** valutata | 6.297 | +0.000011 | [−0.000236, +0.000265] | 0.46 |
+
+La conclusione non cambia (il blend non batte il mercato: entrambi gli IC
+includono lo zero). Ma **il segno sì**, e con esso la frase che uno scriverebbe.
+Con un effetto di 6·10⁻⁵ di Brier, la scelta del pool su cui si stima α pesa
+quanto la misura. Lo script ora stampa **entrambe**.
+
+*(Nota: la ri-derivazione ha anche risolto una discrepanza fra due agenti sul
+numero di casi fuori campione — 6.297 contro 6.518. Il primo è giusto: le righe
+escluse sono la prima stagione di **ciascuna delle 3 leghe**, 1.140, non di una
+sola.)*
+
+### Risultato 3 — tre trappole, e colpivano tutte CHI VERIFICA
+
+È il risultato che mi sembra valga oltre questo repo. Tre difetti indipendenti,
+stessa forma: **l'atto di controllare un numero danneggiava la fonte di quel
+numero, o veniva bloccato da un vincolo stantio.**
+
+1. `_run_fase94_drift.py` **sovrascriveva l'artefatto ufficiale a ogni
+   esecuzione**. Due sessioni di seguito hanno dovuto ripristinarlo da git dopo
+   aver semplicemente *controllato* una cifra. → Ora solo `--sd-map` (la config
+   adottata) scrive `fase94_drift.json`; ogni altra config scrive un file
+   `_variante_<σ>.json`.
+2. `stima_ou_open_bakeoff.py` aveva `assert len(tg0) == 9` — il conteggio delle
+   celle bersaglio **al momento della prima stesura** — mentre le bersaglio si
+   auto-selezionano (`S.y.isna()`). Appena le 3 righe La Liga svuotate dal guard
+   sono entrate nel conteggio, lo script è **morto sull'assert**: una
+   rigenerazione legittima bloccata da una costante. → Sostituito con i controlli
+   che servono davvero (stagioni attese, nessun duplicato), e tutti i «9» cablati
+   resi dinamici.
+3. `applica_correzioni.py` copriva **solo** gli snapshot del cantiere
+   (Bundesliga, Ligue 1). Nel frattempo il registro aveva acquisito **6 righe La
+   Liga**: correzioni *dichiarate* che nessuno strumento poteva più verificare —
+   il contrario di ciò che la regola R3 esiste per garantire. → Copre le 5 leghe.
+
+La forma comune: **un vincolo scritto quando il mondo era diverso, e mai
+ri-letto quando il mondo è cambiato.** Non li trova nessun test, perché non
+rompono niente finché nessuno verifica.
+
+### Risultato 4 — le 6 celle che vivevano dentro un CSV
+
+Sei celle-quota 1X2 portavano da giorni il verdetto «USARE IL DATO REALE» dentro
+`celle_residue.csv`, senza essere né inserite né dichiarate. Eseguite: il dato è
+**reale** (dataset iredchuk, identificato per via statistica come chiusura
+media-di-mercato e confermato da una **seconda fonte indipendente**), ed è 2,8
+volte più preciso della stima che avremmo prodotto noi. Ora le 5 leghe hanno
+**zero** righe senza chiusura 1X2.
+
+Il costo è dichiarato in un riquadro di `docs/DATI.md`: per **due partite su
+16.111** la colonna cambia semantica (non più «media football-data»). E il test
+che asseriva quelle due come eccezioni **si è rotto**, che era il suo scopo:
+riscritto sul nuovo invariante e reso più forte — ora verifica anche che le due
+righe portino *esattamente* i valori del registro, così una ritirata silenziosa
+rompe la suite. Verificato per mutazione.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: questa fase **ricalcola** formule già definite. Le due
+che contano, verificate riga per riga contro il sorgente.
+
+**1 · Encompassing** (`scripts/_run_ah_benchmark.py`, `_alpha_star`). Con `y` =
+copertura realizzata, `k` = P(copre) del mercato devigato, `m` = P(copre) del
+router, il blend è `p(α) = k + α·(m − k)`. Minimizzando il Brier
+`mean((p(α) − y)²)` in α si annulla la derivata:
+
+```
+d/dα mean((k + α(m−k) − y)²) = 2·mean((m−k)·(k + α(m−k) − y)) = 0
+  ->  α* = mean((y − k)(m − k)) / mean((m − k)²)
+```
+
+soluzione in **forma chiusa**, non una griglia. `α*=0` ⇔ `mean((y−k)(m−k))=0` ⇔
+lo scarto del mercato dal realizzato è **ortogonale** allo scarto modello-mercato:
+il mercato ingloba il modello (è il test della Fase 16). Qui α\*=**1.082**, ma
+**non** significa «battiamo il mercato»: `m` è una *traduzione* delle stesse
+quote 1X2+O/U da cui esce `k`, non un previsore indipendente — per questo il
+walk-forward, che è il test onesto, non trova nulla.
+
+*Perché quel valore.* α\*≈1 dice che il router si muove **quanto** il mercato
+rispetto al realizzato: le due letture della stessa informazione differiscono per
+la forma della matrice (double-Poisson θ=1.225, ρ=−0.06), non per il contenuto.
+
+**2 · Test dei segni** sul «18 su 24» (F94). Sotto l'ipotesi nulla «σ 0.18 non
+cambia nulla», il numero di stagioni-lega in cui il top-4 peggiora è
+`X ~ Binom(24, 0.5)`. Osservato X=18:
+
+```
+p = 2·P(X >= 18) = 2 · sum_{k=18..24} C(24,k) · 0.5^24 = 0.0227
+```
+
+che arrotonda allo **0.023** pubblicato. Il σ del confronto è 0.18 perché è il
+valore della griglia uniforme che la Fase 94 aveva provato *prima* di scoprire
+che la deriva è per-squadra (neopromosse 0.299 contro 0.157 delle altre): serve
+come **controllo negativo**, non come candidato.
+
+**Lezione.** Un numero che nessuno script produce non è un numero: è una
+citazione. E il momento in cui se ne accorge qualcuno è quando prova a
+verificarlo — motivo per cui gli strumenti di verifica vanno protetti almeno
+quanto quelli di produzione. Tre difetti su tre, in questa fase, colpivano il
+verificatore e non l'utente.
