@@ -135,21 +135,30 @@ pattern da modellare in modo complesso.
   mercato vuote se quella partita aveva già l'apertura vera).
 
 
-### `ou_open_corrotte_2017_19.csv` — apertura O/U per le 9 linee corrotte
+### `ou_open_corrotte_2017_19.csv` — apertura O/U per le 12 linee corrotte
 
 **Perché.** **Dodici** partite del 2017-19 non hanno l'apertura O/U: 6
 Bundesliga + 2 Ligue 1 + **3 La Liga** svuotate dal guard bilaterale di
 `loader._pick_market_odds` (overround fino a 1.339), più Bayern-Hoffenheim
 24/08/2018, assente alla fonte.
 
-Questo file ne copre **nove** — le 7 Bundesliga (6 corrotte + 1 assente alla
-fonte) e le 2 Ligue 1. ⚠️ **Le 3 La Liga NON sono stimate** (Alaves-Real Madrid
-06/10/2018, Eibar-Real Madrid 24/11/2018, Leganes-Betis 10/02/2019): il guard è
-stato esteso a La Liga con il commit `ec85314`, cioè **dopo** la produzione di
-questa stima, e nessuno l'ha rigenerata. Sono registrate come correzione in
-`data/correzioni_dichiarate.csv` e come celle residue in `celle_residue.csv`
-(caso D), ma restano NaN dichiarato senza stima. Le 2 partite "sparse" di Serie
-A (fuori dal 2017-19) stanno invece in `open_sparse_1x2_ou.csv`.
+Questo file le copre **tutte e dodici** dalla **Fase 101-bis**. Fino ad allora ne
+copriva nove: il guard era stato esteso a La Liga col commit `ec85314`, cioè
+*dopo* la produzione della stima, e nessuno l'aveva rigenerata — anche perché
+lo script moriva su un `assert len(tg0) == 9` che cablava il conteggio di
+allora, mentre le bersaglio si auto-selezionano.
+
+> **Perché rigenerare è stato sicuro, e come lo sappiamo.** Il fit vive
+> sull'insieme di **valutazione** (3.640 partite 2017-19 con la linea integra),
+> che non è cambiato: rigenerando, le **9 righe preesistenti sono risultate
+> identiche a meno di 0.000000**, e si sono aggiunte 3 righe La Liga
+> (Alaves-Real Madrid 0.6222, Eibar-Real Madrid 0.6210, Leganes-Betis 0.3820,
+> stesso metodo M5g e stesso MAE atteso 0.0143). Non è stata una ri-stima: è
+> stata un'estensione. Il confronto prima/dopo è il controllo che rende la cosa
+> verificabile, e va rifatto ogni volta che si rigenera una stima pubblicata.
+
+Le 2 partite "sparse" di Serie A (fuori dal 2017-19) stanno invece in
+`open_sparse_1x2_ou.csv`.
 
 **Come.** Bakeoff di 26 varianti, k-fold k=5 su 3.643 partite della stessa epoca
 con la linea integra. Il metodo storico (inversione del solo 1X2 nei tassi +

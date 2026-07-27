@@ -322,6 +322,13 @@ metà non corretta del 🔴 `F13-03` (il ramo «registro assente» di
    la decisione vive solo dentro un CSV. E il registro stesso è stantio (3 righe
    La Liga già svuotate dal guard, un verdetto logicamente inapplicabile).
    *(`F13-11-celle-residue-caso-A-non-eseguito`, `F12-09-celle-residue-stale`)*
+   → **✅ CHIUSO (Fase 101-bis)**: le 6 celle sono state **inserite** come dato
+   reale, via registro + script idempotente (R3), con la provenienza da provider
+   secondario dichiarata in un riquadro di `docs/DATI.md` (R2) e le istruzioni
+   per tornare indietro. Le 5 leghe hanno ora **zero** righe senza chiusura 1X2.
+   Il registro `celle_residue.csv` è stato aggiornato (caso A → ESEGUITA) e la
+   stima O/U di apertura **rigenerata**: copre 12 righe invece di 9, con le 9
+   preesistenti identiche a meno di 0.000000.
 9. **Riproducibilità della Fase 97**: «il confronto è rifacibile identico» è
    falso finché `_run_fase97_relegation_market.py` legge sempre l'**ultimo**
    snapshot; basta un `--date`. *(`F97-riproducibilita-data`)*

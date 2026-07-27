@@ -9,6 +9,14 @@ per il 2017-19 esiste anche un **dato reale** che prima si riteneva
 irrecuperabile. Ma il risultato più onesto è che il dato reale trovato **non
 batte la stima**, e va usato per quello che è.
 
+> ⚠️ **Aggiornamento Fase 101-bis.** Questo report fotografa il lavoro della
+> Fase 100 e si legge come tale. Due cose sono cambiate dopo: la stima
+> `ou_open_corrotte_2017_19.csv` copre ora **12** righe e non 9 (le 3 La Liga
+> svuotate dal guard sono entrate; le 9 preesistenti sono invariate a meno di
+> 0.000000), e le **6 celle 1X2 del caso A sono state inserite** negli
+> snapshot come dato reale da fonte secondaria dichiarata. Il resto del
+> report resta valido com'e' scritto.
+
 Un secondo giro di lavoro (§5-§7) ha poi ripreso i tre buchi rimasti: le 9 linee
 O/U di apertura corrotte, le celle residue una per una, e il tiro in porta di
 una partita. Ne sono usciti un miglioramento netto della stima peggiore del

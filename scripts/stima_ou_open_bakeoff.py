@@ -151,7 +151,12 @@ def carica_footiqo() -> pd.DataFrame:
 
 
 def carica() -> tuple[pd.DataFrame, pd.DataFrame]:
-    """(insieme di valutazione, le 9 partite bersaglio) con tutte le feature."""
+    """(insieme di valutazione, le partite bersaglio) con tutte le feature.
+
+    Le bersaglio si auto-selezionano: sono le righe senza linea O/U di apertura
+    (`y.isna()`). Erano 9 alla prima stesura, 12 dalla Fase 101-bis quando le 3
+    righe La Liga svuotate dal guard sono entrate nel conteggio.
+    """
     F = carica_footiqo()
     fr = []
     for lg in LEAGUES:
@@ -801,9 +806,9 @@ def main() -> int:
         "extrapolazione": bool(tg["T"].min() < ev["T"].min() or tg["T"].max() > ev["T"].max()
                                or tg.p_c25.min() < ev.p_c25.min()
                                or tg.p_c25.max() > ev.p_c25.max()),
-        "nota": "le 9 sono partite da TOTALE ALTO (percentili 64-98): il MAE medio "
+        "nota": "le bersaglio sono partite da TOTALE ALTO: il MAE medio "
                 "del bakeoff NON e' l'errore atteso su di loro -- vale lo strato C5"}
-    print(f"   C8 le 9 cadono ai percentili T "
+    print(f"   C8 le {len(tg)} bersaglio cadono ai percentili T "
           f"{min(v['perc_T'] for v in perc.values()):.2f}-{max(v['perc_T'] for v in perc.values()):.2f}; "
           f"extrapolazione: {conf_out['C8_dove_cadono_le_9']['extrapolazione']}")
 
@@ -871,7 +876,7 @@ def main() -> int:
     print(f"   lettura di un solo lato su righe INTEGRE: MAE {sei['mae_lettura_solo_lato_over']:.5f} "
           f"(overround sd entro cella {sei['overround_sd_entro_lega_stagione']:.4f})")
 
-    # le 8 righe corrotte: cosa dicono i due lati, letti uno alla volta?
+    # le righe corrotte: cosa dicono i due lati, letti uno alla volta?
     reg = pd.read_csv(ROOT / "data" / "correzioni_dichiarate.csv",
                       dtype={"season": str})
     reg = reg[(reg.stato == "applicata")
@@ -968,7 +973,10 @@ def main() -> int:
     res["fuori_concorso_lato_over"] = sei
     OUT_JSON.write_text(json.dumps(res, indent=1, ensure_ascii=False))
     lato_by_key = {(d["league"], d["season"], d["partita"]): d for d in dettaglio}
-    assert len(lato_by_key) == len(dettaglio) == 8
+    # Nessuna chiave duplicata: la conta e' quella che e' (era cablata a 8,
+    # il numero di righe corrotte alla prima stesura — Fase 101-bis).
+    assert len(lato_by_key) == len(dettaglio), \
+        'chiavi duplicate fra le righe corrotte'
 
     print(f"\n== 5-bis. tabella finale delle {len(tg)} partite bersaglio ==")
     for r in tg.itertuples():
