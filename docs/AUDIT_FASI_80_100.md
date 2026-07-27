@@ -15,8 +15,9 @@
 > **Esito in una riga:** **198 rilievi**, di cui **16 gravi**; nessun errore nei
 > *modelli*, tutti gli errori stanno nel **passaggio dal cantiere al progetto** e
 > nella **propagazione delle conclusioni ritirate**. Più un fatto che nessun
-> fronte cercava e che è emerso al momento di committare: **`main` è fermo alla
-> Fase 88** e non ha mai ricevuto l'integrazione (§1, punto 7).
+> Più un rilievo che ho scritto e poi **ritirato** — «`main` non ha ricevuto
+> l'integrazione» — perché si basava su un ref locale vecchio invece che sulla
+> fonte: la smentita, e il perché è istruttiva, sono al punto 7.
 
 ---
 
@@ -91,19 +92,28 @@ conclusivi» su un intervallo che, ricalcolato, **include lo zero**.
 ✅ **Corretto**: la Fase 92-bis ha ora la sua voce nel diario e la sua riga nel
 registro, e la Fase 91 porta il blocco di rettifica coi numeri dell'artefatto.
 
-**7. `main` non ha mai ricevuto l'integrazione.** La regola §3-bis del
-`CLAUDE.md` è categorica — *«si pusha SEMPRE E SOLO su `main`»* — ma
-`origin/main` è fermo a **`644795f` (Fasi 87-88, 24 luglio)**, mentre le **43
-commit** che contengono le Fasi 89-100, l'import di Bundesliga e Ligue 1, i due
-guard e tutta l'integrazione del cantiere vivono **solo** su
-`claude/audit-ultimi-20-step-gzwro2`. Nessuna di esse è su `main` (`git rev-list
---count HEAD..origin/main` = 0: main è strettamente indietro, non divergente).
-Non è un problema di dati — nulla è perduto, il branch è pubblicato — ma
-chiunque legga `main` oggi vede un progetto a **3 leghe** fermo alla Fase 88, e
-la regola scritta nel protocollo racconta una cosa diversa da quella che è
-successa. **Va deciso dall'utente**: o si porta `main` avanti (è un
-fast-forward, senza conflitti), o si aggiorna §3-bis a dire come si lavora
-davvero.
+**7. ~~`main` non ha mai ricevuto l'integrazione.~~ RILIEVO RITIRATO — ed è
+istruttivo che sia successo proprio qui.** Al momento di committare avevo letto
+`origin/main` **dal ref locale**, fermo a `644795f` (Fasi 87-88, 24 luglio),
+e ne avevo concluso che le 43 commit dell'integrazione vivessero solo sul branch
+di sessione. Interrogando GitHub, `main` è invece a **`6c9b377` — «Integrazione
+3/3c», 26 luglio 14:32**: l'integrazione c'è, e la regola §3-bis è stata
+rispettata. Il ref locale era semplicemente vecchio di un `fetch`.
+
+È esattamente l'errore che questo audit trova negli altri: **una copia locale
+scambiata per la fonte**. La lezione della Fase 100 («verificare contro la
+fonte-madre, non contro sé stessi») vale anche per lo stato di un branch, e il
+costo di non applicarla è stato un rilievo grave inventato di sana pianta.
+Resta agli atti, con la sua smentita, per la regola §1.4 — e perché la prossima
+sessione non lo ri-trovi.
+
+**Lo stato vero dei branch (27 luglio, da GitHub):** `main` = `6c9b377`
+(Fase 100); `claude/audit-ultimi-20-step-gzwro2` = questa fase, **1 commit
+avanti e 0 indietro** rispetto a main (fast-forward pulito);
+`claude/premier-liga-analysis-nqwa5c` = `8636258` (Fase 82) e
+`claude/verify-data-import-leagues-468euv` = `4711d41` (cantiere della Fase 100)
+sono **interamente contenuti in `main`** (0 commit avanti): confluiti, quindi
+cancellabili senza perdere nulla.
 
 **8. `predict.py` applicava la φ35 dove è stata misurata dannosa.** Il motore
 per-lega copriva il θ ma non la φ: su Premier e Liga il path DC riceveva

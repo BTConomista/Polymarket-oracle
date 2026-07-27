@@ -11426,6 +11426,21 @@ ritrattazione di perdersi.
 *calcoli*. Questo li ha cercati nei *giunti*, e lì ne ha trovati sedici gravi
 mentre nei calcoli non ce n'era nemmeno uno.
 
+### 7 · Un rilievo ritirato (e perché sta qui)
+
+Al momento di committare ho scritto un ottavo rilievo grave — «`main` non ha mai
+ricevuto l'integrazione, è fermo alla Fase 88» — leggendo `origin/main` dal
+**ref locale**, vecchio di un `fetch`. Interrogata la fonte, `main` è a
+`6c9b377` («Integrazione 3/3c», 26 luglio): l'integrazione c'è e la regola
+§3-bis è stata rispettata. Il rilievo è stato ritirato lo stesso giorno.
+
+Sta nel diario per la regola §1.4, ma soprattutto perché è **lo stesso errore
+che questa fase trova negli altri**: una copia locale scambiata per la fonte. È
+la lezione della Fase 100 («verificare contro la fonte-madre, non contro sé
+stessi») applicata a un oggetto — lo stato di un branch — a cui non avevo
+pensato di applicarla. Costo: un rilievo grave inventato, sopravvissuto fino
+alla prima domanda dell'utente sui branch.
+
 ### 📐 Il modello in dettaglio
 
 **Nessuna matematica nuova**: è una fase di verifica. Le due formule toccate
