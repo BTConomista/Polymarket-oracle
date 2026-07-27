@@ -54,10 +54,7 @@ Ultimo aggiornamento: **Fase 100** (integrazione delle 5 leghe: la rete e' torna
 
 | host | esito | uso che se ne farebbe |
 |---|---|---|
-| `huggingface.co` (download file `/resolve/`) | CONNECT 403 | dataset |
-| `datasets-server.huggingface.co` (API righe/filtri) | CONNECT 403 | query server-side sui dataset HF |
-| `pub-*.r2.dev` (CDN di transfermarkt-datasets) | 000 | download diretto player-scores |
-| `data.jsdelivr.com` | CONNECT 403 | listing pacchetti |
+| `pub-*.r2.dev` (CDN di transfermarkt-datasets) | 000 (mai ri-verificato dopo la riapertura di rete: nessun URL originale registrato nel repo da ritestare) | download diretto player-scores |
 | `api.github.com` | endpoint generici → "sessions are bound to their configured repositories"; endpoint Actions → negati anche repo-scoped ("GitHub access is not enabled for this session") | REST GitHub |
 
 **Host RAGGIUNGIBILI:**
@@ -72,6 +69,9 @@ Ultimo aggiornamento: **Fase 100** (integrazione delle 5 leghe: la rete e' torna
 | pypi / npm / crates | in NO_PROXY, installazioni ok |
 | `gamma-api.polymarket.com` | **RAGGIUNGIBILE** (verificato 2026-07-24): Gamma API di Polymarket, quote LIVE di eventi/mercati aperti. Vedi §2-bis e `scripts/fetch_polymarket_open.py`. |
 | `api.smarkets.com` | **RAGGIUNGIBILE** (verificato 2026-07-25): API v3 **pubblica, senza chiave**, JSON. Borsa scommesse a soldi veri. Quota gli **outright** (campione, retrocessione, Top 2/3/4/5/6, top-half) delle 5 leghe. Vedi §1-bis e `scripts/fetch_smarkets_outrights.py`. |
+| `huggingface.co` (download file `/resolve/`) | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403): 307→200 su un file reale del dataset `ngeorgea/transfermarkt-player-scores` |
+| `datasets-server.huggingface.co` (API righe/filtri) | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403): righe reali restituite per un dataset valido (es. `stanfordnlp/imdb`) |
+| `data.jsdelivr.com` | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403; già notato raggiungibile nell'audit Fase 100/101 senza però correggere questa tabella): JSON reale dei tag npm di `react` |
 
 Polymarket e Smarkets sono le **due** fonti di quote **prospettiche reali**
 aperte dall'ambiente cloud (test prospettico 2026-27, Fase 78).

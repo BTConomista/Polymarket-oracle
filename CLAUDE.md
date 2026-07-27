@@ -420,7 +420,7 @@ ECE senza intervallo letto come conferma, una dicotomia fra "significativo" e
 > `README.md`; la rosa dei modelli in `docs/PANCHINA.md`. Aggiorna QUESTA
 > istantanea quando cambia lo stato di fondo, non a ogni fase.
 
-**Dove siamo (istantanea aggiornata alla Fase 99 + integrazione delle 5 leghe).**
+**Dove siamo (istantanea aggiornata alla Fase 101 + integrazione delle 5 leghe).**
 Il progetto è passato da "un modello Dixon-Coles sui gol" a **due motori
 complementari**, su **5 leghe** (Serie A, Premier, La Liga, **Bundesliga,
 Ligue 1**), 9 stagioni ciascuna, **16.111 partite**:

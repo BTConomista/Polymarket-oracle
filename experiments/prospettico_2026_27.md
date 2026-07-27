@@ -97,11 +97,26 @@ Per ciascuna delle **5** leghe, giornata 1:
 
 ## 4 · Vincoli ambientali (perché il test non si chiude in un colpo)
 
-Dalla sessione di sviluppo cloud: `WebFetch` è **bloccato del tutto** (403 anche
-su Wikipedia, bug noto — `docs/MANUALE_SOPRAVVIVENZA.md`); i siti di quote
-(oddschecker, ecc.) bloccano i bot; gli snippet di ricerca non danno quote
-decimali pulite né fixture affidabili di stagioni future. Quindi le **quote
-reali vanno raccolte per un canale diverso** vicino al kickoff:
+> ⚠️ **SUPERATA dalla Fase 100** (verificato 27/07/2026, audit di questa
+> sessione): la rete **è tornata raggiungibile** — non è più vero che
+> `WebFetch` sia bloccato del tutto. La Fase 100 ha recuperato realmente
+> **3.045 righe di calendario coppe da Wikipedia via fetch**, e
+> `gamma-api.polymarket.com` / `api.smarkets.com` sono raggiungibili e
+> documentate come fonti di quote prospettiche reali fin dalla Fase 78/97
+> (vedi `docs/MANUALE_SOPRAVVIVENZA.md` §1-bis/§2-bis e
+> `scripts/fetch_polymarket_open.py` / `scripts/fetch_smarkets_outrights.py`
+> per gli outright). Resta vero che quelle due API quotano **outright**, non
+> le quote 1X2/O/U di singola partita che servono al Modello 2: per quelle
+> resta da verificare un canale diretto (siti di quote 1X2/O/U bot-blocked,
+> non ancora ritestati con la rete riaperta) — il paragrafo sotto descrive lo
+> stato di **prima** della Fase 100, conservato come riferimento storico.
+
+Dalla sessione di sviluppo cloud (stato **prima** della Fase 100): `WebFetch`
+era bloccato del tutto (403 anche su Wikipedia, bug noto —
+`docs/MANUALE_SOPRAVVIVENZA.md`); i siti di quote (oddschecker, ecc.)
+bloccano i bot; gli snippet di ricerca non davano quote decimali pulite né
+fixture affidabili di stagioni future. Quindi le **quote reali andavano
+raccolte per un canale diverso** vicino al kickoff:
 - **GitHub Actions** (runner con rete libera, pattern Fase 67), oppure
 - una **sessione browser reale** (Cowork, pattern Fase 70),
 - o inserite a mano dall'utente in un piccolo bundle in `files/`.
