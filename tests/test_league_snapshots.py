@@ -237,3 +237,71 @@ def test_xg_segnaposto_scartato():
     df2 = understat.parse_season_xg(vera, "2021")
     assert df2.iloc[0]["home_xg"] == pytest.approx(0.206627)
     assert df2.iloc[0]["away_xg"] == pytest.approx(0.906784)
+
+
+def test_gruppo_di_mercato_incompleto_scartato_in_blocco():
+    """Un solo lato di un mercato non e' una linea: si scarta IN BLOCCO.
+
+    Politica dichiarata nella docstring di `_pick_market_odds` ("mai un solo
+    lato") ma non implementata: con un lato mancante il guard veniva saltato
+    del tutto e usciva un dict misto (un numero + un NaN). Sui dati odierni non
+    cambia nulla — 0 righe con NaN parziale sui 4 gruppi in tutte e 5 le leghe
+    (audit Fase 101) — ma un refresh futuro potrebbe incontrarne uno.
+    """
+    from src.data import loader
+
+    meta_linea = pd.Series({"Avg>2.5": 1.90})          # manca il lato Under
+    picks = loader._pick_market_odds(
+        meta_linea, ["odds_over25_open", "odds_under25_open"],
+        loader._ODDS_PREFERENCE_OPEN)
+    assert all(pd.isna(v) for v in picks.values()), \
+        "con un solo lato valorizzato l'intero gruppo deve andare a NaN"
+
+    meta_1x2 = pd.Series({"AvgH": 2.10, "AvgD": 3.40})  # manca la trasferta
+    picks = loader._pick_market_odds(
+        meta_1x2, ["odds_home_open", "odds_draw_open", "odds_away_open"],
+        loader._ODDS_PREFERENCE_OPEN)
+    assert all(pd.isna(v) for v in picks.values())
+
+
+@pytest.mark.parametrize("league", TUTTE)
+def test_nessun_gruppo_di_mercato_parziale_negli_snapshot(league):
+    """Controparte sui dati: nessuna riga ha un gruppo di quote a meta'."""
+    if not database.snapshot_path(league).exists():
+        pytest.skip(f"snapshot {league} non costruito")
+    df = pd.read_csv(database.snapshot_path(league))
+    for cols in (["odds_home", "odds_draw", "odds_away"],
+                 ["odds_over25", "odds_under25"],
+                 ["odds_home_open", "odds_draw_open", "odds_away_open"],
+                 ["odds_over25_open", "odds_under25_open"]):
+        cols = [c for c in cols if c in df.columns]
+        if not cols:
+            continue
+        na = df[cols].isna()
+        parziali = int((na.any(axis=1) & ~na.all(axis=1)).sum())
+        assert parziali == 0, f"{league}: {parziali} righe con {cols} a meta'"
+
+
+def test_enrich_richiede_la_lega_giusta():
+    """`enrich` deve sapere QUALE lega sta arricchendo.
+
+    Fino all'audit della Fase 101 non riceveva `league_key` e le tre funzioni
+    chiamate (add_xg, add_squad_values, add_absences) ripiegavano sul default
+    "serie_a": con UNDERSTAT_LEAGUES a 5 voci la guardia non bloccava piu'
+    nulla e `--enrich --league premier_league` avrebbe riscritto l'xG della
+    Premier con quello della Serie A (add_xg fa il drop delle colonne prima di
+    riscriverle). Qui si verifica che la firma prenda la lega e che una lega
+    incoerente col contenuto si fermi RUMOROSAMENTE, senza rete.
+    """
+    import inspect
+
+    from src.data import loader
+
+    assert "league_key" in inspect.signature(loader.enrich).parameters
+
+    finto = pd.DataFrame({"league": ["premier_league"] * 2,
+                          "season": ["2425"] * 2,
+                          "home_team": ["Arsenal", "Chelsea"],
+                          "away_team": ["Chelsea", "Arsenal"]})
+    with pytest.raises(ValueError, match="premier_league"):
+        loader.enrich(finto, "serie_a")

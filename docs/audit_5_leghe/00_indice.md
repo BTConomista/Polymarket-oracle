@@ -20,7 +20,7 @@ nei report come `cantiere/...` vivono ora nella struttura del progetto:
 | `cantiere/data/ricerca/` | `data/ricerca_esterna/` |
 | `cantiere/data/correzioni_dichiarate.csv` | `data/correzioni_dichiarate.csv` |
 | `cantiere/data/stime/` | `data/estimates/` |
-| `cantiere/data/fonti/` | **rimossi** (135 MB, ri-scaricabili con `python scripts/fetch_sources.py`, che oggi li rimette in `data/fonti/`, non versionata). Il manifest `data/ricerca_esterna/manifest_fonti_audit.json` porta l'impronta SHA256 di **90 file su 141**: tutti i grezzi football-data e Understat-lega, cioè quelli su cui poggiano i controlli B/C dell'audit. **NON** coperti: gli 84 `.txt` openfootball (calendari coppe/Europa) e i 16 `.html` Transfermarkt, che vanno ri-raccolti a parte |
+| `cantiere/data/fonti/` | **rimossi** (135 MB, ri-scaricabili con `python scripts/fetch_sources.py`, che oggi li rimette in `data/fonti/`, non versionata). Il manifest `data/ricerca_esterna/manifest_fonti_audit.json` ha **90 voci** (45 `.csv` football-data + 45 `.json` Understat-lega, tutte e 5 le leghe), ma solo **36 dei 141 file cancellati** hanno la loro impronta SHA256: i 18 CSV football-data e i 18 JSON Understat-lega delle due leghe nuove, cioè quelli su cui poggiano i controlli B/C dell'audit (le altre 54 voci del manifest sono le tre leghe storiche, i cui grezzi qui non erano versionati). **NON** coperti **105** file: gli 84 `.txt` openfootball (calendari coppe/Europa), i 16 `.html` Transfermarkt e 5 `.json` (i 4 `understat_match` — il tiro-per-tiro che è la prova del caso R5 — più il `manifest.json` interno), che vanno ri-raccolti a parte. Attenzione: le chiavi del manifest archiviato sono nella forma `cantiere/data/fonti/…`, mentre `scripts/fetch_sources.py` oggi scrive `data/fonti/…` — per confrontare le impronte va tolto il prefisso `cantiere/` |
 
 **Attenzione leggendoli:** i report 09 e 10 contengono conclusioni poi
 **ritirate** dalla verifica avversariale (§15 del report 10). Le ritirate sono
@@ -75,34 +75,47 @@ cantiere/
   REGOLE.md         le regole decise durante il lavoro (R1-R6)
   report/           gli undici report (sopra)
   patch/            proposte di modifica al codice di produzione (poi applicate)
-  scripts/
-    fetch_sources.py         scarica football-data + Understat (5 leghe x 9 stagioni)
-                             registrando URL/SHA256/timestamp in data/fonti/manifest.json
-    audit_snapshots.py       audit A/B/C: struttura + confronto con le fonti + fonte indipendente
-    audit_anomalie.py        audit avversariale: "e se la fonte fosse sbagliata?"
-    verifica_stime.py        8 prove di falsificazione sulla stima O/U 2017-19
-    riconcilia_nomi.py       riconciliazione nomi squadra per le leghe nuove
-    recupero_squad_value_tm.py  valori rosa da Transfermarkt + validazione della scala
-    nuove_leghe.py           config + alias delle 2 leghe nuove (il "sources.py" provvisorio)
-    build_new_snapshot.py    costruisce gli snapshot a 38 colonne di Bundesliga e Ligue 1
-    eda_nuove_leghe.py       EDA comparativa sulle 5 leghe (passo 1 del playbook)
-    applica_correzioni.py    applica le correzioni dichiarate (registro + verifica, R1/R3)
-    applica_squad_value_tm.py  riempie le celle vuote di valore rosa (R2)
-    tranche3_tracer.py       tracer bullet del DC (walk-forward, 5 leghe)
-    tranche3_market_tracer.py  theta/tilt/phi0/ROI dal lato mercato
-    tranche3_ritaratura.py   griglia delta/emivita/shrinkage per-lega
-    tranche3_mercati.py      market-implied multi-mercato + leva phi35
-    stima_ou_corrotte.py     stima P(Over) dall'1X2 per le righe corrotte (R6)
+  scripts/          32 script, oggi tutti in `scripts/`. Per prefisso:
+                    applica_* (correzioni R1/R3, valore rosa R2)
+                    audit_*   (snapshot A/B/C; avversariale)
+                    build_new_snapshot, cerca_segnaposto, eda_nuove_leghe,
+                    fetch_sources, ggng_contro_quote, riconcilia_nomi,
+                    recupero_squad_value_tm, nuove_leghe, verifica_stime
+                    leve_*    (apertura, beat_close, dc_panchina, devig_shin,
+                               phi_griglia, ricalibrazioni, theta_griglia)
+                    nuovo_*   (calibrazione, fronte_generale, mercato_campione)
+                    stima_*   (celle_residue, ou_close_nuove, ou_corrotte,
+                               ou_open_bakeoff, sot_understat)
+                    tranche3_* (tracer, market_tracer, ritaratura, mercati)
   data/
     bundesliga_matches.csv       snapshot 38 colonne (2.754 partite)
     ligue_1_matches.csv          snapshot 38 colonne (3.097 partite)
     club_fixtures_*.csv          calendari di club completi
     correzioni_dichiarate.csv    registro delle correzioni (cosa, perche', fonte, stato)
     squad_value_2526_transfermarkt.csv   16 celle recuperate da Transfermarkt (applicate)
-    stime_ou_corrotte.csv        8 P(Over) stimate (probabilita', FUORI dagli snapshot)
-    fonti/                       fonti grezze + manifest con SHA256
-  out/              output di ogni run (json + log), rigenerabili
+    estimates/ou_open_corrotte_2017_19.csv   9 P(Over) di apertura stimate (MAE 0.0143,
+                                 probabilita', FUORI dagli snapshot). Il file del
+                                 cantiere si chiamava stime_ou_corrotte.csv e aveva
+                                 8 righe: soppresso, sostituito da questo
+    fonti/                       fonti grezze + manifest con SHA256 (oggi RIMOSSE)
+  out/              output di ogni run, oggi `docs/audit_5_leghe/numeri/`
+                    (37 artefatti json/md/csv versionati, rigenerabili;
+                     due di essi NON riproducono più — vedi il README
+                     di quella cartella per il perché)
 ```
+
+⚠️ **Cinque artefatti NON sono versionati**: i `tracer_pred_{lega}.csv` (10.735
+righe di predizioni walk-forward del DC) sono stati cancellati con il cantiere
+senza destinazione, ma cinque script li rileggono da
+`docs/audit_5_leghe/numeri/` — `tranche3_mercati.py` si ferma con `SystemExit`
+se non li trova. Vanno rigenerati con `python scripts/tranche3_tracer.py`
+**prima** di `leve_apertura`, `leve_dc_panchina`, `nuovo_calibrazione`,
+`tranche3_mercati` e `tranche3_ritaratura`.
+
+⚠️ **`caccia_understat.md` non esiste**: delle quattro «cacce» è l'unica senza la
+sua lettura per un umano (c'è solo `caccia_understat.json`).
+`scripts/cerca_segnaposto.py` la promette nel docstring e la scrive a fine run,
+ma il run richiede i grezzi di `data/fonti/`, oggi non versionati.
 
 ## Come rifare tutto da zero
 
@@ -113,6 +126,12 @@ python scripts/audit_anomalie.py         # audit avversariale
 python scripts/verifica_stime.py         # verifica delle stime
 python scripts/build_new_snapshot.py     # ricostruisce i 2 snapshot nuovi
 python scripts/eda_nuove_leghe.py        # EDA 5 leghe
+python scripts/tranche3_tracer.py        # rigenera i 5 tracer_pred_*.csv in
+                                         # docs/audit_5_leghe/numeri/ (10.735 righe di
+                                         # predizioni walk-forward, NON versionate):
+                                         # sono l'input di leve_apertura, leve_dc_panchina,
+                                         # nuovo_calibrazione, tranche3_mercati e
+                                         # tranche3_ritaratura
 python scripts/applica_correzioni.py     # correzioni dichiarate (idempotente)
 python scripts/applica_squad_value_tm.py # valore rosa dalle celle TM (idempotente)
 ```
@@ -129,9 +148,13 @@ versionata).
 
 ## Regole rispettate
 
-- **nessun file esistente del progetto è stato modificato** (né `src/`, né
-  `data/`, né `docs/`, né `scripts/`, né `tests/`): tutto vive qui;
+- **al tempo del cantiere** nessun file esistente del progetto era stato
+  modificato (né `src/`, né `data/`, né `docs/`, né `scripts/`, né `tests/`):
+  tutto viveva qui. ⚠️ **Premessa decaduta all'integrazione** (`03d5bec` →
+  `6c9b377`), che ha toccato tutte e cinque le cartelle, e poi alla Fase 101
+  (`bb6ebe4`), che ha riparato i 32 script migrati;
 - nessun numero inventato: ogni buco resta `NaN` **dichiarato**;
 - ogni anomalia trovata è documentata con la prova e l'impatto quantificato,
   anche quando l'esito è "non è un errore" (§1.4 e §1.6 del CLAUDE.md);
-- `pytest` resta verde (153 test).
+- `pytest` restava verde con **153** test alla chiusura del cantiere; sono
+  **197** al commit `174f78c` (fine Fase 101).

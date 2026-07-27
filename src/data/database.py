@@ -67,11 +67,17 @@ def read_snapshot(path: Path = SNAPSHOT_PATH) -> pd.DataFrame:
 # ---------------------------------------------------------------------- #
 # Database SQLite (artefatto queryable, rigenerabile)
 # ---------------------------------------------------------------------- #
-def build_db(matches: pd.DataFrame, fingerprint: str, db_path: Path = DB_PATH) -> Path:
+def build_db(matches: pd.DataFrame, fingerprint: str, db_path: Path = DB_PATH,
+             league_key: str = "serie_a") -> Path:
     """(Ri)costruisce il database SQLite dai dati normalizzati.
 
     Crea la tabella `matches` e una tabella `meta` con la provenienza
     (numero partite, impronta dei dati, momento di costruzione).
+
+    ``league_key`` finisce in `meta`: fino all'audit della Fase 101 la riga
+    `note` diceva "Serie A" qualunque fosse la lega caricata, cioe' un valore
+    che SEMBRA una misura di provenienza e non lo e' (regola R6, CLAUDE.md
+    §5-bis) su un artefatto che il progetto invita a interrogare in SQL.
     """
     db_path.parent.mkdir(parents=True, exist_ok=True)
     if db_path.exists():
@@ -94,8 +100,10 @@ def build_db(matches: pd.DataFrame, fingerprint: str, db_path: Path = DB_PATH) -
             "n_seasons": str(matches["season"].nunique()),
             "data_fingerprint": fingerprint,
             "seasons": ",".join(sorted(matches["season"].unique())),
-            "note": "Serie A, schema football-data.co.uk (via mirror). "
-                    "Ricostruibile con scripts/build_database.py.",
+            "league": league_key,
+            "note": f"{league_key}, schema football-data.co.uk (via mirror). "
+                    f"Ricostruibile con "
+                    f"scripts/build_database.py --league {league_key}.",
         }
         conn.executemany("INSERT INTO meta VALUES (?, ?)", list(meta.items()))
     return db_path

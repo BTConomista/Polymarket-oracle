@@ -54,18 +54,19 @@ Ultimo aggiornamento: **Fase 100** (integrazione delle 5 leghe: la rete e' torna
 
 | host | esito | uso che se ne farebbe |
 |---|---|---|
-| `transfermarkt.com` / `.it` | curl 000 + WebFetch fallisce | valori rosa ufficiali |
 | `huggingface.co` (download file `/resolve/`) | CONNECT 403 | dataset |
 | `datasets-server.huggingface.co` (API righe/filtri) | CONNECT 403 | query server-side sui dataset HF |
 | `pub-*.r2.dev` (CDN di transfermarkt-datasets) | 000 | download diretto player-scores |
 | `data.jsdelivr.com` | CONNECT 403 | listing pacchetti |
-| `football-data.co.uk`, `understat.com` | 403 (già noto, docs storiche) | fonti originali |
 | `api.github.com` | endpoint generici → "sessions are bound to their configured repositories"; endpoint Actions → negati anche repo-scoped ("GitHub access is not enabled for this session") | REST GitHub |
 
 **Host RAGGIUNGIBILI:**
 
 | host | note |
 |---|---|
+| `football-data.co.uk` | **200 dalla Fase 100** (era 403: vedi il banner in testa; ri-verificato 200 il 27/07/2026). È la fonte primaria: 45 stagioni ri-scaricate |
+| `understat.com` | **200 dalla Fase 100** (era 403). Richiede `GET /main/getLeagueData/{Lega}/{anno}` con header `X-Requested-With: XMLHttpRequest` (senza header → 404) e risposta **gzip** |
+| `transfermarkt.com` / `.it` | **200 dalla Fase 100** (era «curl 000 + WebFetch fallisce»). Valori rosa ufficiali |
 | `raw.githubusercontent.com` | tutti i repo pubblici (openfootball, salimt, …) |
 | `github.com` (pagine HTML) | utile per verifiche di esistenza |
 | pypi / npm / crates | in NO_PROXY, installazioni ok |

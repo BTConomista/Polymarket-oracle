@@ -1,5 +1,10 @@
 name: Probe dataset Kaggle O/U 2017-19 (Fase A)
 
+# PISTA CHIUSA alla Fase 100 (docs/CACCIA_OU_2017_19.md: il dato e' stato trovato
+# via footiqo/1xBet e deliberatamente NON inserito). Workflow conservato come
+# riferimento: non lanciarlo senza aver riletto quel documento. Copre 3 leghe
+# su 5 perche' e' precedente all'ingresso di Bundesliga e Ligue 1.
+
 # Fase A del piano CACCIA_OU_2017_19.md: prima di rifare scraping diretto,
 # verifica se dataset gia' pubblicati (Kaggle) coprono O/U 2.5
 # apertura+chiusura per Serie A/Premier/La Liga 2017-18/2018-19.

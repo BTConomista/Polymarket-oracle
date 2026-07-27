@@ -29,10 +29,18 @@ su gol, date, tiri, 10 colonne quota e 8 colonne xG.
 | assenze stimate | Transfermarkt (mirror salimt) + rose Understat | rete |
 | calendario di club | openfootball: `deutschland/{stagione}/1-bundesliga.txt`, `2-bundesliga2.txt`, `cup.txt`; `france/france/{stagione}_fr{1,2}.txt`, `_frcup.txt`; coppe UEFA condivise | rete |
 
-`data/ricerca_esterna/manifest_fonti_audit.json`: URL, timestamp UTC, byte e **SHA256** di
-ogni file. Le fonti delle due leghe nuove sono **versionate** nel cantiere
-(≈11 MB): gli snapshot si rigenerano **offline**, come per Premier/Liga dai
-bundle di `files/`.
+`data/ricerca_esterna/manifest_fonti_audit.json`: URL, timestamp UTC, byte e
+**SHA256** dei grezzi football-data e Understat-lega — **36 dei 141** file usati
+qui; restano fuori gli 84 `.txt` openfootball, i 16 `.html` Transfermarkt e i 4
+`.json` `understat_match` (vedi la tabella in testa a
+[`00_indice.md`](00_indice.md)).
+
+> ⚠️ **Rettifica della Fase 101.** Le fonti delle due leghe nuove *erano*
+> **versionate** nel cantiere (≈11 MB) e gli snapshot si rigeneravano
+> **offline**, come per Premier/Liga dai bundle di `files/`. All'integrazione
+> sono state **rimosse** (`data/fonti/` è ora in `.gitignore`), quindi oggi la
+> rigenerazione richiede prima `python scripts/fetch_sources.py`, che vuole la
+> rete.
 
 > ⚠️ La Francia ha uno schema di percorsi openfootball **diverso** da tutte le
 > altre leghe: il repo `openfootball/france` è in realtà il mono-repo «Europe» e

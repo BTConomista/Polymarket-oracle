@@ -11,9 +11,9 @@ delle fasi passate. Le curve dicono (a) dove sta l'ottimo per lega, (b) quanto
 chiedono numeri diversi (§7).
 
 Gli assi (un asse alla volta, il resto al riferimento ρ=−0.06, θ=1, φ=0):
-  ρ     ∈ {−0.14 … +0.02} (9 valori)  — correzione punteggi bassi; RICHIEDE
+  ρ     ∈ {−0.22 … +0.02} (11 valori) — correzione punteggi bassi; RICHIEDE
           la ri-inversione delle quote per ogni ρ (coerenza inversione↔matrice)
-  θ     ∈ {1.00 … 1.30} (7 valori)    — double-Poisson mean-preserving (F51)
+  θ     ∈ {1.00 … 1.50} (10 valori)   — double-Poisson mean-preserving (F51)
   φ0×κ  ∈ {0…0.7}×{0.5…5} (37 combo)  — boost-pareggio φ0·exp(−κ|λ−μ|) (F39)
   knee  ∈ {25,28,31,34,37} (5 valori) — profilo stagionale del tasso-ospite,
           coefficienti SEMPRE fittati leave-future-out (come F80)

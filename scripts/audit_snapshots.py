@@ -83,7 +83,10 @@ _CORR_PATH = ROOT / "data" / "correzioni_dichiarate.csv"
 def _righe_corrette(league: str) -> set[tuple]:
     """{(stagione, casa, ospite)} con almeno una correzione applicata."""
     if not _CORR_PATH.exists():
-        return set()
+        raise SystemExit(
+            f"registro delle correzioni non trovato: {_CORR_PATH}. "
+            "Senza registro il controllo B2 segnalerebbe le correzioni volute "
+            "come differenze dalla fonte (regola R3): mi fermo.")
     c = pd.read_csv(_CORR_PATH, dtype={"season": str})
     c = c[(c.league == league) & (c.stato == "applicata")]
     return set(zip(c.season, c.home_team, c.away_team))

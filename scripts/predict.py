@@ -85,7 +85,8 @@ def main() -> None:
                     metavar=("H", "D", "A", "OVER", "UNDER"),
                     help="quote 1X2 + Over/Under 2.5 -> attiva il market-implied (Modello 2)")
     ap.add_argument("--no-draw-balance", action="store_true",
-                    help="non mostrare la variante Fase 35 φ(|λ−μ|)")
+                    help="spegne la φ35 (Fase 35, φ(|λ−μ|)) sul path DC, anche "
+                         "dove il motore per-lega la prevede")
     ap.add_argument("--matchday", type=int, default=None,
                     help="giornata (1-38): mostra il nudge stagionale GG/NG di fine "
                          "stagione (Fase 48; utile solo nel finale 35-38)")
@@ -159,7 +160,9 @@ def main() -> None:
         d = mi.price_markets(lam, mu, rho=-0.06, phi0=eng["phi0"],
                              kappa=eng["kappa"], dp_theta=eng["dp_theta"])
         print(f"  quote devigate:  casa {pH:.1%}  pari {pD:.1%}  ospite {pA:.1%}  Over2.5 {pO:.1%}")
-        _show_markets(d, "Modello 2: market-implied + φ35 (router v3: dp + forma per-mercato)",
+        _show_markets(d, "Modello 2: market-implied"
+                      + (" + φ35" if eng["phi0"] else "")
+                      + " (router v3: dp + forma per-mercato)",
                       rho=-0.06, matchday=args.matchday, nudge=False)
         # 1X2 "affinato" dp_lvl (Fase 51): batte la chiusura in log-loss (CI
         # conclusivo) ma SOLO in Serie A — la Fase 53 ha misurato che fuori non

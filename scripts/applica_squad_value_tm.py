@@ -21,6 +21,7 @@ import argparse
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -57,10 +58,22 @@ def main() -> int:
                 gia_pieno = mask & df[col].notna()
                 if gia_pieno.any():
                     valori = df.loc[gia_pieno, col].unique()
+                    # Idempotenza (garanzia 3): se la cella contiene GIA' il
+                    # valore Transfermarkt, la correzione e' gia' applicata e
+                    # si prosegue. Fino all'audit della Fase 101 lo stop era
+                    # incondizionato, quindi una seconda esecuzione — anche in
+                    # --dry-run — moriva alla prima cella e il blocco di
+                    # ripristino documentato non era eseguibile fino in fondo.
+                    # R2 resta intatta: un valore DIVERSO ferma ancora tutto.
+                    if len(valori) == 1 and np.isclose(float(valori[0]),
+                                                       float(r.squad_value_tm)):
+                        print(f"  [gia' applicata] {r.team} {r.season} {col}")
+                        continue
                     raise SystemExit(
                         f"ERRORE: {r.team} {r.season} ha gia' un {col} "
-                        f"({valori[:3]}): la fonte primaria non si sovrascrive. "
-                        f"Mi fermo.")
+                        f"({valori[:3]}) DIVERSO dal valore Transfermarkt "
+                        f"({r.squad_value_tm}): la fonte primaria non si "
+                        f"sovrascrive. Mi fermo.")
                 if not args.dry_run:
                     df.loc[mask, col] = float(r.squad_value_tm)
                 touched += int(mask.sum())

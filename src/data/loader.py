@@ -213,6 +213,14 @@ def _pick_market_odds(row: pd.Series, targets: list[str],
     l'1X2 della stessa partita.
     """
     picks = {t: _pick_odds(row, preference[t]) for t in targets}
+    if any(pd.isna(v) for v in picks.values()):
+        # Gruppo INCOMPLETO: un solo lato non e' una linea, e non si deviga.
+        # Stessa politica del blocco dichiarata sopra ("mai un solo lato"):
+        # fino all'audit della Fase 101 il guard veniva semplicemente saltato e
+        # il dict misto usciva com'era. Sui dati odierni non cambia nulla
+        # (0 righe con NaN parziale sui 4 gruppi in tutte e 5 le leghe), ma la
+        # politica ora vale anche per un refresh futuro.
+        return {t: float("nan") for t in targets}
     if all(pd.notna(v) for v in picks.values()):
         orr = sum(1.0 / v for v in picks.values())
         if orr < 1.0 or orr > ORR_MAX:
@@ -277,23 +285,39 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     return out
 
 
-def enrich(matches: pd.DataFrame, *, force_download: bool = False) -> pd.DataFrame:
+def enrich(matches: pd.DataFrame, league_key: str = "serie_a", *,
+           force_download: bool = False) -> pd.DataFrame:
     """Arricchisce le partite con le colonne da fonti esterne.
 
     In ordine: xG di Understat (add_xg), valori rosa Transfermarkt
     (add_squad_values) e assenze stimate da infortuni (add_absences).
     E' idempotente: le colonne gia' presenti vengono ricalcolate.
     Le leghe non coperte da Understat vengono restituite invariate.
+
+    ``league_key`` va PROPAGATO alle tre funzioni chiamate (audit Fase 101):
+    ognuna lo prende come argomento ma con default "serie_a", e finche' non
+    veniva passato l'arricchimento restava cablato sulla Serie A. Da quando
+    UNDERSTAT_LEAGUES ha tutte e 5 le voci la guardia qui sotto non blocca
+    piu' nulla, e ``understat.add_xg`` fa il ``drop`` delle colonne xG prima di
+    riscriverle: l'effetto sarebbe stato sostituire l'xG di un'altra lega con
+    quello della Serie A.
     """
     leagues = set(matches["league"].unique())
+    if leagues and leagues != {league_key}:
+        raise ValueError(
+            f"enrich(): lo snapshot contiene {sorted(leagues)} ma "
+            f"league_key={league_key!r}. L'arricchimento scrive colonne "
+            f"per-lega: mi fermo invece di mescolare le fonti.")
     if not leagues <= set(sources.UNDERSTAT_LEAGUES):
         return matches
 
     from . import transfermarkt, understat
 
-    matches = understat.add_xg(matches, force=force_download)
-    matches = transfermarkt.add_squad_values(matches, force=force_download)
-    matches = transfermarkt.add_absences(matches, force=force_download)
+    matches = understat.add_xg(matches, league_key, force=force_download)
+    matches = transfermarkt.add_squad_values(matches, league_key,
+                                             force=force_download)
+    matches = transfermarkt.add_absences(matches, league_key,
+                                         force=force_download)
     return matches
 
 
@@ -648,7 +672,7 @@ def load_league(
 
     combined = pd.concat(frames, ignore_index=True)
     combined = combined.sort_values("date").reset_index(drop=True)
-    combined = enrich(combined, force_download=force_download)
+    combined = enrich(combined, league_key, force_download=force_download)
     combined = add_rest_days(combined)
     combined = add_form(combined)
     combined = add_stakes(combined)

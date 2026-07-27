@@ -192,9 +192,17 @@ ALIASES = {"bundesliga": BUNDESLIGA_ALIASES, "ligue_1": LIGUE1_ALIASES}
 def registra() -> None:
     """Inietta le leghe nuove nelle strutture di `src.data.sources`.
 
-    Effetto: `loader`, `understat`, `fixtures` e `player_scores` (codice di
-    PRODUZIONE, non modificato) trattano bundesliga/ligue_1 come le altre.
-    All'integrazione, questa funzione sparisce e le voci vivono in sources.py.
+    STORICO: serviva finche' il lavoro viveva in `cantiere/` e Bundesliga e
+    Ligue 1 non erano ancora nel codice di produzione.
+
+    Dall'integrazione (Fase 100) e' un NO-OP verificato: le voci vivono in
+    `src/data/sources.py`, `src/config.py` e `src/data/player_scores.py`, e
+    ogni `setdefault` qui sotto non tocca piu' nulla (controllato campo per
+    campo nell'audit della Fase 101). Non viene rimossa perche' resta un
+    CONTROLLO di coerenza a costo zero: il ciclo sugli alias solleva se un
+    alias di produzione diverge da quello con cui i 25 script che la chiamano
+    sono stati scritti — un fallimento rumoroso e' preferibile a numeri
+    prodotti su una tabella di nomi diversa da quella attesa.
     """
     from src.data import player_scores, sources
 

@@ -77,6 +77,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from multiprocessing import Pool
@@ -85,9 +86,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/home/user/Polymarket-oracle")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -95,8 +95,10 @@ import nuove_leghe  # noqa: E402
 nuove_leghe.registra()
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "nuovo_fronte_generale.json"
-SCRATCH = Path("/tmp/claude-0/-home-user-Polymarket-oracle/"
-               "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad") / "fronte_generale"
+SCRATCH = Path(os.environ.get(
+    "SCRATCH",
+    "/tmp/claude-0/-home-user-Polymarket-oracle/"
+    "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "fronte_generale"
 SCRATCH.mkdir(parents=True, exist_ok=True)
 
 LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]

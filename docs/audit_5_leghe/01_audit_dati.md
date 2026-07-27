@@ -7,9 +7,11 @@ dimostrare il contrario**, non di confermare.
 
 **Verdetto in una riga:** i dati **corrispondono alla fonte, riga per riga, su
 tutte e 5 le leghe** (0 differenze su gol, date, tiri, 10 colonne quota, 8
-colonne xG); l'audit avversariale ha però trovato **7 anomalie reali**, tutte
-*nella fonte* (non nella pipeline), tutte identificate una per una e quantificate:
-2 richiedono un intervento, 5 vanno dichiarate.
+colonne xG); l'audit avversariale ha però trovato **7 anomalie reali** — **6
+nella fonte** e **1 nostra** (l'ordine delle colonne fra snapshot, §4.6) — tutte
+identificate una per una e quantificate: 3 hanno richiesto un intervento (§4.1,
+§4.6, §4.8), 4 vanno dichiarate; un ottavo caso segnalato è un falso positivo
+ritirato (§4.4).
 
 ---
 

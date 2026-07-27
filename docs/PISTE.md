@@ -137,9 +137,12 @@ del mercato (cache `outputs/implied_lammu_cache.csv`).
 Poisson sovra-stima i totali alti) e che la double-Poisson θ la corregge, con
 l'exact-score log-loss al minimo esatto a θ=1.225. MA **un solo parametro di
 dispersione non calibra ogni profondità della coda**: Over 3.5 vuole θ≈1.35,
-Over 4.5 θ≈1.10. La COM-Poisson (dispersione principiata a un parametro ν) è
-stata **provata e pareggia** la dp senza batterla (§PANCHINA): una forma a un
-parametro non basta. Serve un **secondo parametro di forma della coda**. Due vie
+Over 4.5 θ≈1.10. ⚠️ **RETTIFICA (Fase 101):** la «COM-Poisson» provata qui **è la
+dp stessa** riparametrizzata (`_dp_pmf` dà `q_k ∝ a^k/(k!)^θ`, cioè la
+COM-Poisson con ν=θ, entrambe mean-matched): non è mai stata la prova che una
+forma a un parametro non basta — era la dp confrontata con sé stessa a un θ
+diverso. La prova vera resta l'incoerenza fra le profondità (θ≈1.35 per l'Over
+3.5, θ≈1.10 per l'Over 4.5). Serve un **secondo parametro di forma della coda**. Due vie
 economiche: (a) **ricalibrazione isotonica per-soglia dei mercati-totale**
 (Over 1.5/2.5/3.5/4.5) fittata walk-forward — corregge ogni profondità
 separatamente, validata su calibrazione (ECE) non log-loss; (b) **mistura di due
@@ -153,8 +156,9 @@ proprio gli esiti meno probabili. Onestà: è calibrazione, non informazione
 (α\*=0 vale anche in coda).
 **Perché non chiusa**: la Fase 51/52 hanno adottato UN θ (sul centro/listino);
 la Fase 85 ha misurato la coda direttamente ma non ha ancora provato la
-correzione a due parametri. La COM-Poisson (una-forma) è a tetto, la
-due-parametri no.
+correzione a due parametri. La via a due parametri resta l'unica non ancora
+provata quando questa pista fu aperta (la «COM-Poisson» non contava: era la dp —
+vedi la rettifica sopra).
 **CHIUSA (Fase 87): entrambe le vie riprodotte, nessuna adottabile.** (a)
 l'**isotonica per-soglia** (PAVA walk-forward) **peggiora il log-loss OOS su tutte
 e 4 le soglie** (Over 1.5 +0.0150 … Over 4.5 +0.0109): il router è già calibrato
@@ -162,8 +166,9 @@ sui totali, ricalibrare aggiunge solo rumore. (b) la **mistura di due Poisson**
 ha un guadagno **in-sample** (s≈0.15, −0.0006) ma **OOS non conclusivo** (Δ
 −0.00042, CI95 [−0.0015,+0.0006], P 78.6%) e con **segno ribaltato sulle stagioni
 recenti** (2024-25 +0.0014, 2025-26 +0.0013: aiutava l'era porte-chiuse, danneggia
-il calcio di oggi). `scripts/_run_tail_two_param.py`. Terza conferma — dopo
-COM-Poisson (F85) e θ_team (F86-bis) — che **la coda dei gol è al tetto della
+il calcio di oggi). `scripts/_run_tail_two_param.py`. **Seconda** conferma
+indipendente — dopo θ_team (F86-bis); la F85 non conta, era la dp
+riparametrizzata (F101) — che **la coda dei gol è al tetto della
 forma**: il singolo θ del router è quanto di meglio senza informazione nuova.
 
 ### 4-quater. Dispersione per-squadra: un θ_team per gli esiti rari (LEAD, Fase 86)
@@ -624,8 +629,10 @@ catturano in parte la stessa quantità: **non vanno sommate**.
 
 **NUOVA PISTA (Fase 91) — il prior δ dipende dall'ORIZZONTE di predizione.**
 Sui mercati posizionali la mis-calibrazione è **tutta sulle neopromosse**
-(dichiarato 58.7% di retrocessione, realizzato 48.6%; il resto della lega è
-calibrato a +1.8pp). Il δ attuale (0.23 / 0.33 / 0.22) fu tarato sul **log-loss
+(dichiarato 54.7% di retrocessione, realizzato 48.6%; il resto della lega è
+calibrato a +1.1pp — valori dell'artefatto `experiments/fase91_positions.json`
+dopo il fix del prior della Fase 92; il 58.7%/+1.8pp della prima stesura è
+PRE-fix). Il δ attuale (0.23 / 0.33 / 0.22) fu tarato sul **log-loss
 della singola partita** (Fasi 7/57): lì è ottimo, ma propagato su 38 giornate la
 penalizzazione si accumula e diventa troppo severa. È la prima costante ufficiale
 del progetto che si scopre **dipendente dall'orizzonte**. Test proposto: ritarare

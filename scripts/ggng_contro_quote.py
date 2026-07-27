@@ -94,9 +94,8 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
 
-ROOT = Path("/home/user/Polymarket-oracle")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -132,8 +131,10 @@ SNAP = {
     "bundesliga": ROOT / "data" / "bundesliga_matches.csv",
     "ligue_1": ROOT / "data" / "ligue_1_matches.csv",
 }
-STIME = [ROOT / "data" / "estimates" / "ou_close_2017_19.csv",
-         ROOT / "data" / "estimates" / "ou_close_2017_19_nuove_leghe.csv"]
+# Un solo file: `ou_close_2017_19_nuove_leghe.csv` e' confluito qui con
+# l'integrazione (6c9b377), perche' il fit pooled a 5 leghe copre anche
+# Bundesliga e Ligue 1 — 3.638 righe, tutte le leghe.
+STIME = [ROOT / "data" / "estimates" / "ou_close_2017_19.csv"]
 
 RHO = -0.06
 B = 10_000

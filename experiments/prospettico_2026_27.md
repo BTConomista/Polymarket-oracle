@@ -1,7 +1,20 @@
-# Test prospettico — giornata 1, stagione 2026-27 (Serie A, Premier, La Liga)
+# Test prospettico — giornata 1, stagione 2026-27 (5 leghe: Serie A, Premier, La Liga, Bundesliga, Ligue 1)
 
 > **Stato: APERTO.** Anteprima illustrativa congelata il 2026-07-23. Il test
 > vero (con quote reali e risultati) va **completato più avanti** — vedi §5.
+>
+> ⚠️ **Allargato a 5 leghe all'audit della Fase 101.** Il documento nasceva a 3
+> leghe perché Bundesliga e Ligue 1 non erano ancora in produzione; ora lo sono
+> (16.111 partite, `LEAGUE_CONFIGS` e `MARKET_ENGINE` complete), quindi non c'è
+> ragione di lasciarle fuori dal gold standard. L'anteprima illustrativa del §2
+> resta a 3 leghe — è congelata e non si riscrive — ma il **protocollo del §3
+> vale per tutte e cinque**.
+>
+> **Le date di inizio** (fonte unica: `newseason.md` §1, `start_date` degli
+> eventi outright Smarkets scaricati il 25/07/2026, da riverificare a inizio
+> agosto): **La Liga 16 agosto**, **Premier e Ligue 1 21 agosto**, **Serie A 22
+> agosto**, **Bundesliga 28 agosto**. La scadenza vera del congelamento è quindi
+> il **16 agosto**.
 
 ## 1 · Perché questo test
 
@@ -34,9 +47,10 @@ sviluppo, con questi limiti **dichiarati**:
   δ Premier 0.33) via `scripts/_run_prospettico_2627.py`. **Da Fase 83-bis anche
   `predict.py` è per-lega** (`--league premier_league` usa δ=0.33 ecc.): il
   "passo 2" del Modello 1 è chiuso, il tool ufficiale può ora produrre M1 per
-  ogni lega. Resta per-contesto solo il θ del router nel path market-implied
-  (M2): Fase 81 ha trovato θ*≈1 in Premier vs ~1.2 in Serie A/Liga, quindi per
-  Premier il M2 andrà prodotto con `dp_theta` neutro (nota nel protocollo §3).
+  ogni lega. ~~Resta per-contesto solo il θ del router nel path market-implied
+  (M2): per Premier il M2 andrà prodotto con `dp_theta` neutro.~~ **Chiuso dalla
+  Fase 92-bis**: anche il M2 è per-lega, `predict.py --league <lega>` prende
+  θ/φ0/κ/sharpen da `src.config.MARKET_ENGINE` — nessun passo manuale.
 
 **Premier League — previsione DC (as_of 2026-08-15, dati fino a 2025-26):**
 
@@ -63,16 +77,17 @@ market-implied riproduce il mercato ed estende ai mercati non quotati.
 
 ## 3 · Il protocollo del test VERO (da eseguire vicino al calcio d'inizio)
 
-Per ciascuna delle 3 leghe, giornata 1:
+Per ciascuna delle **5** leghe, giornata 1:
 1. **Fixture ufficiali** (fonte: lega/Wikipedia, verificati).
 2. **Modello 1 — DC**: `scripts/_run_prospettico_2627.py` oppure, ora che è
    per-lega, `predict.py --league <lega>` (config δ/γ giusta), congelato PRIMA
    del kickoff.
 3. **Modello 2 — market-implied**: raccogliere le **quote di chiusura** reali
    (1X2 + O/U 2.5) di ogni match e invertirle (`predict.py --odds …` /
-   `price_markets`). Da fare vicino al calcio d'inizio. **Nota Fase 81**: per la
-   **Premier** il router θ ottimo è ≈1 (non 1.225): produrre il M2 Premier con
-   `dp_theta` neutro; Serie A/Liga tengono θ≈1.2.
+   `price_markets`). Da fare vicino al calcio d'inizio. **Nessun passo manuale**:
+   dalla Fase 92-bis `predict.py --league <lega>` prende θ/φ0/κ/sharpen da
+   `src.config.MARKET_ENGINE` — motore con θ=1.225 per la Serie A, **liscio**
+   (θ neutro, φ0=0) per Premier, Liga, Bundesliga e Ligue 1.
 4. **Baseline**: frequenza storica dell'esito (già nota) per riferimento.
 5. **Dopo il full-time**: risultati reali → log-loss/Brier per mercato e per
    lega, di Modello 1, Modello 2 e baseline; controllo di calibrazione
@@ -111,6 +126,14 @@ o per stagione): ogni partita raccolta conta per una.
 | **574** | **80%** | ≈ 19 giornate su 3 leghe |
 | 1140 (1 stagione × 3 leghe) | 97,7% | il disegno giusto |
 
+⚠️ **Questa tabella è calcolata su 3 leghe** (6.840 partite appaiate, Fase 98) e
+**non è stata rifatta** dopo l'ingresso di Bundesliga e Ligue 1. Cambia solo il
+rapporto giornate↔partite, non il segnale/rumore: una giornata su **5** leghe
+vale **~48 partite** (10+10+10+9+9) invece di 30, quindi le ~574 partite della
+soglia 80% si raggiungono in **~12 giornate** invece di 19. Le percentuali di
+potenza in colonna restano quelle misurate: ri-calcolarle sulle 5 leghe è un
+lavoro aperto, non un numero da dedurre a mente.
+
 Gerarchia netta fra i bersagli: contro la **baseline** bastano **184** partite
 (6 giornate); contro il **mercato** ne servono **574** sull'1X2, **2.254** sul
 GG/NG, **2.988** sull'O/U 2.5.
@@ -136,8 +159,10 @@ GG/NG, **2.988** sull'O/U 2.5.
 
 ## 5 · «DA RIPETERE / COMPLETARE PIÙ AVANTI» — checklist
 
-- [ ] **Vicino al primo turno 2026-27** (Premier ~21/8, Liga ~15/8, SA ~23/8):
-  - [ ] verificare i **fixture ufficiali** di giornata 1 (3 leghe);
+- [ ] **Vicino al primo turno 2026-27** — date da `newseason.md` §1: Liga
+  **16/8**, Premier e Ligue 1 **21/8**, Serie A **22/8**, Bundesliga **28/8**
+  (la scadenza vera è il **16 agosto**):
+  - [ ] verificare i **fixture ufficiali** di giornata 1 (**5 leghe**);
   - [ ] rigenerare il **Modello 1 (DC)** coi fixture veri e congelarlo;
   - [ ] raccogliere le **quote di chiusura** reali e generare il **Modello 2**;
   - [ ] congelare tutto PRIMA del calcio d'inizio (commit con data).

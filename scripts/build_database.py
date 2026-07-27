@@ -8,8 +8,9 @@ Due modalita':
                                                 # (xG, valori rosa, assenze) senza
                                                 # toccare la base football-data
     python scripts/build_database.py --fixtures # assembla il CALENDARIO DI CLUB
-                                                # completo (Serie A + coppe +
-                                                # Europa) in data/club_fixtures.csv
+                                                # completo (lega di --league +
+                                                # coppe + Europa) in
+                                                # data/club_fixtures[_<lega>].csv
                                                 # e aggiunge le colonne
                                                 # rest_days_full/midweek_europe
                                                 # allo snapshot (congestione vera)
@@ -21,9 +22,14 @@ Due modalita':
                                                 # arricchisce, aggiorna lo snapshot
                                                 # e ricostruisce il DB
 
-Lo snapshot (data/serie_a_matches.csv) e' versionato in git: e' la fonte di
-verita' congelata, cosi' terzi e sessioni future hanno esattamente gli stessi
-dati. Il database SQLite (data/football.db) e' rigenerabile e non versionato.
+Ogni ramo lavora sulla lega di `--league` (default serie_a): snapshot,
+calendario di club, arricchimento e database.
+
+Lo snapshot della lega scelta (data/<lega>_matches.csv, default Serie A) e'
+versionato in git: e' la fonte di verita' congelata, cosi' terzi e sessioni
+future hanno esattamente gli stessi dati. Il database SQLite
+(data/football.db per la Serie A, data/football_<lega>.db per le altre) e'
+rigenerabile e non versionato.
 """
 
 from __future__ import annotations
@@ -92,7 +98,7 @@ def main() -> None:
         # football-data: la base resta congelata, si aggiungono/ricalcolano
         # solo le colonne xG / valori rosa / assenze.
         print(f"Arricchisco lo snapshot congelato: {snap_path}")
-        matches = loader.enrich(database.read_snapshot(snap_path))
+        matches = loader.enrich(database.read_snapshot(snap_path), args.league)
         path = database.write_snapshot(matches, snap_path)
         print(f"  snapshot arricchito: {path}  ({len(matches)} partite)")
     elif args.fixtures:
@@ -153,7 +159,16 @@ def main() -> None:
             print(f"  {season}       {xg:6.1%}  {sq:6.1%}")
 
     fingerprint = experiment_log.data_fingerprint(matches)
-    db_path = database.build_db(matches, fingerprint)
+    # Anche il DB e' PER LEGA (residuo dello stesso difetto chiuso sopra: il
+    # ramo di sola lettura scriveva comunque data/football.db, quindi
+    # `--league bundesliga` sovrascriveva il DB della Serie A). serie_a resta
+    # su data/football.db: retrocompatibile con la query di esempio e col
+    # .gitignore.
+    db_path = database.build_db(
+        matches, fingerprint,
+        database.DB_PATH if args.league == "serie_a"
+        else snap_path.parent / f"football_{args.league}.db",
+        league_key=args.league)
 
     meta = database.read_meta(db_path)
     print(f"\nDatabase costruito: {db_path}")
@@ -161,7 +176,8 @@ def main() -> None:
     print(f"  stagioni:  {meta['n_seasons']}  ({meta['seasons']})")
     print(f"  impronta:  {meta['data_fingerprint']}")
     print("\nEsempio di query:")
-    print("  sqlite3 data/football.db \"SELECT season, COUNT(*) FROM matches GROUP BY season\"")
+    print(f"  sqlite3 {db_path.relative_to(Path(__file__).resolve().parents[1])} "
+          f"\"SELECT season, COUNT(*) FROM matches GROUP BY season\"")
 
 
 if __name__ == "__main__":

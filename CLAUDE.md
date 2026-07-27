@@ -308,9 +308,10 @@ docs/AUDIT_FASI_80_100.md   verbale dell'audit delle ultime 20 fasi (Fase 101):
                  ogni rilievo con evidenza, stato (corretto / da decidere) e
                  rimando al punto del repo
 lavoro_aperto.md (RADICE) INDICE unico del lavoro aperto: Fase 78, le 17 piste
-                 ancora aperte, le caselle vuote della PANCHINA (138 dopo
+                 ancora aperte, le caselle vuote della PANCHINA (134 dopo
                  l'ingresso di Bundesliga e Ligue 1: la matrice e' passata da 4
-                 a 6 colonne), Tier 2/3,
+                 a 6 colonne; erano 138 prima che la riga COM-Poisson uscisse
+                 dalla matrice alla Fase 101), Tier 2/3,
                  i tre punti operativi e il brainstorming sulla routine
                  (aggiornamento giornaliero, movimento quote, notizie e
                  formazioni). NON e' una fonte di verita': se diverge da
@@ -429,8 +430,9 @@ Ligue 1**), 9 stagioni ciascuna, **16.111 partite**:
    (emivita 365g, shrinkage 1.5, blend xG α=0.75, δ neopromosse
    0.23/0.33/0.22/**0.28/0.19**),
    + la **φ(|λ−μ|)** della Fase 35 sulla famiglia-pareggio. Batte nettamente le
-   baseline ma **non il mercato** (gap 1X2 +0.0165 in Serie A; ordine simile
-   nelle altre leghe).
+   baseline ma **non il mercato** (gap 1X2 +0.0167 in Serie A — valore al codice
+   di HEAD, dopo il fix del prior della Fase 92; il +0.0165 delle fasi
+   precedenti è PRE-fix; ordine simile nelle altre leghe).
 2. **Market-implied** (`src/models/market_implied.py`) — il *motore di pricing*:
    inverte le quote 1X2+O/U nei λ,μ del mercato e ne deriva **ogni mercato Tier
    1** dalla matrice DC. Batte il DC-da-gol su 13/14 mercati sulle 3 leghe
@@ -522,9 +524,11 @@ dettaglio in `docs/PISTE.md`:
 - **uso pratico**: `scripts/predict.py` è il tool (DC senza quote / market-implied
   con `--odds`), reso **per-lega** su ENTRAMBI i modelli: M1 alla Fase 83-bis,
   M2 (θ/φ0/κ/sharpen del router) alla **Fase 92-bis** con la mappa
-  `src.config.MARKET_ENGINE` — Premier e Liga escono col motore LISCIO. Residuo
-  vero: `MARKET_ENGINE` non ha ancora una voce esplicita per Bundesliga e
-  Ligue 1 (cadono sul default liscio, che è la scelta giusta ma non dichiarata);
+  `src.config.MARKET_ENGINE` — Premier e Liga escono col motore LISCIO. Dalla
+  **Fase 101** anche Bundesliga e Ligue 1 hanno la loro voce esplicita (motore
+  liscio, stato MISURATO e non solo prudenziale: router θ negativo su 0/25
+  mercati in entrambe), e un test verifica che `MARKET_ENGINE` e
+  `LEAGUE_CONFIGS` elenchino le stesse leghe. Nessun residuo aperto sul M2;
 - **test prospettico 2026-27** (Fase 78, stato APERTO): previsioni congelate
   prima del kickoff e scorate dopo — il gold standard, da completare al primo
   turno con quote reali (`experiments/prospettico_2026_27.md`);

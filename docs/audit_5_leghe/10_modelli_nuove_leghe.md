@@ -955,8 +955,14 @@ diverso, e per la maggior parte è **rifare bene** cose fatte una volta sola:
    generale;
 6. **`dp_tilt` al posto di `dp_lvl` in `sharpen_1x2`** per la Serie A (§7.3): un
    parametro in meno, stesso risultato, e conclusivo anche in walk-forward;
-7. **Tier 2 e Tier 3** (handicap asiatico, HT/FT e tempi): mercati mai coperti,
-   su nessuna lega.
+7. **Tier 2 e Tier 3** — ⚠️ *rettifica della Fase 101: la formulazione originale
+   («mercati mai coperti, su nessuna lega») era già falsa quando è stata
+   scritta.* Il Tier 2 (handicap asiatico) è **coperto e validato** contro una
+   quota esterna e indipendente (Fase 88: Brier 0.2044 vs 0.2044) e il Tier 3 lo
+   è per Halftime, Second Half e risultato esatto (Fasi 96/98, IC conclusivo) —
+   ma **solo sulle 3 leghe storiche**. Restano davvero scoperti **HT/FT
+   congiunto, le combinazioni e il live**, e nessuno dei due Tier è mai stato
+   misurato su Bundesliga e Ligue 1.
 
 ---
 

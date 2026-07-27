@@ -170,7 +170,7 @@ def merged_fixtures(league: str) -> pd.DataFrame:
     F["date"] = pd.to_datetime(F["date"])
     cols = ["season", "team", "date", "competition", "home_away", "opponent"]
     add = []
-    for f in sorted(glob.glob(str(CANTIERE_DATA / "ricerca" / f"fixtures_{league}_*.csv"))):
+    for f in sorted(glob.glob(str(CANTIERE_DATA / "ricerca_esterna" / f"fixtures_{league}_*.csv"))):
         t = pd.read_csv(f)
         t["date"] = pd.to_datetime(t["date"])
         add.append(t[cols])

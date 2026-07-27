@@ -95,6 +95,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -102,9 +103,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/home/user/Polymarket-oracle")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -116,8 +116,10 @@ from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_apertura.json"
-SCRATCH = Path("/tmp/claude-0/-home-user-Polymarket-oracle/"
-               "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad") / "apertura"
+SCRATCH = Path(os.environ.get(
+    "SCRATCH",
+    "/tmp/claude-0/-home-user-Polymarket-oracle/"
+    "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "apertura"
 SNAP = {"bundesliga": ROOT / "data/bundesliga_matches.csv",
         "ligue_1": ROOT / "data/ligue_1_matches.csv"}
 TRACER = {lg: ROOT / f"docs/audit_5_leghe/numeri/tracer_pred_{lg}.csv" for lg in SNAP}
@@ -215,6 +217,9 @@ def inverti(df: pd.DataFrame, league: str, quale: str) -> pd.DataFrame:
 
 def aggancia_dc(df: pd.DataFrame, league: str) -> pd.DataFrame:
     """Aggancia i (lam, mu) del Dixon-Coles dal tracer walk-forward (6 stagioni)."""
+    if not TRACER[league].exists():
+        raise SystemExit(f"manca {TRACER[league]}: esegui prima "
+                         f"scripts/tranche3_tracer.py")
     t = pd.read_csv(TRACER[league], dtype={"season": str, "test_season": str},
                     parse_dates=["date"])
     t = t[["date", "home_team", "away_team", "exp_home_goals", "exp_away_goals"]]
@@ -1410,6 +1415,9 @@ def blocco_H(dati: dict, rng) -> dict:
     print("=" * 96)
     res = {}
     for lg in dati:
+        if not TRACER[lg].exists():
+            raise SystemExit(f"manca {TRACER[lg]}: esegui prima "
+                             f"scripts/tranche3_tracer.py")
         m = pd.read_csv(TRACER[lg], dtype={"season": str, "test_season": str})
         cols = ["odds_home_open", "odds_draw_open", "odds_away_open",
                 "odds_over_open", "odds_under_open", "odds_home", "odds_draw",

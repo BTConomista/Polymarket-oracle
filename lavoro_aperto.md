@@ -51,7 +51,7 @@ con le date e la checklist, è in [`newseason.md`](newseason.md) §5.
 
 ---
 
-## 2 · `docs/PISTE.md` — 21 voci, **17 ancora aperte**
+## 2 · `docs/PISTE.md` — 23 voci, **17 ancora aperte**
 
 Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 
@@ -76,7 +76,7 @@ Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 | 8 | **Quota massima** (MaxC\*/Max\*) → ROI realistico | 🟢 mai estratta. Tutti i ROI del progetto usano la media: col massimo cambierebbero |
 | 9 | **Pinnacle puro** (PS\*/PSC\*) come benchmark singolo-book | 🟢 mai estratta. È *il* riferimento di efficienza |
 | 7 | Statistiche partita (corner, tiri, falli, cartellini) | 🟡 **parziale**: corner e cartellini fatti (F96) + NB (F98, trascurabile); **tiri totali e falli no**; arbitro ❌ chiuso (F98) |
-| **7-bis** | **Correzione di LIVELLO dei conteggi** (lead F98) | ❌ **chiusa NEGATIVA (F99)**: 5 stimatori + emivita alla radice, nessuno migliora, 6/8 celle peggiorano con IC conclusivo. Il bias di fold **non persiste** (10/18 stesso segno) → era rumore aggregato, non deriva. Riaprirla richiede informazione nuova (regolamento/direttive arbitrali), non un estimatore migliore |
+| **7-bis** | **Correzione di LIVELLO dei conteggi** (lead F98) | ❌ **chiusa NEGATIVA (F99)**: 5 stimatori + emivita alla radice, nessuno migliora, 5/8 celle peggiorano con IC conclusivo. Il bias di fold **non persiste** (10/18 stesso segno) → era rumore aggregato, non deriva. Riaprirla richiede informazione nuova (regolamento/direttive arbitrali), non un estimatore migliore |
 
 ### Fonte esterna nuova
 
@@ -100,16 +100,23 @@ Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
 
 ---
 
-## 3 · `docs/PANCHINA.md` — **138 caselle ⬜** (mai testato lì)
+## 3 · `docs/PANCHINA.md` — **134 caselle ⬜** (mai testato lì)
 
 Il principio §1.9 impone due fronti per ogni modello: **per-lega** e
-**generale**. La matrice ha **138** celle `⬜` — e la legenda del file lo dice
+**generale**. La matrice ha **134** celle `⬜` — e la legenda del file lo dice
 esplicitamente: *«è lavoro potenziale, non un'assoluzione»*.
 
 > Il conteggio era **24** e vale 138 dal 26/07/2026 (ri-contato dall'audit della
 > Fase 101): non è lavoro andato perduto, è la matrice che è passata da 4 a 6
 > colonne quando Bundesliga e Ligue 1 sono entrate in produzione (Fase 100).
 > Ogni modello ha ora due colonne-lega in più da riempire.
+> **Da 138 a 134** nella stessa Fase 101: la riga COM-Poisson ha perso le sue 4
+> caselle vuote perché ha smesso di essere un modello a sé (`dp(θ) ≡
+> COM-Poisson(ν=θ)` — non c'è nulla da testare su quelle colonne).
+>
+> Come si ri-conta: `sum(l.count('⬜') for l in open('docs/PANCHINA.md') if
+> l.strip().startswith('|'))` dà **134**; il file ne contiene 136, perché due
+> stanno nelle legende (righe 20 e 54) e non sono celle della matrice.
 
 **La forma del buco**: quasi tutti i modelli in **panchina** o **bocciati** sono
 stati provati **solo sulla Serie A**. Nessuno sa cosa facciano altrove.
@@ -195,8 +202,6 @@ dimostrato che le etichette «presumibilmente bloccato» erano **sbagliate** —
 `oddsportal.com` e `betexplorer.com` rispondevano da mesi e nessuno aveva
 provato. Due candidati cambierebbero parecchio:
 
-| fonte | cosa darebbe | qui | da Actions |
-|---|---|---|---|
 > ⚠️ **SUPERATA dalla Fase 100** (verificato il 26/07/2026, audit Fase 101):
 > la rete **è tornata raggiungibile**. Rispondono 200 `football-data.co.uk`,
 > `understat.com`, `transfermarkt.com` e Kaggle via `kagglehub` — infatti
@@ -205,7 +210,10 @@ provato. Due candidati cambierebbero parecchio:
 > `oddsportal.com` il vincolo non è tecnico ma il `robots.txt` (pagine
 > storiche vietate) e BetExplorer ha ritirato le quote vecchie.
 > Stato aggiornato in `docs/MANUALE_SOPRAVVIVENZA.md` §1.
+> La colonna «qui» qui sotto è quindi **storica**, non lo stato di oggi.
 
+| fonte | cosa darebbe | qui | da Actions |
+|---|---|---|---|
 | **Betfair Exchange** | la borsa più liquida al mondo; **movimento quote pre-partita** (§7.2) | 403 | ❓ |
 | **football-data.co.uk** | è la **nostra fonte primaria**: oggi vive solo di bundle caricati a mano | 403 | ❓ |
 | SofaScore | formazioni, statistiche live | 403 | ❓ |

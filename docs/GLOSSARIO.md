@@ -41,8 +41,10 @@ ognuno ha 1-2 righe e la fase che lo introduce. Ordine tematico.
 - **sotto-dispersione / sovra-dispersione** — la varianza dei gol è *minore*
   (sotto) o *maggiore* (sovra) della media (che per la Poisson pura sono uguali).
   Il calcio dati i tassi del mercato è **sotto-disperso**. *(Fase 51)*
-- **COM-Poisson** — la dispersione "principiata" a un parametro ν (Conway-Maxwell-
-  Poisson): provata sulla coda, **pareggia la dp ma non la batte**. *(Fase 85)*
+- **COM-Poisson** — Conway-Maxwell-Poisson, `p(x) ∝ aˣ/(x!)ᵛ`. **Non è un modello
+  a parte in questo progetto**: la double-Poisson mean-preserving del router *è*
+  una COM-Poisson con ν=θ (dimostrato dalla forma di `_dp_pmf` e verificato
+  numericamente, Fase 101). *(Fasi 85, 101)*
 - **binomiale negativa (NB)** — distribuzione sovra-dispersa: bocciata, i gol NON
   sono sovra-dispersi dati i tassi. *(Fase 27)*
 
@@ -88,7 +90,8 @@ ognuno ha 1-2 righe e la fase che lo introduce. Ordine tematico.
 - **CLV (closing line value)** — quanto si guadagna/perde rispetto alla linea di
   chiusura: il metro d'oro dell'edge. Negativo per il modello. *(Fase 14)*
 - **gap (col mercato)** — la differenza di log-loss tra modello e mercato di
-  chiusura (1X2: +0.0165 in Serie A). **L'88% vive nella discriminazione casa/ospite,
+  chiusura (1X2: +0.0167 in Serie A al codice di HEAD; +0.0165 era il valore
+  PRE-fix del prior, Fase 92). **L'88% vive nella discriminazione casa/ospite,
   solo il 12% nella massa del pareggio** — la lettura opposta della Fase 9 era
   invertita, vedi la correzione nella Fase 92. *(Fasi 9, 92)*
 - **ROI / value-bet** — il rendimento simulato scommettendo dove il modello vede

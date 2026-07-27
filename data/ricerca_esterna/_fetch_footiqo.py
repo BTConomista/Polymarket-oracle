@@ -10,7 +10,7 @@ wpDataTables), esplicitamente permesso da footiqo.com/robots.txt
 
 Uso:
     python3 _fetch_footiqo.py                 # 5 leghe x 2017/2018,2018/2019,2019/2020
-Output: cantiere/data/ricerca/footiqo_<lega>_<stagione>.json (grezzo, una riga
+Output: data/ricerca_esterna/footiqo_<lega>_<stagione>.json (grezzo, una riga
 per partita) + footiqo_manifest.json con URL, timestamp, sha256, conteggi.
 """
 from __future__ import annotations

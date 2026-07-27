@@ -22,6 +22,11 @@ Struttura:
           riprodurrebbe la firma del margine di UNO specifico bookmaker.
 
 Uso: python3 _valida_footiqo.py
+
+Percorsi riparati all'audit della Fase 101 (erano ancora quelli del cantiere,
+cancellato: lo script non partiva). PREREQUISITO: i grezzi football-data non
+sono piu' versionati (`data/fonti/` e' in .gitignore) — prima di eseguire
+serve `python scripts/fetch_sources.py`.
 """
 from __future__ import annotations
 
@@ -32,9 +37,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/home/user/Polymarket-oracle")
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "cantiere" / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -44,15 +48,15 @@ from src.data import sources                    # noqa: E402
 from src.evaluation import metrics               # noqa: E402
 from _fase52_common import boot                  # noqa: E402
 
-RIC = ROOT / "cantiere" / "data" / "ricerca"
+RIC = Path(__file__).resolve().parent
 SNAP = {
     "serie_a": ROOT / "data" / "serie_a_matches.csv",
     "premier_league": ROOT / "data" / "premier_league_matches.csv",
     "la_liga": ROOT / "data" / "la_liga_matches.csv",
-    "bundesliga": ROOT / "cantiere" / "data" / "bundesliga_matches.csv",
-    "ligue_1": ROOT / "cantiere" / "data" / "ligue_1_matches.csv",
+    "bundesliga": ROOT / "data" / "bundesliga_matches.csv",
+    "ligue_1": ROOT / "data" / "ligue_1_matches.csv",
 }
-FD = ROOT / "cantiere" / "data" / "fonti" / "football_data"
+FD = ROOT / "data" / "fonti" / "football_data"
 FD_TAG = {"serie_a": "serie_a", "premier_league": "premier_league",
           "la_liga": "la_liga", "bundesliga": "bundesliga", "ligue_1": "ligue_1"}
 SEASONS = {"2017/2018": "1718", "2018/2019": "1819", "2019/2020": "1920"}

@@ -202,7 +202,7 @@ risultato è sopravvissuto, anzi si è rafforzato.
 
 Mentre lavoravo, una linea parallela di questa stessa sessione ha raccolto da
 **footiqo.com** le quote di chiusura di **1xBet** per le stesse dieci
-lega-stagione (`cantiere/data/ricerca/footiqo_*.json`). È una fonte del tutto
+lega-stagione (`data/ricerca_esterna/footiqo_*.json`). È una fonte del tutto
 indipendente dalla mia: book diverso, sito diverso, raccolta diversa. E contiene
 **entrambe** le partite che mi servivano.
 
@@ -372,8 +372,8 @@ Pista chiusa con prova.
 ### 5.1 · Gli otto già svuotati dal cantiere
 
 Sono le righe O/U 2.5 di apertura con overround impossibile (1.26–1.34), già
-registrate in `cantiere/data/correzioni_dichiarate.csv` e coperte dalla stima di
-`cantiere/data/stime_ou_corrotte.csv` (MAE 0.0267): 6 in Bundesliga, 2 in
+registrate in `data/correzioni_dichiarate.csv` e coperte dalla stima di
+`data/estimates/ou_open_corrotte_2017_19.csv` (MAE 0.0267): 6 in Bundesliga, 2 in
 Ligue 1. **Nessuna fonte esterna le copre**: il dataset trovato in §3 contiene
 solo 1X2, non ha alcun mercato O/U. Restano dove sono.
 
@@ -436,7 +436,7 @@ Throttle ≥ 1,5 s fra le richieste su tutti i siti interrogati.
 
 ## 7 · Le righe di correzione proposte (NON applicate)
 
-Vanno inserite in `cantiere/data/correzioni_dichiarate.csv` (regola R3) e
+Vanno inserite in `data/correzioni_dichiarate.csv` (regola R3) e
 applicate **solo** con `scripts/applica_correzioni.py`, che verifica il
 valore-prima. L'elenco completo con motivo e fonte per riga è in
 `caccia_quote_singole.json`, campo `proposte_correzione`.
@@ -498,11 +498,11 @@ Usa `boot()` di `scripts/_fase52_common.py` per l'incertezza e
 `src/evaluation/metrics.py` per le metriche, come da protocollo: niente
 log-loss o Brier reimplementati.
 
-Fonti grezze usate: `cantiere/data/fonti/football_data/*.csv` (già versionate),
+Fonti grezze usate: `data/fonti/football_data/*.csv` (già versionate),
 `all-euro-data-*.xlsx` da football-data.co.uk, e i cinque CSV di
 `github.com/iredchuk/soccer-bookmaker-odds`.
 
-La controprova di §3.5 usa in più i file `cantiere/data/ricerca/footiqo_*.json`,
+La controprova di §3.5 usa in più i file `data/ricerca_esterna/footiqo_*.json`,
 raccolti da un'altra linea di lavoro della stessa sessione: il codice che la
 riproduce è in coda allo script, funzione `passo_f()`.
 
@@ -512,7 +512,7 @@ riproduce è in coda allo script, funzione `passo_f()`.
 #!/usr/bin/env python3
 """Caccia al dato VERO per le celle-quota mancanti, una partita alla volta.
 
-Riproduce OGNI numero del report cantiere/out/caccia_quote_singole.md.
+Riproduce OGNI numero del report docs/audit_5_leghe/numeri/caccia_quote_singole.md.
 Uso:  python3 caccia_quote_singole.py [--offline]
       --offline salta i download (usa la cache in --cache, default: ./cache_caccia)
 
@@ -537,12 +537,12 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
 from _fase52_common import boot                      # bootstrap unico del progetto
 from src.evaluation import metrics                   # metriche uniche del progetto
 
-FD = ROOT / "cantiere/data/fonti/football_data"      # grezzi gia' versionati
+FD = ROOT / "data/fonti/football_data"      # grezzi gia' versionati
 SNAP = {"serie_a": ROOT/"data/serie_a_matches.csv",
         "premier_league": ROOT/"data/premier_league_matches.csv",
         "la_liga": ROOT/"data/la_liga_matches.csv",
-        "bundesliga": ROOT/"cantiere/data/bundesliga_matches.csv",
-        "ligue_1": ROOT/"cantiere/data/ligue_1_matches.csv"}
+        "bundesliga": ROOT/"data/bundesliga_matches.csv",
+        "ligue_1": ROOT/"data/ligue_1_matches.csv"}
 DIV = {"bundesliga":"D1","la_liga":"SP1","ligue_1":"F1","serie_a":"I1","premier_league":"E0"}
 REPO_URL = "https://raw.githubusercontent.com/iredchuk/soccer-bookmaker-odds/master/data/csv/"
 REPO_FILE = {"bundesliga":"germany_bundesliga.csv","la_liga":"spain_primera.csv",
@@ -731,10 +731,10 @@ def passo_de(cache: Path, offline: bool):
 def passo_f():
     """Confronta le due celle recuperate con la chiusura 1xBet raccolta da
     footiqo.com da un'altra linea di lavoro della stessa sessione
-    (cantiere/data/ricerca/footiqo_*.json). Fonte indipendente: book diverso,
+    (data/ricerca_esterna/footiqo_*.json). Fonte indipendente: book diverso,
     sito diverso, raccolta diversa."""
     print("\n" + "="*78 + "\nF. CONTROPROVA con una seconda fonte indipendente (footiqo / 1xBet)\n" + "="*78)
-    RIC = ROOT / "cantiere/data/ricerca"
+    RIC = ROOT / "data/ricerca_esterna"
     files = [f for f in sorted(RIC.glob("footiqo_*.json"))
              if "gol" not in f.name and "manifest" not in f.name]
     if not files:

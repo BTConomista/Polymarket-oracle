@@ -1,7 +1,7 @@
 # Caccia al dato vero — quote O/U 2.5 di CHIUSURA, 2017-18 e 2018-19, 5 leghe
 
 *Nota di lettura: i numeri di questa nota sono tutti in
-`cantiere/out/caccia_ou_dataset.json` e ricalcolabili con gli script elencati in
+`docs/audit_5_leghe/numeri/caccia_ou_dataset.json` e ricalcolabili con gli script elencati in
 fondo. Nessun numero è stato scritto a mano.*
 
 ---
@@ -31,7 +31,7 @@ costruzione non poteva comparire in quelle ricerche.
 ## 1 · Prima cosa fatta: il buco esiste davvero anche su D1 e F1?
 
 Sì, identico. Ispezione diretta dei 4 file grezzi già versionati
-(`cantiere/data/fonti/football_data/{bundesliga,ligue_1}_{1718,1819}.csv`):
+(`data/fonti/football_data/{bundesliga,ligue_1}_{1718,1819}.csv`):
 
 ```
 … BbOU, BbMx>2.5, BbAv>2.5, BbMx<2.5, BbAv<2.5, BbAH, … , PSCH, PSCD, PSCA
@@ -292,11 +292,11 @@ Il guadagno **certo** è altrove:
 
 ## File prodotti
 
-**Grezzi** (`cantiere/data/ricerca/`): `footiqo_{lega}_{stagione}.json` (15
+**Grezzi** (`data/ricerca_esterna/`): `footiqo_{lega}_{stagione}.json` (15
 file: 5 leghe × 2017-2018 / 2018-2019 / 2019-2020), `footiqo_gol_{lega}_{stagione}.json`
 (10 file, controllo gol), `footiqo_manifest.json` (URL, timestamp, sha256, conteggi).
 
-**Script riproducibili** (`cantiere/data/ricerca/`):
+**Script riproducibili** (`data/ricerca_esterna/`):
 `_fetch_footiqo.py` (quote) · `_fetch_footiqo_gol.py` (gol) ·
 `_valida_footiqo.py` (criteri C1-C8 + confutazioni A/B/C) ·
 `_confuta_footiqo.py` (confutazioni D/E/F, le decisive).
@@ -305,4 +305,4 @@ file: 5 leghe × 2017-2018 / 2018-2019 / 2019-2020), `footiqo_gol_{lega}_{stagio
 `confutazione_footiqo_G.json`, `scarto_book_2019_20.json`,
 `ricalibrazione_book_2019_20.json`.
 
-**Questa nota**: `cantiere/out/caccia_ou_dataset.md` + `cantiere/out/caccia_ou_dataset.json`.
+**Questa nota**: `docs/audit_5_leghe/numeri/caccia_ou_dataset.md` + `docs/audit_5_leghe/numeri/caccia_ou_dataset.json`.

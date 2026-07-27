@@ -1,5 +1,10 @@
 name: Scrape BetExplorer OU 2.5
 
+# PISTA CHIUSA alla Fase 100 (docs/CACCIA_OU_2017_19.md: il dato e' stato trovato
+# via footiqo/1xBet e deliberatamente NON inserito). Workflow conservato come
+# riferimento: non lanciarlo senza aver riletto quel documento. Il menu copre
+# 3 leghe su 5 perche' e' precedente all'ingresso di Bundesliga e Ligue 1.
+
 on:
   workflow_dispatch:
     inputs:

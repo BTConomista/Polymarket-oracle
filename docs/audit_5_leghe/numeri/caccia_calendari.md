@@ -2,8 +2,8 @@
 
 > Lavoro di cantiere (regola R4: nessuno snapshot, nessun file di `src/`, `data/`,
 > `docs/`, `scripts/` è stato modificato). Prodotto da `caccia_calendari.py`
-> (sorgente in appendice); dati grezzi in `cantiere/out/caccia_calendari.json`;
-> calendari recuperati in `cantiere/data/ricerca/fixtures_*.csv`.
+> (sorgente in appendice); dati grezzi in `docs/audit_5_leghe/numeri/caccia_calendari.json`;
+> calendari recuperati in `data/ricerca_esterna/fixtures_*.csv`.
 
 ## 0. In una riga
 
@@ -333,7 +333,7 @@ iniziata l'8, è stata **sospesa al 13'** (episodio razzista) e ripresa il 9.
 
 ## 7. Che cosa ho prodotto
 
-**50 file** in `cantiere/data/ricerca/`, schema identico a
+**50 file** in `data/ricerca_esterna/`, schema identico a
 `club_fixtures` più due colonne di tracciabilità (`metodo_nome`, `pagina`):
 
 `season, team, date, competition, home_away, opponent, metodo_nome, pagina`
@@ -377,7 +377,7 @@ iniziata l'8, è stata **sospesa al 13'** (episodio razzista) e ripresa il 9.
    `ligue_1` sia `FRA` sia `MCO` (o mappare `MCO → FRA` in un dizionario di
    equivalenze paese). È l'intervento con il miglior rapporto valore/rischio:
    una riga di codice, 26 righe di calendario recuperate senza scaricare nulla.
-2. **Registro correzioni** (`cantiere/data/correzioni_dichiarate.csv`, regola R3):
+2. **Registro correzioni** (`data/correzioni_dichiarate.csv`, regola R3):
    8 righe di data sbagliata nella DFB-Pokal 2025-26 — vedi §10.
 3. **Wikipedia come fonte secondaria dichiarata** del calendario di club, con la
    procedura di questo script; da valutare insieme a un `robots`-check periodico.
@@ -389,7 +389,7 @@ iniziata l'8, è stata **sospesa al 13'** (episodio razzista) e ripresa il 9.
 ## 10. Righe candidate per il registro correzioni
 
 Formato: lega / stagione / data / squadre / colonna / valore prima / valore dopo /
-motivo / fonte. **Non applicate.** Riguardano `cantiere/data/club_fixtures_bundesliga.csv`
+motivo / fonte. **Non applicate.** Riguardano `data/club_fixtures_bundesliga.csv`
 (non uno snapshot di partite):
 
 | lega | stagione | squadra | colonna | prima | dopo | motivo | fonte |
@@ -466,14 +466,21 @@ non tocca la rete tranne per la confutazione openligadb. Throttle 0,6 s fra le
 richieste all'API Wikimedia, User-Agent identificato (policy Wikimedia).
 
 > **Dove vivono gli script.** La sessione che ha prodotto questo lavoro poteva
-> scrivere solo in `cantiere/out/caccia_calendari.{json,md}` e
-> `cantiere/data/ricerca/fixtures_*.csv` (regola R4 applicata al singolo agente):
+> scrivere solo in `docs/audit_5_leghe/numeri/caccia_calendari.{json,md}` e
+> `data/ricerca_esterna/fixtures_*.csv` (regola R4 applicata al singolo agente):
 > per non perdere la riproducibilità il sorgente **completo** dei due moduli è
-> incollato qui sotto. Chi integra il lavoro li estragga in
-> `cantiere/scripts/caccia_calendari.py` e `cantiere/scripts/wiki.py` (funzionano
-> così come sono: usano solo percorsi assoluti e `sys.path` verso la radice del
-> repo), più il generatore del report (`scrivi_md.py`, non riportato: è solo
-> impaginazione del JSON).
+> incollato qui sotto.
+>
+> ⚠️ **Stato all'audit della Fase 101: l'estrazione NON è stata fatta.**
+> `caccia_calendari.py` e `wiki.py` **non esistono come file** in `scripts/`:
+> vivono solo come Appendici A e B di questo documento, quindi le 3.045 righe
+> di `data/ricerca_esterna/fixtures_*.csv` **non sono rigenerabili da script**
+> senza prima copiarle e incollarle in `scripts/`. Il terzo modulo
+> (`scrivi_md.py`, solo impaginazione del JSON) non è mai stato riportato ed è
+> perduto. I due sorgenti qui sotto funzionano così come sono, a patto di
+> correggere i percorsi del cantiere che contengono e di ricordare che i grezzi
+> football-data **non sono più versionati** (`data/fonti/` è in `.gitignore`:
+> serve prima `python scripts/fetch_sources.py`).
 
 ---
 
@@ -499,7 +506,7 @@ Questo script:
   6. QUANTIFICA l'impatto ricalcolando add_rest_days_full con e senza il
      recupero, senza toccare gli snapshot.
 
-Uscite: cantiere/out/caccia_calendari.{json,md}, cantiere/data/ricerca/fixtures_*.csv
+Uscite: docs/audit_5_leghe/numeri/caccia_calendari.{json,md}, data/ricerca_esterna/fixtures_*.csv
 """
 from __future__ import annotations
 

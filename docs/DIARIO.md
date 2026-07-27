@@ -204,7 +204,8 @@ diretta (Fase 82) certifica che l'oracolo è calibrato — indovina quanto il
 mercato, non di più. Poi tre giri di audit: la revisione dei commit esterni
 (Fase 83) e del tool per-lega (83-bis), l'audit trasversale del repo (Fase 84),
 l'anatomia della coda per gli esiti meno probabili (Fase 85, la double-Poisson
-è al tetto; COM-Poisson provata e pari) e il secondo audit orchestrato con
+è al tetto; ~~COM-Poisson provata e pari~~ — è la stessa dp riparametrizzata,
+rettifica Fase 101) e il secondo audit orchestrato con
 verifica avversaria (Fase 86: fix di onestà, chiusure e il lead della
 dispersione per-squadra).*
 
@@ -247,6 +248,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 90 — Terzo audit orchestrato: i numeri-titolo della Fase 89 erano gonfiati](#fase-90--terzo-audit-orchestrato-i-numeri-titolo-della-fase-89-erano-gonfiati)
 - [Fase 91 — I mercati POSIZIONALI: il simulatore è calibrato in alto e sbaglia in basso (ed è colpa del prior)](#fase-91--i-mercati-posizionali-il-simulatore-è-calibrato-in-alto-e-sbaglia-in-basso-ed-è-colpa-del-prior)
 - [Fase 92 — Quarto audit (per aree): la diagnosi centrale era invertita, e il prior non atterrava dove diceva](#fase-92--quarto-audit-per-aree-la-diagnosi-centrale-era-invertita-e-il-prior-non-atterrava-dove-diceva)
+- [Fase 92-bis — I fix dell'audit, verificati per mutazione (e l'IC della Fase 91 che si sgonfia)](#fase-92-bis--i-fix-dellaudit-verificati-per-mutazione-e-lic-della-fase-91-che-si-sgonfia)
 - [Fase 93 — Dove si perde la discriminazione: è informazione, non calibrazione (e si vede DOVE)](#fase-93--dove-si-perde-la-discriminazione-è-informazione-non-calibrazione-e-si-vede-dove)
 - [Fase 94 — La varianza mancante: la deriva di forza, e perché va adottata su UN solo mercato](#fase-94--la-varianza-mancante-la-deriva-di-forza-e-perché-va-adottata-su-un-solo-mercato)
 - [Fase 95 — Il primo confronto con un mercato VERO sull'outright: Polymarket quota il campione 2026-27](#fase-95--il-primo-confronto-con-un-mercato-vero-sulloutright-polymarket-quota-il-campione-2026-27)
@@ -255,6 +257,8 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
+- [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
+- [Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita](#fase-101--quinto-audit-le-ultime-20-fasi-e-lintegrazione-che-non-era-stata-eseguita)
 
 ---
 
@@ -1578,6 +1582,10 @@ riproducibile con `scripts/analyze_gap.py`.
 → **gap medio +0.0165** di log-loss. Per dare una scala: la baseline banale sta a
 ~1.085 (gap +0.12), quindi il modello ha gia' chiuso ~**87%** della distanza
 baseline→mercato; l'ultimo 13% e' la parte dura.
+*(Nota Fase 101: «oggi» qui vuol dire «alla Fase 9». Il numero-bandiera al codice
+di HEAD e' **0.9799 / 0.9632 / +0.0167** — la differenza e' la correzione del
+prior della Fase 92, non un cambio di conclusione. Le misure di questa e delle
+altre fasi restano PRE-fix e valide come confronti interni alla fase.)*
 
 **1) Evoluzione — il gap 1X2 lungo le versioni (media 6 stagioni).**
 
@@ -8754,36 +8762,64 @@ Tre fatti:
    4.5): la distribuzione reale dei gol ha **code più leggere** del previsto.
    L'intuizione "θ>1 danneggia la coda" era **sbagliata**: la coda reale È
    sotto-dispersa, la dp la avvicina.
-2. **L'exact-score log-loss ha il minimo ESATTAMENTE a θ=1.225** (curva convessa:
-   2.8369 → 2.8322 → risale a 2.8455). Cioè la costante del router **scelta per il
-   centro** (Fase 52, sul listino) è **anche l'ottimo diretto sul risultato
-   esatto**: una conferma indipendente e non banale che θ≈1.2 è la forma giusta
-   dei gol, non un tuning locale sull'1X2.
+2. **L'exact-score log-loss ha una valle piatta attorno a θ≈1.18**, e θ=1.225 ci
+   cade dentro: 2.83219 contro 2.83192 dell'argmin, differenza appaiata −0.00027
+   con IC95 bootstrap [−0.00081, +0.00028] (dentro il rumore). ~~Il «minimo
+   ESATTAMENTE a θ=1.225»~~ della prima stesura era un artefatto della griglia a
+   cinque punti {1.0, 1.10, 1.225, 1.35, 1.5}, in cui 1.225 era l'unico valore
+   vicino all'ottimo; su griglia fine a passo 0.01 l'argmin è **1.18**
+   (2.831915). Resta vero, ed è il punto, che la costante del router scelta sul
+   **listino** cade nella valle dell'ottimo misurato direttamente sul
+   **risultato esatto** — non che ne sia l'argmin. *(Rettifica Fase 101.)*
 3. **Tensione di profondità (la crepa vera).** Over 3.5 è azzerato a θ≈1.35, Over
    4.5 a θ≈1.10, il log-loss a θ=1.225: **un solo parametro di dispersione non
    calibra ogni profondità della coda contemporaneamente**. È il limite
    strutturale, non un errore.
 
-**La COM-Poisson non rompe il tetto (ma illumina la crepa).** Ho testato la
-dispersione **principiata** a un parametro ν (COM-Poisson, `p(x) ∝ aˣ/(x!)ᵛ`,
-mean-matched), la versione "seria" della sotto-dispersione che la NB (Fase 27) e
-la dp (scorciatoia, Fase 51) non sono:
+**⚠️ RETTIFICA (Fase 101) — la COM-Poisson NON è una famiglia diversa: è la
+stessa double-Poisson, riparametrizzata.** La prima stesura di questa sezione
+presentava la dispersione «principiata» a un parametro ν (COM-Poisson,
+`p(x) ∝ aˣ/(x!)ᵛ`, mean-matched) come la versione «seria» della sotto-dispersione
+di cui la dp sarebbe stata una scorciatoia. È falso, e si dimostra in due righe.
+`_dp_pmf(rate, θ)` costruisce
+`q_k ∝ exp(θ·(k·ln(c·rate) − c·rate − ln k!)) = (c·rate)^{θk}·e^{−θ·c·rate}/(k!)^θ`;
+il fattore `e^{−θ·c·rate}` non dipende da k, quindi dopo la normalizzazione resta
+`q_k ∝ a^k/(k!)^θ` con `a = (c·rate)^θ` — esattamente la forma della COM-Poisson
+con ν=θ. A ν fisso la media è strettamente crescente in `a`, quindi il
+mean-matching individua **la stessa** distribuzione: **dp(θ) ≡ COM-Poisson(ν=θ)**.
 
-| forma | exact-LL | Over 3.5 Δ | Over 4.5 Δ |
-|---|--:|--:|--:|
-| dp θ=1.225 | 2.8322 | +0.0037 | −0.0039 |
-| **COM-Poisson ν=1.15** | **2.8321** | +0.0057 | **+0.0001** |
-| COM-Poisson ν=1.35 | 2.8358 | +0.0002 | −0.0103 |
+Verifica numerica, due vie. **(a) PMF**:
+`max|_dp_pmf(rate,θ) − compois_pmf(rate,ν=θ)| ≤ 1.2e-04` su
+rate ∈ {0.6…3.0} × θ ∈ {1.10…1.50}, e lo scarto **cresce col tasso**
+(7e-11 a rate 0.6, 1e-08 a 1.0, 4e-06 a 2.0, 1.2e-04 a 3.0): è solo troncamento
+del supporto, non una differenza di forma (la dp normalizza su 0..10,
+`compois_pmf` su 0..40 e poi taglia a 11). Regredendo `ln q_k` su `{1, k, −ln k!}` per
+`_dp_pmf(1.24, 1.225)` si riottiene ν = 1.225000 con residuo massimo 1.4e-14.
+**(b) Le tre statistiche della fase**, sugli stessi 7.980 λ,μ:
 
-La COM-Poisson ν=1.15 **pareggia** il log-loss (2.8321 vs 2.8322, differenza nel
-rumore) e **calibra la coda ESTREMA meglio** (Over 4.5 +0.0001 vs dp −0.0039), ma
-**non batte**: la dp è già al tetto del log-loss di coda, e anche la COM-Poisson
-ha la stessa tensione di profondità (ν=1.15 azzera Over 4.5 ma +0.0057 su Over
-3.5). Esito onesto: **negativo per il log-loss, informativo per la forma** —
-conferma che la doppia-Poisson è una buona approssimazione della vera dispersione
-dei gol, e che per andare oltre sulla coda serve un **secondo parametro di forma**
-(mistura, o ricalibrazione per-profondità dei totali), non una forma a un
-parametro diversa.
+| ν = θ | exact-LL dp | exact-LL COM | Over 3.5 Δ (dp / COM) | Over 4.5 Δ (dp / COM) |
+|---|--:|--:|--:|--:|
+| 1.10 | 2.832903 | 2.832898 | +0.00706 / +0.00704 | +0.00283 / +0.00281 |
+| 1.15 | 2.832060 | 2.832057 | +0.00574 / +0.00573 | +0.00013 / +0.00011 |
+| 1.225 | 2.832185 | 2.832182 | +0.00370 / +0.00369 | −0.00386 / −0.00387 |
+| 1.35 | 2.835851 | 2.835850 | +0.00019 / +0.00018 | −0.01030 / −0.01030 |
+| 1.50 | 2.845468 | 2.845467 | −0.00419 / −0.00419 | −0.01769 / −0.01770 |
+
+(Lo si vede già nell'output di `scripts/_run_tail_analysis.py`: le righe
+`dp theta=1.35` e `COM nu=1.35` sono **identiche** a quattro decimali — 2.8358 /
++0.0002 / −0.0103 — e così `dp theta=1.5` e `COM nu=1.50`.)
+
+Quindi la riga ~~«COM-Poisson ν=1.15 pareggia il log-loss (2.8321) e calibra
+meglio la coda estrema (Over 4.5 +0.0001)»~~ era, letteralmente, **dp θ=1.15**:
+un punto di griglia che la griglia della dp non conteneva. Non era un confronto
+fra due famiglie, ma fra due valori di θ della stessa. Ciò che resta vero — ed è
+il risultato della fase — è il punto 3: **tensione di profondità**, Over 4.5
+vuole θ≈1.15, Over 3.5 θ≈1.35, il centro θ≈1.18. Ciò che cade: la COM-Poisson
+come «forma alternativa provata e a tetto», e con essa il conteggio delle
+conferme indipendenti sulla coda — sono **due** (mistura/isotonica della Fase 87
+e θ per-squadra della Fase 86-bis), non tre. La conclusione operativa non cambia:
+per andare oltre sulla coda serve un **secondo parametro di forma** (mistura, o
+ricalibrazione per-profondità dei totali), non un'altra forma a un parametro.
 
 **E l'1X2 improbabile (upset)?** Controprova sul lato esiti: la calibrazione del
 **mercato stesso** (chiusura devigata, 10.259 partite) per fascia di probabilità
@@ -8803,8 +8839,11 @@ sui totali estremi (non per traslazione dall'1X2). Il margine residuo è tutto
 nella **tensione di profondità**: la prossima leva concreta è un trattamento
 della coda a **due parametri** (es. ricalibrazione isotonica dei mercati-totale
 per soglia, o una mistura di due Poisson per il regime "partita da tanti gol"),
-non un'altra forma a un parametro (COM-Poisson provata e a tetto). Va in
-`docs/PISTE.md` come pista aperta.
+non un'altra forma a un parametro. *(La prima stesura chiudeva con «COM-Poisson
+provata e a tetto»: la rettifica della Fase 101 qui sopra mostra che quella non
+era una forma alternativa ma la dp stessa a un altro θ — la conclusione non
+cambia, ma non poggia più su quel test.)* Va in `docs/PISTE.md` come pista
+aperta.
 
 ### 📐 Il modello in dettaglio
 
@@ -8813,17 +8852,21 @@ Forme dei marginali confrontate (tutte poi passate alla stessa correzione DC
 ```
 Poisson:        p(x) = e^-λ λ^x / x!
 double-Poisson: p(x) ∝ (e^-λ λ^x/x!)^θ · c^x, con c t.c. E[X]=λ (mean-preserving,
-                Fase 51; θ>1 = sotto-dispersa). Codice: market_implied._dp_pmf.
+                Fase 51; θ>1 = sotto-dispersa). Normalizzata è p(x) ∝ a^x/(x!)^θ
+                con a=(c·λ)^θ. Codice: market_implied._dp_pmf.
 COM-Poisson:    p(x) ∝ a^x / (x!)^ν, con 'a' t.c. E[X]=λ (mean-matched via
                 bisezione su a; ν=1 → Poisson, ν>1 → sotto-dispersa).
+                È LA STESSA di sopra con ν=θ (verificato a ≤1.2e-04, solo
+                troncamento del supporto): NON è una forma alternativa.
                 Codice: scripts/_run_tail_analysis.py:compois_pmf.
 ```
-Perché θ=1.225 è il minimo dell'exact-LL e non un altro valore: il log-loss del
+Perché l'exact-LL ha la sua valle attorno a θ≈1.18-1.22 e non altrove: il log-loss del
 risultato esatto pesa **ogni cella** per la sua frequenza reale, quindi è
 dominato dagli scoreline comuni (1-1, 1-0, 0-0, 2-1); la Poisson **sotto-stima**
 proprio quelli (fascia di P 0.10-0.20: reale 0.1290 vs Poisson 0.1209, +0.0081)
 perché mette troppa massa in coda — θ>1 la ritira e la rimette sul centro, con
-ottimo a 1.225 (dp) dove il guadagno sul centro non è ancora mangiato dalla
+ottimo a θ≈1.18 (differenza da 1.225 dentro il rumore) dove il guadagno sul
+centro non è ancora mangiato dalla
 sovra-correzione della coda estrema. Numeri riproducibili:
 `python scripts/_run_tail_analysis.py` (usa la cache dell'inversione; il θ=1.225
 coincide con `market_implied.DP_THETA`). Analisi diagnostica: nessun run scorato
@@ -8974,7 +9017,8 @@ architetturale. La chiave per prevedere gli esiti meno probabili resta quella
 della Fase 85 — il controllo di dispersione **globale** (θ=1.225 del router), già
 al suo ottimo — e non esiste una sotto-struttura (per-squadra, per-profondità,
 per-forma) che aggiunga valore sfruttabile: le hanno provate tutte (θ per
-volume/equilibrio/coda F52-quater; COM-Poisson F85; mistura di regime F86 audit,
+volume/equilibrio/coda F52-quater; ~~COM-Poisson F85~~ — ritirata dalla Fase 101,
+era la dp riparametrizzata e non una forma diversa; mistura di regime F86 audit,
 OOS-fragile; θ per-squadra F86-bis). Il lead della Fase 86 passa da 🔎 a **❌
 chiuso**: la volatilità-squadra persiste (fatto vero, documentato) ma il θ_team
 non è adottabile. Nessuna delusione: è esattamente il tipo di risultato negativo
@@ -9041,8 +9085,10 @@ scomposizione. **Non adottabile; PISTE §4-ter via (b) chiusa.**
 
 **Lezione.** Il «secondo parametro di forma» della coda — nelle sue due
 incarnazioni economiche — **non batte il singolo θ in modo conclusivo e
-generalizzabile**. È la terza conferma indipendente, dopo COM-Poisson (Fase 85) e
-θ per-squadra (Fase 86-bis), che la coda dei gol è **al tetto della forma**: la
+generalizzabile**. È la **seconda** conferma indipendente, dopo il θ per-squadra
+(Fase 86-bis), che la coda dei gol è **al tetto della forma**
+*(la prima stesura ne contava tre includendo la COM-Poisson della Fase 85: la
+Fase 101 l'ha ritirata perché è la dp riparametrizzata, non una forma diversa)*: la
 double-Poisson a un parametro è quanto di meglio si può fare senza informazione
 nuova. Nota di metodo: l'aggregato «−0.00042 MEGLIO» sembrava una vittoria finché
 il CI + la scomposizione per-stagione non l'hanno smontato — **mai concludere da
@@ -9094,9 +9140,35 @@ Il Brier del router e quello del mercato sono **indistinguibili** (0.2040 vs
 0.2041 in aggregato, e a coppie su ogni lega), con correlazione modello-mercato
 **0.91-0.92**. Cioè: dai soli λ,μ del 1X2+O/U, il motore prezza la copertura
 dell'handicap **con la stessa accuratezza del mercato sharp che quota l'AH
-direttamente** — senza aver mai visto le quote AH. È α\*=0 su un mercato **nuovo**
-(il margine), non più solo su 1X2/O/U: la struttura DC trasferisce l'informazione
-del mercato alla famiglia-margine senza perdite.
+direttamente** — senza aver mai visto le quote AH.
+
+**⚠️ Come NON va detto (rettifica Fase 101).** La prima stesura chiudeva con
+«~~è α\*=0 su un mercato nuovo (il margine)~~». **L'encompassing non era mai
+stato calcolato** — `_run_ah_benchmark.py` misura solo correlazione, Brier e
+medie — e calcolandolo dà il contrario: con α che minimizza il Brier di
+`α·router + (1−α)·mercato` sugli stessi 7.437 casi,
+`α* = mean((y−k)(m−k)) / mean((m−k)²)` = **1.082**, IC95 bootstrap
+**[+0.147, +2.052]**, che **esclude** lo zero (vincolato a [0,1] come in Fase 16:
+α\*=1.000). Il motivo è strutturale e non è un edge: il router **non è un
+previsore indipendente** dal mercato AH, è una *traduzione* dei λ,μ ricavati da
+1X2+O/U — fra due previsori quasi equivalenti (corr 0.915) α\* è mal determinato
+attorno a 1 e l'IC è larghissimo. Nota di metodo: il «guadagno del blend»
+calcolato ri-fittando α *dentro* ogni ricampionamento bootstrap è **non-negativo
+per costruzione** (minimo osservato 1e-10) e non va usato come prova; con α
+fissato al campione pieno vale +0.000137, IC95 [−0.000110, +0.000375].
+
+**Come va detto.** Ciò che i dati sostengono è il **pareggio in Brier col mercato
+sharp**: ΔBrier (router − mercato) = **−0.000136**, IC95 appaiato
+[−0.000362, +0.000083] (Serie A +0.000001 [−0.00038, +0.00038], Premier −0.000187
+[−0.00058, +0.00021], Liga −0.000224 [−0.00060, +0.00014]). E, col **protocollo
+onesto della Fase 16** (α fittato solo sulle stagioni passate e applicato alla
+successiva; stagione = agosto-luglio dalla data football-data, 6 fold 2021→2526,
+n=6.518 fuori campione), il blend **non batte il mercato**: Δ Brier pooled
+−0.0000058, IC95 [−0.00022, +0.00020], P(Δ<0) 51% — α per stagione −0.59, 0.71,
+1.36, 0.83, 1.04, 0.90, cioè un peso che salta attorno a 1 senza stabilizzarsi.
+È questo il risultato interessante, ed è già quello che serve al Tier 2: la
+struttura DC trasferisce l'informazione del mercato alla famiglia-margine **senza
+perdite misurabili**, non «senza informazione propria».
 
 **Onestà.** Sia modello sia mercato prevedono una copertura-casa media ~0.502
 contro un realizzato 0.488 (~1.4pp): un lieve ottimismo-casa **condiviso** (in
@@ -9123,6 +9195,14 @@ margine atteso del mercato dalla devig delle due quote AH di chiusura; il
 realizzato è `cover(gol_casa − gol_ospite, h)`. Brier `= mean((P − realizzato)²)`.
 λ,μ invertiti da 1X2+O/U (nessun input dall'AH). Riproducibile:
 `python scripts/_run_ah_benchmark.py`. Diagnostico, nessun run in `runs.jsonl`.
+
+**L'encompassing (aggiunto dalla Fase 101).** Con `m` = P(copre) del router,
+`k` = P(copre) del mercato devigato, `y` = copertura realizzata, il blend
+`p(α) = k + α·(m − k)` ha per minimo del Brier
+`α* = mean((y − k)(m − k)) / mean((m − k)²)` — soluzione in forma chiusa, non
+una griglia. Non è prodotto da `_run_ah_benchmark.py`, che si ferma a corr/Brier/
+medie: va ricalcolato dalle colonne `model_p / market_p / realized` del suo
+DataFrame interno (bootstrap iid B=5.000 sulle 7.437 righe per l'IC).
 
 ---
 
@@ -9460,6 +9540,10 @@ delle 24 differenze appaiate.
 Riproducibile: `python scripts/_run_fase89bis_anatomy.py --squad-value`
 (≈4 minuti). Dettaglio in `experiments/fase89bis_anatomy.json`.
 
+Diagnostico: nessun run in `experiments/runs.jsonl` — è un'anatomia dei run già
+registrati alla Fase 89 (nessun cambio di config, nessun modello nuovo scorato);
+l'artefatto riproducibile è il JSON qui sopra.
+
 ---
 
 ## Fase 90 — Terzo audit orchestrato: i numeri-titolo della Fase 89 erano gonfiati
@@ -9598,6 +9682,10 @@ T\*=1.15 in-sample (guadagno 0.0088), ma in leave-one-out **1.2160 contro
 
 Riproducibile: `python scripts/_run_fase89_season_champion.py --nsim 20000` e
 `python scripts/_run_fase89bis_anatomy.py --squad-value`. 158 test verdi.
+
+Diagnostico: nessun run in `experiments/runs.jsonl` — è un audit, non un
+esperimento: ri-esegue e corregge i numeri della Fase 89, il cui run
+(`phase 89`) resta il record storico immutato del registro.
 
 ---
 
@@ -9848,8 +9936,15 @@ girano tutti i backtest (vecchi), e senza una riga nel registro. Disattivato,
 lasciando l'esecuzione a comando.
 
 **Risultato 5 — cosa ha retto.** L'audit ha ri-verificato *eseguendo*: il
-walk-forward ufficiale riproduce 0.979687 / 0.963191 / **+0.016496** (il
-+0.0165 del README), α\*=0 della Fase 16, i CI della Fase 17, il backtest
+walk-forward ufficiale riproduce 0.979687 / 0.963191 / **+0.016496** — che però
+è il valore **PRE-fix** (il +0.0165 storico del README, misurato prima della
+correzione del prior del Risultato 2). Eseguito col codice corretto qui sopra la
+media diventa **0.979890 / 0.963191 / +0.016699**, ed è quella la versione
+coerente con la tabella di scomposizione di questa stessa fase
+(0.576618 + 0.403273 = 0.979890). Il numero-bandiera del progetto passa quindi a
+**+0.0167 / 0.9799** (rimisurato alla Fase 101); i due numeri hanno convissuto
+nella fase senza spiegazione fino ad allora. Hanno retto:
+α\*=0 della Fase 16, i CI della Fase 17, il backtest
 2025-26, le impronte dati, le correzioni della Fase 90 (tutte atterrate: i
 numeri ritirati non esistono più in alcun file, i due bug Polymarket sono
 corretti *e* protetti da test veri verificati su 13.597 eventi live). Aree
@@ -10029,8 +10124,12 @@ IC95 = percentili 2.5 e 97.5 di {delta_b}
 indipendenti**: le squadre in top-4 sono esattamente 4 e le retrocesse
 esattamente 3, quindi un errore su una squadra ne implica uno di segno opposto
 su un'altra. L'iid ignora questo vincolo e **sottostima** la varianza: infatti
-l'IC passa da [+0.0037, +0.0502] a [−0.0006, +0.0522], quasi il doppio in
-ampiezza sul lato basso.
+l'IC passa da [+0.0037, +0.0502] a [−0.0006, +0.0522] — a media invariata
+(+0.02742), è **+14% di ampiezza complessiva** (0.04646 → 0.05276) e **+19% sul
+lato basso** (semi-ampiezza sotto la media da 0.02359 a 0.02799), cioè un
+effetto-disegno DEFF = (0.05276/0.04646)² = **1.29**. Poco, ma abbastanza da
+farlo attraversare lo zero. *(La prima stesura diceva «quasi il doppio in
+ampiezza sul lato basso»: sovrastimava — rettifica Fase 101.)*
 
 ---
 
@@ -10055,11 +10154,29 @@ Scomposizione di Murphy del log-loss binario «casa vs ospite | non pareggio»:
 | **modello** | **0.00083** | 0.05270 |
 | mercato | 0.00125 | **0.06251** |
 
-Le nostre probabilità condizionate sono **meglio calibrate di quelle del
-mercato** (0.00083 contro 0.00125). Perdiamo interamente in **risoluzione**,
-cioè nella capacità di separare i casi. In quote:
+Il termine di mis-calibrazione è **piccolo per entrambi, e la differenza non è
+conclusiva**: 0.00083 contro 0.00125, ma la differenza appaiata vale −0.00042
+con IC95 bootstrap **[−0.00137, +0.00049]** (include lo zero, P 82%) e **cambia
+segno** col numero di fasce (12 fasce 0.00083 vs 0.00125; 25 fasce 0.00127 vs
+0.00147; 50 fasce 0.00230 vs 0.00190; 100 fasce 0.00388 vs 0.00339 — nelle
+ultime due è il *mercato* a essere meglio calibrato). E c'è un pavimento:
+simulando gli esiti da `y ~ Bernoulli(p_modello)`, cioè con calibrazione
+**perfetta per costruzione**, il termine vale già 0.00047 in media e **0.00083 al
+95° percentile** (2.000 repliche) — esattamente il nostro valore, che quindi sta
+**al pavimento del rumore** (P = 5.2%). Quello del mercato lo supera di poco
+(0.00125, P = 0.25% sul proprio nullo), ma sono entrambi termini minuscoli e la
+loro differenza non è misurabile: ~~«siamo meglio calibrati del mercato»~~ **non
+si può dire** *(rettifica Fase 101)*. Ciò che è conclusivo è l'altro termine:
+perdiamo interamente in **risoluzione**, cioè nella capacità di separare i casi —
++0.00981 a favore del mercato, IC95 [+0.00732, +0.01239]. In quote:
 
-> del deficit di discriminazione, **calibrazione −4%, informazione +104%**.
+> della parte di deficit che la scomposizione a fasce **attribuisce** — 0.00939
+> sui **0.02153** totali, cioè il **44%** — **calibrazione −4%, informazione
+> +104%**; il restante 56% è residuo di discretizzazione, non attribuito.
+> Espresso sul deficit vero: la calibrazione ne vale **−1.9%**, la risoluzione
+> **+45.6%**. La quota attribuita è stabile al binning (6/12/25/50/100 fasce:
+> 44.6 / 43.6 / 42.6 / 41.9 / 42.1%), quindi non è un artefatto delle fasce
+> scelte.
 
 Conferma diretta: P(casa | non-pari) dichiarata dal modello **57.61%**, dal
 mercato 58.02%, realizzata **57.68%**. Non c'è alcun bias sistematico
@@ -10067,7 +10184,9 @@ casa/ospite da correggere: in media siamo esatti.
 
 **Conseguenza operativa netta**: su questo termine **non esiste una leva di
 ricalibrazione**. Qualunque mappa post-hoc (temperatura, Platt, isotonica) può
-solo togliere lo 0.00083 che già non abbiamo. È la ragione per cui il progetto
+solo togliere un termine che è **al pavimento di rumore** — 0.00083 su un deficit
+di 0.02153, cioè il 4% di quello che la scomposizione attribuisce e l'1.9% del
+deficit vero. È la ragione per cui il progetto
 non ha mai trovato una leva che chiudesse il gap: non ce n'è una di quella
 famiglia.
 
@@ -10143,10 +10262,24 @@ due termini diventano instabili. Una mappa di ricalibrazione azzera il primo
 termine e **non tocca il secondo**: è questo che rende la scomposizione la
 risposta esatta alla domanda «è aggiustabile?».
 
+**Attenzione a come si normalizzano le quote.** I due termini della
+scomposizione **non ricompongono** il deficit: `Δcal + Δris = 0.00939` contro un
+deficit di `0.02153`, perché la scomposizione a fasce butta via la variazione
+*dentro* la fascia. Le percentuali «−4% / +104%» sono quindi frazioni della
+parte **attribuita**, non del deficit — dirle sul deficit vale −1.9% e +45.6%.
+Chiuderle sul totale sbagliato è l'errore che la Fase 101 ha corretto qui.
+
 Riproducibile: `python scripts/_run_fase93_discrimination.py` (~35 min, 18
 backtest walk-forward). Dataset per-partita in
 `experiments/fase93_discrimination.csv` (5.083 righe, con le covariate per
-affettarlo diversamente).
+affettarlo diversamente); IC, binning alternativi e pavimento di rumore si
+ricalcolano da quel CSV con la `murphy()` dello stesso script (bootstrap
+appaiato B=2.000 sulle 5.083 righe; pavimento: 2.000 repliche di
+`y ~ Bernoulli(p)`), senza rifare i 18 backtest.
+
+Diagnostico: nessun run in `experiments/runs.jsonl` — i 18 backtest walk-forward
+sono serviti a produrre il dataset per-partita, che è l'artefatto riproducibile;
+nessuna metrica di modello nuova da registrare.
 
 ---
 
@@ -10274,9 +10407,28 @@ chiamare meccanismo e non fattore di aggiustamento. Il σ che ottimizza la sola
 dispersione (0.28) è invece **fuori** da quel range e danneggia due mercati su
 tre: la calibrazione sulla dispersione, da sola, è il criterio sbagliato.
 
-Riproducibile: `python scripts/_run_fase94_drift.py` (~50 min, 7 valori di σ ×
-24 stagioni-lega). Run in `experiments/runs.jsonl`, griglia completa in
-`experiments/fase94_drift.json`.
+Riproducibile: `python scripts/_run_fase94_drift.py` per la **calibrazione**
+(~50 min, 7 valori di σ *uniforme* × 24 stagioni-lega; griglia completa in
+`experiments/fase94_drift.json`, run in `experiments/runs.jsonl` con σ=0.28).
+
+⚠️ Il risultato **adottato** — il σ per-squadra 0.30/0.16 con gli IC e i conteggi
+X/24 — richiede `--sd-map`, e fino alla Fase 101 **non era ri-derivabile da
+niente di committato**: lo script accettava solo uno scalare, `bootstrap_ci` era
+importato e mai usato, e l'output si fermava agli aggregati. Rieseguito con la
+mappa (`--sd-map`) i numeri di questa fase si riottengono: retrocessione +0.0095
+[+0.0018, +0.0179] 15/24 (identico), campione +0.0017 9/24 e top-4 +0.0007 7/24
+(gli estremi degli IC ballano sulla quarta cifra rispetto alla prima stesura,
+verdetto invariato: entrambi nel rumore), neopromosse +6.1pp → +2.8pp,
+dispersione 83.1° → 76.2° percentile, ECE retrocessione 0.0479 → 0.0387, ECE
+top-4 0.0140 → 0.0203. L'ECE è su **10 fasce equispaziate** (la funzione della
+Fase 91): il binning va dichiarato perché non è quello per quantile usato altrove
+nel progetto, e due ECE con binning diversi non sono confrontabili.
+Nota operativa: `--sd-map` **riscrive** `experiments/fase94_drift.json` con la
+sola chiave `map`; per non perdere la griglia uniforme va ripristinato da git
+dopo l'uso.
+
+---
+
 ## Fase 95 — Il primo confronto con un mercato VERO sull'outright: Polymarket quota il campione 2026-27
 
 **Obiettivo.** La Fase 89 ha costruito il simulatore di stagione (mercato
@@ -10529,6 +10681,11 @@ prossimo giro, e qui **avrebbe senso** all'opposto dei gol (Fase 27). Effetto
 arbitro: `sd` fra medie per arbitro (≥30 partite) contro 2.000 permutazioni
 dell'etichetta-arbitro; ampiezza netta `√(sd_oss² − sd_nulla²)`. Riproducibile:
 `python scripts/_run_outside_matrix.py`.
+
+Diagnostico: nessun run in `experiments/runs.jsonl` — i mercati corner/cartellini
+sono fuori dal listino che `compute_metrics` scora (il registro tiene le metriche
+del motore sui gol) e la config ufficiale non cambia; l'artefatto riproducibile è
+l'output dello script.
 
 ---
 ## Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva
@@ -11294,6 +11451,13 @@ per-lega» **non regge**: vinceva in interpolazione (−0.00031, CI conclusivo) 
 validazione non era sbagliato in astratto: era il protocollo sbagliato *per
 questa domanda*.
 
+Run nel registro: `build_estimates_ou_close`, `build_estimates_squad_value` e
+`build_estimates_open_sparse` in `experiments/runs.jsonl` (gli ultimi datati
+2026-07-26) — sono i backtest di fedeltà degli stimatori, l'unica parte della
+fase che produce metriche di modello. L'audit riga-per-riga non ha run propri:
+i suoi artefatti sono gli 11 report in `docs/audit_5_leghe/` e i JSON grezzi in
+`docs/audit_5_leghe/numeri/`.
+
 ---
 
 ## Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita
@@ -11366,9 +11530,10 @@ commit. Conseguenza non teorica: la Fase 100 **non era riproducibile** — né
 l'audit dei dati, né le correzioni dichiarate (R3), né gli snapshot delle due
 leghe nuove; e `fetch_sources.py` avrebbe scaricato 135 MB in
 `/home/user/cantiere/`, un albero fantasma invisibile a git. Corretto: tutti e
-32 partono, e `applica_correzioni.py --dry-run` ripercorre le 31 correzioni
-dichiarate confermando che sono già applicate — l'idempotenza R3 è di nuovo
-**dimostrabile**, non solo affermata.
+32 partono, e `applica_correzioni.py --dry-run` ripercorre le **31 righe** del
+registro confermando cella per cella le **27** con stato «applicata» (le altre 4
+non lo sono e non devono esserlo: 2 proposte e 2 ritirate) — l'idempotenza R3 è
+di nuovo **dimostrabile**, non solo affermata.
 
 **Un bug distruttivo latente.** `build_database.py --league <lega>` onorava la
 lega solo nel download: ogni lettura e ogni scrittura passavano da
@@ -11464,9 +11629,14 @@ kappa = m.draw_kappa se use_phi  altrimenti 0
 Perché `bool(eng["phi0"])` e non un flag dedicato: la mappa già distingue
 «motore con correzioni» (Serie A, φ0=0.30) da «motore liscio» (le altre quattro,
 φ0=0.0), e aggiungere un secondo interruttore avrebbe creato due fonti di verità
-per lo stesso stato. Effetto misurato su Newcastle-Liverpool (Premier): il
-pareggio passa da 25.4% a **24.8%** (−0.6pp) e l'1X2 torna quello del motore
-liscio; sulla Serie A l'output è invariato.
+per lo stesso stato. Effetto misurato su Newcastle-Liverpool (Premier), snapshot
+congelato, `as_of = max(date)+1`: il pareggio passa da **25.8%** a **24.8%**
+(−1.0pp, coerente con il +1.0pp che la Fase 79 misura come direzione sbagliata)
+e l'1X2 torna quello del motore liscio (34.8 / 24.8 / 40.4 contro
+34.4 / 25.8 / 39.8); sulla Serie A l'output è invariato.
+*(La prima stesura scriveva «da 25.4% a 24.8%, −0.6pp»: il valore pre-fix è
+25.84% — enumerati tutti e quattro gli incroci fit×pricing della φ, nessuno dà
+25.4%.)*
 
 **(2) Il denominatore.** L'universo dell'audit è l'unione degli snapshot:
 

@@ -132,7 +132,7 @@ principio §1.9); dove diverge è per-lega (mai copiare i numeri, §7).
 | corr xG-gol (F55) | 0.61 | 0.64 | 0.62 | ✅ xG di pari qualità |
 | emivita/shrinkage/α ottimi (F57) | 365/1.5/0.75 | uguali | uguali | ✅ **iperparametri DC generali** |
 | margine book (F55) | 4.9% | **4.3%** | 4.8% | ❌ liquidità crescente PL |
-| gap DC vs mercato (F56) | +0.0165 | **+0.0207** | +0.0162 | ~ stesso ordine; peggio dove il book è più liquido |
+| gap DC vs mercato (F56) | +0.0165 ✱ | **+0.0207** | +0.0162 | ~ stesso ordine; peggio dove il book è più liquido |
 | θ sotto-dispersione MLE (F53) | **1.21** | 1.07 | 1.10 | ❌ decresce con la liquidità |
 | θ OPERATIVO del router (F81, da griglia+lfo) | ⚽ 1.225 | **1.0 (liscio)** | **~1.2 (ribalta F53!)** | ❌ ma SA≈Liga: le latine convergono |
 | dp_lvl batte la chiusura (F52/53) | **sì (CI)** | no | no | ❌ idiosincrasia SA |
@@ -146,6 +146,12 @@ principio §1.9); dove diverge è per-lega (mai copiare i numeri, §7).
 | hit-rate 1X2 modello (F82) | 54.2% (=mercato) | 55.3% (=mercato) | 54.3% (=mercato) | ✅ si indovina quanto il mercato, ovunque |
 | market-implied multi-mercato (F76) | 13/14 | 13/14 | 13/14 | ✅ **il motore è universale** (ρ=−0.06 unico) |
 | pari/dispari imprevedibile (F26/75/76) | sì | sì | sì | ✅ irriducibile ovunque |
+
+> ✱ **PRE-fix.** Il +0.0165 della Serie A è la misura della Fase 56, presa prima
+> del fix del prior della Fase 92. Al codice di HEAD lo stesso backtest dà
+> **+0.0167** (modello 0.979890 / mercato 0.963191, 6 stagioni, ri-eseguito il
+> 27/07/2026). Le misure delle singole fasi restano quelle storiche — qui è solo
+> dichiarato. Il confronto fra le tre leghe non cambia: sono tutte PRE-fix.
 
 **Sintesi in tre righe.** (1) Tutto ciò che è *struttura* (matrice DC,
 market-implied, iperparametri del fit, xG) trasferisce così com'è. (2) Tutto

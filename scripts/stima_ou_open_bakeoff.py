@@ -48,7 +48,7 @@ METODO (vincolante, regole del progetto)
     devig alternativo (Shin) per la verita', strato "partite simili alle 9".
 
 Uscite (gli unici file scritti):
-  data/estimates/ou_open_corrotte_v2.csv   9 righe, probabilita' mai quote
+  data/estimates/ou_open_corrotte_2017_19.csv  9 righe, probabilita' mai quote
   docs/audit_5_leghe/numeri/stima_ou_open_bakeoff.json       tutti i numeri, riproducibili
 
 Uso: python scripts/stima_ou_open_bakeoff.py
@@ -66,9 +66,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/home/user/Polymarket-oracle")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -100,7 +99,7 @@ SNAP = {"serie_a": ROOT / "data", "premier_league": ROOT / "data",
         "ligue_1": ROOT / "data"}
 RIC = ROOT / "data" / "ricerca_esterna"
 OUT_JSON = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_ou_open_bakeoff.json"
-OUT_CSV = ROOT / "data" / "estimates" / "ou_open_corrotte_v2.csv"
+OUT_CSV = ROOT / "data" / "estimates" / "ou_open_corrotte_2017_19.csv"
 CACHE = Path(os.environ.get("OU_BAKEOFF_CACHE",
                             Path(tempfile.gettempdir()) / "ou_open_bakeoff_cache"))
 CACHE.mkdir(parents=True, exist_ok=True)

@@ -14,7 +14,7 @@
 >
 > **Esito in una riga:** **198 rilievi**, di cui **16 gravi**; nessun errore nei
 > *modelli*, tutti gli errori stanno nel **passaggio dal cantiere al progetto** e
-> nella **propagazione delle conclusioni ritirate**. Più un fatto che nessun
+> nella **propagazione delle conclusioni ritirate**.
 > Più un rilievo che ho scritto e poi **ritirato** — «`main` non ha ricevuto
 > l'integrazione» — perché si basava su un ref locale vecchio invece che sulla
 > fonte: la smentita, e il perché è istruttiva, sono al punto 7.
@@ -33,8 +33,10 @@ teorica: la **Fase 100 non era riproducibile** — né l'audit dei dati, né le
 correzioni dichiarate (regola R3), né gli snapshot delle due leghe nuove. E
 `fetch_sources.py` avrebbe scaricato 135 MB in `/home/user/cantiere/`, un albero
 fantasma fuori da git. ✅ **Corretto e verificato**: tutti e 32 partono, e
-`applica_correzioni.py --dry-run` ripercorre le 31 correzioni dichiarate
-confermando che sono già applicate (l'idempotenza R3 è tornata dimostrabile).
+`applica_correzioni.py --dry-run` ripercorre le **27 correzioni con stato
+`applicata`** del registro (31 righe in tutto: 2 `proposta` e 2 `ritirata` non lo
+sono) e le trova già applicate cella per cella — l'idempotenza R3 è tornata
+dimostrabile.
 
 **2. `build_database.py --league <lega>` distruggeva lo snapshot della Serie A.**
 Ogni ramo dello script leggeva e scriveva `database.SNAPSHOT_PATH`, cablato su
@@ -53,8 +55,8 @@ totale delle 5 leghe (16.111), non è la copertura Understat (16.110), non è
 nessun sottoinsieme filtrato (verificato provando xG, quote, apertura, tiri,
 valore rosa e l'esclusione di ogni singola stagione). Gli artefatti **dell'audit
 stesso** (`docs/audit_5_leghe/numeri/audit_*.json`, campo `n_rows`) sommano a
-16.111. Era il numero-titolo di tutta la Fase 100, ripetuto in 11 punti fra
-diario, README, report e patch. ✅ **Corretto** ovunque; il claim sostanziale
+16.111. Era il numero-titolo di tutta la Fase 100, ripetuto in **15 occorrenze
+su 12 righe** fra diario, README, report e patch. ✅ **Corretto** ovunque; il claim sostanziale
 («0 differenze contro la fonte») non cambia — cambia solo su quante partite.
 
 **4. «8 anomalie reali, tutte nella fonte» non regge sui suoi stessi report.**
@@ -107,13 +109,22 @@ costo di non applicarla è stato un rilievo grave inventato di sana pianta.
 Resta agli atti, con la sua smentita, per la regola §1.4 — e perché la prossima
 sessione non lo ri-trovi.
 
-**Lo stato vero dei branch (27 luglio, da GitHub):** `main` = `6c9b377`
-(Fase 100); `claude/audit-ultimi-20-step-gzwro2` = questa fase, **1 commit
-avanti e 0 indietro** rispetto a main (fast-forward pulito);
+**Lo stato vero dei branch (27 luglio, letto con `git ls-remote origin` — la
+fonte, non il ref locale):** `main` = `174f78c`, cioè ha ricevuto anche i due
+commit di questa fase (`bb6ebe4` e `174f78c`), e
+`claude/audit-ultimi-20-step-gzwro2` punta allo **stesso** commit (0 avanti / 0
+indietro);
 `claude/premier-liga-analysis-nqwa5c` = `8636258` (Fase 82) e
 `claude/verify-data-import-leagues-468euv` = `4711d41` (cantiere della Fase 100)
 sono **interamente contenuti in `main`** (0 commit avanti): confluiti, quindi
 cancellabili senza perdere nulla.
+
+*(Rettifica del 27 luglio, seconda passata: la prima stesura di questo paragrafo
+diceva `main` = `6c9b377` e il branch «**1** commit avanti» — erano **2**,
+`git rev-list --count 6c9b377..174f78c` → 2, e nel frattempo sono confluiti in
+`main`. Il paragrafo che insegna a leggere la fonte era a sua volta scritto
+contro una copia già vecchia di pochi minuti: la lezione vale anche per chi la
+scrive.)*
 
 **8. `predict.py` applicava la φ35 dove è stata misurata dannosa.** Il motore
 per-lega copriva il θ ma non la φ: su Premier e Liga il path DC riceveva
@@ -137,7 +148,29 @@ esecuzioni con e senza il flag davano output identici byte per byte.
 | confermati dalla verifica avversariale | 108 |
 | ridimensionati (esistono ma meno gravi) | 35 |
 | **smontati** (rilievo sbagliato) | 2 |
-| non contro-verificati (il verificatore si è fermato per limite di sessione) | 51 |
+| non contro-verificati (il verificatore si è fermato per limite di sessione) | 53 |
+
+**Attenzione a come si legge il 198: sono *blocchi di appendice*, non difetti
+distinti.** I 13 fronti hanno lavorato in parallelo e senza vedersi, quindi lo
+stesso difetto compare fino a dieci volte con id diversi. Il caso più vistoso è
+proprio in cima: **10 dei 16 gravi sono la stessa rottura** — gli script migrati
+con `parents[2]` e i percorsi `cantiere/` (`F11-01`, `F11-02`, `F11-03`,
+`F9-script-cantiere-rotti`, `F10-scripts-root-parents2`, `F12-06`, `F13-01`,
+`F13-02`, `F100-script-cantiere-rotti`, `F100-script-campione-rotto`), e altri
+due sono lo stesso IC del top-4 visto da due fronti (`F91-conclusivo-ritirato` e
+`F92bis-IC-F91-non-propagato`, che citano le medesime righe `DIARIO:9622-9623` e
+`README:247`). Restano **6 famiglie gravi distinte**. Una passata di
+de-duplicazione su tutta l'appendice conta 27 gruppi e 55 voci ridondanti, cioè
+**~143 difetti distinti** sui 198 blocchi; la fusione non è stata eseguita qui
+di proposito — perdere l'id di ogni fronte significherebbe perdere la
+tracciabilità di *chi* ha trovato *cosa*. Il numero da citare fuori da questo
+documento è **~143 difetti / 6 famiglie gravi**, non «198 / 16».
+
+Le ultime quattro righe partizionano i 198 (108 + 35 + 2 + 53). I **53** sono i
+51 dei tre fronti fermati (script migrati 19, integrità dei dati 14, lavoro
+incompiuto 18) **più due rilievi singoli** rimasti senza contro-verifica dentro
+fronti altrimenti coperti: `F93-nessun-run-nel-registro` (Fasi 92-95-bis) e
+`F10-guard-nan-parziale` (Codice entrato con l'integrazione).
 
 I tre fronti rimasti senza contro-verifica sono *script migrati*, *integrità dei
 dati* e *lavoro incompiuto*: i loro rilievi gravi sono però stati **riprodotti a
@@ -173,14 +206,14 @@ test sono verdi.
 
 | # | correzione | dove |
 |--:|---|---|
-| 7 | 15.788 → **16.111** (e 15.787/15.788 → 16.109/16.110 appaiate) | 11 punti in DIARIO, README, report 01, report 08, patch, `audit_anomalie.py` |
+| 7 | 15.788 → **16.111** (e 15.787/15.788 → 16.109/16.110 appaiate) | 15 occorrenze su 12 righe in 6 file: DIARIO (2), README (1), report 01 (6), report 08 (1), patch (1), `audit_anomalie.py` (1) |
 | 8 | «8 anomalie, tutte nella fonte» → **7 (6 fonte + 1 nostra), +1 ritirata** | DIARIO, README, report 01, indice |
 | 9 | «6 celle su 8 peggiorano» → **5** (lo diceva già la tabella della stessa fase) | DIARIO, README, PISTE, PANCHINA, CLAUDE, lavoro_aperto |
 | 10 | griglia φ0×κ: «31 combo» → **37** (`[(0,0)] + 6×6`) | DIARIO, README, docstring dello script |
 | 11 | GG/NG: i numeri sono su **5.337 partite (2017-20)**, non 3.652 (che è la finestra 2017-19 della caccia O/U) | CLAUDE.md §1.8 |
 | 12 | Fase 91: rettifica completa coi numeri dell'artefatto — «entrambi conclusivi» **non regge**, l'IC a grappoli del top-4 è [−0.0006, +0.0522] e a reggere è il test dei segni (19/24, p=0.0066) | DIARIO, README |
 | 13 | `_run_fase96_relegation_market.py` → `_run_fase97_...` (script inesistente citato nel blocco «riproducibilità») | DIARIO ×2 |
-| 14 | manifest delle fonti: «l'impronta di ognuno» → **90 file su 141** (fuori: 84 `.txt` openfootball e 16 `.html` Transfermarkt) | indice dell'audit |
+| 14 | manifest delle fonti: «l'impronta di ognuno» → **36 dei 140 grezzi cancellati** hanno impronta (il manifest ha 90 voci — 45 `.csv` football-data + 45 `.json` Understat, 5 leghe × 9 stagioni — ma 54 sono di Serie A/Premier/Liga, che sotto `cantiere/data/fonti/` non erano versionate). I 104 senza impronta: 84 `.txt` openfootball, 16 `.html` Transfermarkt, 4 `.json` `understat_match` | indice dell'audit |
 
 **Documenti**
 
@@ -203,26 +236,61 @@ test sono verdi.
 Non è stato corretto qui perché richiede una **decisione** o un **ricalcolo**,
 non una riscrittura. Ogni voce ha il suo rilievo nell'appendice.
 
+**Questa NON è la lista completa dei rilievi non corretti**: è la lista di quelli
+che valgono una decisione. I minori restano nell'appendice, non corretti —
+verificati ancora aperti al 27/07: `F9-experiments-readme-snippet` (lo snippet di
+`experiments/README.md` solleva `KeyError: 'test_season'`), `F9-root-hardcoded`
+(`scripts/stima_ou_open_bakeoff.py:69` ha la radice assoluta), `F11-14` (tre
+script — `leve_apertura.py`, `leve_phi_griglia.py`, `nuovo_fronte_generale.py` —
+hanno la cache incisa sullo scratchpad di un'altra sessione, senza override da
+variabile d'ambiente), `F81-docstring-griglie-stantie`, `F81-rho-star-premier`,
+`PISTE-5x-arbitro`, `F11-13` (`data/stime_ou_corrotte.csv` non esiste più),
+`F11-17` (`docs/audit_5_leghe/00_indice.md:137` dice ancora «153 test») e la
+metà non corretta del 🔴 `F13-03` (il ramo «registro assente» di
+`scripts/audit_snapshots.py:85-86` degrada ancora in silenzio).
+
 1. **Il numero-bandiera del progetto va rimisurato.** Dopo il fix del prior
    della Fase 92 il gap 1X2 Serie A risulta **+0.0167 / 0.9799** contro il
    **+0.0165 / 0.9797** dichiarato in 17 punti fra README e `CLAUDE.md`. La
    differenza è irrilevante nel merito e rilevante nel metodo: è il numero più
    citato del repo. Serve rieseguire il walk-forward ufficiale e allineare tutto
    in un colpo solo. *(`F92-headline-0.0165-non-riproducibile`)*
+   → **✅ ESEGUITO nel README (27 luglio, seconda passata)**: walk-forward ufficiale rifatto al
+   codice di HEAD (6 stagioni Serie A, config ufficiale) e allineate tabella di
+   testa, tabella per stagione, matrice della Fase 15-bis, riga pooled della
+   Fase 9, CI della Fase 17 e i punti narrativi. Media **0.9799 / 0.9632 /
+   +0.0167**, ROI **−15.8%** su **866** scommesse (pooled −15.8%). Le misure
+   delle singole fasi e il registro `runs.jsonl` restano PRE-fix, dichiarati
+   tali: sono confronti interni a quelle fasi. Restano da allineare `CLAUDE.md`
+   e gli altri documenti (fuori dall'ambito di chi ha fatto il README).
 2. **La COM-Poisson della Fase 85 non è una famiglia diversa dalla
    double-Poisson: è la stessa, riparametrizzata** (`dp(θ) ≡ COM-Poisson(ν=θ)`
    mean-matched). Il confronto presentato come «conferma indipendente» è la dp
    contro sé stessa. Va riscritta la sezione, e con essa le voci derivate in
    README, PANCHINA, PISTE e GLOSSARIO. *(`F85-com-poisson-e-la-stessa-dp`)*
+   → **✅ ESEGUITO nel README**: riscritte le righe 85 e 87 del registro.
+   Riprodotto: dp e COM coincidono a **≤5e-06** sull'exact-score log-loss e a
+   **≤2e-05** su Over3.5/4.5, a ogni θ della griglia; su griglia fine l'argmin è
+   **θ=1.18** (Δ −0.00027, IC95 [−0.00083, +0.00027], nel rumore), non 1.225.
+   PANCHINA, PISTE e GLOSSARIO restano da allineare.
 3. **«α\*=0 su un mercato nuovo» (Fase 88) non è mai stato calcolato.** Rifatto
    sugli stessi 7.437 casi dà α\*≈1.08 con IC che **esclude** lo zero. La
    conclusione onesta è «pareggio in Brier col mercato sharp», che è comunque il
    risultato interessante. *(`F88-alpha-star-zero-mai-testato`)*
+   → **✅ ESEGUITO nel README**: riga 88 riscritta. Riprodotto sui 7.437 casi:
+   ΔBrier −0.000136 [−0.000362, +0.000083]; α\* non vincolato **1.08**, IC95
+   [+0.147, +2.052]; col protocollo walk-forward della F16 il blend non batte il
+   mercato OOS (Δ −0.000064 [−0.000271, +0.000135]).
 4. **Due affermazioni della Fase 93 vanno declassate**: «siamo meglio calibrati
    del mercato» ha IC a cavallo dello zero e cambia segno col numero di fasce; e
    le quote «−4% calibrazione / +104% informazione» sono normalizzate su 0.0094,
    non sul deficit di 0.0215 che la frase nomina (il 56% resta non attribuito).
    *(`F93-meglio-calibrati-senza-intervallo`, `F93-quote-104-percento`)*
+   → **✅ ESEGUITO nel README** (riga 93 del registro e blocco della diagnosi
+   F92). Riprodotto: rel 0.00083 vs 0.00125, IC95 [−0.00135, +0.00049], segno
+   invertito a 50 e 100 fasce, pavimento di rumore p95 = 0.00083; risoluzione
+   +0.00981 [+0.00747, +0.01246] = unico termine conclusivo; attribuito 0.0094
+   sui 0.0215 (44%).
 5. **`docs/DATI.md` non è più il catalogo di tutti i dati**: mancano
    `data/ricerca_esterna/` (86 file, incluse le quote 1xBet), il registro delle
    correzioni, i due calendari di club nuovi e due stime; il censimento dei
@@ -1057,6 +1125,7 @@ sessione lo ha riprodotto a mano.
 - **Trovato**: «1.12 sta ~6 σ oltre la mediana sana»
 - **Come è stato accertato**: Calcolato sugli snapshot attuali: era Avg (2019-20+), n=12.457, mediana 1.0507, sd 0.00743 → (1.12−1.0507)/sd = 9.3 σ. Era BbAv 2017-19 dopo il guard, n=3.640, sd 0.00420 → 15.4 σ. Era BbAv PRIMA del guard (rimettendo le 11 righe corrotte), n=3.651, mediana 1.0554, sd 0.01283 → 5.0 σ. Nessuna dà 6. L'argomento sostanziale regge comunque: il massimo mai osservato nell'era Avg è 1.0765 (verificato: n=12.457, max 1.0765 — esattamente il numero dichiarato), quindi 1.12 non può scartare una riga buona.
 - **Correzione**: Sostituire con la formulazione verificabile e più forte: «1.12 sta 4 punti percentuali sopra il massimo mai osservato in 12.457 righe dell'era Avg (1.0765), e 9 sd oltre la mediana di quella distribuzione».
+- **Verifica incrociata (fronte «Codice entrato con l'integrazione», rilievo `F10-orr-max-sigma`, che accusa lo STESSO numero da un altro fronte e viene ~~smontato~~)**: una base che dà ~6 esiste, ed è la distribuzione **POOLED** dei quattro gruppi di quote sulle 5 leghe — n = 60.775, mediana 1.0479, sd 0.0110 → **6.5 σ** (ricalcolo sui 5 snapshot: 1X2 chiusura 6.7 σ, 1X2 apertura 6.2 σ, O/U chiusura 10.3 σ, O/U apertura 9.8 σ). Il numero **non è inventato**: è la σ di una popolazione diversa da quella che la frase nomina. La correzione da fare è quindi **dichiarare la popolazione** (e aggiungere «apertura» dove il commento parla della serie O/U), **non** sostituire il 6 con il 9.3 — che «correggerebbe» un numero derivabile. I due rilievi vanno letti insieme.
 
 **🟡 `F100-indice-riga-05` — Il riassunto del report 05 nell'indice dichiara «1 xG impossibile a NaN dichiarato», mentre il report 05 dice che quella correzione è stata RITIRATA**  
 *incoerenza-doc · bassa · **confermato***
@@ -1463,7 +1532,7 @@ sessione lo ha riprodotto a mano.
 *import-rotto · media · **confermato***
 
 - **Dove**: docs/audit_5_leghe/00_indice.md:36,37,38,39,41,42,44,45,46,47,48; docs/audit_5_leghe/REGOLE.md:32,96
-- **Atteso**: [`01_audit_dati.md`](01_audit_dati.md) (fratelli nella stessa cartella) e [`data/correzioni_dichiarate.csv`](../../data/correzioni_dichiarate.csv).
+- **Atteso**: [`01_audit_dati.md`](audit_5_leghe/01_audit_dati.md) (fratelli nella stessa cartella dell'indice) e [`data/correzioni_dichiarate.csv`](../data/correzioni_dichiarate.csv).
 - **Trovato**: I link puntano a docs/audit_5_leghe/report/01_audit_dati.md ... /11_ggng.md e a docs/audit_5_leghe/data/correzioni_dichiarate.csv, docs/audit_5_leghe/data/squad_value_2526_transfermarkt.csv: 13 percorsi inesistenti. E' l'indice da cui parte chi vuole rifare un conto (righe 9-10).
 - **Come è stato accertato**: Script di risoluzione dei link relativi su tutti i doc del fronte: 13 target non esistenti, tutti in docs/audit_5_leghe/. I file veri sono docs/audit_5_leghe/0N_*.md, data/correzioni_dichiarate.csv e data/squad_value_2526_transfermarkt.csv (verificati con ls).
 - **Correzione**: Sed sui link: `report/` -> `` in 00_indice.md; `data/` -> `../../data/` in REGOLE.md.
@@ -1814,7 +1883,7 @@ sessione lo ha riprodotto a mano.
 - **Trovato**: Sulle righe con O/U di CHIUSURA nei 5 snapshot: n = 12.459 (non 12.457), mediana 1.0503, sd 0.0068, massimo 1.0755 (non 1.0765) e 1.12 dista 10.3 sigma. Il valore 1.0765 e' il massimo dell'O/U di APERTURA nell'era Avg (Ligue 1) e il "~6 sigma" corrisponde alla distribuzione 1X2 (6.7 sigma su odds_home, 6.2 su odds_home_open, con massimo 1.0797 ~ il "1.080" citato nella frase successiva). Il 12.457 e' il numero di partite usate dal fit pooled delle stime (che richiede anche la chiusura 1X2), non le righe con O/U.
 - **Come è stato accertato**: Ricalcolo sui 5 snapshot: O/U chiusura n=12459, med 1.0503, sd 0.0068, max 1.0755, (1.12-med)/sd = 10.3; 1X2 chiusura n=16109, med 1.0439, sd 0.0114, sigma 6.7, max 1.0755; 1X2 apertura max 1.0797. Massimo assoluto su tutti i mercati e tutte le leghe: 1.0947 (Bundesliga O/U apertura, era Betbrain).
 - **Correzione**: Riscrivere il commento separando le due popolazioni (O/U: n, max, sigma; 1X2: n, max, sigma), oppure citare il solo dato che conta e che ho verificato: il massimo osservato su TUTTI i mercati e tutte le leghe e' 1.0947, quindi 1.12 non puo' scartare una riga buona. La conclusione operativa non cambia.
-- **Verifica avversariale**: I due numeri accusati di essere sbagliati sono ESATTI per la popolazione che il commento descrive, e l'auditor ha misurato la serie sbagliata. Ricalcolo sui 5 snapshot: O/U di APERTURA nell'era Avg (stagioni 1920+) -> n = 12.457 e massimo 1.0765, cifra per cifra come nel commento; e' l'O/U di CHIUSURA a dare n=12.459 e max 1.0755. Che il commento parli della linea di apertura e' obbligato dalla frase successiva («nell'era Betbrain 2017-19 si arriva a 1.339»): nel 2017-19 la CHIUSURA O/U non esiste affatto (Fase 73), quindi 1.339 puo' venire solo dalla pre-match, ed e' li' che vivevano le 11 celle corrotte che il guard doveva prendere. Il documento sorgente lo conferma: docs/audit_5_leghe/patch_guard_overround_APPLICATA.md riporta la tabella «2017-19 (BbAv) n 3.651 ... max 1.339 | 2019-20+ (Avg) n 12.457, p99.9 1.0757, max 1.0765» — e 3.651 meno le 11 celle svuotate dal guard fa 3.640, esattamente quante ne conto oggi nello snapshot. Cade anche la spiegazione alternativa proposta («12.457 e' l'n del fit pooled»): coincide, ma perche' quel fit gira sulle stesse righe. Corretto pure il «massimo osservato 1.080» per l'1X2 (misurato 1.0797 sull'apertura). Resta in piedi UN SOLO dettaglio, minore: il «~6 sigma» non e' quello della serie citata (9.3) ma della distribuzione POOLED dei quattro gruppi di quote (n=60.775, mediana 1.0479, sd 0.0110 -> 6.5 sigma), ed e' trascritto tale e quale dal documento d'audit; la conclusione operativa non cambia, come ammette lo stesso rilievo. Da non «correggere» i numeri: semmai aggiungere la parola «apertura» e dire su quale popolazione e' il sigma.
+- **Verifica avversariale**: I due numeri accusati di essere sbagliati sono ESATTI per la popolazione che il commento descrive, e l'auditor ha misurato la serie sbagliata. Ricalcolo sui 5 snapshot: O/U di APERTURA nell'era Avg (stagioni 1920+) -> n = 12.457 e massimo 1.0765, cifra per cifra come nel commento; e' l'O/U di CHIUSURA a dare n=12.459 e max 1.0755. Che il commento parli della linea di apertura e' obbligato dalla frase successiva («nell'era Betbrain 2017-19 si arriva a 1.339»): nel 2017-19 la CHIUSURA O/U non esiste affatto (Fase 73), quindi 1.339 puo' venire solo dalla pre-match, ed e' li' che vivevano le 11 celle corrotte che il guard doveva prendere. Il documento sorgente lo conferma: docs/audit_5_leghe/patch_guard_overround_APPLICATA.md riporta la tabella «2017-19 (BbAv) n 3.651 ... max 1.339 | 2019-20+ (Avg) n 12.457, p99.9 1.0757, max 1.0765» — e 3.651 meno le 11 celle svuotate dal guard fa 3.640, esattamente quante ne conto oggi nello snapshot. Cade anche la spiegazione alternativa proposta («12.457 e' l'n del fit pooled»): coincide, ma perche' quel fit gira sulle stesse righe. Corretto pure il «massimo osservato 1.080» per l'1X2 (misurato 1.0797 sull'apertura). Resta in piedi UN SOLO dettaglio, minore: il «~6 sigma» non e' quello della serie citata (9.3) ma della distribuzione POOLED dei quattro gruppi di quote (n=60.775, mediana 1.0479, sd 0.0110 -> 6.5 sigma), ed e' trascritto tale e quale dal documento d'audit; la conclusione operativa non cambia, come ammette lo stesso rilievo. Da non «correggere» i numeri: semmai aggiungere la parola «apertura» e dire su quale popolazione e' il sigma. **Rimando**: lo stesso «~6 σ» è accusato dal fronte «Fase 100 e gli 11 report» come `F100-sei-sigma`, dove il verdetto è *confermato* e la correzione proposta è sostituire il 6 con il 9.3 — verdetto opposto a questo. Vale questa lettura: il 6.5 è ri-derivabile dalla distribuzione pooled, quindi si dichiara la popolazione e non si tocca il numero.
 
 <details><summary>Verifiche con esito OK su questo fronte</summary>
 
@@ -2080,8 +2149,8 @@ sessione lo ha riprodotto a mano.
 *import-rotto · media · *non contro-verificato**
 
 - **Dove**: docs/audit_5_leghe/00_indice.md:35-53 (13 occorrenze di «report/»)
-- **Atteso**: [`01_audit_dati.md`](01_audit_dati.md) ecc. — i file stanno in docs/audit_5_leghe/ senza sottocartella
-- **Trovato**: [`report/01_audit_dati.md`](report/01_audit_dati.md) ... [`report/11_ggng.md`](report/11_ggng.md)
+- **Atteso**: [`01_audit_dati.md`](audit_5_leghe/01_audit_dati.md) ecc. — i file stanno in docs/audit_5_leghe/ senza sottocartella
+- **Trovato**: `[report/01_audit_dati.md](report/01_audit_dati.md)` ... `[report/11_ggng.md](report/11_ggng.md)` (citati come prova: sono i link ROTTI, non devono essere cliccabili)
 - **Come è stato accertato**: `ls docs/audit_5_leghe/report` -> No such file or directory; i file 01..11 sono direttamente in docs/audit_5_leghe/. grep -c 'report/' docs/audit_5_leghe/00_indice.md = 13. Ironia dell'errore: la tabella subito sopra (righe 14-23) mappa correttamente cantiere/report/*.md -> docs/audit_5_leghe/*.md, ma i link non sono stati riscritti.
 - **Correzione**: Rimuovere il prefisso report/ dai 11 link (e dalle 2 occorrenze restanti) in docs/audit_5_leghe/00_indice.md.
 

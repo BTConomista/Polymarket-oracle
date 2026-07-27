@@ -48,6 +48,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -55,9 +56,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path("/home/user/Polymarket-oracle")
+ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import nuove_leghe  # noqa: E402
@@ -70,8 +70,10 @@ from src.models import market_implied as mi          # noqa: E402
 from scripts._fase52_common import boot, dp_matrices  # noqa: E402
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_phi_griglia.json"
-SCRATCH = Path("/tmp/claude-0/-home-user-Polymarket-oracle/"
-               "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")
+SCRATCH = Path(os.environ.get(
+    "SCRATCH",
+    "/tmp/claude-0/-home-user-Polymarket-oracle/"
+    "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad"))
 SEASONS = ["1920", "2021", "2122", "2223", "2324", "2425", "2526"]
 LEAGUES = ["bundesliga", "ligue_1", "serie_a", "premier_league", "la_liga"]
 SNAPSHOT = {"bundesliga": ROOT / "data/bundesliga_matches.csv",

@@ -239,8 +239,9 @@ stagioni *successive* a quelle stimate (unico dato possibile: va bene per un
 benchmark storico, non per una predizione); nel 2017-19 l'input O/U è Betbrain e
 il movimento 1X2 è Pinnacle, mentre il fit usa le medie — semantiche diverse.
 
-→ `data/estimates/ou_close_2017_19_nuove_leghe.csv` (1.362 righe,
-probabilità, mai quote).
+→ `data/estimates/ou_close_2017_19.csv`, le 1.362 righe `bundesliga`/`ligue_1`
+(il file pubblicato copre tutte e 5 le leghe, 3.638 righe; probabilità, mai
+quote).
 
 ---
 
@@ -375,7 +376,7 @@ costante ha l'ottimo **al bordo** (−0.20) e non è identificata, e θ non è m
 stato provato *sotto* la superficie M4 — quindi il suo verdetto vale solo per il
 debias povero.
 
-→ `data/estimates/ou_open_corrotte_v2.csv` (9 righe, probabilità, con
+→ `data/estimates/ou_open_corrotte_2017_19.csv` (9 righe, probabilità, con
 entrambe le colonne M5g e M4)
 
 ---

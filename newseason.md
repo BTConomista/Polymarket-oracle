@@ -173,8 +173,6 @@ lista qui sotto.
 
 Candidati per cui cambierebbe qualcosa davvero:
 
-| fonte | cosa darebbe | qui | da Actions |
-|---|---|---|---|
 > ⚠️ **SUPERATA dalla Fase 100** (verificato il 26/07/2026, audit Fase 101):
 > la rete **è tornata raggiungibile**. Rispondono 200 `football-data.co.uk`,
 > `understat.com`, `transfermarkt.com` e Kaggle via `kagglehub` — infatti
@@ -183,7 +181,10 @@ Candidati per cui cambierebbe qualcosa davvero:
 > `oddsportal.com` il vincolo non è tecnico ma il `robots.txt` (pagine
 > storiche vietate) e BetExplorer ha ritirato le quote vecchie.
 > Stato aggiornato in `docs/MANUALE_SOPRAVVIVENZA.md` §1.
+> La colonna «qui» qui sotto è quindi **storica**, non lo stato di oggi.
 
+| fonte | cosa darebbe | qui | da Actions |
+|---|---|---|---|
 | **Betfair Exchange** | la borsa più liquida del mondo: prezzi migliori di Smarkets su tutto | 403 | **da provare** |
 | **football-data.co.uk** | è la **nostra fonte primaria**: oggi viviamo di bundle caricati a mano | 403 | **da provare** |
 | SofaScore | formazioni, statistiche live | 403 | da provare |
@@ -270,7 +271,8 @@ Elenco delle finestre che si chiudono, in ordine di quanto sono irripetibili:
 
 1. **Traiettoria apertura → chiusura** delle quote (mai avuta a nessuna scala).
 2. **Formazioni ufficiali** pre-partita (pista 10) — esistono un'ora, poi no.
-3. **Quote GG/NG** (§8.4) — l'unico mercato ancora aperto.
+3. **Quote GG/NG** (§8.4) — book diverso e stagioni recenti che nessun archivio
+   copre (la premessa «unico mercato senza quote» è caduta alla Fase 100).
 4. **Dati in-play** minuto per minuto (pista 18) — fondazione dei mercati live,
    Tier 3.
 5. **Ri-prezzatura degli outright** a inizio stagione (`docs/PISTE.md` §4-bis,
@@ -310,12 +312,16 @@ Stato al 26 luglio 2026:
   4 senza dati nuovi, 5 nei grezzi già scaricati e mai estratti (handicap
   asiatico, primo tempo, quota massima, Pinnacle puro), 6 con fonte esterna,
   4 di raccolta prospettica.
-- **`docs/PANCHINA.md`**: **24 caselle ⬜** = modelli testati solo sulla Serie A
+- **`docs/PANCHINA.md`**: **134 caselle ⬜** (erano 24: la matrice è passata da 4
+  a 6 colonne con Bundesliga e Ligue 1, Fase 100; 138 → 134 alla Fase 101, quando
+  la riga COM-Poisson ha smesso di essere un modello a sé) = modelli testati solo sulla Serie A
   e **mai** sul fronte per-lega o generale (principio §1.9). Non sono
   assoluzioni: sono lavoro potenziale.
 - **Fase 78** è l'unica fase formalmente **APERTA** — ed è proprio questa.
-- **Mercati non ancora coperti**: Tier 2 (handicap asiatico), Tier 3 (HT/FT e
-  tempi).
+- **Mercati non ancora coperti**: HT/FT congiunto, le combinazioni e il live. Il
+  **Tier 2** (handicap asiatico) è coperto e validato contro quota esterna
+  (Fase 88) e il **Tier 3** di base — Halftime, Second Half, risultato esatto —
+  dalle Fasi 96/98.
 
 Quello che invece **è chiuso** e non va riproposto senza informazione nuova:
 tutti i dati **interni** (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/

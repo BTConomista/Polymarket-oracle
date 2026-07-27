@@ -61,7 +61,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | **+ dp_lvl / sharpen_1x2** (affina la chiusura) | ⚽ nel tool F51/52 ✱3 | ❌ F53 | ❌ F53 | ❌ PEGGIORA la chiusura (CI conclusivo), ROI −22% | ❌ nel rumore/peggiorativa, ROI −13% | ❌ proprietà della chiusura SA |
 | **Dixon-Coles + xG** (fallback senza quote) | ⚽ δ=0.23 | ⚽ δ=0.33 F57 | ⚽ δ=0.22 F57 | ⚽ δ=0.28 | ⚽ δ=0.19 | ⚽ ✱4 iperparametri comuni |
 | **Simulatore di stagione → mercato CAMPIONE** (MC dal DC, F89) | ⚽ F89 | ⚽ F89 | ⚽ F89 | 🪑 batte le baseline ma non «vince il Bayern» | 🪑 idem, non batte «vince il PSG» | ⚽ struttura universale (spareggi e δ per-lega; +0.2299 sulla baseline forte di persistenza, IC>0, 14/24 — vantaggio concentrato in Premier). ⚠️ **F98: fragile alla specificazione della baseline** — cambiando la griglia LOO la baseline passa 1.4293→1.3816 e l'IC include lo zero; non è una smentita (la griglia F89 è un superset e dà il risultato *peggiore* = instabilità LOO a n=24) ma il segno dipende da una scelta arbitraria. Il mercato è **non testabile prospetticamente**: servirebbero ~57 stagioni-lega, 3 leghe in una stagione danno **9,8% di potenza** |
-| **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⬜ | ⬜ | ⚽ top-4 **calibrato** (ECE 0.0137, batte anche la persistenza, 480 oss.); retrocessione ❌ **non** batte la persistenza (mis-calibrazione tutta sulle neopromosse: −10.1pp) |
+| **… → mercati POSIZIONALI (top-4 / retrocessione)** (F91) | ⚽ F91 | ⚽ F91 | ⚽ F91 | ⬜ | ⬜ | ⚽ top-4 **calibrato** (ECE 0.0140, 480 oss.; batte la persistenza +0.0274 ma l'IC a grappoli [−0.0006,+0.0522] **include lo zero** — a reggere è il test dei segni 19/24, p=0.0066, F92-bis); retrocessione ❌ **non** batte la persistenza (−0.0066 [−0.0364,+0.0208]; mis-calibrazione tutta sulle neopromosse: −6.1pp). Numeri dell'artefatto `experiments/fase91_positions.json` post-fix del prior (F92); i precedenti ECE 0.0137 / −10.1pp erano PRE-fix |
 | **… + deriva di forza in-stagione** (F94) | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⚽/❌ ✱7 | ⬜ | ⬜ | ⚽ **solo RETROCESSIONE** (+0.0095, IC [+0.0020,+0.0180]; neopromosse −6.1pp→−2.8pp); ❌ campione (nullo) e top-4 (peggio 17/24) |
 | **Stimatore chiusura O/U (E3)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime (MAE 0.0143 regime d'uso) | ⚽ tool stime (MAE 0.0125) | ⚽ F62-bis (il pooled VINCE) |
 | **Stimatore squad_value (ibrido A3/A2)** | ⚽ tool stime | ⚽ tool stime | ⚽ tool stime | ⬜ | ⬜ | ⚽/⚽ F66 ✱6 (pooled per anchored, per-lega per il resto) |
@@ -82,7 +82,7 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Copula di Frank | ❌ F43/50 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | GAS / score-driven (state-space) | ❌ F52-sexies | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Binomiale negativa · zero-inflazione · Rue-Salvesen | ❌ F27/51 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| COM-Poisson (dispersione principiata a 1 param ν) | ❌ F85 (pareggia dp, non batte) | ⬜ | ⬜ | ⬜ | ⬜ | ❌ F85 (una-forma è a tetto: serve coda a 2 param) |
+| COM-Poisson (ν) — **duplicato della dp**, non un modello a sé | ⚠️ F85/F101: `dp(θ) ≡ COM-Poisson(ν=θ)` — stessa famiglia, verificata identica | ⚠️ idem | ⚠️ idem | ⚠️ idem | ⚠️ idem | ⚠️ voce da fondere con la double-Poisson del router |
 | ρ dinamico per-partita | ❌ F18 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Power-devig / denoising cross-stagione | ❌ F38/50 | ⬜ | ⬜ | ❌ PEGGIORA (CI conclusivo) | ❌ nel rumore | ⬜ |
 | Covariata stakes + router stakes-aware | ❌ F32/36/45 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
@@ -299,7 +299,7 @@ Note della matrice:
 | GBM modello+mercato (23) | degrada perfino il mercato-feature | 0.9996 vs mercato 0.9632 |
 | Finestre dati corte (25) | più storia batte meno, sempre | 3 stag +0.0011, 2 stag +0.0019 |
 | Binomiale negativa (27) | i gol NON sono sovra-dispersi dati i tassi | nb_size→Poisson |
-| COM-Poisson (85) | dispersione principiata a 1 param: pareggia la dp (exact-LL 2.8321 vs 2.8322) ma non batte; la coda ha bisogno di 2 parametri, non di un'altra forma | ν=1.15 azzera Over4.5 ma non Over3.5 |
+| COM-Poisson (85) — **ritirata come modello distinto (F101)** | non era una famiglia alternativa: `_dp_pmf` è `q_k ∝ a^k/(k!)^θ` rinormalizzata, cioè **la COM-Poisson con ν=θ**, entrambe mean-matched. Ri-eseguito `scripts/_run_tail_analysis.py` su 7.980 partite: a parametri appaiati le tre statistiche coincidono (ν=θ=1.35 → 2.8359/2.8358, Δ Over3.5 e Over4.5 identici alla quarta cifra). Il «ν=1.15 pareggia la dp θ=1.225» confrontava la stessa famiglia a due θ diversi | exact-LL a ν=θ=1.15: dp 2.832060 vs COM 2.832057 (Δ 3.8e-06); max\|dp−COM\| sulla pmf ≤ 9.6e-05 |
 | Coda a 2 parametri: isotonica per-soglia + mistura di 2 Poisson (87) | (A) l'isotonica peggiora il log-loss OOS su tutte 4 le soglie; (B) la mistura guadagna in-sample ma OOS non conclusiva e si ribalta sulle stagioni recenti | A: +0.0061…+0.0150; B: Δ −0.00042 CI [−0.0015,+0.0006] P 78.6%, 2425/2526 positive |
 | Power-devig / denoising (38, 50) | motore già non-biased | Platt a≈1.06 peggiora +0.0020; η=0.909 mai utile |
 | Poisson bivariato λ3 (42) | l'equilibrio \|λ−μ\| batte la correlazione globale | perde vs φ35 |

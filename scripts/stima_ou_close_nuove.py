@@ -1,6 +1,16 @@
 """STIMA della chiusura O/U 2.5 mancante nel 2017-19 di Bundesliga e Ligue 1
    + RIESAME dello stimatore ora che le leghe sono 5 invece di 3.
 
+SUPERATO dall'integrazione (Fase 100): la stima pubblicata e' quella del fit
+pooled a 5 leghe, `data/estimates/ou_close_2017_19.csv` (3.638 righe, prodotta
+da `scripts/build_estimates.py`), che copre anche Bundesliga e Ligue 1. Il file
+`ou_close_2017_19_nuove_leghe.csv` di questo script e' stato RIMOSSO da
+`data/estimates/` in 6c9b377 proprio perche' duplicato e superato. Lo script
+resta come verbale del metodo e come termine di paragone, e la sua uscita NON
+va piu' in `data/estimates/`: scrive in `docs/audit_5_leghe/numeri/` con il
+suffisso `_storico` — stessa scelta gia' fatta per `scripts/stima_ou_corrotte.py`
+(audit Fase 101).
+
 CHE COSA MANCA. Nel 2017-18 e 2018-19 football-data pubblica UNA sola linea
 O/U (`BbAv`, Betbrain media, pre-match: negli snapshot vive correttamente in
 `odds_over25_open`). La CHIUSURA O/U di quelle stagioni non esiste alla fonte:
@@ -73,7 +83,8 @@ TRAPPOLE DICHIARATE (il progetto ci e' gia' inciampato):
     con questo metodo e sono trattate a parte.
 
 USCITE
-  data/estimates/ou_close_2017_19_nuove_leghe.csv   (probabilita', mai quote)
+  docs/audit_5_leghe/numeri/ou_close_2017_19_nuove_leghe_storico.csv
+      (probabilita', mai quote; metodo STORICO, superato dal pooled a 5)
   docs/audit_5_leghe/numeri/stima_ou_close_nuove.json                 (tutti i numeri)
 
 Uso:  python scripts/stima_ou_close_nuove.py
@@ -104,8 +115,16 @@ from src.evaluation import metrics  # noqa: E402
 from _fase52_common import boot, ll_bin  # noqa: E402
 
 OUT_JSON = ROOT / "docs" / "audit_5_leghe" / "numeri" / "stima_ou_close_nuove.json"
-OUT_CSV = ROOT / "data" / "estimates" / "ou_close_2017_19_nuove_leghe.csv"
-CORROTTE = ROOT / "data" / "stime_ou_corrotte.csv"
+OUT_CSV = (ROOT / "docs" / "audit_5_leghe" / "numeri"
+           / "ou_close_2017_19_nuove_leghe_storico.csv")
+# L'apertura STIMATA delle righe con la linea O/U corrotta. Il vecchio percorso
+# `data/stime_ou_corrotte.csv` e' stato cancellato da 6c9b377: il suo produttore
+# (`scripts/stima_ou_corrotte.py`, stesso metodo di inversione del solo 1X2 su
+# cui e' misurato `mae_ch` qui sotto) scrive ora sotto docs/. Si punta li', non
+# alla stima del bakeoff, per non cambiare in silenzio l'input di una misura
+# d'errore che al bakeoff non si riferisce.
+CORROTTE = (ROOT / "docs" / "audit_5_leghe" / "numeri"
+            / "stima_ou_corrotte_metodo_storico.csv")
 
 HIST = ["serie_a", "premier_league", "la_liga"]
 NEW = ["bundesliga", "ligue_1"]
@@ -680,13 +699,16 @@ def main() -> int:
     for r in bad.itertuples():
         print(f"  {r.league:12s} {r.season} {r.date:%Y-%m-%d} "
               f"{r.home_team}-{r.away_team}: manca {r.motivo}")
+    if not args.no_chained and not CORROTTE.exists():
+        print(f"\n  [stima concatenata SALTATA: manca {CORROTTE}. "
+              f"Rigenerarla con `python scripts/stima_ou_corrotte.py`.]")
     if not args.no_chained and CORROTTE.exists():
         chained, mae_ch = stima_concatenata(fit, best, rng)
         if chained:
             rows.extend(chained)
             res["errore_composto_mae"] = mae_ch
             print(f"  -> {len(chained)} di queste hanno un'APERTURA STIMATA "
-                  f"(stime_ou_corrotte.csv): stima concatenata prodotta con "
+                  f"({CORROTTE.name}): stima concatenata prodotta con "
                   f"MAE atteso {mae_ch:.4f} (misurato, vedi sopra)")
 
     # ---- 7. uscita ---------------------------------------------------------
@@ -710,7 +732,9 @@ def main() -> int:
 
 def stima_concatenata(fit: pd.DataFrame, best: str, rng, n_sample: int = 900):
     """Le 8 righe con apertura O/U corrotta hanno gia' una STIMA dell'apertura
-    (data/stime_ou_corrotte.csv, inversione del solo 1X2). Applicarci
+    (docs/audit_5_leghe/numeri/stima_ou_corrotte_metodo_storico.csv,
+    inversione del solo 1X2, prodotta da scripts/stima_ou_corrotte.py).
+    Applicarci
     sopra E3 e' una stima-su-stima: l'errore va MISURATO, non assunto.
 
     Misura: su un campione delle righe 2019-20+ si sostituisce l'apertura vera
@@ -762,7 +786,7 @@ def stima_concatenata(fit: pd.DataFrame, best: str, rng, n_sample: int = 900):
             "home_team": r.home_team, "away_team": r.away_team,
             "p_over25_close_est": round(p, 4),
             "metodo": f"E3 ({best}) applicato a un'APERTURA a sua volta STIMATA "
-                      f"(stime_ou_corrotte.csv): stima su stima",
+                      f"({CORROTTE.name}): stima su stima",
             "mae_atteso": round(mae_ch, 4),
             "note": "apertura O/U originale corrotta e svuotata: errore composto, "
                     "misurato sostituendo l'apertura vera con la stessa stima "
