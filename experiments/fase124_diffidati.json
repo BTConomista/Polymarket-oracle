@@ -1,0 +1,97 @@
+{
+ "fase": 124,
+ "domanda": "un giocatore a una ammonizione dalla squalifica si trattiene?",
+ "disegno": "within-player: ogni giocatore fa da controllo di se stesso; bootstrap a grappolo sul giocatore",
+ "presenze": 726823,
+ "min_minuti": 0,
+ "ingenuo": {
+  "diffidati": 0.15555416268392436,
+  "controllo": 0.12808422465380834,
+  "differenza": 0.02746993803011602,
+  "avvertenza": "confuso dalla selezione, NON usare"
+ },
+ "within_player": {
+  "delta": -0.02654240088673642,
+  "ic95": [
+   -0.029888553938474047,
+   -0.02300956375524144
+  ],
+  "n_giocatori": 4888,
+  "n_presenze_diffidato": 63817
+ },
+ "per_lega": {
+  "bundesliga": {
+   "delta": -0.048082460616303245,
+   "ic95": [
+    -0.05773326422894351,
+    -0.03781584207414124
+   ],
+   "n_giocatori": 828
+  },
+  "la_liga": {
+   "delta": -0.030141021767435217,
+   "ic95": [
+    -0.03774659878654505,
+    -0.022201622041409942
+   ],
+   "n_giocatori": 1213
+  },
+  "ligue_1": {
+   "delta": -0.039506928210655566,
+   "ic95": [
+    -0.04602533228031965,
+    -0.03270156850099751
+   ],
+   "n_giocatori": 1576
+  },
+  "premier_league": {
+   "delta": -0.032304961053217944,
+   "ic95": [
+    -0.0400496053457696,
+    -0.02440385521269678
+   ],
+   "n_giocatori": 924
+  },
+  "serie_a": {
+   "delta": -0.024467271193656787,
+   "ic95": [
+    -0.03210157313764466,
+    -0.01601013638983571
+   ],
+   "n_giocatori": 1130
+  }
+ },
+ "minuti": {
+  "diffidato": 73.25269128915492,
+  "controllo": 66.14281711406701
+ },
+ "gradino_alla_soglia": {
+  "gradino": -0.015415147858291837,
+  "ic95": [
+   -0.01948808078941037,
+   -0.01111280809266482
+  ],
+  "tasso_base": 0.17148166656255856,
+  "riduzione_relativa": -0.0898938537704741,
+  "n_presenze": 128072,
+  "n_giocatori": 4457
+ },
+ "per_fase_stagione": {
+  "per_fase": {
+   "inizio": -0.020459538649168028,
+   "meta": -0.010807689070120925,
+   "fine": -0.015097272101848268
+  },
+  "differenza_inizio_meno_fine": -0.00536226654731976,
+  "ic95_differenza": [
+   -0.016391384017283805,
+   0.00477550137281967
+  ],
+  "conclusiva": false,
+  "potenza": {
+   "larghezza_ic": 0.021166885390103474,
+   "rapporto_su_effetto_medio": 1.3731224367541675,
+   "lettura": "l'IC sulla differenza e' piu' largo dell'effetto stesso: un'attenuazione anche del 50% resterebbe dentro il rumore. Questo test NON puo' vederla."
+  }
+ }
+}

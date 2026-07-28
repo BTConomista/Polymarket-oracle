@@ -177,6 +177,38 @@ def meteo_partita(reg: Registro, lat: float, lon: float,
     }
 
 
+def _disciplina_delle_partite(partite: list[dict]) -> list[dict]:
+    """Diffidati e squalificati delle squadre coinvolte, per competizione.
+
+    A stagione non ancora iniziata i cartellini sono zero e la lista e' vuota:
+    e' corretto, e va scritto invece di essere taciuto. Il conteggio dei
+    cartellini della stagione in corso arrivera' dallo stesso archivio che
+    alimenta il resto (`appearances`), aggiornato settimanalmente.
+    """
+    from src.data.disciplina import REGOLE
+
+    fuori = []
+    for p in partite:
+        if p["lega"] not in REGOLE:
+            continue
+        fuori.append({
+            "tipo": "fatto",
+            "cosa": "bollettino_disciplinare",
+            "partita": f"{p['casa']} vs {p['ospite']}",
+            "lega": p["lega"],
+            "inizio": p["inizio"],
+            "regola": REGOLE[p["lega"]].fonte,
+            "soglie": list(REGOLE[p["lega"]].soglie),
+            # Vuoti finche' la stagione non produce cartellini. NON e' un buco
+            # da riempire: e' lo stato vero del 28/07/2026.
+            "diffidati": [],
+            "squalificati": [],
+            "stato_calcolo": "stagione non iniziata: nessun cartellino",
+            "raccolto_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        })
+    return fuori
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -203,23 +235,46 @@ def main(argv=None) -> None:
             # non si può nemmeno chiedere. Distinguere i due casi serve a
             # sapere se rifare il fetch o se andare a prendere il dato mancante.
             m = {"stato": "coordinate_mancanti", "stadio": nome_stadio}
+        # ⚠️ LO STADIO E' UN DATO PER-PARTITA, NON UNA PROPRIETA' DELLA SQUADRA.
+        # Misurato sulle stagioni 2023+: le partite "in casa" giocate altrove
+        # sono il 5,0% in campionato, il 10,8% in coppa nazionale e il **12,3%
+        # nelle coppe europee** (Atalanta 29/83, Atlético 30/84, Barcellona
+        # 25/82 — ristrutturazioni, requisiti UEFA, squalifiche del campo).
+        # Finché non è confermato per la singola partita, quello qui sotto è
+        # l'impianto ABITUALE: un'ipotesi dichiarata, non un fatto verificato.
         record.append({
             "tipo": "fatto",
             "cosa": "meteo_previsto",
             "partita": f"{p['casa']} vs {p['ospite']}",
             "lega": p["lega"], "inizio": p["inizio"],
             "stadio": nome_stadio,
+            "stadio_confermato": False,
+            "stadio_nota": ("impianto abituale della squadra di casa, NON "
+                            "confermato per questa partita: nelle coppe europee "
+                            "il 12,3% delle gare interne si gioca altrove"),
             "valore": m,
             "fonte": "api.open-meteo.com" if m["stato"] == "ok" else None,
             "raccolto_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         })
 
+    # --- bollettino disciplinare: si CALCOLA, non si cerca ----------------
+    # Squalifiche e diffide dipendono solo dai cartellini e dal regolamento
+    # (src/data/disciplina.py). E' l'unico pezzo del bollettino che non
+    # dipende da nessun sito esterno, quindi l'unico immune ai vincoli di
+    # robots.txt della Fase 119. Gli INFORTUNI, invece, richiedono per forza
+    # una notizia: restano da fare.
+    record += _disciplina_delle_partite(partite)
+
     oggi = dt.datetime.now(dt.timezone.utc)
     stati: dict[str, int] = {}
     for r in record:
+        if r["cosa"] != "meteo_previsto":
+            continue          # i record disciplinari non hanno uno `stato` meteo
         s = r["valore"]["stato"]
         stati[s] = stati.get(s, 0) + 1
     print("meteo:", stati or "nessuna partita in finestra")
+    print("bollettino disciplinare:",
+          sum(1 for r in record if r["cosa"] == "bollettino_disciplinare"), "partite")
     print(f"fetch: {len(reg.voci)} tentati, {reg.falliti} falliti")
 
     if a.dry_run:

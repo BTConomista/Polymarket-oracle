@@ -1,6 +1,6 @@
 {
  "giorno": "2026-07-28",
- "generato_utc": "2026-07-28T19:05:17.711147+00:00",
+ "generato_utc": "2026-07-28T20:06:52.266627+00:00",
  "livello": "fatti",
  "partite_in_finestra": 6,
  "record": [
@@ -11,13 +11,15 @@
    "lega": "la_liga",
    "inizio": "2026-08-15T17:30:00Z",
    "stadio": "Mendizorroza",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
    "valore": {
     "stato": "fuori_orizzonte",
     "giorni_mancanti": 18,
     "orizzonte_giorni": 16
    },
    "fonte": null,
-   "raccolto_utc": "2026-07-28T19:05:17.711067+00:00"
+   "raccolto_utc": "2026-07-28T20:06:52.258411+00:00"
   },
   {
    "tipo": "fatto",
@@ -26,13 +28,15 @@
    "lega": "la_liga",
    "inizio": "2026-08-15T19:30:00Z",
    "stadio": "Ramón Sánchez-Pizjuán",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
    "valore": {
     "stato": "fuori_orizzonte",
     "giorni_mancanti": 18,
     "orizzonte_giorni": 16
    },
    "fonte": null,
-   "raccolto_utc": "2026-07-28T19:05:17.711125+00:00"
+   "raccolto_utc": "2026-07-28T20:06:52.258425+00:00"
   },
   {
    "tipo": "fatto",
@@ -41,12 +45,14 @@
    "lega": "la_liga",
    "inizio": "2026-08-16T15:00:00Z",
    "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
    "valore": {
     "stato": "coordinate_mancanti",
     "stadio": null
    },
    "fonte": null,
-   "raccolto_utc": "2026-07-28T19:05:17.711130+00:00"
+   "raccolto_utc": "2026-07-28T20:06:52.258430+00:00"
   },
   {
    "tipo": "fatto",
@@ -55,13 +61,15 @@
    "lega": "la_liga",
    "inizio": "2026-08-16T17:00:00Z",
    "stadio": "RCDE Stadium",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
    "valore": {
     "stato": "fuori_orizzonte",
     "giorni_mancanti": 19,
     "orizzonte_giorni": 16
    },
    "fonte": null,
-   "raccolto_utc": "2026-07-28T19:05:17.711135+00:00"
+   "raccolto_utc": "2026-07-28T20:06:52.258436+00:00"
   },
   {
    "tipo": "fatto",
@@ -70,13 +78,15 @@
    "lega": "la_liga",
    "inizio": "2026-08-16T19:30:00Z",
    "stadio": "Abanca Balaídos",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
    "valore": {
     "stato": "fuori_orizzonte",
     "giorni_mancanti": 19,
     "orizzonte_giorni": 16
    },
    "fonte": null,
-   "raccolto_utc": "2026-07-28T19:05:17.711140+00:00"
+   "raccolto_utc": "2026-07-28T20:06:52.258448+00:00"
   },
   {
    "tipo": "fatto",
@@ -85,13 +95,105 @@
    "lega": "la_liga",
    "inizio": "2026-08-17T19:00:00Z",
    "stadio": "Abanca Riazor",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
    "valore": {
     "stato": "fuori_orizzonte",
     "giorni_mancanti": 20,
     "orizzonte_giorni": 16
    },
    "fonte": null,
-   "raccolto_utc": "2026-07-28T19:05:17.711145+00:00"
+   "raccolto_utc": "2026-07-28T20:06:52.258453+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Deportivo Alaves vs Getafe CF",
+   "lega": "la_liga",
+   "inizio": "2026-08-15T17:30:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-07-28T20:06:52.266603+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Sevilla FC vs Rayo Vallecano",
+   "lega": "la_liga",
+   "inizio": "2026-08-15T19:30:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-07-28T20:06:52.266614+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Racing Santander vs Villarreal CF",
+   "lega": "la_liga",
+   "inizio": "2026-08-16T15:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-07-28T20:06:52.266617+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Espanyol Barcelona vs Levante UD",
+   "lega": "la_liga",
+   "inizio": "2026-08-16T17:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-07-28T20:06:52.266620+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Celta Vigo vs CA Osasuna",
+   "lega": "la_liga",
+   "inizio": "2026-08-16T19:30:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-07-28T20:06:52.266622+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "RC Deportivo De La Coruna vs Elche CF",
+   "lega": "la_liga",
+   "inizio": "2026-08-17T19:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-07-28T20:06:52.266625+00:00"
   }
  ]
 }

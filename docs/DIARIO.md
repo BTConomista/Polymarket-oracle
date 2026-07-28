@@ -324,7 +324,10 @@ correzioni.*
 - [Fase 120 — Il passo 0: metà della lista era già in casa, su licenza](#fase-120--il-passo-0-metà-della-lista-era-già-in-casa-su-licenza)
 - [Fase 121 — Le rose vere: Wikipedia riempie i buchi, ma non tutti (e l'ipotesi era sbagliata)](#fase-121--le-rose-vere-wikipedia-riempie-i-buchi-ma-non-tutti-e-lipotesi-era-sbagliata)
 - [Fase 122 — Lo scheletro giornaliero: una fetta sottile ma completa](#fase-122--lo-scheletro-giornaliero-una-fetta-sottile-ma-completa)
-- [Fase 123 — Quattro fonti dati valutate e chiuse: Opta, WhoScored, diretta.it/Flashscore, SofaScore](#fase-123--quattro-fonti-dati-valutate-e-chiuse-opta-whoscored-direttait-flashscore-sofascore)
+- [Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano](#fase-123--lo-stadio-non-è-una-proprietà-della-squadra-e-le-squalifiche-non-si-cercano)
+- [Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)](#fase-124--il-diffidato-si-trattiene-davvero-misurato-e-il-segno-ingenuo-era-rovesciato)
+- [Fase 125 — Prezzare i cartellini: ogni leva paga, e la sotto-dispersione non è dei gol](#fase-125--prezzare-i-cartellini-ogni-leva-paga-e-la-sotto-dispersione-non-è-dei-gol)
+- [Fase 126 — Quattro fonti dati valutate e chiuse: Opta, WhoScored, diretta.it/Flashscore, SofaScore](#fase-126--quattro-fonti-dati-valutate-e-chiuse-opta-whoscored-direttait-flashscore-sofascore)
 
 ---
 
@@ -13843,7 +13846,347 @@ Un elenco che si accorcia è un'informazione; un elenco che tace non lo è.
 dati meteo — e il file lo spiega riga per riga, con il motivo per ciascuna delle
 sei partite.
 
-## Fase 123 — Quattro fonti dati valutate e chiuse: Opta, WhoScored, diretta.it/Flashscore, SofaScore
+---
+
+## Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano
+
+**Obiettivo.** Due richieste dell'utente: *«verifica se ogni squadra giocherà
+nel proprio stadio tutte le partite (magari in europa gioca in un altro
+stadio)»* e *«bollettino quotidiano di infortuni, squalifiche e diffidati…
+leggi tu le regole per immaginare quale potrebbe essere il comportamento del
+giocatore»*.
+
+### A · Lo stadio: l'intuizione era giusta, e la misura dice quanto
+
+Misurato su `games.csv` (stagioni 2023+, impianto abituale = il più frequente
+in campionato): le partite «in casa» giocate **altrove** sono il **5,0%** in
+campionato, il **10,8%** in coppa nazionale, il **12,3%** nelle coppe europee e
+il **16,4%** in supercoppe e affini. Una gara europea interna **su otto**.
+Non sono casi di frangia: Atalanta 29/83, Atlético 30/84, Barcellona 25/82,
+Shakhtar 25/67 — ristrutturazioni, requisiti UEFA, campi squalificati, guerre.
+
+**Conseguenza applicata**: nel record giornaliero lo stadio esce con
+`stadio_confermato: false` e la nota del perché. È l'impianto abituale, cioè
+un'**ipotesi dichiarata**. Prima di questa misura sarebbe stato un campo che
+sembra un fatto — e sbagliato una volta su otto proprio nelle partite che
+contano di più.
+
+### B · Squalifiche e diffide: si calcolano, e le regole non sono universali
+
+L'osservazione che cambia il disegno del bollettino: **squalifiche e diffide
+non vanno cercate, si calcolano.** Bastano i cartellini (che abbiamo, col
+minuto, da `game_events`) e il regolamento. È l'unico pezzo del bollettino che
+**non dipende da nessun sito**, quindi l'unico immune ai vincoli di
+`robots.txt` della Fase 119. Gli infortuni, all'opposto, richiedono per forza
+una notizia esterna: restano il pezzo difficile.
+
+**Ho letto le regole invece di andare a memoria, e ho fatto bene.** La
+**Ligue 1 è passata da 3 a 5 ammonizioni nel 2025-26**: a memoria avrei scritto
+3, che è il valore che quasi tutti ricordano. E la UEFA non usa un multiplo:
+squalifica alla **3ª** e poi a ogni ammonizione **dispari** (5ª, 7ª…), con
+azzeramento dopo i play-off e dopo i quarti. La Serie A stringe le soglie a
+ogni recidiva (5, 10, 14, 17, 19, poi ogni).
+
+Chi codificasse «il calcio» con una soglia unica sbaglierebbe **due leghe su
+cinque più la UEFA**, e il difetto sarebbe invisibile: produrrebbe una lista di
+diffidati **plausibile** e sbagliata. Per questo le soglie stanno in una
+tabella con la fonte accanto (`src/data/disciplina.py`), e un test le fissa una
+per una — compreso quello che impedisce di «correggere» la Ligue 1 riportandola
+a 3.
+
+**Validato sui cartellini veri**, non solo sugli esempi: Serie A 2025-26,
+11.926 presenze, 1.361 gialli, 421 giocatori ammoniti; a fine stagione **58
+diffidati** e 45 sulla soglia, con una distribuzione plausibile (103 giocatori
+a 1 giallo, 41 a 5, 1 a 12).
+
+### C · Il comportamento del diffidato: un incentivo, non una misura
+
+La domanda dell'utente è sensata e ha una base **meccanica**: la squalifica
+cade sulla partita *successiva* a quella del cartellino. Quindi se la gara
+imminente vale poco e quella dopo vale molto, «smaltire» la diffida subito
+costa poco e libera la partita che conta; se è imminente quella importante,
+conviene evitare il giallo.
+
+`incentivo_cartellino()` lo calcola — ma dichiara `tipo: "giudizio"`, e la
+formula è deliberatamente banale (§📐): **nessuno ha mai misurato se i
+giocatori vi si conformino davvero**. Un modello elaborato qui darebbe
+un'illusione di precisione su una quantità — l'importanza di una partita — che
+non abbiamo misurato.
+
+**📐 Il modello in dettaglio.** Verificato contro `src/data/disciplina.py`.
+
+*(a) Prossima soglia.* Con `S = (s₁…sₙ)` le soglie dichiarate e `k` il passo
+dopo l'ultima:
+
+```
+soglia_successiva(c) = min{ sᵢ ∈ S : sᵢ > c }              se esiste
+                     = sₙ + k·⌈(c − sₙ + 1)/k⌉             se k > 0
+                     = None                                 altrimenti
+```
+
+Il ramo `None` (Premier oltre la 15ª) è diverso da «zero ammonizioni
+mancanti», e i due non vanno confusi: il primo dice «non c'è più una soglia»,
+il secondo direbbe «sei squalificato».
+
+*(b) Diffidato.* `diffidato(c) ⟺ soglia_successiva(c) − c = 1`. È la
+definizione italiana di diffida, ed è quella che serve: identifica **chi
+rischia di saltare la prossima partita**, che è l'unica cosa che cambia una
+previsione.
+
+*(c) Incentivo (giudizio).* Con `p` e `s` importanza della prossima e della
+successiva, in [0,1]: `incentivo = s − p`. Il valore sta nel **segno**. La
+soglia ±0.2 che separa «conviene» da «indifferente» è arbitraria e dichiarata
+tale: serve a non leggere come segnale una differenza di rumore.
+
+**Lezione.** Due, e vengono dallo stesso posto. (1) *Un attributo che sembra
+appartenere a un'entità spesso appartiene all'evento*: lo stadio «della
+squadra» è sbagliato una volta su otto in Europa, e nessun controllo di schema
+se ne accorgerebbe. (2) *Le regole hanno una data*. La Ligue 1 ha cambiato la
+soglia un anno fa; scriverla a memoria avrebbe prodotto diffidati inventati per
+una stagione intera, senza che nulla diventasse rosso. Le costanti di dominio
+vanno lette alla fonte e datate, esattamente come i dati.
+
+---
+
+## Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)
+
+**Obiettivo.** Proposta dell'utente: *«se abbiamo il calendario della squadra e
+quando ogni giocatore ha preso i cartellini, possiamo fare un backtest o uno
+studio per vedere correlazioni e simili»*. L'ipotesi più netta che questi dati
+possono **falsificare** è quella che alla Fase 123 avevo esplicitamente
+dichiarato non verificata: *un giocatore a una ammonizione dalla squalifica
+gioca più prudente*.
+
+**Il disegno è la parte difficile, non il conto.** Un confronto ingenuo
+«diffidati contro non diffidati» è **garantito** a dare un risultato sbagliato,
+e di segno **opposto**: per arrivare a 4 gialli bisogna essere un giocatore che
+i gialli li prende. Lo stato «diffidato» seleziona i falciatori. Ed è
+esattamente quello che succede:
+
+| confronto | Δ tasso di ammonizione |
+|---|---:|
+| **ingenuo** (fra giocatori diversi) | **+0.0275** ← «i diffidati prendono PIÙ cartellini» |
+| **within-player** (ogni giocatore controlla se stesso) | **−0.0265** IC95% [−0.0299, −0.0230] |
+
+Lo stesso dato, letto nei due modi, dice cose opposte. Il secondo è quello
+giusto: rimuove l'effetto-giocatore, e l'incertezza viene da un bootstrap **a
+grappolo sul giocatore** — le presenze dello stesso giocatore non sono
+osservazioni indipendenti, e un bootstrap sulle righe darebbe un intervallo
+troppo stretto (R7). Replica in tutte e 5 le leghe, tutte conclusive
+(Bundesliga −0.048, Ligue 1 −0.040, Premier −0.032, Liga −0.030, Serie A −0.025).
+
+**Ma il within-player non basta**, e questa è la parte che vale. Lo stato
+«diffidato» arriva **per forza più tardi** nella stagione: se il tasso di
+ammonizione calasse da solo col passare delle giornate, vedremmo lo stesso
+effetto senza che nessuno si trattenga. Il test che separa le due spiegazioni è
+confrontare lo stato a soglia−1 **solo con i due confinanti** (3 e 5 gialli):
+una tendenza liscia dà zero, un gradino sopravvive.
+
+**Sopravvive**: gradino **−0.0154**, IC95% [−0.0195, −0.0111], su un tasso base
+di 0.1715 → **−9,0% relativo**, conclusivo. E il profilo mostra il gradino
+**anche alla soglia successiva** (9 gialli, vigilia del decimo): −0.0107 contro
++0.0009 a 7 gialli. Due gradini nello stesso posto, per due volte.
+
+**Il controllo che chiude un'altra spiegazione.** Un diffidato potrebbe essere
+semplicemente **sostituito prima** — meno minuti, meno occasioni di prendere il
+giallo. Misurato: i diffidati giocano **più** minuti (73.3 contro 66.1). Più
+esposizione dovrebbe significare **più** cartellini: quindi l'effetto misurato
+è semmai una **sottostima** della prudenza.
+
+**La domanda sul timing: NON confermata, e il test non può confermarla.**
+L'utente aveva ipotizzato che il diffidato scelga *quando* prendersi il giallo
+in base a quale partita conta. Se fosse così, la prudenza dovrebbe attenuarsi a
+fine stagione, quando restano poche gare da proteggere. Misurato per terzi di
+stagione: −0.0205 / −0.0108 / −0.0151. Gli intervalli si sovrappongono — e
+**la R7 impone di testare la differenza invece di leggere la sovrapposizione**:
+differenza inizio−fine **−0.0054**, IC95% [−0.0164, +0.0048], **non
+conclusiva**. Con la potenza dichiarata: l'IC sulla differenza è **1,4 volte
+l'effetto medio stesso**, quindi un'attenuazione anche del **50%** resterebbe
+dentro il rumore. Questo test non la può vedere: serve un proxy di «importanza»
+per partita, che non abbiamo.
+
+**📐 Il modello in dettaglio.** Verificato contro
+`scripts/_run_fase124_diffidati.py`.
+
+*(a) Stato disciplinare senza look-ahead.* Per ogni presenza `i` del giocatore
+`p` nella competizione `c` e stagione `s`:
+
+```
+gialli_prima(i) = Σ_{j < i, stesso (p,c,s)} gialli(j)
+diffidato(i)    ⟺ gialli_prima(i) = T(c,s) − 1
+```
+
+`T` dipende da **lega e stagione**: 5 ovunque, ma **3 in Ligue 1 fino al
+2024-25** (la regola semplificata è del 2025-26, Fase 123). Applicare 5 a tutti
+avrebbe mescolato stati diversi in entrambi i gruppi — l'errore sarebbe stato
+invisibile, perché il conto sarebbe girato lo stesso.
+
+*(b) Stimatore within-player.* Con `y` = 1 se ammonito:
+
+```
+δ_p = media(y | p, diffidato) − media(y | p, controllo)
+Δ   = Σ_p w_p·δ_p / Σ_p w_p          w_p = n. presenze da diffidato di p
+```
+
+Solo i giocatori che hanno vissuto **entrambi** gli stati entrano (4.888).
+L'effetto-giocatore sparisce per differenza: è ciò che rovescia il segno.
+
+*(c) Il gradino, cioè il test contro l'artefatto temporale.* Sul solo
+sottoinsieme `gialli_prima ∈ {3,4,5}`, con `r` = residuo centrato sul giocatore:
+
+```
+gradino = media(r | gialli_prima = 4) − media(r | gialli_prima ∈ {3,5})
+```
+
+Una discesa lineare in `gialli_prima` dà **esattamente zero** su questo
+contrasto (il 4 è il punto medio di 3 e 5): tutto ciò che resta è
+non-linearità localizzata alla soglia. È il motivo per cui questo stimatore, e
+non il §b, è quello da citare.
+
+*(d) Incertezza.* Bootstrap a grappolo: si ricampionano i **giocatori** con
+reinserimento e si ricalcola la statistica su tutte le loro presenze. Ignorare
+il grappolo qui gonfierebbe la precisione di parecchio: 4.457 giocatori contro
+128.072 presenze, cioè ~29 osservazioni correlate per grappolo.
+
+**Che cosa ne consegue, senza esagerare.** È un effetto **comportamentale reale
+e misurato**, non un aneddoto: −9% sulla probabilità di ammonizione, con due
+gradini indipendenti e replica su 5 leghe. Ma è un effetto sui **cartellini**,
+non sui gol: quanto sposti il prezzo di un mercato 1X2 è tutt'altra domanda, e
+questa fase non la tocca. Il valore immediato è che una riga che alla Fase 123
+avevo marcato «giudizio mai verificato» ora ha una misura — e la parte di
+quell'ipotesi che riguardava il *timing* resta invece **non dimostrata**, con la
+potenza scritta accanto.
+
+**Lezione.** *Quando lo stato che studi è raggiunto solo da chi ha una certa
+propensione, il confronto fra gruppi misura la propensione, non lo stato.* Qui
+il segno si rovesciava: +0.0275 contro −0.0265. E il within-player da solo non
+sarebbe bastato — serviva il contrasto locale alla soglia per escludere che
+fosse il calendario a fare il lavoro. Due controlli, due spiegazioni alternative
+eliminate, e solo allora un numero da scrivere.
+
+---
+
+## Fase 125 — Prezzare i cartellini: ogni leva paga, e la sotto-dispersione non è dei gol
+
+**Obiettivo.** L'utente: *«lavoriamoci per bene su questi dati (sui
+cartellini)»*. C'è un aggancio concreto: i cartellini sono già un **mercato che
+il progetto prezza** (Fase 96), quindi la domanda non è descrittiva ma
+operativa — **quali fattori migliorano la previsione fuori campione?**
+
+**Prima di modellare, il test che la Fase 99 rende obbligatorio.** *Misurato ≠
+prevedibile*: un effetto visto in una stagione va usato solo se **persiste**.
+Correlazione fra l'effetto di una stagione e quello della successiva:
+
+| effetto | corr(t, t−1) | IC95% |
+|---|---:|---|
+| **arbitro** | **+0.352** | [+0.299, +0.405] |
+| squadra (in casa) | +0.356 | [+0.300, +0.408] |
+| squadra (in trasferta) | +0.288 | [+0.229, +0.343] |
+
+Tutti e tre persistono, a differenza del bias di livello della Fase 99. Solo
+allora ha senso metterli in un modello.
+
+**Il backtest.** Un'osservazione = (partita, lato): quanti gialli prende **una**
+squadra in **una** partita. Modello moltiplicativo nello stile del
+Dixon-Coles, ogni fattore ritirato verso 1 e stimato **solo** sulle stagioni
+precedenti (walk-forward, nessun look-ahead). Metrica: log-verosimiglianza per
+osservazione, perché determina il prezzo di **qualunque** linea over/under
+insieme, non di una sola.
+
+| modello | ll | guadagno incrementale | IC95% |
+|---|---:|---:|---|
+| base (media di lega) | −1.68829 | — | — |
+| + squadra | −1.68390 | **+0.00440** | [+0.00309, +0.00576] ✅ |
+| + avversario | −1.68233 | +0.00157 | [+0.00050, +0.00260] ✅ |
+| + fattore campo | −1.67862 | +0.00371 | [+0.00281, +0.00464] ✅ |
+| + **arbitro** | −1.67491 | **+0.00368** | [+0.00269, +0.00469] ✅ |
+
+**Ogni leva paga, e tutte con IC conclusivo** — cosa rara in questo progetto,
+dove la maggior parte delle leve finisce nel rumore. Il dato che colpisce:
+**l'arbitro vale quanto il fattore campo**. Il totale è +0.01336
+[+0.01120, +0.01552].
+
+**Poi il numero che vale più di tutto il resto.** Per squadra-partita, la
+varianza dei gialli è **0.954 volte** la media: i cartellini sono
+**sotto-dispersi**, esattamente come i gol dati i tassi del mercato (Fase 51).
+La binomiale negativa non può nemmeno rappresentarlo (il suo α collassa a
+0.0001, il bordo). Ma il progetto ha già lo strumento giusto —
+`_dp_pmf(rate, θ)`, la double-Poisson mean-preserving della Fase 51 — e l'ho
+riusato invece di inventarne uno:
+
+```
+theta ottimo = 1.150      Δll = +0.00265   IC95% [+0.00199, +0.00330]  ✅
+```
+
+Vale il **72%** di quanto vale l'arbitro, e il 20% di tutte le covariate messe
+insieme, per **un solo parametro**.
+
+**Ma la mappa per lega NON si trasferisce, e questo è il punto delicato.**
+
+| lega | θ cartellini | (θ gol, Fasi 51-53) |
+|---|---:|---|
+| Serie A | **1.310** ✅ | ~1.2 |
+| Ligue 1 | **1.250** ✅ | ~1.08 |
+| Bundesliga | 1.110 ✅ | ~1.07 |
+| La Liga | 1.080 · | ~1.24 |
+| Premier | 1.020 · | ~1.07 |
+
+θ > 1 in **5 leghe su 5**, ma conclusivo solo in 3. E l'ordine è **diverso** da
+quello dei gol: le «due famiglie» dell'audit a 5 leghe (latine ad alto θ contro
+le altre) qui non reggono — la Liga scende, la Ligue 1 sale. Serie A resta alta
+in entrambi, la Premier bassa in entrambi.
+
+**Che cosa se ne conclude, con precisione.** La sotto-dispersione **non è una
+proprietà dei gol**: è una proprietà dei **processi di conteggio del calcio**,
+e si ritrova su un processo che la Fase 96 aveva già dichiarato *diverso* dai
+gol. Ma il **valore** di θ è specifico della coppia (lega × processo), quindi
+non si eredita: va fittato dove lo si usa. È la stessa lezione del §7 del
+`CLAUDE.md` — le formule sono universali, gli iperparametri no — estesa da
+«per lega» a «per lega e per processo».
+
+**📐 Il modello in dettaglio.** Verificato contro
+`scripts/_run_fase125_cartellini.py`.
+
+*(a) Tasso atteso.* Per l'osservazione (partita, lato):
+
+```
+λ = base(lega) · f_squadra · f_avversario · f_casa · f_arbitro
+```
+
+*(b) Ogni fattore è una media ritirata verso 1:*
+
+```
+f_g = 1 + [n_g/(n_g + K)] · (media_g/media_globale − 1)      K = 40
+```
+
+`K = 40` significa che servono ~40 partite perché il dato del gruppo pesi
+quanto la media di lega. Non è un abbellimento: senza shrinkage un arbitro con
+3 partite e 9 gialli avrebbe `f = 2.2` e rovinerebbe ogni previsione che lo
+incontra — ed è esattamente il caso che si presenta a ogni inizio stagione, con
+gli arbitri nuovi.
+
+*(c) Sotto-dispersione.* `q_k ∝ Poisson(c·λ)^θ` rinormalizzata, con `c` risolto
+per bisezione perché la media resti `λ` (mean-preserving). `θ > 1` concentra la
+massa attorno alla media. È **la stessa funzione** già in produzione sui gol:
+il valore dell'esperimento sta proprio nel non aver scritto codice nuovo — se
+avessi implementato una seconda double-Poisson, un risultato diverso non
+avrebbe distinto «processo diverso» da «bug diverso».
+
+*(d) Perché la log-verosimiglianza e non il MAE.* Il MAE è leggibile ma **non è
+una regola di punteggio**: premia chi indovina il centro, non chi indovina la
+distribuzione. Su un mercato over/under conta la seconda, e θ agisce **solo**
+sulla forma — a media invariata. Con il MAE, l'intero effetto della
+sotto-dispersione sarebbe stato invisibile.
+
+**Lezione.** *Un risultato vecchio si generalizza meglio riusando il suo codice
+che riscrivendolo.* La sotto-dispersione dei gol era una scoperta chiusa della
+Fase 51; applicarne la **stessa funzione** a un processo dichiarato diverso è
+costato dieci righe e ha prodotto un risultato nuovo — con la garanzia che
+un'eventuale differenza fosse del fenomeno e non dell'implementazione. E
+l'altra metà della lezione è simmetrica: **il fenomeno si è trasferito, i suoi
+parametri no.**
+
+## Fase 126 — Quattro fonti dati valutate e chiuse: Opta, WhoScored, diretta.it/Flashscore, SofaScore
 
 **Obiettivo.** Rispondere a una domanda diretta dell'utente — "abbiamo mai
 provato Opta?" — e, una volta scoperto di no, verificare sul campo se Opta e

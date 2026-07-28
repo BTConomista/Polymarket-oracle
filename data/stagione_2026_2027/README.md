@@ -325,6 +325,84 @@ vale: non aggiunge un decimale ai club che già conoscevamo, **riempie i vuoti**
 
 ---
 
+## 3-quater · Due cose che il piano dava per scontate, e non lo sono (Fase 123)
+
+### A · Lo stadio è un dato PER-PARTITA, non una proprietà della squadra
+
+Domanda dell'utente: *«verifica se ogni squadra giocherà nel proprio stadio
+tutte le partite (magari in europa gioca in un altro stadio)»*. **Misurato** su
+`games.csv` (stagioni 2023+, impianto abituale = il più frequente in
+campionato), quota di partite «in casa» giocate **altrove**:
+
+| competizione | quota |
+|---|---:|
+| campionato | **5,0%** (958/19.067) |
+| coppa nazionale | **10,8%** (94/868) |
+| **coppe europee** | **12,3%** (74/604) |
+| supercoppe e altro | **16,4%** (202/1.232) |
+
+Cioè **una gara europea interna su otto** non si gioca nell'impianto abituale.
+I casi non sono marginali: Atalanta 29/83, Atlético 30/84, Barcellona 25/82,
+Shakhtar 25/67 (ristrutturazioni, requisiti UEFA, campi squalificati, guerre).
+
+**Conseguenza applicata**: nel record giornaliero lo stadio esce con
+`stadio_confermato: false` e la nota del perché. È l'impianto **abituale**, cioè
+un'ipotesi dichiarata — non un fatto verificato per quella partita. Confermarlo
+di volta in volta è lavoro aperto (fonte: voce Wikipedia della partita, sito
+ufficiale della lega).
+
+### B · Squalifiche e diffide si CALCOLANO, non si cercano
+
+`src/data/disciplina.py`. Bastano i cartellini (che abbiamo, col minuto) e il
+regolamento: è **l'unico pezzo del bollettino che non dipende da nessun sito**,
+quindi l'unico immune ai vincoli di `robots.txt` del §3.
+
+⚠️ **Le soglie non sono universali e cambiano.** Lette il 28/07/2026, non a
+memoria:
+
+| competizione | squalifica a | poi | note |
+|---|:--:|---|---|
+| Serie A | **5** | 10, 14, 17, 19, poi **ogni** | diffida già al 4° |
+| Premier League | **5** | 10 (2 turni), 15 (3 turni) | soglie legate alla 19ª/32ª giornata |
+| LaLiga | **5** | ogni 5 | |
+| Bundesliga | **5** | ogni 5 | |
+| **Ligue 1** | **5** | ogni 5 | ⚠️ **cambiata nel 2025-26**: prima erano 3 |
+| **UEFA** | **3** | 5ª, 7ª… (**dispari**) | azzerate dopo play-off e dopo i quarti |
+
+Chi codificasse «il calcio» con una soglia unica sbaglierebbe **due leghe su
+cinque più la UEFA**, e il difetto non si vedrebbe: produrrebbe una lista di
+diffidati **plausibile** e sbagliata. Per questo le soglie stanno in una
+tabella con la fonte accanto, e un test le fissa una per una.
+
+**Validato sui cartellini veri** (Serie A 2025-26): 11.926 presenze, 1.361
+gialli, 421 giocatori ammoniti; a fine stagione **58 diffidati** e 45 sulla
+soglia. La distribuzione è quella attesa (103 giocatori a 1 giallo, 41 a 5,
+1 a 12).
+
+**Il comportamento del diffidato è un GIUDIZIO, e resta marcato tale.** La
+domanda dell'utente — *un diffidato potrebbe evitare il giallo se la partita
+imminente conta, o prenderselo se quella che conta è due gare dopo* — è
+sensata, e il **motivo** è meccanico: la squalifica cade sulla partita
+**successiva** a quella del cartellino. Quindi con `p` = importanza della
+prossima e `s` = della successiva, l'incentivo a «smaltire» è `s − p`.
+`incentivo_cartellino()` lo calcola, ma dichiara `tipo: "giudizio"`: **nessuno
+ha mai misurato se i giocatori vi si conformino davvero**, e il valore sta nel
+segno, non nel numero.
+
+### C · Che cosa manca ancora al bollettino
+
+| voce | stato |
+|---|---|
+| squalifiche, diffide | ✅ **calcolate** (vuote finché la stagione non produce cartellini) |
+| stadio della partita | ⚠️ ipotesi dichiarata, da confermare per gara |
+| **infortuni** | ❌ richiedono per forza una notizia esterna: è il pezzo difficile |
+| **calciomercato quotidiano** | ❌ da fare: notizie per squadra, giorno per giorno |
+
+Infortuni e mercato sono il livello «notizie» del §3: fonti che ci consentono
+(Guardian, siti ufficiali), API su licenza, o ricerca web dentro una routine.
+
+---
+
 ## 4 · La lista COMPLETA dei dati
 
 Legenda — **tipo**: 📏 fatto misurato · 🧠 giudizio (LLM/modello) · 🔢 derivato
