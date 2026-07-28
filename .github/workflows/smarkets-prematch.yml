@@ -1,0 +1,63 @@
+name: Raccolta quote pre-partita Smarkets (test prospettico Fase 78)
+
+# PERCHE' ESISTE (Fase 116). Il test prospettico della Fase 78 -- previsioni
+# congelate prima del calcio d'inizio e scorate dopo -- e' il gold standard che
+# il progetto non ha mai potuto eseguire, e cio' che non si raccoglie prima del
+# fischio d'inizio e' perso per sempre (newseason.md §2). Smarkets e' una borsa
+# con API pubblica senza chiave: da' banco, puntatore e volumi (su Betfair
+# sarebbero piani a pagamento) ed e' raggiungibile senza account ne' VPS
+# (Fase 115). Nessun segreto da configurare.
+#
+# COSTO: zero. Quattro esecuzioni al giorno, pochi secondi ciascuna, dentro il
+# piano gratuito di GitHub Actions.
+#
+# SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
+
+on:
+  schedule:
+    # ogni 6 ore. Alzare la frequenza avvicinandosi al kickoff se servisse una
+    # traiettoria piu' fitta -- ma restando cortesi con un'API gratuita.
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      entro_ore:
+        description: 'Raccogli le partite che iniziano entro N ore'
+        default: '72'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: smarkets-prematch
+  cancel-in-progress: false
+
+jobs:
+  raccogli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Raccogli le quote pre-partita
+        run: |
+          python scripts/fetch_smarkets_matches.py \
+            --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"
+
+      - name: Salva lo snapshot (se c'e' qualcosa da salvare)
+        run: |
+          if [ -z "$(git status --porcelain data/smarkets_matches/)" ]; then
+            echo "nessuna partita in finestra: niente da committare (non e' un errore)"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/smarkets_matches/
+          git commit -m "Smarkets: quote pre-partita $(date -u +'%Y-%m-%d %H:%M UTC')"
+          # il push puo' fallire per una corsa con un altro commit: si riprova
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1

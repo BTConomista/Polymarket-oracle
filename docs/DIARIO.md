@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–116)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–117)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -287,9 +287,11 @@ negativo, ma il confronto esteso a 6 stagioni (Fase 106) mostra che il numero
 su cui poggiava la decisione non è stabile nel tempo. Le Fasi 109-115 aprono il
 fronte **Betfair Exchange** — il primo candidato migliore della stima — e lo
 ridimensionano due volte su richiesta dell'utente, fino a scoprire che la borsa
-che serviva (Smarkets) era già in casa e gratis. **Chiude l'arco la Fase 116**,
-che allinea ogni file del repo alle analisi accumulate e scrive la voce di
-diario che alla Fase 101-bis non era mai stata scritta. Esito dell'arco:
+che serviva (Smarkets) era già in casa e gratis. La Fase 116 mette in piedi il
+raccoglitore Smarkets pre-partita a costo zero, prima della scadenza del 16
+agosto. **Chiude l'arco la Fase 117**, che allinea ogni file del repo alle
+analisi accumulate e scrive la voce di diario che alla Fase 101-bis non era
+mai stata scritta. Esito dell'arco:
 nessun edge nuovo, e un repo che dice di sé la verità, coi dati che aveva
 promesso di correggere corretti davvero — comprese le correzioni delle
 correzioni.*
@@ -312,7 +314,8 @@ correzioni.*
 - [Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione](#fase-113--quanto-serve-davvero--il-ridimensionamento-di-una-mia-raccomandazione)
 - [Fase 114 — Far usare le stime davvero (e una mia frase da correggere)](#fase-114--far-usare-le-stime-davvero-e-una-mia-frase-da-correggere)
 - [Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa](#fase-115--serve-un-pc-cloud-247--no-la-borsa-che-serviva-era-già-in-casa)
-- [Fase 116 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson](#fase-116--ogni-file-allineato-il-merge-con-una-sessione-parallela-e-lidentità-che-chiude-la-com-poisson)
+- [Fase 116 — Il raccoglitore prospettico è in piedi (e costa zero)](#fase-116--il-raccoglitore-prospettico-è-in-piedi-e-costa-zero)
+- [Fase 117 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson](#fase-117--ogni-file-allineato-il-merge-con-una-sessione-parallela-e-lidentità-che-chiude-la-com-poisson)
 
 ---
 
@@ -11756,7 +11759,7 @@ passo esiste.
 
 ## Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato
 
-> **Questa voce è stata scritta alla Fase 116**, non alla Fase 101-bis. La fase
+> **Questa voce è stata scritta alla Fase 117**, non alla Fase 101-bis. La fase
 > aveva una riga nel registro del README e le sue rettifiche sparse come note
 > dentro le fasi corrette, ma **nessuna sezione qui** — cioè esattamente la
 > «fase fantasma» che l'audit della Fase 101 aveva rimproverato alla Fase 92-bis,
@@ -11834,7 +11837,7 @@ E la conclusione «top-4 batte la persistenza, entrambi conclusivi» era già st
 ritirata dalla Fase 92-bis (IC a grappoli [−0.0006, +0.0522], include lo zero) ma
 **era sopravvissuta nei documenti per nove fasi** — perché la fase che la ritirava
 non aveva una voce di diario. Lo stesso difetto che questa voce, scritta alla
-Fase 116, sta rimediando per la Fase 101-bis.
+Fase 117, sta rimediando per la Fase 101-bis.
 
 ### Risultato 4 — come si legge «198 rilievi»
 
@@ -13147,9 +13150,79 @@ probabilità normalizzata, e il devig serve solo a togliere quello 0.48%. Sui
 lati grezzi invece la somma fa 84.73% (banco) e 116.23% (puntatore): usarne
 uno solo introdurrebbe un bias sistematico di segno noto, non un rumore.
 
+## Fase 116 — Il raccoglitore prospettico è in piedi (e costa zero)
+
+**Obiettivo.** Costruire il raccoglitore Smarkets deciso alla Fase 115, prima
+del **16 agosto**: ciò che non si raccoglie prima del calcio d'inizio è perso
+per sempre, e il test prospettico della Fase 78 è il gold standard che il
+progetto non ha mai potuto eseguire.
+
+**Cosa c'è.** `scripts/fetch_smarkets_matches.py` +
+`.github/workflows/smarkets-prematch.yml` (ogni 6 ore, dentro il piano
+gratuito). Il client HTTP e la lettura del libro ordini sono **riusati** da
+`fetch_smarkets_outrights.py` (Fase 97): stesso throttle, stessa gestione del
+429, stesso `book_price`. Duplicarli avrebbe voluto dire due comportamenti da
+tenere allineati a mano.
+
+**Verificato dal vivo, non solo scritto.** Tutte e 5 le leghe hanno già il
+calendario 2026-27 su Smarkets; la prima raccolta reale ha prodotto **180
+righe su 6 partite** (La Liga, 15-17 agosto) con i 6 mercati del listino —
+1X2, GG/NG, O/U 1.5/2.5/3.5 e **risultato esatto**. Controllo di coerenza: i
+prezzi medi dei due lati sommano a **0.994-1.003**, cioè il punto medio è già
+una probabilità quasi normalizzata. Libro a due lati sul **59%** delle righe
+(il resto è risultato esatto, sottile a tre settimane dal via: atteso, e
+marcato riga per riga con `lato`).
+
+**La correzione, ed è su un test.** Avevo scritto che il confronto esatto
+sullo slug difende dal caso `germany-2-bundesliga` scambiato per
+`germany-bundesliga`. **Falso**: quella collisione è *strutturalmente
+impossibile* — il «2-» sta in mezzo, quindi nemmeno un match «contiene» la
+produce — e la mutazione corrispondente **non faceva fallire nulla**. Ho
+corretto la motivazione nel test e nel codice invece di lasciare scritta una
+protezione inesistente, e ho cercato la mutazione che i test **catturano
+davvero**: corrompendo una voce della mappa delle leghe, 2 test falliscono.
+Ciò che quei test proteggono è il **contratto con un'API esterna** (uno slug
+rinominato a valle rompe la suite invece di farci raccogliere in silenzio la
+lega sbagliata), non una collisione fantasma.
+
+**Costo: zero.** API pubblica senza chiave né account, GitHub Actions nel
+piano gratuito, nessun VPS, nessun rischio per l'account di nessuno. 13 test
+nuovi, **906 verdi**.
+
+**Il limite dichiarato.** Si raccoglie **in avanti**: questo non sostituisce
+lo scarico Betfair storico per il 2017-19, che resta un problema diverso e sulla
+macchina dell'utente. E il valore cresce con il tempo di accensione — il primo
+file è già un dato che fra un mese non sarebbe più ottenibile.
+
+**Lezione.** La parte lunga non è stata scrivere il raccoglitore (riusa quasi
+tutto), ma **verificare che i test avessero denti**. Un test che passa sempre
+— anche quando rompi il codice che dice di proteggere — è peggio di nessun
+test: dà una garanzia che non c'è. La mutazione va cercata *finché non ne
+trovi una che fallisce*; se non la trovi, il rischio che avevi in mente non
+esiste, e allora va riscritta la motivazione, non lasciata lì perché suona
+bene.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova; la conversione dei prezzi è quella fissata alla
+Fase 115 e implementata in `book_price` (Fase 97):
+
+```
+p_banco     = bid   / 10000        # Smarkets: interi in centesimi di punto %
+p_puntatore = offer / 10000
+p_mid       = (bid + offer) / 20000
+spread      = (offer − bid) / 10000
+```
+
+**Il controllo che rende leggibile il dato**: su una coppia complementare
+(Over/Under della stessa linea) la somma dei `p_mid` deve stare a ~1. Misurato
+sulle 6 partite reali: **0.9941 – 1.0030**. Se un giorno quella somma si
+allontanasse, vorrebbe dire che stiamo leggendo lati diversi di libri diversi
+— ed è un controllo che costa una riga e si può rifare su ogni file raccolto.
+
 ---
 
-## Fase 116 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson
+## Fase 117 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson
 
 **Obiettivo (utente).** «Voglio che ogni file sia sempre aggiornato: procedi
 aggiornando ogni singolo file con le ultime analisi/calcoli/studi svolti. Se
@@ -13242,10 +13315,15 @@ Risolti a mano tenendo l'**unione dei fatti**, mai il più recente per default.
 E il merge ha reso stantio un numero che questa sessione aveva appena scritto in
 sei punti: i test non sono più 841 ma **889** (48 in più dalle Fasi 103-115).
 
-**Conseguenza sulla numerazione**: questa fase era partita come «Fase 102» e le
-sue prime due commit lo dicono. La sessione parallela ha visto il 102 occupato
-ed è partita da 103. La fase è quindi **116**, e il 102 resta un numero **mai
-usato** — dichiararlo qui costa una riga e risparmia la prossima caccia.
+**Conseguenza sulla numerazione, che è successa DUE volte.** Questa fase era
+partita come «Fase 102», e le sue prime commit lo dicono; la sessione parallela
+ha visto il 102 occupato ed è partita da 103, così la fase è diventata 116. Nel
+tempo di scrivere questa voce, la stessa sessione ha pushato **la sua** Fase 116
+(il raccoglitore Smarkets) — quindi questa è la **117**. Il **102 resta un
+numero mai usato**, e il 116 è della fase precedente: dichiararlo qui costa due
+righe e risparmia la prossima caccia. È anche la prova pratica del punto qui
+sotto: con due sessioni sullo stesso `main`, il numero di fase non è un'identità
+stabile finché non è pushato.
 
 ### 📐 Il modello in dettaglio
 
