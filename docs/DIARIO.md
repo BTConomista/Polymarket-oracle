@@ -325,6 +325,7 @@ correzioni.*
 - [Fase 121 — Le rose vere: Wikipedia riempie i buchi, ma non tutti (e l'ipotesi era sbagliata)](#fase-121--le-rose-vere-wikipedia-riempie-i-buchi-ma-non-tutti-e-lipotesi-era-sbagliata)
 - [Fase 122 — Lo scheletro giornaliero: una fetta sottile ma completa](#fase-122--lo-scheletro-giornaliero-una-fetta-sottile-ma-completa)
 - [Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano](#fase-123--lo-stadio-non-è-una-proprietà-della-squadra-e-le-squalifiche-non-si-cercano)
+- [Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)](#fase-124--il-diffidato-si-trattiene-davvero-misurato-e-il-segno-ingenuo-era-rovesciato)
 
 ---
 
@@ -13942,3 +13943,121 @@ se ne accorgerebbe. (2) *Le regole hanno una data*. La Ligue 1 ha cambiato la
 soglia un anno fa; scriverla a memoria avrebbe prodotto diffidati inventati per
 una stagione intera, senza che nulla diventasse rosso. Le costanti di dominio
 vanno lette alla fonte e datate, esattamente come i dati.
+
+---
+
+## Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)
+
+**Obiettivo.** Proposta dell'utente: *«se abbiamo il calendario della squadra e
+quando ogni giocatore ha preso i cartellini, possiamo fare un backtest o uno
+studio per vedere correlazioni e simili»*. L'ipotesi più netta che questi dati
+possono **falsificare** è quella che alla Fase 123 avevo esplicitamente
+dichiarato non verificata: *un giocatore a una ammonizione dalla squalifica
+gioca più prudente*.
+
+**Il disegno è la parte difficile, non il conto.** Un confronto ingenuo
+«diffidati contro non diffidati» è **garantito** a dare un risultato sbagliato,
+e di segno **opposto**: per arrivare a 4 gialli bisogna essere un giocatore che
+i gialli li prende. Lo stato «diffidato» seleziona i falciatori. Ed è
+esattamente quello che succede:
+
+| confronto | Δ tasso di ammonizione |
+|---|---:|
+| **ingenuo** (fra giocatori diversi) | **+0.0275** ← «i diffidati prendono PIÙ cartellini» |
+| **within-player** (ogni giocatore controlla se stesso) | **−0.0265** IC95% [−0.0299, −0.0230] |
+
+Lo stesso dato, letto nei due modi, dice cose opposte. Il secondo è quello
+giusto: rimuove l'effetto-giocatore, e l'incertezza viene da un bootstrap **a
+grappolo sul giocatore** — le presenze dello stesso giocatore non sono
+osservazioni indipendenti, e un bootstrap sulle righe darebbe un intervallo
+troppo stretto (R7). Replica in tutte e 5 le leghe, tutte conclusive
+(Bundesliga −0.048, Ligue 1 −0.040, Premier −0.032, Liga −0.030, Serie A −0.025).
+
+**Ma il within-player non basta**, e questa è la parte che vale. Lo stato
+«diffidato» arriva **per forza più tardi** nella stagione: se il tasso di
+ammonizione calasse da solo col passare delle giornate, vedremmo lo stesso
+effetto senza che nessuno si trattenga. Il test che separa le due spiegazioni è
+confrontare lo stato a soglia−1 **solo con i due confinanti** (3 e 5 gialli):
+una tendenza liscia dà zero, un gradino sopravvive.
+
+**Sopravvive**: gradino **−0.0154**, IC95% [−0.0195, −0.0111], su un tasso base
+di 0.1715 → **−9,0% relativo**, conclusivo. E il profilo mostra il gradino
+**anche alla soglia successiva** (9 gialli, vigilia del decimo): −0.0107 contro
++0.0009 a 7 gialli. Due gradini nello stesso posto, per due volte.
+
+**Il controllo che chiude un'altra spiegazione.** Un diffidato potrebbe essere
+semplicemente **sostituito prima** — meno minuti, meno occasioni di prendere il
+giallo. Misurato: i diffidati giocano **più** minuti (73.3 contro 66.1). Più
+esposizione dovrebbe significare **più** cartellini: quindi l'effetto misurato
+è semmai una **sottostima** della prudenza.
+
+**La domanda sul timing: NON confermata, e il test non può confermarla.**
+L'utente aveva ipotizzato che il diffidato scelga *quando* prendersi il giallo
+in base a quale partita conta. Se fosse così, la prudenza dovrebbe attenuarsi a
+fine stagione, quando restano poche gare da proteggere. Misurato per terzi di
+stagione: −0.0205 / −0.0108 / −0.0151. Gli intervalli si sovrappongono — e
+**la R7 impone di testare la differenza invece di leggere la sovrapposizione**:
+differenza inizio−fine **−0.0054**, IC95% [−0.0164, +0.0048], **non
+conclusiva**. Con la potenza dichiarata: l'IC sulla differenza è **1,4 volte
+l'effetto medio stesso**, quindi un'attenuazione anche del **50%** resterebbe
+dentro il rumore. Questo test non la può vedere: serve un proxy di «importanza»
+per partita, che non abbiamo.
+
+**📐 Il modello in dettaglio.** Verificato contro
+`scripts/_run_fase124_diffidati.py`.
+
+*(a) Stato disciplinare senza look-ahead.* Per ogni presenza `i` del giocatore
+`p` nella competizione `c` e stagione `s`:
+
+```
+gialli_prima(i) = Σ_{j < i, stesso (p,c,s)} gialli(j)
+diffidato(i)    ⟺ gialli_prima(i) = T(c,s) − 1
+```
+
+`T` dipende da **lega e stagione**: 5 ovunque, ma **3 in Ligue 1 fino al
+2024-25** (la regola semplificata è del 2025-26, Fase 123). Applicare 5 a tutti
+avrebbe mescolato stati diversi in entrambi i gruppi — l'errore sarebbe stato
+invisibile, perché il conto sarebbe girato lo stesso.
+
+*(b) Stimatore within-player.* Con `y` = 1 se ammonito:
+
+```
+δ_p = media(y | p, diffidato) − media(y | p, controllo)
+Δ   = Σ_p w_p·δ_p / Σ_p w_p          w_p = n. presenze da diffidato di p
+```
+
+Solo i giocatori che hanno vissuto **entrambi** gli stati entrano (4.888).
+L'effetto-giocatore sparisce per differenza: è ciò che rovescia il segno.
+
+*(c) Il gradino, cioè il test contro l'artefatto temporale.* Sul solo
+sottoinsieme `gialli_prima ∈ {3,4,5}`, con `r` = residuo centrato sul giocatore:
+
+```
+gradino = media(r | gialli_prima = 4) − media(r | gialli_prima ∈ {3,5})
+```
+
+Una discesa lineare in `gialli_prima` dà **esattamente zero** su questo
+contrasto (il 4 è il punto medio di 3 e 5): tutto ciò che resta è
+non-linearità localizzata alla soglia. È il motivo per cui questo stimatore, e
+non il §b, è quello da citare.
+
+*(d) Incertezza.* Bootstrap a grappolo: si ricampionano i **giocatori** con
+reinserimento e si ricalcola la statistica su tutte le loro presenze. Ignorare
+il grappolo qui gonfierebbe la precisione di parecchio: 4.457 giocatori contro
+128.072 presenze, cioè ~29 osservazioni correlate per grappolo.
+
+**Che cosa ne consegue, senza esagerare.** È un effetto **comportamentale reale
+e misurato**, non un aneddoto: −9% sulla probabilità di ammonizione, con due
+gradini indipendenti e replica su 5 leghe. Ma è un effetto sui **cartellini**,
+non sui gol: quanto sposti il prezzo di un mercato 1X2 è tutt'altra domanda, e
+questa fase non la tocca. Il valore immediato è che una riga che alla Fase 123
+avevo marcato «giudizio mai verificato» ora ha una misura — e la parte di
+quell'ipotesi che riguardava il *timing* resta invece **non dimostrata**, con la
+potenza scritta accanto.
+
+**Lezione.** *Quando lo stato che studi è raggiunto solo da chi ha una certa
+propensione, il confronto fra gruppi misura la propensione, non lo stato.* Qui
+il segno si rovesciava: +0.0275 contro −0.0265. E il within-player da solo non
+sarebbe bastato — serviva il contrasto locale alla soglia per escludere che
+fosse il calendario a fare il lavoro. Due controlli, due spiegazioni alternative
+eliminate, e solo allora un numero da scrivere.
