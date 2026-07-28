@@ -1,5 +1,60 @@
 # Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
 
+> ## 🔁 Fase 107 — terzo ri-tentativo: ri-verifica dal vivo + angoli nuovi, ancora negativo
+>
+> Richiesta esplicita dell'utente: continuare a cercare, esplorare fonti nuove
+> E ri-controllare quelle già escluse (non fidarsi delle note vecchie). Fatto
+> entrambo.
+>
+> **Ri-verifiche dal vivo (non nuove fonti, ma controlli ripetuti oggi):**
+> - **`oddsportal.com/robots.txt`**: letto per intero (non solo la nota del
+>   manuale). Vieta esplicitamente **ogni** URL con `-2017-`, `-2018-`,
+>   `-2019-` (e ogni anno da 1998 al 2024) nel percorso: non è un dettaglio,
+>   è un blocco sistematico di TUTTE le pagine-stagione storiche, per
+>   qualunque bot. Conferma R5.3, nessun accesso.
+> - **BetExplorer, dal vivo**: il tentativo precedente (Fase 100, via runner
+>   GitHub Actions) aveva trovato 404 sull'endpoint delle quote. Rifatto oggi
+>   con richiesta diretta: le vecchie URL-stagione (`serie-a-2017-2018/`)
+>   davano prima un 404 **fasullo** (il sito blocca le richieste senza uno
+>   User-Agent da browser vero — non un vero 404, un blocco anti-bot). Con lo
+>   User-Agent giusto: 200, pagina reale, partita reale raggiunta
+>   (`ac-milan-fiorentina/trvrVWvl/`). **Risultato identico alla Fase 100**:
+>   il div `#bettingTabs` contiene solo un tab "1X2" **disabilitato**, nessun
+>   tab O/U — confermato che il sito non espone il confronto-quote per le
+>   partite di quell'epoca, stavolta con una richiesta che ha *davvero*
+>   raggiunto la pagina (non un fallimento mascherato da conferma).
+> - **Kaggle `mexwell/historical-football-...`**: ri-scaricato (ora è alla
+>   **versione 2**, aggiornata dopo il primo controllo). Stessa identica
+>   colonna O/U per il 2017-18 (`BbOU, BbMx>2.5, BbAv>2.5, BbMx<2.5,
+>   BbAv<2.5` — una sola istantanea, nessuna `PC>2.5`/chiusura O/U distinta):
+>   l'aggiornamento non ha aggiunto ciò che serve.
+>
+> **Angoli genuinamente nuovi:**
+> - **Ricerca codice GitHub** per scraper OddsPortal/BetExplorer: trovati 3
+>   repo attivi (`karolmico/OddsPortalScrape`, `jordantete/OddsHarvester`,
+>   `Mg30/odds-portal-scraper`) — sono STRUMENTI, non dati committati.
+>   `OddsPortalScrape` conferma da sé un fatto già noto: richiede **login**
+>   (`username_data`/`password_data`) e copre **solo 1X2**, non O/U — non
+>   sarebbe comunque la fonte giusta anche potendolo usare.
+> - **Ricerca dataset accademici** (arXiv/Zenodo/OSF): trovati due paper con
+>   dataset Bundesliga 2017-18/2018-19 di un "book europeo grande" — ma sono
+>   quote **IN-PLAY** (scommesse durante la partita, frequenza 1Hz), non
+>   quote pre-partita apertura/chiusura: mercato diverso da quello cercato,
+>   scartati.
+> - **`oddalerts.com`** (provider commerciale con Opening/Closing/Peak
+>   dichiarati): la sua stessa documentazione limita lo storico a **6 mesi**
+>   per l'accesso API — strutturalmente non può coprire il 2017-19. Sito
+>   comunque non raggiungibile (403) per un controllo diretto.
+> - **flashscore.com**: `robots.txt` permissivo, ma è un sito fortemente
+>   JS-driven (come Understat prima del fix): senza trovare l'endpoint XHR
+>   giusto (non tentato oltre per tempo/probabilità), l'HTML grezzo non porta
+>   dati. **forebet.com**, **windrawwin.com**: bloccati (403).
+>
+> **Esito: nessun dato nuovo, e più fiducia nel "nessun dato nuovo".** Le
+> ri-verifiche dal vivo con lo User-Agent corretto tolgono il dubbio residuo
+> che il controllo precedente fosse un falso negativo tecnico. Nessuna delle
+> vie note è cambiata; nessuna via nuova ha prodotto un candidato valido.
+
 > ## 📏 Fase 106 — il confronto footiqo-vs-verità esteso da 1 a 6 stagioni
 >
 > L'utente ha chiesto se il confronto "MAE 0.0156 (footiqo) contro ~0.012

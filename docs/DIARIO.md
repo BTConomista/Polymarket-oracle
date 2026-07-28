@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–106)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–107)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -295,6 +295,7 @@ correzioni.*
 - [Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto](#fase-104--il-resto-della-lista-monaco-dfb-pokal-tre-rilievi-gia-chiusi-e-la-fonte-xg-con-lo-stesso-mirror-morto)
 - [Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo](#fase-105--secondo-ri-tentativo-sullou-2017-19-quattro-angoli-nuovi-ancora-negativo)
 - [Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo](#fase-106--il-confronto-footiqo-vs-verità-esteso-da-1-a-6-stagioni-non-è-stabile-nel-tempo)
+- [Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo](#fase-107--terzo-ri-tentativo-sullou-2017-19-ri-verifica-dal-vivo--angoli-nuovi-ancora-negativo)
 
 ---
 
@@ -12476,3 +12477,52 @@ non nel metodo.
 Usarlo come riferimento del confronto era ottimistico verso la stima — un
 bias piccolo (0.002) ma nella direzione che rendeva la decisione più
 comoda, non meno.
+
+## Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo
+
+**Obiettivo.** Richiesta esplicita dell'utente: continuare a cercare il dato
+vero, esplorare fonti nuove E verificare — non assumere — che le fonti già
+scartate lo siano davvero ancora.
+
+**Cosa ho fatto.**
+
+1. **`oddsportal.com/robots.txt` letto per intero** (prima si citava solo "vieta
+   lo storico"): vieta esplicitamente ogni URL con l'anno nel percorso, da
+   1998 al 2024 — un blocco sistematico di tutte le pagine-stagione, non un
+   dettaglio isolato. Nessun accesso, come già deciso.
+2. **BetExplorer ri-controllato dal vivo**, non solo ri-letto dal report della
+   Fase 100. Scoperta: il precedente 404 sull'endpoint delle quote era in
+   parte affidabile, ma la pagina-stagione stessa risponde 404 **anche oggi**
+   senza uno User-Agent da browser — un blocco anti-bot, non un vero "non
+   esiste". Con lo User-Agent giusto: pagina vera, partita vera raggiunta. Il
+   risultato però è **identico**: `#bettingTabs` ha solo un "1X2" disabilitato,
+   nessun tab O/U. La conferma vale di più perché stavolta la richiesta ha
+   *davvero* toccato la pagina, non un errore mascherato da conferma.
+3. **Il dataset Kaggle `mexwell/...` è stato aggiornato** (versione 2) dal
+   primo controllo: ri-scaricato, stessa colonna O/U singola per il 2017-18,
+   nessuna chiusura O/U distinta aggiunta.
+4. **Tre angoli davvero nuovi**: ricerca di codice GitHub per scraper
+   OddsPortal/BetExplorer (trovati solo strumenti — uno conferma da solo che
+   serve login e copre solo 1X2, non O/U); dataset accademici su arXiv
+   (Bundesliga 2017-19, ma quote **in-play**, mercato sbagliato); provider
+   commerciali (`oddalerts.com`, la cui documentazione limita lo storico
+   dichiarato a 6 mesi — strutturalmente fuori portata per il 2017-19, prima
+   ancora di poterlo controllare per il 403).
+
+**Risultato.** Nessun dato nuovo. Ma la fiducia nel "nessun dato nuovo" è più
+solida di prima: il controllo su BetExplorer di questa fase ha **davvero**
+raggiunto la pagina (le fasi precedenti rischiavano di scambiare un blocco
+anti-bot per un'assenza di dato), e altri tre angoli mai tentati sono stati
+chiusi con una ragione specifica, non per esaurimento del tempo.
+
+**Lezione.** Un 404 non è sempre un "non esiste": può essere "non mi hai
+chiesto nel modo giusto". Prima di scrivere una fonte come chiusa, vale la
+pena controllare se la richiesta ha davvero raggiunto il contenuto (una
+pagina vera, non una pagina di errore) — specialmente quando il controllo
+precedente veniva da un ambiente diverso (un runner GitHub Actions, Fase 100)
+i cui dettagli (header, User-Agent) non sono garantiti identici a un
+controllo rifatto altrove.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di ricerca/verifica, esito negativo. Non applicabile.

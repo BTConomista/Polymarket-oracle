@@ -22,8 +22,15 @@ stato fatto.
   (`Disallow: *-2017*`, `*-2018*`): non si scrapano, e non si aggira il divieto
   passando da cache o archivi;
 - `betexplorer.com` ha **ritirato** il confronto-quote per le partite di ~8 anni
-  fa (tab 1X2 disabilitato, nessun tab O/U): ri-verificato, non è un problema di
-  parsing;
+  fa (tab 1X2 disabilitato, nessun tab O/U): ri-verificato **due volte**
+  (Fase 100 e Fase 107, dal vivo), non è un problema di parsing. ⚠️ Le pagine
+  di stagioni vecchie (`.../serie-a-2017-2018/results/`) rispondono **404
+  senza uno User-Agent da browser** (blocco anti-bot generico, non un vero
+  "pagina non trovata") — con `User-Agent: Mozilla/5.0 ...` rispondono 200.
+  Non confondere le due cose: la home e i path semplici (es. `/outrights/`)
+  rispondono comunque senza UA, quindi un 404 lì è un vero 404 (nessuna
+  sezione outright); su path più profondi verificare sempre con un UA da
+  browser prima di concludere "non esiste";
 - `sofascore.com` e `fbref.com` rispondono **403** anche sul `robots.txt`;
 - throttle ≥ 1,5 s fra richieste, sempre.
 
