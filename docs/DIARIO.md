@@ -326,6 +326,7 @@ correzioni.*
 - [Fase 122 — Lo scheletro giornaliero: una fetta sottile ma completa](#fase-122--lo-scheletro-giornaliero-una-fetta-sottile-ma-completa)
 - [Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano](#fase-123--lo-stadio-non-è-una-proprietà-della-squadra-e-le-squalifiche-non-si-cercano)
 - [Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)](#fase-124--il-diffidato-si-trattiene-davvero-misurato-e-il-segno-ingenuo-era-rovesciato)
+- [Fase 125 — Prezzare i cartellini: ogni leva paga, e la sotto-dispersione non è dei gol](#fase-125--prezzare-i-cartellini-ogni-leva-paga-e-la-sotto-dispersione-non-è-dei-gol)
 
 ---
 
@@ -14061,3 +14062,125 @@ il segno si rovesciava: +0.0275 contro −0.0265. E il within-player da solo non
 sarebbe bastato — serviva il contrasto locale alla soglia per escludere che
 fosse il calendario a fare il lavoro. Due controlli, due spiegazioni alternative
 eliminate, e solo allora un numero da scrivere.
+
+---
+
+## Fase 125 — Prezzare i cartellini: ogni leva paga, e la sotto-dispersione non è dei gol
+
+**Obiettivo.** L'utente: *«lavoriamoci per bene su questi dati (sui
+cartellini)»*. C'è un aggancio concreto: i cartellini sono già un **mercato che
+il progetto prezza** (Fase 96), quindi la domanda non è descrittiva ma
+operativa — **quali fattori migliorano la previsione fuori campione?**
+
+**Prima di modellare, il test che la Fase 99 rende obbligatorio.** *Misurato ≠
+prevedibile*: un effetto visto in una stagione va usato solo se **persiste**.
+Correlazione fra l'effetto di una stagione e quello della successiva:
+
+| effetto | corr(t, t−1) | IC95% |
+|---|---:|---|
+| **arbitro** | **+0.352** | [+0.299, +0.405] |
+| squadra (in casa) | +0.356 | [+0.300, +0.408] |
+| squadra (in trasferta) | +0.288 | [+0.229, +0.343] |
+
+Tutti e tre persistono, a differenza del bias di livello della Fase 99. Solo
+allora ha senso metterli in un modello.
+
+**Il backtest.** Un'osservazione = (partita, lato): quanti gialli prende **una**
+squadra in **una** partita. Modello moltiplicativo nello stile del
+Dixon-Coles, ogni fattore ritirato verso 1 e stimato **solo** sulle stagioni
+precedenti (walk-forward, nessun look-ahead). Metrica: log-verosimiglianza per
+osservazione, perché determina il prezzo di **qualunque** linea over/under
+insieme, non di una sola.
+
+| modello | ll | guadagno incrementale | IC95% |
+|---|---:|---:|---|
+| base (media di lega) | −1.68829 | — | — |
+| + squadra | −1.68390 | **+0.00440** | [+0.00309, +0.00576] ✅ |
+| + avversario | −1.68233 | +0.00157 | [+0.00050, +0.00260] ✅ |
+| + fattore campo | −1.67862 | +0.00371 | [+0.00281, +0.00464] ✅ |
+| + **arbitro** | −1.67491 | **+0.00368** | [+0.00269, +0.00469] ✅ |
+
+**Ogni leva paga, e tutte con IC conclusivo** — cosa rara in questo progetto,
+dove la maggior parte delle leve finisce nel rumore. Il dato che colpisce:
+**l'arbitro vale quanto il fattore campo**. Il totale è +0.01336
+[+0.01120, +0.01552].
+
+**Poi il numero che vale più di tutto il resto.** Per squadra-partita, la
+varianza dei gialli è **0.954 volte** la media: i cartellini sono
+**sotto-dispersi**, esattamente come i gol dati i tassi del mercato (Fase 51).
+La binomiale negativa non può nemmeno rappresentarlo (il suo α collassa a
+0.0001, il bordo). Ma il progetto ha già lo strumento giusto —
+`_dp_pmf(rate, θ)`, la double-Poisson mean-preserving della Fase 51 — e l'ho
+riusato invece di inventarne uno:
+
+```
+theta ottimo = 1.150      Δll = +0.00265   IC95% [+0.00199, +0.00330]  ✅
+```
+
+Vale il **72%** di quanto vale l'arbitro, e il 20% di tutte le covariate messe
+insieme, per **un solo parametro**.
+
+**Ma la mappa per lega NON si trasferisce, e questo è il punto delicato.**
+
+| lega | θ cartellini | (θ gol, Fasi 51-53) |
+|---|---:|---|
+| Serie A | **1.310** ✅ | ~1.2 |
+| Ligue 1 | **1.250** ✅ | ~1.08 |
+| Bundesliga | 1.110 ✅ | ~1.07 |
+| La Liga | 1.080 · | ~1.24 |
+| Premier | 1.020 · | ~1.07 |
+
+θ > 1 in **5 leghe su 5**, ma conclusivo solo in 3. E l'ordine è **diverso** da
+quello dei gol: le «due famiglie» dell'audit a 5 leghe (latine ad alto θ contro
+le altre) qui non reggono — la Liga scende, la Ligue 1 sale. Serie A resta alta
+in entrambi, la Premier bassa in entrambi.
+
+**Che cosa se ne conclude, con precisione.** La sotto-dispersione **non è una
+proprietà dei gol**: è una proprietà dei **processi di conteggio del calcio**,
+e si ritrova su un processo che la Fase 96 aveva già dichiarato *diverso* dai
+gol. Ma il **valore** di θ è specifico della coppia (lega × processo), quindi
+non si eredita: va fittato dove lo si usa. È la stessa lezione del §7 del
+`CLAUDE.md` — le formule sono universali, gli iperparametri no — estesa da
+«per lega» a «per lega e per processo».
+
+**📐 Il modello in dettaglio.** Verificato contro
+`scripts/_run_fase125_cartellini.py`.
+
+*(a) Tasso atteso.* Per l'osservazione (partita, lato):
+
+```
+λ = base(lega) · f_squadra · f_avversario · f_casa · f_arbitro
+```
+
+*(b) Ogni fattore è una media ritirata verso 1:*
+
+```
+f_g = 1 + [n_g/(n_g + K)] · (media_g/media_globale − 1)      K = 40
+```
+
+`K = 40` significa che servono ~40 partite perché il dato del gruppo pesi
+quanto la media di lega. Non è un abbellimento: senza shrinkage un arbitro con
+3 partite e 9 gialli avrebbe `f = 2.2` e rovinerebbe ogni previsione che lo
+incontra — ed è esattamente il caso che si presenta a ogni inizio stagione, con
+gli arbitri nuovi.
+
+*(c) Sotto-dispersione.* `q_k ∝ Poisson(c·λ)^θ` rinormalizzata, con `c` risolto
+per bisezione perché la media resti `λ` (mean-preserving). `θ > 1` concentra la
+massa attorno alla media. È **la stessa funzione** già in produzione sui gol:
+il valore dell'esperimento sta proprio nel non aver scritto codice nuovo — se
+avessi implementato una seconda double-Poisson, un risultato diverso non
+avrebbe distinto «processo diverso» da «bug diverso».
+
+*(d) Perché la log-verosimiglianza e non il MAE.* Il MAE è leggibile ma **non è
+una regola di punteggio**: premia chi indovina il centro, non chi indovina la
+distribuzione. Su un mercato over/under conta la seconda, e θ agisce **solo**
+sulla forma — a media invariata. Con il MAE, l'intero effetto della
+sotto-dispersione sarebbe stato invisibile.
+
+**Lezione.** *Un risultato vecchio si generalizza meglio riusando il suo codice
+che riscrivendolo.* La sotto-dispersione dei gol era una scoperta chiusa della
+Fase 51; applicarne la **stessa funzione** a un processo dichiarato diverso è
+costato dieci righe e ha prodotto un risultato nuovo — con la garanzia che
+un'eventuale differenza fosse del fenomeno e non dell'implementazione. E
+l'altra metà della lezione è simmetrica: **il fenomeno si è trasferito, i suoi
+parametri no.**
