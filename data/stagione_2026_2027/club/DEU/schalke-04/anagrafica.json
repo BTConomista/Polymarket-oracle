@@ -1,0 +1,51 @@
+{
+ "_avvertenza": "VALORI PROVVISORI: fotografia del 2026-02-27 (dataset CC0), NON di agosto 2026 — il mercato estivo non è incluso. Da sostituire appena il dato di agosto è disponibile. Vedi README §3-bis.",
+ "stagione": "2026-27",
+ "lega": "bundesliga",
+ "paese": "DEU",
+ "nome_smarkets": "Schalke 04",
+ "nome_dataset": "FC Schalke 04",
+ "slug": "schalke-04",
+ "alias": {
+  "smarkets": "Schalke 04",
+  "player_scores": "FC Schalke 04"
+ },
+ "copertura": "stantia",
+ "ultima_stagione_nel_dataset": 2022,
+ "stadio": {
+  "nome": "Veltins-Arena",
+  "capienza": 62271
+ },
+ "allenatore_dataset": null,
+ "rosa": [
+  {
+   "nome": "Nikola Katic",
+   "ruolo": "Defender",
+   "ruolo_dettaglio": "Centre-Back",
+   "nascita": "1996-10-10 00:00:00",
+   "nazionalita": "Bosnia-Herzegovina",
+   "piede": "right",
+   "altezza_cm": 194.0,
+   "scadenza_contratto": "2028-06-30 00:00:00",
+   "presenze_nazionale": 19.0,
+   "valore_eur": 1200000,
+   "valore_massimo_eur": 2250000
+  }
+ ],
+ "rosa_n": 1,
+ "squad_size_ufficiale": 27,
+ "rosa_copertura": 0.04,
+ "nota_rosa": "`rosa_n` è il nostro conteggio (giocatori col club corrente e almeno una stagione recente); `squad_size_ufficiale` è quello della fonte. Lo scarto mediano è +6: NON usare `rosa_n` come dimensione ufficiale della rosa. `valore_rosa_eur` è `null` quando la rosa NON è completa: su una rosa parziale la somma dei valori è un numero falso, non una stima.",
+ "valore_rosa_eur": null,
+ "data_valore": "2026-02-27",
+ "provvisorio": true,
+ "fonte": "kaggle:davidcariboo/player-scores (CC0) + smarkets (elenco iscritte)",
+ "generato_utc": "2026-07-28",
+ "da_raccogliere": [
+  "obiettivi_dichiarati",
+  "lista_uefa",
+  "fuori_progetto",
+  "competizioni_2026_27",
+  "coordinate_stadio"
+ ]
+}

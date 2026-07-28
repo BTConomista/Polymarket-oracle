@@ -269,3 +269,28 @@ def test_altra_lega_assenze_stimate_plausibili(altro_snapshot):
     valori = pd.concat([altro_snapshot["home_absent_value_est"],
                         altro_snapshot["away_absent_value_est"]]).dropna()
     assert (valori >= 0).all()
+
+
+# --- understat: sola lettura da cache (Fase 120) ---------------------------
+
+def test_understat_non_scarica_piu(tmp_path, monkeypatch):
+    """Il ``robots.txt`` di understat.com vieta tutto (`Disallow: /`): la R5.3
+    impone di rispettarlo, come gia' fatto per oddsportal. La funzione deve
+    SOLLEVARE invece di andare in rete quando il file non e' in cache.
+
+    Il test punta la cache su una cartella vuota: se un giorno qualcuno
+    ripristinasse la chiamata di rete, qui fallirebbe invece di ricominciare a
+    scaricare in silenzio da una fonte che ce lo vieta.
+    """
+    monkeypatch.setattr(understat, "RAW_DIR", tmp_path)
+    with pytest.raises(PermissionError, match="robots.txt"):
+        understat.download_season("2425", "serie_a")
+
+
+def test_understat_legge_la_cache_se_c_e(tmp_path, monkeypatch):
+    """L'altra meta': i dati gia' acquisiti restano usabili. Vietato e'
+    scaricare, non aver scaricato."""
+    monkeypatch.setattr(understat, "RAW_DIR", tmp_path)
+    atteso = understat._cache_path("2425", "serie_a")
+    atteso.write_text("{}", encoding="utf-8")
+    assert understat.download_season("2425", "serie_a") == atteso

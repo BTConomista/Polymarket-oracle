@@ -320,6 +320,8 @@ correzioni.*
 - [Fase 116 — Il raccoglitore prospettico è in piedi (e costa zero)](#fase-116--il-raccoglitore-prospettico-è-in-piedi-e-costa-zero)
 - [Fase 117 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson](#fase-117--ogni-file-allineato-il-merge-con-una-sessione-parallela-e-lidentità-che-chiude-la-com-poisson)
 - [Fase 118 — Il primo giro vero del raccoglitore: verde, e non raccoglieva niente](#fase-118--il-primo-giro-vero-del-raccoglitore-verde-e-non-raccoglieva-niente)
+- [Fase 119 — La raccolta quotidiana 2026-27: il piano, e i due `robots.txt` che lo riscrivono](#fase-119--la-raccolta-quotidiana-2026-27-il-piano-e-i-due-robotstxt-che-lo-riscrivono)
+- [Fase 120 — Il passo 0: metà della lista era già in casa, su licenza](#fase-120--il-passo-0-metà-della-lista-era-già-in-casa-su-licenza)
 
 ---
 
@@ -13514,3 +13516,179 @@ volta**, quando c'è ancora tempo per rimediare, non alla fine della stagione
 quando il dato mancante non si recupera più. La regola R6 diceva già che il
 buco peggiore è il finto pieno; questa fase aggiunge che il finto pieno può
 essere un *file che non esiste*, non solo un valore sbagliato.
+
+---
+
+## Fase 119 — La raccolta quotidiana 2026-27: il piano, e i due `robots.txt` che lo riscrivono
+
+**Obiettivo.** Richiesta dell'utente: una raccolta dati **completa e
+quotidiana** per la nuova stagione — obiettivi, rose con valori, competizioni,
+e ogni giorno le notizie (umore, probabili formazioni, allenatore a rischio,
+meteo, diffidati, convocazioni…). Con una cartella stagionale e un README che
+dica cosa vogliamo.
+
+**Ragionamento.** Un piano che elenca fonti senza averle provate è carta. Prima
+ho **misurato**: 21 sondate, 15 rispondono. Ma il numero che conta non era
+quello.
+
+**La scoperta che riscrive il piano.** Leggendo i `robots.txt` (regola R5.3):
+**la maggior parte della stampa sportiva vieta esplicitamente i crawler AI**.
+`transfermarkt.it`, `gazzetta.it`, `bbc.co.uk`, `kicker.de` dichiarano
+`Disallow: /` per `ClaudeBot`/`anthropic-ai`; `marca.com` per `anthropic-ai`.
+Consentiti: **Guardian** (presente con **zero** regole, cioè permesso
+esplicito), Lega Serie A, open-meteo, Wikipedia, football-data.org.
+
+Non è un 403 da aggirare: è una volontà dichiarata. Conseguenza accettata: il
+livello «notizie» **non** può poggiare sullo scraping della stampa sportiva.
+Restano le fonti che ci consentono, le API su licenza, e la ricerca web dentro
+una routine — che è una ricerca, non un crawl di massa. Rose e valori: la via è
+la raccolta **manuale** dell'utente, già prevista dalla regola R2.
+
+**Cosa è stato creato.** `data/stagione_2026_2027/` con la specifica completa.
+Tre decisioni di struttura che vale la pena estrarre:
+
+1. **Fatto ≠ giudizio.** Metà di ciò che si vuole raccogliere (umore,
+   allenatore a rischio, lettura tattica) non è una misura: è un giudizio
+   prodotto leggendo notizie. Ogni record porta `tipo`, e un giudizio senza
+   **evidenza citata** non si scrive: si scrive «non lo so». È la R6 applicata
+   prima che il dato nasca, invece che a posteriori.
+2. **Due assi ortogonali.** L'utente chiedeva «file al giorno *o* cartella per
+   squadra?». Servono entrambi, perché rispondono a domande diverse:
+   `giornaliero/` è **append-only e immutabile** e risponde a «che cosa
+   sapevamo il giorno D?»; `club/` è l'identità stabile più viste
+   **rigenerabili**. Se lo stato vivesse solo in un file sovrascritto, a maggio
+   non sapremmo più cosa sapevamo ad agosto — e con quello muore il test
+   prospettico, cioè il motivo per cui raccogliamo.
+3. **La priorità non è l'interesse, è l'irrecuperabilità.** Ogni voce della
+   lista ha la colonna «si perde per sempre?», ed è quella la lista delle cose
+   da fare per prime.
+
+**L'onestà preliminare, scritta in testa al README.** Questa raccolta **non
+serve a dare più feature al modello**: le Fasi 4c-33 hanno esplorato tutti i
+dati interni e il verdetto è stato uniforme (ridondanti o rumore). Serve a tre
+cose diverse: l'informazione che il mercato ha e noi no (formazioni a T−1h,
+Fase 93), il dataset **notizia → movimento della quota** (che non esiste in
+nessun archivio comprabile), e un archivio che vale su più stagioni.
+
+**Lezione.** Il vincolo più importante di un progetto di raccolta dati non è
+tecnico né economico: è **quello che le fonti dichiarano di volere**. Costa un
+`curl` scoprirlo, e cambia l'architettura. Scoprirlo dopo aver scritto il
+raccoglitore sarebbe costato il raccoglitore.
+
+---
+
+## Fase 120 — Il passo 0: metà della lista era già in casa, su licenza
+
+**Obiettivo.** Eseguire il passo 0 del piano (scelta dell'utente): importare
+ciò che si può avere senza scraping, e vedere quanto resta davvero da
+raccogliere a mano.
+
+**Il ribaltamento.** Il divieto di Transfermarkt sembrava chiudere rose e
+valori. Non era così, e la fonte era **già nel repo**:
+`davidcariboo/player-scores` su Kaggle è **CC0**, è la fonte ufficiale dello
+`squad_value` dalla Fase 67, e si aggiorna ~settimanalmente. Misurata
+(versione 673, 213 MB): **507.815** valutazioni, **88.958** partite fino al
+6/7/2026, e soprattutto `game_lineups` con **titolari vs panchina** e
+`game_events` **col minuto** di ogni gol e cartellino. Copertura: **65
+competizioni** — 31 campionati (Turchia, Portogallo, Olanda, Belgio, Scozia…),
+10 coppe nazionali, Champions League, 5 tornei per nazionali. Cioè
+**tutti i «prossimi passi» che l'utente aveva elencato**, già coperti.
+
+**Il confine che ne esce, ed è la parte utile.** Il dataset è
+**retrospettivo**: non contiene infortuni di oggi, probabili formazioni, meteo
+previsto, umore. Quindi il lavoro giornaliero si **restringe** a ciò che deve
+davvero essere giornaliero; tutto il resto è un download settimanale. È il
+principio §1.3 — la versione economica prima dell'infrastruttura.
+
+**Il risultato.** `scripts/build_stagione_anagrafica.py` scrive 96 file
+`anagrafica.json`, uno per squadra. L'elenco delle **iscritte 2026-27** viene
+dalle partite d'esordio già raccolte da Smarkets (la prima giornata contiene
+ogni squadra una volta: 20+20+20+18+18 = **96**); gli attributi dal dataset CC0.
+
+**Tre difetti trovati controllando invece che fidandomi.**
+
+1. **Le rose erano assurde**: Genoa **162** giocatori, Atalanta 153.
+   `current_club_id` punta all'*ultimo* club noto, quindi accumulava gente
+   ferma al 2017. Filtro sull'ultima stagione del giocatore → mediana **36**.
+2. **Il filtro non bastava**: contro `squad_size`, il conteggio ufficiale nella
+   stessa fonte, restavamo **+6** di mediana (prestiti e giovani). Non l'ho
+   nascosto: il file scrive **entrambi** i numeri e dichiara lo scarto (R4).
+3. **Il difetto grave**: sulle squadre col record vecchio il filtro lascia un
+   residuo di 1-8 giocatori, e sommarne i valori produceva **«Frosinone,
+   valore rosa 0.8 M€» su 1 giocatore di 31** — la rosa più debole d'Europa di
+   tre ordini di grandezza, per chi la leggesse. Ora l'aggregato esiste **solo
+   se la rosa è completa**; altrimenti `null` dichiarato.
+
+**La lacuna, dichiarata invece che riempita.** Il dataset copre solo la **prima
+divisione** di 31 paesi: delle 96 squadre, **82** hanno copertura completa,
+**10** un record **stantio** (Málaga fermo al 2017, Hull al 2016) e **4** sono
+**assenti** (Elversberg, Coventry, Racing Santander, Le Mans). Sono le
+**neopromosse** — cioè proprio le squadre su cui il modello applica il prior δ.
+
+**Decisione su understat** (delegata dall'utente: «fai tu»). `understat.com`
+dichiara `User-agent: * / Disallow: /`, e `src/data/understat.py` scaricava da
+lì. Ho scelto la **coerenza con la regola che il progetto già applica**:
+oddsportal è escluso per lo stesso identico motivo, e trattare understat
+diversamente solo perché comodo è ciò che un audit rimprovererebbe.
+`download_season` ora **legge la cache e non scarica più**. Costo reale
+**zero** nell'uso quotidiano — verificato: l'arricchimento parte solo con
+`--refresh`/`--enrich`, mentre il percorso normale legge gli snapshot
+congelati, che hanno già le colonne xG e sono versionati. Conseguenza aperta e
+scritta: per le stagioni **nuove** serve una fonte xG con licenza chiara.
+
+**📐 Il modello in dettaglio.**
+
+Nessuna matematica nuova: due regole di decisione, verificate riga per riga
+contro `scripts/build_stagione_anagrafica.py`.
+
+*(a) Stato di copertura di una squadra*, con `u` = ultima stagione del club nel
+dataset e `U` = ultima stagione nota (2025):
+
+```
+copertura = "assente"  se il club non esiste nel dataset
+          = "completa" se u >= U
+          = "stantia"  se u <  U
+```
+
+Non è una soglia scelta: `U` è la stagione più recente che il dataset contiene,
+quindi `u < U` significa letteralmente «questa squadra in massima serie non
+c'era». La distinzione fra `stantia` e `assente` conta perché la prima ha dati
+veri ma **vecchi** (usabili con cautela), la seconda non ha nulla.
+
+*(b) Aggregato del valore rosa* — `valore_aggregato(valori, copertura)`:
+
+```
+valore_rosa = Σ vᵢ   (vᵢ ≠ null)   se copertura = "completa"
+            = null                 altrimenti
+```
+
+Il `null` **non** è un valore mancante per pigrizia: è la conseguenza di una
+misura. Sulle 14 squadre non complete la rosa disponibile copre fra 0/26 e
+8/26 dei giocatori ufficiali; su una frazione così la somma non è una stima
+distorta, è **un'altra quantità** — la somma di un sottoinsieme arbitrario. Il
+caso peggiore misurato (Frosinone: 1 giocatore su 31, 0.8 M€ contro un vero
+ordine di grandezza di ~10² M€) mostra che l'errore non è del 20%: è di **tre
+ordini di grandezza**, e col segno sempre lo stesso. Un numero così non va
+corretto, va **rifiutato**.
+
+*(c) Perché il filtro sulla rosa esiste.* `current_club_id` è l'**ultimo** club
+noto del giocatore, non «la rosa di quest'anno». Senza filtro il Genoa contava
+162 giocatori con `last_season` distribuita dal 2017 al 2025; con
+`last_season >= U` scende a 39, e la mediana sulle 96 squadre passa da valori
+tripli a **36**, contro un `squad_size` ufficiale la cui mediana dista **+6**.
+Il residuo è coerente con prestiti in uscita e giovani aggregati, ed è
+dichiarato in ogni file invece di essere limato.
+
+**Verifica.** 96/96 squadre risolte, **nessuna in silenzio**: 21 alias
+verificati a mano uno per uno (il match approssimato è vietato dal README di
+`club/`), 4 assenze dichiarate esplicitamente. 17 test nuovi, **934 verdi**;
+quattro mutazioni provate sul codice nuovo, **quattro catturate**.
+
+**Lezione.** Due, e sono la stessa vista da due lati. (1) *Prima di costruire
+una fonte, guardare se ce l'hai già*: il dataset CC0 era nel repo da 50 fasi e
+copriva coppe, nazionali e campionati esteri che stavamo per mettere in un
+elenco di «lavori futuri». (2) *Un aggregato calcolato su una copertura
+parziale non è una stima imprecisa: è una quantità diversa*, e va rifiutato,
+non arrotondato. Il Frosinone a 0.8 M€ sarebbe passato qualunque controllo di
+tipo, di schema e di intervallo: nessuno di quei controlli sa che 1 giocatore
+non sono 31.

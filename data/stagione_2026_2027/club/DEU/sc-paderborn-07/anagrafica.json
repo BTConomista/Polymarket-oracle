@@ -1,0 +1,37 @@
+{
+ "_avvertenza": "VALORI PROVVISORI: fotografia del 2026-02-27 (dataset CC0), NON di agosto 2026 — il mercato estivo non è incluso. Da sostituire appena il dato di agosto è disponibile. Vedi README §3-bis.",
+ "stagione": "2026-27",
+ "lega": "bundesliga",
+ "paese": "DEU",
+ "nome_smarkets": "SC Paderborn 07",
+ "nome_dataset": "SC Paderborn 07",
+ "slug": "sc-paderborn-07",
+ "alias": {
+  "smarkets": "SC Paderborn 07",
+  "player_scores": "SC Paderborn 07"
+ },
+ "copertura": "stantia",
+ "ultima_stagione_nel_dataset": 2019,
+ "stadio": {
+  "nome": "Home Deluxe Arena",
+  "capienza": 15000
+ },
+ "allenatore_dataset": null,
+ "rosa": [],
+ "rosa_n": 0,
+ "squad_size_ufficiale": 26,
+ "rosa_copertura": 0.0,
+ "nota_rosa": "`rosa_n` è il nostro conteggio (giocatori col club corrente e almeno una stagione recente); `squad_size_ufficiale` è quello della fonte. Lo scarto mediano è +6: NON usare `rosa_n` come dimensione ufficiale della rosa. `valore_rosa_eur` è `null` quando la rosa NON è completa: su una rosa parziale la somma dei valori è un numero falso, non una stima.",
+ "valore_rosa_eur": null,
+ "data_valore": "2026-02-27",
+ "provvisorio": true,
+ "fonte": "kaggle:davidcariboo/player-scores (CC0) + smarkets (elenco iscritte)",
+ "generato_utc": "2026-07-28",
+ "da_raccogliere": [
+  "obiettivi_dichiarati",
+  "lista_uefa",
+  "fuori_progetto",
+  "competizioni_2026_27",
+  "coordinate_stadio"
+ ]
+}

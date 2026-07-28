@@ -1,0 +1,51 @@
+{
+ "_avvertenza": "VALORI PROVVISORI: fotografia del 2026-02-27 (dataset CC0), NON di agosto 2026 — il mercato estivo non è incluso. Da sostituire appena il dato di agosto è disponibile. Vedi README §3-bis.",
+ "stagione": "2026-27",
+ "lega": "serie_a",
+ "paese": "ITA",
+ "nome_smarkets": "Frosinone Calcio",
+ "nome_dataset": "Frosinone Calcio",
+ "slug": "frosinone-calcio",
+ "alias": {
+  "smarkets": "Frosinone Calcio",
+  "player_scores": "Frosinone Calcio"
+ },
+ "copertura": "stantia",
+ "ultima_stagione_nel_dataset": 2023,
+ "stadio": {
+  "nome": "Benito Stirpe",
+  "capienza": 16227
+ },
+ "allenatore_dataset": null,
+ "rosa": [
+  {
+   "nome": "Giorgi Kvernadze",
+   "ruolo": "Attack",
+   "ruolo_dettaglio": "Left Winger",
+   "nascita": "2003-02-07 00:00:00",
+   "nazionalita": "Georgia",
+   "piede": "right",
+   "altezza_cm": 188.0,
+   "scadenza_contratto": "2028-06-30 00:00:00",
+   "presenze_nazionale": 6.0,
+   "valore_eur": 800000,
+   "valore_massimo_eur": 800000
+  }
+ ],
+ "rosa_n": 1,
+ "squad_size_ufficiale": 31,
+ "rosa_copertura": 0.03,
+ "nota_rosa": "`rosa_n` è il nostro conteggio (giocatori col club corrente e almeno una stagione recente); `squad_size_ufficiale` è quello della fonte. Lo scarto mediano è +6: NON usare `rosa_n` come dimensione ufficiale della rosa. `valore_rosa_eur` è `null` quando la rosa NON è completa: su una rosa parziale la somma dei valori è un numero falso, non una stima.",
+ "valore_rosa_eur": null,
+ "data_valore": "2026-02-27",
+ "provvisorio": true,
+ "fonte": "kaggle:davidcariboo/player-scores (CC0) + smarkets (elenco iscritte)",
+ "generato_utc": "2026-07-28",
+ "da_raccogliere": [
+  "obiettivi_dichiarati",
+  "lista_uefa",
+  "fuori_progetto",
+  "competizioni_2026_27",
+  "coordinate_stadio"
+ ]
+}

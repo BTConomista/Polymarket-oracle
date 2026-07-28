@@ -1,4 +1,4 @@
-"""Fonte xG: Understat (via mirror GitHub, vedi sources.py).
+"""Fonte xG: Understat (SOLA LETTURA da cache -- vedi download_season).
 
 Cosa fornisce questo modulo, a livello di SINGOLA PARTITA:
 
@@ -23,16 +23,17 @@ Struttura del JSON di lega di Understat (una pagina per stagione):
 L'xG a livello partita viene da ``dates``; npxG/PPDA/deep vengono da ``teams``
 (history), riallineati alla partita tramite (squadra, datetime).
 
-Cache OFFLINE-FIRST: i JSON grezzi sono salvati in data/raw/ e riscaricati solo
-con force=True (coerente con loader.download_season).
+⚠️ SOLO CACHE, NIENTE SCARICO (Fase 120): il robots.txt di understat.com vieta
+tutto (``User-agent: * / Disallow: /``), e la regola R5.3 impone di rispettarlo.
+I JSON grezzi gia' in data/raw/ si leggono; quelli mancanti NON si scaricano e
+``download_season`` solleva. L'uso normale non cambia: gli snapshot congelati
+in data/ contengono gia' le colonne xG e sono versionati.
 """
 
 from __future__ import annotations
 
-import gzip
 import json
 import logging
-import urllib.request
 from pathlib import Path
 
 import pandas as pd
@@ -63,28 +64,37 @@ def _cache_path(season_code: str, league_key: str) -> Path:
 def download_season(
     season_code: str, league_key: str = "serie_a", *, force: bool = False
 ) -> Path:
-    """Scarica il JSON Understat di una stagione, con cache su disco.
+    """Legge il JSON Understat di una stagione **dalla cache su disco**.
 
-    L'endpoint XHR ufficiale (Fase 104, vedi sources.UNDERSTAT_OFFICIAL_URL)
-    risponde solo con l'header ``X-Requested-With: XMLHttpRequest`` (senza ->
-    404) e comprime SEMPRE in gzip (Content-Encoding: gzip anche senza
-    Accept-Encoding in richiesta): l'header e' innocuo per il mirror storico,
-    la decompressione si applica solo se il server dichiara gzip.
+    ⚠️ NON SCARICA PIU' (Fase 120). Il ``robots.txt`` di understat.com dichiara
+    ``User-agent: * / Disallow: /``: la regola R5.3 del progetto impone di
+    rispettarlo, ed e' lo stesso motivo per cui oddsportal e' escluso. Se il
+    file non e' in cache la funzione **solleva** invece di andare in rete.
+
+    Non blocca l'uso normale: gli snapshot congelati in ``data/`` hanno gia' le
+    colonne xG e sono versionati. Si ferma solo ``--refresh``/``--enrich``.
+
+    Storia: fino alla Fase 119 scaricava dall'endpoint XHR ufficiale (Fase 104)
+    con header ``X-Requested-With: XMLHttpRequest`` e risposta gzip. Il codice
+    e' recuperabile da git se un giorno la licenza cambiasse.
     """
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     dest = _cache_path(season_code, league_key)
     if dest.exists() and not force:
         return dest
 
-    url = sources.understat_url(season_code, league_key)
-    log.info("Scarico Understat %s -> %s", url, dest)
-    req = urllib.request.Request(url, headers={"X-Requested-With": "XMLHttpRequest"})
-    with urllib.request.urlopen(req) as resp:
-        raw = resp.read()
-        if resp.headers.get("Content-Encoding") == "gzip":
-            raw = gzip.decompress(raw)
-    dest.write_bytes(raw)
-    return dest
+    raise PermissionError(
+        f"Scarico automatico da understat.com NON consentito: il suo "
+        f"robots.txt dichiara 'User-agent: * / Disallow: /' (misurato il "
+        f"28/07/2026, Fase 120). La regola R5.3 del progetto impone di "
+        f"rispettarlo — è lo stesso motivo per cui oddsportal è escluso.\n"
+        f"  manca: {dest}\n"
+        f"  url che NON viene chiamato: {sources.understat_url(season_code, league_key)}\n"
+        f"Questo NON blocca l'uso normale: gli snapshot congelati in data/ "
+        f"contengono già le colonne xG e sono versionati. Si ferma solo "
+        f"`--refresh`/`--enrich`, cioè proprio la raccolta automatica vietata.\n"
+        f"Conseguenza aperta: per le stagioni NUOVE (2026-27) serve una fonte "
+        f"xG con licenza chiara. Vedi docs/MANUALE_SOPRAVVIVENZA.md §4-bis.")
 
 
 def _load_json(season_code: str, league_key: str, *, force: bool = False) -> dict:

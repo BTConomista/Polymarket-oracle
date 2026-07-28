@@ -584,6 +584,44 @@ risultato esatto anche dal denso), non da subire.
 
 ---
 
+## 5-quater · Stagione 2026-27, raccolta quotidiana (`data/stagione_2026_2027/`) — Fasi 119/120
+
+Cartella **nuova**, con una sua specifica completa: **`data/stagione_2026_2027/README.md`**.
+Qui solo ciò che serve al catalogo; per il *perché* e la lista dei dati, quel file.
+
+| | |
+|---|---|
+| **cos'è** | raccolta **prospettica** per la stagione 2026-27: anagrafica di partenza + stato quotidiano |
+| **assi** | `giornaliero/` (append-only, **immutabile**: «cosa sapevamo il giorno D») e `club/<PAESE>/<slug>/` (identità stabile + viste rigenerabili) |
+| **stato** | anagrafica delle **96 squadre** scritta (Fase 120); il livello giornaliero è **specificato, non ancora implementato** |
+| **si scrive con** | `python scripts/build_stagione_anagrafica.py` |
+| **fonti** | elenco iscritte da `data/smarkets_matches/`; attributi da `davidcariboo/player-scores` (Kaggle, **CC0**) |
+
+**⚠️ Tre avvertenze che sono semantica del dato, non note a margine.**
+
+1. **I valori di mercato sono PROVVISORI.** Fotografia del **27/02/2026**: non
+   contengono il mercato estivo 2026. Ogni file porta `provvisorio: true` e
+   `data_valore`. Vanno sostituiti appena esiste il dato di agosto (decisione
+   dell'utente, 28/07/2026).
+2. **`copertura` va letta prima di ogni altro campo**: `completa` (82 squadre),
+   `stantia` (10 — record fermo all'ultima stagione in massima serie, es.
+   Málaga 2017) o `assente` (4 — mai in prima divisione nel periodo coperto:
+   Elversberg, Coventry, Racing Santander, Le Mans). I buchi sono **tutti
+   neopromosse**, cioè proprio le squadre su cui il modello applica il prior δ.
+3. **`valore_rosa_eur` è `null` quando la rosa non è completa**, e non è
+   pigrizia: sulle squadre stantie il residuo è di 1-8 giocatori su ~30, e
+   sommarli dava **«Frosinone 0.8 M€» su 1 giocatore di 31** — un errore di tre
+   ordini di grandezza, sempre con lo stesso segno. Non è una stima imprecisa,
+   è **un'altra quantità** (R6). Stessa logica per `rosa_n`, che sta accanto a
+   `squad_size_ufficiale` e **non** lo sostituisce (scarto mediano +6).
+
+**Nomi squadra: alias espliciti, mai match approssimato.** Ogni
+`anagrafica.json` porta `alias` con il nome di ciascuna fonte. I 21 casi che la
+normalizzazione non risolve sono in `ALIAS` dentro lo script, **verificati a
+mano uno per uno**: le regole stanno in `data/stagione_2026_2027/club/README.md`.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

@@ -246,7 +246,7 @@ somma dei mercati esclusivi ~100-104% invece di 108-115%.
   ```
   che installa il pacchetto in editable più le dipendenze di test dichiarate in
   `pyproject.toml`. Dopo di che `python -m pytest -q` gira: la suite raccoglie
-  **913 test** (`python -m pytest -q --collect-only`, 2026-07-28). Se un
+  **934 test** (`python -m pytest -q --collect-only`, 2026-07-28). Se un
   documento del repo cita un numero di test diverso come stato *attuale*, è
   scaduto; se lo cita come stato storico di una fase, va lasciato ma marcato
   come tale.
@@ -369,12 +369,15 @@ dice di rispettarla.
 | `fbref.com`, `sofascore.com` | — | ❌ **403** (confermato, già noto) |
 | `fotmob.com` | `*` con 5 regole, `/api/*` vietato (trappola del frammento `#matchId`) | ⚠️ parziale |
 
-⚠️ **Rilievo aperto su codice in produzione.** `understat.com` vieta tutto a
-`*`, ma `src/data/understat.py` scarica da lì (usato fino alla Fase 103, dove
-il download live è stato riparato). **Non è stato modificato**: è una decisione
-dell'utente, non della sessione, e disattivarlo d'ufficio romperebbe la
-pipeline dell'xG. Va deciso in modo esplicito, e la decisione va scritta
-qualunque sia.
+✅ **DECISO alla Fase 120** (l'utente ha delegato la scelta). `understat.com`
+vieta tutto a `*`, e `src/data/understat.py` scaricava da lì. Scelta: la
+**coerenza con la regola che il progetto già applica** — oddsportal è escluso
+per lo stesso identico motivo. `download_season` ora **legge la cache e non
+scarica più** (solleva `PermissionError` con la spiegazione). **Costo reale
+zero, verificato**: l'arricchimento xG parte solo con `--refresh`/`--enrich`,
+mentre il percorso normale legge gli snapshot congelati, che hanno già le
+colonne xG e sono versionati. ⛔ **Residuo aperto**: per le stagioni NUOVE
+(2026-27) serve una fonte xG con licenza chiara — nessuna ancora individuata.
 
 **Conseguenza di progetto** (in `data/stagione_2026_2027/README.md` §3): il
 livello «notizie» **non** può poggiare sullo scraping della stampa sportiva.
