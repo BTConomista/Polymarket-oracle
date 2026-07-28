@@ -12094,8 +12094,28 @@ Nessun impatto sul modello in produzione: `rest_full`/`midweek` sono covariate
 **opzionali**, spente di default (`docs/PANCHINA.md`), quindi nessun backtest
 "ufficiale" cambia. Ma la conclusione "sono rumore" era misurata su dati con
 questo difetto (6-13% delle righe per lega): onestà (regola R7) impone di
-ripetere almeno la misura Serie A che quel giudizio cita — vedi nota in coda,
-aggiunta appena il ricalcolo è disponibile.
+ripetere almeno la misura Serie A che quel giudizio cita.
+
+**Ri-verifica (regola R7).** Rilanciato `scripts/_run_midweek_cov.py` (6
+stagioni walk-forward Serie A, config ufficiale, stessi split della F36-bis)
+sui dati corretti:
+
+| variante | Δ 1X2 log-loss | CI95 | P(mig) | β medio |
+|---|--:|--:|--:|--:|
+| `midweek` | −0.0003 | [−0.0013, +0.0007] | 74% | −0.0189 (stabile 6/6: −0.0171…−0.0284) |
+| `rest_full` | −0.0002 | [−0.0009, +0.0005] | 69% | −0.0120 (4/6 negativo: −0.0552…+0.0138) |
+| `rest_full+midweek` | −0.0001 | [−0.0012, +0.0010] | 56% | — |
+
+Praticamente **identico** ai numeri pre-fix (`midweek` Δ −0.0003/β −0.020 →
+Δ −0.0003/β −0.0189; `rest_full` Δ −0.0004 → −0.0002): il verdetto "rumore,
+ridondanti fra loro" **non era un artefatto del calendario incompleto**. L'unico
+dettaglio che cambia è la stabilità del segno di β su `rest_full`, che passa
+da non discussa esplicitamente a **4/6 negativo** (non più "quasi stabile");
+`midweek` resta l'unica delle due con segno stabile su tutte e 6 le stagioni,
+confermando la lettura della F79 ("β stabile ma non generalizza fuori Serie
+A"). Aggiornato `docs/PANCHINA.md` (righe #9/#12 e matrice, colonna Serie A);
+nessuna promozione, nessuna bocciatura: lo stato resta 🪑 panchina su
+entrambe.
 
 **Lezione.** Il costo di applicare una correzione già completamente
 verificata non è la verifica (fatta, e non da rifare): è **trovare cosa era

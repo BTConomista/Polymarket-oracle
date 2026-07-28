@@ -81,9 +81,9 @@ fronte. `⬜` = **mai testato lì**: è lavoro potenziale, non un'assoluzione.
 | Ensemble emivite 180+730 | 🪑 F12a | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Ricalibrazione per-classe del modello | 🪑 F10 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 | Diagonale inflazionata (`--draw-inflation`) | 🪑 F12b | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ⬜ | ⬜ | ❌ rumore su 3/3 leghe |
+| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis (ri-verif. F103: −0.0002, invariato) | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ⬜ | ⬜ | ❌ rumore su 3/3 leghe |
 | Temperature scaling post-hoc | 🪑 F6 (T≈0.94) | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ⬜ | ⬜ | ❌ il β stabile SA non si replica |
+| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis (ri-verif. F103: −0.0003, β stabile 6/6, invariato) | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ⬜ | ⬜ | ❌ il β stabile SA non si replica |
 | Temperatura sopra dp_lvl (T=1.056) | 🪑 F52-ter | ❌ (dp_lvl bocciato lì) | ❌ | ⬜ | ⬜ | ❌ |
 | GBM (diretto, per mercato, bespoke) | ❌ F21-23/50-quater | ⬜ ✱5 | ⬜ ✱5 | ⬜ | ⬜ | ❌ tetto informativo |
 | Poisson bivariato (λ3) | ❌ F42 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
@@ -178,10 +178,10 @@ Note della matrice:
 | 6 | Ensemble di emivite 180+730 (12a) | −0.0006 (4/6) | borderline, rumore | ri-run con 2 fit |
 | 7 | Ricalibrazione per-classe 1X2 del MODELLO (10) | −0.0005 | rumore (bias però robusto) | pesi fissi 0.96/1.04/1.00 |
 | 8 | Diagonale inflazionata (12b) | −0.0004 (3/6) | rumore; calibra il pari ma non paga in LL | `--draw-inflation` |
-| 9 | Covariata congestione vera `rest_full` (4e-bis) | −0.0004 | rumore | `--covariates rest_full` |
+| 9 | Covariata congestione vera `rest_full` (4e-bis) | −0.0004; **ri-verificato F103 sui dati corretti: −0.0002** [−0.0009,+0.0005], P 69% | rumore, invariato dopo la correzione dei 1.603 falsi zero di `midweek_europe` (β ora instabile in segno, 4/6) | `--covariates rest_full` |
 | 10 | Temperature scaling post-hoc (6) | −0.0003 | trascurabile (T≈0.94 robusto) | `scripts/calibrate.py` |
 | 11 | GBM + finishing-luck (33) | −0.0022 (P 81%) | non conclusivo, e il GBM di suo perde dal DC | — |
-| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto) | `--covariates midweek` |
+| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6**; **ri-verificato F103 sui dati corretti: −0.0003** [−0.0013,+0.0007], P 74%, β=−0.0189 **ancora stabile 6/6** (−0.0171…−0.0284) | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto). La correzione dei 1.603 falsi zero (F103) non cambia il verdetto: numeri quasi identici, non era un artefatto del dato sporco | `--covariates midweek` |
 | 13 | Temperatura sopra dp_lvl (52-ter) | 0.9609→**0.9605** (T=1.056) | si somma a una leva già Serie-A-only e da oracolo | sopra `sharpen_1x2` |
 
 ### Dettaglio delle voci di panchina
@@ -278,6 +278,13 @@ Note della matrice:
   nel 21.6% delle partite) e il β abbia direzione sensata (−0.019, 5/6);
   Liga β instabile (+0.053…−0.040). Rumore su 3/3 leghe: il fit pesato nel
   tempo assorbe già la congestione.
+- **Ri-verificato Fase 103** (Serie A, sui dati corretti dopo aver chiuso i
+  1.603 falsi zero di `midweek_europe`, che toccano anche `rest_full` dello
+  stesso calendario): Δ −0.0002 [−0.0009,+0.0005], P 69% — stesso ordine di
+  grandezza, stesso verdetto. Il β 2020-25 non è più a segno stabile
+  (−0.0552…+0.0138, 4/6 negativi): la correzione ha reso più onesto anche
+  questo dettaglio, prima misurato su un calendario con l'8-13% delle righe
+  sbagliate per lega.
 
 #### 10 · Temperature scaling post-hoc — Fase 6
 - **Numeri**: T≈0.94 (sottoconfidenza lieve, robusta), guadagno −0.0003.
