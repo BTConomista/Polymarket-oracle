@@ -94,6 +94,17 @@ RAW_DIR = ROOT / "data" / "raw" / "betfair_historic"   # in .gitignore (data/raw
 API = "https://historicdata.betfair.com/api"
 SPORT = "Soccer"
 PLAN = "Basic Plan"
+
+# ⚠️ ASSUNZIONE NON CONFERMATA DALLA SPECIFICA (verificato alla Fase 110
+# specchiando l'intera documentazione ufficiale in docs/betfair_api/): Betfair
+# **non pubblica l'elenco dei marketType**. La pagina `listMarketTypes` ne cita
+# due come esempio ("i.e. MATCH_ODDS, NEXT_GOAL") e per il resto rimanda a
+# scoprirli a runtime. "OVER_UNDER_25" e' quindi una convenzione diffusa
+# nell'ecosistema, non un valore documentato.
+# Per questo `--dry-run` NON si limita a dire si'/no: stampa i nomi REALI
+# trovati nel pacchetto, cosi' se l'etichetta fosse diversa si vede subito
+# invece di concludere "il mercato non esiste". E' la stessa lezione del bug
+# `img` (Fase 109-bis): non dedurre cio' che si puo' verificare.
 MARKET_TYPE = "OVER_UNDER_25"
 FILE_TYPE = "M"                      # M = market data (E = event data, senza prezzi)
 THROTTLE = 0.4                        # cortesia verso il servizio
@@ -195,11 +206,24 @@ def cmd_dry_run(season: str) -> None:
     tipi = {t["name"]: t["count"] for t in opts.get("marketTypesCollection", [])}
     paesi = {c["name"]: c["count"] for c in opts.get("countriesCollection", [])}
     print(f"--- stagione {season}: cosa esiste nel pacchetto ---")
-    print(f"OVER_UNDER_25 presente: {'SI' if MARKET_TYPE in tipi else 'NO'}"
+    print(f"{MARKET_TYPE} presente: {'SI' if MARKET_TYPE in tipi else 'NO'}"
           f"{f' ({tipi[MARKET_TYPE]} mercati)' if MARKET_TYPE in tipi else ''}")
     print("paesi bersaglio:", {c: paesi.get(c, 0) for c in COUNTRIES})
+
+    # I nomi REALI, sempre: l'elenco dei marketType non e' documentato da
+    # Betfair (vedi il commento su MARKET_TYPE), quindi questa e' l'unica
+    # verifica possibile dell'etichetta che stiamo usando.
+    simili = {k: v for k, v in tipi.items() if "OVER" in k.upper() or "UNDER" in k.upper()}
+    if simili:
+        print("mercati totali/gol disponibili:",
+              dict(sorted(simili.items(), key=lambda x: -x[1])))
     if MARKET_TYPE not in tipi:
-        print("\nSenza OVER_UNDER_25 non c'e' nulla da scaricare per questo scopo.")
+        print(f"\n{MARKET_TYPE} NON e' fra i tipi disponibili. Prima di concludere "
+              "che il mercato non esiste, controllare l'elenco qui sopra: "
+              "l'etichetta potrebbe essere diversa (l'elenco dei marketType non "
+              "e' documentato da Betfair). I 15 tipi piu' frequenti nel pacchetto:")
+        for k, v in sorted(tipi.items(), key=lambda x: -x[1])[:15]:
+            print(f"    {k:32s} {v}")
         return
     size = _post("GetAdvBasketDataSize",
                  _filter(season, market_types=[MARKET_TYPE], countries=COUNTRIES))

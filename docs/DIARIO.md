@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–109)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–110)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -299,6 +299,7 @@ correzioni.*
 - [Fase 108 — «E se cercassimo partita per partita?» — testato, non scala](#fase-108--e-se-cercassimo-partita-per-partita-testato-non-scala)
 - [Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)](#fase-109--betfair-exchange-il-primo-candidato-migliore-della-stima-e-una-mia-valutazione-ritirata)
 - [Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)](#fase-109-bis--la-specifica-ufficiale-trova-un-bug-nel-parser-poche-ore-dopo)
+- [Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)](#fase-110--la-documentazione-betfair-entra-nel-repo-e-smentisce-una-mia-costante)
 
 ---
 
@@ -12703,3 +12704,64 @@ quanto quella scelta — poche ore, perché l'utente ha chiesto di leggere la
 pagina. Regola pratica che ne segue: quando si scrive un parser per un
 formato altrui, la ricerca della specifica ufficiale viene **prima** della
 prima riga di codice, non dopo il primo test verde.
+
+## Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)
+
+**Obiettivo.** Richiesta dell'utente: copiare le API Betfair nel repo,
+dichiarando da quale sito vengono, «così che in futuro avremo meno lavoro da
+fare quando vorremo lavorare su Betfair».
+
+**Scelta: specchiare, non copiare.** Invece di incollare pagine a mano ho
+scritto `scripts/fetch_betfair_docs.py`, che estrae le pagine via API REST di
+Confluence (200 senza autenticazione, scoperta della Fase 109-bis) e le
+converte in Markdown. Così la copia è **ri-generabile** quando Betfair
+aggiorna — il contrario del `caccia_calendari.py` della Fase 100, che viveva
+solo come appendice di un report e infatti è andato perso.
+
+**Cosa c'è**: **78 pagine** in `docs/betfair_api/` (916 KB), ordinate per
+tema (guida → accesso → betting → tipi/enum → stream → mercati nazionali →
+ordini → account → linguaggi), più la **Historical Data API** — che sta su un
+altro sito, geo-bloccato da qui, e me l'ha fornita l'utente: attribuita a
+parte, con la differenza fra i due servizi messa in tabella perché è la
+confusione più facile da fare. Escluse note di rilascio e traduzioni.
+
+**Attribuzione.** Ogni file porta in testa: testo **di Betfair, non del
+progetto**; URL della pagina originale; id Confluence; data di estrazione; e
+la regola che **in caso di dubbio vince la pagina online**. È una copia di
+lavoro per riferimento tecnico interno, non una ri-pubblicazione.
+
+**La scoperta collaterale, che vale più della copia.** Cercando la conferma di
+`OVER_UNDER_25` nelle 78 pagine: **non c'è**. Betfair **non pubblica l'elenco
+dei marketType** — `listMarketTypes` ne cita due come esempio («i.e.
+MATCH_ODDS, NEXT_GOAL») e per il resto rimanda a scoprirli a runtime. Quella
+costante, su cui poggia tutto il filtro di `fetch_betfair_historic.py`, è
+quindi una **convenzione dell'ecosistema, non un valore documentato**: la
+stessa classe di assunzione che alla Fase 109-bis è costata il bug su `img`.
+
+Non è correggibile a tavolino (l'elenco vero si vede solo interrogando il
+servizio), ma è **degradabile da errore silenzioso a diagnosi**: `--dry-run`
+ora stampa i tipi realmente presenti nel pacchetto — tutti quelli che
+contengono OVER/UNDER, e in caso di assenza i 15 più frequenti — invece di
+limitarsi a un sì/no. Se l'etichetta fosse diversa, si vedrebbe subito;
+prima si sarebbe concluso «il mercato non esiste».
+
+**Lezione.** Specchiare una documentazione non è archiviazione passiva: è un
+**controllo**. Nel momento in cui la si porta in casa e la si può interrogare
+tutta insieme (`grep`), si scopre cosa NON dice — ed è lì che stavano le due
+assunzioni non verificate di questo lavoro. La prima l'ha trovata la lettura
+(`img`), la seconda la ricerca (`OVER_UNDER_25`).
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di infrastruttura e verifica documentale. Le due
+affermazioni fattuali su cui poggia sono entrambe ri-controllabili:
+
+```
+# la doc non enumera i marketType: 2 sole occorrenze, entrambe come esempio
+grep -rho "MATCH_ODDS\|OVER_UNDER_25" docs/betfair_api/*.md | sort | uniq -c
+#   2 MATCH_ODDS      (una nell'esempio di subscription, una in listMarketTypes)
+#   1 OVER_UNDER_25   (nel NOSTRO README, non nel testo Betfair)
+
+# ogni file dichiara la fonte
+for f in docs/betfair_api/*.md; do grep -q "Fonte" "$f" || echo "SENZA FONTE: $f"; done
+```
