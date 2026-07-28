@@ -446,10 +446,64 @@ a fatica · 🟢 sempre recuperabile a posteriori.
 | **Quote della prossima partita + movimento** | 📏 | 🔴 | ✅ già coperto (Fasi 116/118) |
 | Trasferimenti conclusi o imminenti | 📏 | 🟡 | |
 | **Cambio allenatore** (avvenuto) | 📏 | 🟢 | |
-| Arbitro designato + sue statistiche (cartellini, rigori) | 📏 | 🔴 | la designazione si pubblica 2 giorni prima e sparisce |
+| 🎯 **Arbitro designato** + sue statistiche (cartellini, rigori) | 📏 | 🔴 | **PRIORITÀ ALTA, misurata**: vedi §4-bis. La designazione esce ~2 giorni prima e poi sparisce |
 | Stadio: porte chiuse, settore ospiti chiuso, campo neutro | 📏 | 🔴 | tocca direttamente il vantaggio-casa |
 | **Contestazione tifosi / sciopero della curva** | 📏/🧠 | 🔴 | il vantaggio-casa è anche pubblico |
 | Biglietti venduti / affluenza attesa | 📏 | 🔴 | |
+
+### 4-bis · 🎯 L'ARBITRO: perché è priorità alta, e non un dettaglio di colore
+
+**Decisione dell'utente (28/07/2026), su evidenza misurata alla Fase 125.**
+Nella raccolta della nuova stagione **l'arbitro va registrato per ogni
+partita**, alla pari di meteo e quote.
+
+**Non è un'opinione, sono tre numeri.** Backtest walk-forward su 14 stagioni e
+50.911 osservazioni (partita × lato), `scripts/_run_fase125_cartellini.py`:
+
+| fattore che aiuta a prevedere i cartellini | guadagno | IC95% |
+|---|---:|---|
+| quale squadra gioca | +0.00440 | [+0.00309, +0.00576] |
+| contro chi gioca | +0.00157 | [+0.00050, +0.00260] |
+| in casa o in trasferta | +0.00371 | [+0.00281, +0.00464] |
+| **chi arbitra** | **+0.00368** | [+0.00269, +0.00469] |
+
+**L'arbitro vale quanto il fattore campo.** Ed è un'informazione che nessun
+altro dato del progetto contiene: la Fase 96 aveva già misurato che i
+cartellini sono **ortogonali ai gol** (|corr| ≤ 0.06), quindi qui non stiamo
+ri-scoprendo la forza delle squadre da un'altra angolazione.
+
+**E si può usare per prevedere, non solo per descrivere.** Il test che la Fase
+99 rende obbligatorio — *misurato ≠ prevedibile* — è superato: la tendenza di
+un arbitro in una stagione **si ritrova** in quella dopo, corr **+0.352**
+IC95% [+0.299, +0.405]. Un arbitro severo quest'anno è severo anche il
+prossimo.
+
+**Perché è 🔴 irrecuperabile.** Le designazioni si pubblicano **due giorni
+prima** della giornata e poi spariscono dai siti: a stagione finita si trova
+chi *ha* arbitrato (e infatti il dato storico ce l'abbiamo, sul 100% delle
+partite), ma **non si ricostruisce che cosa sapevamo prima del fischio**. Per
+il test prospettico serve la prima.
+
+**Che cosa registrare, per partita:**
+
+| campo | note |
+|---|---|
+| nome dell'arbitro designato | la chiave del join: attenzione alle grafie (§`club/README.md`) |
+| data e ora della designazione | serve a dimostrare che la sapevamo **prima** |
+| VAR e assistenti | non ancora misurati, ma costano zero raccolti insieme |
+| eventuale cambio dell'ultimo minuto | sostituzioni per infortunio capitano: se non lo registriamo, il join dà l'arbitro sbagliato |
+
+**Dove prenderlo.** Le leghe pubblicano le designazioni ufficialmente e
+`legaseriea.it` è fra le fonti **consentite** dal §3 (il suo `robots.txt` non ci
+vieta nulla). Per le altre quattro va verificato sito per sito, con la stessa
+regola: prima il `robots.txt`, poi il fetch.
+
+⚠️ **Un avvertimento sul valore, per non promettere troppo.** Tutto questo vale
+sul mercato **cartellini**. Sull'1X2 l'arbitro non è mai stato dimostrato utile,
+e la Fase 126 ha aggiunto un limite ulteriore: sul **totale** di partita la
+forma della distribuzione e la correlazione fra i due lati non sono
+separatamente identificabili, quindi non tutto ciò che si misura per-squadra si
+traduce in un guadagno sul totale.
 
 ### 4.3 · Prestazione e stile — misurabili
 
@@ -525,6 +579,7 @@ perde, poi il resto.
 | **1** | **Anagrafica di partenza** (§4.1) delle 5 leghe: rosa, valori, obiettivi, competizioni, stadi+coordinate | è la fotografia di **agosto**: i valori vengono riscritti, gli obiettivi dichiarati non si ripubblicano. ⚠️ dopo il passo 0 resta soprattutto ciò che il dataset **non** ha: obiettivi, liste UEFA, fuori-progetto | **prima del 15/8** |
 | **2** | ✅ **FATTO (Fase 122)** — scheletro giornaliero + meteo + quote | `scripts/raccolta_giornaliera.py` + cron giornaliero. Scrive `raccolta.json` e `fonti.json`; il meteo oltre l'orizzonte di 16 giorni è marcato `fuori_orizzonte`, non «mancante». Coordinate di **90 stadi su 94** in `_anagrafica/stadi.json` | fatto il 28/7 |
 | **3** | **Formazioni ufficiali a T−1h** | 🎯 il bersaglio della Fase 93; **timebox 2 ore** per la fonte, poi si ripiega sulle probabili | **prima del 15/8** |
+| **3-bis** | 🎯 **Arbitro designato** per ogni partita (§4-bis) | vale **quanto il fattore campo** sui cartellini, la tendenza **persiste** fra stagioni, ed esce solo ~2 giorni prima | **dal 15/8, ogni giornata** |
 | **4** | Bollettino quotidiano dei **fatti** (infortuni, squalifiche, diffidati, convocazioni) | 🔴 in gran parte | dal 15/8 |
 | **5** | Livello **giudizi** (sentiment, rischio panchina, probabili) | serve il livello 4 come evidenza | settembre |
 | **6** | **Incrocio notizia→quota** (§4.6) | serve una massa di giorni | ottobre |

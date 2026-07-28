@@ -21,6 +21,9 @@ nulla. Qui il dato mancante **non si recupera**: un giorno di silenzio va visto.
 
 COSA C'E' IN QUESTO SCHELETRO (livello «fatti», nessun LLM):
   - **prossime partite** delle 5 leghe, dal calendario già raccolto da Smarkets;
+  - **arbitro designato**: campo presente ma ancora **da riempire** — vale
+    quanto il fattore campo sui cartellini (Fase 125) ed è irrecuperabile
+    dopo il fischio (`data/stagione_2026_2027/README.md` §4-bis);
   - **meteo previsto** allo stadio di casa (open-meteo: nessuna chiave, e il suo
     `robots.txt` non pone restrizioni);
   - **quote** più recenti per quelle partite, per riferimento incrociato.
@@ -191,6 +194,28 @@ def _disciplina_delle_partite(partite: list[dict]) -> list[dict]:
     for p in partite:
         if p["lega"] not in REGOLE:
             continue
+        # 🎯 ARBITRO — decisione utente 28/07/2026, su evidenza della Fase 125.
+        # Vale quanto il fattore campo nel prevedere i cartellini (+0.00368
+        # contro +0.00371, IC entrambi conclusivi), e la sua tendenza PERSISTE
+        # da una stagione all'altra (corr +0.352). E' 🔴 irrecuperabile: la
+        # designazione esce ~2 giorni prima e sparisce, quindi a posteriori si
+        # sa CHI ha arbitrato ma non che cosa sapevamo prima del fischio.
+        # Il campo nasce vuoto e dichiarato: e' un buco da riempire, non un
+        # dato assente per scelta (README §4-bis).
+        fuori.append({
+            "tipo": "fatto",
+            "cosa": "arbitro_designato",
+            "partita": f"{p['casa']} vs {p['ospite']}",
+            "lega": p["lega"],
+            "inizio": p["inizio"],
+            "arbitro": None,
+            "var": None,
+            "designato_il": None,
+            "stato_raccolta": "da_implementare",
+            "perche_serve": ("vale quanto il fattore campo sui cartellini "
+                             "(Fase 125) e la tendenza persiste fra stagioni"),
+            "raccolto_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        })
         fuori.append({
             "tipo": "fatto",
             "cosa": "bollettino_disciplinare",
@@ -275,6 +300,12 @@ def main(argv=None) -> None:
     print("meteo:", stati or "nessuna partita in finestra")
     print("bollettino disciplinare:",
           sum(1 for r in record if r["cosa"] == "bollettino_disciplinare"), "partite")
+    da_fare = sum(1 for r in record if r.get("stato_raccolta") == "da_implementare")
+    if da_fare:
+        # Visibile a ogni giro, apposta: un campo dichiarato "da fare" che
+        # nessuno vede resta da fare per sempre.
+        print(f"⚠️  campi ancora DA IMPLEMENTARE in questo giro: {da_fare} "
+              f"(arbitro designato — README §4-bis)")
     print(f"fetch: {len(reg.voci)} tentati, {reg.falliti} falliti")
 
     if a.dry_run:
