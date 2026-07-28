@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–108)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–109)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -297,6 +297,7 @@ correzioni.*
 - [Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo](#fase-106--il-confronto-footiqo-vs-verità-esteso-da-1-a-6-stagioni-non-è-stabile-nel-tempo)
 - [Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo](#fase-107--terzo-ri-tentativo-sullou-2017-19-ri-verifica-dal-vivo--angoli-nuovi-ancora-negativo)
 - [Fase 108 — «E se cercassimo partita per partita?» — testato, non scala](#fase-108--e-se-cercassimo-partita-per-partita-testato-non-scala)
+- [Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)](#fase-109--betfair-exchange-il-primo-candidato-migliore-della-stima-e-una-mia-valutazione-ritirata)
 
 ---
 
@@ -12558,3 +12559,103 @@ invece che con centinaia.
 ### 📐 Il modello in dettaglio
 
 Nessuna matematica: fase di verifica di un'idea, esito negativo. Non applicabile.
+
+## Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)
+
+**Obiettivo.** L'utente ha un account Betfair e ha chiesto se si possa
+implementare direttamente l'API di `historicdata.betfair.com` nel repo, cosa
+serva oltre al token, e «cosa potremmo inventarci».
+
+**Ragionamento.** La tentazione era rispondere subito con lo script. Invece
+ho applicato il principio §1.3 — *testa la versione economica dell'idea prima
+di investire* — perché c'era un test gratuito disponibile: `football-data`
+pubblica la chiusura **Betfair Exchange** (`BFEC>2.5`/`BFEC<2.5`) in una
+stagione, la 2024-25. Lì convivono Betfair, la media multi-book e l'esito
+reale: si può stabilire **che tipo di fonte sia Betfair senza scaricare nulla**
+e senza far fare fatica a nessuno.
+
+**Risultato — e una mia valutazione ritirata.** Su 1.752 partite, 5 leghe:
+
+| fonte | MAE vs media multi-book |
+|---|--:|
+| MaxC | 0.0057 |
+| **Betfair Exchange** | **0.0060** |
+| Pinnacle | 0.0063 |
+| Bet365 | 0.0071 |
+| **la nostra stima** | **~0.014** |
+| 1xBet (scartato F100) | 0.0156 |
+
+Betfair è nel **gruppo dei book seri**, non fra gli outlier: **2,3× più vicino
+alla media multi-book della stima che sostituirebbe**, bias +0.0015 (contro
++0.0088 di 1xBet), e contro l'esito vero almeno pari alla media dei book
+(0.6648 vs 0.6652; Δ −0.00039, IC95 [−0.00115,+0.00038], P 84.7% — non
+conclusivo ma col segno a favore, coerente col fatto che una borsa non ha il
+margine del bookmaker: overround 1.0053 contro 1.0482).
+
+Alla **Fase 108** avevo detto all'utente che «il guadagno è piccolo». Era
+un'**analogia** (Betfair ≈ 1xBet ≈ book singolo), non una misura, e la misura
+la smentisce. **Ritirata**, come si fa con ogni conclusione che non regge.
+
+**Cosa NON è deciso.** I numeri vengono dalla 2024-25, non dal bersaglio: la
+Fase 106 ha già mostrato che la qualità di una fonte **non è stabile nel
+tempo** (1xBet: 0.0096-0.0192 fra stagioni), e la liquidità di una borsa nel
+2017-18 era più bassa di oggi, specie su Bundesliga e Ligue 1. Questa fase
+apre la pista e costruisce lo strumento; **non** autorizza l'inserimento.
+
+**Cosa ho costruito.** `scripts/fetch_betfair_historic.py`: i 5 endpoint
+dell'API più il parsing dello stream storico (`.bz2`, JSON per riga).
+Copertura di test: 9 casi in `tests/test_betfair_historic.py` — 871 verdi in
+totale.
+
+**Il vincolo che l'utente non poteva sapere.** Non basta il token: i pacchetti
+BASIC (gratuiti) di *Soccer* vanno **acquisiti mese per mese** dal sito, e
+senza di essi gli endpoint rispondono con **liste vuote e nessun errore**. È
+una trappola silenziosa: per questo `--check` esiste, confronta i mesi
+posseduti con quelli richiesti, e va eseguito per primo. Inoltre
+`historicdata.betfair.com` è **403 dall'ambiente cloud del progetto** (blocco
+per regione, *prima* dell'autenticazione: verificato sull'endpoint API, non
+solo sul sito) → lo script gira sulla macchina dell'utente.
+
+**Il collaterale può valere più del bersaglio.** Il piano BASIC dà istantanee
+**ogni minuto**, non solo la chiusura. `newseason.md` §2 elenca «le quote di
+apertura e la loro **traiettoria** verso la chiusura» fra le cose che **non si
+recuperano** dopo il calcio d'inizio, e §7 la dichiara «mai avuta a nessuna
+scala»: con questi file diventa recuperabile **all'indietro**, dal 2015. Non è
+riempire un buco, è un asse di dati nuovo.
+
+**Lezione.** Due, e sono la stessa. (1) Prima di chiedere lavoro a qualcuno,
+cercare il test che si può fare da soli: qui esisteva una stagione in cui la
+fonte candidata era **già** nei dati che abbiamo, e valeva più di qualsiasi
+ragionamento sulla sua natura. (2) Un'analogia («è un book singolo come
+1xBet») non è una misura, e produce risposte sbagliate con la stessa
+sicurezza di una giusta.
+
+### 📐 Il modello in dettaglio
+
+**Formula**, identica a quella già usata per 1xBet (Fase 100/106) — il
+confronto è nuovo, la matematica no:
+
+```
+p(fonte) = (1/quota_over) / (1/quota_over + 1/quota_under)     # devig binario
+MAE  = mean(|p(fonte) − p(AvgC)|)          bias = mean(p(fonte) − p(AvgC))
+LL   = −mean( y·log p + (1−y)·log(1−p) ),  y = 1 se gol totali > 2.5
+```
+
+**Perché il devig rende confrontabili borsa e bookmaker.** L'overround grezzo
+è molto diverso (1.0053 contro 1.0482): senza normalizzare, i due numeri non
+starebbero sulla stessa scala. Dopo il devig entrambi sono probabilità che
+sommano a 1, e la differenza residua è **informativa**, non contabile. È
+anche il motivo per cui la «rottura di regime» nella colonna grezza — l'argomento
+che ha bocciato 1xBet — qui va ri-discussa e non ereditata: pesa sulle quote,
+non sulle probabilità che il modello usa davvero.
+
+**Perché la chiusura è definita dal flag `inPlay` e non da `marketTime`.**
+Nel formato Betfair ogni riga porta `pt` (istante di pubblicazione) e i
+`marketDefinition` segnalano `inPlay`. Prendere l'ora *da calendario*
+sbaglierebbe in due direzioni: taglierebbe gli ultimi minuti di mercato per
+le partite iniziate in ritardo, e — molto peggio — includerebbe prezzi
+**già in-play** per quelle iniziate puntuali, cioè prezzi che sanno cosa sta
+succedendo in campo. Sarebbe look-ahead: esattamente l'errore di
+Udinese-Roma (`docs/DATI.md`), dove una chiusura che prezzava una ripresa già
+in corso falsava il confronto *nella direzione a noi favorevole*. Il test
+`test_nessun_look_ahead_i_prezzi_in_play_sono_ignorati` esiste per questo.

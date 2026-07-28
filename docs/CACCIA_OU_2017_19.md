@@ -1,5 +1,83 @@
 # Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
 
+> ## 🟢 Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima
+>
+> L'utente ha un account Betfair e ha chiesto se si può usare l'API di
+> `historicdata.betfair.com`. Prima di far fare qualsiasi fatica, ho applicato
+> il principio §1.3 (**testa la versione economica dell'idea prima di
+> investire**) — e il test ha ribaltato la valutazione che avevo dato.
+>
+> **Il test economico.** `football-data` pubblica la chiusura Betfair Exchange
+> (`BFEC>2.5`/`BFEC<2.5`) in **una** stagione: la 2024-25. Lì esistono insieme
+> Betfair, la media multi-book e l'esito reale, quindi si può misurare che
+> tipo di fonte sia Betfair **senza scaricare nulla**. Su 1.752 partite, 5 leghe:
+>
+> | fonte | scarto (MAE) dalla media multi-book |
+> |---|--:|
+> | MaxC (massimo book) | 0.0057 |
+> | **Betfair Exchange** | **0.0060** |
+> | Pinnacle | 0.0063 |
+> | Bet365 | 0.0071 |
+> | **la nostra STIMA** | **~0.014** |
+> | 1xBet (scartato alla F100) | 0.0156 |
+>
+> **Betfair non è «un altro book singolo» come 1xBet: è nel gruppo dei book
+> seri.** È **2,3× più vicino alla media multi-book della stima che
+> sostituirebbe**, con bias +0.0015 (contro +0.0088 di 1xBet). E contro
+> l'**esito vero** è almeno pari alla media dei book: log-loss 0.6648 vs
+> 0.6652, Δ −0.00039, IC95 [−0.00115, +0.00038], P 84.7% — non conclusivo, ma
+> col segno a favore, come la teoria suggerisce (una borsa non ha il margine
+> del bookmaker: overround 1.0053 contro 1.0482).
+>
+> **Perché la valutazione precedente era sbagliata.** Nella Fase 108 avevo
+> detto «il guadagno è piccolo», assumendo che Betfair fosse un book singolo
+> come 1xBet e quindi soggetto alla stessa bocciatura. Era un'analogia, non
+> una misura. La misura dice il contrario, ed è il motivo per cui questa
+> pista — sola fra tutte quelle esplorate nelle Fasi 100-108 — **merita di
+> essere percorsa**.
+>
+> **Cosa NON è ancora deciso.** Questi numeri vengono dalla 2024-25, non dal
+> bersaglio. La Fase 106 ha già insegnato che la qualità di una fonte **non è
+> stabile nel tempo** (1xBet varia 0.0096-0.0192 fra stagioni), e la liquidità
+> della borsa nel 2017-18 era certamente più bassa di oggi, specie su
+> Bundesliga/Ligue 1. Quindi: si scarica e si valida, **non** si inserisce
+> perché «Betfair è buona».
+>
+> **Lo strumento è pronto**: `scripts/fetch_betfair_historic.py` implementa i
+> 5 endpoint dell'API (`GetMyData`, `GetCollectionOptions`,
+> `GetAdvBasketDataSize`, `DownloadListOfFiles`, `DownloadFile`) e il parsing
+> dello stream storico. Il parser è coperto da 9 test
+> (`tests/test_betfair_historic.py`), fra cui quello che conta davvero:
+> **la chiusura è l'ultimo prezzo prima del passaggio in-play**, mai un prezzo
+> successivo al fischio d'inizio (sarebbe look-ahead — l'errore di
+> Udinese-Roma, `docs/DATI.md`).
+>
+> **Due vincoli operativi, dichiarati:**
+> 1. `historicdata.betfair.com` risponde **403 dall'ambiente cloud del
+>    progetto** — blocco per regione, *prima* dell'autenticazione (verificato
+>    sull'endpoint API, non solo sul sito). Lo script è scritto per girare
+>    sulla macchina dell'utente.
+> 2. Non basta il token: i pacchetti BASIC (gratuiti) di *Soccer* vanno
+>    **acquisiti mese per mese** dal sito. Senza, gli endpoint rispondono con
+>    liste **vuote e senza errore** — la trappola principale del servizio, per
+>    cui `--check` esiste ed è il primo comando da eseguire.
+>
+> **Il protocollo di validazione è dentro lo strumento.** Si scarica **prima
+> la 2024-25**, e si confronta l'estrazione con la colonna `BFEC>2.5` di
+> football-data: è una cattura *indipendente* della stessa fonte, quindi se le
+> due coincidono la pipeline (parsing, scelta dell'istante di chiusura, join)
+> è **dimostrata** corretta — e solo allora ha senso credere all'estrazione
+> del 2017-19, dove nessun controllo esterno esiste. È il passo che mancava a
+> tutte le cacce precedenti.
+>
+> **Il collaterale può valere più del bersaglio.** Il piano BASIC dà
+> istantanee **ogni minuto**, non solo la chiusura: `newseason.md` §2 elenca
+> «le quote di apertura e la loro **traiettoria** verso la chiusura» fra le
+> cose che **non si recuperano** dopo il calcio d'inizio, e §7 la dichiara
+> «mai avuta a nessuna scala». Con questi file la traiettoria diventa
+> recuperabile **all'indietro**, dal 2015 — un asse di dati nuovo, non il
+> riempimento di un buco.
+
 > ## 🔍 Fase 108 — «e se cercassimo partita per partita?» — testato, non scala
 >
 > Idea dell'utente: invece di cercare un dataset che copra tutte le 3.652
