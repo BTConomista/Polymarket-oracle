@@ -261,6 +261,15 @@ def _closing_from_stream(raw: bytes) -> dict | None:
                     closing_pt = pt
             if in_play:
                 continue          # dopo il fischio d'inizio non si aggiorna piu'
+            # `img` (Image) = "replace existing prices/data with the data
+            # supplied: it is not a delta" (specifica ufficiale Exchange Stream
+            # API, pagina "Exchange Stream API" della doc Betfair, letta alla
+            # Fase 109-bis). Senza questo ramo un ri-invio dell'immagine a meta'
+            # stream lascerebbe in cache prezzi che la fonte considera
+            # sostituiti: un "finto pieno" (regola R6) invisibile a ogni
+            # controllo, perche' il numero resta plausibile.
+            if mc.get("img"):
+                last.clear()
             for rc in mc.get("rc", []) or []:
                 if rc.get("ltp") is not None and rc.get("id") is not None:
                     last[rc["id"]] = float(rc["ltp"])

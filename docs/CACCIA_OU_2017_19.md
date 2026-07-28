@@ -77,6 +77,26 @@
 > «mai avuta a nessuna scala». Con questi file la traiettoria diventa
 > recuperabile **all'indietro**, dal 2015 — un asse di dati nuovo, non il
 > riempimento di un buco.
+>
+> **🔧 Fase 109-bis — la specifica ufficiale trova un bug nel parser.** L'utente
+> ha segnalato la documentazione Betfair su Atlassian: **è leggibile** (non è
+> soggetta al geo-blocco, ed è estraibile via API REST di Confluence senza
+> autenticazione — vedi `docs/MANUALE_SOPRAVVIVENZA.md`). La pagina *Exchange
+> Stream API* descrive il formato di cui i file storici sono **registrazioni**,
+> quindi è la specifica contro cui il parser andava verificato. Leggendola:
+> `ltp` = «Last Traded Price» ✓ e `inPlay` = «True if the market is currently
+> in play» ✓ — le due assunzioni portanti reggono. Ma **`img` no**: la
+> specifica dice «*replace existing prices/data with the data supplied: it is
+> not a delta*», mentre il parser fondeva sempre. Un ri-invio dell'immagine a
+> metà stream avrebbe lasciato in cache prezzi che la fonte considera
+> sostituiti: un **finto pieno** (regola R6), plausibile e invisibile a ogni
+> controllo a valle. Corretto, coperto da 3 test nuovi e **verificato per
+> mutazione** (togliendo il fix, il test fallisce). Estratto della specifica,
+> con le citazioni testuali, in
+> `data/ricerca_esterna/betfair_stream_spec_estratto.md`.
+> **Lezione**: la fonte era pubblica e leggibile dall'inizio — il bug è durato
+> quanto la mia decisione di dedurre il formato dai dati invece di leggerne la
+> specifica.
 
 > ## 🔍 Fase 108 — «e se cercassimo partita per partita?» — testato, non scala
 >

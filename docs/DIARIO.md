@@ -298,6 +298,7 @@ correzioni.*
 - [Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo](#fase-107--terzo-ri-tentativo-sullou-2017-19-ri-verifica-dal-vivo--angoli-nuovi-ancora-negativo)
 - [Fase 108 — «E se cercassimo partita per partita?» — testato, non scala](#fase-108--e-se-cercassimo-partita-per-partita-testato-non-scala)
 - [Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)](#fase-109--betfair-exchange-il-primo-candidato-migliore-della-stima-e-una-mia-valutazione-ritirata)
+- [Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)](#fase-109-bis--la-specifica-ufficiale-trova-un-bug-nel-parser-poche-ore-dopo)
 
 ---
 
@@ -12659,3 +12660,46 @@ succedendo in campo. Sarebbe look-ahead: esattamente l'errore di
 Udinese-Roma (`docs/DATI.md`), dove una chiusura che prezzava una ripresa già
 in corso falsava il confronto *nella direzione a noi favorevole*. Il test
 `test_nessun_look_ahead_i_prezzi_in_play_sono_ignorati` esiste per questo.
+
+### Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)
+
+**Come è successo.** L'utente ha chiesto se riuscivo a leggere la
+documentazione Betfair su Atlassian. **Sì**: quel dominio non è soggetto al
+geo-blocco che ferma `historicdata.betfair.com`, e il contenuto — invisibile
+nell'HTML, perché la pagina è un SPA JavaScript — si estrae dall'**API REST di
+Confluence, che risponde 200 senza autenticazione** (fatto operativo nuovo,
+annotato nel manuale con gli endpoint esatti).
+
+**Perché contava.** I file del servizio storico sono **registrazioni dello
+stream** descritto in quella pagina: era la specifica contro cui il parser
+andava verificato, e io lo avevo scritto deducendo il formato dall'esempio,
+non leggendola.
+
+**Esito: due assunzioni confermate, una sbagliata.** `ltp` = «Last Traded
+Price» ✓ e `inPlay` = «True if the market is currently in play» ✓ — le due
+travi portanti reggono. Ma sul campo `img` la specifica dice:
+
+> «img / Image - **replace** existing prices/data with the data supplied: **it
+> is not a delta**»
+
+e il parser fondeva **sempre**. Un ri-invio dell'immagine a metà stream
+avrebbe lasciato in cache prezzi che la fonte considera sostituiti: non un
+crash, non un `NaN` — un numero **plausibile e falso**, cioè il «finto pieno»
+della regola R6, quello che nessun controllo a valle vede. Corretto
+(`last.clear()` quando `img` è vero), 3 test nuovi, e **verificato per
+mutazione**: rimuovendo il fix, `test_img_sostituisce_la_cache_non_la_fonde`
+fallisce. 874 verdi.
+
+**Il limite che resta dichiarato.** La specifica descrive lo stream **live**.
+Che i file storici la seguano in ogni dettaglio è un'inferenza ragionevole
+(sono registrazioni), **non un fatto verificato** — e resta tale finché non
+gira il confronto 2024-25 contro `BFEC>2.5`. L'estratto con le citazioni
+testuali è in `data/ricerca_esterna/betfair_stream_spec_estratto.md`.
+
+**Lezione.** Il bug non è nato da un dato ambiguo o da una fonte ostile: è
+nato dall'aver **dedotto un formato invece di leggerne la specifica**, quando
+la specifica era pubblica, gratuita e raggiungibile. È durato esattamente
+quanto quella scelta — poche ore, perché l'utente ha chiesto di leggere la
+pagina. Regola pratica che ne segue: quando si scrive un parser per un
+formato altrui, la ricerca della specifica ufficiale viene **prima** della
+prima riga di codice, non dopo il primo test verde.

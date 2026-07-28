@@ -131,3 +131,51 @@ def test_riconosce_i_runner_a_prescindere_dal_maiuscolo(nome_over, nome_under):
     ]).encode()
     r = _closing_from_stream(stream)
     assert r["odds_over25_close"] == 1.8 and r["odds_under25_close"] == 2.2
+
+
+# --------------------------------------------------------------------------- #
+# Fase 109-bis: conformita' alla specifica ufficiale Exchange Stream API
+# (letta su betfair-developer-docs.atlassian.net, pagina "Exchange Stream API")
+# --------------------------------------------------------------------------- #
+def test_img_sostituisce_la_cache_non_la_fonde():
+    """Specifica: «img / Image - replace existing prices/data with the data
+    supplied: it is not a delta».
+
+    Scenario: arriva un'immagine che contiene SOLO l'Under. L'Over presente
+    da prima e' stato ritirato dalla fonte, quindi la riga non e' piu'
+    prezzabile su entrambi i lati e va scartata. Fondendo (bug pre-Fase
+    109-bis) si sarebbe tenuto l'Over vecchio a 1.85 e prodotta una riga
+    plausibile ma falsa: il 'finto pieno' della regola R6."""
+    stream = "\n".join([
+        _line(1, [{"ltp": 1.85, "id": 47972}, {"ltp": 2.15, "id": 47973}], inplay=False),
+        json.dumps({"op": "mcm", "pt": 2, "mc": [
+            {"id": "1.12345", "img": True, "rc": [{"ltp": 2.40, "id": 47973}]}]}),
+        _line(3, inplay=True),
+    ]).encode()
+    assert _closing_from_stream(stream) is None
+
+
+def test_img_completa_riparte_pulita_dai_nuovi_prezzi():
+    """Se invece l'immagine porta ENTRAMBI i lati, quelli valgono e i
+    precedenti spariscono: 2.40/1.70, mai 1.85/2.15."""
+    stream = "\n".join([
+        _line(1, [{"ltp": 1.85, "id": 47972}, {"ltp": 2.15, "id": 47973}], inplay=False),
+        json.dumps({"op": "mcm", "pt": 2, "mc": [
+            {"id": "1.12345", "img": True,
+             "rc": [{"ltp": 2.40, "id": 47972}, {"ltp": 1.70, "id": 47973}]}]}),
+        _line(3, inplay=True),
+    ]).encode()
+    r = _closing_from_stream(stream)
+    assert (r["odds_over25_close"], r["odds_under25_close"]) == (2.40, 1.70)
+
+
+def test_delta_normale_resta_un_merge():
+    """Senza `img` il messaggio E' un delta: un aggiornamento del solo Over
+    non deve cancellare l'Under (sarebbe l'errore opposto)."""
+    stream = "\n".join([
+        _line(1, [{"ltp": 1.85, "id": 47972}, {"ltp": 2.15, "id": 47973}], inplay=False),
+        _line(2, [{"ltp": 1.75, "id": 47972}]),
+        _line(3, inplay=True),
+    ]).encode()
+    r = _closing_from_stream(stream)
+    assert (r["odds_over25_close"], r["odds_under25_close"]) == (1.75, 2.15)
