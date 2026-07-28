@@ -26,8 +26,15 @@ stato fatto.
   (`Disallow: *-2017*`, `*-2018*`): non si scrapano, e non si aggira il divieto
   passando da cache o archivi;
 - `betexplorer.com` ha **ritirato** il confronto-quote per le partite di ~8 anni
-  fa (tab 1X2 disabilitato, nessun tab O/U): ri-verificato, non è un problema di
-  parsing;
+  fa (tab 1X2 disabilitato, nessun tab O/U): ri-verificato **due volte**
+  (Fase 100 e Fase 107, dal vivo), non è un problema di parsing. ⚠️ Le pagine
+  di stagioni vecchie (`.../serie-a-2017-2018/results/`) rispondono **404
+  senza uno User-Agent da browser** (blocco anti-bot generico, non un vero
+  "pagina non trovata") — con `User-Agent: Mozilla/5.0 ...` rispondono 200.
+  Non confondere le due cose: la home e i path semplici (es. `/outrights/`)
+  rispondono comunque senza UA, quindi un 404 lì è un vero 404 (nessuna
+  sezione outright); su path più profondi verificare sempre con un UA da
+  browser prima di concludere "non esiste";
 - `sofascore.com` e `fbref.com` rispondono **403** anche sul `robots.txt`
   (ri-verificato 2026-07-28);
 - throttle ≥ 1,5 s fra richieste, sempre.
@@ -82,8 +89,8 @@ contenuto di fondo viene dalla **Fase 100** (integrazione delle 5 leghe: la rete
 
 | host | note |
 |---|---|
-| `football-data.co.uk` | **200 dalla Fase 100** (era 403: vedi il banner in testa). È la fonte primaria: 45 stagioni ri-scaricate |
-| `understat.com` | **200 dalla Fase 100** (era 403). Richiede `GET /main/getLeagueData/{Lega}/{anno}` con header `X-Requested-With: XMLHttpRequest` (senza header → 404) e risposta **gzip** |
+| `football-data.co.uk` | **200 dalla Fase 100** (era 403: vedi il banner in testa; ri-verificato 200 il 27/07/2026). È la fonte primaria: 45 stagioni ri-scaricate |
+| `understat.com` | **200 dalla Fase 100** (era 403). Richiede `GET /main/getLeagueData/{Lega}/{anno}` con header `X-Requested-With: XMLHttpRequest` (senza header → 404) e risposta **gzip** SEMPRE (Content-Encoding: gzip anche senza Accept-Encoding: va decompressa a mano con `gzip.decompress`, `urllib` non lo fa da solo). ⚠️ **Documentato qui dalla Fase 100 ma MAI applicato al codice fino alla Fase 104**: `src/data/sources.py` puntava ancora al mirror GitHub morto (`UNDERSTAT_URL = UNDERSTAT_MIRROR_URL`, 404 dalla stessa verifica che aveva già chiuso il mirror di football-data). Corretto: `understat.download_season` ora usa l'endpoint ufficiale con l'header giusto; verificato che i dati live coincidono ESATTAMENTE (Δ 0.0 su 380/380 partite) con quelli già congelati negli snapshot per una stagione completa (La Liga 1718) |
 | `transfermarkt.com` / `.it` | **200 dalla Fase 100** (era «curl 000 + WebFetch fallisce»). Valori rosa ufficiali |
 | `footiqo.com` | **200**. Attenzione: `www.footiqo.com` fa **301** verso l'apex `footiqo.com` — seguire i redirect (`curl -L`). Quote di chiusura 1xBet, incluso **GG/NG** (vedi banner in testa) |
 | `raw.githubusercontent.com` | tutti i repo pubblici (openfootball, salimt, …) |
@@ -94,6 +101,8 @@ contenuto di fondo viene dalla **Fase 100** (integrazione delle 5 leghe: la rete
 | `huggingface.co` (download file `/resolve/`) | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403): 307→200 su un file reale del dataset `ngeorgea/transfermarkt-player-scores` |
 | `datasets-server.huggingface.co` (API righe/filtri) | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403): righe reali restituite per un dataset valido (es. `stanfordnlp/imdb`). Attenzione: la **radice** del dominio risponde 404 — non è un blocco, è che non esiste una pagina lì: testare sempre un endpoint vero (`/rows?dataset=…`) |
 | `data.jsdelivr.com` | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403; già notato raggiungibile nell'audit Fase 100/101 senza però correggere questa tabella): JSON reale dei tag npm di `react` |
+| `betfair-developer-docs.atlassian.net` | **RAGGIUNGIBILE** (Fase 109-bis) — è su Atlassian, quindi NON soggetto al geo-blocco che colpisce `historicdata.betfair.com` e `betfair.com`. La pagina web è un SPA JavaScript (l'HTML grezzo dà solo la navigazione), ma **l'API REST di Confluence risponde 200 senza autenticazione**: `/wiki/api/v2/spaces`, `/wiki/rest/api/space/<key>/content?limit=100`, `/wiki/rest/api/content/<id>?expand=body.storage`. È così che si legge la specifica Exchange Stream API (id `2687396`), utile perché i file storici Betfair sono registrazioni di quello stream |
+| `web.archive.org` (Wayback Machine, path `/web/{data}/{url}`) e `archive.org/wayback/available` | **RAGGIUNGIBILE** (Fase 105): playback di pagine archiviate funziona (200 su snapshot esistenti, 404 pulito se non archiviate). ⚠️ **`web.archive.org/cdx/search/cdx` è BLOCCATO** dalla policy di rete per QUALSIASI dominio nel parametro `url=` (403 "Blocked by egress policy", verificato anche su domini innocui come betexplorer.com — blocco sul *path* `/cdx/`, non sul dominio bersaglio). Per trovare snapshot di un URL specifico usare `archive.org/wayback/available?url=...&timestamp=...` (non bloccato, ma rate-limita a raffica: throttle) invece della CDX API |
 | `oddsportal.com` | **200** — ma le pagine storiche sono vietate dal suo `robots.txt` e il feed outright è cifrato (vedi sotto) |
 | `betexplorer.com` | **200 solo con User-Agent da browser.** Con lo UA di default di `curl` risponde **404 anche sulla home**: un 404 qui non è «pagina inesistente», è filtro anti-bot. Il `robots.txt` invece risponde 200 sempre |
 

@@ -122,6 +122,27 @@ def test_parse_europa_logga_non_agganciato(caplog):
     assert any("NON agganciato" in m for m in caplog.messages)
 
 
+def test_monaco_mco_e_fra_entrano_entrambi_in_ligue_1():
+    """Fase 104 -- bug del Monaco: openfootball etichetta l'AS Monaco a volte
+    FRA a volte MCO nello stesso repo. Con un solo codice se ne perde meta'."""
+    txt = (
+        "▪ Group A\n  Wed Sep 18 2019\n"
+        "    21:00  Monaco (FRA)            v Juventus (ITA)           1-1\n"
+        "  Tue Oct 1\n"
+        "           Monaco (MCO)            v Atalanta (ITA)           2-0\n"
+    )
+    codes = sources.uefa_country_codes("ligue_1")
+    assert codes == frozenset({"FRA", "MCO"})
+    df = parse_europe(txt, "1920", "Champions League", codes)
+    assert len(df) == 2                     # entrambe le righe hanno una ITA dall'altro lato
+    rows = fixtures._uefa_team_rows(df, {"Monaco"}, codes)
+    assert len(rows) == 2
+    assert {r["opponent"] for r in rows} == {"Juventus", "Atalanta"}
+    # una singola stringa resta equivalente a un insieme di un elemento (retrocompatibile)
+    solo_ita = fixtures._uefa_team_rows(df, {"Monaco"}, "ITA")
+    assert solo_ita == []                   # Monaco non e' ITA: nessuna riga con country_code="ITA"
+
+
 # ----------------------------------------------------- 4. parser Coppa Italia
 
 def test_parse_coppa_formato_punteggio_in_mezzo():
@@ -260,6 +281,7 @@ def test_club_fixtures_schema_e_competizioni(club_fx):
     assert list(club_fx.columns) == FIXTURE_COLUMNS
     note = (set(sources.EUROPE_COMPETITIONS.values())
             | set(sources.ITALY_CUP_COMPETITIONS.values())
+            | set(sources.EXTRA_CUP_COMPETITIONS["serie_a"].values())  # Fase 103
             | {sources.SERIE_A_COMPETITION,
                sources.prelude_competition("serie_a"),      # Fase 68
                sources.SECOND_TIER_NAMES["serie_a"]})
@@ -291,7 +313,7 @@ def test_club_fixtures_no_look_ahead_date(club_fx):
 # Stessi controlli della sezione 7, ma parametrizzati su Premier League/La Liga
 # (build_club_fixtures/add_rest_days_full generalizzati oltre la sola Serie A).
 
-@pytest.fixture(params=["premier_league", "la_liga"])
+@pytest.fixture(params=["premier_league", "la_liga", "bundesliga", "ligue_1"])
 def altra_lega(request):
     return request.param
 
@@ -348,6 +370,7 @@ def test_altra_lega_club_fixtures_competizioni_note(altra_lega, altro_club_fx):
     own = sources.own_league_competition(altra_lega)
     note = (set(sources.EUROPE_COMPETITIONS.values())
             | set(sources.DOMESTIC_CUP_COMPETITIONS[altra_lega].values())
+            | set(sources.EXTRA_CUP_COMPETITIONS[altra_lega].values())  # Fase 103
             | {own, sources.prelude_competition(altra_lega),   # Fase 68
                sources.SECOND_TIER_NAMES[altra_lega]})
     assert set(altro_club_fx.competition.unique()) <= note

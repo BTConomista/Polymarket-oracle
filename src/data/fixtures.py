@@ -215,10 +215,15 @@ class _DateTracker:
 
 
 def parse_europe(
-    text: str, season_code: str, competition: str, country_code: str = "ITA",
+    text: str, season_code: str, competition: str,
+    country_code: str | frozenset[str] | set[str] = "ITA",
 ) -> pd.DataFrame:
     """Estrae le partite di una competizione UEFA che coinvolgono un club di
     ``country_code`` (default "ITA", Serie A).
+
+    ``country_code`` accetta anche un insieme di codici (Fase 104: il Monaco
+    di Ligue 1 compare a volte come "FRA" a volte come "MCO" nella stessa
+    fonte -- vedi ``sources.uefa_country_codes``), non solo una stringa.
 
     Ritorna righe grezze: date, home_raw, home_cc, away_raw, away_cc, competition.
     Il filtro/aggancio ai nomi canonici avviene a valle (in ``_uefa_team_rows``,
@@ -228,6 +233,7 @@ def parse_europe(
     Manchester City-RB Leipzig: un club senza mai un'italiana in un turno
     (comune) restava a ZERO partite anche quando i dati le contenevano tutte).
     """
+    codes = {country_code} if isinstance(country_code, str) else set(country_code)
     tracker = _DateTracker(season_code)
     rows: list[dict] = []
     current_date: pd.Timestamp | None = None
@@ -241,7 +247,7 @@ def parse_europe(
         if not m or current_date is None:
             continue
         home, hc, away, ac = (g.strip() for g in m.groups())
-        if hc != country_code and ac != country_code:
+        if hc not in codes and ac not in codes:
             continue  # ci interessano solo le squadre della lega in oggetto
         rows.append({
             "season": season_code, "competition": competition,
@@ -304,16 +310,19 @@ def parse_cup(text: str, season_code: str, competition: str) -> pd.DataFrame:
 # Da righe grezze a righe "per squadra italiana" (una riga per club coinvolto)
 # --------------------------------------------------------------------------- #
 def _uefa_team_rows(
-    raw: pd.DataFrame, snapshot_teams: set[str], country_code: str = "ITA",
+    raw: pd.DataFrame, snapshot_teams: set[str],
+    country_code: str | frozenset[str] | set[str] = "ITA",
 ) -> list[dict]:
     """Trasforma le partite grezze in righe per-squadra dello schema fixtures.
 
-    Per ogni lato con codice paese ``country_code`` (default "ITA", Serie A)
-    emette una riga (team canonico, opponent = altro lato canonico, home_away).
-    I nomi di quel paese che NON agganciano un club dello snapshot vengono
-    LOGGATi (probabile alias mancante) -- generalizzato Fase 59 per Premier
-    ("ENG")/Liga ("ESP"), stessa logica, stesso schema.
+    Per ogni lato con codice paese in ``country_code`` (default "ITA", Serie A;
+    accetta anche un insieme -- Fase 104, vedi ``parse_europe``) emette una riga
+    (team canonico, opponent = altro lato canonico, home_away). I nomi di quel
+    paese che NON agganciano un club dello snapshot vengono LOGGATi (probabile
+    alias mancante) -- generalizzato Fase 59 per Premier ("ENG")/Liga ("ESP"),
+    stessa logica, stesso schema.
     """
+    codes = {country_code} if isinstance(country_code, str) else set(country_code)
     out: list[dict] = []
     for r in raw.itertuples(index=False):
         home = sources.canonical_team(r.home_raw)
@@ -322,13 +331,13 @@ def _uefa_team_rows(
             (r.home_cc, home, away, "H"),
             (r.away_cc, away, home, "A"),
         ):
-            if side_cc != country_code:
+            if side_cc not in codes:
                 continue
             if team not in snapshot_teams:
                 log.warning(
                     "Club %s NON agganciato (alias mancante?): %r -> %r "
                     "[%s %s, %s]",
-                    country_code, r.home_raw if ha == "H" else r.away_raw, team,
+                    side_cc, r.home_raw if ha == "H" else r.away_raw, team,
                     r.season, r.competition, r.date.date(),
                 )
                 continue
@@ -432,7 +441,7 @@ def build_club_fixtures(
     """
     snapshot_teams = set(matches["home_team"]) | set(matches["away_team"])
     seasons = sorted(matches["season"].astype(str).unique())
-    country_code = sources.UEFA_COUNTRY_CODE[league_key]
+    country_code = sources.uefa_country_codes(league_key)
     domestic_cups = sources.DOMESTIC_CUP_COMPETITIONS.get(league_key, {})
 
     rows: list[dict] = _league_rows(matches, sources.own_league_competition(league_key))

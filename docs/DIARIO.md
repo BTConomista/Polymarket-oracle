@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, e gli audit dell'integrazione (Fasi 100–102)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–115)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -269,13 +269,42 @@ che l'integrazione in `main` aveva portato 32 script che non partivano (Fase
 numero-bandiera rimisurato dopo un fix mai propagato (+0.0167, non +0.0165),
 quattro conclusioni declassate senza che un solo calcolo fosse sbagliato (Fase
 101-bis), i numeri orfani e le trappole che colpivano chi verifica (Fase
-101-ter), e infine l'allineamento di ogni file del repo (Fase 102). Esito
-dell'arco: nessun edge nuovo, e un repo che dice di sé la verità.*
+101-ter), e infine l'allineamento di ogni file del repo (Fase 102). Chiude
+l'arco la Fase 103, che applica un lavoro lasciato a metà da R4 (cantiere
+isolato): i 3.045 righe di calendario di coppa raccolte da Wikipedia alla Fase
+100 vengono finalmente unite ai calendari di club, chiudendo i 1.603 falsi
+zero di `midweek_europe` — verificati a cella esatta contro l'oracolo già
+pubblicato, zero regressioni. La Fase 104 chiude l'ultimo lotto di richieste
+utente aperte sui dati: il bug di codice del Monaco (MCO), 8 righe di
+calendario duplicate emerse dallo stesso merge (data giusta da Wikipedia +
+data sbagliata di openfootball, mai dedotta perché il dedup guarda anche la
+data), tre rilievi dell'audit già chiusi ma mai spuntati come tali (F12-04,
+F12-05, F12-09), e la scoperta che la fonte xG Understat aveva lo STESSO
+mirror morto di football-data ma non era mai stata corretta di conseguenza —
+corretta, e i 2 buchi xG residui ri-verificati LIVE (nessuno si è risolto col
+tempo, ma ora lo sappiamo con certezza invece che per estrapolazione). Esito
+dell'arco: nessun edge nuovo, e un repo che dice di sé la verità, coi dati che
+aveva promesso di correggere corretti davvero — comprese le correzioni delle
+correzioni.*
 
 - [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
 - [Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita](#fase-101--quinto-audit-le-ultime-20-fasi-e-lintegrazione-che-non-era-stata-eseguita)
 - [Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato](#fase-101-bis--applicare-le-correzioni-dellaudit-quattro-conclusioni-declassate-e-il-numero-bandiera-rimisurato)
 - [Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA](#fase-101-ter--chiudere-i-punti-aperti-i-numeri-orfani-e-tre-trappole-che-colpivano-chi-verifica)
+- [Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`](#fase-103--il-recupero-wikipedia-applicato-chiusi-i-1603-falsi-zero-di-midweek_europe)
+- [Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto](#fase-104--il-resto-della-lista-monaco-dfb-pokal-tre-rilievi-gia-chiusi-e-la-fonte-xg-con-lo-stesso-mirror-morto)
+- [Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo](#fase-105--secondo-ri-tentativo-sullou-2017-19-quattro-angoli-nuovi-ancora-negativo)
+- [Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo](#fase-106--il-confronto-footiqo-vs-verità-esteso-da-1-a-6-stagioni-non-è-stabile-nel-tempo)
+- [Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo](#fase-107--terzo-ri-tentativo-sullou-2017-19-ri-verifica-dal-vivo--angoli-nuovi-ancora-negativo)
+- [Fase 108 — «E se cercassimo partita per partita?» — testato, non scala](#fase-108--e-se-cercassimo-partita-per-partita-testato-non-scala)
+- [Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)](#fase-109--betfair-exchange-il-primo-candidato-migliore-della-stima-e-una-mia-valutazione-ritirata)
+- [Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)](#fase-109-bis--la-specifica-ufficiale-trova-un-bug-nel-parser-poche-ore-dopo)
+- [Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)](#fase-110--la-documentazione-betfair-entra-nel-repo-e-smentisce-una-mia-costante)
+- [Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair](#fase-111--il-token-i-vincoli-veri-e-cosa-possiamo-davvero-farci-con-betfair)
+- [Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)](#fase-112--un-solo-scarico-per-due-piste-e-un-refactor-che-un-test-ha-bocciato)
+- [Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione](#fase-113--quanto-serve-davvero--il-ridimensionamento-di-una-mia-raccomandazione)
+- [Fase 114 — Far usare le stime davvero (e una mia frase da correggere)](#fase-114--far-usare-le-stime-davvero-e-una-mia-frase-da-correggere)
+- [Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa](#fase-115--serve-un-pc-cloud-247--no-la-borsa-che-serviva-era-già-in-casa)
 
 ---
 
@@ -12003,3 +12032,1109 @@ citazione. E il momento in cui se ne accorge qualcuno è quando prova a
 verificarlo — motivo per cui gli strumenti di verifica vanno protetti almeno
 quanto quelli di produzione. Tre difetti su tre, in questa fase, colpivano il
 verificatore e non l'utente.
+
+## Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`
+
+**Obiettivo.** Richiesta dell'utente: verificare che i dati del progetto siano
+tutti corretti, e dove mancano cercare fonti esterne (Wikipedia inclusa). Un
+sondaggio dello stato (`docs/DATI.md`, `docs/AUDIT_FASI_80_100.md`,
+`docs/audit_5_leghe/`) ha trovato il gap più "pronto": la Fase 100 aveva già
+raccolto 3.045 righe di calendario di coppa da Wikipedia
+(`data/ricerca_esterna/fixtures_*.csv`) per chiudere i 1.603 falsi zero di
+`midweek_europe` (regola R6, "il buco peggiore non è il `NaN`: è il finto
+pieno"), verificate contro una terza fonte indipendente (openligadb.de, 0/114
+non confermate) ma **mai applicate**: la regola R4 del cantiere imponeva di non
+toccare snapshot/`src`/`scripts` in quella sessione, solo produrre report e
+dati grezzi. La proposta §9 di `caccia_calendari.md` la definiva "la proposta
+più solida del lotto" — dato di calendario, errore atteso zero, 5 controlli
+superati.
+
+**Ragionamento / ipotesi.** Se il recupero è già stato verificato (aggancio
+nomi, doppioni, finestra temporale, confutazione su terza fonte), applicarlo
+non richiede nuova ricerca: richiede solo (a) unire le righe recuperate ai
+calendari di club esistenti, (b) ricalcolare le 4 colonne derivate
+(`fixtures.add_rest_days_full`), e (c) verificare che il risultato riproduca
+ESATTAMENTE i numeri già pubblicati altrove nel progetto (`celle_residue.csv`,
+citati in CLAUDE.md e `docs/DATI.md`) prima di scrivere qualsiasi file — la
+stessa disciplina "verifica-poi-applica" di R3, estesa a un dato derivato
+invece che a una cella osservata.
+
+**Alternative considerate.**
+1. *Registro correzioni per-cella* (`correzioni_dichiarate.csv`, R3): scartata
+   — le 1.603 celle sono un ricalcolo deterministico di una pipeline
+   (`add_rest_days_full`), non un valore osservato corretto a mano; un registro
+   di 1.603 righe sarebbe rumore documentale, non tracciabilità.
+2. *Rifare la raccolta da zero* (script `caccia_calendari.py`/`wiki.py` citati
+   solo come Appendici A/B nel report, mai versionati): scartata — i 3.045
+   righe sono già su disco e già verificate; rifare la raccolta duplicherebbe
+   lavoro già fatto e già controllato (istruzione esplicita: non duplicare ciò
+   che un audit precedente ha già verificato a fondo).
+3. *Includere solo le competizioni già note* (Champions/Europa/Conference +
+   coppa nazionale), scartando supercoppe/Mondiale per club/Coupe de la Ligue
+   (proposta §9.4 di `caccia_calendari.md`, mai decisa): scartata a favore
+   dell'inclusione totale — è la scelta coerente con la semantica già in uso
+   (`is_extra = competition != own_competition`: qualunque partita non di
+   campionato affatica allo stesso modo), **e** è l'unica che riproduce
+   esattamente l'oracolo già pubblicato (236/251/454/180/482 celle): significa
+   che chi ha calcolato quei numeri in `celle_residue.csv` aveva già preso
+   questa stessa decisione, solo mai eseguita.
+
+**Scelta.** Scritto `scripts/integra_calendari_coppa.py`: unisce tutti i file
+`data/ricerca_esterna/fixtures_<lega>_*.csv` (nessuna esclusione per
+competizione) ai `club_fixtures[_<lega>].csv` esistenti, dedup su (stagione,
+squadra, data, competizione, avversario) — lo stesso usato da
+`fixtures.build_club_fixtures` — e ricalcola le 4 colonne su ogni snapshot.
+Prima di scrivere, verifica per OGNI lega: il numero di righe recuperate
+(guardia contro file mancanti/parziali), il numero di celle
+`midweek_europe` che passano da 0 a 1, il numero di partite col riposo
+cambiato, e che non ci sia NESSUNA regressione (nessuna cella da 1 a 0,
+nessun riposo che aumenta — impossibile per costruzione: aggiungere partite
+può solo accorciare un intervallo, mai allungarlo). Se anche una sola lega
+non combacia con l'oracolo, lo script si ferma e non scrive NULLA, per
+nessuna lega (verifica-poi-applica in blocco unico, non lega per lega).
+
+**Risultato.**
+
+| lega | righe agg. | celle `midweek` 0→1 | oracolo | partite riposo cambiato | oracolo |
+|---|--:|--:|--:|--:|--:|
+| Serie A | 499 | 236 | 236 | 314 | 314 |
+| Premier League | 526 | 251 | 251 | 282 | 282 |
+| La Liga | 677 | 454 | 454 | 407 | 407 |
+| Bundesliga | 326 | 180 | 180 | 189 | 189 |
+| Ligue 1 | 1.017 | 482 | 482 | 508 | 508 |
+
+Tutte e 5 le leghe combaciano a cella esatta con l'oracolo pubblicato in
+`data/estimates/celle_residue.csv` (caso D), zero regressioni. Suite di test
+verde (853 passed) dopo aver esteso `test_fixtures.py` alle nuove etichette di
+competizione (`sources.EXTRA_CUP_COMPETITIONS`: Supercoppa Italiana, UEFA
+Super Cup, Mondiale/Intercontinentale per club, FA Community Shield, Supercopa
+de España, DFL-Supercup, Coupe de la Ligue, Trophée des Champions — mai
+modellate prima, emerse dal recupero Wikipedia) e alla parametrizzazione
+`altra_lega` (prima solo Premier/Liga, ora tutte e 4 le leghe non-Serie-A).
+
+Nessun impatto sul modello in produzione: `rest_full`/`midweek` sono covariate
+**opzionali**, spente di default (`docs/PANCHINA.md`), quindi nessun backtest
+"ufficiale" cambia. Ma la conclusione "sono rumore" era misurata su dati con
+questo difetto (6-13% delle righe per lega): onestà (regola R7) impone di
+ripetere almeno la misura Serie A che quel giudizio cita.
+
+**Ri-verifica (regola R7).** Rilanciato `scripts/_run_midweek_cov.py` (6
+stagioni walk-forward Serie A, config ufficiale, stessi split della F36-bis)
+sui dati corretti:
+
+| variante | Δ 1X2 log-loss | CI95 | P(mig) | β medio |
+|---|--:|--:|--:|--:|
+| `midweek` | −0.0003 | [−0.0013, +0.0007] | 74% | −0.0189 (stabile 6/6: −0.0171…−0.0284) |
+| `rest_full` | −0.0002 | [−0.0009, +0.0005] | 69% | −0.0120 (4/6 negativo: −0.0552…+0.0138) |
+| `rest_full+midweek` | −0.0001 | [−0.0012, +0.0010] | 56% | — |
+
+Praticamente **identico** ai numeri pre-fix (`midweek` Δ −0.0003/β −0.020 →
+Δ −0.0003/β −0.0189; `rest_full` Δ −0.0004 → −0.0002): il verdetto "rumore,
+ridondanti fra loro" **non era un artefatto del calendario incompleto**. L'unico
+dettaglio che cambia è la stabilità del segno di β su `rest_full`, che passa
+da non discussa esplicitamente a **4/6 negativo** (non più "quasi stabile");
+`midweek` resta l'unica delle due con segno stabile su tutte e 6 le stagioni,
+confermando la lettura della F79 ("β stabile ma non generalizza fuori Serie
+A"). Aggiornato `docs/PANCHINA.md` (righe #9/#12 e matrice, colonna Serie A);
+nessuna promozione, nessuna bocciatura: lo stato resta 🪑 panchina su
+entrambe.
+
+**Lezione.** Il costo di applicare una correzione già completamente
+verificata non è la verifica (fatta, e non da rifare): è **trovare cosa era
+già pronto** prima di iniziare una nuova ricerca. Il sondaggio iniziale su
+`docs/DATI.md`/`AUDIT_FASI_80_100.md`/`audit_5_leghe/` ha impiegato meno tempo
+dell'intera integrazione, e ha evitato di ripetere una caccia già fatta bene.
+La seconda lezione è la stessa della Fase 51/92: un oracolo pubblicato altrove
+nel progetto (qui `celle_residue.csv`) è un test di regressione gratuito — se
+il ricalcolo l'avesse mancato anche di una sola cella, sarebbe stato un
+segnale di bug, non un dettaglio da ignorare.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova — Fase 4c/4e definiscono già la formula, qui si
+ricalcola con un input più completo.
+
+**`midweek_europe`** (`src/data/fixtures.py:add_rest_days_full`, verificato
+riga per riga contro il sorgente):
+
+```
+is_extra(riga) = competition(riga) != own_competition        # es. "Serie A"
+
+extra_dates(T) = { date(riga) : riga in calendario, team(riga)=T, is_extra(riga) }
+
+midweek_europe(T, d) = 1  se  ∃ x ∈ extra_dates(T) : d − europe_window ≤ x ≤ d − 1
+                      = 0  altrimenti
+```
+
+con `europe_window = 4` giorni (default di produzione). La correzione non
+tocca questa formula: allarga `extra_dates(T)` aggiungendo le righe recuperate
+da Wikipedia a quelle già scaricate da openfootball. Per costruzione un
+insieme più grande può solo **aggiungere** un `x` nella finestra `[d-4, d-1]`,
+mai toglierne uno che c'era prima — da cui la garanzia "zero regressioni"
+verificata (non assunta) dallo script.
+
+**`rest_days_full`** (stessa funzione):
+
+```
+rest_days_full(T, d) = min(cap, d − max{ x ∈ all_dates(T) : x < d })
+```
+
+con `cap = 14`. Stessa logica: `all_dates(T)` si allarga, quindi la data
+immediatamente precedente a `d` può solo avvicinarsi (mai allontanarsi) →
+`rest_days_full` può solo diminuire o restare uguale, mai aumentare — il
+controllo `rest_increased == 0` nello script verifica esattamente questa
+proprietà, non la assume.
+
+**Perché l'oracolo (236/251/454/180/482) è il numero giusto per verificare, e
+non un numero a caso.** È stato calcolato *prima* di questa fase, da chi ha
+scritto `celle_residue.csv` durante l'integrazione della Fase 101(-bis/-ter),
+eseguendo lo stesso ricalcolo su disco ma senza scrivere il risultato (regola
+R4 del cantiere in quel momento). Riprodurlo qui, a cella esatta, non è una
+coincidenza: è la controprova che l'input (i 3.045 righe) e la pipeline
+(`add_rest_days_full`) sono entrambi rimasti quelli descritti, e che la
+decisione mai presa esplicitamente al §9.4 di `caccia_calendari.md`
+("supercoppe/Mondiale contano come `midweek_europe`?") era già stata presa
+implicitamente da chi ha calcolato quel numero.
+
+## Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto
+
+**Obiettivo.** Richiesta esplicita dell'utente dopo la Fase 103: "sistema
+ognuno di questi problemi, cerca le informazioni da più fonti così sei sicuro
+che se una sbaglia, le altre non sbagliano" — riferita alla lista di gap
+dichiarati ancora aperti elencata a fine Fase 103 (bug del Monaco, 8 date
+DFB-Pokal, F12-04/F12-05/F12-09, le 55 celle residue).
+
+**Ragionamento.** Non trattare la lista come un'unica cosa: ogni punto ha una
+natura diversa (bug di codice, duplicato di dati, documentazione stantia,
+buco genuino alla fonte) e va istruito separatamente, con la stessa disciplina
+verifica-poi-scrivi della Fase 103 — e con **più fonti indipendenti** dove il
+compito lo richiede esplicitamente, non solo quella già citata da un audit
+precedente.
+
+**Cosa ho trovato e fatto, punto per punto.**
+
+1. **Bug del Monaco (MCO).** `sources.py` filtrava le competizioni UEFA su un
+   solo codice paese per lega; l'AS Monaco compare a volte `FRA` a volte `MCO`
+   nella stessa fonte openfootball. Aggiunta `UEFA_COUNTRY_CODE_EXTRA` +
+   `uefa_country_codes()` (restituisce un insieme, non più una stringa);
+   `parse_europe`/`_uefa_team_rows` accettano ora sia una stringa sia un
+   insieme (retrocompatibile: i test esistenti passano stringhe singole senza
+   modifiche). Test nuovo: `test_monaco_mco_e_fra_entrano_entrambi_in_ligue_1`.
+   Non tocca i dati correnti (il recupero Wikipedia della Fase 103 aveva già
+   preso il Monaco correttamente, estraendolo da template `{{fbaicon}}` che
+   non hanno questo problema): previene la regressione al prossimo
+   `build_database.py --fixtures` da openfootball.
+
+2. **8 righe duplicate DFB-Pokal 2025-26.** Non erano "8 date da correggere"
+   come proposto in `caccia_calendari.md` §10: il merge della Fase 103 aveva
+   già aggiunto la riga GIUSTA (Wikipedia, 2025-12-03) accanto a quella
+   SBAGLIATA di openfootball (2025-12-02) per le stesse 4 partite (Bochum-
+   Stuttgart, Freiburg-Darmstadt, Hamburg-Kiel, Union Berlin-Bayern Monaco) —
+   il dedup su `(season, team, date, competition, opponent)` non le aveva
+   fuse perché la data è diversa. **Verificato con due fonti indipendenti
+   dal vivo**, non riprendendo solo il numero della Fase 100: query live
+   all'endpoint XHR di openligadb.de (`getmatchdata/dfb/2025/3`, turno
+   "Achtelfinale") — conferma cella per cella le 4 partite e le loro date —
+   e lettura della pagina Wikipedia tedesca (sezione Achtelfinale: "2./3.
+   Dezember 2025"). `scripts/correggi_date_dfb_pokal_2526.py` verifica che
+   esistano ESATTAMENTE le due righe attese (12-02 e 12-03) per ciascuna
+   delle 8 combinazioni squadra/avversario prima di togliere quella sbagliata;
+   ricalcolo `add_rest_days_full` sullo snapshot Bundesliga: **0 partite
+   cambiate** (la partita più recente delle due vince comunque nella ricerca
+   "ultima gara prima di d", quindi il duplicato era innocuo per i numeri, non
+   per la pulizia del dato).
+
+3. **F12-04 (celle La Liga fuori registro) e F12-05 (stima O/U non estesa
+   alla Liga): già chiusi**, non ancora spuntati. `data/correzioni_dichiarate.csv`
+   righe 33-38 registrano le 6 celle La Liga dal commit `ec85314`
+   ("integrazione 2/3"); `ou_open_corrotte_2017_19.csv` copre le 12 linee
+   (non più 9) dal commit `44052d7`, Fase 101-ter — non 101-bis come diceva
+   per errore `data/estimates/README.md` (corretto). Aggiunte note
+   `→ ✅ CHIUSO` in `docs/AUDIT_FASI_80_100.md` per non farli riaprire da una
+   sessione futura che legge solo il rilievo originale.
+
+4. **F12-09 (verdetti stantii in `celle_residue.csv`): l'ultimo pezzo
+   mancava.** Tre dei quattro punti erano già sistemati (righe La Liga
+   "CHIUSA", Leganes-Getafe con verdetto proprio, zero riferimenti a
+   `cantiere/`); il quarto — `docs/DATI.md` che diceva ancora "registrato ma
+   NON inserito" per le 6 celle 1X2 del caso A, già reali nello snapshot dalla
+   Fase 101-bis — no. Corretto: censimento **7.359/55 → 7.353/49** (verificato
+   contando i NaN live sui 5 snapshot: 7.353 esatto), riga delle 6 celle
+   spostata fuori dalla tabella dei buchi con nota di chiusura.
+
+5. **La fonte xG aveva lo stesso mirror morto di football-data, mai
+   corretto.** `docs/MANUALE_SOPRAVVIVENZA.md` documentava già dalla Fase 100
+   che `understat.com` risponde 200 dietro l'endpoint XHR
+   `/main/getLeagueData/{lega}/{anno}` con header `X-Requested-With:
+   XMLHttpRequest` (gzip sempre, va decompresso a mano) — ma **il codice non
+   lo usava mai**: `sources.UNDERSTAT_URL` puntava ancora al mirror GitHub,
+   morto (404 **verificato in modo indipendente dal problema di sessione**:
+   `raw.githubusercontent.com` risponde 200 su un repo vero come
+   `torvalds/linux`, quindi il 404 è reale e non un artefatto del proxy).
+   Corretto `sources.py` (endpoint ufficiale + header) e
+   `understat.download_season` (decompressione gzip). **Verificato**: i dati
+   live coincidono ESATTAMENTE con quelli già congelati negli snapshot
+   (Δ home_xg = 0.0 su 380/380 partite, La Liga 2017-18); scaricate live
+   anche Serie A 2025-26, Premier 2024-25 per conferma su altre leghe/stagioni.
+
+6. **Le 55 (ora 49) celle residue: ri-verificate, non tutte risolvibili.**
+   Con la fonte xG ora viva, ho ri-scaricato dal vivo le due partite col buco
+   xG: **Holstein Kiel-Bochum ha ancora il record segnaposto identico**
+   (xG=2.0/2.0=gol esatti) a distanza di mesi — non è un "non ancora", Understat
+   non l'ha mai acquisita e non sembra destinata a farlo; **Nantes-Toulouse è
+   ancora `isResult: False`** su Understat oltre due mesi dopo la partita —
+   stesso esito della prima verifica, ma ora confermato con un ri-controllo
+   vero, non un'estrapolazione. Ho anche ri-scaricato dal vivo i CSV grezzi
+   football-data per le 3 partite rimanenti (Torino-Fiorentina, Verona-Genoa,
+   Union Berlin-Bochum): tutte confermate, colonna per colonna, con lo stesso
+   esito già dichiarato (apertura mai raccolta per le prime due — le colonne
+   di chiusura `*C` sono piene, quelle di apertura no; tiri in porta assenti
+   per la terza). Nessuna delle 49 celle residue si è rivelata recuperabile:
+   sono tutte lacune genuine alla fonte, non pigrizia di verifica.
+
+7. **Auto-corretto un bug introdotto alla Fase 103.** Verificando
+   `data/estimates/celle_residue.csv` con il modulo `csv` di Python (non
+   pandas, che aveva mascherato il problema non essendo mai stato eseguito su
+   questo file da nessun test) ho trovato che le 5 righe "CHIUSA alla Fase
+   103" che avevo scritto la fase precedente non erano tra virgolette pur
+   contenendo virgole: CSV tecnicamente rotto, 19 campi invece di 16 su quelle
+   righe. Nessun danno (nessuno script lo leggeva ancora), ma corretto subito
+   con una riscrittura verificata (`csv.reader`/`csv.writer`,
+   `lineterminator="\n"` esplicito per non introdurre `\r\n` come già successo
+   una volta in questa stessa sessione).
+
+**Risultato.** 858 test verdi (+4 dalla Fase 103: 1 nuovo per il Monaco, 3 da
+`altra_lega` esteso a Bundesliga/Ligue 1 alla Fase 103). Nessun edge nuovo,
+nessuna cella recuperata in più — ma ogni gap dichiarato è ora o chiuso con
+un dato vero, o ri-verificato dal vivo con almeno due fonti indipendenti dove
+possibile, invece che ereditato da un audit di due fasi prima.
+
+**Lezione.** "Già chiuso ma non spuntato" (F12-04, F12-05) è un modo di
+fallire silenzioso quanto "mai chiuso": una sessione futura che legge solo il
+rilievo — non lo stato vero dei file — rifà il lavoro. E un file dati non
+letto da nessun test (`celle_residue.csv`) può restare rotto per una fase
+intera senza che nessuno se ne accorga: la stessa lezione della Fase 15
+("un numero che nessuno script produce non è un numero: è una citazione"),
+qui applicata a un registro invece che a un calcolo.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: questa fase è infrastruttura e dati, non modello.
+Le uniche formule coinvolte sono già definite altrove e richiamate qui senza
+modifiche:
+
+- `fixtures.add_rest_days_full` (Fase 4e/59, ricalcolo invariato): il
+  duplicato DFB-Pokal non cambia `midweek_europe`/`rest_days_full` perché la
+  ricerca "ultima partita di club prima del giorno `d`" (`np.searchsorted`)
+  seleziona sempre la data più recente fra le candidate — avere ANCHE la data
+  sbagliata (più vecchia) fra le opzioni non cambia mai il risultato quando
+  la data giusta è già presente e più recente. Verificato empiricamente
+  (0 celle cambiate), non solo per argomento.
+- `understat._e_segnaposto` (Fase 100): la firma del segnaposto (xG intero
+  uguale ai gol, deep=0 su entrambi i lati, ppda NaN) è verificata di nuovo,
+  stavolta su un download live invece che su un JSON cache: stessa funzione,
+  stesso esito, fonte diversa.
+
+**Perché questi numeri e non altri.** Il Δ 0.0 su 380/380 partite (La Liga
+1718, verifica del nuovo endpoint Understat) non è un valore scelto: è il
+risultato di un confronto diretto `snapshot.home_xg - live.home_xg` su ogni
+riga appaiata, con `.abs().max()` — la soglia "0.01" nel codice di verifica
+serve solo a stampare un conteggio leggibile (`(diff>0.01).sum()`), il
+confronto vero è sul massimo assoluto, che è esattamente zero in floating
+point (i due JSON sono byte-per-byte la stessa risposta del server, scaricata
+due volte a distanza di anni dalla costruzione dello snapshot: Understat non
+ha mai ricalcolato l'xG storico di quella stagione).
+
+## Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo
+
+**Obiettivo.** L'utente ha chiesto se l'O/U 2017-19 fosse ancora una stima e,
+saputo di sì (footiqo/1xBet trovato ma scartato perché peggiore della stima
+come proxy multi-book, Fase 100), ha chiesto di riprovare a cercare — in
+particolare un secondo book indipendente da mediare col primo, invece di un
+singolo book.
+
+**Cosa ho provato (dettaglio completo in `docs/CACCIA_OU_2017_19.md`,
+banner Fase 105).** Quattro angoli **mai tentati** nelle Fasi A-D originali:
+(1) verificato che footiqo è strutturalmente un solo book, non una via per un
+secondo; (2) Wayback Machine — scoperta operativa che l'endpoint CDX è
+bloccato dalla rete per qualunque dominio (non un blocco specifico di
+oddsportal), ma il playback diretto funziona; nessuna pagina di risultati
+stagionale delle nostre leghe risulta mai archiviata per il 2017-19, e le
+uniche catture di BetExplorer/OddsPortal per quelle stagioni sono del
+2022-2024 — dopo che il sito ha già ritirato il confronto-quote per le
+partite vecchie (Fase 100); (3) ricerca dataset ripetuta: un candidato nuovo
+su Kaggle è un file di 198 righe di sole partite 2023, altri sono lo stesso
+"Beat the Bookie" già scartato; (4) nuovi siti-archivio: `oddsbase.net`
+vieta esplicitamente ClaudeBot nel `robots.txt` (rispettata la regola R5.3,
+non consultato), `aussportsbetting.com` è bloccato (403), `btfodds.com`/
+`sportsoddshistory.com` sono comparatori live senza struttura storica
+per-partita individuabile.
+
+**Risultato.** Nessun dato nuovo. La stima (`data/estimates/ou_close_2017_19.csv`)
+resta la scelta migliore nota. Nessuna delle vie economiche è cambiata dalla
+Fase 100/101-bis.
+
+**Lezione.** Un "no" già scritto in un documento non basta a fermare un
+ri-tentativo onesto quando arriva una richiesta esplicita — ma un ri-tentativo
+onesto deve provare ANGOLI DIVERSI (qui: Wayback Machine, mai tentato prima),
+non ripetere le stesse fonti già scartate. Il valore di questa fase non è nel
+dato (zero), è nell'aver ampliato lo spazio di ricerca già coperto e
+documentato ANCHE il "blocco CDX" scoperto per caso, utile alla prossima
+sessione che voglia usare Wayback Machine per qualunque altra cosa.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di ricerca dati, esito negativo. Non applicabile.
+
+## Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo
+
+**Obiettivo.** L'utente ha chiesto se il confronto MAE "footiqo 0.0156 contro
+stima 0.012" (motivo per cui il dato 1xBet trovato alla Fase 100 non è entrato
+negli snapshot) si potesse misurare su più di una sola stagione — finora era
+il solo 2019-20, l'unica dove la chiusura vera esiste insieme a footiqo.
+
+**Ragionamento.** footiqo.com copre le stagioni dal 2015/16 a oggi (non solo
+2017-19); football-data ha la chiusura O/U vera (`AvgC>2.5`) dal 2019/20 in
+poi. L'intersezione utile — footiqo disponibile E verità disponibile — non è
+un punto solo: sono **sei** stagioni (2019-20 → 2024-25), mai scaricate tutte
+insieme prima.
+
+**Cosa ho fatto.** Estesi i fetcher già esistenti (`_fetch_footiqo.py`,
+riutilizzato senza modifiche, solo stagioni diverse) per le 5 stagioni
+2020-21→2024-25 (25 file nuovi, stesso schema, stesso endpoint, stesso
+throttle 1.8s, `robots.txt` invariato); scaricati live i 30 CSV grezzi
+football-data corrispondenti (`www.football-data.co.uk/mmz4281/{stagione}/{codice}.csv`,
+già raggiungibile). Ricalcolato lo stesso identico confronto del 2019-20 —
+MAE e bias di `p_over(xbetClose)` contro `p_over(AvgC)` — su tutte e sei.
+
+**Verifica del metodo.** Il 2019-20 ricalcolato qui riproduce **esattamente**
+il numero già pubblicato (n=1.687, MAE 0.0156, bias +0.0088): non è un nuovo
+calcolo indipendente che per caso coincide, è la controprova che il metodo è
+implementato correttamente prima di fidarsi delle 5 stagioni nuove.
+
+**Risultato — il numero NON è stabile nel tempo** (pooled 5 leghe):
+
+| stagione | n | MAE | bias |
+|---|--:|--:|--:|
+| 2019-20 | 1.687 | 0.0156 | +0.0088 |
+| 2020-21 | 1.749 | 0.0179 | +0.0167 |
+| 2021-22 | 1.788 | 0.0192 | +0.0166 |
+| 2022-23 | 1.751 | 0.0136 | +0.0054 |
+| 2023-24 | 1.640 | 0.0107 | +0.0010 |
+| 2024-25 | 1.713 | 0.0096 | +0.0021 |
+
+Il 2020-22 (piena era porte-chiuse) è nettamente il peggiore; dal 2022-23 in
+poi footiqo migliora fino a **battere** anche il numero onesto della stima
+nelle ultime due stagioni. **Correzione collaterale**: il confronto "storico"
+usava 0.012 come riferimento della stima, ma quel numero è il MAE
+**ottimistico "in interpolazione"** (`data/estimates/README.md` lo dice
+esplicitamente: "non è il regime in cui la stima viene usata"); il numero
+onesto è **~0.014 "regime d'uso"** (fit solo su stagioni successive, come
+accadrebbe davvero per il 2017-19). Contro quello, il margine del 2019-20 è
+più piccolo (0.0156 vs ~0.014, non 0.0156 vs 0.012) ma resta dello stesso
+segno.
+
+**Perché non cambia la decisione.** Il 2019-20 resta il proxy singolo più
+vicino nel tempo al 2017-19 — e il meno inquinato dalle porte chiuse, iniziate
+a marzo 2020 a stagione già per lo più giocata. Lì la stima vince ancora.
+Se il pattern 2020-22 è un effetto porte-chiuse (non una deriva secolare di
+1xBet/footiqo), il 2017-19 "normale" potrebbe somigliare più alle stagioni
+2022-25 (dove footiqo vince) che al 2019-20: **con i dati disponibili le due
+letture non sono distinguibili**, e vanno dichiarate entrambe, non scelta
+quella comoda.
+
+**Risultato.** Nessun cambio di decisione: la stima resta la scelta per
+2017-19. Ma il fatto che lo sappiamo è passato da "una stagione, un numero"
+a "sei stagioni, un pattern dichiarato con l'incertezza che porta". Aggiornati
+`docs/CACCIA_OU_2017_19.md` (banner Fase 106), `docs/DATI.md`, `docs/PISTE.md`
+(la vecchia cifra "MAE 0.0156 contro 0.012" corretta ovunque compare come
+riferimento vivo, non nelle voci storiche del README/DIARIO che restano
+PRE-fix per lo stesso motivo del numero-bandiera, Fase 101-bis).
+
+**Lezione.** Un numero di validazione misurato su UNA SOLA stagione è un
+punto, non una stima dell'incertezza — anche quando quella stagione è la
+scelta più difendibile disponibile. "Misurabile su più stagioni" era una
+domanda legittima anche per un confronto già chiuso da due fasi: rifarlo non
+ha cambiato la conclusione, ma ha sostituito un'assunzione implicita
+(stabilità nel tempo) con un fatto misurato (instabilità, con una causa
+plausibile ma non provata).
+
+### 📐 Il modello in dettaglio
+
+**Formula**, invariata dalla prima misura (Fase 100/`_valida_footiqo.py`,
+CONF-B): per ogni partita appaiata,
+
+```
+p_true = (1/AvgC>2.5) / (1/AvgC>2.5 + 1/AvgC<2.5)      # devig binario, media multi-book
+p_fq   = (1/xbetCloseOver25) / (1/xbetCloseOver25 + 1/xbetCloseUnder25)  # devig binario, 1xBet
+diff   = p_fq - p_true
+MAE    = mean(|diff|)          bias = mean(diff)
+```
+
+Nessuna novità nella formula: la fase applica lo stesso `p_over`/MAE a 5
+stagioni in più, non ne introduce uno diverso — il valore aggiunto è
+interamente nel numero di osservazioni (da 1.687 a 10.328 partite totali),
+non nel metodo.
+
+**Perché ~0.014 e non 0.012 è il confronto giusto.** La stima E3 è fittata
+"pooled su stagioni successive a quella stimata" (regola dichiarata in
+`data/estimates/README.md`): per il 2017-19, questo significa fit su dati
+2019-20+, cioè esattamente il regime "walk-forward" che dà 0.014. Il numero
+0.012 viene da un fit che vede ANCHE le stagioni prima e dopo il target
+("interpolazione"): un regime che il 2017-19 non può avere per costruzione
+(non ci sono stagioni "prima" nella finestra dati del prog, 2016-17 in poi).
+Usarlo come riferimento del confronto era ottimistico verso la stima — un
+bias piccolo (0.002) ma nella direzione che rendeva la decisione più
+comoda, non meno.
+
+## Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo
+
+**Obiettivo.** Richiesta esplicita dell'utente: continuare a cercare il dato
+vero, esplorare fonti nuove E verificare — non assumere — che le fonti già
+scartate lo siano davvero ancora.
+
+**Cosa ho fatto.**
+
+1. **`oddsportal.com/robots.txt` letto per intero** (prima si citava solo "vieta
+   lo storico"): vieta esplicitamente ogni URL con l'anno nel percorso, da
+   1998 al 2024 — un blocco sistematico di tutte le pagine-stagione, non un
+   dettaglio isolato. Nessun accesso, come già deciso.
+2. **BetExplorer ri-controllato dal vivo**, non solo ri-letto dal report della
+   Fase 100. Scoperta: il precedente 404 sull'endpoint delle quote era in
+   parte affidabile, ma la pagina-stagione stessa risponde 404 **anche oggi**
+   senza uno User-Agent da browser — un blocco anti-bot, non un vero "non
+   esiste". Con lo User-Agent giusto: pagina vera, partita vera raggiunta. Il
+   risultato però è **identico**: `#bettingTabs` ha solo un "1X2" disabilitato,
+   nessun tab O/U. La conferma vale di più perché stavolta la richiesta ha
+   *davvero* toccato la pagina, non un errore mascherato da conferma.
+3. **Il dataset Kaggle `mexwell/...` è stato aggiornato** (versione 2) dal
+   primo controllo: ri-scaricato, stessa colonna O/U singola per il 2017-18,
+   nessuna chiusura O/U distinta aggiunta.
+4. **Tre angoli davvero nuovi**: ricerca di codice GitHub per scraper
+   OddsPortal/BetExplorer (trovati solo strumenti — uno conferma da solo che
+   serve login e copre solo 1X2, non O/U); dataset accademici su arXiv
+   (Bundesliga 2017-19, ma quote **in-play**, mercato sbagliato); provider
+   commerciali (`oddalerts.com`, la cui documentazione limita lo storico
+   dichiarato a 6 mesi — strutturalmente fuori portata per il 2017-19, prima
+   ancora di poterlo controllare per il 403).
+
+**Risultato.** Nessun dato nuovo. Ma la fiducia nel "nessun dato nuovo" è più
+solida di prima: il controllo su BetExplorer di questa fase ha **davvero**
+raggiunto la pagina (le fasi precedenti rischiavano di scambiare un blocco
+anti-bot per un'assenza di dato), e altri tre angoli mai tentati sono stati
+chiusi con una ragione specifica, non per esaurimento del tempo.
+
+**Lezione.** Un 404 non è sempre un "non esiste": può essere "non mi hai
+chiesto nel modo giusto". Prima di scrivere una fonte come chiusa, vale la
+pena controllare se la richiesta ha davvero raggiunto il contenuto (una
+pagina vera, non una pagina di errore) — specialmente quando il controllo
+precedente veniva da un ambiente diverso (un runner GitHub Actions, Fase 100)
+i cui dettagli (header, User-Agent) non sono garantiti identici a un
+controllo rifatto altrove.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di ricerca/verifica, esito negativo. Non applicabile.
+
+## Fase 108 — «E se cercassimo partita per partita?» — testato, non scala
+
+**Obiettivo.** Idea dell'utente dopo tre ri-tentativi negativi in blocco:
+invece di un dataset che copra tutte le 3.652 partite insieme, cercare il
+dato una partita alla volta.
+
+**Cosa ho fatto — due test diretti, non solo un argomento teorico.**
+1. Wayback Machine sulla singola pagina-partita (non più sulla pagina-elenco
+   stagionale, già risultata mai archiviata): URL reali di partite
+   BetExplorer 2017-18, trovati dal vivo alla Fase 107. **404**: nemmeno le
+   pagine di singola partita sono mai state archiviate.
+2. Ricerca web sul caso più favorevole possibile: **Juventus-Napoli
+   22/04/2018**, lo scontro diretto scudetto più seguito della stagione.
+   Nessuna quota storica reale trovata: solo pagine "sempre verdi" di siti
+   pronostici che si riscrivono per ogni nuovo incontro fra le due squadre.
+
+**Risultato.** Anche nel caso più favorevole (partita più seguita, mercato
+più popolare) non si trova nulla di reale e datato. E anche trovando
+qualcosa, l'approccio partita-per-partita introdurrebbe un bias di selezione
+strutturale (solo i big-match sarebbero "trovabili"), non solo un problema di
+scala.
+
+**Lezione.** Testare un'idea sul caso più favorevole possibile, non su un
+caso qualunque, è un modo economico di stabilire se un metodo scala PRIMA di
+investirci ore: se fallisce lì, fallisce ovunque, e lo si sa con un test solo
+invece che con centinaia.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di verifica di un'idea, esito negativo. Non applicabile.
+
+## Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)
+
+**Obiettivo.** L'utente ha un account Betfair e ha chiesto se si possa
+implementare direttamente l'API di `historicdata.betfair.com` nel repo, cosa
+serva oltre al token, e «cosa potremmo inventarci».
+
+**Ragionamento.** La tentazione era rispondere subito con lo script. Invece
+ho applicato il principio §1.3 — *testa la versione economica dell'idea prima
+di investire* — perché c'era un test gratuito disponibile: `football-data`
+pubblica la chiusura **Betfair Exchange** (`BFEC>2.5`/`BFEC<2.5`) in una
+stagione, la 2024-25. Lì convivono Betfair, la media multi-book e l'esito
+reale: si può stabilire **che tipo di fonte sia Betfair senza scaricare nulla**
+e senza far fare fatica a nessuno.
+
+**Risultato — e una mia valutazione ritirata.** Su 1.752 partite, 5 leghe:
+
+| fonte | MAE vs media multi-book |
+|---|--:|
+| MaxC | 0.0057 |
+| **Betfair Exchange** | **0.0060** |
+| Pinnacle | 0.0063 |
+| Bet365 | 0.0071 |
+| **la nostra stima** | **~0.014** |
+| 1xBet (scartato F100) | 0.0156 |
+
+Betfair è nel **gruppo dei book seri**, non fra gli outlier: **2,3× più vicino
+alla media multi-book della stima che sostituirebbe**, bias +0.0015 (contro
++0.0088 di 1xBet), e contro l'esito vero almeno pari alla media dei book
+(0.6648 vs 0.6652; Δ −0.00039, IC95 [−0.00115,+0.00038], P 84.7% — non
+conclusivo ma col segno a favore, coerente col fatto che una borsa non ha il
+margine del bookmaker: overround 1.0053 contro 1.0482).
+
+Alla **Fase 108** avevo detto all'utente che «il guadagno è piccolo». Era
+un'**analogia** (Betfair ≈ 1xBet ≈ book singolo), non una misura, e la misura
+la smentisce. **Ritirata**, come si fa con ogni conclusione che non regge.
+
+**Cosa NON è deciso.** I numeri vengono dalla 2024-25, non dal bersaglio: la
+Fase 106 ha già mostrato che la qualità di una fonte **non è stabile nel
+tempo** (1xBet: 0.0096-0.0192 fra stagioni), e la liquidità di una borsa nel
+2017-18 era più bassa di oggi, specie su Bundesliga e Ligue 1. Questa fase
+apre la pista e costruisce lo strumento; **non** autorizza l'inserimento.
+
+**Cosa ho costruito.** `scripts/fetch_betfair_historic.py`: i 5 endpoint
+dell'API più il parsing dello stream storico (`.bz2`, JSON per riga).
+Copertura di test: 9 casi in `tests/test_betfair_historic.py` — 871 verdi in
+totale.
+
+**Il vincolo che l'utente non poteva sapere.** Non basta il token: i pacchetti
+BASIC (gratuiti) di *Soccer* vanno **acquisiti mese per mese** dal sito, e
+senza di essi gli endpoint rispondono con **liste vuote e nessun errore**. È
+una trappola silenziosa: per questo `--check` esiste, confronta i mesi
+posseduti con quelli richiesti, e va eseguito per primo. Inoltre
+`historicdata.betfair.com` è **403 dall'ambiente cloud del progetto** (blocco
+per regione, *prima* dell'autenticazione: verificato sull'endpoint API, non
+solo sul sito) → lo script gira sulla macchina dell'utente.
+
+**Il collaterale può valere più del bersaglio.** Il piano BASIC dà istantanee
+**ogni minuto**, non solo la chiusura. `newseason.md` §2 elenca «le quote di
+apertura e la loro **traiettoria** verso la chiusura» fra le cose che **non si
+recuperano** dopo il calcio d'inizio, e §7 la dichiara «mai avuta a nessuna
+scala»: con questi file diventa recuperabile **all'indietro**, dal 2015. Non è
+riempire un buco, è un asse di dati nuovo.
+
+**Lezione.** Due, e sono la stessa. (1) Prima di chiedere lavoro a qualcuno,
+cercare il test che si può fare da soli: qui esisteva una stagione in cui la
+fonte candidata era **già** nei dati che abbiamo, e valeva più di qualsiasi
+ragionamento sulla sua natura. (2) Un'analogia («è un book singolo come
+1xBet») non è una misura, e produce risposte sbagliate con la stessa
+sicurezza di una giusta.
+
+### 📐 Il modello in dettaglio
+
+**Formula**, identica a quella già usata per 1xBet (Fase 100/106) — il
+confronto è nuovo, la matematica no:
+
+```
+p(fonte) = (1/quota_over) / (1/quota_over + 1/quota_under)     # devig binario
+MAE  = mean(|p(fonte) − p(AvgC)|)          bias = mean(p(fonte) − p(AvgC))
+LL   = −mean( y·log p + (1−y)·log(1−p) ),  y = 1 se gol totali > 2.5
+```
+
+**Perché il devig rende confrontabili borsa e bookmaker.** L'overround grezzo
+è molto diverso (1.0053 contro 1.0482): senza normalizzare, i due numeri non
+starebbero sulla stessa scala. Dopo il devig entrambi sono probabilità che
+sommano a 1, e la differenza residua è **informativa**, non contabile. È
+anche il motivo per cui la «rottura di regime» nella colonna grezza — l'argomento
+che ha bocciato 1xBet — qui va ri-discussa e non ereditata: pesa sulle quote,
+non sulle probabilità che il modello usa davvero.
+
+**Perché la chiusura è definita dal flag `inPlay` e non da `marketTime`.**
+Nel formato Betfair ogni riga porta `pt` (istante di pubblicazione) e i
+`marketDefinition` segnalano `inPlay`. Prendere l'ora *da calendario*
+sbaglierebbe in due direzioni: taglierebbe gli ultimi minuti di mercato per
+le partite iniziate in ritardo, e — molto peggio — includerebbe prezzi
+**già in-play** per quelle iniziate puntuali, cioè prezzi che sanno cosa sta
+succedendo in campo. Sarebbe look-ahead: esattamente l'errore di
+Udinese-Roma (`docs/DATI.md`), dove una chiusura che prezzava una ripresa già
+in corso falsava il confronto *nella direzione a noi favorevole*. Il test
+`test_nessun_look_ahead_i_prezzi_in_play_sono_ignorati` esiste per questo.
+
+### Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)
+
+**Come è successo.** L'utente ha chiesto se riuscivo a leggere la
+documentazione Betfair su Atlassian. **Sì**: quel dominio non è soggetto al
+geo-blocco che ferma `historicdata.betfair.com`, e il contenuto — invisibile
+nell'HTML, perché la pagina è un SPA JavaScript — si estrae dall'**API REST di
+Confluence, che risponde 200 senza autenticazione** (fatto operativo nuovo,
+annotato nel manuale con gli endpoint esatti).
+
+**Perché contava.** I file del servizio storico sono **registrazioni dello
+stream** descritto in quella pagina: era la specifica contro cui il parser
+andava verificato, e io lo avevo scritto deducendo il formato dall'esempio,
+non leggendola.
+
+**Esito: due assunzioni confermate, una sbagliata.** `ltp` = «Last Traded
+Price» ✓ e `inPlay` = «True if the market is currently in play» ✓ — le due
+travi portanti reggono. Ma sul campo `img` la specifica dice:
+
+> «img / Image - **replace** existing prices/data with the data supplied: **it
+> is not a delta**»
+
+e il parser fondeva **sempre**. Un ri-invio dell'immagine a metà stream
+avrebbe lasciato in cache prezzi che la fonte considera sostituiti: non un
+crash, non un `NaN` — un numero **plausibile e falso**, cioè il «finto pieno»
+della regola R6, quello che nessun controllo a valle vede. Corretto
+(`last.clear()` quando `img` è vero), 3 test nuovi, e **verificato per
+mutazione**: rimuovendo il fix, `test_img_sostituisce_la_cache_non_la_fonde`
+fallisce. 874 verdi.
+
+**Il limite che resta dichiarato.** La specifica descrive lo stream **live**.
+Che i file storici la seguano in ogni dettaglio è un'inferenza ragionevole
+(sono registrazioni), **non un fatto verificato** — e resta tale finché non
+gira il confronto 2024-25 contro `BFEC>2.5`. L'estratto con le citazioni
+testuali è in `data/ricerca_esterna/betfair_stream_spec_estratto.md`.
+
+**Lezione.** Il bug non è nato da un dato ambiguo o da una fonte ostile: è
+nato dall'aver **dedotto un formato invece di leggerne la specifica**, quando
+la specifica era pubblica, gratuita e raggiungibile. È durato esattamente
+quanto quella scelta — poche ore, perché l'utente ha chiesto di leggere la
+pagina. Regola pratica che ne segue: quando si scrive un parser per un
+formato altrui, la ricerca della specifica ufficiale viene **prima** della
+prima riga di codice, non dopo il primo test verde.
+
+## Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)
+
+**Obiettivo.** Richiesta dell'utente: copiare le API Betfair nel repo,
+dichiarando da quale sito vengono, «così che in futuro avremo meno lavoro da
+fare quando vorremo lavorare su Betfair».
+
+**Scelta: specchiare, non copiare.** Invece di incollare pagine a mano ho
+scritto `scripts/fetch_betfair_docs.py`, che estrae le pagine via API REST di
+Confluence (200 senza autenticazione, scoperta della Fase 109-bis) e le
+converte in Markdown. Così la copia è **ri-generabile** quando Betfair
+aggiorna — il contrario del `caccia_calendari.py` della Fase 100, che viveva
+solo come appendice di un report e infatti è andato perso.
+
+**Cosa c'è**: **78 pagine** in `docs/betfair_api/` (916 KB), ordinate per
+tema (guida → accesso → betting → tipi/enum → stream → mercati nazionali →
+ordini → account → linguaggi), più la **Historical Data API** — che sta su un
+altro sito, geo-bloccato da qui, e me l'ha fornita l'utente: attribuita a
+parte, con la differenza fra i due servizi messa in tabella perché è la
+confusione più facile da fare. Escluse note di rilascio e traduzioni.
+
+**Attribuzione.** Ogni file porta in testa: testo **di Betfair, non del
+progetto**; URL della pagina originale; id Confluence; data di estrazione; e
+la regola che **in caso di dubbio vince la pagina online**. È una copia di
+lavoro per riferimento tecnico interno, non una ri-pubblicazione.
+
+**La scoperta collaterale, che vale più della copia.** Cercando la conferma di
+`OVER_UNDER_25` nelle 78 pagine: **non c'è**. Betfair **non pubblica l'elenco
+dei marketType** — `listMarketTypes` ne cita due come esempio («i.e.
+MATCH_ODDS, NEXT_GOAL») e per il resto rimanda a scoprirli a runtime. Quella
+costante, su cui poggia tutto il filtro di `fetch_betfair_historic.py`, è
+quindi una **convenzione dell'ecosistema, non un valore documentato**: la
+stessa classe di assunzione che alla Fase 109-bis è costata il bug su `img`.
+
+Non è correggibile a tavolino (l'elenco vero si vede solo interrogando il
+servizio), ma è **degradabile da errore silenzioso a diagnosi**: `--dry-run`
+ora stampa i tipi realmente presenti nel pacchetto — tutti quelli che
+contengono OVER/UNDER, e in caso di assenza i 15 più frequenti — invece di
+limitarsi a un sì/no. Se l'etichetta fosse diversa, si vedrebbe subito;
+prima si sarebbe concluso «il mercato non esiste».
+
+**Lezione.** Specchiare una documentazione non è archiviazione passiva: è un
+**controllo**. Nel momento in cui la si porta in casa e la si può interrogare
+tutta insieme (`grep`), si scopre cosa NON dice — ed è lì che stavano le due
+assunzioni non verificate di questo lavoro. La prima l'ha trovata la lettura
+(`img`), la seconda la ricerca (`OVER_UNDER_25`).
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di infrastruttura e verifica documentale. Le due
+affermazioni fattuali su cui poggia sono entrambe ri-controllabili:
+
+```
+# la doc non enumera i marketType: 2 sole occorrenze, entrambe come esempio
+grep -rho "MATCH_ODDS\|OVER_UNDER_25" docs/betfair_api/*.md | sort | uniq -c
+#   2 MATCH_ODDS      (una nell'esempio di subscription, una in listMarketTypes)
+#   1 OVER_UNDER_25   (nel NOSTRO README, non nel testo Betfair)
+
+# ogni file dichiara la fonte
+for f in docs/betfair_api/*.md; do grep -q "Fonte" "$f" || echo "SENZA FONTE: $f"; done
+```
+
+## Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair
+
+**Obiettivo.** L'utente ha chiesto aiuto per creare il proprio token e —
+soprattutto — di capire «che tipo di lavoro possiamo fare con Betfair».
+
+**Tre fatti che cambiano il piano, tutti letti nella documentazione ora
+specchiata in `docs/betfair_api/` (Fase 110) e verificati dove possibile.**
+
+1. **Per il servizio storico non serve una Application Key.** Vuole solo
+   l'header `ssoid`, e la via più rapida per averlo è **copiare il cookie
+   `ssoid` dal browser** dopo il login — la documentazione di supporto Betfair
+   indica proprio questa. La strada "seria" (App Key + login via API su
+   `identitysso.betfair.it`) serve solo se si automatizza.
+
+2. **⚠️ Sull'exchange italiano la sessione dura 20 MINUTI**, contro 12-24 ore
+   sul `.com`. E, testuale: «*Session times aren't determined or extended based
+   on API activity*» — scaricare **non** tiene viva la sessione. Un download
+   di qualche migliaio di file sarebbe morto a metà, e la causa sarebbe stata
+   difficile da diagnosticare (errori sparsi, non un fallimento pulito).
+   `fetch_betfair_historic.py` ora chiama `keepAlive` ogni 10 minuti, con
+   l'endpoint della giurisdizione giusta (`--jurisdiction`, default `it`).
+
+3. **L'exchange italiano è una licenza separata** (registrazione e login su
+   `.it`), mentre il servizio storico è `.com`: **se un account italiano vi
+   abbia accesso non è documentato**, e da qui non è verificabile (403 per
+   regione). È la domanda da porre all'assistenza — con il test pratico
+   equivalente già pronto: `--check` elenca i pacchetti, e se ne elenca,
+   l'accesso c'è.
+
+**Cosa possiamo farci, in ordine di valore** (dettaglio in
+`docs/betfair_api/99_guida_pratica_progetto.md`):
+
+- **A. Il buco O/U 2017-19**: il bersaglio dichiarato, e Betfair è l'unico
+  candidato mai trovato *migliore della stima* (Fase 109).
+- **B. La traiettoria delle quote**: istantanee ogni minuto → un asse di dati
+  che `newseason.md` dà per **non recuperabile** e «mai avuto a nessuna
+  scala». Non è un di più: la Fase 93 ha localizzato il nostro deficit nelle
+  partite equilibrate di fine stagione e la Fase 98 ha trovato correlazione
+  +0.43 col deficit dell'apertura — la traiettoria dice **quando** il mercato
+  impara, che è la misura mancante a quella diagnosi.
+- **C. Validare i ~17 mercati mai controllati**: il progetto prezza GG/NG,
+  risultato esatto, multigol, total-squadra… e per sua stessa ammissione
+  (Fase 88) **l'handicap asiatico è l'unico mai validato contro una quota
+  esterna**. Betfair quota molti di quei mercati — ma **quali ci siano nei
+  pacchetti storici va verificato con `--dry-run`, non assunto** (lezione
+  della Fase 110 sul marketType non documentato). Per questo lo script ha ora
+  `--market-type`: se ci sono, si scaricano senza scrivere altro codice.
+- **D. Volume/liquidità** (piani a pagamento): segnale mai avuto, valore non
+  misurato → non si compra prima di aver esaurito il BASIC gratuito.
+- **E. Il test prospettico 2026-27**: possibile, ma frenato dal geo-blocco e
+  dalla sessione da 20 minuti; da valutare dopo A e B.
+
+**Un limite dichiarato, per non fare confusione.** Le API di scommessa sono
+nella copia per completezza, ma il progetto **non piazza scommesse**: il
+modello non batte il mercato, e Betfair qui è una **fonte di dati**, non un
+canale operativo.
+
+**Lezione.** Il lavoro utile di questa fase non è stato "creare il token": è
+stato scoprire i **due vincoli che avrebbero fatto fallire il download in
+modo confuso** (sessione da 20 minuti; accesso dell'account italiano non
+documentato). Erano entrambi nella documentazione, a portata di `grep`, solo
+perché la fase precedente l'aveva portata in casa — il ritorno dell'aver
+specchiato invece di ri-cercare sul web ogni volta.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase operativa e di pianificazione. I due numeri citati
+sono verificabili nella copia locale:
+
+```
+grep -i "20 minutes\|12 hours" docs/betfair_api/10_accesso__login_session_management.md
+grep -i "aren't determined or extended" docs/betfair_api/10_accesso__login_session_management.md
+```
+
+## Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)
+
+**Obiettivo.** L'utente ha chiesto se si potesse già procedere con le piste A
+(buco O/U 2017-19) e B (traiettoria delle quote), e se potessi farlo da solo.
+
+**La risposta onesta sul "da solo": no, e non con una VPN.** Il blocco su
+`historicdata.betfair.com` è **geografico e regolatorio** (le licenze di
+scommessa sono per giurisdizione), non un ostacolo tecnico da aggirare — e
+aggirarlo esporrebbe l'utente a un rischio concreto: un accesso al suo account
+da un IP estero è esattamente il «traffico inusuale» che Betfair segnala e che
+può far limitare l'account. Lo scarico gira sulla sua macchina; il resto
+(validazione, join, analisi) qui.
+
+**Ma c'era una cosa da fare PRIMA dello scarico, ed è il punto della fase.**
+I file `.bz2` contengono **sia la chiusura sia tutta la traiettoria
+pre-partita**, e il parser della Fase 109 teneva solo la chiusura, buttando il
+resto. Chi avesse scaricato in quel momento avrebbe ottenuto A e perso B — per
+poi dover **ri-scaricare tutto** il giorno in cui la traiettoria fosse
+servita. Riscritto: `_serie_from_stream` estrae la serie completa, e la
+chiusura ne diventa un caso particolare — così le due definizioni non possono
+divergere. Un solo scarico, due piste.
+
+**Il refactor è stato bocciato da un test, ed è la parte interessante.**
+Derivando la chiusura come «ultimo punto della serie», il caso limite
+dell'immagine finale che lascia prezzato **un solo lato** cambiava
+comportamento: prima la riga veniva scartata (non esiste una chiusura valida),
+dopo ripiegava sull'ultimo punto completo — cioè **spacciava per chiusura un
+prezzo di minuti prima**. Un «finto pieno» (R6) plausibile e invisibile.
+`test_img_sostituisce_la_cache_non_la_fonde` — scritto due fasi fa per un
+altro motivo — l'ha intercettato. La distinzione è ora esplicita nel codice:
+la **serie** raccoglie i punti completi osservati, lo **stato finale** è cosa
+c'era all'istante della chiusura, e sono due cose diverse.
+
+**Verifica end-to-end.** Simulato l'intero flusso con la rete finta: chiusura
+1.92/1.95 (ultimo prezzo pre-via), traiettoria a −120/−60/−10 minuti, prezzo
+in-play escluso, `minuti_al_via` corretto, tre file scritti (chiusure,
+traiettoria gzippata, manifest). 5 test nuovi, **883 verdi**.
+
+**Lezione.** «Posso farlo da solo?» aveva due risposte, e quella utile non era
+la prima. No allo scarico — ma il lavoro che rende quello scarico *definitivo*
+invece che da rifare si poteva fare subito, e andava fatto **prima**, non
+dopo. Il costo di scoprirlo dopo non sarebbe stato un bug: sarebbe stato
+chiedere all'utente di rifare tutto.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova. L'unica formula introdotta è l'asse su cui si legge
+la traiettoria:
+
+```
+minuti_al_via = (marketTime − pt) / 60000        # pt e marketTime in ms
+# positivo = prima del calcio d'inizio; 0 = al via
+```
+
+`marketTime` è l'orario **programmato** e `pt` l'istante di pubblicazione del
+prezzo. Il taglio della serie però NON usa questa differenza: usa il flag
+`inPlay` (Fase 109-bis), perché una partita iniziata in ritardo ha una
+chiusura più tarda dell'orario da calendario — e usare l'orario programmato
+includerebbe prezzi già in-play, cioè look-ahead.
+
+## Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione
+
+**Obiettivo.** Domanda dell'utente prima di mettersi a scaricare: quanto serve
+davvero questo sforzo, e quali dati otterremmo che non possiamo avere altrove.
+Domanda legittima e mai posta in questi termini: la Fase 109 aveva stabilito
+che Betfair è *migliore della stima*, ma nessuno aveva verificato **a cosa
+serva** quella stima.
+
+**Tre verifiche, tutte a portata di `grep`, tutte mai fatte.**
+
+1. **La stima non alimenta nulla.** `read_ou_close_estimates()` è chiamata
+   **solo da `tests/test_estimates.py`**: nessun modello, nessun backtest la
+   consuma. I backtest ufficiali girano su 2020-21 → 2025-26, stagioni che
+   hanno tutte la chiusura O/U reale. **Il buco 2017-19 non tocca un solo
+   risultato pubblicato.**
+
+2. **Il costo vero del buco è un altro**: 3.652 partite (22,7%) hanno la
+   chiusura 1X2 ma non quella O/U, e senza entrambe il motore market-implied
+   — il titolare — non può girare. Il guadagno non è «un dato più preciso
+   della stima»: è **due stagioni da inutilizzabili a utilizzabili**. Sono
+   però le due più vecchie, le meno rappresentative.
+
+3. **Una fetta grossa del valore era già in casa, gratis.** `football-data`
+   pubblica **20 colonne Betfair Exchange** per 2024-25 e 2025-26 — 1X2, O/U
+   2.5, handicap asiatico, apertura *e* chiusura — su **3.393 partite,
+   copertura 96,8%**. Mai usate. Misurato: il 1X2 di chiusura Betfair fa
+   **0.9676** di log-loss contro **0.9682** della media multi-book
+   (Δ −0.00060, IC95 [−0.00154, +0.00041], P 87.9%, **non conclusivo**),
+   overround 1.0055 contro 1.0531. Betfair vale poco più della media dei book
+   come *fonte*: il suo pregio è l'**indipendenza**, non la precisione.
+
+**Conseguenza.** L'ordine dei lavori si inverte: prima le colonne gratuite
+(costo zero per l'utente, stagioni più rilevanti), poi — solo se lì emerge
+qualcosa — lo scarico storico. Che resta l'unica via per **due** cose davvero
+introvabili altrove: la **traiettoria minuto per minuto** e i **mercati oltre
+1X2/O-U/handicap**. Non per il buco O/U in sé.
+
+**Ridimensionata anche la pista B, non solo la A.** La Fase 98 ha già
+misurato il movimento apertura→chiusura: **non anticipabile** (β −0.0039,
+R² 0.0001) e CLV negativo conclusivo. La traiettoria non rovescia quel
+risultato — risponde a una domanda **diversa** (*quando* il mercato impara,
+non *se* possiamo anticiparlo), utile per **attribuire** il gap, non per
+chiuderlo.
+
+**Lezione, ed è su di me.** Alla Fase 109 ho scritto che questa era la pista
+che «merita di essere percorsa», e il numero su cui poggiava (MAE 0.0060 vs
+~0.014) era corretto. Sbagliata era la conclusione, perché mancavano due
+controlli banali: **chi usa il dato che vorremmo sostituire** (nessuno) e
+**cosa abbiamo già** (due stagioni di Betfair gratis, mai toccate). Misurare
+bene una cosa non basta a stabilire che serva: il valore di un dato non sta
+nella sua qualità, sta in **cosa cambierebbe averlo**. È la stessa forma
+dell'errore della Fase 108 — un'analogia al posto di una misura — ma un
+gradino più su: qui la misura c'era, mancava la domanda giusta.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: stesso devig e stesso log-loss delle fasi
+precedenti, applicati a una colonna mai usata.
+
+```
+p(esito) = (1/quota) / somma(1/quota)          # devig moltiplicativo, 1X2
+LL       = −mean( log p(esito realizzato) )
+```
+
+I due numeri della fase sono ri-ottenibili così:
+
+```
+# la stima non e' consumata da nulla
+grep -rn "read_ou_close_estimates" --include=*.py . | grep -v "def read_ou"
+#   -> solo tests/test_estimates.py
+
+# quante partite bloccano il market-implied
+python3 -c "
+import pandas as pd, glob
+b=sum(((d[['odds_home','odds_draw','odds_away']].notna().all(axis=1)) &
+       (~d[['odds_over25','odds_under25']].notna().all(axis=1))).sum()
+      for d in map(pd.read_csv, glob.glob('data/*_matches.csv')))
+print(b)"   # -> 3652
+```
+
+## Fase 114 — Far usare le stime davvero (e una mia frase da correggere)
+
+**Obiettivo.** Richiesta dell'utente: «abbiamo tanti dati e tante stime,
+vorrei che fossero usati tutti almeno in un modello o da qualche parte».
+
+**Prima l'inventario, perché la premessa andava verificata.** Controllate
+tutte e 38 le colonne dello snapshot, una per una, contro `src/` e `scripts/`:
+**nessuna è inutilizzata**. Il primo tentativo di conteggio diceva il
+contrario (4 colonne «mai usate») ed era un **artefatto della mia regex**, che
+spezzava i nomi contenenti cifre — `odds_over25` diventava `odds_over` + `25`.
+Il dato grezzo, quindi, non è sprecato.
+
+**La rettifica.** Alla Fase 113 avevo scritto che la stima O/U «non alimenta
+nulla». Troppo netto: è vero che la *funzione* `read_ou_close_estimates()` è
+chiamata solo da un test, ma il CSV è letto direttamente da
+`_run_fase75_squeeze_2017_19.py` — che su quella stima ha costruito
+un'analisi vera («apertura REALE + chiusura STIMATA») — e da
+`verifica_stime.py`, che la valida. Il fatto esatto è più preciso e meno
+sensazionale: la stima **non era una via di prima classe**, e chi la voleva
+si faceva il join a mano.
+
+**Cosa ho fatto**: `loader.ou_close_probability()`. Restituisce P(Over 2.5) di
+chiusura per ogni partita **con la provenienza dichiarata riga per riga**
+(`reale` / `stima` / `assente`). Copertura sulle 5 leghe: 12.459 reale +
+3.638 stima + 14 assente = **99,9%**. Per il motore market-implied — che
+senza chiusura O/U non gira — significa passare da **12.459 a 16.097 partite
+utilizzabili (+29%)**: il 2017-18 e il 2018-19 smettono di essere ciechi per
+il titolare.
+
+**Il vincolo che rendeva la cosa non banale.** Il progetto tiene
+deliberatamente separati prezzo e stima: le stime vivono come
+**probabilità**, mai come quote, mai dentro gli snapshot (§5). Una funzione
+che «riempie i buchi» è esattamente il posto dove quella separazione si perde
+per distrazione. Per questo: le colonne quota **non vengono toccate** (un test
+lo verifica, ed è **confermato per mutazione** — scrivendo la stima in
+`odds_over25` il test fallisce), ogni riga porta la sua provenienza, e
+`usa_stime=False` restituisce il buco vero invece della ricostruzione. 6 test
+nuovi, **889 verdi**.
+
+**Cosa NON ho fatto, e perché.** L'utente chiedeva che *tutti* i dati fossero
+usati «almeno in un modello». Molte covariate (`rest_full`, `midweek_europe`,
+`squad_value`, `npxg`, `ppda`, `deep`, assenze) **sono** usate: sono state
+misurate e trovate rumore, e stanno in panchina con i numeri del verdetto in
+`docs/PANCHINA.md`. Accenderle per non lasciarle inutilizzate sarebbe il
+contrario del metodo: un dato testato e scartato **è** un dato usato. La
+differenza che contava era un'altra — un dato *valido ma non raggiungibile*,
+ed era solo la stima.
+
+**Lezione.** «Usare tutti i dati» non vuol dire metterli tutti in un modello:
+vuol dire che nessuno sia **irraggiungibile per attrito**. Qui il problema non
+era il valore della stima (misurato da tempo), era che per usarla servivano
+venti righe di join che ogni analisi doveva riscriversi — e infatti in due
+anni l'ha fatto una sola.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la probabilità reale è il **devig binario** già in
+uso (`metrics.devig_binary`), la stima è quella della Fase 62-bis, presa così
+com'è.
+
+```
+# dove il mercato c'e' (fonte = "reale")
+p_over = (1/quota_over) / (1/quota_over + 1/quota_under)
+
+# dove non c'e' (fonte = "stima"): p_over25_close_est della Fase 62-bis,
+#   gia' una probabilita' -> nessuna trasformazione, nessun devig
+# altrove: NaN, fonte = "assente"
+```
+
+**Perché la stima non passa per un devig.** È già una probabilità devigata per
+costruzione (la Fase 62-bis stima P(Over), non una coppia di quote):
+"devigarla" significherebbe applicare due volte la stessa normalizzazione. È
+anche il motivo per cui non si può scrivere nella colonna quota senza
+inventare un overround che nessuno ha osservato — la regola di
+`data/estimates/README.md` non è una formalità, è questo.
+
+## Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa
+
+**Obiettivo.** Domanda dell'utente: cosa possiamo inventarci per superare i
+blocchi — un PC cloud sempre acceso? e quanto costerebbe?
+
+**La prima risposta: il muro di Betfair non è tecnico né economico, è
+contrattuale.** Dalla documentazione ufficiale: App Key **Delayed** gratuita
+ma «for **development** purposes» (dati conflati a 180 s); App Key **Live**
+**£499** una tantum, e testuale «**Read-only access via the Live App Key
+isn't permitted**». La raccolta dati pura sul feed live **non è un uso
+previsto a nessun prezzo** — e siccome il progetto non scommette (§5), non
+potrebbe soddisfare l'aspettativa nemmeno volendo. Un raccoglitore 24/7 su un
+account che non scommette rischia la **limitazione dell'account**: un danno
+reale all'utente. Nessun VPS risolve un vincolo di questo tipo. *(Resta
+legittimo il servizio **storico**: lì distribuire dati è lo scopo del
+servizio, e le piste A/B non sono toccate.)*
+
+**La seconda risposta, che vale più della prima: la soluzione era già in
+casa.** **Smarkets** è una borsa con API **pubblica, senza chiave, senza
+account**, e **raggiungibile da questo ambiente**. Il progetto la usa dalla
+Fase 97 — ma **solo per gli outright**. Nessuno aveva mai guardato i mercati
+per singola partita. Sondata:
+
+- **100 mercati per partita**: 1X2, **risultato esatto**, **GG/NG**, O/U da
+  0.5 a 6.5, combinati…
+- **`bids`/`offers`** = **banco e puntatore**, con le **quantità**
+  (liquidità) — su Betfair il ladder e il volume sono nei piani **a
+  pagamento**;
+- margine quasi nullo: la somma dei prezzi medi fa **100.48%**.
+
+Letto dall'API su una partita vera: Under 2.5 banco 50.25% / puntatore
+66.23%; Over 2.5 banco 34.48% / puntatore 50.00%; spread 15.98 punti;
+liquidità 88.663 unità.
+
+**Cioè dà gratis le due cose che alla Fase 111 avevo dichiarato
+irraggiungibili** (lo spread banco/puntatore e il volume), e apre la **pista
+C** — validare risultato esatto, GG/NG e le linee O/U contro un mercato vero,
+quando finora solo l'handicap asiatico era mai stato confrontato con una
+quota esterna (Fase 88).
+
+**Il costo.** Smarkets + i **3 workflow GitHub Actions già nel repo**: **€0**.
+Un VPS europeo (Hetzner ~€4/mese, Aruba ~€6) servirebbe solo se Actions non
+bastasse. Betfair Live: £499 e comunque non applicabile.
+
+**Il limite dichiarato.** Smarkets **non ha storico**: raccoglie in avanti,
+non all'indietro. Non sostituisce lo scarico Betfair per il 2017-19 — sono due
+problemi diversi (all'indietro: Betfair storico dalla macchina dell'utente; in
+avanti: Smarkets da qui). **E ha una scadenza**: la stagione comincia il **16
+agosto**, e ogni giorno senza raccoglitore è dato perso per sempre.
+
+**Lezione.** La domanda era «come aggiriamo il muro, e quanto costa». La
+risposta utile non stava nel superare il muro — stava nel **verificare se
+servisse davvero passare di lì**. Una fonte già integrata nel progetto da
+diciotto fasi copriva un'esigenza che non le era mai stata chiesta, perché era
+entrata per un altro scopo (gli outright) e nessuno aveva riaperto la domanda
+«**cos'altro sa fare?**». Prima di comprare infrastruttura per aggirare un
+limite, conviene inventariare cosa si ha già.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova; una **conversione** da fissare, perché Smarkets non
+usa quote decimali:
+
+```
+prezzo Smarkets = probabilita' x 10.000        # 5025 -> 50.25%
+p_back  = bid  / 10000        p_lay = offer / 10000
+p_mid   = (bid + offer) / 20000                # stima centrale, spread neutralizzato
+spread  = (offer - bid) / 10000                # ampiezza del book: proxy di (il)liquidita'
+```
+
+**Perché il prezzo medio e non il lato del banco.** Su una borsa i due lati
+sono i limiti di un intervallo, non due prezzi alternativi: il banco
+sovrastima e il puntatore sottostima la probabilità della stessa proposizione.
+La somma dei **medi** fa 100.48% — cioè il punto medio è già quasi una
+probabilità normalizzata, e il devig serve solo a togliere quello 0.48%. Sui
+lati grezzi invece la somma fa 84.73% (banco) e 116.23% (puntatore): usarne
+uno solo introdurrebbe un bias sistematico di segno noto, non un rumore.

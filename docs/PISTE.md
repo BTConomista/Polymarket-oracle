@@ -763,11 +763,20 @@ decisione da NON rifare da capo, per **due** motivi entrambi misurati:
    colonna** (overround 1.035 contro 1.054, bias **+0.0088** verso l'Over);
 2. come **proxy della media multi-book** è **peggiore della stima** che già
    abbiamo: sulla stagione 2019-20, dove esistono entrambi, MAE **0.0156**
-   contro ~**0.012** della stima E3.
+   contro ~**0.012** della stima E3 in interpolazione (~**0.014** nel regime
+   d'uso, che è il confronto onesto).
    *(Non è che il dato sia cattivo in sé: contro l'**apertura reale** è
    conclusivamente migliore, Δ log-loss −0.00229 [−0.00423, −0.00035]; contro la
    **stima E3** è indistinguibile, −0.00021 [−0.00278, +0.00243]. È inutile
    proprio perché la stima lo pareggia già.)*
+
+**Fasi 105/106/107 — tre ri-tentativi, tutti negativi** (richiesta utente).
+Nessuna fonte multi-book nuova: Wayback Machine, dataset nuovi, siti nuovi,
+ri-verifica dal vivo di betexplorer, ricerca partita-per-partita (Fase 108: non
+scala). E il confronto MAE, **ripetuto su 6 stagioni** invece che su una
+(2019-20 → 2024-25), mostra che **non è stabile nel tempo**: oscilla fra 0.0096
+e 0.0192, ed è peggiore nell'era porte-chiuse 2020-22. Non cambia la decisione,
+ma la rende **meno granitica** di come era stata scritta.
 
 Vive in `data/ricerca_esterna/`, fuori dagli snapshot, come **dato di verifica e
 di ricerca**. Lezione: «non esiste» ≠ «non esiste dove ho cercato» — l'errore

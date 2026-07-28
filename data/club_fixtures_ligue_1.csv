@@ -1101,6 +1101,9 @@ season,team,date,competition,home_away,opponent
 1617,Rennes,2017-05-20,Ligue 1 2016-17,H,Monaco
 1617,St Etienne,2017-05-20,Ligue 1 2016-17,A,AS Nancy Lorraine
 1617,Toulouse,2017-05-20,Ligue 1 2016-17,H,Dijon
+1718,Nice,2017-07-26,Champions League (qual.),H,Ajax
+1718,Bordeaux,2017-07-27,Europa League (qual.),H,Videoton
+1718,Marseille,2017-07-27,Europa League (qual.),H,Oostende
 1718,Ajaccio,2017-07-28,Ligue 2,A,Chamois Niortais
 1718,Brest,2017-07-28,Ligue 2,H,LB Châteauroux
 1718,Clermont,2017-07-28,Ligue 2,A,Paris FC
@@ -1109,8 +1112,13 @@ season,team,date,competition,home_away,opponent
 1718,Paris FC,2017-07-28,Ligue 2,H,Clermont
 1718,Reims,2017-07-28,Ligue 2,A,Nimes
 1718,Lorient,2017-07-29,Ligue 2,H,US Quevilly-Rouen
+1718,Monaco,2017-07-29,Trophee des Champions,H,Paris SG
+1718,Paris SG,2017-07-29,Trophee des Champions,A,Monaco
 1718,Auxerre,2017-07-31,Ligue 2,H,Lens
 1718,Lens,2017-07-31,Ligue 2,A,Auxerre
+1718,Nice,2017-08-02,Champions League (qual.),A,Ajax
+1718,Bordeaux,2017-08-03,Europa League (qual.),A,Videoton
+1718,Marseille,2017-08-03,Europa League (qual.),A,Oostende
 1718,Ajaccio,2017-08-04,Ligue 2,H,Brest
 1718,Auxerre,2017-08-04,Ligue 2,A,Le Havre
 1718,Brest,2017-08-04,Ligue 2,A,Ajaccio
@@ -1141,6 +1149,16 @@ season,team,date,competition,home_away,opponent
 1718,Lille,2017-08-06,Ligue 1,H,Nantes
 1718,Marseille,2017-08-06,Ligue 1,H,Dijon
 1718,Nantes,2017-08-06,Ligue 1,A,Lille
+1718,Ajaccio,2017-08-08,Coupe de la Ligue,A,Lens
+1718,Auxerre,2017-08-08,Coupe de la Ligue,A,Red Star
+1718,Brest,2017-08-08,Coupe de la Ligue,A,Paris FC
+1718,Clermont,2017-08-08,Coupe de la Ligue,A,Châteauroux
+1718,Le Havre,2017-08-08,Coupe de la Ligue,H,Nimes
+1718,Lens,2017-08-08,Coupe de la Ligue,H,Ajaccio
+1718,Lorient,2017-08-08,Coupe de la Ligue,A,Laval
+1718,Nimes,2017-08-08,Coupe de la Ligue,A,Le Havre
+1718,Paris FC,2017-08-08,Coupe de la Ligue,H,Brest
+1718,Reims,2017-08-08,Coupe de la Ligue,A,Bourg-Péronnas
 1718,Ajaccio,2017-08-11,Ligue 2,A,US Orléans
 1718,Auxerre,2017-08-11,Ligue 2,A,Chamois Niortais
 1718,Brest,2017-08-11,Ligue 2,H,Gazélec FC Ajaccio
@@ -1171,6 +1189,8 @@ season,team,date,competition,home_away,opponent
 1718,Strasbourg,2017-08-13,Ligue 1,H,Lille
 1718,Lorient,2017-08-14,Ligue 2,H,LB Châteauroux
 1718,Nimes,2017-08-14,Ligue 2,H,AS Nancy Lorraine
+1718,Nice,2017-08-16,Champions League (qual.),A,Napoli
+1718,Marseille,2017-08-17,Europa League (qual.),A,Domžale
 1718,Ajaccio,2017-08-18,Ligue 2,H,Paris FC
 1718,Auxerre,2017-08-18,Ligue 2,H,US Orléans
 1718,Clermont,2017-08-18,Ligue 2,H,Lorient
@@ -1201,6 +1221,14 @@ season,team,date,competition,home_away,opponent
 1718,Paris SG,2017-08-20,Ligue 1,H,Toulouse
 1718,Toulouse,2017-08-20,Ligue 1,A,Paris SG
 1718,Nimes,2017-08-21,Ligue 2,A,LB Châteauroux
+1718,Clermont,2017-08-22,Coupe de la Ligue,A,Paris FC
+1718,Le Havre,2017-08-22,Coupe de la Ligue,A,Tours
+1718,Lens,2017-08-22,Coupe de la Ligue,A,Lorient
+1718,Lorient,2017-08-22,Coupe de la Ligue,H,Lens
+1718,Nice,2017-08-22,Champions League (qual.),H,Napoli
+1718,Paris FC,2017-08-22,Coupe de la Ligue,H,Clermont
+1718,Reims,2017-08-22,Coupe de la Ligue,A,Valenciennes
+1718,Marseille,2017-08-24,Europa League (qual.),H,Domžale
 1718,Ajaccio,2017-08-25,Ligue 2,A,Tours FC
 1718,Auxerre,2017-08-25,Ligue 2,A,Paris FC
 1718,Brest,2017-08-25,Ligue 2,H,AS Nancy Lorraine
@@ -1263,6 +1291,9 @@ season,team,date,competition,home_away,opponent
 1718,Reims,2017-09-11,Ligue 2,H,Brest
 1718,Paris SG,2017-09-12,Champions League,A,Celtic FC
 1718,Monaco,2017-09-13,Champions League,A,RB Leipzig
+1718,Lyon,2017-09-14,Europa League,A,Apollon Limassol
+1718,Marseille,2017-09-14,Europa League,H,Konyaspor
+1718,Nice,2017-09-14,Europa League,A,Zulte Waregem
 1718,Ajaccio,2017-09-15,Ligue 2,A,Lorient
 1718,Auxerre,2017-09-15,Ligue 2,A,Nimes
 1718,Bordeaux,2017-09-15,Ligue 1,A,Toulouse
@@ -1335,6 +1366,9 @@ season,team,date,competition,home_away,opponent
 1718,Lens,2017-09-25,Ligue 2,A,Clermont
 1718,Monaco,2017-09-26,Champions League,H,FC Porto
 1718,Paris SG,2017-09-27,Champions League,H,Bayern Munich
+1718,Lyon,2017-09-28,Europa League,H,Atalanta
+1718,Marseille,2017-09-28,Europa League,A,Red Bull Salzburg
+1718,Nice,2017-09-28,Europa League,H,Vitesse
 1718,Ajaccio,2017-09-29,Ligue 2,H,FC Bourg-Péronnas
 1718,Auxerre,2017-09-29,Ligue 2,H,FC Sochaux
 1718,Brest,2017-09-29,Ligue 2,A,Tours FC
@@ -1395,6 +1429,9 @@ season,team,date,competition,home_away,opponent
 1718,Lorient,2017-10-16,Ligue 2,H,Chamois Niortais
 1718,Monaco,2017-10-17,Champions League,H,Beşiktaş
 1718,Paris SG,2017-10-18,Champions League,A,RSC Anderlecht
+1718,Lyon,2017-10-19,Europa League,A,Everton
+1718,Marseille,2017-10-19,Europa League,H,Vitória de Guimarães
+1718,Nice,2017-10-19,Europa League,H,Lazio
 1718,Auxerre,2017-10-20,Ligue 2,H,US Quevilly-Rouen
 1718,Brest,2017-10-20,Ligue 2,A,Nimes
 1718,Clermont,2017-10-20,Ligue 2,A,AS Nancy Lorraine
@@ -1425,6 +1462,22 @@ season,team,date,competition,home_away,opponent
 1718,Strasbourg,2017-10-22,Ligue 1,A,Nice
 1718,Troyes,2017-10-22,Ligue 1,H,Lyon
 1718,Ajaccio,2017-10-23,Ligue 2,H,Gazélec FC Ajaccio
+1718,Caen,2017-10-24,Coupe de la Ligue,A,Lorient
+1718,Guingamp,2017-10-24,Coupe de la Ligue,H,Montpellier
+1718,Lorient,2017-10-24,Coupe de la Ligue,H,Caen
+1718,Montpellier,2017-10-24,Coupe de la Ligue,A,Guingamp
+1718,Amiens,2017-10-25,Coupe de la Ligue,A,Troyes
+1718,Angers,2017-10-25,Coupe de la Ligue,H,Nancy
+1718,Clermont,2017-10-25,Coupe de la Ligue,A,Toulouse
+1718,Dijon,2017-10-25,Coupe de la Ligue,H,Rennes
+1718,Lille,2017-10-25,Coupe de la Ligue,H,Valenciennes
+1718,Metz,2017-10-25,Coupe de la Ligue,H,Red Star
+1718,Nantes,2017-10-25,Coupe de la Ligue,A,Tours
+1718,Rennes,2017-10-25,Coupe de la Ligue,A,Dijon
+1718,St Etienne,2017-10-25,Coupe de la Ligue,A,Strasbourg
+1718,Strasbourg,2017-10-25,Coupe de la Ligue,H,St Etienne
+1718,Toulouse,2017-10-25,Coupe de la Ligue,H,Clermont
+1718,Troyes,2017-10-25,Coupe de la Ligue,H,Amiens
 1718,Auxerre,2017-10-27,Ligue 2,A,FC Bourg-Péronnas
 1718,Brest,2017-10-27,Ligue 2,H,US Orléans
 1718,Le Havre,2017-10-27,Ligue 2,A,US Quevilly-Rouen
@@ -1457,6 +1510,9 @@ season,team,date,competition,home_away,opponent
 1718,Lens,2017-10-30,Ligue 2,A,LB Châteauroux
 1718,Paris SG,2017-10-31,Champions League,H,RSC Anderlecht
 1718,Monaco,2017-11-01,Champions League,A,Beşiktaş
+1718,Lyon,2017-11-02,Europa League,H,Everton
+1718,Marseille,2017-11-02,Europa League,A,Vitória de Guimarães
+1718,Nice,2017-11-02,Europa League,A,Lazio
 1718,Ajaccio,2017-11-03,Ligue 2,H,LB Châteauroux
 1718,Auxerre,2017-11-03,Ligue 2,H,Gazélec FC Ajaccio
 1718,Bordeaux,2017-11-03,Ligue 1,A,Rennes
@@ -1487,6 +1543,16 @@ season,team,date,competition,home_away,opponent
 1718,St Etienne,2017-11-05,Ligue 1,H,Lyon
 1718,Le Havre,2017-11-06,Ligue 2,H,Reims
 1718,Reims,2017-11-06,Ligue 2,A,Le Havre
+1718,Lens,2017-11-10,Coupe de France,A,US Nœux-les-Mines
+1718,Auxerre,2017-11-11,Coupe de France,A,FC Chamalières
+1718,Clermont,2017-11-11,Coupe de France,A,AS Yzeure
+1718,Paris FC,2017-11-11,Coupe de France,A,Stade Ygossais
+1718,Ajaccio,2017-11-12,Coupe de France,A,Saint-Amand FC
+1718,Brest,2017-11-12,Coupe de France,A,CS Plédran
+1718,Le Havre,2017-11-12,Coupe de France,A,Évreux FC 27
+1718,Lorient,2017-11-12,Coupe de France,A,Stella Maris Douarnenez
+1718,Nimes,2017-11-12,Coupe de France,H,Marseille Consolat
+1718,Reims,2017-11-12,Coupe de France,A,FC Geispolsheim 01
 1718,Ajaccio,2017-11-17,Ligue 2,A,AS Nancy Lorraine
 1718,Amiens,2017-11-17,Ligue 1,H,Monaco
 1718,Auxerre,2017-11-17,Ligue 2,A,Clermont
@@ -1521,6 +1587,9 @@ season,team,date,competition,home_away,opponent
 1718,Lille,2017-11-20,Ligue 1,A,Amiens
 1718,Monaco,2017-11-21,Champions League,H,RB Leipzig
 1718,Paris SG,2017-11-22,Champions League,H,Celtic FC
+1718,Lyon,2017-11-23,Europa League,H,Apollon Limassol
+1718,Marseille,2017-11-23,Europa League,A,Konyaspor
+1718,Nice,2017-11-23,Europa League,H,Zulte Waregem
 1718,Ajaccio,2017-11-24,Ligue 2,H,Reims
 1718,Auxerre,2017-11-24,Ligue 2,H,AS Nancy Lorraine
 1718,Brest,2017-11-24,Ligue 2,H,FC Sochaux
@@ -1583,26 +1652,37 @@ season,team,date,competition,home_away,opponent
 1718,Troyes,2017-11-29,Ligue 1,A,Paris SG
 1718,Bordeaux,2017-12-01,Ligue 1,A,Dijon
 1718,Dijon,2017-12-01,Ligue 1,H,Bordeaux
+1718,Ajaccio,2017-12-02,Coupe de France,A,Canet Roussillon FC
 1718,Amiens,2017-12-02,Ligue 1,A,Rennes
 1718,Angers,2017-12-02,Ligue 1,A,Monaco
+1718,Auxerre,2017-12-02,Coupe de France,A,ASF Andrézieux
+1718,Brest,2017-12-02,Coupe de France,A,US Concarneau
 1718,Guingamp,2017-12-02,Ligue 1,A,Troyes
 1718,Lille,2017-12-02,Ligue 1,H,Toulouse
+1718,Lorient,2017-12-02,Coupe de France,A,Séné FC
 1718,Metz,2017-12-02,Ligue 1,A,Nice
 1718,Monaco,2017-12-02,Ligue 1,H,Angers
 1718,Nice,2017-12-02,Ligue 1,H,Metz
+1718,Paris FC,2017-12-02,Coupe de France,A,L'Entente SSG
 1718,Paris SG,2017-12-02,Ligue 1,A,Strasbourg
 1718,Rennes,2017-12-02,Ligue 1,H,Amiens
 1718,Strasbourg,2017-12-02,Ligue 1,H,Paris SG
 1718,Toulouse,2017-12-02,Ligue 1,A,Lille
 1718,Troyes,2017-12-02,Ligue 1,H,Guingamp
 1718,Caen,2017-12-03,Ligue 1,H,Lyon
+1718,Lens,2017-12-03,Coupe de France,H,Reims
 1718,Lyon,2017-12-03,Ligue 1,A,Caen
 1718,Marseille,2017-12-03,Ligue 1,A,Montpellier
 1718,Montpellier,2017-12-03,Ligue 1,H,Marseille
 1718,Nantes,2017-12-03,Ligue 1,A,St Etienne
+1718,Nimes,2017-12-03,Coupe de France,A,SC Anduzien
+1718,Reims,2017-12-03,Coupe de France,A,Lens
 1718,St Etienne,2017-12-03,Ligue 1,H,Nantes
 1718,Paris SG,2017-12-05,Champions League,A,Bayern Munich
 1718,Monaco,2017-12-06,Champions League,A,FC Porto
+1718,Lyon,2017-12-07,Europa League,A,Atalanta
+1718,Marseille,2017-12-07,Europa League,H,Red Bull Salzburg
+1718,Nice,2017-12-07,Europa League,A,Vitesse
 1718,Auxerre,2017-12-08,Ligue 2,H,LB Châteauroux
 1718,Bordeaux,2017-12-08,Ligue 1,H,Strasbourg
 1718,Brest,2017-12-08,Ligue 2,H,FC Bourg-Péronnas
@@ -1633,6 +1713,21 @@ season,team,date,competition,home_away,opponent
 1718,St Etienne,2017-12-10,Ligue 1,A,Marseille
 1718,Clermont,2017-12-11,Ligue 2,A,Nimes
 1718,Nimes,2017-12-11,Ligue 2,H,Clermont
+1718,Angers,2017-12-12,Coupe de la Ligue,H,Metz
+1718,Bordeaux,2017-12-12,Coupe de la Ligue,A,Toulouse
+1718,Caen,2017-12-12,Coupe de la Ligue,A,Monaco
+1718,Metz,2017-12-12,Coupe de la Ligue,A,Angers
+1718,Monaco,2017-12-12,Coupe de la Ligue,H,Caen
+1718,Toulouse,2017-12-12,Coupe de la Ligue,H,Bordeaux
+1718,Amiens,2017-12-13,Coupe de la Ligue,H,Tours
+1718,Lille,2017-12-13,Coupe de la Ligue,H,Nice
+1718,Lyon,2017-12-13,Coupe de la Ligue,A,Montpellier
+1718,Marseille,2017-12-13,Coupe de la Ligue,A,Rennes
+1718,Montpellier,2017-12-13,Coupe de la Ligue,H,Lyon
+1718,Nice,2017-12-13,Coupe de la Ligue,A,Lille
+1718,Paris SG,2017-12-13,Coupe de la Ligue,A,Strasbourg
+1718,Rennes,2017-12-13,Coupe de la Ligue,H,Marseille
+1718,Strasbourg,2017-12-13,Coupe de la Ligue,H,Paris SG
 1718,Ajaccio,2017-12-15,Ligue 2,H,Auxerre
 1718,Auxerre,2017-12-15,Ligue 2,A,Ajaccio
 1718,Brest,2017-12-15,Ligue 2,A,US Quevilly-Rouen
@@ -1682,6 +1777,38 @@ season,team,date,competition,home_away,opponent
 1718,Strasbourg,2017-12-20,Ligue 1,A,Metz
 1718,Toulouse,2017-12-20,Ligue 1,H,Lyon
 1718,Troyes,2017-12-20,Ligue 1,A,Marseille
+1718,Auxerre,2018-01-06,Coupe de France,A,SC Schiltigheim
+1718,Caen,2018-01-06,Coupe de France,A,SC Hazebrouck
+1718,Guingamp,2018-01-06,Coupe de France,H,Niort
+1718,Lille,2018-01-06,Coupe de France,A,Le Mans FC
+1718,Lyon,2018-01-06,Coupe de France,A,Nancy
+1718,Monaco,2018-01-06,Coupe de France,A,AS Yzeure
+1718,Montpellier,2018-01-06,Coupe de France,A,CA Pontarlier
+1718,Nice,2018-01-06,Coupe de France,A,Toulouse
+1718,Toulouse,2018-01-06,Coupe de France,H,Nice
+1718,Amiens,2018-01-07,Coupe de France,A,Sochaux
+1718,Angers,2018-01-07,Coupe de France,H,Lorient
+1718,Bordeaux,2018-01-07,Coupe de France,A,US Granville
+1718,Dijon,2018-01-07,Coupe de France,A,Strasbourg
+1718,Lorient,2018-01-07,Coupe de France,A,Angers
+1718,Marseille,2018-01-07,Coupe de France,H,Valenciennes
+1718,Metz,2018-01-07,Coupe de France,A,USL Dunkerque
+1718,Nantes,2018-01-07,Coupe de France,A,USM Senlisienne
+1718,Nimes,2018-01-07,Coupe de France,A,St Etienne
+1718,Paris SG,2018-01-07,Coupe de France,A,Rennes
+1718,Rennes,2018-01-07,Coupe de France,H,Paris SG
+1718,St Etienne,2018-01-07,Coupe de France,H,Nimes
+1718,Strasbourg,2018-01-07,Coupe de France,H,Dijon
+1718,Troyes,2018-01-07,Coupe de France,A,FC Still 1930
+1718,Lens,2018-01-08,Coupe de France,H,US Boulogne
+1718,Monaco,2018-01-09,Coupe de la Ligue,A,Nice
+1718,Nice,2018-01-09,Coupe de la Ligue,H,Monaco
+1718,Amiens,2018-01-10,Coupe de la Ligue,H,Paris SG
+1718,Angers,2018-01-10,Coupe de la Ligue,H,Montpellier
+1718,Montpellier,2018-01-10,Coupe de la Ligue,A,Angers
+1718,Paris SG,2018-01-10,Coupe de la Ligue,A,Amiens
+1718,Rennes,2018-01-10,Coupe de la Ligue,H,Toulouse
+1718,Toulouse,2018-01-10,Coupe de la Ligue,A,Rennes
 1718,Ajaccio,2018-01-12,Ligue 2,A,Brest
 1718,Auxerre,2018-01-12,Ligue 2,H,Le Havre
 1718,Brest,2018-01-12,Ligue 2,H,Ajaccio
@@ -1771,7 +1898,24 @@ season,team,date,competition,home_away,opponent
 1718,St Etienne,2018-01-21,Ligue 1,A,Nice
 1718,Ajaccio,2018-01-22,Ligue 2,A,Paris FC
 1718,Paris FC,2018-01-22,Ligue 2,H,Ajaccio
+1718,Auxerre,2018-01-23,Coupe de France,A,Nantes
+1718,Caen,2018-01-23,Coupe de France,A,Canet Roussillon FC
+1718,Lens,2018-01-23,Coupe de France,A,Stade Briochin
+1718,Marseille,2018-01-23,Coupe de France,A,SAS Épinal
+1718,Nantes,2018-01-23,Coupe de France,H,Auxerre
 1718,Nimes,2018-01-23,Ligue 2,A,Gazélec FC Ajaccio
+1718,Toulouse,2018-01-23,Coupe de France,A,Bourg-en-Bresse
+1718,Guingamp,2018-01-24,Coupe de France,A,Paris SG
+1718,Lorient,2018-01-24,Coupe de France,A,Montpellier
+1718,Lyon,2018-01-24,Coupe de France,A,Monaco
+1718,Metz,2018-01-24,Coupe de France,A,Tours
+1718,Monaco,2018-01-24,Coupe de France,H,Lyon
+1718,Montpellier,2018-01-24,Coupe de France,H,Lorient
+1718,Paris SG,2018-01-24,Coupe de France,H,Guingamp
+1718,St Etienne,2018-01-24,Coupe de France,A,Troyes
+1718,Troyes,2018-01-24,Coupe de France,H,St Etienne
+1718,Lille,2018-01-25,Coupe de France,A,Strasbourg
+1718,Strasbourg,2018-01-25,Coupe de France,H,Lille
 1718,Auxerre,2018-01-26,Ligue 2,H,Paris FC
 1718,Brest,2018-01-26,Ligue 2,A,AS Nancy Lorraine
 1718,Clermont,2018-01-26,Ligue 2,H,US Quevilly-Rouen
@@ -1803,6 +1947,10 @@ season,team,date,competition,home_away,opponent
 1718,Lorient,2018-01-29,Ligue 2,A,Reims
 1718,Reims,2018-01-29,Ligue 2,H,Lorient
 1718,Lens,2018-01-30,Ligue 2,H,FC Sochaux
+1718,Paris SG,2018-01-30,Coupe de la Ligue,A,Rennes
+1718,Rennes,2018-01-30,Coupe de la Ligue,H,Paris SG
+1718,Monaco,2018-01-31,Coupe de la Ligue,H,Montpellier
+1718,Montpellier,2018-01-31,Coupe de la Ligue,A,Monaco
 1718,Ajaccio,2018-02-02,Ligue 2,A,Nimes
 1718,Auxerre,2018-02-02,Ligue 2,A,Tours FC
 1718,Clermont,2018-02-02,Ligue 2,A,FC Bourg-Péronnas
@@ -1831,6 +1979,16 @@ season,team,date,competition,home_away,opponent
 1718,Rennes,2018-02-04,Ligue 1,H,Guingamp
 1718,Brest,2018-02-05,Ligue 2,H,Reims
 1718,Reims,2018-02-05,Ligue 2,A,Brest
+1718,Auxerre,2018-02-06,Coupe de France,H,Les Herbiers VF
+1718,Marseille,2018-02-06,Coupe de France,A,Bourg-en-Bresse
+1718,Paris SG,2018-02-06,Coupe de France,A,Sochaux
+1718,Caen,2018-02-07,Coupe de France,A,Metz
+1718,Lens,2018-02-07,Coupe de France,H,Troyes
+1718,Lyon,2018-02-07,Coupe de France,A,Montpellier
+1718,Metz,2018-02-07,Coupe de France,H,Caen
+1718,Montpellier,2018-02-07,Coupe de France,H,Lyon
+1718,Troyes,2018-02-07,Coupe de France,A,Lens
+1718,Strasbourg,2018-02-08,Coupe de France,A,Grenoble Foot 38
 1718,Ajaccio,2018-02-09,Ligue 2,H,Lorient
 1718,Brest,2018-02-09,Ligue 2,A,Le Havre
 1718,Clermont,2018-02-09,Ligue 2,H,Gazélec FC Ajaccio
@@ -1862,6 +2020,9 @@ season,team,date,competition,home_away,opponent
 1718,Auxerre,2018-02-12,Ligue 2,H,Nimes
 1718,Nimes,2018-02-12,Ligue 2,A,Auxerre
 1718,Paris SG,2018-02-14,Champions League,A,Real Madrid
+1718,Lyon,2018-02-15,Europa League,H,Villarreal
+1718,Marseille,2018-02-15,Europa League,H,Braga
+1718,Nice,2018-02-15,Europa League,H,Lokomotiv Moscow
 1718,Ajaccio,2018-02-16,Ligue 2,A,Valenciennes FC
 1718,Brest,2018-02-16,Ligue 2,H,Chamois Niortais
 1718,Clermont,2018-02-16,Ligue 2,H,LB Châteauroux
@@ -1894,6 +2055,9 @@ season,team,date,competition,home_away,opponent
 1718,Lens,2018-02-19,Ligue 2,A,US Quevilly-Rouen
 1718,Dijon,2018-02-20,Ligue 1,A,Troyes
 1718,Troyes,2018-02-20,Ligue 1,H,Dijon
+1718,Lyon,2018-02-22,Europa League,A,Villarreal
+1718,Marseille,2018-02-22,Europa League,A,Braga
+1718,Nice,2018-02-22,Europa League,A,Lokomotiv Moscow
 1718,Ajaccio,2018-02-23,Ligue 2,H,FC Sochaux
 1718,Auxerre,2018-02-23,Ligue 2,H,Valenciennes FC
 1718,Clermont,2018-02-23,Ligue 2,A,Lens
@@ -1924,6 +2088,12 @@ season,team,date,competition,home_away,opponent
 1718,Paris SG,2018-02-25,Ligue 1,H,Marseille
 1718,St Etienne,2018-02-25,Ligue 1,A,Lyon
 1718,Lorient,2018-02-26,Ligue 2,A,AS Nancy Lorraine
+1718,Lens,2018-02-27,Coupe de France,A,Les Herbiers VF
+1718,Marseille,2018-02-28,Coupe de France,A,Paris SG
+1718,Paris SG,2018-02-28,Coupe de France,H,Marseille
+1718,Strasbourg,2018-02-28,Coupe de France,A,FC Chambly
+1718,Caen,2018-03-01,Coupe de France,H,Lyon
+1718,Lyon,2018-03-01,Coupe de France,A,Caen
 1718,Ajaccio,2018-03-02,Ligue 2,A,FC Bourg-Péronnas
 1718,Bordeaux,2018-03-02,Ligue 1,A,Monaco
 1718,Brest,2018-03-02,Ligue 2,H,Tours FC
@@ -1954,6 +2124,8 @@ season,team,date,competition,home_away,opponent
 1718,Le Havre,2018-03-05,Ligue 2,A,Lorient
 1718,Lorient,2018-03-05,Ligue 2,H,Le Havre
 1718,Paris SG,2018-03-06,Champions League,H,Real Madrid
+1718,Lyon,2018-03-08,Europa League,A,CSKA Moscow
+1718,Marseille,2018-03-08,Europa League,H,Athletic Bilbao
 1718,Ajaccio,2018-03-09,Ligue 2,H,US Quevilly-Rouen
 1718,Auxerre,2018-03-09,Ligue 2,H,Brest
 1718,Brest,2018-03-09,Ligue 2,A,Auxerre
@@ -1987,6 +2159,8 @@ season,team,date,competition,home_away,opponent
 1718,Auxerre,2018-03-13,Ligue 2,A,FC Sochaux
 1718,Angers,2018-03-14,Ligue 1,A,Paris SG
 1718,Paris SG,2018-03-14,Ligue 1,H,Angers
+1718,Lyon,2018-03-15,Europa League,H,CSKA Moscow
+1718,Marseille,2018-03-15,Europa League,A,Athletic Bilbao
 1718,Ajaccio,2018-03-16,Ligue 2,A,Gazélec FC Ajaccio
 1718,Auxerre,2018-03-16,Ligue 2,A,US Quevilly-Rouen
 1718,Clermont,2018-03-16,Ligue 2,H,AS Nancy Lorraine
@@ -2027,6 +2201,8 @@ season,team,date,competition,home_away,opponent
 1718,Paris FC,2018-03-30,Ligue 2,H,Gazélec FC Ajaccio
 1718,Dijon,2018-03-31,Ligue 1,H,Marseille
 1718,Marseille,2018-03-31,Ligue 1,A,Dijon
+1718,Monaco,2018-03-31,Coupe de la Ligue,A,Paris SG
+1718,Paris SG,2018-03-31,Coupe de la Ligue,H,Monaco
 1718,Reims,2018-03-31,Ligue 2,A,AS Nancy Lorraine
 1718,Amiens,2018-04-01,Ligue 1,A,Lille
 1718,Bordeaux,2018-04-01,Ligue 1,A,Guingamp
@@ -2045,6 +2221,7 @@ season,team,date,competition,home_away,opponent
 1718,Lens,2018-04-02,Ligue 2,H,LB Châteauroux
 1718,Monaco,2018-04-04,Ligue 1,A,Rennes
 1718,Rennes,2018-04-04,Ligue 1,H,Monaco
+1718,Marseille,2018-04-05,Europa League,A,RB Leipzig
 1718,Ajaccio,2018-04-06,Ligue 2,A,LB Châteauroux
 1718,Auxerre,2018-04-06,Ligue 2,A,Gazélec FC Ajaccio
 1718,Brest,2018-04-06,Ligue 2,H,Valenciennes FC
@@ -2073,6 +2250,7 @@ season,team,date,competition,home_away,opponent
 1718,Nice,2018-04-08,Ligue 1,H,Rennes
 1718,Rennes,2018-04-08,Ligue 1,A,Nice
 1718,Lens,2018-04-09,Ligue 2,H,AS Nancy Lorraine
+1718,Marseille,2018-04-12,Europa League,H,RB Leipzig
 1718,Ajaccio,2018-04-13,Ligue 2,H,AS Nancy Lorraine
 1718,Angers,2018-04-13,Ligue 1,H,Nice
 1718,Auxerre,2018-04-13,Ligue 2,H,Clermont
@@ -2101,6 +2279,8 @@ season,team,date,competition,home_away,opponent
 1718,Troyes,2018-04-15,Ligue 1,H,Marseille
 1718,Brest,2018-04-16,Ligue 2,H,Lorient
 1718,Lorient,2018-04-16,Ligue 2,A,Brest
+1718,Caen,2018-04-18,Coupe de France,H,Paris SG
+1718,Paris SG,2018-04-18,Coupe de France,A,Caen
 1718,Ajaccio,2018-04-20,Ligue 2,A,Reims
 1718,Brest,2018-04-20,Ligue 2,A,FC Sochaux
 1718,Clermont,2018-04-20,Ligue 2,H,US Orléans
@@ -2143,6 +2323,7 @@ season,team,date,competition,home_away,opponent
 1718,Reims,2018-04-24,Ligue 2,A,Auxerre
 1718,Caen,2018-04-25,Ligue 1,H,Toulouse
 1718,Toulouse,2018-04-25,Ligue 1,A,Caen
+1718,Marseille,2018-04-26,Europa League,H,Red Bull Salzburg
 1718,Ajaccio,2018-04-27,Ligue 2,A,Le Havre
 1718,Auxerre,2018-04-27,Ligue 2,A,LB Châteauroux
 1718,Brest,2018-04-27,Ligue 2,A,FC Bourg-Péronnas
@@ -2175,6 +2356,7 @@ season,team,date,competition,home_away,opponent
 1718,Lens,2018-04-30,Ligue 2,H,Paris FC
 1718,Paris FC,2018-04-30,Ligue 2,A,Lens
 1718,Reims,2018-04-30,Ligue 2,H,Le Havre
+1718,Marseille,2018-05-03,Europa League,A,Red Bull Salzburg
 1718,Ajaccio,2018-05-04,Ligue 2,A,Auxerre
 1718,Amiens,2018-05-04,Ligue 1,H,Paris SG
 1718,Auxerre,2018-05-04,Ligue 2,H,Ajaccio
@@ -2205,6 +2387,7 @@ season,team,date,competition,home_away,opponent
 1718,Strasbourg,2018-05-06,Ligue 1,A,Rennes
 1718,Toulouse,2018-05-06,Ligue 1,H,Lille
 1718,Troyes,2018-05-06,Ligue 1,A,Lyon
+1718,Paris SG,2018-05-08,Coupe de France,A,Les Herbiers VF
 1718,Ajaccio,2018-05-11,Ligue 2,H,Chamois Niortais
 1718,Auxerre,2018-05-11,Ligue 2,A,Lens
 1718,Brest,2018-05-11,Ligue 2,A,LB Châteauroux
@@ -2235,6 +2418,7 @@ season,team,date,competition,home_away,opponent
 1718,Strasbourg,2018-05-12,Ligue 1,H,Lyon
 1718,Toulouse,2018-05-12,Ligue 1,A,Bordeaux
 1718,Troyes,2018-05-12,Ligue 1,A,Montpellier
+1718,Marseille,2018-05-16,Europa League,H,Atlético Madrid
 1718,Amiens,2018-05-19,Ligue 1,A,Marseille
 1718,Angers,2018-05-19,Ligue 1,A,Dijon
 1718,Bordeaux,2018-05-19,Ligue 1,A,Metz
@@ -2255,6 +2439,7 @@ season,team,date,competition,home_away,opponent
 1718,Strasbourg,2018-05-19,Ligue 1,A,Nantes
 1718,Toulouse,2018-05-19,Ligue 1,H,Guingamp
 1718,Troyes,2018-05-19,Ligue 1,H,Monaco
+1819,Bordeaux,2018-07-26,Europa League (qual.),A,Ventspils
 1819,Ajaccio,2018-07-27,Ligue 2,H,Troyes
 1819,Auxerre,2018-07-27,Ligue 2,A,Valenciennes FC
 1819,Clermont,2018-07-27,Ligue 2,H,LB Châteauroux
@@ -2265,6 +2450,7 @@ season,team,date,competition,home_away,opponent
 1819,Lorient,2018-07-28,Ligue 2,H,Le Havre
 1819,Brest,2018-07-30,Ligue 2,H,Metz
 1819,Metz,2018-07-30,Ligue 2,A,Brest
+1819,Bordeaux,2018-08-02,Europa League (qual.),H,Ventspils
 1819,Ajaccio,2018-08-03,Ligue 2,A,AS Béziers
 1819,Auxerre,2018-08-03,Ligue 2,H,Gazélec FC Ajaccio
 1819,Brest,2018-08-03,Ligue 2,A,Troyes
@@ -2274,7 +2460,10 @@ season,team,date,competition,home_away,opponent
 1819,Paris FC,2018-08-03,Ligue 2,H,AS Nancy Lorraine
 1819,Troyes,2018-08-03,Ligue 2,H,Brest
 1819,Lens,2018-08-04,Ligue 2,H,Red Star FC
+1819,Monaco,2018-08-04,Trophee des Champions,A,Paris SG
+1819,Paris SG,2018-08-04,Trophee des Champions,H,Monaco
 1819,Lorient,2018-08-06,Ligue 2,A,LB Châteauroux
+1819,Bordeaux,2018-08-09,Europa League (qual.),A,Mariupol
 1819,Ajaccio,2018-08-10,Ligue 2,H,FC Sochaux
 1819,Auxerre,2018-08-10,Ligue 2,A,US Orléans
 1819,Brest,2018-08-10,Ligue 2,H,Paris FC
@@ -2305,6 +2494,17 @@ season,team,date,competition,home_away,opponent
 1819,Lyon,2018-08-12,Ligue 1,H,Amiens
 1819,Paris SG,2018-08-12,Ligue 1,H,Caen
 1819,Strasbourg,2018-08-12,Ligue 1,A,Bordeaux
+1819,Ajaccio,2018-08-14,Coupe de la Ligue,A,Paris FC
+1819,Auxerre,2018-08-14,Coupe de la Ligue,H,Gazélec Ajaccio
+1819,Brest,2018-08-14,Coupe de la Ligue,A,Sochaux
+1819,Clermont,2018-08-14,Coupe de la Ligue,A,Laval
+1819,Le Havre,2018-08-14,Coupe de la Ligue,H,Bourg-Péronnas
+1819,Lens,2018-08-14,Coupe de la Ligue,A,Tours
+1819,Lorient,2018-08-14,Coupe de la Ligue,A,Valenciennes
+1819,Metz,2018-08-14,Coupe de la Ligue,H,Grenoble
+1819,Paris FC,2018-08-14,Coupe de la Ligue,H,Ajaccio
+1819,Troyes,2018-08-14,Coupe de la Ligue,A,Quevilly-Rouen
+1819,Bordeaux,2018-08-16,Europa League (qual.),H,Mariupol
 1819,Auxerre,2018-08-17,Ligue 2,H,AS Nancy Lorraine
 1819,Brest,2018-08-17,Ligue 2,A,FC Sochaux
 1819,Clermont,2018-08-17,Ligue 2,A,Le Havre
@@ -2335,6 +2535,7 @@ season,team,date,competition,home_away,opponent
 1819,Toulouse,2018-08-19,Ligue 1,H,Bordeaux
 1819,Ajaccio,2018-08-20,Ligue 2,A,Metz
 1819,Metz,2018-08-20,Ligue 2,H,Ajaccio
+1819,Bordeaux,2018-08-23,Europa League (qual.),A,Gent
 1819,Ajaccio,2018-08-24,Ligue 2,H,Lorient
 1819,Auxerre,2018-08-24,Ligue 2,A,Red Star FC
 1819,Brest,2018-08-24,Ligue 2,H,Le Havre
@@ -2364,6 +2565,16 @@ season,team,date,competition,home_away,opponent
 1819,Marseille,2018-08-26,Ligue 1,H,Rennes
 1819,Monaco,2018-08-26,Ligue 1,A,Bordeaux
 1819,Rennes,2018-08-26,Ligue 1,A,Marseille
+1819,Ajaccio,2018-08-28,Coupe de la Ligue,H,Lorient
+1819,Auxerre,2018-08-28,Coupe de la Ligue,H,Châteauroux
+1819,Brest,2018-08-28,Coupe de la Ligue,A,Le Havre
+1819,Clermont,2018-08-28,Coupe de la Ligue,A,Troyes
+1819,Le Havre,2018-08-28,Coupe de la Ligue,H,Brest
+1819,Lens,2018-08-28,Coupe de la Ligue,H,Metz
+1819,Lorient,2018-08-28,Coupe de la Ligue,A,Ajaccio
+1819,Metz,2018-08-28,Coupe de la Ligue,A,Lens
+1819,Troyes,2018-08-28,Coupe de la Ligue,H,Clermont
+1819,Bordeaux,2018-08-30,Europa League (qual.),H,Gent
 1819,Ajaccio,2018-08-31,Ligue 2,A,Chamois Niortais
 1819,Auxerre,2018-08-31,Ligue 2,H,Brest
 1819,Brest,2018-08-31,Ligue 2,A,Auxerre
@@ -2427,6 +2638,9 @@ season,team,date,competition,home_away,opponent
 1819,Monaco,2018-09-18,Champions League,H,Ath Madrid
 1819,Paris SG,2018-09-18,Champions League,A,Liverpool
 1819,Lyon,2018-09-19,Champions League,A,Man City
+1819,Bordeaux,2018-09-20,Europa League,A,Slavia Prague
+1819,Marseille,2018-09-20,Europa League,H,Eintracht Frankfurt
+1819,Rennes,2018-09-20,Europa League,H,Jablonec
 1819,Ajaccio,2018-09-21,Ligue 2,A,Auxerre
 1819,Auxerre,2018-09-21,Ligue 2,H,Ajaccio
 1819,Brest,2018-09-21,Ligue 2,A,Grenoble Foot 38
@@ -2511,6 +2725,9 @@ season,team,date,competition,home_away,opponent
 1819,Lyon,2018-10-02,Champions League,H,Shakhtar Donetsk
 1819,Monaco,2018-10-03,Champions League,A,Dortmund
 1819,Paris SG,2018-10-03,Champions League,H,Crvena Zvezda
+1819,Bordeaux,2018-10-04,Europa League,H,Copenhagen
+1819,Marseille,2018-10-04,Europa League,A,Apollon Limassol
+1819,Rennes,2018-10-04,Europa League,A,Astana
 1819,Ajaccio,2018-10-05,Ligue 2,A,Red Star FC
 1819,Brest,2018-10-05,Ligue 2,A,Valenciennes FC
 1819,Clermont,2018-10-05,Ligue 2,A,Grenoble Foot 38
@@ -2574,6 +2791,9 @@ season,team,date,competition,home_away,opponent
 1819,Lyon,2018-10-23,Champions League,A,Hoffenheim
 1819,Monaco,2018-10-24,Champions League,A,Club Brugge KV
 1819,Paris SG,2018-10-24,Champions League,H,Napoli
+1819,Bordeaux,2018-10-25,Europa League,A,Zenit Saint Petersburg
+1819,Marseille,2018-10-25,Europa League,H,Lazio
+1819,Rennes,2018-10-25,Europa League,H,Dynamo Kyiv
 1819,Ajaccio,2018-10-26,Ligue 2,A,LB Châteauroux
 1819,Auxerre,2018-10-26,Ligue 2,H,Paris FC
 1819,Lorient,2018-10-26,Ligue 2,H,Metz
@@ -2604,6 +2824,23 @@ season,team,date,competition,home_away,opponent
 1819,Rennes,2018-10-28,Ligue 1,H,Reims
 1819,Brest,2018-10-29,Ligue 2,A,Clermont
 1819,Clermont,2018-10-29,Ligue 2,H,Brest
+1819,Lille,2018-10-30,Coupe de la Ligue,A,Strasbourg
+1819,Montpellier,2018-10-30,Coupe de la Ligue,H,Nantes
+1819,Nantes,2018-10-30,Coupe de la Ligue,A,Montpellier
+1819,Strasbourg,2018-10-30,Coupe de la Ligue,H,Lille
+1819,Amiens,2018-10-31,Coupe de la Ligue,A,Metz
+1819,Angers,2018-10-31,Coupe de la Ligue,A,Guingamp
+1819,Auxerre,2018-10-31,Coupe de la Ligue,A,Nice
+1819,Caen,2018-10-31,Coupe de la Ligue,A,Dijon
+1819,Dijon,2018-10-31,Coupe de la Ligue,H,Caen
+1819,Guingamp,2018-10-31,Coupe de la Ligue,H,Angers
+1819,Le Havre,2018-10-31,Coupe de la Ligue,H,Troyes
+1819,Lorient,2018-10-31,Coupe de la Ligue,A,Toulouse
+1819,Metz,2018-10-31,Coupe de la Ligue,H,Amiens
+1819,Nice,2018-10-31,Coupe de la Ligue,H,Auxerre
+1819,Reims,2018-10-31,Coupe de la Ligue,H,Orléans
+1819,Toulouse,2018-10-31,Coupe de la Ligue,H,Lorient
+1819,Troyes,2018-10-31,Coupe de la Ligue,A,Le Havre
 1819,Ajaccio,2018-11-02,Ligue 2,H,Gazélec FC Ajaccio
 1819,Brest,2018-11-02,Ligue 2,H,Red Star FC
 1819,Clermont,2018-11-02,Ligue 2,A,AS Nancy Lorraine
@@ -2637,6 +2874,9 @@ season,team,date,competition,home_away,opponent
 1819,Monaco,2018-11-06,Champions League,H,Club Brugge KV
 1819,Paris SG,2018-11-06,Champions League,A,Napoli
 1819,Lyon,2018-11-07,Champions League,H,Hoffenheim
+1819,Bordeaux,2018-11-08,Europa League,H,Zenit Saint Petersburg
+1819,Marseille,2018-11-08,Europa League,A,Lazio
+1819,Rennes,2018-11-08,Europa League,A,Dynamo Kyiv
 1819,Ajaccio,2018-11-09,Ligue 2,A,Grenoble Foot 38
 1819,Auxerre,2018-11-09,Ligue 2,H,Chamois Niortais
 1819,Clermont,2018-11-09,Ligue 2,H,US Orléans
@@ -2667,6 +2907,17 @@ season,team,date,competition,home_away,opponent
 1819,Paris SG,2018-11-11,Ligue 1,A,Monaco
 1819,Rennes,2018-11-11,Ligue 1,H,Nantes
 1819,Brest,2018-11-12,Ligue 2,H,AS Nancy Lorraine
+1819,Paris FC,2018-11-16,Coupe de France,A,Iris Club de Croix
+1819,Ajaccio,2018-11-17,Coupe de France,A,Olympique Alès
+1819,Auxerre,2018-11-17,Coupe de France,A,Angoulême CFC
+1819,Brest,2018-11-17,Coupe de France,A,FC Atlantique Vilaine
+1819,Clermont,2018-11-17,Coupe de France,A,FC Gueugnon
+1819,Le Havre,2018-11-17,Coupe de France,A,AS Gamaches
+1819,Lens,2018-11-17,Coupe de France,A,US Nogent
+1819,Troyes,2018-11-17,Coupe de France,A,AFC Compiègne
+1819,Lorient,2018-11-18,Coupe de France,A,US Saint-Malo
+1819,Metz,2018-11-18,Coupe de France,A,Sarreguemines FC
+1819,Strasbourg,2018-11-18,Coupe de France,H,US Reipertswiller
 1819,Ajaccio,2018-11-23,Ligue 2,H,Clermont
 1819,Auxerre,2018-11-23,Ligue 2,A,FC Sochaux
 1819,Brest,2018-11-23,Ligue 2,A,US Orléans
@@ -2698,8 +2949,13 @@ season,team,date,competition,home_away,opponent
 1819,Rennes,2018-11-25,Ligue 1,A,Montpellier
 1819,Metz,2018-11-26,Ligue 2,H,Gazélec FC Ajaccio
 1819,Lyon,2018-11-27,Champions League,H,Man City
+1819,Nimes,2018-11-27,Coupe de la Ligue,H,St Etienne
+1819,St Etienne,2018-11-27,Coupe de la Ligue,A,Nimes
 1819,Monaco,2018-11-28,Champions League,A,Ath Madrid
 1819,Paris SG,2018-11-28,Champions League,H,Liverpool
+1819,Bordeaux,2018-11-29,Europa League,H,Slavia Prague
+1819,Marseille,2018-11-29,Europa League,A,Eintracht Frankfurt
+1819,Rennes,2018-11-29,Europa League,A,Jablonec
 1819,Ajaccio,2018-11-30,Ligue 2,A,Brest
 1819,Auxerre,2018-11-30,Ligue 2,A,Le Havre
 1819,Brest,2018-11-30,Ligue 2,H,Ajaccio
@@ -2761,16 +3017,25 @@ season,team,date,competition,home_away,opponent
 1819,Strasbourg,2018-12-05,Ligue 1,H,Paris SG
 1819,Toulouse,2018-12-05,Ligue 1,A,Reims
 1819,Amiens,2018-12-08,Ligue 1,A,Guingamp
+1819,Clermont,2018-12-08,Coupe de France,A,AF Bobigny
 1819,Dijon,2018-12-08,Ligue 1,A,Rennes
 1819,Guingamp,2018-12-08,Ligue 1,H,Amiens
+1819,Le Havre,2018-12-08,Coupe de France,A,AS Villers Houlgate Côte Fleurie
+1819,Lens,2018-12-08,Coupe de France,A,FC Versailles 78
 1819,Rennes,2018-12-08,Ligue 1,H,Dijon
+1819,Troyes,2018-12-08,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC
+1819,Brest,2018-12-09,Coupe de France,A,Vannes OC
 1819,Caen,2018-12-09,Ligue 1,A,Strasbourg
 1819,Lille,2018-12-09,Ligue 1,H,Reims
+1819,Metz,2018-12-09,Coupe de France,A,CMS Oissel
 1819,Reims,2018-12-09,Ligue 1,A,Lille
 1819,Strasbourg,2018-12-09,Ligue 1,H,Caen
 1819,Monaco,2018-12-11,Champions League,H,Dortmund
 1819,Paris SG,2018-12-11,Champions League,A,Crvena Zvezda
 1819,Lyon,2018-12-12,Champions League,A,Shakhtar Donetsk
+1819,Bordeaux,2018-12-13,Europa League,A,Copenhagen
+1819,Marseille,2018-12-13,Europa League,H,Apollon Limassol
+1819,Rennes,2018-12-13,Europa League,H,Astana
 1819,Ajaccio,2018-12-14,Ligue 2,A,US Orléans
 1819,Auxerre,2018-12-14,Ligue 2,A,LB Châteauroux
 1819,Brest,2018-12-14,Ligue 2,H,AS Béziers
@@ -2790,7 +3055,22 @@ season,team,date,competition,home_away,opponent
 1819,St Etienne,2018-12-16,Ligue 1,A,Nice
 1819,Metz,2018-12-17,Ligue 2,A,Valenciennes FC
 1819,Caen,2018-12-18,Ligue 1,H,Toulouse
+1819,Paris SG,2018-12-18,Coupe de la Ligue,A,Orléans
 1819,Toulouse,2018-12-18,Ligue 1,A,Caen
+1819,Amiens,2018-12-19,Coupe de la Ligue,H,Lyon
+1819,Bordeaux,2018-12-19,Coupe de la Ligue,A,Dijon
+1819,Dijon,2018-12-19,Coupe de la Ligue,H,Bordeaux
+1819,Guingamp,2018-12-19,Coupe de la Ligue,A,Nice
+1819,Le Havre,2018-12-19,Coupe de la Ligue,H,Nimes
+1819,Lorient,2018-12-19,Coupe de la Ligue,A,Monaco
+1819,Lyon,2018-12-19,Coupe de la Ligue,A,Amiens
+1819,Marseille,2018-12-19,Coupe de la Ligue,H,Strasbourg
+1819,Monaco,2018-12-19,Coupe de la Ligue,H,Lorient
+1819,Nantes,2018-12-19,Coupe de la Ligue,A,Rennes
+1819,Nice,2018-12-19,Coupe de la Ligue,H,Guingamp
+1819,Nimes,2018-12-19,Coupe de la Ligue,A,Le Havre
+1819,Rennes,2018-12-19,Coupe de la Ligue,H,Nantes
+1819,Strasbourg,2018-12-19,Coupe de la Ligue,A,Marseille
 1819,Auxerre,2018-12-21,Ligue 2,H,Grenoble Foot 38
 1819,Brest,2018-12-21,Ligue 2,A,Chamois Niortais
 1819,Clermont,2018-12-21,Ligue 2,A,Troyes
@@ -2819,10 +3099,43 @@ season,team,date,competition,home_away,opponent
 1819,Toulouse,2018-12-22,Ligue 1,A,Lille
 1819,Amiens,2018-12-23,Ligue 1,A,Bordeaux
 1819,Bordeaux,2018-12-23,Ligue 1,H,Amiens
+1819,Nantes,2019-01-04,Coupe de France,H,Châteauroux
+1819,Amiens,2019-01-05,Coupe de France,H,Valenciennes
+1819,Angers,2019-01-05,Coupe de France,A,ES Viry-Châtillon
+1819,Caen,2019-01-05,Coupe de France,A,Red Star
+1819,Clermont,2019-01-05,Coupe de France,A,Marignane Gignac FC
+1819,Dijon,2019-01-05,Coupe de France,A,SC Schiltigheim
+1819,Guingamp,2019-01-05,Coupe de France,A,Stade Pontivyen
+1819,Lyon,2019-01-05,Coupe de France,A,Bourges Foot
+1819,Metz,2019-01-05,Coupe de France,A,Olympique Saint-Quentin
+1819,Montpellier,2019-01-05,Coupe de France,A,L'Entente SSG
+1819,Nimes,2019-01-05,Coupe de France,A,AS Lyon-Duchère
+1819,Bordeaux,2019-01-06,Coupe de France,H,Le Havre
+1819,Brest,2019-01-06,Coupe de France,A,Rennes
+1819,Le Havre,2019-01-06,Coupe de France,A,Bordeaux
+1819,Lens,2019-01-06,Coupe de France,A,Reims
+1819,Marseille,2019-01-06,Coupe de France,A,ASF Andrézieux
+1819,Monaco,2019-01-06,Coupe de France,A,Canet Roussillon FC
+1819,Nice,2019-01-06,Coupe de France,A,Toulouse
+1819,Paris SG,2019-01-06,Coupe de France,A,GSI Pontivy
+1819,Reims,2019-01-06,Coupe de France,H,Lens
+1819,Rennes,2019-01-06,Coupe de France,H,Brest
+1819,St Etienne,2019-01-06,Coupe de France,A,Strasbourg
+1819,Strasbourg,2019-01-06,Coupe de France,H,St Etienne
+1819,Toulouse,2019-01-06,Coupe de France,H,Nice
+1819,Lille,2019-01-07,Coupe de France,H,Sochaux
 1819,Amiens,2019-01-08,Ligue 1,H,Angers
 1819,Angers,2019-01-08,Ligue 1,A,Amiens
+1819,Lyon,2019-01-08,Coupe de la Ligue,H,Strasbourg
 1819,Montpellier,2019-01-08,Ligue 1,A,Nantes
 1819,Nantes,2019-01-08,Ligue 1,H,Montpellier
+1819,Strasbourg,2019-01-08,Coupe de la Ligue,A,Lyon
+1819,Bordeaux,2019-01-09,Coupe de la Ligue,H,Le Havre
+1819,Guingamp,2019-01-09,Coupe de la Ligue,A,Paris SG
+1819,Le Havre,2019-01-09,Coupe de la Ligue,A,Bordeaux
+1819,Monaco,2019-01-09,Coupe de la Ligue,H,Rennes
+1819,Paris SG,2019-01-09,Coupe de la Ligue,H,Guingamp
+1819,Rennes,2019-01-09,Coupe de la Ligue,A,Monaco
 1819,Ajaccio,2019-01-11,Ligue 2,H,AS Béziers
 1819,Auxerre,2019-01-11,Ligue 2,A,Gazélec FC Ajaccio
 1819,Caen,2019-01-11,Ligue 1,H,Lille
@@ -2863,6 +3176,7 @@ season,team,date,competition,home_away,opponent
 1819,Nimes,2019-01-16,Ligue 1,H,Nantes
 1819,Rennes,2019-01-16,Ligue 1,A,Guingamp
 1819,St Etienne,2019-01-16,Ligue 1,H,Marseille
+1819,Strasbourg,2019-01-16,Coupe de France,A,Grenoble
 1819,Toulouse,2019-01-16,Ligue 1,H,Lyon
 1819,Ajaccio,2019-01-18,Ligue 2,A,FC Sochaux
 1819,Amiens,2019-01-18,Ligue 1,A,Lille
@@ -2894,8 +3208,23 @@ season,team,date,competition,home_away,opponent
 1819,Brest,2019-01-21,Ligue 2,A,Paris FC
 1819,Le Havre,2019-01-21,Ligue 2,H,Red Star FC
 1819,Paris FC,2019-01-21,Ligue 2,H,Brest
+1819,Guingamp,2019-01-22,Coupe de France,A,Nancy
+1819,Lille,2019-01-22,Coupe de France,A,FC Sète 34
+1819,Metz,2019-01-22,Coupe de France,A,Monaco
+1819,Monaco,2019-01-22,Coupe de France,H,Metz
+1819,Reims,2019-01-22,Coupe de France,A,Toulouse
+1819,Toulouse,2019-01-22,Coupe de France,H,Reims
 1819,Angers,2019-01-23,Ligue 1,A,Nimes
+1819,Caen,2019-01-23,Coupe de France,A,ES Viry-Châtillon
+1819,Dijon,2019-01-23,Coupe de France,A,St Etienne
 1819,Nimes,2019-01-23,Ligue 1,H,Angers
+1819,Paris SG,2019-01-23,Coupe de France,H,Strasbourg
+1819,Rennes,2019-01-23,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC
+1819,St Etienne,2019-01-23,Coupe de France,H,Dijon
+1819,Strasbourg,2019-01-23,Coupe de France,A,Paris SG
+1819,Amiens,2019-01-24,Coupe de France,H,Lyon
+1819,Le Havre,2019-01-24,Coupe de France,A,AS Vitré
+1819,Lyon,2019-01-24,Coupe de France,A,Amiens
 1819,Ajaccio,2019-01-25,Ligue 2,H,Metz
 1819,Auxerre,2019-01-25,Ligue 2,A,AS Nancy Lorraine
 1819,Lille,2019-01-25,Ligue 1,A,Marseille
@@ -2924,9 +3253,13 @@ season,team,date,competition,home_away,opponent
 1819,Lens,2019-01-28,Ligue 2,A,Troyes
 1819,Paris FC,2019-01-28,Ligue 2,A,AS Béziers
 1819,Troyes,2019-01-28,Ligue 2,H,Lens
+1819,Guingamp,2019-01-29,Coupe de la Ligue,H,Monaco
 1819,Metz,2019-01-29,Ligue 2,H,AS Nancy Lorraine
+1819,Monaco,2019-01-29,Coupe de la Ligue,A,Guingamp
+1819,Bordeaux,2019-01-30,Coupe de la Ligue,A,Strasbourg
 1819,Nantes,2019-01-30,Ligue 1,H,St Etienne
 1819,St Etienne,2019-01-30,Ligue 1,A,Nantes
+1819,Strasbourg,2019-01-30,Coupe de la Ligue,H,Bordeaux
 1819,Ajaccio,2019-02-01,Ligue 2,A,Lorient
 1819,Auxerre,2019-02-01,Ligue 2,H,Red Star FC
 1819,Brest,2019-02-01,Ligue 2,A,Le Havre
@@ -2943,6 +3276,7 @@ season,team,date,competition,home_away,opponent
 1819,Dijon,2019-02-02,Ligue 1,A,Angers
 1819,Marseille,2019-02-02,Ligue 1,A,Reims
 1819,Monaco,2019-02-02,Ligue 1,H,Toulouse
+1819,Nantes,2019-02-02,Coupe de France,A,L'Entente SSG
 1819,Reims,2019-02-02,Ligue 1,H,Marseille
 1819,Rennes,2019-02-02,Ligue 1,H,Amiens
 1819,Toulouse,2019-02-02,Ligue 1,A,Monaco
@@ -2952,7 +3286,17 @@ season,team,date,competition,home_away,opponent
 1819,Paris SG,2019-02-03,Ligue 1,A,Lyon
 1819,Lens,2019-02-04,Ligue 2,H,AS Béziers
 1819,Bordeaux,2019-02-05,Ligue 1,A,Marseille
+1819,Caen,2019-02-05,Coupe de France,A,SC Bastia
+1819,Dijon,2019-02-05,Coupe de France,A,Iris Club de Croix
 1819,Marseille,2019-02-05,Ligue 1,H,Bordeaux
+1819,Metz,2019-02-05,Coupe de France,H,Orléans
+1819,Nantes,2019-02-05,Coupe de France,H,Toulouse
+1819,Toulouse,2019-02-05,Coupe de France,A,Nantes
+1819,Lille,2019-02-06,Coupe de France,A,Rennes
+1819,Paris SG,2019-02-06,Coupe de France,A,FC Villefranche
+1819,Rennes,2019-02-06,Coupe de France,H,Lille
+1819,Guingamp,2019-02-07,Coupe de France,H,Lyon
+1819,Lyon,2019-02-07,Coupe de France,A,Guingamp
 1819,Ajaccio,2019-02-08,Ligue 2,H,Chamois Niortais
 1819,Clermont,2019-02-08,Ligue 2,H,Valenciennes FC
 1819,Dijon,2019-02-08,Ligue 1,H,Marseille
@@ -2988,6 +3332,7 @@ season,team,date,competition,home_away,opponent
 1819,Nantes,2019-02-13,Ligue 1,A,Caen
 1819,St Etienne,2019-02-13,Ligue 1,H,Strasbourg
 1819,Strasbourg,2019-02-13,Ligue 1,A,St Etienne
+1819,Rennes,2019-02-14,Europa League,H,Real Betis
 1819,Ajaccio,2019-02-15,Ligue 2,A,Paris FC
 1819,Auxerre,2019-02-15,Ligue 2,H,Clermont
 1819,Brest,2019-02-15,Ligue 2,A,Gazélec FC Ajaccio
@@ -3023,6 +3368,7 @@ season,team,date,competition,home_away,opponent
 1819,Guingamp,2019-02-20,Ligue 1,A,Bordeaux
 1819,Montpellier,2019-02-20,Ligue 1,A,Paris SG
 1819,Paris SG,2019-02-20,Ligue 1,H,Montpellier
+1819,Rennes,2019-02-21,Europa League,A,Real Betis
 1819,Ajaccio,2019-02-22,Ligue 2,H,Auxerre
 1819,Auxerre,2019-02-22,Ligue 2,A,Ajaccio
 1819,Brest,2019-02-22,Ligue 2,H,Grenoble Foot 38
@@ -3053,6 +3399,11 @@ season,team,date,competition,home_away,opponent
 1819,Rennes,2019-02-24,Ligue 1,H,Marseille
 1819,Toulouse,2019-02-24,Ligue 1,H,Caen
 1819,Lens,2019-02-25,Ligue 2,H,Chamois Niortais
+1819,Dijon,2019-02-26,Coupe de France,A,Paris SG
+1819,Paris SG,2019-02-26,Coupe de France,H,Dijon
+1819,Caen,2019-02-27,Coupe de France,A,Lyon
+1819,Lyon,2019-02-27,Coupe de France,H,Caen
+1819,Rennes,2019-02-27,Coupe de France,H,US Orléans
 1819,Ajaccio,2019-03-01,Ligue 2,A,Valenciennes FC
 1819,Auxerre,2019-03-01,Ligue 2,H,Troyes
 1819,Brest,2019-03-01,Ligue 2,A,LB Châteauroux
@@ -3081,7 +3432,9 @@ season,team,date,competition,home_away,opponent
 1819,Metz,2019-03-04,Ligue 2,A,Le Havre
 1819,Bordeaux,2019-03-05,Ligue 1,H,Montpellier
 1819,Montpellier,2019-03-05,Ligue 1,A,Bordeaux
+1819,Nantes,2019-03-06,Coupe de France,A,AS Vitré
 1819,Paris SG,2019-03-06,Champions League,H,Man United
+1819,Rennes,2019-03-07,Europa League,H,Arsenal
 1819,Ajaccio,2019-03-08,Ligue 2,H,Red Star FC
 1819,Brest,2019-03-08,Ligue 2,H,Valenciennes FC
 1819,Clermont,2019-03-08,Ligue 2,H,Grenoble Foot 38
@@ -3113,6 +3466,7 @@ season,team,date,competition,home_away,opponent
 1819,Dijon,2019-03-12,Ligue 1,H,Paris SG
 1819,Paris SG,2019-03-12,Ligue 1,A,Dijon
 1819,Lyon,2019-03-13,Champions League,A,Barcelona
+1819,Rennes,2019-03-14,Europa League,A,Arsenal
 1819,Ajaccio,2019-03-15,Ligue 2,A,Le Havre
 1819,Auxerre,2019-03-15,Ligue 2,A,AS Béziers
 1819,Clermont,2019-03-15,Ligue 2,A,Red Star FC
@@ -3152,7 +3506,9 @@ season,team,date,competition,home_away,opponent
 1819,Rennes,2019-03-29,Ligue 1,H,Lyon
 1819,Troyes,2019-03-29,Ligue 2,H,Grenoble Foot 38
 1819,Angers,2019-03-30,Ligue 1,A,Marseille
+1819,Guingamp,2019-03-30,Coupe de la Ligue,A,Strasbourg
 1819,Marseille,2019-03-30,Ligue 1,H,Angers
+1819,Strasbourg,2019-03-30,Coupe de la Ligue,H,Guingamp
 1819,Amiens,2019-03-31,Ligue 1,H,Bordeaux
 1819,Bordeaux,2019-03-31,Ligue 1,A,Amiens
 1819,Caen,2019-03-31,Ligue 1,A,Monaco
@@ -3169,8 +3525,12 @@ season,team,date,competition,home_away,opponent
 1819,Lens,2019-04-01,Ligue 2,H,Le Havre
 1819,Nimes,2019-04-01,Ligue 1,A,St Etienne
 1819,St Etienne,2019-04-01,Ligue 1,H,Nimes
+1819,Lyon,2019-04-02,Coupe de France,H,Rennes
+1819,Rennes,2019-04-02,Coupe de France,A,Lyon
 1819,Guingamp,2019-04-03,Ligue 1,A,Montpellier
 1819,Montpellier,2019-04-03,Ligue 1,H,Guingamp
+1819,Nantes,2019-04-03,Coupe de France,A,Paris SG
+1819,Paris SG,2019-04-03,Coupe de France,H,Nantes
 1819,Reims,2019-04-03,Ligue 1,A,Strasbourg
 1819,Strasbourg,2019-04-03,Ligue 1,H,Reims
 1819,Ajaccio,2019-04-05,Ligue 2,A,Gazélec FC Ajaccio
@@ -3287,6 +3647,8 @@ season,team,date,competition,home_away,opponent
 1819,Troyes,2019-04-26,Ligue 2,A,US Orléans
 1819,Brest,2019-04-27,Ligue 2,H,Lens
 1819,Lens,2019-04-27,Ligue 2,A,Brest
+1819,Paris SG,2019-04-27,Coupe de France,A,Rennes
+1819,Rennes,2019-04-27,Coupe de France,H,Paris SG
 1819,Amiens,2019-04-28,Ligue 1,H,Strasbourg
 1819,Angers,2019-04-28,Ligue 1,H,Reims
 1819,Caen,2019-04-28,Ligue 1,H,Dijon
@@ -3417,6 +3779,7 @@ season,team,date,competition,home_away,opponent
 1819,St Etienne,2019-05-24,Ligue 1,A,Angers
 1819,Strasbourg,2019-05-24,Ligue 1,A,Nantes
 1819,Toulouse,2019-05-24,Ligue 1,A,Dijon
+1920,Strasbourg,2019-07-25,Europa League (qual.),H,Maccabi Haifa
 1920,Ajaccio,2019-07-26,Ligue 2,H,Le Havre
 1920,Auxerre,2019-07-26,Ligue 2,A,Rodez AF
 1920,Caen,2019-07-26,Ligue 2,A,FC Sochaux
@@ -3427,6 +3790,7 @@ season,team,date,competition,home_away,opponent
 1920,Lens,2019-07-27,Ligue 2,A,Le Mans FC
 1920,Lorient,2019-07-29,Ligue 2,H,Paris FC
 1920,Paris FC,2019-07-29,Ligue 2,A,Lorient
+1920,Strasbourg,2019-08-01,Europa League (qual.),A,Maccabi Haifa
 1920,Ajaccio,2019-08-02,Ligue 2,A,Grenoble Foot 38
 1920,Auxerre,2019-08-02,Ligue 2,H,Le Mans FC
 1920,Clermont,2019-08-02,Ligue 2,A,Troyes
@@ -3435,8 +3799,11 @@ season,team,date,competition,home_away,opponent
 1920,Troyes,2019-08-02,Ligue 2,H,Clermont
 1920,Guingamp,2019-08-03,Ligue 2,A,Lens
 1920,Lens,2019-08-03,Ligue 2,H,Guingamp
+1920,Paris SG,2019-08-03,Trophee des Champions,H,Rennes
+1920,Rennes,2019-08-03,Trophee des Champions,A,Paris SG
 1920,Caen,2019-08-05,Ligue 2,H,Lorient
 1920,Lorient,2019-08-05,Ligue 2,A,Caen
+1920,Strasbourg,2019-08-08,Europa League (qual.),A,Lokomotiv Plovdiv
 1920,Ajaccio,2019-08-09,Ligue 2,H,Caen
 1920,Auxerre,2019-08-09,Ligue 2,A,FC Sochaux
 1920,Caen,2019-08-09,Ligue 2,A,Ajaccio
@@ -3467,6 +3834,17 @@ season,team,date,competition,home_away,opponent
 1920,Nimes,2019-08-11,Ligue 1,A,Paris SG
 1920,Paris SG,2019-08-11,Ligue 1,H,Nimes
 1920,Strasbourg,2019-08-11,Ligue 1,H,Metz
+1920,Ajaccio,2019-08-13,Coupe de la Ligue,H,Valenciennes
+1920,Auxerre,2019-08-13,Coupe de la Ligue,H,Béziers
+1920,Caen,2019-08-13,Coupe de la Ligue,H,Nancy
+1920,Clermont,2019-08-13,Coupe de la Ligue,H,Le Havre
+1920,Guingamp,2019-08-13,Coupe de la Ligue,A,Orléans
+1920,Le Havre,2019-08-13,Coupe de la Ligue,A,Clermont
+1920,Lens,2019-08-13,Coupe de la Ligue,A,Troyes
+1920,Lorient,2019-08-13,Coupe de la Ligue,H,Le Mans
+1920,Paris FC,2019-08-13,Coupe de la Ligue,H,Sochaux
+1920,Troyes,2019-08-13,Coupe de la Ligue,H,Lens
+1920,Strasbourg,2019-08-15,Europa League (qual.),H,Lokomotiv Plovdiv
 1920,Ajaccio,2019-08-16,Ligue 2,A,LB Châteauroux
 1920,Angers,2019-08-16,Ligue 1,A,Lyon
 1920,Caen,2019-08-16,Ligue 2,H,FC Chambly
@@ -3497,6 +3875,7 @@ season,team,date,competition,home_away,opponent
 1920,Strasbourg,2019-08-18,Ligue 1,A,Reims
 1920,Auxerre,2019-08-19,Ligue 2,H,Guingamp
 1920,Guingamp,2019-08-19,Ligue 2,A,Auxerre
+1920,Strasbourg,2019-08-22,Europa League (qual.),H,Eintracht Frankfurt
 1920,Ajaccio,2019-08-23,Ligue 2,H,Paris FC
 1920,Auxerre,2019-08-23,Ligue 2,A,Clermont
 1920,Caen,2019-08-23,Ligue 2,A,Chamois Niortais
@@ -3521,12 +3900,17 @@ season,team,date,competition,home_away,opponent
 1920,Strasbourg,2019-08-25,Ligue 1,H,Rennes
 1920,Toulouse,2019-08-25,Ligue 1,A,Paris SG
 1920,Guingamp,2019-08-26,Ligue 2,H,Valenciennes FC
+1920,Ajaccio,2019-08-27,Coupe de la Ligue,A,Nancy
+1920,Clermont,2019-08-27,Coupe de la Ligue,A,Lens
+1920,Lens,2019-08-27,Coupe de la Ligue,H,Clermont
 1920,Lyon,2019-08-27,Ligue 1,A,Montpellier
 1920,Montpellier,2019-08-27,Ligue 1,H,Lyon
+1920,Paris FC,2019-08-27,Coupe de la Ligue,A,Gazélec Ajaccio
 1920,Lille,2019-08-28,Ligue 1,H,St Etienne
 1920,Marseille,2019-08-28,Ligue 1,A,Nice
 1920,Nice,2019-08-28,Ligue 1,H,Marseille
 1920,St Etienne,2019-08-28,Ligue 1,A,Lille
+1920,Strasbourg,2019-08-29,Europa League (qual.),A,Eintracht Frankfurt
 1920,Ajaccio,2019-08-30,Ligue 2,A,Auxerre
 1920,Auxerre,2019-08-30,Ligue 2,H,Ajaccio
 1920,Caen,2019-08-30,Ligue 2,H,Le Havre
@@ -3590,6 +3974,8 @@ season,team,date,competition,home_away,opponent
 1920,Lille,2019-09-17,Champions League,A,AFC Ajax
 1920,Lyon,2019-09-17,Champions League,H,Zenit St. Petersburg
 1920,Paris SG,2019-09-18,Champions League,H,Real Madrid
+1920,Rennes,2019-09-19,Europa League,H,Celtic
+1920,St Etienne,2019-09-19,Europa League,A,Gent
 1920,Ajaccio,2019-09-20,Ligue 2,A,Le Mans FC
 1920,Auxerre,2019-09-20,Ligue 2,H,Troyes
 1920,Clermont,2019-09-20,Ligue 2,A,Paris FC
@@ -3673,6 +4059,8 @@ season,team,date,competition,home_away,opponent
 1920,Paris SG,2019-10-01,Champions League,A,Galatasaray
 1920,Lille,2019-10-02,Champions League,H,Chelsea
 1920,Lyon,2019-10-02,Champions League,A,RB Leipzig
+1920,Rennes,2019-10-03,Europa League,A,Lazio
+1920,St Etienne,2019-10-03,Europa League,H,VfL Wolfsburg
 1920,Ajaccio,2019-10-04,Ligue 2,A,Lorient
 1920,Amiens,2019-10-04,Ligue 1,H,Marseille
 1920,Caen,2019-10-04,Ligue 2,H,LB Châteauroux
@@ -3736,6 +4124,8 @@ season,team,date,competition,home_away,opponent
 1920,Paris SG,2019-10-22,Champions League,A,Club Brugge KV
 1920,Lille,2019-10-23,Champions League,H,Valencia
 1920,Lyon,2019-10-23,Champions League,A,SL Benfica
+1920,Rennes,2019-10-24,Europa League,H,CFR Cluj
+1920,St Etienne,2019-10-24,Europa League,H,Oleksandriya
 1920,Ajaccio,2019-10-25,Ligue 2,A,FC Sochaux
 1920,Auxerre,2019-10-25,Ligue 2,H,Grenoble Foot 38
 1920,Caen,2019-10-25,Ligue 2,A,Paris FC
@@ -3766,6 +4156,22 @@ season,team,date,competition,home_away,opponent
 1920,St Etienne,2019-10-27,Ligue 1,H,Amiens
 1920,Toulouse,2019-10-27,Ligue 1,A,Rennes
 1920,Le Havre,2019-10-28,Ligue 2,A,Valenciennes FC
+1920,Bordeaux,2019-10-29,Coupe de la Ligue,H,Dijon
+1920,Dijon,2019-10-29,Coupe de la Ligue,A,Bordeaux
+1920,Lens,2019-10-29,Coupe de la Ligue,A,Nimes
+1920,Nimes,2019-10-29,Coupe de la Ligue,H,Lens
+1920,Amiens,2019-10-30,Coupe de la Ligue,H,Angers
+1920,Angers,2019-10-30,Coupe de la Ligue,A,Amiens
+1920,Brest,2019-10-30,Coupe de la Ligue,A,Metz
+1920,Marseille,2019-10-30,Coupe de la Ligue,A,Monaco
+1920,Metz,2019-10-30,Coupe de la Ligue,H,Brest
+1920,Monaco,2019-10-30,Coupe de la Ligue,H,Marseille
+1920,Montpellier,2019-10-30,Coupe de la Ligue,H,Nancy
+1920,Nantes,2019-10-30,Coupe de la Ligue,H,Paris FC
+1920,Nice,2019-10-30,Coupe de la Ligue,A,Le Mans
+1920,Paris FC,2019-10-30,Coupe de la Ligue,A,Nantes
+1920,Reims,2019-10-30,Coupe de la Ligue,H,Bourg-Péronnas
+1920,Toulouse,2019-10-30,Coupe de la Ligue,A,Niort
 1920,Ajaccio,2019-11-01,Ligue 2,H,Rodez AF
 1920,Auxerre,2019-11-01,Ligue 2,A,LB Châteauroux
 1920,Caen,2019-11-01,Ligue 2,H,US Orléans
@@ -3797,6 +4203,8 @@ season,team,date,competition,home_away,opponent
 1920,Lille,2019-11-05,Champions League,A,Valencia
 1920,Lyon,2019-11-05,Champions League,H,SL Benfica
 1920,Paris SG,2019-11-06,Champions League,H,Club Brugge KV
+1920,Rennes,2019-11-07,Europa League,A,CFR Cluj
+1920,St Etienne,2019-11-07,Europa League,A,Oleksandriya
 1920,Auxerre,2019-11-08,Ligue 2,H,Caen
 1920,Bordeaux,2019-11-08,Ligue 1,A,Nice
 1920,Caen,2019-11-08,Ligue 2,A,Auxerre
@@ -3827,6 +4235,17 @@ season,team,date,competition,home_away,opponent
 1920,St Etienne,2019-11-10,Ligue 1,A,Nantes
 1920,Toulouse,2019-11-10,Ligue 1,A,Montpellier
 1920,Lens,2019-11-11,Ligue 2,A,Rodez AF
+1920,Le Havre,2019-11-15,Coupe de France,H,USL Dunkerque
+1920,Troyes,2019-11-15,Coupe de France,A,Football Bourg-en-Bresse Péronnas 01
+1920,Ajaccio,2019-11-16,Coupe de France,A,US Saint-Flour
+1920,Auxerre,2019-11-16,Coupe de France,A,US La Charité
+1920,Caen,2019-11-16,Coupe de France,A,ASI Mûrs-Erigné
+1920,Clermont,2019-11-16,Coupe de France,A,Bergerac Périgord FC
+1920,Guingamp,2019-11-16,Coupe de France,A,Lorient
+1920,Lens,2019-11-16,Coupe de France,H,US Boulogne
+1920,Lorient,2019-11-16,Coupe de France,H,Guingamp
+1920,Lyon,2019-11-16,Coupe de France,H,Athlético Marseille
+1920,Paris FC,2019-11-16,Coupe de France,A,CSO Amnéville
 1920,Ajaccio,2019-11-22,Ligue 2,H,Clermont
 1920,Auxerre,2019-11-22,Ligue 2,A,Paris FC
 1920,Caen,2019-11-22,Ligue 2,H,Le Mans FC
@@ -3860,6 +4279,8 @@ season,team,date,competition,home_away,opponent
 1920,Paris SG,2019-11-26,Champions League,A,Real Madrid
 1920,Lille,2019-11-27,Champions League,H,AFC Ajax
 1920,Lyon,2019-11-27,Champions League,A,Zenit St. Petersburg
+1920,Rennes,2019-11-28,Europa League,A,Celtic
+1920,St Etienne,2019-11-28,Europa League,H,Gent
 1920,Ajaccio,2019-11-29,Ligue 2,A,FC Chambly
 1920,Auxerre,2019-11-29,Ligue 2,H,US Orléans
 1920,Brest,2019-11-29,Ligue 1,A,Marseille
@@ -3922,6 +4343,9 @@ season,team,date,competition,home_away,opponent
 1920,Nimes,2019-12-06,Ligue 1,H,Lyon
 1920,Amiens,2019-12-07,Ligue 1,A,Monaco
 1920,Angers,2019-12-07,Ligue 1,A,Rennes
+1920,Auxerre,2019-12-07,Coupe de France,A,SSEP Hombourg-Haut
+1920,Caen,2019-12-07,Coupe de France,A,C'Chartres Football
+1920,Lorient,2019-12-07,Coupe de France,A,Stade Pontivyen
 1920,Metz,2019-12-07,Ligue 1,A,Nice
 1920,Monaco,2019-12-07,Ligue 1,H,Amiens
 1920,Montpellier,2019-12-07,Ligue 1,H,Paris SG
@@ -3932,13 +4356,17 @@ season,team,date,competition,home_away,opponent
 1920,Toulouse,2019-12-07,Ligue 1,A,Strasbourg
 1920,Bordeaux,2019-12-08,Ligue 1,A,Marseille
 1920,Dijon,2019-12-08,Ligue 1,A,Nantes
+1920,Lens,2019-12-08,Coupe de France,A,FC Dieppe
 1920,Marseille,2019-12-08,Ligue 1,H,Bordeaux
 1920,Nantes,2019-12-08,Ligue 1,H,Dijon
+1920,Paris FC,2019-12-08,Coupe de France,A,Olympique de Valence
 1920,Reims,2019-12-08,Ligue 1,H,St Etienne
 1920,St Etienne,2019-12-08,Ligue 1,A,Reims
 1920,Lille,2019-12-10,Champions League,A,Chelsea
 1920,Lyon,2019-12-10,Champions League,H,RB Leipzig
 1920,Paris SG,2019-12-11,Champions League,H,Galatasaray
+1920,Rennes,2019-12-12,Europa League,H,Lazio
+1920,St Etienne,2019-12-12,Europa League,A,VfL Wolfsburg
 1920,Auxerre,2019-12-13,Ligue 2,A,Lorient
 1920,Caen,2019-12-13,Ligue 2,A,Rodez AF
 1920,Clermont,2019-12-13,Ligue 2,H,Le Havre
@@ -3969,6 +4397,21 @@ season,team,date,competition,home_away,opponent
 1920,Strasbourg,2019-12-15,Ligue 1,A,Bordeaux
 1920,Guingamp,2019-12-16,Ligue 2,H,Troyes
 1920,Troyes,2019-12-16,Ligue 2,A,Guingamp
+1920,Lille,2019-12-17,Coupe de la Ligue,A,Monaco
+1920,Monaco,2019-12-17,Coupe de la Ligue,H,Lille
+1920,Montpellier,2019-12-17,Coupe de la Ligue,A,Reims
+1920,Reims,2019-12-17,Coupe de la Ligue,H,Montpellier
+1920,Amiens,2019-12-18,Coupe de la Ligue,H,Rennes
+1920,Bordeaux,2019-12-18,Coupe de la Ligue,A,Brest
+1920,Brest,2019-12-18,Coupe de la Ligue,H,Bordeaux
+1920,Lyon,2019-12-18,Coupe de la Ligue,H,Toulouse
+1920,Nantes,2019-12-18,Coupe de la Ligue,H,Strasbourg
+1920,Nimes,2019-12-18,Coupe de la Ligue,H,St Etienne
+1920,Paris SG,2019-12-18,Coupe de la Ligue,A,Le Mans
+1920,Rennes,2019-12-18,Coupe de la Ligue,A,Amiens
+1920,St Etienne,2019-12-18,Coupe de la Ligue,A,Nimes
+1920,Strasbourg,2019-12-18,Coupe de la Ligue,A,Nantes
+1920,Toulouse,2019-12-18,Coupe de la Ligue,A,Lyon
 1920,Auxerre,2019-12-20,Ligue 2,H,AS Nancy Lorraine
 1920,Caen,2019-12-20,Ligue 2,H,Clermont
 1920,Clermont,2019-12-20,Ligue 2,A,Caen
@@ -3999,6 +4442,37 @@ season,team,date,competition,home_away,opponent
 1920,Strasbourg,2019-12-21,Ligue 1,H,St Etienne
 1920,Toulouse,2019-12-21,Ligue 1,A,Nice
 1920,Troyes,2019-12-21,Ligue 2,H,Ajaccio
+1920,Bordeaux,2020-01-03,Coupe de France,H,Le Mans
+1920,Amiens,2020-01-04,Coupe de France,A,Rennes
+1920,Caen,2020-01-04,Coupe de France,A,FC Guichen
+1920,Lyon,2020-01-04,Coupe de France,A,Football Bourg-en-Bresse 01
+1920,Monaco,2020-01-04,Coupe de France,H,Reims
+1920,Nantes,2020-01-04,Coupe de France,A,Aviron Bayonnais FC
+1920,Nimes,2020-01-04,Coupe de France,A,Tours FC
+1920,Paris FC,2020-01-04,Coupe de France,A,AS Fabrègues
+1920,Reims,2020-01-04,Coupe de France,A,Monaco
+1920,Rennes,2020-01-04,Coupe de France,H,Amiens
+1920,Strasbourg,2020-01-04,Coupe de France,A,Stade Portelois
+1920,Toulouse,2020-01-04,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC
+1920,Angers,2020-01-05,Coupe de France,A,FC Dieppe
+1920,Brest,2020-01-05,Coupe de France,A,Lorient
+1920,Dijon,2020-01-05,Coupe de France,A,Valenciennes
+1920,Lille,2020-01-05,Coupe de France,A,US Raon-l'Étape
+1920,Lorient,2020-01-05,Coupe de France,H,Brest
+1920,Marseille,2020-01-05,Coupe de France,A,Trélissac FC
+1920,Montpellier,2020-01-05,Coupe de France,A,EF Reims Ste Anne Châtillons
+1920,Nice,2020-01-05,Coupe de France,H,Étoile Fréjus Saint-Raphaël
+1920,Paris SG,2020-01-05,Coupe de France,A,ESA Linas-Montlhéry
+1920,St Etienne,2020-01-05,Coupe de France,A,FC Bastia-Borgo
+1920,Metz,2020-01-06,Coupe de France,A,FC Rouen
+1920,Reims,2020-01-07,Coupe de la Ligue,H,Strasbourg
+1920,Strasbourg,2020-01-07,Coupe de la Ligue,A,Reims
+1920,Amiens,2020-01-08,Coupe de la Ligue,A,Lille
+1920,Brest,2020-01-08,Coupe de la Ligue,A,Lyon
+1920,Lille,2020-01-08,Coupe de la Ligue,H,Amiens
+1920,Lyon,2020-01-08,Coupe de la Ligue,H,Brest
+1920,Paris SG,2020-01-08,Coupe de la Ligue,H,St Etienne
+1920,St Etienne,2020-01-08,Coupe de la Ligue,A,Paris SG
 1920,Ajaccio,2020-01-10,Ligue 2,H,Grenoble Foot 38
 1920,Auxerre,2020-01-10,Ligue 2,A,Le Mans FC
 1920,Clermont,2020-01-10,Ligue 2,H,Troyes
@@ -4033,8 +4507,30 @@ season,team,date,competition,home_away,opponent
 1920,Paris SG,2020-01-15,Ligue 1,A,Monaco
 1920,Reims,2020-01-15,Ligue 1,A,Amiens
 1920,Rennes,2020-01-15,Ligue 1,A,Nimes
+1920,Bordeaux,2020-01-16,Coupe de France,A,Pau FC
+1920,Marseille,2020-01-17,Coupe de France,A,Granville
 1920,Guingamp,2020-01-18,Ligue 2,H,Lens
 1920,Lens,2020-01-18,Ligue 2,A,Guingamp
+1920,Lille,2020-01-18,Coupe de France,A,ESM Gonfreville
+1920,Lyon,2020-01-18,Coupe de France,A,Nantes
+1920,Nantes,2020-01-18,Coupe de France,H,Lyon
+1920,Nice,2020-01-18,Coupe de France,H,Red Star
+1920,Paris FC,2020-01-18,Coupe de France,H,St Etienne
+1920,St Etienne,2020-01-18,Coupe de France,A,Paris FC
+1920,Strasbourg,2020-01-18,Coupe de France,A,Angoulême-Soyaux Charente
+1920,Angers,2020-01-19,Coupe de France,A,FC Rouen
+1920,Caen,2020-01-19,Coupe de France,A,Montpellier
+1920,Dijon,2020-01-19,Coupe de France,H,Nimes
+1920,Lorient,2020-01-19,Coupe de France,H,Paris SG
+1920,Montpellier,2020-01-19,Coupe de France,H,Caen
+1920,Nimes,2020-01-19,Coupe de France,A,Dijon
+1920,Paris SG,2020-01-19,Coupe de France,A,Lorient
+1920,Rennes,2020-01-19,Coupe de France,A,Athlético Marseille
+1920,Monaco,2020-01-20,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC
+1920,Lille,2020-01-21,Coupe de la Ligue,A,Lyon
+1920,Lyon,2020-01-21,Coupe de la Ligue,H,Lille
+1920,Paris SG,2020-01-22,Coupe de la Ligue,A,Reims
+1920,Reims,2020-01-22,Coupe de la Ligue,H,Paris SG
 1920,Ajaccio,2020-01-24,Ligue 2,A,Caen
 1920,Auxerre,2020-01-24,Ligue 2,H,FC Sochaux
 1920,Caen,2020-01-24,Ligue 2,H,Ajaccio
@@ -4065,6 +4561,18 @@ season,team,date,competition,home_away,opponent
 1920,Toulouse,2020-01-26,Ligue 1,A,Lyon
 1920,Le Havre,2020-01-27,Ligue 2,H,Troyes
 1920,Troyes,2020-01-27,Ligue 2,A,Le Havre
+1920,Angers,2020-01-28,Coupe de France,H,Rennes
+1920,Dijon,2020-01-28,Coupe de France,A,FC Limonest Saint-Didier
+1920,Monaco,2020-01-28,Coupe de France,H,St Etienne
+1920,Montpellier,2020-01-28,Coupe de France,A,ASM Belfort
+1920,Rennes,2020-01-28,Coupe de France,A,Angers
+1920,St Etienne,2020-01-28,Coupe de France,A,Monaco
+1920,Lille,2020-01-29,Coupe de France,A,SAS Épinal
+1920,Marseille,2020-01-29,Coupe de France,H,Strasbourg
+1920,Paris SG,2020-01-29,Coupe de France,A,Pau FC
+1920,Strasbourg,2020-01-29,Coupe de France,A,Marseille
+1920,Lyon,2020-01-30,Coupe de France,A,Nice
+1920,Nice,2020-01-30,Coupe de France,H,Lyon
 1920,Ajaccio,2020-01-31,Ligue 2,H,LB Châteauroux
 1920,Auxerre,2020-01-31,Ligue 2,A,Guingamp
 1920,Caen,2020-01-31,Ligue 2,A,FC Chambly
@@ -4155,6 +4663,12 @@ season,team,date,competition,home_away,opponent
 1920,St Etienne,2020-02-09,Ligue 1,A,Montpellier
 1920,Strasbourg,2020-02-09,Ligue 1,H,Reims
 1920,Lens,2020-02-10,Ligue 2,H,Grenoble Foot 38
+1920,Rennes,2020-02-11,Coupe de France,A,ASM Belfort
+1920,Dijon,2020-02-12,Coupe de France,H,Paris SG
+1920,Lyon,2020-02-12,Coupe de France,H,Marseille
+1920,Marseille,2020-02-12,Coupe de France,A,Lyon
+1920,Paris SG,2020-02-12,Coupe de France,A,Dijon
+1920,St Etienne,2020-02-13,Coupe de France,A,SAS Épinal
 1920,Ajaccio,2020-02-14,Ligue 2,A,US Orléans
 1920,Auxerre,2020-02-14,Ligue 2,H,FC Chambly
 1920,Caen,2020-02-14,Ligue 2,H,Troyes
@@ -4247,6 +4761,10 @@ season,team,date,competition,home_away,opponent
 1920,St Etienne,2020-03-01,Ligue 1,A,Lyon
 1920,Lens,2020-03-02,Ligue 2,A,Paris FC
 1920,Paris FC,2020-03-02,Ligue 2,H,Lens
+1920,Lyon,2020-03-04,Coupe de France,H,Paris SG
+1920,Paris SG,2020-03-04,Coupe de France,A,Lyon
+1920,Rennes,2020-03-05,Coupe de France,A,St Etienne
+1920,St Etienne,2020-03-05,Coupe de France,H,Rennes
 1920,Amiens,2020-03-06,Ligue 1,A,Marseille
 1920,Auxerre,2020-03-06,Ligue 2,A,Le Havre
 1920,Caen,2020-03-06,Ligue 2,A,LB Châteauroux
@@ -4376,6 +4894,10 @@ season,team,date,competition,home_away,opponent
 1920,Lorient,2020-05-15,Ligue 2,A,Paris FC
 1920,Paris FC,2020-05-15,Ligue 2,H,Lorient
 1920,Troyes,2020-05-15,Ligue 2,H,Chamois Niortais
+2021,Paris SG,2020-07-24,Coupe de France,H,St Etienne
+2021,St Etienne,2020-07-24,Coupe de France,A,Paris SG
+2021,Lyon,2020-07-31,Coupe de la Ligue,A,Paris SG
+2021,Paris SG,2020-07-31,Coupe de la Ligue,H,Lyon
 1920,Lyon,2020-08-07,Champions League,A,Juventus
 1920,Paris SG,2020-08-12,Champions League,A,Atalanta
 1920,Lyon,2020-08-15,Champions League,A,Man City
@@ -4470,6 +4992,7 @@ season,team,date,competition,home_away,opponent
 2021,Metz,2020-09-16,Ligue 1,A,Paris SG
 2021,Paris SG,2020-09-16,Ligue 1,H,Metz
 2021,Marseille,2020-09-17,Ligue 1,H,St Etienne
+2021,Reims,2020-09-17,Europa League (qual.),A,Servette
 2021,St Etienne,2020-09-17,Ligue 1,A,Marseille
 2021,Lyon,2020-09-18,Ligue 1,H,Nimes
 2021,Nimes,2020-09-18,Ligue 1,A,Lyon
@@ -4501,6 +5024,7 @@ season,team,date,competition,home_away,opponent
 2021,Strasbourg,2020-09-20,Ligue 1,H,Dijon
 2021,Auxerre,2020-09-21,Ligue 2,H,Troyes
 2021,Troyes,2020-09-21,Ligue 2,A,Auxerre
+2021,Reims,2020-09-24,Europa League (qual.),A,MOL Fehérvár
 2021,Lille,2020-09-25,Ligue 1,H,Nantes
 2021,Nantes,2020-09-25,Ligue 1,A,Lille
 2021,Ajaccio,2020-09-26,Ligue 2,H,FC Sochaux
@@ -4802,6 +5326,7 @@ season,team,date,competition,home_away,opponent
 2021,Strasbourg,2020-12-06,Ligue 1,A,Nantes
 2021,Ajaccio,2020-12-07,Ligue 2,H,Le Havre
 2021,Le Havre,2020-12-07,Ligue 2,A,Ajaccio
+2021,Paris SG,2020-12-08,Champions League,H,İstanbul Başakşehir
 2021,Rennes,2020-12-08,Champions League,H,Sevilla
 2021,Marseille,2020-12-09,Champions League,A,Man City
 2021,Paris SG,2020-12-09,Champions League,H,İstanbul Başakşehir
@@ -4978,6 +5503,8 @@ season,team,date,competition,home_away,opponent
 2021,Strasbourg,2021-01-09,Ligue 1,A,Lens
 2021,Caen,2021-01-11,Ligue 2,H,Toulouse
 2021,Toulouse,2021-01-11,Ligue 2,A,Caen
+2021,Marseille,2021-01-13,Trophee des Champions,A,Paris SG
+2021,Paris SG,2021-01-13,Trophee des Champions,H,Marseille
 2021,Monaco,2021-01-15,Ligue 1,A,Montpellier
 2021,Montpellier,2021-01-15,Ligue 1,H,Monaco
 2021,Ajaccio,2021-01-16,Ligue 2,H,Caen
@@ -5005,8 +5532,18 @@ season,team,date,competition,home_away,opponent
 2021,Rennes,2021-01-17,Ligue 1,A,Brest
 2021,St Etienne,2021-01-17,Ligue 1,A,Strasbourg
 2021,Strasbourg,2021-01-17,Ligue 1,H,St Etienne
+2021,Ajaccio,2021-01-19,Coupe de France,A,Châteauroux
+2021,Amiens,2021-01-19,Coupe de France,A,Dunkerque
+2021,Auxerre,2021-01-19,Coupe de France,H,Troyes
+2021,Le Havre,2021-01-19,Coupe de France,H,Paris FC
+2021,Paris FC,2021-01-19,Coupe de France,A,Le Havre
+2021,Troyes,2021-01-19,Coupe de France,A,Auxerre
+2021,Caen,2021-01-20,Coupe de France,A,Guingamp
+2021,Clermont,2021-01-20,Coupe de France,H,Grenoble
+2021,Guingamp,2021-01-20,Coupe de France,H,Caen
 2021,Lens,2021-01-20,Ligue 1,A,Marseille
 2021,Marseille,2021-01-20,Ligue 1,H,Lens
+2021,Toulouse,2021-01-20,Coupe de France,H,Niort
 2021,Montpellier,2021-01-22,Ligue 1,A,Paris SG
 2021,Paris SG,2021-01-22,Ligue 1,H,Montpellier
 2021,Ajaccio,2021-01-23,Ligue 2,A,USL Dunkerque
@@ -5112,6 +5649,7 @@ season,team,date,competition,home_away,opponent
 2021,Strasbourg,2021-02-06,Ligue 1,A,Lyon
 2021,Toulouse,2021-02-06,Ligue 2,A,Troyes
 2021,Troyes,2021-02-06,Ligue 2,H,Toulouse
+2021,Amiens,2021-02-07,Coupe de France,A,US Lesquin
 2021,Angers,2021-02-07,Ligue 1,A,Nice
 2021,Bordeaux,2021-02-07,Ligue 1,A,Brest
 2021,Brest,2021-02-07,Ligue 1,H,Bordeaux
@@ -5126,6 +5664,32 @@ season,team,date,competition,home_away,opponent
 2021,Nimes,2021-02-07,Ligue 1,H,Monaco
 2021,Paris SG,2021-02-07,Ligue 1,A,Marseille
 2021,St Etienne,2021-02-07,Ligue 1,H,Metz
+2021,Ajaccio,2021-02-09,Coupe de France,A,Lyon
+2021,Lorient,2021-02-09,Coupe de France,H,Paris FC
+2021,Lyon,2021-02-09,Coupe de France,H,Ajaccio
+2021,Paris FC,2021-02-09,Coupe de France,A,Lorient
+2021,Reims,2021-02-09,Coupe de France,H,Valenciennes
+2021,Amiens,2021-02-10,Coupe de France,H,Metz
+2021,Auxerre,2021-02-10,Coupe de France,H,Marseille
+2021,Bordeaux,2021-02-10,Coupe de France,H,Toulouse
+2021,Brest,2021-02-10,Coupe de France,H,Rodez
+2021,Caen,2021-02-10,Coupe de France,H,Paris SG
+2021,Dijon,2021-02-10,Coupe de France,H,Lille
+2021,Lens,2021-02-10,Coupe de France,A,Nantes
+2021,Lille,2021-02-10,Coupe de France,A,Dijon
+2021,Marseille,2021-02-10,Coupe de France,A,Auxerre
+2021,Metz,2021-02-10,Coupe de France,A,Amiens
+2021,Monaco,2021-02-10,Coupe de France,A,Grenoble
+2021,Montpellier,2021-02-10,Coupe de France,A,Strasbourg
+2021,Nantes,2021-02-10,Coupe de France,H,Lens
+2021,Nice,2021-02-10,Coupe de France,A,Nimes
+2021,Nimes,2021-02-10,Coupe de France,H,Nice
+2021,Paris SG,2021-02-10,Coupe de France,A,Caen
+2021,Strasbourg,2021-02-10,Coupe de France,H,Montpellier
+2021,Toulouse,2021-02-10,Coupe de France,A,Bordeaux
+2021,Angers,2021-02-11,Coupe de France,H,Rennes
+2021,Rennes,2021-02-11,Coupe de France,A,Angers
+2021,St Etienne,2021-02-11,Coupe de France,A,Sochaux
 2021,Amiens,2021-02-13,Ligue 2,A,Grenoble Foot 38
 2021,Auxerre,2021-02-13,Ligue 2,H,Guingamp
 2021,Caen,2021-02-13,Ligue 2,H,Chamois Niortais
@@ -5140,6 +5704,7 @@ season,team,date,competition,home_away,opponent
 2021,Paris SG,2021-02-13,Ligue 1,H,Nice
 2021,Reims,2021-02-13,Ligue 1,H,Lens
 2021,Troyes,2021-02-13,Ligue 2,H,Rodez AF
+2021,Amiens,2021-02-14,Coupe de France,A,OS Aire-sur-la-Lys
 2021,Angers,2021-02-14,Ligue 1,H,Nantes
 2021,Bordeaux,2021-02-14,Ligue 1,H,Marseille
 2021,Brest,2021-02-14,Ligue 1,A,Lille
@@ -5253,6 +5818,19 @@ season,team,date,competition,home_away,opponent
 2021,Rennes,2021-03-03,Ligue 1,A,Lyon
 2021,St Etienne,2021-03-03,Ligue 1,H,Lens
 2021,Strasbourg,2021-03-03,Ligue 1,H,Monaco
+2021,Toulouse,2021-03-05,Coupe de France,A,Aubagne FC
+2021,Brest,2021-03-06,Coupe de France,H,Paris SG
+2021,Lens,2021-03-06,Coupe de France,A,Red Star
+2021,Lorient,2021-03-06,Coupe de France,A,Le Puy Foot 43 Auvergne
+2021,Lyon,2021-03-06,Coupe de France,H,Sochaux
+2021,Metz,2021-03-06,Coupe de France,A,Valenciennes
+2021,Montpellier,2021-03-06,Coupe de France,A,Olympique Alès
+2021,Paris SG,2021-03-06,Coupe de France,A,Brest
+2021,Angers,2021-03-07,Coupe de France,H,Club Franciscain
+2021,Lille,2021-03-07,Coupe de France,A,Gazélec Ajaccio
+2021,Marseille,2021-03-07,Coupe de France,A,Canet Roussillon FC
+2021,Monaco,2021-03-08,Coupe de France,A,Nice
+2021,Nice,2021-03-08,Coupe de France,H,Monaco
 2021,Marseille,2021-03-10,Ligue 1,H,Rennes
 2021,Paris SG,2021-03-10,Champions League,H,Barcelona
 2021,Rennes,2021-03-10,Ligue 1,A,Marseille
@@ -5284,6 +5862,8 @@ season,team,date,competition,home_away,opponent
 2021,Strasbourg,2021-03-14,Ligue 1,A,Rennes
 2021,Caen,2021-03-15,Ligue 2,H,Le Havre
 2021,Le Havre,2021-03-15,Ligue 2,A,Caen
+2021,Lille,2021-03-17,Coupe de France,A,Paris SG
+2021,Paris SG,2021-03-17,Coupe de France,H,Lille
 2021,Ajaccio,2021-03-19,Ligue 2,A,FC Chambly
 2021,Monaco,2021-03-19,Ligue 1,A,St Etienne
 2021,St Etienne,2021-03-19,Ligue 1,H,Monaco
@@ -5343,7 +5923,13 @@ season,team,date,competition,home_away,opponent
 2021,Strasbourg,2021-04-04,Ligue 1,A,Bordeaux
 2021,Auxerre,2021-04-05,Ligue 2,H,Le Havre
 2021,Le Havre,2021-04-05,Ligue 2,A,Auxerre
+2021,Metz,2021-04-06,Coupe de France,A,Monaco
+2021,Monaco,2021-04-06,Coupe de France,H,Metz
+2021,Angers,2021-04-07,Coupe de France,A,CS Sedan Ardennes
+2021,Montpellier,2021-04-07,Coupe de France,A,Voltigeurs de Châteaubriant
 2021,Paris SG,2021-04-07,Champions League,A,Bayern Munich
+2021,Toulouse,2021-04-07,Coupe de France,A,Olympique Saumur FC
+2021,Lyon,2021-04-08,Coupe de France,A,Red Star
 2021,Lille,2021-04-09,Ligue 1,A,Metz
 2021,Metz,2021-04-09,Ligue 1,H,Lille
 2021,Ajaccio,2021-04-10,Ligue 2,A,Le Havre
@@ -5413,8 +5999,14 @@ season,team,date,competition,home_away,opponent
 2021,Caen,2021-04-20,Ligue 2,H,USL Dunkerque
 2021,Clermont,2021-04-20,Ligue 2,A,Paris FC
 2021,Guingamp,2021-04-20,Ligue 2,H,FC Chambly
+2021,Montpellier,2021-04-20,Coupe de France,A,Canet Roussillon FC
 2021,Paris FC,2021-04-20,Ligue 2,H,Clermont
+2021,Toulouse,2021-04-20,Coupe de France,A,GFA Rumilly-Vallières
 2021,Troyes,2021-04-20,Ligue 2,A,Chamois Niortais
+2021,Angers,2021-04-21,Coupe de France,A,Paris SG
+2021,Lyon,2021-04-21,Coupe de France,H,Monaco
+2021,Monaco,2021-04-21,Coupe de France,A,Lyon
+2021,Paris SG,2021-04-21,Coupe de France,H,Angers
 2021,Marseille,2021-04-23,Ligue 1,A,Reims
 2021,Reims,2021-04-23,Ligue 1,H,Marseille
 2021,Ajaccio,2021-04-24,Ligue 2,H,Amiens
@@ -5509,7 +6101,10 @@ season,team,date,competition,home_away,opponent
 2021,Rennes,2021-05-09,Ligue 1,H,Paris SG
 2021,St Etienne,2021-05-09,Ligue 1,H,Marseille
 2021,Strasbourg,2021-05-09,Ligue 1,H,Montpellier
+2021,Montpellier,2021-05-12,Coupe de France,H,Paris SG
+2021,Paris SG,2021-05-12,Coupe de France,A,Montpellier
 2021,Toulouse,2021-05-12,Ligue 2,H,Pau FC
+2021,Monaco,2021-05-13,Coupe de France,A,GFA Rumilly-Vallières
 2021,Ajaccio,2021-05-15,Ligue 2,A,LB Châteauroux
 2021,Amiens,2021-05-15,Ligue 2,A,AS Nancy Lorraine
 2021,Auxerre,2021-05-15,Ligue 2,A,FC Sochaux
@@ -5540,6 +6135,8 @@ season,team,date,competition,home_away,opponent
 2021,Rennes,2021-05-16,Ligue 1,A,Monaco
 2021,St Etienne,2021-05-16,Ligue 1,A,Lille
 2021,Strasbourg,2021-05-16,Ligue 1,A,Nice
+2021,Monaco,2021-05-19,Coupe de France,H,Paris SG
+2021,Paris SG,2021-05-19,Coupe de France,A,Monaco
 2021,Angers,2021-05-23,Ligue 1,H,Lille
 2021,Bordeaux,2021-05-23,Ligue 1,A,Reims
 2021,Brest,2021-05-23,Ligue 1,H,Paris SG
@@ -5579,7 +6176,10 @@ season,team,date,competition,home_away,opponent
 2122,Nimes,2021-07-31,Ligue 2,H,Dijon
 2122,Paris FC,2021-07-31,Ligue 2,H,USL Dunkerque
 2122,Toulouse,2021-07-31,Ligue 2,A,AS Nancy Lorraine
+2122,Lille,2021-08-01,Trophee des Champions,H,Paris SG
+2122,Paris SG,2021-08-01,Trophee des Champions,A,Lille
 2122,Auxerre,2021-08-02,Ligue 2,H,Grenoble Foot 38
+2122,Monaco,2021-08-03,Champions League (qual.),A,Sparta Prague
 2122,Monaco,2021-08-06,Ligue 1,H,Nantes
 2122,Nantes,2021-08-06,Ligue 1,A,Monaco
 2122,Ajaccio,2021-08-07,Ligue 2,A,Auxerre
@@ -5610,6 +6210,7 @@ season,team,date,competition,home_away,opponent
 2122,Rennes,2021-08-08,Ligue 1,H,Lens
 2122,St Etienne,2021-08-08,Ligue 1,H,Lorient
 2122,Strasbourg,2021-08-08,Ligue 1,H,Angers
+2122,Monaco,2021-08-10,Champions League (qual.),H,Sparta Prague
 2122,Lorient,2021-08-13,Ligue 1,H,Monaco
 2122,Monaco,2021-08-13,Ligue 1,A,Lorient
 2122,Amiens,2021-08-14,Ligue 2,A,Guingamp
@@ -5638,6 +6239,8 @@ season,team,date,competition,home_away,opponent
 2122,Troyes,2021-08-15,Ligue 1,A,Clermont
 2122,Auxerre,2021-08-16,Ligue 2,A,Paris FC
 2122,Paris FC,2021-08-16,Ligue 2,H,Auxerre
+2122,Monaco,2021-08-17,Champions League (qual.),H,Shakhtar Donetsk
+2122,Rennes,2021-08-19,Conference League (qual.),H,Rosenborg
 2122,Brest,2021-08-20,Ligue 1,H,Paris SG
 2122,Paris SG,2021-08-20,Ligue 1,A,Brest
 2122,Amiens,2021-08-21,Ligue 2,H,FC Sochaux
@@ -5666,6 +6269,8 @@ season,team,date,competition,home_away,opponent
 2122,Guingamp,2021-08-23,Ligue 2,A,Auxerre
 2122,Ajaccio,2021-08-25,Ligue 2,H,Caen
 2122,Caen,2021-08-25,Ligue 2,A,Ajaccio
+2122,Monaco,2021-08-25,Champions League (qual.),A,Shakhtar Donetsk
+2122,Rennes,2021-08-26,Conference League (qual.),A,Rosenborg
 2122,Lyon,2021-08-27,Ligue 1,A,Nantes
 2122,Nantes,2021-08-27,Ligue 1,H,Lyon
 2122,Ajaccio,2021-08-28,Ligue 2,A,Guingamp
@@ -5994,6 +6599,17 @@ season,team,date,competition,home_away,opponent
 2122,Rennes,2021-11-07,Ligue 1,H,Lyon
 2122,St Etienne,2021-11-07,Ligue 1,H,Clermont
 2122,Strasbourg,2021-11-07,Ligue 1,A,Nantes
+2122,Ajaccio,2021-11-12,Coupe de France,H,US Orléans
+2122,Amiens,2021-11-13,Coupe de France,A,ES Anzin-Saint-Aubin
+2122,Auxerre,2021-11-13,Coupe de France,A,FC Limonest Saint-Didier
+2122,Caen,2021-11-13,Coupe de France,A,Dinan-Léhon FC
+2122,Dijon,2021-11-13,Coupe de France,A,ASC Saint-Apollinaire
+2122,Guingamp,2021-11-13,Coupe de France,A,US Liffré
+2122,Le Havre,2021-11-13,Coupe de France,A,Vierzon FC
+2122,Nimes,2021-11-13,Coupe de France,A,FC Chusclan-Laudun-l'Ardoise
+2122,Toulouse,2021-11-13,Coupe de France,A,FC Libourne
+2122,Amiens,2021-11-14,Coupe de France,A,FC Dutemple
+2122,Paris FC,2021-11-14,Coupe de France,A,CS Sedan Ardennes
 2122,Lille,2021-11-19,Ligue 1,A,Monaco
 2122,Monaco,2021-11-19,Ligue 1,H,Lille
 2122,Ajaccio,2021-11-20,Ligue 2,A,USL Dunkerque
@@ -6030,13 +6646,20 @@ season,team,date,competition,home_away,opponent
 2122,Rennes,2021-11-25,Conference League,H,Vitesse
 2122,Angers,2021-11-26,Ligue 1,A,Lens
 2122,Lens,2021-11-26,Ligue 1,H,Angers
+2122,Amiens,2021-11-27,Coupe de France,A,AC Cambrai
+2122,Auxerre,2021-11-27,Coupe de France,A,Chambéry SF
+2122,Dijon,2021-11-27,Coupe de France,A,FC Morteau-Montlebon
+2122,Guingamp,2021-11-27,Coupe de France,H,Stade Briochin
 2122,Lille,2021-11-27,Ligue 1,H,Nantes
 2122,Metz,2021-11-27,Ligue 1,A,Nice
 2122,Nantes,2021-11-27,Ligue 1,A,Lille
 2122,Nice,2021-11-27,Ligue 1,H,Metz
+2122,Nimes,2021-11-27,Coupe de France,A,Aubagne FC
+2122,Paris FC,2021-11-27,Coupe de France,H,CSC Cayenne
 2122,Bordeaux,2021-11-28,Ligue 1,H,Brest
 2122,Brest,2021-11-28,Ligue 1,A,Bordeaux
 2122,Clermont,2021-11-28,Ligue 1,A,Reims
+2122,Le Havre,2021-11-28,Coupe de France,A,US Chauvigny
 2122,Lorient,2021-11-28,Ligue 1,H,Rennes
 2122,Lyon,2021-11-28,Ligue 1,A,Montpellier
 2122,Marseille,2021-11-28,Ligue 1,H,Troyes
@@ -6047,6 +6670,7 @@ season,team,date,competition,home_away,opponent
 2122,Rennes,2021-11-28,Ligue 1,A,Lorient
 2122,St Etienne,2021-11-28,Ligue 1,H,Paris SG
 2122,Strasbourg,2021-11-28,Ligue 1,A,Monaco
+2122,Toulouse,2021-11-28,Coupe de France,A,Trélissac-Antonne Périgord FC
 2122,Troyes,2021-11-28,Ligue 1,A,Marseille
 2122,Angers,2021-12-01,Ligue 1,H,Monaco
 2122,Bordeaux,2021-12-01,Ligue 1,A,Strasbourg
@@ -6134,6 +6758,33 @@ season,team,date,competition,home_away,opponent
 2122,Strasbourg,2021-12-12,Ligue 1,H,Marseille
 2122,Troyes,2021-12-12,Ligue 1,H,Bordeaux
 2122,Toulouse,2021-12-13,Ligue 2,H,Rodez AF
+2122,Strasbourg,2021-12-16,Coupe de France,A,Valenciennes
+2122,Lyon,2021-12-17,Coupe de France,A,Paris FC
+2122,Paris FC,2021-12-17,Coupe de France,H,Lyon
+2122,Amiens,2021-12-18,Coupe de France,A,Guingamp
+2122,Auxerre,2021-12-18,Coupe de France,A,Lille
+2122,Clermont,2021-12-18,Coupe de France,A,JS Chemin Bas d'Avignon
+2122,Dijon,2021-12-18,Coupe de France,A,AS Cannes
+2122,Guingamp,2021-12-18,Coupe de France,H,Amiens
+2122,Lille,2021-12-18,Coupe de France,H,Auxerre
+2122,Lorient,2021-12-18,Coupe de France,A,Rennes
+2122,Nantes,2021-12-18,Coupe de France,A,Sochaux
+2122,Nimes,2021-12-18,Coupe de France,A,Toulouse
+2122,Rennes,2021-12-18,Coupe de France,H,Lorient
+2122,Toulouse,2021-12-18,Coupe de France,H,Nimes
+2122,Troyes,2021-12-18,Coupe de France,H,Nancy
+2122,Angers,2021-12-19,Coupe de France,A,ESA Linas-Montlhéry
+2122,Bordeaux,2021-12-19,Coupe de France,H,AS Jumeaux de M'zouazia
+2122,Brest,2021-12-19,Coupe de France,A,Dinan-Léhon FC
+2122,Lens,2021-12-19,Coupe de France,A,Stade Poitevin FC
+2122,Marseille,2021-12-19,Coupe de France,H,ES Cannet Rocheville
+2122,Metz,2021-12-19,Coupe de France,A,Bergerac Périgord FC
+2122,Monaco,2021-12-19,Coupe de France,A,Red Star
+2122,Montpellier,2021-12-19,Coupe de France,A,Andrézieux-Bouthéon FC
+2122,Nice,2021-12-19,Coupe de France,A,SO Cholet
+2122,Paris SG,2021-12-19,Coupe de France,A,Entente Feignies Aulnoye FC
+2122,Reims,2021-12-19,Coupe de France,A,EF Reims Sainte-Anne Châtillons
+2122,St Etienne,2021-12-19,Coupe de France,A,Lyon La Duchère
 2122,Ajaccio,2021-12-21,Ligue 2,H,Grenoble Foot 38
 2122,Amiens,2021-12-21,Ligue 2,A,Paris FC
 2122,Auxerre,2021-12-21,Ligue 2,H,Le Havre
@@ -6162,6 +6813,22 @@ season,team,date,competition,home_away,opponent
 2122,Rennes,2021-12-22,Ligue 1,A,Monaco
 2122,St Etienne,2021-12-22,Ligue 1,H,Nantes
 2122,Troyes,2021-12-22,Ligue 1,H,Brest
+2122,Amiens,2022-01-02,Coupe de France,A,ESA Linas-Montlhéry
+2122,Bordeaux,2022-01-02,Coupe de France,A,Brest
+2122,Brest,2022-01-02,Coupe de France,H,Bordeaux
+2122,Clermont,2022-01-02,Coupe de France,A,Bastia
+2122,Marseille,2022-01-02,Coupe de France,A,US Chauvigny
+2122,Monaco,2022-01-02,Coupe de France,A,Quevilly-Rouen
+2122,Montpellier,2022-01-02,Coupe de France,H,Strasbourg
+2122,Nantes,2022-01-02,Coupe de France,H,AS Vitré
+2122,Reims,2022-01-02,Coupe de France,A,ES Thaon
+2122,Rennes,2022-01-02,Coupe de France,A,Nancy
+2122,St Etienne,2022-01-02,Coupe de France,A,Jura Sud Foot
+2122,Strasbourg,2022-01-02,Coupe de France,A,Montpellier
+2122,Toulouse,2022-01-02,Coupe de France,A,Cannes
+2122,Paris SG,2022-01-03,Coupe de France,A,Vannes OC
+2122,Lens,2022-01-04,Coupe de France,H,Lille
+2122,Lille,2022-01-04,Coupe de France,A,Lens
 2122,Bordeaux,2022-01-07,Ligue 1,H,Marseille
 2122,Marseille,2022-01-07,Ligue 1,A,Bordeaux
 2122,Auxerre,2022-01-08,Ligue 2,A,Grenoble Foot 38
@@ -6248,9 +6915,21 @@ season,team,date,competition,home_away,opponent
 2122,St Etienne,2022-01-26,Ligue 1,A,Angers
 2122,Ajaccio,2022-01-28,Ligue 2,H,Auxerre
 2122,Auxerre,2022-01-28,Ligue 2,A,Ajaccio
+2122,Brest,2022-01-28,Coupe de France,A,Nantes
 2122,Caen,2022-01-28,Ligue 2,H,Chamois Niortais
+2122,Nantes,2022-01-28,Coupe de France,H,Brest
 2122,Nimes,2022-01-28,Ligue 2,H,Valenciennes FC
 2122,Paris FC,2022-01-28,Ligue 2,A,USL Dunkerque
+2122,Amiens,2022-01-29,Coupe de France,A,Nancy
+2122,Marseille,2022-01-29,Coupe de France,H,Montpellier
+2122,Montpellier,2022-01-29,Coupe de France,A,Marseille
+2122,Reims,2022-01-29,Coupe de France,H,Bastia
+2122,Toulouse,2022-01-29,Coupe de France,H,FC Versailles 78
+2122,Lens,2022-01-30,Coupe de France,H,Monaco
+2122,Monaco,2022-01-30,Coupe de France,A,Lens
+2122,St Etienne,2022-01-30,Coupe de France,A,Bergerac Périgord FC
+2122,Nice,2022-01-31,Coupe de France,A,Paris SG
+2122,Paris SG,2022-01-31,Coupe de France,H,Nice
 2122,Auxerre,2022-02-01,Ligue 2,H,Paris FC
 2122,Lyon,2022-02-01,Ligue 1,H,Marseille
 2122,Marseille,2022-02-01,Ligue 1,A,Lyon
@@ -6286,6 +6965,11 @@ season,team,date,competition,home_away,opponent
 2122,Troyes,2022-02-06,Ligue 1,H,Metz
 2122,Ajaccio,2022-02-07,Ligue 2,A,Paris FC
 2122,Paris FC,2022-02-07,Ligue 2,H,Ajaccio
+2122,Amiens,2022-02-08,Coupe de France,A,Monaco
+2122,Monaco,2022-02-08,Coupe de France,H,Amiens
+2122,Marseille,2022-02-09,Coupe de France,A,Nice
+2122,Nice,2022-02-09,Coupe de France,H,Marseille
+2122,Nantes,2022-02-10,Coupe de France,H,Bastia
 2122,Paris SG,2022-02-11,Ligue 1,H,Rennes
 2122,Rennes,2022-02-11,Ligue 1,A,Paris SG
 2122,Ajaccio,2022-02-12,Ligue 2,H,Guingamp
@@ -6380,6 +7064,9 @@ season,team,date,competition,home_away,opponent
 2122,Reims,2022-02-27,Ligue 1,A,Monaco
 2122,Troyes,2022-02-27,Ligue 1,H,Marseille
 2122,Toulouse,2022-02-28,Ligue 2,A,Grenoble Foot 38
+2122,Nice,2022-03-01,Coupe de France,H,FC Versailles 78
+2122,Monaco,2022-03-02,Coupe de France,A,Nantes
+2122,Nantes,2022-03-02,Coupe de France,H,Monaco
 2122,Lorient,2022-03-04,Ligue 1,H,Lyon
 2122,Lyon,2022-03-04,Ligue 1,A,Lorient
 2122,Ajaccio,2022-03-05,Ligue 2,A,Chamois Niortais
@@ -6686,6 +7373,8 @@ season,team,date,competition,home_away,opponent
 2122,Dijon,2022-05-07,Ligue 2,H,AS Nancy Lorraine
 2122,Guingamp,2022-05-07,Ligue 2,A,USL Dunkerque
 2122,Le Havre,2022-05-07,Ligue 2,H,Auxerre
+2122,Nantes,2022-05-07,Coupe de France,A,Nice
+2122,Nice,2022-05-07,Coupe de France,H,Nantes
 2122,Nimes,2022-05-07,Ligue 2,A,Toulouse
 2122,Paris FC,2022-05-07,Ligue 2,A,Amiens
 2122,Strasbourg,2022-05-07,Ligue 1,A,Brest
@@ -6765,7 +7454,10 @@ season,team,date,competition,home_away,opponent
 2223,Metz,2022-07-30,Ligue 2,H,Amiens
 2223,Nimes,2022-07-30,Ligue 2,H,Caen
 2223,St Etienne,2022-07-30,Ligue 2,A,Dijon
+2223,Nantes,2022-07-31,Trophee des Champions,A,Paris SG
+2223,Paris SG,2022-07-31,Trophee des Champions,H,Nantes
 2223,Paris FC,2022-08-01,Ligue 2,A,FC Sochaux
+2223,Monaco,2022-08-02,Champions League (qual.),H,PSV Eindhoven
 2223,Ajaccio,2022-08-05,Ligue 1,A,Lyon
 2223,Lyon,2022-08-05,Ligue 1,H,Ajaccio
 2223,Amiens,2022-08-06,Ligue 2,H,FC Annecy
@@ -6796,6 +7488,7 @@ season,team,date,competition,home_away,opponent
 2223,Troyes,2022-08-07,Ligue 1,A,Montpellier
 2223,Caen,2022-08-08,Ligue 2,H,Metz
 2223,Metz,2022-08-08,Ligue 2,A,Caen
+2223,Monaco,2022-08-09,Champions League (qual.),A,PSV Eindhoven
 2223,Lille,2022-08-12,Ligue 1,A,Nantes
 2223,Nantes,2022-08-12,Ligue 1,H,Lille
 2223,Amiens,2022-08-13,Ligue 2,A,FC Sochaux
@@ -6824,6 +7517,7 @@ season,team,date,competition,home_away,opponent
 2223,Toulouse,2022-08-14,Ligue 1,A,Troyes
 2223,Troyes,2022-08-14,Ligue 1,H,Toulouse
 2223,St Etienne,2022-08-15,Ligue 2,A,US Quevilly-Rouen
+2223,Nice,2022-08-18,Conference League (qual.),A,Maccabi Tel Aviv
 2223,Lyon,2022-08-19,Ligue 1,H,Troyes
 2223,Troyes,2022-08-19,Ligue 1,A,Lyon
 2223,Amiens,2022-08-20,Ligue 2,H,SC Bastia
@@ -6854,6 +7548,7 @@ season,team,date,competition,home_away,opponent
 2223,Strasbourg,2022-08-21,Ligue 1,H,Reims
 2223,Toulouse,2022-08-21,Ligue 1,H,Lorient
 2223,Bordeaux,2022-08-22,Ligue 2,A,Grenoble Foot 38
+2223,Nice,2022-08-25,Conference League (qual.),H,Maccabi Tel Aviv
 2223,Ajaccio,2022-08-26,Ligue 1,H,Lille
 2223,Lille,2022-08-26,Ligue 1,A,Ajaccio
 2223,Amiens,2022-08-27,Ligue 2,A,Le Havre
@@ -7158,15 +7853,24 @@ season,team,date,competition,home_away,opponent
 2223,Rennes,2022-10-27,Europa League,A,Fenerbahçe
 2223,Lens,2022-10-28,Ligue 1,H,Toulouse
 2223,Toulouse,2022-10-28,Ligue 1,A,Lens
+2223,Bordeaux,2022-10-29,Coupe de France,A,Stade Bordelais
+2223,Caen,2022-10-29,Coupe de France,A,US Saint-Malo
+2223,Dijon,2022-10-29,Coupe de France,A,Saint-Pryvé Saint-Hilaire FC
+2223,Le Havre,2022-10-29,Coupe de France,A,US Alençon
 2223,Marseille,2022-10-29,Ligue 1,A,Strasbourg
+2223,Nimes,2022-10-29,Coupe de France,H,FC Borgo
+2223,Paris FC,2022-10-29,Coupe de France,A,CO Les Ulis
 2223,Paris SG,2022-10-29,Ligue 1,H,Troyes
+2223,St Etienne,2022-10-29,Coupe de France,H,Rodez
 2223,Strasbourg,2022-10-29,Ligue 1,H,Marseille
 2223,Troyes,2022-10-29,Ligue 1,A,Paris SG
 2223,Ajaccio,2022-10-30,Ligue 1,A,Auxerre
+2223,Amiens,2022-10-30,Coupe de France,A,FC Chambly Oise
 2223,Angers,2022-10-30,Ligue 1,A,Monaco
 2223,Auxerre,2022-10-30,Ligue 1,H,Ajaccio
 2223,Brest,2022-10-30,Ligue 1,H,Reims
 2223,Clermont,2022-10-30,Ligue 1,A,Nantes
+2223,Guingamp,2022-10-30,Coupe de France,A,Auray FC
 2223,Lille,2022-10-30,Ligue 1,A,Lyon
 2223,Lorient,2022-10-30,Ligue 1,H,Nice
 2223,Lyon,2022-10-30,Ligue 1,H,Lille
@@ -7177,6 +7881,7 @@ season,team,date,competition,home_away,opponent
 2223,Reims,2022-10-30,Ligue 1,A,Brest
 2223,Rennes,2022-10-30,Ligue 1,H,Montpellier
 2223,Marseille,2022-11-01,Champions League,H,Tottenham
+2223,Metz,2022-11-01,Coupe de France,A,US Raon-l'Étape
 2223,Paris SG,2022-11-02,Champions League,A,Juventus
 2223,Monaco,2022-11-03,Europa League,H,Crvena Zvezda
 2223,Nantes,2022-11-03,Europa League,A,Olympiakos Piraeus
@@ -7242,6 +7947,13 @@ season,team,date,competition,home_away,opponent
 2223,Reims,2022-11-13,Ligue 1,A,Montpellier
 2223,Strasbourg,2022-11-13,Ligue 1,H,Lorient
 2223,Troyes,2022-11-13,Ligue 1,A,Brest
+2223,Amiens,2022-11-19,Coupe de France,H,Aiglon du Lamentin FC
+2223,Bordeaux,2022-11-19,Coupe de France,A,Trélissac-Antonne Périgord FC
+2223,Guingamp,2022-11-19,Coupe de France,A,Les Herbiers VF
+2223,Metz,2022-11-19,Coupe de France,A,SAS Épinal
+2223,Nimes,2022-11-19,Coupe de France,A,Montauban FCTG
+2223,Paris FC,2022-11-19,Coupe de France,A,Union Cosnoise Sportive
+2223,Caen,2022-12-21,Coupe de France,A,AF Virois
 2223,Amiens,2022-12-26,Ligue 2,A,Valenciennes FC
 2223,Bordeaux,2022-12-26,Ligue 2,A,Le Havre
 2223,Caen,2022-12-26,Ligue 2,A,SC Bastia
@@ -7302,6 +8014,31 @@ season,team,date,competition,home_away,opponent
 2223,Rennes,2023-01-02,Ligue 1,H,Nice
 2223,Strasbourg,2023-01-02,Ligue 1,H,Troyes
 2223,Troyes,2023-01-02,Ligue 1,A,Strasbourg
+2223,Angers,2023-01-06,Coupe de France,A,Strasbourg
+2223,Montpellier,2023-01-06,Coupe de France,A,Pau
+2223,Nimes,2023-01-06,Coupe de France,A,Grenoble
+2223,Paris FC,2023-01-06,Coupe de France,H,Valenciennes
+2223,Paris SG,2023-01-06,Coupe de France,A,LB Châteauroux
+2223,Strasbourg,2023-01-06,Coupe de France,H,Angers
+2223,Amiens,2023-01-07,Coupe de France,A,ES Thaon
+2223,Bordeaux,2023-01-07,Coupe de France,H,Rennes
+2223,Brest,2023-01-07,Coupe de France,A,US Avranches
+2223,Clermont,2023-01-07,Coupe de France,A,FCO Strasbourg Koenigshoffen 06
+2223,Lens,2023-01-07,Coupe de France,A,ESA Linas-Montlhéry
+2223,Lyon,2023-01-07,Coupe de France,H,Metz
+2223,Marseille,2023-01-07,Coupe de France,H,Hyères FC
+2223,Metz,2023-01-07,Coupe de France,A,Lyon
+2223,Monaco,2023-01-07,Coupe de France,H,Rodez
+2223,Nantes,2023-01-07,Coupe de France,A,AF Virois
+2223,Nice,2023-01-07,Coupe de France,A,Le Puy Foot 43 Auvergne
+2223,Rennes,2023-01-07,Coupe de France,A,Bordeaux
+2223,Ajaccio,2023-01-08,Coupe de France,A,Jura Sud Foot
+2223,Auxerre,2023-01-08,Coupe de France,A,USL Dunkerque
+2223,Lille,2023-01-08,Coupe de France,H,Troyes
+2223,Lorient,2023-01-08,Coupe de France,A,AS La Châtaigneraie
+2223,Reims,2023-01-08,Coupe de France,A,FC Loon-Plage
+2223,Toulouse,2023-01-08,Coupe de France,A,Lannion FC
+2223,Troyes,2023-01-08,Coupe de France,A,Lille
 2223,Amiens,2023-01-10,Ligue 2,H,Guingamp
 2223,Bordeaux,2023-01-10,Ligue 2,A,Caen
 2223,Caen,2023-01-10,Ligue 2,H,Bordeaux
@@ -7362,6 +8099,21 @@ season,team,date,competition,home_away,opponent
 2223,Troyes,2023-01-15,Ligue 1,A,Lille
 2223,St Etienne,2023-01-16,Ligue 2,A,Chamois Niortais
 2223,Caen,2023-01-20,Ligue 2,A,FC Sochaux
+2223,Marseille,2023-01-20,Coupe de France,H,Rennes
+2223,Rennes,2023-01-20,Coupe de France,A,Marseille
+2223,Ajaccio,2023-01-21,Coupe de France,A,Toulouse
+2223,Angers,2023-01-21,Coupe de France,A,FCO Strasbourg Koenigshoffen 06
+2223,Lorient,2023-01-21,Coupe de France,A,Bastia
+2223,Lyon,2023-01-21,Coupe de France,A,Chambéry SF
+2223,Paris FC,2023-01-21,Coupe de France,A,FC Chamalières
+2223,Reims,2023-01-21,Coupe de France,A,Les Herbiers VF
+2223,Toulouse,2023-01-21,Coupe de France,H,Ajaccio
+2223,Auxerre,2023-01-22,Coupe de France,A,Niort
+2223,Brest,2023-01-22,Coupe de France,H,Lens
+2223,Lens,2023-01-22,Coupe de France,A,Brest
+2223,Lille,2023-01-22,Coupe de France,H,Pau FC
+2223,Nantes,2023-01-22,Coupe de France,A,ES Thaon
+2223,Paris SG,2023-01-23,Coupe de France,A,US Pays de Cassel
 2223,Lorient,2023-01-27,Ligue 1,H,Rennes
 2223,Rennes,2023-01-27,Ligue 1,A,Lorient
 2223,Amiens,2023-01-28,Ligue 2,H,Le Havre
@@ -7452,6 +8204,18 @@ season,team,date,competition,home_away,opponent
 2223,Strasbourg,2023-02-05,Ligue 1,H,Montpellier
 2223,Amiens,2023-02-06,Ligue 2,H,Metz
 2223,Metz,2023-02-06,Ligue 2,A,Amiens
+2223,Angers,2023-02-08,Coupe de France,H,Nantes
+2223,Auxerre,2023-02-08,Coupe de France,H,Rodez
+2223,Lille,2023-02-08,Coupe de France,A,Lyon
+2223,Lyon,2023-02-08,Coupe de France,H,Lille
+2223,Marseille,2023-02-08,Coupe de France,H,Paris SG
+2223,Nantes,2023-02-08,Coupe de France,A,Angers
+2223,Paris FC,2023-02-08,Coupe de France,H,Annecy
+2223,Paris SG,2023-02-08,Coupe de France,A,Marseille
+2223,Reims,2023-02-08,Coupe de France,A,Toulouse
+2223,Toulouse,2023-02-08,Coupe de France,H,Reims
+2223,Lens,2023-02-09,Coupe de France,A,Lorient
+2223,Lorient,2023-02-09,Coupe de France,H,Lens
 2223,Ajaccio,2023-02-10,Ligue 1,A,Nice
 2223,Nice,2023-02-10,Ligue 1,H,Ajaccio
 2223,Bordeaux,2023-02-11,Ligue 2,A,Chamois Niortais
@@ -7547,6 +8311,11 @@ season,team,date,competition,home_away,opponent
 2223,Troyes,2023-02-26,Ligue 1,A,Ajaccio
 2223,Amiens,2023-02-27,Ligue 2,H,Bordeaux
 2223,Bordeaux,2023-02-27,Ligue 2,A,Amiens
+2223,Lyon,2023-02-28,Coupe de France,H,Grenoble
+2223,Lens,2023-03-01,Coupe de France,A,Nantes
+2223,Marseille,2023-03-01,Coupe de France,H,Annecy
+2223,Nantes,2023-03-01,Coupe de France,H,Lens
+2223,Toulouse,2023-03-01,Coupe de France,H,Rodez
 2223,Auxerre,2023-03-03,Ligue 1,A,Nice
 2223,Nice,2023-03-03,Ligue 1,H,Auxerre
 2223,Amiens,2023-03-04,Ligue 2,H,Pau FC
@@ -7672,6 +8441,9 @@ season,team,date,competition,home_away,opponent
 2223,Toulouse,2023-04-02,Ligue 1,A,Brest
 2223,Bordeaux,2023-04-03,Ligue 2,A,Guingamp
 2223,Guingamp,2023-04-03,Ligue 2,H,Bordeaux
+2223,Lyon,2023-04-05,Coupe de France,A,Nantes
+2223,Nantes,2023-04-05,Coupe de France,H,Lyon
+2223,Toulouse,2023-04-06,Coupe de France,A,Annecy
 2223,Lens,2023-04-07,Ligue 1,H,Strasbourg
 2223,Strasbourg,2023-04-07,Ligue 1,A,Lens
 2223,Amiens,2023-04-08,Ligue 2,H,Nimes
@@ -7774,9 +8546,11 @@ season,team,date,competition,home_away,opponent
 2223,Le Havre,2023-04-29,Ligue 2,A,Caen
 2223,Lille,2023-04-29,Ligue 1,H,Ajaccio
 2223,Metz,2023-04-29,Ligue 2,H,Paris FC
+2223,Nantes,2023-04-29,Coupe de France,H,Toulouse
 2223,Nimes,2023-04-29,Ligue 2,H,Pau FC
 2223,Paris FC,2023-04-29,Ligue 2,A,Metz
 2223,St Etienne,2023-04-29,Ligue 2,A,Rodez AF
+2223,Toulouse,2023-04-29,Coupe de France,A,Nantes
 2223,Angers,2023-04-30,Ligue 1,A,Rennes
 2223,Auxerre,2023-04-30,Ligue 1,A,Marseille
 2223,Clermont,2023-04-30,Ligue 1,H,Reims
@@ -7954,6 +8728,7 @@ season,team,date,competition,home_away,opponent
 2324,St Etienne,2023-08-05,Ligue 2,H,Grenoble Foot 38
 2324,Troyes,2023-08-05,Ligue 2,A,USL Dunkerque
 2324,Bordeaux,2023-08-07,Ligue 2,A,Pau FC
+2324,Marseille,2023-08-09,Champions League (qual.),A,Panathinaikos
 2324,Lille,2023-08-11,Ligue 1,A,Nice
 2324,Nice,2023-08-11,Ligue 1,H,Lille
 2324,Ajaccio,2023-08-12,Ligue 2,A,US Quevilly-Rouen
@@ -7982,6 +8757,7 @@ season,team,date,competition,home_away,opponent
 2324,Strasbourg,2023-08-13,Ligue 1,H,Lyon
 2324,Toulouse,2023-08-13,Ligue 1,A,Nantes
 2324,Bordeaux,2023-08-14,Ligue 2,H,US Concarneau
+2324,Marseille,2023-08-15,Champions League (qual.),H,Panathinaikos
 2324,Marseille,2023-08-18,Ligue 1,A,Metz
 2324,Metz,2023-08-18,Ligue 1,H,Marseille
 2324,Amiens,2023-08-19,Ligue 2,H,SC Bastia
@@ -8010,6 +8786,7 @@ season,team,date,competition,home_away,opponent
 2324,Strasbourg,2023-08-20,Ligue 1,A,Monaco
 2324,Ajaccio,2023-08-21,Ligue 2,H,Bordeaux
 2324,Bordeaux,2023-08-21,Ligue 2,A,Ajaccio
+2324,Lille,2023-08-24,Conference League (qual.),H,Rijeka
 2324,Monaco,2023-08-25,Ligue 1,A,Nantes
 2324,Nantes,2023-08-25,Ligue 1,H,Monaco
 2324,Ajaccio,2023-08-26,Ligue 2,A,Caen
@@ -8038,6 +8815,7 @@ season,team,date,competition,home_away,opponent
 2324,Strasbourg,2023-08-27,Ligue 1,H,Toulouse
 2324,Toulouse,2023-08-27,Ligue 1,A,Strasbourg
 2324,St Etienne,2023-08-28,Ligue 2,A,FC Annecy
+2324,Lille,2023-08-31,Conference League (qual.),A,Rijeka
 2324,Marseille,2023-09-01,Ligue 1,A,Nantes
 2324,Nantes,2023-09-01,Ligue 1,H,Marseille
 2324,Ajaccio,2023-09-02,Ligue 2,H,USL Dunkerque
@@ -8318,6 +9096,18 @@ season,team,date,competition,home_away,opponent
 2324,Nantes,2023-11-12,Ligue 1,A,Metz
 2324,Rennes,2023-11-12,Ligue 1,H,Lyon
 2324,Toulouse,2023-11-12,Ligue 1,A,Lille
+2324,Bordeaux,2023-11-17,Coupe de France,A,Canet Roussillon FC
+2324,Amiens,2023-11-18,Coupe de France,A,SSEP Hombourg-Haut
+2324,Angers,2023-11-18,Coupe de France,A,AC Houilles
+2324,Auxerre,2023-11-18,Coupe de France,A,US Le Pays du Valois
+2324,Caen,2023-11-18,Coupe de France,A,FC Loon-Plage
+2324,Dijon,2023-11-18,Coupe de France,A,RC Doullens
+2324,Guingamp,2023-11-18,Coupe de France,A,US Saint-Malo
+2324,Paris FC,2023-11-18,Coupe de France,A,US Villejuif
+2324,St Etienne,2023-11-18,Coupe de France,A,Football Bourg-en-Bresse Péronnas 01
+2324,Troyes,2023-11-18,Coupe de France,A,SAS Épinal
+2324,Ajaccio,2023-11-19,Coupe de France,A,Toulouse Métropole FC
+2324,Nimes,2023-11-19,Coupe de France,A,Roannais Foot 42
 2324,Monaco,2023-11-24,Ligue 1,A,Paris SG
 2324,Paris SG,2023-11-24,Ligue 1,H,Monaco
 2324,Ajaccio,2023-11-25,Ligue 2,A,FC Annecy
@@ -8398,10 +9188,21 @@ season,team,date,competition,home_away,opponent
 2324,Strasbourg,2023-12-07,Ligue 1,A,Brest
 2324,Lens,2023-12-08,Ligue 1,A,Montpellier
 2324,Montpellier,2023-12-08,Ligue 1,H,Lens
+2324,Ajaccio,2023-12-09,Coupe de France,H,US Orléans
+2324,Amiens,2023-12-09,Coupe de France,A,ES Thaon
+2324,Angers,2023-12-09,Coupe de France,A,FC Plessis-Robinson
+2324,Auxerre,2023-12-09,Coupe de France,A,FC Saint-Meziery
+2324,Bordeaux,2023-12-09,Coupe de France,A,Angoulême Charente FC
+2324,Caen,2023-12-09,Coupe de France,A,RC Calais
+2324,Dijon,2023-12-09,Coupe de France,A,Quevilly-Rouen
+2324,Guingamp,2023-12-09,Coupe de France,A,AG Caennaise
 2324,Monaco,2023-12-09,Ligue 1,A,Rennes
 2324,Nantes,2023-12-09,Ligue 1,A,Paris SG
+2324,Nimes,2023-12-09,Coupe de France,A,St Etienne
+2324,Paris FC,2023-12-09,Coupe de France,H,Saint-Denis FC
 2324,Paris SG,2023-12-09,Ligue 1,H,Nantes
 2324,Rennes,2023-12-09,Ligue 1,H,Monaco
+2324,St Etienne,2023-12-09,Coupe de France,H,Nimes
 2324,Brest,2023-12-10,Ligue 1,A,Metz
 2324,Clermont,2023-12-10,Ligue 1,H,Lille
 2324,Le Havre,2023-12-10,Ligue 1,A,Strasbourg
@@ -8476,6 +9277,34 @@ season,team,date,competition,home_away,opponent
 2324,Rennes,2023-12-20,Ligue 1,A,Clermont
 2324,Strasbourg,2023-12-20,Ligue 1,H,Lille
 2324,Toulouse,2023-12-20,Ligue 1,H,Monaco
+2324,Paris SG,2024-01-03,Trophee des Champions,H,Toulouse
+2324,Toulouse,2024-01-03,Trophee des Champions,A,Paris SG
+2324,Clermont,2024-01-05,Coupe de France,A,Metz
+2324,Metz,2024-01-05,Coupe de France,H,Clermont
+2324,Nantes,2024-01-05,Coupe de France,A,Pau
+2324,Amiens,2024-01-06,Coupe de France,H,Montpellier
+2324,Angers,2024-01-06,Coupe de France,A,Brest
+2324,Auxerre,2024-01-06,Coupe de France,A,Nice
+2324,Bordeaux,2024-01-06,Coupe de France,A,Entente SSG
+2324,Brest,2024-01-06,Coupe de France,H,Angers
+2324,Lille,2024-01-06,Coupe de France,H,Golden Lion FC
+2324,Lorient,2024-01-06,Coupe de France,A,Sochaux
+2324,Montpellier,2024-01-06,Coupe de France,A,Amiens
+2324,Nice,2024-01-06,Coupe de France,H,Auxerre
+2324,Nimes,2024-01-06,Coupe de France,A,US Orléans
+2324,Paris FC,2024-01-06,Coupe de France,A,Olympique Alès
+2324,Strasbourg,2024-01-06,Coupe de France,A,Avoine OCC
+2324,Caen,2024-01-07,Coupe de France,A,Le Havre
+2324,Guingamp,2024-01-07,Coupe de France,H,Rennes
+2324,Le Havre,2024-01-07,Coupe de France,H,Caen
+2324,Lens,2024-01-07,Coupe de France,H,Monaco
+2324,Lyon,2024-01-07,Coupe de France,A,CA Pontarlier
+2324,Marseille,2024-01-07,Coupe de France,A,US Thionville Lusitanos
+2324,Monaco,2024-01-07,Coupe de France,A,Lens
+2324,Paris SG,2024-01-07,Coupe de France,A,US Revel
+2324,Reims,2024-01-07,Coupe de France,A,Dinan Léhon FC
+2324,Rennes,2024-01-07,Coupe de France,A,Guingamp
+2324,Toulouse,2024-01-07,Coupe de France,A,Chambéry SF
 2324,Marseille,2024-01-12,Ligue 1,H,Strasbourg
 2324,Strasbourg,2024-01-12,Ligue 1,A,Marseille
 2324,Ajaccio,2024-01-13,Ligue 2,A,Troyes
@@ -8504,6 +9333,22 @@ season,team,date,competition,home_away,opponent
 2324,Toulouse,2024-01-14,Ligue 1,A,Metz
 2324,Auxerre,2024-01-15,Ligue 2,H,Bordeaux
 2324,Bordeaux,2024-01-15,Ligue 2,A,Auxerre
+2324,Lyon,2024-01-19,Coupe de France,A,Bergerac Périgord FC
+2324,Bordeaux,2024-01-20,Coupe de France,H,Nice
+2324,Brest,2024-01-20,Coupe de France,A,Trélissac-Antonne Périgord FC
+2324,Monaco,2024-01-20,Coupe de France,A,Rodez
+2324,Nantes,2024-01-20,Coupe de France,H,Laval
+2324,Nice,2024-01-20,Coupe de France,A,Bordeaux
+2324,Paris FC,2024-01-20,Coupe de France,A,Valenciennes
+2324,Paris SG,2024-01-20,Coupe de France,A,US Orléans
+2324,Clermont,2024-01-21,Coupe de France,H,Strasbourg
+2324,Le Havre,2024-01-21,Coupe de France,A,LB Châteauroux
+2324,Lille,2024-01-21,Coupe de France,A,Racing Club de France Football
+2324,Marseille,2024-01-21,Coupe de France,A,Rennes
+2324,Reims,2024-01-21,Coupe de France,A,Sochaux
+2324,Rennes,2024-01-21,Coupe de France,H,Marseille
+2324,Strasbourg,2024-01-21,Coupe de France,A,Clermont
+2324,Toulouse,2024-01-21,Coupe de France,A,FC Rouen
 2324,Ajaccio,2024-01-23,Ligue 2,A,USL Dunkerque
 2324,Amiens,2024-01-23,Ligue 2,H,FC Annecy
 2324,Angers,2024-01-23,Ligue 2,H,US Quevilly-Rouen
@@ -8514,6 +9359,7 @@ season,team,date,competition,home_away,opponent
 2324,Paris FC,2024-01-23,Ligue 2,A,Stade Lavallois
 2324,St Etienne,2024-01-23,Ligue 2,A,Pau FC
 2324,Troyes,2024-01-23,Ligue 2,A,US Concarneau
+2324,Montpellier,2024-01-24,Coupe de France,A,Entente Feignies Aulnoye FC
 2324,Lyon,2024-01-26,Ligue 1,H,Rennes
 2324,Rennes,2024-01-26,Ligue 1,A,Lyon
 2324,Ajaccio,2024-01-27,Ligue 2,H,US Concarneau
@@ -8570,6 +9416,16 @@ season,team,date,competition,home_away,opponent
 2324,Reims,2024-02-04,Ligue 1,H,Toulouse
 2324,Toulouse,2024-02-04,Ligue 1,A,Reims
 2324,Ajaccio,2024-02-05,Ligue 2,A,SC Bastia
+2324,Rennes,2024-02-06,Coupe de France,A,Sochaux
+2324,Brest,2024-02-07,Coupe de France,A,Paris SG
+2324,Le Havre,2024-02-07,Coupe de France,A,Strasbourg
+2324,Lille,2024-02-07,Coupe de France,A,Lyon
+2324,Lyon,2024-02-07,Coupe de France,H,Lille
+2324,Montpellier,2024-02-07,Coupe de France,H,Nice
+2324,Nice,2024-02-07,Coupe de France,A,Montpellier
+2324,Paris SG,2024-02-07,Coupe de France,H,Brest
+2324,Strasbourg,2024-02-07,Coupe de France,H,Le Havre
+2324,Monaco,2024-02-08,Coupe de France,A,FC Rouen
 2324,Marseille,2024-02-09,Ligue 1,H,Metz
 2324,Metz,2024-02-09,Ligue 1,A,Marseille
 2324,Ajaccio,2024-02-10,Ligue 2,H,Guingamp
@@ -8663,6 +9519,9 @@ season,team,date,competition,home_away,opponent
 2324,Toulouse,2024-02-25,Ligue 1,H,Lille
 2324,Angers,2024-02-26,Ligue 2,A,Caen
 2324,Caen,2024-02-26,Ligue 2,H,Angers
+2324,Lyon,2024-02-27,Coupe de France,H,Strasbourg
+2324,Strasbourg,2024-02-27,Coupe de France,A,Lyon
+2324,Rennes,2024-02-29,Coupe de France,A,Le Puy Foot 43 Auvergne
 2324,Monaco,2024-03-01,Ligue 1,H,Paris SG
 2324,Paris SG,2024-03-01,Ligue 1,A,Monaco
 2324,Amiens,2024-03-02,Ligue 2,A,Stade Lavallois
@@ -8722,6 +9581,8 @@ season,team,date,competition,home_away,opponent
 2324,Rennes,2024-03-10,Ligue 1,A,Lille
 2324,Strasbourg,2024-03-10,Ligue 1,H,Monaco
 2324,Toulouse,2024-03-10,Ligue 1,A,Le Havre
+2324,Nice,2024-03-13,Coupe de France,A,Paris SG
+2324,Paris SG,2024-03-13,Coupe de France,H,Nice
 2324,Lille,2024-03-14,Conference League,H,Sturm Graz
 2324,Marseille,2024-03-14,Europa League,A,Villarreal
 2324,Lyon,2024-03-15,Ligue 1,A,Toulouse
@@ -8780,6 +9641,9 @@ season,team,date,competition,home_away,opponent
 2324,Toulouse,2024-03-31,Ligue 1,A,Clermont
 2324,Ajaccio,2024-04-01,Ligue 2,H,Auxerre
 2324,Auxerre,2024-04-01,Ligue 2,A,Ajaccio
+2324,Lyon,2024-04-02,Coupe de France,H,Valenciennes
+2324,Paris SG,2024-04-03,Coupe de France,H,Rennes
+2324,Rennes,2024-04-03,Coupe de France,A,Paris SG
 2324,Lille,2024-04-05,Ligue 1,H,Marseille
 2324,Marseille,2024-04-05,Ligue 1,A,Lille
 2324,Ajaccio,2024-04-06,Ligue 2,A,Pau FC
@@ -8996,6 +9860,8 @@ season,team,date,competition,home_away,opponent
 2324,Rennes,2024-05-19,Ligue 1,A,Reims
 2324,Strasbourg,2024-05-19,Ligue 1,A,Lyon
 2324,Toulouse,2024-05-19,Ligue 1,H,Brest
+2324,Lyon,2024-05-25,Coupe de France,H,Paris SG
+2324,Paris SG,2024-05-25,Coupe de France,A,Lyon
 2425,Lille,2024-08-06,Champions League (qual.),H,Fenerbahçe
 2425,Lille,2024-08-13,Champions League (qual.),A,Fenerbahçe
 2425,Ajaccio,2024-08-16,Ligue 2,H,Rodez AF
@@ -9113,6 +9979,7 @@ season,team,date,competition,home_away,opponent
 2425,Lille,2024-09-17,Champions League,A,Sporting Clube de Portugal
 2425,Paris SG,2024-09-18,Champions League,H,Girona
 2425,Brest,2024-09-19,Champions League,H,SK Sturm Graz
+2425,Monaco,2024-09-19,Champions League,H,Barcelona
 2425,Ajaccio,2024-09-20,Ligue 2,A,Caen
 2425,Amiens,2024-09-20,Ligue 2,H,Clermont
 2425,Caen,2024-09-20,Ligue 2,H,Ajaccio
@@ -9181,6 +10048,7 @@ season,team,date,competition,home_away,opponent
 2425,Brest,2024-10-01,Champions League,A,FC Red Bull Salzburg
 2425,Paris SG,2024-10-01,Champions League,A,Arsenal
 2425,Lille,2024-10-02,Champions League,H,Real Madrid
+2425,Monaco,2024-10-02,Champions League,A,Dinamo Zagreb
 2425,Lyon,2024-10-03,Europa League,A,Rangers FC
 2425,Nice,2024-10-03,Europa League,A,Lazio
 2425,Angers,2024-10-04,Ligue 1,A,Marseille
@@ -9237,6 +10105,7 @@ season,team,date,competition,home_away,opponent
 2425,Toulouse,2024-10-20,Ligue 1,H,Angers
 2425,Paris FC,2024-10-21,Ligue 2,A,Troyes
 2425,Troyes,2024-10-21,Ligue 2,H,Paris FC
+2425,Monaco,2024-10-22,Champions League,H,Red Star Belgrade
 2425,Paris SG,2024-10-22,Champions League,H,PSV
 2425,Brest,2024-10-23,Champions League,H,Leverkusen
 2425,Lille,2024-10-23,Champions League,A,Ath Madrid
@@ -9305,6 +10174,7 @@ season,team,date,competition,home_away,opponent
 2425,Ajaccio,2024-11-04,Ligue 2,H,Metz
 2425,Metz,2024-11-04,Ligue 2,A,Ajaccio
 2425,Lille,2024-11-05,Champions League,H,Juventus
+2425,Monaco,2024-11-05,Champions League,A,Bologna
 2425,Brest,2024-11-06,Champions League,A,AC Sparta Praha
 2425,Paris SG,2024-11-06,Champions League,H,Ath Madrid
 2425,Lyon,2024-11-07,Europa League,A,Hoffenheim
@@ -9377,6 +10247,7 @@ season,team,date,competition,home_away,opponent
 2425,Brest,2024-11-26,Champions League,A,Barcelona
 2425,Paris SG,2024-11-26,Champions League,A,Bayern Munich
 2425,Lille,2024-11-27,Champions League,A,Bologna
+2425,Monaco,2024-11-27,Champions League,H,Benfica
 2425,Lyon,2024-11-28,Europa League,A,Qarabağ FK
 2425,Nice,2024-11-28,Europa League,H,Rangers FC
 2425,Amiens,2024-11-29,Coupe de France,A,Calais Beau Marais
@@ -9437,6 +10308,7 @@ season,team,date,competition,home_away,opponent
 2425,Brest,2024-12-10,Champions League,H,PSV
 2425,Paris SG,2024-12-10,Champions League,A,FC Red Bull Salzburg
 2425,Lille,2024-12-11,Champions League,H,SK Sturm Graz
+2425,Monaco,2024-12-11,Champions League,A,Arsenal
 2425,Lyon,2024-12-12,Europa League,H,Ein Frankfurt
 2425,Nice,2024-12-12,Europa League,A,Union Saint-Gilloise
 2425,Ajaccio,2024-12-13,Ligue 2,A,Pau FC
@@ -9518,6 +10390,8 @@ season,team,date,competition,home_away,opponent
 2425,Le Havre,2025-01-05,Ligue 1,A,Marseille
 2425,Lens,2025-01-05,Ligue 1,H,Toulouse
 2425,Marseille,2025-01-05,Ligue 1,H,Le Havre
+2425,Monaco,2025-01-05,Trophee des Champions,A,Paris SG
+2425,Paris SG,2025-01-05,Trophee des Champions,H,Monaco
 2425,Strasbourg,2025-01-05,Ligue 1,H,Auxerre
 2425,Toulouse,2025-01-05,Ligue 1,A,Lens
 2425,Auxerre,2025-01-10,Ligue 1,H,Lille
@@ -9591,6 +10465,7 @@ season,team,date,competition,home_away,opponent
 2425,Strasbourg,2025-01-19,Ligue 1,A,Marseille
 2425,Troyes,2025-01-20,Ligue 2,H,FC Annecy
 2425,Lille,2025-01-21,Champions League,A,Liverpool
+2425,Monaco,2025-01-21,Champions League,H,Aston Villa
 2425,Brest,2025-01-22,Champions League,A,FK Shakhtar Donetsk
 2425,Paris SG,2025-01-22,Champions League,H,Man City
 2425,Lyon,2025-01-23,Europa League,A,Fenerbahçe
@@ -9624,6 +10499,7 @@ season,team,date,competition,home_away,opponent
 2425,Toulouse,2025-01-26,Ligue 1,H,Montpellier
 2425,Brest,2025-01-29,Champions League,H,Real Madrid
 2425,Lille,2025-01-29,Champions League,H,Feyenoord Rotterdam
+2425,Monaco,2025-01-29,Champions League,A,Inter Milan
 2425,Paris SG,2025-01-29,Champions League,A,Stuttgart
 2425,Lyon,2025-01-30,Europa League,H,PFC Ludogorets Razgrad
 2425,Nice,2025-01-30,Europa League,H,FK Bodø/Glimt
@@ -9693,6 +10569,7 @@ season,team,date,competition,home_away,opponent
 2425,Caen,2025-02-10,Ligue 2,H,USL Dunkerque
 2425,Brest,2025-02-11,Champions League,H,Paris SG
 2425,Paris SG,2025-02-11,Champions League,A,Brest
+2425,Monaco,2025-02-12,Champions League,H,Benfica
 2425,Ajaccio,2025-02-14,Ligue 2,H,Stade Lavallois
 2425,Amiens,2025-02-14,Ligue 2,H,Grenoble Foot 38
 2425,Auxerre,2025-02-14,Ligue 1,A,Brest
@@ -9720,6 +10597,7 @@ season,team,date,competition,home_away,opponent
 2425,Rennes,2025-02-16,Ligue 1,H,Lille
 2425,Strasbourg,2025-02-16,Ligue 1,A,Lens
 2425,Caen,2025-02-17,Ligue 2,A,FC Annecy
+2425,Monaco,2025-02-18,Champions League,A,Benfica
 2425,Brest,2025-02-19,Champions League,A,Paris SG
 2425,Paris SG,2025-02-19,Champions League,H,Brest
 2425,Amiens,2025-02-21,Ligue 2,A,Rodez AF
@@ -10059,8 +10937,16 @@ season,team,date,competition,home_away,opponent
 2425,Paris SG,2025-05-24,Coupe de France,H,Reims
 2425,Reims,2025-05-24,Coupe de France,A,Paris SG
 2425,Paris SG,2025-05-31,Champions League,H,Inter
+2425,Paris SG,2025-06-15,FIFA Club World Cup,H,Atlético Madrid
+2425,Paris SG,2025-06-19,FIFA Club World Cup,H,Botafogo
+2425,Paris SG,2025-06-23,FIFA Club World Cup,A,Seattle Sounders FC
+2425,Paris SG,2025-06-29,FIFA Club World Cup,H,Inter Miami CF
+2526,Paris SG,2025-07-05,FIFA Club World Cup,H,Bayern Munich
+2526,Paris SG,2025-07-09,FIFA Club World Cup,H,Real Madrid
+2526,Paris SG,2025-07-13,FIFA Club World Cup,A,Chelsea
 2526,Nice,2025-08-06,Champions League (qual.),H,SL Benfica
 2526,Nice,2025-08-12,Champions League (qual.),A,SL Benfica
+2526,Paris SG,2025-08-13,UEFA Super Cup,H,Tottenham Hotspur
 2526,Marseille,2025-08-15,Ligue 1,A,Rennes
 2526,Rennes,2025-08-15,Ligue 1,H,Marseille
 2526,Le Havre,2025-08-16,Ligue 1,A,Monaco
@@ -10137,6 +11023,7 @@ season,team,date,competition,home_away,opponent
 2526,Toulouse,2025-09-14,Ligue 1,A,Lille
 2526,Marseille,2025-09-16,Champions League,A,Real Madrid
 2526,Paris SG,2025-09-17,Champions League,H,Atalanta
+2526,Monaco,2025-09-18,Champions League,A,Club Brugge
 2526,Angers,2025-09-19,Ligue 1,A,Lyon
 2526,Lyon,2025-09-19,Ligue 1,H,Angers
 2526,Brest,2025-09-20,Ligue 1,H,Nice
@@ -10155,6 +11042,9 @@ season,team,date,competition,home_away,opponent
 2526,Toulouse,2025-09-21,Ligue 1,A,Auxerre
 2526,Marseille,2025-09-22,Ligue 1,H,Paris SG
 2526,Paris SG,2025-09-22,Ligue 1,A,Marseille
+2526,Nice,2025-09-24,Europa League,H,Roma
+2526,Lille,2025-09-25,Europa League,H,Brann
+2526,Lyon,2025-09-25,Europa League,A,Utrecht
 2526,Marseille,2025-09-26,Ligue 1,A,Strasbourg
 2526,Strasbourg,2025-09-26,Ligue 1,H,Marseille
 2526,Auxerre,2025-09-27,Ligue 1,A,Paris SG
@@ -10174,7 +11064,12 @@ season,team,date,competition,home_away,opponent
 2526,Paris FC,2025-09-28,Ligue 1,A,Nice
 2526,Rennes,2025-09-28,Ligue 1,H,Lens
 2526,Marseille,2025-09-30,Champions League,H,AFC Ajax
+2526,Monaco,2025-10-01,Champions League,H,Manchester City
 2526,Paris SG,2025-10-01,Champions League,A,Barcelona
+2526,Lille,2025-10-02,Europa League,A,Roma
+2526,Lyon,2025-10-02,Europa League,H,Red Bull Salzburg
+2526,Nice,2025-10-02,Europa League,A,Fenerbahçe
+2526,Strasbourg,2025-10-02,Conference League,A,Slovan Bratislava
 2526,Lorient,2025-10-03,Ligue 1,A,Paris FC
 2526,Paris FC,2025-10-03,Ligue 1,H,Lorient
 2526,Auxerre,2025-10-04,Ligue 1,H,Lens
@@ -10213,6 +11108,11 @@ season,team,date,competition,home_away,opponent
 2526,Toulouse,2025-10-19,Ligue 1,H,Metz
 2526,Paris SG,2025-10-21,Champions League,A,Leverkusen
 2526,Marseille,2025-10-22,Champions League,A,Sporting Clube de Portugal
+2526,Monaco,2025-10-22,Champions League,H,Tottenham Hotspur
+2526,Lille,2025-10-23,Europa League,H,PAOK
+2526,Lyon,2025-10-23,Europa League,H,Basel
+2526,Nice,2025-10-23,Europa League,A,Celta Vigo
+2526,Strasbourg,2025-10-23,Conference League,H,Jagiellonia Białystok
 2526,Nantes,2025-10-24,Ligue 1,A,Paris FC
 2526,Paris FC,2025-10-24,Ligue 1,H,Nantes
 2526,Brest,2025-10-25,Ligue 1,H,Paris SG
@@ -10267,8 +11167,13 @@ season,team,date,competition,home_away,opponent
 2526,Rennes,2025-11-02,Ligue 1,H,Strasbourg
 2526,Strasbourg,2025-11-02,Ligue 1,A,Rennes
 2526,Toulouse,2025-11-02,Ligue 1,H,Le Havre
+2526,Monaco,2025-11-04,Champions League,A,Bodø/Glimt
 2526,Paris SG,2025-11-04,Champions League,H,Bayern Munich
 2526,Marseille,2025-11-05,Champions League,H,Atalanta
+2526,Lille,2025-11-06,Europa League,A,Red Star Belgrade
+2526,Lyon,2025-11-06,Europa League,A,Real Betis
+2526,Nice,2025-11-06,Europa League,H,SC Freiburg
+2526,Strasbourg,2025-11-06,Conference League,A,BK Häcken
 2526,Paris FC,2025-11-07,Ligue 1,H,Rennes
 2526,Rennes,2025-11-07,Ligue 1,A,Paris FC
 2526,Brest,2025-11-08,Ligue 1,A,Marseille
@@ -10287,6 +11192,8 @@ season,team,date,competition,home_away,opponent
 2526,Paris SG,2025-11-09,Ligue 1,A,Lyon
 2526,Strasbourg,2025-11-09,Ligue 1,H,Lille
 2526,Toulouse,2025-11-09,Ligue 1,A,Lorient
+2526,Amiens,2025-11-15,Coupe de France,A,Auby
+2526,Reims,2025-11-15,Coupe de France,A,Olympique Charleville Prix AM
 2526,Marseille,2025-11-21,Ligue 1,A,Nice
 2526,Nice,2025-11-21,Ligue 1,H,Marseille
 2526,Le Havre,2025-11-22,Ligue 1,A,Paris SG
@@ -10306,14 +11213,21 @@ season,team,date,competition,home_away,opponent
 2526,Paris FC,2025-11-23,Ligue 1,A,Lille
 2526,Toulouse,2025-11-23,Ligue 1,H,Angers
 2526,Marseille,2025-11-25,Champions League,H,Newcastle
+2526,Monaco,2025-11-26,Champions League,A,Pafos
 2526,Paris SG,2025-11-26,Champions League,H,Tottenham
+2526,Lille,2025-11-27,Europa League,H,Dinamo Zagreb
+2526,Lyon,2025-11-27,Europa League,A,Maccabi Tel Aviv
+2526,Nice,2025-11-27,Europa League,A,Porto
+2526,Strasbourg,2025-11-27,Conference League,H,Crystal Palace
 2526,Metz,2025-11-28,Ligue 1,H,Rennes
 2526,Rennes,2025-11-28,Ligue 1,A,Metz
 2526,Auxerre,2025-11-29,Ligue 1,A,Paris FC
 2526,Marseille,2025-11-29,Ligue 1,H,Toulouse
 2526,Monaco,2025-11-29,Ligue 1,H,Paris SG
+2526,Montpellier,2025-11-29,Coupe de France,A,FCMB
 2526,Paris FC,2025-11-29,Ligue 1,H,Auxerre
 2526,Paris SG,2025-11-29,Ligue 1,A,Monaco
+2526,Reims,2025-11-29,Coupe de France,A,US Torcy
 2526,Toulouse,2025-11-29,Ligue 1,A,Marseille
 2526,Angers,2025-11-30,Ligue 1,H,Lens
 2526,Brest,2025-11-30,Ligue 1,A,Strasbourg
@@ -10344,7 +11258,12 @@ season,team,date,competition,home_away,opponent
 2526,Nice,2025-12-07,Ligue 1,H,Angers
 2526,Paris FC,2025-12-07,Ligue 1,A,Le Havre
 2526,Marseille,2025-12-09,Champions League,A,Royale Union Saint-Gilloise
+2526,Monaco,2025-12-09,Champions League,H,Galatasaray
 2526,Paris SG,2025-12-10,Champions League,A,Ath Bilbao
+2526,Lille,2025-12-11,Europa League,A,Young Boys
+2526,Lyon,2025-12-11,Europa League,H,Go Ahead Eagles
+2526,Nice,2025-12-11,Europa League,H,Braga
+2526,Strasbourg,2025-12-11,Conference League,A,Aberdeen
 2526,Angers,2025-12-12,Ligue 1,H,Nantes
 2526,Nantes,2025-12-12,Ligue 1,A,Angers
 2526,Brest,2025-12-13,Ligue 1,A,Rennes
@@ -10363,6 +11282,33 @@ season,team,date,competition,home_away,opponent
 2526,Monaco,2025-12-14,Ligue 1,A,Marseille
 2526,Nice,2025-12-14,Ligue 1,A,Lens
 2526,Strasbourg,2025-12-14,Ligue 1,H,Lorient
+2526,Paris SG,2025-12-17,FIFA Intercontinental Cup,H,Flamengo
+2526,Strasbourg,2025-12-18,Conference League,H,Breiðablik
+2526,Angers,2025-12-19,Coupe de France,A,Les Herbiers
+2526,Brest,2025-12-19,Coupe de France,A,Avranches
+2526,Guingamp,2025-12-19,Coupe de France,H,Laval
+2526,Lens,2025-12-19,Coupe de France,H,Feignies
+2526,Montpellier,2025-12-19,Coupe de France,A,Canet Roussillon
+2526,Reims,2025-12-19,Coupe de France,A,IC Croix
+2526,Lille,2025-12-20,Coupe de France,A,Saint-Maur
+2526,Lorient,2025-12-20,Coupe de France,A,AS Gosier
+2526,Metz,2025-12-20,Coupe de France,A,Biesheim
+2526,Paris FC,2025-12-20,Coupe de France,A,Raon-l'Étape
+2526,Paris SG,2025-12-20,Coupe de France,A,Fontenay
+2526,Toulouse,2025-12-20,Coupe de France,A,Lyon-La Duchère
+2526,Troyes,2025-12-20,Coupe de France,A,Olympique Marcquois
+2526,Amiens,2025-12-21,Coupe de France,A,Le Havre
+2526,Auxerre,2025-12-21,Coupe de France,H,Monaco
+2526,Bordeaux,2025-12-21,Coupe de France,A,Le Puy Foot 43
+2526,Le Havre,2025-12-21,Coupe de France,H,Amiens
+2526,Lyon,2025-12-21,Coupe de France,H,Saint-Cyr Collonges
+2526,Marseille,2025-12-21,Coupe de France,A,Bourg-Péronnas
+2526,Monaco,2025-12-21,Coupe de France,A,Auxerre
+2526,Nantes,2025-12-21,Coupe de France,A,Concarneau
+2526,Nice,2025-12-21,Coupe de France,H,St Etienne
+2526,Rennes,2025-12-21,Coupe de France,H,Les Sables
+2526,St Etienne,2025-12-21,Coupe de France,A,Nice
+2526,Strasbourg,2025-12-21,Coupe de France,H,Dunkerque
 2526,Lens,2026-01-02,Ligue 1,A,Toulouse
 2526,Toulouse,2026-01-02,Ligue 1,H,Lens
 2526,Lille,2026-01-03,Ligue 1,H,Rennes
@@ -10381,6 +11327,27 @@ season,team,date,competition,home_away,opponent
 2526,Nantes,2026-01-04,Ligue 1,A,Marseille
 2526,Paris FC,2026-01-04,Ligue 1,A,Paris SG
 2526,Paris SG,2026-01-04,Ligue 1,H,Paris FC
+2526,Marseille,2026-01-08,Trophee des Champions,A,Paris SG
+2526,Paris SG,2026-01-08,Trophee des Champions,H,Marseille
+2526,Amiens,2026-01-10,Coupe de France,A,Montreuil
+2526,Angers,2026-01-10,Coupe de France,H,Toulouse
+2526,Lorient,2026-01-10,Coupe de France,A,Hauts Lyonnais
+2526,Monaco,2026-01-10,Coupe de France,A,Orléans
+2526,Reims,2026-01-10,Coupe de France,A,Le Puy
+2526,Strasbourg,2026-01-10,Coupe de France,A,Avranches
+2526,Toulouse,2026-01-10,Coupe de France,A,Angers
+2526,Troyes,2026-01-10,Coupe de France,A,Bastia
+2526,Lens,2026-01-11,Coupe de France,A,Sochaux
+2526,Lille,2026-01-11,Coupe de France,H,Lyon
+2526,Lyon,2026-01-11,Coupe de France,A,Lille
+2526,Metz,2026-01-11,Coupe de France,H,Montpellier
+2526,Montpellier,2026-01-11,Coupe de France,A,Metz
+2526,Nantes,2026-01-11,Coupe de France,H,Nice
+2526,Nice,2026-01-11,Coupe de France,A,Nantes
+2526,Rennes,2026-01-11,Coupe de France,A,Chantilly
+2526,Paris FC,2026-01-12,Coupe de France,A,Paris SG
+2526,Paris SG,2026-01-12,Coupe de France,H,Paris FC
+2526,Marseille,2026-01-13,Coupe de France,A,Bayeux
 2526,Lille,2026-01-16,Ligue 1,A,Paris SG
 2526,Lorient,2026-01-16,Ligue 1,A,Monaco
 2526,Monaco,2026-01-16,Ligue 1,H,Lorient
@@ -10399,8 +11366,12 @@ season,team,date,competition,home_away,opponent
 2526,Paris FC,2026-01-18,Ligue 1,A,Nantes
 2526,Rennes,2026-01-18,Ligue 1,H,Le Havre
 2526,Strasbourg,2026-01-18,Ligue 1,H,Metz
+2526,Monaco,2026-01-20,Champions League,A,Real Madrid
 2526,Paris SG,2026-01-20,Champions League,A,Sporting Clube de Portugal
 2526,Marseille,2026-01-21,Champions League,H,Liverpool
+2526,Lille,2026-01-22,Europa League,A,Celta Vigo
+2526,Lyon,2026-01-22,Europa League,A,Young Boys
+2526,Nice,2026-01-22,Europa League,H,Go Ahead Eagles
 2526,Auxerre,2026-01-23,Ligue 1,H,Paris SG
 2526,Paris SG,2026-01-23,Ligue 1,A,Auxerre
 2526,Le Havre,2026-01-24,Ligue 1,H,Monaco
@@ -10420,7 +11391,11 @@ season,team,date,competition,home_away,opponent
 2526,Strasbourg,2026-01-25,Ligue 1,A,Lille
 2526,Toulouse,2026-01-25,Ligue 1,A,Brest
 2526,Marseille,2026-01-28,Champions League,A,Club Brugge KV
+2526,Monaco,2026-01-28,Champions League,H,Juventus
 2526,Paris SG,2026-01-28,Champions League,H,Newcastle
+2526,Lille,2026-01-29,Europa League,H,SC Freiburg
+2526,Lyon,2026-01-29,Europa League,H,PAOK
+2526,Nice,2026-01-29,Europa League,A,Ludogorets Razgrad
 2526,Le Havre,2026-01-30,Ligue 1,A,Lens
 2526,Lens,2026-01-30,Ligue 1,H,Le Havre
 2526,Lorient,2026-01-31,Ligue 1,H,Nantes
@@ -10439,6 +11414,20 @@ season,team,date,competition,home_away,opponent
 2526,Paris SG,2026-02-01,Ligue 1,A,Strasbourg
 2526,Strasbourg,2026-02-01,Ligue 1,H,Paris SG
 2526,Toulouse,2026-02-01,Ligue 1,H,Auxerre
+2526,Marseille,2026-02-03,Coupe de France,H,Rennes
+2526,Reims,2026-02-03,Coupe de France,H,Le Mans
+2526,Rennes,2026-02-03,Coupe de France,A,Marseille
+2526,Amiens,2026-02-04,Coupe de France,A,Toulouse
+2526,Lens,2026-02-04,Coupe de France,A,Troyes
+2526,Lorient,2026-02-04,Coupe de France,H,Paris FC
+2526,Lyon,2026-02-04,Coupe de France,H,Laval
+2526,Montpellier,2026-02-04,Coupe de France,A,Nice
+2526,Nice,2026-02-04,Coupe de France,H,Montpellier
+2526,Paris FC,2026-02-04,Coupe de France,A,Lorient
+2526,Toulouse,2026-02-04,Coupe de France,H,Amiens
+2526,Troyes,2026-02-04,Coupe de France,H,Lens
+2526,Monaco,2026-02-05,Coupe de France,A,Strasbourg
+2526,Strasbourg,2026-02-05,Coupe de France,H,Monaco
 2526,Lille,2026-02-06,Ligue 1,A,Metz
 2526,Metz,2026-02-06,Ligue 1,H,Lille
 2526,Brest,2026-02-07,Ligue 1,H,Lorient
@@ -10475,7 +11464,9 @@ season,team,date,competition,home_away,opponent
 2526,Metz,2026-02-15,Ligue 1,H,Auxerre
 2526,Nice,2026-02-15,Ligue 1,A,Lyon
 2526,Toulouse,2026-02-15,Ligue 1,A,Le Havre
+2526,Monaco,2026-02-17,Champions League,H,Paris SG
 2526,Paris SG,2026-02-17,Champions League,A,Monaco
+2526,Lille,2026-02-19,Europa League,H,Red Star Belgrade
 2526,Brest,2026-02-20,Ligue 1,H,Marseille
 2526,Marseille,2026-02-20,Ligue 1,A,Brest
 2526,Lens,2026-02-21,Ligue 1,H,Monaco
@@ -10494,7 +11485,9 @@ season,team,date,competition,home_away,opponent
 2526,Nice,2026-02-22,Ligue 1,H,Lorient
 2526,Rennes,2026-02-22,Ligue 1,A,Auxerre
 2526,Strasbourg,2026-02-22,Ligue 1,H,Lyon
+2526,Monaco,2026-02-25,Champions League,A,Paris SG
 2526,Paris SG,2026-02-25,Champions League,H,Monaco
+2526,Lille,2026-02-26,Europa League,A,Red Star Belgrade
 2526,Lens,2026-02-27,Ligue 1,A,Strasbourg
 2526,Strasbourg,2026-02-27,Ligue 1,H,Lens
 2526,Angers,2026-02-28,Ligue 1,A,Monaco
@@ -10513,6 +11506,14 @@ season,team,date,competition,home_away,opponent
 2526,Nantes,2026-03-01,Ligue 1,A,Lille
 2526,Nice,2026-03-01,Ligue 1,A,Paris FC
 2526,Paris FC,2026-03-01,Ligue 1,H,Nice
+2526,Reims,2026-03-03,Coupe de France,A,Strasbourg
+2526,Strasbourg,2026-03-03,Coupe de France,H,Reims
+2526,Lorient,2026-03-04,Coupe de France,H,Nice
+2526,Marseille,2026-03-04,Coupe de France,H,Toulouse
+2526,Nice,2026-03-04,Coupe de France,A,Lorient
+2526,Toulouse,2026-03-04,Coupe de France,A,Marseille
+2526,Lens,2026-03-05,Coupe de France,A,Lyon
+2526,Lyon,2026-03-05,Coupe de France,H,Lens
 2526,Monaco,2026-03-06,Ligue 1,A,Paris SG
 2526,Paris SG,2026-03-06,Ligue 1,H,Monaco
 2526,Angers,2026-03-07,Ligue 1,A,Nantes
@@ -10532,6 +11533,9 @@ season,team,date,competition,home_away,opponent
 2526,Paris FC,2026-03-08,Ligue 1,A,Lyon
 2526,Rennes,2026-03-08,Ligue 1,A,Nice
 2526,Paris SG,2026-03-11,Champions League,H,Chelsea
+2526,Lille,2026-03-12,Europa League,H,Aston Villa
+2526,Lyon,2026-03-12,Europa League,A,Celta Vigo
+2526,Strasbourg,2026-03-12,Conference League,A,Rijeka
 2526,Auxerre,2026-03-13,Ligue 1,A,Marseille
 2526,Marseille,2026-03-13,Ligue 1,H,Auxerre
 2526,Angers,2026-03-14,Ligue 1,H,Nice
@@ -10549,6 +11553,9 @@ season,team,date,competition,home_away,opponent
 2526,Strasbourg,2026-03-15,Ligue 1,H,Paris FC
 2526,Toulouse,2026-03-15,Ligue 1,A,Metz
 2526,Paris SG,2026-03-17,Champions League,A,Chelsea
+2526,Lille,2026-03-19,Europa League,A,Aston Villa
+2526,Lyon,2026-03-19,Europa League,H,Celta Vigo
+2526,Strasbourg,2026-03-19,Conference League,H,Rijeka
 2526,Angers,2026-03-20,Ligue 1,A,Lens
 2526,Lens,2026-03-20,Ligue 1,H,Angers
 2526,Auxerre,2026-03-21,Ligue 1,H,Brest
@@ -10586,6 +11593,7 @@ season,team,date,competition,home_away,opponent
 2526,Nantes,2026-04-05,Ligue 1,A,Metz
 2526,Paris FC,2026-04-05,Ligue 1,A,Lorient
 2526,Paris SG,2026-04-08,Champions League,H,Liverpool
+2526,Strasbourg,2026-04-09,Conference League,A,Mainz 05
 2526,Marseille,2026-04-10,Ligue 1,H,Metz
 2526,Metz,2026-04-10,Ligue 1,A,Marseille
 2526,Monaco,2026-04-10,Ligue 1,A,Paris FC
@@ -10601,6 +11609,7 @@ season,team,date,competition,home_away,opponent
 2526,Nice,2026-04-12,Ligue 1,H,Le Havre
 2526,Toulouse,2026-04-12,Ligue 1,H,Lille
 2526,Paris SG,2026-04-14,Champions League,A,Liverpool
+2526,Strasbourg,2026-04-16,Conference League,H,Mainz 05
 2526,Lens,2026-04-17,Ligue 1,H,Toulouse
 2526,Toulouse,2026-04-17,Ligue 1,A,Lens
 2526,Angers,2026-04-18,Ligue 1,H,Le Havre
@@ -10619,8 +11628,12 @@ season,team,date,competition,home_away,opponent
 2526,Paris SG,2026-04-19,Ligue 1,H,Lyon
 2526,Rennes,2026-04-19,Ligue 1,A,Strasbourg
 2526,Strasbourg,2026-04-19,Ligue 1,H,Rennes
+2526,Lens,2026-04-21,Coupe de France,H,Toulouse
+2526,Toulouse,2026-04-21,Coupe de France,A,Lens
 2526,Nantes,2026-04-22,Ligue 1,A,Paris SG
+2526,Nice,2026-04-22,Coupe de France,A,Strasbourg
 2526,Paris SG,2026-04-22,Ligue 1,H,Nantes
+2526,Strasbourg,2026-04-22,Coupe de France,H,Nice
 2526,Brest,2026-04-24,Ligue 1,H,Lens
 2526,Lens,2026-04-24,Ligue 1,A,Brest
 2526,Angers,2026-04-25,Ligue 1,H,Paris SG
@@ -10640,6 +11653,7 @@ season,team,date,competition,home_away,opponent
 2526,Rennes,2026-04-26,Ligue 1,H,Nantes
 2526,Strasbourg,2026-04-26,Ligue 1,A,Lorient
 2526,Paris SG,2026-04-28,Champions League,H,Bayern Munich
+2526,Strasbourg,2026-04-30,Conference League,A,Rayo Vallecano
 2526,Lens,2026-05-02,Ligue 1,A,Nice
 2526,Lorient,2026-05-02,Ligue 1,A,Paris SG
 2526,Marseille,2026-05-02,Ligue 1,A,Nantes
@@ -10659,6 +11673,7 @@ season,team,date,competition,home_away,opponent
 2526,Strasbourg,2026-05-03,Ligue 1,H,Toulouse
 2526,Toulouse,2026-05-03,Ligue 1,A,Strasbourg
 2526,Paris SG,2026-05-06,Champions League,A,Bayern Munich
+2526,Strasbourg,2026-05-07,Conference League,H,Rayo Vallecano
 2526,Lens,2026-05-08,Ligue 1,H,Nantes
 2526,Nantes,2026-05-08,Ligue 1,A,Lens
 2526,Angers,2026-05-10,Ligue 1,H,Strasbourg
@@ -10699,4 +11714,6 @@ season,team,date,competition,home_away,opponent
 2526,Rennes,2026-05-17,Ligue 1,A,Marseille
 2526,Strasbourg,2026-05-17,Ligue 1,H,Monaco
 2526,Toulouse,2026-05-17,Ligue 1,A,Nantes
+2526,Lens,2026-05-22,Coupe de France,H,Nice
+2526,Nice,2026-05-22,Coupe de France,A,Lens
 2526,Paris SG,2026-05-30,Champions League,H,Arsenal

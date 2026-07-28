@@ -368,6 +368,12 @@ docs/STUDIO_PREMIER_LIGA.md   quaderno di studio dedicato a Premier e La Liga:
 docs/PLAYBOOK_NUOVA_LEGA.md   procedura operativa per aggiungere una lega
                  nuova (passi 0-5, finestre di backtest, lezioni acquisite,
                  checklist): da seguire per ogni campionato futuro
+docs/betfair_api/  COPIA DI LAVORO della documentazione API Betfair (78 pagine
+                 dall'Exchange API su Atlassian + la Historical Data API), con
+                 fonte e data dichiarate in testa a OGNI file. Ri-generabile con
+                 scripts/fetch_betfair_docs.py. Esiste perche' la Fase 109-bis ha
+                 pagato un bug (campo `img`) per non aver letto la specifica
+                 prima di scrivere il parser: leggerla e' un passo, non un extra
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)

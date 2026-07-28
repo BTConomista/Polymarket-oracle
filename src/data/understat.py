@@ -29,6 +29,7 @@ con force=True (coerente con loader.download_season).
 
 from __future__ import annotations
 
+import gzip
 import json
 import logging
 import urllib.request
@@ -62,7 +63,14 @@ def _cache_path(season_code: str, league_key: str) -> Path:
 def download_season(
     season_code: str, league_key: str = "serie_a", *, force: bool = False
 ) -> Path:
-    """Scarica il JSON Understat di una stagione, con cache su disco."""
+    """Scarica il JSON Understat di una stagione, con cache su disco.
+
+    L'endpoint XHR ufficiale (Fase 104, vedi sources.UNDERSTAT_OFFICIAL_URL)
+    risponde solo con l'header ``X-Requested-With: XMLHttpRequest`` (senza ->
+    404) e comprime SEMPRE in gzip (Content-Encoding: gzip anche senza
+    Accept-Encoding in richiesta): l'header e' innocuo per il mirror storico,
+    la decompressione si applica solo se il server dichiara gzip.
+    """
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     dest = _cache_path(season_code, league_key)
     if dest.exists() and not force:
@@ -70,8 +78,12 @@ def download_season(
 
     url = sources.understat_url(season_code, league_key)
     log.info("Scarico Understat %s -> %s", url, dest)
-    with urllib.request.urlopen(url) as resp:
-        dest.write_bytes(resp.read())
+    req = urllib.request.Request(url, headers={"X-Requested-With": "XMLHttpRequest"})
+    with urllib.request.urlopen(req) as resp:
+        raw = resp.read()
+        if resp.headers.get("Content-Encoding") == "gzip":
+            raw = gzip.decompress(raw)
+    dest.write_bytes(raw)
     return dest
 
 

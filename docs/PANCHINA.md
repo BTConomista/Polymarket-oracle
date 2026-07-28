@@ -95,9 +95,9 @@ righe nuove (✱10). Il conteggio si ricava con
 | Ensemble emivite 180+730 | 🪑 F12a | ⬜ | ⬜ | 🪑 0.99194 → 0.99144 (−0.000496 [−0.00137,+0.00037]), 4/6 | 🪑 **alta**: 1.00407 → 1.00314 (−0.000938 [−0.00177,−0.00013]), 5/6 — CI conclusivo | 🪑 **l'unico candidato vivo del path DC**: negativo in 12/12 sottoinsiemi LOSO e il meccanismo è verificato (180g e 730g **da sole** sono peggiori: il guadagno è riduzione di varianza). Ma p=0.019 contro Bonferroni 0.00625 su 8 test, e non replica in Bundesliga. Il test che decide: pooled 5 leghe (~10.000 partite), **pre-registrato** |
 | Ricalibrazione per-classe del modello | 🪑 F10 | ⬜ | ⬜ | ❌ 0.99194 → 0.99474 (+0.0028 [−0.0001,+0.0057]), 1/6 | ❌ **conclusivo CONTRO**: 1.00407 → 1.00627 (+0.0022 [+0.00036,+0.00402]), 1/6 | ⬜ mai misurata pooled — ma la causa della bocciatura è generale: il bias per classe **non è stabile nel tempo dentro la stessa lega** (oscilla di ±0.03 stagione su stagione, quanto la sua incertezza campionaria) |
 | Diagonale inflazionata (`--draw-inflation`, φ costante) | 🪑 F12b | ⬜ | ⬜ | ❌ 0.99194 → 0.99262 (+0.00069 [−0.00018,+0.00154]), 2/6 | ❌ 1.00407 → 1.00402 (−0.000056 [−0.0012,+0.0011]), 2/6: nullo | ❌ era «la leva a più alta probabilità a priori» del path DC (§3 dell'audit la dava promettente): **non paga in nessuna delle due leghe nuove** |
-| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ❌ +0.000796 [−0.0002,+0.0018], 2/6 | ❌ +0.000371 [−0.0003,+0.0010], 1/6 | ❌ **rumore su 5/5 leghe** |
+| Covariata `rest_full` (congestione vera) | 🪑 F4e-bis (ri-verif. F103 sui dati corretti: −0.0002, invariato) | ❌ F79 (+0.0005, P 9%) | ❌ F79 (β instabile) | ❌ +0.000796 [−0.0002,+0.0018], 2/6 | ❌ +0.000371 [−0.0003,+0.0010], 1/6 | ❌ **rumore su 5/5 leghe** |
 | Temperature scaling post-hoc | 🪑 F6 (T≈0.94) | ⬜ | ⬜ | 🪑 −0.000236 [−0.00163,+0.00116], 5/6 (nel rumore) | ❌ +0.00037 [−0.00072,+0.00144], 2/6 (peggiora) | ⬜ mai misurato pooled; ⚠️ col test del rapporto di verosimiglianza **nessuna T è distinguibile da 1** tranne La Liga (0.890, p=0.018), che non supera Bonferroni su 5 leghe |
-| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ❌ −0.000393 [−0.0016,+0.0009], 3/6; col dato di coppa **corretto** −0.000345, e il confronto diretto bucato-vs-corretto è +0.000048 [−0.00074,+0.00083] | ❌ +0.000321 [−0.0005,+0.0012], 2/6; col dato corretto +0.000227 | ❌ il β stabile SA non si replica — e **misurare bene la congestione non la fa funzionare**: il difetto del dato non era la ragione ✱9 |
+| Covariata `midweek_europe` (dummy congestione) | 🪑 F36-bis (ri-verif. F103 sui dati corretti: −0.0003, β stabile 6/6, invariato) | ❌ F79 (β alterno) | ❌ F79 (β segno opposto a SA) | ❌ −0.000393 [−0.0016,+0.0009], 3/6; col dato di coppa **corretto** −0.000345, e il confronto diretto bucato-vs-corretto è +0.000048 [−0.00074,+0.00083] | ❌ +0.000321 [−0.0005,+0.0012], 2/6; col dato corretto +0.000227 | ❌ il β stabile SA non si replica — e **misurare bene la congestione non la fa funzionare**: il difetto del dato non era la ragione ✱9 |
 | Temperatura sopra dp_lvl (T=1.056) | 🪑 F52-ter | ❌ (dp_lvl bocciato lì) | ❌ | ❌ (dp_lvl bocciato lì con CI conclusivo) | ❌ (idem) | ❌ |
 | GBM (diretto, per mercato, bespoke) | ❌ F21-23/50-quater | ⬜ ✱5 | ⬜ ✱5 | ⬜ ✱5 | ⬜ ✱5 | ❌ tetto informativo |
 | Poisson bivariato (λ3) | ❌ F42 | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
@@ -270,10 +270,10 @@ Note della matrice:
 | 6 | Ensemble di emivite 180+730 (12a) | −0.0006 (4/6) in SA; **−0.000938 CI<0 in Ligue 1** (audit) | borderline in SA; in Ligue 1 conclusivo ma p=0.019 > Bonferroni, e non replica in Bundesliga | ri-run con 2 fit; il test che decide è il pooled 5 leghe pre-registrato |
 | 7 | Ricalibrazione per-classe 1X2 del MODELLO (10) | −0.0005 | rumore (bias però robusto) | pesi fissi 0.96/1.04/1.00 |
 | 8 | Diagonale inflazionata (12b) | −0.0004 (3/6) | rumore; calibra il pari ma non paga in LL; e sul path DC delle leghe nuove non paga affatto | `--draw-inflation` |
-| 9 | Covariata congestione vera `rest_full` (4e-bis) | −0.0004 | rumore — e ora rumore su **5 leghe su 5** | `--covariates rest_full` |
+| 9 | Covariata congestione vera `rest_full` (4e-bis) | −0.0004; **ri-verificato F103 sui dati corretti: −0.0002** [−0.0009,+0.0005], P 69% | rumore — e ora rumore su **5 leghe su 5**; invariato dopo la correzione dei 1.603 falsi zero di `midweek_europe` (β ora instabile in segno, 4/6) | `--covariates rest_full` |
 | 10 | Temperature scaling post-hoc (6) | −0.0003 | trascurabile (T≈0.94 robusto); nessuna T è distinguibile da 1 al test del rapporto di verosimiglianza | `scripts/calibrate.py` |
 | 11 | GBM + finishing-luck (33) | −0.0022 (P 81%) | non conclusivo, e il GBM di suo perde dal DC | — |
-| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6** | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto); e col dato di coppa corretto (audit) non cambia nulla | `--covariates midweek` |
+| 12 | Covariata `midweek_europe` (36-bis) | −0.0003, ma β=−0.020 **stabile 6/6**; **ri-verificato F103 sui dati corretti: −0.0003** [−0.0013,+0.0007], P 74%, β=−0.0189 **ancora stabile 6/6** (−0.0171…−0.0284) | CI include 0; ridondante con rest_full insieme; **F79: il β stabile NON si replica** (PL alterno, Liga +0.008 opposto). La correzione dei 1.603 falsi zero (F103) non cambia il verdetto: numeri quasi identici, **non era un artefatto del dato sporco** | `--covariates midweek` |
 | 13 | Temperatura sopra dp_lvl (52-ter) | 0.9609→**0.9605** (T=1.056) | si somma a una leva già Serie-A-only e da oracolo | sopra `sharpen_1x2` |
 | 14 | **Estremizzazione della chiusura O/U** (α ≈ 1.15-1.33 — audit §8.2) | nel rumore in Bundesliga e Ligue 1, ma **α > 1 in tutte le stagioni** | una sola coppia di leghe; è l'unico candidato vivo del fronte apertura | da implementare: nessuna funzione dedicata in `src/` (l'estremizzazione vive solo negli script dell'audit) |
 | 15 | **θ come rimedio di CALIBRAZIONE** (famiglia GG/clean-sheet — audit §11) | bias GG **−0.0238 → −0.0106** (BL), −0.0206 → −0.0049 (L1), −0.0292 → **+0.0049** (SA) | il guadagno in **log-loss** è minuscolo (0.6847 → 0.6842): è un argomento che il log-loss non sa vedere. E una baseline a **un** parametro fa meglio | `price_markets(dp_theta)` acceso per la sola famiglia GG/clean-sheet |
@@ -428,6 +428,13 @@ Note della matrice:
   Liga β instabile (+0.053…−0.040). Su Bundesliga +0.000796 e Ligue 1
   +0.000371: **rumore su 5/5 leghe**. Il fit pesato nel tempo assorbe già la
   congestione.
+- **Ri-verificato Fase 103** (Serie A, sui dati corretti dopo aver chiuso i
+  1.603 falsi zero di `midweek_europe`, che toccano anche `rest_full` dello
+  stesso calendario): Δ −0.0002 [−0.0009,+0.0005], P 69% — stesso ordine di
+  grandezza, stesso verdetto. Il β 2020-25 non è più a segno stabile
+  (−0.0552…+0.0138, 4/6 negativi): la correzione ha reso più onesto anche
+  questo dettaglio, prima misurato su un calendario con l'8-13% delle righe
+  sbagliate per lega.
 
 #### 10 · Temperature scaling post-hoc — Fase 6
 - **Numeri**: T≈0.94 (sottoconfidenza lieve, robusta), guadagno −0.0003.

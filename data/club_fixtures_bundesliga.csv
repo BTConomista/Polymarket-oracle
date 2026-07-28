@@ -917,6 +917,7 @@ season,team,date,competition,home_away,opponent
 1617,St Pauli,2017-05-21,2. Bundesliga,A,Bochum
 1617,Stuttgart,2017-05-21,2. Bundesliga,H,Würzburger Kickers
 1617,Union Berlin,2017-05-21,2. Bundesliga,A,Greuther Furth
+1718,Freiburg,2017-07-27,Europa League (qual.),H,Domžale
 1718,Bochum,2017-07-28,2. Bundesliga,H,St Pauli
 1718,St Pauli,2017-07-28,2. Bundesliga,A,Bochum
 1718,Bielefeld,2017-07-29,2. Bundesliga,H,Jahn Regensburg
@@ -926,10 +927,13 @@ season,team,date,competition,home_away,opponent
 1718,Holstein Kiel,2017-07-30,2. Bundesliga,H,SV Sandhausen
 1718,Nurnberg,2017-07-30,2. Bundesliga,H,1. FC Kaiserslautern
 1718,Fortuna Dusseldorf,2017-07-31,2. Bundesliga,H,Eintracht Braunschweig
+1718,Freiburg,2017-08-03,Europa League (qual.),A,Domžale
 1718,Darmstadt,2017-08-04,2. Bundesliga,A,1. FC Kaiserslautern
 1718,Holstein Kiel,2017-08-04,2. Bundesliga,A,Union Berlin
 1718,Union Berlin,2017-08-04,2. Bundesliga,H,Holstein Kiel
+1718,Bayern Munich,2017-08-05,DFL-Supercup,A,Dortmund
 1718,Bochum,2017-08-05,2. Bundesliga,A,MSV Duisburg
+1718,Dortmund,2017-08-05,DFL-Supercup,H,Bayern Munich
 1718,Heidenheim,2017-08-05,2. Bundesliga,A,Eintracht Braunschweig
 1718,Bielefeld,2017-08-06,2. Bundesliga,A,Greuther Furth
 1718,Fortuna Dusseldorf,2017-08-06,2. Bundesliga,A,Erzgebirge Aue
@@ -937,6 +941,36 @@ season,team,date,competition,home_away,opponent
 1718,Nurnberg,2017-08-06,2. Bundesliga,A,Jahn Regensburg
 1718,St Pauli,2017-08-07,2. Bundesliga,H,Dynamo Dresden
 1718,Heidenheim,2017-08-09,2. Bundesliga,H,Erzgebirge Aue
+1718,Holstein Kiel,2017-08-11,DFB-Pokal,H,Eintracht Braunschweig
+1718,Leverkusen,2017-08-11,DFB-Pokal,A,Karlsruher SC
+1718,M'gladbach,2017-08-11,DFB-Pokal,A,Rot-Weiss Essen
+1718,Bayern Munich,2017-08-12,DFB-Pokal,A,Chemnitzer FC
+1718,Bielefeld,2017-08-12,DFB-Pokal,H,Fortuna Dusseldorf
+1718,Darmstadt,2017-08-12,DFB-Pokal,A,Jahn Regensburg
+1718,Dortmund,2017-08-12,DFB-Pokal,A,1. FC Rielasingen-Arlen
+1718,Ein Frankfurt,2017-08-12,DFB-Pokal,A,TuS Erndtebrück
+1718,FC Koln,2017-08-12,DFB-Pokal,A,Leher TS
+1718,Fortuna Dusseldorf,2017-08-12,DFB-Pokal,A,Bielefeld
+1718,Freiburg,2017-08-12,DFB-Pokal,A,Germania Halberstadt
+1718,Heidenheim,2017-08-12,DFB-Pokal,A,SpVgg Unterhaching
+1718,Hoffenheim,2017-08-12,DFB-Pokal,A,Rot-Weiß Erfurt
+1718,Mainz,2017-08-12,DFB-Pokal,A,LSK Hansa
+1718,Werder Bremen,2017-08-12,DFB-Pokal,A,Würzburger Kickers
+1718,Augsburg,2017-08-13,DFB-Pokal,A,1. FC Magdeburg
+1718,Bochum,2017-08-13,DFB-Pokal,A,FC Nöttingen
+1718,Greuther Furth,2017-08-13,DFB-Pokal,A,SV Morlautern
+1718,Hamburg,2017-08-13,DFB-Pokal,A,VfL Osnabrück
+1718,Hannover,2017-08-13,DFB-Pokal,A,Bonner SC
+1718,RB Leipzig,2017-08-13,DFB-Pokal,A,Sportfreunde Dorfmerkingen
+1718,Stuttgart,2017-08-13,DFB-Pokal,A,Energie Cottbus
+1718,Union Berlin,2017-08-13,DFB-Pokal,A,1. FC Saarbrücken
+1718,Wolfsburg,2017-08-13,DFB-Pokal,A,Eintracht Norderstedt
+1718,Hertha,2017-08-14,DFB-Pokal,A,Hansa Rostock
+1718,Nurnberg,2017-08-14,DFB-Pokal,A,MSV Duisburg
+1718,Paderborn,2017-08-14,DFB-Pokal,H,St Pauli
+1718,Schalke 04,2017-08-14,DFB-Pokal,A,BFC Dynamo
+1718,St Pauli,2017-08-14,DFB-Pokal,A,Paderborn
+1718,Hoffenheim,2017-08-15,Champions League (qual.),H,Liverpool
 1718,Bayern Munich,2017-08-18,Bundesliga,H,Leverkusen
 1718,Darmstadt,2017-08-18,2. Bundesliga,H,St Pauli
 1718,Leverkusen,2017-08-18,Bundesliga,A,Bayern Munich
@@ -965,6 +999,7 @@ season,team,date,competition,home_away,opponent
 1718,Union Berlin,2017-08-20,2. Bundesliga,A,Nurnberg
 1718,Bielefeld,2017-08-21,2. Bundesliga,H,Bochum
 1718,Bochum,2017-08-21,2. Bundesliga,A,Bielefeld
+1718,Hoffenheim,2017-08-23,Champions League (qual.),A,Liverpool
 1718,Darmstadt,2017-08-25,2. Bundesliga,A,MSV Duisburg
 1718,FC Koln,2017-08-25,Bundesliga,H,Hamburg
 1718,Greuther Furth,2017-08-25,2. Bundesliga,H,FC Ingolstadt 04
@@ -1024,6 +1059,9 @@ season,team,date,competition,home_away,opponent
 1718,Bayern Munich,2017-09-12,Champions League,H,RSC Anderlecht
 1718,Dortmund,2017-09-13,Champions League,A,Tottenham
 1718,RB Leipzig,2017-09-13,Champions League,H,Monaco
+1718,FC Koln,2017-09-14,Europa League,A,Arsenal
+1718,Hertha,2017-09-14,Europa League,H,Athletic Bilbao
+1718,Hoffenheim,2017-09-14,Europa League,H,Braga
 1718,Hamburg,2017-09-15,Bundesliga,A,Hannover
 1718,Hannover,2017-09-15,Bundesliga,H,Hamburg
 1718,Holstein Kiel,2017-09-15,2. Bundesliga,A,Erzgebirge Aue
@@ -1111,6 +1149,9 @@ season,team,date,competition,home_away,opponent
 1718,Dortmund,2017-09-26,Champions League,H,Real Madrid
 1718,RB Leipzig,2017-09-26,Champions League,A,Beşiktaş
 1718,Bayern Munich,2017-09-27,Champions League,A,Paris SG
+1718,FC Koln,2017-09-28,Europa League,H,Red Star Belgrade
+1718,Hertha,2017-09-28,Europa League,A,Östersunds FK
+1718,Hoffenheim,2017-09-28,Europa League,A,Ludogorets Razgrad
 1718,Darmstadt,2017-09-29,2. Bundesliga,A,FC Ingolstadt 04
 1718,Greuther Furth,2017-09-29,2. Bundesliga,A,1. FC Kaiserslautern
 1718,Leverkusen,2017-09-29,Bundesliga,A,Schalke 04
@@ -1170,6 +1211,9 @@ season,team,date,competition,home_away,opponent
 1718,Dortmund,2017-10-17,Champions League,A,APOEL Nikosia
 1718,RB Leipzig,2017-10-17,Champions League,H,FC Porto
 1718,Bayern Munich,2017-10-18,Champions League,H,Celtic FC
+1718,FC Koln,2017-10-19,Europa League,A,BATE Borisov
+1718,Hertha,2017-10-19,Europa League,A,Zorya Luhansk
+1718,Hoffenheim,2017-10-19,Europa League,H,İstanbul Başakşehir
 1718,Darmstadt,2017-10-20,2. Bundesliga,A,Fortuna Dusseldorf
 1718,Fortuna Dusseldorf,2017-10-20,2. Bundesliga,H,Darmstadt
 1718,Heidenheim,2017-10-20,2. Bundesliga,A,FC Ingolstadt 04
@@ -1198,6 +1242,30 @@ season,team,date,competition,home_away,opponent
 1718,Werder Bremen,2017-10-22,Bundesliga,A,FC Koln
 1718,Wolfsburg,2017-10-22,Bundesliga,H,Hoffenheim
 1718,St Pauli,2017-10-23,2. Bundesliga,A,SV Sandhausen
+1718,Bochum,2017-10-24,DFB-Pokal,A,Paderborn
+1718,Dortmund,2017-10-24,DFB-Pokal,A,1. FC Magdeburg
+1718,Ein Frankfurt,2017-10-24,DFB-Pokal,A,Schweinfurt 05
+1718,Fortuna Dusseldorf,2017-10-24,DFB-Pokal,H,M'gladbach
+1718,Greuther Furth,2017-10-24,DFB-Pokal,H,FC Ingolstadt
+1718,Holstein Kiel,2017-10-24,DFB-Pokal,A,Mainz
+1718,Leverkusen,2017-10-24,DFB-Pokal,H,Union Berlin
+1718,M'gladbach,2017-10-24,DFB-Pokal,A,Fortuna Dusseldorf
+1718,Mainz,2017-10-24,DFB-Pokal,H,Holstein Kiel
+1718,Paderborn,2017-10-24,DFB-Pokal,H,Bochum
+1718,Schalke 04,2017-10-24,DFB-Pokal,A,Wehen Wiesbaden
+1718,Union Berlin,2017-10-24,DFB-Pokal,A,Leverkusen
+1718,Bayern Munich,2017-10-25,DFB-Pokal,A,RB Leipzig
+1718,FC Koln,2017-10-25,DFB-Pokal,A,Hertha
+1718,Freiburg,2017-10-25,DFB-Pokal,H,Dynamo Dresden
+1718,Hannover,2017-10-25,DFB-Pokal,A,Wolfsburg
+1718,Heidenheim,2017-10-25,DFB-Pokal,A,Jahn Regensburg
+1718,Hertha,2017-10-25,DFB-Pokal,H,FC Koln
+1718,Hoffenheim,2017-10-25,DFB-Pokal,A,Werder Bremen
+1718,Nurnberg,2017-10-25,DFB-Pokal,A,VfL Osnabrück
+1718,RB Leipzig,2017-10-25,DFB-Pokal,H,Bayern Munich
+1718,Stuttgart,2017-10-25,DFB-Pokal,A,1. FC Kaiserslautern
+1718,Werder Bremen,2017-10-25,DFB-Pokal,H,Hoffenheim
+1718,Wolfsburg,2017-10-25,DFB-Pokal,H,Hannover
 1718,Bielefeld,2017-10-27,2. Bundesliga,H,FC Ingolstadt 04
 1718,Ein Frankfurt,2017-10-27,Bundesliga,A,Mainz
 1718,Mainz,2017-10-27,Bundesliga,H,Ein Frankfurt
@@ -1229,6 +1297,9 @@ season,team,date,competition,home_away,opponent
 1718,Bayern Munich,2017-10-31,Champions League,A,Celtic FC
 1718,Dortmund,2017-11-01,Champions League,H,APOEL Nikosia
 1718,RB Leipzig,2017-11-01,Champions League,A,FC Porto
+1718,FC Koln,2017-11-02,Europa League,H,BATE Borisov
+1718,Hertha,2017-11-02,Europa League,H,Zorya Luhansk
+1718,Hoffenheim,2017-11-02,Europa League,A,İstanbul Başakşehir
 1718,Bochum,2017-11-03,2. Bundesliga,A,1. FC Kaiserslautern
 1718,Ein Frankfurt,2017-11-03,Bundesliga,H,Werder Bremen
 1718,Werder Bremen,2017-11-03,Bundesliga,A,Ein Frankfurt
@@ -1288,6 +1359,9 @@ season,team,date,competition,home_away,opponent
 1718,Dortmund,2017-11-21,Champions League,H,Tottenham
 1718,RB Leipzig,2017-11-21,Champions League,A,Monaco
 1718,Bayern Munich,2017-11-22,Champions League,A,RSC Anderlecht
+1718,FC Koln,2017-11-23,Europa League,H,Arsenal
+1718,Hertha,2017-11-23,Europa League,A,Athletic Bilbao
+1718,Hoffenheim,2017-11-23,Europa League,A,Braga
 1718,Darmstadt,2017-11-24,2. Bundesliga,A,Union Berlin
 1718,Hannover,2017-11-24,Bundesliga,H,Stuttgart
 1718,Heidenheim,2017-11-24,2. Bundesliga,A,SV Sandhausen
@@ -1347,6 +1421,9 @@ season,team,date,competition,home_away,opponent
 1718,Bayern Munich,2017-12-05,Champions League,H,Paris SG
 1718,Dortmund,2017-12-06,Champions League,A,Real Madrid
 1718,RB Leipzig,2017-12-06,Champions League,H,Beşiktaş
+1718,FC Koln,2017-12-07,Europa League,A,Red Star Belgrade
+1718,Hertha,2017-12-07,Europa League,H,Östersunds FK
+1718,Hoffenheim,2017-12-07,Europa League,H,Ludogorets Razgrad
 1718,Darmstadt,2017-12-08,2. Bundesliga,A,Erzgebirge Aue
 1718,Holstein Kiel,2017-12-08,2. Bundesliga,A,Eintracht Braunschweig
 1718,Leverkusen,2017-12-08,Bundesliga,A,Stuttgart
@@ -1421,6 +1498,21 @@ season,team,date,competition,home_away,opponent
 1718,RB Leipzig,2017-12-17,Bundesliga,H,Hertha
 1718,Bochum,2017-12-18,2. Bundesliga,A,St Pauli
 1718,St Pauli,2017-12-18,2. Bundesliga,H,Bochum
+1718,FC Koln,2017-12-19,DFB-Pokal,A,Schalke 04
+1718,Mainz,2017-12-19,DFB-Pokal,H,Stuttgart
+1718,Nurnberg,2017-12-19,DFB-Pokal,H,Wolfsburg
+1718,Paderborn,2017-12-19,DFB-Pokal,H,FC Ingolstadt
+1718,Schalke 04,2017-12-19,DFB-Pokal,H,FC Koln
+1718,Stuttgart,2017-12-19,DFB-Pokal,A,Mainz
+1718,Wolfsburg,2017-12-19,DFB-Pokal,A,Nurnberg
+1718,Bayern Munich,2017-12-20,DFB-Pokal,H,Dortmund
+1718,Dortmund,2017-12-20,DFB-Pokal,A,Bayern Munich
+1718,Ein Frankfurt,2017-12-20,DFB-Pokal,A,Heidenheim
+1718,Freiburg,2017-12-20,DFB-Pokal,A,Werder Bremen
+1718,Heidenheim,2017-12-20,DFB-Pokal,H,Ein Frankfurt
+1718,Leverkusen,2017-12-20,DFB-Pokal,A,M'gladbach
+1718,M'gladbach,2017-12-20,DFB-Pokal,H,Leverkusen
+1718,Werder Bremen,2017-12-20,DFB-Pokal,H,Freiburg
 1718,Bayern Munich,2018-01-12,Bundesliga,A,Leverkusen
 1718,Leverkusen,2018-01-12,Bundesliga,H,Bayern Munich
 1718,Augsburg,2018-01-13,Bundesliga,H,Hamburg
@@ -1522,6 +1614,14 @@ season,team,date,competition,home_away,opponent
 1718,Hannover,2018-02-04,Bundesliga,A,Hamburg
 1718,Bielefeld,2018-02-05,2. Bundesliga,H,Union Berlin
 1718,Union Berlin,2018-02-05,2. Bundesliga,A,Bielefeld
+1718,Bayern Munich,2018-02-06,DFB-Pokal,A,Paderborn
+1718,Leverkusen,2018-02-06,DFB-Pokal,H,Werder Bremen
+1718,Paderborn,2018-02-06,DFB-Pokal,H,Bayern Munich
+1718,Werder Bremen,2018-02-06,DFB-Pokal,A,Leverkusen
+1718,Ein Frankfurt,2018-02-07,DFB-Pokal,H,Mainz
+1718,Mainz,2018-02-07,DFB-Pokal,A,Ein Frankfurt
+1718,Schalke 04,2018-02-07,DFB-Pokal,H,Wolfsburg
+1718,Wolfsburg,2018-02-07,DFB-Pokal,A,Schalke 04
 1718,Augsburg,2018-02-09,Bundesliga,A,RB Leipzig
 1718,Bochum,2018-02-09,2. Bundesliga,H,Darmstadt
 1718,Darmstadt,2018-02-09,2. Bundesliga,A,Bochum
@@ -1550,6 +1650,8 @@ season,team,date,competition,home_away,opponent
 1718,Wolfsburg,2018-02-11,Bundesliga,A,Werder Bremen
 1718,Nurnberg,2018-02-12,2. Bundesliga,A,St Pauli
 1718,St Pauli,2018-02-12,2. Bundesliga,H,Nurnberg
+1718,Dortmund,2018-02-15,Europa League,H,Atalanta
+1718,RB Leipzig,2018-02-15,Europa League,A,Napoli
 1718,Bochum,2018-02-16,2. Bundesliga,A,Heidenheim
 1718,Heidenheim,2018-02-16,2. Bundesliga,H,Bochum
 1718,Hertha,2018-02-16,Bundesliga,H,Mainz
@@ -1580,6 +1682,8 @@ season,team,date,competition,home_away,opponent
 1718,RB Leipzig,2018-02-19,Bundesliga,A,Ein Frankfurt
 1718,Bayern Munich,2018-02-20,Champions League,H,Beşiktaş
 1718,Darmstadt,2018-02-21,2. Bundesliga,H,1. FC Kaiserslautern
+1718,Dortmund,2018-02-22,Europa League,A,Atalanta
+1718,RB Leipzig,2018-02-22,Europa League,H,Napoli
 1718,Bielefeld,2018-02-23,2. Bundesliga,H,Dynamo Dresden
 1718,Fortuna Dusseldorf,2018-02-23,2. Bundesliga,A,Jahn Regensburg
 1718,Mainz,2018-02-23,Bundesliga,H,Wolfsburg
@@ -1636,6 +1740,8 @@ season,team,date,competition,home_away,opponent
 1718,St Pauli,2018-03-04,2. Bundesliga,A,Fortuna Dusseldorf
 1718,Stuttgart,2018-03-04,Bundesliga,A,FC Koln
 1718,Bochum,2018-03-05,2. Bundesliga,A,FC Ingolstadt 04
+1718,Dortmund,2018-03-08,Europa League,H,Red Bull Salzburg
+1718,RB Leipzig,2018-03-08,Europa League,H,Zenit Saint Petersburg
 1718,Bielefeld,2018-03-09,2. Bundesliga,H,Nurnberg
 1718,Heidenheim,2018-03-09,2. Bundesliga,A,Dynamo Dresden
 1718,Mainz,2018-03-09,Bundesliga,H,Schalke 04
@@ -1665,6 +1771,8 @@ season,team,date,competition,home_away,opponent
 1718,FC Koln,2018-03-12,Bundesliga,A,Werder Bremen
 1718,Werder Bremen,2018-03-12,Bundesliga,H,FC Koln
 1718,Bayern Munich,2018-03-14,Champions League,A,Beşiktaş
+1718,Dortmund,2018-03-15,Europa League,A,Red Bull Salzburg
+1718,RB Leipzig,2018-03-15,Europa League,A,Zenit Saint Petersburg
 1718,Bielefeld,2018-03-16,2. Bundesliga,A,Fortuna Dusseldorf
 1718,Fortuna Dusseldorf,2018-03-16,2. Bundesliga,H,Bielefeld
 1718,Freiburg,2018-03-16,Bundesliga,H,Stuttgart
@@ -1722,6 +1830,7 @@ season,team,date,competition,home_away,opponent
 1718,Darmstadt,2018-04-02,2. Bundesliga,H,Fortuna Dusseldorf
 1718,Fortuna Dusseldorf,2018-04-02,2. Bundesliga,A,Darmstadt
 1718,Bayern Munich,2018-04-03,Champions League,A,Sevilla
+1718,RB Leipzig,2018-04-05,Europa League,H,Marseille
 1718,Bochum,2018-04-06,2. Bundesliga,A,Fortuna Dusseldorf
 1718,Fortuna Dusseldorf,2018-04-06,2. Bundesliga,H,Bochum
 1718,Greuther Furth,2018-04-06,2. Bundesliga,A,SV Sandhausen
@@ -1751,6 +1860,7 @@ season,team,date,competition,home_away,opponent
 1718,Leverkusen,2018-04-09,Bundesliga,A,RB Leipzig
 1718,RB Leipzig,2018-04-09,Bundesliga,H,Leverkusen
 1718,Bayern Munich,2018-04-11,Champions League,H,Sevilla
+1718,RB Leipzig,2018-04-12,Europa League,A,Marseille
 1718,Augsburg,2018-04-13,Bundesliga,A,Wolfsburg
 1718,Bochum,2018-04-13,2. Bundesliga,H,1. FC Kaiserslautern
 1718,Greuther Furth,2018-04-13,2. Bundesliga,H,Jahn Regensburg
@@ -1779,6 +1889,10 @@ season,team,date,competition,home_away,opponent
 1718,Werder Bremen,2018-04-15,Bundesliga,H,RB Leipzig
 1718,Freiburg,2018-04-16,Bundesliga,A,Mainz
 1718,Mainz,2018-04-16,Bundesliga,H,Freiburg
+1718,Bayern Munich,2018-04-17,DFB-Pokal,A,Leverkusen
+1718,Leverkusen,2018-04-17,DFB-Pokal,H,Bayern Munich
+1718,Ein Frankfurt,2018-04-18,DFB-Pokal,A,Schalke 04
+1718,Schalke 04,2018-04-18,DFB-Pokal,H,Ein Frankfurt
 1718,Bielefeld,2018-04-20,2. Bundesliga,A,Eintracht Braunschweig
 1718,Bochum,2018-04-20,2. Bundesliga,A,Greuther Furth
 1718,Greuther Furth,2018-04-20,2. Bundesliga,H,Bochum
@@ -1893,6 +2007,10 @@ season,team,date,competition,home_away,opponent
 1718,Nurnberg,2018-05-13,2. Bundesliga,H,Fortuna Dusseldorf
 1718,St Pauli,2018-05-13,2. Bundesliga,A,MSV Duisburg
 1718,Union Berlin,2018-05-13,2. Bundesliga,A,Dynamo Dresden
+1718,Bayern Munich,2018-05-19,DFB-Pokal,H,Ein Frankfurt
+1718,Ein Frankfurt,2018-05-19,DFB-Pokal,A,Bayern Munich
+1819,RB Leipzig,2018-07-26,Europa League (qual.),H,BK Häcken
+1819,RB Leipzig,2018-08-02,Europa League (qual.),A,BK Häcken
 1819,Hamburg,2018-08-03,2. Bundesliga,H,Holstein Kiel
 1819,Holstein Kiel,2018-08-03,2. Bundesliga,A,Hamburg
 1819,Bochum,2018-08-04,2. Bundesliga,H,FC Koln
@@ -1904,17 +2022,21 @@ season,team,date,competition,home_away,opponent
 1819,Paderborn,2018-08-05,2. Bundesliga,A,Darmstadt
 1819,St Pauli,2018-08-05,2. Bundesliga,A,1. FC Magdeburg
 1819,Union Berlin,2018-08-05,2. Bundesliga,H,Erzgebirge Aue
+1819,RB Leipzig,2018-08-09,Europa League (qual.),H,Universitatea Craiova
 1819,Darmstadt,2018-08-10,2. Bundesliga,A,St Pauli
 1819,Greuther Furth,2018-08-10,2. Bundesliga,A,FC Ingolstadt 04
 1819,Paderborn,2018-08-10,2. Bundesliga,H,Jahn Regensburg
 1819,St Pauli,2018-08-10,2. Bundesliga,H,Darmstadt
 1819,Bielefeld,2018-08-11,2. Bundesliga,H,Dynamo Dresden
 1819,Bochum,2018-08-11,2. Bundesliga,A,MSV Duisburg
+1819,Bayern Munich,2018-08-12,DFL-Supercup,A,Ein Frankfurt
+1819,Ein Frankfurt,2018-08-12,DFL-Supercup,H,Bayern Munich
 1819,Hamburg,2018-08-12,2. Bundesliga,A,SV Sandhausen
 1819,Heidenheim,2018-08-12,2. Bundesliga,A,Holstein Kiel
 1819,Holstein Kiel,2018-08-12,2. Bundesliga,H,Heidenheim
 1819,FC Koln,2018-08-13,2. Bundesliga,H,Union Berlin
 1819,Union Berlin,2018-08-13,2. Bundesliga,A,FC Koln
+1819,RB Leipzig,2018-08-16,Europa League (qual.),A,Universitatea Craiova
 1819,Darmstadt,2018-08-17,DFB-Pokal,A,1. FC Magdeburg
 1819,Schalke 04,2018-08-17,DFB-Pokal,A,1. FC Schweinfurt 05
 1819,St Pauli,2018-08-17,DFB-Pokal,A,SV Wehen Wiesbaden
@@ -1944,6 +2066,7 @@ season,team,date,competition,home_away,opponent
 1819,Greuther Furth,2018-08-20,DFB-Pokal,H,Dortmund
 1819,Hertha,2018-08-20,DFB-Pokal,A,Eintracht Braunschweig
 1819,Paderborn,2018-08-20,DFB-Pokal,H,FC Ingolstadt 04
+1819,RB Leipzig,2018-08-23,Europa League (qual.),A,Zorya Luhansk
 1819,Bayern Munich,2018-08-24,Bundesliga,H,Hoffenheim
 1819,Bochum,2018-08-24,2. Bundesliga,H,SV Sandhausen
 1819,Darmstadt,2018-08-24,2. Bundesliga,H,MSV Duisburg
@@ -1973,6 +2096,7 @@ season,team,date,competition,home_away,opponent
 1819,Union Berlin,2018-08-26,2. Bundesliga,H,St Pauli
 1819,Bielefeld,2018-08-27,2. Bundesliga,A,Hamburg
 1819,Hamburg,2018-08-27,2. Bundesliga,H,Bielefeld
+1819,RB Leipzig,2018-08-30,Europa League (qual.),H,Zorya Luhansk
 1819,Bochum,2018-08-31,2. Bundesliga,A,Paderborn
 1819,Dortmund,2018-08-31,Bundesliga,A,Hannover
 1819,Hannover,2018-08-31,Bundesliga,H,Dortmund
@@ -2035,6 +2159,9 @@ season,team,date,competition,home_away,opponent
 1819,Schalke 04,2018-09-18,Champions League,H,FC Porto
 1819,Bayern Munich,2018-09-19,Champions League,A,SL Benfica
 1819,Hoffenheim,2018-09-19,Champions League,A,Shakhtar Donetsk
+1819,Ein Frankfurt,2018-09-20,Europa League,A,Marseille
+1819,Leverkusen,2018-09-20,Europa League,A,Ludogorets Razgrad
+1819,RB Leipzig,2018-09-20,Europa League,H,Red Bull Salzburg
 1819,FC Koln,2018-09-21,2. Bundesliga,A,SV Sandhausen
 1819,Fortuna Dusseldorf,2018-09-21,Bundesliga,A,Stuttgart
 1819,St Pauli,2018-09-21,2. Bundesliga,A,FC Ingolstadt 04
@@ -2126,6 +2253,9 @@ season,team,date,competition,home_away,opponent
 1819,Hoffenheim,2018-10-02,Champions League,H,Man City
 1819,Dortmund,2018-10-03,Champions League,H,Monaco
 1819,Schalke 04,2018-10-03,Champions League,A,Lokomotiv Moskva
+1819,Ein Frankfurt,2018-10-04,Europa League,H,Lazio
+1819,Leverkusen,2018-10-04,Europa League,H,AEK Larnaca
+1819,RB Leipzig,2018-10-04,Europa League,A,Rosenborg
 1819,Bielefeld,2018-10-05,2. Bundesliga,A,Bochum
 1819,Bochum,2018-10-05,2. Bundesliga,H,Bielefeld
 1819,Darmstadt,2018-10-05,2. Bundesliga,H,Hamburg
@@ -2188,6 +2318,9 @@ season,team,date,competition,home_away,opponent
 1819,Hoffenheim,2018-10-23,Champions League,H,Lyon
 1819,Dortmund,2018-10-24,Champions League,H,Ath Madrid
 1819,Schalke 04,2018-10-24,Champions League,A,Galatasaray
+1819,Ein Frankfurt,2018-10-25,Europa League,H,Apollon Limassol
+1819,Leverkusen,2018-10-25,Europa League,A,Zürich
+1819,RB Leipzig,2018-10-25,Europa League,H,Celtic
 1819,Darmstadt,2018-10-26,2. Bundesliga,H,Greuther Furth
 1819,Freiburg,2018-10-26,Bundesliga,H,M'gladbach
 1819,Greuther Furth,2018-10-26,2. Bundesliga,A,Darmstadt
@@ -2274,6 +2407,9 @@ season,team,date,competition,home_away,opponent
 1819,Schalke 04,2018-11-06,Champions League,H,Galatasaray
 1819,Bayern Munich,2018-11-07,Champions League,H,AEK Athen
 1819,Hoffenheim,2018-11-07,Champions League,A,Lyon
+1819,Ein Frankfurt,2018-11-08,Europa League,A,Apollon Limassol
+1819,Leverkusen,2018-11-08,Europa League,H,Zürich
+1819,RB Leipzig,2018-11-08,Europa League,A,Celtic
 1819,Hannover,2018-11-09,Bundesliga,H,Wolfsburg
 1819,Holstein Kiel,2018-11-09,2. Bundesliga,A,Paderborn
 1819,Paderborn,2018-11-09,2. Bundesliga,H,Holstein Kiel
@@ -2336,6 +2472,9 @@ season,team,date,competition,home_away,opponent
 1819,Hoffenheim,2018-11-27,Champions League,H,Shakhtar Donetsk
 1819,Dortmund,2018-11-28,Champions League,H,Club Brugge KV
 1819,Schalke 04,2018-11-28,Champions League,A,FC Porto
+1819,Ein Frankfurt,2018-11-29,Europa League,H,Marseille
+1819,Leverkusen,2018-11-29,Europa League,H,Ludogorets Razgrad
+1819,RB Leipzig,2018-11-29,Europa League,A,Red Bull Salzburg
 1819,Bielefeld,2018-11-30,2. Bundesliga,A,Paderborn
 1819,Fortuna Dusseldorf,2018-11-30,Bundesliga,H,Mainz
 1819,Mainz,2018-11-30,Bundesliga,A,Fortuna Dusseldorf
@@ -2398,6 +2537,9 @@ season,team,date,competition,home_away,opponent
 1819,Schalke 04,2018-12-11,Champions League,H,Lokomotiv Moskva
 1819,Bayern Munich,2018-12-12,Champions League,A,AFC Ajax
 1819,Hoffenheim,2018-12-12,Champions League,A,Man City
+1819,Ein Frankfurt,2018-12-13,Europa League,A,Lazio
+1819,Leverkusen,2018-12-13,Europa League,A,AEK Larnaca
+1819,RB Leipzig,2018-12-13,Europa League,H,Rosenborg
 1819,Bielefeld,2018-12-14,2. Bundesliga,A,Holstein Kiel
 1819,Hamburg,2018-12-14,2. Bundesliga,A,MSV Duisburg
 1819,Holstein Kiel,2018-12-14,2. Bundesliga,H,Bielefeld
@@ -2594,6 +2736,8 @@ season,team,date,competition,home_away,opponent
 1819,Werder Bremen,2019-02-10,Bundesliga,H,Augsburg
 1819,Hamburg,2019-02-11,2. Bundesliga,H,Dynamo Dresden
 1819,Dortmund,2019-02-13,Champions League,A,Tottenham
+1819,Ein Frankfurt,2019-02-14,Europa League,A,Shakhtar Donetsk
+1819,Leverkusen,2019-02-14,Europa League,A,Krasnodar
 1819,Augsburg,2019-02-15,Bundesliga,H,Bayern Munich
 1819,Bayern Munich,2019-02-15,Bundesliga,A,Augsburg
 1819,Darmstadt,2019-02-15,2. Bundesliga,A,SV Sandhausen
@@ -2625,6 +2769,8 @@ season,team,date,competition,home_away,opponent
 1819,Nurnberg,2019-02-18,Bundesliga,H,Dortmund
 1819,Bayern Munich,2019-02-19,Champions League,A,Liverpool
 1819,Schalke 04,2019-02-20,Champions League,H,Man City
+1819,Ein Frankfurt,2019-02-21,Europa League,H,Shakhtar Donetsk
+1819,Leverkusen,2019-02-21,Europa League,H,Krasnodar
 1819,Bielefeld,2019-02-22,2. Bundesliga,A,Union Berlin
 1819,Greuther Furth,2019-02-22,2. Bundesliga,H,Heidenheim
 1819,Heidenheim,2019-02-22,2. Bundesliga,A,Greuther Furth
@@ -2685,6 +2831,7 @@ season,team,date,competition,home_away,opponent
 1819,Greuther Furth,2019-03-04,2. Bundesliga,A,Hamburg
 1819,Hamburg,2019-03-04,2. Bundesliga,H,Greuther Furth
 1819,Dortmund,2019-03-05,Champions League,H,Tottenham
+1819,Ein Frankfurt,2019-03-07,Europa League,H,Inter Milan
 1819,Bochum,2019-03-08,2. Bundesliga,H,Heidenheim
 1819,Heidenheim,2019-03-08,2. Bundesliga,A,Bochum
 1819,Schalke 04,2019-03-08,Bundesliga,A,Werder Bremen
@@ -2715,6 +2862,7 @@ season,team,date,competition,home_away,opponent
 1819,Fortuna Dusseldorf,2019-03-11,Bundesliga,H,Ein Frankfurt
 1819,Schalke 04,2019-03-12,Champions League,A,Man City
 1819,Bayern Munich,2019-03-13,Champions League,H,Liverpool
+1819,Ein Frankfurt,2019-03-14,Europa League,A,Inter Milan
 1819,Freiburg,2019-03-15,Bundesliga,A,M'gladbach
 1819,Heidenheim,2019-03-15,2. Bundesliga,H,Union Berlin
 1819,Holstein Kiel,2019-03-15,2. Bundesliga,H,Erzgebirge Aue
@@ -2811,6 +2959,7 @@ season,team,date,competition,home_away,opponent
 1819,Werder Bremen,2019-04-07,Bundesliga,A,M'gladbach
 1819,Hamburg,2019-04-08,2. Bundesliga,H,1. FC Magdeburg
 1819,FC Koln,2019-04-10,2. Bundesliga,A,MSV Duisburg
+1819,Ein Frankfurt,2019-04-11,Europa League,A,Benfica
 1819,Heidenheim,2019-04-12,2. Bundesliga,A,Erzgebirge Aue
 1819,Nurnberg,2019-04-12,Bundesliga,H,Schalke 04
 1819,Schalke 04,2019-04-12,Bundesliga,A,Nurnberg
@@ -2840,6 +2989,7 @@ season,team,date,competition,home_away,opponent
 1819,St Pauli,2019-04-14,2. Bundesliga,H,Bielefeld
 1819,FC Koln,2019-04-15,2. Bundesliga,H,Hamburg
 1819,Hamburg,2019-04-15,2. Bundesliga,A,FC Koln
+1819,Ein Frankfurt,2019-04-18,Europa League,H,Benfica
 1819,Augsburg,2019-04-20,Bundesliga,H,Stuttgart
 1819,Bayern Munich,2019-04-20,Bundesliga,H,Werder Bremen
 1819,Fortuna Dusseldorf,2019-04-20,Bundesliga,A,Mainz
@@ -2902,6 +3052,7 @@ season,team,date,competition,home_away,opponent
 1819,Union Berlin,2019-04-28,2. Bundesliga,H,Hamburg
 1819,Wolfsburg,2019-04-28,Bundesliga,A,Hoffenheim
 1819,Bielefeld,2019-04-29,2. Bundesliga,A,MSV Duisburg
+1819,Ein Frankfurt,2019-05-02,Europa League,H,Chelsea
 1819,Bielefeld,2019-05-03,2. Bundesliga,H,Paderborn
 1819,Mainz,2019-05-03,Bundesliga,H,RB Leipzig
 1819,Paderborn,2019-05-03,2. Bundesliga,A,Bielefeld
@@ -2931,6 +3082,7 @@ season,team,date,competition,home_away,opponent
 1819,Union Berlin,2019-05-05,2. Bundesliga,A,Darmstadt
 1819,FC Koln,2019-05-06,2. Bundesliga,A,Greuther Furth
 1819,Greuther Furth,2019-05-06,2. Bundesliga,H,FC Koln
+1819,Ein Frankfurt,2019-05-09,Europa League,A,Chelsea
 1819,Augsburg,2019-05-11,Bundesliga,H,Hertha
 1819,Bayern Munich,2019-05-11,Bundesliga,A,RB Leipzig
 1819,Dortmund,2019-05-11,Bundesliga,H,Fortuna Dusseldorf
@@ -2991,6 +3143,7 @@ season,team,date,competition,home_away,opponent
 1819,Union Berlin,2019-05-19,2. Bundesliga,A,Bochum
 1819,Bayern Munich,2019-05-25,DFB-Pokal,A,RB Leipzig
 1819,RB Leipzig,2019-05-25,DFB-Pokal,H,Bayern Munich
+1920,Ein Frankfurt,2019-07-25,Europa League (qual.),A,Flora
 1920,Hannover,2019-07-26,2. Bundesliga,A,Stuttgart
 1920,Stuttgart,2019-07-26,2. Bundesliga,H,Hannover
 1920,Heidenheim,2019-07-27,2. Bundesliga,A,VfL Osnabrück
@@ -3002,10 +3155,13 @@ season,team,date,competition,home_away,opponent
 1920,Hamburg,2019-07-28,2. Bundesliga,H,Darmstadt
 1920,Bielefeld,2019-07-29,2. Bundesliga,H,St Pauli
 1920,St Pauli,2019-07-29,2. Bundesliga,A,Bielefeld
+1920,Ein Frankfurt,2019-08-01,Europa League (qual.),H,Flora
 1920,Bielefeld,2019-08-02,2. Bundesliga,A,Bochum
 1920,Bochum,2019-08-02,2. Bundesliga,H,Bielefeld
 1920,Greuther Furth,2019-08-02,2. Bundesliga,A,St Pauli
 1920,St Pauli,2019-08-02,2. Bundesliga,H,Greuther Furth
+1920,Bayern Munich,2019-08-03,DFL-Supercup,A,Dortmund
+1920,Dortmund,2019-08-03,DFL-Supercup,H,Bayern Munich
 1920,Hannover,2019-08-03,2. Bundesliga,H,Jahn Regensburg
 1920,Darmstadt,2019-08-04,2. Bundesliga,H,Holstein Kiel
 1920,Heidenheim,2019-08-04,2. Bundesliga,H,Stuttgart
@@ -3013,6 +3169,7 @@ season,team,date,competition,home_away,opponent
 1920,Stuttgart,2019-08-04,2. Bundesliga,A,Heidenheim
 1920,Hamburg,2019-08-05,2. Bundesliga,A,Nurnberg
 1920,Nurnberg,2019-08-05,2. Bundesliga,H,Hamburg
+1920,Ein Frankfurt,2019-08-08,Europa League (qual.),A,Vaduz
 1920,Dortmund,2019-08-09,DFB-Pokal,A,KFC Uerdingen 05
 1920,M'gladbach,2019-08-09,DFB-Pokal,A,SV Sandhausen
 1920,Nurnberg,2019-08-09,DFB-Pokal,A,FC Ingolstadt 04
@@ -3042,6 +3199,7 @@ season,team,date,competition,home_away,opponent
 1920,Hannover,2019-08-12,DFB-Pokal,A,Karlsruher SC
 1920,Stuttgart,2019-08-12,DFB-Pokal,A,Hansa Rostock
 1920,Wolfsburg,2019-08-12,DFB-Pokal,A,Hallescher FC
+1920,Ein Frankfurt,2019-08-15,Europa League (qual.),H,Vaduz
 1920,Bayern Munich,2019-08-16,Bundesliga,H,Hertha
 1920,Bochum,2019-08-16,2. Bundesliga,A,Hamburg
 1920,Hamburg,2019-08-16,2. Bundesliga,H,Bochum
@@ -3071,6 +3229,7 @@ season,team,date,competition,home_away,opponent
 1920,RB Leipzig,2019-08-18,Bundesliga,A,Union Berlin
 1920,Union Berlin,2019-08-18,Bundesliga,H,RB Leipzig
 1920,Darmstadt,2019-08-19,2. Bundesliga,A,VfL Osnabrück
+1920,Ein Frankfurt,2019-08-22,Europa League (qual.),A,Strasbourg
 1920,Darmstadt,2019-08-23,2. Bundesliga,H,Dynamo Dresden
 1920,Dortmund,2019-08-23,Bundesliga,A,FC Koln
 1920,FC Koln,2019-08-23,Bundesliga,H,Dortmund
@@ -3100,6 +3259,7 @@ season,team,date,competition,home_away,opponent
 1920,Wolfsburg,2019-08-25,Bundesliga,A,Hertha
 1920,Holstein Kiel,2019-08-26,2. Bundesliga,A,St Pauli
 1920,St Pauli,2019-08-26,2. Bundesliga,H,Holstein Kiel
+1920,Ein Frankfurt,2019-08-29,Europa League (qual.),H,Strasbourg
 1920,Darmstadt,2019-08-30,2. Bundesliga,A,SV Sandhausen
 1920,Heidenheim,2019-08-30,2. Bundesliga,A,Nurnberg
 1920,M'gladbach,2019-08-30,Bundesliga,H,RB Leipzig
@@ -3162,6 +3322,9 @@ season,team,date,competition,home_away,opponent
 1920,RB Leipzig,2019-09-17,Champions League,A,SL Benfica
 1920,Bayern Munich,2019-09-18,Champions League,H,Crvena Zvezda
 1920,Leverkusen,2019-09-18,Champions League,H,Lokomotiv Moskva
+1920,Ein Frankfurt,2019-09-19,Europa League,H,Arsenal
+1920,M'gladbach,2019-09-19,Europa League,H,Wolfsberger AC
+1920,Wolfsburg,2019-09-19,Europa League,H,Oleksandriya
 1920,Darmstadt,2019-09-20,2. Bundesliga,A,Heidenheim
 1920,Hannover,2019-09-20,2. Bundesliga,A,Holstein Kiel
 1920,Heidenheim,2019-09-20,2. Bundesliga,H,Darmstadt
@@ -3224,6 +3387,9 @@ season,team,date,competition,home_away,opponent
 1920,Leverkusen,2019-10-01,Champions League,A,Juventus
 1920,Dortmund,2019-10-02,Champions League,A,Slavia Praha
 1920,RB Leipzig,2019-10-02,Champions League,H,Lyon
+1920,Ein Frankfurt,2019-10-03,Europa League,A,Vitória de Guimarães
+1920,M'gladbach,2019-10-03,Europa League,A,İstanbul Başakşehir
+1920,Wolfsburg,2019-10-03,Europa League,A,Saint-Étienne
 1920,Darmstadt,2019-10-04,2. Bundesliga,H,Karlsruher SC
 1920,Fortuna Dusseldorf,2019-10-04,Bundesliga,A,Hertha
 1920,Hertha,2019-10-04,Bundesliga,H,Fortuna Dusseldorf
@@ -3286,6 +3452,9 @@ season,team,date,competition,home_away,opponent
 1920,Leverkusen,2019-10-22,Champions League,A,Ath Madrid
 1920,Dortmund,2019-10-23,Champions League,A,Inter
 1920,RB Leipzig,2019-10-23,Champions League,H,Zenit St. Petersburg
+1920,Ein Frankfurt,2019-10-24,Europa League,H,Standard Liège
+1920,M'gladbach,2019-10-24,Europa League,A,Roma
+1920,Wolfsburg,2019-10-24,Europa League,A,Gent
 1920,Bochum,2019-10-25,2. Bundesliga,A,Holstein Kiel
 1920,Darmstadt,2019-10-25,2. Bundesliga,H,Erzgebirge Aue
 1920,FC Koln,2019-10-25,Bundesliga,A,Mainz
@@ -3373,6 +3542,9 @@ season,team,date,competition,home_away,opponent
 1920,RB Leipzig,2019-11-05,Champions League,A,Zenit St. Petersburg
 1920,Bayern Munich,2019-11-06,Champions League,H,Olympiakos Piraeus
 1920,Leverkusen,2019-11-06,Champions League,H,Ath Madrid
+1920,Ein Frankfurt,2019-11-07,Europa League,A,Standard Liège
+1920,M'gladbach,2019-11-07,Europa League,H,Roma
+1920,Wolfsburg,2019-11-07,Europa League,H,Gent
 1920,Bochum,2019-11-08,2. Bundesliga,A,St Pauli
 1920,FC Koln,2019-11-08,Bundesliga,H,Hoffenheim
 1920,Hoffenheim,2019-11-08,Bundesliga,A,FC Koln
@@ -3435,6 +3607,9 @@ season,team,date,competition,home_away,opponent
 1920,Leverkusen,2019-11-26,Champions League,A,Lokomotiv Moskva
 1920,Dortmund,2019-11-27,Champions League,A,Barcelona
 1920,RB Leipzig,2019-11-27,Champions League,H,SL Benfica
+1920,Ein Frankfurt,2019-11-28,Europa League,A,Arsenal
+1920,M'gladbach,2019-11-28,Europa League,A,Wolfsberger AC
+1920,Wolfsburg,2019-11-28,Europa League,A,Oleksandriya
 1920,Hamburg,2019-11-29,2. Bundesliga,A,VfL Osnabrück
 1920,Schalke 04,2019-11-29,Bundesliga,H,Union Berlin
 1920,Union Berlin,2019-11-29,Bundesliga,A,Schalke 04
@@ -3497,6 +3672,9 @@ season,team,date,competition,home_away,opponent
 1920,RB Leipzig,2019-12-10,Champions League,A,Lyon
 1920,Bayern Munich,2019-12-11,Champions League,H,Tottenham
 1920,Leverkusen,2019-12-11,Champions League,H,Juventus
+1920,Ein Frankfurt,2019-12-12,Europa League,H,Vitória de Guimarães
+1920,M'gladbach,2019-12-12,Europa League,H,İstanbul Başakşehir
+1920,Wolfsburg,2019-12-12,Europa League,H,Saint-Étienne
 1920,Augsburg,2019-12-13,Bundesliga,A,Hoffenheim
 1920,Bochum,2019-12-13,2. Bundesliga,H,Hannover
 1920,Hannover,2019-12-13,2. Bundesliga,A,Bochum
@@ -3719,6 +3897,9 @@ season,team,date,competition,home_away,opponent
 1920,Stuttgart,2020-02-17,2. Bundesliga,A,Bochum
 1920,Dortmund,2020-02-18,Champions League,H,Paris SG
 1920,RB Leipzig,2020-02-19,Champions League,A,Tottenham
+1920,Ein Frankfurt,2020-02-20,Europa League,H,Red Bull Salzburg
+1920,Leverkusen,2020-02-20,Europa League,H,Porto
+1920,Wolfsburg,2020-02-20,Europa League,H,Malmö FF
 1920,Bayern Munich,2020-02-21,Bundesliga,H,Paderborn
 1920,Greuther Furth,2020-02-21,2. Bundesliga,A,SV Wehen Wiesbaden
 1920,Paderborn,2020-02-21,Bundesliga,A,Bayern Munich
@@ -3749,6 +3930,9 @@ season,team,date,competition,home_away,opponent
 1920,Ein Frankfurt,2020-02-24,Bundesliga,H,Union Berlin
 1920,Union Berlin,2020-02-24,Bundesliga,A,Ein Frankfurt
 1920,Bayern Munich,2020-02-25,Champions League,A,Chelsea
+1920,Leverkusen,2020-02-27,Europa League,A,Porto
+1920,Wolfsburg,2020-02-27,Europa League,A,Malmö FF
+1920,Ein Frankfurt,2020-02-28,Europa League,A,Red Bull Salzburg
 1920,Fortuna Dusseldorf,2020-02-28,Bundesliga,H,Hertha
 1920,Hertha,2020-02-28,Bundesliga,A,Fortuna Dusseldorf
 1920,Nurnberg,2020-02-28,2. Bundesliga,A,Karlsruher SC
@@ -3816,6 +4000,9 @@ season,team,date,competition,home_away,opponent
 1920,Dortmund,2020-03-11,Champions League,A,Paris SG
 1920,FC Koln,2020-03-11,Bundesliga,A,M'gladbach
 1920,M'gladbach,2020-03-11,Bundesliga,H,FC Koln
+1920,Ein Frankfurt,2020-03-12,Europa League,H,Basel
+1920,Leverkusen,2020-03-12,Europa League,A,Rangers
+1920,Wolfsburg,2020-03-12,Europa League,H,Shakhtar Donetsk
 1920,Augsburg,2020-05-16,Bundesliga,H,Wolfsburg
 1920,Bochum,2020-05-16,2. Bundesliga,H,Heidenheim
 1920,Darmstadt,2020-05-16,2. Bundesliga,A,Karlsruher SC
@@ -4084,7 +4271,11 @@ season,team,date,competition,home_away,opponent
 1920,Stuttgart,2020-06-28,2. Bundesliga,H,Darmstadt
 1920,Bayern Munich,2020-07-04,DFB-Pokal,A,Leverkusen
 1920,Leverkusen,2020-07-04,DFB-Pokal,H,Bayern Munich
+1920,Wolfsburg,2020-08-05,Europa League,A,Shakhtar Donetsk
+1920,Ein Frankfurt,2020-08-06,Europa League,A,Basel
+1920,Leverkusen,2020-08-06,Europa League,H,Rangers
 1920,Bayern Munich,2020-08-08,Champions League,H,Chelsea
+2021,Leverkusen,2020-08-10,Europa League,A,Inter Milan
 1920,RB Leipzig,2020-08-13,Champions League,H,Ath Madrid
 1920,Bayern Munich,2020-08-14,Champions League,A,Barcelona
 1920,RB Leipzig,2020-08-18,Champions League,H,Paris SG
@@ -4107,6 +4298,7 @@ season,team,date,competition,home_away,opponent
 2021,Darmstadt,2020-09-13,DFB-Pokal,A,1. FC Magdeburg
 2021,Freiburg,2020-09-13,DFB-Pokal,A,Waldhof Mannheim
 2021,Heidenheim,2020-09-13,DFB-Pokal,A,SV Wehen Wiesbaden
+2021,Hoffenheim,2020-09-13,DFB-Pokal,A,Chemnitzer FC
 2021,Holstein Kiel,2020-09-13,DFB-Pokal,A,1. FC Rielasingen-Arlen
 2021,Leverkusen,2020-09-13,DFB-Pokal,A,Eintracht Norderstedt
 2021,Paderborn,2020-09-13,DFB-Pokal,A,SC Wiedenbrück
@@ -4116,6 +4308,7 @@ season,team,date,competition,home_away,opponent
 2021,Dortmund,2020-09-14,DFB-Pokal,A,MSV Duisburg
 2021,Hamburg,2020-09-14,DFB-Pokal,A,Dynamo Dresden
 2021,Hannover,2020-09-14,DFB-Pokal,A,Würzburger Kickers
+2021,Wolfsburg,2020-09-17,Europa League (qual.),A,Kukësi
 2021,Bayern Munich,2020-09-18,Bundesliga,H,Schalke 04
 2021,Fortuna Dusseldorf,2020-09-18,2. Bundesliga,A,Hamburg
 2021,Hamburg,2020-09-18,2. Bundesliga,H,Fortuna Dusseldorf
@@ -4145,6 +4338,8 @@ season,team,date,competition,home_away,opponent
 2021,Wolfsburg,2020-09-20,Bundesliga,H,Leverkusen
 2021,Bochum,2020-09-21,2. Bundesliga,H,St Pauli
 2021,St Pauli,2020-09-21,2. Bundesliga,A,Bochum
+2021,Bayern Munich,2020-09-24,UEFA Super Cup,H,Sevilla
+2021,Wolfsburg,2020-09-24,Europa League (qual.),H,Desna Chernihiv
 2021,Ein Frankfurt,2020-09-25,Bundesliga,A,Hertha
 2021,Greuther Furth,2020-09-25,2. Bundesliga,A,Erzgebirge Aue
 2021,Hannover,2020-09-25,2. Bundesliga,A,VfL Osnabrück
@@ -4174,6 +4369,9 @@ season,team,date,competition,home_away,opponent
 2021,Wolfsburg,2020-09-27,Bundesliga,A,Freiburg
 2021,Hamburg,2020-09-28,2. Bundesliga,A,Paderborn
 2021,Paderborn,2020-09-28,2. Bundesliga,H,Hamburg
+2021,Bayern Munich,2020-09-30,DFL-Supercup,H,Dortmund
+2021,Dortmund,2020-09-30,DFL-Supercup,A,Bayern Munich
+2021,Wolfsburg,2020-10-01,Europa League (qual.),A,AEK Athens
 2021,Bochum,2020-10-02,2. Bundesliga,H,VfL Osnabrück
 2021,Mainz,2020-10-02,Bundesliga,A,Union Berlin
 2021,St Pauli,2020-10-02,2. Bundesliga,A,SV Sandhausen
@@ -4534,14 +4732,18 @@ season,team,date,competition,home_away,opponent
 2021,Darmstadt,2020-12-22,DFB-Pokal,A,Dynamo Dresden
 2021,Dortmund,2020-12-22,DFB-Pokal,A,Eintracht Braunschweig
 2021,FC Koln,2020-12-22,DFB-Pokal,H,VfL Osnabrück
+2021,Greuther Furth,2020-12-22,DFB-Pokal,A,Hoffenheim
+2021,Hoffenheim,2020-12-22,DFB-Pokal,H,Greuther Furth
 2021,M'gladbach,2020-12-22,DFB-Pokal,A,SV 07 Elversberg
 2021,Paderborn,2020-12-22,DFB-Pokal,A,Union Berlin
 2021,RB Leipzig,2020-12-22,DFB-Pokal,A,Augsburg
 2021,Schalke 04,2020-12-22,DFB-Pokal,A,SSV Ulm 1846
 2021,Union Berlin,2020-12-22,DFB-Pokal,H,Paderborn
+2021,Bochum,2020-12-23,DFB-Pokal,A,Mainz
 2021,Fortuna Dusseldorf,2020-12-23,DFB-Pokal,A,Rot-Weiss Essen
 2021,Freiburg,2020-12-23,DFB-Pokal,A,Stuttgart
 2021,Hannover,2020-12-23,DFB-Pokal,H,Werder Bremen
+2021,Mainz,2020-12-23,DFB-Pokal,H,Bochum
 2021,Stuttgart,2020-12-23,DFB-Pokal,H,Freiburg
 2021,Werder Bremen,2020-12-23,DFB-Pokal,A,Hannover
 2021,Wolfsburg,2020-12-23,DFB-Pokal,H,SV Sandhausen
@@ -4606,6 +4808,8 @@ season,team,date,competition,home_away,opponent
 2021,Fortuna Dusseldorf,2021-01-11,2. Bundesliga,A,Eintracht Braunschweig
 2021,Ein Frankfurt,2021-01-12,DFB-Pokal,A,Leverkusen
 2021,Leverkusen,2021-01-12,DFB-Pokal,H,Ein Frankfurt
+2021,Bayern Munich,2021-01-13,DFB-Pokal,A,Holstein Kiel
+2021,Holstein Kiel,2021-01-13,DFB-Pokal,H,Bayern Munich
 2021,Greuther Furth,2021-01-15,2. Bundesliga,H,Paderborn
 2021,Leverkusen,2021-01-15,Bundesliga,A,Union Berlin
 2021,Paderborn,2021-01-15,2. Bundesliga,A,Greuther Furth
@@ -4722,12 +4926,15 @@ season,team,date,competition,home_away,opponent
 2021,St Pauli,2021-01-31,2. Bundesliga,A,Heidenheim
 2021,Wolfsburg,2021-01-31,Bundesliga,H,Freiburg
 2021,Hannover,2021-02-01,2. Bundesliga,H,VfL Osnabrück
+2021,Darmstadt,2021-02-02,DFB-Pokal,A,Holstein Kiel
 2021,Dortmund,2021-02-02,DFB-Pokal,H,Paderborn
 2021,Greuther Furth,2021-02-02,DFB-Pokal,A,Werder Bremen
+2021,Holstein Kiel,2021-02-02,DFB-Pokal,H,Darmstadt
 2021,Leverkusen,2021-02-02,DFB-Pokal,A,Rot-Weiss Essen
 2021,Paderborn,2021-02-02,DFB-Pokal,A,Dortmund
 2021,Werder Bremen,2021-02-02,DFB-Pokal,H,Greuther Furth
 2021,Bochum,2021-02-03,DFB-Pokal,A,RB Leipzig
+2021,FC Koln,2021-02-03,DFB-Pokal,A,Jahn Regensburg
 2021,M'gladbach,2021-02-03,DFB-Pokal,A,Stuttgart
 2021,RB Leipzig,2021-02-03,DFB-Pokal,H,Bochum
 2021,Schalke 04,2021-02-03,DFB-Pokal,A,Wolfsburg
@@ -5218,11 +5425,13 @@ season,team,date,competition,home_away,opponent
 2122,Holstein Kiel,2021-08-01,2. Bundesliga,H,Schalke 04
 2122,Schalke 04,2021-08-01,2. Bundesliga,A,Holstein Kiel
 2122,St Pauli,2021-08-01,2. Bundesliga,A,Erzgebirge Aue
+2122,Darmstadt,2021-08-06,DFB-Pokal,A,1860 Munich
 2122,Paderborn,2021-08-06,DFB-Pokal,A,Dynamo Dresden
 2122,Augsburg,2021-08-07,DFB-Pokal,A,Greifswalder FC
 2122,Bielefeld,2021-08-07,DFB-Pokal,A,SpVgg Bayreuth
 2122,Bochum,2021-08-07,DFB-Pokal,A,Wuppertaler SV
 2122,Dortmund,2021-08-07,DFB-Pokal,A,SV Wehen Wiesbaden
+2122,Greuther Furth,2021-08-07,DFB-Pokal,A,SV Babelsberg
 2122,Hannover,2021-08-07,DFB-Pokal,A,Eintracht Norderstedt
 2122,Holstein Kiel,2021-08-07,DFB-Pokal,A,Weiche Flensburg 08
 2122,Leverkusen,2021-08-07,DFB-Pokal,A,1. FC Lok Leipzig
@@ -5232,13 +5441,16 @@ season,team,date,competition,home_away,opponent
 2122,Stuttgart,2021-08-07,DFB-Pokal,A,BFC Dynamo
 2122,Werder Bremen,2021-08-07,DFB-Pokal,A,VfL Osnabrück
 2122,Ein Frankfurt,2021-08-08,DFB-Pokal,A,Waldhof Mannheim
+2122,FC Koln,2021-08-08,DFB-Pokal,A,Carl Zeiss Jena
 2122,Fortuna Dusseldorf,2021-08-08,DFB-Pokal,A,VfL Oldenburg
 2122,Freiburg,2021-08-08,DFB-Pokal,A,Würzburger Kickers
 2122,Hamburg,2021-08-08,DFB-Pokal,A,Eintracht Braunschweig
 2122,Heidenheim,2021-08-08,DFB-Pokal,A,Hansa Rostock
 2122,Hertha,2021-08-08,DFB-Pokal,A,SV Meppen
+2122,Mainz,2021-08-08,DFB-Pokal,A,SV Elversberg
 2122,Schalke 04,2021-08-08,DFB-Pokal,A,FC 08 Villingen
 2122,Union Berlin,2021-08-08,DFB-Pokal,A,Türkgücü München
+2122,Wolfsburg,2021-08-08,DFB-Pokal,A,Preußen Münster
 2122,Hoffenheim,2021-08-09,DFB-Pokal,A,Viktoria Köln
 2122,M'gladbach,2021-08-09,DFB-Pokal,A,1. FC Kaiserslautern
 2122,Bayern Munich,2021-08-13,Bundesliga,A,M'gladbach
@@ -5270,6 +5482,9 @@ season,team,date,competition,home_away,opponent
 2122,Paderborn,2021-08-15,2. Bundesliga,A,Werder Bremen
 2122,RB Leipzig,2021-08-15,Bundesliga,A,Mainz
 2122,Werder Bremen,2021-08-15,2. Bundesliga,H,Paderborn
+2122,Bayern Munich,2021-08-17,DFL-Supercup,A,Dortmund
+2122,Dortmund,2021-08-17,DFL-Supercup,H,Bayern Munich
+2122,Union Berlin,2021-08-19,Conference League (qual.),A,KuPS
 2122,Fortuna Dusseldorf,2021-08-20,2. Bundesliga,H,Holstein Kiel
 2122,Hannover,2021-08-20,2. Bundesliga,H,Heidenheim
 2122,Heidenheim,2021-08-20,2. Bundesliga,A,Hannover
@@ -5300,6 +5515,7 @@ season,team,date,competition,home_away,opponent
 2122,Nurnberg,2021-08-22,2. Bundesliga,A,FC Ingolstadt 04
 2122,Union Berlin,2021-08-22,Bundesliga,A,Hoffenheim
 2122,Bayern Munich,2021-08-25,DFB-Pokal,A,Bremer SV
+2122,Union Berlin,2021-08-26,Conference League (qual.),H,KuPS
 2122,Dortmund,2021-08-27,Bundesliga,H,Hoffenheim
 2122,Hoffenheim,2021-08-27,Bundesliga,A,Dortmund
 2122,Nurnberg,2021-08-27,2. Bundesliga,H,Karlsruher SC
@@ -5526,13 +5742,18 @@ season,team,date,competition,home_away,opponent
 2122,Werder Bremen,2021-10-24,2. Bundesliga,A,SV Sandhausen
 2122,Bielefeld,2021-10-26,DFB-Pokal,A,Mainz
 2122,Dortmund,2021-10-26,DFB-Pokal,H,FC Ingolstadt 04
+2122,Freiburg,2021-10-26,DFB-Pokal,A,VfL Osnabrück
+2122,Hamburg,2021-10-26,DFB-Pokal,A,Nurnberg
 2122,Hertha,2021-10-26,DFB-Pokal,A,Preußen Münster
 2122,Hoffenheim,2021-10-26,DFB-Pokal,H,Holstein Kiel
 2122,Holstein Kiel,2021-10-26,DFB-Pokal,A,Hoffenheim
 2122,Mainz,2021-10-26,DFB-Pokal,H,Bielefeld
+2122,Nurnberg,2021-10-26,DFB-Pokal,H,Hamburg
 2122,RB Leipzig,2021-10-26,DFB-Pokal,A,SV Babelsberg 03
 2122,Schalke 04,2021-10-26,DFB-Pokal,A,TSV 1860 München
+2122,Augsburg,2021-10-27,DFB-Pokal,A,Bochum
 2122,Bayern Munich,2021-10-27,DFB-Pokal,A,M'gladbach
+2122,Bochum,2021-10-27,DFB-Pokal,H,Augsburg
 2122,FC Koln,2021-10-27,DFB-Pokal,A,Stuttgart
 2122,Fortuna Dusseldorf,2021-10-27,DFB-Pokal,A,Hannover
 2122,Hannover,2021-10-27,DFB-Pokal,H,Fortuna Dusseldorf
@@ -5832,6 +6053,8 @@ season,team,date,competition,home_away,opponent
 2122,Schalke 04,2022-01-16,2. Bundesliga,H,Holstein Kiel
 2122,Bochum,2022-01-18,DFB-Pokal,H,Mainz
 2122,Dortmund,2022-01-18,DFB-Pokal,A,St Pauli
+2122,FC Koln,2022-01-18,DFB-Pokal,H,Hamburg
+2122,Hamburg,2022-01-18,DFB-Pokal,A,FC Koln
 2122,Mainz,2022-01-18,DFB-Pokal,A,Bochum
 2122,St Pauli,2022-01-18,DFB-Pokal,H,Dortmund
 2122,Freiburg,2022-01-19,DFB-Pokal,A,Hoffenheim
@@ -5995,6 +6218,7 @@ season,team,date,competition,home_away,opponent
 2122,Union Berlin,2022-03-01,DFB-Pokal,H,St Pauli
 2122,Bochum,2022-03-02,DFB-Pokal,H,Freiburg
 2122,Freiburg,2022-03-02,DFB-Pokal,A,Bochum
+2122,Hamburg,2022-03-02,DFB-Pokal,H,Karlsruher SC
 2122,Hannover,2022-03-02,DFB-Pokal,H,RB Leipzig
 2122,RB Leipzig,2022-03-02,DFB-Pokal,A,Hannover
 2122,Augsburg,2022-03-04,Bundesliga,A,Bielefeld
@@ -6309,6 +6533,8 @@ season,team,date,competition,home_away,opponent
 2122,St Pauli,2022-05-15,2. Bundesliga,H,Fortuna Dusseldorf
 2122,Werder Bremen,2022-05-15,2. Bundesliga,H,Jahn Regensburg
 2122,Ein Frankfurt,2022-05-18,Europa League,H,Rangers FC
+2122,Freiburg,2022-05-21,DFB-Pokal,H,RB Leipzig
+2122,RB Leipzig,2022-05-21,DFB-Pokal,A,Freiburg
 2223,Hannover,2022-07-15,2. Bundesliga,A,1. FC Kaiserslautern
 2223,Bielefeld,2022-07-16,2. Bundesliga,A,SV Sandhausen
 2223,Darmstadt,2022-07-16,2. Bundesliga,A,Jahn Regensburg
@@ -6334,20 +6560,25 @@ season,team,date,competition,home_away,opponent
 2223,Dortmund,2022-07-29,DFB-Pokal,A,TSV 1860 München
 2223,Nurnberg,2022-07-29,DFB-Pokal,A,1. FC Kaan-Marienborn
 2223,Stuttgart,2022-07-29,DFB-Pokal,A,Dynamo Dresden
+2223,Bayern Munich,2022-07-30,DFL-Supercup,A,RB Leipzig
 2223,Bochum,2022-07-30,DFB-Pokal,A,FC Viktoria 1889 Berlin
+2223,FC Koln,2022-07-30,DFB-Pokal,A,Jahn Regensburg
 2223,Fortuna Dusseldorf,2022-07-30,DFB-Pokal,A,Kickers Offenbach
 2223,Greuther Furth,2022-07-30,DFB-Pokal,A,Stuttgarter Kickers
 2223,Hamburg,2022-07-30,DFB-Pokal,A,SpVgg Bayreuth
 2223,Heidenheim,2022-07-30,DFB-Pokal,A,FV Illertissen
 2223,Leverkusen,2022-07-30,DFB-Pokal,A,SV 07 Elversberg
 2223,Paderborn,2022-07-30,DFB-Pokal,A,Einheit Wernigerode
+2223,RB Leipzig,2022-07-30,DFL-Supercup,H,Bayern Munich
 2223,St Pauli,2022-07-30,DFB-Pokal,A,SV 19 Straelen
 2223,Wolfsburg,2022-07-30,DFB-Pokal,A,FC Carl Zeiss Jena
 2223,Augsburg,2022-07-31,DFB-Pokal,A,Blau-Weiß Lohne
 2223,Bielefeld,2022-07-31,DFB-Pokal,A,FV Engers 07
 2223,Freiburg,2022-07-31,DFB-Pokal,A,1. FC Kaiserslautern
 2223,Hannover,2022-07-31,DFB-Pokal,A,TSV Schott Mainz
+2223,Hertha,2022-07-31,DFB-Pokal,A,Eintracht Braunschweig
 2223,Hoffenheim,2022-07-31,DFB-Pokal,A,SV Rödinghausen
+2223,Holstein Kiel,2022-07-31,DFB-Pokal,A,Waldhof Mannheim
 2223,M'gladbach,2022-07-31,DFB-Pokal,A,SV Oberachern
 2223,Mainz,2022-07-31,DFB-Pokal,A,Erzgebirge Aue
 2223,Schalke 04,2022-07-31,DFB-Pokal,A,Bremer SV
@@ -6384,6 +6615,7 @@ season,team,date,competition,home_away,opponent
 2223,Schalke 04,2022-08-07,Bundesliga,A,FC Koln
 2223,St Pauli,2022-08-07,2. Bundesliga,A,1. FC Kaiserslautern
 2223,Stuttgart,2022-08-07,Bundesliga,H,RB Leipzig
+2223,Ein Frankfurt,2022-08-10,UEFA Super Cup,A,Real Madrid
 2223,Dortmund,2022-08-12,Bundesliga,A,Freiburg
 2223,Freiburg,2022-08-12,Bundesliga,H,Dortmund
 2223,Heidenheim,2022-08-12,2. Bundesliga,A,Nurnberg
@@ -6413,6 +6645,7 @@ season,team,date,competition,home_away,opponent
 2223,St Pauli,2022-08-14,2. Bundesliga,H,1. FC Magdeburg
 2223,Union Berlin,2022-08-14,Bundesliga,A,Mainz
 2223,Wolfsburg,2022-08-14,Bundesliga,A,Bayern Munich
+2223,FC Koln,2022-08-18,Conference League (qual.),H,MOL Fehérvár
 2223,Darmstadt,2022-08-19,2. Bundesliga,A,Hamburg
 2223,Hamburg,2022-08-19,2. Bundesliga,H,Darmstadt
 2223,Hannover,2022-08-19,2. Bundesliga,A,1. FC Magdeburg
@@ -6442,6 +6675,7 @@ season,team,date,competition,home_away,opponent
 2223,Greuther Furth,2022-08-21,2. Bundesliga,H,1. FC Kaiserslautern
 2223,Heidenheim,2022-08-21,2. Bundesliga,H,Bielefeld
 2223,St Pauli,2022-08-21,2. Bundesliga,A,Hansa Rostock
+2223,FC Koln,2022-08-25,Conference League (qual.),A,MOL Fehérvár
 2223,Bielefeld,2022-08-26,2. Bundesliga,H,Eintracht Braunschweig
 2223,Bochum,2022-08-26,Bundesliga,A,Freiburg
 2223,Fortuna Dusseldorf,2022-08-26,2. Bundesliga,H,Jahn Regensburg
@@ -6698,9 +6932,11 @@ season,team,date,competition,home_away,opponent
 2223,Freiburg,2022-10-19,DFB-Pokal,H,St Pauli
 2223,Hannover,2022-10-19,DFB-Pokal,H,Dortmund
 2223,Heidenheim,2022-10-19,DFB-Pokal,A,Union Berlin
+2223,Paderborn,2022-10-19,DFB-Pokal,H,Werder Bremen
 2223,St Pauli,2022-10-19,DFB-Pokal,A,Freiburg
 2223,Stuttgart,2022-10-19,DFB-Pokal,H,Bielefeld
 2223,Union Berlin,2022-10-19,DFB-Pokal,H,Heidenheim
+2223,Werder Bremen,2022-10-19,DFB-Pokal,A,Paderborn
 2223,Darmstadt,2022-10-21,2. Bundesliga,H,Holstein Kiel
 2223,FC Koln,2022-10-21,Bundesliga,A,Mainz
 2223,Holstein Kiel,2022-10-21,2. Bundesliga,A,Darmstadt
@@ -6735,6 +6971,7 @@ season,team,date,competition,home_away,opponent
 2223,Bayern Munich,2022-10-26,Champions League,A,Barcelona
 2223,Ein Frankfurt,2022-10-26,Champions League,H,Marseille
 2223,Leverkusen,2022-10-26,Champions League,A,Ath Madrid
+2223,FC Koln,2022-10-27,Conference League,A,Slovácko
 2223,Freiburg,2022-10-27,Europa League,H,Olympiakos Piraeus
 2223,Union Berlin,2022-10-27,Europa League,H,Sporting Braga
 2223,Bielefeld,2022-10-28,2. Bundesliga,A,Greuther Furth
@@ -6969,6 +7206,8 @@ season,team,date,competition,home_away,opponent
 2223,Freiburg,2023-02-07,DFB-Pokal,A,SV Sandhausen
 2223,Bochum,2023-02-08,DFB-Pokal,H,Dortmund
 2223,Dortmund,2023-02-08,DFB-Pokal,A,Bochum
+2223,Fortuna Dusseldorf,2023-02-08,DFB-Pokal,A,Nurnberg
+2223,Nurnberg,2023-02-08,DFB-Pokal,H,Fortuna Dusseldorf
 2223,Bielefeld,2023-02-10,2. Bundesliga,H,Hansa Rostock
 2223,Greuther Furth,2023-02-10,2. Bundesliga,A,Karlsruher SC
 2223,Schalke 04,2023-02-10,Bundesliga,H,Wolfsburg
@@ -7462,8 +7701,12 @@ season,team,date,competition,home_away,opponent
 2324,Hamburg,2023-08-06,2. Bundesliga,A,Karlsruher SC
 2324,Hannover,2023-08-06,2. Bundesliga,A,Nurnberg
 2324,Nurnberg,2023-08-06,2. Bundesliga,H,Hannover
+2324,Hannover,2023-08-11,DFB-Pokal,A,SV Sandhausen
 2324,M'gladbach,2023-08-11,DFB-Pokal,A,TuS Bersenbrück
 2324,Schalke 04,2023-08-11,DFB-Pokal,A,Eintracht Braunschweig
+2324,Bayern Munich,2023-08-12,DFL-Supercup,H,RB Leipzig
+2324,Bielefeld,2023-08-12,DFB-Pokal,H,Bochum
+2324,Bochum,2023-08-12,DFB-Pokal,A,Bielefeld
 2324,Dortmund,2023-08-12,DFB-Pokal,A,TSV Schott Mainz
 2324,Greuther Furth,2023-08-12,DFB-Pokal,A,Hallescher FC
 2324,Hertha,2023-08-12,DFB-Pokal,A,FC Carl Zeiss Jena
@@ -7471,6 +7714,7 @@ season,team,date,competition,home_away,opponent
 2324,Leverkusen,2023-08-12,DFB-Pokal,A,FC Teutonia 05
 2324,Mainz,2023-08-12,DFB-Pokal,A,SV 07 Elversberg
 2324,Nurnberg,2023-08-12,DFB-Pokal,A,FC Oberneuland
+2324,RB Leipzig,2023-08-12,DFL-Supercup,A,Bayern Munich
 2324,St Pauli,2023-08-12,DFB-Pokal,A,Atlas Delmenhorst
 2324,Stuttgart,2023-08-12,DFB-Pokal,A,TSG Balingen
 2324,Werder Bremen,2023-08-12,DFB-Pokal,A,Viktoria Köln
@@ -7514,6 +7758,7 @@ season,team,date,competition,home_away,opponent
 2324,Nurnberg,2023-08-20,2. Bundesliga,A,VfL Osnabrück
 2324,Schalke 04,2023-08-20,2. Bundesliga,A,Eintracht Braunschweig
 2324,Union Berlin,2023-08-20,Bundesliga,H,Mainz
+2324,Ein Frankfurt,2023-08-24,Conference League (qual.),A,Levski Sofia
 2324,Holstein Kiel,2023-08-25,2. Bundesliga,A,Schalke 04
 2324,Paderborn,2023-08-25,2. Bundesliga,H,1. FC Kaiserslautern
 2324,RB Leipzig,2023-08-25,Bundesliga,H,Stuttgart
@@ -7542,6 +7787,7 @@ season,team,date,competition,home_away,opponent
 2324,Mainz,2023-08-27,Bundesliga,H,Ein Frankfurt
 2324,Nurnberg,2023-08-27,2. Bundesliga,H,SV Wehen Wiesbaden
 2324,St Pauli,2023-08-27,2. Bundesliga,H,1. FC Magdeburg
+2324,Ein Frankfurt,2023-08-31,Conference League (qual.),H,Levski Sofia
 2324,Dortmund,2023-09-01,Bundesliga,H,Heidenheim
 2324,Fortuna Dusseldorf,2023-09-01,2. Bundesliga,H,Karlsruher SC
 2324,Heidenheim,2023-09-01,Bundesliga,A,Dortmund
@@ -7761,9 +8007,11 @@ season,team,date,competition,home_away,opponent
 2324,Holstein Kiel,2023-10-29,2. Bundesliga,H,Nurnberg
 2324,Leverkusen,2023-10-29,Bundesliga,H,Freiburg
 2324,Nurnberg,2023-10-29,2. Bundesliga,A,Holstein Kiel
+2324,Bielefeld,2023-10-31,DFB-Pokal,H,Hamburg
 2324,FC Koln,2023-10-31,DFB-Pokal,A,1. FC Kaiserslautern
 2324,Fortuna Dusseldorf,2023-10-31,DFB-Pokal,A,SpVgg Unterhaching
 2324,Greuther Furth,2023-10-31,DFB-Pokal,A,FC 08 Homburg
+2324,Hamburg,2023-10-31,DFB-Pokal,A,Bielefeld
 2324,Heidenheim,2023-10-31,DFB-Pokal,A,M'gladbach
 2324,M'gladbach,2023-10-31,DFB-Pokal,H,Heidenheim
 2324,RB Leipzig,2023-10-31,DFB-Pokal,A,Wolfsburg
@@ -7778,6 +8026,7 @@ season,team,date,competition,home_away,opponent
 2324,Freiburg,2023-11-01,DFB-Pokal,H,Paderborn
 2324,Hertha,2023-11-01,DFB-Pokal,H,Mainz
 2324,Hoffenheim,2023-11-01,DFB-Pokal,A,Dortmund
+2324,Holstein Kiel,2023-11-01,DFB-Pokal,H,1. FC Magdeburg
 2324,Leverkusen,2023-11-01,DFB-Pokal,A,SV Sandhausen
 2324,Mainz,2023-11-01,DFB-Pokal,A,Hertha
 2324,Nurnberg,2023-11-01,DFB-Pokal,H,Hansa Rostock
@@ -7913,6 +8162,8 @@ season,team,date,competition,home_away,opponent
 2324,Wolfsburg,2023-12-05,DFB-Pokal,A,M'gladbach
 2324,Dortmund,2023-12-06,DFB-Pokal,A,Stuttgart
 2324,Ein Frankfurt,2023-12-06,DFB-Pokal,A,1. FC Saarbrücken
+2324,Hamburg,2023-12-06,DFB-Pokal,A,Hertha
+2324,Hertha,2023-12-06,DFB-Pokal,H,Hamburg
 2324,Leverkusen,2023-12-06,DFB-Pokal,H,Paderborn
 2324,Paderborn,2023-12-06,DFB-Pokal,A,Leverkusen
 2324,Stuttgart,2023-12-06,DFB-Pokal,H,Dortmund
@@ -8071,6 +8322,8 @@ season,team,date,competition,home_away,opponent
 2324,Hamburg,2024-01-28,2. Bundesliga,H,Karlsruher SC
 2324,Holstein Kiel,2024-01-28,2. Bundesliga,A,Greuther Furth
 2324,Union Berlin,2024-01-28,Bundesliga,H,Darmstadt
+2324,Fortuna Dusseldorf,2024-01-30,DFB-Pokal,A,St Pauli
+2324,St Pauli,2024-01-30,DFB-Pokal,H,Fortuna Dusseldorf
 2324,Hertha,2024-01-31,DFB-Pokal,H,1. FC Kaiserslautern
 2324,Dortmund,2024-02-02,Bundesliga,A,Heidenheim
 2324,Heidenheim,2024-02-02,Bundesliga,H,Dortmund
@@ -8559,9 +8812,11 @@ season,team,date,competition,home_away,opponent
 2425,Hannover,2024-08-17,DFB-Pokal,A,Bielefeld
 2425,Heidenheim,2024-08-17,DFB-Pokal,A,FC 08 Villingen
 2425,Holstein Kiel,2024-08-17,DFB-Pokal,A,Alemannia Aachen
+2425,Leverkusen,2024-08-17,DFL-Supercup,H,Stuttgart
 2425,M'gladbach,2024-08-17,DFB-Pokal,A,Erzgebirge Aue
 2425,RB Leipzig,2024-08-17,DFB-Pokal,A,Rot-Weiss Essen
 2425,Schalke 04,2024-08-17,DFB-Pokal,A,VfR Aalen
+2425,Stuttgart,2024-08-17,DFL-Supercup,A,Leverkusen
 2425,Union Berlin,2024-08-17,DFB-Pokal,A,Greifswalder FC
 2425,Augsburg,2024-08-18,DFB-Pokal,A,FC Viktoria 1889 Berlin
 2425,Bochum,2024-08-18,DFB-Pokal,A,Jahn Regensburg
@@ -9647,10 +9902,21 @@ season,team,date,competition,home_away,opponent
 2425,Schalke 04,2025-05-18,2. Bundesliga,H,SV 07 Elversberg
 2425,Bielefeld,2025-05-24,DFB-Pokal,H,Stuttgart
 2425,Stuttgart,2025-05-24,DFB-Pokal,A,Bielefeld
+2425,Bayern Munich,2025-06-15,FIFA Club World Cup,H,Auckland City
+2425,Dortmund,2025-06-17,FIFA Club World Cup,A,Fluminense
+2425,Bayern Munich,2025-06-20,FIFA Club World Cup,H,Boca Juniors
+2425,Dortmund,2025-06-21,FIFA Club World Cup,A,Mamelodi Sundowns
+2425,Bayern Munich,2025-06-24,FIFA Club World Cup,A,Benfica
+2425,Dortmund,2025-06-25,FIFA Club World Cup,H,Ulsan HD
+2425,Bayern Munich,2025-06-29,FIFA Club World Cup,A,Flamengo
+2425,Dortmund,2025-07-01,FIFA Club World Cup,H,Monterrey
+2526,Bayern Munich,2025-07-05,FIFA Club World Cup,A,Paris Saint-Germain
+2526,Dortmund,2025-07-05,FIFA Club World Cup,A,Real Madrid
 2526,Bielefeld,2025-08-15,DFB-Pokal,H,Werder Bremen
 2526,Leverkusen,2025-08-15,DFB-Pokal,A,SG Sonnenhof Großaspach
 2526,Union Berlin,2025-08-15,DFB-Pokal,A,FC Gütersloh
 2526,Werder Bremen,2025-08-15,DFB-Pokal,A,Bielefeld
+2526,Bayern Munich,2025-08-16,DFL-Supercup,A,Stuttgart
 2526,Bochum,2025-08-16,DFB-Pokal,A,BFC Dynamo
 2526,Darmstadt,2025-08-16,DFB-Pokal,A,VfB Lübeck
 2526,Freiburg,2025-08-16,DFB-Pokal,A,Sportfreunde Lotte
@@ -9661,6 +9927,7 @@ season,team,date,competition,home_away,opponent
 2526,Nurnberg,2025-08-16,DFB-Pokal,A,FV Illertissen
 2526,RB Leipzig,2025-08-16,DFB-Pokal,A,SV Sandhausen
 2526,St Pauli,2025-08-16,DFB-Pokal,A,Eintracht Norderstedt
+2526,Stuttgart,2025-08-16,DFL-Supercup,H,Bayern Munich
 2526,Wolfsburg,2025-08-16,DFB-Pokal,A,SV Hemelingen
 2526,Augsburg,2025-08-17,DFB-Pokal,A,Hallescher FC
 2526,Ein Frankfurt,2025-08-17,DFB-Pokal,A,FV Engers 07
@@ -9754,6 +10021,8 @@ season,team,date,competition,home_away,opponent
 2526,M'gladbach,2025-09-21,Bundesliga,A,Leverkusen
 2526,Union Berlin,2025-09-21,Bundesliga,A,Ein Frankfurt
 2526,Wolfsburg,2025-09-21,Bundesliga,A,Dortmund
+2526,Freiburg,2025-09-24,Europa League,H,Basel
+2526,Stuttgart,2025-09-25,Europa League,H,Celta Vigo
 2526,Bayern Munich,2025-09-26,Bundesliga,H,Werder Bremen
 2526,Werder Bremen,2025-09-26,Bundesliga,A,Bayern Munich
 2526,Augsburg,2025-09-27,Bundesliga,A,Heidenheim
@@ -9776,6 +10045,9 @@ season,team,date,competition,home_away,opponent
 2526,Ein Frankfurt,2025-09-30,Champions League,A,Ath Madrid
 2526,Dortmund,2025-10-01,Champions League,H,Ath Bilbao
 2526,Leverkusen,2025-10-01,Champions League,H,PSV
+2526,Freiburg,2025-10-02,Europa League,A,Bologna
+2526,Mainz,2025-10-02,Conference League,A,Omonia
+2526,Stuttgart,2025-10-02,Europa League,A,Basel
 2526,FC Koln,2025-10-03,Bundesliga,A,Hoffenheim
 2526,Hoffenheim,2025-10-03,Bundesliga,H,FC Koln
 2526,Augsburg,2025-10-04,Bundesliga,H,Wolfsburg
@@ -9816,6 +10088,9 @@ season,team,date,competition,home_away,opponent
 2526,Leverkusen,2025-10-21,Champions League,H,Paris SG
 2526,Bayern Munich,2025-10-22,Champions League,H,Club Brugge KV
 2526,Ein Frankfurt,2025-10-22,Champions League,H,Liverpool
+2526,Freiburg,2025-10-23,Europa League,H,Utrecht
+2526,Mainz,2025-10-23,Conference League,H,Zrinjski Mostar
+2526,Stuttgart,2025-10-23,Europa League,A,Fenerbahçe
 2526,Union Berlin,2025-10-24,Bundesliga,A,Werder Bremen
 2526,Werder Bremen,2025-10-24,Bundesliga,H,Union Berlin
 2526,Augsburg,2025-10-25,Bundesliga,H,RB Leipzig
@@ -9882,6 +10157,9 @@ season,team,date,competition,home_away,opponent
 2526,Ein Frankfurt,2025-11-04,Champions League,A,Napoli
 2526,Dortmund,2025-11-05,Champions League,A,Man City
 2526,Leverkusen,2025-11-05,Champions League,A,Sport Lisboa e Benfica
+2526,Freiburg,2025-11-06,Europa League,A,Nice
+2526,Mainz,2025-11-06,Conference League,H,Fiorentina
+2526,Stuttgart,2025-11-06,Europa League,H,Feyenoord
 2526,Werder Bremen,2025-11-07,Bundesliga,H,Wolfsburg
 2526,Wolfsburg,2025-11-07,Bundesliga,A,Werder Bremen
 2526,Bayern Munich,2025-11-08,Bundesliga,A,Union Berlin
@@ -9922,6 +10200,9 @@ season,team,date,competition,home_away,opponent
 2526,Leverkusen,2025-11-25,Champions League,A,Man City
 2526,Bayern Munich,2025-11-26,Champions League,A,Arsenal
 2526,Ein Frankfurt,2025-11-26,Champions League,H,Atalanta
+2526,Freiburg,2025-11-27,Europa League,A,Viktoria Plzeň
+2526,Mainz,2025-11-27,Conference League,A,Universitatea Craiova
+2526,Stuttgart,2025-11-27,Europa League,A,Go Ahead Eagles
 2526,M'gladbach,2025-11-28,Bundesliga,H,RB Leipzig
 2526,RB Leipzig,2025-11-28,Bundesliga,A,M'gladbach
 2526,Augsburg,2025-11-29,Bundesliga,A,Hoffenheim
@@ -9940,20 +10221,20 @@ season,team,date,competition,home_away,opponent
 2526,Mainz,2025-11-30,Bundesliga,A,Freiburg
 2526,Stuttgart,2025-11-30,Bundesliga,A,Hamburg
 2526,Wolfsburg,2025-11-30,Bundesliga,A,Ein Frankfurt
-2526,Bayern Munich,2025-12-02,DFB-Pokal,A,Union Berlin
-2526,Bochum,2025-12-02,DFB-Pokal,H,Stuttgart
-2526,Darmstadt,2025-12-02,DFB-Pokal,A,Freiburg
 2526,Dortmund,2025-12-02,DFB-Pokal,H,Leverkusen
-2526,Freiburg,2025-12-02,DFB-Pokal,H,Darmstadt
-2526,Hamburg,2025-12-02,DFB-Pokal,H,Holstein Kiel
 2526,Hertha,2025-12-02,DFB-Pokal,H,1. FC Kaiserslautern
-2526,Holstein Kiel,2025-12-02,DFB-Pokal,A,Hamburg
 2526,Leverkusen,2025-12-02,DFB-Pokal,A,Dortmund
 2526,M'gladbach,2025-12-02,DFB-Pokal,H,St Pauli
 2526,RB Leipzig,2025-12-02,DFB-Pokal,H,1. FC Magdeburg
 2526,St Pauli,2025-12-02,DFB-Pokal,A,M'gladbach
-2526,Stuttgart,2025-12-02,DFB-Pokal,A,Bochum
-2526,Union Berlin,2025-12-02,DFB-Pokal,H,Bayern Munich
+2526,Bayern Munich,2025-12-03,DFB-Pokal,A,Union Berlin
+2526,Bochum,2025-12-03,DFB-Pokal,H,Stuttgart
+2526,Darmstadt,2025-12-03,DFB-Pokal,A,Freiburg
+2526,Freiburg,2025-12-03,DFB-Pokal,H,Darmstadt
+2526,Hamburg,2025-12-03,DFB-Pokal,H,Holstein Kiel
+2526,Holstein Kiel,2025-12-03,DFB-Pokal,A,Hamburg
+2526,Stuttgart,2025-12-03,DFB-Pokal,A,Bochum
+2526,Union Berlin,2025-12-03,DFB-Pokal,H,Bayern Munich
 2526,M'gladbach,2025-12-05,Bundesliga,A,Mainz
 2526,Mainz,2025-12-05,Bundesliga,H,M'gladbach
 2526,Augsburg,2025-12-06,Bundesliga,H,Leverkusen
@@ -9976,6 +10257,9 @@ season,team,date,competition,home_away,opponent
 2526,Ein Frankfurt,2025-12-09,Champions League,A,Barcelona
 2526,Dortmund,2025-12-10,Champions League,H,FK Bodø/Glimt
 2526,Leverkusen,2025-12-10,Champions League,H,Newcastle
+2526,Freiburg,2025-12-11,Europa League,H,Red Bull Salzburg
+2526,Mainz,2025-12-11,Conference League,A,Lech Poznań
+2526,Stuttgart,2025-12-11,Europa League,H,Maccabi Tel Aviv
 2526,RB Leipzig,2025-12-12,Bundesliga,A,Union Berlin
 2526,Union Berlin,2025-12-12,Bundesliga,H,RB Leipzig
 2526,Augsburg,2025-12-13,Bundesliga,A,Ein Frankfurt
@@ -9994,6 +10278,7 @@ season,team,date,competition,home_away,opponent
 2526,Mainz,2025-12-14,Bundesliga,A,Bayern Munich
 2526,Stuttgart,2025-12-14,Bundesliga,A,Werder Bremen
 2526,Werder Bremen,2025-12-14,Bundesliga,H,Stuttgart
+2526,Mainz,2025-12-18,Conference League,H,Samsunspor
 2526,Dortmund,2025-12-19,Bundesliga,H,M'gladbach
 2526,M'gladbach,2025-12-19,Bundesliga,A,Dortmund
 2526,Augsburg,2025-12-20,Bundesliga,H,Werder Bremen
@@ -10064,6 +10349,8 @@ season,team,date,competition,home_away,opponent
 2526,Leverkusen,2026-01-20,Champions League,A,PAE Olympiakos SFP
 2526,Bayern Munich,2026-01-21,Champions League,H,Royale Union Saint-Gilloise
 2526,Ein Frankfurt,2026-01-21,Champions League,A,Qarabağ Ağdam FK
+2526,Freiburg,2026-01-22,Europa League,H,Maccabi Tel Aviv
+2526,Stuttgart,2026-01-22,Europa League,A,Roma
 2526,Hamburg,2026-01-23,Bundesliga,A,St Pauli
 2526,St Pauli,2026-01-23,Bundesliga,H,Hamburg
 2526,Augsburg,2026-01-24,Bundesliga,A,Bayern Munich
@@ -10090,6 +10377,8 @@ season,team,date,competition,home_away,opponent
 2526,Dortmund,2026-01-28,Champions League,H,Inter
 2526,Ein Frankfurt,2026-01-28,Champions League,H,Tottenham
 2526,Leverkusen,2026-01-28,Champions League,H,Villarreal
+2526,Freiburg,2026-01-29,Europa League,A,Lille
+2526,Stuttgart,2026-01-29,Europa League,H,Young Boys
 2526,FC Koln,2026-01-30,Bundesliga,H,Wolfsburg
 2526,Wolfsburg,2026-01-30,Bundesliga,A,FC Koln
 2526,Augsburg,2026-01-31,Bundesliga,H,St Pauli
@@ -10108,6 +10397,10 @@ season,team,date,competition,home_away,opponent
 2526,Freiburg,2026-02-01,Bundesliga,A,Stuttgart
 2526,Heidenheim,2026-02-01,Bundesliga,A,Dortmund
 2526,Stuttgart,2026-02-01,Bundesliga,H,Freiburg
+2526,Leverkusen,2026-02-03,DFB-Pokal,H,St Pauli
+2526,St Pauli,2026-02-03,DFB-Pokal,A,Leverkusen
+2526,Holstein Kiel,2026-02-04,DFB-Pokal,H,Stuttgart
+2526,Stuttgart,2026-02-04,DFB-Pokal,A,Holstein Kiel
 2526,Ein Frankfurt,2026-02-06,Bundesliga,A,Union Berlin
 2526,Union Berlin,2026-02-06,Bundesliga,H,Ein Frankfurt
 2526,Augsburg,2026-02-07,Bundesliga,A,Mainz
@@ -10126,6 +10419,10 @@ season,team,date,competition,home_away,opponent
 2526,FC Koln,2026-02-08,Bundesliga,H,RB Leipzig
 2526,Hoffenheim,2026-02-08,Bundesliga,A,Bayern Munich
 2526,RB Leipzig,2026-02-08,Bundesliga,A,FC Koln
+2526,Freiburg,2026-02-10,DFB-Pokal,A,Hertha
+2526,Hertha,2026-02-10,DFB-Pokal,H,Freiburg
+2526,Bayern Munich,2026-02-11,DFB-Pokal,H,RB Leipzig
+2526,RB Leipzig,2026-02-11,DFB-Pokal,A,Bayern Munich
 2526,Dortmund,2026-02-13,Bundesliga,H,Mainz
 2526,Mainz,2026-02-13,Bundesliga,A,Dortmund
 2526,Bayern Munich,2026-02-14,Bundesliga,A,Werder Bremen
@@ -10146,6 +10443,7 @@ season,team,date,competition,home_away,opponent
 2526,Wolfsburg,2026-02-15,Bundesliga,A,RB Leipzig
 2526,Dortmund,2026-02-17,Champions League,H,Atalanta
 2526,Leverkusen,2026-02-18,Champions League,A,PAE Olympiakos SFP
+2526,Stuttgart,2026-02-19,Europa League,A,Celtic
 2526,Hamburg,2026-02-20,Bundesliga,A,Mainz
 2526,Mainz,2026-02-20,Bundesliga,H,Hamburg
 2526,Augsburg,2026-02-21,Bundesliga,A,Wolfsburg
@@ -10166,6 +10464,7 @@ season,team,date,competition,home_away,opponent
 2526,Werder Bremen,2026-02-22,Bundesliga,A,St Pauli
 2526,Leverkusen,2026-02-24,Champions League,H,PAE Olympiakos SFP
 2526,Dortmund,2026-02-25,Champions League,A,Atalanta
+2526,Stuttgart,2026-02-26,Europa League,H,Celtic
 2526,Augsburg,2026-02-27,Bundesliga,H,FC Koln
 2526,FC Koln,2026-02-27,Bundesliga,A,Augsburg
 2526,Bayern Munich,2026-02-28,Bundesliga,A,Dortmund
@@ -10206,6 +10505,9 @@ season,team,date,competition,home_away,opponent
 2526,Werder Bremen,2026-03-08,Bundesliga,A,Union Berlin
 2526,Bayern Munich,2026-03-10,Champions League,A,Atalanta
 2526,Leverkusen,2026-03-11,Champions League,H,Arsenal
+2526,Freiburg,2026-03-12,Europa League,A,Genk
+2526,Mainz,2026-03-12,Conference League,A,Sigma Olomouc
+2526,Stuttgart,2026-03-12,Europa League,H,Porto
 2526,M'gladbach,2026-03-13,Bundesliga,H,St Pauli
 2526,St Pauli,2026-03-13,Bundesliga,A,M'gladbach
 2526,Augsburg,2026-03-14,Bundesliga,A,Dortmund
@@ -10226,6 +10528,9 @@ season,team,date,competition,home_away,opponent
 2526,Werder Bremen,2026-03-15,Bundesliga,H,Mainz
 2526,Leverkusen,2026-03-17,Champions League,A,Arsenal
 2526,Bayern Munich,2026-03-18,Champions League,H,Atalanta
+2526,Freiburg,2026-03-19,Europa League,H,Genk
+2526,Mainz,2026-03-19,Conference League,H,Sigma Olomouc
+2526,Stuttgart,2026-03-19,Europa League,A,Porto
 2526,Hoffenheim,2026-03-20,Bundesliga,A,RB Leipzig
 2526,RB Leipzig,2026-03-20,Bundesliga,H,Hoffenheim
 2526,Bayern Munich,2026-03-21,Bundesliga,H,Union Berlin
@@ -10263,6 +10568,8 @@ season,team,date,competition,home_away,opponent
 2526,St Pauli,2026-04-05,Bundesliga,A,Union Berlin
 2526,Union Berlin,2026-04-05,Bundesliga,H,St Pauli
 2526,Bayern Munich,2026-04-07,Champions League,A,Real Madrid
+2526,Freiburg,2026-04-09,Europa League,H,Celta Vigo
+2526,Mainz,2026-04-09,Conference League,H,Strasbourg
 2526,Augsburg,2026-04-10,Bundesliga,H,Hoffenheim
 2526,Hoffenheim,2026-04-10,Bundesliga,A,Augsburg
 2526,Bayern Munich,2026-04-11,Bundesliga,A,St Pauli
@@ -10282,6 +10589,8 @@ season,team,date,competition,home_away,opponent
 2526,Stuttgart,2026-04-12,Bundesliga,H,Hamburg
 2526,Werder Bremen,2026-04-12,Bundesliga,A,FC Koln
 2526,Bayern Munich,2026-04-15,Champions League,H,Real Madrid
+2526,Freiburg,2026-04-16,Europa League,A,Celta Vigo
+2526,Mainz,2026-04-16,Conference League,A,Strasbourg
 2526,FC Koln,2026-04-17,Bundesliga,A,St Pauli
 2526,St Pauli,2026-04-17,Bundesliga,H,FC Koln
 2526,Augsburg,2026-04-18,Bundesliga,A,Leverkusen
@@ -10300,6 +10609,10 @@ season,team,date,competition,home_away,opponent
 2526,M'gladbach,2026-04-19,Bundesliga,H,Mainz
 2526,Mainz,2026-04-19,Bundesliga,A,M'gladbach
 2526,Stuttgart,2026-04-19,Bundesliga,A,Bayern Munich
+2526,Bayern Munich,2026-04-22,DFB-Pokal,A,Leverkusen
+2526,Leverkusen,2026-04-22,DFB-Pokal,H,Bayern Munich
+2526,Freiburg,2026-04-23,DFB-Pokal,A,Stuttgart
+2526,Stuttgart,2026-04-23,DFB-Pokal,H,Freiburg
 2526,RB Leipzig,2026-04-24,Bundesliga,H,Union Berlin
 2526,Union Berlin,2026-04-24,Bundesliga,A,RB Leipzig
 2526,Augsburg,2026-04-25,Bundesliga,H,Ein Frankfurt
@@ -10319,6 +10632,7 @@ season,team,date,competition,home_away,opponent
 2526,Stuttgart,2026-04-26,Bundesliga,H,Werder Bremen
 2526,Werder Bremen,2026-04-26,Bundesliga,A,Stuttgart
 2526,Bayern Munich,2026-04-28,Champions League,A,Paris SG
+2526,Freiburg,2026-04-30,Europa League,A,Braga
 2526,Augsburg,2026-05-02,Bundesliga,A,Werder Bremen
 2526,Bayern Munich,2026-05-02,Bundesliga,H,Heidenheim
 2526,Ein Frankfurt,2026-05-02,Bundesliga,H,Hamburg
@@ -10338,6 +10652,7 @@ season,team,date,competition,home_away,opponent
 2526,St Pauli,2026-05-03,Bundesliga,H,Mainz
 2526,Wolfsburg,2026-05-03,Bundesliga,A,Freiburg
 2526,Bayern Munich,2026-05-06,Champions League,H,Paris SG
+2526,Freiburg,2026-05-07,Europa League,H,Braga
 2526,Dortmund,2026-05-08,Bundesliga,H,Ein Frankfurt
 2526,Ein Frankfurt,2026-05-08,Bundesliga,A,Dortmund
 2526,Augsburg,2026-05-09,Bundesliga,H,M'gladbach
@@ -10374,3 +10689,6 @@ season,team,date,competition,home_away,opponent
 2526,Union Berlin,2026-05-16,Bundesliga,H,Augsburg
 2526,Werder Bremen,2026-05-16,Bundesliga,H,Dortmund
 2526,Wolfsburg,2026-05-16,Bundesliga,A,St Pauli
+2526,Freiburg,2026-05-20,Europa League,H,Aston Villa
+2526,Bayern Munich,2026-05-23,DFB-Pokal,H,Stuttgart
+2526,Stuttgart,2026-05-23,DFB-Pokal,A,Bayern Munich

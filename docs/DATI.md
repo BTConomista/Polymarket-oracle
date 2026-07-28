@@ -68,20 +68,20 @@ due leghe nuove, verificati per identità).
 
 ## 1-bis · I buchi, tutti quanti — e quelli che non sembrano buchi
 
-Censimento completo, ri-contato sugli snapshot di HEAD (Fase 101-ter):
-**7.353 celle vuote su 612.218**, cioè l'**1,20%** (1,2010% esatto). Ma il numero
-da solo inganna: il **99,33%** è **un buco solo**, la chiusura O/U del 2017-19
-(7.304 celle = 3.652 partite × 2 colonne), che non esiste alla fonte per nessuna
-delle cinque leghe (§5). Tolto quello restano **49 celle**, ognuna con un nome e
-una causa:
+Censimento completo, ri-contato sugli snapshot di HEAD (Fase 101-ter, ricalcolato
+alla Fase 104 — vedi nota sotto): **7.353 celle vuote su 612.218**, cioè l'**1,20%**
+(1,2010% esatto). Ma il numero da solo inganna: il **99,3%** è **un buco solo**,
+la chiusura O/U del 2017-19 (7.304 celle = 3.652 partite × 2 colonne), che non
+esiste alla fonte per nessuna delle cinque leghe (§5). Tolto quello restano
+**49 celle**, ognuna con un nome e una causa:
 
 | cosa | dove | perché |
 |---|---|---|
-| 11 linee O/U di apertura = **22 celle** | 3 La Liga, 6 Bundesliga, 2 Ligue 1 (2017-19) | overround impossibile alla fonte (fino a 1.339): svuotate dal guard bilaterale di `loader._pick_market_odds` |
-| 1 linea O/U di apertura = **2 celle** | Bayern-Hoffenheim 24/08/2018 | assente alla fonte |
-| 7 celle quota | Torino-Fiorentina 10/01/2022 (5: O/U + 1X2 di apertura), Verona-Genoa 19/10/2020 (2: O/U di apertura) | partite rinviate, quote mai aperte |
-| 16 celle xG/stile | 2 partite (vedi §1), 8 colonne ciascuna | fonte non consolidata / record segnaposto |
-| 2 celle tiri in porta | Union Berlin-Bochum 14/12/2024 | statistiche assenti alla fonte |
+| 11 linee O/U di apertura = **22 celle** | 3 La Liga, 6 Bundesliga, 2 Ligue 1 (2017-19) | overround impossibile alla fonte (fino a 1.339): svuotate dal guard bilaterale di `loader._pick_market_odds`. **Tutte e 11 hanno una stima dichiarata** in `data/estimates/ou_open_corrotte_2017_19.csv` dalla Fase 101-ter (le 3 La Liga erano rimaste indietro perché il guard le ha svuotate DOPO la produzione della stima: chiuso) |
+| 1 linea O/U di apertura = **2 celle** | Bayern-Hoffenheim 24/08/2018 | assente alla fonte; coperta dalla stessa stima |
+| 7 celle quota | Torino-Fiorentina 10/01/2022 (5: O/U + 1X2 di apertura), Verona-Genoa 19/10/2020 (2: O/U di apertura) | partite rinviate, quote mai aperte. Ri-verificato Fase 104 scaricando di nuovo i CSV grezzi live da football-data.co.uk: TUTTE le colonne di chiusura (`*C`) sono piene, tutte le colonne di apertura sono NaN — non un dato mancante per errore, è che il mercato ha aperto dopo il cutoff di raccolta di football-data per il recupero |
+| 16 celle xG/stile | 2 partite (vedi §1), 8 colonne ciascuna | fonte non consolidata / record segnaposto. Ri-verificato Fase 104 (vedi `docs/MANUALE_SOPRAVVIVENZA.md`: il mirror Understat era morto, corretto l'endpoint ufficiale) con un download LIVE: Holstein Kiel-Bochum ha ancora il record segnaposto identico, Nantes-Toulouse è ancora `isResult=False` su Understat a oltre due mesi dalla partita — nessuno dei due si è risolto col tempo |
+| 2 celle tiri in porta | Union Berlin-Bochum 14/12/2024 | statistiche assenti alla fonte. Ri-verificato Fase 104 con un download live del CSV grezzo football-data: colonne HST/AST ancora vuote |
 
 *(22 + 2 + 7 + 16 + 2 = 49, cioè esattamente 7.353 − 7.304.)*
 
@@ -92,22 +92,39 @@ una causa:
 > **registrato e NON inserito**»~~
 >
 > **Non sono più un buco: le 6 celle sono state inserite** con il dato reale di
-> `iredchuk/soccer-bookmaker-odds` (3.40/3.34/2.15 e 1.03/18.43/43.88, MAE
-> 0.0060 contro 0.0160 della stima che avremmo prodotto noi), dichiarate come
-> provenienza secondaria (R2) nel riquadro di §4 e reversibili dal registro
-> `data/correzioni_dichiarate.csv` (§4-ter). Il verdetto in
-> `data/estimates/celle_residue.csv` (caso A) è ora `ESEGUITA alla Fase
-> 101-bis`. È l'unico movimento che spiega il passaggio da 55 residue a 49.
+> `github.com/iredchuk/soccer-bookmaker-odds` (chiusura media-di-mercato:
+> 3.40/3.34/2.15 e 1.03/18.43/43.88, MAE 0.0060 contro 0.0160 della stima che
+> avremmo prodotto noi), via `data/correzioni_dichiarate.csv` +
+> `scripts/applica_correzioni.py` (R3), con la provenienza da provider
+> secondario dichiarata nel riquadro di §4 (R2) e reversibile dal registro
+> (§4-ter). Il verdetto in `data/estimates/celle_residue.csv` (caso A) è ora
+> `ESEGUITA alla Fase 101-bis`. **Verificato live nello snapshot alla Fase 104**:
+> le due terne non sono più NaN.
+>
+> Il censimento sopra (7.353/49) è **già** al netto di questa correzione. La
+> vecchia cifra **7.359/55** — con le 6 celle ancora contate come buco — era
+> rimasta stampata qui per errore dopo l'inserimento, nonostante il diario e
+> `docs/AUDIT_FASI_80_100.md` dichiarassero già la correzione chiusa: è l'unico
+> movimento che spiega il passaggio da 55 residue a 49.
 
 **E i buchi che NON sono `NaN`** — la categoria pericolosa, perché un valore che
 *sembra* una misura non lo dichiara mai:
 
-- **`midweek_europe` = 0 quando invece si giocava**: il calendario di club viene
-  da openfootball, che non copre tutte le coppe. Censite **1.603 celle** a zero
-  che dovrebbero essere 1, e ~1.700 valori di riposo sbagliati di conseguenza
-  (lacune: Europa/Conference League 2025-26 su tutte e 5 le leghe, DFB-Pokal
-  2016-18, Coupe de France quasi ovunque). Non ancora corretto: le righe di
-  recupero esistono ma la fonte (Wikipedia) non è primaria. **Dichiarato.**
+- ~~**`midweek_europe` = 0 quando invece si giocava**: il calendario di club
+  viene da openfootball, che non copre tutte le coppe. Censite **1.603 celle**
+  a zero che dovrebbero essere 1, e ~1.700 valori di riposo sbagliati di
+  conseguenza (lacune: Europa/Conference League 2025-26 su tutte e 5 le leghe,
+  DFB-Pokal 2016-18, Coupe de France quasi ovunque). Non ancora corretto: le
+  righe di recupero esistono ma la fonte (Wikipedia) non è primaria.~~
+  **CHIUSO alla Fase 103**: `scripts/integra_calendari_coppa.py` ha unito le
+  3.045 righe recuperate da Wikipedia ai calendari di club esistenti
+  (`club_fixtures*.csv`) e ricalcolato `rest_days_full`/`midweek_europe` sulle
+  5 leghe. I 1.603 falsi zero (236/251/454/180/482 per lega) e le 1.700
+  partite col riposo corretto conseguente (314/282/407/189/508) sono stati
+  verificati contro l'oracolo già pubblicato in `celle_residue.csv` **prima**
+  di scrivere: combaciano a cella esatta, zero regressioni. Wikipedia resta
+  fonte **secondaria dichiarata** (verificata su 114 righe contro una terza
+  fonte indipendente, openligadb.de, alla Fase 100: 0 non confermate).
 - **un xG segnaposto** su 16.110 partite (§4-bis), ora intercettato da un guard.
 - **due linee O/U di apertura anomale che il guard NON svuota**, e restano piene
   (dichiarate in `data/estimates/celle_residue.csv`, caso D):
@@ -124,6 +141,27 @@ una causa:
   a monte. Poco rilevante oggi (il blend usa l'xG, non i tiri), ma va saputo.
 
 ---
+
+## 1-ter · Prezzo reale e stima insieme, senza confonderli (Fase 114)
+
+`loader.ou_close_probability(matches)` restituisce **P(Over 2.5) di chiusura
+per ogni partita** con la provenienza dichiarata riga per riga:
+
+| colonna | contenuto |
+|---|---|
+| `p_over25_close` | probabilità devigata (NaN se ignota) |
+| `p_over25_close_fonte` | `reale` \| `stima` \| `assente` |
+
+Copertura sulle 5 leghe: **12.459 reale + 3.638 stima + 14 assente = 99,9%**.
+Serve al motore **market-implied**, che senza chiusura O/U non gira: passa da
+12.459 a **16.097 partite utilizzabili** (+29%), cioè le stagioni 2017-18 e
+2018-19 smettono di essere cieche per il titolare.
+
+**Le regole restano intatte, ed è il punto**: la stima resta una
+**probabilità** e non viene *mai* scritta in una colonna quota (un test lo
+verifica per mutazione), ogni riga dichiara cosa è, e chi non vuole stime
+passa `usa_stime=False` e vede il buco vero. Le righe `stima` **non vanno
+usate per ROI/CLV** (§5).
 
 ## 2 · Semantica delle quote: apertura vs chiusura (leggere PRIMA di usarle)
 
@@ -196,11 +234,23 @@ Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
 
 | file | righe | competizioni oltre il campionato |
 |---|--:|---|
-| `data/club_fixtures.csv` (Serie A) | 11657 | Champions (9 stagioni), Europa L. (dal 20-21), Conference (dal 21-22), Coppa Italia (20-21→24-25) + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68) |
-| `data/club_fixtures_premier_league.csv` | 11994 | idem UEFA + **FA Cup, EFL Cup** (18-19→24-25) + preludio: Premier 2016-17, Championship 1617→2425 |
-| `data/club_fixtures_la_liga.csv` | 12102 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
-| `data/club_fixtures_bundesliga.csv` | 10375 | Champions (1718→2526), Europa L. (20-21→24-25), Conference (dal 21-22, + qual. dal 24-25), **DFB-Pokal** (18-19→25-26) + preludio: Bundesliga 2016-17, 2. Bundesliga 1617→2425 |
-| `data/club_fixtures_ligue_1.csv` | 10701 | Champions (1718→2526, + qual. dal 24-25), Europa L. (20-21→24-25), Conference (21-22→23-24, + qual. dal 24-25), **Coupe de France** (solo 24-25) + preludio: Ligue 1 2016-17, Ligue 2 1617→2425 |
+| `data/club_fixtures.csv` (Serie A) | 12156 | Champions (9 stagioni, + qual.), Europa L. (+ qual.), Conference (+ qual.), Coppa Italia + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68); dalla Fase 103 anche Supercoppa Italiana, UEFA Super Cup, Mondiale per club (righe recuperate da Wikipedia, `sources.EXTRA_CUP_COMPETITIONS`) |
+| `data/club_fixtures_premier_league.csv` | 12520 | idem UEFA + **FA Cup, EFL Cup** + preludio: Premier 2016-17, Championship 1617→2425; dalla Fase 103 anche FA Community Shield, UEFA Super Cup, Mondiale per club |
+| `data/club_fixtures_la_liga.csv` | 12779 | idem UEFA + **Copa del Rey** + preludio: Liga 2016-17, Segunda 1617→2425; dalla Fase 103 anche Supercopa de España, UEFA Super Cup, Mondiale/Intercontinentale per club |
+| `data/club_fixtures_bundesliga.csv` | 10701 | Champions (1718→2526), Europa L., Conference, **DFB-Pokal** + preludio: Bundesliga 2016-17, 2. Bundesliga 1617→2425; dalla Fase 103 anche DFL-Supercup, UEFA Super Cup, Mondiale per club |
+| `data/club_fixtures_ligue_1.csv` | 11718 | Champions (1718→2526, + qual.), Europa L., Conference, **Coupe de France** + preludio: Ligue 1 2016-17, Ligue 2 1617→2425; dalla Fase 103 anche Coupe de la Ligue, Trophée des Champions, UEFA Super Cup, Mondiale/Intercontinentale per club |
+
+Copertura openfootball (produzione, invariata dalla Fase 59) + **3.045 righe
+recuperate da Wikipedia alla Fase 103** (`scripts/integra_calendari_coppa.py`,
+`data/ricerca_esterna/fixtures_*.csv`): riempiono le lacune di Europa/Conference
+League 2025-26 su tutte e 5 le leghe, DFB-Pokal/Copa del Rey/Coupe de France
+dove openfootball è parziale, e aggiungono competizioni mai modellate prima
+(supercoppe nazionali, Supercoppa UEFA, Mondiale/Intercontinentale per club,
+Coupe de la Ligue). Non rigenerabili da script (il recupero Wikipedia è
+one-off, vedi `caccia_calendari.md` Appendici A/B): se si rilancia
+`build_database.py --fixtures`/`build_league_snapshot.py --fixtures` senza
+rifare `integra_calendari_coppa.py`, queste righe **scompaiono di nuovo**
+(openfootball resta la fonte di produzione, invariata).
 
 Dove una competizione non è coperta, `rest_days_full` degrada verso il valore
 solo-campionato (mai in direzione sbagliata) e `midweek_europe` può essere un
@@ -220,8 +270,8 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 | Transfermarkt (datalake `salimt`) | mirror GitHub, cache `data/raw/` (~106 MB, non versionata) | ✅ raggiungibile; dalla Fase 67 usato SOLO per gli infortuni (`absent_*_est`) — per i valori rosa e' superato da player-scores |
 | Transfermarkt diretto (pagine di competizione per stagione) | recupero MANUALE (Fase 70 e audit delle 5 leghe), non rigenerabile da script: `transfermarkt.com/.it/.us` **era** bloccato dal proxy quando il recupero è stato fatto e oggi **risponde 200** (verificato alla Fase 100, vedi il banner di `docs/MANUALE_SOPRAVVIVENZA.md`); il recupero resta manuale perché la pagina utile è quella di competizione filtrata per stagione | ✅ usato per **29** celle `squad_value` 2025-26 sotto soglia (13 + 16; le 16 con la scala misurata contro player-scores nella colonna `rapporto_TM_su_playerscores_mediano_lega` di `data/squad_value_2526_transfermarkt.csv`, regola R2); **non** la pagina profilo club (mostra il valore LIVE di oggi) ma `.../{lega}/startseite/wettbewerb/{codice}/saison_id/{anno}` (tabella per-club di quella stagione) |
 | openfootball (coppe/Europa) | cache `data/raw/fixtures_*` | ✅ raggiungibile |
-| **1xBet via `footiqo.com`** (quote di CHIUSURA 1X2 + O/U + GG/NG, 2017-20, 5 leghe) | `data/ricerca_esterna/`: **15** file `footiqo_{lega}_{stagione}.json` (5 leghe × 3 stagioni, 1X2+O/U) + **10** file `footiqo_gol_{lega}_{stagione}.json` (5 leghe × 2 stagioni, GG/NG) + `footiqo_manifest.json`, `validazione_footiqo.json`, `confutazione_footiqo*.json` | ✅ dato esterno REALE, **NON integrato** negli snapshot: è un solo book, e come proxy della media multi-book è peggiore della stima (MAE 0.0156 contro 0.012) — vedi [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md) |
-| **Wikipedia (calendari di coppa)** | `data/ricerca_esterna/fixtures_*.csv` (50 file, **3.045 righe**) | ⚠️ fonte NON primaria: righe di recupero per il falso 0 di `midweek_europe` (§1-bis), raccolte ma **non applicate** |
+| **1xBet via `footiqo.com`** (quote di CHIUSURA 1X2 + O/U + GG/NG, 2017-25, 5 leghe) | `data/ricerca_esterna/footiqo_*.json` (43 file: 18 dalla Fase 100 + 25 dalla Fase 106, stagioni 2017-18→2024-25) + `footiqo_gol_*.json` (10) + manifest, validazioni e `footiqo_confronto_multistagione_fase106.json` | ✅ dato esterno REALE, **NON integrato** negli snapshot: è un solo book, e come proxy della media multi-book è peggiore della stima nel confronto onesto (MAE 0.0156 contro ~0.014 regime d'uso), ma il numero **non è stabile su 6 stagioni** (Fase 106: 0.0096-0.0192, peggio nell'era porte-chiuse) — vedi [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md) |
+| **Wikipedia (calendari di coppa)** | `data/ricerca_esterna/fixtures_*.csv` (50 file, **3.045 righe**) | ⚠️ fonte NON primaria, verificata su una terza fonte indipendente (openligadb.de, Fase 100): righe di recupero per il falso 0 di `midweek_europe` (§1-bis) — **applicate alla Fase 103** in `club_fixtures*.csv`/negli snapshot delle 5 leghe |
 | **iredchuk/soccer-bookmaker-odds** (chiusura 1X2) | usato per **6 celle**, in 2 partite | ⚠️ **provider SECONDARIO, dichiarato (R2)** — l'unico punto degli snapshot dove una cella-quota non viene da football-data. Vedi il riquadro qui sotto |
 | **manifest delle fonti dell'audit** | `data/ricerca_esterna/manifest_fonti_audit.json` | ✅ 90 impronte SHA256 (45 CSV football-data + 45 JSON Understat-lega). Le chiavi sono nella forma `cantiere/data/fonti/…`: per confrontarle con quelle che `scripts/fetch_sources.py` scrive oggi va tolto il prefisso `cantiere/` |
 
@@ -391,11 +441,20 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   stato inserito**. Il motivo è la parte che conta, ed è una decisione di
   merito, non una rinuncia: gli snapshot dal 2019-20 contengono la **media
   multi-book**, mentre 1xBet è **un solo book**; come proxy di quella media è
-  *peggiore della stima che già avevamo* (MAE **0.0156** contro **~0.012**,
-  misurato sulla stagione 2019-20 dove esistono entrambi) e inserirlo creerebbe
-  una **rottura di regime a metà colonna**. Quello che resta aperto è solo la
-  chiusura O/U 2017-19 **come media multi-book**, che non esiste da nessuna
-  parte. Dettaglio: **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
+  *peggiore della stima che già avevamo* (MAE **0.0156** contro **~0.014** del
+  regime d'uso — non 0.012, che è il numero ottimistico "in interpolazione": la
+  correzione vale anche qui, non solo nella riga Fase 100 del README) e
+  inserirlo creerebbe una **rottura di regime a metà colonna**.
+  **Fase 106**: il confronto ripetuto su 6 stagioni (2019-20 → 2024-25, non solo
+  una) mostra che il numero **non è stabile nel tempo** — il MAE di footiqo
+  varia fra 0.0096 e 0.0192, peggiore nell'era porte-chiuse 2020-22 e migliore
+  dal 2022-23 in poi (nelle ultime 2 stagioni batterebbe perfino la stima). Non
+  cambia la decisione — il 2019-20 resta il proxy più vicino al 2017-19, e lì la
+  stima vince ancora — ma la rende **meno granitica** di come suonava.
+  Quello che resta aperto è solo la chiusura O/U 2017-19 **come media
+  multi-book**, che non esiste da nessuna parte — e le Fasi 105/107/108 l'hanno
+  ricercata altre tre volte, sempre negativo.
+  Dettaglio: **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
 - ~~**quote O/U/1X2 di apertura mancanti sparse**~~ → **FATTO (Fase 69)**: le
   **2 partite sparse** (Torino-Fiorentina recupero 1X2+O/U; Verona-Genoa O/U
   isolata 2020-21) sono stimate in `open_sparse_1x2_ou.csv` (vedi tabella

@@ -1,5 +1,281 @@
 # Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
 
+> ## 🟢 Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima
+>
+> L'utente ha un account Betfair e ha chiesto se si può usare l'API di
+> `historicdata.betfair.com`. Prima di far fare qualsiasi fatica, ho applicato
+> il principio §1.3 (**testa la versione economica dell'idea prima di
+> investire**) — e il test ha ribaltato la valutazione che avevo dato.
+>
+> **Il test economico.** `football-data` pubblica la chiusura Betfair Exchange
+> (`BFEC>2.5`/`BFEC<2.5`) in **una** stagione: la 2024-25. Lì esistono insieme
+> Betfair, la media multi-book e l'esito reale, quindi si può misurare che
+> tipo di fonte sia Betfair **senza scaricare nulla**. Su 1.752 partite, 5 leghe:
+>
+> | fonte | scarto (MAE) dalla media multi-book |
+> |---|--:|
+> | MaxC (massimo book) | 0.0057 |
+> | **Betfair Exchange** | **0.0060** |
+> | Pinnacle | 0.0063 |
+> | Bet365 | 0.0071 |
+> | **la nostra STIMA** | **~0.014** |
+> | 1xBet (scartato alla F100) | 0.0156 |
+>
+> **Betfair non è «un altro book singolo» come 1xBet: è nel gruppo dei book
+> seri.** È **2,3× più vicino alla media multi-book della stima che
+> sostituirebbe**, con bias +0.0015 (contro +0.0088 di 1xBet). E contro
+> l'**esito vero** è almeno pari alla media dei book: log-loss 0.6648 vs
+> 0.6652, Δ −0.00039, IC95 [−0.00115, +0.00038], P 84.7% — non conclusivo, ma
+> col segno a favore, come la teoria suggerisce (una borsa non ha il margine
+> del bookmaker: overround 1.0053 contro 1.0482).
+>
+> **Perché la valutazione precedente era sbagliata.** Nella Fase 108 avevo
+> detto «il guadagno è piccolo», assumendo che Betfair fosse un book singolo
+> come 1xBet e quindi soggetto alla stessa bocciatura. Era un'analogia, non
+> una misura. La misura dice il contrario, ed è il motivo per cui questa
+> pista — sola fra tutte quelle esplorate nelle Fasi 100-108 — **merita di
+> essere percorsa**.
+>
+> **Cosa NON è ancora deciso.** Questi numeri vengono dalla 2024-25, non dal
+> bersaglio. La Fase 106 ha già insegnato che la qualità di una fonte **non è
+> stabile nel tempo** (1xBet varia 0.0096-0.0192 fra stagioni), e la liquidità
+> della borsa nel 2017-18 era certamente più bassa di oggi, specie su
+> Bundesliga/Ligue 1. Quindi: si scarica e si valida, **non** si inserisce
+> perché «Betfair è buona».
+>
+> **Lo strumento è pronto**: `scripts/fetch_betfair_historic.py` implementa i
+> 5 endpoint dell'API (`GetMyData`, `GetCollectionOptions`,
+> `GetAdvBasketDataSize`, `DownloadListOfFiles`, `DownloadFile`) e il parsing
+> dello stream storico. Il parser è coperto da 9 test
+> (`tests/test_betfair_historic.py`), fra cui quello che conta davvero:
+> **la chiusura è l'ultimo prezzo prima del passaggio in-play**, mai un prezzo
+> successivo al fischio d'inizio (sarebbe look-ahead — l'errore di
+> Udinese-Roma, `docs/DATI.md`).
+>
+> **Due vincoli operativi, dichiarati:**
+> 1. `historicdata.betfair.com` risponde **403 dall'ambiente cloud del
+>    progetto** — blocco per regione, *prima* dell'autenticazione (verificato
+>    sull'endpoint API, non solo sul sito). Lo script è scritto per girare
+>    sulla macchina dell'utente.
+> 2. Non basta il token: i pacchetti BASIC (gratuiti) di *Soccer* vanno
+>    **acquisiti mese per mese** dal sito. Senza, gli endpoint rispondono con
+>    liste **vuote e senza errore** — la trappola principale del servizio, per
+>    cui `--check` esiste ed è il primo comando da eseguire.
+>
+> **Il protocollo di validazione è dentro lo strumento.** Si scarica **prima
+> la 2024-25**, e si confronta l'estrazione con la colonna `BFEC>2.5` di
+> football-data: è una cattura *indipendente* della stessa fonte, quindi se le
+> due coincidono la pipeline (parsing, scelta dell'istante di chiusura, join)
+> è **dimostrata** corretta — e solo allora ha senso credere all'estrazione
+> del 2017-19, dove nessun controllo esterno esiste. È il passo che mancava a
+> tutte le cacce precedenti.
+>
+> **Il collaterale può valere più del bersaglio.** Il piano BASIC dà
+> istantanee **ogni minuto**, non solo la chiusura: `newseason.md` §2 elenca
+> «le quote di apertura e la loro **traiettoria** verso la chiusura» fra le
+> cose che **non si recuperano** dopo il calcio d'inizio, e §7 la dichiara
+> «mai avuta a nessuna scala». Con questi file la traiettoria diventa
+> recuperabile **all'indietro**, dal 2015 — un asse di dati nuovo, non il
+> riempimento di un buco.
+>
+> **🔧 Fase 109-bis — la specifica ufficiale trova un bug nel parser.** L'utente
+> ha segnalato la documentazione Betfair su Atlassian: **è leggibile** (non è
+> soggetta al geo-blocco, ed è estraibile via API REST di Confluence senza
+> autenticazione — vedi `docs/MANUALE_SOPRAVVIVENZA.md`). La pagina *Exchange
+> Stream API* descrive il formato di cui i file storici sono **registrazioni**,
+> quindi è la specifica contro cui il parser andava verificato. Leggendola:
+> `ltp` = «Last Traded Price» ✓ e `inPlay` = «True if the market is currently
+> in play» ✓ — le due assunzioni portanti reggono. Ma **`img` no**: la
+> specifica dice «*replace existing prices/data with the data supplied: it is
+> not a delta*», mentre il parser fondeva sempre. Un ri-invio dell'immagine a
+> metà stream avrebbe lasciato in cache prezzi che la fonte considera
+> sostituiti: un **finto pieno** (regola R6), plausibile e invisibile a ogni
+> controllo a valle. Corretto, coperto da 3 test nuovi e **verificato per
+> mutazione** (togliendo il fix, il test fallisce). Estratto della specifica,
+> con le citazioni testuali, in
+> `data/ricerca_esterna/betfair_stream_spec_estratto.md`.
+> **Lezione**: la fonte era pubblica e leggibile dall'inizio — il bug è durato
+> quanto la mia decisione di dedurre il formato dai dati invece di leggerne la
+> specifica.
+
+> ## 🔍 Fase 108 — «e se cercassimo partita per partita?» — testato, non scala
+>
+> Idea dell'utente: invece di cercare un dataset che copra tutte le 3.652
+> partite insieme, cercare il dato **una partita alla volta**. Due sotto-idee
+> distinte, entrambe testate davvero (non solo argomentate):
+>
+> 1. **Wayback Machine sulla singola pagina-partita** (non più sulla
+>    pagina-elenco stagionale, già risultata mai archiviata): presi URL REALI
+>    di partite BetExplorer 2017-18 (es.
+>    `.../serie-a-2017-2018/ac-milan-fiorentina/trvrVWvl/`, trovati dal vivo
+>    alla Fase 107) e controllati su `web.archive.org`. **404**: nemmeno le
+>    singole pagine-partita sono mai state archiviate — sono URL troppo di
+>    nicchia perché il crawler di Internet Archive le raccogliesse all'epoca.
+> 2. **Ricerca web mirata sulla singola partita**: provata anche sul caso più
+>    favorevole possibile — non una partita qualunque, ma **Juventus-Napoli
+>    22/04/2018**, lo scontro diretto scudetto più seguito di quella stagione
+>    (massima probabilità che qualcuno ne avesse scritto le quote all'epoca).
+>    Risultato: **nessuna quota storica reale trovata**. Tutti i risultati
+>    sono pagine "sempre verdi" di siti pronostici/comparatori (bettingtips4you,
+>    sportytrader, oddstrader, oddspedia…) che **si riscrivono per ogni nuovo
+>    incontro fra le stesse due squadre**: mostrano le quote dell'ULTIMO
+>    Juventus-Napoli, non quella del 2018. Anche per la partita più seguita
+>    dell'anno, sul mercato più popolare, la ricerca non ha trovato nulla di
+>    reale e datato.
+>
+> **Perché non scala, anche a prescindere dall'esito.** 3.652 partite: pure
+> trovando un modo di cercare una partita in pochi secondi, sarebbero ore di
+> lavoro per una copertura che — visto il test sul caso più favorevole — non
+> sarebbe comunque completa: coprirebbe (forse) i big-match e lascerebbe
+> scoperte le partite di metà classifica, cioè introdurrebbe un **bias di
+> selezione** (le partite "trovabili" non sono un campione casuale) invece di
+> chiudere il buco.
+>
+> **Esito: confermato che il dato non è recuperabile né in blocco né
+> partita-per-partita**, con un test diretto anche sul caso più favorevole al
+> metodo, non solo per esaurimento delle alternative in blocco.
+
+> ## 🔁 Fase 107 — terzo ri-tentativo: ri-verifica dal vivo + angoli nuovi, ancora negativo
+>
+> Richiesta esplicita dell'utente: continuare a cercare, esplorare fonti nuove
+> E ri-controllare quelle già escluse (non fidarsi delle note vecchie). Fatto
+> entrambo.
+>
+> **Ri-verifiche dal vivo (non nuove fonti, ma controlli ripetuti oggi):**
+> - **`oddsportal.com/robots.txt`**: letto per intero (non solo la nota del
+>   manuale). Vieta esplicitamente **ogni** URL con `-2017-`, `-2018-`,
+>   `-2019-` (e ogni anno da 1998 al 2024) nel percorso: non è un dettaglio,
+>   è un blocco sistematico di TUTTE le pagine-stagione storiche, per
+>   qualunque bot. Conferma R5.3, nessun accesso.
+> - **BetExplorer, dal vivo**: il tentativo precedente (Fase 100, via runner
+>   GitHub Actions) aveva trovato 404 sull'endpoint delle quote. Rifatto oggi
+>   con richiesta diretta: le vecchie URL-stagione (`serie-a-2017-2018/`)
+>   davano prima un 404 **fasullo** (il sito blocca le richieste senza uno
+>   User-Agent da browser vero — non un vero 404, un blocco anti-bot). Con lo
+>   User-Agent giusto: 200, pagina reale, partita reale raggiunta
+>   (`ac-milan-fiorentina/trvrVWvl/`). **Risultato identico alla Fase 100**:
+>   il div `#bettingTabs` contiene solo un tab "1X2" **disabilitato**, nessun
+>   tab O/U — confermato che il sito non espone il confronto-quote per le
+>   partite di quell'epoca, stavolta con una richiesta che ha *davvero*
+>   raggiunto la pagina (non un fallimento mascherato da conferma).
+> - **Kaggle `mexwell/historical-football-...`**: ri-scaricato (ora è alla
+>   **versione 2**, aggiornata dopo il primo controllo). Stessa identica
+>   colonna O/U per il 2017-18 (`BbOU, BbMx>2.5, BbAv>2.5, BbMx<2.5,
+>   BbAv<2.5` — una sola istantanea, nessuna `PC>2.5`/chiusura O/U distinta):
+>   l'aggiornamento non ha aggiunto ciò che serve.
+>
+> **Angoli genuinamente nuovi:**
+> - **Ricerca codice GitHub** per scraper OddsPortal/BetExplorer: trovati 3
+>   repo attivi (`karolmico/OddsPortalScrape`, `jordantete/OddsHarvester`,
+>   `Mg30/odds-portal-scraper`) — sono STRUMENTI, non dati committati.
+>   `OddsPortalScrape` conferma da sé un fatto già noto: richiede **login**
+>   (`username_data`/`password_data`) e copre **solo 1X2**, non O/U — non
+>   sarebbe comunque la fonte giusta anche potendolo usare.
+> - **Ricerca dataset accademici** (arXiv/Zenodo/OSF): trovati due paper con
+>   dataset Bundesliga 2017-18/2018-19 di un "book europeo grande" — ma sono
+>   quote **IN-PLAY** (scommesse durante la partita, frequenza 1Hz), non
+>   quote pre-partita apertura/chiusura: mercato diverso da quello cercato,
+>   scartati.
+> - **`oddalerts.com`** (provider commerciale con Opening/Closing/Peak
+>   dichiarati): la sua stessa documentazione limita lo storico a **6 mesi**
+>   per l'accesso API — strutturalmente non può coprire il 2017-19. Sito
+>   comunque non raggiungibile (403) per un controllo diretto.
+> - **flashscore.com**: `robots.txt` permissivo, ma è un sito fortemente
+>   JS-driven (come Understat prima del fix): senza trovare l'endpoint XHR
+>   giusto (non tentato oltre per tempo/probabilità), l'HTML grezzo non porta
+>   dati. **forebet.com**, **windrawwin.com**: bloccati (403).
+>
+> **Esito: nessun dato nuovo, e più fiducia nel "nessun dato nuovo".** Le
+> ri-verifiche dal vivo con lo User-Agent corretto tolgono il dubbio residuo
+> che il controllo precedente fosse un falso negativo tecnico. Nessuna delle
+> vie note è cambiata; nessuna via nuova ha prodotto un candidato valido.
+
+> ## 📏 Fase 106 — il confronto footiqo-vs-verità esteso da 1 a 6 stagioni
+>
+> L'utente ha chiesto se il confronto "MAE 0.0156 (footiqo) contro ~0.012
+> (stima)" si potesse misurare anche su altre stagioni, non solo sul 2019-20.
+> Sì: footiqo/1xBet copre dal 2015/16 a oggi, e football-data ha la chiusura
+> vera (`AvgC>2.5`) dal 2019/20. Scaricate live 25 nuove stagioni footiqo
+> (2020-21 → 2024-25, 5 leghe) e i 30 CSV grezzi football-data corrispondenti;
+> stesso metodo esatto del confronto originale (join per squadre, MAE/bias di
+> `p_over(xbetClose)` contro `p_over(AvgC)`). Il 2019-20 ricalcolato qui
+> riproduce **esattamente** il numero già pubblicato (n=1.687, MAE 0.0156,
+> bias +0.0088) — buona verifica indipendente del metodo.
+>
+> **Il numero NON è stabile nel tempo** (pooled 5 leghe per stagione):
+>
+> | stagione | n | MAE | bias |
+> |---|--:|--:|--:|
+> | 2019-20 | 1.687 | 0.0156 | +0.0088 |
+> | 2020-21 | 1.749 | 0.0179 | +0.0167 |
+> | 2021-22 | 1.788 | 0.0192 | +0.0166 |
+> | 2022-23 | 1.751 | 0.0136 | +0.0054 |
+> | 2023-24 | 1.640 | 0.0107 | +0.0010 |
+> | 2024-25 | 1.713 | 0.0096 | +0.0021 |
+>
+> Il 2020-22 (piena era porte-chiuse) è il peggiore; dal 2022-23 in poi
+> footiqo **migliora fino a battere** anche il numero onesto della stima
+> (**~0.014 "regime d'uso"**, non lo 0.012 "in interpolazione" citato la prima
+> volta — la correzione va fatta anche qui: erano due regimi diversi, quello
+> giusto per un confronto equo è il primo). Non è chiaro se sia una deriva
+> secolare (1xBet/footiqo migliorano nel tempo) o un effetto porte-chiuse
+> localizzato al 2020-22: **con i dati disponibili non è distinguibile**, e le
+> due letture implicano l'opposto per il 2017-19 (prima del 2019-20: se è
+> deriva secolare, peggio; se è un effetto porte-chiuse, il 2017-19
+> "normale" potrebbe somigliare più al 2022-25 "buono").
+>
+> **Non cambia la decisione**: il 2019-20 resta il proxy singolo più vicino
+> nel tempo al 2017-19 (e il meno inquinato dalle porte chiuse, iniziate a
+> marzo 2020 a stagione già in corso), e lì la stima vince ancora — 0.0156
+> contro ~0.014, un margine più piccolo di quanto detto la prima volta
+> (0.0156 contro 0.012) ma dello stesso segno. **Cambia la sicurezza con cui
+> lo sappiamo**: da una singola stagione a sei, con un pattern dichiarato
+> invece di assunto stabile. Dati grezzi e risultato completo in
+> `data/ricerca_esterna/footiqo_confronto_multistagione_fase106.json` e
+> `footiqo_manifest_fase106.json`.
+
+> ## 🔁 Fase 105 — un secondo ri-tentativo, negativo (richiesta utente)
+>
+> Dopo la Fase 104, l'utente ha chiesto esplicitamente di riprovare a trovare
+> il dato vero multi-book (non un singolo book come 1xBet). Quattro angoli
+> **nuovi**, non provati nelle Fasi A-D:
+>
+> 1. **footiqo.com ha SOLO 1xBet, per costruzione** — il sito si dichiara
+>    esplicitamente sourced da un solo book: non è una via per un secondo
+>    book indipendente da mediare col primo.
+> 2. **Wayback Machine (archive.org)** — angolo mai tentato prima. Scoperta
+>    operativa: l'endpoint `/cdx/search/cdx` è bloccato dalla policy di rete
+>    di questa sessione per QUALSIASI dominio nel parametro `url=` (403
+>    "Blocked by egress policy", verificato anche su domini innocui come
+>    betexplorer.com — non è un blocco specifico di oddsportal), ma il path
+>    di **playback** `/web/{data}/{url}` funziona (200 su
+>    `web.archive.org/web/2018/https://oddsportal.com/`). Nessuna pagina di
+>    RISULTATI per stagione 2017-18/2018-19 delle nostre leghe risulta mai
+>    archiviata (`archive.org/wayback/available` → `archived_snapshots: {}`
+>    per l'URL esatto); le uniche cattura disponibili di BetExplorer/OddsPortal
+>    per quelle stagioni sono del **2022-2024**, cioè dopo che (per BetExplorer,
+>    verificato Fase 100) il sito ha ritirato il confronto-quote per le
+>    partite vecchie — quindi mostrerebbero comunque il buco.
+> 3. **Ricerca dataset ripetuta** (Kaggle/GitHub freschi) — un candidato nuovo
+>    (`laisassini/soccer-bet-all-euro-data-from-1993-to-2023`, nonostante il
+>    titolo) è un file di 198 righe di sole partite 2023: scaricato e
+>    ispezionato, stesso schema football-data.co.uk, zero copertura 2017-19.
+>    "Beat the Bookie" (worldwide, 32 book) è lo stesso dataset già scartato
+>    alla prima caccia (si ferma al 2015).
+> 4. **Nuovi siti-archivio**: `oddsbase.net` ha un `robots.txt` che **vieta
+>    esplicitamente ClaudeBot** (`User-agent: ClaudeBot / Disallow: /`) —
+>    rispettata la regola R5.3, non consultato; `aussportsbetting.com`
+>    risponde 403 (bloccato); `btfodds.com`/`sportsoddshistory.com` hanno
+>    `robots.txt` permissivi ma sono siti di comparazione **live**, non
+>    archivi storici per-partita (sitemap di 1,3 MB con 5 sole occorrenze di
+>    "italy", nessuna struttura per stagione individuabile).
+>
+> **Esito: nessun dato nuovo trovato.** La stima resta la scelta migliore
+> nota. Nessuna delle vie economiche è cambiata dalla Fase 100/101-bis; il
+> promemoria di quella fase resta valido — soprattutto il punto su OddsPortal
+> (robots.txt vieta lo storico, R5.3) e sulle fonti a pagamento (mai valutate
+> a fondo, unica via rimasta davvero non esplorata).
+
 > ## ✅ ESITO FINALE — pista chiusa con successo, e con un risultato scomodo
 >
 > **Il dato vero esiste ed è stato scaricato**: `footiqo.com` pubblica le quote

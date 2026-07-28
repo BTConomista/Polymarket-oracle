@@ -1183,6 +1183,15 @@ season,team,date,competition,home_away,opponent
 1617,Mallorca,2017-06-10,Segunda División,H,Getafe
 1617,Oviedo,2017-06-10,Segunda División,A,Elche
 1617,Valladolid,2017-06-10,Segunda División,H,Cadiz
+1718,Ath Bilbao,2017-07-27,Europa League (qual.),A,Dinamo București
+1718,Ath Bilbao,2017-08-03,Europa League (qual.),H,Dinamo București
+1718,Real Madrid,2017-08-08,UEFA Super Cup,H,Manchester United
+1718,Barcelona,2017-08-13,Supercopa de Espana,H,Real Madrid
+1718,Real Madrid,2017-08-13,Supercopa de Espana,A,Barcelona
+1718,Barcelona,2017-08-16,Supercopa de Espana,A,Real Madrid
+1718,Real Madrid,2017-08-16,Supercopa de Espana,H,Barcelona
+1718,Sevilla,2017-08-16,Champions League (qual.),A,İstanbul Başakşehir
+1718,Ath Bilbao,2017-08-17,Europa League (qual.),A,Panathinaikos
 1718,Alaves,2017-08-18,La Liga,A,Leganes
 1718,Las Palmas,2017-08-18,La Liga,A,Valencia
 1718,Leganes,2017-08-18,La Liga,H,Alaves
@@ -1211,6 +1220,8 @@ season,team,date,competition,home_away,opponent
 1718,Levante,2017-08-21,La Liga,H,Villarreal
 1718,Malaga,2017-08-21,La Liga,H,Eibar
 1718,Villarreal,2017-08-21,La Liga,A,Levante
+1718,Sevilla,2017-08-22,Champions League (qual.),H,İstanbul Başakşehir
+1718,Ath Bilbao,2017-08-24,Europa League (qual.),H,Panathinaikos
 1718,Betis,2017-08-25,La Liga,H,Celta
 1718,Celta,2017-08-25,La Liga,A,Betis
 1718,Sociedad,2017-08-25,La Liga,H,Villarreal
@@ -1239,6 +1250,7 @@ season,team,date,competition,home_away,opponent
 1718,Real Madrid,2017-08-27,La Liga,H,Valencia
 1718,Sevilla,2017-08-27,La Liga,A,Getafe
 1718,Valencia,2017-08-27,La Liga,A,Real Madrid
+1718,Elche,2017-08-30,Copa del Rey,A,Badalona
 1718,Granada,2017-09-01,Segunda División,H,FC Barcelona B
 1718,Almeria,2017-09-02,Segunda División,A,CD Numancia
 1718,Cadiz,2017-09-02,Segunda División,A,CD Lugo
@@ -1247,6 +1259,16 @@ season,team,date,competition,home_away,opponent
 1718,Vallecano,2017-09-02,Segunda División,A,Lorca FC
 1718,Oviedo,2017-09-03,Segunda División,H,CF Reus Deportiu
 1718,Valladolid,2017-09-03,Segunda División,H,CD Tenerife
+1718,Almeria,2017-09-05,Copa del Rey,A,Cadiz
+1718,Cadiz,2017-09-05,Copa del Rey,H,Almeria
+1718,Elche,2017-09-06,Copa del Rey,H,Cultural Durango
+1718,Granada,2017-09-06,Copa del Rey,A,Zaragoza
+1718,Huesca,2017-09-06,Copa del Rey,H,Valladolid
+1718,Mallorca,2017-09-06,Copa del Rey,H,Lleida Esportiu
+1718,Oviedo,2017-09-06,Copa del Rey,H,Numancia
+1718,Valladolid,2017-09-06,Copa del Rey,A,Huesca
+1718,Vallecano,2017-09-06,Copa del Rey,H,Tenerife
+1718,Osasuna,2017-09-07,Copa del Rey,H,Albacete
 1718,Cadiz,2017-09-08,Segunda División,H,Gimnàstic de Tarragona
 1718,Getafe,2017-09-08,La Liga,A,Leganes
 1718,Leganes,2017-09-08,La Liga,H,Getafe
@@ -1279,6 +1301,9 @@ season,team,date,competition,home_away,opponent
 1718,Barcelona,2017-09-12,Champions League,H,Juventus
 1718,Real Madrid,2017-09-13,Champions League,H,APOEL Nikosia
 1718,Sevilla,2017-09-13,Champions League,A,Liverpool
+1718,Ath Bilbao,2017-09-14,Europa League,A,Hertha BSC
+1718,Sociedad,2017-09-14,Europa League,H,Rosenborg
+1718,Villarreal,2017-09-14,Europa League,H,Astana
 1718,Eibar,2017-09-15,La Liga,H,Leganes
 1718,Leganes,2017-09-15,La Liga,A,Eibar
 1718,Almeria,2017-09-16,Segunda División,A,Osasuna
@@ -1315,12 +1340,16 @@ season,team,date,competition,home_away,opponent
 1718,Ath Bilbao,2017-09-20,La Liga,H,Ath Madrid
 1718,Ath Madrid,2017-09-20,La Liga,A,Ath Bilbao
 1718,Betis,2017-09-20,La Liga,A,Real Madrid
+1718,Cadiz,2017-09-20,Copa del Rey,H,Osasuna
+1718,Elche,2017-09-20,Copa del Rey,A,Hércules
 1718,Girona,2017-09-20,La Liga,A,Leganes
 1718,La Coruna,2017-09-20,La Liga,H,Alaves
 1718,Las Palmas,2017-09-20,La Liga,A,Sevilla
 1718,Leganes,2017-09-20,La Liga,H,Girona
+1718,Osasuna,2017-09-20,Copa del Rey,A,Cadiz
 1718,Real Madrid,2017-09-20,La Liga,H,Betis
 1718,Sevilla,2017-09-20,La Liga,H,Las Palmas
+1718,Valladolid,2017-09-20,Copa del Rey,A,Cultural Leonesa
 1718,Celta,2017-09-21,La Liga,H,Getafe
 1718,Espanol,2017-09-21,La Liga,A,Villarreal
 1718,Getafe,2017-09-21,La Liga,A,Celta
@@ -1359,6 +1388,9 @@ season,team,date,competition,home_away,opponent
 1718,Sevilla,2017-09-26,Champions League,H,NK Maribor
 1718,Ath Madrid,2017-09-27,Champions League,H,Chelsea
 1718,Barcelona,2017-09-27,Champions League,A,Sporting CP
+1718,Ath Bilbao,2017-09-28,Europa League,H,Zorya Luhansk
+1718,Sociedad,2017-09-28,Europa League,A,Zenit Saint Petersburg
+1718,Villarreal,2017-09-28,Europa League,A,Maccabi Tel Aviv
 1718,Almeria,2017-09-29,Segunda División,A,Cultural Leonesa
 1718,Celta,2017-09-29,La Liga,H,Girona
 1718,Girona,2017-09-29,La Liga,A,Celta
@@ -1435,6 +1467,9 @@ season,team,date,competition,home_away,opponent
 1718,Sevilla,2017-10-17,Champions League,A,Spartak Moskva
 1718,Ath Madrid,2017-10-18,Champions League,A,Qarabağ FK
 1718,Barcelona,2017-10-18,Champions League,H,Olympiakos Piraeus
+1718,Ath Bilbao,2017-10-19,Europa League,A,Östersunds FK
+1718,Sociedad,2017-10-19,Europa League,A,Vardar
+1718,Villarreal,2017-10-19,Europa League,H,Slavia Prague
 1718,Osasuna,2017-10-20,Segunda División,H,FC Barcelona B
 1718,Alaves,2017-10-21,La Liga,A,Betis
 1718,Barcelona,2017-10-21,La Liga,H,Malaga
@@ -1463,6 +1498,29 @@ season,team,date,competition,home_away,opponent
 1718,Girona,2017-10-23,La Liga,A,La Coruna
 1718,La Coruna,2017-10-23,La Liga,H,Girona
 1718,Sociedad,2017-10-23,La Liga,H,Espanol
+1718,Alaves,2017-10-24,Copa del Rey,A,Getafe
+1718,Barcelona,2017-10-24,Copa del Rey,A,Murcia
+1718,Betis,2017-10-24,Copa del Rey,A,Cadiz
+1718,Cadiz,2017-10-24,Copa del Rey,H,Betis
+1718,Getafe,2017-10-24,Copa del Rey,H,Alaves
+1718,Malaga,2017-10-24,Copa del Rey,A,Numancia
+1718,Sevilla,2017-10-24,Copa del Rey,A,Cartagena
+1718,Valencia,2017-10-24,Copa del Rey,A,Zaragoza
+1718,Ath Bilbao,2017-10-25,Copa del Rey,A,Formentera
+1718,Ath Madrid,2017-10-25,Copa del Rey,A,Elche
+1718,Celta,2017-10-25,Copa del Rey,A,Eibar
+1718,Eibar,2017-10-25,Copa del Rey,H,Celta
+1718,Elche,2017-10-25,Copa del Rey,H,Ath Madrid
+1718,Leganes,2017-10-25,Copa del Rey,A,Valladolid
+1718,Valladolid,2017-10-25,Copa del Rey,H,Leganes
+1718,Villarreal,2017-10-25,Copa del Rey,A,Ponferradina
+1718,Espanol,2017-10-26,Copa del Rey,A,Tenerife
+1718,Girona,2017-10-26,Copa del Rey,H,Levante
+1718,La Coruna,2017-10-26,Copa del Rey,H,Las Palmas
+1718,Las Palmas,2017-10-26,Copa del Rey,A,La Coruna
+1718,Levante,2017-10-26,Copa del Rey,A,Girona
+1718,Real Madrid,2017-10-26,Copa del Rey,A,Fuenlabrada
+1718,Sociedad,2017-10-26,Copa del Rey,A,Lleida Esportiu
 1718,Alaves,2017-10-28,La Liga,H,Valencia
 1718,Almeria,2017-10-28,Segunda División,A,Sporting Gijón
 1718,Ath Bilbao,2017-10-28,La Liga,H,Barcelona
@@ -1495,6 +1553,9 @@ season,team,date,competition,home_away,opponent
 1718,Barcelona,2017-10-31,Champions League,A,Olympiakos Piraeus
 1718,Real Madrid,2017-11-01,Champions League,A,Tottenham
 1718,Sevilla,2017-11-01,Champions League,H,Spartak Moskva
+1718,Ath Bilbao,2017-11-02,Europa League,H,Östersunds FK
+1718,Sociedad,2017-11-02,Europa League,H,Vardar
+1718,Villarreal,2017-11-02,Europa League,A,Slavia Prague
 1718,Betis,2017-11-03,La Liga,H,Getafe
 1718,Getafe,2017-11-03,La Liga,A,Betis
 1718,Alaves,2017-11-04,La Liga,H,Espanol
@@ -1563,6 +1624,9 @@ season,team,date,competition,home_away,opponent
 1718,Sevilla,2017-11-21,Champions League,H,Liverpool
 1718,Ath Madrid,2017-11-22,Champions League,H,Roma
 1718,Barcelona,2017-11-22,Champions League,A,Juventus
+1718,Ath Bilbao,2017-11-23,Europa League,H,Hertha BSC
+1718,Sociedad,2017-11-23,Europa League,A,Rosenborg
+1718,Villarreal,2017-11-23,Europa League,A,Astana
 1718,Celta,2017-11-24,La Liga,H,Leganes
 1718,Leganes,2017-11-24,La Liga,A,Celta
 1718,Vallecano,2017-11-24,Segunda División,A,CD Tenerife
@@ -1591,6 +1655,29 @@ season,team,date,competition,home_away,opponent
 1718,Villarreal,2017-11-26,La Liga,H,Sevilla
 1718,Espanol,2017-11-27,La Liga,H,Getafe
 1718,Getafe,2017-11-27,La Liga,A,Espanol
+1718,Celta,2017-11-28,Copa del Rey,H,Eibar
+1718,Eibar,2017-11-28,Copa del Rey,A,Celta
+1718,Girona,2017-11-28,Copa del Rey,A,Levante
+1718,Leganes,2017-11-28,Copa del Rey,H,Valladolid
+1718,Levante,2017-11-28,Copa del Rey,H,Girona
+1718,Malaga,2017-11-28,Copa del Rey,H,Numancia
+1718,Real Madrid,2017-11-28,Copa del Rey,H,Fuenlabrada
+1718,Valladolid,2017-11-28,Copa del Rey,A,Leganes
+1718,Ath Bilbao,2017-11-29,Copa del Rey,H,Formentera
+1718,Ath Madrid,2017-11-29,Copa del Rey,H,Elche
+1718,Barcelona,2017-11-29,Copa del Rey,H,Murcia
+1718,Elche,2017-11-29,Copa del Rey,A,Ath Madrid
+1718,La Coruna,2017-11-29,Copa del Rey,A,Las Palmas
+1718,Las Palmas,2017-11-29,Copa del Rey,H,La Coruna
+1718,Sevilla,2017-11-29,Copa del Rey,H,Cartagena
+1718,Sociedad,2017-11-29,Copa del Rey,H,Lleida Esportiu
+1718,Alaves,2017-11-30,Copa del Rey,H,Getafe
+1718,Betis,2017-11-30,Copa del Rey,H,Cadiz
+1718,Cadiz,2017-11-30,Copa del Rey,A,Betis
+1718,Espanol,2017-11-30,Copa del Rey,H,Tenerife
+1718,Getafe,2017-11-30,Copa del Rey,A,Alaves
+1718,Valencia,2017-11-30,Copa del Rey,H,Zaragoza
+1718,Villarreal,2017-11-30,Copa del Rey,H,Ponferradina
 1718,Levante,2017-12-01,La Liga,A,Malaga
 1718,Malaga,2017-12-01,La Liga,H,Levante
 1718,Ath Bilbao,2017-12-02,La Liga,H,Real Madrid
@@ -1622,6 +1709,9 @@ season,team,date,competition,home_away,opponent
 1718,Barcelona,2017-12-05,Champions League,H,Sporting CP
 1718,Real Madrid,2017-12-06,Champions League,H,Borussia Dortmund
 1718,Sevilla,2017-12-06,Champions League,A,NK Maribor
+1718,Ath Bilbao,2017-12-07,Europa League,A,Zorya Luhansk
+1718,Sociedad,2017-12-07,Europa League,H,Zenit Saint Petersburg
+1718,Villarreal,2017-12-07,Europa League,H,Maccabi Tel Aviv
 1718,Alaves,2017-12-08,La Liga,H,Las Palmas
 1718,Almeria,2017-12-08,Segunda División,A,Granada
 1718,Granada,2017-12-08,Segunda División,H,Almeria
@@ -1650,6 +1740,7 @@ season,team,date,competition,home_away,opponent
 1718,Villarreal,2017-12-10,La Liga,H,Barcelona
 1718,Espanol,2017-12-11,La Liga,H,Girona
 1718,Girona,2017-12-11,La Liga,A,Espanol
+1718,Real Madrid,2017-12-13,FIFA Club World Cup,A,Al-Jazira
 1718,Cadiz,2017-12-15,Segunda División,H,FC Barcelona B
 1718,Levante,2017-12-15,La Liga,A,Sevilla
 1718,Sevilla,2017-12-15,La Liga,H,Levante
@@ -1660,6 +1751,7 @@ season,team,date,competition,home_away,opponent
 1718,Eibar,2017-12-16,La Liga,H,Valencia
 1718,Granada,2017-12-16,Segunda División,A,CF Reus Deportiu
 1718,Osasuna,2017-12-16,Segunda División,H,CD Numancia
+1718,Real Madrid,2017-12-16,FIFA Club World Cup,H,Grêmio
 1718,Sociedad,2017-12-16,La Liga,A,Ath Bilbao
 1718,Valencia,2017-12-16,La Liga,A,Eibar
 1718,Valladolid,2017-12-16,Segunda División,H,Lorca FC
@@ -1704,6 +1796,19 @@ season,team,date,competition,home_away,opponent
 1718,Real Madrid,2017-12-23,La Liga,H,Barcelona
 1718,Valencia,2017-12-23,La Liga,H,Villarreal
 1718,Villarreal,2017-12-23,La Liga,A,Valencia
+1718,Alaves,2018-01-03,Copa del Rey,A,Formentera
+1718,Ath Madrid,2018-01-03,Copa del Rey,A,Lleida Esportiu
+1718,Cadiz,2018-01-03,Copa del Rey,H,Sevilla
+1718,Las Palmas,2018-01-03,Copa del Rey,H,Valencia
+1718,Sevilla,2018-01-03,Copa del Rey,A,Cadiz
+1718,Valencia,2018-01-03,Copa del Rey,A,Las Palmas
+1718,Barcelona,2018-01-04,Copa del Rey,A,Celta
+1718,Celta,2018-01-04,Copa del Rey,H,Barcelona
+1718,Espanol,2018-01-04,Copa del Rey,H,Levante
+1718,Leganes,2018-01-04,Copa del Rey,H,Villarreal
+1718,Levante,2018-01-04,Copa del Rey,A,Espanol
+1718,Real Madrid,2018-01-04,Copa del Rey,A,Numancia
+1718,Villarreal,2018-01-04,Copa del Rey,A,Leganes
 1718,Ath Madrid,2018-01-06,La Liga,H,Getafe
 1718,Betis,2018-01-06,La Liga,A,Sevilla
 1718,Cadiz,2018-01-06,Segunda División,H,Granada
@@ -1732,6 +1837,19 @@ season,team,date,competition,home_away,opponent
 1718,Villarreal,2018-01-07,La Liga,H,La Coruna
 1718,Espanol,2018-01-08,La Liga,A,Malaga
 1718,Malaga,2018-01-08,La Liga,H,Espanol
+1718,Ath Madrid,2018-01-09,Copa del Rey,H,Lleida Esportiu
+1718,Las Palmas,2018-01-09,Copa del Rey,A,Valencia
+1718,Valencia,2018-01-09,Copa del Rey,H,Las Palmas
+1718,Alaves,2018-01-10,Copa del Rey,H,Formentera
+1718,Leganes,2018-01-10,Copa del Rey,A,Villarreal
+1718,Real Madrid,2018-01-10,Copa del Rey,H,Numancia
+1718,Villarreal,2018-01-10,Copa del Rey,H,Leganes
+1718,Barcelona,2018-01-11,Copa del Rey,H,Celta
+1718,Cadiz,2018-01-11,Copa del Rey,A,Sevilla
+1718,Celta,2018-01-11,Copa del Rey,A,Barcelona
+1718,Espanol,2018-01-11,Copa del Rey,A,Levante
+1718,Levante,2018-01-11,Copa del Rey,H,Espanol
+1718,Sevilla,2018-01-11,Copa del Rey,H,Cadiz
 1718,Getafe,2018-01-12,La Liga,H,Malaga
 1718,Malaga,2018-01-12,La Liga,A,Getafe
 1718,Oviedo,2018-01-12,Segunda División,A,Vallecano
@@ -1760,7 +1878,15 @@ season,team,date,competition,home_away,opponent
 1718,Sociedad,2018-01-14,La Liga,H,Barcelona
 1718,Betis,2018-01-15,La Liga,H,Leganes
 1718,Leganes,2018-01-15,La Liga,A,Betis
+1718,Alaves,2018-01-17,Copa del Rey,A,Valencia
+1718,Ath Madrid,2018-01-17,Copa del Rey,H,Sevilla
+1718,Barcelona,2018-01-17,Copa del Rey,A,Espanol
+1718,Espanol,2018-01-17,Copa del Rey,H,Barcelona
+1718,Sevilla,2018-01-17,Copa del Rey,A,Ath Madrid
+1718,Valencia,2018-01-17,Copa del Rey,H,Alaves
+1718,Leganes,2018-01-18,Copa del Rey,H,Real Madrid
 1718,Osasuna,2018-01-18,Segunda División,H,Gimnàstic de Tarragona
+1718,Real Madrid,2018-01-18,Copa del Rey,A,Leganes
 1718,Ath Bilbao,2018-01-19,La Liga,A,Getafe
 1718,Getafe,2018-01-19,La Liga,H,Ath Bilbao
 1718,Granada,2018-01-19,Segunda División,H,Real Zaragoza
@@ -1789,6 +1915,14 @@ season,team,date,competition,home_away,opponent
 1718,Vallecano,2018-01-21,Segunda División,A,CD Numancia
 1718,Eibar,2018-01-22,La Liga,H,Malaga
 1718,Malaga,2018-01-22,La Liga,A,Eibar
+1718,Ath Madrid,2018-01-23,Copa del Rey,A,Sevilla
+1718,Sevilla,2018-01-23,Copa del Rey,H,Ath Madrid
+1718,Alaves,2018-01-24,Copa del Rey,H,Valencia
+1718,Leganes,2018-01-24,Copa del Rey,A,Real Madrid
+1718,Real Madrid,2018-01-24,Copa del Rey,H,Leganes
+1718,Valencia,2018-01-24,Copa del Rey,A,Alaves
+1718,Barcelona,2018-01-25,Copa del Rey,H,Espanol
+1718,Espanol,2018-01-25,Copa del Rey,A,Barcelona
 1718,Ath Bilbao,2018-01-26,La Liga,H,Eibar
 1718,Eibar,2018-01-26,La Liga,A,Ath Bilbao
 1718,Cadiz,2018-01-27,Segunda División,H,CD Lugo
@@ -1817,6 +1951,10 @@ season,team,date,competition,home_away,opponent
 1718,Valladolid,2018-01-28,Segunda División,A,CD Tenerife
 1718,Betis,2018-01-29,La Liga,A,Celta
 1718,Celta,2018-01-29,La Liga,H,Betis
+1718,Leganes,2018-01-31,Copa del Rey,H,Sevilla
+1718,Sevilla,2018-01-31,Copa del Rey,A,Leganes
+1718,Barcelona,2018-02-01,Copa del Rey,H,Valencia
+1718,Valencia,2018-02-01,Copa del Rey,A,Barcelona
 1718,La Coruna,2018-02-02,La Liga,A,Sociedad
 1718,Osasuna,2018-02-02,Segunda División,H,Vallecano
 1718,Sociedad,2018-02-02,La Liga,H,La Coruna
@@ -1845,6 +1983,10 @@ season,team,date,competition,home_away,opponent
 1718,Valencia,2018-02-04,La Liga,A,Ath Madrid
 1718,Las Palmas,2018-02-05,La Liga,H,Malaga
 1718,Malaga,2018-02-05,La Liga,A,Las Palmas
+1718,Leganes,2018-02-07,Copa del Rey,A,Sevilla
+1718,Sevilla,2018-02-07,Copa del Rey,H,Leganes
+1718,Barcelona,2018-02-08,Copa del Rey,A,Valencia
+1718,Valencia,2018-02-08,Copa del Rey,H,Barcelona
 1718,Ath Bilbao,2018-02-09,La Liga,H,Las Palmas
 1718,Granada,2018-02-09,Segunda División,H,Valladolid
 1718,Las Palmas,2018-02-09,La Liga,A,Ath Bilbao
@@ -1874,6 +2016,10 @@ season,team,date,competition,home_away,opponent
 1718,Betis,2018-02-12,La Liga,A,La Coruna
 1718,La Coruna,2018-02-12,La Liga,H,Betis
 1718,Real Madrid,2018-02-14,Champions League,H,Paris Saint-Germain
+1718,Ath Bilbao,2018-02-15,Europa League,A,Spartak Moscow
+1718,Ath Madrid,2018-02-15,Europa League,A,Copenhagen
+1718,Sociedad,2018-02-15,Europa League,H,Red Bull Salzburg
+1718,Villarreal,2018-02-15,Europa League,A,Lyon
 1718,Girona,2018-02-16,La Liga,H,Leganes
 1718,Huesca,2018-02-16,Segunda División,A,Valladolid
 1718,Leganes,2018-02-16,La Liga,A,Girona
@@ -1906,6 +2052,10 @@ season,team,date,competition,home_away,opponent
 1718,Leganes,2018-02-21,La Liga,H,Real Madrid
 1718,Real Madrid,2018-02-21,La Liga,A,Leganes
 1718,Sevilla,2018-02-21,Champions League,H,Man United
+1718,Ath Bilbao,2018-02-22,Europa League,H,Spartak Moscow
+1718,Ath Madrid,2018-02-22,Europa League,H,Copenhagen
+1718,Sociedad,2018-02-22,Europa League,A,Red Bull Salzburg
+1718,Villarreal,2018-02-22,Europa League,H,Lyon
 1718,Espanol,2018-02-23,La Liga,A,La Coruna
 1718,La Coruna,2018-02-23,La Liga,H,Espanol
 1718,Osasuna,2018-02-23,Segunda División,A,Sporting Gijón
@@ -1983,6 +2133,8 @@ season,team,date,competition,home_away,opponent
 1718,Celta,2018-03-05,La Liga,H,Las Palmas
 1718,Las Palmas,2018-03-05,La Liga,A,Celta
 1718,Real Madrid,2018-03-06,Champions League,A,Paris Saint-Germain
+1718,Ath Bilbao,2018-03-08,Europa League,A,Marseille
+1718,Ath Madrid,2018-03-08,Europa League,H,Lokomotiv Moscow
 1718,Girona,2018-03-09,La Liga,H,La Coruna
 1718,La Coruna,2018-03-09,La Liga,A,Girona
 1718,Oviedo,2018-03-09,Segunda División,A,CD Tenerife
@@ -2013,6 +2165,8 @@ season,team,date,competition,home_away,opponent
 1718,Betis,2018-03-12,La Liga,A,Alaves
 1718,Sevilla,2018-03-13,Champions League,A,Man United
 1718,Barcelona,2018-03-14,Champions League,H,Chelsea
+1718,Ath Bilbao,2018-03-15,Europa League,H,Marseille
+1718,Ath Madrid,2018-03-15,Europa League,A,Lokomotiv Moscow
 1718,Eibar,2018-03-16,La Liga,A,Levante
 1718,Levante,2018-03-16,La Liga,H,Eibar
 1718,Alaves,2018-03-17,La Liga,A,Valencia
@@ -2079,6 +2233,7 @@ season,team,date,competition,home_away,opponent
 1718,Real Madrid,2018-04-03,Champions League,A,Juventus
 1718,Sevilla,2018-04-03,Champions League,H,Bayern München
 1718,Barcelona,2018-04-04,Champions League,H,Roma
+1718,Ath Madrid,2018-04-05,Europa League,H,Sporting CP
 1718,Almeria,2018-04-06,Segunda División,A,Cadiz
 1718,Cadiz,2018-04-06,Segunda División,H,Almeria
 1718,La Coruna,2018-04-06,La Liga,H,Malaga
@@ -2110,6 +2265,7 @@ season,team,date,competition,home_away,opponent
 1718,Barcelona,2018-04-10,Champions League,A,Roma
 1718,Real Madrid,2018-04-11,Champions League,H,Juventus
 1718,Sevilla,2018-04-11,Champions League,A,Bayern München
+1718,Ath Madrid,2018-04-12,Europa League,A,Sporting CP
 1718,Huesca,2018-04-12,Segunda División,H,Albacete
 1718,Betis,2018-04-13,La Liga,A,Girona
 1718,Girona,2018-04-13,La Liga,H,Betis
@@ -2164,10 +2320,12 @@ season,team,date,competition,home_away,opponent
 1718,Oviedo,2018-04-20,Segunda División,H,Valladolid
 1718,Valladolid,2018-04-20,Segunda División,A,Oviedo
 1718,Almeria,2018-04-21,Segunda División,A,Real Zaragoza
+1718,Barcelona,2018-04-21,Copa del Rey,A,Sevilla
 1718,Celta,2018-04-21,La Liga,H,Valencia
 1718,Eibar,2018-04-21,La Liga,H,Getafe
 1718,Getafe,2018-04-21,La Liga,A,Eibar
 1718,Huesca,2018-04-21,Segunda División,A,CD Tenerife
+1718,Sevilla,2018-04-21,Copa del Rey,H,Barcelona
 1718,Valencia,2018-04-21,La Liga,A,Celta
 1718,Alaves,2018-04-22,La Liga,A,Las Palmas
 1718,Ath Madrid,2018-04-22,La Liga,H,Betis
@@ -2184,6 +2342,7 @@ season,team,date,competition,home_away,opponent
 1718,Ath Bilbao,2018-04-23,La Liga,H,Levante
 1718,Levante,2018-04-23,La Liga,A,Ath Bilbao
 1718,Real Madrid,2018-04-25,Champions League,A,Bayern München
+1718,Ath Madrid,2018-04-26,Europa League,A,Arsenal
 1718,Levante,2018-04-27,La Liga,H,Sevilla
 1718,Sevilla,2018-04-27,La Liga,A,Levante
 1718,Almeria,2018-04-28,Segunda División,H,FC Barcelona B
@@ -2213,6 +2372,7 @@ season,team,date,competition,home_away,opponent
 1718,Betis,2018-04-30,La Liga,H,Malaga
 1718,Malaga,2018-04-30,La Liga,A,Betis
 1718,Real Madrid,2018-05-01,Champions League,H,Bayern München
+1718,Ath Madrid,2018-05-03,Europa League,H,Arsenal
 1718,Sevilla,2018-05-04,La Liga,H,Sociedad
 1718,Sociedad,2018-05-04,La Liga,A,Sevilla
 1718,Almeria,2018-05-05,Segunda División,A,CD Tenerife
@@ -2273,6 +2433,7 @@ season,team,date,competition,home_away,opponent
 1718,Malaga,2018-05-13,La Liga,A,Espanol
 1718,Vallecano,2018-05-13,Segunda División,H,Córdoba CF
 1718,Cadiz,2018-05-14,Segunda División,H,Real Zaragoza
+1718,Ath Madrid,2018-05-16,Europa League,A,Marseille
 1718,Alaves,2018-05-19,La Liga,A,Sevilla
 1718,Betis,2018-05-19,La Liga,A,Leganes
 1718,Celta,2018-05-19,La Liga,H,Levante
@@ -2318,6 +2479,14 @@ season,team,date,competition,home_away,opponent
 1718,Oviedo,2018-06-02,Segunda División,H,Huesca
 1718,Valladolid,2018-06-02,Segunda División,H,Osasuna
 1718,Vallecano,2018-06-02,Segunda División,A,Gimnàstic de Tarragona
+1819,Sevilla,2018-07-26,Europa League (qual.),H,Újpest
+1819,Sevilla,2018-08-02,Europa League (qual.),A,Újpest
+1819,Sevilla,2018-08-09,Europa League (qual.),H,Žalgiris
+1819,Barcelona,2018-08-12,Supercopa de Espana,A,Sevilla
+1819,Sevilla,2018-08-12,Supercopa de Espana,H,Barcelona
+1819,Ath Madrid,2018-08-15,UEFA Super Cup,A,Real Madrid
+1819,Real Madrid,2018-08-15,UEFA Super Cup,H,Ath Madrid
+1819,Sevilla,2018-08-16,Europa League (qual.),A,Žalgiris
 1819,Almeria,2018-08-17,Segunda División,A,Cadiz
 1819,Betis,2018-08-17,La Liga,H,Levante
 1819,Cadiz,2018-08-17,Segunda División,H,Almeria
@@ -2348,6 +2517,7 @@ season,team,date,competition,home_away,opponent
 1819,Ath Madrid,2018-08-20,La Liga,A,Valencia
 1819,Leganes,2018-08-20,La Liga,A,Ath Bilbao
 1819,Valencia,2018-08-20,La Liga,H,Ath Madrid
+1819,Sevilla,2018-08-23,Europa League (qual.),A,Sigma Olomouc
 1819,Eibar,2018-08-24,La Liga,A,Getafe
 1819,Getafe,2018-08-24,La Liga,H,Eibar
 1819,La Coruna,2018-08-24,Segunda División,A,Extremadura UD
@@ -2378,6 +2548,7 @@ season,team,date,competition,home_away,opponent
 1819,Huesca,2018-08-27,La Liga,A,Ath Bilbao
 1819,Levante,2018-08-27,La Liga,H,Celta
 1819,Mallorca,2018-08-27,Segunda División,A,Rayo Majadahonda
+1819,Sevilla,2018-08-30,Europa League (qual.),H,Sigma Olomouc
 1819,Eibar,2018-08-31,La Liga,H,Sociedad
 1819,Getafe,2018-08-31,La Liga,H,Valladolid
 1819,Girona,2018-08-31,La Liga,A,Villarreal
@@ -2416,6 +2587,16 @@ season,team,date,competition,home_away,opponent
 1819,Elche,2018-09-09,Segunda División,A,CD Numancia
 1819,Granada,2018-09-09,Segunda División,A,Extremadura UD
 1819,La Coruna,2018-09-09,Segunda División,H,Sporting Gijón
+1819,Almeria,2018-09-11,Copa del Rey,A,Malaga
+1819,Malaga,2018-09-11,Copa del Rey,H,Almeria
+1819,Mallorca,2018-09-11,Copa del Rey,H,Oviedo
+1819,Oviedo,2018-09-11,Copa del Rey,A,Mallorca
+1819,Cadiz,2018-09-12,Copa del Rey,A,Tenerife
+1819,La Coruna,2018-09-12,Copa del Rey,A,Zaragoza
+1819,Osasuna,2018-09-12,Copa del Rey,H,Reus
+1819,Elche,2018-09-13,Copa del Rey,H,Granada
+1819,Granada,2018-09-13,Copa del Rey,A,Elche
+1819,Las Palmas,2018-09-13,Copa del Rey,H,Rayo Majadahonda
 1819,Huesca,2018-09-14,La Liga,H,Vallecano
 1819,Vallecano,2018-09-14,La Liga,A,Huesca
 1819,Ath Bilbao,2018-09-15,La Liga,H,Real Madrid
@@ -2450,6 +2631,9 @@ season,team,date,competition,home_away,opponent
 1819,Barcelona,2018-09-18,Champions League,H,PSV Eindhoven
 1819,Real Madrid,2018-09-19,Champions League,H,Roma
 1819,Valencia,2018-09-19,Champions League,H,Juventus
+1819,Betis,2018-09-20,Europa League,A,Olympiacos
+1819,Sevilla,2018-09-20,Europa League,H,Standard Liège
+1819,Villarreal,2018-09-20,Europa League,H,Rangers
 1819,Huesca,2018-09-21,La Liga,H,Sociedad
 1819,Sociedad,2018-09-21,La Liga,A,Huesca
 1819,Alaves,2018-09-22,La Liga,A,Vallecano
@@ -2534,6 +2718,9 @@ season,team,date,competition,home_away,opponent
 1819,Valencia,2018-10-02,Champions League,A,Man United
 1819,Ath Madrid,2018-10-03,Champions League,H,Club Brugge KV
 1819,Barcelona,2018-10-03,Champions League,A,Tottenham
+1819,Betis,2018-10-04,Europa League,H,F91 Dudelange
+1819,Sevilla,2018-10-04,Europa League,A,Krasnodar
+1819,Villarreal,2018-10-04,Europa League,A,Spartak Moscow
 1819,Ath Bilbao,2018-10-05,La Liga,H,Sociedad
 1819,Sociedad,2018-10-05,La Liga,A,Ath Bilbao
 1819,Alaves,2018-10-06,La Liga,H,Real Madrid
@@ -2574,6 +2761,9 @@ season,team,date,competition,home_away,opponent
 1819,Granada,2018-10-14,Segunda División,H,Mallorca
 1819,Mallorca,2018-10-14,Segunda División,A,Granada
 1819,Oviedo,2018-10-14,Segunda División,A,Rayo Majadahonda
+1819,Elche,2018-10-16,Copa del Rey,H,Córdoba
+1819,Cadiz,2018-10-17,Copa del Rey,A,Zaragoza
+1819,Almeria,2018-10-18,Copa del Rey,H,Reus
 1819,Alaves,2018-10-19,La Liga,A,Celta
 1819,Celta,2018-10-19,La Liga,H,Alaves
 1819,Elche,2018-10-19,Segunda División,H,Malaga
@@ -2610,6 +2800,9 @@ season,team,date,competition,home_away,opponent
 1819,Ath Madrid,2018-10-24,Champions League,A,Borussia Dortmund
 1819,Barcelona,2018-10-24,Champions League,H,Inter
 1819,Vallecano,2018-10-24,La Liga,H,Ath Bilbao
+1819,Betis,2018-10-25,Europa League,A,Milan
+1819,Sevilla,2018-10-25,Europa League,H,Akhisarspor
+1819,Villarreal,2018-10-25,Europa League,H,Rapid Wien
 1819,Espanol,2018-10-26,La Liga,A,Valladolid
 1819,Valladolid,2018-10-26,La Liga,H,Espanol
 1819,Almeria,2018-10-27,Segunda División,A,Granada
@@ -2640,6 +2833,27 @@ season,team,date,competition,home_away,opponent
 1819,Sevilla,2018-10-28,La Liga,H,Huesca
 1819,Villarreal,2018-10-28,La Liga,A,Alaves
 1819,Malaga,2018-10-29,Segunda División,H,CD Numancia
+1819,Ath Madrid,2018-10-30,Copa del Rey,A,Sant Andreu
+1819,Leganes,2018-10-30,Copa del Rey,H,Vallecano
+1819,Levante,2018-10-30,Copa del Rey,A,Lugo
+1819,Valencia,2018-10-30,Copa del Rey,A,Ebro
+1819,Vallecano,2018-10-30,Copa del Rey,A,Leganes
+1819,Alaves,2018-10-31,Copa del Rey,H,Girona
+1819,Barcelona,2018-10-31,Copa del Rey,A,Cultural Leonesa
+1819,Getafe,2018-10-31,Copa del Rey,A,Córdoba
+1819,Girona,2018-10-31,Copa del Rey,A,Alaves
+1819,Mallorca,2018-10-31,Copa del Rey,H,Valladolid
+1819,Real Madrid,2018-10-31,Copa del Rey,A,Melilla
+1819,Valladolid,2018-10-31,Copa del Rey,A,Mallorca
+1819,Almeria,2018-11-01,Copa del Rey,H,Villarreal
+1819,Betis,2018-11-01,Copa del Rey,A,Racing Santander
+1819,Cadiz,2018-11-01,Copa del Rey,H,Espanol
+1819,Celta,2018-11-01,Copa del Rey,H,Sociedad
+1819,Eibar,2018-11-01,Copa del Rey,A,Sporting Gijón
+1819,Espanol,2018-11-01,Copa del Rey,A,Cadiz
+1819,Sevilla,2018-11-01,Copa del Rey,A,Villanovense
+1819,Sociedad,2018-11-01,Copa del Rey,A,Celta
+1819,Villarreal,2018-11-01,Copa del Rey,A,Almeria
 1819,Ath Madrid,2018-11-03,La Liga,A,Leganes
 1819,Barcelona,2018-11-03,La Liga,A,Vallecano
 1819,Girona,2018-11-03,La Liga,A,Valencia
@@ -2674,6 +2888,9 @@ season,team,date,competition,home_away,opponent
 1819,Barcelona,2018-11-06,Champions League,A,Inter
 1819,Real Madrid,2018-11-07,Champions League,A,Viktoria Plzeň
 1819,Valencia,2018-11-07,Champions League,H,BSC Young Boys
+1819,Betis,2018-11-08,Europa League,H,Milan
+1819,Sevilla,2018-11-08,Europa League,A,Akhisarspor
+1819,Villarreal,2018-11-08,Europa League,A,Rapid Wien
 1819,Levante,2018-11-09,La Liga,H,Sociedad
 1819,Sociedad,2018-11-09,La Liga,A,Levante
 1819,Ath Bilbao,2018-11-10,La Liga,A,Ath Madrid
@@ -2746,8 +2963,13 @@ season,team,date,competition,home_away,opponent
 1819,Sociedad,2018-11-26,La Liga,H,Celta
 1819,Real Madrid,2018-11-27,Champions League,A,Roma
 1819,Valencia,2018-11-27,Champions League,A,Juventus
+1819,Ath Bilbao,2018-11-28,Copa del Rey,H,Huesca
 1819,Ath Madrid,2018-11-28,Champions League,H,AS Monaco
 1819,Barcelona,2018-11-28,Champions League,A,PSV Eindhoven
+1819,Huesca,2018-11-28,Copa del Rey,A,Ath Bilbao
+1819,Betis,2018-11-29,Europa League,H,Olympiacos
+1819,Sevilla,2018-11-29,Europa League,A,Standard Liège
+1819,Villarreal,2018-11-29,Europa League,A,Rangers
 1819,Cadiz,2018-11-30,Segunda División,A,Real Zaragoza
 1819,Eibar,2018-11-30,La Liga,A,Vallecano
 1819,Vallecano,2018-11-30,La Liga,H,Eibar
@@ -2778,6 +3000,29 @@ season,team,date,competition,home_away,opponent
 1819,Villarreal,2018-12-02,La Liga,A,Barcelona
 1819,Ath Bilbao,2018-12-03,La Liga,A,Levante
 1819,Levante,2018-12-03,La Liga,H,Ath Bilbao
+1819,Cadiz,2018-12-04,Copa del Rey,A,Espanol
+1819,Espanol,2018-12-04,Copa del Rey,H,Cadiz
+1819,Getafe,2018-12-04,Copa del Rey,H,Córdoba
+1819,Leganes,2018-12-04,Copa del Rey,A,Vallecano
+1819,Valencia,2018-12-04,Copa del Rey,H,Ebro
+1819,Vallecano,2018-12-04,Copa del Rey,H,Leganes
+1819,Alaves,2018-12-05,Copa del Rey,A,Girona
+1819,Almeria,2018-12-05,Copa del Rey,A,Villarreal
+1819,Ath Madrid,2018-12-05,Copa del Rey,H,Sant Andreu
+1819,Barcelona,2018-12-05,Copa del Rey,H,Cultural Leonesa
+1819,Celta,2018-12-05,Copa del Rey,A,Sociedad
+1819,Girona,2018-12-05,Copa del Rey,H,Alaves
+1819,Mallorca,2018-12-05,Copa del Rey,A,Valladolid
+1819,Sevilla,2018-12-05,Copa del Rey,H,Villanovense
+1819,Sociedad,2018-12-05,Copa del Rey,H,Celta
+1819,Valladolid,2018-12-05,Copa del Rey,H,Mallorca
+1819,Villarreal,2018-12-05,Copa del Rey,H,Almeria
+1819,Ath Bilbao,2018-12-06,Copa del Rey,A,Huesca
+1819,Betis,2018-12-06,Copa del Rey,H,Racing Santander
+1819,Eibar,2018-12-06,Copa del Rey,H,Sporting Gijón
+1819,Huesca,2018-12-06,Copa del Rey,H,Ath Bilbao
+1819,Levante,2018-12-06,Copa del Rey,H,Lugo
+1819,Real Madrid,2018-12-06,Copa del Rey,H,Melilla
 1819,Getafe,2018-12-07,La Liga,A,Leganes
 1819,Leganes,2018-12-07,La Liga,H,Getafe
 1819,Alaves,2018-12-08,La Liga,A,Ath Madrid
@@ -2812,6 +3057,9 @@ season,team,date,competition,home_away,opponent
 1819,Barcelona,2018-12-11,Champions League,H,Tottenham
 1819,Real Madrid,2018-12-12,Champions League,H,CSKA Moskva
 1819,Valencia,2018-12-12,Champions League,H,Man United
+1819,Betis,2018-12-13,Europa League,A,F91 Dudelange
+1819,Sevilla,2018-12-13,Europa League,H,Krasnodar
+1819,Villarreal,2018-12-13,Europa League,H,Spartak Moscow
 1819,Cadiz,2018-12-14,Segunda División,A,Malaga
 1819,Celta,2018-12-14,La Liga,H,Leganes
 1819,Leganes,2018-12-14,La Liga,A,Celta
@@ -2842,6 +3090,7 @@ season,team,date,competition,home_away,opponent
 1819,Villarreal,2018-12-16,La Liga,A,Huesca
 1819,Alaves,2018-12-17,La Liga,H,Ath Bilbao
 1819,Ath Bilbao,2018-12-17,La Liga,A,Alaves
+1819,Real Madrid,2018-12-19,FIFA Club World Cup,A,Kashima Antlers
 1819,Alaves,2018-12-21,La Liga,A,Sociedad
 1819,Getafe,2018-12-21,La Liga,A,Girona
 1819,Girona,2018-12-21,La Liga,H,Getafe
@@ -2862,6 +3111,7 @@ season,team,date,competition,home_away,opponent
 1819,Las Palmas,2018-12-22,Segunda División,A,Córdoba CF
 1819,Malaga,2018-12-22,Segunda División,A,Oviedo
 1819,Oviedo,2018-12-22,Segunda División,H,Malaga
+1819,Real Madrid,2018-12-22,FIFA Club World Cup,H,Al Ain
 1819,Valladolid,2018-12-22,La Liga,A,Ath Bilbao
 1819,Huesca,2018-12-23,La Liga,A,Valencia
 1819,Leganes,2018-12-23,La Liga,H,Sevilla
@@ -2902,6 +3152,21 @@ season,team,date,competition,home_away,opponent
 1819,Celta,2019-01-07,La Liga,H,Ath Bilbao
 1819,Las Palmas,2019-01-07,Segunda División,A,Rayo Majadahonda
 1819,Oviedo,2019-01-07,Segunda División,A,CD Numancia
+1819,Valencia,2019-01-08,Copa del Rey,A,Sporting Gijón
+1819,Ath Madrid,2019-01-09,Copa del Rey,A,Girona
+1819,Espanol,2019-01-09,Copa del Rey,A,Villarreal
+1819,Getafe,2019-01-09,Copa del Rey,H,Valladolid
+1819,Girona,2019-01-09,Copa del Rey,H,Ath Madrid
+1819,Leganes,2019-01-09,Copa del Rey,A,Real Madrid
+1819,Real Madrid,2019-01-09,Copa del Rey,H,Leganes
+1819,Valladolid,2019-01-09,Copa del Rey,A,Getafe
+1819,Villarreal,2019-01-09,Copa del Rey,H,Espanol
+1819,Ath Bilbao,2019-01-10,Copa del Rey,H,Sevilla
+1819,Barcelona,2019-01-10,Copa del Rey,A,Levante
+1819,Betis,2019-01-10,Copa del Rey,H,Sociedad
+1819,Levante,2019-01-10,Copa del Rey,H,Barcelona
+1819,Sevilla,2019-01-10,Copa del Rey,A,Ath Bilbao
+1819,Sociedad,2019-01-10,Copa del Rey,A,Betis
 1819,Cadiz,2019-01-11,Segunda División,H,Granada
 1819,Celta,2019-01-11,La Liga,A,Vallecano
 1819,Granada,2019-01-11,Segunda División,A,Cadiz
@@ -2932,6 +3197,21 @@ season,team,date,competition,home_away,opponent
 1819,Sevilla,2019-01-13,La Liga,A,Ath Bilbao
 1819,Espanol,2019-01-14,La Liga,A,Sociedad
 1819,Sociedad,2019-01-14,La Liga,H,Espanol
+1819,Getafe,2019-01-15,Copa del Rey,A,Valladolid
+1819,Valencia,2019-01-15,Copa del Rey,H,Sporting Gijón
+1819,Valladolid,2019-01-15,Copa del Rey,H,Getafe
+1819,Ath Bilbao,2019-01-16,Copa del Rey,A,Sevilla
+1819,Ath Madrid,2019-01-16,Copa del Rey,H,Girona
+1819,Girona,2019-01-16,Copa del Rey,A,Ath Madrid
+1819,Leganes,2019-01-16,Copa del Rey,H,Real Madrid
+1819,Real Madrid,2019-01-16,Copa del Rey,A,Leganes
+1819,Sevilla,2019-01-16,Copa del Rey,H,Ath Bilbao
+1819,Barcelona,2019-01-17,Copa del Rey,H,Levante
+1819,Betis,2019-01-17,Copa del Rey,A,Sociedad
+1819,Espanol,2019-01-17,Copa del Rey,H,Villarreal
+1819,Levante,2019-01-17,Copa del Rey,A,Barcelona
+1819,Sociedad,2019-01-17,Copa del Rey,H,Betis
+1819,Villarreal,2019-01-17,Copa del Rey,A,Espanol
 1819,Alaves,2019-01-18,La Liga,A,Getafe
 1819,Getafe,2019-01-18,La Liga,H,Alaves
 1819,Almeria,2019-01-19,Segunda División,H,Cadiz
@@ -2962,6 +3242,14 @@ season,team,date,competition,home_away,opponent
 1819,Elche,2019-01-21,Segunda División,A,Granada
 1819,Espanol,2019-01-21,La Liga,A,Eibar
 1819,Granada,2019-01-21,Segunda División,H,Elche
+1819,Getafe,2019-01-22,Copa del Rey,H,Valencia
+1819,Valencia,2019-01-22,Copa del Rey,A,Getafe
+1819,Barcelona,2019-01-23,Copa del Rey,A,Sevilla
+1819,Sevilla,2019-01-23,Copa del Rey,H,Barcelona
+1819,Betis,2019-01-24,Copa del Rey,A,Espanol
+1819,Espanol,2019-01-24,Copa del Rey,H,Betis
+1819,Girona,2019-01-24,Copa del Rey,A,Real Madrid
+1819,Real Madrid,2019-01-24,Copa del Rey,H,Girona
 1819,Oviedo,2019-01-25,Segunda División,A,Real Zaragoza
 1819,Almeria,2019-01-26,Segunda División,H,Osasuna
 1819,Ath Madrid,2019-01-26,La Liga,H,Getafe
@@ -2992,6 +3280,14 @@ season,team,date,competition,home_away,opponent
 1819,Valladolid,2019-01-27,La Liga,H,Celta
 1819,Alaves,2019-01-28,La Liga,H,Vallecano
 1819,Vallecano,2019-01-28,La Liga,A,Alaves
+1819,Getafe,2019-01-29,Copa del Rey,A,Valencia
+1819,Valencia,2019-01-29,Copa del Rey,H,Getafe
+1819,Barcelona,2019-01-30,Copa del Rey,H,Sevilla
+1819,Betis,2019-01-30,Copa del Rey,H,Espanol
+1819,Espanol,2019-01-30,Copa del Rey,A,Betis
+1819,Sevilla,2019-01-30,Copa del Rey,A,Barcelona
+1819,Girona,2019-01-31,Copa del Rey,H,Real Madrid
+1819,Real Madrid,2019-01-31,Copa del Rey,A,Girona
 1819,Almeria,2019-02-01,Segunda División,A,Malaga
 1819,Huesca,2019-02-01,La Liga,H,Valladolid
 1819,Malaga,2019-02-01,Segunda División,H,Almeria
@@ -3022,6 +3318,10 @@ season,team,date,competition,home_away,opponent
 1819,Las Palmas,2019-02-04,Segunda División,H,Real Zaragoza
 1819,Leganes,2019-02-04,La Liga,A,Vallecano
 1819,Vallecano,2019-02-04,La Liga,H,Leganes
+1819,Barcelona,2019-02-06,Copa del Rey,H,Real Madrid
+1819,Real Madrid,2019-02-06,Copa del Rey,A,Barcelona
+1819,Betis,2019-02-07,Copa del Rey,H,Valencia
+1819,Valencia,2019-02-07,Copa del Rey,A,Betis
 1819,Osasuna,2019-02-08,Segunda División,A,Sporting Gijón
 1819,Valladolid,2019-02-08,La Liga,H,Villarreal
 1819,Villarreal,2019-02-08,La Liga,A,Valladolid
@@ -3053,6 +3353,10 @@ season,team,date,competition,home_away,opponent
 1819,Alaves,2019-02-11,La Liga,H,Levante
 1819,Levante,2019-02-11,La Liga,A,Alaves
 1819,Real Madrid,2019-02-13,Champions League,A,AFC Ajax
+1819,Betis,2019-02-14,Europa League,A,Rennes
+1819,Sevilla,2019-02-14,Europa League,A,Lazio
+1819,Valencia,2019-02-14,Europa League,A,Celtic
+1819,Villarreal,2019-02-14,Europa League,A,Sporting CP
 1819,Eibar,2019-02-15,La Liga,H,Getafe
 1819,Getafe,2019-02-15,La Liga,A,Eibar
 1819,Granada,2019-02-15,Segunda División,A,Córdoba CF
@@ -3085,6 +3389,10 @@ season,team,date,competition,home_away,opponent
 1819,Huesca,2019-02-18,La Liga,H,Ath Bilbao
 1819,Barcelona,2019-02-19,Champions League,A,Olympique Lyonnais
 1819,Ath Madrid,2019-02-20,Champions League,H,Juventus
+1819,Sevilla,2019-02-20,Europa League,H,Lazio
+1819,Betis,2019-02-21,Europa League,H,Rennes
+1819,Valencia,2019-02-21,Europa League,H,Celtic
+1819,Villarreal,2019-02-21,Europa League,H,Sporting CP
 1819,Espanol,2019-02-22,La Liga,H,Huesca
 1819,Huesca,2019-02-22,La Liga,A,Espanol
 1819,Mallorca,2019-02-22,Segunda División,A,CD Tenerife
@@ -3115,6 +3423,10 @@ season,team,date,competition,home_away,opponent
 1819,Villarreal,2019-02-24,La Liga,A,Ath Madrid
 1819,Girona,2019-02-25,La Liga,H,Sociedad
 1819,Sociedad,2019-02-25,La Liga,A,Girona
+1819,Barcelona,2019-02-27,Copa del Rey,A,Real Madrid
+1819,Real Madrid,2019-02-27,Copa del Rey,H,Barcelona
+1819,Betis,2019-02-28,Copa del Rey,A,Valencia
+1819,Valencia,2019-02-28,Copa del Rey,H,Betis
 1819,Girona,2019-03-01,La Liga,A,Vallecano
 1819,Vallecano,2019-03-01,La Liga,H,Girona
 1819,Alaves,2019-03-02,La Liga,A,Villarreal
@@ -3146,6 +3458,9 @@ season,team,date,competition,home_away,opponent
 1819,Leganes,2019-03-04,La Liga,H,Levante
 1819,Levante,2019-03-04,La Liga,A,Leganes
 1819,Real Madrid,2019-03-05,Champions League,H,AFC Ajax
+1819,Sevilla,2019-03-07,Europa League,H,Slavia Prague
+1819,Valencia,2019-03-07,Europa League,H,Krasnodar
+1819,Villarreal,2019-03-07,Europa League,A,Zenit Saint Petersburg
 1819,Ath Bilbao,2019-03-08,La Liga,H,Espanol
 1819,Espanol,2019-03-08,La Liga,A,Ath Bilbao
 1819,Alaves,2019-03-09,La Liga,H,Eibar
@@ -3178,6 +3493,9 @@ season,team,date,competition,home_away,opponent
 1819,Osasuna,2019-03-11,Segunda División,A,Malaga
 1819,Ath Madrid,2019-03-12,Champions League,A,Juventus
 1819,Barcelona,2019-03-13,Champions League,H,Olympique Lyonnais
+1819,Sevilla,2019-03-14,Europa League,A,Slavia Prague
+1819,Valencia,2019-03-14,Europa League,A,Krasnodar
+1819,Villarreal,2019-03-14,Europa League,H,Zenit Saint Petersburg
 1819,Levante,2019-03-15,La Liga,A,Sociedad
 1819,Sociedad,2019-03-15,La Liga,H,Levante
 1819,Alaves,2019-03-16,La Liga,A,Huesca
@@ -3299,6 +3617,8 @@ season,team,date,competition,home_away,opponent
 1819,Villarreal,2019-04-07,La Liga,A,Betis
 1819,Cadiz,2019-04-08,Segunda División,H,Real Zaragoza
 1819,Barcelona,2019-04-10,Champions League,A,Man United
+1819,Valencia,2019-04-11,Europa League,A,Villarreal
+1819,Villarreal,2019-04-11,Europa League,H,Valencia
 1819,Granada,2019-04-12,Segunda División,A,Sporting Gijón
 1819,Alaves,2019-04-13,La Liga,A,Espanol
 1819,Almeria,2019-04-13,Segunda División,H,Gimnàstic de Tarragona
@@ -3330,6 +3650,8 @@ season,team,date,competition,home_away,opponent
 1819,Leganes,2019-04-15,La Liga,H,Real Madrid
 1819,Real Madrid,2019-04-15,La Liga,A,Leganes
 1819,Barcelona,2019-04-16,Champions League,H,Man United
+1819,Valencia,2019-04-18,Europa League,H,Villarreal
+1819,Villarreal,2019-04-18,Europa League,A,Valencia
 1819,Alaves,2019-04-19,La Liga,H,Valladolid
 1819,Malaga,2019-04-19,Segunda División,A,AD Alcorcón
 1819,Valladolid,2019-04-19,La Liga,A,Alaves
@@ -3411,6 +3733,7 @@ season,team,date,competition,home_away,opponent
 1819,Betis,2019-04-29,La Liga,H,Espanol
 1819,Espanol,2019-04-29,La Liga,A,Betis
 1819,Barcelona,2019-05-01,Champions League,H,Liverpool
+1819,Valencia,2019-05-02,Europa League,A,Arsenal
 1819,Leganes,2019-05-03,La Liga,A,Sevilla
 1819,Sevilla,2019-05-03,La Liga,H,Leganes
 1819,Alaves,2019-05-04,La Liga,H,Sociedad
@@ -3442,6 +3765,7 @@ season,team,date,competition,home_away,opponent
 1819,Cadiz,2019-05-06,Segunda División,H,Malaga
 1819,Malaga,2019-05-06,Segunda División,A,Cadiz
 1819,Barcelona,2019-05-07,Champions League,A,Liverpool
+1819,Valencia,2019-05-09,Europa League,H,Arsenal
 1819,Granada,2019-05-10,Segunda División,H,CD Tenerife
 1819,Mallorca,2019-05-11,Segunda División,A,Gimnàstic de Tarragona
 1819,Alaves,2019-05-12,La Liga,A,Valencia
@@ -3503,8 +3827,10 @@ season,team,date,competition,home_away,opponent
 1819,Real Madrid,2019-05-19,La Liga,H,Betis
 1819,Granada,2019-05-20,Segunda División,A,Albacete
 1819,Malaga,2019-05-24,Segunda División,H,Real Zaragoza
+1819,Barcelona,2019-05-25,Copa del Rey,H,Valencia
 1819,Las Palmas,2019-05-25,Segunda División,A,Osasuna
 1819,Osasuna,2019-05-25,Segunda División,H,Las Palmas
+1819,Valencia,2019-05-25,Copa del Rey,A,Barcelona
 1819,Almeria,2019-05-26,Segunda División,H,AD Alcorcón
 1819,Cadiz,2019-05-26,Segunda División,A,Granada
 1819,Elche,2019-05-26,Segunda División,A,Gimnàstic de Tarragona
@@ -3532,6 +3858,10 @@ season,team,date,competition,home_away,opponent
 1819,Osasuna,2019-06-08,Segunda División,H,Oviedo
 1819,Oviedo,2019-06-08,Segunda División,A,Osasuna
 1819,Las Palmas,2019-06-09,Segunda División,A,CD Numancia
+1920,Espanol,2019-07-25,Europa League (qual.),H,Stjarnan
+1920,Espanol,2019-08-01,Europa League (qual.),A,Stjarnan
+1920,Espanol,2019-08-08,Europa League (qual.),A,Luzern
+1920,Espanol,2019-08-15,Europa League (qual.),H,Luzern
 1920,Ath Bilbao,2019-08-16,La Liga,H,Barcelona
 1920,Barcelona,2019-08-16,La Liga,A,Ath Bilbao
 1920,Almeria,2019-08-17,Segunda División,H,Albacete
@@ -3562,6 +3892,7 @@ season,team,date,competition,home_away,opponent
 1920,Oviedo,2019-08-18,Segunda División,A,La Coruna
 1920,Sevilla,2019-08-18,La Liga,A,Espanol
 1920,Valladolid,2019-08-18,La Liga,A,Betis
+1920,Espanol,2019-08-22,Europa League (qual.),H,Zorya Luhansk
 1920,Girona,2019-08-23,Segunda División,A,Albacete
 1920,Granada,2019-08-23,La Liga,H,Sevilla
 1920,Levante,2019-08-23,La Liga,H,Villarreal
@@ -3592,6 +3923,7 @@ season,team,date,competition,home_away,opponent
 1920,Mallorca,2019-08-25,La Liga,H,Sociedad
 1920,Sociedad,2019-08-25,La Liga,A,Mallorca
 1920,Vallecano,2019-08-25,Segunda División,A,Sporting Gijón
+1920,Espanol,2019-08-29,Europa League (qual.),A,Zorya Luhansk
 1920,Ath Bilbao,2019-08-30,La Liga,H,Sociedad
 1920,Celta,2019-08-30,La Liga,A,Sevilla
 1920,Elche,2019-08-30,Segunda División,A,Real Zaragoza
@@ -3674,8 +4006,11 @@ season,team,date,competition,home_away,opponent
 1920,La Coruna,2019-09-18,Segunda División,H,CD Numancia
 1920,Real Madrid,2019-09-18,Champions League,A,Paris Saint-Germain
 1920,Elche,2019-09-19,Segunda División,H,CD Tenerife
+1920,Espanol,2019-09-19,Europa League,H,Ferencváros
+1920,Getafe,2019-09-19,Europa League,H,Trabzonspor
 1920,Las Palmas,2019-09-19,Segunda División,H,Sporting Gijón
 1920,Oviedo,2019-09-19,Segunda División,H,Extremadura UD
+1920,Sevilla,2019-09-19,Europa League,A,Qarabağ
 1920,Betis,2019-09-20,La Liga,A,Osasuna
 1920,Osasuna,2019-09-20,La Liga,H,Betis
 1920,Almeria,2019-09-21,Segunda División,A,Vallecano
@@ -3767,9 +4102,12 @@ season,team,date,competition,home_away,opponent
 1920,Oviedo,2019-10-02,Segunda División,A,CD Tenerife
 1920,Valencia,2019-10-02,Champions League,H,AFC Ajax
 1920,Almeria,2019-10-03,Segunda División,A,Sporting Gijón
+1920,Espanol,2019-10-03,Europa League,A,CSKA Moscow
+1920,Getafe,2019-10-03,Europa League,A,Krasnodar
 1920,Girona,2019-10-03,Segunda División,H,La Coruna
 1920,La Coruna,2019-10-03,Segunda División,A,Girona
 1920,Malaga,2019-10-03,Segunda División,A,Real Zaragoza
+1920,Sevilla,2019-10-03,Europa League,H,APOEL
 1920,Betis,2019-10-04,La Liga,H,Eibar
 1920,Eibar,2019-10-04,La Liga,A,Betis
 1920,Alaves,2019-10-05,La Liga,A,Valencia
@@ -3844,6 +4182,9 @@ season,team,date,competition,home_away,opponent
 1920,Real Madrid,2019-10-22,Champions League,A,Galatasaray
 1920,Barcelona,2019-10-23,Champions League,A,Slavia Praha
 1920,Valencia,2019-10-23,Champions League,A,Lille OSC
+1920,Espanol,2019-10-24,Europa League,A,Ludogorets Razgrad
+1920,Getafe,2019-10-24,Europa League,H,Basel
+1920,Sevilla,2019-10-24,Europa League,H,F91 Dudelange
 1920,Alaves,2019-10-25,La Liga,A,Villarreal
 1920,Cadiz,2019-10-25,Segunda División,A,Albacete
 1920,Villarreal,2019-10-25,La Liga,H,Alaves
@@ -3926,6 +4267,9 @@ season,team,date,competition,home_away,opponent
 1920,Valencia,2019-11-05,Champions League,H,Lille OSC
 1920,Ath Madrid,2019-11-06,Champions League,A,Bayer Leverkusen
 1920,Real Madrid,2019-11-06,Champions League,H,Galatasaray
+1920,Espanol,2019-11-07,Europa League,H,Ludogorets Razgrad
+1920,Getafe,2019-11-07,Europa League,A,Basel
+1920,Sevilla,2019-11-07,Europa League,A,F91 Dudelange
 1920,Girona,2019-11-08,Segunda División,H,CD Tenerife
 1920,Leganes,2019-11-08,La Liga,A,Sociedad
 1920,Sociedad,2019-11-08,La Liga,H,Leganes
@@ -4000,6 +4344,9 @@ season,team,date,competition,home_away,opponent
 1920,Real Madrid,2019-11-26,Champions League,H,Paris Saint-Germain
 1920,Barcelona,2019-11-27,Champions League,H,Borussia Dortmund
 1920,Valencia,2019-11-27,Champions League,H,Chelsea
+1920,Espanol,2019-11-28,Europa League,A,Ferencváros
+1920,Getafe,2019-11-28,Europa League,A,Trabzonspor
+1920,Sevilla,2019-11-28,Europa League,H,Qarabağ
 1920,Celta,2019-11-29,La Liga,H,Valladolid
 1920,Malaga,2019-11-29,Segunda División,A,CD Numancia
 1920,Valladolid,2019-11-29,La Liga,A,Celta
@@ -4064,6 +4411,9 @@ season,team,date,competition,home_away,opponent
 1920,Valencia,2019-12-10,Champions League,A,AFC Ajax
 1920,Ath Madrid,2019-12-11,Champions League,H,Lokomotiv Moskva
 1920,Real Madrid,2019-12-11,Champions League,A,Club Brugge KV
+1920,Espanol,2019-12-12,Europa League,H,CSKA Moscow
+1920,Getafe,2019-12-12,Europa League,H,Krasnodar
+1920,Sevilla,2019-12-12,Europa League,A,APOEL
 1920,Alaves,2019-12-13,La Liga,H,Leganes
 1920,Girona,2019-12-13,Segunda División,A,CD Numancia
 1920,Leganes,2019-12-13,La Liga,A,Alaves
@@ -4093,8 +4443,34 @@ season,team,date,competition,home_away,opponent
 1920,Valencia,2019-12-15,La Liga,H,Real Madrid
 1920,Valladolid,2019-12-15,La Liga,A,Getafe
 1920,Villarreal,2019-12-15,La Liga,A,Sevilla
+1920,Alaves,2019-12-17,Copa del Rey,A,Jaén
+1920,Ath Bilbao,2019-12-17,Copa del Rey,A,Intercity
+1920,Cadiz,2019-12-17,Copa del Rey,A,Lealtad
+1920,Eibar,2019-12-17,Copa del Rey,A,SD Logroñés
+1920,Elche,2019-12-17,Copa del Rey,A,Gimnástica Segoviana
+1920,Granada,2019-12-17,Copa del Rey,A,L'Hospitalet
+1920,La Coruna,2019-12-17,Copa del Rey,A,Illueca
+1920,Las Palmas,2019-12-17,Copa del Rey,A,Castellón
+1920,Leganes,2019-12-17,Copa del Rey,A,Andorra
+1920,Malaga,2019-12-17,Copa del Rey,A,Escobedo
+1920,Vallecano,2019-12-17,Copa del Rey,A,Tarazona
 1920,Barcelona,2019-12-18,La Liga,H,Real Madrid
+1920,Getafe,2019-12-18,Copa del Rey,A,El Palmar
+1920,Mallorca,2019-12-18,Copa del Rey,A,El Álamo
+1920,Oviedo,2019-12-18,Copa del Rey,A,Badalona
 1920,Real Madrid,2019-12-18,La Liga,A,Barcelona
+1920,Sevilla,2019-12-18,Copa del Rey,A,Bergantiños
+1920,Valladolid,2019-12-18,Copa del Rey,A,Tolosa
+1920,Villarreal,2019-12-18,Copa del Rey,A,Comillas
+1920,Almeria,2019-12-19,Copa del Rey,A,Tamaraceite
+1920,Betis,2019-12-19,Copa del Rey,A,Atlético Antoniano
+1920,Celta,2019-12-19,Copa del Rey,A,Peña Azagresa
+1920,Espanol,2019-12-19,Copa del Rey,A,Lleida Esportiu
+1920,Girona,2019-12-19,Copa del Rey,A,Linares
+1920,Huesca,2019-12-19,Copa del Rey,A,Laredo
+1920,Levante,2019-12-19,Copa del Rey,A,Melilla CD
+1920,Osasuna,2019-12-19,Copa del Rey,A,Lorca Deportiva
+1920,Sociedad,2019-12-19,Copa del Rey,A,Becerril
 1920,Eibar,2019-12-20,La Liga,H,Granada
 1920,Granada,2019-12-20,La Liga,A,Eibar
 1920,La Coruna,2019-12-20,Segunda División,H,CD Tenerife
@@ -4155,6 +4531,32 @@ season,team,date,competition,home_away,opponent
 1920,Sociedad,2020-01-05,La Liga,H,Villarreal
 1920,Vallecano,2020-01-05,Segunda División,H,Girona
 1920,Villarreal,2020-01-05,La Liga,A,Sociedad
+1920,Real Madrid,2020-01-08,Supercopa de Espana,A,Valencia
+1920,Valencia,2020-01-08,Supercopa de Espana,H,Real Madrid
+1920,Ath Madrid,2020-01-09,Supercopa de Espana,A,Barcelona
+1920,Barcelona,2020-01-09,Supercopa de Espana,H,Ath Madrid
+1920,Ath Bilbao,2020-01-11,Copa del Rey,A,Sestao River
+1920,Betis,2020-01-11,Copa del Rey,A,Portugalete
+1920,Cadiz,2020-01-11,Copa del Rey,A,UD Logroñés
+1920,Elche,2020-01-11,Copa del Rey,A,Yeclano
+1920,Getafe,2020-01-11,Copa del Rey,A,Badalona
+1920,Girona,2020-01-11,Copa del Rey,A,Cartagena
+1920,Granada,2020-01-11,Copa del Rey,A,Tamaraceite
+1920,Huesca,2020-01-11,Copa del Rey,A,Cultural Leonesa
+1920,Las Palmas,2020-01-11,Copa del Rey,A,Badajoz
+1920,Leganes,2020-01-11,Copa del Rey,A,Murcia
+1920,Mallorca,2020-01-11,Copa del Rey,A,Zamora
+1920,Osasuna,2020-01-11,Copa del Rey,A,Haro
+1920,Valladolid,2020-01-11,Copa del Rey,A,Marbella
+1920,Villarreal,2020-01-11,Copa del Rey,A,Orihuela
+1920,Celta,2020-01-12,Copa del Rey,A,Mérida
+1920,Eibar,2020-01-12,Copa del Rey,A,Cacereño
+1920,Espanol,2020-01-12,Copa del Rey,A,San Sebastián de los Reyes
+1920,La Coruna,2020-01-12,Copa del Rey,A,Unionistas
+1920,Levante,2020-01-12,Copa del Rey,A,Jaén
+1920,Sevilla,2020-01-12,Copa del Rey,A,Escobedo
+1920,Sociedad,2020-01-12,Copa del Rey,A,Ceuta
+1920,Vallecano,2020-01-12,Copa del Rey,A,Barakaldo
 1920,Elche,2020-01-14,Segunda División,A,Sporting Gijón
 1920,Las Palmas,2020-01-14,Segunda División,H,Real Zaragoza
 1920,Malaga,2020-01-14,Segunda División,H,SD Ponferradina
@@ -4195,6 +4597,27 @@ season,team,date,competition,home_away,opponent
 1920,Sociedad,2020-01-19,La Liga,A,Betis
 1920,Valencia,2020-01-19,La Liga,A,Mallorca
 1920,Villarreal,2020-01-19,La Liga,H,Espanol
+1920,Levante,2020-01-21,Copa del Rey,A,Sevilla
+1920,Mallorca,2020-01-21,Copa del Rey,A,Zaragoza
+1920,Osasuna,2020-01-21,Copa del Rey,A,Recreativo
+1920,Sevilla,2020-01-21,Copa del Rey,H,Levante
+1920,Ath Bilbao,2020-01-22,Copa del Rey,A,Elche
+1920,Barcelona,2020-01-22,Copa del Rey,A,Ibiza
+1920,Elche,2020-01-22,Copa del Rey,H,Ath Bilbao
+1920,Espanol,2020-01-22,Copa del Rey,A,Sociedad
+1920,Girona,2020-01-22,Copa del Rey,H,Villarreal
+1920,Granada,2020-01-22,Copa del Rey,A,Badalona
+1920,Real Madrid,2020-01-22,Copa del Rey,A,Unionistas
+1920,Sociedad,2020-01-22,Copa del Rey,H,Espanol
+1920,Valencia,2020-01-22,Copa del Rey,A,UD Logroñés
+1920,Valladolid,2020-01-22,Copa del Rey,A,Tenerife
+1920,Villarreal,2020-01-22,Copa del Rey,A,Girona
+1920,Ath Madrid,2020-01-23,Copa del Rey,A,Cultural Leonesa
+1920,Betis,2020-01-23,Copa del Rey,A,Vallecano
+1920,Celta,2020-01-23,Copa del Rey,A,Mirandés
+1920,Eibar,2020-01-23,Copa del Rey,A,Badajoz
+1920,Leganes,2020-01-23,Copa del Rey,A,Ebro
+1920,Vallecano,2020-01-23,Copa del Rey,H,Betis
 1920,Cadiz,2020-01-24,Segunda División,H,Racing Santander
 1920,Levante,2020-01-24,La Liga,A,Osasuna
 1920,Osasuna,2020-01-24,La Liga,H,Levante
@@ -4225,6 +4648,17 @@ season,team,date,competition,home_away,opponent
 1920,Sociedad,2020-01-26,La Liga,H,Mallorca
 1920,Valladolid,2020-01-26,La Liga,H,Real Madrid
 1920,Vallecano,2020-01-26,Segunda División,H,Extremadura UD
+1920,Ath Bilbao,2020-01-28,Copa del Rey,A,Tenerife
+1920,Granada,2020-01-29,Copa del Rey,A,Badajoz
+1920,Osasuna,2020-01-29,Copa del Rey,A,Sociedad
+1920,Real Madrid,2020-01-29,Copa del Rey,A,Zaragoza
+1920,Sociedad,2020-01-29,Copa del Rey,H,Osasuna
+1920,Valencia,2020-01-29,Copa del Rey,A,Cultural Leonesa
+1920,Vallecano,2020-01-29,Copa del Rey,H,Villarreal
+1920,Villarreal,2020-01-29,Copa del Rey,A,Vallecano
+1920,Barcelona,2020-01-30,Copa del Rey,H,Leganes
+1920,Leganes,2020-01-30,Copa del Rey,A,Barcelona
+1920,Sevilla,2020-01-30,Copa del Rey,A,Mirandés
 1920,Ath Madrid,2020-02-01,La Liga,A,Real Madrid
 1920,Celta,2020-02-01,La Liga,A,Valencia
 1920,Elche,2020-02-01,Segunda División,H,Malaga
@@ -4255,6 +4689,13 @@ season,team,date,competition,home_away,opponent
 1920,Sociedad,2020-02-02,La Liga,A,Leganes
 1920,Vallecano,2020-02-02,Segunda División,A,CD Mirandés
 1920,Villarreal,2020-02-02,La Liga,H,Osasuna
+1920,Granada,2020-02-04,Copa del Rey,H,Valencia
+1920,Valencia,2020-02-04,Copa del Rey,A,Granada
+1920,Villarreal,2020-02-05,Copa del Rey,A,Mirandés
+1920,Ath Bilbao,2020-02-06,Copa del Rey,H,Barcelona
+1920,Barcelona,2020-02-06,Copa del Rey,A,Ath Bilbao
+1920,Real Madrid,2020-02-06,Copa del Rey,H,Sociedad
+1920,Sociedad,2020-02-06,Copa del Rey,A,Real Madrid
 1920,Alaves,2020-02-07,La Liga,H,Eibar
 1920,Almeria,2020-02-07,Segunda División,H,Racing Santander
 1920,Eibar,2020-02-07,La Liga,A,Alaves
@@ -4285,6 +4726,9 @@ season,team,date,competition,home_away,opponent
 1920,Sevilla,2020-02-09,La Liga,A,Celta
 1920,Sociedad,2020-02-09,La Liga,H,Ath Bilbao
 1920,Vallecano,2020-02-09,Segunda División,H,Oviedo
+1920,Ath Bilbao,2020-02-12,Copa del Rey,H,Granada
+1920,Granada,2020-02-12,Copa del Rey,A,Ath Bilbao
+1920,Sociedad,2020-02-13,Copa del Rey,H,Mirandés
 1920,Ath Madrid,2020-02-14,La Liga,A,Valencia
 1920,Girona,2020-02-14,Segunda División,A,La Coruna
 1920,La Coruna,2020-02-14,Segunda División,H,Girona
@@ -4315,6 +4759,9 @@ season,team,date,competition,home_away,opponent
 1920,Vallecano,2020-02-16,Segunda División,A,CD Tenerife
 1920,Ath Madrid,2020-02-18,Champions League,H,Liverpool
 1920,Valencia,2020-02-19,Champions League,A,Atalanta
+1920,Espanol,2020-02-20,Europa League,A,Wolverhampton Wanderers
+1920,Getafe,2020-02-20,Europa League,H,Ajax
+1920,Sevilla,2020-02-20,Europa League,A,CFR Cluj
 1920,Betis,2020-02-21,La Liga,H,Mallorca
 1920,Cadiz,2020-02-21,Segunda División,A,Sporting Gijón
 1920,Mallorca,2020-02-21,La Liga,A,Betis
@@ -4347,6 +4794,9 @@ season,team,date,competition,home_away,opponent
 1920,Villarreal,2020-02-23,La Liga,A,Ath Madrid
 1920,Barcelona,2020-02-25,Champions League,A,Napoli
 1920,Real Madrid,2020-02-26,Champions League,H,Man City
+1920,Espanol,2020-02-27,Europa League,H,Wolverhampton Wanderers
+1920,Getafe,2020-02-27,Europa League,A,Ajax
+1920,Sevilla,2020-02-27,Europa League,H,CFR Cluj
 1920,Las Palmas,2020-02-28,Segunda División,H,Malaga
 1920,Malaga,2020-02-28,Segunda División,A,Las Palmas
 1920,Sociedad,2020-02-28,La Liga,H,Valladolid
@@ -4377,6 +4827,9 @@ season,team,date,competition,home_away,opponent
 1920,Real Madrid,2020-03-01,La Liga,H,Barcelona
 1920,Sevilla,2020-03-01,La Liga,H,Osasuna
 1920,Villarreal,2020-03-01,La Liga,A,Ath Bilbao
+1920,Sociedad,2020-03-04,Copa del Rey,A,Mirandés
+1920,Ath Bilbao,2020-03-05,Copa del Rey,A,Granada
+1920,Granada,2020-03-05,Copa del Rey,H,Ath Bilbao
 1920,Alaves,2020-03-06,La Liga,H,Valencia
 1920,Cadiz,2020-03-06,Segunda División,A,CD Lugo
 1920,Valencia,2020-03-06,La Liga,A,Alaves
@@ -4741,11 +5194,16 @@ season,team,date,competition,home_away,opponent
 1920,Malaga,2020-07-20,Segunda División,A,Almeria
 1920,Oviedo,2020-07-20,Segunda División,A,Elche
 1920,Vallecano,2020-07-20,Segunda División,A,Racing Santander
+1920,Getafe,2020-08-05,Europa League,A,Inter Milan
+1920,Sevilla,2020-08-06,Europa League,H,Roma
 1920,La Coruna,2020-08-07,Segunda División,H,CF Fuenlabrada
 1920,Real Madrid,2020-08-07,Champions League,A,Man City
 1920,Barcelona,2020-08-08,Champions League,H,Napoli
+1920,Sevilla,2020-08-11,Europa League,A,Wolverhampton Wanderers
 1920,Ath Madrid,2020-08-13,Champions League,A,RB Leipzig
 1920,Barcelona,2020-08-14,Champions League,H,Bayern München
+2021,Sevilla,2020-08-16,Europa League,H,Manchester United
+2021,Sevilla,2020-08-21,Europa League,H,Inter Milan
 2021,Ath Bilbao,2020-09-12,La Liga,A,Granada
 2021,Cadiz,2020-09-12,La Liga,H,Osasuna
 2021,Celta,2020-09-12,La Liga,A,Eibar
@@ -4767,6 +5225,7 @@ season,team,date,competition,home_away,opponent
 2021,Valladolid,2020-09-13,La Liga,H,Sociedad
 2021,Vallecano,2020-09-13,Segunda División,A,Mallorca
 2021,Villarreal,2020-09-13,La Liga,H,Huesca
+2021,Granada,2020-09-17,Europa League (qual.),A,Teuta
 2021,Celta,2020-09-19,La Liga,H,Valencia
 2021,Eibar,2020-09-19,La Liga,A,Villarreal
 2021,Getafe,2020-09-19,La Liga,H,Osasuna
@@ -4788,6 +5247,8 @@ season,team,date,competition,home_away,opponent
 2021,Real Madrid,2020-09-20,La Liga,A,Sociedad
 2021,Sociedad,2020-09-20,La Liga,H,Real Madrid
 2021,Valladolid,2020-09-20,La Liga,A,Betis
+2021,Granada,2020-09-24,Europa League (qual.),H,Locomotive Tbilisi
+2021,Sevilla,2020-09-24,UEFA Super Cup,A,Bayern Munich
 2021,Alaves,2020-09-26,La Liga,H,Getafe
 2021,Betis,2020-09-26,La Liga,H,Real Madrid
 2021,Elche,2020-09-26,La Liga,H,Sociedad
@@ -4833,6 +5294,7 @@ season,team,date,competition,home_away,opponent
 2021,Barcelona,2020-10-01,La Liga,A,Celta
 2021,Cadiz,2020-10-01,La Liga,A,Ath Bilbao
 2021,Celta,2020-10-01,La Liga,H,Barcelona
+2021,Granada,2020-10-01,Europa League (qual.),A,Malmö FF
 2021,Levante,2020-10-01,La Liga,A,Sevilla
 2021,Sevilla,2020-10-01,La Liga,H,Levante
 2021,Ath Madrid,2020-10-03,La Liga,H,Villarreal
@@ -5343,9 +5805,11 @@ season,team,date,competition,home_away,opponent
 2021,Leganes,2021-01-06,Copa del Rey,A,UD Socuéllamos
 2021,Levante,2021-01-06,Copa del Rey,A,Club Portugalete
 2021,Malaga,2021-01-06,Copa del Rey,H,Oviedo
+2021,Mallorca,2021-01-06,Copa del Rey,A,Fuenlabrada
 2021,Osasuna,2021-01-06,Copa del Rey,A,UE Olot
 2021,Oviedo,2021-01-06,Copa del Rey,A,Malaga
 2021,Vallecano,2021-01-06,Copa del Rey,A,Haro Deportivo
+2021,Cadiz,2021-01-07,Copa del Rey,A,Pontevedra
 2021,Eibar,2021-01-07,Copa del Rey,A,Las Rozas CF
 2021,Girona,2021-01-07,Copa del Rey,H,CD Lugo
 2021,Huesca,2021-01-07,Copa del Rey,A,CD Alcoyano
@@ -5378,12 +5842,17 @@ season,team,date,competition,home_away,opponent
 2021,Granada,2021-01-12,La Liga,H,Osasuna
 2021,Osasuna,2021-01-12,La Liga,A,Granada
 2021,Sevilla,2021-01-12,La Liga,A,Ath Madrid
+2021,Barcelona,2021-01-13,Supercopa de Espana,A,Sociedad
+2021,Sociedad,2021-01-13,Supercopa de Espana,H,Barcelona
+2021,Ath Bilbao,2021-01-14,Supercopa de Espana,A,Real Madrid
+2021,Real Madrid,2021-01-14,Supercopa de Espana,H,Ath Bilbao
 2021,Alaves,2021-01-16,Copa del Rey,A,Almeria
 2021,Almeria,2021-01-16,Copa del Rey,H,Alaves
 2021,Cadiz,2021-01-16,Copa del Rey,A,Girona
 2021,Elche,2021-01-16,Copa del Rey,A,Vallecano
 2021,Girona,2021-01-16,Copa del Rey,H,Cadiz
 2021,Leganes,2021-01-16,Copa del Rey,H,Sevilla
+2021,Levante,2021-01-16,Copa del Rey,A,Fuenlabrada
 2021,Sevilla,2021-01-16,Copa del Rey,A,Leganes
 2021,Valladolid,2021-01-16,Copa del Rey,A,Peña Deportiva
 2021,Vallecano,2021-01-16,Copa del Rey,H,Elche
@@ -5451,7 +5920,9 @@ season,team,date,competition,home_away,opponent
 2021,Sociedad,2021-01-26,Copa del Rey,A,Betis
 2021,Valladolid,2021-01-26,Copa del Rey,H,Levante
 2021,Villarreal,2021-01-26,Copa del Rey,A,Girona
+2021,Almeria,2021-01-27,Copa del Rey,H,Osasuna
 2021,Barcelona,2021-01-27,Copa del Rey,A,Vallecano
+2021,Osasuna,2021-01-27,Copa del Rey,A,Almeria
 2021,Sevilla,2021-01-27,Copa del Rey,H,Valencia
 2021,Valencia,2021-01-27,Copa del Rey,A,Sevilla
 2021,Vallecano,2021-01-27,Copa del Rey,H,Barcelona
@@ -5492,6 +5963,8 @@ season,team,date,competition,home_away,opponent
 2021,Granada,2021-02-03,Copa del Rey,H,Barcelona
 2021,Levante,2021-02-03,Copa del Rey,H,Villarreal
 2021,Villarreal,2021-02-03,Copa del Rey,A,Levante
+2021,Ath Bilbao,2021-02-04,Copa del Rey,A,Betis
+2021,Betis,2021-02-04,Copa del Rey,H,Ath Bilbao
 2021,Alaves,2021-02-05,La Liga,H,Valladolid
 2021,Mallorca,2021-02-05,Segunda División,A,Albacete
 2021,Valladolid,2021-02-05,La Liga,A,Alaves
@@ -5754,6 +6227,7 @@ season,team,date,competition,home_away,opponent
 2021,Huesca,2021-04-02,La Liga,A,Levante
 2021,Levante,2021-04-02,La Liga,H,Huesca
 2021,Vallecano,2021-04-02,Segunda División,A,Almeria
+2021,Ath Bilbao,2021-04-03,Copa del Rey,H,Sociedad
 2021,Eibar,2021-04-03,La Liga,A,Real Madrid
 2021,Getafe,2021-04-03,La Liga,A,Osasuna
 2021,Girona,2021-04-03,Segunda División,H,SD Ponferradina
@@ -5761,6 +6235,7 @@ season,team,date,competition,home_away,opponent
 2021,Osasuna,2021-04-03,La Liga,H,Getafe
 2021,Oviedo,2021-04-03,Segunda División,A,CD Castellón
 2021,Real Madrid,2021-04-03,La Liga,H,Eibar
+2021,Sociedad,2021-04-03,Copa del Rey,A,Ath Bilbao
 2021,Villarreal,2021-04-03,La Liga,A,Granada
 2021,Alaves,2021-04-04,La Liga,H,Celta
 2021,Ath Madrid,2021-04-04,La Liga,A,Sevilla
@@ -6054,6 +6529,7 @@ season,team,date,competition,home_away,opponent
 2021,Malaga,2021-05-30,Segunda División,H,CD Castellón
 2021,Mallorca,2021-05-30,Segunda División,A,SD Ponferradina
 2021,Vallecano,2021-05-30,Segunda División,H,CD Lugo
+2122,Villarreal,2021-08-11,UEFA Super Cup,A,Chelsea
 2122,Eibar,2021-08-13,Segunda División,A,Huesca
 2122,Getafe,2021-08-13,La Liga,A,Valencia
 2122,Huesca,2021-08-13,Segunda División,H,Eibar
@@ -6544,6 +7020,7 @@ season,team,date,competition,home_away,opponent
 2122,Girona,2021-11-29,Segunda División,A,Eibar
 2122,Osasuna,2021-11-29,La Liga,H,Elche
 2122,Alaves,2021-11-30,Copa del Rey,A,Unami CP
+2122,Almeria,2021-11-30,Copa del Rey,A,Águilas
 2122,Celta,2021-11-30,Copa del Rey,A,CD Ebro
 2122,Getafe,2021-11-30,Copa del Rey,A,CFJ Mollerussa
 2122,Granada,2021-11-30,Copa del Rey,A,CD Laguna
@@ -6569,6 +7046,7 @@ season,team,date,competition,home_away,opponent
 2122,Malaga,2021-12-02,Copa del Rey,A,Peña Sport FC
 2122,Osasuna,2021-12-02,Copa del Rey,A,CF San Agustín
 2122,Valencia,2021-12-02,Copa del Rey,A,CD Utrillas
+2122,Vallecano,2021-12-02,Copa del Rey,A,Guijuelo
 2122,Alaves,2021-12-03,La Liga,A,Granada
 2122,Granada,2021-12-03,La Liga,H,Alaves
 2122,Huesca,2021-12-03,Segunda División,H,Valladolid
@@ -6639,11 +7117,13 @@ season,team,date,competition,home_away,opponent
 2122,Espanol,2021-12-14,Copa del Rey,A,CD Cristo Atlético
 2122,Girona,2021-12-14,Copa del Rey,A,Huesca
 2122,Huesca,2021-12-14,Copa del Rey,H,Girona
+2122,Levante,2021-12-14,Copa del Rey,A,Alcoyano
 2122,Malaga,2021-12-14,Copa del Rey,A,Rayo Majadahonda
 2122,Eibar,2021-12-15,Copa del Rey,A,CD Tenerife
 2122,Elche,2021-12-15,Copa del Rey,A,Unionistas CF
 2122,Las Palmas,2021-12-15,Copa del Rey,A,Valladolid
 2122,Leganes,2021-12-15,Copa del Rey,A,CD Leonesa
+2122,Sevilla,2021-12-15,Copa del Rey,A,Andratx
 2122,Sociedad,2021-12-15,Copa del Rey,A,Zamora CF
 2122,Valladolid,2021-12-15,Copa del Rey,H,Las Palmas
 2122,Vallecano,2021-12-15,Copa del Rey,A,Bergantiños FC
@@ -6722,6 +7202,7 @@ season,team,date,competition,home_away,opponent
 2122,Osasuna,2022-01-03,La Liga,H,Ath Bilbao
 2122,Sevilla,2022-01-03,La Liga,A,Cadiz
 2122,Villarreal,2022-01-03,La Liga,H,Levante
+2122,Espanol,2022-01-04,Copa del Rey,A,Ponferradina
 2122,Barcelona,2022-01-05,Copa del Rey,A,Linares Deportivo
 2122,Betis,2022-01-05,Copa del Rey,A,Valladolid
 2122,Celta,2022-01-05,Copa del Rey,A,Atlético Baleares
@@ -6771,6 +7252,11 @@ season,team,date,competition,home_away,opponent
 2122,Elche,2022-01-10,La Liga,A,Espanol
 2122,Espanol,2022-01-10,La Liga,H,Elche
 2122,Oviedo,2022-01-10,Segunda División,H,Eibar
+2122,Barcelona,2022-01-12,Supercopa de Espana,H,Real Madrid
+2122,Real Madrid,2022-01-12,Supercopa de Espana,A,Barcelona
+2122,Ath Bilbao,2022-01-13,Supercopa de Espana,A,Ath Madrid
+2122,Ath Madrid,2022-01-13,Supercopa de Espana,H,Ath Bilbao
+2122,Cadiz,2022-01-15,Copa del Rey,A,Sporting Gijón
 2122,Espanol,2022-01-15,Copa del Rey,A,Mallorca
 2122,Girona,2022-01-15,Copa del Rey,H,Vallecano
 2122,Mallorca,2022-01-15,Copa del Rey,H,Espanol
@@ -7203,9 +7689,11 @@ season,team,date,competition,home_away,opponent
 2122,Sociedad,2022-04-21,La Liga,H,Barcelona
 2122,Vallecano,2022-04-21,La Liga,A,Espanol
 2122,Huesca,2022-04-22,Segunda División,A,CD Tenerife
+2122,Betis,2022-04-23,Copa del Rey,H,Valencia
 2122,Eibar,2022-04-23,Segunda División,A,Malaga
 2122,Girona,2022-04-23,Segunda División,A,FC Cartagena
 2122,Malaga,2022-04-23,Segunda División,H,Eibar
+2122,Valencia,2022-04-23,Copa del Rey,A,Betis
 2122,Barcelona,2022-04-24,La Liga,H,Vallecano
 2122,Las Palmas,2022-04-24,Segunda División,A,UD Ibiza
 2122,Leganes,2022-04-24,Segunda División,A,CD Lugo
@@ -7363,6 +7851,7 @@ season,team,date,competition,home_away,opponent
 2122,Leganes,2022-05-29,Segunda División,H,Almeria
 2122,Oviedo,2022-05-29,Segunda División,H,UD Ibiza
 2122,Valladolid,2022-05-29,Segunda División,H,Huesca
+2223,Real Madrid,2022-08-10,UEFA Super Cup,H,Eintracht Frankfurt
 2223,Huesca,2022-08-12,Segunda División,A,Levante
 2223,Levante,2022-08-12,Segunda División,H,Huesca
 2223,Osasuna,2022-08-12,La Liga,H,Sevilla
@@ -7392,6 +7881,7 @@ season,team,date,competition,home_away,opponent
 2223,Getafe,2022-08-15,La Liga,H,Ath Madrid
 2223,Mallorca,2022-08-15,La Liga,A,Ath Bilbao
 2223,Oviedo,2022-08-15,Segunda División,H,FC Andorra
+2223,Villarreal,2022-08-18,Conference League (qual.),H,Hajduk Split
 2223,Alaves,2022-08-19,Segunda División,H,CD Mirandés
 2223,Eibar,2022-08-19,Segunda División,A,Villarreal CF B
 2223,Espanol,2022-08-19,La Liga,H,Vallecano
@@ -7421,6 +7911,7 @@ season,team,date,competition,home_away,opponent
 2223,Girona,2022-08-22,La Liga,H,Getafe
 2223,Las Palmas,2022-08-22,Segunda División,A,Malaga
 2223,Malaga,2022-08-22,Segunda División,H,Las Palmas
+2223,Villarreal,2022-08-25,Conference League (qual.),A,Hajduk Split
 2223,Betis,2022-08-26,La Liga,H,Osasuna
 2223,Celta,2022-08-26,La Liga,A,Girona
 2223,Girona,2022-08-26,La Liga,H,Celta
@@ -7824,6 +8315,7 @@ season,team,date,competition,home_away,opponent
 2223,Elche,2022-11-12,Copa del Rey,A,CD l'Alcora
 2223,Espanol,2022-11-12,Copa del Rey,A,CD Rincón
 2223,La Coruna,2022-11-12,Copa del Rey,A,CD Guijuelo
+2223,Leganes,2022-11-12,Copa del Rey,A,Gernika
 2223,Levante,2022-11-12,Copa del Rey,A,UE Olot
 2223,Mallorca,2022-11-12,Copa del Rey,A,CD Autol
 2223,Osasuna,2022-11-12,Copa del Rey,A,CD Fuentes
@@ -7838,7 +8330,9 @@ season,team,date,competition,home_away,opponent
 2223,Getafe,2022-11-13,Copa del Rey,A,CD San Roque
 2223,Girona,2022-11-13,Copa del Rey,A,Quintanar del Rey
 2223,Granada,2022-11-13,Copa del Rey,A,Yeclano Deportivo
+2223,Huesca,2022-11-13,Copa del Rey,A,Juventud Torremolinos
 2223,Las Palmas,2022-11-13,Copa del Rey,A,CD Teruel
+2223,Malaga,2022-11-13,Copa del Rey,A,Peña Deportiva
 2223,Oviedo,2022-11-13,Copa del Rey,A,Gimnástica Torrelavega
 2223,Sevilla,2022-11-13,Copa del Rey,A,Velarde CF
 2223,Sociedad,2022-11-13,Copa del Rey,A,CD Cazalegas
@@ -7910,10 +8404,12 @@ season,team,date,competition,home_away,opponent
 2223,Sevilla,2022-12-21,Copa del Rey,A,Juventud Torremolinos
 2223,Sociedad,2022-12-21,Copa del Rey,A,CD Coria
 2223,Valladolid,2022-12-21,Copa del Rey,A,Arenas de Getxo
+2223,Vallecano,2022-12-21,Copa del Rey,A,Atlético Saguntino
 2223,Ath Madrid,2022-12-22,Copa del Rey,A,CD Arenteiro
 2223,Celta,2022-12-22,Copa del Rey,A,SD Gernika
 2223,Girona,2022-12-22,Copa del Rey,A,CP Cacereño
 2223,Granada,2022-12-22,Copa del Rey,A,Oviedo
+2223,Las Palmas,2022-12-22,Copa del Rey,A,La Nucía
 2223,Malaga,2022-12-22,Copa del Rey,A,Gimnàstic de Tarragona
 2223,Oviedo,2022-12-22,Copa del Rey,H,Granada
 2223,Ath Bilbao,2022-12-29,La Liga,A,Betis
@@ -7985,6 +8481,10 @@ season,team,date,competition,home_away,opponent
 2223,Ath Bilbao,2023-01-09,La Liga,H,Osasuna
 2223,Huesca,2023-01-09,Segunda División,H,Albacete
 2223,Osasuna,2023-01-09,La Liga,A,Ath Bilbao
+2223,Real Madrid,2023-01-11,Supercopa de Espana,H,Valencia
+2223,Valencia,2023-01-11,Supercopa de Espana,A,Real Madrid
+2223,Barcelona,2023-01-12,Supercopa de Espana,A,Betis
+2223,Betis,2023-01-12,Supercopa de Espana,H,Barcelona
 2223,Alaves,2023-01-13,Segunda División,A,Oviedo
 2223,Celta,2023-01-13,La Liga,H,Villarreal
 2223,Oviedo,2023-01-13,Segunda División,H,Alaves
@@ -8016,8 +8516,10 @@ season,team,date,competition,home_away,opponent
 2223,Sociedad,2023-01-17,Copa del Rey,H,Mallorca
 2223,Ath Bilbao,2023-01-18,Copa del Rey,H,Espanol
 2223,Ath Madrid,2023-01-18,Copa del Rey,A,Levante
+2223,Betis,2023-01-18,Copa del Rey,H,Osasuna
 2223,Espanol,2023-01-18,Copa del Rey,A,Ath Bilbao
 2223,Levante,2023-01-18,Copa del Rey,H,Ath Madrid
+2223,Osasuna,2023-01-18,Copa del Rey,A,Betis
 2223,Valencia,2023-01-18,Copa del Rey,A,Sporting Gijón
 2223,Barcelona,2023-01-19,Copa del Rey,A,AD Ceuta FC
 2223,Real Madrid,2023-01-19,Copa del Rey,A,Villarreal
@@ -8121,6 +8623,7 @@ season,team,date,competition,home_away,opponent
 2223,Almeria,2023-02-06,La Liga,A,Vallecano
 2223,Las Palmas,2023-02-06,Segunda División,A,Burgos CF
 2223,Vallecano,2023-02-06,La Liga,H,Almeria
+2223,Real Madrid,2023-02-08,FIFA Club World Cup,A,Al Ahly
 2223,Cadiz,2023-02-10,La Liga,H,Girona
 2223,Girona,2023-02-10,La Liga,A,Cadiz
 2223,Granada,2023-02-10,Segunda División,H,CD Tenerife
@@ -8131,6 +8634,7 @@ season,team,date,competition,home_away,opponent
 2223,Las Palmas,2023-02-11,Segunda División,H,CD Lugo
 2223,Levante,2023-02-11,Segunda División,H,FC Andorra
 2223,Mallorca,2023-02-11,La Liga,A,Sevilla
+2223,Real Madrid,2023-02-11,FIFA Club World Cup,H,Al-Hilal
 2223,Sevilla,2023-02-11,La Liga,H,Mallorca
 2223,Valencia,2023-02-11,La Liga,H,Ath Bilbao
 2223,Ath Madrid,2023-02-12,La Liga,A,Celta
@@ -8686,6 +9190,7 @@ season,team,date,competition,home_away,opponent
 2324,Cadiz,2023-08-14,La Liga,H,Alaves
 2324,Granada,2023-08-14,La Liga,A,Ath Madrid
 2324,Oviedo,2023-08-14,Segunda División,A,CD Tenerife
+2324,Sevilla,2023-08-16,UEFA Super Cup,A,Manchester City
 2324,Las Palmas,2023-08-18,La Liga,A,Valencia
 2324,Mallorca,2023-08-18,La Liga,H,Villarreal
 2324,Valencia,2023-08-18,La Liga,H,Las Palmas
@@ -8714,6 +9219,7 @@ season,team,date,competition,home_away,opponent
 2324,Huesca,2023-08-21,Segunda División,H,CD Tenerife
 2324,Sevilla,2023-08-21,La Liga,A,Alaves
 2324,Vallecano,2023-08-21,La Liga,A,Granada
+2324,Osasuna,2023-08-24,Conference League (qual.),H,Club Brugge
 2324,Celta,2023-08-25,La Liga,H,Real Madrid
 2324,Las Palmas,2023-08-25,La Liga,H,Sociedad
 2324,Levante,2023-08-25,Segunda División,A,FC Cartagena
@@ -8742,6 +9248,7 @@ season,team,date,competition,home_away,opponent
 2324,Getafe,2023-08-28,La Liga,H,Alaves
 2324,Huesca,2023-08-28,Segunda División,A,Racing Santander
 2324,Vallecano,2023-08-28,La Liga,H,Ath Madrid
+2324,Osasuna,2023-08-31,Conference League (qual.),A,Club Brugge
 2324,Almeria,2023-09-01,La Liga,H,Celta
 2324,Cadiz,2023-09-01,La Liga,H,Villarreal
 2324,Celta,2023-09-01,La Liga,A,Almeria
@@ -9007,6 +9514,7 @@ season,team,date,competition,home_away,opponent
 2324,Levante,2023-10-31,Copa del Rey,A,CD Varea
 2324,Ath Bilbao,2023-11-01,Copa del Rey,A,UE Rubí
 2324,Betis,2023-11-01,Copa del Rey,A,CD Hernán Cortés
+2324,Cadiz,2023-11-01,Copa del Rey,A,Badalona Futur
 2324,Celta,2023-11-01,Copa del Rey,A,Turégano CF
 2324,Elche,2023-11-01,Copa del Rey,A,CE Europa
 2324,Getafe,2023-11-01,Copa del Rey,A,AD Tardienta
@@ -9014,6 +9522,7 @@ season,team,date,competition,home_away,opponent
 2324,Huesca,2023-11-01,Copa del Rey,A,Águilas FC
 2324,La Coruna,2023-11-01,Copa del Rey,A,CD Covadonga
 2324,Leganes,2023-11-01,Copa del Rey,A,AD Llerenense
+2324,Malaga,2023-11-01,Copa del Rey,A,Barakaldo
 2324,Mallorca,2023-11-01,Copa del Rey,A,CD Boiro
 2324,Oviedo,2023-11-01,Copa del Rey,A,CE Manresa
 2324,Sevilla,2023-11-01,Copa del Rey,A,CD Quintanar
@@ -9021,6 +9530,7 @@ season,team,date,competition,home_away,opponent
 2324,Valladolid,2023-11-01,Copa del Rey,A,Peña Deportiva
 2324,Vallecano,2023-11-01,Copa del Rey,A,Atlético de Lugones
 2324,Alaves,2023-11-02,Copa del Rey,A,Deportivo Murcia
+2324,Granada,2023-11-02,Copa del Rey,A,Arosa
 2324,Valencia,2023-11-02,Copa del Rey,A,UD Logroñés
 2324,Villarreal,2023-11-02,Copa del Rey,A,Chiclana CF
 2324,Ath Madrid,2023-11-03,La Liga,A,Las Palmas
@@ -9179,6 +9689,7 @@ season,team,date,competition,home_away,opponent
 2324,Ath Bilbao,2023-12-07,Copa del Rey,A,CD Cayón
 2324,Cadiz,2023-12-07,Copa del Rey,A,Arandina CF
 2324,Celta,2023-12-07,Copa del Rey,A,Sestao River
+2324,Eibar,2023-12-07,Copa del Rey,A,Melilla
 2324,Elche,2023-12-07,Copa del Rey,A,Linares Deportivo
 2324,Girona,2023-12-07,Copa del Rey,A,Orihuela CF
 2324,Leganes,2023-12-07,Copa del Rey,A,Racing Ferrol
@@ -9316,6 +9827,11 @@ season,team,date,competition,home_away,opponent
 2324,Sevilla,2024-01-07,Copa del Rey,A,Racing Ferrol
 2324,Sociedad,2024-01-07,Copa del Rey,A,Malaga
 2324,Valencia,2024-01-07,Copa del Rey,A,FC Cartagena
+2324,Villarreal,2024-01-08,Copa del Rey,A,Unionistas
+2324,Ath Madrid,2024-01-10,Supercopa de Espana,A,Real Madrid
+2324,Real Madrid,2024-01-10,Supercopa de Espana,H,Ath Madrid
+2324,Barcelona,2024-01-11,Supercopa de Espana,H,Osasuna
+2324,Osasuna,2024-01-11,Supercopa de Espana,A,Barcelona
 2324,Alaves,2024-01-12,La Liga,A,Sevilla
 2324,Eibar,2024-01-12,Segunda División,H,Racing Santander
 2324,Sevilla,2024-01-12,La Liga,H,Alaves
@@ -9541,6 +10057,8 @@ season,team,date,competition,home_away,opponent
 2324,Girona,2024-02-26,La Liga,H,Vallecano
 2324,Huesca,2024-02-26,Segunda División,A,CD Mirandés
 2324,Vallecano,2024-02-26,La Liga,A,Girona
+2324,Mallorca,2024-02-27,Copa del Rey,A,Sociedad
+2324,Sociedad,2024-02-27,Copa del Rey,H,Mallorca
 2324,Ath Bilbao,2024-02-29,Copa del Rey,H,Ath Madrid
 2324,Ath Madrid,2024-02-29,Copa del Rey,A,Ath Bilbao
 2324,Almeria,2024-03-01,La Liga,A,Celta
@@ -9674,7 +10192,9 @@ season,team,date,competition,home_away,opponent
 2324,Valencia,2024-04-04,La Liga,A,Granada
 2324,Elche,2024-04-05,Segunda División,H,Oviedo
 2324,Oviedo,2024-04-05,Segunda División,A,Elche
+2324,Ath Bilbao,2024-04-06,Copa del Rey,H,Mallorca
 2324,Levante,2024-04-06,Segunda División,H,Real Zaragoza
+2324,Mallorca,2024-04-06,Copa del Rey,A,Ath Bilbao
 2324,Eibar,2024-04-07,Segunda División,A,CD Tenerife
 2324,Espanol,2024-04-07,Segunda División,H,Albacete
 2324,Huesca,2024-04-07,Segunda División,H,Leganes
@@ -9913,6 +10433,7 @@ season,team,date,competition,home_away,opponent
 2324,Levante,2024-06-02,Segunda División,A,Huesca
 2324,Oviedo,2024-06-02,Segunda División,A,Eibar
 2324,Valladolid,2024-06-02,Segunda División,A,CD Tenerife
+2425,Real Madrid,2024-08-14,UEFA Super Cup,H,Atalanta
 2425,Ath Bilbao,2024-08-15,La Liga,H,Getafe
 2425,Betis,2024-08-15,La Liga,H,Girona
 2425,Getafe,2024-08-15,La Liga,A,Ath Bilbao
@@ -10536,6 +11057,7 @@ season,team,date,competition,home_away,opponent
 2425,Almeria,2024-12-18,Segunda División,A,Racing Ferrol
 2425,Espanol,2024-12-18,La Liga,H,Valencia
 2425,Malaga,2024-12-18,Segunda División,H,CD Eldense
+2425,Real Madrid,2024-12-18,FIFA Intercontinental Cup,H,Pachuca
 2425,Valencia,2024-12-18,La Liga,A,Espanol
 2425,Vallecano,2024-12-18,La Liga,A,Villarreal
 2425,Villarreal,2024-12-18,La Liga,H,Vallecano
@@ -10597,6 +11119,10 @@ season,team,date,competition,home_away,opponent
 2425,Real Madrid,2025-01-06,Copa del Rey,A,Deportiva Minera
 2425,Levante,2025-01-07,Segunda División,A,CD Tenerife
 2425,Valencia,2025-01-07,Copa del Rey,A,CD Eldense
+2425,Ath Bilbao,2025-01-08,Supercopa de Espana,H,Barcelona
+2425,Barcelona,2025-01-08,Supercopa de Espana,A,Ath Bilbao
+2425,Mallorca,2025-01-09,Supercopa de Espana,A,Real Madrid
+2425,Real Madrid,2025-01-09,Supercopa de Espana,H,Mallorca
 2425,Celta,2025-01-10,La Liga,A,Vallecano
 2425,Granada,2025-01-10,Segunda División,H,Burgos CF
 2425,Vallecano,2025-01-10,La Liga,H,Celta
@@ -11281,6 +11807,15 @@ season,team,date,competition,home_away,opponent
 2425,La Coruna,2025-06-01,Segunda División,H,Elche
 2425,Levante,2025-06-01,Segunda División,H,Eibar
 2425,Oviedo,2025-06-01,Segunda División,H,Cadiz
+2425,Ath Madrid,2025-06-15,FIFA Club World Cup,A,Paris Saint-Germain
+2425,Real Madrid,2025-06-18,FIFA Club World Cup,H,Al Hilal
+2425,Ath Madrid,2025-06-19,FIFA Club World Cup,A,Seattle Sounders FC
+2425,Real Madrid,2025-06-22,FIFA Club World Cup,H,Pachuca
+2425,Ath Madrid,2025-06-23,FIFA Club World Cup,H,Botafogo
+2425,Real Madrid,2025-06-26,FIFA Club World Cup,A,Red Bull Salzburg
+2425,Real Madrid,2025-07-01,FIFA Club World Cup,H,Juventus
+2425,Real Madrid,2025-07-05,FIFA Club World Cup,H,Borussia Dortmund
+2526,Real Madrid,2025-07-09,FIFA Club World Cup,A,Paris Saint-Germain
 2526,Girona,2025-08-15,La Liga,H,Vallecano
 2526,Oviedo,2025-08-15,La Liga,A,Villarreal
 2526,Vallecano,2025-08-15,La Liga,A,Girona
@@ -11400,11 +11935,13 @@ season,team,date,competition,home_away,opponent
 2526,Villarreal,2025-09-23,La Liga,A,Sevilla
 2526,Alaves,2025-09-24,La Liga,A,Getafe
 2526,Ath Madrid,2025-09-24,La Liga,H,Vallecano
+2526,Betis,2025-09-24,Europa League,H,Nottingham Forest
 2526,Getafe,2025-09-24,La Liga,H,Alaves
 2526,Mallorca,2025-09-24,La Liga,A,Sociedad
 2526,Sociedad,2025-09-24,La Liga,H,Mallorca
 2526,Vallecano,2025-09-24,La Liga,A,Ath Madrid
 2526,Barcelona,2025-09-25,La Liga,A,Oviedo
+2526,Celta,2025-09-25,Europa League,A,VfB Stuttgart
 2526,Elche,2025-09-25,La Liga,A,Osasuna
 2526,Osasuna,2025-09-25,La Liga,H,Elche
 2526,Oviedo,2025-09-25,La Liga,H,Barcelona
@@ -11433,6 +11970,9 @@ season,team,date,competition,home_away,opponent
 2526,Ath Bilbao,2025-10-01,Champions League,A,Borussia Dortmund
 2526,Barcelona,2025-10-01,Champions League,H,Paris Saint-Germain FC
 2526,Villarreal,2025-10-01,Champions League,H,Juventus
+2526,Betis,2025-10-02,Europa League,A,Ludogorets Razgrad
+2526,Celta,2025-10-02,Europa League,H,PAOK
+2526,Vallecano,2025-10-02,Conference League,H,Shkëndija
 2526,Getafe,2025-10-03,La Liga,A,Osasuna
 2526,Osasuna,2025-10-03,La Liga,H,Getafe
 2526,Ath Bilbao,2025-10-04,La Liga,H,Mallorca
@@ -11478,6 +12018,9 @@ season,team,date,competition,home_away,opponent
 2526,Villarreal,2025-10-21,Champions League,H,Man City
 2526,Ath Bilbao,2025-10-22,Champions League,H,Qarabağ Ağdam FK
 2526,Real Madrid,2025-10-22,Champions League,H,Juventus
+2526,Betis,2025-10-23,Europa League,A,Genk
+2526,Celta,2025-10-23,Europa League,H,Nice
+2526,Vallecano,2025-10-23,Conference League,A,BK Häcken
 2526,Sevilla,2025-10-24,La Liga,A,Sociedad
 2526,Sociedad,2025-10-24,La Liga,H,Sevilla
 2526,Ath Bilbao,2025-10-25,La Liga,H,Getafe
@@ -11498,6 +12041,32 @@ season,team,date,competition,home_away,opponent
 2526,Vallecano,2025-10-26,La Liga,H,Alaves
 2526,Ath Madrid,2025-10-27,La Liga,A,Betis
 2526,Betis,2025-10-27,La Liga,H,Ath Madrid
+2526,Cadiz,2025-10-28,Copa del Rey,A,UCAM Murcia
+2526,Getafe,2025-10-28,Copa del Rey,A,Inter de Valdemoro
+2526,Girona,2025-10-28,Copa del Rey,A,Constància
+2526,Granada,2025-10-28,Copa del Rey,A,Roda
+2526,Huesca,2025-10-28,Copa del Rey,A,Utebo
+2526,Las Palmas,2025-10-28,Copa del Rey,A,Extremadura
+2526,Oviedo,2025-10-28,Copa del Rey,A,Ourense CF
+2526,Sevilla,2025-10-28,Copa del Rey,A,Toledo
+2526,Sociedad,2025-10-28,Copa del Rey,A,Negreira
+2526,Valencia,2025-10-28,Copa del Rey,A,Maracena
+2526,Almeria,2025-10-29,Copa del Rey,A,Lorca Deportiva
+2526,Eibar,2025-10-29,Copa del Rey,A,Náxara
+2526,Elche,2025-10-29,Copa del Rey,A,Los Garres
+2526,Leganes,2025-10-29,Copa del Rey,A,Azuaga
+2526,Mallorca,2025-10-29,Copa del Rey,A,Atlètic Sant Just
+2526,Osasuna,2025-10-29,Copa del Rey,A,Sant Jordi
+2526,Valladolid,2025-10-29,Copa del Rey,A,Portugalete
+2526,Vallecano,2025-10-29,Copa del Rey,A,Yuncos
+2526,Villarreal,2025-10-29,Copa del Rey,A,Ciudad de Lucena
+2526,Alaves,2025-10-30,Copa del Rey,A,Getxo
+2526,Betis,2025-10-30,Copa del Rey,A,Atlético Palma del Río
+2526,Celta,2025-10-30,Copa del Rey,A,Puerto de Vega
+2526,Espanol,2025-10-30,Copa del Rey,A,Atlètic Lleida
+2526,La Coruna,2025-10-30,Copa del Rey,A,Sámano
+2526,Levante,2025-10-30,Copa del Rey,A,Orihuela
+2526,Malaga,2025-10-30,Copa del Rey,A,Estepona
 2526,Getafe,2025-10-31,La Liga,H,Girona
 2526,Girona,2025-10-31,La Liga,A,Getafe
 2526,Ath Bilbao,2025-11-01,La Liga,A,Sociedad
@@ -11523,6 +12092,9 @@ season,team,date,competition,home_away,opponent
 2526,Ath Bilbao,2025-11-05,Champions League,A,Newcastle
 2526,Barcelona,2025-11-05,Champions League,A,Club Brugge KV
 2526,Villarreal,2025-11-05,Champions League,A,Paphos FC
+2526,Betis,2025-11-06,Europa League,H,Lyon
+2526,Celta,2025-11-06,Europa League,A,Dinamo Zagreb
+2526,Vallecano,2025-11-06,Conference League,H,Lech Poznań
 2526,Elche,2025-11-07,La Liga,H,Sociedad
 2526,Sociedad,2025-11-07,La Liga,A,Elche
 2526,Alaves,2025-11-08,La Liga,A,Girona
@@ -11568,6 +12140,9 @@ season,team,date,competition,home_away,opponent
 2526,Villarreal,2025-11-25,Champions League,A,Borussia Dortmund
 2526,Ath Madrid,2025-11-26,Champions League,H,Inter
 2526,Real Madrid,2025-11-26,Champions League,A,PAE Olympiakos SFP
+2526,Betis,2025-11-27,Europa League,H,Utrecht
+2526,Celta,2025-11-27,Europa League,A,Ludogorets Razgrad
+2526,Vallecano,2025-11-27,Conference League,A,Slovan Bratislava
 2526,Elche,2025-11-28,La Liga,A,Getafe
 2526,Getafe,2025-11-28,La Liga,H,Elche
 2526,Alaves,2025-11-29,La Liga,A,Barcelona
@@ -11588,10 +12163,33 @@ season,team,date,competition,home_away,opponent
 2526,Villarreal,2025-11-30,La Liga,A,Sociedad
 2526,Valencia,2025-12-01,La Liga,A,Vallecano
 2526,Vallecano,2025-12-01,La Liga,H,Valencia
+2526,Alaves,2025-12-02,Copa del Rey,A,Portugalete
 2526,Ath Madrid,2025-12-02,La Liga,A,Barcelona
 2526,Barcelona,2025-12-02,La Liga,H,Ath Madrid
+2526,Getafe,2025-12-02,Copa del Rey,A,Navalcarnero
+2526,Huesca,2025-12-02,Copa del Rey,A,Racing Ferrol
+2526,Mallorca,2025-12-02,Copa del Rey,A,Numancia
+2526,Osasuna,2025-12-02,Copa del Rey,A,Ebro
+2526,Almeria,2025-12-03,Copa del Rey,A,Eldense
 2526,Ath Bilbao,2025-12-03,La Liga,H,Real Madrid
+2526,Betis,2025-12-03,Copa del Rey,A,Torrent
+2526,Cadiz,2025-12-03,Copa del Rey,A,Murcia
+2526,Eibar,2025-12-03,Copa del Rey,A,Pontevedra
+2526,Elche,2025-12-03,Copa del Rey,A,Quintanar del Rey
+2526,Girona,2025-12-03,Copa del Rey,A,Ourense CF
+2526,Levante,2025-12-03,Copa del Rey,A,Cieza
+2526,Malaga,2025-12-03,Copa del Rey,A,Talavera de la Reina
 2526,Real Madrid,2025-12-03,La Liga,A,Ath Bilbao
+2526,Sociedad,2025-12-03,Copa del Rey,A,Reus FCR
+2526,Villarreal,2025-12-03,Copa del Rey,A,Atlético Antoniano
+2526,Celta,2025-12-04,Copa del Rey,A,Sant Andreu
+2526,Espanol,2025-12-04,Copa del Rey,A,Atlético Baleares
+2526,Granada,2025-12-04,Copa del Rey,A,Tenerife
+2526,La Coruna,2025-12-04,Copa del Rey,A,Sabadell
+2526,Leganes,2025-12-04,Copa del Rey,H,Albacete
+2526,Sevilla,2025-12-04,Copa del Rey,A,Extremadura
+2526,Valencia,2025-12-04,Copa del Rey,A,Cartagena
+2526,Vallecano,2025-12-04,Copa del Rey,A,Ávila
 2526,Mallorca,2025-12-05,La Liga,A,Oviedo
 2526,Oviedo,2025-12-05,La Liga,H,Mallorca
 2526,Alaves,2025-12-06,La Liga,H,Sociedad
@@ -11617,6 +12215,9 @@ season,team,date,competition,home_away,opponent
 2526,Ath Bilbao,2025-12-10,Champions League,H,Paris Saint-Germain FC
 2526,Real Madrid,2025-12-10,Champions League,H,Man City
 2526,Villarreal,2025-12-10,Champions League,H,FC København
+2526,Betis,2025-12-11,Europa League,A,Dinamo Zagreb
+2526,Celta,2025-12-11,Europa League,H,Bologna
+2526,Vallecano,2025-12-11,Conference League,A,Jagiellonia Białystok
 2526,Girona,2025-12-12,La Liga,A,Sociedad
 2526,Sociedad,2025-12-12,La Liga,H,Girona
 2526,Ath Madrid,2025-12-13,La Liga,H,Valencia
@@ -11635,6 +12236,26 @@ season,team,date,competition,home_away,opponent
 2526,Sevilla,2025-12-14,La Liga,H,Oviedo
 2526,Betis,2025-12-15,La Liga,A,Vallecano
 2526,Vallecano,2025-12-15,La Liga,H,Betis
+2526,Barcelona,2025-12-16,Copa del Rey,A,Guadalajara
+2526,Eibar,2025-12-16,Copa del Rey,H,Elche
+2526,Elche,2025-12-16,Copa del Rey,A,Eibar
+2526,La Coruna,2025-12-16,Copa del Rey,H,Mallorca
+2526,Mallorca,2025-12-16,Copa del Rey,A,La Coruna
+2526,Sociedad,2025-12-16,Copa del Rey,A,Eldense
+2526,Valencia,2025-12-16,Copa del Rey,A,Sporting Gijón
+2526,Alaves,2025-12-17,Copa del Rey,H,Sevilla
+2526,Ath Madrid,2025-12-17,Copa del Rey,A,Atlético Baleares
+2526,Celta,2025-12-17,Copa del Rey,A,Albacete
+2526,Huesca,2025-12-17,Copa del Rey,H,Osasuna
+2526,Levante,2025-12-17,Copa del Rey,A,Cultural Leonesa
+2526,Osasuna,2025-12-17,Copa del Rey,A,Huesca
+2526,Real Madrid,2025-12-17,Copa del Rey,A,Talavera de la Reina
+2526,Sevilla,2025-12-17,Copa del Rey,A,Alaves
+2526,Villarreal,2025-12-17,Copa del Rey,A,Racing Santander
+2526,Ath Bilbao,2025-12-18,Copa del Rey,A,Ourense CF
+2526,Betis,2025-12-18,Copa del Rey,A,Murcia
+2526,Getafe,2025-12-18,Copa del Rey,A,Burgos
+2526,Vallecano,2025-12-18,Conference League,H,Drita
 2526,Mallorca,2025-12-19,La Liga,A,Valencia
 2526,Valencia,2025-12-19,La Liga,H,Mallorca
 2526,Alaves,2025-12-20,La Liga,A,Osasuna
@@ -11675,6 +12296,12 @@ season,team,date,competition,home_away,opponent
 2526,Real Madrid,2026-01-04,La Liga,H,Betis
 2526,Sevilla,2026-01-04,La Liga,H,Levante
 2526,Sociedad,2026-01-04,La Liga,H,Ath Madrid
+2526,Granada,2026-01-06,Copa del Rey,H,Vallecano
+2526,Vallecano,2026-01-06,Copa del Rey,A,Granada
+2526,Ath Bilbao,2026-01-07,Supercopa de Espana,A,Barcelona
+2526,Barcelona,2026-01-07,Supercopa de Espana,H,Ath Bilbao
+2526,Ath Madrid,2026-01-08,Supercopa de Espana,H,Real Madrid
+2526,Real Madrid,2026-01-08,Supercopa de Espana,A,Ath Madrid
 2526,Getafe,2026-01-09,La Liga,H,Sociedad
 2526,Sociedad,2026-01-09,La Liga,A,Getafe
 2526,Alaves,2026-01-10,La Liga,A,Villarreal
@@ -11691,6 +12318,18 @@ season,team,date,competition,home_away,opponent
 2526,Vallecano,2026-01-11,La Liga,H,Mallorca
 2526,Celta,2026-01-12,La Liga,A,Sevilla
 2526,Sevilla,2026-01-12,La Liga,H,Celta
+2526,Ath Bilbao,2026-01-13,Copa del Rey,A,Cultural Leonesa
+2526,Ath Madrid,2026-01-13,Copa del Rey,A,La Coruna
+2526,La Coruna,2026-01-13,Copa del Rey,H,Ath Madrid
+2526,Osasuna,2026-01-13,Copa del Rey,A,Sociedad
+2526,Sociedad,2026-01-13,Copa del Rey,H,Osasuna
+2526,Alaves,2026-01-14,Copa del Rey,H,Vallecano
+2526,Betis,2026-01-14,Copa del Rey,H,Elche
+2526,Elche,2026-01-14,Copa del Rey,A,Betis
+2526,Real Madrid,2026-01-14,Copa del Rey,A,Albacete
+2526,Vallecano,2026-01-14,Copa del Rey,A,Alaves
+2526,Barcelona,2026-01-15,Copa del Rey,A,Racing Santander
+2526,Valencia,2026-01-15,Copa del Rey,A,Burgos
 2526,Espanol,2026-01-16,La Liga,H,Girona
 2526,Girona,2026-01-16,La Liga,A,Espanol
 2526,Ath Bilbao,2026-01-17,La Liga,A,Mallorca
@@ -11716,6 +12355,8 @@ season,team,date,competition,home_away,opponent
 2526,Ath Bilbao,2026-01-21,Champions League,A,Atalanta
 2526,Ath Madrid,2026-01-21,Champions League,A,Galatasaray SK
 2526,Barcelona,2026-01-21,Champions League,A,SK Slavia Praha
+2526,Betis,2026-01-22,Europa League,A,PAOK
+2526,Celta,2026-01-22,Europa League,H,Lille
 2526,Elche,2026-01-23,La Liga,A,Levante
 2526,Levante,2026-01-23,La Liga,H,Elche
 2526,Ath Bilbao,2026-01-24,La Liga,A,Sevilla
@@ -11741,6 +12382,8 @@ season,team,date,competition,home_away,opponent
 2526,Barcelona,2026-01-28,Champions League,H,FC København
 2526,Real Madrid,2026-01-28,Champions League,A,Sport Lisboa e Benfica
 2526,Villarreal,2026-01-28,Champions League,A,Bayer 04 Leverkusen
+2526,Betis,2026-01-29,Europa League,H,Feyenoord
+2526,Celta,2026-01-29,Europa League,A,Red Star Belgrade
 2526,Alaves,2026-01-30,La Liga,A,Espanol
 2526,Espanol,2026-01-30,La Liga,H,Alaves
 2526,Ath Madrid,2026-01-31,La Liga,A,Levante
@@ -11761,6 +12404,13 @@ season,team,date,competition,home_away,opponent
 2526,Vallecano,2026-02-01,La Liga,A,Real Madrid
 2526,Mallorca,2026-02-02,La Liga,H,Sevilla
 2526,Sevilla,2026-02-02,La Liga,A,Mallorca
+2526,Barcelona,2026-02-03,Copa del Rey,A,Albacete
+2526,Alaves,2026-02-04,Copa del Rey,H,Sociedad
+2526,Ath Bilbao,2026-02-04,Copa del Rey,A,Valencia
+2526,Sociedad,2026-02-04,Copa del Rey,A,Alaves
+2526,Valencia,2026-02-04,Copa del Rey,H,Ath Bilbao
+2526,Ath Madrid,2026-02-05,Copa del Rey,A,Betis
+2526,Betis,2026-02-05,Copa del Rey,H,Ath Madrid
 2526,Celta,2026-02-06,La Liga,H,Osasuna
 2526,Osasuna,2026-02-06,La Liga,A,Celta
 2526,Barcelona,2026-02-07,La Liga,H,Mallorca
@@ -11779,6 +12429,10 @@ season,team,date,competition,home_away,opponent
 2526,Valencia,2026-02-08,La Liga,H,Real Madrid
 2526,Espanol,2026-02-09,La Liga,A,Villarreal
 2526,Villarreal,2026-02-09,La Liga,H,Espanol
+2526,Ath Bilbao,2026-02-11,Copa del Rey,H,Sociedad
+2526,Sociedad,2026-02-11,Copa del Rey,A,Ath Bilbao
+2526,Ath Madrid,2026-02-12,Copa del Rey,H,Barcelona
+2526,Barcelona,2026-02-12,Copa del Rey,A,Ath Madrid
 2526,Elche,2026-02-13,La Liga,H,Osasuna
 2526,Osasuna,2026-02-13,La Liga,A,Elche
 2526,Alaves,2026-02-14,La Liga,A,Sevilla
@@ -11803,6 +12457,7 @@ season,team,date,competition,home_away,opponent
 2526,Ath Madrid,2026-02-18,Champions League,A,Club Brugge KV
 2526,Levante,2026-02-18,La Liga,H,Villarreal
 2526,Villarreal,2026-02-18,La Liga,A,Levante
+2526,Celta,2026-02-19,Europa League,A,PAOK
 2526,Ath Bilbao,2026-02-20,La Liga,H,Elche
 2526,Elche,2026-02-20,La Liga,A,Ath Bilbao
 2526,Ath Madrid,2026-02-21,La Liga,H,Espanol
@@ -11825,6 +12480,7 @@ season,team,date,competition,home_away,opponent
 2526,Girona,2026-02-23,La Liga,A,Alaves
 2526,Ath Madrid,2026-02-24,Champions League,H,Club Brugge KV
 2526,Real Madrid,2026-02-25,Champions League,H,Sport Lisboa e Benfica
+2526,Celta,2026-02-26,Europa League,H,PAOK
 2526,Alaves,2026-02-27,La Liga,A,Levante
 2526,Levante,2026-02-27,La Liga,H,Alaves
 2526,Ath Bilbao,2026-02-28,La Liga,A,Vallecano
@@ -11845,7 +12501,11 @@ season,team,date,competition,home_away,opponent
 2526,Valencia,2026-03-01,La Liga,H,Osasuna
 2526,Getafe,2026-03-02,La Liga,A,Real Madrid
 2526,Real Madrid,2026-03-02,La Liga,H,Getafe
+2526,Ath Madrid,2026-03-03,Copa del Rey,A,Barcelona
+2526,Barcelona,2026-03-03,Copa del Rey,H,Ath Madrid
+2526,Ath Bilbao,2026-03-04,Copa del Rey,A,Sociedad
 2526,Oviedo,2026-03-04,La Liga,A,Vallecano
+2526,Sociedad,2026-03-04,Copa del Rey,H,Ath Bilbao
 2526,Vallecano,2026-03-04,La Liga,H,Oviedo
 2526,Celta,2026-03-06,La Liga,H,Real Madrid
 2526,Real Madrid,2026-03-06,La Liga,A,Celta
@@ -11870,6 +12530,9 @@ season,team,date,competition,home_away,opponent
 2526,Ath Madrid,2026-03-10,Champions League,H,Tottenham
 2526,Barcelona,2026-03-10,Champions League,A,Newcastle
 2526,Real Madrid,2026-03-11,Champions League,H,Man City
+2526,Betis,2026-03-12,Europa League,A,Panathinaikos
+2526,Celta,2026-03-12,Europa League,H,Lyon
+2526,Vallecano,2026-03-12,Conference League,A,Samsunspor
 2526,Alaves,2026-03-13,La Liga,H,Villarreal
 2526,Villarreal,2026-03-13,La Liga,A,Alaves
 2526,Ath Bilbao,2026-03-14,La Liga,A,Girona
@@ -11893,6 +12556,9 @@ season,team,date,competition,home_away,opponent
 2526,Real Madrid,2026-03-17,Champions League,A,Man City
 2526,Ath Madrid,2026-03-18,Champions League,A,Tottenham
 2526,Barcelona,2026-03-18,Champions League,H,Newcastle
+2526,Betis,2026-03-19,Europa League,H,Panathinaikos
+2526,Celta,2026-03-19,Europa League,A,Lyon
+2526,Vallecano,2026-03-19,Conference League,H,Samsunspor
 2526,Sociedad,2026-03-20,La Liga,A,Villarreal
 2526,Villarreal,2026-03-20,La Liga,H,Sociedad
 2526,Elche,2026-03-21,La Liga,H,Mallorca
@@ -11936,6 +12602,9 @@ season,team,date,competition,home_away,opponent
 2526,Real Madrid,2026-04-07,Champions League,H,FC Bayern München
 2526,Ath Madrid,2026-04-08,Champions League,A,Barcelona
 2526,Barcelona,2026-04-08,Champions League,H,Ath Madrid
+2526,Betis,2026-04-08,Europa League,A,Braga
+2526,Celta,2026-04-09,Europa League,A,SC Freiburg
+2526,Vallecano,2026-04-09,Conference League,H,AEK Athens
 2526,Girona,2026-04-10,La Liga,A,Real Madrid
 2526,Real Madrid,2026-04-10,La Liga,H,Girona
 2526,Alaves,2026-04-11,La Liga,A,Sociedad
@@ -11959,6 +12628,11 @@ season,team,date,competition,home_away,opponent
 2526,Ath Madrid,2026-04-14,Champions League,H,Barcelona
 2526,Barcelona,2026-04-14,Champions League,A,Ath Madrid
 2526,Real Madrid,2026-04-15,Champions League,A,FC Bayern München
+2526,Betis,2026-04-16,Europa League,H,Braga
+2526,Celta,2026-04-16,Europa League,H,SC Freiburg
+2526,Vallecano,2026-04-16,Conference League,A,AEK Athens
+2526,Ath Madrid,2026-04-18,Copa del Rey,H,Sociedad
+2526,Sociedad,2026-04-18,Copa del Rey,A,Ath Madrid
 2526,Alaves,2026-04-21,La Liga,A,Real Madrid
 2526,Ath Bilbao,2026-04-21,La Liga,H,Osasuna
 2526,Betis,2026-04-21,La Liga,A,Girona
@@ -12000,6 +12674,7 @@ season,team,date,competition,home_away,opponent
 2526,Espanol,2026-04-27,La Liga,H,Levante
 2526,Levante,2026-04-27,La Liga,A,Espanol
 2526,Ath Madrid,2026-04-29,Champions League,H,Arsenal
+2526,Vallecano,2026-04-30,Conference League,H,Strasbourg
 2526,Girona,2026-05-01,La Liga,H,Mallorca
 2526,Mallorca,2026-05-01,La Liga,A,Girona
 2526,Alaves,2026-05-02,La Liga,H,Ath Bilbao
@@ -12021,6 +12696,7 @@ season,team,date,competition,home_away,opponent
 2526,Sevilla,2026-05-04,La Liga,H,Sociedad
 2526,Sociedad,2026-05-04,La Liga,A,Sevilla
 2526,Ath Madrid,2026-05-05,Champions League,A,Arsenal
+2526,Vallecano,2026-05-07,Conference League,A,Strasbourg
 2526,Levante,2026-05-08,La Liga,H,Osasuna
 2526,Osasuna,2026-05-08,La Liga,A,Levante
 2526,Alaves,2026-05-09,La Liga,A,Elche
@@ -12101,3 +12777,4 @@ season,team,date,competition,home_away,opponent
 2526,Vallecano,2026-05-23,La Liga,A,Alaves
 2526,Ath Madrid,2026-05-24,La Liga,A,Villarreal
 2526,Villarreal,2026-05-24,La Liga,H,Ath Madrid
+2526,Vallecano,2026-05-27,Conference League,A,Crystal Palace

@@ -1027,6 +1027,42 @@ season,team,date,competition,home_away,opponent
 1617,Benevento,2017-05-30,Serie B,A,AC Perugia Calcio
 1617,Benevento,2017-06-04,Serie B,A,Carpi FC
 1617,Benevento,2017-06-08,Serie B,H,Carpi FC
+1718,Milan,2017-07-27,Europa League (qual.),A,Universitatea Craiova
+1718,Lecce,2017-07-30,Coppa Italia,H,Ciliverghe Mazzano
+1718,Pisa,2017-07-30,Coppa Italia,H,Varese
+1718,Milan,2017-08-03,Europa League (qual.),H,Universitatea Craiova
+1718,Empoli,2017-08-05,Coppa Italia,H,Renate
+1718,Lecce,2017-08-05,Coppa Italia,A,Pro Vercelli
+1718,Spezia,2017-08-05,Coppa Italia,H,Reggiana
+1718,Brescia,2017-08-06,Coppa Italia,H,Padova
+1718,Cremonese,2017-08-06,Coppa Italia,A,Virtus Entella
+1718,Frosinone,2017-08-06,Coppa Italia,A,Pisa
+1718,Parma,2017-08-06,Coppa Italia,A,Bari
+1718,Pisa,2017-08-06,Coppa Italia,H,Frosinone
+1718,Salernitana,2017-08-06,Coppa Italia,H,Alessandria
+1718,Venezia,2017-08-06,Coppa Italia,H,Pordenone
+1718,Torino,2017-08-11,Coppa Italia,H,Trapani
+1718,Benevento,2017-08-12,Coppa Italia,H,Perugia
+1718,Bologna,2017-08-12,Coppa Italia,H,Cittadella
+1718,Brescia,2017-08-12,Coppa Italia,H,Pescara
+1718,Cagliari,2017-08-12,Coppa Italia,H,Palermo
+1718,Chievo,2017-08-12,Coppa Italia,H,Ascoli
+1718,Cremonese,2017-08-12,Coppa Italia,A,Bari
+1718,Crotone,2017-08-12,Coppa Italia,H,Piacenza
+1718,Frosinone,2017-08-12,Coppa Italia,A,Udinese
+1718,Lecce,2017-08-12,Coppa Italia,A,Pordenone
+1718,Salernitana,2017-08-12,Coppa Italia,A,Carpi
+1718,Sampdoria,2017-08-12,Coppa Italia,H,Foggia
+1718,Sassuolo,2017-08-12,Coppa Italia,H,Spezia
+1718,Spal,2017-08-12,Coppa Italia,H,Renate
+1718,Spezia,2017-08-12,Coppa Italia,A,Sassuolo
+1718,Udinese,2017-08-12,Coppa Italia,H,Frosinone
+1718,Genoa,2017-08-13,Coppa Italia,H,Cesena
+1718,Juventus,2017-08-13,Supercoppa Italiana,H,Lazio
+1718,Lazio,2017-08-13,Supercoppa Italiana,A,Juventus
+1718,Verona,2017-08-13,Coppa Italia,H,Avellino
+1718,Napoli,2017-08-16,Champions League (qual.),H,Nice
+1718,Milan,2017-08-17,Europa League (qual.),H,Shkëndija
 1718,Cagliari,2017-08-19,Serie A,A,Juventus
 1718,Juventus,2017-08-19,Serie A,H,Cagliari
 1718,Napoli,2017-08-19,Serie A,A,Verona
@@ -1047,6 +1083,8 @@ season,team,date,competition,home_away,opponent
 1718,Spal,2017-08-20,Serie A,A,Lazio
 1718,Torino,2017-08-20,Serie A,A,Bologna
 1718,Udinese,2017-08-20,Serie A,H,Chievo
+1718,Napoli,2017-08-22,Champions League (qual.),A,Nice
+1718,Milan,2017-08-24,Europa League (qual.),A,Shkëndija
 1718,Cremonese,2017-08-25,Serie B,A,Parma
 1718,Parma,2017-08-25,Serie B,H,Cremonese
 1718,Benevento,2017-08-26,Serie A,H,Bologna
@@ -1112,6 +1150,9 @@ season,team,date,competition,home_away,opponent
 1718,Juventus,2017-09-12,Champions League,A,Barcelona
 1718,Roma,2017-09-12,Champions League,H,Ath Madrid
 1718,Napoli,2017-09-13,Champions League,A,Shakhtar Donetsk
+1718,Atalanta,2017-09-14,Europa League,H,Everton
+1718,Lazio,2017-09-14,Europa League,A,Vitesse
+1718,Milan,2017-09-14,Europa League,A,Austria Wien
 1718,Spezia,2017-09-15,Serie B,A,Venezia
 1718,Venezia,2017-09-15,Serie B,H,Spezia
 1718,Bologna,2017-09-16,Serie A,A,Fiorentina
@@ -1198,6 +1239,9 @@ season,team,date,competition,home_away,opponent
 1718,Napoli,2017-09-26,Champions League,H,Feyenoord
 1718,Juventus,2017-09-27,Champions League,H,Olympiakos Piraeus
 1718,Roma,2017-09-27,Champions League,A,Qarabağ FK
+1718,Atalanta,2017-09-28,Europa League,A,Lyon
+1718,Lazio,2017-09-28,Europa League,H,Zulte Waregem
+1718,Milan,2017-09-28,Europa League,H,Rijeka
 1718,Parma,2017-09-29,Serie B,H,Salernitana
 1718,Salernitana,2017-09-29,Serie B,A,Parma
 1718,Bologna,2017-09-30,Serie A,A,Genoa
@@ -1266,6 +1310,9 @@ season,team,date,competition,home_away,opponent
 1718,Napoli,2017-10-17,Champions League,A,Man City
 1718,Juventus,2017-10-18,Champions League,H,Sporting CP
 1718,Roma,2017-10-18,Champions League,A,Chelsea
+1718,Atalanta,2017-10-19,Europa League,H,Apollon Limassol
+1718,Lazio,2017-10-19,Europa League,A,Nice
+1718,Milan,2017-10-19,Europa League,H,AEK Athens
 1718,Brescia,2017-10-20,Serie B,A,Cremonese
 1718,Cremonese,2017-10-20,Serie B,H,Brescia
 1718,Crotone,2017-10-21,Serie A,A,Sampdoria
@@ -1353,6 +1400,9 @@ season,team,date,competition,home_away,opponent
 1718,Juventus,2017-10-31,Champions League,A,Sporting CP
 1718,Roma,2017-10-31,Champions League,H,Chelsea
 1718,Napoli,2017-11-01,Champions League,H,Man City
+1718,Atalanta,2017-11-02,Europa League,A,Apollon Limassol
+1718,Lazio,2017-11-02,Europa League,H,Nice
+1718,Milan,2017-11-02,Europa League,A,AEK Athens
 1718,Bologna,2017-11-04,Serie A,H,Crotone
 1718,Brescia,2017-11-04,Serie B,H,Venezia
 1718,Cremonese,2017-11-04,Serie B,A,Foggia Calcio
@@ -1418,6 +1468,9 @@ season,team,date,competition,home_away,opponent
 1718,Napoli,2017-11-21,Champions League,H,Shakhtar Donetsk
 1718,Juventus,2017-11-22,Champions League,H,Barcelona
 1718,Roma,2017-11-22,Champions League,A,Ath Madrid
+1718,Atalanta,2017-11-23,Europa League,A,Everton
+1718,Lazio,2017-11-23,Europa League,H,Vitesse
+1718,Milan,2017-11-23,Europa League,H,Austria Wien
 1718,Empoli,2017-11-24,Serie B,H,Frosinone
 1718,Frosinone,2017-11-24,Serie B,A,Empoli
 1718,Bologna,2017-11-25,Serie A,H,Sampdoria
@@ -1446,6 +1499,16 @@ season,team,date,competition,home_away,opponent
 1718,Atalanta,2017-11-27,Serie A,H,Benevento
 1718,Benevento,2017-11-27,Serie A,A,Atalanta
 1718,Brescia,2017-11-27,Serie B,A,AC Cesena
+1718,Cagliari,2017-11-28,Coppa Italia,H,Pordenone
+1718,Sampdoria,2017-11-28,Coppa Italia,H,Pescara
+1718,Spal,2017-11-28,Coppa Italia,H,Cittadella
+1718,Chievo,2017-11-29,Coppa Italia,H,Verona
+1718,Sassuolo,2017-11-29,Coppa Italia,H,Bari
+1718,Torino,2017-11-29,Coppa Italia,H,Carpi
+1718,Verona,2017-11-29,Coppa Italia,A,Chievo
+1718,Crotone,2017-11-30,Coppa Italia,A,Genoa
+1718,Genoa,2017-11-30,Coppa Italia,H,Crotone
+1718,Udinese,2017-11-30,Coppa Italia,H,Perugia
 1718,Juventus,2017-12-01,Serie A,A,Napoli
 1718,Napoli,2017-12-01,Serie A,H,Juventus
 1718,Roma,2017-12-01,Serie A,H,Spal
@@ -1477,6 +1540,9 @@ season,team,date,competition,home_away,opponent
 1718,Juventus,2017-12-05,Champions League,A,Olympiakos Piraeus
 1718,Roma,2017-12-05,Champions League,H,Qarabağ FK
 1718,Napoli,2017-12-06,Champions League,A,Feyenoord
+1718,Atalanta,2017-12-07,Europa League,H,Lyon
+1718,Lazio,2017-12-07,Europa League,A,Zulte Waregem
+1718,Milan,2017-12-07,Europa League,A,Rijeka
 1718,Cremonese,2017-12-08,Serie B,A,Novara Calcio
 1718,Parma,2017-12-08,Serie B,A,Ternana Calcio
 1718,Spezia,2017-12-08,Serie B,H,Foggia Calcio
@@ -1505,6 +1571,12 @@ season,team,date,competition,home_away,opponent
 1718,Torino,2017-12-11,Serie A,A,Lazio
 1718,Atalanta,2017-12-12,Serie A,A,Genoa
 1718,Genoa,2017-12-12,Serie A,H,Atalanta
+1718,Inter,2017-12-12,Coppa Italia,H,Pordenone
+1718,Fiorentina,2017-12-13,Coppa Italia,H,Sampdoria
+1718,Milan,2017-12-13,Coppa Italia,H,Verona
+1718,Sampdoria,2017-12-13,Coppa Italia,A,Fiorentina
+1718,Verona,2017-12-13,Coppa Italia,A,Milan
+1718,Lazio,2017-12-14,Coppa Italia,H,Cittadella
 1718,Venezia,2017-12-15,Serie B,A,Foggia Calcio
 1718,Cagliari,2017-12-16,Serie A,A,Roma
 1718,Cremonese,2017-12-16,Serie B,H,Empoli
@@ -1533,7 +1605,15 @@ season,team,date,competition,home_away,opponent
 1718,Sassuolo,2017-12-17,Serie A,A,Sampdoria
 1718,Spal,2017-12-17,Serie A,A,Benevento
 1718,Verona,2017-12-17,Serie A,H,Milan
+1718,Napoli,2017-12-19,Coppa Italia,H,Udinese
+1718,Udinese,2017-12-19,Coppa Italia,A,Napoli
+1718,Atalanta,2017-12-20,Coppa Italia,H,Sassuolo
 1718,Cremonese,2017-12-20,Serie B,A,Venezia
+1718,Genoa,2017-12-20,Coppa Italia,A,Juventus
+1718,Juventus,2017-12-20,Coppa Italia,H,Genoa
+1718,Roma,2017-12-20,Coppa Italia,H,Torino
+1718,Sassuolo,2017-12-20,Coppa Italia,A,Atalanta
+1718,Torino,2017-12-20,Coppa Italia,A,Roma
 1718,Venezia,2017-12-20,Serie B,H,Cremonese
 1718,Brescia,2017-12-21,Serie B,A,Empoli
 1718,Empoli,2017-12-21,Serie B,H,Brescia
@@ -1561,6 +1641,10 @@ season,team,date,competition,home_away,opponent
 1718,Torino,2017-12-23,Serie A,A,Spal
 1718,Udinese,2017-12-23,Serie A,H,Verona
 1718,Verona,2017-12-23,Serie A,A,Udinese
+1718,Fiorentina,2017-12-26,Coppa Italia,A,Lazio
+1718,Lazio,2017-12-26,Coppa Italia,H,Fiorentina
+1718,Inter,2017-12-27,Coppa Italia,A,Milan
+1718,Milan,2017-12-27,Coppa Italia,H,Inter
 1718,Parma,2017-12-27,Serie B,H,Spezia
 1718,Spezia,2017-12-27,Serie B,A,Parma
 1718,Brescia,2017-12-28,Serie B,H,Ascoli Picchio FC
@@ -1589,6 +1673,10 @@ season,team,date,competition,home_away,opponent
 1718,Torino,2017-12-30,Serie A,H,Genoa
 1718,Udinese,2017-12-30,Serie A,A,Bologna
 1718,Verona,2017-12-30,Serie A,H,Juventus
+1718,Atalanta,2018-01-02,Coppa Italia,A,Napoli
+1718,Napoli,2018-01-02,Coppa Italia,H,Atalanta
+1718,Juventus,2018-01-03,Coppa Italia,H,Torino
+1718,Torino,2018-01-03,Coppa Italia,A,Juventus
 1718,Chievo,2018-01-05,Serie A,H,Udinese
 1718,Fiorentina,2018-01-05,Serie A,H,Inter
 1718,Inter,2018-01-05,Serie A,A,Fiorentina
@@ -1669,6 +1757,10 @@ season,team,date,competition,home_away,opponent
 1718,Udinese,2018-01-28,Serie A,A,Genoa
 1718,Verona,2018-01-28,Serie A,A,Fiorentina
 1718,Salernitana,2018-01-29,Serie B,A,Ternana Calcio
+1718,Atalanta,2018-01-30,Coppa Italia,H,Juventus
+1718,Juventus,2018-01-30,Coppa Italia,A,Atalanta
+1718,Lazio,2018-01-31,Coppa Italia,A,Milan
+1718,Milan,2018-01-31,Coppa Italia,H,Lazio
 1718,Empoli,2018-02-02,Serie B,H,US Palermo
 1718,Brescia,2018-02-03,Serie B,H,Parma
 1718,Cremonese,2018-02-03,Serie B,H,Pro Vercelli
@@ -1726,6 +1818,10 @@ season,team,date,competition,home_away,opponent
 1718,Udinese,2018-02-11,Serie A,A,Torino
 1718,Verona,2018-02-11,Serie A,A,Sampdoria
 1718,Juventus,2018-02-13,Champions League,H,Tottenham
+1718,Atalanta,2018-02-15,Europa League,A,Borussia Dortmund
+1718,Lazio,2018-02-15,Europa League,A,FCSB
+1718,Milan,2018-02-15,Europa League,A,Ludogorets Razgrad
+1718,Napoli,2018-02-15,Europa League,H,RB Leipzig
 1718,Cremonese,2018-02-16,Serie B,H,FC Bari 1908
 1718,Cagliari,2018-02-17,Serie A,A,Chievo
 1718,Chievo,2018-02-17,Serie A,H,Cagliari
@@ -1755,6 +1851,10 @@ season,team,date,competition,home_away,opponent
 1718,Lazio,2018-02-19,Serie A,H,Verona
 1718,Verona,2018-02-19,Serie A,A,Lazio
 1718,Roma,2018-02-21,Champions League,A,Shakhtar Donetsk
+1718,Atalanta,2018-02-22,Europa League,H,Borussia Dortmund
+1718,Lazio,2018-02-22,Europa League,H,FCSB
+1718,Milan,2018-02-22,Europa League,H,Ludogorets Razgrad
+1718,Napoli,2018-02-22,Europa League,A,RB Leipzig
 1718,Parma,2018-02-23,Serie B,H,Venezia
 1718,Salernitana,2018-02-23,Serie B,A,Spezia
 1718,Spezia,2018-02-23,Serie B,H,Salernitana
@@ -1787,6 +1887,10 @@ season,team,date,competition,home_away,opponent
 1718,Empoli,2018-02-27,Serie B,H,US Avellino
 1718,Frosinone,2018-02-27,Serie B,A,Cremonese
 1718,Venezia,2018-02-27,Serie B,H,Ternana Calcio
+1718,Atalanta,2018-02-28,Coppa Italia,A,Juventus
+1718,Juventus,2018-02-28,Coppa Italia,H,Atalanta
+1718,Lazio,2018-02-28,Coppa Italia,H,Milan
+1718,Milan,2018-02-28,Coppa Italia,A,Lazio
 1718,Bologna,2018-03-03,Serie A,A,Spal
 1718,Cremonese,2018-03-03,Serie B,A,Ternana Calcio
 1718,Frosinone,2018-03-03,Serie B,H,Novara Calcio
@@ -1799,6 +1903,8 @@ season,team,date,competition,home_away,opponent
 1718,Spezia,2018-03-03,Serie B,H,AC Cesena
 1718,Brescia,2018-03-06,Serie B,A,AC Perugia Calcio
 1718,Juventus,2018-03-07,Champions League,A,Tottenham
+1718,Lazio,2018-03-08,Europa League,H,Dynamo Kyiv
+1718,Milan,2018-03-08,Europa League,H,Arsenal
 1718,Roma,2018-03-09,Serie A,H,Torino
 1718,Torino,2018-03-09,Serie A,A,Roma
 1718,Chievo,2018-03-10,Serie A,A,Verona
@@ -1831,6 +1937,8 @@ season,team,date,competition,home_away,opponent
 1718,Spezia,2018-03-13,Serie B,A,FC Bari 1908
 1718,Atalanta,2018-03-14,Serie A,A,Juventus
 1718,Juventus,2018-03-14,Serie A,H,Atalanta
+1718,Lazio,2018-03-15,Europa League,A,Dynamo Kyiv
+1718,Milan,2018-03-15,Europa League,A,Arsenal
 1718,Brescia,2018-03-17,Serie B,H,Cremonese
 1718,Cremonese,2018-03-17,Serie B,A,Brescia
 1718,Empoli,2018-03-17,Serie B,H,Venezia
@@ -1915,6 +2023,7 @@ season,team,date,competition,home_away,opponent
 1718,Sassuolo,2018-04-04,Serie A,A,Chievo
 1718,Torino,2018-04-04,Serie A,H,Crotone
 1718,Verona,2018-04-04,Serie A,A,Benevento
+1718,Lazio,2018-04-05,Europa League,H,Red Bull Salzburg
 1718,Atalanta,2018-04-07,Serie A,A,Spal
 1718,Benevento,2018-04-07,Serie A,H,Juventus
 1718,Cremonese,2018-04-07,Serie B,H,Foggia Calcio
@@ -1945,6 +2054,7 @@ season,team,date,competition,home_away,opponent
 1718,Verona,2018-04-08,Serie A,H,Cagliari
 1718,Roma,2018-04-10,Champions League,H,Barcelona
 1718,Juventus,2018-04-11,Champions League,A,Real Madrid
+1718,Lazio,2018-04-12,Europa League,A,Red Bull Salzburg
 1718,Parma,2018-04-13,Serie B,H,AS Cittadella
 1718,Atalanta,2018-04-14,Serie A,H,Inter
 1718,Brescia,2018-04-14,Serie B,H,Carpi FC
@@ -2095,6 +2205,8 @@ season,team,date,competition,home_away,opponent
 1718,Udinese,2018-05-06,Serie A,H,Inter
 1718,Cremonese,2018-05-07,Serie B,A,Empoli
 1718,Empoli,2018-05-07,Serie B,H,Cremonese
+1718,Juventus,2018-05-09,Coppa Italia,H,Milan
+1718,Milan,2018-05-09,Coppa Italia,A,Juventus
 1718,Spezia,2018-05-11,Serie B,A,US Avellino
 1718,Benevento,2018-05-12,Serie A,H,Genoa
 1718,Brescia,2018-05-12,Serie B,H,Empoli
@@ -2158,6 +2270,44 @@ season,team,date,competition,home_away,opponent
 1718,Venezia,2018-06-10,Serie B,A,US Palermo
 1718,Frosinone,2018-06-13,Serie B,A,US Palermo
 1718,Frosinone,2018-06-16,Serie B,H,US Palermo
+1819,Atalanta,2018-07-26,Europa League (qual.),H,Sarajevo
+1819,Como,2018-07-29,Coppa Italia,A,Catania
+1819,Monza,2018-07-29,Coppa Italia,H,Matelica
+1819,Pisa,2018-07-29,Coppa Italia,H,Triestina
+1819,Atalanta,2018-08-02,Europa League (qual.),A,Sarajevo
+1819,Spezia,2018-08-04,Coppa Italia,H,Sambenedettese
+1819,Benevento,2018-08-05,Coppa Italia,H,Imolese
+1819,Brescia,2018-08-05,Coppa Italia,H,Pro Vercelli
+1819,Cremonese,2018-08-05,Coppa Italia,H,Pisa
+1819,Crotone,2018-08-05,Coppa Italia,H,Giana Erminio
+1819,Monza,2018-08-05,Coppa Italia,A,Padova
+1819,Pisa,2018-08-05,Coppa Italia,A,Cremonese
+1819,Salernitana,2018-08-05,Coppa Italia,H,Rezzato
+1819,Venezia,2018-08-05,Coppa Italia,H,Südtirol
+1819,Verona,2018-08-05,Coppa Italia,H,Juve Stabia
+1819,Lecce,2018-08-07,Coppa Italia,H,FeralpiSalò
+1819,Atalanta,2018-08-09,Europa League (qual.),A,Hapoel Haifa
+1819,Benevento,2018-08-11,Coppa Italia,A,Udinese
+1819,Genoa,2018-08-11,Coppa Italia,H,Lecce
+1819,Lecce,2018-08-11,Coppa Italia,A,Genoa
+1819,Udinese,2018-08-11,Coppa Italia,H,Benevento
+1819,Bologna,2018-08-12,Coppa Italia,H,Padova
+1819,Brescia,2018-08-12,Coppa Italia,H,Novara
+1819,Cagliari,2018-08-12,Coppa Italia,H,Palermo
+1819,Chievo,2018-08-12,Coppa Italia,H,Pescara
+1819,Crotone,2018-08-12,Coppa Italia,A,Livorno
+1819,Empoli,2018-08-12,Coppa Italia,H,Cittadella
+1819,Frosinone,2018-08-12,Coppa Italia,H,Südtirol
+1819,Parma,2018-08-12,Coppa Italia,H,Pisa
+1819,Pisa,2018-08-12,Coppa Italia,A,Parma
+1819,Salernitana,2018-08-12,Coppa Italia,A,Virtus Entella
+1819,Sampdoria,2018-08-12,Coppa Italia,H,Viterbese
+1819,Sassuolo,2018-08-12,Coppa Italia,H,Ternana
+1819,Spal,2018-08-12,Coppa Italia,A,Spezia
+1819,Spezia,2018-08-12,Coppa Italia,H,Spal
+1819,Torino,2018-08-12,Coppa Italia,H,Cosenza
+1819,Verona,2018-08-12,Coppa Italia,A,Catania
+1819,Atalanta,2018-08-16,Europa League (qual.),H,Hapoel Haifa
 1819,Chievo,2018-08-18,Serie A,H,Juventus
 1819,Juventus,2018-08-18,Serie A,A,Chievo
 1819,Lazio,2018-08-18,Serie A,H,Napoli
@@ -2174,6 +2324,7 @@ season,team,date,competition,home_away,opponent
 1819,Udinese,2018-08-19,Serie A,A,Parma
 1819,Atalanta,2018-08-20,Serie A,H,Frosinone
 1819,Frosinone,2018-08-20,Serie A,A,Atalanta
+1819,Atalanta,2018-08-23,Europa League (qual.),H,Copenhagen
 1819,Brescia,2018-08-24,Serie B,H,AC Perugia Calcio
 1819,Cremonese,2018-08-25,Serie B,H,Delfino Pescara
 1819,Juventus,2018-08-25,Serie A,H,Lazio
@@ -2203,6 +2354,7 @@ season,team,date,competition,home_away,opponent
 1819,Benevento,2018-08-27,Serie B,H,Lecce
 1819,Lecce,2018-08-27,Serie B,A,Benevento
 1819,Roma,2018-08-27,Serie A,H,Atalanta
+1819,Atalanta,2018-08-30,Europa League (qual.),A,Copenhagen
 1819,Cremonese,2018-08-31,Serie B,A,US Palermo
 1819,Milan,2018-08-31,Serie A,H,Roma
 1819,Roma,2018-08-31,Serie A,A,Milan
@@ -2266,6 +2418,8 @@ season,team,date,competition,home_away,opponent
 1819,Juventus,2018-09-19,Champions League,A,Valencia
 1819,Roma,2018-09-19,Champions League,A,Real Madrid
 1819,Sampdoria,2018-09-19,Serie A,H,Fiorentina
+1819,Lazio,2018-09-20,Europa League,H,Apollon Limassol
+1819,Milan,2018-09-20,Europa League,A,F91 Dudelange
 1819,Benevento,2018-09-21,Serie B,H,Salernitana
 1819,Empoli,2018-09-21,Serie A,A,Sassuolo
 1819,Salernitana,2018-09-21,Serie B,A,Benevento
@@ -2356,6 +2510,8 @@ season,team,date,competition,home_away,opponent
 1819,Roma,2018-10-02,Champions League,H,Viktoria Plzeň
 1819,Inter,2018-10-03,Champions League,A,PSV Eindhoven
 1819,Napoli,2018-10-03,Champions League,H,Liverpool
+1819,Lazio,2018-10-04,Europa League,A,Eintracht Frankfurt
+1819,Milan,2018-10-04,Europa League,H,Olympiacos
 1819,Frosinone,2018-10-05,Serie A,A,Torino
 1819,Lecce,2018-10-05,Serie B,A,Verona
 1819,Torino,2018-10-05,Serie A,H,Frosinone
@@ -2417,6 +2573,8 @@ season,team,date,competition,home_away,opponent
 1819,Roma,2018-10-23,Champions League,H,CSKA Moskva
 1819,Inter,2018-10-24,Champions League,A,Barcelona
 1819,Napoli,2018-10-24,Champions League,A,Paris Saint-Germain
+1819,Lazio,2018-10-25,Europa League,A,Marseille
+1819,Milan,2018-10-25,Europa League,H,Real Betis
 1819,Venezia,2018-10-26,Serie B,A,US Palermo
 1819,Atalanta,2018-10-27,Serie A,H,Parma
 1819,Benevento,2018-10-27,Serie B,H,Cremonese
@@ -2486,6 +2644,8 @@ season,team,date,competition,home_away,opponent
 1819,Napoli,2018-11-06,Champions League,H,Paris Saint-Germain
 1819,Juventus,2018-11-07,Champions League,H,Man United
 1819,Roma,2018-11-07,Champions League,A,CSKA Moskva
+1819,Lazio,2018-11-08,Europa League,H,Marseille
+1819,Milan,2018-11-08,Europa League,A,Real Betis
 1819,Crotone,2018-11-09,Serie B,A,AC Perugia Calcio
 1819,Fiorentina,2018-11-09,Serie A,A,Frosinone
 1819,Frosinone,2018-11-09,Serie A,H,Fiorentina
@@ -2549,6 +2709,8 @@ season,team,date,competition,home_away,opponent
 1819,Roma,2018-11-27,Champions League,H,Real Madrid
 1819,Inter,2018-11-28,Champions League,A,Tottenham
 1819,Napoli,2018-11-28,Champions League,H,Crvena Zvezda
+1819,Lazio,2018-11-29,Europa League,A,Apollon Limassol
+1819,Milan,2018-11-29,Europa League,H,F91 Dudelange
 1819,Benevento,2018-11-30,Serie B,A,US Palermo
 1819,Bologna,2018-12-01,Serie A,A,Sampdoria
 1819,Cremonese,2018-12-01,Serie B,H,Crotone
@@ -2577,6 +2739,17 @@ season,team,date,competition,home_away,opponent
 1819,Atalanta,2018-12-03,Serie A,H,Napoli
 1819,Napoli,2018-12-03,Serie A,A,Atalanta
 1819,Venezia,2018-12-03,Serie B,A,Foggia Calcio
+1819,Benevento,2018-12-04,Coppa Italia,H,Cittadella
+1819,Bologna,2018-12-04,Coppa Italia,H,Crotone
+1819,Crotone,2018-12-04,Coppa Italia,A,Bologna
+1819,Sampdoria,2018-12-04,Coppa Italia,H,Spal
+1819,Spal,2018-12-04,Coppa Italia,A,Sampdoria
+1819,Cagliari,2018-12-05,Coppa Italia,A,Chievo
+1819,Chievo,2018-12-05,Coppa Italia,H,Cagliari
+1819,Pisa,2018-12-05,Coppa Italia,A,Novara
+1819,Sassuolo,2018-12-05,Coppa Italia,H,Catania
+1819,Genoa,2018-12-06,Coppa Italia,H,Virtus Entella
+1819,Torino,2018-12-06,Coppa Italia,H,Südtirol
 1819,Inter,2018-12-07,Serie A,A,Juventus
 1819,Juventus,2018-12-07,Serie A,H,Inter
 1819,Cagliari,2018-12-08,Serie A,H,Roma
@@ -2609,6 +2782,8 @@ season,team,date,competition,home_away,opponent
 1819,Napoli,2018-12-11,Champions League,A,Liverpool
 1819,Juventus,2018-12-12,Champions League,A,BSC Young Boys
 1819,Roma,2018-12-12,Champions League,A,Viktoria Plzeň
+1819,Lazio,2018-12-13,Europa League,H,Eintracht Frankfurt
+1819,Milan,2018-12-13,Europa League,A,Olympiacos
 1819,Cremonese,2018-12-14,Serie B,A,Foggia Calcio
 1819,Inter,2018-12-15,Serie A,H,Udinese
 1819,Juventus,2018-12-15,Serie A,A,Torino
@@ -2724,6 +2899,22 @@ season,team,date,competition,home_away,opponent
 1819,Spezia,2018-12-30,Serie B,H,Lecce
 1819,Venezia,2018-12-30,Serie B,H,Carpi FC
 1819,Verona,2018-12-30,Serie B,A,Foggia Calcio
+1819,Bologna,2019-01-12,Coppa Italia,H,Juventus
+1819,Juventus,2019-01-12,Coppa Italia,A,Bologna
+1819,Lazio,2019-01-12,Coppa Italia,H,Novara
+1819,Milan,2019-01-12,Coppa Italia,A,Sampdoria
+1819,Sampdoria,2019-01-12,Coppa Italia,H,Milan
+1819,Benevento,2019-01-13,Coppa Italia,A,Inter
+1819,Fiorentina,2019-01-13,Coppa Italia,A,Torino
+1819,Inter,2019-01-13,Coppa Italia,H,Benevento
+1819,Napoli,2019-01-13,Coppa Italia,H,Sassuolo
+1819,Sassuolo,2019-01-13,Coppa Italia,A,Napoli
+1819,Torino,2019-01-13,Coppa Italia,H,Fiorentina
+1819,Atalanta,2019-01-14,Coppa Italia,A,Cagliari
+1819,Cagliari,2019-01-14,Coppa Italia,H,Atalanta
+1819,Roma,2019-01-14,Coppa Italia,H,Virtus Entella
+1819,Juventus,2019-01-16,Supercoppa Italiana,H,Milan
+1819,Milan,2019-01-16,Supercoppa Italiana,A,Juventus
 1819,Salernitana,2019-01-18,Serie B,A,US Palermo
 1819,Benevento,2019-01-19,Serie B,A,Lecce
 1819,Brescia,2019-01-19,Serie B,A,AC Perugia Calcio
@@ -2781,6 +2972,14 @@ season,team,date,competition,home_away,opponent
 1819,Empoli,2019-01-28,Serie A,H,Genoa
 1819,Genoa,2019-01-28,Serie A,A,Empoli
 1819,Verona,2019-01-28,Serie B,H,Cosenza Calcio
+1819,Milan,2019-01-29,Coppa Italia,H,Napoli
+1819,Napoli,2019-01-29,Coppa Italia,A,Milan
+1819,Atalanta,2019-01-30,Coppa Italia,H,Juventus
+1819,Fiorentina,2019-01-30,Coppa Italia,H,Roma
+1819,Juventus,2019-01-30,Coppa Italia,A,Atalanta
+1819,Roma,2019-01-30,Coppa Italia,A,Fiorentina
+1819,Inter,2019-01-31,Coppa Italia,H,Lazio
+1819,Lazio,2019-01-31,Coppa Italia,A,Inter
 1819,Chievo,2019-02-02,Serie A,A,Empoli
 1819,Cremonese,2019-02-02,Serie B,A,Spezia
 1819,Empoli,2019-02-02,Serie A,H,Chievo
@@ -2839,6 +3038,9 @@ season,team,date,competition,home_away,opponent
 1819,Lecce,2019-02-11,Serie B,A,Venezia
 1819,Venezia,2019-02-11,Serie B,H,Lecce
 1819,Roma,2019-02-12,Champions League,H,FC Porto
+1819,Inter,2019-02-14,Europa League,A,Rapid Wien
+1819,Lazio,2019-02-14,Europa League,H,Sevilla
+1819,Napoli,2019-02-14,Europa League,A,Zürich
 1819,Brescia,2019-02-15,Serie B,A,US Palermo
 1819,Frosinone,2019-02-15,Serie A,A,Juventus
 1819,Juventus,2019-02-15,Serie A,H,Frosinone
@@ -2868,6 +3070,9 @@ season,team,date,competition,home_away,opponent
 1819,Crotone,2019-02-18,Serie B,H,Delfino Pescara
 1819,Roma,2019-02-18,Serie A,H,Bologna
 1819,Juventus,2019-02-20,Champions League,A,Ath Madrid
+1819,Lazio,2019-02-20,Europa League,A,Sevilla
+1819,Inter,2019-02-21,Europa League,H,Rapid Wien
+1819,Napoli,2019-02-21,Europa League,H,Zürich
 1819,Empoli,2019-02-22,Serie A,A,Milan
 1819,Milan,2019-02-22,Serie A,H,Empoli
 1819,Salernitana,2019-02-22,Serie B,A,Verona
@@ -2899,9 +3104,13 @@ season,team,date,competition,home_away,opponent
 1819,Brescia,2019-02-26,Serie B,A,Calcio Padova
 1819,Cremonese,2019-02-26,Serie B,A,Salernitana
 1819,Crotone,2019-02-26,Serie B,H,US Palermo
+1819,Lazio,2019-02-26,Coppa Italia,H,Milan
 1819,Lecce,2019-02-26,Serie B,H,Verona
+1819,Milan,2019-02-26,Coppa Italia,A,Lazio
 1819,Salernitana,2019-02-26,Serie B,H,Cremonese
 1819,Verona,2019-02-26,Serie B,A,Lecce
+1819,Atalanta,2019-02-27,Coppa Italia,A,Fiorentina
+1819,Fiorentina,2019-02-27,Coppa Italia,H,Atalanta
 1819,Spezia,2019-02-27,Serie B,H,AS Livorno
 1819,Venezia,2019-02-27,Serie B,H,AC Perugia Calcio
 1819,Cagliari,2019-03-01,Serie A,H,Inter
@@ -2933,6 +3142,8 @@ season,team,date,competition,home_away,opponent
 1819,Verona,2019-03-03,Serie B,H,Venezia
 1819,Benevento,2019-03-04,Serie B,A,AS Livorno
 1819,Roma,2019-03-06,Champions League,A,FC Porto
+1819,Inter,2019-03-07,Europa League,A,Eintracht Frankfurt
+1819,Napoli,2019-03-07,Europa League,H,Red Bull Salzburg
 1819,Juventus,2019-03-08,Serie A,H,Udinese
 1819,Udinese,2019-03-08,Serie A,A,Juventus
 1819,Verona,2019-03-08,Serie B,A,AC Perugia Calcio
@@ -2963,6 +3174,8 @@ season,team,date,competition,home_away,opponent
 1819,Roma,2019-03-11,Serie A,H,Empoli
 1819,Venezia,2019-03-11,Serie B,H,US Palermo
 1819,Juventus,2019-03-12,Champions League,H,Ath Madrid
+1819,Inter,2019-03-14,Europa League,H,Eintracht Frankfurt
+1819,Napoli,2019-03-14,Europa League,A,Red Bull Salzburg
 1819,Cagliari,2019-03-15,Serie A,H,Fiorentina
 1819,Fiorentina,2019-03-15,Serie A,A,Cagliari
 1819,Benevento,2019-03-16,Serie B,H,Spezia
@@ -3078,6 +3291,7 @@ season,team,date,competition,home_away,opponent
 1819,Chievo,2019-04-08,Serie A,A,Bologna
 1819,Verona,2019-04-08,Serie B,A,US Palermo
 1819,Juventus,2019-04-10,Champions League,A,AFC Ajax
+1819,Napoli,2019-04-11,Europa League,A,Arsenal
 1819,Cremonese,2019-04-13,Serie B,A,Crotone
 1819,Crotone,2019-04-13,Serie B,H,Cremonese
 1819,Juventus,2019-04-13,Serie A,A,Spal
@@ -3109,6 +3323,7 @@ season,team,date,competition,home_away,opponent
 1819,Juventus,2019-04-16,Champions League,H,AFC Ajax
 1819,Lazio,2019-04-17,Serie A,H,Udinese
 1819,Udinese,2019-04-17,Serie A,A,Lazio
+1819,Napoli,2019-04-18,Europa League,H,Arsenal
 1819,Bologna,2019-04-20,Serie A,H,Sampdoria
 1819,Cagliari,2019-04-20,Serie A,H,Frosinone
 1819,Chievo,2019-04-20,Serie A,A,Lazio
@@ -3137,6 +3352,10 @@ season,team,date,competition,home_away,opponent
 1819,Spezia,2019-04-22,Serie B,A,Cosenza Calcio
 1819,Venezia,2019-04-22,Serie B,A,Ascoli Calcio
 1819,Verona,2019-04-22,Serie B,H,Benevento
+1819,Lazio,2019-04-24,Coppa Italia,A,Milan
+1819,Milan,2019-04-24,Coppa Italia,H,Lazio
+1819,Atalanta,2019-04-25,Coppa Italia,H,Fiorentina
+1819,Fiorentina,2019-04-25,Coppa Italia,A,Atalanta
 1819,Benevento,2019-04-26,Serie B,H,Cosenza Calcio
 1819,Bologna,2019-04-27,Serie A,H,Empoli
 1819,Cagliari,2019-04-27,Serie A,A,Roma
@@ -3232,6 +3451,8 @@ season,team,date,competition,home_away,opponent
 1819,Chievo,2019-05-13,Serie A,A,Inter
 1819,Inter,2019-05-13,Serie A,H,Chievo
 1819,Parma,2019-05-13,Serie A,A,Bologna
+1819,Atalanta,2019-05-15,Coppa Italia,H,Lazio
+1819,Lazio,2019-05-15,Coppa Italia,A,Atalanta
 1819,Spezia,2019-05-17,Serie B,H,AS Cittadella
 1819,Cagliari,2019-05-18,Serie A,A,Genoa
 1819,Genoa,2019-05-18,Serie A,H,Cagliari
@@ -3284,6 +3505,45 @@ season,team,date,competition,home_away,opponent
 1819,Venezia,2019-06-05,Serie B,A,Salernitana
 1819,Salernitana,2019-06-09,Serie B,A,Venezia
 1819,Venezia,2019-06-09,Serie B,H,Salernitana
+1920,Torino,2019-07-25,Europa League (qual.),H,Debrecen
+1920,Torino,2019-08-01,Europa League (qual.),A,Debrecen
+1920,Monza,2019-08-04,Coppa Italia,H,Alessandria
+1920,Torino,2019-08-08,Europa League (qual.),H,Shakhtyor Soligorsk
+1920,Benevento,2019-08-11,Coppa Italia,H,Monza
+1920,Chievo,2019-08-11,Coppa Italia,H,Ravenna
+1920,Cremonese,2019-08-11,Coppa Italia,H,Virtus Francavilla
+1920,Crotone,2019-08-11,Coppa Italia,H,Arezzo
+1920,Empoli,2019-08-11,Coppa Italia,H,Reggina
+1920,Frosinone,2019-08-11,Coppa Italia,H,Carrarese
+1920,Monza,2019-08-11,Coppa Italia,A,Benevento
+1920,Pisa,2019-08-11,Coppa Italia,H,Potenza
+1920,Salernitana,2019-08-11,Coppa Italia,H,Catanzaro
+1920,Spezia,2019-08-11,Coppa Italia,H,Pro Patria
+1920,Venezia,2019-08-11,Coppa Italia,H,Catania
+1920,Torino,2019-08-15,Europa League (qual.),A,Shakhtyor Soligorsk
+1920,Genoa,2019-08-16,Coppa Italia,H,Imolese
+1920,Parma,2019-08-17,Coppa Italia,H,Venezia
+1920,Venezia,2019-08-17,Coppa Italia,A,Parma
+1920,Bologna,2019-08-18,Coppa Italia,A,Pisa
+1920,Brescia,2019-08-18,Coppa Italia,A,Perugia
+1920,Cagliari,2019-08-18,Coppa Italia,H,Chievo
+1920,Chievo,2019-08-18,Coppa Italia,A,Cagliari
+1920,Cremonese,2019-08-18,Coppa Italia,A,Verona
+1920,Crotone,2019-08-18,Coppa Italia,H,Sampdoria
+1920,Empoli,2019-08-18,Coppa Italia,H,Pescara
+1920,Fiorentina,2019-08-18,Coppa Italia,H,Monza
+1920,Frosinone,2019-08-18,Coppa Italia,H,Monopoli
+1920,Lecce,2019-08-18,Coppa Italia,H,Salernitana
+1920,Monza,2019-08-18,Coppa Italia,A,Fiorentina
+1920,Pisa,2019-08-18,Coppa Italia,H,Bologna
+1920,Salernitana,2019-08-18,Coppa Italia,A,Lecce
+1920,Sampdoria,2019-08-18,Coppa Italia,A,Crotone
+1920,Sassuolo,2019-08-18,Coppa Italia,H,Spezia
+1920,Spal,2019-08-18,Coppa Italia,H,Feralpisalò
+1920,Spezia,2019-08-18,Coppa Italia,A,Sassuolo
+1920,Udinese,2019-08-18,Coppa Italia,H,Südtirol
+1920,Verona,2019-08-18,Coppa Italia,H,Cremonese
+1920,Torino,2019-08-22,Europa League (qual.),H,Wolverhampton Wanderers
 1920,Benevento,2019-08-23,Serie B,A,Pisa
 1920,Pisa,2019-08-23,Serie B,H,Benevento
 1920,Cremonese,2019-08-24,Serie B,A,Venezia
@@ -3314,6 +3574,7 @@ season,team,date,competition,home_away,opponent
 1920,Frosinone,2019-08-26,Serie B,A,Pordenone Calcio
 1920,Inter,2019-08-26,Serie A,H,Lecce
 1920,Lecce,2019-08-26,Serie A,A,Inter
+1920,Torino,2019-08-29,Europa League (qual.),A,Wolverhampton Wanderers
 1920,Bologna,2019-08-30,Serie A,H,Spal
 1920,Chievo,2019-08-30,Serie B,H,Empoli
 1920,Empoli,2019-08-30,Serie B,A,Chievo
@@ -3378,6 +3639,8 @@ season,team,date,competition,home_away,opponent
 1920,Napoli,2019-09-17,Champions League,H,Liverpool
 1920,Atalanta,2019-09-18,Champions League,A,Dinamo Zagreb
 1920,Juventus,2019-09-18,Champions League,A,Ath Madrid
+1920,Lazio,2019-09-19,Europa League,A,CFR Cluj
+1920,Roma,2019-09-19,Europa League,H,İstanbul Başakşehir
 1920,Cagliari,2019-09-20,Serie A,H,Genoa
 1920,Frosinone,2019-09-20,Serie B,H,Venezia
 1920,Genoa,2019-09-20,Serie A,A,Cagliari
@@ -3472,6 +3735,8 @@ season,team,date,competition,home_away,opponent
 1920,Juventus,2019-10-01,Champions League,H,Bayer Leverkusen
 1920,Inter,2019-10-02,Champions League,A,Barcelona
 1920,Napoli,2019-10-02,Champions League,A,KRC Genk
+1920,Lazio,2019-10-03,Europa League,H,Rennes
+1920,Roma,2019-10-03,Europa League,A,Wolfsberger AC
 1920,Pisa,2019-10-04,Serie B,A,AC Perugia Calcio
 1920,Benevento,2019-10-05,Serie B,A,Spezia
 1920,Chievo,2019-10-05,Serie B,A,AS Livorno
@@ -3534,6 +3799,8 @@ season,team,date,competition,home_away,opponent
 1920,Juventus,2019-10-22,Champions League,H,Lokomotiv Moskva
 1920,Inter,2019-10-23,Champions League,H,Borussia Dortmund
 1920,Napoli,2019-10-23,Champions League,A,RB Salzburg
+1920,Lazio,2019-10-24,Europa League,A,Celtic
+1920,Roma,2019-10-24,Europa League,H,Borussia Mönchengladbach
 1920,Sassuolo,2019-10-25,Serie A,A,Verona
 1920,Verona,2019-10-25,Serie A,H,Sassuolo
 1920,Benevento,2019-10-26,Serie B,A,Delfino Pescara
@@ -3628,6 +3895,8 @@ season,team,date,competition,home_away,opponent
 1920,Napoli,2019-11-05,Champions League,H,RB Salzburg
 1920,Atalanta,2019-11-06,Champions League,H,Man City
 1920,Juventus,2019-11-06,Champions League,A,Lokomotiv Moskva
+1920,Lazio,2019-11-07,Europa League,H,Celtic
+1920,Roma,2019-11-07,Europa League,A,Borussia Mönchengladbach
 1920,Bologna,2019-11-08,Serie A,A,Sassuolo
 1920,Crotone,2019-11-08,Serie B,H,Ascoli Calcio
 1920,Sassuolo,2019-11-08,Serie A,H,Bologna
@@ -3692,6 +3961,8 @@ season,team,date,competition,home_away,opponent
 1920,Juventus,2019-11-26,Champions League,H,Ath Madrid
 1920,Inter,2019-11-27,Champions League,A,Slavia Praha
 1920,Napoli,2019-11-27,Champions League,A,Liverpool
+1920,Lazio,2019-11-28,Europa League,H,CFR Cluj
+1920,Roma,2019-11-28,Europa League,A,İstanbul Başakşehir
 1920,Spezia,2019-11-29,Serie B,A,Cosenza Calcio
 1920,Atalanta,2019-11-30,Serie A,A,Brescia
 1920,Benevento,2019-11-30,Serie B,A,Venezia
@@ -3722,6 +3993,19 @@ season,team,date,competition,home_away,opponent
 1920,Cagliari,2019-12-02,Serie A,H,Sampdoria
 1920,Pisa,2019-12-02,Serie B,H,Pordenone Calcio
 1920,Sampdoria,2019-12-02,Serie A,A,Cagliari
+1920,Cremonese,2019-12-03,Coppa Italia,H,Empoli
+1920,Empoli,2019-12-03,Coppa Italia,A,Cremonese
+1920,Fiorentina,2019-12-03,Coppa Italia,H,Cittadella
+1920,Genoa,2019-12-03,Coppa Italia,H,Ascoli
+1920,Bologna,2019-12-04,Coppa Italia,A,Udinese
+1920,Lecce,2019-12-04,Coppa Italia,A,Spal
+1920,Sassuolo,2019-12-04,Coppa Italia,H,Perugia
+1920,Spal,2019-12-04,Coppa Italia,H,Lecce
+1920,Udinese,2019-12-04,Coppa Italia,H,Bologna
+1920,Cagliari,2019-12-05,Coppa Italia,H,Sampdoria
+1920,Frosinone,2019-12-05,Coppa Italia,A,Parma
+1920,Parma,2019-12-05,Coppa Italia,H,Frosinone
+1920,Sampdoria,2019-12-05,Coppa Italia,A,Cagliari
 1920,Benevento,2019-12-06,Serie B,H,Trapani Calcio
 1920,Inter,2019-12-06,Serie A,H,Roma
 1920,Roma,2019-12-06,Serie A,A,Inter
@@ -3756,6 +4040,8 @@ season,team,date,competition,home_away,opponent
 1920,Napoli,2019-12-10,Champions League,H,KRC Genk
 1920,Atalanta,2019-12-11,Champions League,A,Shakhtar Donetsk
 1920,Juventus,2019-12-11,Champions League,A,Bayer Leverkusen
+1920,Lazio,2019-12-12,Europa League,A,Rennes
+1920,Roma,2019-12-12,Europa League,H,Wolfsberger AC
 1920,Chievo,2019-12-13,Serie B,H,Juve Stabia
 1920,Benevento,2019-12-14,Serie B,A,AS Livorno
 1920,Brescia,2019-12-14,Serie A,H,Lecce
@@ -3808,6 +4094,8 @@ season,team,date,competition,home_away,opponent
 1920,Atalanta,2019-12-22,Serie A,H,Milan
 1920,Bologna,2019-12-22,Serie A,A,Lecce
 1920,Brescia,2019-12-22,Serie A,A,Parma
+1920,Juventus,2019-12-22,Supercoppa Italiana,H,Lazio
+1920,Lazio,2019-12-22,Supercoppa Italiana,A,Juventus
 1920,Lecce,2019-12-22,Serie A,H,Bologna
 1920,Milan,2019-12-22,Serie A,A,Atalanta
 1920,Napoli,2019-12-22,Serie A,A,Sassuolo
@@ -3854,6 +4142,8 @@ season,team,date,competition,home_away,opponent
 1920,Parma,2020-01-06,Serie A,A,Atalanta
 1920,Sampdoria,2020-01-06,Serie A,A,Milan
 1920,Udinese,2020-01-06,Serie A,A,Lecce
+1920,Genoa,2020-01-09,Coppa Italia,A,Torino
+1920,Torino,2020-01-09,Coppa Italia,H,Genoa
 1920,Atalanta,2020-01-11,Serie A,A,Inter
 1920,Cagliari,2020-01-11,Serie A,H,Milan
 1920,Inter,2020-01-11,Serie A,H,Atalanta
@@ -3874,6 +4164,19 @@ season,team,date,competition,home_away,opponent
 1920,Verona,2020-01-12,Serie A,H,Genoa
 1920,Lecce,2020-01-13,Serie A,A,Parma
 1920,Parma,2020-01-13,Serie A,H,Lecce
+1920,Cagliari,2020-01-14,Coppa Italia,A,Inter
+1920,Cremonese,2020-01-14,Coppa Italia,A,Lazio
+1920,Inter,2020-01-14,Coppa Italia,H,Cagliari
+1920,Lazio,2020-01-14,Coppa Italia,H,Cremonese
+1920,Napoli,2020-01-14,Coppa Italia,H,Perugia
+1920,Atalanta,2020-01-15,Coppa Italia,A,Fiorentina
+1920,Fiorentina,2020-01-15,Coppa Italia,H,Atalanta
+1920,Juventus,2020-01-15,Coppa Italia,H,Udinese
+1920,Milan,2020-01-15,Coppa Italia,H,Spal
+1920,Spal,2020-01-15,Coppa Italia,A,Milan
+1920,Udinese,2020-01-15,Coppa Italia,A,Juventus
+1920,Parma,2020-01-16,Coppa Italia,H,Roma
+1920,Roma,2020-01-16,Coppa Italia,A,Parma
 1920,Frosinone,2020-01-17,Serie B,H,Pordenone Calcio
 1920,Chievo,2020-01-18,Serie B,H,AC Perugia Calcio
 1920,Cremonese,2020-01-18,Serie B,H,Venezia
@@ -3904,6 +4207,10 @@ season,team,date,competition,home_away,opponent
 1920,Atalanta,2020-01-20,Serie A,H,Spal
 1920,Crotone,2020-01-20,Serie B,A,Cosenza Calcio
 1920,Spal,2020-01-20,Serie A,A,Atalanta
+1920,Lazio,2020-01-21,Coppa Italia,A,Napoli
+1920,Napoli,2020-01-21,Coppa Italia,H,Lazio
+1920,Juventus,2020-01-22,Coppa Italia,H,Roma
+1920,Roma,2020-01-22,Coppa Italia,A,Juventus
 1920,Brescia,2020-01-24,Serie A,H,Milan
 1920,Chievo,2020-01-24,Serie B,A,Empoli
 1920,Empoli,2020-01-24,Serie B,H,Chievo
@@ -3934,6 +4241,10 @@ season,team,date,competition,home_away,opponent
 1920,Udinese,2020-01-26,Serie A,A,Parma
 1920,Venezia,2020-01-26,Serie B,H,Trapani Calcio
 1920,Verona,2020-01-26,Serie A,H,Lecce
+1920,Milan,2020-01-28,Coppa Italia,H,Torino
+1920,Torino,2020-01-28,Coppa Italia,A,Milan
+1920,Fiorentina,2020-01-29,Coppa Italia,A,Inter
+1920,Inter,2020-01-29,Coppa Italia,H,Fiorentina
 1920,Cremonese,2020-01-31,Serie B,H,Pisa
 1920,Pisa,2020-01-31,Serie B,A,Cremonese
 1920,Bologna,2020-02-01,Serie A,H,Brescia
@@ -3998,6 +4309,10 @@ season,team,date,competition,home_away,opponent
 1920,Salernitana,2020-02-10,Serie B,H,Trapani Calcio
 1920,Cremonese,2020-02-11,Serie B,A,Spezia
 1920,Spezia,2020-02-11,Serie B,H,Cremonese
+1920,Inter,2020-02-12,Coppa Italia,H,Napoli
+1920,Napoli,2020-02-12,Coppa Italia,A,Inter
+1920,Juventus,2020-02-13,Coppa Italia,A,Milan
+1920,Milan,2020-02-13,Coppa Italia,H,Juventus
 1920,Atalanta,2020-02-15,Serie A,H,Roma
 1920,Benevento,2020-02-15,Serie B,H,Pordenone Calcio
 1920,Bologna,2020-02-15,Serie A,H,Genoa
@@ -4029,6 +4344,8 @@ season,team,date,competition,home_away,opponent
 1920,Salernitana,2020-02-17,Serie B,A,Chievo
 1920,Torino,2020-02-17,Serie A,A,Milan
 1920,Atalanta,2020-02-19,Champions League,H,Valencia
+1920,Inter,2020-02-20,Europa League,A,Ludogorets Razgrad
+1920,Roma,2020-02-20,Europa League,H,Gent
 1920,Brescia,2020-02-21,Serie A,H,Napoli
 1920,Frosinone,2020-02-21,Serie B,A,Cosenza Calcio
 1920,Napoli,2020-02-21,Serie A,A,Brescia
@@ -4052,6 +4369,8 @@ season,team,date,competition,home_away,opponent
 1920,Empoli,2020-02-24,Serie B,A,AC Perugia Calcio
 1920,Napoli,2020-02-25,Champions League,H,Barcelona
 1920,Juventus,2020-02-26,Champions League,A,Olympique Lyonnais
+1920,Inter,2020-02-27,Europa League,H,Ludogorets Razgrad
+1920,Roma,2020-02-27,Europa League,A,Gent
 1920,Crotone,2020-02-28,Serie B,A,Virtus Entella
 1920,Benevento,2020-02-29,Serie B,H,Spezia
 1920,Bologna,2020-02-29,Serie A,A,Lazio
@@ -4103,7 +4422,13 @@ season,team,date,competition,home_away,opponent
 1920,Chievo,2020-03-09,Serie B,H,Cosenza Calcio
 1920,Sassuolo,2020-03-09,Serie A,H,Brescia
 1920,Atalanta,2020-03-10,Champions League,A,Valencia
+1920,Juventus,2020-06-12,Coppa Italia,H,Milan
+1920,Milan,2020-06-12,Coppa Italia,A,Juventus
+1920,Inter,2020-06-13,Coppa Italia,A,Napoli
+1920,Napoli,2020-06-13,Coppa Italia,H,Inter
 1920,Cremonese,2020-06-17,Serie B,A,Ascoli Calcio
+1920,Juventus,2020-06-17,Coppa Italia,A,Napoli
+1920,Napoli,2020-06-17,Coppa Italia,H,Juventus
 1920,Empoli,2020-06-19,Serie B,A,Spezia
 1920,Spezia,2020-06-19,Serie B,H,Empoli
 1920,Cagliari,2020-06-20,Serie A,A,Verona
@@ -4455,19 +4780,25 @@ season,team,date,competition,home_away,opponent
 1920,Chievo,2020-08-04,Serie B,H,Empoli
 1920,Empoli,2020-08-04,Serie B,A,Chievo
 1920,Frosinone,2020-08-05,Serie B,A,AS Cittadella
+1920,Inter,2020-08-05,Europa League,H,Getafe
+1920,Roma,2020-08-06,Europa League,A,Sevilla
 1920,Juventus,2020-08-07,Champions League,H,Olympique Lyonnais
 1920,Chievo,2020-08-08,Serie B,H,Spezia
 1920,Napoli,2020-08-08,Champions League,A,Barcelona
 1920,Spezia,2020-08-08,Serie B,A,Chievo
 1920,Frosinone,2020-08-09,Serie B,H,Pordenone Calcio
+1920,Inter,2020-08-10,Europa League,H,Bayer Leverkusen
 1920,Chievo,2020-08-11,Serie B,A,Spezia
 1920,Spezia,2020-08-11,Serie B,H,Chievo
 1920,Atalanta,2020-08-12,Champions League,H,Paris Saint-Germain
 1920,Frosinone,2020-08-12,Serie B,A,Pordenone Calcio
 1920,Frosinone,2020-08-16,Serie B,H,Spezia
 1920,Spezia,2020-08-16,Serie B,A,Frosinone
+1920,Inter,2020-08-17,Europa League,H,Shakhtar Donetsk
 1920,Frosinone,2020-08-20,Serie B,A,Spezia
 1920,Spezia,2020-08-20,Serie B,H,Frosinone
+1920,Inter,2020-08-21,Europa League,A,Sevilla
+2021,Milan,2020-09-17,Europa League (qual.),A,Shamrock Rovers
 2021,Fiorentina,2020-09-19,Serie A,H,Torino
 2021,Roma,2020-09-19,Serie A,A,Verona
 2021,Torino,2020-09-19,Serie A,A,Fiorentina
@@ -4482,6 +4813,7 @@ season,team,date,competition,home_away,opponent
 2021,Sassuolo,2020-09-20,Serie A,H,Cagliari
 2021,Bologna,2020-09-21,Serie A,A,Milan
 2021,Milan,2020-09-21,Serie A,H,Bologna
+2021,Milan,2020-09-24,Europa League (qual.),H,Bodø/Glimt
 2021,Monza,2020-09-25,Serie B,H,Spal
 2021,Spal,2020-09-25,Serie B,A,Monza
 2021,Atalanta,2020-09-26,Serie A,A,Torino
@@ -4517,6 +4849,7 @@ season,team,date,competition,home_away,opponent
 2021,Atalanta,2020-09-30,Serie A,A,Lazio
 2021,Benevento,2020-09-30,Serie A,H,Inter
 2021,Brescia,2020-09-30,Coppa Italia,H,Trapani Calcio           [awarded]
+2021,Chievo,2020-09-30,Coppa Italia,H,Catanzaro
 2021,Cremonese,2020-09-30,Coppa Italia,H,US Arezzo
 2021,Empoli,2020-09-30,Coppa Italia,H,AC Renate
 2021,Frosinone,2020-09-30,Coppa Italia,H,Calcio Padova
@@ -4525,9 +4858,11 @@ season,team,date,competition,home_away,opponent
 2021,Lecce,2020-09-30,Coppa Italia,H,Feralpisalò
 2021,Pisa,2020-09-30,Coppa Italia,H,SS Juve Stabia
 2021,Salernitana,2020-09-30,Coppa Italia,H,FC Südtirol
+2021,Spal,2020-09-30,Coppa Italia,H,Bari
 2021,Spezia,2020-09-30,Serie A,A,Udinese
 2021,Udinese,2020-09-30,Serie A,H,Spezia
 2021,Venezia,2020-09-30,Coppa Italia,H,Carrarese Calcio
+2021,Milan,2020-10-01,Europa League (qual.),A,Rio Ave
 2021,Fiorentina,2020-10-02,Serie A,H,Sampdoria
 2021,Sampdoria,2020-10-02,Serie A,A,Fiorentina
 2021,Chievo,2020-10-03,Serie B,H,Salernitana
@@ -4634,6 +4969,7 @@ season,team,date,competition,home_away,opponent
 2021,Atalanta,2020-10-27,Champions League,H,AFC Ajax
 2021,Bologna,2020-10-27,Coppa Italia,H,Reggina 1914
 2021,Inter,2020-10-27,Champions League,A,Shakhtar Donetsk
+2021,Monza,2020-10-27,Coppa Italia,A,Pordenone
 2021,Pisa,2020-10-27,Coppa Italia,A,Virtus Entella
 2021,Salernitana,2020-10-27,Coppa Italia,A,Sampdoria
 2021,Sampdoria,2020-10-27,Coppa Italia,H,Salernitana
@@ -4641,6 +4977,7 @@ season,team,date,competition,home_away,opponent
 2021,Brescia,2020-10-28,Coppa Italia,H,AC Perugia Calcio
 2021,Cagliari,2020-10-28,Coppa Italia,H,Cremonese
 2021,Cremonese,2020-10-28,Coppa Italia,A,Cagliari
+2021,Crotone,2020-10-28,Coppa Italia,H,Spal
 2021,Empoli,2020-10-28,Coppa Italia,A,Benevento
 2021,Fiorentina,2020-10-28,Coppa Italia,H,Calcio Padova
 2021,Genoa,2020-10-28,Coppa Italia,H,US Catanzaro
@@ -4648,9 +4985,12 @@ season,team,date,competition,home_away,opponent
 2021,Lazio,2020-10-28,Champions League,A,Club Brugge KV
 2021,Lecce,2020-10-28,Coppa Italia,A,Torino
 2021,Parma,2020-10-28,Coppa Italia,H,Delfino Pescara
+2021,Spal,2020-10-28,Coppa Italia,A,Crotone
 2021,Spezia,2020-10-28,Coppa Italia,A,AS Cittadella
 2021,Torino,2020-10-28,Coppa Italia,H,Lecce
 2021,Udinese,2020-10-28,Coppa Italia,H,L.R. Vicenza Virtus
+2021,Venezia,2020-10-28,Coppa Italia,A,Verona
+2021,Verona,2020-10-28,Coppa Italia,H,Venezia
 2021,Milan,2020-10-29,Europa League,H,AC Sparta Praha
 2021,Napoli,2020-10-29,Europa League,A,Sociedad
 2021,Roma,2020-10-29,Europa League,H,CSKA Sofia
@@ -4761,6 +5101,7 @@ season,team,date,competition,home_away,opponent
 2021,Spal,2020-11-24,Coppa Italia,H,Monza
 2021,Atalanta,2020-11-25,Champions League,A,Liverpool
 2021,Bologna,2020-11-25,Coppa Italia,H,Spezia
+2021,Brescia,2020-11-25,Coppa Italia,A,Empoli
 2021,Cagliari,2020-11-25,Coppa Italia,H,Verona
 2021,Empoli,2020-11-25,Coppa Italia,H,Brescia Calcio           [awarded]
 2021,Fiorentina,2020-11-25,Coppa Italia,A,Udinese
@@ -5067,6 +5408,8 @@ season,team,date,competition,home_away,opponent
 2021,Verona,2021-01-10,Serie A,H,Crotone
 2021,Sampdoria,2021-01-11,Serie A,A,Spezia
 2021,Spezia,2021-01-11,Serie A,H,Sampdoria
+2021,Milan,2021-01-12,Coppa Italia,H,Torino
+2021,Torino,2021-01-12,Coppa Italia,A,Milan
 2021,Empoli,2021-01-13,Coppa Italia,A,Napoli
 2021,Fiorentina,2021-01-13,Coppa Italia,H,Inter
 2021,Genoa,2021-01-13,Coppa Italia,A,Juventus
@@ -5110,7 +5453,10 @@ season,team,date,competition,home_away,opponent
 2021,Spal,2021-01-18,Serie B,H,AC Reggiana 1919
 2021,Chievo,2021-01-19,Serie B,A,L.R. Vicenza Virtus
 2021,Roma,2021-01-19,Coppa Italia,H,Spezia Calcio            [awarded]
+2021,Spezia,2021-01-19,Coppa Italia,A,Roma
 2021,Atalanta,2021-01-20,Serie A,A,Udinese
+2021,Juventus,2021-01-20,Supercoppa Italiana,H,Napoli
+2021,Napoli,2021-01-20,Supercoppa Italiana,A,Juventus
 2021,Udinese,2021-01-20,Serie A,H,Atalanta
 2021,Lazio,2021-01-21,Coppa Italia,H,Parma
 2021,Parma,2021-01-21,Coppa Italia,A,Lazio
@@ -5788,6 +6134,7 @@ season,team,date,competition,home_away,opponent
 2021,Venezia,2021-05-23,Serie B,A,AS Cittadella
 2021,Verona,2021-05-23,Serie A,A,Napoli
 2021,Venezia,2021-05-27,Serie B,H,AS Cittadella
+2122,Como,2021-08-07,Coppa Italia,H,Catanzaro
 2122,Fiorentina,2021-08-13,Coppa Italia,H,Cosenza Calcio
 2122,Genoa,2021-08-13,Coppa Italia,H,AC Perugia Calcio
 2122,Spezia,2021-08-13,Coppa Italia,A,Pordenone Calcio
@@ -5798,12 +6145,19 @@ season,team,date,competition,home_away,opponent
 2122,Pisa,2021-08-14,Coppa Italia,A,Cagliari
 2122,Spal,2021-08-14,Coppa Italia,A,Benevento
 2122,Verona,2021-08-14,Coppa Italia,H,US Catanzaro
+2122,Cremonese,2021-08-15,Coppa Italia,A,Torino
 2122,Empoli,2021-08-15,Coppa Italia,H,L.R. Vicenza
+2122,Frosinone,2021-08-15,Coppa Italia,A,Venezia
 2122,Lecce,2021-08-15,Coppa Italia,A,Parma
 2122,Parma,2021-08-15,Coppa Italia,H,Lecce
+2122,Torino,2021-08-15,Coppa Italia,H,Cremonese
+2122,Venezia,2021-08-15,Coppa Italia,H,Frosinone
 2122,Bologna,2021-08-16,Coppa Italia,H,Ternana Calcio
+2122,Brescia,2021-08-16,Coppa Italia,A,Crotone
+2122,Crotone,2021-08-16,Coppa Italia,H,Brescia
 2122,Salernitana,2021-08-16,Coppa Italia,H,Reggina 1914
 2122,Sampdoria,2021-08-16,Coppa Italia,H,US Alessandria 1912
+2122,Roma,2021-08-19,Conference League (qual.),A,Trabzonspor
 2122,Frosinone,2021-08-20,Serie B,H,Parma
 2122,Parma,2021-08-20,Serie B,A,Frosinone
 2122,Atalanta,2021-08-21,Serie A,A,Torino
@@ -5835,6 +6189,7 @@ season,team,date,competition,home_away,opponent
 2122,Milan,2021-08-23,Serie A,A,Sampdoria
 2122,Sampdoria,2021-08-23,Serie A,H,Milan
 2122,Spezia,2021-08-23,Serie A,A,Cagliari
+2122,Roma,2021-08-26,Conference League (qual.),H,Trabzonspor
 2122,Brescia,2021-08-27,Serie B,H,Cosenza Calcio
 2122,Inter,2021-08-27,Serie A,A,Verona
 2122,Pisa,2021-08-27,Serie B,H,US Alessandria 1912
@@ -6466,6 +6821,8 @@ season,team,date,competition,home_away,opponent
 2122,Bologna,2022-01-11,Serie A,A,Cagliari
 2122,Cagliari,2022-01-11,Serie A,H,Bologna
 2122,Atalanta,2022-01-12,Coppa Italia,H,Venezia
+2122,Inter,2022-01-12,Supercoppa Italiana,H,Juventus
+2122,Juventus,2022-01-12,Supercoppa Italiana,A,Inter
 2122,Venezia,2022-01-12,Coppa Italia,A,Atalanta
 2122,Benevento,2022-01-13,Serie B,H,Monza
 2122,Fiorentina,2022-01-13,Coppa Italia,A,Napoli
@@ -7159,6 +7516,7 @@ season,team,date,competition,home_away,opponent
 2223,Napoli,2022-08-15,Serie A,A,Verona
 2223,Sassuolo,2022-08-15,Serie A,A,Juventus
 2223,Verona,2022-08-15,Serie A,H,Napoli
+2223,Fiorentina,2022-08-18,Conference League (qual.),H,Twente
 2223,Benevento,2022-08-20,Serie B,A,Genoa
 2223,Genoa,2022-08-20,Serie B,H,Benevento
 2223,Inter,2022-08-20,Serie A,H,Spezia
@@ -7189,6 +7547,7 @@ season,team,date,competition,home_away,opponent
 2223,Juventus,2022-08-22,Serie A,A,Sampdoria
 2223,Roma,2022-08-22,Serie A,H,Cremonese
 2223,Sampdoria,2022-08-22,Serie A,H,Juventus
+2223,Fiorentina,2022-08-25,Conference League (qual.),A,Twente
 2223,Inter,2022-08-26,Serie A,A,Lazio
 2223,Lazio,2022-08-26,Serie A,H,Inter
 2223,Monza,2022-08-26,Serie A,H,Udinese
@@ -7458,6 +7817,7 @@ season,team,date,competition,home_away,opponent
 2223,Bologna,2022-10-20,Coppa Italia,H,Cagliari
 2223,Cagliari,2022-10-20,Coppa Italia,A,Bologna
 2223,Cremonese,2022-10-20,Coppa Italia,H,Modena FC
+2223,Sampdoria,2022-10-20,Coppa Italia,H,Ascoli
 2223,Empoli,2022-10-21,Serie A,A,Juventus
 2223,Juventus,2022-10-21,Serie A,H,Empoli
 2223,Benevento,2022-10-22,Serie B,A,Como
@@ -7750,6 +8110,10 @@ season,team,date,competition,home_away,opponent
 2223,Genoa,2023-01-16,Serie B,H,Venezia
 2223,Sampdoria,2023-01-16,Serie A,A,Empoli
 2223,Venezia,2023-01-16,Serie B,A,Genoa
+2223,Cremonese,2023-01-17,Coppa Italia,A,Napoli
+2223,Napoli,2023-01-17,Coppa Italia,H,Cremonese
+2223,Inter,2023-01-18,Supercoppa Italiana,A,Milan
+2223,Milan,2023-01-18,Supercoppa Italiana,H,Inter
 2223,Atalanta,2023-01-19,Coppa Italia,H,Spezia
 2223,Bologna,2023-01-19,Coppa Italia,A,Lazio
 2223,Juventus,2023-01-19,Coppa Italia,H,Monza
@@ -8427,7 +8791,10 @@ season,team,date,competition,home_away,opponent
 2324,Sassuolo,2023-08-13,Coppa Italia,H,Cosenza Calcio
 2324,Cremonese,2023-08-14,Coppa Italia,H,Crotone
 2324,Crotone,2023-08-14,Coppa Italia,A,Cremonese
+2324,Sampdoria,2023-08-14,Coppa Italia,H,Südtirol
+2324,Spezia,2023-08-14,Coppa Italia,H,Venezia
 2324,Torino,2023-08-14,Coppa Italia,H,Feralpisalò
+2324,Venezia,2023-08-14,Coppa Italia,A,Spezia
 2324,Cremonese,2023-08-19,Serie B,H,US Catanzaro
 2324,Empoli,2023-08-19,Serie A,H,Verona
 2324,Fiorentina,2023-08-19,Serie A,A,Genoa
@@ -8454,6 +8821,7 @@ season,team,date,competition,home_away,opponent
 2324,Cagliari,2023-08-21,Serie A,A,Torino
 2324,Milan,2023-08-21,Serie A,A,Bologna
 2324,Torino,2023-08-21,Serie A,H,Cagliari
+2324,Fiorentina,2023-08-24,Conference League (qual.),A,Rapid Wien
 2324,Pisa,2023-08-25,Serie B,A,Sampdoria
 2324,Sampdoria,2023-08-25,Serie B,H,Pisa
 2324,Atalanta,2023-08-26,Serie A,A,Frosinone
@@ -8486,6 +8854,7 @@ season,team,date,competition,home_away,opponent
 2324,Sampdoria,2023-08-30,Serie B,H,Venezia
 2324,Spezia,2023-08-30,Serie B,A,US Catanzaro
 2324,Venezia,2023-08-30,Serie B,A,Sampdoria
+2324,Fiorentina,2023-08-31,Conference League (qual.),H,Rapid Wien
 2324,Milan,2023-09-01,Serie A,A,Roma
 2324,Roma,2023-09-01,Serie A,H,Milan
 2324,Sassuolo,2023-09-01,Serie A,H,Verona
@@ -8744,6 +9113,8 @@ season,team,date,competition,home_away,opponent
 2324,Parma,2023-11-01,Coppa Italia,A,Lecce
 2324,Udinese,2023-11-01,Coppa Italia,H,Cagliari
 2324,Frosinone,2023-11-02,Coppa Italia,A,Torino
+2324,Sassuolo,2023-11-02,Coppa Italia,H,Spezia
+2324,Spezia,2023-11-02,Coppa Italia,A,Sassuolo
 2324,Torino,2023-11-02,Coppa Italia,H,Frosinone
 2324,Bologna,2023-11-03,Serie A,H,Lazio
 2324,Lazio,2023-11-03,Serie A,A,Bologna
@@ -8877,6 +9248,8 @@ season,team,date,competition,home_away,opponent
 2324,Torino,2023-12-04,Serie A,H,Atalanta
 2324,Genoa,2023-12-05,Coppa Italia,A,Lazio
 2324,Lazio,2023-12-05,Coppa Italia,H,Genoa
+2324,Fiorentina,2023-12-06,Coppa Italia,H,Parma
+2324,Parma,2023-12-06,Coppa Italia,A,Fiorentina
 2324,Juventus,2023-12-08,Serie A,H,Napoli
 2324,Napoli,2023-12-08,Serie A,A,Juventus
 2324,Atalanta,2023-12-09,Serie A,H,Milan
@@ -9028,6 +9401,8 @@ season,team,date,competition,home_away,opponent
 2324,Salernitana,2024-01-07,Serie A,H,Juventus
 2324,Torino,2024-01-07,Serie A,H,Napoli
 2324,Udinese,2024-01-07,Serie A,H,Lazio
+2324,Bologna,2024-01-09,Coppa Italia,A,Fiorentina
+2324,Fiorentina,2024-01-09,Coppa Italia,H,Bologna
 2324,Atalanta,2024-01-10,Coppa Italia,A,Milan
 2324,Lazio,2024-01-10,Coppa Italia,H,Roma
 2324,Milan,2024-01-10,Coppa Italia,H,Atalanta
@@ -9062,6 +9437,10 @@ season,team,date,competition,home_away,opponent
 2324,Frosinone,2024-01-15,Serie A,A,Atalanta
 2324,Juventus,2024-01-16,Serie A,H,Sassuolo
 2324,Sassuolo,2024-01-16,Serie A,A,Juventus
+2324,Fiorentina,2024-01-18,Supercoppa Italiana,A,Napoli
+2324,Napoli,2024-01-18,Supercoppa Italiana,H,Fiorentina
+2324,Inter,2024-01-19,Supercoppa Italiana,H,Lazio
+2324,Lazio,2024-01-19,Supercoppa Italiana,A,Inter
 2324,Parma,2024-01-19,Serie B,A,Sampdoria
 2324,Sampdoria,2024-01-19,Serie B,H,Parma
 2324,Brescia,2024-01-20,Serie B,H,FC Südtirol
@@ -9640,6 +10019,7 @@ season,team,date,competition,home_away,opponent
 2425,Pisa,2024-08-12,Coppa Italia,A,Frosinone
 2425,Salernitana,2024-08-12,Coppa Italia,H,Spezia
 2425,Spezia,2024-08-12,Coppa Italia,A,Salernitana
+2425,Atalanta,2024-08-14,UEFA Super Cup,A,Real Madrid
 2425,Brescia,2024-08-16,Serie B,H,Palermo FC
 2425,Empoli,2024-08-17,Serie A,H,Monza
 2425,Fiorentina,2024-08-17,Serie A,A,Parma
@@ -10235,6 +10615,10 @@ season,team,date,competition,home_away,opponent
 2425,Como,2024-12-30,Serie A,H,Lecce
 2425,Lecce,2024-12-30,Serie A,A,Como
 2425,Verona,2024-12-30,Serie A,A,Bologna
+2425,Atalanta,2025-01-02,Supercoppa Italiana,A,Inter
+2425,Inter,2025-01-02,Supercoppa Italiana,H,Atalanta
+2425,Juventus,2025-01-03,Supercoppa Italiana,H,Milan
+2425,Milan,2025-01-03,Supercoppa Italiana,A,Juventus
 2425,Empoli,2025-01-04,Serie A,A,Venezia
 2425,Fiorentina,2025-01-04,Serie A,H,Napoli
 2425,Napoli,2025-01-04,Serie A,A,Fiorentina
@@ -10854,6 +11238,32 @@ season,team,date,competition,home_away,opponent
 2425,Inter,2025-05-31,Champions League,A,Paris Saint-Germain FC
 2425,Cremonese,2025-06-01,Serie B,A,Spezia
 2425,Spezia,2025-06-01,Serie B,H,Cremonese
+2425,Inter,2025-06-17,FIFA Club World Cup,A,Monterrey
+2425,Juventus,2025-06-18,FIFA Club World Cup,A,Al Ain
+2425,Inter,2025-06-21,FIFA Club World Cup,H,Urawa Red Diamonds
+2425,Juventus,2025-06-22,FIFA Club World Cup,H,Wydad AC
+2425,Inter,2025-06-25,FIFA Club World Cup,H,River Plate
+2425,Juventus,2025-06-26,FIFA Club World Cup,H,Manchester City
+2425,Inter,2025-06-30,FIFA Club World Cup,H,Fluminense
+2425,Juventus,2025-07-01,FIFA Club World Cup,A,Real Madrid
+2526,Empoli,2025-08-15,Coppa Italia,H,Reggiana
+2526,Genoa,2025-08-15,Coppa Italia,H,Vicenza
+2526,Lecce,2025-08-15,Coppa Italia,H,Juve Stabia
+2526,Sassuolo,2025-08-15,Coppa Italia,H,Catanzaro
+2526,Cagliari,2025-08-16,Coppa Italia,H,Virtus Entella
+2526,Como,2025-08-16,Coppa Italia,H,Südtirol
+2526,Cremonese,2025-08-16,Coppa Italia,H,Palermo
+2526,Venezia,2025-08-16,Coppa Italia,H,Mantova
+2526,Frosinone,2025-08-17,Coppa Italia,A,Monza
+2526,Milan,2025-08-17,Coppa Italia,H,Bari
+2526,Monza,2025-08-17,Coppa Italia,H,Frosinone
+2526,Parma,2025-08-17,Coppa Italia,H,Pescara
+2526,Pisa,2025-08-17,Coppa Italia,A,Cesena
+2526,Sampdoria,2025-08-18,Coppa Italia,A,Spezia
+2526,Spezia,2025-08-18,Coppa Italia,H,Sampdoria
+2526,Torino,2025-08-18,Coppa Italia,H,Modena
+2526,Udinese,2025-08-18,Coppa Italia,H,Carrarese
+2526,Verona,2025-08-18,Coppa Italia,A,Audace Cerignola
 2526,Fiorentina,2025-08-21,Conference League (qual.),A,Polissya Zhytomyr
 2526,Bologna,2025-08-23,Serie A,A,Roma
 2526,Cremonese,2025-08-23,Serie A,A,Milan
@@ -10940,6 +11350,23 @@ season,team,date,competition,home_away,opponent
 2526,Torino,2025-09-21,Serie A,H,Atalanta
 2526,Napoli,2025-09-22,Serie A,H,Pisa
 2526,Pisa,2025-09-22,Serie A,A,Napoli
+2526,Cagliari,2025-09-23,Coppa Italia,H,Frosinone
+2526,Frosinone,2025-09-23,Coppa Italia,A,Cagliari
+2526,Lecce,2025-09-23,Coppa Italia,A,Milan
+2526,Milan,2025-09-23,Coppa Italia,H,Lecce
+2526,Udinese,2025-09-23,Coppa Italia,H,Palermo
+2526,Como,2025-09-24,Coppa Italia,H,Sassuolo
+2526,Parma,2025-09-24,Coppa Italia,H,Spezia
+2526,Roma,2025-09-24,Europa League,A,Nice
+2526,Sassuolo,2025-09-24,Coppa Italia,A,Como
+2526,Spezia,2025-09-24,Coppa Italia,A,Parma
+2526,Venezia,2025-09-24,Coppa Italia,A,Verona
+2526,Verona,2025-09-24,Coppa Italia,H,Venezia
+2526,Bologna,2025-09-25,Europa League,A,Aston Villa
+2526,Empoli,2025-09-25,Coppa Italia,A,Genoa
+2526,Genoa,2025-09-25,Coppa Italia,H,Empoli
+2526,Pisa,2025-09-25,Coppa Italia,A,Torino
+2526,Torino,2025-09-25,Coppa Italia,H,Pisa
 2526,Atalanta,2025-09-27,Serie A,A,Juventus
 2526,Cagliari,2025-09-27,Serie A,H,Inter
 2526,Como,2025-09-27,Serie A,H,Cremonese
@@ -10964,6 +11391,9 @@ season,team,date,competition,home_away,opponent
 2526,Inter,2025-09-30,Champions League,H,SK Slavia Praha
 2526,Juventus,2025-10-01,Champions League,A,Villarreal
 2526,Napoli,2025-10-01,Champions League,H,Sporting Clube de Portugal
+2526,Bologna,2025-10-02,Europa League,H,SC Freiburg
+2526,Fiorentina,2025-10-02,Conference League,H,Sigma Olomouc
+2526,Roma,2025-10-02,Europa League,H,Lille
 2526,Sassuolo,2025-10-03,Serie A,A,Verona
 2526,Verona,2025-10-03,Serie A,H,Sassuolo
 2526,Atalanta,2025-10-04,Serie A,H,Como
@@ -11008,6 +11438,9 @@ season,team,date,competition,home_away,opponent
 2526,Napoli,2025-10-21,Champions League,A,PSV
 2526,Atalanta,2025-10-22,Champions League,H,SK Slavia Praha
 2526,Juventus,2025-10-22,Champions League,A,Real Madrid
+2526,Bologna,2025-10-23,Europa League,A,FCSB
+2526,Fiorentina,2025-10-23,Conference League,A,Rapid Wien
+2526,Roma,2025-10-23,Europa League,H,Viktoria Plzeň
 2526,Milan,2025-10-24,Serie A,H,Pisa
 2526,Pisa,2025-10-24,Serie A,A,Milan
 2526,Atalanta,2025-10-25,Serie A,A,Cremonese
@@ -11072,6 +11505,9 @@ season,team,date,competition,home_away,opponent
 2526,Napoli,2025-11-04,Champions League,H,Eintracht Frankfurt
 2526,Atalanta,2025-11-05,Champions League,A,Olympique de Marseille
 2526,Inter,2025-11-05,Champions League,H,FK Kairat
+2526,Bologna,2025-11-06,Europa League,H,Brann
+2526,Fiorentina,2025-11-06,Conference League,A,Mainz 05
+2526,Roma,2025-11-06,Europa League,A,Rangers
 2526,Cremonese,2025-11-07,Serie A,A,Pisa
 2526,Pisa,2025-11-07,Serie A,H,Cremonese
 2526,Cagliari,2025-11-08,Serie A,A,Como
@@ -11116,6 +11552,9 @@ season,team,date,competition,home_away,opponent
 2526,Napoli,2025-11-25,Champions League,H,Qarabağ Ağdam FK
 2526,Atalanta,2025-11-26,Champions League,A,Eintracht Frankfurt
 2526,Inter,2025-11-26,Champions League,A,Ath Madrid
+2526,Bologna,2025-11-27,Europa League,H,Red Bull Salzburg
+2526,Fiorentina,2025-11-27,Conference League,H,AEK Athens
+2526,Roma,2025-11-27,Europa League,H,Midtjylland
 2526,Como,2025-11-28,Serie A,H,Sassuolo
 2526,Sassuolo,2025-11-28,Serie A,A,Como
 2526,Cagliari,2025-11-29,Serie A,A,Juventus
@@ -11136,6 +11575,18 @@ season,team,date,competition,home_away,opponent
 2526,Torino,2025-11-30,Serie A,A,Lecce
 2526,Bologna,2025-12-01,Serie A,H,Cremonese
 2526,Cremonese,2025-12-01,Serie A,A,Bologna
+2526,Juventus,2025-12-02,Coppa Italia,H,Udinese
+2526,Udinese,2025-12-02,Coppa Italia,A,Juventus
+2526,Atalanta,2025-12-03,Coppa Italia,H,Genoa
+2526,Cagliari,2025-12-03,Coppa Italia,A,Napoli
+2526,Genoa,2025-12-03,Coppa Italia,A,Atalanta
+2526,Inter,2025-12-03,Coppa Italia,H,Venezia
+2526,Napoli,2025-12-03,Coppa Italia,H,Cagliari
+2526,Venezia,2025-12-03,Coppa Italia,A,Inter
+2526,Bologna,2025-12-04,Coppa Italia,H,Parma
+2526,Lazio,2025-12-04,Coppa Italia,H,Milan
+2526,Milan,2025-12-04,Coppa Italia,A,Lazio
+2526,Parma,2025-12-04,Coppa Italia,A,Bologna
 2526,Atalanta,2025-12-06,Serie A,A,Verona
 2526,Como,2025-12-06,Serie A,A,Inter
 2526,Fiorentina,2025-12-06,Serie A,A,Sassuolo
@@ -11160,6 +11611,9 @@ season,team,date,competition,home_away,opponent
 2526,Inter,2025-12-09,Champions League,H,Liverpool
 2526,Juventus,2025-12-10,Champions League,H,Paphos FC
 2526,Napoli,2025-12-10,Champions League,A,Sport Lisboa e Benfica
+2526,Bologna,2025-12-11,Europa League,A,Celta Vigo
+2526,Fiorentina,2025-12-11,Conference League,H,Dynamo Kyiv
+2526,Roma,2025-12-11,Europa League,A,Celtic
 2526,Lecce,2025-12-12,Serie A,H,Pisa
 2526,Pisa,2025-12-12,Serie A,A,Lecce
 2526,Atalanta,2025-12-13,Serie A,H,Cagliari
@@ -11180,6 +11634,11 @@ season,team,date,competition,home_away,opponent
 2526,Verona,2025-12-14,Serie A,A,Fiorentina
 2526,Como,2025-12-15,Serie A,A,Roma
 2526,Roma,2025-12-15,Serie A,H,Como
+2526,Fiorentina,2025-12-18,Conference League,A,Lausanne-Sport
+2526,Milan,2025-12-18,Supercoppa Italiana,A,Napoli
+2526,Napoli,2025-12-18,Supercoppa Italiana,H,Milan
+2526,Bologna,2025-12-19,Supercoppa Italiana,H,Inter
+2526,Inter,2025-12-19,Supercoppa Italiana,A,Bologna
 2526,Cremonese,2025-12-20,Serie A,A,Lazio
 2526,Juventus,2025-12-20,Serie A,H,Roma
 2526,Lazio,2025-12-20,Serie A,H,Cremonese
@@ -11272,6 +11731,8 @@ season,team,date,competition,home_away,opponent
 2526,Cremonese,2026-01-12,Serie A,A,Juventus
 2526,Genoa,2026-01-12,Serie A,H,Cagliari
 2526,Juventus,2026-01-12,Serie A,H,Cremonese
+2526,Roma,2026-01-13,Coppa Italia,H,Torino
+2526,Torino,2026-01-13,Coppa Italia,A,Roma
 2526,Inter,2026-01-14,Serie A,H,Lecce
 2526,Lecce,2026-01-14,Serie A,A,Inter
 2526,Napoli,2026-01-14,Serie A,H,Parma
@@ -11304,6 +11765,8 @@ season,team,date,competition,home_away,opponent
 2526,Napoli,2026-01-20,Champions League,A,FC København
 2526,Atalanta,2026-01-21,Champions League,H,Ath Bilbao
 2526,Juventus,2026-01-21,Champions League,H,Sport Lisboa e Benfica
+2526,Bologna,2026-01-22,Europa League,H,Celtic
+2526,Roma,2026-01-22,Europa League,H,VfB Stuttgart
 2526,Inter,2026-01-23,Serie A,H,Pisa
 2526,Pisa,2026-01-23,Serie A,A,Inter
 2526,Cagliari,2026-01-24,Serie A,A,Fiorentina
@@ -11324,10 +11787,14 @@ season,team,date,competition,home_away,opponent
 2526,Sassuolo,2026-01-25,Serie A,H,Cremonese
 2526,Udinese,2026-01-26,Serie A,A,Verona
 2526,Verona,2026-01-26,Serie A,H,Udinese
+2526,Como,2026-01-27,Coppa Italia,A,Fiorentina
+2526,Fiorentina,2026-01-27,Coppa Italia,H,Como
 2526,Atalanta,2026-01-28,Champions League,A,Royale Union Saint-Gilloise
 2526,Inter,2026-01-28,Champions League,A,Borussia Dortmund
 2526,Juventus,2026-01-28,Champions League,A,AS Monaco FC
 2526,Napoli,2026-01-28,Champions League,H,Chelsea
+2526,Bologna,2026-01-29,Europa League,A,Maccabi Tel Aviv
+2526,Roma,2026-01-29,Europa League,A,Panathinaikos
 2526,Genoa,2026-01-30,Serie A,A,Lazio
 2526,Lazio,2026-01-30,Serie A,H,Genoa
 2526,Cagliari,2026-01-31,Serie A,H,Verona
@@ -11348,6 +11815,10 @@ season,team,date,competition,home_away,opponent
 2526,Udinese,2026-02-02,Serie A,H,Roma
 2526,Bologna,2026-02-03,Serie A,H,Milan
 2526,Milan,2026-02-03,Serie A,A,Bologna
+2526,Inter,2026-02-04,Coppa Italia,H,Torino
+2526,Torino,2026-02-04,Coppa Italia,A,Inter
+2526,Atalanta,2026-02-05,Coppa Italia,H,Juventus
+2526,Juventus,2026-02-05,Coppa Italia,A,Atalanta
 2526,Pisa,2026-02-06,Serie A,A,Verona
 2526,Verona,2026-02-06,Serie A,H,Pisa
 2526,Fiorentina,2026-02-07,Serie A,H,Torino
@@ -11366,6 +11837,10 @@ season,team,date,competition,home_away,opponent
 2526,Cagliari,2026-02-09,Serie A,A,Roma
 2526,Cremonese,2026-02-09,Serie A,A,Atalanta
 2526,Roma,2026-02-09,Serie A,H,Cagliari
+2526,Como,2026-02-10,Coppa Italia,A,Napoli
+2526,Napoli,2026-02-10,Coppa Italia,H,Como
+2526,Bologna,2026-02-11,Coppa Italia,H,Lazio
+2526,Lazio,2026-02-11,Coppa Italia,A,Bologna
 2526,Milan,2026-02-13,Serie A,A,Pisa
 2526,Pisa,2026-02-13,Serie A,H,Milan
 2526,Atalanta,2026-02-14,Serie A,A,Lazio
@@ -11391,6 +11866,8 @@ season,team,date,competition,home_away,opponent
 2526,Como,2026-02-18,Serie A,A,Milan
 2526,Inter,2026-02-18,Champions League,A,FK Bodø/Glimt
 2526,Milan,2026-02-18,Serie A,H,Como
+2526,Bologna,2026-02-19,Europa League,A,Brann
+2526,Fiorentina,2026-02-19,Conference League,A,Jagiellonia Białystok
 2526,Sassuolo,2026-02-20,Serie A,H,Verona
 2526,Verona,2026-02-20,Serie A,A,Sassuolo
 2526,Cagliari,2026-02-21,Serie A,H,Lazio
@@ -11414,6 +11891,8 @@ season,team,date,competition,home_away,opponent
 2526,Inter,2026-02-24,Champions League,H,FK Bodø/Glimt
 2526,Atalanta,2026-02-25,Champions League,H,Borussia Dortmund
 2526,Juventus,2026-02-25,Champions League,H,Galatasaray SK
+2526,Bologna,2026-02-26,Europa League,H,Brann
+2526,Fiorentina,2026-02-26,Conference League,H,Jagiellonia Białystok
 2526,Cagliari,2026-02-27,Serie A,A,Parma
 2526,Parma,2026-02-27,Serie A,H,Cagliari
 2526,Como,2026-02-28,Serie A,H,Lecce
@@ -11434,6 +11913,10 @@ season,team,date,competition,home_away,opponent
 2526,Fiorentina,2026-03-02,Serie A,A,Udinese
 2526,Pisa,2026-03-02,Serie A,H,Bologna
 2526,Udinese,2026-03-02,Serie A,H,Fiorentina
+2526,Como,2026-03-03,Coppa Italia,H,Inter
+2526,Inter,2026-03-03,Coppa Italia,A,Como
+2526,Atalanta,2026-03-04,Coppa Italia,A,Lazio
+2526,Lazio,2026-03-04,Coppa Italia,H,Atalanta
 2526,Napoli,2026-03-06,Serie A,H,Torino
 2526,Torino,2026-03-06,Serie A,A,Napoli
 2526,Atalanta,2026-03-07,Serie A,H,Udinese
@@ -11455,6 +11938,9 @@ season,team,date,competition,home_away,opponent
 2526,Lazio,2026-03-09,Serie A,H,Sassuolo
 2526,Sassuolo,2026-03-09,Serie A,A,Lazio
 2526,Atalanta,2026-03-10,Champions League,H,FC Bayern München
+2526,Bologna,2026-03-12,Europa League,H,Roma
+2526,Fiorentina,2026-03-12,Conference League,H,Raków Częstochowa
+2526,Roma,2026-03-12,Europa League,A,Bologna
 2526,Parma,2026-03-13,Serie A,A,Torino
 2526,Torino,2026-03-13,Serie A,H,Parma
 2526,Atalanta,2026-03-14,Serie A,A,Inter
@@ -11476,6 +11962,9 @@ season,team,date,competition,home_away,opponent
 2526,Cremonese,2026-03-16,Serie A,H,Fiorentina
 2526,Fiorentina,2026-03-16,Serie A,A,Cremonese
 2526,Atalanta,2026-03-18,Champions League,A,FC Bayern München
+2526,Bologna,2026-03-19,Europa League,A,Roma
+2526,Fiorentina,2026-03-19,Conference League,A,Raków Częstochowa
+2526,Roma,2026-03-19,Europa League,H,Bologna
 2526,Cagliari,2026-03-20,Serie A,H,Napoli
 2526,Genoa,2026-03-20,Serie A,H,Udinese
 2526,Napoli,2026-03-20,Serie A,A,Cagliari
@@ -11516,6 +12005,8 @@ season,team,date,competition,home_away,opponent
 2526,Milan,2026-04-06,Serie A,A,Napoli
 2526,Napoli,2026-04-06,Serie A,H,Milan
 2526,Udinese,2026-04-06,Serie A,H,Como
+2526,Bologna,2026-04-09,Europa League,H,Aston Villa
+2526,Fiorentina,2026-04-09,Conference League,A,Crystal Palace
 2526,Pisa,2026-04-10,Serie A,A,Roma
 2526,Roma,2026-04-10,Serie A,H,Pisa
 2526,Atalanta,2026-04-11,Serie A,H,Juventus
@@ -11536,6 +12027,8 @@ season,team,date,competition,home_away,opponent
 2526,Sassuolo,2026-04-12,Serie A,A,Genoa
 2526,Fiorentina,2026-04-13,Serie A,H,Lazio
 2526,Lazio,2026-04-13,Serie A,A,Fiorentina
+2526,Bologna,2026-04-16,Europa League,A,Aston Villa
+2526,Fiorentina,2026-04-16,Conference League,H,Crystal Palace
 2526,Cagliari,2026-04-17,Serie A,A,Inter
 2526,Como,2026-04-17,Serie A,A,Sassuolo
 2526,Inter,2026-04-17,Serie A,H,Cagliari
@@ -11556,6 +12049,10 @@ season,team,date,competition,home_away,opponent
 2526,Verona,2026-04-19,Serie A,H,Milan
 2526,Fiorentina,2026-04-20,Serie A,A,Lecce
 2526,Lecce,2026-04-20,Serie A,H,Fiorentina
+2526,Como,2026-04-21,Coppa Italia,A,Inter
+2526,Inter,2026-04-21,Coppa Italia,H,Como
+2526,Atalanta,2026-04-22,Coppa Italia,H,Lazio
+2526,Lazio,2026-04-22,Coppa Italia,A,Atalanta
 2526,Cremonese,2026-04-24,Serie A,A,Napoli
 2526,Napoli,2026-04-24,Serie A,H,Cremonese
 2526,Bologna,2026-04-25,Serie A,H,Roma
@@ -11616,6 +12113,8 @@ season,team,date,competition,home_away,opponent
 2526,Verona,2026-05-10,Serie A,H,Como
 2526,Bologna,2026-05-11,Serie A,A,Napoli
 2526,Napoli,2026-05-11,Serie A,H,Bologna
+2526,Inter,2026-05-13,Coppa Italia,A,Lazio
+2526,Lazio,2026-05-13,Coppa Italia,H,Inter
 2526,Atalanta,2026-05-17,Serie A,H,Bologna
 2526,Bologna,2026-05-17,Serie A,A,Atalanta
 2526,Cagliari,2026-05-17,Serie A,H,Torino
