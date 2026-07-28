@@ -215,7 +215,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 | Transfermarkt (datalake `salimt`) | mirror GitHub, cache `data/raw/` (~106 MB, non versionata) | ✅ raggiungibile; dalla Fase 67 usato SOLO per gli infortuni (`absent_*_est`) — per i valori rosa e' superato da player-scores |
 | Transfermarkt diretto (pagine di competizione per stagione) | recupero MANUALE (Fase 70 e audit delle 5 leghe), non rigenerabile da script: `transfermarkt.com/.it/.us` **era** bloccato dal proxy quando il recupero è stato fatto e oggi **risponde 200** (verificato alla Fase 100, vedi il banner di `docs/MANUALE_SOPRAVVIVENZA.md`); il recupero resta manuale perché la pagina utile è quella di competizione filtrata per stagione | ✅ usato per **29** celle `squad_value` 2025-26 sotto soglia (13 + 16; le 16 con la scala misurata contro player-scores nella colonna `rapporto_TM_su_playerscores_mediano_lega` di `data/squad_value_2526_transfermarkt.csv`, regola R2); **non** la pagina profilo club (mostra il valore LIVE di oggi) ma `.../{lega}/startseite/wettbewerb/{codice}/saison_id/{anno}` (tabella per-club di quella stagione) |
 | openfootball (coppe/Europa) | cache `data/raw/fixtures_*` | ✅ raggiungibile |
-| **1xBet via `footiqo.com`** (quote di CHIUSURA 1X2 + O/U + GG/NG, 2017-20, 5 leghe) | `data/ricerca_esterna/footiqo_*.json` (18 file) + `footiqo_gol_*.json` (10) + manifest e validazioni | ✅ dato esterno REALE, **NON integrato** negli snapshot: è un solo book, e come proxy della media multi-book è peggiore della stima (MAE 0.0156 contro 0.012) — vedi [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md) |
+| **1xBet via `footiqo.com`** (quote di CHIUSURA 1X2 + O/U + GG/NG, 2017-25, 5 leghe) | `data/ricerca_esterna/footiqo_*.json` (43 file: 18 dalla Fase 100 + 25 dalla Fase 106, stagioni 2017-18→2024-25) + `footiqo_gol_*.json` (10) + manifest, validazioni e `footiqo_confronto_multistagione_fase106.json` | ✅ dato esterno REALE, **NON integrato** negli snapshot: è un solo book, e come proxy della media multi-book è peggiore della stima nel confronto onesto (MAE 0.0156 contro ~0.014 regime d'uso), ma il numero **non è stabile su 6 stagioni** (Fase 106: 0.0096-0.0192, peggio nell'era porte-chiuse) — vedi [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md) |
 | **Wikipedia (calendari di coppa)** | `data/ricerca_esterna/fixtures_*.csv` (50 file, **3.045 righe**) | ⚠️ fonte NON primaria, verificata su una terza fonte indipendente (openligadb.de, Fase 100): righe di recupero per il falso 0 di `midweek_europe` (§1-bis) — **applicate alla Fase 103** in `club_fixtures*.csv`/negli snapshot delle 5 leghe |
 | **iredchuk/soccer-bookmaker-odds** (chiusura 1X2) | usato per **6 celle**, in 2 partite | ⚠️ **provider SECONDARIO, dichiarato (R2)** — l'unico punto degli snapshot dove una cella-quota non viene da football-data. Vedi il riquadro qui sotto |
 | **manifest delle fonti dell'audit** | `data/ricerca_esterna/manifest_fonti_audit.json` | ✅ 90 impronte SHA256 (45 CSV football-data + 45 JSON Understat-lega). Le chiavi sono nella forma `cantiere/data/fonti/…`: per confrontarle con quelle che `scripts/fetch_sources.py` scrive oggi va tolto il prefisso `cantiere/` |
@@ -335,7 +335,15 @@ dove la verità esiste → errore atteso dichiarato → pubblicazione separata):
   dato vero di chiusura è **CHIUSA dalla Fase 100** → il dato esiste (book 1xBet
   via footiqo, 3.652/3.652 partite, in `data/ricerca_esterna/`) ma **non è stato
   inserito**: è un solo book e come proxy della media multi-book è peggiore
-  della stima (MAE 0.0156 contro 0.012). Dettaglio:
+  della stima nel confronto onesto (MAE 0.0156 contro **~0.014** regime d'uso —
+  non 0.012, che è il numero ottimistico "in interpolazione": la correzione va
+  fatta anche qui, non solo nella riga Fase 100 del README). **Fase 106**: il
+  confronto ripetuto su 6 stagioni (2019-20→2024-25, non solo una) mostra che
+  il numero NON è stabile nel tempo (MAE footiqo varia 0.0096-0.0192, peggiore
+  nell'era porte-chiuse 2020-22, migliore dal 2022-23 in poi — nelle ultime 2
+  stagioni batterebbe perfino la stima) — non cambia la decisione (il 2019-20
+  resta il proxy più vicino al 2017-19 e lì la stima vince ancora) ma la rende
+  meno granitica di come suonava. Dettaglio:
   **[CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md)**.
 - ~~**quote O/U/1X2 di apertura mancanti sparse**~~ → **FATTO (Fase 69)**: le
   **2 partite sparse** (Torino-Fiorentina recupero 1X2+O/U; Verona-Genoa O/U

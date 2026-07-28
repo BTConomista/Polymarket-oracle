@@ -1,0 +1,209 @@
+{
+ "fonte": "footiqo.com",
+ "endpoint": "wp-admin/admin-ajax.php?action=get_wdtable",
+ "book": "1xBet (colonne xbetClose*)",
+ "scaricato": "2026-07-28T13:06:49Z",
+ "nota": "estensione Fase 106: stagioni 2020-21..2024-25 per validare la stabilita nel tempo del bias/MAE gia misurato sul solo 2019-20",
+ "file": [
+  {
+   "file": "footiqo_serie_a_2020-2021.json",
+   "lega": "serie_a",
+   "stagione": "2020/2021",
+   "table_id": 575,
+   "righe": 379,
+   "sha256": "5b583543d75c8d9b42d0ee5956e9a87cd8bebc6699982fb9896857b63afc4435"
+  },
+  {
+   "file": "footiqo_serie_a_2021-2022.json",
+   "lega": "serie_a",
+   "stagione": "2021/2022",
+   "table_id": 575,
+   "righe": 380,
+   "sha256": "d464cf9d096b9dc053a96cfcfcd942c1e903b7602c14c4f2db36ffc8cd27d99e"
+  },
+  {
+   "file": "footiqo_serie_a_2022-2023.json",
+   "lega": "serie_a",
+   "stagione": "2022/2023",
+   "table_id": 575,
+   "righe": 381,
+   "sha256": "781a5b5c12eb8d368579063116be15d6bfecd9927d4444226323fd99ed04c434"
+  },
+  {
+   "file": "footiqo_serie_a_2023-2024.json",
+   "lega": "serie_a",
+   "stagione": "2023/2024",
+   "table_id": 575,
+   "righe": 380,
+   "sha256": "0f99b3c873effd7744b6f7bf9c5aa628091fa7bf01a89f4288211d0cb0df8c03"
+  },
+  {
+   "file": "footiqo_serie_a_2024-2025.json",
+   "lega": "serie_a",
+   "stagione": "2024/2025",
+   "table_id": 575,
+   "righe": 380,
+   "sha256": "29261c412120e261c5c0b666fd26f26a702a064ed6b79f00fe256d3db99574d8"
+  },
+  {
+   "file": "footiqo_premier_league_2020-2021.json",
+   "lega": "premier_league",
+   "stagione": "2020/2021",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "d2877a1375afdf1d5e3671813c12e7f3e6568083796791d5582ecfdd058948f4"
+  },
+  {
+   "file": "footiqo_premier_league_2021-2022.json",
+   "lega": "premier_league",
+   "stagione": "2021/2022",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "f0cacdc6a68f4741dfff405142f062f058fee02af884981608a9e17773529ac4"
+  },
+  {
+   "file": "footiqo_premier_league_2022-2023.json",
+   "lega": "premier_league",
+   "stagione": "2022/2023",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "57df5ff436f744d6d935b92b7df37a0fe723da50a95eec16b846d8d8ea718dc6"
+  },
+  {
+   "file": "footiqo_premier_league_2023-2024.json",
+   "lega": "premier_league",
+   "stagione": "2023/2024",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "9faaaf83ba4e45306b59669aae5a4769ec2fa8e5634983d798d605daec234e09"
+  },
+  {
+   "file": "footiqo_premier_league_2024-2025.json",
+   "lega": "premier_league",
+   "stagione": "2024/2025",
+   "table_id": 545,
+   "righe": 380,
+   "sha256": "c1457838fc3ae008cddc1931f81b18cc8b86d8545566fb8d760266ce1e821372"
+  },
+  {
+   "file": "footiqo_la_liga_2020-2021.json",
+   "lega": "la_liga",
+   "stagione": "2020/2021",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "5756fe0128648cdaf9eda35ff3b45bd2b4d764bf7f94240aec55dd306969c44a"
+  },
+  {
+   "file": "footiqo_la_liga_2021-2022.json",
+   "lega": "la_liga",
+   "stagione": "2021/2022",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "bca6168589141fa4b826b977a65cae485eb671ce3fe0af1f396bdfd85f8c812c"
+  },
+  {
+   "file": "footiqo_la_liga_2022-2023.json",
+   "lega": "la_liga",
+   "stagione": "2022/2023",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "60bbbe66d066a1af091a6af9f8312caebca74e3cce37cdc067c2594430c539e7"
+  },
+  {
+   "file": "footiqo_la_liga_2023-2024.json",
+   "lega": "la_liga",
+   "stagione": "2023/2024",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "b3ef479d4aa9369064dd40e39dab3a06b3e065368d68819d2858b42c50d05294"
+  },
+  {
+   "file": "footiqo_la_liga_2024-2025.json",
+   "lega": "la_liga",
+   "stagione": "2024/2025",
+   "table_id": 555,
+   "righe": 380,
+   "sha256": "c91a8994c0033a93ab9544467ebe658e1822e0de2abee9be5174578767d19897"
+  },
+  {
+   "file": "footiqo_bundesliga_2020-2021.json",
+   "lega": "bundesliga",
+   "stagione": "2020/2021",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "a58858cdc010e22de74fc07b0df530682d310f991faf7f34bac5345754bc6d21"
+  },
+  {
+   "file": "footiqo_bundesliga_2021-2022.json",
+   "lega": "bundesliga",
+   "stagione": "2021/2022",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "0aa6d5670dd748ccbfb003d2d49675cdaf5ee046bc2b182c913c2d1081d2c69a"
+  },
+  {
+   "file": "footiqo_bundesliga_2022-2023.json",
+   "lega": "bundesliga",
+   "stagione": "2022/2023",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "a6aa9a4c0dc9cf292c0431ff4f4ea4263c3a5929d75509ad1f57d82bd1a909dc"
+  },
+  {
+   "file": "footiqo_bundesliga_2023-2024.json",
+   "lega": "bundesliga",
+   "stagione": "2023/2024",
+   "table_id": 565,
+   "righe": 306,
+   "sha256": "75fc1f84116fee5ee70312a1ef7ffa4b9c44485afda5990120e3d95005684969"
+  },
+  {
+   "file": "footiqo_bundesliga_2024-2025.json",
+   "lega": "bundesliga",
+   "stagione": "2024/2025",
+   "table_id": 565,
+   "righe": 305,
+   "sha256": "ee555cdcff159fadd27f7403e4f96242bafb4662f8beb2f1809ea8e2d3916c66"
+  },
+  {
+   "file": "footiqo_ligue_1_2020-2021.json",
+   "lega": "ligue_1",
+   "stagione": "2020/2021",
+   "table_id": 585,
+   "righe": 380,
+   "sha256": "93baeb567cb7aa97a8221decd908ea326d3a568672f88e4774baa2812ea297fe"
+  },
+  {
+   "file": "footiqo_ligue_1_2021-2022.json",
+   "lega": "ligue_1",
+   "stagione": "2021/2022",
+   "table_id": 585,
+   "righe": 380,
+   "sha256": "4d5e36f1e138017f2af84922e1a1b9d3415b949e300dda64033f94a8ab71d34c"
+  },
+  {
+   "file": "footiqo_ligue_1_2022-2023.json",
+   "lega": "ligue_1",
+   "stagione": "2022/2023",
+   "table_id": 585,
+   "righe": 380,
+   "sha256": "05408b9c3b5697dbef3f802d0491133953373771b18b5277666cced2144b3a9c"
+  },
+  {
+   "file": "footiqo_ligue_1_2023-2024.json",
+   "lega": "ligue_1",
+   "stagione": "2023/2024",
+   "table_id": 585,
+   "righe": 306,
+   "sha256": "c3454e2bfe0ab9532643eadc9645ef2811f35538cee0eb58a8e9d983f210d445"
+  },
+  {
+   "file": "footiqo_ligue_1_2024-2025.json",
+   "lega": "ligue_1",
+   "stagione": "2024/2025",
+   "table_id": 585,
+   "righe": 306,
+   "sha256": "4d42e2ffa34105535fd86c8728c59b6a5a37c884d08a5215658698085237f1a4"
+  }
+ ]
+}

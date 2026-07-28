@@ -1,5 +1,49 @@
 # Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
 
+> ## 📏 Fase 106 — il confronto footiqo-vs-verità esteso da 1 a 6 stagioni
+>
+> L'utente ha chiesto se il confronto "MAE 0.0156 (footiqo) contro ~0.012
+> (stima)" si potesse misurare anche su altre stagioni, non solo sul 2019-20.
+> Sì: footiqo/1xBet copre dal 2015/16 a oggi, e football-data ha la chiusura
+> vera (`AvgC>2.5`) dal 2019/20. Scaricate live 25 nuove stagioni footiqo
+> (2020-21 → 2024-25, 5 leghe) e i 30 CSV grezzi football-data corrispondenti;
+> stesso metodo esatto del confronto originale (join per squadre, MAE/bias di
+> `p_over(xbetClose)` contro `p_over(AvgC)`). Il 2019-20 ricalcolato qui
+> riproduce **esattamente** il numero già pubblicato (n=1.687, MAE 0.0156,
+> bias +0.0088) — buona verifica indipendente del metodo.
+>
+> **Il numero NON è stabile nel tempo** (pooled 5 leghe per stagione):
+>
+> | stagione | n | MAE | bias |
+> |---|--:|--:|--:|
+> | 2019-20 | 1.687 | 0.0156 | +0.0088 |
+> | 2020-21 | 1.749 | 0.0179 | +0.0167 |
+> | 2021-22 | 1.788 | 0.0192 | +0.0166 |
+> | 2022-23 | 1.751 | 0.0136 | +0.0054 |
+> | 2023-24 | 1.640 | 0.0107 | +0.0010 |
+> | 2024-25 | 1.713 | 0.0096 | +0.0021 |
+>
+> Il 2020-22 (piena era porte-chiuse) è il peggiore; dal 2022-23 in poi
+> footiqo **migliora fino a battere** anche il numero onesto della stima
+> (**~0.014 "regime d'uso"**, non lo 0.012 "in interpolazione" citato la prima
+> volta — la correzione va fatta anche qui: erano due regimi diversi, quello
+> giusto per un confronto equo è il primo). Non è chiaro se sia una deriva
+> secolare (1xBet/footiqo migliorano nel tempo) o un effetto porte-chiuse
+> localizzato al 2020-22: **con i dati disponibili non è distinguibile**, e le
+> due letture implicano l'opposto per il 2017-19 (prima del 2019-20: se è
+> deriva secolare, peggio; se è un effetto porte-chiuse, il 2017-19
+> "normale" potrebbe somigliare più al 2022-25 "buono").
+>
+> **Non cambia la decisione**: il 2019-20 resta il proxy singolo più vicino
+> nel tempo al 2017-19 (e il meno inquinato dalle porte chiuse, iniziate a
+> marzo 2020 a stagione già in corso), e lì la stima vince ancora — 0.0156
+> contro ~0.014, un margine più piccolo di quanto detto la prima volta
+> (0.0156 contro 0.012) ma dello stesso segno. **Cambia la sicurezza con cui
+> lo sappiamo**: da una singola stagione a sei, con un pattern dichiarato
+> invece di assunto stabile. Dati grezzi e risultato completo in
+> `data/ricerca_esterna/footiqo_confronto_multistagione_fase106.json` e
+> `footiqo_manifest_fase106.json`.
+
 > ## 🔁 Fase 105 — un secondo ri-tentativo, negativo (richiesta utente)
 >
 > Dopo la Fase 104, l'utente ha chiesto esplicitamente di riprovare a trovare

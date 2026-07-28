@@ -1,0 +1,217 @@
+{
+ "metodo": "MAE/bias di p_over(xbetCloseOver25,xbetCloseUnder25) vs p_over(AvgC>2.5,AvgC<2.5) football-data, join per squadre canonicalizzate",
+ "fonte_footiqo": "footiqo.com (1xBet), scaricato Fase 106",
+ "fonte_verita": "football-data.co.uk grezzi, scaricati live Fase 106",
+ "dettaglio": [
+  {
+   "lega": "serie_a",
+   "stagione": "2019/2020",
+   "n": 380,
+   "MAE": 0.0164,
+   "bias": 0.01
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2020/2021",
+   "n": 379,
+   "MAE": 0.0186,
+   "bias": 0.0177
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2021/2022",
+   "n": 380,
+   "MAE": 0.02,
+   "bias": 0.0179
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2022/2023",
+   "n": 381,
+   "MAE": 0.0148,
+   "bias": 0.0068
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2023/2024",
+   "n": 380,
+   "MAE": 0.0104,
+   "bias": 0.0012
+  },
+  {
+   "lega": "serie_a",
+   "stagione": "2024/2025",
+   "n": 380,
+   "MAE": 0.0097,
+   "bias": 0.0015
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2019/2020",
+   "n": 342,
+   "MAE": 0.0169,
+   "bias": 0.0108
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2020/2021",
+   "n": 342,
+   "MAE": 0.0182,
+   "bias": 0.0179
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2021/2022",
+   "n": 380,
+   "MAE": 0.0199,
+   "bias": 0.0183
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2022/2023",
+   "n": 342,
+   "MAE": 0.0145,
+   "bias": 0.007
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2023/2024",
+   "n": 306,
+   "MAE": 0.0116,
+   "bias": 0.0037
+  },
+  {
+   "lega": "premier_league",
+   "stagione": "2024/2025",
+   "n": 342,
+   "MAE": 0.0099,
+   "bias": 0.0042
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2019/2020",
+   "n": 380,
+   "MAE": 0.0158,
+   "bias": 0.0096
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2020/2021",
+   "n": 342,
+   "MAE": 0.0176,
+   "bias": 0.0167
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2021/2022",
+   "n": 342,
+   "MAE": 0.0183,
+   "bias": 0.0161
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2022/2023",
+   "n": 342,
+   "MAE": 0.0138,
+   "bias": 0.0047
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2023/2024",
+   "n": 342,
+   "MAE": 0.0113,
+   "bias": 0.0002
+  },
+  {
+   "lega": "la_liga",
+   "stagione": "2024/2025",
+   "n": 380,
+   "MAE": 0.0095,
+   "bias": 0.002
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2019/2020",
+   "n": 306,
+   "MAE": 0.0146,
+   "bias": 0.0085
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2020/2021",
+   "n": 306,
+   "MAE": 0.0184,
+   "bias": 0.0176
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2021/2022",
+   "n": 306,
+   "MAE": 0.0188,
+   "bias": 0.0165
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2022/2023",
+   "n": 306,
+   "MAE": 0.0118,
+   "bias": 0.0053
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2023/2024",
+   "n": 306,
+   "MAE": 0.0099,
+   "bias": 0.0029
+  },
+  {
+   "lega": "bundesliga",
+   "stagione": "2024/2025",
+   "n": 305,
+   "MAE": 0.009,
+   "bias": 0.0032
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2019/2020",
+   "n": 279,
+   "MAE": 0.014,
+   "bias": 0.0039
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2020/2021",
+   "n": 380,
+   "MAE": 0.017,
+   "bias": 0.0139
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2021/2022",
+   "n": 380,
+   "MAE": 0.0186,
+   "bias": 0.0141
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2022/2023",
+   "n": 380,
+   "MAE": 0.0129,
+   "bias": 0.0033
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2023/2024",
+   "n": 306,
+   "MAE": 0.0104,
+   "bias": -0.0029
+  },
+  {
+   "lega": "ligue_1",
+   "stagione": "2024/2025",
+   "n": 306,
+   "MAE": 0.0101,
+   "bias": -0.0003
+  }
+ ]
+}

@@ -461,10 +461,16 @@ condizionamento al punteggio produce segnale.
 contro 0.9909 con l'apertura; riproduce il movimento 1X2 partita per partita;
 margine e ultima cifra da book vero). **Non è stato inserito**, ed è una
 decisione da NON rifare da capo: è **un solo book**, e come proxy della media
-multi-book è **peggiore della stima** (MAE 0.0156 contro 0.012). Vive in
-`data/ricerca_esterna/`, fuori dagli snapshot. Lezione: «non esiste» ≠ «non
-esiste dove ho cercato» — l'errore delle due cacce precedenti era l'asse di
-ricerca (si cercava chi ri-esporta football-data, ereditandone il buco).
+multi-book è **peggiore della stima** nel confronto onesto (MAE 0.0156 contro
+~0.014 regime d'uso). **Fase 105/106** (richiesta utente, due ri-tentativi):
+nessuna fonte multi-book nuova trovata (Wayback Machine, nuovi dataset, nuovi
+siti — tutti chiusi negativi); il confronto MAE ripetuto su 6 stagioni
+(2019-20→2024-25, non solo una) mostra che **non è stabile nel tempo**
+(0.0096-0.0192, peggio nell'era porte-chiuse 2020-22) — non cambia la
+decisione ma la rende meno granitica. Vive in `data/ricerca_esterna/`, fuori
+dagli snapshot. Lezione: «non esiste» ≠ «non esiste dove ho cercato» —
+l'errore delle due cacce precedenti era l'asse di ricerca (si cercava chi
+ri-esporta football-data, ereditandone il buco).
 **Dato**: piano dedicato (CHIUSO): [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md).
 
 <details><summary>Storico pre-Fase 100 (perché la caccia sembrava chiusa)</summary>

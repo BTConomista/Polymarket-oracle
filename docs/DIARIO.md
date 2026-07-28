@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–105)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–106)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -294,6 +294,7 @@ correzioni.*
 - [Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`](#fase-103--il-recupero-wikipedia-applicato-chiusi-i-1603-falsi-zero-di-midweek_europe)
 - [Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto](#fase-104--il-resto-della-lista-monaco-dfb-pokal-tre-rilievi-gia-chiusi-e-la-fonte-xg-con-lo-stesso-mirror-morto)
 - [Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo](#fase-105--secondo-ri-tentativo-sullou-2017-19-quattro-angoli-nuovi-ancora-negativo)
+- [Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo](#fase-106--il-confronto-footiqo-vs-verità-esteso-da-1-a-6-stagioni-non-è-stabile-nel-tempo)
 
 ---
 
@@ -12374,3 +12375,104 @@ sessione che voglia usare Wayback Machine per qualunque altra cosa.
 ### 📐 Il modello in dettaglio
 
 Nessuna matematica: fase di ricerca dati, esito negativo. Non applicabile.
+
+## Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo
+
+**Obiettivo.** L'utente ha chiesto se il confronto MAE "footiqo 0.0156 contro
+stima 0.012" (motivo per cui il dato 1xBet trovato alla Fase 100 non è entrato
+negli snapshot) si potesse misurare su più di una sola stagione — finora era
+il solo 2019-20, l'unica dove la chiusura vera esiste insieme a footiqo.
+
+**Ragionamento.** footiqo.com copre le stagioni dal 2015/16 a oggi (non solo
+2017-19); football-data ha la chiusura O/U vera (`AvgC>2.5`) dal 2019/20 in
+poi. L'intersezione utile — footiqo disponibile E verità disponibile — non è
+un punto solo: sono **sei** stagioni (2019-20 → 2024-25), mai scaricate tutte
+insieme prima.
+
+**Cosa ho fatto.** Estesi i fetcher già esistenti (`_fetch_footiqo.py`,
+riutilizzato senza modifiche, solo stagioni diverse) per le 5 stagioni
+2020-21→2024-25 (25 file nuovi, stesso schema, stesso endpoint, stesso
+throttle 1.8s, `robots.txt` invariato); scaricati live i 30 CSV grezzi
+football-data corrispondenti (`www.football-data.co.uk/mmz4281/{stagione}/{codice}.csv`,
+già raggiungibile). Ricalcolato lo stesso identico confronto del 2019-20 —
+MAE e bias di `p_over(xbetClose)` contro `p_over(AvgC)` — su tutte e sei.
+
+**Verifica del metodo.** Il 2019-20 ricalcolato qui riproduce **esattamente**
+il numero già pubblicato (n=1.687, MAE 0.0156, bias +0.0088): non è un nuovo
+calcolo indipendente che per caso coincide, è la controprova che il metodo è
+implementato correttamente prima di fidarsi delle 5 stagioni nuove.
+
+**Risultato — il numero NON è stabile nel tempo** (pooled 5 leghe):
+
+| stagione | n | MAE | bias |
+|---|--:|--:|--:|
+| 2019-20 | 1.687 | 0.0156 | +0.0088 |
+| 2020-21 | 1.749 | 0.0179 | +0.0167 |
+| 2021-22 | 1.788 | 0.0192 | +0.0166 |
+| 2022-23 | 1.751 | 0.0136 | +0.0054 |
+| 2023-24 | 1.640 | 0.0107 | +0.0010 |
+| 2024-25 | 1.713 | 0.0096 | +0.0021 |
+
+Il 2020-22 (piena era porte-chiuse) è nettamente il peggiore; dal 2022-23 in
+poi footiqo migliora fino a **battere** anche il numero onesto della stima
+nelle ultime due stagioni. **Correzione collaterale**: il confronto "storico"
+usava 0.012 come riferimento della stima, ma quel numero è il MAE
+**ottimistico "in interpolazione"** (`data/estimates/README.md` lo dice
+esplicitamente: "non è il regime in cui la stima viene usata"); il numero
+onesto è **~0.014 "regime d'uso"** (fit solo su stagioni successive, come
+accadrebbe davvero per il 2017-19). Contro quello, il margine del 2019-20 è
+più piccolo (0.0156 vs ~0.014, non 0.0156 vs 0.012) ma resta dello stesso
+segno.
+
+**Perché non cambia la decisione.** Il 2019-20 resta il proxy singolo più
+vicino nel tempo al 2017-19 — e il meno inquinato dalle porte chiuse, iniziate
+a marzo 2020 a stagione già per lo più giocata. Lì la stima vince ancora.
+Se il pattern 2020-22 è un effetto porte-chiuse (non una deriva secolare di
+1xBet/footiqo), il 2017-19 "normale" potrebbe somigliare più alle stagioni
+2022-25 (dove footiqo vince) che al 2019-20: **con i dati disponibili le due
+letture non sono distinguibili**, e vanno dichiarate entrambe, non scelta
+quella comoda.
+
+**Risultato.** Nessun cambio di decisione: la stima resta la scelta per
+2017-19. Ma il fatto che lo sappiamo è passato da "una stagione, un numero"
+a "sei stagioni, un pattern dichiarato con l'incertezza che porta". Aggiornati
+`docs/CACCIA_OU_2017_19.md` (banner Fase 106), `docs/DATI.md`, `docs/PISTE.md`
+(la vecchia cifra "MAE 0.0156 contro 0.012" corretta ovunque compare come
+riferimento vivo, non nelle voci storiche del README/DIARIO che restano
+PRE-fix per lo stesso motivo del numero-bandiera, Fase 101-bis).
+
+**Lezione.** Un numero di validazione misurato su UNA SOLA stagione è un
+punto, non una stima dell'incertezza — anche quando quella stagione è la
+scelta più difendibile disponibile. "Misurabile su più stagioni" era una
+domanda legittima anche per un confronto già chiuso da due fasi: rifarlo non
+ha cambiato la conclusione, ma ha sostituito un'assunzione implicita
+(stabilità nel tempo) con un fatto misurato (instabilità, con una causa
+plausibile ma non provata).
+
+### 📐 Il modello in dettaglio
+
+**Formula**, invariata dalla prima misura (Fase 100/`_valida_footiqo.py`,
+CONF-B): per ogni partita appaiata,
+
+```
+p_true = (1/AvgC>2.5) / (1/AvgC>2.5 + 1/AvgC<2.5)      # devig binario, media multi-book
+p_fq   = (1/xbetCloseOver25) / (1/xbetCloseOver25 + 1/xbetCloseUnder25)  # devig binario, 1xBet
+diff   = p_fq - p_true
+MAE    = mean(|diff|)          bias = mean(diff)
+```
+
+Nessuna novità nella formula: la fase applica lo stesso `p_over`/MAE a 5
+stagioni in più, non ne introduce uno diverso — il valore aggiunto è
+interamente nel numero di osservazioni (da 1.687 a 10.328 partite totali),
+non nel metodo.
+
+**Perché ~0.014 e non 0.012 è il confronto giusto.** La stima E3 è fittata
+"pooled su stagioni successive a quella stimata" (regola dichiarata in
+`data/estimates/README.md`): per il 2017-19, questo significa fit su dati
+2019-20+, cioè esattamente il regime "walk-forward" che dà 0.014. Il numero
+0.012 viene da un fit che vede ANCHE le stagioni prima e dopo il target
+("interpolazione"): un regime che il 2017-19 non può avere per costruzione
+(non ci sono stagioni "prima" nella finestra dati del prog, 2016-17 in poi).
+Usarlo come riferimento del confronto era ottimistico verso la stima — un
+bias piccolo (0.002) ma nella direzione che rendeva la decisione più
+comoda, non meno.
