@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–114)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–115)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -304,6 +304,7 @@ correzioni.*
 - [Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)](#fase-112--un-solo-scarico-per-due-piste-e-un-refactor-che-un-test-ha-bocciato)
 - [Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione](#fase-113--quanto-serve-davvero--il-ridimensionamento-di-una-mia-raccomandazione)
 - [Fase 114 — Far usare le stime davvero (e una mia frase da correggere)](#fase-114--far-usare-le-stime-davvero-e-una-mia-frase-da-correggere)
+- [Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa](#fase-115--serve-un-pc-cloud-247--no-la-borsa-che-serviva-era-già-in-casa)
 
 ---
 
@@ -13059,3 +13060,81 @@ costruzione (la Fase 62-bis stima P(Over), non una coppia di quote):
 anche il motivo per cui non si può scrivere nella colonna quota senza
 inventare un overround che nessuno ha osservato — la regola di
 `data/estimates/README.md` non è una formalità, è questo.
+
+## Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa
+
+**Obiettivo.** Domanda dell'utente: cosa possiamo inventarci per superare i
+blocchi — un PC cloud sempre acceso? e quanto costerebbe?
+
+**La prima risposta: il muro di Betfair non è tecnico né economico, è
+contrattuale.** Dalla documentazione ufficiale: App Key **Delayed** gratuita
+ma «for **development** purposes» (dati conflati a 180 s); App Key **Live**
+**£499** una tantum, e testuale «**Read-only access via the Live App Key
+isn't permitted**». La raccolta dati pura sul feed live **non è un uso
+previsto a nessun prezzo** — e siccome il progetto non scommette (§5), non
+potrebbe soddisfare l'aspettativa nemmeno volendo. Un raccoglitore 24/7 su un
+account che non scommette rischia la **limitazione dell'account**: un danno
+reale all'utente. Nessun VPS risolve un vincolo di questo tipo. *(Resta
+legittimo il servizio **storico**: lì distribuire dati è lo scopo del
+servizio, e le piste A/B non sono toccate.)*
+
+**La seconda risposta, che vale più della prima: la soluzione era già in
+casa.** **Smarkets** è una borsa con API **pubblica, senza chiave, senza
+account**, e **raggiungibile da questo ambiente**. Il progetto la usa dalla
+Fase 97 — ma **solo per gli outright**. Nessuno aveva mai guardato i mercati
+per singola partita. Sondata:
+
+- **100 mercati per partita**: 1X2, **risultato esatto**, **GG/NG**, O/U da
+  0.5 a 6.5, combinati…
+- **`bids`/`offers`** = **banco e puntatore**, con le **quantità**
+  (liquidità) — su Betfair il ladder e il volume sono nei piani **a
+  pagamento**;
+- margine quasi nullo: la somma dei prezzi medi fa **100.48%**.
+
+Letto dall'API su una partita vera: Under 2.5 banco 50.25% / puntatore
+66.23%; Over 2.5 banco 34.48% / puntatore 50.00%; spread 15.98 punti;
+liquidità 88.663 unità.
+
+**Cioè dà gratis le due cose che alla Fase 111 avevo dichiarato
+irraggiungibili** (lo spread banco/puntatore e il volume), e apre la **pista
+C** — validare risultato esatto, GG/NG e le linee O/U contro un mercato vero,
+quando finora solo l'handicap asiatico era mai stato confrontato con una
+quota esterna (Fase 88).
+
+**Il costo.** Smarkets + i **3 workflow GitHub Actions già nel repo**: **€0**.
+Un VPS europeo (Hetzner ~€4/mese, Aruba ~€6) servirebbe solo se Actions non
+bastasse. Betfair Live: £499 e comunque non applicabile.
+
+**Il limite dichiarato.** Smarkets **non ha storico**: raccoglie in avanti,
+non all'indietro. Non sostituisce lo scarico Betfair per il 2017-19 — sono due
+problemi diversi (all'indietro: Betfair storico dalla macchina dell'utente; in
+avanti: Smarkets da qui). **E ha una scadenza**: la stagione comincia il **16
+agosto**, e ogni giorno senza raccoglitore è dato perso per sempre.
+
+**Lezione.** La domanda era «come aggiriamo il muro, e quanto costa». La
+risposta utile non stava nel superare il muro — stava nel **verificare se
+servisse davvero passare di lì**. Una fonte già integrata nel progetto da
+diciotto fasi copriva un'esigenza che non le era mai stata chiesta, perché era
+entrata per un altro scopo (gli outright) e nessuno aveva riaperto la domanda
+«**cos'altro sa fare?**». Prima di comprare infrastruttura per aggirare un
+limite, conviene inventariare cosa si ha già.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova; una **conversione** da fissare, perché Smarkets non
+usa quote decimali:
+
+```
+prezzo Smarkets = probabilita' x 10.000        # 5025 -> 50.25%
+p_back  = bid  / 10000        p_lay = offer / 10000
+p_mid   = (bid + offer) / 20000                # stima centrale, spread neutralizzato
+spread  = (offer - bid) / 10000                # ampiezza del book: proxy di (il)liquidita'
+```
+
+**Perché il prezzo medio e non il lato del banco.** Su una borsa i due lati
+sono i limiti di un intervallo, non due prezzi alternativi: il banco
+sovrastima e il puntatore sottostima la probabilità della stessa proposizione.
+La somma dei **medi** fa 100.48% — cioè il punto medio è già quasi una
+probabilità normalizzata, e il devig serve solo a togliere quello 0.48%. Sui
+lati grezzi invece la somma fa 84.73% (banco) e 116.23% (puntatore): usarne
+uno solo introdurrebbe un bias sistematico di segno noto, non un rumore.

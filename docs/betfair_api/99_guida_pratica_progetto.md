@@ -205,3 +205,78 @@ Le API di scommessa (`placeOrders` e affini) sono documentate in
 scommesse**: il `CLAUDE.md` dice, e resta vero, che il modello **non batte il
 mercato** e non va usato per scommettere soldi veri. Betfair qui è una
 **fonte di dati**, non un canale operativo.
+
+---
+
+## 6 · «Serve un PC cloud 24/7?» — no, e il motivo non è il costo (Fase 115)
+
+Domanda dell'utente: cosa possiamo inventarci, un PC cloud sempre acceso?
+quale sarebbe il costo? Cercata la risposta, ed è arrivata da una direzione
+diversa.
+
+### Il muro di Betfair non è tecnico né economico: è contrattuale
+
+Dalla documentazione ufficiale (`support.developer.betfair.com`):
+
+| | costo | uso consentito |
+|---|---|---|
+| App Key **Delayed** | **gratuita** | «for **development** purposes» — dati ritardati/conflati (180 s sullo Stream) |
+| App Key **Live** | **£499** una tantum | scommesse. Testuale: «**Read-only access via the Live App Key isn't permitted**» |
+
+Cioè: **la raccolta dati pura sul feed live non è un uso previsto**, a nessun
+prezzo. E il progetto non scommette (§5), quindi non può soddisfare
+l'aspettativa di Betfair nemmeno volendo. Un raccoglitore 24/7 su un account
+che non scommette rischia la limitazione dell'account — un danno reale
+all'utente, non un cavillo.
+
+**Resta legittimo** il servizio **storico**: lì vendere/regalare dati *è* lo
+scopo del servizio. Le piste A e B non sono toccate da questo limite.
+
+### La soluzione era già in casa: Smarkets
+
+Smarkets è una **borsa** con API **pubblica, senza chiave, senza account**, e
+— verificato — **raggiungibile da questo ambiente**. Il progetto la usa già
+per gli outright dalla Fase 97; nessuno aveva guardato i mercati per singola
+partita. Sondata alla Fase 115:
+
+- **100 mercati per partita**: 1X2, **risultato esatto**, **GG/NG**, O/U da
+  0.5 a 6.5, combinati…
+- **`bids` e `offers`** = **banco e puntatore**, con le **quantità**
+  (liquidità). *Su Betfair il ladder back/lay e il volume richiedono i piani
+  ADVANCED/PRO a pagamento.*
+- margine quasi nullo: sui prezzi medi la somma fa **100.48%** (contro ~105%
+  di un bookmaker).
+
+Esempio reale letto dall'API:
+
+```
+Under 2.5   banco 50.25%   puntatore 66.23%   -> medio 58.24%
+Over  2.5   banco 34.48%   puntatore 50.00%   -> medio 42.24%
+spread banco/puntatore: 15.98 punti     liquidità sul book: 88.663 unità
+```
+
+**Dà gratis le due cose che avevo dichiarato irraggiungibili**: lo spread
+banco/puntatore e il volume.
+
+### Il costo, per davvero
+
+| soluzione | costo | serve? |
+|---|---|---|
+| **Smarkets + GitHub Actions** (3 workflow già nel repo) | **€0** | ✅ è la risposta |
+| VPS piccolo con IP europeo (Hetzner ~€4/mese, Aruba ~€6) | €50-70/anno | solo se Actions non basta |
+| Betfair **Live** App Key | **£499** + *read-only non permesso* | ❌ non applicabile |
+| Betfair **storico** BASIC | €0, gira sulla macchina dell'utente, una tantum | ✅ per le piste A/B |
+
+### Il limite vero di Smarkets, dichiarato
+
+**Non ha storico**: si raccoglie in avanti, non all'indietro. Quindi non
+sostituisce lo scarico Betfair per il 2017-19 — sono due cose diverse:
+
+- **all'indietro** (2017-19): solo Betfair storico, dalla macchina dell'utente;
+- **in avanti** (dal 2026-27): Smarkets, gratis, da qui, e **più ricco** di
+  quello che Betfair darebbe gratis.
+
+⚠️ **Ha una scadenza**: la stagione 2026-27 comincia il **16 agosto**
+(`newseason.md`). Ogni giorno senza raccoglitore è dato perso per sempre — ed
+è esattamente il test prospettico della Fase 78, l'unico gold standard che il
+progetto non ha mai potuto fare.
