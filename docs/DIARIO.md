@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–111)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–112)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -301,6 +301,7 @@ correzioni.*
 - [Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)](#fase-109-bis--la-specifica-ufficiale-trova-un-bug-nel-parser-poche-ore-dopo)
 - [Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)](#fase-110--la-documentazione-betfair-entra-nel-repo-e-smentisce-una-mia-costante)
 - [Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair](#fase-111--il-token-i-vincoli-veri-e-cosa-possiamo-davvero-farci-con-betfair)
+- [Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)](#fase-112--un-solo-scarico-per-due-piste-e-un-refactor-che-un-test-ha-bocciato)
 
 ---
 
@@ -12840,3 +12841,63 @@ sono verificabili nella copia locale:
 grep -i "20 minutes\|12 hours" docs/betfair_api/10_accesso__login_session_management.md
 grep -i "aren't determined or extended" docs/betfair_api/10_accesso__login_session_management.md
 ```
+
+## Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)
+
+**Obiettivo.** L'utente ha chiesto se si potesse già procedere con le piste A
+(buco O/U 2017-19) e B (traiettoria delle quote), e se potessi farlo da solo.
+
+**La risposta onesta sul "da solo": no, e non con una VPN.** Il blocco su
+`historicdata.betfair.com` è **geografico e regolatorio** (le licenze di
+scommessa sono per giurisdizione), non un ostacolo tecnico da aggirare — e
+aggirarlo esporrebbe l'utente a un rischio concreto: un accesso al suo account
+da un IP estero è esattamente il «traffico inusuale» che Betfair segnala e che
+può far limitare l'account. Lo scarico gira sulla sua macchina; il resto
+(validazione, join, analisi) qui.
+
+**Ma c'era una cosa da fare PRIMA dello scarico, ed è il punto della fase.**
+I file `.bz2` contengono **sia la chiusura sia tutta la traiettoria
+pre-partita**, e il parser della Fase 109 teneva solo la chiusura, buttando il
+resto. Chi avesse scaricato in quel momento avrebbe ottenuto A e perso B — per
+poi dover **ri-scaricare tutto** il giorno in cui la traiettoria fosse
+servita. Riscritto: `_serie_from_stream` estrae la serie completa, e la
+chiusura ne diventa un caso particolare — così le due definizioni non possono
+divergere. Un solo scarico, due piste.
+
+**Il refactor è stato bocciato da un test, ed è la parte interessante.**
+Derivando la chiusura come «ultimo punto della serie», il caso limite
+dell'immagine finale che lascia prezzato **un solo lato** cambiava
+comportamento: prima la riga veniva scartata (non esiste una chiusura valida),
+dopo ripiegava sull'ultimo punto completo — cioè **spacciava per chiusura un
+prezzo di minuti prima**. Un «finto pieno» (R6) plausibile e invisibile.
+`test_img_sostituisce_la_cache_non_la_fonde` — scritto due fasi fa per un
+altro motivo — l'ha intercettato. La distinzione è ora esplicita nel codice:
+la **serie** raccoglie i punti completi osservati, lo **stato finale** è cosa
+c'era all'istante della chiusura, e sono due cose diverse.
+
+**Verifica end-to-end.** Simulato l'intero flusso con la rete finta: chiusura
+1.92/1.95 (ultimo prezzo pre-via), traiettoria a −120/−60/−10 minuti, prezzo
+in-play escluso, `minuti_al_via` corretto, tre file scritti (chiusure,
+traiettoria gzippata, manifest). 5 test nuovi, **883 verdi**.
+
+**Lezione.** «Posso farlo da solo?» aveva due risposte, e quella utile non era
+la prima. No allo scarico — ma il lavoro che rende quello scarico *definitivo*
+invece che da rifare si poteva fare subito, e andava fatto **prima**, non
+dopo. Il costo di scoprirlo dopo non sarebbe stato un bug: sarebbe stato
+chiedere all'utente di rifare tutto.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova. L'unica formula introdotta è l'asse su cui si legge
+la traiettoria:
+
+```
+minuti_al_via = (marketTime − pt) / 60000        # pt e marketTime in ms
+# positivo = prima del calcio d'inizio; 0 = al via
+```
+
+`marketTime` è l'orario **programmato** e `pt` l'istante di pubblicazione del
+prezzo. Il taglio della serie però NON usa questa differenza: usa il flag
+`inPlay` (Fase 109-bis), perché una partita iniziata in ritardo ha una
+chiusura più tarda dell'orario da calendario — e usare l'orario programmato
+includerebbe prezzi già in-play, cioè look-ahead.

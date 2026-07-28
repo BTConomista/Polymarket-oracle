@@ -179,3 +179,59 @@ def test_delta_normale_resta_un_merge():
     ]).encode()
     r = _closing_from_stream(stream)
     assert (r["odds_over25_close"], r["odds_under25_close"]) == (1.75, 2.15)
+
+
+# --------------------------------------------------------------------------- #
+# Fase 112: la TRAIETTORIA (pista B) esce dallo stesso file della chiusura
+# --------------------------------------------------------------------------- #
+from fetch_betfair_historic import _serie_from_stream, _minuti_al_via  # noqa: E402
+
+
+def test_la_serie_registra_ogni_cambio_di_prezzo():
+    """La pista B vive qui: `newseason.md` dà la traiettoria delle quote per
+    NON recuperabile dopo il fischio d'inizio. È nello stesso file della
+    chiusura — buttarla via costringerebbe a ri-scaricare tutto."""
+    s = _serie_from_stream(_stream_normale())
+    assert [(o, u) for _, o, u in s["serie"]] == [(2.00, 2.00), (1.90, 2.00), (1.85, 2.15)]
+
+
+def test_la_serie_si_ferma_al_fischio_dinizio():
+    """I prezzi in-play non sono pre-partita: fuori dalla traiettoria come
+    dalla chiusura."""
+    s = _serie_from_stream(_stream_normale())
+    assert all((o, u) != (5.00, 1.10) for _, o, u in s["serie"])
+    assert s["serie"][-1][0] == 1500000120000        # l'ultimo punto è pre-via
+
+
+def test_chiusura_e_serie_non_possono_divergere():
+    """La chiusura è derivata dalla stessa passata della serie: se un giorno
+    una delle due cambiasse definizione, l'altra la seguirebbe."""
+    raw = _stream_normale()
+    c = _closing_from_stream(raw)
+    s = _serie_from_stream(raw)
+    assert (c["odds_over25_close"], c["odds_under25_close"]) == s["finale"]
+
+
+def test_stato_finale_incompleto_niente_chiusura_ma_la_serie_resta():
+    """Il caso che ha bocciato il primo refactor: un'immagine finale lascia un
+    solo lato → la CHIUSURA non esiste (mai ripiegare su un prezzo di minuti
+    prima), ma i punti completi già osservati restano dati validi."""
+    stream = "\n".join([
+        _line(1, [{"ltp": 1.85, "id": 47972}, {"ltp": 2.15, "id": 47973}], inplay=False),
+        json.dumps({"op": "mcm", "pt": 2, "mc": [
+            {"id": "1.12345", "img": True, "rc": [{"ltp": 2.40, "id": 47973}]}]}),
+        _line(3, inplay=True),
+    ]).encode()
+    s = _serie_from_stream(stream)
+    assert s["finale"] is None                 # nessuna chiusura valida
+    assert len(s["serie"]) == 1                # ma il punto osservato c'era
+    assert _closing_from_stream(stream) is None
+
+
+def test_minuti_al_via_positivi_prima_del_calcio_dinizio():
+    """L'asse su cui si legge la traiettoria: positivo = prima del via."""
+    via = "2017-08-19T18:00:00.000Z"
+    t_via = 1503165600000                       # 2017-08-19 18:00:00 UTC in ms
+    assert _minuti_al_via(t_via - 3600_000, via) == 60.0
+    assert _minuti_al_via(t_via, via) == 0.0
+    assert _minuti_al_via(None, via) is None and _minuti_al_via(t_via, None) is None

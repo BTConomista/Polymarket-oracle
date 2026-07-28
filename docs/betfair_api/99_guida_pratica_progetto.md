@@ -100,7 +100,7 @@ dalla media multi-book contro ~0.014 della stima (misurato sulla 2024-25,
 Fase 109). Protocollo: prima la 2024-25 per validare l'estrazione contro
 `BFEC>2.5`, poi il 2017-18.
 
-### B · La traiettoria delle quote *(un asse di dati nuovo)*
+### B · La traiettoria delle quote *(un asse di dati nuovo)* — ✅ già nello stesso scarico
 
 Il piano BASIC dà **istantanee ogni minuto**, non solo la chiusura.
 `newseason.md` elenca «le quote di apertura e la loro traiettoria» fra le cose
@@ -111,6 +111,14 @@ deficit nelle **partite equilibrate della seconda metà di stagione**, e la
 Fase 98 ha visto che il nostro errore correla +0.43 con quello dell'apertura.
 La traiettoria dice *quando* il mercato impara le cose: è la misura che
 manca a quella diagnosi.
+
+**Dalla Fase 112 A e B escono dallo STESSO scarico**: `_serie_from_stream`
+estrae tutta la serie pre-partita e la chiusura ne è l'ultimo punto, così un
+solo download serve entrambe le piste. Non è un dettaglio: estrarre solo la
+chiusura avrebbe costretto a **ri-scaricare tutto** il giorno in cui si vuole
+la traiettoria. Output: `betfair_traiettoria_<mercato>_<stagione>.csv.gz`
+(compresso: la serie pesa ~2 ordini di grandezza più delle chiusure), con
+`minuti_al_via` come asse.
 
 ### C · Validare i ~17 mercati che nessuno ha mai controllato *(forse il più grosso)*
 

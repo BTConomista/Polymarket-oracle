@@ -75,6 +75,8 @@ from __future__ import annotations
 import argparse
 import bz2
 import csv
+import datetime as dt
+import gzip
 import hashlib
 import json
 import os
@@ -268,29 +270,63 @@ def cmd_dry_run(season: str) -> None:
 # --------------------------------------------------------------------------- #
 # Parsing dello stream storico (formato Betfair: JSON per riga, bz2)
 # --------------------------------------------------------------------------- #
-def _closing_from_stream(raw: bytes) -> dict | None:
-    """Estrae la CHIUSURA da un file-mercato dello stream storico.
+def _minuti_al_via(pt_ms: int, market_time: str | None) -> float | None:
+    """Minuti fra l'istante del prezzo e il calcio d'inizio programmato.
+    Positivo = prima del via. E' l'asse su cui si legge la traiettoria."""
+    if not market_time or pt_ms is None:
+        return None
+    try:
+        via = dt.datetime.fromisoformat(market_time.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return round((via.timestamp() * 1000 - pt_ms) / 60000, 2)
 
-    Formato: una riga JSON per aggiornamento (`op":"mcm"`), con `pt` = istante
-    di pubblicazione (epoch ms) e `mc[]` = cambi di mercato. `mc[].rc[]` porta
-    `ltp` (last traded price) per ciascun runner; `mc[].marketDefinition`
-    compare quando la definizione cambia e contiene `inPlay`.
 
-    "Chiusura" = ultimo prezzo scambiato PRIMA che il mercato passi in-play,
-    cioe' prima del calcio d'inizio. Si usa il flag `inPlay` e non l'orario
-    programmato (`marketTime`) perche' e' il fatto reale: una partita che
-    inizia in ritardo ha una chiusura piu' tarda dell'orario da calendario, e
-    prendere `marketTime` taglierebbe fuori gli ultimi minuti di mercato --
-    oppure, peggio, includerebbe prezzi gia' in-play (che riflettono cio' che
-    accade in campo: sarebbe look-ahead, l'errore che il progetto insegue da
-    sempre, cfr. la trappola di Udinese-Roma in docs/DATI.md).
+def _over_under(last: dict[int, float], runners: dict[int, str]) -> tuple[float, float] | None:
+    """Da (selectionId -> prezzo) + (selectionId -> nome) ai due lati del
+    mercato. None se manca anche solo un lato: mai mezzo mercato."""
+    over = under = None
+    for sel, price in last.items():
+        nome = (runners.get(sel) or "").lower()
+        if "over" in nome:
+            over = price
+        elif "under" in nome:
+            under = price
+    return (over, under) if over is not None and under is not None else None
+
+
+def _serie_from_stream(raw: bytes) -> dict | None:
+    """Estrae da un file-mercato TUTTA la traiettoria pre-partita, non solo la
+    chiusura.
+
+    Perche' la serie e non solo l'ultimo punto (Fase 112): i file contengono
+    entrambe le cose, ma un'estrazione che tiene solo la chiusura costringe a
+    **ri-scaricare tutto** il giorno in cui si vuole la traiettoria (pista B:
+    `newseason.md` la da' per non recuperabile, ed e' il dato che manca alla
+    diagnosi della Fase 93). Un solo passaggio serve entrambe le piste.
+
+    Formato: una riga JSON per aggiornamento, `pt` = istante di pubblicazione
+    (epoch ms), `mc[].rc[].ltp` = last traded price, `mc[].img` = immagine che
+    SOSTITUISCE la cache (non un delta -- specifica ufficiale, vedi
+    `data/ricerca_esterna/betfair_stream_spec_estratto.md`).
+
+    La serie si ferma al passaggio **in-play**: dopo il fischio d'inizio i
+    prezzi riflettono cio' che accade in campo e non sono piu' pre-partita.
+
+    ASSUNZIONE DICHIARATA: lo stream registrato comincia con un'immagine
+    iniziale che porta la `marketDefinition` (e quindi i nomi dei runner), come
+    prevede il protocollo. I punti eventualmente precedenti non sono
+    risolvibili e vengono contati in `punti_senza_runner`: se quel numero non
+    fosse zero, l'assunzione andrebbe rivista.
     """
     last: dict[int, float] = {}
-    closing: dict[int, float] | None = None
-    closing_pt: int | None = None
-    meta: dict = {}
     runners: dict[int, str] = {}
+    meta: dict = {}
+    serie: list[tuple[int, float, float]] = []
+    closing_pt: int | None = None
     in_play = False
+    ultimo: tuple[float, float] | None = None
+    punti_senza_runner = 0
 
     for line in raw.decode("utf-8", "replace").splitlines():
         line = line.strip()
@@ -313,57 +349,71 @@ def _closing_from_stream(raw: bytes) -> dict | None:
                     if r.get("id") is not None and r.get("name"):
                         runners[r["id"]] = r["name"]
                 if md.get("inPlay") and not in_play:
-                    # transizione al gioco: congela cio' che c'era un istante prima
                     in_play = True
-                    closing = dict(last)
                     closing_pt = pt
             if in_play:
-                continue          # dopo il fischio d'inizio non si aggiorna piu'
-            # `img` (Image) = "replace existing prices/data with the data
-            # supplied: it is not a delta" (specifica ufficiale Exchange Stream
-            # API, pagina "Exchange Stream API" della doc Betfair, letta alla
-            # Fase 109-bis). Senza questo ramo un ri-invio dell'immagine a meta'
-            # stream lascerebbe in cache prezzi che la fonte considera
-            # sostituiti: un "finto pieno" (regola R6) invisibile a ogni
-            # controllo, perche' il numero resta plausibile.
+                continue
             if mc.get("img"):
                 last.clear()
             for rc in mc.get("rc", []) or []:
                 if rc.get("ltp") is not None and rc.get("id") is not None:
                     last[rc["id"]] = float(rc["ltp"])
+        if in_play or pt is None or not last:
+            continue
+        if not runners:
+            punti_senza_runner += 1
+            continue
+        ou = _over_under(last, runners)
+        if ou and ou != ultimo:          # solo i CAMBI: la serie resta compatta
+            serie.append((pt, ou[0], ou[1]))
+            ultimo = ou
 
-    if closing is None:
-        # il mercato non ha mai segnato inPlay (succede: sospeso, annullato,
-        # o file troncato). Si usa l'ultimo stato noto, ma lo si DICHIARA.
-        closing, closing_pt = last, None
-    if not closing or not runners:
+    if not serie:
         return None
-
-    over = under = None
-    for sel, price in closing.items():
-        name = (runners.get(sel) or "").lower()
-        if "over" in name:
-            over = price
-        elif "under" in name:
-            under = price
-    if over is None or under is None:
-        return None
-
+    # Lo stato ALL'ISTANTE della chiusura, che NON coincide sempre con l'ultimo
+    # punto della serie: se un'immagine finale lascia prezzato un solo lato, la
+    # chiusura non esiste e va detto. Ripiegare sull'ultimo punto completo
+    # significherebbe spacciare per chiusura un prezzo di minuti prima -- un
+    # "finto pieno" (R6). Distinzione trovata da
+    # test_img_sostituisce_la_cache_non_la_fonde, che ha bocciato il primo
+    # tentativo di refactor (Fase 112).
+    finale = _over_under(last, runners)
     return {
+        "finale": finale,
         "marketId": meta.get("marketId"),
         "eventId": meta.get("eventId"),
         "eventName": meta.get("eventName"),
         "countryCode": meta.get("countryCode"),
         "marketTime": meta.get("marketTime"),
-        "odds_over25_close": over,
-        "odds_under25_close": under,
+        "serie": serie,
         "closing_pt_ms": closing_pt,
         "chiusura_da_inplay": closing_pt is not None,
+        "punti_senza_runner": punti_senza_runner,
+    }
+
+
+def _closing_from_stream(raw: bytes) -> dict | None:
+    """La CHIUSURA: ultimo punto della traiettoria prima del passaggio in-play.
+
+    E' un caso particolare di `_serie_from_stream` -- cosi' la definizione di
+    "chiusura" e la serie non possono divergere.
+    """
+    s = _serie_from_stream(raw)
+    if s is None or s["finale"] is None:
+        return None
+    over, under = s["finale"]
+    return {
+        "marketId": s["marketId"], "eventId": s["eventId"],
+        "eventName": s["eventName"], "countryCode": s["countryCode"],
+        "marketTime": s["marketTime"],
+        "odds_over25_close": over, "odds_under25_close": under,
+        "closing_pt_ms": s["closing_pt_ms"],
+        "chiusura_da_inplay": s["chiusura_da_inplay"],
     }
 
 
 def cmd_fetch(season: str, limit: int | None, market_type: str = MARKET_TYPE,
-              giurisdizione: str = "it") -> None:
+              giurisdizione: str = "it", traiettoria: bool = True) -> None:
     files = _post("DownloadListOfFiles",
                   _filter(season, market_types=[market_type], countries=COUNTRIES))
     if not isinstance(files, list) or not files:
@@ -381,6 +431,7 @@ def cmd_fetch(season: str, limit: int | None, market_type: str = MARKET_TYPE,
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     rows, falliti, senza_inplay = [], 0, 0
+    serie_rows, senza_chiusura, orfani = [], 0, 0
     ultimo_ka = time.monotonic()
     print(f"keep-alive ogni {KEEPALIVE_OGNI//60} min su giurisdizione '{giurisdizione}'")
 
@@ -399,17 +450,35 @@ def cmd_fetch(season: str, limit: int | None, market_type: str = MARKET_TYPE,
                     blob = r.read()
                 dest.write_bytes(blob)
                 time.sleep(THROTTLE)
-            rec = _closing_from_stream(bz2.decompress(blob))
+            s = _serie_from_stream(bz2.decompress(blob))
         except (urllib.error.URLError, OSError, ValueError) as e:
             falliti += 1
             print(f"  [{i}/{len(files)}] ERRORE su {path}: {e}")
             continue
-        if rec is None:
+        if s is None:
             falliti += 1
         else:
-            if not rec["chiusura_da_inplay"]:
+            if not s["chiusura_da_inplay"]:
                 senza_inplay += 1
-            rows.append(rec)
+            if s["finale"] is not None:
+                over, under = s["finale"]
+                rows.append({
+                    "marketId": s["marketId"], "eventId": s["eventId"],
+                    "eventName": s["eventName"], "countryCode": s["countryCode"],
+                    "marketTime": s["marketTime"],
+                    "odds_over25_close": over, "odds_under25_close": under,
+                    "closing_pt_ms": s["closing_pt_ms"],
+                    "chiusura_da_inplay": s["chiusura_da_inplay"]})
+            else:
+                senza_chiusura += 1
+            if traiettoria:
+                for pt, o, u in s["serie"]:
+                    serie_rows.append({
+                        "marketId": s["marketId"], "eventName": s["eventName"],
+                        "marketTime": s["marketTime"], "pt_ms": pt,
+                        "minuti_al_via": _minuti_al_via(pt, s["marketTime"]),
+                        "odds_over25": o, "odds_under25": u})
+            orfani += s["punti_senza_runner"]
         if i % 100 == 0 or i == len(files):
             print(f"  [{i}/{len(files)}] estratte {len(rows)} chiusure")
 
@@ -426,8 +495,22 @@ def cmd_fetch(season: str, limit: int | None, market_type: str = MARKET_TYPE,
         w.writeheader()
         w.writerows(rows)
 
+    if traiettoria and serie_rows:
+        # gzip: la serie e' ~2 ordini di grandezza piu' grande delle chiusure
+        tpath = OUT_DIR / f"betfair_traiettoria_{tag}_{season}.csv.gz"
+        tcols = ["marketId", "eventName", "marketTime", "pt_ms", "minuti_al_via",
+                 "odds_over25", "odds_under25"]
+        with gzip.open(tpath, "wt", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=tcols)
+            w.writeheader()
+            w.writerows(serie_rows)
+        print(f"scritta traiettoria {tpath.name}  ({len(serie_rows)} punti)")
+
     manifest = {
         "fonte": "historicdata.betfair.com (Betfair Exchange, piano BASIC)",
+        "punti_traiettoria": len(serie_rows),
+        "mercati_senza_chiusura_valida": senza_chiusura,
+        "punti_prima_della_market_definition": orfani,
         "stagione": season, "mercato": market_type, "paesi": COUNTRIES,
         "scaricato": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "file_richiesti": len(files), "chiusure_estratte": len(rows),
@@ -466,6 +549,10 @@ def main() -> None:
                         "e' documentato da Betfair: usare --dry-run per vedere i "
                         "nomi reali, poi eventualmente passarli qui (es. per "
                         "scaricare risultato esatto o GG/NG)")
+    p.add_argument("--no-trajectory", action="store_true",
+                   help="NON estrarre la traiettoria (pista B). Sconsigliato: "
+                        "e' nello stesso file, costa zero download in piu', e "
+                        "senza di essa servirebbe ri-scaricare tutto")
     p.add_argument("--jurisdiction", default="it", choices=sorted(KEEPALIVE),
                    help="giurisdizione dell'account, per il keep-alive: la "
                         "sessione dura 20 MINUTI su it/es, 12-24h su com "
@@ -480,7 +567,8 @@ def main() -> None:
     if args.dry_run:
         cmd_dry_run(args.season)
         return
-    cmd_fetch(args.season, args.limit, args.market_type, args.jurisdiction)
+    cmd_fetch(args.season, args.limit, args.market_type, args.jurisdiction,
+              traiettoria=not args.no_trajectory)
 
 
 if __name__ == "__main__":
