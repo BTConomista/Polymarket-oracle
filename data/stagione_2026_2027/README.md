@@ -167,6 +167,65 @@ crawler AI.** Misurato il 28/07/2026 leggendo i `robots.txt` (regola **R5.3**):
 
 ---
 
+## 3-bis · La buona notizia: metà della lista è già disponibile, **su licenza**
+
+Il divieto del §3 sembra chiudere rose, valori e statistiche. **Non è così**, e
+la soluzione era già in casa: `davidcariboo/player-scores` su Kaggle — la
+**fonte ufficiale** dello `squad_value` del progetto dalla Fase 67, **CC0**
+(pubblico dominio, redistribuzione consentita), aggiornata ~settimanalmente.
+Misurata oggi (versione 673, 213 MB):
+
+| file | che cosa dà | copre la nostra lista |
+|---|---|---|
+| `player_valuations.csv` | **507.815** valutazioni, 2000-01 → **2026-02-27** | §4.1 valori di mercato |
+| `players.csv` | anagrafica giocatori | §4.1 rosa |
+| `game_lineups.csv` | **formazioni**: `starting_lineup` vs `substitutes`, ruolo, numero, capitano | 🎯 §4.4 — permette di **scorare** la formazione probabile contro quella vera |
+| `game_events.csv` | eventi **col minuto**: gol, cartellini, sostituzioni, rigori | §4.3 fasce di 15′, cartellini per giocatore, pattern di sostituzione |
+| `appearances.csv` | presenze e **minuti giocati** per giocatore | §4.2 carico, §4.3 rotazione |
+| `transfers.csv` | trasferimenti | §4.2 mercato |
+| `games.csv` | 88.958 partite, 2006-06 → **2026-07-06** | calendario e risultati |
+| `national_teams.csv` | nazionali | §7.3 |
+
+**Copertura ben oltre le 5 leghe** — 65 competizioni:
+
+- **31 campionati nazionali**: fra cui **Turchia, Portogallo, Olanda, Belgio,
+  Scozia, Grecia, Austria, Svizzera, Danimarca, Croazia, Serbia, Ucraina,
+  Polonia, Romania**, più Brasile, Argentina, USA, Messico, Giappone, Corea,
+  Arabia Saudita, Australia. È esattamente il §7.5 («club di campionati che non
+  modelliamo ma che incontriamo nelle coppe»), **già coperto**;
+- **10 coppe nazionali**: Coppa Italia, Copa del Rey, DFB-Pokal… (§7.1);
+- **coppe internazionali**: Champions League e le sue qualificazioni (§7.2);
+- **5 competizioni per nazionali**: Europei, Copa América, Coppa d'Africa,
+  Coppa d'Asia (§7.3).
+
+### Il confine che conta: retrospettivo ≠ prospettico
+
+Questo dataset dice **che cosa è successo**, non che cosa succederà. Non
+contiene — e non può contenere — nulla di ciò che serve *prima* della partita:
+infortuni di oggi, formazione probabile, previsione meteo, allenatore a
+rischio, umore. Quindi:
+
+| livello | fonte | cadenza | irrecuperabile? |
+|---|---|---|:--:|
+| **fatti retrospettivi** (rose, valori, minuti, eventi, formazioni giocate) | Kaggle CC0 | **settimanale** | 🟢 no — si ri-scarica quando si vuole |
+| **stato pre-partita** (infortuni, probabili, meteo, quote, notizie) | raccolta quotidiana | **giornaliera** | 🔴 **sì** |
+
+**Conseguenza sul piano**: il lavoro giornaliero si **restringe** a ciò che deve
+davvero essere giornaliero. Tutto il resto è un `kagglehub.dataset_download`
+una volta a settimana. È il principio §1.3 del progetto — testare la versione
+economica di un'idea prima di costruire l'infrastruttura costosa.
+
+**Due limiti dichiarati**, perché non diventino sorprese:
+
+1. le valutazioni si fermano al **27/02/2026** in questa versione: c'è un
+   **ritardo di ~5 mesi** sul valore «attuale». Per il valore di **agosto 2026**
+   serve o attendere l'aggiornamento a monte, o la raccolta manuale (§3.1);
+2. è una fonte **secondaria** rispetto a Transfermarkt (da cui deriva): vale la
+   regola **R2** — la scala va misurata contro la primaria dove entrambe
+   esistono, mai innestata in silenzio.
+
+---
+
 ## 4 · La lista COMPLETA dei dati
 
 Legenda — **tipo**: 📏 fatto misurato · 🧠 giudizio (LLM/modello) · 🔢 derivato
@@ -285,7 +344,8 @@ perde, poi il resto.
 
 | # | passo | perché ora | scadenza |
 |:--:|---|---|---|
-| **1** | **Anagrafica di partenza** (§4.1) delle 5 leghe: rosa, valori, obiettivi, competizioni, stadi+coordinate | è la fotografia di **agosto**: i valori vengono riscritti, gli obiettivi dichiarati non si ripubblicano | **prima del 15/8** |
+| **0** | **Importare il dataset CC0** (§3-bis) e costruirci sopra l'anagrafica | costa un `dataset_download`: è la versione **economica** di metà della lista (§1.3). Va fatto per primo perché dice quanto resta davvero da raccogliere | **subito** |
+| **1** | **Anagrafica di partenza** (§4.1) delle 5 leghe: rosa, valori, obiettivi, competizioni, stadi+coordinate | è la fotografia di **agosto**: i valori vengono riscritti, gli obiettivi dichiarati non si ripubblicano. ⚠️ dopo il passo 0 resta soprattutto ciò che il dataset **non** ha: obiettivi, liste UEFA, fuori-progetto | **prima del 15/8** |
 | **2** | **Scheletro giornaliero + meteo + quote** (già pronte) | la struttura immutabile dev'esistere prima del primo giorno utile | **prima del 15/8** |
 | **3** | **Formazioni ufficiali a T−1h** | 🎯 il bersaglio della Fase 93; **timebox 2 ore** per la fonte, poi si ripiega sulle probabili | **prima del 15/8** |
 | **4** | Bollettino quotidiano dei **fatti** (infortuni, squalifiche, diffidati, convocazioni) | 🔴 in gran parte | dal 15/8 |
