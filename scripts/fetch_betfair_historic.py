@@ -115,6 +115,19 @@ THROTTLE = 0.4                        # cortesia verso il servizio
 # footiqo). Le partite di serie minori/coppe semplicemente non agganciano.
 COUNTRIES = ["IT", "GB", "ES", "DE", "FR"]
 
+# Endpoint di keep-alive per giurisdizione (docs/betfair_api/10_accesso__*).
+# ⚠️ La sessione dura **20 MINUTI sull'exchange italiano e spagnolo**, contro
+# 12-24 ore sul .com: un download di qualche migliaio di file muore a meta'
+# senza rinnovo. Il rinnovo NON e' automatico ne' legato all'attivita' API
+# ("Session times aren't determined or extended based on API activity").
+KEEPALIVE = {
+    "com": "https://identitysso.betfair.com/api/keepAlive",
+    "it": "https://identitysso.betfair.it/api/keepAlive",
+    "es": "https://identitysso.betfair.es/api/keepAlive",
+    "ro": "https://identitysso.betfair.ro/api/keepAlive",
+}
+KEEPALIVE_OGNI = 600      # 10 min: meta' della finestra italiana, con margine
+
 # Finestre delle stagioni: agosto -> maggio. 2425 e' la stagione di VALIDAZIONE
 # (football-data pubblica li' la colonna BFEC di confronto), le altre sono il
 # bersaglio.
@@ -151,6 +164,27 @@ def _get(endpoint: str) -> object:
     req = urllib.request.Request(f"{API}/{endpoint}", headers={"ssoid": _token()})
     with urllib.request.urlopen(req, timeout=120) as r:
         return json.loads(r.read().decode("utf-8", "replace"))
+
+
+def _keep_alive(giurisdizione: str) -> bool:
+    """Rinnova la sessione. Ritorna True se il servizio conferma.
+
+    Non solleva: un keep-alive fallito non deve buttare via un download in
+    corso -- lo si segnala e si prosegue finche' il token regge davvero.
+    """
+    url = KEEPALIVE.get(giurisdizione, KEEPALIVE["com"])
+    req = urllib.request.Request(url, headers={
+        "Accept": "application/json", "X-Authentication": _token()})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            d = json.loads(r.read().decode("utf-8", "replace"))
+        ok = str(d.get("status", "")).upper() == "SUCCESS"
+        if not ok:
+            print(f"  [keep-alive] risposta inattesa: {d}")
+        return ok
+    except (urllib.error.URLError, OSError, ValueError) as e:
+        print(f"  [keep-alive] fallito ({e}) -- proseguo finche' il token regge")
+        return False
 
 
 def _filter(season: str, *, market_types: list[str], countries: list[str]) -> dict:
@@ -328,9 +362,10 @@ def _closing_from_stream(raw: bytes) -> dict | None:
     }
 
 
-def cmd_fetch(season: str, limit: int | None) -> None:
+def cmd_fetch(season: str, limit: int | None, market_type: str = MARKET_TYPE,
+              giurisdizione: str = "it") -> None:
     files = _post("DownloadListOfFiles",
-                  _filter(season, market_types=[MARKET_TYPE], countries=COUNTRIES))
+                  _filter(season, market_types=[market_type], countries=COUNTRIES))
     if not isinstance(files, list) or not files:
         raise SystemExit(
             "DownloadListOfFiles ha restituito 0 file. Cause tipiche, in ordine:\n"
@@ -346,8 +381,13 @@ def cmd_fetch(season: str, limit: int | None) -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     rows, falliti, senza_inplay = [], 0, 0
+    ultimo_ka = time.monotonic()
+    print(f"keep-alive ogni {KEEPALIVE_OGNI//60} min su giurisdizione '{giurisdizione}'")
 
     for i, path in enumerate(files, 1):
+        if time.monotonic() - ultimo_ka > KEEPALIVE_OGNI:
+            _keep_alive(giurisdizione)
+            ultimo_ka = time.monotonic()
         dest = RAW_DIR / f"{season}_{Path(path).parent.name}_{Path(path).name}"
         try:
             if dest.exists():
@@ -376,7 +416,8 @@ def cmd_fetch(season: str, limit: int | None) -> None:
     if not rows:
         raise SystemExit("nessuna chiusura estratta: controllare il formato dei file.")
 
-    out = OUT_DIR / f"betfair_ou25_{season}.csv"
+    tag = market_type.lower()
+    out = OUT_DIR / f"betfair_{tag}_{season}.csv"
     cols = ["marketId", "eventId", "eventName", "countryCode", "marketTime",
             "odds_over25_close", "odds_under25_close", "closing_pt_ms",
             "chiusura_da_inplay"]
@@ -387,7 +428,7 @@ def cmd_fetch(season: str, limit: int | None) -> None:
 
     manifest = {
         "fonte": "historicdata.betfair.com (Betfair Exchange, piano BASIC)",
-        "stagione": season, "mercato": MARKET_TYPE, "paesi": COUNTRIES,
+        "stagione": season, "mercato": market_type, "paesi": COUNTRIES,
         "scaricato": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "file_richiesti": len(files), "chiusure_estratte": len(rows),
         "file_falliti_o_senza_prezzi": falliti,
@@ -397,7 +438,7 @@ def cmd_fetch(season: str, limit: int | None) -> None:
                           "dove il flag inPlay non compare mai si e' usato "
                           "l'ultimo stato noto (colonna chiusura_da_inplay=False)"),
     }
-    (OUT_DIR / f"betfair_manifest_{season}.json").write_text(
+    (OUT_DIR / f"betfair_manifest_{tag}_{season}.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=1), encoding="utf-8")
 
     print(f"\nscritto {out}  ({len(rows)} righe)")
@@ -420,6 +461,15 @@ def main() -> None:
                    help="quanti file e quanti MB, senza scaricare")
     p.add_argument("--limit", type=int,
                    help="scarica solo i primi N file (prova rapida)")
+    p.add_argument("--market-type", default=MARKET_TYPE,
+                   help=f"tipo di mercato (default {MARKET_TYPE}). L'elenco NON "
+                        "e' documentato da Betfair: usare --dry-run per vedere i "
+                        "nomi reali, poi eventualmente passarli qui (es. per "
+                        "scaricare risultato esatto o GG/NG)")
+    p.add_argument("--jurisdiction", default="it", choices=sorted(KEEPALIVE),
+                   help="giurisdizione dell'account, per il keep-alive: la "
+                        "sessione dura 20 MINUTI su it/es, 12-24h su com "
+                        "(default: it)")
     args = p.parse_args()
 
     if args.check:
@@ -430,7 +480,7 @@ def main() -> None:
     if args.dry_run:
         cmd_dry_run(args.season)
         return
-    cmd_fetch(args.season, args.limit)
+    cmd_fetch(args.season, args.limit, args.market_type, args.jurisdiction)
 
 
 if __name__ == "__main__":

@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–110)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–111)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -300,6 +300,7 @@ correzioni.*
 - [Fase 109 — Betfair Exchange: il primo candidato MIGLIORE della stima (e una mia valutazione ritirata)](#fase-109--betfair-exchange-il-primo-candidato-migliore-della-stima-e-una-mia-valutazione-ritirata)
 - [Fase 109-bis — La specifica ufficiale trova un bug nel parser (poche ore dopo)](#fase-109-bis--la-specifica-ufficiale-trova-un-bug-nel-parser-poche-ore-dopo)
 - [Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)](#fase-110--la-documentazione-betfair-entra-nel-repo-e-smentisce-una-mia-costante)
+- [Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair](#fase-111--il-token-i-vincoli-veri-e-cosa-possiamo-davvero-farci-con-betfair)
 
 ---
 
@@ -12764,4 +12765,78 @@ grep -rho "MATCH_ODDS\|OVER_UNDER_25" docs/betfair_api/*.md | sort | uniq -c
 
 # ogni file dichiara la fonte
 for f in docs/betfair_api/*.md; do grep -q "Fonte" "$f" || echo "SENZA FONTE: $f"; done
+```
+
+## Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair
+
+**Obiettivo.** L'utente ha chiesto aiuto per creare il proprio token e —
+soprattutto — di capire «che tipo di lavoro possiamo fare con Betfair».
+
+**Tre fatti che cambiano il piano, tutti letti nella documentazione ora
+specchiata in `docs/betfair_api/` (Fase 110) e verificati dove possibile.**
+
+1. **Per il servizio storico non serve una Application Key.** Vuole solo
+   l'header `ssoid`, e la via più rapida per averlo è **copiare il cookie
+   `ssoid` dal browser** dopo il login — la documentazione di supporto Betfair
+   indica proprio questa. La strada "seria" (App Key + login via API su
+   `identitysso.betfair.it`) serve solo se si automatizza.
+
+2. **⚠️ Sull'exchange italiano la sessione dura 20 MINUTI**, contro 12-24 ore
+   sul `.com`. E, testuale: «*Session times aren't determined or extended based
+   on API activity*» — scaricare **non** tiene viva la sessione. Un download
+   di qualche migliaio di file sarebbe morto a metà, e la causa sarebbe stata
+   difficile da diagnosticare (errori sparsi, non un fallimento pulito).
+   `fetch_betfair_historic.py` ora chiama `keepAlive` ogni 10 minuti, con
+   l'endpoint della giurisdizione giusta (`--jurisdiction`, default `it`).
+
+3. **L'exchange italiano è una licenza separata** (registrazione e login su
+   `.it`), mentre il servizio storico è `.com`: **se un account italiano vi
+   abbia accesso non è documentato**, e da qui non è verificabile (403 per
+   regione). È la domanda da porre all'assistenza — con il test pratico
+   equivalente già pronto: `--check` elenca i pacchetti, e se ne elenca,
+   l'accesso c'è.
+
+**Cosa possiamo farci, in ordine di valore** (dettaglio in
+`docs/betfair_api/99_guida_pratica_progetto.md`):
+
+- **A. Il buco O/U 2017-19**: il bersaglio dichiarato, e Betfair è l'unico
+  candidato mai trovato *migliore della stima* (Fase 109).
+- **B. La traiettoria delle quote**: istantanee ogni minuto → un asse di dati
+  che `newseason.md` dà per **non recuperabile** e «mai avuto a nessuna
+  scala». Non è un di più: la Fase 93 ha localizzato il nostro deficit nelle
+  partite equilibrate di fine stagione e la Fase 98 ha trovato correlazione
+  +0.43 col deficit dell'apertura — la traiettoria dice **quando** il mercato
+  impara, che è la misura mancante a quella diagnosi.
+- **C. Validare i ~17 mercati mai controllati**: il progetto prezza GG/NG,
+  risultato esatto, multigol, total-squadra… e per sua stessa ammissione
+  (Fase 88) **l'handicap asiatico è l'unico mai validato contro una quota
+  esterna**. Betfair quota molti di quei mercati — ma **quali ci siano nei
+  pacchetti storici va verificato con `--dry-run`, non assunto** (lezione
+  della Fase 110 sul marketType non documentato). Per questo lo script ha ora
+  `--market-type`: se ci sono, si scaricano senza scrivere altro codice.
+- **D. Volume/liquidità** (piani a pagamento): segnale mai avuto, valore non
+  misurato → non si compra prima di aver esaurito il BASIC gratuito.
+- **E. Il test prospettico 2026-27**: possibile, ma frenato dal geo-blocco e
+  dalla sessione da 20 minuti; da valutare dopo A e B.
+
+**Un limite dichiarato, per non fare confusione.** Le API di scommessa sono
+nella copia per completezza, ma il progetto **non piazza scommesse**: il
+modello non batte il mercato, e Betfair qui è una **fonte di dati**, non un
+canale operativo.
+
+**Lezione.** Il lavoro utile di questa fase non è stato "creare il token": è
+stato scoprire i **due vincoli che avrebbero fatto fallire il download in
+modo confuso** (sessione da 20 minuti; accesso dell'account italiano non
+documentato). Erano entrambi nella documentazione, a portata di `grep`, solo
+perché la fase precedente l'aveva portata in casa — il ritorno dell'aver
+specchiato invece di ri-cercare sul web ogni volta.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase operativa e di pianificazione. I due numeri citati
+sono verificabili nella copia locale:
+
+```
+grep -i "20 minutes\|12 hours" docs/betfair_api/10_accesso__login_session_management.md
+grep -i "aren't determined or extended" docs/betfair_api/10_accesso__login_session_management.md
 ```

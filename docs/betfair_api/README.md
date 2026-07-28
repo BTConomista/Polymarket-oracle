@@ -29,6 +29,14 @@ registrazioni dello stream** descritto in `40_stream__*`, quindi quella
 specifica vale anche per il parser di
 `scripts/fetch_betfair_historic.py`.
 
+## ⭐ Parti da qui
+
+**[`99_guida_pratica_progetto.md`](99_guida_pratica_progetto.md)** — l'unico
+file di questa cartella scritto DAL progetto: come ottenere il token, i
+vincoli reali già verificati (sessione da 20 minuti sull'exchange italiano,
+geo-blocco), la domanda ancora aperta per l'assistenza, e cosa possiamo
+farci in ordine di valore.
+
 ## Le pagine che servono per prime
 
 - **`40_stream__exchange_stream_api.md`** — il formato dei messaggi
