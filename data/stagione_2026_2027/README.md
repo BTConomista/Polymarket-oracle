@@ -226,6 +226,105 @@ economica di un'idea prima di costruire l'infrastruttura costosa.
 
 ---
 
+## 3-ter · ⚠️ IL PROBLEMA DELLA ROSA, e come è stato risolto
+
+Va scritto per esteso perché è il difetto che ha richiesto tre correzioni
+successive, e perché chiunque userà questi file deve sapere che cosa sta
+leggendo.
+
+### Il problema
+
+Il dataset CC0 associa i giocatori al club con `current_club_id`, che è
+**l'ultimo club noto**, e la sua fotografia è ferma al **27/02/2026**. Ne
+seguono tre guasti, tutti trovati controllando e non fidandosi:
+
+1. **rose gonfie**: senza filtro il Genoa contava **162** giocatori (gente
+   ferma al 2017). Filtrando sull'ultima stagione del giocatore → mediana 36;
+2. **residuo sistematico**: anche filtrando restava **+6** sul `squad_size`
+   ufficiale della stessa fonte — prestiti in uscita e giovani aggregati;
+3. **il guasto grave**: sulle squadre col record vecchio la somma dei valori
+   dava **«Frosinone, valore rosa 0.8 M€» su 1 giocatore di 31** — tre ordini
+   di grandezza di errore, in un campo che *sembra* una misura (**R6**).
+
+E soprattutto: **il mercato estivo 2026 non c'è**. La rosa di febbraio non è la
+rosa che scenderà in campo il 15 agosto.
+
+### La soluzione: Wikipedia come fonte della rosa, dataset per i valori
+
+`scripts/fetch_rose_wikipedia.py` (Fase 121). Wikipedia **ci consente** il bot
+(a differenza di Transfermarkt, §3), ha una API ufficiale, ed è aggiornata da
+persone in tempo quasi reale: al 28/07/2026 la voce dell'Inter dichiarava
+«*Rosa e numerazione aggiornate al 26 luglio 2026*» citando il sito ufficiale
+del club.
+
+**Un solo parser**, con la Wikipedia *italiana* anche per i club stranieri: le
+altre lingue usano formati diversi (`{{Feff joueur}}` in francese, tabelle in
+inglese), e cinque parser sarebbero cinque punti di rottura silenziosa.
+
+⚠️ **Ma l'ipotesi «l'italiana li copre tutti» è FALSA, e va detto.** L'avevo
+dedotta da due club grossi (Real Madrid 29, Manchester City 32) e generalizzata:
+la misura su tutte e 96 dice altro.
+
+| lega | rose trovate |
+|---|:--:|
+| Serie A | **18/20** |
+| Premier League | 12/20 |
+| La Liga | 6/20 |
+| Ligue 1 | 3/18 |
+| Bundesliga | 2/18 |
+| **totale** | **41/96** |
+
+La Wikipedia italiana scrive la voce-stagione dei club esteri solo per i più
+noti. **Il seguito è già chiaro e non ancora fatto**: per le altre quattro
+leghe si va sulla Wikipedia *locale* (`en`, `es`, `de`, `fr`), una voce-stagione
+per club, con il parser del template di quella lingua — verificato che esistono
+(es. `Saison 2026-2027 du Paris Saint-Germain` con `{{Feff joueur}}`, 36 voci).
+
+**Il discrimine prima squadra / giovani aggregati è MISURATO, non stimato.**
+Le voci elencano nella stessa sezione i tesserati con il **numero di maglia** e
+i giovani aggregati con `n=` **vuoto**: al Napoli sono **26 + 21**. È il numero
+di maglia a separarli, non una soglia di età o di valore inventata da noi.
+Verifica che chiude il cerchio: l'Inter esce con **25** numerati, cioè
+*esattamente* il `squad_size` ufficiale.
+
+### Come si combinano le due fonti
+
+| domanda | fonte | perché |
+|---|---|---|
+| **chi** è in rosa oggi | Wikipedia | sta al passo col mercato estivo; dichiara la sua data |
+| **quanto vale** ciascuno | dataset CC0 | Wikipedia non ha i valori |
+| **chi è disponibile** oggi | ❌ nessuna delle due | infortuni e squalifiche sono **stato quotidiano**: §4.2, cartella `giornaliero/` |
+
+Le due liste **non coincidono**, ed è informazione: chi c'è su Wikipedia e non
+nel dataset è un acquisto estivo (valore da recuperare); chi c'è nel dataset e
+non su Wikipedia è partito. Lo scarto va **letto**, non appianato.
+
+### Il risultato che conta: Wikipedia riempie proprio i buchi del dataset
+
+Delle **14** squadre che il dataset copre male (10 stantie + 4 assenti — tutte
+neopromosse), Wikipedia ne risolve **4**, e sono i casi peggiori:
+
+| squadra | rosa dal dataset | rosa da Wikipedia |
+|---|:--:|:--:|
+| Coventry City | **0** (assente) | **27** |
+| Frosinone Calcio | 1 | **30** |
+| Hull City | 7 | **27** |
+| AC Monza | 1 | **22** |
+
+Le altre 10 aspettano le Wikipedia locali. È il motivo per cui questa fonte
+vale: non aggiunge un decimale ai club che già conoscevamo, **riempie i vuoti**.
+
+### Che cosa resta aperto
+
+- **55 rose su 96** (le leghe non italiane): serve il passaggio alle Wikipedia
+  locali descritto sopra;
+- i **valori** dei nuovi acquisti mancano finché il dataset non aggiorna;
+- le rose che nessuna Wikipedia copre vanno risolte **a mano**, mai stimate;
+- «infortunato o squalificato oggi» non è in nessuna delle due fonti: è
+  esattamente il lavoro del livello giornaliero (§5, passo 4).
+
+---
+
 ## 4 · La lista COMPLETA dei dati
 
 Legenda — **tipo**: 📏 fatto misurato · 🧠 giudizio (LLM/modello) · 🔢 derivato
@@ -346,7 +445,7 @@ perde, poi il resto.
 |:--:|---|---|---|
 | **0** | **Importare il dataset CC0** (§3-bis) e costruirci sopra l'anagrafica | costa un `dataset_download`: è la versione **economica** di metà della lista (§1.3). Va fatto per primo perché dice quanto resta davvero da raccogliere | **subito** |
 | **1** | **Anagrafica di partenza** (§4.1) delle 5 leghe: rosa, valori, obiettivi, competizioni, stadi+coordinate | è la fotografia di **agosto**: i valori vengono riscritti, gli obiettivi dichiarati non si ripubblicano. ⚠️ dopo il passo 0 resta soprattutto ciò che il dataset **non** ha: obiettivi, liste UEFA, fuori-progetto | **prima del 15/8** |
-| **2** | **Scheletro giornaliero + meteo + quote** (già pronte) | la struttura immutabile dev'esistere prima del primo giorno utile | **prima del 15/8** |
+| **2** | ✅ **FATTO (Fase 122)** — scheletro giornaliero + meteo + quote | `scripts/raccolta_giornaliera.py` + cron giornaliero. Scrive `raccolta.json` e `fonti.json`; il meteo oltre l'orizzonte di 16 giorni è marcato `fuori_orizzonte`, non «mancante». Coordinate di **90 stadi su 94** in `_anagrafica/stadi.json` | fatto il 28/7 |
 | **3** | **Formazioni ufficiali a T−1h** | 🎯 il bersaglio della Fase 93; **timebox 2 ore** per la fonte, poi si ripiega sulle probabili | **prima del 15/8** |
 | **4** | Bollettino quotidiano dei **fatti** (infortuni, squalifiche, diffidati, convocazioni) | 🔴 in gran parte | dal 15/8 |
 | **5** | Livello **giudizi** (sentiment, rischio panchina, probabili) | serve il livello 4 come evidenza | settembre |

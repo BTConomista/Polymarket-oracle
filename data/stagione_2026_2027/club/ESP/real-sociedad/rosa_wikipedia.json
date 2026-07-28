@@ -1,0 +1,188 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Real Sociedad",
+ "lega": "la_liga",
+ "voce": "Real Madrid Club de Fútbol 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 29,
+ "rosa_prima_squadra_n": 29,
+ "rosa": [
+  {
+   "nome": "Thibaut Courtois",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Marc Cucurella",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Éder Militão",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Ibrahima Konaté",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Jude Bellingham",
+   "numero": 5,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Eduardo Camavinga",
+   "numero": 6,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Vinícius Júnior",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Federico Valverde",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "URY"
+  },
+  {
+   "nome": "Endrick",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Kylian Mbappé",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Rodrygo",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Trent Alexander-Arnold",
+   "numero": 12,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Andrij Lunin",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "UKR"
+  },
+  {
+   "nome": "Aurélien Tchouaméni",
+   "numero": 14,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Arda Güler",
+   "numero": 15,
+   "ruolo": "C",
+   "nazione": "TUR"
+  },
+  {
+   "nome": "Gonzalo García",
+   "numero": 16,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Raúl Asencio",
+   "numero": 17,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Álvaro Carreras",
+   "numero": 18,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Denzel Dumfries",
+   "numero": 19,
+   "ruolo": "D",
+   "nazione": "NED"
+  },
+  {
+   "nome": "Bernardo Silva",
+   "numero": 20,
+   "ruolo": "C",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Brahim Díaz",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Antonio Rüdiger",
+   "numero": 22,
+   "ruolo": "D",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Ferland Mendy",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Dean Huijsen",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Fran González",
+   "numero": 26,
+   "ruolo": "P",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Jorge Cestero",
+   "numero": 28,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Franco Mastantuono",
+   "numero": 30,
+   "ruolo": "C",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Manuel Ángel",
+   "numero": 37,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Thiago Pitarch",
+   "numero": 45,
+   "ruolo": "C",
+   "nazione": "ESP"
+  }
+ ]
+}

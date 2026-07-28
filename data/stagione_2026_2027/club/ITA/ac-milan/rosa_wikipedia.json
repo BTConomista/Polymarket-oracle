@@ -1,0 +1,212 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "AC Milan",
+ "lega": "serie_a",
+ "voce": "Associazione Calcio Milan 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Associazione_Calcio_Milan_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 33,
+ "rosa_prima_squadra_n": 30,
+ "rosa": [
+  {
+   "nome": "Pietro Terracciano",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Pervis Estupiñán",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "ECU"
+  },
+  {
+   "nome": "Samuele Ricci",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Koni De Winter",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Santiago Giménez",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "MEX"
+  },
+  {
+   "nome": "Ruben Loftus-Cheek",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Gonçalo Ramos",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Rafael Leão",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Christian Pulisic",
+   "numero": 11,
+   "ruolo": "C",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Adrien Rabiot",
+   "numero": 12,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Luka Modrić",
+   "numero": 14,
+   "ruolo": "C",
+   "nazione": "CRO"
+  },
+  {
+   "nome": "Mike Maignan",
+   "numero": 16,
+   "ruolo": "P",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Christopher Nkunku",
+   "numero": 18,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Youssouf Fofana",
+   "numero": 19,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Samuel Chukwueze",
+   "numero": 21,
+   "ruolo": "A",
+   "nazione": "NGA"
+  },
+  {
+   "nome": "Fikayo Tomori",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Zachary Athekame",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "CHE"
+  },
+  {
+   "nome": "David Odogu",
+   "numero": 27,
+   "ruolo": "D",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Christian Comotto",
+   "numero": 28,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ardon Jashari",
+   "numero": 30,
+   "ruolo": "C",
+   "nazione": "CHE"
+  },
+  {
+   "nome": "Strahinja Pavlović",
+   "numero": 31,
+   "ruolo": "D",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Davide Bartesaghi",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Mario Gila",
+   "numero": 34,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Matteo Gabbia",
+   "numero": 46,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Andrej Kostić",
+   "numero": 47,
+   "ruolo": "A",
+   "nazione": "MNE"
+  },
+  {
+   "nome": "Alexis Saelemaekers",
+   "numero": 56,
+   "ruolo": "C",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Alphadjo Cissé",
+   "numero": 70,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Francesco Camarda",
+   "numero": 73,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Yunus Musah",
+   "numero": 80,
+   "ruolo": "C",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Lorenzo Torriani",
+   "numero": 96,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ismaël Bennacer",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "DZA"
+  },
+  {
+   "nome": "Warren Bondo",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Kevin Zeroli",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  }
+ ]
+}

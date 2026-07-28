@@ -1,0 +1,296 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Udinese Calcio",
+ "lega": "serie_a",
+ "voce": "Società Sportiva Calcio Napoli 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Societ%C3%A0_Sportiva_Calcio_Napoli_2026-2027",
+ "aggiornata_al_dichiarato": "26 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 47,
+ "rosa_prima_squadra_n": 26,
+ "rosa": [
+  {
+   "nome": "Alex Meret",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Miguel Gutiérrez",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Alessandro Buongiorno",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Luca Marianucci",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Billy Gilmour",
+   "numero": 6,
+   "ruolo": "C",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "David Neres",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Scott McTominay",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "Romelu Lukaku",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Kevin De Bruyne",
+   "numero": 11,
+   "ruolo": "C",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Amir Rrahmani",
+   "numero": 13,
+   "ruolo": "D",
+   "nazione": "KOS"
+  },
+  {
+   "nome": "Nikita Contini",
+   "numero": 14,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Rafa Marín",
+   "numero": 16,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Mathías Olivera",
+   "numero": 17,
+   "ruolo": "D",
+   "nazione": "URY"
+  },
+  {
+   "nome": "Rasmus Højlund",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Matteo Politano",
+   "numero": 21,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Giovanni Di Lorenzo",
+   "numero": 22,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Giovane",
+   "numero": 23,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Antonio Vergara",
+   "numero": 26,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Alisson Santos",
+   "numero": 27,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Jesper Lindstrøm",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Pasquale Mazzocchi",
+   "numero": 30,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Sam Beukema",
+   "numero": 31,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Vanja Milinković-Savić",
+   "numero": 32,
+   "ruolo": "P",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Leonardo Spinazzola",
+   "numero": 37,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Stanislav Lobotka",
+   "numero": 68,
+   "ruolo": "C",
+   "nazione": "SVK"
+  },
+  {
+   "nome": "André-Frank Anguissa",
+   "numero": 99,
+   "ruolo": "C",
+   "nazione": "CMR"
+  },
+  {
+   "nome": "Raffaele Colella",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Giuseppe D'Angelo",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Alfonso De Luca",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Francesco Eletto",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Vittorio Gambardella",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Nosa Edward Obaretin",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Jens Cajuste",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Michael Folorunsho",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Gennaro Iaccarino",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lorenzo Russo",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Coli Saco",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "MLI"
+  },
+  {
+   "nome": "Salvatore Borriello",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Umberto Camelio",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Walid Cheddira",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Antonio Cioffi",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Noa Lang",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Lorenzo Lucca",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Cyril Ngonge",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Cristian Raggioli",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Emanuele Rao",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lorenzo Sgarbi",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  }
+ ]
+}

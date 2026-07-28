@@ -1,0 +1,224 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Newcastle",
+ "lega": "premier_league",
+ "voce": "Manchester United Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Manchester_United_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 35,
+ "rosa_prima_squadra_n": 34,
+ "rosa": [
+  {
+   "nome": "Altay Bayındır",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "TUR"
+  },
+  {
+   "nome": "Diogo Dalot",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Noussair Mazraoui",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Matthijs de Ligt",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Harry Maguire",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Lisandro Martínez",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Mason Mount",
+   "numero": 7,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Bruno Fernandes",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Matheus Cunha",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Joshua Zirkzee",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Karl Darlow",
+   "numero": 12,
+   "ruolo": "P",
+   "nazione": "WAL"
+  },
+  {
+   "nome": "Patrick Dorgu",
+   "numero": 13,
+   "ruolo": "D",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Leny Yoro",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Amad Diallo",
+   "numero": 16,
+   "ruolo": "A",
+   "nazione": "CIV"
+  },
+  {
+   "nome": "Andrey Santos",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Youri Tielemans",
+   "numero": 18,
+   "ruolo": "C",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Bryan Mbeumo",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "CMR"
+  },
+  {
+   "nome": "Tom Heaton",
+   "numero": 22,
+   "ruolo": "P",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Luke Shaw",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Manuel Ugarte",
+   "numero": 25,
+   "ruolo": "C",
+   "nazione": "URY"
+  },
+  {
+   "nome": "Ayden Heaven",
+   "numero": 26,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Benjamin Šeško",
+   "numero": 30,
+   "ruolo": "A",
+   "nazione": "SVN"
+  },
+  {
+   "nome": "Senne Lammens",
+   "numero": 31,
+   "ruolo": "P",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Chido Obi-Martin",
+   "numero": 32,
+   "ruolo": "A",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Tyler Fredricson",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Diego León",
+   "numero": 35,
+   "ruolo": "D",
+   "nazione": "PRY"
+  },
+  {
+   "nome": "Ethan Wheatley",
+   "numero": 36,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Kobbie Mainoo",
+   "numero": 37,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Jack Fletcher",
+   "numero": 38,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Tyler Fletcher",
+   "numero": 39,
+   "ruolo": "C",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "Harry Amass",
+   "numero": 41,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Toby Collyer",
+   "numero": 43,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Dan Gore",
+   "numero": 44,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Dermot Mee",
+   "numero": 45,
+   "ruolo": "P",
+   "nazione": "NIR"
+  },
+  {
+   "nome": "Marcus Rashford",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ENG"
+  }
+ ]
+}

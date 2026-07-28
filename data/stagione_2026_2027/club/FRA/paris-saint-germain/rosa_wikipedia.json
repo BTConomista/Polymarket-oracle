@@ -1,0 +1,170 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Paris Saint-Germain",
+ "lega": "ligue_1",
+ "voce": "Paris Saint-Germain Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Paris_Saint-Germain_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 26,
+ "rosa_prima_squadra_n": 22,
+ "rosa": [
+  {
+   "nome": "Achraf Hakimi",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Lucas Beraldo",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Marquinhos",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Illja Zabarnyj",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "UKR"
+  },
+  {
+   "nome": "Khvicha K'varatskhelia",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "GEO"
+  },
+  {
+   "nome": "Fabián Ruiz",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Ousmane Dembélé",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Désiré Doué",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Alessandro Longoni",
+   "numero": 16,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Vitinha",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Lucas Hernández",
+   "numero": 21,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Senny Mayulu",
+   "numero": 24,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Nuno Mendes",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Dro Fernández",
+   "numero": 27,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Bradley Barcola",
+   "numero": 29,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Lucas Chevalier",
+   "numero": 30,
+   "ruolo": "P",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Warren Zaïre-Emery",
+   "numero": 33,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Matvej Safonov",
+   "numero": 39,
+   "ruolo": "P",
+   "nazione": "RUS"
+  },
+  {
+   "nome": "Quentin Ndjantou",
+   "numero": 47,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Ibrahim Mbaye",
+   "numero": 49,
+   "ruolo": "A",
+   "nazione": "SEN"
+  },
+  {
+   "nome": "Willian Pacho",
+   "numero": 51,
+   "ruolo": "D",
+   "nazione": "ECU"
+  },
+  {
+   "nome": "João Neves",
+   "numero": 87,
+   "ruolo": "C",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Renato Sanches",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Randal Kolo Muani",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Yoram Zague",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Naoufel El Hannach",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "MAR"
+  }
+ ]
+}

@@ -1,0 +1,194 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Espanyol Barcelona",
+ "lega": "la_liga",
+ "voce": "Futbol Club Barcelona 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Futbol_Club_Barcelona_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 30,
+ "rosa_prima_squadra_n": 20,
+ "rosa": [
+  {
+   "nome": "Alejandro Balde",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Ronald Araújo",
+   "numero": 4,
+   "ruolo": null,
+   "nazione": "URY"
+  },
+  {
+   "nome": "Pau Cubarsí",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Gavi",
+   "numero": 6,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Ferrán Torres",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Pedri",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Lamine Yamal",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Raphinha",
+   "numero": 11,
+   "ruolo": "FW",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Joan Garcia",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Andreas Christensen",
+   "numero": 15,
+   "ruolo": "DF",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Fermín López",
+   "numero": 16,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Marc Casadó",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Gerard Martín",
+   "numero": 18,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Roony Bardghji",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Dani Olmo",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Frenkie de Jong",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Marc Bernal",
+   "numero": 22,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Jules Koundé",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Eric García",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Wojciech Szczęsny",
+   "numero": 25,
+   "ruolo": "P",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Toni Fernández",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Xavi Espart",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Tommy Marqués",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Marc-André ter Stegen",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Anthony Gordon",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Álvaro Cortés",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Héctor Fort",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Diego Kochen",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Áron Yaakobishvili",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "HUN"
+  },
+  {
+   "nome": "Karim Adeyemi",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "DEU"
+  }
+ ]
+}

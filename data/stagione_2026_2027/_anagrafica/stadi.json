@@ -1,0 +1,826 @@
+{
+ "_fonte": "it.wikipedia.org (CC BY-SA), prop=coordinates",
+ "_nota": "le coordinate servono al meteo previsto. Gli stadi mancanti sono elencati e vanno risolti a mano: NON stimare una posizione, un meteo sulla città sbagliata è peggio di nessun meteo.",
+ "generato_utc": "2026-07-28T18:59:34.745240+00:00",
+ "stadi_n": 90,
+ "mancanti": [
+  "SV 07 Elversberg (nessuno stadio in anagrafica)",
+  "Coventry City (nessuno stadio in anagrafica)",
+  "Racing Santander (nessuno stadio in anagrafica)",
+  "Le Mans FC (nessuno stadio in anagrafica)"
+ ],
+ "stadi": {
+  "BayArena": {
+   "lat": 51.038256,
+   "lon": 7.002206,
+   "voce": "BayArena",
+   "squadre": [
+    "Bayer Leverkusen"
+   ],
+   "capienza": 30210
+  },
+  "Allianz Arena": {
+   "lat": 48.218775,
+   "lon": 11.624753,
+   "voce": "Allianz Arena",
+   "squadre": [
+    "Bayern Munich"
+   ],
+   "capienza": 75000
+  },
+  "SIGNAL IDUNA PARK": {
+   "lat": 51.4925,
+   "lon": 7.451667,
+   "voce": "Westfalenstadion",
+   "squadre": [
+    "Borussia Dortmund"
+   ],
+   "capienza": 81365
+  },
+  "Stadion im Borussia-Park": {
+   "lat": 51.174583,
+   "lon": 6.385464,
+   "voce": "Stadion im Borussia-Park",
+   "squadre": [
+    "Borussia Monchengladbach"
+   ],
+   "capienza": 54042
+  },
+  "Deutsche Bank Park": {
+   "lat": 50.068611,
+   "lon": 8.645278,
+   "voce": "Waldstadion (Francoforte sul Meno)",
+   "squadre": [
+    "Eintracht Frankfurt"
+   ],
+   "capienza": 59500
+  },
+  "WWK ARENA": {
+   "lat": 48.323321,
+   "lon": 10.885926,
+   "voce": "WWK Arena",
+   "squadre": [
+    "FC Augsburg"
+   ],
+   "capienza": 30660
+  },
+  "Mewa Arena": {
+   "lat": 49.984167,
+   "lon": 8.224167,
+   "voce": "Mewa Arena",
+   "squadre": [
+    "FSV Mainz"
+   ],
+   "capienza": 33305
+  },
+  "Volksparkstadion": {
+   "lat": 53.586944,
+   "lon": 9.898611,
+   "voce": "Volksparkstadion",
+   "squadre": [
+    "Hamburger SV"
+   ],
+   "capienza": 57000
+  },
+  "PreZero Arena": {
+   "lat": 46.081603,
+   "lon": 13.200136,
+   "voce": "Stadio Friuli",
+   "squadre": [
+    "Hoffenheim"
+   ],
+   "capienza": 30150
+  },
+  "RheinEnergieSTADION": {
+   "lat": 50.933611,
+   "lon": 6.875,
+   "voce": "RheinEnergieStadion",
+   "squadre": [
+    "Köln"
+   ],
+   "capienza": 50000
+  },
+  "Red Bull Arena": {
+   "lat": 51.345833,
+   "lon": 12.348056,
+   "voce": "Red Bull Arena (Lipsia)",
+   "squadre": [
+    "RB Leipzig"
+   ],
+   "capienza": 47069
+  },
+  "Europa-Park Stadion": {
+   "lat": 48.021536,
+   "lon": 7.830006,
+   "voce": "Europa-Park Stadion",
+   "squadre": [
+    "SC Freiburg"
+   ],
+   "capienza": 34700
+  },
+  "Home Deluxe Arena": {
+   "lat": 51.555556,
+   "lon": -0.279722,
+   "voce": "Stadio di Wembley (1923)",
+   "squadre": [
+    "SC Paderborn 07"
+   ],
+   "capienza": 15000
+  },
+  "Veltins-Arena": {
+   "lat": 51.554503,
+   "lon": 7.067589,
+   "voce": "Veltins-Arena",
+   "squadre": [
+    "Schalke 04"
+   ],
+   "capienza": 62271
+  },
+  "Stadion An der Alten Försterei": {
+   "lat": 52.457222,
+   "lon": 13.568056,
+   "voce": "Stadio An der Alten Försterei",
+   "squadre": [
+    "Union Berlin"
+   ],
+   "capienza": 22012
+  },
+  "MHPArena Stuttgart": {
+   "lat": 48.792222,
+   "lon": 9.231944,
+   "voce": "MHPArena",
+   "squadre": [
+    "VfB Stuttgart"
+   ],
+   "capienza": 60449
+  },
+  "Weserstadion": {
+   "lat": 53.066389,
+   "lon": 8.8375,
+   "voce": "Weserstadion",
+   "squadre": [
+    "Werder Bremen"
+   ],
+   "capienza": 41800
+  },
+  "Vitality Stadium": {
+   "lat": 50.735278,
+   "lon": -1.838333,
+   "voce": "Dean Court",
+   "squadre": [
+    "AFC Bournemouth"
+   ],
+   "capienza": 11307
+  },
+  "Emirates Stadium": {
+   "lat": 51.555,
+   "lon": -0.108333,
+   "voce": "Emirates Stadium",
+   "squadre": [
+    "Arsenal FC"
+   ],
+   "capienza": 60704
+  },
+  "Villa Park": {
+   "lat": 52.509167,
+   "lon": -1.884722,
+   "voce": "Villa Park",
+   "squadre": [
+    "Aston Villa"
+   ],
+   "capienza": 43205
+  },
+  "Gtech Community Stadium": {
+   "lat": 51.490825,
+   "lon": -0.2887,
+   "voce": "Brentford Community Stadium",
+   "squadre": [
+    "Brentford FC"
+   ],
+   "capienza": 17250
+  },
+  "AMEX Stadium": {
+   "lat": 50.861822,
+   "lon": -0.083278,
+   "voce": "Falmer Stadium",
+   "squadre": [
+    "Brighton & Hove Albion"
+   ],
+   "capienza": 31876
+  },
+  "Stamford Bridge": {
+   "lat": 51.481667,
+   "lon": -0.191111,
+   "voce": "Stamford Bridge",
+   "squadre": [
+    "Chelsea FC"
+   ],
+   "capienza": 41631
+  },
+  "Selhurst Park": {
+   "lat": 51.398333,
+   "lon": -0.085556,
+   "voce": "Selhurst Park",
+   "squadre": [
+    "Crystal Palace"
+   ],
+   "capienza": 25486
+  },
+  "Hill Dickinson Stadium": {
+   "lat": 53.425079,
+   "lon": -3.002785,
+   "voce": "Hill Dickinson Stadium",
+   "squadre": [
+    "Everton FC"
+   ],
+   "capienza": 52769
+  },
+  "Craven Cottage": {
+   "lat": 51.475,
+   "lon": -0.221667,
+   "voce": "Craven Cottage",
+   "squadre": [
+    "Fulham FC"
+   ],
+   "capienza": 29589
+  },
+  "MKM Stadium": {
+   "lat": 53.746111,
+   "lon": -0.367778,
+   "voce": "MKM Stadium",
+   "squadre": [
+    "Hull City"
+   ],
+   "capienza": 25586
+  },
+  "Portman Road": {
+   "lat": 52.055,
+   "lon": 1.145278,
+   "voce": "Portman Road",
+   "squadre": [
+    "Ipswich Town"
+   ],
+   "capienza": 30056
+  },
+  "Elland Road": {
+   "lat": 53.777778,
+   "lon": -1.572222,
+   "voce": "Elland Road",
+   "squadre": [
+    "Leeds United"
+   ],
+   "capienza": 37890
+  },
+  "Anfield": {
+   "lat": 53.430833,
+   "lon": -2.960833,
+   "voce": "Anfield",
+   "squadre": [
+    "Liverpool"
+   ],
+   "capienza": 61276
+  },
+  "Etihad Stadium": {
+   "lat": 53.483056,
+   "lon": -2.200278,
+   "voce": "City of Manchester Stadium",
+   "squadre": [
+    "Manchester City"
+   ],
+   "capienza": 61000
+  },
+  "Old Trafford": {
+   "lat": 53.463056,
+   "lon": -2.291389,
+   "voce": "Old Trafford",
+   "squadre": [
+    "Manchester United"
+   ],
+   "capienza": 74879
+  },
+  "St James' Park": {
+   "lat": 54.975556,
+   "lon": -1.621667,
+   "voce": "St James' Park",
+   "squadre": [
+    "Newcastle"
+   ],
+   "capienza": 52258
+  },
+  "The City Ground": {
+   "lat": 52.94,
+   "lon": -1.132778,
+   "voce": "City Ground",
+   "squadre": [
+    "Nottingham Forest"
+   ],
+   "capienza": 30404
+  },
+  "Stadium of Light": {
+   "lat": 54.914429,
+   "lon": -1.388173,
+   "voce": "Stadium of Light",
+   "squadre": [
+    "Sunderland AFC"
+   ],
+   "capienza": 48707
+  },
+  "Tottenham Hotspur Stadium": {
+   "lat": 51.604444,
+   "lon": -0.066389,
+   "voce": "Tottenham Hotspur Stadium",
+   "squadre": [
+    "Tottenham Hotspur"
+   ],
+   "capienza": 62850
+  },
+  "San Mamés": {
+   "lat": 43.264205,
+   "lon": -2.949369,
+   "voce": "Stadio di San Mamés (2013)",
+   "squadre": [
+    "Athletic Bilbao"
+   ],
+   "capienza": 53289
+  },
+  "Riyadh Air Metropolitano": {
+   "lat": 40.436111,
+   "lon": -3.599444,
+   "voce": "Stadio Metropolitano (Madrid)",
+   "squadre": [
+    "Atletico Madrid"
+   ],
+   "capienza": 70460
+  },
+  "El Sadar": {
+   "lat": 42.796667,
+   "lon": -1.636944,
+   "voce": "Stadio El Sadar",
+   "squadre": [
+    "CA Osasuna"
+   ],
+   "capienza": 23576
+  },
+  "Abanca Balaídos": {
+   "lat": 42.211861,
+   "lon": -8.740328,
+   "voce": "Stadio Balaídos",
+   "squadre": [
+    "Celta Vigo"
+   ],
+   "capienza": 22803
+  },
+  "Mendizorroza": {
+   "lat": 42.837111,
+   "lon": -2.688044,
+   "voce": "Stadio di Mendizorrotza",
+   "squadre": [
+    "Deportivo Alaves"
+   ],
+   "capienza": 19840
+  },
+  "Manuel Martínez Valero": {
+   "lat": 38.266944,
+   "lon": -0.663333,
+   "voce": "Stadio Manuel Martínez Valero",
+   "squadre": [
+    "Elche CF"
+   ],
+   "capienza": 31388
+  },
+  "RCDE Stadium": {
+   "lat": 41.347861,
+   "lon": 2.075667,
+   "voce": "RCDE Stadium",
+   "squadre": [
+    "Espanyol Barcelona"
+   ],
+   "capienza": 37776
+  },
+  "Spotify Camp Nou": {
+   "lat": 41.380833,
+   "lon": 2.122778,
+   "voce": "Camp Nou",
+   "squadre": [
+    "FC Barcelona"
+   ],
+   "capienza": 62657
+  },
+  "Coliseum": {
+   "lat": 34.014167,
+   "lon": -118.287778,
+   "voce": "Los Angeles Memorial Coliseum",
+   "squadre": [
+    "Getafe CF"
+   ],
+   "capienza": 16800
+  },
+  "Ciutat de València": {
+   "lat": 39.494722,
+   "lon": -0.364167,
+   "voce": "Stadio Ciutat de València",
+   "squadre": [
+    "Levante UD"
+   ],
+   "capienza": 26354
+  },
+  "La Rosaleda": {
+   "lat": 36.734092,
+   "lon": -4.426422,
+   "voce": "Stadio La Rosaleda",
+   "squadre": [
+    "Malaga CF"
+   ],
+   "capienza": 30044
+  },
+  "Estadio de Vallecas": {
+   "lat": 40.436111,
+   "lon": -3.599444,
+   "voce": "Stadio Metropolitano (Madrid)",
+   "squadre": [
+    "Rayo Vallecano"
+   ],
+   "capienza": 14708
+  },
+  "Abanca Riazor": {
+   "lat": 43.368667,
+   "lon": -8.417372,
+   "voce": "Stadio Riazor",
+   "squadre": [
+    "RC Deportivo De La Coruna"
+   ],
+   "capienza": 32912
+  },
+  "La Cartuja": {
+   "lat": 37.417236,
+   "lon": -6.004564,
+   "voce": "Stadio della Cartuja",
+   "squadre": [
+    "Real Betis"
+   ],
+   "capienza": 71374
+  },
+  "Santiago Bernabéu": {
+   "lat": 40.45306,
+   "lon": -3.68835,
+   "voce": "Stadio Santiago Bernabéu",
+   "squadre": [
+    "Real Madrid"
+   ],
+   "capienza": 83186
+  },
+  "Anoeta": {
+   "lat": 43.15,
+   "lon": -2.0667,
+   "voce": "Anoeta",
+   "squadre": [
+    "Real Sociedad"
+   ],
+   "capienza": 40000
+  },
+  "Ramón Sánchez-Pizjuán": {
+   "lat": 37.383878,
+   "lon": -5.970467,
+   "voce": "Stadio Ramón Sánchez-Pizjuán",
+   "squadre": [
+    "Sevilla FC"
+   ],
+   "capienza": 43883
+  },
+  "Mestalla": {
+   "lat": 39.474722,
+   "lon": -0.358333,
+   "voce": "Stadio di Mestalla",
+   "squadre": [
+    "Valencia CF"
+   ],
+   "capienza": 49430
+  },
+  "La Cerámica": {
+   "lat": 39.944167,
+   "lon": -0.103611,
+   "voce": "Stadio della Ceramica",
+   "squadre": [
+    "Villarreal CF"
+   ],
+   "capienza": 23500
+  },
+  "Stade Océane": {
+   "lat": 49.4988,
+   "lon": 0.1697,
+   "voce": "Stadio Océane",
+   "squadre": [
+    "AC Le Havre"
+   ],
+   "capienza": 25178
+  },
+  "Stade de l'Abbé-Deschamps": {
+   "lat": 47.78672,
+   "lon": 3.58871,
+   "voce": "Stadio Abbé-Deschamps",
+   "squadre": [
+    "AJ Auxerre"
+   ],
+   "capienza": 18541
+  },
+  "Stade Raymond-Kopa": {
+   "lat": 47.45905,
+   "lon": -0.53163,
+   "voce": "Stadio Raymond Kopa",
+   "squadre": [
+    "Angers"
+   ],
+   "capienza": 19350
+  },
+  "Stade Louis-II": {
+   "lat": 43.727778,
+   "lon": 7.415556,
+   "voce": "Stadio Louis II",
+   "squadre": [
+    "AS Monaco"
+   ],
+   "capienza": 18525
+  },
+  "Stade de l'Aube": {
+   "lat": 48.30616,
+   "lon": 4.0982,
+   "voce": "Stade de l'Aube",
+   "squadre": [
+    "ES Troyes AC"
+   ],
+   "capienza": 21877
+  },
+  "Stade du Moustoir": {
+   "lat": 47.74869,
+   "lon": -3.36929,
+   "voce": "Stadio Yves Allainmat",
+   "squadre": [
+    "FC Lorient"
+   ],
+   "capienza": 16787
+  },
+  "Stadium Municipal": {
+   "lat": 43.301378,
+   "lon": -1.973617,
+   "voce": "Stadio di Anoeta",
+   "squadre": [
+    "FC Toulouse"
+   ],
+   "capienza": 33150
+  },
+  "Decathlon Arena-Stade Pierre-Mauroy": {
+   "lat": 50.611962,
+   "lon": 3.130631,
+   "voce": "Stadio Pierre Mauroy",
+   "squadre": [
+    "Lille OSC"
+   ],
+   "capienza": 50186
+  },
+  "Allianz Riviera": {
+   "lat": 43.70513,
+   "lon": 7.19262,
+   "voce": "Allianz Riviera",
+   "squadre": [
+    "OGC Nice"
+   ],
+   "capienza": 36178
+  },
+  "Groupama Stadium": {
+   "lat": 47.475278,
+   "lon": 19.096111,
+   "voce": "Groupama Arena",
+   "squadre": [
+    "Olympique Lyon"
+   ],
+   "capienza": 59186
+  },
+  "Orange Vélodrome": {
+   "lat": 43.269241,
+   "lon": 5.394907,
+   "voce": "Stadio Vélodrome",
+   "squadre": [
+    "Olympique Marseille"
+   ],
+   "capienza": 67394
+  },
+  "Stade Jean Bouin": {
+   "lat": 48.8432,
+   "lon": 2.25293,
+   "voce": "Stadio Jean Bouin",
+   "squadre": [
+    "Paris FC"
+   ],
+   "capienza": 19904
+  },
+  "Parc des Princes": {
+   "lat": 48.84145,
+   "lon": 2.25305,
+   "voce": "Parco dei Principi",
+   "squadre": [
+    "Paris Saint-Germain"
+   ],
+   "capienza": 48583
+  },
+  "Stade Bollaert-Delelis": {
+   "lat": 50.4329,
+   "lon": 2.81491,
+   "voce": "Stadio Bollaert-Delelis",
+   "squadre": [
+    "RC Lens"
+   ],
+   "capienza": 38223
+  },
+  "Stade Francis-Le Blé": {
+   "lat": 48.40293,
+   "lon": -4.46148,
+   "voce": "Stadio Francis Le Blé",
+   "squadre": [
+    "Stade Brest 29"
+   ],
+   "capienza": 15220
+  },
+  "Roazhon Park": {
+   "lat": 48.10743,
+   "lon": -1.71282,
+   "voce": "Roazhon Park",
+   "squadre": [
+    "Stade Rennais FC"
+   ],
+   "capienza": 29778
+  },
+  "Stade de la Meinau": {
+   "lat": 48.55942,
+   "lon": 7.75738,
+   "voce": "Stadio della Meinau",
+   "squadre": [
+    "Strasbourg Alsace"
+   ],
+   "capienza": 32000
+  },
+  "Giuseppe Meazza": {
+   "lat": 45.478056,
+   "lon": 9.123889,
+   "voce": "Stadio Giuseppe Meazza",
+   "squadre": [
+    "AC Milan",
+    "Inter Milano"
+   ],
+   "capienza": 75923
+  },
+  "Brianteo": {
+   "lat": 45.582778,
+   "lon": 9.308056,
+   "voce": "Stadio Brianteo",
+   "squadre": [
+    "AC Monza"
+   ],
+   "capienza": 17102
+  },
+  "Artemio Franchi": {
+   "lat": 43.780822,
+   "lon": 11.282258,
+   "voce": "Stadio Artemio Franchi",
+   "squadre": [
+    "ACF Fiorentina"
+   ],
+   "capienza": 43147
+  },
+  "Olimpico di Roma": {
+   "lat": 41.933889,
+   "lon": 12.454722,
+   "voce": "Stadio Olimpico (Roma)",
+   "squadre": [
+    "AS Roma",
+    "Lazio Rome"
+   ],
+   "capienza": 70634
+  },
+  "New Balance Arena - Bergamo": {
+   "lat": 45.708889,
+   "lon": 9.680833,
+   "voce": "Stadio di Bergamo",
+   "squadre": [
+    "Atalanta BC"
+   ],
+   "capienza": 24950
+  },
+  "Stadio Renato Dall’Ara": {
+   "lat": 44.4922,
+   "lon": 11.3098,
+   "voce": "Stadio Renato Dall'Ara",
+   "squadre": [
+    "Bologna FC"
+   ],
+   "capienza": 36462
+  },
+  "Unipol Domus": {
+   "lat": 39.199694,
+   "lon": 9.137417,
+   "voce": "Unipol Domus",
+   "squadre": [
+    "Cagliari Calcio"
+   ],
+   "capienza": 16416
+  },
+  "Giuseppe Sinigaglia": {
+   "lat": 45.813889,
+   "lon": 9.072222,
+   "voce": "Stadio Giuseppe Sinigaglia",
+   "squadre": [
+    "Como 1907"
+   ],
+   "capienza": 12039
+  },
+  "Benito Stirpe": {
+   "lat": 41.63426,
+   "lon": 13.321866,
+   "voce": "Stadio Benito Stirpe",
+   "squadre": [
+    "Frosinone Calcio"
+   ],
+   "capienza": 16227
+  },
+  "Luigi Ferraris": {
+   "lat": 44.416431,
+   "lon": 8.952428,
+   "voce": "Stadio Luigi Ferraris",
+   "squadre": [
+    "Genoa CFC"
+   ],
+   "capienza": 34901
+  },
+  "Allianz Stadium": {
+   "lat": 40.813611,
+   "lon": -74.074444,
+   "voce": "MetLife Stadium",
+   "squadre": [
+    "Juventus Turin"
+   ],
+   "capienza": 41507
+  },
+  "Ennio Tardini": {
+   "lat": 44.794917,
+   "lon": 10.338444,
+   "voce": "Stadio Ennio Tardini",
+   "squadre": [
+    "Parma Calcio"
+   ],
+   "capienza": 22352
+  },
+  "Mapei Stadium - Città del Tricolore": {
+   "lat": 44.714722,
+   "lon": 10.649722,
+   "voce": "Mapei Stadium - Città del Tricolore",
+   "squadre": [
+    "Sassuolo Calcio"
+   ],
+   "capienza": 21584
+  },
+  "Diego Armando Maradona": {
+   "lat": 40.827967,
+   "lon": 14.193008,
+   "voce": "Stadio Diego Armando Maradona (Napoli)",
+   "squadre": [
+    "SSC Napoli"
+   ],
+   "capienza": 54726
+  },
+  "Olimpico Grande Torino": {
+   "lat": 45.041667,
+   "lon": 7.65,
+   "voce": "Stadio Olimpico Grande Torino",
+   "squadre": [
+    "Torino FC"
+   ],
+   "capienza": 28177
+  },
+  "Bluenergy Stadium": {
+   "lat": 46.081603,
+   "lon": 13.200136,
+   "voce": "Stadio Friuli",
+   "squadre": [
+    "Udinese Calcio"
+   ],
+   "capienza": 25144
+  },
+  "Ettore Giardiniero": {
+   "lat": 40.365278,
+   "lon": 18.208889,
+   "voce": "Stadio Via del mare",
+   "squadre": [
+    "US Lecce"
+   ],
+   "capienza": 31559
+  },
+  "Pier Luigi Penzo": {
+   "lat": 45.427761,
+   "lon": 12.363731,
+   "voce": "Stadio Pier Luigi Penzo",
+   "squadre": [
+    "Venezia FC"
+   ],
+   "capienza": 12048
+  }
+ }
+}

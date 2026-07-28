@@ -1,0 +1,170 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "AC Monza",
+ "lega": "serie_a",
+ "voce": "Associazione Calcio Monza 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Associazione_Calcio_Monza_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 26,
+ "rosa_prima_squadra_n": 22,
+ "rosa": [
+  {
+   "nome": "Semuel Pizzignacco",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Arvid Brorsson",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Lorenzo Lucchesi",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Valentin Antov",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "BGR"
+  },
+  {
+   "nome": "Patrick Cutrone",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Omari Forson",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Pedro Obiang",
+   "numero": 14,
+   "ruolo": "C",
+   "nazione": "GNQ"
+  },
+  {
+   "nome": "Filippo Delli Carri",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Keita Baldé",
+   "numero": 17,
+   "ruolo": "A",
+   "nazione": "SEN"
+  },
+  {
+   "nome": "Samuele Birindelli",
+   "numero": 19,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Demba Thiam",
+   "numero": 20,
+   "ruolo": "P",
+   "nazione": "SEN"
+  },
+  {
+   "nome": "Leonardo Colombo",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Nicolas Galazzi",
+   "numero": 23,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Adam Bakoune",
+   "numero": 24,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Patrick Ciurria",
+   "numero": 26,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Simone Capolupo",
+   "numero": 27,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Andrea Colpani",
+   "numero": 28,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Matteo Pessina",
+   "numero": 32,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Andrea Petagna",
+   "numero": 37,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Aljaž Strajnar",
+   "numero": 43,
+   "ruolo": "P",
+   "nazione": "SVN"
+  },
+  {
+   "nome": "Andrea Carboni",
+   "numero": 44,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Dany Mota",
+   "numero": 47,
+   "ruolo": "A",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Kevin Maussi Martins",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Manga Foe Ondoa",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Solomon Loubao",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Eddy Kouadio",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  }
+ ]
+}

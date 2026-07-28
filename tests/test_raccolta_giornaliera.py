@@ -1,0 +1,132 @@
+"""Test dello scheletro giornaliero e delle rose da Wikipedia (Fasi 121/122).
+
+Le due cose che qui possono rompersi in silenzio, e che i test presidiano:
+
+1. **«zero raccolte» deve restare distinguibile da «non ha girato»** — la
+   lezione della Fase 118, che qui costa di più: il dato pre-partita non si
+   recupera. Perciò il meteo che *non esiste ancora* (partita oltre l'orizzonte
+   di previsione) non è un errore, e il registro deve annotare anche i fetch
+   falliti;
+2. **il conteggio della rosa** — al Napoli la voce elenca 26 tesserati con
+   numero e 21 giovani aggregati senza: contarli insieme era il difetto che
+   rendeva `rosa_n` illeggibile (Fase 120).
+"""
+from __future__ import annotations
+
+import datetime as dt
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+
+from fetch_rose_wikipedia import (  # noqa: E402
+    _pulisci_data, _titolo_plausibile, leggi_rosa)
+from raccolta_giornaliera import (  # noqa: E402
+    METEO_ORIZZONTE_GIORNI, Registro, meteo_partita)
+
+
+# --- il meteo che non esiste ancora NON è un guasto -----------------------
+
+def _fra(giorni: int) -> dt.datetime:
+    return dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=giorni, hours=2)
+
+
+def test_partita_oltre_l_orizzonte_non_e_un_errore():
+    """Misurato il 28/07/2026: open-meteo copre 16 giorni e oltre risponde
+    400. Una partita a 18 giorni non ha previsione perché la previsione **non
+    esiste**, non perché il fetch è fallito: va scritto come tale, o fra mesi
+    nessuno saprà distinguere i due casi."""
+    reg = Registro()
+    esito = meteo_partita(reg, 45.47, 9.12, _fra(METEO_ORIZZONTE_GIORNI + 2))
+    assert esito["stato"] == "fuori_orizzonte"
+    assert esito["giorni_mancanti"] > METEO_ORIZZONTE_GIORNI
+    assert reg.voci == [], "non deve nemmeno chiamare l'API: sa già che non c'è"
+
+
+def test_dentro_l_orizzonte_il_fetch_si_tenta():
+    """L'altra metà: dentro l'orizzonte la richiesta si fa davvero. Senza
+    questo, un bug che mettesse tutto «fuori orizzonte» non lo vedrebbe
+    nessuno — il raccoglitore resterebbe verde e vuoto per sempre."""
+    reg = Registro()
+    chiamate = []
+    reg.get = lambda url, **kw: chiamate.append(url) or None   # type: ignore
+    meteo_partita(reg, 45.47, 9.12, _fra(1))
+    assert len(chiamate) == 1 and "open-meteo" in chiamate[0]
+
+
+# --- il registro delle fonti ---------------------------------------------
+
+def test_il_registro_annota_anche_i_fallimenti():
+    """`fonti.json` esiste per distinguere «non è successo niente» da «non ha
+    girato»: se annotasse solo i successi, un giorno di API morta sarebbe
+    indistinguibile da un giorno tranquillo."""
+    reg = Registro()
+    assert reg.get("https://esempio.invalido/x", timeout=2) is None
+    assert len(reg.voci) == 1 and reg.falliti == 1
+    voce = reg.voci[0]
+    assert voce["esito"] != "ok" and "quando_utc" in voce and "durata_s" in voce
+
+
+# --- la rosa: numerati vs giovani aggregati -------------------------------
+
+WIKITEXT = """
+== Rosa ==
+''Rosa e numerazione aggiornate al 26 luglio 2026.''
+{{Calciatore in rosa/inizio}}
+{{Calciatore in rosa|n=1|nazione=ITA|nome=[[Alex Meret]]|ruolo=P}}
+{{Calciatore in rosa|n=3|nazione=ESP|nome=[[Miguel Gutiérrez (calciatore 2001)|Miguel Gutiérrez]]|ruolo=D}}
+{{Calciatore in rosa|n=|nazione=ITA|nome=Raffaele Colella|ruolo=D}}
+{{Calciatore in rosa/fine}}
+"""
+
+
+def test_legge_numero_ruolo_e_nazione():
+    rosa = leggi_rosa(WIKITEXT)
+    assert len(rosa) == 3
+    assert rosa[0] == {"nome": "Alex Meret", "numero": 1, "ruolo": "P", "nazione": "ITA"}
+
+
+def test_il_wikilink_con_disambigua_da_il_nome_leggibile():
+    """`[[Miguel Gutiérrez (calciatore 2001)|Miguel Gutiérrez]]` deve dare il
+    nome visualizzato, non il titolo della voce con la disambigua: è la stringa
+    su cui si farà il join con le altre fonti."""
+    assert leggi_rosa(WIKITEXT)[1]["nome"] == "Miguel Gutiérrez"
+
+
+def test_il_giovane_aggregato_ha_numero_None():
+    """Il discrimine prima squadra / primavera è il numero di maglia, ed è un
+    dato della fonte, non una soglia inventata da noi."""
+    rosa = leggi_rosa(WIKITEXT)
+    assert rosa[2]["numero"] is None
+    assert sum(1 for g in rosa if g["numero"] is not None) == 2
+
+
+# --- la voce giusta, non la competizione ---------------------------------
+
+def test_scarta_la_pagina_della_competizione():
+    """Cercando «Paris Saint-Germain 2026-2027» il primo risultato era *UEFA
+    Champions League 2026-2027*: contiene la stagione e nessuna rosa."""
+    assert not _titolo_plausibile("UEFA Champions League 2026-2027",
+                                  ["Paris Saint-Germain"])
+    assert not _titolo_plausibile("Serie A 2026-2027", ["Inter Milan"])
+
+
+def test_accetta_la_voce_del_club():
+    assert _titolo_plausibile("Football Club Internazionale Milano 2026-2027",
+                              ["Inter Milan", "Inter Milano"])
+    assert _titolo_plausibile("Real Madrid Club de Fútbol 2026-2027",
+                              ["Real Madrid"])
+
+
+def test_serve_la_stagione_giusta():
+    """Una voce di un'altra stagione dello stesso club non va bene: sarebbe la
+    rosa dell'anno scorso, cioè un dato sbagliato che sembra giusto."""
+    assert not _titolo_plausibile("Football Club Internazionale Milano 2025-2026",
+                                  ["Inter Milano"])
+
+
+def test_pulisce_la_data_dichiarata():
+    assert _pulisci_data("26 luglio 2026''") == "26 luglio 2026"
+    assert _pulisci_data("13 luglio 2026))") == "13 luglio 2026"
+    assert _pulisci_data("{{data|18|07|2026}}") == "18/07/2026"
+    assert _pulisci_data(None) is None

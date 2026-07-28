@@ -1,0 +1,206 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "RC Lens",
+ "lega": "ligue_1",
+ "voce": "Racing Club de Lens 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Racing_Club_de_Lens_2026-2027",
+ "aggiornata_al_dichiarato": "28 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 32,
+ "rosa_prima_squadra_n": 29,
+ "rosa": [
+  {
+   "nome": "Régis Gurtner",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Ruben Aguilar",
+   "numero": 2,
+   "ruolo": "DF",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Maik Nawrocki",
+   "numero": 3,
+   "ruolo": "DF",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Nidal Čelik",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "BIH"
+  },
+  {
+   "nome": "Andrija Bulatović",
+   "numero": 5,
+   "ruolo": "C",
+   "nazione": "MNE"
+  },
+  {
+   "nome": "Samson Baidoo",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "AUT"
+  },
+  {
+   "nome": "Florian Sotoca",
+   "numero": 7,
+   "ruolo": "FW",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Mamadou Sangare",
+   "numero": 8,
+   "ruolo": "MF",
+   "nazione": "MLI"
+  },
+  {
+   "nome": "Thorgan Hazard",
+   "numero": 9,
+   "ruolo": "FW",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Florian Thauvin",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Odsonne Édouard",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Matthieu Udol",
+   "numero": 14,
+   "ruolo": "DF",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Mathieu Gorgelin",
+   "numero": 16,
+   "ruolo": "GK",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Rayan Fofana",
+   "numero": 18,
+   "ruolo": "FW",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Abdallah Sima",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "SEN"
+  },
+  {
+   "nome": "Rémy Labeau Lascary",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Amadou Haidara",
+   "numero": 21,
+   "ruolo": "MF",
+   "nazione": "MLI"
+  },
+  {
+   "nome": "Michał Skóraś",
+   "numero": 22,
+   "ruolo": "FW",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Saud Abdulhamid",
+   "numero": 23,
+   "ruolo": "DF",
+   "nazione": "KSA"
+  },
+  {
+   "nome": "Jonathan Gradit",
+   "numero": 24,
+   "ruolo": "DF",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Ismaëlo Ganiou",
+   "numero": 25,
+   "ruolo": "DF",
+   "nazione": "BFA"
+  },
+  {
+   "nome": "Mickaël Cuisance",
+   "numero": 27,
+   "ruolo": "MF",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Souleymane Sagnan",
+   "numero": 31,
+   "ruolo": "DF",
+   "nazione": "MLI"
+  },
+  {
+   "nome": "Kyllian Antonio",
+   "numero": 32,
+   "ruolo": "DF",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Erawan Garnier",
+   "numero": 34,
+   "ruolo": "FW",
+   "nazione": "THA"
+  },
+  {
+   "nome": "Rayan Fofana",
+   "numero": 38,
+   "ruolo": "FW",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Robin Risser",
+   "numero": 40,
+   "ruolo": "GK",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Ilan Jourdren",
+   "numero": 60,
+   "ruolo": "GK",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Hervé Koffi",
+   "numero": 70,
+   "ruolo": "GK",
+   "nazione": "BFA"
+  },
+  {
+   "nome": "Jhoanner Chávez",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ECU"
+  },
+  {
+   "nome": "Alpha Diallo",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Gabin Capuano",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "FRA"
+  }
+ ]
+}

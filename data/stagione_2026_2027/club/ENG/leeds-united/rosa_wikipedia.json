@@ -1,0 +1,146 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Leeds United",
+ "lega": "premier_league",
+ "voce": "Leeds United Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Leeds_United_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": "23 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 22,
+ "rosa_prima_squadra_n": 21,
+ "rosa": [
+  {
+   "nome": "Lucas Perri",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Jayden Bogle",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Gabriel Gudmundsson",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Ethan Ampadu",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "WAL"
+  },
+  {
+   "nome": "Joe Rodon",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "WAL"
+  },
+  {
+   "nome": "Daniel James",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "WAL"
+  },
+  {
+   "nome": "Sean Longstaff",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Dominic Calvert-Lewin",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Joël Piroe",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "SUR"
+  },
+  {
+   "nome": "Brenden Aaronson",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Lukas Nmecha",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Jaka Bijol",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "SVN"
+  },
+  {
+   "nome": "Anton Stach",
+   "numero": 18,
+   "ruolo": "C",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Noah Okafor",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "CHE"
+  },
+  {
+   "nome": "Jack Harrison",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Ao Tanaka",
+   "numero": 22,
+   "ruolo": "C",
+   "nazione": "JPN"
+  },
+  {
+   "nome": "Sebastiaan Bornauw",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "James Justin",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Sam Byram",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Wilfried Gnonto",
+   "numero": 29,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ilija Gruev",
+   "numero": 44,
+   "ruolo": "C",
+   "nazione": "BGR"
+  },
+  {
+   "nome": "Tarik Muharemović",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "BIH"
+  }
+ ]
+}

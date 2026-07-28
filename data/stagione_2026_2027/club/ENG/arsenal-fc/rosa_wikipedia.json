@@ -1,0 +1,182 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Arsenal FC",
+ "lega": "premier_league",
+ "voce": "Arsenal Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Arsenal_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 28,
+ "rosa_prima_squadra_n": 27,
+ "rosa": [
+  {
+   "nome": "David Raya",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "William Saliba",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Cristhian Mosquera",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Ben White",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Piero Hincapié",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "ECU"
+  },
+  {
+   "nome": "Gabriel",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Bukayo Saka",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Martin Ødegaard",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Gabriel Jesus",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Eberechi Eze",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Gabriel Martinelli",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Jurriën Timber",
+   "numero": 12,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Kepa Arrizabalaga",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Viktor Gyökeres",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Christian Nørgaard",
+   "numero": 16,
+   "ruolo": "C",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Chrīstos Tzolīs",
+   "numero": 17,
+   "ruolo": "A",
+   "nazione": "GRE"
+  },
+  {
+   "nome": "Noni Madueke",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Fábio Vieira",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Ethan Nwaneri",
+   "numero": 22,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Mikel Merino",
+   "numero": 23,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Reiss Nelson",
+   "numero": 24,
+   "ruolo": "FW",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Kai Havertz",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Riccardo Calafiori",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Martín Zubimendi",
+   "numero": 36,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Declan Rice",
+   "numero": 41,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Myles Lewis-Skelly",
+   "numero": 49,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Max Dowman",
+   "numero": 56,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Illan Meslier",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "FRA"
+  }
+ ]
+}

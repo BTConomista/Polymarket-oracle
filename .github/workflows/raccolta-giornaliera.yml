@@ -1,0 +1,61 @@
+name: Raccolta giornaliera stagione 2026-27
+
+# PERCHE' ESISTE (Fase 122). Lo stato PRE-partita non si ricostruisce dopo:
+# una previsione meteo, un infortunio di oggi, una probabile formazione
+# esistono solo prima del fischio (data/stagione_2026_2027/README.md §0).
+# Questo e' il livello "fatti": deterministico, senza LLM, e deve girare anche
+# nei giorni in cui il livello "giudizi" non gira.
+#
+# COSTO: zero. Un giro al giorno di pochi secondi, piano gratuito.
+# SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
+
+on:
+  schedule:
+    # 06:23 UTC: presto abbastanza da avere il bollettino del giorno, e a un
+    # minuto "storto" per non accodarsi al picco delle :00.
+    - cron: '23 6 * * *'
+  workflow_dispatch:
+    inputs:
+      entro_giorni:
+        description: 'Partite entro N giorni'
+        default: '21'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: raccolta-giornaliera
+  cancel-in-progress: false
+
+jobs:
+  raccogli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Raccogli i fatti del giorno
+        run: |
+          python scripts/raccolta_giornaliera.py \
+            --entro-giorni "${{ github.event.inputs.entro_giorni || 21 }}"
+
+      - name: Salva il giorno
+        run: |
+          if [ -z "$(git status --porcelain data/stagione_2026_2027/giornaliero/)" ]; then
+            # Non dovrebbe succedere: il giro scrive SEMPRE il suo giorno,
+            # anche quando non c'e' nulla da raccogliere (e' il senso di
+            # fonti.json). Se non ha scritto, e' un problema, non un non-evento.
+            echo "::error::nessun file prodotto: il raccoglitore non ha scritto il giorno"
+            exit 1
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/stagione_2026_2027/giornaliero/
+          git commit -m "Raccolta giornaliera $(date -u +'%Y-%m-%d')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1

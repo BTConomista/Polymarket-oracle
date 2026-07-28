@@ -40,9 +40,28 @@ def test_aggregato_solo_su_rosa_completa():
 
 
 def test_aggregato_ignora_i_valori_mancanti_ma_non_li_inventa():
-    """`None` in mezzo ai valori non deve valere zero né far saltare la somma."""
-    assert valore_aggregato([10, None, 30], "completa") == 40
+    """`None` in mezzo ai valori non deve valere zero né far saltare la somma,
+    **purché** la copertura resti sopra soglia: 9 valutati su 10 = 90%."""
+    assert valore_aggregato([10] * 9 + [None], "completa") == 90
     assert valore_aggregato([None, None], "completa") is None
+
+
+def test_sotto_l_ottantacinque_percento_di_valutati_niente_aggregato():
+    """La soglia è quella che il progetto già applica in
+    `transfermarkt.team_season_values` (`MIN_COVERAGE = 0.85`), non una nuova:
+    due nozioni diverse di «rosa coperta» nello stesso repo sarebbero il modo
+    più semplice per confrontare numeri non confrontabili.
+
+    2 valutati su 3 = 67%: sotto soglia, niente somma."""
+    assert valore_aggregato([10, None, 30], "completa") is None
+    # 17 su 20 = 85% esatto: la soglia è inclusiva, il bordo passa
+    assert valore_aggregato([10] * 17 + [None] * 3, "completa") == 170
+
+
+def test_la_soglia_e_la_stessa_del_resto_del_progetto():
+    from src.data.transfermarkt import MIN_COVERAGE
+    from build_stagione_anagrafica import MIN_COPERTURA_VALORI
+    assert MIN_COPERTURA_VALORI == MIN_COVERAGE
 
 
 # --- slug: è una chiave tecnica, deve restare stabile ---------------------

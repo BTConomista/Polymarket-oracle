@@ -1,0 +1,230 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Tottenham Hotspur",
+ "lega": "premier_league",
+ "voce": "Tottenham Hotspur Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Tottenham_Hotspur_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 36,
+ "rosa_prima_squadra_n": 31,
+ "rosa": [
+  {
+   "nome": "Guglielmo Vicario",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Kevin Danso",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "AUT"
+  },
+  {
+   "nome": "Xavi Simons",
+   "numero": 7,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Conor Gallagher",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Richarlison",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "James Maddison",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Mathys Tel",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Destiny Udogie",
+   "numero": 13,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Archie Gray",
+   "numero": 14,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Lucas Bergvall",
+   "numero": 15,
+   "ruolo": "C",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Sandro Tonali",
+   "numero": 16,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Cristian Romero",
+   "numero": 17,
+   "ruolo": "D",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Mateus Fernandes",
+   "numero": 18,
+   "ruolo": "D",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Dominic Solanke",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Mohammed Kudus",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "GHA"
+  },
+  {
+   "nome": "Dejan Kulusevski",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Pedro Porro",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Djed Spence",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Kōta Takai",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "JPN"
+  },
+  {
+   "nome": "Manor Solomon",
+   "numero": 27,
+   "ruolo": "A",
+   "nazione": "ISR"
+  },
+  {
+   "nome": "Wilson Odobert",
+   "numero": 28,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Pape Matar Sarr",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "SEN"
+  },
+  {
+   "nome": "Rodrigo Bentancur",
+   "numero": 30,
+   "ruolo": "C",
+   "nazione": "URU"
+  },
+  {
+   "nome": "Antonín Kinský",
+   "numero": 31,
+   "ruolo": "P",
+   "nazione": "CZE"
+  },
+  {
+   "nome": "Ben Davies",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "WAL"
+  },
+  {
+   "nome": "Ashley Phillips",
+   "numero": 35,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Micky van de Ven",
+   "numero": 37,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Souza",
+   "numero": 38,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Martin Dúbravka",
+   "numero": 39,
+   "ruolo": "p",
+   "nazione": "CZE"
+  },
+  {
+   "nome": "Brandon Austin",
+   "numero": 40,
+   "ruolo": "P",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Dane Scarlett",
+   "numero": 44,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Andrew Robertson",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "Marcos Senesi",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Jan Paul van Hecke",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Yang Min-hyeok",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "KOR"
+  },
+  {
+   "nome": "Mikey Moore",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ENG"
+  }
+ ]
+}

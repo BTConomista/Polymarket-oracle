@@ -1,0 +1,230 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Lazio Rome",
+ "lega": "serie_a",
+ "voce": "Società Sportiva Lazio 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Societ%C3%A0_Sportiva_Lazio_2026-2027",
+ "aggiornata_al_dichiarato": "26 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 36,
+ "rosa_prima_squadra_n": 32,
+ "rosa": [
+  {
+   "nome": "Samuel Gigot",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Luca Pellegrini",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Patric",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Danilho Doekhi",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "NED"
+  },
+  {
+   "nome": "Nicolò Rovella",
+   "numero": 6,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Fisayo Dele-Bashiru",
+   "numero": 7,
+   "ruolo": "C",
+   "nazione": "NGA"
+  },
+  {
+   "nome": "Mattia Zaccagni",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Saná Fernandes",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Alessio Romagnoli",
+   "numero": 13,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Tijjani Noslin",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "NED"
+  },
+  {
+   "nome": "Romano Floriani Mussolini",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Nuno Tavares",
+   "numero": 17,
+   "ruolo": "D",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Gustav Isaksen",
+   "numero": 18,
+   "ruolo": "A",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Boulaye Dia",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "SEN"
+  },
+  {
+   "nome": "Petar Ratkov",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Reda Belahyane",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Matteo Cancellieri",
+   "numero": 22,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Alfonso Pedraza",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Kenneth Taylor",
+   "numero": 24,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Oliver Provstgaard",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Adrian Przyborek",
+   "numero": 28,
+   "ruolo": "C",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Manuel Lazzari",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Danilo Cataldi",
+   "numero": 32,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ricardo Bordon",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Chrīstos Mandas",
+   "numero": 35,
+   "ruolo": "P",
+   "nazione": "GRE"
+  },
+  {
+   "nome": "Edoardo Motta",
+   "numero": 40,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Davide Renzetti",
+   "numero": 47,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Alessio Furlanetto",
+   "numero": 55,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Federico Serra",
+   "numero": 63,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Valerio Farcomeni",
+   "numero": 71,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Adam Marušić",
+   "numero": 77,
+   "ruolo": "D",
+   "nazione": "MNE"
+  },
+  {
+   "nome": "Gabriele Artistico",
+   "numero": 98,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Filipe Bordon",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Mohamed Fares",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ALG"
+  },
+  {
+   "nome": "Leonardo Di Tommaso",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Bruno Galassi",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ESP"
+  }
+ ]
+}

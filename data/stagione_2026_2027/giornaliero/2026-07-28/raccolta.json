@@ -1,0 +1,97 @@
+{
+ "giorno": "2026-07-28",
+ "generato_utc": "2026-07-28T19:05:17.711147+00:00",
+ "livello": "fatti",
+ "partite_in_finestra": 6,
+ "record": [
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Deportivo Alaves vs Getafe CF",
+   "lega": "la_liga",
+   "inizio": "2026-08-15T17:30:00Z",
+   "stadio": "Mendizorroza",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-07-28T19:05:17.711067+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Sevilla FC vs Rayo Vallecano",
+   "lega": "la_liga",
+   "inizio": "2026-08-15T19:30:00Z",
+   "stadio": "Ramón Sánchez-Pizjuán",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-07-28T19:05:17.711125+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Racing Santander vs Villarreal CF",
+   "lega": "la_liga",
+   "inizio": "2026-08-16T15:00:00Z",
+   "stadio": null,
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-07-28T19:05:17.711130+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Espanyol Barcelona vs Levante UD",
+   "lega": "la_liga",
+   "inizio": "2026-08-16T17:00:00Z",
+   "stadio": "RCDE Stadium",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 19,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-07-28T19:05:17.711135+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Celta Vigo vs CA Osasuna",
+   "lega": "la_liga",
+   "inizio": "2026-08-16T19:30:00Z",
+   "stadio": "Abanca Balaídos",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 19,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-07-28T19:05:17.711140+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "RC Deportivo De La Coruna vs Elche CF",
+   "lega": "la_liga",
+   "inizio": "2026-08-17T19:00:00Z",
+   "stadio": "Abanca Riazor",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 20,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-07-28T19:05:17.711145+00:00"
+  }
+ ]
+}

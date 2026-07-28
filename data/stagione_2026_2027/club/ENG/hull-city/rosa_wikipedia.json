@@ -1,0 +1,206 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Hull City",
+ "lega": "premier_league",
+ "voce": "Manchester City Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Manchester_City_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 32,
+ "rosa_prima_squadra_n": 27,
+ "rosa": [
+  {
+   "nome": "James Trafford",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Rúben Dias",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Tijjani Reijnders",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Omar Marmoush",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "EGY"
+  },
+  {
+   "nome": "Mateo Kovačić",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "HRV"
+  },
+  {
+   "nome": "Erling Haaland",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Rayan Cherki",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Jérémy Doku",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Marcus Bettinelli",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Nico González",
+   "numero": 14,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Marc Guéhi",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Rodri",
+   "numero": 16,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Rayan Aït-Nouri",
+   "numero": 21,
+   "ruolo": "D",
+   "nazione": "ALG"
+  },
+  {
+   "nome": "Vitor Reis",
+   "numero": 22,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Joško Gvardiol",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "HRV"
+  },
+  {
+   "nome": "Gianluigi Donnarumma",
+   "numero": 25,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Savinho",
+   "numero": 26,
+   "ruolo": "A",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Matheus Nunes",
+   "numero": 27,
+   "ruolo": "C",
+   "nazione": "POR"
+  },
+  {
+   "nome": "Claudio Echeverri",
+   "numero": 30,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Nico O'Reilly",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Antoine Semenyo",
+   "numero": 42,
+   "ruolo": "A",
+   "nazione": "GHA"
+  },
+  {
+   "nome": "Kalvin Phillips",
+   "numero": 44,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Abduqodir Xusanov",
+   "numero": 45,
+   "ruolo": "D",
+   "nazione": "UZB"
+  },
+  {
+   "nome": "Phil Foden",
+   "numero": 47,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Max Alleyne",
+   "numero": 68,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Rico Lewis",
+   "numero": 82,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Josh Wilson-Esbrand",
+   "numero": 97,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Jack Grealish",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Elliot Anderson",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Issa Kaboré",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "BFA"
+  },
+  {
+   "nome": "Juma Bah",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "SLE"
+  },
+  {
+   "nome": "Jeremy Monga",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ENG"
+  }
+ ]
+}

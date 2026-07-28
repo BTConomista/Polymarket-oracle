@@ -1,0 +1,188 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Liverpool",
+ "lega": "premier_league",
+ "voce": "Liverpool Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Liverpool_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 29,
+ "rosa_prima_squadra_n": 28,
+ "rosa": [
+  {
+   "nome": "Alisson Becker",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Joe Gomez",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Wataru Endō",
+   "numero": 3,
+   "ruolo": "C",
+   "nazione": "JPN"
+  },
+  {
+   "nome": "Virgil van Dijk",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Jérémy Jacquet",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Milos Kerkez",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "HUN"
+  },
+  {
+   "nome": "Florian Wirtz",
+   "numero": 7,
+   "ruolo": "C",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Dominik Szoboszlai",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "HUN"
+  },
+  {
+   "nome": "Alexander Isak",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Alexis Mac Allister",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Conor Bradley",
+   "numero": 12,
+   "ruolo": "D",
+   "nazione": "NIR"
+  },
+  {
+   "nome": "Federico Chiesa",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Giovanni Leoni",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Curtis Jones",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Cody Gakpo",
+   "numero": 18,
+   "ruolo": "A",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Harvey Elliott",
+   "numero": 19,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Kōstas Tsimikas",
+   "numero": 21,
+   "ruolo": "D",
+   "nazione": "GRC"
+  },
+  {
+   "nome": "Hugo Ekitike",
+   "numero": 22,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Giorgi Mamardashvili",
+   "numero": 25,
+   "ruolo": "P",
+   "nazione": "GEO"
+  },
+  {
+   "nome": "Freddie Woodman",
+   "numero": 28,
+   "ruolo": "P",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Jeremie Frimpong",
+   "numero": 30,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Ryan Gravenberch",
+   "numero": 38,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Trey Nyoni",
+   "numero": 42,
+   "ruolo": "C",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Stefan Bajčetić",
+   "numero": 43,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Calvin Ramsay",
+   "numero": 47,
+   "ruolo": "D",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "Vítězslav Jaroš",
+   "numero": 56,
+   "ruolo": "P",
+   "nazione": "CZE"
+  },
+  {
+   "nome": "Rio Ngumoha",
+   "numero": 73,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Harvey Davies",
+   "numero": 95,
+   "ruolo": "P",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Víctor Muñoz",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ESP"
+  }
+ ]
+}

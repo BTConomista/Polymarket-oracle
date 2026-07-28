@@ -1,0 +1,158 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "US Lecce",
+ "lega": "serie_a",
+ "voce": "Unione Sportiva Lecce 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Unione_Sportiva_Lecce_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 24,
+ "rosa_prima_squadra_n": 23,
+ "rosa": [
+  {
+   "nome": "Christian Früchtl",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "GER"
+  },
+  {
+   "nome": "Corrie Ndaba",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "IRL"
+  },
+  {
+   "nome": "Kialonda Gaspar",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "ANG"
+  },
+  {
+   "nome": "Jamil Siebert",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "GER"
+  },
+  {
+   "nome": "Sadik Fofana",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "TGO"
+  },
+  {
+   "nome": "Nikola Štulić",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Medon Berisha",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "ALB"
+  },
+  {
+   "nome": "Konan N'Dri",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "NER"
+  },
+  {
+   "nome": "Matias Perez",
+   "numero": 13,
+   "ruolo": "D",
+   "nazione": "CHI"
+  },
+  {
+   "nome": "Omri Gandelman",
+   "numero": 16,
+   "ruolo": "C",
+   "nazione": "ISR"
+  },
+  {
+   "nome": "Danilo Veiga",
+   "numero": 17,
+   "ruolo": "D",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Gaby Jean",
+   "numero": 18,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Lameck Banda",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "ZAM"
+  },
+  {
+   "nome": "Christ-Owen Kouassi",
+   "numero": 21,
+   "ruolo": "D",
+   "nazione": "CIV"
+  },
+  {
+   "nome": "Antonino Gallo",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lassana Coulibaly",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "MLI"
+  },
+  {
+   "nome": "Wladimiro Falcone",
+   "numero": 30,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Jasper Samooja",
+   "numero": 32,
+   "ruolo": "P",
+   "nazione": "FIN"
+  },
+  {
+   "nome": "Tiago Gabriel",
+   "numero": 44,
+   "ruolo": "D",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Santiago Pierotti",
+   "numero": 50,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Mohamed Kaba",
+   "numero": 77,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Oumar Ngom",
+   "numero": 79,
+   "ruolo": "C",
+   "nazione": "MRT"
+  },
+  {
+   "nome": "Youssef Maleh",
+   "numero": 93,
+   "ruolo": "C",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Miloš Jović",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "SRB"
+  }
+ ]
+}

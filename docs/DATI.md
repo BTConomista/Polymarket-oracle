@@ -620,6 +620,26 @@ Qui solo ciò che serve al catalogo; per il *perché* e la lista dei dati, quel 
 normalizzazione non risolve sono in `ALIAS` dentro lo script, **verificati a
 mano uno per uno**: le regole stanno in `data/stagione_2026_2027/club/README.md`.
 
+**Rose vere (Fase 121): `rosa_wikipedia.json` accanto all'anagrafica.**
+`scripts/fetch_rose_wikipedia.py` scrive, per i club coperti, la rosa da
+it.wikipedia (CC BY-SA, API ufficiale). Serve perché il dataset CC0 è fermo a
+**febbraio** e non conosce il mercato estivo.
+
+- `rosa_prima_squadra_n` conta i giocatori **col numero di maglia**;
+  `rosa_n` include i **giovani aggregati** (che nella fonte hanno `n=` vuoto).
+  Sono due quantità diverse e vanno usate come tali: al Napoli 26 e 47.
+- `aggiornata_al_dichiarato` è la data che **la voce dichiara**, non quella del
+  nostro scarico: è quella che dice se il dato è fresco.
+- **Copertura misurata: 41/96** (Serie A 18/20, Premier 12/20, La Liga 6/20,
+  Ligue 1 3/18, Bundesliga 2/18). Le altre 55 richiedono le Wikipedia locali.
+  Dove il file non c'è, **non c'è**: nessuna rosa stimata.
+
+**Giornaliero (Fase 122): `giornaliero/AAAA-MM-GG/`.**
+`raccolta.json` (record con `tipo`, `fonte`, `raccolto_utc`) e `fonti.json`
+(**ogni** fetch tentato, anche fallito). Il meteo di una partita oltre i **16
+giorni** di orizzonte è `fuori_orizzonte`, che è un non-evento dichiarato e non
+un buco. Coordinate degli stadi in `_anagrafica/stadi.json` (90 su 94).
+
 ---
 
 ## 6 · Come si rigenera tutto (riproducibilità)

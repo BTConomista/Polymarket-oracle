@@ -1,0 +1,134 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Sassuolo Calcio",
+ "lega": "serie_a",
+ "voce": "Unione Sportiva Sassuolo Calcio 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Unione_Sportiva_Sassuolo_Calcio_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 20,
+ "rosa_prima_squadra_n": 20,
+ "rosa": [
+  {
+   "nome": "Josh Doig",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "Fali Candé",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "GNB"
+  },
+  {
+   "nome": "Sebastian Walukiewicz",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Cristian Volpato",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "AUS"
+  },
+  {
+   "nome": "Domenico Berardi",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Daniel Boloca",
+   "numero": 11,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Stefano Turati",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Edoardo Pieragnolo",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Gioele Zacchi",
+   "numero": 16,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Nemanja Matić",
+   "numero": 18,
+   "ruolo": "C",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Jay Idzes",
+   "numero": 21,
+   "ruolo": "D",
+   "nazione": "IDN"
+  },
+  {
+   "nome": "Luca Moro",
+   "numero": 24,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Luca Lipani",
+   "numero": 35,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Kristian Thorstvedt",
+   "numero": 42,
+   "ruolo": "C",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Edoardo Iannoni",
+   "numero": 44,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Armand Laurienté",
+   "numero": 45,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Arijanet Murić",
+   "numero": 49,
+   "ruolo": "P",
+   "nazione": "KOS"
+  },
+  {
+   "nome": "Darryl Bakola",
+   "numero": 50,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Ismaël Koné",
+   "numero": 90,
+   "ruolo": "A",
+   "nazione": "CAN"
+  },
+  {
+   "nome": "Andrea Pinamonti",
+   "numero": 99,
+   "ruolo": "A",
+   "nazione": "ITA"
+  }
+ ]
+}

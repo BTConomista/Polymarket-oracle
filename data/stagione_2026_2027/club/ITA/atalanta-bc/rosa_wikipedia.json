@@ -1,0 +1,176 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Atalanta BC",
+ "lega": "serie_a",
+ "voce": "Atalanta Bergamasca Calcio 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Atalanta_Bergamasca_Calcio_2026-2027",
+ "aggiornata_al_dichiarato": "13 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 27,
+ "rosa_prima_squadra_n": 0,
+ "rosa": [
+  {
+   "nome": "Odilon Kossounou",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "CIV"
+  },
+  {
+   "nome": "Isak Hien",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Mitchel Bakker",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Ibrahim Sulemana",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "GHA"
+  },
+  {
+   "nome": "Kamaldeen Sulemana",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "GHA"
+  },
+  {
+   "nome": "Mario Pašalić",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "HRV"
+  },
+  {
+   "nome": "Gianluca Scamacca",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lazar Samardžić",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Éderson",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Marten de Roon",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Raoul Bellanova",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Charles De Ketelaere",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Giacomo Raspadori",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Berat Djimsiti",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ALB"
+  },
+  {
+   "nome": "Sead Kolašinac",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "BIH"
+  },
+  {
+   "nome": "Marco Carnesecchi",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Francesco Rossi",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Giorgio Scalvini",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lorenzo Bernasconi",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Marco Sportiello",
+   "numero": null,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Nicola Zalewski",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Honest Ahanor",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Daniel Maldini",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Davide Zappacosta",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Nikola Krstović",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "MNE"
+  },
+  {
+   "nome": "El Bilal Touré",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "MLI"
+  },
+  {
+   "nome": "Gianluca Gaetano",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  }
+ ]
+}

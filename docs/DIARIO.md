@@ -322,6 +322,8 @@ correzioni.*
 - [Fase 118 — Il primo giro vero del raccoglitore: verde, e non raccoglieva niente](#fase-118--il-primo-giro-vero-del-raccoglitore-verde-e-non-raccoglieva-niente)
 - [Fase 119 — La raccolta quotidiana 2026-27: il piano, e i due `robots.txt` che lo riscrivono](#fase-119--la-raccolta-quotidiana-2026-27-il-piano-e-i-due-robotstxt-che-lo-riscrivono)
 - [Fase 120 — Il passo 0: metà della lista era già in casa, su licenza](#fase-120--il-passo-0-metà-della-lista-era-già-in-casa-su-licenza)
+- [Fase 121 — Le rose vere: Wikipedia riempie i buchi, ma non tutti (e l'ipotesi era sbagliata)](#fase-121--le-rose-vere-wikipedia-riempie-i-buchi-ma-non-tutti-e-lipotesi-era-sbagliata)
+- [Fase 122 — Lo scheletro giornaliero: una fetta sottile ma completa](#fase-122--lo-scheletro-giornaliero-una-fetta-sottile-ma-completa)
 
 ---
 
@@ -13692,3 +13694,150 @@ parziale non è una stima imprecisa: è una quantità diversa*, e va rifiutato,
 non arrotondato. Il Frosinone a 0.8 M€ sarebbe passato qualunque controllo di
 tipo, di schema e di intervallo: nessuno di quei controlli sa che 1 giocatore
 non sono 31.
+
+---
+
+## Fase 121 — Le rose vere: Wikipedia riempie i buchi, ma non tutti (e l'ipotesi era sbagliata)
+
+**Obiettivo.** L'utente, a metà lavoro: *«invece io cercherei i nomi su
+internet, potrebbero esserci giocatori infortunati o squalificati o altro,
+meglio essere sicuri di tutto»*. Giusto: il dataset CC0 della Fase 120 è una
+**fotografia del 27/02/2026** e non sa nulla del mercato estivo.
+
+**Il vincolo, e la fonte scelta.** Transfermarkt vieta i crawler AI (Fase 119).
+Wikipedia invece **consente**, ha una API ufficiale, ed è aggiornata da persone
+in tempo quasi reale: al 28/07/2026 la voce dell'Inter dichiarava «*Rosa e
+numerazione aggiornate al 26 luglio 2026*» citando il sito ufficiale del club.
+
+**La scoperta che risolve il problema della rosa.** Le voci elencano nella
+**stessa** sezione i tesserati della prima squadra, con il **numero di maglia**,
+e i giovani aggregati, con `n=` **vuoto**: al Napoli sono **26 + 21**. Il
+discrimine prima squadra/primavera è quindi un **dato della fonte**, non una
+soglia di età o di valore inventata da noi — che è esattamente ciò che mancava
+alla Fase 120, dove `rosa_n` mescolava le due cose. Verifica che chiude il
+cerchio: **l'Inter esce con 25 numerati, cioè esattamente il `squad_size`
+ufficiale**.
+
+**L'ipotesi che ho generalizzato da due casi, ed era falsa.** Avevo verificato
+che la Wikipedia *italiana* copre anche Real Madrid (29) e Manchester City (32),
+e ne avevo dedotto «**un solo parser per tutti e 96**». La misura su tutte dice
+altro: **41/96**, e sbilanciate — Serie A 18/20, Premier 12/20, La Liga 6/20,
+Ligue 1 3/18, **Bundesliga 2/18**. L'italiana scrive la voce-stagione dei club
+esteri solo per i più noti. Due club bastavano a formulare l'ipotesi, non a
+confermarla.
+
+**Ma il valore c'è, ed è dove serve.** Delle 14 squadre che il dataset copre
+male — tutte **neopromosse**, cioè quelle del prior δ — Wikipedia ne risolve 4,
+e sono i casi peggiori: **Coventry City 0 → 27**, Frosinone 1 → 30, Hull 7 → 27,
+Monza 1 → 22. Non aggiunge un decimale a chi già conoscevamo: **riempie i
+vuoti**.
+
+**Due difetti trovati e corretti in corsa.** (1) Il nome nei wikilink con
+disambigua (`[[Miguel Gutiérrez (calciatore 2001)|Miguel Gutiérrez]]`) usciva
+troncato al `pipe`: è la stringa su cui si farà il join, quindi un difetto che
+avrebbe rotto tutto a valle. (2) Un «connection reset» a metà di 96 squadre
+buttava via l'intero giro, perché ritentavo solo sul 429: un errore di rete
+transitorio non è un dato mancante.
+
+**📐 Il modello in dettaglio.** Nessuna matematica: due regole, verificate
+contro `scripts/fetch_rose_wikipedia.py`.
+
+*(a) Prima squadra vs aggregati.* Con `n` = numero di maglia dichiarato:
+
+```
+prima_squadra(g) = 1  se n(g) è un intero
+                 = 0  se n(g) è vuoto
+rosa_prima_squadra_n = Σ prima_squadra(g)
+```
+
+Non c'è soglia da tarare: la fonte separa già i due gruppi, e noi la leggiamo
+invece di rimpiazzarla con un criterio nostro. Controprova sui numeri veri:
+Inter 25 numerati contro `squad_size` ufficiale **25**; Napoli 26 contro 47
+tesserati totali.
+
+*(b) La voce è quella giusta?* Un titolo è accettato se, insieme:
+
+```
+stagione ∈ titolo   ∧   titolo ∉ competizioni_note   ∧   ∃ parola(>3 lettere)
+                                                          comune a titolo e nome-club
+```
+
+Serve tutto e tre. Senza la prima, si prende la rosa dell'anno **scorso** — un
+dato sbagliato che sembra giusto. Senza le altre due, cercando «Paris
+Saint-Germain 2026-2027» il primo risultato era *UEFA Champions League
+2026-2027*: contiene la stagione e nessuna rosa.
+
+**Lezione.** *Due campioni bastano per una congettura, non per una regola.*
+L'ipotesi «l'italiana copre tutti» era comoda — un parser invece di cinque — e
+per questo l'ho verificata con due club invece che con novantasei. Il costo di
+misurarla per intero era un giro di venti minuti; il costo di non farlo sarebbe
+stato scoprire a settembre che la Bundesliga aveva due rose su diciotto.
+
+---
+
+## Fase 122 — Lo scheletro giornaliero: una fetta sottile ma completa
+
+**Obiettivo.** Il passo 2 del piano: la struttura della raccolta quotidiana in
+piedi **prima** del primo giorno utile, perché lo stato pre-partita non si
+ricostruisce dopo.
+
+**Scelta di metodo: tracer bullet** (§1.1). Non mezza infrastruttura, ma una
+fetta verticale che va dal fetch al file su disco: prossime partite → coordinate
+dello stadio → previsione meteo → `raccolta.json` + `fonti.json`, con il cron
+che lo fa girare da solo.
+
+**Il vincolo misurato che dà forma al livello meteo.** open-meteo copre **16
+giorni**: al 28/07 arrivava al 12 agosto, e la richiesta esplicita per il 15
+rispondeva **400**. Quindi la prima giornata di campionato **non ha ancora**
+una previsione. Non è un guasto ed è scritto come tale (`fuori_orizzonte`, con i
+giorni mancanti): fra sei mesi, chi rileggerà questi file deve poter distinguere
+«non c'era ancora» da «il fetch è fallito». Il primo giro reale l'ha fatto:
+5 partite `fuori_orizzonte`, 1 `coordinate_mancanti`, **0 fetch e 0 errori**.
+
+**`fonti.json` non è un accessorio.** Registra **ogni** tentativo — url, esito,
+byte, durata — compresi i falliti. È la contromisura diretta alla Fase 118: un
+giorno senza raccolta e un giorno senza raccoglitore devono avere aspetto
+diverso. Per lo stesso motivo il workflow **fallisce** se il giro non ha scritto
+il suo giorno: qui l'assenza di un file è un problema, non un non-evento.
+
+**Le coordinate.** 90 stadi su 94 da Wikipedia (`prop=coordinates`, campo
+strutturato). I 4 mancanti sono esattamente le 4 squadre assenti dal dataset —
+non hanno un nome di stadio da cercare. Coerente, e dichiarato invece che
+riempito: un meteo sulla città sbagliata è peggio di nessun meteo.
+
+**Un test che ha fatto il suo mestiere.** Avevo aggiunto la soglia di copertura
+all'85% sull'aggregato del valore rosa **dopo** aver scritto il test che dava
+per buono `[10, None, 30] → 40`. La suite è diventata rossa: il test negava il
+comportamento voluto. Riscritto perché **verifichi** la soglia (e che sia la
+stessa `MIN_COVERAGE = 0.85` già usata da `transfermarkt.team_season_values`:
+due nozioni diverse di «rosa coperta» nello stesso repo sarebbero il modo più
+semplice per confrontare numeri non confrontabili). Rigenerati i 96 file: gli 82
+con aggregato restano 82, quindi la soglia non cambia il dato di oggi — protegge
+i giri futuri.
+
+**📐 Il modello in dettaglio.** Verificato contro
+`scripts/raccolta_giornaliera.py`.
+
+*(a) Il meteo esiste?* Con `d` = giorni fra oggi e il calcio d'inizio e
+`H = 16` l'orizzonte misurato:
+
+```
+stato = "fuori_orizzonte"     se d > H        (e NON si chiama l'API)
+      = "coordinate_mancanti" se lo stadio non ha lat/lon
+      = "ok" | "non_disponibile" | "ora_non_coperta"   altrimenti
+```
+
+`H` non è una costante di comodo: è il numero che l'API espone, misurato
+(384 ore = 16 giorni esatti). Il ramo `d > H` **non chiama** l'API — chiedere
+qualcosa che si sa non esistere produrrebbe un 400 nel registro delle fonti, cioè
+un errore finto in mezzo a quelli veri.
+
+*(b) La finestra delle partite.* `adesso ≤ inizio ≤ adesso + N giorni`, con
+`N = 21` di default: più larga dell'orizzonte meteo apposta, perché il file del
+giorno deve **elencare** anche le partite di cui non sappiamo ancora il tempo.
+Un elenco che si accorcia è un'informazione; un elenco che tace non lo è.
+
+**Lezione.** Uno scheletro utile non è quello che raccoglie di più: è quello che
+**dice sempre che cosa gli è successo**. Al primo giro questo ha raccolto zero
+dati meteo — e il file lo spiega riga per riga, con il motivo per ciascuna delle
+sei partite.

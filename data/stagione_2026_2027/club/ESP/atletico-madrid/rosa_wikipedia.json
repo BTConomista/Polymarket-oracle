@@ -1,0 +1,164 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Atletico Madrid",
+ "lega": "la_liga",
+ "voce": "Club Atlético de Madrid 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 25,
+ "rosa_prima_squadra_n": 23,
+ "rosa": [
+  {
+   "nome": "Juan Musso",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "José Giménez",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "URY"
+  },
+  {
+   "nome": "Matteo Ruggeri",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Rodri Mendoza",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Johnny Cardoso",
+   "numero": 5,
+   "ruolo": "C",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Koke",
+   "numero": 6,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Lee Kang-in",
+   "numero": 7,
+   "ruolo": "C",
+   "nazione": "KOR"
+  },
+  {
+   "nome": "Pablo Barrios",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Alexander Sørloth",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Álex Baena",
+   "numero": 10,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Thiago Almada",
+   "numero": 11,
+   "ruolo": "C",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Carlos Martín",
+   "numero": 12,
+   "ruolo": "A",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Jan Oblak",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "SVN"
+  },
+  {
+   "nome": "Marcos Llorente",
+   "numero": 14,
+   "ruolo": "C",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Nahuel Molina",
+   "numero": 16,
+   "ruolo": "D",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Dávid Hancko",
+   "numero": 17,
+   "ruolo": "D",
+   "nazione": "SVK"
+  },
+  {
+   "nome": "Marc Pubill",
+   "numero": 18,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Julián Alvarez",
+   "numero": 19,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Giuliano Simeone",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Obed Vargas",
+   "numero": 21,
+   "ruolo": "A",
+   "nazione": "MEX"
+  },
+  {
+   "nome": "Ademola Lookman",
+   "numero": 22,
+   "ruolo": "A",
+   "nazione": "NGA"
+  },
+  {
+   "nome": "Morten Hjulmand",
+   "numero": 23,
+   "ruolo": "C",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Robin Le Normand",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Alejandro Grimaldo",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Thomas Lemar",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "FRA"
+  }
+ ]
+}

@@ -1,0 +1,164 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Inter Milano",
+ "lega": "serie_a",
+ "voce": "Football Club Internazionale Milano 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Football_Club_Internazionale_Milano_2026-2027",
+ "aggiornata_al_dichiarato": "26 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 25,
+ "rosa_prima_squadra_n": 23,
+ "rosa": [
+  {
+   "nome": "Josep Martínez",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Aleksandar Stanković",
+   "numero": 5,
+   "ruolo": "C",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Piotr Zieliński",
+   "numero": 7,
+   "ruolo": "C",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Petar Sučić",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "HRV"
+  },
+  {
+   "nome": "Marcus Thuram",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Lautaro Martínez",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Luis Henrique",
+   "numero": 11,
+   "ruolo": "C",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Raffaele Di Gennaro",
+   "numero": 12,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ange-Yoan Bonny",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "CIV"
+  },
+  {
+   "nome": "Davide Frattesi",
+   "numero": 16,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Andy Diouf",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Hakan Çalhanoğlu",
+   "numero": 20,
+   "ruolo": "C",
+   "nazione": "TUR"
+  },
+  {
+   "nome": "Henrix Mxit'aryan",
+   "numero": 22,
+   "ruolo": "C",
+   "nazione": "ARM"
+  },
+  {
+   "nome": "Nicolò Barella",
+   "numero": 23,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ebenezer Akinsanmiro",
+   "numero": 24,
+   "ruolo": "C",
+   "nazione": "NGA"
+  },
+  {
+   "nome": "Manuel Akanji",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "CHE"
+  },
+  {
+   "nome": "Benjamin Pavard",
+   "numero": 28,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Carlos Augusto",
+   "numero": 30,
+   "ruolo": "C",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Yann Aurel Bisseck",
+   "numero": 31,
+   "ruolo": "D",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Federico Dimarco",
+   "numero": 32,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Ivan Provedel",
+   "numero": 49,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Pio Esposito",
+   "numero": 94,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Alessandro Bastoni",
+   "numero": 95,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Kristjan Asllani",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ALB"
+  },
+  {
+   "nome": "Yanis Massolin",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "FRA"
+  }
+ ]
+}

@@ -1,0 +1,170 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Borussia Monchengladbach",
+ "lega": "bundesliga",
+ "voce": "Ballspielverein Borussia 09 Dortmund 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Ballspielverein_Borussia_09_Dortmund_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 26,
+ "rosa_prima_squadra_n": 26,
+ "rosa": [
+  {
+   "nome": "Gregor Kobel",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "CHE"
+  },
+  {
+   "nome": "Yan Couto",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Waldemar Anton",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Nico Schlotterbeck",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Ramy Bensebaini",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "DZA"
+  },
+  {
+   "nome": "Jobe Bellingham",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Felix Nmecha",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Serhou Guirassy",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "GIN"
+  },
+  {
+   "nome": "Maximilian Beier",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Carney Chukwuemeka",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "AUT"
+  },
+  {
+   "nome": "Marcel Sabitzer",
+   "numero": 20,
+   "ruolo": "C",
+   "nazione": "AUT"
+  },
+  {
+   "nome": "Fábio Silva",
+   "numero": 21,
+   "ruolo": "A",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Joane Gadou",
+   "numero": 22,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Emre Can",
+   "numero": 23,
+   "ruolo": "C",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Daniel Svensson",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Julian Ryerson",
+   "numero": 26,
+   "ruolo": "D",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Jutin Lerma",
+   "numero": 28,
+   "ruolo": "C",
+   "nazione": "ECU"
+  },
+  {
+   "nome": "Patrick Drewes",
+   "numero": 30,
+   "ruolo": "P",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Silas Ostrzinski",
+   "numero": 31,
+   "ruolo": "P",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Diant Ramaj",
+   "numero": 32,
+   "ruolo": "P",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Alexander Meyer",
+   "numero": 33,
+   "ruolo": "P",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Filippo Mané",
+   "numero": 39,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Samuele Inácio",
+   "numero": 40,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Mathis Albert",
+   "numero": 41,
+   "ruolo": "A",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Almugera Kabar",
+   "numero": 42,
+   "ruolo": "D",
+   "nazione": "DEU"
+  },
+  {
+   "nome": "Luca Reggiani",
+   "numero": 49,
+   "ruolo": "D",
+   "nazione": "ITA"
+  }
+ ]
+}

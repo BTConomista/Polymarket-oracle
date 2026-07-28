@@ -119,8 +119,17 @@ def slug(nome: str) -> str:
     return "-".join(re.sub(r"[^a-z0-9]+", " ", s).split())
 
 
-def valore_aggregato(valori: list[int | None], copertura: str) -> int | None:
-    """La somma dei valori della rosa, **solo** se la rosa è completa.
+# Sotto questa quota di giocatori valutati l'aggregato NON si pubblica. È la
+# stessa soglia di `src.data.transfermarkt.MIN_COVERAGE` (0.85), usata dal
+# progetto dalla Fase 59/67 per lo stesso identico scopo: non pubblicare un
+# valore rosa costruito su una copertura parziale. Riusarla invece di
+# sceglierne un'altra evita due nozioni diverse di "rosa" nello stesso repo.
+MIN_COPERTURA_VALORI = 0.85
+
+
+def valore_aggregato(valori: list[int | None], copertura: str,
+                     min_quota: float = MIN_COPERTURA_VALORI) -> int | None:
+    """La somma dei valori della rosa, **solo** se la rosa regge due prove.
 
     PERCHE' ESISTE (R6). Sulle squadre `stantia` il filtro per stagione lascia
     un residuo di 1-8 giocatori su una rosa ufficiale di ~30. Sommarli produce
@@ -128,10 +137,17 @@ def valore_aggregato(valori: list[int | None], copertura: str) -> int | None:
     il **Frosinone a 0.8 M€, calcolato su 1 giocatore su 31** — cioè la rosa
     più debole d'Europa di tre ordini di grandezza, se qualcuno lo usasse.
     `None` dichiarato è informazione; un numero plausibile e falso non lo è.
+
+    Le due prove:
+      1. la squadra ha copertura `completa` (il record del club non è vecchio);
+      2. almeno l'85% dei giocatori in rosa ha un valore — la soglia che il
+         progetto già applica in `transfermarkt.team_season_values`.
     """
-    if copertura != "completa":
+    if copertura != "completa" or not valori:
         return None
     veri = [v for v in valori if v]
+    if len(veri) / len(valori) < min_quota:
+        return None
     return sum(veri) if veri else None
 
 

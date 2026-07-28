@@ -1,0 +1,176 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Bologna FC",
+ "lega": "serie_a",
+ "voce": "Bologna Football Club 1909 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Bologna_Football_Club_1909_2026-2027",
+ "aggiornata_al_dichiarato": null,
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 27,
+ "rosa_prima_squadra_n": 22,
+ "rosa": [
+  {
+   "nome": "Łukasz Skorupski",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Tommaso Pobega",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Eivind Helland",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Nikola Moro",
+   "numero": 6,
+   "ruolo": "C",
+   "nazione": "HRV"
+  },
+  {
+   "nome": "Riccardo Orsolini",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Santiago Castro",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Federico Bernardeschi",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Jonathan Rowe",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Federico Ravaglia",
+   "numero": 13,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Torbjørn Heggem",
+   "numero": 14,
+   "ruolo": "D",
+   "nazione": "NOR"
+  },
+  {
+   "nome": "Nicolò Casale",
+   "numero": 16,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lewis Ferguson",
+   "numero": 19,
+   "ruolo": "C",
+   "nazione": "SCO"
+  },
+  {
+   "nome": "Nadir Zortea",
+   "numero": 20,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Jens Odgaard",
+   "numero": 21,
+   "ruolo": "A",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Thijs Dallinga",
+   "numero": 24,
+   "ruolo": "A",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Massimo Pessina",
+   "numero": 25,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Jhon Lucumí",
+   "numero": 26,
+   "ruolo": "D",
+   "nazione": "COL"
+  },
+  {
+   "nome": "Nicolò Cambiaghi",
+   "numero": 28,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lorenzo De Silvestri",
+   "numero": 29,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Benjamín Domínguez",
+   "numero": 30,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Juan Miranda",
+   "numero": 33,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Martin Vitík",
+   "numero": 41,
+   "ruolo": "D",
+   "nazione": "CZE"
+  },
+  {
+   "nome": "Rahim Alhassane",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "NER"
+  },
+  {
+   "nome": "Emil Holm",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Mihajlo Ilić",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Oussama El Azzouzi",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Jesper Karlsson",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "SWE"
+  }
+ ]
+}

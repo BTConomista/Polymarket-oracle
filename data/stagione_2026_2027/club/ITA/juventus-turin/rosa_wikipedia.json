@@ -1,0 +1,194 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "Juventus Turin",
+ "lega": "serie_a",
+ "voce": "Juventus Football Club 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Juventus_Football_Club_2026-2027",
+ "aggiornata_al_dichiarato": "18/07/2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 30,
+ "rosa_prima_squadra_n": 29,
+ "rosa": [
+  {
+   "nome": "Mattia Perin",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Zeki Çelik",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "TUR"
+  },
+  {
+   "nome": "Bremer",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Federico Gatti",
+   "numero": 4,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Manuel Locatelli",
+   "numero": 5,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Lloyd Kelly",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "ENG"
+  },
+  {
+   "nome": "Francisco Conceição",
+   "numero": 7,
+   "ruolo": "A",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Teun Koopmeiners",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "NLD"
+  },
+  {
+   "nome": "Kenan Yıldız",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "TUR"
+  },
+  {
+   "nome": "Edon Zhegrova",
+   "numero": 11,
+   "ruolo": "A",
+   "nazione": "KOS"
+  },
+  {
+   "nome": "Douglas Luiz",
+   "numero": 12,
+   "ruolo": "C",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Jérémie Boga",
+   "numero": 13,
+   "ruolo": "A",
+   "nazione": "CIV"
+  },
+  {
+   "nome": "Arkadiusz Milik",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Pierre Kalulu",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Michele Di Gregorio",
+   "numero": 16,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Vasilije Adžić",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "MNE"
+  },
+  {
+   "nome": "Jeff Ekhator",
+   "numero": 18,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Khéphren Thuram",
+   "numero": 19,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Loïs Openda",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "BEL"
+  },
+  {
+   "nome": "Fabio Miretti",
+   "numero": 21,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Weston McKennie",
+   "numero": 22,
+   "ruolo": "C",
+   "nazione": "USA"
+  },
+  {
+   "nome": "Carlo Pinsoglio",
+   "numero": 23,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Daniele Rugani",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "João Mário",
+   "numero": 25,
+   "ruolo": "D",
+   "nazione": "PRT"
+  },
+  {
+   "nome": "Andrea Cambiaso",
+   "numero": 27,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Arthur",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Jonathan David",
+   "numero": 30,
+   "ruolo": "A",
+   "nazione": "CAN"
+  },
+  {
+   "nome": "Juan David Cabal",
+   "numero": 32,
+   "ruolo": "D",
+   "nazione": "COL"
+  },
+  {
+   "nome": "Jonas Rouhi",
+   "numero": 40,
+   "ruolo": "D",
+   "nazione": "SWE"
+  },
+  {
+   "nome": "Nicolás González",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ARG"
+  }
+ ]
+}

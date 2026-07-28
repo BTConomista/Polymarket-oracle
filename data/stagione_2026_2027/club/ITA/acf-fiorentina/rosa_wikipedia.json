@@ -1,0 +1,158 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "ACF Fiorentina",
+ "lega": "serie_a",
+ "voce": "ACF Fiorentina 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/ACF_Fiorentina_2026-2027",
+ "aggiornata_al_dichiarato": "1° luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 24,
+ "rosa_prima_squadra_n": 19,
+ "rosa": [
+  {
+   "nome": "Luca Lezzerini",
+   "numero": 1,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Dodô",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Marco Brescianini",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Marin Pongračić",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "HRV"
+  },
+  {
+   "nome": "Luca Ranieri",
+   "numero": 6,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Rolando Mandragora",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Albert Guðmundsson",
+   "numero": 10,
+   "ruolo": "A",
+   "nazione": "ISL"
+  },
+  {
+   "nome": "Pietro Comuzzo",
+   "numero": 15,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Moise Kean",
+   "numero": 20,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Eman Košpo",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "BIH"
+  },
+  {
+   "nome": "Cher Ndour",
+   "numero": 27,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Niccolò Fortini",
+   "numero": 29,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "David de Gea",
+   "numero": 43,
+   "ruolo": "P",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Nicolò Fagioli",
+   "numero": 44,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Oliver Christensen",
+   "numero": 53,
+   "ruolo": "P",
+   "nazione": "DNK"
+  },
+  {
+   "nome": "Luis Balbo",
+   "numero": 62,
+   "ruolo": "D",
+   "nazione": "VEN"
+  },
+  {
+   "nome": "Fabiano Parisi",
+   "numero": 65,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Giovanni Fabbian",
+   "numero": 80,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Roberto Piccoli",
+   "numero": 91,
+   "ruolo": "A",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Viery",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Radu Drăgușin",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ROU"
+  },
+  {
+   "nome": "Álex Jiménez",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Arthur Atta",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Christ Inao Oulaï",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "CIV"
+  }
+ ]
+}

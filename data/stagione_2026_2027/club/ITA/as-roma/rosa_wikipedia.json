@@ -1,0 +1,182 @@
+{
+ "_fonte": "it.wikipedia.org (licenza CC BY-SA), API ufficiale",
+ "_nota": "Chi è TESSERATO, non chi è disponibile: infortuni e squalifiche sono stato quotidiano e vivono in giornaliero/, non qui.",
+ "squadra": "AS Roma",
+ "lega": "serie_a",
+ "voce": "Associazione Sportiva Roma 2026-2027",
+ "url": "https://it.wikipedia.org/wiki/Associazione_Sportiva_Roma_2026-2027",
+ "aggiornata_al_dichiarato": "13 luglio 2026",
+ "scaricato_utc": "2026-07-28T18:49:13.333182+00:00",
+ "rosa_n": 28,
+ "rosa_prima_squadra_n": 22,
+ "rosa": [
+  {
+   "nome": "Devyne Rensch",
+   "numero": 2,
+   "ruolo": "D",
+   "nazione": "NED"
+  },
+  {
+   "nome": "Angeliño",
+   "numero": 3,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Bryan Cristante",
+   "numero": 4,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Evan Ndicka",
+   "numero": 5,
+   "ruolo": "D",
+   "nazione": "CIV"
+  },
+  {
+   "nome": "Neil El Aynaoui",
+   "numero": 8,
+   "ruolo": "C",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Artem Dovbyk",
+   "numero": 9,
+   "ruolo": "A",
+   "nazione": "UKR"
+  },
+  {
+   "nome": "Donyell Malen",
+   "numero": 14,
+   "ruolo": "A",
+   "nazione": "NED"
+  },
+  {
+   "nome": "Manu Koné",
+   "numero": 17,
+   "ruolo": "C",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Matías Soulé",
+   "numero": 18,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Paulo Dybala",
+   "numero": 21,
+   "ruolo": "A",
+   "nazione": "ARG"
+  },
+  {
+   "nome": "Mario Hermoso",
+   "numero": 22,
+   "ruolo": "D",
+   "nazione": "ESP"
+  },
+  {
+   "nome": "Gianluca Mancini",
+   "numero": 23,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Jan Ziółkowski",
+   "numero": 24,
+   "ruolo": "D",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Devis Vásquez",
+   "numero": 32,
+   "ruolo": "P",
+   "nazione": "COL"
+  },
+  {
+   "nome": "Anass Salah-Eddine",
+   "numero": 34,
+   "ruolo": "D",
+   "nazione": "MAR"
+  },
+  {
+   "nome": "Wesley França",
+   "numero": 43,
+   "ruolo": "D",
+   "nazione": "BRA"
+  },
+  {
+   "nome": "Niccolò Pisilli",
+   "numero": 61,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Robinio Vaz",
+   "numero": 78,
+   "ruolo": "A",
+   "nazione": "FRA"
+  },
+  {
+   "nome": "Daniele Ghilardi",
+   "numero": 87,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Radosław Żelezny",
+   "numero": 91,
+   "ruolo": "P",
+   "nazione": "POL"
+  },
+  {
+   "nome": "Pierluigi Gollini",
+   "numero": 95,
+   "ruolo": "P",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Mile Svilar",
+   "numero": 99,
+   "ruolo": "P",
+   "nazione": "SRB"
+  },
+  {
+   "nome": "Marash Kumbulla",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ALB"
+  },
+  {
+   "nome": "Mattia Mannini",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Filippo Reale",
+   "numero": null,
+   "ruolo": "D",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Riccardo Pagano",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "ITA"
+  },
+  {
+   "nome": "Muhammed Bah",
+   "numero": null,
+   "ruolo": "C",
+   "nazione": "GMB"
+  },
+  {
+   "nome": "Luigi Cherubini",
+   "numero": null,
+   "ruolo": "A",
+   "nazione": "ITA"
+  }
+ ]
+}
