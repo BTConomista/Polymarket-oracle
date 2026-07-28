@@ -708,7 +708,15 @@ proprietà del mercato, era la nostra ignoranza.
 GG/NG nelle stagioni recenti, e le "aperture vere" (prima quota pubblicata, non
 il venerdì di football-data) restano l'unico test rimasto della Fase 14. Il
 motivo però non è più «non abbiamo quote»: è «non abbiamo quote *recenti*».
-Canale già pronto (cron Actions).
+**🟢 CANALE APERTO E IN FUNZIONE dal 28/07/2026** (Fasi 116/118): il GG/NG è
+uno dei tre mercati del regime di lungo raggio di
+`scripts/fetch_smarkets_matches.py` (cron in `.github/workflows/smarkets-prematch.yml`,
+archivio in `data/smarkets_matches/`, semantica in `docs/DATI.md` §5-ter). Le
+quote di borsa **non sono le stesse** di un bookmaker — niente margine da
+devigare, e c'è lo spread banco/puntatore al suo posto: il confronto con la
+misura di 1xBet va fatto **dichiarando** questa differenza, non ignorandola. La
+pista resta aperta finché non ci sono partite **giocate** da scorare: la prima
+è il **15 agosto**.
 
 ### 17. Paper-trading della strategia draw-bias
 **Dato**: nessuno nuovo — modello e storia già esistono; manca il

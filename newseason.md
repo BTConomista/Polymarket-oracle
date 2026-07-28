@@ -59,7 +59,7 @@ posteriori. Ognuna ha la sua scadenza, e non è la stessa:
 | # | cosa | scadenza | se si manca |
 |---|---|---|---|
 | 1 | **Previsioni congelate** del test prospettico (Fase 78) | **15 agosto** (vigilia della Liga), lega per lega alla vigilia della rispettiva giornata 1 | il test non è più prospettico: una previsione prodotta dopo non è una previsione |
-| 2 | **Quote di apertura e traiettoria** verso la chiusura | **dal via in poi, in continuo** — ma il raccoglitore va acceso *prima* (≈10 agosto) | resta un buco identico a quello di `docs/CACCIA_OU_2017_19.md`, e all'indietro non si chiude |
+| 2 | ✅ **FATTO (Fasi 116/118, 28 luglio)** — **quote di apertura e traiettoria** verso la chiusura | era «acceso ≈10 agosto»: acceso il **28 luglio**, cioè **13 giorni prima**, e non è un anticipo di lusso — il listino dell'esordio è già quotato e la Fase 118 ha misurato che una finestra a 72 h avrebbe lasciato il raccoglitore fermo **fino al 12 agosto** | il buco sarebbe stato identico a quello di `docs/CACCIA_OU_2017_19.md`, e all'indietro non si chiude |
 | 3 | **Formazioni ufficiali** | **T−1h di ogni partita**, per sempre | è l'unica informazione che la Fase 93 indica come bersaglio (il deficit è informazione, non calibrazione), e a posteriori diventa cronaca |
 
 Il lavoro di modello, invece, **può aspettare**. Da qui l'ordine del piano.
@@ -79,13 +79,17 @@ nasce **con i paracadute già scritti**, non aggiunti dopo.
 Tre cose che decidono il disegno e che **non voglio assumere**. Stato al
 28/07/2026:
 
-- [ ] **Smarkets ha le quote 1X2 per-partita del 2026-27?** Gli eventi ci sono
-      (`Inter Milan vs Monza`, 22/08) ma i **libri** non li ha ancora guardati
-      nessuno. Se sono liquidi risolvono in un colpo **calendario + quote** per
-      il test prospettico. È la casella che decide se il **Modello 2 esiste**
+- [x] ✅ **Smarkets ha le quote 1X2 per-partita del 2026-27? SÌ — misurato**
+      (Fasi 115/116/118). L'API espone **una giornata per lega**: al 28/07 sono
+      **48 partite** delle nostre 5 (9-10 ciascuna, dal 15 al 30 agosto), e i
+      libri **ci sono**: 1X2 + O/U 2.5 + GG/NG con libro a **due lati sull'85%**
+      delle righe e overround mediano **1.0034**. Risolve in un colpo
+      **calendario + quote**, quindi **il Modello 2 esiste**
       (`experiments/prospettico_2026_27.md` §5.1).
-      Punto di partenza: `python scripts/fetch_smarkets_outrights.py`
-      (usa `api.smarkets.com`, pubblica e senza chiave — `MANUALE` §1-bis).
+      Raccoglitore: `scripts/fetch_smarkets_matches.py`, acceso in automatico da
+      `.github/workflows/smarkets-prematch.yml`. Primo file già in archivio.
+      ⚠️ Da fare **prima del join**: la mappa nomi squadra Smarkets→nostri, a
+      mano e verificata (vale la stessa avvertenza di `docs/DATI.md` §5-bis).
 - [ ] **Calendario 2026-27 completo.** Se Smarkets non basta: openfootball su
       `raw.githubusercontent.com` è raggiungibile (`MANUALE` §1). ⚠️ Verificare
       i nomi squadra contro `TEAM_ALIASES` (`src/data/sources.py`): è un bug già
@@ -385,15 +389,17 @@ Elenco delle finestre che si chiudono, in ordine di quanto sono irripetibili:
 ## 11 · Checklist datata
 
 Riferita al **28/07/2026**. Le prime due righe sono **in ritardo di zero
-giorni**: erano «fine luglio».
+giorni**: erano «fine luglio». **Tre righe sono già chiuse** (Fasi 116/118): il
+raccoglitore pre-partita era previsto per il 5-10 agosto ed è in funzione dal
+28 luglio.
 
 | entro | cosa | comando / file | blocco |
 |---|---|---|:--:|
 | **subito** | **pre-registrare i criteri** (prima di guardare qualunque dato) | scrivili in `experiments/prospettico_2026_27.md` §5.1 | A3 |
-| **subito** | sondaggi: libri Smarkets per-partita, calendario, formazioni | `scripts/fetch_smarkets_outrights.py` | 0 |
+| ~~subito~~ ✅ **28 lug** | sondaggi: libri Smarkets per-partita ✅ (48 partite, libri liquidi) — restano calendario completo e formazioni | `scripts/fetch_smarkets_matches.py` | 0 |
 | **~2 agosto** | `probe.yml` dal runner Actions — **solo** per Betfair/SofaScore e il vincolo geo | — | 8.1 |
-| **~5 agosto** | raccoglitore Actions scritto, **visto girare a mano** (`workflow_dispatch`) | `scripts/archive_outrights.py` | A2 |
-| **~10 agosto** | cron armato, due giri completi osservati | — | A2 |
+| ~~~5 agosto~~ ✅ **28 lug** | raccoglitore Actions scritto e **visto girare a mano** (`workflow_dispatch`, run `30383527812`) — ed è servito: girava **verde raccogliendo zero** (Fase 118) | `scripts/fetch_smarkets_matches.py` | A2 |
+| ~~~10 agosto~~ ✅ **28 lug** | cron armato (denso ogni 6 h + lungo raggio 1×/giorno). **Resta da osservare**: due giri completi *automatici*, cioè non lanciati a mano | `.github/workflows/smarkets-prematch.yml` | A2 |
 | **~12 agosto** | previsioni DC congelate (tutti i Tier 1, 5 leghe) + script di scoring pronto | `scripts/predict.py --league …` | A1 |
 | **14 agosto** | istantanea outright pre-stagione + ri-prezzatura campione | `scripts/archive_outrights.py`, `scripts/_run_fase89_season_champion.py` | 10.5 |
 | **15 agosto** | ultimo controllo: tutto gira? commit datato delle previsioni congelate | — | A1 |

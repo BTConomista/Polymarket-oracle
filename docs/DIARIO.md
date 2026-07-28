@@ -289,9 +289,12 @@ fronte **Betfair Exchange** — il primo candidato migliore della stima — e lo
 ridimensionano due volte su richiesta dell'utente, fino a scoprire che la borsa
 che serviva (Smarkets) era già in casa e gratis. La Fase 116 mette in piedi il
 raccoglitore Smarkets pre-partita a costo zero, prima della scadenza del 16
-agosto. **Chiude l'arco la Fase 117**, che allinea ogni file del repo alle
+agosto. La Fase 117 allinea ogni file del repo alle
 analisi accumulate e scrive la voce di diario che alla Fase 101-bis non era
-mai stata scritta. Esito dell'arco:
+mai stata scritta. **Chiude l'arco la Fase 118**, che accende il raccoglitore
+per la prima volta e scopre che un run *verde* non stava raccogliendo niente:
+la finestra a 72 ore lo teneva fermo fino a tre giorni dal via, e «nessuna
+partita» era indistinguibile da «l'API non ci parla più». Esito dell'arco:
 nessun edge nuovo, e un repo che dice di sé la verità, coi dati che aveva
 promesso di correggere corretti davvero — comprese le correzioni delle
 correzioni.*
@@ -316,6 +319,7 @@ correzioni.*
 - [Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa](#fase-115--serve-un-pc-cloud-247--no-la-borsa-che-serviva-era-già-in-casa)
 - [Fase 116 — Il raccoglitore prospettico è in piedi (e costa zero)](#fase-116--il-raccoglitore-prospettico-è-in-piedi-e-costa-zero)
 - [Fase 117 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson](#fase-117--ogni-file-allineato-il-merge-con-una-sessione-parallela-e-lidentità-che-chiude-la-com-poisson)
+- [Fase 118 — Il primo giro vero del raccoglitore: verde, e non raccoglieva niente](#fase-118--il-primo-giro-vero-del-raccoglitore-verde-e-non-raccoglieva-niente)
 
 ---
 
@@ -13381,3 +13385,132 @@ pericolosa non sono i conflitti** — quelli git li segnala. Sono i file che si
 fondono *puliti* mentre le due versioni raccontano storie diverse: nessun
 marker, nessun test rosso, e il documento risultante è coerente solo in
 apparenza. È lo stesso difetto della fase fantasma, alla scala del repo.
+
+---
+
+## Fase 118 — Il primo giro vero del raccoglitore: verde, e non raccoglieva niente
+
+**Obiettivo.** Verificare che il raccoglitore della Fase 116 parta **da solo**.
+Il cron era committato ma non era mai stato eseguito: fino a quel momento
+«funziona» era una deduzione dal codice, non un fatto. Con una scadenza vera
+(16 agosto) e un dato irrecuperabile, la deduzione non basta.
+
+**Cosa è successo.** Primo run su GitHub Actions (`30383527812`): **verde in 23
+secondi**, nessun file scritto. Lo step di raccolta è durato **3 secondi** —
+in locale, con 6 partite, ne serviva un ordine di grandezza in più. Il log
+diceva `partite delle 5 leghe entro 72h: 0`.
+
+**Prima diagnosi: sbagliata.** Ho sospettato che Smarkets filtrasse gli IP dei
+runner. Era falso, e la prova era già nel repo: i miei run locali della Fase
+116 avevano usato `--entro-ore 500`, non 72. Oggi è il **28 luglio**: la prima
+partita delle 5 leghe è il **15 agosto**, cioè fra 432 ore. Il codice aveva
+fatto esattamente la cosa giusta. *(R5.1 — spiegare prima di accusare: la
+spiegazione stava nel metadato del file, non in un blocco della fonte.)*
+
+**Ma il run verde ha scoperchiato due difetti veri.**
+
+**(1) Il raccoglitore non avrebbe raccolto NULLA fino al 12 agosto.** Con la
+finestra a 72 ore, il primo giro utile sarebbe caduto tre giorni prima del via.
+Nel frattempo il listino dell'esordio è **già quotato e già si muove**: misurato
+il 28/07, Smarkets espone **48 partite** delle nostre 5 leghe (9-10 per lega,
+dal 15 al 30 agosto). Diciotto giorni di traiettoria che `newseason.md` §2
+classifica come irrecuperabili, persi per un valore di default.
+
+**(2) «Finestra vuota» e «l'API non ci parla più» erano lo stesso esito.** Zero
+righe, workflow verde, nessun errore. Se Smarkets rinominasse uno slug di
+competizione — e il commento nel codice diceva già che il confronto esatto
+serve a proteggere *quel* contratto — raccoglieremmo il nulla per mesi senza
+accorgercene. È il **finto pieno** della regola R6 applicato a un processo
+invece che a una cella: un verde che significa «tutto a posto» e invece
+significa «non lo so».
+
+**Le due correzioni.** Un regime di **lungo raggio** (`--tutte-le-esposte
+--solo-principali`, un giro al giorno) che prende tutto ciò che l'API espone ma
+solo sui mercati che il motore consuma; e un **controllo di plausibilità del
+listino** che fa fallire il giro invece di uscire verde. In più i secondi nel
+nome del file: due regimi nello stesso minuto si sarebbero sovrascritti in
+silenzio.
+
+**La regola è misurata, non assunta.** Il 28 luglio — il punto più profondo
+dell'off-season, nessuna delle 5 leghe in campo prima di tre settimane — il
+listino esponeva **709 eventi calcio su 101 competizioni**, e tutte e 5 le
+nostre erano presenti con 9-10 partite. Quindi «zero partite nostre in un
+listino non vuoto» non è uno stato che l'off-season produce: è un'anomalia. È
+la differenza fra una soglia inventata e una soglia con una misura dietro.
+
+**Risultato.** Primo file di lungo raggio: **336 righe su 48 partite**, tutte e
+5 le leghe, 7 righe per partita (1X2 + O/U 2.5 + GG/NG), **149 KB**. Libro a
+due lati sull'**85%** delle righe; somma dei complementari mediana **1.0034**
+(O/U 2.5), **1.0030** (GG/NG), **1.0040** (1X2) — l'overround quasi nullo di
+una borsa. Le 49 righe senza libro sono marcate una per una, non riempite.
+Quattro mutazioni provate sul codice nuovo, **quattro catturate** dal test
+inteso.
+
+**📐 Il modello in dettaglio.**
+
+Non c'è matematica nuova: ci sono due regole di decisione, e il punto è il
+*perché* delle loro soglie. Verificate riga per riga contro
+`scripts/fetch_smarkets_matches.py`.
+
+*(a) Plausibilità del listino* — `anomalia_del_listino(E, N)`, con `E` = eventi
+calcio futuri visti in tutto e `N` = quanti appartengono alle nostre 5 leghe:
+
+```
+anomalia(E, N) = "listino vuoto"       se E = 0
+               = "slug non trovati"    se E > 0 e N = 0
+               = None (tutto bene)     altrimenti
+```
+
+Perché queste due e non una soglia numerica: sono gli unici due stati che **non
+possono** essere prodotti dal calendario. `E = 0` significa che da nessuna parte
+al mondo si gioca — mai vero. `N = 0` con `E > 0` significa che gli slug attesi
+non compaiono; e che non sia l'off-season a produrlo è **misurato** il
+28/07/2026 (`E = 709`, `N = 48`, nel giorno più vuoto dell'anno). Nessuna soglia
+su «quante partite ci aspettiamo»: sarebbe stata una costante inventata, e
+avrebbe suonato falsi allarmi durante le soste.
+
+*(b) Finestra temporale* — `entro_finestra(S, h)`:
+
+```
+entro_finestra(S, h) = S                                      se h ≤ 0
+                     = { e ∈ S : inizio(e) ≤ adesso + h }     se h > 0
+```
+
+`h ≤ 0` è il regime di lungo raggio (`--tutte-le-esposte` passa 0). Il confronto
+è `≤`, non `<`: una partita che dista esattamente `h` deve entrare, altrimenti
+due giri consecutivi a distanza `h` la perderebbero in modo intermittente —
+difetto invisibile in un test a valori tondi, coperto da
+`test_il_bordo_della_finestra_e_incluso`.
+
+*(c) Perché il lungo raggio esclude il risultato esatto.* Non è una scelta di
+gusto, è aritmetica di archivio. Dal file misurato: 149 KB / 336 righe = **454
+byte per riga**. Con i 6 mercati del listino le righe per partita sono **30**
+(la Fase 116 misurò 180 righe / 6 partite), di cui ~24 di solo risultato esatto;
+con i 3 principali sono **7**. Quindi:
+
+```
+lungo raggio, 1 giro/giorno:  48 × 7  × 454 B ≈ 149 KB/giorno ≈ 45 MB/stagione
+stesso giro con tutti i mercati: 48 × 30 × 454 B ≈ 640 KB/giorno ≈ 190 MB
+```
+
+Il fattore ~4.3 è tutto risultato esatto — un mercato che a tre settimane dal
+via è sottile (Fase 116: libro a due lati sul 59% delle righe, contro l'85% di
+oggi sui principali) e che il **regime denso** raccoglie comunque quando conta,
+cioè vicino al calcio d'inizio. Si paga dove il dato è informativo, non dove è
+rumore.
+
+**Il costo dichiarato, perché non resti una sorpresa.** Il regime denso
+in-season è la voce pesante: ~35 partite in finestra in un fine settimana × 30
+righe × 454 B ≈ 480 KB a giro, per 4 giri al giorno. Su una stagione l'archivio
+sta nell'ordine dei **250-300 MB** versionati. È il prezzo di un dato che non si
+può ricomprare, ma è una cifra che va **decisa**, non subita: le due leve sono
+la frequenza del cron e l'esclusione del risultato esatto anche dal denso.
+
+**Lezione.** *Un processo automatico verde non è un processo che funziona: è un
+processo che non ha protestato.* Il run era verde, il codice era corretto, e
+insieme non stavano facendo il lavoro. La verifica che conta non è «il job
+passa» ma «il job ha prodotto il dato che doveva» — e va guardata **la prima
+volta**, quando c'è ancora tempo per rimediare, non alla fine della stagione
+quando il dato mancante non si recupera più. La regola R6 diceva già che il
+buco peggiore è il finto pieno; questa fase aggiunge che il finto pieno può
+essere un *file che non esiste*, non solo un valore sbagliato.

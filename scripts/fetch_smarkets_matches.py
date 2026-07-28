@@ -19,10 +19,21 @@ E soprattutto: API **pubblica, senza chiave, senza account**, raggiungibile
 dall'ambiente cloud del progetto. Nessun VPS, nessun rischio per l'account di
 nessuno (il muro di Betfair era contrattuale, non tecnico: Fase 115).
 
-COSA RACCOGLIE. Solo le partite **imminenti** (default: entro 72 ore) delle 5
-leghe. Non tutte le partite future a ogni giro: la traiettoria interessante e'
-quella che si addensa verso il calcio d'inizio, e restringere tiene i file
-piccoli e le chiamate poche (cortesia verso un'API gratuita).
+COSA RACCOGLIE. Due regimi, perche' servono due cose diverse:
+  - **denso** (default, `--entro-ore 72`): tutti i mercati delle partite
+    imminenti. E' la traiettoria che si addensa verso il calcio d'inizio, ed
+    e' quella che vale per il test prospettico;
+  - **lungo raggio** (`--tutte-le-esposte --solo-principali`): tutte le
+    partite che Smarkets espone -- misurato il 28/07/2026: **una giornata per
+    lega, ~48 partite in tutto** -- ma solo sui mercati che il motore consuma.
+    Serve perche' il listino dell'esordio e' **gia' quotato oggi** e si muove
+    da oggi: col solo regime denso non si raccoglierebbe nulla fino al 12
+    agosto, e quei 18 giorni di traiettoria sono irrecuperabili
+    (`newseason.md` §2).
+
+Il risultato esatto e' ~24 delle ~30 righe per partita: tenerlo fuori dal
+lungo raggio e' cio' che rende sostenibile un giro al giorno per una stagione
+intera, senza perdere nulla di cio' che il motore usa davvero.
 
 COSA *NON* FA. Non piazza scommesse e non legge conti: e' sola lettura di
 dati pubblici. Il progetto non scommette (CLAUDE.md §5).
@@ -37,6 +48,7 @@ USO:
     python scripts/fetch_smarkets_matches.py --entro-ore 24  # solo l'imminente
     python scripts/fetch_smarkets_matches.py --dry-run       # cosa prenderebbe
     python scripts/fetch_smarkets_matches.py --tutti-i-mercati
+    python scripts/fetch_smarkets_matches.py --tutte-le-esposte --solo-principali
 """
 
 from __future__ import annotations
@@ -87,6 +99,12 @@ MERCATI_BASE = {
     "Correct score": "risultato_esatto",
 }
 
+# I mercati che il motore consuma davvero: il market-implied inverte 1X2+O/U
+# 2.5 (src/models/market_implied.py) e il GG/NG e' quello che il progetto non
+# ha mai potuto validare contro una quota esterna. Il regime di lungo raggio si
+# ferma a questi.
+MERCATI_PRINCIPALI = {"1x2", "ou25", "ggng"}
+
 _ORA = re.compile(r"^(\d{4}-\d{2}-\d{2})T")
 
 
@@ -95,13 +113,44 @@ def _slug_lega(full_slug: str | None) -> str | None:
     return SLUG_LEGA.get(m.group(1)) if m else None
 
 
-def partite_imminenti(entro_ore: int) -> list[dict]:
-    """Le partite delle nostre 5 leghe che iniziano entro N ore."""
-    limite = dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=entro_ore)
-    out, url = [], "/events/?type=football_match&state=upcoming&limit=200"
+def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
+    """Il listino ricevuto e' plausibile? Ritorna il motivo, o None se va bene.
+
+    PERCHE' ESISTE (R6, «il buco peggiore e' il finto pieno»). Senza questo
+    controllo, «nessuna partita in finestra» e «l'API non ci parla piu'»
+    producono lo **stesso** identico esito: zero righe, workflow verde. Se
+    Smarkets rinominasse uno slug di competizione, o filtrasse gli IP dei
+    runner, raccoglieremmo il nulla per mesi senza che nessuno se ne accorga --
+    e i dati pre-partita non si recuperano dopo (`newseason.md` §2).
+
+    La regola non e' assunta, e' **misurata** (28/07/2026, il punto piu'
+    profondo dell'off-season: nessuna delle 5 leghe gioca prima del 15 agosto):
+    il listino esponeva **709** eventi calcio su 101 competizioni, e tutte e 5
+    le nostre erano presenti con **9-10 partite ciascuna**. Quindi «zero
+    partite nostre in un listino non vuoto» non e' uno stato che l'off-season
+    produce: e' un'anomalia. Zero eventi in assoluto lo e' a maggior ragione --
+    da qualche parte nel mondo si gioca sempre.
+    """
+    if eventi_totali == 0:
+        return ("il listino delle partite future e' VUOTO: 0 eventi calcio in "
+                "tutto. L'API ha risposto ma non dice nulla.")
+    if nostri == 0:
+        return (f"{eventi_totali} eventi calcio nel listino, ma NESSUNO delle "
+                f"nostre 5 leghe: gli slug di competizione attesi "
+                f"({', '.join(sorted(SLUG_LEGA))}) non compaiono. "
+                "Probabile rinominamento a monte.")
+    return None
+
+
+def scandaglia_upcoming() -> tuple[list[dict], int]:
+    """Tutte le partite delle 5 leghe che Smarkets espone, e quanti eventi
+    calcio ha mostrato in totale (il secondo serve solo alla diagnosi)."""
+    nostre, totale = [], 0
+    url = "/events/?type=football_match&state=upcoming&limit=200"
     while url:
         d = _get(url)
         for e in d.get("events", []):
+            totale += 1
             lega = _slug_lega(e.get("full_slug"))
             if not lega:
                 continue
@@ -110,15 +159,26 @@ def partite_imminenti(entro_ore: int) -> list[dict]:
                     (e.get("start_datetime") or "").replace("Z", "+00:00"))
             except ValueError:
                 continue
-            if inizio <= limite:
-                out.append({"event_id": e["id"], "nome": e.get("name"),
-                            "lega": lega, "inizio": e.get("start_datetime")})
+            nostre.append({"event_id": e["id"], "nome": e.get("name"),
+                           "lega": lega, "inizio": e.get("start_datetime"),
+                           "_inizio": inizio})
         nx = (d.get("pagination") or {}).get("next_page")
         url = f"/events/{nx}" if nx else None
-    return out
+    return nostre, totale
 
 
-def quote_partita(ev: dict, tutti: bool) -> list[dict]:
+def entro_finestra(nostre: list[dict], entro_ore: int,
+                   adesso: dt.datetime | None = None) -> list[dict]:
+    """Il sottoinsieme che inizia entro N ore. `entro_ore` <= 0 = nessun
+    limite (prende tutto cio' che l'API espone)."""
+    if entro_ore <= 0:
+        return list(nostre)
+    adesso = adesso or dt.datetime.now(dt.timezone.utc)
+    limite = adesso + dt.timedelta(hours=entro_ore)
+    return [e for e in nostre if e["_inizio"] <= limite]
+
+
+def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[dict]:
     """Le quote di una partita: una riga per (mercato, contratto)."""
     righe = []
     mercati = (_get(f"/events/{ev['event_id']}/markets/") or {}).get("markets", [])
@@ -129,6 +189,8 @@ def quote_partita(ev: dict, tutti: bool) -> list[dict]:
             if not tutti:
                 continue
             etichetta = re.sub(r"[^a-z0-9]+", "_", nome.lower()).strip("_")
+        if solo_principali and etichetta not in MERCATI_PRINCIPALI:
+            continue
         contratti = (_get(f"/markets/{m['id']}/contracts/") or {}).get("contracts", [])
         quote = _get(f"/markets/{m['id']}/quotes/") or {}
         libri = quote.get(str(m["id"]), quote)
@@ -157,36 +219,68 @@ def main(argv=None) -> None:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--entro-ore", type=int, default=72,
                     help="raccogli le partite che iniziano entro N ore (default 72)")
+    ap.add_argument("--tutte-le-esposte", action="store_true",
+                    help="ignora la finestra: tutto cio' che l'API espone (~1 giornata/lega)")
     ap.add_argument("--tutti-i-mercati", action="store_true",
                     help="tutti i ~100 mercati, non solo quelli del listino")
+    ap.add_argument("--solo-principali", action="store_true",
+                    help=f"solo i mercati che il motore consuma: {sorted(MERCATI_PRINCIPALI)}")
     ap.add_argument("--dry-run", action="store_true",
                     help="mostra le partite che prenderebbe, senza chiedere quote")
     a = ap.parse_args(argv)
 
-    evs = partite_imminenti(a.entro_ore)
-    print(f"partite delle 5 leghe entro {a.entro_ore}h: {len(evs)}")
-    for e in evs:
+    nostre, totale = scandaglia_upcoming()
+
+    # R6: prima di tutto, il listino ricevuto ha senso? Un giro che raccoglie
+    # zero perche' l'API e' muta deve FALLIRE, non uscire verde come un giro
+    # che raccoglie zero perche' e' off-season.
+    perche = anomalia_del_listino(totale, len(nostre))
+    if perche:
+        raise SystemExit(f"ANOMALIA nel listino Smarkets: {perche}")
+
+    entro = 0 if a.tutte_le_esposte else a.entro_ore
+    evs = entro_finestra(nostre, entro)
+    quali = "esposte" if entro <= 0 else f"entro {entro}h"
+    print(f"eventi calcio nel listino: {totale} | partite delle 5 leghe "
+          f"esposte: {len(nostre)} | in raccolta ({quali}): {len(evs)}")
+    for e in sorted(evs, key=lambda x: x["_inizio"]):
         print(f"   [{e['lega']:15s}] {e['inizio']}  {e['nome']}")
+
+    if not evs:
+        # Non e' un errore, ma non e' nemmeno un non-evento: si dice quanto
+        # manca, cosi' «zero» resta un'informazione e non un silenzio.
+        prossima = min(nostre, key=lambda x: x["_inizio"])
+        ore = (prossima["_inizio"] - dt.datetime.now(dt.timezone.utc)).total_seconds() / 3600
+        print(f"\nnessuna partita entro {entro}h, ma {len(nostre)} sono gia' "
+              f"esposte: la prima fra {ore:.0f}h ({prossima['inizio']}). "
+              "Per prenderle: --tutte-le-esposte.")
+        return
     if a.dry_run:
         print("\n--dry-run: nessuna quota richiesta, nessun file scritto.")
-        return
-    if not evs:
-        print("\nnessuna partita in finestra: niente da raccogliere (non e' un errore).")
         return
 
     righe = []
     for i, e in enumerate(evs, 1):
-        righe += quote_partita(e, a.tutti_i_mercati)
+        righe += quote_partita(e, a.tutti_i_mercati, a.solo_principali)
         print(f"  [{i}/{len(evs)}] {e['nome']}: {len(righe)} righe totali")
 
     quando = dt.datetime.now(dt.timezone.utc)
     DEST.mkdir(parents=True, exist_ok=True)
-    dest = DEST / f"{quando.strftime('%Y-%m-%dT%H-%M')}.json"
+    # Con i SECONDI, non con i soli minuti: i due regimi (denso e lungo raggio)
+    # possono capitare nello stesso minuto, e due file con lo stesso nome
+    # significherebbero uno dei due perso in silenzio.
+    dest = DEST / f"{quando.strftime('%Y-%m-%dT%H-%M-%S')}.json"
     dest.write_text(json.dumps({
         "fonte": "api.smarkets.com/v3 (borsa, API pubblica senza chiave)",
         "raccolto_utc": quando.isoformat(),
-        "entro_ore": a.entro_ore,
+        # 0 = nessun limite (regime di lungo raggio). Serve a sapere, rileggendo
+        # l'archivio fra mesi, CHE COSA questo file poteva contenere: un file
+        # denso e uno di lungo raggio non sono confrontabili riga per riga.
+        "entro_ore": entro,
         "tutti_i_mercati": a.tutti_i_mercati,
+        "solo_principali": a.solo_principali,
+        "eventi_calcio_nel_listino": totale,
+        "partite_nostre_esposte": len(nostre),
         "nota_prezzi": ("probabilita' 0-1: p_banco/p_puntatore sono i due lati "
                         "del libro, p_mid il punto medio (somma ~1.005 sulle "
                         "coppie complementari). MAI quote decimali."),

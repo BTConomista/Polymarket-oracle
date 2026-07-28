@@ -15,14 +15,24 @@ name: Raccolta quote pre-partita Smarkets (test prospettico Fase 78)
 
 on:
   schedule:
-    # ogni 6 ore. Alzare la frequenza avvicinandosi al kickoff se servisse una
-    # traiettoria piu' fitta -- ma restando cortesi con un'API gratuita.
+    # DENSO, ogni 6 ore: tutti i mercati delle partite entro 72h. E' la
+    # traiettoria che si addensa verso il calcio d'inizio.
     - cron: '17 */6 * * *'
+    # LUNGO RAGGIO, una volta al giorno: tutte le partite che l'API espone
+    # (misurato: ~1 giornata per lega, 48 partite) ma solo sui mercati che il
+    # motore consuma. Senza questo, fino al 12 agosto non si raccoglierebbe
+    # NULLA -- mentre il listino dell'esordio e' gia' quotato e si muove da
+    # oggi, e quei giorni non si recuperano (newseason.md §2).
+    - cron: '41 5 * * *'
   workflow_dispatch:
     inputs:
       entro_ore:
         description: 'Raccogli le partite che iniziano entro N ore'
         default: '72'
+      lungo_raggio:
+        description: 'Tutto cio che l API espone, solo mercati principali'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -42,8 +52,15 @@ jobs:
 
       - name: Raccogli le quote pre-partita
         run: |
-          python scripts/fetch_smarkets_matches.py \
-            --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"
+          # Quale regime: lo decide il cron che ha fatto partire il giro
+          # (github.event.schedule e' vuoto per un avvio a mano).
+          if [ "${{ github.event.schedule }}" = "41 5 * * *" ] \
+             || [ "${{ github.event.inputs.lungo_raggio }}" = "true" ]; then
+            python scripts/fetch_smarkets_matches.py --tutte-le-esposte --solo-principali
+          else
+            python scripts/fetch_smarkets_matches.py \
+              --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"
+          fi
 
       - name: Salva lo snapshot (se c'e' qualcosa da salvare)
         run: |

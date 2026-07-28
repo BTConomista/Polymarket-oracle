@@ -524,6 +524,66 @@ una lega deve costruire la sua**, non affidarsi a un match approssimato.
 
 ---
 
+## 5-ter · Quote PRE-PARTITA di borsa (`data/smarkets_matches/`) — Fasi 116/118
+
+Dati di **mercato reali** (non stime), **versionati**, raccolti in avanti.
+Stessa logica del 5-bis — ciò che non si congela prima del calcio d'inizio è
+perso — ma sulla **singola partita** invece che sulla stagione.
+
+**A cosa servono.** Due cose che il progetto non ha mai potuto fare:
+(a) il **test prospettico** della Fase 78 (previsioni congelate prima del
+fischio, scorate dopo — il gold standard mai eseguito); (b) la **pista C**,
+cioè validare contro una quota esterna i ~17 mercati che il progetto prezza e
+non ha mai confrontato con nessuno (GG/NG, risultato esatto, multigol,
+total-squadra…). Finora l'**unico** mercato del listino validato esternamente
+era l'handicap asiatico (Fase 88).
+
+| | |
+|---|---|
+| **fonte** | **Smarkets** (API v3 pubblica, senza chiave né account) — una **borsa**, non un bookmaker |
+| **file** | `YYYY-MM-DDTHH-MM-SS.json`, uno per esecuzione. I **secondi** nel nome non sono un vezzo: i due regimi possono cadere nello stesso minuto e si sovrascriverebbero in silenzio (Fase 118) |
+| **granularità riga** | (partita, mercato, contratto) con `p_banco`, `p_puntatore`, `p_mid`, `lato`, `spread`, `vol_banco`, `vol_puntatore` |
+| **prezzi** | **PROBABILITÀ 0-1**, mai quote decimali. Sulle coppie complementari il mid somma ~1.003 (overround quasi nullo di una borsa) |
+| **mercati** | *denso*: 1X2, GG/NG, O/U 1.5/2.5/3.5, **risultato esatto**. *Lungo raggio*: solo 1X2 + O/U 2.5 + GG/NG (quelli che il motore consuma) |
+| **si scrive con** | `python scripts/fetch_smarkets_matches.py` (`--entro-ore`, `--tutte-le-esposte`, `--solo-principali`, `--tutti-i-mercati`, `--dry-run`) |
+| **automazione** | `.github/workflows/smarkets-prematch.yml` — **denso** ogni 6 h (entro 72 h dal via), **lungo raggio** 1×/giorno (tutto l'esposto). Piano gratuito, costo €0 |
+
+**I due regimi, e perché sono due.** Misurato il 28/07/2026: Smarkets espone
+**una giornata per lega** (~48 partite delle nostre 5). Col solo regime denso
+non si sarebbe raccolto **nulla fino al 12 agosto**, mentre il listino
+dell'esordio è già quotato e già si muove — 18 giorni di traiettoria
+irrecuperabili. Il lungo raggio li prende; esclude il risultato esatto perché
+è ~24 righe su 30 per partita, ed è proprio il mercato più sottile lontano dal
+via (libro a due lati sul **59%** delle righe a tre settimane, contro l'**85%**
+dei principali).
+
+**Avvertenze di semantica** (le stesse tre del 5-bis valgono qui):
+
+1. **`p_mid` può mancare** (`lato` dice perché): a listino sottile un contratto
+   può avere un lato solo o nessuno. Al 28/07/2026 sono **49 righe su 336**.
+   Sono marcate, **non riempite**: un mid inventato sarebbe un finto pieno (R6).
+2. **Con un lato solo il «mid» non è un prezzo**: è un tetto (o un pavimento).
+   **Filtrare sullo spread** prima di usare le righe in un'analisi.
+3. **Nomi squadra non normalizzati**, come nel 5-bis: l'archivio conserva i
+   nomi grezzi di Smarkets («Inter Milano»). Chi farà il join con gli snapshot
+   dovrà costruire e **verificare a mano** la sua mappa.
+
+**Controllo di plausibilità (Fase 118).** Il raccoglitore **fallisce** invece
+di uscire verde se il listino ricevuto è vuoto, o se non contiene nessuna delle
+5 leghe. Senza, «off-season» e «l'API non ci parla più» darebbero lo stesso
+esito — zero righe e un workflow verde — e si raccoglierebbe il nulla per mesi.
+La soglia è misurata: il 28/07, nel giorno più vuoto dell'anno, il listino
+aveva **709 eventi calcio su 101 competizioni** con tutte e 5 le nostre
+presenti (9-10 partite ciascuna).
+
+**Costo dell'archivio, dichiarato.** 454 byte per riga misurati. Il lungo
+raggio vale ~149 KB/giorno (~45 MB a stagione); il **denso in-season** è la
+voce pesante e porta il totale nell'ordine dei **250-300 MB** versionati per
+stagione. È una cifra da **decidere** (leve: frequenza del cron, esclusione del
+risultato esatto anche dal denso), non da subire.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

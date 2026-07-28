@@ -246,7 +246,7 @@ somma dei mercati esclusivi ~100-104% invece di 108-115%.
   ```
   che installa il pacchetto in editable più le dipendenze di test dichiarate in
   `pyproject.toml`. Dopo di che `python -m pytest -q` gira: la suite raccoglie
-  **906 test** (`python -m pytest -q --collect-only`, 2026-07-28). Se un
+  **913 test** (`python -m pytest -q --collect-only`, 2026-07-28). Se un
   documento del repo cita un numero di test diverso come stato *attuale*, è
   scaduto; se lo cita come stato storico di una fase, va lasciato ma marcato
   come tale.
@@ -293,16 +293,32 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
   workflow" e il cron mensile di `import_dataset.yml` si attiveranno solo
   quando il file arriverà su main~~ — **PREMESSA CADUTA.** Dalla Fase 82 si
   lavora e si committa **direttamente su `main`** (regola §3-bis del
-  CLAUDE.md), e i tre workflow sono **su main** (verificato 2026-07-28:
+  CLAUDE.md), e i workflow sono **su main** (verificato 2026-07-28:
   `git ls-tree --name-only main .github/workflows/` elenca
-  `betexplorer-scrape.yml`, `import_dataset.yml`, `kaggle-ou-probe.yml`).
+  `betexplorer-scrape.yml`, `import_dataset.yml`, `kaggle-ou-probe.yml` e,
+  dalla Fase 116, `smarkets-prematch.yml`).
   Quindi `workflow_dispatch` è ora azionabile dalla tab Actions. Resta valido
   e utile il workaround **trigger `on: push` sul file-segnale**
   (`.github/import-dataset-trigger`), che legge il workflow dal branch pushato
   e funziona da qualsiasi branch. **Nota**: i commenti dentro i due file
   `.yml` ripetono ancora la premessa caduta («main, qui ancora vuoto») — è
   documentazione scaduta nel codice, non un fatto.
-- **Nessuno dei tre workflow è un'automazione viva**: `import_dataset.yml` ha
+- ⚠️ **Un workflow VERDE non è un workflow che lavora** (Fase 118, pagata sul
+  campo). Il primo run di `smarkets-prematch.yml` è finito **verde in 23 s
+  senza scrivere nulla**: lo step di raccolta durava **3 secondi** contro i
+  minuti attesi. Non era un guasto — la finestra di default (72 h) escludeva
+  legittimamente partite che distano 432 h — ma «zero righe» e «l'API non ci
+  parla più» producevano lo **stesso** esito verde. Due regole che ne
+  discendono, valide per qualunque cron di raccolta: **(1)** guardare il run
+  la **prima volta**, e guardare *cosa ha prodotto*, non solo il pallino
+  verde; **(2)** far **fallire** il giro quando la risposta è implausibile
+  (listino vuoto, o senza nessuna delle entità attese), altrimenti si raccoglie
+  il nulla per mesi. La durata di uno step è il segnale più economico che
+  qualcosa non ha girato davvero.
+- **`smarkets-prematch.yml` È un'automazione viva** (dalla Fase 116/118): due
+  cron, denso ogni 6 h e lungo raggio 1×/giorno, che committano su `main`.
+  L'unico dei workflow del repo a scrivere dati in continuo.
+- **Nessuno degli altri tre workflow è un'automazione viva**: `import_dataset.yml` ha
   il cron mensile disattivato (motivazione dell'audit Fase 92 scritta nel
   file), e `betexplorer-scrape.yml` / `kaggle-ou-probe.yml` puntano alla
   caccia O/U 2017-19, **chiusa alla Fase 100**. Sono conservati come
