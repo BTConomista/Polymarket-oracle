@@ -80,12 +80,21 @@ il numero da solo inganna: il **99,25%** è **un buco solo**, la chiusura O/U de
 **E i buchi che NON sono `NaN`** — la categoria pericolosa, perché un valore che
 *sembra* una misura non lo dichiara mai:
 
-- **`midweek_europe` = 0 quando invece si giocava**: il calendario di club viene
-  da openfootball, che non copre tutte le coppe. Censite **1.603 celle** a zero
-  che dovrebbero essere 1, e ~1.700 valori di riposo sbagliati di conseguenza
-  (lacune: Europa/Conference League 2025-26 su tutte e 5 le leghe, DFB-Pokal
-  2016-18, Coupe de France quasi ovunque). Non ancora corretto: le righe di
-  recupero esistono ma la fonte (Wikipedia) non è primaria. **Dichiarato.**
+- ~~**`midweek_europe` = 0 quando invece si giocava**: il calendario di club
+  viene da openfootball, che non copre tutte le coppe. Censite **1.603 celle**
+  a zero che dovrebbero essere 1, e ~1.700 valori di riposo sbagliati di
+  conseguenza (lacune: Europa/Conference League 2025-26 su tutte e 5 le leghe,
+  DFB-Pokal 2016-18, Coupe de France quasi ovunque). Non ancora corretto: le
+  righe di recupero esistono ma la fonte (Wikipedia) non è primaria.~~
+  **CHIUSO alla Fase 103**: `scripts/integra_calendari_coppa.py` ha unito le
+  3.045 righe recuperate da Wikipedia ai calendari di club esistenti
+  (`club_fixtures*.csv`) e ricalcolato `rest_days_full`/`midweek_europe` sulle
+  5 leghe. I 1.603 falsi zero (236/251/454/180/482 per lega) e le 1.700
+  partite col riposo corretto conseguente (314/282/407/189/508) sono stati
+  verificati contro l'oracolo già pubblicato in `celle_residue.csv` **prima**
+  di scrivere: combaciano a cella esatta, zero regressioni. Wikipedia resta
+  fonte **secondaria dichiarata** (verificata su 114 righe contro una terza
+  fonte indipendente, openligadb.de, alla Fase 100: 0 non confermate).
 - **un xG segnaposto** su 16.110 partite (§4-bis), ora intercettato da un guard.
 - **i conteggi tiri di football-data non sono confrontabili fra stagioni**: in
   Serie A la somma passa da 5.359 (2017-18) a 4.269 (2018-19) e torna a 5.326
@@ -160,11 +169,23 @@ Una riga per (squadra, partita di club, qualsiasi competizione) — alimentano
 
 | file | righe | competizioni oltre il campionato |
 |---|--:|---|
-| `data/club_fixtures.csv` (Serie A) | 11657 | Champions (9 stagioni), Europa L. (dal 20-21), Conference (dal 21-22), Coppa Italia (20-21→24-25) + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68) |
-| `data/club_fixtures_premier_league.csv` | 11994 | idem UEFA + **FA Cup, EFL Cup** (18-19→24-25) + preludio: Premier 2016-17, Championship 1617→2425 |
-| `data/club_fixtures_la_liga.csv` | 12102 | idem UEFA + **Copa del Rey** (20-21→24-25) + preludio: Liga 2016-17, Segunda 1617→2425 |
-| `data/club_fixtures_bundesliga.csv` | 10375 | Champions (1718→2526), Europa L. (20-21→24-25), Conference (dal 21-22, + qual. dal 24-25), **DFB-Pokal** (18-19→25-26) + preludio: Bundesliga 2016-17, 2. Bundesliga 1617→2425 |
-| `data/club_fixtures_ligue_1.csv` | 10701 | Champions (1718→2526, + qual. dal 24-25), Europa L. (20-21→24-25), Conference (21-22→23-24, + qual. dal 24-25), **Coupe de France** (solo 24-25) + preludio: Ligue 1 2016-17, Ligue 2 1617→2425 |
+| `data/club_fixtures.csv` (Serie A) | 12156 | Champions (9 stagioni, + qual.), Europa L. (+ qual.), Conference (+ qual.), Coppa Italia + **preludio**: Serie A 2016-17, Serie B 1617→2425 (Fase 68); dalla Fase 103 anche Supercoppa Italiana, UEFA Super Cup, Mondiale per club (righe recuperate da Wikipedia, `sources.EXTRA_CUP_COMPETITIONS`) |
+| `data/club_fixtures_premier_league.csv` | 12520 | idem UEFA + **FA Cup, EFL Cup** + preludio: Premier 2016-17, Championship 1617→2425; dalla Fase 103 anche FA Community Shield, UEFA Super Cup, Mondiale per club |
+| `data/club_fixtures_la_liga.csv` | 12779 | idem UEFA + **Copa del Rey** + preludio: Liga 2016-17, Segunda 1617→2425; dalla Fase 103 anche Supercopa de España, UEFA Super Cup, Mondiale/Intercontinentale per club |
+| `data/club_fixtures_bundesliga.csv` | 10701 | Champions (1718→2526), Europa L., Conference, **DFB-Pokal** + preludio: Bundesliga 2016-17, 2. Bundesliga 1617→2425; dalla Fase 103 anche DFL-Supercup, UEFA Super Cup, Mondiale per club |
+| `data/club_fixtures_ligue_1.csv` | 11718 | Champions (1718→2526, + qual.), Europa L., Conference, **Coupe de France** + preludio: Ligue 1 2016-17, Ligue 2 1617→2425; dalla Fase 103 anche Coupe de la Ligue, Trophée des Champions, UEFA Super Cup, Mondiale/Intercontinentale per club |
+
+Copertura openfootball (produzione, invariata dalla Fase 59) + **3.045 righe
+recuperate da Wikipedia alla Fase 103** (`scripts/integra_calendari_coppa.py`,
+`data/ricerca_esterna/fixtures_*.csv`): riempiono le lacune di Europa/Conference
+League 2025-26 su tutte e 5 le leghe, DFB-Pokal/Copa del Rey/Coupe de France
+dove openfootball è parziale, e aggiungono competizioni mai modellate prima
+(supercoppe nazionali, Supercoppa UEFA, Mondiale/Intercontinentale per club,
+Coupe de la Ligue). Non rigenerabili da script (il recupero Wikipedia è
+one-off, vedi `caccia_calendari.md` Appendici A/B): se si rilancia
+`build_database.py --fixtures`/`build_league_snapshot.py --fixtures` senza
+rifare `integra_calendari_coppa.py`, queste righe **scompaiono di nuovo**
+(openfootball resta la fonte di produzione, invariata).
 
 Dove una competizione non è coperta, `rest_days_full` degrada verso il valore
 solo-campionato (mai in direzione sbagliata) e `midweek_europe` può essere un
@@ -184,7 +205,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 | Transfermarkt diretto (pagine di competizione per stagione) | recupero MANUALE (Fase 70 e audit delle 5 leghe), non rigenerabile da script: `transfermarkt.com/.it/.us` **era** bloccato dal proxy quando il recupero è stato fatto e oggi **risponde 200** (verificato alla Fase 100, vedi il banner di `docs/MANUALE_SOPRAVVIVENZA.md`); il recupero resta manuale perché la pagina utile è quella di competizione filtrata per stagione | ✅ usato per **29** celle `squad_value` 2025-26 sotto soglia (13 + 16; le 16 con la scala misurata contro player-scores nella colonna `rapporto_TM_su_playerscores_mediano_lega` di `data/squad_value_2526_transfermarkt.csv`, regola R2); **non** la pagina profilo club (mostra il valore LIVE di oggi) ma `.../{lega}/startseite/wettbewerb/{codice}/saison_id/{anno}` (tabella per-club di quella stagione) |
 | openfootball (coppe/Europa) | cache `data/raw/fixtures_*` | ✅ raggiungibile |
 | **1xBet via `footiqo.com`** (quote di CHIUSURA 1X2 + O/U + GG/NG, 2017-20, 5 leghe) | `data/ricerca_esterna/footiqo_*.json` (18 file) + `footiqo_gol_*.json` (10) + manifest e validazioni | ✅ dato esterno REALE, **NON integrato** negli snapshot: è un solo book, e come proxy della media multi-book è peggiore della stima (MAE 0.0156 contro 0.012) — vedi [CACCIA_OU_2017_19.md](CACCIA_OU_2017_19.md) |
-| **Wikipedia (calendari di coppa)** | `data/ricerca_esterna/fixtures_*.csv` (50 file, **3.045 righe**) | ⚠️ fonte NON primaria: righe di recupero per il falso 0 di `midweek_europe` (§1-bis), raccolte ma **non applicate** |
+| **Wikipedia (calendari di coppa)** | `data/ricerca_esterna/fixtures_*.csv` (50 file, **3.045 righe**) | ⚠️ fonte NON primaria, verificata su una terza fonte indipendente (openligadb.de, Fase 100): righe di recupero per il falso 0 di `midweek_europe` (§1-bis) — **applicate alla Fase 103** in `club_fixtures*.csv`/negli snapshot delle 5 leghe |
 | **iredchuk/soccer-bookmaker-odds** (chiusura 1X2) | usato per **6 celle**, in 2 partite | ⚠️ **provider SECONDARIO, dichiarato (R2)** — l'unico punto degli snapshot dove una cella-quota non viene da football-data. Vedi il riquadro qui sotto |
 | **manifest delle fonti dell'audit** | `data/ricerca_esterna/manifest_fonti_audit.json` | ✅ 90 impronte SHA256 (45 CSV football-data + 45 JSON Understat-lega). Le chiavi sono nella forma `cantiere/data/fonti/…`: per confrontarle con quelle che `scripts/fetch_sources.py` scrive oggi va tolto il prefisso `cantiere/` |
 

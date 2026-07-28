@@ -545,6 +545,47 @@ UEFA_COUNTRY_CODE: dict[str, str] = {
     "bundesliga": "GER", "ligue_1": "FRA",
 }
 
+# Competizioni presenti nel calendario di club SOLO grazie al recupero
+# Wikipedia (Fase 100/103, docs/audit_5_leghe/numeri/caccia_calendari.md §7):
+# supercoppe nazionali, Supercoppa UEFA, Mondiale/Intercontinentale per club,
+# Coupe de la Ligue francese. Openfootball non le scarica (nessun URL/parser
+# dedicato in questo modulo): non ricompaiono da sole se si rilancia
+# build_club_fixtures senza rifare l'integrazione (scripts/integra_calendari_
+# coppa.py). Trattarle come "extra" ai fini di midweek_europe/rest_days_full
+# e' la scelta coerente con la semantica gia' in uso
+# (fixtures.add_rest_days_full: is_extra = competition != own_competition):
+# non sono il campionato, quindi affaticano allo stesso modo di una coppa.
+EXTRA_CUP_COMPETITIONS: dict[str, dict[str, str]] = {
+    "serie_a": {
+        "supercoppa": "Supercoppa Italiana",
+        "uefasc": "UEFA Super Cup",
+        "cwc": "FIFA Club World Cup",
+    },
+    "premier_league": {
+        "communityshield": "FA Community Shield",
+        "uefasc": "UEFA Super Cup",
+        "cwc": "FIFA Club World Cup",
+    },
+    "la_liga": {
+        "supercopa": "Supercopa de Espana",
+        "uefasc": "UEFA Super Cup",
+        "cwc": "FIFA Club World Cup",
+        "icc": "FIFA Intercontinental Cup",
+    },
+    "bundesliga": {
+        "dflsupercup": "DFL-Supercup",
+        "uefasc": "UEFA Super Cup",
+        "cwc": "FIFA Club World Cup",
+    },
+    "ligue_1": {
+        "trophee": "Trophee des Champions",
+        "coupeligue": "Coupe de la Ligue",
+        "uefasc": "UEFA Super Cup",
+        "cwc": "FIFA Club World Cup",
+        "icc": "FIFA Intercontinental Cup",
+    },
+}
+
 # Nome canonico usato nel calendario di club per le partite della lega stessa
 # (derivate dallo snapshot, non scaricate). Per compatibilita' col codice/test
 # storici, la Serie A resta "Serie A"; le altre leghe usano League.name.

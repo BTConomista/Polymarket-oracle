@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, e gli audit dell'integrazione (Fasi 100–102)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–103)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -269,13 +269,20 @@ che l'integrazione in `main` aveva portato 32 script che non partivano (Fase
 numero-bandiera rimisurato dopo un fix mai propagato (+0.0167, non +0.0165),
 quattro conclusioni declassate senza che un solo calcolo fosse sbagliato (Fase
 101-bis), i numeri orfani e le trappole che colpivano chi verifica (Fase
-101-ter), e infine l'allineamento di ogni file del repo (Fase 102). Esito
-dell'arco: nessun edge nuovo, e un repo che dice di sé la verità.*
+101-ter), e infine l'allineamento di ogni file del repo (Fase 102). Chiude
+l'arco la Fase 103, che applica un lavoro lasciato a metà da R4 (cantiere
+isolato): i 3.045 righe di calendario di coppa raccolte da Wikipedia alla Fase
+100 vengono finalmente unite ai calendari di club, chiudendo i 1.603 falsi
+zero di `midweek_europe` — verificati a cella esatta contro l'oracolo già
+pubblicato, zero regressioni. Esito dell'arco: nessun edge nuovo, e un repo
+che dice di sé la verità, coi dati che aveva promesso di correggere corretti
+davvero.*
 
 - [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
 - [Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita](#fase-101--quinto-audit-le-ultime-20-fasi-e-lintegrazione-che-non-era-stata-eseguita)
 - [Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato](#fase-101-bis--applicare-le-correzioni-dellaudit-quattro-conclusioni-declassate-e-il-numero-bandiera-rimisurato)
 - [Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA](#fase-101-ter--chiudere-i-punti-aperti-i-numeri-orfani-e-tre-trappole-che-colpivano-chi-verifica)
+- [Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`](#fase-103--il-recupero-wikipedia-applicato-chiusi-i-1603-falsi-zero-di-midweek_europe)
 
 ---
 
@@ -12003,3 +12010,146 @@ citazione. E il momento in cui se ne accorge qualcuno è quando prova a
 verificarlo — motivo per cui gli strumenti di verifica vanno protetti almeno
 quanto quelli di produzione. Tre difetti su tre, in questa fase, colpivano il
 verificatore e non l'utente.
+
+## Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`
+
+**Obiettivo.** Richiesta dell'utente: verificare che i dati del progetto siano
+tutti corretti, e dove mancano cercare fonti esterne (Wikipedia inclusa). Un
+sondaggio dello stato (`docs/DATI.md`, `docs/AUDIT_FASI_80_100.md`,
+`docs/audit_5_leghe/`) ha trovato il gap più "pronto": la Fase 100 aveva già
+raccolto 3.045 righe di calendario di coppa da Wikipedia
+(`data/ricerca_esterna/fixtures_*.csv`) per chiudere i 1.603 falsi zero di
+`midweek_europe` (regola R6, "il buco peggiore non è il `NaN`: è il finto
+pieno"), verificate contro una terza fonte indipendente (openligadb.de, 0/114
+non confermate) ma **mai applicate**: la regola R4 del cantiere imponeva di non
+toccare snapshot/`src`/`scripts` in quella sessione, solo produrre report e
+dati grezzi. La proposta §9 di `caccia_calendari.md` la definiva "la proposta
+più solida del lotto" — dato di calendario, errore atteso zero, 5 controlli
+superati.
+
+**Ragionamento / ipotesi.** Se il recupero è già stato verificato (aggancio
+nomi, doppioni, finestra temporale, confutazione su terza fonte), applicarlo
+non richiede nuova ricerca: richiede solo (a) unire le righe recuperate ai
+calendari di club esistenti, (b) ricalcolare le 4 colonne derivate
+(`fixtures.add_rest_days_full`), e (c) verificare che il risultato riproduca
+ESATTAMENTE i numeri già pubblicati altrove nel progetto (`celle_residue.csv`,
+citati in CLAUDE.md e `docs/DATI.md`) prima di scrivere qualsiasi file — la
+stessa disciplina "verifica-poi-applica" di R3, estesa a un dato derivato
+invece che a una cella osservata.
+
+**Alternative considerate.**
+1. *Registro correzioni per-cella* (`correzioni_dichiarate.csv`, R3): scartata
+   — le 1.603 celle sono un ricalcolo deterministico di una pipeline
+   (`add_rest_days_full`), non un valore osservato corretto a mano; un registro
+   di 1.603 righe sarebbe rumore documentale, non tracciabilità.
+2. *Rifare la raccolta da zero* (script `caccia_calendari.py`/`wiki.py` citati
+   solo come Appendici A/B nel report, mai versionati): scartata — i 3.045
+   righe sono già su disco e già verificate; rifare la raccolta duplicherebbe
+   lavoro già fatto e già controllato (istruzione esplicita: non duplicare ciò
+   che un audit precedente ha già verificato a fondo).
+3. *Includere solo le competizioni già note* (Champions/Europa/Conference +
+   coppa nazionale), scartando supercoppe/Mondiale per club/Coupe de la Ligue
+   (proposta §9.4 di `caccia_calendari.md`, mai decisa): scartata a favore
+   dell'inclusione totale — è la scelta coerente con la semantica già in uso
+   (`is_extra = competition != own_competition`: qualunque partita non di
+   campionato affatica allo stesso modo), **e** è l'unica che riproduce
+   esattamente l'oracolo già pubblicato (236/251/454/180/482 celle): significa
+   che chi ha calcolato quei numeri in `celle_residue.csv` aveva già preso
+   questa stessa decisione, solo mai eseguita.
+
+**Scelta.** Scritto `scripts/integra_calendari_coppa.py`: unisce tutti i file
+`data/ricerca_esterna/fixtures_<lega>_*.csv` (nessuna esclusione per
+competizione) ai `club_fixtures[_<lega>].csv` esistenti, dedup su (stagione,
+squadra, data, competizione, avversario) — lo stesso usato da
+`fixtures.build_club_fixtures` — e ricalcola le 4 colonne su ogni snapshot.
+Prima di scrivere, verifica per OGNI lega: il numero di righe recuperate
+(guardia contro file mancanti/parziali), il numero di celle
+`midweek_europe` che passano da 0 a 1, il numero di partite col riposo
+cambiato, e che non ci sia NESSUNA regressione (nessuna cella da 1 a 0,
+nessun riposo che aumenta — impossibile per costruzione: aggiungere partite
+può solo accorciare un intervallo, mai allungarlo). Se anche una sola lega
+non combacia con l'oracolo, lo script si ferma e non scrive NULLA, per
+nessuna lega (verifica-poi-applica in blocco unico, non lega per lega).
+
+**Risultato.**
+
+| lega | righe agg. | celle `midweek` 0→1 | oracolo | partite riposo cambiato | oracolo |
+|---|--:|--:|--:|--:|--:|
+| Serie A | 499 | 236 | 236 | 314 | 314 |
+| Premier League | 526 | 251 | 251 | 282 | 282 |
+| La Liga | 677 | 454 | 454 | 407 | 407 |
+| Bundesliga | 326 | 180 | 180 | 189 | 189 |
+| Ligue 1 | 1.017 | 482 | 482 | 508 | 508 |
+
+Tutte e 5 le leghe combaciano a cella esatta con l'oracolo pubblicato in
+`data/estimates/celle_residue.csv` (caso D), zero regressioni. Suite di test
+verde (853 passed) dopo aver esteso `test_fixtures.py` alle nuove etichette di
+competizione (`sources.EXTRA_CUP_COMPETITIONS`: Supercoppa Italiana, UEFA
+Super Cup, Mondiale/Intercontinentale per club, FA Community Shield, Supercopa
+de España, DFL-Supercup, Coupe de la Ligue, Trophée des Champions — mai
+modellate prima, emerse dal recupero Wikipedia) e alla parametrizzazione
+`altra_lega` (prima solo Premier/Liga, ora tutte e 4 le leghe non-Serie-A).
+
+Nessun impatto sul modello in produzione: `rest_full`/`midweek` sono covariate
+**opzionali**, spente di default (`docs/PANCHINA.md`), quindi nessun backtest
+"ufficiale" cambia. Ma la conclusione "sono rumore" era misurata su dati con
+questo difetto (6-13% delle righe per lega): onestà (regola R7) impone di
+ripetere almeno la misura Serie A che quel giudizio cita — vedi nota in coda,
+aggiunta appena il ricalcolo è disponibile.
+
+**Lezione.** Il costo di applicare una correzione già completamente
+verificata non è la verifica (fatta, e non da rifare): è **trovare cosa era
+già pronto** prima di iniziare una nuova ricerca. Il sondaggio iniziale su
+`docs/DATI.md`/`AUDIT_FASI_80_100.md`/`audit_5_leghe/` ha impiegato meno tempo
+dell'intera integrazione, e ha evitato di ripetere una caccia già fatta bene.
+La seconda lezione è la stessa della Fase 51/92: un oracolo pubblicato altrove
+nel progetto (qui `celle_residue.csv`) è un test di regressione gratuito — se
+il ricalcolo l'avesse mancato anche di una sola cella, sarebbe stato un
+segnale di bug, non un dettaglio da ignorare.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova — Fase 4c/4e definiscono già la formula, qui si
+ricalcola con un input più completo.
+
+**`midweek_europe`** (`src/data/fixtures.py:add_rest_days_full`, verificato
+riga per riga contro il sorgente):
+
+```
+is_extra(riga) = competition(riga) != own_competition        # es. "Serie A"
+
+extra_dates(T) = { date(riga) : riga in calendario, team(riga)=T, is_extra(riga) }
+
+midweek_europe(T, d) = 1  se  ∃ x ∈ extra_dates(T) : d − europe_window ≤ x ≤ d − 1
+                      = 0  altrimenti
+```
+
+con `europe_window = 4` giorni (default di produzione). La correzione non
+tocca questa formula: allarga `extra_dates(T)` aggiungendo le righe recuperate
+da Wikipedia a quelle già scaricate da openfootball. Per costruzione un
+insieme più grande può solo **aggiungere** un `x` nella finestra `[d-4, d-1]`,
+mai toglierne uno che c'era prima — da cui la garanzia "zero regressioni"
+verificata (non assunta) dallo script.
+
+**`rest_days_full`** (stessa funzione):
+
+```
+rest_days_full(T, d) = min(cap, d − max{ x ∈ all_dates(T) : x < d })
+```
+
+con `cap = 14`. Stessa logica: `all_dates(T)` si allarga, quindi la data
+immediatamente precedente a `d` può solo avvicinarsi (mai allontanarsi) →
+`rest_days_full` può solo diminuire o restare uguale, mai aumentare — il
+controllo `rest_increased == 0` nello script verifica esattamente questa
+proprietà, non la assume.
+
+**Perché l'oracolo (236/251/454/180/482) è il numero giusto per verificare, e
+non un numero a caso.** È stato calcolato *prima* di questa fase, da chi ha
+scritto `celle_residue.csv` durante l'integrazione della Fase 101(-bis/-ter),
+eseguendo lo stesso ricalcolo su disco ma senza scrivere il risultato (regola
+R4 del cantiere in quel momento). Riprodurlo qui, a cella esatta, non è una
+coincidenza: è la controprova che l'input (i 3.045 righe) e la pipeline
+(`add_rest_days_full`) sono entrambi rimasti quelli descritti, e che la
+decisione mai presa esplicitamente al §9.4 di `caccia_calendari.md`
+("supercoppe/Mondiale contano come `midweek_europe`?") era già stata presa
+implicitamente da chi ha calcolato quel numero.
