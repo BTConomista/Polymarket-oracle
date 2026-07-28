@@ -1526,7 +1526,7 @@ docs/
 
 files/              bundle caricati a mano (football-data e Understat di
                     Premier/Liga, Fase 54) + player_scores/ (valori rosa)
-tests/              17 file, 889 test verdi (modello, dati, metriche, script)
+tests/              17 file, 906 test verdi (modello, dati, metriche, script)
 .github/workflows/  import del dataset player-scores e probe via runner Actions
 worldcup/           esperimento parallelo a bassa priorità (Mondiali)
 ```

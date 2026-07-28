@@ -188,7 +188,7 @@ versionata).
   | chiusura del **cantiere** | **153** | ⚠️ **numero STORICO**, dichiarato allora, non ri-misurato qui |
   | fine **Fase 101** (commit `174f78c`) | **197** | ⚠️ numero STORICO, dichiarato allora. `docs/AUDIT_FASI_80_100.md` riporta **194** per la stessa epoca: la divergenza non è stata sciolta (servirebbe un checkout di quel commit) |
   | Fase 101-ter (27 luglio 2026) | **841** | ✅ ri-misurato allora: `python -m pytest -q` → `841 passed` |
-  | **oggi** (28 luglio 2026, Fase 116) | **889** | ✅ **ri-misurato in questa sessione**: `python -m pytest -q` → `889 passed`. I 48 in più vengono dalle Fasi 103-115 (Betfair, `ou_close_probability`, calendari di coppa) |
+  | **oggi** (28 luglio 2026, Fase 117) | **906** | ✅ **ri-misurato in questa sessione**: `python -m pytest -q` → `906 passed`. I 65 in più vengono dalle Fasi 103-116 (Betfair, `ou_close_probability`, calendari di coppa, raccoglitore Smarkets) |
 
   L'impennata non misura il lavoro svolto: i due file di test aggiunti dalla
   seconda passata sono **parametrizzati sui 159 script** di `scripts/`, quindi
