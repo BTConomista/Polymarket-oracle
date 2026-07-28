@@ -60,22 +60,33 @@ due leghe nuove, verificati per identità).
 
 ## 1-bis · I buchi, tutti quanti — e quelli che non sembrano buchi
 
-Censimento completo (ricalcolato all'audit della Fase 101, **dopo** il guard
-bilaterale: era 7.353 prima): **7.359 celle vuote su 612.218**, cioè l'1,20%. Ma
-il numero da solo inganna: il **99,25%** è **un buco solo**, la chiusura O/U del
-2017-19 (7.304 celle), che non esiste alla fonte per nessuna delle cinque leghe
-(§5). Tolto quello restano **55 celle**, ognuna con un nome e una causa:
+Censimento completo (ricalcolato ora, Fase 104 — vedi nota sotto): **7.353 celle
+vuote su 612.218**, cioè l'1,20%. Ma il numero da solo inganna: il **99,32%** è
+**un buco solo**, la chiusura O/U del 2017-19 (7.304 celle), che non esiste alla
+fonte per nessuna delle cinque leghe (§5). Tolto quello restano **49 celle**,
+ognuna con un nome e una causa:
 
 | cosa | dove | perché |
 |---|---|---|
-| 11 linee O/U di apertura = **22 celle** | 3 La Liga, 6 Bundesliga, 2 Ligue 1 (2017-19) | overround impossibile alla fonte (fino a 1.339): svuotate dal guard bilaterale di `loader._pick_market_odds` |
-| 1 linea O/U di apertura = **2 celle** | Bayern-Hoffenheim 24/08/2018 | assente alla fonte |
-| 2 terne 1X2 di chiusura = **6 celle** | Alaves-Sociedad, Bayern-Hannover | colonne `PSC*` vuote nel grezzo — un dato REALE esterno esiste (github.com/iredchuk/soccer-bookmaker-odds, chiusura media-di-mercato: 3.40/3.34/2.15 e 1.03/18.43/43.88, MAE 0.0060 contro 0.0160 della stima) ed è **registrato ma NON inserito**, perché viene da un provider diverso dal resto della colonna. Verdetto e numeri in `data/estimates/celle_residue.csv` (caso A) |
-| 7 celle quota | Torino-Fiorentina 10/01/2022 (5: O/U + 1X2 di apertura), Verona-Genoa 19/10/2020 (2: O/U di apertura) | partite rinviate, quote mai aperte |
-| 16 celle xG/stile | 2 partite (vedi §1), 8 colonne ciascuna | fonte non consolidata / record segnaposto |
-| 2 celle tiri in porta | Union Berlin-Bochum 14/12/2024 | statistiche assenti alla fonte |
+| 11 linee O/U di apertura = **22 celle** | 3 La Liga, 6 Bundesliga, 2 Ligue 1 (2017-19) | overround impossibile alla fonte (fino a 1.339): svuotate dal guard bilaterale di `loader._pick_market_odds`. **Tutte e 11 hanno una stima dichiarata** in `data/estimates/ou_open_corrotte_2017_19.csv` dalla Fase 101-ter (le 3 La Liga erano rimaste indietro perché il guard le ha svuotate DOPO la produzione della stima: chiuso) |
+| 1 linea O/U di apertura = **2 celle** | Bayern-Hoffenheim 24/08/2018 | assente alla fonte; coperta dalla stessa stima |
+| 7 celle quota | Torino-Fiorentina 10/01/2022 (5: O/U + 1X2 di apertura), Verona-Genoa 19/10/2020 (2: O/U di apertura) | partite rinviate, quote mai aperte. Ri-verificato Fase 104 scaricando di nuovo i CSV grezzi live da football-data.co.uk: TUTTE le colonne di chiusura (`*C`) sono piene, tutte le colonne di apertura sono NaN — non un dato mancante per errore, è che il mercato ha aperto dopo il cutoff di raccolta di football-data per il recupero |
+| 16 celle xG/stile | 2 partite (vedi §1), 8 colonne ciascuna | fonte non consolidata / record segnaposto. Ri-verificato Fase 104 (vedi `docs/MANUALE_SOPRAVVIVENZA.md`: il mirror Understat era morto, corretto l'endpoint ufficiale) con un download LIVE: Holstein Kiel-Bochum ha ancora il record segnaposto identico, Nantes-Toulouse è ancora `isResult=False` su Understat a oltre due mesi dalla partita — nessuno dei due si è risolto col tempo |
+| 2 celle tiri in porta | Union Berlin-Bochum 14/12/2024 | statistiche assenti alla fonte. Ri-verificato Fase 104 con un download live del CSV grezzo football-data: colonne HST/AST ancora vuote |
 
-*(22 + 2 + 6 + 7 + 16 + 2 = 55, cioè esattamente 7.359 − 7.304.)*
+*(22 + 2 + 7 + 16 + 2 = 49, cioè esattamente 7.353 − 7.304.)*
+
+~~2 terne 1X2 di chiusura = 6 celle (Alaves-Sociedad, Bayern-Hannover), colonne
+`PSC*` vuote nel grezzo~~ **NON è più un buco**: dato REALE esterno
+(github.com/iredchuk/soccer-bookmaker-odds, chiusura media-di-mercato:
+3.40/3.34/2.15 e 1.03/18.43/43.88, MAE 0.0060 contro 0.0160 della stima)
+**inserito alla Fase 101-bis** via `data/correzioni_dichiarate.csv` +
+`scripts/applica_correzioni.py` (R3); provenienza da provider secondario
+dichiarata sotto (R2). Verificato live nello snapshot (Fase 104): le due terne
+non sono più NaN. Il censimento sopra (7.353/49) è **già** al netto di questa
+correzione — la vecchia cifra 7.359/55 (con le 6 celle ancora contate come
+buco) era rimasta stampata qui per errore dopo l'inserimento, nonostante il
+diario e `docs/AUDIT_FASI_80_100.md` dichiarassero già la correzione chiusa.
 
 **E i buchi che NON sono `NaN`** — la categoria pericolosa, perché un valore che
 *sembra* una misura non lo dichiara mai:

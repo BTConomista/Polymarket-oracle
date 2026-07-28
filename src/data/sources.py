@@ -387,19 +387,28 @@ def csv_url(season_code: str, league: League) -> str:
 
 
 # --------------------------------------------------------------------------- #
-# Fonte xG: Understat (via mirror GitHub)
+# Fonte xG: Understat
 # --------------------------------------------------------------------------- #
-# La fonte originale (understat.com) non e' raggiungibile dall'ambiente cloud
-# (policy di rete, verificato: 403 host_not_allowed). Usiamo lo STESSO repo
-# mirror gia' usato per football-data, che pubblica i JSON di lega di Understat
-# (datesData/teamsData/playersData) per stagione, aggiornati da un workflow
-# giornaliero. In locale basta sostituire UNDERSTAT_URL con quello ufficiale.
-UNDERSTAT_OFFICIAL_URL = "https://understat.com/league/{league}/{year}"
-UNDERSTAT_MIRROR_URL = (
+# STORIA (aggiornata Fase 104, docs/MANUALE_SOPRAVVIVENZA.md). Il mirror
+# GitHub (Mentaturan/ScoutFootball_for_World_Cup, STESSO repo usato per
+# football-data, vedi sopra) e' MORTO: 404 reale, riverificato in modo
+# indipendente il 2026-07-28 (curl diretto e via WebFetch, non un problema di
+# proxy/sessione: raw.githubusercontent.com risponde 200 su un repo vero come
+# torvalds/linux). La fonte ufficiale (understat.com) e' invece raggiungibile
+# dalla Fase 100 (era 403 prima), ma NON sull'URL "pagina" (quella e' resa via
+# JS lato client, il body HTML non contiene i dati) -- serve l'endpoint XHR
+# interno, GET /main/getLeagueData/{league}/{year} con header
+# X-Requested-With: XMLHttpRequest (senza -> 404) e risposta SEMPRE gzip
+# (Content-Encoding: gzip anche senza Accept-Encoding, va decompressa a mano
+# con urllib -- vedi understat.download_season). Stessa struttura JSON del
+# mirror (teams/players/dates): verificato Fase 104 scaricando live Ligue 1
+# 2025 e Bundesliga 2024 e riparsandoli con parse_season_xg.
+UNDERSTAT_OFFICIAL_URL = "https://understat.com/main/getLeagueData/{league}/{year}"
+UNDERSTAT_MIRROR_URL = (  # MORTO (404, riverificato Fase 104): resta come riferimento storico
     "https://raw.githubusercontent.com/Mentaturan/ScoutFootball_for_World_Cup"
     "/main/data/raw/understat/{league}/{year}.json"
 )
-UNDERSTAT_URL = UNDERSTAT_MIRROR_URL
+UNDERSTAT_URL = UNDERSTAT_OFFICIAL_URL
 
 # Nome del campionato nello stile Understat (chiave interna -> nome Understat).
 UNDERSTAT_LEAGUES: dict[str, str] = {
@@ -544,6 +553,25 @@ UEFA_COUNTRY_CODE: dict[str, str] = {
     "serie_a": "ITA", "premier_league": "ENG", "la_liga": "ESP",
     "bundesliga": "GER", "ligue_1": "FRA",
 }
+
+# Codici paese UEFA EXTRA che vanno trattati come la lega, oltre a quello
+# "ufficiale" sopra (Fase 104, docs/audit_5_leghe/numeri/caccia_calendari.md
+# §6a: "il bug del Monaco"). openfootball etichetta l'AS Monaco a volte "FRA"
+# a volte "MCO" nello stesso repo (champions-league, dal 2011-12): con solo
+# "FRA" il filtro perdeva 26 righe europee del Monaco su 54, comprese intere
+# fasi a gironi di Champions. Il Monaco gioca in Ligue 1 dal punto di vista del
+# progetto (e' nello snapshot ligue_1), quindi le sue partite europee contano
+# come "extra" per ligue_1 a prescindere da quale codice openfootball usa.
+UEFA_COUNTRY_CODE_EXTRA: dict[str, tuple[str, ...]] = {
+    "ligue_1": ("MCO",),
+}
+
+
+def uefa_country_codes(league_key: str) -> frozenset[str]:
+    """Insieme dei codici paese UEFA da considerare per ``league_key`` (il
+    codice "ufficiale" di ``UEFA_COUNTRY_CODE`` + eventuali extra)."""
+    return frozenset({UEFA_COUNTRY_CODE[league_key],
+                       *UEFA_COUNTRY_CODE_EXTRA.get(league_key, ())})
 
 # Competizioni presenti nel calendario di club SOLO grazie al recupero
 # Wikipedia (Fase 100/103, docs/audit_5_leghe/numeri/caccia_calendari.md §7):

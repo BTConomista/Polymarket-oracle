@@ -62,7 +62,7 @@ Ultimo aggiornamento: **Fase 100** (integrazione delle 5 leghe: la rete e' torna
 | host | note |
 |---|---|
 | `football-data.co.uk` | **200 dalla Fase 100** (era 403: vedi il banner in testa; ri-verificato 200 il 27/07/2026). È la fonte primaria: 45 stagioni ri-scaricate |
-| `understat.com` | **200 dalla Fase 100** (era 403). Richiede `GET /main/getLeagueData/{Lega}/{anno}` con header `X-Requested-With: XMLHttpRequest` (senza header → 404) e risposta **gzip** |
+| `understat.com` | **200 dalla Fase 100** (era 403). Richiede `GET /main/getLeagueData/{Lega}/{anno}` con header `X-Requested-With: XMLHttpRequest` (senza header → 404) e risposta **gzip** SEMPRE (Content-Encoding: gzip anche senza Accept-Encoding: va decompressa a mano con `gzip.decompress`, `urllib` non lo fa da solo). ⚠️ **Documentato qui dalla Fase 100 ma MAI applicato al codice fino alla Fase 104**: `src/data/sources.py` puntava ancora al mirror GitHub morto (`UNDERSTAT_URL = UNDERSTAT_MIRROR_URL`, 404 dalla stessa verifica che aveva già chiuso il mirror di football-data). Corretto: `understat.download_season` ora usa l'endpoint ufficiale con l'header giusto; verificato che i dati live coincidono ESATTAMENTE (Δ 0.0 su 380/380 partite) con quelli già congelati negli snapshot per una stagione completa (La Liga 1718) |
 | `transfermarkt.com` / `.it` | **200 dalla Fase 100** (era «curl 000 + WebFetch fallisce»). Valori rosa ufficiali |
 | `raw.githubusercontent.com` | tutti i repo pubblici (openfootball, salimt, …) |
 | `github.com` (pagine HTML) | utile per verifiche di esistenza |

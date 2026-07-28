@@ -122,6 +122,27 @@ def test_parse_europa_logga_non_agganciato(caplog):
     assert any("NON agganciato" in m for m in caplog.messages)
 
 
+def test_monaco_mco_e_fra_entrano_entrambi_in_ligue_1():
+    """Fase 104 -- bug del Monaco: openfootball etichetta l'AS Monaco a volte
+    FRA a volte MCO nello stesso repo. Con un solo codice se ne perde meta'."""
+    txt = (
+        "▪ Group A\n  Wed Sep 18 2019\n"
+        "    21:00  Monaco (FRA)            v Juventus (ITA)           1-1\n"
+        "  Tue Oct 1\n"
+        "           Monaco (MCO)            v Atalanta (ITA)           2-0\n"
+    )
+    codes = sources.uefa_country_codes("ligue_1")
+    assert codes == frozenset({"FRA", "MCO"})
+    df = parse_europe(txt, "1920", "Champions League", codes)
+    assert len(df) == 2                     # entrambe le righe hanno una ITA dall'altro lato
+    rows = fixtures._uefa_team_rows(df, {"Monaco"}, codes)
+    assert len(rows) == 2
+    assert {r["opponent"] for r in rows} == {"Juventus", "Atalanta"}
+    # una singola stringa resta equivalente a un insieme di un elemento (retrocompatibile)
+    solo_ita = fixtures._uefa_team_rows(df, {"Monaco"}, "ITA")
+    assert solo_ita == []                   # Monaco non e' ITA: nessuna riga con country_code="ITA"
+
+
 # ----------------------------------------------------- 4. parser Coppa Italia
 
 def test_parse_coppa_formato_punteggio_in_mezzo():

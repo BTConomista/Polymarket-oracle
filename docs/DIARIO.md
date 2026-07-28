@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–103)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–104)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -274,15 +274,25 @@ l'arco la Fase 103, che applica un lavoro lasciato a metà da R4 (cantiere
 isolato): i 3.045 righe di calendario di coppa raccolte da Wikipedia alla Fase
 100 vengono finalmente unite ai calendari di club, chiudendo i 1.603 falsi
 zero di `midweek_europe` — verificati a cella esatta contro l'oracolo già
-pubblicato, zero regressioni. Esito dell'arco: nessun edge nuovo, e un repo
-che dice di sé la verità, coi dati che aveva promesso di correggere corretti
-davvero.*
+pubblicato, zero regressioni. La Fase 104 chiude l'ultimo lotto di richieste
+utente aperte sui dati: il bug di codice del Monaco (MCO), 8 righe di
+calendario duplicate emerse dallo stesso merge (data giusta da Wikipedia +
+data sbagliata di openfootball, mai dedotta perché il dedup guarda anche la
+data), tre rilievi dell'audit già chiusi ma mai spuntati come tali (F12-04,
+F12-05, F12-09), e la scoperta che la fonte xG Understat aveva lo STESSO
+mirror morto di football-data ma non era mai stata corretta di conseguenza —
+corretta, e i 2 buchi xG residui ri-verificati LIVE (nessuno si è risolto col
+tempo, ma ora lo sappiamo con certezza invece che per estrapolazione). Esito
+dell'arco: nessun edge nuovo, e un repo che dice di sé la verità, coi dati che
+aveva promesso di correggere corretti davvero — comprese le correzioni delle
+correzioni.*
 
 - [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
 - [Fase 101 — Quinto audit: le ultime 20 fasi e l'integrazione che non era stata eseguita](#fase-101--quinto-audit-le-ultime-20-fasi-e-lintegrazione-che-non-era-stata-eseguita)
 - [Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato](#fase-101-bis--applicare-le-correzioni-dellaudit-quattro-conclusioni-declassate-e-il-numero-bandiera-rimisurato)
 - [Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA](#fase-101-ter--chiudere-i-punti-aperti-i-numeri-orfani-e-tre-trappole-che-colpivano-chi-verifica)
 - [Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`](#fase-103--il-recupero-wikipedia-applicato-chiusi-i-1603-falsi-zero-di-midweek_europe)
+- [Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto](#fase-104--il-resto-della-lista-monaco-dfb-pokal-tre-rilievi-gia-chiusi-e-la-fonte-xg-con-lo-stesso-mirror-morto)
 
 ---
 
@@ -12173,3 +12183,152 @@ coincidenza: è la controprova che l'input (i 3.045 righe) e la pipeline
 decisione mai presa esplicitamente al §9.4 di `caccia_calendari.md`
 ("supercoppe/Mondiale contano come `midweek_europe`?") era già stata presa
 implicitamente da chi ha calcolato quel numero.
+
+## Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto
+
+**Obiettivo.** Richiesta esplicita dell'utente dopo la Fase 103: "sistema
+ognuno di questi problemi, cerca le informazioni da più fonti così sei sicuro
+che se una sbaglia, le altre non sbagliano" — riferita alla lista di gap
+dichiarati ancora aperti elencata a fine Fase 103 (bug del Monaco, 8 date
+DFB-Pokal, F12-04/F12-05/F12-09, le 55 celle residue).
+
+**Ragionamento.** Non trattare la lista come un'unica cosa: ogni punto ha una
+natura diversa (bug di codice, duplicato di dati, documentazione stantia,
+buco genuino alla fonte) e va istruito separatamente, con la stessa disciplina
+verifica-poi-scrivi della Fase 103 — e con **più fonti indipendenti** dove il
+compito lo richiede esplicitamente, non solo quella già citata da un audit
+precedente.
+
+**Cosa ho trovato e fatto, punto per punto.**
+
+1. **Bug del Monaco (MCO).** `sources.py` filtrava le competizioni UEFA su un
+   solo codice paese per lega; l'AS Monaco compare a volte `FRA` a volte `MCO`
+   nella stessa fonte openfootball. Aggiunta `UEFA_COUNTRY_CODE_EXTRA` +
+   `uefa_country_codes()` (restituisce un insieme, non più una stringa);
+   `parse_europe`/`_uefa_team_rows` accettano ora sia una stringa sia un
+   insieme (retrocompatibile: i test esistenti passano stringhe singole senza
+   modifiche). Test nuovo: `test_monaco_mco_e_fra_entrano_entrambi_in_ligue_1`.
+   Non tocca i dati correnti (il recupero Wikipedia della Fase 103 aveva già
+   preso il Monaco correttamente, estraendolo da template `{{fbaicon}}` che
+   non hanno questo problema): previene la regressione al prossimo
+   `build_database.py --fixtures` da openfootball.
+
+2. **8 righe duplicate DFB-Pokal 2025-26.** Non erano "8 date da correggere"
+   come proposto in `caccia_calendari.md` §10: il merge della Fase 103 aveva
+   già aggiunto la riga GIUSTA (Wikipedia, 2025-12-03) accanto a quella
+   SBAGLIATA di openfootball (2025-12-02) per le stesse 4 partite (Bochum-
+   Stuttgart, Freiburg-Darmstadt, Hamburg-Kiel, Union Berlin-Bayern Monaco) —
+   il dedup su `(season, team, date, competition, opponent)` non le aveva
+   fuse perché la data è diversa. **Verificato con due fonti indipendenti
+   dal vivo**, non riprendendo solo il numero della Fase 100: query live
+   all'endpoint XHR di openligadb.de (`getmatchdata/dfb/2025/3`, turno
+   "Achtelfinale") — conferma cella per cella le 4 partite e le loro date —
+   e lettura della pagina Wikipedia tedesca (sezione Achtelfinale: "2./3.
+   Dezember 2025"). `scripts/correggi_date_dfb_pokal_2526.py` verifica che
+   esistano ESATTAMENTE le due righe attese (12-02 e 12-03) per ciascuna
+   delle 8 combinazioni squadra/avversario prima di togliere quella sbagliata;
+   ricalcolo `add_rest_days_full` sullo snapshot Bundesliga: **0 partite
+   cambiate** (la partita più recente delle due vince comunque nella ricerca
+   "ultima gara prima di d", quindi il duplicato era innocuo per i numeri, non
+   per la pulizia del dato).
+
+3. **F12-04 (celle La Liga fuori registro) e F12-05 (stima O/U non estesa
+   alla Liga): già chiusi**, non ancora spuntati. `data/correzioni_dichiarate.csv`
+   righe 33-38 registrano le 6 celle La Liga dal commit `ec85314`
+   ("integrazione 2/3"); `ou_open_corrotte_2017_19.csv` copre le 12 linee
+   (non più 9) dal commit `44052d7`, Fase 101-ter — non 101-bis come diceva
+   per errore `data/estimates/README.md` (corretto). Aggiunte note
+   `→ ✅ CHIUSO` in `docs/AUDIT_FASI_80_100.md` per non farli riaprire da una
+   sessione futura che legge solo il rilievo originale.
+
+4. **F12-09 (verdetti stantii in `celle_residue.csv`): l'ultimo pezzo
+   mancava.** Tre dei quattro punti erano già sistemati (righe La Liga
+   "CHIUSA", Leganes-Getafe con verdetto proprio, zero riferimenti a
+   `cantiere/`); il quarto — `docs/DATI.md` che diceva ancora "registrato ma
+   NON inserito" per le 6 celle 1X2 del caso A, già reali nello snapshot dalla
+   Fase 101-bis — no. Corretto: censimento **7.359/55 → 7.353/49** (verificato
+   contando i NaN live sui 5 snapshot: 7.353 esatto), riga delle 6 celle
+   spostata fuori dalla tabella dei buchi con nota di chiusura.
+
+5. **La fonte xG aveva lo stesso mirror morto di football-data, mai
+   corretto.** `docs/MANUALE_SOPRAVVIVENZA.md` documentava già dalla Fase 100
+   che `understat.com` risponde 200 dietro l'endpoint XHR
+   `/main/getLeagueData/{lega}/{anno}` con header `X-Requested-With:
+   XMLHttpRequest` (gzip sempre, va decompresso a mano) — ma **il codice non
+   lo usava mai**: `sources.UNDERSTAT_URL` puntava ancora al mirror GitHub,
+   morto (404 **verificato in modo indipendente dal problema di sessione**:
+   `raw.githubusercontent.com` risponde 200 su un repo vero come
+   `torvalds/linux`, quindi il 404 è reale e non un artefatto del proxy).
+   Corretto `sources.py` (endpoint ufficiale + header) e
+   `understat.download_season` (decompressione gzip). **Verificato**: i dati
+   live coincidono ESATTAMENTE con quelli già congelati negli snapshot
+   (Δ home_xg = 0.0 su 380/380 partite, La Liga 2017-18); scaricate live
+   anche Serie A 2025-26, Premier 2024-25 per conferma su altre leghe/stagioni.
+
+6. **Le 55 (ora 49) celle residue: ri-verificate, non tutte risolvibili.**
+   Con la fonte xG ora viva, ho ri-scaricato dal vivo le due partite col buco
+   xG: **Holstein Kiel-Bochum ha ancora il record segnaposto identico**
+   (xG=2.0/2.0=gol esatti) a distanza di mesi — non è un "non ancora", Understat
+   non l'ha mai acquisita e non sembra destinata a farlo; **Nantes-Toulouse è
+   ancora `isResult: False`** su Understat oltre due mesi dopo la partita —
+   stesso esito della prima verifica, ma ora confermato con un ri-controllo
+   vero, non un'estrapolazione. Ho anche ri-scaricato dal vivo i CSV grezzi
+   football-data per le 3 partite rimanenti (Torino-Fiorentina, Verona-Genoa,
+   Union Berlin-Bochum): tutte confermate, colonna per colonna, con lo stesso
+   esito già dichiarato (apertura mai raccolta per le prime due — le colonne
+   di chiusura `*C` sono piene, quelle di apertura no; tiri in porta assenti
+   per la terza). Nessuna delle 49 celle residue si è rivelata recuperabile:
+   sono tutte lacune genuine alla fonte, non pigrizia di verifica.
+
+7. **Auto-corretto un bug introdotto alla Fase 103.** Verificando
+   `data/estimates/celle_residue.csv` con il modulo `csv` di Python (non
+   pandas, che aveva mascherato il problema non essendo mai stato eseguito su
+   questo file da nessun test) ho trovato che le 5 righe "CHIUSA alla Fase
+   103" che avevo scritto la fase precedente non erano tra virgolette pur
+   contenendo virgole: CSV tecnicamente rotto, 19 campi invece di 16 su quelle
+   righe. Nessun danno (nessuno script lo leggeva ancora), ma corretto subito
+   con una riscrittura verificata (`csv.reader`/`csv.writer`,
+   `lineterminator="\n"` esplicito per non introdurre `\r\n` come già successo
+   una volta in questa stessa sessione).
+
+**Risultato.** 858 test verdi (+4 dalla Fase 103: 1 nuovo per il Monaco, 3 da
+`altra_lega` esteso a Bundesliga/Ligue 1 alla Fase 103). Nessun edge nuovo,
+nessuna cella recuperata in più — ma ogni gap dichiarato è ora o chiuso con
+un dato vero, o ri-verificato dal vivo con almeno due fonti indipendenti dove
+possibile, invece che ereditato da un audit di due fasi prima.
+
+**Lezione.** "Già chiuso ma non spuntato" (F12-04, F12-05) è un modo di
+fallire silenzioso quanto "mai chiuso": una sessione futura che legge solo il
+rilievo — non lo stato vero dei file — rifà il lavoro. E un file dati non
+letto da nessun test (`celle_residue.csv`) può restare rotto per una fase
+intera senza che nessuno se ne accorga: la stessa lezione della Fase 15
+("un numero che nessuno script produce non è un numero: è una citazione"),
+qui applicata a un registro invece che a un calcolo.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: questa fase è infrastruttura e dati, non modello.
+Le uniche formule coinvolte sono già definite altrove e richiamate qui senza
+modifiche:
+
+- `fixtures.add_rest_days_full` (Fase 4e/59, ricalcolo invariato): il
+  duplicato DFB-Pokal non cambia `midweek_europe`/`rest_days_full` perché la
+  ricerca "ultima partita di club prima del giorno `d`" (`np.searchsorted`)
+  seleziona sempre la data più recente fra le candidate — avere ANCHE la data
+  sbagliata (più vecchia) fra le opzioni non cambia mai il risultato quando
+  la data giusta è già presente e più recente. Verificato empiricamente
+  (0 celle cambiate), non solo per argomento.
+- `understat._e_segnaposto` (Fase 100): la firma del segnaposto (xG intero
+  uguale ai gol, deep=0 su entrambi i lati, ppda NaN) è verificata di nuovo,
+  stavolta su un download live invece che su un JSON cache: stessa funzione,
+  stesso esito, fonte diversa.
+
+**Perché questi numeri e non altri.** Il Δ 0.0 su 380/380 partite (La Liga
+1718, verifica del nuovo endpoint Understat) non è un valore scelto: è il
+risultato di un confronto diretto `snapshot.home_xg - live.home_xg` su ogni
+riga appaiata, con `.abs().max()` — la soglia "0.01" nel codice di verifica
+serve solo a stampare un conteggio leggibile (`(diff>0.01).sum()`), il
+confronto vero è sul massimo assoluto, che è esattamente zero in floating
+point (i due JSON sono byte-per-byte la stessa risposta del server, scaricata
+due volte a distanza di anni dalla costruzione dello snapshot: Understat non
+ha mai ricalcolato l'xG storico di quella stagione).

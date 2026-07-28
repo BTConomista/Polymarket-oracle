@@ -142,7 +142,7 @@ Bundesliga + 2 Ligue 1 + **3 La Liga** svuotate dal guard bilaterale di
 `loader._pick_market_odds` (overround fino a 1.339), più Bayern-Hoffenheim
 24/08/2018, assente alla fonte.
 
-Questo file le copre **tutte e dodici** dalla **Fase 101-bis**. Fino ad allora ne
+Questo file le copre **tutte e dodici** dalla **Fase 101-ter**. Fino ad allora ne
 copriva nove: il guard era stato esteso a La Liga col commit `ec85314`, cioè
 *dopo* la produzione della stima, e nessuno l'aveva rigenerata — anche perché
 lo script moriva su un `assert len(tg0) == 9` che cablava il conteggio di
