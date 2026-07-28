@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–104)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–105)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -293,6 +293,7 @@ correzioni.*
 - [Fase 101-ter — Chiudere i punti aperti: i numeri orfani, e tre trappole che colpivano CHI VERIFICA](#fase-101-ter--chiudere-i-punti-aperti-i-numeri-orfani-e-tre-trappole-che-colpivano-chi-verifica)
 - [Fase 103 — Il recupero Wikipedia applicato: chiusi i 1.603 falsi zero di `midweek_europe`](#fase-103--il-recupero-wikipedia-applicato-chiusi-i-1603-falsi-zero-di-midweek_europe)
 - [Fase 104 — Il resto della lista: Monaco, DFB-Pokal, tre rilievi già chiusi, e la fonte xG con lo stesso mirror morto](#fase-104--il-resto-della-lista-monaco-dfb-pokal-tre-rilievi-gia-chiusi-e-la-fonte-xg-con-lo-stesso-mirror-morto)
+- [Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo](#fase-105--secondo-ri-tentativo-sullou-2017-19-quattro-angoli-nuovi-ancora-negativo)
 
 ---
 
@@ -12332,3 +12333,44 @@ confronto vero è sul massimo assoluto, che è esattamente zero in floating
 point (i due JSON sono byte-per-byte la stessa risposta del server, scaricata
 due volte a distanza di anni dalla costruzione dello snapshot: Understat non
 ha mai ricalcolato l'xG storico di quella stagione).
+
+## Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo
+
+**Obiettivo.** L'utente ha chiesto se l'O/U 2017-19 fosse ancora una stima e,
+saputo di sì (footiqo/1xBet trovato ma scartato perché peggiore della stima
+come proxy multi-book, Fase 100), ha chiesto di riprovare a cercare — in
+particolare un secondo book indipendente da mediare col primo, invece di un
+singolo book.
+
+**Cosa ho provato (dettaglio completo in `docs/CACCIA_OU_2017_19.md`,
+banner Fase 105).** Quattro angoli **mai tentati** nelle Fasi A-D originali:
+(1) verificato che footiqo è strutturalmente un solo book, non una via per un
+secondo; (2) Wayback Machine — scoperta operativa che l'endpoint CDX è
+bloccato dalla rete per qualunque dominio (non un blocco specifico di
+oddsportal), ma il playback diretto funziona; nessuna pagina di risultati
+stagionale delle nostre leghe risulta mai archiviata per il 2017-19, e le
+uniche catture di BetExplorer/OddsPortal per quelle stagioni sono del
+2022-2024 — dopo che il sito ha già ritirato il confronto-quote per le
+partite vecchie (Fase 100); (3) ricerca dataset ripetuta: un candidato nuovo
+su Kaggle è un file di 198 righe di sole partite 2023, altri sono lo stesso
+"Beat the Bookie" già scartato; (4) nuovi siti-archivio: `oddsbase.net`
+vieta esplicitamente ClaudeBot nel `robots.txt` (rispettata la regola R5.3,
+non consultato), `aussportsbetting.com` è bloccato (403), `btfodds.com`/
+`sportsoddshistory.com` sono comparatori live senza struttura storica
+per-partita individuabile.
+
+**Risultato.** Nessun dato nuovo. La stima (`data/estimates/ou_close_2017_19.csv`)
+resta la scelta migliore nota. Nessuna delle vie economiche è cambiata dalla
+Fase 100/101-bis.
+
+**Lezione.** Un "no" già scritto in un documento non basta a fermare un
+ri-tentativo onesto quando arriva una richiesta esplicita — ma un ri-tentativo
+onesto deve provare ANGOLI DIVERSI (qui: Wayback Machine, mai tentato prima),
+non ripetere le stesse fonti già scartate. Il valore di questa fase non è nel
+dato (zero), è nell'aver ampliato lo spazio di ricerca già coperto e
+documentato ANCHE il "blocco CDX" scoperto per caso, utile alla prossima
+sessione che voglia usare Wayback Machine per qualunque altra cosa.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di ricerca dati, esito negativo. Non applicabile.

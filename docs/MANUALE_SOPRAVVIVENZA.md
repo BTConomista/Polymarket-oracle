@@ -72,6 +72,7 @@ Ultimo aggiornamento: **Fase 100** (integrazione delle 5 leghe: la rete e' torna
 | `huggingface.co` (download file `/resolve/`) | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403): 307→200 su un file reale del dataset `ngeorgea/transfermarkt-player-scores` |
 | `datasets-server.huggingface.co` (API righe/filtri) | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403): righe reali restituite per un dataset valido (es. `stanfordnlp/imdb`) |
 | `data.jsdelivr.com` | **RAGGIUNGIBILE** (ri-verificato 2026-07-27, era CONNECT 403; già notato raggiungibile nell'audit Fase 100/101 senza però correggere questa tabella): JSON reale dei tag npm di `react` |
+| `web.archive.org` (Wayback Machine, path `/web/{data}/{url}`) e `archive.org/wayback/available` | **RAGGIUNGIBILE** (Fase 105): playback di pagine archiviate funziona (200 su snapshot esistenti, 404 pulito se non archiviate). ⚠️ **`web.archive.org/cdx/search/cdx` è BLOCCATO** dalla policy di rete per QUALSIASI dominio nel parametro `url=` (403 "Blocked by egress policy", verificato anche su domini innocui come betexplorer.com — blocco sul *path* `/cdx/`, non sul dominio bersaglio). Per trovare snapshot di un URL specifico usare `archive.org/wayback/available?url=...&timestamp=...` (non bloccato, ma rate-limita a raffica: throttle) invece della CDX API |
 
 Polymarket e Smarkets sono le **due** fonti di quote **prospettiche reali**
 aperte dall'ambiente cloud (test prospettico 2026-27, Fase 78).

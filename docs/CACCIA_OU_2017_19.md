@@ -1,5 +1,47 @@
 # Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
 
+> ## 🔁 Fase 105 — un secondo ri-tentativo, negativo (richiesta utente)
+>
+> Dopo la Fase 104, l'utente ha chiesto esplicitamente di riprovare a trovare
+> il dato vero multi-book (non un singolo book come 1xBet). Quattro angoli
+> **nuovi**, non provati nelle Fasi A-D:
+>
+> 1. **footiqo.com ha SOLO 1xBet, per costruzione** — il sito si dichiara
+>    esplicitamente sourced da un solo book: non è una via per un secondo
+>    book indipendente da mediare col primo.
+> 2. **Wayback Machine (archive.org)** — angolo mai tentato prima. Scoperta
+>    operativa: l'endpoint `/cdx/search/cdx` è bloccato dalla policy di rete
+>    di questa sessione per QUALSIASI dominio nel parametro `url=` (403
+>    "Blocked by egress policy", verificato anche su domini innocui come
+>    betexplorer.com — non è un blocco specifico di oddsportal), ma il path
+>    di **playback** `/web/{data}/{url}` funziona (200 su
+>    `web.archive.org/web/2018/https://oddsportal.com/`). Nessuna pagina di
+>    RISULTATI per stagione 2017-18/2018-19 delle nostre leghe risulta mai
+>    archiviata (`archive.org/wayback/available` → `archived_snapshots: {}`
+>    per l'URL esatto); le uniche cattura disponibili di BetExplorer/OddsPortal
+>    per quelle stagioni sono del **2022-2024**, cioè dopo che (per BetExplorer,
+>    verificato Fase 100) il sito ha ritirato il confronto-quote per le
+>    partite vecchie — quindi mostrerebbero comunque il buco.
+> 3. **Ricerca dataset ripetuta** (Kaggle/GitHub freschi) — un candidato nuovo
+>    (`laisassini/soccer-bet-all-euro-data-from-1993-to-2023`, nonostante il
+>    titolo) è un file di 198 righe di sole partite 2023: scaricato e
+>    ispezionato, stesso schema football-data.co.uk, zero copertura 2017-19.
+>    "Beat the Bookie" (worldwide, 32 book) è lo stesso dataset già scartato
+>    alla prima caccia (si ferma al 2015).
+> 4. **Nuovi siti-archivio**: `oddsbase.net` ha un `robots.txt` che **vieta
+>    esplicitamente ClaudeBot** (`User-agent: ClaudeBot / Disallow: /`) —
+>    rispettata la regola R5.3, non consultato; `aussportsbetting.com`
+>    risponde 403 (bloccato); `btfodds.com`/`sportsoddshistory.com` hanno
+>    `robots.txt` permissivi ma sono siti di comparazione **live**, non
+>    archivi storici per-partita (sitemap di 1,3 MB con 5 sole occorrenze di
+>    "italy", nessuna struttura per stagione individuabile).
+>
+> **Esito: nessun dato nuovo trovato.** La stima resta la scelta migliore
+> nota. Nessuna delle vie economiche è cambiata dalla Fase 100/101-bis; il
+> promemoria di quella fase resta valido — soprattutto il punto su OddsPortal
+> (robots.txt vieta lo storico, R5.3) e sulle fonti a pagamento (mai valutate
+> a fondo, unica via rimasta davvero non esplorata).
+
 > ## ✅ ESITO FINALE — pista chiusa con successo, e con un risultato scomodo
 >
 > **Il dato vero esiste ed è stato scaricato**: `footiqo.com` pubblica le quote
