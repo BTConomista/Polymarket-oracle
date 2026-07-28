@@ -1,0 +1,360 @@
+# Stagione 2026-27 — raccolta quotidiana
+
+> **Stato: SPECIFICA, non ancora implementazione.** Questo file dice *cosa*
+> vogliamo, *perché*, *da dove* e *in che ordine*. Il codice arriva dopo, un
+> pezzo alla volta, e ogni pezzo aggiorna questo file.
+> Scritto il **28 luglio 2026** (Fase 119). Prima partita: **15 agosto**.
+
+---
+
+## 0 · A che cosa serve davvero questa cartella (onestà preliminare)
+
+Va detto subito, perché cambia le priorità e perché il progetto ha già pagato
+per impararlo: **questa raccolta non nasce per «dare più feature al modello».**
+
+Le Fasi 4c-33 hanno esplorato **tutti** i dati interni già disponibili (gol, xG,
+npxG, PPDA, deep completions, valore rosa, assenze, riposo, forma, poste in
+palio) e il verdetto è stato uniforme: **ridondanti o rumore**. Il tetto non è
+architetturale, è **informativo** — con ~380 partite a stagione e centinaia di
+covariate candidate, aggiungere colonne non sposta il log-loss, lo fa solo
+sembrare più basso in-sample. Chi legge questa cartella pensando «più dati =
+modello migliore» ripeterà un esperimento già fatto sei volte.
+
+Il valore di questa raccolta è **altrove**, ed è di tre tipi:
+
+1. **L'informazione che il mercato ha e noi no.** La Fase 93 ha isolato dove
+   vive il gap col mercato — l'**88% è discriminazione casa-ospite**, non massa
+   del pareggio — e la Fase 78 indica il candidato: la **formazione ufficiale a
+   T−1h**. È l'unica leva mai identificata e mai testata, e si può raccogliere
+   **solo in avanti**.
+2. **Il dataset notizia → movimento della quota.** Questo non esiste in nessun
+   archivio comprabile: richiede di osservare *insieme*, ogni giorno, la notizia
+   e il prezzo. È la cosa più originale che possiamo costruire, ed è
+   esattamente ciò che il raccoglitore Smarkets (Fasi 116/118) rende possibile.
+3. **Un archivio che vale su più stagioni.** Il principio §1.7 impone 3+
+   stagioni prima di concludere. Questa è la stagione 1: quasi nulla di ciò che
+   raccogliamo qui produrrà una conclusione entro maggio. Va costruito lo
+   stesso, perché il costo di *non* averlo si paga per anni.
+
+**Corollario operativo**: la priorità non è «quanti dati», è **quali dati si
+perdono per sempre se non li prendo oggi**. La colonna «⏳ recuperabile?» della
+lista al §4 è la vera lista delle priorità.
+
+---
+
+## 1 · La regola che decide l'architettura: fatto ≠ giudizio
+
+Metà di ciò che vogliamo raccogliere (umore dell'ambiente, allenatore a
+rischio, probabile formazione, lettura tattica) **non è un dato misurato**: è un
+giudizio prodotto leggendo delle notizie. Trattare le due cose allo stesso modo
+sarebbe il difetto peggiore del repo, quello che la regola **R6** chiama *finto
+pieno*: un valore che **sembra** una misura e non lo è.
+
+Quindi ogni record raccolto porta obbligatoriamente:
+
+```json
+{
+  "valore": "...",
+  "tipo": "fatto" | "giudizio",
+  "fonte": "https://…",            // per i fatti: URL + orario di accesso
+  "evidenza": ["…"],               // per i giudizi: le frasi su cui si basa
+  "confidenza": 0.0-1.0,           // solo per i giudizi
+  "raccolto_utc": "2026-08-14T09:00:00Z"
+}
+```
+
+Regole non negoziabili, ereditate da `CLAUDE.md` §5 e §5-bis:
+
+- un **giudizio** non entra mai in una colonna che sembra una misura;
+- un giudizio senza **evidenza citata** non si scrive: si scrive «non lo so»;
+- i giudizi **non si usano per simulare ROI**, mai (§5);
+- niente modifiche a mano: ogni correzione passa da uno script idempotente che
+  verifica il valore-prima (**R3**);
+- un'anomalia si dichiara **anche quando non è un errore** (**R4**);
+- il dato è il risultato del **campo**, non del tribunale (**R1**).
+
+---
+
+## 2 · Due assi ortogonali (risolve il dubbio «file al giorno *o* cartella per squadra?»)
+
+Non è un aut-aut: sono **due cose diverse** e servono entrambe.
+
+| asse | cosa risponde | proprietà indispensabile |
+|---|---|---|
+| **tempo** (`giornaliero/`) | «che cosa sapevamo il giorno D?» | **immutabile, append-only** |
+| **entità** (`club/`) | «che cos'è l'Inter, e in quali competizioni gioca?» | **anagrafica stabile + viste rigenerabili** |
+
+**Perché l'immutabilità non è pignoleria.** Se lo stato di una squadra vive in
+un file che sovrascriviamo ogni giorno, al 20 maggio non sapremo più *che cosa
+sapevamo il 14 agosto* — e con quello muore il test prospettico, cioè il motivo
+per cui stiamo raccogliendo. Il file del giorno è la **fonte di verità**; la
+cartella del club contiene (a) l'anagrafica, che cambia raramente e con un
+registro delle modifiche, e (b) viste **rigenerabili** dai file giornalieri,
+marcate come tali e mai modificate a mano.
+
+L'intuizione dell'utente — *una cartella per squadra, così serve per Serie A,
+Coppa Italia e Champions insieme* — è giusta e va tenuta: la **squadra** è
+l'entità, la **competizione** è un attributo della partita, non della cartella.
+
+### Struttura
+
+```
+data/stagione_2026_2027/
+├── README.md                        questo file
+├── _anagrafica/                     raccolto UNA VOLTA a inizio stagione (+ delta)
+│   ├── competizioni.json            quali tornei, formato, date, regole di classifica
+│   ├── ranking_uefa_club.json       coefficienti per club
+│   ├── ranking_fifa_nazionali.json  per il lavoro sulle nazionali (§7)
+│   └── stadi.json                   nome, capienza, superficie, COORDINATE (→ meteo)
+├── giornaliero/                     APPEND-ONLY, immutabile
+│   └── 2026-08-14/
+│       ├── raccolta.json            tutti i record del giorno (fatti + giudizi)
+│       ├── fonti.json               URL, orario, esito HTTP, hash di ogni fetch
+│       └── quote.json               istantanea del mercato (→ data/smarkets_matches/)
+└── club/
+    └── ITA/                         ISO-3166 alpha-3 del PAESE del club
+        └── inter/                   slug stabile (vedi club/README.md)
+            ├── anagrafica.json      rosa, obiettivi, competizioni, allenatore
+            ├── rosa_storico.jsonl   una riga per ogni variazione (mercato, valori)
+            └── vista_corrente.md    ⚙️ RIGENERABILE — non modificare a mano
+```
+
+**Nota sulle nazionalità.** `ITA/` è il paese del **club**, non della lega: serve
+perché §7 prevede di aggiungere club di seconda/terza serie e di campionati che
+oggi non modelliamo (Turchia, Portogallo, Olanda…), che incontriamo nelle coppe
+europee. Un club sta in **una sola** cartella per sempre, anche se cambia
+categoria: è la sua identità, non la sua classifica.
+
+---
+
+## 3 · Il vincolo che ho misurato oggi, e che riduce l'ambizione «tutto in automatico»
+
+**⚠️ La maggior parte dei siti di notizie sportive VIETA esplicitamente i
+crawler AI.** Misurato il 28/07/2026 leggendo i `robots.txt` (regola **R5.3**):
+
+| fonte | `ClaudeBot` / `anthropic-ai` | uso automatico? |
+|---|---|:--:|
+| **transfermarkt.it** (rose, valori) | `Disallow: /` | ❌ **NO** |
+| **gazzetta.it** | `Disallow: /` | ❌ NO |
+| **bbc.co.uk** | `Disallow: /` | ❌ NO |
+| **kicker.de** | `Disallow: /` | ❌ NO |
+| **marca.com** | `anthropic-ai: Disallow: /` | ❌ NO |
+| **theguardian.com** | presenti con **0 regole** = permesso | ✅ **SÌ** |
+| **legaseriea.it** | solo `*`, sezioni tecniche escluse | ✅ SÌ |
+| **open-meteo.com** | nessuna restrizione | ✅ SÌ |
+| **api.football-data.org** | nessun `robots.txt`; API con chiave | ✅ SÌ |
+| **wikipedia.org** | consentito (+ REST API ufficiale) | ✅ SÌ |
+| **understat.com** | `User-agent: * → Disallow: /` | ⚠️ **vedi sotto** |
+| **fbref.com**, **sofascore.com** | — | ❌ 403 (già noto) |
+
+**Conseguenze, da accettare invece di aggirare:**
+
+1. **Transfermarkt non si scrapa.** Le rose e i valori si prendono (a) dalla
+   raccolta **manuale dell'utente** — una persona che apre un sito col browser
+   non è un crawler, ed è già il metodo dichiarato dalla regola **R2** per i
+   valori 2025-26 — oppure (b) da fonti che lo consentono (football-data.org,
+   Wikidata). **Nessun aggiramento**: niente user-agent camuffati, niente VPN.
+2. **Il livello «notizie» non può poggiare sullo scraping della stampa
+   sportiva.** Restano tre vie legittime: fonti che ci consentono (Guardian,
+   siti ufficiali di lega e club), **API su licenza**, e la **ricerca web fatta
+   da Claude** in una routine — che è una ricerca, non un crawl di massa, e
+   rispetta a sua volta i `robots.txt`.
+3. **⚠️ Rilievo su codice già in produzione**: `understat.com` vieta tutto a
+   `*`, ma `src/data/understat.py` scarica da lì (usato fino alla Fase 103).
+   **Non l'ho toccato**: è una decisione dell'utente, non mia, e disattivarlo
+   di mia iniziativa romperebbe la pipeline. Va deciso esplicitamente — e la
+   decisione va scritta, qualunque sia.
+
+---
+
+## 4 · La lista COMPLETA dei dati
+
+Legenda — **tipo**: 📏 fatto misurato · 🧠 giudizio (LLM/modello) · 🔢 derivato
+per calcolo. **⏳**: 🔴 si perde per sempre se non raccolto oggi · 🟡 recuperabile
+a fatica · 🟢 sempre recuperabile a posteriori.
+
+### 4.1 · Anagrafica — una volta a inizio stagione, poi *delta*
+
+| dato | tipo | ⏳ | perché conta / note |
+|---|:--:|:--:|---|
+| Rosa completa (nome, data nascita, ruolo, piede, altezza, nazionalità, numero) | 📏 | 🟡 | base di tutto il resto |
+| **Valore di mercato per giocatore** | 📏 | 🔴 | i valori vengono **riscritti** dalle fonti: quello di agosto sparisce |
+| Valore totale rosa + valore dell'XI titolare | 🔢 | 🔴 | l'XI pesa più della rosa: 11 giocatori giocano |
+| Anno di scadenza contratto | 📏 | 🟡 | in scadenza = rischio distrazione/mercato |
+| Provenienza (acquisto, prestito, rientro, vivaio) | 📏 | 🟡 | l'integrazione dei nuovi ha un costo |
+| **Giocatori fuori progetto / fuori lista** | 📏 | 🔴 | rosa nominale ≠ rosa disponibile |
+| **Lista UEFA (25 + lista B)** | 📏 | 🔴 | chi è escluso dalle coppe: cambia la rosa *per competizione* |
+| Allenatore: nome, data nomina, contratto, precedenti | 📏 | 🟡 | |
+| **Obiettivi dichiarati** (società e pubblici) | 📏/🧠 | 🔴 | dichiarazioni di luglio: a maggio nessuno le ripubblica |
+| Competizioni a cui partecipa | 📏 | 🟢 | campionato, coppa nazionale, supercoppa, UEFA, Mondiale per club |
+| Stadio: nome, capienza, superficie, **coordinate**, altitudine | 📏 | 🟢 | le coordinate servono al meteo |
+| Coefficiente/ranking UEFA del club | 📏 | 🟡 | |
+| Situazione societaria: proprietà, FFP, **penalizzazioni di punti** | 📏 | 🟡 | una penalizzazione cambia gli obiettivi a stagione in corso |
+| Cambio stadio / stadio provvisorio | 📏 | 🟡 | il vantaggio-casa non è trasferibile |
+
+### 4.2 · Stato quotidiano — FATTI
+
+| dato | tipo | ⏳ | perché conta / note |
+|---|:--:|:--:|---|
+| **Infortuni**: giocatore, tipo, data, rientro previsto | 📏 | 🔴 | il *rientro previsto* è una previsione che poi nessuno archivia |
+| **Squalificati**: giornate, competizione | 📏 | 🟡 | ⚠️ le squalifiche sono **per competizione** |
+| **Diffidati** (a un cartellino dalla squalifica) | 📏 | 🔴 | quasi mai archiviato, e cambia il modo di giocare del singolo |
+| Allenamenti differenziati / a parte | 📏 | 🔴 | il primo segnale, giorni prima del bollettino ufficiale |
+| **Convocazioni in nazionale**: partenza, n. partite, fuso, minuti, rientro | 📏 | 🔴 | la sosta è il maggiore shock di disponibilità della stagione |
+| Minuti giocati per giocatore (7/14/30 giorni) | 🔢 | 🟢 | carico → turnover |
+| Km percorsi e fusi orari attraversati | 🔢 | 🟡 | trasferte europee lontane |
+| Riposo fra le partite | 🔢 | 🟢 | già in `rest_days_full` |
+| Prossime 3 partite: data, competizione, avversario | 📏 | 🟢 | base del turnover atteso |
+| **Meteo previsto allo stadio** (T, pioggia, vento, umidità) | 📏 | 🔴 | la *previsione* è irrecuperabile; il consuntivo no |
+| Orario del match (12:30 vs 20:45) | 📏 | 🟢 | caldo, ritmo |
+| **Quote della prossima partita + movimento** | 📏 | 🔴 | ✅ già coperto (Fasi 116/118) |
+| Trasferimenti conclusi o imminenti | 📏 | 🟡 | |
+| **Cambio allenatore** (avvenuto) | 📏 | 🟢 | |
+| Arbitro designato + sue statistiche (cartellini, rigori) | 📏 | 🔴 | la designazione si pubblica 2 giorni prima e sparisce |
+| Stadio: porte chiuse, settore ospiti chiuso, campo neutro | 📏 | 🔴 | tocca direttamente il vantaggio-casa |
+| **Contestazione tifosi / sciopero della curva** | 📏/🧠 | 🔴 | il vantaggio-casa è anche pubblico |
+| Biglietti venduti / affluenza attesa | 📏 | 🔴 | |
+
+### 4.3 · Prestazione e stile — misurabili
+
+| dato | tipo | ⏳ | perché conta / note |
+|---|:--:|:--:|---|
+| Possesso, PPDA, xG/xGA, npxG, deep completions | 📏 | 🟢 | già nel repo (attenzione a §3.3) |
+| **Modulo per partita e cambi di modulo** | 📏 | 🟡 | «sta cambiando modo di giocare» diventa misurabile solo così |
+| Giocatori spostati di ruolo | 📏 | 🟡 | |
+| **Distribuzione dei gol per fascia di 15′** (fatti e subiti) | 🔢 | 🟢 | il pattern «segna sempre alla fine» |
+| Gol da palla inattiva (fatti/subiti) | 🔢 | 🟢 | |
+| Rendimento casa/trasferta separato | 🔢 | 🟢 | |
+| Rendimento contro alta/bassa classifica | 🔢 | 🟢 | |
+| Serie aperte (imbattibilità, clean sheet, sconfitte) | 🔢 | 🟢 | |
+| Rotazione: n. giocatori usati, età media dell'XI | 🔢 | 🟢 | |
+| **Dipendenza da singoli**: % gol+assist del migliore | 🔢 | 🟢 | **il numero che rende quantificabile «giocatore chiave»** |
+| Rigori concessi/ottenuti, chi li tira | 📏 | 🟢 | |
+| Portiere: parate, **gol evitati (PSxG−GA)** | 📏 | 🟡 | un portiere in stato di grazia sposta i totali |
+| Cartellini per giocatore e per squadra | 📏 | 🟢 | già coperto (Fase 96) |
+| Falli commessi/subiti, corner | 📏 | 🟢 | già coperto |
+
+### 4.4 · Giudizi — utili, ma **marcati** (§1)
+
+| dato | tipo | ⏳ | perché conta / note |
+|---|:--:|:--:|---|
+| **Probabile formazione** della prossima partita | 🧠 | 🔴 | il proxy di ciò che la Fase 93 indica come bersaglio |
+| Formazione **ufficiale** a T−1h | 📏 | 🔴 | 🎯 **il dato più prezioso in assoluto**: fatto, non giudizio |
+| Sentiment / umore dell'ambiente | 🧠 | 🔴 | |
+| **Allenatore a rischio esonero** | 🧠 | 🔴 | |
+| Lettura tattica del prossimo avversario | 🧠 | 🔴 | |
+| Importanza percepita della partita | 🧠 | 🔴 | «devono vincere per forza» vs «gara ininfluente» |
+| Rischio turnover in vista della prossima | 🧠 | 🔴 | |
+| Giocatore in forma / giocatore chiave assente | 🧠 | 🔴 | **con accanto il numero di §4.3** (dipendenza), o è aria |
+| Impatto stimato di un'assenza | 🧠 | 🔴 | |
+
+### 4.5 · Contesto di competizione
+
+| dato | tipo | ⏳ | perché conta / note |
+|---|:--:|:--:|---|
+| Classifica aggiornata e distanza dagli obiettivi | 🔢 | 🟢 | |
+| Fase del torneo (gruppi, eliminazione, andata/ritorno) | 📏 | 🟢 | |
+| Possibilità matematiche residue | 🔢 | 🟢 | si calcola con `season_sim.py` (Fase 89) |
+| Scontri diretti recenti | 🔢 | 🟢 | |
+| **Derby / rivalità** | 📏 | 🟢 | più cartellini, meno gol |
+| Prima/ultima giornata, turno infrasettimanale | 📏 | 🟢 | |
+| **Partita importante subito dopo** (guardare avanti) | 🔢 | 🟢 | la causa più comune di turnover |
+| Sosta nazionali imminente | 📏 | 🟢 | |
+| Ranking UEFA club / FIFA nazionali | 📏 | 🟡 | |
+
+### 4.6 · Il dato che nasce dall'incrocio — **il vero prodotto originale**
+
+| dato | tipo | ⏳ | perché conta |
+|---|:--:|:--:|---|
+| **notizia (t) → movimento della quota (t+δ)** | 🔢 | 🔴 | non esiste in nessun archivio: richiede di osservare **insieme** notizia e prezzo, ogni giorno |
+| Quota **prima** e **dopo** l'annuncio delle formazioni | 🔢 | 🔴 | quantifica quanto vale l'informazione che ci manca |
+| Notizie che **non** muovono il prezzo | 🔢 | 🔴 | il risultato negativo vale quanto il positivo (§1.4) |
+
+> **Perché questo è il pezzo forte.** Il progetto ha dimostrato (Fase 16) che il
+> mercato di chiusura **ingloba** il nostro modello. Ma *quanto* si muove il
+> prezzo, e *su quale notizia*, è una misura diretta di **quale informazione il
+> mercato considera rilevante** — cioè la mappa di dove cercare. Non promette
+> edge: promette di sapere dove guardare.
+
+---
+
+## 5 · Come si sviluppa (ordine per rapporto valore/costo)
+
+**Il criterio d'ordine è la colonna ⏳, non l'interesse.** Prima ciò che si
+perde, poi il resto.
+
+| # | passo | perché ora | scadenza |
+|:--:|---|---|---|
+| **1** | **Anagrafica di partenza** (§4.1) delle 5 leghe: rosa, valori, obiettivi, competizioni, stadi+coordinate | è la fotografia di **agosto**: i valori vengono riscritti, gli obiettivi dichiarati non si ripubblicano | **prima del 15/8** |
+| **2** | **Scheletro giornaliero + meteo + quote** (già pronte) | la struttura immutabile dev'esistere prima del primo giorno utile | **prima del 15/8** |
+| **3** | **Formazioni ufficiali a T−1h** | 🎯 il bersaglio della Fase 93; **timebox 2 ore** per la fonte, poi si ripiega sulle probabili | **prima del 15/8** |
+| **4** | Bollettino quotidiano dei **fatti** (infortuni, squalifiche, diffidati, convocazioni) | 🔴 in gran parte | dal 15/8 |
+| **5** | Livello **giudizi** (sentiment, rischio panchina, probabili) | serve il livello 4 come evidenza | settembre |
+| **6** | **Incrocio notizia→quota** (§4.6) | serve una massa di giorni | ottobre |
+| **7** | Derivati di §4.3 (fasce di 15′, dipendenza dai singoli, PSxG) | 🟢 ricalcolabili **quando vogliamo** | quando c'è tempo |
+
+**Come gira, tecnicamente.** Due canali, e ognuno fa ciò per cui è adatto:
+
+- **GitHub Actions** (già in uso, gratuito, affidabile) per i **fatti da API**:
+  meteo, quote, calendario, classifiche. Deterministico, testabile, senza LLM.
+- **Routine Claude Code** per i **giudizi** e per le notizie che richiedono
+  lettura: gira, cerca, scrive un file datato, committa. Qui l'LLM serve
+  davvero — ma ciò che produce è marcato `"tipo": "giudizio"` con l'evidenza.
+
+Sono separati apposta: se un giorno la routine LLM non gira, i fatti si
+raccolgono lo stesso. **Il livello 1 non deve dipendere dal livello 2.**
+
+⚠️ **Il paracadute obbligatorio (lezione della Fase 118).** Ogni raccoglitore
+automatico deve **fallire rumorosamente** quando la risposta è implausibile.
+Un job verde che non raccoglie niente è indistinguibile da uno che funziona, e
+in questa cartella il dato mancante **non si recupera**. Ogni giro scrive anche
+`fonti.json` con esito e orario di ogni fetch: un giorno con 0 fatti dev'essere
+visibile come un'anomalia, non come un file assente.
+
+---
+
+## 6 · Come si controlla che non stiamo raccogliendo spazzatura
+
+Regola del progetto (**R7**): ogni statistica di testa ha il suo intervallo, e
+ogni «non c'è effetto» la sua misura di potenza. Applicata qui:
+
+- **copertura dichiarata**: per ogni giorno e ogni campo, quante squadre coperte
+  su quante attese. Un campo sotto il 50% è un campo che **non** si può usare in
+  un'analisi senza dirlo;
+- **i giudizi si scorano**: la «probabile formazione» va confrontata con quella
+  **ufficiale** appena esce. Senza questo numero, il livello 5 è intrattenimento;
+- **niente conclusioni su una stagione** (§1.7): questa è la stagione 1;
+- **niente ROI simulato** con dati raccolti in questo modo (§5).
+
+---
+
+## 7 · Prossimi passi già previsti (non ancora fatti)
+
+1. **Coppe nazionali** (Coppa Italia, FA Cup, Copa del Rey, DFB-Pokal, Coupe de
+   France) e **supercoppe**: la squadra è la stessa cartella, cambia la
+   competizione della partita. Serve la regola delle **liste per competizione**
+   (chi è squalificato dove).
+2. **Coppe europee** (Champions, Europa, Conference) + **Mondiale per club**:
+   introducono avversari di campionati che non modelliamo → §4 della struttura.
+3. **Nazionali** — *da questa stagione si comincia*: convocazioni, minuti,
+   risultati, e l'effetto rientro. È anche il ponte verso i tornei per nazionali.
+4. **Ranking UEFA (club) e FIFA (nazionali)**: sia come feature sia come
+   contesto per gli obiettivi.
+5. **Club fuori dalle 5 leghe**: seconde/terze/quarte serie e campionati esteri
+   (Turchia, Portogallo, Olanda, Belgio…). Non li modelliamo, ma li
+   **incontriamo** nelle coppe: servono almeno anagrafica e ranking.
+6. **Mappa nomi squadra** Smarkets ↔ nostri snapshot ↔ fonti nuove: da fare **a
+   mano e verificata**, mai con un match approssimato. È un bug già capitato nel
+   repo («Hellas Verona» → «Verona»), ed è il modo tipico di rovinare un join.
+
+---
+
+## 8 · Che cosa NON va in questa cartella
+
+- **quote come numeri decimali**: qui si scrivono probabilità, come ovunque nel
+  repo (`docs/DATI.md`);
+- **stime del nostro modello**: vivono in `data/estimates/` (§5 di `CLAUDE.md`);
+- **dati modificati a mano**: mai (**R3**);
+- **contenuti scaricati da fonti che ci vietano il crawling** (§3);
+- **niente di tutto questo serve a scommettere soldi veri.** Vale qui come in
+  tutto il repo.

@@ -345,6 +345,46 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
 | `betexplorer.com` (O/U 2017-19 apertura/chiusura) | ❌ **chiusa negativa** (Fase B): il sito ha ritirato il confronto-quote per le partite di ~8 anni fa, copertura 0%. Scraper e verbale conservati in [BETEXPLORER_SCRAPER.md](BETEXPLORER_SCRAPER.md) |
 | `oddsportal.com` | ❌ **esclusa**: `robots.txt` vieta le pagine storiche; il feed outright è un blob AES; lo storico per singola quota richiede login |
 
+### 4-bis · `robots.txt` e crawler AI — misurato il 28/07/2026 (Fase 119)
+
+Prima di progettare la raccolta quotidiana della stagione 2026-27 ho letto i
+`robots.txt` delle fonti candidate. **La maggior parte della stampa sportiva
+vieta esplicitamente i crawler AI**, `ClaudeBot`/`anthropic-ai` compresi. Non è
+un 403 da aggirare: è una regola dichiarata, e la regola **R5.3** del progetto
+dice di rispettarla.
+
+| fonte | regola per noi | uso automatico |
+|---|---|:--:|
+| `transfermarkt.it` | `ClaudeBot`, `anthropic-ai`, `Claude-SearchBot`, `GPTBot`, `CCBot`, `wget` → `Disallow: /` | ❌ **vietato** |
+| `gazzetta.it` | `ClaudeBot`, `GPTBot` → `Disallow: /` | ❌ vietato |
+| `bbc.co.uk` | `ClaudeBot`, `anthropic-ai`, `GPTBot` → `Disallow: /` | ❌ vietato |
+| `kicker.de` | tutti e 4 gli UA AI → `Disallow: /` | ❌ vietato |
+| `marca.com` | `anthropic-ai`, `GPTBot` → `Disallow: /` | ❌ vietato |
+| **`theguardian.com`** | `ClaudeBot`/`anthropic-ai`/`Claude-SearchBot` presenti con **0 regole** = **consentito** | ✅ **sì** |
+| `legaseriea.it` | solo `*`, con sezioni tecniche escluse | ✅ sì |
+| `open-meteo.com` | nessuna restrizione (API gratuita, senza chiave) | ✅ sì |
+| `api.football-data.org` | nessun `robots.txt`; API con chiave | ✅ sì |
+| `wikipedia.org` | consentito, e ha una REST API ufficiale | ✅ sì |
+| `understat.com` | `User-agent: * → Disallow: /` | ⚠️ vedi sotto |
+| `fbref.com`, `sofascore.com` | — | ❌ **403** (confermato, già noto) |
+| `fotmob.com` | `*` con 5 regole, `/api/*` vietato (trappola del frammento `#matchId`) | ⚠️ parziale |
+
+⚠️ **Rilievo aperto su codice in produzione.** `understat.com` vieta tutto a
+`*`, ma `src/data/understat.py` scarica da lì (usato fino alla Fase 103, dove
+il download live è stato riparato). **Non è stato modificato**: è una decisione
+dell'utente, non della sessione, e disattivarlo d'ufficio romperebbe la
+pipeline dell'xG. Va deciso in modo esplicito, e la decisione va scritta
+qualunque sia.
+
+**Conseguenza di progetto** (in `data/stagione_2026_2027/README.md` §3): il
+livello «notizie» **non** può poggiare sullo scraping della stampa sportiva.
+Restano tre vie legittime — fonti che ci consentono, API su licenza, e la
+**ricerca web** dentro una routine (che è una ricerca, non un crawl di massa).
+Rose e valori di mercato: raccolta **manuale** dell'utente (una persona con un
+browser non è un crawler — è già il metodo dichiarato dalla regola **R2**) o
+fonti che lo permettono. **Nessun aggiramento**: niente user-agent camuffati,
+niente VPN.
+
 ---
 
 *Cosa NON sta qui (perché già scritto altrove): le fasi in DIARIO.md, il
