@@ -1,5 +1,21 @@
 # Report 2 — Le stime: ritentare l'import del dato vero, e verificare la stima
 
+> **Che cos'è questo documento.** Il secondo degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md).
+> Documento **storico**: fotografa lo stato di allora.
+
+> ⚠️ **SUPERATO in parte dal report 9.** Questo report chiude quattro vie e
+> conclude che il dato vero della chiusura O/U 2017-19 «non è procurabile».
+> Un **quinto angolo**, cercato dopo — non «chi ri-esporta football-data» ma «un
+> book che football-data non contiene» — lo ha trovato: **1xBet via `footiqo.com`,
+> 3.652 partite** della finestra bersaglio su 5 leghe
+> ([`09_chiusura_buchi.md`](09_chiusura_buchi.md) §2). Restano vere due cose:
+> quel dato **non batte la stima** (indistinguibili, CI a cavallo dello zero) ed è
+> un **singolo book**, non la media multi-book che le colonne di chiusura
+> contengono dal 2019-20 — perciò **non è stato inserito** negli snapshot. Tutta
+> la verifica della stima (§3) è invece **invariata**.
+
 **Domanda posta:** *«riprova ad importare i dati che abbiamo raccolto come stime;
 se ancora non riesci, verifica che i risultati delle stime (e il ragionamento che
 ha portato ad esse) sia corretto»*.
@@ -19,6 +35,12 @@ esiste. Tre precisazioni da riportare nei documenti (§4).
 `data/estimates/ou_close_2017_19.csv` (2.279 righe, 3 leghe): la **chiusura
 Over/Under 2.5** delle stagioni 2017-18 e 2018-19, che le fonti non pubblicano.
 Stimata con l'estimatore E3 pooled (Fasi 62/62-bis).
+
+> Stato oggi: lo stesso file copre **5 leghe e 3.638 righe** (verificato:
+> serie_a 760, premier_league 760, ligue_1 758, la_liga 756, bundesliga 604). Le
+> 1.362 righe di Bundesliga e Ligue 1 sono state aggiunte dal report 9 §3, e le
+> 3 righe La Liga che poggiavano su un input rotto (§3.7) sono cadute da sole col
+> guard sull'overround. Il «2.279 righe, 3 leghe» è il perimetro **di allora**.
 
 ## 2 · Ritentativo di import del dato VERO — esito NEGATIVO (con prove)
 
@@ -168,6 +190,11 @@ stime spariscono da sole (`build_estimates.py` salta le righe senza input).
    3 stime da ritirare (§3.7).
 
 ## 5 · Aggiornamenti da fare a `docs/CACCIA_OU_2017_19.md`
+
+> ⚠️ **Fatti, e poi superati.** `docs/CACCIA_OU_2017_19.md` è stato aggiornato e
+> quindi **CHIUSO alla Fase 100**: il dato esiste (1xBet via footiqo) ma non è
+> stato inserito — un solo book, peggiore della stima come proxy della media
+> multi-book. Le voci qui sotto restano come verbale della decisione.
 
 - Fase A: **ri-confermata negativa**, ora per verifica **diretta sulla
   fonte-madre** (prima era un'inferenza da mirror Kaggle + ricerca web).

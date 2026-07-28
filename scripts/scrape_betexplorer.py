@@ -36,7 +36,20 @@ import time
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+
+# DIPENDENZE NON DICHIARATE in pyproject.toml: questo e' l'unico script del repo
+# che usa BeautifulSoup. L'import e' guardato perche' un `--help` (o lo smoke
+# test statico su scripts/) non deve morire con un ModuleNotFoundError nudo su
+# una macchina che non ha `beautifulsoup4`: la mancanza va detta in chiaro, e
+# solo quando serve davvero (cioe' quando si scrappa).
+try:
+    from bs4 import BeautifulSoup
+except ModuleNotFoundError:                              # pragma: no cover
+    BeautifulSoup = None
+
+_BS4_MANCA = ("questo scraper richiede `beautifulsoup4`, che NON e' fra le "
+              "dipendenze del progetto (pyproject.toml): installalo con "
+              "`pip install beautifulsoup4` prima di eseguirlo.")
 
 BASE = "https://www.betexplorer.com"
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -60,6 +73,13 @@ NUM_RE = re.compile(r"^\d+(?:\.\d+)?$")
 
 def log(msg):
     print(msg, flush=True)
+
+
+def _soup(html):
+    """BeautifulSoup, oppure un errore che dice cosa manca e come installarlo."""
+    if BeautifulSoup is None:                            # pragma: no cover
+        raise SystemExit(_BS4_MANCA)
+    return BeautifulSoup(html, "html.parser")
 
 
 def polite_sleep(lo=2.0, hi=3.0):
@@ -97,7 +117,7 @@ def get(session, url, referer=None, ajax=False, tries=4):
 
 def parse_results_page(html):
     """Estrae le partite dalla pagina risultati (tutta la stagione e' server-side)."""
-    soup = BeautifulSoup(html, "html.parser")
+    soup = _soup(html)
     matches, seen = [], set()
     for tr in soup.find_all("tr"):
         team_a, score_a = None, None
@@ -168,7 +188,7 @@ def parse_ou_html(html):
     Struttura attesa: tabella con righe bookmaker; colonna linea (testo tipo '2.5'
     senza data-odd) + due celle quota (Over, Under) con data-odd / data-opening-odd.
     """
-    soup = BeautifulSoup(html, "html.parser")
+    soup = _soup(html)
     out = []
     for tr in soup.find_all("tr"):
         tds = tr.find_all("td")
@@ -264,6 +284,8 @@ def main():
     ap.add_argument("--throttle-min", type=float, default=2.0)
     ap.add_argument("--throttle-max", type=float, default=3.0)
     args = ap.parse_args()
+    if BeautifulSoup is None:
+        raise SystemExit(_BS4_MANCA)
 
     country, league_name, season = LEAGUES[args.league]
     files_dir = Path("files"); files_dir.mkdir(exist_ok=True)

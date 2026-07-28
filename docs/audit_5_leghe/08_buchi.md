@@ -1,5 +1,12 @@
 # Report 8 — I buchi: quanti sono, dove sono, come si chiudono
 
+> **Che cos'è questo documento.** L'ottavo degli **11 report integrali dell'audit
+> a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md` riassume
+> nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md). Documento
+> **storico**: è il *censimento* dei buchi; la loro **chiusura** (e il fatto che
+> il buco maggiore rimasto non sia un `NaN`) sta in
+> [`09_chiusura_buchi.md`](09_chiusura_buchi.md).
+
 Domanda posta: *«dei dati che hai importato quanti buchi abbiamo? come potremmo
 risolvere?»*
 
@@ -53,13 +60,20 @@ probabilità. Sta in `data/estimates/`, mai nelle colonne quota. Le due leghe
 nuove **non hanno ancora la loro stima**: si genera con lo stesso script, è uno
 dei passi della tranche 2.
 
+> **Fatto poi** ([`09_chiusura_buchi.md`](09_chiusura_buchi.md) §3): **1.362
+> partite** stimate (604 bundesliga + 758 ligue_1), con l'errore dichiarato nel
+> **regime d'uso** — MAE **0.0143** (Bundesliga) e **0.0125** (Ligue 1), non lo
+> ≈0.012 delle altre leghe. E il dato **reale** di quelle stagioni è stato
+> trovato (1xBet via footiqo, 3.652 partite) ma **non inserito**: non batte la
+> stima ed è un singolo book (§2 di là).
+
 ---
 
 ## 3 · Le altre 49 celle, una per una
 
 | lega | partita | colonne vuote | perché | recuperabile? |
 |---|---|---|---|---|
-| bundesliga | Leverkusen-Dortmund, Hoffenheim-RB Leipzig, Ein Frankfurt-Bayern, Bayern-Hertha, Werder-Leverkusen (2017-18), Dortmund-Wolfsburg (2018-19) | O/U apertura (12) | **svuotate da noi**: overround impossibile fino a 1.339 (report 5 §1.1) | no → **stimate**, MAE 0.0267 (`data/stime_ou_corrotte.csv`) |
+| bundesliga | Leverkusen-Dortmund, Hoffenheim-RB Leipzig, Ein Frankfurt-Bayern, Bayern-Hertha, Werder-Leverkusen (2017-18), Dortmund-Wolfsburg (2018-19) | O/U apertura (12) | **svuotate da noi**: overround impossibile fino a 1.339 (report 5 §1.1) | no → **stimate**, MAE 0.0267 → **poi 0.0143** (`data/estimates/ou_open_corrotte_2017_19.csv`; il file del cantiere si chiamava `stime_ou_corrotte.csv` ed è stato soppresso) |
 | ligue_1 | Lyon-Metz, Monaco-Lyon (2017-18) | O/U apertura (4) | idem | idem |
 | bundesliga | Bayern-Hoffenheim 24/08/2018 | O/U apertura (2) | **assente alla fonte** (cella vuota nel CSV originale) | stessa strada delle 8 sopra |
 | bundesliga | Bayern-Hannover 04/05/2019 | 1X2 chiusura (3) | assente alla fonte (colonne Pinnacle vuote) | l'apertura c'è: sostituibile solo dichiarandolo |
@@ -122,7 +136,7 @@ giorno 0, xG impossibili 0 (autogol verificati uno per uno).
 |---|---|---|---|---|
 | 1 | Nantes-Toulouse xG | ri-scaricare Understat quando consolida | ~0 | **sì**, si chiude da solo |
 | 2 | O/U chiusura 2017-19 delle 2 leghe nuove | generare la stima dichiarata con lo script esistente | basso | **sì** — è un passo della tranche 2 |
-| 3 | 9 linee O/U di apertura corrotte/assenti | stima già prodotta (MAE 0.0267 vs 0.0743 baseline) | fatto | **sì**, già fatto |
+| 3 | 9 linee O/U di apertura corrotte/assenti | stima già prodotta (MAE 0.0267 vs 0.0743 baseline) → **ri-stimata a 0.0143** dal bakeoff del report 9 §5 | fatto | **sì**, già fatto |
 | 4 | tiri in porta Union-Bochum | decidere se accettare la convenzione Understat | decisione, non lavoro | **da decidere** (oggi: proposta non applicata) |
 | 5 | coppe nazionali + EL/Conference mancanti | trovare e integrare altre fonti calendario | medio-alto | **no per ora**: la congestione è già risultata rumore |
 | 6 | O/U chiusura 2017-19 *reale* | non esiste strada legale/tecnica | ∞ | **no**, chiuso con prova (report 7 §2) |

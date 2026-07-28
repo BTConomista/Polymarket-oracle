@@ -116,10 +116,14 @@ from src.evaluation import metrics                 # noqa: E402
 from src.models import market_implied as mi        # noqa: E402
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "leve_apertura.json"
+# Cache dei tassi impliciti: rigenerabile, quindi DENTRO il repo sotto `outputs/`
+# (gia' in .gitignore, stessa convenzione di `_run_fase81_mega_sweep_mi.CACHE`).
+# Override con la variabile d'ambiente SCRATCH. Il default non deve mai essere lo
+# scratchpad di una sessione: su qualunque altra macchina quel percorso non
+# esiste e la cache riparte muta da vuota (rilievo F11-14, audit Fase 101).
 SCRATCH = Path(os.environ.get(
-    "SCRATCH",
-    "/tmp/claude-0/-home-user-Polymarket-oracle/"
-    "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "apertura"
+    "SCRATCH", ROOT / "outputs" / "scratch")) / "apertura"
+SCRATCH.mkdir(parents=True, exist_ok=True)
 SNAP = {"bundesliga": ROOT / "data/bundesliga_matches.csv",
         "ligue_1": ROOT / "data/ligue_1_matches.csv"}
 TRACER = {lg: ROOT / f"docs/audit_5_leghe/numeri/tracer_pred_{lg}.csv" for lg in SNAP}

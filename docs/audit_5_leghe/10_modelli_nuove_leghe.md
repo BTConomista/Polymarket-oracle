@@ -1,5 +1,13 @@
 # Report 10 — La rosa dei modelli messa alla prova su Bundesliga e Ligue 1
 
+> **Che cos'è questo documento.** Il decimo degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md).
+> È il report più lungo del lotto e contiene anche il **verbale della verifica
+> avversariale** (§15), che smonta conclusioni sia di questo report sia del
+> report 9. Numeri grezzi: `docs/audit_5_leghe/numeri/leve_*.json`,
+> `nuovo_*.json`, `verifica_blocco_precedente.json`.
+
 Richiesta: *«valutare quanti più modelli, piste o cose possibili per queste due
 leghe appena aggiunte»*.
 

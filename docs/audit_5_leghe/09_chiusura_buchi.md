@@ -1,5 +1,18 @@
 # Report 9 — Chiudere i buchi: cosa si è recuperato davvero, cosa si è stimato
 
+> **Che cos'è questo documento.** Il nono degli **11 report integrali dell'audit
+> a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md` riassume
+> nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md). È il seguito
+> operativo di [`08_buchi.md`](08_buchi.md) (che censisce i buchi) e contiene
+> conclusioni poi **ritirate** dalla verifica avversariale: sono segnalate qui
+> dentro, e l'elenco completo è in
+> [`10_modelli_nuove_leghe.md`](10_modelli_nuove_leghe.md) §15.
+>
+> ⚠️ **Sigle delle regole.** Le «R6» citate qui (§5.1, §9) sono nella numerazione
+> **storica del cantiere**: nella numerazione **vigente** (`CLAUDE.md` §5-bis)
+> quella regola è la **R5**. Corrispondenza completa in testa a
+> [`REGOLE.md`](REGOLE.md).
+
 Richiesta: *«risolviamo quanti più buchi nei dati abbiamo (o trovandoli su
 internet o da qualche parte, o facendo delle stime quanto più accurate)»*.
 
@@ -131,6 +144,14 @@ Primo sguardo: il mercato prezza GG in media 0.526 contro una frequenza reale di
 mercato GG/NG **è informativo** — quanto sia battibile è una domanda aperta, e
 adesso è una domanda *rispondibile*.
 
+> **Risposta data** in [`11_ggng.md`](11_ggng.md), che riproduce questo «primo
+> sguardo» come controllo di sanità (p medio 0.5268, frequenza 0.5140, log-loss
+> 0.6851, overround 1.0433 su n = 3.650) e poi allarga a **5.337 partite**: il
+> mercato GG/NG è informativo (0.6840 contro 0.6921 di baseline, CI conclusivo),
+> il nostro market-implied lo **pareggia** e il DC **perde** (+0.01036). La
+> premessa di `CLAUDE.md` §1.8 citata qui sopra è quindi **CADUTA**, ed è stata
+> riscritta là.
+
 ---
 
 ## 3 · La stima che chiude il buco: chiusura O/U per Bundesliga e Ligue 1
@@ -227,12 +248,22 @@ solo per confronto — quello che vale è la tabella del §3-bis):
 
 | lega | MAE (interpolazione) | | lega | MAE (interpolazione) |
 |---|--:|---|---|--:|
-| bundesliga | 0.0124 | | serie_a | 0.0134 |
-| ligue_1 | 0.0114 | | premier_league | 0.0122 |
-| | | | la_liga | 0.0115 |
+| bundesliga | 0.0124 | | serie_a | **0.0123** |
+| ligue_1 | 0.0114 | | premier_league | **0.0123** |
+| | | | la_liga | **0.0116** |
 
 Le due leghe nuove non sono più difficili delle altre: la Ligue 1 è anzi la
 **più facile** del campione.
+
+> ⚠️ **Correzione della Fase 101-ter (tre celle).** Le tre leghe storiche
+> portavano 0.0134 / 0.0122 / 0.0115, che sono i MAE dello stimatore
+> **per-lega** — cioè quello **bocciato** dal §3. Con lo stimatore adottato
+> (E3 pooled a 5 leghe) valgono 0.0123 / 0.0123 / 0.0116, come registra
+> `docs/audit_5_leghe/numeri/stima_ou_close_nuove.json`
+> (`mae_atteso_leghe_storiche`; stessi numeri in `bakeoff.E3_pooled5`: serie_a
+> 0.01226, premier_league 0.01233, la_liga 0.01162). Era un residuo della
+> versione del report scritta prima del ritiro. Le due leghe nuove erano già
+> pooled e restano invariate.
 
 **Due prove di stress, entrambe superate.** (a) *Fit solo su stagioni
 successive*, che è la condizione reale dell'applicazione: MAE 0.0140 contro
@@ -385,7 +416,9 @@ stato provato *sotto* la superficie M4 — quindi il suo verdetto vale solo per 
 debias povero.
 
 → `data/estimates/ou_open_corrotte_2017_19.csv` (9 righe, probabilità, con
-entrambe le colonne M5g e M4)
+entrambe le colonne M5g e M4) — **12 righe oggi** (verificato: 7 bundesliga,
+3 la_liga, 2 ligue_1), dopo che il guard sull'overround ha svuotato anche le
+3 celle La Liga; le 9 preesistenti sono invariate a meno di 0.000000.
 
 ---
 
@@ -663,6 +696,14 @@ inclusa. Poco rilevante oggi (il blend ufficiale usa l'xG), ma va scritto.
 ---
 
 ## 9 · Le proposte, nessuna applicata
+
+> ⚠️ **Stato oggi.** «Nessuna applicata» vale al momento della scrittura. Dopo,
+> almeno queste sono state eseguite: la **4** (guard `ORR_MAX = 1.12` in
+> `src/data/loader.py` + svuotamento delle righe La Liga), la **7**
+> (rigenerazione col pooled, §3-bis), la **8** (`ou_open_corrotte_2017_19.csv`
+> v2, oggi 12 righe) e — per il caso A — le **6 celle 1X2** inserite come dato
+> reale da fonte secondaria dichiarata (vedi il riquadro «Aggiornamento Fase
+> 101-bis» in testa a questo report). Le altre restano proposte.
 
 | # | cosa | dove | perché serve una decisione |
 |---|---|---|---|

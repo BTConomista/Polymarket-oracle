@@ -1,5 +1,10 @@
 # Report 4 — Le tre decisioni: istruttoria, esito e applicazione
 
+> **Che cos'è questo documento.** Il quarto degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md).
+> Documento **storico**.
+
 Le prime due decisioni sono state istruite andando a **cercare i dati**, non
 ragionando a tavolino. **Tutte e tre sono state prese e applicate** (§4).
 
@@ -152,6 +157,14 @@ semmai più corrette di quelle vicine prese dalla fonte primaria.)*
 
 ## Decisione 3 — Isolamento del lavoro (presa)
 
+> ⚠️ **Regola decaduta all'integrazione.** La cartella `cantiere/` non esiste
+> più: report, script, snapshot e artefatti sono stati spostati nella struttura
+> del progetto (la tabella di corrispondenza è in testa a
+> [`00_indice.md`](00_indice.md)), e i documenti condivisi sono stati aggiornati.
+> Attenzione anche alle **sigle delle regole**: la R4-isolamento di cui si parla
+> qui è quella del cantiere; nella numerazione vigente (`CLAUDE.md` §5-bis) la
+> R4 è un'altra cosa.
+
 Tutto resta **in `cantiere/`**, senza numerazione di fase e senza toccare i
 documenti condivisi (`DIARIO.md`, `README.md`, `PANCHINA.md`, `DATI.md`,
 `runs.jsonl`): così non c'è modo di entrare in conflitto con il lavoro in corso
@@ -215,4 +228,5 @@ temevo.
 
 **Verifiche dopo l'applicazione:** audit sulle 5 leghe (Bundesliga 0 FAIL/0 WARN,
 Ligue 1 0 FAIL/2 WARN noti), audit avversariale invariato, `pytest` verde
-(153 test).
+(153 test — ⚠️ **numero STORICO**, quello dichiarato allora; la suite di oggi ne
+conta **841**, ri-misurati alla Fase 101-ter).

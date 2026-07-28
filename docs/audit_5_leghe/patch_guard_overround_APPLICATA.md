@@ -1,5 +1,10 @@
 # Guard sull'overround TROPPO ALTO — APPLICATA
 
+> **Che cos'è questo documento.** L'unica **proposta di patch al codice di
+> produzione** uscita dall'**audit a 5 leghe (Fase 100)** — allora la cartella
+> `cantiere/patch/`. Sta insieme agli 11 report: indice in
+> [`00_indice.md`](00_indice.md).
+
 **APPLICATA all'integrazione** (commit `ec85314`): il guard bilaterale vive in
 `src/data/loader.py` (`ORR_MAX = 1.12`, usato in `_pick_market_odds`). Questo
 documento resta come verbale della proposta e della sua verifica. Motivazione
@@ -15,7 +20,8 @@ if sum(1.0 / v for v in picks.values()) < 1.0:      # overround < 1 = arbitraggi
 ```
 
 Un overround **impossibilmente alto** passa invece indisturbato. Nei dati ce ne
-sono **11 casi**, tutti nella linea O/U pre-match delle stagioni 2017-19
+sono **11 righe** (= 22 celle, perché il mercato si scarta in blocco su entrambi
+i lati), tutte nella linea O/U pre-match delle stagioni 2017-19
 (sorgente `BbAv`, Betbrain): overround fino a **1.339**, cioè il 34% di margine
 su un mercato binario. Diagnosi (Report 1 §4.1): in ogni caso il **lato Under**
 è incompatibile con l'1X2 della stessa partita — le due quote non appartengono
@@ -70,6 +76,11 @@ def _pick_market_odds(row, targets, preference):
   la soglia.
 
 ## Test da aggiungere
+
+> **Aggiunto**: vive come `test_overround_impossibilmente_alto_scartato` in
+> `tests/test_league_snapshots.py`, insieme a
+> `test_nessun_margine_impossibile_negli_snapshot` che ricontrolla lo stesso
+> invariante su tutte e 5 le leghe.
 
 ```python
 def test_overround_impossibile_scartato():

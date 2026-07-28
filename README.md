@@ -1416,71 +1416,186 @@ rimasti. L'unico lead vivo è lo stakes-mismatch (Fase 32), che serve più stagi
 
 ## Struttura
 
+*(Aggiornata all'audit della Fase 101: rispecchia il repo reale a 5 leghe —
+prima si fermava a 3 e non elencava l'archivio dell'audit, i dati esterni né i
+documenti nati dopo la Fase 82.)*
+
 ```
+CLAUDE.md           protocollo di lavoro (cosa aggiornare a ogni esperimento)
+lavoro_aperto.md    INDICE del lavoro aperto (piste, caselle vuote, Tier 2/3)
+newseason.md        file DEPERIBILE: piano operativo per l'avvio del 2026-27
+
 src/
-  config.py       iperparametri PER LEGA (LEAGUE_CONFIGS) = fonte unica di verità
+  config.py       iperparametri PER LEGA (LEAGUE_CONFIGS, 5 voci) + costanti del
+                  motore market-implied per lega (MARKET_ENGINE) + deriva
+                  in-stagione del simulatore (DRIFT_SD, Fase 94) = fonte unica
   data/           raccolta e normalizzazione dati (schema interno pulito)
-    sources.py      UNICO punto con URL, stagioni e alias squadre
-    loader.py       parsing + normalizzazione + covariate (offline-first)
+    sources.py      UNICO punto con URL, stagioni, leghe e alias squadre
+    loader.py       parsing + normalizzazione + covariate (offline-first);
+                    politica quote apertura/chiusura (Fase 73) e guard
+                    bilaterale sull'overround (ORR_MAX = 1.12)
     database.py     snapshot CSV congelati + SQLite rigenerabile
+    understat.py    xG/npxG/PPDA/deep + guard sui record SEGNAPOSTO
+    transfermarkt.py  infortuni → assenze stimate (`*_est`)
+    player_scores.py  valori rosa (dataset Transfermarkt via Kaggle, Fase 67)
+    fixtures.py     calendario di club completo → congestione vera (Fase 4e)
   models/
     dixon_coles.py      il modello standalone (fit, blend gol/xG, φ35 pareggio)
     market_implied.py   il motore di pricing (quote 1X2+O/U → λ,μ → ogni mercato;
                         router `price_markets`, `sharpen_1x2`, nudge stagionale)
     market_denoise.py   power-devig + ricalibrazione cross-stagione (Fase 38)
+    season_sim.py       Monte Carlo di una STAGIONE intera → mercati outright
+                        (campione/retrocessione/Top-N), spareggi ufficiali per
+                        lega (Fase 89)
     bivariate_poisson.py, copula_scores.py   forme alternative (testate, non adottate)
   evaluation/
     metrics.py        Brier, log-loss, devigging quote, baseline
+    markets.py        derivazione dei mercati Tier 1 dalla matrice dei punteggi
+    analysis.py       analisi degli errori del backtest
     calibration.py    temperature scaling + ricalibrazione per-classe (Fase 6/10)
     experiment_log.py  compute_metrics (FONTE DI VERITÀ) + registro runs.jsonl
-scripts/
-  build_database.py   (ri)costruisce il DB dallo snapshot congelato (offline)
-  backtest.py         backtest walk-forward (registra il run) — supporta --league
-  predict.py          predice una partita (tutti i mercati, con o senza quote)
+
+scripts/            159 file .py, di cui 105 driver `_run_*` (uno per fase)
+  build_database.py       (ri)costruisce il DB dallo snapshot congelato (offline)
+  build_league_snapshot.py / build_new_snapshot.py   snapshot delle altre leghe
+  backtest.py             backtest walk-forward (registra il run) — con --league
+  predict.py              predice una partita (tutti i mercati, con o senza quote)
   analyze.py / analyze_gap.py / tune.py / calibrate.py / markets.py
-  _run_*.py           driver one-shot di ogni fase (riproducibilità)
+  audit_snapshots.py      audit dei dati: snapshot vs fonte-madre vs fonte terza
+  audit_anomalie.py / cerca_segnaposto.py   audit avversariale (regole R5/R6)
+  applica_correzioni.py   applica il registro delle correzioni (regola R3)
+  build_estimates.py      genera data/estimates/ (STIME dichiarate)
+  fetch_sources.py        riscarica le fonti originali con provenienza (SHA256)
+  archive_outrights.py    congela le quote outright LIVE (Polymarket + Smarkets)
+  fetch_polymarket_open.py / fetch_smarkets_outrights.py   fetch delle due borse
+  _run_*.py               driver one-shot di ogni fase (riproducibilità)
+
 experiments/        runs.jsonl: registro replicabile di OGNI run
-data/               snapshot congelati per lega + estimates/ (stime DICHIARATE)
-docs/               DIARIO (storia), DATI (catalogo), PANCHINA (rosa modelli),
-                    PISTE, PLAYBOOK_NUOVA_LEGA, STUDIO_PREMIER_LIGA, MANUALE
-tests/              test unitari del modello e delle metriche
+                    + gli output riutilizzabili delle fasi recenti
+                      (fase93_discrimination.csv, fase89*, fase91, fase94,
+                       listino_validazione.json, prospettico_2026_27*)
+
+data/
+  {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
+                        i 5 SNAPSHOT congelati (schema identico, 38 colonne)
+  club_fixtures*.csv    calendario di club completo per lega (congestione vera)
+  football_data_raw/    i 9 CSV grezzi football-data della Serie A
+  estimates/            STIME dichiarate (mai nelle colonne quota) + README
+  ricerca_esterna/      86 file: quote 1xBet via footiqo (2017-20, 5 leghe),
+                        calendari di coppa da Wikipedia, manifest e validazioni
+                        — dati REALI esterni, NON integrati negli snapshot
+  outright_snapshots/   quote outright LIVE congelate a ogni raccolta (Fase 97)
+  correzioni_dichiarate.csv   registro delle correzioni ai dati (regola R3)
+  squad_value_2526_transfermarkt.csv   16 celle 2025-26 da fonte secondaria (R2)
+
+docs/
+  DIARIO.md             la storia fase per fase (indice per archi narrativi)
+  DATI.md               catalogo di TUTTI i dati: copertura, semantica, stime
+  GLOSSARIO.md          i termini del progetto, una riga ciascuno
+  PANCHINA.md           la rosa dei modelli (titolari/panchina/bocciati × 2 fronti)
+  PISTE.md              idee dato→modello non ancora provate, per costo crescente
+  PLAYBOOK_NUOVA_LEGA.md  procedura per aggiungere un campionato
+  STUDIO_PREMIER_LIGA.md  quaderno dedicato alle due leghe non-Serie A
+  MANUALE_SOPRAVVIVENZA.md  conoscenza operativa dell'ambiente (rete, Actions)
+  CACCIA_OU_2017_19.md  il dossier sull'ultimo buco dati (CHIUSO alla Fase 100)
+  BETEXPLORER_SCRAPER.md  verbale dello scraper (pista chiusa)
+  AUDIT_FASI_80_100.md  verbale dell'audit delle ultime 20 fasi (Fase 101)
+  audit_5_leghe/        gli 11 report integrali dell'audit a 5 leghe + 00_indice
+                        + REGOLE.md + patch_guard_overround_APPLICATA.md
+                        + numeri/ (i JSON grezzi dietro ogni tabella)
+
+files/              bundle caricati a mano (football-data e Understat di
+                    Premier/Liga, Fase 54) + player_scores/ (valori rosa)
+tests/              15 file, 841 test verdi (modello, dati, metriche, script)
+.github/workflows/  import del dataset player-scores e probe via runner Actions
 worldcup/           esperimento parallelo a bassa priorità (Mondiali)
 ```
 
 ## Come si usa
 
 ```bash
-pip install -e .            # oppure: pip install numpy pandas scipy pytest
+pip install -e .            # oppure: pip install -e ".[dev]" per i test
 
 python scripts/build_database.py    # (ri)costruisce il DB dallo snapshot (offline)
 python scripts/backtest.py          # backtest walk-forward (config ufficiale Serie A)
-python scripts/backtest.py --league premier_league   # ...o su un'altra lega
 python scripts/analyze.py           # analizza gli errori del backtest
 python scripts/tune.py --sweep shrinkage          # tara un iperparametro su piu' stagioni
 python scripts/markets.py           # grande backtest su TUTTI i mercati (1X2, O/U, GG/NG, doppie chance)
-python -m pytest                    # esegue i test
+python -m pytest                    # esegue i test (841, tutti verdi)
 ```
+
+**Le cinque leghe.** La chiave di lega (`--league`) è una di
+`serie_a` (default) · `premier_league` · `la_liga` · `bundesliga` · `ligue_1`,
+ed è la stessa in `src/config.py` (`LEAGUE_CONFIGS`, `MARKET_ENGINE`) e in
+`src/data/sources.py`:
+
+```bash
+python scripts/backtest.py --league premier_league    # ...su un'altra lega
+python scripts/backtest.py --league bundesliga --test-season 2425
+python scripts/analyze.py --league bundesliga         # DEVE coincidere con la lega
+                                                      # del backtest che ha prodotto il CSV
+```
+
+⚠️ **`--league` non è ovunque**: `backtest.py`, `analyze.py`, `predict.py` e
+`build_database.py` lo accettano; **`tune.py` e `markets.py` no** — girano sulla
+Serie A. Le tarature per-lega sono state fatte con i driver dedicati
+(`scripts/_run_fase57_retune.py` per Premier/Liga, `scripts/tranche3_ritaratura.py`
+per Bundesliga/Ligue 1), non con `tune.py`.
 
 Predire una partita (il tool pratico, `scripts/predict.py`):
 
 ```bash
-# senza quote: Dixon-Coles standalone (+ φ35 sul pareggio)
+# senza quote: Dixon-Coles standalone (+ φ35 sul pareggio dove la lega la prevede)
 python scripts/predict.py Inter Juventus
 
 # con le quote 1X2 (H D A) + O/U 2.5 (Over Under): motore market-implied,
 # router double-Poisson, tutti i mercati Tier 1
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95
+
+# su un'altra lega: legge da sola la config e il MOTORE di quella lega
+python scripts/predict.py "Bayern Munich" Dortmund --league bundesliga
 ```
+
+**Entrambi i modelli sono per-lega** (M1 dalla Fase 83-bis, M2 dalla Fase
+92-bis, Bundesliga e Ligue 1 esplicitate alla Fase 101): `predict.py` legge gli
+iperparametri da `LEAGUE_CONFIGS` e le costanti del motore (θ, φ0, κ,
+`sharpen_1x2`) da `MARKET_ENGINE`. **Solo la Serie A esce col router completo**;
+Premier, La Liga, Bundesliga e Ligue 1 escono col **motore liscio** — non per
+prudenza ma perché misurato (router θ negativo su 0/25 mercati nelle due leghe
+nuove, φ35 bocciata in Premier). Altre opzioni: `--date` (momento della
+predizione), `--no-draw-balance` (spegne la φ35 sul path DC),
+`--matchday N` (mostra il nudge stagionale GG/NG di fine stagione, Fase 48).
 
 Opzioni utili:
 
 ```bash
 python scripts/backtest.py --test-season 2425          # testa un'altra stagione
+python scripts/backtest.py --covariates rest_full      # covariate off-di-default
+python scripts/backtest.py --draw-balance              # φ35 (Fase 35) sul path DC
 python scripts/tune.py --sweep half_life_days --values 0 180 365 730
 python scripts/tune.py --sweep shots_blend --values 0 0.5 1
 ```
 
+Dati e controlli (dettaglio nella sezione
+[Archivio dati interno](#archivio-dati-interno-riproducibilità)):
+
+```bash
+python scripts/audit_snapshots.py               # snapshot vs fonte-madre vs fonte terza
+python scripts/audit_snapshots.py bundesliga    # ...su una lega sola
+python scripts/audit_anomalie.py                # audit avversariale (e se la fonte sbagliasse?)
+python scripts/build_estimates.py               # rigenera data/estimates/ (STIME dichiarate)
+python scripts/archive_outrights.py --show      # archivio delle quote outright (Fase 97)
+```
+
 ## Roadmap (idee, non impegni)
+
+> 🗓️ **Questa è la roadmap STORICA delle Fasi 1-23** (più le due voci di
+> prospettiva che erano in coda), tenuta perché mostra l'ordine in cui le cose
+> sono state provate. **Non è la lista dei prossimi passi**: quella vive in
+> `CLAUDE.md` §6 («Prossimi passi») e, in dettaglio e ordinata per costo, in
+> [`docs/PISTE.md`](docs/PISTE.md). Dalla Fase 24 in poi la storia è nella
+> tabella [«Tutti gli esperimenti»](#tutti-gli-esperimenti-in-un-colpo-docchio)
+> e nel [DIARIO](docs/DIARIO.md).
 
 1. ✅ **Fase 1** — tracer bullet: Dixon-Coles + backtest su Serie A.
 2. ✅ **Fase 2a** — analisi degli errori: capito dove il modello perde (neopromosse,
@@ -1490,9 +1605,14 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
 4. ✅ **Fase 3** — tiri in porta come informazione nuova: **risultato negativo**
    (i tiri grezzi non aiutano in modo affidabile). Codice mantenuto per l'xG reale.
 5. ✅ **Fase 4a** — arricchimento dati: **xG reale Understat per il 100% delle
-   3420 partite**, valori rosa Transfermarkt a inizio stagione (copertura 63-80%
-   per stagione) e assenze stimate da infortuni. Snapshot e DB rigenerati, base
-   invariata (stessa impronta dati). Vedi `docs/DIARIO.md`, Fase 4a.
+   3420 partite** di Serie A, valori rosa Transfermarkt a inizio stagione
+   (copertura 63-80% per stagione) e assenze stimate da infortuni. Snapshot e DB
+   rigenerati, base invariata (stessa impronta dati). Vedi `docs/DIARIO.md`,
+   Fase 4a. *(Copertura di oggi, dopo le Fasi 60/67/70 e l'integrazione delle 5
+   leghe: 16.111 partite, 16.110 appaiate a Understat, xG presente ovunque
+   tranne **2 partite dichiarate**; `squad_value` al **100%** su tutte le
+   stagioni, zero `NaN` residui. Vedi
+   [`docs/DATI.md`](docs/DATI.md) §1.)*
 6. ✅ **Fase 4b** — blend gol/**xG reale** (α=0.75): primo miglioramento da dati
    nuovi, soprattutto sull'Over/Under. Config ufficiale aggiornata.
 7. ✅ **Fase 4c** — spremuti gli altri dati (npxG, valori rosa, assenze) via un
@@ -1620,26 +1740,48 @@ python scripts/tune.py --sweep shots_blend --values 0 0.5 1
     riduce con un modello (a ~0 solo copiando il mercato, sotto zero mai).
 27. ✅ **Uso pratico** — fatto: `scripts/predict.py` predice ogni partita su
     tutti i mercati Tier 1 (DC standalone senza quote; motore market-implied +
-    router double-Poisson con le quote 1X2+O/U — Fasi 44/52).
-28. ✅ **Estensione a nuovi campionati** — fatto: **Premier League e La Liga**
-    (Fasi 53-57, 76, 79-81). Esito: le conclusioni (gap, tetto, α*=0) sono
-    robuste fuori dalla Serie A, **il modello trasferisce ma l'edge no** (il
-    beat-the-close è una proprietà della chiusura Serie A); costanti per-lega
-    in `src/config.py` (`LEAGUE_CONFIGS`).
+    router double-Poisson con le quote 1X2+O/U — Fasi 44/52), ed è **per-lega su
+    entrambi i modelli**: M1 dalla Fase 83-bis, M2 dalla Fase 92-bis con la
+    mappa `src.config.MARKET_ENGINE`. Solo la Serie A esce col router completo;
+    le altre quattro col **motore liscio** (Fase 101).
+28. ✅ **Estensione a nuovi campionati** — fatto, e arrivato a **cinque leghe**:
+    prima **Premier League e La Liga** (Fasi 53-57, 76, 79-81, da bundle
+    caricati a mano), poi **Bundesliga e Ligue 1** (Fase 100/101, scaricate
+    direttamente perché la rete è tornata raggiungibile, e verificate riga per
+    riga contro la fonte). Esito identico su tutte: le conclusioni (gap, tetto,
+    α*=0) sono robuste fuori dalla Serie A, **il modello trasferisce ma l'edge
+    no** (il beat-the-close è una proprietà della chiusura Serie A). Costanti
+    per-lega in `src/config.py`: `LEAGUE_CONFIGS` (δ neopromosse 0.23 / 0.33 /
+    0.22 / 0.28 / 0.19) e `MARKET_ENGINE`. Procedura riutilizzabile in
+    [`docs/PLAYBOOK_NUOVA_LEGA.md`](docs/PLAYBOOK_NUOVA_LEGA.md).
 29. **Dati davvero nuovi** (formazioni ufficiali pre-partita, quote live/di
-    apertura vere raccolte prospetticamente) — l'unica leva informativa che
-    tutte le fasi indicano non ancora esaurita. Le piste concrete, ordinate per
-    costo, vivono in [`docs/PISTE.md`](docs/PISTE.md).
-30. **Integrazioni** con piattaforme esterne (Polymarket, exchange, …), dove il
-    mercato potrebbe essere meno efficiente della chiusura dei bookmaker.
+    apertura vere raccolte prospetticamente) — **APERTA**, ed è l'unica leva
+    informativa che tutte le fasi indicano non ancora esaurita. Il primo passo
+    concreto è il **test prospettico 2026-27** (Fase 78, previsioni congelate
+    prima del kickoff e scorate dopo: `experiments/prospettico_2026_27.md`). Le
+    piste, ordinate per costo, vivono in [`docs/PISTE.md`](docs/PISTE.md).
+30. 🟡 **Integrazioni** con piattaforme esterne (Polymarket, exchange, …), dove
+    il mercato potrebbe essere meno efficiente della chiusura dei bookmaker —
+    **avviata, non conclusa**: Polymarket (Gamma API) e Smarkets (API v3
+    pubblica) sono raggiungibili e i loro prezzi outright vengono **congelati a
+    ogni raccolta** in `data/outright_snapshots/` (Fase 97). Manca la parte
+    che conta: nessun confronto storico è possibile all'indietro (non esistono
+    quote outright storiche), quindi la verifica «battiamo il mercato» su questa
+    famiglia si può fare **solo in avanti**.
 
 *(La roadmap per-fase si ferma qui: dalla Fase 24 in poi la storia è tracciata
 riga per riga nella tabella
 [«Tutti gli esperimenti»](#tutti-gli-esperimenti-in-un-colpo-docchio) e nel
 [DIARIO](docs/DIARIO.md); le idee non ancora provate stanno in
-[`docs/PISTE.md`](docs/PISTE.md).)*
+[`docs/PISTE.md`](docs/PISTE.md), l'indice del lavoro aperto in
+[`lavoro_aperto.md`](lavoro_aperto.md).)*
 
 ## Archivio dati interno (riproducibilità)
+
+> 🗂️ Questa sezione è il **riassunto** dell'archivio dati. Il catalogo completo
+> — copertura colonna per colonna, semantica delle quote, censimento dei buchi,
+> stime dichiarate — è in **[`docs/DATI.md`](docs/DATI.md)**, che è la fonte da
+> aggiornare per prima quando i dati cambiano.
 
 Per non dipendere dalla disponibilità *in tempo reale* di una fonte esterna (che
 può cambiare o sparire) e permettere a chiunque di rieseguire gli stessi calcoli,
@@ -1647,9 +1789,19 @@ i dati sono **congelati** in un archivio interno con due artefatti:
 
 - **snapshot** `data/<lega>_matches.csv` — **versionati in git**, testo
   diffabile: sono la fonte di verità congelata, **cinque** file con schema
-  identico (Serie A 3.420 partite; Premier, La Liga, Bundesliga e Ligue 1 per un
-  totale di **16.111** su 9 stagioni). Chi clona il repo ha esattamente gli
+  identico (stesse **38 colonne** e **stesso ordine**, verificato da
+  `test_schema_identico_tra_leghe`). Chi clona il repo ha esattamente gli
   stessi dati, **senza rete**.
+
+  | file | partite | stagioni | nota |
+  |---|--:|--:|---|
+  | `data/serie_a_matches.csv` | 3.420 | 9 (2017-18 → 2025-26) | |
+  | `data/premier_league_matches.csv` | 3.420 | 9 | |
+  | `data/la_liga_matches.csv` | 3.420 | 9 | |
+  | `data/bundesliga_matches.csv` | 2.754 | 9 | 18 squadre → 306 partite/stagione |
+  | `data/ligue_1_matches.csv` | 3.097 | 9 | 380 fino al 2022-23, 306 dal 2023-24 (riforma); **279 nel 2019-20**, campionato cancellato per COVID — dato reale, non un buco |
+  | **totale** | **16.111** | | 16.110 appaiate a Understat |
+
 - **database** `data/football.db` (Serie A, nome storico) e
   `data/football_<lega>.db` (le altre quattro) — SQLite queryable,
   **rigenerabili** dallo snapshot, non versionati.
@@ -1659,6 +1811,8 @@ python scripts/build_database.py            # ricostruisce il DB dallo snapshot 
 python scripts/build_database.py --enrich   # ricalcola xG/rose/assenze sullo snapshot esistente
 python scripts/build_database.py --fixtures # assembla il calendario di club completo + congestione vera
 python scripts/build_database.py --refresh  # riscarica TUTTO dalle fonti e aggiorna lo snapshot
+python scripts/build_database.py --refresh-odds  # ricalcola SOLO le 10 colonne quota (Fase 61/73)
+python scripts/build_database.py --open-odds     # aggancia le colonne *_open dai grezzi (Fase 14)
 # ogni comando accetta --league: senza, e' Serie A
 python scripts/build_database.py --league bundesliga
 sqlite3 data/football.db "SELECT season, COUNT(*) FROM matches GROUP BY season"
@@ -1667,14 +1821,14 @@ sqlite3 data/football_bundesliga.db "SELECT season, COUNT(*) FROM matches GROUP 
 
 ### Colonne di arricchimento (Fase 4a)
 
-Oltre alle 15 colonne base (partita, gol, tiri in porta, quote), lo snapshot
-contiene 14 colonne da fonti esterne (`NaN` dove la fonte non copre):
+Oltre alle colonne base (partita, gol, tiri in porta, 10 colonne quota), lo
+snapshot contiene 14 colonne da fonti esterne (`NaN` dove la fonte non copre):
 
 | Colonne | Fonte | Note |
 |---|---|---|
-| `home_xg`, `away_xg`, `home_npxg`, `away_npxg` | Understat | xG e xG senza rigori; **100% delle partite** |
-| `home_ppda`, `away_ppda`, `home_deep`, `away_deep` | Understat | pressing e passaggi profondi |
-| `home_squad_value`, `away_squad_value` | Transfermarkt | valore rosa (EUR) all'inizio stagione (valutazioni ≤ 1 settembre, **niente look-ahead**); pubblicato solo con copertura ≥85% dei minuti, altrimenti `NaN` |
+| `home_xg`, `away_xg`, `home_npxg`, `away_npxg` | Understat | xG e xG senza rigori; presenti ovunque tranne **2 partite dichiarate** (Nantes-Toulouse 17/05/2026, `isResult=false`; Holstein Kiel-Bochum 09/02/2025, **record segnaposto** — vedi `docs/DATI.md` §4-bis) |
+| `home_ppda`, `away_ppda`, `home_deep`, `away_deep` | Understat | pressing e passaggi profondi; stessa copertura |
+| `home_squad_value`, `away_squad_value` | **player-scores** (Transfermarkt via Kaggle, Fase 67) + 29 celle 2025-26 da Transfermarkt diretto | valore rosa (EUR) all'inizio stagione (valutazioni ≤ 1 settembre, **niente look-ahead**); pubblicato solo con copertura ≥85% dei minuti. **Oggi: 100%, zero `NaN` residui** |
 | `home_absent_count_est`, `away_absent_count_est`, `home_absent_value_est`, `away_absent_value_est` | Transfermarkt | assenze per infortunio alla data della partita: **stime** (suffisso `_est`), rosa ricostruita dai minutaggi Understat |
 
 Il join usa la chiave `(season, home_team, away_team)` con nomi squadra
@@ -1684,22 +1838,35 @@ controllo di coerenza.
 **Generalizzato a Premier League e La Liga (Fase 60).** `python
 scripts/build_league_snapshot.py --enrich premier_league la_liga` aggiunge le
 stesse 6 colonne. Le rose Understat vengono dai bundle già caricati in
-`files/` (il mirror Understat per-stagione è sparito, come da Fase 14); le
-valutazioni/infortuni Transfermarkt vengono invece scaricati dalla rete — **il
-mirror usato dal progetto è raggiungibile** (contrariamente a quanto scritto in
-una risposta precedente, mai verificato prima d'ora: è `transfermarkt.com`
-diretto ad essere bloccato, non il mirror GitHub). Copertura `squad_value`:
-**95.6% Premier League**, **60.2% La Liga** (58.3% prima del fix del matching, Fase 63; quest'ultima sensibilmente più
-bassa — diagnosticata, non solo osservata: il matching per nome è comunque
-buono, 91.7%; il gap è nei giocatori sudamericani/spagnoli dal nome breve o
-senza serie di valutazioni nel datalake, la stessa causa già nota per
-Lazio/Milinkovic-Savic ma più diffusa — dettagli nel
-[diario, Fase 60](docs/DIARIO.md)). Schema ora **38/38 colonne, identico su
-tutte e tre le leghe**. Come già verificato per la Serie A, queste due feature
-non migliorano il modello (Fase 4c/11): completano lo schema dati, non ci si
-aspetta guadagno predittivo.
+`files/` (il mirror Understat per-stagione era sparito, come da Fase 14); le
+valutazioni/infortuni Transfermarkt vengono invece scaricati dalla rete.
+Nel farlo lo schema è arrivato a **38/38 colonne identiche**. Come già
+verificato per la Serie A, queste due feature non migliorano il modello
+(Fase 4c/11): completano lo schema dati, non ci si aspetta guadagno predittivo.
 
-### Integrità delle quote 1X2 — overround impossibile (Fase 58)
+> ⚠️ **SUPERATA dalle Fasi 67/70 e dall'audit delle 5 leghe.** La copertura
+> `squad_value` misurata alla Fase 60 era **95.6% Premier League** e **60.2% La
+> Liga** (58.3% prima del fix del matching, Fase 63; il gap era nei giocatori
+> sudamericani/spagnoli dal nome breve o senza serie di valutazioni nel datalake
+> — diagnosi nel [diario, Fase 60](docs/DIARIO.md)). Quei numeri restano come
+> misura *di quella fase*, ma **non descrivono più i dati**: dalla Fase 67 la
+> fonte dei valori rosa è **player-scores** (`files/player_scores/`, CC0,
+> importato via GitHub Actions) e le ultime celle sotto soglia della 2025-26
+> sono state colmate con dati **reali** presi da Transfermarkt (**29** celle:
+> 13 alla Fase 70 sulle 3 leghe storiche + **16** su Bundesliga e Ligue 1, in
+> `data/squad_value_2526_transfermarkt.csv`, con la scala misurata contro
+> player-scores — regola R2). Oggi la copertura è **100% su tutte e 5 le leghe
+> e tutte le stagioni**, e `data/estimates/squad_value_2017_26.csv` è **vuoto**:
+> nessuna stima attiva su questa colonna.
+
+**Generalizzato anche a Bundesliga e Ligue 1** (Fase 100) con
+`scripts/build_new_snapshot.py`, che riusa il codice di **produzione** senza
+modificarlo (`loader._normalize`, `understat.parse_season_xg`,
+`player_scores.add_squad_values`, `transfermarkt.add_absences`, `fixtures.*`).
+Lì i dati non vengono da bundle manuali ma dalla fonte diretta — tornata
+raggiungibile — e sono stati verificati **riga per riga contro di essa**.
+
+### Integrità delle quote — overround impossibile (Fase 58, guard reso bilaterale)
 
 Le quote 1X2 (chiusura e apertura) vengono scelte per **intero mercato**, non
 colonna per colonna: se il livello di preferenza preferito (`AvgCH/CD/CA`, …)
@@ -1710,11 +1877,25 @@ livello successivo (`B365CH/CD/CA`, …), mai su un solo lato aggiustato a mano.
 Trovato e corretto un caso reale per lega (dettagli e formula nel
 [diario, Fase 58](docs/DIARIO.md)); impatto nullo sui risultati già pubblicati
 (2 righe su 10260, mai usate per stimare il modello — impronta dati invariata).
-Test di non-regressione su tutte e tre le leghe in `tests/test_league_snapshots.py`.
+Test di non-regressione in `tests/test_league_snapshots.py`.
+
+**Il guard era protetto da un lato solo (audit delle 5 leghe).** Un overround
+*impossibilmente alto* passava indisturbato: **11 casi**, tutti nella linea O/U
+pre-match del 2017-19 (`BbAv`, Betbrain), con margini fino a **1.339** su un
+mercato binario — in ognuno il lato Under è incompatibile con l'1X2 della stessa
+partita (le due quote non appartengono alla stessa linea). Il guard è ora
+**bilaterale** in `src/data/loader._pick_market_odds` (`ORR_MAX = 1.12`), e la
+soglia non è arbitraria: nell'era sana (`Avg`, 12.457 righe su 5 leghe) il
+massimo osservato è **1.0765**, quindi 1.12 sta oltre 4 punti percentuali sopra
+il massimo mai visto in condizioni normali e non può scartare una riga buona.
+Effetto: **22 celle** svuotate (3 La Liga, 6 Bundesliga, 2 Ligue 1 — 11 linee ×
+2 lati), poi coperte dalla stima dichiarata `ou_open_corrotte_2017_19.csv`.
+Verbale e patch in
+[`docs/audit_5_leghe/patch_guard_overround_APPLICATA.md`](docs/audit_5_leghe/patch_guard_overround_APPLICATA.md).
 
 ### Quote di apertura 2017-19 — chiusura Pinnacle recuperata (Fase 61)
 
-Le stagioni 2017-18 e 2018-19 (tutte e 3 le leghe) non hanno le colonne di
+Le stagioni 2017-18 e 2018-19 non hanno le colonne di
 chiusura **aggregate** (`AvgCH`/`B365CH`), quindi il loader usava le pre-match
 come chiusura e lasciava l'apertura a `NaN` (~22% delle partite). In realtà
 quelle stagioni pubblicano **`PSCH`/`PSCD`/`PSCA` = la chiusura di Pinnacle**
@@ -1730,6 +1911,16 @@ premier_league la_liga` (bundle). Dettagli e tabella completa per stagione nel
 [diario, Fase 61](docs/DIARIO.md). *(Aggiornamento Fase 73: anche l'**O/U**
 2017-19 ha un'apertura reale — vedi sotto — mentre la sua chiusura è il vero
 buco.)*
+
+Le **2279 aperture recuperate** sono la misura della Fase 61, quando le leghe
+erano tre. La *politica* però è generale e vale ora su tutte e cinque: nel
+2017-19 chiusura e apertura 1X2 sono **Pinnacle→Pinnacle** (margine ~2.5%,
+più basso della media ~4.9% — CLV pulito, stesso book), dal 2019-20 sono medie
+multi-book (`AvgC*` / `Avg*`). Tabella per epoca e per mercato in
+[`docs/DATI.md`](docs/DATI.md) §2. Due sole partite restano senza chiusura 1X2
+alla fonte (Alaves-Sociedad 14/10/2017 e Bayern-Hannover 04/05/2019): le loro 6
+celle sono state riempite con un **dato reale di un provider secondario**,
+dichiarato nel registro delle correzioni (vedi sotto).
 
 ### L'O/U 2017-19 era un'apertura, non una chiusura (Fase 73)
 
@@ -1788,6 +1979,24 @@ possibili — vedi il promemoria esplicito in testa a
 [`docs/CACCIA_OU_2017_19.md`](docs/CACCIA_OU_2017_19.md) e la voce dedicata in
 [`docs/PISTE.md`](docs/PISTE.md).
 
+> ⚠️ **CACCIA CHIUSA dalla Fase 100 — e il finale non è quello che ci si
+> aspettava.** Il promemoria qui sopra aveva ragione: le vie non erano finite.
+> Con la rete tornata raggiungibile il dato vero è stato **trovato** —
+> `footiqo.com` pubblica le quote di **chiusura** del book **1xBet** (1X2, O/U
+> 0.5→4.5 e GG/NG) e copre **3.652 partite su 3.652** nella finestra 2017-19, su
+> tutte e 5 le leghe. Sono state scaricate, validate e congelate in
+> `data/ricerca_esterna/` — e **non sono state inserite negli snapshot**: è **un
+> solo book**, e come proxy della *media multi-book* (che è ciò che la colonna
+> contiene per le altre stagioni) è **peggiore della stima** — MAE **0.0156**
+> contro **~0.012**, misurato sulla stagione 2019-20 dove esistono entrambi.
+> Sostituire una stima con un dato reale *di semantica diversa* avrebbe
+> peggiorato la colonna. La stima `ou_close_2017_19.csv` resta la fonte per
+> quelle celle, e la conclusione va detta per intero: **il buco è chiuso non
+> perché sia stato riempito, ma perché ora sappiamo che riempirlo con l'unico
+> dato esistente costerebbe precisione.** Verbale completo in
+> [`docs/CACCIA_OU_2017_19.md`](docs/CACCIA_OU_2017_19.md) e
+> [`docs/audit_5_leghe/09_chiusura_buchi.md`](docs/audit_5_leghe/09_chiusura_buchi.md).
+
 ### Congestione vera — calendario di club completo (Fase 4e)
 
 Il riposo di `add_rest_days` vede solo le date di Serie A; la **congestione
@@ -1830,6 +2039,130 @@ A questo punto restavano assenti per Premier/Liga solo `squad_value`/`absences`
 il mirror Transfermarkt si è rivelato raggiungibile, contrariamente a quanto
 scritto in un primo momento senza averlo verificato.
 
+**Oggi i calendari di club sono cinque**, uno per lega, tutti versionati:
+
+| file | righe | competizioni oltre il campionato |
+|---|--:|---|
+| `data/club_fixtures.csv` (Serie A) | 11.657 | Champions, Europa, Conference, Coppa Italia |
+| `data/club_fixtures_premier_league.csv` | 11.994 | idem UEFA + FA Cup, EFL Cup |
+| `data/club_fixtures_la_liga.csv` | 12.102 | idem UEFA + Copa del Rey |
+| `data/club_fixtures_bundesliga.csv` | 10.375 | idem UEFA + DFB-Pokal |
+| `data/club_fixtures_ligue_1.csv` | 10.701 | idem UEFA + Coupe de France (solo 24-25) |
+
+Ogni file include anche il **preludio** (massima serie 2016-17 + seconda serie
+dal 2016-17, Fase 68): serve a radicare il riposo delle squadre all'**esordio**
+in campionato, che prima restava `NaN`. Da quella fase `rest_days_full` non ha
+**nessun `NaN` residuo** su nessuna lega. Copertura per competizione e per
+stagione in [`docs/DATI.md`](docs/DATI.md) §3.
+
+> ⚠️ **Un buco che non è un `NaN`, dichiarato e non ancora chiuso.** Dove
+> openfootball non copre una coppa, `midweek_europe` vale **0 anche se la
+> squadra ha giocato**: **1.603 celle** censite in questa condizione (lacune
+> principali: Europa/Conference League 2025-26 su tutte e 5 le leghe,
+> DFB-Pokal 2016-18, Coupe de France quasi ovunque), e ~1.700 valori di riposo
+> sbagliati di conseguenza. Le righe di recupero **esistono** — 50 file,
+> **3.045 righe** raccolte da Wikipedia in `data/ricerca_esterna/fixtures_*.csv`
+> — ma **non sono state applicate**: Wikipedia non è una fonte primaria
+> (regola R2/R6). È il caso di scuola del §5-bis del `CLAUDE.md`: un valore che
+> *sembra* una misura e non lo è, che nessun confronto snapshot↔fonte può
+> intercettare.
+
+### Dati esterni REALI, raccolti e NON integrati (`data/ricerca_esterna/`)
+
+86 file di dati esterni **veri** (non stime), congelati nel repo e usati per
+*misurare*, mai innestati in silenzio nelle colonne degli snapshot. Sono la
+prova che «trovare il dato» e «poterlo usare» sono due cose diverse:
+
+| cosa | file | perché è fuori dagli snapshot |
+|---|---|---|
+| **quote di chiusura 1xBet** via `footiqo.com` — 1X2, O/U 0.5→4.5 e **GG/NG**, 2017-20, 5 leghe | 15 `footiqo_<lega>_<stagione>.json` + 10 `footiqo_gol_*.json` + manifest e validazioni | è **un solo book**: come proxy della media multi-book che la colonna contiene è peggiore della stima (MAE 0.0156 contro ~0.012) |
+| **calendari di coppa** da Wikipedia (per il falso 0 di `midweek_europe`) | 50 `fixtures_<lega>_<coppa>.csv`, **3.045 righe** | fonte **non primaria** (R2): raccolte, non applicate |
+| **manifest delle fonti dell'audit** | `manifest_fonti_audit.json` | 90 impronte SHA256 (45 CSV football-data + 45 JSON Understat) |
+
+Il dato footiqo non è servito a riempire un buco, ma a **rispondere a una
+domanda rimasta aperta per 80 fasi**: il GG/NG era «l'unico mercato senza quote
+nei dati», quindi l'unico dove non si poteva dimostrare l'efficienza del
+mercato. Ora si può, e la risposta è netta — il mercato GG/NG **è informativo**
+(log-loss **0.6840** contro **0.6921** della baseline, CI conclusivo), il nostro
+miglior prezzo lo **pareggia e non lo batte** (6 varianti su 6 con CI a cavallo
+dello zero) e il **DC perde di netto** (+0.0104, IC95% [+0.0063, +0.0145], con
+il book che lo ingloba: α\*=0 nel 70% dei fit). Lo «spazio» non era una
+proprietà del mercato: era la nostra ignoranza. Dettaglio in
+[`docs/audit_5_leghe/11_ggng.md`](docs/audit_5_leghe/11_ggng.md).
+
+### Registro delle correzioni (`data/correzioni_dichiarate.csv`, regola R3)
+
+**Nessuna modifica a mano ai dati, mai.** Ogni correzione vive in un registro
+con *cosa, perché, fonte, chi ha deciso, quando*, e viene applicata da uno
+script **idempotente** (`scripts/applica_correzioni.py`) che verifica il
+valore-prima **cella per cella** e si ferma senza scrivere nulla se non
+corrisponde. Stato attuale del registro: **43 righe** — 39 `applicata`, 2
+`proposta`, 2 `ritirata`. Le ritirate restano dentro **con il motivo**, così la
+sessione dopo non le rifà (§5-bis del `CLAUDE.md`).
+
+Il caso più delicato è dichiarato apertamente: **6 celle** di chiusura 1X2 (2
+partite) vengono da un provider **diverso** dal resto della colonna
+(`iredchuk/soccer-bookmaker-odds`, identificato per via statistica come chiusura
+media-di-mercato e confermato da una seconda fonte indipendente). Costo, che va
+detto: per quelle due partite la colonna cambia *semantica*. Beneficio: il dato
+reale è 2,8 volte più preciso della stima che avremmo prodotto noi (MAE 0.0060
+contro 0.0160). Si torna indietro portando le righe a `ritirata` e rigenerando.
+
+### Stime dichiarate (`data/estimates/`)
+
+Dove un dato di mercato **non esiste nelle fonti**, il progetto può stimarlo coi
+propri modelli — ma la stima vive **fuori** dagli snapshot, come
+**probabilità** (mai quote: impossibile confonderla con un prezzo), con
+l'errore atteso **misurato e dichiarato**, e non si usa **mai** per simulare
+ROI. Regole complete in [`data/estimates/README.md`](data/estimates/README.md),
+schede in [`docs/DATI.md`](docs/DATI.md) §5.
+
+| file | righe | cosa stima |
+|---|--:|---|
+| `ou_close_2017_19.csv` | 3.638 | la **chiusura** O/U 2.5 del 2017-19, che non esiste alla fonte su nessuna delle 5 leghe (MAE ~0.014 nel regime d'uso) |
+| `ou_open_corrotte_2017_19.csv` | 12 | l'**apertura** O/U delle linee svuotate dal guard bilaterale (MAE 0.0143) |
+| `open_sparse_1x2_ou.csv` | 2 | l'apertura delle 2 partite sparse senza apertura vera (MAE ~0.016/~0.020) |
+| `squad_value_2017_26.csv` | **0** | niente: svuotato alla Fase 70, il buco è stato chiuso con dati **reali** |
+| `celle_residue.csv` | 32 | **niente — è il registro di NON-stima**: quali celle restano vuote e *perché non conviene* stimarle |
+
+L'ultima riga è la più utile per chi arriva dopo: dice che «non stimare» è stata
+una scelta motivata, non una dimenticanza.
+
+### Quote outright congelate (`data/outright_snapshots/`, Fase 97)
+
+L'unico dato del repo che nasce da un **fetch live** e viene comunque congelato:
+senza archivio, i prezzi di oggi sparirebbero col container. Fonti: **Polymarket**
+(Gamma API) e **Smarkets** (API v3 pubblica) — entrambe *borse*, non bookmaker.
+Formato: `YYYY-MM-DD.json` (completo) + `history.csv` (data × fonte × lega ×
+mercato × squadra). Si scrive con `python scripts/archive_outrights.py`
+(idempotente sulla data).
+
+Serve a rimuovere **in avanti** il limite più duro del simulatore di stagione
+(Fase 89): non esistono quote outright storiche, quindi «battiamo il mercato» su
+quella famiglia non è testabile all'indietro. Avvertenze di semantica
+(`settled_share`, `exclusive=False`, libri con un lato solo, nomi squadra **non**
+normalizzati) nel README della cartella e in `docs/DATI.md` §5-bis.
+
+### Come si verifica che i dati siano giusti (audit)
+
+Verificare, non fidarsi. `scripts/audit_snapshots.py` fa tre controlli, dal più
+debole al più forte: **(A) interno** — struttura, coerenza, range, duplicati,
+senza rete; **(B) esterno** — confronto **riga per riga** con le fonti originali
+ri-scaricate oggi, con le 10 colonne quota ri-derivate dallo stesso codice di
+produzione; **(C) indipendente** — i gol secondo Understat (fonte terza)
+confrontati con quelli dello snapshot. Esito sulle due leghe entrate per ultime:
+**0 differenze** su gol, date, tiri, quote e xG.
+
+Accanto c'è l'audit **avversariale**, che fa la domanda opposta e più scomoda —
+*e se la fonte stessa fosse sbagliata?*: `scripts/audit_anomalie.py` e
+`scripts/cerca_segnaposto.py` (quest'ultimo cerca i **finti pieni**, la
+categoria pericolosa della regola R6: valori di comodo che *sembrano* misure).
+Bilancio dell'audit a 5 leghe: **7 anomalie** confermate — 6 nella fonte e **1
+nostra** (l'ordine delle colonne, poi allineato) — più **1 ritirata** come falso
+positivo. I verbali integrali sono gli 11 report di
+[`docs/audit_5_leghe/`](docs/audit_5_leghe/00_indice.md), con i JSON grezzi
+dietro ogni tabella in `docs/audit_5_leghe/numeri/`.
+
 Tutta la pipeline è **offline-first**: `backtest.py`/`tune.py` leggono lo snapshot
 congelato (nessun download per run), quindi i risultati sono riproducibili identici.
 Ogni backtest è inoltre registrato in `experiments/runs.jsonl` con l'impronta dei
@@ -1837,22 +2170,47 @@ dati usati (vedi `experiments/README.md`).
 
 ### Fonti originali
 
-L'ambiente di sviluppo cloud non raggiunge direttamente `football-data.co.uk`,
-`understat.com` né `transfermarkt.com` (policy di rete), quindi si usavano mirror
-su GitHub con **lo stesso formato**:
+> ⚠️ **SUPERATA dalla Fase 100: la rete è tornata raggiungibile.** Per decine di
+> fasi questo paragrafo ha detto che l'ambiente cloud **non** raggiungeva
+> `football-data.co.uk`, `understat.com` e `transfermarkt.com`, e tutta
+> l'architettura dei bundle manuali in `files/` nasce da lì. **Oggi rispondono
+> 200**, verificato scaricando davvero (non pingando): le 45 stagioni di
+> football-data sono state ri-scaricate, Bundesliga e Ligue 1 sono entrate senza
+> bundle, e — la conseguenza che conta — gli snapshot sono stati verificati
+> **contro la fonte-madre**, non solo contro sé stessi. Lo strumento è
+> `scripts/fetch_sources.py` (scarica con provenienza SHA256). Mappa della rete
+> aggiornata, con i vincoli che restano (`robots.txt` di OddsPortal, `api.github.com`
+> bloccato, throttle ≥1,5 s), in
+> [`docs/MANUALE_SOPRAVVIVENZA.md`](docs/MANUALE_SOPRAVVIVENZA.md) §1.
+> **Lezione operativa, generale:** «presumibilmente bloccato» non è un fatto —
+> due host erano marcati per esclusione da mesi e bastava un `curl`.
 
-- **football-data** e **Understat**: stesso repo mirror — URL in
-  `sources.BASE_URL` / `sources.UNDERSTAT_URL`. ⚠️ **Il mirror è sparito da
-  GitHub** (404, verificato luglio 2026, Fase 14): `--refresh` non ha più una
-  fonte a monte raggiungibile dal cloud. Il progetto non ne dipende: lo snapshot
-  congelato è versionato, e i **CSV grezzi originali** football-data (9 stagioni,
-  con TUTTE le colonne quote) sono congelati in **`data/football_data_raw/`** (con
-README di provenienza) —
-  `scripts/_restore_raw_cache.py` ricostruisce la cache `data/raw/` da lì.
-- **Transfermarkt**: datalake `salimt/football-datasets` — URL in
-  `sources.TRANSFERMARKT_MIRROR_URL`. Limite noto: ~25% dei profili è privo di
-  serie di valutazioni (per questo alcune squadre-stagione hanno `squad_value = NaN`).
+Quando la rete era chiusa si usavano mirror su GitHub con **lo stesso formato**;
+questa è la situazione delle fonti oggi, mirror compresi:
 
-Girando il progetto in locale è sufficiente sostituire gli URL in
-`src/data/sources.py` con quelli ufficiali (football-data.co.uk è raggiungibile
-da un browser/rete normale; per Understat c'è già `UNDERSTAT_OFFICIAL_URL`).
+- **football-data** e **Understat**: il repo mirror storico che li serviva
+  entrambi **è sparito da GitHub** (404, verificato luglio 2026 alla Fase 14 e
+  ri-verificato alla Fase 101-bis) — ma non serve più, perché i siti originali
+  rispondono. Dalla Fase 101-bis `sources.BASE_URL` punta all'**ufficiale**
+  (`OFFICIAL_BASE_URL`): prima il default era il mirror morto, cioè `--refresh`
+  puntava all'unica delle due URL che non risponde. ⚠️ `sources.UNDERSTAT_URL`
+  punta **ancora** al mirror (`UNDERSTAT_MIRROR_URL`), con l'ufficiale
+  disponibile accanto in `UNDERSTAT_OFFICIAL_URL`. Il progetto
+  non dipende comunque da nessuno dei due: lo snapshot congelato è versionato, e
+  i **CSV grezzi originali** football-data della Serie A (9 stagioni, con TUTTE
+  le colonne quote) sono congelati in **`data/football_data_raw/`** (con README di
+  provenienza) — `scripts/_restore_raw_cache.py` ricostruisce la cache
+  `data/raw/` da lì. Per Premier e Liga l'equivalente sono i bundle in `files/`.
+  Nota su Understat: l'API vuole l'header `X-Requested-With: XMLHttpRequest`
+  (senza → 404) e risponde **gzip**.
+- **Valori rosa**: dalla Fase 67 la fonte ufficiale è il dataset **player-scores**
+  (`dcaribou/transfermarkt-datasets`, CC0) in `files/player_scores/`, importato
+  via **workflow GitHub Actions** (`.github/workflows/import_dataset.yml`: il
+  runner ha rete libera). Il vecchio datalake `salimt/football-datasets`
+  (`sources.TRANSFERMARKT_MIRROR_URL`) resta usato **solo** per gli infortuni
+  (`absent_*_est`). ⚠️ Il suo limite noto — ~25% dei profili privo di serie di
+  valutazioni, che produceva `squad_value = NaN` — **non si applica più ai valori
+  rosa**: con player-scores + i 29 recuperi manuali la copertura è al 100%.
+
+Girando il progetto in locale gli URL ufficiali sono già in
+`src/data/sources.py` (per Understat c'è `UNDERSTAT_OFFICIAL_URL`).

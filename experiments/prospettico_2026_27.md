@@ -7,8 +7,9 @@
 > leghe perché Bundesliga e Ligue 1 non erano ancora in produzione; ora lo sono
 > (16.111 partite, `LEAGUE_CONFIGS` e `MARKET_ENGINE` complete), quindi non c'è
 > ragione di lasciarle fuori dal gold standard. L'anteprima illustrativa del §2
-> resta a 3 leghe — è congelata e non si riscrive — ma il **protocollo del §3
-> vale per tutte e cinque**.
+> resta com'era — è congelata e non si riscrive, e di fatto copre la **sola
+> Premier** (Serie A e La Liga erano slot vuoti già a 3 leghe) — ma il
+> **protocollo del §3 e la checklist del §5 valgono per tutte e cinque**.
 >
 > **Le date di inizio** (fonte unica: `newseason.md` §1, `start_date` degli
 > eventi outright Smarkets scaricati il 25/07/2026, da riverificare a inizio
@@ -22,8 +23,10 @@
 del calcio d'inizio e si controllano **dopo**. Nessun senno di poi è possibile —
 a differenza di ogni backtest (dove i dati passati sono già noti). Il progetto
 insegue dati prospettici dalla Fase 14; ora che il motore market-implied è
-validato su ogni asse (3 leghe, apertura e chiusura, 2017-2026 — Fasi 26/75/76),
-ha senso puntarlo su partite **davvero mai viste**: la prossima stagione.
+validato su ogni asse — **5 leghe**, apertura e chiusura, 2017-2026 (Fasi
+26/75/76 sulle 3 storiche, dove batte il DC-da-gol su 13/14 mercati; **15/15**
+nelle due nuove; **25/25** partendo dall'apertura) — ha senso puntarlo su
+partite **davvero mai viste**: la prossima stagione.
 
 L'idea: al primo turno 2026-27, per ogni partita, produrre **due** previsioni —
 il Dixon-Coles da solo (Modello 1) e il market-implied dalle quote di chiusura
@@ -33,16 +36,36 @@ dichiarate corrispondono alle frequenze reali?).
 
 ## 2 · Anteprima illustrativa (congelata 2026-07-23) — SOLO Modello 1 (DC)
 
+> ⚠️ **Due delle premesse di questo paragrafo sono CADUTE** (verificato il
+> 27/07/2026, audit di questa sessione — stesso riquadro del §4). Il testo
+> resta com'era — è
+> un'anteprima **congelata** il 2026-07-23 e non si riscrive a posteriori — ma
+> va letto sapendo che:
+> - **`WebFetch` non è più bloccato**: la rete è tornata raggiungibile alla
+>   Fase 100 (200 da football-data.co.uk, understat, transfermarkt, Kaggle,
+>   footiqo, `gamma-api.polymarket.com`, `api.smarkets.com`; e in questa
+>   sessione anche huggingface e jsdelivr). Vedi il riquadro del §4 e
+>   `docs/MANUALE_SOPRAVVIVENZA.md` §1. **I calendari ufficiali 2026-27 sono
+>   quindi recuperabili**: non è più un vincolo, è un compito (§5);
+> - **le quote NON sono più tutte irraggiungibili**: gli **outright** si
+>   prendono da Polymarket e Smarkets (le previsioni outright 2026-27 sono
+>   infatti **già congelate**, `prospettico_2026_27_outright.json`, 2026-07-25).
+>   Resta vero il pezzo che serve al Modello 2: le quote **1X2 + O/U di singola
+>   partita** non hanno ancora un canale verificato — è la casella aperta del
+>   §5, non un fatto acquisito.
+
 ⚠️ **Non è il test scorato.** È ciò che si può produrre *oggi* dalla sessione di
 sviluppo, con questi limiti **dichiarati**:
-- i **calendari** 2026-27 non sono verificabili in modo affidabile da qui
+- ~~i **calendari** 2026-27 non sono verificabili in modo affidabile da qui
   (`WebFetch` bloccato; gli snippet di ricerca su stagioni future sono
-  speculativi — mescolavano squadre di Championship): le partite qui sotto sono
-  **plausibili, non ufficiali**;
+  speculativi — mescolavano squadre di Championship)~~ **premessa caduta, vedi
+  il riquadro sopra**: le partite qui sotto restano comunque **plausibili, non
+  ufficiali**, perché nessuno ha ancora verificato i fixture veri;
 - i **dati si fermano a 2025-26** → le forze delle squadre sono "vecchie" di
   un'estate di mercato (nuovi acquisti/cessioni non pesati);
-- **niente quote** raggiungibili da qui → **niente Modello 2** (market-implied).
-  Solo il DC-da-solo;
+- ~~**niente quote** raggiungibili da qui~~ → **niente Modello 2**
+  (market-implied) *in questa anteprima*: al 2026-07-23 non c'erano quote 1X2/OU
+  per-partita in mano. Solo il DC-da-solo;
 - l'anteprima è generata con la **config giusta per lega** (`LEAGUE_CONFIGS`,
   δ Premier 0.33) via `scripts/_run_prospettico_2627.py`. **Da Fase 83-bis anche
   `predict.py` è per-lega** (`--league premier_league` usa δ=0.33 ecc.): il
@@ -123,9 +146,12 @@ raccolte per un canale diverso** vicino al kickoff:
 
 ## 4-bis · Quanta POTENZA ha questo test (Fase 98) — il vincolo di disegno
 
-Il calcolo è stato fatto sui dati veri (6.840 partite, differenze appaiate
-per-partita, `scripts/_run_prospective_power.py`). Controllo di validità
-superato: gap 1X2 pooled +0.0179, che riproduce il +0.0165 noto.
+Il calcolo è stato fatto sui dati veri (6.840 partite = 3 leghe × 6 stagioni ×
+380, differenze appaiate per-partita, `scripts/_run_prospective_power.py`).
+Controllo di validità superato: gap 1X2 pooled **+0.0179**, che riproduce il
+**+0.0165** noto *(PRE-fix Fase 92; al codice di HEAD il gap 1X2 Serie A è
+**+0.0167**, log-loss 0.9799 contro 0.9632 del mercato — la differenza non
+cambia nulla nell'ordine di grandezza né nelle conclusioni sotto)*.
 
 **Buona notizia**: le partite sono **indipendenti** — autocorrelazione di ordine
 1 +0.007, ICC ≈ 0, **DEFF = 1.00**. Non c'è penalità da clustering (per giornata
@@ -136,22 +162,73 @@ o per stagione): ogni partita raccolta conta per una.
 
 | campione | potenza sul gap col mercato | verdetto |
 |---|--:|---|
-| **30 partite** (1 giornata × 3 leghe) | **9,8%** | MDE 0.0781 = 4,7× il gap: **non conclude mai** |
+| **30 partite** (1 giornata × 3 leghe) | **9,8%** | MDE 0.0781 (= 4,4× il gap misurato +0.0179; 4,7× il +0.0165 di riferimento): **non conclude mai** |
 | 380 (1 stagione, 1 lega) | 62,5% | sotto-dimensionato |
 | **574** | **80%** | ≈ 19 giornate su 3 leghe |
 | 1140 (1 stagione × 3 leghe) | 97,7% | il disegno giusto |
 
 ⚠️ **Questa tabella è calcolata su 3 leghe** (6.840 partite appaiate, Fase 98) e
 **non è stata rifatta** dopo l'ingresso di Bundesliga e Ligue 1. Cambia solo il
-rapporto giornate↔partite, non il segnale/rumore: una giornata su **5** leghe
-vale **~48 partite** (10+10+10+9+9) invece di 30, quindi le ~574 partite della
-soglia 80% si raggiungono in **~12 giornate** invece di 19. Le percentuali di
-potenza in colonna restano quelle misurate: ri-calcolarle sulle 5 leghe è un
-lavoro aperto, non un numero da dedurre a mente.
+rapporto giornate↔partite, non il segnale/rumore.
+
+**L'aritmetica del rapporto, esplicita** (squadre verificate sugli snapshot,
+stagione 2025-26: Serie A 20, Premier 20, La Liga 20, Bundesliga 18, Ligue 1 18):
+
+```
+partite per giornata, 3 leghe = 20/2 + 20/2 + 20/2                 = 30
+partite per giornata, 5 leghe = 20/2 + 20/2 + 20/2 + 18/2 + 18/2   = 48
+soglia 80%  -> 574 / 30 = 19,1 giornate (3 leghe)
+            -> 574 / 48 = 12,0 giornate (5 leghe)
+soglia baseline (184) -> 184 / 30 = 6,1 giornate | 184 / 48 = 3,8 giornate
+1 stagione intera, 5 leghe = 380·3 + 306·2 = 1.752 partite (era 1.140 su 3)
+```
+
+Le **percentuali di potenza in colonna restano quelle misurate su 3 leghe**:
+ri-calcolarle sulle 5 è un lavoro aperto (il gap pooled e la sd cambierebbero,
+perché cambia il mix di leghe), **non un numero da dedurre a mente**.
 
 Gerarchia netta fra i bersagli: contro la **baseline** bastano **184** partite
-(6 giornate); contro il **mercato** ne servono **574** sull'1X2, **2.254** sul
-GG/NG, **2.988** sull'O/U 2.5.
+(6 giornate su 3 leghe, ~4 su 5); contro il **mercato** ne servono **574**
+sull'1X2, **2.254** sul GG/NG, **2.988** sull'O/U 2.5.
+
+*(Nota sul GG/NG: nella Fase 98 il riferimento del GG/NG era il **motore
+market-implied**, non un mercato reale, perché nei dati non c'erano quote GG/NG.
+Quella premessa è **caduta alla Fase 100** — le quote GG/NG di chiusura esistono
+per il 2017-20, 1xBet via footiqo, 5.337 partite su 5 leghe — ma il numero qui
+sopra resta quello misurato contro il market-implied e **non va riletto** come
+«contro il book».)*
+
+### 📐 Il modello in dettaglio — da dove escono questi numeri
+
+Formule copiate riga per riga da `scripts/_run_prospective_power.py`
+(`summarize`, `n_star`, `power_at`), test appaiato a due code al 5%:
+
+```
+d_i     = logloss_modello_i − logloss_riferimento_i        (differenza APPAIATA)
+DEFF    = max(1, (SE_bootstrap_a_cluster / SE_iid)^2)      # cluster = giornata / stagione
+sd_eff  = sd(d) · sqrt(DEFF)
+SE(n)   = sd_eff / sqrt(n)
+MDE(n)  = (z_0.975 + z_0.80) · SE(n) = 2.8016 · SE(n)
+n*      = ( 2.8016 · sd_eff / |δ| )^2
+potenza(n) = Φ(ncp − z_0.975) + Φ(−ncp − z_0.975),  ncp = |δ| · sqrt(n) / sd_eff
+```
+
+**Perché ogni numero vale quello che vale:**
+- `z_0.975 = 1.9600` (due code al 5%) e `z_0.80 = 0.8416` (potenza 80%) sono le
+  costanti del disegno, non scelte: **K = 2.8016** è la loro somma;
+- `DEFF = 1.00` **non è un'assunzione**: è misurato (bootstrap a cluster su
+  giornata e stagione), e coincide col fatto che acf1 = +0.007 e ICC ≈ 0. Quindi
+  `sd_eff = sd(d) = 0.1527` — nessuna penalità da clustering;
+- `δ = 0.0179` è il gap 1X2 pooled **misurato**, non un'ipotesi ottimistica;
+- da cui `n* = (2.8016 · 0.1527 / 0.0179)² = 571` ≈ le **574** partite della
+  tabella (la piccola differenza è l'arrotondamento di sd e δ a 4 decimali);
+- `MDE(30) = 2.8016 · 0.1527 / √30 = 0.0781`, cioè **4,4×** il gap misurato:
+  con una giornata l'unico effetto rilevabile sarebbe quattro volte più grande
+  di quello che esiste davvero.
+
+**Limite dichiarato**: la potenza assume che il gap resti **costante**. È una
+stima **ottimistica** se il modello degrada o il mercato migliora — ed entrambe
+le cose sono successe in passato (il θ del router cresce nel tempo, Fasi 75/81).
 
 **Conseguenze operative su questo test:**
 
@@ -159,36 +236,93 @@ GG/NG, **2.988** sull'O/U 2.5.
    trattata per quello che è: il **collaudo del protocollo** (fixture veri,
    quote reali, congelamento, scoring) — non la prova.
 2. **il bersaglio realistico della giornata 1 è la baseline**, non il mercato:
-   con 30 partite nemmeno quella conclude (servono 184), ma la direzione è
-   leggibile e i 6 turni si accumulano in fretta.
+   con 30 partite (48 su 5 leghe) nemmeno quella conclude (servono 184), ma la
+   direzione è leggibile e i turni si accumulano in fretta — 4 giornate su 5
+   leghe, 6 su 3.
 3. **si scora l'1X2 per primo**: dà potenza **4-5×** prima di GG/NG e O/U.
    Riportare gli altri mercati va bene, ma dichiarando che sono
    sotto-dimensionati.
-4. **il piano va esteso a ~19 giornate su 3 leghe** (≈ metà stagione) per una
-   prima conclusione onesta sul mercato, e a una stagione intera per il 97,7%.
-   Cioè: questo file resta APERTO per mesi, per costruzione.
+4. **il piano va esteso a ~19 giornate su 3 leghe — ~12 su 5** (≈ metà stagione
+   o meno) per una prima conclusione onesta sul mercato, e a una stagione intera
+   per il 97,7%. Cioè: questo file resta APERTO per mesi, per costruzione.
 5. **l'outright NON è testabile qui**: servirebbero ~57 stagioni-lega, 3 leghe in
    una stagione danno **9,8%** di potenza (vedi Fase 98 e `docs/PISTE.md` §4-bis).
+   Con 5 leghe si raccolgono 5 stagioni-lega l'anno invece di 3: cambia poco,
+   resta **non testabile prospetticamente** — non «perdente».
 
 ---
 
-## 5 · «DA RIPETERE / COMPLETARE PIÙ AVANTI» — checklist
+## 5 · «DA RIPETERE / COMPLETARE PIÙ AVANTI» — checklist ESEGUIBILE
 
-- [ ] **Vicino al primo turno 2026-27** — date da `newseason.md` §1: Liga
-  **16/8**, Premier e Ligue 1 **21/8**, Serie A **22/8**, Bundesliga **28/8**
-  (la scadenza vera è il **16 agosto**):
-  - [ ] verificare i **fixture ufficiali** di giornata 1 (**5 leghe**);
-  - [ ] rigenerare il **Modello 1 (DC)** coi fixture veri e congelarlo;
-  - [ ] raccogliere le **quote di chiusura** reali e generare il **Modello 2**;
-  - [ ] congelare tutto PRIMA del calcio d'inizio (commit con data).
-- [ ] **Dopo il full-time**: risultati reali → scoring (log-loss/Brier/
-  calibrazione) di M1/M2/baseline, per lega e per mercato; run in `runs.jsonl`;
-  voce nel diario (nuova fase) con i numeri.
-- [ ] Confrontare l'anteprima DC congelata oggi (§2) coi risultati reali: quanto
-  è costata l'estate di mercato non vista + la config non ancora per-lega.
-- [ ] **(NON opzionale, Fase 98) estendere a ≥19 giornate su 3 leghe** (~574
-  partite) prima di dichiarare qualsiasi cosa sul confronto col mercato: con 30
-  partite la potenza è 9,8% (vedi §4-bis).
+**Date di inizio** (fonte unica `newseason.md` §1, `start_date` degli eventi
+outright Smarkets scaricati il 25/07/2026, **da riverificare a inizio agosto**):
+La Liga **16/8**, Premier e Ligue 1 **21/8**, Serie A **22/8**, Bundesliga
+**28/8**. **La scadenza vera del congelamento è il 16 agosto** — non fine mese,
+non l'inizio della Serie A. Da fine luglio 2026 sono meno di tre settimane.
+
+Cosa esiste già, per non rifarlo:
+
+| pezzo | stato | dove |
+|---|---|---|
+| previsioni **outright** congelate | ✅ fatto il **2026-07-25**, ma **3 leghe** (`serie_a`, `premier_league`, `la_liga`) | `experiments/prospettico_2026_27_outright.json` |
+| anteprima **DC per-partita** | ⚠️ **illustrativa**, 7 partite Premier plausibili, congelata 2026-07-23 | `experiments/prospettico_2026_27_dc.csv` |
+| motore **per-lega** su M1 e M2 | ✅ chiuso (Fasi 83-bis e 92-bis) | `predict.py --league <lega>`, `src.config.MARKET_ENGINE` |
+| **fixture ufficiali** 2026-27 | ❌ mancanti | — |
+| **quote 1X2 + O/U per-partita** | ❌ nessun canale verificato | — |
+| **script di scoring** | ❌ non esiste | — |
+
+### 5.1 · PRIMA del 16 agosto (blocco non negoziabile)
+
+- [ ] **Riverificare le date di inizio** delle 5 leghe (si spostano): ri-scaricare
+      gli outright con `python scripts/fetch_smarkets_outrights.py` e confrontare
+      `start_date`, oppure il calendario ufficiale. Se una data si sposta,
+      aggiornare **qui e in `newseason.md` §1** (fonte unica).
+- [ ] **Fixture ufficiali** di giornata 1 delle **5** leghe. La rete non è più un
+      vincolo (§4): fonti da provare in ordine — openfootball su
+      `raw.githubusercontent.com`, eventi Smarkets/Polymarket (hanno già le
+      partite: es. `Inter Milan vs Monza`, 22/08, `newseason.md` §4), sito
+      ufficiale della lega. Verificare i nomi squadra contro `TEAM_ALIASES`
+      (`src/data/sources.py`): è un bug già capitato («Hellas Verona» → «Verona»).
+- [ ] **Modello 1 (DC) congelato** coi fixture veri. ⚠️ `scripts/_run_prospettico_2627.py`
+      ha `FIXTURES` e `AS_OF` **hardcoded** (solo Premier, 7 partite): vanno
+      sostituiti con i fixture veri delle 5 leghe prima di rigenerare il CSV.
+      In alternativa, partita per partita:
+      `python scripts/predict.py --league <lega> --date <YYYY-MM-DD> "<casa>" "<ospite>"`.
+      Congelare **tutti i mercati Tier 1**, non solo 1X2 (§4-bis punto 3: l'1X2 si
+      scora per primo, ma gli altri si raccolgono lo stesso — dopo non si recuperano).
+- [ ] **Estendere l'outright alle 5 leghe** se Polymarket/Smarkets quotano anche
+      Bundesliga e Ligue 1 (`scripts/fetch_polymarket_open.py`,
+      `scripts/fetch_smarkets_outrights.py`). Se non le quotano, **dichiararlo
+      nel JSON**: un buco dichiarato è innocuo, un buco silenzioso no (§5-bis R6).
+- [ ] **Canale per le quote 1X2 + O/U per-partita** — è la casella che decide se
+      il Modello 2 esiste. Opzioni note, in ordine di costo: Smarkets per-partita
+      (da verificare la liquidità, `newseason.md` §4); un raccoglitore automatico
+      via GitHub Actions (pattern Fase 67, con i paracadute di `newseason.md` §5/A2);
+      una sessione browser reale (pattern Fase 70); inserimento a mano in `files/`.
+      **Timebox dichiarato**: se non si risolve, il test parte con il solo M1 e lo
+      si scrive, invece di far slittare tutto.
+- [ ] **Script di scoring scritto ORA**, non a settembre (`newseason.md` §5/A1):
+      legge le previsioni congelate + i risultati e produce log-loss/Brier/
+      calibrazione per lega e per mercato, via
+      `experiment_log.compute_metrics` (fonte unica) e `append_run`
+      (`config.source = "prospettico_2627"`).
+- [ ] **Pre-registrare i criteri** prima di vedere un dato (`newseason.md` §5/A3):
+      metrica, soglia di successo, quante ipotesi si testano, e il vincolo del
+      §4-bis (con una giornata non si conclude niente contro il mercato).
+- [ ] **Congelare tutto PRIMA del calcio d'inizio, con un commit datato.** Una
+      previsione prodotta dopo non è una previsione.
+
+### 5.2 · Dopo il full-time
+
+- [ ] Risultati reali → scoring (log-loss/Brier/calibrazione) di M1/M2/baseline,
+      per lega e per mercato; **run in `runs.jsonl`** (`source=prospettico_2627`);
+      voce nel diario (nuova fase) con i numeri e il blocco 📐.
+- [ ] Confrontare l'**anteprima DC del §2** (congelata 2026-07-23, config già
+      per-lega) coi risultati reali, dove le partite coincidono: quanto è costata
+      l'estate di mercato non vista.
+- [ ] **(NON opzionale, Fase 98) estendere a ~574 partite** — ≥19 giornate su 3
+      leghe, **~12 su 5** — prima di dichiarare qualsiasi cosa sul confronto col
+      mercato: con una sola giornata la potenza è 9,8% (§4-bis).
 
 ---
 

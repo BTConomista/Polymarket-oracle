@@ -57,21 +57,29 @@ FINESTRE
 
 CONTROLLI DI SANITA' (obbligatori, §CLAUDE.md)
 ----------------------------------------------
-  * il θ MLE per lega deve riprodurre i numeri gia' pubblicati nel cantiere
-    (serie_a 1.232, la_liga 1.242, premier 1.085, bundesliga 1.080, ligue_1 1.103);
-  * il log-loss 1X2 del mercato a θ=1/φ=0 deve riprodurre i numeri del report 10
-    (bundesliga 0.9744, ligue_1 0.9850);
-  * il DC di riferimento deve riprodurre il tracer (bundesliga 0.9919,
-    ligue_1 1.0041, serie_a 0.9797, premier 0.9831).
+Ogni numero-bersaglio e' COPIATO da un artefatto versionato, non ricordato:
+  * θ MLE per lega — `docs/audit_5_leghe/numeri/leve_theta_griglia.json`,
+    chiave `<lega>.theta_mle_pooled` (serie_a 1.232, la_liga 1.242,
+    premier 1.085, bundesliga 1.080, ligue_1 1.103);
+  * log-loss 1X2 del mercato a θ=1/φ=0 — stesso file, chiave
+    `<lega>.curve_in_sample.1X2["1.0"]` (bundesliga 0.9744, ligue_1 0.9850);
+  * DC di riferimento — `docs/audit_5_leghe/numeri/tranche3_tracer.json`,
+    chiave `<lega>.pooled.x2_model_logloss` (bundesliga 0.9919, ligue_1 1.0041,
+    serie_a 0.9797, premier 0.9831).
 Se un controllo non torna, lo script lo dichiara e non nasconde il numero.
 
 USO
 ---
-  python scripts/nuovo_fronte_generale.py dc-run     # griglia DC (lunga)
-  python scripts/nuovo_fronte_generale.py theta
-  python scripts/nuovo_fronte_generale.py phi
-  python scripts/nuovo_fronte_generale.py rho
-  python scripts/nuovo_fronte_generale.py dc         # analisi della griglia
+  python scripts/nuovo_fronte_generale.py dc-run     # griglia DC walk-forward (lunga)
+  python scripts/nuovo_fronte_generale.py theta      # 1 · θ pooled vs per-lega
+  python scripts/nuovo_fronte_generale.py phi        # 2 · φ(φ0,κ)
+  python scripts/nuovo_fronte_generale.py rho        # 3 · ρ
+  python scripts/nuovo_fronte_generale.py dc         # 4 · analisi della griglia DC
+  python scripts/nuovo_fronte_generale.py dc-fast    # 4-bis · apparato economico
+  python scripts/nuovo_fronte_generale.py pool       # 5 · 1 DC congiunto vs 5 separati
+  python scripts/nuovo_fronte_generale.py confuta    # 6 · le quattro confutazioni
+  python scripts/nuovo_fronte_generale.py sintesi    # 7 · la tabella riassuntiva
+  python scripts/nuovo_fronte_generale.py sanita     # solo i controlli, veloce
 """
 from __future__ import annotations
 
@@ -95,10 +103,13 @@ import nuove_leghe  # noqa: E402
 nuove_leghe.registra()
 
 OUT = ROOT / "docs" / "audit_5_leghe" / "numeri" / "nuovo_fronte_generale.json"
+# Cache dei tassi impliciti: rigenerabile, quindi DENTRO il repo sotto `outputs/`
+# (gia' in .gitignore, stessa convenzione di `_run_fase81_mega_sweep_mi.CACHE`).
+# Override con la variabile d'ambiente SCRATCH. Il default non deve mai essere lo
+# scratchpad di una sessione: su qualunque altra macchina quel percorso non
+# esiste e la cache riparte muta da vuota (rilievo F11-14, audit Fase 101).
 SCRATCH = Path(os.environ.get(
-    "SCRATCH",
-    "/tmp/claude-0/-home-user-Polymarket-oracle/"
-    "a5fc6f34-4b89-5526-a47c-c72cff4ac735/scratchpad")) / "fronte_generale"
+    "SCRATCH", ROOT / "outputs" / "scratch")) / "fronte_generale"
 SCRATCH.mkdir(parents=True, exist_ok=True)
 
 LEAGUES = ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"]
@@ -171,14 +182,17 @@ def inverti(df: pd.DataFrame, league: str, rho: float) -> tuple[np.ndarray, np.n
     from src.evaluation import metrics
     from src.models import market_implied as mi
     fp = SCRATCH / f"rates_{league}_rho{rho:+.3f}.csv"
-    vecchia = (ROOT.parent / "x")  # placeholder, sostituita sotto
+    # `alt`: la stessa cache, se gia' prodotta da `leve_theta_griglia.py` (che usa
+    # 2 decimali nel nome). Il riuso scatta solo quando i due script condividono la
+    # radice SCRATCH, cioe' quando la variabile d'ambiente e' impostata per
+    # entrambi; e' un'ottimizzazione opportunistica, non un requisito: se `alt`
+    # manca, i tassi si ricalcolano qui sotto.
     alt = SCRATCH.parent / "theta_griglia" / f"rates_{league}_rho{rho:+.2f}.csv"
     for cand in (fp, alt):
         if cand.exists():
             c = pd.read_csv(cand)
             if len(c) == len(df):
                 return c["lam"].to_numpy(), c["mu"].to_numpy()
-    del vecchia
     lam = np.zeros(len(df)); mu = np.zeros(len(df))
     for i, r in enumerate(df.itertuples()):
         pH, pD, pA = metrics.devig_1x2(r.odds_home, r.odds_draw, r.odds_away)
@@ -210,7 +224,6 @@ def _masks():
 
 
 MASKS = _masks()
-BIN_MK = [k for k in MASKS if k not in ("home_win", "away_win")] + ["home_win", "away_win"]
 BIN_MK = list(MASKS)
 CAT_MK = ["1X2", "multigol", "risultato_esatto"]
 ALL_MK = BIN_MK + CAT_MK
@@ -477,7 +490,9 @@ def stampa_tabella(res: dict, glob: dict, mercati: list, titolo: str) -> None:
 # --------------------------------------------------------------------------- #
 THETAS = [round(1.0 + 0.025 * i, 3) for i in range(17)]      # 1.000 … 1.400
 THETA_PRODUZIONE = 1.225        # costante del router v3, tarata sulla Serie A
-# Numeri gia' pubblicati dal cantiere, da riprodurre (controllo di sanita').
+# Bersagli del controllo di sanita', copiati da un artefatto VERSIONATO:
+# docs/audit_5_leghe/numeri/leve_theta_griglia.json — `<lega>.theta_mle_pooled`
+# e `<lega>.curve_in_sample["1X2"]["1.0"]` (finestra 1920..2526, 7 stagioni).
 SANITA_THETA_MLE = {"serie_a": 1.232, "la_liga": 1.242, "premier_league": 1.085,
                     "bundesliga": 1.080, "ligue_1": 1.103}
 SANITA_LL_1X2 = {"bundesliga": 0.9744, "ligue_1": 0.9850}
@@ -777,6 +792,14 @@ def cmd_rho(args) -> int:
 # --------------------------------------------------------------------------- #
 #  4 · IPERPARAMETRI DEL DC
 # --------------------------------------------------------------------------- #
+# Bersagli copiati da docs/audit_5_leghe/numeri/tranche3_tracer.json, chiave
+# `<lega>.pooled.x2_model_logloss` (il tracer walk-forward della tranche 3).
+# NOTA: lo 0.9797 della Serie A e' il numero DEL TRACER, non il gap ufficiale del
+# progetto: il walk-forward ufficiale al codice di HEAD da' 0.9799 (dopo il fix
+# del prior della Fase 92). Qui serve a riprodurre QUESTO artefatto, quindi resta.
+# La Liga manca dal dizionario (il tracer la riporta a 0.9843): il motivo non e'
+# scritto da nessuna parte e non e' ri-derivabile, quindi non lo si inventa —
+# aggiungerla richiederebbe prima una esecuzione di controllo.
 SANITA_DC = {"bundesliga": 0.9919, "ligue_1": 1.0041, "serie_a": 0.9797,
              "premier_league": 0.9831}
 

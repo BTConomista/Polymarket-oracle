@@ -65,8 +65,9 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      doppie chance, total-squadra (casa/ospite O0.5/1.5), clean sheet, vince-a-zero,
      scarto ≥2, multigol, risultato esatto. Ogni backtest/analisi li copre tutti
      (`scripts/_run_markets_bakeoff.py`, `derive_markets`). Il **Tier 2**
-     (handicap asiatico) è **coperto e validato** contro una quota esterna
-     (Fase 88); il **Tier 3** è coperto per Halftime, Second Half e risultato
+     (handicap asiatico) è **coperto e confrontato** con una quota esterna
+     (Fase 88) — esito onesto: **pareggio** in Brier col mercato sharp, non
+     vittoria (§6); il **Tier 3** è coperto per Halftime, Second Half e risultato
      esatto (Fase 96/98). Restano scoperti: HT/FT congiunto, le combinazioni, e
      il live (Tier 3+) — per cui serve prima il modello a due stadi del secondo
      tempo (residuo aperto della Fase 96/99).
@@ -75,8 +76,11 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      su 19/20 mercati Tier 1 (il DC-da-gol non vince mai), perché i mercati sono
      proiezioni della stessa matrice e i λ,μ del mercato battono i nostri ovunque.
      L'unico "specialista" aggiuntivo è la **φ(|λ−μ|)** (Fase 35/39) sulla
-     famiglia-pareggio. Regola operativa: **market-implied + φ35 quando ci sono le
-     quote 1X2+O/U; DC come fallback senza quote.** Il **Poisson bivariato** (Fase 42,
+     famiglia-pareggio. Regola operativa: **market-implied quando ci sono le
+     quote 1X2+O/U; DC come fallback senza quote** — con la φ35 **solo dove è
+     misurata utile**, cioè in Serie A: su Premier e Liga peggiora (Fase 79) e
+     applicarla lì era un bug del tool, corretto alla Fase 101. Le leve attive
+     per lega stanno in `src.config.MARKET_ENGINE`. Il **Poisson bivariato** (Fase 42,
      5° modello) è stato implementato e **perde** vs la φ35 (l'equilibrio |λ−μ| batte
      la correlazione globale λ3, che peggiora i totali). Il **ML bespoke per singolo
      mercato è stato testato e CHIUSO (Fase 50-quater)**: perde su ogni mercato e su
@@ -105,7 +109,10 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      proprietà della chiusura Serie A (meno liquida), non del calcio. Le costanti
      del motore restano dichiaratamente per-lega (§7). Il port su Premier/Liga e'
      stato poi COMPLETATO (Fasi 54-57): snapshot congelati e config per-lega in
-     LEAGUE_CONFIGS; il seguito vive in docs/STUDIO_PREMIER_LIGA.md.
+     LEAGUE_CONFIGS; il seguito vive in docs/STUDIO_PREMIER_LIGA.md. (I due θ
+     citati qui sono quelli *pubblicati* dalla Fase 53; l'audit a 5 leghe li ha
+     poi rimisurati con uno stimatore pooled e le leghe si dividono in due
+     famiglie — vedi §6 e docs/audit_5_leghe/10_modelli_nuove_leghe.md.)
 9. **Ogni modello si sviluppa su DUE FRONTI e si traccia nella rosa (Fase 65).**
    Per ogni modello/leva vanno considerate e valutate DUE versioni:
    - **per-lega**: costanti/iperparametri ritarati sulla singola lega (es. DC
@@ -158,8 +165,13 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde; aggiungi un test per ogni nuova
-  funzionalità del modello/pipeline.
+- [ ] **Test** — mantieni `pytest` verde (**841 verdi** al 27/07/2026); aggiungi
+  un test per ogni nuova funzionalità del modello/pipeline.
+- [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
+  correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
+  esiste, reale o stimato) e il registro `data/correzioni_dichiarate.csv`
+  (regola R3, §5-bis); se ha introdotto un **termine** nuovo, aggiungi la voce
+  in `docs/GLOSSARIO.md` con la fase che lo introduce.
 - [ ] **Piste** (`docs/PISTE.md`) e **manuale di sopravvivenza**
   (`docs/MANUALE_SOPRAVVIVENZA.md`) — se l'esperimento apre, prova o chiude
   una pista dati→modello, aggiorna la voce corrispondente in PISTE.md (anche
@@ -221,15 +233,31 @@ python scripts/build_database.py --fixtures  # calendario di club completo + con
 python scripts/build_database.py --refresh   # riscarica dalle fonti, aggiorna lo snapshot
 python scripts/backtest.py             # backtest walk-forward (registra il run)
 python scripts/backtest.py --test-season 2425 --shots-blend 0.5   # varianti
+python scripts/backtest.py --league premier_league   # altra lega (default: serie_a)
 python scripts/analyze.py              # analisi errori del backtest
 python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperparametro
-python -m pytest                       # test
+python scripts/markets.py              # listino multi-mercato
+python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
+python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
+python -m pytest                       # test (841 verdi al 27/07/2026)
 ```
 
-Config "ufficiale" corrente del modello (default in `backtest.py`): **emivita
-365g, shrinkage 1.5, shots_blend 0.75, blend_signal xg, promoted_prior 0.23**
-(blend gol/xG reale, Fase 4b; emivita ri-tarata a 365g in Fase 4d; prior di
-cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e diario.
+⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
+snapshot Serie A fino alla Fase 101 (bug distruttivo, corretto lì): se un giorno
+lo snapshot di una lega sembra contenerne un'altra, la causa storica è quella.
+
+Config "ufficiale" del modello: vive in **`src/config.py`** (`LEAGUE_CONFIGS`),
+**unico punto di verità** (§7), da cui `backtest.py` e `tune.py` leggono i default
+— non è incisa negli script né nella classe `DixonColesModel` (che resta neutra).
+Per la **Serie A**: **emivita 365g, shrinkage 1.5, shots_blend 0.75, blend_signal
+xg, promoted_prior δ=0.23** (blend gol/xG reale, Fase 4b; emivita ri-tarata a 365g
+in Fase 4d; prior di cold-start neopromosse adottato in Fase 7/8). Le altre quattro
+leghe hanno **gli stessi valori tranne δ**: Premier 0.33, La Liga 0.22 (Fase 57),
+Bundesliga 0.28, Ligue 1 0.19 (Fase 100/101). Le costanti del **motore
+market-implied** stanno nella mappa gemella `MARKET_ENGINE` (θ del router, φ0, κ,
+`sharpen_1x2`): la Serie A è l'unica con le correzioni attive, le altre quattro
+escono col **motore LISCIO** (Fase 92-bis/101). Se cambi un valore, aggiorna README
+e diario.
 
 ---
 
@@ -245,6 +273,11 @@ cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e dia
 - Storia: fino alla Fase 82 si lavorava su branch di sessione (`claude/...`)
   poi confluiti; il branch `claude/premier-liga-analysis-nqwa5c` è stato
   rinominato/ricopiato in `main` ed è deprecato.
+- **Verificato (27/07/2026)**: i tre branch `claude/…` rimasti su `origin`
+  (`audit-ultimi-20-step-gzwro2`, `premier-liga-analysis-nqwa5c`,
+  `verify-data-import-leagues-468euv`) sono tutti **antenati di `main`** —
+  `git rev-list --count origin/main..origin/<branch>` dà **0** su tutti e tre.
+  Sono davvero confluiti: non c'è niente da ripescare lì dentro.
 
 ---
 
@@ -252,14 +285,20 @@ cold-start neopromosse adottato in Fase 7/8). Se la cambi, aggiorna README e dia
 
 ```
 src/config.py    iperparametri PER LEGA (LEAGUE_CONFIGS) = fonte unica (§7); nuova
-                 lega = nuova voce, non codice
+                 lega = nuova voce, non codice. Mappa gemella MARKET_ENGINE
+                 (lega -> costanti del motore market-implied) e DRIFT_SD (deriva
+                 di forza in-stagione, Fase 94)
 src/data/        sources.py (URL/stagioni/alias), loader.py (offline-first),
-                 database.py (snapshot CSV + SQLite)
+                 database.py (snapshot CSV + SQLite), understat.py (xG/npxG/PPDA/
+                 deep), player_scores.py (valori rosa, Fase 67), transfermarkt.py
+                 (valori e assenze), fixtures.py (calendario di club -> congestione
+                 vera, Fase 4c/4e)
 src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  draw_balance Fase 35 = phi(|lam-mu|))
                  market_implied.py (Fase 24/26: inverte le quote 1X2+O/U ->
                  lambda,mu del mercato -> matrice DC -> ogni mercato sui gol;
-                 price_markets Fase 44 = routing forma per-mercato; btts_season Fase 48
+                 derive_markets = tutti i mercati da una matrice; price_markets
+                 Fase 44 = routing forma per-mercato; btts_season Fase 48
                  = nudge stagionale GG/NG di fine stagione, off di default)
                  market_denoise.py (Fase 38/Punto 4: power-devig + recal cross-stagione)
                  bivariate_poisson.py (Fase 42: correlazione esplicita λ3; perde vs φ35)
@@ -268,19 +307,55 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  intera -> mercato CAMPIONE; classifica con spareggi UFFICIALI
                  per lega, h2h in SA/Liga, DR in Premier)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
+                 markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
 scripts/         download_data, build_database, backtest, analyze, tune, calibrate,
-                 markets (multi-mercato), analyze_gap (anatomia del gap col mercato)
+                 markets (multi-mercato), analyze_gap (anatomia del gap col mercato),
+                 predict (il TOOL d'uso: DC senza quote, market-implied con --odds),
+                 build_league_snapshot (snapshot Premier/Liga dai bundle in files/),
+                 build_new_snapshot (snapshot Bundesliga/Ligue 1, scaricati),
+                 build_estimates + verifica_stime (le stime dichiarate, §5),
+                 applica_correzioni (registro R3, idempotente), audit_snapshots +
+                 audit_anomalie + cerca_segnaposto (i controlli dell'audit),
+                 fetch_polymarket_open / fetch_smarkets_outrights / archive_outrights
+                 (quote outright live), scrape_betexplorer (Fase B, vedi
+                 docs/BETEXPLORER_SCRAPER.md), _run_*.py (uno per esperimento:
+                 e' cosi' che ogni numero del diario resta ri-calcolabile, Fase 15)
 experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fase93_discrimination.csv: deficit di discriminazione per
                  PARTITA (5.083 righe, Fase 93) — input riutilizzabile per
                  affettare il gap in altri modi senza rifare 18 backtest
+                 fase89/91/94*.json, listino_validazione.json: artefatti delle
+                 fasi corrispondenti
+                 prospettico_2026_27* : le previsioni CONGELATE del test
+                 prospettico (Fase 78, APERTO)
 data/            {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
                  (SNAPSHOT congelati, versionati — schema IDENTICO, ordine
                  colonne compreso: lo verifica test_schema_identico_tra_leghe)
+                 club_fixtures[_{lega}].csv (calendario di club completo)
+                 correzioni_dichiarate.csv (registro R3: ogni correzione ai dati,
+                 con valore-prima, motivo, fonte, chi ha deciso e quando)
+                 estimates/ (SOLO stime dichiarate, §5 — regole nel suo README)
+                 football_data_raw/ (CSV grezzi football-data della Serie A)
+                 ricerca_esterna/ (fonti esterne dell'audit: JSON footiqo, i
+                 calendari di coppa per lega, manifest con sha256 e URL)
+                 outright_snapshots/ (prezzi outright live, uno per giorno)
+                 squad_value_2526_transfermarkt.csv (fonte secondaria, regola R2)
                  football.db (SQLite, rigenerabile, NON versionato)
+files/           dati GREZZI versionati: i bundle football-data/Understat di
+                 Premier e Liga (Fase 54, input di build_league_snapshot) e il
+                 dataset player_scores (valori rosa, Fase 67). Nati perche' la
+                 rete era bloccata; la rete e' tornata (Fase 100) ma i bundle
+                 RESTANO — sono la fonte congelata di quelle due leghe e piu' di
+                 uno script li legge. Vedi files/README.md
+worldcup/        esperimento Mondiali, SEPARATO e a bassa fiducia (ancora vuoto):
+                 modello giocattolo, non un test del motore
+.github/         workflow (e file-trigger) di scraping/import: betexplorer,
+                 import_dataset, kaggle-ou-probe
 docs/DIARIO.md   narrazione passo-passo con ragionamento (le decisioni e il perché)
+docs/GLOSSARIO.md  ogni termine del progetto in 1-2 righe, con la fase che lo
+                 introduce; dove una definizione è caduta la voce lo dice
 docs/DATI.md     catalogo di TUTTI i dati (reali e stimati): copertura, semantica
                  quote, fonti, stime dichiarate — aggiornare a ogni modifica dati
 docs/PANCHINA.md la rosa dei modelli: titolari/panchina/bocciati × 2 fronti (§1.9)
@@ -301,6 +376,8 @@ docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
                  CHIUSO alla Fase 100: il dato esiste (1xBet via footiqo) ma NON
                  e' stato inserito — un solo book, peggiore della stima come
                  proxy della media multi-book
+docs/BETEXPLORER_SCRAPER.md   lo scraper della Fase B di quella caccia
+                 (`scripts/scrape_betexplorer.py` + workflow GitHub Actions)
 docs/audit_5_leghe/   gli 11 report integrali dell'audit a 5 leghe (Fase 100) +
                  REGOLE.md + numeri/ (i JSON grezzi dietro ogni tabella).
                  Verbale esteso di cio' che il DIARIO riassume
@@ -322,16 +399,21 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari
+tests/           test unitari (841 verdi al 27/07/2026), fra cui i guardiani
+                 strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
+                 che elenca le stesse leghe di LEAGUE_CONFIGS
 ```
 
 ---
 
 ## 5. Convenzioni sui dati
 
-- **Offline-first**: la pipeline legge lo **snapshot congelato**
-  (`data/serie_a_matches.csv`, versionato). Si scarica dalle fonti solo con
-  `--refresh`/`force_download`. Così i backtest sono riproducibili identici.
+- **Offline-first**: la pipeline legge lo **snapshot congelato** della lega
+  (`data/{serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv`,
+  versionati). Si scarica dalle fonti solo con `--refresh`/`force_download`. Così
+  i backtest sono riproducibili identici. Vale anche ora che la rete è tornata
+  raggiungibile (Fase 100): la raggiungibilità non cambia la regola, lo snapshot
+  resta la fonte dei backtest.
 - **Fonte configurabile in un punto solo** (`src/data/sources.py`): URL, stagioni,
   alias dei nomi squadra (`TEAM_ALIASES` — es. "Hellas Verona" → "Verona": bug
   reale già capitato, attenzione ai nomi quando si aggiunge una fonte).
@@ -420,7 +502,7 @@ ECE senza intervallo letto come conferma, una dicotomia fra "significativo" e
 > `README.md`; la rosa dei modelli in `docs/PANCHINA.md`. Aggiorna QUESTA
 > istantanea quando cambia lo stato di fondo, non a ogni fase.
 
-**Dove siamo (istantanea aggiornata alla Fase 101 + integrazione delle 5 leghe).**
+**Dove siamo (istantanea aggiornata alla Fase 101-ter + integrazione delle 5 leghe).**
 Il progetto è passato da "un modello Dixon-Coles sui gol" a **due motori
 complementari**, su **5 leghe** (Serie A, Premier, La Liga, **Bundesliga,
 Ligue 1**), 9 stagioni ciascuna, **16.111 partite**:
@@ -429,7 +511,9 @@ Ligue 1**), 9 stagioni ciascuna, **16.111 partite**:
    *standalone*, senza quote: config per-lega in `src/config.py`
    (emivita 365g, shrinkage 1.5, blend xG α=0.75, δ neopromosse
    0.23/0.33/0.22/**0.28/0.19**),
-   + la **φ(|λ−μ|)** della Fase 35 sulla famiglia-pareggio. Batte nettamente le
+   + la **φ(|λ−μ|)** della Fase 35 sulla famiglia-pareggio — attiva **solo dove è
+   misurata utile** (Serie A; le altre quattro leghe girano col motore liscio,
+   `src.config.MARKET_ENGINE`). Batte nettamente le
    baseline ma **non il mercato** (gap 1X2 +0.0167 in Serie A — valore al codice
    di HEAD, dopo il fix del prior della Fase 92; il +0.0165 delle fasi
    precedenti è PRE-fix; ordine simile nelle altre leghe).
@@ -458,19 +542,26 @@ usato come prova che «chi vince» fosse a posto — misura ESATTAMENTE la massa
 pareggio. Conseguenza: le leve sul pareggio (12b, 18, φ35) rendevano poco perché
 aggredivano il 12%. Cercare l'informazione mancante nella **discriminazione**.
 
-**Le scoperte che reggono.** (a) Il mercato di **chiusura ingloba il modello**
-(α\*=0 ovunque, Fase 16): non lo si batte in ROI — **non usare per scommettere
-soldi veri**. (b) I gol dati i tassi del mercato sono **sotto-dispersi**
-(double-Poisson θ≈1.2): `sharpen_1x2` batte la chiusura devigata in log-loss con
-CI conclusivo (non in ROI), ed è il **router v3** adottato (`price_markets`,
-θ 1.225 mercato / 1.138 DC). Ma è una proprietà della **chiusura Serie A** (meno
-liquida): non replica su Premier/Liga (Fase 53). (c) Il θ del router è
-**per-contesto** (lega × epoca): ~1.2 in Serie A/Liga, ~1 in Premier, e cresce
-nel tempo (Fasi 75/81). (d) Il **valore residuo** è prezzare *calibrato* i ~17
-mercati che il book non quota (GG/NG, risultato esatto, multigol, total-squadra…)
-e le **correzioni per-lega** (φ35 famiglia-pareggio, θ router); la Fase 82 ha
-verificato per via diretta che l'oracolo è **calibrato e indovina quanto il
-mercato** (non di più).
+**Le scoperte che reggono.** (a) Il mercato di **chiusura ingloba il modello**:
+α\*=0 sull'1X2 (Fase 16) e sul GG/NG (α\* medio 0.060, α\*=0 nel 70% dei fit —
+audit 5 leghe). Non lo si batte in ROI: la config ufficiale dà **ROI −15.8% su
+866 scommesse** (6 stagioni, rimisurato al codice di HEAD alla Fase 101-bis) —
+**non usare per scommettere soldi veri**. ⚠️ «α\*=0 *ovunque*» sarebbe però
+troppo: sull'handicap asiatico α\* = **1.08**, con IC bootstrap che **esclude**
+lo zero (il test non era mai stato eseguito nella Fase 88; rifatto alla Fase 101).
+(b) I gol dati i tassi del mercato sono **sotto-dispersi** (double-Poisson θ≈1.2):
+`sharpen_1x2` batte la chiusura devigata in log-loss con CI conclusivo (non in
+ROI), ed è il **router v3** adottato (`price_markets`, θ 1.225 mercato / 1.138 DC
+— su griglia fine l'argmin sarebbe θ=1.18, ma la differenza è nel rumore, Δ
+−0.00027 IC95 [−0.00083, +0.00027], Fase 101: il valore in config resta 1.225).
+Ma è una proprietà della **chiusura Serie A** (meno liquida): non replica su
+Premier/Liga (Fase 53). (c) Il θ del router è **per-contesto** (lega × epoca):
+~1.2 in Serie A/Liga, ~1 in Premier, e cresce nel tempo (Fasi 75/81). (d) Il
+**valore residuo** è prezzare *calibrato* i ~17 mercati che il book non quota
+(risultato esatto, multigol, total-squadra… e il GG/NG, per cui una quota di
+chiusura esiste solo nel 2017-20 di un book, §1.8) e le **correzioni per-lega**
+(φ35 famiglia-pareggio, θ router); la Fase 82 ha verificato per via diretta che
+l'oracolo è **calibrato e indovina quanto il mercato** (non di più).
 
 **Una famiglia di mercati NUOVA (Fase 89).** Il mercato **campione di stagione**
 (outright) è il primo che NON si deriva dalla matrice di una partita: dipende da
@@ -480,7 +571,12 @@ mercato** (non di più).
 2 stagioni: guadagno +0.2299, IC95% [+0.0108,+0.4542], 14/24 stagioni, e il
 vantaggio è **quasi tutto Premier**) ma è **sovra-confidente** (dichiara 60.1%
 sul favorito, ne azzecca 41.7%): mancano
-l'incertezza dei parametri e la loro evoluzione in-season. Non esistono quote
+l'incertezza dei parametri e la loro evoluzione in-season — e la sovra-confidenza
+è stata **confermata dall'esterno** dal primo confronto con un mercato outright
+vero (Fase 95, prezzi live Polymarket: ordinamento in accordo, corr 0.95-0.98, ma
+troppa massa sul favorito). Va letto sapendo che a n=24 il risultato è **fragile
+alla specificazione della baseline** (Fase 98) e che l'outright **non è testabile
+prospetticamente** (servirebbero 57 stagioni-lega). Non esistono quote
 outright storiche → «battiamo il mercato» NON è testabile all'indietro. È una
 pista **ricorrente**: si riprezza a ogni inizio stagione (promemoria operativo in
 `docs/PISTE.md` §4-bis). Lo strumento per le quote live è
@@ -488,13 +584,15 @@ pista **ricorrente**: si riprezza a ogni inizio stagione (promemoria operativo i
 
 **Le famiglie FUORI dalla matrice dei gol (Fasi 96-99).** Corner e cartellini
 sono un processo **diverso** dai gol (non ridondante) e sono prezzabili
-walk-forward su tutte e 3 le leghe; i mercati **Tier 3** (Halftime, Second Half,
+walk-forward sulle 3 leghe storiche; i mercati **Tier 3** (Halftime, Second Half,
 risultato esatto) si ottengono ri-scalando i tassi con la frazione di gol nel
 primo tempo, **misurata** (f = 0.4396 [0.4338, 0.4458], primo tempo
 Poisson-compatibile, tempi quasi indipendenti) e battono la baseline con IC
 conclusivo. Il **Tier 2** (handicap asiatico) è l'**unico** mercato del listino
 validato contro una quota esterna e indipendente: Brier 0.2044 vs 0.2044 — il
-router prezza il margine come il mercato sharp. Su queste famiglie le correzioni
+router **pareggia** col mercato sharp (ΔBrier −0.000136 [−0.000362, +0.000083],
+IC a cavallo dello zero: «pareggio», non «vittoria» — formulazione rettificata
+alla Fase 101). Su queste famiglie le correzioni
 di forma (binomiale negativa, Fase 98) e di centro (correzione di livello, Fase
 99) valgono il terzo decimale o meno: **il tetto informativo vale anche qui**.
 Il residuo vivo è uno solo, ed è localizzato: il **secondo tempo è mal
@@ -516,8 +614,12 @@ INTERNI sono esplorati (gol/xG/npxG/PPDA/deep/valore-rosa/assenze/riposo/forma/
 stakes: ridondanti o rumore, Fasi 4c-33); GBM bespoke per-mercato (bocciato
 4 volte); Poisson bivariato, copule di Frank, ensemble emivite, draw-inflation,
 ρ dinamico, zero-inflazione, Rue-Salvesen, GAS/state-space (tutti chiusi per
-test o per argomento); più-storia-batte-meno (Fase 25). Il tetto è
-**informativo**, non architetturale.
+test o per argomento); coda-forma a 1 e 2 parametri (Fasi 85-87);
+più-storia-batte-meno (Fase 25). Il tetto è **informativo**, non architetturale.
+⚠️ La **COM-Poisson** della Fase 85 non è una famiglia alternativa da riaprire:
+è la **stessa double-Poisson riparametrizzata** (`dp(θ) ≡ COM-Poisson(ν=θ)`
+mean-matched — coincidono a ≤5e-06 sull'exact-score log-loss e ≤2e-05 sulle
+code), quindi **non** è una conferma indipendente di nulla (rettifica Fase 101).
 
 **Prossimi passi (idee, non impegni).** In ordine di rapporto valore/costo,
 dettaglio in `docs/PISTE.md`:
@@ -531,9 +633,16 @@ dettaglio in `docs/PISTE.md`:
   `LEAGUE_CONFIGS` elenchino le stesse leghe. Nessun residuo aperto sul M2;
 - **test prospettico 2026-27** (Fase 78, stato APERTO): previsioni congelate
   prima del kickoff e scorate dopo — il gold standard, da completare al primo
-  turno con quote reali (`experiments/prospettico_2026_27.md`);
+  turno con quote reali (`experiments/prospettico_2026_27.md`). ⚠️ Con la
+  potenza misurata alla Fase 98 va gestita l'aspettativa: **una giornata su 3
+  leghe vale il 9,8% di potenza**, e per l'80% sull'1X2 servono **574 partite**
+  (2.254 sul GG/NG, 2.988 sull'O/U 2.5). È un test che si accumula, non che si
+  chiude in un weekend;
 - **informazione DAVVERO nuova** (formazioni ufficiali pre-partita, quote
-  live/di apertura raccolte prospetticamente): l'unica leva non ancora esaurita;
+  live/di apertura raccolte prospetticamente): l'unica leva non ancora esaurita —
+  e dalla Fase 100 la rete è tornata raggiungibile, quindi raccoglierla costa
+  meno di prima (elenco aggiornato delle fonti che rispondono in
+  `docs/MANUALE_SOPRAVVIVENZA.md` §1);
 - **mercati non ancora coperti**: HT/FT congiunto, le combinazioni e il live —
   il Tier 2 (handicap asiatico) e il Tier 3 di base sono già coperti (Fasi 88/96/98).
 
@@ -544,12 +653,15 @@ dettaglio in `docs/PISTE.md`:
 **La procedura completa e collaudata (passi 0-5, EDA, tracer, ri-taratura,
 motore, leve della rosa, scelta delle finestre di backtest, checklist) vive in
 `docs/PLAYBOOK_NUOVA_LEGA.md`** — scritta dopo l'onboarding di Premier e Liga
-(Fasi 53-57, 79-80): per ogni lega futura si parte da lì. Qui sotto i principi.
+(Fasi 53-57, 79-80) e ri-usata per Bundesliga e Ligue 1 (Fase 100): per ogni lega
+futura si parte da lì. Qui sotto i principi.
 
 Le **formule** del modello sono universali; gli **iperparametri no**. Vivono in un
 **unico punto di verità**, `src/config.py` (`LEAGUE_CONFIGS`), da cui `backtest.py`
-legge i default: `emivita 365g`, `shrinkage 1.5`, `blend α=0.75`, `blend_signal xg`,
-`promoted_prior δ=0.23`. La classe `DixonColesModel` ha default **neutri** (nessun
+legge i default: `emivita 365g`, `shrinkage 1.5`, `blend α=0.75`, `blend_signal xg`
+— uguali su tutte e 5 le leghe — e `promoted_prior δ`, che è invece **per-lega**
+(0.23 Serie A / 0.33 Premier / 0.22 Liga / 0.28 Bundesliga / 0.19 Ligue 1: l'unico
+numero che l'evidenza ha davvero separato). La classe `DixonColesModel` ha default **neutri** (nessun
 decadimento/shrinkage): la lega-specificità non è mai incisa nel modello. Aggiungere
 una lega = **aggiungere una voce in `LEAGUE_CONFIGS`**, non toccare il codice.
 Trasferire i numeri della Serie A uncritically lascerebbe il modello **sub-ottimo**:
@@ -558,7 +670,11 @@ numero** (regola §2-bis), perché ognuno dipende dai dati di *quella* lega:
 
 - **δ (prior neopromosse)**: `δ = ln(gol_lega / gol_promosse)` — va ricalcolato. In
   Premier le promosse sono notoriamente più deboli → δ probabilmente **maggiore** di
-  0.23. Copiare 0.23 sotto-correggerebbe.
+  0.23. Copiare 0.23 sotto-correggerebbe. *(Confermato: Premier δ = ln(1.419/1.022)
+  = 0.33. Ma attenzione al caso opposto — la **Ligue 1** ha δ=0.19, il più basso del
+  campione: le promosse francesi sono le meno deboli. Il δ per-lega si adotta per
+  MOTIVAZIONE STRUTTURALE, non per guadagno misurato: sulle 5 leghe il guadagno in
+  log-loss è nel rumore, `src/config.py` lo dichiara riga per riga.)*
 - **emivita / shrinkage**: dipendono dalla stabilità delle rose e dal rumore del
   segnale nella lega. Una lega con più turnover → emivita più corta.
 - **α del blend gol/xG**: dipende dalla qualità/copertura dell'xG di quella lega.
@@ -568,17 +684,11 @@ numero** (regola §2-bis), perché ognuno dipende dai dati di *quella* lega:
 Ogni ri-taratura è una fase a sé, con blocco 📐 e riga nel registro. Non esiste "il
 modello": esiste *il modello tarato per la lega X*.
 
-**Bundesliga e Ligue 1 sono state aggiunte** dopo Premier e Liga, con la stessa
-procedura ma senza bundle manuali: il provider era tornato raggiungibile, quindi
-i dati vengono scaricati e sono stati **verificati riga per riga contro la
-fonte** (0 differenze su gol/date/tiri/quote/xG). δ per-lega 0.28 e 0.19; tutto
-il resto identico. Esito: il modello trasferisce, l'edge no — 5 leghe su 5.
-Il dettaglio in `docs/DIARIO.md`; le regole sui dati sporchi nate da quel lavoro
-in §5-bis.
-
-**Premier League e La Liga sono state aggiunte (Fasi 54-57).** Dati grezzi caricati
-a mano come bundle in `files/` (rete bloccata) → snapshot congelati
-`data/{premier_league,la_liga}_matches.csv` via `scripts/build_league_snapshot.py`.
+**Premier League e La Liga sono state aggiunte per prime (Fasi 54-57).** Dati
+grezzi caricati a mano come bundle in `files/` — *all'epoca* la rete era bloccata
+(dalla Fase 100 non lo è più: vedi `docs/MANUALE_SOPRAVVIVENZA.md` §1) → snapshot
+congelati `data/{premier_league,la_liga}_matches.csv` via
+`scripts/build_league_snapshot.py`.
 Config in `LEAGUE_CONFIGS`: **identiche alla Serie A tranne δ** (Premier 0.33, Liga
 0.22 — ri-tarato, ipotesi §7 confermata). Esito cross-lega: **il modello è
 trasferibile** (DC+xG batte la baseline, gap col mercato dello stesso ordine, la
@@ -586,5 +696,15 @@ ri-taratura è piatta = tetto informativo universale) **ma l'edge no** (Fase 53:
 sotto-dispersione decresce con la liquidità del mercato, il tilt e il draw-bias non
 si replicano — il beat-the-close è idiosincratico della chiusura Serie A). γ
 (vantaggio-casa, molto più forte in Liga) è auto-fittato dal DC, non in config.
+
+**Bundesliga e Ligue 1 sono state aggiunte dopo** (Fase 100), con la stessa
+procedura ma **senza bundle manuali**: il provider era tornato raggiungibile,
+quindi i dati si scaricano (`scripts/fetch_sources.py` +
+`scripts/build_new_snapshot.py`, non `build_league_snapshot.py`, che legge i
+bundle) e sono stati **verificati riga per riga contro la fonte** (0 differenze
+su gol/date/tiri/quote/xG). δ per-lega 0.28 e 0.19; tutto il resto identico —
+curve di ri-taratura piatte, 5 leghe su 5. Esito: il modello trasferisce, l'edge
+no. Il dettaglio in `docs/DIARIO.md` e in `docs/audit_5_leghe/`; le regole sui
+dati sporchi nate da quel lavoro in §5-bis.
 
 **Non usare il modello per scommettere soldi veri allo stato attuale.**

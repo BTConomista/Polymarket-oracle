@@ -4,26 +4,53 @@
 > canoniche restano `docs/PISTE.md` (piste), `docs/PANCHINA.md` (rosa dei
 > modelli), `docs/DIARIO.md` (narrazione) e il registro del `README.md`. Qui
 > c'è (a) il **quadro d'insieme** di cosa è aperto, con i rimandi, e (b) le
-> cose che **non vivono ancora da nessuna parte**: i tre punti operativi e il
+> cose che **non vivono ancora da nessuna parte**: i punti operativi e il
 > brainstorming.
 >
 > **Regola d'uso**: quando una voce si chiude, si aggiorna la **fonte
 > canonica** e poi questa riga. Se questo file e PISTE/PANCHINA divergono,
 > **hanno ragione loro**.
 >
-> Scritto il **26 luglio 2026**, dopo la Fase 97; **aggiornato dopo le Fasi 98-99**
-> (sette fronti: vedi il registro del README e l'arco 11 del diario). Il piano *datato* per l'inizio
-> stagione sta in [`newseason.md`](newseason.md): quello ha una scadenza
-> (16 agosto), questo no.
+> **Regola aggiunta il 28/07/2026**: questo file **non duplica più i
+> conteggi** (piste aperte, caselle `⬜`). Un indice che incide numeri che
+> vivono altrove diventa stantio nel giro di una sessione — ed era già
+> successo due volte. Dove serviva un numero, ora c'è un **rimando** e, dove
+> utile, il **comando per ri-contarlo**.
+>
+> Scritto il **26 luglio 2026** dopo la Fase 97; aggiornato dopo le Fasi 98-99,
+> dopo l'ingresso di Bundesliga e Ligue 1 (Fase 100) e **il 28 luglio 2026**
+> con gli esiti dell'audit (Fasi 101 / 101-bis / 101-ter). Il piano *datato*
+> per l'inizio stagione sta in [`newseason.md`](newseason.md): quello ha una
+> scadenza (**16 agosto**), questo no.
 
 ---
 
-> 🗓️ **Stato dell'audit al 27/07/2026 (Fase 101-ter).** Dei 13 punti aperti di
-> `docs/AUDIT_FASI_80_100.md` §4 ne restano **3**: le 18 celle `⬜` della
-> PANCHINA che l'audit integrato ha già misurato (punto 6), il refresh dei
-> documenti storici (punto 13, parziale), e il riporto della Fase 100 dentro
-> `STUDIO_PREMIER_LIGA.md`. Tutto il resto è chiuso ed è datato nel verbale.
-> **Nessuno dei tre tocca il modello**: sono documentazione.
+> 🗓️ **Stato dell'audit al 28/07/2026.** Dei 13 punti aperti di
+> `docs/AUDIT_FASI_80_100.md` §4 ne restano **3**, e **nessuno tocca il
+> modello**:
+> 1. **punto 6** — le **18 celle `⬜` della PANCHINA che l'audit integrato ha
+>    già misurato** (più quattro leve misurate senza riga, la sezione «I
+>    titolari» ferma a 3 leghe, e «CI<0» usato con due significati opposti);
+> 2. **punto 13** — i documenti storici da rinfrescare (`PLAYBOOK_NUOVA_LEGA`,
+>    `STUDIO_PREMIER_LIGA`, `MANUALE_SOPRAVVIVENZA`, `GLOSSARIO`, le sezioni
+>    «Struttura»/«Archivio dati» del README): **in lavorazione nella sessione
+>    del 28/07**, che ha allineato in parallelo tutti i documenti del repo;
+> 3. il **riporto della Fase 100 dentro `STUDIO_PREMIER_LIGA.md`** (le due
+>    leghe nuove non sono ancora entrate in quel quaderno).
+>
+> Restano inoltre le **code dei punti 1 e 2**, chiusi nel README ma non
+> ovunque: il numero-bandiera aggiornato (**+0.0167 / log-loss 0.9799** contro
+> il **+0.0165 / 0.9797 PRE-fix Fase 92**; ROI **−15.8%** su **866**
+> scommesse) e la rettifica della **COM-Poisson** (`dp(θ) ≡ COM-Poisson(ν=θ)`
+> mean-matched: **non** è una conferma indipendente; su griglia fine l'argmin è
+> **θ=1.18**, Δ −0.00027 IC95 [−0.00083, +0.00027], nel rumore) vanno propagati
+> anche a `CLAUDE.md`, `PANCHINA`, `PISTE` e `GLOSSARIO`. Anche questo è
+> lavoro **documentale**, non di modello.
+>
+> I minori non corretti (script con radice o cache incise, lo snippet di
+> `experiments/README.md` che solleva `KeyError`, il ramo silenzioso di
+> `audit_snapshots.py`) sono elencati nel **cappello** di
+> `docs/AUDIT_FASI_80_100.md` §4: mezza giornata a spizzichi.
 
 ## 0 · Il quadro in tre righe
 
@@ -33,9 +60,9 @@ provate e bocciate. Quindi il lavoro aperto si divide in tre famiglie:
 
 1. **cose mai provate che non costano dati nuovi** (le più economiche, §2-§3);
 2. **cose che richiedono informazione nuova** — l'unica leva non esaurita, e
-   dopo la Fase 93 sappiamo *esattamente* dove punta: **partite equilibrate,
-   seconda metà di stagione** (§4);
-3. **mercati mai coperti** (Tier 2 e Tier 3, §5).
+   dopo la Fase 93 sappiamo *dove* punta: **partite equilibrate, seconda metà
+   di stagione** (§4);
+3. **mercati mai coperti** (le combinazioni del Tier 3 e il live, §5).
 
 ---
 
@@ -47,107 +74,116 @@ il look-ahead è impossibile per costruzione, non per disciplina.
 
 | pezzo | stato |
 |---|---|
-| `experiments/prospettico_2026_27.md` | esiste (impostazione) |
-| `experiments/prospettico_2026_27_dc.csv` | esiste |
-| `experiments/prospettico_2026_27_outright.json` | **congelato** (Fase 96) |
-| **livello-partita** | ❌ **manca** |
+| `experiments/prospettico_2026_27.md` | esiste (impostazione **+ checklist eseguibile**, §5) |
+| `experiments/prospettico_2026_27_dc.csv` | esiste, ma **illustrativo**: 7 partite Premier *plausibili*, congelate il 2026-07-23 |
+| `experiments/prospettico_2026_27_outright.json` | **congelato il 2026-07-25** (Fase 95), ma su **3 leghe su 5** (`serie_a`, `premier_league`, `la_liga`) |
+| **fixture ufficiali** giornata 1 | ❌ **mancano** |
+| **livello-partita congelato** | ❌ **manca** |
 | **script di scoring** | ❌ **manca** |
 
-⏰ **Ha una scadenza vera: 16 agosto** (via della Liga). Il piano operativo,
-con le date e la checklist, è in [`newseason.md`](newseason.md) §5.
+⏰ **Ha una scadenza vera: 16 agosto** (via della Liga). Le **date** e il
+*perché* stanno in [`newseason.md`](newseason.md); i **comandi**, i file e i
+timebox in `experiments/prospettico_2026_27.md` §5. Vincolo di disegno da non
+dimenticare: con **una** giornata la potenza contro il mercato è 9,8% (Fase 98)
+— la soglia è ~574 partite, cioè ~12 giornate su 5 leghe.
 
 ---
 
-## 2 · `docs/PISTE.md` — 23 voci, **17 ancora aperte**
+## 2 · Le piste — lo stato canonico è `docs/PISTE.md` §0-bis
 
-Conteggio verificato il 26/07/2026. Ordinate per costo crescente, come nel file.
+`docs/PISTE.md` ha dalla Fase 101-ter un **indice di stato** (§0-bis) che dice,
+pista per pista, se è aperta, parziale o chiusa, e rimanda alla voce estesa.
+**Non si duplica qui**: quello è il conteggio buono, questo è l'ordine di
+priorità.
 
-### Senza dati nuovi (solo codice sugli snapshot già in repo)
+Cosa conta *adesso*, in ordine di rapporto valore/costo (i dettagli e i numeri
+sono nella voce di PISTE indicata):
 
-| # | pista | stato |
-|--:|---|---|
-| 1 | **Scontri diretti (head-to-head)** — accoppiamento specifico della coppia | 🟢 mai provata. *Zero occorrenze in 68 fasi: un vuoto sorprendente.* Angolo consigliato: **totali/GG**, non 1X2 |
-| 2 | **Covariate anche nel sotto-modello xG** | 🟢 mai provata. Potrebbe far riemergere covariate borderline bocciate *per diluizione* (α=0.75), non perché nulle |
-| 3 | **Denoising cross-partita dei λ,μ impliciti** | 🟢 mai provata |
-| 4-bis | **θ del router come funzione del MARGINE** | 🟢 mai provata. Unificherebbe F53 (θ ↓ con la liquidità) e F75 (θ ↑ nel tempo) in **una curva universale** |
-| 4-quater | **θ_team per gli esiti rari** (LEAD, F86) | 🟢 mai provata |
-| 4 | Market-implied multi-mercato su Premier/Liga | ✅ **chiusa positiva** (F76: 13/14 mercati su 3 leghe) |
-| 4-ter | Coda a due parametri (tensione di profondità) | ✅ **chiusa** (F87: riprodotte, non adottabili) |
+| priorità | pista | perché adesso |
+|---|---|---|
+| ⭐ 1 | **6-bis · modello a DUE STADI del secondo tempo** (game-state) | è **il residuo vivo** del progetto: localizzato, non-artefatto, sui dati che già abbiamo, e primo mattone dell'in-play |
+| 2 | **6-ter · HT/FT congiunto e combinazioni** | costo quasi nullo una volta che il Tier 3 di base è coperto (F98) |
+| 3 | **9 · Pinnacle puro** come benchmark singolo-book | nei grezzi **già scaricati**, mai estratta: è *il* riferimento di efficienza |
+| 4 | **8 · quota massima (best-price)** → ROI realistico | idem, e cambia il metro di tutti i ROI del progetto (oggi usano la media) |
+| 5 | **1 · scontri diretti (H2H)**, puntati su **totali/GG** | zero occorrenze in tutto il progetto: un vuoto sorprendente, e non costa dati |
+| 6 | **15 · altre linee O/U (multi-linea)** | una fonte candidata **è già in repo** (1xBet/footiqo 2017-20) |
+| 7 | **12 · seconda serie → prior neopromosse individualizzato** | bersaglio puntuale: sbagliamo di **+19.6pp** proprio sulle neopromosse (F97) |
+| 8 | **13 · meteo** | ferma solo per mancanza di fonte, e **open-meteo è gratis e senza chiave** (§6.2) |
+| 9 | **10 · formazioni ufficiali a T−1h** | *la più preziosa* (§4) ma **solo prospettica**: il surrogato storico è BOCCIATO (F98, correla +0.9603 col valore rosa) |
+| 10 | **11 · `transfers.csv` (shock di gennaio)**, **17 · paper-trading draw-bias**, **18 · in-play** | hanno una finestra temporale propria: gennaio, o la stagione in corso |
 
-### Nei grezzi **già scaricati** e mai estratti (nessuna rete!)
-
-| # | pista | stato |
-|--:|---|---|
-| 5 | **Handicap asiatico** → terzo vincolo per l'inversione market-implied | 🟢 mai estratta. È anche il **Tier 2** (§5) |
-| 6 | **Primo tempo** (HTHG/HTAG/HTR) → Tier 3 + fondazione live | ✅ **chiusa positiva (F98)**: f=0.4396 misurata, 3 mercati Tier 3 validati con IC conclusivo. 🟢 **resta aperto il residuo**: il 2T è mal calibrato (game-state) → modello a due stadi |
-| 8 | **Quota massima** (MaxC\*/Max\*) → ROI realistico | 🟢 mai estratta. Tutti i ROI del progetto usano la media: col massimo cambierebbero |
-| 9 | **Pinnacle puro** (PS\*/PSC\*) come benchmark singolo-book | 🟢 mai estratta. È *il* riferimento di efficienza |
-| 7 | Statistiche partita (corner, tiri, falli, cartellini) | 🟡 **parziale**: corner e cartellini fatti (F96) + NB (F98, trascurabile); **tiri totali e falli no**; arbitro ❌ chiuso (F98) |
-| **7-bis** | **Correzione di LIVELLO dei conteggi** (lead F98) | ❌ **chiusa NEGATIVA (F99)**: 5 stimatori + emivita alla radice, nessuno migliora, 5/8 celle peggiorano con IC conclusivo. Il bias di fold **non persiste** (10/18 stesso segno) → era rumore aggregato, non deriva. Riaprirla richiede informazione nuova (regolamento/direttive arbitrali), non un estimatore migliore |
-
-### Fonte esterna nuova
-
-| # | pista | stato |
-|--:|---|---|
-| 10 | **Formazioni ufficiali** → assenze VERE | 🟢 aperta — *la più preziosa* (§4). **F98: il surrogato storico è BOCCIATO** (correla +0.9603 col valore rosa; nulla sul bersaglio F93) → resta solo la **formazione ufficiale a T−1h raccolta prospetticamente**. È un argomento *a favore* della raccolta: esclude la scorciatoia |
-| 11 | `transfers.csv` → shock di gennaio | 🟢 aperta (va raccolto **a gennaio**) |
-| 12 | Risultati di seconda serie → prior neopromosse individualizzato | 🟢 aperta. Puntuale dopo la F97: sbagliamo di **+19.6pp** proprio sulle neopromosse |
-| 13 | **Meteo pre-partita** | 🟢 aperta — ferma per mancanza di fonte, ma **open-meteo è gratis e senza chiave** (§6.2) |
-| 15 | Altre linee O/U (multi-linea) per vincolare λ,μ | 🟢 aperta |
-| 14 | Bundle Understat Premier/Liga | ✅ **chiusa positiva** (F54-57) |
-
-### Raccolta prospettica (mesi, non giorni) — **tutte legate a §7**
-
-| # | pista | stato |
-|--:|---|---|
-| 16 | **GG/NG quotato + aperture vere** | ✅ **premessa CADUTA (F100)**: le quote GG/NG esistono (1xBet, 5.337 partite 2017-20) e la domanda è misurata — mercato informativo, il nostro prezzo lo pareggia, il DC perde. Resta aperta **solo** la raccolta prospettica sulle stagioni recenti |
-| 17 | Paper-trading della strategia draw-bias | 🟢 aperta |
-| 18 | **Dati in-play** (quote minuto per minuto) | 🟢 aperta — esiste solo *durante* la stagione. **F98: la fondazione offline c'è** (pista 6) e il modello a due stadi si può provare **senza rete** |
-| 19 | Quote O/U 2017-19, chiusura vera | ✅ **CHIUSA (F100)**: dato trovato (1xBet via footiqo, 3.652/3.652) ma **non inserito** — un solo book, peggiore della stima come proxy multi-book |
+Chiuse di recente, per non riproporle: **19** (O/U 2017-19 di chiusura: dato
+**trovato e NON inserito** — un solo book), **16** (GG/NG: premessa caduta,
+resta solo la raccolta prospettica), **7-bis** (correzione di livello dei
+conteggi: chiusa NEGATIVA alla F99), **4-quater** (θ_team), **4-ter** (coda a
+due parametri). Motivi ed esiti nelle voci di PISTE: **il motivo è la parte
+che serve**, perché è ciò che impedisce di rifarle.
 
 ---
 
-## 3 · `docs/PANCHINA.md` — **134 caselle ⬜** (mai testato lì)
+## 3 · `docs/PANCHINA.md` — le caselle `⬜` (mai testato lì)
 
 Il principio §1.9 impone due fronti per ogni modello: **per-lega** e
-**generale**. La matrice ha **134** celle `⬜` — e la legenda del file lo dice
-esplicitamente: *«è lavoro potenziale, non un'assoluzione»*.
+**generale**. La matrice della PANCHINA ha molte celle `⬜`, e la legenda del
+file lo dice esplicitamente: *«è lavoro potenziale, non un'assoluzione»*.
 
-> Il conteggio era **24** e vale 138 dal 26/07/2026 (ri-contato dall'audit della
-> Fase 101): non è lavoro andato perduto, è la matrice che è passata da 4 a 6
-> colonne quando Bundesliga e Ligue 1 sono entrate in produzione (Fase 100).
-> Ogni modello ha ora due colonne-lega in più da riempire.
-> **Da 138 a 134** nella stessa Fase 101: la riga COM-Poisson ha perso le sue 4
-> caselle vuote perché ha smesso di essere un modello a sé (`dp(θ) ≡
-> COM-Poisson(ν=θ)` — non c'è nulla da testare su quelle colonne).
+> **Il numero corrente si legge dalla PANCHINA, non da qui.** Storia del
+> conteggio, che spiega perché è cresciuto senza che si perdesse lavoro: era
+> **24** finché le leghe erano 3; è salito quando la matrice è passata da 4 a 6
+> colonne con l'ingresso di Bundesliga e Ligue 1 (Fase 100) — ogni modello ha
+> due colonne-lega in più da riempire; ed è sceso di 4 alla Fase 101, quando la
+> riga COM-Poisson ha smesso di essere un modello a sé (`dp(θ) ≡
+> COM-Poisson(ν=θ)`: non c'è nulla da testare su quelle colonne).
 >
-> Come si ri-conta: `sum(l.count('⬜') for l in open('docs/PANCHINA.md') if
-> l.strip().startswith('|'))` dà **134**; il file ne contiene 136, perché due
-> stanno nelle legende (righe 20 e 54) e non sono celle della matrice.
+> Come si ri-conta (le celle della matrice, escluse le legende):
+> ```bash
+> python - <<'EOF'
+> n = sum(l.count('⬜') for l in open('docs/PANCHINA.md') if l.strip().startswith('|'))
+> print(n)
+> EOF
+> ```
+> Il file ne contiene qualcuna in più, perché alcune stanno nelle **legende** e
+> non sono celle della matrice: il filtro `startswith('|')` da solo non basta a
+> distinguerle, controllare a vista se il numero deve essere citato altrove.
 
 **La forma del buco**: quasi tutti i modelli in **panchina** o **bocciati** sono
 stati provati **solo sulla Serie A**. Nessuno sa cosa facciano altrove.
 
-| famiglia | modelli con Premier/Liga/generale mai testati |
+| famiglia | modelli con Premier/Liga/Bundesliga/Ligue 1/generale mai testati |
 |---|---|
 | 🪑 **in panchina in Serie A** (potrebbero essere titolari altrove) | nudge GG/NG di fine stagione (F48), ensemble emivite 180+730 (F12a), ricalibrazione per-classe del modello (F10), diagonale inflazionata (F12b), temperature scaling post-hoc (F6) |
 | ❌ **bocciati in Serie A** (una bocciatura su una lega non è universale) | Poisson bivariato λ3, copula di Frank, GAS/state-space, binomiale negativa · zero-inflazione · Rue-Salvesen, ρ dinamico, power-devig, covariata stakes, vantaggio-casa per-squadra, covariate nel canale-pareggio, ricalibrazione O/U, ensemble standalone, blend modello+mercato, profilo stagionale dinamico, tiri in porta grezzi, covariate squad_value/absence/npxG/forma/luck/ppda/deep |
 
 ⚠️ **Attenzione al costo-opportunità.** Riaprire un modello bocciato su un'altra
-lega è economico ma raramente paga: la Fase 79-80 ha già mostrato che diverse
+lega è economico ma raramente paga: le Fasi 79-80 hanno già mostrato che diverse
 leve della Serie A **non si replicano** (φ35 sul path DC, `rest_full`,
-`midweek_europe`, il draw-bias). La priorità onesta è **bassa** — salvo dove c'è
-una ragione strutturale, non solo una casella vuota.
+`midweek_europe`, il draw-bias), e la Fase 100 lo ha confermato sulle due leghe
+nuove (router θ negativo su 0/25 mercati). La priorità onesta è **bassa** —
+salvo dove c'è una ragione strutturale, non solo una casella vuota.
+
+**Eccezione a priorità alta**: le **18 celle che l'audit integrato ha già
+misurato** (punto 6 del verbale). Lì il lavoro è fatto e manca solo la
+trascrizione: è documentazione, non ricerca.
 
 ---
 
 ## 4 · Il bersaglio misurato (dove conviene davvero cercare)
 
-Non è un'opinione, è la Fase 93:
+Non è un'opinione, è la Fase 93 — **con le rettifiche dell'audit della Fase 101,
+che ne indeboliscono due affermazioni su quattro senza cambiare la direzione**:
 
-- il deficit è **104% informazione e −4% calibrazione** → **nessuna
-  ricalibrazione può chiudere il gap**, è misurato, non provarci più;
-- siamo perfino **meglio calibrati del mercato** (0.00083 contro 0.00125);
+- il deficit è **informazione, non calibrazione** → **nessuna ricalibrazione
+  può chiudere il gap**. ⚠️ Le quote «**−4% calibrazione / +104%
+  informazione**» sono normalizzate sulla parte che la scomposizione
+  **attribuisce**: **0.0094 sui 0.0215** del deficit, cioè il **44%** — il
+  restante **56% resta non attribuito**;
+- l'unico termine **conclusivo** è la **risoluzione**: 0.05270 contro 0.06251,
+  **+0.00981 [+0.00747, +0.01246]**;
+- ⚠️ **DECLASSATA**: «siamo perfino meglio calibrati del mercato» (0.00083
+  contro 0.00125) **non regge** — IC95 **[−0.00135, +0.00049]**, segno che si
+  inverte a 50 e 100 fasce, ed entrambi i valori sono al pavimento di rumore
+  (p95 = 0.00083 sotto calibrazione perfetta). Ciò che resta vero, e basta per
+  decidere: **dalla calibrazione non c'è niente da prendere**;
 - **sui mismatch siamo quasi alla pari** (−0.00198); **sulle equilibrate il
   mercato stacca** (−0.00793, **quattro volte tanto**);
 - la forbice **si allarga durante la stagione** (−0.00829 nelle prime 5
@@ -171,14 +207,16 @@ Cioè: **lo stesso profilo del deficit F93**. L'informazione che manca è in buo
 parte quella che **arriva nelle ultime ore prima del fischio** — che è
 esattamente ciò che le formazioni ufficiali a T−1h (pista 10) contengono. Ordine
 di grandezza onesto: tutto il movimento vale **15,6% del nostro gap**;
-prendendolo *interamente* (impossibile) resteremmo a +0.0151 contro +0.0179. È
-una direzione, non una soluzione.
+prendendolo *interamente* (impossibile) resteremmo a +0.0151 contro +0.0179
+(numeri interni alla Fase 98, misurati **PRE-fix del prior della Fase 92**: il
+gap ufficiale al codice di HEAD è **+0.0167**). È una direzione, non una
+soluzione.
 *(Autocorrezione: l'ipotesi «il deficit è 4× più grande sulle partite più mosse»
 NON sopravvive al placebo — vera +0.0311 contro artefatto +0.0524.)*
 
 ---
 
-## 5 · Mercati mai coperti — Tier 2 e Tier 3
+## 5 · Mercati coperti e mercati mai coperti — Tier 2 e Tier 3
 
 Il `CLAUDE.md` §1.8 definisce tre livelli. **Tier 1 è coperto** (1X2, O/U
 1.5/2.5/3.5, GG/NG, doppie chance, total-squadra, clean sheet, vince-a-zero,
@@ -187,45 +225,47 @@ posizionali** (F89/F91) e **corner/cartellini** (F96).
 
 | tier | mercati | stato | prerequisito |
 |---|---|---|---|
-| **Tier 2** | **handicap asiatico** | ✅ **coperto** (F88 benchmark + F98 listino: Brier 0.2044 vs 0.2044, Δ −0.0000 — **l'unica riga del listino che regge un'affermazione di efficienza**) | — |
-| **Tier 3** | **HT/FT**, mercati per tempo | 🟡 **tre mercati coperti** (F98: Halftime +0.0537, Second Half +0.0578, risultato esatto +0.1940, tutti IC conclusivo vs baseline); mancano HT/FT congiunto e le altre combinazioni | — |
-| Tier 3+ | **live / in-play** | ❌ scoperto | pista 18 (raccolta prospettica) |
+| **Tier 2** | **handicap asiatico** | ✅ **coperto** (F88 benchmark + F98 listino): **pareggio in Brier** col mercato sharp, 0.2044 vs 0.2044, ΔBrier −0.000136 [−0.000362, +0.000083]. ⚠️ **rettifica F101**: l'affermazione «α\*=0 su un mercato nuovo» non fu mai calcolata — rifatta dà α\* **+1.082** [+0.143, +2.026], IC che **esclude** lo zero. La conclusione onesta è il pareggio, non l'encompassing | — |
+| **Tier 3** | **HT/FT**, mercati per tempo | 🟡 **tre mercati coperti** (F98: Halftime +0.0537, Second Half +0.0578, risultato esatto +0.1940, tutti IC conclusivo vs baseline); mancano **HT/FT congiunto** e le combinazioni (pista 6-ter) | — |
+| Tier 3+ | **live / in-play** | ❌ scoperto | pista 6-bis (offline, gratis) **poi** pista 18 (raccolta prospettica) |
 
-Il Tier 3 è anche la **fondazione dei mercati live**, che è la direzione con più
-mercato reale — ma richiede il primo tempo (pista 6) come mattone.
+Il residuo vivo è uno solo ed è localizzato: il **secondo tempo è mal
+calibrato** mentre il primo, che passa per lo stesso codice, non lo è → è
+**game-state**, e chiede il modello a due stadi (1T indipendente → 2T
+condizionato al punteggio dell'intervallo). È anche il primo mattone
+dell'in-play, e **si prova senza rete**.
 
 ---
 
-## 6 · I tre punti operativi
+## 6 · I punti operativi
 
-### 6.1 · Ri-sondare le fonti **dal runner GitHub Actions** ⭐
+### 6.1 · Ri-sondare le fonti — ✅ in gran parte FATTO, e il resto vale meno
 
-Il proxy di una sessione cloud e il runner Actions hanno **IP e regole
-diverse**, e non è mai stato verificato in modo sistematico. Un workflow
-`probe.yml` che prova ~20 host e committa una tabella di esiti costa **un'ora**.
+> ⚠️ **SUPERATA dalla Fase 100** (verificato il 26/07/2026, ri-testato host per
+> host il **28/07/2026**): la rete **è tornata raggiungibile**. Rispondono 200
+> `football-data.co.uk`, `understat.com`, `transfermarkt.com`, Kaggle via
+> `kagglehub`, `footiqo.com`, `gamma-api.polymarket.com`, `api.smarkets.com`, e
+> dal 27/07 anche `huggingface.co`, `datasets-server.huggingface.co`,
+> `data.jsdelivr.com`. Bundesliga e Ligue 1 sono infatti state scaricate
+> direttamente, senza bundle a mano.
+>
+> **La mappa autorevole e corrente è `docs/MANUALE_SOPRAVVIVENZA.md` §1**: qui
+> non si duplicano gli esiti host per host, perché lì sono datati e aggiornati.
 
-**Perché è il punto con il rapporto valore/costo più alto**: la Fase 97 ha
-dimostrato che le etichette «presumibilmente bloccato» erano **sbagliate** —
-`oddsportal.com` e `betexplorer.com` rispondevano da mesi e nessuno aveva
-provato. Due candidati cambierebbero parecchio:
+Cosa resta, e vale molto meno di prima:
 
-> ⚠️ **SUPERATA dalla Fase 100** (verificato il 26/07/2026, audit Fase 101):
-> la rete **è tornata raggiungibile**. Rispondono 200 `football-data.co.uk`,
-> `understat.com`, `transfermarkt.com` e Kaggle via `kagglehub` — infatti
-> Bundesliga e Ligue 1 sono state scaricate direttamente, senza bundle a
-> mano. Restano davvero da provare solo **Betfair** e **SofaScore**; per
-> `oddsportal.com` il vincolo non è tecnico ma il `robots.txt` (pagine
-> storiche vietate) e BetExplorer ha ritirato le quote vecchie.
-> Stato aggiornato in `docs/MANUALE_SOPRAVVIVENZA.md` §1.
-> La colonna «qui» qui sotto è quindi **storica**, non lo stato di oggi.
+- un `probe.yml` **dal runner GitHub Actions** per i pochi host che da qui non
+  rispondono davvero (**Betfair** e **SofaScore** in testa) e per verificare il
+  **vincolo geo/ADM** di oddsportal e betexplorer, che dipende dall'IP e non
+  dall'ambiente. Costo: un'ora. Non è più «il punto a valore più alto»;
+- `oddsportal.com`: il vincolo **non è tecnico** ma il `robots.txt` (pagine
+  storiche vietate) più un feed cifrato; `betexplorer.com` ha **ritirato** le
+  quote vecchie. Entrambi: chiusi per merito, non per rete.
 
-| fonte | cosa darebbe | qui | da Actions |
-|---|---|---|---|
-| **Betfair Exchange** | la borsa più liquida al mondo; **movimento quote pre-partita** (§7.2) | 403 | ❓ |
-| **football-data.co.uk** | è la **nostra fonte primaria**: oggi vive solo di bundle caricati a mano | 403 | ❓ |
-| SofaScore | formazioni, statistiche live | 403 | ❓ |
-| Understat | xG Premier/Liga | 403 | ❓ |
-| Transfermarkt | valori rosa (oggi recupero manuale) | bloccato | ❓ |
+**Lezione che resta valida** (Fase 97, riconfermata il 28/07): «presumibilmente
+bloccato» **non è un dato**, e un codice di stato va letto insieme al modo in
+cui è stato chiesto — `000` (timeout) ≠ `403` (rifiuto) ≠ `404` da filtro
+anti-bot ≠ `401` (la richiesta è **uscita**).
 
 ### 6.2 · Fonti mai sondate
 
@@ -233,28 +273,28 @@ provato. Due candidati cambierebbero parecchio:
 |---|---|---|
 | **open-meteo.com** | meteo storico + previsto, **senza chiave, gratis** | **sblocca la pista 13**, ferma solo per mancanza di fonte |
 | **Kalshi** | terza borsa — **risponde già** (verificato) | da capire se copre il calcio europeo |
-| **The Odds API** | **molti bookmaker insieme, Pinnacle incluso** → sblocca la pista 9 | free tier 500 req/mese: basta per gli outright, non per le partite. **Serve una registrazione gratuita: decisione dell'utente** |
-| FotMob / API non ufficiali | formazioni pre-partita | fragile |
+| **The Odds API** | **molti bookmaker insieme, Pinnacle incluso** → sblocca la pista 9 | verificato: 200 ma **401 senza chiave**. Free tier 500 req/mese: basta per gli outright, non per le partite. **Serve una registrazione gratuita: decisione dell'utente** |
+| FotMob / API non ufficiali | formazioni pre-partita | fragile: `/api/*` vietato dal loro `robots.txt`, e l'URL senza `#matchId` rende un'altra partita |
 
-### 6.3 · GG/NG: il mercato che si può aprire **subito**
+### 6.3 · GG/NG: non è più «il mercato con lo spazio aperto»
 
 > ⚠️ **La premessa di questo paragrafo è CADUTA (Fase 100).** Il `CLAUDE.md`
 > §1.8 diceva che il GG/NG è «l'unico mercato senza quote nei dati, quindi
 > l'unico con spazio non ancora chiuso»: le quote **esistono** (1xBet via
-> footiqo, 5.337 partite 2017-20 su 5 leghe) e la domanda è stata **misurata**.
-> Il mercato GG/NG è informativo (0.6840 contro 0.6921), il nostro prezzo lo
-> **pareggia** e il DC **perde** (+0.0104, con il book che lo ingloba).
-> La raccolta prospettica resta utile — book diverso, stagioni recenti che
-> nessuno quota — ma **non** perché «non abbiamo quote».
+> footiqo, **5.337 partite 2017-20** su 5 leghe) e la domanda è stata
+> **misurata**. Il mercato GG/NG **è informativo** (log-loss **0.6840** contro
+> **0.6921** di baseline, CI conclusivo), il nostro miglior prezzo lo
+> **pareggia e non lo batte** (6 varianti su 6 con CI a cavallo dello zero) e
+> il DC **perde di netto** (**+0.0104** [+0.0063, +0.0145], col book che lo
+> ingloba: α\*=0 nel 70% dei fit). **Lo "spazio" non era una proprietà del
+> mercato: era la nostra ignoranza.**
 
-Il `CLAUDE.md` §1.8 diceva che il GG/NG è **l'unico mercato senza quote nei
-dati** (football-data non le include), quindi **l'unico dove non abbiamo mai
-potuto dimostrare l'efficienza del mercato** — *«l'unico con spazio non ancora
-chiuso dai risultati delle Fasi 14/16/20»*.
-
-**Polymarket lo quota** (`BTTS`, negli eventi "More Markets"). Raccogliendolo da
-subito, fra una stagione la **pista 16 si chiude in un senso o nell'altro**.
-**Costo marginale zero**: il raccoglitore di §7.1 lo prende già.
+~~Il GG/NG è **l'unico mercato senza quote nei dati**, quindi **l'unico dove non
+abbiamo mai potuto dimostrare l'efficienza del mercato**.~~
+Quel che resta, ed è comunque vero: **Polymarket lo quota** (`BTTS`, negli
+eventi "More Markets") e il book non lo quota nelle **stagioni recenti**.
+Raccoglierlo da subito costa **zero** — il raccoglitore di §7.1 lo prende già —
+e dà un campione su un **book diverso** e su anni che nessun archivio copre.
 
 ---
 
@@ -266,14 +306,17 @@ subito, fra una stagione la **pista 16 si chiude in un senso o nell'altro**.
 
 ### 7.1 · Aggiornamento **giornaliero** dell'elenco mercati
 
-Oggi l'archivio ha **poche istantanee**: fotografa un istante, non un
-movimento. Con una istantanea al giorno diventa una **serie storica**, ed è
-un'altra cosa: si vede *come si muovono* le quote outright durante la stagione
-(la favorita che scivola dopo tre pareggi, la neopromossa che affonda).
+**Stato misurato (28/07/2026)**: `data/outright_snapshots/` contiene **2
+istantanee** (`2026-07-25.json` e `2026-07-26.json`) per **930 righe** in
+`history.csv`. Cioè: fotografa un istante, **non un movimento**. Con una
+istantanea al giorno diventa una **serie storica**, ed è un'altra cosa: si vede
+*come si muovono* le quote outright durante la stagione (la favorita che scivola
+dopo tre pareggi, la neopromossa che affonda).
 
 - comando già pronto e idempotente: `python scripts/archive_outrights.py`
+  (**due fonti** in un colpo: Polymarket + Smarkets)
 - costo: ~250-450 righe/giorno → trascurabile
-- **serve solo il cron**: GitHub Actions (§7.4)
+- **serve solo il cron**: GitHub Actions (§7.4). È l'unico pezzo mancante.
 
 ### 7.2 · Movimento quote **pre-partita** (l'idea Betfair)
 
@@ -290,7 +333,9 @@ mai avuta a nessuna scala**, per nessuna lega, in nessuna stagione.
    chiusura? (la F16 dice che la chiusura ingloba il *nostro modello*, non che
    inglobi il *proprio percorso*);
 2. il movimento identifica le chiusure **più affilate** → un θ per-partita
-   invece che per-lega, che è esattamente la **pista 4-bis**;
+   invece che per-lega, che è esattamente la **pista 4-bis** (la cui versione
+   per-lega è stata **falsificata** dalla Fase 100: resta viva solo la
+   per-partita);
 3. quanto vale, in log-loss, arrivare **in anticipo** su una linea?
 
 **Fonte**: Smarkets ce l'ha già (l'abbiamo), Betfair sarebbe meglio (più
@@ -359,22 +404,31 @@ segnalare?
 
 ## 8 · Ordine consigliato per la prossima sessione
 
-1. **Il blocco con la scadenza**, da [`newseason.md`](newseason.md): sondaggi →
-   pre-registrazione dei criteri → raccoglitore → previsioni congelate.
-   **Entro il 16 agosto**, il resto no.
-2. **`probe.yml` dal runner** (§6.1) — un'ora, può sbloccare mezza lista.
-3. ⭐ **Il modello a DUE STADI per il secondo tempo** (pista 6, residuo F98): il
-   primo residuo *localizzato e non-artefatto* trovato da parecchie fasi, ed è
-   anche il primo mattone dell'in-play — sui dati che già abbiamo.
-4. **Le piste nei grezzi già scaricati rimaste** (§2: 8, 9): nessuna rete,
-   nessuna attesa. *(La 5 e la 6 sono state aperte da F88/F98: Tier 2 e Tier 3
-   non sono più scoperti.)*
-5. **La coda a zero** (`docs/PISTE.md`, pista aperta dalla F97) — costo basso,
-   infrastruttura già presente.
-6. Il resto, senza fretta.
+1. **Il blocco con la scadenza**, da [`newseason.md`](newseason.md) §5 e dalla
+   checklist eseguibile di `experiments/prospettico_2026_27.md` §5:
+   pre-registrazione dei criteri → sondaggi (libri Smarkets per-partita,
+   fixture) → raccoglitore + cron → previsioni congelate. **Entro il 16
+   agosto**, il resto no.
+2. ⭐ **Il modello a DUE STADI per il secondo tempo** (pista 6-bis, residuo
+   F98): il primo residuo *localizzato e non-artefatto* trovato da parecchie
+   fasi, primo mattone dell'in-play — **sui dati che già abbiamo**.
+3. **Le piste nei grezzi già scaricati** (PISTE 8 e 9: quota massima, Pinnacle
+   puro): nessuna rete, nessuna attesa. *(Le piste 5 e 6 sono state chiuse da
+   F88/F98: Tier 2 e Tier 3 di base non sono più scoperti.)*
+4. **La coda a zero** (`docs/PISTE.md` §4-bis, aperta dalla F97) e, prima di
+   riprezzare il 2027 Champion, **rilanciare la Fase 89 su 5 leghe**: da 24 a
+   ~40 stagioni-lega con **un run**, contro le +3 che ogni stagione regala.
+5. **Il lavoro documentale rimasto** (audit §4, punti 6 e 13): le 18 celle
+   PANCHINA già misurate, il riporto della Fase 100 in `STUDIO_PREMIER_LIGA.md`,
+   e la propagazione di numero-bandiera e rettifica COM-Poisson fuori dal
+   README. È trascrizione, non ricerca — ma finché non è fatta il repo dice due
+   cose diverse.
+6. **`probe.yml` dal runner** (§6.1) — un'ora, ma ormai vale solo per Betfair,
+   SofaScore e il vincolo geo.
+7. Il resto, senza fretta.
 
 **Da non fare adesso**: ~~aggiungere le leghe nuove (Ligue 1/Bundesliga come
 leghe *modellate*)~~ → **FATTO alla Fase 100**: sono in `LEAGUE_CONFIGS`, con
 snapshot congelati (2.754 e 3.097 partite) e δ 0.28/0.19. Resta valido per
-Serie B e Championship. Valore reale, **nessuna scadenza**,
-mangerebbe le settimane che servono al punto 1. Dopo settembre.
+**Serie B e Championship**: valore reale, **nessuna scadenza**, mangerebbe le
+settimane che servono al punto 1. **Dopo settembre.**

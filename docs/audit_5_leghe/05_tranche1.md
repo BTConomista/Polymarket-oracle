@@ -1,5 +1,11 @@
 # Report 5 — Tranche 1: le correzioni dati (parte eseguibile nel cantiere)
 
+> **Che cos'è questo documento.** Il quinto degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md).
+> Documento **storico**: la «tranche 2» del §2, allora bloccata, è stata poi
+> eseguita per intero all'integrazione (vedi il riquadro là).
+
 La tranche 1 era divisa in due dalla regola di isolamento (R4): ciò che si può
 correggere **dentro il cantiere** e ciò che tocca `src/` o i documenti condivisi
 e quindi aspetta l'integrazione. Qui la prima parte, **fatta**.
@@ -53,6 +59,9 @@ audit A/B/C/D, ligue_1:            0 FAIL, 2 WARN (lacune note della fonte)
 pytest:                            153 test verdi
 ```
 
+⚠️ I «153 test verdi» sono il **numero STORICO** dichiarato allora: la suite di
+oggi ne conta **841** (ri-misurati alla Fase 101-ter).
+
 L'audit **non** è stato ammorbidito: le righe corrette sono escluse dal solo
 confronto con la fonte (segnalate come `INFO`, con il registro come
 giustificazione), e tutto il resto resta severo.
@@ -60,6 +69,18 @@ giustificazione), e tutto il resto resta severo.
 ---
 
 ## 2 · Cosa resta in attesa dell'integrazione (tranche 2)
+
+> ⚠️ **Sbloccata ed eseguita.** Tutti e cinque i punti sono stati fatti:
+> (1) il guard vive in `src/data/loader.py` (`ORR_MAX = 1.12`), con test;
+> (2) le celle La Liga sono state svuotate e le stime che vi poggiavano sono
+> cadute — `data/estimates/ou_open_corrotte_2017_19.csv` conta oggi **12** righe
+> (7 bundesliga + 3 la_liga + 2 ligue_1), non 9;
+> (3) il controllo sull'xG impossibile è in `scripts/audit_anomalie.py`
+> (`check_xg`, con la verifica degli autogol) e il segnaposto in
+> `check_xg_segnaposto`;
+> (4) l'ordine colonne è uniformato e coperto da `test_schema_identico_tra_leghe`;
+> (5) le dichiarazioni sono in `docs/DATI.md`.
+> La tabella resta come verbale di ciò che era bloccato allora, e perché.
 
 | # | cosa | perché è bloccato |
 |---|---|---|

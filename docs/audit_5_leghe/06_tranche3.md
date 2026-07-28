@@ -1,5 +1,13 @@
 # Report 6 — Tranche 3: il playbook sulle leghe nuove (passi 2-5)
 
+> **Che cos'è questo documento.** Il sesto degli **11 report integrali dell'audit
+> a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md` riassume
+> nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md). Documento
+> **storico**. Numeri grezzi: `docs/audit_5_leghe/numeri/tranche3_*.json`.
+> Il seguito, con gli altri fronti della rosa, è
+> [`10_modelli_nuove_leghe.md`](10_modelli_nuove_leghe.md), che in un punto
+> corregge questo report (§2.2 di là).
+
 Dati pronti e verificati (report 1 e 3), correzioni applicate (report 5): qui si
 mette alla prova il modello. Tutto con il protocollo di sempre — walk-forward,
 metriche dalla fonte unica, bootstrap appaiato B=10.000, **aspettativa dichiarata
@@ -21,15 +29,23 @@ mercato, con gap atteso +0.015…+0.021.
 |---|--:|--:|--:|--:|--:|---|
 | serie_a | 2.280 | 0.9797 | 1.0849 | 0.9632 | **+0.0165** | [+0.0107, +0.0225] |
 | premier_league | 2.280 | 0.9831 | 1.0695 | 0.9623 | **+0.0207** | [+0.0138, +0.0275] |
-| la_liga | 2.280 | 0.9843 | 1.0689 | 0.9681 | **+0.0162** | [+0.0103, +0.0225] |
+| la_liga | 2.280 | 0.9843 | 1.0689 | 0.9681 | **+0.0162** | [+0.0103, +0.0223] |
 | **bundesliga** | 1.836 | 0.9919 | 1.0722 | 0.9738 | **+0.0181** | [+0.0109, +0.0253] |
 | **ligue_1** | 2.058 | 1.0041 | 1.0750 | 0.9851 | **+0.0190** | [+0.0121, +0.0258] |
 
 **Controllo che vale più di tutto il resto:** il gap che misuro in Serie A è
-**+0.0165**, identico alla quarta cifra a quello pubblicato dal progetto
-(CLAUDE.md §6: «gap 1X2 +0.0165 in Serie A»). Non l'ho preso da lì: esce dalla
-mia pipeline, con i miei snapshot e il mio codice di valutazione. È la prova che
-l'intero apparato — dati, percorsi, metriche — riproduce i numeri noti.
+**+0.0165** *(PRE-fix Fase 92)*, identico alla quarta cifra a quello pubblicato
+allora dal progetto (CLAUDE.md §6: «gap 1X2 +0.0165 in Serie A»). Non l'ho preso
+da lì: esce dalla mia pipeline, con i miei snapshot e il mio codice di
+valutazione. È la prova che l'intero apparato — dati, percorsi, metriche —
+riproduce i numeri noti.
+
+> ⚠️ **Il numero-bandiera oggi è un altro.** Al codice di HEAD, dopo il fix del
+> prior della Fase 92, il gap 1X2 della Serie A vale **+0.0167** (log-loss
+> **0.9799** contro 0.9632 del mercato). Il **+0.0165 / 0.9797** di questa
+> tabella è **PRE-fix** e va letto come misura interna a questa fase: conferma
+> che l'apparato riproduceva il numero *allora* pubblicato, non che quello sia lo
+> stato attuale. Stessa avvertenza per gli altri valori 1X2 della tabella.
 
 **Esito.** Entrambe le aspettative si avverano su entrambe le leghe nuove:
 

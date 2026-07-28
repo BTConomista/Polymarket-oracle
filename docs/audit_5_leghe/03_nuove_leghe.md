@@ -1,5 +1,11 @@
 # Report 3 — Import di Bundesliga e Ligue 1
 
+> **Che cos'è questo documento.** Il terzo degli **11 report integrali dell'audit
+> a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md` riassume
+> nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md). Documento
+> **storico**: le checklist del §7 sono state **eseguite** all'integrazione (vedi
+> il riquadro là).
+
 **Domanda posta:** *«importiamo i dati di bundesliga e ligue 1, segui sempre i
 dati che abbiamo importato fino ad ora»* — cioè **stesso schema, stesse fonti,
 stessa semantica** delle tre leghe già in repo.
@@ -167,6 +173,12 @@ lega lascia prevedere.
 passo 3 del playbook (ri-taratura per-lega con backtest walk-forward). Qui c'è
 solo il numero e la sua derivazione.
 
+> **Adottati poi**, dopo il passo 3 ([`06_tranche3.md`](06_tranche3.md)):
+> `src/config.py` porta oggi `promoted_prior` **0.28** (Bundesliga) e **0.19**
+> (Ligue 1), cioè i due valori qui calcolati arrotondati a due decimali come per
+> le altre leghe. Adozione **per motivazione strutturale**: il guadagno misurato
+> è nel rumore (report 6, passo 3), e va detto così.
+
 ### Deficit-pareggio per quartile di equilibrio (reale − prezzato dal mercato)
 
 | lega | Q1 equilibrate | Q2 | Q3 | Q4 sbilanciate |
@@ -186,6 +198,12 @@ di qualsiasi fit della φ(|λ−μ|): in Ligue 1 aspettarsi φ0 ≈ 0; in Bundes
 quella latina.
 
 ## 7 · Checklist di integrazione (quando si porta tutto in `main`)
+
+> ⚠️ **Eseguita.** Tutti e otto i punti sono stati fatti all'integrazione: le due
+> leghe vivono in `src/data/sources.py` e in `LEAGUE_CONFIGS` (δ 0.28 / 0.19), gli
+> snapshot sono in `data/`, `tests/test_league_snapshots.py` copre le 5 leghe
+> (compreso `test_schema_identico_tra_leghe`), e la matrice di `docs/PANCHINA.md`
+> è passata da 4 a 6 colonne. La lista resta come verbale.
 
 1. `src/data/sources.py`: aggiungere le 2 voci a `LEAGUES`, `UNDERSTAT_LEAGUES`,
    `UEFA_COUNTRY_CODE`, `SECOND_TIER_NAMES`, `DOMESTIC_CUP_COMPETITIONS`,
@@ -214,3 +232,7 @@ Il passo 2 e seguenti del playbook — **tracer bullet** (DC così com'è sulla 
 nuova), ri-taratura, motore market-implied, leve della rosa — **non** sono stati
 eseguiti: la richiesta era importare i dati. I dati sono pronti e verificati per
 farlo; `docs/PLAYBOOK_NUOVA_LEGA.md` §2-5 dice esattamente come.
+
+> **Fatti subito dopo**, nello stesso audit: i passi 2-5 stanno in
+> [`06_tranche3.md`](06_tranche3.md) e il resto della rosa in
+> [`10_modelli_nuove_leghe.md`](10_modelli_nuove_leghe.md).

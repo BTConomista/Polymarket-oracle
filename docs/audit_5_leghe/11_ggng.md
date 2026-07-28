@@ -1,5 +1,11 @@
 # Report 11 — Il GG/NG contro le quote vere: cade una premessa del progetto
 
+> **Che cos'è questo documento.** L'ultimo degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md).
+> Numeri grezzi: `docs/audit_5_leghe/numeri/ggng_contro_quote.json`; script:
+> `scripts/ggng_contro_quote.py`.
+
 Il GG/NG ha un report suo perché non è un mercato come gli altri. È il mercato
 su cui il progetto ha scritto, in `CLAUDE.md` §1.8, la frase che ne ha guidato
 le priorità:
@@ -87,10 +93,19 @@ migliore.
 | a | market-implied dalle quote **dello stesso book** | 0.6846 | book 0.6851 | −0.00045 | [−0.00207, +0.00121] | 3.650 | nel rumore |
 | a | idem, 3 stagioni | 0.6836 | 0.6840 | −0.00041 | [−0.00174, +0.00086] | 5.337 | nel rumore |
 | a2 | idem, dalla **scaletta completa** del book | 0.6833 | 0.6840 | −0.00067 | [−0.00182, +0.00048] | 5.337 | nel rumore |
-| b1 | snapshot: 1X2 chiusura + **O/U apertura reale** | 0.6845 | 0.6840 | +0.00060 | [−0.00123, +0.00244] | 5.328 | nel rumore |
-| b2 | snapshot + **stima** O/U del progetto | 0.6848 | 0.6851 | −0.00015 | [−0.00267, +0.00231] | 3.641 | nel rumore |
+| b1 | snapshot: 1X2 chiusura + **O/U apertura reale** | 0.6845 | 0.6839 | +0.00060 | [−0.00123, +0.00244] | 5.328 | nel rumore |
+| b2 | snapshot + **stima** O/U del progetto | 0.6848 | 0.6850 | −0.00015 | [−0.00267, +0.00231] | 3.641 | nel rumore |
 | b0 | snapshot + O/U **chiusura reale** (solo 2019-20) | 0.6820 | 0.6816 | +0.00035 | [−0.00209, +0.00274] | 1.687 | nel rumore |
-| c | **DC gol+xG walk-forward** | 0.6934 | 0.6840 | **+0.01036** | **[+0.00632, +0.01454]** | 3.512 | **il book vince** |
+| c | **DC gol+xG walk-forward** | 0.6934 | **0.6830** | **+0.01036** | **[+0.00632, +0.01454]** | 3.512 | **il book vince** |
+
+⚠️ **La colonna «riferimento» non è la stessa riga per riga**, e va letta così:
+è il log-loss del book **sulle stesse partite** del predittore a fianco, che
+cambiano da riga a riga (il DC non copre il 2017-18, b1/b2 perdono le righe senza
+input). Perciò il riferimento della riga (c) è **0.6830** — non lo 0.6840 dei
+5.337 — e la differenza 0.693406 − 0.683044 = **+0.01036** torna. *(Correzione
+della Fase 101-ter: il testo riportava 0.6840, che con 0.6934 avrebbe dato 0.0094
+e non il Δ dichiarato. Il numero giusto è quello del JSON; corretto il testo,
+non il JSON.)*
 
 Il path (b1) è la variante **primaria dichiarata**: nel 2017-19 l'unico input
 O/U reale è quello di apertura, mentre la stima del progetto (b2) ha
@@ -336,7 +351,9 @@ delle leghe.
 
 ## 10 · Che cosa ne consegue per il progetto
 
-1. **`CLAUDE.md` §1.8 va riscritto.** La frase «il GG/NG è l'unico mercato dove
+1. **`CLAUDE.md` §1.8 va riscritto.** → **Fatto**: la frase è oggi barrata in
+   `CLAUDE.md` §1.8, seguita dalla dicitura «**PREMESSA CADUTA**» e dai numeri di
+   questo report. La frase «il GG/NG è l'unico mercato dove
    non possiamo dimostrare l'efficienza del mercato — l'unico con spazio non
    ancora chiuso. Priorità lì» è superata dai fatti: le quote esistono per 3
    stagioni e 5 leghe, e la risposta è che il mercato GG/NG è informativo, il

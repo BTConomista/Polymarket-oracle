@@ -1,5 +1,12 @@
 # Report 1 — Audit dei dati: gli snapshot sono giusti?
 
+> **Che cos'è questo documento.** Il primo degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)**: il verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice e mappa dei file:
+> [`00_indice.md`](00_indice.md). È un documento **storico** — fotografa lo stato
+> al momento in cui è stato scritto; dove una conclusione è stata superata, lo
+> dice un riquadro.
+
 **Data:** 24 luglio 2026 · **Branch:** `claude/verify-data-import-leagues-468euv`
 **Domanda posta:** *«mi serve essere sicuro che i dati sono tutti giusti e che non
 abbiamo alcun dato sbagliato»* — con la richiesta esplicita di **cercare di
@@ -21,6 +28,11 @@ ritirato (§4.4).
 tra gli **host BLOCCATI** dal proxy (403). **Oggi rispondono 200** — verificato
 scaricando 45 CSV e 45 JSON. Anche `data.jsdelivr.com`, `betexplorer.com` e
 `oddsportal.com` (mai testati da questa sessione) sono raggiungibili.
+
+> Nota di navigazione: questo paragrafo racconta il **fatto nuovo di allora**.
+> Per lo **stato corrente** della rete fa fede `docs/MANUALE_SOPRAVVIVENZA.md`
+> §1, che nel frattempo si è aggiornato (fra l'altro con `footiqo.com`, la fonte
+> delle quote 1xBet del report 9).
 
 Conseguenza metodologica: per la prima volta si può fare **il controllo che
 conta davvero** — non «lo snapshot è internamente coerente?» ma «lo snapshot
@@ -125,7 +137,11 @@ simmetrico a quello della Fase 58 — se l'overround supera una soglia
 (proposta: **1.12**, ~6σ oltre la mediana sana), si ritenta col livello di
 preferenza successivo e, se anche quello è impossibile, **NaN dichiarato**
 (mai un numero corretto a mano: §5 del CLAUDE.md). Costo: 11 righe (22 celle)
-su 16.111 partite (0.07%). Bozza di patch in `docs/audit_5_leghe/patch_guard_overround_APPLICATA.md`.
+su 16.111 partite (0.07%). Bozza di patch in
+[`patch_guard_overround_APPLICATA.md`](patch_guard_overround_APPLICATA.md) —
+**poi applicata**: `ORR_MAX = 1.12` vive oggi in `src/data/loader.py`
+(`_pick_market_odds`), con il test `test_overround_impossibilmente_alto_scartato`
+in `tests/test_league_snapshots.py`.
 
 ### 4.2 · Udinese-Roma 25/04/2024: quote di chiusura di una partita di 19 minuti → **da dichiarare**
 
@@ -213,7 +229,9 @@ file*, quindi la divergenza si perpetua. I due snapshot nuovi sono stati scritti
 
 **Raccomandazione:** riordinare Premier/Liga all'ordine canonico e aggiungere un
 test che confronta le liste di colonne fra leghe (oggi `tests/test_league_snapshots.py`
-non lo fa).
+non lo fa). → **fatta**: l'ordine è stato uniformato all'integrazione e il test
+`test_schema_identico_tra_leghe` (in quello stesso file) confronta nomi **e**
+ordine delle colonne su tutte e 5 le leghe.
 
 ### 4.7 · Lacune di copertura minori → **già dichiarate in linea di principio**
 
@@ -294,8 +312,15 @@ errore **respinte dai dati**:
 
 ## 6 · Cosa fare (in ordine di priorità)
 
+> ⚠️ **Stato oggi (post-integrazione).** Questa era la lista di lavoro di allora;
+> i punti 1, 4 e 5 sono **fatti** (guard `ORR_MAX = 1.12` in `src/data/loader.py`;
+> ordine colonne uniformato + `test_schema_identico_tra_leghe`), il punto 2 è già
+> ritirato qui sotto, e il punto 3 (le dichiarazioni) vive in `docs/DATI.md`. La
+> lista resta com'era per non riscrivere la storia: si legge come verbale, non
+> come cose da fare.
+
 1. **Guard sull'overround alto** in `loader._pick_market_odds` (§4.1) →
-   11 celle a NaN, e rigenerare le stime che vi poggiano.
+   11 righe (22 celle) a NaN, e rigenerare le stime che vi poggiano.
 2. ~~Portare a NaN l'xG di Bielefeld-Leverkusen~~ → **non serve**: falso
    positivo, ritirato (§4.4). Va invece portato in produzione il controllo
    corretto, quello che verifica gli autogol.

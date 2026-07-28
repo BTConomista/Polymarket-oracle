@@ -1,5 +1,16 @@
 # Report 7 — Le righe corrotte: recupero, ritiro di un errore, stima
 
+> **Che cos'è questo documento.** Il settimo degli **11 report integrali
+> dell'audit a 5 leghe (Fase 100)** — verbale esteso di ciò che `docs/DIARIO.md`
+> riassume nella voce «Cinque leghe». Indice: [`00_indice.md`](00_indice.md).
+> Documento **storico**: la stima del §3 (MAE 0.0267) è stata **superata** dal
+> secondo giro di lavoro ([`09_chiusura_buchi.md`](09_chiusura_buchi.md) §5).
+>
+> ⚠️ **Sigle delle regole.** Le «R6» citate qui sono nella numerazione **storica
+> del cantiere**: nella numerazione **vigente** (`CLAUDE.md` §5-bis) quella
+> regola è la **R5** («procedura per una riga che sembra corrotta», 5 passi). La
+> tabella di corrispondenza è in testa a [`REGOLE.md`](REGOLE.md).
+
 Domanda posta: *«come hai sistemato gli errori? cerca su internet… se non riesci
 a risalire ai dati reali, riesci a fare delle stime?»*
 
@@ -94,6 +105,13 @@ mescolato dentro la stessa colonna.
 
 ## 3 · La stima: sì, e con un errore misurato
 
+> ⚠️ **SUPERATA dal report 9 §5.** Un bakeoff di 26 varianti ha battuto questo
+> metodo (chiamato lì **M1**): **M5g** scende a **MAE 0.0143** usando la chiusura
+> 1xBet, **M4** (superficie di debias sul solo 1X2, senza contaminazione) a
+> **0.0197**. Il fattore d'effetto onesto è **1,87×** (0.0267 → 0.0143), non
+> «2,6×». Lo 0.0267 di questo paragrafo vale come **misura interna a questo
+> report**, non come errore corrente della stima pubblicata.
+
 Se il dato vero non c'è, si stima — con informazione **integra** e un errore
 **misurato**, tenendo il risultato fuori dallo snapshot.
 
@@ -140,6 +158,13 @@ linea O/U vera e aggiunge il movimento; questa deve dedurre il totale dal solo
 
 Restano **fuori dagli snapshot**: nelle colonne quota c'è NaN, la stima vive nel
 suo file con metodo ed errore scritti riga per riga. Chi la userà lo dichiarerà.
+
+> Stato oggi di quel file: `data/estimates/ou_open_corrotte_2017_19.csv` ha
+> **12 righe** (verificato: 7 bundesliga + 3 la_liga + 2 ligue_1) e porta i
+> valori del metodo v2 (M5g e M4). Le 3 righe La Liga sono entrate dopo, quando
+> il guard sull'overround ha svuotato anche quelle celle; le 8 di questa tabella
+> sono le stesse, ri-stimate. Il diagnostico storico (metodo M1, MAE 0.0267)
+> vive in `docs/audit_5_leghe/numeri/stima_ou_corrotte_metodo_storico.csv`.
 
 ---
 
