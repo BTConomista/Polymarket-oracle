@@ -324,6 +324,7 @@ correzioni.*
 - [Fase 120 — Il passo 0: metà della lista era già in casa, su licenza](#fase-120--il-passo-0-metà-della-lista-era-già-in-casa-su-licenza)
 - [Fase 121 — Le rose vere: Wikipedia riempie i buchi, ma non tutti (e l'ipotesi era sbagliata)](#fase-121--le-rose-vere-wikipedia-riempie-i-buchi-ma-non-tutti-e-lipotesi-era-sbagliata)
 - [Fase 122 — Lo scheletro giornaliero: una fetta sottile ma completa](#fase-122--lo-scheletro-giornaliero-una-fetta-sottile-ma-completa)
+- [Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano](#fase-123--lo-stadio-non-è-una-proprietà-della-squadra-e-le-squalifiche-non-si-cercano)
 
 ---
 
@@ -13841,3 +13842,103 @@ Un elenco che si accorcia è un'informazione; un elenco che tace non lo è.
 **dice sempre che cosa gli è successo**. Al primo giro questo ha raccolto zero
 dati meteo — e il file lo spiega riga per riga, con il motivo per ciascuna delle
 sei partite.
+
+---
+
+## Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano
+
+**Obiettivo.** Due richieste dell'utente: *«verifica se ogni squadra giocherà
+nel proprio stadio tutte le partite (magari in europa gioca in un altro
+stadio)»* e *«bollettino quotidiano di infortuni, squalifiche e diffidati…
+leggi tu le regole per immaginare quale potrebbe essere il comportamento del
+giocatore»*.
+
+### A · Lo stadio: l'intuizione era giusta, e la misura dice quanto
+
+Misurato su `games.csv` (stagioni 2023+, impianto abituale = il più frequente
+in campionato): le partite «in casa» giocate **altrove** sono il **5,0%** in
+campionato, il **10,8%** in coppa nazionale, il **12,3%** nelle coppe europee e
+il **16,4%** in supercoppe e affini. Una gara europea interna **su otto**.
+Non sono casi di frangia: Atalanta 29/83, Atlético 30/84, Barcellona 25/82,
+Shakhtar 25/67 — ristrutturazioni, requisiti UEFA, campi squalificati, guerre.
+
+**Conseguenza applicata**: nel record giornaliero lo stadio esce con
+`stadio_confermato: false` e la nota del perché. È l'impianto abituale, cioè
+un'**ipotesi dichiarata**. Prima di questa misura sarebbe stato un campo che
+sembra un fatto — e sbagliato una volta su otto proprio nelle partite che
+contano di più.
+
+### B · Squalifiche e diffide: si calcolano, e le regole non sono universali
+
+L'osservazione che cambia il disegno del bollettino: **squalifiche e diffide
+non vanno cercate, si calcolano.** Bastano i cartellini (che abbiamo, col
+minuto, da `game_events`) e il regolamento. È l'unico pezzo del bollettino che
+**non dipende da nessun sito**, quindi l'unico immune ai vincoli di
+`robots.txt` della Fase 119. Gli infortuni, all'opposto, richiedono per forza
+una notizia esterna: restano il pezzo difficile.
+
+**Ho letto le regole invece di andare a memoria, e ho fatto bene.** La
+**Ligue 1 è passata da 3 a 5 ammonizioni nel 2025-26**: a memoria avrei scritto
+3, che è il valore che quasi tutti ricordano. E la UEFA non usa un multiplo:
+squalifica alla **3ª** e poi a ogni ammonizione **dispari** (5ª, 7ª…), con
+azzeramento dopo i play-off e dopo i quarti. La Serie A stringe le soglie a
+ogni recidiva (5, 10, 14, 17, 19, poi ogni).
+
+Chi codificasse «il calcio» con una soglia unica sbaglierebbe **due leghe su
+cinque più la UEFA**, e il difetto sarebbe invisibile: produrrebbe una lista di
+diffidati **plausibile** e sbagliata. Per questo le soglie stanno in una
+tabella con la fonte accanto (`src/data/disciplina.py`), e un test le fissa una
+per una — compreso quello che impedisce di «correggere» la Ligue 1 riportandola
+a 3.
+
+**Validato sui cartellini veri**, non solo sugli esempi: Serie A 2025-26,
+11.926 presenze, 1.361 gialli, 421 giocatori ammoniti; a fine stagione **58
+diffidati** e 45 sulla soglia, con una distribuzione plausibile (103 giocatori
+a 1 giallo, 41 a 5, 1 a 12).
+
+### C · Il comportamento del diffidato: un incentivo, non una misura
+
+La domanda dell'utente è sensata e ha una base **meccanica**: la squalifica
+cade sulla partita *successiva* a quella del cartellino. Quindi se la gara
+imminente vale poco e quella dopo vale molto, «smaltire» la diffida subito
+costa poco e libera la partita che conta; se è imminente quella importante,
+conviene evitare il giallo.
+
+`incentivo_cartellino()` lo calcola — ma dichiara `tipo: "giudizio"`, e la
+formula è deliberatamente banale (§📐): **nessuno ha mai misurato se i
+giocatori vi si conformino davvero**. Un modello elaborato qui darebbe
+un'illusione di precisione su una quantità — l'importanza di una partita — che
+non abbiamo misurato.
+
+**📐 Il modello in dettaglio.** Verificato contro `src/data/disciplina.py`.
+
+*(a) Prossima soglia.* Con `S = (s₁…sₙ)` le soglie dichiarate e `k` il passo
+dopo l'ultima:
+
+```
+soglia_successiva(c) = min{ sᵢ ∈ S : sᵢ > c }              se esiste
+                     = sₙ + k·⌈(c − sₙ + 1)/k⌉             se k > 0
+                     = None                                 altrimenti
+```
+
+Il ramo `None` (Premier oltre la 15ª) è diverso da «zero ammonizioni
+mancanti», e i due non vanno confusi: il primo dice «non c'è più una soglia»,
+il secondo direbbe «sei squalificato».
+
+*(b) Diffidato.* `diffidato(c) ⟺ soglia_successiva(c) − c = 1`. È la
+definizione italiana di diffida, ed è quella che serve: identifica **chi
+rischia di saltare la prossima partita**, che è l'unica cosa che cambia una
+previsione.
+
+*(c) Incentivo (giudizio).* Con `p` e `s` importanza della prossima e della
+successiva, in [0,1]: `incentivo = s − p`. Il valore sta nel **segno**. La
+soglia ±0.2 che separa «conviene» da «indifferente» è arbitraria e dichiarata
+tale: serve a non leggere come segnale una differenza di rumore.
+
+**Lezione.** Due, e vengono dallo stesso posto. (1) *Un attributo che sembra
+appartenere a un'entità spesso appartiene all'evento*: lo stadio «della
+squadra» è sbagliato una volta su otto in Europa, e nessun controllo di schema
+se ne accorgerebbe. (2) *Le regole hanno una data*. La Ligue 1 ha cambiato la
+soglia un anno fa; scriverla a memoria avrebbe prodotto diffidati inventati per
+una stagione intera, senza che nulla diventasse rosso. Le costanti di dominio
+vanno lette alla fonte e datate, esattamente come i dati.
