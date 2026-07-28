@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–115)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–116)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -269,8 +269,7 @@ che l'integrazione in `main` aveva portato 32 script che non partivano (Fase
 numero-bandiera rimisurato dopo un fix mai propagato (+0.0167, non +0.0165),
 quattro conclusioni declassate senza che un solo calcolo fosse sbagliato (Fase
 101-bis), i numeri orfani e le trappole che colpivano chi verifica (Fase
-101-ter), e infine l'allineamento di ogni file del repo (Fase 102). Chiude
-l'arco la Fase 103, che applica un lavoro lasciato a metà da R4 (cantiere
+101-ter). Poi la Fase 103 applica un lavoro lasciato a metà da R4 (cantiere
 isolato): i 3.045 righe di calendario di coppa raccolte da Wikipedia alla Fase
 100 vengono finalmente unite ai calendari di club, chiudendo i 1.603 falsi
 zero di `midweek_europe` — verificati a cella esatta contro l'oracolo già
@@ -283,8 +282,16 @@ F12-05, F12-09), e la scoperta che la fonte xG Understat aveva lo STESSO
 mirror morto di football-data ma non era mai stata corretta di conseguenza —
 corretta, e i 2 buchi xG residui ri-verificati LIVE (nessuno si è risolto col
 tempo, ma ora lo sappiamo con certezza invece che per estrapolazione). Esito
-dell'arco: nessun edge nuovo, e un repo che dice di sé la verità, coi dati che
-aveva promesso di correggere corretti davvero — comprese le correzioni delle
+Le Fasi 105-108 ricercano tre volte ancora la chiusura O/U 2017-19, sempre
+negativo, ma il confronto esteso a 6 stagioni (Fase 106) mostra che il numero
+su cui poggiava la decisione non è stabile nel tempo. Le Fasi 109-115 aprono il
+fronte **Betfair Exchange** — il primo candidato migliore della stima — e lo
+ridimensionano due volte su richiesta dell'utente, fino a scoprire che la borsa
+che serviva (Smarkets) era già in casa e gratis. **Chiude l'arco la Fase 116**,
+che allinea ogni file del repo alle analisi accumulate e scrive la voce di
+diario che alla Fase 101-bis non era mai stata scritta. Esito dell'arco:
+nessun edge nuovo, e un repo che dice di sé la verità, coi dati che aveva
+promesso di correggere corretti davvero — comprese le correzioni delle
 correzioni.*
 
 - [Fase 100 — Cinque leghe: l'audit riga-per-riga, il dato che si credeva perduto, e la premessa che cade](#fase-100--cinque-leghe-laudit-riga-per-riga-il-dato-che-si-credeva-perduto-e-la-premessa-che-cade)
@@ -305,6 +312,7 @@ correzioni.*
 - [Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione](#fase-113--quanto-serve-davvero--il-ridimensionamento-di-una-mia-raccomandazione)
 - [Fase 114 — Far usare le stime davvero (e una mia frase da correggere)](#fase-114--far-usare-le-stime-davvero-e-una-mia-frase-da-correggere)
 - [Fase 115 — «Serve un PC cloud 24/7?» — no: la borsa che serviva era già in casa](#fase-115--serve-un-pc-cloud-247--no-la-borsa-che-serviva-era-già-in-casa)
+- [Fase 116 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson](#fase-116--ogni-file-allineato-il-merge-con-una-sessione-parallela-e-lidentità-che-chiude-la-com-poisson)
 
 ---
 
@@ -11748,7 +11756,7 @@ passo esiste.
 
 ## Fase 101-bis — Applicare le correzioni dell'audit: quattro conclusioni declassate, e il numero-bandiera rimisurato
 
-> **Questa voce è stata scritta alla Fase 102**, non alla Fase 101-bis. La fase
+> **Questa voce è stata scritta alla Fase 116**, non alla Fase 101-bis. La fase
 > aveva una riga nel registro del README e le sue rettifiche sparse come note
 > dentro le fasi corrette, ma **nessuna sezione qui** — cioè esattamente la
 > «fase fantasma» che l'audit della Fase 101 aveva rimproverato alla Fase 92-bis,
@@ -11826,7 +11834,7 @@ E la conclusione «top-4 batte la persistenza, entrambi conclusivi» era già st
 ritirata dalla Fase 92-bis (IC a grappoli [−0.0006, +0.0522], include lo zero) ma
 **era sopravvissuta nei documenti per nove fasi** — perché la fase che la ritirava
 non aveva una voce di diario. Lo stesso difetto che questa voce, scritta alla
-Fase 102, sta rimediando per la Fase 101-bis.
+Fase 116, sta rimediando per la Fase 101-bis.
 
 ### Risultato 4 — come si legge «198 rilievi»
 
@@ -13138,3 +13146,160 @@ La somma dei **medi** fa 100.48% — cioè il punto medio è già quasi una
 probabilità normalizzata, e il devig serve solo a togliere quello 0.48%. Sui
 lati grezzi invece la somma fa 84.73% (banco) e 116.23% (puntatore): usarne
 uno solo introdurrebbe un bias sistematico di segno noto, non un rumore.
+
+---
+
+## Fase 116 — Ogni file allineato: il merge con una sessione parallela, e l'identità che chiude la COM-Poisson
+
+**Obiettivo (utente).** «Voglio che ogni file sia sempre aggiornato: procedi
+aggiornando ogni singolo file con le ultime analisi/calcoli/studi svolti. Se
+serve, riorganizza anche ciò che secondo te è disordinato.» Prima ancora,
+nella stessa sessione: un resoconto dei branch, e la caccia ai riferimenti
+scaduti — link morti e affermazioni non più vere.
+
+**Ragionamento / ipotesi.** Un repo che documenta sé stesso accumula un debito
+particolare: non righe di codice sbagliate, ma **frasi vere quando furono
+scritte**. Nessun test le prende, nessun lettore le smentisce, e restano. La
+Fase 101 ne aveva censite a decine e lasciato aperti due punti espliciti
+(«PANCHINA: 18 celle già misurate», «documenti da rinfrescare»). L'ipotesi di
+lavoro: il difetto non è distribuito a caso ma **si concentra nei file-indice**
+— quelli che riassumono altri file — perché sono gli unici che nessuno rilegge
+quando cambia la cosa riassunta.
+
+### Risultato 1 — i branch: nulla da recuperare
+
+Verificato con `git merge-base --is-ancestor`: i tre branch `claude/…` rimasti
+su `origin` sono **tutti antenati di `main`**, zero commit avanti. L'unica
+differenza di superficie è la cartella `cantiere/` del branch
+`verify-data-import-leagues-468euv`, assente da `main` — ma il commit `6c9b377`
+mostra che è uno **spostamento tracciato da git** (script → `scripts/`, report →
+`docs/audit_5_leghe/`), non una cancellazione. Restano fuori solo download
+grezzi e log di scratch. Il `CLAUDE.md` §3-bis diceva già la cosa giusta.
+
+### Risultato 2 — tre affermazioni di rete scadute, e un solo modo di scoprirle
+
+Il `MANUALE_SOPRAVVIVENZA.md` è il registro di ciò che è raggiungibile, e
+dichiarava bloccati da proxy `huggingface.co`, `datasets-server.huggingface.co`
+e `data.jsdelivr.com`. **Ri-testati con `curl`: rispondono 200 con contenuto
+reale.** Per `jsdelivr` l'audit della Fase 100/101 l'aveva perfino già notato,
+senza correggere la tabella.
+
+La lezione non è «la rete è cambiata» — è che **una tabella di stato va
+ri-eseguita, non riletta**. Un'affermazione di raggiungibilità è l'unico tipo
+di fatto in questo repo che si può verificare in un secondo, e per mesi nessuno
+l'ha fatto. Da cui anche la distinzione che è entrata nel manuale: un **timeout
+(`000`) non è un `403`** — sono cause diverse, e trattarle uguale è ciò che
+aveva prodotto la voce sbagliata su `pub-*.r2.dev` (oggi: un bucket generico
+risponde 401, cioè la richiesta *esce* dal proxy → l'etichetta «bloccato» non è
+più dimostrata).
+
+Stessa forma nel `experiments/prospettico_2026_27.md`, che dichiarava «`WebFetch`
+è bloccato del tutto» — smentito dalla Fase 100, che da Wikipedia aveva
+recuperato 3.045 righe di calendario. Era l'ultimo dei cinque documenti del
+rilievo `F9-rete-tornata-non-propagata` a non essere stato sistemato.
+
+### Risultato 3 — una fase fantasma, di nuovo
+
+La **Fase 101-bis** aveva una riga nel registro del README e le sue rettifiche
+sparse come note dentro le fasi corrette, ma **nessuna voce nel diario**. È
+esattamente il difetto che l'audit della Fase 101 aveva rimproverato alla Fase
+92-bis — e per il quale «top-4 batte la persistenza, entrambi conclusivi» era
+sopravvissuto nove fasi a un IC che includeva lo zero. Ripetuto a due fasi di
+distanza, dallo stesso audit che l'aveva diagnosticato.
+
+Voce ricostruita (sopra) dalle fonti contemporanee. E il diario ha ora un
+**Arco 12** nell'indice: le Fasi 100+ erano appese in coda all'Arco 11,
+intitolato «Fasi 89–99».
+
+### Risultato 4 — la COM-Poisson: da coincidenza numerica a identità
+
+È il solo risultato di questa fase che aggiunge **matematica** invece di
+allineare prosa, ed è il blocco 📐 qui sotto. La Fase 101-bis aveva stabilito
+che la COM-Poisson della Fase 85 «è la double-Poisson riparametrizzata» sulla
+base di un accordo numerico (≤5e-06 sull'exact-score log-loss). Un accordo a
+5e-06 **non è una dimostrazione**: potrebbero essere due famiglie diverse che
+quasi coincidono nel regime dei gol del calcio. È invece un'**identità esatta**,
+e si vede in tre righe di algebra.
+
+### Risultato 5 — il merge con una sessione parallela (il vero imprevisto)
+
+A metà lavoro `git push` è stato rifiutato: **`origin/main` era avanti di 15
+commit** — le Fasi 103-115, prodotte da un'altra sessione mentre questa girava
+(il container di questa era stato sospeso per ~16 ore, e il workflow che
+aggiornava i file è morto lì dentro senza completare la fase di verifica).
+
+Sette file erano stati modificati da entrambe le sessioni; cinque hanno dato
+conflitto. Nessuno era risolvibile «tenendo il più recente»: **entrambe le parti
+avevano fatti veri e diversi**. Esempi:
+
+| file | questa sessione | sessione parallela |
+|---|---|---|
+| `MANUALE` §1 | ri-test host per host del 28/07, `api.github.com` e `pub-*.r2.dev` rimisurati | betexplorer richiede UA da browser (F107), Understat è gzip sempre (F104), Betfair docs e Wayback raggiungibili (F105/109-bis) |
+| `PANCHINA` | 18 celle `⬜` riempite coi numeri di Bundesliga e Ligue 1 | `rest_full` e `midweek_europe` ri-verificati sui dati corretti (F103) |
+| `PISTE` §19 | la decisione scomposta in **due** motivi misurati (rottura di regime + proxy peggiore) | tre ri-tentativi negativi (F105/107/108) e il MAE **non stabile** su 6 stagioni (F106) |
+
+Risolti a mano tenendo l'**unione dei fatti**, mai il più recente per default.
+E il merge ha reso stantio un numero che questa sessione aveva appena scritto in
+sei punti: i test non sono più 841 ma **889** (48 in più dalle Fasi 103-115).
+
+**Conseguenza sulla numerazione**: questa fase era partita come «Fase 102» e le
+sue prime due commit lo dicono. La sessione parallela ha visto il 102 occupato
+ed è partita da 103. La fase è quindi **116**, e il 102 resta un numero **mai
+usato** — dichiararlo qui costa una riga e risparmia la prossima caccia.
+
+### 📐 Il modello in dettaglio
+
+**L'identità dp ≡ COM-Poisson.** La double-Poisson di Efron come è implementata
+(`src/models/market_implied.py`, `_dp_pmf`, righe 47-63), mean-preserving con
+`c` risolto per bisezione perché la media resti `rate`:
+
+```
+q_k ∝ [ Poisson_k(c·rate) ]^θ = [ (c·rate)^k · e^(−c·rate) / k! ]^θ
+```
+
+Si sviluppa la potenza e si separa ciò che dipende da `k` da ciò che non dipende:
+
+```
+q_k ∝ (c·rate)^(θk) · e^(−θ·c·rate) / (k!)^θ
+        \_________/   \____________/   \____/
+         dipende da k   COSTANTE in k    (k!)^θ
+```
+
+Il fattore `e^(−θ·c·rate)` non dipende da `k`: **sparisce nella
+rinormalizzazione**. Resta
+
+```
+q_k ∝ [ (c·rate)^θ ]^k / (k!)^θ
+```
+
+che è esattamente la COM-Poisson `P(k) ∝ λ^k / (k!)^ν` con
+
+```
+λ_COM = (c·rate)^θ        ν = θ
+```
+
+*Perché chiude la questione.* Non è «due modelli che danno numeri simili»: è
+**un solo modello con due parametrizzazioni**, e la mappa fra le due è in forma
+chiusa. Verificato eseguendo, sui tassi che il progetto usa davvero:
+`max|dp − COM|` = **1.8e-14** a (rate 1.35, θ 1.225), **4.1e-14** a (0.90,
+1.138), **1.2e-14** a (2.10, 1.18), **3.3e-15** a (1.00, 0.85) — precisione
+macchina, tre ordini di grandezza più stringente del ≤5e-06 empirico, e vale
+anche in **sovra-dispersione** (θ<1), dove nessuno aveva guardato. Un bakeoff
+fra dp e COM-Poisson non può dare altro che pareggio: il ν della COM-Poisson
+*è* il θ del router.
+
+*Onestà su cosa NON è stato ri-derivato.* Tutti gli altri numeri toccati in
+questa fase sono stati **spostati**, non ricalcolati: provengono dal registro
+del README, dai JSON di `docs/audit_5_leghe/numeri/` o dal verbale dell'audit, e
+il criterio applicato è stato «se non lo trovo in una fonte del repo, non lo
+scrivo». Le uniche misure nuove sono l'identità qui sopra, i codici HTTP del
+Risultato 2 e il conteggio dei test (`889`).
+
+**Lezione.** Due, e sono la stessa vista da due lati. (1) **Un'affermazione di
+stato va ri-eseguita, non riletta**: le tre voci di rete sbagliate costavano un
+secondo di `curl` ciascuna e sono sopravvissute a due audit, perché un audit
+legge. (2) **Il lavoro parallelo non si integra da solo, e la sua parte
+pericolosa non sono i conflitti** — quelli git li segnala. Sono i file che si
+fondono *puliti* mentre le due versioni raccontano storie diverse: nessun
+marker, nessun test rosso, e il documento risultante è coerente solo in
+apparenza. È lo stesso difetto della fase fantasma, alla scala del repo.
