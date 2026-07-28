@@ -327,6 +327,7 @@ correzioni.*
 - [Fase 123 — Lo stadio non è una proprietà della squadra, e le squalifiche non si cercano](#fase-123--lo-stadio-non-è-una-proprietà-della-squadra-e-le-squalifiche-non-si-cercano)
 - [Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)](#fase-124--il-diffidato-si-trattiene-davvero-misurato-e-il-segno-ingenuo-era-rovesciato)
 - [Fase 125 — Prezzare i cartellini: ogni leva paga, e la sotto-dispersione non è dei gol](#fase-125--prezzare-i-cartellini-ogni-leva-paga-e-la-sotto-dispersione-non-è-dei-gol)
+- [Fase 126 — Cartellini: la contraddizione con la Fase 98 era apparente, e il modello «giusto» non paga](#fase-126--cartellini-la-contraddizione-con-la-fase-98-era-apparente-e-il-modello-giusto-non-paga)
 
 ---
 
@@ -14185,3 +14186,124 @@ un'eventuale differenza fosse del fenomeno e non dell'implementazione. E
 l'altra metà della lezione è simmetrica: **il fenomeno si è trasferito, i suoi
 parametri no.**
 
+---
+
+## Fase 126 — Cartellini: la contraddizione con la Fase 98 era apparente, e il modello «giusto» non paga
+
+**Obiettivo.** Portare in produzione le leve della Fase 125. Ma prima di
+toccare il listino è emerso un conflitto da risolvere: **la Fase 98 aveva
+misurato i cartellini SOVRA-dispersi** (var/media 1.12-1.48) e adottato la
+binomiale negativa; **la Fase 125 li ha misurati SOTTO-dispersi** (0.954).
+Due fasi dello stesso repo che dicono il contrario.
+
+**Non è una contraddizione: è la stessa cosa a due livelli.** E la
+scomposizione lo dimostra **esattamente** — regola §2-bis, quella nata alla
+Fase 92: una deduzione da misura indiretta va scritta come identità, non in
+prosa.
+
+```
+var(totale) = var(casa) + var(ospite) + 2·cov(casa, ospite)
+  4.7308    =   1.8699  +   2.0258    + 2·0.4175          ✓ (ricompone esatto)
+```
+
+Ogni **lato** è sotto-disperso (0.970 e 0.924), ma i due lati sono **correlati
+positivamente** (corr **+0.2145**): la partita nervosa produce cartellini per
+entrambe. **Tutta** la sovra-dispersione del totale viene da lì — a lati
+indipendenti il totale avrebbe rapporto **0.945**, cioè sarebbe sotto-disperso
+anche lui. La Fase 98 misurava il totale, la Fase 125 il lato: **entrambe
+avevano ragione**, e nessuna delle due poteva accorgersene da sola.
+
+**Conseguenza teorica, e il modello che ne segue.** Se è così, la binomiale
+negativa sul totale stava tappando la **correlazione** con un parametro di
+**forma**: la patch giusta per il motivo sbagliato. Il modello che separa le due
+cose è un condizionale a effetto casuale:
+
+```
+gialli_casa | Z ~ dp(λ_casa · Z, θ)
+gialli_osp  | Z ~ dp(λ_osp  · Z, θ)      indipendenti DATO Z
+Z ~ Gamma(media 1, varianza σ²)          il "nervosismo" della partita
+```
+
+con `σ² → 0` che ricade esattamente sui lati indipendenti: il caso «niente
+nervosismo» resta un caso particolare, non un modello rivale.
+
+**Esito: NON paga.** Walk-forward sul totale (19.761 partite):
+
+| modello | ll |
+|---|---:|
+| Poisson sul totale (forma F96) | −2.12806 |
+| **NegBin sul totale (adottato F98)** | **−2.12734** |
+| dp per lato, indipendenti | −2.12806 |
+| dp per lato + nervosismo | −2.12731 |
+
+Guadagno del modello strutturale sulla NegBin: **+0.00003**, IC95%
+[−0.00015, +0.00022] — **nel rumore**. E la griglia sceglie **θ = 1.00**, cioè
+marginali Poisson, proprio dove la Fase 125 aveva trovato θ=1.15 conclusivo.
+
+**Il perché, misurato e non congetturato.** La superficie di verosimiglianza in
+(θ, σ²) è una **cresta**:
+
+| θ \ σ² | 0.00 | 0.02 | 0.04 | 0.06 |
+|---|---:|---:|---:|---:|
+| 1.00 | −2.12806 | **−2.12731** | −2.12878 | −2.13188 |
+| 1.10 | −2.13177 | −2.12843 | **−2.12798** | −2.12963 |
+| 1.20 | −2.13769 | −2.13137 | −2.12869 | **−2.12864** |
+| 1.30 | −2.14568 | −2.13601 | −2.13088 | **−2.12896** |
+
+Al crescere di θ cresce il σ² ottimo, e lungo la cresta la verosimiglianza è
+**piatta** (−2.1273 → −2.1290, cioè 0.0017 in tutto). **Sul totale, forma
+marginale e correlazione non sono separatamente identificabili**: è la stessa
+varianza spiegata due volte. Solo il dato **per lato** può distinguerle — ed è
+esattamente il dato che la Fase 98 non guardava.
+
+**Che cosa si adotta, allora.**
+
+1. **Sul TOTALE cartellini** (il mercato O/U che il progetto già prezza): **la
+   binomiale negativa della Fase 98 resta**. Non perché fosse la struttura
+   giusta, ma perché a quel livello nessuna struttura più fine è distinguibile.
+   La differenza è che ora sappiamo *che cosa* stava fittando.
+2. **Per i mercati PER SQUADRA** (total-squadra cartellini): lì la θ=1.15 della
+   Fase 125 è misurata e conclusiva, e il totale non la può contraddire perché
+   non la può nemmeno vedere.
+3. **Il fattore ARBITRO** (+0.00368 per lato, IC conclusivo) vale in entrambi i
+   casi: agisce sulla **media**, non sulla forma, e non soffre di questa
+   ambiguità.
+
+**📐 Il modello in dettaglio.** Verificato contro
+`scripts/_run_fase126_cartellini_congiunto.py`.
+
+*(a) Il totale, integrando il nervosismo:*
+
+```
+P(tot = n) = Σ_j w_j · [ dp(λ_c·z_j, θ) ⊛ dp(λ_o·z_j, θ) ](n)
+```
+
+con `⊛` la convoluzione e `(z_j, w_j)` una quadratura a 11 nodi equiprobabili
+della Gamma ri-centrata su media 1. La media resta **esattamente** `λ_c + λ_o`
+— verificato numericamente (4.204 contro 4.204): la proprietà mean-preserving
+della dp sopravvive sia alla convoluzione sia alla miscela, il che è ciò che
+rende il confronto onesto (i modelli differiscono **solo** per la forma).
+
+*(b) Perché la correlazione entra come fattore moltiplicativo comune.* Un
+effetto additivo avrebbe potuto rendere negativo un tasso; uno moltiplicativo
+con media 1 lascia invariata la previsione centrale e agisce solo sulla
+dipendenza. Con `Var(Z) = σ²` la covarianza indotta è `σ²·λ_c·λ_o`: con
+λ ≈ 2.06 ciascuno e σ² = 0.02 dà ≈ 0.085, contro **0.4175** osservato. Cioè
+**il nervosismo condiviso spiega solo un quinto della covarianza reale**: il
+resto è correlazione che questo effetto casuale non cattura — un residuo
+dichiarato, non risolto.
+
+*(c) Una nota su una trappola di calcolo, perché è costata un'ora.* La prima
+stesura chiamava `_dp_pmf` per ogni partita e per ogni nodo: 42 combinazioni ×
+19.761 partite × 11 nodi × 2 lati ≈ **18 milioni** di bisezioni. Tabulare la
+pmf su una griglia di tassi (~900 valori per θ) porta il giro da ~90 minuti a
+**22 secondi**. Il risultato non cambia; cambia se l'esperimento si può fare.
+
+**Lezione.** *Due misure che si contraddicono spesso misurano due cose
+diverse: prima di scegliere chi ha ragione, si scrive l'identità che le lega.*
+Qui la scomposizione della varianza ha mostrato che **entrambe** erano giuste,
+e ha prodotto un'ipotesi strutturale precisa — che poi si è rivelata **non
+verificabile a quel livello di aggregazione**. È un esito che vale la pena
+scrivere due volte: un modello «più corretto» non è automaticamente un modello
+**migliore**, e quando due parametri si scambiano il lavoro, la scelta fra loro
+non è una questione empirica ma di comodo.

@@ -246,7 +246,7 @@ somma dei mercati esclusivi ~100-104% invece di 108-115%.
   ```
   che installa il pacchetto in editable più le dipendenze di test dichiarate in
   `pyproject.toml`. Dopo di che `python -m pytest -q` gira: la suite raccoglie
-  **991 test** (`python -m pytest -q --collect-only`, 2026-07-28). Se un
+  **995 test** (`python -m pytest -q --collect-only`, 2026-07-28). Se un
   documento del repo cita un numero di test diverso come stato *attuale*, è
   scaduto; se lo cita come stato storico di una fase, va lasciato ma marcato
   come tale.

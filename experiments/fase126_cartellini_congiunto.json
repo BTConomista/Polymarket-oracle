@@ -1,0 +1,23 @@
+{
+ "fase": 126,
+ "n_partite": 19761,
+ "identita_varianza": "var(tot) = var(casa)+var(osp)+2cov; tutta la sovra-dispersione del totale e' correlazione",
+ "ll": {
+  "poisson_totale": -2.128062232187662,
+  "negbin_totale": -2.1273447626758255,
+  "dp_lati_indipendenti": -2.128062431614898,
+  "dp_lati_nervosismo": -2.1273115274309817
+ },
+ "parametri": {
+  "alpha_negbin": 0.013000000000000001,
+  "theta": 1.0,
+  "sigma2": 0.02
+ },
+ "guadagno_vs_negbin": {
+  "delta": 3.323524484377671e-05,
+  "ic95": [
+   -0.00014815653612196492,
+   0.0002180712524961864
+  ]
+ }
+}
