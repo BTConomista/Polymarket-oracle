@@ -96,9 +96,15 @@ Domanda dell'utente: «quanto serve davvero questo sforzo? quali dati
 scarichiamo che non possiamo avere da altre parti?». Verificato, e la risposta
 ridimensiona quanto scritto sotto. Tre fatti:
 
-**1. La stima che il dato sostituirebbe non alimenta nulla.**
+**1. La stima che il dato sostituirebbe alimenta pochissimo.**
 `read_ou_close_estimates()` è chiamata **solo da un test**: nessun modello,
-nessun backtest la consuma. E i backtest ufficiali girano su **2020-21 →
+nessun backtest la consuma. ⚠️ *Rettifica della Fase 114*: dire «non alimenta
+nulla» era **troppo netto** — il CSV è letto direttamente da
+`_run_fase75_squeeze_2017_19.py`, che su quella stima ha costruito
+un'analisi vera («apertura REALE + chiusura STIMATA»), e da
+`verifica_stime.py` che la valida. Il fatto esatto è: la stima **non era una
+via di prima classe**, e chi la voleva se ne faceva il join a mano. Dalla
+Fase 114 c'è `loader.ou_close_probability()`. E i backtest ufficiali girano su **2020-21 →
 2025-26**, stagioni che hanno tutte la chiusura O/U reale. Il buco 2017-19
 **non tocca nessun risultato pubblicato**.
 

@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–113)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–114)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -303,6 +303,7 @@ correzioni.*
 - [Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair](#fase-111--il-token-i-vincoli-veri-e-cosa-possiamo-davvero-farci-con-betfair)
 - [Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)](#fase-112--un-solo-scarico-per-due-piste-e-un-refactor-che-un-test-ha-bocciato)
 - [Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione](#fase-113--quanto-serve-davvero--il-ridimensionamento-di-una-mia-raccomandazione)
+- [Fase 114 — Far usare le stime davvero (e una mia frase da correggere)](#fase-114--far-usare-le-stime-davvero-e-una-mia-frase-da-correggere)
 
 ---
 
@@ -12982,3 +12983,79 @@ b=sum(((d[['odds_home','odds_draw','odds_away']].notna().all(axis=1)) &
       for d in map(pd.read_csv, glob.glob('data/*_matches.csv')))
 print(b)"   # -> 3652
 ```
+
+## Fase 114 — Far usare le stime davvero (e una mia frase da correggere)
+
+**Obiettivo.** Richiesta dell'utente: «abbiamo tanti dati e tante stime,
+vorrei che fossero usati tutti almeno in un modello o da qualche parte».
+
+**Prima l'inventario, perché la premessa andava verificata.** Controllate
+tutte e 38 le colonne dello snapshot, una per una, contro `src/` e `scripts/`:
+**nessuna è inutilizzata**. Il primo tentativo di conteggio diceva il
+contrario (4 colonne «mai usate») ed era un **artefatto della mia regex**, che
+spezzava i nomi contenenti cifre — `odds_over25` diventava `odds_over` + `25`.
+Il dato grezzo, quindi, non è sprecato.
+
+**La rettifica.** Alla Fase 113 avevo scritto che la stima O/U «non alimenta
+nulla». Troppo netto: è vero che la *funzione* `read_ou_close_estimates()` è
+chiamata solo da un test, ma il CSV è letto direttamente da
+`_run_fase75_squeeze_2017_19.py` — che su quella stima ha costruito
+un'analisi vera («apertura REALE + chiusura STIMATA») — e da
+`verifica_stime.py`, che la valida. Il fatto esatto è più preciso e meno
+sensazionale: la stima **non era una via di prima classe**, e chi la voleva
+si faceva il join a mano.
+
+**Cosa ho fatto**: `loader.ou_close_probability()`. Restituisce P(Over 2.5) di
+chiusura per ogni partita **con la provenienza dichiarata riga per riga**
+(`reale` / `stima` / `assente`). Copertura sulle 5 leghe: 12.459 reale +
+3.638 stima + 14 assente = **99,9%**. Per il motore market-implied — che
+senza chiusura O/U non gira — significa passare da **12.459 a 16.097 partite
+utilizzabili (+29%)**: il 2017-18 e il 2018-19 smettono di essere ciechi per
+il titolare.
+
+**Il vincolo che rendeva la cosa non banale.** Il progetto tiene
+deliberatamente separati prezzo e stima: le stime vivono come
+**probabilità**, mai come quote, mai dentro gli snapshot (§5). Una funzione
+che «riempie i buchi» è esattamente il posto dove quella separazione si perde
+per distrazione. Per questo: le colonne quota **non vengono toccate** (un test
+lo verifica, ed è **confermato per mutazione** — scrivendo la stima in
+`odds_over25` il test fallisce), ogni riga porta la sua provenienza, e
+`usa_stime=False` restituisce il buco vero invece della ricostruzione. 6 test
+nuovi, **889 verdi**.
+
+**Cosa NON ho fatto, e perché.** L'utente chiedeva che *tutti* i dati fossero
+usati «almeno in un modello». Molte covariate (`rest_full`, `midweek_europe`,
+`squad_value`, `npxg`, `ppda`, `deep`, assenze) **sono** usate: sono state
+misurate e trovate rumore, e stanno in panchina con i numeri del verdetto in
+`docs/PANCHINA.md`. Accenderle per non lasciarle inutilizzate sarebbe il
+contrario del metodo: un dato testato e scartato **è** un dato usato. La
+differenza che contava era un'altra — un dato *valido ma non raggiungibile*,
+ed era solo la stima.
+
+**Lezione.** «Usare tutti i dati» non vuol dire metterli tutti in un modello:
+vuol dire che nessuno sia **irraggiungibile per attrito**. Qui il problema non
+era il valore della stima (misurato da tempo), era che per usarla servivano
+venti righe di join che ogni analisi doveva riscriversi — e infatti in due
+anni l'ha fatto una sola.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la probabilità reale è il **devig binario** già in
+uso (`metrics.devig_binary`), la stima è quella della Fase 62-bis, presa così
+com'è.
+
+```
+# dove il mercato c'e' (fonte = "reale")
+p_over = (1/quota_over) / (1/quota_over + 1/quota_under)
+
+# dove non c'e' (fonte = "stima"): p_over25_close_est della Fase 62-bis,
+#   gia' una probabilita' -> nessuna trasformazione, nessun devig
+# altrove: NaN, fonte = "assente"
+```
+
+**Perché la stima non passa per un devig.** È già una probabilità devigata per
+costruzione (la Fase 62-bis stima P(Over), non una coppia di quote):
+"devigarla" significherebbe applicare due volte la stessa normalizzazione. È
+anche il motivo per cui non si può scrivere nella colonna quota senza
+inventare un overround che nessuno ha osservato — la regola di
+`data/estimates/README.md` non è una formalità, è questo.

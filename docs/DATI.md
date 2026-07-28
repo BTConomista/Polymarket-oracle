@@ -114,6 +114,27 @@ diario e `docs/AUDIT_FASI_80_100.md` dichiarassero già la correzione chiusa.
 
 ---
 
+## 1-ter · Prezzo reale e stima insieme, senza confonderli (Fase 114)
+
+`loader.ou_close_probability(matches)` restituisce **P(Over 2.5) di chiusura
+per ogni partita** con la provenienza dichiarata riga per riga:
+
+| colonna | contenuto |
+|---|---|
+| `p_over25_close` | probabilità devigata (NaN se ignota) |
+| `p_over25_close_fonte` | `reale` \| `stima` \| `assente` |
+
+Copertura sulle 5 leghe: **12.459 reale + 3.638 stima + 14 assente = 99,9%**.
+Serve al motore **market-implied**, che senza chiusura O/U non gira: passa da
+12.459 a **16.097 partite utilizzabili** (+29%), cioè le stagioni 2017-18 e
+2018-19 smettono di essere cieche per il titolare.
+
+**Le regole restano intatte, ed è il punto**: la stima resta una
+**probabilità** e non viene *mai* scritta in una colonna quota (un test lo
+verifica per mutazione), ogni riga dichiara cosa è, e chi non vuole stime
+passa `usa_stime=False` e vede il buco vero. Le righe `stima` **non vanno
+usate per ROI/CLV** (§5).
+
 ## 2 · Semantica delle quote: apertura vs chiusura (leggere PRIMA di usarle)
 
 Due istantanee per mercato: **apertura** (`*_open`, raccolta giorni prima

@@ -709,6 +709,62 @@ def read_ou_close_estimates() -> pd.DataFrame:
     return df
 
 
+def ou_close_probability(matches: pd.DataFrame, *, usa_stime: bool = True) -> pd.DataFrame:
+    """P(Over 2.5) di CHIUSURA per ogni partita, con la PROVENIENZA dichiarata.
+
+    PERCHE' ESISTE (Fase 114). Il 22,7% delle partite (3.652: tutte le 2017-18
+    e 2018-19) ha la chiusura 1X2 ma NON quella O/U, che alla fonte non esiste.
+    Senza entrambe il motore market-implied -- il titolare -- non puo' girare
+    su quelle stagioni. La stima della Fase 62-bis copre esattamente quel buco
+    ed e' validata (MAE ~0.014 nel regime d'uso), ma finora era raggiungibile
+    solo leggendo il CSV a mano: l'unica analisi che l'ha usata (Fase 75) si
+    era fatta il join per conto suo. Questa funzione la rende una via di
+    prima classe -- **senza** violare la regola che tiene separate stime e
+    prezzi.
+
+    Come rispetta le regole di data/estimates/README.md:
+      - la stima resta una PROBABILITA' e non viene mai scritta nelle colonne
+        quota (`odds_over25` non viene toccata da nessuna parte);
+      - ogni riga porta la sua provenienza in ``p_over25_close_fonte``, quindi
+        nessuna analisi puo' usarla senza sapere cosa sta usando;
+      - chi non la vuole passa ``usa_stime=False`` e ottiene NaN dove il dato
+        reale manca.
+
+    ⚠️  Le righe con fonte ``"stima"`` NON vanno usate per simulare
+    scommesse/ROI/CLV (regola §5 del CLAUDE.md): sono ricostruzioni di
+    modello, catturano solo la parte di movimento condivisa con l'1X2.
+
+    Aggiunge due colonne e non ne modifica nessuna:
+      ``p_over25_close``        probabilita' devigata (NaN se ignota)
+      ``p_over25_close_fonte``  "reale" | "stima" | "assente"
+    """
+    out = matches.copy()
+    reale = out["odds_over25"].notna() & out["odds_under25"].notna()
+    p = pd.Series(np.nan, index=out.index, dtype=float)
+    fonte = pd.Series("assente", index=out.index, dtype=object)
+
+    if reale.any():
+        inv_o = 1.0 / out.loc[reale, "odds_over25"]
+        inv_u = 1.0 / out.loc[reale, "odds_under25"]
+        p.loc[reale] = inv_o / (inv_o + inv_u)      # devig binario (metrics.devig_binary)
+        fonte.loc[reale] = "reale"
+
+    if usa_stime and (~reale).any():
+        est = read_ou_close_estimates()
+        chiave = ["season", "home_team", "away_team"]
+        m = (out.loc[~reale, chiave].astype({"season": str})
+             .merge(est[chiave + ["p_over25_close_est"]].astype({"season": str}),
+                    on=chiave, how="left"))
+        m.index = out.index[~reale]
+        trovate = m["p_over25_close_est"].notna()
+        p.loc[m.index[trovate]] = m.loc[trovate, "p_over25_close_est"].values
+        fonte.loc[m.index[trovate]] = "stima"
+
+    out["p_over25_close"] = p
+    out["p_over25_close_fonte"] = fonte
+    return out
+
+
 def read_open_sparse_estimates() -> pd.DataFrame:
     """Le STIME dell'apertura per le partite "sparse" senza apertura vera,
     fuori dal buco sistemico O/U 2017-19 (Fase 69).
