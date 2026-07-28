@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–112)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–113)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -302,6 +302,7 @@ correzioni.*
 - [Fase 110 — La documentazione Betfair entra nel repo (e smentisce una mia costante)](#fase-110--la-documentazione-betfair-entra-nel-repo-e-smentisce-una-mia-costante)
 - [Fase 111 — Il token, i vincoli veri, e cosa possiamo davvero farci con Betfair](#fase-111--il-token-i-vincoli-veri-e-cosa-possiamo-davvero-farci-con-betfair)
 - [Fase 112 — Un solo scarico per due piste (e un refactor che un test ha bocciato)](#fase-112--un-solo-scarico-per-due-piste-e-un-refactor-che-un-test-ha-bocciato)
+- [Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione](#fase-113--quanto-serve-davvero--il-ridimensionamento-di-una-mia-raccomandazione)
 
 ---
 
@@ -12901,3 +12902,83 @@ prezzo. Il taglio della serie però NON usa questa differenza: usa il flag
 `inPlay` (Fase 109-bis), perché una partita iniziata in ritardo ha una
 chiusura più tarda dell'orario da calendario — e usare l'orario programmato
 includerebbe prezzi già in-play, cioè look-ahead.
+
+## Fase 113 — «Quanto serve davvero?» — il ridimensionamento di una mia raccomandazione
+
+**Obiettivo.** Domanda dell'utente prima di mettersi a scaricare: quanto serve
+davvero questo sforzo, e quali dati otterremmo che non possiamo avere altrove.
+Domanda legittima e mai posta in questi termini: la Fase 109 aveva stabilito
+che Betfair è *migliore della stima*, ma nessuno aveva verificato **a cosa
+serva** quella stima.
+
+**Tre verifiche, tutte a portata di `grep`, tutte mai fatte.**
+
+1. **La stima non alimenta nulla.** `read_ou_close_estimates()` è chiamata
+   **solo da `tests/test_estimates.py`**: nessun modello, nessun backtest la
+   consuma. I backtest ufficiali girano su 2020-21 → 2025-26, stagioni che
+   hanno tutte la chiusura O/U reale. **Il buco 2017-19 non tocca un solo
+   risultato pubblicato.**
+
+2. **Il costo vero del buco è un altro**: 3.652 partite (22,7%) hanno la
+   chiusura 1X2 ma non quella O/U, e senza entrambe il motore market-implied
+   — il titolare — non può girare. Il guadagno non è «un dato più preciso
+   della stima»: è **due stagioni da inutilizzabili a utilizzabili**. Sono
+   però le due più vecchie, le meno rappresentative.
+
+3. **Una fetta grossa del valore era già in casa, gratis.** `football-data`
+   pubblica **20 colonne Betfair Exchange** per 2024-25 e 2025-26 — 1X2, O/U
+   2.5, handicap asiatico, apertura *e* chiusura — su **3.393 partite,
+   copertura 96,8%**. Mai usate. Misurato: il 1X2 di chiusura Betfair fa
+   **0.9676** di log-loss contro **0.9682** della media multi-book
+   (Δ −0.00060, IC95 [−0.00154, +0.00041], P 87.9%, **non conclusivo**),
+   overround 1.0055 contro 1.0531. Betfair vale poco più della media dei book
+   come *fonte*: il suo pregio è l'**indipendenza**, non la precisione.
+
+**Conseguenza.** L'ordine dei lavori si inverte: prima le colonne gratuite
+(costo zero per l'utente, stagioni più rilevanti), poi — solo se lì emerge
+qualcosa — lo scarico storico. Che resta l'unica via per **due** cose davvero
+introvabili altrove: la **traiettoria minuto per minuto** e i **mercati oltre
+1X2/O-U/handicap**. Non per il buco O/U in sé.
+
+**Ridimensionata anche la pista B, non solo la A.** La Fase 98 ha già
+misurato il movimento apertura→chiusura: **non anticipabile** (β −0.0039,
+R² 0.0001) e CLV negativo conclusivo. La traiettoria non rovescia quel
+risultato — risponde a una domanda **diversa** (*quando* il mercato impara,
+non *se* possiamo anticiparlo), utile per **attribuire** il gap, non per
+chiuderlo.
+
+**Lezione, ed è su di me.** Alla Fase 109 ho scritto che questa era la pista
+che «merita di essere percorsa», e il numero su cui poggiava (MAE 0.0060 vs
+~0.014) era corretto. Sbagliata era la conclusione, perché mancavano due
+controlli banali: **chi usa il dato che vorremmo sostituire** (nessuno) e
+**cosa abbiamo già** (due stagioni di Betfair gratis, mai toccate). Misurare
+bene una cosa non basta a stabilire che serva: il valore di un dato non sta
+nella sua qualità, sta in **cosa cambierebbe averlo**. È la stessa forma
+dell'errore della Fase 108 — un'analogia al posto di una misura — ma un
+gradino più su: qui la misura c'era, mancava la domanda giusta.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: stesso devig e stesso log-loss delle fasi
+precedenti, applicati a una colonna mai usata.
+
+```
+p(esito) = (1/quota) / somma(1/quota)          # devig moltiplicativo, 1X2
+LL       = −mean( log p(esito realizzato) )
+```
+
+I due numeri della fase sono ri-ottenibili così:
+
+```
+# la stima non e' consumata da nulla
+grep -rn "read_ou_close_estimates" --include=*.py . | grep -v "def read_ou"
+#   -> solo tests/test_estimates.py
+
+# quante partite bloccano il market-implied
+python3 -c "
+import pandas as pd, glob
+b=sum(((d[['odds_home','odds_draw','odds_away']].notna().all(axis=1)) &
+       (~d[['odds_over25','odds_under25']].notna().all(axis=1))).sum()
+      for d in map(pd.read_csv, glob.glob('data/*_matches.csv')))
+print(b)"   # -> 3652
+```

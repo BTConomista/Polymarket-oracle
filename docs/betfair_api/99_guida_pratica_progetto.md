@@ -90,6 +90,51 @@ Testo pronto:
 `python scripts/fetch_betfair_historic.py --check`. Se elenca dei pacchetti,
 l'accesso c'è.
 
+## 3-bis · ⚠️ RIDIMENSIONAMENTO (Fase 113) — leggere PRIMA di scaricare
+
+Domanda dell'utente: «quanto serve davvero questo sforzo? quali dati
+scarichiamo che non possiamo avere da altre parti?». Verificato, e la risposta
+ridimensiona quanto scritto sotto. Tre fatti:
+
+**1. La stima che il dato sostituirebbe non alimenta nulla.**
+`read_ou_close_estimates()` è chiamata **solo da un test**: nessun modello,
+nessun backtest la consuma. E i backtest ufficiali girano su **2020-21 →
+2025-26**, stagioni che hanno tutte la chiusura O/U reale. Il buco 2017-19
+**non tocca nessun risultato pubblicato**.
+
+**2. Il costo vero del buco è un altro, ed è misurabile**: 3.652 partite
+(**22,7%**) hanno la chiusura 1X2 ma non quella O/U, e senza entrambe il
+motore **market-implied** — il titolare — non può girare. Il guadagno reale
+non è «un dato più preciso della stima»: è **due stagioni che passano da
+inutilizzabili a utilizzabili**. Sono però le due *più vecchie*, cioè le meno
+rappresentative del calcio di oggi.
+
+**3. Una fetta grossa del valore ce l'abbiamo GIÀ, gratis.** `football-data`
+pubblica **20 colonne Betfair Exchange** per 2024-25 **e 2025-26**: 1X2, O/U
+2.5 e handicap asiatico, *apertura e chiusura* (`BFEH/BFECH…`, `BFE>2.5`,
+`BFEC>2.5`, `BFEAHH`, `BFECAHH`). **3.393 partite, copertura 96,8%**,
+scaricabili in trenta secondi — e **mai usate**.
+
+Misurato su quelle: il 1X2 di chiusura Betfair ha log-loss **0.9676** contro
+**0.9682** della media multi-book (Δ −0.00060, IC95 [−0.00154, +0.00041],
+P 87.9% — **non conclusivo**), con overround 1.0055 contro 1.0531. Cioè:
+Betfair come *fonte* vale poco più della media dei book — il suo vantaggio è
+di essere **indipendente**, non più preciso.
+
+**Conseguenza sull'ordine dei lavori.** Prima si usano le colonne Betfair
+gratuite (costo zero per l'utente, stagioni più rilevanti), e solo se lì
+emerge qualcosa si giustifica lo scarico storico. Lo scarico resta l'unica
+via per **due** cose che non esistono altrove: la **traiettoria minuto per
+minuto** (pista B) e i **mercati oltre 1X2/O-U/handicap** (pista C, tutta da
+verificare con `--dry-run`). Non per il buco O/U in sé.
+
+**Onestà su quanto avevo detto.** Alla Fase 109 avevo presentato Betfair come
+la pista che «merita di essere percorsa», sulla base di un MAE 0.0060 contro
+~0.014 della stima. Il numero è giusto, la conclusione era sbilanciata: non
+avevo controllato **chi usa quella stima** (nessuno) né **cosa abbiamo già**
+(due stagioni di Betfair gratis). Entrambi i controlli erano a portata di
+`grep`.
+
 ## 4 · Cosa possiamo farci — in ordine di valore
 
 ### A · Chiudere il buco O/U 2017-19 *(il bersaglio dichiarato)*
