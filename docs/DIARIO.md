@@ -257,7 +257,7 @@ rumore aggregato. Misurato ≠ prevedibile.*
 - [Fase 97 — Una SECONDA borsa (Smarkets), l'archivio storico degli outright, e il primo controllo esterno della deriva](#fase-97--una-seconda-borsa-smarkets-larchivio-storico-degli-outright-e-il-primo-controllo-esterno-della-deriva)
 - [Fase 98 — Sette fronti in parallelo: cosa regge, cosa cade, e la deriva di livello che nessuno cercava](#fase-98--sette-fronti-in-parallelo-cosa-regge-cosa-cade-e-la-deriva-di-livello-che-nessuno-cercava)
 - [Fase 99 — La correzione di LIVELLO dei conteggi: il lead della Fase 98 è FALSO (e perché)](#fase-99--la-correzione-di-livello-dei-conteggi-il-lead-della-fase-98-è-falso-e-perché)
-### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–107)
+### Arco 12 — I cinque campionati, gli audit dell'integrazione, e il recupero applicato (Fasi 100–108)
 
 *Il progetto passa da 3 a **5 leghe** (16.111 partite): Bundesliga e Ligue 1
 entrano scaricate e verificate riga per riga contro la fonte-madre, e con loro
@@ -296,6 +296,7 @@ correzioni.*
 - [Fase 105 — Secondo ri-tentativo sull'O/U 2017-19: quattro angoli nuovi, ancora negativo](#fase-105--secondo-ri-tentativo-sullou-2017-19-quattro-angoli-nuovi-ancora-negativo)
 - [Fase 106 — Il confronto footiqo-vs-verità esteso da 1 a 6 stagioni: non è stabile nel tempo](#fase-106--il-confronto-footiqo-vs-verità-esteso-da-1-a-6-stagioni-non-è-stabile-nel-tempo)
 - [Fase 107 — Terzo ri-tentativo sull'O/U 2017-19: ri-verifica dal vivo + angoli nuovi, ancora negativo](#fase-107--terzo-ri-tentativo-sullou-2017-19-ri-verifica-dal-vivo--angoli-nuovi-ancora-negativo)
+- [Fase 108 — «E se cercassimo partita per partita?» — testato, non scala](#fase-108--e-se-cercassimo-partita-per-partita-testato-non-scala)
 
 ---
 
@@ -12526,3 +12527,34 @@ controllo rifatto altrove.
 ### 📐 Il modello in dettaglio
 
 Nessuna matematica: fase di ricerca/verifica, esito negativo. Non applicabile.
+
+## Fase 108 — «E se cercassimo partita per partita?» — testato, non scala
+
+**Obiettivo.** Idea dell'utente dopo tre ri-tentativi negativi in blocco:
+invece di un dataset che copra tutte le 3.652 partite insieme, cercare il
+dato una partita alla volta.
+
+**Cosa ho fatto — due test diretti, non solo un argomento teorico.**
+1. Wayback Machine sulla singola pagina-partita (non più sulla pagina-elenco
+   stagionale, già risultata mai archiviata): URL reali di partite
+   BetExplorer 2017-18, trovati dal vivo alla Fase 107. **404**: nemmeno le
+   pagine di singola partita sono mai state archiviate.
+2. Ricerca web sul caso più favorevole possibile: **Juventus-Napoli
+   22/04/2018**, lo scontro diretto scudetto più seguito della stagione.
+   Nessuna quota storica reale trovata: solo pagine "sempre verdi" di siti
+   pronostici che si riscrivono per ogni nuovo incontro fra le due squadre.
+
+**Risultato.** Anche nel caso più favorevole (partita più seguita, mercato
+più popolare) non si trova nulla di reale e datato. E anche trovando
+qualcosa, l'approccio partita-per-partita introdurrebbe un bias di selezione
+strutturale (solo i big-match sarebbero "trovabili"), non solo un problema di
+scala.
+
+**Lezione.** Testare un'idea sul caso più favorevole possibile, non su un
+caso qualunque, è un modo economico di stabilire se un metodo scala PRIMA di
+investirci ore: se fallisce lì, fallisce ovunque, e lo si sa con un test solo
+invece che con centinaia.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: fase di verifica di un'idea, esito negativo. Non applicabile.

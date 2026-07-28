@@ -1,5 +1,42 @@
 # Caccia alle quote O/U 2017-19 — CHIUSA: il dato è stato trovato
 
+> ## 🔍 Fase 108 — «e se cercassimo partita per partita?» — testato, non scala
+>
+> Idea dell'utente: invece di cercare un dataset che copra tutte le 3.652
+> partite insieme, cercare il dato **una partita alla volta**. Due sotto-idee
+> distinte, entrambe testate davvero (non solo argomentate):
+>
+> 1. **Wayback Machine sulla singola pagina-partita** (non più sulla
+>    pagina-elenco stagionale, già risultata mai archiviata): presi URL REALI
+>    di partite BetExplorer 2017-18 (es.
+>    `.../serie-a-2017-2018/ac-milan-fiorentina/trvrVWvl/`, trovati dal vivo
+>    alla Fase 107) e controllati su `web.archive.org`. **404**: nemmeno le
+>    singole pagine-partita sono mai state archiviate — sono URL troppo di
+>    nicchia perché il crawler di Internet Archive le raccogliesse all'epoca.
+> 2. **Ricerca web mirata sulla singola partita**: provata anche sul caso più
+>    favorevole possibile — non una partita qualunque, ma **Juventus-Napoli
+>    22/04/2018**, lo scontro diretto scudetto più seguito di quella stagione
+>    (massima probabilità che qualcuno ne avesse scritto le quote all'epoca).
+>    Risultato: **nessuna quota storica reale trovata**. Tutti i risultati
+>    sono pagine "sempre verdi" di siti pronostici/comparatori (bettingtips4you,
+>    sportytrader, oddstrader, oddspedia…) che **si riscrivono per ogni nuovo
+>    incontro fra le stesse due squadre**: mostrano le quote dell'ULTIMO
+>    Juventus-Napoli, non quella del 2018. Anche per la partita più seguita
+>    dell'anno, sul mercato più popolare, la ricerca non ha trovato nulla di
+>    reale e datato.
+>
+> **Perché non scala, anche a prescindere dall'esito.** 3.652 partite: pure
+> trovando un modo di cercare una partita in pochi secondi, sarebbero ore di
+> lavoro per una copertura che — visto il test sul caso più favorevole — non
+> sarebbe comunque completa: coprirebbe (forse) i big-match e lascerebbe
+> scoperte le partite di metà classifica, cioè introdurrebbe un **bias di
+> selezione** (le partite "trovabili" non sono un campione casuale) invece di
+> chiudere il buco.
+>
+> **Esito: confermato che il dato non è recuperabile né in blocco né
+> partita-per-partita**, con un test diretto anche sul caso più favorevole al
+> metodo, non solo per esaurimento delle alternative in blocco.
+
 > ## 🔁 Fase 107 — terzo ri-tentativo: ri-verifica dal vivo + angoli nuovi, ancora negativo
 >
 > Richiesta esplicita dell'utente: continuare a cercare, esplorare fonti nuove
