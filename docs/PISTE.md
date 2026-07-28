@@ -89,13 +89,12 @@ voce.
 | 17 | paper-trading del draw-bias | 🟢 aperta, ma **indebolita**: il ROI pari-equilibrio non è conclusivo in nessuna delle 5 leghe (F100) | §4 |
 | 18 | dati in-play | 🟢 aperta — ma prima va chiusa la 6-bis, che costa nulla | §4 |
 | 19 | quote O/U 2017-19, chiusura vera | ✅ chiusa (F100): **trovata e NON inserita** | §4 |
-| 20 | flashscore.com/diretta.it (formazioni + corner/cartellini) | ❌ **chiusa**: endpoint protetto da anti-bot (TLS fingerprint), non aggirato per scelta di metodo; browser headless bloccato in sessione | §3 |
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
 
 **Conteggio** (con questa tassonomia): **12 piste aperte piene** (1, 2, 3,
 6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18), **5 parziali o con residuo** (4-bis,
-7, 8, 10, 16), **9 chiuse** (4, 4-ter, 4-quater, 5 come input, 6, 7-bis, 14,
-19, 20), più la ricorrente §4-bis. Le due voci nuove (6-bis, 6-ter) sono state
+7, 8, 10, 16), **8 chiuse** (4, 4-ter, 4-quater, 5 come input, 6, 7-bis, 14,
+19), più la ricorrente §4-bis. Le due voci nuove (6-bis, 6-ter) sono state
 aggiunte alla Fase 101-ter scorporando residui che erano descritti dentro altre
 voci e quindi non contati da nessuna parte: prima erano **15** fra aperte e
 parziali.
@@ -682,43 +681,6 @@ che tocca la dimensione dove la Fase 85/87 hanno trovato una tensione
 (θ≈1.35 sull'Over 3.5 contro θ≈1.10 sull'Over 4.5, pista 4-ter). Costo
 BASSO-MEDIO: il dato c'è, serve solo il join e una `implied_lambda_mu`
 multi-vincolo.
-
-### 20. flashscore.com / diretta.it (formazioni + corner/cartellini a 5 leghe) — ❌ **CHIUSA (28/07/2026)**
-**Dato**: mai estratto, nessuna riga in repo.
-**Ipotesi**: diretta.it (versione italiana di Flashscore, stessa piattaforma
-Livesport s.r.o.) mostra per (quasi) ogni lega/stagione le **formazioni
-ufficiali pre-partita** (pista 10) e le **statistiche di partita**
-corner/cartellini per Bundesliga e Ligue 1 (il buco a 5 leghe della pista 7),
-che oggi mancano perché `data/football_data_raw/` copre solo la Serie A.
-Sarebbe stata una fonte unica per colmare due piste aperte insieme.
-**ESITO — chiusa, per due motivi indipendenti, nessuno dei due aggirabile:**
-1. **Il sito non ha un'API pubblica.** I dati che il browser mostra arrivano
-   da una chiamata interna non documentata verso l'infrastruttura Flashscore,
-   protetta da un **meccanismo anti-bot attivo** (oltre a un token applicativo,
-   richiede che il client presenti il fingerprint TLS di un browser reale).
-   Non è un caso di "nessuno l'ha mai documentata": è una contromisura
-   *deliberata* contro client non-browser. Il `robots.txt` di per sé non
-   vieta le pagine di risultati (a differenza di understat/oddsportal), ma
-   accedere all'endpoint richiederebbe di impersonare un browser a livello di
-   handshake TLS — non un semplice user-agent. È la stessa categoria del
-   "nessun aggiramento" già scritto in `docs/MANUALE_SOPRAVVIVENZA.md` §4-bis
-   (niente user-agent camuffati, niente VPN), solo più profonda: qui sarebbe
-   il livello TLS, non l'header. **Non perseguita per scelta di metodo**, a
-   prescindere da fattibilità tecnica.
-2. **Un browser reale (non necessario per il punto 1, ma verificato per
-   completezza) non è comunque un'alternativa pulita in questa sessione**:
-   Playwright/Chromium (pre-installato nell'ambiente) non riesce a raggiungere
-   la rete pubblica in HTTPS — fallisce con `ERR_CONNECTION_RESET` anche su un
-   sito banale come `example.com`, con o senza il proxy dell'agente,
-   indipendentemente da diretta.it. È un limite dell'ambiente di questa
-   sessione, non del sito.
-**Via legittima alternativa, non ancora tentata**: cercare un **dataset già
-raccolto e ridistribuito apertamente da terzi** (stesso pattern di
-`davidcariboo/player-scores` per Transfermarkt, pista 10/11) — misurato
-contro una fonte primaria dove possibile, invece di scrapare noi la fonte
-viva. Non riproporre lo scraping diretto senza un cambio di condizioni (es.
-un'autorizzazione esplicita del sito, o un accesso browser reale disponibile
-in una sessione futura).
 
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 
