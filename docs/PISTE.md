@@ -742,15 +742,22 @@ diverse) nell'isolare il suo contributo da quello della rosa.
 **Piano completo**: [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)
 (cosa raccogliere in ordine di costo, bozza di schema, come dividerlo fra più
 agenti, idee d'uso non ancora decise, rischi, un **controllo finale su
-Wikipedia** — §6-bis, richiesta utente — e un elenco di **arricchimenti
+Wikipedia** — §6-bis, richiesta utente, **completo su ogni dato, non a
+campione** dopo la revisione critica — e un elenco di **arricchimenti
 aggiuntivi** — §1.8: età ed esperienza dei giocatori (anche pregressa fuori
 dalle 5 leghe, dataset globale), esperienza globale di allenatori e
 arbitri, attendance come proxy del vantaggio-casa, contesto andata/ritorno
 nelle coppe, rigori — tutti a costo marginale ~zero sugli stessi file già
-individuati). **Stato**: nessun dato ancora importato nel repo, nessun
-codice scritto — il primo passo proposto (non ancora eseguito, e col
-miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv` e
-fare un tracer bullet su una sola lega-stagione.
+individuati, da aggiungere **una funzionalità alla volta**, non in blocco).
+**§6-ter**: dieci problemi trovati rileggendo il piano in modo avversariale
+(ID mancanti per allenatori/arbitri, mandati non contigui, "esperienza"
+potenzialmente il finto pieno della regola R6, confondenti fra rimbalzo
+nuovo-allenatore e persistenza dello stile, riproducibilità sul dataset che
+si aggiorna...), ciascuno con una correzione proposta. **Stato**: nessun
+dato ancora importato nel repo, nessun codice scritto — il primo passo
+proposto (non ancora eseguito, e col miglior rapporto valore/costo) è
+importare `games.csv`/`club_games.csv` e fare un tracer bullet su una sola
+lega-stagione.
 
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 

@@ -10,7 +10,11 @@
 > fronti (§6-bis) e un elenco di **arricchimenti aggiuntivi** (§1.8: età ed
 > esperienza dei giocatori, esperienza globale di allenatori e arbitri,
 > attendance, contesto andata/ritorno, rigori...) individuati continuando a
-> ragionarci sopra. Non è una fase del diario (nessun esperimento è stato ancora
+> ragionarci sopra, più una **revisione critica** (§6-ter: 10 problemi trovati
+> nel ragionamento stesso, con la correzione proposta per ciascuno, e due
+> risposte esplicite dell'utente — controllo Wikipedia esaustivo, non a
+> campione, §6-bis; e le funzionalità di §1.8 vanno aggiunte una alla volta,
+> non in blocco, §6). Non è una fase del diario (nessun esperimento è stato ancora
 > eseguito: la regola `CLAUDE.md` §2 riserva il diario a decisioni/scoperte da
 > un run, questo è un piano), non è un impegno di raccolta, e **non autorizza
 > da sola** né lo scaricamento di nuovi dati né la scrittura di codice di
@@ -605,13 +609,21 @@ via libera esplicito dell'utente** prima di scrivere codice o importare dati:
    derivata da `games.csv`/`appearances.csv` si considera pronta per il
    modeling prima di questo passo.
 
-**Nota sugli arricchimenti di §1.8**: non sono un passo a parte — età,
-esperienza (giocatore/allenatore/arbitro), attendance, aggregate/round,
-formazione e rigori si ottengono dagli stessi file già previsti nei passi
-0-2 (nessuna riga in più nel `WANTED` del workflow). Vanno solo incluse nel
-parser quando si scrivono `player_match_appearances.csv`/
-`referee_matches.csv`/`manager_spells.csv` — un dettaglio di
-implementazione, non un fronte nuovo con la sua priorità.
+**Nota sugli arricchimenti di §1.8 — AGGIORNATA (decisione utente,
+29/07/2026): una funzionalità alla volta, non in blocco.** Tecnicamente età,
+esperienza, attendance, aggregate/round, formazione e rigori vengono dagli
+stessi file già previsti nei passi 0-2 (nessuna riga in più nel `WANTED` del
+workflow) — ma questo NON significa importarle e usarle tutte insieme.
+L'utente ha confermato il problema 9 della revisione critica (§6-ter,
+principio "una cosa alla volta" del `CLAUDE.md` §2): ogni campo va
+**aggiunto, testato e valutato singolarmente** — un esperimento per feature,
+non un unico backtest con dieci covariate nuove — altrimenti non si saprà
+mai quale delle dieci ha funzionato. Ordine proposto (dal più semplice/meno
+ambiguo al più delicato, si può rivedere): età esatta → esperienza
+giocatore → attendance → aggregate/round → formazione → esperienza
+allenatore/arbitro → effetto "nuovo allenatore" → bias casa/trasferta
+arbitro → altezza/rigori (questi ultimi due subordinati alla verifica dello
+schema, ancora da fare).
 
 ## 6-bis · Controllo finale: verifica indipendente su Wikipedia (richiesta utente, 29/07/2026)
 
@@ -633,30 +645,45 @@ rosa"). Qui si applica lo stesso schema a arbitri, allenatori e giocatori.
 | `referee_matches.csv` (arbitri) | pagine di stagione delle leghe principali (es. "20XX–XX Serie A season") includono a volte tabelle/tabellini con l'arbitro, più spesso per big-match e finali di coppa che per il turno generico | **non uniforme, da misurare**: nessuna verifica preliminare in questo progetto su quanto sia sistematica — potrebbe risultare parziale |
 | `player_match_appearances.csv` (aggregati stagionali) | tabelle "Career statistics" nelle pagine giocatore (presenze/gol/assist per stagione e competizione) | **media-alta** per i giocatori di rilievo, più debole per le rotazioni minori |
 
-**Metodo proposto** (coerente con la disciplina statistica già richiesta dal
-progetto, regola R7 del `CLAUDE.md`: ogni controllo ha la sua misura, non un
-"sembra giusto"):
+**Metodo proposto — AGGIORNATO (decisione utente, 29/07/2026): controllo
+COMPLETO, non a campione.** La prima stesura proponeva un campione (30-50
+casi) con una soglia di allarme statistica; l'utente ha chiesto esplicitamente
+il controllo **su ogni dato raccolto**, non su un sottoinsieme. Cambia il
+disegno:
 
-1. **campione, non censimento**: un numero dichiarato in anticipo di casi
-   per fronte e per lega (es. 30-50) — validare l'intero dataset contro
-   Wikipedia sarebbe uno scraping sproporzionato allo scopo (un controllo
-   qualità, non una fonte primaria) e andrebbe comunque a carico del
-   `robots.txt`/rate-limit di Wikipedia, che va rispettato anche per un
-   uso "consentito" (regola R5.3);
-2. **tasso di concordanza pubblicato**, non assunto: quante voci del
-   campione coincidono, quante divergono, quante Wikipedia non le copre
-   affatto (un "non trovato" non è un errore, va contato a parte);
-3. **soglia di allarme dichiarata prima di guardare i numeri**: se il
-   mismatch (sulle voci che Wikipedia COPRE, non sul totale) supera una
-   soglia da fissare (indicativamente 5%, coerente con le tolleranze già
-   usate altrove nel progetto per il matching nome↔fonte), ci si ferma e si
-   applica la procedura R5-§5-bis (spiegare prima di accusare, cercare il
-   dato vero con un'ulteriore fonte indipendente, mai correggere a mano —
-   regola R3) prima di usare quella tabella per modellare;
-4. **il controllo è un gate, non un'operazione singola**: se un fronte non
-   supera la soglia, la tabella resta marcata "non verificata" (si registra
-   comunque, principio §1.4 del `CLAUDE.md`: anche un controllo negativo si
-   scrive) — non si butta il lavoro, si dichiara il limite.
+1. **censimento, non campione**: ogni riga di `referee_matches.csv`/
+   `manager_spells.csv`/`player_match_appearances.csv` per cui Wikipedia offre
+   un dato comparabile va verificata, non solo un sottoinsieme. Conseguenza
+   diretta e positiva: **il problema 4 della revisione critica (§6-ter) sparisce
+   da solo** — un censimento non ha bisogno di un intervallo di confidenza o di
+   una soglia-su-campione, perché non stima una percentuale ignota: la
+   riporta esatta;
+2. **per farlo senza sovraccaricare Wikipedia** (resta valida la regola
+   R5.3 sul rispetto di `robots.txt`/rate-limit anche per un uso
+   "consentito"): recuperare **una pagina per volta** (es. una pagina di
+   stagione, o una pagina "manager history" di un club) e confrontarla con
+   **tutte** le righe nostre che quella pagina copre, invece di fare una
+   richiesta per ogni singola partita — così il costo di rete scala con il
+   numero di pagine Wikipedia (poche centinaia), non con il numero di
+   partite (migliaia). Dove disponibile, preferire l'API strutturata di
+   Wikipedia (REST/Action API) alla scrematura dell'HTML grezzo, per
+   un'estrazione più affidabile delle tabelle;
+3. **tasso di concordanza pubblicato riga per riga**: quante voci
+   coincidono, quante divergono, quante Wikipedia **non copre affatto** (un
+   "non trovato" non è un errore, va contato separatamente — vedi il limite
+   sulla copertura sotto: un censimento completo dei NOSTRI dati non
+   garantisce che Wikipedia li copra tutti);
+4. **ogni divergenza reale (non "non trovato") si istruisce singolarmente**
+   con la procedura R5-§5-bis (spiegare prima di accusare, cercare il dato
+   vero con un'ulteriore fonte indipendente, mai correggere a mano — regola
+   R3) — un censimento completo produrrà più divergenze in valore assoluto
+   di un campione, quindi conviene classificarle per tipo (typo di grafia,
+   nome diverso per la stessa persona, dato davvero sbagliato) prima di
+   istruirle una per una;
+5. **il controllo è un gate, non un'operazione singola**: nessuna tabella si
+   considera pronta per il modeling finché il censimento non è completo — si
+   registra comunque il risultato anche se negativo (principio §1.4 del
+   `CLAUDE.md`).
 
 **Limiti onesti, dichiarati subito**:
 
@@ -664,14 +691,124 @@ progetto, regola R7 del `CLAUDE.md`: ogni controllo ha la sua misura, non un
   incrociato, non un dato migliore di Transfermarkt. Se le due fonti
   divergono, la procedura R5 decide qual è quella vera — non si sceglie a
   priori quale fidarsi;
-- **copertura sconosciuta, non zero ma non garantita**: per gli arbitri in
-  particolare, non c'è oggi nessuna misura di quanto sistematicamente
-  Wikipedia riporti l'arbitro partita-per-partita nelle 5 leghe — potrebbe
-  risultare che il campione utile è più piccolo del previsto, e va
-  dichiarato se succede, non nascosto;
+- **"completo sui NOSTRI dati" ≠ "Wikipedia li copre tutti"**: anche
+  facendo un censimento invece di un campione, restano partite che
+  Wikipedia semplicemente non riporta (per gli arbitri in particolare, non
+  c'è oggi nessuna misura di quanto sistematicamente Wikipedia riporti
+  l'arbitro partita-per-partita nelle 5 leghe) — il censimento è completo
+  sul lato "quante ne abbiamo controllate", non garantisce una copertura
+  del 100% sul lato "quante Wikipedia sapeva confermare";
+- **costo**: un controllo esaustivo è più lento di un campione — è una
+  scelta dichiarata dall'utente (completezza prima della velocità), non una
+  sottovalutazione del costo;
 - **ordine**: questo controllo va fatto DOPO l'importazione (passi 0-3 di
   §6), non prima — prima si costruisce la tabella dai dati già in casa, poi
   si verifica con una fonte indipendente, esattamente come richiesto.
+
+## 6-ter · Problemi trovati e correzioni (revisione critica, 29/07/2026)
+
+Su richiesta dell'utente ("cerchiamo di trovare problemi in tutto questo
+ragionamento e cerchiamo di risolverli"): una rilettura avversariale del
+piano, non solo dell'idea originale. Dieci problemi, ciascuno con la
+correzione proposta; due hanno già una risposta esplicita dell'utente.
+
+**1. Allenatori e arbitri non hanno un ID stabile — solo un nome libero.**
+A differenza del giocatore (`player_id` numerico in `appearances.csv`/
+`players.csv`), `games.csv` dà `referee` e `home/away_club_manager_name`
+come **testo puro**, senza ID interno Transfermarkt. Una variante di grafia
+(accenti, "Jr.", nome vs cognome) crea silenziosamente un "allenatore
+fantasma" diverso — un problema più serio di quanto dichiarato in §1.6/§2
+("stringa libera, va normalizzata"), perché qui non c'è nemmeno un ID di
+riferimento contro cui disambiguare, a differenza dei giocatori.
+*Correzione*: costruire un dizionario nome→entità canonica **con tasso di
+aggancio dichiarato**, stesso trattamento già riservato ai nomi-squadra
+(`TEAM_ALIASES`) — ogni nome non riconosciuto va **loggato**, mai scartato
+in silenzio (la lezione già pagata con "Verona" nei nomi-squadra).
+
+**2. `manager_spells.csv` derivato con "prima/ultima partita" si rompe sui
+ritorni.** Un allenatore che lascia un club e **ci torna anni dopo** (capita
+spesso) verrebbe fuso in un unico mandato lunghissimo che include l'era di
+chi lo ha sostituito nel mezzo, perché la derivazione proposta in §2 prende
+solo min/max data.
+*Correzione*: derivare i mandati da **sequenze contigue** (ordinare le
+partite per club/data, aprire un nuovo mandato ogni volta che il nome
+cambia), non da min/max.
+
+**3. "Esperienza globale" rischia di essere il "finto pieno" della regola
+R6.** Non è verificato quanto indietro nel tempo arrivi davvero la
+copertura di `games.csv` per ogni competizione/paese. Se è parziale, un
+giocatore/allenatore/arbitro con carriera vera in un campionato o
+un'epoca poco coperti risulterebbe con "poca esperienza" — un numero che
+**sembra** una misura e non lo è, esattamente il caso che la regola R6 del
+`CLAUDE.md` mette in guardia ("il buco peggiore non è il NaN: è il finto
+pieno").
+*Correzione*: misurare la profondità storica reale per competizione prima
+di fidarsi del conteggio, e trattare l'esperienza come "visibile al
+dataset", **mai** come verità assoluta — dichiarare il limite invece di
+sottintenderlo.
+
+**4. La soglia del controllo Wikipedia non aveva un intervallo.** ✅
+**Risposta dell'utente**: il controllo va fatto **completo, su ogni dato
+raccolto**, non a campione. Aggiornato in §6-bis: un censimento non stima
+una percentuale ignota da un campione, quindi non serve un intervallo di
+confidenza o una soglia arbitraria — il problema si risolve cambiando
+disegno, non aggiungendo statistica. Resta comunque da gestire il costo
+operativo (§6-bis: recuperare pagine intere invece di una richiesta a
+partita) e il limite di copertura (Wikipedia non ha necessariamente un
+dato per ogni nostra riga, anche controllandole tutte).
+
+**5. Il rimbalzo "nuovo allenatore" confonde il test sulla firma
+stilistica.** Le idee c-bis (lo stile persiste da un club all'altro) e g
+(rimbalzo nelle prime partite, §4) non sono indipendenti: se non si
+escludono le prime N partite del nuovo mandato, il rimbalzo di breve
+periodo contamina la misura di "quanto persiste lo stile".
+*Correzione*: modellarle insieme, non separatamente — o escludere la
+finestra-rimbalzo dal test di persistenza, o stimare entrambe nello stesso
+modello con un termine dedicato al rimbalzo.
+
+**6. La persistenza dello stile può essere selezione, non causa.** Un club
+spesso assume un allenatore **perché** il suo stile noto si adatta già alla
+rosa/filosofia del club — trovare che "lo stile persiste" potrebbe
+riflettere questo bias di selezione nell'assunzione, non un effetto
+causale dell'allenatore in sé.
+*Correzione*: dichiararlo esplicitamente come limite, stesso spirito di
+"misurato ≠ prevedibile" (Fase 99) — il test confermerebbe una
+correlazione utile per prevedere, non stabilirebbe la causa.
+
+**7. Il bias casa/trasferta dell'arbitro, senza shrinkage, è rumore per gli
+arbitri con poche partite.** La Fase 125 usa già uno shrinkage (K=40, verso
+la media di lega) proprio per questo motivo sul fattore-arbitro aggregato;
+`referee_home_away_bias.csv` (§2) non lo menzionava.
+*Correzione*: stesso shrinkage-verso-la-media già in
+`scripts/_run_fase125_cartellini.py`, non una media grezza casa/trasferta.
+
+**8. Riproducibilità: il dataset upstream si aggiorna ogni settimana.**
+"Esperienza a oggi" calcolata sul dataset "corrente" darebbe numeri diversi
+in sessioni diverse se le righe storiche vengono corrette a monte — viola
+il principio di riproducibilità (§1.5 del `CLAUDE.md`: "ogni numero dev'essere
+rifacibile da terzi, stesso codice, stessi dati, stessa config").
+*Correzione*: fissare/hashare lo snapshot scaricato (stesso pattern già
+usato per gli altri file grezzi in `data/raw/`), mai ricalcolare
+sull'"ultima versione disponibile" del dataset upstream.
+
+**9. Rischio "kitchen sink": troppe feature nuove insieme.** §1.8 aggiunge
+~10 campi in un colpo solo — il principio "una cosa alla volta" (§2 del
+`CLAUDE.md`) impone di testarli uno per volta, non in blocco, altrimenti
+non si saprà mai quale ha funzionato. ✅ **Risposta dell'utente**: confermato
+— tutte queste funzionalità vanno aggiunte un po' per volta. Aggiornato in
+§6: un esperimento per feature, con un ordine proposto (età → esperienza
+giocatore → attendance → aggregate/round → formazione → esperienza
+allenatore/arbitro → nuovo-allenatore → bias arbitro → altezza/rigori).
+
+**10. Minori, ma da dichiarare.** L'esperienza "in nazionale" resta
+scoperta anche con la scoperta del dataset globale (solo quella per-club
+ne beneficia, §1.8); le date di inizio/fine mandato derivate in
+`manager_spells.csv` sono **approssimate ai giorni-partita**, non le date
+reali di nomina/esonero — vanno dichiarate come tali, non come esatte; e —
+dato che arbitri e allenatori sono persone reali — un punteggio di "bias"
+(problema 7) andrebbe presentato con un tono descrittivo/statistico, non
+accusatorio, se e quando diventasse pubblico (stesso spirito del principio
+§1.6 del `CLAUDE.md`: onestà sui limiti, niente promesse).
 
 ## 7 · Collegamenti
 

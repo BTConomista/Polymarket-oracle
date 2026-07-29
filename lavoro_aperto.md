@@ -433,12 +433,17 @@ FIFA regolari (terreno mai esplorato). Nessun dato ancora importato nel
 repo, nessun codice scritto: il piano propone `games.csv`/`club_games.csv`
 come primo passo (miglior rapporto valore/costo) più un tracer bullet su
 una lega-stagione, un **controllo finale su Wikipedia** (§6-bis del piano,
-richiesta utente) per verificare con una fonte indipendente che i dati
-raccolti siano corretti, e un elenco di **arricchimenti aggiuntivi** (§1.8:
-età ed esperienza di giocatori/allenatori/arbitri — anche pregressa fuori
-dalle 5 leghe, essendo il dataset globale —, attendance, andata/ritorno,
-rigori) tutti a costo marginale ~zero. Nessuna idea d'uso (§4 del piano) è
-stata decisa — resta da concordare con l'utente.
+richiesta utente — **completo su ogni dato, non a campione**) per
+verificare con una fonte indipendente che i dati raccolti siano corretti, e
+un elenco di **arricchimenti aggiuntivi** (§1.8: età ed esperienza di
+giocatori/allenatori/arbitri — anche pregressa fuori dalle 5 leghe, essendo
+il dataset globale —, attendance, andata/ritorno, rigori) da aggiungere
+**una funzionalità alla volta** (richiesta utente). Una revisione critica
+(§6-ter) elenca dieci problemi trovati nel ragionamento — dai nomi senza ID
+stabile per allenatori/arbitri alla riproducibilità su un dataset che si
+aggiorna ogni settimana — ciascuno con una correzione proposta. Nessuna
+idea d'uso (§4 del piano) è stata decisa — resta da concordare con
+l'utente.
 
 ---
 
