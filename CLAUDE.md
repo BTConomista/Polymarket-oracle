@@ -368,6 +368,12 @@ docs/STUDIO_PREMIER_LIGA.md   quaderno di studio dedicato a Premier e La Liga:
 docs/PLAYBOOK_NUOVA_LEGA.md   procedura operativa per aggiungere una lega
                  nuova (passi 0-5, finestre di backtest, lezioni acquisite,
                  checklist): da seguire per ogni campionato futuro
+docs/PIANO_DATABASE_GIOCATORI.md   bozza (29/07/2026, richiesta utente):
+                 database giocatore per giocatore (minuti, formazioni,
+                 gol/assist, event data, affaticamento da nazionale) — cosa
+                 raccogliere in ordine di costo, schema proposto, fonti
+                 valutate/da valutare, idee d'uso NON ancora decise. Pista 21
+                 di PISTE.md; nessun dato ancora raccolto
 docs/betfair_api/  COPIA DI LAVORO della documentazione API Betfair (78 pagine
                  dall'Exchange API su Atlassian + la Historical Data API), con
                  fonte e data dichiarate in testa a OGNI file. Ri-generabile con
