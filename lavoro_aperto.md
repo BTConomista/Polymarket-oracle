@@ -432,8 +432,10 @@ europee, e l'affaticamento/gli allenatori da **nazionale** nelle finestre
 FIFA regolari (terreno mai esplorato). Nessun dato ancora importato nel
 repo, nessun codice scritto: il piano propone `games.csv`/`club_games.csv`
 come primo passo (miglior rapporto valore/costo) più un tracer bullet su
-una lega-stagione, e nessuna idea d'uso (§4 del piano) è stata decisa —
-resta da concordare con l'utente.
+una lega-stagione, un **controllo finale su Wikipedia** (§6-bis del piano,
+richiesta utente) per verificare con una fonte indipendente che i dati
+raccolti siano corretti, e nessuna idea d'uso (§4 del piano) è stata
+decisa — resta da concordare con l'utente.
 
 ---
 

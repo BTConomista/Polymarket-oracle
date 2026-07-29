@@ -6,7 +6,8 @@
 > struttura") ed **estesa lo stesso giorno** — sempre su richiesta dell'utente
 > — a due fronti collegati: un database per gli **arbitri** e uno per gli
 > **allenatori** (club e nazionali, incluse le competizioni europee per i
-> club). Non è una fase del diario (nessun esperimento è stato ancora
+> club), più un **controllo finale di qualità** su Wikipedia per tutti i
+> fronti (§6-bis). Non è una fase del diario (nessun esperimento è stato ancora
 > eseguito: la regola `CLAUDE.md` §2 riserva il diario a decisioni/scoperte da
 > un run, questo è un piano), non è un impegno di raccolta, e **non autorizza
 > da sola** né lo scaricamento di nuovi dati né la scrittura di codice di
@@ -481,6 +482,71 @@ via libera esplicito dell'utente** prima di scrivere codice o importare dati:
    giocatore (tocchi/passaggi) sia per lo stile di gioco nelle coppe
    europee (§1.6), prima di decidere se vale la pena scriverci sopra un
    importer.
+6. **Controllo finale, DOPO ogni importazione**: verifica indipendente su
+   Wikipedia dei dati raccolti (arbitri, allenatori, e dove possibile i
+   conteggi giocatore) — dettaglio del disegno in §6-bis. Nessuna tabella
+   derivata da `games.csv`/`appearances.csv` si considera pronta per il
+   modeling prima di questo passo.
+
+## 6-bis · Controllo finale: verifica indipendente su Wikipedia (richiesta utente, 29/07/2026)
+
+**Perché**: `games.csv`/`appearances.csv` sono un'unica fonte (Transfermarkt
+via Kaggle) — anche se la copertura interna è quasi completa (§1.1/§1.5/§1.6),
+un dato sbagliato A MONTE non si vede confrontando la stessa fonte con se
+stessa. Serve un'informazione **indipendente**: è la regola R5 del
+`CLAUDE.md` ("diagnosticare con informazione indipendente... un'altra
+fonte"), già seguita con successo in questo progetto — i calendari di coppa
+(Fase 100, Wikipedia) e le rose 2026-27 dove il dataset non arriva
+(`data/stagione_2026_2027/README.md` §3-ter, "Wikipedia come fonte della
+rosa"). Qui si applica lo stesso schema a arbitri, allenatori e giocatori.
+
+**Cosa verificare, fronte per fronte, e con quale pagina Wikipedia**:
+
+| tabella | pagina Wikipedia candidata | affidabilità attesa |
+|---|---|---|
+| `manager_spells.csv` (allenatori) | "Managerial history of \<club\>" / tabelle "List of \<club\> F.C. managers" — quasi tutti i club delle 5 leghe ne hanno una, con date di inizio/fine mandato | **alta**: è un formato standard e sistematico su Wikipedia, il più adatto dei tre a questo controllo |
+| `referee_matches.csv` (arbitri) | pagine di stagione delle leghe principali (es. "20XX–XX Serie A season") includono a volte tabelle/tabellini con l'arbitro, più spesso per big-match e finali di coppa che per il turno generico | **non uniforme, da misurare**: nessuna verifica preliminare in questo progetto su quanto sia sistematica — potrebbe risultare parziale |
+| `player_match_appearances.csv` (aggregati stagionali) | tabelle "Career statistics" nelle pagine giocatore (presenze/gol/assist per stagione e competizione) | **media-alta** per i giocatori di rilievo, più debole per le rotazioni minori |
+
+**Metodo proposto** (coerente con la disciplina statistica già richiesta dal
+progetto, regola R7 del `CLAUDE.md`: ogni controllo ha la sua misura, non un
+"sembra giusto"):
+
+1. **campione, non censimento**: un numero dichiarato in anticipo di casi
+   per fronte e per lega (es. 30-50) — validare l'intero dataset contro
+   Wikipedia sarebbe uno scraping sproporzionato allo scopo (un controllo
+   qualità, non una fonte primaria) e andrebbe comunque a carico del
+   `robots.txt`/rate-limit di Wikipedia, che va rispettato anche per un
+   uso "consentito" (regola R5.3);
+2. **tasso di concordanza pubblicato**, non assunto: quante voci del
+   campione coincidono, quante divergono, quante Wikipedia non le copre
+   affatto (un "non trovato" non è un errore, va contato a parte);
+3. **soglia di allarme dichiarata prima di guardare i numeri**: se il
+   mismatch (sulle voci che Wikipedia COPRE, non sul totale) supera una
+   soglia da fissare (indicativamente 5%, coerente con le tolleranze già
+   usate altrove nel progetto per il matching nome↔fonte), ci si ferma e si
+   applica la procedura R5-§5-bis (spiegare prima di accusare, cercare il
+   dato vero con un'ulteriore fonte indipendente, mai correggere a mano —
+   regola R3) prima di usare quella tabella per modellare;
+4. **il controllo è un gate, non un'operazione singola**: se un fronte non
+   supera la soglia, la tabella resta marcata "non verificata" (si registra
+   comunque, principio §1.4 del `CLAUDE.md`: anche un controllo negativo si
+   scrive) — non si butta il lavoro, si dichiara il limite.
+
+**Limiti onesti, dichiarati subito**:
+
+- **Wikipedia non sostituisce la fonte primaria**: è un controllo
+  incrociato, non un dato migliore di Transfermarkt. Se le due fonti
+  divergono, la procedura R5 decide qual è quella vera — non si sceglie a
+  priori quale fidarsi;
+- **copertura sconosciuta, non zero ma non garantita**: per gli arbitri in
+  particolare, non c'è oggi nessuna misura di quanto sistematicamente
+  Wikipedia riporti l'arbitro partita-per-partita nelle 5 leghe — potrebbe
+  risultare che il campione utile è più piccolo del previsto, e va
+  dichiarato se succede, non nascosto;
+- **ordine**: questo controllo va fatto DOPO l'importazione (passi 0-3 di
+  §6), non prima — prima si costruisce la tabella dai dati già in casa, poi
+  si verifica con una fonte indipendente, esattamente come richiesto.
 
 ## 7 · Collegamenti
 
