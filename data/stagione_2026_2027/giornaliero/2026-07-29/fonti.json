@@ -1,0 +1,7 @@
+{
+ "giorno": "2026-07-29",
+ "nota": "verbale di OGNI fetch, riusciti e falliti. Un giorno senza questo file è un giorno di cui non sappiamo nulla, e va trattato come tale in ogni analisi.",
+ "tentati": 0,
+ "falliti": 0,
+ "voci": []
+}
