@@ -434,8 +434,11 @@ repo, nessun codice scritto: il piano propone `games.csv`/`club_games.csv`
 come primo passo (miglior rapporto valore/costo) più un tracer bullet su
 una lega-stagione, un **controllo finale su Wikipedia** (§6-bis del piano,
 richiesta utente) per verificare con una fonte indipendente che i dati
-raccolti siano corretti, e nessuna idea d'uso (§4 del piano) è stata
-decisa — resta da concordare con l'utente.
+raccolti siano corretti, e un elenco di **arricchimenti aggiuntivi** (§1.8:
+età ed esperienza di giocatori/allenatori/arbitri — anche pregressa fuori
+dalle 5 leghe, essendo il dataset globale —, attendance, andata/ritorno,
+rigori) tutti a costo marginale ~zero. Nessuna idea d'uso (§4 del piano) è
+stata decisa — resta da concordare con l'utente.
 
 ---
 

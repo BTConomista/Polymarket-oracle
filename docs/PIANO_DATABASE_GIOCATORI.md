@@ -7,7 +7,10 @@
 > — a due fronti collegati: un database per gli **arbitri** e uno per gli
 > **allenatori** (club e nazionali, incluse le competizioni europee per i
 > club), più un **controllo finale di qualità** su Wikipedia per tutti i
-> fronti (§6-bis). Non è una fase del diario (nessun esperimento è stato ancora
+> fronti (§6-bis) e un elenco di **arricchimenti aggiuntivi** (§1.8: età ed
+> esperienza dei giocatori, esperienza globale di allenatori e arbitri,
+> attendance, contesto andata/ritorno, rigori...) individuati continuando a
+> ragionarci sopra. Non è una fase del diario (nessun esperimento è stato ancora
 > eseguito: la regola `CLAUDE.md` §2 riserva il diario a decisioni/scoperte da
 > un run, questo è un piano), non è un impegno di raccolta, e **non autorizza
 > da sola** né lo scaricamento di nuovi dati né la scrittura di codice di
@@ -264,6 +267,78 @@ normalizzato e il tasso di aggancio dichiarato, non assunto.
 | **allenatore, competizioni europee** | A (chi/risultato) + B (stile) | risultato/allenatore/arbitro gratis da `games.csv`; possesso/tiri/xG senza fonte nota |
 | **allenatore, nazionali** | 🟠 parziale | solo tornei finali in `games.csv`; qualificazioni/amichevoli/Nations League senza fonte, come per i giocatori |
 
+### 1.8 · Arricchimenti aggiuntivi (brainstorming del 29/07/2026 — "quasi tutto già nei file noti")
+
+Continuando a ragionarci sopra dopo la prima stesura: nessuna di queste voci
+richiede una fonte nuova — sono tutte derivabili dagli stessi file già
+identificati in §1.1 (`games.csv`, `club_games.csv`, `appearances.csv`,
+`players.csv`, `game_events.csv`), a costo marginale ~zero rispetto
+all'importazione già proposta.
+
+**Partita** (da `games.csv`, colonne già viste in §1.1 ma non ancora usate):
+
+- **`attendance`** (spettatori) — proxy diretta della forza del
+  fattore-campo **partita per partita**, invece di un flag binario. Si lega
+  al regime "porte chiuse" 2020-22 già noto nel progetto (Fase 51/52): con
+  l'attendance vera si può misurare il vantaggio-casa in funzione del
+  pubblico invece di trattare quell'era come un blocco unico;
+- **`aggregate` + `round`** — risultato aggregato e turno della
+  competizione: per le coppe europee dà il contesto andata/ritorno; per i
+  gironi già decisi, identifica le partite dove un allenatore fa turnover
+  perché la qualificazione è già acquisita ("dead rubber") — si lega alla
+  rotazione già in `data/stagione_2026_2027/README.md`;
+- **`home/away_club_formation`** — modulo schierato: un confronto di moduli
+  (es. difesa a 3 contro difesa a 4) è gratis e mai sfruttato finora nel
+  piano.
+
+**Giocatore** (da `players.csv`/`appearances.csv`/`game_events.csv`):
+
+- **età esatta a partita** — derivata da data di nascita + data partita, mai
+  usata finora: utile per isolare l'effetto "squadra giovane/vecchia"
+  dall'effetto valore-rosa;
+- **esperienza del giocatore** (idea dell'utente) — presenze e/o minuti
+  cumulati **fino a quella partita, o a inizio stagione**, non solo l'età
+  anagrafica. Poiché `appearances.csv`/`games.csv` NON sono filtrati alle
+  nostre 5 leghe (coprono ~89.000 partite globali, decine di competizioni —
+  Brasile, Argentina, MLS, Arabia Saudita, Giappone, Corea, le principali
+  leghe europee, verificato scaricando il dataset in questa sessione),
+  l'esperienza si può contare **anche da prima che il giocatore entrasse in
+  una delle nostre 5 leghe** (es. un giovane arrivato dal Brasile, o un
+  giocatore con anni di carriera in un altro campionato) — stesso file di
+  `player_match_appearances.csv`, nessuna fonte in più;
+- **altezza** — se presente in `players.csv` (schema non ancora ispezionato
+  riga per riga per questo campo): rilevante per calci piazzati/duelli
+  aerei, asse mai toccato dal progetto;
+- **rigori** — `game_events.csv` ha probabilmente il dettaglio nel campo
+  `description` (non ancora ispezionato oltre al conteggio dei `type`): chi
+  li calcia, chi li para. Primo passo verso uno shot-stopping da rigore per
+  portiere, più specifico del PSxG−GA già in
+  `data/stagione_2026_2027/README.md`.
+
+**Allenatori**:
+
+- **esperienza globale** — partite dirette in carriera anche fuori dalle
+  nostre 5 leghe/coppe europee (stesso ragionamento del giocatore): un
+  allenatore straniero esperto non va trattato come un debuttante solo
+  perché è nuovo nelle nostre leghe;
+- **effetto "nuovo allenatore"** — le prime N partite dopo un cambio in
+  panchina hanno spesso un rimbalzo di risultati indipendente dallo stile:
+  derivabile subito da `manager_spells.csv`, distinto dalla "firma
+  stilistica" (idea c-bis, §4).
+
+**Arbitri**:
+
+- **esperienza globale** — stesso ragionamento, partite arbitrate in
+  carriera anche fuori dalle nostre competizioni;
+- **bias casa/trasferta per singolo arbitro** — scomporre "quanto ammonisce"
+  (Fase 125) per squadra-in-casa vs squadra-in-trasferta, per capire se un
+  arbitro è sistematicamente più severo con gli ospiti.
+
+**Nota di onestà**: due voci sopra NON sono ancora verificate riga per riga
+(altezza in `players.csv`, dettaglio rigori nel campo `description` di
+`game_events.csv`) — vanno controllate nel tracer bullet (§6), non assunte
+presenti solo perché sarebbe comodo che lo fossero.
+
 ## 2 · Come strutturare i dati (bozza di schema)
 
 Rispettando le convenzioni già consolidate (`CLAUDE.md` §5/§5-bis):
@@ -287,12 +362,15 @@ testa come fa ogni modulo di `src/data/`):
 ```
 players.csv
     player_id (interno, stabile), nome, data_nascita, ruolo, piede,
-    nazionalita
+    nazionalita, altezza (se presente in players.csv, da verificare)
 
 player_match_appearances.csv        # Tier A — una riga per (player_id, partita)
     season, home_team, away_team, player_id, team, titolare (bool),
     minuto_in, minuto_out, minuti_giocati, ruolo_in_campo,
-    gol, assist, ammonizioni, espulsione (bool)
+    gol, assist, ammonizioni, espulsione (bool),
+    eta_esatta                      # derivata: data_nascita vs data partita
+    presenze_carriera_a_oggi        # derivata: conteggio su TUTTO appearances.csv,
+    minuti_carriera_a_oggi          #   non filtrato alle 5 leghe (§1.8)
 
 player_match_advanced.csv           # Tier B — SOLO se/quando una fonte esiste
     season, home_team, away_team, player_id, tocchi, passaggi_tentati,
@@ -303,16 +381,34 @@ player_national_duty.csv            # fronte nazionali — SOLO se/quando una
     player_id, data, competizione, minuti_giocati   # fonte esiste
 
 referee_matches.csv                 # Tier A — una riga per partita (5 leghe + coppe UEFA)
-    season, competition, date, home_team, away_team, referee
+    season, competition, date, home_team, away_team, referee,
+    attendance, aggregate, round, home_formation, away_formation,  # §1.8: gia' in
+                                                                    #   games.csv, stessa riga
+    esperienza_arbitro_a_oggi       # derivata: partite arbitrate PRIMA di questa,
+                                     #   su TUTTO games.csv (§1.8)
 
 manager_spells.csv                  # Tier A — mandati per club/nazionale, DERIVATI
     club_or_national_team, manager_name, data_inizio, data_fine,
-    fonte_derivazione ("prima/ultima partita in games.csv")
+    fonte_derivazione ("prima/ultima partita in games.csv"),
+    esperienza_globale_a_inizio_mandato   # derivata: partite dirette PRIMA
+                                            #   dell'inizio mandato (§1.8)
 
 manager_match_style.csv             # JOIN di manager_spells su snapshot esistenti
     season, competition, home_team, away_team, home_manager, away_manager,
     <tutte le colonne di stile già in snapshot: xg, npxg, ppda, deep, ...>
+
+referee_home_away_bias.csv          # derivata/aggregata (§1.8, NON una riga per
+    referee, n_partite,             #   partita): scomposizione casa/trasferta di
+    cartellini_medi_casa,           #   "quanto ammonisce" (Fase 125), utile per
+    cartellini_medi_trasferta       #   capire se un arbitro e' sbilanciato
 ```
+
+`presenze_carriera_a_oggi`/`minuti_carriera_a_oggi`/`esperienza_arbitro_a_oggi`/
+`esperienza_globale_a_inizio_mandato` sono tutte contate su `appearances.csv`/
+`games.csv` **per intero** (non filtrati alle 5 leghe): è il vantaggio pratico
+di partire da un dataset globale invece che da 5 snapshot isolati — l'unico
+posto dove questo piano propone di guardare fuori dalle 5 leghe senza che sia
+una fonte nuova da cercare.
 
 Un file per lega o un unico file con `season`+`league` in chiave: da decidere
 quando si scrive il primo importer reale, seguendo lo stesso pattern già
@@ -413,6 +509,27 @@ d. **Mercati "player prop"** (marcatore, ammonito, ecc.): oggi il listino
    stimarli in assoluto, come già capitato per il GG/NG prima che le quote
    1xBet fossero trovate (`PISTE.md` pista 16).
 
+e. **Attendance come proxy continua del vantaggio-casa** (§1.8): oggi il
+   regime "porte chiuse" 2020-22 è trattato come un blocco (Fase 51/52) —
+   con l'`attendance` vera si potrebbe stimare il vantaggio-casa in funzione
+   del pubblico presente, dentro e fuori quell'era, invece che con un flag
+   binario.
+
+f. **Esperienza (giocatore/allenatore/arbitro) come covariata**, non solo
+   età anagrafica (§1.8, idea dell'utente): presenze/minuti/partite dirette
+   cumulate fino a quella data — compresa l'esperienza maturata FUORI dalle
+   nostre 5 leghe, dato che `appearances.csv`/`games.csv` sono globali. Da
+   testare separatamente dall'età (un ventenne con 100 presenze in Brasile
+   non è un debuttante) e con lo stesso controllo-di-solo-livello delle Fasi
+   96-99, perché "più esperienza" correla anche con "squadra più forte".
+
+g. **Effetto "nuovo allenatore" e bias casa/trasferta dell'arbitro** (§1.8):
+   due ipotesi puntuali, entrambe derivabili senza fonti nuove da
+   `manager_spells.csv`/`referee_home_away_bias.csv` — il primo è un
+   rimbalzo di breve periodo indipendente dalla firma stilistica (idea
+   c-bis), il secondo scompone il fattore-arbitro già misurato (Fase 125)
+   per capire se è sbilanciato verso casa o trasferta.
+
 Nessuna di queste idee è approvata all'implementazione. Il primo passo reale,
 qualunque sia l'idea scelta poi, resta la qualità del dato Tier A (§6).
 
@@ -487,6 +604,14 @@ via libera esplicito dell'utente** prima di scrivere codice o importare dati:
    conteggi giocatore) — dettaglio del disegno in §6-bis. Nessuna tabella
    derivata da `games.csv`/`appearances.csv` si considera pronta per il
    modeling prima di questo passo.
+
+**Nota sugli arricchimenti di §1.8**: non sono un passo a parte — età,
+esperienza (giocatore/allenatore/arbitro), attendance, aggregate/round,
+formazione e rigori si ottengono dagli stessi file già previsti nei passi
+0-2 (nessuna riga in più nel `WANTED` del workflow). Vanno solo incluse nel
+parser quando si scrivono `player_match_appearances.csv`/
+`referee_matches.csv`/`manager_spells.csv` — un dettaglio di
+implementazione, non un fronte nuovo con la sua priorità.
 
 ## 6-bis · Controllo finale: verifica indipendente su Wikipedia (richiesta utente, 29/07/2026)
 

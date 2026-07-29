@@ -741,11 +741,13 @@ diretto del test già validato per l'arbitro (stessa persona, stagioni
 diverse) nell'isolare il suo contributo da quello della rosa.
 **Piano completo**: [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)
 (cosa raccogliere in ordine di costo, bozza di schema, come dividerlo fra più
-agenti, idee d'uso non ancora decise, rischi, e un **controllo finale su
-Wikipedia** — §6-bis, richiesta utente — per verificare con una fonte
-indipendente che arbitri/allenatori/giocatori derivati da `games.csv` siano
-giusti, con campione dichiarato e soglia di allarme, prima di fidarsene per
-il modeling). **Stato**: nessun dato ancora importato nel repo, nessun
+agenti, idee d'uso non ancora decise, rischi, un **controllo finale su
+Wikipedia** — §6-bis, richiesta utente — e un elenco di **arricchimenti
+aggiuntivi** — §1.8: età ed esperienza dei giocatori (anche pregressa fuori
+dalle 5 leghe, dataset globale), esperienza globale di allenatori e
+arbitri, attendance come proxy del vantaggio-casa, contesto andata/ritorno
+nelle coppe, rigori — tutti a costo marginale ~zero sugli stessi file già
+individuati). **Stato**: nessun dato ancora importato nel repo, nessun
 codice scritto — il primo passo proposto (non ancora eseguito, e col
 miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv` e
 fare un tracer bullet su una sola lega-stagione.
