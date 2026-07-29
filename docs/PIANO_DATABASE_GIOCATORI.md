@@ -461,17 +461,21 @@ trattato in dettaglio nel piano e il tier:
 | 19 | recuperi palla e intercetti | B | nuovo qui |
 | 20 | chi calcia corner e punizioni | B (estende l'idea rigori) | §1.8 |
 | 21 | grandi occasioni create/sprecate | B | nuovo qui |
-| 22 | storia infortuni per giocatore (date, tipo, durata) | scoperto — oggi solo stima aggregata per squadra (`transfermarkt.py`) | nuovo qui |
+| 22 | storia infortuni per giocatore, **ricostruita per intero all'indietro** (non solo da qui in avanti) — date, tipo, durata | scoperto — oggi solo stima aggregata per squadra (`transfermarkt.py`) | nuovo qui, ampliato §8-bis |
 | 23 | peso, accanto all'altezza | A da verificare | nuovo qui, come §1.8 |
 | 24 | rendimento per livello avversario (più forte/pari/più debole) | nuovo asse, richiede l'indice di forza (§1.10) | §1.10 |
 | 25 | squadre passate in carriera, con un indice di forza 0-1 ciascuna | nuovo, richiede l'indice di forza (§1.10) | §1.10 |
+| 26 | **esperienza PESATA per livello di competizione** (una finale di Champions da titolare ≠ un girone minore) | nuovo, richiede `peso_competizione` (§1.10) | §1.10 |
+| 27 | squalifiche REALI (storico di quelle scontate davvero, non solo calcolate dalle regole) | scoperto — oggi solo calcolate da `disciplina.py` sui cartellini, mai verificate contro un dato reale | nuovo qui, ampliato §8-bis |
+| 28 | testa a testa (H2H) a livello di **singolo giocatore**, non solo di squadra | nuovo asse | nuovo qui, ampliato §8-bis |
+| 29 | caratteristiche di gioco individuali, oltre i conteggi grezzi (es. "recupera molto e riparte veloce" invece del solo numero di recuperi) | C — dipende interamente dallo sblocco del Tier B, nessuna fonte nota nemmeno per i conteggi grezzi | nuovo qui |
 
 **Onestà su cosa resta fuori portata**: heatmap/zone di campo, distanza
 percorsa, velocità di sprint — dati da tracking GPS/video, prodotti dagli
 stessi fornitori già chiusi per il Tier B (§1.2). Nessun motivo di
 aspettarsi che diventino disponibili dove tocchi/passaggi non lo sono.
 
-### 1.10 · Rendimento per livello avversario, e un indice di forza del club (0-1)
+### 1.10 · Rendimento per livello avversario, indice di forza del club, ed esperienza PESATA per livello
 
 **L'idea dell'utente**: non fermarsi a "quanto conta la partita" (posta in
 gioco) ma guardare **quanto è forte l'avversario** — squadre più forti,
@@ -522,6 +526,40 @@ nessuna forma; e la versione più semplice di "quanto conta la partita"
 (stakes) è già stata provata a livello squadra e bocciata — un motivo in
 più per trattare "forza dell'avversario" come un'ipotesi da verificare, non
 un risultato scontato.
+
+**Estensione (29/07/2026, esempio dell'utente): l'esperienza non è solo un
+conteggio, è anche un LIVELLO.** "Un giocatore che ha giocato 3 finali di
+Champions League da titolare dovrebbe essere più forte di uno che ha
+sempre giocato in Serie B" — l'esperienza cumulata di §1.8/§4f
+(`presenze_carriera_a_oggi`, `minuti_carriera_a_oggi`) tratta ogni partita
+allo stesso modo: 90 minuti in un girone di Conference League contano
+quanto 90 minuti in una finale di Champions. Serve un secondo indice,
+**gemello** di quello di forza-del-club ma sulla **competizione/il turno**
+invece che sul club:
+
+- **`peso_competizione` (0-1)**: un ordinamento per tipo di competizione
+  (finale > semifinale > fase a gironi di Champions > campionato top-5 >
+  coppa nazionale > campionati minori...), costruibile da campi già
+  identificati — `competition_type`/`round` di `games.csv` (§1.8, già
+  proposti per il contesto andata/ritorno) danno competizione e turno
+  precisi, la `confederation`/`type` di `competitions.csv` (visto
+  scaricando il dataset, non ancora usato nel piano) distingue campionati
+  da coppe e coppe nazionali da internazionali;
+- **esperienza pesata**: invece di sommare 1 per ogni presenza, sommare
+  `peso_competizione` (ed eventualmente un peso titolare/subentrato) — così
+  il giocatore delle 3 finali di Champions da titolare pesa più del
+  giocatore con lo stesso numero di presenze tutte in Serie B, esattamente
+  l'esempio dell'utente;
+- **relazione con l'indice di forza del club**: sono complementari, non lo
+  stesso indice — un club forte può giocare partite di basso livello
+  (campionato debole) e un club debole può giocare una partita di alto
+  livello (una finale di coppa nazionale contro una big). Tenerli separati
+  finché non si misura se uno predice l'altro.
+
+**Onestà**: anche questo indice è nuovo da progettare, e la scelta
+dell'ordinamento fra competizioni (dove va una finale di Coppa Italia
+rispetto a un girone di Champions?) è in parte soggettiva — da dichiarare
+come tale, non da presentare come un fatto oggettivo.
 
 ## 2 · Come strutturare i dati (bozza di schema)
 
@@ -1080,3 +1118,62 @@ una sede decisa.
 
 **Nessuna di queste quattro idee è stata sviluppata oltre l'enunciato** —
 sono promemoria da non perdere, non piani pronti da eseguire.
+
+## 8-bis · Le quattro idee erano ESEMPI, non l'elenco — il principio generale (richiesta utente, 29/07/2026)
+
+**Chiarimento dell'utente**: le quattro idee di §8 non erano una lista
+chiusa, erano **esempi** di un principio più ampio — con tutti questi dati
+incrociati (giocatori, arbitri, allenatori, e i dati di partita che il
+progetto ha già) si potranno fare **molte più valutazioni di quelle
+elencate finora**, su assi che vanno lavorati uno per volta, nel file,
+mano a mano che si approfondiscono (non solo elencati e lasciati lì).
+
+Gli assi che l'utente ha indicato esplicitamente, con lo stato attuale nel
+piano:
+
+- **Testa a testa (H2H)** — non è un fronte nuovo: esiste già come pista 1
+  di `PISTE.md` ("scontri diretti, puntati su totali/GG"), 🟢 aperta ma
+  **mai provata**, oggi pensata a livello **squadra**. L'angolo nuovo,
+  emerso qui, è l'H2H a livello di **singolo giocatore** (voce 28 di
+  §1.9) — un attaccante che segna sempre/mai contro una certa difesa, un
+  centrocampista che soffre un certo avversario diretto — mai considerato
+  né a livello squadra né a livello giocatore in questo progetto come
+  fonte di dato STRUTTURATA (oggi la pista 1 è solo un'ipotesi, zero
+  implementazione).
+- **Partite delle squadre** — il cuore dei dati che il progetto ha già
+  (snapshot di 5 leghe, 9 stagioni); non è un fronte nuovo, è la base su
+  cui tutto il resto si innesta.
+- **Infortuni dei giocatori, ricostruiti nello storico completo** —
+  l'utente chiede esplicitamente di **risalire a tutti quelli passati**,
+  non solo raccoglierli da qui in avanti (voce 22 di §1.9, ampliata):
+  oggi il progetto ha solo una stima **aggregata per squadra** derivata
+  dalle rose Understat (`transfermarkt.py`, Fase 4/pista vecchia) — mai
+  un infortunio **individuale reale** con date di inizio/fine e tipo.
+  Nessuna fonte nota oggi per uno storico così dettagliato: è ricerca, non
+  raccolta, esattamente come il Tier B (§1.2).
+- **Squalifiche dei giocatori** — attenzione a una distinzione già scritta
+  altrove nel progetto ma da ribadire qui: `src/data/disciplina.py` **calcola**
+  le squalifiche dalle regole (soglie di cartellini) e dal conteggio dei
+  cartellini reali, non le **osserva**. Funziona bene come proiezione in
+  avanti, ma non è mai stato verificato **retrospettivamente** se le
+  squalifiche calcolate coincidano con quelle davvero scontate (casi come
+  il rosso diretto, che scatta una squalifica di durata VARIABILE decisa
+  dal giudice sportivo in base alla gravità — non dalle soglie di
+  accumulo — sfuggono al modello a regole). Uno storico REALE delle
+  squalifiche (voce 27 di §1.9) servirebbe sia come dato sia come
+  **controllo indipendente** del calcolo esistente (stesso spirito del
+  controllo Wikipedia, §6-bis, applicato a un altro modulo del progetto).
+- **Livello di esperienza, non solo quantità** — l'esempio dell'utente ("3
+  finali di Champions da titolare" vs "sempre in Serie B") è già stato
+  sviluppato in dettaglio in §1.10 (`peso_competizione`, esperienza
+  pesata, voce 26 di §1.9).
+- **Età** — già coperta (§1.8, voce 11 di §1.9).
+- **Caratteristiche di gioco, di squadra e del singolo** — di squadra è la
+  "firma stilistica" dell'allenatore (idea c-bis, §4) e i dati event/Tier B
+  di squadra già impliciti nello snapshot (xG, PPDA, deep); del singolo è
+  il Tier B individuale (§1.2, voce 29 di §1.9) — entrambi dipendono dallo
+  sblocco di una fonte oggi non nota.
+
+**Come si lavora da qui**: uno alla volta, come già deciso per gli
+arricchimenti di §1.8 (§6-ter problema 9) — non tutti insieme. L'ordine di
+approfondimento non è ancora deciso, va scelto insieme all'utente.

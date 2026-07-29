@@ -767,12 +767,19 @@ checklist unica di 25 dati-giocatore (nessun filtro per utilità immediata,
 richiesta esplicita dell'utente — solo per i campi a costo marginale
 ~zero) più un asse nuovo, il **rendimento per livello avversario**, che
 richiederebbe un **indice di forza del club (0-1)** ancora da progettare
-(candidato: `clubs.csv` dell'upstream, non ancora ispezionato). **§8**: 4
-idee prospettiche catturate ma non sviluppate (notizie infortuni/cambio
-allenatore/arbitro/meteo che dovrebbero muovere le quote in corso di
-settimana) — quasi tutte già imparentate con piste esistenti (10, 13,
-§7.3 di `lavoro_aperto.md`), in attesa di essere ricollocate quando questo
-piano verrà smontato. **Stato**: nessun dato ancora importato nel repo,
+(candidato: `clubs.csv` dell'upstream, non ancora ispezionato) — esteso
+poi a un secondo indice gemello, `peso_competizione`, per pesare
+l'**esperienza per livello** (una finale di Champions da titolare ≠ un
+girone minore, esempio dell'utente). **§8/§8-bis**: le prime 4 idee
+prospettiche catturate (notizie infortuni/cambio allenatore/arbitro/meteo)
+erano **esempi**, non l'elenco — generalizzate ad altri assi: H2H anche a
+livello **giocatore** (oltre alla pista 1, mai a livello squadra
+implementata), storico infortuni ricostruito **per intero all'indietro**
+(non solo da qui in avanti), e uno storico REALE delle squalifiche come
+controllo indipendente di `disciplina.py` (che oggi le calcola dalle
+regole, non le osserva). Quasi tutte imparentate con piste esistenti (1,
+10, 13, §7.3 di `lavoro_aperto.md`), in attesa di essere ricollocate
+quando questo piano verrà smontato. **Stato**: nessun dato ancora importato nel repo,
 nessun codice scritto — il primo passo proposto (non ancora eseguito, e
 col miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv`
 e fare un tracer bullet su una sola lega-stagione.

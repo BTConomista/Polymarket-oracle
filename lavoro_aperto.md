@@ -450,12 +450,18 @@ in più fra partita e stagione, la **convocazione per finestra FIFA**
 per utilità immediata su richiesta esplicita dell'utente — vale solo per i
 campi a costo marginale ~zero) e un asse nuovo, il **rendimento per
 livello avversario** con un **indice di forza del club (0-1)** ancora da
-progettare (§1.10). Un'**appendice** (§8 del piano) raccoglie 4 idee
-prospettiche non ancora sviluppate (notizie infortuni/allenatore/
-arbitro/meteo che dovrebbero muovere le quote in corso di settimana), in
+progettare (§1.10, poi esteso con un secondo indice gemello per pesare
+l'**esperienza per livello di competizione** — l'esempio dell'utente: 3
+finali di Champions da titolare pesano più di altrettante presenze in
+Serie B). Un'**appendice** (§8 del piano) raccoglie 4 idee prospettiche
+non ancora sviluppate (notizie infortuni/allenatore/arbitro/meteo), in
 attesa di essere ricollocate nelle piste già esistenti quando questo piano
-verrà smontato. Nessuna idea d'uso (§4 del piano) è stata decisa — resta
-da concordare con l'utente.
+verrà smontato — **§8-bis chiarisce che erano solo esempi**: il principio
+generalizzato tocca anche l'H2H a livello giocatore (oltre la pista 1),
+lo storico infortuni ricostruito per intero all'indietro, e uno storico
+REALE delle squalifiche come controllo indipendente di `disciplina.py`.
+Nessuna idea d'uso (§4 del piano) è stata decisa — resta da concordare con
+l'utente.
 
 ---
 
