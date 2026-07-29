@@ -445,8 +445,17 @@ aggiorna ogni settimana — ciascuno con una correzione proposta. Chiarita
 anche la **grana dei dati** (§1.0): base = partita, non stagione (lo
 stagionale è sempre derivato per somma); per le nazionali serve un livello
 in più fra partita e stagione, la **convocazione per finestra FIFA**
-(conta per la fatica anche senza un minuto giocato). Nessuna idea d'uso
-(§4 del piano) è stata decisa — resta da concordare con l'utente.
+(conta per la fatica anche senza un minuto giocato). Consolidata anche una
+**checklist unica di 25 dati-giocatore** (§1.9 del piano, nessun filtro
+per utilità immediata su richiesta esplicita dell'utente — vale solo per i
+campi a costo marginale ~zero) e un asse nuovo, il **rendimento per
+livello avversario** con un **indice di forza del club (0-1)** ancora da
+progettare (§1.10). Un'**appendice** (§8 del piano) raccoglie 4 idee
+prospettiche non ancora sviluppate (notizie infortuni/allenatore/
+arbitro/meteo che dovrebbero muovere le quote in corso di settimana), in
+attesa di essere ricollocate nelle piste già esistenti quando questo piano
+verrà smontato. Nessuna idea d'uso (§4 del piano) è stata decisa — resta
+da concordare con l'utente.
 
 ---
 

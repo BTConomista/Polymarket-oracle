@@ -1,28 +1,28 @@
 # Piano (bozza) — database giocatore per giocatore, arbitri e allenatori
 
-> **Cos'è questo documento e cosa NON è.** È una bozza di ragionamento, aperta
-> il **29/07/2026** su richiesta esplicita dell'utente ("prossimo passo:
-> database giocatore per giocatore... per ora iniziamo solo a creare la
-> struttura") ed **estesa lo stesso giorno** — sempre su richiesta dell'utente
-> — a due fronti collegati: un database per gli **arbitri** e uno per gli
-> **allenatori** (club e nazionali, incluse le competizioni europee per i
-> club), più un **controllo finale di qualità** su Wikipedia per tutti i
-> fronti (§6-bis) e un elenco di **arricchimenti aggiuntivi** (§1.8: età ed
-> esperienza dei giocatori, esperienza globale di allenatori e arbitri,
-> attendance, contesto andata/ritorno, rigori...) individuati continuando a
-> ragionarci sopra, più una **revisione critica** (§6-ter: 10 problemi trovati
-> nel ragionamento stesso, con la correzione proposta per ciascuno, e due
-> risposte esplicite dell'utente — controllo Wikipedia esaustivo, non a
-> campione, §6-bis; e le funzionalità di §1.8 vanno aggiunte una alla volta,
-> non in blocco, §6), e infine una **gerarchia esplicita della grana dei
-> dati** (§1.0: evento → presenza-partita club/nazionale unificata →
-> convocazione-finestra → stagione derivata), con lo schema aggiornato di
-> conseguenza (§2, `player_national_callups.csv`). Non è una fase del diario (nessun esperimento è stato ancora
-> eseguito: la regola `CLAUDE.md` §2 riserva il diario a decisioni/scoperte da
-> un run, questo è un piano), non è un impegno di raccolta, e **non autorizza
-> da sola** né lo scaricamento di nuovi dati né la scrittura di codice di
-> importazione: quello resta un passo successivo, da concordare esplicitamente
-> con l'utente (vedi §6). Vive come pista aperta in
+> **Cos'è questo documento e cosa NON è.** È una bozza di ragionamento,
+> costruita a più mani in una sola sessione (29/07/2026), che cresce ad ogni
+> giro di brainstorming — non è una fase del diario (nessun esperimento è
+> stato ancora eseguito: la regola `CLAUDE.md` §2 riserva il diario a
+> decisioni/scoperte da un run, questo è un piano), non è un impegno di
+> raccolta, e **non autorizza da sola** né lo scaricamento di nuovi dati né
+> la scrittura di codice di importazione: quello resta un passo successivo,
+> da concordare esplicitamente con l'utente (vedi §6).
+>
+> **Cronologia sintetica** (per non perdere il filo — il dettaglio vero sta
+> nelle sezioni, non qui): aperto per il database **giocatori**; esteso ad
+> **arbitri** e **allenatori** (club e nazionali, incl. coppe europee); poi
+> un **controllo finale su Wikipedia** (§6-bis, ora esaustivo su richiesta
+> dell'utente); un elenco di **arricchimenti** (§1.8: età, esperienza,
+> attendance, rigori...); una **revisione critica** con 10 problemi trovati
+> e le correzioni proposte (§6-ter); una **gerarchia esplicita della grana
+> dei dati** (§1.0: evento → partita club/nazionale unificata →
+> convocazione-finestra → stagione derivata); una **checklist completa dei
+> dati giocatore** (§1.9) con un nuovo asse — il **rendimento per livello
+> avversario** e un **indice di forza del club** ancora da progettare
+> (§1.10); e un'**appendice di idee prospettiche catturate ma non ancora
+> ricollocate** (§8, es. notizie di infortuni/cambio allenatore/meteo che
+> dovrebbero muovere le previsioni in corso di settimana). Vive come pista aperta in
 > [`PISTE.md`](PISTE.md) (pista 21) e come voce di brainstorming in
 > [`lavoro_aperto.md`](../lavoro_aperto.md) §7.
 >
@@ -422,6 +422,106 @@ all'importazione già proposta.
 (altezza in `players.csv`, dettaglio rigori nel campo `description` di
 `game_events.csv`) — vanno controllate nel tracer bullet (§6), non assunte
 presenti solo perché sarebbe comodo che lo fossero.
+
+### 1.9 · Checklist completa dei dati giocatore (elenco unico, richiesta utente)
+
+**Principio di raccolta per questo fronte, dichiarato esplicitamente
+dall'utente**: qui NON si filtra per utilità immediata al modello. Il
+principio §3 del `CLAUDE.md` ("testare la versione economica prima di
+investire") resta valido per l'infrastruttura **costosa** (Tier B, nuove
+fonti da cercare) — ma per i campi a **costo marginale ~zero** (già negli
+stessi file identificati in §1.1) la scelta è raccogliere ora, anche senza
+un uso identificato oggi, e decidere l'utilizzo più avanti. Non è uno
+strappo al metodo: nessun campo qui sotto richiede un'infrastruttura nuova
+da costruire, solo una colonna in più nel parser.
+
+Elenco unico di tutto ciò che è stato proposto per il giocatore, con dove è
+trattato in dettaglio nel piano e il tier:
+
+| # | dato | tier | dove nel piano |
+|---|---|---|---|
+| 1 | minuti giocati a partita (titolare/subentrato, minuto in/out) | A | §1.0, §1.1 |
+| 2 | gol | A | §1.1 |
+| 3 | assist | A | §1.1 |
+| 4 | tocchi | B | §1.2 |
+| 5 | passaggi (tentati/riusciti) | B | §1.2 |
+| 6 | dribbling (tentati/riusciti) | B | §1.2 |
+| 7 | interventi difensivi (contrasti) | B | §1.2 |
+| 8 | stanchezza da minuti consecutivi, club + nazionale | A (club) / scoperto (nazionale) | §1.0, §1.3, §4a |
+| 9 | vantaggio/svantaggio dai tocchi in un certo tipo di partita | B (+ §1.10 per "tipo di partita" = livello avversario) | §1.2, §1.10 |
+| 10 | gol subiti per portiere | nessuna fonte nuova | §1.1 |
+| 11 | età esatta a partita | A, derivata | §1.8 |
+| 12 | esperienza (presenze/minuti cumulati, anche pregressa fuori le 5 leghe) | A, derivata | §1.8 |
+| 13 | elenco convocati per finestra nazionale (non solo chi ha giocato) | scoperto | §1.0, §1.3 |
+| 14 | confronto del carico fra giocatori | query, non dato a sé | §1.0, §4h |
+| 15 | capitano per partita | A — `game_lineups.csv` ha già `team_captain` | nuovo qui |
+| 16 | cambio di ruolo recente | A, derivata da `ruolo_in_campo` nel tempo | nuovo qui |
+| 17 | falli commessi/subiti per singolo giocatore | B (oggi solo a livello squadra, Fase 96) | nuovo qui |
+| 18 | xG e xA individuali (non di squadra) | B | nuovo qui |
+| 19 | recuperi palla e intercetti | B | nuovo qui |
+| 20 | chi calcia corner e punizioni | B (estende l'idea rigori) | §1.8 |
+| 21 | grandi occasioni create/sprecate | B | nuovo qui |
+| 22 | storia infortuni per giocatore (date, tipo, durata) | scoperto — oggi solo stima aggregata per squadra (`transfermarkt.py`) | nuovo qui |
+| 23 | peso, accanto all'altezza | A da verificare | nuovo qui, come §1.8 |
+| 24 | rendimento per livello avversario (più forte/pari/più debole) | nuovo asse, richiede l'indice di forza (§1.10) | §1.10 |
+| 25 | squadre passate in carriera, con un indice di forza 0-1 ciascuna | nuovo, richiede l'indice di forza (§1.10) | §1.10 |
+
+**Onestà su cosa resta fuori portata**: heatmap/zone di campo, distanza
+percorsa, velocità di sprint — dati da tracking GPS/video, prodotti dagli
+stessi fornitori già chiusi per il Tier B (§1.2). Nessun motivo di
+aspettarsi che diventino disponibili dove tocchi/passaggi non lo sono.
+
+### 1.10 · Rendimento per livello avversario, e un indice di forza del club (0-1)
+
+**L'idea dell'utente**: non fermarsi a "quanto conta la partita" (posta in
+gioco) ma guardare **quanto è forte l'avversario** — squadre più forti,
+dello stesso livello, più deboli — sia per il singolo giocatore sia per la
+squadra.
+
+**Distinta dalla covariata già bocciata**: `docs/PANCHINA.md` registra già
+una covariata `stakes` (posta in gioco) **bocciata** a livello squadra —
+ma "posta in gioco" e "forza dell'avversario" sono assi diversi (una
+partita-salvezza contro l'ultima in classifica ha posta alta e avversario
+debole). Non è la stessa idea travestita, va trattata come un test
+indipendente. Un'idea consanguinea **esiste già** a livello squadra in
+`data/stagione_2026_2027/README.md` §4.3 ("Rendimento contro alta/bassa
+classifica", 🟢 misurabile) — qui si propone di (a) **estenderla al singolo
+giocatore**, (b) renderla **continua** invece che binaria alta/bassa
+classifica.
+
+**Per farlo serve un indice di forza del club**, da 0 a 1, che oggi non
+esiste. Candidati per costruirlo, in ordine di quanto sono già in casa:
+
+- **valore di rosa** — già calcolato per le 5 leghe (`player_scores.py`/
+  `transfermarkt.py`): un percentile del valore-rosa dentro la
+  lega-stagione è un candidato diretto, ma copre solo le nostre 5 leghe;
+- **posizione in classifica** — già nello snapshot per le 5 leghe;
+- **`clubs.csv`** (upstream `davidcariboo/player-scores`, **non ancora
+  ispezionato in questa sessione** — a differenza degli altri file elencati
+  in §1.1, questo va dichiarato non verificato): candidato naturale per un
+  indice **già pronto e globale** (non solo le 5 leghe), perché
+  `national_teams.csv` — stesso dataset — ha già un campo
+  `total_market_value` per le nazionali: è plausibile (da controllare, non
+  assumere) che `clubs.csv` abbia un equivalente per i club, utile proprio
+  per i club **fuori** dalle 5 leghe che compaiono nella carriera di un
+  giocatore/allenatore.
+
+**Due usi collegati, stesso indice**:
+
+1. segmentare le performance (giocatore e squadra) per livello avversario,
+   invece del solo alta/bassa classifica binario (voce 24 di §1.9);
+2. caratterizzare il **percorso di carriera** di un giocatore o di un
+   allenatore — non solo *quanta* esperienza (§1.8) ma *di che qualità*:
+   ha giocato/allenato squadre forti o deboli? Si somma/media l'indice delle
+   squadre passate, usando lo stesso storico-club-in-carriera già
+   derivabile dal dataset globale (§1.8) — nessuna fonte in più (voce 25 di
+   §1.9).
+
+**Onestà**: è un indice **nuovo da progettare**, non esiste ancora in
+nessuna forma; e la versione più semplice di "quanto conta la partita"
+(stakes) è già stata provata a livello squadra e bocciata — un motivo in
+più per trattare "forza dell'avversario" come un'ipotesi da verificare, non
+un risultato scontato.
 
 ## 2 · Come strutturare i dati (bozza di schema)
 
@@ -932,3 +1032,51 @@ accusatorio, se e quando diventasse pubblico (stesso spirito del principio
   `games.csv` (colonna `referee`) e ha misurato il guadagno sui cartellini.
 - `scripts/raccolta_giornaliera.py` — dove vive già lo stub
   `arbitro_designato` per la raccolta prospettica del 2026-27.
+
+## 8 · Idee catturate qui, in attesa di essere ricollocate (richiesta utente, 29/07/2026)
+
+**Nota di metodo.** Ragionando sul database giocatori sono emerse quattro
+idee **prospettiche** — non sull'uso dei dati storici, ma su come una
+notizia saputa **durante la settimana** dovrebbe cambiare le
+quote/previsioni della partita successiva. Nessuna di queste è davvero
+"nuova": toccano tutte piste già esistenti altrove nel progetto. L'utente
+ha chiesto di scriverle **qui per ora**, senza deciderne subito la sede
+definitiva, e di **ricollocarle quando questo piano — che resta una bozza
+di brainstorming — verrà smontato o superato da qualcosa di più
+strutturato**. Stesso schema già usato per `cantiere_opta_flashscore/`: un
+contenitore temporaneo che dichiara esplicitamente dove il contenuto dovrà
+essere spostato, per non perdere idee valide solo perché non hanno ancora
+una sede decisa.
+
+1. **Un giocatore-chiave infortunato, saputo durante la settimana, dovrebbe
+   cambiare le quote/previsioni della partita.** Non nuova in assoluto — è
+   imparentata con la pista 10 di `PISTE.md` (formazioni ufficiali a T−1h,
+   l'unica versione della pista che conta) e con §7.3 di `lavoro_aperto.md`
+   ("notizie, probabili formazioni, motivazioni"), che pone già gli stessi
+   paletti (solo raccolta prospettica, mai backtestabile sul passato, cieca
+   alle quote). **Sede futura probabile**: pista 10 di `PISTE.md`, o §7.3 di
+   `lavoro_aperto.md`.
+2. **Un cambio di allenatore, saputo in corso di stagione, dovrebbe
+   impattare subito la previsione.** Diversa dall'idea già in §4g di questo
+   piano ("effetto nuovo allenatore", che è una correzione
+   **retrospettiva** misurabile nei dati storici) — qui l'accento è
+   sull'uso **prospettico** della notizia appena accade. **Sede futura
+   probabile**: insieme all'idea 1 (§7.3 di `lavoro_aperto.md`), o come
+   estensione di §4g quando si scriverà davvero.
+3. **Un arbitro designato, saputo in anticipo, dovrebbe aggiornare le quote
+   sul mercato cartellini.** Non nuova: è esattamente ciò che
+   `data/stagione_2026_2027/README.md` §4-bis pianifica già (raccolta
+   prospettica della designazione), e ciò che la Fase 125/126 ha già
+   misurato in retrospettiva. **Sede futura**: nessuna nuova da creare — è
+   già scritta in quel §4-bis, questa voce serve solo a non perderla di
+   vista mentre si lavora su questo piano.
+4. **Se piove, e sappiamo che con la pioggia ci sono meno gol, possiamo
+   giocare Under 3.5.** Tocca la pista 13 (meteo) di `PISTE.md`, aperta da
+   tempo ma **senza nemmeno un candidato di fonte verificato** — una delle
+   poche piste del progetto in questo stato. L'ipotesi specifica — pioggia
+   → meno gol — **non è mai stata misurata** in questo progetto: è un'idea
+   da testare, non un fatto acquisito. **Sede futura probabile**: pista 13
+   di `PISTE.md`.
+
+**Nessuna di queste quattro idee è stata sviluppata oltre l'enunciato** —
+sono promemoria da non perdere, non piani pronti da eseguire.

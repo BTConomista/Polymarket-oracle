@@ -762,11 +762,20 @@ individuati, da aggiungere **una funzionalità alla volta**, non in blocco).
 (ID mancanti per allenatori/arbitri, mandati non contigui, "esperienza"
 potenzialmente il finto pieno della regola R6, confondenti fra rimbalzo
 nuovo-allenatore e persistenza dello stile, riproducibilità sul dataset che
-si aggiorna...), ciascuno con una correzione proposta. **Stato**: nessun
-dato ancora importato nel repo, nessun codice scritto — il primo passo
-proposto (non ancora eseguito, e col miglior rapporto valore/costo) è
-importare `games.csv`/`club_games.csv` e fare un tracer bullet su una sola
-lega-stagione.
+si aggiorna...), ciascuno con una correzione proposta. **§1.9-§1.10**:
+checklist unica di 25 dati-giocatore (nessun filtro per utilità immediata,
+richiesta esplicita dell'utente — solo per i campi a costo marginale
+~zero) più un asse nuovo, il **rendimento per livello avversario**, che
+richiederebbe un **indice di forza del club (0-1)** ancora da progettare
+(candidato: `clubs.csv` dell'upstream, non ancora ispezionato). **§8**: 4
+idee prospettiche catturate ma non sviluppate (notizie infortuni/cambio
+allenatore/arbitro/meteo che dovrebbero muovere le quote in corso di
+settimana) — quasi tutte già imparentate con piste esistenti (10, 13,
+§7.3 di `lavoro_aperto.md`), in attesa di essere ricollocate quando questo
+piano verrà smontato. **Stato**: nessun dato ancora importato nel repo,
+nessun codice scritto — il primo passo proposto (non ancora eseguito, e
+col miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv`
+e fare un tracer bullet su una sola lega-stagione.
 
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 
