@@ -370,10 +370,13 @@ docs/PLAYBOOK_NUOVA_LEGA.md   procedura operativa per aggiungere una lega
                  checklist): da seguire per ogni campionato futuro
 docs/PIANO_DATABASE_GIOCATORI.md   bozza (29/07/2026, richiesta utente):
                  database giocatore per giocatore (minuti, formazioni,
-                 gol/assist, event data, affaticamento da nazionale) — cosa
-                 raccogliere in ordine di costo, schema proposto, fonti
-                 valutate/da valutare, idee d'uso NON ancora decise. Pista 21
-                 di PISTE.md; nessun dato ancora raccolto
+                 gol/assist, event data, affaticamento da nazionale) ESTESA
+                 lo stesso giorno ad arbitri e allenatori (club/nazionali,
+                 incl. competizioni europee) — cosa raccogliere in ordine di
+                 costo, schema proposto, fonti valutate/verificate (games.csv
+                 di davidcariboo/player-scores da' arbitro+allenatore al
+                 >99,7% anche su CL/EL/Conference), idee d'uso NON ancora
+                 decise. Pista 21 di PISTE.md; nessun dato ancora importato
 docs/betfair_api/  COPIA DI LAVORO della documentazione API Betfair (78 pagine
                  dall'Exchange API su Atlassian + la Historical Data API), con
                  fonte e data dichiarate in testa a OGNI file. Ri-generabile con

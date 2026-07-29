@@ -1,9 +1,12 @@
-# Piano (bozza) — database giocatore per giocatore
+# Piano (bozza) — database giocatore per giocatore, arbitri e allenatori
 
 > **Cos'è questo documento e cosa NON è.** È una bozza di ragionamento, aperta
 > il **29/07/2026** su richiesta esplicita dell'utente ("prossimo passo:
 > database giocatore per giocatore... per ora iniziamo solo a creare la
-> struttura"). Non è una fase del diario (nessun esperimento è stato ancora
+> struttura") ed **estesa lo stesso giorno** — sempre su richiesta dell'utente
+> — a due fronti collegati: un database per gli **arbitri** e uno per gli
+> **allenatori** (club e nazionali, incluse le competizioni europee per i
+> club). Non è una fase del diario (nessun esperimento è stato ancora
 > eseguito: la regola `CLAUDE.md` §2 riserva il diario a decisioni/scoperte da
 > un run, questo è un piano), non è un impegno di raccolta, e **non autorizza
 > da sola** né lo scaricamento di nuovi dati né la scrittura di codice di
@@ -11,6 +14,16 @@
 > con l'utente (vedi §6). Vive come pista aperta in
 > [`PISTE.md`](PISTE.md) (pista 21) e come voce di brainstorming in
 > [`lavoro_aperto.md`](../lavoro_aperto.md) §7.
+>
+> **Nota metodologica sulla verifica.** A differenza della prima stesura (che
+> per il Tier A si basava sui nomi di file già annotati nelle piste 10/11,
+> mai aperti), le sezioni su arbitri e allenatori sono state scritte **dopo
+> aver scaricato per davvero** il dataset `davidcariboo/player-scores` da
+> Kaggle in questa sessione (`kagglehub`, licenza CC0) e **ispezionato lo
+> schema reale** dei file — non a memoria. I numeri di copertura di questo
+> documento (§1.5/§1.6) sono quindi **verificati oggi**, non stimati. Il
+> download era solo di controllo: i file NON sono stati committati nel repo
+> (708 MB, cache locale ripulita a fine verifica).
 
 ## 0 · Perché, e con quale grado di certezza
 
@@ -44,36 +57,46 @@ moduli), e da valutare con lo stesso rigore (per-mercato, con IC, principio
 ## 1 · Cosa vorremmo raccogliere, in ordine di costo
 
 Principio §3 del `CLAUDE.md`: testare la versione economica prima di
-costruire infrastrutture costose. Divido i dati desiderati in tre livelli, dal
-più economico al più difficile.
+costruire infrastrutture costose. Divido i dati desiderati per livello di
+costo — dal più economico (§1.1, §1.5, §1.6) al più difficile (§1.2, §1.3).
 
-### 1.1 · Tier A — quasi gratis: stesso fornitore già in casa, mai importato
+### 1.1 · Tier A — quasi gratis: stesso fornitore già in casa
 
 Il dataset che già usiamo per i valori di rosa (`src/data/player_scores.py`,
 Fase 67 — `dcaribou/transfermarkt-datasets` via Kaggle, licenza **CC0**,
 aggiornato settimanalmente a monte) **contiene già** i file che servono per
-gran parte di questa richiesta. Oggi il workflow
-`.github/workflows/import_dataset.yml` ne scarica solo 4 (quelli dei valori);
-**mai importati** finora (già annotato come pista 10/11 di `PISTE.md`,
-prima di questo piano):
+gran parte di questa richiesta. Verificato **oggi** scaricando il dataset per
+intero (nota metodologica in testa al documento) — schema reale, non quello
+supposto dalle piste 10/11:
 
-| file upstream | cosa dà | risponde a |
-|---|---|---|
-| `game_lineups.csv` (~349 MB) | formazione titolare, panchina, **minuto di ingresso/uscita** di ogni cambio, ruolo in campo | "quanti minuti gioca ogni partita", "informazioni su subentrati e sostituti" |
-| `game_events.csv` | gol, assist, cartellini **con il minuto**, per giocatore e per partita | "numero di gol e assist di ogni giocatore" (i cartellini già in parte usati via `src/data/disciplina.py`, ma lì solo aggregati per il calcolo di diffide/squalifiche) |
-| `transfers.csv` (pista 11) | data di arrivo/partenza di ogni giocatore da ogni club | quando un giocatore è nella rosa che gioca quella partita |
-| `players.csv` (già parzialmente usato) | anagrafica: ruolo, piede, data di nascita, nazionalità | anagrafica di base |
+| file upstream | dimensione | cosa dà DAVVERO (schema verificato) | stato import |
+|---|--:|---|---|
+| `appearances.csv` | 143 MB | **già scaricato** in `files/player_scores/appearances.csv.gz` (Fase 67) — colonne: `game_id, player_id, player_club_id, competition_id, yellow_cards, red_cards, goals, assists, minutes_played`. Minuti/gol/assist/cartellini per (giocatore, partita) **ci sono già sul disco**, solo mai uniti in una tabella partita-per-partita | ✅ scaricato, da parsare |
+| `games.csv` | 24 MB | `game_id, competition_id, season, date, home_club_id, away_club_id, home/away_club_goals, home/away_club_manager_name, referee, stadium, attendance, home/away_club_formation, competition_type` — **la tabella-cardine**: dà arbitro E allenatore per partita (vedi §1.5/§1.6), e copre anche Champions/Europa/Conference League | ⬜ non importato |
+| `club_games.csv` | 11 MB | stessa informazione di `games.csv` ma **una riga per (club, partita)**: `own_manager_name, opponent_manager_name, own/opponent_goals, is_win` — comoda per costruire il pannello per-allenatore senza pivot | ⬜ non importato |
+| `game_lineups.csv` | 337 MB | **NON ha il minuto di entrata/uscita** (correzione rispetto alla prima stesura): solo `type` (`starting_lineup`/`substitutes`), `position`, `number`, `team_captain`. Aggiunge titolare/panchina/ruolo/maglia, non i minuti — quelli sono già in `appearances.csv` | ⬜ non importato |
+| `game_events.csv` | 150 MB | eventi **con il minuto**: `type` ∈ {Substitutions (631k), Cards (382k), Goals (248k), Shootout}, con `player_id`/`player_in_id`/`player_assist_id` — qui vive il minuto esatto di ogni cambio, gol, assist, cartellino | ⬜ non importato |
+| `transfers.csv` (pista 11) | — | data di arrivo/partenza di ogni giocatore da ogni club | ⬜ non importato |
+| `players.csv` | — | anagrafica: ruolo, piede, data di nascita, nazionalità | ✅ già scaricato |
 
 **Il portiere è già coperto da qui, senza fonte aggiuntiva**: `game_lineups.csv`
 dice chi era in porta partita per partita: bastano lineup + risultato per
 avere "gol subiti per portiere" (e, incrociando gli xG di Understat già in
 snapshot, anche una stima di shot-stopping).
 
-**Non verificato ancora**: se `game_lineups.csv`/`game_events.csv` coprano
-davvero le nostre 5 leghe × 9 stagioni con la stessa completezza dei file già
-importati (i valori di rosa hanno margini di copertura dichiarati e sotto
-soglia in alcune celle, `docs/DATI.md` §5) — è il primo controllo del tracer
-bullet (§6).
+**Conseguenza pratica per l'ordine dei passi (§6)**: `games.csv` e
+`club_games.csv` insieme pesano **35 MB** (contro i 487 MB di
+lineups+events) e sbloccano arbitri, allenatori **e** l'estensione alle
+coppe europee in un colpo solo — vengono prima, non dopo, nell'ordine di
+costo/valore.
+
+**Copertura verificata oggi** (non stimata): su `games.csv`, per le 5 leghe +
+Champions/Europa/Conference League (incluse le qualificazioni) nel periodo
+2017-2025, `referee` e `home/away_club_manager_name` mancano in **meno dello
+0,3%** delle partite in ogni singola competizione (il dettaglio per
+competizione è in §1.5). Non ancora verificato: la stessa completezza per
+`appearances.csv`/`game_lineups.csv`/`game_events.csv` sulle nostre 5
+leghe/9 stagioni — è il primo controllo del tracer bullet (§6).
 
 ### 1.2 · Tier B — dati "event/advanced": tocchi, passaggi, dribbling, interventi
 
@@ -127,16 +150,118 @@ nazionale, sarà più stanco"). Candidati **da verificare, nessuno testato**:
 Questo fronte resta, dichiaratamente, allo stesso stadio della pista 13
 (meteo) in `PISTE.md`: aperto, senza nemmeno un candidato verificato.
 
-### 1.4 · Riepilogo per la richiesta originale dell'utente
+### 1.5 · Arbitri — quasi tutto già misurato altrove, qui è la parte STRUTTURALE
+
+**Non è un fronte nuovo**: l'utente aveva già chiesto di tenere conto degli
+arbitri (28/07/2026), e da quella richiesta il progetto ha già prodotto
+lavoro reale, misurato — **da riusare, non da rifare**:
+
+- `data/stagione_2026_2027/README.md` §4-bis — l'arbitro vale **quanto il
+  fattore campo** nel prevedere i cartellini (+0.00368 contro +0.00371, IC
+  entrambi conclusivi, Fase 125), la sua tendenza **persiste** fra stagioni
+  (corr +0.352, IC95% [+0.299, +0.405]), ed è **ortogonale ai gol** (Fase 96,
+  |corr| ≤ 0.06 — non è la forza-squadra vista da un'altra angolazione);
+- `scripts/_run_fase125_cartellini.py` — il backtest che l'ha misurato, e la
+  fonte che ha già usato è **esattamente `games.csv`** di
+  `davidcariboo/player-scores` (colonna `referee`, non football-data: le 5
+  leghe non hanno l'arbitro nei CSV grezzi già in repo, verificato oggi —
+  `data/football_data_raw/*.csv` non ha una colonna `Referee`);
+- `scripts/raccolta_giornaliera.py` scrive già un record `arbitro_designato`
+  (stato `da_implementare`) per la raccolta **prospettica** (designazione
+  ~2 giorni prima, irrecuperabile a posteriori).
+
+**Quello che manca, e che è lo scopo di QUESTO piano**: quei numeri vengono
+da uno script `_run_*` una tantum (Fase 125), non da una tabella
+**strutturale** versionata che backtest/predict possano leggere come
+`understat.py`/`transfermarkt.py`. Verificato oggi (§1.1): `games.csv`
+copre `referee` su **IT1/GB1/ES1/L1/FR1 2017-2025 con lo 0,0-0,1% di celle
+mancanti**, e — punto nuovo rispetto alla Fase 125, che guardava solo le 5
+leghe — **anche su CL/EL/UCOL (Conference) e le rispettive qualificazioni**,
+sempre 2017-2025, sempre sotto lo 0,3% di mancanti. La tabella
+`referee_matches.csv` proposta (§2) non aggiunge dato: **impacchetta in una
+fonte unica e versionata** ciò che oggi vive in uno script sperimentale, e lo
+estende gratis alle coppe europee.
+
+**Il confine resta quello già scritto nella Fase 125**: vale sul mercato
+**cartellini**; sull'1X2 l'arbitro non è mai stato dimostrato utile, e sul
+**totale** di partita forma e correlazione non sono separatamente
+identificabili (Fase 126) — non promettere di più di quanto già misurato.
+
+**Cosa resta davvero aperto** (non coperto da `games.csv`): VAR/assistenti,
+cambi dell'ultimo minuto, e soprattutto la raccolta **prospettica** — tutto
+già pianificato in `data/stagione_2026_2027/README.md` §4-bis, che questo
+documento NON duplica.
+
+### 1.6 · Allenatori — fronte nuovo, ipotesi dell'utente, testabile da subito
+
+**L'idea dell'utente**: uno stesso allenatore tende a produrre lo stesso
+*stile* di squadra (possesso, tiri, dribbling tentati/riusciti, occasioni da
+gol create, xG, gol fatti/subiti…) **anche cambiando squadra** — sia per i
+club sia per le nazionali —, e per i club l'analisi andrebbe estesa anche
+alle **competizioni europee**.
+
+**Perché è testabile meglio del semplice "l'allenatore conta"**: l'utente
+descrive esattamente il disegno che rende il test convincente, ed è più
+forte di quello già fatto per l'arbitro (Fase 125 confronta lo *stesso*
+arbitro fra due stagioni: qui si può confrontare lo *stesso* allenatore su
+**due squadre diverse**, isolando il suo contributo da quello della rosa
+molto più direttamente — un test quasi "a effetti fissi").
+
+**Il dato-cardine esiste già ed è quasi completo**: `games.csv`/
+`club_games.csv` (§1.1, verificati oggi) hanno `home/away_club_manager_name`
+(o `own_manager_name`/`opponent_manager_name` nella vista per-club), **con
+meno dello 0,3% di celle mancanti** sulle 5 leghe + CL/EL/UCOL 2017-2025 —
+identico alla copertura dell'arbitro, stessa tabella, stesso costo. Da questo
+si costruisce senza fonti aggiuntive:
+
+1. una tabella `manager_spells.csv` (club, allenatore, data inizio, data
+   fine mandato) per **derivazione** — prima/ultima partita con quel nome in
+   quella colonna, non un dato raccolto a parte;
+2. un JOIN di quegli intervalli sugli snapshot **già molto più ricchi** che
+   il progetto ha per le 5 leghe (xG/npxG/PPDA/deep di Understat, corner e
+   cartellini Tier 3, quote di mercato) — molto più stile-di-gioco di quanto
+   `games.csv` da solo contenga (che ha solo il risultato secco e la
+   formazione, non xG/possesso/tiri).
+
+**Il confine onesto, dichiarato subito**: per le partite di club in
+**Champions/Europa/Conference League**, `games.csv` dà allenatore, arbitro,
+risultato e modulo — ma **non** possesso/tiri/xG: Understat copre solo le 5
+leghe domestiche (nessuna verifica che copra le coppe europee, e nessuna
+fonte alternativa nota oggi per lo stile di gioco nelle coppe). Quindi
+l'estensione europea è **immediata e gratis per "chi ha allenato, con che
+risultato"**, ma resta **aperta** (nuovo Tier B, da cercare) per le
+statistiche di stile nelle stesse partite.
+
+**Nazionali — più debole del previsto, verificato oggi**: `national_teams.csv`
+ha un campo `coach_name`, ma è **solo l'attuale**, non uno storico
+per-partita — non basta per un pannello. E `games.csv` copre le nazionali
+**solo nei tornei finali** (Europei, Mondiali, Copa América, Coppa
+d'Africa, Coppa d'Asia — es. `EURO`: 215 partite su 5 edizioni 2007-2023;
+`FIWC`: 392 partite su 6 edizioni 2005-2025), **non** le qualificazioni, le
+amichevoli o la UEFA Nations League che occupano la maggior parte delle
+finestre FIFA durante una stagione normale di club — la stessa lacuna già
+scritta per i giocatori (§1.3): il fronte-nazionali resta debole, qui un
+po' meno (i tornei finali un dato lo danno) ma non risolve il caso d'uso
+principale (la fatica da doppio impegno durante la stagione).
+
+**Rischio di matching aggiuntivo**: `manager_name` è una stringa libera
+(Transfermarkt), stesso problema di matching già noto per i giocatori — va
+normalizzato e il tasso di aggancio dichiarato, non assunto.
+
+### 1.7 · Riepilogo per le richieste dell'utente (giocatori + arbitri + allenatori)
 
 | richiesta | tier | dato |
 |---|---|---|
-| minuti giocati a partita, subentrati/sostituti | A | `game_lineups.csv` (da importare) |
-| gol e assist per giocatore | A | `game_events.csv` (da importare) |
+| minuti giocati a partita, subentrati/sostituti | A | `appearances.csv` (**già scaricato**) per i minuti; `game_events.csv` per il minuto esatto del cambio |
+| gol e assist per giocatore | A | `appearances.csv` (**già scaricato**) |
 | tocchi, passaggi, dribbling, interventi | B | nessuna fonte pulita nota oggi; StatsBomb/API-Football da controllare |
 | stanchezza da minuti consecutivi + nazionale | A (club) + fronte nuovo (nazionale) | minuti-club da Tier A; minuti-nazionale **senza fonte** oggi |
 | vantaggio/svantaggio da tocchi in un certo tipo di partita | B | dipende dal Tier B |
 | gol subiti per portiere | **nessuna fonte nuova**: derivabile da Tier A + snapshot esistenti | — |
+| **arbitro per partita** | A | `games.csv` (24 MB, ⬜ da importare) — struttura ciò che la Fase 125 ha già misurato |
+| **allenatore per partita, club** | A | `games.csv`/`club_games.csv` — stile di gioco dal join con gli snapshot già ricchi (5 leghe) |
+| **allenatore, competizioni europee** | A (chi/risultato) + B (stile) | risultato/allenatore/arbitro gratis da `games.csv`; possesso/tiri/xG senza fonte nota |
+| **allenatore, nazionali** | 🟠 parziale | solo tornei finali in `games.csv`; qualificazioni/amichevoli/Nations League senza fonte, come per i giocatori |
 
 ## 2 · Come strutturare i dati (bozza di schema)
 
@@ -175,11 +300,32 @@ player_match_advanced.csv           # Tier B — SOLO se/quando una fonte esiste
 
 player_national_duty.csv            # fronte nazionali — SOLO se/quando una
     player_id, data, competizione, minuti_giocati   # fonte esiste
+
+referee_matches.csv                 # Tier A — una riga per partita (5 leghe + coppe UEFA)
+    season, competition, date, home_team, away_team, referee
+
+manager_spells.csv                  # Tier A — mandati per club/nazionale, DERIVATI
+    club_or_national_team, manager_name, data_inizio, data_fine,
+    fonte_derivazione ("prima/ultima partita in games.csv")
+
+manager_match_style.csv             # JOIN di manager_spells su snapshot esistenti
+    season, competition, home_team, away_team, home_manager, away_manager,
+    <tutte le colonne di stile già in snapshot: xg, npxg, ppda, deep, ...>
 ```
 
 Un file per lega o un unico file con `season`+`league` in chiave: da decidere
 quando si scrive il primo importer reale, seguendo lo stesso pattern già
 usato per gli snapshot di club (`data/{lega}_matches.csv`).
+`manager_match_style.csv` non è un file raccolto ma **derivato** (join): non
+serve versionarlo separatamente se si può ricalcolare da
+`manager_spells.csv` + gli snapshot, stesso principio di riproducibilità
+(`CLAUDE.md` §1.5).
+
+**Chiave allenatore/arbitro**: stesso principio della chiave giocatore —
+`manager_name`/`referee` sono stringhe libere di Transfermarkt, vanno
+normalizzate (probabilmente con lo stesso approccio nome-normalizzato +
+disambiguazione già usato in `transfermarkt.py`) e il tasso di aggancio
+dichiarato, non assunto al 100%.
 
 ## 3 · Come raccoglierli — la proposta di più agenti in parallelo
 
@@ -196,14 +342,22 @@ visto con football-data/Understat: una volta scritto il parser, le altre
 stagioni sono un ciclo, non un problema nuovo). Proposta di suddivisione
 compatibile con l'idea originale dell'utente:
 
-1. **un fronte "Tier A club"**: estendere l'import esistente
-   (`import_dataset.yml`) a `game_lineups.csv`/`game_events.csv`, scrivere il
-   parser, validarlo su una lega-stagione, poi ripeterlo sulle altre 44
-   (5 leghe × 9 stagioni meno quella del tracer);
-2. **un fronte "Tier B"**: verificare StatsBomb open data e API-Football
-   (copertura reale, licenza, robots.txt) prima di scrivere qualunque parser;
-3. **un fronte "nazionali"**: cercare una fonte da zero (§1.3) — oggi è
-   ricerca, non raccolta.
+1. **un fronte "arbitri + allenatori"**: estendere l'import esistente
+   (`import_dataset.yml`) a `games.csv`/`club_games.csv` (35 MB, già
+   verificati oggi) — è il fronte più economico e più pronto di tutti, e
+   sblocca da solo tre delle richieste dell'utente (arbitro, allenatore
+   club, estensione europea di "chi ha allenato/arbitrato/vinto");
+2. **un fronte "Tier A giocatori"**: parsare `appearances.csv` (già
+   scaricato) in `player_match_appearances.csv`, poi valutare se estendere a
+   `game_lineups.csv`/`game_events.csv` per titolare/panchina e minuto esatto
+   dei cambi;
+3. **un fronte "Tier B"**: verificare StatsBomb open data e API-Football
+   (copertura reale, licenza, robots.txt) prima di scrivere qualunque parser
+   — vale sia per i giocatori (tocchi/passaggi) sia per lo stile di gioco
+   nelle coppe europee (§1.6);
+4. **un fronte "nazionali"**: cercare una fonte da zero per le finestre FIFA
+   regolari (qualificazioni, amichevoli, Nations League — §1.3/§1.6) — oggi
+   è ricerca, non raccolta, per giocatori E allenatori.
 
 Ogni fronte segue le regole già consolidate del progetto quando tocca una
 fonte esterna: `robots.txt` rispettato (regola R5.3), licenza dichiarata
@@ -235,6 +389,21 @@ c. **Portiere**: shot-stopping individuale (gol subiti contro gol attesi
    concessi dalla difesa, usando l'xG già in snapshot) come possibile
    modificatore della forza difensiva quando cambia il portiere titolare.
 
+c-bis. **Firma stilistica dell'allenatore, testata col disegno che l'utente
+   ha proposto**: misurare lo stile di una squadra (possesso, tiri, xG,
+   dribbling…) sotto un allenatore, e verificare se **la stessa firma
+   ricompare quando lo stesso allenatore cambia squadra** — un test più
+   diretto della semplice persistenza-nel-tempo già usata per l'arbitro
+   (Fase 125), perché confronta due squadre diverse invece di due stagioni
+   della stessa. Da disegnare come backtest walk-forward con lo stesso
+   rigore (shrinkage sulle poche partite, IC, controllo-di-solo-livello per
+   non confondere "stile del nuovo allenatore" con "la squadra che eredita è
+   diversa" — stesso principio delle Fasi 96-99 sul controllo di livello).
+
+c-ter. **Arbitro**: nessuna nuova idea d'uso qui — è già misurato e in uso
+   (Fase 125/126, §1.5). L'unico passo aperto è **strutturale**
+   (`referee_matches.csv`), non di modellazione.
+
 d. **Mercati "player prop"** (marcatore, ammonito, ecc.): oggi il listino
    Tier 1-3 del progetto non li contempla — sarebbe una famiglia di mercati
    completamente nuova. Nota di onestà, coerente col principio §1.8: per
@@ -262,28 +431,56 @@ qualunque sia l'idea scelta poi, resta la qualità del dato Tier A (§6).
   detto che l'informazione mancante sia proprio quella a livello di
   giocatore — è un'ipotesi, non una certezza (principio §6 del `CLAUDE.md`:
   onestà sui limiti).
-- **Volume**: `game_lineups.csv` upstream pesa da solo ~349 MB (già annotato
-  in pista 10) — va verificato l'impatto prima di importarlo per intero.
+- **Volume**: `game_lineups.csv` (337 MB) e `game_events.csv` (150 MB) pesano
+  molto più di `games.csv`/`club_games.csv` (35 MB insieme) — un motivo in
+  più per farli DOPO, non prima (§6).
+- **Coppe europee, solo mezza vittoria**: chi ha allenato/arbitrato/vinto è
+  quasi gratis (§1.5/§1.6); possesso/tiri/xG per le stesse partite **non
+  hanno una fonte nota oggi** — Understat copre solo le 5 leghe domestiche,
+  non verificato se esista un equivalente per Champions/Europa/Conference.
+  Non dare per scontato che l'estensione europea sia completa solo perché
+  la parte "chi" lo è.
+- **`manager_name`/`referee` sono stringhe libere**: stesso rischio di
+  matching già noto per i giocatori (`transfermarkt.py`), e va misurato per
+  ogni competizione — la copertura verificata oggi (§1.5/§1.6) è sulla
+  COMPLETEZZA della colonna in `games.csv`, non sulla qualità del matching
+  contro altre fonti (che qui non serve, essendo un dato auto-contenuto).
 
 ## 6 · Primi passi concreti proposti (nessuno ancora eseguito)
 
 Tutti reversibili, in ordine di costo crescente, **ciascuno subordinato a un
 via libera esplicito dell'utente** prima di scrivere codice o importare dati:
 
-0. Aggiungere `game_lineups.csv` e `game_events.csv` alla lista `WANTED` del
-   workflow `import_dataset.yml` — stessa fonte già fidata (CC0,
-   `dcaribou/transfermarkt-datasets`), nessun nuovo rischio di licenza.
-1. **Tracer bullet**: UNA lega-stagione (candidata naturale: Serie A
-   2025-26, la più recente) → costruire `player_match_appearances.csv`
-   grezzo e validarlo contro `understat.season_players` (i minuti totali per
+0. Aggiungere `games.csv` e `club_games.csv` alla lista `WANTED` del
+   workflow `import_dataset.yml` (35 MB insieme, stessa fonte già fidata CC0)
+   — il passo col miglior rapporto valore/costo: sblocca arbitri, allenatori
+   club e l'estensione europea in un colpo solo. Aggiungere anche
+   `game_lineups.csv`/`game_events.csv` alla stessa lista è a costo
+   marginale di codice quasi nullo (stesso workflow), ma pesano 20× di più
+   (487 MB) — separarli non è obbligatorio, ma va dichiarato l'impatto
+   prima di farlo.
+1. **Tracer bullet arbitri/allenatori**: UNA lega-stagione → costruire
+   `referee_matches.csv` e `manager_spells.csv` grezzi da `games.csv`/
+   `club_games.csv`, e validare `manager_spells` contro fonte indipendente
+   (es. Wikipedia "manager history" del club, già usata con successo per
+   altre cose in questo progetto, Fase 100) prima di fidarsi del solo
+   dato derivato.
+2. **Tracer bullet giocatori**: parsare `appearances.csv` (già scaricato)
+   in `player_match_appearances.csv` per UNA lega-stagione, e validarlo
+   contro `understat.season_players` (i minuti totali per
    giocatore-stagione devono tornare, entro una tolleranza da definire) e
    contro il conteggio cartellini già usato da `disciplina.py`.
-2. **Solo dopo la validazione**: estendere alle altre 4 leghe × 9 stagioni.
-3. **Fronte nazionali** (indipendente, nessuna fonte nota): ricerca da zero,
-   non raccolta.
-4. **Fronte Tier B** (indipendente): verificare copertura reale di StatsBomb
-   open data e limiti del free tier di API-Football prima di decidere se
-   vale la pena scriverci sopra un importer.
+3. **Solo dopo la validazione di 1 e 2**: estendere alle altre 4 leghe × 9
+   stagioni, e valutare se importare anche `game_lineups.csv`/
+   `game_events.csv` per titolare/panchina e minuto esatto dei cambi.
+4. **Fronte nazionali** (indipendente, nessuna fonte nota per le finestre
+   FIFA regolari): ricerca da zero, non raccolta — vale sia per i
+   giocatori sia per gli allenatori.
+5. **Fronte Tier B** (indipendente): verificare copertura reale di StatsBomb
+   open data e limiti del free tier di API-Football, sia per i dati
+   giocatore (tocchi/passaggi) sia per lo stile di gioco nelle coppe
+   europee (§1.6), prima di decidere se vale la pena scriverci sopra un
+   importer.
 
 ## 7 · Collegamenti
 
@@ -296,3 +493,10 @@ via libera esplicito dell'utente** prima di scrivere codice o importare dati:
   di matching giocatore↔fonte già esistente, da riusare.
 - `cantiere_opta_flashscore/` — il verbale (da integrare) della sessione che
   ha chiuso quattro delle fonti Tier B.
+- `data/stagione_2026_2027/README.md` §4-bis — il lavoro già fatto e in corso
+  sull'arbitro (Fase 125/126, raccolta prospettica): questo piano lo
+  struttura, non lo duplica.
+- `scripts/_run_fase125_cartellini.py` — il backtest che ha già usato
+  `games.csv` (colonna `referee`) e ha misurato il guadagno sui cartellini.
+- `scripts/raccolta_giornaliera.py` — dove vive già lo stub
+  `arbitro_designato` per la raccolta prospettica del 2026-27.

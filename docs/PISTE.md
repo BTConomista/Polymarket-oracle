@@ -12,11 +12,12 @@ l'esito negativo si scrive, principio §1.4). Ultimo aggiornamento:
 **Fase 101-ter** (piste 16 e 19 chiuse dalla Fase 100; α\* della Fase 88 e
 COM-Poisson della Fase 85 rettificati dall'audit; piste 6-bis e 6-ter aperte
 dai residui delle Fasi 96-98); **29/07/2026** — pista **21** aperta (database
-giocatore per giocatore, richiesta utente; piano dedicato
-[`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)). ⚠️ La pista
-**20** (Opta/WhoScored/Flashscore/SofaScore, chiusa negativa il 28/07/2026) è
-ancora **da integrare** da `cantiere_opta_flashscore/` e non compare ancora
-qui sotto: la 21 non dipende dalla 20, i numeri non collidono.
+giocatore per giocatore, richiesta utente; **estesa lo stesso giorno** ad
+arbitri e allenatori, club e nazionali, con estensione alle coppe europee;
+piano dedicato [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)).
+⚠️ La pista **20** (Opta/WhoScored/Flashscore/SofaScore, chiusa negativa il
+28/07/2026) è ancora **da integrare** da `cantiere_opta_flashscore/` e non
+compare ancora qui sotto: la 21 non dipende dalla 20, i numeri non collidono.
 
 ## 0 · ⚠️ DOVE CERCARE, dopo la correzione della Fase 92
 
@@ -95,7 +96,7 @@ voce.
 | 18 | dati in-play | 🟢 aperta — ma prima va chiusa la 6-bis, che costa nulla | §4 |
 | 19 | quote O/U 2017-19, chiusura vera | ✅ chiusa (F100): **trovata e NON inserita** | §4 |
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
-| 21 | database giocatore per giocatore | 🟢 **appena aperta (29/07/2026), bozza** — nessun dato ancora raccolto/importato, vedi [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) | §3 |
+| 21 | database giocatore/arbitri/allenatori | 🟢 **appena aperta (29/07/2026), bozza** — nessun dato ancora importato, ma la fonte per arbitri/allenatori è già verificata (`games.csv`, >99,7% di copertura anche sulle coppe UEFA), vedi [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) | §3 |
 
 **Conteggio** (con questa tassonomia): **13 piste aperte piene** (1, 2, 3,
 6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21), **5 parziali o con residuo** (4-bis,
@@ -688,38 +689,63 @@ che tocca la dimensione dove la Fase 85/87 hanno trovato una tensione
 BASSO-MEDIO: il dato c'è, serve solo il join e una `implied_lambda_mu`
 multi-vincolo.
 
-### 21. Database giocatore per giocatore — 🟢 appena aperta (29/07/2026), bozza
+### 21. Database giocatore/arbitri/allenatori — 🟢 appena aperta (29/07/2026), bozza
 **Richiesta dell'utente**: il calcio è un gioco di squadra, ma ogni giocatore
 incide più o meno di un altro. Raccogliere, per ogni giocatore: minuti
 giocati a partita (titolare/subentrato, minuto di ingresso/uscita), gol,
 assist, e — dove possibile — tocchi, passaggi, dribbling, interventi
 difensivi; l'affaticamento da minuti consecutivi (inclusa la nazionale); i
-gol subiti per portiere.
-**Dato**: **estende le piste 10 e 11**, non le duplica. Lo stesso upstream
-CC0 già importato per i valori di rosa (`dcaribou/transfermarkt-datasets`,
-Fase 67) contiene anche `game_lineups.csv` e `game_events.csv` (pista 10) e
-`transfers.csv` (pista 11) — mai importati, bastano righe in più nel
-`WANTED` del workflow. Coprono minuti/subentri/gol/assist/cartellini per
-partita: quasi tutta la richiesta "Tier A". Il portiere non richiede alcuna
-fonte in più (si deriva da lineup + risultato). Restano scoperti: le
-statistiche "event/advanced" (tocchi, passaggi, dribbling, contrasti — "Tier
-B", nessuna fonte pulita nota oggi: Opta commerciale, WhoScored/SofaScore/
-FBref/Flashscore chiusi da una sessione dedicata del 28/07/2026, verbale in
+gol subiti per portiere. **Estesa lo stesso giorno** a due fronti collegati:
+un database **arbitri**, e un database **allenatori** (ipotesi: lo stile di
+una squadra sotto un allenatore tende a ripetersi quando l'allenatore cambia
+squadra) — per club **e** nazionali, con richiesta esplicita di estendere
+l'analisi club anche alle **competizioni europee**.
+**Dato**: **estende le piste 10 e 11**, non le duplica, e verificato **oggi
+scaricando per davvero** il dataset upstream (non a memoria). Lo stesso CC0
+già importato per i valori di rosa (`dcaribou/transfermarkt-datasets`, Fase
+67) contiene: `appearances.csv` (**già scaricato** in `files/`,
+minuti/gol/assist/cartellini per giocatore-partita — più ricco di quanto le
+piste 10/11 supponessero); `games.csv`/`club_games.csv` (24+11 MB, **non
+ancora importati**) con **arbitro e allenatore per partita, con >99,7% di
+copertura**, sulle 5 leghe **e su Champions/Europa/Conference League** (incl.
+qualificazioni) 2017-2025 — sblocca da solo l'estensione europea richiesta;
+e `game_lineups.csv`/`game_events.csv` (pista 10, 487 MB insieme) per
+titolare/panchina/minuto esatto dei cambi. Il portiere non richiede alcuna
+fonte in più (si deriva da lineup + risultato).
+**Il fronte arbitri non è nuovo**: il progetto ha già misurato che l'arbitro
+vale quanto il fattore campo sui cartellini e persiste fra stagioni (Fase
+125/126, `data/stagione_2026_2027/README.md` §4-bis) usando esattamente
+`games.csv`; questa pista **struttura** quel lavoro (tabella versionata)
+invece di rifarlo.
+**Restano scoperti**: le statistiche "event/advanced" per i giocatori
+(tocchi, passaggi, dribbling, contrasti — "Tier B", nessuna fonte pulita
+nota oggi: Opta commerciale, WhoScored/SofaScore/FBref/Flashscore chiusi da
+una sessione dedicata del 28/07/2026, verbale in
 `cantiere_opta_flashscore/`, non ancora integrato come pista 20 in questo
-file; StatsBomb open data e API-Football mai verificati per questo uso) e
-l'affaticamento da **nazionale** (nessuna fonte mai cercata in questo
-progetto — stesso stadio della pista 13/meteo: zero candidati verificati).
+file; StatsBomb open data e API-Football mai verificati per questo uso); lo
+**stile di gioco** (possesso/tiri/xG) nelle coppe europee, perché Understat
+copre solo le 5 leghe domestiche; e l'affaticamento/gli allenatori da
+**nazionale** nelle finestre FIFA regolari (qualificazioni, amichevoli,
+Nations League) — nessuna fonte mai cercata, stesso stadio della pista
+13/meteo (i tornei finali, Europei/Mondiali/Copa América/Coppa
+d'Africa/Coppa d'Asia, SONO coperti da `games.csv`, ma non bastano per il
+caso d'uso "fatica durante la stagione").
 **Ipotesi**: se un'informazione a livello di singolo giocatore aiuta, punta
 nella stessa direzione già misurata dalla Fase 92/93 (il gap col mercato è
 soprattutto discriminazione casa/ospite nelle partite equilibrate di seconda
 metà stagione) — ma è un'ipotesi, non una certezza; il surrogato storico
 della formazione schierata è già bocciato (Fase 98) e questo piano non lo
-riapre con la stessa scorciatoia, propone di rifarlo con dati VERI.
+riapre con la stessa scorciatoia, propone di rifarlo con dati VERI. Per
+l'allenatore, il disegno proposto (stessa persona, squadre diverse) è più
+diretto del test già validato per l'arbitro (stessa persona, stagioni
+diverse) nell'isolare il suo contributo da quello della rosa.
 **Piano completo**: [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)
 (cosa raccogliere in ordine di costo, bozza di schema, come dividerlo fra più
 agenti, idee d'uso non ancora decise, rischi). **Stato**: nessun dato ancora
-raccolto/importato, nessun codice scritto — il primo passo proposto (non
-ancora eseguito) è un tracer bullet su una sola lega-stagione.
+importato nel repo, nessun codice scritto — il primo passo proposto (non
+ancora eseguito, e col miglior rapporto valore/costo) è importare
+`games.csv`/`club_games.csv` e fare un tracer bullet su una sola
+lega-stagione.
 
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 

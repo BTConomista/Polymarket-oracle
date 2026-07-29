@@ -400,28 +400,40 @@ ferma e avvisa** invece di decidere.
 **settimanale o dopo ogni giornata**? E può **committare da sola** o deve solo
 segnalare?
 
-### 7.5 · 💭 Database giocatore per giocatore ⭐ (idea dell'utente, 29/07/2026)
+### 7.5 · 💭 Database giocatore/arbitri/allenatori ⭐ (idea dell'utente, 29/07/2026)
 
 L'idea: il calcio è un gioco di squadra ma ogni giocatore incide più o meno
 di un altro — raccogliere minuti giocati, subentri, gol, assist e (dove
 possibile) tocchi/passaggi/dribbling/interventi per ogni giocatore, più
 l'affaticamento da minuti consecutivi (club **e** nazionale), più i gol
-subiti per portiere.
+subiti per portiere. **Estesa lo stesso giorno** ad arbitri e allenatori
+(ipotesi: lo stile di una squadra sotto un allenatore si ripete quando
+l'allenatore cambia squadra), per club **e** nazionali, incluse le
+competizioni europee per i club.
 
 **Non è ancora una pista prioritizzata** come quelle di §2: è aperta oggi come
 **pista 21** in `docs/PISTE.md` con un piano dedicato,
 [`docs/PIANO_DATABASE_GIOCATORI.md`](docs/PIANO_DATABASE_GIOCATORI.md).
-Riassunto in tre righe: gran parte della richiesta (minuti, subentri,
+Riassunto: gran parte della richiesta giocatori (minuti, subentri,
 gol/assist, portiere) è **quasi gratis** — stesso dataset CC0 già importato
-per i valori di rosa (Fase 67), mai esteso a `game_lineups.csv`/
-`game_events.csv` (piste 10/11, note da tempo); i dati "event/advanced"
+per i valori di rosa (Fase 67), un file (`appearances.csv`) già scaricato
+sul disco e mai parsato, altri due (`game_lineups.csv`/`game_events.csv`,
+piste 10/11) mai importati; i dati "event/advanced"
 (tocchi/passaggi/dribbling/contrasti) non hanno oggi **nessuna fonte pulita
 nota** (Opta commerciale, WhoScored/SofaScore/FBref/Flashscore chiusi il
-28/07/2026); l'affaticamento da **nazionale** è terreno mai esplorato, zero
-candidati verificati. Nessun dato ancora raccolto, nessun codice scritto:
-il piano propone un tracer bullet su una lega-stagione prima di qualunque
-scalata, e nessuna idea d'uso (§4 del piano) è stata decisa — resta da
-concordare con l'utente.
+28/07/2026). **Scoperta verificata oggi** (scaricato per davvero il dataset,
+non a memoria): lo stesso CC0 ha anche `games.csv`/`club_games.csv` (35 MB),
+con **arbitro e allenatore per partita al >99,7% di copertura**, sulle 5
+leghe **e** su Champions/Europa/Conference League 2017-2025 — sblocca da
+solo il fronte arbitri (che il progetto misura già dalla Fase 125/126, qui
+si struttura soltanto) e l'estensione europea degli allenatori chiesta
+dall'utente. Restano scoperti: lo stile di gioco (possesso/xG) nelle coppe
+europee, e l'affaticamento/gli allenatori da **nazionale** nelle finestre
+FIFA regolari (terreno mai esplorato). Nessun dato ancora importato nel
+repo, nessun codice scritto: il piano propone `games.csv`/`club_games.csv`
+come primo passo (miglior rapporto valore/costo) più un tracer bullet su
+una lega-stagione, e nessuna idea d'uso (§4 del piano) è stata decisa —
+resta da concordare con l'utente.
 
 ---
 
