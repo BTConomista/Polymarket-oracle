@@ -730,6 +730,15 @@ Nations League) — nessuna fonte mai cercata, stesso stadio della pista
 13/meteo (i tornei finali, Europei/Mondiali/Copa América/Coppa
 d'Africa/Coppa d'Asia, SONO coperti da `games.csv`, ma non bastano per il
 caso d'uso "fatica durante la stagione").
+**Gerarchia della grana dei dati (§1.0 del piano)**: la base è la
+**partita**, non la stagione (lo stagionale è sempre derivato per somma,
+mai raccolto a parte). Emerso ragionandoci sopra un livello in più fra
+partita e stagione, specifico delle nazionali: la **convocazione per
+finestra FIFA**, perché un giocatore chiamato ma mai sceso in campo conta
+comunque per la fatica (viaggio, allenamenti saltati col club) e
+sparirebbe da qualunque fonte basata solo sulle partite giocate — precisa
+il bersaglio del fronte-nazionali (§1.3): serve l'elenco dei convocati per
+finestra, non solo le partite giocate.
 **Ipotesi**: se un'informazione a livello di singolo giocatore aiuta, punta
 nella stessa direzione già misurata dalla Fase 92/93 (il gap col mercato è
 soprattutto discriminazione casa/ospite nelle partite equilibrate di seconda

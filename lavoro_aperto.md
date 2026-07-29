@@ -441,9 +441,12 @@ il dataset globale —, attendance, andata/ritorno, rigori) da aggiungere
 **una funzionalità alla volta** (richiesta utente). Una revisione critica
 (§6-ter) elenca dieci problemi trovati nel ragionamento — dai nomi senza ID
 stabile per allenatori/arbitri alla riproducibilità su un dataset che si
-aggiorna ogni settimana — ciascuno con una correzione proposta. Nessuna
-idea d'uso (§4 del piano) è stata decisa — resta da concordare con
-l'utente.
+aggiorna ogni settimana — ciascuno con una correzione proposta. Chiarita
+anche la **grana dei dati** (§1.0): base = partita, non stagione (lo
+stagionale è sempre derivato per somma); per le nazionali serve un livello
+in più fra partita e stagione, la **convocazione per finestra FIFA**
+(conta per la fatica anche senza un minuto giocato). Nessuna idea d'uso
+(§4 del piano) è stata decisa — resta da concordare con l'utente.
 
 ---
 

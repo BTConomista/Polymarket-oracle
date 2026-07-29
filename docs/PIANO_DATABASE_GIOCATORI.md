@@ -14,7 +14,10 @@
 > nel ragionamento stesso, con la correzione proposta per ciascuno, e due
 > risposte esplicite dell'utente — controllo Wikipedia esaustivo, non a
 > campione, §6-bis; e le funzionalità di §1.8 vanno aggiunte una alla volta,
-> non in blocco, §6). Non è una fase del diario (nessun esperimento è stato ancora
+> non in blocco, §6), e infine una **gerarchia esplicita della grana dei
+> dati** (§1.0: evento → presenza-partita club/nazionale unificata →
+> convocazione-finestra → stagione derivata), con lo schema aggiornato di
+> conseguenza (§2, `player_national_callups.csv`). Non è una fase del diario (nessun esperimento è stato ancora
 > eseguito: la regola `CLAUDE.md` §2 riserva il diario a decisioni/scoperte da
 > un run, questo è un piano), non è un impegno di raccolta, e **non autorizza
 > da sola** né lo scaricamento di nuovi dati né la scrittura di codice di
@@ -67,6 +70,66 @@ moduli), e da valutare con lo stesso rigore (per-mercato, con IC, principio
 Principio §3 del `CLAUDE.md`: testare la versione economica prima di
 costruire infrastrutture costose. Divido i dati desiderati per livello di
 costo — dal più economico (§1.1, §1.5, §1.6) al più difficile (§1.2, §1.3).
+
+### 1.0 · Gerarchia dei dati: a che grana raccogliere (partita per partita, o stagione per stagione?)
+
+Chiarito ragionandoci insieme (29/07/2026): **la grana di base è la
+partita, non la stagione**. Non sono due raccolte alternative — lo
+stagionale è una vista **derivata** per somma, mai raccolto a parte, stesso
+principio già usato altrove nel piano (`manager_match_style.csv` è
+"derivato, non raccolto", §2). Motivo tecnico oltre che di metodo: la fonte
+stessa (`appearances.csv`) è già una riga per (giocatore, partita) — un
+totale stagionale raccolto a parte sarebbe una **perdita** di informazione
+rispetto a quello che si può derivare dal dato già sul disco, e le cose che
+contano di più per questo piano (fatica, esperienza cumulata fino a QUELLA
+partita) non si possono calcolare da un totale stagionale: servono le date
+delle singole partite.
+
+Discutendone è emerso che i livelli utili sono **quattro**, non tre — le
+nazionali aggiungono un livello che il campionato non ha:
+
+1. **Evento** (dentro la partita, minuto per minuto) — gol, cambio,
+   cartellino. Il livello più fine, già coperto concettualmente da
+   `game_events.csv` (§1.1). Vale sia per club sia per nazionale, nessuna
+   differenza strutturale;
+2. **Presenza a partita** — una riga per (giocatore, partita): minuti
+   giocati, titolare/subentrato, gol, assist, cartellini. **Non serve una
+   tabella diversa per club e nazionale**: è la stessa identica struttura,
+   con un campo `tipo_competizione`/`selezione` in più (campionato, coppa
+   nazionale, coppa europea, o nazionale — e per la nazionale, quale
+   selezione). Un giocatore in un dato giorno gioca o per il club o per la
+   nazionale, mai le due cose insieme: si sommano nella stessa tabella, non
+   in due tabelle parallele da far quadrare dopo;
+3. **Convocazione/finestra** (livello nuovo, emerso ragionandoci sopra) —
+   una finestra FIFA raggruppa più partite di nazionale in ~10 giorni, ed
+   **"essere convocato" è un fatto che esiste anche se il giocatore poi fa
+   zero minuti**. Un convocato mai sceso in campo ha comunque viaggiato,
+   saltato gli allenamenti col club, accumulato fuso orario — tutto conta
+   per la fatica anche senza un minuto giocato. Registrare solo le "righe
+   di partita giocata" perderebbe esattamente questo caso, probabilmente il
+   più insidioso: il giocatore "sparisce" dai dati proprio quando in realtà
+   è stato via una settimana. Serve quindi un dato a parte, **l'elenco dei
+   convocati per ogni finestra**, non derivabile dalle sole presenze a
+   partita (schema in §2, `player_national_callups.csv`);
+4. **Stagione** — derivata per somma dai livelli 2 e 3, sommando
+   SEPARATAMENTE club e nazionale (per non nascondere quanto viene da dove)
+   e insieme (per il totale che serve alla fatica).
+
+**Il confronto fra giocatori** (idea dell'utente: "potremmo anche
+confrontare i minuti giocati da ogni giocatore") non è un livello a sé, è
+una **query** sopra i livelli 2+3: presa una finestra temporale (es. "ultimi
+15 giorni"), sommare minuti-club + minuti-nazionale per ogni giocatore e
+ordinare — è così che si individua chi è più a rischio fatica rispetto ai
+compagni o rispetto a chi affronterà nella prossima partita, incrociabile
+con l'esperienza cumulata (§1.8: un giovane con molti minuti consecutivi
+rischia diversamente da un veterano).
+
+**Nota di onestà, che non cambia il resto del piano**: la
+convocazione-per-finestra resta esattamente il pezzo che §1.3/§1.6
+segnalano già come scoperto (nessuna fonte nota per le finestre FIFA
+regolari, solo per i tornei finali). Questa gerarchia non risolve quel
+buco, lo **precisa**: il bersaglio da cercare è specificamente "elenco dei
+convocati per finestra", non genericamente "partite di nazionale giocate".
 
 ### 1.1 · Tier A — quasi gratis: stesso fornitore già in casa
 
@@ -141,19 +204,35 @@ rigore (robots.txt, licenza, copertura reale) usato per gli altri.
 presenze delle nazionali (zero occorrenze, come già constatato per altre
 piste mai aperte). Serve per calcolare l'affaticamento da doppio impegno
 ("un giocatore che gioca molti minuti di fila, tenendo conto anche della
-nazionale, sarà più stanco"). Candidati **da verificare, nessuno testato**:
+nazionale, sarà più stanco").
+
+**Il bersaglio, precisato in §1.0**: non genericamente "partite di
+nazionale giocate" — quello lo dà in parte già `games.csv` per i tornei
+finali (§1.6). Serve specificamente l'**elenco dei convocati per ogni
+finestra FIFA**, perché un giocatore chiamato ma mai sceso in campo conta
+comunque per la fatica (viaggio, allenamenti saltati col club) e sparirebbe
+da qualunque fonte basata solo sulle partite giocate. Candidati **da
+verificare, nessuno testato**:
 
 - **openfootball** (già usato per calendari di coppa, Fase 100/68): copre
   soprattutto competizioni per club; non è verificato se abbia anche
-  risultati/formazioni delle nazionali con dettaglio per giocatore;
+  risultati/formazioni delle nazionali con dettaglio per giocatore, e
+  quasi certamente non ha le liste dei convocati (è un calendario, non un
+  registro di selezione);
 - **Wikipedia**: ha già funzionato come fonte per calendari di coppa (Fase
   100, 3.045 righe recuperate) — potrebbe avere le rose/i marcatori delle
   partite di nazionale, ma **non** tipicamente i minuti giocati per giocatore
-  con la stessa granularità del club;
+  con la stessa granularità del club. Le pagine "\<Nazionale\> squad" per
+  singola finestra/amichevole (quando esistono) sarebbero il candidato più
+  vicino a un elenco-convocati, ma la copertura per le finestre "minori"
+  (non tornei finali) non è verificata;
 - **Transfermarkt**: le pagine-giocatore hanno spesso una sezione "presenze in
   nazionale" — ma il mirror GitHub che alimenta `src/data/transfermarkt.py`
   oggi copre solo valori/infortuni per club, **non verificato** se includa
-  anche questo.
+  anche questo. Le federazioni nazionali pubblicano di norma la lista dei
+  convocati sul proprio sito ufficiale ad ogni finestra: mai controllato se
+  raggiungibile/con `robots.txt` permissivo, fonte primaria migliore di un
+  aggregatore ma da verificare una federazione alla volta.
 
 Questo fronte resta, dichiaratamente, allo stesso stadio della pista 13
 (meteo) in `PISTE.md`: aperto, senza nemmeno un candidato verificato.
@@ -263,7 +342,8 @@ normalizzato e il tasso di aggancio dichiarato, non assunto.
 | minuti giocati a partita, subentrati/sostituti | A | `appearances.csv` (**già scaricato**) per i minuti; `game_events.csv` per il minuto esatto del cambio |
 | gol e assist per giocatore | A | `appearances.csv` (**già scaricato**) |
 | tocchi, passaggi, dribbling, interventi | B | nessuna fonte pulita nota oggi; StatsBomb/API-Football da controllare |
-| stanchezza da minuti consecutivi + nazionale | A (club) + fronte nuovo (nazionale) | minuti-club da Tier A; minuti-nazionale **senza fonte** oggi |
+| stanchezza da minuti consecutivi + nazionale | A (club) + fronte nuovo (nazionale) | minuti-club da Tier A; per la nazionale serve l'**elenco dei convocati per finestra** (§1.0/§1.3), non solo le partite giocate — **senza fonte** oggi |
+| confronto del carico fra giocatori | query, non dato a sé | somma minuti-club+nazionale su una finestra, da `player_match_appearances.csv`+`player_national_callups.csv` (§1.0, §4h) |
 | vantaggio/svantaggio da tocchi in un certo tipo di partita | B | dipende dal Tier B |
 | gol subiti per portiere | **nessuna fonte nuova**: derivabile da Tier A + snapshot esistenti | — |
 | **arbitro per partita** | A | `games.csv` (24 MB, ⬜ da importare) — struttura ciò che la Fase 125 ha già misurato |
@@ -368,10 +448,13 @@ players.csv
     player_id (interno, stabile), nome, data_nascita, ruolo, piede,
     nazionalita, altezza (se presente in players.csv, da verificare)
 
-player_match_appearances.csv        # Tier A — una riga per (player_id, partita)
-    season, home_team, away_team, player_id, team, titolare (bool),
-    minuto_in, minuto_out, minuti_giocati, ruolo_in_campo,
-    gol, assist, ammonizioni, espulsione (bool),
+player_match_appearances.csv        # Tier A — livello 2 di §1.0: una riga per
+    season, date, tipo_competizione,  #   (player_id, partita), CLUB e NAZIONALE
+    selezione_o_club, avversario,     #   nella STESSA tabella (§1.0) — distinte
+    titolare (bool), minuto_in,       #   dal campo tipo_competizione/selezione,
+    minuto_out, minuti_giocati,       #   non da due tabelle parallele
+    ruolo_in_campo, gol, assist,
+    ammonizioni, espulsione (bool),
     eta_esatta                      # derivata: data_nascita vs data partita
     presenze_carriera_a_oggi        # derivata: conteggio su TUTTO appearances.csv,
     minuti_carriera_a_oggi          #   non filtrato alle 5 leghe (§1.8)
@@ -381,8 +464,14 @@ player_match_advanced.csv           # Tier B — SOLO se/quando una fonte esiste
     passaggi_riusciti, dribbling_tentati, dribbling_riusciti,
     contrasti, tiri, tiri_in_porta, duelli_aerei_vinti
 
-player_national_duty.csv            # fronte nazionali — SOLO se/quando una
-    player_id, data, competizione, minuti_giocati   # fonte esiste
+player_national_callups.csv         # livello 3 di §1.0 — SOLO se/quando una fonte
+    player_id, selezione, finestra_fifa (es. "2026-09"),  # esiste (§1.3): NON
+    data_convocazione, ha_giocato (bool)                  # derivabile dalle sole
+                                                           # presenze a partita —
+                                                           # un convocato mai sceso
+                                                           # in campo non lascia
+                                                           # traccia altrove, ma
+                                                           # conta per la fatica
 
 referee_matches.csv                 # Tier A — una riga per partita (5 leghe + coppe UEFA)
     season, competition, date, home_team, away_team, referee,
@@ -420,7 +509,12 @@ usato per gli snapshot di club (`data/{lega}_matches.csv`).
 `manager_match_style.csv` non è un file raccolto ma **derivato** (join): non
 serve versionarlo separatamente se si può ricalcolare da
 `manager_spells.csv` + gli snapshot, stesso principio di riproducibilità
-(`CLAUDE.md` §1.5).
+(`CLAUDE.md` §1.5). **Stesso discorso per lo stagionale del giocatore**
+(§1.0, livello 4): niente `player_season_stats.csv` raccolto a parte — è un
+`GROUP BY player_id, season` su `player_match_appearances.csv` (+
+`player_national_callups.csv` per la quota-nazionale), calcolabile a volo e
+quindi non versionato separatamente, salvo serva pubblicarlo per il
+confronto con Wikipedia/Understat in §6-bis.
 
 **Chiave allenatore/arbitro**: stesso principio della chiave giocatore —
 `manager_name`/`referee` sono stringhe libere di Transfermarkt, vanno
@@ -533,6 +627,16 @@ g. **Effetto "nuovo allenatore" e bias casa/trasferta dell'arbitro** (§1.8):
    rimbalzo di breve periodo indipendente dalla firma stilistica (idea
    c-bis), il secondo scompone il fattore-arbitro già misurato (Fase 125)
    per capire se è sbilanciato verso casa o trasferta.
+
+h. **Confronto del carico fra giocatori** (§1.0, idea dell'utente): non un
+   dato a sé ma una query sopra `player_match_appearances.csv` +
+   `player_national_callups.csv` — presa una finestra temporale (es. gli
+   ultimi 15 giorni), sommare minuti-club + minuti-nazionale per ogni
+   giocatore e ordinare, per individuare chi è più a rischio fatica rispetto
+   ai compagni o a chi affronterà nella prossima partita. Da incrociare con
+   l'esperienza (idea f): un giovane con molti minuti consecutivi rischia
+   diversamente da un veterano — due covariate distinte, da testare
+   separatamente (principio "una cosa alla volta", §6-ter problema 9).
 
 Nessuna di queste idee è approvata all'implementazione. Il primo passo reale,
 qualunque sia l'idea scelta poi, resta la qualità del dato Tier A (§6).
