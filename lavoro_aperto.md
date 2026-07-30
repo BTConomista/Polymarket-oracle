@@ -495,8 +495,25 @@ sono toccate, coppe e nazionali sì. **§1.12** aggiunge un terzo giro di
 idee fronte per fronte (14 giocatori, 13 allenatori, 11 arbitri) e registra
 **due interazioni scartate** dall'utente — giocatore × arbitro e allenatore
 × arbitro — tenendo solo **giocatore × allenatore**, utile a prevedere chi
-giocherà quando cambia la panchina. Nessuna idea d'uso (§4 del piano) è
-stata decisa — resta da concordare con l'utente.
+giocherà quando cambia la panchina.
+
+> 🔴 **VERIFICA COMPLETA del 30/07/2026 (§9 del piano) — leggere quella prima
+> del resto.** Il dataset è stato verificato a fondo (14 agenti, sei fronti +
+> otto verifiche avversariali). Esiti: **14 affermazioni sbagliate** nel piano
+> (fra cui `clubs.total_market_value` vuota al 100%, `appearances` senza
+> nessun campionato extra-europeo, `transfers` all'8,7% e senza flag prestito,
+> la trappola-rigori 3× più grande del misurato); **dati nuovi** mai nominati
+> (`player_valuations` come indice di forza, la classifica in `games.csv`, il
+> campo `description` strutturato con 10.558 infortuni); la scoperta che
+> **`games.csv` dà il risultato del tribunale e `game_events` quello del
+> campo** (chi importa da `games.csv` viola la regola R1 senza accorgersene);
+> e la **classificazione finale** delle fonti — orario e **meteo RISOLTI**
+> (pista 13 aggiornata), infortuni con licenza CC BY trovata, event data solo
+> per il 2017-18, nazionali **chiuse** da questa fonte. Scoperto anche che il
+> repo **legge già** metà dei campi che il piano voleva "verificare".
+
+Nessuna idea d'uso (§4 del piano) è stata decisa — resta da concordare con
+l'utente.
 
 ---
 

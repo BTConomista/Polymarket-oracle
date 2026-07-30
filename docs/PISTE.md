@@ -88,7 +88,7 @@ voce.
 | 10 | formazioni ufficiali | 🟠 **surrogato storico bocciato** (F98); resta la raccolta a T−1h | §3 |
 | 11 | `transfers.csv` → shock di gennaio | 🟢 aperta, mai provata | §3 |
 | 12 | seconda serie → prior neopromosse individualizzato | 🟢 aperta (si incrocia con la F91: δ dipende dall'orizzonte) | §3 |
-| 13 | meteo pre-partita | 🟢 aperta, fonte mai cercata | §3 |
+| 13 | meteo pre-partita | 🟢 aperta — **fonte TROVATA il 30/07/2026** (open-meteo, CC BY 4.0, senza chiave) | §3 |
 | 14 | bundle Understat Premier/Liga | ✅ chiusa **positiva** (F54-57) | §3 |
 | 15 | altre linee O/U (multi-linea) | 🟢 aperta — **una fonte candidata ora c'è ed è in repo** (1xBet/footiqo, 2017-20) | §3 |
 | 16 | GG/NG quotato + aperture vere | ✅ **premessa caduta** (F100); resta solo la raccolta prospettica | §4 |
@@ -96,7 +96,7 @@ voce.
 | 18 | dati in-play | 🟢 aperta — ma prima va chiusa la 6-bis, che costa nulla | §4 |
 | 19 | quote O/U 2017-19, chiusura vera | ✅ chiusa (F100): **trovata e NON inserita** | §4 |
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
-| 21 | database giocatore/arbitri/allenatori | 🟢 **appena aperta (29/07/2026), bozza** — nessun dato ancora importato, ma la fonte per arbitri/allenatori è già verificata (`games.csv`, >99,7% di copertura anche sulle coppe UEFA), vedi [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) | §3 |
+| 21 | database giocatore/arbitri/allenatori | 🟢 **aperta (29/07/2026), bozza + VERIFICA COMPLETA del 30/07** — nessun dato ancora importato; il dataset è stato verificato a fondo (14 agenti): 14 affermazioni del piano corrette, dati nuovi trovati, classificazione finale delle fonti in [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) **§9** | §3 |
 
 **Conteggio** (con questa tassonomia): **13 piste aperte piene** (1, 2, 3,
 6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21), **5 parziali o con residuo** (4-bis,
@@ -614,8 +614,19 @@ prior *individualizzato* per neopromossa è una risposta possibile a entrambi i
 problemi — quello di partita e quello di stagione — e va valutata
 **per-mercato** (§1.8), non in blocco.
 
-### 13. Meteo pre-partita
-**Dato**: da procurare (mai cercata una fonte).
+### 13. Meteo pre-partita — 🟢 **la fonte ORA esiste (30/07/2026)**
+**Dato**: ~~da procurare (mai cercata una fonte)~~ → **TROVATA**: `open-meteo`
+**archive API**, raggiungibile da questo ambiente senza chiave d'accesso, con
+storico testato fino al **1990** e licenza **CC BY 4.0** (il tier gratuito è
+per uso non commerciale). Era l'**unica pista del progetto senza nemmeno un
+candidato di fonte**: adesso ne ha una, e per usarla serve solo il join
+partita → (coordinate dello stadio, data). Le **coordinate degli stadi** sono
+a loro volta disponibili da Wikipedia/Wikidata, già usate nel repo (90/94).
+E dalla stessa ricerca esce anche l'**orario** di inizio (openfootball,
+dominio pubblico, 16.111/16.111), che serve per l'ora esatta invece del solo
+giorno. Dettaglio in `PIANO_DATABASE_GIOCATORI.md` §9.8.
+⚠️ **L'ipotesi resta da testare**: "con la pioggia si segna meno" non è mai
+stato misurato in questo progetto (vedi §8 del piano, idea 4).
 **Ipotesi**: nel chiudere il capitolo "dati interni esauriti" la Fase 4c
 lascia il layer covariate "riutilizzabile per dati futuri davvero
 indipendenti (es. formazioni ufficiali last-minute, **meteo**,

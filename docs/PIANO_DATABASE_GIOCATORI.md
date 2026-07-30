@@ -45,6 +45,13 @@
 
 ## Indice — dove sta cosa
 
+> 🔴 **LEGGERE PRIMA §9.** Il 30/07/2026 il dataset è stato verificato a fondo
+> (14 agenti, sei fronti d'indagine e otto verifiche avversariali). Sono emerse
+> **14 affermazioni sbagliate** in questo documento, dati nuovi mai nominati, e
+> la classificazione finale raggiungibile/irraggiungibile. **§9 ha la precedenza
+> su tutto ciò che viene prima**; le sezioni §1-§8 sono conservate come storia
+> del ragionamento, con un richiamo dove sono state rettificate.
+
 Il documento è cresciuto molto: questo indice serve a non dover rileggere
 tutto per trovare una cosa già scritta (stesso motivo per cui `PISTE.md` ha
 il suo §0-bis).
@@ -60,7 +67,7 @@ il suo §0-bis).
 | §1.6 | allenatori — fronte nuovo, ipotesi persistenza dello stile |
 | §1.7 | riepilogo per le richieste utente (giocatori+arbitri+allenatori) |
 | §1.8 | arricchimenti: età, esperienza, attendance, rigori... |
-| §1.9 | **checklist completa dei 49 dati-giocatore**, con tier, rimandi e marcatura temporale ⏱️ |
+| §1.9 | **checklist completa dei 61 dati-giocatore**, con tier, rimandi e marcatura temporale ⏱️ |
 | §1.10 | rendimento per livello avversario, indice forza club, esperienza pesata |
 | §1.11 | **dati DERIVATI** — l'inventiva: ritmo dei gol, rimonte, coesione dell'undici... |
 | §1.12 | **terzo giro di idee fronte per fronte**: 14 nuove per i giocatori, 13 per gli allenatori, 11 per gli arbitri (+ 2 interazioni scartate) |
@@ -76,6 +83,7 @@ il suo §0-bis).
 | §7 | collegamenti ad altri file del repo |
 | §8 | 4 idee prospettiche catturate, da ricollocare quando il piano verrà smontato |
 | §8-bis | quelle 4 erano ESEMPI — il principio generale (H2H, infortuni, squalifiche...) |
+| **§9** | 🔴 **VERIFICA COMPLETA (30/07/2026)** — 14 affermazioni sbagliate, dati nuovi, classificazione finale delle fonti. **Ha la precedenza su tutto** |
 
 ## 0 · Perché, e con quale grado di certezza
 
@@ -187,7 +195,7 @@ supposto dalle piste 10/11:
 | `games.csv` | 24 MB | `game_id, competition_id, season, date, home_club_id, away_club_id, home/away_club_goals, home/away_club_manager_name, referee, stadium, attendance, home/away_club_formation, competition_type` — **la tabella-cardine**: dà arbitro E allenatore per partita (vedi §1.5/§1.6), e copre anche Champions/Europa/Conference League | ⬜ non importato |
 | `club_games.csv` | 11 MB | stessa informazione di `games.csv` ma **una riga per (club, partita)**: `own_manager_name, opponent_manager_name, own/opponent_goals, is_win` — comoda per costruire il pannello per-allenatore senza pivot | ⬜ non importato |
 | `game_lineups.csv` | 337 MB | **NON ha il minuto di entrata/uscita** (correzione rispetto alla prima stesura): solo `type` (`starting_lineup`/`substitutes`), `position`, `number`, `team_captain`. Aggiunge titolare/panchina/ruolo/maglia, non i minuti — quelli sono già in `appearances.csv` | ⬜ non importato |
-| `game_events.csv` | 150 MB | eventi **con il minuto**: `type` ∈ {Substitutions (631k), Cards (382k), Goals (248k), Shootout}, con `player_id`/`player_in_id`/`player_assist_id` — qui vive il minuto esatto di ogni cambio, gol, assist, cartellino | ⬜ non importato |
+| `game_events.csv` | 150 MB | ⚠️ *§9.1 n.11: `minute` usa −1 come segnaposto, e i minuti sono troncati a 45/90 (§9.7). Il campo `description` è STRUTTURATO: vedi §9.4* — eventi **con il minuto**: `type` ∈ {Substitutions (631k), Cards (382k), Goals (248k), Shootout}, con `player_id`/`player_in_id`/`player_assist_id` — qui vive il minuto esatto di ogni cambio, gol, assist, cartellino | ⬜ non importato |
 | `transfers.csv` (pista 11) | — | data di arrivo/partenza di ogni giocatore da ogni club | ⬜ non importato |
 | `players.csv` | — | anagrafica: ruolo, piede, data di nascita, nazionalità | ✅ già scaricato |
 
@@ -360,7 +368,9 @@ l'estensione europea è **immediata e gratis per "chi ha allenato, con che
 risultato"**, ma resta **aperta** (nuovo Tier B, da cercare) per le
 statistiche di stile nelle stesse partite.
 
-**Nazionali — più debole del previsto, verificato oggi**: `national_teams.csv`
+**Nazionali — più debole del previsto** ❌ *(RETTIFICATO §9.1 n.4: `coach_name` è
+vuota al 100%, non «solo l'attuale»; e §9.9: il fronte nazionali è chiuso da
+questa fonte)*: `national_teams.csv`
 ha un campo `coach_name`, ma è **solo l'attuale**, non uno storico
 per-partita — non basta per un pannello. E `games.csv` copre le nazionali
 **solo nei tornei finali** (Europei, Mondiali, Copa América, Coppa
@@ -407,7 +417,9 @@ all'importazione già proposta.
   al regime "porte chiuse" 2020-22 già noto nel progetto (Fase 51/52): con
   l'attendance vera si può misurare il vantaggio-casa in funzione del
   pubblico invece di trattare quell'era come un blocco unico;
-- **`aggregate` + `round`** — risultato aggregato e turno della
+- ~~**`aggregate` + `round`**~~ — ❌ **RETTIFICATO (§9.1 n.1): `aggregate` è la
+  copia letterale del risultato, in 88.958 righe su 88.958. Resta valido solo
+  `round`.** Il testo originale diceva: risultato aggregato e turno della
   competizione: per le coppe europee dà il contesto andata/ritorno; per i
   gironi già decisi, identifica le partite dove un allenatore fa turnover
   perché la qualificazione è già acquisita ("dead rubber") — si lega alla
@@ -510,7 +522,7 @@ mai della partita da prevedere.
 | 9 | vantaggio/svantaggio dai tocchi in un certo tipo di partita | B (+ §1.10 per "tipo di partita" = livello avversario) | `post` | §1.2, §1.10 |
 | 10 | gol subiti per portiere | nessuna fonte nuova | `post` | §1.1 |
 | 11 | età esatta a partita | A, derivata | **`pre`** | §1.8 |
-| 12 | esperienza (presenze/minuti cumulati, anche pregressa fuori le 5 leghe) | A, derivata | **`pre`** (cumulata *fino a* quella partita) | §1.8 |
+| 12 | esperienza (presenze/minuti cumulati) | A, derivata — ⚠️ **NON** «anche fuori le 5 leghe»: `appearances` ha zero righe per Brasile/Argentina/MLS/ecc. e nessuna seconda divisione; il 32,6% dei debuttanti ≥26 anni risulta senza passato (§9.1 n.2) | **`pre`** | §1.8, §9.1 |
 | 13 | elenco convocati per finestra nazionale (non solo chi ha giocato) | scoperto | **`pre`** | §1.0, §1.3 |
 | 14 | confronto del carico fra giocatori | query, non dato a sé | **`pre`** | §1.0, §4h |
 | 15 | capitano per partita | A — `game_lineups.csv` ha già `team_captain` | `post` (⚠️ noto a T−1h con la formazione ufficiale) | nuovo qui |
@@ -521,18 +533,18 @@ mai della partita da prevedere.
 | 20 | chi calcia corner e punizioni | B (estende l'idea rigori) | `post` (ma la *tendenza* storica è `pre`) | §1.8 |
 | 21 | grandi occasioni create/sprecate | B | `post` | nuovo qui |
 | 22 | storia infortuni per giocatore, **ricostruita per intero all'indietro** (non solo da qui in avanti) — date, tipo, durata | scoperto — oggi solo stima aggregata per squadra (`transfermarkt.py`) | **`pre`** ⚠️ *solo se la data di inizio è nota prima*, vedi §6-quinquies | nuovo qui, ampliato §8-bis |
-| 23 | peso, accanto all'altezza | A da verificare | `statico` | nuovo qui, come §1.8 |
+| 23 | ~~peso~~, **altezza** | ✅ `height_in_cm` c'è (98,66%); ❌ il **peso non esiste** in nessuno dei 12 file (§9.1 n.12) | `statico` | §9.4 |
 | 24 | rendimento per livello avversario (più forte/pari/più debole) | nuovo asse, richiede l'indice di forza (§1.10) | **`pre`** | §1.10 |
 | 25 | squadre passate in carriera, con un indice di forza 0-1 ciascuna | nuovo, richiede l'indice di forza (§1.10) | **`pre`** | §1.10 |
 | 26 | **esperienza PESATA per livello di competizione** (una finale di Champions da titolare ≠ un girone minore) | nuovo, richiede `peso_competizione` (§1.10) | **`pre`** | §1.10 |
 | 27 | squalifiche REALI (storico di quelle scontate davvero, non solo calcolate dalle regole) | scoperto — oggi solo calcolate da `disciplina.py` sui cartellini, mai verificate contro un dato reale | **`pre`** | nuovo qui, ampliato §8-bis |
 | 28 | testa a testa (H2H) a livello di **singolo giocatore**, non solo di squadra | nuovo asse | **`pre`** | nuovo qui, ampliato §8-bis |
 | 29 | caratteristiche di gioco individuali, oltre i conteggi grezzi (es. "recupera molto e riparte veloce" invece del solo numero di recuperi) | C — dipende interamente dallo sblocco del Tier B, nessuna fonte nota nemmeno per i conteggi grezzi | `post` → tendenza `pre` | nuovo qui |
-| 30 | **minuti giocati in inferiorità/superiorità numerica** (dal minuto del rosso) | A — `red_cards` in `appearances.csv` + minuto in `game_events.csv` | `post` | §1.11 |
+| 30 | **minuti giocati in inferiorità/superiorità numerica** (dal minuto del rosso) | A — ⚠️ **NON** `red_cards` di `appearances.csv`, che ignora i 9.741 secondi gialli (§9.1 n.6): usare gli eventi `Cards` | `post` | §1.11, §9.7 |
 | 31 | **ruolo giocato ≠ ruolo naturale** (schieramento d'emergenza) | A — `players.csv` vs `game_lineups.csv` | `post` (⚠️ `pre` con la formazione ufficiale) | §1.11 |
 | 32 | **già ammonito, e da che minuto** (comportamento nel resto della partita) | A — minuto del giallo in `game_events.csv` | `post` | §1.11 |
-| 33 | situazione contrattuale (scadenza) e giorni dall'arrivo al club | A da verificare — `transfers.csv`, campo contratto **non verificato** | **`pre`** | §1.11 |
-| 34 | prestito, e prestito **dalla squadra che si affronta** | A — `transfers.csv` | **`pre`** | §1.11 |
+| 33 | situazione contrattuale (scadenza) e giorni dall'arrivo al club | A — ✅ `contract_expiration_date` è in **`players.csv`**, non in `transfers.csv` (§9.1 n.8) | **`pre`** | §1.11, §9.4 |
+| 34 | prestito, e prestito **dalla squadra che si affronta** | ❌ **non servibile**: `transfers.csv` non ha un flag prestito e copre l'8,7% dei giocatori (§9.1 n.8) | **`pre`** | §1.11 |
 | 35 | numero di maglia (proxy grezza dello status in rosa) | A — già in `game_lineups.csv` | **`pre`** | §1.11 |
 | 36 | rientro da infortunio, con la **curva di reinserimento** (20′ → 45′ → 70′) | dipende dagli infortuni (scoperto) + minuti | **`pre`** | §1.12 |
 | 37 | **sensibilità individuale al riposo** (chi crolla sotto i 4 giorni e chi no) | A, derivata | **`pre`** | §1.12 |
@@ -544,10 +556,22 @@ mai della partita da prevedere.
 | 43 | gerarchie dei rigori/punizioni (2ª e 3ª scelta) | B, derivata | **`pre`** | §1.12 |
 | 44 | rendimento casa/trasferta del **singolo giocatore** | A, derivata | **`pre`** | §1.12 |
 | 45 | "mai sostituito": partite consecutive giocate per intero | A, derivata | **`pre`** | §1.12 |
-| 46 | primo anno in un **campionato nuovo** (distinto dai giorni dall'arrivo) | A — `transfers.csv` + competizioni precedenti | **`pre`** | §1.12 |
+| 46 | primo anno in un **campionato nuovo** (distinto dai giorni dall'arrivo) | ⚠️ indebolita: `transfers.csv` copre l'8,7%, e `appearances` non ha i campionati extra-europei (§9.1 n.2/n.8) | **`pre`** | §1.12 |
 | 47 | **gol decisivi vs ininfluenti** (l'1-0 e il 4-0 non sono uguali) | A, derivata dal punteggio minuto per minuto | `post` | §1.12 |
 | 48 | disciplina fine: falli/cartellini, e cartellini nelle partite tese | B (falli individuali) | `post` → tendenza `pre` | §1.12 |
 | 49 | **giocatore × allenatore**: minuti sotto un certo allenatore | A, derivata (incrocio con `manager_spells`) | **`pre`** | §1.12 |
+| 50 | **valore di mercato nel tempo** (serie storica datata) | A — `player_valuations.csv`, **già nel repo**, 154.022 valutazioni | **`pre`** | §9.4 |
+| 51 | **distanza dal picco di carriera** (`highest_market_value_in_eur`, 93%) | A — `players.csv` | **`pre`** | §9.4 |
+| 52 | presenze e gol in **nazionale** (`international_caps`/`international_goals`) | A — `players.csv`, **già letto dal repo** | **`pre`** | §9.4, §9.5 |
+| 53 | **posizione in classifica** delle due squadre (`club_position`, 100% piena) | A — `games.csv`; è la classifica **DOPO** la giornata, quindi si usa **ritardata** | `post` → ritardata **`pre`** | §9.4 |
+| 54 | **campo di casa temporaneo** (lo `stadium` cambia dentro la stessa squadra) | A — `games.csv`; si aggancia alla Fase 123 | **`pre`** | §9.4 |
+| 55 | contesto-club: `squad_size`, `average_age`, `foreigners_percentage`, `national_team_players`, `stadium_seats`, `net_transfer_record` | A — `clubs.csv`, **già nel repo** | **`pre`** | §9.4 |
+| 56 | **`sub_position`** (ruolo di dettaglio) oltre a `position` | A — `players.csv`, **già letto dal repo** | `statico` | §9.4, §9.5 |
+| 57 | **rigori segnati** (4.061), **autogol** (1.333), **parte del corpo** del gol, **tipo di assist** (2.323 da corner) | A — dal campo `description` di `game_events.csv` | `post` | §9.4 |
+| 58 | **motivo del cartellino** (17 etichette nel perimetro) e **rosso diretto vs doppia ammonizione** | A — `description`; ⚠️ copertura **per lega × stagione**, vedi §9.6 | `post` | §9.4, §9.6 |
+| 59 | **sostituzione per INFORTUNIO** (10.558 nelle 5 leghe) | A — `description`; ⚠️ tasso per partita **+56%** nel tempo (§9.6) | `post` | §9.4, §9.6 |
+| 60 | **orario di inizio** della partita | ✅ **RISOLTO** — openfootball (100%) o la colonna `Time` di football-data, **già in repo** (77,3%) | **`pre`** | §9.8 |
+| 61 | **meteo** della partita | ✅ **RISOLTO** — open-meteo archive API, CC BY 4.0, senza chiave | **`pre`** | §9.8 |
 
 **Nota sulla riga 15/31 (`post` con asterisco)**: capitano e ruolo effettivo
 sono `post` nel **dato storico** (li leggiamo a partita finita), ma nella
@@ -585,7 +609,9 @@ esiste. Candidati per costruirlo, in ordine di quanto sono già in casa:
   `transfermarkt.py`): un percentile del valore-rosa dentro la
   lega-stagione è un candidato diretto, ma copre solo le nostre 5 leghe;
 - **posizione in classifica** — già nello snapshot per le 5 leghe;
-- **`clubs.csv`** (upstream `davidcariboo/player-scores`, **non ancora
+- ❌ **`clubs.csv` — RETTIFICATO (§9.1 n.3 e n.14): `total_market_value` è VUOTA
+  al 100%, e il file era GIÀ nel repo. Il rimpiazzo è `player_valuations.csv`
+  (§9.4).** Testo originale: (upstream `davidcariboo/player-scores`, **non ancora
   ispezionato in questa sessione** — a differenza degli altri file elencati
   in §1.1, questo va dichiarato non verificato): candidato naturale per un
   indice **già pronto e globale** (non solo le 5 leghe), perché
@@ -716,8 +742,8 @@ progetto salvo dove indicato):
 - **distanza di trasferta**: `games.csv` ha già il campo `stadium`;
   servirebbero le coordinate (fonte esterna, costo basso) per trasformarlo
   in km — si somma bene alla fatica;
-- **derby / rivalità**: stessa città o regione, derivabile se `clubs.csv`
-  porta la città (**non verificato**);
+- ~~**derby / rivalità**~~ — ❌ **VERIFICATO E CHIUSO (§9.1 n.13): `clubs.csv` non
+  ha nessun campo città.** Serve un'altra fonte;
 - ~~**orario di inizio**~~ — ❌ **verificato il 30/07/2026: NON disponibile.**
   Il campo `date` di `games.csv` contiene solo `AAAA-MM-GG`, senza ora. Una
   partita delle 12:30 non è come una delle 20:45, ma per saperlo servirebbe
@@ -1752,6 +1778,7 @@ sembra un risultato e non lo è:
 | Inghilterra-Italia, Europeo 2012 | **2-4** | 0-0, poi 2-4 **ai rigori** |
 | Chemnitzer-Mainz, DFB-Pokal 2014 | **10-9** | 5-5 dopo i supplementari, poi 5-4 ai rigori (**somma dei due**) |
 
+❌ *RETTIFICATO (§9.1 n.5): sono **1.292** partite e **786**, non 407/394.*
 Nelle 407 partite ai rigori, in **394** la somma dei gol dei giocatori è
 *inferiore* al "risultato" di `games.csv`: la differenza sono i tiri dagli
 undici metri. Il campo mescola quindi tre semantiche diverse (risultato
@@ -1894,3 +1921,226 @@ piano:
 **Come si lavora da qui**: uno alla volta, come già deciso per gli
 arricchimenti di §1.8 (§6-ter problema 9) — non tutti insieme. L'ordine di
 approfondimento non è ancora deciso, va scelto insieme all'utente.
+
+---
+
+# 9 · ⭐ VERIFICA COMPLETA DEL DATASET (30/07/2026) — la sezione che rettifica tutte le precedenti
+
+> **Come è stata fatta.** Sei fronti d'indagine in parallelo sul dataset scaricato
+> (poi cancellato: nulla è entrato nel repo), più otto verifiche **avversariali**
+> incaricate di *refutare* le scoperte più importanti. In totale 14 agenti,
+> ~1,5 milioni di token, 89 minuti. Tre refutazioni sono andate a segno — non sui
+> numeri, che si sono riprodotti tutti alla cifra, ma sulle **interpretazioni**
+> (§9.6). È esattamente il caso previsto dalla regola R7 del `CLAUDE.md`: il
+> difetto non era il numero, era la statistica scelta per raccontarlo.
+>
+> **Questa sezione ha la precedenza su tutte le precedenti.** Dove §1.x o §6.x
+> dicono altro, vale quanto scritto qui.
+
+## 9.1 · Le 14 affermazioni SBAGLIATE trovate nel piano
+
+L'audit ha verificato una per una tutte le affermazioni numeriche del documento.
+**Il nucleo regge** (§9.2), ma quattordici affermazioni erano sbagliate o
+fuorvianti, e **tre demoliscono ipotesi su cui il piano costruiva interi
+paragrafi**:
+
+| # | dove | cosa dicevamo | cosa è vero |
+|---|---|---|---|
+| 1 | §1.8 | «`aggregate` dà il contesto andata/ritorno nelle coppe» | ❌ `aggregate` è la **copia letterale** del risultato della singola partita, in **88.958 righe su 88.958**. Nessun contesto di doppio confronto. L'idea muore |
+| 2 | §1.8, §4f | «l'esperienza si può contare anche da prima delle 5 leghe (es. un giovane dal Brasile)» | ❌ **`appearances.csv` ha ZERO righe** per Brasile, Argentina, MLS, Arabia Saudita, Giappone, Corea, Messico, Colombia, Australia. **22 competizioni su 70** non hanno alcuna presenza. L'esempio scelto è esattamente il caso che non funziona |
+| 3 | §1.10 | «`clubs.csv` avrà un `total_market_value` come `national_teams.csv`: indice di forza già pronto e globale» | ❌ La colonna esiste ma è **vuota al 100%** (796 righe su 796), e `clubs.csv` copre **793 club su 3.274**. L'indice "già pronto" non esiste |
+| 4 | §1.6 | «`national_teams.csv` ha `coach_name`, ma solo l'attuale» | ❌ La colonna è **vuota al 100%**: non c'è nemmeno l'attuale |
+| 5 | §7-ter | «407 partite ai rigori, 394 con somma inferiore» | ❌ Sono **1.292** e **786**: la trappola che avevamo scoperto è **2-3× più grande** di come l'avevamo misurata |
+| 6 | §1.9 voce 30 | «minuti in inferiorità: `red_cards` di `appearances.csv` + minuto in `game_events`» | ❌ `red_cards` conta **solo i rossi diretti**: ignora tutti i **9.741 secondi gialli**, cioè metà delle espulsioni |
+| 7 | §6-quinquies p.7 | «12.835 espulsi troncati (88,7%) … le 1.980 con 90 pieni sono rossi a fine gara» | ❌ **Errore aritmetico mio**: 12.835 + 1.980 = 14.815 > 14.472. I due gruppi si sovrappongono; il residuo vero è **1.654** |
+| 8 | §1.9 voci 33-34-46 | contratto, prestiti, primo anno in un campionato nuovo: «A — `transfers.csv`» | ❌ `transfers.csv` **non ha** il campo contratto **né** un flag prestito, e copre l'**8,7%** dei giocatori (Ronaldo, Lukaku, Immobile, Dybala, Mbappé: zero righe). Il contratto sta in **`players.csv`** |
+| 9 | §1.5-1.7 | «l'estensione alle coppe europee in un colpo solo» | ⚠️ Vero per `games.csv`, falso a livello giocatore: la **Conference League ha ZERO** righe in `appearances.csv` (728 partite) |
+| 10 | §1.6 | «i tornei finali delle nazionali un dato lo danno» | ⚠️ A livello **giocatore** no: gli Europei hanno **0 appearances e 0 lineups**; i minuti in nazionale esistono solo per Mondiale 2026 e Coppa d'Africa 2025-26 = **3.027 righe su 1.894.350 (0,16%)** |
+| 11 | §1.1 | «`game_events`: il minuto esatto di ogni evento» | ⚠️ Il campo `minute` usa **−1 come segnaposto** di "ignoto" (tutti i 13.574 Shootout, 3.784 cartellini, 118 gol, 99 cambi) — un "finto pieno" della regola R6 |
+| 12 | §1.8, §1.9 v.23 | «altezza e peso da verificare» | ✅/❌ L'**altezza c'è** (`height_in_cm`, 98,66%); il **peso non esiste** in nessuno dei 12 file |
+| 13 | §1.11 | «derby derivabile se `clubs.csv` porta la città» | ❌ `clubs.csv` **non ha** nessun campo città. L'idea muore qui (serve un'altra fonte) |
+| 14 | §1.10, §1.1 | «`clubs.csv` non ancora ispezionato» | ❌ **`clubs.csv.gz` è GIÀ nel repo** da `files/player_scores/`. E peggio (§9.5): il repo **legge già** altezza, piede, contratto e presenze in nazionale |
+
+## 9.2 · Cosa invece REGGE (verificato in modo indipendente)
+
+Tutto il nucleo "misurato" delle sezioni precedenti si è riprodotto **alla cifra**:
+1.894.350 righe di `appearances.csv` con 0 duplicati e 3 righe a zero minuti;
+990.536 valori a 90 e 11.041 sopra 90 con massimo 148; `players.csv` 50.149/50.149
+senza duplicati; 10.596 giocatori delle 5 leghe di cui 5.270 in coppa europea e
+8.401 altrove; Amrabat in 18 competizioni; 4.954/4.955 autogol esclusi dai gol;
+date senza ora su 88.958 righe su 88.958; copertura arbitro/allenatore sotto lo
+0,3%; tutte le dimensioni dei file (705,2 MB → 214,6 MB) e il repo a 66,33 MiB.
+
+**E soprattutto il controllo di §6-bis è stato riprodotto da zero da un agente
+indipendente**: 16.111/16.111 partite agganciate, 6 con tolleranza ±1 giorno,
+16.109 gol identici, **le stesse identiche 2 divergenze**. È la parte più solida
+del documento.
+
+## 9.3 · ⚠️ La scoperta strutturale: `games.csv` dà il risultato del TRIBUNALE, `game_events` quello del CAMPO
+
+La scoperta più importante per chi scriverà l'importatore. Ricostruendo il
+punteggio dai soli eventi e confrontandolo con `games.csv` su tutte e 16.111 le
+partite, i due divergono in **3 casi**:
+
+| partita | eventi (campo) | `games.csv` | cos'è |
+|---|:--:|:--:|---|
+| Verona-Roma 19/09/2020 | **0-0** | 3-0 | assegnata a tavolino |
+| Union Berlin-Bochum 14/12/2024 | **1-1** | 0-2 | assegnata a tavolino |
+| Toulouse-Brest 11/01/2020 | 1-5 | **2-5** | un gol davvero **mancante** negli eventi |
+
+Cioè: **gli eventi sono conformi alla regola R1** del `CLAUDE.md` (il dato è il
+risultato del campo), **`games.csv` no**. Chi importasse i gol da `games.csv`
+importerebbe il risultato del tribunale, contraddicendo una regola del progetto
+senza accorgersene. La terza riga dice però che nemmeno gli eventi sono perfetti:
+la regola operativa è **incrociare le due fonti e istruire le divergenze una per
+una** (sono tre in nove stagioni: costo nullo).
+
+## 9.4 · Dati NUOVI trovati — mai nominati nel piano
+
+Il dataset ha **163 colonne**; il piano ne nominava **52**. Le più utili fra
+quelle mai viste:
+
+| dato | dove | perché conta |
+|---|---|---|
+| **`home/away_club_position`** | `games.csv`, **100% piena** | posizione in classifica. Semantica misurata: è la classifica **DOPO** la giornata (88,7% di accordo contro 44,9% per "prima") → colonna `post`, ma la sua **versione ritardata è `pre` e gratis** |
+| **`player_valuations.csv`** | già nel repo | l'**unica serie storica datata per giocatore** del dataset (154.022 valutazioni per i nostri giocatori). È il **rimpiazzo naturale** della vuota `clubs.total_market_value` per l'indice di forza di §1.10 |
+| **`competitions.sub_type`** | `competitions.csv` | l'ossatura **già pronta** del `peso_competizione` che §1.10 diceva di dover inventare da zero |
+| **`contract_expiration_date`** | `players.csv` (non `transfers.csv`) | la voce 33 cercava nel file sbagliato |
+| **`international_caps`, `international_goals`** | `players.csv` | toccano il fronte che il piano dichiara più scoperto (le nazionali) |
+| **`highest_market_value_in_eur`** (93%) | `players.csv` | rende calcolabile la "**distanza dal picco di carriera**" (§1.12) |
+| **`fifa_ranking`** | `national_teams.csv` | indice di forza **pronto** per le nazionali |
+| `squad_size`, `average_age`, `foreigners_percentage`, `national_team_players`, `stadium_seats`, `net_transfer_record` | `clubs.csv` | sei colonne di contesto-club, tutte mai nominate |
+| **`stadium` cambia dentro la stessa squadra** | `games.csv` | rileva il **campo di casa temporaneo** — si aggancia direttamente alla Fase 123 (il 5% di partite "in casa" giocate altrove) |
+| `date`, `player_name`, `player_current_club_id` | `appearances.csv` | tre colonne che il piano non elencava |
+
+**Due misure nuove, fatte sul posto**: il **27,6% dei titolari gioca fuori dal
+proprio ruolo naturale** (dà sostanza alla voce 31); e `club_games.is_win` è
+**lossy** — il pareggio è codificato come sconfitta, quindi non va usato.
+
+## 9.5 · 🔴 Il repo usa GIÀ metà di ciò che il piano voleva "verificare"
+
+`scripts/build_stagione_anagrafica.py` legge **già** `foot`, `height_in_cm`,
+`contract_expiration_date`, `international_caps` e `sub_position`; e quattro dei
+dodici file (`appearances`, `clubs`, `players`, `player_valuations`) sono **già
+versionati** in `files/player_scores/`.
+
+È lo stesso errore delle piste 10/11 (file elencati e mai aperti) che questo
+piano era nato per correggere, ripetuto un livello più in basso. **Regola che ne
+esce**: prima di dichiarare un dato "da verificare" o "da procurare", cercarlo
+nel repo — sia nei file, sia nel codice che li legge.
+
+## 9.6 · Le tre refutazioni: i numeri erano giusti, le conclusioni no
+
+| affermazione | numeri | conclusione |
+|---|:--:|---|
+| «il motivo del cartellino: 18 etichette, 52 combinazioni» | ✅ riprodotti al terzo decimale | ❌ sono cifre **globali**. Nel perimetro del progetto (5 leghe 2017-2025) sono **17 etichette e 46 combinazioni**, e il motivo è coperto **meglio** del globale (12,3% mancante contro 26,4%) |
+| «la copertura del motivo si stabilizza sopra il 94%» | ✅ tutti riprodotti | ❌ **falso per lega**: FR1 98,5%, IT1 96,6%, L1 95,6% — ma **GB1 93,5% ed ES1 92,1%, entrambe in CALO** (ES1: 93,7 → 92,6 → 91,1 → 90,6). Sui **rossi diretti** la copertura resta all'**86,3%** anche nel periodo buono. Il bias è **lega × stagione**, non stagione: 18 celle su 35 dal 2019 sono sotto il 94%, con Ligue 1 2018-19 al **16,0%** |
+| «la quota di infortuni è piatta, quindi il segnale non è inflazionato dall'epoca» | ✅ riprodotti | ❌ **la quota è piatta perché numeratore e denominatore crescono insieme**. I cambi-infortunio **per partita** passano da 0,469 a 0,730: **+56%**. E non è artefatto di etichettatura: nelle due leghe già pulite nel 2017 il tasso sale comunque con uno scalino al 2020 (regola dei 5 cambi) |
+
+**Una quarta cosa emersa dalle refutazioni, operativamente importante**: la
+tassonomia delle sostituzioni è **collassata**, non migliorata. `Resting`
+(1,77% → 0,05%), `Risk of booking` (0,55% → 0,11%), `Delay`, `Special
+achievements` sono **morte dal 2020**: "Tactical" le ha assorbite. Chi contasse
+di usare "Risk of booking" come segnale troverebbe la categoria vuota.
+
+## 9.7 · I dati DERIVATI sono tutti fattibili — provato, non ipotizzato
+
+Un agente ha **ricostruito lo stato di campo minuto per minuto** su tutte e
+16.111 le partite (~40 righe di codice, 1,2 s di esecuzione) e lo ha validato in
+tre modi indipendenti:
+
+- minuti ricostruiti vs `appearances.minutes_played`: **94,92% esatti, 99,986%
+  entro ±1** su 476.913 coppie giocatore-partita;
+- invariante "11 in campo ogni minuto, meno le espulsioni": **99,39%** delle partite;
+- identità Σ(gol-fatti-col-giocatore-in-campo)/gol = **11,000 esatto** per le
+  squadre senza espulsioni.
+
+Su questa base sono **FATTIBILI**: plus/minus, punteggio minuto per minuto
+(rimonte, stato di gioco), minuti in inferiorità numerica, gol subiti per
+portiere, coesione dell'undici, turnover, ritmo/tempo dall'ultimo gol.
+
+⚠️ **Limite trasversale a tutti**: i minuti degli eventi sono **troncati a 45 e
+90** — il recupero è ripiegato lì dentro (il minuto 90 concentra 3.341 gol
+contro ~500 dei minuti vicini). Circa l'**8,9% dei gol** sta in un secchio senza
+minuto esatto. Ogni analisi temporale fine è compromessa in coda di tempo.
+
+## 9.8 · Classificazione finale: raggiungibile / irraggiungibile
+
+**✅ RISOLTI (fonte trovata, licenza pulita)**
+
+| dato | fonte | licenza | copertura |
+|---|---|---|---|
+| **orario di inizio** | `openfootball/football.json` | **dominio pubblico** | **16.111/16.111** (100%) |
+| *(idem, ripiego)* | `football-data.co.uk` colonna `Time` — **file già in repo** | come le altre nostre quote | 12.459/16.111 (77,3%), dal 2019-20 |
+| **meteo storico** | **open-meteo** archive API, senza chiave | CC BY 4.0 (free = non commerciale) | testata fino al 1990 |
+| **infortuni storici** | Kaggle `irrazional/transfermarkt-injuries` | **CC BY 4.0** | 107.971 record, **66.982 nella nostra finestra**; si ferma a 2023-24 |
+| **coordinate stadi** | Wikipedia/Wikidata, **già in uso nel repo** | CC BY-SA / CC0 | 90/94 |
+
+L'orario è il caso più istruttivo: **il dato non mancava, mancava il fatto di
+averlo portato nello snapshot** — la colonna `Time` è nei CSV di football-data
+che il repo ha già.
+
+**🟡 PARZIALI**
+
+| dato | fonte | limite |
+|---|---|---|
+| **event data** (tocchi, passaggi, dribbling…) | Wyscout/Pappalardo su figshare, **CC BY 4.0**, esattamente le nostre 5 leghe | **solo 2017-18**: 1.826 partite = **11,3%** della finestra |
+| *(alternativa)* | StatsBomb open data — **mai verificato prima dal progetto** | nella nostra finestra vale **230 partite (1,4%)**, 3 club soli |
+| **terna arbitrale + VAR** | Wyscout 2017-18 + `api.fifa.com` dal 2020/21 | buco 2018-19 e 2019-20 |
+| **rigori, falli, recupero concesso per arbitro** | derivabili dagli eventi Wyscout | solo 2017-18 |
+
+**❌ IRRAGGIUNGIBILI oggi**
+- **PSxG / dati portiere avanzati**: nessuna fonte con licenza chiara.
+- **Convocazioni per finestra FIFA**: nessuna fonte aperta trovata.
+
+**🔒 CHIUSE PER LICENZA, non per rete** — la distinzione che la Fase 126 chiedeva
+di fare esplicitamente:
+- **API ufficiale Premier League** (`footballapi.pulselive.com`): tecnicamente
+  aperta, **161 metriche Opta** per squadra, terna completa **VAR incluso**, 9/9
+  stagioni. Ma i T&C vietano testualmente *«creating a database … that includes
+  material downloaded … from the Website»* — cioè esattamente ciò che faremmo;
+- **bundesliga.com**: il `robots.txt` **consente** ClaudeBot, ma la stessa pagina
+  porta la riserva DFL ex §44b(3) UrhG che vieta bot e training. **Quando le due
+  divergono, vince la riserva legale**;
+- **Transfermarkt diretto**: il `robots.txt` vieta **esplicitamente** ClaudeBot e
+  anthropic-ai (ri-verificato oggi). Il dataset Kaggle CC0 resta l'unica via.
+
+## 9.9 · Il fronte NAZIONALI è chiuso da questa fonte
+
+Misurato: il dataset ha **5 soli tornei finali, 742 partite**. **Nessuna
+qualificazione, nessuna amichevole, nessuna Nations League** (verificato per
+parola chiave su tutte le 65 competizioni). Gli Europei hanno **0 appearances e
+0 lineups**. I minuti in nazionale sono **3.027 righe su 1.894.350 (0,16%)**.
+
+**Conseguenza**: l'affaticamento da doppio impegno club+nazionale (§1.0 livello 3,
+§1.3) **non è servibile da qui**, e nemmeno dai tornei finali. Serve una fonte
+esterna che oggi non esiste (vedi §9.8). Il livello "convocazione per finestra"
+resta il buco più grande del piano.
+
+## 9.10 · Aggiornamento nel tempo: il dataset non è un calendario
+
+- si ferma al **2026-07-06** e non contiene **nessun fixture futuro** (0 partite
+  dopo oggi): **non è una fonte di calendario**;
+- la stagione **2025-26 delle 5 leghe è completa**;
+- ma la freschezza è **per-competizione e inaffidabile**: mancano le **tre finali
+  europee 2025-26**, il Mondiale 2026 ha solo i gironi, e il ritardo va da **24 a
+  236 giorni** a seconda della competizione.
+
+Per la manutenzione (§6-quater punto 4) significa: il dataset va bene per il
+**backfill storico**, non per l'aggiornamento tempestivo della giornata in corso —
+quello resta compito della raccolta quotidiana già esistente.
+
+## 9.11 · Copertura sulle nostre 5 leghe: il controllo che §6 rimandava al tracer bullet
+
+Fatto adesso, sulle **16.111 partite** (numero che coincide **esattamente** con
+gli snapshot del repo):
+
+| file | copertura | buco |
+|---|--:|---|
+| `appearances.csv` | 16.110/16.111 (**99,99%**) | 1 partita |
+| `game_events.csv` | 16.110/16.111 (**99,99%**) | 1 partita (FR1) |
+| `game_lineups.csv` | 16.057/16.111 (**99,66%**) | **48 partite di Liga 2018-19** |
+
+Risponde alla domanda che il piano teneva aperta: **sì, lineups ed events coprono
+le nostre leghe quanto `appearances`**. Il tracer bullet del passo 1-2 di §6 non
+deve più misurare questo: è misurato.
