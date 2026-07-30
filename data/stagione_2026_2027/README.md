@@ -200,6 +200,12 @@ Misurata oggi (versione 673, 213 MB):
 
 ### Il confine che conta: retrospettivo ≠ prospettico
 
+> 📌 **Questa distinzione è diventata una regola generale del progetto il
+> 30/07/2026**: è la **R8** del `CLAUDE.md` («ogni dato porta con sé il momento
+> in cui diventa noto»), che generalizza quanto scritto qui — dai blocchi di
+> dati alla **singola colonna**, marcata `pre`/`post`/`statico`. Il concetto
+> è nato in questo paragrafo; la versione autorevole ora sta lì.
+
 Questo dataset dice **che cosa è successo**, non che cosa succederà. Non
 contiene — e non può contenere — nulla di ciò che serve *prima* della partita:
 infortuni di oggi, formazione probabile, previsione meteo, allenatore a

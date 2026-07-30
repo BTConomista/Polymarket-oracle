@@ -432,9 +432,11 @@ europee, e l'affaticamento/gli allenatori da **nazionale** nelle finestre
 FIFA regolari (terreno mai esplorato). Nessun dato ancora importato nel
 repo, nessun codice scritto: il piano propone `games.csv`/`club_games.csv`
 come primo passo (miglior rapporto valore/costo) più un tracer bullet su
-una lega-stagione, un **controllo finale su Wikipedia** (§6-bis del piano,
-richiesta utente — **completo su ogni dato, non a campione**) per
-verificare con una fonte indipendente che i dati raccolti siano corretti, e
+una lega-stagione, un **controllo finale con fonte indipendente** (§6-bis
+del piano, richiesta utente — **completo su ogni dato, non a campione**;
+ristrutturato il 30/07: non è "il controllo Wikipedia", perché per i
+risultati e per i minuti di stagione le fonti indipendenti migliori le
+abbiamo **già offline** — i nostri snapshot e Understat), e
 un elenco di **arricchimenti aggiuntivi** (§1.8: età ed esperienza di
 giocatori/allenatori/arbitri — anche pregressa fuori dalle 5 leghe, essendo
 il dataset globale —, attendance, andata/ritorno, rigori) da aggiungere
@@ -471,8 +473,17 @@ giocatori compare con lo stesso ID in altre competizioni) — un rischio in
 meno di quanto temuto. ⚠️ **Resta un promemoria esplicito per l'utente**:
 decidere il rapporto fra le assenze STIMATE già in `transfermarkt.py` e
 gli infortuni VERI per giocatore, se e quando si troveranno (§6-quater
-punto 6, nessuna soluzione ancora). Nessuna idea d'uso (§4 del piano) è
-stata decisa — resta da concordare con l'utente.
+punto 6, nessuna soluzione ancora). Un **terzo giro di problemi**
+(§6-quinquies) ha prodotto la **regola R8 del `CLAUDE.md`** (ogni dato
+dichiara quando diventa noto: `pre`/`post`/`statico` — propagata a
+`DATI.md` e a `data/stagione_2026_2027/README.md`), il ritiro di
+un'obiezione mal posta sul "ponte giocatore→squadra", e **tre verifiche
+tecniche** sul dataset (il recupero non è nei minuti; gli autogol non
+contano come gol del giocatore, 99,98%; l'espulso ha i minuti troncati al
+rosso). Aggiunto anche §1.11, i **dati derivati** — l'inventiva: ritmo dei
+gol e tempo dall'ultimo, rimonte e crolli, coesione dell'undici, impatto
+dei subentrati. Nessuna idea d'uso (§4 del piano) è stata decisa — resta
+da concordare con l'utente.
 
 ---
 

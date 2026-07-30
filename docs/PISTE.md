@@ -792,7 +792,15 @@ nuovo il dataset) che il `player_id` del giocatore è stabile anche fuori
 dalle 5 leghe (50.149 ID puliti in `players.csv`, l'80% dei giocatori
 delle 5 leghe compare con lo stesso ID in altre competizioni) — un rischio
 in meno rispetto a quanto temuto per arbitri/allenatori (§6-ter problema
-1, loro senza alcun ID). **Stato**: nessun dato ancora importato nel repo,
+1, loro senza alcun ID). **§6-quinquies**: terzo giro di problemi — da qui
+nasce la **regola R8** del `CLAUDE.md` (ogni dato dichiara *quando* diventa
+noto: `pre`/`post`/`statico`, propagata a `DATI.md`, al README della
+stagione 2026-27 e alla checklist §1.9), più tre verifiche tecniche sul
+dataset (recupero **non** incluso nei minuti; autogol **esclusi** dai gol
+del giocatore nel 99,98% dei casi; minuti dell'espulso **troncati** al
+minuto del rosso) e §1.11, i **dati derivati** (ritmo dei gol e tempo
+dall'ultimo, rimonte, coesione dell'undici: costo di raccolta zero, è tutto
+calcolo). **Stato**: nessun dato ancora importato nel repo,
 nessun codice scritto — il primo passo proposto (non ancora eseguito, e
 col miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv`
 e fare un tracer bullet su una sola lega-stagione.

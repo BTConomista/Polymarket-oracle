@@ -60,16 +60,18 @@ il suo §0-bis).
 | §1.6 | allenatori — fronte nuovo, ipotesi persistenza dello stile |
 | §1.7 | riepilogo per le richieste utente (giocatori+arbitri+allenatori) |
 | §1.8 | arricchimenti: età, esperienza, attendance, rigori... |
-| §1.9 | **checklist completa dei 29 dati-giocatore**, con tier e rimandi |
+| §1.9 | **checklist completa dei 35 dati-giocatore**, con tier, rimandi e marcatura temporale ⏱️ |
 | §1.10 | rendimento per livello avversario, indice forza club, esperienza pesata |
+| §1.11 | **dati DERIVATI** — l'inventiva: ritmo dei gol, rimonte, coesione dell'undici... |
 | §2 | bozza di schema (tabelle, chiavi, come agganciare i nomi) |
 | §3 | come dividere il lavoro fra più agenti |
 | §4 | idee d'uso (NON decise) — a, b, c, c-bis, c-ter, d, e, f, g, h |
 | §5 | rischi e limiti dichiarati onestamente |
 | §6 | primi passi concreti, in ordine (nessuno ancora eseguito) |
-| §6-bis | controllo finale su Wikipedia — **completo, non a campione** |
+| §6-bis | controllo finale con **fonte indipendente** (non solo Wikipedia: due fonti le abbiamo già offline) |
 | §6-ter | **10 problemi trovati** rileggendo il piano in modo avversariale, con le correzioni |
 | §6-quater | decisioni operative prese e domande ancora aperte, prima di partire |
+| §6-quinquies | **terzo giro di problemi** e risposte: regola R8 (⏱️), obiezione ritirata sul "ponte", 3 verifiche tecniche |
 | §7 | collegamenti ad altri file del repo |
 | §8 | 4 idee prospettiche catturate, da ricollocare quando il piano verrà smontato |
 | §8-bis | quelle 4 erano ESEMPI — il principio generale (H2H, infortuni, squalifiche...) |
@@ -487,39 +489,56 @@ strappo al metodo: nessun campo qui sotto richiede un'infrastruttura nuova
 da costruire, solo una colonna in più nel parser.
 
 Elenco unico di tutto ciò che è stato proposto per il giocatore, con dove è
-trattato in dettaglio nel piano e il tier:
+trattato in dettaglio nel piano, il tier, e — **obbligatoria dalla regola R8
+del `CLAUDE.md`** (§6-quinquies punto 1) — la **disponibilità temporale**:
+`pre` = noto prima del fischio, `post` = esiste solo a partita finita,
+`statico` = anagrafica che non dipende dalla partita. La colonna `post` non
+è inutilizzabile: è utilizzabile **come storia delle partite precedenti**,
+mai della partita da prevedere.
 
-| # | dato | tier | dove nel piano |
-|---|---|---|---|
-| 1 | minuti giocati a partita (titolare/subentrato, minuto in/out) | A | §1.0, §1.1 |
-| 2 | gol | A | §1.1 |
-| 3 | assist | A | §1.1 |
-| 4 | tocchi | B | §1.2 |
-| 5 | passaggi (tentati/riusciti) | B | §1.2 |
-| 6 | dribbling (tentati/riusciti) | B | §1.2 |
-| 7 | interventi difensivi (contrasti) | B | §1.2 |
-| 8 | stanchezza da minuti consecutivi, club + nazionale | A (club) / scoperto (nazionale) | §1.0, §1.3, §4a |
-| 9 | vantaggio/svantaggio dai tocchi in un certo tipo di partita | B (+ §1.10 per "tipo di partita" = livello avversario) | §1.2, §1.10 |
-| 10 | gol subiti per portiere | nessuna fonte nuova | §1.1 |
-| 11 | età esatta a partita | A, derivata | §1.8 |
-| 12 | esperienza (presenze/minuti cumulati, anche pregressa fuori le 5 leghe) | A, derivata | §1.8 |
-| 13 | elenco convocati per finestra nazionale (non solo chi ha giocato) | scoperto | §1.0, §1.3 |
-| 14 | confronto del carico fra giocatori | query, non dato a sé | §1.0, §4h |
-| 15 | capitano per partita | A — `game_lineups.csv` ha già `team_captain` | nuovo qui |
-| 16 | cambio di ruolo recente | A, derivata da `ruolo_in_campo` nel tempo | nuovo qui |
-| 17 | falli commessi/subiti per singolo giocatore | B (oggi solo a livello squadra, Fase 96) | nuovo qui |
-| 18 | xG e xA individuali (non di squadra) | B | nuovo qui |
-| 19 | recuperi palla e intercetti | B | nuovo qui |
-| 20 | chi calcia corner e punizioni | B (estende l'idea rigori) | §1.8 |
-| 21 | grandi occasioni create/sprecate | B | nuovo qui |
-| 22 | storia infortuni per giocatore, **ricostruita per intero all'indietro** (non solo da qui in avanti) — date, tipo, durata | scoperto — oggi solo stima aggregata per squadra (`transfermarkt.py`) | nuovo qui, ampliato §8-bis |
-| 23 | peso, accanto all'altezza | A da verificare | nuovo qui, come §1.8 |
-| 24 | rendimento per livello avversario (più forte/pari/più debole) | nuovo asse, richiede l'indice di forza (§1.10) | §1.10 |
-| 25 | squadre passate in carriera, con un indice di forza 0-1 ciascuna | nuovo, richiede l'indice di forza (§1.10) | §1.10 |
-| 26 | **esperienza PESATA per livello di competizione** (una finale di Champions da titolare ≠ un girone minore) | nuovo, richiede `peso_competizione` (§1.10) | §1.10 |
-| 27 | squalifiche REALI (storico di quelle scontate davvero, non solo calcolate dalle regole) | scoperto — oggi solo calcolate da `disciplina.py` sui cartellini, mai verificate contro un dato reale | nuovo qui, ampliato §8-bis |
-| 28 | testa a testa (H2H) a livello di **singolo giocatore**, non solo di squadra | nuovo asse | nuovo qui, ampliato §8-bis |
-| 29 | caratteristiche di gioco individuali, oltre i conteggi grezzi (es. "recupera molto e riparte veloce" invece del solo numero di recuperi) | C — dipende interamente dallo sblocco del Tier B, nessuna fonte nota nemmeno per i conteggi grezzi | nuovo qui |
+| # | dato | tier | ⏱️ | dove nel piano |
+|---|---|---|:--:|---|
+| 1 | minuti giocati a partita (titolare/subentrato, minuto in/out) | A | `post` | §1.0, §1.1 |
+| 2 | gol | A | `post` | §1.1 |
+| 3 | assist | A | `post` | §1.1 |
+| 4 | tocchi | B | `post` | §1.2 |
+| 5 | passaggi (tentati/riusciti) | B | `post` | §1.2 |
+| 6 | dribbling (tentati/riusciti) | B | `post` | §1.2 |
+| 7 | interventi difensivi (contrasti) | B | `post` | §1.2 |
+| 8 | stanchezza da minuti consecutivi, club + nazionale | A (club) / scoperto (nazionale) | **`pre`** (somma di `post` passati) | §1.0, §1.3, §4a |
+| 9 | vantaggio/svantaggio dai tocchi in un certo tipo di partita | B (+ §1.10 per "tipo di partita" = livello avversario) | `post` | §1.2, §1.10 |
+| 10 | gol subiti per portiere | nessuna fonte nuova | `post` | §1.1 |
+| 11 | età esatta a partita | A, derivata | **`pre`** | §1.8 |
+| 12 | esperienza (presenze/minuti cumulati, anche pregressa fuori le 5 leghe) | A, derivata | **`pre`** (cumulata *fino a* quella partita) | §1.8 |
+| 13 | elenco convocati per finestra nazionale (non solo chi ha giocato) | scoperto | **`pre`** | §1.0, §1.3 |
+| 14 | confronto del carico fra giocatori | query, non dato a sé | **`pre`** | §1.0, §4h |
+| 15 | capitano per partita | A — `game_lineups.csv` ha già `team_captain` | `post` (⚠️ noto a T−1h con la formazione ufficiale) | nuovo qui |
+| 16 | cambio di ruolo recente | A, derivata da `ruolo_in_campo` nel tempo | **`pre`** (dalle partite passate) | nuovo qui |
+| 17 | falli commessi/subiti per singolo giocatore | B (oggi solo a livello squadra, Fase 96) | `post` | nuovo qui |
+| 18 | xG e xA individuali (non di squadra) | B | `post` | nuovo qui |
+| 19 | recuperi palla e intercetti | B | `post` | nuovo qui |
+| 20 | chi calcia corner e punizioni | B (estende l'idea rigori) | `post` (ma la *tendenza* storica è `pre`) | §1.8 |
+| 21 | grandi occasioni create/sprecate | B | `post` | nuovo qui |
+| 22 | storia infortuni per giocatore, **ricostruita per intero all'indietro** (non solo da qui in avanti) — date, tipo, durata | scoperto — oggi solo stima aggregata per squadra (`transfermarkt.py`) | **`pre`** ⚠️ *solo se la data di inizio è nota prima*, vedi §6-quinquies | nuovo qui, ampliato §8-bis |
+| 23 | peso, accanto all'altezza | A da verificare | `statico` | nuovo qui, come §1.8 |
+| 24 | rendimento per livello avversario (più forte/pari/più debole) | nuovo asse, richiede l'indice di forza (§1.10) | **`pre`** | §1.10 |
+| 25 | squadre passate in carriera, con un indice di forza 0-1 ciascuna | nuovo, richiede l'indice di forza (§1.10) | **`pre`** | §1.10 |
+| 26 | **esperienza PESATA per livello di competizione** (una finale di Champions da titolare ≠ un girone minore) | nuovo, richiede `peso_competizione` (§1.10) | **`pre`** | §1.10 |
+| 27 | squalifiche REALI (storico di quelle scontate davvero, non solo calcolate dalle regole) | scoperto — oggi solo calcolate da `disciplina.py` sui cartellini, mai verificate contro un dato reale | **`pre`** | nuovo qui, ampliato §8-bis |
+| 28 | testa a testa (H2H) a livello di **singolo giocatore**, non solo di squadra | nuovo asse | **`pre`** | nuovo qui, ampliato §8-bis |
+| 29 | caratteristiche di gioco individuali, oltre i conteggi grezzi (es. "recupera molto e riparte veloce" invece del solo numero di recuperi) | C — dipende interamente dallo sblocco del Tier B, nessuna fonte nota nemmeno per i conteggi grezzi | `post` → tendenza `pre` | nuovo qui |
+| 30 | **minuti giocati in inferiorità/superiorità numerica** (dal minuto del rosso) | A — `red_cards` in `appearances.csv` + minuto in `game_events.csv` | `post` | §1.11 |
+| 31 | **ruolo giocato ≠ ruolo naturale** (schieramento d'emergenza) | A — `players.csv` vs `game_lineups.csv` | `post` (⚠️ `pre` con la formazione ufficiale) | §1.11 |
+| 32 | **già ammonito, e da che minuto** (comportamento nel resto della partita) | A — minuto del giallo in `game_events.csv` | `post` | §1.11 |
+| 33 | situazione contrattuale (scadenza) e giorni dall'arrivo al club | A da verificare — `transfers.csv`, campo contratto **non verificato** | **`pre`** | §1.11 |
+| 34 | prestito, e prestito **dalla squadra che si affronta** | A — `transfers.csv` | **`pre`** | §1.11 |
+| 35 | numero di maglia (proxy grezza dello status in rosa) | A — già in `game_lineups.csv` | **`pre`** | §1.11 |
+
+**Nota sulla riga 15/31 (`post` con asterisco)**: capitano e ruolo effettivo
+sono `post` nel **dato storico** (li leggiamo a partita finita), ma nella
+raccolta **prospettica** diventano `pre`, perché escono con la formazione
+ufficiale ~1h prima. È il caso che rende la marcatura obbligatoria: la stessa
+informazione cambia categoria a seconda di **come** la ottieni.
 
 **Onestà su cosa resta fuori portata**: heatmap/zone di campo, distanza
 percorsa, velocità di sprint — dati da tracking GPS/video, prodotti dagli
@@ -611,6 +630,91 @@ invece che sul club:
 dell'ordinamento fra competizioni (dove va una finale di Coppa Italia
 rispetto a un girone di Champions?) è in parte soggettiva — da dichiarare
 come tale, non da presentare come un fatto oggettivo.
+
+### 1.11 · Dati DERIVATI — l'inventiva (30/07/2026)
+
+Sezione diversa da tutte le precedenti: qui non si tratta di **procurarsi**
+dati nuovi, ma di **inventare** informazioni nuove da quelli che avremo già.
+Costo di raccolta **zero** (è tutto calcolo), e — come chiede l'utente —
+l'elenco non è filtrato per utilità dimostrata: serve inventiva, e alcune di
+queste voci saranno rumore.
+
+**Gli esempi dell'utente, generalizzati.**
+
+- **Ritmo di un evento, e tempo trascorso dall'ultimo** — "un giocatore che
+  segna ogni 150 minuti, e sono passati 120 minuti dall'ultimo gol". Si
+  generalizza a ogni evento contabile: minuti per gol, per assist, per
+  cartellino, per rigore guadagnato; e il **tempo trascorso dall'ultimo**.
+  ⚠️ **Attenzione statistica, da dichiarare subito**: se i gol fossero un
+  processo di Poisson, il tempo trascorso dall'ultimo gol **non direbbe
+  nulla** su quando arriva il prossimo (assenza di memoria) — l'idea è
+  interessante proprio perché mette alla prova quell'assunzione, che è la
+  base di tutto il motore del progetto. Due esiti entrambi utili: se non
+  c'è effetto, si conferma il Poisson; se c'è, si è trovata una crepa vera.
+- **Rimonte e crolli** — "una squadra va sempre in svantaggio e poi rimonta?
+  come gioca?". Dal minuto dei gol (`game_events.csv`) si ricostruisce il
+  **punteggio minuto per minuto**, e da lì: quante volte va sotto, quanti
+  punti recupera da sotto, quanti ne butta da avanti, e come cambia il suo
+  ritmo di gioco nei due stati. È lo stesso ingrediente della pista 6-bis
+  (il modello a due stadi, "game state") — con l'angolo nuovo che qui
+  diventa una **caratteristica della squadra**, non solo uno stato della
+  partita.
+
+**Altre idee nello stesso spirito** (tutte calcolabili, nessuna già nel
+progetto salvo dove indicato):
+
+*Sul tempo e sul punteggio*
+- distribuzione dei gol per fascia di 15′, **per giocatore** (a livello
+  squadra è già previsto in `data/stagione_2026_2027/README.md` §4.3);
+- minuto medio del primo gol, fatto e subito; quanto spesso segna per
+  prima, e quanto vince quando lo fa;
+- gol negli ultimi 5-10 minuti — la squadra "che segna sempre alla fine";
+- rendimento **dopo** un rosso (proprio o avversario), e dopo un rigore
+  sbagliato;
+- serie aperte: partite consecutive segnando, senza subire, senza vincere.
+
+*Sul giocatore*
+- **over/underperformance sull'xG**: chi segna molto più di quanto i suoi
+  tiri valgano è candidato a raffreddarsi (ritorno alla media) — richiede
+  l'xG individuale (voce 18, Tier B);
+- **impatto da subentrato**: gol/assist per minuto giocato entrando dalla
+  panchina, distinto da quello da titolare;
+- **sostituito presto ripetutamente**: un giocatore tolto sistematicamente
+  al 60' è un segnale di condizione o di fiducia dell'allenatore;
+- **quota di gol+assist della squadra** che passa da un solo giocatore
+  (dipendenza da un singolo, già ipotizzata a livello squadra);
+- **distanza dal picco di carriera**, incrociando età e curva di rendimento.
+
+*Sulla squadra e sull'undici*
+- **coesione dell'undici**: quanti minuti hanno già giocato **insieme** gli
+  undici titolari — una squadra sempre uguale contro un undici rimaneggiato;
+- **turnover rispetto alla partita precedente**: quanti cambi nell'undici;
+- **rendimento con/senza un certo giocatore** (e con/senza una certa
+  coppia) — il modo più diretto di quantificare "quanto incide";
+- **pattern di sostituzione dell'allenatore**: minuto del primo cambio,
+  quanti ne usa, se cambia prima quando è sotto (firma dell'allenatore
+  diversa da quella stilistica di §4 c-bis);
+- **"i suoi giocatori"**: quali giocatori un allenatore si porta dietro
+  cambiando squadra (incrocio `manager_spells` × `transfers`).
+
+*Sul contesto*
+- **distanza di trasferta**: `games.csv` ha già il campo `stadium`;
+  servirebbero le coordinate (fonte esterna, costo basso) per trasformarlo
+  in km — si somma bene alla fatica;
+- **derby / rivalità**: stessa città o regione, derivabile se `clubs.csv`
+  porta la città (**non verificato**);
+- **orario di inizio**: se il campo `date` di `games.csv` contiene anche
+  l'ora (**non verificato**) — una partita delle 12:30 non è come una delle
+  20:45.
+
+**Due avvertenze oneste, valide per tutta la sezione.** (1) Diverse di
+queste idee sono cugine di cose **già bocciate a livello squadra** (la
+covariata `stakes`, la forma, il valore rosa: `docs/PANCHINA.md`): il fatto
+che siano nuove *a livello giocatore* non garantisce che funzionino. (2)
+Sono tutte **derivate**, quindi ereditano la marcatura temporale della
+fonte (R8): una tendenza calcolata sulle partite passate è `pre` ed è
+utilizzabile; la stessa quantità misurata **sulla partita in corso** è
+`post` e non lo è.
 
 ## 2 · Come strutturare i dati (bozza di schema)
 
@@ -918,7 +1022,7 @@ allenatore/arbitro → effetto "nuovo allenatore" → bias casa/trasferta
 arbitro → altezza/rigori (questi ultimi due subordinati alla verifica dello
 schema, ancora da fare).
 
-## 6-bis · Controllo finale: verifica indipendente su Wikipedia (richiesta utente, 29/07/2026)
+## 6-bis · Controllo finale: verifica con fonte indipendente (richiesta utente, 29-30/07/2026)
 
 **Perché**: `games.csv`/`appearances.csv` sono un'unica fonte (Transfermarkt
 via Kaggle) — anche se la copertura interna è quasi completa (§1.1/§1.5/§1.6),
@@ -928,7 +1032,50 @@ stessa. Serve un'informazione **indipendente**: è la regola R5 del
 fonte"), già seguita con successo in questo progetto — i calendari di coppa
 (Fase 100, Wikipedia) e le rose 2026-27 dove il dataset non arriva
 (`data/stagione_2026_2027/README.md` §3-ter, "Wikipedia come fonte della
-rosa"). Qui si applica lo stesso schema a arbitri, allenatori e giocatori.
+rosa").
+
+> 🔄 **RISTRUTTURATO il 30/07/2026 — non è (solo) "il controllo Wikipedia".**
+> Domanda dell'utente: *"possiamo cercare info sulla singola partita? o il
+> controllo deve diventare un controllo su internet o simile?"*. Ragionandoci,
+> la risposta è che **Wikipedia era la scelta sbagliata come punto di
+> partenza**, per un motivo che avevamo sotto gli occhi:
+>
+> **due delle fonti indipendenti migliori ce le abbiamo già in casa, offline
+> e complete.**
+>
+> | cosa verifichiamo | fonte indipendente | dove sta | copertura |
+> |---|---|---|---|
+> | risultati, date, squadre di `games.csv` | i nostri **snapshot** `data/*_matches.csv` (origine football-data, **indipendente** da Transfermarkt) | già nel repo | **100%** sulle 5 leghe × 9 stagioni, offline, zero rete |
+> | minuti per giocatore-stagione | **Understat** (`understat.season_players`, indipendente da Transfermarkt) | già nel repo | 5 leghe, aggregato-stagione |
+> | mandati degli allenatori | Wikipedia ("List of \<club\> managers") | rete | alta, formato sistematico |
+> | arbitri per partita | Wikipedia (pagine di stagione) o siti delle leghe | rete | **ignota, da misurare** |
+> | cartellini per giocatore | i nostri snapshot (totali di squadra) + `disciplina.py` | già nel repo | incrocio parziale |
+>
+> **Il principio giusto non è "si controlla su Wikipedia", è: ogni tabella
+> deve essere verificata contro almeno UNA fonte indipendente, dichiarata,
+> e si sceglie la migliore disponibile per quel fronte** — preferendo, dove
+> esiste, quella che abbiamo già offline (più veloce, riproducibile, e senza
+> caricare siti di terzi, coerente con la regola R5.3).
+>
+> **Sulla singola partita**: sì, ma non da Wikipedia. Per la singola partita
+> il controllo migliore è **contro i nostri snapshot** (risultato, data,
+> squadre: verificabile al 100% e gratis). Wikipedia sulla singola partita
+> esiste solo per le gare importanti (finali, big match) — utile come spot
+> check, inutile come censimento.
+>
+> **Correzione onesta a quanto scritto sotto**: "completo su ogni dato" è
+> realizzabile **alla grana della partita** per il fronte
+> risultati/arbitri/allenatori, ma **non** alla grana giocatore-partita —
+> `appearances.csv` ha **1.894.350 righe** (misurate) e Wikipedia pubblica
+> **totali di stagione**, non tabellini per partita. Per i giocatori il
+> censimento completo è quindi **per giocatore-stagione** (contro Understat,
+> offline), non per giocatore-partita: la differenza va dichiarata, non
+> lasciata intendere.
+>
+> **Ogni fonte esterna nuova** (siti delle leghe per gli arbitri, ecc.) passa
+> per il controllo di rito prima dell'uso: `robots.txt`, licenza, e nessun
+> aggiramento di blocchi — le stesse regole che hanno chiuso quattro fonti in
+> §1.2.
 
 **Cosa verificare, fronte per fronte, e con quale pagina Wikipedia**:
 
@@ -1195,6 +1342,114 @@ rischio è **basso**, non assente: resta da controllare, quando si scriverà
 il codice vero, che non esistano rari casi di doppio profilo per la stessa
 persona (non cercato in questa verifica, che ha controllato la coerenza
 dell'ID, non l'unicità delle persone dietro ID diversi).
+
+## 6-quinquies · Terzo giro di problemi, e le risposte dell'utente (30/07/2026)
+
+**1. Nessun campo diceva QUANDO il dato diventa noto — ✅ RISOLTO, ed è
+diventata una regola del progetto.** Era il problema più serio: nella stessa
+tabella convivono dati noti prima del fischio (arbitro, formazione, età,
+esperienza) e dati che esistono solo dopo (minuti, gol, tocchi), e usare i
+secondi per prevedere la partita che li ha prodotti è look-ahead — con la
+sfumatura che rende l'errore invisibile: **il numero è giusto, è il momento a
+essere sbagliato**. Su richiesta dell'utente ("sistemalo in questo file e in
+tutto il resto del repo") è stato sistemato in **quattro punti**:
+   - **`CLAUDE.md` §5-bis, nuova regola R8** — la sede autorevole: ogni
+     colonna dichiara `pre`/`post`/`statico`, e una feature di backtest usa
+     solo `pre` della partita in corso o `post` di partite **precedenti**;
+   - **`docs/DATI.md`** — un riquadro in testa al catalogo che classifica le
+     colonne degli **snapshot esistenti** (le quote sono `pre`, l'xG è `post`:
+     nel DC entra sempre e solo come storia delle partite già giocate);
+   - **`data/stagione_2026_2027/README.md` §3-bis** — dove il concetto era
+     nato come «retrospettivo ≠ prospettico», ora rimanda alla regola generale;
+   - **questo piano, §1.9** — una colonna ⏱️ per ognuno dei 35 dati-giocatore.
+   Il caso che dimostra perché serviva: **capitano e ruolo effettivo sono
+   `post` nel dato storico ma `pre` nella raccolta prospettica**, perché
+   escono con la formazione ufficiale. La stessa informazione cambia
+   categoria a seconda di come la ottieni.
+
+**2. "Manca il ponte da giocatore a squadra" — ⚠️ obiezione RITIRATA, era
+un'inquadratura sbagliata mia.** Avevo scritto che i dati-giocatore devono
+"diventare un numero di squadra" perché il motore attuale lavora su λ e μ di
+squadra. L'utente ha giustamente obiettato che **non è quello lo scopo**: i
+dati si raccolgono per avere più informazione sui calciatori, punto — e l'uso
+previsto è già stato descritto, ed è diverso: *nella settimana della partita
+si hanno le probabili formazioni, quindi si sa chi gioca, e si usano insieme
+i dati di squadra, dei giocatori, del meteo, dell'arbitro, dell'allenatore
+per fare una previsione*. Questa è un'architettura legittima e **non**
+richiede di collassare tutto in λ e μ. Resta vera solo la parte piccola
+dell'osservazione, declassata da "problema" a **nota di progettazione**: nel
+momento in cui si produrrà una previsione, un modo di combinare quelle
+informazioni andrà scelto — ma è una decisione da prendere allora, con i dati
+in mano, non un prerequisito per raccoglierli.
+
+**3. Il controllo "completo" e la sua grana — ✅ RISTRUTTURATO in §6-bis.**
+Domanda dell'utente: cercare le info sulla singola partita? diventa un
+controllo "su internet"? Risposta emersa ragionandoci: il principio giusto è
+"**ogni tabella verificata contro almeno una fonte indipendente
+dichiarata**", scegliendo la migliore per quel fronte — e per due fronti la
+fonte migliore **ce l'abbiamo già offline** (i nostri snapshot per
+risultati/date/squadre, Understat per i minuti di stagione). Wikipedia resta
+la fonte giusta per i mandati degli allenatori. Dettaglio e tabella in §6-bis,
+inclusa la correzione onesta sulla grana: per i giocatori il censimento
+completo è **per giocatore-stagione**, non per giocatore-partita (1.894.350
+righe, e Wikipedia pubblica totali di stagione).
+
+**4. Il repo git cresce per sempre — spiegato semplice.** Git non tiene solo
+la versione attuale di un file: tiene **tutte** le versioni passate, per
+sempre. Se mettiamo nel repo un file da 100 MB e ogni settimana lo
+aggiorniamo, dopo un anno nel repo non ci sono 100 MB: ce ne sono ~5 GB
+(52 copie), anche se guardando la cartella se ne vede una sola. E non si
+possono cancellare senza riscrivere la storia. Il progetto ha già avuto un
+episodio simile (un cron che committava ~51 MB in silenzio, Fase 92).
+**Conseguenza pratica, da decidere quando si scriverà il codice**: o si
+committa il dataset **una volta sola** (lo storico non cambia: le partite
+del 2019 restano quelle) aggiornando solo la coda recente, oppure i grezzi
+grossi restano fuori dal repo e si ri-scaricano. La decisione dell'utente
+("teniamo tutti i dati, sempre accessibili") **non è in discussione**: è
+compatibile con entrambe le soluzioni, riguarda solo *come* si versiona.
+
+**5. Bias di selezione nelle medie "per 90 minuti" — chiarimento.** L'utente
+ha chiesto di cosa parlassi: è un rischio d'**uso**, non di raccolta. Se un
+domani si confrontano i giocatori con una media "per 90 minuti" (es. "gol
+ogni 90'"), quella media è calcolata solo sulle partite in cui l'allenatore
+lo ha schierato — e chi gioca poco spesso entra a partita già decisa, o
+gioca quando è in condizione peggiore. Non è un motivo per non raccogliere
+niente: è un promemoria per quando si faranno i confronti fra giocatori
+(idea §4h). Nessuna azione richiesta ora.
+
+**6. Troppe ipotesi insieme — ridimensionato dall'utente.** Avevo posto il
+problema come "testare 29 feature produce falsi positivi per caso". L'utente
+ha chiarito che **non si tratta di testare tutto**: si tratta di aggregare
+dati che, messi insieme, danno un quadro più ricco della partita. L'obiezione
+resta valida solo nel momento in cui si **valida** se una singola feature
+migliora davvero le previsioni (lì servono IC e disciplina, come sempre nel
+progetto), non nella fase di raccolta e di costruzione del quadro. Ridotto da
+"problema" a **avvertenza per la fase di validazione**.
+
+**7. Semantica di `minutes_played` e dei gol — ✅ VERIFICATO (30/07/2026),
+tre risposte su tre.** Controllato scaricando il dataset ed elaborando le
+1.894.350 righe di `appearances.csv` (cache ripulita a fine verifica):
+   - **il recupero NON è incluso**: il valore 90 compare **990.536 volte** (è
+     di gran lunga il più frequente) e significa "partita intera"; i valori
+     sopra 90 sono **11.041** e arrivano fino a **148** — sono i tempi
+     supplementari delle coppe, non il recupero;
+   - **gli autogol NON contano come gol del giocatore**: su 4.955 casi
+     risolvibili (giocatore con un autogol in quella partita, incrociando i
+     6.729 eventi `Own-goal` di `game_events.csv` con `appearances.csv`),
+     in **4.954** il campo `goals` esclude l'autogol — il 99,98%. È la
+     semantica che ci aspettavamo, ed è quella giusta: un autogol non è un
+     gol del marcatore. *(Il progetto si era già fatto male una volta con un
+     autogol: la lezione R5 sull'xG a 0.00 con un gol segnato.)*;
+   - **l'espulso ha i minuti TRONCATI al rosso**: su 14.472 espulsioni
+     incrociabili, **12.835 (88,7%)** hanno `minutes_played` uguale al minuto
+     del cartellino rosso (differenza mediana **0**); le 1.980 con 90 pieni
+     sono rossi mostrati a fine gara o dopo il fischio. Il dato è quindi già
+     corretto per il calcolo della fatica, senza aggiustamenti.
+   **Un limite trovato per strada, da dichiarare**: `game_events.csv` copre
+   **più** competizioni/anni di `appearances.csv` — solo 14.472 delle 19.638
+   espulsioni (74%) e 4.955 dei 6.710 autogol hanno una riga corrispondente
+   nelle presenze. Non è un errore, ma va tenuto presente quando si incrociano
+   i due file: non tutti gli eventi hanno una presenza dietro.
 
 ## 7 · Collegamenti
 

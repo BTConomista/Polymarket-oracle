@@ -507,6 +507,31 @@ per raccontarlo: un conteggio di celle che non distingue il vero dal placebo, un
 ECE senza intervallo letto come conferma, una dicotomia fra "significativo" e
 "non significativo" mai testata come differenza.
 
+**R8 · Ogni dato porta con sé il MOMENTO in cui diventa noto.** Un dato non è
+solo un valore: è un valore **e** l'istante da cui è disponibile. Nella stessa
+tabella convivono per natura dati noti **prima** del fischio d'inizio (arbitro
+designato, formazione ufficiale, meteo previsto, quote, valore rosa) e dati che
+esistono **solo dopo** (minuti giocati, gol, cartellini, xG, possesso). Usare i
+secondi per prevedere la partita che li ha prodotti è **look-ahead**: l'errore
+più facile da commettere e più difficile da vedere, perché il numero è giusto —
+è il *momento* a essere sbagliato. Quindi:
+  - ogni colonna di ogni tabella dichiara la propria **disponibilità
+    temporale**: `pre` (nota prima del fischio), `post` (esiste solo a partita
+    finita), `statico` (anagrafica che non dipende dalla partita);
+  - una feature di backtest può usare **solo** colonne `pre` della partita in
+    corso, oppure colonne `post` di partite **precedenti** (ed è questa la forma
+    normale: "quanti gol ha fatto *finora*", mai "quanti ne fa oggi");
+  - dove una tabella mescola i due tipi — è normale che lo faccia — la
+    separazione vive nella **documentazione della colonna**, non nella testa di
+    chi scrive il codice.
+
+*(La distinzione non nasce oggi: esisteva già come «retrospettivo ≠
+prospettico» in `data/stagione_2026_2027/README.md` §3-bis, ma solo in quel file
+e solo a livello di blocchi di dati, mai colonna per colonna. La Fase 92 ha
+scoperto che la regola anti-look-ahead del progetto **non aveva nemmeno un
+test**; il fronte del database giocatori — dove ~30 campi nuovi mescolano i due
+tipi — l'ha resa una regola generale.)*
+
 ---
 
 ## 6. Stato corrente e prossimi passi

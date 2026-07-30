@@ -25,6 +25,28 @@ nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 101-ter** (5 leghe).
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
 > pubblicato **separatamente** con l'etichetta di stima (vedi [§5](#5--stime-dichiarate-dataestimates)).
 
+> ⏱️ **Seconda regola d'oro, aggiunta il 30/07/2026 (regola R8 del
+> `CLAUDE.md`): ogni dato porta con sé il momento in cui diventa noto.**
+> Un valore giusto usato *prima* che esistesse è look-ahead — l'errore più
+> difficile da vedere, perché il numero è corretto ed è il momento a essere
+> sbagliato. Ogni colonna è quindi `pre` (nota prima del fischio d'inizio),
+> `post` (esiste solo a partita finita) o `statico` (anagrafica). Negli
+> snapshot partita di §1 la ripartizione è netta e vale la pena averla in
+> mente leggendo tutto il resto del catalogo:
+>
+> | tipo | colonne degli snapshot |
+> |---|---|
+> | `pre` | tutte le **quote** (apertura e chiusura), `date`, `season`, squadre; il **valore rosa** (foto al 1° settembre) e le **assenze stimate** |
+> | `post` | gol, gol primo tempo, tiri, tiri in porta, falli, corner, cartellini, **xG/npxG/PPDA/deep** |
+> | derivate da `post` **di partite precedenti** (quindi legittime) | `rest_days`, `rest_days_full`, `midweek_europe` |
+>
+> Il caso da tenere d'occhio è l'xG: è la colonna più preziosa del progetto
+> ed è `post` — nel Dixon-Coles entra sempre e solo come storia delle
+> partite **già giocate** (`src/models/dixon_coles.py`), mai della partita da
+> prevedere. Il fronte del database giocatori (`PIANO_DATABASE_GIOCATORI.md`)
+> aggiunge ~30 campi nuovi che mescolano i tre tipi: lì la marcatura è
+> obbligatoria colonna per colonna.
+
 ---
 
 ## 1 · Gli snapshot partita (la fonte di verità)
