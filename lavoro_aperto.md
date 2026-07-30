@@ -460,8 +460,19 @@ verrà smontato — **§8-bis chiarisce che erano solo esempi**: il principio
 generalizzato tocca anche l'H2H a livello giocatore (oltre la pista 1),
 lo storico infortuni ricostruito per intero all'indietro, e uno storico
 REALE delle squalifiche come controllo indipendente di `disciplina.py`.
-Nessuna idea d'uso (§4 del piano) è stata decisa — resta da concordare con
-l'utente.
+Aggiunto un **indice** in testa al piano (era diventato troppo lungo) e un
+giro di decisioni operative (§6-quater): i grezzi si tengono **tutti,
+così come sono** (decisione utente); resta aperto come tracciare i
+giocatori fuori dalle 5 leghe; confermato che la raccolta continuerà sulle
+partite nuove ma la priorità ora è il passato; abbozzati i test da
+scrivere col codice vero; e **verificato di nuovo scaricando il dataset**
+che il `player_id` del giocatore regge anche fuori dalle 5 leghe (80% dei
+giocatori compare con lo stesso ID in altre competizioni) — un rischio in
+meno di quanto temuto. ⚠️ **Resta un promemoria esplicito per l'utente**:
+decidere il rapporto fra le assenze STIMATE già in `transfermarkt.py` e
+gli infortuni VERI per giocatore, se e quando si troveranno (§6-quater
+punto 6, nessuna soluzione ancora). Nessuna idea d'uso (§4 del piano) è
+stata decisa — resta da concordare con l'utente.
 
 ---
 

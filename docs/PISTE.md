@@ -779,7 +779,20 @@ implementata), storico infortuni ricostruito **per intero all'indietro**
 controllo indipendente di `disciplina.py` (che oggi le calcola dalle
 regole, non le osserva). Quasi tutte imparentate con piste esistenti (1,
 10, 13, §7.3 di `lavoro_aperto.md`), in attesa di essere ricollocate
-quando questo piano verrà smontato. **Stato**: nessun dato ancora importato nel repo,
+quando questo piano verrà smontato. **§6-quater**: un giro di decisioni
+operative — un **indice** aggiunto in testa al piano (era diventato troppo
+lungo per orientarsi); i grezzi si scaricano **tutti e si tengono così
+come sono** (decisione utente: "è importante avere accesso a tutti i dati
+in qualsiasi momento"), compressi solo nel formato su disco; resta aperto
+**come tracciare i giocatori fuori dalle 5 leghe** (coppe europee,
+nazionali); confermato che la raccolta continuerà sulle partite nuove, ma
+la priorità ora è il lavoro sul passato; abbozzati i **test automatici**
+da scrivere quando il codice sarà vero; e **verificato** (scaricando di
+nuovo il dataset) che il `player_id` del giocatore è stabile anche fuori
+dalle 5 leghe (50.149 ID puliti in `players.csv`, l'80% dei giocatori
+delle 5 leghe compare con lo stesso ID in altre competizioni) — un rischio
+in meno rispetto a quanto temuto per arbitri/allenatori (§6-ter problema
+1, loro senza alcun ID). **Stato**: nessun dato ancora importato nel repo,
 nessun codice scritto — il primo passo proposto (non ancora eseguito, e
 col miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv`
 e fare un tracer bullet su una sola lega-stagione.

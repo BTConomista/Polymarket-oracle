@@ -20,9 +20,15 @@
 > convocazione-finestra → stagione derivata); una **checklist completa dei
 > dati giocatore** (§1.9) con un nuovo asse — il **rendimento per livello
 > avversario** e un **indice di forza del club** ancora da progettare
-> (§1.10); e un'**appendice di idee prospettiche catturate ma non ancora
+> (§1.10); un'**appendice di idee prospettiche catturate ma non ancora
 > ricollocate** (§8, es. notizie di infortuni/cambio allenatore/meteo che
-> dovrebbero muovere le previsioni in corso di settimana). Vive come pista aperta in
+> dovrebbero muovere le previsioni in corso di settimana), poi generalizzate
+> (§8-bis: erano esempi, non l'elenco — H2H, infortuni ricostruiti,
+> squalifiche reali); e un **indice** in testa al documento più un giro di
+> **decisioni operative** (§6-quater: da dove si parte, tenere i grezzi
+> così come sono, giocatori fuori dalle 5 leghe, test da implementare, e
+> la verifica — positiva — che il `player_id` regge anche fuori dalle 5
+> leghe). Vive come pista aperta in
 > [`PISTE.md`](PISTE.md) (pista 21) e come voce di brainstorming in
 > [`lavoro_aperto.md`](../lavoro_aperto.md) §7.
 >
@@ -34,7 +40,39 @@
 > schema reale** dei file — non a memoria. I numeri di copertura di questo
 > documento (§1.5/§1.6) sono quindi **verificati oggi**, non stimati. Il
 > download era solo di controllo: i file NON sono stati committati nel repo
-> (708 MB, cache locale ripulita a fine verifica).
+> (708 MB, cache locale ripulita a fine verifica — ripetuta una seconda
+> volta per il controllo di §1.8-bis, stessa disciplina).
+
+## Indice — dove sta cosa
+
+Il documento è cresciuto molto: questo indice serve a non dover rileggere
+tutto per trovare una cosa già scritta (stesso motivo per cui `PISTE.md` ha
+il suo §0-bis).
+
+| sezione | cosa contiene |
+|---|---|
+| §0 | perché questo piano esiste, e con che grado di certezza |
+| §1.0 | grana dei dati: evento → partita → convocazione-finestra → stagione |
+| §1.1 | Tier A giocatori — file già in casa (`appearances.csv`, `games.csv`...) |
+| §1.2 | Tier B giocatori — tocchi/passaggi/dribbling, nessuna fonte pulita nota |
+| §1.3 | nazionali — il fronte più scoperto, serve l'elenco dei convocati |
+| §1.5 | arbitri — struttura ciò che la Fase 125/126 ha già misurato |
+| §1.6 | allenatori — fronte nuovo, ipotesi persistenza dello stile |
+| §1.7 | riepilogo per le richieste utente (giocatori+arbitri+allenatori) |
+| §1.8 | arricchimenti: età, esperienza, attendance, rigori... |
+| §1.9 | **checklist completa dei 29 dati-giocatore**, con tier e rimandi |
+| §1.10 | rendimento per livello avversario, indice forza club, esperienza pesata |
+| §2 | bozza di schema (tabelle, chiavi, come agganciare i nomi) |
+| §3 | come dividere il lavoro fra più agenti |
+| §4 | idee d'uso (NON decise) — a, b, c, c-bis, c-ter, d, e, f, g, h |
+| §5 | rischi e limiti dichiarati onestamente |
+| §6 | primi passi concreti, in ordine (nessuno ancora eseguito) |
+| §6-bis | controllo finale su Wikipedia — **completo, non a campione** |
+| §6-ter | **10 problemi trovati** rileggendo il piano in modo avversariale, con le correzioni |
+| §6-quater | decisioni operative prese e domande ancora aperte, prima di partire |
+| §7 | collegamenti ad altri file del repo |
+| §8 | 4 idee prospettiche catturate, da ricollocare quando il piano verrà smontato |
+| §8-bis | quelle 4 erano ESEMPI — il principio generale (H2H, infortuni, squalifiche...) |
 
 ## 0 · Perché, e con quale grado di certezza
 
@@ -390,6 +428,19 @@ all'importazione già proposta.
   una delle nostre 5 leghe** (es. un giovane arrivato dal Brasile, o un
   giocatore con anni di carriera in un altro campionato) — stesso file di
   `player_match_appearances.csv`, nessuna fonte in più;
+  > ✅ **VERIFICATO (30/07/2026), punto 7 di §6-quater**: a differenza di
+  > arbitri/allenatori (§6-ter problema 1, nessun ID, solo un nome libero),
+  > il giocatore ha un `player_id` **stabile e globale**. Controllato
+  > scaricando di nuovo il dataset: `players.csv` ha **50.149 righe, 50.149
+  > `player_id` distinti** (zero duplicati — è una chiave pulita). Su
+  > **10.596 giocatori** visti in una delle nostre 5 leghe, **5.270 (50%)**
+  > compaiono con lo STESSO `player_id` anche in una coppa europea
+  > (CL/EL/Conference/qualificazioni), e **8.401 (79%)** anche in
+  > un'altra lega/competizione. Esempio concreto: il `player_id` di Sofyan
+  > Amrabat compare sotto **18 competizioni diverse** (5 leghe, coppe
+  > nazionali, coppe europee, e il Mondiale `FIWC`), sempre con lo stesso
+  > numero. Il player_id regge quindi bene anche fuori dalle 5 leghe — un
+  > rischio in meno rispetto a quanto temuto;
 - **altezza** — se presente in `players.csv` (schema non ancora ispezionato
   riga per riga per questo campo): rilevante per calci piazzati/duelli
   aerei, asse mai toccato dal progetto;
@@ -1051,6 +1102,99 @@ dato che arbitri e allenatori sono persone reali — un punteggio di "bias"
 (problema 7) andrebbe presentato con un tono descrittivo/statistico, non
 accusatorio, se e quando diventasse pubblico (stesso spirito del principio
 §1.6 del `CLAUDE.md`: onestà sui limiti, niente promesse).
+
+## 6-quater · Decisioni operative e domande aperte prima di partire (30/07/2026)
+
+Continuando a rileggere il piano è emerso un secondo giro di osservazioni,
+più operative delle prime dieci — con le risposte che l'utente ha già dato
+per alcune, e le domande che restano aperte per altre.
+
+**1. Da dove si parte, fra tutti i fronti?** Il piano non ha mai messo in
+fila arbitri/allenatori/giocatori/nazionali/big-match/H2H/infortuni fra
+loro (§1.8 ha un ordine solo per le sue feature interne). **Proposta**
+(da valutare quando si parte davvero, NON vincolante — l'utente ha chiesto
+esplicitamente di sottolinearlo): partire da `games.csv`/`club_games.csv`
+(arbitri + allenatori, §1.5/§1.6) perché è il passo più economico e
+sblocca tre fronti insieme; poi `appearances.csv` (giocatori Tier A,
+già scaricato); poi le feature derivate a costo zero (§1.8/§1.10); e per
+ultimi i fronti che richiedono una fonte ancora da trovare (nazionali,
+Tier B, infortuni, squalifiche reali, H2H). Questo ordine può cambiare
+completamente una volta che si guardano i dati da vicino.
+
+**2. Quanto teniamo dei file grezzi?** **Deciso dall'utente**: si scaricano
+**tutti** i file già identificati e si tengono **così come sono**, non
+distillati in tabelle più piccole — "è importante avere accesso a tutti i
+dati in qualsiasi momento". Vale anche per `game_lineups.csv`/
+`game_events.csv` (487 MB) oltre a `games.csv`/`club_games.csv`/
+`appearances.csv`. Conseguenza pratica per quando si scriverà il codice:
+i grezzi vanno comunque **compressi** per stare nel repo (stesso schema
+già in uso per `files/player_scores/*.csv.gz`), "teneteli così come sono"
+riguarda il contenuto, non il formato del file su disco.
+
+**3. Giocatori che non sono nelle nostre 5 leghe.** Osservazione
+dell'utente: nelle partite di Champions/Europa/Conference League, o in
+nazionale, incontreremo giocatori di club che non fanno parte delle 5
+leghe che il progetto segue (es. un giocatore di un club portoghese o
+scozzese in Champions League). **Vanno tracciati anche loro — come,
+resta da decidere.** Il punto 7 qui sotto aiuta: il `player_id` di questi
+giocatori è lo stesso, stabile, in tutto il dataset (verificato oggi),
+quindi tecnicamente non sono "invisibili" — la domanda aperta è
+**logistica**: li aggiungiamo a `players.csv` (la nostra tabella
+giocatori) fin da subito, con tutti i ~50.000 del dataset globale, o solo
+quando compaiono per la prima volta in una partita che ci riguarda
+(club delle 5 leghe in coppa, o nazionali)? Nessuna delle due opzioni è
+stata scelta.
+
+**4. Il database si aggiornerà da solo?** **Confermato dall'utente**: sì,
+una volta finito il lavoro sul passato si continuerà a raccogliere i dati
+delle partite nuove per tenere tutto aggiornato (stesso principio già
+attivo per il resto del progetto, `scripts/raccolta_giornaliera.py`). Ma
+**la priorità adesso è fare bene il lavoro sul passato** — l'aggancio alla
+raccolta quotidiana è un passo successivo, non descritto qui in dettaglio.
+
+**5. Controlli automatici (test) — da iniziare a pensarci.** Il `CLAUDE.md`
+chiede un test per ogni nuova funzionalità della pipeline; questo piano non
+lo aveva mai citato. **Da implementare quando si scriverà il codice vero**
+(non ora). Un primo abbozzo di cosa dovranno controllare, per iniziare a
+pensarci:
+   - **coerenza fra fonti**: i minuti totali di un giocatore in una
+     stagione, sommati da `player_match_appearances.csv`, devono tornare
+     (entro una tolleranza) con `understat.season_players` — stesso
+     controllo già proposto come tracer bullet in §6, ma va reso un test
+     permanente, non solo un controllo una tantum;
+   - **nessuna riga orfana**: ogni `player_id` in `player_match_appearances.csv`
+     deve esistere in `players.csv`, ogni partita deve avere una chiave
+     valida — stesso principio di `test_schema_identico_tra_leghe` già nel
+     progetto;
+   - **tasso di aggancio dichiarato**: un test che fallisce se il tasso di
+     match nome→entità di allenatori/arbitri (§6-ter problema 1) scende
+     sotto una soglia, così un peggioramento silenzioso della fonte non
+     passa inosservato;
+   - **copertura minima**: un test che controlla che ogni lega/stagione
+     abbia almeno una soglia di copertura minima prima di essere usata,
+     stesso principio di `MIN_COVERAGE` già usato in `transfermarkt.py`.
+
+**6. Rapporto fra assenze STIMATE (oggi) e infortuni VERI (se li
+troviamo).** `src/data/transfermarkt.py` calcola già `home_absent_count_est`/
+`away_absent_count_est` — una **stima aggregata per squadra**, basata sulle
+rose Understat incrociate con lo storico infortuni (§DATI.md). Se il fronte
+infortuni di §8-bis produce dati **reali per singolo giocatore**, va deciso:
+sostituiscono la stima esistente, o convivono (es. la stima resta come
+fallback dove il dato reale manca)? **Nessuna decisione presa.**
+> ⚠️ **PROMEMORIA per l'utente**: questo punto resta aperto e richiede una
+> soluzione — da riprendere in una sessione futura, non dimenticarlo.
+
+**7. `player_id` è stabile anche fuori dalle 5 leghe? — VERIFICATO,
+risposta positiva.** Vedi il riquadro in §1.8 (voce "esperienza del
+giocatore"): controllato scaricando di nuovo il dataset, `players.csv` è
+una chiave pulita (50.149 righe, 50.149 ID distinti, zero duplicati), e la
+maggioranza dei giocatori delle 5 leghe compare con lo stesso ID anche in
+coppe europee (50%) o altre competizioni (79%). A differenza di
+arbitri/allenatori (nessun ID, §6-ter problema 1), per i giocatori questo
+rischio è **basso**, non assente: resta da controllare, quando si scriverà
+il codice vero, che non esistano rari casi di doppio profilo per la stessa
+persona (non cercato in questa verifica, che ha controllato la coerenza
+dell'ID, non l'unicità delle persone dietro ID diversi).
 
 ## 7 · Collegamenti
 
