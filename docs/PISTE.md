@@ -18,8 +18,9 @@ piano dedicato [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)).
 ⚠️ La pista **20** (Opta/WhoScored/Flashscore/SofaScore, chiusa negativa il
 28/07/2026) è ancora **da integrare** da `cantiere_opta_flashscore/` e non
 compare ancora qui sotto: la 21 non dipende dalla 20, i numeri non collidono.
-**30/07/2026** — pista **22** aperta (gol pesati per la forza dell'avversario /
-rating iterativo tipo Elo-SRS, richiesta utente, §1).
+**30/07/2026** — pista **22** aperta (eventi pesati per la forza
+dell'avversario — gol, O/U, cartellini — rating iterativo tipo Elo-SRS,
+richiesta utente, §1; estesa lo stesso giorno da gol a O/U e cartellini).
 
 ## 0 · ⚠️ DOVE CERCARE, dopo la correzione della Fase 92
 
@@ -99,7 +100,7 @@ voce.
 | 19 | quote O/U 2017-19, chiusura vera | ✅ chiusa (F100): **trovata e NON inserita** | §4 |
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
 | 21 | database giocatore/arbitri/allenatori | 🟢 **aperta (29/07/2026), bozza + VERIFICA COMPLETA del 30/07** — nessun dato ancora importato; il dataset è stato verificato a fondo (14 agenti): 14 affermazioni del piano corrette, dati nuovi trovati, classificazione finale delle fonti in [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) **§9** | §3 |
-| 22 | gol pesati per la forza dell'avversario (rating iterativo tipo Elo/SRS) | 🟢 **aperta (30/07/2026), richiesta utente** — il DC già pesa implicitamente ogni gol per la forza dell'avversario via fit congiunto attacco/difesa (non è una pista di "aggiungerlo"); resta da testare solo un rating **sequenziale** esterno come covariata, con controllo di ridondanza contro `attack`/`defense` | §1 |
+| 22 | eventi pesati per la forza dell'avversario — gol, O/U, cartellini (rating iterativo tipo Elo/SRS) | 🟢 **aperta (30/07/2026), richiesta utente** — il DC (gol) e il suo analogo sui conteggi (corner/cartellini, Fase 96) già pesano implicitamente ogni evento per la forza dell'avversario via fit congiunto attacco/difesa; l'O/U eredita lo stesso peso perché è **derivato** dalla matrice gol, non un processo a parte. Non è una pista di "aggiungerlo"; resta da testare solo un rating **sequenziale** esterno come covariata, con controllo di ridondanza | §1 |
 
 **Conteggio** (con questa tassonomia): **14 piste aperte piene** (1, 2, 3,
 6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21, 22), **5 parziali o con residuo**
@@ -300,7 +301,7 @@ nessuna sotto-struttura del θ (volume/equilibrio/coda F52-quater; per-squadra
 F86-bis) batte il θ globale OOS. `scripts/_run_team_dispersion.py` (sez.
 walk-forward). Lead 🔎 → ❌.
 
-### 22. Gol pesati per la forza dell'avversario (rating iterativo tipo Elo/SRS) — 🟢 aperta (30/07/2026, richiesta utente)
+### 22. Eventi pesati per la forza dell'avversario — gol, O/U, cartellini (rating iterativo tipo Elo/SRS) — 🟢 aperta (30/07/2026, richiesta utente)
 **Dato**: nessuno nuovo — solo i gol già in snapshot, riaggregati diversamente.
 **Domanda di partenza (dell'utente)**: sapere quanti gol segna/subisce in media
 una squadra aiuta a prevedere i gol della partita? E se pesassimo ogni gol per
@@ -352,6 +353,36 @@ relativa da dati sovrapposti — quindi il test onesto è un **controllo di
 ridondanza**: il rating Elo/SRS aggiunge log-loss fuori campione **oltre**
 `attack`/`defense` del DC, o è spiegato per intero da essi? Se il secondo, si
 chiude come la "forma": nel rumore.
+
+**Estensione dell'utente: e per O/U 1.5/2.5/3.5, e per i cartellini (o "altri
+mercati")?** Stessa risposta, per due motivi diversi a seconda del mercato:
+- **O/U (qualunque linea, 1.5/2.5/3.5/…) NON è un processo a sé**: è
+  **derivato** dalla stessa matrice punteggi `M` del DC (`derive_markets`,
+  `src/models/market_implied.py:130`) costruita dagli stessi λ,μ già pesati
+  per la forza dell'avversario. Non esiste, nel codice, una "frequenza grezza
+  di quante partite di una squadra finiscono Over 2.5" usata come input: la
+  domanda "quanto spesso una squadra fa match Over" è già la conseguenza di
+  `attack`/`defense`, non un dato indipendente da pesare a parte. Pesarla per
+  la forza dell'avversario significherebbe ri-derivare esattamente ciò che il
+  DC già fa a monte, sui gol.
+- **Cartellini (e corner) SONO un processo a sé** — non derivano dalla matrice
+  gol (Fase 96, `scripts/_run_outside_matrix.py`: "i mercati con un processo
+  generatore PROPRIO... non sono mai stati modellati [dal motore-gol]") — ma
+  **sono già pesati alla stessa maniera dei gol**: lo script fitta un
+  "Dixon-Coles-like sui CONTEGGI (forza-cartellini/corner attacco/difesa per
+  squadra + vantaggio casa, stima pesata nel tempo)", cioè la stessa MLE
+  congiunta descritta sopra, applicata ai cartellini invece che ai gol. Quindi
+  vale la stessa conclusione: un cartellino preso in una partita "cattiva"
+  (arbitro severo, avversario fallo-oso) sposta già il parametro giusto, non
+  una media grezza.
+- **Generalizzazione onesta della pista**: qualunque mercato Tier 1-3 di
+  questo repo passa da un fit di forza-attacco/forza-difesa per squadra
+  (gol → DC; corner/cartellini → il loro DC-like; §1.8/CLAUDE.md — gli altri
+  mercati derivano tutti da una di queste due matrici). Il "valore 0-1"
+  richiesto dall'utente **esiste già**, in forma di parametro stimato, per
+  ogni processo che il progetto modella. L'unica variante NON provata resta
+  quella sequenziale (Elo/SRS) discussa sopra — e si applicherebbe allo stesso
+  modo a gol, corner o cartellini: stesso test di ridondanza, stesso rischio.
 
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
