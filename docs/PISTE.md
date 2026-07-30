@@ -100,7 +100,7 @@ voce.
 | 19 | quote O/U 2017-19, chiusura vera | ✅ chiusa (F100): **trovata e NON inserita** | §4 |
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
 | 21 | database giocatore/arbitri/allenatori | 🟢 **aperta (29/07/2026), bozza + VERIFICA COMPLETA del 30/07** — nessun dato ancora importato; il dataset è stato verificato a fondo (14 agenti): 14 affermazioni del piano corrette, dati nuovi trovati, classificazione finale delle fonti in [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) **§9** | §3 |
-| 22 | eventi pesati per la forza dell'avversario — gol, O/U, cartellini (rating iterativo tipo Elo/SRS) | 🟢 **aperta (30/07/2026), richiesta utente** — il DC (gol) e il suo analogo sui conteggi (corner/cartellini, Fase 96) già pesano implicitamente ogni evento per la forza dell'avversario via fit congiunto attacco/difesa; l'O/U eredita lo stesso peso perché è **derivato** dalla matrice gol, non un processo a parte. Non è una pista di "aggiungerlo"; resta da testare solo un rating **sequenziale** esterno come covariata, con controllo di ridondanza | §1 |
+| 22 | eventi pesati per la forza dell'avversario — gol, O/U, cartellini (rating iterativo tipo Elo/SRS) | 🟢 **aperta (30/07/2026), richiesta utente** — il DC (gol) e il suo analogo sui conteggi (corner/cartellini, Fase 96) già pesano implicitamente ogni evento per la forza dell'avversario via fit congiunto attacco/difesa; l'O/U eredita lo stesso peso perché è **derivato** dalla matrice gol, non un processo a parte. Come feature del modello resta solo il test di ridondanza (rating sequenziale vs DC); **come metrica standalone/diagnostica (non deve battere il DC) è indipendente e resta da provare** — power-ranking descrittivo, sorpresa-vs-forma-recente, affidabilità dello storico contro calendario sbilanciato | §1 |
 
 **Conteggio** (con questa tassonomia): **14 piste aperte piene** (1, 2, 3,
 6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21, 22), **5 parziali o con residuo**
@@ -383,6 +383,52 @@ mercati")?** Stessa risposta, per due motivi diversi a seconda del mercato:
   ogni processo che il progetto modella. L'unica variante NON provata resta
   quella sequenziale (Elo/SRS) discussa sopra — e si applicherebbe allo stesso
   modo a gol, corner o cartellini: stesso test di ridondanza, stesso rischio.
+
+**Ulteriore chiarimento dell'utente: il ragionamento non è solo per il modello
+di previsione.** Sopra il test proposto è "il rating Elo/SRS batte
+`attack`/`defense` del DC fuori campione?" — un criterio che ha senso SOLO se
+lo scopo è sostituire/integrare il motore di previsione. Ma un rating
+sequenziale può valere **anche se perde quel confronto**, per usi che non
+competono col DC:
+- **Metrica descrittiva standalone**: un power-ranking "che forza ha ogni
+  squadra oggi", leggibile di per sé (tipo la classifica Elo pubblica del
+  calcio), utile per raccontare/capire la lega — non deve battere il DC in
+  log-loss per essere utile, allo stesso modo in cui la classifica reale non
+  serve a scommettere ma serve a capire chi sta andando bene. Nessun costo di
+  ridondanza qui: non è una feature del modello, è un output a sé.
+- **Diagnostica di partite "sorprendenti" rispetto al rating**, diversa da
+  quella già fatta: la volatilità-sorpresa della Fase 86
+  (`scripts/_run_team_dispersion.py`) misura il residuo *(diff-reti reale) −
+  (λ−μ del **mercato**)* — è "sorpresa rispetto al prezzo", non "sorpresa
+  rispetto alla traiettoria di forza della squadra". Un Elo/SRS sequenziale
+  permetterebbe di chiedere una cosa diversa: "questo risultato è coerente con
+  la forma **recente** della squadra (ultime N partite), o è un'anomalia?" —
+  utile per costruire, es., una lista di partite da rivedere manualmente o un
+  segnale di "squadra in caduta/salita che il fit batch a 365g non ha ancora
+  visto" (il DC lo vede con ritardo, per costruzione: l'emivita di un anno
+  smussa i cali bruschi).
+- **Rilevare cali/scatti di forma** (stesso punto della Fase 13 sulla "forma",
+  ma con una metrica diversa — non punti/gara ma il residuo cumulato del
+  rating): potrebbe essere un segnale operativo ("questa squadra sta
+  performando sistematicamente sopra/sotto il suo rating storico da M
+  partite") anche senza essere una feature del DC — es. per decidere quando
+  guardare una partita con più attenzione prima di fidarsi ciecamente del
+  prezzo.
+- **Pesare quanto fidarsi dello storico contro avversari deboli**: una
+  squadra che ha giocato tante partite contro fondo-classifica (calendario
+  sbilanciato in una finestra recente) avrebbe un rating batch (DC, emivita
+  365g) più incerto di quanto sembri; un tracciamento esplicito di *contro chi*
+  si è costruito lo storico recente potrebbe segnalare quando fidarsi meno
+  della stima corrente — imparentato con lo squilibrio di calendario già
+  discusso per il prior neopromosse (δ, §7 di CLAUDE.md) ma generalizzato a
+  ogni squadra, non solo alle neopromosse.
+
+Questi usi **non richiedono il test di ridondanza-vs-DC** sopra: sono
+giustificati anche se l'esito è "il rating non aggiunge nulla al log-loss".
+Vanno però tenuti separati con chiarezza da quel test — altrimenti si rischia
+di scambiare un output descrittivo utile per un miglioramento del modello (o
+viceversa, di scartare un rating descrittivo valido solo perché non batte il
+DC, che non è il suo scopo).
 
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
