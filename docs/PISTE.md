@@ -302,6 +302,27 @@ F86-bis) batte il θ globale OOS. `scripts/_run_team_dispersion.py` (sez.
 walk-forward). Lead 🔎 → ❌.
 
 ### 22. Eventi pesati per la forza dell'avversario — gol, O/U, cartellini (rating iterativo tipo Elo/SRS) — 🟢 aperta (30/07/2026, richiesta utente)
+
+> 🔗 **Un Elo di club È GIÀ STATO COSTRUITO E VALIDATO lo stesso giorno**, da
+> una sessione parallela, per un altro scopo (l'indice di forza del §1.10 del
+> database giocatori). I numeri sono in
+> [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) **§10.2** e
+> questa pista non deve rifarli da zero:
+> **ricetta già tarata** (K=12, vantaggio-casa 65, regressione di fine stagione
+> 0,15 verso la media della propria lega, cold-start a media−70; iperparametri
+> scelti su griglia col log-loss fuori campione, superficie piatta su 36
+> combinazioni); **validazione** contro le quote di chiusura dei nostri
+> snapshot (16.111 partite): correlazione **0,9329**, contro 0,8508 del valore
+> rosa e 0,7687 del coefficiente UEFA; **le coppe UEFA vanno incluse**, sono
+> l'unico ponte che rende comparabili leghe diverse; normalizzazione 0-1
+> disponibile, **ma per segmentare va usato il delta Elo grezzo** (la logistica
+> schiaccia le code: 0,8347 contro 0,8812).
+> ⚠️ **Avvertenza che riguarda direttamente questa pista**: quell'Elo **non
+> batte il mercato** (log-loss 0,9857 contro 0,9663) e non è pensato per farlo.
+> Il che è coerente con l'analisi qui sotto — il valore atteso di questa pista
+> è **descrittivo/diagnostico**, non un miglioramento del Dixon-Coles, che già
+> pesa gli avversari per massima verosimiglianza congiunta.
+
 **Dato**: nessuno nuovo — solo i gol già in snapshot, riaggregati diversamente.
 **Domanda di partenza (dell'utente)**: sapere quanti gol segna/subisce in media
 una squadra aiuta a prevedere i gol della partita? E se pesassimo ogni gol per
