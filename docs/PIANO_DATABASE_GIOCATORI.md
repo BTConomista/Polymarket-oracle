@@ -83,7 +83,8 @@ il suo §0-bis).
 | §7 | collegamenti ad altri file del repo |
 | §8 | 4 idee prospettiche catturate, da ricollocare quando il piano verrà smontato |
 | §8-bis | quelle 4 erano ESEMPI — il principio generale (H2H, infortuni, squalifiche...) |
-| **§9** | 🔴 **VERIFICA COMPLETA (30/07/2026)** — 14 affermazioni sbagliate, dati nuovi, classificazione finale delle fonti. **Ha la precedenza su tutto** |
+| **§9** | 🔴 **VERIFICA COMPLETA (30/07/2026)** — 14 affermazioni sbagliate, dati nuovi, classificazione delle fonti **dentro** il CSV |
+| **§10** | 🌍 **OLTRE IL CSV (30/07/2026)** — fonti esterne, verifica incrociata, **indice di forza costruito in casa**. Insieme a §9 ha la precedenza su tutto |
 
 ## 0 · Perché, e con quale grado di certezza
 
@@ -2144,3 +2145,265 @@ gli snapshot del repo):
 Risponde alla domanda che il piano teneva aperta: **sì, lineups ed events coprono
 le nostre leghe quanto `appearances`**. Il tracer bullet del passo 1-2 di §6 non
 deve più misurare questo: è misurato.
+
+---
+
+# 10 · 🌍 OLTRE IL CSV: fonti esterne, verifica incrociata, e l'indice di forza costruito in casa (30/07/2026)
+
+> **Perché.** Il §9 aveva verificato solo cosa è raggiungibile **dentro** il
+> dataset Kaggle. Su richiesta dell'utente («allarghiamo lo sguardo… le carriere
+> fuori dall'Europa le possiamo raggiungere con altre fonti; l'indice di forza
+> possiamo ottenerlo noi a modo nostro, ingegniamoci»), sette fronti di ricerca
+> esterna + dieci verifiche avversariali. **Sette refutazioni su dieci**: le
+> scoperte più entusiasmanti erano quasi tutte troppo ottimistiche, e quanto
+> segue è la versione già ridimensionata.
+
+## 10.1 · Carriere fuori Europa — **PARZIALE**, non risolta
+
+Il problema (§9.1 n.2): `appearances.csv` non ha nessun campionato
+extra-europeo né seconde divisioni, e **333 giocatori** delle nostre 5 leghe
+(debutto dopo il 2017-07, età ≥26) risultano con **zero passato**.
+
+**Cosa funziona.** **DBpedia** (`dbpedia.org/sparql`, HTTP 200 verificato,
+`robots.txt` **non** vieta `/sparql`, Crawl-delay 10 rispettato) espone
+`dbo:careerStation` con squadra, anni e presenze. Copre Brasile fino alla Série
+D, Argentina, Liga MX, MLS, J1, K League, Chinese Super League, Perù, Uruguay,
+Algeria — **e le seconde/terze divisioni europee, dove sta il 79% degli spell
+mancanti**.
+
+**Perché NON è la soluzione che sembrava** — tre difetti, tutti misurati:
+
+1. **Il 96,1% dichiarato non è ottenibile in modo conforme.** Dipendeva da un
+   passaggio via `query.wikidata.org/sparql`, il cui `robots.txt` dice
+   `Disallow: /sparql`. Per la regola del progetto quella via è **chiusa**
+   (stesso motivo per cui Understat è chiuso). Con la sola via conforme
+   (nome → IRI dentro DBpedia) la copertura misurata scende a **250/333 =
+   75,1%**, ed è un tetto perché non filtra gli omonimi;
+2. **la carriera non è ricostruibile, solo intuibile**: su **2.965 stazioni,
+   ZERO hanno una data di fine** (`dbo:years` è un `xsd:gYear` di solo inizio);
+   appena il **33%** dei giocatori coperti ha le presenze su *tutte* le tappe
+   pre-debutto; e per il **33%** l'ultima tappa è a cavallo del debutto, quindi
+   le presenze non sono separabili prima/dopo. DBpedia mescola inoltre
+   **settore giovanile e prima squadra** nella stessa stazione;
+3. **Wikidata come ripiego è conforme ma il dato è debole.**
+   `Special:EntityData/Q<id>.json` **è permesso** (riga 436 `Allow:` batte la
+   435 `Disallow:` per longest-match RFC 9309) ed è **CC0** — ma su un campione
+   di 90 giocatori: join valido all'82,2%, **41,9% senza alcun numero di
+   presenze**, **62,2% sottostima** il nostro dato. L'esempio-vetrina era
+   sbagliato (25 presenze al Milan contro 51 reali).
+
+**Verdetto onesto**: si può sapere **se** un giocatore ha un passato e
+grosso modo **dove**, non **quanto**. Utile per un flag/categoria
+("proviene da campionato minore/extra-europeo"), **non** per un conteggio di
+presenze. E la licenza DBpedia è **CC BY-SA 3.0 + GFDL**, non CC0: lo
+share-alike è un vincolo reale in ridistribuzione, da dichiarare (regola R2).
+
+*(Correzione tecnica: `dbo:SoccerPlayer` sono **194.850** entità distinte, non
+536.455 — quello era un `COUNT(*)` su triple duplicate fra grafi di lingua.)*
+
+## 10.2 · ⭐ Indice di forza: **RISOLTO**, e vince l'Elo calcolato in casa
+
+L'utente chiedeva di ingegnarci. Quattro vie prototipate e validate contro un
+metro indipendente — le **quote 1X2 di chiusura** dei nostri snapshot (16.111
+partite, copertura 100%), più il log-loss 1X2 fuori campione:
+
+| indice | correlazione col mercato | log-loss OOS |
+|---|--:|--:|
+| **Elo pre-partita (in casa)** | **0,9329** | **0,9857** |
+| valore rosa mediano | 0,8508 | 0,9974 |
+| valore rosa top-11 | 0,8492 | — |
+| coefficiente UEFA ricostruito | 0,7687 | — |
+| `national_team_players` | 0,7517 | — |
+| `stadium_seats` | 0,6195 | — |
+| `foreigners_%` | 0,2587 | — |
+| `average_age` | 0,0288 | — |
+| *(riferimenti)* | mercato **0,9663** | baseline **1,0730** |
+
+**Ricetta raccomandata** (iperparametri scelti su griglia col log-loss OOS,
+superficie piatta su 36 combinazioni → robusti): **K=12**, vantaggio-casa **65**,
+regressione di fine stagione **0,15** verso la media della **propria** lega,
+cold-start delle mai-viste a **media − 70** (l'analogo del `promoted_prior δ`
+del Dixon-Coles). **Includere sempre le coppe UEFA**: sono l'**unico ponte** che
+rende comparabili leghe diverse (4.897 partite, log-loss OOS 0,9902 contro
+1,0487 di baseline).
+
+Normalizzazione 0-1: `forza01 = 1/(1+10^(−(elo−1407,3)/148,6))`.
+⚠️ **Avvertenza misurata**: la *differenza* di due `forza01` correla **meno** del
+delta Elo grezzo (0,8347 contro 0,8812) perché la logistica schiaccia le code →
+per **segmentare/modellare** usare il **delta Elo grezzo**, per **pesare le
+squadre passate** il **0-1**.
+
+**Copertura**: 5.655 club-stagione, 903 club, 2012-2025. Fuori dalle 5 leghe
+**4.279 club-stagione**, di cui 452 visti **solo in coppa** e quindi fragili
+(mediana 10 partite di storia) → serve una colonna `n_games_prima` come flag.
+
+**Fonte esterna trovata e CONFERMATA: ClubElo** (`api.clubelo.com`) —
+⚠️ **solo `http://`, l'HTTPS non funziona**. Licenza: permesso esplicito
+dell'autore *«You can use my calculations… Please cite me»* → uso libero **con
+attribuzione obbligatoria**. Confronto testa a testa: ClubElo 0,9376 contro il
+nostro 0,9308, correlazione fra i due **0,9921**, e nella regressione congiunta
+il nostro Elo è **inglobato** (pesi 0,952 ClubElo / 0,034 nostro).
+
+**Perché costruirlo comunque in casa**: è CC0, offline, riproducibile e
+calcolabile per **qualunque** club presente in `games.csv`. **Onestà**: non
+batte il mercato (0,9857 contro 0,9663) e **non è pensato per farlo** — serve a
+segmentare e a pesare, non a prezzare.
+
+## 10.3 · Infortuni: **precisione ~97%, sensibilità ~37-63%**
+
+Il dataset `irrazional/transfermarkt-injuries` (CC BY 4.0 verificata) si
+aggancia **per `player_id` di Transfermarkt: 18.824/18.825 = 100%** — nessun
+matching per nome.
+
+**La verifica incrociata** (la parte che conta): incrociando le **10.558
+sostituzioni per infortunio** degli eventi con le date del dataset —
+**36,7% di corrispondenza a ±1 giorno**, contro **1,0%** delle sostituzioni
+tattiche e **1,0-1,4%** dei placebo con la data spostata di ±91/182/365 giorni:
+un **lift di 35×**. Il tasso sale **monotonamente con la gravità**: 11,5% se il
+giocatore non salta nulla → **63,2%** se salta le 3 partite successive. Nella
+direzione inversa la **precisione è 97,3%**.
+
+> **Profilo della fonte: quando parla dice il vero; quando tace, spesso mente
+> per omissione.**
+
+⚠️ **Tre limiti che ne condizionano l'uso**: (1) si ferma a **febbraio 2024**;
+(2) la copertura **non è uniforme fra leghe** — Serie A 49,5%, Premier 41,4%,
+Liga 36,7%, Bundesliga 29,0%, **Ligue 1 20,9%**, e gli infortuni per
+giocatore-stagione vanno da 1,886 (Bundesliga) a 0,598 (Ligue 1): un fattore
+**3,2** che nessuna medicina sportiva giustifica, quindi è **difetto di
+registrazione**; (3) contiene **9.275 duplicati esatti**.
+
+## 10.4 · Arbitri: la via "gratis" funziona, quella ricca è chiusa per licenza
+
+**Funziona**: `games.csv` dà l'arbitro sul **99,96%** delle nostre 16.111
+partite (250 arbitri, mediana 54 gare a testa), e gli eventi danno cartellini e
+rigori **senza alcun join**. Il segnale c'è ed è stato misurato contro una
+**banda nulla da permutazione**: la deviazione standard fra arbitri sui gialli
+la supera in **tutte e 5 le leghe** (Serie A 0,582 contro [0,183, 0,303]).
+
+**I falli** non sono nel dataset ma sono in **football-data** (colonne `HF`/`AF`,
+100%): il join `games.csv` ↔ football-data aggancia il **93,3%** e arriverebbe
+quasi al 100% con i `TEAM_ALIASES` già nel repo.
+
+> ⚠️ **Correzione a un'assunzione implicita**: la colonna `Referee` di
+> football-data esiste **solo per la Premier League**. Per le altre quattro
+> leghe l'arbitro **deve** venire da `games.csv`.
+
+**Chiuso per licenza, non per rete**: `api.fifa.com` ha la **terna al 100%** su
+9.975 partite, il **VAR** su 5.603 e persino il **recupero concesso** —
+ma i ToS §5.3 vietano l'uso fuori dalle piattaforme FIFA, e il `robots.txt`
+risponde 503 persistente (per RFC 9309 va letto come *disallow*). Come per
+l'API della Premier League: **raggiungibile e ricca, non utilizzabile**.
+`legaseriea.it` non ha endpoint (307 sulla homepage); AIA e FFF sono dietro
+anti-bot (403) e **non si aggirano**.
+
+## 10.5 · Event data: resta al **12,55%**, e le scorciatoie sono avvelenate
+
+Caccia esaustiva (figshare, Zenodo, OSF, HuggingFace, Kaggle, le liste
+canoniche KU Leuven e PySport): **l'ecosistema aperto è esattamente quello già
+noto**. StatsBomb **non è cambiato** (230 partite = 1,43%, un club per
+stagione); i "nuovi" depositi Wyscout sono **campionato russo**; **SkillCorner
+ha cambiato contenuto** (oggi A-League australiana, zero delle nostre).
+
+**Unico guadagno pulito**: 2 partite di Bundesliga 2022-23 dal dataset
+DFL/Sportec (figshare, CC BY 4.0, rilasciato **col consenso della DFL**) — è
+minuscolo, ma è la **prima event data ufficiale** di una delle nostre 5 leghe
+con licenza inequivocabile.
+
+⚠️ **La scoperta avvelenata**: esistono tre **re-depositi di scrape** che
+coprono dal 55,7% all'82,7% della finestra con esattamente le variabili che
+servono (StatFootDB su figshare 8.970 partite; i mirror Understat su Kaggle
+12.651 partite con xG/xA per giocatore-partita; un mirror API-Football).
+**Dichiarano licenze aperte che non possono concedere**, perché i dati non sono
+loro. È lo stesso motivo per cui il progetto ha chiuso WhoScored: non è la
+raggiungibilità il problema, è il diritto di riuso.
+
+## 10.6 · Seconde divisioni: ci sono già, **ma l'ipotesi della pista 12 è falsa**
+
+**La fonte migliore non è openfootball, è football-data.co.uk** — quella che il
+progetto **già usa**: pubblica le stesse cinque seconde divisioni (`I2`, `E1`,
+`SP2`, `D2`, `F2`) con **schema identico a 105 colonne**, cioè con quote di
+chiusura, tiri, corner e cartellini: **18.515 partite, 9/9 stagioni**, e il
+2025-26 **completo** (openfootball è fermo a novembre 2025 su 4 repo su 5).
+Manca solo l'xG. ⚠️ Licenza: *«© Football-Data. All Rights Reserved»* — **non è
+aperta**; il progetto ci convive già per le massime serie, ma va dichiarato.
+
+**Il risultato che conta è però una misura, e chiude la pista 12.** Agganciate
+**108/108** neopromosse alla loro ultima stagione di seconda serie, e testati
+tre indici contro il rendimento reale nella prima stagione in massima serie:
+
+| indice della forza in seconda serie | correlazione | IC95% |
+|---|--:|---|
+| punti/gara standardizzati | **+0,004** | [−0,185, +0,193] → **zero** |
+| Elo ClubElo al 15 luglio | +0,073 | [−0,117, +0,259] → rumore |
+| **mercato** (prob. devigata media di stagione) | **+0,218** | **[+0,030, +0,391]** |
+
+L'ipotesi della pista 12 — *«stimare la forza della neopromossa dal suo
+rendimento reale in B»* — **non regge**. L'unico indice il cui intervallo
+esclude lo zero è il **mercato** della seconda serie (R² = 4,75%). Anche la via
+di promozione non ordina nulla (playoff 1,032 punti/gara contro 0,988 delle
+promozioni dirette).
+
+## 10.7 · Verifica incrociata: i nostri snapshot reggono, e saltano fuori due anomalie
+
+Scaricati e confrontati per intero i 45 file di campionato di **openfootball**
+(CC0) contro i nostri snapshot:
+
+- **16.111/16.111 partite agganciate (100%)**, **date identiche al 100%**,
+  **risultati identici al 99,981%** (16.108/16.111);
+- le **101 partite in più** di openfootball sono le gare di Ligue 1 2019-20
+  annullate dal COVID, marcate `[cancelled]`: il nostro snapshot fa bene a non
+  averle.
+
+⚠️ **Un avvertimento metodologico importante**: openfootball e `games.csv`
+concordano fra loro al **100%** — **anche sulle due partite a tavolino**. Quindi
+**non sono una conferma indipendente della regola R1**: riportano entrambe il
+verdetto del giudice sportivo. **Il nostro snapshot è l'unico dei tre a portare
+il risultato del campo**, ed è una scelta consapevole.
+
+**Due anomalie nuove, da dichiarare per la regola R4** (registrate in
+`docs/DATI.md` §1-quater):
+
+1. **Nantes-Toulouse, 17/05/2026** (Ligue 1): il nostro snapshot la conta
+   **0-0**, ma **quattro fonti indipendenti** dicono che quello 0-0 è un
+   **"finto pieno"** (regola R6) e non una misura — openfootball la marca
+   `[cancelled]` senza risultato; football-data la dà 0-0 ma con statistiche
+   impossibili per 90 minuti (2+2 tiri, 3+5 falli, 0 cartellini); Understat non
+   ha xG (una delle sole 2 partite su 16.111); e in Kaggle è l'**unica** partita
+   su 16.111 con **zero presenze, zero eventi e zero formazioni**;
+2. **Montpellier-Saint-Étienne, 16/03/2025**: marcata `[awarded]` da
+   openfootball (0-2, sospesa all'88' per incidenti). Qui il risultato assegnato
+   **coincide** con quello del campo, quindi non c'è nulla da correggere — ma va
+   dichiarata lo stesso. L'inventario completo di openfootball sui 45 file è
+   esattamente **3 `[awarded]` e 102 `[cancelled]`**.
+
+### ⚠️ L'orario: §9.8 lo dava per «risolto», e mancava un controllo
+
+Confrontate le due fonti dell'orario (football-data `Time` vs openfootball) su
+**12.459 partite**: accordo **99,10%**, ma **solo dopo aver misurato un offset
+di fuso orario** invece di assumerlo:
+
+- **Premier League**: moda della differenza **0 minuti** (98,87%);
+- **le altre quattro leghe**: moda **+60 minuti** (99,49%-99,89%).
+
+**La colonna `Time` di football-data è in ora britannica.** Importarla senza
+correggere il fuso avrebbe sfalsato di un'ora l'orario di **tutte** le partite
+non inglesi — un errore che nessun controllo di completezza avrebbe rilevato,
+perché il dato *c'è* ed è *plausibile*.
+
+## 10.8 · Classificazione finale aggiornata
+
+| dato | stato | fonte | licenza |
+|---|:--:|---|---|
+| orario di inizio | ✅ | openfootball (100%) / football-data `Time` ⚠️ **fuso da correggere** | CC0 / proprietaria |
+| meteo | ✅ | open-meteo | CC BY 4.0 |
+| **indice di forza club** | ✅ **costruito in casa** | Elo da `games.csv` (+ ClubElo come controllo) | CC0 / attribuzione |
+| infortuni | 🟡 | Kaggle `transfermarkt-injuries` | CC BY 4.0 |
+| seconde divisioni | ✅ | football-data (`I2`/`E1`/`SP2`/`D2`/`F2`) | ⚠️ proprietaria |
+| arbitro per partita + cartellini/rigori | ✅ | `games.csv` + eventi | CC0 |
+| falli per partita | ✅ | football-data (`HF`/`AF`) | ⚠️ proprietaria |
+| carriere extra-europee | 🟡 **solo come flag** | DBpedia (+ Wikidata EntityData) | CC BY-SA 3.0 / CC0 |
+| event data per giocatore | 🟡 **12,55%** | Wyscout 2017-18, StatsBomb, DFL/Sportec | CC BY 4.0 |
+| terna arbitrale, VAR, recupero | 🔒 **chiuso per licenza** | api.fifa.com | ToS FIFA |
+| convocazioni FIFA storiche | ❌ | — | — |
+| PSxG / portiere avanzato | ❌ | — | — |

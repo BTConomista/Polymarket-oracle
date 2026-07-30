@@ -511,6 +511,26 @@ giocherà quando cambia la panchina.
 > (pista 13 aggiornata), infortuni con licenza CC BY trovata, event data solo
 > per il 2017-18, nazionali **chiuse** da questa fonte. Scoperto anche che il
 > repo **legge già** metà dei campi che il piano voleva "verificare".
+>
+> 🌍 **E il 30/07 anche OLTRE il CSV (§10 del piano)**: sette fronti di ricerca
+> esterna, **7 refutazioni su 10** verifiche avversariali. Esiti: l'**indice di
+> forza è RISOLTO e costruito in casa** — un Elo da `games.csv` (K=12, casa 65,
+> coppe UEFA incluse come ponte cross-lega) che correla **0,9329** col mercato,
+> meglio di ogni alternativa, validato contro le nostre quote; le **carriere
+> extra-europee** restano **parziali** (DBpedia dà il *se* e il *dove*, non il
+> *quanto*: zero date di fine su 2.965 stazioni) e la via che dava il 96%
+> violava il `robots.txt` di Wikidata; gli **infortuni** hanno precisione 97%
+> ma sensibilità 37-63% e copertura sbilanciata fra leghe (Ligue 1 20,9%);
+> l'**event data** resta al 12,55% e le scorciatoie che coprirebbero il 78%
+> sono re-depositi di scrape che dichiarano licenze che non possono concedere;
+> le **seconde divisioni** sono in football-data con schema identico, **ma
+> l'ipotesi della pista 12 è falsificata** (il rendimento in B non predice
+> nulla, r=+0,004; solo il mercato di B sì, r=+0,218). La **verifica
+> incrociata** conferma i nostri snapshot (16.111/16.111, risultati identici al
+> 99,981%) e trova **due anomalie nuove** (`docs/DATI.md` §1-quater) più un
+> errore che stavamo per fare: la colonna `Time` di football-data è in **ora
+> britannica**, e importarla senza correggere il fuso avrebbe sfalsato di
+> un'ora tutte le partite non inglesi.
 
 Nessuna idea d'uso (§4 del piano) è stata decisa — resta da concordare con
 l'utente.

@@ -208,6 +208,43 @@ caso Verona-Roma è emerso proprio da un controllo di questo tipo, eseguito il
 (`docs/PIANO_DATABASE_GIOCATORI.md` §6-bis): 16.109 risultati identici, e le
 uniche 2 differenze sono queste.
 
+> ⚠️ **Attenzione a non scambiare l'accordo fra fonti per una conferma.**
+> Un secondo controllo (30/07/2026, contro **openfootball**, CC0) ha mostrato
+> che openfootball e `games.csv` **concordano fra loro al 100%** — comprese
+> queste due partite, dove **entrambe riportano il verdetto del tribunale**.
+> Non sono quindi una verifica indipendente della regola R1: **il nostro
+> snapshot è l'unico dei tre a portare il risultato del campo**. È una scelta
+> consapevole del progetto, non un disallineamento da sanare.
+
+### Altre due anomalie trovate confrontando con openfootball (30/07/2026)
+
+**1. Nantes-Toulouse, 17/05/2026 (Ligue 1 2025-26) — ⚠️ il nostro 0-0 è
+probabilmente un "finto pieno" (regola R6), non una misura.** Quattro fonti
+indipendenti concordano nel dire che quella partita non è stata giocata (o non
+è stata acquisita da nessuno):
+
+| fonte | cosa dice |
+|---|---|
+| il nostro snapshot | **0-0** |
+| openfootball | `[cancelled]`, **senza risultato** |
+| football-data | 0-0, ma con statistiche **impossibili** per 90′: 2+2 tiri, 3+5 falli, 2+2 corner, 0 cartellini (la mediana di lega è 9 tiri in porta totali) |
+| Understat | **nessun xG** — una delle sole 2 partite su 16.111 |
+| dataset Kaggle | l'**unica** partita su 16.111 con **zero presenze, zero eventi e zero formazioni** |
+
+**Nessuna correzione applicata**: serve prima decidere cosa sia il dato giusto
+(riga da rimuovere? `NaN` dichiarato?). Registrata qui perché **non venga
+usata come se fosse una partita vera** — 0-0 è il risultato più innocuo e
+insieme il più insidioso, perché non salta all'occhio in nessun controllo di
+completezza.
+
+**2. Montpellier-Saint-Étienne, 16/03/2025 (Ligue 1) — anomalia SENZA errore.**
+Sospesa all'88′ per incidenti e assegnata **0-2**: openfootball la marca
+`[awarded]`. Qui però il risultato assegnato **coincide con quello del campo al
+momento della sospensione**, quindi non c'è nulla da correggere e il nostro dato
+è giusto. Dichiarata per la regola **R4** (un'anomalia si scrive anche quando
+non è un errore). L'inventario completo dei marcatori di openfootball sui 45
+file di campionato è esattamente **3 `[awarded]` e 102 `[cancelled]`**.
+
 ## 2 · Semantica delle quote: apertura vs chiusura (leggere PRIMA di usarle)
 
 Due istantanee per mercato: **apertura** (`*_open`, raccolta giorni prima

@@ -90,7 +90,7 @@ voce.
 | 9 | Pinnacle puro come benchmark singolo-book | 🟢 aperta, mai fatta | §2 |
 | 10 | formazioni ufficiali | 🟠 **surrogato storico bocciato** (F98); resta la raccolta a T−1h | §3 |
 | 11 | `transfers.csv` → shock di gennaio | 🟢 aperta, mai provata | §3 |
-| 12 | seconda serie → prior neopromosse individualizzato | 🟢 aperta (si incrocia con la F91: δ dipende dall'orizzonte) | §3 |
+| 12 | seconda serie → prior neopromosse individualizzato | 🟠 **ipotesi FALSIFICATA (30/07/2026)**: il rendimento in B non predice (r=+0,004); solo il **mercato** della seconda serie sì (r=+0,218) | §3 |
 | 13 | meteo pre-partita | 🟢 aperta — **fonte TROVATA il 30/07/2026** (open-meteo, CC BY 4.0, senza chiave) | §3 |
 | 14 | bundle Understat Premier/Liga | ✅ chiusa **positiva** (F54-57) | §3 |
 | 15 | altre linee O/U (multi-linea) | 🟢 aperta — **una fonte candidata ora c'è ed è in repo** (1xBet/footiqo, 2017-20) | §3 |
@@ -726,7 +726,25 @@ esclude la scorciatoia storica.
 `squad_value` è una foto al 1° settembre. Mai modellato. Da incrociare con
 la Fase 31 (motivazione): gennaio ridistribuisce anche gli obiettivi.
 
-### 12. Risultati di seconda serie → prior neopromosse individualizzato
+### 12. Risultati di seconda serie → prior neopromosse — 🟠 **IPOTESI FALSIFICATA (30/07/2026)**
+> **MISURATO e negativo.** Agganciate **108/108** neopromosse delle 5 leghe alla
+> loro ultima stagione di seconda serie e testati tre indici contro il rendimento
+> reale nella prima stagione in massima serie:
+> **punti/gara standardizzati r = +0,004, IC95 [−0,185, +0,193] → esattamente
+> zero**; Elo ClubElo al 15 luglio r = +0,073 [−0,117, +0,259], rumore; e
+> **l'unico indice il cui intervallo esclude lo zero è il MERCATO della seconda
+> serie** (probabilità devigata media di stagione): r = **+0,218**, IC95
+> **[+0,030, +0,391]**, R² 4,75%. Anche la via di promozione non ordina nulla
+> (playoff 1,032 punti/gara contro 0,988 delle promozioni dirette).
+> **Conseguenza**: l'idea originale — "stimare la forza dal rendimento reale in
+> B" — **non funziona**; se si individualizza il δ, va fatto col mercato della
+> seconda serie, non con la classifica. **I dati però ci sono e costano poco**:
+> football-data pubblica le stesse 5 seconde divisioni (`I2`/`E1`/`SP2`/`D2`/`F2`)
+> con **schema identico a 105 colonne** (quote di chiusura incluse), 18.515
+> partite, 9/9 stagioni, 2025-26 completo. Dettaglio in
+> `PIANO_DATABASE_GIOCATORI.md` §10.6.
+
+**Testo originale della pista (conservato):**
 **Dato**: la Fase 68 ha già scaricato le seconde serie (Serie B,
 Championship, Segunda, 1617→2425 via openfootball) ma **solo per il
 calendario/riposo**, non per i punteggi — che sono nello stesso file.
