@@ -18,6 +18,8 @@ piano dedicato [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md)).
 ⚠️ La pista **20** (Opta/WhoScored/Flashscore/SofaScore, chiusa negativa il
 28/07/2026) è ancora **da integrare** da `cantiere_opta_flashscore/` e non
 compare ancora qui sotto: la 21 non dipende dalla 20, i numeri non collidono.
+**30/07/2026** — pista **22** aperta (gol pesati per la forza dell'avversario /
+rating iterativo tipo Elo-SRS, richiesta utente, §1).
 
 ## 0 · ⚠️ DOVE CERCARE, dopo la correzione della Fase 92
 
@@ -97,14 +99,16 @@ voce.
 | 19 | quote O/U 2017-19, chiusura vera | ✅ chiusa (F100): **trovata e NON inserita** | §4 |
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
 | 21 | database giocatore/arbitri/allenatori | 🟢 **aperta (29/07/2026), bozza + VERIFICA COMPLETA del 30/07** — nessun dato ancora importato; il dataset è stato verificato a fondo (14 agenti): 14 affermazioni del piano corrette, dati nuovi trovati, classificazione finale delle fonti in [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) **§9** | §3 |
+| 22 | gol pesati per la forza dell'avversario (rating iterativo tipo Elo/SRS) | 🟢 **aperta (30/07/2026), richiesta utente** — il DC già pesa implicitamente ogni gol per la forza dell'avversario via fit congiunto attacco/difesa (non è una pista di "aggiungerlo"); resta da testare solo un rating **sequenziale** esterno come covariata, con controllo di ridondanza contro `attack`/`defense` | §1 |
 
-**Conteggio** (con questa tassonomia): **13 piste aperte piene** (1, 2, 3,
-6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21), **5 parziali o con residuo** (4-bis,
-7, 8, 10, 16), **8 chiuse** (4, 4-ter, 4-quater, 5 come input, 6, 7-bis, 14,
-19), più la ricorrente §4-bis. Le due voci 6-bis/6-ter sono state aggiunte alla
-Fase 101-ter scorporando residui che erano descritti dentro altre voci e quindi
-non contati da nessuna parte (prima erano **15** fra aperte e parziali); la 21
-è nuova del 29/07/2026 e non deriva da uno scorporo.
+**Conteggio** (con questa tassonomia): **14 piste aperte piene** (1, 2, 3,
+6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21, 22), **5 parziali o con residuo**
+(4-bis, 7, 8, 10, 16), **8 chiuse** (4, 4-ter, 4-quater, 5 come input, 6, 7-bis,
+14, 19), più la ricorrente §4-bis. Le due voci 6-bis/6-ter sono state aggiunte
+alla Fase 101-ter scorporando residui che erano descritti dentro altre voci e
+quindi non contati da nessuna parte (prima erano **15** fra aperte e parziali);
+la 21 è del 29/07/2026 e non deriva da uno scorporo; la 22 è del 30/07/2026, su
+richiesta esplicita dell'utente.
 
 ## 1 · Piste che non richiedono nuovi dati (feature engineering / architettura)
 
@@ -295,6 +299,59 @@ l'ennesima conferma del tetto informativo (α\*=0), ora *nella coda e per-squadr
 nessuna sotto-struttura del θ (volume/equilibrio/coda F52-quater; per-squadra
 F86-bis) batte il θ globale OOS. `scripts/_run_team_dispersion.py` (sez.
 walk-forward). Lead 🔎 → ❌.
+
+### 22. Gol pesati per la forza dell'avversario (rating iterativo tipo Elo/SRS) — 🟢 aperta (30/07/2026, richiesta utente)
+**Dato**: nessuno nuovo — solo i gol già in snapshot, riaggregati diversamente.
+**Domanda di partenza (dell'utente)**: sapere quanti gol segna/subisce in media
+una squadra aiuta a prevedere i gol della partita? E se pesassimo ogni gol per
+quanto era "difficile" segnarlo — un gol alla Juventus vale più di un gol alla
+Cremonese — dando un valore di forza (0=più scarsa, 1=più forte) a ogni squadra?
+
+**Perché la risposta alla prima domanda è già "sì, e il modello lo fa" — ma non
+come media grezza.** `attack[squadra]` e `defense[squadra]` in
+`src/models/dixon_coles.py` (`_fit_counts`, righe 514+) **non sono una media dei
+gol segnati/subiti**: sono stimati per **massima verosimiglianza congiunta** su
+tutte le partite della lega insieme (`lam = exp(attack[home] + defense[away] +
+home_adv)`). Questo fit congiunto **pesa già implicitamente ogni gol per la forza
+di chi l'ha subito**: un gol alla difesa più forte della lega spinge `attack` più
+in alto di un gol identico a una difesa debole, perché l'unico modo per il
+solutore di spiegare "tanti gol contro una buona difesa" è alzare il parametro
+d'attacco di quella squadra. È il motivo per cui i parametri sono definiti solo a
+meno di una costante (invarianza `attack_i += c, defense_i -= c`, riga 583) — la
+scala assoluta non esiste, conta solo la forza *relativa*, esattamente lo spirito
+del "valore 0-1" proposto dall'utente. **La pista NON è quindi "far pesare i gol
+per la forza dell'avversario"**: è già la definizione del modello, e ri-provarlo
+come feature aggiuntiva nel DC sarebbe quasi certamente ridondante (come la
+"forma" bocciata alla Fase 13, che il fit pesato nel tempo assorbe già).
+
+**Cosa resta genuinamente diverso, e non ancora provato**: un rating **iterativo
+esplicito** (stile Elo/SRS — Simple Rating System), calcolato *fuori* dal DC, con
+un aggiornamento partita-per-partita invece di un fit batch su tutta la stagione:
+```
+forza_i(t+1) = forza_i(t) + K · (risultato_reale − atteso(forza_i(t), forza_j(t)))
+```
+Si differenzia dal DC su due assi, non uno:
+1. **Sequenziale vs batch**: il DC rifitta tutte le partite pesate per recency
+   (emivita 365g) ogni volta che serve una predizione; un Elo aggiorna un solo
+   numero per squadra a ogni risultato — più economico, ma "dimentica" in modo
+   diverso (aggiornamento moltiplicativo per-partita, non decadimento esponenziale
+   continuo).
+2. **Un solo numero vs due (attacco/difesa separati)**: l'Elo classico dà una
+   forza scalare per squadra (non distingue "segna tanto" da "subisce poco"); le
+   varianti a due assi (Elo offensivo/difensivo, o SRS separato per gol
+   fatti/subiti) esistono ma vanno implementate.
+**Dove potrebbe aiutare**: non come sostituto del DC (che già fa la stima
+congiunta, corretta in teoria) ma come **covariata aggiuntiva indipendente** — se
+un rating stimato con dinamica diversa (aggiornamento sequenziale invece di fit
+batch) cattura scostamenti di forma "improvvisi" che l'emivita a 365g smussa
+troppo, potrebbe sopravvivere come feature debole nel sotto-modello (stesso
+trattamento delle covariate deboli già in `PANCHINA.md`, shrinkage forte verso
+zero). **Rischio onesto**: quasi certamente ridondante col DC per lo stesso
+motivo per cui la "forma" (Fase 13) lo è — entrambi stimano la stessa forza
+relativa da dati sovrapposti — quindi il test onesto è un **controllo di
+ridondanza**: il rating Elo/SRS aggiunge log-loss fuori campione **oltre**
+`attack`/`defense` del DC, o è spiegato per intero da essi? Se il secondo, si
+chiude come la "forma": nel rumore.
 
 ## 2 · Piste nei dati grezzi già scaricati, mai estratte
 
