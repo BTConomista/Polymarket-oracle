@@ -60,9 +60,10 @@ il suo §0-bis).
 | §1.6 | allenatori — fronte nuovo, ipotesi persistenza dello stile |
 | §1.7 | riepilogo per le richieste utente (giocatori+arbitri+allenatori) |
 | §1.8 | arricchimenti: età, esperienza, attendance, rigori... |
-| §1.9 | **checklist completa dei 35 dati-giocatore**, con tier, rimandi e marcatura temporale ⏱️ |
+| §1.9 | **checklist completa dei 49 dati-giocatore**, con tier, rimandi e marcatura temporale ⏱️ |
 | §1.10 | rendimento per livello avversario, indice forza club, esperienza pesata |
 | §1.11 | **dati DERIVATI** — l'inventiva: ritmo dei gol, rimonte, coesione dell'undici... |
+| §1.12 | **terzo giro di idee fronte per fronte**: 14 nuove per i giocatori, 13 per gli allenatori, 11 per gli arbitri (+ 2 interazioni scartate) |
 | §2 | bozza di schema (tabelle, chiavi, come agganciare i nomi) |
 | §3 | come dividere il lavoro fra più agenti |
 | §4 | idee d'uso (NON decise) — a, b, c, c-bis, c-ter, d, e, f, g, h |
@@ -533,6 +534,20 @@ mai della partita da prevedere.
 | 33 | situazione contrattuale (scadenza) e giorni dall'arrivo al club | A da verificare — `transfers.csv`, campo contratto **non verificato** | **`pre`** | §1.11 |
 | 34 | prestito, e prestito **dalla squadra che si affronta** | A — `transfers.csv` | **`pre`** | §1.11 |
 | 35 | numero di maglia (proxy grezza dello status in rosa) | A — già in `game_lineups.csv` | **`pre`** | §1.11 |
+| 36 | rientro da infortunio, con la **curva di reinserimento** (20′ → 45′ → 70′) | dipende dagli infortuni (scoperto) + minuti | **`pre`** | §1.12 |
+| 37 | **sensibilità individuale al riposo** (chi crolla sotto i 4 giorni e chi no) | A, derivata | **`pre`** | §1.12 |
+| 38 | partite in N giorni (non solo minuti totali) | A, derivata | **`pre`** | §1.12 |
+| 39 | usura di carriera / "età calcistica" (minuti cumulati vs età) | A, derivata | **`pre`** | §1.12 |
+| 40 | fuso orario del viaggio in nazionale | dipende dalle convocazioni (scoperto) | **`pre`** | §1.12 |
+| 41 | piede rispetto al lato di impiego (ala invertita) | A da verificare (piede in `players.csv`) | `statico` + `post` (`pre` con formazione) | §1.12 |
+| 42 | **probabilità di partire titolare** (dallo storico recente) | A, derivata | **`pre`** | §1.12 |
+| 43 | gerarchie dei rigori/punizioni (2ª e 3ª scelta) | B, derivata | **`pre`** | §1.12 |
+| 44 | rendimento casa/trasferta del **singolo giocatore** | A, derivata | **`pre`** | §1.12 |
+| 45 | "mai sostituito": partite consecutive giocate per intero | A, derivata | **`pre`** | §1.12 |
+| 46 | primo anno in un **campionato nuovo** (distinto dai giorni dall'arrivo) | A — `transfers.csv` + competizioni precedenti | **`pre`** | §1.12 |
+| 47 | **gol decisivi vs ininfluenti** (l'1-0 e il 4-0 non sono uguali) | A, derivata dal punteggio minuto per minuto | `post` | §1.12 |
+| 48 | disciplina fine: falli/cartellini, e cartellini nelle partite tese | B (falli individuali) | `post` → tendenza `pre` | §1.12 |
+| 49 | **giocatore × allenatore**: minuti sotto un certo allenatore | A, derivata (incrocio con `manager_spells`) | **`pre`** | §1.12 |
 
 **Nota sulla riga 15/31 (`post` con asterisco)**: capitano e ruolo effettivo
 sono `post` nel **dato storico** (li leggiamo a partita finita), ma nella
@@ -716,6 +731,141 @@ Sono tutte **derivate**, quindi ereditano la marcatura temporale della
 fonte (R8): una tendenza calcolata sulle partite passate è `pre` ed è
 utilizzabile; la stessa quantità misurata **sulla partita in corso** è
 `post` e non lo è.
+
+### 1.12 · Terzo giro di idee, fronte per fronte (30/07/2026)
+
+Brainstorming dedicato: cosa manca ancora per **giocatori**, **allenatori** e
+**arbitri**, oltre a tutto ciò che è già nelle sezioni precedenti. Vale il
+principio di §1.9 (non si filtra per utilità immediata finché il costo è
+~zero) e la marcatura temporale della regola R8.
+
+#### Giocatori (righe 36-49 della checklist §1.9)
+
+*Fisico e condizione*
+- **rientro da infortunio con la curva di reinserimento** — non "è stato
+  infortunato" ma *a che punto è*: prima gara 20′, poi 45′, poi 70′. Un
+  giocatore alla terza gara dal rientro è un altro giocatore rispetto alla
+  prima;
+- **sensibilità individuale al riposo** — alcuni crollano sotto i 4 giorni di
+  recupero, altri no. ⚠️ Da non confondere con le feature di riposo di
+  squadra, **già bocciate** (`rest_full`, `midweek_europe`,
+  `docs/PANCHINA.md`): lì si misurava un effetto medio uguale per tutti, qui
+  è l'**eterogeneità fra giocatori**. È un'ipotesi diversa, non la stessa
+  ripresentata;
+- **partite in N giorni**, non solo minuti totali: "3 partite in 8 giorni"
+  pesa diversamente da "270 minuti" distribuiti;
+- **usura di carriera** ("età calcistica"): un 28enne con 500 partite nelle
+  gambe non è un 28enne con 200 — si deriva dai minuti cumulati (§1.8);
+- **fuso orario del viaggio in nazionale** — un sudamericano che vola in
+  Argentina e torna perde ~24 ore di volo, un europeo due. Oggi tutte le
+  convocazioni peserebbero uguale.
+
+*Ruolo e contesto*
+- **piede rispetto al lato** — un mancino sulla fascia destra (ala invertita)
+  fa un altro mestiere. Il piede dovrebbe essere in `players.csv` (**da
+  verificare**, come altezza e peso);
+- **probabilità di partire titolare**, stimata dallo storico recente: serve
+  esattamente al caso d'uso descritto dall'utente (le probabili formazioni
+  nella settimana della partita);
+- **gerarchie dei rigori e delle punizioni** — chi tira quando il rigorista
+  designato non è in campo (seconda e terza scelta);
+- **casa/trasferta per singolo giocatore** — il fattore campo di squadra è
+  noto, quello individuale non è mai stato guardato;
+- **mai sostituito**: partite consecutive giocate per intero, proxy della
+  fiducia dell'allenatore;
+- **cambio di campionato**: il primo anno in un campionato nuovo
+  (Brasile→Serie A) è diverso da un trasferimento interno — distinto dai
+  "giorni dall'arrivo" già in lista (§1.9 riga 33).
+
+*Peso degli eventi*
+- **gol decisivi vs ininfluenti** — l'1-0, il pareggio al 90′ e il quarto gol
+  a partita chiusa oggi contano uguale. Si lega direttamente al bias di
+  selezione (§6-quinquies punto 5): è lo stesso problema visto dal lato
+  dell'evento invece che dal lato dei minuti;
+- **disciplina fine**: rapporto falli commessi / cartellini ricevuti (chi fa
+  molti falli e prende pochi gialli), e cartellini nelle partite ad alta
+  tensione.
+
+*Una interazione, l'unica tenuta*
+- **giocatore × allenatore** — quanti minuti gioca un certo giocatore sotto
+  un certo allenatore. È l'unica delle tre interazioni proposte che l'utente
+  ha ritenuto utile, e il motivo è pratico: quando cambia la panchina serve
+  a **prevedere chi giocherà**, che è il caso d'uso centrale del progetto.
+
+> ❌ **Due interazioni proposte e SCARTATE dall'utente (30/07/2026)**:
+> *giocatore × arbitro* (cartellini presi da quello specifico arbitro) e
+> *allenatore × arbitro*. Giudicate poco utili. Scritte qui per la regola
+> §1.4 — anche le idee scartate si registrano, altrimenti la sessione dopo
+> le ripropone.
+
+#### Allenatori (si aggiungono a §1.6)
+
+*Come schiera*
+- **modulo preferito e quanto lo cambia** — `home/away_club_formation` è già
+  in `games.csv`, mai sfruttato;
+- **reattività**: cambia modulo dopo una sconfitta? dopo quante?
+- **uso della rosa**: quanti giocatori diversi impiega, età media dell'undici,
+  minuti concessi agli under-21 ("lancia i giovani");
+- **turnover per competizione**: chi stravolge la formazione in coppa e chi
+  no — utile per prevedere le formazioni;
+- **uso delle sostituzioni**: quante ne fa, quando fa la quinta. ⚠️ **Cambio
+  di regime nei dati**: le sostituzioni sono passate da 3 a 5 nel 2020 —
+  qualunque media che attraversi quella data mescola due mondi diversi. Da
+  trattare come il progetto tratta già l'era porte-chiuse.
+
+*Come rende*
+- **curva del mandato**: primo anno vs terzo anno — diverso dal "rimbalzo del
+  nuovo allenatore" (§4g), che riguarda le prime settimane;
+- **rendimento per livello avversario**: chi fa bene con le grandi e male con
+  le piccole, e viceversa (usa l'indice di forza di §1.10);
+- **testa a testa fra allenatori**: il record di uno specifico allenatore
+  contro un altro;
+- **gestione del risultato**: quando è in vantaggio si chiude o continua ad
+  attaccare? Misurabile dal punteggio minuto per minuto (§1.11);
+- **reazione dopo una sconfitta pesante**;
+- **disciplina della squadra sotto di lui** (cartellini per partita) — è il
+  fronte-allenatore con l'aggancio più diretto a un mercato dove il progetto
+  ha già risultati veri (Fasi 125/126).
+
+*Contesto*
+- **come è finito il mandato** (esonero o dimissioni), e soprattutto: le
+  ultime 3-4 partite prima di un esonero sono sistematicamente peggiori? È
+  una domanda che si può guardare all'indietro sui dati storici;
+- **primo anno in *quel* campionato**, distinto dall'esperienza globale
+  (§1.8).
+
+#### Arbitri (si aggiungono a §1.5)
+
+*Oltre i cartellini — che è tutto ciò che il progetto misura oggi*
+- **rigori assegnati per partita** — il dato più interessante che manca:
+  tocca direttamente i **gol**, non solo il mercato cartellini;
+- **falli fischiati per partita** — l'asse "lascia correre" vs "fischia
+  tutto", che cambia il ritmo della partita;
+- **recupero concesso** — quanto tempo aggiunge: rilevante per i gol nel
+  finale e per gli Over;
+- **rossi diretti vs doppie ammonizioni** — profilo di severità, non solo il
+  conteggio;
+- **uso del VAR**: quante volte va al monitor, quante volte ribalta.
+
+*Chi è e dove arbitra*
+- **squadra arbitrale completa** — assistenti, quarto uomo e soprattutto
+  l'**arbitro VAR**, che ha una propria propensione a intervenire
+  (`data/stagione_2026_2027/README.md` §4-bis annota già che "costano zero
+  raccolti insieme");
+- **esperienza nella competizione specifica**, non solo globale: la prima
+  partita di Champions di un arbitro;
+- **quanto spesso gli affidano i big match** — proxy del suo ranking interno;
+- **nazionalità dell'arbitro rispetto a quella delle squadre** — nelle coppe
+  europee, se lo stile del suo campionato si trasferisce (è misurabile);
+- **arbitro × squadra**: i precedenti con un club specifico;
+- **coerenza, non solo media** — un arbitro prevedibile vale diversamente da
+  uno che oscilla molto. Oggi la Fase 125 stima solo la media.
+
+**Nota di realismo su tutto il blocco arbitri**: quasi nulla di questo sta in
+`games.csv`, che dà **solo il nome** dell'arbitro. Rigori, falli, recupero,
+VAR e squadra arbitrale richiedono una fonte che oggi **non abbiamo** —
+alcuni (rigori, falli) sono già nei nostri snapshot a livello di squadra e si
+possono aggregare per arbitro, il resto è Tier B o raccolta prospettica.
 
 ## 2 · Come strutturare i dati (bozza di schema)
 

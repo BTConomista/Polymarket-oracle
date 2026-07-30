@@ -491,7 +491,11 @@ giusto per R1, non va "corretto"). Misurato anche il costo del problema-git
 (705 MB grezzi → **214,6 MB** compressi contro un repo che oggi pesa 66,3
 MB: serve partizionare per stagione) e trovata una **trappola R6**: nelle
 partite ai rigori i gol di `games.csv` sono inutilizzabili — le 5 leghe non
-sono toccate, coppe e nazionali sì. Nessuna idea d'uso (§4 del piano) è
+sono toccate, coppe e nazionali sì. **§1.12** aggiunge un terzo giro di
+idee fronte per fronte (14 giocatori, 13 allenatori, 11 arbitri) e registra
+**due interazioni scartate** dall'utente — giocatore × arbitro e allenatore
+× arbitro — tenendo solo **giocatore × allenatore**, utile a prevedere chi
+giocherà quando cambia la panchina. Nessuna idea d'uso (§4 del piano) è
 stata decisa — resta da concordare con l'utente.
 
 ---

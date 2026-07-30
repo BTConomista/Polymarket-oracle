@@ -807,7 +807,18 @@ dataset (recupero **non** incluso nei minuti; autogol **esclusi** dai gol
 del giocatore nel 99,98% dei casi; minuti dell'espulso **troncati** al
 minuto del rosso) e §1.11, i **dati derivati** (ritmo dei gol e tempo
 dall'ultimo, rimonte, coesione dell'undici: costo di raccolta zero, è tutto
-calcolo). ⚠️ **Trappola trovata (§6-quinquies 7-ter)**: nelle partite decise
+calcolo). **§1.12**: terzo giro di idee fronte per fronte — 14 nuove per i
+giocatori (curva di rientro dagli infortuni, sensibilità individuale al
+riposo, probabilità di essere titolare, gol decisivi vs ininfluenti…), 13
+per gli allenatori (modulo e sua variabilità, uso della rosa, turnover per
+competizione, curva del mandato, cosa succede prima di un esonero) e 11 per
+gli arbitri (rigori assegnati, falli fischiati, recupero concesso, uso del
+VAR, squadra arbitrale completa) — con la nota che per gli arbitri quasi
+nulla di questo sta in `games.csv`, che dà **solo il nome**. Due interazioni
+(giocatore × arbitro, allenatore × arbitro) sono state proposte e
+**scartate** dall'utente; tenuta solo **giocatore × allenatore**, perché
+serve a prevedere chi giocherà quando cambia la panchina.
+⚠️ **Trappola trovata (§6-quinquies 7-ter)**: nelle partite decise
 ai rigori i gol di `games.csv` sono inutilizzabili (a volte è il punteggio
 dei rigori, a volte la somma — Chemnitzer-Mainz «10-9»). Le 5 leghe non sono
 toccate, ma **coppe europee e nazionali sì**: da risolvere prima di
