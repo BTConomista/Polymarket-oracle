@@ -185,6 +185,29 @@ verifica per mutazione), ogni riga dichiara cosa è, e chi non vuole stime
 passa `usa_stime=False` e vede il buco vero. Le righe `stima` **non vanno
 usate per ROI/CLV** (§5).
 
+## 1-quater · Le due partite «a tavolino»: perché il nostro risultato diverge da Transfermarkt (30/07/2026)
+
+**Dichiarate per la regola R4** («un'anomalia si dichiara anche quando NON è
+un errore»): in due partite su 16.111 il nostro snapshot riporta un risultato
+**diverso** da quello di Transfermarkt, e in entrambi i casi **il nostro è
+quello giusto** secondo la regola **R1** (il dato è il risultato del CAMPO,
+non quello del tribunale sportivo — è il risultato su cui si regolano i
+mercati, ed è il processo che il modello stima).
+
+| partita | nostro dato | Transfermarkt | cos'è successo |
+|---|:--:|:--:|---|
+| **Union Berlin-Bochum**, 14/12/2024 (Bundesliga) | **1-1** | 0-2 | correzione **già applicata** il 24/07/2026 e registrata in `data/correzioni_dichiarate.csv` (3 righe): gara sospesa al 92' per un accendino lanciato sul portiere, ripresa e finita 1-1; il 2-0 è una riassegnazione del DFB |
+| **Verona-Roma**, 19/09/2020 (Serie A) | **0-0** | 3-0 | **nessuna correzione applicata, e nessuna serve**: la nostra fonte (football-data) riporta nativamente il risultato del campo. Il 3-0 è l'assegnazione a tavolino per la posizione irregolare di un giocatore in distinta |
+
+**Perché è importante averlo scritto qui.** Chiunque, in futuro, confronti i
+nostri snapshot con Transfermarkt (o con `games.csv` del dataset
+`davidcariboo/player-scores`) troverà queste due divergenze e sarà tentato di
+"correggerle". **Non vanno corrette**: sono la regola R1 che funziona. Il
+caso Verona-Roma è emerso proprio da un controllo di questo tipo, eseguito il
+30/07/2026 su tutte e 16.111 le partite
+(`docs/PIANO_DATABASE_GIOCATORI.md` §6-bis): 16.109 risultati identici, e le
+uniche 2 differenze sono queste.
+
 ## 2 · Semantica delle quote: apertura vs chiusura (leggere PRIMA di usarle)
 
 Due istantanee per mercato: **apertura** (`*_open`, raccolta giorni prima

@@ -68,7 +68,7 @@ il suo §0-bis).
 | §4 | idee d'uso (NON decise) — a, b, c, c-bis, c-ter, d, e, f, g, h |
 | §5 | rischi e limiti dichiarati onestamente |
 | §6 | primi passi concreti, in ordine (nessuno ancora eseguito) |
-| §6-bis | controllo finale con **fonte indipendente** (non solo Wikipedia: due fonti le abbiamo già offline) |
+| §6-bis | controllo con **fonte indipendente** — ✅ **già ESEGUITO** sul livello-partita: 16.111 partite, 99,99% identiche, le 2 divergenze sono partite a tavolino |
 | §6-ter | **10 problemi trovati** rileggendo il piano in modo avversariale, con le correzioni |
 | §6-quater | decisioni operative prese e domande ancora aperte, prima di partire |
 | §6-quinquies | **terzo giro di problemi** e risposte: regola R8 (⏱️), obiezione ritirata sul "ponte", 3 verifiche tecniche |
@@ -703,9 +703,10 @@ progetto salvo dove indicato):
   in km — si somma bene alla fatica;
 - **derby / rivalità**: stessa città o regione, derivabile se `clubs.csv`
   porta la città (**non verificato**);
-- **orario di inizio**: se il campo `date` di `games.csv` contiene anche
-  l'ora (**non verificato**) — una partita delle 12:30 non è come una delle
-  20:45.
+- ~~**orario di inizio**~~ — ❌ **verificato il 30/07/2026: NON disponibile.**
+  Il campo `date` di `games.csv` contiene solo `AAAA-MM-GG`, senza ora. Una
+  partita delle 12:30 non è come una delle 20:45, ma per saperlo servirebbe
+  un'altra fonte (§6-quinquies punto 7-bis).
 
 **Due avvertenze oneste, valide per tutta la sezione.** (1) Diverse di
 queste idee sono cugine di cose **già bocciate a livello squadra** (la
@@ -1077,6 +1078,61 @@ rosa").
 > aggiramento di blocchi — le stesse regole che hanno chiuso quattro fonti in
 > §1.2.
 
+### ✅ Il controllo è stato ESEGUITO sul livello-partita (30/07/2026) — e funziona
+
+Non è più una proposta: la parte offline del controllo **è stata fatta**, e
+il risultato è il pezzo di lavoro più solido di questo piano. Incrociate
+tutte e **16.111** le partite dei nostri snapshot con `games.csv`, per
+`(data, squadra di casa, squadra ospite)`, canonicalizzando i nomi
+Transfermarkt con `sources.canonical_team` — **senza scrivere un solo alias
+nuovo**: i 234 `TEAM_ALIASES` già nel progetto bastano.
+
+| lega | nostre partite | agganciate | gol identici | gol diversi |
+|---|--:|--:|--:|--:|
+| Serie A | 3.420 | 3.420 | 3.419 | **1** |
+| Premier League | 3.420 | 3.420 | 3.420 | 0 |
+| La Liga | 3.420 | 3.418 (+2 a ±1 giorno) | 3.420 | 0 |
+| Bundesliga | 2.754 | 2.754 | 2.753 | **1** |
+| Ligue 1 | 3.097 | 3.093 (+4 a ±1 giorno) | 3.097 | 0 |
+| **totale** | **16.111** | **16.111** (100%, con tolleranza ±1 giorno) | **16.109** | **2** |
+
+Le **6 partite non agganciate** al primo colpo sono tutte a **±1 giorno** di
+distanza (fuso orario / posticipo serale che scavalca la mezzanotte) e hanno
+**gol identici**: non sono discrepanze, sono un dettaglio di allineamento
+delle date da gestire con una tolleranza di un giorno.
+
+**Le 2 differenze vere sono la dimostrazione che il controllo serve — ed
+entrambe sono partite assegnate dal giudice sportivo:**
+
+1. **Union Berlin-Bochum, 14/12/2024** — noi 1-1, Transfermarkt 0-2. È il
+   caso **già documentato**: la regola R1 del `CLAUDE.md` lo cita per nome, e
+   `data/correzioni_dichiarate.csv` contiene le tre righe della correzione
+   applicata il 24/07/2026. Il controllo ha **ritrovato da solo** l'unica
+   anomalia che già conoscevamo — la miglior prova possibile che il metodo
+   funziona e non produce rumore;
+2. **Verona-Roma, 19/09/2020** — noi 0-0, Transfermarkt 3-0. **Trovata
+   nuova**: stesso identico schema (0-0 sul campo, 3-0 assegnato a tavolino
+   per la posizione irregolare di un giocatore in distinta). Il nostro dato è
+   **già corretto** secondo R1 — non c'è niente da correggere — ma va
+   **dichiarato** per la regola R4 («un'anomalia si dichiara anche quando NON
+   è un errore»), altrimenti la prossima sessione che confronta con
+   Transfermarkt vede 3-0 contro il nostro 0-0 e ci "corregge" al contrario.
+   Registrata in `docs/DATI.md` §1-quater.
+
+**Cosa dimostra, in pratica:**
+
+- il livello-partita è verificato al **99,99%** contro una fonte
+  indipendente, **senza rete, senza Wikipedia, in pochi secondi** e in modo
+  perfettamente riproducibile;
+- il tasso di falsi allarmi è **zero**: le uniche due divergenze su 16.111
+  sono reali, spiegabili e della stessa famiglia;
+- quando `games.csv` verrà importato, questo confronto diventa un **test
+  automatico** permanente (§6-quater punto 5), non un controllo una tantum;
+- resta da fare la parte che questa verifica non copre: **arbitri e
+  allenatori** (colonne che i nostri snapshot non hanno — lì servono
+  Wikipedia e i siti delle leghe) e i **minuti per giocatore-stagione**
+  (contro Understat, anch'esso già offline).
+
 **Cosa verificare, fronte per fronte, e con quale pagina Wikipedia**:
 
 | tabella | pagina Wikipedia candidata | affidabilità attesa |
@@ -1278,6 +1334,44 @@ i grezzi vanno comunque **compressi** per stare nel repo (stesso schema
 già in uso per `files/player_scores/*.csv.gz`), "teneteli così come sono"
 riguarda il contenuto, non il formato del file su disco.
 
+> 📏 **MISURATO il 30/07/2026** (vedi anche §6-quinquies punto 4). I numeri
+> veri, invece delle stime a occhio:
+>
+> | file | grezzo | compresso (gzip) |
+> |---|--:|--:|
+> | `game_lineups.csv` | 336,0 MB | **114,2 MB** |
+> | `game_events.csv` | 149,6 MB | 42,4 MB |
+> | `appearances.csv` | 142,2 MB | 41,0 MB *(già nel repo)* |
+> | `player_valuations.csv` | 23,5 MB | 5,4 MB *(già nel repo)* |
+> | `games.csv` | 23,8 MB | 4,5 MB |
+> | `players.csv` | 16,3 MB | 3,9 MB *(già nel repo)* |
+> | `club_games.csv` | 10,5 MB | 1,8 MB |
+> | `transfers.csv` | 2,8 MB | 1,0 MB |
+> | altri (clubs, competitions…) | 0,1 MB | ~0 MB |
+> | **totale** | **705,2 MB** | **214,6 MB** |
+>
+> Per capire la scala: **l'intero repo oggi pesa 66,3 MB** (`git
+> count-objects`), e `appearances.csv.gz` da solo — già dentro — ne è il
+> **63%**. Aggiungere tutto il resto porterebbe il repo a **~280 MB**, oltre
+> **4 volte** l'attuale, in un solo commit. Il file più pesante è
+> `game_lineups.csv` (114 MB gz), da solo più della metà del totale nuovo.
+>
+> **Buona notizia**: la storia di git è ancora pulita — `appearances.csv.gz`
+> ha **un solo blob** in tutta la storia del repo (verificato), segno che il
+> gzip deterministico (`mtime=0`) del workflow di import funziona: a
+> contenuto identico non crea una versione nuova. Il problema quindi **non è
+> già avvenuto**, è tutto davanti a noi.
+>
+> **La soluzione proposta (da decidere quando si scriverà il codice)**: la
+> gran parte di questi dati è **storia immutabile** — le presenze del 2019
+> non cambieranno mai più. Quindi **partizionare per stagione**: le stagioni
+> chiuse si committano **una volta sola** e git le conserva in una copia
+> sola per sempre; solo il file della **stagione in corso** cambia. Quella
+> vale circa un nono del totale, e la sua quota di righe nuove ogni
+> settimana è dell'ordine di **1-3 MB**, non 214. Senza partizionamento,
+> ri-committare tutto ogni settimana costerebbe ~214 MB × 52 = **oltre 10 GB
+> l'anno** di storia git irrecuperabile.
+
 **3. Giocatori che non sono nelle nostre 5 leghe.** Osservazione
 dell'utente: nelle partite di Champions/Europa/Conference League, o in
 nazionale, incontreremo giocatori di club che non fanno parte delle 5
@@ -1408,14 +1502,44 @@ grossi restano fuori dal repo e si ri-scaricano. La decisione dell'utente
 ("teniamo tutti i dati, sempre accessibili") **non è in discussione**: è
 compatibile con entrambe le soluzioni, riguarda solo *come* si versiona.
 
-**5. Bias di selezione nelle medie "per 90 minuti" — chiarimento.** L'utente
-ha chiesto di cosa parlassi: è un rischio d'**uso**, non di raccolta. Se un
-domani si confrontano i giocatori con una media "per 90 minuti" (es. "gol
-ogni 90'"), quella media è calcolata solo sulle partite in cui l'allenatore
-lo ha schierato — e chi gioca poco spesso entra a partita già decisa, o
-gioca quando è in condizione peggiore. Non è un motivo per non raccogliere
-niente: è un promemoria per quando si faranno i confronti fra giocatori
-(idea §4h). Nessuna azione richiesta ora.
+**5. Bias di selezione nelle medie "per 90 minuti" — chiarito, e con quattro
+rimedi concreti.** L'utente ha chiesto di cosa parlassi: è un rischio
+d'**uso**, non di raccolta. Il problema in una riga: se si confrontano i
+giocatori con una media "per 90 minuti" (gol ogni 90′, tocchi ogni 90′),
+quella media viene **solo dalle partite in cui l'allenatore lo ha
+schierato** — e i minuti di una riserva non sono i minuti di un titolare.
+Chi gioca poco entra spesso **a partita già decisa** (dove tutti segnano di
+più e si difende di meno), o contro avversari più deboli in coppa, o quando
+non è al meglio. Due giocatori con "0,4 gol ogni 90′" possono aver fatto
+cose completamente diverse.
+
+Non è un motivo per non raccogliere: è un motivo per **raccogliere il
+contesto dei minuti insieme ai minuti** — e la buona notizia è che il piano
+lo prevede già quasi tutto. I rimedi, in ordine di forza:
+
+  a. **normalizzare per il contesto**, non solo per i minuti: livello
+     dell'avversario (§1.10), peso della competizione (§1.10), stato del
+     punteggio (§1.11). Sono già in progetto per altri motivi, e servono
+     esattamente a questo;
+  b. **segmentare invece di aggregare**: la resa da titolare e quella da
+     subentrato sono due numeri diversi, non uno solo — idem per fascia di
+     avversario;
+  c. **minuti in punteggio equilibrato**: dal punteggio minuto per minuto
+     (§1.11) si può contare quanti minuti un giocatore ha giocato con la
+     partita ancora in bilico, e calcolare le medie **solo su quelli**.
+     Questo rimedio ha un valore particolare per il progetto: la Fase 93 ha
+     misurato che il divario col mercato si concentra **proprio sulle
+     partite equilibrate** — quindi la versione "depurata" della statistica
+     è anche quella puntata dove il bersaglio è più grande;
+  d. **shrinkage verso la media** per chi ha pochi minuti, esattamente come
+     il progetto fa già altrove (K=40 sul fattore-arbitro nella Fase 125,
+     shrinkage 1.5 nel Dixon-Coles): un attaccante con 90 minuti totali e un
+     gol non "segna ogni 90′".
+
+  **Un quinto pezzo, che nessun rimedio risolve e va solo dichiarato**: un
+  giocatore infortunato **non compare affatto** nelle presenze. La sua
+  assenza è informativa (§1.9 voce 22) ma è invisibile in qualunque media
+  per-90: le medie descrivono chi c'era, mai chi mancava.
 
 **6. Troppe ipotesi insieme — ridimensionato dall'utente.** Avevo posto il
 problema come "testare 29 feature produce falsi positivi per caso". L'utente
@@ -1450,6 +1574,50 @@ tre risposte su tre.** Controllato scaricando il dataset ed elaborando le
    espulsioni (74%) e 4.955 dei 6.710 autogol hanno una riga corrispondente
    nelle presenze. Non è un errore, ma va tenuto presente quando si incrociano
    i due file: non tutti gli eventi hanno una presenza dietro.
+
+**7-bis. Altri quattro controlli di semantica, fatti nello stesso giro
+(30/07/2026).** Tre rassicuranti e **uno serio**:
+   - ✅ **i rigori della lotteria finale NON contano come gol**: verificato
+     nel modo decisivo, cioè confrontando la somma dei gol di
+     `appearances.csv` con il risultato ufficiale nelle 407 partite andate
+     ai rigori — **zero** casi in cui la somma è maggiore. *(Un primo test
+     più grossolano sembrava dire il contrario: era un falso allarme, e
+     l'ho corretto invece di lasciarlo scritto.)*;
+   - ✅ **nessuna riga duplicata**: 0 coppie (partita, giocatore) ripetute su
+     1.894.350 righe. La chiave è pulita;
+   - ✅ **`minutes_played` = 0 è un caso trascurabile**: 3 righe su 1.894.350;
+   - ❌ **il campo `date` di `games.csv` NON contiene l'ora** (solo
+     `AAAA-MM-GG`). Conseguenza diretta: l'idea "orario di inizio" di §1.11
+     **non è realizzabile con questa fonte** — servirebbe un'altra fonte.
+     Depennata, non lasciata come speranza.
+
+**7-ter. ⚠️ TROVATA UNA TRAPPOLA VERA: nelle partite decise ai rigori, i gol
+di `games.csv` sono inutilizzabili.** È il caso da manuale della regola
+**R6** («il buco peggiore non è il NaN: è il finto pieno») — il numero
+sembra un risultato e non lo è:
+
+| partita | `games.csv` dice | ma il risultato vero era |
+|---|:--:|---|
+| Paraguay-Giappone, Mondiale 2010 | **5-3** | 0-0, poi 5-3 **ai rigori** |
+| Inghilterra-Italia, Europeo 2012 | **2-4** | 0-0, poi 2-4 **ai rigori** |
+| Chemnitzer-Mainz, DFB-Pokal 2014 | **10-9** | 5-5 dopo i supplementari, poi 5-4 ai rigori (**somma dei due**) |
+
+Nelle 407 partite ai rigori, in **394** la somma dei gol dei giocatori è
+*inferiore* al "risultato" di `games.csv`: la differenza sono i tiri dagli
+undici metri. Il campo mescola quindi tre semantiche diverse (risultato
+dei tempi regolamentari, punteggio dei rigori, o la loro somma) senza
+dichiararlo.
+
+**Impatto e rimedio.** Le **5 leghe non sono toccate** — in campionato non
+esistono i rigori finali, e infatti l'incrocio di §6-bis dà 16.109 risultati
+identici su 16.111. Ma il piano vuole estendersi proprio a
+**Champions/Europa/Conference** (dove i turni a eliminazione vanno ai
+rigori) e alle **nazionali** (dove i tornei finali ne sono pieni): lì il
+dato è **silenziosamente sbagliato**. Rimedio proposto: individuare le
+partite con eventi `Shootout` in `game_events.csv` e, per quelle,
+**ricostruire il risultato dai soli eventi-gol** invece di leggere
+`home/away_club_goals` — oppure marcarle e trattarle a parte. Da fare
+**prima** di qualunque analisi che includa le coppe, non dopo.
 
 ## 7 · Collegamenti
 

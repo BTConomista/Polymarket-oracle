@@ -792,7 +792,14 @@ nuovo il dataset) che il `player_id` del giocatore è stabile anche fuori
 dalle 5 leghe (50.149 ID puliti in `players.csv`, l'80% dei giocatori
 delle 5 leghe compare con lo stesso ID in altre competizioni) — un rischio
 in meno rispetto a quanto temuto per arbitri/allenatori (§6-ter problema
-1, loro senza alcun ID). **§6-quinquies**: terzo giro di problemi — da qui
+1, loro senza alcun ID). **§6-bis — il controllo è stato ESEGUITO**: tutte e
+**16.111** le nostre partite incrociate con `games.csv` (offline, zero rete,
+nessun alias nuovo): **100% agganciate** con tolleranza ±1 giorno e **16.109
+gol identici**. Le uniche **2 divergenze** sono partite assegnate dal giudice
+sportivo — Union Berlin-Bochum (già nel registro delle correzioni) e
+**Verona-Roma 19/09/2020, trovata nuova**, dove il nostro 0-0 è già giusto
+per la regola R1 e va solo dichiarato (fatto in `docs/DATI.md` §1-quater).
+**§6-quinquies**: terzo giro di problemi — da qui
 nasce la **regola R8** del `CLAUDE.md` (ogni dato dichiara *quando* diventa
 noto: `pre`/`post`/`statico`, propagata a `DATI.md`, al README della
 stagione 2026-27 e alla checklist §1.9), più tre verifiche tecniche sul
@@ -800,7 +807,11 @@ dataset (recupero **non** incluso nei minuti; autogol **esclusi** dai gol
 del giocatore nel 99,98% dei casi; minuti dell'espulso **troncati** al
 minuto del rosso) e §1.11, i **dati derivati** (ritmo dei gol e tempo
 dall'ultimo, rimonte, coesione dell'undici: costo di raccolta zero, è tutto
-calcolo). **Stato**: nessun dato ancora importato nel repo,
+calcolo). ⚠️ **Trappola trovata (§6-quinquies 7-ter)**: nelle partite decise
+ai rigori i gol di `games.csv` sono inutilizzabili (a volte è il punteggio
+dei rigori, a volte la somma — Chemnitzer-Mainz «10-9»). Le 5 leghe non sono
+toccate, ma **coppe europee e nazionali sì**: da risolvere prima di
+estendersi lì. **Stato**: nessun dato ancora importato nel repo,
 nessun codice scritto — il primo passo proposto (non ancora eseguito, e
 col miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv`
 e fare un tracer bullet su una sola lega-stagione.

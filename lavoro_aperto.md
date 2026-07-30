@@ -482,8 +482,17 @@ tecniche** sul dataset (il recupero non è nei minuti; gli autogol non
 contano come gol del giocatore, 99,98%; l'espulso ha i minuti troncati al
 rosso). Aggiunto anche §1.11, i **dati derivati** — l'inventiva: ritmo dei
 gol e tempo dall'ultimo, rimonte e crolli, coesione dell'undici, impatto
-dei subentrati. Nessuna idea d'uso (§4 del piano) è stata decisa — resta
-da concordare con l'utente.
+dei subentrati. **Il 30/07 il controllo di §6-bis è stato ESEGUITO** sul
+livello-partita: 16.111 partite incrociate con `games.csv` offline, 100%
+agganciate, **16.109 gol identici**, e le uniche 2 divergenze sono partite
+a tavolino (Union Berlin-Bochum già a registro; **Verona-Roma 19/09/2020
+trovata nuova**, dichiarata in `docs/DATI.md` §1-quater — il nostro 0-0 è
+giusto per R1, non va "corretto"). Misurato anche il costo del problema-git
+(705 MB grezzi → **214,6 MB** compressi contro un repo che oggi pesa 66,3
+MB: serve partizionare per stagione) e trovata una **trappola R6**: nelle
+partite ai rigori i gol di `games.csv` sono inutilizzabili — le 5 leghe non
+sono toccate, coppe e nazionali sì. Nessuna idea d'uso (§4 del piano) è
+stata decisa — resta da concordare con l'utente.
 
 ---
 
