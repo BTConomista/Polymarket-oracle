@@ -206,21 +206,84 @@ def test_strato2_struttura_delle_tappe():
     assert w["giovanili"].dtype == bool and w["prestito"].dtype == bool
 
 
-def test_i_due_strati_restano_distinguibili():
-    """IL test della licenza: se un giorno le due fonti si mescolassero senza
-    che si possa piu' separarle, il vincolo CC BY-SA diventerebbe impossibile
-    da circoscrivere — e si estenderebbe per contatto a tutto il repo."""
-    s1 = C.load_careers(only_population=True)
-    assert (s1["fonte"] == C.FONTE_STRATO1).all()
-    assert "wikipedia" not in set(s1["fonte"])
+# --------------------------------------------------------------------------
+# 4 · Il DATABASE UNICO
+# --------------------------------------------------------------------------
 
-    combinata = C.combined_careers()
-    fonti = set(combinata["fonte"])
+def test_database_unico_contiene_entrambe_le_fonti():
+    db = C.load_database()
+    fonti = set(db["fonte"])
     assert C.FONTE_STRATO1 in fonti
+    # ogni riga sa da dove viene: e' la condizione perche' i numeri delle due
+    # fonti non vengano sommati per sbaglio (contano cose diverse)
+    assert db["fonte"].notna().all()
+    assert len(db[db["fonte"] == C.FONTE_STRATO1]) == len(C.load_careers())
     if not C.load_wikipedia_careers().empty:
         assert "wikipedia" in fonti
-        # e si possono sempre riseparare
-        assert len(combinata[combinata["fonte"] == "wikipedia"]) > 0
-        assert len(combinata[combinata["fonte"] == C.FONTE_STRATO1]) == len(
-            C.load_careers()
-        )
+
+
+def test_database_unico_ha_le_colonne_comuni():
+    db = C.load_database()
+    for c in ("player_id", "player_name", "club_id", "club_name", "anno_da",
+              "anno_a", "appearances", "goals", "fonte", "aggancio"):
+        assert c in db.columns, f"colonna assente nel database: {c}"
+    # Il nome c'e' su tutte le righe wikipedia (arriva per player_id, non per
+    # matching di nome).
+    w = db[db["fonte"] == "wikipedia"]
+    if len(w):
+        assert w["player_name"].notna().all()
+    # ⚠️ ANOMALIA DICHIARATA (R4), non un bug nostro: nella fonte a monte
+    # esiste UN giocatore senza nome — player_id 380365, due presenze in Copa
+    # del Rey nel settembre 2018, e non compare affatto in players.csv. E' un
+    # buco di `appearances.csv`, non della nostra aggregazione.
+    senza_nome = db[db["player_name"].isna()]
+    assert set(senza_nome["player_id"]) <= {380365}
+
+
+def test_aggancio_dichiara_sempre_il_proprio_stato():
+    """`nativo` / `univoco` / `ambiguo` / `assente`: un club non agganciato
+    deve dirlo, non sparire ne' fingere un id."""
+    db = C.load_database()
+    assert set(db["aggancio"].unique()) <= {"nativo", "univoco", "ambiguo", "assente"}
+    # dove l'aggancio non e' riuscito, il club_id DEVE essere nullo
+    non_agganciate = db[db["aggancio"].isin(["ambiguo", "assente"])]
+    assert non_agganciate["club_id"].isna().all()
+    # e dove e' riuscito, no
+    agganciate = db[db["aggancio"].isin(["nativo", "univoco"])]
+    assert agganciate["club_id"].notna().all()
+
+
+# --------------------------------------------------------------------------
+# 5 · Normalizzazione dei nomi di club
+# --------------------------------------------------------------------------
+
+def test_normalizzazione_toglie_le_sigle_ma_non_i_nomi():
+    """Le sigle societarie non distinguono un club; i nomi si'. Confondere le
+    due cose e' costato un bug: `sporting` fra le stopword annullava
+    «Sporting CP», che restava senza token e quindi senza candidati."""
+    from src.data.club_matching import normalizza
+    assert normalizza("SSC Napoli") == normalizza("Napoli")
+    assert normalizza("Associazione Sportiva Roma") >= normalizza("Roma")
+    assert "sporting" in normalizza("Sporting CP")
+    # caratteri che NFKD NON decompone: secondo bug pagato
+    assert normalizza("Brøndby") == normalizza("Brondby")
+    assert normalizza("Lech Poznań") == normalizza("Lech Poznan")
+
+
+def test_aggancio_e_univoco_o_niente():
+    """Un aggancio ambiguo non si sceglie a caso: si lascia vuoto. E' la
+    lezione di TEAM_ALIASES (caso «Hellas Verona»)."""
+    from src.data.club_matching import Agganciatore
+    a = Agganciatore()
+    assert a.aggancia("Bayern Munich") is not None
+    assert a.aggancia("Lech Poznań") is not None
+    assert a.aggancia("Club Che Non Esiste Affatto") is None
+
+
+def test_aggancio_serie_rende_uno_stato_per_riga():
+    from src.data.club_matching import Agganciatore
+    s = pd.Series(["Bayern Munich", "Club Che Non Esiste Affatto", None])
+    out = Agganciatore().aggancia_serie(s)
+    assert list(out["aggancio"]) == ["univoco", "assente", "assente"]
+    assert out.loc[0, "club_id_agganciato"] is not None
+    assert pd.isna(out.loc[1, "club_id_agganciato"])

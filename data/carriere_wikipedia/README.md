@@ -1,28 +1,11 @@
 # Carriere da Wikipedia — strato 2 del database giocatori
 
-## ⚖️ LICENZA — questa cartella è CC BY-SA 4.0, il resto del repo no
+## Licenza
 
-Il contenuto di questa cartella deriva dall'**infobox delle voci di
-`en.wikipedia.org`** ed è pertanto **CC BY-SA 4.0**
-(<https://creativecommons.org/licenses/by-sa/4.0/>), come il testo di Wikipedia
-da cui proviene.
-
-**Attribuzione**: Wikipedia contributors, *en.wikipedia.org*. Ogni riga porta
-l'URL esatto della voce da cui è stata estratta, nel campo `source_url`.
-
-**Share-alike**: chi ridistribuisce **questi dati** o una banca dati **derivata**
-che li incorpora deve farlo sotto **CC BY-SA 4.0**.
-
-> **Perché una cartella separata.** Lo share-alike è **virale**: mescolare
-> questi dati al resto del repo lascerebbe ambiguo se l'obbligo si estenda a
-> tutto il progetto. Tenendoli qui, auto-dichiarati, l'obbligo resta
-> **circoscritto** a ciò che lo eredita davvero — questa cartella e qualunque
-> cosa la incorpori. Il resto del repo non è toccato.
->
-> È una **scelta di contenimento, non un espediente**: se un domani il progetto
-> distribuisse una tabella che unisce strato 1 e strato 2, *quella* tabella
-> sarebbe CC BY-SA. Per questo `careers.py` tiene i due strati **distinti** e la
-> colonna `fonte` è obbligatoria su ogni riga.
+Questi dati vengono dall'infobox delle voci di `en.wikipedia.org` e sono
+**CC BY-SA 4.0** — attribuzione a *Wikipedia contributors*, con l'URL della
+voce su ogni riga (`source_url`), e share-alike su chi li ridistribuisce.
+Scelta consapevole del titolare del repo.
 
 ---
 
