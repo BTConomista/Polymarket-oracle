@@ -149,6 +149,101 @@ partita successiva. **Mai** le colonne `post` della partita in corso.
 
 ## 7 · Stato
 
-**Dati inseriti, nessun codice scritto, nessuna feature costruita, nessun
-backtest eseguito.** Non sono letti da nulla in `src/` né in `scripts/`.
-Il primo passo proposto è in `docs/PIANO_DATABASE_GIOCATORI.md` §12.
+**Dati inseriti + loader e test (31/07/2026). Nessuna feature costruita, nessun
+backtest eseguito, nessun modello li usa.**
+
+- **`src/data/player_stats.py`** — il caricatore. `load_player_matches()` con
+  guardie di copertura che alzano se il file cambia; `join_to_snapshot()` che
+  alza se anche una sola riga resta orfana; `team_form()`, **l'unica forma
+  sicura per R8** (media delle N partite *precedenti*, `shift(1)`);
+- **`tests/test_player_stats.py`** — **15 test**, di cui 4 dedicati
+  esclusivamente all'anti-look-ahead. Il più importante verifica che la media
+  alla partita *k* coincida con quella calcolata a mano su 0..*k*−1 e **non**
+  con quella su 0..*k*: se `team_form` guardasse la partita in corso il numero
+  sarebbe giusto e il modello inservibile.
+
+Il passo successivo — il go/no-go, con il disegno da fissare **prima** di
+guardare i risultati — è in `docs/PIANO_DATABASE_GIOCATORI.md` §12.3.
+
+---
+
+## 8 · Il report di verifica dell'utente, ricontrollato (31/07/2026)
+
+`report_verifica_utente.md` è il documento prodotto da chi ha raccolto i dati,
+riportato **integralmente e non modificato**. La sessione lo ha ricontrollato
+rieseguendo i controlli sul file. **Esito: quasi tutto confermato, un rilievo
+reale.**
+
+### 8.1 · Confermato, rieseguito sul file
+
+| affermazione del report | riscontro |
+|---|---|
+| esattamente **11 titolari** per squadra-partita | ✅ **758/758**, min 11 max 11 |
+| **43** squadra-partita sotto 985 minuti, **tutte** con un'espulsione, **0** senza | ✅ **esatto**: 43 trovate, 0 senza rosso |
+| gol della squadra = gol dei giocatori + autogol avversari | ✅ **758/758**, controllato contro il **nostro** snapshot (football-data.co.uk, fonte indipendente) |
+| zero righe duplicate, zero valori fuori range | ✅ |
+| Dimarco **17 assist** | ✅ |
+| marcatori: Lautaro 17, Malen 14, Douvikas 13, Thuram 13, Højlund 12, Paz 11 | ✅ **identici** |
+| Ramon a 1 gol invece di 2 | ✅ |
+| unica lacuna = Lecce-Como 27/12/2025 | ✅ e non ce ne sono altre |
+
+### 8.2 · ⚠️ Il rilievo: §3.1 non è il controllo indipendente che sembra
+
+Il report presenta la ricostruzione della classifica come *«20/20 esatta»* —
+ordine, **partite giocate**, V-N-P e punti — e la tabella mostra **Como
+20-11-7, 71 punti, 38 partite** e **Lecce 10-8-20, 38 partite**.
+
+**Ricostruendo la classifica dal file** (cioè facendo davvero ciò che §3.1
+descrive) i due valori **non tornano**:
+
+| | dal file | tabella del report (= ufficiale) |
+|---|---|---|
+| **Como** | **37** partite, 19-11-7, **68** punti | 38 partite, 20-11-7, **71** punti |
+| **Lecce** | **37** partite, 10-8-**19** | 38 partite, 10-8-**20** |
+| le altre 18 squadre | ✅ identiche | ✅ |
+
+La differenza è **esattamente** la partita mancante: Lecce-Como 0-3 è una
+vittoria del Como (3 punti) e una sconfitta del Lecce (0 punti — ecco perché i
+punti del Lecce coincidono lo stesso, e il caso non si nota).
+
+**Non è un errore nei dati: è un errore nella descrizione del controllo.** La
+tabella di §3.1 riporta la classifica **ufficiale**, non quella ricostruita dal
+dataset; e **contraddice la conclusione del report stesso**, che poche righe
+dopo scrive correttamente *«Como e Lecce hanno quindi 37 partite invece di 38»*.
+
+**Perché merita di essere scritto** (regola **R7**: ogni statistica di testa
+deve avere la sua misura, e un «non c'è differenza» va testato come
+differenza): §3.1 è il controllo esterno più forte del report, e così com'è
+formulato **non poteva fallire** — se confronti la tabella ufficiale con sé
+stessa, torna sempre. Il controllo vero — «la classifica ricostruita dal
+dataset coincide con quella ufficiale?» — ha esito **18/20, con i 2 scarti
+spiegati dalla lacuna nota**. È un ottimo risultato, ma è un risultato diverso,
+e va detto quello.
+
+### 8.3 · Una svista di intestazione
+
+Riga 3 del report: *«11.894 righe giocatore-partita, **380 partite**»*. Le
+partite con statistiche per giocatore sono **379**; 380 sono quelle del
+campionato. Il resto del report usa il numero giusto.
+
+### 8.4 · Cosa NON è stato modificato nei dati, e perché
+
+**Niente.** In particolare **non** sono stati aggiunti i 3 gol di Lecce-Como
+(Paz, Ramon, Douvikas), benché il report li identifichi correttamente dal
+riepilogo testuale del sito. Tre ragioni:
+
+1. **regola R3** — nessuna modifica a mano ai dati, mai: una correzione vive in
+   `data/correzioni_dichiarate.csv` e la applica uno script idempotente che
+   verifica il valore-prima cella per cella;
+2. **creerebbe un fantasma** — la partita Lecce-Como **non esiste** in questo
+   file (non è una riga con valori vuoti: non c'è). Inserire 3 gol senza le
+   righe giocatore-partita che li contengono produrrebbe gol **senza partita**,
+   e romperebbe le identità che i test verificano;
+3. **il dato resta fedele alla fonte**, e la lacuna è dichiarata in tre punti
+   (qui, nel report, e in `note_coverage_lecce_como.csv`). Un dato mancante e
+   dichiarato è innocuo; è il finto pieno a essere pericoloso (**R6**).
+
+⚠️ **Conseguenza operativa da tenere presente**: chi usa
+`riepilogo_stagionale.csv.gz` per Como e Lecce sta sommando **37 partite**, non
+38. Per i **tassi per 90 minuti** non cambia nulla; per i **totali stagionali**
+sì.
