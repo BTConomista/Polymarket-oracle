@@ -2205,6 +2205,50 @@ grosso modo **dove**, non **quanto**. Utile per un flag/categoria
 presenze. E la licenza DBpedia è **CC BY-SA 3.0 + GFDL**, non CC0: lo
 share-alike è un vincolo reale in ridistribuzione, da dichiarare (regola R2).
 
+### 10.1-bis · Seconda ricerca (30/07/2026, richiesta utente: «non riusciamo a trovare altre fonti?»)
+
+**Trovato un complemento, non un sostituto: le pagine-articolo di
+`en.wikipedia.org`, fetch diretto (NON l'API).** Verificato riga per riga il
+`robots.txt` (711 righe): `/api/` e `/w/` sono **vietati**, ma le pagine
+`/wiki/NomeGiocatore` **non lo sono** (solo `Special:` e simili). La tabella
+"Career statistics → Club" delle pagine-giocatore dà presenze **per stagione e
+per competizione**, e — a differenza di DBpedia — il passaggio da una riga alla
+successiva **fissa implicitamente la fine di ogni tappa a livello di
+stagione**: la lacuna più grave di DBpedia (zero date di fine su 2.965
+stazioni) qui è colmata.
+
+**Copertura misurata** (campione casuale 40/333, riproducibile): **100%**
+trova l'articolo giusto (3 casi di disambiguazione, risolvibili in automatico
+incrociando età/nazionalità già in `players.csv`); ma solo **62,5%** ha la
+tabella strutturata (il resto sono biografie in sola prosa, senza nulla da
+estrarre). Dove la tabella c'è, **100%** contiene dati veri pre-debutto. Su un
+campione mirato di 20 giocatori extra-europei noti, la tabella c'è nel **90%**.
+
+**Verdetto**: **complementare a DBpedia, non superiore** — copre meno (62,5%
+contro 75,1%) ma dove copre è più ricco (fine-tappa a livello di stagione).
+Licenza **CC BY-SA 4.0** (nota bene: 4.0, non 3.0 come il resto del sito),
+stesso vincolo di attribuzione/share-alike di DBpedia.
+
+**Altre piste, tutte verificate e CHIUSE**:
+
+| fonte | esito |
+|---|---|
+| worldfootball.net / weltfussball.de | ❌ `robots.txt` vieta **esplicitamente** `User-agent: ClaudeBot` |
+| eu-football.info | ❌ permissivo in generale, ma vieta **specificamente** `/*player=*` |
+| RSSSF | 🟡 aperto ma senza pagine-carriera per giocatore: solo risultati/classifiche |
+| bdfutbol.com | 🟡 permissivo ma copre solo la Spagna: non tocca il buco Brasile/Argentina/Asia |
+| ceroacero.es | ❌ dietro Cloudflare anti-bot |
+| CBF, AFA, Liga MX, J.League, K League (siti ufficiali) | 🟡 raggiungibili, nessuna API/bulk data aperta trovata |
+
+> ⚠️ **Una fonte "avvelenata" trovata e scartata, da non riprendere**: un
+> dataset su Zenodo (*"Comprehensive Ontology and Dataset for Football
+> Players"*) dichiara licenza **CC0**, ma è verificabilmente uno **scrape
+> diretto di Transfermarkt** (URL e ID Transfermarkt nei dati, immagini dal
+> CDN di Transfermarkt) — chi l'ha caricato non aveva il diritto di
+> concedere quella licenza. È lo stesso schema già chiuso per StatFootDB e i
+> mirror Understat/API-Football (§10.5): **una licenza dichiarata non vale
+> se chi la dichiara non è il titolare del dato**.
+
 *(Correzione tecnica: `dbo:SoccerPlayer` sono **194.850** entità distinte, non
 536.455 — quello era un `COUNT(*)` su triple duplicate fra grafi di lingua.)*
 
@@ -2409,7 +2453,7 @@ perché il dato *c'è* ed è *plausibile*.
 | seconde divisioni | ✅ | football-data (`I2`/`E1`/`SP2`/`D2`/`F2`) | ⚠️ proprietaria |
 | arbitro per partita + cartellini/rigori | ✅ | `games.csv` + eventi | CC0 |
 | falli per partita | ✅ | football-data (`HF`/`AF`) | ⚠️ proprietaria |
-| carriere extra-europee | 🟡 **solo come flag** | DBpedia (+ Wikidata EntityData) | CC BY-SA 3.0 / CC0 |
+| carriere extra-europee | 🟡 **solo come flag** | DBpedia (75,1%) + Wikipedia pagine-articolo (62,5%, complementare) | CC BY-SA 3.0 / CC BY-SA 4.0 |
 | event data per giocatore | 🟡 **12,55%** | Wyscout 2017-18, StatsBomb, DFL/Sportec | CC BY 4.0 |
 | terna arbitrale, VAR, recupero | 🔒 **chiuso per licenza** | api.fifa.com | ToS FIFA |
 | convocazioni FIFA storiche | ❌ | — | — |
