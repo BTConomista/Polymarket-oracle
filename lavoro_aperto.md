@@ -566,6 +566,19 @@ operativa di ciò che è rimasto aperto; i numeri stanno nei due verbali.*
 | A4 | **Infortuni: importarli o no** | `AUDIT_FONTI_GIOCATORI.md` §A.4/§A.6 | se sì: **B come base + A come complemento 2017-2023**, convenzione **`[from+1, until]`** obbligatoria, e le altre 9 regole di §A.6. ⚠️ la licenza è rotta per **entrambe** |
 | A5 | **Carriere: importarle o no** | `AUDIT_FONTI_GIOCATORI.md` §B | se sì, si attiva A3 (share-alike su repo pubblico) |
 
+> ⭐⭐ **AGGIORNAMENTO DEL 31/07/2026, SERA — il Tier B è entrato.** L'utente ha
+> raccolto **a mano** da diretta.it 97 statistiche per giocatore-partita di Serie
+> A 2025-26 (**11.894 righe**, 379/380 partite) e le ha inserite in
+> `files/diretta_serie_a_2526/`. Verifica contro i nostri snapshot: **758/758**
+> sul join e **758/758** sulla coerenza dei gol. Questo **cambia B1 e B2 di
+> priorità** (restano validi ma non sono più il meglio disponibile) e apre un
+> lavoro nuovo, **B0**, descritto in `docs/PIANO_DATABASE_GIOCATORI.md` §12: il
+> go/no-go su *«sapere COME hanno giocato aggiunge qualcosa?»* — il gemello della
+> domanda a cui il plus-minus ha già risposto per metà (r=+0,0354).
+> ⚠️ Due cose da tenere in mano: la **potenza** (379 partite contro le ~574 della
+> Fase 98 → un nullo non chiude il fronte) e la **licenza**, dichiaratamente non
+> risolta (`files/diretta_serie_a_2526/README.md` §1-bis).
+
 ### B · Lavori concreti, nessuna decisione richiesta (3)
 
 | # | cosa | costo | valore |

@@ -95,6 +95,7 @@ il suo §0-bis).
 | **§9** | 🔴 **VERIFICA COMPLETA (30/07/2026)** — 14 affermazioni sbagliate, dati nuovi, classificazione delle fonti **dentro** il CSV |
 | **§10** | 🌍 **OLTRE IL CSV (30/07/2026)** — fonti esterne, verifica incrociata, **indice di forza costruito in casa**. Insieme a §9 ha la precedenza su tutto |
 | **§11** | 🔴🔴 **AUDIT DELLE 118 VOCI (31/07/2026)** — sintesi; il verbale integrale è in `docs/AUDIT_FONTI_GIOCATORI.md`, che ha la precedenza su §9 e §10 |
+| **§12** | ⭐ **IL TIER B È ENTRATO (31/07/2026)** — 97 statistiche per giocatore-partita, Serie A 2025-26, in `files/diretta_serie_a_2526/`. Ribalta §1.2 e §10.5 **per una lega e una stagione** |
 
 ## 0 · Perché, e con quale grado di certezza
 
@@ -2692,3 +2693,72 @@ nessuna fonte nuova: serve leggere colonne che stiamo già scaricando.
    *first-match-wins* invece di longest-match, e su `Special:EntityData/*.json`
    (permesso da un `Allow` più lungo) restituisce `False`. **Chi verifica con quello
    si auto-chiude una fonte lecita.**
+
+## 12 · ⭐ Il Tier B è ENTRATO (31/07/2026) — Serie A 2025-26, 97 statistiche per giocatore-partita
+
+> **Questa sezione ribalta §1.2 e §10.5 per una lega e una stagione.** Il Tier B
+> era dichiarato irraggiungibile da tre ricerche consecutive. Non lo è più —
+> non perché sia stata trovata una fonte aperta, ma perché **l'utente ha raccolto
+> i dati a mano** da diretta.it/Flashscore e ha deciso di inserirli.
+> **Dati: `files/diretta_serie_a_2526/` — leggere il suo README PRIMA di usarli.**
+
+### 12.1 · Cosa è entrato
+
+**11.894 righe giocatore-partita × 108 colonne**, Serie A 2025-26, 379/380
+partite, 20 squadre, 584 giocatori. Copre **tutte** le righe Tier B della
+checklist §1.9 — e alcune che non c'erano nemmeno:
+
+| riga §1.9 | dato | stato prima | ora |
+|:--:|---|---|---|
+| 4 | tocchi | ❌ nessuna fonte | ✅ `Palloni toccati` (media 39,2) |
+| 5 | passaggi tentati/riusciti | ❌ | ✅ + precisione, lunghi, filtranti, nel terzo finale, **progressivi** |
+| 6 | dribbling tentati/riusciti | ❌ | ✅ (0,91 / 0,39) |
+| 7 | interventi difensivi | ❌ | ✅ `Contrasti`, `Tackle`, separati per duelli **aerei e a terra** |
+| 17 | **falli individuali** | ❌ solo a livello squadra (F96) | ✅ commessi **e** subiti |
+| 18 | **xG e xA individuali** | ❌ | ✅ + **xGOT** (mai in checklist) |
+| 19 | recuperi e intercetti | ❌ | ✅ `Palloni recuperati`, `Palle intercettate` |
+| 21 | grandi occasioni create/sprecate | ❌ «etichetta Opta, non un dato che si procura» | ✅ create, fallite, parate |
+| 48 | disciplina fine | parziale | ✅ falli individuali + cartellini + motivo |
+| — | *non in checklist* | — | conduzioni progressive, ingressi in area e nel terzo finale, sponde, palloni persi, palloni toccati in area avversaria, blocco portiere completo (gol evitati, uscite alte, respinte di pugno) |
+
+### 12.2 · La verifica, prima di fidarsi
+
+Controllato contro `data/serie_a_matches.csv`, che viene da **football-data.co.uk**
+— fonte completamente diversa: **join 758/758 team-partita (100,00%)**, **zero
+alias necessari** sui 20 nomi squadra, **coerenza dei gol 758/758 (100,00%)**
+(`gol dei giocatori + autogol avversari == risultato dello snapshot`), e l'unica
+partita mancante è **esattamente** quella che il file dichiara (Lecce-Como
+27/12/2025, che alla fonte ha solo i rating). **758 controlli indipendenti, 758
+passati.**
+
+### 12.3 · Il primo passo proposto — e la domanda giusta da fargli
+
+**Non** costruire feature. Il primo passo è un **go/no-go a una domanda sola**,
+che ora è finalmente ponibile con dati veri:
+
+> **Sapere COME hanno giocato i singoli aggiunge qualcosa che i dati di squadra e
+> le quote non hanno già?**
+
+È il gemello della domanda a cui il **plus-minus** ha già risposto per metà
+(`docs/CACCIA_EVENT_DATA.md` §6): sapere **chi** gioca vale **r = +0,0354** su
+10.161 partite. Questa è la metà mancante.
+
+**Disegno onesto, da fissare PRIMA di guardare i risultati:**
+1. le feature si costruiscono **solo** da colonne `post` di partite **precedenti**
+   (regola R8, §5 del README dei dati): forma recente del giocatore, aggregata a
+   livello squadra sull'undici schierato;
+2. il confronto è contro il **market-implied** sulle stesse partite — le quote
+   2025-26 sono già nel nostro snapshot;
+3. **la potenza va dichiarata prima**: 379 partite contro le ~574 che la Fase 98
+   misura per l'80% sull'1X2. Un nullo **non** chiude il fronte, un positivo sì;
+4. la stagione 2025-26 è **una sola**: qualunque risultato è per costruzione
+   fragile alla stagione, come lo era il θ della Fase 75/81.
+
+### 12.4 · Il limite che non si supera con questi dati
+
+**Una lega, una stagione.** Le altre 4 leghe e le 8 stagioni precedenti restano
+scoperte, e nessuna fonte aperta le copre (ecosistema aperto: **12,55%**, `+0`
+partite in tre ricerche — `docs/CACCIA_EVENT_DATA.md` §2). Quindi anche un esito
+positivo **non** produrrebbe una feature utilizzabile in produzione sul perimetro
+completo: produrrebbe la **prova che vale la pena procurarsi il dato**, che è una
+cosa diversa e va detta così.

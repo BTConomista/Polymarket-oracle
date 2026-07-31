@@ -25,6 +25,8 @@ rete). Contenuto:
 | `understat_la_liga_bundle.json` | idem per La Liga | idem |
 | `player_scores/` | dataset player-scores (valutazioni rosa reali, dcaribou/transfermarkt-datasets, dichiarato CC0 — ⚠️ **ma vedi la decisione aperta sulla catena della licenza in `docs/DATI.md` §4**: Transfermarkt pubblica una riserva `ai-all` machine-readable e il sui generis sulla banca dati resta suo), **4 file `.csv.gz`**: `appearances` (41 MB), `player_valuations` (5,4 MB), `players` (3,9 MB), `clubs` (47 KB) — è la voce che pesa | `scripts/build_squad_values.py` (Fase 67), `src/data/player_scores.py` |
 
+| `diretta_serie_a_2526/` | ⭐ **il primo dato "Tier B" del progetto**: **97 statistiche per giocatore-partita** (tocchi, passaggi, dribbling, contrasti, recuperi, falli individuali, xG/xA individuali), Serie A 2025-26, **11.894 righe** su 379/380 partite. Fonte **diretta.it/Flashscore**, dato a monte di **Opta**, raccolto **a mano** dall'utente il 31/07/2026. ⚠️ **Il progetto non rivendica alcuna licenza su questi dati**: leggere `diretta_serie_a_2526/README.md` §1-bis prima di usarli o ridistribuirli | **nessuno** (inseriti il 31/07/2026, nessun codice li legge ancora) |
+
 **Chi li legge** (`grep` su `scripts/` e `src/`): 10 script —
 `build_league_snapshot.py`, `_run_ah_benchmark.py`, `_run_counts_nb.py`,
 `_run_fase53_crossleague.py`, `_run_fase73_ou_close_disp.py`,

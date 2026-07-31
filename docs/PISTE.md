@@ -1096,6 +1096,25 @@ e fare un tracer bullet su una sola lega-stagione.
 >   (`src/data/understat.py`, righe 214-241). Nessuna fonte nuova da cercare —
 >   il Tier B parziale è a **costo zero**.
 
+> ⭐⭐ **IL TIER B È ENTRATO (31/07/2026)** — `files/diretta_serie_a_2526/`.
+> **11.894 righe giocatore-partita × 97 statistiche**, Serie A 2025-26, 379/380
+> partite: tocchi, passaggi (con i **progressivi**), dribbling, contrasti,
+> recuperi, intercetti, **falli individuali**, **xG/xA/xGOT individuali**, grandi
+> occasioni. Copre **tutte** le righe Tier B della checklist §1.9 — che tre
+> ricerche consecutive davano per irraggiungibili.
+> **Come**: raccolti **a mano** dall'utente da diretta.it/Flashscore (niente
+> scraping) e inseriti per sua decisione consapevole. ⚠️ **Il progetto non
+> rivendica alcuna licenza su questi dati** e la posizione è dichiaratamente non
+> risolta (dato a monte di Opta, sui generis di Livesport, repo pubblico):
+> leggere `files/diretta_serie_a_2526/README.md` §1-bis **prima** di usarli.
+> **Verifica**: join ai nostri snapshot **758/758 = 100%**, coerenza dei gol
+> **758/758 = 100%**, zero alias necessari, unica partita mancante = esattamente
+> quella dichiarata dalla fonte.
+> **Limite che resta**: **una lega, una stagione**. Un esito positivo non darebbe
+> una feature di produzione — darebbe la prova che vale la pena procurarsi il
+> dato sul resto del perimetro. Primo passo e disegno del test in
+> `docs/PIANO_DATABASE_GIOCATORI.md` §12.
+
 > 🌍 **CACCIA ALL'EVENT DATA (31/07/2026) — `docs/CACCIA_EVENT_DATA.md`** (10 agenti,
 > richiesta dell'utente «troviamo un modo per ottenerli, su diretta.it navigando
 > partita per partita»). Esito:
