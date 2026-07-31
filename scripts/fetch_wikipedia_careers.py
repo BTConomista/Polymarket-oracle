@@ -92,6 +92,15 @@ def gia_fatti() -> set[int]:
     return fatti
 
 
+def _versa() -> None:
+    """Rigenera il deliverable versionato dal file di lavoro."""
+    import subprocess
+    subprocess.run(
+        [sys.executable, str(Path(__file__).parent / "export_wikipedia_careers.py")],
+        capture_output=True, check=False,
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--limit", type=int, default=None, help="quanti giocatori")
@@ -116,15 +125,17 @@ def main() -> int:
 
     with ESITI.open("a") as out:
         for i, r in enumerate(da_fare.itertuples(), 1):
+            # I suffissi si provano SOLO se la pagina non esiste (404). Se la
+            # pagina c'e' ma non ha il blocco carriera, e' la voce giusta e
+            # riprovare con "(footballer)" e' una richiesta sprecata: costa
+            # tempo a noi e carico a Wikipedia, per niente.
             esito = None
             for suff in SUFFISSI:
                 e = W.fetch_player(r.player_id, f"{r.name}{suff}",
                                    use_cache=not args.no_cache)
-                if e.stato == "ok":
-                    esito = e
+                esito = e
+                if e.stato != "nessuna_pagina":
                     break
-                if esito is None or e.stato != "nessuna_pagina":
-                    esito = e
             conta[esito.stato] = conta.get(esito.stato, 0) + 1
             out.write(json.dumps({
                 "player_id": int(r.player_id), "nome": r.name,
@@ -140,6 +151,14 @@ def main() -> int:
                 print(f"  {i:,}/{len(da_fare):,} | {dt/i:.2f}s/giocatore | "
                       f"ok {conta['ok']:,} | senza pagina {conta['nessuna_pagina']:,} | "
                       f"senza blocco {conta['nessun_blocco']:,}", flush=True)
+
+            # Versamento periodico nel deliverable: il container e' effimero e
+            # la cache HTML non sopravvive. Cosi' ogni 500 giocatori il lavoro
+            # fatto e' gia' in un file versionabile, invece di vivere solo nel
+            # .jsonl di lavoro.
+            if i % 500 == 0:
+                out.flush()
+                _versa()
 
     print("\n=== ESITO ===")
     for k, v in sorted(conta.items(), key=lambda x: -x[1]):
