@@ -95,6 +95,7 @@ il suo §0-bis).
 | **§9** | 🔴 **VERIFICA COMPLETA (30/07/2026)** — 14 affermazioni sbagliate, dati nuovi, classificazione delle fonti **dentro** il CSV |
 | **§10** | 🌍 **OLTRE IL CSV (30/07/2026)** — fonti esterne, verifica incrociata, **indice di forza costruito in casa**. Insieme a §9 ha la precedenza su tutto |
 | **§11** | 🔴🔴 **AUDIT DELLE 118 VOCI (31/07/2026)** — sintesi; il verbale integrale è in `docs/AUDIT_FONTI_GIOCATORI.md`, che ha la precedenza su §9 e §10 |
+| **§13** | 🏗️ **DATABASE CARRIERE — disegno a strati (31/07/2026)**: strato 1 COSTRUITO (`src/data/careers.py`), strato 2 (Wikipedia) fermo su una decisione di licenza |
 | **§12** | ⭐ **IL TIER B È ENTRATO (31/07/2026)** — 97 statistiche per giocatore-partita, Serie A 2025-26, in `files/diretta_serie_a_2526/`. Ribalta §1.2 e §10.5 **per una lega e una stagione** |
 
 ## 0 · Perché, e con quale grado di certezza
@@ -2762,3 +2763,94 @@ partite in tre ricerche — `docs/CACCIA_EVENT_DATA.md` §2). Quindi anche un es
 positivo **non** produrrebbe una feature utilizzabile in produzione sul perimetro
 completo: produrrebbe la **prova che vale la pena procurarsi il dato**, che è una
 cosa diversa e va detta così.
+
+## 13 · Il database CARRIERE — disegno a strati (31/07/2026)
+
+> **Strato 1 COSTRUITO** (`src/data/careers.py`, 12 test). Strato 2 **non**
+> costruito: dipende da una decisione dell'utente, vedi §13.4.
+
+### 13.1 · La popolazione: 7.709 giocatori, ≥1 presenza (non «≥1 stagione»)
+
+Definizione adottata: **ogni giocatore con almeno UNA presenza in una delle 5
+leghe dal 2017-07**. Sono **7.709**.
+
+| soglia | giocatori |
+|---|---:|
+| ≥ 1 presenza | **7.709** ← adottata |
+| ≥ 5 | 6.308 |
+| ≥ 10 | 5.714 |
+| ≥ 19 (~«una stagione») | 4.870 |
+
+**Perché ≥1 e non «una stagione»**: (a) «una stagione» richiede una soglia
+arbitraria di partite, ≥1 presenza è oggettivo e riproducibile; (b) alzare la
+soglia escluderebbe **proprio i giocatori di rotazione** — quelli la cui
+presenza varia di più da una partita all'altra, cioè esattamente il segnale che
+un database di giocatori dovrebbe catturare. Sarebbe una selezione avversa; (c)
+i 2.839 giocatori in più costano solo tempo di calcolo.
+
+### 13.2 · ⭐ Lo strato 1 era già in casa, e nessuno l'aveva guardato
+
+**`appearances.csv` copre 48 competizioni, non 5.** È il fatto che cambia il
+disegno, e contraddice quanto il piano dava per scontato:
+
+- oltre alle nostre 5, i **massimi campionati** di Turchia, Olanda, Portogallo,
+  Belgio, Russia, Grecia, Scozia, Danimarca, Ucraina;
+- le **coppe europee** (CL/EL/Conference + qualificazioni);
+- le **coppe nazionali** e le supercoppe, la **Coppa d'Africa**, il **Mondiale
+  per club**.
+
+Risultato: **89.625 righe di carriera** (giocatore × club × competizione ×
+stagione), mediana **8 tappe** a testa, **costo zero**, nessuna rete.
+
+| | |
+|---|---:|
+| giocatori con **storia precedente** al debutto nelle 5 leghe | **4.834** (62,7%) |
+| con almeno una presenza **fuori** dalle 5 leghe | **6.580** (85,4%) |
+| **senza** alcuna storia precedente | 2.875 (37,3%) |
+
+### 13.3 · ⏱️ Il nodo R8: perché l'API non è una colonna
+
+«Presenze in carriera» è la feature che **per sua natura contiene il futuro** —
+la carriera di un giocatore comprende anche le partite che deve ancora giocare.
+Usarla per una partita del 2019 significa sapere cosa farà nel 2024, e un test
+che controllasse solo i totali **passerebbe lo stesso**.
+
+Per questo l'API sicura non è una colonna ma una funzione:
+**`career_before(as_of)`** conta solo ciò che precede *strettamente* quella
+data. Tre test lo verificano: che nessuna partita `>= as_of` entri, che la
+carriera sia **monotona** nel tempo, e che il confine sia `<` e non `<=` — la
+partita del giorno stesso è quella da prevedere e non può entrare nella propria
+feature.
+
+**E `censored_left`**: chi ha la prima presenza al bordo del dataset
+(**1.045 giocatori**) non è un esordiente, è un **troncato** — i suoi totali
+sono un limite inferiore. È lo stesso errore che l'audit ha misurato costare
+**155 allenatori su 496** (§D.2 di `AUDIT_FONTI_GIOCATORI.md`, «Ancelotti
+debutta in Serie A nel 2018»).
+
+### 13.4 · Lo strato 2 (Wikipedia) — cosa aggiungerebbe, e la decisione aperta
+
+Lo strato 1 **non** copre tre cose:
+
+| buco | dimensione |
+|---|---|
+| tutto ciò che precede il **2012-07-03** | **1.045** giocatori censurati al bordo |
+| le **seconde divisioni** (nessuna nel dataset) | non misurato |
+| i campionati **extra-europei** | non misurato |
+
+Il metodo per riempirli è misurato e funziona (**infobox** di Wikipedia,
+**99,7%** di copertura sui 333 già testati — `AUDIT_FONTI_GIOCATORI.md` §B), ma
+**non è stato eseguito su nessun giocatore** e ha un prezzo che non è tecnico:
+
+> ⚠️ **Wikipedia e DBpedia sono CC BY-SA: share-alike VIRALE.** Il repo è
+> **pubblico**, quindi importare quelle carriere **vincola la licenza del
+> progetto** — e questa è la decisione **A3/A5** di `lavoro_aperto.md` §7-bis,
+> ancora aperta. Va presa **prima** dell'importazione: dopo è molto più
+> scomodo. *(Rendere il repo privato la scioglie, perché lo share-alike scatta
+> sulla distribuzione.)*
+
+**Ordine consigliato**: usare prima lo strato 1 — c'è, è gratis e copre l'85%
+dei giocatori con almeno una tappa esterna — e **misurare quanto lo strato 2
+aggiungerebbe davvero** su un campione, prima di pagarne il costo di licenza.
+È il principio §1.3 del `CLAUDE.md`: la versione economica prima
+dell'investimento.
