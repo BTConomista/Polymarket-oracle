@@ -231,6 +231,32 @@ leghe/9 stagioni — è il primo controllo del tracer bullet (§6).
 
 ### 1.2 · Tier B — dati "event/advanced": tocchi, passaggi, dribbling, interventi
 
+> 🔴 **SUPERATA il 31/07/2026 — vedi `docs/CACCIA_EVENT_DATA.md`** (10 agenti,
+> ricerca su richiesta dell'utente «troviamo un modo per ottenerli»). Tre cose che
+> cambiano questa tabella:
+> 1. **diretta.it/Flashscore va spostata nel gruppo «chiuse per LICENZA»**, non per
+>    vincolo tecnico. Il `robots.txt` **non ci vieta nulla** (0 righe contrarie), ma
+>    i ToS Livesport vietano lo **scraping per nome** (cl. 2.10), rivendicano il
+>    **sui generis** (cl. 2.9), limitano all'**uso personale** (cl. 2.2) e valgono
+>    anche per i **non registrati** (cl. 1.2). Il dato è dichiaratamente **di Opta**.
+>    ⚠️ La vecchia motivazione («l'ambiente non raggiunge un browser in HTTPS») era
+>    **tecnicamente superata** — Chromium+Playwright funziona — ed è proprio il tipo
+>    di motivazione sbagliata che fa riaprire una pista chiusa. **La condizione di
+>    riapertura non è "un browser vero": è un accordo scritto con Livesport.**
+> 2. **Nemmeno avrebbe dato event data**: 46 campi per giocatore ma **zero
+>    coordinate x,y**, e l'archivio per-giocatore comincia **dentro la 2024-25**
+>    (fra il 9 marzo e il 23 aprile 2025) → **12,7-14,7%** delle 16.111 partite, e
+>    **niente** sul 65,8% (2017-18 → 2023-24).
+> 3. **La via che invece esiste**: **Wyscout/Pappalardo** su figshare, **CC BY 4.0
+>    verificata all'endpoint API**, titolare che rilascia in proprio — **1.826
+>    partite = 11,33%**, ma è **una stagione al 100% su tutte e 5 le leghe**, con il
+>    log azione-per-azione completo (coordinate comprese) da cui si derivano
+>    **tutti** i conteggi di questa sezione. 77,3 MB, 0 €.
+>
+> Ecosistema aperto ricontato agli endpoint: **2.022/16.111 = 12,55%**, **+0
+> partite** rispetto a tre ricerche fa. Per superare la soglia di rilevanza del 20%
+> servirebbe **raddoppiare l'intero ecosistema aperto mondiale**.
+
 Questo è ciò che manca per rispondere a "un giocatore che tocca tanti palloni
 in un certo tipo di partita potrebbe essere avvantaggiato o svantaggiato" con
 un dato vero (non un proxy). **Nessuna fonte pulita è nota oggi**, e la

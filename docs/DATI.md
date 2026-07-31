@@ -360,6 +360,55 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 
 ## 4 · Fonti grezze congelate e loro limiti
 
+> ### ⚠️ DECISIONE APERTA (31/07/2026): la catena della licenza su Transfermarkt
+>
+> **Non è un fatto già deciso: è una domanda da portare all'utente.** Emersa dalla
+> caccia all'event data (`docs/CACCIA_EVENT_DATA.md` §3) e **ri-verificata a mano**
+> in questa sessione, non riferita:
+>
+> ```
+> $ curl -A "ClaudeBot" https://www.transfermarkt.com/robots.txt
+> License: https://www.transfermarkt.de/license.xml
+> ...
+> User-agent: ClaudeBot          User-agent: Claude-SearchBot     User-agent: anthropic-ai
+> Disallow: /                    Disallow: /                      Disallow: /
+>
+> $ curl -A "ClaudeBot" https://www.transfermarkt.com/license.xml
+> <rsl xmlns="https://rslstandard.org/rsl">
+>   <content url="/"><license><prohibits type="usage">ai-all</prohibits></license></content>
+> </rsl>
+> ```
+>
+> **Cosa questo significa e cosa NON significa** — la distinzione conta, perché il
+> rilievo è facile da sovrastimare:
+> - il `robots.txt` regola **il nostro crawling di transfermarkt.com**, e quel
+>   crawling **non è mai avvenuto**: i dati arrivano da una ridistribuzione di terzi
+>   su Kaggle (`dcaribou/transfermarkt-datasets`), più 29 celle recuperate a mano.
+>   Da solo, quindi, **non decide** l'uso a valle;
+> - il `license.xml` è invece una **riserva sull'USO** (`prohibits usage: ai-all`),
+>   machine-readable secondo lo standard RSL, su **tutto** il sito. È il tipo di
+>   riserva contemplata dall'art. 4(3) della Direttiva 2019/790 (art. 70-quater
+>   L.633/41). **Questo tocca l'uso a valle, non solo il crawling**;
+> - il **diritto sui generis** sulla banca dati resta di Transfermarkt: la CC0
+>   dichiarata da `dcaribou` copre la propria compilazione, **non** può concedere
+>   ciò di cui il dichiarante non è titolare. È lo schema che il progetto ha già
+>   applicato **5 volte** per scartare altrettanti dataset («fonte avvelenata»).
+>
+> **Perché è delicato**: questa fonte non è un candidato, è **in produzione dalla
+> Fase 67** — è la sorgente ufficiale di `home/away_squad_value` (§1), e i suoi file
+> sono versionati in `files/player_scores/`. Il precedente interno (Premier League
+> API e bundesliga.com, entrambe chiuse «per licenza, non per rete») porterebbe alla
+> stessa conclusione anche qui.
+>
+> **Nessuna azione presa.** Tenere la fonte è legittimo, ma sarebbe una **decisione
+> consapevole di rischio**, non un fatto tecnico — e come tale va scritta qui invece
+> di restare implicita. *(Regola R4: un'anomalia si dichiara anche quando non è un
+> errore.)*
+>
+> Nella tabella qui sotto la riga `player-scores` dice «CC0» senza questa riserva:
+> la dicitura va corretta **qualunque** sia la decisione. Stesso testo in
+> `files/README.md`.
+
 | fonte | dove | stato |
 |---|---|---|
 | football-data (Serie A, CSV originali completi) | `data/football_data_raw/` (versionata, 9 file) | ✅ congelata; il sito originale **è tornato raggiungibile** (200, verificato alla Fase 100: le due leghe nuove sono state scaricate direttamente) |

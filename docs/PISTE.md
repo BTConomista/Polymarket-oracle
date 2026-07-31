@@ -1096,6 +1096,34 @@ e fare un tracer bullet su una sola lega-stagione.
 >   (`src/data/understat.py`, righe 214-241). Nessuna fonte nuova da cercare —
 >   il Tier B parziale è a **costo zero**.
 
+> 🌍 **CACCIA ALL'EVENT DATA (31/07/2026) — `docs/CACCIA_EVENT_DATA.md`** (10 agenti,
+> richiesta dell'utente «troviamo un modo per ottenerli, su diretta.it navigando
+> partita per partita»). Esito:
+> - **diretta.it: NO, e va spostata fra le chiuse PER LICENZA** — il `robots.txt`
+>   non ci vieta nulla, ma i ToS Livesport vietano lo scraping **per nome** (cl.
+>   2.10), rivendicano il sui generis (cl. 2.9) e valgono anche per i non
+>   registrati (cl. 1.2); il dato è **di Opta**. E comunque: **zero coordinate
+>   x,y**, archivio per-giocatore che comincia **dentro la 2024-25** → 12,7-14,7%
+>   delle partite e **niente** sul 65,8% del perimetro;
+> - **🥇 la via che esiste è Wyscout/Pappalardo** (figshare, **CC BY 4.0 verificata
+>   all'endpoint**, titolare che rilascia in proprio): **1.826 partite = 11,33%**,
+>   ma è **una stagione intera al 100% su tutte e 5 le leghe**, con il log
+>   azione-per-azione **completo di coordinate**. 77,3 MB, **0 €**, ~1 giornata di
+>   lavoro di cui il grosso è il **join** (nomi Wyscout ≠ football-data);
+> - **Sportmonks** è la miglior via a pagamento self-serve (48-77 € una tantum) ma
+>   **declassata**: l'xG individuale parte dalla **2024-25** (21,7%), il 67,4% del
+>   perimetro dipende da un add-on storico che la doc ufficiale non descrive, e il
+>   test diagnostico «gratis» è **cieco** (un 403 non distingue «dato assente» da
+>   «non nel tuo piano»);
+> - **Understat tiro-per-tiro: CHIUSA** — `robots.txt` di 26 byte, `Disallow: /`;
+> - **ecosistema aperto ricontato: 12,55%, +0 partite** rispetto a tre ricerche fa.
+> **Raccomandazione**: scaricare Wyscout 2017-18 e usarlo come **go/no-go su una
+> domanda sola** — «le statistiche per giocatore aggiungono qualcosa che i dati di
+> squadra non hanno già?». 1.826 partite contro le 574 che la Fase 98 dà per l'80%
+> di potenza sull'1X2, con walk-forward dentro la stagione. L'esito **non può
+> essere "adottiamo"**: o segnale nullo (e il fronte si chiude **gratis**), o
+> segnale presente (e **solo allora** ha senso comprare).
+
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 
 ### 16. GG/NG quotato + aperture vere — ✅ **CHIUSA nella premessa (Fase 100)**

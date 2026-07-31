@@ -53,6 +53,60 @@ quindi si usano solo le pagine; e l'URL senza il frammento `#matchId` **rende
 un'altra partita** della stessa coppia. Verificare sempre `matchTimeUTC` prima di
 leggere i numeri. Nota di merito: il loro xG è un **modello diverso** da
 Understat, quindi non va mescolato nella stessa colonna.
+⚠️ **Aggiornamento 31/07/2026**: FotMob è comunque **chiusa** — i ToS vietano
+testualmente *«scraping … strictly prohibited»* e *«systematic, regular, or bulk
+retrieval … expressly forbidden»*; e l'archivio è **irraggiungibile per
+costruzione**, perché la partita è identificata dal **frammento** `#matchId`, che
+**non arriva al server**: chiedendo Juventus-Napoli del 22/04/2018 il server rende
+`matchTimeUTC = 2026-11-01`. Copertura retrospettiva reale: **0%**.
+
+### ⭐ Chromium + Playwright FUNZIONA in HTTPS (31/07/2026) — l'annotazione contraria è superata
+
+Una sessione precedente aveva concluso «l'ambiente non raggiunge un vero browser
+in HTTPS» e ci aveva **chiuso sopra una pista** (diretta.it). **È falso.** Ricetta
+verificata sul campo aprendo ~25 pagine reali:
+
+- `pip install playwright` (il binario è già lì: `PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`
+  — **non** eseguire `playwright install`);
+- `executable_path=/opt/pw-browsers/chromium-*`;
+- **`--ssl-version-max=tls1.2`** fra gli argomenti di lancio. È il pezzo che
+  mancava: **il proxy resetta il TLS 1.3 di Chromium su QUALUNQUE host** —
+  verificato su `example.com` e `wikipedia.org`, non è una particolarità di un
+  sito.
+
+> **Lezione di metodo, più importante della ricetta.** Una pista era stata chiusa
+> con una motivazione **tecnica** che il tempo ha smentito, e sarebbe stata
+> riaperta a vuoto. Quando si chiude una fonte, la motivazione va scritta al
+> livello giusto: se il vincolo vero è **legale**, scrivere quello — un vincolo
+> legale non scade con l'aggiornamento dell'ambiente. *(diretta.it, ri-esaminata
+> il 31/07/2026, è chiusa **per licenza**: vedi sotto.)*
+
+### diretta.it / Flashscore — CHIUSA PER LICENZA, non per rete (31/07/2026)
+
+Da tenere nello stesso gruppo dell'**API Premier League** e di **bundesliga.com**.
+- `robots.txt`: **non ci vieta nulla** — `User-agent: *` vieta solo `/classifiche/`,
+  `/tabellone/`, `/newsfeed/` e un JS; ~16 crawler AI bloccati per nome, ClaudeBot e
+  anthropic-ai **non** fra loro. **Zero righe contrarie.** Non è quello il vincolo.
+- **ToS Livesport s.r.o.** (legge ceca, att. Dir. 96/9/CE), quattro divieti
+  indipendenti: cl. 2.2 solo uso personale · cl. 2.8 no riproduzione per guadagno ·
+  cl. 2.9 no estrazione di parte sostanziale (**sui generis rivendicato**) ·
+  **cl. 2.10 la parola «scraping» in chiaro** + no richieste automatiche. Cl. 1.2:
+  valgono **anche per i non registrati**. Cl. 2.11: *«responsabilità civili,
+  amministrative o penali»*.
+- Il dato è dichiaratamente **di Opta**, non di Livesport → stesso motivo per cui il
+  progetto ha già chiuso WhoScored.
+- **Condizione di riapertura**: non «un browser vero», ma **un accordo scritto con
+  Livesport**, e comunque subordinato ai diritti Opta.
+
+### Understat — `robots.txt` di 26 byte: `Disallow: /` per tutti (ri-verificato 31/07/2026)
+
+Nessun `Allow`, nessuna eccezione, invariato dal 13/07/2020. Per RFC 9309 `/`
+combacia con `/match/{id}`: la pista **tiro-per-tiro** (coordinate di ogni tiro,
+che sarebbe stato l'unico event data al 100% della finestra) è **chiusa**.
+I dati Understat già negli snapshot e nei bundle di `files/` sono acquisiti prima,
+e restano. ⚠️ I mirror su Kaggle/HuggingFace **non dichiarano nessuna licenza**
+(verificato via API: `Other` con descrizione vuota, `Unknown`, nessuna) — la
+formulazione «dichiarano licenze aperte che non possono concedere» era imprecisa.
 
 ---
 
