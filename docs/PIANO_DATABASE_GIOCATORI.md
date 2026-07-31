@@ -2324,6 +2324,56 @@ giocatore-stagione vanno da 1,886 (Bundesliga) a 0,598 (Ligue 1): un fattore
 **3,2** che nessuna medicina sportiva giustifica, quindi è **difetto di
 registrazione**; (3) contiene **9.275 duplicati esatti**.
 
+### 10.3-bis · Seconda fonte cercata e trovata (30/07/2026, richiesta utente: «verifichiamo che le due combacino»)
+
+**Nessuna fonte a origine DAVVERO indipendente da Transfermarkt è utilizzabile
+oggi.** Verificate e chiuse: `premierinjuries.com` (403 con challenge
+Cloudflare, non aggirabile); `physioroom.com` (non è più un archivio infortuni,
+è un e-commerce); lo studio accademico sulla Bundesliga (*Sports Medicine –
+Open* 2023, fonte genuinamente indipendente — i media, non Transfermarkt —
+licenza CC BY 4.0) ha però il dato grezzo **non pubblico**, solo "su richiesta
+motivata all'autore"; vari dataset Kaggle scartati per licenza "Unknown" o
+perché troppo piccoli (657 righe, 7 club).
+
+**Trovato invece un SECONDO SCRAPE di Transfermarkt, fatto da un altro
+autore**: `xfkzujqjvx97n/football-datasets` su Kaggle. Licenza verificata
+all'endpoint pubblico dell'API Kaggle: **CC0**. 143.195 record, 34.561
+giocatori, stesso schema (player_id, date inizio/fine, giorni persi) —
+aggiornato fino al **dicembre 2025**, molto oltre il febbraio 2024 della
+fonte già nota.
+
+**Verifica incrociata fra le due fonti**, sul perimetro delle 5 leghe
+2017-2025 (A = `irrazional`, 31.297 infortuni; B = `xfkzujqjvx97n`, 37.511):
+appaiando per `player_id` + data di inizio (±1 giorno), **27.588 coppie**,
+con **date identiche nel 99,98%** dei match. Dove appaiate: **data di fine
+identica nel 99,3%**, causa dell'infortunio testualmente identica nel
+**99,3%** (le differenze sono quasi sempre sinonimi, "Calf injury" contro
+"Calf problems"). Ristretto alla sola finestra in cui **entrambe** le fonti
+potevano vedere lo stesso evento (fino a febbraio 2024): **A ritrova il
+94,0%** di B e **B ritrova l'88,8%** di A — **le due fonti indipendentemente
+scritte si confermano a vicenda**, con un margine di rumore fisiologico di
+due scrape dello stesso sito crowd-sourced, non un errore sistematico.
+
+**E B estende quello che A non poteva dare**: dei 9.923 infortuni che B ha e
+A no, l'**80%** cade **dopo** febbraio 2024 — cioè non è un buco, è
+semplicemente il periodo che A non poteva coprire. Il restante 20% (1.985
+casi) sono buchi genuini di A dentro la propria finestra.
+
+**Un effetto secondario interessante sul limite già noto** (lo squilibrio fra
+leghe): B **riduce ma non chiude** il divario. Il rapporto
+Bundesliga/Ligue-1 passa da **2,43×** (fonte A) a **1,97×** (fonte B) — la
+Ligue 1 guadagna il **+45,6%** di infortuni registrati in più rispetto ad A,
+il salto maggiore fra le 5 leghe. Quindi lo squilibrio era **in parte un
+difetto di scraping reale** (si è attenuato con una seconda passata), ma
+**non del tutto un artefatto** — resta comunque la lega con meno infortuni
+registrati anche nella fonte migliore.
+
+**Raccomandazione operativa**: non sostituire la fonte primaria — usare la
+seconda come **estensione dichiarata** (regola R2, fonte secondaria
+dichiarata): riempie il periodo dopo febbraio 2024 e i 1.985 buchi genuini
+interni alla prima. Nessuna importazione fatta in questa sessione, resta una
+decisione da prendere quando si scriverà il codice.
+
 ## 10.4 · Arbitri: la via "gratis" funziona, quella ricca è chiusa per licenza
 
 **Funziona**: `games.csv` dà l'arbitro sul **99,96%** delle nostre 16.111
@@ -2449,7 +2499,7 @@ perché il dato *c'è* ed è *plausibile*.
 | orario di inizio | ✅ | openfootball (100%) / football-data `Time` ⚠️ **fuso da correggere** | CC0 / proprietaria |
 | meteo | ✅ | open-meteo | CC BY 4.0 |
 | **indice di forza club** | ✅ **costruito in casa** | Elo da `games.csv` (+ ClubElo come controllo) | CC0 / attribuzione |
-| infortuni | 🟡 | Kaggle `transfermarkt-injuries` | CC BY 4.0 |
+| infortuni | 🟡 | Kaggle `irrazional/transfermarkt-injuries` (fino a 2024-02) + `xfkzujqjvx97n/football-datasets` (estensione, confermata al 94% nella finestra comune) | CC BY 4.0 + CC0 |
 | seconde divisioni | ✅ | football-data (`I2`/`E1`/`SP2`/`D2`/`F2`) | ⚠️ proprietaria |
 | arbitro per partita + cartellini/rigori | ✅ | `games.csv` + eventi | CC0 |
 | falli per partita | ✅ | football-data (`HF`/`AF`) | ⚠️ proprietaria |
