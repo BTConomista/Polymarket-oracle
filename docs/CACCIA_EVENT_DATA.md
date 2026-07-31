@@ -18,6 +18,13 @@
 > (Transfermarkt via Kaggle, sorgente di `squad_value` dalla Fase 67): vedi §3.
 > È una **decisione da prendere**, non un fatto già deciso.
 >
+> ⭐ **E c'è un §6, aggiunto dopo, che è la cosa più importante del file**: la
+> domanda a monte («l'informazione per singolo giocatore aggiunge qualcosa?») ha
+> una **versione economica** già misurabile con i dati in casa — il **plus-minus**.
+> Misurata: segnale **reale ma minuscolo** (RAPM r=+0,0354, IC95 [+0,0143,
+> +0,0542], n=10.161; swing di 1 sd = **0,055 gol**). Il go/no-go su Wyscout è in
+> gran parte già risolto, gratis, e su 10.161 partite invece che 1.826.
+>
 > Metodo dichiarato: sulla fonte proposta dall'utente **non è stata raccolta una
 > sola riga di dati** — ~25 pagine aperte a ritmo umano per il solo censimento.
 > **Nessuna protezione è stata incontrata né aggirata**: il sito ha risposto 200 a
@@ -284,3 +291,66 @@ E un limite che non è di dato ma di misura, già pagato dal progetto: il tetto 
 ---
 
 **Nota di metodo su questa ricerca.** Sulla fonte proposta dall'utente non è stata raccolta una sola riga di dati: ~25 pagine aperte a ritmo umano per il censimento, 6 fetch legali/di indice per l'analisi contrattuale, nessuna protezione incontrata né aggirata (il sito ha risposto **200** a ogni richiesta — è esattamente il caso in cui la tentazione è massima e la risposta è comunque no). Un fatto operativo nuovo da annotare in `docs/MANUALE_SOPRAVVIVENZA.md`: **Chromium+Playwright funziona in HTTPS in questo ambiente**, con `pip install playwright`, `executable_path=/opt/pw-browsers/chromium-*` e **`--ssl-version-max=tls1.2`** (il proxy resetta il TLS 1.3 di Chromium su **qualunque** host — verificato su example.com e wikipedia.org). L'annotazione contraria in archivio è superata. Non cambia nulla per diretta.it: il vincolo lì è legale.
+---
+
+## 6. ⭐ Il numero che risponde alla domanda, e che era finito fuori dalla sintesi
+
+*Aggiunto il 31/07/2026 dopo la domanda dell'utente: «a noi non servono per forza
+gli event data, o sbaglio?». La misura c'era già nei risultati grezzi
+dell'agente «derivabile-senza», ma la sintesi l'aveva persa perché lo scettico
+aveva declassato quel blocco **per la licenza** (catena Transfermarkt, §3) — e il
+declassamento legale si era portato via anche il **dato conoscitivo**, che invece
+resta valido: è una misura fatta, e vale indipendentemente dalla decisione se
+importare o no.*
+
+**La domanda che l'event data servirebbe a rispondere è: «l'informazione a livello
+di singolo giocatore aggiunge qualcosa che i dati di squadra non hanno già?»**
+Quella domanda ha una **versione economica**, che il progetto poteva permettersi
+da sempre — è il principio §1.3 del `CLAUDE.md` («testa la versione economica di
+un'idea prima di investire»):
+
+> **il plus-minus**: il differenziale reti della squadra mentre quel giocatore è
+> in campo, aggiustato per la forza delle due squadre. Serve solo sapere **chi era
+> in campo minuto per minuto** e **quando sono stati segnati i gol** — due cose
+> che il progetto ha al 99,98%.
+
+### I numeri, misurati
+
+| misura | risultato | confronto |
+|---|---|---|
+| ricostruzione minuto-entrata / minuto-uscita | **99,98%** entro 1 minuto su 474.894 righe giocatore-partita | — |
+| validazione del plus-minus | **99,98%** (sui 233.978 titolari rimasti in campo 90', coincide col margine di squadra) | — |
+| **affidabilità split-half** del plus-minus aggiustato | **r = +0,0487** (n=5.389 giocatore-stagione, ≥900 min per metà) | **placebo +0,0054** [−0,0008, +0,0162] |
+| **stabilità fra stagioni** consecutive | **r = +0,0509** (n=6.231, ≥1.200 min in entrambe, stessa lega) | — |
+| **RAPM** (plus-minus ridge): la variazione di formazione **dentro** il club predice il residuo di partita? | **r = +0,0354**, IC95 **[+0,0143, +0,0542]**, n=10.161 partite | **swing di 1 sd = +0,055 gol** di margine |
+
+### Come si legge
+
+**Il segnale c'è ed è reale**: l'IC del RAPM esclude lo zero, e lo split-half
+batte il proprio placebo di un ordine di grandezza. Non è rumore.
+
+**Ma è minuscolo.** Una correlazione di **0,035-0,05**, e uno swing di una
+deviazione standard nella qualità dell'undici schierato vale **0,055 gol** di
+margine atteso — su una distribuzione dove lo scarto tipico è dell'ordine del gol
+e mezzo. È il terzo decimale, cioè lo stesso ordine di grandezza in cui sono
+finite **tutte** le leve interne già testate dal progetto (xG, npxG, PPDA, deep,
+valore rosa, assenze, riposo, forma, stakes: ridondanti o rumore, Fasi 4c-33) e
+lo stesso in cui è finito il surrogato della formazione della **Fase 98**, già
+bocciato.
+
+### Cosa ne consegue, onestamente
+
+1. **Il go/no-go che raccomandavo al §5 è in gran parte già risolto, e gratis.**
+   Scaricare Wyscout resta legittimo e a costo quasi nullo, ma va fatto sapendo
+   che la domanda a monte ha già una risposta indicativa **negativa**, ottenuta su
+   **10.161 partite** invece che su 1.826, e sull'**intero perimetro** invece che
+   sulla sola 2017-18.
+2. **Attenzione a non confondere due domande vicine.** Il plus-minus risponde a
+   *«sapere CHI è in campo aggiunge segnale oltre alla forza di squadra?»* → sì,
+   r≈0,035. L'event data risponderebbe a *«sapere COME ha giocato ciascuno
+   aggiunge segnale?»* → **non è la stessa domanda**, e questa misura non la
+   chiude. Ma ne abbassa molto la probabilità a priori: se la variabile a monte
+   (chi gioca) vale 0,035, è difficile che il dettaglio a valle (come ha giocato)
+   valga molto di più.
+3. **Il tetto è informativo, non architetturale** — ed è la centesima volta che
+   questo progetto lo misura. Nessun numero di questa ricerca lo sposta.
