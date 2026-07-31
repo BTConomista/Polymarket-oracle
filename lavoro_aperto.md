@@ -402,6 +402,18 @@ segnalare?
 
 ### 7.5 · 💭 Database giocatore/arbitri/allenatori ⭐ (idea dell'utente, 29/07/2026)
 
+> 🔴 **Stato al 31/07/2026 — `docs/AUDIT_FONTI_GIOCATORI.md`** (13 agenti): tutte e
+> **118 le voci** dei tre fronti auditate con verifica avversariale. **Solo il 30,5%
+> è davvero VERIFICATO**; 13 voci sono ASSUNTE (dichiarate a posto e mai misurate) e
+> vanno considerate inutilizzabili finché non sono chiuse. Tre cose da sapere prima
+> di riprendere in mano il fronte: **(1)** ci sono **due look-ahead attivi nel codice
+> del repo** (`scripts/build_stagione_anagrafica.py:222,225`) — decisione aperta;
+> **(2)** `appearances.csv` **comincia il 2012-07-03**, censura a sinistra mai
+> dichiarata, che invalida in parte ogni feature cumulativa; **(3)** ⭐ **gli xG/xA
+> individuali sono già sul disco** (10.008 righe nei bundle Understat in `files/`,
+> scartate dal parser): il pezzo di Tier B più prezioso costa **zero**.
+> Infortuni e carriere extra-Europa: verdetti aggiornati in §A e §B del verbale.
+
 L'idea: il calcio è un gioco di squadra ma ogni giocatore incide più o meno
 di un altro — raccogliere minuti giocati, subentri, gol, assist e (dove
 possibile) tocchi/passaggi/dribbling/interventi per ogni giocatore, più

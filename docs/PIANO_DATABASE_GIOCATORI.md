@@ -51,6 +51,15 @@
 > la classificazione finale raggiungibile/irraggiungibile. **§9 ha la precedenza
 > su tutto ciò che viene prima**; le sezioni §1-§8 sono conservate come storia
 > del ragionamento, con un richiamo dove sono state rettificate.
+>
+> 🔴🔴 **E PRIMA ANCORA, `docs/AUDIT_FONTI_GIOCATORI.md`** (31/07/2026, 13 agenti):
+> ha auditato **tutte e 118 le voci** dei tre fronti (61 giocatore + 32 allenatore
+> + 25 arbitro) con un giro di verifica avversariale sopra, e ha prodotto **7
+> declassamenti** e **18 numeri rettificati** — inclusi **due look-ahead ATTIVI
+> nel codice del repo** (`scripts/build_stagione_anagrafica.py`, righe 222 e 225).
+> Bilancio: **36 VERIFICATE, 45 DERIVATE, 21 MANCANTI, 13 ASSUNTE, 3 CHIUSE per
+> licenza**. Quel file ha la precedenza **anche su §9 e §10**, ed è riassunto qui
+> in **§11**.
 
 Il documento è cresciuto molto: questo indice serve a non dover rileggere
 tutto per trovare una cosa già scritta (stesso motivo per cui `PISTE.md` ha
@@ -85,6 +94,7 @@ il suo §0-bis).
 | §8-bis | quelle 4 erano ESEMPI — il principio generale (H2H, infortuni, squalifiche...) |
 | **§9** | 🔴 **VERIFICA COMPLETA (30/07/2026)** — 14 affermazioni sbagliate, dati nuovi, classificazione delle fonti **dentro** il CSV |
 | **§10** | 🌍 **OLTRE IL CSV (30/07/2026)** — fonti esterne, verifica incrociata, **indice di forza costruito in casa**. Insieme a §9 ha la precedenza su tutto |
+| **§11** | 🔴🔴 **AUDIT DELLE 118 VOCI (31/07/2026)** — sintesi; il verbale integrale è in `docs/AUDIT_FONTI_GIOCATORI.md`, che ha la precedenza su §9 e §10 |
 
 ## 0 · Perché, e con quale grado di certezza
 
@@ -2167,6 +2177,24 @@ deve più misurare questo: è misurato.
 
 ## 10.1 · Carriere fuori Europa — **PARZIALE**, non risolta
 
+> 🔴 **SUPERATA il 31/07/2026 — vedi `docs/AUDIT_FONTI_GIOCATORI.md` §B.**
+> Il fronte era rimasto aperto per **due ricerche consecutive** per un **errore di
+> oggetto, non di fonte**: si contava la tabella «Career statistics» (la forma più
+> ricca e più rara, 62,2%) invece del **blocco carriera dell'infobox** (la forma più
+> povera e quasi universale, **332/333 = 99,7%**), che contiene già i tre campi che
+> servivano — anni **con fine**, club, presenze. *Le date di fine non mancano su
+> Wikipedia: le perde il parser di DBpedia* (`dbo:years` è `xsd:gYear` di solo inizio).
+> **Recuperate 2.854 tappe pre-debutto** (79,2% con anno di fine, 83,9% con presenze,
+> 96.164 presenze totali). Verdetto corretto: **risolto sulla copertura e
+> sull'elenco dei club; NON risolto sul conteggio delle presenze**, separabile
+> pre/post debutto solo per **246/333 = 73,9%**.
+> ⚠️ Due rettifiche: l'idea delle **Wikipedia in altra lingua è SMENTITA**
+> (guadagno **0 su 333**, e `es.wikipedia` è strutturalmente *peggiore*); e il fronte
+> è mal chiamato — la coorte è **europea per il 67,0%**, il buco vero sono le
+> **seconde e terze divisioni europee**, non l'extra-Europa.
+> `footballdatabase.eu` e `playmakerstats.com`, 🟡 qui sotto, oggi sono **403
+> Cloudflare → ❌**.
+
 Il problema (§9.1 n.2): `appearances.csv` non ha nessun campionato
 extra-europeo né seconde divisioni, e **333 giocatori** delle nostre 5 leghe
 (debutto dopo il 2017-07, età ≥26) risultano con **zero passato**.
@@ -2301,6 +2329,35 @@ batte il mercato (0,9857 contro 0,9663) e **non è pensato per farlo** — serve
 segmentare e a pesare, non a prezzare.
 
 ## 10.3 · Infortuni: **precisione ~97%, sensibilità ~37-63%**
+
+> 🔴 **AGGIORNATA il 31/07/2026 — vedi `docs/AUDIT_FONTI_GIOCATORI.md` §A**, che
+> misura la stessa cosa con **due controlli indipendenti nuovi** e cambia la
+> raccomandazione operativa.
+> **(1) Le fonti sono reali, dimostrato due volte**: contro le nostre presenze, un
+> infortunato gioca il **4,5%** delle partite del suo club contro il **58-59%** dello
+> stesso giocatore nella stessa finestra spostata di sei mesi (placebo); e contro la
+> **stampa d'epoca**, 29 casi su 29 realmente avvenuti, **0 smentiti**.
+> **(2) Il difetto non è l'invenzione, sono le DATE**: `from` è il giorno della
+> *partita* in cui il giocatore si è fatto male (offset medio **+0,68 gg**, test dei
+> segni p=2,0e-04), `until` è in anticipo di **4-11 giorni** sul rientro vero.
+> Convenzione obbligatoria all'import: **`[from+1, until]`** — quella letterale
+> inietta un look-ahead di un giorno (R8). Tasso d'errore reale: **5-11%**.
+> **(3) Il collo di bottiglia è la SENSIBILITÀ**: sulle 8.201 assenze prolungate
+> ricostruite dalle sole presenze, le fonti ne dichiarano **il 46-52%** (A∪B: 57,69%).
+> «Nessun infortunio dichiarato» **non** significa «disponibile».
+> **(4) Risposta alla domanda A-o-B: NON sostituire.** B è più pulita (record
+> esclusivi coerenti al 93,1% contro 89,2%; duplicati 0,24% contro 9,6%) e arriva al
+> **12/09/2025** contro il **25/02/2024**; ma A è più **sensibile** a parità di
+> stagioni (**59,75% vs 54,59%**, McNemar chi²=167). Sostituire costa **426 finestre**
+> e **−5,2 punti** di copertura. Uso corretto: **B come base, A come complemento sul
+> 2017-2023**.
+> **(5) Nessuna fonte non-Transfermarkt esiste**: sei angoli nuovi, sei esiti
+> negativi. L'unica a origine genuinamente indipendente — l'API **Fantasy Premier
+> League**, che ha pure `news_added` = il momento in cui il fatto diventa noto (R8) —
+> è **chiusa dai ToS**, non dal robots.txt.
+> ⚠️ **La licenza resta rotta per entrambe** (CC BY 4.0 e CC0, ma nessuno dei due
+> dichiaranti è titolare del dato Transfermarkt): **l'alta qualità non sana la
+> licenza**, sono due decisioni separate.
 
 Il dataset `irrazional/transfermarkt-injuries` (CC BY 4.0 verificata) si
 aggancia **per `player_id` di Transfermarkt: 18.824/18.825 = 100%** — nessun
@@ -2513,3 +2570,99 @@ perché il dato *c'è* ed è *plausibile*.
 | terna arbitrale, VAR, recupero | 🔒 **chiuso per licenza** | api.fifa.com | ToS FIFA |
 | convocazioni FIFA storiche | ❌ | — | — |
 | PSxG / portiere avanzato | ❌ | — | — |
+
+## 11 · 🔴🔴 AUDIT DELLE 118 VOCI (31/07/2026) — sintesi
+
+> **Verbale integrale: `docs/AUDIT_FONTI_GIOCATORI.md`** (13 agenti, 5 fette di
+> audit + 3 giri di verifica avversariale + 4 fronti di ricerca esterna).
+> **Quel file ha la precedenza su §9 e §10 di questo**, che sono anteriori.
+> Qui sotto solo ciò che cambia le decisioni.
+
+### 11.1 · Il bilancio delle fonti, dopo le refutazioni
+
+| stato | n | % | cosa significa |
+|---|---:|---:|---|
+| **VERIFICATO** | 36 | 30,5% | misurato sul perimetro reale (16.111 partite, 5 leghe, 2017-2026) |
+| **DERIVATO** | 45 | 38,1% | calcolabile da dati verificati, ma è un calcolo con assunzioni da dichiarare |
+| **MANCANTE** | 21 | 17,8% | nessuna fonte utilizzabile trovata |
+| **ASSUNTO** | 13 | 11,0% | dato per buono e **mai misurato**, o misurato male → **non usare finché non è chiuso** |
+| **CHIUSO_LICENZA** | 3 | 2,5% | esiste, raggiungibile, vietato dai termini (recupero concesso, VAR, terna completa) |
+
+**Solo il 30,5% delle voci è davvero verificato.** La verifica avversariale ha
+**declassato 7 voci** da VERIFICATO/DERIVATO ad ASSUNTO e **rettificato 18 numeri**
+senza cambiare stato.
+
+### 11.2 · I due look-ahead ATTIVI nel codice (R8) — l'unica cosa urgente
+
+Non sono ipotesi sul futuro database: sono **già dentro `scripts/build_stagione_anagrafica.py`**.
+
+1. **riga 225 — `highest_market_value_in_eur`**: è il massimo dell'**intera serie
+   storica** nel 100% dei casi, quindi include il futuro rispetto alla partita.
+   Correzione **gratuita**: massimo *progressivo* fino alla data della partita.
+2. **riga 222 — `international_caps`/`international_goals`**: snapshot **non datato**
+   (copertura 58,20%), con 3.222 NaN che non distinguono «mai convocato» da «non
+   rilevato».
+
+⚠️ **Da decidere se e come correggerli**: tocca codice in produzione, quindi non è
+stato fatto in sede di audit.
+
+### 11.3 · Le 4 voci di gravità ALTA (dettaglio in §D del verbale)
+
+1. **`attendance` in Bundesliga è la CAPIENZA, non il pubblico** — 796/2.382 partite
+   (**33,42%**) hanno `attendance` == `stadium_seats`; il Bayern ha 9 valori distinti
+   su 130 gare interne. L'idea §1.8 di misurare il vantaggio-casa col pubblico, lì,
+   misurerebbe la capienza. **Declassata ad ASSUNTO.**
+2. **«Primo anno in quel campionato» (allenatori) è falso per 155/496 (31,2%)** —
+   `games.csv` parte dal 2012-08-10 e la feature legge il **bordo del dataset** come
+   un esordio: Ancelotti «debutta» in Serie A nel 2018, Mourinho nel 2021.
+   Lo stesso difetto era già riconosciuto per gli arbitri e assolto qui.
+3. **«Primo anno in un campionato nuovo» (voce 46) copre il 34,8%, non il 55,9%.**
+4. **1.119 titolari (0,317%) non hanno minuti**, concentrati per lega×stagione
+   (**ES1 2020 al 4,60%**): un `LEFT JOIN + fillna(0)` li registra come «non ha
+   giocato» **proprio nelle stagioni COVID**, dove il carico è l'oggetto d'interesse.
+
+### 11.4 · La censura a sinistra che nessuna fase aveva dichiarato
+
+**`appearances.csv` comincia il 2012-07-03.** Sta sotto le voci 12, 25, 39 (esperienza,
+usura), A12/A13 (esperienza arbitro) e F25/F26 (esperienza allenatore) — cioè sotto
+**tutto ciò che è cumulativo**. Conseguenze misurate: l'esperienza dell'arbitro è
+censurata per il **66,2%** delle partite; quella globale dell'allenatore è falsa per
+il **30,8%**.
+
+### 11.5 · Sei trappole nei dati, tutte con il numero accanto
+
+| trappola | numero |
+|---|---|
+| il prefisso `N. Yellow card` è il **contatore stagionale**, non l'ennesima ammonizione della partita | leggerlo male dà **15.077 espulsioni invece di 3.122 (11×)** |
+| **la Coupe de France non esiste** in `competitions.csv` (10 coppe nazionali, nessuna francese) | un giocatore di Ligue 1 non accumula MAI carico da coppa; uno di Bundesliga all'86,6% → **confronto cross-lega distorto per costruzione** |
+| `contract_expiration_date` è un **finto pieno di anni** | 76,66% come valore *attuale*, **0% come valore storico** |
+| `clubs.csv` è uno snapshot la cui annata **coincide con la retrocessione** del club | un modello ci si aggancia e *sembra* funzionare |
+| **i rigori sbagliati non esistono** in nessuno dei 12 file (un rigore c'è solo se segnato: 4.159) | usare i rigori realizzati come propensione dell'arbitro misura **il tiratore e il portiere** |
+| **un gol manca dagli eventi**, silenziosamente: Toulouse-Brest 11/01/2020 (2-5 nel nostro snapshot, un solo gol del Toulouse in `game_events`) | un gol mancante **riclassifica lo stato di tutti i gol successivi** → la ricostruzione del punteggio va usata come **controllo permanente dell'importatore** |
+
+### 11.6 · Una buona notizia grossa: gli xG/xA individuali sono già sul disco
+
+Il piano afferma che Understat dà «solo aggregato-stagione per giocatore». È
+**sbagliato**: i bundle in `files/` contengono **xG, xA, npxG, npg, xGChain,
+xGBuildup, key_passes, shots** per giocatore — **10.008 righe** (Premier 4.819 +
+Liga 5.189). È **il parser del repo a scartarli**
+(`parse_season_players` in `src/data/understat.py`, righe 214-241). Non serve
+nessuna fonte nuova: serve leggere colonne che stiamo già scaricando.
+
+### 11.7 · Tre lezioni di metodo, generalizzabili fuori da questo fronte
+
+1. **Quando un fronte resiste, prima di cercare una fonte nuova scrivi in modo
+   esatto CHE COSA stai contando.** Le carriere sono rimaste aperte per *due*
+   ricerche consecutive per un **errore di oggetto, non di fonte**: «la copertura è
+   62,5%» era vero *e* fuorviante (era la copertura della tabella più ricca, non del
+   dato che serviva). Bastava guardare **un altro pezzo della stessa pagina**:
+   l'infobox copre il **99,7%**. È la versione-dati della lezione della Fase 92.
+2. **L'anti-«fonte avvelenata» non può fermarsi agli identificatori.** Un dataset
+   senza alcun ID/URL Transfermarkt è stato smascherato da una **firma numerica**:
+   il campo `Days` differiva di **esattamente +1 nel 97,43%** dei casi — l'off-by-one
+   di chi ricalcola `(until − from)` inclusivo dalle stesse due date. Le firme
+   numeriche sono più difficili da ripulire dei metadati.
+3. **`urllib.robotparser` di Python NON implementa RFC 9309**: applica
+   *first-match-wins* invece di longest-match, e su `Special:EntityData/*.json`
+   (permesso da un `Allow` più lungo) restituisce `False`. **Chi verifica con quello
+   si auto-chiude una fonte lecita.**

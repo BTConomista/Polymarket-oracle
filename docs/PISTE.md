@@ -1071,6 +1071,31 @@ nessun codice scritto — il primo passo proposto (non ancora eseguito, e
 col miglior rapporto valore/costo) è importare `games.csv`/`club_games.csv`
 e fare un tracer bullet su una sola lega-stagione.
 
+> 🔴 **AUDIT DELLE 118 VOCI (31/07/2026) — `docs/AUDIT_FONTI_GIOCATORI.md`.**
+> Tutti e tre i fronti (61 voci giocatore + 32 allenatore + 25 arbitro) sono stati
+> auditati voce per voce con verifica avversariale. Bilancio: **36 VERIFICATE
+> (30,5%), 45 DERIVATE, 21 MANCANTI, 13 ASSUNTE, 3 CHIUSE per licenza**; **7
+> declassamenti** e **18 numeri rettificati**. Cosa cambia per chi riprende questa
+> pista:
+> - **due look-ahead ATTIVI nel codice del repo** (`scripts/build_stagione_anagrafica.py`
+>   righe 222 e 225: `international_caps` snapshot non datato, e
+>   `highest_market_value_in_eur` come massimo dell'intera serie) — **da decidere**
+>   se correggerli, tocca codice in produzione;
+> - **`appearances.csv` comincia il 2012-07-03**: censura a sinistra **mai
+>   dichiarata prima**, che sta sotto ogni feature cumulativa (esperienza arbitro
+>   censurata per il **66,2%** delle partite, esperienza allenatore falsa per il
+>   **30,8%**);
+> - **la Coupe de France non esiste** in `competitions.csv` → il carico da coppa
+>   nazionale è **distorto per costruzione** nel confronto cross-lega;
+> - **`attendance` in Bundesliga è la capienza** (33,42% == `stadium_seats`);
+> - **i rigori sbagliati non esistono** in nessuno dei 12 file;
+> - il prefisso **`N. Yellow card` è il contatore stagionale**, non l'ennesimo
+>   giallo della partita (leggerlo male dà 11× le espulsioni vere);
+> - ⭐ **gli xG/xA individuali sono GIÀ sul disco**: 10.008 righe nei bundle
+>   Understat in `files/`, scartate da `parse_season_players`
+>   (`src/data/understat.py`, righe 214-241). Nessuna fonte nuova da cercare —
+>   il Tier B parziale è a **costo zero**.
+
 ## 4 · Piste di raccolta prospettica (richiedono mesi, non giorni)
 
 ### 16. GG/NG quotato + aperture vere — ✅ **CHIUSA nella premessa (Fase 100)**
