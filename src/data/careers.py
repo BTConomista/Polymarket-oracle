@@ -6,16 +6,27 @@ economico al più caro, e ogni riga dichiara **da quale strato viene** (colonna
 `files/player_scores/appearances.csv.gz` contiene già, e che nessuno aveva mai
 guardato come *carriera* invece che come singole partite.
 
-QUANTO COPRE (misurato, non stimato):
-- **48 competizioni**, non 5 — oltre alle nostre ci sono i massimi campionati di
-  Turchia, Olanda, Portogallo, Belgio, Russia, Grecia, Scozia, Danimarca e
-  Ucraina, le coppe europee (CL/EL/Conference, qualificazioni comprese), le
-  coppe nazionali, le supercoppe, la Coppa d'Africa e il Mondiale per club;
-- **dal 2012-07-03** in avanti;
-- **6.580 dei 7.709** giocatori della popolazione hanno almeno una presenza
-  fuori dalle 5 leghe: per loro una parte di carriera "esterna" c'è già.
+PERIMETRO: **tutto l'universo del dataset, non solo i nostri giocatori**
+(decisione dell'utente, 31/07/2026: *«vale la pena avere il database completo
+di tutte le competizioni alle quali possiamo avere accesso — se un domani
+vorremo allargare oltre le 5 leghe avremo almeno una base da cui partire»*).
 
-COSA MANCA, ed è lo STRATO 2 (Wikipedia, non ancora costruito):
+- **29.531 giocatori**, **1.231 club**, **48 competizioni**, 1.894.350 presenze;
+- **197.812 tappe di carriera** (giocatore × club × competizione × stagione);
+- **dal 2012-07-03 al 2026-06-28**.
+
+`population()` resta disponibile e isola i **7.709** giocatori con almeno una
+presenza nelle 5 leghe modellate: è un *filtro*, non più il perimetro.
+
+QUANTO COPRE, oltre alle nostre 5 leghe: i **massimi campionati** di Turchia,
+Olanda, Portogallo, Belgio, Russia, Grecia, Scozia, Danimarca e Ucraina; le
+**coppe europee** (CL/EL/Conference, qualificazioni comprese); le **coppe
+nazionali** e le supercoppe; la Coppa d'Africa e il Mondiale per club.
+**6.580 dei 7.709** giocatori della nostra popolazione hanno almeno una
+presenza fuori dalle 5 leghe.
+
+COSA MANCA, ed è lo STRATO 2 (Wikipedia — `wikipedia_careers.py`, raccolta
+avviata il 31/07/2026):
 1. **tutto ciò che precede il 2012-07-03** — sono **1.045** giocatori censurati
    al bordo del dataset: per loro il "prima" è tagliato dai dati, non dalla
    realtà;
@@ -23,10 +34,16 @@ COSA MANCA, ed è lo STRATO 2 (Wikipedia, non ancora costruito):
    Segunda...);
 3. i campionati **extra-europei** (niente Brasile, Argentina, MLS, Giappone...).
 
-⚠️ LICENZA: questo strato eredita la posizione **non risolta** della fonte
-Transfermarkt (`docs/DATI.md` §4). Lo strato 2 ne aprirebbe una seconda, diversa
-e più vincolante: Wikipedia/DBpedia sono **CC BY-SA**, cioè share-alike virale
-su un repo pubblico.
+⚠️⚖️ LICENZA — I DUE STRATI NE HANNO DUE DIVERSE, ED È IL MOTIVO PER CUI
+RESTANO TABELLE SEPARATE.
+- **strato 1** eredita la posizione **non risolta** della fonte Transfermarkt
+  (`docs/DATI.md` §4);
+- **strato 2** è **CC BY-SA 4.0** (contenuto Wikipedia): share-alike **virale**
+  su un repo pubblico. Vive in `data/carriere_wikipedia/`, auto-dichiarato.
+`load_careers()` restituisce **solo** lo strato 1. `combined_careers()` li
+impila, e **il risultato è CC BY-SA**: lo share-alike si trasmette a valle, non
+a monte. Tenere le due tabelle distinte è ciò che impedisce all'obbligo di
+estendersi per contatto a tutto il progetto.
 
 ⏱️ REGOLA R8 — IL PUNTO CHE RENDE PERICOLOSA UNA TABELLA DI CARRIERE.
 «Presenze in carriera» è un numero che per sua natura **include il futuro**:
@@ -47,6 +64,7 @@ import pandas as pd
 
 log = logging.getLogger(__name__)
 
+ROOT_DATA = Path(__file__).resolve().parents[2] / "data"
 DATA_DIR = Path(__file__).resolve().parents[2] / "files" / "player_scores"
 APPEARANCES = DATA_DIR / "appearances.csv.gz"
 CLUBS = DATA_DIR / "clubs.csv.gz"
@@ -106,8 +124,15 @@ def population(appearances: pd.DataFrame | None = None) -> pd.Index:
     return pd.Index(sorted(dentro["player_id"].unique()), name="player_id")
 
 
-def load_careers(appearances: pd.DataFrame | None = None) -> pd.DataFrame:
+def load_careers(
+    appearances: pd.DataFrame | None = None, *, only_population: bool = False
+) -> pd.DataFrame:
     """Una riga per **giocatore × club × competizione × stagione**.
+
+    Per default copre **tutti i 29.531 giocatori** del dataset (197.812 righe):
+    è la base da cui partire se un domani si allarga oltre le 5 leghe. Con
+    ``only_population=True`` si restringe ai 7.709 delle nostre leghe (89.625
+    righe).
 
     ⚠️ È una tabella `post`: contiene l'intera carriera nota, futuro compreso
     rispetto a qualunque partita passata. Per fare feature usa `career_before`.
@@ -118,8 +143,10 @@ def load_careers(appearances: pd.DataFrame | None = None) -> pd.DataFrame:
     """
     if appearances is None:
         appearances = _load_appearances()
-    pop = population(appearances)
-    df = appearances[appearances["player_id"].isin(pop)].copy()
+    df = appearances
+    if only_population:
+        df = df[df["player_id"].isin(population(appearances))]
+    df = df.copy()
     df["season"] = season_of(df["date"])
 
     out = (
@@ -192,6 +219,88 @@ def career_before(
     )
     out["censored_left"] = out["first_appearance"] <= CENSORING_CUTOFF
     return out
+
+
+def load_wikipedia_careers(solo_ok: bool = True) -> pd.DataFrame:
+    """STRATO 2: le tappe estratte dall'infobox di Wikipedia.
+
+    ⚖️ **Queste righe sono CC BY-SA 4.0** (vedi
+    `data/carriere_wikipedia/README.md`). Restano in una tabella **separata**
+    proprio perché lo share-alike non si estenda per contatto a tutto il resto.
+
+    Ritorna un DataFrame vuoto — non alza — se la raccolta non è ancora stata
+    eseguita: lo strato 2 è opzionale per costruzione.
+    """
+    import json
+
+    # Il deliverable versionato ha la precedenza sul file di lavoro: cosi' chi
+    # clona il repo legge le carriere senza dover rieseguire la raccolta.
+    versato = ROOT_DATA / "carriere_wikipedia" / "tappe.csv.gz"
+    if versato.exists():
+        return pd.read_csv(versato)
+
+    percorso = ROOT_DATA / "carriere_wikipedia" / "esiti.jsonl"
+    if not percorso.exists():
+        return pd.DataFrame(columns=[
+            "player_id", "ordine", "club", "anno_da", "anno_a", "aperta",
+            "presenze", "gol", "prestito", "giovanili", "source_url",
+            "fonte", "licenza",
+        ])
+    righe = []
+    with percorso.open() as f:
+        for riga in f:
+            try:
+                r = json.loads(riga)
+            except json.JSONDecodeError:
+                continue          # riga tronca da un'interruzione: si salta
+            if solo_ok and r.get("stato") != "ok":
+                continue
+            righe.extend(r.get("tappe", []))
+    return pd.DataFrame(righe)
+
+
+def wikipedia_progress() -> dict:
+    """Stato della raccolta dello strato 2 (è lunga: ~1s a giocatore)."""
+    import json
+
+    percorso = ROOT_DATA / "carriere_wikipedia" / "esiti.jsonl"
+    if not percorso.exists():
+        return {"tentati": 0}
+    stati: dict[str, int] = {}
+    tappe = 0
+    with percorso.open() as f:
+        for riga in f:
+            try:
+                r = json.loads(riga)
+            except json.JSONDecodeError:
+                continue
+            stati[r["stato"]] = stati.get(r["stato"], 0) + 1
+            tappe += len(r.get("tappe", []))
+    return {"tentati": sum(stati.values()), "tappe": tappe, **stati}
+
+
+def combined_careers(appearances: pd.DataFrame | None = None) -> pd.DataFrame:
+    """I due strati impilati, con `fonte` a distinguerli riga per riga.
+
+    ⚠️⚖️ **La tabella che ne esce è CC BY-SA 4.0**, perché incorpora contenuto
+    Wikipedia: lo share-alike si trasmette al risultato, non alla sorgente.
+    Se serve una tabella *senza* quel vincolo, usare `load_careers()` da sola.
+
+    ⚠️ **NON sommare le presenze fra i due strati.** Contano cose diverse:
+    Wikipedia conta il solo campionato nazionale, `appearances.csv` conta tutte
+    le 48 competizioni. Impilare le righe è lecito; sommarle no.
+
+    ⏱️ **La grana temporale è diversa**: lo strato 1 ha le date esatte, lo
+    strato 2 solo l'anno. Un taglio R8 sullo strato 2 è approssimato all'anno.
+    """
+    s1 = load_careers(appearances)
+    s2 = load_wikipedia_careers()
+    if s2.empty:
+        return s1
+    s2 = s2.rename(columns={"club": "club_name", "presenze": "appearances",
+                            "gol": "goals"})
+    s2["is_top5"] = pd.NA
+    return pd.concat([s1, s2], ignore_index=True, sort=False)
 
 
 def coverage_report(appearances: pd.DataFrame | None = None) -> dict:

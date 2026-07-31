@@ -1,0 +1,390 @@
+player_id,nome,nostro,censurato,stato,url
+38253,Robert Lewandowski,True,True,ok,https://en.wikipedia.org/wiki/Robert_Lewandowski
+125781,Antoine Griezmann,True,True,ok,https://en.wikipedia.org/wiki/Antoine_Griezmann
+74229,Koke,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Koke_%28footballer%29
+59561,Dani Parejo,True,True,ok,https://en.wikipedia.org/wiki/Dani_Parejo
+55735,Henrikh Mkhitaryan,True,True,ok,https://en.wikipedia.org/wiki/Henrikh_Mkhitaryan
+65278,Pedro,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Pedro_%28footballer%29
+139208,Virgil van Dijk,True,True,ok,https://en.wikipedia.org/wiki/Virgil_van_Dijk
+27992,Luka Modrić,True,True,ok,https://en.wikipedia.org/wiki/Luka_Modri%C4%87
+108390,Thibaut Courtois,True,True,ok,https://en.wikipedia.org/wiki/Thibaut_Courtois
+28396,Edin Dzeko,True,True,ok,https://en.wikipedia.org/wiki/Edin_Dzeko
+32467,Ivan Rakitic,True,True,ok,https://en.wikipedia.org/wiki/Ivan_Rakitic
+133179,Marten de Roon,True,True,ok,https://en.wikipedia.org/wiki/Marten_de_Roon
+121483,Jan Oblak,True,True,ok,https://en.wikipedia.org/wiki/Jan_Oblak
+36139,Dušan Tadić,True,True,ok,https://en.wikipedia.org/wiki/Du%C5%A1an_Tadi%C4%87
+29364,João Moutinho,True,True,ok,https://en.wikipedia.org/wiki/Jo%C3%A3o_Moutinho
+59377,David de Gea,True,True,ok,https://en.wikipedia.org/wiki/David_de_Gea
+128223,Álvaro Morata,True,True,ok,https://en.wikipedia.org/wiki/%C3%81lvaro_Morata
+111455,Granit Xhaka,True,True,ok,https://en.wikipedia.org/wiki/Granit_Xhaka
+56416,Dries Mertens,True,True,ok,https://en.wikipedia.org/wiki/Dries_Mertens
+54781,Nicolás Otamendi,True,True,ok,https://en.wikipedia.org/wiki/Nicol%C3%A1s_Otamendi
+96341,Romelu Lukaku,True,True,ok,https://en.wikipedia.org/wiki/Romelu_Lukaku
+132098,Harry Kane,True,True,ok,https://en.wikipedia.org/wiki/Harry_Kane
+91845,Heung-min Son,True,True,ok,https://en.wikipedia.org/wiki/Heung-min_Son
+57500,César Azpilicueta,True,True,ok,https://en.wikipedia.org/wiki/C%C3%A9sar_Azpilicueta
+58358,Thomas Müller,True,True,ok,https://en.wikipedia.org/wiki/Thomas_M%C3%BCller
+17259,Manuel Neuer,True,True,ok,https://en.wikipedia.org/wiki/Manuel_Neuer
+134425,Raheem Sterling,True,True,ok,https://en.wikipedia.org/wiki/Raheem_Sterling
+69633,Christian Eriksen,True,True,ok,https://en.wikipedia.org/wiki/Christian_Eriksen
+58864,Pierre-Emerick Aubameyang,True,True,ok,https://en.wikipedia.org/wiki/Pierre-Emerick_Aubameyang
+53622,İlkay Gündoğan,True,True,ok,https://en.wikipedia.org/wiki/%C4%B0lkay_G%C3%BCndo%C4%9Fan
+74683,Nemanja Matić,True,True,ok,https://en.wikipedia.org/wiki/Nemanja_Mati%C4%87
+72476,Bernd Leno,True,True,ok,https://en.wikipedia.org/wiki/Bernd_Leno
+48015,Lukas Hradecky,True,True,ok,https://en.wikipedia.org/wiki/Lukas_Hradecky
+65230,Sergio Busquets,True,True,ok,https://en.wikipedia.org/wiki/Sergio_Busquets
+40433,Alexis Sánchez,True,True,ok,https://en.wikipedia.org/wiki/Alexis_S%C3%A1nchez
+42460,Ivan Perišić,True,True,ok,https://en.wikipedia.org/wiki/Ivan_Peri%C5%A1i%C4%87
+88755,Kevin De Bruyne,True,True,ok,https://en.wikipedia.org/wiki/Kevin_De_Bruyne
+82442,Olivier Giroud,True,True,ok,https://en.wikipedia.org/wiki/Olivier_Giroud
+12282,Daley Blind,True,True,ok,https://en.wikipedia.org/wiki/Daley_Blind
+28003,Lionel Messi,True,True,ok,https://en.wikipedia.org/wiki/Lionel_Messi
+105521,Ciro Immobile,True,True,ok,https://en.wikipedia.org/wiki/Ciro_Immobile
+15956,Jesús Navas,True,True,ok,https://en.wikipedia.org/wiki/Jes%C3%BAs_Navas
+72522,Luuk de Jong,True,True,ok,https://en.wikipedia.org/wiki/Luuk_de_Jong
+95424,Kyle Walker,True,True,ok,https://en.wikipedia.org/wiki/Kyle_Walker
+55089,Oliver Baumann,True,True,ok,https://en.wikipedia.org/wiki/Oliver_Baumann
+51471,Mateo Kovacic,True,True,ok,https://en.wikipedia.org/wiki/Mateo_Kovacic
+45320,Ángel Di María,True,True,ok,https://en.wikipedia.org/wiki/%C3%81ngel_Di_Mar%C3%ADa
+124502,Matthias Ginter,True,True,ok,https://en.wikipedia.org/wiki/Matthias_Ginter
+31909,Toni Kroos,True,True,ok,https://en.wikipedia.org/wiki/Toni_Kroos
+61651,Jordan Henderson,True,True,ok,https://en.wikipedia.org/wiki/Jordan_Henderson
+131075,Francesco Acerbi,True,True,ok,https://en.wikipedia.org/wiki/Francesco_Acerbi
+238223,Ederson,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Ederson
+93720,Alexandre Lacazette,True,True,ok,https://en.wikipedia.org/wiki/Alexandre_Lacazette
+182932,Davy Klaassen,True,True,ok,https://en.wikipedia.org/wiki/Davy_Klaassen
+91970,Juan Cuadrado,True,True,ok,https://en.wikipedia.org/wiki/Juan_Cuadrado
+181767,Marquinhos,True,True,ok,https://en.wikipedia.org/wiki/Marquinhos
+206050,Paulo Dybala,True,True,ok,https://en.wikipedia.org/wiki/Paulo_Dybala
+39728,Mats Hummels,True,True,ok,https://en.wikipedia.org/wiki/Mats_Hummels
+126665,Idrissa Gueye,True,True,ok,https://en.wikipedia.org/wiki/Idrissa_Gueye
+50219,Simon Mignolet,True,True,ok,https://en.wikipedia.org/wiki/Simon_Mignolet
+39983,Leonardo Bonucci,True,True,ok,https://en.wikipedia.org/wiki/Leonardo_Bonucci
+85288,Isco,True,True,ok,https://en.wikipedia.org/wiki/Isco
+138927,Daniel Carvajal,True,True,ok,https://en.wikipedia.org/wiki/Daniel_Carvajal
+8198,Cristiano Ronaldo,True,True,ok,https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+52769,Willian,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Willian_%28footballer%29
+44058,Wojciech Szczesny,True,True,ok,https://en.wikipedia.org/wiki/Wojciech_Szczesny
+84301,Benjamin André,True,True,ok,https://en.wikipedia.org/wiki/Benjamin_Andr%C3%A9
+111196,Stefan de Vrij,True,True,ok,https://en.wikipedia.org/wiki/Stefan_de_Vrij
+3333,James Milner,True,True,ok,https://en.wikipedia.org/wiki/James_Milner
+74294,Nemanja Gudelj,True,True,ok,https://en.wikipedia.org/wiki/Nemanja_Gudelj
+182913,Adrien Rabiot,True,True,ok,https://en.wikipedia.org/wiki/Adrien_Rabiot
+74230,Pablo Sarabia,True,True,ok,https://en.wikipedia.org/wiki/Pablo_Sarabia
+181579,James Ward-Prowse,True,True,ok,https://en.wikipedia.org/wiki/James_Ward-Prowse
+35047,Axel Witsel,True,True,ok,https://en.wikipedia.org/wiki/Axel_Witsel
+74842,Mario Götze,True,True,ok,https://en.wikipedia.org/wiki/Mario_G%C3%B6tze
+45672,Kevin Trapp,True,True,ok,https://en.wikipedia.org/wiki/Kevin_Trapp
+96718,Óscar de Marcos,True,True,ok,https://en.wikipedia.org/wiki/%C3%93scar_de_Marcos
+148928,Saúl Ñíguez,True,True,ok,https://en.wikipedia.org/wiki/Sa%C3%BAl_%C3%91%C3%ADguez
+25488,Antonio Candreva,True,True,ok,https://en.wikipedia.org/wiki/Antonio_Candreva
+27389,Kévin Gameiro,True,True,ok,https://en.wikipedia.org/wiki/K%C3%A9vin_Gameiro
+15452,Raúl Albiol,True,True,ok,https://en.wikipedia.org/wiki/Ra%C3%BAl_Albiol
+61253,José Callejón,True,True,ok,https://en.wikipedia.org/wiki/Jos%C3%A9_Callej%C3%B3n
+72047,Iago Aspas,True,True,ok,https://en.wikipedia.org/wiki/Iago_Aspas
+18922,Karim Benzema,True,True,ok,https://en.wikipedia.org/wiki/Karim_Benzema
+117674,Maximilian Arnold,True,True,ok,https://en.wikipedia.org/wiki/Maximilian_Arnold
+16136,Dante,True,True,ok,https://en.wikipedia.org/wiki/Dante_%28footballer%29
+146854,Wissam Ben Yedder,True,True,ok,https://en.wikipedia.org/wiki/Wissam_Ben_Yedder
+34601,Raúl García,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Ra%C3%BAl_Garc%C3%ADa_%28footballer%29
+119296,Emre Can,True,True,ok,https://en.wikipedia.org/wiki/Emre_Can
+74857,Marc-André ter Stegen,True,True,ok,https://en.wikipedia.org/wiki/Marc-Andr%C3%A9_ter_Stegen
+93081,Nick Viergever,True,True,ok,https://en.wikipedia.org/wiki/Nick_Viergever
+158863,Iñigo Martínez,True,True,ok,https://en.wikipedia.org/wiki/I%C3%B1igo_Mart%C3%ADnez
+54906,Matteo Darmian,True,True,ok,https://en.wikipedia.org/wiki/Matteo_Darmian
+86784,Ricardo Rodríguez,True,True,ok,https://en.wikipedia.org/wiki/Ricardo_Rodr%C3%ADguez_%28footballer%29
+102226,Thorgan Hazard,True,True,ok,https://en.wikipedia.org/wiki/Thorgan_Hazard
+28021,Samir Handanovic,True,True,ok,https://en.wikipedia.org/wiki/Samir_Handanovic
+131789,Roberto Firmino,True,True,ok,https://en.wikipedia.org/wiki/Roberto_Firmino
+68863,Mauro Icardi,True,True,ok,https://en.wikipedia.org/wiki/Mauro_Icardi
+63463,Daniel Wass,True,True,ok,https://en.wikipedia.org/wiki/Daniel_Wass
+25557,Sergio Ramos,True,True,ok,https://en.wikipedia.org/wiki/Sergio_Ramos
+34784,Lasse Schöne,True,True,ok,https://en.wikipedia.org/wiki/Lasse_Sch%C3%B6ne
+45026,Rui Patrício,True,True,ok,https://en.wikipedia.org/wiki/Rui_Patr%C3%ADcio
+126664,Lucas Digne,True,True,ok,https://en.wikipedia.org/wiki/Lucas_Digne
+80293,Aïssa Mandi,True,True,ok,https://en.wikipedia.org/wiki/A%C3%AFssa_Mandi
+33829,José Fonte,True,True,ok,https://en.wikipedia.org/wiki/Jos%C3%A9_Fonte
+35865,Andrea Consigli,True,True,ok,https://en.wikipedia.org/wiki/Andrea_Consigli
+44352,Luis Suárez,True,True,ok,https://en.wikipedia.org/wiki/Luis_Su%C3%A1rez
+108354,Jordan Ayew,True,True,ok,https://en.wikipedia.org/wiki/Jordan_Ayew
+107010,Stefan Savic,True,True,ok,https://en.wikipedia.org/wiki/Stefan_Savic
+46001,Moussa Sissoko,True,True,ok,https://en.wikipedia.org/wiki/Moussa_Sissoko
+43250,Jan Vertonghen,True,True,ok,https://en.wikipedia.org/wiki/Jan_Vertonghen
+17965,Hugo Lloris,True,True,ok,https://en.wikipedia.org/wiki/Hugo_Lloris
+94529,Stephan El Shaarawy,True,True,ok,https://en.wikipedia.org/wiki/Stephan_El_Shaarawy
+106405,Jeffrey Gouweleeuw,True,True,ok,https://en.wikipedia.org/wiki/Jeffrey_Gouweleeuw
+164770,Raphaël Varane,True,True,ok,https://en.wikipedia.org/wiki/Rapha%C3%ABl_Varane
+29241,Thiago Silva,True,True,ok,https://en.wikipedia.org/wiki/Thiago_Silva
+23951,Steve Mandanda,True,True,ok,https://en.wikipedia.org/wiki/Steve_Mandanda
+91849,Thomas Delaney,True,True,ok,https://en.wikipedia.org/wiki/Thomas_Delaney
+182581,Tonny Vilhena,True,True,ok,https://en.wikipedia.org/wiki/Tonny_Vilhena
+52119,Patrick van Aanholt,True,True,ok,https://en.wikipedia.org/wiki/Patrick_van_Aanholt
+18944,Gerard Piqué,True,True,ok,https://en.wikipedia.org/wiki/Gerard_Piqu%C3%A9
+49499,Georginio Wijnaldum,True,True,ok,https://en.wikipedia.org/wiki/Georginio_Wijnaldum
+82009,Kevin Volland,True,True,ok,https://en.wikipedia.org/wiki/Kevin_Volland
+133964,Lorenzo Insigne,True,True,ok,https://en.wikipedia.org/wiki/Lorenzo_Insigne
+111195,Joël Veltman,True,True,ok,https://en.wikipedia.org/wiki/Jo%C3%ABl_Veltman
+93128,Kalidou Koulibaly,True,True,ok,https://en.wikipedia.org/wiki/Kalidou_Koulibaly
+127189,Geoffrey Kondogbia,True,True,ok,https://en.wikipedia.org/wiki/Geoffrey_Kondogbia
+35207,Marco Reus,True,True,ok,https://en.wikipedia.org/wiki/Marco_Reus
+54235,Iker Muniain,True,True,ok,https://en.wikipedia.org/wiki/Iker_Muniain
+112302,Roberto Pereyra,True,True,ok,https://en.wikipedia.org/wiki/Roberto_Pereyra
+37666,Arturo Vidal,True,True,ok,https://en.wikipedia.org/wiki/Arturo_Vidal
+42710,Toby Alderweireld,True,True,ok,https://en.wikipedia.org/wiki/Toby_Alderweireld
+113707,Rémy Cabella,True,True,ok,https://en.wikipedia.org/wiki/R%C3%A9my_Cabella
+175446,Jonny Otto,True,True,ok,https://en.wikipedia.org/wiki/Jonny_Otto
+130765,Stuart Armstrong,True,True,ok,https://en.wikipedia.org/wiki/Stuart_Armstrong
+141050,Danilo Pereira,True,True,ok,https://en.wikipedia.org/wiki/Danilo_Pereira
+119228,Luis Muriel,True,True,ok,https://en.wikipedia.org/wiki/Luis_Muriel
+100131,William Carvalho,True,True,ok,https://en.wikipedia.org/wiki/William_Carvalho
+217111,Hakim Ziyech,True,True,ok,https://en.wikipedia.org/wiki/Hakim_Ziyech
+192765,Ben Davies,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Ben_Davies_%28footballer%29
+69751,Jordi Alba,True,True,ok,https://en.wikipedia.org/wiki/Jordi_Alba
+122153,Paul Pogba,True,True,ok,https://en.wikipedia.org/wiki/Paul_Pogba
+167850,Memphis Depay,True,True,ok,https://en.wikipedia.org/wiki/Memphis_Depay
+179184,Michy Batshuayi,True,True,ok,https://en.wikipedia.org/wiki/Michy_Batshuayi
+184892,Florian Thauvin,True,True,ok,https://en.wikipedia.org/wiki/Florian_Thauvin
+44162,Miralem Pjanić,True,True,ok,https://en.wikipedia.org/wiki/Miralem_Pjani%C4%87
+35518,David Silva,True,True,ok,https://en.wikipedia.org/wiki/David_Silva
+67063,Danny Welbeck,True,True,ok,https://en.wikipedia.org/wiki/Danny_Welbeck
+79960,Alex Sandro,True,True,ok,https://en.wikipedia.org/wiki/Alex_Sandro
+94005,Sead Kolasinac,True,True,ok,https://en.wikipedia.org/wiki/Sead_Kolasinac
+20005,Papu Gómez,True,True,ok,https://en.wikipedia.org/wiki/Papu_G%C3%B3mez
+145707,Danilo,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Danilo_%28footballer%29
+203412,Andreas Cornelius,True,True,ok,https://en.wikipedia.org/wiki/Andreas_Cornelius
+50202,Eden Hazard,True,True,ok,https://en.wikipedia.org/wiki/Eden_Hazard
+14086,Ashley Young,True,True,ok,https://en.wikipedia.org/wiki/Ashley_Young
+130365,Alessandro Florenzi,True,True,ok,https://en.wikipedia.org/wiki/Alessandro_Florenzi
+127202,Matz Sels,True,True,ok,https://en.wikipedia.org/wiki/Matz_Sels
+26267,Fernandinho,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Fernandinho_%28footballer%29
+84435,Kevin Vogt,True,True,ok,https://en.wikipedia.org/wiki/Kevin_Vogt
+111961,Suso,True,True,ok,https://en.wikipedia.org/wiki/Suso_%28footballer%29
+37647,Dimitri Payet,True,True,ok,https://en.wikipedia.org/wiki/Dimitri_Payet
+41982,Radja Nainggolan,True,True,ok,https://en.wikipedia.org/wiki/Radja_Nainggolan
+99343,Ander Herrera,True,True,ok,https://en.wikipedia.org/wiki/Ander_Herrera
+40204,Joe Hart,True,True,ok,https://en.wikipedia.org/wiki/Joe_Hart
+50355,Fedor Smolov,True,True,ok,https://en.wikipedia.org/wiki/Fedor_Smolov
+57280,Giacomo Bonaventura,True,True,ok,https://en.wikipedia.org/wiki/Giacomo_Bonaventura
+111630,Erik Lamela,True,True,ok,https://en.wikipedia.org/wiki/Erik_Lamela
+80444,Philippe Coutinho,True,True,ok,https://en.wikipedia.org/wiki/Philippe_Coutinho
+20506,Andrés Guardado,True,True,ok,https://en.wikipedia.org/wiki/Andr%C3%A9s_Guardado
+51174,Fernando,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Fernando_%28footballer%29
+40633,Milan Badelj,True,True,ok,https://en.wikipedia.org/wiki/Milan_Badelj
+69015,Andriy Yarmolenko,True,True,ok,https://en.wikipedia.org/wiki/Andriy_Yarmolenko
+213260,Rubén García,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Rub%C3%A9n_Garc%C3%ADa_%28footballer%29
+48280,Edinson Cavani,True,True,ok,https://en.wikipedia.org/wiki/Edinson_Cavani
+81999,Joselu,True,True,ok,https://en.wikipedia.org/wiki/Joselu
+126422,Allan,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Allan_%28footballer%29
+100986,Thomas Meunier,True,True,ok,https://en.wikipedia.org/wiki/Thomas_Meunier
+73734,Steven Nzonzi,True,True,ok,https://en.wikipedia.org/wiki/Steven_Nzonzi
+129588,Dennis Praet,True,True,ok,https://en.wikipedia.org/wiki/Dennis_Praet
+34322,Sokratis Papastathopoulos,True,True,ok,https://en.wikipedia.org/wiki/Sokratis_Papastathopoulos
+60542,Maxime Gonalons,True,True,ok,https://en.wikipedia.org/wiki/Maxime_Gonalons
+104752,Konstantinos Manolas,True,True,ok,https://en.wikipedia.org/wiki/Konstantinos_Manolas
+66934,Cheikhou Kouyaté,True,True,ok,https://en.wikipedia.org/wiki/Cheikhou_Kouyat%C3%A9
+63494,Étienne Capoue,True,True,ok,https://en.wikipedia.org/wiki/%C3%89tienne_Capoue
+39153,Gonzalo Higuaín,True,True,ok,https://en.wikipedia.org/wiki/Gonzalo_Higua%C3%ADn
+161869,Djibril Sidibé,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Djibril_Sidib%C3%A9
+55769,Danilo D'Ambrosio,True,True,ok,https://en.wikipedia.org/wiki/Danilo_D%27Ambrosio
+22328,Fabio Quagliarella,True,True,ok,https://en.wikipedia.org/wiki/Fabio_Quagliarella
+65467,Vicente Iborra,True,True,ok,https://en.wikipedia.org/wiki/Vicente_Iborra
+121985,Juan Jesus,True,True,ok,https://en.wikipedia.org/wiki/Juan_Jesus
+38410,Daniel Caligiuri,True,True,ok,https://en.wikipedia.org/wiki/Daniel_Caligiuri
+182381,Quincy Promes,True,True,ok,https://en.wikipedia.org/wiki/Quincy_Promes
+94201,Robin Knoche,True,True,ok,https://en.wikipedia.org/wiki/Robin_Knoche
+74869,Francis Coquelin,True,True,ok,https://en.wikipedia.org/wiki/Francis_Coquelin
+119905,Hugo Mallo,True,True,ok,https://en.wikipedia.org/wiki/Hugo_Mallo
+33571,Lorenzo De Silvestri,True,True,ok,https://en.wikipedia.org/wiki/Lorenzo_De_Silvestri
+48859,Simon Kjær,True,True,ok,https://en.wikipedia.org/wiki/Simon_Kj%C3%A6r
+60444,Thiago Alcántara,True,True,ok,https://en.wikipedia.org/wiki/Thiago_Alc%C3%A1ntara
+25508,Salvatore Sirigu,True,True,ok,https://en.wikipedia.org/wiki/Salvatore_Sirigu
+50057,Aaron Ramsey,True,True,ok,https://en.wikipedia.org/wiki/Aaron_Ramsey
+63186,Roberto Soriano,True,True,ok,https://en.wikipedia.org/wiki/Roberto_Soriano
+103565,Wahbi Khazri,True,True,ok,https://en.wikipedia.org/wiki/Wahbi_Khazri
+102558,Marco Verratti,True,True,ok,https://en.wikipedia.org/wiki/Marco_Verratti
+44068,Juan Mata,True,True,ok,https://en.wikipedia.org/wiki/Juan_Mata
+127160,Benjamin Stambouli,True,True,ok,https://en.wikipedia.org/wiki/Benjamin_Stambouli
+214775,Óliver Torres,True,True,ok,https://en.wikipedia.org/wiki/%C3%93liver_Torres
+113045,Rubén Pérez,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Rub%C3%A9n_P%C3%A9rez_%28footballer%29
+38593,Marek Hamsik,True,True,ok,https://en.wikipedia.org/wiki/Marek_Hamsik
+82048,Nicola Sansone,True,True,ok,https://en.wikipedia.org/wiki/Nicola_Sansone
+184816,Ahmed Hassan,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Ahmed_Hassan_%28footballer%29
+45671,Cenk Tosun,True,True,ok,https://en.wikipedia.org/wiki/Cenk_Tosun
+10471,Luiz Gustavo,True,True,ok,https://en.wikipedia.org/wiki/Luiz_Gustavo
+41384,Marko Arnautovic,True,True,ok,https://en.wikipedia.org/wiki/Marko_Arnautovic
+26485,Jérôme Boateng,True,True,ok,https://en.wikipedia.org/wiki/J%C3%A9r%C3%B4me_Boateng
+107775,Frederik Rönnow,True,True,ok,https://en.wikipedia.org/wiki/Frederik_R%C3%B6nnow
+94307,Filip Djuricic,True,True,ok,https://en.wikipedia.org/wiki/Filip_Djuricic
+7825,Pepe Reina,True,True,ok,https://en.wikipedia.org/wiki/Pepe_Reina
+33923,Blaise Matuidi,True,True,ok,https://en.wikipedia.org/wiki/Blaise_Matuidi
+48298,Lars Stindl,True,True,ok,https://en.wikipedia.org/wiki/Lars_Stindl
+85825,Jasmin Kurtic,True,True,ok,https://en.wikipedia.org/wiki/Jasmin_Kurtic
+126737,Juanmi,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Juanmi
+215114,Thomas Foket,True,True,ok,https://en.wikipedia.org/wiki/Thomas_Foket
+7663,Joaquín,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Joaqu%C3%ADn_%28footballer%29
+60889,Gary Medel,True,True,ok,https://en.wikipedia.org/wiki/Gary_Medel
+43530,Adam Lallana,True,True,ok,https://en.wikipedia.org/wiki/Adam_Lallana
+60577,Nicolas N'Koulou,True,True,ok,https://en.wikipedia.org/wiki/Nicolas_N%27Koulou
+61842,Andros Townsend,True,True,ok,https://en.wikipedia.org/wiki/Andros_Townsend
+157509,Kurt Zouma,True,True,ok,https://en.wikipedia.org/wiki/Kurt_Zouma
+68390,Séamus Coleman,True,True,ok,https://en.wikipedia.org/wiki/S%C3%A9amus_Coleman
+131505,Rodrigo,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Rodrigo_%28footballer%29
+143424,Alex Oxlade-Chamberlain,True,True,ok,https://en.wikipedia.org/wiki/Alex_Oxlade-Chamberlain
+56331,Bas Dost,True,True,ok,https://en.wikipedia.org/wiki/Bas_Dost
+79045,Jeroen Zoet,True,True,ok,https://en.wikipedia.org/wiki/Jeroen_Zoet
+157501,M'Baye Niang,True,True,ok,https://en.wikipedia.org/wiki/M%27Baye_Niang
+28973,Steven Davis,True,True,ok,https://en.wikipedia.org/wiki/Steven_Davis
+32711,Patrick Herrmann,True,True,ok,https://en.wikipedia.org/wiki/Patrick_Herrmann
+111508,Allan Nyom,True,True,ok,https://en.wikipedia.org/wiki/Allan_Nyom
+36827,Branislav Ivanovic,True,True,ok,https://en.wikipedia.org/wiki/Branislav_Ivanovic
+44501,Marcelo,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Marcelo_%28footballer%29
+184894,Alfred Duncan,True,True,ok,https://en.wikipedia.org/wiki/Alfred_Duncan
+18644,Álvaro Negredo,True,True,ok,https://en.wikipedia.org/wiki/%C3%81lvaro_Negredo
+41414,Lucas Leiva,True,True,ok,https://en.wikipedia.org/wiki/Lucas_Leiva
+93704,Josuha Guilavogui,True,True,ok,https://en.wikipedia.org/wiki/Josuha_Guilavogui
+8806,Cesc Fàbregas,True,True,ok,https://en.wikipedia.org/wiki/Cesc_F%C3%A0bregas
+60573,Yann M'Vila,True,True,ok,https://en.wikipedia.org/wiki/Yann_M%27Vila
+35664,Mesut Özil,True,True,ok,https://en.wikipedia.org/wiki/Mesut_%C3%96zil
+37838,Dejan Lovren,True,True,ok,https://en.wikipedia.org/wiki/Dejan_Lovren
+59323,Cristhian Stuani,True,True,ok,https://en.wikipedia.org/wiki/Cristhian_Stuani
+79422,Keylor Navas,True,True,ok,https://en.wikipedia.org/wiki/Keylor_Navas
+146889,Peter Ankersen,True,True,ok,https://en.wikipedia.org/wiki/Peter_Ankersen
+45660,Eric-Maxim Choupo-Moting,True,True,ok,https://en.wikipedia.org/wiki/Eric-Maxim_Choupo-Moting
+90466,Gylfi Sigurdsson,True,True,ok,https://en.wikipedia.org/wiki/Gylfi_Sigurdsson
+112343,Manolo Gabbiadini,True,True,ok,https://en.wikipedia.org/wiki/Manolo_Gabbiadini
+104597,Bram Nuytinck,True,True,ok,https://en.wikipedia.org/wiki/Bram_Nuytinck
+26721,Lucas Biglia,True,True,ok,https://en.wikipedia.org/wiki/Lucas_Biglia
+52920,Marcelo,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Marcelo_%28footballer%29
+84545,Marco Parolo,True,True,ok,https://en.wikipedia.org/wiki/Marco_Parolo
+42412,Jonny Evans,True,True,ok,https://en.wikipedia.org/wiki/Jonny_Evans
+82105,Joel Matip,True,True,ok,https://en.wikipedia.org/wiki/Joel_Matip
+109256,Haris Seferovic,True,True,ok,https://en.wikipedia.org/wiki/Haris_Seferovic
+46552,Kamil Glik,True,True,ok,https://en.wikipedia.org/wiki/Kamil_Glik
+48870,Jonas Lössl,True,True,ok,https://en.wikipedia.org/wiki/Jonas_L%C3%B6ssl
+32816,Danilo,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Danilo_%28footballer%29
+54928,Diego Godín,True,True,ok,https://en.wikipedia.org/wiki/Diego_God%C3%ADn
+96533,Youssef El Arabi,True,True,ok,https://en.wikipedia.org/wiki/Youssef_El_Arabi
+112930,Benito Raman,True,True,ok,https://en.wikipedia.org/wiki/Benito_Raman
+39381,Gareth Bale,True,True,ok,https://en.wikipedia.org/wiki/Gareth_Bale
+40372,Borja Valero,True,True,ok,https://en.wikipedia.org/wiki/Borja_Valero
+61449,Senad Lulic,True,True,ok,https://en.wikipedia.org/wiki/Senad_Lulic
+95732,Martin Braithwaite,True,True,ok,https://en.wikipedia.org/wiki/Martin_Braithwaite
+36182,Max Kruse,True,True,ok,https://en.wikipedia.org/wiki/Max_Kruse
+28140,Max Gradel,True,True,ok,https://en.wikipedia.org/wiki/Max_Gradel
+45184,Grzegorz Krychowiak,True,True,ok,https://en.wikipedia.org/wiki/Grzegorz_Krychowiak
+39152,Radamel Falcao,True,True,ok,https://en.wikipedia.org/wiki/Radamel_Falcao
+52059,Zanka,True,True,nessun_blocco,https://en.wikipedia.org/wiki/Zanka
+148355,Jens Jønsson,True,True,ok,https://en.wikipedia.org/wiki/Jens_J%C3%B8nsson
+46741,David Luiz,True,True,ok,https://en.wikipedia.org/wiki/David_Luiz
+85258,Mikel Balenziaga,True,True,ok,https://en.wikipedia.org/wiki/Mikel_Balenziaga
+143029,Stefan Mitrovic,True,True,ok,https://en.wikipedia.org/wiki/Stefan_Mitrovic_%28soccer%29
+45314,Federico Fazio,True,True,ok,https://en.wikipedia.org/wiki/Federico_Fazio
+52403,Dimitrios Siovas,True,True,ok,https://en.wikipedia.org/wiki/Dimitrios_Siovas
+57051,Sebastian Rudy,True,True,ok,https://en.wikipedia.org/wiki/Sebastian_Rudy
+85148,Julian Draxler,True,True,ok,https://en.wikipedia.org/wiki/Julian_Draxler
+119235,Carlos Bacca,True,True,ok,https://en.wikipedia.org/wiki/Carlos_Bacca
+126719,Juan Bernat,True,True,ok,https://en.wikipedia.org/wiki/Juan_Bernat
+146227,Jasper Cillessen,True,True,ok,https://en.wikipedia.org/wiki/Jasper_Cillessen
+26399,Sergio Agüero,True,True,ok,https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
+34870,Roberto Soldado,True,True,ok,https://en.wikipedia.org/wiki/Roberto_Soldado
+52570,Fraser Forster,True,True,ok,https://en.wikipedia.org/wiki/Fraser_Forster
+80197,Salomón Rondón,True,True,ok,https://en.wikipedia.org/wiki/Salom%C3%B3n_Rond%C3%B3n
+59344,Asier Illarramendi,True,True,ok,https://en.wikipedia.org/wiki/Asier_Illarramendi
+31067,Jonathan de Guzmán,True,True,ok,https://en.wikipedia.org/wiki/Jonathan_de_Guzm%C3%A1n
+31835,Mark Noble,True,True,ok,https://en.wikipedia.org/wiki/Mark_Noble
+46156,Aleksandar Kolarov,True,True,ok,https://en.wikipedia.org/wiki/Aleksandar_Kolarov
+53536,Tolgay Arslan,True,True,ok,https://en.wikipedia.org/wiki/Tolgay_Arslan
+70934,Nolito,True,True,ok,https://en.wikipedia.org/wiki/Nolito
+71292,Jonjo Shelvey,True,True,ok,https://en.wikipedia.org/wiki/Jonjo_Shelvey
+108880,Koen Casteels,True,True,ok,https://en.wikipedia.org/wiki/Koen_Casteels
+127048,Cédric Bakambu,True,True,ok,https://en.wikipedia.org/wiki/C%C3%A9dric_Bakambu
+126600,Kenny McLean,True,True,ok,https://en.wikipedia.org/wiki/Kenny_McLean
+126687,Valentin Eysseric,True,True,ok,https://en.wikipedia.org/wiki/Valentin_Eysseric
+88103,James Rodríguez,True,True,ok,https://en.wikipedia.org/wiki/James_Rodr%C3%ADguez
+50201,Christian Benteke,True,True,ok,https://en.wikipedia.org/wiki/Christian_Benteke
+85177,Nathaniel Clyne,True,True,ok,https://en.wikipedia.org/wiki/Nathaniel_Clyne
+29260,Giorgio Chiellini,True,True,ok,https://en.wikipedia.org/wiki/Giorgio_Chiellini
+42936,Nils Petersen,True,True,ok,https://en.wikipedia.org/wiki/Nils_Petersen
+44779,Diego Costa,True,True,ok,https://en.wikipedia.org/wiki/Diego_Costa
+73185,Lucas Pérez,True,True,ok,https://en.wikipedia.org/wiki/Lucas_P%C3%A9rez
+98349,Romain Hamouma,True,True,ok,https://en.wikipedia.org/wiki/Romain_Hamouma
+59866,Victor Moses,True,True,ok,https://en.wikipedia.org/wiki/Victor_Moses
+76277,Laurent Koscielny,True,True,ok,https://en.wikipedia.org/wiki/Laurent_Koscielny
+29124,Aritz Aduriz,True,True,ok,https://en.wikipedia.org/wiki/Aritz_Aduriz
+39910,Stéphane Ruffier,True,True,ok,https://en.wikipedia.org/wiki/St%C3%A9phane_Ruffier
+5023,Gianluigi Buffon,True,True,ok,https://en.wikipedia.org/wiki/Gianluigi_Buffon
+53437,Bastian Oczipka,True,True,ok,https://en.wikipedia.org/wiki/Bastian_Oczipka
+57825,Jorge Molina,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Jorge_Molina_%28footballer%29
+59631,Nacer Chadli,True,True,ok,https://en.wikipedia.org/wiki/Nacer_Chadli
+44699,Antunes,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Antunes
+22628,Benoît Costil,True,True,ok,https://en.wikipedia.org/wiki/Beno%C3%AEt_Costil
+63342,Leroy Fer,True,True,ok,https://en.wikipedia.org/wiki/Leroy_Fer
+91317,Ashley Westwood,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Ashley_Westwood
+141834,Cristian Tello,True,True,ok,https://en.wikipedia.org/wiki/Cristian_Tello
+146258,Jetro Willems,True,True,ok,https://en.wikipedia.org/wiki/Jetro_Willems
+48002,Angelo Ogbonna,True,True,ok,https://en.wikipedia.org/wiki/Angelo_Ogbonna
+69646,Jens Stryger,True,True,ok,https://en.wikipedia.org/wiki/Jens_Stryger
+75615,Douglas Costa,True,True,ok,https://en.wikipedia.org/wiki/Douglas_Costa
+80351,Josip Ilicic,True,True,ok,https://en.wikipedia.org/wiki/Josip_Ilicic
+22068,Franck Ribéry,True,True,ok,https://en.wikipedia.org/wiki/Franck_Rib%C3%A9ry
+126540,Samuel Umtiti,True,True,ok,https://en.wikipedia.org/wiki/Samuel_Umtiti
+124028,Ismaily,True,True,ok,https://en.wikipedia.org/wiki/Ismaily_%28footballer%29
+33713,Theo Walcott,True,True,ok,https://en.wikipedia.org/wiki/Theo_Walcott
+43512,Ömer Toprak,True,True,ok,https://en.wikipedia.org/wiki/%C3%96mer_Toprak
+187105,Mike van der Hoorn,True,True,ok,https://en.wikipedia.org/wiki/Mike_van_der_Hoorn
+44466,Sebastian Rode,True,True,ok,https://en.wikipedia.org/wiki/Sebastian_Rode
+57723,Iván Marcano,True,True,ok,https://en.wikipedia.org/wiki/Iv%C3%A1n_Marcano
+61087,Karim Bellarabi,True,True,ok,https://en.wikipedia.org/wiki/Karim_Bellarabi
+68864,Kevin Strootman,True,True,ok,https://en.wikipedia.org/wiki/Kevin_Strootman
+79642,Shinji Okazaki,True,True,ok,https://en.wikipedia.org/wiki/Shinji_Okazaki
+110923,Mattia Perin,True,True,ok,https://en.wikipedia.org/wiki/Mattia_Perin
+146752,Gianluca Caprari,True,True,ok,https://en.wikipedia.org/wiki/Gianluca_Caprari
+79027,Davy Pröpper,True,True,ok,https://en.wikipedia.org/wiki/Davy_Pr%C3%B6pper
+99331,Jannik Vestergaard,True,True,ok,https://en.wikipedia.org/wiki/Jannik_Vestergaard
+39099,Rodrigo Palacio,True,True,ok,https://en.wikipedia.org/wiki/Rodrigo_Palacio
+44136,Domenico Criscito,True,True,ok,https://en.wikipedia.org/wiki/Domenico_Criscito
+45403,André Ayew,True,True,ok,https://en.wikipedia.org/wiki/Andr%C3%A9_Ayew
+127181,Benjamin Lecomte,True,True,ok,https://en.wikipedia.org/wiki/Benjamin_Lecomte
+34987,Burak Yilmaz,True,True,ok,https://en.wikipedia.org/wiki/Burak_Yilmaz
+40014,Alaixys Romao,True,True,ok,https://en.wikipedia.org/wiki/Alaixys_Romao
+43848,Miguel Veloso,True,True,ok,https://en.wikipedia.org/wiki/Miguel_Veloso
+70285,Jonathan Schmid,True,True,ok,https://en.wikipedia.org/wiki/Jonathan_Schmid
+127032,Serge Aurier,True,True,ok,https://en.wikipedia.org/wiki/Serge_Aurier
+61560,Marc Albrighton,True,True,ok,https://en.wikipedia.org/wiki/Marc_Albrighton
+62920,Víctor Ruiz,True,True,nessun_infobox,https://en.wikipedia.org/wiki/V%C3%ADctor_Ruiz
+31182,Andreas Beck,True,True,ok,https://en.wikipedia.org/wiki/Andreas_Beck_%28footballer%29
+88683,Mattia Destro,True,True,ok,https://en.wikipedia.org/wiki/Mattia_Destro
+102744,Sébastien Corchia,True,True,ok,https://en.wikipedia.org/wiki/S%C3%A9bastien_Corchia
+127076,Jérôme Roussillon,True,True,ok,https://en.wikipedia.org/wiki/J%C3%A9r%C3%B4me_Roussillon
+183647,Álvaro González,True,True,nessun_infobox,https://en.wikipedia.org/wiki/%C3%81lvaro_Gonz%C3%A1lez
+16135,Ryan Babel,True,True,ok,https://en.wikipedia.org/wiki/Ryan_Babel
+25727,Lukasz Piszczek,True,True,ok,https://en.wikipedia.org/wiki/Lukasz_Piszczek
+27511,Gary Cahill,True,True,ok,https://en.wikipedia.org/wiki/Gary_Cahill
+60632,Theodor Gebre Selassie,True,True,ok,https://en.wikipedia.org/wiki/Theodor_Gebre_Selassie
+18909,Jimmy Briand,True,True,ok,https://en.wikipedia.org/wiki/Jimmy_Briand
+37304,Shane Long,True,True,ok,https://en.wikipedia.org/wiki/Shane_Long
+52469,Mikel San José,True,True,ok,https://en.wikipedia.org/wiki/Mikel_San_Jos%C3%A9
+69374,Adem Ljajic,True,True,ok,https://en.wikipedia.org/wiki/Adem_Ljajic
+22386,Daniel Congré,True,True,ok,https://en.wikipedia.org/wiki/Daniel_Congr%C3%A9
+51118,Adil Rami,True,True,ok,https://en.wikipedia.org/wiki/Adil_Rami
+77826,Ryad Boudebouz,True,True,ok,https://en.wikipedia.org/wiki/Ryad_Boudebouz
+137616,Okay Yokuşlu,True,True,ok,https://en.wikipedia.org/wiki/Okay_Yoku%C5%9Flu
+15951,Dani Alves,True,True,ok,https://en.wikipedia.org/wiki/Dani_Alves
+37834,Felipe Caicedo,True,True,ok,https://en.wikipedia.org/wiki/Felipe_Caicedo
+88682,Mattia De Sciglio,True,True,ok,https://en.wikipedia.org/wiki/Mattia_De_Sciglio
+143559,Matija Nastasić,True,True,ok,https://en.wikipedia.org/wiki/Matija_Nastasi%C4%87
+42783,André Hahn,True,True,ok,https://en.wikipedia.org/wiki/Andr%C3%A9_Hahn
+101213,Pedro Obiang,True,True,ok,https://en.wikipedia.org/wiki/Pedro_Obiang
+4811,Hilton,True,True,ok,https://en.wikipedia.org/wiki/Hilton_%28footballer%29
+15799,Santi Cazorla,True,True,ok,https://en.wikipedia.org/wiki/Santi_Cazorla
+23960,Jérémy Morel,True,True,ok,https://en.wikipedia.org/wiki/J%C3%A9r%C3%A9my_Morel
+36371,Nikola Kalinic,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Nikola_Kalinic
+40611,Ryan Bertrand,True,True,ok,https://en.wikipedia.org/wiki/Ryan_Bertrand
+46972,Teemu Pukki,True,True,ok,https://en.wikipedia.org/wiki/Teemu_Pukki
+112052,Bruno Martins Indi,True,True,ok,https://en.wikipedia.org/wiki/Bruno_Martins_Indi
+19305,Oscar Wendt,True,True,ok,https://en.wikipedia.org/wiki/Oscar_Wendt
+84085,Timothée Kolodziejczak,True,True,ok,https://en.wikipedia.org/wiki/Timoth%C3%A9e_Kolodziejczak
+28947,Gonzalo Castro,True,True,ok,https://en.wikipedia.org/wiki/Gonzalo_Castro
+34370,Diego López,True,True,nessun_infobox,https://en.wikipedia.org/wiki/Diego_L%C3%B3pez_%28footballer%29
+41416,James McArthur,True,True,ok,https://en.wikipedia.org/wiki/James_McArthur
+80205,Jimmy Durmaz,True,True,ok,https://en.wikipedia.org/wiki/Jimmy_Durmaz

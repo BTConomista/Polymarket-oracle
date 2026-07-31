@@ -22,7 +22,14 @@ def app() -> pd.DataFrame:
 
 @pytest.fixture(scope="module")
 def careers(app) -> pd.DataFrame:
+    """Il perimetro DEFAULT: tutto l'universo (29.531 giocatori)."""
     return C.load_careers(app)
+
+
+@pytest.fixture(scope="module")
+def careers_pop(app) -> pd.DataFrame:
+    """Il sottoinsieme delle nostre 5 leghe (7.709 giocatori)."""
+    return C.load_careers(app, only_population=True)
 
 
 # --------------------------------------------------------------------------
@@ -45,8 +52,21 @@ def test_copertura(app):
     assert r["senza_storia_precedente"] == 2875
 
 
+def test_perimetro_default_e_tutto_luniverso(careers, careers_pop):
+    """Decisione utente 31/07/2026: il database copre TUTTI i giocatori di
+    TUTTE le 48 competizioni, non solo i nostri — cosi' allargarsi oltre le 5
+    leghe un domani non richiede di ricostruire nulla."""
+    assert careers["player_id"].nunique() == 29531
+    assert careers["competition_id"].nunique() == 48
+    assert careers["club_id"].nunique() == 1231
+    assert len(careers) == 197812
+    # e il filtro restringe davvero
+    assert careers_pop["player_id"].nunique() == 7709
+    assert len(careers_pop) == 89625
+    assert set(careers_pop["player_id"]) <= set(careers["player_id"])
+
+
 def test_struttura_carriere(careers):
-    assert careers["player_id"].nunique() == 7709
     assert (careers["appearances"] > 0).all()
     assert (careers["date_to"] >= careers["date_from"]).all()
     assert (careers["fonte"] == C.FONTE_STRATO1).all()
@@ -65,11 +85,9 @@ def test_ogni_riga_dichiara_la_fonte(careers):
 
 def test_i_totali_coincidono_con_le_presenze_grezze(app, careers):
     """La tabella e' un'aggregazione: non deve perdere ne' inventare partite."""
-    pop = C.population(app)
-    grezzo = app[app["player_id"].isin(pop)]
-    assert careers["appearances"].sum() == len(grezzo)
-    assert careers["goals"].sum() == grezzo["goals"].sum()
-    assert careers["minutes"].sum() == grezzo["minutes_played"].sum()
+    assert careers["appearances"].sum() == len(app)
+    assert careers["goals"].sum() == app["goals"].sum()
+    assert careers["minutes"].sum() == app["minutes_played"].sum()
 
 
 def test_season_taglia_a_luglio():
@@ -144,3 +162,65 @@ def test_career_before_filtra_per_giocatore(app):
     ids = list(C.population(app)[:50])
     cb = C.career_before("2023-01-01", app, player_ids=ids)
     assert set(cb.index) <= set(ids)
+
+
+# --------------------------------------------------------------------------
+# 3 · Strato 2 (Wikipedia) — struttura e CONTENIMENTO DELLA LICENZA
+# --------------------------------------------------------------------------
+
+def test_strato2_opzionale_non_alza_se_manca(tmp_path, monkeypatch):
+    """Lo strato 2 e' opzionale per costruzione: se la raccolta non e' stata
+    eseguita, il codice deve restituire una tabella vuota, non rompersi."""
+    monkeypatch.setattr(C, "ROOT_DATA", tmp_path)
+    w = C.load_wikipedia_careers()
+    assert w.empty
+    assert "fonte" in w.columns
+
+
+def test_strato2_dichiara_fonte_e_licenza_su_ogni_riga():
+    """Regola R2 a livello di riga + attribuzione CC BY: senza `source_url` la
+    licenza Wikipedia non e' rispettata."""
+    w = C.load_wikipedia_careers()
+    if w.empty:
+        pytest.skip("raccolta Wikipedia non ancora eseguita")
+    assert (w["fonte"] == "wikipedia").all()
+    assert (w["licenza"] == "CC BY-SA 4.0").all()
+    assert w["source_url"].notna().all()
+    assert w["source_url"].str.startswith("https://").all()
+
+
+def test_strato2_struttura_delle_tappe():
+    w = C.load_wikipedia_careers()
+    if w.empty:
+        pytest.skip("raccolta Wikipedia non ancora eseguita")
+    # `anno_da` puo' essere NULLO: Wikipedia usa `0000` come segnaposto per
+    # "inizio ignoto" e il parser lo traduce in None invece di lasciare uno
+    # zero che sembrerebbe una misura (regola R6). Cio' che NON deve mai
+    # esserci e' proprio lo zero.
+    assert (w["anno_da"].dropna() >= 1900).all()
+    assert not (w["anno_da"] == 0).any(), "segnaposto 0000 non neutralizzato (R6)"
+    entrambi = w["anno_a"].notna() & w["anno_da"].notna()
+    assert (w.loc[entrambi, "anno_a"] >= w.loc[entrambi, "anno_da"]).all()
+    # una tappa "aperta" e' quella senza anno di fine, e viceversa
+    assert (w.loc[w["aperta"], "anno_a"].isna()).all()
+    assert w["giovanili"].dtype == bool and w["prestito"].dtype == bool
+
+
+def test_i_due_strati_restano_distinguibili():
+    """IL test della licenza: se un giorno le due fonti si mescolassero senza
+    che si possa piu' separarle, il vincolo CC BY-SA diventerebbe impossibile
+    da circoscrivere — e si estenderebbe per contatto a tutto il repo."""
+    s1 = C.load_careers(only_population=True)
+    assert (s1["fonte"] == C.FONTE_STRATO1).all()
+    assert "wikipedia" not in set(s1["fonte"])
+
+    combinata = C.combined_careers()
+    fonti = set(combinata["fonte"])
+    assert C.FONTE_STRATO1 in fonti
+    if not C.load_wikipedia_careers().empty:
+        assert "wikipedia" in fonti
+        # e si possono sempre riseparare
+        assert len(combinata[combinata["fonte"] == "wikipedia"]) > 0
+        assert len(combinata[combinata["fonte"] == C.FONTE_STRATO1]) == len(
+            C.load_careers()
+        )

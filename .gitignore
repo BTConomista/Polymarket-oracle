@@ -32,3 +32,9 @@ data/polymarket/
 # Fonti grezze ri-scaricabili dell'audit (scripts/fetch_sources.py):
 # 135 MB, rigenerabili, impronta SHA256 in data/ricerca_esterna/manifest_fonti_audit.json
 data/fonti/
+data/wikipedia_cache/
+# Strato 2 carriere: file di LAVORO (resumabilita'), non deliverable.
+# Il deliverable versionato e' data/carriere_wikipedia/tappe.csv.gz,
+# prodotto da scripts/export_wikipedia_careers.py
+data/carriere_wikipedia/esiti.jsonl
+data/carriere_wikipedia/run.log
