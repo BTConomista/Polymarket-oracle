@@ -101,6 +101,7 @@ voce.
 | §4-bis | mercato **campione di stagione** (+ top-4 e retrocessione) | 🔁 **ricorrente**: si riprezza ogni estate. 🟢 sotto-pista nuova: **rifarlo su 5 leghe** (24 → ~40 stagioni-lega, un run) | §4-bis |
 | 21 | database giocatore/arbitri/allenatori | 🟢 **aperta (29/07/2026), bozza + VERIFICA COMPLETA del 30/07** — nessun dato ancora importato; il dataset è stato verificato a fondo (14 agenti): 14 affermazioni del piano corrette, dati nuovi trovati, classificazione finale delle fonti in [`PIANO_DATABASE_GIOCATORI.md`](PIANO_DATABASE_GIOCATORI.md) **§9** | §3 |
 | 22 | eventi pesati per la forza dell'avversario — gol, O/U, cartellini (rating iterativo tipo Elo/SRS) | 🟢 **aperta (30/07/2026), richiesta utente** — il DC (gol) e il suo analogo sui conteggi (corner/cartellini, Fase 96) già pesano implicitamente ogni evento per la forza dell'avversario via fit congiunto attacco/difesa; l'O/U eredita lo stesso peso perché è **derivato** dalla matrice gol, non un processo a parte. Come feature del modello resta solo il test di ridondanza (rating sequenziale vs DC); **come metrica standalone/diagnostica (non deve battere il DC) è indipendente e resta da provare** — power-ranking descrittivo, sorpresa-vs-forma-recente, affidabilità dello storico contro calendario sbilanciato | §1 |
+| 23 | estendere il metodo a seconde divisioni, coppe europee a fondo, nazionali + effetto-promozione individuale | 🟢 **aperta (30/07/2026), richiesta utente** — ambizione registrata, nessun lavoro fatto; manca ancora la fonte per il rendimento *individuale* in seconda serie | §2 |
 
 **Conteggio** (con questa tassonomia): **14 piste aperte piene** (1, 2, 3,
 6-bis, 6-ter, 9, 11, 12, 13, 15, 17, 18, 21, 22), **5 parziali o con residuo**
@@ -712,6 +713,65 @@ sotto-dispersione vera. Due esiti, entrambi da dichiarare: `dp_lvl`
 sopravvive → l'edge è più solido del dichiarato; svanisce → downgrade onesto.
 La Fase 53 ha testato `dp_lvl` cross-*lega* (bocciato fuori SA) ma **mai
 cross-avversario**: è la caveat auto-dichiarata e mai onorata. Costo BASSO.
+
+### 23. Estendere il metodo oltre le 5 leghe (seconde divisioni, coppe europee a fondo, nazionali) — e l'effetto-promozione sul rendimento individuale — 🟢 aperta (30/07/2026, richiesta utente)
+
+**Non è ancora una pista lavorabile, è un'ambizione da non perdere.** L'utente
+l'ha chiesto esplicitamente parlando delle seconde divisioni: *"vorrei fare un
+lavoro molto più approfondito… sia per farci lo stesso lavoro che facciamo
+sulle altre leghe (idem per coppe europee e partite delle nazionali), sia per
+capire: come cambia il rendimento di una squadra/giocatore quando passa in
+prima categoria?"*. Due domande diverse, tenute insieme perché nate dalla
+stessa richiesta.
+
+**(a) Applicare l'intera disciplina del progetto** — snapshot puliti e
+versionati, backtest walk-forward, market-implied dove ci sono le quote,
+Dixon-Coles altrove, validazione con IC — a tre fronti oggi trattati solo di
+sfuggita:
+- **seconde divisioni** (Serie B, Championship, Segunda, 2.Bundesliga,
+  Ligue 2): oggi solo calendario/riposo (Fase 68, openfootball) o, dal
+  30/07/2026, dato grezzo trovato ma non sfruttato — football-data le
+  pubblica con **schema identico** alle prime divisioni (quote di chiusura
+  comprese), 18.515 partite, 9 stagioni (`PIANO_DATABASE_GIOCATORI.md` §10.6);
+- **coppe europee**: oggi solo calendario per la congestione
+  (`club_fixtures.csv`) e, dal database giocatori, fonte di arbitro/
+  allenatore/risultato (`games.csv`) — **mai un mercato da prevedere per sé**
+  (1X2, O/U delle partite europee non sono mai stati backtestati come tali);
+- **nazionali**: il fronte più scoperto di tutto il progetto — il dataset
+  Kaggle copre solo 5 tornei finali, **nessuna qualificazione, amichevole o
+  Nations League** (§9.9 del piano database giocatori).
+
+**(b) La domanda specifica, mai posta prima**: quanto cambia il rendimento di
+un **singolo giocatore** (non della squadra) passando di categoria? Esempio
+dell'utente: un attaccante con 25 gol in Serie B, una volta promosso in Serie
+A, quanti ne fa in media?
+
+> ⚠️ **Non è la stessa domanda della pista 12, già chiusa negativa.** La
+> pista 12 chiedeva *"il rendimento IN B predice la forza della SQUADRA
+> neopromossa in A?"* — misurato e **falsificato** (r=+0,004, IC95
+> [−0,185,+0,193], `PIANO_DATABASE_GIOCATORI.md` §10.6). Questa domanda è
+> un'altra: non "quanto sarà forte la squadra" ma "quanto rende il singolo
+> giocatore" — un fattore di conversione statistico fra categorie. Un indice
+> di squadra aggregato falsificato **non dice nulla a priori** sulla resa
+> individuale: sono grandezze diverse, la domanda resta aperta.
+
+**Perché conta per il database giocatori**: darebbe un numero vero
+all'"esperienza pesata per livello di competizione" già abbozzata in §1.10
+del piano — oggi solo una formula, senza un fattore di conversione misurato.
+
+**Costo onesto, e perché non è la pista 12 riscritta**: per rispondere serve
+il rendimento **individuale** in seconda serie (gol/assist/presenze per
+giocatore), che football-data **non ha** (dà risultati e quote di squadra,
+non statistiche per giocatore) — e il dataset Kaggle principale **nemmeno**,
+perché `appearances.csv` non copre le seconde divisioni delle nostre 5 leghe
+(§9.1 n.2). Manca quindi ancora la fonte per la metà "seconda serie" del
+confronto, prima ancora di poter fare il conto.
+
+**Stato**: nessun lavoro fatto, nessuna fonte cercata per il pezzo mancante.
+È un progetto grande — tocca calendario, dati di squadra, dati di giocatore,
+modellazione, e il fronte nazionali che è già il più scoperto — non una
+singola pista da un pomeriggio. Va scomposto in passi (principio §1: tracer
+bullet prima dei moduli) quando si deciderà di affrontarlo.
 
 ## 3 · Piste che richiedono una fonte esterna nuova
 

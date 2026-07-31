@@ -673,6 +673,13 @@ dell'ordinamento fra competizioni (dove va una finale di Coppa Italia
 rispetto a un girone di Champions?) è in parte soggettiva — da dichiarare
 come tale, non da presentare come un fatto oggettivo.
 
+> 🔗 **Collegamento (30/07/2026)**: la pista 23 di `PISTE.md` propone di dare
+> un numero vero a questo `peso_competizione`, misurando quanto cambia il
+> rendimento di un giocatore passando di categoria (l'esempio dell'utente: un
+> attaccante da 25 gol in Serie B, promosso, quanti ne fa in Serie A?). Oggi
+> manca ancora la fonte per il rendimento individuale in seconda serie — vedi
+> quella pista prima di partire da zero qui.
+
 ### 1.11 · Dati DERIVATI — l'inventiva (30/07/2026)
 
 Sezione diversa da tutte le precedenti: qui non si tratta di **procurarsi**
