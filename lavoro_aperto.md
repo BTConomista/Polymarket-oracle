@@ -549,6 +549,68 @@ l'utente.
 
 ---
 
+## 7-bis · 📋 Bilancio dei due workflow del 31/07/2026 — cosa resta da risolvere
+
+*23 agenti in due workflow. Verbali: `docs/AUDIT_FONTI_GIOCATORI.md` (13 agenti,
+infortuni + carriere + audit delle 118 voci) e `docs/CACCIA_EVENT_DATA.md`
+(10 agenti, diretta.it + alternative + il plus-minus). Questa è la lista
+operativa di ciò che è rimasto aperto; i numeri stanno nei due verbali.*
+
+### A · Decisioni che spettano all'utente (5) — nessuna presa
+
+| # | decisione | dove | perché non l'ho presa io |
+|---|---|---|---|
+| A1 | **Catena della licenza su Transfermarkt**: tenerla consapevolmente o sostituirla | `docs/DATI.md` §4 | fonte **in produzione dalla Fase 67** (`squad_value`); il `robots.txt` vieta `ClaudeBot` per nome e `license.xml` porta `prohibits usage: ai-all` |
+| A2 | **I due look-ahead attivi nel codice** | `scripts/build_stagione_anagrafica.py:222,225` | tocca codice in produzione. Il primo (`highest_market_value_in_eur` → massimo *progressivo*) è una correzione **gratuita**; il secondo (`international_caps`, snapshot non datato al 58,20%) forse va tolto |
+| A3 | **Licenza del repo**: quale, e con che vincoli | nessun file `LICENSE`, repo **pubblico** | la scelta è **già vincolata**: CC BY 4.0 impone attribuzione, e il **share-alike** di DBpedia/Wikipedia (CC BY-SA 3.0/4.0) è **virale** → va deciso **prima** di importare le carriere |
+| A4 | **Infortuni: importarli o no** | `AUDIT_FONTI_GIOCATORI.md` §A.4/§A.6 | se sì: **B come base + A come complemento 2017-2023**, convenzione **`[from+1, until]`** obbligatoria, e le altre 9 regole di §A.6. ⚠️ la licenza è rotta per **entrambe** |
+| A5 | **Carriere: importarle o no** | `AUDIT_FONTI_GIOCATORI.md` §B | se sì, si attiva A3 (share-alike su repo pubblico) |
+
+### B · Lavori concreti, nessuna decisione richiesta (3)
+
+| # | cosa | costo | valore |
+|---|---|---|---|
+| B1 | ⭐ **Le 10.008 righe Understat già su disco** — xG, xA, npxG, xGChain, xGBuildup, key_passes per giocatore, scartate da `parse_season_players` (`src/data/understat.py`, righe 214-241) | **1-2 ore** | il pezzo più prezioso del Tier B, **già in repo**. ⚠️ grana **stagione** e solo **2 leghe su 5**; R8: usabile solo **ritardato** |
+| B2 | **I token di `description` mai estratti** da `game_events` — fra cui **due falli individuali VERI**: `Handball by` (832) e `Fouled player` (2.256); più `Counter attack goal` (1.430), `Tap-in` (829), `Direct free kick` (783) | poche ore | i falli individuali erano in checklist come «Tier B, nessuna fonte»: **ci sono già**. ⚠️ subordinato ad A1 |
+| B3 | **Chiudere o congelare le 13 voci ASSUNTE** dell'audit | variabile | finché sono ASSUNTE **non vanno usate**: sono dichiarate a posto e mai misurate |
+
+### C · Buchi strutturali DICHIARATI — non sono da risolvere, sono da non ri-scoprire
+
+`appearances.csv` comincia il **2012-07-03** (censura a sinistra sotto ogni feature
+cumulativa) · la **Coupe de France non esiste** in `competitions.csv` → carico da
+coppa **distorto per costruzione** fra leghe · `attendance` in Bundesliga è la
+**capienza** (33,42%) · **i rigori sbagliati non esistono** in nessuno dei 12 file ·
+`N. Yellow card` è il **contatore stagionale**, non l'ennesimo giallo della partita
+(11× le espulsioni se letto male) · **un gol manca** dagli eventi (Toulouse-Brest
+11/01/2020) · **1.119 titolari senza minuti**, concentrati nelle stagioni COVID.
+
+### D · Chiuse — non riaprire senza informazione nuova
+
+**diretta.it** (licenza: ToS che vietano lo scraping *per nome*, sui generis
+rivendicato, dato Opta — **non** per la rete: il `robots.txt` non ci vieta nulla) ·
+**FotMob** (ToS + archivio irraggiungibile per costruzione, copertura retrospettiva
+**0%**) · **Understat tiro-per-tiro** (`robots.txt` di 26 byte, `Disallow: /`) ·
+**fbref / Sofascore** (Cloudflare) · **Sportmonks** (declassata: xG individuale dal
+2024-25 = 21,7%, il 67,4% dietro un add-on non documentato, test diagnostico cieco) ·
+**API-Football** (non verificabile: Cloudflare anche su archive.org) ·
+**ecosistema aperto** (12,55%, **+0 partite** in tre ricerche) · **Wikipedia in
+altra lingua** (guadagno **0 su 333**) · **fonti infortuni non-Transfermarkt**
+(6 angoli, 6 esiti negativi; l'API FPL è chiusa dai **ToS**, non dal robots.txt).
+
+### E · La domanda a monte ha già una risposta, ed è la cosa più importante
+
+Il **plus-minus** (`CACCIA_EVENT_DATA.md` §6) misura la versione economica della
+domanda per cui volevamo l'event data. Esito: **segnale reale ma minuscolo** —
+RAPM **r = +0,0354**, IC95 [+0,0143, +0,0542], n=**10.161** partite; uno swing di
+1 sd nella qualità dell'undici vale **0,055 gol** di margine. È il **terzo
+decimale**, lo stesso posto in cui sono finite tutte le leve interne già testate.
+
+> **Conseguenza operativa**: il fronte «dati per giocatore» **non è sulla via
+> critica**. Vale B1 e B2 perché costano ore e i dati sono già qui — non vale
+> comprare, scrapare, né costruire infrastruttura. Il tetto resta **informativo**.
+
+---
+
 ## 8 · Ordine consigliato per la prossima sessione
 
 1. **Il blocco con la scadenza**, da [`newseason.md`](newseason.md) §5 e dalla
