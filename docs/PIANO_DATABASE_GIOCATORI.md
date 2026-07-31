@@ -2465,13 +2465,18 @@ il risultato del campo**, ed è una scelta consapevole.
 **Due anomalie nuove, da dichiarare per la regola R4** (registrate in
 `docs/DATI.md` §1-quater):
 
-1. **Nantes-Toulouse, 17/05/2026** (Ligue 1): il nostro snapshot la conta
-   **0-0**, ma **quattro fonti indipendenti** dicono che quello 0-0 è un
-   **"finto pieno"** (regola R6) e non una misura — openfootball la marca
-   `[cancelled]` senza risultato; football-data la dà 0-0 ma con statistiche
-   impossibili per 90 minuti (2+2 tiri, 3+5 falli, 0 cartellini); Understat non
-   ha xG (una delle sole 2 partite su 16.111); e in Kaggle è l'**unica** partita
-   su 16.111 con **zero presenze, zero eventi e zero formazioni**;
+1. **Nantes-Toulouse, 17/05/2026** (Ligue 1) — ✅ **risolta il 31/07/2026**:
+   il nostro snapshot la conta **0-0**, e una ricerca su fonti di stampa
+   esterne (non solo dataset) ha chiarito che è il dato **giusto**: ultima
+   giornata, Nantes già retrocesso, gara **interrotta definitivamente al 22'**
+   sullo 0-0 per un'invasione di campo dei tifosi in protesta, **omologata
+   0-0 dalla Commissione Disciplinare della LFP** il 27/05/2026 — stesso
+   meccanismo del caso Montpellier-Saint-Étienne sotto (regola R1). Le
+   quattro "anomalie" viste il 30/07 (openfootball `[cancelled]`,
+   football-data con statistiche basse, Understat senza xG, Kaggle senza
+   presenze/eventi) sono tutte spiegate dal fatto che la partita è durata 22
+   minuti, non 90: non era un "finto pieno" (R6), era R1 una terza volta.
+   Nessuna correzione ai dati;
 2. **Montpellier-Saint-Étienne, 16/03/2025**: marcata `[awarded]` da
    openfootball (0-2, sospesa all'88' per incidenti). Qui il risultato assegnato
    **coincide** con quello del campo, quindi non c'è nulla da correggere — ma va

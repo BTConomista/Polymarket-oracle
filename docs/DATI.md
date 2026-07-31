@@ -218,24 +218,42 @@ uniche 2 differenze sono queste.
 
 ### Altre due anomalie trovate confrontando con openfootball (30/07/2026)
 
-**1. Nantes-Toulouse, 17/05/2026 (Ligue 1 2025-26) — ⚠️ il nostro 0-0 è
-probabilmente un "finto pieno" (regola R6), non una misura.** Quattro fonti
-indipendenti concordano nel dire che quella partita non è stata giocata (o non
-è stata acquisita da nessuno):
+**1. Nantes-Toulouse, 17/05/2026 (Ligue 1 2025-26) — ✅ RISOLTA (31/07/2026):
+il nostro 0-0 è REALE e CORRETTO, non un "finto pieno".** La riga era stata
+lasciata aperta il 30/07 perché quattro fonti interne concordavano solo sul
+fatto che qualcosa non tornava, senza dire cosa fosse successo davvero. Una
+ricerca su fonti di stampa esterne (Goal.com, Yahoo Sports, TribalFootball,
+Flashscore, *Le Journal Toulousain*, `centpourcent.com`, sito ufficiale LFP)
+ricostruisce i fatti:
 
-| fonte | cosa dice |
-|---|---|
-| il nostro snapshot | **0-0** |
-| openfootball | `[cancelled]`, **senza risultato** |
-| football-data | 0-0, ma con statistiche **impossibili** per 90′: 2+2 tiri, 3+5 falli, 2+2 corner, 0 cartellini (la mediana di lega è 9 tiri in porta totali) |
-| Understat | **nessun xG** — una delle sole 2 partite su 16.111 |
-| dataset Kaggle | l'**unica** partita su 16.111 con **zero presenze, zero eventi e zero formazioni** |
+- la partita — ultima giornata, Nantes già retrocesso, Toulouse senza
+  obiettivi di classifica — è stata **interrotta definitivamente al 22'**
+  sullo 0-0, dopo un'invasione di campo con fumogeni dei tifosi del Nantes in
+  protesta per la retrocessione (arbitro Stéphanie Frappart, decisione presa
+  dal prefetto per motivi di sicurezza);
+- la **Commissione Disciplinare della LFP ha omologato il risultato di
+  0-0** il 27/05/2026 — cioè il punteggio al momento dell'interruzione,
+  **esattamente lo stesso meccanismo** del caso Montpellier-Saint-Étienne qui
+  sopra (regola **R1**: il campo, non il tribunale) — con sanzioni a carico
+  del Nantes (una gara a porte chiuse + due turni di chiusura della curva
+  Loire), non sul risultato.
 
-**Nessuna correzione applicata**: serve prima decidere cosa sia il dato giusto
-(riga da rimuovere? `NaN` dichiarato?). Registrata qui perché **non venga
-usata come se fosse una partita vera** — 0-0 è il risultato più innocuo e
-insieme il più insidioso, perché non salta all'occhio in nessun controllo di
-completezza.
+**Quindi il nostro 0-0 è la regola R1 che funziona una terza volta**, non
+un'anomalia da correggere. E questo spiega anche le altre tre osservazioni,
+che sembravano indizi di corruzione ed erano invece la conseguenza naturale
+di una partita durata 22 minuti anziché 90:
+
+| fonte | cosa diceva (30/07) | perché è coerente, non sospetto |
+|---|---|---|
+| openfootball | `[cancelled]`, senza risultato | openfootball marca "cancelled" ogni gara non arrivata a fine regolare — non distingue un rinvio da un'interruzione a punteggio omologato |
+| football-data | 0-0 con 2+2 tiri, 3+5 falli, 2+2 corner, 0 cartellini | erano etichettate "impossibili per 90′" **sotto l'assunzione sbagliata** che la gara fosse durata 90′: per **22 minuti** di gioco sono numeri del tutto plausibili |
+| Understat | nessun xG (`isResult=False`) | Understat non processa le gare interrotte anzitempo — coerente con la classificazione già esistente in questo file (riga "xG", §1) come dato mancante dichiarato, non un errore |
+| dataset Kaggle | zero presenze/eventi/formazioni | stesso motivo: il pipeline di raccolta esclude le gare non completate |
+
+**Nessuna correzione ai dati**: il valore in snapshot (0-0) resta quello
+giusto. L'unico intervento fatto qui è la ricerca esterna che chiude la
+domanda lasciata aperta il 30/07 — chiusa per regola **R4** (anomalia
+dichiarata anche quando non è un errore), non per regola R6.
 
 **2. Montpellier-Saint-Étienne, 16/03/2025 (Ligue 1) — anomalia SENZA errore.**
 Sospesa all'88′ per incidenti e assegnata **0-2**: openfootball la marca
