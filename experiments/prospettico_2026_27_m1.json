@@ -1,0 +1,132 @@
+{
+ "modello": "M1 — Dixon-Coles gol+xG, senza quote",
+ "congelato_utc": "2026-08-01T01:31:04.727139+00:00",
+ "fixture_da": "data/smarkets_matches/2026-08-01T01-11-00.json",
+ "dati_fino_a": "stagione 2526",
+ "partite": 48,
+ "mercati_congelati": [
+  "home_win",
+  "draw",
+  "away_win",
+  "dc_1x",
+  "dc_12",
+  "dc_2x",
+  "over_1.5",
+  "over_2.5",
+  "over_3.5",
+  "over_4.5",
+  "over_0.5",
+  "btts",
+  "odd_total",
+  "home_ov_0.5",
+  "home_ov_1.5",
+  "away_ov_0.5",
+  "away_ov_1.5",
+  "cs_home",
+  "cs_away",
+  "wtn_home",
+  "wtn_away",
+  "home_by_2plus",
+  "away_by_2plus",
+  "mg_0_1",
+  "mg_2_3",
+  "mg_4plus"
+ ],
+ "config_per_lega": {
+  "bundesliga": {
+   "half_life_days": 365.0,
+   "shrinkage": 1.5,
+   "shots_blend": 0.75,
+   "blend_signal": "xg",
+   "promoted_prior": 0.28,
+   "motore": {
+    "dp_theta": null,
+    "dp_theta_dc": null,
+    "phi0": 0.0,
+    "kappa": 0.0,
+    "sharpen_1x2": false
+   },
+   "neopromosse_dichiarate": [
+    "Elversberg",
+    "Paderborn",
+    "Schalke 04"
+   ]
+  },
+  "la_liga": {
+   "half_life_days": 365.0,
+   "shrinkage": 1.5,
+   "shots_blend": 0.75,
+   "blend_signal": "xg",
+   "promoted_prior": 0.22,
+   "motore": {
+    "dp_theta": null,
+    "dp_theta_dc": null,
+    "phi0": 0.0,
+    "kappa": 0.0,
+    "sharpen_1x2": false
+   },
+   "neopromosse_dichiarate": [
+    "La Coruna",
+    "Malaga",
+    "Santander"
+   ]
+  },
+  "ligue_1": {
+   "half_life_days": 365.0,
+   "shrinkage": 1.5,
+   "shots_blend": 0.75,
+   "blend_signal": "xg",
+   "promoted_prior": 0.19,
+   "motore": {
+    "dp_theta": null,
+    "dp_theta_dc": null,
+    "phi0": 0.0,
+    "kappa": 0.0,
+    "sharpen_1x2": false
+   },
+   "neopromosse_dichiarate": [
+    "Le Mans",
+    "Troyes"
+   ]
+  },
+  "premier_league": {
+   "half_life_days": 365.0,
+   "shrinkage": 1.5,
+   "shots_blend": 0.75,
+   "blend_signal": "xg",
+   "promoted_prior": 0.33,
+   "motore": {
+    "dp_theta": null,
+    "dp_theta_dc": null,
+    "phi0": 0.0,
+    "kappa": 0.0,
+    "sharpen_1x2": false
+   },
+   "neopromosse_dichiarate": [
+    "Coventry",
+    "Hull",
+    "Ipswich"
+   ]
+  },
+  "serie_a": {
+   "half_life_days": 365.0,
+   "shrinkage": 1.5,
+   "shots_blend": 0.75,
+   "blend_signal": "xg",
+   "promoted_prior": 0.23,
+   "motore": {
+    "dp_theta": 1.225,
+    "dp_theta_dc": 1.138,
+    "phi0": 0.3,
+    "kappa": 1.5,
+    "sharpen_1x2": true
+   },
+   "neopromosse_dichiarate": [
+    "Frosinone",
+    "Monza",
+    "Venezia"
+   ]
+  }
+ },
+ "avvertenza": "previsione CONGELATA prima del calcio d'inizio. Il valore del test non e' battere il mercato (non lo batte: alfa*=0 ovunque) ma misurare quanto perde e se resta calibrato su partite mai viste. Con una giornata la potenza contro il mercato e' ~10% (Fase 98): questo turno collauda il protocollo, non conclude."
+}

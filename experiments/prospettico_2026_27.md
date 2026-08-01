@@ -1,7 +1,16 @@
 # Test prospettico — giornata 1, stagione 2026-27 (5 leghe: Serie A, Premier, La Liga, Bundesliga, Ligue 1)
 
-> **Stato: APERTO.** Anteprima illustrativa congelata il 2026-07-23. Il test
-> vero (con quote reali e risultati) va **completato più avanti** — vedi §5.
+> **Stato: APERTO — ma il congelamento è FATTO (01/08/2026).** Le previsioni
+> del **Modello 1** delle **48 partite** della giornata 1 di tutte e 5 le leghe
+> sono congelate in `experiments/prospettico_2026_27_m1.csv` (26 mercati Tier 1
+> per partita), con lo **scoring già scritto** e i **criteri pre-registrati**
+> — tutto **due settimane prima** del primo calcio d'inizio. Resta da fare:
+> il **Modello 2** dalle quote di chiusura (si esegue a ridosso del fischio) e
+> lo **scoring** a risultati acquisiti. Lo stato passo per passo è in **§5.1**.
+>
+> ⚠️ Il §2 qui sotto è l'**anteprima illustrativa** del 2026-07-23 — 7 partite
+> Premier *plausibili*, non ufficiali. Resta come documento storico e **non si
+> riscrive**: le previsioni vere sono quelle del CSV, non quelle della tabella.
 >
 > ⚠️ **Allargato a 5 leghe all'audit della Fase 101.** Il documento nasceva a 3
 > leghe perché Bundesliga e Ligue 1 non erano ancora in produzione; ora lo sono
@@ -317,11 +326,11 @@ Cosa esiste già, per non rifarlo:
 | # | passo | sblocca | scadenza | stato |
 |---|---|---|---|---|
 | **P1** | **mappa nomi Smarkets → nostri** | P2, P3, P5 | 7 ago | ✅ **fatto 01/08** (Fase 128) |
-| **P2** | `_run_prospettico_2627.py` legge i fixture veri | P3 | 10 ago | ❌ |
-| **P3** | **congelamento M1 (DC)**, 5 leghe, commit datato | il test | **14 ago** | ❌ |
-| **P4** | **script di scoring**, scritto prima dei risultati | P7 | 14 ago | ❌ |
-| **P5** | **M2** dall'ultimo snapshot pre-kickoff | il confronto col mercato | a ogni giornata | ⚠️ dipende da P1 e da D1 |
-| **P6** | criteri **pre-registrati** | l'onestà del test | prima di P3 | ❌ |
+| **P2** | `_run_prospettico_2627.py` legge i fixture veri | P3 | 10 ago | ✅ **fatto 01/08** (Fase 129) |
+| **P3** | **congelamento M1 (DC)**, 5 leghe, commit datato | il test | **14 ago** | ✅ **congelato 01/08** — `prospettico_2026_27_m1.csv`, 48 partite, 26 mercati |
+| **P4** | **script di scoring**, scritto prima dei risultati | P7 | 14 ago | ✅ **fatto 01/08** — `_run_prospettico_scoring.py`, 56 test |
+| **P5** | **M2** dall'ultimo snapshot pre-kickoff | il confronto col mercato | a ogni giornata | ⏳ **pronto a partire**: P1 e D1 chiusi, si esegue dopo il fischio |
+| **P6** | criteri **pre-registrati** | l'onestà del test | prima di P3 | ✅ **fissati 01/08** (qui sotto + docstring dello scoring) |
 | **P7** | risultati reali → scoring → run + fase di diario | la conclusione | dopo il full-time | ❌ |
 
 **P1 · La mappa nomi è il vero collo di bottiglia.** Smarkets scrive
@@ -359,6 +368,30 @@ significa sceglierne la forma sapendo già l'esito.
 **P5 · I risultati veri** arrivano da football-data (stagione `2627`,
 provider raggiungibile dalla Fase 100) — **non** da Smarkets, che dà prezzi e
 non esiti.
+
+#### Criteri PRE-REGISTRATI (fissati il 01/08/2026, prima di ogni dato — P6)
+
+Scritti anche nel docstring di `scripts/_run_prospettico_scoring.py`, che è
+datato in git **prima** di ogni partita 2026-27. Scegliere metrica e baseline
+dopo aver visto gli esiti è la forma più facile di look-ahead, e non lascia
+traccia.
+
+1. **Metrica principale: log-loss sull'1X2. Una sola.** Il Brier e gli altri
+   mercati si riportano, ma la conclusione si legge sull'1X2 — l'unico che a
+   questi campioni ha potenza (4-5× il GG/NG e l'O/U 2.5, Fase 98).
+2. **Bersaglio della prima giornata: la baseline, non il mercato.** Contro il
+   mercato servono 574 partite; con 48 la potenza è ~10%.
+3. **Successo, in ordine di ambizione**: (a) M1 batte la baseline con IC95%
+   che esclude lo zero — serve n ≥ 184, cioè ~4 giornate su 5 leghe; prima si
+   riporta il **segno**, non si conclude; (b) M2 riproduce il mercato entro il
+   rumore; (c) M1 **calibrato**, ECE < 0.05 sull'1X2 — questo si può guardare
+   subito, perché non è un confronto.
+4. **Aspettativa dichiarata: M1 perde contro il mercato.** È previsto (α\*=0
+   ovunque, Fase 16) e non è un fallimento: il test misura **quanto** perde su
+   partite mai viste, e se resta calibrato.
+5. **Quante ipotesi**: si dichiara il numero di confronti; l'1X2 pooled è il
+   primario, il resto è **esplorativo** e va scritto che lo è.
+6. **Niente ROI**: il progetto non simula denaro.
 
 #### Decisioni aperte (non tecniche: vanno prese, non risolte)
 

@@ -14504,3 +14504,107 @@ in cui prevedo?». E il corollario metodologico: quando una proprietà
 strutturale esiste (entrate = uscite), conviene testarla invece di rileggere
 la lista — una regola verifica 96 nomi, e continua a verificarli l'anno
 prossimo.
+
+---
+
+## Fase 129 — Il test prospettico è congelato: 48 partite, 26 mercati, due settimane di anticipo
+
+**Obiettivo.** Portare a termine i passi P2-P6 della checklist (§5.1 di
+`experiments/prospettico_2026_27.md`) e **congelare** il Modello 1, invece di
+arrivare al 14 agosto con tutto da fare.
+
+**La domanda che andava fatta prima: perché aspettare il 14 agosto?**
+La scadenza esisteva perché una previsione prodotta dopo il fischio non è una
+previsione. Ma il M1 dipende **solo** dai dati fino a 2025-26, che sono
+congelati da maggio: fra il 1° e il 14 agosto **non cambia niente** che possa
+entrare nella previsione. Congelare oggi è quindi **identico nel contenuto** e
+**strettamente migliore nel processo** — più lontano dal kickoff, e senza il
+rischio che una sessione salti la finestra. L'unica cosa che il 14 agosto
+avrebbe in più è la possibilità di cambiare il modello prima: se succede, si
+ri-congela e git tiene entrambe le versioni datate.
+
+**Cosa è stato fatto.**
+
+1. **P2 — i fixture veri.** `_run_prospettico_2627.py` conteneva **7 partite
+   Premier hardcoded e dichiaratamente plausibili**. Ora legge lega, squadre,
+   data e ora dall'ultimo file di `data/smarkets_matches/`: **48 partite**, che
+   sono l'organico completo delle 5 leghe.
+2. **P3 — congelate 48 × 26 mercati** in `prospettico_2026_27_m1.csv`, con i
+   metadati (config per lega, motore, neopromosse dichiarate, commit) in un
+   JSON gemello.
+3. **D1 — la chiusura vera.** Il regime denso girava ogni 6 ore: l'ultimo
+   prezzo prima del fischio poteva essere vecchio di 6 ore, e *quella* non è
+   una chiusura. Aggiunto un cron **orario** con finestra a **2 ore** e
+   listino **intero**. Costo quasi nullo: nelle ore senza partite lo script
+   esce **prima** di chiedere le quote e non scrive alcun file.
+4. **P4 — lo scoring, scritto ORA.** Con i **criteri pre-registrati** (P6) nel
+   suo docstring, datato in git prima di ogni partita 2026-27.
+
+**Due errori veri trovati nella versione precedente dello script**, che
+avrebbero prodotto una previsione sbagliata *congelata* — cioè non più
+correggibile senza invalidare il test:
+
+- **le neopromosse erano dedotte con la funzione sbagliata.** Chiamava
+  `promoted_teams(allm, ultima_stagione)`, che restituisce le promosse **nel
+  2025-26** — è il difetto che la Fase 128 aveva appena diagnosticato, e stava
+  nel codice, non solo in teoria;
+- **il motore era quello della Serie A per tutti.** Passava `draw_balance=True`
+  e `DP_THETA_DC` a ogni lega, mentre φ(|λ−μ|) e router θ sono misurati utili
+  **solo in Serie A** (Fase 79/101). Era lo stesso bug corretto in `predict.py`
+  alla Fase 101, sopravvissuto qui.
+
+**Controllo di sanità, non validazione.** Le medie previste stanno addosso
+alle frequenze storiche di 9 stagioni su tutte e 5 le leghe (gol/partita: 3.10
+vs 3.12 in Bundesliga, 2.81 vs 2.84 in Premier, 2.80 vs 2.74 in Ligue 1, 2.68
+vs 2.58 in Liga, 2.57 vs 2.72 in Serie A). **Non dimostra nulla** sulla bontà
+delle previsioni — sono 48 partite specifiche, non un campione casuale — ma
+uno scarto grosso qui avrebbe segnalato un guasto, e non c'è.
+
+**Lo scoring è stato eseguito end-to-end prima di servire.** Con risultati
+sintetici (i gol veri della 1ª giornata 2025-26 accoppiati alle partite
+congelate): la pipeline gira, scrive l'artefatto e registra il run. I numeri
+prodotti sono **privi di significato** per costruzione, quindi il registro è
+stato **ripristinato** e l'artefatto cancellato: un numero finto in
+`runs.jsonl` è esattamente il finto pieno della R6. Uno scoring che gira per
+la prima volta a fine agosto, su dati irripetibili, è un turno perso.
+
+**📐 Il modello in dettaglio.** Nessuna matematica nuova — è il DC della Fase
+4b/4d col motore per-lega della Fase 92-bis. Le tre formule che decidono i
+numeri congelati, verificate contro il codice:
+
+*(a) Tassi attesi* (`dixon_coles.expected_goals`):
+
+```
+λ = exp( att[casa] − dif[ospite] + γ )        μ = exp( att[ospite] − dif[casa] )
+```
+
+*(b) Verosimiglianza pesata e shrinkage* (`_fit_counts`), con `w(g)` il peso
+della Fase 128 e `p` il bersaglio:
+
+```
+w(g) = 0.5^(g/365)
+obiettivo = − Σ_i w(g_i)·ℓ_i(att, dif, γ)  +  s·Σ_t [ (att_t − p^att_t)² + (dif_t − p^dif_t)² ]
+```
+
+con `s = 1.5` (shrinkage, tutte le leghe) e `p^att_t = −δ`, `p^dif_t = +δ` per
+le **14 neopromosse dichiarate**, `0` per tutte le altre. δ è per-lega:
+0.23 / 0.33 / 0.22 / 0.28 / 0.19.
+
+*(c) Il routing per-mercato* (`price_markets`), che dalla coppia (λ,μ) produce
+i 26 mercati. Le costanti vengono da `market_engine(lega)` e **non sono le
+stesse ovunque**: Serie A `φ0=0.30, κ=1.5, θ_DC=1.138`; le altre quattro
+`φ0=0, κ=0, θ=None` — motore **liscio**. È la differenza che la versione
+precedente dello script ignorava.
+
+**Onestà su cosa questo NON è.** Non è ancora un risultato: è una previsione.
+Il valore si vedrà solo dopo il fischio, e con 48 partite la potenza contro il
+mercato è **~10%** (Fase 98) — questa giornata **collauda il protocollo**, non
+conclude. La conclusione onesta contro il mercato arriva a ~574 partite, cioè
+~12 giornate su 5 leghe: fine ottobre.
+
+**Lezione.** *Una scadenza va interrogata, non solo rispettata.* «Congelare
+entro il 14 agosto» è stato per settimane un vincolo trattato come dato,
+mentre la domanda giusta era **da cosa dipende ciò che congelo**: la risposta
+(solo da dati fermi a maggio) rendeva la scadenza aggirabile in un pomeriggio.
+E il corollario: **il codice che gira una volta sola va fatto girare due
+volte** — la prima a vuoto, su dati finti, e prima che serva.

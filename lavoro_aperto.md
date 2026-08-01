@@ -75,13 +75,17 @@ il look-ahead è impossibile per costruzione, non per disciplina.
 | pezzo | stato |
 |---|---|
 | `experiments/prospettico_2026_27.md` | esiste (impostazione **+ checklist eseguibile**, §5) |
-| `experiments/prospettico_2026_27_dc.csv` | esiste, ma **illustrativo**: 7 partite Premier *plausibili*, congelate il 2026-07-23 |
+| `experiments/prospettico_2026_27_m1.csv` | ✅ **CONGELATO il 2026-08-01**: le **48 partite** della giornata 1 di tutte e 5 le leghe, **26 mercati** Tier 1 ciascuna, due settimane prima del primo fischio (Fase 129) |
+| `experiments/prospettico_2026_27_dc.csv` | il vecchio: **illustrativo**, 7 partite Premier *plausibili*, congelate il 2026-07-23. Documento storico, superato da `_m1.csv` |
+| `scripts/_run_prospettico_scoring.py` | ✅ **scritto il 2026-08-01**, con i criteri **pre-registrati** nel docstring e 56 test; eseguito end-to-end su dati sintetici prima di servire |
 | `experiments/prospettico_2026_27_outright.json` | **congelato il 2026-07-25** (Fase 95), ma su **3 leghe su 5** (`serie_a`, `premier_league`, `la_liga`) |
 | **quote 1X2+O/U per-partita** | ✅ **risolto** (Fasi 115-118): Smarkets, 4 giri/giorno, `data/smarkets_matches/` |
 | **fixture ufficiali** giornata 1 | ✅ **li dà Smarkets** (lega, squadre, data, ora) — da verificare contro openfootball |
-| **mappa nomi Smarkets → nostri** | ❌ **manca, ed è il collo di bottiglia** |
-| **livello-partita congelato** | ❌ **manca** |
-| **script di scoring** | ❌ **manca** |
+| **mappa nomi Smarkets → nostri** | ✅ **fatta** (Fase 128): 9 alias nuovi, 0 nomi non agganciati, verifica strutturale entrate=uscite |
+| **livello-partita congelato** | ✅ **fatto** (Fase 129) |
+| **script di scoring** | ✅ **fatto** (Fase 129) |
+| **Modello 2** (quote di chiusura) | ⏳ **si esegue a ridosso del fischio** — il raccoglitore orario a T−2h è acceso (decisione D1) |
+| **risultati e scoring** | ⏳ dopo il full-time, da football-data stagione `2627` |
 
 ⏰ **La scadenza è il 14 agosto**, non il 16: il listino per-partita dice che la
 prima partita è **Alaves–Getafe il 15/8** (gli outright dicevano 16/8 — la

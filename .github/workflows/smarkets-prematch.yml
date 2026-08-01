@@ -24,6 +24,19 @@ on:
     # NULLA -- mentre il listino dell'esordio e' gia' quotato e si muove da
     # oggi, e quei giorni non si recuperano (newseason.md §2).
     - cron: '41 5 * * *'
+    # CHIUSURA, ogni ora ma solo su cio' che inizia entro 2 ore (decisione D1,
+    # Fase 129). Il regime denso a 6 ore lascerebbe l'ultimo prezzo vecchio
+    # fino a 6 ore: per il Modello 2 del test prospettico quello NON e' una
+    # chiusura, ed e' contro la chiusura che il progetto misura da 100 fasi
+    # (alfa*=0, Fase 16). Un giro orario con finestra a 2h da' un prezzo a
+    # T-1h/T-2h e costa quasi nulla: nelle ore senza partite lo script esce
+    # PRIMA di chiedere le quote e non scrive alcun file, quindi il costo e'
+    # una chiamata di listino l'ora (~20 giri a vuoto al giorno) e zero byte
+    # in archivio. Nessun flag `--solo-principali`: la chiusura e' l'unico
+    # istante in cui vale la pena avere il listino Tier 1 intero (risultato
+    # esatto compreso), perche' e' l'unica occasione di validare il nostro
+    # listino contro un libro vero -- e dopo il fischio non si recupera.
+    - cron: '7 * * * *'
   workflow_dispatch:
     inputs:
       entro_ore:
@@ -57,6 +70,11 @@ jobs:
           if [ "${{ github.event.schedule }}" = "41 5 * * *" ] \
              || [ "${{ github.event.inputs.lungo_raggio }}" = "true" ]; then
             python scripts/fetch_smarkets_matches.py --tutte-le-esposte --solo-principali
+          elif [ "${{ github.event.schedule }}" = "7 * * * *" ]; then
+            # Chiusura: finestra stretta, listino intero. Nelle ore vuote lo
+            # script esce senza scrivere e il passo dopo non trova nulla da
+            # committare -- che e' il comportamento voluto, non un guasto.
+            python scripts/fetch_smarkets_matches.py --entro-ore 2
           else
             python scripts/fetch_smarkets_matches.py \
               --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"
