@@ -25,6 +25,20 @@ from src.data import wikipedia_careers as W  # noqa: E402
 ESITI = W.OUT_DIR / "esiti.jsonl"
 TAPPE = W.OUT_DIR / "tappe.csv.gz"
 RIEPILOGO = W.OUT_DIR / "esiti_riepilogo.csv"
+VERDETTI = W.OUT_DIR / "verdetti_wikidata.csv.gz"
+
+
+def _verdetti() -> dict[int, dict]:
+    """I verdetti Wikidata per player_id, se la verifica e' stata eseguita.
+
+    E' un arricchimento OPZIONALE: senza il file, l'export si comporta come
+    prima. Cosi' chi clona il repo e rifa' solo la raccolta Wikipedia ottiene
+    comunque un deliverable coerente, invece di un errore.
+    """
+    if not VERDETTI.exists():
+        return {}
+    v = pd.read_csv(VERDETTI)
+    return {int(r["player_id"]): r for _, r in v.iterrows()}
 
 
 def main() -> int:
@@ -32,6 +46,8 @@ def main() -> int:
         print(f"{ESITI} non esiste: eseguire prima fetch_wikipedia_careers.py")
         return 1
 
+    verdetti = _verdetti()
+    recuperati = rimossi = 0
     tappe, esiti = [], []
     with ESITI.open() as f:
         for riga in f:
@@ -39,16 +55,50 @@ def main() -> int:
                 r = json.loads(riga)
             except json.JSONDecodeError:
                 continue                      # riga tronca da un'interruzione
+            pid = r.get("player_id")
+            vd = verdetti.get(pid)
             esiti.append({k: r.get(k) for k in
                           ("player_id", "nome", "nostro", "censurato", "stato",
                            "url", "identita", "bday_pagina", "nascita_attesa")})
+            esiti[-1]["identita_wikidata"] = vd["esito"] if vd is not None else None
+            esiti[-1]["forma_discrepanza"] = vd["forma"] if vd is not None else None
+
             # ⚠️ Le tappe di una pagina la cui identita' NON e' confermata sono
             # la carriera di un'altra persona: restano in esiti.jsonl (servono a
             # sapere CHI era) ma non entrano nel deliverable.
-            if r.get("stato") == "ok":
-                tappe.extend(r.get("tappe", []))
+            #
+            # Il verdetto Wikidata SCAVALCA questa regola in entrambi i sensi,
+            # perche' e' misurato meglio: la `bday` dell'HTML e' un ripiego, la
+            # `P569` e' un valore tipizzato sulla stessa entita' (nessun
+            # matching per nome, quindi nessuna omonimia nuova).
+            dentro = r.get("stato") == "ok"
+            if vd is not None:
+                if vd["esito"] == "confermata":
+                    # RECUPERO: la pagina era stata respinta perche' la data
+                    # nell'HTML non tornava, ma Wikidata conferma. 17 giocatori.
+                    if not dentro:
+                        recuperati += 1
+                    dentro = True
+                elif bool(vd["persona_diversa"]):
+                    # RIMOZIONE: forma senza struttura E oltre tre anni. E' una
+                    # CONGIUNZIONE, non una soglia sui giorni: cosi' non tocca
+                    # Chancel Mbemba (2.191 gg ma stesso giorno e mese: disputa
+                    # d'eta' sulla stessa persona) ne' i refusi a ±1 anno.
+                    if dentro:
+                        rimossi += 1
+                    dentro = False
+
+            if dentro:
+                for t in r.get("tappe", []):
+                    if vd is not None:
+                        t["identita_wikidata"] = vd["esito"]
+                        t["forma_discrepanza"] = vd["forma"]
+                    tappe.append(t)
 
     df = pd.DataFrame(tappe)
+    if verdetti:
+        print(f"verdetti Wikidata applicati: +{recuperati} giocatori recuperati, "
+              f"-{rimossi} rimossi (identita' di un'altra persona)")
 
     # GUARDIA D'USCITA sull'invariante degli anni. Sta qui, e non solo nel
     # parser, perche' il file di lavoro accumula righe prodotte da versioni
