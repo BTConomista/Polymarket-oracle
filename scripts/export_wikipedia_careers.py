@@ -90,9 +90,18 @@ def main() -> int:
 
             if dentro:
                 for t in r.get("tappe", []):
+                    # `identita` deve dire la VERITA' sulla riga che la porta.
+                    # Lasciarci scritto «respinta» su una tappa che sta nel
+                    # database sarebbe un finto pieno (R6): un valore che
+                    # sembra una misura e non lo e' piu', e che tradirebbe
+                    # chiunque filtri su quella colonna. Il giudizio originale
+                    # non si perde — si sposta in `identita_wikipedia`.
+                    t["identita_wikipedia"] = t.get("identita")
                     if vd is not None:
                         t["identita_wikidata"] = vd["esito"]
                         t["forma_discrepanza"] = vd["forma"]
+                        if vd["esito"] == "confermata":
+                            t["identita"] = "confermata_wikidata"
                     tappe.append(t)
 
     df = pd.DataFrame(tappe)

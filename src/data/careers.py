@@ -212,7 +212,11 @@ def load_wikipedia_careers(solo_ok: bool = True) -> pd.DataFrame:
     # clona il repo legge le carriere senza dover rieseguire la raccolta.
     versato = ROOT_DATA / "carriere_wikipedia" / "tappe.csv.gz"
     if versato.exists():
-        return pd.read_csv(versato)
+        # `low_memory=False`: le colonne del verdetto Wikidata sono vuote per la
+        # grande maggioranza delle righe (solo 483 giocatori sono stati dirimenti),
+        # quindi a blocchi pandas ne inferisce tipi diversi e avvisa. Il tipo
+        # giusto e' uno solo, e leggere in un colpo lo rende deterministico.
+        return pd.read_csv(versato, low_memory=False)
 
     percorso = ROOT_DATA / "carriere_wikipedia" / "esiti.jsonl"
     if not percorso.exists():

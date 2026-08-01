@@ -339,8 +339,35 @@ def test_le_respinte_non_entrano_nel_database():
         assert "respinta" not in set(w["identita"])
         # e cio' che resta e' dichiarato, non implicito
         assert set(w["identita"].unique()) <= {
-            "confermata_data", "confermata_club", "quarantena", "non_verificata"
+            "confermata_data", "confermata_club", "quarantena", "non_verificata",
+            # Wikidata puo' RIBALTARE una respinta: la `bday` dell'HTML e' un
+            # ripiego, la `P569` e' un valore tipizzato sulla stessa entita'.
+            # Quando lo fa, la riga cambia etichetta — non entra nel database
+            # continuando a dichiararsi «respinta» (sarebbe un finto pieno, R6).
+            "confermata_wikidata",
         }
+
+
+def test_una_respinta_ribaltata_cambia_etichetta():
+    """Il seguito del test qui sopra, sul punto che l'ha fatto fallire.
+
+    17 giocatori respinti dalla verifica HTML sono stati confermati da
+    Wikidata a scarto ZERO ed entrano nel database. Devono entrarci con
+    l'etichetta nuova: se una riga dentro il deliverable dicesse ancora
+    `respinta`, ogni filtro futuro su quella colonna darebbe la risposta
+    sbagliata, e nessun confronto snapshot-contro-fonte se ne accorgerebbe.
+    Il giudizio originale resta leggibile in `identita_wikipedia`.
+    """
+    w = C.load_wikipedia_careers()
+    if w.empty or "identita_wikidata" not in w.columns:
+        pytest.skip("verifica Wikidata non ancora eseguita")
+    ribaltate = w[w["identita"] == "confermata_wikidata"]
+    if ribaltate.empty:
+        pytest.skip("nessuna respinta ribaltata in questo deliverable")
+    assert (ribaltate["identita_wikidata"] == "confermata").all()
+    assert set(ribaltate["identita_wikipedia"]) <= {
+        "respinta", "quarantena", "confermata_club", "confermata_data"
+    }
 
 
 def test_club_riserve_non_si_agganciano_alla_prima_squadra():
