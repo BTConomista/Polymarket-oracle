@@ -813,6 +813,64 @@ un buco. Coordinate degli stadi in `_anagrafica/stadi.json` (90 su 94).
 
 ---
 
+## 5-quinquies · Carriere dei calciatori (`data/carriere_wikipedia/`) — Fasi 127-132
+
+Il **database carriere**: una riga per giocatore-club-stagione, da **due fonti in
+una tabella sola** (non due strati — `src/data/careers.py`, colonna `fonte`).
+
+| file | cos'è | licenza |
+|---|---|---|
+| `tappe.csv.gz` | il deliverable: ~202.000 tappe su ~21.600 giocatori | **CC BY-SA 4.0** (Wikipedia) |
+| `esiti_riepilogo.csv` | l'esito di **ogni** tentativo, anche negativo (§1.4) | CC BY-SA 4.0 |
+| `wikidata_qid.csv.gz` | 24.413 `player_id` → Q-id, estratti dalla cache HTML | CC0 |
+| `verdetti_wikidata.csv.gz` | il verdetto d'identità su 477 casi dubbi (Fase 132) | **CC0** (Wikidata) |
+| `esiti.jsonl`, `verdetti_wikidata.jsonl` | file di LAVORO (resumabilità), **non versionati** | — |
+
+⏱️ **R8.** `anno_da`/`anno_a`/`presenze`/`gol` di una tappa sono **`post`** rispetto
+alle partite di quella tappa, e **`pre`** rispetto a qualunque partita successiva.
+L'unico accesso sicuro è **`careers.career_before(as_of)`**, che taglia con `<`
+stretto: usare `load_database()` per costruire una feature di backtest è
+look-ahead. `player_id`, `club_id` e la data di nascita sono **`statico`**.
+
+### Le colonne d'identità: quale dice cosa
+
+Tre colonne, e **non sono ridondanti** — confonderle è il modo più facile di
+leggere male il file:
+
+| colonna | chi l'ha scritta | valori |
+|---|---|---|
+| `identita` | il **verdetto finale**, quello su cui filtrare | `confermata_data`, `confermata_club`, `confermata_wikidata`, `quarantena`, `non_verificata` |
+| `identita_wikipedia` | il giudizio della verifica HTML, **prima** di Wikidata | incl. `respinta` |
+| `identita_wikidata` / `forma_discrepanza` | il verdetto Wikidata e la **forma** dello scarto | `confermata`/`smentita`/`indeterminato`; `senza_struttura`, `scambio_giorno_mese`, … |
+
+⚠️ **`respinta` non compare mai in `identita`**, per costruzione: Wikidata può
+ribaltare una respinta (17 casi), e una riga *dentro* il database che continuasse
+a dichiararsi esclusa sarebbe un **finto pieno (R6)** — un valore che sembra una
+misura e non lo è più. Nessun confronto snapshot-contro-fonte se ne accorgerebbe,
+perché il dato coincide con ciò che l'ha prodotto; se ne accorgerebbe solo il
+primo che filtra su quella colonna, con una risposta sbagliata e nessun motivo di
+sospettarla. Il giudizio originale resta leggibile in `identita_wikipedia`.
+
+### Cosa NON c'è dentro
+
+- **5 giocatori rimossi** perché la pagina era di un'altra persona (forma senza
+  struttura **e** oltre tre anni di scarto): Olaizola, Lazaridis, Nilson Júnior,
+  Bruno Alves, Ballantyne. Le loro tappe restano in `esiti.jsonl`, che serve a
+  sapere *chi* era. ⚠️ **Ballantyne è al bordo**: 1.105 giorni contro una soglia
+  di 1.098, coi vicini a 1.004 e 1.261 — quel caso lo decide il taglio, non i
+  dati. Gli altri quattro stanno a 3.116+.
+- **~10 quarantene** ancora sospette ma non rimosse: l'evidenza non regge da sola.
+- Le 141 quarantene *smentite* da Wikidata **ci sono ancora**, ed è voluto: la
+  mediana del loro scarto è **31 giorni** e la forma conserva sempre una
+  componente della data — sono **refusi**, non persone diverse. Rimuoverle era la
+  trappola (§1.4 del CLAUDE.md: anche il risultato negativo si scrive).
+
+⚖️ **Licenza mista, dichiarata**: le tappe sono CC BY-SA 4.0 (contenuto
+Wikipedia), i verdetti e i Q-id sono CC0 (Wikidata). Vedi
+`data/carriere_wikipedia/README.md`.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche
