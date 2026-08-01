@@ -91,7 +91,17 @@ enumera **tutti** i nomi mai comparsi nell'archivio a ogni esecuzione della
 suite, così il prossimo rinominamento rompe i test e non la raccolta.
 
 
-### Le 38 colonne, per gruppo
+### Le 40 colonne, per gruppo
+
+> 🆕 **Fase 132**: aggiunte `home_goals_ht` e `away_goals_ht` — i **gol
+> all'intervallo**, presi da `HTHG/HTAG` di football-data (la stessa fonte dei
+> gol finali). Coprono **16.111/16.111** partite con un'unica eccezione
+> dichiarata: **Union Berlin-Bochum 14/12/2024**, dove la fonte non ha
+> l'intervallo (è la partita del caso R1) e la cella resta **vuota** invece di
+> essere inventata. Dtype `Int64` nullable. Servono alla pista 6-bis (modello a
+> due stadi): sono `post`, quindi mai usabili per prevedere la partita che li ha
+> prodotti — la loro forma d'uso è come **stato** del secondo tempo, non come
+> feature del primo.
 
 | gruppo | colonne | fonte | copertura |
 |---|---|---|---|

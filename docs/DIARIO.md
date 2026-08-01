@@ -333,6 +333,7 @@ correzioni.*
 - [Fase 129 — Il test prospettico è congelato: 48 partite, 26 mercati, due settimane di anticipo](#fase-129--il-test-prospettico-è-congelato-48-partite-26-mercati-due-settimane-di-anticipo)
 - [Fase 130 — Le quote si muovono? Quasi no. E il movimento più grande era un libro rotto](#fase-130--le-quote-si-muovono-quasi-no-e-il-movimento-più-grande-era-un-libro-rotto)
 - [Fase 131 — Le statistiche di squadra per periodo: il primo dato che separa i due tempi](#fase-131--le-statistiche-di-squadra-per-periodo-il-primo-dato-che-separa-i-due-tempi)
+- [Fase 132 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi](#fase-132--i-gol-allintervallo-entrano-negli-snapshot-il-dato-che-mancava-al-modello-a-due-stadi)
 
 ---
 
@@ -14782,11 +14783,16 @@ split **non è invertito**: con le etichette scambiate l'accordo sui gol crolla 
 3. **Le righe `Play-off` non sono campionato**: 6 partite di spareggio con club
    di seconda divisione, assenti dagli snapshot. In Ligue 1 si **sovrappongono
    per data** al campionato: solo la colonna `Fase` le separa.
-4. **Una partita è incompleta e sembra completa** (R6): Nantes-Toulouse
-   17/05/2026, il 2° tempo manca alla fonte e la riga `Totale` **coincide col
-   1° tempo** su tutte e 45 le metriche (146 passaggi, impossibili in 90').
-   ⚠️ football-data **concorda** con quei totali: non è un difetto di diretta,
-   e la causa **non è accertata** — la si dichiara invece di inventarla (R5).
+4. **Una partita dura 22 minuti e la riga `Totale` sembra una partita
+   intera**: Nantes-Toulouse 17/05/2026. ⚠️ *Prima lettura mia sbagliata*:
+   l'avevo classificata «causa non accertata», ma `docs/DATI.md` §1-quater
+   l'aveva già **risolta il 31/07** — gara **interrotta al 22′** per invasione
+   di campo, 0-0 omologato dalla LFP. Il secondo tempo non manca: **non è mai
+   stato giocato**, e 146 passaggi in 22 minuti sono normali. Il dato è
+   corretto; la trappola è d'uso — quel `Totale` copre 22′ e non 90, cioè la
+   **R6 applicata al tempo** invece che al valore. Lezione: prima di dichiarare
+   una causa ignota, cercarla nei documenti del repo, dove qualcuno l'aveva
+   già chiusa il giorno prima.
 5. **`Risultato squadra` ed `Esito` sono di fine partita anche sulle righe di
    periodo** (3.504/3.504 identici): la riga «1° tempo» porta il risultato
    finale. Caso da manuale della R8 — e ne segue che **il punteggio
@@ -14903,3 +14909,136 @@ corso, il numero resterebbe plausibile e il modello sarebbe inservibile. È il
 motivo per cui il test non confronta con un valore atteso ma con **entrambi** i
 candidati — la media su `0..k−1` e quella su `0..k` — e pretende che coincida
 con la prima **e differisca** dalla seconda.
+
+---
+
+## Fase 132 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi
+
+**Obiettivo.** Rispondere a tre domande dell'utente sulla Fase 131 («i gol
+all'intervallo si recuperano? qual è il problema dei tiri? ci sono altri
+problemi?») e, dove la risposta era «sì», farlo.
+
+**Il buco, e perché era più grande di quanto sembrasse.** La pista 6-bis — il
+modello a due stadi, «il residuo vivo del progetto» — ha bisogno di **una sola
+variabile di stato**: il punteggio all'intervallo. Quel numero non era in
+nessuna tabella. Non negli snapshot (`data/*_matches.csv` non aveva colonne di
+primo tempo); non nelle statistiche di squadra appena inserite (`Risultato
+squadra` è il **finale** anche sulla riga «1° tempo», regola R8); e la Fase 98 se
+lo rileggeva ogni volta dai grezzi, **in tre modi diversi a seconda della lega**.
+
+**Alternative considerate.** (a) **Dedurlo** dall'identità `xGot affrontati −
+Gol evitati` del dataset nuovo: funziona al 98,3%, ma è una *stima*, e per le
+regole del progetto (§5) una stima vive in `data/estimates/`, non negli
+snapshot — e coprirebbe solo le 1.752 partite del 2025-26. (b) **Prenderlo
+vero** da `HTHG/HTAG` di football-data, che è **la stessa fonte da cui gli
+snapshot derivano già i gol finali**: non un innesto di terzi, e copre **tutte e
+16.111 le partite** delle 9 stagioni. Scelta la (b): quando il dato vero esiste,
+non si stima (R5, passo 4).
+
+**Risultato.** Due colonne nuove, `home_goals_ht` e `away_goals_ht`, su tutti e
+5 gli snapshot (38 → 40 colonne), scritte da
+`scripts/aggiungi_gol_intervallo.py`. **Nessuna cella esistente è stata
+toccata**: è un'aggiunta, non una correzione.
+
+| lega | partite | join | gol finali coerenti | f (gol nel 1° tempo) |
+|---|--:|:--:|:--:|--:|
+| Serie A | 3.420 | 3.420/3.420 | 3.420/3.420 | **0,4365** |
+| Premier | 3.420 | 3.420/3.420 | 3.420/3.420 | **0,4464** |
+| La Liga | 3.420 | 3.420/3.420 | 3.420/3.420 | **0,4356** |
+| Bundesliga | 2.754 | 2.754/2.754 | 2.754/2.754 | 0,4482 |
+| Ligue 1 | 3.097 | 3.097/3.097 | 3.097/3.097 | 0,4461 |
+| **totale** | **16.111** | **16.111/16.111** | **16.111/16.111** | **0,4425** |
+
+⭐ **La verifica più forte non l'ho costruita io: era già pubblicata.** Le tre
+frazioni in grassetto — 0,4365 / 0,4464 / 0,4356 — **coincidono alla quarta
+cifra** con quelle che la Fase 96 aveva misurato per le stesse tre leghe. Non è
+una coincidenza fortunata: è la prova che il join ha agganciato le righe giuste,
+ottenuta ri-derivando per un'altra strada un numero che il repo aveva già
+scritto. Su 5 leghe f = **0,4425**, dentro l'IC [0,4338, 0,4458] della Fase 96
+allargato al campione nuovo.
+
+**Un buco solo, dichiarato: Union Berlin-Bochum 14/12/2024.** È la partita del
+caso **R1** — 1-1 sul campo, 0-2 assegnato dal DFB — e football-data **non ha
+l'intervallo** per quella gara. Il valore resta vuoto (`Int64` nullable) invece
+di essere inventato: un buco dichiarato è innocuo, il finto pieno no (R6).
+Nota di metodo: lo stesso caso fa **divergere** i gol finali fra snapshot (1-1)
+e fonte (0-2), e il controllo «i gol finali devono coincidere» lo avrebbe fatto
+fallire. La soluzione non è stata incidere l'eccezione nel codice ma **leggerla
+da `data/correzioni_dichiarate.csv`**: se un domani ne comparisse un'altra, lo
+script la conosce già.
+
+**Le altre due risposte, che non hanno prodotto codice.**
+
+1. **I tiri.** `Tiri totali` ha **due** partizioni indipendenti: per esito
+   (`in porta + fuori + fermati`) e per zona (`area + fuori area`). La prima
+   tiene **10.510/10.510**, la seconda **10.500/10.510**. Il difetto è quindi
+   solo nella scomposizione per zona, in 5 squadra-partita su 3.504 (0,14%), a
+   livello di **periodo**, e si propaga al Totale. La prova è l'Espanyol
+   09/05/2026: 1T `+1` e 2T `−1` si **cancellano** e il Totale torna giusto.
+   **Non è riparabile**: sappiamo che la somma per zona dovrebbe fare
+   `Tiri totali`, ma non *quale* zona — servirebbe il dato tiro-per-tiro, e
+   attribuirlo a occhio è ciò che la R3 vieta. Contro football-data sulle 4
+   righe-Totale contese, `Tiri totali` vince 3/4 e la zona 1/4: nemmeno
+   l'arbitro esterno è netto, mentre internamente `Tiri totali` è corroborata
+   da una seconda partizione su **tutte** le righe e la zona no.
+2. **Altri problemi**: 15 vincoli logici, 12 puliti. E **due dei tre allarmi
+   erano miei, non dei dati** — è il punto che vale la pena ricordare:
+   - «1T > Totale» in 2.335 celle: tutte e sole su `Gol evitati`, che può essere
+     **negativa** (min −3,31). Se un tempo vale +0,67 e l'altro −0,50, il
+     Totale 0,17 è minore del primo tempo. Aritmetica corretta, **vincolo mio
+     sbagliato**;
+   - 43 righe con tiri in porta e `xGOT = 0,00`: **arrotondamento**, non
+     segnaposto. 42 su 43 hanno **un solo** tiro in porta, l'xG medio è 0,507
+     contro 0,930 generale, e in **43/43** non è stato segnato nulla — un
+     segnaposto avrebbe gol associati (è il caso R5 già pagato dal progetto);
+   - 3 righe con `Grandi occasioni > Tiri totali`: anomalia vera ma coerente
+     con la definizione Opta (una grande occasione può non finire in tiro).
+
+**Una correzione a me stesso.** Nella Fase 131 avevo classificato
+Nantes-Toulouse 17/05/2026 come «causa non accertata». Era sbagliato: il repo
+l'aveva **già risolta il 31/07** (`docs/DATI.md` §1-quater) — gara interrotta al
+22′ per invasione di campo, 0-0 omologato dalla LFP. Il secondo tempo non manca:
+non è mai stato giocato. Corretto in quattro punti. **Lezione: prima di
+dichiarare ignota una causa, cercarla nei documenti del repo** — dove qualcuno
+l'aveva chiusa il giorno prima.
+
+### 📐 Il modello in dettaglio
+
+Questa fase non introduce matematica di modello: sposta un dato e ne verifica
+l'identità. Le due formule in gioco sono entrambe di **controllo**.
+
+**(1) Il vincolo che rende falsificabile l'import.** Per ogni partita `p`:
+
+```
+HTHG(p) ≤ FTHG(p)        e        HTAG(p) ≤ FTAG(p)
+```
+
+— un intervallo non può contenere più gol del finale. Verificato su
+16.110/16.110 partite con l'intervallo (la 16.111ª è il NaN dichiarato).
+Il controllo *portante* è però un altro, ed è quello che dimostra di aver
+agganciato la riga giusta invece di una qualsiasi che combacia per data:
+
+```
+FTHG(fonte) == home_goals(snapshot)   e   FTAG(fonte) == away_goals(snapshot)
+```
+
+su **16.111/16.111**, con l'unica eccezione **letta dal registro** delle
+correzioni (R1, Union Berlin-Bochum). Un join che non verifica i gol finali
+può agganciare la partita sbagliata e nessun conteggio se ne accorge.
+
+**(2) La frazione f, e perché la sua riproduzione è una prova.**
+
+```
+f = Σ_p [ HTHG(p) + HTAG(p) ]  /  Σ_p [ FTHG(p) + FTAG(p) ]
+```
+
+È la **stessa** grandezza che la Fase 98 usa per ri-scalare i tassi nei mercati
+Tier 3 (`M_1T = score_matrix(f·λ, f·μ, …)`), lì misurata leggendo i grezzi lega
+per lega. Ricalcolata dalle colonne nuove dà **0,4365 / 0,4464 / 0,4356** per
+Serie A / Premier / La Liga: le stesse quattro cifre già pubblicate. Due strade
+indipendenti che producono lo stesso numero sono una verifica; una strada sola
+che produce un numero plausibile non lo è.
+Le due leghe mai misurate prima danno **0,4482** (Bundesliga) e **0,4461**
+(Ligue 1), cioè in alto nella forchetta: il valore a 5 leghe sale a
+**0,4425** — dentro l'IC della Fase 96, e da ri-misurare con il suo intervallo
+prima di usarlo come costante per-lega (R7).

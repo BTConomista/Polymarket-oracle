@@ -258,14 +258,15 @@ def test_risultato_squadra_e_dal_punto_di_vista_della_riga(tm):
 
 
 def test_la_partita_incompleta_e_solo_quella_dichiarata():
-    """Nantes-Toulouse 17/05/2026: il 2 tempo manca ALLA FONTE, e la riga
-    `Totale` coincide con il `1° tempo` su tutte e 45 le metriche.
+    """Nantes-Toulouse 17/05/2026: la riga `Totale` copre 22 MINUTI, non 90.
 
-    E' il «finto pieno» della regola R6 — una riga che sembra il totale di una
-    partita e copre solo 45 minuti — quindi va fissata qui: se un giorno ne
-    comparissero altre, il test deve rompersi. ⚠️ football-data concorda con
-    quei totali su tutte le metriche confrontabili: non e' un difetto di
-    diretta.it, e la causa non e' accertata dai dati che abbiamo.
+    La partita fu interrotta definitivamente al 22' per invasione di campo e la
+    LFP omologo' lo 0-0 (`docs/DATI.md` §1-quater). Il secondo tempo non manca:
+    non e' mai stato giocato, e infatti football-data riporta gli stessi
+    22 minuti. Il dato e' CORRETTO — la trappola e' d'uso: mettere quel `Totale`
+    in media con partite da 90' mescola durate diverse. E' la R6 applicata al
+    TEMPO invece che al valore. Il test la fissa: se comparissero altre righe
+    cosi', non sarebbero piu' un caso isolato spiegato.
     """
     tutte = ts.load_team_matches(tutte=True)
     non_sparse = [c for c in ts.COLONNE_METRICHE if c not in ts.COLONNE_ZERO_IMPLICITO]
@@ -450,3 +451,56 @@ def test_le_incoerenze_aritmetiche_minori_sono_solo_quelle(tm):
     #     identità esatta, e serve da controprova che il merge qui sopra è sano
     f = (m["Falli"] - m["Punizioni_avv"]).dropna()
     assert int((f.abs() > 1e-9).sum()) == 0
+
+
+# --------------------------------------------------------------------------
+# 6 · I gol all'intervallo negli snapshot (Fase 132)
+# --------------------------------------------------------------------------
+
+def test_gol_intervallo_presenti_e_coerenti():
+    """`home_goals_ht`/`away_goals_ht` esistono su tutte e 5 le leghe.
+
+    Sono il dato che mancava al modello a due stadi (pista 6-bis) e che questo
+    dataset NON contiene (`Risultato squadra` e' il finale anche sulla riga
+    «1° tempo»). Vengono da football-data.co.uk, la stessa fonte da cui gli
+    snapshot derivano gia' i gol finali.
+    """
+    import pandas as pd
+    from src.data import database
+
+    totale_ht = totale = 0
+    for lega in LEGHE:
+        s = pd.read_csv(database.snapshot_path(lega))
+        assert {"home_goals_ht", "away_goals_ht"} <= set(s.columns), lega
+        h, a = s["home_goals_ht"], s["away_goals_ht"]
+        v = s.dropna(subset=["home_goals_ht", "away_goals_ht"])
+        # un intervallo non puo' avere piu' gol del finale
+        assert (v["home_goals_ht"] <= v["home_goals"]).all(), lega
+        assert (v["away_goals_ht"] <= v["away_goals"]).all(), lega
+        assert (v["home_goals_ht"] >= 0).all() and (v["away_goals_ht"] >= 0).all()
+        totale_ht += int(v["home_goals_ht"].sum() + v["away_goals_ht"].sum())
+        totale += int(v["home_goals"].sum() + v["away_goals"].sum())
+
+    # f = frazione di gol nel 1 tempo. La Fase 96 misurava 0.4396
+    # [0.4338, 0.4458] su 3 leghe; su 5 leghe e 9 stagioni deve restare li'.
+    f = totale_ht / totale
+    assert 0.43 < f < 0.46, f"frazione 1T fuori scala: {f}"
+
+
+def test_l_unico_intervallo_mancante_e_quello_dichiarato():
+    """Union Berlin-Bochum 14/12/2024: la fonte non ha l'intervallo.
+
+    E' la partita del caso R1 (1-1 sul campo, 0-2 dal tribunale DFB): il
+    nostro snapshot porta il risultato del campo, football-data quello del
+    tribunale e **nessun intervallo**. Il valore resta vuoto invece di essere
+    inventato (R3): un buco dichiarato e' innocuo, il finto pieno no (R6).
+    """
+    import pandas as pd
+    from src.data import database
+
+    buchi = []
+    for lega in LEGHE:
+        s = pd.read_csv(database.snapshot_path(lega))
+        b = s[s[["home_goals_ht", "away_goals_ht"]].isna().any(axis=1)]
+        buchi += [(lega, r.date, r.home_team, r.away_team) for r in b.itertuples()]
+    assert buchi == [("bundesliga", "2024-12-14", "Union Berlin", "Bochum")]

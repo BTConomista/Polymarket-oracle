@@ -112,7 +112,7 @@ impossibili — quindi «1° tempo» è davvero il primo tempo.
 
 ---
 
-## 4 · Le cinque cose che si sbagliano leggendo questi file
+## 4 · Le cose che si sbagliano leggendo questi file
 
 Tutte misurate, tutte con un test che le fissa (`tests/test_team_stats.py`).
 
@@ -140,18 +140,26 @@ default; la colonna `Fase` resta a dichiararle. ⚠️ In Ligue 1 si **sovrappon
 per data** alla stagione regolare (12→29 maggio contro un campionato che finisce
 il 17): **solo `Fase` le separa, mai la data.**
 
-### 4.4 · ⚠️ Una partita è incompleta, e sembra completa (R6, «finto pieno»)
-**Nantes-Toulouse, 17/05/2026, giornata 34 di Ligue 1.** Il 2° tempo manca alla
-fonte (42/45 metriche vuote) e la riga `Totale` **coincide esattamente con il
-1° tempo** su tutte e 45 le metriche: 146 passaggi totali, impossibili in una
-partita intera. È una riga che *sembra* il totale di una partita e copre 45
+### 4.4 · ⚠️ Una partita dura 22 minuti, e la riga `Totale` sembra una partita intera
+**Nantes-Toulouse, 17/05/2026, giornata 34 di Ligue 1.** La riga `2° tempo` è
+vuota (42/45 metriche) e la riga `Totale` **coincide esattamente con il
+1° tempo** su tutte e 45 le metriche — 146 passaggi complessivi.
+
+**La causa è accertata, e non è un difetto del dato**: la partita è stata
+**interrotta definitivamente al 22′** sullo 0-0, dopo un'invasione di campo con
+fumogeni dei tifosi del Nantes, e la Commissione Disciplinare LFP ha **omologato
+lo 0-0** il 27/05/2026. Il secondo tempo non manca: **non è mai stato giocato**,
+e 146 passaggi in 22 minuti sono del tutto normali. La ricostruzione è in
+[`docs/DATI.md`](../docs/DATI.md) §1-quater, che l'ha chiusa il 31/07/2026 su
+fonti di stampa esterne; football-data concorda perché riporta gli stessi 22
 minuti.
-⚠️ **football-data concorda** con quei totali su tutte e 6 le metriche
-confrontabili: non è un difetto di diretta.it, ed è per questo che **la causa non
-è accertata** dai dati che abbiamo — la si dichiara invece di inventarla (R5).
-Nota che l'additività `1T+2T=Totale` **torna lo stesso** su questa partita,
-perché il Totale è troncato quanto la somma: l'additività non certifica la
-copertura.
+
+⚠️ **Resta però una trappola d'uso, ed è per questo che la voce esiste**: quella
+riga `Totale` copre **22 minuti** e non 90. Chi la mette in media con le altre
+1.751 partite sta mescolando durate diverse senza saperlo — è la regola **R6**
+applicata al *tempo* invece che al valore. E nota che l'additività
+`1T+2T=Totale` **torna lo stesso** qui, perché il Totale è troncato quanto la
+somma: **l'additività non certifica la copertura.**
 
 ### 4.5 · `Risultato squadra` ed `Esito` sono di FINE partita, anche sulle righe di periodo
 Sono identici nelle tre righe (3.504/3.504): la riga «1° tempo» porta il

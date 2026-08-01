@@ -541,7 +541,12 @@ non-artefatto* trovato da parecchie fasi. → **la pista scorporata è la 6-bis*
 > dedotto dall'identità di `team_stats.gol_dedotti` accettando un errore
 > misurato del **1,7%** e **sempre in difetto**.
 
-**Dato**: **nessuno nuovo da procurare**, ma attenzione a dove sta: HTHG/HTAG/HTR
+**Dato**: 🆕 **dalla Fase 132 non c'è più niente da procurare né da cercare**:
+`home_goals_ht` e `away_goals_ht` sono **colonne degli snapshot**, su tutte e 5
+le leghe e tutte e 9 le stagioni (16.111/16.111, un solo buco dichiarato). Il
+paragrafo qui sotto descrive com'era **prima**, quando andavano rilette dai
+grezzi in tre modi diversi per lega — resta perché spiega da dove vengono.
+*(storico)* HTHG/HTAG/HTR
 **non sono negli snapshot** (`data/*_matches.csv` non ha colonne di primo tempo)
 — stanno nei grezzi, ed è da lì che la Fase 98 li legge: Serie A da
 `data/football_data_raw/`, Premier e Liga dai bundle in `files/`. Per
