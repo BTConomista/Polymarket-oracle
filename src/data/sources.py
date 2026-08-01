@@ -376,6 +376,37 @@ TEAM_ALIASES: dict[str, str] = {
     "FC Paris": "Paris FC",
     "Paris Saint-Germain FC": "Paris SG",
     "Racing Club de Lens": "Lens",
+    # --- Smarkets (Fase 128, passo P1 del test prospettico): la borsa da cui
+    # arrivano quote E fixture della stagione 2026-27. Delle 96 squadre esposte
+    # nella giornata 1 delle 5 leghe, 62 combaciavano gia' e 23 passavano dagli
+    # alias sopra: queste 6 sono le uniche differenze rimaste, enumerate
+    # estraendo TUTTI i nomi dallo snapshot e confrontandoli per IDENTITA' coi
+    # nomi canonici dei 5 snapshot (mai per ordinamento).
+    #
+    # ⚠️ Tre di queste sono trappole vere, non abbreviazioni innocue:
+    #   - "Málaga"/"Köln" differiscono per un solo carattere accentato: il
+    #     confronto esatto le scarta, e sono squadre CON storia nei nostri dati
+    #     (Malaga 2017-18, FC Koln 7 stagioni su 9);
+    #   - "PSG" convive nella stessa giornata con "Paris FC", che e' un'altra
+    #     squadra e combacia gia': un match largo su "Paris" le fonderebbe.
+    "Köln": "FC Koln",
+    "Málaga": "Malaga",
+    "Troyes AC": "Troyes",
+    "PSG": "Paris SG",
+    "Man Utd": "Man United",
+    "Nottm Forest": "Nott'm Forest",
+    # Le tre ESORDIENTI con un nome diverso: squadre che in 9 stagioni non
+    # hanno mai giocato nelle nostre 5 leghe, quindi un nome canonico nei
+    # nostri snapshot **non esiste** -- non e' un alias mancante, e' una
+    # squadra nuova. Il nome giusto non e' stato indovinato: e' stato **letto
+    # dallo stesso provider** nei file di seconda divisione 2025-26, dove
+    # queste squadre giocavano (football-data.co.uk/mmz4281/2526/{D2,SP2,F2}.csv,
+    # verificato il 01/08/2026). Vale la R5: prima si cerca il dato vero, si
+    # stima solo se non esiste. Coventry e Hull (E1) non compaiono qui perche'
+    # football-data le scrive **identiche** a Smarkets.
+    "SV Elversberg": "Elversberg",     # D2 2025-26
+    "Racing Santander": "Santander",   # SP2 2025-26
+    "Le Mans FC": "Le Mans",           # F2 2025-26
 }
 
 

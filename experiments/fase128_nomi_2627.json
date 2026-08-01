@@ -1,0 +1,261 @@
+{
+ "fonte_quote": "data/smarkets_matches/2026-08-01T01-11-00.json",
+ "ultima_stagione_nei_dati": 2526,
+ "avvertenza": "le neopromosse qui elencate vanno passate a DixonColesModel.fit(promoted_teams=...): per il 2026-27 backtest.promoted_teams() non puo' dedurle, perche' la stagione di test non esiste ancora nei dati.",
+ "per_lega": {
+  "bundesliga": {
+   "squadre_esposte": 18,
+   "agganciate": [
+    "Augsburg",
+    "Bayern Munich",
+    "Dortmund",
+    "Ein Frankfurt",
+    "FC Koln",
+    "Freiburg",
+    "Hamburg",
+    "Hoffenheim",
+    "Leverkusen",
+    "M'gladbach",
+    "Mainz",
+    "RB Leipzig",
+    "Stuttgart",
+    "Union Berlin",
+    "Werder Bremen"
+   ],
+   "neopromosse": [
+    {
+     "smarkets": "SV Elversberg",
+     "canonico": "Elversberg",
+     "stagioni_nei_dati": [],
+     "nome_verificato_su": "D2 2025-26"
+    },
+    {
+     "smarkets": "SC Paderborn 07",
+     "canonico": "Paderborn",
+     "stagioni_nei_dati": [
+      1920
+     ]
+    },
+    {
+     "smarkets": "FC Schalke 04",
+     "canonico": "Schalke 04",
+     "stagioni_nei_dati": [
+      1718,
+      1819,
+      1920,
+      2021,
+      2223
+     ]
+    }
+   ],
+   "da_mappare": [],
+   "uscite_dalla_lega": [
+    "Heidenheim",
+    "St Pauli",
+    "Wolfsburg"
+   ],
+   "coerente": true
+  },
+  "la_liga": {
+   "squadre_esposte": 20,
+   "agganciate": [
+    "Alaves",
+    "Ath Bilbao",
+    "Ath Madrid",
+    "Barcelona",
+    "Betis",
+    "Celta",
+    "Elche",
+    "Espanol",
+    "Getafe",
+    "Levante",
+    "Osasuna",
+    "Real Madrid",
+    "Sevilla",
+    "Sociedad",
+    "Valencia",
+    "Vallecano",
+    "Villarreal"
+   ],
+   "neopromosse": [
+    {
+     "smarkets": "Deportivo La Coruña",
+     "canonico": "La Coruna",
+     "stagioni_nei_dati": [
+      1718
+     ]
+    },
+    {
+     "smarkets": "Málaga",
+     "canonico": "Malaga",
+     "stagioni_nei_dati": [
+      1718
+     ]
+    },
+    {
+     "smarkets": "Racing Santander",
+     "canonico": "Santander",
+     "stagioni_nei_dati": [],
+     "nome_verificato_su": "SP2 2025-26"
+    }
+   ],
+   "da_mappare": [],
+   "uscite_dalla_lega": [
+    "Girona",
+    "Mallorca",
+    "Oviedo"
+   ],
+   "coerente": true
+  },
+  "ligue_1": {
+   "squadre_esposte": 18,
+   "agganciate": [
+    "Angers",
+    "Auxerre",
+    "Brest",
+    "Le Havre",
+    "Lens",
+    "Lille",
+    "Lorient",
+    "Lyon",
+    "Marseille",
+    "Monaco",
+    "Nice",
+    "Paris FC",
+    "Paris SG",
+    "Rennes",
+    "Strasbourg",
+    "Toulouse"
+   ],
+   "neopromosse": [
+    {
+     "smarkets": "Le Mans FC",
+     "canonico": "Le Mans",
+     "stagioni_nei_dati": [],
+     "nome_verificato_su": "F2 2025-26"
+    },
+    {
+     "smarkets": "Troyes AC",
+     "canonico": "Troyes",
+     "stagioni_nei_dati": [
+      1718,
+      2122,
+      2223
+     ]
+    }
+   ],
+   "da_mappare": [],
+   "uscite_dalla_lega": [
+    "Metz",
+    "Nantes"
+   ],
+   "coerente": true
+  },
+  "premier_league": {
+   "squadre_esposte": 20,
+   "agganciate": [
+    "Arsenal",
+    "Aston Villa",
+    "Bournemouth",
+    "Brentford",
+    "Brighton",
+    "Chelsea",
+    "Crystal Palace",
+    "Everton",
+    "Fulham",
+    "Leeds",
+    "Liverpool",
+    "Man City",
+    "Man United",
+    "Newcastle",
+    "Nott'm Forest",
+    "Sunderland",
+    "Tottenham"
+   ],
+   "neopromosse": [
+    {
+     "smarkets": "Coventry",
+     "canonico": "Coventry",
+     "stagioni_nei_dati": [],
+     "nome_verificato_su": "E1 2025-26"
+    },
+    {
+     "smarkets": "Hull",
+     "canonico": "Hull",
+     "stagioni_nei_dati": [],
+     "nome_verificato_su": "E1 2025-26"
+    },
+    {
+     "smarkets": "Ipswich",
+     "canonico": "Ipswich",
+     "stagioni_nei_dati": [
+      2425
+     ]
+    }
+   ],
+   "da_mappare": [],
+   "uscite_dalla_lega": [
+    "Burnley",
+    "West Ham",
+    "Wolves"
+   ],
+   "coerente": true
+  },
+  "serie_a": {
+   "squadre_esposte": 20,
+   "agganciate": [
+    "Atalanta",
+    "Bologna",
+    "Cagliari",
+    "Como",
+    "Fiorentina",
+    "Genoa",
+    "Inter",
+    "Juventus",
+    "Lazio",
+    "Lecce",
+    "Milan",
+    "Napoli",
+    "Parma",
+    "Roma",
+    "Sassuolo",
+    "Torino",
+    "Udinese"
+   ],
+   "neopromosse": [
+    {
+     "smarkets": "Frosinone",
+     "canonico": "Frosinone",
+     "stagioni_nei_dati": [
+      1819,
+      2324
+     ]
+    },
+    {
+     "smarkets": "Monza",
+     "canonico": "Monza",
+     "stagioni_nei_dati": [
+      2223,
+      2324,
+      2425
+     ]
+    },
+    {
+     "smarkets": "Venezia",
+     "canonico": "Venezia",
+     "stagioni_nei_dati": [
+      2122,
+      2425
+     ]
+    }
+   ],
+   "da_mappare": [],
+   "uscite_dalla_lega": [
+    "Cremonese",
+    "Pisa",
+    "Verona"
+   ],
+   "coerente": true
+  }
+ }
+}

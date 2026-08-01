@@ -68,8 +68,16 @@ Premier e Liga avevano le 5 colonne `*_open` in posizione 15-19 e la Serie A in
 29-33. Riordinate; e ora lo verifica `test_schema_identico_tra_leghe`.
 
 Chiave di partita in tutto il progetto: `(season, home_team, away_team)`, nomi
-squadra canonicalizzati via `sources.TEAM_ALIASES` (234 alias, di cui 104 per le
-due leghe nuove, verificati per identità).
+squadra canonicalizzati via `sources.TEAM_ALIASES` (**250** alias, di cui 104 per
+le due leghe nuove, verificati per identità). Gli ultimi **9** sono quelli di
+**Smarkets** (Fase 128, passo P1 del test prospettico): la borsa da cui arrivano
+quote e fixture 2026-27 scrive `Köln`, `Málaga`, `PSG`, `Man Utd`,
+`Nottm Forest`, `Troyes AC` — e i nomi delle **5 esordienti** (Elversberg,
+Santander, Le Mans, più Coventry e Hull che combaciano già) sono stati **letti
+dai file di seconda divisione dello stesso provider**, non dedotti (R5).
+⚠️ Vanno **riverificati** al primo file 2627 vero: se football-data usasse una
+grafia diversa da quella dei suoi file di seconda divisione, il join dei
+risultati salterebbe in silenzio.
 
 ### Le 38 colonne, per gruppo
 

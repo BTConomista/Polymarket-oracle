@@ -316,7 +316,7 @@ Cosa esiste già, per non rifarlo:
 
 | # | passo | sblocca | scadenza | stato |
 |---|---|---|---|---|
-| **P1** | **mappa nomi Smarkets → nostri** | P2, P3, P5 | 7 ago | ❌ **da fare per primo** |
+| **P1** | **mappa nomi Smarkets → nostri** | P2, P3, P5 | 7 ago | ✅ **fatto 01/08** (Fase 128) |
 | **P2** | `_run_prospettico_2627.py` legge i fixture veri | P3 | 10 ago | ❌ |
 | **P3** | **congelamento M1 (DC)**, 5 leghe, commit datato | il test | **14 ago** | ❌ |
 | **P4** | **script di scoring**, scritto prima dei risultati | P7 | 14 ago | ❌ |

@@ -14382,3 +14382,125 @@ la meno probabile in natura: i sistemi esterni si rompono **per pezzi**. E il
 corollario operativo, che vale per ogni raccoglitore futuro del progetto: un
 allarme non deve mai poter distruggere il dato che sta proteggendo — prima si
 salva, poi si urla.
+
+---
+
+## Fase 128 — Il passo P1: la mappa nomi, e la neopromossa che il modello non sa di avere
+
+**Obiettivo.** Sbloccare il test prospettico partendo dal passo che blocca
+tutti gli altri (§5.1 di `experiments/prospettico_2026_27.md`): il ponte fra i
+nomi squadra di Smarkets — da cui arrivano **quote e fixture** della stagione
+2026-27 — e i nomi canonici dei nostri snapshot. Senza, nessuna delle 48
+partite si aggancia: né il Modello 1 (che deve sapere chi scende in campo) né
+il Modello 2 (che deve invertire le quote di *quella* partita).
+
+**Ragionamento.** È il bug più banale del progetto e quello capitato più volte
+(«Hellas Verona» → «Verona», Fase 5; `Manchester Utd` che fermava un join a
+544/760, Fase 122), quindi non si fa a occhio: si estraggono **tutti** i nomi
+distinti e si confrontano **per identità**, mai per ordinamento o per
+contenimento.
+
+**Risultato, primo strato.** Le 96 squadre della giornata 1 (20+20+20+18+18 —
+il listino esposto copre **l'intero organico** di tutte e 5 le leghe):
+**62 combaciavano** già, **25 passavano** dagli alias esistenti, **9** erano
+differenze nuove. Tre di queste nove non sono abbreviazioni innocue:
+
+- `Köln` → `FC Koln` e `Málaga` → `Malaga` differiscono per **un carattere
+  accentato**, e sono squadre **con storia vera** nei nostri dati (7 stagioni
+  su 9 il Colonia). Un confronto esatto le scarta senza dire niente;
+- `PSG` → `Paris SG` convive **nella stessa giornata** con `Paris FC`, che è
+  un altro club e combaciava già. Un match largo su "Paris" li fonderebbe, e
+  **nessun conteggio se ne accorgerebbe**: le squadre resterebbero 18.
+
+**Il controllo che rende superfluo l'occhio umano.** Invece di rileggere 96
+nomi, si usa una proprietà **strutturale**: un campionato non cambia numero di
+squadre fra due stagioni, quindi in ogni lega **|entrate| = |uscite|**. Un
+nome mappato male rompe l'uguaglianza (una squadra vera resta fuori, una
+fantasma entra). Torna su tutte e cinque: 3-3, 3-3, 2-2, 3-3, 3-3.
+
+**Cinque squadre senza nome canonico — e la R5 applicata.** Elversberg,
+Racing Santander, Le Mans, Coventry e Hull non hanno **mai** giocato nelle
+nostre 5 leghe in 9 stagioni: un nome canonico nei nostri snapshot **non
+esiste per costruzione**. Non sono alias mancanti né errori. La tentazione era
+dedurre la grafia dalle convenzioni del provider; invece si è **cercato il
+dato vero** (R5, passo 3): quelle squadre nel 2025-26 giocavano in **seconda
+divisione**, e football-data pubblica anche quei file. Scaricati
+`mmz4281/2526/{E1,D2,SP2,F2}.csv` ed enumerati i nomi: `Elversberg`,
+`Santander`, `Le Mans` — e `Coventry`/`Hull` **identici** a come li scrive
+Smarkets. Tre alias nuovi, zero indovinati.
+
+**La scoperta vera, che non era il bersaglio della fase.**
+`scripts/backtest.py::promoted_teams` deduce le neopromosse confrontando la
+stagione di test con la precedente. Per il 2026-27 **la stagione di test non
+esiste ancora nei dati**, quindi la funzione restituisce l'insieme vuoto: nel
+test prospettico le promosse vanno **dichiarate**, e sono **14**. Non è una
+formalità burocratica, ed è il motivo per cui questa fase esiste: senza
+dichiararle, il **Malaga** — una sola stagione nei nostri dati, la 2017-18 —
+non finisce nel prior delle promosse e viene stimato dallo shrinkage verso la
+**media della lega**. Cioè trattato come una squadra *normale* invece che come
+una neopromossa. I due difetti sono **opposti**, e solo uno è quello giusto.
+
+**📐 Il modello in dettaglio.** Nessuna matematica nuova: il decadimento
+esponenziale è quello della Fase 4d, il prior delle promosse quello della
+Fase 7. Quel che serve è il **conto** che li mette insieme.
+
+Il peso di una partita giocata `g` giorni prima di `as_of`, con emivita
+`H = 365` giorni (`LEAGUE_CONFIGS`, tutte e 5 le leghe):
+
+```
+w(g) = 0.5^(g / H)
+```
+
+Il bersaglio dello shrinkage, da `dixon_coles.fit` (righe 366-373):
+
+```
+attack_prior[t]  = −δ   se t ∈ promoted_teams,  0 altrimenti
+defense_prior[t] = +δ   se t ∈ promoted_teams,  0 altrimenti
+```
+
+cioè: **0 = la media della lega**. Una squadra non dichiarata promossa viene
+tirata verso la squadra media; una dichiarata, verso «segna meno e subisce di
+più» di δ (La Liga: **0.22**).
+
+Con `as_of = 2026-08-14` (la vigilia del congelamento) e l'ultima partita di
+Malaga il **2018-05-19**, cioè `g = 3.009` giorni:
+
+```
+w = 0.5^(3009/365) = 0.5^8.24 = 0.0033
+```
+
+**Tre millesimi.** La storia c'è, e non conta nulla: la verosimiglianza è
+piatta su quei parametri e li lascia dove li mette il prior — che senza
+dichiarazione è **zero, la media**. Ecco perché «ha storia nei dati» e «il
+modello sa qualcosa di lei» sono due cose diverse. Lo stesso conto per le
+altre 13 mostra che il problema è **graduato**, non binario:
+
+| squadra | ultima partita | g (giorni) | w = 0.5^(g/365) |
+|---|---|--:|--:|
+| Malaga, La Coruna | 2018-05 | 3.009 | **0.0033** |
+| Paderborn | 2020-06 | 2.239 | 0.0142 |
+| Schalke 04, Troyes | 2023-05/06 | ~1.170 | ~0.108 |
+| Ipswich, Monza, Venezia | 2025-05 | ~447 | **0.428** |
+| Elversberg, Santander, Le Mans, Coventry, Hull | mai | ∞ | **0** |
+
+Le ultime tre righe sono tre regimi diversi: chi ha ~0.43 di peso è stimato
+**dai suoi dati** (il prior conta poco), chi ha 0.003 è stimato **dal prior**
+pur avendo righe nel database, e chi non ha mai giocato entra nel modello **a
+zero partite** — cold-start puro, esattamente il caso per cui il prior della
+Fase 7 era stato scritto. Dichiarare le 14 promosse è ciò che rende il
+secondo gruppo uguale al terzo invece che al primo.
+
+**Onestà su cosa NON è stato misurato.** Che dichiararle sia *meglio* qui non
+è stato verificato in backtest su questa stagione — non si può, la stagione
+non esiste. L'evidenza è quella della Fase 7 (dove il prior fu adottato perché
+misurato utile) più il conto qui sopra, che mostra che l'alternativa è
+«Malaga = squadra media di Liga». È un argomento **strutturale**, e va letto
+come tale.
+
+**Lezione.** *Un dato può essere presente e non informativo, e le due cose si
+confondono facilmente.* Il controllo «la squadra è nel database?» dà la
+risposta giusta alla domanda sbagliata: quella utile è «quanto pesa, alla data
+in cui prevedo?». E il corollario metodologico: quando una proprietà
+strutturale esiste (entrate = uscite), conviene testarla invece di rileggere
+la lista — una regola verifica 96 nomi, e continua a verificarli l'anno
+prossimo.
