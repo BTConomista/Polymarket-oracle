@@ -95,16 +95,37 @@ def elenco_giocatori(solo_popolazione: bool) -> pd.DataFrame:
     ).reset_index(drop=True)
 
 
+# Esiti DEFINITIVI: non ha senso ritentarli, la risposta non cambiera'.
+# `errore` NON e' fra questi: e' quasi sempre un problema di rete transitorio
+# (304 "Connection refused" su 22.254 tentativi il 01/08/2026), e trattarlo come
+# definitivo significherebbe perdere quei giocatori per sempre — un buco creato
+# da noi, non dalla fonte.
+STATI_DEFINITIVI = frozenset({
+    "ok", "identita_non_confermata", "nessuna_pagina", "nessun_infobox",
+    "nessun_blocco",
+})
+
+
 def gia_fatti() -> set[int]:
+    """I giocatori da NON ritentare. Gli errori di rete si ritentano."""
     if not ESITI.exists():
         return set()
-    fatti = set()
+    fatti, da_ritentare = set(), set()
     with ESITI.open() as f:
         for riga in f:
             try:
-                fatti.add(json.loads(riga)["player_id"])
+                r = json.loads(riga)
             except Exception:
                 continue
+            pid = r.get("player_id")
+            if r.get("stato") in STATI_DEFINITIVI:
+                fatti.add(pid)
+            else:
+                da_ritentare.add(pid)
+    ritentabili = da_ritentare - fatti
+    if ritentabili:
+        print(f"   {len(ritentabili):,} giocatori da RITENTARE (errore transitorio)",
+              flush=True)
     return fatti
 
 
