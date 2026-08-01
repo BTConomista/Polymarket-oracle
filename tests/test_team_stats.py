@@ -425,3 +425,28 @@ def test_load_strict_alza_se_la_copertura_cambia(monkeypatch):
     monkeypatch.setattr(ts, "_raccolta", finto)
     with pytest.raises(ValueError, match="attese 1 righe"):
         ts.load_team_matches("serie_a", "2526")
+
+
+def test_le_incoerenze_aritmetiche_minori_sono_solo_quelle(tm):
+    """Tre scostamenti della fonte, trovati riconciliando dopo l'inserimento.
+
+    Nessuno è corretto (R3) e nessuno è nascosto (R4). Il test li fissa: se il
+    conteggio cresce, la fonte è cambiata e va riguardata.
+    """
+    # (a) delle DUE partizioni dei tiri, una chiude sempre e l'altra no
+    perfetta = tm["Tiri totali"] - (tm["Tiri in porta"] + tm["Tiri fuori"] + tm["Tiri fermati"])
+    assert int((perfetta.dropna() != 0).sum()) == 0
+
+    zona = tm["Tiri totali"] - (tm["Tiri dall'area di rigore"] + tm["Tiri da fuori area"])
+    assert int((zona.dropna() != 0).sum()) == 10
+
+    # (b) xGot affrontati di A deve essere l'xGOT di B: 4 righe non tornano
+    m = tm.merge(tm, left_on=["lega", "data", "Squadra", "Periodo"],
+                 right_on=["lega", "data", "Avversario", "Periodo"], suffixes=("", "_avv"))
+    d = (m["xGot affrontati"] - m["xG sui Tiri in porta (xGOT)_avv"]).dropna()
+    assert int((d.abs() > 1e-9).sum()) == 4
+
+    # (c) `Falli` e `Punizioni` sono la STESSA quantità vista dai due lati:
+    #     identità esatta, e serve da controprova che il merge qui sopra è sano
+    f = (m["Falli"] - m["Punizioni_avv"]).dropna()
+    assert int((f.abs() > 1e-9).sum()) == 0

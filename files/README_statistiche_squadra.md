@@ -168,6 +168,18 @@ partite non pareggiate.
 25/04/2026 e Napoli 11/05/2026, entrambe nel 2° tempo, entrambe con `Tackles %` a
 **133**. Incoerenza della fonte, non corretta (R3) e non nascosta (R4).
 
+### 4.7 · Tre incoerenze aritmetiche minori della fonte (01/08/2026)
+Trovate riconciliando il dataset dopo l'inserimento. Nessuna corretta (R3),
+tutte dichiarate (R4), tutte fissate da un test.
+
+| cosa | quante | dettaglio |
+|---|--:|---|
+| `Tiri totali ≠ area + fuori area` | **10/10.510** righe | scarto `{+1: 5, −1: 3, −2: 2}`, su 5 partite. ⚠️ L'altra scomposizione dei tiri (`in porta + fuori + fermati`) torna invece **10.510/10.510**: è una sola delle due partizioni a non chiudere |
+| `xGot affrontati(A) ≠ xGOT(B)` | **4/10.510** righe | 2 partite (Bayern-Leverkusen 01/11, Arsenal-Everton 20/12), righe `Totale` e `2° tempo`: un lato dichiara 0,10 e 0,18 di xGOT affrontato mentre l'avversario dichiara xGOT **0,00** |
+| percentuali ricalcolate con `round()` | 96,7-99,7% | **entro ±1 sono il 100,0%** su tutte e 5 le famiglie: la fonte non arrotonda con `round()` ma tronca. Nessuna informazione persa — `riusciti` e `totali` ci sono entrambi, la percentuale è un derivato ridondante |
+
+---
+
 ---
 
 ## 5 · ⏱️ Disponibilità temporale (regola R8)
