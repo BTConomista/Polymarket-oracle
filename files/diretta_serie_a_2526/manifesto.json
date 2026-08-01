@@ -1,0 +1,22 @@
+{
+  "righe_attese": 11894,
+  "team_partita_attesi": 758,
+  "squadre": 20,
+  "giocatori": 584,
+  "statistiche": 98,
+  "data_prima": "2025-08-23",
+  "data_ultima": "2026-05-24",
+  "partite_attese": 379,
+  "join_snapshot": "758/758",
+  "snapshot_verificato": true,
+  "partite_mancanti": [
+    {
+      "data": "2025-12-27",
+      "casa": "Lecce",
+      "trasferta": "Como"
+    }
+  ],
+  "lega": "serie_a",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+}

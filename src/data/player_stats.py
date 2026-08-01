@@ -1,28 +1,37 @@
-"""Statistiche PER GIOCATORE PER PARTITA — il primo dato "Tier B" del progetto.
+"""Statistiche PER GIOCATORE PER PARTITA — il dato "Tier B" del progetto.
 
-Fonte: diretta.it/Flashscore, Serie A 2025-26, raccolta A MANO dall'utente il
-31/07/2026 (niente scraping). Dati in `files/diretta_serie_a_2526/`.
-⚠️ PRIMA DI USARE QUESTO MODULO leggi `files/diretta_serie_a_2526/README.md`
-§1-bis: il dato a monte e' di Opta, il progetto NON rivendica alcuna licenza
-su di esso, e la posizione di licenza e' dichiaratamente non risolta.
+Fonte: **diretta.it/Flashscore**, raccolta **a mano** dall'utente (niente
+scraping). Ogni raccolta vive in `files/diretta_{lega}_{stagione}/` con il
+proprio `README.md` e un `manifesto.json`.
+⚠️ Il dato a monte e' di **Opta**: il progetto NON rivendica alcuna licenza su
+di esso e la posizione e' dichiaratamente non risolta. Vedi il README della
+raccolta.
 
-COSA C'E': 11.894 righe giocatore-partita x 97 statistiche (tocchi, passaggi
-anche progressivi, dribbling, contrasti, recuperi, intercetti, falli
-individuali, xG/xA/xGOT individuali, grandi occasioni, blocco portiere), su
-379 delle 380 partite. Copre l'intero "Tier B" che il piano dava per
-irraggiungibile (docs/PIANO_DATABASE_GIOCATORI.md §12).
+COSA CONTIENE una raccolta: **97 statistiche per giocatore-partita** — tocchi,
+passaggi (anche progressivi), dribbling, contrasti, recuperi, intercetti, falli
+individuali, xG/xA/xGOT individuali, grandi occasioni, blocco portiere. E'
+l'intero "Tier B" che il piano dava per irraggiungibile
+(`docs/PIANO_DATABASE_GIOCATORI.md` §12).
 
-PERIMETRO: una lega, una stagione. Non c'e' nulla per le altre 4 leghe ne' per
-le 8 stagioni precedenti.
+PERIMETRO, e come si allarga. Oggi c'e' **Serie A 2025-26** (11.894 righe, 379
+partite su 380). L'utente ha in programma le altre 4 leghe e poi le competizioni
+europee e internazionali: per questo **nulla qui e' incardinato su una lega o
+una stagione**. Aggiungerne una = creare una cartella e registrarla con
+`scripts/registra_raccolta_diretta.py`, senza toccare `src/`. E' la stessa
+scelta gia' fatta per `LEAGUE_CONFIGS` (§7 del `CLAUDE.md`).
+
+⚠️ Le coppe europee e le nazionali avranno un limite in piu': **non hanno uno
+snapshot** in `data/*_matches.csv`, quindi `join_to_snapshot()` non le copre e
+alza un errore esplicito. Serve un'altra via d'aggancio prima di usarle.
 
 ⏱️ REGOLA R8 — E' IL PUNTO PIU' FACILE DA SBAGLIARE.
 Tutte e 97 le statistiche sono `post`: esistono solo a partita finita. Usarle
 per prevedere la partita che le ha prodotte e' look-ahead. La forma normale
-d'uso e' `team_form()`, che aggrega le partite PRECEDENTI. Le colonne grezze
-di `load_player_matches()` NON vanno passate a un modello cosi' come sono.
+d'uso e' `team_form()`, che aggrega le partite PRECEDENTI. Le colonne grezze di
+`load_player_matches()` NON vanno passate a un modello cosi' come sono.
 
-Il modulo non e' letto da backtest.py ne' da alcun modello: e' l'infrastruttura
-per il go/no-go descritto in docs/PIANO_DATABASE_GIOCATORI.md §12.3.
+Il modulo non e' letto da `backtest.py` ne' da alcun modello: e'
+l'infrastruttura per il go/no-go descritto in §12.3 del piano.
 """
 
 from __future__ import annotations
@@ -34,13 +43,17 @@ import pandas as pd
 
 log = logging.getLogger(__name__)
 
-DATA_DIR = Path(__file__).resolve().parents[2] / "files" / "diretta_serie_a_2526"
-MATCHES_FILE = DATA_DIR / "partita_per_partita.csv.gz"
-SEASON_FILE = DATA_DIR / "riepilogo_stagionale.csv.gz"
-LEGEND_FILE = DATA_DIR / "legenda.csv"
+FILES = Path(__file__).resolve().parents[2] / "files"
 
-LEAGUE = "serie_a"
-SEASON = "2526"
+# Ogni raccolta vive in `files/diretta_{lega}_{stagione}/` con dentro un
+# `manifesto.json` che dichiara perimetro e copertura attesa. Aggiungere una
+# lega o una stagione = aggiungere una cartella, MAI toccare questo codice:
+# e' la stessa scelta gia' fatta per LEAGUE_CONFIGS (§7 del CLAUDE.md).
+PREFISSO = "diretta_"
+FILE_PARTITE = "partita_per_partita.csv.gz"
+FILE_STAGIONE = "riepilogo_stagionale.csv.gz"
+FILE_LEGENDA = "legenda.csv"
+FILE_MANIFESTO = "manifesto.json"
 
 # Le uniche colonne NON `post` (regola R8). Tutto il resto esiste solo a
 # partita finita. `Titolare/Subentrato` e' `post` nel dato storico ma
@@ -49,66 +62,128 @@ SEASON = "2526"
 PRE_COLUMNS = ("Giornata", "Data", "Squadra", "Campo", "Avversario")
 STATIC_COLUMNS = ("Giocatore", "Ruolo")
 
-# Copertura attesa, verificata all'inserimento (31/07/2026). Sono guardie:
-# se un giorno il file cambia sotto i piedi, il caricamento deve fallire
-# rumorosamente invece di restituire in silenzio meno righe.
-EXPECTED_ROWS = 11894
-EXPECTED_TEAM_MATCHES = 758
-EXPECTED_MATCHES = 379
 
-# L'unica partita senza statistiche alla fonte (dichiarata dalla fonte stessa).
-MISSING_MATCH = ("2025-12-27", "Lecce", "Como")
+def raccolte() -> list[dict]:
+    """Le raccolte disponibili, lette dai manifesti. Vuota se non ce ne sono.
+
+    Non c'e' un elenco incardinato nel codice: si scopre cosa c'e' sul disco.
+    Cosi' una lega nuova entra copiando una cartella e registrandola con
+    `scripts/registra_raccolta_diretta.py`, senza modifiche a `src/`.
+    """
+    import json
+
+    out = []
+    for d in sorted(FILES.glob(f"{PREFISSO}*")):
+        m = d / FILE_MANIFESTO
+        if not m.is_file():
+            continue
+        try:
+            info = json.loads(m.read_text())
+        except json.JSONDecodeError:
+            log.warning("manifesto illeggibile in %s: raccolta ignorata", d)
+            continue
+        info["cartella"] = d
+        out.append(info)
+    return out
+
+
+def _raccolta(lega: str | None, stagione: str | None) -> dict:
+    disponibili = raccolte()
+    if not disponibili:
+        raise FileNotFoundError(
+            f"nessuna raccolta trovata in {FILES}/{PREFISSO}*. "
+            "Registrarne una con scripts/registra_raccolta_diretta.py"
+        )
+    scelte = [
+        r for r in disponibili
+        if (lega is None or r.get("lega") == lega)
+        and (stagione is None or r.get("stagione") == stagione)
+    ]
+    if not scelte:
+        eleggibili = [f"{r.get('lega')}/{r.get('stagione')}" for r in disponibili]
+        raise KeyError(f"raccolta {lega}/{stagione} non trovata. Disponibili: {eleggibili}")
+    if len(scelte) > 1:
+        eleggibili = [f"{r.get('lega')}/{r.get('stagione')}" for r in scelte]
+        raise ValueError(f"piu' raccolte corrispondono: {eleggibili}. Specificare lega e stagione.")
+    return scelte[0]
 
 
 def _read(path: Path) -> pd.DataFrame:
     if not path.exists():  # pragma: no cover - dipende dal checkout
         raise FileNotFoundError(
-            f"{path} non trovato. I dati vivono in files/diretta_serie_a_2526/ "
-            "e sono versionati: se manca, il checkout e' incompleto."
+            f"{path} non trovato. Le raccolte vivono in files/diretta_*/ e sono "
+            "versionate: se manca, il checkout e' incompleto."
         )
     df = pd.read_csv(path)
     df.columns = [str(c).replace("﻿", "").strip() for c in df.columns]
     return df
 
 
-def load_player_matches(*, strict: bool = True) -> pd.DataFrame:
-    """Una riga per giocatore-partita, con `data` come datetime.
+def load_player_matches(
+    lega: str | None = None,
+    stagione: str | None = None,
+    *,
+    strict: bool = True,
+    tutte: bool = False,
+) -> pd.DataFrame:
+    """Una riga per giocatore-partita, con `data`, `lega` e `stagione`.
 
-    ⚠️ Le 97 statistiche qui dentro sono TUTTE `post` (R8): non passarle a un
-    modello per la partita che le ha prodotte. Usa `team_form()`.
+    Senza argomenti carica **l'unica** raccolta presente; con `lega`/`stagione`
+    ne sceglie una; con ``tutte=True`` le impila tutte (le colonne `lega` e
+    `stagione` restano a distinguerle).
 
-    Con ``strict`` (default) verifica la copertura attesa e alza se non torna.
+    ⚠️ Le 97 statistiche sono TUTTE `post` (R8): non passarle a un modello per
+    la partita che le ha prodotte. Usa `team_form()`.
+
+    Con ``strict`` (default) verifica la copertura dichiarata nel manifesto e
+    alza se non torna: meglio fallire che restituire in silenzio meno righe.
     """
-    df = _read(MATCHES_FILE)
+    if tutte:
+        pezzi = [
+            load_player_matches(r.get("lega"), r.get("stagione"), strict=strict)
+            for r in raccolte()
+        ]
+        return pd.concat(pezzi, ignore_index=True) if pezzi else pd.DataFrame()
+
+    r = _raccolta(lega, stagione)
+    df = _read(r["cartella"] / FILE_PARTITE)
     df["data"] = pd.to_datetime(df["Data"], format="%d.%m.%Y")
+    df["lega"] = r.get("lega")
+    df["stagione"] = r.get("stagione")
 
     if strict:
-        if len(df) != EXPECTED_ROWS:
+        attese = r.get("righe_attese")
+        if attese is not None and len(df) != attese:
             raise ValueError(
-                f"attese {EXPECTED_ROWS} righe giocatore-partita, trovate {len(df)}"
+                f"{r.get('lega')}/{r.get('stagione')}: attese {attese} righe "
+                f"giocatore-partita, trovate {len(df)}"
             )
-        n_team_matches = df.groupby(["data", "Squadra", "Avversario"]).ngroups
-        if n_team_matches != EXPECTED_TEAM_MATCHES:
-            raise ValueError(
-                f"attesi {EXPECTED_TEAM_MATCHES} team-partita, trovati {n_team_matches}"
-            )
+        att_tm = r.get("team_partita_attesi")
+        if att_tm is not None:
+            n = df.groupby(["data", "Squadra", "Avversario"]).ngroups
+            if n != att_tm:
+                raise ValueError(
+                    f"{r.get('lega')}/{r.get('stagione')}: attesi {att_tm} "
+                    f"team-partita, trovati {n}"
+                )
     return df
 
 
-def load_season_totals() -> pd.DataFrame:
+def load_season_totals(lega: str | None = None, stagione: str | None = None) -> pd.DataFrame:
     """Una riga per giocatore-stagione (somme e medie).
 
     ⚠️ E' un DERIVATO del partita-per-partita, non una seconda misura: non
     usarlo come controllo incrociato di sé stesso. Ed e' un aggregato di FINE
     stagione, quindi utilizzabile solo RITARDATO (stagione precedente).
-    ⚠️ I totali di Como e Lecce sono su 37 partite, non 38 (vedi MISSING_MATCH).
+    ⚠️ Se la raccolta ha partite mancanti (dichiarate nel manifesto alla voce
+    `partite_mancanti`), i totali delle squadre coinvolte sono su meno partite.
     """
-    return _read(SEASON_FILE)
+    return _read(_raccolta(lega, stagione)["cartella"] / FILE_STAGIONE)
 
 
-def load_legend() -> pd.DataFrame:
+def load_legend(lega: str | None = None, stagione: str | None = None) -> pd.DataFrame:
     """Mappa `codice fonte -> etichetta italiana` (es. BALL_RECOVERIES)."""
-    return _read(LEGEND_FILE)
+    return _read(_raccolta(lega, stagione)["cartella"] / FILE_LEGENDA)
 
 
 def statistic_columns(df: pd.DataFrame | None = None) -> list[str]:
@@ -116,7 +191,8 @@ def statistic_columns(df: pd.DataFrame | None = None) -> list[str]:
     if df is None:
         df = load_player_matches(strict=False)
     skip = set(PRE_COLUMNS) | set(STATIC_COLUMNS) | {
-        "data", "Risultato squadra", "Esito", "Titolare/Subentrato",
+        "data", "lega", "stagione", "Risultato squadra", "Esito",
+        "Titolare/Subentrato",
     }
     return [c for c in df.columns if c not in skip]
 
@@ -130,18 +206,40 @@ def join_to_snapshot(
     Alza se anche una sola riga resta orfana: un join che perde righe in
     silenzio e' il modo in cui il progetto ha gia' pagato un bug (§7 del
     CLAUDE.md, caso "Hellas Verona").
+
+    ⚠️ **Vale solo per le 5 leghe modellate.** Coppe europee e nazionali non
+    hanno uno snapshot in `data/*_matches.csv`: per quelle raccolte questa
+    funzione alza un errore esplicito invece di restituire righe orfane. Serve
+    un'altra via d'aggancio (probabilmente `games.csv`), ancora da costruire.
     """
     if df is None:
         df = load_player_matches()
+    leghe = sorted(set(df["lega"].dropna())) if "lega" in df.columns else []
+    if len(leghe) != 1:
+        raise ValueError(
+            f"join_to_snapshot lavora su UNA lega per volta, trovate {leghe or 'nessuna'}"
+        )
+    lega = leghe[0]
+
     if snapshot is None:
         # Import locale: evita un ciclo all'import del pacchetto. Si legge lo
         # SNAPSHOT congelato (offline-first, §5 del CLAUDE.md), non la rete.
         from . import database
 
-        snapshot = database.read_snapshot(database.snapshot_path(LEAGUE))
+        percorso = database.snapshot_path(lega)
+        if not percorso.exists():
+            raise FileNotFoundError(
+                f"nessuno snapshot per '{lega}': le competizioni fuori dalle 5 "
+                "leghe modellate (coppe europee, nazionali) non hanno un "
+                "riferimento partita in data/*_matches.csv. Serve un'altra via "
+                "d'aggancio prima di poterle unire."
+            )
+        snapshot = database.read_snapshot(percorso)
+
     snap = snapshot.copy()
     snap["data"] = pd.to_datetime(snap["date"])
-    snap = snap[snap["data"] >= pd.Timestamp("2025-07-01")]
+    # si restringe alla finestra della raccolta, non a una data incisa
+    snap = snap[snap["data"].between(df["data"].min(), df["data"].max())]
     cols = ["data", "home_team", "away_team", "home_goals", "away_goals"]
 
     casa = df.merge(
@@ -162,7 +260,7 @@ def join_to_snapshot(
     if orfane:
         raise ValueError(
             f"{orfane} righe giocatore-partita non agganciate allo snapshot "
-            f"{LEAGUE}: il join deve essere totale, non parziale."
+            f"{lega}: il join deve essere totale, non parziale."
         )
     return out
 

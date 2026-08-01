@@ -247,3 +247,41 @@ riepilogo testuale del sito. Tre ragioni:
 `riepilogo_stagionale.csv.gz` per Como e Lecce sta sommando **37 partite**, non
 38. Per i **tassi per 90 minuti** non cambia nulla; per i **totali stagionali**
 sì.
+
+---
+
+## 9 · Come si aggiunge una raccolta nuova (01/08/2026)
+
+L'utente ha in programma le altre 4 leghe e poi le **competizioni europee e
+internazionali** (club e nazionali). Per questo dal 01/08/2026 **nulla è più
+incardinato su una lega o una stagione**: `src/data/player_stats.py` scopre le
+raccolte leggendo le cartelle `files/diretta_{lega}_{stagione}/`, ognuna col
+proprio `manifesto.json`.
+
+**Aggiungere una lega o una stagione non richiede di toccare `src/`**, che è la
+stessa scelta già fatta per `LEAGUE_CONFIGS` (§7 del `CLAUDE.md`):
+
+```bash
+python scripts/registra_raccolta_diretta.py \
+    --partite ~/Premier_202526_partita_per_partita.xlsx \
+    --lega premier_league --stagione 2526 \
+    --riepilogo ~/Premier_202526_riepilogo.xlsx
+```
+
+Lo script **verifica prima di accettare**, e si ferma se qualcosa non torna:
+colonne fondamentali presenti · date leggibili · **esattamente 11 titolari** per
+squadra-partita · nessun duplicato · minuti e percentuali nei range fisici · e —
+dove esiste uno snapshot della lega — **join e coerenza contro di esso**, che è
+il controllo forte perché la fonte è indipendente. Le partite mancanti finiscono
+dichiarate nel manifesto invece di sparire.
+
+Poi i dati si leggono con `load_player_matches("premier_league", "2526")`,
+oppure `load_player_matches(tutte=True)` per impilarle tutte — le colonne `lega`
+e `stagione` restano a distinguerle.
+
+> ⚠️ **Il limite che morderà sulle coppe e sulle nazionali**: quelle competizioni
+> **non hanno uno snapshot** in `data/*_matches.csv`, quindi (a) il controllo
+> forte al momento della registrazione non è possibile — il manifesto lo
+> dichiara con `snapshot_verificato: false` — e (b) `join_to_snapshot()` alza un
+> errore esplicito invece di restituire righe orfane. Serve un'altra via
+> d'aggancio, probabilmente `games.csv`, ed è lavoro non ancora fatto.

@@ -19,17 +19,43 @@ from src.data import player_stats as ps
 
 @pytest.fixture(scope="module")
 def pm() -> pd.DataFrame:
-    return ps.load_player_matches()
+    return ps.load_player_matches("serie_a", "2526")
+
+
+@pytest.fixture(scope="module")
+def manifesto() -> dict:
+    """La copertura attesa NON e' piu' incisa nel codice: sta nel manifesto
+    della raccolta, cosi' aggiungere una lega non richiede di toccare `src/`."""
+    r = [x for x in ps.raccolte() if x["lega"] == "serie_a" and x["stagione"] == "2526"]
+    assert r, "raccolta serie_a/2526 non registrata"
+    return r[0]
 
 
 # --------------------------------------------------------------------------
 # 1 · Guardiani dei dati
 # --------------------------------------------------------------------------
 
-def test_copertura_attesa(pm):
-    assert len(pm) == ps.EXPECTED_ROWS
-    assert pm.groupby(["data", "Squadra", "Avversario"]).ngroups == ps.EXPECTED_TEAM_MATCHES
-    assert pm["Squadra"].nunique() == 20
+def test_copertura_attesa(pm, manifesto):
+    assert len(pm) == manifesto["righe_attese"] == 11894
+    assert (pm.groupby(["data", "Squadra", "Avversario"]).ngroups
+            == manifesto["team_partita_attesi"] == 758)
+    assert pm["Squadra"].nunique() == manifesto["squadre"] == 20
+    # la lega e la stagione viaggiano col dato: servono quando le raccolte
+    # saranno piu' di una (altre 4 leghe, poi coppe e nazionali)
+    assert set(pm["lega"]) == {"serie_a"} and set(pm["stagione"]) == {"2526"}
+
+
+def test_ogni_raccolta_ha_il_suo_manifesto():
+    """Una raccolta senza manifesto e' invisibile al caricatore: e' voluto —
+    meglio ignorare una cartella incompleta che caricarla senza guardie."""
+    for r in ps.raccolte():
+        for chiave in ("lega", "stagione", "righe_attese", "team_partita_attesi", "fonte"):
+            assert chiave in r, f"manifesto di {r.get('cartella')} senza '{chiave}'"
+
+
+def test_raccolta_inesistente_alza_con_elenco():
+    with pytest.raises(KeyError, match="Disponibili"):
+        ps.load_player_matches("lega_che_non_esiste", "9999")
 
 
 def test_load_strict_alza_se_la_copertura_cambia(pm, monkeypatch):
@@ -37,21 +63,26 @@ def test_load_strict_alza_se_la_copertura_cambia(pm, monkeypatch):
 
     Si simula un file troncato: `strict=True` deve alzare, `strict=False` no.
     """
-    troncato = pm.drop(columns=["data"]).head(100)
+    troncato = pm.drop(columns=["data", "lega", "stagione"]).head(100)
     monkeypatch.setattr(ps, "_read", lambda path: troncato)
 
     with pytest.raises(ValueError, match="righe giocatore-partita"):
-        ps.load_player_matches(strict=True)
+        ps.load_player_matches("serie_a", "2526", strict=True)
 
-    assert len(ps.load_player_matches(strict=False)) == 100
+    assert len(ps.load_player_matches("serie_a", "2526", strict=False)) == 100
 
 
-def test_load_strict_alza_se_mancano_team_partita(pm, monkeypatch):
-    """Il conteggio righe può tornare mentre i team-partita no: va visto lo stesso."""
-    doppio = pd.concat([pm.drop(columns=["data"]).head(ps.EXPECTED_ROWS // 2)] * 2)
+def test_load_strict_alza_se_mancano_team_partita(pm, manifesto, monkeypatch):
+    """Il conteggio righe può tornare mentre i team-partita no: va visto lo stesso.
+
+    La soglia viene dal MANIFESTO, non da una costante nel codice: e' la
+    differenza che permette di aggiungere una lega senza toccare `src/`.
+    """
+    meta = manifesto["righe_attese"] // 2
+    doppio = pd.concat([pm.drop(columns=["data", "lega", "stagione"]).head(meta)] * 2)
     monkeypatch.setattr(ps, "_read", lambda path: doppio)
     with pytest.raises(ValueError, match="team-partita"):
-        ps.load_player_matches(strict=True)
+        ps.load_player_matches("serie_a", "2526", strict=True)
 
 
 def test_esattamente_undici_titolari(pm):
