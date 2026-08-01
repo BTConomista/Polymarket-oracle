@@ -1,0 +1,13 @@
+Fonte,diretta.it (Flashscore) — Bundesliga 2025/2026
+Contenuto,"Statistiche di SQUADRA di ogni partita, per periodo: Totale, 1° tempo, 2° tempo (e Supplementari dove giocati)"
+Partite,308
+"Righe foglio ""Per squadra""",1850
+"Righe foglio ""Per partita""",925
+Statistiche,"35 metriche; quelle mostrate sul sito come ""% (riusciti/totali)"" sono divise in tre colonne"
+"Attenzione: ""Totale""","Corrisponde ai 90 minuti regolamentari. Gli eventuali tempi supplementari NON sono compresi nel Totale: hanno una riga a parte con Periodo = ""Supplementari""."
+Verifica,1° tempo + 2° tempo = Totale su tutte le metriche additive; possesso palla casa+trasferta = 100% in ogni periodo
+"Colonna ""Fase""",Distingue le giornate di stagione regolare dalle partite di play-off / spareggio incluse da diretta.it nella stessa competizione.
+,
+"Nota: statistiche di squadra, indipendenti dai file per giocatore consegnati in precedenza.",
+,"306 partite di stagione regolare (34 giornate x 9) piu le 2 partite di spareggio promozione/retrocessione contro la terza di 2. Bundesliga: per questo compare anche il Paderborn, che ha righe solo nella fase Play-off."
+,Il ritorno dello spareggio (Paderborn-Wolfsburg) e andato ai supplementari: quelle righe hanno Periodo = Supplementari e non sono comprese nel Totale.

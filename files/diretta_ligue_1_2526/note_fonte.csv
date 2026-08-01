@@ -1,0 +1,12 @@
+Fonte,diretta.it (Flashscore) — Ligue 1 2025/2026
+Contenuto,"Statistiche di SQUADRA di ogni partita, in tre periodi: Totale, 1° tempo, 2° tempo"
+Partite,310
+"Righe foglio ""Per squadra""",1860 = 310 partite x 2 squadre x 3 periodi
+"Righe foglio ""Per partita""",930 = 310 partite x 3 periodi
+Statistiche,"35 metriche; quelle mostrate sul sito come ""% (riusciti/totali)"" sono divise in tre colonne"
+Verifica,1° tempo + 2° tempo = Totale su tutte le metriche additive; possesso palla casa+trasferta = 100% in ogni periodo
+"Colonna ""Fase""",Distingue le giornate di stagione regolare dalle eventuali partite di play-off / barrage incluse da diretta.it nella stessa competizione.
+,
+"Nota: statistiche di squadra, indipendenti dai file per giocatore consegnati in precedenza.",
+,"Le 4 partite marcate come Play-off sono il barrage di fine stagione: coinvolgono anche tre club di Ligue 2 (St. Etienne, Red Star, Rodez), che compaiono quindi solo in quelle righe."
+,"Nantes-Tolosa della 34a giornata e stata assegnata a tavolino: diretta.it riporta le statistiche solo della parte disputata, quindi il 2 tempo e vuoto e il Totale coincide con il 1 tempo."

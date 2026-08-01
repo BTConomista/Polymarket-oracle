@@ -165,7 +165,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**995 verdi** al 28/07/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.162 verdi** al 01/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -239,7 +239,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (995 verdi al 28/07/2026)
+python -m pytest                       # test (1.162 verdi al 01/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -306,6 +306,11 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  season_sim.py (Fase 89: simulazione Monte Carlo di una STAGIONE
                  intera -> mercato CAMPIONE; classifica con spareggi UFFICIALI
                  per lega, h2h in SA/Liga, DR in Premier)
+                 player_stats.py (97 statistiche per GIOCATORE-partita, 3 leghe)
+                 team_stats.py (Fase 130: 45 statistiche per SQUADRA-partita divise
+                 in PERIODI -- Totale/1T/2T, 5 leghe 2025-26, 1.752 partite. E' il
+                 primo dato che separa i due tempi: serve alla pista 6-bis, il
+                 modello a due stadi. team_form(periodo=) e' l'unica forma sicura R8)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
@@ -315,6 +320,9 @@ scripts/         download_data, build_database, backtest, analyze, tune, calibra
                  predict (il TOOL d'uso: DC senza quote, market-implied con --odds),
                  build_league_snapshot (snapshot Premier/Liga dai bundle in files/),
                  build_new_snapshot (snapshot Bundesliga/Ligue 1, scaricati),
+                 registra_raccolta_diretta / registra_raccolta_squadra_diretta
+                 (le due porte d'ingresso dei dati diretta.it: per giocatore e per
+                 squadra; verificano PRIMA di accettare e scrivono il manifesto),
                  build_estimates + verifica_stime (le stime dichiarate, §5),
                  applica_correzioni (registro R3, idempotente), audit_snapshots +
                  audit_anomalie + cerca_segnaposto (i controlli dell'audit),
@@ -414,7 +422,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (995 verdi al 28/07/2026), fra cui i guardiani
+tests/           test unitari (1.162 verdi al 01/08/2026), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
 ```

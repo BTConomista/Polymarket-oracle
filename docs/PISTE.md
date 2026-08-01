@@ -82,7 +82,7 @@ voce.
 | 4-quater | dispersione per-squadra (θ_team) | ❌ chiusa **negativa** (F86-bis) | §1 |
 | 5 | handicap asiatico | ❌ chiusa come **input** (F86) · ✅ **benchmark Tier 2** validato (F88, rettificato F101) | §2 |
 | 6 | primo tempo → Tier 3 | ✅ chiusa **positiva** (F98) su **3 leghe su 5** — con residuo, → 6-bis | §2 |
-| 6-bis | **modello a due stadi del 2° tempo (game-state)** | 🟢 **aperta — il residuo vivo del progetto** | §2 |
+| 6-bis | **modello a due stadi del 2° tempo (game-state)** | 🟢 **aperta — il residuo vivo del progetto**; 🆕 **F130**: arrivate 45 metriche separate 1T/2T su 5 leghe (1 stagione) | §2 |
 | 6-ter | **HT/FT congiunto e combinazioni** | 🟢 aperta (le combinazioni sono a costo quasi nullo) | §2 |
 | 7 | corner/cartellini (statistiche partita) | ✅ aperta e **produttiva** (F96/98) su **3 leghe su 5**; arbitro ❌ chiuso | §2 |
 | 7-bis | correzione di LIVELLO dei conteggi | ❌ chiusa **negativa** (F99) | §2 |
@@ -522,6 +522,25 @@ Costo BASSO, e ha il pregio di essere il primo residuo *localizzato e
 non-artefatto* trovato da parecchie fasi. → **la pista scorporata è la 6-bis**.
 
 ### 6-bis. Modello a DUE STADI del secondo tempo (game-state) — 🟢 il residuo vivo
+
+> 🆕 **Aggiornamento 01/08/2026 (Fase 130): è arrivato un dato che questa pista
+> non aveva.** Le statistiche di **squadra per periodo** di diretta.it coprono
+> ora tutte e 5 le leghe 2025-26 — **1.752 partite**, 45 metriche separate fra
+> primo e secondo tempo (`src/data/team_stats.py`, `periodo=PERIODO_1T`). Finora
+> il primo tempo esisteva **solo come gol** (HTHG/HTAG); adesso esiste come
+> tiri, xG, possesso, corner, falli, cartellini. Cambia cosa si può mettere
+> dentro `g_home`/`g_away`: non solo il vantaggio all'intervallo, ma **come si
+> è arrivati a quel vantaggio** (chi ha dominato il primo tempo).
+> ⚠️ **Due limiti da mettere in conto PRIMA, non dopo.** (a) È **una stagione
+> sola**: un walk-forward multi-stagione su queste metriche non è possibile,
+> quindi servono come covariata *dentro* la stagione o come studio descrittivo,
+> non come feature addestrata su anni precedenti. (b) ⚠️ **Il punteggio
+> all'intervallo NON è in quel dataset** — `Risultato squadra` è il risultato
+> **finale** anche sulla riga «1° tempo» (regola R8). Lo stato `(h,a)`
+> dell'intervallo va preso da `HTHG/HTAG`, come già fa la Fase 98, oppure
+> dedotto dall'identità di `team_stats.gol_dedotti` accettando un errore
+> misurato del **1,7%** e **sempre in difetto**.
+
 **Dato**: **nessuno nuovo da procurare**, ma attenzione a dove sta: HTHG/HTAG/HTR
 **non sono negli snapshot** (`data/*_matches.csv` non ha colonne di primo tempo)
 — stanno nei grezzi, ed è da lì che la Fase 98 li legge: Serie A da

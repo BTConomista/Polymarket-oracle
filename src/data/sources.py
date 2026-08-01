@@ -407,6 +407,37 @@ TEAM_ALIASES: dict[str, str] = {
     "SV Elversberg": "Elversberg",     # D2 2025-26
     "Racing Santander": "Santander",   # SP2 2025-26
     "Le Mans FC": "Le Mans",           # F2 2025-26
+    # --- ESONIMI ITALIANI di diretta.it (Fase 130, statistiche di SQUADRA
+    # 2025-26). L'edizione italiana del sito traduce i nomi stranieri, e la
+    # traduzione morde solo dove esiste un esonimo italiano corrente: Serie A,
+    # Premier e La Liga si agganciavano gia' 20/20, Ligue 1 solo 12/18 e
+    # Bundesliga 6/18. Senza questi 18 il join si fermava a 264/612 (Ligue 1) e
+    # 60/612 (Bundesliga) team-partita.
+    #
+    # Enumerati per DIFFERENZA INSIEMISTICA, non a occhio: nomi del file che
+    # non risolvono contro i canonici dello snapshot 2025-26, contro i canonici
+    # rimasti liberi. Le due liste hanno la stessa cardinalita' e
+    # l'accoppiamento e' forzato (6-6 e 12-12), quindi non c'e' scelta
+    # discrezionale. Verificato che nessuna chiave collida con un alias
+    # esistente e che nessun valore sia a sua volta chiave (niente catene).
+    "Lilla": "Lille",
+    "Lione": "Lyon",
+    "Marsiglia": "Marseille",
+    "Nizza": "Nice",
+    "Strasburgo": "Strasbourg",
+    "Tolosa": "Toulouse",
+    "Amburgo": "Hamburg",
+    "Augusta": "Augsburg",
+    "Bayern": "Bayern Munich",
+    "Brema": "Werder Bremen",
+    "Colonia": "FC Koln",
+    "Francoforte": "Ein Frankfurt",
+    "Friburgo": "Freiburg",
+    "Magonza": "Mainz",
+    "Monchengladbach": "M'gladbach",
+    "RB Lipsia": "RB Leipzig",
+    "Stoccarda": "Stuttgart",
+    "Union Berlino": "Union Berlin",
 }
 
 

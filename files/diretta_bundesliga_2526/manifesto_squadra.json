@@ -1,0 +1,28 @@
+{
+  "lega": "bundesliga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 1850,
+  "righe_campionato": 1836,
+  "righe_playoff": 14,
+  "team_partita_attesi": 612,
+  "partite_attese": 306,
+  "squadre": 18,
+  "periodi": [
+    "1° tempo",
+    "2° tempo",
+    "Supplementari",
+    "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-22",
+  "data_ultima": "2026-05-16",
+  "join_snapshot": "612/612",
+  "risultato_coerente": "612/612",
+  "snapshot_verificato": true,
+  "additivita_periodi": "24024/24024",
+  "partite_playoff": [
+    "21.05.2026 Wolfsburg-Paderborn",
+    "25.05.2026 Paderborn-Wolfsburg"
+  ]
+}
