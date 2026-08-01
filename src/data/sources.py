@@ -161,6 +161,18 @@ TEAM_ALIASES: dict[str, str] = {
     "Real Sociedad": "Sociedad",
     "Real Valladolid": "Valladolid",
     "Rayo Vallecano": "Vallecano",
+    # --- diretta.it, edizione ITALIANA di Flashscore (raccolte 2025-26,
+    # 01/08/2026). Due famiglie di differenze, e conviene conoscerle prima di
+    # aggiungere Bundesliga e Ligue 1, dove si ripeteranno:
+    #   1. i nomi sono ITALIANIZZATI (Barcellona, Siviglia, Maiorca — e piu'
+    #      avanti Bayern Monaco, Colonia, Marsiglia, Lilla);
+    #   2. le abbreviazioni portano il punto ("Ath. Bilbao", "Atl. Madrid").
+    # Senza queste 5 il join La Liga si fermava a 420/760.
+    "Barcellona": "Barcelona",
+    "Siviglia": "Sevilla",
+    "Maiorca": "Mallorca",
+    "Ath. Bilbao": "Ath Bilbao",
+    "Atl. Madrid": "Ath Madrid",
     # --- Calendario di club (openfootball, Fase 59): varianti "FC/CF/Hotspur"
     # usate nelle competizioni europee/coppe nazionali per i club di Premier
     # League e La Liga, generalizzando la Fase 4e (Coppa Italia/coppe europee)

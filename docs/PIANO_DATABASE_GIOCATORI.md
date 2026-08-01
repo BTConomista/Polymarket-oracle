@@ -2777,6 +2777,39 @@ nostri snapshot `Man United` e `Nott'm Forest`. I due alias sono entrati in
 join è tornato a 760/760. La parte che conta: **il join non ha fallito in
 silenzio**, la guardia ha rifiutato la raccolta finché il conto non tornava.
 
+### 12.3-ter · Tre leghe (01/08/2026): 1.139 partite, 35.339 righe
+
+Terza raccolta: **La Liga 2025-26** — 11.953 righe, **380/380 partite**, 599
+giocatori (la più ricca delle tre). Join **760/760** e coerenza gol **760/760**
+contro il nostro snapshot.
+
+| raccolta | righe | partite | giocatori | join |
+|---|---:|---:|---:|---|
+| Serie A 2025-26 | 11.894 | 379/380 | 584 | 758/758 |
+| Premier 2025-26 | 11.492 | 380/380 | 537 | 760/760 |
+| **La Liga 2025-26** | **11.953** | **380/380** | **599** | **760/760** |
+| **totale** | **35.339** | **1.139** | — | **2.278/2.278** |
+
+**⚠️ Per la Liga non esiste un report dell'utente**: il terzo file caricato era
+di nuovo quello della Premier. La verifica è interamente della sessione, senza
+un secondo parere con cui incrociarla.
+
+**Un'anomalia ridimensionata misurandola meglio (R4/R7).** Il controllo
+«squadra-partita sotto 985 minuti», che su Serie A e Premier dava 0 casi senza
+espulsione, sulla Liga ne dava 2. Rifatta la domanda sul deficit rispetto ai 990
+minuti attesi, su tutte e tre le raccolte: **2.077 su 2.086 (99,57%) stanno
+esattamente a 990**, i 9 residui hanno deficit 1-12 e sono **distribuiti su tutte
+e tre le leghe**. Non è arrotondamento per sostituzione (correlazione col numero
+di cambi: **+0,0004**). È un'imprecisione minore della fonte sullo **0,43%** dei
+team-partita — e **la soglia dei 985 usata dai report era arbitraria**: faceva
+sembrare la Liga diversa quando il fenomeno è comune.
+
+**Gli alias, e cosa aspettarsi dopo.** Il join partiva da 420/760 per **5 nomi su
+20**. Due famiglie che **si ripeteranno su Bundesliga e Ligue 1**: i nomi sono
+**italianizzati** (`Barcellona`, `Siviglia`, `Maiorca` — poi *Bayern Monaco*,
+*Colonia*, *Marsiglia*, *Lilla*) e le **abbreviazioni portano il punto**
+(`Ath. Bilbao`, `Atl. Madrid`). Tutti in `TEAM_ALIASES`.
+
 ### 12.4 · Il limite che non si supera con questi dati
 
 **Una lega, una stagione.** Le altre 4 leghe e le 8 stagioni precedenti restano
