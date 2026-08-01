@@ -14307,3 +14307,78 @@ verificabile a quel livello di aggregazione**. È un esito che vale la pena
 scrivere due volte: un modello «più corretto» non è automaticamente un modello
 **migliore**, e quando due parametri si scambiano il lavoro, la scelta fra loro
 non è una questione empirica ma di comodo.
+
+---
+
+## Fase 127 — La Liga era uscita dalla raccolta in silenzio: una guardia che scattava solo troppo tardi
+
+**Obiettivo.** Rispondere a «come completiamo il test prospettico?» (Fase 78)
+partendo da un controllo dello stato, a 14 giorni dalla prima giornata utile
+(La Liga, 15 agosto). Il controllo ha trovato un guasto, e la fase è diventata
+quello.
+
+**Il fatto.** Confrontando gli snapshot di `data/smarkets_matches/`, il file del
+**31/07/2026** contiene **38 partite** invece delle 48 dei tre giorni
+precedenti, e **nessuna riga di La Liga**. Il workflow era verde. La causa,
+verificata dal vivo interrogando il listino: Smarkets ha **rinominato lo slug di
+competizione** da `spain-laliga` a `spain-la-liga`. `SLUG_LEGA` confronta il
+segmento in modo **esatto** (scelta deliberata della Fase 116, e giusta: un
+match largo raccoglie la lega sbagliata), quindi la Liga ha semplicemente
+smesso di essere riconosciuta.
+
+**Perché nessuno se n'è accorto.** `anomalia_del_listino` esisteva proprio per
+questo — R6, «il buco peggiore è il finto pieno» — ma la sua soglia era
+`nostri == 0`: scatta **solo se spariscono tutte e cinque**. Il modo realistico
+in cui un'API rinomina uno slug è invece **una lega alla volta**. Quattro leghe
+su cinque sono un finto pieno perfetto: il file c'è, pesa 120 KB, e non
+contiene la lega che parte per prima. La distanza fra la guardia scritta e il
+guasto reale era esattamente un quantificatore.
+
+**Alternative considerate.**
+1. *Match largo sullo slug* (`"spain" in slug`) — scartata: reintrodurrebbe il
+   rischio che la Fase 116 aveva eliminato (raccogliere la seconda divisione o
+   un torneo femminile credendolo la prima).
+2. *Far fallire il giro appena una lega manca, prima della raccolta* —
+   **scartata**: farebbe perdere anche le altre quattro, e i dati pre-partita
+   non si ri-scaricano (`newseason.md` §2). Un allarme che distrugge il dato
+   che doveva proteggere è peggio del silenzio.
+3. *Scelta adottata*: raccogliere tutto, **dichiarare il buco nel file**
+   (`leghe_senza_partite_esposte`), e uscire con codice diverso da zero **dopo**
+   aver scritto. Il dato è salvo e il workflow è rosso.
+
+**Risultato.** Entrambi gli slug in mappa (il vecchio **non** si toglie:
+l'archivio già raccolto lo contiene, e un rinominamento può essere rimesso
+indietro); `leghe_assenti()` nuova; raccolta di recupero eseguita a mano lo
+stesso giorno. Test: 23 verdi su questo modulo, fra cui quello che fissa per
+iscritto che la guardia vecchia, da sola, **non** vedeva il caso.
+
+**📐 Il modello in dettaglio.** Nessuna matematica nuova: la correzione è un
+quantificatore. Detto `E` l'insieme delle leghe esposte dal listino e `L` le
+nostre cinque, la guardia della Fase 116 era
+
+```
+allarme_116  ⇔  |E ∩ L| = 0            (sparizione TOTALE)
+```
+
+e quella di oggi è
+
+```
+mancanti     =  L \ E
+allarme_127  ⇔  mancanti ≠ ∅           (sparizione di UNA QUALSIASI)
+```
+
+con `allarme_116 ⇒ allarme_127` (la vecchia è il caso `mancanti = L`), quindi
+la nuova non allenta nulla: stringe. Il caso reale del 31/07 è
+`|E ∩ L| = 4 ≠ 0` e `mancanti = {la_liga} ≠ ∅`: **falso** per la prima,
+**vero** per la seconda. Il numero che rende la condizione non vacua è
+**misurato**, non assunto: il 28/07/2026 — il punto più profondo
+dell'off-season, nessuna delle 5 leghe in campo prima del 15 agosto — tutte e
+cinque erano esposte con **9-10 partite ciascuna** (48 in totale). «Lega a
+zero» non è uno stato che il calendario produca.
+
+**Lezione.** *Una guardia va tarata sul guasto che accadrà, non sul guasto che
+è comodo scrivere.* La forma «tutto o niente» è la più facile da implementare e
+la meno probabile in natura: i sistemi esterni si rompono **per pezzi**. E il
+corollario operativo, che vale per ogni raccoglitore futuro del progetto: un
+allarme non deve mai poter distruggere il dato che sta proteggendo — prima si
+salva, poi si urla.

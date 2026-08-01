@@ -254,11 +254,42 @@ le cose sono successe in passato (il θ del router cresce nel tempo, Fasi 75/81)
 
 ## 5 · «DA RIPETERE / COMPLETARE PIÙ AVANTI» — checklist ESEGUIBILE
 
+> 🔄 **Aggiornamento 01/08/2026 (Fase 127).** Due caselle di questo paragrafo
+> sono chiuse e una data è cambiata.
+>
+> - **Canale quote per-partita: ✅ RISOLTO** (Fasi 115/116/118). Smarkets
+>   espone 1X2 + O/U 2.5 + GG/NG delle 5 leghe, e
+>   `.github/workflows/smarkets-prematch.yml` raccoglie 4 volte al giorno da
+>   28/07. L'archivio è `data/smarkets_matches/`.
+> - **Fixture ufficiali: ✅ li dà la stessa fonte** — l'API espone ~1 giornata
+>   per lega con data e ora. Restano da **verificare contro una seconda fonte**
+>   (openfootball): «ciò che è quotato» non è per definizione «la giornata
+>   intera».
+> - **La prima partita è il 15 agosto, non il 16**: `spain-la-liga`
+>   Alaves–Getafe, 15/08 17:30 UTC (letto dal listino, non dagli outright).
+>   **La scadenza del congelamento è il 14 agosto.**
+> - ⚠️ **Lezione pagata lo stesso giorno**: la Liga era uscita dalla raccolta
+>   **in silenzio** dal 31/07 perché Smarkets ha rinominato lo slug
+>   (`spain-laliga` → `spain-la-liga`) e la guardia scattava solo a 5 leghe su
+>   5 mancanti (Fase 127). Corretto. Da qui in avanti, **prima di ogni
+>   congelamento si controlla che tutte e 5 le leghe siano nell'ultimo file**,
+>   non che il file esista.
+>
+> **Restano aperte**, in ordine di dipendenza: (1) la **mappa nomi
+> Smarkets → nostri** — bloccante sia per M1 sia per M2; (2) il congelamento
+> **M1** sui fixture veri (`scripts/_run_prospettico_2627.py` ha ancora
+> `FIXTURES` hardcoded su 7 partite Premier); (3) lo **script di scoring**;
+> (4) i **criteri pre-registrati**. Più una decisione: il regime denso gira
+> ogni 6h, quindi la «chiusura» del M2 può essere vecchia fino a 6 ore — o si
+> infittisce il cron nelle finestre di partita, o lo si dichiara.
+
 **Date di inizio** (fonte unica `newseason.md` §1, `start_date` degli eventi
 outright Smarkets scaricati il 25/07/2026, **da riverificare a inizio agosto**):
 La Liga **16/8**, Premier e Ligue 1 **21/8**, Serie A **22/8**, Bundesliga
 **28/8**. **La scadenza vera del congelamento è il 16 agosto** — non fine mese,
 non l'inizio della Serie A. Da fine luglio 2026 sono meno di tre settimane.
+*(⚠️ rettifica 01/08: il listino per-partita dice **15/8** per la Liga — vedi il
+riquadro sopra. Le date qui restano quelle degli outright, come dichiarato.)*
 
 Cosa esiste già, per non rifarlo:
 
