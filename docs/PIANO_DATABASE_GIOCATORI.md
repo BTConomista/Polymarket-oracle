@@ -2755,6 +2755,28 @@ che ora è finalmente ponibile con dati veri:
 4. la stagione 2025-26 è **una sola**: qualunque risultato è per costruzione
    fragile alla stagione, come lo era il θ della Fase 75/81.
 
+### 12.3-bis · ⭐ Entra la Premier (01/08/2026): la potenza diventa sufficiente
+
+Seconda raccolta: **Premier League 2025-26**, `files/diretta_premier_league_2526/`
+— **11.492 righe**, **380/380 partite** (nessun buco, a differenza della Serie A).
+Verifica indipendente contro il nostro snapshot: **760/760** sul join e
+**760/760** sulla coerenza dei gol; classifica ricostruita dal file 20/20 con 38
+partite ciascuna; marcatori e assist coincidenti.
+
+**Cosa cambia per il go/no-go di §12.3.** Con due leghe siamo a **759 partite**,
+sopra le **~574** che la Fase 98 misura servire per l'80% di potenza sull'1X2
+contro il mercato. **Il test diventa conclusivo invece che indicativo**: un esito
+nullo ora chiuderebbe davvero il fronte, mentre con la sola Serie A (379 partite)
+sarebbe rimasto ambiguo. Era il limite dichiarato in §12.4 e in §6.2 del README
+della prima raccolta: è caduto.
+
+**Un alias mancante, trovato dalla guardia.** Alla prima registrazione il join si
+è fermato a **544/760**: diretta.it scrive `Manchester Utd` e `Nottingham`, i
+nostri snapshot `Man United` e `Nott'm Forest`. I due alias sono entrati in
+`src/data/sources.py::TEAM_ALIASES` — dove il progetto li tiene da sempre — e il
+join è tornato a 760/760. La parte che conta: **il join non ha fallito in
+silenzio**, la guardia ha rifiutato la raccolta finché il conto non tornava.
+
 ### 12.4 · Il limite che non si supera con questi dati
 
 **Una lega, una stagione.** Le altre 4 leghe e le 8 stagioni precedenti restano

@@ -1,0 +1,16 @@
+{
+  "righe_attese": 11492,
+  "team_partita_attesi": 760,
+  "squadre": 20,
+  "giocatori": 537,
+  "statistiche": 98,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-24",
+  "partite_attese": 380,
+  "join_snapshot": "760/760",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "premier_league",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+}

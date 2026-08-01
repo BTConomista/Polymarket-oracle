@@ -150,6 +150,15 @@ def load_player_matches(
     df["data"] = pd.to_datetime(df["Data"], format="%d.%m.%Y")
     df["lega"] = r.get("lega")
     df["stagione"] = r.get("stagione")
+    # I nomi squadra si portano sulla convenzione dei nostri snapshot
+    # (football-data) con la mappa canonica del progetto. Senza, il join si
+    # ferma in silenzio: sulla Premier 2025-26 si fermava a 544/760, perche'
+    # diretta.it scrive "Manchester Utd" e noi "Man United".
+    from .sources import TEAM_ALIASES
+
+    for col in ("Squadra", "Avversario"):
+        if col in df.columns:
+            df[col] = df[col].map(lambda x: TEAM_ALIASES.get(x, x))
 
     if strict:
         attese = r.get("righe_attese")

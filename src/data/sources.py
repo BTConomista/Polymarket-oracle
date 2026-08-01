@@ -140,6 +140,13 @@ TEAM_ALIASES: dict[str, str] = {
     "Nottingham Forest": "Nott'm Forest",
     "West Bromwich Albion": "West Brom",
     "Wolverhampton Wanderers": "Wolves",
+    # Forme brevi usate da diretta.it/Flashscore (aggiunte 01/08/2026 con la
+    # raccolta Premier 2025-26). Le altre 17 squadre combaciavano gia': queste
+    # tre sono le uniche differenze, e senza di esse il join si fermava a
+    # 544/760 team-partita — la guardia lo ha visto, ed e' esattamente il caso
+    # per cui TEAM_ALIASES esiste (§5 del CLAUDE.md, bug "Hellas Verona").
+    "Manchester Utd": "Man United",
+    "Nottingham": "Nott'm Forest",
     # --- La Liga (Fase 54): le 11 differenze Understat -> football-data. Ogni
     # coppia verificata per IDENTITA' (non per ordinamento): es. "Atletico Madrid"
     # (Ath Madrid) e' distinta da "Real Madrid", presente identica in entrambe.

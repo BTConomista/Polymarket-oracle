@@ -66,6 +66,13 @@ def verifica(df: pd.DataFrame, lega: str) -> dict:
 
     d = df.copy()
     d["data"] = pd.to_datetime(d["Data"], format="%d.%m.%Y", errors="coerce")
+    # stessa normalizzazione del caricatore: il controllo deve vedere cio' che
+    # vedra' il codice, non i nomi grezzi
+    from src.data.sources import TEAM_ALIASES
+
+    for col in ("Squadra", "Avversario"):
+        if col in d.columns:
+            d[col] = d[col].map(lambda x: TEAM_ALIASES.get(x, x))
     if d["data"].isna().any():
         raise SystemExit(f"❌ {int(d['data'].isna().sum())} date non interpretabili")
 
