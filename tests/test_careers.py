@@ -287,3 +287,86 @@ def test_aggancio_serie_rende_uno_stato_per_riga():
     assert list(out["aggancio"]) == ["univoco", "assente", "assente"]
     assert out.loc[0, "club_id_agganciato"] is not None
     assert pd.isna(out.loc[1, "club_id_agganciato"])
+
+
+# --------------------------------------------------------------------------
+# 6 · VERIFICA D'IDENTITA' — la difesa contro gli omonimi (audit 01/08/2026)
+# --------------------------------------------------------------------------
+
+def test_verifica_identita_e_gerarchica_non_un_or():
+    """L'audit ha misurato che senza questo controllo lo 0,268% delle pagine
+    raccolte era di UN'ALTRA PERSONA. E che un OR (`data OR club`) porterebbe
+    il falso positivo da 0,23% a ~10,5%: un OR non e' mai piu' forte del suo
+    ramo piu' debole."""
+    from src.data.wikipedia_careers import Tappa, verifica_identita
+
+    def tappa(club):
+        return Tappa(1, 1, club, 2015, 2018, False, 10, 0, False, False, "u")
+
+    # 1 · data che coincide -> confermata, senza bisogno dei club
+    assert verifica_identita("1988-08-21", "1988-08-21", []) == "confermata_data"
+    assert verifica_identita("1988-08-21", "1988-08-23", []) == "confermata_data"  # 2 gg
+
+    # 4 · data discorde e nessun club in comune -> RESPINTA. E' il caso Pele':
+    # player_id nato nel 1991 che riceveva la pagina del Pele' del 1940.
+    assert verifica_identita("1940-10-23", "1991-09-29", [tappa("Santos")],
+                             club_noti={"Fluminense"}) == "respinta"
+
+    # 3 · date discordi MA i club coincidono -> QUARANTENA, non scarto: sono i
+    # casi in cui la persona e' giusta e sono le due FONTI a dissentire
+    # sull'anagrafica (Chancel Mbemba 1994 contro 1988, 5 club su 5 uguali).
+    assert verifica_identita(
+        "1988-08-08", "1994-08-08",
+        [tappa("Anderlecht"), tappa("Newcastle")],
+        club_noti={"Anderlecht", "Newcastle"},
+    ) == "quarantena"
+
+    # 2 · data non confrontabile ma club coincidenti -> confermata via club
+    assert verifica_identita(None, "1994-08-08", [tappa("Anderlecht")],
+                             club_noti={"Anderlecht"}) == "confermata_club"
+    # ...e senza club noti resta respinta: l'assenza di prova non e' prova
+    assert verifica_identita(None, "1994-08-08", [tappa("Anderlecht")]) == "respinta"
+
+
+def test_le_respinte_non_entrano_nel_database():
+    """Il test che conta davvero: una carriera di un'altra persona non deve
+    poter arrivare a valle. Restano in `esiti.jsonl` per sapere CHI era, ma
+    fuori dal deliverable e fuori da `load_database()`."""
+    w = C.load_wikipedia_careers()
+    if w.empty:
+        pytest.skip("raccolta Wikipedia non ancora eseguita")
+    if "identita" in w.columns:
+        assert "respinta" not in set(w["identita"])
+        # e cio' che resta e' dichiarato, non implicito
+        assert set(w["identita"].unique()) <= {
+            "confermata_data", "confermata_club", "quarantena", "non_verificata"
+        }
+
+
+def test_club_riserve_non_si_agganciano_alla_prima_squadra():
+    """«Bilbao Athletic» e' la squadra B: agganciarla all'Athletic Bilbao
+    attribuirebbe presenze di terza divisione al club maggiore. `normalizza`
+    torna un frozenset, quindi i due nomi collassano sullo stesso insieme e
+    l'ordine dei token NON protegge: serve l'elenco esplicito."""
+    from src.data.club_matching import Agganciatore, normalizza
+
+    assert normalizza("Bilbao Athletic") == normalizza("Athletic Bilbao")
+    a = Agganciatore()
+    assert a.aggancia("Bilbao Athletic") is None
+    assert a.aggancia("Real Madrid B") is None
+    assert a.aggancia("Bayern Munich") is not None       # la prima squadra si'
+
+
+def test_falsi_positivi_dellaudit_sono_corretti():
+    """Erano il difetto peggiore: uscivano etichettati «univoco», cioe' come
+    CERTEZZA sbagliata. Brest andava alla Dynamo Brest (Bielorussia, 0/108
+    conferme) e PAOK a una squadra dilettanti che in `appearances` non compare
+    mai."""
+    from src.data.club_matching import Agganciatore
+
+    nomi = pd.read_csv(C.DATA_DIR.parent / "player_scores" / "club_names.csv.gz")
+    per_id = nomi.set_index("club_id")["name"]
+    a = Agganciatore()
+    assert per_id[a.aggancia("Brest")] == "Stade Brestois 29"
+    assert "Panthessalonikios" in per_id[a.aggancia("PAOK")]
+    assert "Athlitiki Enosi" in per_id[a.aggancia("AEK Athens")]

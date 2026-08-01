@@ -40,8 +40,13 @@ def main() -> int:
             except json.JSONDecodeError:
                 continue                      # riga tronca da un'interruzione
             esiti.append({k: r.get(k) for k in
-                          ("player_id", "nome", "nostro", "censurato", "stato", "url")})
-            tappe.extend(r.get("tappe", []))
+                          ("player_id", "nome", "nostro", "censurato", "stato",
+                           "url", "identita", "bday_pagina", "nascita_attesa")})
+            # ⚠️ Le tappe di una pagina la cui identita' NON e' confermata sono
+            # la carriera di un'altra persona: restano in esiti.jsonl (servono a
+            # sapere CHI era) ma non entrano nel deliverable.
+            if r.get("stato") == "ok":
+                tappe.extend(r.get("tappe", []))
 
     df = pd.DataFrame(tappe)
     df.to_csv(TAPPE, index=False, compression="gzip")
@@ -50,6 +55,9 @@ def main() -> int:
 
     print(f"tappe:     {len(df):,} righe -> {TAPPE} ({TAPPE.stat().st_size/1e6:.1f} MB)")
     print(f"esiti:     {len(ri):,} giocatori tentati -> {RIEPILOGO}")
+    resp = int((ri["stato"] == "identita_non_confermata").sum())
+    if resp:
+        print(f"⚠️  {resp} pagine ESCLUSE: erano di un'altra persona (verifica d'identita')")
     print("\nper stato:")
     for stato, n in ri["stato"].value_counts().items():
         print(f"  {stato:18s} {n:,}")

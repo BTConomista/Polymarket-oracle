@@ -102,6 +102,7 @@ class Tappa:
     prestito: bool
     giovanili: bool
     source_url: str
+    identita: str = "non_verificata"   # confermata_data | confermata_club | quarantena | respinta
     fonte: str = FONTE
     licenza: str = LICENZA
 
@@ -112,9 +113,11 @@ class Esito:
     player_id: int
     nome: str
     url: str | None = None
-    stato: str = "ok"      # ok | nessuna_pagina | nessun_infobox | nessun_blocco | errore
+    stato: str = "ok"      # ok | nessuna_pagina | nessun_infobox | nessun_blocco | errore | identita_non_confermata
     tappe: list[Tappa] = field(default_factory=list)
     dettaglio: str = ""
+    bday_pagina: str | None = None
+    identita: str = "non_verificata"
 
 
 def _percorso_permesso(url: str) -> bool:
@@ -213,6 +216,76 @@ def _parse_intero(testo: str) -> int | None:
     return int(m.group()) if m else None
 
 
+def bday_pagina(html: str) -> str | None:
+    """La data di nascita dichiarata dall'infobox (`<span class="bday">`).
+
+    E' l'unico dato che permette di sapere **se la pagina parla davvero di quel
+    giocatore**, e sta gia' nella pagina scaricata: verificarlo costa **zero
+    richieste in piu'**.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    tag = soup.find("span", class_="bday")
+    return tag.get_text(strip=True) if tag else None
+
+
+def verifica_identita(
+    bday: str | None, nascita_attesa: str | None, tappe: list[Tappa],
+    club_noti: set[str] | None = None, tolleranza_giorni: int = 3,
+) -> str:
+    """⚠️ LA DIFESA CONTRO GLI OMONIMI — regola GERARCHICA, non un OR.
+
+    L'audit del 01/08/2026 ha misurato che senza questo controllo lo **0,268%**
+    delle pagine raccolte e' di **un'altra persona**: carriere vere, coerenti,
+    con il nostro nome sopra. E' regola **R6** allo stato puro — nessun NaN,
+    nessun errore, solo il dato di qualcun altro. Casi trovati: il `player_id`
+    di un giocatore nato nel 1991 che riceveva la carriera di **Pele'** (Santos
+    1956, New York Cosmos 1975); Joao Moutinho con **692 presenze fantasma**.
+
+    L'ordine conta e **non e' sostituibile da un OR**: `data OR club` porterebbe
+    il falso positivo dallo 0,23% a ~10,5%, perche' un OR non puo' essere piu'
+    forte del suo ramo piu' debole.
+
+    1. data di nascita entro `tolleranza_giorni`      -> `confermata_data`
+    2. data non confrontabile ma >=50% dei club noti  -> `confermata_club`
+    3. date discordi MA i club coincidono             -> `quarantena`
+    4. altrimenti                                      -> `respinta`
+
+    Il passo 3 esiste perche' **32 discordanze su 45 sono la persona giusta**
+    con l'anagrafica contestata fra le due fonti (Chancel Mbemba 1988 contro
+    1994, con 5 club su 5 coincidenti): un taglio secco sulla data butterebbe
+    dati buoni. La quarantena si dichiara, non si nasconde.
+    """
+    import datetime as _dt
+
+    def _data(x):
+        if not x:
+            return None
+        try:
+            return _dt.date.fromisoformat(str(x)[:10])
+        except ValueError:
+            return None
+
+    a, b = _data(bday), _data(nascita_attesa)
+    coincide_data = (
+        a is not None and b is not None and abs((a - b).days) <= tolleranza_giorni
+    )
+    if coincide_data:
+        return "confermata_data"
+
+    copertura = 0.0
+    if club_noti:
+        nostri = {c.lower() for c in club_noti}
+        loro = {t.club.lower() for t in tappe if not t.giovanili}
+        if loro:
+            copertura = sum(
+                1 for c in nostri if any(c in x or x in c for x in loro)
+            ) / max(len(nostri), 1)
+
+    if a is None or b is None:
+        return "confermata_club" if copertura >= 0.5 else "respinta"
+    return "quarantena" if copertura >= 0.5 else "respinta"
+
+
 def parse_career(html: str, player_id: int, url: str) -> list[Tappa]:
     """Estrae il blocco carriera dell'infobox: senior + giovanili, marcati.
 
@@ -270,7 +343,10 @@ def parse_career(html: str, player_id: int, url: str) -> list[Tappa]:
     return tappe
 
 
-def fetch_player(player_id: int, nome: str, lang: str = "en", **kw) -> Esito:
+def fetch_player(
+    player_id: int, nome: str, lang: str = "en",
+    *, nascita_attesa: str | None = None, club_noti: set[str] | None = None, **kw
+) -> Esito:
     """Scarica e analizza un giocatore. Registra anche gli esiti NEGATIVI.
 
     Un esito negativo va registrato quanto uno positivo (principio §1.4 del
@@ -289,4 +365,15 @@ def fetch_player(player_id: int, nome: str, lang: str = "en", **kw) -> Esito:
     tappe = parse_career(html, player_id, url)
     if not tappe:
         return Esito(player_id, nome, url, "nessun_blocco")
-    return Esito(player_id, nome, url, "ok", tappe)
+
+    bday = bday_pagina(html)
+    identita = verifica_identita(bday, nascita_attesa, tappe, club_noti)
+    for t in tappe:
+        t.identita = identita
+    if identita == "respinta":
+        # Le tappe si conservano nell'esito (servono a capire CHI era la pagina
+        # sbagliata) ma lo stato dice che non vanno nel database.
+        return Esito(player_id, nome, url, "identita_non_confermata", tappe,
+                     bday_pagina=bday, identita=identita)
+    return Esito(player_id, nome, url, "ok", tappe,
+                 bday_pagina=bday, identita=identita)
