@@ -1,186 +1,375 @@
-# Piano di recupero dei giocatori Wikipedia falliti (01/08/2026)
+# Recupero dei giocatori Wikipedia falliti — piano verificato (01/08/2026)
 
-> ## ⚠️ STATO: ANALISI COMPLETE, **VERIFICA NON ESEGUITA**
+> **Lavoro a 9 agenti**: 4 analisi indipendenti sui quattro fronti, 4 scettici che
+> hanno rieseguito ogni misura, una sintesi. **Dove lo scettico ha corretto un
+> numero o una conclusione, vale la sua versione.**
 >
-> Quattro agenti hanno analizzato i quattro fronti e prodotto stime e codice.
-> **I quattro scettici e la sintesi sono falliti per limite di sessione**, quindi
-> nulla di ciò che segue è stato sottoposto alla verifica avversariale.
+> **Esito della verifica: 3 fronti su 4 reggono, 1 cade** (il gazetteer sui 404:
+> non per il rischio, ma perché la resa non è più misurata dopo il fix di un bug
+> nel suo stesso codice). E **cinque rettifiche obbligatorie** cambiano il piano,
+> non solo i numeri — sono in §0-bis.
 >
-> **Non è materiale su cui agire così com'è.** Il precedente pesa: nell'audit del
-> database carriere lo scettico ha declassato **27 rilievi su 72**, e in quello
-> sulle fonti **25 su 88**. Le stime qui sotto vanno lette come **limiti
-> superiori ottimistici** finché qualcuno non le rimette in discussione.
->
-> **L'unica cosa verificata in proprio dalla sessione** è il rilievo §0, perché
-> costava due minuti e riguarda il nostro codice.
+> ⚠️ **Nulla di questo è stato applicato.** Il codice proposto vive qui, non nei
+> moduli. Le tre identità sbagliate identificate in §B sono **ancora nel
+> database**.
+
+
+> Sintesi finale. **I verdetti dello scettico hanno precedenza sulle quattro analisi**: dove le due fonti divergono, qui sotto compare il numero dello scettico e l'analisi originale è citata solo come misura ritirata. Tutte le misure sono state fatte sulla cache (`data/wikipedia_cache/en/`, 24.052 pagine) e su una copia in sola lettura di `data/carriere_wikipedia/esiti.jsonl`. Richieste di rete spese in totale dai cinque agenti: **~140**, una alla volta, solo su `/wiki/<Nome>`.
 
 ---
 
-## §0 · L'unico rilievo VERIFICATO: la classificazione degli errori è sbagliata
+## 0. Premessa: i numeri del brief sono scaduti, e non di poco
 
-`wikipedia_careers.py:380` decide così se una pagina ha un infobox:
+La raccolta è girata in background durante tutto il lavoro. Denominatori a HEAD (01/08/2026), 26.816 righe / 26.504 `player_id` distinti:
 
-```python
-if "infobox" not in html:
-    return Esito(..., "nessun_infobox")
+| stato | brief | HEAD | in cache |
+|---|---:|---:|---:|
+| `nessun_infobox` (pagine-indice) | 2.102 | **2.519** | 2.519 = **100%** |
+| `nessuna_pagina` (404) | 1.354 | **2.085** | 0 (ovvio) |
+| `nessun_blocco` | 557 | **711** | 711 = **100%** |
+| `errore` | 312 | **315** | 286 = 90,8% |
+| `identita_non_confermata` | 152 | **205** | 205 = **100%** |
+| `quarantena` (dentro gli `ok`) | 199 | **262** | — |
+| **totale falliti** | **4.477** | **5.835** | |
+| *mai tentati* | — | **3.027** | — |
+
+**Due conseguenze operative.**
+
+1. La colonna «in cache» del brief (1.516/2.102, 477/557, 118/152) è **stale**: su tutti i fronti diversi dai 404 la cache è al **100%**. Quindi l'obiezione «avete misurato sul sottoinsieme facile già scaricato» **non si applica** e va dichiarata refutata (R4): il censimento è sulla popolazione intera, non su un campione.
+2. Tutte le percentuali qui sotto **trasferiscono**, i valori assoluti **no**. Vanno ricontati sul file finale prima di scriverli nel README.
+
+---
+
+## 0-bis. Rettifiche obbligatorie prima di eseguire qualunque cosa
+
+Sono i verdetti dello scettico che **cambiano il piano**, non solo i numeri.
+
+| # | fronte | cosa va corretto | conseguenza se non si corregge |
+|---|---|---|---|
+| R1 | pagine-indice | La frase «il ramo-indice **non peggiora** la qualità del database» è **falsa**: confronta uno 0,268% *pre-filtro* (audit §1.1, misurato prima che `verifica_identita` esistesse) con un limite *post-filtro*. | Si dichiara neutrale un canale che moltiplica per ~5-11× il conteggio residuo di persone sbagliate. |
+| R2 | pagine-indice | Il limite sui falsi positivi va da **pooled** a **stratificato per notabilità**: 0,224% → **0,50%**. | Si sottostima di 2× il rischio, e i 3.027 mai tentati stanno **al 100%** nello strato non vincolato. |
+| R3 | gazetteer (404) | `varianti_da_gazetteer` ha il dedup su `chiavi(t)[0]` inizializzato a `{a}`: ogni titolo indicizzato sotto `A{a}` ha per costruzione la stessa chiave → **lo strato A è irraggiungibile**. Eseguito: 301 candidati, strato A = **0** invece di 291. | Si perde il **48%** della resa e si esegue codice diverso da quello che ha prodotto i numeri (viola §1.5). |
+| R4 | respinte/quarantena | Il ramo `k == 0 → respinta` confonde **prova contraria** e **assenza di prova**: 6 delle 11 respinte hanno **zero club** nello strato 1, e 4 di queste hanno Δ FORTE (4, 10, 14, 18 giorni). Serve la guardia `k == 0 **and** n_club > 0`. | Si **cancellano ~4 identità corrette** per rimuoverne 3 sbagliate: bilancio negativo. |
+| R5 | `nessun_blocco` | `casi_routing.json` risolve la data di nascita **per nome**, non per `player_id`: 40/126 righe duplicate, 86 titoli distinti su 126, i **sei** Danilo (1984/1986/1990/1991/1999/2001) tutti instradati su «Danilo (footballer, born 1986)». | Il recupero scende da ~126 a ~79, **e il colpo cade esattamente sui mononimi brasiliani**, cioè sulla confondente. |
+
+---
+
+## 1. Il piano di recupero, in ordine di rapporto valore/costo
+
+### Riepilogo
+
+| # | fronte | popolaz. | recuperati (IC) | falsi positivi | richieste | tempo @1/s |
+|---|---|---:|---:|---:|---:|---:|
+| **A** | parser: vincolo sull'anno | 20.981 pagine `ok` | **+7.900 tappe** (non giocatori) | 0 per costruzione | **0** | 0 (≈16 min CPU) |
+| **B** | quarantena → `verifica_identita_v2` | 262 | **245 rietichettate** [89,9-95,9%] · **−3 sbagliate** | 0-2 righe | **0** | 0 |
+| **B2** | respinte risolte dalla sola cache | 205 | **16** [4,9-12,3%] | incluso in B | **0** | 0 |
+| **C** | `nessun_blocco` → instradamento | 711 | **126** [111-133] | **0 punto, ≤9** | **137** | 2,3 min |
+| **D** | pagine-indice | 2.519+376+24 | **2.070-2.335** | **0 punto, ≤11,8** | **2.842** | 47,4 min |
+| **E** | 404 → gazetteer (**pilota, poi decidere**) | 2.085 | **non misurato** (603 candidati) | 0 punto, ≤28 | 603 | 10,1 min |
+| **F** | respinte → titolo nuovo | 189 | **~81** [44-118] | incluso in B | **189** | 3,2 min |
+| | **TOTALE** | | **≈2.400-3.100 giocatori** | **0 osservati, ≤51 al 95%** | **3.771** | **1,05 ore** |
+
+Il totale dei falsi positivi è la **somma dei limiti superiori** (conservativa, non additiva in probabilità): ≤51 su ~2.900 recuperi = **≤1,8%**. Il valore **osservato** su ~180 verifiche end-to-end indipendenti (30 sul fronte-indice + 50 sull'instradamento + 79 sul placebo gazetteer + 9 candidati reali + 16 pagine nuove) è **0 agganci sbagliati**.
+
+---
+
+### A · Il vincolo sull'anno in `parse_career` — 0 richieste, il miglior rapporto in assoluto
+
+Non recupera **giocatori**, recupera **righe**: Wikipedia lascia la colonna *Years* vuota quando gli anni non si sanno, e il parser pretende `\d{4}`.
+
+- **+757 tappe su 1.999 pagine = +4,08%** (analisi: +3,96%) → estrapolato su 20.981 pagine `ok`: **≈7.900 tappe**;
+- **26,81%** delle pagine toccate (IC95 [24,9%, 28,8%]); mediana +1 riga, massimo +4;
+- **99,74% giovanili** — quindi il guadagno è quasi tutto sulla ricostruzione del settore giovanile, non sulle tappe senior;
+- forma della cella: **757/757 vuote** → la guardia proposta (`cella vuota o sole cifre/?/trattini`) non ammette nulla che non sia già visto;
+- controllo spazzatura: i club aggiunti sono club veri (Real Sociedad 6, Roma 3, Valencia 3, Lazio 3; sul campione più grande Ajax 35, Feyenoord 25, Boca Juniors 20).
+
+**Costo: zero richieste, ~16 minuti di CPU** per ri-girare il parser sulla cache. Due effetti di schema da dichiarare (R8): le 7.900 tappe hanno `anno_da=None` (dato mancante **dichiarato**, non finto pieno), e il campo `ordine` si rinumera sul 26,8% delle pagine.
+
+**Falsi positivi: zero per costruzione** — non si scarica nulla, non si cambia identità, si leggono righe di pagine già confermate.
+
+---
+
+### B · Le 262 quarantene e le 16 false respinte — 0 richieste
+
+L'errore diagnosticato è giusto: `verifica_identita` confronta **insiemi di nomi di club**, e il nome di un club non identifica nessuno. Il caso conclamato è nel campione: **Javier Olaizola** padre (28/11/1969, Eibar/Real Burgos/**Mallorca**) contro il nostro figlio (15/03/2007, **Mallorca** 2025-26). 37 anni di scarto, club in comune, e la regola attuale lo mette in quarantena *per la copertura-club*. Con le finestre temporali `k = 0`: le due permanenze al Mallorca non si sovrappongono.
+
+**Che le quarantene siano la persona giusta è dimostrato per via indipendente, non per intuizione**: sulle 2.219 coppie di persone **diverse con lo stesso nome** dentro `players.csv`, solo lo **0,96%** ha le date entro 31 giorni e l'**8,96%** entro 366; nella quarantena sono il **53,1%** e il **94,8%**. Limite inferiore di miscela: **π ≥ 94,3%** (≥89,9% con gli estremi di Wilson).
+
+Esito con `verifica_identita_v2` **e la guardia R4**:
+
+| | quante | tasso |
+|---|---:|---:|
+| promosse a `confermata_coerenza` | 245 | **93,5%** [89,9; 95,9] |
+| lasciate in `quarantena` (giudizio umano) | ~14 | |
+| **respinte — identità davvero sbagliate, oggi dentro il DB** | **3** | Olaizola 1969/2007 · Bruno Alves 1981/1990 · Nilson Júnior 1975/1991 |
+| false respinte recuperate dalla sola cache | **16/205** | **7,8%** [4,9; 12,3] |
+
+Le 16 sono refusi veri: **Germán Lux** 07/06/1982 contro 06/07/1982 (giorno e mese invertiti), **Georgievski** 5 giorni di scarto con **4 club su 4** coerenti anche negli anni (bocciato dai diacritici nel matcher).
+
+**Regressione nota e non riportata dall'analisi**: il ramo `Δ ignoto → serve k≥2` **declassa 9 delle 15** `confermata_club` odierne a quarantena. Piccola in assoluto, reale, va messa a verbale.
+
+**Il 72,3% dichiarato va scisso**, perché mescola due cose diverse: **245 righe cambiano solo etichetta** (sono già nel DB come `ok`) e **16 sono dato nuovo**. Il valore vero di questo passo è: 1.643 tappe senior passano da «dubbie» a «confermate con una misura», e **18 tappe di due-tre persone sbagliate escono**.
+
+**Falsi positivi: 0-2 righe.** Lo **0,11%** pubblicato dall'analisi è **ritirato**: viene da un placebo che condivide un club ma ha **un altro nome**, e in produzione quell'avversario non può presentarsi (si scarica `/wiki/<Nome>`, quindi l'avversario è **sempre** un omonimo). I due avversari differiscono proprio sull'asse a cui si attribuiva il taglio di 40×: la corroborazione passa nel **13,9%** [7,7; 23,7] sull'omonimo contro il **2,3%** [1,8; 2,9] sullo stesso-club — **6×**. Sull'avversario vero: **0/72 = 0,0% [0,0; 5,1]**, e condizionato ai club condivisi n=3 → IC [0; 56]: **nessuna potenza**, e va detto. Con ~38 incontri attesi, FP = **0-2 righe**.
+
+---
+
+### C · `nessun_blocco` → instradamento — 137 richieste, 2,3 minuti
+
+**L'ipotesi del fronte era sbagliata e questo è il risultato negativo più utile del lavoro.** Non è un problema di parsing:
+
+| che cos'è davvero (censimento completo, 711) | n | % |
+|---|---:|---:|
+| soggetto diverso (NBA, baseball, ciclismo, città, santi, re, club) | 320 | 45,0% |
+| pagina di disambigua | 220 | 30,9% |
+| pagina di NOME (lista antroponimica) | 154 | 21,7% |
+| senza infobox | 14 | 2,0% |
+| **biografia di calcio vera** | **3** | **0,42%** |
+
+E le 3 di calcio sono **tutte e tre omonimi**, tutte e tre respinte. **Recupero dall'ampliamento delle etichette: 0/711, IC95 [0%, 0,54%].** Nella variante generica `career` l'ampliamento **rompe il 93,2%** delle pagine che oggi funzionano (+7.701 righe spurie — le nazionali giovanili promosse a tappe di club — e **−3.161 righe perse**). Le varianti prudenti non rompono nulla ma iniettano 31 carriere NBA/ciclismo su `player_id` di calciatori: guadagno esattamente zero. **`INTESTAZIONI_SENIOR` va lasciato com'è.**
+
+Lo strumento di classificazione è stato validato (cosa che l'analisi non fa): la firma `club domestic league appearances and goals` è presente in **1.998/1.999 = 99,95%** delle pagine `ok` → il tasso di calciatori veri etichettati per errore «soggetto_diverso» è ~0,05%, cioè **~0,4 pagine su 711**.
+
+**Quello che i 711 danno davvero**: la pagina sbagliata è una **tabella di instradamento**. Ri-derivando per `player_id` (fix R5):
+
+- almeno un candidato calcistico: **395/711 = 55,6%**
+- **esattamente uno** con l'anno di nascita atteso: **137/711 = 19,3%** [16,5%, 22,3%] — **137 titoli distinti, 0 collisioni**
+- precisione della regola su **50** verifiche di rete (25 dell'analisi + 25 dello scettico su casi *esclusi* dal campione originale): **46/50 = 92,0%** [81,2%, 96,8%]
+- **dopo `verifica_identita` invariata: 0/50 agganci sbagliati**, IC95 superiore **7,1%**
+
+**Recuperati: 126** (range 111-133). Tappe attese ≈126 × 10,8 = **~1.360**. **Falsi positivi: 0 punto, ≤9.**
+
+Residuo non misurato, ed è **diverso** da quello dichiarato dall'analisi: il ramo che può far passare un omonimo non è la data, è la **quarantena** (date discordi + ≥50% club coincidenti → `ok`). Quel ramo si attiva solo quando la data discorda: **4 casi su 50**, 0 sfuggiti. La difesa lì è misurata a n=4, non a n=50.
+
+---
+
+### D · Le pagine-indice — 2.842 richieste, 47 minuti. È il fronte grosso, ed è il più rischioso
+
+**Il fronte non è 2.519 pagine, è 2.919**: il test `"infobox" not in html` è una **stringa**, non una forma. «Danilo», «Fernando», «Roberto» sono voci di *nome proprio* che hanno un `infobox name`, passano il test e finiscono in `nessun_blocco`. Ri-eseguito: **376/711** `nessun_blocco` e **24/315** `errore` sono pagine-indice; **0/205** `identita_non_confermata` — e quello zero è un **controllo negativo genuino** che funziona.
+
+Copertura del selettore sulla popolazione attuale: **2.145/2.490 = 86,1%** (astensioni: 275 sotto soglia, 59 ambiguo, 11 senza candidati) → **2.335 `player_id` accettati unici**. Tasso di conferma sul campione di 30, riverificato offline: **30/30 `confermata_data`** (data esatta in 29, ±1 giorno in 1 — Ignatenko 2006-05-11 vs 2006-05-12, dentro tolleranza, R4). IC95 [88,6%, 100%] → **recuperati attesi 2.070-2.335**.
+
+**Prova di non-regressione, fatta bene**: il test sui 600 `ok` misurava un percorso irraggiungibile (`not tappe and ... and e_pagina_indice(html)` va in corto circuito). La prova che serviva: su **2.866** pagine classificate INDICE, **0** contengono la nostra data di nascita; delle 2.490 `nessun_infobox` indice, **0** hanno uno `span.bday` (sono disambigue pure); per contro **227 delle 335** `nessun_blocco` non-indice hanno un bday — sono voci vere, e vengono correttamente lasciate stare.
+
+#### I falsi positivi, riscritti (R1 + R2)
+
+Il bound *pooled* della proposta è persino leggermente **migliore** del dichiarato: la decomposizione non è circolare, perché un bersaglio assente viene comunque respinto nel 97,9% dei casi → `(1 − 0,979·z)^30 = 0,05` → **z ≤ 9,7%**; col leak rimisurato su **20.394** accoppiamenti (**2,10%** [1,91%, 2,31%], contro 2,02% su 3.914) → **FP ≤ 0,224% = ≤5,3 giocatori**.
+
+**Ma il bound pooled non vale per la coda**, ed è lì che il lavoro andrà:
+
+| presenze in carriera | n | accettazione |
+|---|---:|---:|
+| <5 | 351 | **78,3%** [73,7-82,5] |
+| 5-20 | 703 | 76,4% [73,1-79,5] |
+| 20-50 | 616 | 81,8% |
+| 50-100 | 530 | 81,3% |
+| 100-200 | 442 | 86,2% |
+| 200+ | 248 | **89,5%** [85,0-93,0] |
+
+Il selettore è **sensibile** alla notabilità (si astiene di più sugli oscuri) — credito. Ma accetta comunque il **78,3%** dei giocatori con <5 presenze, cioè proprio quelli che quasi certamente non hanno una voce propria. Il campione di 30 ha mediana **44** presenze e solo il 20% sotto le 20; le 2.335 scelte hanno mediana **38** e il 34,2% sotto le 20. Lo strato debole è coperto da **6 osservazioni**.
+
+```
+strato <20 presenze :   812 scelte, z <= 40,1%  ->  FP <= 0,927%  ->  <= 7,5
+strato >=20 presenze: 1.538 scelte, z <= 12,0%  ->  FP <= 0,277%  ->  <= 4,3
+TOTALE                                          <= 11,8 giocatori = 0,50%
 ```
 
-**È un test di STRINGA, non di forma.** Le voci di *nome proprio* di Wikipedia
-(«Pedro», «Danilo», «Fernando», «Marcelo», «Allan») **hanno** un
-`infobox name`: passano il test, il parser non trova righe di carriera, e
-finiscono etichettate `nessun_blocco` — cioè in un fronte diverso da quello a
-cui appartengono.
+**Il doppio del limite pooled.** E i **3.027 mai tentati** (mediana **1** presenza, **100%** sotto le 20) porteranno ~446 scelte in più **tutte** nella fascia peggiore. L'audit §1.3 aveva già misurato che il tasso di persona-sbagliata sale sulla coda (60% sugli omonimi non-primi contro 0,117% sui nomi unici, Fisher p=3,7e-8).
 
-**Misurato in proprio dalla sessione**: delle 615 pagine `nessun_blocco`
-presenti in cache, **330 (53,7%) sono in realtà pagine-indice**. Gli esempi sono
-esattamente i mononimi brasiliani e iberici del bias noto.
+**La formulazione onesta**, che sostituisce «non peggiora il database»:
 
-**Conseguenza pratica**: il fronte «disambigua» non è di 2.102 pagine ma di circa
-**2.500**, e i conteggi per stato che abbiamo pubblicato finora **sotto-stimano
-il problema e sovra-stimano la sua varietà**. Non è un errore nei dati raccolti:
-è un errore nell'*etichetta* con cui li abbiamo classificati — che però decide
-quale strategia di recupero si applica.
+> Il ramo-indice recupera ~2.335 giocatori al prezzo di **al più ~12 agganci sbagliati (0,50%)**. È un canale d'errore **~40× più sporco per recupero** del ramo per-nome (residuo post-filtro 0,268% × 2,10% = **0,0056%**, cioè ~1,2 giocatori sui 20.981 `ok` di oggi), e ha un **meccanismo**: sul ramo per-nome l'omonimo ha un anno di nascita scorrelato dal nostro e il test a ±3 giorni lo respinge quasi sempre; sul ramo-indice la persona sbagliata è **year-matched per costruzione** — l'abbiamo scelta *perché* l'anno coincideva — quindi il leak collassa esattamente sul pavimento del paradosso dei compleanni, 7/365 = 1,92%. **La strategia costruisce la correlazione che rende il filtro a valle massimamente debole.** In assoluto ≤12 giocatori sono lo **0,02%** del database e il prezzo è accettabile — ma è un **aumento dichiarato**, non un pareggio.
 
-*(Regola R6: il pericolo non è il valore mancante, è quello che sembra dire una
-cosa e ne dice un'altra.)*
+**Prima di lanciare: 30 richieste di validazione stratificate sotto le 20 presenze**, non a caso. Costo 30 secondi, e chiudono l'unico strato dove il bound non c'è.
+
+#### Il controllo che mancava (regola Fase 98/99)
+
+Classificando i 1.840 titoli scelti: **83,9% è generabile da template deterministici** — `(footballer)` 24,6%, `(footballer, born <anno>)` 54,0%, `(<Nazionalità> footballer)` 5,2%. Il meccanismo **esiste già** (`SUFFISSI` in `fetch_wikipedia_careers.py`): semplicemente non viene provato su `nessun_infobox`, perché il loop fa `break` su qualunque stato ≠ `nessuna_pagina`. Il contributo **unico** del selettore è il **16,1%** restante (qualificatori col mese come `Fernandinho (footballer, born May 1985)`, e titoli davvero diversi: `Antunes → Vitorino Antunes`, `Fabri → Fabricio Agosto Ramírez`, `Jonathas → Jonathas de Jesus`) più un risparmio di **2-3×** in richieste rispetto a provare i template in sequenza. Resta un buon affare, ma «il fronte recupera 2.335» attribuisce al selettore recuperi che un cambio di **una riga** otterrebbe. Il codice proposto registra `template_equivalente` in `dettaglio`, così il controllo si misura a posteriori gratis.
+
+**Ancora due cose da sistemare**: la mappa `DEMONIMI` del codice proposto ha **75** paesi, quella che ha prodotto i numeri ne ha **96** — 23 persi (Northern Ireland 24 giocatori, Cape Verde 31, DR Congo, Egypt, Korea South, Kosovo, Ivory Coast…), **219/3.545 = 6,2% del fronte** che perde il segnale nazionalità **e**, con `dem=()`, anche il **−2,0 per nazionalità sbagliata**: l'anno decide da solo. È R6 applicato al codice: degrado silenzioso, nessuna eccezione. E il placebo A è **6,30%** [5,79%, 6,83%] (la tabella del dettaglio aveva ragione, la sezione `numeri` col 6,87% no).
 
 ---
 
-## Le quattro analisi, come sono uscite (NON verificate)
+### E · I 404 e il gazetteer — 603 richieste, ma **prima un pilota di 100**
 
-| fronte | su quanti | stima recuperati | costo |
-|---|---:|---:|---|
-| **1 · pagine-indice** | 2.499 | **2.017** | +1 richiesta per recuperato (~34 min) |
-| **2 · 404 sul nome** | 1.389 | **477** | 480 richieste in tutto |
-| **3 · identità respinte + quarantena** | 351 | **254** | 137 richieste (~2,5 min) |
-| **4 · pagina senza carriera** | 634 | **116** | 126 richieste (~2 min) |
-| **totale** | 4.873 | **~2.864** | ~2.760 richieste, ~46 min |
+**L'idea regge, il consegnato no.** Il nucleo è reale e vale: le pagine già in cache contengono, nei loro wikilink, i **titoli veri** di en.wikipedia, e il titolo giusto di un giocatore che ha fallito per grafia sta quasi sempre lì dentro perché la sua pagina è linkata da quella di un compagno. Costo: **zero richieste**. Il fronte 404 non è quello dei mononimi — è **traslitterazione** (Ucraina 29,5%, Bosnia 22,7%, Croazia 15,5%, Grecia 14,0%; Brasile solo 5,5%), e le quattro chiavi (grafia / traslitterazione / ordine / cognome) coprono insieme ucraino, russo, bielorusso e kazako senza una regola per lingua.
 
-⚠️ I totali non si sommano in modo pulito: i fronti si sovrappongono, perché il
-rilievo §0 sposta ~360 righe dal fronte 4 al fronte 1.
+**Ma va respinto come consegnato**, per cinque motivi misurati:
+
+1. **Il codice cancella lo strato più grande** (R3): 301 candidati invece di 587, strato A = **0**. Tutti e cinque gli esempi che l'analisi dichiara verificati 5/5 allo strato A restituiscono lista vuota. Col dedup corretto (sull'**URL esatto** già tentato, non sulla chiave appiattita — è il punto: `Bosko Sutalo` e `Boško Šutalo` sono due URL diversi con la *stessa* forma appiattita): **587 candidati, A = 291**.
+2. **Il 34,3% non si estrapola.** Per blocchi di raccolta, a gazetteer costante: **46,6% → 29,6% → 22,4% → 16,1%**. La raccolta è ordinata per priorità e il gazetteer contiene i *linkati*, cioè i famosi: i ~3.000 ancora da fare renderanno **~16%**, non 34%.
+3. **Il placebo è contaminato.** Il null assume che, tolto il titolo vero, ogni candidato sia un'altra pagina: falso proprio dove pesa, perché en.wikipedia compare nei wikilink con **entrambe** le grafie. Misurato: **1.223 su 1.223** candidati-placebo di strato A hanno la data di nascita coincidente (Modric/Modrić, Džeko, Rakitić, Szczęsny). I null validi sono ~70, non 107.
+4. **La stratificazione del rischio è sbagliata.** «Solo D può agganciare un'altra persona» è falsificato: dei 587 candidati **reali**, 9 hanno la pagina già in cache e **9 su 9 sono un'altra persona** — uno di **strato A** (`Alex Sola` → `Álex Sola`, 1999-06-09 contro 2003-12-14). Tutti e 9 **respinti dal giudice-data**: la difesa funziona, la stratificazione no.
+5. **Numeri secondari non riproducibili**: i «218.026 titoli» non tornano (con un *sovrainsieme* di file lo stesso codice ne dà **186.562** — impossibile, l'insieme è monotono); cade con essi il «volano ~4 titoli/pagina». Il filtro `class="new"` sui link rossi è **inerte** (gli href dei red link contengono `?action=edit&redlink=1` e sono già esclusi dalla regex): risultato giusto, meccanismo dichiarato sbagliato.
+
+**E un claim strutturale falsificato a costo zero**: «un 404 sul nome nudo dice che quel nome su en.wikipedia non esiste in nessuna forma» è **falso**, 19 controesempi già dentro la cache (`Lasse Sörensen` → `Lasse Sørensen (footballer, born 1999)`; `Nikola Stankovic` → `Nikola Stanković (footballer, born 1993)`). La conclusione *operativa* (non provare `(footballer, born AAAA)` alla cieca — bisognerebbe indovinare **anche** la grafia, resa 0/6) resta valida, ma **indicizzando i titoli disambiguati per la loro forma base si ottengono +16 recuperi gratis**, che la proposta buttava via.
+
+**Falsi positivi**: ripulendo il denominatore, i confronti validi sono **70** (placebo B/C/D in cache) **+ 9** candidati reali = **0 falsi positivi passati su 79** → Wilson 95% superiore **4,64%** (non 3,47%) → su 603 recuperi: punto **0**, **≤28** agganci sbagliati. Nota strutturale che restringe il rischio e che nessuno aveva scritto: perché un aggancio passi servono due persone con nome quasi identico **e** data entro 3 giorni; a parità di nome la data è indipendente, e su una finestra anagrafica realistica la collisione vale **~0,1%** — un ordine di grandezza sotto il bound empirico.
+
+**Recuperi attesi: NON MISURATI sul codice corretto.** Due misure parziali divergono (18/18 dal prototipo dell'analisi, 0/9 sui candidati reali in cache dello scettico) e il fix sblocca 291 candidati di strato A che **nessun null valido copre**. Il rischio è limitato (≤28), la **resa no** → per il criterio del brief questo fronte è **non valutabile come consegnato**: si esegue un **pilota di 100 richieste stratificato per chiave (A/B/C/D)**, si misura la resa per strato, e solo allora si impegnano le restanti ~500.
 
 ---
 
-## FRONTE 1 — le pagine di disambigua (`nessun_infobox`), più la stessa cosa mal etichettata dentro `nessun_blocco` e `errore`.
-**Stima**: 2017 su 2499
+### F · Le respinte con un titolo nuovo — 189 richieste, 3,2 minuti
 
-**Tasso**: copertura del selettore 2.038/2.499 = 81,6% IC95 [80,0%, 83,0%]; sui soli `nessun_infobox` 1.846/2.139 = 86,3% IC95 [84,8%, 87,7%]. Recuperati unici 2.017 (alcuni player_id compaiono due volte in esiti.jsonl per il ritentativo degli `errore`). Il tasso di CONFERMA della scelta, misurato su 30 pagine scaricate: 30/30 = 100%, IC95 [88,6%, 100%] — quindi i recuperati attesi sono fra 1.788 e 2.017.
+Due sorgenti, in quest'ordine:
 
-**Falsi positivi attesi**: ZERO osservati su 30 (tutti `confermata_data`, con la data al giorno; un solo caso a 1 giorno di distanza, Vladimir Ignatenko 2006-05-11 contro 2006-05-12 — dentro la tolleranza, R4: si dichiara). Limite superiore 95%: ≤0,285% dei recuperati, cioè **≤6 giocatori su 2.017**. Deriva dal prodotto di due misure indipendenti: quota di scelte col bersaglio assente ≤11,4% (regola del tre su 0/30) × quota di impostori che `verifica_identita` lascia passare 2,51% (limite superiore su 3.914 accoppiamenti stesso-paese/stesso-anno). Da confrontare con lo 0,268% già presente nella raccolta attuale: il ramo-indice NON peggiora la qualità del database.
+- **hatnote della pagina sbagliata che abbiamo già in cache**: **21,0%** [16,0; 27,1] contiene il titolo esatto col nostro anno, **43/43 link BLU, zero rossi**. Trovarlo costa **0 richieste**, prenderlo 1. Sonda su 8: pagina esistente **8/8**, aggancio corretto **7/8 = 87,5%** [52,9; 97,8];
+- **titolo costruito alla cieca** `Nome (footballer, born AAAA)`: pagina esistente **8/20 = 40%**, aggancio corretto **6/20 = 30%** [14,5; 51,9]. Il **60% dà 404**, ed è la risposta onesta: quei giocatori una voce non ce l'hanno.
 
-**Costo**: **+1 richiesta per giocatore recuperato, 0 per gli astenuti.** Le pagine-indice sono già in cache (2.138/2.139 dei `nessun_infobox`), quindi il passo di selezione è **interamente offline**. Si spendono ~2.017 richieste per 2.017 recuperi — cioè +0,45 richieste per ogni giocatore fallito del fronte complessivo (2.017 su 4.477). A 1 richiesta al secondo: **circa 34 minuti** di raccolta, in un processo solo. Nessuna richiesta va sprecata sugli astenuti (461 pagine), che è il vantaggio concreto dell'astensione. Le uniche pagine-indice ancora da scaricare sono 28 (1 `nessun_infobox` + 27 `errore` senza cache).
+**Recuperati attesi ~81** (≈38 via hatnote + ≈44 alla cieca), range **44-118** — l'intervallo è largo per un motivo solo e dichiarato: il ramo cieco è misurato su **n=20**.
 
-### Strategia
+⚠️ **Il titolo con l'anno non è univoco**: `Burak Yilmaz (footballer, born 1995)` esiste ed è una **terza** persona (7 febbraio contro il nostro 27 novembre); idem `Romario (footballer, born 1992)` e `Liam Henderson (footballer, born 1996)`. Ogni pagina nuova **ripassa** dalla verifica. End-to-end: **16 pagine trovate → 13 attaccate → 0 identità sbagliate**, e le 3 scartate sono esattamente le 3 di un'altra persona. Fra le attaccate c'è `Pele (footballer, born 1991)` — il giovane brasiliano che dà il nome al caso peggiore dell'audit: **8 club su 8** coerenti anche negli anni. Stavolta prende la sua carriera, non quella di Pelé.
 
-## La procedura, passo per passo
+**Il passo rende la spesa permanente** (+1 richiesta su *ogni* futura respinta), non una-tantum. Trascurabile, ma va detto.
 
-**Passo 0 — riclassificare, prima di raccogliere.** Lo stato `nessun_infobox` non identifica il fronte: lo identifica solo in parte. Il test attuale è `"infobox" not in html`, che è una *stringa*, non una forma. «Danilo», «Fernando», «Roberto», «Fábio» sono voci di **nome proprio** che HANNO un `infobox name`: passano il test, il parser non trova righe di carriera, e finiscono in `nessun_blocco`. «Dante» reindirizza a Dante Alighieri, con tanto di infobox. Misurato: **336 dei 620** `nessun_blocco` in cache e **24 dei 313** `errore` sono pagine-indice esattamente come le disambigue. Quindi il fronte non è 2.102 pagine ma **2.499**. Si sostituisce il test-stringa con `e_pagina_indice(html)`, che guarda due segnali in OR: la dichiarazione di Wikipedia (`#disambigbox`, `.dmbox`, categorie «… disambiguation / given name / surname») e la forma (≥2 righe «… (born AAAA), …»). Falsi allarmi su 600 voci vere di calciatori: **0**.
+---
 
-**Passo 1 — estrarre i candidati dalla pagina-indice, senza aprire nulla.** Si scorrono le `<li>` dentro `div.mw-parser-output`, saltando le sezioni non-persona (*See also*, *Places*, *Other uses*, *Fictional*…), i navbox e le note. Di ogni riga si prende il **primo link a persona** e **tutto il testo della riga**. Zero richieste.
+### Cosa NON conviene fare — due voci, con il numero
 
-**Passo 2 — scegliere con ciò che la riga già dice.** È il punto: la riga d'indice contiene quasi sempre l'anno di nascita, spesso il mese, quasi sempre la nazionalità in forma di aggettivo, spesso il ruolo e a volte i club. `Koke (footballer, born 1992), full name Jorge Resurrección Merodio, Spanish football midfielder for Atlético Madrid and Spain` è, da sola, sufficiente. Si assegna un punteggio (anno ±5,0 · mese ±2,0/−4,0 · club +2,5 fino a 2 · nazionalità ±2,0 · ruolo +1,0/−1,5 · non-calciatore −6,0) e si prende il primo **solo se** supera soglia 5,0 **e** stacca il secondo di almeno 3,0.
+| non fare | perché, misurato |
+|---|---|
+| **ampliare `INTESTAZIONI_SENIOR`** | recupero **0/711**, IC95 [0%, 0,54%]. Le varianti prudenti iniettano 31 carriere NBA/ciclismo; `career` generico rompe il **93,2%** delle pagine buone (+7.701 spurie, −3.161 perse). |
+| **provare `(footballer, born AAAA)` alla cieca sui 1.482 404 senza candidato** | 1.482 richieste per una resa **0/6** sul ramo puro-404, IC [0%, 39%], e l'argomento strutturale (il titolo disambiguato nasce solo quando il nudo è occupato, e allora il nudo dà una *disambigua*, non un 404) punta nella stessa direzione. Spendere 25 minuti per riconfermare un fatto già noto. |
 
-**Passo 3 — astenersi, quando non si sa.** Il 13,7% delle pagine finisce qui: 223 sotto soglia, 49 ambigue, 20 senza candidati. L'astensione costa zero richieste e zero rischio, ed è una decisione, non un fallimento.
+---
 
-**Passo 4 — una sola richiesta, e poi il giudice.** Si scarica la pagina scelta (1 richiesta) e si applica `verifica_identita` **già esistente**, che lavora sulla data di nascita **al giorno**. Questa è la vera barriera, non il punteggio.
+## 2. Il codice
 
-**Passo 5 — su questo ramo, niente quarantena.** `solo_data=True`: sul ramo-indice si accetta **solo** `confermata_data`. Motivo: sul ramo per-nome una data discorde è spesso un'anagrafica contestata fra fonti; qui invece abbiamo scelto la pagina *proprio perché* l'anno coincideva, quindi una data discorde è un sintomo, non un dubbio. Costo misurato: 1,19% (223 su 18.790 pagine risolte non sono `confermata_data`).
-
-## Perché non serve un selettore severo
-
-Le due barriere sono indipendenti e si moltiplicano. Il selettore, da solo, aderisce al 6,87% dei profili che **non sono** sulla pagina. `verifica_identita`, da sola, lascia passare il 2,02% degli impostori stesso-paese/stesso-anno — che è il pavimento del paradosso dei compleanni (7/365 = 1,9%), non un difetto del codice. Stringere il selettore fino a chiedere anno + (mese o club) porta il placebo a 0,10% ma **crolla la copertura al 10,2%**: si pagherebbero 76 punti di copertura per un rischio che il secondo stadio già annulla.
-
-## Costo e ordine di esecuzione
-
-Le pagine-indice sono **già tutte in cache** (2.138/2.139). Si spende **1 richiesta per giocatore recuperato**, zero per gli astenuti: ~2.017 richieste, ~34 minuti a 1 req/s. Solo `/wiki/<Nome>`, nessun `/w/`, `/api/`, `Special:`.
-
-### I numeri misurati
-
-| cosa | valore | come |
-|---|---|---|
-| Pagine `nessun_infobox` censite | 2.139, di cui 2.138 in cache (99,95%) | lettura di esiti.jsonl + esistenza del file `urllib.parse.quote(titolo, safe='')[:150] + '.html.gz'`. Il conteggio è più alto del brief (2.102) perché la raccolta è proseguita in background. |
-| Che cosa sono davvero, classificate in cache | 1.806 disambigua di nome-persona · 123 disambigua generiche · 149 voci di nome/cognome con elenco · 54 indici senza categoria · 6 anomale. Totale: 2.132/2.138 (99,7%) sono INDICI DI PERSONE | BeautifulSoup su ogni pagina in cache: presenza di `#disambigbox`, categorie in `#mw-normal-catlinks`, incipit «may refer to», presenza di un `table.infobox`. |
-| R6 — lo stesso problema sotto un'altra etichetta | 336/620 `nessun_blocco` in cache e 24/313 `errore` sono pagine-indice. Sui 178 `identita_non_confermata`: 0 | `e_pagina_indice()` applicata alle pagine in cache di quegli stati. Su un sotto-campione di 200 brasiliani `nessun_blocco`: 100 senza alcun infobox, 96 con un infobox NON calcistico (`infobox name`), 4 altro. |
-| Copertura del selettore (astensione inclusa) | 1.846/2.139 = 86,3% IC95 [84,8%, 87,7%] sui `nessun_infobox`; 2.038/2.499 = 81,6% [80,0%, 83,0%] sul fronte esteso | `scegli_da_indice` con soglia 5,0 / margine 3,0 su tutte le pagine in cache. Astensioni: 223 sotto soglia, 49 ambigue, 20 senza candidati. |
-| Corroborazione delle scelte | 11,8% anno + mese o club · 87,0% anno unico sulla pagina · 1,2% anno conteso da un altro calciatore | per ogni scelta si ri-punteggiano tutti gli altri candidati e si conta quanti sono calciatori con lo STESSO anno di nascita del nostro giocatore. |
-| Tasso di conferma (campione di rete, 30 pagine) | 30/30 = 100%, IC95 [88,6%, 100%] — tutte `confermata_data` | campione riproducibile seed=20260801: 24 estratte a caso dalle scelte, 6 forzate dal tier 'anno conteso'. Scaricate una alla volta con `W.fetch_page` (1 req/s, cache, robots), poi `parse_career` + `bday_pagina` + `verifica_identita`. Tappe estratte: da 3 a 20 per giocatore. |
-| PLACEBO (R7) — il selettore giudicato con un profilo che NON è sulla pagina | 6,87% IC95 [6,26%, 7,53%] con impostore della stessa nazionalità (6.048 accoppiamenti). Se l'impostore ha ANCHE lo stesso anno di nascita: 83,5% [82,5%, 84,5%] su 5.091 | per ogni pagina-indice si estraggono 3 impostori a caso dai 2.138 giocatori, filtrati per nazionalità (A) o nazionalità+anno (B), e si rilancia `scegli_da_indice`. Ogni accettazione è per costruzione un falso positivo. Il caso B dice che anno+nazionalità NON bastano da soli — ed è il motivo per cui  |
-| Il filtro a valle — quanto lascia passare `verifica_identita` | 2,02% IC95 [1,62%, 2,51%] entrano nel DB · 4,42% [3,82%, 5,11%] finiscono in quarantena · 93,6% respinti | 3.914 impostori su pagine VERE già scaricate (esiti `ok` con bday e tappe): si passa a `verifica_identita` la data di nascita della pagina e l'anagrafica + i club di un giocatore diverso con stesso paese e stesso anno. Il 2,02% coincide col pavimento del paradosso dei compleanni (7/365 = 1,9%): è ir |
-| Costo della regola `solo_data=True` (niente quarantena su questo ramo) | 1,19% — 223 su 18.790 pagine già risolte non sono `confermata_data` (210 quarantena, 13 confermata_club) | distribuzione del campo `identita` fra gli esiti `ok` di esiti.jsonl. Nel campione di 30 il costo è stato 0. |
-| Curva di scambio copertura/rischio | (soglia 3, margine 2) 88,6% / 8,35% · (5,3) 86,1% / 6,87% · (7,5) 77,7% / 3,63% · anno+(mese|club) obbligatori 10,2% / 0,10% | griglia rilanciata sulle 2.138 pagine, con il placebo A ricalcolato a ogni punto. Il punto (5,3) è quello oltre il quale si perde copertura senza guadagnare sicurezza. |
-| Due bug del parser, entrambi silenziosi (R6 applicato al codice) | href protocollo-relativi in cache → 0 candidati · `find_parent(class_=regex 'toc')` risale fino a `<html>` (`vector-toc-available`) → 0 candidati | trovati eseguendo l'estrattore sulla cache. Nessuno dei due solleva un'eccezione: restituiscono una lista vuota, che sembra un risultato legittimo. Entrambi documentati nel codice proposto. |
-
-### Rischi dichiarati
-
-- **Il campione di rete è 30, e si vede.** 30/30 dà un IC95 che scende a 88,6%: il tasso di recupero vero potrebbe essere l'88% invece del 100%, e il numero di recuperati fra 1.788 e 2.017. Non è un numero chiuso: è un numero che la raccolta vera chiuderà. Va rimisurato sui primi 300 recuperi effettivi prima di dichiarare il fronte concluso.
-- **Il limite superiore sui falsi positivi (0,285%) è un limite, non una stima.** È il prodotto di due limiti superiori (bersaglio assente ≤11,4% da 0/30 · leak di `verifica_identita` ≤2,51%). La stima puntuale è molto più bassa, ma con 0 eventi osservati non si può dire quanto. Se il tasso vero di bersaglio-assente fosse il 3%, i falsi positivi sarebbero ~1,5 giocatori su 2.017.
-- **Il placebo adversariale è alto e va detto: 83,5%.** Se due giocatori condividono nazionalità e anno di nascita e solo uno è sull'indice, il selettore aggancia l'altro senza esitare. Non diventa un errore nel database solo perché `verifica_identita` sta a valle. Chi in futuro riusasse `scegli_da_indice` **senza** il secondo stadio introdurrebbe errori a due cifre percentuali. Il codice lo dichiara nel docstring di `risolvi_da_indice`.
-- **La quarantena è una via d'ingresso, e su questo ramo va chiusa.** Il 4,42% degli impostori finisce in `quarantena` — che nella raccolta attuale viene comunque salvata (199 righe dentro gli `ok`). Con `solo_data=True` questa via è chiusa a costo dell'1,19%. Se un domani qualcuno passasse `solo_data=False` per «recuperare di più», riaprirebbe il canale peggiore.
-- **Il ruolo come feature è fragile.** `position` nel nostro dataset è la posizione ATTUALE/prevalente; la riga d'indice descrive spesso il ruolo di inizio carriera. Pesa +1,0/−1,5, quindi non ribalta una decisione da solo, ma su un giocatore riconvertito (terzino diventato centrocampista) può togliere 2,5 punti al candidato giusto. È una delle cause plausibili delle 223 astensioni sotto soglia.
-- **I demonimi sono una mappa a mano, e le mappe a mano invecchiano.** Copre i paesi con ≥100 giocatori; una nazione assente non rompe nulla (il candidato semplicemente non prende il +2,0) ma abbassa la copertura in silenzio. Nota già trovata: `Turkey` e `Türkiye` convivono nel dataset come due paesi distinti — entrambe mappate, ma è il tipo di cosa che si ripresenterà.
-- **L'anno di nascita del nostro dataset è assunto giusto.** Tutto il selettore ci si appoggia. Se `date_of_birth` di player-scores è sbagliato per un giocatore, il selettore sceglierà con sicurezza la persona sbagliata — e poi `verifica_identita` la respingerà, quindi il danno è una richiesta sprecata, non un dato falso. È il comportamento voluto, ma va detto che il fronte NON recupererà mai chi ha l'anagrafica sbagliata da noi.
-- **`indice_non_risolto` è uno stato nuovo.** Va aggiunto all'elenco degli stati in `data/carriere_wikipedia/README.md` e NON va messo fra gli esiti definitivi che non si ritentano: un indice non risolto oggi può diventare risolvibile domani, se la pagina Wikipedia si arricchisce o se il selettore migliora.
-
-<details><summary>Codice proposto (non applicato)</summary>
+Da aggiungere a `src/data/wikipedia_careers.py` (dopo `verifica_identita`) e la modifica a `scripts/fetch_wikipedia_careers.py`. **Nessun file del repo è stato toccato.** Il codice **non aggira** `verifica_identita`: la usa come secondo stadio obbligatorio e, sul ramo-indice, la stringe (`solo_data=True`).
 
 ```python
 # ===========================================================================
-# FRONTE 1 — RISOLUZIONE DALLE PAGINE-INDICE (disambigua e voci di nome)
-# Da incastrare in src/data/wikipedia_careers.py, dopo `verifica_identita`.
-# Usa quello che il modulo ha gia': re, urllib.parse, dataclass/field,
-# BeautifulSoup, Esito, Tappa, fetch_page, parse_career, bday_pagina,
-# verifica_identita. Nessuna dipendenza nuova.
+# RECUPERO DEI FALLITI DELLO STRATO 2 — proposta unificata (01/08/2026)
+#
+# Quattro meccanismi, un solo secondo stadio: `verifica_identita*`, MAI aggirata.
+#   (1) classifica_pagina()      dice PERCHE' una pagina non ha dato carriera
+#   (2) risolvi_da_indice()      pagina-indice -> il titolo giusto (1 richiesta)
+#   (3) verifica_identita_v2()   club x ANNI + forma del Delta + corroborazione
+#   (4) gazetteer + varianti     404 -> titoli VERI letti dalla cache (0 richieste)
+#
+# Dipendenze: solo quelle gia' nel modulo (re, gzip, glob, os, urllib.parse,
+# dataclass/field, BeautifulSoup, datetime, unicodedata).
 # ===========================================================================
 
-# Namespace da ignorare fra i link di una riga d'indice.
+import collections
+import datetime as _dt
+import glob
+import os
+import unicodedata as _ud
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (1) PERCHE' la pagina non ha dato una carriera. Zero richieste: legge la cache.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_FIRMA_CALCIO = "club domestic league appearances and goals"
+
+def classifica_pagina(html: str) -> str:
+    """Sostituisce il test `if "infobox" not in html`, che NON testa cio' che dice.
+
+    La stringa "infobox" sta nel CSS TemplateStyles incorporato in quasi ogni
+    voce, disambigue comprese (R6): **278 delle 711** pagine finite in
+    `nessun_blocco` non hanno NESSUN `<table class="infobox">`, e **215** di
+    quelle sono disambigue. Il confine fra `nessun_infobox` e `nessun_blocco`
+    e' arbitrario: sono lo stesso fenomeno.
+
+    Censimento completo dei 711 `nessun_blocco` (tutti in cache, 0 richieste):
+      soggetto_diverso  320 (45,0%)   NBA, baseball, ciclismo, citta', santi, re
+      disambigua        220 (30,9%)
+      pagina_di_nome    154 (21,7%)   liste antroponimiche
+      senza_infobox      14 ( 2,0%)
+      senza_blocco        3 ( 0,4%)   biografie di calcio VERE — tutte e tre omonimi
+    Cioe': il 99,6% di questo fronte non e' parsing, e' la pagina sbagliata.
+
+    ⚠️ La firma usata per «e' una voce di calcio» NON sono le categorie: la voce
+    del GOLFISTA Sergio Garcia porta tre categorie di calcio, fra cui «Men's
+    association football players not categorized by position» (R4: anomalia
+    dichiarata anche se non e' un errore nostro). La firma affidabile e' la nota
+    a pie' d'infobox `* Club domestic league appearances and goals`, presente in
+    1.998/1.999 pagine `ok` = **99,95%** -> falsi «soggetto_diverso» ~0,4/711.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    if soup.find(id="disambigbox") or "Category:All_disambiguation_pages" in html:
+        return "disambigua"
+    sd = soup.find("div", class_="shortdescription")
+    sd = sd.get_text(" ", strip=True) if sd else ""
+    if re.search(r"name list|given name|surname|list of people with the same", sd, re.I):
+        return "pagina_di_nome"
+    cats = " ".join(a.get_text() for a in soup.select("#mw-normal-catlinks li a")).lower()
+    if "disambiguation" in cats or "given name" in cats or "surname" in cats:
+        return "pagina_di_nome"
+    if _FIRMA_CALCIO in html.lower():
+        return "senza_blocco"            # e' una voce di calcio: manca il dato
+    if soup.find("table", class_=_e_infobox) is None:
+        return "senza_infobox"
+    return "soggetto_diverso"
+
+
+STATI_INDICE = ("disambigua", "pagina_di_nome", "soggetto_diverso")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (2) La pagina sbagliata e' una TABELLA DI INSTRADAMENTO
+# ─────────────────────────────────────────────────────────────────────────────
+
 NS_ESCLUSI = ("Category:", "Help:", "Wikipedia:", "File:", "Template:",
               "Portal:", "Special:", "Talk:", "Module:", "MOS:", "WP:")
-# Sezioni di una pagina-indice che non contengono persone.
 SEZ_ESCLUSE = ("see also", "references", "external links", "places",
                "other uses", "fictional", "ships", "further reading",
                "in fiction", "music", "films")
 
-# Nazione del nostro dataset -> aggettivi come compaiono nelle righe d'indice
-# («Brazilian football forward»). Copre i paesi con >=100 giocatori nella
-# popolazione; una nazione assente non rompe nulla, semplicemente non porta il
-# suo +2,0 (il selettore degrada, non sbaglia).
+# ⚠️ MAPPA COMPLETA (96 voci). Il codice proposto dall'analisi ne aveva 75:
+# 23 paesi persi = **219/3.545 = 6,2% del fronte** che perde il segnale
+# nazionalita' E, con `dem=()`, anche il -2,0 per nazionalita' SBAGLIATA —
+# l'anno decide da solo. R6 applicato al codice: nessuna eccezione, degrado
+# silenzioso. Una nazione assente non rompe nulla ma abbassa la copertura e
+# alza il rischio, entrambi in silenzio.
 DEMONIMI: dict[str, tuple[str, ...]] = {
     "Brazil": ("brazilian",), "Spain": ("spanish",), "Portugal": ("portuguese",),
     "England": ("english",), "Scotland": ("scottish",), "Wales": ("welsh",),
-    "Ireland": ("irish",), "France": ("french",), "Italy": ("italian",),
-    "Germany": ("german",), "Netherlands": ("dutch",),
-    "Argentina": ("argentine", "argentinian"), "Russia": ("russian",),
-    "Denmark": ("danish",), "Sweden": ("swedish",), "Norway": ("norwegian",),
-    "Belgium": ("belgian",), "Poland": ("polish",), "Croatia": ("croatian",),
-    "Serbia": ("serbian",), "Turkey": ("turkish",), "Türkiye": ("turkish",),
-    "Greece": ("greek",), "Austria": ("austrian",), "Switzerland": ("swiss",),
-    "Ukraine": ("ukrainian",), "Colombia": ("colombian",),
-    "Uruguay": ("uruguayan",), "Mexico": ("mexican",), "Chile": ("chilean",),
-    "Japan": ("japanese",), "United States": ("american",),
-    "Nigeria": ("nigerian",), "Ghana": ("ghanaian",), "Senegal": ("senegalese",),
-    "Cote d'Ivoire": ("ivorian",), "Cameroon": ("cameroonian",),
+    "Ireland": ("irish",), "Northern Ireland": ("northern irish",),
+    "France": ("french",), "Italy": ("italian",), "Germany": ("german",),
+    "Netherlands": ("dutch",), "Argentina": ("argentine", "argentinian"),
+    "Russia": ("russian",), "Denmark": ("danish",), "Sweden": ("swedish",),
+    "Norway": ("norwegian",), "Belgium": ("belgian",), "Poland": ("polish",),
+    "Croatia": ("croatian",), "Serbia": ("serbian",), "Turkey": ("turkish",),
+    "Türkiye": ("turkish",), "Greece": ("greek",), "Austria": ("austrian",),
+    "Switzerland": ("swiss",), "Ukraine": ("ukrainian",),
+    "Colombia": ("colombian",), "Uruguay": ("uruguayan",), "Mexico": ("mexican",),
+    "Chile": ("chilean",), "Japan": ("japanese",), "Korea South": ("south korean",),
+    "United States": ("american",), "Nigeria": ("nigerian",), "Ghana": ("ghanaian",),
+    "Senegal": ("senegalese",), "Cote d'Ivoire": ("ivorian",),
+    "Ivory Coast": ("ivorian",), "Cameroon": ("cameroonian",),
     "Morocco": ("moroccan",), "Algeria": ("algerian",), "Tunisia": ("tunisian",),
-    "Czech Republic": ("czech",), "Slovakia": ("slovak",),
-    "Hungary": ("hungarian",), "Romania": ("romanian",),
-    "Finland": ("finnish",), "Iceland": ("icelandic",), "Israel": ("israeli",),
-    "Australia": ("australian",), "Canada": ("canadian",),
-    "Bosnia-Herzegovina": ("bosnian",), "Albania": ("albanian",),
+    "Egypt": ("egyptian",), "Czech Republic": ("czech",), "Slovakia": ("slovak",),
+    "Hungary": ("hungarian",), "Romania": ("romanian",), "Finland": ("finnish",),
+    "Iceland": ("icelandic",), "Israel": ("israeli",), "Australia": ("australian",),
+    "Canada": ("canadian",), "Bosnia-Herzegovina": ("bosnian",),
+    "Albania": ("albanian",), "Kosovo": ("kosovar", "kosovan"),
     "North Macedonia": ("macedonian",), "Montenegro": ("montenegrin",),
-    "Slovenia": ("slovenian",), "Bulgaria": ("bulgarian",),
-    "Georgia": ("georgian",), "Congo": ("congolese",), "Mali": ("malian",),
-    "Guinea": ("guinean",), "Angola": ("angolan",), "Gabon": ("gabonese",),
-    "South Africa": ("south african",), "Jamaica": ("jamaican",),
-    "Costa Rica": ("costa rican",), "China": ("chinese",), "Iran": ("iranian",),
-    "Estonia": ("estonian",), "Latvia": ("latvian",),
-    "Lithuania": ("lithuanian",), "Belarus": ("belarusian",),
-    "Cyprus": ("cypriot",), "Peru": ("peruvian",), "Ecuador": ("ecuadorian",),
-    "Venezuela": ("venezuelan",), "Paraguay": ("paraguayan",),
+    "Slovenia": ("slovenian", "slovene"), "Bulgaria": ("bulgarian",),
+    "Georgia": ("georgian",), "Armenia": ("armenian",), "Azerbaijan": ("azerbaijani",),
+    "Congo": ("congolese",), "DR Congo": ("congolese",), "Mali": ("malian",),
+    "Guinea": ("guinean",), "Guinea-Bissau": ("bissau-guinean",),
+    "Angola": ("angolan",), "Gabon": ("gabonese",), "Benin": ("beninese",),
+    "Togo": ("togolese",), "Burkina Faso": ("burkinabe",),
+    "Cape Verde": ("cape verdean",), "Mozambique": ("mozambican",),
+    "South Africa": ("south african",), "Zimbabwe": ("zimbabwean",),
+    "Kenya": ("kenyan",), "Jamaica": ("jamaican",), "Costa Rica": ("costa rican",),
+    "Honduras": ("honduran",), "Panama": ("panamanian",), "China": ("chinese",),
+    "Iran": ("iranian",), "Iraq": ("iraqi",), "Estonia": ("estonian",),
+    "Latvia": ("latvian",), "Lithuania": ("lithuanian",),
+    "Belarus": ("belarusian",), "Moldova": ("moldovan",), "Cyprus": ("cypriot",),
+    "Peru": ("peruvian",), "Ecuador": ("ecuadorian",), "Venezuela": ("venezuelan",),
+    "Paraguay": ("paraguayan",), "Bolivia": ("bolivian",),
+    "New Zealand": ("new zealand",), "Kazakhstan": ("kazakh", "kazakhstani"),
 }
 _TUTTI_DEMONIMI = {x for v in DEMONIMI.values() for x in v}
 
 RUOLI: dict[str, tuple[str, ...]] = {
     "Goalkeeper": ("goalkeeper", "keeper"),
-    "Defender": ("defender", "back", "defence"),
+    "Defender": ("defender", "centre-back", "center-back", "full-back", "back", "defence"),
     "Midfield": ("midfielder", "midfield"),
     "Attack": ("forward", "striker", "winger", "attacker"),
 }
@@ -190,21 +379,21 @@ _MESI = {m: i + 1 for i, m in enumerate(
      "august", "september", "october", "november", "december"))}
 
 _RE_NATO = re.compile(r"born\s+(?:\d{1,2}\s+)?([A-Za-z]+)?\s*(?:\d{1,2},?\s*)?(\d{4})")
-_RE_CALCIO = re.compile(r"footballer|football|soccer", re.I)
+_RE_CALCIO = re.compile(r"footballer|football player|soccer", re.I)
 _RE_HREF = re.compile(
     r"^(?:https?:)?//[a-z-]+\.wikipedia\.org/wiki/(.+)$|^/wiki/(.+)$", re.I)
 
-# Soglie del selettore. Punto operativo scelto il 01/08/2026: copertura 86,3%
-# delle pagine-indice (1.846/2.139), con il 6,9% di adesioni a un profilo che
-# NON e' sulla pagina (placebo). La griglia misurata:
-#   (soglia, margine)  copertura   placebo
-#      (3, 2)            88,6%      8,35%
-#      (5, 3)  <-- qui   86,1%      6,87%
-#      (7, 5)            77,7%      3,63%
-#      anno + (mese|club) obbligatori: 10,2% di copertura, 0,10% di placebo
-# Stringere costa 8 punti di copertura per 3 di placebo, e non serve: la vera
-# difesa e' `verifica_identita` a valle, che lavora sulla data AL GIORNO e
-# taglia il 98% degli agganci sbagliati (vedi `risolvi_da_indice`).
+# Punto operativo del selettore, misurato il 01/08/2026 sulle 2.490 pagine-indice:
+#   (soglia, margine)   copertura   placebo (profilo NON sulla pagina)
+#      (3, 2)             88,6%       8,35%
+#      (5, 3)  <-- qui    86,1%       6,30% [5,79%, 6,83%]
+#      (7, 5)             77,7%       3,63%
+#      anno + (mese|club) obbligatori:  10,2% / 0,10%
+# Stringere costa 8 punti di copertura per 3 di placebo; stringere davvero ne
+# costa 76 per 6,2. E non serve, perche' la difesa e' `verifica_identita` a
+# valle. ⚠️ MA il placebo ADVERSARIALE (impostore con stessa nazionalita' E
+# stesso anno) e' **77,0%** [76,1%, 77,9%]: da solo il selettore NON basta,
+# mai riusarlo senza il secondo stadio.
 SOGLIA = 5.0
 MARGINE = 3.0
 
@@ -215,10 +404,12 @@ _STOP_CLUB = {"fc", "cf", "sc", "ac", "as", "cd", "ud", "sv", "afc", "club",
 
 @dataclass
 class Candidato:
-    """Una riga di una pagina-indice: un link a persona + il testo che la
-    descrive. Il testo e' oro: contiene gia' anno di nascita, nazionalita',
-    ruolo e spesso i club — cioe' tutto cio' che serve a scegliere **senza
-    aprire il link**, che e' l'unica cosa che costa una richiesta."""
+    """Una riga di pagina-indice: link a persona + il testo che la descrive.
+
+    Il testo e' oro: `Koke (footballer, born 1992), full name Jorge
+    Resurreccion Merodio, Spanish football midfielder for Atletico Madrid` da
+    solo basta. Aprire il link e' l'unica cosa che costa una richiesta.
+    """
     titolo: str
     testo: str
     sezione: str = ""
@@ -227,342 +418,389 @@ class Candidato:
 
 
 def _norm(s: str) -> str:
-    import unicodedata
-    s = unicodedata.normalize("NFKD", s)
-    s = "".join(c for c in s if not unicodedata.combining(c)).lower()
+    s = _ud.normalize("NFKD", s)
+    s = "".join(c for c in s if not _ud.combining(c)).lower()
     return re.sub(r"[^a-z0-9]+", " ", s).strip()
 
 
 def _titolo_da_href(href: str) -> str | None:
     """`/wiki/X`, `//en.wikipedia.org/wiki/X`, `https://en.wikipedia.org/wiki/X`.
 
-    ⚠️ Le pagine **in cache** hanno gli href in forma protocollo-relativa
-    (`//en.wikipedia.org/wiki/...`), non `/wiki/...`. Un parser che accetta solo
-    la seconda forma es
-```
-
-</details>
-
-## Fronte 2 — i giocatori con 404 sul nome (`stato = nessuna_pagina`). Alla fotografia del 01/08/2026 ore 10:38 sono **1.389** (non 1.354: la raccolta in background è andata avanti mentre lavoravo), di cui **199 della nostra popolazione**. Per definizione nessuno ha la pagina in cache. La scoperta centrale è che il fronte **non si risolve indovinando le varianti del nome, ma leggendo i titoli veri che sono già dentro la cache**: le 20.924 pagine scaricate contengono, nei loro wikilink, **218.026 titoli reali di en.wikipedia**, e lì dentro c'è il titolo giusto di 477 dei 1.389 falliti. Costo di questa scoperta: **zero richieste**.
-**Stima**: 477 su 1389
-
-**Tasso**: 34,3% del fronte (477/1.389). Con l'incertezza sul tasso di successo del candidato misurato su campione (18/18, Wilson 95% [82,4%, 100%]) la stima scende a un intervallo di [393, 477] giocatori, cioè [28,3%, 34,3%]. Sui NOSTRI: 99 dei 199. Il residuo (912) non è recuperabile con le varianti: un 404 vero sul nome nudo significa quasi sempre che la voce inglese NON esiste, e questo è misurato, non supposto.
-
-**Falsi positivi attesi**: Punto: 0. Due misure indipendenti. (1) Campione reale: 0 agganci sbagliati su 20 pagine scaricate (18 candidati + 2 sospetti costruiti apposta), Wilson 95% superiore 16,1% — potenza bassa, lo dichiaro. (2) PLACEBO a costo zero su n grande: ho ri-eseguito il matcher sui 18.245 giocatori 'ok' dopo aver TOLTO dal gazetteer il loro titolo vero, così ogni candidato prodotto è per costruzione un'altra pagina. Ne ha prodotti 2.134 (11,7% dei giocatori); 107 erano verificabili gratis perché già in cache; il giudice-data ne ha respinti **107 su 107** (l'unico 'passato', Burak Yilmaz → Burak Yılmaz, è la STESSA persona sotto l'alias accentato, quindi non è un errore). Wilson 95% superiore **3,47%** → attesi **≤ 13 agganci sbagliati sui 477**, punto 0. Sul solo strato rischioso (chiave-cognome): 0/98 respinti, superiore 3,77%.
-
-**Costo**: **0,022 richieste in più per giocatore tentato** (480 richieste su 22.254), cioè **0,35 per giocatore fallito** — contro le **5,0** di un piano a cinque varianti cieche (5 × 1.354 = 6.770 richieste). Il fattore 14 di risparmio non viene da varianti migliori: viene dal fatto che il grosso del lavoro (218.026 titoli veri) si fa **a zero richieste** dentro la cache, e la rete serve solo per la conferma.
-
-Dettaglio: costruzione del gazetteer 0 richieste (~35 s di CPU su 20.924 file). Recupero: 477 candidati, di cui 7 già in cache → 470 pagine da scaricare; il primo candidato è bastato 18 volte su 18, quindi il tetto di 2 candidati per giocatore si attiva raramente → **≈480 richieste, 8 minuti a 1 richiesta/secondo**. Secondo giro dopo la fine della raccolta: di nuovo 0 richieste per rigenerare il gazetteer, più le poche conferme dei nuovi candidati.
-
-Costo già speso da me: **31 richieste** (1 ogni 3 secondi, sequenziali, con la raccolta in background già a 1/s), tutte su `/wiki/<Titolo>`, nessuna su `/w/`, `/api/` o `/wiki/Special:`. Le 31 pagine sono finite nella cache e sono quindi già pagate per la raccolta vera.
-
-Costo che consiglio di NON spendere: 912 × 1 richiesta = 912 per `(footballer, born AAAA)` (resa misurata 0/6) e altre ~900 per le regole per-famiglia (resa 2/5, IC [11,8%, 76,9%] — troppo largo per impegnare 900 richieste).
-
-### Strategia
-
-PASSO 0 — COSTRUIRE IL GAZETTEER (0 richieste, ~35 s di CPU). Scorrere `data/wikipedia_cache/en/*.html.gz` ed estrarre da ogni pagina i wikilink `rel="mw:WikiLink" href="https://en.wikipedia.org/wiki/TITOLO"`. Le pagine sono in HTML Parsoid: i link del corpo sono ASSOLUTI, non `/wiki/…` relativi — un parser che cerca `href="/wiki/` trova 5 link per pagina invece di 450 (ci sono cascato al primo tentativo). Scartare i link con `class="new"` (link ROSSI: la pagina non esiste — generarli sarebbe fabbricare 404 garantiti, regola R6) e i namespace (`Category:`, `Template:`). Tenere i titoli di 2-4 parole. Risultato misurato: **218.026 titoli reali**.
-
-PASSO 1 — INDICIZZARE CON QUATTRO CHIAVI, dalla più stretta alla più larga. Ogni chiave è una FAMIGLIA di fallimento, non una variante generica:
-  A · grafia (solo diacritici e punteggiatura ripiegati) → Bosko Sutalo = Boško Šutalo, Frederik Sörensen = Frederik Sørensen, Albert Grønbaek = Grønbæk. **221 giocatori.**
-  B · traslitterazione (A + collassi g/h, j/i/y, w/v, z/s, ck/k, doppie, ie/ei) → Artem Gromov = Artem Hromov, Ilya Zabarnyi = Illia Zabarnyi, Sergey Pesjakov = Sergei Pesyakov. **+126.**
-  C · ordine (token ordinati) → Ja-cheol Koo = Koo Ja-cheol, In-beom Hwang = Hwang In-beom. **+28** (praticamente tutta la Corea).
-  D · solo cognome, con FILTRO sul nome di battesimo (prefisso comune ≥3 lettere oppure lista chiusa di ipocoristici greci) → Vasilios Torosidis = Vasilis Torosidis, Konstantinos Giannoulis = Kostas Giannoulis, Javi Eraso = Javier Eraso, Álex Pozo = Alejandro Pozo. **+102.** D si usa SOLO se A, B, C sono vuote.
-
-PASSO 2 — SCARICARE, AL MASSIMO 2 CANDIDATI PER GIOCATORE, uno alla volta, 1 richiesta/secondo. 477 giocatori, 7 dei quali hanno il candidato già in cache. Sul campione il PRIMO candidato è bastato 18 volte su 18 → **≈ 480 richieste in tutto, 8 minuti**.
-
-PASSO 3 — GIUDICARE CON UNA REGOLA PIÙ SEVERA DEL SOLITO. Sul percorso-variante accettare **solo `confermata_data`**, mai `confermata_club`: il nome l'abbiamo cambiato noi, quindi non è più una prova d'identità, e l'unica prova indipendente che resta è la data di nascita — che esiste per il **100%** dei 1.389. Non costa niente: sul campione tutte e 18 le conferme sono passate per la data, zero per i club.
-
-PASSO 4 — REGISTRARE LO STRATO (A/B/C/D) nell'esito, in `dettaglio`. Senza, il tasso di errore resta un numero unico che non dice niente; con, si rimisura per famiglia (regola R7).
-
-PASSO 5 — RIPETERE ALLA FINE DELLA RACCOLTA (volano). Il gazetteer cresce di ~4 titoli nuovi per pagina scaricata: i ~6.700 giocatori ancora da fare e i 477 recuperati aggiungeranno titoli, e un secondo giro sui 912 residui costa di nuovo zero richieste.
-
-COSA **NON** FARE, e questo è il risultato negativo più utile del lavoro: **non provare `Nome (footballer, born AAAA)`**. Sembra la variante ovvia (è il disambiguante standard di Wikipedia, e la data di nascita ce l'abbiamo per tutti) ed è **0 su 6** nel campione. Il motivo è strutturale e va scritto come identità, non come impressione: il titolo disambiguato esiste solo quando il titolo nudo è occupato — e in quel caso il nome nudo NON restituisce 404, restituisce la pagina di disambigua (fronte 1, `nessun_infobox`). Un 404 vero sul nome nudo dice che quel nome su en.wikipedia **non esiste in nessuna forma**. Applicarla ai 912 residui costerebbe 912 richieste per una resa attesa fra 0% e 39%, quasi tutta sul bordo inferiore.
-
-### I numeri misurati
-
-| cosa | valore | come |
-|---|---|---|
-| Fronte 2 alla fotografia del 01/08/2026 10:38 | 1.389 (di cui 199 nostri) | conteggio su copia read-only di esiti.jsonl, deduplicata per player_id; 22.499 giocatori distinti tentati. Il brief diceva 1.354: la raccolta in background è avanzata. |
-| Titoli reali di en.wikipedia estratti dalla cache | 218.026 (da 20.924 pagine) | regex sui wikilink Parsoid `rel="mw:WikiLink" href="https://en.wikipedia.org/wiki/…"`, esclusi i link rossi (class="new") e i namespace. 0 richieste, 35 s. |
-| Copertura cumulativa delle 4 chiavi | A 221 → +B 126 → +C 28 → +D 102 = 477 (34,3%) | matching delle chiavi dei 1.389 nomi contro l'indice del gazetteer; D applicata solo dove A/B/C sono vuote e filtrata sul nome di battesimo. |
-| Campione reale — percorso GRATUITO (candidato dal gazetteer) | 18/18 confermati dalla data di nascita | 31 richieste vere, una alla volta, 3 s di pausa (la raccolta in background era già a 1/s). Strati A 5/5, B 5/5, C 3/3, D 5/5. Wilson 95% [82,4%, 100%]. |
-| Campione reale — percorso A PAGAMENTO (varianti indovinate) | 2/11 | `(footballer, born AAAA)` 0/6 [0%, 39%]; regola ucraina g→h 1/2; forma corta greca 1/3. Estrazione casuale con seed 20260801 dentro ogni strato, nessun cherry-picking. |
-| Falsi positivi nel campione reale | 0/20 (superiore 95% 16,1%) | 18 candidati + 2 sospetti costruiti apposta (Charly Musonda Jr.→Chavo Guerrero Jr., un wrestler; Yannik Wagner→Yana Vagner, una scrittrice). Entrambi respinti: il primo bday 1970 vs 1996 e nessun blocco carriera, il secondo è una disambigua. |
-| PLACEBO a costo zero — quanto spesso il matcher inventa un candidato | 2.134 candidati sbagliati su 18.245 (11,7%) | ri-eseguito il matcher sui giocatori 'ok' con il loro titolo vero RIMOSSO dal gazetteer: ogni candidato prodotto è per costruzione un'altra pagina. |
-| PLACEBO — quanti di quei candidati sbagliati PASSANO il giudice | 0 su 107 verificabili (superiore 95% 3,47%) | 107 dei 2.134 avevano la pagina già in cache → verifica gratis. L'unico che passava è Burak Yilmaz → Burak Yılmaz: stessa persona sotto l'alias accentato, non un errore. Sullo strato D da solo: 0/98, superiore 3,77%. |
-| Falsi positivi attesi sui 477 recuperati | 0 (punto) — ≤ 13 (superiore 95%) | 477 × 3,47% = 12,6. È il numero che rende la strategia 'finita' secondo il criterio del brief. |
-| Riduzione della CONFONDENTE di nazionalità | chi-quadro 1.439 → 1.029 (p resta < 1e-180) | tasso di 404 per cittadinanza prima e dopo il recupero, paesi con ≥100 giocatori. Croazia 15,5%→4,8%, Serbia 10,4%→2,7%, Cechia 8,5%→0,6%, Danimarca 10,0%→6,1%, Ucraina 29,5%→21,2%. Il bias si RIDUCE ma NON sparisce. |
-| `first_name`/`last_name` di players.csv.gz — aiutano? | NO: `first_name + ' ' + last_name == name` nel 100,0% dei 1.389 | confronto diretto. Sono uno split di `name`, informazione zero. L'unico uso residuo: `first_name` NaN marca il nome d'arte brasiliano (mononimo). |
-| Colonna `url` (Transfermarkt) — aiuta? | NO: `player_code == slug(name)` nel 98,3% | l'1,7% di scarto è solo punteggiatura (N'Dri→ndri, ‘Duncan’→lsquo-duncan-rsquo). Nessuna informazione nuova sul titolo Wikipedia, e Transfermarkt ha un robots.txt diverso che non stiamo autorizzati a interrogare. |
-| Composizione del fronte per famiglia linguistica | Ucraina 284 · Grecia 97 · Russia 84 · Danimarca 74 · Brasile 73 · Spagna 57 · Croazia+Bosnia+Serbia+Slovenia 120 · Turchia 68 · Corea 28 | incrocio con players.csv.gz. Profilo COMPLETAMENTE DIVERSO dal fronte 1 (disambigue): lì il problema sono i mononimi brasiliani/iberici, qui è la TRASLITTERAZIONE (Ucraina 29,5% di tasso, Bosnia 22,7%, Croazia 15,5%). |
-| Crescita del gazetteer | ≈4 titoli nuovi per pagina scaricata (1.000 file → 46k titoli; 21.283 → 242k) | curva misurata su permutazione casuale dei file. Il gazetteer si arricchisce da solo mentre la raccolta procede → il passo 5 (secondo giro) è gratis e non a rendimento nullo. |
-
-### Rischi dichiarati
-
-- **Il rischio non è distribuito uniformemente: sta quasi tutto nella chiave D (cognome).** Le chiavi A/B/C cambiano solo la grafia dello STESSO stringa-nome; D cambia il nome di battesimo e può agganciare un'altra persona. Nel placebo D ha prodotto 748 candidati sbagliati su 2.134. Mitigazione misurata: filtro sul nome di battesimo (prefisso ≥3 o ipocoristico), D usata solo se A/B/C sono vuote, e giudizio con la sola data di nascita → 0/98 passati. Se un domani si volesse allargare D, quel 3,77% di soglia superiore va rimisurato, non ereditato.
-- **I due falsi positivi veri che ho trovato venivano dallo stesso bug: 'Jr.' usato come cognome.** «Charly Musonda Jr.» → «Chavo Guerrero Jr.» (un wrestler, bday 1970 contro 1996) e «Aleksey Eremenko Jr.» → «Alejandro Alvarado Jr.». Il filtro `_ONORIFICI` li elimina a costo zero. È R6 puro: due nomi che condividono un suffisso onorifico non condividono niente.
-- **Il placebo ha potenza limitata dove conta di più.** Ha generato 2.134 candidati sbagliati ma solo 107 erano verificabili gratis (quelli con la pagina già in cache); gli altri 2.027 no, perché sono pagine di non-calciatori che non abbiamo. Quindi il 3,47% di soglia superiore vale sul sottoinsieme verificabile, che potrebbe non essere rappresentativo: le pagine in cache sono tutte di calciatori, e proprio l'omonimo-calciatore è il caso più insidioso. Lo dichiaro invece di nasconderlo: per stringere l'intervallo servirebbe scaricare un campione dei candidati-placebo, cioè spendere richieste per misurare il rischio anziché per raccogliere dati. È una scelta che lascio al titolare.
-- **Il bias di nazionalità si riduce ma NON si chiude.** chi-quadro 1.439 → 1.029, p ancora < 1e-180. L'Ucraina resta al 21,2% di 404 contro lo 0,7% dell'Olanda. La confondente sopravvive al recupero, e ogni analisi che usi lo strato 2 deve continuare a dichiararlo. Chiudere quel divario richiederebbe una fonte diversa (Wikipedia ucraina), non varianti sull'inglese.
-- **Il residuo di 912 non è 'da recuperare più avanti': è quasi tutto irrecuperabile per costruzione.** Un 404 sul nome nudo significa che il titolo non esiste; se esistesse un disambiguante, il nome nudo darebbe una pagina di disambigua e il giocatore starebbe nel fronte 1. La misura (0/6 su `(footballer, born AAAA)`) e l'argomento strutturale puntano nella stessa direzione. Il rischio qui è opposto a quello degli omonimi: **spendere 1.800 richieste per convincersi di un fatto già noto**.
-- **`nessun_infobox` interrompe la scala dei suffissi.** In `scripts/fetch_wikipedia_careers.py` il ciclo fa `if e.stato != "nessuna_pagina": break`: se il nome nudo restituisce una pagina di DISAMBIGUA, i suffissi `(footballer)` e `(soccer)` non vengono mai provati. È un'osservazione sul fronte 1, non sul mio, ma la registro perché spiega perché quel fronte è il più grosso e perché i due fronti non vanno trattati con la stessa scala di varianti.
-- **Anomalia dichiarata, non è un errore (R4): `players.csv.gz` contiene la stessa nazione sotto DUE etichette** — «Turkey» (426 giocatori, 9,2% di 404) e «Türkiye» (360, 8,1%). Le statistiche per paese si spezzano in due e la copertura del recupero ne risente in modo artificiale (Turkey 28%, Türkiye 3%). Non l'ho corretto (R3: nessuna modifica a mano), ma chiunque aggreghi per cittadinanza deve saperlo.
-- **Il gazetteer è un dato derivato, non una fonte.** Vive nella cache, che non è versionata e non sopravvive al container. Va ricostruito a ogni sessione (35 s) e non va mai trattato come verità: dice che un titolo ESISTE, non che sia la persona giusta. Il giudice resta `verifica_identita`, e sul percorso-variante nella sua forma più severa.
-
-<details><summary>Codice proposto (non applicato)</summary>
-
-```python
-"""PROPOSTA (non applicata) — da aggiungere a src/data/wikipedia_careers.py.
-
-RECUPERO DEI 404: non si INDOVINA il titolo, lo si LEGGE.
-
-Le 20.924 pagine gia' in `data/wikipedia_cache/` contengono, nei loro
-wikilink, 218.026 titoli REALI di en.wikipedia. Il titolo giusto di un
-giocatore che ha fallito per grafia sta quasi sempre li' dentro, perche' la
-sua pagina e' linkata da quella di un compagno o di un avversario che
-abbiamo gia' scaricato. Costo: ZERO richieste.
-Misurato il 01/08/2026: 477 dei 1.389 falliti ottengono un candidato, e su
-un campione di 18 il candidato era giusto 18 volte su 18.
-"""
-
-from __future__ import annotations
-
-import collections
-import glob
-import gzip
-import os
-import re
-import unicodedata
-import urllib.parse
-
-# `class="new"` marca un link ROSSO: la pagina NON esiste. Tenerlo
-# significherebbe generare candidati garantiti 404 (regola R6: finto pieno).
-_RE_WIKILINK = re.compile(
-    rb'rel="mw:WikiLink" href="https://en\.wikipedia\.org/wiki/([^"?#]+)"([^>]{0,200})'
-)
-
-# Suffissi onorifici: NON sono cognomi. Usarli come chiave ha prodotto due
-# falsi positivi veri e misurati — «Charly Musonda Jr.» -> «Chavo Guerrero Jr.»
-# (un wrestler) e «Aleksey Eremenko Jr.» -> «Alejandro Alvarado Jr.».
-_ONORIFICI = frozenset({"jr", "sr", "ii", "iii", "jnr", "snr"})
-
-# Ipocoristici greci che la regola del prefisso non puo' vedere (Konstantinos
-# e Kostas condividono solo 2 lettere). Lista chiusa e dichiarata.
-_IPOCORISTICI = {
-    "konstantinos": {"kostas"}, "georgios": {"giorgos", "yorgos"},
-    "athanasios": {"thanasis", "sakis"}, "ioannis": {"giannis", "yiannis"},
-    "emmanouil": {"manolis"}, "charalampos": {"babis", "charis"},
-    "anastasios": {"tasos"}, "dimosthenis": {"dimos"},
-    "eleftherios": {"lefteris"}, "panagiotis": {"panos"},
-    "vasilios": {"vasilis"}, "nikolaos": {"nikos"},
-    "dimitrios": {"dimitris"}, "stylianos": {"stelios"},
-    "efstathios": {"stathis"}, "theodoros": {"thodoris"},
-    "alexandros": {"alexis"}, "evangelos": {"vangelis"},
-    "efthymios": {"efthymis"},
-}
-
-
-def _piatto(s: str) -> str:
-    """Toglie i diacritici e le lettere non ASCII delle lingue europee."""
-    s = "".join(c for c in unicodedata.normalize("NFD", str(s))
-                if unicodedata.category(c) != "Mn")
-    for a, b in (("ø", "o"), ("Ø", "O"), ("æ", "ae"), ("Æ", "Ae"), ("ð", "d"),
-                 ("Ð", "D"), ("ł", "l"), ("Ł", "L"), ("đ", "d"), ("Đ", "D"),
-                 ("þ", "th"), ("Þ", "Th"), ("ı", "i"), ("İ", "I"), ("ß", "ss")):
-        s = s.replace(a, b)
-    return s
-
-
-def _token(s: str) -> list[str]:
-    return re.sub(r"[^a-z0-9 ]", " ", _piatto(s).lower()).split()
-
-
-def _collassa(t: str) -> str:
-    """Collassa le differenze di TRASLITTERAZIONE, non quelle di persona.
-
-    Ogni sostituzione ha un caso misurato dietro:
-      g/h   Gromov -> Hromov, Bogdanov -> Bohdanov  (ucraino: г si translittera
-            h nello schema ufficiale, g in quello che usa Transfermarkt);
-      j/i/y Pesjakov -> Pesyakov, Ilya -> Illia     (russo/ucraino);
-      w/v   Wagner/Vagner;  z/s  Adzic/Adžić;  ck/k;
-      doppie: Ilya -> Illia;  ie/ei -> e: Matvienko -> Matviyenko.
+    ⚠️ Nella cache gli href del CORPO sono **protocollo-relativi assoluti**
+    (`//en.wikipedia.org/wiki/...`); i `/wiki/...` relativi sono SOLO la
+    navigazione del sito (`/wiki/Main_Page`, `/wiki/Special:Random`). Un parser
+    che accetta solo la forma relativa estrae **0 link a calciatori su 250
+    disambigue** e non solleva nulla: sembra funzionare. Verificato: `title=`
+    ne trova 232/250 = 92,8%.
+    ⚠️ Non e' vero, come si era scritto, che «convivono due dialetti HTML»: su
+    500 pagine campionate il **100%** contiene `href="/wiki/`. La regola
+    operativa (usare `title=`, mai `href^=/wiki/`) e' giusta; la diagnosi
+    «pagine Parsoid» era sbagliata e chi la cercasse non la troverebbe.
     """
-    t = t.replace("kh", "h").replace("ch", "h")
-    t = (t.replace("g", "h").replace("j", "i").replace("y", "i")
-          .replace("ck", "k").replace("w", "v").replace("z", "s"))
-    t = re.sub(r"(.)\1+", r"\1", t)
-    return t.replace("ie", "e").replace("ei", "e")
+    m = _RE_HREF.match(href.split("#")[0])
+    return (m.group(1) or m.group(2)) if m else None
 
 
-def chiavi(nome: str) -> tuple[str, str, str, str]:
-    """Le quattro chiavi, dalla piu' stretta alla piu' larga.
+def e_pagina_indice(html: str, minimo: int = 2) -> bool:
+    """La pagina e' un ELENCO DI PERSONE omonime, non una voce?
 
-    A  grafia   — solo diacritici/punteggiatura  (Bosko Sutalo = Boško Šutalo)
-    B  translit — + i collassi di `_collassa`    (Artem Gromov = Artem Hromov)
-    C  ordine   — token ordinati                 (Ja-cheol Koo = Koo Ja-cheol)
-    D  cognome  — solo l'ultimo token utile      (Nikolaos/Nikos Korovesis)
+    Due segnali in OR: la **dichiarazione** di Wikipedia (disambigbox/categoria)
+    e la **forma** (>=2 righe «... (born AAAA), ...»). Il secondo serve perche'
+    le voci di nome proprio non si dichiarano disambigue; il primo perche' le
+    disambigue corte non hanno righe a sufficienza.
+
+    Ri-eseguito su HEAD: pagine-indice fuori da `nessun_infobox` -> **376/711**
+    `nessun_blocco`, **24/315** `errore`, e **0/205** `identita_non_confermata`
+    (controllo negativo: quelle sono voci VERE di un'altra persona, fronte
+    diverso, e vengono correttamente lasciate stare).
+    Non-regressione, provata direttamente: su **2.866** pagine classificate
+    INDICE, **0** contengono la nostra data di nascita; delle 2.490
+    `nessun_infobox` indice, **0** hanno uno `span.bday`.
     """
-    tok = _token(nome)
-    if not tok:
-        return "", "", "", ""
-    utili = [t for t in tok if t not in _ONORIFICI] or tok
-    piatto = "".join(tok)
-    return (piatto,
-            _collassa(piatto),
-            "|".join(sorted(_collassa(t) for t in utili)),
-            _collassa(utili[-1]))
+    soup = BeautifulSoup(html, "lxml")
+    if soup.find(id="disambigbox") or soup.find(class_="dmbox"):
+        return True
+    cats = " ".join(a.get_text() for a in soup.select("#mw-normal-catlinks li a")).lower()
+    if "disambiguation" in cats or "given name" in cats or "surname" in cats:
+        return True
+    return sum(1 for c in estrai_candidati(html) if "born" in c.testo.lower()) >= minimo
 
 
-def costruisci_gazetteer(cache_dir=None) -> dict[str, list[str]]:
-    """I titoli REALI di en.wikipedia linkati dalle pagine gia' in cache.
-
-    Zero richieste. Cresce da solo: ogni pagina scaricata dalla raccolta
-    normale ne aggiunge (~4 titoli nuovi per pagina, misurato).
-    """
-    cache_dir = str(cache_dir or (CACHE_DIR / "en"))
-    titoli: set[str] = set()
-    for p in glob.glob(os.path.join(cache_dir, "*.html.gz")):
-        try:
-            raw = gzip.decompress(open(p, "rb").read())
-        except Exception:
+def estrai_candidati(html: str) -> list[Candidato]:
+    """Le righe di elenco che puntano a una persona. Zero richieste."""
+    soup = BeautifulSoup(html, "lxml")
+    body = soup.find("div", class_="mw-parser-output")
+    if body is None:
+        return []
+    sezione, out, visti = "", [], set()
+    for el in body.find_all(["h2", "h3", "li"]):
+        if el.name in ("h2", "h3"):
+            sezione = el.get_text(" ", strip=True).lower()
             continue
-        for m in _RE_WIKILINK.finditer(raw):
-            if b'class="new"' in m.group(2):
-                continue                       # link rosso: non esiste
-            t = urllib.parse.unquote(
-                m.group(1).decode("utf-8", "replace")).replace("_", " ")
-            if ":" in t:                       # Category:, Template:, ...
+        if any(s in sezione for s in SEZ_ESCLUSE):
+            continue
+        # ⚠️ `find_parent(class_=re.compile("...|toc"))` risale fino a <html>,
+        # che su Vector-2022 porta la classe `vector-toc-available`: la regola
+        # «salta le righe dentro un TOC» scartava OGNI riga di OGNI pagina.
+        # Si risale a mano e ci si ferma al corpo voce.
+        cattivo = False
+        for anc in el.parents:
+            if anc is body:
+                break
+            if {"navbox", "reflist", "catlinks", "toc", "hatnote"} & set(anc.get("class") or []):
+                cattivo = True
+                break
+        if cattivo:
+            continue
+        testo = el.get_text(" ", strip=True)
+        if not testo or len(testo) > 400:
+            continue
+        link = None
+        for a in el.find_all("a", href=True):
+            t = _titolo_da_href(a["href"])
+            if t is None or any(t.startswith(n) for n in NS_ESCLUSI):
                 continue
-            if 1 < len(t.split()) <= 4:        # forma da nome di persona
-                titoli.add(t)
-    idx: dict[str, list[str]] = collections.defaultdict(list)
-    for t in titoli:
-        a, b, c, d = chiavi(t)
-        for k in (f"A{a}", f"B{b}", f"C{c}", f"D{d}"):
-            idx[k].append(t)
-    return dict(idx)
-
-
-def _prefisso(a: str, b: str) -> int:
-    a, b = _piatto(a).lower(), _piatto(b).lower()
-    k = 0
-    for x, y in zip(a, b):
-        if x != y:
+            if "disambiguation" in t.lower():
+                continue
+            link = t
             break
-        k += 1
-    return k
+        if link is None or link in visti:
+            continue
+        visti.add(link)
+        out.append(Candidato(titolo=link, testo=testo, sezione=sezione))
+    return out
 
 
-def _nome_compatibile(a: str, b: str) -> bool:
-    """Per la chiave D: il nome di battesimo dev'essere la stessa persona.
+def _anni_e_mese(c: Candidato) -> tuple[set[int], int | None]:
+    """Anni di nascita citati nella riga, e il mese se dichiarato.
 
-    Senza questo filtro la chiave-cognome aggancia «Adu Ares» -> «Austin
-    Aries» e «Dong-jun Lee» -> «Derrek Lee». Con il filtro, i due nomi devono
-    condividere almeno 3 lettere iniziali (Javi/Javier, Alex/Alejandro,
-    Nikolaos/Nikos) oppure stare nella lista chiusa degli ipoco
-```
+    Il mese risolve i casi altrimenti indecidibili: «Ederson (footballer, born
+    January 1986)» contro «born March 1986» sono due brasiliani, stesso anno,
+    stesso ruolo. Senza il mese sono indistinguibili; col mese uno fa 10,0 e
+    l'altro 4,0.
+    """
+    src = c.titolo.replace("_", " ") + " || " + c.testo
+    anni, mese = set(), None
+    for m in _RE_NATO.finditer(src):
+        anni.add(int(m.group(2)))
+        if m.group(1) and m.group(1).lower() in _MESI:
+            mese = _MESI[m.group(1).lower()]
+    return anni, mese
 
-</details>
 
-## Fronte 3 — le 152 respinte (`identita_non_confermata`) e le 199 in quarantena dello strato 2 Wikipedia. ⚠️ La raccolta gira in background: mentre lavoravo i due gruppi sono passati a 170 e 211. Tutte le misure sono fatte sui numeri correnti (170/211) e RIPORTATE COME TASSI; le cifre assolute qui sotto sono riscalate ai 351 del brief.
-**Stima**: 254 su 351
+def punteggio_candidato(c: Candidato, prof: dict) -> tuple[float, dict]:
+    """Punteggio della riga per `prof` = {anno, mese, paese, ruolo, club_noti}.
 
-**Tasso**: 72,3% — IC95% [60%, 84%] (212-294 righe). Scomposto: QUARANTENA 181/199 = 91,0% [86,4%, 94,2%] (Wilson su n=211 misurati); RESPINTE 73/152 = 47,8% [26%, 70%] (somma di tre rami con IC propagati; il ramo dominante e' misurato su n=20, quindi l'intervallo e' largo e va dichiarato tale).
+    I pesi sono ORDINI DI GRANDEZZA, non un'ottimizzazione: l'anno domina (e'
+    l'unico campo quasi sempre presente e quasi sempre discriminante), mese e
+    club corroborano, nazionalita' e ruolo fanno da rompi-parita'.
+      anno   +5,0 / -5,0 (off-by-1: -1,5)     mese  +2,0 / -4,0
+      club   +2,5 (max 2)                     naz   +2,0 / -2,0
+      ruolo  +1,0 / -1,5                      non-calciatore -6,0
 
-**Falsi positivi attesi**: 0,3 righe su 254 — IC95% [0,05, 1,6]. Viene dal tasso di falsi positivi MISURATO della regola proposta contro il placebo piu' duro costruibile (avversario che condivide un club col nostro giocatore, n=922): 0,11% [0,02%, 0,61%]. Controllo diretto e indipendente: sulle 16 pagine nuove trovate dal titolo-con-anno, 13 sono state attaccate e ZERO erano di un'altra persona — le 3 sbagliate (Burak Yilmaz, Romario, Liam Henderson) sono state scartate dalla regola. ⚠️ 0/13 preso da solo ha potenza nulla (limite superiore 23% per la regola del tre): il numero che regge e' quello del placebo a n=922. In piu' la regola TOGLIE dal database 2 carriere sbagliate che oggi ci sono dentro (18 tappe: Javier Olaizola e Bruno Alves, entrambi in quarantena e oggi contati fra gli `ok`).
+    ⚠️ Il ruolo e' FRAGILE: `position` nel nostro dataset e' la posizione
+    attuale/prevalente, la riga d'indice descrive spesso il ruolo d'inizio
+    carriera. Pesa poco apposta, ma su un riconvertito puo' togliere 2,5 punti
+    al candidato giusto: e' una delle cause plausibili delle 275 astensioni.
+    """
+    src = _norm(c.titolo.replace("_", " ") + " " + c.testo)
+    d: dict = {}
+    s = 0.0
+    d["calcio"] = bool(_RE_CALCIO.search(c.titolo.replace("_", " ") + " " + c.testo)) \
+        or "football" in c.sezione or "soccer" in c.sezione
 
-**Costo**: +0,006 richieste per giocatore sui 22.254 tentati — cioe' 137 richieste in tutto per l'intero fronte, ~2,5 minuti a 1 richiesta/secondo. Dettaglio: le 199 in QUARANTENA costano ZERO (tutto quello che serve — le tappe, la data della pagina, nazionalita'/ruolo/altezza — e' gia' in `data/wikipedia_cache/en/` e in `esiti.jsonl`); le 152 RESPINTE costano ~0,9 richieste a testa, cioe' 33 titoli letti dagli hatnote (che sono gratis da TROVARE, si pagano solo da PRENDERE) piu' 104 costruiti alla cieca. Nessuna richiesta e' sprecata su chi la regola risolve gia' in locale, ed e' per questo che il passo 4 (rileggere la pagina che abbiamo) viene PRIMA del passo 5 (chiederne una nuova). Se un domani si applica lo stesso codice ai 2.102 `nessun_infobox`, il conto sale a ~1 richiesta per riga ma il ritrovamento e' molto piu' alto (58,2% ha gia' il titolo esatto in cache) — e' un fronte diverso e va deciso a parte.
+    anni, mese = _anni_e_mese(c)
+    d["anni_riga"] = sorted(anni)
+    if prof.get("anno") and anni:
+        if prof["anno"] in anni:
+            s += 5.0
+            d["anno"] = "match"
+            if mese is not None:
+                if prof.get("mese") == mese:
+                    s += 2.0; d["mese"] = "match"
+                else:
+                    s -= 4.0; d["mese"] = "discorde"
+        elif min(abs(a - prof["anno"]) for a in anni) == 1:
+            s -= 1.5; d["anno"] = "off_by_1"
+        else:
+            s -= 5.0; d["anno"] = "discorde"
+    else:
+        d["anno"] = "assente"
 
-### Strategia
+    dem = DEMONIMI.get(prof.get("paese") or "", ())
+    if dem:
+        if any(x in src for x in dem):
+            s += 2.0; d["naz"] = "match"
+        elif any(x in src for x in _TUTTI_DEMONIMI - set(dem)):
+            s -= 2.0; d["naz"] = "altra"
+        else:
+            d["naz"] = "assente"
 
-PASSO 0 — cambiare il dato che si confronta, non la soglia.
-Oggi `verifica_identita()` confronta INSIEMI DI NOMI DI CLUB. Il nome del club da solo non identifica nessuno: padre e figlio giocano nello stesso club (Javier Olaizola padre a Mallorca negli anni '90, il nostro figlio a Mallorca 2025-26), e i compagni di squadra pure. Da `appearances.csv` si ricava, per `player_id` (quindi immune all'omonimia), la terna `(club, primo_anno, ultimo_anno)`; dall'infobox si ha `(club, anno_da, anno_a)`. Il confronto giusto e' `club COINCIDE **e** le finestre si SOVRAPPONGONO` (tolleranza ±1 anno, perche' la grana dell'infobox e' l'anno-stagione). Chiamo `k` il numero di club dello strato 1 confermati anche negli anni. Serve anche un normalizzatore di nomi club che tolga i diacritici e le sigle societarie: il matcher attuale e' un `in` fra stringhe minuscole e fallisce in silenzio (Svyatoslav Georgievski ha 4 club su 4 coincidenti e oggi e' RESPINTO).
+    kw = RUOLI.get(prof.get("ruolo") or "", ())
+    if kw:
+        if any(k in src for k in kw):
+            s += 1.0; d["ruolo"] = "match"
+        elif any(k in src for p, v in RUOLI.items() if p != prof.get("ruolo") for k in v):
+            s -= 1.5; d["ruolo"] = "altro"
+        else:
+            d["ruolo"] = "assente"
 
-PASSO 1 — leggere la FORMA dello scarto anagrafico, non la sua ampiezza.
-Non «quanti giorni» ma «che tipo di refuso»: Δ FORTE = entro 31 giorni, oppure stesso giorno+mese con anno diverso, oppure giorno/mese invertiti (German Lux: 1982-06-07 contro 1982-07-06). Δ DEBOLE = entro 366 giorni. Δ ESTRANEO = tutto il resto. La taratura non e' arbitraria: sulle 2.389 coppie di persone DIVERSE con lo stesso nome dentro `players.csv`, solo lo 0,96% sta entro 31 giorni e solo lo 0,25% condivide giorno+mese. Un Δ di quella forma non e' «un'altra persona»: e' un refuso fra due fonti.
+    tok = set(src.split())
+    n_club = sum(
+        1 for cl in (prof.get("club_noti") or [])
+        if (t := {x for x in _norm(cl).split() if x not in _STOP_CLUB and len(x) > 2})
+        and t <= tok
+    )
+    d["club"] = n_club
+    s += min(n_club, 2) * 2.5
+    if not d["calcio"]:
+        s -= 6.0
+    c.punteggio, c.dettaglio = s, d
+    return s, d
 
-PASSO 2 — il terzo voto, che costa zero richieste.
-Nazionalita' (riga «place of birth» + categorie «X men's footballers»), ruolo e altezza (±3 cm) stanno gia' dentro l'HTML scaricato. NON bastano da soli — Aaron Ramsey nato 1990 corrobora 3 su 3 con il nostro nato 2003 (gallese, centrocampista, stessa statura) ed e' un'altra persona — ma come terzo voto abbattono i falsi positivi di 40 volte.
 
-PASSO 3 — la regola (`verifica_identita_v2`, tre assi indipendenti, non una cascata).
-  a) date entro 3 giorni                        -> `confermata_data`   (invariata)
-  b) k == 0                                     -> `respinta`          (e' qui che cadono ENTRAMBE le 2 identita' davvero sbagliate della quarantena)
-  c) Δ FORTE  e k >= 1                          -> `confermata_coerenza`
-  d) Δ DEBOLE e k >= 1 e >=2 tratti concordi e 0 discordi -> `confermata_coerenza`
-  e) Δ ignoto e k >= 2                          -> `confermata_coerenza`
-  f) Δ ESTRANEO                                 -> `quarantena` (mai promozione automatica: giudizio umano)
-Questa regola DOMINA l'alternativa piu' stretta su entrambi gli assi (0,11% di falsi positivi contro 0,43%, e 91,9% di recupero contro 81,5%) e non perde nulla sul gruppo a identita' certa (1.000/1.000 restano `confermata_data`).
+def scegli_da_indice(html, prof, *, soglia=SOGLIA, margine=MARGINE):
+    """Sceglie la riga giusta, oppure **si astiene**.
 
-PASSO 4 — le respinte: prima si riprova la regola sulla pagina che gia' abbiamo (0 richieste).
-14 delle 170 (8,2% [5,0%, 13,3%]) non erano omonimi: erano FALSE RESPINTE, buttate da un matcher di club cieco ai diacritici e da una tolleranza di 3 giorni troppo secca.
+    L'astensione e' una decisione, non un fallimento: costa zero richieste e
+    zero rischio. Misurato su HEAD (2.490 pagine-indice `nessun_infobox`):
+    scelto 2.145 = **86,1%**; astensioni 275 sotto soglia, 59 ambiguo,
+    11 senza candidati.
+    ⚠️ Il **63,0%** delle scelte ha s1 < 8 (anno + al piu' un segnale debole) e
+    il **5,9%** (137 giocatori) ha s1 = 5,0 esatto, cioe' l'anno E BASTA.
+    """
+    val = []
+    for c in estrai_candidati(html):
+        s, _ = punteggio_candidato(c, prof)
+        val.append((s, c))
+    val.sort(key=lambda x: -x[0])
+    diag = {"n_cand": len(val), "top": [(round(s, 2), c.titolo) for s, c in val[:3]]}
+    if not val:
+        return None, diag | {"motivo": "nessun_candidato"}
+    s1, c1 = val[0]
+    s2 = val[1][0] if len(val) > 1 else -99.0
+    diag |= {"s1": s1, "s2": s2, "dettaglio": c1.dettaglio}
+    if s1 < soglia:
+        return None, diag | {"motivo": "sotto_soglia"}
+    if s1 - s2 < margine:
+        return None, diag | {"motivo": "ambiguo"}
+    return c1, diag | {"motivo": "scelto"}
 
-PASSO 5 — le respinte vere: il titolo che porta l'anno di nascita.
-Wikipedia disambigua i calciatori omonimi con la convenzione `Nome (footballer, born AAAA)`. Noi l'anno atteso ce l'abbiamo. Due sorgenti, in quest'ordine:
-  5a. leggerlo dall'HATNOTE della pagina sbagliata che abbiamo gia' in cache — 37 su 170 (21,8%) contengono il titolo ESATTO col nostro anno, tutti link BLU (0 rossi). Costo per trovarlo: ZERO richieste. Costo per prenderlo: 1 richiesta a testa.
-  5b. costruirlo alla cieca per i restanti. 1 richiesta a testa.
-⚠️ Il titolo con l'anno NON e' univoco: `Burak Yilmaz (footballer, born 1995)` esiste ed e' una TERZA persona (7 febbraio contro il nostro 27 novembre). Quindi ogni pagina nuova ripassa comunque dal PASSO 3. E' esattamente cosi' che la sonda ha attaccato 13 pagine su 16 con 0 errori.
 
-PASSO 6 — l'ordine dei tentativi cambia.
-Oggi i suffissi si provano SOLO sul 404. Va provato il titolo-con-anno **anche quando il nome nudo ha dato una pagina con l'infobox**, se la verifica dice `respinta`: quella pagina e' di un altro, e la persona giusta puo' avere la sua voce. Costo: +1 richiesta solo sui respinti, non su tutti.
+_RE_ANNO_TIT = re.compile(r"born\s+(?:\w+\s+)?(\d{4})")
 
-PASSO 7 — cosa resta a mano, ed e' poco.
-17 righe su 211 restano in `quarantena` (Δ ESTRANEO, oppure DEBOLE senza corroborazione). Le ho aperte una per una: 2 sono davvero un'altra persona (Olaizola, Bruno Alves — entrambe con k=0), 3 sono la persona giusta con l'anagrafica sbagliata SULLA PAGINA (Haris Belkebla: la voce dice 3 agosto 2000, ma e' l'algerino del Brest/Angers nato 28 gennaio 1994, stessa altezza al centimetro, stesso ruolo, stesso club attuale — la data della pagina e' un finto pieno, R6), le altre 12 sono ambigue. La regola non le indovina: le DICHIARA.
+def candidati_calcistici(html: str, anno_atteso: int | None) -> list[str]:
+    """Fallback quando `scegli_da_indice` si astiene: i titoli-candidato letti
+    dagli attributi `title=`, filtrati sull'anno di nascita atteso.
 
-### I numeri misurati
+    E' il ramo che copre le pagine di SOGGETTO DIVERSO (NBA, ciclismo, citta'),
+    dove non ci sono righe d'elenco descrittive ma i link ci sono comunque.
+    Misurato sui 711 `nessun_blocco`, ri-derivato **per player_id** (fix R5:
+    l'artefatto originale risolveva la data per NOME e i sei Danilo — 1984,
+    1986, 1990, 1991, 1999, 2001 — finivano tutti su «Danilo (born 1986)»):
+      almeno un candidato        395/711 = 55,6%
+      ESATTAMENTE UNO con l'anno atteso  **137/711 = 19,3%** [16,5%, 22,3%]
+      -> 137 titoli DISTINTI, 0 collisioni
+    Precisione su 50 verifiche di rete: **46/50 = 92,0%** [81,2%, 96,8%]; i 4
+    errori sono tutti omonimi nati lo STESSO ANNO, giorno diverso, e
+    `verifica_identita` li respinge tutti e quattro -> **0/50 agganci sbagliati**.
+    Si scarica SOLO se la lista ha lunghezza 1.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    corpo = soup.find("div", class_="mw-parser-output") or soup
+    titoli: list[str] = []
+    for a in corpo.find_all("a"):
+        t = a.get("title")
+        if not t or t in titoli:
+            continue
+        if "page does not exist" in t or t.startswith("Edit section"):
+            continue
+        if _RE_CALCIO.search(t):
+            titoli.append(t)
+    if anno_atteso is None:
+        return titoli
+    return [t for t in titoli
+            if (m := _RE_ANNO_TIT.search(t)) and int(m.group(1)) == anno_atteso]
 
-| cosa | valore | come |
-|---|---|---|
-| QUARANTENA — quante sono davvero la persona giusta | 192/211 = 91,0% promosse in automatico; 17 al giudizio umano; 2 RESPINTE (oggi sono nel database e sono sbagliate) | `verifica_identita_v2` eseguita sulle 211 righe `identita=quarantena` estratte da esiti.jsonl, con gli span club×anni da appearances.csv e la corroborazione letta dall'HTML in cache. Validazione girata sul codice proposto, non sullo script d'analisi. |
-| Quanto la quarantena somiglia al gruppo a identita' CERTA (R7, con potenza) | nazionalita' Δ=−1,8% IC95% [−6,2%, +2,6%] · ruolo Δ=+4,7% [−0,5%, +9,9%] · altezza±3cm Δ=−2,8% [−7,0%, +1,4%]. MDE all'80% di potenza: 6,3% / 7,4% / 6,0% | Tre proporzioni indipendenti dalla data e dai club, lette dall'infobox in cache: quarantena promossa (n≈206) contro un campione casuale di 1.000 `confermata_data`. Tutti e tre gli IC a cavallo dello zero: una contaminazione ≥6-7% sarebbe stata vista, e non c'e'. |
-| Limite inferiore distribution-free su quante quarantene sono la persona giusta | π ≥ 94,3% (stima puntuale), ≥ 89,9% al 95% | Miscela: p_osservata(Δ≤366gg)=94,8% sulle 211 quarantene; p_nulla(Δ≤366gg)=8,96% misurata sulle 2.389 coppie di persone DIVERSE con lo stesso nome in players.csv. π ≥ (p_oss − p_null)/(1 − p_null), con l'estremo inferiore di Wilson su entrambe. E' conservativo: assume che nessun refuso vero superi l |
-| Falsi positivi della regola proposta — placebo «avversario che condivide un club» | 0,11% — IC95% [0,02%, 0,61%] su n=922. Confronto: regola stretta 0,43% [0,17%, 1,11%] con solo 81,5% di recupero; regola permissiva senza corroborazione 4,56% [3,39%, 6,10%] con 97,6% | Per ogni pagina a identita' certa si sceglie a caso un giocatore DIVERSO che condivide almeno un club con la carriera della pagina, e si chiede alla regola se attaccherebbe. E' il caso peggiore costruibile: garantisce la sovrapposizione di club, cioe' l'evidenza su cui si reggeva la regola vecchia. |
-| Falsi positivi — placebo OMONIMO ESATTO (dichiarato senza potenza) | 0/86 con la regola completa; 3/86 = 3,5% con la sola coerenza club×anni a k=1, 0/86 a k≥2. Ristretto a chi ha anche club in comune: n=5, IC [0%, 43%] | Pagine confermate accoppiate con l'anagrafica di un omonimo esatto del dataset. ⚠️ R7: a n=5 non c'e' potenza; il numero NON va citato come conferma. I 3 falsi agganci a k=1 sono TUTTI casi di famiglia (Nikolaos Lazaridis 1979/1997, Robinho 1984/1997, Andre Santos 1983/1989) — e' proprio la trappola |
-| Sensibilita' — quanto costa la nuova regola a chi era gia' giusto | 0. 1.000/1.000 restano `confermata_data`. La coerenza club×anni da sola scatta sul 96,9% [95,6%, 97,8%] delle identita' certe | La regola nuova non tocca il ramo della data entro 3 giorni; agisce solo sotto. Il 96,9% e' la sensibilita' del solo asse club×anni, misurata sul campione di 1.000 confermate: il 3,1% che non scatta sono giocatori i cui club dello strato 1 non compaiono nell'infobox (seconde squadre, prestiti brevi) |
-| La trappola FRATELLI / PADRE-FIGLIO — esiste, e l'ho trovata nel nostro campione | SI. Caso conclamato: Javier Olaizola, pagina 28/11/1969 (San Sebastian, terzino destro, Eibar/Real Burgos/Mallorca) contro il nostro nato 15/03/2007 (centrale, Mallorca 2025-26). 37 anni di scarto, CLUB IN COMUNE, e la copertura-club lo confermava. Secondo caso: Bruno Alves 1981 (il portoghese, 187 cm, centrale) contro il nostro 1990 (179 cm, mediano) | Ispezione diretta delle pagine in cache (data, luogo di nascita, altezza, ruolo, categorie) per tutti i 7 casi di quarantena che la regola non risolve in automatico. Entrambi cadono su k=0: la finestra temporale li uccide, il nome del club no. |
-| Quanto e' diffusa la trappola di famiglia, misurata | Nel dataset: 988 gruppi di omonimi esatti, 2.389 coppie. Con almeno un CLUB in comune: 15 coppie fratelli (2-9 anni) e 2 coppie padre-figlio (18-40 anni), cioe' lo 0,7% delle coppie omonime | Prodotto cartesiano dentro ogni gruppo di nomi identici in players.csv, incrociato con l'insieme dei club da appearances.csv. ⚠️ R4: e' un LIMITE INFERIORE. Olaizola padre (1969) non e' nel nostro dataset — vive solo su Wikipedia. Il conteggio vede solo le trappole che players.csv contiene; quelle c |
-| RESPINTE — quante sono FALSE respinte (la pagina in mano e' gia' la persona giusta) | 14/170 = 8,2% — IC95% [5,0%, 13,3%]. Costo: ZERO richieste di rete | Applicazione della regola nuova alle 170 respinte. Sono casi come Svyatoslav Georgievski (5 giorni di scarto, 4 club su 4 coerenti anche negli anni: bocciato dai diacritici) e German Lux (giorno e mese invertiti). |
-| RESPINTE — la persona giusta ha una pagina? (via HATNOTE, gia' in cache) | 37/170 = 21,8% hanno nell'hatnote il titolo ESATTO col nostro anno di nascita, tutti link BLU, zero rossi. Sonda su 8: pagina esistente 8/8 = 100%, aggancio corretto 7/8 = 87,5% [52,9%, 97,8%] | Estrazione degli attributi `title=` dai blocchi `div.hatnote`/`div.dablink` delle 170 pagine in cache. Poi 8 richieste vere a 1/s. L'unico non agganciato e' `Burak Yilmaz (footballer, born 1995)`: la pagina esiste ma e' una TERZA persona (7 febbraio contro 27 novembre) — la verifica l'ha scartata co |
-| RESPINTE — la persona giusta ha una pagina? (titolo COSTRUITO alla cieca) | pagina esistente 8/20 = 40% [21,9%, 61,3%]; aggancio corretto 6/20 = 30% [14,5%, 51,9%]. Delle 8 esistenti, 3 (37,5%) erano di UN'ALTRA persona e sono state scartate | 20 richieste vere a 1/s su `Nome (footballer, born AAAA)` per respinte NON coperte dall'hatnote. Le 3 scartate: Romario 1992 (13/03 contro 15/01), Liam Henderson 1996 (25/04 contro 23/08), piu' Burak Yilmaz nell'altro strato. Il complemento — il 60% che da' 404 — e' la risposta onesta alla domanda:  |
-| RESPINTE — esito end-to-end della sonda | 16 pagine trovate, 13 attaccate, 0 identita' sbagliate | Ogni pagina della sonda ri-passata dal parser dell'infobox + regola nuova. Le 3 non attaccate sono esattamente le 3 pagine di un'altra persona. Nessuna richiesta aggiuntiva: le pagine erano gia' in cache dopo la sonda. |
-| SOTTOPRODOTTO fuori dal mio fronte, ma e' lo stesso codice | 58,2% delle pagine di DISAMBIGUA in cache (campione 400 dei 2.102 `nessun_infobox`) contiene gia' il titolo `Nome (footballer, born <nostro anno>)`. Altre 34,2% linkano calciatori di altri anni | Stesso estrattore, applicato al corpo della disambigua invece che all'hatnote. Zero richieste di rete: le pagine sono gia' scaricate. E' il fronte 1 (i mononimi brasiliani/spagnoli/portoghesi) e questa e' la chiave. |
-| ANOMALIA R6 trovata e dichiarata: due dialetti HTML nella stessa cache | Prima misura sulle disambigua: 0/250 = 0,0%. Misura corretta: 58,2%. Non un dato mancante — un PARSER cieco | Le pagine in cache convivono in due formati: quello classico con href relativi `/wiki/...` e l'output Parsoid con href ASSOLUTI (`rel="mw:WikiLink"`, id `mwXX`). Un selettore `a[href^="/wiki/"]` vede zero link sul secondo e non solleva nessun errore. Chiunque tocchi questa cache deve usare un estrat |
-| Quanto vale in righe di carriera | Quarantena: 1.643 tappe senior gia' nel database la cui identita' passa da «dubbia» a «confermata», meno 18 tappe di due persone sbagliate che escono. Respinte: ~73 giocatori × 8,0 tappe senior ≈ 580 tappe NUOVE | Conteggio diretto delle `tappe` non giovanili nelle due popolazioni di esiti.jsonl; media di 8,0 tappe senior per giocatore misurata sui respinti. |
-| Il costo di rete dell'intero fronte | 137 richieste in tutto (~2,5 minuti a 1 richiesta/secondo). ZERO per le 199 in quarantena | 33 titoli letti dagli hatnote + 104 costruiti alla cieca, scalati ai 152 del brief. La quarantena non chiede nemmeno una richiesta: tutto quello che serve e' gia' in `data/wikipedia_cache/en/`. |
 
-### Rischi dichiarati
+_RE_TEMPLATE = re.compile(
+    r"^(.+?) \((?:footballer|soccer)(?:, born \d{4})?\)$|"
+    r"^(.+?) \(\w+ footballer\)$", re.I)
 
-- POTENZA ASIMMETRICA. Il ramo piu' grosso del recupero delle respinte (il titolo costruito alla cieca) e' misurato su n=20: 30% [14,5%, 51,9%]. Il ramo vale ~31 righe con IC [15, 54]. Se serve stringere, bastano altre 40-60 richieste — ma vanno fatte dal processo unico, non da un agente.
-- IL PLACEBO OMONIMO NON HA POTENZA. 0/86 con la regola completa suona bene ma l'IC arriva al 4%, e ristretto a chi ha anche club in comune n=5 -> IC [0%, 43%]. Il numero che regge e' il placebo «stesso club» a n=922. Non citare il placebo omonimo come conferma (R7).
-- IL CONTEGGIO DELLE TRAPPOLE DI FAMIGLIA E' UN LIMITE INFERIORE. 15 coppie fratelli + 2 padre-figlio con club in comune contano solo le coppie in cui ENTRAMBI stanno in players.csv. Javier Olaizola padre (1969) non c'e': vive solo su Wikipedia. Il vero denominatore e' piu' grande e non e' misurabile con i dati che abbiamo.
-- IL TITOLO CON L'ANNO NON E' UNIVOCO. Esistono due calciatori omonimi nati lo STESSO anno: `Burak Yilmaz (footballer, born 1995)` non e' il nostro Burak Yilmaz del 1995. Il titolo e' un candidato, mai una prova: ogni pagina nuova deve ripassare dalla verifica d'identita', altrimenti si reintroduce l'errore che la verifica esiste per impedire.
-- IL BIAS DI CITTADINANZA NON SI CHIUDE QUI. Questo fronte vale 351 righe su 4.477; i mononimi brasiliani/spagnoli/portoghesi stanno quasi tutti nei 2.102 `nessun_infobox`. Il 58,2% misurato sulle disambigua dice che la chiave e' la stessa, ma finche' quel fronte non e' fatto la confondente resta.
-- LA CORROBORAZIONE E' RUMOROSA SULLA POPOLAZIONE SBAGLIATA. Altezza e nazionalita' sono contestate fra le fonti proprio per i giocatori la cui data e' contestata: usarle come TERZO voto (dopo club×anni) va bene, usarle come primo no. Aaron Ramsey 1990 contro 2003 corrobora 3 su 3 ed e' un'altra persona.
-- LE 17 RIGHE LASCIATE A MANO NON SONO UN RESIDUO TRASCURABILE. Contengono le 2 identita' sbagliate che oggi stanno nel database. Se nessuno le guarda, la regola ha comunque fatto il suo lavoro (non le promuove) ma il database resta sporco: vanno RIMOSSE, non solo non-promosse.
-- TOLLERANZA ±1 ANNO SULLE FINESTRE. E' un iperparametro non ottimizzato: l'ho fissato a priori sulla grana annuale dell'infobox, non per griglia. Alzarlo aumenta il recupero e i falsi positivi; il numero che ho misurato vale per ±1.
-- DERIVA DEI DATI. La raccolta gira: fra l'inizio e la fine di questa analisi le due popolazioni sono passate da 152/199 a 170/211. I TASSI trasferiscono, i conteggi assoluti no. Rifare i conti sul file finale prima di scrivere numeri nel README.
+def risolvi_da_indice(html, player_id, nome, lang="en", *, nascita_attesa=None,
+                      paese=None, ruolo=None, club_noti=None, club_anni=None,
+                      solo_data=True, **kw) -> Esito:
+    """Dalla pagina-indice all'`Esito`. **Una** richiesta in piu'.
 
-<details><summary>Codice proposto (non applicato)</summary>
+    ⚖️ DUE BARRIERE INDIPENDENTI, e vanno tenute distinte.
+      1. il **selettore** sceglie quale riga aprire usando solo il testo
+         dell'indice (0 richieste). Sbaglia il **6,30%** [5,79; 6,83] delle
+         volte quando la persona giusta NON e' sulla pagina; se l'impostore ha
+         anche lo stesso anno di nascita sbaglia il **77,0%**. DA SOLO NON BASTA:
+         chi riusasse `scegli_da_indice` senza il secondo stadio introdurrebbe
+         errori a due cifre percentuali.
+      2. `verifica_identita*` giudica la pagina scaricata sulla data AL GIORNO.
+         Su **20.394** impostori stesso-paese/stesso-anno ne fa passare il
+         **2,10%** [1,91%, 2,31%] — il pavimento del paradosso dei compleanni
+         (7/365 = 1,92%), non un difetto del codice.
 
-```python
-Il file completo, pronto, e' in `/tmp/claude-0/-home-user-Polymarket-oracle/1edc272d-613d-56fc-909b-6ca07c8eb53a/scratchpad/proposta.py` (284 righe, importa e gira; NON applicato al repo, come richiesto). Gli script di misura che producono ogni numero di questa risposta stanno accanto: `coer.py` (coerenza club×anni), `corrob.py` (i tre tratti dalla pagina). Il nucleo:
+    ⚠️ ONESTA' SUL RISCHIO (rettifica del 01/08/2026). Il ramo-indice **peggiora**
+    la qualita' del DB, di poco ma misurabilmente: seleziona sull'anno e
+    consegna al filtro **esattamente** il caso in cui il filtro e' piu' debole
+    (year-matched per costruzione). Limite superiore STRATIFICATO per notabilita':
+        <20 presenze :   812 scelte, z<=40,1% -> FP <= 0,927%  -> <= 7,5
+        >=20 presenze: 1.538 scelte, z<=12,0% -> FP <= 0,277%  -> <= 4,3
+        TOTALE <= 11,8 giocatori = **0,50%** (il DOPPIO del limite pooled 0,224%)
+    Da confrontare con il residuo POST-filtro del ramo per-nome, 0,268% x 2,10%
+    = **0,0056%** (~1,2 giocatori su 20.981). Il ramo-indice e' ~40x piu' sporco
+    per recupero. Accettabile (0,02% del DB), ma e' un AUMENTO, non un pareggio.
 
-```python
-# --- asse 1: i club, ma con gli ANNI -----------------------------------------
+    `solo_data=True` chiude la terza via: sul ramo-indice `quarantena` NON e'
+    ammessa. Sul ramo per-nome una data discorde e' spesso un'anagrafica
+    contestata; qui abbiamo scelto la pagina *proprio perche'* l'anno
+    coincideva, quindi una data discorde e' un **sintomo**. Costo: **1,19%**.
+    """
+    nascita = str(nascita_attesa)[:10] if nascita_attesa else None
+    anno = int(nascita[:4]) if nascita and len(nascita) >= 4 else None
+    prof = {"anno": anno,
+            "mese": int(nascita[5:7]) if nascita and len(nascita) >= 7 else None,
+            "paese": paese, "ruolo": ruolo, "club_noti": list(club_noti or ())}
 
-_STOP_CLUB = {"fc","cf","ac","sc","afc","cd","ud","sd","ss","as","club","de",
-              "futbol","football","calcio","sa","sad","spa","s","p","a","the",
-              "sportiva","societa","atletico","e","associacao","esporte","clube",
-              "gmbh","co","kgaa","ev","f","c","u","d","team","kulubu","spor","ii","1"}
+    cand, diag = scegli_da_indice(html, prof)
+    titolo = urllib.parse.unquote(cand.titolo) if cand else None
+    via = "selettore"
+    if titolo is None:                       # fallback per le pagine-soggetto
+        alt = candidati_calcistici(html, anno)
+        if len(alt) == 1:
+            titolo, via = alt[0], "titolo_instradato"
+    if titolo is None:
+        # stato NUOVO. Sta in STATI_DEFINITIVI (vedi il commento la'): senza,
+        # le ~345 astensioni vengono riprocessate e RISCRITTE a ogni run, e i
+        # contatori di stato si sdoppiano — e' gia' successo con i 312 `errore`
+        # ritentati, che hanno costretto a deduplicare per player_id.
+        return Esito(player_id, nome, None, "indice_non_risolto",
+                     dettaglio=f"{diag['motivo']} | {diag.get('top')}")
+
+    # CONTROLLO (regola Fase 98/99): il **83,9%** dei titoli scelti e'
+    # generabile da template deterministici — `(footballer)` 24,6%,
+    # `(footballer, born AAAA)` 54,0%, `(<Naz> footballer)` 5,2%. Il contributo
+    # UNICO del selettore e' il 16,1% restante piu' un risparmio di 2-3x in
+    # richieste. Registrarlo qui rende il confronto col controllo misurabile
+    # a posteriori a costo zero, invece di attribuire al selettore recuperi che
+    # un cambio di una riga otterrebbe.
+    templ = bool(_RE_TEMPLATE.match(titolo))
+
+    url = f"https://{lang}.wikipedia.org/wiki/{urllib.parse.quote(titolo.replace(' ', '_'))}"
+    try:
+        pagina = fetch_page(titolo, lang, **kw)
+    except Exception as e:                                   # pragma: no cover
+        return Esito(player_id, nome, url, "errore", dettaglio=repr(e))
+    if pagina is None:
+        # ⚠️ stato PROPRIO, non `nessuna_pagina`: il loop chiamante fa
+        # `if e.stato != "nessuna_pagina": break`, quindi restituire
+        # `nessuna_pagina` lo farebbe proseguire con i suffissi, ognuno dei
+        # quali rientra nel ramo-indice -> fino a 3 risoluzioni e 6 richieste
+        # per un giocatore. Fuori budget.
+        return Esito(player_id, nome, url, "indice_link_rotto",
+                     dettaglio=f"link rotto sull'indice: {titolo}")
+
+    tappe = parse_career(pagina, player_id, url)
+    if not tappe:
+        return Esito(player_id, nome, url, classifica_pagina(pagina),
+                     dettaglio=f"via={via} titolo={titolo} template={templ}")
+    bday = bday_pagina(pagina)
+    identita = verifica_identita_v2(
+        bday, nascita, tappe, club_anni,
+        corrob=corroborazione(pagina, paese, ruolo))
+    for t in tappe:
+        t.identita = identita
+    dett = f"via={via} titolo={titolo} template={templ}"
+    if identita != "confermata_data" and (solo_data or identita in ("respinta", "quarantena")):
+        return Esito(player_id, nome, url, "identita_non_confermata", tappe,
+                     dettaglio=dett, bday_pagina=bday, identita=identita)
+    return Esito(player_id, nome, url, "ok", tappe,
+                 dettaglio=dett, bday_pagina=bday, identita=identita)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (3) LA VERIFICA D'IDENTITA', VERSIONE 2 — club x ANNI, forma del Delta,
+#     corroborazione. NON sostituisce `verifica_identita`: la estende.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_STOP_CLUB_V2 = {"fc","cf","ac","sc","afc","cd","ud","sd","ss","as","club","de",
+                 "futbol","football","calcio","sa","sad","spa","s","p","a","the",
+                 "sportiva","societa","atletico","e","associacao","esporte","clube",
+                 "gmbh","co","kgaa","ev","f","c","u","d","team","kulubu","spor","ii","1"}
+
+# ⚠️ TOKEN GENERICI — lista nera. Il matcher lasco (token condiviso >=4 caratteri)
+# NON fa solo «i diacritici», come la sua motivazione dichiarava: su coppie di
+# club DIVERSI della stessa lega coincide nel **2,32%** dei casi, e genera un k
+# SPURIO nel **4,2%** [3,6; 4,9] contro un avversario della stessa lega senza
+# club condivisi (matcher stretto: 2,6%). Colpevoli misurati: Manchester United
+# ~ Newcastle United, Manchester City ~ Norwich City, Real Madrid ~ Real
+# Sociedad, Inter Milan ~ AC Milan, Union Berlin ~ Hertha Berlin (20 coppie su
+# 22 provate a mano). Aggravante: il **62%** delle quarantene e il **68%** delle
+# respinte hanno UN SOLO club nello strato 1, quindi k=1 e' l'intera prova per
+# la maggioranza della popolazione. Sulle popolazioni reali il danno NON si
+# vede (quarantena 245 lasco vs 243 stretto) — e' un rischio latente, non un
+# difetto attuale: si tiene il matcher lasco CON la lista nera.
+_TOKEN_GENERICI = {"united", "city", "real", "sport", "sports", "deportivo",
+                   "athletic", "atletico", "sporting", "racing", "olympique",
+                   "dynamo", "spartak", "zagreb", "prague", "praha", "zurich",
+                   "sydney", "berlin", "milan", "madrid", "london", "moscow"}
+
 
 def _norm_club(s: str) -> str:
     """'Fudbalski Klub Rabotnicki Skopje' e 'Rabotnicki' devono coincidere.
 
-    Il matcher precedente era un `in` fra stringhe minuscole: i diacritici lo
-    facevano fallire in silenzio. Costo misurato: Svyatoslav Georgievski, 4
-    club su 4 coincidenti, respinto per 5 giorni di scarto anagrafico.
+    Il matcher precedente e' un `in` fra stringhe minuscole: i diacritici lo
+    fanno fallire in silenzio. Costo misurato: Svyatoslav Georgievski, **4 club
+    su 4** coincidenti anche negli anni, respinto per 5 giorni di scarto.
     """
     s = _ud.normalize("NFKD", s).encode("ascii", "ignore").decode()
-    s = _re.sub(r"[^a-zA-Z0-9 ]", " ", s).lower()
-    return " ".join(t for t in s.split() if t and t not in _STOP_CLUB)
+    s = re.sub(r"[^a-zA-Z0-9 ]", " ", s).lower()
+    return " ".join(t for t in s.split() if t and t not in _STOP_CLUB_V2)
+
 
 def club_coincide(nostro: str, loro: str) -> bool:
     a, b = _norm_club(nostro), _norm_club(loro)
@@ -570,20 +808,36 @@ def club_coincide(nostro: str, loro: str) -> bool:
         return False
     if a in b or b in a:
         return True
-    return bool({t for t in set(a.split()) & set(b.split()) if len(t) >= 4})
+    comuni = {t for t in set(a.split()) & set(b.split())
+              if len(t) >= 4 and t not in _TOKEN_GENERICI}
+    return bool(comuni)
+
 
 def coerenza_temporale(club_anni, tappe, *, tolleranza=1, anno_corrente=None):
     """Quanti club dello STRATO 1 la pagina conferma **anche negli anni**.
 
     `club_anni`: iterabile di `(nome_club, primo_anno, ultimo_anno)` da
     `appearances.csv` — quindi su `player_id`, immune all'omonimia.
+    Ritorna `(k_club, k_club_e_anni, n_club)`.
 
-    Ritorna `(k_club, k_club_e_anni, n_club)`. E' `k_club_e_anni` che
-    discrimina: il solo NOME del club non basta, perche' padre e figlio giocano
-    nello stesso club (Javier Olaizola, Mallorca anni '90 contro Mallorca
-    2025-26) e i compagni di squadra pure.
+    E' `k_club_e_anni` che discrimina: il solo NOME del club non basta, perche'
+    padre e figlio giocano nello stesso club — Javier Olaizola padre al
+    Mallorca negli anni '90 contro il nostro figlio al Mallorca 2025-26, 37
+    anni di scarto, e la copertura-club lo confermava. Con le finestre: k=0.
+
+    Sensibilita' misurata (almeno 1 club confermato anche negli anni):
+      identita' CERTA  93,9%   |  QUARANTENA  95,8%
+      RESPINTE          9,8%   |  placebo casuale  0,6%
+    La quarantena non e' «intermedia»: e' SOPRA le confermate.
+    (La proposta originale dava 96,9 / 99,1 / 11,8 / 1,1 — l'ordinamento regge,
+     le cifre esatte no: non citarle senza rifare il conto.)
+
+    ⚠️ `tolleranza=1` e' fissata a priori sulla grana annuale dell'infobox, NON
+    ottimizzata per griglia. Alzarla aumenta recupero e falsi positivi; i numeri
+    qui sopra valgono per 1.
     """
     anno_corrente = anno_corrente or _dt.date.today().year
+    club_anni = list(club_anni or ())
     k_c = k_ct = 0
     for club, y0, y1 in club_anni:
         m_c = m_ct = False
@@ -602,135 +856,639 @@ def coerenza_temporale(club_anni, tappe, *, tolleranza=1, anno_corrente=None):
                 m_ct = True
         k_c += m_c
         k_ct += m_ct
-    return k_c, k_ct, len(list(club_anni))
+    return k_c, k_ct, len(club_anni)
 
 
-# --- asse 2: la FORMA della discordanza anagrafica ---------------------------
+def _data(x):
+    if not x:
+        return None
+    try:
+        return _dt.date.fromisoformat(str(x)[:10])
+    except ValueError:
+        return None
+
 
 def livello_delta(bday, nascita_attesa) -> str:
     """Non «quanto» differiscono le due date, ma **come**.
 
-    Misurato sulle 2.389 coppie di persone DIVERSE con lo stesso nome dentro
-    `players.csv`: solo lo 0,96% ha le date entro 31 giorni e solo lo 0,25%
-    condivide giorno+mese. Uno scarto di quella forma non e' «un'altra
-    persona»: e' un refuso anagrafico fra due fonti.
+    Misurato sulle **2.219 coppie di persone DIVERSE con lo stesso nome** dentro
+    `players.csv`: solo lo **0,96%** ha le date entro 31 giorni, lo **0,25%**
+    condivide giorno+mese, l'**8,96%** sta entro 366 giorni. Nella nostra
+    quarantena: 53,1%, 8,1%, **94,8%**. Non e' un indizio, e' un rapporto di
+    verosimiglianza schiacciante -> limite inferiore di miscela **pi >= 94,3%**
+    (>= 89,9% con gli estremi di Wilson), e conservativo, perche' assume che
+    nessun refuso vero superi l'anno (Chancel Mbemba: 6 anni, 5 club su 6).
     """
     a, b = _data(bday), _data(nascita_attesa)
     if a is None or b is None:
         return "ignoto"
     dd = abs((a - b).days)
-    if dd <= 31:                                   return "FORTE"   # giorno o mese
-    if a.month == b.month and a.day == b.day:      return "FORTE"   # anno
-    if a.day == b.month and a.month == b.day:      return "FORTE"   # gg/mm invertiti
-    if dd <= 366:                                  return "DEBOLE"
+    if dd <= 31:                                return "FORTE"    # giorno o mese
+    if a.month == b.month and a.day == b.day:   return "FORTE"    # solo l'anno
+    if a.day == b.month and a.month == b.day:   return "FORTE"    # gg/mm invertiti
+    if dd <= 366:                               return "DEBOLE"
     return "ESTRANEO"
 
 
-# --- asse 3: i tratti gia' dentro l'HTML che abbiamo (zero richieste) --------
-# corroborazione(html, anagrafica) -> (concordi, discordi) su nazionalita'
-# (place of birth + categorie "X men's footballers"), ruolo e altezza +-3 cm.
-# Presi da SOLI non bastano: Aaron Ramsey nato 1990 corrobora 3 su 3 con il
-# nostro nato 2003 (gallese, centrocampista, stessa statura) ed e' un'altra
-# persona. Servono come TERZO voto, mai come prova.
+_RE_ALTEZZA = re.compile(r"(\d)\.(\d{2})\s*m")
 
+def corroborazione(html: str, paese: str | None = None,
+                   ruolo: str | None = None, altezza_cm: int | None = None):
+    """Tre tratti INDIPENDENTI da data e club, gia' dentro l'HTML scaricato:
+    nazionalita' (place of birth + categorie «X men's footballers»), ruolo,
+    altezza +-3 cm. Zero richieste. Ritorna `(concordi, discordi)`.
 
-# --- la regola ---------------------------------------------------------------
+    ⚠️ PRESI DA SOLI NON BASTANO, e va detto forte: Aaron Ramsey nato 1990
+    corrobora 3 su 3 con il nostro nato 2003 (gallese, centrocampista, stessa
+    statura) ed e' un'altra persona. Servono come TERZO voto, dopo club x anni.
+    Sono anche RUMOROSI sulla popolazione sbagliata: altezza e nazionalita' sono
+    contestate fra le fonti proprio per i giocatori la cui data e' contestata.
+
+    Confronto quarantena promossa vs identita' CERTA (R7, con potenza):
+      nazionalita' -1,8% IC95 [-6,2; +2,6]  (MDE 80%: 6,3%)
+      ruolo        +4,7%      [-0,5; +9,9]  (MDE 80%: 7,4%)
+      altezza      -2,8%      [-7,0; +1,4]  (MDE 80%: 6,0%)
+    Tutti e tre a cavallo dello zero: una contaminazione >=6-7% l'avremmo vista.
+    Il **nullo giusto non e' «un giocatore a caso»** (nazionalita' concorde solo
+    il 2,0% delle volte) ma **un omonimo**: 65,3%. Gli omonimi condividono la
+    nazionalita' quasi due volte su tre — e' la stessa confondente dei mononimi.
+    """
+    testo = BeautifulSoup(html, "lxml").get_text(" ", strip=True).lower()
+    conc = disc = 0
+    dem = DEMONIMI.get(paese or "", ())
+    if dem:
+        if any(x in testo for x in dem):
+            conc += 1
+        elif any(x in testo for x in _TUTTI_DEMONIMI - set(dem)):
+            disc += 1
+    kw = RUOLI.get(ruolo or "", ())
+    if kw:
+        if any(k in testo for k in kw):
+            conc += 1
+        elif any(k in testo for p, v in RUOLI.items() if p != ruolo for k in v):
+            disc += 1
+    if altezza_cm and (m := _RE_ALTEZZA.search(testo)):
+        h = int(m.group(1)) * 100 + int(m.group(2))
+        conc += abs(h - altezza_cm) <= 3
+        disc += abs(h - altezza_cm) > 3
+    return conc, disc
+
 
 def verifica_identita_v2(bday, nascita_attesa, tappe, club_anni=None,
-                         corrob=(0, 0), tolleranza_giorni=3):
-    """Tre assi INDIPENDENTI, non una gerarchia a cascata.
-
+                         corrob=(0, 0), tolleranza_giorni=3) -> str:
+    """Tre assi INDIPENDENTI, non una cascata.
     Esiti: `confermata_data` · `confermata_coerenza` · `quarantena` · `respinta`.
 
-    MISURATO — avversario che condivide un club col nostro giocatore (n=922,
-    il placebo piu' duro costruibile):
+    ⚠️ NUMERO RITIRATO. Lo «0,11% di falsi positivi» pubblicato viene da un
+    placebo che condivide un club ma ha **un altro nome**: in produzione quel
+    avversario non puo' presentarsi, perche' si scarica `/wiki/<Nome>` e chi si
+    incontra e' per forza un **omonimo**. E i due avversari differiscono proprio
+    sull'asse a cui si attribuiva il taglio di 40x:
+        corroborazione passa    omonimo 13,9% [7,7; 23,7]  vs  stesso-club 2,3%
+        nazionalita' concorde   omonimo 65,3%              vs  stesso-club 23,9%
+    Sull'avversario VERO: **0/72 = 0,0% [0,0; 5,1]**; condizionato ai club
+    condivisi n=3 -> [0; 56]. **Nessuna potenza**, e va dichiarato (R7).
+    Con ~38 incontri attesi: **0-2 righe** di falso positivo.
 
-        regola                                 falsi positivi      quarantena recuperata
-        stretta      (DEBOLE richiede k>=2)    0,43% [0,17;1,11]   81,5%
-        permissiva   (DEBOLE basta k=1)        4,56% [3,39;6,10]   97,6%
-        QUESTA       (permissiva + 2/3 tratti) 0,11% [0,02;0,61]   91,9%
-
-    Questa DOMINA la stretta su entrambi gli assi: meno errori E piu' recupero.
-    Sensibilita' sul gruppo a identita' certa (n=1.000): 100%, nessuna perdita.
-
-    ⚠️ Il placebo OMONIMO ha n=5 -> IC [0%, 43%]: su quell'avversario non c'e'
-    potenza e il numero non va citato come conferma (R7).
+    ⚠️ LA GUARDIA `n_club > 0` E' OBBLIGATORIA. Senza, il ramo `k==0 ->
+    respinta` confonde PROVA CONTRARIA e ASSENZA DI PROVA: **6 delle 11**
+    respinte hanno ZERO club nello strato 1 (`appearances.csv` non li copre), e
+    **4 di queste hanno Delta FORTE** — Tayrell Wouter 4 giorni, Simone
+    Dell'Agnello 10, Yarin Levi 14, Logan Ross 18. Sono quasi certamente la
+    persona giusta, oggi stanno nel DB come `ok`, e senza la guardia la regola
+    li CANCELLA: ~4 identita' corrette perse per rimuoverne 3 sbagliate. E'
+    R6 commessa dalla regola scritta per far rispettare R6.
     """
     senior = [t for t in tappe if not t.giovanili] or list(tappe)
-    _, k, _ = coerenza_temporale(club_anni or [], senior)
+    _, k, n_club = coerenza_temporale(club_anni or [], senior)
     liv = livello_delta(bday, nascita_attesa)
     conc, disc = corrob
 
     a, b = _data(bday), _data(nascita_attesa)
     if a and b and abs((a - b).days) <= tolleranza_giorni:
         return "confermata_data"
+
+    if n_club == 0:
+        # nessun club nello strato 1: non c'e' evidenza indipendente, ne' PRO
+        # ne' CONTRO. Non si promuove e non si cancella.
+        return "quarantena" if liv == "FORTE" else "respinta"
     if k == 0:
-        # Nessun club confermato NEGLI ANNI. E' il caso padre-figlio/omonimo:
-        # le 2 sole identita' davvero sbagliate rimaste in quarantena (Javier
-        # Olaizola 1969 contro il nostro 2007, stesso Mallorca; Bruno Alves
-        # 1981 contro il nostro 1990) cadono tutte e due esattamente qui.
+        # club noti che la pagina NON conferma negli anni: prova contraria.
+        # E' qui che cadono le 3 identita' davvero sbagliate (Olaizola 1969
+        # contro il nostro 2007 con lo stesso Mallorca; Bruno Alves 1981/1990;
+        # Nilson Junior 1975/1991).
         return "respinta"
-    if liv == "FORTE
+    if liv == "FORTE":
+        return "confermata_coerenza"
+    if liv == "DEBOLE":
+        return "confermata_coerenza" if (conc >= 2 and disc == 0) else "quarantena"
+    if liv == "ignoto":
+        return "confermata_coerenza" if k >= 2 else "quarantena"
+    return "quarantena"       # ESTRANEO: giudizio umano, mai promozione automatica
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (4) I 404 — il titolo giusto non si INDOVINA, si LEGGE dalla cache
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ⚠️ Il filtro sui link rossi via `class="new"` e' INERTE: gli href dei red link
+# contengono `?action=edit&redlink=1` e sono gia' esclusi da `[^"?#]+`. Il
+# risultato (niente link rossi) e' giusto, il meccanismo dichiarato no.
+_RE_WIKILINK = re.compile(
+    rb'rel="mw:WikiLink" href="https://en\.wikipedia\.org/wiki/([^"?#]+)"')
+
+_ONORIFICI = frozenset({"jr", "sr", "ii", "iii", "jnr", "snr"})
+# Due falsi positivi VERI venivano dallo stesso bug — «Jr.» usato come cognome:
+# Charly Musonda Jr. -> Chavo Guerrero Jr. (un wrestler, 1970 contro 1996) e
+# Aleksey Eremenko Jr. -> Alejandro Alvarado Jr. Due nomi che condividono un
+# suffisso onorifico non condividono niente (R6).
+
+_IPOCORISTICI = {
+    "konstantinos": {"kostas"}, "georgios": {"giorgos", "yorgos"},
+    "athanasios": {"thanasis", "sakis"}, "ioannis": {"giannis", "yiannis"},
+    "emmanouil": {"manolis"}, "charalampos": {"babis", "charis"},
+    "anastasios": {"tasos"}, "dimosthenis": {"dimos"}, "eleftherios": {"lefteris"},
+    "panagiotis": {"panos"}, "vasilios": {"vasilis"}, "nikolaos": {"nikos"},
+    "dimitrios": {"dimitris"}, "stylianos": {"stelios"}, "efstathios": {"stathis"},
+    "theodoros": {"thodoris"}, "alexandros": {"alexis"}, "evangelos": {"vangelis"},
+    "efthymios": {"efthymis"},
+}
+
+
+def _piatto(s: str) -> str:
+    s = "".join(c for c in _ud.normalize("NFD", str(s))
+                if _ud.category(c) != "Mn")
+    for a, b in (("ø","o"),("Ø","O"),("æ","ae"),("Æ","Ae"),("ð","d"),("Ð","D"),
+                 ("ł","l"),("Ł","L"),("đ","d"),("Đ","D"),("þ","th"),("Þ","Th"),
+                 ("ı","i"),("İ","I"),("ß","ss")):
+        s = s.replace(a, b)
+    return s
+
+
+def _tok(s: str) -> list[str]:
+    return re.sub(r"[^a-z0-9 ]", " ", _piatto(s).lower()).split()
+
+
+def _collassa(t: str) -> str:
+    """Collassa le differenze di TRASLITTERAZIONE, non quelle di persona.
+
+    Ogni sostituzione ha un caso misurato dietro:
+      g/h    Gromov -> Hromov, Bogdanov -> Bohdanov   (ucraino: г e' h nello
+             schema ufficiale, g in quello di Transfermarkt);
+      j/i/y  Pesjakov -> Pesyakov, Ilya -> Illia      (russo/ucraino);
+      w/v    Wagner/Vagner;  z/s  Adzic/Adzic;  ck/k;
+      doppie e ie/ei -> e:   Matvienko -> Matviyenko.
+    Una sola chiave copre insieme ucraino, russo, bielorusso e kazako: non serve
+    una regola per lingua, serve una metrica che ignori l'asse su cui le lingue
+    differiscono.
+    """
+    t = t.replace("kh", "h").replace("ch", "h")
+    t = (t.replace("g","h").replace("j","i").replace("y","i")
+          .replace("ck","k").replace("w","v").replace("z","s"))
+    t = re.sub(r"(.)\1+", r"\1", t)
+    return t.replace("ie", "e").replace("ei", "e")
+
+
+def chiavi(nome: str) -> tuple[str, str, str, str]:
+    """A grafia · B traslitterazione · C ordine · D cognome."""
+    tok = _tok(nome)
+    if not tok:
+        return "", "", "", ""
+    utili = [t for t in tok if t not in _ONORIFICI] or tok
+    piatto = "".join(tok)
+    return (piatto, _collassa(piatto),
+            "|".join(sorted(_collassa(t) for t in utili)), _collassa(utili[-1]))
+
+
+_RE_QUALIF = re.compile(r"^(.+?)\s*\((?:footballer|soccer)[^)]*\)$", re.I)
+
+def costruisci_gazetteer(cache_dir=None) -> dict[str, list[str]]:
+    """I titoli REALI di en.wikipedia linkati dalle pagine gia' in cache.
+
+    Zero richieste. Misurato il 01/08/2026 su **24.052** file: **186.562**
+    titoli, ~70 s.
+    ⚠️ Il «218.026 titoli / 35 s» pubblicato NON si riproduce e va ritirato:
+    con un SOVRAINSIEME dei file lo stesso codice ne da' meno, il che e'
+    impossibile (l'insieme e' monotono nei file). Cade con esso anche il
+    «volano ~4 titoli nuovi per pagina».
+    ⚠️ Le pagine in cache sono HTML Parsoid: i link del corpo sono ASSOLUTI. Un
+    parser che cerca `href="/wiki/` trova 5 link per pagina invece di 450.
+
+    NOVITA': i titoli DISAMBIGUATI vengono indicizzati **anche per la loro forma
+    base**. Motivo misurato: il claim «un 404 sul nome nudo significa che quel
+    nome non esiste in nessuna forma» e' **falso** — 19 controesempi su 2.085
+    gia' dentro la cache (`Lasse Sorensen` -> `Lasse Sørensen (footballer, born
+    1999)`; `Nikola Stankovic` -> `Nikola Stankovic (footballer, born 1993)`).
+    Costa zero e vale **+16 recuperi**.
+    """
+    cache_dir = str(cache_dir or (CACHE_DIR / "en"))
+    titoli: set[str] = set()
+    for p in glob.glob(os.path.join(cache_dir, "*.html.gz")):
+        try:
+            raw = gzip.decompress(open(p, "rb").read())
+        except Exception:
+            continue
+        for m in _RE_WIKILINK.finditer(raw):
+            t = urllib.parse.unquote(
+                m.group(1).decode("utf-8", "replace")).replace("_", " ")
+            if ":" in t:
+                continue
+            if 1 < len(t.split()) <= 6:
+                titoli.add(t)
+    idx: dict[str, list[str]] = collections.defaultdict(list)
+    for t in titoli:
+        forme = [t]
+        if (m := _RE_QUALIF.match(t)):
+            forme.append(m.group(1).strip())     # indicizza anche la forma base
+        for f in forme:
+            a, b, c, d = chiavi(f)
+            if 1 < len(f.split()) <= 4:
+                for k in (f"A{a}", f"B{b}", f"C{c}", f"D{d}"):
+                    if t not in idx[k]:
+                        idx[k].append(t)
+    return dict(idx)
+
+
+def _prefisso(a: str, b: str) -> int:
+    a, b = _piatto(a).lower(), _piatto(b).lower()
+    k = 0
+    for x, y in zip(a, b):
+        if x != y:
+            break
+        k += 1
+    return k
+
+
+def _nome_compatibile(a: str, b: str) -> bool:
+    """Filtro della chiave D: il nome di battesimo dev'essere la stessa persona.
+
+    Senza, la chiave-cognome aggancia «Adu Ares» -> «Austin Aries» e «Dong-jun
+    Lee» -> «Derrek Lee». Con: >=3 lettere iniziali in comune (Javi/Javier,
+    Alex/Alejandro, Nikolaos/Nikos) o lista chiusa di ipocoristici greci.
+    """
+    if _prefisso(a, b) >= 3:
+        return True
+    fa, fb = _piatto(a).lower(), _piatto(b).lower()
+    return any((fa == L and fb in S) or (fb == L and fa in S)
+               for L, S in _IPOCORISTICI.items())
+
+
+def _titolo_norm(t: str) -> str:
+    """Identita' di un TITOLO: l'URL esatto, diacritici COMPRESI."""
+    return t.replace("_", " ").strip().lower()
+
+
+def varianti_da_gazetteer(nome, idx, max_per_chiave=2):
+    """I titoli candidati per un nome che ha dato 404, in ordine di fiducia.
+
+    ⚠️ FIX OBBLIGATORIO. La versione precedente inizializzava il dedup con
+    `visti = {chiavi(nome)[0]}` e poi scartava i candidati con
+    `chiavi(t)[0] in visti`: ma ogni titolo indicizzato sotto `A{a}` ha per
+    costruzione **la stessa chiave A**, quindi lo strato A era STRUTTURALMENTE
+    irraggiungibile. Eseguito sul fronte: 301 candidati, **strato A = 0**
+    invece di 291 — il **48%** della resa. Il dedup va fatto sull'**URL esatto
+    gia' tentato**, non sulla chiave appiattita: e' esattamente il punto dello
+    strato A che `Bosko Sutalo` e `Boško Šutalo` siano due URL diversi con la
+    stessa forma appiattita.
+    Con il fix, sul fronte attuale (2.085 `nessuna_pagina`): **587 candidati** —
+    A 291 · B 142 · C 48 · D 106.
+
+    ⚠️ LA RESA NON SI ESTRAPOLA. Per blocchi di raccolta, a gazetteer costante:
+    **46,6% -> 29,6% -> 22,4% -> 16,1%**. La raccolta e' ordinata per priorita' e
+    il gazetteer contiene i *linkati*, cioe' i famosi: i ~3.000 ancora da fare
+    renderanno ~16%, non 34%.
+
+    ⚠️ IL RISCHIO NON E' CONFINATO ALLA CHIAVE D, come si era scritto. Dei 587
+    candidati reali, 9 hanno la pagina gia' in cache: **9 su 9 sono un'altra
+    persona**, e uno e' di **strato A** (`Alex Sola` -> `Álex Sola`, 1999-06-09
+    contro 2003-12-14). Tutti e 9 respinti dal giudice-data.
+    """
+    a, b, c, d = chiavi(nome)
+    tentati = {_titolo_norm(nome)}
+    fuori: list[tuple[str, str]] = []
+    for chiave, strato in ((f"A{a}", "A-grafia"), (f"B{b}", "B-translit"),
+                           (f"C{c}", "C-ordine")):
+        for t in idx.get(chiave, [])[:max_per_chiave]:
+            tn = _titolo_norm(t)
+            if tn in tentati:
+                continue
+            tentati.add(tn)
+            fuori.append((t, strato))
+    if fuori:
+        return fuori[:max_per_chiave]           # D = ultima spiaggia
+    primo = (_tok(nome) or [""])[0]
+    for t in idx.get(f"D{d}", [])[:8]:
+        tk = _tok(t)
+        tn = _titolo_norm(t)
+        if tk and tn not in tentati and _nome_compatibile(primo, tk[0]):
+            tentati.add(tn)
+            fuori.append((t, "D-cognome"))
+    return fuori[:max_per_chiave]
+
+
+def recupera_404(player_id, nome, idx, *, nascita_attesa, club_noti=None,
+                 club_anni=None, paese=None, ruolo=None, **kw) -> Esito:
+    """Un tentativo di recupero. UNA richiesta per candidato, al massimo 2.
+
+    ⚠️ Sul percorso-variante si accetta SOLO `confermata_data`: il nome non e'
+    piu' una prova d'identita' (l'abbiamo cambiato noi), quindi l'unica prova
+    indipendente che resta e' la data di nascita — presente per il **100%** dei
+    2.085. La conferma-da-club, ragionevole sul titolo esatto, qui sarebbe
+    circolare, e rinunciarci non costa nulla.
+
+    ⚠️ RESA NON MISURATA sul codice corretto: due misure parziali divergono
+    (18/18 dal prototipo, 0/9 sui candidati reali gia' in cache) e il fix
+    sblocca 291 candidati di strato A che nessun null valido copre. Eseguire
+    prima un **pilota di 100 richieste stratificato per chiave**, misurare la
+    resa per strato, e solo allora impegnare le restanti ~500.
+    """
+    for titolo, strato in varianti_da_gazetteer(nome, idx):
+        e = fetch_player(player_id, titolo, nascita_attesa=nascita_attesa,
+                         club_noti=club_noti, club_anni=club_anni,
+                         paese=paese, ruolo=ruolo, segui_indice=False, **kw)
+        if e.stato == "ok" and e.identita == "confermata_data":
+            e.dettaglio = f"recuperato_via={strato} titolo={titolo}"
+            return e
+    return Esito(player_id, nome, None, "nessuna_pagina",
+                 dettaglio="404 anche dopo le varianti da gazetteer")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (5) parse_career — UNA sola modifica, sulla riga del vincolo sull'anno
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Cella-anni senza anno: ammessa solo se vuota o «quasi-anno» ('200?–200?').
+# Tiene fuori le righe-etichetta di ALTRI template ("High school", "College",
+# "NBA draft", "Drafted by"). Misurato: **757 celle su 757** sono vuote.
+_RE_ANNI_AMMESSI = re.compile(r"[\d?–—\-\s]*")
+
+#  ⬇️  dentro parse_career, sostituire
+#         if not re.search(r"\d{4}", anni) or not club:
+#             continue
+#      con
+#         if not club:
+#             continue
+#         if not re.search(r"\d{4}", anni):
+#             # Wikipedia lascia la colonna Years VUOTA quando gli anni non si
+#             # sanno. Pretendere \d{4} buttava via in silenzio tappe con il
+#             # club scritto per esteso — un **finto vuoto**, gemello del finto
+#             # pieno di R6. Censimento su 1.999 pagine gia' riuscite:
+#             #   18.541 -> 19.298 tappe = **+4,08%**, su **26,81%** delle pagine
+#             #   (mediana +1, max +4), **99,74% giovanili**.
+#             #   Club aggiunti reali: Real Sociedad 6, Roma 3, Valencia 3, Lazio 3.
+#             # Estrapolato alle 20.981 pagine `ok`: **~7.900 tappe**, 0 richieste.
+#             # Sui 711 falliti recupera 3 pagine — le uniche 3 di calcio — e
+#             # sono TUTTE E TRE omonimi, tutte e tre respinte. Guadagno su
+#             # QUEL fronte: **zero**. Il guadagno e' su chi gia' funzionava.
+#             # ⚠️ R8: le 7.900 tappe hanno `anno_da=None` — dato mancante
+#             # DICHIARATO, non finto pieno; chi ordina la carriera per anno
+#             # deve gestirle esplicitamente. E il campo `ordine` si rinumera
+#             # sul 26,8% delle pagine: effetto di schema, va dichiarato.
+#             if not _RE_ANNI_AMMESSI.fullmatch(anni.strip()):
+#                 continue
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# (6) fetch_player — lo stato dice la CAUSA, e l'indice si segue
+# ─────────────────────────────────────────────────────────────────────────────
+
+def fetch_player(player_id, nome, lang="en", *, nascita_attesa=None,
+                 club_noti=None, club_anni=None, paese=None, ruolo=None,
+                 segui_indice=True, **kw) -> Esito:
+    titolo = nome.replace(" ", "_")
+    url = f"https://{lang}.wikipedia.org/wiki/{urllib.parse.quote(titolo)}"
+    try:
+        html = fetch_page(titolo, lang, **kw)
+    except Exception as e:                                   # pragma: no cover
+        return Esito(player_id, nome, url, "errore", dettaglio=repr(e))
+    if html is None:
+        return Esito(player_id, nome, url, "nessuna_pagina")
+
+    tappe = parse_career(html, player_id, url)
+    if not tappe:
+        classe = classifica_pagina(html)
+        if segui_indice and classe in STATI_INDICE:
+            return risolvi_da_indice(
+                html, player_id, nome, lang, nascita_attesa=nascita_attesa,
+                paese=paese, ruolo=ruolo, club_noti=club_noti,
+                club_anni=club_anni, **kw)
+        return Esito(player_id, nome, url, classe)
+
+    bday = bday_pagina(html)
+    identita = verifica_identita_v2(bday, nascita_attesa, tappe, club_anni,
+                                    corrob=corroborazione(html, paese, ruolo))
+    for t in tappe:
+        t.identita = identita
+    if identita == "respinta":
+        # NOVITA': la pagina e' di un ALTRO, ma la persona giusta puo' avere la
+        # sua voce. Oggi i suffissi si provano SOLO sul 404, quindi non si
+        # tenta mai. Due sorgenti, in quest'ordine:
+        #   (a) l'HATNOTE della pagina sbagliata, che abbiamo gia' in mano:
+        #       **21,0%** [16,0; 27,1] contiene il titolo esatto col nostro
+        #       anno, **43/43 link BLU, zero rossi**. Trovarlo costa 0 richieste;
+        #       sonda 8/8 pagina esistente, **7/8 = 87,5%** aggancio corretto;
+        #   (b) il titolo COSTRUITO `Nome (footballer, born AAAA)`: pagina
+        #       esistente **8/20 = 40%**, aggancio corretto **6/20 = 30%**
+        #       [14,5; 51,9]. Il **60% da' 404**: per quei giocatori la voce
+        #       non esiste, e questa e' la risposta, non un fallimento.
+        # ⚠️ Il titolo con l'anno NON e' univoco: `Burak Yilmaz (footballer,
+        # born 1995)` esiste ed e' una TERZA persona (7 febbraio contro il
+        # nostro 27 novembre); idem Romario 1992 e Liam Henderson 1996. Il
+        # titolo e' un CANDIDATO, mai una prova: la pagina nuova ripassa
+        # sempre di qui. End-to-end: 16 trovate -> 13 attaccate -> **0
+        # identita' sbagliate**, e le 3 scartate sono le 3 di un'altra persona.
+        if segui_indice and nascita_attesa:
+            anno = str(nascita_attesa)[:4]
+            cand = candidati_calcistici(html, int(anno)) or \
+                [f"{nome} (footballer, born {anno})"]
+            if len(cand) == 1:
+                e2 = fetch_player(player_id, cand[0], lang,
+                                  nascita_attesa=nascita_attesa,
+                                  club_noti=club_noti, club_anni=club_anni,
+                                  paese=paese, ruolo=ruolo,
+                                  segui_indice=False, **kw)
+                if e2.stato == "ok" and e2.identita == "confermata_data":
+                    e2.dettaglio = f"recuperato_da_respinta titolo={cand[0]}"
+                    return e2
+        return Esito(player_id, nome, url, "identita_non_confermata", tappe,
+                     bday_pagina=bday, identita=identita)
+    return Esito(player_id, nome, url, "ok", tappe,
+                 bday_pagina=bday, identita=identita)
 ```
 
-</details>
-
-## Fronte 4 — i «nessun_blocco»: pagina con infobox ma senza tabella carriera (634 casi al 01/08/2026, tutti in cache, diagnosi a ZERO richieste di rete)
-**Stima**: 116 su 634
-
-**Tasso**: 18,3% (116/634), IC95 [14,9%, 19,4%] propagando la precisione misurata dell'instradamento (23/25) sui 126 casi instradabili — NON dall'ipotesi del fronte. Con la leva che il fronte proponeva (ampliare le etichette di sezione) il recupero e' ZERO: 0/634, IC95 [0%, 0,60%].
-
-**Falsi positivi attesi**: MISURATO su campione di rete di 25 pagine (1 richiesta al secondo): la regola d'instradamento da sola aggancia la persona sbagliata 2 volte su 25 = 8,0% (IC95 [2,2%, 25,0%]) — due omonimi nati lo STESSO ANNO ma in un altro giorno (Leonardo 1988-02-05 contro il nostro 1988-04-09; Bruno Barbosa 1994-04-28 contro 1994-05-26). Composta con verifica_identita() esistente: 23 confermata_data + 2 respinta = 0 agganci sbagliati su 25, IC95 [0%, 13,3%]. Estrapolando ai 126: ~10 candidati respinti, ~116 confermati per data. Residuo NON misurabile con n=25: omonimi con lo stesso giorno di nascita esatto (non osservati; la potenza esclude solo tassi > 13,3%).
-
-**Costo**: "+1 richiesta per giocatore, e solo per i 126 instradabili con certezza: 126 richieste in totale (~2 minuti a 1 req/s). Tutto il resto costa ZERO: la classificazione dei 634, il censimento delle intestazioni, la misura del danno da ampliamento e il guadagno delle 7.421 tappe si fanno sulle pagine già in cache. Le 25 richieste del campione di verifica sono già state spese in questa analisi (pagine ora in cache, riusabili). Se si vuole stringere l'intervallo sui falsi positivi prima di procedere: +75 richieste."
-
-### Strategia
-
-PASSO 0 — non ampliare le etichette. È la conclusione, non una premessa: il censimento dice che l'ipotesi (a) è falsa e che l'ampliamento è dannoso. Lasciare INTESTAZIONI_SENIOR = ("senior career",) e INTESTAZIONI_GIOVANILI = ("youth career","college career").
-
-PASSO 1 (0 richieste) — riclassificare i 634 leggendo le pagine già in cache con `classifica_pagina()`: disambigua 200 · pagina_di_nome 144 · soggetto_diverso 275 · senza_infobox 12 · senza_blocco vero 3. Sostituire il test `if "infobox" not in html`, che non testa ciò che dice. Effetto: `nessun_blocco` smette di essere un fallimento d'identità silenzioso travestito da bug del parser.
-
-PASSO 2 (0 richieste) — togliere il vincolo «la cella anni deve contenere un anno a 4 cifre» in parse_career, con guardia sulla FORMA della cella (vuota, oppure sole cifre/`?`/trattini). Questa leva NON serve ai 634 (recupera 3 pagine, tutte omonimi, tutte respinte) ma vale +7.421 tappe (+3,96%) sulle 19.968 pagine che GIÀ funzionano, senza scaricare nulla. Va rifatta girando il parser sulla cache, non sulla rete.
-
-PASSO 3 (1 richiesta per giocatore, 126 in tutto, ~2 minuti a 1 req/s) — instradamento: la pagina sbagliata è una tabella di instradamento. Si estraggono dai link della pagina in cache i titoli con disambiguatore calcistico; si tiene SOLO il caso in cui esiste ESATTAMENTE UN candidato il cui titolo porta l'anno di nascita atteso (`candidati_calcistici`); si scarica quella pagina e si passa il risultato per `verifica_identita()` invariata. Regola gerarchica NON allentata: se la data non coincide entro 3 giorni, si respinge.
-
-PASSO 4 (da NON fare finché non è misurato a parte) — i 208 casi con candidati ma nessuno con l'anno atteso, i 18 con più candidati dello stesso anno e i 282 senza candidati restano aperti: appartengono al fronte 3 (disambigua/mononimi) e vanno risolti lì, con la ricerca per nome+data, non da qui. Aprirli qui significherebbe alzare la copertura con una regola la cui precisione non è stata misurata.
-
-PASSO 5 — registrare gli esiti nuovi con lo stato che dice la CAUSA (`disambigua`, `pagina_di_nome`, `soggetto_diverso`, `senza_blocco`) e la provenienza dell'instradamento (`titolo_instradato`), così la sessione dopo non ri-tenta i 287 «soggetto_diverso» credendoli un problema di parsing.
-
-### I numeri misurati
-
-| cosa | valore | come |
-|---|---|---|
-| Ipotesi (c) — la pagina è di un altro soggetto | 631/634 = 99,53% (IC95 98,6-99,8%) | Censimento COMPLETO delle 634 pagine in cache: disambigua 200 (id=disambigbox / Category:All_disambiguation_pages), pagine di NOME 144 (shortdescription 'Name list'/'given name'), soggetto diverso 287 (basket, baseball, ciclismo, città, santi, re, club). Verificato con tre segnali indipendenti: shor |
-| Ipotesi (a) — etichetta di sezione diversa | 0 casi | Censimento delle intestazioni su 2.000 pagine che oggi funzionano: 'Senior career' compare in 2.000/2.000 (100%). Il Template:Infobox football biography ha UNA sola etichetta, senza varianti per portieri o giocatrici. Le intestazioni alternative trovate nei 634 ('Career history', 'Career information |
-| Ipotesi (b) — assenza vera del blocco | 0 casi puri; 3 casi di anni assenti (club presente) | Le uniche 3 biografie di calcio del lotto (Omar Traoré, Julius Beck, Víctor Fernández) hanno la sezione 'Senior career*' con la colonna Years VUOTA: il club c'è, l'anno no. Il parser le scartava per il vincolo sull'anno, non per l'etichetta. |
-| Le 3 biografie di calcio sono la persona GIUSTA? | 0 su 3 | Omar Traoré: pagina 1975-02-27 (senegalese), nostro player_id 388294 nato 1998-02-04. Julius Beck: pagina neozelandese in nazionale nel 1967, nostro 802512 nato 2005-04-27. Víctor Fernández: pagina dell'allenatore nato 1960, nostro 415205 nato 1998-05-02. Recupero netto del fronte con l'ampliamento  |
-| Danno dell'ampliamento «prudente» (club/professional/playing career, senior clubs) | 0 righe cambiate su 2.000 pagine buone, ma 13 pagine / 111 righe di ALTRI SPORT sui 634 | Innocuo sulle pagine buone, inutile sul calcio: 13/13 pagine recuperate sono NBA (Mohamed Bamba, Ben Gordon, Nenê), pallamano, ciclismo. L'unica cosa che fermerebbe l'iniezione è la verifica d'identità: seconda linea, non prima. |
-| Danno dell'ampliamento con «career history / career information / teams» | 18 pagine / 141 righe, 18 su 18 di altri sport | Stesso censimento sui 634. Aggiunge baseball (Iván Rodríguez), pallavolo (Rodrigão), ciclismo World Tour (Mads Pedersen). Zero calcio. |
-| Danno dell'ampliamento con «career» generico | rompe il 92,0% delle pagine buone | Su 2.000 pagine oggi corrette: 1.840 cambiate, +7.765 righe SPURIE (le nazionali giovanili promosse a tappe di club: 'Spain U17', 'Germany U19', 'France U21') e 3.161 righe PERSE. È il rischio principale del fronte, ed è reale solo per questa variante. |
-| Guadagno vero della rimozione del vincolo sull'anno (censimento completo) | +7.421 tappe (+3,96%) su 5.206 pagine (26,07%, IC95 25,5-26,7%) | Parser attuale contro parser rilassato su TUTTE le 19.968 pagine 'ok' in cache: 187.308 → 194.729 righe. Il 99,30% delle aggiunte è giovanile (7.369 su 7.421). Mediana 1 riga per pagina toccata, massimo 8. Controllo spazzatura: i club aggiunti sono club veri (Ajax 35, Red Star Belgrade 30, Feyenoord |
-| Forma della cella-anni nelle righe recuperate | 738 su 739 vuote, 1 con '200?–200?' | Misurato sul campione di 2.000: giustifica la guardia proposta (accettare solo cella vuota o sole cifre/`?`/trattini), che tiene fuori le righe-etichetta di altri template ('High school', 'College', 'NBA draft', 'Drafted by'). |
-| Potenziale d'instradamento già presente nelle pagine scaricate | 352/634 = 55,5% (IC95 51,6-59,3%) con almeno un candidato; 126/634 = 19,9% (IC95 17,0-23,2%) con UN solo candidato dell'anno giusto | Estrazione dei link con disambiguatore calcistico dal corpo della pagina in cache e confronto dell'anno nel titolo ('Pedro (footballer, born 2006)') con nascita_attesa. 18 casi hanno più candidati dello stesso anno, 208 nessuno con quell'anno, 282 nessun candidato. |
-| Precisione dell'instradamento, misurata sulla rete | 23/25 = 92,0% (IC95 75,0-97,8%) prima della verifica; 0/25 agganci sbagliati dopo (IC95 0-13,3%) | Campione di 25 titoli distinti, una richiesta al secondo, 25 richieste in totale. Confronto <span class='bday'> contro date_of_birth. I 2 errori (stesso anno, altro giorno) sono entrambi respinti da verifica_identita() senza toccarla. |
-| Tappe attese dal recupero | ~1.150 tappe su ~116 giocatori | Media di 9,9 tappe per pagina confermata sul campione di 25 (228 tappe su 23 pagine), moltiplicata per i 116 attesi. Costo: 126 richieste. |
-| Il confine fra `nessun_infobox` e `nessun_blocco` è arbitrario | 252/634 pagine «nessun_blocco» non hanno alcun <table class='infobox'>, e 195 di quelle sono disambigue | Il test `if "infobox" not in html` è vero su quasi ogni voce, perché la stringa compare nel CSS TemplateStyles incorporato ('.mw-parser-output .infobox .side-box{...}'). Regola R6: non è un NaN, è un test che dichiara di misurare una cosa e ne misura un'altra. |
-| Composizione per cittadinanza dei 634 | Brasile 265 (41,8%), Portogallo 77, Spagna 60; mononimi 62,6% | Join con files/player_scores/players.csv.gz. Nelle classi A e B i mononimi sono il 95,0% e il 93,1%: questo fronte è la STESSA confondente del fronte 3, non un fronte di parsing. |
-
-### Rischi dichiarati
-
-- La leva che il fronte proponeva (ampliare le etichette) è quella da NON tirare: nella variante generica «career» distrugge il 92,0% delle pagine che oggi funzionano (+7.765 righe spurie, −3.161 righe). Le varianti prudenti non rompono nulla ma iniettano carriere NBA/ciclismo su player_id di calciatori: il guadagno misurato sul calcio è esattamente zero, quindi il rapporto rischio/beneficio non è «basso», è indefinito.
-- Le CATEGORIE di Wikipedia NON sono un segnale d'identità affidabile (R4, anomalia dichiarata anche se non è un errore nostro): la voce del GOLFISTA Sergio García porta tre categorie di calcio, fra cui «Men's association football players not categorized by position». Un filtro «è un calciatore se ha categorie di calcio» l'avrebbe accettato. La firma affidabile è la nota a piè d'infobox «* Club domestic league appearances and goals».
-- La regola d'instradamento si appoggia all'anno nel TITOLO della voce: è un dato scritto a mano da un redattore, non un campo strutturato. Due omonimi nati lo stesso anno esistono e li abbiamo misurati (2 su 25). L'unica difesa è la data piena della verifica d'identità: se un giorno si allenta quella (per «recuperare di più»), questa strategia diventa un iniettore di omonimi.
-- Il residuo non misurato: omonimi con lo STESSO giorno di nascita. Con n=25 la potenza esclude solo tassi superiori al 13,3%. Prima di girare la strategia sui 126 conviene ampliare il campione di verifica a ~100 pagine (100 richieste, ~2 minuti) per stringere l'intervallo.
-- La rimozione del vincolo sull'anno introduce 7.421 tappe con anno_da=None: sono dato mancante DICHIARATO, non finto pieno — ma qualunque analisi che ordini la carriera per anno deve gestirle esplicitamente (regola R8: il valore c'è, il momento no). Il 99,3% sono giovanili, quindi impattano soprattutto la ricostruzione del settore giovanile, non le tappe senior.
-- I 634 continuano a crescere mentre la raccolta gira (erano 557 quando il fronte è stato scritto, 634 al momento della misura): le percentuali sono stabili ma i valori assoluti vanno rimisurati sul file finale prima di eseguire.
-- 287 pagine «soggetto_diverso» e 282 senza alcun candidato restano scoperte da questa strategia. Chiuderle significa cercare fuori dalla pagina (ricerca per nome+data), che è il fronte 3: non va fatto qui, perché la sua precisione non è stata misurata in questo lavoro.
-
-<details><summary>Codice proposto (non applicato)</summary>
+### La modifica a `scripts/fetch_wikipedia_careers.py`
 
 ```python
-"# ─── PROPOSTA per src/data/wikipedia_careers.py — NON applicata al repo ───\n# Verificata girando sulla cache: parse_career proposta == attuale sulle pagine\n# senza righe anni-vuoti (Lewandowski 11==11) e le aggiunge dove ci sono\n# (Randy Wolters 13→17, Pape Demba Diop 4→6).\n\n# ── 1. INTESTAZIONI: l'elenco CORRETTO è quello che c'è già. Misurato. ──────\n# Censimento 01/08/2026 su 2.000 pagine che oggi funzionano: \"Senior career\"\n# compare in 2.000/2.000 (100%). Il Template:Infobox football biography usa UNA\n# sola etichetta, senza varianti per portieri o per giocatrici. Ampliare NON\n# recupera calcio e IMPORTA altri sport (misurato sui 634 «nessun_blocco»):\n#   +(\"club career\",\"professional career\",\"playing career\",\"senior clubs\")\n#        -> 13 pagine, 111 righe — 13 su 13 sono NBA/ciclismo/pallamano;\n#   + (\"career history\",\"career information\",\"teams\")\n#        -> 18 pagine, 141 righe — 18 su 18 altri sport. Zero calcio;\n#   + \"career\" generico\n#        -> rompe il 92,0% delle pagine buone (1.840/2.000): +7.765 righe\n#           spurie (nazionali giovanili promosse a club) e 3.161 righe PERSE.\nINTESTAZIONI_SENIOR = (\"senior career\",)\nINTESTAZIONI_GIOVANILI = (\"youth career\", \"college career\")\nINTESTAZIONI_FINE = (\"international career\", \"managerial career\",\n                     \"medal record\", \"honours\")\n\n# Cella-anni senza anno: ammessa solo se vuota o \"quasi-anno\" ('200?–200?').\n# Tiene fuori le righe-etichetta di ALTRI template (\"High school\", \"College\",\n# \"NBA draft\", \"Drafted by\"). Misurato: 738 righe su 739 hanno la cella vuota.\n_RE_ANNI_AMMESSI = re.compile(r\"[\\d?–—\\-\\s]*\")\n_FIRMA_CALCIO = \"club domestic league appearances and goals\"\n\n\n# ── 2. PERCHÉ la pagina non dà una carriera. Zero richieste: legge la cache. ─\ndef classifica_pagina(html: str) -> str:\n    \"\"\"Sostituisce il test `if \"infobox\" not in html`, che **non testa ciò che\n    dice**: la stringa \"infobox\" sta nel CSS TemplateStyles incorporato in quasi\n    ogni voce, disambigue comprese (R6). Misura: 252 delle 634 pagine finite in\n    `nessun_blocco` non hanno NESSUN `<table class=\"infobox\">`, e 195 di quelle\n    sono disambigue — lo stesso fenomeno di `nessun_infobox`, separato da un\n    confine arbitrario.\n\n    Censimento completo dei 634 (tutti in cache, 0 richieste):\n      disambigua        200 (31,5%)\n      pagina_di_nome    144 (22,7%)   liste antroponimiche (\"Name list\")\n      soggetto_diverso  275 (43,4%)   altro sport, città, santi, re, club\n      senza_infobox      12 ( 1,9%)\n      senza_blocco        3 ( 0,5%)   biografie di calcio vere\n    Cioè: il 99,5% di questo fronte NON è parsing, è la pagina sbagliata. È un\n    fallimento d'IDENTITÀ silenzioso: se la voce sbagliata è di un calciatore lo\n    stato lo dichiara (`identita_non_confermata`); se è di un cestista finisce\n    qui e sembra un bug del parser.\n    \"\"\"\n    soup = BeautifulSoup(html, \"lxml\")\n    if soup.find(id=\"disambigbox\") or \"Category:All_disambiguation_pages\" in html:\n        return \"disambigua\"\n    sd = soup.find(\"div\", class_=\"shortdescription\")\n    sd = sd.get_text(\" \", strip=True) if sd else \"\"\n    if re.search(r\"name list|given name|surname|list of people with the same\",\n                 sd, re.I):\n        return \"pagina_di_nome\"\n    if _FIRMA_CALCIO in html.lower():\n        return \"senza_blocco\"          # è una voce di calcio: manca il dato\n    if soup.find(\"table\", class_=_e_infobox) is None:\n        return \"senza_infobox\"\n    return \"soggetto_diverso\"\n\n\n# ── 3. La pagina sbagliata è una TABELLA DI INSTRADAMENTO ───────────────────\ndef candidati_calcistici(html: str, anno_atteso: int | None) -> list[str]:\n    \"\"\"I titoli-candidato già presenti NELLA PAGINA SCARICATA.\n\n    Misurato sui 634: 352 (55,5%) contengono almeno un link con disambiguatore\n    calcistico; **126 (19,9%, IC95 17,0-23,2%)** ne contengono ESATTAMENTE UNO\n    con l'anno di nascita atteso nel titolo. Campione di rete di 25 pagine (1\n    richiesta al secondo): 23/25 sono la persona giusta (precisione 92,0%, IC95\n    75,0-97,8%); le 2 sbagliate hanno lo stesso ANNO ma un'altra data, e\n    `verifica_identita` le respinge entrambe -> 0 agganci sbagliati su 25\n    (IC95 0-13,3%).\n\n    Ritorna i candidati con l'anno giusto: si scarica SOLO se la lista ha\n    lunghezza 1. Con più di un candidato l'anno non basta e il caso va al\n    fronte 3 (ricerca per nome+data), non risolto qui.\n    \"\"\"\n    soup = BeautifulSoup(html, \"lxml\")\n    corpo = soup.find(\"div\", class_=\"mw-parser-output\") or soup\n    re_foot = re.compile(r\"footballer|football player|soccer\", re.I)\n    re_anno = re.compile(r\"born\\s+(?:\\w+\\s+)?(\\d{4})\")\n    titoli: list[str] = []\n    for a in corpo.find_all(\"a\"):\n        t = a.get(\"title\")\n        if not t or t in titoli:\n            continue\n        if \"page does not exist\" in t or t.startswith(\"Edit section\"):\n            continue\n        if re_foot.search(t):\n            titoli.append(t)\n    if anno_atteso is None:\n        return titoli\n    return [t for t in titoli\n            if (m := re_anno.search(t)) and int(m.group(1)) == anno_atteso]\n\n\n# ── 4. parse_career: UNA sola modifica, sulla riga del vincolo dell'anno ────\ndef parse_career(html: str, player_id: int, url: str) -> list[Tappa]:\n    \"\"\"Come oggi, con una modifica: **anni ignoti ≠ riga non valida**.\n\n    Wikipedia lascia la colonna Years VUOTA quando gli anni non si sanno.\n    Pretendere un anno a 4 cifre buttava via in silenzio tappe con il club\n    scritto per esteso. Censimento su TUTTE le 19.968 pagine già riuscite:\n      +7.421 tappe (+3,96% sulle 187.308 attuali) su 5.206 pagine\n      (26,07%, IC95 25,5-26,7%), di cui il 99,30% giovanili;\n      mediana 1 riga per pagina toccata, massimo 8.\n    Controllo spazzatura: i club aggiunti sono club veri (Ajax 35, Red Star\n    B
+# ── 1. elenco_giocatori: servono TRE dati nuovi, tutti gia' presenti ─────────
+#    club_anni  (nome_club, primo_anno, ultimo_anno) da appearances.csv, per
+#               player_id -> immune all'omonimia. E' l'asse che mancava.
+#    paese      country_of_citizenship  |  ruolo  position
+#
+    players = pd.read_csv(
+        W.ROOT / "files" / "player_scores" / "players.csv.gz",
+        usecols=["player_id", "name", "date_of_birth",
+                 "country_of_citizenship", "position"],      # <-- +position
+    )
+    ...
+    app["anno"] = pd.to_datetime(app["date"]).dt.year
+    span = (app.assign(nome_club=app["player_club_id"].map(nomi_club))
+               .dropna(subset=["nome_club"])
+               .groupby(["player_id", "nome_club"])["anno"].agg(["min", "max"])
+               .reset_index())
+    club_anni = span.groupby("player_id").apply(
+        lambda g: [(r.nome_club, int(r.min), int(r.max)) for r in g.itertuples()])
+    players["club_anni"] = players["player_id"].map(club_anni)
+
+
+# ── 2. STATI_DEFINITIVI: il vocabolario cambia, e va dichiarato ─────────────
+# `indice_non_risolto` STA fra i definitivi. Motivo: fuori, le ~345 astensioni
+# verrebbero riprocessate e RISCRITTE a ogni run, e i contatori di stato si
+# sdoppierebbero — e' gia' successo con i 312 `errore` ritentati, che hanno
+# costretto a deduplicare per player_id (2.038 -> 2.017). Un indice non risolto
+# oggi puo' esserlo domani: si ritenta con `--ritenta-indici`, esplicitamente.
+STATI_DEFINITIVI = frozenset({
+    "ok", "identita_non_confermata", "nessuna_pagina",
+    "nessun_infobox", "nessun_blocco",                  # storici, restano
+    "disambigua", "pagina_di_nome", "soggetto_diverso",  # NUOVI: dicono la causa
+    "senza_infobox", "senza_blocco",
+    "indice_non_risolto", "indice_link_rotto",
+})
+if args.ritenta_indici:
+    STATI_DEFINITIVI = STATI_DEFINITIVI - {"indice_non_risolto"}
+
+
+# ── 3. il loop: gazetteer una volta sola, poi i suffissi solo sul 404 ───────
+    GAZ = W.costruisci_gazetteer() if args.gazetteer else None   # 0 richieste, ~70 s
+
+    for i, r in enumerate(da_fare.itertuples(), 1):
+        esito = None
+        for suff in SUFFISSI:
+            e = W.fetch_player(
+                r.player_id, f"{r.name}{suff}",
+                nascita_attesa=r.date_of_birth,
+                club_noti=r.club_noti if isinstance(r.club_noti, set) else None,
+                club_anni=r.club_anni if isinstance(r.club_anni, list) else None,
+                paese=r.country_of_citizenship, ruolo=r.position,
+                use_cache=not args.no_cache,
+            )
+            esito = e
+            # `indice_link_rotto` NON e' `nessuna_pagina`: fermarsi qui evita
+            # che i suffissi rientrino nel ramo-indice (fino a 3 risoluzioni e
+            # 6 richieste per un giocatore).
+            if e.stato != "nessuna_pagina":
+                break
+        if esito.stato == "nessuna_pagina" and GAZ is not None:
+            esito = W.recupera_404(
+                r.player_id, r.name, GAZ, nascita_attesa=r.date_of_birth,
+                club_noti=r.club_noti if isinstance(r.club_noti, set) else None,
+                club_anni=r.club_anni if isinstance(r.club_anni, list) else None,
+                paese=r.country_of_citizenship, ruolo=r.position,
+                use_cache=not args.no_cache)
+        ...
 ```
 
-</details>
+---
+
+## 3. L'effetto sul bias brasiliano-iberico
+
+**Risposta breve: il divario si RIDUCE di circa un quarto. Non si chiude, e non si chiuderà con Wikipedia inglese.**
+
+### Il fronte-indice, misurato end-to-end (l'unico numero completo)
+
+| paese | tentati | PRIMA | DOPO | recuperato |
+|---|---:|---:|---:|---:|
+| Brasile | 1.449 | **57,3%** | **27,1%** | 52,7% |
+| Portogallo | 859 | 44,4% | **17,2%** | 61,3% |
+| Scozia | 620 | 32,7% | 9,8% | 70,0% |
+| Spagna | 1.570 | 30,3% | 9,7% | 68,1% |
+| Inghilterra | 1.082 | 22,1% | 6,9% | 68,6% |
+| **Ucraina** | 1.056 | **37,7%** | **36,0%** | **4,5%** |
+| **Grecia** | 773 | **24,4%** | **23,0%** | **5,7%** |
+| Italia | 905 | 7,0% | 4,3% | 38,1% |
+| Francia | 1.303 | 7,3% | 4,9% | 32,6% |
+| Olanda | 952 | 5,7% | 4,7% | 16,7% |
+
+| | PRIMA | DOPO |
+|---|---:|---:|
+| **V di Cramér** (forza del legame paese↔fallimento) | **0,3372** | **0,2573** (**−23,7%**) |
+| rapporto **Brasile / Olanda** | 7,5× | **4,2×** |
+| chi-quadro | 2.365 | 1.250 (df 37, **p ≈ 0**) |
+
+⚠️ La tabella «DOPO» assume che il **100%** delle scelte diventi un recupero: va scontata per il tasso di conferma ([88,6%, 100%]).
+
+### Gli altri fronti, misurati **separatamente** su denominatori diversi
+
+- **404 → gazetteer**: chi-quadro del tasso di 404 per cittadinanza **1.439 → 1.029** (Croazia 15,5%→4,8%, Serbia 10,4%→2,7%, Cechia 8,5%→0,6%, Danimarca 10,0%→6,1%, **Ucraina 29,5%→21,2%**). ⚠️ Con il fix R3 e il decadimento della resa il numero va **rimisurato**: non è mai stato calcolato sul codice corretto.
+- **`nessun_blocco` → instradamento**: il fronte è al **41,8% brasiliano** (265/634 alla misura) e al **62,6% mononimi**, ma solo 137 sono instradabili → contributo di ordine ~50 brasiliani.
+
+**L'effetto congiunto NON è misurato**: i tre fronti hanno denominatori diversi e popolazioni parzialmente sovrapposte. L'ordine di grandezza atteso è V di Cramér **0,337 → ~0,24-0,25**, ma è una proiezione, non una misura.
+
+### Che cosa dice questo, in sostanza
+
+**Il divario si dimezza dove il fallimento era mononimia pura** — Spagna, Portogallo, Scozia, Inghilterra crollano di due terzi. Il residuo brasiliano **cambia natura**: da «pagina di disambigua» diventa «voce che non esiste o è di un altro soggetto», ed è per questo che il Brasile si ferma al 27,1% invece di scendere ai livelli iberici.
+
+**E c'è una cosa che va a verbale (R4) e che nessuno aveva separato**: l'**Ucraina** (37,7% → 36,0%) e la **Grecia** (24,4% → 23,0%) **non si muovono**. Il loro fallimento **non è mai stato mononimia**: è traslitterazione e assenza di voce. Stavano nel gruppo «alto tasso» per un meccanismo completamente diverso, e vengono aggrediti solo dal fronte gazetteer — dove l'Ucraina scende 29,5%→21,2% **sul solo sotto-fronte 404** e resta comunque il buco maggiore, perché **metà dei suoi 404 non ha candidato**: quelle pagine non sono linkate da nessuna delle nostre. Chiudere quel divario richiede la **Wikipedia ucraina**, cioè un'altra decisione — e l'audit citato nel modulo dice che le altre lingue avevano dato guadagno zero su 333, ma su *quel* campione, non su questo.
+
+**Il chi-quadro resta enorme (p < 1e-180) e resterà tale.** La confondente si riduce di oltre un quarto; non sparisce. **Ogni analisi che usi lo strato 2 deve continuare a dichiararla.**
+
+---
+
+## 4. Cosa NON è recuperabile, e perché
+
+| che cosa | quanti | perché |
+|---|---:|---|
+| pagine-indice: astensioni del selettore | **345** (275 sotto soglia, 59 ambiguo, 11 senza candidati) | L'astensione è la parte **onesta** del metodo: costa zero richieste e zero rischio. Le più promettenti sono le 59 ambigue, che si sbloccherebbero con un segnale in più (nazionale, o `first_name`/`last_name` confrontati col nome completo). **Costo: zero richieste.** Non fatto. |
+| 404 senza candidato nel gazetteer | **≈1.480** su 2.085 | Quelle pagine **non sono linkate da nessuna delle nostre**. Il gazetteer legge ciò che la cache contiene: non può inventare. |
+| 404 con titolo costruito alla cieca | **60%** dà 404 (n=20) | Babacar Gueye, Moustapha Sall, Rodrigo Macedo, Miguel Monteiro: **la voce non esiste**. Fine. Non è un difetto della strategia: è un'assenza. |
+| `nessun_blocco` non instradabili | **574** su 711 (236 con candidati ma anno sbagliato, 316 senza candidati, 22 multi-candidato dello stesso anno) | I 22 multi-candidato: l'anno non basta e vanno risolti con la ricerca per nome+data, **la cui precisione non è stata misurata in questo lavoro**. |
+| quarantene lasciate al giudizio umano | **~14** | Δ ESTRANEO o DEBOLE senza corroborazione. La regola non le indovina: le **dichiara**. Fra queste ci sono casi che sono la persona giusta con l'anagrafica sbagliata **sulla pagina** — Haris Belkebla, la voce dice 3/8/2000 ma è l'algerino di Brest/Angers nato 28/1/1994, **stessa altezza al centimetro**, stesso ruolo, stesso club: la data della pagina è un **finto pieno** (R6). |
+| respinte senza pagina alternativa | **~110** | Il 60% dei titoli costruiti dà 404. |
+| **giocatori con `date_of_birth` sbagliata da noi** | **non misurato** | Tutto il selettore si appoggia all'anno del nostro dataset. Se è sbagliato, il selettore sceglie **con sicurezza** la persona sbagliata e `verifica_identita` la respinge: il danno è **una richiesta sprecata, non un dato falso** — comportamento voluto. Ma quei giocatori **non saranno mai recuperati**, per costruzione. |
+| **omonimi con lo stesso giorno di nascita esatto** | **non osservati** | Zero eventi in 50 (instradamento) + 30 (indice) prove. La potenza esclude solo tassi > **7,1%**. È il residuo vero, ed è irriducibile con la data come unico giudice. |
+| **i 3.027 mai tentati** | 3.027 | Mediana **1 presenza**, **100%** sotto le 20. Renderanno meno di tutti (resa gazetteer ~16%) e stanno **interamente** nello strato dove il bound sui falsi positivi del fronte-indice **non esiste**. |
+
+**Un claim che va ritirato, e uno che resta.** Non è vero che «un 404 sul nome nudo significa che quel nome su en.wikipedia non esiste in nessuna forma»: 19 controesempi su 2.085 (0,9%) sono già dentro la cache. Resta invece vero, ed è misurato, che provare `(footballer, born AAAA)` alla cieca sui 404 rende **0/6**: il titolo disambiguato nasce solo quando il nudo è occupato, e in quel caso il nudo restituisce una **disambigua**, non un 404.
+
+**Totale non recuperabile: ~2.900 sui 5.835 falliti attuali** (~50%), di cui la maggioranza è **assenza vera della voce**. Va registrata come esito definitivo, non inseguita.
+
+---
+
+## 5. L'ordine di esecuzione consigliato
+
+| # | passo | richieste | tempo | condizione |
+|---|---|---:|---:|---|
+| **0** | applicare le 5 rettifiche obbligatorie (§0-bis) e i test | 0 | — | **bloccante** |
+| **1** | `parse_career` rilassato, ri-girato sulla cache | **0** | ~16 min CPU | — |
+| **2** | `verifica_identita_v2` sulle 262 quarantene + 16 false respinte | **0** | ~2 min CPU | **con la guardia `n_club>0`** |
+| **3** | rimuovere dal DB le 3 identità sbagliate | 0 | — | non basta non promuoverle: vanno **tolte** |
+| **4** | instradamento `nessun_blocco` (elenco ricostruito **per player_id**) | **137** | **2,3 min** | — |
+| **5** | validazione stratificata `<20 presenze` per il fronte-indice | **30** | **0,5 min** | **bloccante per il passo 6** |
+| **6** | pagine-indice (`nessun_infobox` + 376 `nessun_blocco` + 24 `errore`) | **2.812** | **46,9 min** | dopo il passo 5 |
+| **7** | pilota gazetteer, 100 richieste stratificate per chiave A/B/C/D | **100** | 1,7 min | **bloccante per il passo 8** |
+| **8** | gazetteer, resto | **503** | 8,4 min | solo se il pilota conferma la resa |
+| **9** | respinte → hatnote, poi titolo costruito | **189** | 3,2 min | — |
+| | **TOTALE** | **3.771** | **62,9 min = 1,05 ore** | |
+
+**Perché quest'ordine.** I passi 1-3 costano **zero richieste** e vanno prima di tutto: cambiano la baseline contro cui si misura tutto il resto (e il passo 3 **toglie** dati sbagliati, che vale quanto aggiungerne di giusti). Il passo 4 ha il miglior rapporto fra i fronti a pagamento (**0,92 recuperi per richiesta**) ed è quello con il bound sui falsi positivi più stretto (0/50, ≤7,1%). Il passo 5 costa **30 secondi** e chiude l'unico strato in cui il fronte più grosso non ha un limite: farlo dopo il passo 6 significherebbe scoprire il problema con 2.800 richieste già spese. I passi 7-8 sono spezzati perché il fronte gazetteer, dopo il fix, ha un **rischio limitato (≤28) e una resa ignota**: per il criterio del brief è **non valutabile**, e la risposta corretta non è «promettente», è **misurarlo su 100 richieste prima di impegnarne 600**.
+
+### Il bilancio finale
+
+```
+recuperati            ≈ 2.400 - 3.100 giocatori   (punto ~2.900)
+rietichettati            245 quarantene -> confermata_coerenza
+rimossi                    3 identità sbagliate (18 tappe)
+tappe aggiunte        ≈ 7.900 (parser) + ~1.360 (instradamento)
+                        + ~19.000 (recuperi × ~8 tappe senior)
+
+falsi positivi        0 osservati su ~180 verifiche end-to-end
+                      ≤ 51 al 95% (somma dei limiti superiori) = ≤ 1,8%
+                      ripartiti: indice ≤11,8 · gazetteer ≤28 · instrad. ≤9 · v2 ≤2
+
+costo                 3.771 richieste = 1,05 ore a 1 al secondo
+                      + ~20 minuti di CPU su cache
+                      un solo processo, mai in parallelo
+```
+
+**Il criterio del brief è soddisfatto per tre fronti su quattro.** Instradamento (0/50, ≤7,1%), quarantene (0/72, ≤5,1%) e pagine-indice (0/30, ≤0,50% stratificato) sanno dire quanti errori introducono. Il **gazetteer no** — non sul rischio, che è limitato, ma sulla **resa**, che dopo il fix non è misurata da nessun campione valido. Va etichettato **non valutabile** e trattato con un pilota, non con un lancio.
+
+E la frase che non va scritta nel README: *«il recupero non peggiora la qualità del database»*. La peggiora, di poco e in modo quantificato — **da ~1,2 a ~13 persone sbagliate residue su ~24.000 pagine, cioè dallo 0,006% allo 0,05%** — perché il ramo-indice seleziona sull'anno di nascita e consegna al filtro esattamente il caso in cui il filtro è più debole. Il prezzo è accettabile. Presentarlo come neutro non lo è.
