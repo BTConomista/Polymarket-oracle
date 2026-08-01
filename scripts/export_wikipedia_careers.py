@@ -49,6 +49,22 @@ def main() -> int:
                 tappe.extend(r.get("tappe", []))
 
     df = pd.DataFrame(tappe)
+
+    # GUARDIA D'USCITA sull'invariante degli anni. Sta qui, e non solo nel
+    # parser, perche' il file di lavoro accumula righe prodotte da versioni
+    # diverse del parser lungo una raccolta di ore: una correzione al parser non
+    # ripulisce da sola cio' che e' gia' stato scritto. Il deliverable dev'essere
+    # coerente comunque.
+    # I casi sono REFUSI DELLA FONTE, non del parser: su Wikipedia esistono
+    # intervalli rovesciati come «2025–2006» (Miguel Mellado) e «2019–2013»
+    # (Luan Scapolan). Si azzera la FINE, non si "corregge" invertendo: l'anno
+    # giusto non lo sappiamo, e indovinarlo sarebbe inventare un dato.
+    if len(df) and {"anno_da", "anno_a"} <= set(df.columns):
+        rovesciate = df["anno_da"].notna() & df["anno_a"].notna() & (df["anno_a"] < df["anno_da"])
+        if rovesciate.any():
+            print(f"⚠️  {int(rovesciate.sum())} tappe con anno di fine PRIMA dell'inizio "
+                  "(refusi della fonte): la fine viene azzerata, non invertita")
+            df.loc[rovesciate, "anno_a"] = pd.NA
     df.to_csv(TAPPE, index=False, compression="gzip")
     ri = pd.DataFrame(esiti)
     ri.to_csv(RIEPILOGO, index=False)

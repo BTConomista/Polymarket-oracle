@@ -203,11 +203,28 @@ def _parse_anni(testo: str) -> tuple[int | None, int | None, bool]:
         return None, None, False
     da: int | None = int(m.group(1))
     a = int(m.group(2)) if m.group(2) else None
-    if da == 0:                      # segnaposto "inizio ignoto"
+    # Il segnaposto `0000` vale su ENTRAMBI gli estremi: il primo fix del
+    # 31/07/2026 copriva solo l'inizio, e 4 tappe hanno mostrato che compare
+    # anche come fine (Pavel Mamaev, Rasmus Lauritsen: '2000–0000').
+    if da == 0:
         da = None
+    if a == 0:
+        a = None
+    ha_intervallo = bool(re.search(r"\d{4}\s*[–—-]", t))
     aperta = a is None and bool(re.search(r"[–—-]\s*$", t))
-    if a is None and not aperta and da is not None:
+    # La regola "un anno solo" vale SOLO se non c'e' un separatore di
+    # intervallo: '2000 –0000' e' «dal 2000, fine ignota», non «solo il 2000».
+    if a is None and not aperta and da is not None and not ha_intervallo:
         a = da           # tappa di un anno solo: '2005'
+
+    # ⚠️ REFUSI DELLA FONTE, non del parser: su Wikipedia esistono intervalli
+    # rovesciati — «2025–2006» per Miguel Mellado (voleva dire 2025-2026) e
+    # «2019–2013» per Luan Scapolan. Sono 10 tappe su 167.171 (0,006%).
+    # Si scarta la FINE, non si "corregge" invertendo: l'anno giusto non lo
+    # sappiamo, e indovinarlo sarebbe inventare un dato. Sappiamo l'inizio,
+    # non sappiamo la fine — ed e' esattamente cio' che il None dichiara.
+    if da is not None and a is not None and a < da:
+        a = None
     return da, a, aperta
 
 
