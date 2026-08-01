@@ -298,23 +298,106 @@ Cosa esiste già, per non rifarlo:
 | previsioni **outright** congelate | ✅ fatto il **2026-07-25**, ma **3 leghe** (`serie_a`, `premier_league`, `la_liga`) | `experiments/prospettico_2026_27_outright.json` |
 | anteprima **DC per-partita** | ⚠️ **illustrativa**, 7 partite Premier plausibili, congelata 2026-07-23 | `experiments/prospettico_2026_27_dc.csv` |
 | motore **per-lega** su M1 e M2 | ✅ chiuso (Fasi 83-bis e 92-bis) | `predict.py --league <lega>`, `src.config.MARKET_ENGINE` |
-| **fixture ufficiali** 2026-27 | ❌ mancanti | — |
-| **quote 1X2 + O/U per-partita** | ❌ nessun canale verificato | — |
-| **script di scoring** | ❌ non esiste | — |
+| **quote 1X2 + O/U per-partita** | ✅ **risolto** (Fasi 115-118): Smarkets, 4 giri al giorno dal 28/07 | `data/smarkets_matches/`, `.github/workflows/smarkets-prematch.yml` |
+| **fixture ufficiali** 2026-27 | ✅ **li dà la stessa fonte** (lega, squadre, data, ora); da verificare contro openfootball | l'ultimo file di `data/smarkets_matches/` |
+| **mappa nomi Smarkets → nostri** | ❌ **manca — è il collo di bottiglia** (P1) | `src/data/sources.py` (`TEAM_ALIASES`) |
+| **script di scoring** | ❌ non esiste (P4) | — |
 
-### 5.1 · PRIMA del 16 agosto (blocco non negoziabile)
+### 5.1 · COSA FARE ORA — lista ordinata per dipendenza (agg. 01/08/2026, Fase 127)
 
+> **Come si legge.** I passi sono in ordine di **dipendenza**, non di
+> importanza: P1 sblocca P2 e P3, e senza P3 non c'è test. La colonna
+> «scadenza» è vera: il **14 agosto** è la vigilia di Alaves–Getafe, la prima
+> partita della stagione. Ciò che non è congelato entro quella sera non è più
+> una previsione, per definizione.
+>
+> **Quanto manca a ogni cosa lo dice il calendario, non questo file**: al
+> 01/08 sono **13 giorni** a P3, il resto viene dopo il fischio.
+
+| # | passo | sblocca | scadenza | stato |
+|---|---|---|---|---|
+| **P1** | **mappa nomi Smarkets → nostri** | P2, P3, P5 | 7 ago | ❌ **da fare per primo** |
+| **P2** | `_run_prospettico_2627.py` legge i fixture veri | P3 | 10 ago | ❌ |
+| **P3** | **congelamento M1 (DC)**, 5 leghe, commit datato | il test | **14 ago** | ❌ |
+| **P4** | **script di scoring**, scritto prima dei risultati | P7 | 14 ago | ❌ |
+| **P5** | **M2** dall'ultimo snapshot pre-kickoff | il confronto col mercato | a ogni giornata | ⚠️ dipende da P1 e da D1 |
+| **P6** | criteri **pre-registrati** | l'onestà del test | prima di P3 | ❌ |
+| **P7** | risultati reali → scoring → run + fase di diario | la conclusione | dopo il full-time | ❌ |
+
+**P1 · La mappa nomi è il vero collo di bottiglia.** Smarkets scrive
+`Inter Milan`, `AC Milan`, `Nottm Forest`, `Köln`, `Le Mans FC`,
+`Racing Santander`: nomi che i nostri snapshot non conoscono. Va costruita
+**a mano e verificata una per una** contro `TEAM_ALIASES`
+(`src/data/sources.py`) — è un bug già capitato due volte («Hellas Verona» →
+«Verona», Fase 5; `Manchester Utd` che fermava un join a 544/760, Fase 122).
+⚠️ **Metà delle neopromosse non esiste negli snapshot** (Coventry, Hull,
+Ipswich, Le Mans, Troyes, Paris FC, Elversberg, Paderborn, Schalke, Racing
+Santander, Málaga, Elche…): lì il DC gira sul **prior δ** della lega, e la
+cosa va **dichiarata partita per partita** nel CSV congelato, non lasciata
+implicita. Un nome non mappato dev'essere un **errore rumoroso**, mai una
+partita saltata in silenzio (è la lezione della Fase 127, pagata due giorni fa).
+
+**P2 · Lo script di congelamento ha ancora i fixture incisi nel codice.**
+`scripts/_run_prospettico_2627.py` contiene `FIXTURES` e `AS_OF` hardcoded:
+**7 partite di Premier, plausibili e non ufficiali**. Vanno sostituiti dalla
+lettura dell'ultimo file di `data/smarkets_matches/` (che ha lega, squadre,
+data e ora vere). Alternativa manuale, se P2 slitta:
+`python scripts/predict.py --league <lega> --date <YYYY-MM-DD> "<casa>" "<ospite>"`,
+48 volte.
+
+**P3 · Congelare TUTTO il Tier 1, non solo l'1X2.** L'1X2 si scora per primo
+perché dà 4-5× la potenza (§4-bis punto 3), ma gli altri mercati **dopo non si
+recuperano**: si congelano lo stesso, dichiarando che sono sotto-dimensionati.
+Commit **datato** la sera del 14, prima del fischio.
+
+**P4 · Lo scoring si scrive ORA, non a settembre.** Legge previsioni congelate
++ risultati e produce log-loss/Brier/calibrazione per lega e per mercato, via
+`experiment_log.compute_metrics` (fonte unica, §5) e `append_run` con
+`config.source = "prospettico_2627"`. Scriverlo dopo aver visto i risultati
+significa sceglierne la forma sapendo già l'esito.
+
+**P5 · I risultati veri** arrivano da football-data (stagione `2627`,
+provider raggiungibile dalla Fase 100) — **non** da Smarkets, che dà prezzi e
+non esiti.
+
+#### Decisioni aperte (non tecniche: vanno prese, non risolte)
+
+- **D1 · Quanto dev'essere «chiusa» la chiusura del M2.** Il regime denso gira
+  **ogni 6 ore** (`cron: '17 */6 * * *'`), quindi l'ultimo prezzo prima del
+  fischio può essere vecchio fino a 6 h. Due strade: **(a)** infittire il cron
+  nelle finestre di partita per avere un T−1h — più fedele a «chiusura», più
+  file, più MB; **(b)** tenere così e **dichiarare** che il M2 usa un prezzo a
+  T−6h. Nessuna delle due è sbagliata; sceglierne una in silenzio sì.
+- **D2 · Che cosa si fa se P1 non chiude in tempo.** Timebox dichiarato: il
+  test parte **col solo M1** e lo si scrive, invece di far slittare tutto.
+
+#### Controlli fissi, da rifare a ogni congelamento
+
+- [ ] l'ultimo file di `data/smarkets_matches/` ha
+      `leghe_senza_partite_esposte: []` **e** 5 leghe fra le righe. Non basta
+      che il file esista: il 31/07 esisteva, pesava 120 KB e non conteneva La
+      Liga (Fase 127).
+- [ ] le date di inizio non si sono spostate (`fetch_smarkets_outrights.py`,
+      oppure il listino per-partita che è più preciso: ha detto **15/8** dove
+      gli outright dicevano 16/8).
+- [ ] ogni nome squadra dei fixture risolve a un nome canonico.
+
+---
+
+#### Le caselle originali del blocco (aggiornate al 01/08)
+
+- [x] ~~**Canale per le quote 1X2 + O/U per-partita**~~ — ✅ **risolto**
+      (Fasi 115/116/118): Smarkets, 4 giri al giorno, archivio in
+      `data/smarkets_matches/`.
+- [x] ~~**Fixture ufficiali** di giornata 1~~ — ✅ **li dà la stessa fonte**,
+      con data e ora. ⚠️ Restano da **verificare contro una seconda fonte**
+      (openfootball): l'API espone ciò che è *quotato*, che non è per
+      definizione la giornata intera.
 - [ ] **Riverificare le date di inizio** delle 5 leghe (si spostano): ri-scaricare
       gli outright con `python scripts/fetch_smarkets_outrights.py` e confrontare
       `start_date`, oppure il calendario ufficiale. Se una data si sposta,
       aggiornare **qui e in `newseason.md` §1** (fonte unica).
-- [ ] **Fixture ufficiali** di giornata 1 delle **5** leghe. La rete non è più un
-      vincolo (§4): fonti da provare in ordine — openfootball su
-      `raw.githubusercontent.com`, eventi Smarkets/Polymarket (hanno già le
-      partite: es. `Inter Milan vs Monza`, 22/08, `newseason.md` §4), sito
-      ufficiale della lega. Verificare i nomi squadra contro `TEAM_ALIASES`
-      (`src/data/sources.py`): è un bug già capitato («Hellas Verona» → «Verona»).
-- [ ] **Modello 1 (DC) congelato** coi fixture veri. ⚠️ `scripts/_run_prospettico_2627.py`
+- [ ] **Modello 1 (DC) congelato** coi fixture veri (= **P3**). ⚠️ `scripts/_run_prospettico_2627.py`
       ha `FIXTURES` e `AS_OF` **hardcoded** (solo Premier, 7 partite): vanno
       sostituiti con i fixture veri delle 5 leghe prima di rigenerare il CSV.
       In alternativa, partita per partita:
@@ -325,14 +408,7 @@ Cosa esiste già, per non rifarlo:
       Bundesliga e Ligue 1 (`scripts/fetch_polymarket_open.py`,
       `scripts/fetch_smarkets_outrights.py`). Se non le quotano, **dichiararlo
       nel JSON**: un buco dichiarato è innocuo, un buco silenzioso no (§5-bis R6).
-- [ ] **Canale per le quote 1X2 + O/U per-partita** — è la casella che decide se
-      il Modello 2 esiste. Opzioni note, in ordine di costo: Smarkets per-partita
-      (da verificare la liquidità, `newseason.md` §4); un raccoglitore automatico
-      via GitHub Actions (pattern Fase 67, con i paracadute di `newseason.md` §5/A2);
-      una sessione browser reale (pattern Fase 70); inserimento a mano in `files/`.
-      **Timebox dichiarato**: se non si risolve, il test parte con il solo M1 e lo
-      si scrive, invece di far slittare tutto.
-- [ ] **Script di scoring scritto ORA**, non a settembre (`newseason.md` §5/A1):
+- [ ] **Script di scoring scritto ORA** (= **P4**), non a settembre (`newseason.md` §5/A1):
       legge le previsioni congelate + i risultati e produce log-loss/Brier/
       calibrazione per lega e per mercato, via
       `experiment_log.compute_metrics` (fonte unica) e `append_run`

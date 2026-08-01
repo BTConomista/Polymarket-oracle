@@ -77,15 +77,26 @@ il look-ahead è impossibile per costruzione, non per disciplina.
 | `experiments/prospettico_2026_27.md` | esiste (impostazione **+ checklist eseguibile**, §5) |
 | `experiments/prospettico_2026_27_dc.csv` | esiste, ma **illustrativo**: 7 partite Premier *plausibili*, congelate il 2026-07-23 |
 | `experiments/prospettico_2026_27_outright.json` | **congelato il 2026-07-25** (Fase 95), ma su **3 leghe su 5** (`serie_a`, `premier_league`, `la_liga`) |
-| **fixture ufficiali** giornata 1 | ❌ **mancano** |
+| **quote 1X2+O/U per-partita** | ✅ **risolto** (Fasi 115-118): Smarkets, 4 giri/giorno, `data/smarkets_matches/` |
+| **fixture ufficiali** giornata 1 | ✅ **li dà Smarkets** (lega, squadre, data, ora) — da verificare contro openfootball |
+| **mappa nomi Smarkets → nostri** | ❌ **manca, ed è il collo di bottiglia** |
 | **livello-partita congelato** | ❌ **manca** |
 | **script di scoring** | ❌ **manca** |
 
-⏰ **Ha una scadenza vera: 16 agosto** (via della Liga). Le **date** e il
-*perché* stanno in [`newseason.md`](newseason.md); i **comandi**, i file e i
-timebox in `experiments/prospettico_2026_27.md` §5. Vincolo di disegno da non
-dimenticare: con **una** giornata la potenza contro il mercato è 9,8% (Fase 98)
-— la soglia è ~574 partite, cioè ~12 giornate su 5 leghe.
+⏰ **La scadenza è il 14 agosto**, non il 16: il listino per-partita dice che la
+prima partita è **Alaves–Getafe il 15/8** (gli outright dicevano 16/8 — la
+rettifica è alla Fase 127). Le **date** e il *perché* stanno in
+[`newseason.md`](newseason.md); **cosa fare ora, in ordine di dipendenza (P1-P7)
++ le due decisioni aperte**, in
+[`experiments/prospettico_2026_27.md` §5.1](experiments/prospettico_2026_27.md).
+Vincolo di disegno da non dimenticare: con **una** giornata la potenza contro il
+mercato è 9,8% (Fase 98) — la soglia è ~574 partite, cioè ~12 giornate su 5
+leghe.
+
+⚠️ **Controllo fisso prima di ogni congelamento** (Fase 127): che l'ultimo file
+di `data/smarkets_matches/` abbia `leghe_senza_partite_esposte: []` **e** tutte
+e 5 le leghe fra le righe. Che il file esista non basta — il 31/07 esisteva,
+pesava 120 KB e non conteneva La Liga.
 
 ---
 
