@@ -541,7 +541,7 @@ non-artefatto* trovato da parecchie fasi. → **la pista scorporata è la 6-bis*
 > dedotto dall'identità di `team_stats.gol_dedotti` accettando un errore
 > misurato del **1,7%** e **sempre in difetto**.
 
-**Dato**: 🆕 **dalla Fase 132 non c'è più niente da procurare né da cercare**:
+**Dato**: 🆕 **dalla Fase 133 non c'è più niente da procurare né da cercare**:
 `home_goals_ht` e `away_goals_ht` sono **colonne degli snapshot**, su tutte e 5
 le leghe e tutte e 9 le stagioni (16.111/16.111, un solo buco dichiarato). Il
 paragrafo qui sotto descrive com'era **prima**, quando andavano rilette dai

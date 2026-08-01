@@ -454,7 +454,7 @@ def test_le_incoerenze_aritmetiche_minori_sono_solo_quelle(tm):
 
 
 # --------------------------------------------------------------------------
-# 6 · I gol all'intervallo negli snapshot (Fase 132)
+# 6 · I gol all'intervallo negli snapshot (Fase 133)
 # --------------------------------------------------------------------------
 
 def test_gol_intervallo_presenti_e_coerenti():

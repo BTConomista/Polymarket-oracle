@@ -333,7 +333,7 @@ correzioni.*
 - [Fase 129 — Il test prospettico è congelato: 48 partite, 26 mercati, due settimane di anticipo](#fase-129--il-test-prospettico-è-congelato-48-partite-26-mercati-due-settimane-di-anticipo)
 - [Fase 130 — Le quote si muovono? Quasi no. E il movimento più grande era un libro rotto](#fase-130--le-quote-si-muovono-quasi-no-e-il-movimento-più-grande-era-un-libro-rotto)
 - [Fase 131 — Le statistiche di squadra per periodo: il primo dato che separa i due tempi](#fase-131--le-statistiche-di-squadra-per-periodo-il-primo-dato-che-separa-i-due-tempi)
-- [Fase 132 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi](#fase-132--i-gol-allintervallo-entrano-negli-snapshot-il-dato-che-mancava-al-modello-a-due-stadi)
+- [Fase 133 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi](#fase-133--i-gol-allintervallo-entrano-negli-snapshot-il-dato-che-mancava-al-modello-a-due-stadi)
 
 ---
 
@@ -14912,7 +14912,7 @@ con la prima **e differisca** dalla seconda.
 
 ---
 
-## Fase 132 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi
+## Fase 133 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi
 
 **Obiettivo.** Rispondere a tre domande dell'utente sulla Fase 131 («i gol
 all'intervallo si recuperano? qual è il problema dei tiri? ci sono altri

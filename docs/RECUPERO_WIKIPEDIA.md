@@ -1492,3 +1492,128 @@ costo                 3.771 richieste = 1,05 ore a 1 al secondo
 **Il criterio del brief è soddisfatto per tre fronti su quattro.** Instradamento (0/50, ≤7,1%), quarantene (0/72, ≤5,1%) e pagine-indice (0/30, ≤0,50% stratificato) sanno dire quanti errori introducono. Il **gazetteer no** — non sul rischio, che è limitato, ma sulla **resa**, che dopo il fix non è misurata da nessun campione valido. Va etichettato **non valutabile** e trattato con un pilota, non con un lancio.
 
 E la frase che non va scritta nel README: *«il recupero non peggiora la qualità del database»*. La peggiora, di poco e in modo quantificato — **da ~1,2 a ~13 persone sbagliate residue su ~24.000 pagine, cioè dallo 0,006% allo 0,05%** — perché il ramo-indice seleziona sull'anno di nascita e consegna al filtro esattamente il caso in cui il filtro è più debole. Il prezzo è accettabile. Presentarlo come neutro non lo è.
+---
+
+## 8. Wikidata: la terza fonte (01/08/2026)
+
+Il piano qui sopra è stato scritto quando l'unica prova d'identità disponibile
+era la `bday` letta **dall'HTML** della pagina. Da lì venivano tutte le sue
+difficoltà: il ramo `k == 0 → respinta` che confonde prova contraria e assenza
+di prova (R4), le 263 quarantene che restano nel database senza conferma, le
+205 respinte perse. Tutte forme dello stesso problema: **quando il markup non
+dà la data, non abbiamo niente da confrontare.**
+
+Wikidata lo chiude, e lo chiude a un costo che non ha rapporto col piano sopra.
+
+### Perché è la fonte giusta (e non una fonte in più)
+
+Tre proprietà, in ordine di importanza:
+
+1. **Non c'è matching per nome.** Il Q-id è inciso **dentro la pagina che
+   abbiamo già scaricato** (`wgWikibaseItemId`), presente in **24.074 pagine su
+   24.077 = 100,0%**, estratto in 101 secondi con **zero richieste di rete**.
+   Questo è il punto: ogni verifica d'identità basata sul nome può introdurre
+   una *nuova* omonimia mentre ne risolve una vecchia. Qui quel passaggio non
+   esiste — l'entità interrogata è per costruzione quella della pagina letta.
+2. **`P569` è strutturata.** È un valore tipizzato con una **precisione
+   dichiarata**, non testo da estrarre: non dipende dal template né dalla
+   lingua. Dove l'HTML non dava la `bday`, Wikidata dà comunque la data.
+3. **`P54` porta i qualificatori `P580`/`P582`** — la *finestra temporale*
+   della carriera, che l'infobox dà in modo irregolare. È ciò che permette il
+   ramo 2 del verdetto (il caso del padre omonimo) anche senza data di nascita.
+
+Costo: **una richiesta per giocatore da dirimere**. 483, non 24.000.
+
+### Robots.txt — verificato riga per riga
+
+```
+Disallow: /wiki/Special:EntityData/
+Allow:    /wiki/Special:EntityData/*.
+```
+
+Vince il pattern **più lungo** (RFC 9309 §2.2.2): un URL con estensione
+(`.json`) è **permesso**. È l'endpoint che Wikidata pubblica apposta per
+l'accesso automatico.
+
+⚠️ `urllib.robotparser` della standard library implementa *first-match-wins* e
+su questa coppia risponde `False` — **sbagliato**. Il controllo in
+`src/data/wikidata_identity.py` è scritto a mano per questo, e non riusa
+`wikipedia_careers.PATH_VIETATI` (che vieta tutto `/wiki/Special:`: giusto per
+i domini Wikipedia, sbagliato per questo).
+
+⚖️ Wikidata è **CC0**, non CC BY-SA: ciò che deriva da qui non porta vincoli di
+condivisione allo stesso modo.
+
+### 📐 Il modello in dettaglio
+
+**La regola di verdetto è gerarchica**, non un OR — un OR non è mai più forte
+del suo ramo più debole (stesso argomento di `verifica_identita`):
+
+```
+1. nascita_wikidata != None  and  nascita_attesa != None
+       Δ = |data(P569) − data(attesa)| in giorni
+       Δ ≤ 3  → confermata
+       Δ > 3  → smentita
+
+2. altrimenti, se ultimo_anno(P54) != None and prima_presenza != None
+       ultimo_anno < anno(prima_presenza)  → smentita  (incompatibilità temporale)
+
+3. altrimenti → indeterminato
+```
+
+**Perché 3 giorni.** Stessa soglia di `verifica_identita`, e per la stessa
+ragione: le fonti calcistiche discordano di un giorno con frequenza non
+trascurabile (fuso della registrazione, data di dichiarazione vs data di
+nascita). Non si introduce una seconda soglia per la stessa domanda, altrimenti
+lo stesso giocatore può essere confermato da un modulo e smentito dall'altro.
+
+**Perché il ramo 3 è `indeterminato` e non `confermata`.** Un'assenza di prova
+non è una prova. È la regola che tiene in piedi tutta la verifica: marcare come
+confermato ciò che non lo è ricrea *esattamente* il problema che questo modulo
+esiste per chiudere. È anche la correzione strutturale della rettifica **R4**
+(il ramo `k == 0 → respinta`), che sbagliava nella direzione opposta.
+
+**Due casi di «finto pieno» (R6) chiusi nel codice:**
+
+- `P569` con **precisione < 11** (solo anno, solo mese) è scritta
+  `+1994-00-00T00:00:00Z`. Leggerla come «1° gennaio» produrrebbe uno scarto di
+  mesi contro una data vera, cioè una **smentita fabbricata dal nostro codice**
+  su un giocatore che potrebbe essere quello giusto. Si scarta.
+- una militanza **aperta** (`P580` senza `P582`) non ha un ultimo anno. Se
+  `ultimo_anno` restituisse l'anno d'inizio, il ramo 2 dichiarerebbe «carriera
+  chiusa nel 2015» un giocatore ancora in attività.
+- le date dei qualificatori si troncano alla **precisione dichiarata**:
+  scrivere `2015-01-01` dove la fonte dice `2015` è inventare due campi su tre.
+
+### Le due domande che il numero da solo non risponde
+
+Misurate in `scripts/_run_verdetti_wikidata.py`, non assunte (R7):
+
+**(a) Le smentite sono una popolazione sola?** No — la prova su 20 casi mostra
+già due fenomeni incompatibili: `Q12897` a **18.603 giorni** (una pagina del
+1940 per un giocatore nato nel 1991: un'altra persona, senza dubbio) e
+`Q431562` a **61 giorni** (`1984-03-15` contro `1984-05-15` — stesso giorno,
+mese scambiato: una discrepanza di fonte sulla **stessa** persona). Trattarle
+allo stesso modo butterebbe via giocatori buoni per rimuoverne di sbagliati —
+lo stesso bilancio negativo che la rettifica R4 aveva già trovato.
+
+**(b) Wikidata è INDIPENDENTE dalla pagina?** Da verificare, non da dare per
+scontato: la data attesa viene da Transfermarkt, ma la `bday` della pagina e la
+`P569` vengono **entrambe dall'ecosistema Wikimedia**. Se concordano quasi
+sempre, una smentita significa «Wikimedia discorda da Transfermarkt», **non**
+«è un'altra persona» — e il valore di Wikidata non è l'indipendenza, è che la
+data è *leggibile* dove l'HTML non la dava. Lo script misura la concordanza con
+un **intervallo di Wilson** (a `p` vicino a 1 il normale darebbe estremi > 1).
+
+### Cosa questo NON fa
+
+Lo script **non modifica nessun dato**: scrive solo il proprio verdetto in
+`data/carriere_wikipedia/verdetti_wikidata.csv.gz`. Applicarlo al database è un
+passo separato, che passa dal registro delle correzioni (**R3**).
+
+### Nota sul workflow
+
+Il workflow multi-agente lanciato per lo stesso scopo è **fallito**: 7 agenti su
+8 in errore (`StructuredOutput retry cap`), l'unico sopravvissuto ha riportato
+tutti gli strumenti rotti nel proprio ambiente. **Zero misure nuove da quel
+run.** Il lavoro di questa sezione è deterministico e non ne deriva nulla.
