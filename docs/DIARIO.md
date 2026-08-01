@@ -328,6 +328,11 @@ correzioni.*
 - [Fase 124 — Il diffidato si trattiene davvero: misurato (e il segno ingenuo era rovesciato)](#fase-124--il-diffidato-si-trattiene-davvero-misurato-e-il-segno-ingenuo-era-rovesciato)
 - [Fase 125 — Prezzare i cartellini: ogni leva paga, e la sotto-dispersione non è dei gol](#fase-125--prezzare-i-cartellini-ogni-leva-paga-e-la-sotto-dispersione-non-è-dei-gol)
 - [Fase 126 — Cartellini: la contraddizione con la Fase 98 era apparente, e il modello «giusto» non paga](#fase-126--cartellini-la-contraddizione-con-la-fase-98-era-apparente-e-il-modello-giusto-non-paga)
+- [Fase 127 — La Liga era uscita dalla raccolta in silenzio: una guardia che scattava solo troppo tardi](#fase-127--la-liga-era-uscita-dalla-raccolta-in-silenzio-una-guardia-che-scattava-solo-troppo-tardi)
+- [Fase 128 — Il passo P1: la mappa nomi, e la neopromossa che il modello non sa di avere](#fase-128--il-passo-p1-la-mappa-nomi-e-la-neopromossa-che-il-modello-non-sa-di-avere)
+- [Fase 129 — Il test prospettico è congelato: 48 partite, 26 mercati, due settimane di anticipo](#fase-129--il-test-prospettico-è-congelato-48-partite-26-mercati-due-settimane-di-anticipo)
+- [Fase 130 — Le quote si muovono? Quasi no. E il movimento più grande era un libro rotto](#fase-130--le-quote-si-muovono-quasi-no-e-il-movimento-più-grande-era-un-libro-rotto)
+- [Fase 131 — Le statistiche di squadra per periodo: il primo dato che separa i due tempi](#fase-131--le-statistiche-di-squadra-per-periodo-il-primo-dato-che-separa-i-due-tempi)
 
 ---
 
@@ -14719,3 +14724,182 @@ poi ha dato la regola generale. Corollario metodologico: **quando una fonte
 esterna cambia una convenzione, la difesa non è inseguirla ma tenere entrambe
 le versioni e mettere un test che enumera tutto lo storico** — inseguire
 significa accorgersene la volta in cui è troppo tardi.
+## Fase 131 — Le statistiche di squadra per periodo: il primo dato che separa i due tempi
+
+**Obiettivo.** Verificare e integrare sette file consegnati dall'utente —
+statistiche di **squadra** per partita, divise in **Totale / 1° tempo /
+2° tempo**, per tutte e 5 le leghe, stagione 2025-26, fonte diretta.it
+(Flashscore), dato a monte di Opta. Sono l'altra metà del dato per giocatore
+entrato alla Fase precedente, e portano una cosa che il progetto non aveva
+mai avuto: la **scomposizione temporale** di 45 metriche.
+
+**Ragionamento / ipotesi.** Il progetto ha un residuo aperto e localizzato
+(Fasi 96/99): *«il secondo tempo è mal calibrato mentre il primo, che passa per
+lo stesso codice, non lo è → è game-state, e chiede un modello a due stadi»*.
+Fino a qui ogni metrica del repo era di fine partita, quindi quel residuo non
+era nemmeno osservabile su altro che i gol. L'ipotesi da verificare non era
+«questi dati sono utili» ma, prima, «questi dati sono veri e lo split è
+genuino».
+
+**Alternative considerate sulla verifica.** (a) Fidarsi del foglio «Note», che
+dichiara la propria verifica interna. Scartata: la fonte dichiara di aver
+controllato «1T + 2T = Totale», che è un controllo **che non può fallire** se il
+secondo tempo è calcolato come (Totale − 1T) — ed è esattamente ciò che i dati
+mostrano. Una tautologia non è una verifica (R7). (b) Verificare contro il
+per-giocatore già in repo. Insufficiente: è la **stessa fonte**, e sulle
+metriche continue non ricostruisce nulla (xG combacia in 55/758 celle).
+(c) **Scelta**: verificare contro **football-data.co.uk**, che ha le stesse
+metriche di conteggio misurate da un fornitore diverso, e — decisivo — ha
+`HTHG/HTAG`, cioè **i gol veri dell'intervallo**. Due workflow da 14 agenti
+ciascuno (7 dimensioni + 7 confutatori avversariali che riscrivono gli script
+da zero), poi i controlli portanti ri-eseguiti a mano.
+
+**Risultato — i dati reggono.**
+
+| controllo (5 leghe, sola stagione regolare) | esito |
+|---|---|
+| join allo snapshot (data + squadre) | **3.504/3.504 team-partita** |
+| risultato coerente con lo snapshot | **3.504/3.504** |
+| additività `1T + 2T (+Suppl) = Totale` | **137.124/137.124 celle**, 0 violazioni |
+| gol del **1° tempo** dedotti vs `HTHG/HTAG` | **3.444/3.502 = 98,34%** |
+| gol del **2° tempo** dedotti vs `FT−HT` | **3.428/3.502 = 97,89%** |
+| conteggi vs football-data (6 metriche) | 97,7% – 99,7%, **scarto medio ~0** |
+
+Lo scarto medio nullo su tutte e sei le metriche dice che **non c'è differenza
+sistematica di definizione**: è rumore di raccolta ±1 fra due fornitori. E lo
+split **non è invertito**: con le etichette scambiate l'accordo sui gol crolla a
+77/380 e 66/380 e compaiono 144 e 167 casi fisicamente impossibili.
+
+**Sei cose trovate che nessuna dichiarazione della fonte diceva.**
+
+1. **Il vuoto è uno ZERO**, non un dato mancante — fino al 94% di NaN su tre
+   colonne. Caricarle come mancanti non farebbe sparire dei cartellini:
+   farebbe sparire gli **zeri**, gonfiando ogni media. Dimostrato contro
+   football-data, non per argomento interno.
+2. **La fonte documenta male sé stessa.** Il foglio «Note» della Bundesliga
+   dichiara che i supplementari NON sono compresi nel Totale. È **falso**:
+   `1T+2T+Suppl = Totale` torna su 39/39 metriche, `1T+2T` su 8 e 7.
+3. **Le righe `Play-off` non sono campionato**: 6 partite di spareggio con club
+   di seconda divisione, assenti dagli snapshot. In Ligue 1 si **sovrappongono
+   per data** al campionato: solo la colonna `Fase` le separa.
+4. **Una partita è incompleta e sembra completa** (R6): Nantes-Toulouse
+   17/05/2026, il 2° tempo manca alla fonte e la riga `Totale` **coincide col
+   1° tempo** su tutte e 45 le metriche (146 passaggi, impossibili in 90').
+   ⚠️ football-data **concorda** con quei totali: non è un difetto di diretta,
+   e la causa **non è accertata** — la si dichiara invece di inventarla (R5).
+5. **`Risultato squadra` ed `Esito` sono di fine partita anche sulle righe di
+   periodo** (3.504/3.504 identici): la riga «1° tempo» porta il risultato
+   finale. Caso da manuale della R8 — e ne segue che **il punteggio
+   all'intervallo non è in questo dataset**.
+6. **Due tackle impossibili** (`riusciti` 4 > `totali` 3, `Tackles %` = 133) su
+   10.512 righe. Non corretti (R3), non nascosti (R4).
+
+**La lezione di metodo, e non è sui dati.** Dieci confutazioni su quattordici
+hanno trovato errori nei **rapporti**, non nei file — e il vizio è quasi sempre
+lo stesso: il **denominatore**. Denominatori che mescolano stagione regolare e
+play-off (618 = 612+6); un «100%» ottenuto confrontando qualcosa con sé stesso;
+un conteggio di *presenza del dato* presentato come verifica di un'identità; una
+tolleranza scelta dopo aver visto i dati. Il caso più istruttivo: un rapporto
+arbitrava le celle in cui diretta e football-data divergono usando come
+«testimone indipendente» la colonna `Parate` — che è **di diretta**. Il
+confutatore ha costruito il controllo negativo mancante (perturbare celle
+concordi con le stesse magnitudini) e ha misurato che quel testimone favorisce
+diretta nel **94,7%** dei casi anche quando l'avversario è indistinguibile per
+costruzione: il null non era 0,5 ma 0,947, e il p-value passava da 0,003 a 0,85.
+**Un arbitrato con un testimone della parte in causa non è un arbitrato.**
+
+**Cosa è entrato nel repo.** `src/data/team_stats.py` (caricatore con le guardie
+di copertura, `join_to_snapshot` che alza sulle orfane, `periodi_affiancati`,
+`team_form` R8-safe con `periodo=`), `scripts/registra_raccolta_squadra_diretta.py`
+(verifica **prima** di accettare), 5 raccolte in `files/diretta_{lega}_2526/`
+(604 KB in tutto), 18 alias italiani in `TEAM_ALIASES`, e
+`files/README_statistiche_squadra.md`. **28 test nuovi**. Sul solo ramo di lavoro la suite passava da **1.130 a 1.162**;
+dopo il merge con la sessione parallela (Fase 130) i verdi sono **1.163**. Il manifesto si chiama `manifesto_squadra.json` e non `manifesto.json`
+per una ragione misurata: `player_stats.raccolte()` cerca `manifesto.json`,
+quindi le cartelle con **solo** dati di squadra (Bundesliga e Ligue 1) restano
+invisibili a quel caricatore invece di farlo fallire su un file che non c'è —
+provato che il layout alternativo lo rompe (`2 passed, 15 errors`).
+
+**Cosa NON è stato fatto, e va detto.** Nessuna feature, nessun backtest,
+nessun modello li usa. E il limite vero non è la potenza ma la **profondità**:
+1.752 partite sono sopra le ~574 della Fase 98, ma sono **una stagione sola**,
+quindi un walk-forward multi-stagione non è possibile — la finestra di
+addestramento non esiste. Un risultato nullo sarà meno conclusivo di quanto
+sembri, e va detto **prima** del test.
+
+### 📐 Il modello in dettaglio
+
+Questa fase non introduce matematica di modello: introduce **due identità sui
+dati**, e la seconda è quella che rende utilizzabile lo split.
+
+**(1) Additività dei periodi.** Per ogni metrica di *conteggio* `m`, ogni
+squadra `s` e ogni partita `p`:
+
+```
+m(s, p, 1T) + m(s, p, 2T) [+ m(s, p, Suppl)] = m(s, p, Totale)
+```
+
+verificata in `scripts/registra_raccolta_squadra_diretta.py::verifica` (somma
+per `groupby(data, Squadra, Avversario)` su tutti i periodi ≠ Totale, confronto
+con tolleranza 0.005) e in `tests/test_team_stats.py::test_additivita_dei_periodi`.
+Esito: **137.124/137.124** celle, 0 violazioni.
+⚠️ Le 6 colonne percentuale **non** vi rientrano, e non per convenzione: sono
+rapporti (`% = riusciti/totali`) e medie (`Possesso`), per cui la somma non è
+definita. `COLONNE_NON_ADDITIVE` le elenca, e un test di **segno opposto**
+verifica che continuino a NON sommare — così nessuno «sistema» il primo test
+allargando l'elenco delle additive.
+⚠️ La tolleranza 0.005 non è scelta dopo aver visto i dati: è il mezzo passo
+dell'ultima cifra pubblicata dalla fonte (2 decimali su xG, xGOT, xA). Sui
+conteggi interi è irrilevante.
+
+**(2) Deduzione dei gol per periodo.** La fonte pubblica `Gol evitati`, che è
+definito come
+
+```
+Gol evitati(s, p, π) := xGOT affrontato(s, p, π) − gol subiti(s, p, π)
+```
+
+da cui, invertendo, la sola via per avere i gol di un periodo in un dataset che
+**non ha una colonna gol**:
+
+```
+gol subiti(s, p, π) = xGot affrontati(s, p, π) − Gol evitati(s, p, π)
+gol segnati(s, p, π) = gol subiti(avversario(s), p, π)
+```
+
+implementata in `src/data/team_stats.py::gol_dedotti`, con `round(0)`.
+
+*Perché lo scarto è a senso unico.* Un **autogol** è un gol subito che non nasce
+da un tiro dell'attaccante, quindi **non entra nell'xGOT** di chi ne beneficia:
+il termine `xGOT affrontato` non lo contiene, mentre `gol subiti` sì. Ne segue,
+per costruzione,
+
+```
+xGot affrontati − Gol evitati  =  gol subiti − autogol_a_favore  ≤  gol subiti
+```
+
+cioè la deduzione può solo **sottostimare**, mai sovrastimare. È una previsione
+falsificabile, non una giustificazione a posteriori: misurata contro
+`HTHG/HTAG` su 7.004 confronti (2 periodi × 3.502 lati), la distribuzione dello
+scarto è `{0: 6.872, −1: 131, −2: 1, +1: 0}`. **Nessun caso positivo su 7.004**,
+come l'identità impone. Il test
+`test_gol_dedotti_possono_solo_sottostimare` fissa proprio il segno, non il
+tasso: un tasso è un numero, un segno è una struttura.
+
+*Perché non è sempre un intero.* `Gol evitati` è pubblicato a 2 decimali, quindi
+la differenza eredita l'errore di arrotondamento di due quantità continue: su
+Cagliari-Udinese 09/05/2026 dà 2,07 invece di 2. L'arrotondamento assorbe, ma
+l'identità va dichiarata **approssimata**, non esatta.
+
+**(3) La forma sicura (R8).** `team_form` usa
+
+```
+forma(s, k) = media[ m(s, k−W) … m(s, k−1) ]      W = window, k−1 escluso l'oggi
+```
+
+realizzato come `groupby("Squadra")[cols].shift(1).rolling(W, min_periods=1).mean()`.
+Lo `shift(1)` **precede** il `rolling`: invertirli includerebbe la partita in
+corso, il numero resterebbe plausibile e il modello sarebbe inservibile. È il
+motivo per cui il test non confronta con un valore atteso ma con **entrambi** i
+candidati — la media su `0..k−1` e quella su `0..k` — e pretende che coincida
+con la prima **e differisca** dalla seconda.

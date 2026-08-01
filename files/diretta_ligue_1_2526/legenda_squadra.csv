@@ -1,0 +1,36 @@
+Gruppo sul sito,Statistica,Codice,Nota
+Statistiche Top,Goal previsti (xG),432,Valore assoluto
+Statistiche Top,Possesso palla,12,Percentuale 0-100; casa e trasferta sommano a 100.
+Statistiche Top,Tiri totali,34,Valore assoluto
+Statistiche Top,Tiri in porta,13,Valore assoluto
+Statistiche Top,Grandi occasioni,459,Valore assoluto
+Statistiche Top,Calci d'angolo,16,Valore assoluto
+Statistiche Top,Passaggi,342,"Sul sito è mostrata come ""% (riusciti/totali)"": nei file è divisa in tre colonne."
+Statistiche Top,Cartellini gialli,23,Valore assoluto
+Tiri,xG sui Tiri in porta (xGOT),499,Valore assoluto
+Tiri,Tiri fuori,14,Valore assoluto
+Tiri,Tiri fermati,158,Valore assoluto
+Tiri,Tiri dall'area di rigore,461,Valore assoluto
+Tiri,Tiri da fuori area,463,Valore assoluto
+Tiri,Pali colpiti,457,Valore assoluto
+Attacco,Palloni toccati nell'area avversaria,471,Valore assoluto
+Attacco,Passaggi filtranti riusciti,521,Valore assoluto
+Attacco,Fuorigioco,17,Valore assoluto
+Attacco,Punizioni,15,Valore assoluto
+Passaggi,Passaggi lunghi,517,"Sul sito è mostrata come ""% (riusciti/totali)"": nei file è divisa in tre colonne."
+Passaggi,Passaggi offensivi,467,"Sul sito è mostrata come ""% (riusciti/totali)"": nei file è divisa in tre colonne."
+Passaggi,Cross,433,"Sul sito è mostrata come ""% (riusciti/totali)"": nei file è divisa in tre colonne."
+Passaggi,Assist previsti (xA),503,Valore assoluto
+Passaggi,Rimesse Laterali,18,Valore assoluto
+Difesa,Falli,21,Valore assoluto
+Difesa,Tackles,475,"Sul sito è mostrata come ""% (riusciti/totali)"": nei file è divisa in tre colonne."
+Difesa,Contrasti vinti,513,Valore assoluto
+Difesa,Respinte difensive,479,Valore assoluto
+Difesa,Palle intercettate,434,Valore assoluto
+Difesa,Errori che hanno portato al tiro,507,Valore assoluto
+Difesa,Errori che hanno portato al gol,509,Valore assoluto
+Portiere,Parate,19,Valore assoluto
+Portiere,xGot affrontati,501,Valore assoluto
+Portiere,Gol evitati,511,Valore assoluto
+Altro,Cartellini rossi,22,Valore assoluto
+Altro,Gol di testa,465,Valore assoluto

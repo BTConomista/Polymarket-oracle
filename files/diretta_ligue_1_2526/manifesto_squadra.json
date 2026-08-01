@@ -1,0 +1,29 @@
+{
+  "lega": "ligue_1",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 1860,
+  "righe_campionato": 1836,
+  "righe_playoff": 24,
+  "team_partita_attesi": 612,
+  "partite_attese": 306,
+  "squadre": 18,
+  "periodi": [
+    "1° tempo",
+    "2° tempo",
+    "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-17",
+  "join_snapshot": "612/612",
+  "risultato_coerente": "612/612",
+  "snapshot_verificato": true,
+  "additivita_periodi": "24180/24180",
+  "partite_playoff": [
+    "12.05.2026 Red Star-Rodez",
+    "15.05.2026 St. Etienne-Rodez",
+    "26.05.2026 St. Etienne-Nice",
+    "29.05.2026 Nice-St. Etienne"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "lega": "la_liga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 2280,
+  "righe_campionato": 2280,
+  "righe_playoff": 0,
+  "team_partita_attesi": 760,
+  "partite_attese": 380,
+  "squadre": 20,
+  "periodi": [
+    "1° tempo",
+    "2° tempo",
+    "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-24",
+  "join_snapshot": "760/760",
+  "risultato_coerente": "760/760",
+  "snapshot_verificato": true,
+  "additivita_periodi": "29640/29640",
+  "partite_playoff": []
+}

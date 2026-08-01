@@ -1,0 +1,9 @@
+Fonte,diretta.it (Flashscore) — Serie A 2025/2026
+Contenuto,"Statistiche di SQUADRA di ogni partita, in tre periodi: Totale, 1° tempo, 2° tempo"
+Partite,380 — copertura completa
+"Righe foglio ""Per squadra""",2280 = 380 partite x 2 squadre x 3 periodi
+"Righe foglio ""Per partita""",1140 = 380 partite x 3 periodi
+Statistiche,"35 metriche; le 5 mostrate sul sito come ""% (riusciti/totali)"" sono divise in tre colonne"
+Verifica,1° tempo + 2° tempo = Totale su tutte le metriche additive; possesso palla casa+trasferta = 100% in ogni periodo
+,
+"Nota: queste sono statistiche di squadra, diverse e indipendenti dai file per giocatore consegnati in precedenza.",

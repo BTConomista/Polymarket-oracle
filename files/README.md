@@ -27,6 +27,17 @@ rete). Contenuto:
 
 | `diretta_serie_a_2526/` | ⭐ **il primo dato "Tier B" del progetto**: **97 statistiche per giocatore-partita** (tocchi, passaggi, dribbling, contrasti, recuperi, falli individuali, xG/xA individuali), Serie A 2025-26, **11.894 righe** su 379/380 partite. Fonte **diretta.it/Flashscore**, dato a monte di **Opta**, raccolto **a mano** dall'utente il 31/07/2026. ⚠️ **Il progetto non rivendica alcuna licenza su questi dati**: leggere `diretta_serie_a_2526/README.md` §1-bis prima di usarli o ridistribuirli | **nessuno** (inseriti il 31/07/2026, nessun codice li legge ancora) |
 
+
+| `diretta_{lega}_2526/squadra_per_partita.csv.gz` (×5) | ⭐ **il primo dato che separa i due tempi**: **45 statistiche per squadra-partita in tre periodi** (Totale / 1° tempo / 2° tempo), tutte e 5 le leghe 2025-26, **10.512 righe** su 1.752 partite di campionato. Stessa fonte **diretta.it/Flashscore** (dato a monte Opta), raccolta **a mano** dall'utente il 01/08/2026. ⚠️ **Il progetto non rivendica alcuna licenza**: leggere `README_statistiche_squadra.md` prima di usarli o ridistribuirli | `src/data/team_stats.py` (nessun modello li usa ancora) |
+
+> ⚠️ Nelle cartelle `diretta_*` convivono **due dataset diversi**: quello per
+> **giocatore** (`partita_per_partita.csv.gz` + `manifesto.json`) e quello per
+> **squadra** (`squadra_per_partita.csv.gz` + `manifesto_squadra.json`). I due
+> manifesti hanno nomi diversi apposta: ogni caricatore scopre le raccolte
+> cercando il proprio, così le cartelle di **Bundesliga e Ligue 1** — che hanno
+> solo il dato di squadra — restano invisibili a `player_stats` invece di farlo
+> fallire su un file che non c'è. Un test lo verifica.
+
 **Chi li legge** (`grep` su `scripts/` e `src/`): 10 script —
 `build_league_snapshot.py`, `_run_ah_benchmark.py`, `_run_counts_nb.py`,
 `_run_fase53_crossleague.py`, `_run_fase73_ou_close_disp.py`,
