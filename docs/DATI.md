@@ -68,7 +68,7 @@ Premier e Liga avevano le 5 colonne `*_open` in posizione 15-19 e la Serie A in
 29-33. Riordinate; e ora lo verifica `test_schema_identico_tra_leghe`.
 
 Chiave di partita in tutto il progetto: `(season, home_team, away_team)`, nomi
-squadra canonicalizzati via `sources.TEAM_ALIASES` (**250** alias, di cui 104 per
+squadra canonicalizzati via `sources.TEAM_ALIASES` (**265** alias, di cui 104 per
 le due leghe nuove, verificati per identità). Gli ultimi **9** sono quelli di
 **Smarkets** (Fase 128, passo P1 del test prospettico): la borsa da cui arrivano
 quote e fixture 2026-27 scrive `Köln`, `Málaga`, `PSG`, `Man Utd`,
@@ -78,6 +78,18 @@ dai file di seconda divisione dello stesso provider**, non dedotti (R5).
 ⚠️ Vanno **riverificati** al primo file 2627 vero: se football-data usasse una
 grafia diversa da quella dei suoi file di seconda divisione, il join dei
 risultati salterebbe in silenzio.
+
+⚠️ **Gli alias di Smarkets sono DOPPI, e apposta** (Fase 130). Fra il 30 e il
+31/07/2026 la borsa ha rinominato **40 eventi su 49**, passando dai nomi
+formali (`AS Roma vs ACF Fiorentina`) a quelli brevi (`Roma vs Fiorentina`).
+`TEAM_ALIASES` copre **entrambe** le convenzioni: inseguire l'ultima
+significherebbe accorgersi del cambio la volta in cui è troppo tardi — e il
+momento in cui il join deve funzionare è l'ora prima del calcio d'inizio.
+La chiave **stabile** resta però `event_id`, non il nome: gli alias sono la
+seconda linea. Un test (`test_ogni_nome_mai_visto_nell_archivio_si_aggancia`)
+enumera **tutti** i nomi mai comparsi nell'archivio a ogni esecuzione della
+suite, così il prossimo rinominamento rompe i test e non la raccolta.
+
 
 ### Le 38 colonne, per gruppo
 

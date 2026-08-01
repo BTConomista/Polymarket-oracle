@@ -407,6 +407,37 @@ TEAM_ALIASES: dict[str, str] = {
     "SV Elversberg": "Elversberg",     # D2 2025-26
     "Racing Santander": "Santander",   # SP2 2025-26
     "Le Mans FC": "Le Mans",           # F2 2025-26
+    # --- Smarkets, forme LUNGHE (Fase 130). Fra il 30 e il 31/07/2026 la borsa
+    # ha rinominato **40 eventi su 49** in un colpo, passando dai nomi formali
+    # ("AS Roma vs ACF Fiorentina") a quelli brevi ("Roma vs Fiorentina").
+    # Le voci qui sopra coprono la convenzione NUOVA; queste coprono la VECCHIA.
+    #
+    # Perche' si tengono entrambe invece di inseguire l'ultima: la borsa ha
+    # cambiato convenzione una volta in quattro giorni, e il momento in cui il
+    # join DEVE funzionare e' l'ora prima del calcio d'inizio, quando nessuno
+    # sta guardando. Un alias in piu' non costa nulla; un nome non agganciato
+    # all'ora X e' la partita persa. Enumerate su TUTTI i 160 nomi distinti mai
+    # comparsi nell'archivio, non su quelli di oggi -- e un test lo rifa' a
+    # ogni esecuzione della suite.
+    #
+    # ⚠️ La chiave STABILE resta `event_id`, non il nome: gli alias sono la
+    # seconda linea, non la prima (vedi `prospettico_2026_27_m1.csv`, che
+    # l'event_id lo porta con se').
+    "Inter Milano": "Inter",
+    "Juventus Turin": "Juventus",
+    "Lazio Rome": "Lazio",
+    "Parma Calcio": "Parma",
+    "FSV Mainz": "Mainz",
+    "SV 07 Elversberg": "Elversberg",
+    "Deportivo Alaves": "Alaves",
+    "Malaga CF": "Malaga",
+    "RC Deportivo De La Coruna": "La Coruna",
+    "AC Le Havre": "Le Havre",
+    "ES Troyes AC": "Troyes",
+    "Stade Brest 29": "Brest",
+    "Strasbourg Alsace": "Strasbourg",
+    "Coventry City": "Coventry",
+    "Hull City": "Hull",
 }
 
 

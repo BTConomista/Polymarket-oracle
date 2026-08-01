@@ -392,6 +392,28 @@ traccia.
 5. **Quante ipotesi**: si dichiara il numero di confronti; l'1X2 pooled è il
    primario, il resto è **esplorativo** e va scritto che lo è.
 6. **Niente ROI**: il progetto non simula denaro.
+7. **Quale prezzo è usabile per il M2** (aggiunto il 01/08, Fase 130 — prima di
+   sapere quali partite ne beneficiano). Il prezzo che usiamo è il **punto
+   medio** fra banco e puntatore, e vale come prezzo **solo se il libro è
+   stretto**: a 15-27 giorni dal fischio lo spread mediano dell'1X2 è **8 punti
+   percentuali**, e in un caso (Angers–Lille, 01/08) banco e puntatore stavano
+   a **15.6% e 55.6%** — un "medio" del 35.6% che non è il prezzo di niente.
+   Regola dichiarata:
+   - si calcola il M2 per **ogni** partita con libro a **due lati** su 1X2 e
+     O/U 2.5, e si **registra lo spread** di ogni contratto;
+   - l'**analisi primaria** usa solo le partite con spread **≤ 5pp su tutti**
+     i contratti che entrano nell'inversione; le altre sono **secondarie** e
+     vanno riportate separatamente, mai mescolate;
+   - una partita senza libro a due lati al momento della chiusura **non ha
+     M2**, e viene scorata **solo M1** — dichiarandolo nel conteggio, non
+     lasciandola sparire (R6).
+
+   ⚠️ Il perimetro non è uniforme fra leghe, ed è **misurato**: spread mediano
+   1X2 a 15-27 giorni — Premier **0.010**, Liga 0.031, Serie A 0.031,
+   Ligue 1 0.056, **Bundesliga 0.104**. Lo stesso ordinamento per liquidità
+   della Fase 53. Se il libro non si stringesse a ridosso del fischio, il M2
+   sarebbe di fatto un test su Premier/Liga/Serie A: è una **verifica da fare**
+   al primo turno, non un'assunzione.
 
 #### Decisioni aperte (non tecniche: vanno prese, non risolte)
 

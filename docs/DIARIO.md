@@ -14608,3 +14608,114 @@ mentre la domanda giusta era **da cosa dipende ciò che congelo**: la risposta
 (solo da dati fermi a maggio) rendeva la scadenza aggirabile in un pomeriggio.
 E il corollario: **il codice che gira una volta sola va fatto girare due
 volte** — la prima a vuoto, su dati finti, e prima che serva.
+
+---
+
+## Fase 130 — Le quote si muovono? Quasi no. E il movimento più grande era un libro rotto
+
+**Obiettivo.** Rispondere a una domanda diretta dell'utente — «stiamo davvero
+raccogliendo le quote, e vediamo come cambiano nei giorni?» — guardando
+l'archivio invece di fidarsi del fatto che il workflow sia verde.
+
+**Risposta breve: sì raccogliamo, no non si muovono (ancora).** Otto file dal
+28/07 al 01/08, 48 partite, 3 mercati (1X2, O/U 2.5, GG/NG). Sui 144 contratti
+1X2 seguiti su ≥2 giorni il movimento mediano è **0.30 punti percentuali**, e
+il **70% è fermo sotto 0.5pp**. Fra il 28 e il 30 luglio parecchi libri sono
+identici **alla quinta cifra**: in off-season profonda nessuno scambia.
+
+**Ma la prima misura era sbagliata, e il modo in cui lo era conta.** Chiave
+iniziale: il *nome* della partita. Risultato: 233 serie invece di 144, perché
+**Smarkets ha rinominato 40 eventi su 49** fra il 30 e il 31 luglio — da nomi
+formali (`AS Roma vs ACF Fiorentina`) a nomi brevi (`Roma vs Fiorentina`),
+un cambio di convenzione in blocco. Rifatto su `event_id`, che non cambia.
+
+Due conseguenze operative:
+- **la chiave stabile è `event_id`**, e il congelato del M1 la porta con sé;
+- **gli alias vanno tenuti su ENTRAMBE le convenzioni.** Dei 160 nomi distinti
+  mai comparsi nell'archivio, **15 non si agganciavano** — tutti della forma
+  lunga (`Inter Milano`, `Juventus Turin`, `Malaga CF`, `Hull City`…). Oggi
+  innocuo, perché la borsa usa i brevi; ma la borsa ha cambiato convenzione
+  **una volta in quattro giorni**, e il momento in cui il join deve funzionare
+  è l'ora prima del fischio, quando nessuno guarda. Aggiunti tutti e 15, senza
+  togliere i nuovi. E un test enumera **tutti** i nomi dell'archivio a ogni
+  esecuzione della suite: il giorno del prossimo rinominamento si rompe la
+  suite, non il test prospettico.
+
+**Il movimento più grande non era informazione.** Angers–Lille, vittoria
+Angers: da 16.7% a 35.6%, **+18.9pp** — dieci volte il secondo. Guardando il
+libro invece del solo punto medio: il 01/08 il banco stava a **0.1562** e il
+puntatore a **0.5556**. Uno spread di **40 punti percentuali**: il "medio" del
+35.6% non è il prezzo di niente, è la metà di un intervallo vuoto.
+
+**Da lì, la misura che serviva davvero: quanto è usabile il libro.** Sul file
+del 01/08 (partite a 15-27 giorni dal fischio):
+
+| statistica | valore |
+|---|--:|
+| righe con libro a **due lati** | 277/336 (**82%**) |
+| spread **mediano** | **0.082** |
+| righe con spread > 10pp | 44 (16%) |
+| partite con 1X2 completo e spread ≤5pp **su tutti e tre** | **28/48** |
+
+E non è uniforme fra leghe — spread mediano 1X2:
+
+```
+premier_league  0.010     la_liga  0.031     serie_a  0.031
+ligue_1         0.056     bundesliga  0.104
+```
+
+Lo **stesso ordinamento per liquidità** della Fase 53, misurato su una fonte
+diversa e a otto anni di distanza.
+
+**Cosa ne consegue per il Modello 2** — e va fissato **ora**, prima di sapere
+quali partite ne beneficiano, altrimenti la soglia la sceglie il risultato:
+- M2 calcolato per ogni partita con libro a due lati, **registrando lo spread**
+  di ogni contratto;
+- **analisi primaria** solo sulle partite con spread ≤5pp su tutti i contratti
+  che entrano nell'inversione; le altre **secondarie**, riportate a parte;
+- partita senza libro a due lati alla chiusura → **niente M2**, scorata solo
+  M1, **dichiarandolo** nel conteggio (R6).
+
+⚠️ Tutto questo è misurato **oggi**, a 15-27 giorni dal fischio. Che il libro
+si stringa a ridosso del calcio d'inizio è **plausibile e non verificato**: è
+una verifica da fare al primo turno, non un'assunzione. Se non si stringesse,
+il M2 sarebbe di fatto un test su Premier, Liga e Serie A.
+
+**📐 Il modello in dettaglio.** Nessun modello nuovo: due definizioni e una
+soglia, che però decidono quali dati entrano.
+
+Dal libro degli ordini (`fetch_smarkets_outrights.book_price`, riusato dal
+raccoglitore per-partita), con `b` = miglior banco e `a` = miglior puntatore,
+entrambi **probabilità** 0-1:
+
+```
+p_mid    = (b + a) / 2          definito solo se esistono ENTRAMBI i lati
+spread   = a − b
+```
+
+Il punto medio è uno stimatore del prezzo "vero" con errore limitato da metà
+spread:
+
+```
+|p_mid − p_vero|  ≤  spread / 2
+```
+
+Da cui la soglia dichiarata: `spread ≤ 0.05` implica un errore ≤ **2.5pp** su
+ciascuna probabilità. Non è una costante universale — è il livello sotto il
+quale l'incertezza del prezzo resta più piccola degli effetti che il progetto
+misura (il gap col mercato sull'1X2 vale 0.0167 di log-loss, e le correzioni
+del router il terzo decimale). Sopra i 5pp l'incertezza del *dato* supererebbe
+l'effetto *studiato*, e il confronto misurerebbe il libro, non il modello.
+
+Sul caso Angers: `b = 0.1562`, `a = 0.5556` → `spread = 0.3994`, cioè un
+errore possibile di **±20pp** su una probabilità del 35.6%. Il numero esiste;
+il prezzo no.
+
+**Lezione.** *Il movimento più grande in una serie storica di prezzi è quasi
+sempre un difetto della serie, non un evento del mondo.* La cosa giusta da
+guardare per prima non era la variazione ma il **libro che la produce** — e la
+stessa colonna che rendeva sospetto il caso singolo (lo spread) è quella che
+poi ha dato la regola generale. Corollario metodologico: **quando una fonte
+esterna cambia una convenzione, la difesa non è inseguirla ma tenere entrambe
+le versioni e mettere un test che enumera tutto lo storico** — inseguire
+significa accorgersene la volta in cui è troppo tardi.

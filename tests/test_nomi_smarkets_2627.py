@@ -83,6 +83,47 @@ def test_la_riconciliazione_torna_su_tutte_e_cinque_le_leghe():
             f"{len(e['uscite_dalla_lega'])} uscite")
 
 
+def test_ogni_nome_mai_visto_nell_archivio_si_aggancia():
+    """La guardia che si mantiene da sola.
+
+    Fra il 30 e il 31/07/2026 Smarkets ha rinominato **40 eventi su 49** in un
+    colpo (da "AS Roma vs ACF Fiorentina" a "Roma vs Fiorentina"): una
+    convenzione cambiata in blocco, senza preavviso. Questo test non guarda i
+    nomi di oggi ma **tutti** quelli mai comparsi nell'archivio, quindi:
+
+      - il giorno in cui la borsa rinomina di nuovo, la suite si rompe alla
+        prima esecuzione dopo la raccolta -- cioe' **prima** del calcio
+        d'inizio, non durante;
+      - e se tornasse alla convenzione vecchia, resta agganciata lo stesso.
+
+    E' la seconda linea di difesa: la prima e' `event_id`, che non cambia."""
+    import json
+
+    archivio = sorted((ROOT / "data" / "smarkets_matches").glob("*.json"))
+    if not archivio:                                      # pragma: no cover
+        pytest.skip("archivio vuoto")
+
+    per_lega: dict[str, set[str]] = {}
+    for f in archivio:
+        for r in json.loads(f.read_text(encoding="utf-8"))["righe"]:
+            casa, ospite = r["partita"].split(" vs ")
+            per_lega.setdefault(r["lega"], set()).update([casa, ospite])
+
+    from _run_fase128_nomi_2627 import ESORDIENTI
+    import pandas as pd
+
+    orfani = []
+    for lega, nomi in sorted(per_lega.items()):
+        df = pd.read_csv(ROOT / "data" / f"{lega}_matches.csv")
+        canonici = set(df.home_team) | set(df.away_team) | set(ESORDIENTI.get(lega, {}))
+        orfani += [(lega, n) for n in sorted(nomi)
+                   if canonical_team(n) not in canonici]
+    assert not orfani, (
+        f"{len(orfani)} nomi Smarkets non agganciati: {orfani}. "
+        "Probabile rinominamento a monte: aggiungerli a TEAM_ALIASES SENZA "
+        "togliere i vecchi (la borsa puo' tornare indietro).")
+
+
 def test_le_neopromosse_2627_sono_quattordici():
     """Il numero e' un fatto misurato, non una scelta: 3 per lega tranne la
     Ligue 1 (2). Se cambiasse senza che nessuno l'abbia deciso, vuol dire che
