@@ -14,6 +14,7 @@ un formato di lavoro. Questo script ne estrae le tappe in un CSV compresso
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -26,6 +27,25 @@ ESITI = W.OUT_DIR / "esiti.jsonl"
 TAPPE = W.OUT_DIR / "tappe.csv.gz"
 RIEPILOGO = W.OUT_DIR / "esiti_riepilogo.csv"
 VERDETTI = W.OUT_DIR / "verdetti_wikidata.csv.gz"
+
+
+def _scrivi_atomico(df: pd.DataFrame, destinazione: Path, **kw) -> None:
+    """Scrive su un temporaneo e poi rinomina: `os.replace` e' ATOMICO su POSIX.
+
+    Serve davvero, non e' prudenza teorica. La raccolta chiama questo export
+    ogni 500 giocatori mentre gira, quindi un lettore concorrente — un
+    backtest, `load_wikipedia_careers`, la suite di test — puo' aprire il
+    `.csv.gz` a meta' scrittura e trovarci un gzip troncato. E' gia' successo:
+    `EOFError` in `gzip.py` durante `pytest`, con il file perfettamente integro
+    un secondo dopo.
+
+    E' il caso peggiore di tutti, perche' NON e' riproducibile: dipende da
+    quando cade la lettura. Con la rinomina atomica il lettore vede o la
+    versione vecchia intera o quella nuova intera, mai niente in mezzo.
+    """
+    tmp = destinazione.with_suffix(destinazione.suffix + ".tmp")
+    df.to_csv(tmp, **kw)
+    os.replace(tmp, destinazione)
 
 
 def _verdetti() -> dict[int, dict]:
@@ -124,9 +144,9 @@ def main() -> int:
             print(f"⚠️  {int(rovesciate.sum())} tappe con anno di fine PRIMA dell'inizio "
                   "(refusi della fonte): la fine viene azzerata, non invertita")
             df.loc[rovesciate, "anno_a"] = pd.NA
-    df.to_csv(TAPPE, index=False, compression="gzip")
+    _scrivi_atomico(df, TAPPE, index=False, compression="gzip")
     ri = pd.DataFrame(esiti)
-    ri.to_csv(RIEPILOGO, index=False)
+    _scrivi_atomico(ri, RIEPILOGO, index=False)
 
     print(f"tappe:     {len(df):,} righe -> {TAPPE} ({TAPPE.stat().st_size/1e6:.1f} MB)")
     print(f"esiti:     {len(ri):,} giocatori tentati -> {RIEPILOGO}")
