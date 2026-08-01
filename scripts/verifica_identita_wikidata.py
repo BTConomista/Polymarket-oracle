@@ -85,6 +85,19 @@ def _versa() -> None:
     # l'ultimo verdetto per giocatore vince: se lo script e' stato rilanciato
     # dopo una correzione del parser, la riga buona e' la piu' recente
     df = df.drop_duplicates(subset="player_id", keep="last")
+
+    # La FORMA della discrepanza e il verdetto congiunto. Si calcolano qui e non
+    # nel loop perche' non costano rete: chi ha gia' il .jsonl li ottiene senza
+    # ri-scaricare niente, e una revisione della regola non richiede una nuova
+    # raccolta. Il *come* separa meglio del *quanto* (vedi il modulo).
+    df["forma"] = [
+        WD.forma_discrepanza(a, b)
+        for a, b in zip(df.get("nascita_wikidata"), df.get("nascita_attesa"))
+    ]
+    df["persona_diversa"] = [
+        WD.persona_diversa(f, s if pd.notna(s) else None)
+        for f, s in zip(df["forma"], df.get("scarto_giorni"))
+    ]
     df.sort_values("player_id").to_csv(DELIVERABLE, index=False, compression="gzip")
 
 

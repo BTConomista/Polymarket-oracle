@@ -265,6 +265,85 @@ class Verdetto:
     militanze: list[Militanza] = field(default_factory=list)
 
 
+# --------------------------------------------------------------------------
+# La FORMA della discrepanza — il discriminante vero
+# --------------------------------------------------------------------------
+# Misurato sui 325 casi smentiti del 01/08/2026: il *quanto* (giorni di scarto)
+# separa molto peggio del *come*. Uno scarto di 2.191 giorni che conserva giorno
+# e mese e' un refuso sull'anno; uno scarto di 61 giorni che non conserva niente
+# puo' essere un'altra persona. La mediana per ramo lo dice gia' (quarantena 31
+# gg, respinta 3.840 gg) ma la forma lo dice meglio, ed e' interpretabile.
+#
+# In particolare «stesso giorno+mese, anno diverso» NON e' il padre: 8 casi su
+# 10 sono a ±1 anno esatto (365/366 gg), e nessun padre nasce nello stesso
+# giorno e mese del figlio esattamente un anno prima. E' un refuso sull'anno —
+# o una disputa d'eta' documentata, come per Chancel Mbemba (1988 vs 1994).
+
+FORME_STRUTTURATE = frozenset({
+    "scambio_giorno_mese", "stesso_giorno_mese_anno_diverso",
+    "stesso_anno_giorno_diverso", "stesso_anno_mese_diverso",
+    "stesso_anno_resto_diverso",
+})
+
+
+def forma_discrepanza(a: str | None, b: str | None) -> str:
+    """Come differiscono due date di nascita: la *struttura*, non la distanza.
+
+    `senza_struttura` (nessuna componente in comune) e' la firma di una persona
+    diversa: vale il 86% delle respinte e il 7% delle quarantene. Tutte le altre
+    forme conservano almeno una componente e sono firme di **refuso**.
+    """
+    # `not a` NON basta: un NaN di pandas è un float ed è **truthy**, quindi
+    # passerebbe la guardia e arriverebbe a `a[:10]` come TypeError. La guardia
+    # deve stare qui e non nel chiamante: è la funzione a sapere cosa accetta.
+    if not isinstance(a, str) or not isinstance(b, str) or not a or not b:
+        return "non_confrontabile"
+    try:
+        ya, ma, da_ = a[:10].split("-")
+        yb, mb, db = b[:10].split("-")
+    except ValueError:
+        return "non_confrontabile"
+    if (ya, ma, da_) == (yb, mb, db):
+        return "identica"
+    if ya == yb and ma == db and da_ == mb:
+        return "scambio_giorno_mese"          # 07/06 contro 06/07: formato data
+    if ya != yb and ma == mb and da_ == db:
+        return "stesso_giorno_mese_anno_diverso"
+    if ya == yb and ma == mb:
+        return "stesso_anno_mese_diverso"     # cambia solo il giorno
+    if ya == yb and da_ == db:
+        return "stesso_anno_giorno_diverso"   # cambia solo il mese
+    if ya == yb:
+        return "stesso_anno_resto_diverso"
+    if ma == db and da_ == mb:
+        return "scambio_giorno_mese"          # scambio + anno diverso
+    return "senza_struttura"
+
+
+# Soglia oltre la quale una discrepanza SENZA STRUTTURA non è più spiegabile
+# come dato sporco. Tre anni: sotto, la distribuzione ha ancora coda di refusi
+# (Wilchez 791 gg, Jallow 514 gg); sopra, i casi sono padri e omonimi
+# (Olaizola 13.621, Lazaridis 6.484, Nilson Júnior 5.736, Bruno Alves 3.116).
+# Il valore cade nel *ventre vuoto* della distribuzione bimodale: la fascia
+# 1-3 anni conta 11 casi su 325, contro 166 sotto l'anno e 148 sopra i tre.
+SOGLIA_PERSONA_DIVERSA = 3 * 366
+
+
+def persona_diversa(forma: str, scarto_giorni: int | None) -> bool:
+    """True solo dove l'evidenza regge da sola: forma senza struttura **e**
+    scarto oltre i tre anni.
+
+    Congiunzione, non disgiunzione. Ognuno dei due criteri da solo sbaglia in
+    una direzione diversa e nota:
+      * solo lo scarto → toglie Chancel Mbemba (2.191 gg, ma stesso giorno e
+        mese: disputa d'eta' documentata sulla **stessa** persona);
+      * solo la forma → toglie cinque giocatori con discrepanze sotto i due
+        anni che sono compatibili con dato sporco.
+    """
+    return forma == "senza_struttura" and bool(
+        scarto_giorni and scarto_giorni > SOGLIA_PERSONA_DIVERSA)
+
+
 def _giorni(a: str, b: str) -> int | None:
     import datetime as dt
     try:

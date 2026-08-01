@@ -187,3 +187,56 @@ def test_qid_malformato_non_va_in_rete(monkeypatch):
     monkeypatch.setattr(WD.urllib.request, "urlopen", _boom)
     assert WD.fetch_entity("", use_cache=False) is None
     assert WD.fetch_entity("12345", use_cache=False) is None
+
+
+# ------------------------------------------------- forma della discrepanza
+
+def test_forma_identica():
+    assert WD.forma_discrepanza("1994-01-28", "1994-01-28") == "identica"
+
+
+def test_forma_scambio_giorno_mese():
+    """Germán Lux: 1982-06-07 contro 1982-07-06. È il formato data, non una persona."""
+    assert WD.forma_discrepanza("1982-06-07", "1982-07-06") == "scambio_giorno_mese"
+
+
+def test_forma_stesso_giorno_mese_anno_diverso():
+    assert WD.forma_discrepanza("1988-08-08", "1994-08-08") == \
+        "stesso_giorno_mese_anno_diverso"
+
+
+def test_forma_senza_struttura():
+    assert WD.forma_discrepanza("1969-11-28", "2007-03-15") == "senza_struttura"
+
+
+def test_forma_non_confrontabile():
+    assert WD.forma_discrepanza(None, "1994-01-28") == "non_confrontabile"
+    assert WD.forma_discrepanza("boh", "1994-01-28") == "non_confrontabile"
+
+
+def test_persona_diversa_richiede_ENTRAMBI_i_criteri():
+    """È una congiunzione. Ognuno dei due criteri da solo sbaglia, e sappiamo come.
+
+    Mbemba ha 2.191 giorni di scarto — oltre soglia — ma conserva giorno e mese:
+    è una disputa d'età sulla stessa persona. Il solo scarto lo toglierebbe.
+    """
+    assert WD.persona_diversa("senza_struttura", 13_621)          # Olaizola
+    assert not WD.persona_diversa("stesso_giorno_mese_anno_diverso", 2_191)  # Mbemba
+    assert not WD.persona_diversa("senza_struttura", 791)         # Wilchez
+    assert not WD.persona_diversa("senza_struttura", None)
+
+
+def test_soglia_cade_nel_ventre_della_bimodale():
+    """La soglia non è tonda per estetica: 1-3 anni conta 11 casi su 325."""
+    assert 366 < WD.SOGLIA_PERSONA_DIVERSA <= 4 * 366
+
+
+def test_forma_regge_il_nan_di_pandas():
+    """Un NaN è un float ed è **truthy**: `not a` non lo ferma.
+
+    La guardia va nella funzione, non nel chiamante — altrimenti ogni nuovo
+    consumatore deve ricordarsene, e prima o poi non se ne ricorda.
+    """
+    nan = float("nan")
+    assert WD.forma_discrepanza(nan, "1994-01-28") == "non_confrontabile"
+    assert WD.forma_discrepanza("1994-01-28", nan) == "non_confrontabile"
