@@ -68,7 +68,28 @@ ALIAS: dict[str, str] = {
     "Zenit Saint Petersburg": "AO FK Zenit Sankt-Peterburg",
     "SC Freiburg II": "SC Freiburg",          # riserve → prima squadra
     "Bayern Munich II": "Bayern Munich",
+    # --- FALSI POSITIVI trovati dall'audit del 01/08/2026. Erano il difetto
+    # peggiore dell'aggancio, perche' uscivano etichettati «univoco»: non un
+    # mancato aggancio, ma una CERTEZZA sbagliata (regola R6).
+    "Brest": "Stade Brestois 29",       # andava alla Dynamo Brest (Bielorussia):
+                                        # 0/108 conferme contro lo strato 1, 80/108
+                                        # col club giusto
+    "PAOK": "Panthessalonikios Athlitikos Omilos Konstantinoupoliton",
+                                        # andava al PAOK Kristonis (dilettanti), che
+                                        # in `appearances` non compare MAI: 0/50
+    "AEK Athens": "Athlitiki Enosi Konstantinoupoleos",   # 41/41 conferme
 }
+
+# Nomi che NON vanno agganciati: sono squadre RISERVE, che nel nostro dataset in
+# larga parte non esistono. Agganciarle alla prima squadra e' peggio di lasciarle
+# vuote — attribuisce presenze di terza divisione al club maggiore. `normalizza`
+# torna un frozenset, quindi «Bilbao Athletic» e «Athletic Bilbao» collassano
+# sullo stesso insieme: senza questo elenco l'ordine dei token non protegge.
+NON_AGGANCIARE: frozenset[str] = frozenset({
+    "bilbao athletic", "real madrid castilla", "barcelona atletic",
+    "barcelona b", "real madrid b", "atletico madrid b", "sevilla atletico",
+    "villarreal b", "celta b", "athletic bilbao b",
+})
 
 
 def normalizza(nome: str) -> frozenset[str]:
@@ -105,6 +126,8 @@ class Agganciatore:
 
     def candidati(self, nome: str) -> list[int]:
         """I `club_id` compatibili. Lista vuota = nessuno; >1 = ambiguo."""
+        if isinstance(nome, str) and nome.strip().lower() in NON_AGGANCIARE:
+            return []
         ts = normalizza(nome)
         ts = self._alias.get(ts, ts)
         if not ts or not all(t in self._inverso for t in ts):

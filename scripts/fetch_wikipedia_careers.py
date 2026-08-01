@@ -65,6 +65,22 @@ def elenco_giocatori(solo_popolazione: bool) -> pd.DataFrame:
     players["nostro"] = players["player_id"].isin(pop)
     players["censurato"] = players["prima_presenza"] <= C.CENSORING_CUTOFF
 
+    # I CLUB realmente giocati, per la verifica d'identita' (ramo 2/3 della
+    # regola gerarchica). Vengono dallo strato 1, che e' su player_id e quindi
+    # non puo' essere contaminato dall'omonimia.
+    from src.data import club_matching  # noqa: E402
+
+    nomi_club = pd.read_csv(
+        W.ROOT / "files" / "player_scores" / "club_names.csv.gz",
+        usecols=["club_id", "name"],
+    ).set_index("club_id")["name"]
+    club_per_gioc = (
+        app.assign(nome_club=app["player_club_id"].map(nomi_club))
+        .dropna(subset=["nome_club"])
+        .groupby("player_id")["nome_club"].apply(set)
+    )
+    players["club_noti"] = players["player_id"].map(club_per_gioc)
+
     if solo_popolazione:
         players = players[players["nostro"]]
 
@@ -79,16 +95,37 @@ def elenco_giocatori(solo_popolazione: bool) -> pd.DataFrame:
     ).reset_index(drop=True)
 
 
+# Esiti DEFINITIVI: non ha senso ritentarli, la risposta non cambiera'.
+# `errore` NON e' fra questi: e' quasi sempre un problema di rete transitorio
+# (304 "Connection refused" su 22.254 tentativi il 01/08/2026), e trattarlo come
+# definitivo significherebbe perdere quei giocatori per sempre — un buco creato
+# da noi, non dalla fonte.
+STATI_DEFINITIVI = frozenset({
+    "ok", "identita_non_confermata", "nessuna_pagina", "nessun_infobox",
+    "nessun_blocco",
+})
+
+
 def gia_fatti() -> set[int]:
+    """I giocatori da NON ritentare. Gli errori di rete si ritentano."""
     if not ESITI.exists():
         return set()
-    fatti = set()
+    fatti, da_ritentare = set(), set()
     with ESITI.open() as f:
         for riga in f:
             try:
-                fatti.add(json.loads(riga)["player_id"])
+                r = json.loads(riga)
             except Exception:
                 continue
+            pid = r.get("player_id")
+            if r.get("stato") in STATI_DEFINITIVI:
+                fatti.add(pid)
+            else:
+                da_ritentare.add(pid)
+    ritentabili = da_ritentare - fatti
+    if ritentabili:
+        print(f"   {len(ritentabili):,} giocatori da RITENTARE (errore transitorio)",
+              flush=True)
     return fatti
 
 
@@ -120,7 +157,7 @@ def main() -> int:
           f"| da fare ora: {len(da_fare):,}", flush=True)
 
     conta = {"ok": 0, "nessuna_pagina": 0, "nessun_infobox": 0,
-             "nessun_blocco": 0, "errore": 0}
+             "nessun_blocco": 0, "errore": 0, "identita_non_confermata": 0}
     t0 = time.monotonic()
 
     with ESITI.open("a") as out:
@@ -131,8 +168,12 @@ def main() -> int:
             # tempo a noi e carico a Wikipedia, per niente.
             esito = None
             for suff in SUFFISSI:
-                e = W.fetch_player(r.player_id, f"{r.name}{suff}",
-                                   use_cache=not args.no_cache)
+                e = W.fetch_player(
+                    r.player_id, f"{r.name}{suff}",
+                    nascita_attesa=r.date_of_birth,
+                    club_noti=r.club_noti if isinstance(r.club_noti, set) else None,
+                    use_cache=not args.no_cache,
+                )
                 esito = e
                 if e.stato != "nessuna_pagina":
                     break
@@ -142,6 +183,8 @@ def main() -> int:
                 "nostro": bool(r.nostro), "censurato": bool(r.censurato),
                 "stato": esito.stato, "url": esito.url,
                 "dettaglio": esito.dettaglio,
+                "identita": esito.identita, "bday_pagina": esito.bday_pagina,
+                "nascita_attesa": str(r.date_of_birth)[:10] if r.date_of_birth else None,
                 "tappe": [asdict(t) for t in esito.tappe],
             }, ensure_ascii=False) + "\n")
             out.flush()
