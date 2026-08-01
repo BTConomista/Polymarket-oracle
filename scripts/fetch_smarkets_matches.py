@@ -80,10 +80,19 @@ DEST = ROOT / "data" / "smarkets_matches"
 # Fase 116, la prima stesura di questo commento sbagliava), ma perche' un
 # match largo su un'API che puo' rinominare i suoi slug e' il modo tipico di
 # raccogliere la lega sbagliata senza accorgersene.
+#
+# ⚠️ Una lega puo' avere PIU' slug: Smarkets li rinomina senza preavviso. Il
+# 31/07/2026 `spain-laliga` e' diventato `spain-la-liga` e la Liga e' sparita
+# dalla raccolta in silenzio -- proprio la lega che parte per prima (15 agosto).
+# Trovato il 01/08/2026 con un giro di controllo a mano, non dal workflow: la
+# guardia di allora scattava solo se sparivano TUTTE e 5 (vedi `leghe_assenti`,
+# scritta per questo). I vecchi slug NON si tolgono: l'archivio gia' raccolto
+# li contiene, e un rinominamento puo' anche essere rimesso indietro.
 SLUG_LEGA = {
     "italy-serie-a": "serie_a",
     "england-premier-league": "premier_league",
-    "spain-laliga": "la_liga",
+    "spain-laliga": "la_liga",       # fino al 30/07/2026
+    "spain-la-liga": "la_liga",      # dal 31/07/2026 (misurato dal vivo)
     "germany-bundesliga": "bundesliga",
     "france-ligue-1": "ligue_1",
 }
@@ -140,6 +149,31 @@ def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
                 f"({', '.join(sorted(SLUG_LEGA))}) non compaiono. "
                 "Probabile rinominamento a monte.")
     return None
+
+
+def leghe_assenti(nostre: list[dict]) -> set[str]:
+    """Quali delle nostre 5 leghe non hanno NESSUNA partita esposta.
+
+    PERCHE' ESISTE (01/08/2026, R6 di nuovo -- e questa volta pagata). La
+    guardia sopra e' a soglia zero-su-cinque: scatta solo se sparisce tutto.
+    Ma il modo realistico in cui un'API rinomina uno slug e' **una lega alla
+    volta**: il 31/07/2026 `spain-laliga` e' diventato `spain-la-liga`, la
+    Liga e' uscita dalla raccolta e il workflow e' rimasto verde con 38
+    partite invece di 48. Quattro leghe su cinque sono un «finto pieno»
+    perfetto: il file c'e', e' grosso, e non contiene la lega che parte per
+    prima.
+
+    Il 28/07/2026 -- il punto piu' profondo dell'off-season -- tutte e 5 erano
+    esposte con 9-10 partite: «lega a zero» non e' uno stato che il calendario
+    produca, nemmeno a stagione ferma.
+
+    Non solleva: **segnala**. Far fallire il giro PRIMA della raccolta
+    perderebbe anche le altre quattro leghe, e sono dati che non si
+    ri-scaricano (`newseason.md` §2). Chi chiama raccoglie tutto, scrive il
+    file, e solo dopo esce con codice diverso da zero.
+    """
+    esposte = {e["lega"] for e in nostre}
+    return set(SLUG_LEGA.values()) - esposte
 
 
 def scandaglia_upcoming() -> tuple[list[dict], int]:
@@ -238,11 +272,22 @@ def main(argv=None) -> None:
     if perche:
         raise SystemExit(f"ANOMALIA nel listino Smarkets: {perche}")
 
+    # La guardia per-lega (01/08/2026): NON solleva qui, o perderemmo anche le
+    # leghe che ci sono. Si raccoglie, si scrive, si esce rosso alla fine.
+    mancanti = leghe_assenti(nostre)
+
     entro = 0 if a.tutte_le_esposte else a.entro_ore
     evs = entro_finestra(nostre, entro)
     quali = "esposte" if entro <= 0 else f"entro {entro}h"
     print(f"eventi calcio nel listino: {totale} | partite delle 5 leghe "
           f"esposte: {len(nostre)} | in raccolta ({quali}): {len(evs)}")
+    if mancanti:
+        print(f"\n⚠️  LEGHE SENZA NESSUNA PARTITA ESPOSTA: "
+              f"{', '.join(sorted(mancanti))}. Probabile rinominamento dello "
+              f"slug di competizione a monte (e' gia' successo: spain-laliga "
+              f"-> spain-la-liga, 31/07/2026). Controllare SLUG_LEGA contro il "
+              f"listino vero PRIMA del calcio d'inizio: i dati pre-partita non "
+              f"si recuperano dopo.\n")
     for e in sorted(evs, key=lambda x: x["_inizio"]):
         print(f"   [{e['lega']:15s}] {e['inizio']}  {e['nome']}")
 
@@ -281,6 +326,10 @@ def main(argv=None) -> None:
         "solo_principali": a.solo_principali,
         "eventi_calcio_nel_listino": totale,
         "partite_nostre_esposte": len(nostre),
+        # Un buco DICHIARATO e' innocuo, uno silenzioso no (R6). Chi rilegge
+        # l'archivio fra mesi deve poter distinguere «la Liga non c'era» da
+        # «la Liga non l'abbiamo chiesta».
+        "leghe_senza_partite_esposte": sorted(mancanti),
         "nota_prezzi": ("probabilita' 0-1: p_banco/p_puntatore sono i due lati "
                         "del libro, p_mid il punto medio (somma ~1.005 sulle "
                         "coppie complementari). MAI quote decimali."),
@@ -290,6 +339,13 @@ def main(argv=None) -> None:
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"\nscritto {dest.relative_to(ROOT)}  ({len(righe)} righe, "
           f"{len({r['partita'] for r in righe})} partite)")
+
+    # Solo ORA si esce rosso: il file e' salvo, l'allarme e' visibile.
+    if mancanti:
+        raise SystemExit(
+            f"raccolta INCOMPLETA: nessuna partita esposta per "
+            f"{', '.join(sorted(mancanti))} (dati comunque salvati in "
+            f"{dest.relative_to(ROOT)})")
 
 
 if __name__ == "__main__":

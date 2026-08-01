@@ -27,13 +27,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from fetch_smarkets_matches import (  # noqa: E402
     MERCATI_BASE, MERCATI_PRINCIPALI, SLUG_LEGA, _slug_lega,
-    anomalia_del_listino, entro_finestra)
+    anomalia_del_listino, entro_finestra, leghe_assenti)
 
 
 @pytest.mark.parametrize("slug,atteso", [
     ("/sport/football/italy-serie-a/2026/08/16/19-00/inter-vs-milan", "serie_a"),
     ("/sport/football/england-premier-league/2026/08/15/14-00/a-vs-b", "premier_league"),
     ("/sport/football/spain-laliga/2026/08/15/17-30/a-vs-b", "la_liga"),
+    # Lo slug rinominato dal 31/07/2026: se questo caso non passasse, la Liga
+    # tornerebbe a uscire dalla raccolta in silenzio.
+    ("/sport/football/spain-la-liga/2026/08/15/17-30/a-vs-b", "la_liga"),
     ("/sport/football/germany-bundesliga/2026/08/22/13-30/a-vs-b", "bundesliga"),
     ("/sport/football/france-ligue-1/2026/08/16/19-00/a-vs-b", "ligue_1"),
 ])
@@ -92,6 +95,24 @@ def test_listino_senza_nessuna_delle_nostre_leghe_e_anomalia():
     filtra gli IP dei runner. Senza questo controllo il workflow resterebbe
     verde raccogliendo il nulla, e i dati pre-partita non tornano piu'."""
     assert anomalia_del_listino(709, 0) is not None
+
+
+def test_una_lega_sparita_e_vista():
+    """Il caso vero del 31/07/2026: 4 leghe su 5 nel file, la Liga assente
+    perche' lo slug era stato rinominato. La guardia a soglia zero-su-cinque
+    non lo vedeva -- il workflow era verde con 38 partite invece di 48."""
+    nostre = [{"lega": lega} for lega in
+              ("serie_a", "premier_league", "bundesliga", "ligue_1")]
+    assert leghe_assenti(nostre) == {"la_liga"}
+    # E la guardia vecchia, da sola, continua a NON vederlo: e' proprio il
+    # buco che `leghe_assenti` copre.
+    assert anomalia_del_listino(850, len(nostre)) is None
+
+
+def test_tutte_le_leghe_esposte_non_e_un_allarme():
+    nostre = [{"lega": lega} for lega in
+              ("serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1")]
+    assert leghe_assenti(nostre) == set()
 
 
 def test_listino_normale_non_e_anomalia():
