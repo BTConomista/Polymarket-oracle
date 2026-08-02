@@ -284,6 +284,40 @@ class TestRaccoltaProdotta:
         for campo, c in v["confronti"].items():
             assert c["uguali"] == c["confrontabili"], campo
 
+    def test_divisione_1_solo_per_chi_gioca_davvero_in_prima(self, partite):
+        """Guardiano del bug «Wigan Athletic in prima divisione» (02/08/2026).
+
+        La divisione veniva da `club_names.domestic_competition_id`, che marca
+        **chiunque sia mai stato** in quella lega: 37 club per `GB1`, fra cui
+        Wigan, Reading, QPR, West Brom — tutti oggi in divisioni inferiori.
+        Un finto pieno da manuale (R6): valore plausibile, formato giusto,
+        sbagliato. Qui si verifica contro gli snapshot 2025-26, che sono la
+        verità.
+        """
+        snapshot = {"IT": "serie_a", "EN": "premier_league", "ES": "la_liga",
+                    "DE": "bundesliga", "FR": "ligue_1"}
+        for paese, lega in snapshot.items():
+            d = pd.read_csv(RADICE / "data" / f"{lega}_matches.csv")
+            d = d[d.season == 2526]
+            attese = len(set(d.home_team) | set(d.away_team))
+            # solo le righe di player-scores: hanno il club_id, che e' l'unica
+            # identita' stabile. Le finali da Wikipedia arrivano con un'altra
+            # grafia ("Chelsea" vs "Chelsea FC") e contarle per nome gonfia.
+            x = partite[(partite.paese == paese) & partite.game_id.notna()]
+            prime = set(x.loc[x.divisione_casa == 1, "home_club_id"]) | \
+                set(x.loc[x.divisione_ospite == 1, "away_club_id"])
+            assert len(prime) <= attese, (
+                f"{paese}: {len(prime)} club marcati prima divisione, ma la "
+                f"lega 2025-26 ne ha {attese}")
+
+    def test_lista_di_lavoro_coerente_col_perimetro(self, partite):
+        """`da_raccogliere.csv` è il perimetro, né più né meno — e la colonna
+        che dice se le formazioni ci sono già deve combaciare con `game_id`."""
+        lavoro = pd.read_csv(CARTELLA / "da_raccogliere.csv")
+        assert len(lavoro) == int(partite.dentro_perimetro.sum())
+        atteso = partite[partite.dentro_perimetro].game_id.notna().sum()
+        assert int(lavoro.gia_abbiamo_formazioni.sum()) == int(atteso)
+
     def test_i_buchi_sono_dichiarati(self, manifesto):
         """Un buco dichiarato e' innocuo, uno nascosto no (R6). Il manifesto
         deve dire quante partite restano senza formazioni."""

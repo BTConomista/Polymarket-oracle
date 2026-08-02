@@ -96,6 +96,22 @@ ALIAS: dict[str, str] = {
     "Karlsruhe": "Karlsruher SC",
     "Nurnberg": "1.FC Nuremberg",
     "Preussen Munster": "Preußen Münster",
+    # --- Nomi ABBREVIATI di football-data per la PRIMA divisione 2025-26.
+    # Stesso motivo dei precedenti, e stessa verifica (1 solo candidato).
+    "Inter": "Inter Milan",
+    "Verona": "Hellas Verona",
+    "Man City": "Manchester City",
+    "Man United": "Manchester United",
+    "Newcastle": "Newcastle United",
+    "Nott'm Forest": "Nottingham Forest",
+    "Wolves": "Wolverhampton Wanderers",
+    "Ath Bilbao": "Athletic Bilbao",
+    "Ath Madrid": "Atletico de Madrid",
+    "Ein Frankfurt": "Eintracht Frankfurt",
+    "Hamburg": "Hamburger SV",
+    "M'gladbach": "Borussia Monchengladbach",
+    "Mainz": "1.FSV Mainz 05",
+    "Paris SG": "Paris Saint-Germain",
     # ⚠️ I club di Ligue 2 (Annecy, Boulogne, Dunkerque, Grenoble, Laval,
     # Le Mans, Pau, Rodez) NON hanno un alias perche' non esistono nel
     # registro: player-scores non copre ne' la Ligue 2 ne' la Coupe de France.

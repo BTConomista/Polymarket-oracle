@@ -35,7 +35,9 @@ di un bug nella nostra conversione (§5-ter). Non usarlo come punteggio.
 | `partite.csv` | 662 | una riga per partita: data, turno, squadre, punteggio nei quattro pezzi, divisione delle due squadre, arbitro, allenatori, modulo, stadio, spettatori |
 | `formazioni.csv` | 18.566 | una riga per giocatore-partita: `titolare`/`panchina`, ruolo, numero, capitano, **minuti giocati**, gol, assist, cartellini |
 | `eventi.csv` | 8.177 | una riga per evento **col minuto**: 4.328 sostituzioni, 1.437 gol, 1.699 cartellini, 713 rigori |
+| `da_raccogliere.csv` | 580 | **la lista di lavoro** per la raccolta manuale: solo il perimetro, ordinata per coppa e data, con `gia_abbiamo_formazioni` per vedere la priorità riga per riga |
 | `manifesto.json` | — | provenienza, conteggi e **tutti** i controlli, compresi quelli falliti |
+| `DA_RACCOGLIERE.md` | — | il **foglio da passare a chi raccoglie a mano**: da che turno partire in ogni coppa, cosa saltare, cosa annotare |
 
 ## Copertura, e i buchi dichiarati
 
@@ -61,7 +63,13 @@ perimetro sono **tenute lo stesso** e marcate `False`: il perimetro è un filtro
 a valle, non un confine di raccolta (§5-ter).
 
 **`divisione_casa` / `divisione_ospite`**: `1` prima divisione, `2` seconda,
-`3` terza o sotto — il registro non distingue oltre la seconda. Per la Coupe de
+`3` terza o sotto — il registro non distingue oltre la seconda.
+
+⚠️ La prima divisione viene dagli **snapshot congelati 2025-26**, non da
+`club_names.domestic_competition_id`: quel campo marca chiunque sia *mai* stato
+in quella lega (37 club per `GB1`, fra cui Wigan, Reading, QPR, West Brom) e
+faceva risultare **Wigan Athletic in prima divisione**. Corretto il 02/08/2026;
+un test lo verifica lega per lega. Il perimetro non ne era stato toccato. Per la Coupe de
 France ci sono anche `sigla_divisione_*` con la sigla esatta di Wikipedia
 (`L2`, `N2`, `R1`…), che è più fine.
 

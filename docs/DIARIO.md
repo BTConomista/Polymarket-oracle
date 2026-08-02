@@ -15763,3 +15763,33 @@ raccolta, e il suo valore immediato è il collegamento (§14.5), non una
 conclusione. Il confronto con la raccolta manuale diretta.it dell'utente è il
 passo successivo, ed è quello che chiuderà il cerchio sulle 204 partite senza
 formazione.
+
+**Correzione applicata lo stesso giorno, dopo una domanda dell'utente**
+(«come faccio a dire al mio amico da che turno partire?»). Preparando il foglio
+di istruzioni è saltato fuori che **Wigan Athletic risultava di prima
+divisione** — gioca in League One. La causa: la divisione veniva da
+`club_names.domestic_competition_id`, che **non** è la lega corrente ma
+*«qualunque lega in cui il club sia mai comparso»*: 37 club marcati `GB1`, fra
+cui Reading, Huddersfield, Cardiff, QPR, West Brom. Un finto pieno da manuale
+(R6) — valore plausibile, formato giusto, sbagliato — e sfuggito perché nessun
+controllo confrontava quella colonna con una fonte indipendente.
+
+**Corretto** usando gli **snapshot congelati 2025-26**, che sono la verità e
+ce li avevamo in casa; servono 14 alias nuovi per i nomi abbreviati di
+football-data (`Man City`, `Nott'm Forest`, `M'gladbach`, `Ath Bilbao`…), tutti
+verificati a candidato unico, e ora il costruttore **si ferma** se un club di
+prima divisione non si aggancia, invece di degradarlo silenziosamente a «terza
+o sotto». ⚠️ **Il perimetro non cambia**: i turni d'ingresso della seconda
+divisione restano identici (Coppa Italia *Qualifying*, FA Cup *Third Round*,
+gli altri *First Round*, Coupe de France *7° turno*), perché in quei turni la
+presenza di club di seconda divisione era già rilevata da altri club. Il difetto
+sporcava l'**etichetta**, non la **conclusione** — ma andava trovato lo stesso,
+e l'ha trovato una domanda pratica, non un audit.
+
+Aggiunti: un **test di regressione** che confronta i club marcati prima
+divisione con gli snapshot lega per lega, `data/coppe_2526/da_raccogliere.csv`
+(la lista di lavoro, 580 righe, col flag `gia_abbiamo_formazioni`) e
+`data/coppe_2526/DA_RACCOGLIERE.md` (il foglio operativo per chi raccoglie a
+mano: da che turno partire, cosa saltare, e l'avvertenza di annotare 90',
+supplementari e rigori in **tre caselle separate** — 113 partite su 580
+finiscono ai rigori, una su cinque).

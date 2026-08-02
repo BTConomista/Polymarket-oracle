@@ -76,7 +76,6 @@ FOOTBALL_DATA = "https://www.football-data.co.uk/mmz4281/2526/{}.csv"
 
 # seconda divisione per paese su football-data, e prima divisione nel registro
 SECONDA_DIVISIONE = {"IT": "I2", "EN": "E1", "ES": "SP2", "DE": "D2"}
-PRIMA_DIVISIONE = {"IT": "IT1", "EN": "GB1", "ES": "ES1", "DE": "L1"}
 PAESE_COPPA = {"CIT": "IT", "FAC": "EN", "CGB": "EN", "CDR": "ES", "DFB": "DE"}
 
 
@@ -98,13 +97,38 @@ def scarica_player_scores() -> Path:
 def livelli_divisione(ag: Agganciatore) -> tuple[dict[str, set[int]], dict[str, set[int]], dict]:
     """`club_id` di prima e seconda divisione 2025-26, per paese.
 
-    La prima divisione viene dal registro (`club_names.csv.gz`), la seconda da
-    football-data.co.uk — l'unica fonte raggiungibile che elenca le seconde
-    divisioni 2025-26 di tutti i paesi che ci servono.
+    ⚠️ La prima divisione NON puo' venire da `club_names.domestic_competition_id`:
+    quel campo marca **chiunque sia mai stato** in quella lega nella storia del
+    dataset. Sono 37 club per `GB1` — Wigan, Reading, QPR, Huddersfield, West
+    Brom — tutti oggi in divisioni inferiori. Usarlo faceva risultare **Wigan
+    Athletic in prima divisione** nel 2025-26, cioe' esattamente il tipo di
+    finto pieno che la regola R6 impone di cercare: un valore plausibile, di
+    formato giusto, e sbagliato.
+
+    La fonte corretta ce l'abbiamo in casa: gli **snapshot congelati** delle
+    cinque leghe, filtrati sulla stagione 2526. La seconda divisione viene da
+    football-data.co.uk, che e' l'unica fonte raggiungibile che la elenchi per
+    tutti i paesi che servono.
     """
-    cn = pd.read_csv(RADICE / "files" / "player_scores" / "club_names.csv.gz")
-    primi = {p: set(cn.loc[cn.domestic_competition_id == c, "club_id"])
-             for p, c in PRIMA_DIVISIONE.items()}
+    snapshot = {"IT": "serie_a", "EN": "premier_league", "ES": "la_liga",
+                "DE": "bundesliga", "FR": "ligue_1"}
+    primi = {}
+    for paese, lega in snapshot.items():
+        d = pd.read_csv(RADICE / "data" / f"{lega}_matches.csv")
+        d = d[d.season == 2526]
+        nomi = sorted(set(d.home_team) | set(d.away_team))
+        agganci = {n: ag.aggancia(n) for n in nomi}
+        primi[paese] = {v for v in agganci.values() if v is not None}
+        mancanti = [n for n, v in agganci.items() if v is None]
+        _log(f"  1a divisione {paese}: {len(primi[paese])}/{len(nomi)} agganciati"
+             + (f"  MANCANO: {', '.join(mancanti)}" if mancanti else ""))
+        if mancanti:
+            raise LookupError(
+                f"prima divisione {paese}: {len(mancanti)} club senza aggancio "
+                f"({', '.join(mancanti)}). Un club di prima divisione non "
+                f"agganciato verrebbe marcato «terza o sotto»: aggiungere "
+                f"l'alias in src/data/club_matching.ALIAS prima di procedere."
+            )
     secondi, resa = {}, {}
     for paese, codice in SECONDA_DIVISIONE.items():
         r = requests.get(FOOTBALL_DATA.format(codice), timeout=60)
@@ -417,9 +441,22 @@ def main() -> int:
         _log("\n(--verifica: nessun file scritto)")
         return 0
 
+    # --- la lista di lavoro per chi raccoglie a mano su diretta.it.
+    # Non e' un doppione di partite.csv: e' ordinata per competizione e data,
+    # tiene solo il perimetro, e dice per OGNI partita se le formazioni le
+    # abbiamo gia' (`gia_abbiamo_formazioni`) — cosi' la priorita' si vede
+    # dalla riga invece di doverla ricordare.
+    lavoro = tutte[tutte.dentro_perimetro].copy()
+    lavoro["gia_abbiamo_formazioni"] = lavoro.game_id.notna()
+    lavoro = lavoro.sort_values(["competizione", "data", "casa"])[[
+        "competizione", "paese", "turno", "data", "casa", "ospite",
+        "gol_casa_finale", "gol_ospite_finale", "rigori_casa", "rigori_ospite",
+        "divisione_casa", "divisione_ospite", "gia_abbiamo_formazioni",
+    ]]
+
     USCITA.mkdir(parents=True, exist_ok=True)
     for nome, d in [("partite", tutte), ("formazioni", formazioni),
-                    ("eventi", eventi)]:
+                    ("eventi", eventi), ("da_raccogliere", lavoro)]:
         f = USCITA / f"{nome}.csv"
         d.to_csv(f, index=False)
         quadro.setdefault("file", {})[f"{nome}.csv"] = {

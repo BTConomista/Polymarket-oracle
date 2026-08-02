@@ -183,7 +183,7 @@
   "file": {
     "partite.csv": {
       "righe": 662,
-      "sha256": "df5b2241539bc768f81f7cab728f4dc58e365f033b1260be682e24d0ef5a1bca"
+      "sha256": "fa075e8e534776a06342a2837fe6b8310fc8e5d28debe8d964d3212cde3f4c4e"
     },
     "formazioni.csv": {
       "righe": 18566,
@@ -192,6 +192,10 @@
     "eventi.csv": {
       "righe": 8177,
       "sha256": "e9e0d27c042ce984c6c031e2548c35f14a94273fdeeedc826dd22a1f86fed311"
+    },
+    "da_raccogliere.csv": {
+      "righe": 580,
+      "sha256": "68cb4a662a6b92c74bb99448db7999473ee32278b5e0d4d0de3a8ba90bb89a2d"
     }
   }
 }
