@@ -1,0 +1,16 @@
+{
+ "giorno": "2026-08-02",
+ "nota": "verbale di OGNI fetch, riusciti e falliti. Un giorno senza questo file è un giorno di cui non sappiamo nulla, e va trattato come tale in ogni analisi.",
+ "tentati": 1,
+ "falliti": 0,
+ "voci": [
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=42.211861&longitude=-8.740328&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-08-02T08:39:22.324118+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14364,
+   "durata_s": 0.59
+  }
+ ]
+}
