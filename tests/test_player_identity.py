@@ -13,6 +13,32 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.data import player_identity as PI
 
 
+def _solo_anagrafica(nomi):
+    """Sostituisce la lettura di `players.csv.gz` e lascia stare le altre.
+
+    Sostituire `pd.read_csv` in blocco intercettava anche il registro degli
+    agganci manuali, che ha colonne tutte diverse: il test falliva su un
+    `AttributeError` che non c'entrava niente con ciò che voleva verificare.
+    """
+    import contextlib
+
+    @contextlib.contextmanager
+    def _cm():
+        orig = pd.read_csv
+
+        def finto(percorso, *a, **k):
+            if "players" in str(percorso):
+                return nomi
+            return orig(percorso, *a, **k)
+
+        pd.read_csv = finto
+        try:
+            yield
+        finally:
+            pd.read_csv = orig
+    return _cm()
+
+
 def test_ordine_dei_token_irrilevante():
     """È il punto del modulo: le due fonti scrivono il nome al contrario.
 
@@ -128,12 +154,8 @@ def test_eliminazione_aggancia_senza_guardare_il_nome():
     })
     nomi = pd.DataFrame({"player_id": [10, 11],
                          "name": ["Mario Rossi", "Nick Pope"]})
-    orig = pd.read_csv
-    try:
-        pd.read_csv = lambda *a, **k: nomi          # noqa: ARG005
+    with _solo_anagrafica(nomi):
         out = PI.collega_per_eliminazione(d, app)
-    finally:
-        pd.read_csv = orig
     assert list(out["player_id"]) == [10, 11]
 
 
@@ -153,12 +175,8 @@ def test_eliminazione_non_inventa_se_i_liberi_sono_due():
         "Giocatore": ["Sconosciuto Uno", "Sconosciuto Due"],
     })
     nomi = pd.DataFrame({"player_id": [10, 11], "name": ["Alfa Beta", "Gamma Delta"]})
-    orig = pd.read_csv
-    try:
-        pd.read_csv = lambda *a, **k: nomi          # noqa: ARG005
+    with _solo_anagrafica(nomi):
         out = PI.collega_per_eliminazione(d, app)
-    finally:
-        pd.read_csv = orig
     assert out["player_id"].isna().all()
 
 
@@ -194,3 +212,37 @@ def test_omonimi_veri_restano_distinti():
         sub = out[out["Giocatore"] == nome]
         if len(sub):
             assert sub["player_id"].nunique() == 2, f"{nome} collassato"
+
+
+def test_registro_manuale_solo_dove_manca_laggancio():
+    """Il registro R3 riempie i buchi, non sovrascrive l'automatismo.
+
+    Una riga che sovrascrivesse un aggancio già fatto sarebbe una modifica a
+    mano dei dati mascherata da eccezione — esattamente ciò che R3 vieta.
+    """
+    import pandas as pd
+    from src.data import careers as C
+    reg = C.ROOT_DATA / "aggancio_manuale.csv"
+    if not reg.exists():
+        pytest.skip("nessun registro manuale")
+    m = pd.read_csv(reg)
+    for col in ("giocatore_diretta", "squadra", "player_id", "motivo",
+                "fonte", "verificato_il", "deciso_da"):
+        assert col in m.columns, f"il registro deve dichiarare `{col}`"
+    assert m["motivo"].str.len().min() > 40, "un motivo di una riga non è un motivo"
+    assert m["fonte"].notna().all()
+
+
+def test_copertura_totale_sulle_tre_leghe():
+    """Il traguardo raggiunto: 35.339 righe su 35.339.
+
+    Se una raccolta futura lo fa scendere, è un dato nuovo che il ponte non
+    copre — e va guardato, non ignorato.
+    """
+    from src.data import player_stats as PS
+    try:
+        d = PS.load_player_matches(tutte=True)
+    except Exception:
+        pytest.skip("raccolte non disponibili")
+    out = PI.collega_per_eliminazione(d)
+    assert out["player_id"].notna().mean() == 1.0
