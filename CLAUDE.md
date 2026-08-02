@@ -58,9 +58,19 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
      book lo **ingloba** (α\*=0 nel 70% dei fit — esattamente come la Fase 16
      sull'1X2). Nessuna leva aiuta su nessuno dei due fronti (§1.9).
      **Lo "spazio" non era una proprietà del mercato: era la nostra ignoranza.**
-     Il GG/NG resta interessante perché il book non lo quota nelle stagioni
-     recenti — ma va trattato come gli altri mercati derivati, non come una
-     frontiera.
+     Va trattato come gli altri mercati derivati, non come una frontiera.
+     ⚠️ **RETTIFICA (01/08/2026, censimento delle fonti).** Qui c'era scritto
+     che «il GG/NG resta interessante perché il book non lo quota nelle
+     stagioni recenti». **È falso**, e lo era già dal 28/07: la Fase 106 aveva
+     scaricato i file footiqo fino al 2024-25 senza che nessuno se ne
+     accorgesse. Misurato ora: **14.358 righe** con entrambi i lati della quota
+     di chiusura GG/NG (`xbetCloseBTTSY`/`N`), distribuite su **tutti e nove
+     gli anni 2017→2025** (909 / 1.808 / 1.823 / 1.569 / 1.988 / 1.690 / 1.920
+     / 1.717 / 934). Le conclusioni qui sopra restano valide **ma sono misurate
+     sulle sole 5.337 partite del 2017-20**: le altre **8.981 non sono mai
+     state aperte da una riga di codice**, e sono la verifica fuori campione
+     — regime porte chiuse 2020-21 compreso — che il progetto non ha ancora
+     fatto.
    - **Mercati standard = Tier 1** (d'ora in poi): 1X2, O/U 1.5/2.5/3.5, GG/NG,
      doppie chance, total-squadra (casa/ospite O0.5/1.5), clean sheet, vince-a-zero,
      scarto ≥2, multigol, risultato esatto. Ogni backtest/analisi li copre tutti
@@ -394,6 +404,12 @@ docs/betfair_api/  COPIA DI LAVORO della documentazione API Betfair (78 pagine
                  scripts/fetch_betfair_docs.py. Esiste perche' la Fase 109-bis ha
                  pagato un bug (campo `img`) per non aver letto la specifica
                  prima di scrivere il parser: leggerla e' un passo, non un extra
+docs/CENSIMENTO_FONTI.md   censimento a 13 agenti di TUTTE le fonti (01/08/2026):
+                 ~1.100 campi, cosa usiamo e cosa no, con la colonna che conta —
+                 mai-provato contro gia-bocciato. 12 occasioni dopo il filtro, e
+                 9 affermazioni FALSE o non ri-calcolabili trovate nei nostri
+                 stessi documenti (fra cui il f=0.4396 usato sui cartellini, dove
+                 il vero e 0.3200)
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
