@@ -135,6 +135,27 @@ Se aggiorni il modo di lavorare, aggiorna **anche questo file**.
    Lo stato di ogni modello su ogni fronte (titolare/panchina/bocciato/mai
    testato) vive nella **matrice di `docs/PANCHINA.md`** ("la rosa dei
    modelli"), da aggiornare a ogni esperimento.
+10. **⭐ Un risultato negativo vale SOLO per i dati su cui è stato misurato**
+    (decisione utente, 02/08/2026 — apre la **Fase 2** del progetto).
+    Le Fasi 0-136 hanno cercato l'edge dentro un insieme di dati ristretto e
+    **aggregato per squadra-partita**: gol, xG, quote, riposo, valore rosa.
+    Molte piste sono state chiuse lì, ed è giusto che restino chiuse *per
+    quella domanda*. Ma «il riposo non predice» è stato misurato come covariata
+    di squadra sul risultato: **non dice niente** su «questo giocatore ha
+    volato venti ore ed è sceso in campo con due giorni di recupero».
+    Sono dati diversi, granularità diversa, domanda diversa.
+    Quindi, d'ora in poi:
+    - un esito negativo si cita **con il perimetro su cui è stato ottenuto**
+      («nullo su dati di squadra 2017-25»), mai come «chiuso» in astratto;
+    - **non si rifiuta un dato nuovo citando un modello vecchio** costruito su
+      meno informazione e più grossolana. Si può prevedere che il segnale sia
+      debole — ma è una previsione da misurare, non un verdetto già emesso;
+    - vale anche al contrario: la nuova granularità **non sospende** il metodo.
+      Restano l'intervallo di confidenza (R7), la validazione su più stagioni
+      (§1.7), la disponibilità temporale (R8) e l'onestà sui limiti (§1.6).
+      Più dati significa più occasioni di trovare un pattern che non c'è.
+    Il rischio che questa regola corregge è **asimmetrico**: riaprire una pista
+    chiusa costa un esperimento; non riaprirla costa non sapere mai.
 
 ---
 
