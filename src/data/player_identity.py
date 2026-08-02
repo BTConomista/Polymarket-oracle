@@ -113,3 +113,146 @@ def collega(df: pd.DataFrame, appearances=None, *, colonna_nome="Giocatore",
     mappa = tabella_aggancio(appearances).set_index("chiave")["player_id"]
     out["player_id"] = out["chiave"].map(mappa)
     return out.drop(columns="chiave")
+
+
+# --------------------------------------------------------------------------
+# Secondo passaggio: l'ELIMINAZIONE
+# --------------------------------------------------------------------------
+# Il primo passaggio aggancia il 95,4% e lascia fuori 94 nomi. Non sono nomi
+# «sporchi»: sono nomi SCRITTI DIVERSAMENTE dalle due fonti — nome legale contro
+# nome d'uso (`Pope Nicholas David` / `Nick Pope`, `Livramento Valentino` /
+# `Tino Livramento`), cognomi composti spagnoli, mononimi (`Djene`, `Fermín`).
+# Nessuna normalizzazione del nome può chiuderli, perché il nome non è lo stesso.
+#
+# Ma c'è un argomento più forte del nome, ed è STRUTTURALE. Misurato sui dati:
+# per ogni (partita, squadra) le due fonti elencano gli STESSI giocatori —
+# 1.145 coppie con righe residue si distribuiscono in (1,1) 774, (2,2) 268,
+# (3,3) 83, (4,4) 11, (5,5) 1, e solo **9 su 1.145** hanno conteggi diversi.
+#
+# Quindi dove resta UNA riga diretta libera e UN giocatore libero in quella
+# partita, sono la stessa persona **per eliminazione**: non serve che i nomi si
+# somiglino, serve che non ci sia nessun altro che possano essere.
+#
+# ⚠️ Perché questo è più sicuro del nome, e non meno: l'aggancio per somiglianza
+# sbagliava proprio dove il nome ingannava. `Cunat Pablo` veniva agganciato a
+# `Pablo Campos` perché condividevano `pablo` — un nome di battesimo che nel
+# dataset compare 124 volte, mentre `cunat` non compare mai. L'eliminazione non
+# ha questo modo di fallire: non guarda il nome.
+
+SOGLIA_TOKEN_COMUNE = 50   # oltre questa frequenza un token non prova nulla
+
+
+def _liberi(cand, usati, chiave):
+    return [(p, n) for p, n in cand.get(chiave, []) if p not in usati[chiave]]
+
+
+def collega_per_eliminazione(df, appearances=None, *, colonna_nome="Giocatore",
+                             colonna_data="Data", colonna_squadra="Squadra"):
+    """`collega` + secondo passaggio per eliminazione dentro la singola partita.
+
+    La mappa squadra→`club_id` **non** si costruisce allineando i nomi dei club:
+    si DEDUCE dalle righe già agganciate al primo passaggio. Purezza misurata
+    0,9999 su 60 squadre — un problema di normalizzazione in meno, e risolto
+    dai dati invece che da una tabella scritta a mano.
+    """
+    import collections
+
+    from . import careers as C
+
+    out = collega(df, appearances, colonna_nome=colonna_nome,
+                  colonna_data=colonna_data)
+    date = pd.to_datetime(out[colonna_data], dayfirst=True)
+
+    app = appearances if appearances is not None else C._load_appearances()
+    a = app[app["date"] >= pd.Timestamp("2025-07-01")][
+        ["player_id", "date", "player_club_id"]].copy()
+    nomi = pd.read_csv(
+        C.ROOT_DATA.parent / "files" / "player_scores" / "players.csv.gz",
+        usecols=["player_id", "name"])
+    a = a.merge(nomi, on="player_id", how="left")
+
+    freq = collections.Counter()
+    for n in nomi["name"]:
+        for t in normalizza_nome(n):
+            freq[t] += 1
+
+    agg = out["player_id"].notna()
+    # Il club della riga già agganciata si prende con un MERGE, non con una
+    # chiave-stringa: `astype(str)` su una colonna di date rende `2025-07-01`
+    # mentre un f-string sullo stesso Timestamp rende `2025-07-01 00:00:00`.
+    # Le due chiavi non combaciano mai e la mappa esce vuota — in silenzio,
+    # perché un dizionario che non trova nulla non è un errore. Costato un
+    # passaggio intero che sembrava funzionare e non agganciava niente.
+    ponte = a[["player_id", "date", "player_club_id"]].rename(
+        columns={"date": "_d"})
+    tmp = pd.DataFrame({"player_id": out["player_id"], "_d": date})
+    out["_cid"] = tmp.merge(ponte, on=["player_id", "_d"],
+                            how="left")["player_club_id"].to_numpy()
+    club = (out[agg].groupby(colonna_squadra)["_cid"]
+            .agg(lambda s: s.value_counts().idxmax() if s.notna().any() else None))
+
+    usati = collections.defaultdict(set)
+    for p, d, c in zip(out.loc[agg, "player_id"], date[agg], out.loc[agg, "_cid"]):
+        usati[(d, c)].add(p)
+    cand = collections.defaultdict(list)
+    for r in a.itertuples():
+        cand[(r.date, r.player_club_id)].append((r.player_id, r.name))
+
+    da_fare = collections.defaultdict(list)
+    for i in out.index[~agg]:
+        cid = club.get(out.at[i, colonna_squadra])
+        if cid is not None:
+            da_fare[(date[i], cid)].append(i)
+
+    for chiave, righe in da_fare.items():
+        liberi = _liberi(cand, usati, chiave)
+        if len(righe) == 1 and len(liberi) == 1:
+            # ELIMINAZIONE: nessun altro che possano essere.
+            out.at[righe[0], "player_id"] = liberi[0][0]
+            usati[chiave].add(liberi[0][0])
+            continue
+        # Più di uno per parte: qui il nome torna a servire, ma su un insieme di
+        # due o tre. Si accetta solo l'abbinamento UNIVOCO e con almeno un token
+        # discriminante — un nome di battesimo comune non prova niente.
+        for i in righe:
+            tk = normalizza_nome(out.at[i, colonna_nome])
+            seg = [(p, n) for p, n in _liberi(cand, usati, chiave)
+                   if any(freq.get(t, 0) <= SOGLIA_TOKEN_COMUNE
+                          for t in normalizza_nome(n) & tk)]
+            if len(seg) == 1:
+                out.at[i, "player_id"] = seg[0][0]
+                usati[chiave].add(seg[0][0])
+
+    # ---------------------------------------------------------------- terzo
+    # L'INTERSEZIONE SULLA STAGIONE. Un nome può restare ambiguo in una singola
+    # partita — due liberi, nessun token che li separi — e non esserlo affatto
+    # sull'anno: se in tutte e 32 le giornate il candidato libero è sempre lo
+    # stesso, l'intersezione lo identifica. È la stessa logica dell'eliminazione
+    # applicata all'asse del tempo invece che a quello della rosa, e chiude 15
+    # dei 20 casi residui (`Garcia de Haro Raul` → Raúl García, `Oliveira Tiago`
+    # → Tiago Gabriel, `de la Fuente Adrian` → Adrián Dela).
+    #
+    # L'intersezione si fa per (nome, SQUADRA), non per nome: un giocatore che
+    # cambia club a gennaio è due insiemi di candidati diversi, e intersecarli
+    # darebbe il vuoto proprio sui trasferiti (`Lopez Fernando`, Celta e poi
+    # Wolves — due volte lo stesso Fer López, ma da due rose diverse).
+    resta = out["player_id"].isna()
+    if resta.any():
+        gruppi = collections.defaultdict(list)
+        for i in out.index[resta]:
+            gruppi[(out.at[i, colonna_nome], out.at[i, colonna_squadra])].append(i)
+        for (_, squadra), righe in gruppi.items():
+            cid = club.get(squadra)
+            if cid is None:
+                continue
+            comune = None
+            for i in righe:
+                liberi = {p for p, _ in _liberi(cand, usati, (date[i], cid))}
+                comune = liberi if comune is None else (comune & liberi)
+            if comune and len(comune) == 1:
+                pid = next(iter(comune))
+                for i in righe:
+                    out.at[i, "player_id"] = pid
+                    usati[(date[i], cid)].add(pid)
+
+    return out.drop(columns="_cid")

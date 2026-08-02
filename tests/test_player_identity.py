@@ -104,3 +104,93 @@ def test_collega_non_muta_lingresso():
     colonne_prima = list(d.columns)
     PI.collega(d)
     assert list(d.columns) == colonne_prima
+
+
+# ------------------------------------------ secondo e terzo passaggio
+
+def test_eliminazione_aggancia_senza_guardare_il_nome():
+    """Un solo libero per parte in quella partita: sono la stessa persona.
+
+    È l'argomento strutturale che chiude i nomi che nessuna normalizzazione
+    può chiudere, perché il nome *non è lo stesso*: `Pope Nicholas David` e
+    `Nick Pope` non condividono i token giusti, ma non c'è nessun altro che
+    possano essere.
+    """
+    app = pd.DataFrame({
+        "player_id": [10, 11],
+        "date": pd.to_datetime(["2025-08-16"] * 2),
+        "player_club_id": [7, 7],
+    })
+    d = pd.DataFrame({
+        "Data": ["16.08.2025", "16.08.2025"],
+        "Squadra": ["Tal", "Tal"],
+        "Giocatore": ["Rossi Mario", "Pope Nicholas David"],
+    })
+    nomi = pd.DataFrame({"player_id": [10, 11],
+                         "name": ["Mario Rossi", "Nick Pope"]})
+    orig = pd.read_csv
+    try:
+        pd.read_csv = lambda *a, **k: nomi          # noqa: ARG005
+        out = PI.collega_per_eliminazione(d, app)
+    finally:
+        pd.read_csv = orig
+    assert list(out["player_id"]) == [10, 11]
+
+
+def test_eliminazione_non_inventa_se_i_liberi_sono_due():
+    """Due righe libere e due candidati senza token che li separino: NESSUNO.
+
+    Sceglierne uno attribuirebbe a un giocatore le partite di un altro.
+    """
+    app = pd.DataFrame({
+        "player_id": [10, 11],
+        "date": pd.to_datetime(["2025-08-16"] * 2),
+        "player_club_id": [7, 7],
+    })
+    d = pd.DataFrame({
+        "Data": ["16.08.2025", "16.08.2025"],
+        "Squadra": ["Tal", "Tal"],
+        "Giocatore": ["Sconosciuto Uno", "Sconosciuto Due"],
+    })
+    nomi = pd.DataFrame({"player_id": [10, 11], "name": ["Alfa Beta", "Gamma Delta"]})
+    orig = pd.read_csv
+    try:
+        pd.read_csv = lambda *a, **k: nomi          # noqa: ARG005
+        out = PI.collega_per_eliminazione(d, app)
+    finally:
+        pd.read_csv = orig
+    assert out["player_id"].isna().all()
+
+
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga"])
+def test_copertura_reale_sopra_il_99_percento(lega):
+    from src.data import player_stats as PS
+    try:
+        d = PS.load_player_matches(lega=lega, stagione="2526")
+    except Exception:
+        pytest.skip(f"raccolta {lega} non disponibile")
+    if d.empty:
+        pytest.skip("raccolta vuota")
+    out = PI.collega_per_eliminazione(d)
+    assert out["player_id"].notna().mean() > 0.99
+
+
+def test_omonimi_veri_restano_distinti():
+    """Due persone diverse con lo stesso nome diretta NON vanno fuse.
+
+    Al Getafe giocano due `Kiko` (Femenía 1991 e Kiko 2002); a Girona e
+    Mallorca due `David López` (1989 e 2003). Se l'aggancio li collassasse su
+    un `player_id` solo, attribuirebbe a uno la carriera dell'altro — e il
+    conteggio delle righe non se ne accorgerebbe.
+    """
+    from src.data import player_stats as PS
+    try:
+        d = PS.load_player_matches(lega="la_liga", stagione="2526")
+    except Exception:
+        pytest.skip("raccolta non disponibile")
+    out = PI.collega_per_eliminazione(d)
+    out = out[out["player_id"].notna()]
+    for nome in ("Kiko", "Lopez David"):
+        sub = out[out["Giocatore"] == nome]
+        if len(sub):
+            assert sub["player_id"].nunique() == 2, f"{nome} collassato"
