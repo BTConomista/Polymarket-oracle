@@ -2826,6 +2826,16 @@ cosa diversa e va detta così.
 
 ### 13.1 · La popolazione: 7.709 giocatori, ≥1 presenza (non «≥1 stagione»)
 
+> ⚠️ **AGGIORNATO al 02/08/2026: sono 7.710.** Il +1 è Alessandro Romano, che
+> ha esordito in Serie A il 06/01/2026 e che la fonte primaria delle presenze
+> non registra: la sua presenza arriva da `data/presenze_integrate.csv`, letta
+> dalla nostra raccolta diretta.it e confermata da una fonte esterna. Il numero
+> si è mosso perché è cambiato il **dato**, non la regola — chi ha giocato in
+> Serie A appartiene alla popolazione, e prima ne restava fuori per un buco
+> della fonte. Il vecchio 7.709 resta qui sotto perché è il numero con cui la
+> soglia è stata *decisa*.
+
+
 Definizione adottata: **ogni giocatore con almeno UNA presenza in una delle 5
 leghe dal 2017-07**. Sono **7.709**.
 

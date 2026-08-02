@@ -66,7 +66,45 @@ def _load_appearances() -> pd.DataFrame:
                  "yellow_cards", "red_cards"],
     )
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
-    return df.dropna(subset=["date"])
+    df = df.dropna(subset=["date"])
+    df["fonte"] = FONTE_STRATO1
+    return _con_integrazioni(df)
+
+
+# Presenze che la fonte primaria NON ha e che noi abbiamo da un'altra parte.
+# Vivono in un file a sé e si uniscono in lettura: il CSV di player-scores non
+# si tocca (R3 — e comunque è di terzi: una riga scritta lì sparirebbe al primo
+# ri-scaricamento, senza che nessuno se ne accorga).
+#
+# Ogni riga porta `fonte`, `motivo` e la data della verifica, e resta
+# distinguibile a valle: chi vuole la sola fonte primaria filtra su `fonte`.
+# Non è una stima — è un dato reale preso da una raccolta che abbiamo già.
+INTEGRAZIONI = "presenze_integrate.csv"
+
+
+def _con_integrazioni(df: pd.DataFrame) -> pd.DataFrame:
+    """Unisce le presenze integrate, se il registro esiste.
+
+    ⚠️ Non sovrascrive mai: se la fonte primaria ha già quella presenza
+    (stesso giocatore, stessa data), la riga integrata viene SCARTATA. Il
+    registro serve a colmare un buco, non a correggere la fonte — e un giorno
+    la fonte potrebbe aggiungere ciò che oggi le manca, senza che nessuno
+    rilegga questo file.
+    """
+    percorso = ROOT_DATA / INTEGRAZIONI
+    if not percorso.exists():
+        return df
+    extra = pd.read_csv(percorso)
+    extra["date"] = pd.to_datetime(extra["date"], errors="coerce")
+    extra = extra.dropna(subset=["date"])
+    if extra.empty:
+        return df
+    gia = set(zip(df["player_id"], df["date"]))
+    extra = extra[[(p, d) not in gia
+                   for p, d in zip(extra["player_id"], extra["date"])]]
+    if extra.empty:
+        return df
+    return pd.concat([df, extra[df.columns]], ignore_index=True)
 
 
 def season_of(dates: pd.Series) -> pd.Series:

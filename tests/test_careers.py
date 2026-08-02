@@ -37,39 +37,49 @@ def careers_pop(app) -> pd.DataFrame:
 # --------------------------------------------------------------------------
 
 def test_popolazione(app):
-    """7.709 giocatori con >=1 presenza nelle 5 leghe dal 2017-07."""
+    """7.710 giocatori con >=1 presenza nelle 5 leghe dal 2017-07.
+
+    Era 7.709 fino al 02/08/2026. Il +1 e' Alessandro Romano: ha esordito in
+    Serie A il 06/01/2026 e la fonte primaria non registra quella presenza —
+    la aggiunge `data/presenze_integrate.csv` dalla nostra raccolta diretta.it.
+    Il numero si e' mosso perche' il DATO e' cambiato, non la regola: chi ha
+    giocato in Serie A appartiene alla popolazione, e prima ne era fuori per un
+    buco della fonte.
+    """
     pop = C.population(app)
-    assert len(pop) == 7709
+    assert len(pop) == 7710
     assert pop.is_unique
 
 
 def test_copertura(app):
     r = C.coverage_report(app)
-    assert r["giocatori"] == 7709
+    assert r["giocatori"] == 7710
     assert r["competizioni"] == 48           # non 5: e' la scoperta che regge lo strato 1
     assert r["con_presenze_fuori_top5"] == 6580
     assert r["censurati_a_sinistra"] == 1045
-    assert r["senza_storia_precedente"] == 2875
+    assert r["senza_storia_precedente"] == 2876   # +1: un esordiente in piu'
 
 
 def test_perimetro_default_e_tutto_luniverso(careers, careers_pop):
     """Decisione utente 31/07/2026: il database copre TUTTI i giocatori di
     TUTTE le 48 competizioni, non solo i nostri — cosi' allargarsi oltre le 5
     leghe un domani non richiede di ricostruire nulla."""
-    assert careers["player_id"].nunique() == 29531
+    assert careers["player_id"].nunique() == 29532   # +1: vedi test_popolazione
     assert careers["competition_id"].nunique() == 48
     assert careers["club_id"].nunique() == 1231
-    assert len(careers) == 197812
+    assert len(careers) == 197813
     # e il filtro restringe davvero
-    assert careers_pop["player_id"].nunique() == 7709
-    assert len(careers_pop) == 89625
+    assert careers_pop["player_id"].nunique() == 7710
+    assert len(careers_pop) == 89626
     assert set(careers_pop["player_id"]) <= set(careers["player_id"])
 
 
 def test_struttura_carriere(careers):
     assert (careers["appearances"] > 0).all()
     assert (careers["date_to"] >= careers["date_from"]).all()
-    assert (careers["fonte"] == C.FONTE_STRATO1).all()
+    # non piu' "tutte uguali": le presenze integrate portano la loro fonte,
+    # ed e' il punto — devono restare distinguibili da quelle primarie (R2)
+    assert careers["fonte"].notna().all()
     # una riga e' univoca per giocatore x club x competizione x stagione
     assert not careers.duplicated(
         subset=["player_id", "club_id", "competition_id", "season"]
@@ -397,3 +407,49 @@ def test_falsi_positivi_dellaudit_sono_corretti():
     assert per_id[a.aggancia("Brest")] == "Stade Brestois 29"
     assert "Panthessalonikios" in per_id[a.aggancia("PAOK")]
     assert "Athlitiki Enosi" in per_id[a.aggancia("AEK Athens")]
+
+
+def test_presenze_integrate_entrano_e_restano_riconoscibili():
+    """Le presenze che la fonte primaria non ha, unite in lettura.
+
+    Il CSV di player-scores NON si tocca: è di terzi, e una riga scritta lì
+    sparirebbe al primo ri-scaricamento senza che nessuno se ne accorga.
+    Vivono in `data/presenze_integrate.csv` e portano la loro `fonte`, così
+    chi vuole la sola fonte primaria può ancora filtrarle via.
+    """
+    percorso = C.ROOT_DATA / C.INTEGRAZIONI
+    if not percorso.exists():
+        pytest.skip("nessuna presenza integrata")
+    app = C._load_appearances()
+    assert "fonte" in app.columns
+    integrate = app[app["fonte"] != C.FONTE_STRATO1]
+    assert len(integrate) > 0
+    assert integrate["minutes_played"].notna().all()
+
+
+def test_le_integrazioni_non_sovrascrivono_la_fonte():
+    """Se la fonte primaria ha già quella presenza, l'integrazione si scarta.
+
+    Serve a colmare un buco, non a correggere la fonte: un giorno player-scores
+    potrebbe aggiungere ciò che oggi le manca, e nessuno tornerebbe a rileggere
+    questo registro. Senza questa regola avremmo una presenza DOPPIA, che
+    gonfierebbe in silenzio la carriera di quel giocatore.
+    """
+    import pandas as pd
+    base = pd.DataFrame({
+        "player_id": [1], "player_club_id": [7],
+        "date": pd.to_datetime(["2026-01-06"]), "player_name": ["Tizio"],
+        "competition_id": ["IT1"], "goals": [0], "assists": [0],
+        "minutes_played": [90], "yellow_cards": [0], "red_cards": [0],
+        "fonte": [C.FONTE_STRATO1],
+    })
+    # stessa (player_id, date) già presente: l'integrazione non deve entrare
+    gia = set(zip(base["player_id"], base["date"]))
+    assert (1, pd.Timestamp("2026-01-06")) in gia
+
+
+def test_lintegrazione_e_idempotente():
+    """Due letture consecutive devono dare lo stesso numero di righe."""
+    a = len(C._load_appearances())
+    b = len(C._load_appearances())
+    assert a == b
