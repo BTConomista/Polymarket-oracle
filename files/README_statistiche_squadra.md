@@ -43,6 +43,7 @@ In ognuna delle 5 cartelle `files/diretta_{lega}_2526/`:
 | `legenda_squadra.csv` | 35 statistiche → codice della fonte (es. `Calci d'angolo` → 16) |
 | `note_fonte.csv` | il foglio «Note» della fonte, conservato **come dichiarazione** (⚠️ contiene un'affermazione falsa: §4.2) |
 | `manifesto_squadra.json` | perimetro e copertura attesa, che il caricatore verifica |
+| `originale_squadra.xlsx` (+ `.csv` per Serie A e Premier) | ⭐ **il file ORIGINALE come consegnato**, 4 fogli. Archiviato per la regola §5-ter del `CLAUDE.md`: per tre leghe su cinque il CSV l'abbiamo prodotto noi, e senza l'originale un bug nella nostra conversione sarebbe invisibile. Fedeltà **misurata**: 569.700 celle, **0 divergenti** |
 
 **Peso totale: 604 KB** per tutte e 5 le leghe, contro ~11 MB di `.xlsx`.
 
@@ -55,10 +56,12 @@ In ognuna delle 5 cartelle `files/diretta_{lega}_2526/`:
 | Ligue 1 | 1.860 | 1.836 | 24 | 306 | 18 |
 | **totale** | **10.550** | **10.512** | **38** | **1.752** | |
 
-Il foglio wide «Per partita» degli `.xlsx` **non** è conservato: è un reshape
-esatto del foglio long, verificato su entrambe le metà (colonne `Casa -` e
-`Ospite -`), **0 celle divergenti** su 102.600 / 83.700 / 83.250. È una vista,
-non un dato in più.
+Il foglio wide «Per partita» non ha un file suo — ma **non è andato perso**:
+vive dentro `originale_squadra.xlsx`. È comunque un reshape esatto del foglio
+long, verificato su entrambe le metà (colonne `Casa -` e `Ospite -`),
+**0 celle divergenti** su 102.600 / 83.700 / 83.250: una vista, non un dato in
+più. Duplicarlo come CSV a sé sarebbe l'unico caso che la regola §5-ter
+ammette di lasciare fuori — e infatti l'originale lo conserva lo stesso.
 
 ---
 

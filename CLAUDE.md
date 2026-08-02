@@ -460,6 +460,51 @@ tests/           test unitari (1.218 verdi al 01/08/2026), fra cui i guardiani
 
 ---
 
+### 5-ter · RACCOGLIERE TUTTO (decisione utente, 01/08/2026)
+
+**La regola.** Quando una fonte offre un dato, lo si **prende**, anche se oggi
+non serve e anche se non si vede a cosa possa servire. *«Magari un domani
+potrebbe esserlo. I dati prendiamoli, poi se non li usiamo è un altro conto.»*
+Raccogliere e usare sono due decisioni separate, e la prima non richiede di
+saper rispondere alla seconda.
+
+**Perché è una regola e non un'inclinazione.** Un dato non raccolto al momento
+giusto spesso **non è più recuperabile**: le quote si muovono e non tornano
+indietro, le formazioni si sanno un'ora prima, un sito cambia struttura, un
+file caricato a mano vive in una cartella temporanea. Il costo di tenere una
+colonna in più è disco; il costo di non averla presa è la domanda che non si
+potrà mai fare.
+
+**L'unica eccezione, e come si applica.** Si può lasciare fuori solo un dato
+**proprio inutile o assurdo** — e il caso tipico è uno solo: il **duplicato
+esatto e algoritmico**, cioè una vista che si rigenera dall'altra in poche
+righe (verificato a zero celle divergenti, non a occhio). In ogni caso:
+⚠️ **si chiede SEMPRE conferma all'utente prima di escludere qualcosa.**
+Non è una decisione da prendere da soli, nemmeno quando sembra ovvia.
+
+**Si conserva l'ORIGINALE come consegnato**, non solo la versione normalizzata.
+Dove il file di lavoro è generato da noi (una conversione, un reshape, una
+selezione di colonne), l'originale è **l'unico modo per accorgersi di un bug
+nella conversione**: senza, un errore nostro diventa indistinguibile dal dato.
+*(Caso: le statistiche di squadra 2025-26 — di tre leghe su cinque esisteva
+solo l'`.xlsx`, e il CSV l'abbiamo prodotto noi. Archiviati gli originali,
+`originale_squadra.xlsx` in ogni raccolta: 11 MB, e la fedeltà della nostra
+conversione è ora verificabile — misurata, 569.700 celle, 0 divergenti.)*
+
+**Cosa questa regola NON rilassa.** Raccogliere di più non abbassa nessuna delle
+soglie che valgono sul dato raccolto:
+- la **provenienza** va dichiarata (R2) e la posizione di licenza pure;
+- nessuna **modifica a mano**, mai (R3);
+- un dato in più è anche un **finto pieno** in più da cercare (R6): più colonne
+  raccogliamo, più zeri-che-significano-«non lo so» possono entrare;
+- ogni colonna dichiara la propria **disponibilità temporale** (R8) — raccogliere
+  un dato `post` non lo rende utilizzabile per prevedere la partita che l'ha
+  prodotto;
+- **raccolto ≠ usato**: un dato inserito e mai letto da nessun modello è uno
+  stato legittimo e va scritto come tale in `docs/DATI.md`, non nascosto.
+
+---
+
 ## 5-bis. Regole sui dati sporchi (non negoziabili)
 
 Nate durante l'audit riga-per-riga delle 5 leghe, pagate tutte con un errore

@@ -504,3 +504,18 @@ def test_l_unico_intervallo_mancante_e_quello_dichiarato():
         b = s[s[["home_goals_ht", "away_goals_ht"]].isna().any(axis=1)]
         buchi += [(lega, r.date, r.home_team, r.away_team) for r in b.itertuples()]
     assert buchi == [("bundesliga", "2024-12-14", "Union Berlin", "Bochum")]
+
+
+def test_ogni_raccolta_conserva_l_originale():
+    """Regola §5-ter del CLAUDE.md: si conserva il file COME CONSEGNATO.
+
+    Per tre leghe su cinque il CSV di lavoro l'abbiamo prodotto noi dall'.xlsx:
+    senza l'originale, un bug nella nostra conversione sarebbe indistinguibile
+    dal dato. Il test verifica che l'originale ci sia — non che sia leggibile
+    (aprirlo qui costerebbe secondi a ogni esecuzione della suite; la fedelta'
+    e' verificata al momento della registrazione).
+    """
+    for r in ts.raccolte_squadra():
+        orig = r["cartella"] / "originale_squadra.xlsx"
+        assert orig.is_file(), f"{r['lega']}: manca l'originale consegnato"
+        assert orig.stat().st_size > 100_000, f"{r['lega']}: originale sospettosamente piccolo"
