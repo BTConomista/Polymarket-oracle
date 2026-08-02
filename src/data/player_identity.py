@@ -204,24 +204,47 @@ def collega_per_eliminazione(df, appearances=None, *, colonna_nome="Giocatore",
         if cid is not None:
             da_fare[(date[i], cid)].append(i)
 
-    for chiave, righe in da_fare.items():
-        liberi = _liberi(cand, usati, chiave)
-        if len(righe) == 1 and len(liberi) == 1:
-            # ELIMINAZIONE: nessun altro che possano essere.
-            out.at[righe[0], "player_id"] = liberi[0][0]
-            usati[chiave].add(liberi[0][0])
-            continue
-        # Più di uno per parte: qui il nome torna a servire, ma su un insieme di
-        # due o tre. Si accetta solo l'abbinamento UNIVOCO e con almeno un token
-        # discriminante — un nome di battesimo comune non prova niente.
-        for i in righe:
-            tk = normalizza_nome(out.at[i, colonna_nome])
-            seg = [(p, n) for p, n in _liberi(cand, usati, chiave)
-                   if any(freq.get(t, 0) <= SOGLIA_TOKEN_COMUNE
-                          for t in normalizza_nome(n) & tk)]
-            if len(seg) == 1:
-                out.at[i, "player_id"] = seg[0][0]
-                usati[chiave].add(seg[0][0])
+    # I passaggi si ripetono FINO A PUNTO FISSO. Ogni assegnazione toglie un
+    # candidato dal mucchio e può rendere univoco un caso che prima non lo era:
+    # girare una volta sola lascia sul tavolo proprio i casi che si sbloccano a
+    # vicenda. Misurato: il portiere del Levante restava fuori solo per questo.
+    for _ in range(10):
+        fatto = 0
+        for chiave, righe in da_fare.items():
+            aperte = [i for i in righe if pd.isna(out.at[i, "player_id"])]
+            if not aperte:
+                continue
+            liberi = _liberi(cand, usati, chiave)
+            if len(aperte) == 1 and len(liberi) == 1:
+                # ELIMINAZIONE: nessun altro che possano essere.
+                out.at[aperte[0], "player_id"] = liberi[0][0]
+                usati[chiave].add(liberi[0][0])
+                fatto += 1
+                continue
+            # Più di uno per parte: qui il nome torna a servire, ma su un insieme
+            # di due o tre. Si prende il candidato con la sovrapposizione di token
+            # STRETTAMENTE maggiore di ogni altro — non «almeno un token raro».
+            #
+            # La soglia sulla rarità era una difesa contro un falso positivo che
+            # falso non era: `Cunat Pablo` -> `Pablo Campos` sembrava sbagliato
+            # perché i cognomi non si toccano, ed è invece la STESSA persona —
+            # Pablo Cuñat Campos, portiere del Levante nato il 28/04/2002
+            # (verificato sul sito del club e sulla stampa spagnola, e la data
+            # coincide con la nostra). In spagnolo i cognomi sono DUE, paterno e
+            # materno, e due fonti possono sceglierne uno ciascuna: la
+            # sovrapposizione parziale è la norma, non un indizio di errore.
+            for i in aperte:
+                tk = normalizza_nome(out.at[i, colonna_nome])
+                punteggi = sorted(
+                    ((len(normalizza_nome(n) & tk), p) for p, n in
+                     _liberi(cand, usati, chiave)), reverse=True)
+                if (punteggi and punteggi[0][0] > 0
+                        and (len(punteggi) == 1 or punteggi[0][0] > punteggi[1][0])):
+                    out.at[i, "player_id"] = punteggi[0][1]
+                    usati[chiave].add(punteggi[0][1])
+                    fatto += 1
+        if not fatto:
+            break
 
     # ---------------------------------------------------------------- terzo
     # L'INTERSEZIONE SULLA STAGIONE. Un nome può restare ambiguo in una singola
@@ -254,5 +277,34 @@ def collega_per_eliminazione(df, appearances=None, *, colonna_nome="Giocatore",
                 for i in righe:
                     out.at[i, "player_id"] = pid
                     usati[(date[i], cid)].add(pid)
+
+    # ------------------------------------------------------ eccezioni (R3)
+    # Ultimo: il registro degli agganci dichiarati a mano. Serve per i casi che
+    # l'automatismo NON PUO' raggiungere, non per quelli su cui non è d'accordo:
+    # l'aggancio passa dalle presenze, e dove la fonte delle presenze non ha la
+    # riga non c'è nessun candidato fra cui scegliere. È il caso di Alessandro
+    # Romano, che esiste nell'anagrafica (nato il 17/06/2006, coincide con la
+    # fonte esterna) ma di cui player-scores non registra l'esordio in Serie A.
+    #
+    # Ogni riga del registro porta motivo, fonte e data della verifica, e si
+    # applica SOLO dove il player_id è ancora vuoto: una regola che sovrascriva
+    # l'automatismo sarebbe una modifica a mano dei dati mascherata da eccezione.
+    reg = C.ROOT_DATA / "aggancio_manuale.csv"
+    if reg.exists():
+        manuale = pd.read_csv(reg)
+        attese = {"giocatore_diretta", "squadra", "player_id", "motivo", "fonte"}
+        mancanti = attese - set(manuale.columns)
+        if mancanti:
+            # Meglio dirlo qui che lasciare un AttributeError dentro un loop:
+            # chi ha appena modificato il registro deve capire cosa manca.
+            raise ValueError(
+                f"{reg}: colonne mancanti {sorted(mancanti)}. Ogni eccezione "
+                "dichiara cosa aggancia, perché e su quale fonte (R3).")
+        chiavi = {(r.giocatore_diretta, r.squadra): r.player_id
+                  for r in manuale.itertuples()}
+        for i in out.index[out["player_id"].isna()]:
+            pid = chiavi.get((out.at[i, colonna_nome], out.at[i, colonna_squadra]))
+            if pid is not None:
+                out.at[i, "player_id"] = pid
 
     return out.drop(columns="_cid")
