@@ -26,7 +26,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from fetch_smarkets_matches import (  # noqa: E402
-    MERCATI_BASE, MERCATI_PRINCIPALI, SLUG_LEGA, _slug_lega,
+    LOTTO_MERCATI, MERCATI_BASE, MERCATI_PRINCIPALI, SLUG_LEGA,
+    _etichetta_generica, _libri_per_contratto, _slug_lega,
     anomalia_del_listino, entro_finestra, leghe_assenti)
 
 
@@ -150,3 +151,53 @@ def test_il_bordo_della_finestra_e_incluso():
     """Esattamente 72h: dentro. Un `<` al posto di `<=` perderebbe in modo
     intermittente le partite raccolte all'ora esatta del giro precedente."""
     assert len(entro_finestra([_ev(3.0)], 72, adesso=_ADESSO)) == 1
+
+
+# --------------------------------------------------------------------------
+# Il listino intero (Fase 135): batching e etichette stabili
+# --------------------------------------------------------------------------
+
+def test_etichetta_generica_e_stabile_fra_partite():
+    """L'etichetta di un mercato NON deve contenere i nomi delle squadre.
+
+    Ricavarla dal nome visualizzato dava «alaves_0_5_corners_getafe_0_5_corners»:
+    360 "tipi" su 6 partite invece di ~100, cioe' un archivio che nessun
+    raggruppamento puo' leggere. Si usa `market_type.name` (+ `param`), che
+    l'API garantisce stabile.
+    """
+    casa = {"market_type": {"name": "CORNERS_HANDICAP", "param": 0.5}}
+    trasf = {"market_type": {"name": "CORNERS_HANDICAP", "param": 0.5}}
+    a = _etichetta_generica(casa, "Alaves 0.5 corners / Getafe 0.5 corners")
+    b = _etichetta_generica(trasf, "Celta 0.5 corners / Osasuna 0.5 corners")
+    assert a == b == "corners_handicap_0_5"
+    # niente nomi squadra
+    for squadra in ("alaves", "getafe", "celta", "osasuna"):
+        assert squadra not in a
+
+    # linee diverse restano mercati diversi
+    altra = _etichetta_generica(
+        {"market_type": {"name": "CORNERS_HANDICAP", "param": 1.5}}, "x")
+    assert altra != a
+
+    # senza market_type si ripiega sul nome, invece di produrre un'etichetta vuota
+    assert _etichetta_generica({}, "Qualcosa Strano") == "qualcosa_strano"
+
+
+def test_libri_per_contratto_regge_entrambe_le_forme():
+    """/quotes/ risponde in DUE modi: annidato per mercato con un ID solo,
+    piatto per contratto quando gli ID sono a lotti. Verificato dal vivo."""
+    piatto = {"111": {"bids": [], "offers": []}, "222": {"bids": [], "offers": []}}
+    assert _libri_per_contratto(piatto) == piatto
+
+    annidato = {"999": {"111": {"bids": [], "offers": []}}}
+    assert _libri_per_contratto(annidato) == {"111": {"bids": [], "offers": []}}
+
+    assert _libri_per_contratto({}) == {}
+
+
+def test_il_lotto_e_dichiarato_e_ragionevole():
+    """Senza batching il listino intero non sta in nessun budget di tempo:
+    221 richieste per partita contro 13. Il numero non e' magico ma dev'esserci
+    ed essere > 1, altrimenti il batching non esiste."""
+    assert LOTTO_MERCATI > 1
+    assert LOTTO_MERCATI <= 50      # oltre, l'URL diventa troppo lungo

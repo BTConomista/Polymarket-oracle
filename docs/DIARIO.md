@@ -335,6 +335,7 @@ correzioni.*
 - [Fase 131 — Le statistiche di squadra per periodo: il primo dato che separa i due tempi](#fase-131--le-statistiche-di-squadra-per-periodo-il-primo-dato-che-separa-i-due-tempi)
 - [Fase 133 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi](#fase-133--i-gol-allintervallo-entrano-negli-snapshot-il-dato-che-mancava-al-modello-a-due-stadi)
 - [Fase 134 — La borsa rinomina le squadre e il raccoglitore resta verde: il join che si è rotto in silenzio](#fase-134--la-borsa-rinomina-le-squadre-e-il-raccoglitore-resta-verde-il-join-che-si-è-rotto-in-silenzio)
+- [Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile](#fase-135--il-listino-intero-da-6-mercati-a-110-e-il-batching-che-lo-rende-possibile)
 
 ---
 
@@ -15130,3 +15131,102 @@ e la sua violazione è **contata**, scritta nel file del giorno e propagata al
 codice d'uscita. Il numero che la fa scattare non è una soglia scelta: è
 **zero**, perché il listino e le anagrafiche coprono per costruzione le stesse
 96 squadre delle 5 leghe.
+
+---
+
+## Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile
+
+**Obiettivo.** Applicare la regola §5-ter («raccogliere tutto») al dato più
+deperibile che il progetto abbia: i prezzi di mercato prima del fischio.
+
+**Il fatto di partenza.** Smarkets espone **110 mercati per partita** (56 tipi
+distinti, sondati dal vivo). Il cron ne raccoglieva **3** nel giro giornaliero e
+**6** in quello di chiusura. Fra i 104 buttati: `corners_handicap` (×4),
+`cards_handicap_three_way` (×2), `first_half_*` (×13), `second_half_*` (×12),
+`half_full`, `clean_sheet`, `win_to_nil`, `winner_and_*`. Cioè **esattamente i
+mercati che il progetto prezza senza avere una quota contro cui misurarsi** —
+i conteggi delle Fasi 96/98/125, il Tier 3 della Fase 98, e le famiglie che
+`CLAUDE.md` §1.8 dichiara **scoperte**.
+
+**Il flag `--tutti-i-mercati` esisteva già, e non funzionava.** Non per un bug:
+per il costo. `quote_partita` faceva **due chiamate API per mercato**
+(contratti + quote), cioè `1 + 110×2 = 221` richieste per partita. Misurato:
+il giro su **sei** partite è stato ucciso dal timeout a **15 minuti senza
+scrivere nulla**. Con la finestra di chiusura su un sabato di punta sarebbero
+2.200 richieste per giro orario: impossibile.
+
+**La correzione, e perché è quella giusta.** L'API accetta **ID separati da
+virgola** sia su `/contracts/` sia su `/quotes/`. A lotti di 20 le richieste per
+partita passano da **221 a 13**: **17 volte meno**. Lo stesso giro che moriva di
+timeout ora chiude in **1m27s** e scrive 2.056 righe.
+
+⚠️ La risposta di `/quotes/` ha **due forme**: annidata per `market_id` con un
+ID solo, **piatta per `contract_id`** a lotti. Verificato dal vivo su entrambe.
+`_libri_per_contratto()` le distingue **guardando la forma**, non contando gli
+ID richiesti — così il prossimo cambio dell'API non richiede di ricordarselo.
+
+**Equivalenza dimostrata prima di adottare.** Il percorso in batch e quello
+per-mercato producono **le stesse 30 righe su 30**, stessi prezzi, stesso banco,
+stesso puntatore. Un'ottimizzazione che cambia i numeri non è un'ottimizzazione.
+
+**Il difetto che l'estensione ha scoperchiato.** Alla prima raccolta completa i
+mercati risultavano **360 "tipi" su 6 partite** invece di ~100. Causa:
+l'etichetta veniva slugificata dal **nome visualizzato**, che contiene i nomi
+delle squadre — `alaves_0_5_corners_getafe_0_5_corners`. Un archivio così è
+illeggibile da qualunque raggruppamento: non si può chiedere «l'handicap corner»
+attraverso le partite. L'API espone `market_type.name` (+ `param`), che è
+stabile: adottato. Risultato **102 tipi**, di cui **96 comuni a tutte e sei** le
+partite, e **zero nomi squadra** nelle etichette.
+
+**Cosa è stato cambiato nel cron.** Il giro di **chiusura** (`--entro-ore 2`,
+orario) passa a `--tutti-i-mercati`. È il momento in cui il prezzo vale di più
+ed è irrecuperabile: dopo il fischio non esiste. Costo misurato: 343
+righe/partita × 484 byte = **~1,6 MB** in un sabato con 10 partite in finestra.
+Il giro **giornaliero** resta sui 3 mercati principali — decisione **da
+prendere**, non chiusa: a listino intero costerebbe ~7,8 MB/giro, cioè ~2 GB di
+archivio a stagione (o ~110 MB comprimendo, ma il formato dell'archivio
+cambierebbe e più di un lettore glob-a `*.json`).
+
+**Lezione.** Un flag che esiste e nessuno usa non è una funzionalità: è
+un'ipotesi non verificata. `--tutti-i-mercati` era in `argparse` dalla Fase 116,
+e la prima volta che qualcuno l'ha eseguito davvero è morto di timeout — e ha
+prodotto etichette inutilizzabili. **Il codice non provato non è codice che
+funziona: è codice di cui non sappiamo niente.**
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica di modello. La formula è il costo, ed è quella che decide.
+
+Sia `M` il numero di mercati per partita e `L` la dimensione del lotto. Le
+richieste per partita sono:
+
+```
+senza batching:   R = 1 + 2·M                    = 1 + 2·110 = 221
+con batching:     R = 1 + 2·ceil(M / L)          = 1 + 2·⌈110/20⌉ = 13
+riduzione:        221 / 13 = 17,0×
+```
+
+Con il throttle dichiarato del client (`_THROTTLE = 0.35 s`, l'API limita a
+~3/s) il tempo per partita passa da `221 × 0.35 ≈ 77 s` a `13 × 0.35 ≈ 4.6 s`.
+Misurato end-to-end su 6 partite: **86,7 s**, cioè **14,5 s/partita** — più dei
+4,6 teorici perché il throttle non è l'unico costo (latenza di rete, parsing),
+ma dello stesso ordine. Il calcolo a priori e la misura concordano; è il
+controllo che dice che il modello di costo è quello giusto.
+
+Il peso dell'archivio, misurato e non stimato:
+
+```
+righe/partita = 343        (contratti totali sui mercati esposti)
+byte/riga     = 484        (973 KB / 2.056 righe)
+gzip          = 19,6×      (973 KB -> 50 KB)
+```
+
+da cui il costo del regime di chiusura (partite in finestra `p`):
+
+```
+peso(p) = 343 · 484 · p byte ≈ 0,166 MB · p
+```
+
+— 1,6 MB con `p = 10`. E quello di un ipotetico giornaliero a listino intero,
+`p ≈ 48`: **7,8 MB/giro**, cioè ~2 GB su una stagione di ~280 giri. È il numero
+che rende la decisione sul giornaliero una scelta e non un automatismo.

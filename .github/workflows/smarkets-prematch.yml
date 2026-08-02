@@ -71,10 +71,23 @@ jobs:
              || [ "${{ github.event.inputs.lungo_raggio }}" = "true" ]; then
             python scripts/fetch_smarkets_matches.py --tutte-le-esposte --solo-principali
           elif [ "${{ github.event.schedule }}" = "7 * * * *" ]; then
-            # Chiusura: finestra stretta, listino intero. Nelle ore vuote lo
-            # script esce senza scrivere e il passo dopo non trova nulla da
-            # committare -- che e' il comportamento voluto, non un guasto.
-            python scripts/fetch_smarkets_matches.py --entro-ore 2
+            # CHIUSURA: finestra stretta, e da oggi TUTTI i mercati esposti
+            # (~110 per partita invece di 6). E' il momento in cui il prezzo
+            # vale di piu' e in cui non si recupera piu': dopo il fischio non
+            # esiste. Fra i 104 mercati che prima buttavamo ci sono corner,
+            # cartellini, primo/secondo tempo, HT/FT e le combinazioni -- cioe'
+            # meta' del listino che il progetto prezza SENZA una quota di
+            # riferimento contro cui misurarsi.
+            #
+            # Sostenibile solo grazie al batching (LOTTO_MERCATI): a chiamate
+            # per-mercato servivano 221 richieste a partita e il giro moriva di
+            # timeout; a lotti di 20 sono 13, e una partita si chiude in ~5 s.
+            # Costo misurato: 343 righe/partita, 484 byte/riga -> ~1,6 MB in un
+            # sabato di punta con 10 partite in finestra.
+            #
+            # Nelle ore vuote lo script esce senza scrivere e il passo dopo non
+            # trova nulla da committare: e' il comportamento voluto, non un guasto.
+            python scripts/fetch_smarkets_matches.py --entro-ore 2 --tutti-i-mercati
           else
             python scripts/fetch_smarkets_matches.py \
               --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"

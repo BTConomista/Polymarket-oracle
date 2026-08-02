@@ -212,30 +212,91 @@ def entro_finestra(nostre: list[dict], entro_ore: int,
     return [e for e in nostre if e["_inizio"] <= limite]
 
 
+# Quanti mercati per chiamata. L'API accetta ID separati da virgola sia su
+# /contracts/ sia su /quotes/, e senza questo il listino intero e' irraggiungibile:
+# 110 mercati x 2 chiamate + 1 = 221 richieste per partita, cioe' oltre 15 minuti
+# per SEI partite (misurato: il giro e' stato ucciso dal timeout senza scrivere).
+# A lotti di 20 le richieste diventano 13 e la stessa partita si chiude in ~5s:
+# **17 volte meno**. E' la differenza fra «tutti i mercati» possibile e impossibile.
+LOTTO_MERCATI = 20
+
+
+def _etichetta_generica(m: dict, nome: str) -> str:
+    """L'etichetta di un mercato fuori da MERCATI_BASE, STABILE fra partite.
+
+    ⚠️ Non si ricava dal nome visualizzato: quello contiene i nomi delle
+    squadre («Alaves 0.5 corners / Getafe 0.5 corners»), e slugificarlo dava
+    **360 "tipi" su 6 partite** invece di ~56 — etichette irraggiungibili da
+    qualunque raggruppamento, cioe' un archivio inutilizzabile. L'API espone
+    `market_type.name` (WINNER_3_WAY, CORNERS_HANDICAP, ...) piu' un `param`
+    per le linee: quello e' stabile, ed e' quello che si usa.
+    """
+    mt = m.get("market_type") or {}
+    tipo = str(mt.get("name") or "").strip().lower()
+    if not tipo:                       # l'API non lo dichiara: si ripiega sul nome
+        return re.sub(r"[^a-z0-9]+", "_", nome.lower()).strip("_")
+    param = mt.get("param")
+    if param is not None:
+        tipo += "_" + re.sub(r"[^a-z0-9]+", "_", str(param).lower()).strip("_")
+    return tipo
+
+
+def _libri_per_contratto(quote: dict) -> dict:
+    """Normalizza la risposta di /quotes/, che ha DUE forme.
+
+    Con un mercato solo torna annidata per market_id; a lotti torna piatta per
+    contract_id. Verificato dal vivo su entrambe. Distinguerle guardando la
+    forma, invece che il numero di ID richiesti, evita di doverci pensare al
+    prossimo cambio dell'API.
+    """
+    if not quote:
+        return {}
+    campione = next(iter(quote.values()), None)
+    if isinstance(campione, dict) and ("bids" in campione or "offers" in campione):
+        return quote                     # gia' per contratto
+    piatta = {}                          # annidata per mercato: si appiattisce
+    for libri in quote.values():
+        if isinstance(libri, dict):
+            piatta.update(libri)
+    return piatta
+
+
 def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[dict]:
     """Le quote di una partita: una riga per (mercato, contratto)."""
     righe = []
     mercati = (_get(f"/events/{ev['event_id']}/markets/") or {}).get("markets", [])
+
+    # Prima si sceglie COSA serve, poi si chiede in blocco: cosi' il costo
+    # dipende dai mercati richiesti, non da quelli esposti.
+    scelti: dict[str, tuple[str, str]] = {}
     for m in mercati:
         nome = m.get("name") or ""
         etichetta = MERCATI_BASE.get(nome)
         if etichetta is None:
             if not tutti:
                 continue
-            etichetta = re.sub(r"[^a-z0-9]+", "_", nome.lower()).strip("_")
+            etichetta = _etichetta_generica(m, nome)
         if solo_principali and etichetta not in MERCATI_PRINCIPALI:
             continue
-        contratti = (_get(f"/markets/{m['id']}/contracts/") or {}).get("contracts", [])
-        quote = _get(f"/markets/{m['id']}/quotes/") or {}
-        libri = quote.get(str(m["id"]), quote)
+        scelti[str(m["id"])] = (etichetta, nome)
+
+    ids = list(scelti)
+    for i in range(0, len(ids), LOTTO_MERCATI):
+        lotto = ",".join(ids[i:i + LOTTO_MERCATI])
+        contratti = (_get(f"/markets/{lotto}/contracts/") or {}).get("contracts", [])
+        libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
         for c in contratti:
-            libro = (libri or {}).get(str(c["id"])) or {}
+            mid = str(c.get("market_id") or "")
+            if mid not in scelti:
+                continue          # l'API puo' restituire piu' di quanto chiesto
+            etichetta, nome = scelti[mid]
+            libro = libri.get(str(c["id"])) or {}
             p = book_price(libro)
             righe.append({
                 "lega": ev["lega"], "partita": ev["nome"],
                 "inizio": ev["inizio"], "event_id": ev["event_id"],
                 "mercato": etichetta, "mercato_smarkets": nome,
-                "market_id": m["id"], "contratto": c.get("name"),
+                "market_id": mid, "contratto": c.get("name"),
                 "contract_id": c["id"],
                 # book_price (Fase 97): prezzi come PROBABILITA' 0-1, mai quote
                 "p_mid": p["price"], "lato": p["price_side"],
