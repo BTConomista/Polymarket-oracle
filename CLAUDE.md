@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.265 verdi** al 02/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.287 verdi** al 02/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.265 verdi al 02/08/2026)
+python -m pytest                       # test (1.287 verdi al 02/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -342,6 +342,10 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  Smarkets, .json storici e .json.gz nuovi. ultimo_listino_completo()
                  e' quello che serve: «l'ultimo file» puo' essere un giro di
                  chiusura con una lega sola)
+                 coppe.py + coupe_de_france.py (Fase 138: le COPPE NAZIONALI
+                 2025-26, 6 tornei / 5 paesi. Il punteggio di games.csv SOMMA
+                 I RIGORI su 68 partite su 458: qui e' ricostruito dagli eventi
+                 e verificato contro openfootball, 42/42 identiche)
                  team_stats.py (Fase 131: 45 statistiche per SQUADRA-partita divise
                  in PERIODI -- Totale/1T/2T, 5 leghe 2025-26, 1.752 partite. E' il
                  primo dato che separa i due tempi: serve alla pista 6-bis, il
@@ -350,7 +354,8 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         download_data, build_database, backtest, analyze, tune, calibrate,
+scripts/         build_coppe_2526 (la raccolta coppe, Fase 138),
+                 download_data, build_database, backtest, analyze, tune, calibrate,
                  markets (multi-mercato), analyze_gap (anatomia del gap col mercato),
                  predict (il TOOL d'uso: DC senza quote, market-implied con --odds),
                  build_league_snapshot (snapshot Premier/Liga dai bundle in files/),
@@ -373,7 +378,11 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
-data/            {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
+data/            coppe_2526/ (COPPE NAZIONALI 2025-26: 662 partite, 18.566 righe
+                 di formazione, 8.177 eventi col minuto. 204 partite senza
+                 formazione, dichiarate. Leggere il suo README PRIMA di usare
+                 il punteggio)
+                 {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
                  (SNAPSHOT congelati, versionati — schema IDENTICO, ordine
                  colonne compreso: lo verifica test_schema_identico_tra_leghe.
                  40 colonne: dalla Fase 133 ci sono anche home_goals_ht /
@@ -466,7 +475,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.265 verdi al 02/08/2026), fra cui i guardiani
+tests/           test unitari (1.287 verdi al 02/08/2026), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/

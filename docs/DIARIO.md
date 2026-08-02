@@ -338,6 +338,7 @@ correzioni.*
 - [Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile](#fase-135--il-listino-intero-da-6-mercati-a-110-e-il-batching-che-lo-rende-possibile)
 - [Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime](#fase-136--anche-il-giro-giornaliero-prende-tutto-e-larchivio-si-comprime)
 - [Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere](#fase-137--i-guardiani-mancanti-tre-difetti-che-nessun-test-poteva-vedere)
+- [Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato](#fase-138--le-coppe-nazionali-entrano-nel-progetto-e-la-fonte-somma-i-rigori-al-risultato)
 
 ---
 
@@ -15561,3 +15562,204 @@ non l'ultima salva. Deducendo `n` dai dati tornano entrambe giuste senza toccare
 turno. L'euristica ragiona sul calendario **teorico**, quindi fino all'ultima
 giornata giocata vede ancora 10 gare da giocare e non dichiara nessuno «deciso». È
 corretto così: nessuno, in quel momento, lo sapeva.
+
+---
+
+## Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato
+
+**Obiettivo.** Decisione dell'utente (02/08/2026), dopo il disegno di
+`PIANO_DATABASE_GIOCATORI.md` §14: si parte dalle **competizioni di club**, e
+dentro queste dalle **coppe nazionali** della sola stagione 2025-26 — Coppa
+Italia, FA Cup, Carabao Cup, Copa del Rey, DFB-Pokal, Coupe de France. Il
+perimetro l'ha fissato l'utente e non è quello che avevo proposto io: **«da
+dove iniziano a giocare i club di seconda divisione in ogni nazione»**, perché
+*«i club che oggi sono in seconda domani saranno in prima, e viceversa»*. Da
+raccogliere: data, squadre, risultato, **formazioni titolari e sostituzioni**.
+Il risultato serve anche da controparte automatica alla raccolta manuale
+diretta.it che l'utente importerà.
+
+**Ragionamento e ipotesi.** L'ipotesi di partenza — la mia — era che le coppe
+fossero un fronte quasi vergine e che il costo stesse nel procurarsi il
+calendario. Verificando prima di pianificare (la stessa disciplina che alla
+§14 aveva già demolito due premesse), è caduta anche questa:
+
+1. **il calendario di coppa 2025-26 c'era già**, in `data/club_fixtures*.csv`,
+   per tutte e cinque le leghe — ma solo per le partite in cui gioca almeno un
+   club di prima divisione, e **senza risultato e senza formazioni**;
+2. **le formazioni c'erano quasi tutte**, e non me ne ero accorto: il dataset
+   player-scores contiene le coppe nazionali. `appearances` ha 891 presenze di
+   Coppa Italia 2025-26, 1.172 di FA Cup, 1.298 di Copa del Rey. Mancavano solo
+   i file che non avevamo scaricato — `games.csv`, `game_lineups.csv`,
+   `game_events.csv` — e Kaggle è raggiungibile in sessione dalla Fase 100.
+
+**Alternative considerate.** (a) Scraping di diretta.it via Playwright: dà
+tutto, ma è il lavoro che l'utente fa a mano e non serviva duplicarlo prima di
+avere una controparte. (b) openfootball come fonte primaria: **scartata per
+misura** — il 2025-26 delle coppe esiste solo per la Germania, e anche lì il
+file si ferma al 2° turno (dagli ottavi in poi le righe sono `N.N.`). È
+diventato invece il *verificatore*. (c) Wikipedia come fonte primaria: dà
+risultati ma non formazioni; è rimasta per la Coupe de France e per tre finali.
+
+**Scelta: tre fonti, con ruoli diversi.** player-scores come ossatura;
+openfootball come **verifica esterna e indipendente**; Wikipedia per ciò che
+manca. Non è ridondanza: due fonti sulla stessa partita sono l'unico modo per
+accorgersi che una delle due sbaglia (R5, passo 2) — ed è servito subito.
+
+### Il difetto: il punteggio della fonte non è il punteggio della partita
+
+Su **68 partite di coppa su 458 (14,8%)** `games.csv` riporta il risultato
+**sommato ai rigori**:
+
+```
+Eintracht Braunschweig v VfB Stuttgart   games.csv:  11-12
+la partita è finita 4-4 dopo i supplementari; rigori 7-8
+```
+
+Non è un dato mancante: è un **finto pieno** (regola R6). Un 11-12 sembra un
+punteggio, si comporta come un punteggio, passa qualunque controllo di tipo, e
+avvelenerebbe ogni modello sui gol. È **esattamente** la trappola che il
+progetto aveva già registrato per Chemnitzer-Mainz 2014 (10-9 = 5-5 più 5-4
+ai rigori): scritta in un documento, mai trasformata in un controllo. Ora lo è.
+
+**Risultato.** 662 partite su 6 coppe e 5 paesi; 18.566 righe di formazione
+(9.883 titolari, 8.683 panchina) e 8.177 eventi col minuto su 458 partite
+coperte al 100%. Ricostruzione del punteggio esatta su **448/458 (97,8%)**, con
+i 10 residui dichiarati riga per riga. Verifica esterna contro openfootball:
+**42 partite appaiate, 42/42 identiche su tutti e sei i campi** (90' casa e
+ospite, finale casa e ospite, rigori casa e ospite), **zero divergenze**.
+
+**Due ipotesi scartate misurando, non discutendo.**
+- *«gli autogol vanno riassegnati all'avversario di chi li segna»* — **falso**:
+  nel dataset sono già attribuiti alla squadra che ne **beneficia**. Invertirli
+  fa scendere la ricostruzione dal 98,5% all'89,7%: è la differenza che ha
+  deciso, non l'intuizione.
+- *«i rigori si contano dagli eventi»* — **falso**: la sequenza è **troncata**.
+  In Grimsby-Manchester United sono registrati 23 tiri, i rigori veri furono
+  12-11. Il totale contaminato di `games.csv` è più completo della sequenza,
+  quindi la stima buona è la **sottrazione**.
+
+**Il turno d'ingresso della seconda divisione è misurato, non copiato** da una
+scheda di formato: si cerca il primo turno in cui compare un club che
+football-data elenca nella seconda divisione 2025-26 di quel paese.
+
+| coppa | 2ª divisione entra a | partite | nel perimetro |
+|---|---|--:|--:|
+| Coppa Italia | Qualifying Round | 45 | 45 |
+| FA Cup | Third Round | 123 | 63 |
+| EFL Cup (Carabao) | First Round | 93 | 91 |
+| Copa del Rey | First Round | 137 | 117 |
+| DFB-Pokal | First Round | 63 | 63 |
+| Coupe de France | 7° turno | 201 | 201 |
+
+Per cinque coppe su sei l'ingresso è **il primo turno del torneo**: il
+perimetro dell'utente coincide quasi sempre con la competizione intera, e taglia
+davvero solo la FA Cup (i primi due turni, 60 partite di sole squadre minori).
+Applicando §5-ter («raccogliere tutto») le partite fuori perimetro sono state
+**tenute lo stesso** e marcate con una colonna: il perimetro è un filtro, non un
+confine di raccolta.
+
+**Buchi dichiarati** (R6: un buco dichiarato è innocuo, uno nascosto no).
+**204 partite senza formazione** — le 201 di Coupe de France più tre finali:
+Wikipedia pubblica i titolari solo per le finali, e la Coupe de France non è
+in player-scores (`competitions.csv` ha 10 coppe nazionali e nessuna francese,
+rilievo già noto). E **tre finali mancavano del tutto da `games.csv`** — Coppa
+Italia, FA Cup, DFB-Pokal — pur essendoci 846 partite di maggio 2026 in altre
+competizioni: non è un taglio temporale, è un'assenza puntuale, recuperata da
+Wikipedia.
+
+**Un controllo cieco scoperto scrivendolo.** Il primo test che avevo messo
+diceva «nessuna partita finisce con più di 10 gol». È diventato rosso su dati
+**veri**: Getafe ha vinto 11-0 in casa di una squadra di quinta divisione, il
+Saint-Étienne 11-1. Un tetto sul numero di gol non distingue il difetto dal
+calcio — è la regola R7 (la statistica di testa dev'essere quella giusta, non
+quella comoda). Sostituito con l'**identità esatta** `dichiarato = gol +
+rigori`, che il difetto lo intercetta e la goleada la lascia passare.
+
+### 📐 Il modello in dettaglio
+
+Non c'è modello nuovo: c'è una **ricomposizione esatta**, e va scritta come
+identità perché è così che si evita di leggerla al contrario (regola aggiunta
+dalla Fase 92).
+
+**1. Il punteggio, dai soli eventi** (`src/data/coppe.py::ricostruisci_punteggio`):
+
+```
+gol_casa(t)   = #{ e ∈ eventi : e.type = "Goals" ∧ e.club_id = casa ∧ e.minute ≤ t }
+gol_casa_90   = gol_casa(90)          gol_casa_finale = gol_casa(∞)
+rigori_casa   = home_club_goals − gol_casa_finale        [solo se ∃ evento "Shootout"]
+```
+
+Perché `club_id` senza correzione per gli autogol: **misurato**. Contando gli
+autogol a favore della squadra del giocatore la resa è 89,7%; attribuendoli a
+chi ne beneficia — cioè leggendo `club_id` così com'è — è 98,5%. Il numero non
+è scelto, è l'esito del confronto fra le due letture sulle stesse 458 partite.
+
+Perché i rigori per sottrazione e non per conteggio: `#Shootout(Grimsby) = 23`
+contro un 12-11 reale. La sottrazione usa `home_club_goals`, che è contaminato
+**ma completo**; il conteggio userebbe una sequenza **incompleta**. Fra un dato
+sporco-e-intero e uno pulito-e-mozzo, per una differenza, vince il primo.
+
+Due guardie, entrambe con una ragione fisica e non estetica:
+```
+rigori_casa < 0  ∨  rigori_ospite < 0   → impossibile (i gol non si sottraggono)
+rigori_casa = rigori_ospite             → impossibile (una serie di rigori non pareggia)
+```
+In entrambi i casi il valore **non** viene scritto: la riga si marca
+`eventi_incompleti`. Sono 10 righe su 458, e 9 sono turni preliminari
+dilettantistici di Copa del Rey dove manca perfino il nome di un club.
+
+**2. La verifica esterna** (`leggi_openfootball`). openfootball scrive la stessa
+partita in forma già scomposta:
+
+```
+7-8 pen.  4-4 a.e.t.  (3-3, 1-1)
+ rigori    finale       90'  primo tempo
+```
+
+⚠️ La parentesi ha **due significati**: con `a.e.t.` è il 90' (più, se c'è, il
+primo tempo); senza, è il primo tempo. Leggerla sempre allo stesso modo è
+l'errore facile, ed è coperto da un test. Il confronto fra le due letture
+indipendenti — la nostra ricostruita, la loro dichiarata — dà **42/42 su sei
+campi**: è ciò che rende la ricomposizione un fatto e non un'ipotesi.
+
+Un bug pagato qui, e vale la pena scriverlo: il parser pretendeva **due spazi**
+attorno alla `v` che separa le squadre. Nel file le colonne sono allineate,
+quindi due spazi ci sono quasi sempre — ma **non** quando il nome di casa è
+lungo abbastanza da mangiarseli («SG Sonnenhof Großaspach v Bayer Leverkusen»).
+Saltavano in silenzio 16 partite su 63, **tutte con la squadra dal nome lungo**:
+un filtro sistematico travestito da svista, che nessun conteggio totale avrebbe
+mostrato come sbagliato. L'ha trovato un test, non un'occhiata ai numeri.
+
+**3. La Coupe de France** (`src/data/coupe_de_france.py`). Il template
+`{{Feuille de match}}` tiene i rigori in un campo **separato** (`score tab`),
+quindi lì il punteggio non è mai contaminato; e scrive la **divisione** di ogni
+club accanto al nome (`<small>(N2)</small>`), cioè esattamente l'informazione
+che serve al perimetro. La squadra qualificata è in `'''grassetto'''`: è un
+secondo canale **indipendente** dal punteggio, quindi confrontarli verifica la
+lettura. Su 201 partite: 201 con punteggio, 201 con data, 201 con entrambe le
+divisioni, **0 incoerenze** fra grassetto e punteggio.
+
+**4. Le tre finali mancanti** (`leggi_finale_wikipedia`). Una trappola piccola e
+istruttiva: nell'infobox `Infobox football match` il punteggio **non** sta in un
+campo `score`, sta in `team1score`/`team2score`. Un `| score = 0–2` esiste più
+in basso nella pagina, dentro il `{{Football box}}` del riepilogo — quindi una
+ricerca su tutto il wikitext lo trova, sembra giusta, e sta leggendo **un
+template diverso** da quello da cui prende tutti gli altri campi. Si legge un
+solo template, per intero, con l'annidamento contato.
+
+**Lezione.** Tre, e nessuna riguarda un modello.
+1. **Una fonte nuova va letta contro una seconda fonte prima di crederle**, non
+   dopo. Qui il difetto era su una partita su sette, e nessun controllo interno
+   l'avrebbe visto: il dato coincide con la fonte, la fonte è sbagliata.
+2. **Un fatto scritto in un documento non è un controllo.** Chemnitzer-Mainz
+   era annotato dal 29/07 e il difetto è rientrato lo stesso, perché
+   un'annotazione non fallisce quando qualcuno la ignora. Un test sì.
+3. **I controlli di sanità vanno scelti come le statistiche di testa** (R7): un
+   tetto sui gol segnala il calcio vero e tace sul difetto; l'identità esatta fa
+   il contrario.
+
+**Cosa NON è stato fatto**, e va detto: nessun modello usa questi dati. È una
+raccolta, e il suo valore immediato è il collegamento (§14.5), non una
+conclusione. Il confronto con la raccolta manuale diretta.it dell'utente è il
+passo successivo, ed è quello che chiuderà il cerchio sulle 204 partite senza
+formazione.

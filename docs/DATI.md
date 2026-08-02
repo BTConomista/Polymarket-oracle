@@ -900,6 +900,54 @@ Wikipedia), i verdetti e i Q-id sono CC0 (Wikidata). Vedi
 
 ---
 
+## 5-sexies · Coppe nazionali 2025-26 (`data/coppe_2526/`) — Fase 138
+
+**662 partite** su sei coppe e cinque paesi: Coppa Italia (45), FA Cup (123),
+EFL Cup/Carabao (93), Copa del Rey (137), DFB-Pokal (63), Coupe de France (201).
+Con **18.566 righe di formazione** (titolari + panchina + minuti giocati) e
+**8.177 eventi col minuto** (sostituzioni, gol, cartellini, rigori) su 458
+partite. Dettaglio completo in `data/coppe_2526/README.md`.
+
+⚠️ **Il difetto della fonte, da conoscere prima di usare il dato.** In
+`games.csv` di player-scores il risultato è **sommato ai rigori** su **68
+partite (14,8%)**: Braunschweig-Stuttgart risulta `11-12` mentre è finita 4-4
+(rigori 8-7). È un **finto pieno** da manuale (R6): sembra un punteggio e non
+lo è. Nella nostra raccolta il punteggio è **ricostruito dagli eventi** e vive
+in colonne separate — `gol_*_90`, `gol_*_finale`, `rigori_*` — mentre il valore
+grezzo della fonte è conservato in `gol_*_dichiarato` (per poter scoprire un
+bug nella *nostra* conversione, §5-ter). Resa **448/458 (97,8%)**; i 10 residui
+sono marcati `eventi_incompleti`, non corretti a occhio.
+
+**Verificata contro una fonte esterna**: openfootball scrive la stessa partita
+già scomposta (`7-8 pen. 4-4 a.e.t. (3-3, 1-1)`). Sulle 42 partite di
+DFB-Pokal appaiabili la ricostruzione coincide **42/42 su tutti e sei i campi**,
+zero divergenze. openfootball copre però solo la Germania per il 2025-26 e solo
+i primi due turni: è un verificatore parziale, non una fonte alternativa.
+
+**Perimetro** (decisione utente 02/08/2026): «da dove entrano i club di seconda
+divisione». Il turno d'ingresso è **misurato** — primo turno con un club che
+football-data elenca in 2ª divisione 2025-26 — e non copiato da una scheda di
+formato: Coppa Italia *Qualifying Round*, FA Cup *Third Round*, Carabao / Copa
+del Rey / DFB-Pokal *First Round*, Coupe de France *7° turno*. **577 partite**
+nel perimetro; le altre sono **tenute** e marcate `dentro_perimetro = False`.
+
+**Buchi dichiarati.** **204 partite senza formazione**: le 201 di Coupe de
+France (player-scores non ha coppe francesi in `competitions.csv`, rilievo già
+noto dall'audit fonti) e le **3 finali** — Coppa Italia, FA Cup, DFB-Pokal —
+che mancano da `games.csv` pur essendoci 846 partite di maggio 2026 in altre
+competizioni, e sono state recuperate da Wikipedia. Sono esattamente le righe
+con `game_id` vuoto.
+
+**Disponibilità temporale (R8).** Le **formazioni titolari** sono `pre` (note
+circa un'ora prima del fischio, quindi utilizzabili per prevedere anche se qui
+sono raccolte a posteriori); **sostituzioni, minuti, gol, cartellini e
+risultato** sono `post`. Arbitro, stadio e squadre sono `pre`.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge questi dati
+(§5-ter: «raccolto ≠ usato» è uno stato legittimo e va scritto).
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

@@ -78,6 +78,29 @@ ALIAS: dict[str, str] = {
                                         # andava al PAOK Kristonis (dilettanti), che
                                         # in `appearances` non compare MAI: 0/50
     "AEK Athens": "Athlitiki Enosi Konstantinoupoleos",   # 41/41 conferme
+    # --- Nomi ABBREVIATI di football-data.co.uk (coppe 2025-26, 02/08/2026).
+    # Servono per riconoscere i club di SECONDA divisione nelle coppe nazionali:
+    # football-data li scrive corti ("QPR", "Sheffield Weds"), il registro
+    # player-scores per esteso. Ognuno verificato singolarmente: aggancio
+    # univoco (1 solo candidato) contro `club_names.csv.gz`.
+    "Blackburn": "Blackburn Rovers",
+    "Oxford": "Oxford United",
+    "Preston": "Preston North End",
+    "QPR": "Queens Park Rangers",
+    "Sheffield Weds": "Sheffield Wednesday",
+    "West Brom": "West Bromwich Albion",
+    "Ceuta": "AD Ceuta FC",
+    "Santander": "Racing Santander",
+    "Sp Gijon": "Sporting Gijon",
+    "Braunschweig": "Eintracht Braunschweig",
+    "Karlsruhe": "Karlsruher SC",
+    "Nurnberg": "1.FC Nuremberg",
+    "Preussen Munster": "Preußen Münster",
+    # ⚠️ I club di Ligue 2 (Annecy, Boulogne, Dunkerque, Grenoble, Laval,
+    # Le Mans, Pau, Rodez) NON hanno un alias perche' non esistono nel
+    # registro: player-scores non copre ne' la Ligue 2 ne' la Coupe de France.
+    # Per la coppa francese la divisione viene da Wikipedia, che la scrive
+    # accanto a ogni nome (vedi `coupe_de_france.py`).
 }
 
 # Nomi che NON vanno agganciati: sono squadre RISERVE, che nel nostro dataset in
@@ -89,6 +112,9 @@ NON_AGGANCIARE: frozenset[str] = frozenset({
     "bilbao athletic", "real madrid castilla", "barcelona atletic",
     "barcelona b", "real madrid b", "atletico madrid b", "sevilla atletico",
     "villarreal b", "celta b", "athletic bilbao b",
+    # football-data chiama cosi' la riserva della Real Sociedad, che gioca in
+    # Segunda: stesso motivo di tutte le altre, non va agganciata alla prima.
+    "sociedad b", "real sociedad b",
 })
 
 

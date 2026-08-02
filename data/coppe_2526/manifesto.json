@@ -1,0 +1,197 @@
+{
+  "generato": "2026-08-02",
+  "fonti": {
+    "player_scores": {
+      "dataset": "davidcariboo/player-scores",
+      "cartella": "/root/.cache/kagglehub/datasets/davidcariboo/player-scores/versions/673"
+    },
+    "openfootball": "https://raw.githubusercontent.com/openfootball/deutschland/master/2025-26/cup.txt",
+    "wikipedia": "fr:Coupe de France de football 2025-2026",
+    "football_data": "https://www.football-data.co.uk/mmz4281/2526/<codice>.csv"
+  },
+  "partite_totali": 662,
+  "per_competizione": {
+    "Coupe de France": {
+      "partite": 201,
+      "turno_ingresso_seconda_divisione": "7° turno",
+      "dentro_perimetro": 201
+    },
+    "Copa del Rey": {
+      "partite": 137,
+      "turno_ingresso_seconda_divisione": "First Round",
+      "dentro_perimetro": 117
+    },
+    "FA Cup": {
+      "partite": 123,
+      "turno_ingresso_seconda_divisione": "Third Round",
+      "dentro_perimetro": 63
+    },
+    "EFL Cup": {
+      "partite": 93,
+      "turno_ingresso_seconda_divisione": "First Round",
+      "dentro_perimetro": 91
+    },
+    "DFB-Pokal": {
+      "partite": 63,
+      "turno_ingresso_seconda_divisione": "First Round",
+      "dentro_perimetro": 63
+    },
+    "Coppa Italia": {
+      "partite": 45,
+      "turno_ingresso_seconda_divisione": "Qualifying Round",
+      "dentro_perimetro": 45
+    }
+  },
+  "formazioni": {
+    "righe": 18566,
+    "partite_coperte": 458,
+    "titolari": 9883,
+    "panchina": 8683
+  },
+  "eventi": {
+    "righe": 8177,
+    "per_tipo": {
+      "Substitutions": 4328,
+      "Cards": 1699,
+      "Goals": 1437,
+      "Shootout": 713
+    }
+  },
+  "punteggio": {
+    "partite_con_rigori": 68,
+    "partite_con_supplementari": 46,
+    "dichiarato_diverso_dal_ricostruito": 78,
+    "eventi_incompleti": 10,
+    "ricomposte_esattamente": 448
+  },
+  "verifica_esterna_dfb": {
+    "partite_openfootball": 43,
+    "partite_nostre_dfb": 62,
+    "appaiate": 43,
+    "confronti": {
+      "gol_casa_90": {
+        "confrontabili": 43,
+        "uguali": 43
+      },
+      "gol_ospite_90": {
+        "confrontabili": 43,
+        "uguali": 43
+      },
+      "gol_casa_finale": {
+        "confrontabili": 43,
+        "uguali": 43
+      },
+      "gol_ospite_finale": {
+        "confrontabili": 43,
+        "uguali": 43
+      },
+      "rigori_casa": {
+        "confrontabili": 6,
+        "uguali": 6
+      },
+      "rigori_ospite": {
+        "confrontabili": 6,
+        "uguali": 6
+      }
+    },
+    "divergenti": [],
+    "solo_in_openfootball": 0
+  },
+  "verifica_coupe_de_france": {
+    "partite": 201,
+    "con_punteggio": 201,
+    "con_rigori": 54,
+    "con_data": 201,
+    "con_divisione_entrambe": 201,
+    "incoerenti": []
+  },
+  "finali_recuperate_da_wikipedia": [
+    {
+      "competizione": "Coppa Italia",
+      "casa": "Lazio",
+      "ospite": "Internazionale",
+      "gol_casa": 0,
+      "gol_ospite": 2,
+      "rigori_casa": null,
+      "rigori_ospite": null,
+      "data": "2026-05-13",
+      "stadio": "Stadio Olimpico",
+      "citta": "Rome",
+      "arbitro": "Marco Guida",
+      "spettatori": 68729,
+      "pagina": "2026 Coppa Italia final"
+    },
+    {
+      "competizione": "FA Cup",
+      "casa": "Chelsea",
+      "ospite": "Manchester City",
+      "gol_casa": 0,
+      "gol_ospite": 1,
+      "rigori_casa": null,
+      "rigori_ospite": null,
+      "data": "2026-05-16",
+      "stadio": "Wembley Stadium",
+      "citta": "London",
+      "arbitro": "Darren England (South Yorkshire)",
+      "spettatori": 83337,
+      "pagina": "2026 FA Cup final"
+    },
+    {
+      "competizione": "DFB-Pokal",
+      "casa": "Bayern Munich",
+      "ospite": "VfB Stuttgart",
+      "gol_casa": 3,
+      "gol_ospite": 0,
+      "rigori_casa": null,
+      "rigori_ospite": null,
+      "data": "2026-05-23",
+      "stadio": "Olympiastadion",
+      "citta": "Berlin",
+      "arbitro": "Sven Jablonski (Bremen)",
+      "spettatori": 74036,
+      "pagina": "2026 DFB-Pokal final"
+    }
+  ],
+  "senza_formazioni": {
+    "partite": 204,
+    "quali": "Coupe de France (201) + le 3 finali assenti da games.csv; Wikipedia non pubblica i titolari se non per le finali"
+  },
+  "aggancio_seconde_divisioni": {
+    "IT": {
+      "club_elencati": 20,
+      "agganciati": 20,
+      "non_agganciati": []
+    },
+    "EN": {
+      "club_elencati": 24,
+      "agganciati": 24,
+      "non_agganciati": []
+    },
+    "ES": {
+      "club_elencati": 22,
+      "agganciati": 21,
+      "non_agganciati": [
+        "Sociedad B"
+      ]
+    },
+    "DE": {
+      "club_elencati": 18,
+      "agganciati": 18,
+      "non_agganciati": []
+    }
+  },
+  "file": {
+    "partite.csv": {
+      "righe": 662,
+      "sha256": "df5b2241539bc768f81f7cab728f4dc58e365f033b1260be682e24d0ef5a1bca"
+    },
+    "formazioni.csv": {
+      "righe": 18566,
+      "sha256": "4dbd5397528401fcd9e5a601ae12a96faac979256f50bd2d1488895faf6917a2"
+    },
+    "eventi.csv": {
+      "righe": 8177,
+      "sha256": "e9e0d27c042ce984c6c031e2548c35f14a94273fdeeedc826dd22a1f86fed311"
+    }
+  }
+}
