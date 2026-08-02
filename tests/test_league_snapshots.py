@@ -317,3 +317,196 @@ def test_enrich_richiede_la_lega_giusta():
                           "away_team": ["Chelsea", "Arsenal"]})
     with pytest.raises(ValueError, match="premier_league"):
         loader.enrich(finto, "serie_a")
+
+
+# --------------------------------------------------------------------- #
+# I gol all'intervallo devono sopravvivere a un --refresh (Fase 137)
+# --------------------------------------------------------------------- #
+def _grezzo_finto() -> pd.DataFrame:
+    """Un CSV football-data in miniatura, con i campi che `_normalize` esige."""
+    return pd.DataFrame({
+        "Date": ["12/08/2023", "13/08/2023", "14/08/2023"],
+        "HomeTeam": ["Inter", "Milan", "Roma"],
+        "AwayTeam": ["Milan", "Roma", "Inter"],
+        "FTHG": [3, 1, 0], "FTAG": [1, 1, 2], "FTR": ["H", "D", "A"],
+        # asimmetrici di proposito: un'inversione casa/ospite si vede
+        "HTHG": [2, 0, 0], "HTAG": [0, 1, 1],
+    })
+
+
+def test_normalize_produce_i_gol_all_intervallo():
+    """Un `--refresh` NON deve perdere i gol all'intervallo.
+
+    Perche' questo test esiste. La Fase 133 aveva aggiunto `home_goals_ht` /
+    `away_goals_ht` con uno script che scriveva sugli snapshot GIA' fatti. Il
+    ramo `--refresh` di `build_database.py`, pero', ricostruisce lo snapshot da
+    zero passando da `loader._normalize`: finche' le due colonne non nascevano
+    li', un solo refresh riportava la lega a 38 colonne — e nessun modulo sotto
+    `src/` le nominava, quindi nessun test poteva accorgersene.
+
+    L'asimmetria dei valori e' voluta: se HTHG e HTAG fossero scambiate, la
+    prima riga darebbe 0-2 invece di 2-0 e questo test fallirebbe.
+    """
+    from src.data import sources
+
+    out = loader._normalize(_grezzo_finto(), "2324", sources.LEAGUES["serie_a"])
+    assert {"home_goals_ht", "away_goals_ht"} <= set(out.columns)
+    assert list(out["home_goals_ht"]) == [2, 0, 0]
+    assert list(out["away_goals_ht"]) == [0, 1, 1]
+    # e restano coerenti col finale, riga per riga
+    assert (out["home_goals_ht"] <= out["home_goals"]).all()
+    assert (out["away_goals_ht"] <= out["away_goals"]).all()
+
+
+def test_normalize_intervallo_vuoto_resta_vuoto_e_non_zero():
+    """Regola R6: un buco dichiarato e' innocuo, un finto pieno no.
+
+    Il caso reale e' Union Berlin-Bochum del 14/12/2024 (sospesa, 1-1 sul campo
+    e 0-2 a tavolino): football-data ne registra il verdetto ma lascia
+    l'intervallo in bianco. Uno 0-0 al suo posto racconterebbe una partita che
+    non c'e' stata. Il tipo dev'essere Int64 nullable proprio per questo: un
+    `int` non puo' essere vuoto e un `float` scriverebbe `2.0` in ogni cella.
+    """
+    grezzo = _grezzo_finto()
+    grezzo.loc[1, ["HTHG", "HTAG"]] = [None, None]
+
+    from src.data import sources
+
+    out = loader._normalize(grezzo, "2324", sources.LEAGUES["serie_a"])
+    assert str(out["home_goals_ht"].dtype) == "Int64"
+    assert pd.isna(out.loc[1, "home_goals_ht"])
+    assert pd.isna(out.loc[1, "away_goals_ht"])
+    assert out.loc[0, "home_goals_ht"] == 2      # le altre righe non ne risentono
+
+
+def test_normalize_senza_le_colonne_di_intervallo_alla_fonte():
+    """Una fonte che non porta HTHG/HTAG non deve far esplodere il caricamento:
+    le colonne ci sono lo stesso, vuote. E' il caso di una stagione vecchia o di
+    un provider diverso — e vale la stessa regola dei tiri in porta, che gia'
+    mancano in alcune righe."""
+    grezzo = _grezzo_finto().drop(columns=["HTHG", "HTAG"])
+
+    from src.data import sources
+
+    out = loader._normalize(grezzo, "2324", sources.LEAGUES["serie_a"])
+    assert {"home_goals_ht", "away_goals_ht"} <= set(out.columns)
+    assert out["home_goals_ht"].isna().all()
+    assert str(out["home_goals_ht"].dtype) == "Int64"
+
+
+def test_le_colonne_di_intervallo_sono_nello_schema_interno():
+    """Guardia contro il ritorno del difetto: qualunque cosa succeda, le due
+    colonne devono nascere dentro `src/`, non da uno script a valle.
+
+    Prima della Fase 137 `grep -rl goals_ht src/ scripts/` rispondeva con UN
+    file solo — lo script della Fase 133 — e questo bastava a spiegare il
+    difetto: nessuna riga della pipeline di produzione le conosceva.
+    """
+    import inspect
+
+    sorgente = inspect.getsource(loader._normalize)
+    assert "HTHG" in sorgente and "HTAG" in sorgente
+    assert "home_goals_ht" in sorgente and "away_goals_ht" in sorgente
+
+
+# --------------------------------------------------------------------- #
+# La posta in palio non puo' presumere 20 squadre (Fase 137)
+# --------------------------------------------------------------------- #
+def _stagione_finta(n: int, season: str = "2324",
+                    inizio: str = "2023-08-01") -> pd.DataFrame:
+    """Un campionato finto ma REALISTICO: doppio girone col metodo del cerchio.
+
+    Serve che sia realistico e non un elenco qualunque di partite: `add_stakes`
+    ragiona sulla classifica giornata per giornata, quindi un calendario con una
+    partita al giorno (tutte le gare interne di una squadra di fila) produce
+    classifiche che non esistono, e non distingue una lega a 18 da una a 20.
+    Qui invece ogni giornata manda in campo TUTTE le squadre, come nella realta'.
+
+    I risultati sono deterministici e gerarchici — vince sempre la squadra col
+    numero piu' basso — cosi' a fine stagione titolo, Europa e salvezza sono
+    decisi per davvero e c'e' qualcosa da misurare.
+    """
+    squadre = [f"T{i:02d}" for i in range(n)]
+    righe, giorno = [], pd.Timestamp(inizio)
+    for ritorno in (False, True):
+        rot = list(squadre)
+        for _ in range(n - 1):
+            for i in range(n // 2):
+                a, b = rot[i], rot[n - 1 - i]
+                casa, ospite = (b, a) if ritorno else (a, b)
+                righe.append({
+                    "date": giorno, "season": season,
+                    "home_team": casa, "away_team": ospite,
+                    "result": "H" if casa < ospite else "A",
+                })
+            giorno += pd.Timedelta(days=7)
+            rot = [rot[0], rot[-1], *rot[1:-1]]     # rotazione del cerchio
+    return pd.DataFrame(righe)
+
+
+def test_add_stakes_legge_il_numero_di_squadre_dai_dati():
+    """`total` deve venire dalla lega vera, non da un 20 cablato.
+
+    Il difetto: `load_league` chiamava `add_stakes(df)` con i default per tutte
+    e cinque le leghe. La Bundesliga ha 18 squadre in tutte e 9 le stagioni e la
+    Ligue 1 e' passata a 18 nel 2023-24: 34 giornate, non 38. Con n_teams=20 la
+    raggiungibilita' `3*(total-played)` sopravvalutava di 12 punti la rimonta
+    ancora possibile, quindi a fine stagione «nessuno era deciso».
+
+    Misurato sugli snapshot veri: in Bundesliga le partite con la squadra di
+    casa a posta decisa passano da 7 a 114, in Ligue 1 da 76 a 112. In Serie A
+    (che 20 squadre le ha davvero) non cambia **una sola cella**: la correzione
+    tocca solo dove il numero era sbagliato.
+    """
+    a18 = _stagione_finta(18)
+    assert len(a18) == 306 and a18["date"].nunique() == 34
+    dedotto = loader.add_stakes(a18)
+    cablato = loader.add_stakes(a18, n_teams=20)
+    assert dedotto["home_settled"].sum() > cablato["home_settled"].sum(), (
+        "con 18 squadre il calendario e' piu' corto: dedurlo dai dati deve "
+        "dichiarare DECISE piu' partite del conto a 20, che vede 4 giornate "
+        "fantasma e quindi 12 punti di rimonta che non esistono")
+
+    # dove le squadre sono davvero 20, dedurre e presumere devono coincidere:
+    # la correzione non deve muovere una sola cella di Serie A/Premier/Liga.
+    a20 = _stagione_finta(20)
+    assert len(a20) == 380 and a20["date"].nunique() == 38
+    for col in ("home_settled", "away_settled"):
+        assert (loader.add_stakes(a20)[col].values
+                == loader.add_stakes(a20, n_teams=20)[col].values).all(), col
+
+
+def test_add_stakes_non_guarda_avanti():
+    """Regola R8: la classifica usata e' quella PRIMA della partita.
+
+    La prima giornata di ogni stagione parte da una classifica vuota, quindi
+    nessuno puo' risultare «deciso»: se lo fosse, vorrebbe dire che la funzione
+    ha gia' letto risultati che non erano ancora accaduti.
+    """
+    df = loader.add_stakes(_stagione_finta(18))
+    prima = df[df["date"] == df["date"].min()]
+    assert (prima["home_settled"] == 0.0).all()
+    assert (prima["away_settled"] == 0.0).all()
+
+
+def test_add_stakes_e_per_stagione_non_per_lega():
+    """Una lega che cambia formato a meta' storia dev'essere gestita stagione
+    per stagione: e' il caso vero della Ligue 1 (20 squadre fino al 2022-23,
+    18 dal 2023-24), che un unico `n_teams` per lega non puo' descrivere."""
+    a = _stagione_finta(20, season="2324", inizio="2023-08-01")
+    b = _stagione_finta(18, season="2425", inizio="2024-08-01")
+    unite = loader.add_stakes(pd.concat([a, b], ignore_index=True))
+
+    chiave = ["date", "home_team", "away_team"]
+    for pezzo, stagione in ((a, "2324"), (b, "2425")):
+        sola = loader.add_stakes(pezzo)
+        # confronto per CHIAVE e non per posizione: `sort_values("date")` non e'
+        # stabile, quindi due esecuzioni possono ordinare diversamente le
+        # partite dello stesso giorno. I valori restano attaccati alla loro
+        # riga — ed e' quello che conta — ma un confronto posizionale
+        # fallirebbe per un motivo che non c'entra nulla con la posta in palio.
+        m = unite[unite["season"] == stagione].merge(sola, on=chiave,
+                                                     suffixes=("_ins", "_sola"))
+        assert len(m) == len(sola)
+        for col in ("home_settled", "away_settled"):
+            assert (m[f"{col}_ins"] == m[f"{col}_sola"]).all(), (stagione, col)

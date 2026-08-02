@@ -4,6 +4,7 @@ Verifichiamo proprieta' matematiche che DEVONO valere sempre, cosi' un domani
 una modifica che rompe il modello viene subito segnalata.
 """
 
+import math
 import sys
 from pathlib import Path
 
@@ -476,3 +477,99 @@ def test_time_decay_halves_weight_at_half_life():
     assert w[0] > w[1] > w[2]                        # monotonia: piu' vecchio = meno peso
     wn = DixonColesModel(half_life_days=None)._time_weights(dates, as_of)
     assert np.allclose(wn, 1.0)
+
+
+# --------------------------------------------------------------------- #
+# Le covariate: il termine che si poteva rendere inerte senza accorgersene
+# --------------------------------------------------------------------- #
+def _modello_con_covariata(beta: float = 0.5, media: float = 0.0,
+                           dev: float = 1.0) -> DixonColesModel:
+    """Un modello con UNA covariata e i parametri messi a mano.
+
+    Non lo si fitta di proposito: qui non si vuole verificare che la stima
+    funzioni, ma che la FORMULA sia quella dichiarata. Con beta, media e
+    deviazione noti il contributo si calcola a mano e si inchioda.
+    """
+    m = DixonColesModel(covariates=("squad_value",))
+    m.beta = {"squad_value": beta}
+    m.cov_mean = {"squad_value": media}
+    m.cov_std = {"squad_value": dev}
+    return m
+
+
+def test_cov_term_valore_esatto():
+    """beta * (z_casa - z_ospite), con z = (log(valore) - media) / dev.
+
+    Valori scelti perche' il logaritmo venga tondo: e^2 e e^1 danno z grezzi 2 e
+    1, quindi con media 0, dev 1 e beta 0.5 il termine vale 0.5*(2-1) = 0.5.
+
+    Audit Fase 137: `_cov_term` non aveva alcun test: sostituirlo con
+    `return 0.0` lasciava verde l'intera suite del modello. E' il termine da cui
+    passano TUTTE le covariate di partita della Fase 4c (valore rosa, assenze,
+    riposo, forma, posta in palio, PPDA, deep, fortuna), cioe' ogni esperimento
+    che ha concluso «questo dato non aggiunge nulla»: se il termine fosse
+    inerte, quelle conclusioni misurerebbero soltanto se stesse.
+    """
+    m = _modello_con_covariata(beta=0.5)
+    feats = {"home_squad_value": math.e ** 2, "away_squad_value": math.e}
+    assert m._cov_term(feats) == pytest.approx(0.5)
+
+    # la standardizzazione entra davvero: con dev 2 il contributo si dimezza
+    m2 = _modello_con_covariata(beta=0.5, media=0.0, dev=2.0)
+    assert m2._cov_term(feats) == pytest.approx(0.25)
+
+    # e la media si semplifica, perche' il termine e' una DIFFERENZA di z
+    m3 = _modello_con_covariata(beta=0.5, media=10.0, dev=1.0)
+    assert m3._cov_term(feats) == pytest.approx(0.5)
+
+
+def test_cov_term_antisimmetrico_e_neutro_a_parita():
+    """Due squadre col medesimo valore non devono spostare nulla, e invertirle
+    deve invertire il segno: e' cio' che rende la covariata un VANTAGGIO
+    RELATIVO e non un livello."""
+    m = _modello_con_covariata(beta=0.5)
+    pari = {"home_squad_value": 100.0, "away_squad_value": 100.0}
+    assert m._cov_term(pari) == pytest.approx(0.0)
+
+    a = {"home_squad_value": math.e ** 2, "away_squad_value": math.e}
+    b = {"home_squad_value": math.e, "away_squad_value": math.e ** 2}
+    assert m._cov_term(a) == pytest.approx(-m._cov_term(b))
+
+
+def test_cov_term_spento_quando_non_c_e_nulla_da_dire():
+    """Senza covariate, senza beta o senza feature il termine e' 0 — e dev'esserlo
+    davvero, altrimenti un modello «senza covariate» non sarebbe piu' il modello
+    base e ogni confronto con lui sarebbe falsato."""
+    base = DixonColesModel()
+    assert base._cov_term({"home_squad_value": 1e9, "away_squad_value": 1.0}) == 0.0
+
+    m = _modello_con_covariata()
+    assert m._cov_term(None) == 0.0
+    # valore mancante -> z neutro (0), non NaN e non un'esplosione
+    assert m._cov_term({"home_squad_value": math.e}) == pytest.approx(0.5)
+    assert not math.isnan(m._cov_term({}))
+
+
+def test_cov_term_entra_nei_tassi_con_segno_opposto():
+    """La covariata alza il tasso della casa ESATTAMENTE quanto abbassa quello
+    dell'ospite: lam = exp(... + cov), mu = exp(... - cov).
+
+    E' il collegamento fra il termine e i gol attesi: senza questo test si
+    potrebbe testare `_cov_term` da solo e non accorgersi che `expected_goals`
+    ha smesso di usarlo.
+    """
+    m = _modello_con_covariata(beta=0.5)
+    m.teams = ["Casa", "Ospite"]
+    m.attack = {"Casa": 0.0, "Ospite": 0.0}
+    m.defense = {"Casa": 0.0, "Ospite": 0.0}
+    m.home_advantage = 0.0
+
+    feats = {"home_squad_value": math.e ** 2, "away_squad_value": math.e}
+    lam, mu = m.expected_goals("Casa", "Ospite", feats)
+    assert lam == pytest.approx(math.exp(0.5))
+    assert mu == pytest.approx(math.exp(-0.5))
+    assert lam * mu == pytest.approx(1.0)          # il prodotto resta invariato
+
+    # e senza feature si torna al modello base
+    lam0, mu0 = m.expected_goals("Casa", "Ospite")
+    assert lam0 == pytest.approx(1.0) and mu0 == pytest.approx(1.0)

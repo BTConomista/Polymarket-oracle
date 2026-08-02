@@ -58,7 +58,7 @@ Quindi:
 ### 0.2 · Snapshot congelato
 
 `scripts/build_new_snapshot.py` → `data/<lega>_matches.csv` versionato, **stesso
-schema a 38 colonne** delle altre leghe, **nomi e ordine compresi** (lo verifica
+schema a 40 colonne** delle altre leghe, **nomi e ordine compresi** (lo verifica
 `tests/test_league_snapshots.py::test_schema_identico_tra_leghe`; l'ordine
 divergente è stato una nostra anomalia reale, audit Report 1 §4.6).
 
@@ -587,7 +587,7 @@ non lo è.
 
 ### Dati (una volta, alla fine del Passo 0-bis)
 
-- [ ] snapshot a 38 colonne, **nomi e ordine** identici alle altre leghe
+- [ ] snapshot a 40 colonne, **nomi e ordine** identici alle altre leghe
       (`test_schema_identico_tra_leghe`);
 - [ ] manifest di provenienza (URL, timestamp, byte, SHA256) dei grezzi;
 - [ ] audit livelli A-B-C-D eseguito: **0 differenze** contro la fonte

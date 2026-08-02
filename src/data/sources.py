@@ -147,6 +147,13 @@ TEAM_ALIASES: dict[str, str] = {
     # per cui TEAM_ALIASES esiste (§5 del CLAUDE.md, bug "Hellas Verona").
     "Manchester Utd": "Man United",
     "Nottingham": "Nott'm Forest",
+    # Stessa famiglia di forme brevi, trovata invece nei file footiqo (Fase 137):
+    # senza questa riga le **38 partite** dello Sheffield United nella Premier
+    # 2019-20 non si agganciavano allo snapshot e sparivano in silenzio dal
+    # campione — nessun errore, solo un denominatore piu' piccolo. E' il motivo
+    # per cui ogni join di fonte esterna deve dichiarare il proprio tasso di
+    # aggancio col denominatore, invece di limitarsi a non sollevare eccezioni.
+    "Sheffield Utd": "Sheffield United",
     # --- La Liga (Fase 54): le 11 differenze Understat -> football-data. Ogni
     # coppia verificata per IDENTITA' (non per ordinamento): es. "Atletico Madrid"
     # (Ath Madrid) e' distinta da "Real Madrid", presente identica in entrambe.

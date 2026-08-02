@@ -337,6 +337,7 @@ correzioni.*
 - [Fase 134 — La borsa rinomina le squadre e il raccoglitore resta verde: il join che si è rotto in silenzio](#fase-134--la-borsa-rinomina-le-squadre-e-il-raccoglitore-resta-verde-il-join-che-si-è-rotto-in-silenzio)
 - [Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile](#fase-135--il-listino-intero-da-6-mercati-a-110-e-il-batching-che-lo-rende-possibile)
 - [Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime](#fase-136--anche-il-giro-giornaliero-prende-tutto-e-larchivio-si-comprime)
+- [Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere](#fase-137--i-guardiani-mancanti-tre-difetti-che-nessun-test-poteva-vedere)
 
 ---
 
@@ -15306,3 +15307,257 @@ ridondanza, e un JSON tabellare indentato ne ha moltissima. È anche il motivo
 per cui il rapporto **crescerà** con `p`: più partite nello stesso file, più
 ripetizione. I 20,3× misurati su 6 partite sono quindi un **limite inferiore**
 per i file di stagione.
+
+---
+
+## Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere
+
+**Obiettivo.** Agire sul primo giro di caccia agli errori (workflow di 13 agenti,
+richiesta utente: *«cerca errori, vedi cosa potremmo fare dopo, prova a trovare
+spunti interessanti»*). Due difetti erano marcati **bloccanti**. Il compito qui
+non era crederci: era **verificarli** — il primo giro aveva già prodotto almeno
+un'affermazione falsa, smontata ri-eseguendo il conto.
+
+**Ragionamento.** I due difetti bloccanti sembravano scollegati. Non lo sono: hanno
+la **stessa forma**. In entrambi i casi esiste una cosa giusta nel repo (due colonne
+di dati; una formula corretta) e **nessun meccanismo che la tenga giusta**. Il
+guardiano manca, quindi il difetto non è «c'è un errore» ma «un errore non
+verrebbe visto». È la categoria peggiore, perché il repo appare sano fino al giorno
+in cui qualcuno esegue il comando sbagliato.
+
+### Difetto 1 — un `--refresh` cancellava i gol all'intervallo
+
+**Verificato, non creduto.** `grep -rln goals_ht src/ scripts/` rispondeva con **un
+file solo**: `scripts/aggiungi_gol_intervallo.py`, cioè lo script della Fase 133.
+Nessuna riga sotto `src/` nominava le due colonne. Ma il ramo `--refresh` di
+`build_database.py` non arricchisce lo snapshot: lo **ricostruisce da zero** con
+`loader.load_league(force_download=True)` e lo riscrive con `write_snapshot`. Le
+due colonne non sarebbero rinate, e la lega sarebbe tornata a 38 colonne — senza
+un errore, senza un test rosso, senza che nessuno se ne accorgesse fino al
+confronto con un'altra lega.
+
+**La correzione è dove doveva stare fin dall'inizio.** `HTHG`/`HTAG` arrivano dalla
+**stessa riga grezza** da cui `_normalize` prende già `FTHG`/`FTAG`: nessun join,
+nessun rischio di agganciare la partita sbagliata. È una riga in meno di codice di
+quella che avevo scritto alla Fase 133, non una in più.
+
+**Verifica di equivalenza.** Ho rifatto il percorso del refresh sui grezzi delle
+cinque leghe e confrontato cella per cella con lo snapshot congelato:
+**32.222/32.222 celle identiche**, dtype `Int64` compreso, e l'unico `<NA>` è
+sempre Union Berlin-Bochum. Le tre vie di costruzione (`build_database --refresh`,
+`build_league_snapshot`, `build_new_snapshot`) passano **tutte e tre** da
+`_normalize`, quindi la correzione le copre tutte.
+
+**Una cosa che avevo scritto male.** Nel commento del codice avevo attribuito
+l'unica cella vuota a Nantes-Tolosa. È **Union Berlin-Bochum**, misurato: e non è
+un dettaglio, è il caso R1 — partita sospesa, 1-1 sul campo, 0-2 a tavolino.
+football-data ne registra il verdetto in `FTHG`/`FTAG` e lascia l'intervallo in
+bianco, perché l'intervallo di una partita mai finita non è un risultato.
+
+### Difetto 2 — `brier_1x2` non aveva un solo test
+
+**Verificato:** `grep -rn brier_1x2 tests/*.py` → **zero riferimenti**.
+`log_loss_1x2` ne aveva cinque, ma tutti **relazionali** («il modello buono prende
+meno del cattivo»). Sono asserzioni che sopravvivono a qualunque trasformazione
+monotona sbagliata: cambiare la base del logaritmo cambierebbe **ogni log-loss mai
+pubblicato** dal progetto senza invertire un solo confronto, quindi senza far
+fallire nulla.
+
+Non è un dettaglio di igiene: `experiment_log.compute_metrics` — la «fonte di
+verità unica» delle metriche (CLAUDE.md §5) — chiama queste due funzioni, e da lì
+i numeri finiscono in `runs.jsonl`, nel README e in ogni fase del diario.
+
+**`tests/test_metrics.py`**, 18 test, ogni assert col suo conto a mano nel
+docstring. Non è una regressione contro noi stessi (che congelerebbe anche un
+errore): è il confronto con la **definizione da manuale**.
+
+### Difetto 3 — la posta in palio presumeva 20 squadre su tutte le leghe
+
+Segnalato dal primo giro come «serio», e confermato: `load_league` chiama
+`add_stakes(df)` con i default per tutte e cinque le leghe. Ma la **Bundesliga ha
+18 squadre in tutte e nove le stagioni** e la **Ligue 1 è passata a 18 nel
+2023-24**. Con `n_teams=20` il calendario teorico è di 38 giornate invece di 34:
+quattro **giornate fantasma**, cioè 12 punti di rimonta che non esistono.
+
+**Misurato sugli snapshot veri**, partite con la squadra di casa a posta decisa:
+
+| lega | prima (n=20 cablato) | dopo (dedotto) |
+|---|--:|--:|
+| Serie A | 160 | **160** |
+| Bundesliga | 7 | **114** |
+| Ligue 1 | 76 | **112** |
+
+Le sette partite «decise» di tutta la storia della Bundesliga erano il sintomo
+visibile, e nessuno l'aveva guardato. In Serie A **non cambia una sola cella**: la
+correzione tocca solo dove il numero era sbagliato — che è il modo giusto perché
+una correzione si comporti.
+
+**Come, e perché così.** Il numero di squadre si **legge dai dati, stagione per
+stagione**, invece di stare in una mappa per lega. Una mappa avrebbe richiesto a
+chi aggiunge una lega di ricordarsi un numero, e non avrebbe descritto la Ligue 1,
+che il formato l'ha cambiato **a metà storia**. Con `relegated=3` le linee di
+classifica restano giuste su entrambi i formati: la 15ª di 18 e la 17ª di 20 sono
+tutte e due «l'ultima salva» (in Bundesliga e Ligue 1 il terzo posto a rischio è
+lo spareggio, ma il conto delle *posizioni in bilico* è lo stesso).
+
+### Il quarto: un alias che faceva sparire 38 partite
+
+Cercando la copertura delle quote GG/NG di 1xBet (via footiqo), il join si fermava
+a **5.339/5.377** righe. Il colpevole: **«Sheffield Utd»** non mappava su
+«Sheffield United». Sono le 38 partite dello Sheffield United nella Premier
+2019-20 — sparite in silenzio, senza un'eccezione, senza un avviso: solo un
+denominatore più piccolo. Con l'alias: **5.377/5.377, 100%**, zero orfani residui.
+
+È la ragione per cui ogni join di fonte esterna deve **dichiarare il proprio tasso
+di aggancio col denominatore** invece di limitarsi a non sollevare eccezioni. Un
+join che non solleva niente e aggancia il 99,3% ha lo stesso aspetto di uno che
+aggancia il 100%.
+
+### ⭐ La prova che i guardiani guardano davvero: 11 mutazioni, 11 uccise
+
+Un test che non fallisce mai non protegge nulla. Ho quindi **mutato apposta** il
+codice — su copie, mai sul repo — e verificato che la suite diventi rossa:
+
+| # | mutazione | dove | esito |
+|---|---|---|---|
+| M1 | Brier senza il quadrato (`abs` al posto di `**2`) | `metrics.brier_1x2` | 5 rossi |
+| M2 | log-loss in base 10 | `metrics.log_loss_1x2` | 4 rossi |
+| M3 | indici `H` e `A` scambiati | `metrics._OUTCOME_INDEX` | 9 rossi |
+| M4 | devig senza normalizzazione | `metrics.devig_1x2` | 1 rosso |
+| M5 | clip rimosso | `metrics.log_loss_binary` | 1 rosso |
+| M6 | blocco intervallo rimosso | `loader._normalize` | 4 rossi |
+| M7 | `HTHG`/`HTAG` invertiti | `loader._normalize` | 2 rossi |
+| M8 | `Int64` → `fillna(0).astype(int)` | `loader._normalize` | 3 rossi |
+| M9 | `return 0.0` in testa | `DixonColesModel._cov_term` | 3 rossi |
+| M10 | segno della covariata non invertito per l'ospite | `expected_goals` | 1 rosso |
+| M11 | standardizzazione senza `/s` | `_cov_term` | 1 rosso |
+
+M9 merita una riga a parte: **`_cov_term` non aveva alcun test**, e renderlo inerte
+lasciava verde tutta la suite del modello. È il termine da cui passano **tutte** le
+covariate di partita della Fase 4c — valore rosa, assenze, riposo, forma, posta in
+palio, PPDA, deep, fortuna — cioè ogni esperimento che ha concluso «questo dato non
+aggiunge nulla». Se il termine fosse stato inerte, quelle conclusioni avrebbero
+misurato soltanto sé stesse. (Non lo era: le mutazioni M10 e M11 mostrano che il
+codice fa quello che dice. Ma **non lo sapevamo**, ed è la differenza che conta.)
+
+**Un difetto trovato scrivendo il test, non nel codice.** Il primo confronto fra la
+posta in palio calcolata su una stagione sola e su due stagioni insieme falliva su
+14 celle su 380. Non era `add_stakes`: `pd.sort_values("date")` **non è stabile**,
+quindi due esecuzioni ordinano diversamente le partite dello stesso giorno. I
+valori restano attaccati alla loro riga — che è ciò che conta — ma un confronto
+**posizionale** falliva per un motivo che con la posta in palio non c'entra nulla.
+Il test ora confronta per chiave.
+
+**Risultato.** **1.265 test verdi** misurati sulla suite intera, di cui **29 nuovi**
+da questa fase: 18 sulle metriche, 7 sullo schema e la posta in palio, 4 sulle
+covariate. Nessun numero pubblicato cambia: il valore della fase è **che non
+possano cambiare in silenzio**.
+
+**Lezione.** Le tre correzioni hanno la stessa forma e la stessa morale. Un dato
+giusto senza un meccanismo che lo tenga giusto è **giusto per caso**, e il caso
+scade al primo comando. Il difetto non era mai nel valore — le due colonne erano
+corrette, la formula del Brier era corretta, `_cov_term` era corretto: era
+nell'**assenza del guardiano**. E un guardiano si verifica in un modo solo, provando
+a fargli passare davanti l'errore che deve fermare.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: questa fase **inchioda** matematica che c'era già. Ogni
+formula qui sotto è stata letta riga per riga dal sorgente e ognuna ha ora almeno
+un test che ne fissa il **valore**.
+
+**(1) Brier 1X2** (`src/evaluation/metrics.py:59`). Con `p = (p_H, p_D, p_A)` e
+`y` il vettore indicatore dell'esito avvenuto:
+
+```
+Brier = (1/N) · Σ_i Σ_{k∈{H,D,A}} (p_ik − y_ik)²          range [0, 2]
+```
+
+Il test che lo inchioda: `p = (0.5, 0.3, 0.2)`, esito `H`, quindi
+`(0.5−1)² + 0.3² + 0.2² = 0.25 + 0.09 + 0.04 = **0.38**`. Senza il quadrato la
+stessa riga darebbe `0.5 + 0.3 + 0.2 = 1.00`, e **nessun** confronto fra modelli
+cambierebbe ordine: è esattamente il motivo per cui un test relazionale non basta.
+Gli altri due valori fissati: uniforme `(1/3,1/3,1/3) → 4/9 + 2/9 = 6/9 = 0.6667`
+(il «non so nulla» a tre esiti), e previsione certa e sbagliata `→ 2` (1 sul lato
+mancato + 1 sul lato dato per certo), che è il massimo raggiungibile.
+
+**(2) Log-loss 1X2** (`metrics.py:52`), col logaritmo **naturale**:
+
+```
+LL = −(1/N) · Σ_i ln(p_i,esito_i)          con p ∈ [1e−15, 1]
+```
+
+`p = 0.5` sull'esito avvenuto → `−ln(0.5) = 0.6931`. In base 10 sarebbe `0.3010`:
+ogni numero pubblicato dal progetto cambierebbe di un fattore `ln(10) = 2,3026` e
+nessun confronto si invertirebbe. Il clip a `1e−15` è una **scelta**, non un
+dettaglio: senza, una sola probabilità 0 sull'esito avvenuto manderebbe a infinito
+la metrica dell'intero backtest. Il test fissa anche il valore del taglio,
+`−ln(1e−15) = 34.54`, così se qualcuno lo cambia si vede.
+
+**(3) Devig moltiplicativo** (`metrics.py:31`):
+
+```
+p_k = (1/q_k) / Σ_j (1/q_j)
+```
+
+Quote `1.90/3.80/3.80`: `1/q = 0.5263/0.2632/0.2632`, somma `1.0526` (margine del
+5,26%), normalizzate `0.50/0.25/0.25`. Il margine viene spalmato **in proporzione**
+— è la definizione del metodo moltiplicativo, e il test lo mostra su un caso dove
+il risultato è tondo. Su quote già eque (`2/4/4`, somma degli inversi esattamente
+1) il devig dev'essere l'**identità**: il secondo test.
+
+**(4) Il termine covariata** (`dixon_coles.py:648`). Per la squadra di casa:
+
+```
+cov = Σ_k β_k · (z_casa,k − z_ospite,k)      con  z = (T(v) − m_k) / s_k
+```
+
+dove `T` è la trasformazione dichiarata in `_COVARIATES` (`log`, `log1p` o
+identità) e `m_k, s_k` sono media e deviazione standard imparate sul training. Il
+termine entra nei tassi **con segno opposto**:
+
+```
+λ = exp(att_casa + dif_ospite + γ + cov)
+μ = exp(att_ospite + dif_casa − cov)
+```
+
+Da cui tre proprietà che i test fissano, e che sono le tre cose che potrebbero
+rompersi in silenzio:
+- **valore**: con `v_casa = e²`, `v_ospite = e`, `T = log`, `m = 0`, `s = 1`,
+  `β = 0.5` → `cov = 0.5·(2−1) = **0.5**`. Con `s = 2` diventa `0.25`: la
+  standardizzazione entra davvero. Con `m = 10` resta `0.5`, perché il termine è
+  una **differenza** di z e la media si semplifica;
+- **antisimmetria**: due squadre col medesimo valore danno `cov = 0` (è un
+  vantaggio **relativo**, non un livello), e scambiarle inverte il segno;
+- **prodotto invariante**: `λ·μ = exp(cov)·exp(−cov) = 1`. La covariata **sposta
+  l'equilibrio** della partita senza toccarne il totale atteso: è la sua semantica,
+  e un errore di segno la trasformerebbe in un moltiplicatore dei gol totali.
+
+**(5) La raggiungibilità della posta in palio** (`loader.py:599`). Con `n` squadre,
+`g` gare già giocate e `p` punti:
+
+```
+total  = 2·(n − 1)               giornate del calendario teorico
+reach  = 3·(total − g)           punti ancora conquistabili (tutte vittorie)
+```
+
+Il difetto era in `total`. Con `n = 18` il valore vero è `2·17 = 34`; presumendo
+`n = 20` diventa `2·19 = 38`, cioè `reach` sovrastimato di `3·4 = **12 punti**` a
+ogni giornata. Dodici punti sono, in classifica, la distanza fra la metà bassa e
+la zona europea: una squadra tagliata fuori da tutto risultava «ancora in corsa»
+per l'Europa fino all'ultima giornata. Le tre linee che `reach` confronta:
+
+```
+safe_line   = board[n − relegated − 1]     ultima salva     (15ª di 18, 17ª di 20)
+releg_line  = board[n − relegated]         prima a rischio  (16ª di 18, 18ª di 20)
+euro_line   = board[europe_rank − 1]       ~Europa          (7ª)
+```
+
+anche loro leggevano la posizione sbagliata a `n = 18`: la 17ª di 18 è penultima,
+non l'ultima salva. Deducendo `n` dai dati tornano entrambe giuste senza toccare
+`relegated`, perché `n − relegated − 1` vale 14 (15ª) a 18 squadre e 16 (17ª) a 20.
+
+⚠️ **Un limite che resta, dichiarato**: la Ligue 1 2019-20 fu **cancellata** al 28°
+turno. L'euristica ragiona sul calendario **teorico**, quindi fino all'ultima
+giornata giocata vede ancora 10 gare da giocare e non dichiara nessuno «deciso». È
+corretto così: nessuno, in quel momento, lo sapeva.

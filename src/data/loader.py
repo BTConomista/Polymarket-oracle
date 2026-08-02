@@ -19,6 +19,11 @@ Schema interno (un DataFrame pandas con queste colonne):
     home_goals   int
     away_goals   int
     result       str        "H" / "D" / "A"
+    home_goals_ht  Int64    gol della squadra di casa all'INTERVALLO (Fase 133)
+    away_goals_ht  Int64    gol della squadra ospite all'intervallo -- <NA> se la
+                            fonte non lo copre (1 partita su 16.111), mai 0
+    home_sot     float      tiri in porta casa   -- puo' essere NaN
+    away_sot     float      tiri in porta ospite
     odds_home    float      quota 1 (migliore disponibile, vedi sotto)  -- puo' essere NaN
     odds_draw    float      quota X
     odds_away    float      quota 2
@@ -263,6 +268,27 @@ def _normalize(raw: pd.DataFrame, season_code: str, league: League) -> pd.DataFr
     out["home_goals"] = raw["FTHG"].astype(int)
     out["away_goals"] = raw["FTAG"].astype(int)
     out["result"] = raw["FTR"].astype(str).str.strip()
+
+    # Gol all'INTERVALLO (HTHG/HTAG): stessa riga e stessa fonte dei gol finali,
+    # quindi nessun join e nessun rischio di agganciare la partita sbagliata.
+    #
+    # ⚠️ Stanno QUI, e non in uno script a valle, per un motivo pagato: la Fase
+    # 133 li aveva aggiunti con `scripts/aggiungi_gol_intervallo.py` sugli
+    # snapshot GIA' SCRITTI. Corretto una volta sola: il ramo `--refresh` di
+    # build_database.py riscrive lo snapshot da zero a partire da questa
+    # funzione, quindi un solo refresh avrebbe riportato la lega a 38 colonne
+    # cancellando le due nuove senza che nulla se ne accorgesse (nessun modulo
+    # sotto src/ le nominava). Ora sono parte dello schema interno.
+    #
+    # Int64 nullable e non int: una partita su 16.111 non ha l'intervallo alla
+    # fonte e deve poter restare VUOTA. E' Union Berlin-Bochum del 14/12/2024,
+    # cioe' esattamente il caso R1 (sospesa, 1-1 sul campo, 0-2 a tavolino):
+    # football-data ne registra il verdetto ma lascia l'intervallo in bianco.
+    # Uno zero al suo posto sarebbe un finto pieno (regola R6, CLAUDE.md §5-bis).
+    for target, sorgente in (("home_goals_ht", "HTHG"), ("away_goals_ht", "HTAG")):
+        colonna = (raw[sorgente] if sorgente in raw.columns
+                   else pd.Series(float("nan"), index=raw.index))
+        out[target] = pd.to_numeric(colonna, errors="coerce").astype("Int64")
 
     # Tiri in porta (HST/AST): segnale meno rumoroso dei gol per stimare la
     # forza delle squadre (vedi models/dixon_coles.py, blend gol/tiri). Puo'
@@ -570,7 +596,7 @@ def add_style_luck(matches: pd.DataFrame, window: int = 8) -> pd.DataFrame:
     return df
 
 
-def add_stakes(matches: pd.DataFrame, n_teams: int = 20, relegated: int = 3,
+def add_stakes(matches: pd.DataFrame, n_teams: int | None = None, relegated: int = 3,
                europe_rank: int = 7) -> pd.DataFrame:
     """Aggiunge home_settled / away_settled: 1.0 se la squadra non ha piu' NESSUNA
     corsa aperta (posta in palio 'decisa'), 0.0 se e' ancora in corsa (Fase 31/32).
@@ -579,12 +605,36 @@ def add_stakes(matches: pd.DataFrame, n_teams: int = 20, relegated: int = 3,
     inclusi i due estremi (gia' matematicamente retrocessa o gia' campione).
     Usa la classifica PRIMA della partita (solo gare precedenti della stessa
     stagione -> niente look-ahead). Euristica di raggiungibilita' 3*gare-rimaste.
+
+    ``n_teams=None`` (il default dalla Fase 137) significa **leggerlo dai dati,
+    stagione per stagione**. Prima era cablato a 20 e `load_league` lo chiamava
+    cosi' per tutte e 5 le leghe: sbagliato su due di esse, e in modo che
+    nessun controllo vedeva. La Bundesliga ha **18** squadre in tutte e 9 le
+    stagioni e la Ligue 1 e' passata da 20 a 18 nel 2023-24, quindi giocano 34
+    partite e non 38 — cioe' `total` sbagliava di 4 e la raggiungibilita'
+    `3*(total-played)` sopravvalutava di 12 punti la rimonta possibile: a fine
+    stagione risultava «ancora in corsa» chi non lo era. In piu' le tre linee
+    di classifica si leggevano alla posizione sbagliata (17a/18a invece di
+    15a/16a). Ricavarlo dai dati e' l'unica versione che non chiede a chi
+    aggiunge una lega di ricordarsi un numero: si auto-corregge anche quando
+    una lega cambia formato a meta' storia, come e' appena successo.
+
+    ⚠️ Con `relegated=3` la 15a di 18 e la 17a di 20 sono entrambe «l'ultima
+    salva», e questo vale su tutte e 5 le leghe: in Bundesliga e in Ligue 1 a
+    18 il terzo posto a rischio e' lo spareggio, non una retrocessione diretta,
+    ma il conto delle POSIZIONI in bilico e' lo stesso.
+    ⚠️ Resta un limite dichiarato: la Ligue 1 2019-20 fu **cancellata** al 28°
+    turno (279 partite). L'euristica ragiona sul calendario teorico, quindi
+    fino all'ultima giornata giocata vede ancora 10 gare da giocare e non
+    dichiara nessuno «deciso». E' corretto cosi': nessuno lo sapeva.
     """
-    total = 2 * (n_teams - 1)
     df = matches.sort_values("date").reset_index(drop=True)
     settled_h = np.full(len(df), 0.0)
     settled_a = np.full(len(df), 0.0)
     for _, sdf in df.groupby("season"):
+        n = n_teams if n_teams is not None else len(
+            set(sdf["home_team"]) | set(sdf["away_team"]))
+        total = 2 * (n - 1)
         pts: dict[str, int] = {}
         played: dict[str, int] = {}
         for _, day in sdf.groupby("date", sort=True):
@@ -592,9 +642,9 @@ def add_stakes(matches: pd.DataFrame, n_teams: int = 20, relegated: int = 3,
 
             def line(rk):
                 return board[rk] if len(board) > rk else 0
-            safe_line = line(n_teams - relegated - 1)   # ultima salva (17a)
-            releg_line = line(n_teams - relegated)       # prima retrocessa (18a)
-            euro_line = line(europe_rank - 1)            # ~Europa (7a)
+            safe_line = line(n - relegated - 1)     # ultima salva (17a di 20)
+            releg_line = line(n - relegated)        # prima a rischio (18a di 20)
+            euro_line = line(europe_rank - 1)       # ~Europa (7a)
             title_line = line(0)
             second_line = line(1)
             for i, m in day.iterrows():

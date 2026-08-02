@@ -15,6 +15,18 @@ gli snapshot derivano gia' i gol finali, quindi non e' un innesto di terzi — e
 scrive come due colonne nuove. **Nessuna cella esistente viene toccata**: e'
 un'aggiunta, non una correzione (regola R3, che vale per le modifiche).
 
+⚠️ **DALLA FASE 137 QUESTO SCRIPT NON E' PIU' LA FONTE DELLE DUE COLONNE.** Le
+produce `loader._normalize`, dentro la pipeline di produzione, dalla stessa riga
+grezza da cui prende i gol finali. Il motivo e' un difetto vero: questo script
+scrive sugli snapshot GIA' FATTI, quindi correggeva una volta sola — un solo
+`build_database.py --refresh` avrebbe ricostruito lo snapshot da zero e
+cancellato le due colonne. Verificato che i due percorsi coincidono:
+**32.222/32.222 celle identiche** sulle 5 leghe.
+
+Resta utile per cio' che il loader non fa: **ricontrollare** uno snapshot gia'
+scritto contro la fonte, con i quattro controlli qui sotto e il conto della
+frazione di gol nel primo tempo. Con `--dry-run` non scrive nulla.
+
 DA DOVE, lega per lega (i tre regimi gia' in essere, `docs/DATI.md` §4):
   - Serie A            -> `data/football_data_raw/` (CSV grezzi versionati)
   - Premier / La Liga  -> `files/football_data_*_bundle.json` (bundle congelati)

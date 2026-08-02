@@ -20,6 +20,14 @@ nuova colonna, nuova stima). Ultimo aggiornamento: **Fase 101-ter** (5 leghe).
 > (+6 dal guard bilaterale su La Liga, −6 dall'inserimento), e le residue non-O/U
 > passano da 55 a **49**. Conteggio rifatto con `pandas` su
 > `data/*_matches.csv`: 16.111 righe × 38 colonne = 612.218 celle, 7.353 NaN.
+>
+> ⚠️ **Ri-contato di nuovo alla Fase 137**, perché i gol all'intervallo (Fase
+> 133) hanno portato lo schema da 38 a **40 colonne**: 16.111 × 40 =
+> **644.440 celle** e **7.355 NaN**, di cui 7.304 sono sempre la chiusura O/U
+> 2017-19. I due NaN in più sono le due celle di intervallo dell'unica partita
+> che non le ha (Union Berlin-Bochum), quindi le residue non-O/U passano da 49
+> a **51**. Sono i numeri validi oggi; quelli del capoverso sopra restano come
+> traccia di come ci si è arrivati.
 
 > Regola d'oro del progetto: **mai un numero inventato spacciato per dato**.
 > Dove un dato manca, o resta `NaN` (dichiarato), oppure viene stimato e
@@ -102,6 +110,15 @@ suite, così il prossimo rinominamento rompe i test e non la raccolta.
 > due stadi): sono `post`, quindi mai usabili per prevedere la partita che li ha
 > prodotti — la loro forma d'uso è come **stato** del secondo tempo, non come
 > feature del primo.
+>
+> 🔧 **Fase 137**: nascono ora dentro `loader._normalize`, cioè nella pipeline
+> di produzione, e non più solo da `scripts/aggiungi_gol_intervallo.py`. Alla
+> Fase 133 le due colonne erano state scritte sugli snapshot **già fatti**:
+> corretto una volta sola, perché il ramo `build_database.py --refresh`
+> ricostruisce lo snapshot da zero e le avrebbe **cancellate**, riportando la
+> lega a 38 colonne senza che nulla protestasse (nessun modulo sotto `src/` le
+> nominava). Verificato che il percorso nuovo riproduce quello vecchio:
+> **32.222/32.222 celle identiche** sulle 5 leghe, dtype compreso.
 
 | gruppo | colonne | fonte | copertura |
 |---|---|---|---|
@@ -121,11 +138,12 @@ suite, così il prossimo rinominamento rompe i test e non la raccolta.
 ## 1-bis · I buchi, tutti quanti — e quelli che non sembrano buchi
 
 Censimento completo, ri-contato sugli snapshot di HEAD (Fase 101-ter, ricalcolato
-alla Fase 104 — vedi nota sotto): **7.353 celle vuote su 612.218**, cioè l'**1,20%**
-(1,2010% esatto). Ma il numero da solo inganna: il **99,3%** è **un buco solo**,
-la chiusura O/U del 2017-19 (7.304 celle = 3.652 partite × 2 colonne), che non
-esiste alla fonte per nessuna delle cinque leghe (§5). Tolto quello restano
-**49 celle**, ognuna con un nome e una causa:
+alla Fase 104 e di nuovo alla **Fase 137** dopo l'arrivo delle due colonne di
+intervallo): **7.355 celle vuote su 644.440** (16.111 × **40** colonne), cioè
+l'**1,14%** (1,1413% esatto). Ma il numero da solo inganna: il **99,3%** è **un
+buco solo**, la chiusura O/U del 2017-19 (7.304 celle = 3.652 partite × 2
+colonne), che non esiste alla fonte per nessuna delle cinque leghe (§5). Tolto
+quello restano **51 celle**, ognuna con un nome e una causa:
 
 | cosa | dove | perché |
 |---|---|---|
@@ -134,8 +152,9 @@ esiste alla fonte per nessuna delle cinque leghe (§5). Tolto quello restano
 | 7 celle quota | Torino-Fiorentina 10/01/2022 (5: O/U + 1X2 di apertura), Verona-Genoa 19/10/2020 (2: O/U di apertura) | partite rinviate, quote mai aperte. Ri-verificato Fase 104 scaricando di nuovo i CSV grezzi live da football-data.co.uk: TUTTE le colonne di chiusura (`*C`) sono piene, tutte le colonne di apertura sono NaN — non un dato mancante per errore, è che il mercato ha aperto dopo il cutoff di raccolta di football-data per il recupero |
 | 16 celle xG/stile | 2 partite (vedi §1), 8 colonne ciascuna | fonte non consolidata / record segnaposto. Ri-verificato Fase 104 (vedi `docs/MANUALE_SOPRAVVIVENZA.md`: il mirror Understat era morto, corretto l'endpoint ufficiale) con un download LIVE: Holstein Kiel-Bochum ha ancora il record segnaposto identico, Nantes-Toulouse è ancora `isResult=False` su Understat a oltre due mesi dalla partita — nessuno dei due si è risolto col tempo |
 | 2 celle tiri in porta | Union Berlin-Bochum 14/12/2024 | statistiche assenti alla fonte. Ri-verificato Fase 104 con un download live del CSV grezzo football-data: colonne HST/AST ancora vuote |
+| **2 celle gol all'intervallo** | Union Berlin-Bochum 14/12/2024 | la **stessa** partita, e per la stessa ragione: è il caso R1 (sospesa al 78', **1-1 sul campo**, **0-2 assegnato** dal tribunale sportivo). football-data ne registra il verdetto in `FTHG`/`FTAG` ma lascia `HTHG`/`HTAG` in bianco, perché un intervallo di una partita mai finita non è un risultato. Restano `<NA>` dichiarati (Fase 133; nate in `loader._normalize` dalla Fase 137) |
 
-*(22 + 2 + 7 + 16 + 2 = 49, cioè esattamente 7.353 − 7.304.)*
+*(22 + 2 + 7 + 16 + 2 + 2 = 51, cioè esattamente 7.355 − 7.304.)*
 
 > ⚠️ **SUPERATA dalla Fase 101-bis** — una sesta riga stava in questa tabella:
 >
@@ -903,7 +922,7 @@ python scripts/build_league_snapshot.py --enrich           # rose/assenze (rete:
 
 # Bundesliga / Ligue 1 — nessun bundle: le fonti si riscaricano (RETE richiesta)
 python scripts/fetch_sources.py --leagues bundesliga ligue_1   # -> data/fonti/ + manifest SHA256
-python scripts/build_new_snapshot.py                           # snapshot 38 colonne + calendari
+python scripts/build_new_snapshot.py                           # snapshot 40 colonne + calendari
 python scripts/build_new_snapshot.py --leagues bundesliga      # una sola lega
 python scripts/build_new_snapshot.py --step core               # solo base + xG
 
