@@ -153,12 +153,19 @@ def valore_aggregato(valori: list[int | None], copertura: str,
 
 def squadre_2026_27() -> dict[str, set[str]]:
     """Le iscritte, dalle partite d'esordio già raccolte da Smarkets."""
-    file = sorted(glob.glob(str(ROOT / "data" / "smarkets_matches" / "*.json")))
-    if not file:
-        raise SystemExit("nessuno snapshot in data/smarkets_matches/: "
-                         "esegui prima scripts/fetch_smarkets_matches.py")
+    from src.data import smarkets_archive as _arch
+
+    # ⚠️ «l'ultimo listino COMPLETO», non «l'ultimo file»: l'archivio mescola i
+    # giri di lungo raggio (tutte le leghe) con quelli di chiusura (finestra 2h,
+    # spesso una lega sola). Prendere il piu' recente e basta costruirebbe le
+    # anagrafiche su una lega e nessuno se ne accorgerebbe.
+    try:
+        ultimo = _arch.ultimo_listino_completo()
+    except FileNotFoundError as e:
+        raise SystemExit(f"{e}\nEsegui prima scripts/fetch_smarkets_matches.py "
+                         "--tutte-le-esposte") from None
     out: dict[str, set[str]] = {}
-    for r in json.loads(Path(file[-1]).read_text(encoding="utf-8"))["righe"]:
+    for r in _arch.leggi(ultimo)["righe"]:
         if " vs " not in (r.get("partita") or ""):
             continue
         casa, ospite = r["partita"].split(" vs ", 1)

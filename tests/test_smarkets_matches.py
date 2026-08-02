@@ -201,3 +201,33 @@ def test_il_lotto_e_dichiarato_e_ragionevole():
     ed essere > 1, altrimenti il batching non esiste."""
     assert LOTTO_MERCATI > 1
     assert LOTTO_MERCATI <= 50      # oltre, l'URL diventa troppo lungo
+
+
+def test_nessuno_legge_l_archivio_a_mano():
+    """Chi glob-a `smarkets_matches/*.json` si perde i `.json.gz`, in silenzio.
+
+    Dalla Fase 136 l'archivio ha due estensioni: `.json` per cio' che c'era gia'
+    e `.json.gz` per il nuovo. Un lettore che continua a globare solo `*.json`
+    non fallisce -- legge di MENO, che e' il difetto peggiore (R6). E uno che
+    legge col `read_text()` esplode su un file compresso. L'unico modo di non
+    ricascarci e' che nessuno lo faccia a mano: si passa da
+    `src/data/smarkets_archive.py`.
+
+    Questo test e' la guardia: se qualcuno riapre la scorciatoia, la suite si
+    rompe subito invece che il giorno in cui l'archivio conta davvero.
+    """
+    import re
+
+    radice = Path(__file__).resolve().parents[1]
+    sospetti = []
+    for cartella in ("scripts", "src", "tests"):
+        for f in (radice / cartella).rglob("*.py"):
+            if f.name == "smarkets_archive.py":
+                continue          # e' lui il posto giusto
+            testo = f.read_text(encoding="utf-8")
+            for riga in testo.splitlines():
+                if "smarkets_matches" in riga and re.search(r'glob\(|"\*\.json"', riga):
+                    sospetti.append(f"{f.relative_to(radice)}: {riga.strip()[:90]}")
+    assert not sospetti, (
+        "questi leggono l'archivio Smarkets a mano e si perderanno i .json.gz:\n"
+        + "\n".join(sospetti))

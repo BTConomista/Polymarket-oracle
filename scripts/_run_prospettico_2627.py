@@ -91,7 +91,9 @@ MERCATI = [
 
 def fixture_veri(snapshot: Path) -> list[dict]:
     """I fixture della giornata 1, dal listino: lega, squadre canoniche, ora."""
-    d = json.loads(snapshot.read_text(encoding="utf-8"))
+    from src.data import smarkets_archive as _arch
+
+    d = _arch.leggi(snapshot)
     viste: dict[tuple, dict] = {}
     for r in d["righe"]:
         casa, ospite = r["partita"].split(" vs ")
@@ -151,7 +153,8 @@ def main(argv=None) -> None:
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
 
-    snap = a.snapshot or max(SNAPSHOTS.glob("*.json"))
+    from src.data import smarkets_archive as _arch
+    snap = a.snapshot or _arch.ultimo_listino_completo(SNAPSHOTS)
     fix = fixture_veri(snap)
     promosse = promosse_dichiarate(snap)
 

@@ -69,7 +69,12 @@ jobs:
           # (github.event.schedule e' vuoto per un avvio a mano).
           if [ "${{ github.event.schedule }}" = "41 5 * * *" ] \
              || [ "${{ github.event.inputs.lungo_raggio }}" = "true" ]; then
-            python scripts/fetch_smarkets_matches.py --tutte-le-esposte --solo-principali
+            # LUNGO RAGGIO: tutte le partite esposte, e da oggi TUTTI i mercati
+            # (decisione utente 02/08/2026, regola §5-ter). Costa ~16 MB per
+            # giro a listino pieno, ma l'archivio e' COMPRESSO (19,6x) quindi
+            # sono ~800 KB effettivi: ~230 MB su una stagione intera.
+            # Cio' che non si raccoglie prima del fischio non torna piu'.
+            python scripts/fetch_smarkets_matches.py --tutte-le-esposte --tutti-i-mercati
           elif [ "${{ github.event.schedule }}" = "7 * * * *" ]; then
             # CHIUSURA: finestra stretta, e da oggi TUTTI i mercati esposti
             # (~110 per partita invece di 6). E' il momento in cui il prezzo

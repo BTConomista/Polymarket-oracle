@@ -38,8 +38,10 @@ intera, senza perdere nulla di cio' che il motore usa davvero.
 COSA *NON* FA. Non piazza scommesse e non legge conti: e' sola lettura di
 dati pubblici. Il progetto non scommette (CLAUDE.md §5).
 
-FORMATO. Un file per esecuzione in `data/smarkets_matches/YYYY-MM-DDTHH-MM.json`,
-**versionato**: sono dati che non si possono ri-scaricare dopo (stessa
+FORMATO. Un file per esecuzione in `data/smarkets_matches/YYYY-MM-DDTHH-MM.json.gz`,
+**versionato e COMPRESSO** (dalla Fase 136: a listino intero il giro giornaliero
+fa ~16 MB, il gzip toglie 19,6x senza perdere un byte; l'archivio `.json`
+storico resta leggibile, vedi `src/data/smarkets_archive.py`): sono dati che non si possono ri-scaricare dopo (stessa
 politica di `data/outright_snapshots/`). Una riga per
 (partita, mercato, contratto) con banco, puntatore, medio, spread e volumi.
 
@@ -69,6 +71,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 # libro ordini. Duplicarli avrebbe voluto dire due comportamenti da tenere
 # allineati a mano.
 from fetch_smarkets_outrights import _get, book_price   # noqa: E402
+from src.data import smarkets_archive as _archivio   # noqa: E402
 
 DEST = ROOT / "data" / "smarkets_matches"
 
@@ -376,7 +379,7 @@ def main(argv=None) -> None:
     # possono capitare nello stesso minuto, e due file con lo stesso nome
     # significherebbero uno dei due perso in silenzio.
     dest = DEST / f"{quando.strftime('%Y-%m-%dT%H-%M-%S')}.json"
-    dest.write_text(json.dumps({
+    dati = {
         "fonte": "api.smarkets.com/v3 (borsa, API pubblica senza chiave)",
         "raccolto_utc": quando.isoformat(),
         # 0 = nessun limite (regime di lungo raggio). Serve a sapere, rileggendo
@@ -397,7 +400,8 @@ def main(argv=None) -> None:
         "avvertenza": ("dati di MERCATO raccolti prospetticamente. Il progetto "
                        "non scommette: sola lettura (CLAUDE.md §5)."),
         "righe": righe,
-    }, ensure_ascii=False, indent=1), encoding="utf-8")
+    }
+    dest = _archivio.scrivi(dest, dati)
     print(f"\nscritto {dest.relative_to(ROOT)}  ({len(righe)} righe, "
           f"{len({r['partita'] for r in righe})} partite)")
 

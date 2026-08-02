@@ -336,6 +336,7 @@ correzioni.*
 - [Fase 133 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi](#fase-133--i-gol-allintervallo-entrano-negli-snapshot-il-dato-che-mancava-al-modello-a-due-stadi)
 - [Fase 134 — La borsa rinomina le squadre e il raccoglitore resta verde: il join che si è rotto in silenzio](#fase-134--la-borsa-rinomina-le-squadre-e-il-raccoglitore-resta-verde-il-join-che-si-è-rotto-in-silenzio)
 - [Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile](#fase-135--il-listino-intero-da-6-mercati-a-110-e-il-batching-che-lo-rende-possibile)
+- [Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime](#fase-136--anche-il-giro-giornaliero-prende-tutto-e-larchivio-si-comprime)
 
 ---
 
@@ -15230,3 +15231,78 @@ peso(p) = 343 · 484 · p byte ≈ 0,166 MB · p
 — 1,6 MB con `p = 10`. E quello di un ipotetico giornaliero a listino intero,
 `p ≈ 48`: **7,8 MB/giro**, cioè ~2 GB su una stagione di ~280 giri. È il numero
 che rende la decisione sul giornaliero una scelta e non un automatismo.
+
+---
+
+## Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime
+
+**Obiettivo.** Decisione dell'utente: *«il giro giornaliero facciamolo su tutti
+i mercati»*. Cioè applicare la regola §5-ter anche al regime di lungo raggio,
+non solo alla chiusura (Fase 135).
+
+**Il problema che la decisione porta con sé, misurato.** Il lungo raggio
+raccoglie **tutte le partite esposte** — 48 al 28/07, e in stagione di più —
+per **343 righe a partita**: ~16 MB per giro, cioè **oltre 4 GB** su una
+stagione di ~280 giri. In un repo git ogni file è un oggetto nuovo: non è una
+cartella che cresce, è una storia che cresce.
+
+**La soluzione non è raccogliere meno.** È comprimere: **gzip toglie 20,3×**
+sullo stesso identico contenuto — misurato, 978 KB → 48 KB su 2.056 righe.
+~230 MB su una stagione intera, che è l'ordine di grandezza che `newseason.md`
+aveva già messo in conto. È la stessa scelta già fatta per i dati diretta.it
+(868 KB contro 29 MB di `.xlsx`).
+
+**Ma un formato nuovo non deve rendere illeggibile ciò che c'è.** L'archivio
+già raccolto è in `.json` semplice. Da qui `src/data/smarkets_archive.py`:
+l'unico posto dove la doppia estensione è un problema, con `snapshots()`,
+`leggi()` e `scrivi()`. Il `mtime=0` nel gzip non è un dettaglio: senza,
+due esecuzioni con gli stessi dati darebbero byte diversi e git vedrebbe una
+modifica che non c'è.
+
+**⭐ Il difetto che ho introdotto e corretto nello stesso lavoro.** Portando la
+raccolta giornaliera sul modulo nuovo, le ho fatto leggere `ultimo()` — il file
+più recente. Il calendario del giorno è passato da **23 partite a 6**: perché
+il file più recente era un giro di *chiusura* (finestra 2 ore, una lega sola).
+
+È **esattamente** l'inciampo che poche ore prima aveva fatto cadere due test di
+`test_nomi_smarkets_2627.py`, e l'avevo appena corretto lì. L'ho re-introdotto
+altrove nello stesso pomeriggio. La correzione vera non era il test: era che
+**«l'ultimo file» e «il listino» non sono la stessa cosa**, e finché il codice
+non lo dice esplicitamente ognuno ci ricasca. Ora esiste
+`ultimo_listino_completo()`, che cerca l'ultimo snapshot con **tutte e cinque**
+le leghe e alza con un messaggio esplicito se non lo trova — e lo usano sia la
+raccolta giornaliera sia i test.
+
+**Lezione.** Un difetto corretto in un punto non è un difetto corretto. Finché
+la cosa sbagliata resta **facile da scrivere**, torna: qui è tornata dopo tre
+ore, per mano della stessa persona che l'aveva appena tolta. Ciò che chiude
+davvero il buco non è la correzione, è **rendere la versione giusta più comoda
+di quella sbagliata** — una funzione che si chiama come la cosa che serve.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica di modello: due numeri di costo, entrambi misurati.
+
+**(1) Il peso dell'archivio.** Con `p` partite esposte per giro, `r = 343`
+righe per partita e `b = 484` byte per riga:
+
+```
+grezzo(p)     = r · b · p                    ≈ 0,166 MB · p
+compresso(p)  = grezzo(p) / 20,3             ≈ 0,0082 MB · p
+```
+
+misurato su un file vero: 2.056 righe → 978.384 B grezzi, 48.261 B compressi,
+**rapporto 20,27**. Su una stagione (`p ≈ 60` in media, ~280 giri):
+
+```
+grezzo     ≈ 0,166 · 60 · 280  ≈ 2.800 MB
+compresso  ≈ 0,0082 · 60 · 280 ≈   138 MB
+```
+
+**(2) Perché il rapporto è così alto.** Non è fortuna: le righe sono
+**quasi identiche fra loro** — stesse chiavi JSON ripetute 2.056 volte, stessi
+nomi di lega e di partita, stesse etichette di mercato. Il gzip lavora su
+ridondanza, e un JSON tabellare indentato ne ha moltissima. È anche il motivo
+per cui il rapporto **crescerà** con `p`: più partite nello stesso file, più
+ripetizione. I 20,3× misurati su 6 partite sono quindi un **limite inferiore**
+per i file di stagione.

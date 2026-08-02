@@ -317,6 +317,10 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  intera -> mercato CAMPIONE; classifica con spareggi UFFICIALI
                  per lega, h2h in SA/Liga, DR in Premier)
                  player_stats.py (97 statistiche per GIOCATORE-partita, 3 leghe)
+                 smarkets_archive.py (Fase 136: elenca e legge gli snapshot
+                 Smarkets, .json storici e .json.gz nuovi. ultimo_listino_completo()
+                 e' quello che serve: «l'ultimo file» puo' essere un giro di
+                 chiusura con una lega sola)
                  team_stats.py (Fase 131: 45 statistiche per SQUADRA-partita divise
                  in PERIODI -- Totale/1T/2T, 5 leghe 2025-26, 1.752 partite. E' il
                  primo dato che separa i due tempi: serve alla pista 6-bis, il

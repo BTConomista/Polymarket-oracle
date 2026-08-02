@@ -105,11 +105,20 @@ class Registro:
 
 def prossime_partite(entro_giorni: int) -> list[dict]:
     """Le partite in arrivo, dal calendario già raccolto da Smarkets."""
-    file = sorted(glob.glob(str(ROOT / "data" / "smarkets_matches" / "*.json")))
-    if not file:
-        raise SystemExit("nessuno snapshot in data/smarkets_matches/: "
-                         "esegui prima scripts/fetch_smarkets_matches.py")
-    dati = json.loads(Path(file[-1]).read_text(encoding="utf-8"))
+    from src.data import smarkets_archive
+
+    # ⚠️ NON «l'ultimo file»: **l'ultimo listino COMPLETO**. L'archivio mescola
+    # due regimi, e un giro di chiusura contiene solo le partite entro 2 ore --
+    # spesso di una lega sola. Prendendo il piu' recente e basta, il calendario
+    # del giorno si restringerebbe a quelle poche partite senza che niente
+    # fallisca. E' lo stesso inciampo che il 02/08/2026 ha fatto cadere due
+    # test di `test_nomi_smarkets_2627.py`.
+    try:
+        ultimo = smarkets_archive.ultimo_listino_completo()
+    except FileNotFoundError as e:
+        raise SystemExit(f"{e}\nEsegui scripts/fetch_smarkets_matches.py "
+                         "--tutte-le-esposte") from None
+    dati = smarkets_archive.leggi(ultimo)
     adesso = dt.datetime.now(dt.timezone.utc)
     limite = adesso + dt.timedelta(days=entro_giorni)
     viste: dict[tuple, dict] = {}
@@ -127,7 +136,7 @@ def prossime_partite(entro_giorni: int) -> list[dict]:
         viste.setdefault((r["lega"], casa, ospite), {
             "lega": r["lega"], "casa": casa, "ospite": ospite,
             "inizio": r["inizio"], "event_id": r["event_id"],
-            "quote_da": Path(file[-1]).name,
+            "quote_da": ultimo.name,
         })
     return sorted(viste.values(), key=lambda x: x["inizio"])
 

@@ -17,6 +17,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+
+from src.data import smarkets_archive as _archivio  # noqa: E402
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from src.data.sources import TEAM_ALIASES, canonical_team  # noqa: E402
@@ -63,26 +66,6 @@ def test_gli_alias_sono_idempotenti():
         assert canonical_team(nome) == nome, f"{nome} e' a sua volta un alias"
 
 
-def _listino_completo() -> Path:
-    """L'ultimo snapshot che contiene TUTTE E CINQUE le leghe.
-
-    ⚠️ Non basta prendere il piu' recente. L'archivio mescola due regimi: il
-    giro di lungo raggio scrive il listino intero, quello di chiusura scrive
-    solo le partite entro 2 ore — e un'esecuzione a mano con una finestra
-    stretta puo' lasciare in coda un file con una lega sola. E' successo il
-    02/08/2026 e ha fatto fallire due test che assumevano l'ordine dei file.
-    Il test dichiara cosa gli serve invece di sperarlo.
-    """
-    import json
-
-    candidati = sorted((ROOT / "data" / "smarkets_matches").glob("*.json"))
-    for f in reversed(candidati):
-        leghe = {r["lega"] for r in json.loads(f.read_text(encoding="utf-8"))["righe"]}
-        if len(leghe) == 5:
-            return f
-    raise AssertionError(
-        f"nessuno dei {len(candidati)} snapshot copre tutte e 5 le leghe")
-
 
 def test_la_riconciliazione_torna_su_tutte_e_cinque_le_leghe():
     """Il controllo strutturale, sullo snapshot congelato: in ogni lega il
@@ -94,7 +77,7 @@ def test_la_riconciliazione_torna_su_tutte_e_cinque_le_leghe():
     romperebbe da sola."""
     from _run_fase128_nomi_2627 import classifica, nomi_per_lega
 
-    snap = _listino_completo()
+    snap = _archivio.ultimo_listino_completo()
     nomi = nomi_per_lega(snap)
     for lega, squadre in sorted(nomi.items()):
         e = classifica(lega, squadre)
@@ -120,13 +103,13 @@ def test_ogni_nome_mai_visto_nell_archivio_si_aggancia():
     E' la seconda linea di difesa: la prima e' `event_id`, che non cambia."""
     import json
 
-    archivio = sorted((ROOT / "data" / "smarkets_matches").glob("*.json"))
+    archivio = _archivio.snapshots()
     if not archivio:                                      # pragma: no cover
         pytest.skip("archivio vuoto")
 
     per_lega: dict[str, set[str]] = {}
     for f in archivio:
-        for r in json.loads(f.read_text(encoding="utf-8"))["righe"]:
+        for r in _archivio.leggi(f)["righe"]:
             casa, ospite = r["partita"].split(" vs ")
             per_lega.setdefault(r["lega"], set()).update([casa, ospite])
 
@@ -151,7 +134,7 @@ def test_le_neopromosse_2627_sono_quattordici():
     e' cambiato il listino o la mappa."""
     from _run_fase128_nomi_2627 import classifica, nomi_per_lega
 
-    snap = _listino_completo()
+    snap = _archivio.ultimo_listino_completo()
     nomi = nomi_per_lega(snap)
     tot = sum(len(classifica(l, s)["neopromosse"]) for l, s in nomi.items())
     assert tot == 14

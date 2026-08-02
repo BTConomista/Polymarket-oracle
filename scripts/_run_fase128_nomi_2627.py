@@ -92,7 +92,9 @@ ULTIMA = int(sources.SEASONS[-1])
 
 def nomi_per_lega(snapshot: Path) -> dict[str, set[str]]:
     """I nomi squadra distinti che Smarkets espone, lega per lega."""
-    d = json.loads(snapshot.read_text(encoding="utf-8"))
+    from src.data import smarkets_archive as _arch
+
+    d = _arch.leggi(snapshot)
     fuori = d.get("leghe_senza_partite_esposte")
     if fuori:
         # Fase 127: un file puo' esistere ed essere incompleto. Meglio
@@ -155,7 +157,8 @@ def main(argv=None) -> None:
                     help="file da leggere (default: l'ultimo raccolto)")
     a = ap.parse_args(argv)
 
-    snap = a.snapshot or max(SNAPSHOTS.glob("*.json"))
+    from src.data import smarkets_archive as _arch
+    snap = a.snapshot or _arch.ultimo_listino_completo(SNAPSHOTS)
     nomi = nomi_per_lega(snap)
 
     mancanti = set(LEAGUE_CONFIGS) - set(nomi)
