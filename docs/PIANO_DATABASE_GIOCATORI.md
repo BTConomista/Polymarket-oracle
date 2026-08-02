@@ -2925,6 +2925,67 @@ dell'investimento.
 
 ## 14 · Nazionali e coppe: disegno deciso il 02/08/2026
 
+### 14.0 · ⭐ La FASE 2 del progetto (precisazione dell'utente, 02/08/2026)
+
+Prima di tutto il resto, perché cambia come si legge ogni riga sotto.
+
+**Fase 1 — quella conclusa.** Dalle origini alla Fase 136 il progetto ha
+cercato di prevedere i mercati partendo da **quello che aveva**: gol, xG,
+quote, riposo, congestione, valore rosa. Tutto **aggregato per squadra-partita**.
+Ha prodotto molto — due motori, cinque leghe, un tetto informativo misurato — e
+ha **chiuso molte piste**. Quelle chiusure restano valide *per la domanda che
+ponevano*.
+
+**Fase 2 — quella che comincia qui.** Stiamo allargando i dati di un ordine di
+grandezza, e soprattutto stiamo **cambiando granularità**: dalla squadra al
+**singolo**. Giocatori, allenatori, arbitri, meteo, formazioni probabili,
+carriere, notizie pre-partita.
+
+Non è "più dati della stessa cosa": è la possibilità di porre domande che prima
+**non erano formulabili**. Alcune, dette dall'utente:
+
+- quanto un **singolo giocatore** incide sul rendimento della squadra;
+- se un giocatore sta avendo un **calo** o un picco di forma;
+- cosa succede in una partita **quando piove**;
+- come variano le **formazioni probabili** di giorno in giorno, e come si
+  muovono le quote al variare delle notizie — e se si muovono **anche in
+  assenza** di notizie, con quali schemi;
+- se un giocatore è **ex** della squadra contro cui gioca (le carriere ce
+  l'hanno già);
+- quanti **cartellini** dà in media un arbitro, e se un giocatore ne sta
+  accumulando;
+- e il caso che lo riassume: **se alla Roma si infortuna Dovbyk o Malen non è
+  la stessa cosa** — una distinzione che il dato di squadra non può esprimere,
+  perché entrambi diventano «un attaccante in meno».
+
+⚠️ **LA REGOLA CHE NE DISCENDE** (ora anche `CLAUDE.md` §1, principio 10):
+**un risultato negativo vale solo per i dati su cui è stato misurato.**
+«Il riposo non predice» è stato misurato come covariata di *squadra* sul
+risultato: non dice nulla su «questo giocatore ha volato venti ore ed è sceso
+in campo con due giorni di recupero». Dati diversi, granularità diversa,
+domanda diversa.
+
+Quindi: **non si rifiuta un dato nuovo citando un modello vecchio** costruito su
+meno informazione e più grossolana. Si può *prevedere* che il segnale sia
+debole, ma è una previsione da misurare, non un verdetto già emesso.
+
+📌 Questo documento conteneva già l'errore che la regola corregge: il §14.3
+giustificava il viaggio dicendo «le Fasi 4c-33 hanno chiuso riposo e
+congestione, **ma**…» — trattando un risultato vecchio come un ostacolo da
+aggirare invece che come una misura semplicemente **muta** sulla domanda nuova.
+Lasciato lì, corretto qui, così si vede la differenza.
+
+⚠️ **E vale anche al contrario.** La nuova granularità non sospende il metodo:
+restano l'intervallo di confidenza (R7), la validazione su più stagioni (§1.7),
+la disponibilità temporale (R8) e l'onestà sui limiti. Più dati significa anche
+**più occasioni di trovare un pattern che non c'è**.
+
+**L'ordine della Fase 2, deciso:** prima si **raccoglie tutto il possibile** —
+individuale (giocatori, allenatori, arbitri) e di squadra (club e nazionali) —
+e **poi** si capisce come usarlo. Raccogliere e usare sono due decisioni
+separate (§5-ter del `CLAUDE.md`), e la prima non richiede di saper rispondere
+alla seconda.
+
 Sessione di ragionamento con l'utente, dopo che il ponte statistiche↔`player_id`
 è arrivato al 100%. Qui stanno le **decisioni di struttura** e — altrettanto
 importante — le **premesse che si sono rivelate false prima di spendere**.
@@ -3048,6 +3109,13 @@ bastano a dire «si comporta diversamente in nazionale». Il dato va raccolto �
 costa poco e si accumula — ma **l'analisi va messa in conto come pluriennale**.
 Il valore immediato è il *collegamento*, non la conclusione.
 
+⚠️ **Questa avvertenza NON è il tipo di pre-giudizio che il principio 10
+vieta**, ed è importante non confonderle. Il principio 10 vieta di *rifiutare
+un dato* citando un modello vecchio; questa è una **misura di potenza** (R7)
+sul dato nuovo, cioè esattamente ciò che il principio 10 richiede al posto del
+verdetto anticipato. Non dice «non farlo»: dice «raccoglilo, e sappi che la
+risposta arriverà fra qualche stagione».
+
 ### 14.6 · Arbitri e allenatori — stato, per non ricercarlo di nuovo
 
 L'utente chiede se serva un database di allenatori e arbitri. **Sì, e c'era
@@ -3076,4 +3144,48 @@ e **niente** riuso di un id che significa un'altra cosa.
 4. **Statistiche individuali di nazionale**, partita per partita, come per i
    club — collegate allo stesso `player_id`;
 5. **Coppe europee**: le statistiche di dettaglio si innestano sull'ossatura che
-   già esiste, riusando `collega_per_eliminazione` senza codice nuovo.
+   già esiste, riusando `collega_per_eliminazione` senza codice nuovo;
+6. **`games.csv`** di player-scores → arbitri e allenatori (§14.6): costo basso,
+   apre il terzo e il quarto fronte del piano.
+
+**Il passo 2 va fatto prima del 3.** Se si importa una partita di nazionale
+senza aver deciso la chiave, la si sceglie sotto pressione — ed è la scelta più
+costosa da cambiare dopo.
+
+
+### 14.8 · Da dove si riparte (stato di fatto, misurato il 02/08/2026)
+
+Nessuno di questi numeri è stimato.
+
+| cosa | stato |
+|---|---|
+| ponte statistiche 2025-26 ↔ `player_id` | **35.339/35.339 = 100%**, 1.698 giocatori |
+| database carriere | 29.532 giocatori, 197.813 righe, 48 competizioni |
+| popolazione 5 leghe | 7.710 |
+| presenze totali | 1.894.352 |
+| cache Wikipedia | 26.044 pagine (non versionata, rigenerabile) |
+| Q-id Wikidata | 24.413 mappati, estratti a costo zero di rete |
+| suite | **1.232 test verdi** |
+
+### 14.9 · Cosa NON è deciso
+
+Onestà su dove il piano si ferma:
+
+- **quale fonte** per calendario e convocazioni delle nazionali (rispettando i
+  `robots.txt`: la stampa sportiva vieta i crawler AI, Fase 119);
+- **come si identifica una convocazione** che non porta a una presenza — il
+  convocato che resta in panchina, o che dà forfait dopo la lista;
+- **se le giovanili** (U19/U21) stanno nello stesso registro delle maggiori;
+- **la geografia**: abbiamo le coordinate di 90 stadi su 94 (Fase 122), ma non
+  di tutti i club europei né delle sedi delle nazionali;
+- **niente di tutto questo è ancora collegato a un modello**: è raccolta, e va
+  detto come tale (§5-ter: raccolto ≠ usato è uno stato legittimo).
+
+### 14.10 · Come accorgersi di aver rotto qualcosa
+
+- `python -m pytest` → **1.232 verdi** al 02/08/2026;
+- `test_copertura_totale_sulle_tre_leghe` fissa il ponte al **100%**: se scende,
+  è arrivato un dato che il ponte non copre — va guardato, non ignorato;
+- i conteggi del database (7.710 / 29.532 / 197.813) sono fissati nei test: se
+  si muovono, dev'esserci una riga in `data/presenze_integrate.csv` che lo
+  spiega.
