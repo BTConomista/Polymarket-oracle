@@ -2919,3 +2919,161 @@ dei giocatori con almeno una tappa esterna — e **misurare quanto lo strato 2
 aggiungerebbe davvero** su un campione, prima di pagarne il costo di licenza.
 È il principio §1.3 del `CLAUDE.md`: la versione economica prima
 dell'investimento.
+
+
+---
+
+## 14 · Nazionali e coppe: disegno deciso il 02/08/2026
+
+Sessione di ragionamento con l'utente, dopo che il ponte statistiche↔`player_id`
+è arrivato al 100%. Qui stanno le **decisioni di struttura** e — altrettanto
+importante — le **premesse che si sono rivelate false prima di spendere**.
+
+### 14.1 · Due premesse cadute (misurate, non discusse)
+
+**(a) «Il passo 0 è procurarsi la lista delle nazionali».** Non serve: il blocco
+`International career` dell'infobox Wikipedia è **già nella nostra cache**. Il
+parser lo tratta come marcatore di *fine* (`INTESTAZIONI_FINE`) e lo scarta,
+ma il testo è stato scaricato. Misurato su 400 pagine campionate: **62,3% ha il
+blocco**, nella stessa forma del blocco club —
+
+```
+2011–2012 | Hungary U19 |  5 | (0)
+2014–2024 | Hungary     | 70 | (2)
+```
+
+Anni, nazionale, presenze, gol, **e le giovanili** (U19/U20/U21). Estrarlo costa
+**zero richieste di rete**: è lo stesso regalo dei Q-id Wikidata (§13). E la
+lista delle nazionali ne esce come *sottoprodotto già filtrato sui nostri
+giocatori*, invece che come elenco di 210 federazioni di cui usiamo un terzo.
+
+**(b) «Per le coppe europee avremo club nuovi che non abbiamo».** Falso, e di
+molto. Le coppe sono **già dentro `appearances`**:
+
+| competizione | presenze |
+|---|---|
+| Europa League | 55.834 |
+| Champions League | 49.536 |
+| qualificazioni EL | 19.460 |
+| qualificazioni CL | 10.580 |
+
+**415 club europei distinti, 415 con un nome nel registro, ZERO mancanti.** E la
+sola 2025-26 ha già 14.450 presenze, 122 club, 2.243 giocatori. Quello che
+manca non è l'ossatura: sono le **statistiche di dettaglio** partita per
+partita, che player-scores non ha e diretta.it sì.
+
+⭐ **Conseguenza operativa**: per le coppe europee il ponte funzionerà
+**esattamente come per i campionati**, senza codice nuovo. Le due fonti
+elencheranno gli stessi giocatori per ogni (data, club), quindi l'eliminazione
+di `player_identity.collega_per_eliminazione` ha il suo insieme di candidati.
+Per le nazionali **no**: lì la controparte non esiste (vedi §14.4).
+
+### 14.2 · L'identità delle squadre: `team_id` con `tipo`
+
+Il problema posto dall'utente: una nazionale non può essere un `club_id`.
+Giusto, ma la soluzione non è un secondo spazio di identificatori.
+
+**Scelta: UN registro `data/squadre.csv`**, chiave `team_id`, con:
+
+| campo | cosa | note |
+|---|---|---|
+| `team_id` | chiave universale «chi ha giocato» | club: **uguale al `club_id`** (leggibilità); nazionali: **negativo** |
+| `tipo` | `club` / `nazionale` / `nazionale_giovanile` | il guard sta qui, in un posto solo |
+| `club_id` | l'id player-scores | **solo** per `tipo=club`, altrimenti vuoto |
+| `qid` | ancoraggio Wikidata | esterno e stabile |
+| `paese`, `citta`, `lat`, `lon` | geografia | serve al calcolo dei viaggi (§14.3) |
+
+**Perché una chiave sola e non due.** Una riga-partita ha UNA colonna «squadra
+di casa». Con due spazi servirebbero `home_club_id` + `home_nazionale_id` e ogni
+query diventerebbe un `coalesce`: il tipo di complicazione che si dimentica una
+volta e sbaglia per sempre.
+
+**Perché i negativi.** Un `club_id` è sempre positivo. Se qualcuno unisce per
+sbaglio `team_id` a `club_id`, con i negativi non trova **nessuna riga** — un
+buco visibile. Con un intervallo alto e positivo troverebbe righe **sbagliate**,
+che è il modo peggiore di fallire (R6: non è il `NaN` il pericolo, è il finto
+pieno). Qui la scelta rende l'errore *impossibile*, non solo improbabile.
+
+⚠️ **Il pericolo vero non è l'id: è l'aggregazione.** «Per quanti club ha
+giocato» non deve contare l'Italia. Quindi il filtro NON può vivere nella testa
+di chi scrive la query: le funzioni di carriera devono escludere `tipo≠club`
+**per default**, e chi vuole le nazionali le chiede esplicitamente.
+
+### 14.3 · Il viaggio: la fetta economica ad alto valore
+
+Meccanismo, come formulato dall'utente e qui precisato: si incrociano **dove
+vive** (città del club) e **dove va a giocare** (città della partita di
+nazionale), più le **date** delle partite di club prima e dopo la finestra —
+così si ottengono insieme i chilometri, i fusi orari attraversati e il riposo
+reale.
+
+Perché vale la pena prima delle statistiche individuali:
+
+1. è **informazione che i dati di club non contengono**. Le Fasi 4c-33 hanno
+   chiuso riposo/congestione/forma come rumore, ma erano tutte misurate *dentro*
+   il campionato: un brasiliano dell'Arsenal fa ~20 ore di volo due volte a
+   finestra, un francese del PSG prende un treno, e questa differenza nel
+   dataset attuale **non esiste**;
+2. è dato **`pre`** (R8): noto quando esce il calendario, quindi utilizzabile
+   per *prevedere* invece che per raccontare;
+3. non richiede **nessuna** statistica partita per partita — solo calendario,
+   convocazioni e geografia.
+
+⚠️ **L'entità da raccogliere è la CONVOCAZIONE, non la nazionale.** E i **non
+convocati contano quanto i convocati**: sono il gruppo di controllo senza cui si
+misura solo che i convocati sono i giocatori più forti. Li abbiamo già gratis,
+perché abbiamo le rose complete dei club.
+
+### 14.4 · La difficoltà nota in anticipo
+
+Per le nazionali **l'eliminazione non funziona**. Coi club reggeva perché le due
+fonti elencavano gli stessi 14-18 giocatori per partita; per le nazionali
+player-scores non ha alcuna partita, quindi non c'è insieme di candidati da cui
+eliminare. La leva sostitutiva è la **nazionalità**, che restringe il campo a
+poche centinaia di persone, ed è su Wikidata (`P1532`) sugli stessi Q-id già
+estratti.
+
+### 14.5 · Avvertenza sul campione (scritta PRIMA di spendere)
+
+Il confronto club↔nazionale **su una stagione sola non concluderà nulla** — la
+stessa lezione della Fase 131:
+
+| | partite per giocatore, 2025-26 |
+|---|---|
+| club | ~35-50 |
+| nazionale | ~10-15 (ed è stagione di Mondiale, cioè il massimo) |
+
+Dieci partite per giocatore, con avversari, compagni e sistemi diversi, non
+bastano a dire «si comporta diversamente in nazionale». Il dato va raccolto —
+costa poco e si accumula — ma **l'analisi va messa in conto come pluriennale**.
+Il valore immediato è il *collegamento*, non la conclusione.
+
+### 14.6 · Arbitri e allenatori — stato, per non ricercarlo di nuovo
+
+L'utente chiede se serva un database di allenatori e arbitri. **Sì, e c'era
+già**: è in questo stesso documento dal 29/07/2026 (il titolo lo dice, e l'audit
+§11 copre **32 voci allenatore + 25 arbitro** oltre alle 61 giocatore).
+
+Quello che manca non è il piano, è **l'importazione**: la fonte valutata è
+`games.csv` di `davidcariboo/player-scores`, che dà arbitro **e** allenatore al
+**>99,7%** anche su CL/EL/Conference. ⚠️ **Non è fra i file che abbiamo**:
+`files/player_scores/` contiene solo `appearances`, `club_names`, `clubs`,
+`player_valuations`, `players`. Va scaricato.
+
+📌 **Da ricordare** (richiesta esplicita dell'utente, 02/08/2026): quando si
+apriranno le coppe e le nazionali arriveranno **allenatori nuovi** (i ct) e
+**arbitri nuovi** (internazionali) che nessuna delle nostre fonti attuali copre.
+Vanno trattati con lo stesso disegno di §14.2: registro proprio, tipo esplicito,
+e **niente** riuso di un id che significa un'altra cosa.
+
+### 14.7 · Ordine di lavoro concordato
+
+1. **Nazionali, strato presenze** — dal blocco `International career` in cache,
+   costo zero di rete. Dà lista nazionali + presenze + gol + giovanili;
+2. **Registro squadre** (`team_id`/`tipo`) — prima di importare qualunque
+   partita di nazionale, altrimenti si sceglie la chiave sotto pressione;
+3. **Calendario + convocazioni + geografia** → il viaggio;
+4. **Statistiche individuali di nazionale**, partita per partita, come per i
+   club — collegate allo stesso `player_id`;
+5. **Coppe europee**: le statistiche di dettaglio si innestano sull'ossatura che
+   già esiste, riusando `collega_per_eliminazione` senza codice nuovo.
