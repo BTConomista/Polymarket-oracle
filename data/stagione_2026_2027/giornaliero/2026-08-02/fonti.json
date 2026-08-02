@@ -1,0 +1,48 @@
+{
+ "giorno": "2026-08-02",
+ "nota": "verbale di OGNI fetch, riusciti e falliti. Un giorno senza questo file è un giorno di cui non sappiamo nulla, e va trattato come tale in ogni analisi.",
+ "tentati": 5,
+ "falliti": 0,
+ "voci": [
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=42.837111&longitude=-2.688044&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-08-02T09:43:56.910482+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14430,
+   "durata_s": 0.92
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=37.383878&longitude=-5.970467&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-08-02T09:43:57.833654+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14345,
+   "durata_s": 0.64
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=41.347861&longitude=2.075667&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-08-02T09:43:58.470228+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14299,
+   "durata_s": 0.63
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=42.211861&longitude=-8.740328&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-08-02T09:43:59.101412+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14365,
+   "durata_s": 0.63
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=43.368667&longitude=-8.417372&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-08-02T09:43:59.736363+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14367,
+   "durata_s": 0.63
+  }
+ ]
+}

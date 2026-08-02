@@ -130,3 +130,64 @@ def test_pulisce_la_data_dichiarata():
     assert _pulisci_data("13 luglio 2026))") == "13 luglio 2026"
     assert _pulisci_data("{{data|18|07|2026}}") == "18/07/2026"
     assert _pulisci_data(None) is None
+
+
+# --------------------------------------------------------------------------
+# Il guasto del 31/07/2026: la borsa rinomina, il join si rompe in silenzio
+# --------------------------------------------------------------------------
+
+def test_il_join_col_listino_non_dipende_dalla_convenzione_di_smarkets():
+    """Fra il 30 e il 31/07/2026 Smarkets e' passata dai nomi formali a quelli
+    brevi, e il join anagrafiche-listino e' crollato da 96/96 a 32/96 **senza
+    che niente fallisse**: il giro restava verde e il meteo usciva
+    `coordinate_mancanti` perche' l'anagrafica non si agganciava piu'.
+
+    La correzione e' canonicalizzare ENTRAMBI i lati con la mappa che il
+    progetto gia' ha. Il test lo verifica dove conta: sul listino vero.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    radice = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "rg", radice / "scripts" / "raccolta_giornaliera.py")
+    rg = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rg)
+
+    partite = rg.prossime_partite(30)
+    if not partite:
+        pytest.skip("nessuna partita in finestra: niente da agganciare")
+    schede = rg._schede_club()
+    squadre = ({(p["lega"], p["casa"]) for p in partite}
+               | {(p["lega"], p["ospite"]) for p in partite})
+    orfane = [f"{l}/{n}" for l, n in squadre
+              if (l, rg._canonico(n)) not in schede]
+    assert not orfane, f"{len(orfane)}/{len(squadre)} squadre senza anagrafica: {orfane[:10]}"
+
+
+def test_la_guardia_scatta_se_gli_alias_spariscono(monkeypatch):
+    """Controprova con denti: senza la mappa alias il join DEVE rompersi.
+
+    Un test che passa sia col rimedio sia senza non dimostrerebbe niente —
+    e' la stessa trappola che il repo ha gia' incontrato piu' volte.
+    """
+    import importlib.util
+    from pathlib import Path
+
+    from src.data import sources
+
+    radice = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "rg2", radice / "scripts" / "raccolta_giornaliera.py")
+    rg = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rg)
+
+    partite = rg.prossime_partite(30)
+    if not partite:
+        pytest.skip("nessuna partita in finestra")
+    monkeypatch.setattr(sources, "TEAM_ALIASES", {})
+    schede = rg._schede_club()
+    squadre = ({(p["lega"], p["casa"]) for p in partite}
+               | {(p["lega"], p["ospite"]) for p in partite})
+    orfane = [1 for l, n in squadre if (l, rg._canonico(n)) not in schede]
+    assert orfane, "senza alias il join dovrebbe rompersi, e non si rompe"

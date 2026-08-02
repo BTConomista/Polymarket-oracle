@@ -334,6 +334,7 @@ correzioni.*
 - [Fase 130 — Le quote si muovono? Quasi no. E il movimento più grande era un libro rotto](#fase-130--le-quote-si-muovono-quasi-no-e-il-movimento-più-grande-era-un-libro-rotto)
 - [Fase 131 — Le statistiche di squadra per periodo: il primo dato che separa i due tempi](#fase-131--le-statistiche-di-squadra-per-periodo-il-primo-dato-che-separa-i-due-tempi)
 - [Fase 133 — I gol all'intervallo entrano negli snapshot: il dato che mancava al modello a due stadi](#fase-133--i-gol-allintervallo-entrano-negli-snapshot-il-dato-che-mancava-al-modello-a-due-stadi)
+- [Fase 134 — La borsa rinomina le squadre e il raccoglitore resta verde: il join che si è rotto in silenzio](#fase-134--la-borsa-rinomina-le-squadre-e-il-raccoglitore-resta-verde-il-join-che-si-è-rotto-in-silenzio)
 
 ---
 
@@ -15042,3 +15043,90 @@ Le due leghe mai misurate prima danno **0,4482** (Bundesliga) e **0,4461**
 (Ligue 1), cioè in alto nella forchetta: il valore a 5 leghe sale a
 **0,4425** — dentro l'IC della Fase 96, e da ri-misurare con il suo intervallo
 prima di usarlo come costante per-lega (R7).
+
+---
+
+## Fase 134 — La borsa rinomina le squadre e il raccoglitore resta verde: il join che si è rotto in silenzio
+
+**Obiettivo.** Correggere un difetto **in corso** trovato dal censimento delle
+fonti: il join fra il listino Smarkets e le nostre 96 anagrafiche di club era
+passato da 96/96 a 32/96, e nessuno se n'era accorto.
+
+**Come è stato trovato, e perché conta.** Non da un test rosso né da un errore:
+da un censimento che guardava un'altra cosa. Il difetto era **invisibile per
+costruzione** — il giro giornaliero usciva verde, scriveva il suo file, e
+l'unico sintomo era che il meteo veniva marcato `coordinate_mancanti` invece
+di essere richiesto. Un campo che vale «buco dichiarato» copriva un guasto.
+
+**La causa.** `scripts/raccolta_giornaliera.py` indicizzava le anagrafiche per
+`nome_smarkets` **grezzo** e cercava con il nome **grezzo** del listino. Fra il
+30 e il 31/07/2026 Smarkets è passata dai nomi formali ai nomi brevi
+(`Deportivo Alaves` → `Alaves`, `FC Augsburg` → `Augsburg`,
+`Atletico Madrid` → `Atlético Madrid`). Gli alias per la nuova convenzione
+**esistevano già** — la Fase 130 li aveva aggiunti a `TEAM_ALIASES` proprio per
+questo rinominamento — ma la raccolta giornaliera non consultava quella mappa.
+Il progetto aveva il rimedio in casa e non lo applicava dove serviva.
+
+**Il danno, misurato sull'archivio giorno per giorno:**
+
+| giorno | partite | meteo | orfane |
+|---|--:|---|--:|
+| 30/07 | 7 | 1 `coordinate_mancanti` | — |
+| **31/07** | **0** | **niente** | — |
+| **01/08** | 9 | **8/9 `coordinate_mancanti`** | — |
+| 02/08 (dopo il fix) | 23 | 2 `coordinate_mancanti` | **0** |
+
+**La correzione, e perché è quella giusta.** Canonicalizzare **entrambi i lati**
+con `TEAM_ALIASES` (`_canonico()`): così la convenzione che la borsa usa oggi
+diventa irrilevante. Misurato: 96/96, zero orfane. È la stessa scelta della
+Fase 128 — la chiave stabile non è la stringa, è il nome canonico — applicata
+al punto in cui mancava.
+
+**Ma la correzione non basta, e questa è la lezione.** Un join che si rompe
+resta silenzioso finché nessuno lo misura. Aggiunta una **guardia** che conta
+le squadre senza anagrafica, le **scrive nel file del giorno**
+(`squadre_senza_anagrafica`) e fa uscire il giro **rosso** — ma solo **dopo**
+aver scritto, perché le quote e il meteo di oggi non si ri-scaricano domani
+(stessa scelta della Fase 127). Due test: uno verifica il join sul listino
+vero, l'altro è la **controprova con denti** — svuotando la mappa alias il join
+deve rompersi (36/46 orfane), altrimenti il test passerebbe sia col rimedio sia
+senza e non dimostrerebbe nulla.
+
+**Lezione.** È la terza volta che questo progetto paga lo stesso schema: la
+Fase 118 (un run verde che non raccoglieva niente), la Fase 127 (una lega uscita
+dalla raccolta in silenzio) e ora questa. Il denominatore comune non è la rete
+né l'API: è che **un valore legittimo per un caso legittimo** (`fuori_finestra`,
+`coordinate_mancanti`) veniva usato anche quando la causa era un guasto. La
+contromisura non è un controllo in più: è che ogni stato «non ho il dato»
+dichiari **perché** non ce l'ha, e che il perché sia distinguibile.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica di modello: è un difetto di join. La formula è l'invariante
+che il codice ora impone.
+
+Sia `A` l'insieme delle anagrafiche e `L` il listino del giorno. Prima:
+
+```
+join(L, A) = { (l, a) : l.nome == a.nome_smarkets }        # stringa grezza
+```
+
+fragile perché `l.nome` è scelto dal fornitore e cambia. Dopo:
+
+```
+c(x)       = TEAM_ALIASES.get(x, x)                        # nome canonico
+join(L, A) = { (l, a) : c(l.nome) == c(a.nome_smarkets) }
+```
+
+`c` è **idempotente** (`c(c(x)) = c(x)`, verificato: nessun valore di
+`TEAM_ALIASES` è a sua volta una chiave), quindi applicarla a entrambi i lati è
+sicuro e non introduce catene. L'invariante che la guardia verifica è
+
+```
+∀ s ∈ squadre(L) :  (lega(s), c(nome(s))) ∈ A
+```
+
+e la sua violazione è **contata**, scritta nel file del giorno e propagata al
+codice d'uscita. Il numero che la fa scattare non è una soglia scelta: è
+**zero**, perché il listino e le anagrafiche coprono per costruzione le stesse
+96 squadre delle 5 leghe.

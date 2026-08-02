@@ -132,12 +132,33 @@ def prossime_partite(entro_giorni: int) -> list[dict]:
     return sorted(viste.values(), key=lambda x: x["inizio"])
 
 
+def _canonico(nome: str) -> str:
+    """Il nome squadra sulla convenzione canonica del progetto.
+
+    ⚠️ Serve perche' il nome con cui Smarkets espone una squadra **cambia**:
+    fra il 30 e il 31/07/2026 la borsa e' passata dai nomi formali
+    ("Deportivo Alaves", "FC Augsburg") a quelli brevi ("Alaves", "Augsburg"),
+    e prima ancora aveva rinominato uno slug di lega (Fase 127). Se il join
+    poggia sulla stringa grezza, ogni rinominamento lo rompe in silenzio.
+    Canonicalizzando **entrambi i lati** con la mappa che il progetto gia' ha,
+    la convenzione del giorno diventa irrilevante.
+    """
+    from src.data.sources import TEAM_ALIASES
+
+    return TEAM_ALIASES.get(nome, nome)
+
+
 def _schede_club() -> dict[tuple[str, str], dict]:
-    """Le 96 anagrafiche, indicizzate una volta sola per (lega, nome)."""
+    """Le 96 anagrafiche, indicizzate una volta sola per (lega, nome CANONICO).
+
+    L'indice era sul `nome_smarkets` grezzo: il 31/07/2026 la borsa ha
+    cambiato convenzione e il join e' passato da 96/96 a 32/96 senza che
+    niente fallisse. Ora la chiave e' canonica da entrambi i lati.
+    """
     out = {}
     for f in CLUB.glob("*/*/anagrafica.json"):
         d = json.loads(f.read_text(encoding="utf-8"))
-        out[(d["lega"], d["nome_smarkets"])] = d
+        out[(d["lega"], _canonico(d["nome_smarkets"]))] = d
     return out
 
 
@@ -247,9 +268,26 @@ def main(argv=None) -> None:
     print(f"partite entro {a.entro_giorni} giorni: {len(partite)}")
 
     schede, stadi = _schede_club(), _coordinate_stadi()
+
+    # ⚠️ GUARDIA SUL JOIN (aggiunta dopo il guasto del 31/07/2026).
+    # Il difetto vero non era il rinominamento: era che il giro restava VERDE
+    # mentre 64 squadre su 96 non si agganciavano piu' a nessuna anagrafica.
+    # E' la stessa lezione della Fase 118 — «nessuna partita» e «l'API non ci
+    # parla piu'» avevano lo stesso aspetto — applicata al join invece che al
+    # listino. Si misura PRIMA di raccogliere, ma non si solleva qui: come
+    # alla Fase 127, prima si scrive il giorno (i dati non si ri-scaricano),
+    # poi si esce rossi.
+    squadre = {(p["lega"], p["casa"]) for p in partite} | {
+        (p["lega"], p["ospite"]) for p in partite}
+    orfane = sorted(f"{lega}/{nome}" for lega, nome in squadre
+                    if (lega, _canonico(nome)) not in schede)
+    if orfane:
+        print(f"⚠️ {len(orfane)}/{len(squadre)} squadre del listino senza "
+              f"anagrafica: {orfane[:10]}")
+
     record: list[dict] = []
     for p in partite:
-        casa = schede.get((p["lega"], p["casa"]))
+        casa = schede.get((p["lega"], _canonico(p["casa"])))
         nome_stadio = ((casa or {}).get("stadio") or {}).get("nome")
         coord = stadi.get(nome_stadio) if nome_stadio else None
         inizio = dt.datetime.fromisoformat(p["inizio"].replace("Z", "+00:00"))
@@ -319,6 +357,10 @@ def main(argv=None) -> None:
         "generato_utc": oggi.isoformat(),
         "livello": "fatti",          # i giudizi arrivano col livello 5 del piano
         "partite_in_finestra": len(partite),
+        # Dichiarato nel file, non solo stampato: un giro con meta' listino
+        # scollegato deve restare RICONOSCIBILE il giorno dopo, altrimenti
+        # l'archivio non distingue «anagrafica assente» da «tutto a posto».
+        "squadre_senza_anagrafica": orfane,
         "record": record,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     (d / "fonti.json").write_text(json.dumps({
@@ -330,6 +372,16 @@ def main(argv=None) -> None:
         "voci": reg.voci,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"\nscritto {d.relative_to(ROOT)}/ (raccolta.json + fonti.json)")
+
+    # Il giro esce ROSSO **dopo** aver scritto, mai prima: le quote e il meteo
+    # di oggi non si ri-scaricano domani (stessa scelta della Fase 127).
+    if orfane:
+        raise SystemExit(
+            f"❌ {len(orfane)} squadre del listino non hanno un'anagrafica: "
+            f"{orfane[:10]}. Il giorno e' stato scritto lo stesso. Causa tipica: "
+            "la borsa ha rinominato le squadre -> aggiungere gli alias mancanti "
+            "in src/data/sources.py (TEAM_ALIASES)."
+        )
 
 
 if __name__ == "__main__":
