@@ -1,0 +1,57 @@
+Coppa di Francia 2025/26 — note di raccolta,Unnamed: 1,Unnamed: 2
+,,
+Fonte,diretta.it (Flashscore),
+Partite raccolte,201,
+Prima giornata,14.11.2025 (7° turno) — include AS Cannes - FC Annecy,
+Finale,22.05.2026 Lens - Nizza 3-1,
+,,
+Turni esclusi (come da indicazioni),,
+,"Dal 1° al 6° turno (fasi regionali, fine agosto - inizio novembre 2025).",
+,"La raccolta parte dal 7° turno, quello in cui entrano i club di Ligue 2.",
+,,
+Come e stata ricostruita la lista,,
+,"La pagina risultati della Coppa di Francia su diretta.it non carica gli incontri (0 righe, piu tentativi e piu percorsi).",
+,Anche i feed di calendario delle squadre restituiscono dati fermi a fine novembre 2025.,
+,Il tabellone e stato ricostruito leggendo le pagine risultati dei singoli club: 111 squadre (i 92 qualificati dal 7° turno + le 18 di Ligue 1).,
+,I nomi dei turni non provengono dal sito: sono assegnati raggruppando le partite per data. Data e squadre sono il dato primario.,
+,,
+Verifica di completezza del tabellone,,
+,Ogni turno e stato controllato contro i vincitori del turno precedente:,
+8° turno,"92 partecipanti, tutti vincitori del 7° turno (0 estranei)",
+32esimi,"64 partecipanti: 46 vincitori dell'8° turno + 18 nuovi, esattamente i 18 club di Ligue 1",
+16esimi,"32 partecipanti, tutti vincitori dei 32esimi (0 estranei)",
+Ottavi,"16 partecipanti, tutti vincitori dei 16esimi",
+Quarti,"8 partecipanti, tutti vincitori degli ottavi",
+Semifinali,"4 partecipanti, tutti vincitori dei quarti",
+Finale,"2 partecipanti, entrambi vincitori delle semifinali",
+,Il tabellone e quindi chiuso e coerente: 92+46+32+16+8+4+2+1 = 201. Non puo mancare nessuna partita.,
+,,
+Risultati,,
+,"I punteggi non sono mai sommati. Colonne separate per 90 minuti, dopo i supplementari e rigori;",
+,"la colonna ""Risultato (esteso)"" li scrive per esteso, es. ""0-0, poi rigori 5-3"".",
+Partite decise ai rigori,54,
+Partite con tempi supplementari,0,
+,In Coppa di Francia non si giocano i supplementari: in caso di parita si va direttamente ai rigori. Anche la finale si e chiusa nei 90 minuti.,
+,,
+Formazioni ed eventi,,
+Partite con formazioni,63 su 201 (dai 32esimi in avanti),
+,Per il 7° e l'8° turno (138 partite tra club dilettantistici e di serie minori) diretta.it non pubblica le formazioni: la sezione non esiste alla fonte.,
+Righe formazione,2495,
+"Righe eventi (gol, cartellini, cambi, rigori)",2792,
+,,
+Statistiche individuali dei giocatori — verifica partita per partita,,
+,Verificata una per una: la disponibilita dichiarata dal sito coincide al 100% con i dati effettivamente scaricati.,
+Partite con statistiche giocatore,63 su 201,
+Righe statistiche,1924,
+Colonne per giocatore,114,
+,,
+Dettaglio per turno,con statistiche,senza
+7° turno,0,92
+8° turno,0,46
+32esimi di finale,32,0
+16esimi di finale,16,0
+Ottavi di finale,8,0
+Quarti di finale,4,0
+Semifinali,2,0
+Finale,1,0
+,"Le statistiche individuali compaiono dai 32esimi, cioe dal turno in cui entrano i club di Ligue 1.",
