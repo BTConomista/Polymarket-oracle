@@ -156,18 +156,23 @@ def appaia_partite(manuale: pd.DataFrame, automatica: pd.DataFrame,
     2. **chiave** `data|lato|lato`, che ripiega sul nome normalizzato quando il
        `club_id` non esiste proprio (club dilettantistici);
     3. ⭐ **appaiamento per nome dentro la giornata** per cio' che resta. Serve
-       alla Coupe de France, dove le due fonti scrivono il nome in due lingue
-       diverse — diretta.it «Nizza», la nostra fonte «OGC Nice»: nessun token in
-       comune, nessun `club_id`, quindi i passi 1 e 2 non possono farcela.
-       Dentro una singola data le partite sono poche, quindi si appaia per
-       sovrapposizione dei token e si accetta **solo** il candidato migliore e
-       unico. Il punteggio non e' la chiave: resta la verifica indipendente che
-       dice se l'appaiamento regge.
+       alla Coupe de France, dove nessuno dei due lati ha un `club_id` (il
+       registro non copre ne' la Ligue 2 ne' i dilettanti) e le due fonti
+       scrivono il nome in due FORME diverse: diretta.it la corta, la nostra
+       fonte quella per esteso — «Cannes»/«AS Cannes», «Grenoble»/«Grenoble Foot
+       38», «Sochaux»/«FC Sochaux-Montbéliard». La chiave del passo 2 le vede
+       come due squadre diverse; la sovrapposizione dei token no. Dentro una
+       singola data le partite sono poche, quindi si accetta **solo** il
+       candidato migliore e unico. Misurato: **122 partite su 201** appaiate
+       cosi', e in 160 delle 161 coppie i due nomi non coincidono alla lettera.
+       Il punteggio non e' la chiave: resta la verifica indipendente che dice se
+       l'appaiamento regge (157/161 punteggi identici).
 
     ⚠️ Una partita automatica contesa da due righe manuali non va a nessuna
     delle due (`contese`). E' la regola di sempre — un aggancio incerto resta
     vuoto — applicata qui: l'alternativa sarebbe far vincere la prima riga in
-    ordine di file, cioe' scegliere a caso.
+    ordine di file, cioe' scegliere a caso. Sulle sei coppe raccolte le contese
+    sono **zero**: il guardrail non toglie niente a cio' che gia' funzionava.
     """
     if ag is None:
         ag = Agganciatore()

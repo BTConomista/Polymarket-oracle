@@ -44,6 +44,9 @@
             ]
           }
         ],
+        "club_dedotti_dalle_partite": {},
+        "appaiate_per_nome_dentro_la_giornata": 0,
+        "contese_lasciate_vuote": 0,
         "non_appaiate_manuale": [],
         "non_appaiate_automatica": [
           "2025-07-29 Barnet FC-Newport County",

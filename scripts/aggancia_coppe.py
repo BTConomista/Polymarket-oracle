@@ -45,9 +45,8 @@ import pandas as pd
 RADICE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RADICE))
 
-from src.data.club_matching import Agganciatore, normalizza  # noqa: E402
+from src.data.coppe_aggancio import appaia_partite  # noqa: E402
 from scripts.registra_raccolta_coppa_diretta import (  # noqa: E402
-    ALIAS_COPPA,
     FILE_MANIFESTO,
     _stessa_persona as _uguali,
     _token as _tok,
@@ -58,16 +57,6 @@ USCITA = RADICE / "data" / "coppe_2526"
 
 def _log(m: str) -> None:
     print(m, flush=True)
-
-
-def _chiave_partita(data, id_casa, id_osp, nome_casa, nome_osp) -> str:
-    """Chiave di partita che regge anche senza `club_id` (vedi la nota gemella
-    in `registra_raccolta_coppa_diretta.confronta_con_automatica`)."""
-    def lato(idc, nome):
-        return str(int(idc)) if pd.notna(idc) else "~" + "".join(
-            sorted(normalizza(str(nome))))
-
-    return f"{str(data)[:10]}|{lato(id_casa, nome_casa)}|{lato(id_osp, nome_osp)}"
 
 
 def _aggancia_giocatori(F: pd.DataFrame, partite: pd.DataFrame, cid) -> pd.DataFrame:
@@ -167,38 +156,30 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     N = pd.read_csv(USCITA / "partite.csv")
     N = N[N.competizione == coppa].copy()
 
-    ag = Agganciatore()
-
-    def cid(n):
-        return ag.aggancia(ALIAS_COPPA.get(n, n))
+    # ⭐ UNA sola implementazione, condivisa con la porta d'ingresso: risoluzione
+    # dei club (alias, registro, **deduzione dalle partite**) e appaiamento
+    # (chiave con ripiego sul nome, **appaiamento per nome dentro la giornata**).
+    # Qui c'era una seconda versione che si fermava a `Agganciatore.aggancia`:
+    # 77/117 partite sulla Copa del Rey e 0/201 sulla Coupe de France, mentre lo
+    # script gemello sugli stessi file ne appaiava 117 e 161. Due implementazioni
+    # divergenti dello stesso appaiamento ERANO il bug.
+    P = P.copy()
+    app = appaia_partite(P, N)
+    cid = app.cid
 
     # --- 1. squadre -------------------------------------------------------- #
     nomi = sorted(set(P.Casa) | set(P.Ospite))
     squadre = pd.DataFrame({"competizione": coppa, "nome_diretta": nomi})
     squadre["club_id"] = squadre.nome_diretta.map(cid).astype("Int64")
-    _log(f"  squadre:   {squadre.club_id.notna().sum()}/{len(squadre)} agganciate")
+    _log(f"  squadre:   {squadre.club_id.notna().sum()}/{len(squadre)} agganciate"
+         f"  (di cui {len(app.dedotti)} dedotte dalle partite)")
 
     # --- 2. partite -------------------------------------------------------- #
-    P = P.copy()
-    P["data_iso"] = pd.to_datetime(P.Data, format="%d.%m.%Y").dt.strftime("%Y-%m-%d")
-    P["club_casa"] = P.Casa.map(cid).astype("Int64")
-    P["club_ospite"] = P.Ospite.map(cid).astype("Int64")
-    # ⚠️ Sul lato AUTOMATICO gli identificatori ci sono gia': non si ri-derivano
-    # dal nome. Ri-derivarli e' un giro inutile che introduce un punto di
-    # rottura — «FC Südtirol-Alto Adige» non si agganciava (il registro lo
-    # chiama «FC Südtirol») e la partita Como-Südtirol spariva, pur avendo
-    # `home_club_id` scritto nella riga accanto.
-    N["club_casa"] = N.home_club_id.astype("Int64")
-    N["club_ospite"] = N.away_club_id.astype("Int64")
-    # ⚠️ NON si fa il merge su (data, id, id): dove gli id mancano — la Coupe de
-    # France e' fatta di club dilettantistici che il registro non ha — tutte le
-    # righe hanno la stessa chiave `(data, NaN, NaN)` e il merge esplode in un
-    # prodotto cartesiano: 201 partite diventavano 4.804. Si riusa la stessa
-    # chiave della porta d'ingresso, che ripiega sul nome quando l'id non c'e'.
-    P["k"] = [_chiave_partita(d, a, b, na, nb) for d, a, b, na, nb
-              in zip(P.data_iso, P.club_casa, P.club_ospite, P.Casa, P.Ospite)]
-    N["k"] = [_chiave_partita(d, a, b, na, nb) for d, a, b, na, nb
-              in zip(N.data, N.club_casa, N.club_ospite, N.casa, N.ospite)]
+    P["data_iso"] = app.data_iso
+    P["club_casa"] = pd.array(list(P.Casa.map(cid)), dtype="Int64")
+    P["club_ospite"] = pd.array(list(P.Ospite.map(cid)), dtype="Int64")
+    P["k"] = app.k_manuale
+    N["k"] = app.k_automatica
     N_unica = N.drop_duplicates(subset="k")
     partite = P.merge(N_unica[["k", "game_id", "turno"]], on="k", how="left",
                       suffixes=("", "_nostro"))
@@ -209,8 +190,17 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
                            "Competizione": "competizione", "Turno": "turno_diretta",
                            "data_iso": "data", "Casa": "casa", "Ospite": "ospite",
                            "ID partita": "id_diretta", "turno": "turno_nostro"})
+    # ⚠️ «appaiate» e «agganciate a un `game_id`» sono due cose diverse, e la
+    # Coupe de France e' il caso che le separa: 161 righe su 201 trovano la loro
+    # gemella nella fonte automatica (ed e' cosi' che se ne verificano i
+    # punteggi), ma quella fonte e' Wikipedia e non ha `game_id` — quindi 0/201
+    # qui. Il ponte manca dalla sponda opposta, non da questa.
+    appaiate = int(P.k.isin(set(N.k)).sum())
     _log(f"  partite:   {partite.game_id.notna().sum()}/{len(partite)} agganciate "
-         f"a un `game_id`")
+         f"a un `game_id`  ·  {appaiate}/{len(P)} appaiate con la fonte automatica"
+         + (f" ({app.rimappate} per nome dentro la giornata"
+            + (f", {app.contese} contese e lasciate vuote)" if app.contese else ")")
+            if app.rimappate else ""))
 
     # --- 3. giocatori ------------------------------------------------------ #
     # ⚠️ NON si usa `player_identity.collega_per_eliminazione`, ed e' una
@@ -309,6 +299,15 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
                         squadre.loc[squadre.club_id.isna(), "nome_diretta"])},
         "partite": {"totali": len(partite),
                     "agganciate": int(partite.game_id.notna().sum()),
+                    # dichiarato a parte: una partita puo' essere APPAIATA con la
+                    # fonte automatica (e quindi verificata nei punteggi) senza
+                    # avere un `game_id`, se quella fonte non ne ha — Coupe de
+                    # France, 161 appaiate e 0 con identificatore.
+                    "appaiate_con_la_fonte_automatica": appaiate,
+                    "appaiate_per_nome_dentro_la_giornata": app.rimappate,
+                    "contese_lasciate_vuote": app.contese,
+                    "club_dedotti_dalle_partite": {k: int(v) for k, v
+                                                   in sorted(app.dedotti.items())},
                     "non_agganciate": [
                         f"{r.data} {r.casa}-{r.ospite}"
                         for _, r in partite[partite.game_id.isna()].iterrows()]},

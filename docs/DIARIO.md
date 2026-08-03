@@ -16128,3 +16128,140 @@ non avevano `club_id`: risolti alla fonte.
 3. **Chiedere «è tutto agganciato?» è diverso da guardare le percentuali.** Le
    percentuali erano al 99% su ciò che guardavamo, e due fogli interi erano a
    zero. La domanda giusta non era «quanto è alta la copertura» ma «di che cosa».
+
+## Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose
+
+**Obiettivo.** Le sei coppe nazionali 2025-26 erano registrate e agganciate, ma
+le due nuove non tornavano: **Copa del Rey 77/117** partite agganciate e
+giocatori al 66,8%, **Coupe de France 0/201** e 19,7%. Le altre quattro erano a
+posto (100% delle partite, tutti gli undici identici). Capire perché.
+
+**La causa, ed è una sola.** Il progetto aveva **due implementazioni** della
+stessa cosa — risolvere un club e appaiare una partita fra le due fonti — e solo
+una le sapeva tutte.
+
+| | `registra_raccolta_coppa_diretta.py` | `aggancia_coppe.py` |
+|---|---|---|
+| deduzione del club dalle partite | ✅ | ❌ |
+| chiave che ripiega sul nome | ✅ | ✅ |
+| appaiamento per nome dentro la giornata | ✅ | ❌ |
+| **Copa del Rey** | **117/117** | 77/117 |
+| **Coupe de France** | **161/201** | 0/201 |
+
+Non è un dettaglio di implementazione: **la divergenza era il bug.** Lo stesso
+file, le stesse due fonti, due risposte diverse — e nessun test poteva
+accorgersene, perché nessuno confrontava le due copie: erano entrambe «giuste»
+rispetto a sé stesse.
+
+**La scelta.** Risoluzione dei club e appaiamento delle partite estratti in
+`src/data/coppe_aggancio.py` (`ALIAS_COPPA`, `chiave_partita`, `deduci_club`,
+`appaia_partite`), chiamato da **entrambi** gli script. Non una funzione di
+comodo: `appaia_partite` restituisce anche la funzione `cid` — la risoluzione
+*completa* del nome di un club — perché un club dedotto per le partite e non per
+le formazioni lascerebbe quei giocatori senza `club_id`, quindi senza candidati,
+quindi vuoti. Il test `test_i_due_script_usano_la_stessa_implementazione`
+verifica che nessuno dei due si ricrei una copia propria.
+
+### 📐 Il modello in dettaglio
+
+Tre regole, in ordine di forza decrescente. Nessuna sceglie mai fra due
+possibilità: dove non c'è un vincitore unico, la casella resta vuota.
+
+**(1) La chiave di partita** (`chiave_partita`, verificata riga per riga contro
+`src/data/coppe_aggancio.py`):
+
+```
+k(riga) = data[:10] ‖ "|" ‖ lato(id_casa, nome_casa) ‖ "|" ‖ lato(id_osp, nome_osp)
+
+lato(id, nome) = str(int(id))                            se id esiste
+               = "~" + "".join(sorted(normalizza(nome)))  altrimenti
+```
+
+Il ripiego sul nome non è cosmetico: senza, le 201 righe della Coupe de France
+diventano tutte `data|<NA>|<NA>` e il merge esplode in un prodotto cartesiano
+(**4.804 righe**) che ha l'aspetto di una lista di divergenze.
+
+**(2) La deduzione del club** (`deduci_club`) — l'eliminazione applicata ai
+club invece che ai giocatori. Per ogni riga manuale con **un solo** lato
+risolto:
+
+```
+cand(nome) = { b : (a,b) ∈ automatiche(giorno), a = club_risolto }   (lato casa noto)
+si propone  nome → l'unico elemento di cand   se |cand| = 1
+si accetta  nome → c   sse   tutte le proposte per quel nome danno lo stesso c
+                             ∧ ( candidati(nome) = ∅  ∨  c ∈ candidati(nome) )
+```
+
+Le tre condizioni sono tutte necessarie e tutte pagate da un caso vero: la Copa
+del Rey ha 21 nomi che il registro non riconosce e **sette sono ambigui** —
+«Murcia» ha 4 candidati, «Ourense CF» e «UD Ourense» sono due club *diversi*
+della stessa città. Scrivere alias a mano su nomi così rifà il caso «Brest»
+(Fase 100): un aggancio sbagliato non dà errore, attribuisce le partite a un
+altro club. Esito misurato: **21 club dedotti, 116/116 squadre agganciate**.
+
+**(3) L'appaiamento per nome dentro la giornata** — per ciò che resta, e serve
+alla sola Coupe de France:
+
+```
+s(L, N) = |normalizza(casa_L) ∩ normalizza(casa_N)| + |normalizza(osp_L) ∩ normalizza(osp_N)|
+          definito solo se ENTRAMBE le intersezioni sono non vuote
+si appaia L → argmax_N s   sse  il massimo è unico e STRETTAMENTE maggiore del secondo
+                            ∧  nessun'altra riga manuale rivendica quella stessa N
+```
+
+Perché serve solo lì: nella Coupe de France **nessuno dei due lati ha un
+`club_id`** (player-scores non copre né la Ligue 2 né i dilettanti) e le due
+fonti scrivono il nome in due *forme* diverse — «Sochaux» contro «FC
+Sochaux-Montbéliard», «Grenoble» contro «Grenoble Foot 38». La regola (1) le
+vede come due squadre diverse; l'intersezione dei token no. Misurato: **122
+partite su 201** appaiate così, e in **160 delle 161** coppie finali i due nomi
+non coincidono alla lettera.
+
+L'ultima clausola (la partita contesa da due righe manuali non va a nessuna
+delle due) è la regola di sempre applicata alle partite: l'alternativa sarebbe
+far vincere la prima riga in ordine di file. Sulle sei coppe le contese sono
+**zero** — il guardrail non toglie niente a ciò che già funzionava, e c'è per
+quando la prossima raccolta ne produrrà una.
+
+### Il risultato, sei coppe
+
+| | Coppa Italia | DFB-Pokal | EFL Cup | FA Cup | **Copa del Rey** | **Coupe de France** |
+|---|--:|--:|--:|--:|--:|--:|
+| partite → `game_id` | 44/45 | 62/63 | 91/91 | 62/63 | **77 → 117/117** | 0/201 |
+| partite appaiate | 45/45 | 63/63 | 91/91 | 63/63 | **117/117** | **0 → 161/201** |
+| squadre → `club_id` | 44/44 | 64/64 | 90/90 | 64/64 | **95 → 116/116** | 29/202 |
+| giocatori → `player_id` | 99,9% | 99,8% | 99,8% | 100% | **66,8% → 94,7%** | 19,7% |
+
+Le quattro coppe già a posto sono **immutate**, verificato al byte sui manifesti.
+
+**Cosa resta fuori, e perché non è la stessa cosa.**
+
+1. **Coupe de France — assenza a monte, non nostra.** La fonte automatica di
+   quella coppa è Wikipedia (Fase 138): **0/201 righe hanno un `game_id`, 0
+   hanno un `club_id`, e non ci sono formazioni**. Il ponte manca dalla sponda
+   opposta. L'appaiamento a 161/201 non è quindi sprecato — è ciò che permette
+   di *verificare i punteggi* (157/161 identici) — ma non può produrre
+   identificatori che dall'altra parte non esistono. Provato anche il giro
+   indiretto (dedurre il `club_id` dal nome della controparte appaiata): **24
+   proposte coerenti, 0 nuove** — i club francesi minori non sono nel registro
+   in nessuna grafia. Il tetto è la copertura di player-scores, e si alza solo
+   con una fonte diversa per quella coppa.
+2. **Copa del Rey — un residuo di nomi, ed è la prossima causa.** 265 righe su
+   5.040 (98 squadre-partita). **Non sono righe mancanti**: le due fonti hanno
+   lo stesso numero di giocatori per squadra-partita (delta medio **+0,02**,
+   234 gruppi). È la convenzione spagnola sui **due cognomi** — diretta.it
+   scrive «Sanchez Alonso M.», il registro «Mario Sánchez»: nessuno dei due
+   insiemi di token contiene l'altro, quindi la regola del sottoinsieme non
+   aggancia e l'eliminazione scatta solo dove resta un candidato solo. La porta
+   d'ingresso ha già una seconda passata più permissiva (token in comune) usata
+   per *contare* gli undici; portarla nell'aggancio significherebbe *attribuire
+   identità*, ed è un esperimento a sé — con «Blanco Lopez J.»/«Blanco Garcia
+   E.» contro «Pepe Blanco»/«Eloy Blanco» nella stessa partita, il rischio non è
+   teorico. **Dichiarato, non chiuso.**
+
+**Lezione.** *Due implementazioni della stessa regola non sono ridondanza: sono
+due regole diverse che si somigliano.* Finché nessuno le confronta, la peggiore
+non dà errore — dà un numero più basso che sembra un limite del dato. Il segnale
+c'era e l'abbiamo guardato per giorni: lo stesso file registrato dalla porta
+d'ingresso diceva 117, lo script accanto diceva 77. **Due numeri diversi sullo
+stesso dato sono sempre un bug, mai un dettaglio.**

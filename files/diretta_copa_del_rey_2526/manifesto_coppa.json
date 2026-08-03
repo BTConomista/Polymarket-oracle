@@ -43,7 +43,6 @@
         "identiche_su_tutti_i_punteggi": 117,
         "divergenti": [],
         "buchi_colmati_dalla_manuale": [],
-        "non_appaiate_manuale": [],
         "club_dedotti_dalle_partite": {
           "A Coruna": 897,
           "Arenas Getxo": 16122,
@@ -67,6 +66,9 @@
           "UD Logrones": 24420,
           "UD Ourense": 60225
         },
+        "appaiate_per_nome_dentro_la_giornata": 0,
+        "contese_lasciate_vuote": 0,
+        "non_appaiate_manuale": [],
         "non_appaiate_automatica": [
           "2025-09-27 Atlètic Sant Just-nan",
           "2025-09-27 CD Getxo-nan",

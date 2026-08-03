@@ -3,95 +3,58 @@
     "coppa": "Copa del Rey",
     "squadre": {
       "totali": 116,
-      "agganciate": 95,
-      "non_agganciate": [
-        "A Coruna",
-        "Arenas Getxo",
-        "Atl. Astorga",
-        "Atl. Madrid",
-        "Atl. Tordesillas",
-        "Barcellona",
-        "CD Extremadura",
-        "Cadice",
-        "Ciudad Cieza",
-        "Deportivo Getxo",
-        "La Union",
-        "Maiorca",
-        "Murcia",
-        "Ourense CF",
-        "Reus FCR",
-        "SD Logrones",
-        "San Fernando",
-        "Saragozza",
-        "Siviglia",
-        "UD Logrones",
-        "UD Ourense"
-      ]
+      "agganciate": 116,
+      "non_agganciate": []
     },
     "partite": {
       "totali": 117,
-      "agganciate": 77,
-      "non_agganciate": [
-        "2025-10-28 Ourense CF-Oviedo",
-        "2025-10-28 Atl. Tordesillas-Burgos CF",
-        "2025-10-28 SD Logrones-Racing Santander",
-        "2025-10-28 UCAM Murcia-Cadice",
-        "2025-10-28 San Fernando-Albacete",
-        "2025-10-28 Toledo-Siviglia",
-        "2025-10-28 CD Extremadura-Las Palmas",
-        "2025-10-29 Mutilvera-Saragozza",
-        "2025-10-29 La Union-Ceuta",
-        "2025-10-29 Sant Just-Maiorca",
-        "2025-10-29 Ciudad Cieza-Cordoba",
-        "2025-10-29 Atl. Astorga-Mirandes",
-        "2025-10-29 Numancia-Arenas Getxo",
-        "2025-10-29 UD Ourense-Pontevedra",
-        "2025-10-29 Reus FCR-CE Europa",
-        "2025-10-30 Deportivo Getxo-Alaves",
-        "2025-10-30 UD Logrones-Ponferradina",
-        "2025-10-30 UD Samano-A Coruna",
-        "2025-10-30 Murcia-Antequera",
-        "2025-12-02 Numancia-Maiorca",
-        "2025-12-03 Murcia-Cadice",
-        "2025-12-03 Reus FCR-Real Sociedad",
-        "2025-12-03 Ciudad Cieza-Levante",
-        "2025-12-03 Ourense CF-Girona",
-        "2025-12-04 Sabadell-A Coruna",
-        "2025-12-04 CD Extremadura-Siviglia",
-        "2025-12-04 Saragozza-Burgos CF",
-        "2025-12-16 A Coruna-Maiorca",
-        "2025-12-16 Guadalajara-Barcellona",
-        "2025-12-17 Baleares-Atl. Madrid",
-        "2025-12-17 Alaves-Siviglia",
-        "2025-12-18 Ourense CF-Ath. Bilbao",
-        "2025-12-18 Murcia-Betis",
-        "2026-01-13 A Coruna-Atl. Madrid",
-        "2026-01-15 Racing Santander-Barcellona",
-        "2026-02-03 Albacete-Barcellona",
-        "2026-02-05 Betis-Atl. Madrid",
-        "2026-02-12 Atl. Madrid-Barcellona",
-        "2026-03-03 Barcellona-Atl. Madrid",
-        "2026-04-18 Atl. Madrid-Real Sociedad"
-      ]
+      "agganciate": 117,
+      "appaiate_con_la_fonte_automatica": 117,
+      "appaiate_per_nome_dentro_la_giornata": 0,
+      "contese_lasciate_vuote": 0,
+      "club_dedotti_dalle_partite": {
+        "A Coruna": 897,
+        "Arenas Getxo": 16122,
+        "Atl. Astorga": 40977,
+        "Atl. Madrid": 13,
+        "Atl. Tordesillas": 41604,
+        "Barcellona": 131,
+        "CD Extremadura": 101648,
+        "Cadice": 2687,
+        "Ciudad Cieza": 56725,
+        "Deportivo Getxo": 29739,
+        "La Union": 132258,
+        "Maiorca": 237,
+        "Murcia": 171,
+        "Ourense CF": 55398,
+        "Reus FCR": 83848,
+        "SD Logrones": 33303,
+        "San Fernando": 57379,
+        "Saragozza": 142,
+        "Siviglia": 368,
+        "UD Logrones": 24420,
+        "UD Ourense": 60225
+      },
+      "non_agganciate": []
     },
     "giocatori": {
       "righe": 5040,
-      "agganciate": 3364,
-      "quota": 0.6675,
+      "agganciate": 4775,
+      "quota": 0.9474,
       "titolari": 2573,
-      "titolari_agganciati": 1736,
-      "persone_distinte": 1925
+      "titolari_agganciati": 2460,
+      "persone_distinte": 2623
     },
     "eventi": {
       "righe": 3854,
       "con_giocatore": 3854,
-      "agganciate": 2587,
-      "con_game_id": 2541
+      "agganciate": 3639,
+      "con_game_id": 3854
     },
     "statistiche": {
       "righe": 1437,
-      "agganciate": 956,
-      "con_game_id": 903
+      "agganciate": 1353,
+      "con_game_id": 1437
     }
   },
   {
@@ -104,6 +67,10 @@
     "partite": {
       "totali": 45,
       "agganciate": 44,
+      "appaiate_con_la_fonte_automatica": 45,
+      "appaiate_per_nome_dentro_la_giornata": 0,
+      "contese_lasciate_vuote": 0,
+      "club_dedotti_dalle_partite": {},
       "non_agganciate": [
         "2026-05-13 Lazio-Inter"
       ]
@@ -312,6 +279,10 @@
     "partite": {
       "totali": 201,
       "agganciate": 0,
+      "appaiate_con_la_fonte_automatica": 161,
+      "appaiate_per_nome_dentro_la_giornata": 122,
+      "contese_lasciate_vuote": 0,
+      "club_dedotti_dalle_partite": {},
       "non_agganciate": [
         "2025-11-14 Olympique de Villefontaine-Grenoble",
         "2025-11-14 Cannes-Annecy",
@@ -546,6 +517,10 @@
     "partite": {
       "totali": 63,
       "agganciate": 62,
+      "appaiate_con_la_fonte_automatica": 63,
+      "appaiate_per_nome_dentro_la_giornata": 0,
+      "contese_lasciate_vuote": 0,
+      "club_dedotti_dalle_partite": {},
       "non_agganciate": [
         "2026-05-23 Bayern-Stoccarda"
       ]
@@ -580,6 +555,10 @@
     "partite": {
       "totali": 91,
       "agganciate": 91,
+      "appaiate_con_la_fonte_automatica": 91,
+      "appaiate_per_nome_dentro_la_giornata": 0,
+      "contese_lasciate_vuote": 0,
+      "club_dedotti_dalle_partite": {},
       "non_agganciate": []
     },
     "giocatori": {
@@ -612,6 +591,10 @@
     "partite": {
       "totali": 63,
       "agganciate": 62,
+      "appaiate_con_la_fonte_automatica": 63,
+      "appaiate_per_nome_dentro_la_giornata": 0,
+      "contese_lasciate_vuote": 0,
+      "club_dedotti_dalle_partite": {},
       "non_agganciate": [
         "2026-05-16 Chelsea-Manchester City"
       ]

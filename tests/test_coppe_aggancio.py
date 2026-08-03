@@ -1,0 +1,116 @@
+"""Test dell'appaiamento condiviso fra le due fonti di coppa.
+
+PERCHE' ESISTE. Il codice che questi test coprono nasce da un bug di
+DUPLICAZIONE: la porta d'ingresso (`registra_raccolta_coppa_diretta.py`) sapeva
+dedurre i club e appaiare per nome, lo script degli agganci
+(`aggancia_coppe.py`) no. Stessi file, stesse due fonti, due risultati —
+117/117 partite contro 77/117 sulla Copa del Rey, 161/201 contro 0/201 sulla
+Coupe de France. Nessun test poteva accorgersene, perché nessuno confrontava le
+due implementazioni: erano entrambe «giuste» rispetto a se stesse.
+
+Quindi la proprietà protetta qui non è solo «l'appaiamento funziona»: è che
+esista **una sola** implementazione, e che i due script chiamino quella.
+"""
+
+from __future__ import annotations
+
+import pandas as pd
+
+from src.data.club_matching import Agganciatore
+from src.data.coppe_aggancio import appaia_partite, chiave_partita, deduci_club
+
+# Un registro finto: due club soli, così i test non dipendono da
+# `club_names.csv.gz` (che cambia quando cambia il dataset a monte).
+REGISTRO = pd.DataFrame({
+    "club_id": [1, 2],
+    "name": ["Inter Milan", "Juventus"],
+})
+
+
+def _ag() -> Agganciatore:
+    return Agganciatore(club_names=REGISTRO)
+
+
+def _manuale(righe) -> pd.DataFrame:
+    return pd.DataFrame(righe, columns=["Data", "Casa", "Ospite"])
+
+
+def _automatica(righe) -> pd.DataFrame:
+    return pd.DataFrame(
+        righe, columns=["data", "casa", "ospite", "home_club_id", "away_club_id"])
+
+
+def test_deduce_il_club_quando_la_partita_lo_determina():
+    """«Inter» si aggancia, e in quella data c'è UNA sola partita dell'Inter in
+    casa: l'ospite è determinato, non indovinato."""
+    L = _manuale([("01.01.2026", "Inter", "Squadra Ignota")])
+    N = _automatica([("2026-01-01", "Inter Milan", "Chissà Chi", 1, 2)])
+    assert deduci_club(L, N, _ag()) == {"Squadra Ignota": 2}
+
+
+def test_non_deduce_se_lo_stesso_nome_darebbe_due_club_diversi():
+    """Garanzia 2: un nome incoerente fra le sue partite viene scartato del
+    tutto. Meglio nessun `club_id` che il `club_id` di un altro club."""
+    L = _manuale([("01.01.2026", "Inter", "Ignota"),
+                  ("02.01.2026", "Juventus", "Ignota")])
+    N = _automatica([("2026-01-01", "Inter Milan", "X", 1, 2),
+                     ("2026-01-02", "Juventus", "Y", 2, 1)])
+    assert deduci_club(L, N, _ag()) == {}
+
+
+def test_non_deduce_se_la_giornata_ha_piu_di_una_partita_candidata():
+    """Garanzia 1: due partite dell'Inter in casa nello stesso giorno e
+    l'ospite non è più determinato."""
+    L = _manuale([("01.01.2026", "Inter", "Ignota")])
+    N = _automatica([("2026-01-01", "Inter Milan", "X", 1, 2),
+                     ("2026-01-01", "Inter Milan", "Y", 1, 99)])
+    assert deduci_club(L, N, _ag()) == {}
+
+
+def test_la_chiave_ripiega_sul_nome_quando_il_club_id_non_esiste():
+    """Senza ripiego tutte le righe senza `club_id` collassano su
+    «data|<NA>|<NA>» e il merge esplode in un prodotto cartesiano (201 partite
+    della Coupe de France diventavano 4.804)."""
+    a = chiave_partita("2026-01-01", None, None, "Cannes", "Annecy")
+    b = chiave_partita("2026-01-01", None, None, "Auby", "Amiens")
+    assert a != b
+    # lo stesso nome scritto in due grafie deve dare la stessa chiave
+    assert a == chiave_partita("2026-01-01", None, None, "cannes", "ANNECY")
+
+
+def test_appaia_per_nome_dentro_la_giornata_le_forme_corta_e_lunga():
+    """Il caso Coupe de France: nessun `club_id` da nessuna delle due parti, e
+    i nomi differiscono per una parola intera — non per la sola sigla, che
+    `normalizza` già toglie come stopword. Coppia reale della raccolta:
+    «Sochaux» contro «FC Sochaux-Montbéliard»."""
+    L = _manuale([("01.01.2026", "Sochaux", "Le Puy-en-Velay")])
+    N = _automatica([("2026-01-01", "FC Sochaux-Montbéliard", "Le Puy Foot 43",
+                      None, None)])
+    app = appaia_partite(L, N, _ag())
+    assert app.rimappate == 1
+    assert app.k_manuale == app.k_automatica
+
+
+def test_una_partita_contesa_da_due_righe_non_va_a_nessuna():
+    """La regola di sempre — un aggancio incerto resta vuoto — applicata alle
+    partite. L'alternativa sarebbe far vincere la prima riga del file."""
+    L = _manuale([("01.01.2026", "Real Alfa", "Union Beta"),
+                  ("01.01.2026", "Real Gamma", "Union Delta")])
+    N = _automatica([("2026-01-01", "Real Madrid", "Union Berlin", None, None)])
+    app = appaia_partite(L, N, _ag())
+    assert app.rimappate == 0
+    assert app.contese == 2
+    assert not set(app.k_manuale) & set(app.k_automatica)
+
+
+def test_i_due_script_usano_la_stessa_implementazione():
+    """⭐ Il test che sarebbe servito prima: nessuno dei due script può avere
+    una propria copia della risoluzione dei club o dell'appaiamento."""
+    import scripts.aggancia_coppe as A
+    import scripts.registra_raccolta_coppa_diretta as R
+
+    assert A.appaia_partite is appaia_partite
+    assert R.appaia_partite is appaia_partite
+    for modulo in (A, R):
+        assert not hasattr(modulo, "deduci_club"), modulo.__name__
+        assert not hasattr(modulo, "_chiave_partita"), modulo.__name__

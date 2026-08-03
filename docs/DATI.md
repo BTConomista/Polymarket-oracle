@@ -988,6 +988,57 @@ la stessa avvertenza delle altre raccolte diretta.it (`files/README.md`).
 
 ---
 
+## 5-octies · Gli agganci delle coppe (`data/coppe_2526/aggancio_*.csv`) — Fasi 139-bis → 139-quater
+
+Cinque tabelle-ponte che collegano le **raccolte manuali** di coppa
+(`files/diretta_*_2526/`) al resto del database: `aggancio_squadre` (nome
+diretta.it → `club_id`), `aggancio_partite` (`ID partita` → `game_id`),
+`aggancio_giocatori`, `aggancio_eventi`, `aggancio_statistiche` (nome →
+`player_id`). Si rigenerano con `python scripts/aggancia_coppe.py`; la
+completezza si controlla con `python scripts/verifica_aggancio_coppe.py`.
+
+⚠️ **Un aggancio incerto resta VUOTO** — mai scelto a caso. Le colonne
+`club_id`, `game_id` e `player_id` sono quindi nullable *per progetto*, e la
+colonna `metodo` dice come si è arrivati a ciascun `player_id` (`nome`,
+`eliminazione`, `rosa_stagionale` — l'ultimo è un vincolo più debole, usato solo
+dove la partita non esiste nella fonte automatica).
+
+**Copertura misurata** (03/08/2026, dopo l'unificazione della Fase 139-quater):
+
+| coppa | partite → `game_id` | partite appaiate | squadre → `club_id` | righe formazione → `player_id` |
+|---|--:|--:|--:|--:|
+| Coppa Italia | 44/45 | 45/45 | 44/44 | 2.130/2.133 (99,9%) |
+| DFB-Pokal | 62/63 | 63/63 | 64/64 | 2.514/2.518 (99,8%) |
+| EFL Cup | 91/91 | 91/91 | 90/90 | 3.598/3.606 (99,8%) |
+| FA Cup | 62/63 | 63/63 | 64/64 | 2.515/2.515 (100%) |
+| Copa del Rey | 117/117 | 117/117 | 116/116 | 4.775/5.040 (94,7%) |
+| Coupe de France | **0/201** | 161/201 | 29/202 | 492/2.495 (19,7%) |
+
+**Buchi dichiarati, e sono di due tipi diversi.**
+
+1. **Le tre finali** (Coppa Italia, FA Cup, DFB-Pokal): non esistono in
+   `games.csv`, quindi non hanno un `game_id` da agganciare. È il `−1` delle
+   prime due righe.
+2. **La Coupe de France è un caso a sé, e non è un limite del nostro
+   aggancio**: la sua fonte automatica è **Wikipedia** (player-scores non ha
+   coppe francesi), che non porta né `game_id` né `club_id` né formazioni —
+   **0/201 righe** hanno un identificatore. Il ponte manca dalla sponda opposta.
+   Le 161 partite *appaiate* servono comunque: è così che se ne verificano i
+   punteggi (157/161 identici). I giocatori agganciati lì passano tutti dalla
+   **rosa stagionale**, e solo per i 29 club che il registro conosce.
+3. **Le 265 righe della Copa del Rey** non sono righe mancanti (le due fonti
+   hanno lo stesso numero di giocatori per squadra-partita, delta medio +0,02):
+   è la convenzione spagnola sui **due cognomi** — «Sanchez Alonso M.» contro
+   «Mario Sánchez» — che la regola del sottoinsieme non aggancia. Dichiarata,
+   non chiusa.
+
+**Disponibilità temporale (R8)**: tutte queste tabelle sono **`statico`** —
+sono anagrafica di identità (chi è chi), non misure della partita.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge questi agganci.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche
