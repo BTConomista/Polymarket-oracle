@@ -948,6 +948,46 @@ risultato** sono `post`. Arbitro, stadio e squadre sono `pre`.
 
 ---
 
+## 5-septies · Coppa Italia 2025-26, raccolta MANUALE (`files/diretta_coppa_italia_2526/`) — Fase 139
+
+La stessa Coppa Italia della §5-sexies, letta a mano da **diretta.it
+(Flashscore)** da un collaboratore dell'utente. Non è un doppione: è la
+**seconda misura indipendente**, ed è il motivo per cui la raccolta automatica
+era stata costruita in una forma confrontabile.
+
+**Esito del confronto** (in `manifesto.json`, ricalcolabile con
+`python scripts/registra_raccolta_coppa_diretta.py --cartella …`):
+
+| confronto | esito |
+|---|---|
+| partite appaiate | **45 / 45** |
+| punteggi identici (90', finale, rigori) | **45 / 45** |
+| undici iniziali identici | **88 / 88** squadre-partita |
+
+**Cosa aggiunge** rispetto alla fonte automatica: 1.307 righe × **103 metriche
+per giocatore** (41 partite su 45 — dove diretta.it non pubblica la sezione le
+righe non ci sono); la **sequenza completa dei rigori** (256 eventi, e le 12
+partite ai rigori ricompongono 12/12 — mentre nell'automatica la sequenza è
+troncata); il **periodo** di ogni evento (1°/2° tempo, supplementari, rigori);
+e i titolari della **finale**, che `games.csv` non conteneva.
+
+**Contenuto**: `originale_coppa.xlsx` (come consegnato, §5-ter) + i cinque fogli
+esportati in CSV (`partite`, `formazioni_e_cambi`, `eventi`, `stat_giocatori`,
+`note`) + `manifesto.json` con tutte le verifiche.
+⚠️ `originale_partite.csv` e `originale_formazioni.csv` sono **duplicati esatti**
+di due fogli dell'xlsx (verificato cella per cella, 0 divergenti): restano
+archiviati perché escludere un dato richiede il consenso dell'utente (§5-ter).
+
+**Disponibilità temporale (R8)**: formazioni titolari e modulo sono `pre`;
+risultato, sostituzioni, eventi, rating e le 103 metriche sono `post`.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+
+⚠️ **Licenza**: il progetto non rivendica alcun diritto su questi dati — vale
+la stessa avvertenza delle altre raccolte diretta.it (`files/README.md`).
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

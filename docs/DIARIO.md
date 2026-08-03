@@ -339,6 +339,7 @@ correzioni.*
 - [Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime](#fase-136--anche-il-giro-giornaliero-prende-tutto-e-larchivio-si-comprime)
 - [Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere](#fase-137--i-guardiani-mancanti-tre-difetti-che-nessun-test-poteva-vedere)
 - [Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato](#fase-138--le-coppe-nazionali-entrano-nel-progetto-e-la-fonte-somma-i-rigori-al-risultato)
+- [Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze](#fase-139--la-controprova-arriva-due-fonti-indipendenti-sulla-coppa-italia-zero-divergenze)
 
 ---
 
@@ -15793,3 +15794,122 @@ divisione con gli snapshot lega per lega, `data/coppe_2526/da_raccogliere.csv`
 mano: da che turno partire, cosa saltare, e l'avvertenza di annotare 90',
 supplementari e rigori in **tre caselle separate** — 113 partite su 580
 finiscono ai rigori, una su cinque).
+
+---
+
+## Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze
+
+**Obiettivo.** L'utente consegna la raccolta manuale diretta.it della **Coppa
+Italia 2025-26**, fatta da un collaboratore seguendo il foglio di istruzioni
+della Fase 138. È il momento per cui `data/coppe_2526/` era stato costruito:
+non «abbiamo un altro dataset», ma **abbiamo una seconda misura della stessa
+cosa**, ed è l'unico modo di sapere se la prima era giusta (R5, passo 2).
+
+**Ragionamento.** La Fase 138 aveva trovato che la fonte automatica sbagliava
+il punteggio su 68 partite su 458 (sommava i rigori) e l'aveva corretta
+ricostruendolo dagli eventi, validando la ricostruzione contro openfootball —
+ma **solo sulla DFB-Pokal**, 42 partite, e solo sui primi due turni. Sulla
+Coppa Italia la ricostruzione non era mai stata verificata da nessuno.
+
+**Risultato — il confronto**, `scripts/registra_raccolta_coppa_diretta.py`:
+
+| confronto | esito |
+|---|---|
+| partite appaiate | **45 / 45** |
+| punteggi identici (90', finale, rigori) | **45 / 45** |
+| undici iniziali identici | **88 / 88** squadre-partita |
+| divergenze | **nessuna** |
+
+Zero. Su tre grandezze diverse, due fonti che non si sono mai parlate — una
+scaricata da Transfermarkt e ricomposta dagli eventi, una letta a mano da
+Flashscore — dicono la stessa cosa su ogni partita del torneo.
+
+**Cosa la raccolta manuale aggiunge**, oltre alla conferma:
+- le **statistiche per giocatore**: 1.307 righe × **103 metriche** (tocchi,
+  dribbling, contrasti, xG/xA individuali, ingressi in area…) su 41 partite;
+- la **sequenza completa dei rigori** — 256 eventi, ed è esattamente il punto
+  in cui la fonte automatica **tronca** (Grimsby-United ne registra 23 su 25+).
+  Qui si può *pretendere* che i rigori tornino, e tornano: **12/12**;
+- il **periodo** di ogni evento (1° tempo / 2° tempo / supplementari / rigori),
+  che da noi si deduce dal minuto invece di essere scritto;
+- la **finale**, che `games.csv` non conteneva affatto (Fase 138): ora ha i
+  suoi titolari.
+
+**Due limiti dell'aggancio dei nomi, entrambi trovati e chiusi scrivendo i
+test** — e sono la parte istruttiva.
+
+1. **Quindici undici risultavano diversi ed erano identici.** Le due fonti
+   scrivono `Gronbaek A.` e `Albert Grønbaek`, `Kilicsoy S.` e `Semih
+   Kılıçsoy`, `Hojlund R.` e `Rasmus Højlund`. È il bug già documentato in
+   `club_matching.py` — «`ø`, `ł`, `đ` non sono decomposti da NFKD» — che io
+   avevo riprodotto pari pari perché non stavo usando la tabella del progetto.
+   La conoscenza era scritta; non l'avevo applicata.
+2. ⭐ **Un test negativo ha trovato un difetto vero.** Avevo scritto «`Esposito
+   Sa.` non deve agganciarsi a `Francesco Esposito`» aspettandomi il verde: è
+   uscito **rosso**, perché buttando l'iniziale `Esposito Sa.` si riduce a
+   `{esposito}`, che è sottoinsieme di `{francesco, esposito}`. Cioè il
+   confronto **non distingueva due omonimi in rosa** — e Salvatore e Francesco
+   Esposito giocano davvero in questa Coppa Italia. Non è teorico: è il caso in
+   cui una formazione sbagliata sarebbe passata per giusta. Corretto
+   conservando l'iniziale e verificandola come prefisso.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello: un **criterio di identità fra due scritture dello stesso nome**,
+che è la cosa da rendere esplicita perché è dove si nascondono gli errori.
+
+Un nome diventa una coppia `(parole, iniziali)`:
+
+```
+_token("Esposito Sa.")      = ({"esposito"},              {"sa"})
+_token("Salvatore Esposito")= ({"salvatore","esposito"},  {})
+_token("Ndri K.")           = ({"ndri"},                  {"k"})
+_token("Konan N'Dri")       = ({"konan","ndri"},          {})
+```
+
+con, prima di tutto, `str.translate(_TRADUZIONE)` — la tabella del progetto per
+`ø ł đ ß æ ı`, che NFKD **non** decompone — e l'apostrofo **tolto** e non
+sostituito con uno spazio (spezzando, `N'Dri` darebbe `dri` e `Ndri` non
+si aggancerebbe).
+
+Due nomi sono la stessa persona quando:
+
+```
+(A ⊆ B  ∨  B ⊆ A)                          le parole intere si contengono
+∧  ∀ i ∈ iniziali(A): ∃ p ∈ B con p[:|i|]=i   ogni iniziale e' prefisso di una parola
+∧  ∀ i ∈ iniziali(B): ∃ p ∈ A con p[:|i|]=i
+```
+
+La seconda e la terza riga sono quelle che il test negativo ha imposto:
+`{esposito} ⊆ {francesco, esposito}` è vero, ma `"sa"` non è prefisso né di
+`francesco` né di `esposito`, quindi il match **cade** — mentre con `Salvatore
+Esposito` `"sa"` è prefisso di `salvatore` e il match **regge**. È una riga di
+codice che separa due persone reali.
+
+**Una seconda passata**, solo sui giocatori rimasti spaiati dopo la prima:
+accetta **un token in comune**. Serve per le convenzioni spagnole, che non sono
+in relazione di sottoinsieme — `Santiago Perez J.` contro `Yellu Santiago` è
+Yellu Santiago Pérez. È sicura *perché è seconda*: quando gli altri dieci sono
+già appaiati, un giocatore davvero diverso non condivide il cognome.
+
+**Lezione.** Tre.
+1. **La controprova va progettata prima di servire, non cercata dopo.** Il
+   confronto è costato mezz'ora perché la Fase 138 aveva già messo i punteggi
+   in colonne separate e le formazioni in una forma confrontabile. Se la
+   raccolta automatica fosse arrivata dopo quella manuale, il confronto sarebbe
+   stato un lavoro a sé.
+2. **Un test negativo vale quanto uno positivo.** Gli otto test «questi due
+   nomi sono la stessa persona» hanno confermato ciò che sapevo; l'unico test
+   «questi due NON lo sono» ha trovato un difetto che nessuno dei precedenti
+   poteva vedere. Il verde conferma, il rosso insegna.
+3. **Sapere una cosa e applicarla sono due stati diversi.** Il bug dei caratteri
+   non-decomponibili era scritto in `club_matching.py`, con tanto di elenco. L'ho
+   rifatto lo stesso, perché stavo scrivendo un normalizzatore nuovo invece di
+   usare quello che c'era. La documentazione non protegge: protegge il codice
+   condiviso.
+
+**Cosa resta aperto.** Le statistiche per giocatore (103 metriche) sono
+**raccolte e non usate** — stato legittimo e dichiarato (§5-ter). E i due CSV
+consegnati a parte sono **duplicati esatti** di due fogli dell'xlsx (verificato
+cella per cella, 0 divergenti): restano archiviati entrambi perché escludere un
+dato richiede il consenso dell'utente, non la mia valutazione (§5-ter).

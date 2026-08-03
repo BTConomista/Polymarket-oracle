@@ -1,0 +1,49 @@
+{
+  "coppa": "Coppa Italia",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "efd6340e3ea8c5b7ae514cc8cbb99a9564fb937d5398310caeae7ab5d040b108",
+  "conteggi": {
+    "partite": 45,
+    "righe_formazione": 2133,
+    "titolari": 990,
+    "panchina": 1143,
+    "eventi": 1479,
+    "righe_statistiche": 1307,
+    "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+    "undici_titolari": {
+      "squadre_partita": 90,
+      "con_undici_esatti": 90,
+      "anomale": []
+    },
+    "punteggio_non_somma_i_rigori": {
+      "partite_ai_rigori": 12,
+      "incoerenti": []
+    },
+    "sequenza_rigori": {
+      "partite_ai_rigori": 12,
+      "sequenza_ricompone": 12,
+      "divergenti": []
+    },
+    "confronto_con_fonte_automatica": {
+      "eseguito": true,
+      "partite": {
+        "manuale": 45,
+        "automatica": 45,
+        "appaiate": 45,
+        "identiche_su_tutti_i_punteggi": 45,
+        "divergenti": [],
+        "non_appaiate_manuale": [],
+        "non_appaiate_automatica": []
+      },
+      "formazioni": {
+        "squadre_partita_confrontabili": 88,
+        "undici_identici": 88,
+        "con_differenze": []
+      }
+    }
+  }
+}
