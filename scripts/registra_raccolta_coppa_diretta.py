@@ -50,6 +50,7 @@ RADICE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RADICE))
 
 from src.data.club_matching import Agganciatore, _TRADUZIONE  # noqa: E402
+from src.data.coppe_aggancio import ALIAS_COPPA, appaia_partite  # noqa: E402
 
 FOGLI = ["Partite", "Formazioni e cambi", "Eventi", "Stat giocatori", "Note"]
 NOSTRE = RADICE / "data" / "coppe_2526"
@@ -98,18 +99,6 @@ SINONIMI_GIOCATORE = {
     # diretta.it col cognome. Mononimo contro cognome, stessa persona.
     "mejbri": "hannibal",
 }
-
-# Nomi che diretta.it scrive in modo che il registro non riconosce da solo.
-# Ognuno verificato a candidato unico contro `club_names.csv.gz`.
-ALIAS_COPPA = {
-    "Entella": "Virtus Entella",
-    "L.R. Vicenza": "LR Vicenza",
-    "Inter": "Inter Milan",
-    "Sudtirol": "FC Sudtirol",
-    "Juve Stabia": "SS Juve Stabia",
-    "Internazionale": "Inter Milan",
-}
-
 
 def _log(m: str) -> None:
     print(m, flush=True)
@@ -331,17 +320,65 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
         return {"eseguito": False, "motivo": f"«{coppa}» assente dalla raccolta automatica"}
 
     L["data_iso"] = pd.to_datetime(L.Data, format="%d.%m.%Y").dt.strftime("%Y-%m-%d")
-    L["_c"] = L.Casa.map(cid)
-    L["_o"] = L.Ospite.map(cid)
+    # prima si prova a DEDURRE dai dati i club che il nome non risolve
+    dedotti = deduci_club(L, N, ag)
+
+    def cid2(n):
+        return cid(n) if cid(n) is not None else dedotti.get(n)
+
+    L["_c"] = L.Casa.map(cid2)
+    L["_o"] = L.Ospite.map(cid2)
     # sul lato automatico gli id ci sono gia': usarli invece di ri-derivarli
     # dal nome (vedi la nota gemella in scripts/aggancia_coppe.py).
     N["_c"] = N.home_club_id
     N["_o"] = N.away_club_id
-    L["k"] = L.data_iso + "|" + L._c.astype("Int64").astype(str) + "|" + L._o.astype("Int64").astype(str)
-    N["k"] = N.data + "|" + N._c.astype("Int64").astype(str) + "|" + N._o.astype("Int64").astype(str)
+    # ⚠️ La chiave NON puo' essere «data|id|id» quando gli id mancano: nella
+    # Coupe de France i club sono dilettantistici e il registro non li ha, cosi'
+    # tutte le righe diventerebbero «data|<NA>|<NA>» e collasserebbero l'una
+    # sull'altra — il merge produce un prodotto cartesiano che SEMBRA una lista
+    # di divergenze. Dove l'id c'e' si usa quello (e' l'identita' vera); dove
+    # manca si ripiega sul nome normalizzato, che almeno distingue le righe.
+    def chiave_squadra(idc, nome):
+        return str(int(idc)) if pd.notna(idc) else "~" + "".join(
+            sorted(normalizza(str(nome))))
+
+    L["k"] = [f"{d}|{chiave_squadra(a, na)}|{chiave_squadra(b, nb)}"
+              for d, a, b, na, nb in zip(L.data_iso, L._c, L._o, L.Casa, L.Ospite)]
+    N["k"] = [f"{d}|{chiave_squadra(a, na)}|{chiave_squadra(b, nb)}"
+              for d, a, b, na, nb in zip(N.data, N._c, N._o, N.casa, N.ospite)]
+
+    # --- seconda passata: appaiamento per NOME dentro la giornata ------------
+    # Dove gli id non esistono (Coupe de France: club dilettantistici che il
+    # registro non ha) e i nomi sono in due lingue diverse — «Nizza» contro
+    # «OGC Nice» — la chiave non basta. Dentro una singola data le partite sono
+    # poche, quindi si puo' appaiare per sovrapposizione dei token dei nomi e
+    # accettare solo il candidato MIGLIORE e UNICO. Il punteggio resta la
+    # verifica, non la chiave: serve a dire se l'appaiamento regge.
+    rimaste = set(N.k) - set(L.k)
+    if rimaste:
+        libere: dict[str, list] = {}
+        for _, r in N[N.k.isin(rimaste)].iterrows():
+            libere.setdefault(str(r.data)[:10], []).append(r)
+        rimappa = {}
+        for _, r in L[~L.k.isin(set(N.k))].iterrows():
+            cand = libere.get(r.data_iso, [])
+            punteggi = []
+            for c in cand:
+                a = len(normalizza(str(r.Casa)) & normalizza(str(c.casa)))
+                b = len(normalizza(str(r.Ospite)) & normalizza(str(c.ospite)))
+                if a and b:
+                    punteggi.append((a + b, c.k))
+            punteggi.sort(reverse=True)
+            # unico migliore, e strettamente migliore del secondo
+            if punteggi and (len(punteggi) == 1 or punteggi[0][0] > punteggi[1][0]):
+                rimappa[r.k] = punteggi[0][1]
+        if rimappa:
+            L["k"] = L.k.map(lambda x: rimappa.get(x, x))
+            _log(f"     appaiate per nome dentro la giornata: {len(rimappa)}")
 
     m = L.merge(N, on="k", suffixes=("_l", "_n"))
     divergenti, colmate = [], []
+    _log(f"     club dedotti dalle partite: {len(dedotti)}")
     for _, r in m.iterrows():
         lfin = ((r["Gol casa dts"], r["Gol ospite dts"])
                 if pd.notna(r["Gol casa dts"])
@@ -367,15 +404,46 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
             # e' il motivo per cui la seconda fonte serve.
             (colmate if bool(r.eventi_incompleti) else divergenti).append(voce)
 
+    quadro_partite = {
+        "manuale": int(len(L)), "automatica": int(len(N)),
+        "appaiate": int(len(m)),
+        "identiche_su_tutti_i_punteggi": int(len(m) - len(divergenti) - len(colmate)),
+        "divergenti": divergenti,
+        "buchi_colmati_dalla_manuale": colmate,
+        "club_dedotti_dalle_partite": {k: int(v) for k, v in sorted(dedotti.items())},
+        "non_appaiate_manuale": [
+            f"{r.data_iso} {r.Casa}-{r.Ospite}"
+            for _, r in L[~L.k.isin(set(N.k))].iterrows()],
+        "non_appaiate_automatica": [
+            f"{r.data} {r.casa}-{r.ospite}"
+            for _, r in N[~N.k.isin(set(L.k))].iterrows()],
+    }
+
     # --- formazioni
     F = fogli["Formazioni e cambi"].copy()
     F["data_iso"] = pd.to_datetime(F.Data, format="%d.%m.%Y").dt.strftime("%Y-%m-%d")
-    F["_s"] = F.Squadra.map(cid)
-    F["k"] = (F.data_iso + "|" + F.Casa.map(cid).astype("Int64").astype(str)
-              + "|" + F.Ospite.map(cid).astype("Int64").astype(str))
+    F["_s"] = F.Squadra.map(cid2)
+    F["k"] = (F.data_iso + "|" + F.Casa.map(cid2).astype("Int64").astype(str)
+              + "|" + F.Ospite.map(cid2).astype("Int64").astype(str))
     NF = pd.read_csv(NOSTRE / "formazioni.csv")
     NF = NF[NF.game_id.isin(set(N.game_id.dropna()))].copy()
-    NF["k"] = NF.game_id.map(dict(zip(N.game_id, N.k)))
+    # ⚠️ Per la Coupe de France la fonte automatica viene da Wikipedia e NON ha
+    # formazioni: non c'e' niente da confrontare, e dirlo e' diverso dal dire
+    # «zero undici identici». Il confronto sugli undici si salta, dichiarandolo.
+    if NF.empty:
+        return {
+            "eseguito": True,
+            "partite": quadro_partite,
+            "formazioni": {
+                "squadre_partita_confrontabili": 0,
+                "undici_identici": 0,
+                "con_differenze": [],
+                "non_confrontabile": "la fonte automatica non ha formazioni per "
+                                     "questa coppa (Coupe de France, da Wikipedia)",
+            },
+        }
+    mappa_k = {g: k for g, k in zip(N.game_id, N.k) if pd.notna(g)}
+    NF["k"] = NF.game_id.map(mappa_k)
 
     uguali = totale = 0
     form_diverse = []
@@ -397,19 +465,7 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
 
     return {
         "eseguito": True,
-        "partite": {
-            "manuale": int(len(L)), "automatica": int(len(N)),
-            "appaiate": int(len(m)),
-            "identiche_su_tutti_i_punteggi": int(len(m) - len(divergenti) - len(colmate)),
-            "divergenti": divergenti,
-            "buchi_colmati_dalla_manuale": colmate,
-            "non_appaiate_manuale": [
-                f"{r.data_iso} {r.Casa}-{r.Ospite}"
-                for _, r in L[~L.k.isin(set(N.k))].iterrows()],
-            "non_appaiate_automatica": [
-                f"{r.data} {r.casa}-{r.ospite}"
-                for _, r in N[~N.k.isin(set(L.k))].iterrows()],
-        },
+        "partite": quadro_partite,
         "formazioni": {
             "squadre_partita_confrontabili": totale,
             "undici_identici": uguali,

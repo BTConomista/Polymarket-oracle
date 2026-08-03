@@ -45,7 +45,7 @@ import pandas as pd
 RADICE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RADICE))
 
-from src.data.club_matching import Agganciatore  # noqa: E402
+from src.data.club_matching import Agganciatore, normalizza  # noqa: E402
 from scripts.registra_raccolta_coppa_diretta import (  # noqa: E402
     ALIAS_COPPA,
     FILE_MANIFESTO,
@@ -58,6 +58,16 @@ USCITA = RADICE / "data" / "coppe_2526"
 
 def _log(m: str) -> None:
     print(m, flush=True)
+
+
+def _chiave_partita(data, id_casa, id_osp, nome_casa, nome_osp) -> str:
+    """Chiave di partita che regge anche senza `club_id` (vedi la nota gemella
+    in `registra_raccolta_coppa_diretta.confronta_con_automatica`)."""
+    def lato(idc, nome):
+        return str(int(idc)) if pd.notna(idc) else "~" + "".join(
+            sorted(normalizza(str(nome))))
+
+    return f"{str(data)[:10]}|{lato(id_casa, nome_casa)}|{lato(id_osp, nome_osp)}"
 
 
 def _aggancia_giocatori(F: pd.DataFrame, partite: pd.DataFrame, cid) -> pd.DataFrame:
@@ -180,11 +190,18 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     # `home_club_id` scritto nella riga accanto.
     N["club_casa"] = N.home_club_id.astype("Int64")
     N["club_ospite"] = N.away_club_id.astype("Int64")
-    partite = P.merge(
-        N[["data", "club_casa", "club_ospite", "game_id", "turno"]],
-        left_on=["data_iso", "club_casa", "club_ospite"],
-        right_on=["data", "club_casa", "club_ospite"], how="left",
-        suffixes=("", "_nostro"))
+    # ⚠️ NON si fa il merge su (data, id, id): dove gli id mancano — la Coupe de
+    # France e' fatta di club dilettantistici che il registro non ha — tutte le
+    # righe hanno la stessa chiave `(data, NaN, NaN)` e il merge esplode in un
+    # prodotto cartesiano: 201 partite diventavano 4.804. Si riusa la stessa
+    # chiave della porta d'ingresso, che ripiega sul nome quando l'id non c'e'.
+    P["k"] = [_chiave_partita(d, a, b, na, nb) for d, a, b, na, nb
+              in zip(P.data_iso, P.club_casa, P.club_ospite, P.Casa, P.Ospite)]
+    N["k"] = [_chiave_partita(d, a, b, na, nb) for d, a, b, na, nb
+              in zip(N.data, N.club_casa, N.club_ospite, N.casa, N.ospite)]
+    N_unica = N.drop_duplicates(subset="k")
+    partite = P.merge(N_unica[["k", "game_id", "turno"]], on="k", how="left",
+                      suffixes=("", "_nostro"))
     partite["Competizione"] = coppa
     partite = partite[["Competizione", "Turno", "data_iso", "Casa", "Ospite",
                        "club_casa", "club_ospite", "ID partita", "game_id",
