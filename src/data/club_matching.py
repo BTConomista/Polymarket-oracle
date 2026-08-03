@@ -112,6 +112,25 @@ ALIAS: dict[str, str] = {
     "M'gladbach": "Borussia Monchengladbach",
     "Mainz": "1.FSV Mainz 05",
     "Paris SG": "Paris Saint-Germain",
+    # --- ESONIMI ITALIANI (raccolte diretta.it, Fase 139). diretta.it e' un
+    # sito italiano e traduce le citta' straniere: «Stoccarda», «Friburgo»,
+    # «Colonia». Non e' un capriccio di quella fonte — vale per QUALUNQUE
+    # fonte in lingua italiana, e per questo stanno qui e non nello script.
+    # Ognuno verificato a candidato unico contro `club_names.csv.gz`.
+    "Amburgo": "Hamburger SV",
+    "Augusta": "FC Augsburg",
+    "Brema": "SV Werder Bremen",
+    "Colonia": "1.FC Koln",
+    "Dresda": "SG Dynamo Dresden",
+    "Francoforte": "Eintracht Frankfurt",
+    "Friburgo": "SC Freiburg",
+    "Magonza": "1.FSV Mainz 05",
+    "Norimberga": "1.FC Nuremberg",
+    "RB Lipsia": "RB Leipzig",
+    "RW Essen": "Rot-Weiss Essen",
+    "Stoccarda": "VfB Stuttgart",
+    "Union Berlino": "1.FC Union Berlin",
+    "L.R. Vicenza": "LR Vicenza",
     # ⚠️ I club di Ligue 2 (Annecy, Boulogne, Dunkerque, Grenoble, Laval,
     # Le Mans, Pau, Rodez) NON hanno un alias perche' non esistono nel
     # registro: player-scores non copre ne' la Ligue 2 ne' la Coupe de France.

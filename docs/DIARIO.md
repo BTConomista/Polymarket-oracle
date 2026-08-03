@@ -340,6 +340,7 @@ correzioni.*
 - [Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere](#fase-137--i-guardiani-mancanti-tre-difetti-che-nessun-test-poteva-vedere)
 - [Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato](#fase-138--le-coppe-nazionali-entrano-nel-progetto-e-la-fonte-somma-i-rigori-al-risultato)
 - [Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze](#fase-139--la-controprova-arriva-due-fonti-indipendenti-sulla-coppa-italia-zero-divergenze)
+- [Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo](#fase-139-bis--i-tre-ponti-e-perché-il-terzo-si-regge-sul-secondo)
 
 ---
 
@@ -15913,3 +15914,107 @@ già appaiati, un giocatore davvero diverso non condivide il cognome.
 consegnati a parte sono **duplicati esatti** di due fogli dell'xlsx (verificato
 cella per cella, 0 divergenti): restano archiviati entrambi perché escludere un
 dato richiede il consenso dell'utente, non la mia valutazione (§5-ter).
+
+---
+
+## Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo
+
+**Obiettivo.** Richiesta dell'utente, dopo la consegna della **DFB-Pokal**:
+*«iniziamo ad agganciare i nomi con le presenze, le squadre con le partite, e
+tutto quello che c'è da collegare»*. Le raccolte manuali parlano per **nomi**,
+il database per **identificatori**: finché non si toccano, «la carriera di
+questo giocatore» e «come ha giocato in Coppa Italia» sono due frasi che non si
+possono dire insieme.
+
+**Prima, la DFB-Pokal.** Registrata con la stessa porta della Fase 139:
+63 partite, 2.518 righe di formazione, 1.979 righe di statistiche, 2.106 eventi.
+Verifiche interne tutte verdi (126/126 undici esatti, 8/8 sequenze di rigori).
+Contro la fonte automatica: **63/63 partite appaiate, 63/63 punteggi identici,
+122/124 undici identici** — e le 63 includono la **finale**, che `games.csv` non
+conteneva.
+
+Ci sono voluti due passaggi per arrivarci, ed entrambi meritano una riga.
+
+1. **diretta.it scrive i club tedeschi in italiano**: `Stoccarda`, `Friburgo`,
+   `Colonia`, `Amburgo`, `Magonza`, `Norimberga`, `RB Lipsia`. Sono **14 nomi**,
+   tutti esonimi, tutti verificati a candidato unico, e sono andati in
+   `club_matching.ALIAS` — non nello script, perché valgono per **qualunque**
+   fonte in lingua italiana, non per questa raccolta.
+2. ⚠️ **Un bug mio che produceva un numero credibile.** Ri-registrando la Pokal
+   con `--cartella` senza `--coppa`, lo script usava il default («Coppa Italia»)
+   e confrontava la Pokal con la coppa sbagliata: **0 partite appaiate**. Zero
+   non sembra un errore, sembra un *dato* — «le due fonti non si parlano». È il
+   tipo di difetto peggiore, e l'ha svelato solo il fatto che un attimo prima
+   erano 33. Ora il nome si riprende dal manifesto, e l'argomento esplicito ha
+   la precedenza.
+
+**Il risultato: i tre ponti.**
+
+| ponte | Coppa Italia | DFB-Pokal |
+|---|---|---|
+| squadre → `club_id` | **44/44** | **64/64** |
+| partite → `game_id` | 44/45 | 62/63 |
+| giocatori → `player_id` | **2.080/2.133 (97,5%)** | **2.467/2.518 (98,0%)** |
+
+Le due partite mancanti sono le **finali**, che la fonte automatica non ha
+(Fase 138): non è un aggancio fallito, è una controparte che non esiste.
+
+⭐ **Il terzo ponte si regge sul secondo, ed è tutta la storia.** Il primo
+tentativo usava `player_identity.collega_per_eliminazione`, la funzione già
+collaudata sui campionati, che aggancia per `(data, token del nome)`. Resa:
+**25,6%** sulla Coppa Italia, **12,0%** sulla Pokal. Il motivo non è un bug: nei
+**campionati** diretta.it scrive il nome intero (`Garces Facundo`), nelle
+**coppe** lo abbrevia (`Motta E.`) — e `{motta}` non è `{emanuele, motta}`.
+
+La soluzione non è stata un normalizzatore più furbo: è stato **usare il ponte
+già costruito**. Agganciata la partita, i candidati non sono più «tutti quelli
+in campo quel giorno» (migliaia) ma le **18-23 persone di quel club in quella
+partita**. Su un insieme così piccolo il confronto per nome è quasi sempre
+univoco: **97,5%** e **98,0%**.
+
+**Come si scompone la copertura**, perché «97,5%» da solo non dice nulla:
+
+| | righe |
+|---|--:|
+| agganciate **per nome** | 4.501 |
+| agganciate **per eliminazione** | 46 |
+| non agganciate | 104 |
+
+E delle 104: **92 sono nelle due finali**, che non hanno `game_id` e quindi non
+hanno candidati. I fallimenti veri dell'appaiamento sono **12 su 4.651 righe —
+lo 0,26%**.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello: un **criterio di assegnazione** dentro un insieme chiuso.
+
+Per ogni `(game_id, club_id)` si hanno due liste della stessa cosa: la nostra
+`A` (nomi Transfermarkt, con `player_id`) e la manuale `B` (nomi diretta.it).
+L'assegnazione è in due passate, e l'ordine è la garanzia:
+
+```
+passata 1 — per nome:   ∀ b ∈ B, si cerca l'unico a ∈ A con stessa_persona(a, b)
+passata 2 — eliminazione: se |B_spaiati| = 1 ∧ |A_liberi| = 1  →  si appaiano
+                           altrimenti NESSUNO viene agganciato
+```
+
+dove `stessa_persona` è la stessa regola della porta d'ingresso (Fase 139):
+sottoinsieme dei token **e** ogni iniziale prefisso di una parola dell'altro
+nome — la condizione che separa `Esposito Sa.` da `Francesco Esposito`.
+
+La condizione `1 ∧ 1` della seconda passata non è prudenza decorativa: con due
+spaiati e due liberi ci sono **due assegnazioni possibili** e sceglierne una
+significa, nella metà dei casi, attribuire a un giocatore le statistiche di un
+compagno di squadra. Costa 12 righe su 4.651 e le rende **dichiarate** invece
+che sbagliate.
+
+**Lezione.** Due.
+1. **Un ponte costruito abilita il successivo.** Il salto dal 25% al 97,5% non
+   viene da un algoritmo migliore: viene dall'aver ristretto il campo con un
+   collegamento che già avevamo. Vale la pena chiedersi, prima di raffinare un
+   matcher, se non ci sia un vincolo già disponibile che non si sta usando.
+2. **Uno zero è un numero come gli altri, e va sospettato allo stesso modo.**
+   «0 partite appaiate» aveva l'aspetto di un risultato — due fonti che non si
+   corrispondono — ed era un argomento di default sbagliato. Un risultato
+   drasticamente peggiore del precedente non è una scoperta finché non si è
+   escluso di averlo causato.

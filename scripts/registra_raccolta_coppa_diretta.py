@@ -325,7 +325,9 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--xlsx", type=Path, help="il file consegnato")
-    ap.add_argument("--coppa", default="Coppa Italia")
+    ap.add_argument("--coppa", default=None,
+                    help="nome della coppa; con --cartella si riprende dal "
+                         "manifesto se non indicato")
     ap.add_argument("--stagione", default="2526")
     ap.add_argument("--cartella", type=Path, help="ri-registra una raccolta esistente")
     ap.add_argument("--extra", type=Path, nargs="*", default=[],
@@ -335,9 +337,19 @@ def main() -> int:
     if args.cartella:
         dest = args.cartella if args.cartella.is_absolute() else (RADICE / args.cartella)
         xlsx = next(dest.glob("originale*.xlsx"))
+        # ⚠️ il nome della coppa si RIPRENDE dal manifesto, non dal default:
+        # ri-registrando la Pokal senza `--coppa` la si confrontava con la
+        # Coppa Italia, e il confronto dava 0 partite appaiate — un risultato
+        # che sembra un dato («le due fonti non si parlano») ed e' un bug.
+        vecchio = dest / FILE_MANIFESTO
+        if args.coppa is None and vecchio.exists():
+            args.coppa = json.loads(vecchio.read_text(encoding="utf-8"))["coppa"]
+            _log(f"  coppa ripresa dal manifesto: {args.coppa}")
     else:
         if not args.xlsx:
             ap.error("serve --xlsx oppure --cartella")
+        if not args.coppa:
+            ap.error("con --xlsx serve anche --coppa")
         slug = re.sub(r"[^a-z0-9]+", "_", args.coppa.lower()).strip("_")
         dest = RADICE / "files" / f"diretta_{slug}_{args.stagione}"
         dest.mkdir(parents=True, exist_ok=True)

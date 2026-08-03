@@ -1,0 +1,48 @@
+[
+  {
+    "coppa": "Coppa Italia",
+    "squadre": {
+      "totali": 44,
+      "agganciate": 44,
+      "non_agganciate": []
+    },
+    "partite": {
+      "totali": 45,
+      "agganciate": 44,
+      "non_agganciate": [
+        "2026-05-13 Lazio-Inter"
+      ]
+    },
+    "giocatori": {
+      "righe": 2133,
+      "agganciate": 2080,
+      "quota": 0.9752,
+      "titolari": 990,
+      "titolari_agganciati": 968,
+      "persone_distinte": 1213
+    }
+  },
+  {
+    "coppa": "DFB-Pokal",
+    "squadre": {
+      "totali": 64,
+      "agganciate": 64,
+      "non_agganciate": []
+    },
+    "partite": {
+      "totali": 63,
+      "agganciate": 62,
+      "non_agganciate": [
+        "2026-05-23 Bayern-Stoccarda"
+      ]
+    },
+    "giocatori": {
+      "righe": 2518,
+      "agganciate": 2467,
+      "quota": 0.9797,
+      "titolari": 1386,
+      "titolari_agganciati": 1361,
+      "persone_distinte": 1460
+    }
+  }
+]

@@ -1,0 +1,60 @@
+{
+  "coppa": "DFB-Pokal",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "7cb61bf1fdd58eadf5058ece5311c92052dbc902a3b992bf4015e3c5a3137482",
+  "conteggi": {
+    "partite": 63,
+    "righe_formazione": 2518,
+    "titolari": 1386,
+    "panchina": 1132,
+    "eventi": 2106,
+    "righe_statistiche": 1979,
+    "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+    "undici_titolari": {
+      "squadre_partita": 126,
+      "con_undici_esatti": 126,
+      "anomale": []
+    },
+    "punteggio_non_somma_i_rigori": {
+      "partite_ai_rigori": 8,
+      "incoerenti": []
+    },
+    "sequenza_rigori": {
+      "partite_ai_rigori": 8,
+      "sequenza_ricompone": 8,
+      "divergenti": []
+    },
+    "confronto_con_fonte_automatica": {
+      "eseguito": true,
+      "partite": {
+        "manuale": 63,
+        "automatica": 63,
+        "appaiate": 63,
+        "identiche_su_tutti_i_punteggi": 63,
+        "divergenti": [],
+        "non_appaiate_manuale": [],
+        "non_appaiate_automatica": []
+      },
+      "formazioni": {
+        "squadre_partita_confrontabili": 124,
+        "undici_identici": 122,
+        "con_differenze": [
+          {
+            "partita": "2025-08-16|26444|82",
+            "club_id": 26444,
+            "spaiati": 2
+          },
+          {
+            "partita": "2025-08-17|2643|48",
+            "club_id": 2643,
+            "spaiati": 2
+          }
+        ]
+      }
+    }
+  }
+}
