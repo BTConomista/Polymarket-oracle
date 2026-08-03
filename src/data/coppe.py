@@ -78,6 +78,48 @@ TURNO_INGRESSO_SECONDA: dict[str, str] = {
 
 STAGIONE = 2025  # `season` di player-scores per la stagione 2025-26
 
+# --------------------------------------------------------------------------- #
+# Date da correggere: la fonte tiene il CALENDARIO, non il campo
+# --------------------------------------------------------------------------- #
+# `games.csv` registra la data in cui la partita era in programma, non quella in
+# cui si e' giocata. Dove le due divergono il dato non e' «mancante»: e' un
+# valore plausibile e sbagliato (R6), e sballa sia l'aggancio fra le fonti sia
+# qualunque conto sul riposo.
+#
+# ⚠️ Ogni voce e' una correzione DICHIARATA (R3): sta anche in
+# `data/correzioni_dichiarate.csv` con motivo, fonte e data, e non si applica
+# se la data di partenza non e' quella attesa — cosi' se un giorno la fonte si
+# corregge da sola, questa tabella non introduce l'errore al contrario.
+#
+# chiave: (competition_id, data attesa, home_club_id) -> data vera
+DATE_CORRETTE: dict[tuple[str, str, int], str] = {
+    # Tranmere Rovers-Burton Albion, 1o turno di Carabao Cup. In programma il
+    # 12/08/2025 a Prenton Park, RINVIATA la sera stessa per un blackout che ha
+    # lasciato senza corrente lo stadio; rigiocata martedi' 19/08 alle 19:45
+    # d'accordo con la EFL. Verificato su tre fonti indipendenti (comunicato
+    # del Tranmere, ESPN che marca «Postponed», team news del Burton del 19/08).
+    ("CGB", "2025-08-12", 1074): "2025-08-19",
+}
+
+
+def applica_date_corrette(partite: "pd.DataFrame") -> tuple["pd.DataFrame", list[dict]]:
+    """Sostituisce le date sbagliate, verificando il valore di partenza.
+
+    Rende il DataFrame corretto e l'elenco di cio' che e' stato toccato — che
+    va nel manifesto: una correzione silenziosa e' peggio di nessuna.
+    """
+    d = partite.copy()
+    applicate = []
+    for (comp, attesa, casa), vera in DATE_CORRETTE.items():
+        m = ((d["competition_id"] == comp)
+             & (d["date"].astype(str).str[:10] == attesa)
+             & (d["home_club_id"] == casa))
+        if m.any():
+            d.loc[m, "date"] = pd.Timestamp(vera)
+            applicate.append({"competizione": comp, "da": attesa, "a": vera,
+                              "home_club_id": int(casa), "righe": int(m.sum())})
+    return d, applicate
+
 
 @dataclass(frozen=True)
 class Punteggio:

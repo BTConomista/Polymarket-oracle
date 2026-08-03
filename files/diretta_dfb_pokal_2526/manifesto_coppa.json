@@ -36,24 +36,14 @@
         "appaiate": 63,
         "identiche_su_tutti_i_punteggi": 63,
         "divergenti": [],
+        "buchi_colmati_dalla_manuale": [],
         "non_appaiate_manuale": [],
         "non_appaiate_automatica": []
       },
       "formazioni": {
         "squadre_partita_confrontabili": 124,
-        "undici_identici": 122,
-        "con_differenze": [
-          {
-            "partita": "2025-08-16|26444|82",
-            "club_id": 26444,
-            "spaiati": 2
-          },
-          {
-            "partita": "2025-08-17|2643|48",
-            "club_id": 2643,
-            "spaiati": 2
-          }
-        ]
+        "undici_identici": 124,
+        "con_differenze": []
       }
     }
   }

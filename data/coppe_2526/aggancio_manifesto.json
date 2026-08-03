@@ -15,11 +15,22 @@
     },
     "giocatori": {
       "righe": 2133,
-      "agganciate": 2080,
-      "quota": 0.9752,
+      "agganciate": 2130,
+      "quota": 0.9986,
       "titolari": 990,
-      "titolari_agganciati": 968,
+      "titolari_agganciati": 990,
       "persone_distinte": 1213
+    },
+    "eventi": {
+      "righe": 1479,
+      "con_giocatore": 1479,
+      "agganciate": 1469,
+      "con_game_id": 1448
+    },
+    "statistiche": {
+      "righe": 1307,
+      "agganciate": 1299,
+      "con_game_id": 1275
     }
   },
   {
@@ -38,11 +49,88 @@
     },
     "giocatori": {
       "righe": 2518,
-      "agganciate": 2467,
-      "quota": 0.9797,
+      "agganciate": 2514,
+      "quota": 0.9984,
       "titolari": 1386,
-      "titolari_agganciati": 1361,
-      "persone_distinte": 1460
+      "titolari_agganciati": 1386,
+      "persone_distinte": 1466
+    },
+    "eventi": {
+      "righe": 2106,
+      "con_giocatore": 2106,
+      "agganciate": 2087,
+      "con_game_id": 2081
+    },
+    "statistiche": {
+      "righe": 1979,
+      "agganciate": 1975,
+      "con_game_id": 1948
+    }
+  },
+  {
+    "coppa": "EFL Cup",
+    "squadre": {
+      "totali": 90,
+      "agganciate": 90,
+      "non_agganciate": []
+    },
+    "partite": {
+      "totali": 91,
+      "agganciate": 91,
+      "non_agganciate": []
+    },
+    "giocatori": {
+      "righe": 3606,
+      "agganciate": 3598,
+      "quota": 0.9978,
+      "titolari": 2002,
+      "titolari_agganciati": 1997,
+      "persone_distinte": 2052
+    },
+    "eventi": {
+      "righe": 2882,
+      "con_giocatore": 2882,
+      "agganciate": 2871,
+      "con_game_id": 2882
+    },
+    "statistiche": {
+      "righe": 2855,
+      "agganciate": 2818,
+      "con_game_id": 2855
+    }
+  },
+  {
+    "coppa": "FA Cup",
+    "squadre": {
+      "totali": 64,
+      "agganciate": 64,
+      "non_agganciate": []
+    },
+    "partite": {
+      "totali": 63,
+      "agganciate": 62,
+      "non_agganciate": [
+        "2026-05-16 Chelsea-Manchester City"
+      ]
+    },
+    "giocatori": {
+      "righe": 2515,
+      "agganciate": 2515,
+      "quota": 1.0,
+      "titolari": 1386,
+      "titolari_agganciati": 1386,
+      "persone_distinte": 1493
+    },
+    "eventi": {
+      "righe": 2008,
+      "con_giocatore": 2008,
+      "agganciate": 1996,
+      "con_game_id": 1992
+    },
+    "statistiche": {
+      "righe": 1974,
+      "agganciate": 1957,
+      "con_game_id": 1947
     }
   }
 ]

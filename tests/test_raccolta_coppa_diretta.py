@@ -166,6 +166,8 @@ class TestCoppaItaliaRegistrata:
         p, f = c["partite"], c["formazioni"]
         assert p["appaiate"] == p["manuale"] == p["automatica"]
         assert p["divergenti"] == []
+        # i buchi che la fonte automatica aveva DICHIARATO e la manuale colma
+        # non sono divergenze: sono il motivo per cui la seconda fonte esiste.
         assert p["identiche_su_tutti_i_punteggi"] == p["appaiate"]
         assert f["con_differenze"] == []
         assert f["undici_identici"] == f["squadre_partita_confrontabili"]

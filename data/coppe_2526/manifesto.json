@@ -1,9 +1,9 @@
 {
-  "generato": "2026-08-02",
+  "generato": "2026-08-03",
   "fonti": {
     "player_scores": {
       "dataset": "davidcariboo/player-scores",
-      "cartella": "/root/.cache/kagglehub/datasets/davidcariboo/player-scores/versions/673"
+      "cartella": "/root/.cache/kagglehub/datasets/davidcariboo/player-scores/versions/674"
     },
     "openfootball": "https://raw.githubusercontent.com/openfootball/deutschland/master/2025-26/cup.txt",
     "wikipedia": "fr:Coupe de France de football 2025-2026",
@@ -180,22 +180,31 @@
       "non_agganciati": []
     }
   },
+  "date_corrette": [
+    {
+      "competizione": "CGB",
+      "da": "2025-08-12",
+      "a": "2025-08-19",
+      "home_club_id": 1074,
+      "righe": 1
+    }
+  ],
   "file": {
     "partite.csv": {
       "righe": 662,
-      "sha256": "fa075e8e534776a06342a2837fe6b8310fc8e5d28debe8d964d3212cde3f4c4e"
+      "sha256": "578308637978fd9b89d34948fd1fba60dcbd3c1b2710579bd9c4efafab596651"
     },
     "formazioni.csv": {
       "righe": 18566,
-      "sha256": "4dbd5397528401fcd9e5a601ae12a96faac979256f50bd2d1488895faf6917a2"
+      "sha256": "bf6bfa2627ab0ec7e4c6f792d2bbd1a8439bbdffd1c4f06704c882dea29d9477"
     },
     "eventi.csv": {
       "righe": 8177,
-      "sha256": "e9e0d27c042ce984c6c031e2548c35f14a94273fdeeedc826dd22a1f86fed311"
+      "sha256": "211be6c26c2ef52088e92807ad19a6be1214be0afe3b5b4a87a8409da7ee24e2"
     },
     "da_raccogliere.csv": {
       "righe": 580,
-      "sha256": "68cb4a662a6b92c74bb99448db7999473ee32278b5e0d4d0de3a8ba90bb89a2d"
+      "sha256": "cdc10d9e6a5322e4ae12e7161ad95d5ca952fbc744709372bb6eac4e26e84c16"
     }
   }
 }

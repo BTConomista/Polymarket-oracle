@@ -1,0 +1,111 @@
+{
+  "coppa": "FA Cup",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "a3dadc37031069c6f8aad0bf0eccd13d329186857797cfb6481e858045a3dfca",
+  "conteggi": {
+    "partite": 63,
+    "righe_formazione": 2515,
+    "titolari": 1386,
+    "panchina": 1129,
+    "eventi": 2008,
+    "righe_statistiche": 1974,
+    "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+    "undici_titolari": {
+      "squadre_partita": 126,
+      "con_undici_esatti": 126,
+      "anomale": []
+    },
+    "punteggio_non_somma_i_rigori": {
+      "partite_ai_rigori": 9,
+      "incoerenti": []
+    },
+    "sequenza_rigori": {
+      "partite_ai_rigori": 9,
+      "sequenza_ricompone": 9,
+      "divergenti": []
+    },
+    "confronto_con_fonte_automatica": {
+      "eseguito": true,
+      "partite": {
+        "manuale": 63,
+        "automatica": 123,
+        "appaiate": 63,
+        "identiche_su_tutti_i_punteggi": 63,
+        "divergenti": [],
+        "buchi_colmati_dalla_manuale": [],
+        "non_appaiate_manuale": [],
+        "non_appaiate_automatica": [
+          "2025-10-31 Luton Town-Forest Green Rovers ",
+          "2025-11-01 AFC Wimbledon-Gateshead FC",
+          "2025-11-01 Barnsley FC-York City",
+          "2025-11-01 Blackpool FC-Scunthorpe United",
+          "2025-11-01 Bolton Wanderers-Huddersfield Town",
+          "2025-11-01 Boreham Wood FC-Crawley Town",
+          "2025-11-01 Brackley Town-Notts County",
+          "2025-11-01 Bromley FC-Bristol Rovers",
+          "2025-11-01 Burton Albion-St Albans City",
+          "2025-11-01 Buxton FC-Chatham Town",
+          "2025-11-01 Cambridge United-Chester FC",
+          "2025-11-01 Chelmsford City-Braintree Town",
+          "2025-11-01 Cheltenham Town-Bradford City",
+          "2025-11-01 Colchester United-Milton Keynes Dons",
+          "2025-11-01 Crewe Alexandra-Doncaster Rovers",
+          "2025-11-01 FC Halifax Town-Exeter City",
+          "2025-11-01 Fleetwood Town-Barnet FC",
+          "2025-11-01 Grimsby Town-Ebbsfleet United",
+          "2025-11-01 Macclesfield FC-AFC Totton",
+          "2025-11-01 Mansfield Town-Harrogate Town",
+          "2025-11-01 Newport County-Gillingham FC",
+          "2025-11-01 Oldham Athletic-Northampton Town",
+          "2025-11-01 Peterborough United-Cardiff City",
+          "2025-11-01 Reading FC-Carlisle United",
+          "2025-11-01 Rotherham United-Swindon Town",
+          "2025-11-01 Salford City-Lincoln City",
+          "2025-11-01 Slough Town-Altrincham FC",
+          "2025-11-01 Spennymoor Town-Barrow AFC",
+          "2025-11-01 Stevenage FC-Chesterfield FC",
+          "2025-11-01 Sutton United-AFC Telford United",
+          "2025-11-01 Tranmere Rovers-Stockport County",
+          "2025-11-01 Wealdstone FC-Southend United",
+          "2025-11-01 Weston-super-Mare AFC-Aldershot Town",
+          "2025-11-01 Wigan Athletic-Hemel Hempstead Town",
+          "2025-11-01 Wycombe Wanderers-Plymouth Argyle",
+          "2025-11-02 Eastleigh FC-Walsall FC",
+          "2025-11-02 Gainsborough Trinity-Accrington Stanley",
+          "2025-11-02 Port Vale FC-Maldon & Tiptree FC",
+          "2025-11-02 South Shields FC-Shrewsbury Town",
+          "2025-11-03 Tamworth FC-Leyton Orient",
+          "2025-12-05 Salford City-Leyton Orient",
+          "2025-12-06 Accrington Stanley-Mansfield Town",
+          "2025-12-06 Chelmsford City-Weston-super-Mare AFC",
+          "2025-12-06 Cheltenham Town-Buxton FC",
+          "2025-12-06 Chesterfield FC-Doncaster Rovers",
+          "2025-12-06 Exeter City-Wycombe Wanderers",
+          "2025-12-06 Fleetwood Town-Luton Town",
+          "2025-12-06 Grimsby Town-Wealdstone FC",
+          "2025-12-06 Milton Keynes Dons-Oldham Athletic",
+          "2025-12-06 Peterborough United-Barnsley FC",
+          "2025-12-06 Port Vale FC-Bristol Rovers",
+          "2025-12-06 Stockport County-Cambridge United",
+          "2025-12-06 Sutton United-Shrewsbury Town",
+          "2025-12-06 Swindon Town-Bolton Wanderers",
+          "2025-12-06 Wigan Athletic-Barrow AFC",
+          "2025-12-07 Blackpool FC-Carlisle United",
+          "2025-12-07 Boreham Wood FC-Newport County",
+          "2025-12-07 Gateshead FC-Walsall FC",
+          "2025-12-07 Slough Town-Macclesfield FC",
+          "2025-12-08 Brackley Town-Burton Albion"
+        ]
+      },
+      "formazioni": {
+        "squadre_partita_confrontabili": 124,
+        "undici_identici": 124,
+        "con_differenze": []
+      }
+    }
+  }
+}

@@ -131,6 +131,22 @@ ALIAS: dict[str, str] = {
     "Stoccarda": "VfB Stuttgart",
     "Union Berlino": "1.FC Union Berlin",
     "L.R. Vicenza": "LR Vicenza",
+    # --- Abbreviazioni INGLESI di diretta.it (Carabao Cup e FA Cup 2025-26,
+    # Fase 139-ter). Verificate una per una: `candidati()` deve dare 1.
+    # ⚠️ Due di queste erano AMBIGUE nella forma corta, ed e' il caso «Brest»
+    # daccapo: «Cardiff» da solo pesca anche la **Cardiff Metropolitan
+    # University** (53152) e «Lincoln» i **Lincoln Red Imps** di Gibilterra
+    # (38204). Senza l'alias per esteso l'aggancio resta vuoto — che e' il
+    # comportamento giusto, ma qui il club vero esiste e va nominato.
+    "Cambridge Utd": "Cambridge United",     # non Cambridge City (4674)
+    "Cardiff": "Cardiff City",               # non Cardiff Metropolitan (53152)
+    "Lincoln": "Lincoln City",               # non Lincoln Red Imps (38204)
+    "Manchester Utd": "Manchester United",
+    "Oxford Utd": "Oxford United",           # non Oxford City (22563)
+    # ⚠️ i due club di Sheffield: `club_id` DIVERSI, verificati sullo stadio
+    # (Bramall Lane = United 350, Hillsborough = Wednesday 1035).
+    "Sheffield Utd": "Sheffield United",
+    "Sheffield Wed": "Sheffield Wednesday",
     # ⚠️ I club di Ligue 2 (Annecy, Boulogne, Dunkerque, Grenoble, Laval,
     # Le Mans, Pau, Rodez) NON hanno un alias perche' non esistono nel
     # registro: player-scores non copre ne' la Ligue 2 ne' la Coupe de France.

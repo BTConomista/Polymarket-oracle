@@ -36,6 +36,7 @@
         "appaiate": 45,
         "identiche_su_tutti_i_punteggi": 45,
         "divergenti": [],
+        "buchi_colmati_dalla_manuale": [],
         "non_appaiate_manuale": [],
         "non_appaiate_automatica": []
       },

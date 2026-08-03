@@ -97,11 +97,29 @@ class TestAgganciProdotti:
             assert q["squadre"]["non_agganciate"] == [], q["coppa"]
 
     def test_partite_agganciate_tranne_quelle_che_non_esistono(self, quadro):
-        """L'unico buco ammesso è la finale, che la fonte automatica non ha
-        (Fase 138). Se ne comparisse un altro, è un problema di aggancio."""
+        """L'unico buco ammesso è la finale, che la fonte automatica non ha e
+        che quindi non ha un `game_id` da agganciare (Fase 138). Se ne
+        comparisse un altro, è un problema di aggancio."""
         for q in quadro:
             manca = q["partite"]["totali"] - q["partite"]["agganciate"]
             assert manca <= 1, f"{q['coppa']}: {manca} partite non agganciate"
+
+    def test_ogni_foglio_raccolto_e_agganciato(self):
+        """⭐ Il controllo di completezza: nessun foglio raccolto resta fuori.
+
+        Quando l'utente l'ha chiesto, 8.475 righe di evento e 8.115 di
+        statistica erano raccolte e collegate a NIENTE — e non se n'era accorto
+        nessuno, perché i numeri che guardavamo (partite, formazioni) erano
+        ottimi. Un foglio dimenticato non dà errore: dà silenzio.
+        """
+        from scripts.verifica_aggancio_coppe import verifica
+
+        righe, problemi = verifica()
+        assert problemi == [], problemi
+        assert righe, "nessuna raccolta trovata"
+        for r in righe:
+            assert r["in_tabella"] == r["raccolte"], r
+            assert r["quota"] > 0.95, r
 
     def test_copertura_giocatori_alta_e_niente_e_indovinato(self, quadro):
         for q in quadro:

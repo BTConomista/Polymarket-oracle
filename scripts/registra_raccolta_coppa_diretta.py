@@ -61,6 +61,44 @@ NOSTRE = RADICE / "data" / "coppe_2526"
 # falliva su una chiave che qui non esiste — misurato, 2 test rossi.
 FILE_MANIFESTO = "manifesto_coppa.json"
 
+# Espansione tedesca delle umlaut: NON e' un'alternativa a `_TRADUZIONE` di
+# club_matching (che copre ß, ø, ł…), e' una SECONDA lettura dello stesso nome.
+_UMLAUT = str.maketrans({"ö": "oe", "Ö": "oe", "ü": "ue", "Ü": "ue",
+                         "ä": "ae", "Ä": "ae"})
+
+# --------------------------------------------------------------------------- #
+# SINONIMI di GIOCATORE, verificati uno per uno su fonte esterna
+# --------------------------------------------------------------------------- #
+# Casi in cui le due fonti scrivono un cognome DIVERSO, non una grafia diversa:
+# nessuna regola di normalizzazione puo' agganciarli, e indovinare sarebbe
+# esattamente l'errore che tutto il resto del modulo evita. Ognuno e' stato
+# accertato su fonte esterna (indagine del 03/08/2026, con verifica avversaria
+# indipendente su ciascuno).
+#
+# chiave = token come lo scrive diretta.it  ->  token del registro Transfermarkt
+SINONIMI_GIOCATORE = {
+    # Portiere e capitano dell'SV Hemelingen. Il registro UFFICIALE della
+    # DFB (datencenter.dfb.de, rosa DFB-Pokal 2025-26) scrive «Marcel Pfaar,
+    # 18.10.1998»; fussball.de, kicker e il Weser-Kurier idem. diretta.it ha
+    # invertito le due lettere. La forma giusta e' quella del registro.
+    "pfarr": "pfaar",
+    # ⭐ NON un refuso: un CAMBIO DI COGNOME. Il sito ufficiale dello ZFC
+    # Meuselwitz elenca «Ben Nitschke (ehem. Keßler)» — «ex Keßler» — in una
+    # sola voce fra i 29 nomi della rosa; nessun Keßler separato. Alla data
+    # della partita (17/08/2025) i referti ufficiali portavano ancora
+    # «Kessler»: diretta.it usa il nome in vigore allora, Transfermarkt
+    # l'attuale. **Nessuna delle due fonti sbaglia.**
+    "kessler": "nitschke",
+    # Difensore ucraino dello Stoke. Due traslitterazioni di Таловєров: la
+    # forma con -ie- e' quella del club, di UEFA e della BBC; Transfermarkt usa
+    # la resa piu' russificata. Stesso `player_id` 668557 gia' presente nel
+    # nostro database carriere, con data di nascita verificata.
+    "talovierov": "taloverov",
+    # Hannibal Mejbri: il registro lo porta col solo nome proprio, «Hannibal»,
+    # diretta.it col cognome. Mononimo contro cognome, stessa persona.
+    "mejbri": "hannibal",
+}
+
 # Nomi che diretta.it scrive in modo che il registro non riconosce da solo.
 # Ognuno verificato a candidato unico contro `club_names.csv.gz`.
 ALIAS_COPPA = {
@@ -174,31 +212,76 @@ def _token(nome: str) -> tuple[frozenset[str], frozenset[str]]:
     Francesco Esposito giocano davvero nella stessa Coppa Italia. Tenuta come
     prefisso da verificare, li separa.
     """
-    s = str(nome).translate(_TRADUZIONE)
-    s = unicodedata.normalize("NFKD", s)
-    s = "".join(c for c in s if not unicodedata.combining(c))
+    grezzo = str(nome)
     # l'apostrofo si TOGLIE, non si sostituisce con uno spazio: spezzando,
     # «N'Dri» darebbe «dri» e «Ndri» non si aggancerebbe.
-    s = s.replace("'", "").replace("’", "")
+    grezzo = grezzo.replace("'", "").replace("’", "")
     iniziali = frozenset(m.group(1).lower()
-                         for m in re.finditer(r"\b([A-Za-z]{1,3})\.", s))
-    s = re.sub(r"\b[A-Za-z]{1,3}\.", " ", s)
-    s = re.sub(r"[^A-Za-z ]", " ", s)
-    return frozenset(p.lower() for p in s.split() if len(p) > 1), iniziali
+                         for m in re.finditer(r"\b([A-Za-z]{1,3})\.", grezzo))
+
+    def parole(testo: str) -> frozenset[str]:
+        s = unicodedata.normalize("NFKD", testo)
+        s = "".join(c for c in s if not unicodedata.combining(c))
+        s = re.sub(r"\b[A-Za-z]{1,3}\.", " ", s)
+        s = re.sub(r"[^A-Za-z ]", " ", s)
+        return frozenset(p.lower() for p in s.split() if len(p) > 1)
+
+    # ⚠️ DUE varianti, non una scelta fra le due. Le umlaut tedesche si scrivono
+    # in due modi entrambi legittimi: Transfermarkt tiene la lettera
+    # («Splettstößer») e NFKD la riduce a `splettstosser`; diretta.it la ESPANDE
+    # («Splettstoesser»). Normalizzare in un verso solo rompe l'altro — se
+    # espandessimo sempre, «Muller» non aggancerebbe piu' «Müller». Si generano
+    # entrambe le forme e basta che UNA coppia combaci.
+    diretta = parole(grezzo.translate(_TRADUZIONE))
+    espansa = parole(grezzo.translate(_UMLAUT).translate(_TRADUZIONE))
+    varianti = [diretta] + ([espansa] if espansa != diretta else [])
+
+    # terza variante: i sinonimi accertati su fonte esterna. Si applicano come
+    # una lettura IN PIU', mai sostituendo l'originale — cosi' un sinonimo
+    # sbagliato non puo' far perdere un aggancio che gia' funzionava.
+    for v in list(varianti):
+        tradotta = frozenset(SINONIMI_GIOCATORE.get(t, t) for t in v)
+        if tradotta != v and tradotta not in varianti:
+            varianti.append(tradotta)
+    return tuple(varianti), iniziali
 
 
 def _compatibili(iniziali: frozenset[str], parole: frozenset[str]) -> bool:
-    """Ogni iniziale dev'essere il prefisso di una parola dell'altro nome."""
-    return all(any(p.startswith(i) for p in parole) for i in iniziali)
+    """**Almeno una** iniziale dev'essere il prefisso di una parola dell'altro.
+
+    ⚠️ La prima versione pretendeva che le rispettasse **tutte**, ed era troppo
+    severa per una ragione precisa: le due fonti non portano lo stesso numero di
+    nomi di battesimo. diretta.it scrive «Manu K. S.» (King Samuel), Transfermarkt
+    tiene solo «King Manu» — l'iniziale `s` non ha prefisso da nessuna parte e la
+    coppia cadeva. Stessa cosa per «Obiogumu D. U.» (Destiny Uche) contro «Uche
+    Obiogumu», «Zimmer M. N.» (Melvin Noah), «Gross F. C.» (Falk Christopher).
+    Verificato leggendo `stat_giocatori.csv` della stessa raccolta, che i nomi li
+    scrive **per intero**: in tutti e cinque i casi e' la stessa persona.
+
+    La protezione contro gli omonimi **non si indebolisce**, ed e' misurabile:
+    con UNA sola iniziale «almeno una» e «tutte» coincidono, quindi «Esposito
+    Sa.» continua a non agganciare «Francesco Esposito». Il rilassamento agisce
+    solo da due iniziali in su. Misurato sull'intera raccolta: **+23 righe
+    agganciate, 0 nuove ambiguita'**.
+    """
+    return not iniziali or any(
+        any(p.startswith(i) for p in parole) for i in iniziali)
 
 
 def _stessa_persona(a: tuple, b: tuple) -> bool:
-    (pa, ia), (pb, ib) = a, b
-    if not pa or not pb:
-        return False
-    if not (pa <= pb or pb <= pa):
-        return False
-    return _compatibili(ia, pb) and _compatibili(ib, pa)
+    """Le due scritture sono la stessa persona?
+
+    Basta che UNA coppia di varianti soddisfi il sottoinsieme; le iniziali si
+    verificano contro la variante che ha combaciato.
+    """
+    (va, ia), (vb, ib) = a, b
+    for pa in va:
+        for pb in vb:
+            if not pa or not pb:
+                continue
+            if (pa <= pb or pb <= pa) and _compatibili(ia, pb) and _compatibili(ib, pa):
+                return True
+    return False
 
 
 def _appaia_undici(A: list[frozenset], B: list[frozenset]) -> int:
@@ -218,10 +301,13 @@ def _appaia_undici(A: list[frozenset], B: list[frozenset]) -> int:
                 break
         else:
             spaiati.append(a)
+    def condivide_una_parola(a, b) -> bool:
+        return any(pa & pb for pa in a[0] for pb in b[0])
+
     residui = []
     for a in spaiati:
         for i, b in enumerate(liberi):
-            if a[0] & b[0]:
+            if condivide_una_parola(a, b):
                 liberi.pop(i)
                 break
         else:
@@ -245,14 +331,17 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
         return {"eseguito": False, "motivo": f"«{coppa}» assente dalla raccolta automatica"}
 
     L["data_iso"] = pd.to_datetime(L.Data, format="%d.%m.%Y").dt.strftime("%Y-%m-%d")
-    for d, c_casa, c_osp in ((L, "Casa", "Ospite"), (N, "casa", "ospite")):
-        d["_c"] = d[c_casa].map(cid)
-        d["_o"] = d[c_osp].map(cid)
+    L["_c"] = L.Casa.map(cid)
+    L["_o"] = L.Ospite.map(cid)
+    # sul lato automatico gli id ci sono gia': usarli invece di ri-derivarli
+    # dal nome (vedi la nota gemella in scripts/aggancia_coppe.py).
+    N["_c"] = N.home_club_id
+    N["_o"] = N.away_club_id
     L["k"] = L.data_iso + "|" + L._c.astype("Int64").astype(str) + "|" + L._o.astype("Int64").astype(str)
     N["k"] = N.data + "|" + N._c.astype("Int64").astype(str) + "|" + N._o.astype("Int64").astype(str)
 
     m = L.merge(N, on="k", suffixes=("_l", "_n"))
-    divergenti = []
+    divergenti, colmate = [], []
     for _, r in m.iterrows():
         lfin = ((r["Gol casa dts"], r["Gol ospite dts"])
                 if pd.notna(r["Gol casa dts"])
@@ -270,7 +359,13 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
         if lr != nr:
             p.append(f"rigori: manuale {lr} · automatica {nr}")
         if p:
-            divergenti.append({"partita": f"{r.data_iso} {r.Casa}-{r.Ospite}", "differenze": p})
+            voce = {"partita": f"{r.data_iso} {r.Casa}-{r.Ospite}", "differenze": p}
+            # ⚠️ Se la NOSTRA riga era gia' marcata `eventi_incompleti`, la
+            # differenza non e' un disaccordo fra le fonti: e' un buco che la
+            # fonte automatica aveva DICHIARATO e che la manuale colma. Contarlo
+            # fra le divergenze farebbe sembrare un problema quello che invece
+            # e' il motivo per cui la seconda fonte serve.
+            (colmate if bool(r.eventi_incompleti) else divergenti).append(voce)
 
     # --- formazioni
     F = fogli["Formazioni e cambi"].copy()
@@ -305,8 +400,9 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
         "partite": {
             "manuale": int(len(L)), "automatica": int(len(N)),
             "appaiate": int(len(m)),
-            "identiche_su_tutti_i_punteggi": int(len(m) - len(divergenti)),
+            "identiche_su_tutti_i_punteggi": int(len(m) - len(divergenti) - len(colmate)),
             "divergenti": divergenti,
+            "buchi_colmati_dalla_manuale": colmate,
             "non_appaiate_manuale": [
                 f"{r.data_iso} {r.Casa}-{r.Ospite}"
                 for _, r in L[~L.k.isin(set(N.k))].iterrows()],
@@ -407,8 +503,13 @@ def main() -> int:
     if c.get("eseguito"):
         p, f = c["partite"], c["formazioni"]
         _log(f"  ⭐ contro la fonte automatica:")
+        colmate = p.get("buchi_colmati_dalla_manuale", [])
         _log(f"     partite appaiate {p['appaiate']} · punteggi identici "
-             f"{p['identiche_su_tutti_i_punteggi']}/{p['appaiate']}")
+             f"{p['identiche_su_tutti_i_punteggi']}/{p['appaiate']}"
+             + (f" · {len(colmate)} buco/i DICHIARATO/I colmato/i dalla manuale"
+                if colmate else ""))
+        for c in colmate:
+            _log(f"       colmato {c['partita']}: {c['differenze']}")
         if p["divergenti"]:
             for d in p["divergenti"]:
                 _log(f"       DIVERGE {d['partita']}: {d['differenze']}")

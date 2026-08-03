@@ -341,6 +341,7 @@ correzioni.*
 - [Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato](#fase-138--le-coppe-nazionali-entrano-nel-progetto-e-la-fonte-somma-i-rigori-al-risultato)
 - [Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze](#fase-139--la-controprova-arriva-due-fonti-indipendenti-sulla-coppa-italia-zero-divergenze)
 - [Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo](#fase-139-bis--i-tre-ponti-e-perché-il-terzo-si-regge-sul-secondo)
+- [Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava](#fase-139-ter--caso-per-caso-quattro-coppe-due-fonti-e-il-foglio-che-nessuno-guardava)
 
 ---
 
@@ -16018,3 +16019,112 @@ che sbagliate.
    corrispondono — ed era un argomento di default sbagliato. Un risultato
    drasticamente peggiore del precedente non è una scoperta finché non si è
    escluso di averlo causato.
+
+---
+
+## Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava
+
+**Obiettivo.** Richiesta dell'utente: *«risolviamo caso per caso tutti i problemi
+sia per la coppa italia sia per la coppa tedesca, se serve cerchiamo su internet
+per avere conferme»*, poi la **Carabao Cup** e la **FA Cup** con lo stesso
+lavoro, e infine *«un controllo finale per verificare di aver agganciato tutti i
+dati raccolti fino ad ora»*.
+
+**Il metodo.** I casi aperti erano 22, di tre tipi. Sono stati mandati a
+**indagare in parallelo** (workflow a 6 agenti: 3 investigatori + 3 scettici
+indipendenti incaricati di **refutare** le conclusioni). Nessuna conclusione
+basata sul web è stata applicata senza che un secondo agente l'avesse
+verificata su una fonte diversa.
+
+### I tre nomi discordanti — tutti stessa persona, per tre ragioni diverse
+
+| caso | verdetto | chi sbaglia |
+|---|---|---|
+| `Pfarr M.` vs `Marcel Pfaar` | stessa persona | **diretta.it**: due lettere invertite. Il registro ufficiale DFB scrive «Marcel Pfaar, 18.10.1998» |
+| `Kessler B.` vs `Ben Nitschke` | stessa persona | **nessuno**: è un **cambio di cognome**. Il sito dello ZFC Meuselwitz elenca «Ben Nitschke (ehem. Keßler)» in una sola voce. diretta.it usa il nome in vigore alla data della partita, Transfermarkt l'attuale |
+| `Talovierov M.` vs `Maksym Taloverov` | stessa persona | **Transfermarkt**: due traslitterazioni di Таловєров. La forma con -ie- è quella del club, di UEFA e della BBC |
+
+Il secondo è il più istruttivo: **due fonti possono avere ragione entrambe** e
+dire cose diverse, perché descrivono momenti diversi. Nessuna correzione: una
+tabella di sinonimi, con la fonte scritta accanto a ciascuno.
+
+### Le 12 righe non agganciate — e un test che stavo per scrivere sbagliato
+
+Otto erano **la stessa persona con una regola troppo severa**, e la prova stava
+in casa: `stat_giocatori.csv`, il quarto foglio della stessa raccolta, scrive i
+nomi **per intero**. `Manu K. S.` è «Manu King Samuel» — la `S` è Samuel, un
+secondo nome che il registro non porta. La clausola pretendeva che **ogni**
+iniziale trovasse un prefisso; ne basta **una**. Misurato prima di applicarlo:
+**+23 righe, 0 nuove ambiguità**, e la protezione sugli omonimi resta intatta
+perché con una sola iniziale «almeno una» e «tutte» coincidono.
+
+Due erano **grafia**: `Abursu`/`Arbursu` (una `r`) e `Splettstoesser` contro
+`Splettstößer` — diretta.it espande la ö in `oe`, NFKD la riduce a `o`. Risolto
+generando **entrambe** le letture invece di sceglierne una: normalizzare in un
+verso solo romperebbe l'altro (`Muller` non aggancerebbe più `Müller`).
+
+Le altre quattro sono **assenze vere**: la riga di panchina manca nella fonte
+automatica, non la persona. Il mancato aggancio è corretto.
+
+### La partita che nessuna delle due fonti sbagliava
+
+Tranmere-Burton, 1° turno di Carabao Cup: la nostra fonte la dava il **12/08**,
+diretta.it il **19/08**. Verificato: era in programma il 12, **rinviata la sera
+stessa per un blackout** che ha lasciato senza corrente Prenton Park, e rigiocata
+il 19 d'accordo con la EFL. `games.csv` tiene la data di **calendario**, non
+quella del campo. Correzione dichiarata (R3) in
+`data/correzioni_dichiarate.csv` + tabella `DATE_CORRETTE` che **verifica il
+valore di partenza** prima di sostituire.
+
+E una volta agganciata, quella partita ha **colmato un buco nostro**: la nostra
+riga era marcata `eventi_incompleti` (5-6 grezzo, sequenza rigori assente); la
+manuale dice 1-1 più rigori 4-5, che ricompone il 5-6 esattamente. Il confronto
+ora distingue le due cose: una **divergenza** è un disaccordo, un **buco
+colmato** è il motivo per cui la seconda fonte esiste.
+
+### Il risultato, quattro coppe
+
+| | Coppa Italia | DFB-Pokal | Carabao | FA Cup |
+|---|--:|--:|--:|--:|
+| partite appaiate | **45/45** | **63/63** | **91/91** | **63/63** |
+| punteggi identici | 45/45 | 63/63 | 90/91 + 1 colmato | 63/63 |
+| **undici identici** | **88/88** | **124/124** | **180/180** | **124/124** |
+| giocatori → `player_id` | 99,9% | 99,8% | 99,8% | **100%** |
+
+**516 undici su 516.** Zero divergenze fra due fonti indipendenti.
+
+### ⭐ Il controllo finale, e cosa ha trovato subito
+
+`scripts/verifica_aggancio_coppe.py` risponde a una domanda sola: *ogni riga
+raccolta è in una tabella di aggancio?* Quando l'utente l'ha chiesto la risposta
+era **no**, e in grande: **8.475 righe di evento e 8.115 di statistica erano
+raccolte e collegate a niente**. Nessuno se n'era accorto perché i numeri che
+guardavamo — partite, formazioni — erano ottimi. **Un foglio dimenticato non dà
+errore: dà silenzio.**
+
+Agganciati anche quelli (le statistiche hanno richiesto la regola di confronto e
+non l'uguaglianza, perché quel foglio scrive i nomi per intero: da 30 righe su
+1.307 a 1.299). Stato finale:
+
+```
+27.624 righe raccolte · 27.488 agganciate · 99,5%
+✅ ogni riga raccolta è nella sua tabella, nessuna identità usata due volte
+```
+
+**Un bug trovato dal controllo stesso.** Passando agli identificatori ho scoperto
+che il lato automatico veniva **ri-derivato dal nome** pur avendo `home_club_id`
+nella riga accanto: `FC Südtirol-Alto Adige` non si agganciava (il registro lo
+chiama `FC Südtirol`) e Como-Südtirol spariva. Un giro inutile che introduce un
+punto di rottura. Stessa classe di problema per le tre finali da Wikipedia, che
+non avevano `club_id`: risolti alla fonte.
+
+**Lezione.** Tre.
+1. **«Zero» va sospettato come qualunque altro numero.** Ri-registrando la Pokal
+   senza `--coppa` il confronto dava «0 partite appaiate» — che ha l'aspetto di
+   un risultato («le due fonti non si parlano») ed era un default sbagliato del
+   mio script. L'ha svelato solo il fatto che un attimo prima erano 33.
+2. **La prova migliore era già in casa.** Otto casi su dodici si sono chiusi
+   leggendo un foglio della stessa raccolta, non cercando in rete.
+3. **Chiedere «è tutto agganciato?» è diverso da guardare le percentuali.** Le
+   percentuali erano al 99% su ciò che guardavamo, e due fogli interi erano a
+   zero. La domanda giusta non era «quanto è alta la copertura» ma «di che cosa».

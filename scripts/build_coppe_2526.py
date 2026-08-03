@@ -54,6 +54,7 @@ sys.path.insert(0, str(RADICE))
 from src.data.club_matching import Agganciatore  # noqa: E402
 from src.data.coppe import (  # noqa: E402
     COPPE,
+    applica_date_corrette,
     FINALI_MANCANTI,
     STAGIONE,
     TURNO_INGRESSO_SECONDA,
@@ -153,6 +154,10 @@ def costruisci_da_player_scores(base: Path, ag: Agganciatore) -> tuple[pd.DataFr
     s = games[(games.season == STAGIONE)
               & (games.competition_id.isin(COPPE))].copy()
     s["date"] = pd.to_datetime(s.date)
+    s, date_corrette = applica_date_corrette(s)
+    for c in date_corrette:
+        _log(f"  data corretta: {c['competizione']} {c['da']} -> {c['a']} "
+             f"(club {c['home_club_id']}, {c['righe']} riga/e)")
     ids = set(s.game_id)
     _log(f"  partite di coppa 2025-26: {len(s)}")
 
@@ -250,7 +255,7 @@ def costruisci_da_player_scores(base: Path, ag: Agganciatore) -> tuple[pd.DataFr
                     "assist_id", "descrizione"]].sort_values(
         ["game_id", "minuto"])
 
-    return partite, formazioni, eventi_out, resa, inizio
+    return partite, formazioni, eventi_out, resa, inizio, date_corrette
 
 
 # --------------------------------------------------------------------------- #
@@ -324,9 +329,18 @@ def costruisci_coupe_de_france() -> tuple[pd.DataFrame, dict]:
     return d, v
 
 
-def costruisci_finali_mancanti() -> tuple[pd.DataFrame, list[dict]]:
-    """Le tre finali che `games.csv` non contiene (Coppa Italia, FA Cup, Pokal)."""
+def costruisci_finali_mancanti(ag: Agganciatore) -> tuple[pd.DataFrame, list[dict]]:
+    """Le tre finali che `games.csv` non contiene (Coppa Italia, FA Cup, Pokal).
+
+    ⚠️ I `club_id` si risolvono QUI. Lasciarli vuoti sembra innocuo — il nome
+    della squadra c'e' — ma rende le tre finali invisibili a ogni join che usi
+    gli identificatori invece dei nomi, che e' la strada giusta ovunque.
+    """
     s = requests.Session()
+    # Wikipedia scrive i nomi in inglese e in forma breve: servono gli alias.
+    alias = {"Internazionale": "Inter Milan", "Lazio": "SS Lazio",
+             "Chelsea": "Chelsea FC", "Manchester City": "Manchester City",
+             "Bayern Munich": "Bayern Munich", "VfB Stuttgart": "VfB Stuttgart"}
     righe, quadro = [], []
     for cid, (pagina, nome) in FINALI_MANCANTI.items():
         f = leggi_finale_wikipedia(pagina, sessione=s)
@@ -350,7 +364,8 @@ def costruisci_finali_mancanti() -> tuple[pd.DataFrame, list[dict]]:
             "allenatore_casa": None, "allenatore_ospite": None,
             "modulo_casa": None, "modulo_ospite": None,
             "game_id": None, "competition_id": cid,
-            "home_club_id": None, "away_club_id": None,
+            "home_club_id": ag.aggancia(alias.get(f["casa"], f["casa"])),
+            "away_club_id": ag.aggancia(alias.get(f["ospite"], f["ospite"])),
             "fonte": "wikipedia-en", "url": None,
         })
     return pd.DataFrame(righe), quadro
@@ -365,7 +380,7 @@ def main() -> int:
     _log("== A. player-scores")
     base = scarica_player_scores()
     ag = Agganciatore()
-    partite, formazioni, eventi, resa2a, inizio = costruisci_da_player_scores(base, ag)
+    partite, formazioni, eventi, resa2a, inizio, date_corrette = costruisci_da_player_scores(base, ag)
 
     _log("== B. openfootball (verifica esterna DFB-Pokal)")
     controllo = verifica_dfb(partite, ag)
@@ -374,7 +389,7 @@ def main() -> int:
     cdf, cdf_v = costruisci_coupe_de_france()
 
     _log("== D. le tre finali assenti da games.csv (Wikipedia)")
-    finali, finali_q = costruisci_finali_mancanti()
+    finali, finali_q = costruisci_finali_mancanti(ag)
 
     tutte = pd.concat([partite, finali, cdf], ignore_index=True)
     tutte = tutte.sort_values(["competizione", "data", "casa"],
@@ -432,6 +447,7 @@ def main() -> int:
                      "Wikipedia non pubblica i titolari se non per le finali",
         },
         "aggancio_seconde_divisioni": resa2a,
+        "date_corrette": date_corrette,
     }
 
     _log("\n== quadro")
