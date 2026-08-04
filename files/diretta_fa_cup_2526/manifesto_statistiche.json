@@ -1,0 +1,36 @@
+{
+  "coppa": "FA Cup",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_statistiche.xlsx",
+  "sha256": "090b775c462afccc3132ef6efef9e96159f760f0ceba05ccf5dd99bb9e355a42",
+  "partite": 63,
+  "id_partita_orfani": 0,
+  "partite_confronto_raccolta_esistente": "63/63 punteggi identici",
+  "team_partita": 126,
+  "periodi": [
+    "1° tempo",
+    "2° tempo",
+    "Supplementari",
+    "Totale"
+  ],
+  "righe_squadra": 406,
+  "partite_con_supplementari": 14,
+  "additivita_periodi": "4914/4914",
+  "giocatori_confronto_consegna_precedente": {
+    "righe": 1974,
+    "colonne_comuni": 114,
+    "celle_confrontate": 225036,
+    "divergenze_reali": 0,
+    "scarto_massimo": 0.0,
+    "lettura": "scarto compatibile con il solo arrotondamento a 3 decimali della consegna precedente: qui i decimali sono 6"
+  },
+  "righe_giocatori": 1974,
+  "metriche_per_giocatore": 104,
+  "fedelta_csv_vs_xlsx": {
+    "giocatori": "227010/227010 celle identiche",
+    "squadra": "17864/17864 celle identiche"
+  },
+  "turni_rietichettati": 6,
+  "statistiche_squadra": 45,
+  "disponibilita_temporale": "post — ogni metrica di questi due fogli esiste solo a partita finita (regola R8). Utilizzabile per prevedere partite SUCCESSIVE, mai quella che l'ha prodotta."
+}

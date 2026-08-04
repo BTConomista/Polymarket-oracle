@@ -988,6 +988,64 @@ la stessa avvertenza delle altre raccolte diretta.it (`files/README.md`).
 
 ---
 
+## 5-septies-bis · Statistiche di COPPA per periodo e per giocatore (`files/diretta_{efl_cup,fa_cup}_2526/`) — Fase 140
+
+Seconda consegna manuale delle **stesse** Carabao Cup e FA Cup 2025-26 già
+presenti dalla Fase 139-bis/ter. **Non è un doppione**: le righe coincidono
+(2.855 e 1.974, stessi giocatori), ma le *colonne* no — ed è lì che vive tutto
+il valore.
+
+**Cosa aggiunge, e perché conta**
+
+| | |
+|---|---|
+| ⭐ `squadra_per_partita.csv.gz` | **45 statistiche per (squadra, partita, PERIODO)** — Totale / 1° tempo / 2° tempo, più «Supplementari» dove giocati. Per le coppe non esistevano: è lo stesso dato che la Fase 131 ha portato per le 5 leghe, quello che serve al modello a due stadi (residuo aperto delle Fasi 96/99) |
+| ⭐ `ID partita` in `stat_giocatori.csv` | la **chiave di join** che mancava. `scripts/aggancia_coppe.py` documenta a riga 239 di aver dovuto aggirarne l'assenza appaiando per `(Data, Casa, Ospite)` e poi per nome: ora l'aggancio è esatto invece che dedotto |
+| precisione | **6 decimali invece di 3** su ogni metrica continua |
+| `turni_rietichettati.csv` | i turni passano dalle etichette generiche del sito (`1/8 FINALE`, `SEMI FINALI`) a quelle editoriali (`4° turno (ottavi)`, `Semifinali (andata)`), che **distinguono andata e ritorno**. La mappa vecchia→nuova è conservata, così il cambio è verificabile e reversibile (R3) |
+
+**Copertura e verifiche** (in `manifesto_statistiche.json`, ricalcolabili con
+`python scripts/registra_raccolta_statistiche_coppa_diretta.py …`):
+
+| | Carabao Cup | FA Cup |
+|---|---|---|
+| partite | 91 | 63 |
+| righe di squadra | 546 (182 × 3) | 406 (126 × 3 + 28) |
+| partite con supplementari | 0 | 14 |
+| additività dei periodi | **7.098 / 7.098** | **4.914 / 4.914** |
+| fedeltà CSV ↔ `.xlsx` | **328.325 / 328.325** e **24.024 / 24.024** | **227.010 / 227.010** e **17.864 / 17.864** |
+| punteggi vs raccolta già in casa | **91 / 91** | **63 / 63** |
+| divergenze **reali** vs consegna precedente | **0** su 322.615 celle | **0** su 223.062 celle |
+
+Lo scarto massimo è **0.0005** su entrambe: esattamente il massimo compatibile
+con l'arrotondamento a 3 decimali della consegna precedente, non un millesimo
+oltre. La soglia oltre la quale lo script si ferma è 0.005 — dieci volte tanto:
+sopra, non sarebbe più precisione, sarebbe un dato che cambia.
+
+**Contenuto**: `originale_statistiche.xlsx` (come consegnato, §5-ter),
+`squadra_per_partita.csv.gz`, `stat_giocatori.csv` (aggiornato),
+`turni_rietichettati.csv`, `note_statistiche.csv`, `manifesto_statistiche.json`.
+⚠️ L'`originale_coppa.xlsx` della prima consegna **resta**: contiene formazioni
+ed eventi, che questa non ha. I due originali sono complementari, non alternativi.
+
+⚠️ **Nome della competizione (R4).** In `files/diretta_efl_cup_2526/` convivono
+ora due manifesti che chiamano la stessa competizione in due modi: `EFL Cup`
+(canonico della cartella) e `Carabao Cup` (come la scrive la fonte — è il nome
+sponsorizzato). Il manifesto lo dichiara in `coppa_come_dichiarata_dalla_fonte`:
+**sono la stessa competizione**, non due.
+
+**Disponibilità temporale (R8)**: **tutte** le metriche di entrambi i fogli sono
+`post` — esistono solo a partita finita. Usabili per prevedere partite
+*successive*, mai quella che le ha prodotte.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+
+⚠️ **Licenza**: vale la stessa posizione dichiaratamente **non risolta** delle
+altre raccolte diretta.it — il progetto non rivendica alcun diritto su questi
+dati (`files/README.md`).
+
+---
+
 ## 5-octies · Gli agganci delle coppe (`data/coppe_2526/aggancio_*.csv`) — Fasi 139-bis → 139-quater
 
 Cinque tabelle-ponte che collegano le **raccolte manuali** di coppa

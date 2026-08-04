@@ -1,0 +1,37 @@
+{
+  "coppa": "EFL Cup",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_statistiche.xlsx",
+  "sha256": "7dbfdcc663163a3d3dd5391293c4d86378d27d6833cd9499cf44f6ad86a61944",
+  "partite": 91,
+  "id_partita_orfani": 0,
+  "partite_confronto_raccolta_esistente": "91/91 punteggi identici",
+  "team_partita": 182,
+  "periodi": [
+    "1° tempo",
+    "2° tempo",
+    "Totale"
+  ],
+  "righe_squadra": 546,
+  "partite_con_supplementari": 0,
+  "additivita_periodi": "7098/7098",
+  "giocatori_confronto_consegna_precedente": {
+    "righe": 2855,
+    "colonne_comuni": 114,
+    "celle_confrontate": 325470,
+    "divergenze_reali": 0,
+    "scarto_massimo": 0.0,
+    "lettura": "scarto compatibile con il solo arrotondamento a 3 decimali della consegna precedente: qui i decimali sono 6"
+  },
+  "righe_giocatori": 2855,
+  "metriche_per_giocatore": 104,
+  "fedelta_csv_vs_xlsx": {
+    "giocatori": "328325/328325 celle identiche",
+    "squadra": "24024/24024 celle identiche"
+  },
+  "turni_rietichettati": 8,
+  "coppa_come_dichiarata_dalla_fonte": "Carabao Cup",
+  "nota_nome": "«Carabao Cup» e «EFL Cup» sono la STESSA competizione: la prima e' il nome sponsorizzato. Il nome canonico di questa cartella resta il secondo.",
+  "statistiche_squadra": 45,
+  "disponibilita_temporale": "post — ogni metrica di questi due fogli esiste solo a partita finita (regola R8). Utilizzabile per prevedere partite SUCCESSIVE, mai quella che l'ha prodotta."
+}

@@ -1,0 +1,48 @@
+FA Cup 2025/26 — statistiche di squadra e individuali,Unnamed: 1
+,
+Fonte,diretta.it (Flashscore)
+Partite,63
+Prima giornata,09.01.2026 (3° turno)
+Finale,16.05.2026 Chelsea - Manchester City
+Turni esclusi,"1° e 2° turno (60 partite, 31.10 - 08.12.2025), come da indicazioni"
+,
+Come e stata ricostruita la lista,
+,La pagina risultati della FA Cup su diretta.it non carica gli incontri (0 righe).
+,"Il tabellone e stato ricostruito leggendo le pagine risultati dei singoli club, partendo da Premier League e Championship"
+,e allargando poi agli avversari fino a chiusura: 61 club visitati.
+,I nomi dei turni non provengono dal sito: sono assegnati raggruppando le partite per data.
+,
+Verifica di completezza del tabellone,
+,Ogni turno controllato contro i vincitori del turno precedente:
+4° turno,"32 partecipanti, tutti vincitori del 3° turno (0 estranei)"
+5° turno,"16 partecipanti, tutti vincitori del 4° turno"
+Quarti,"8 partecipanti, tutti vincitori del 5° turno"
+Semifinali,"4 partecipanti, tutti vincitori dei quarti"
+Finale,"2 partecipanti, entrambi vincitori delle semifinali"
+,Tabellone chiuso e coerente: 32+16+8+4+2+1 = 63. Non puo mancare nessuna partita.
+,
+"Foglio ""Statistiche squadra""",
+,Una riga per ogni combinazione partita + periodo + squadra.
+Periodi,"Totale, 1° tempo, 2° tempo e Supplementari (solo dove giocati)"
+Righe,406
+Statistiche per riga,35
+Partite con statistiche di squadra,"63 su 63, tutte tracciate"
+,
+Verifica di quadratura,
+,"Su tutte e 63 le partite: 1° tempo + 2° tempo = Totale nelle 49 partite chiuse nei 90 minuti,"
+,e 1° tempo + 2° tempo + Supplementari = Totale nelle 14 partite andate ai supplementari. Zero discordanze.
+,"Quindi la colonna ""Totale"" comprende anche i tempi supplementari."
+Partite con tempi supplementari,14
+Partite decise ai rigori,9
+,
+"Foglio ""Statistiche giocatori""",
+,"Una riga per ogni giocatore sceso in campo (titolari e subentrati), con tutte le metriche pubblicate."
+Righe,1974
+Metriche per giocatore,103
+Partite con statistiche individuali,63 su 63 — copertura completa
+Controlli,"Nessuna squadra con meno di 11 giocatori, nessun giocatore duplicato."
+,"169 giocatori senza rating: sono subentri di pochi minuti, per i quali diretta.it non assegna un voto."
+,
+Risultati,
+,"Nel foglio Partite i punteggi non sono mai sommati: colonne separate per 90 minuti, dopo i supplementari e rigori,"
+,"piu la colonna ""Risultato (esteso)"" che li scrive per esteso."

@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.328 verdi** al 03/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.364 verdi** al 04/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.328 verdi al 03/08/2026)
+python -m pytest                       # test (1.364 verdi al 04/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -365,6 +365,15 @@ scripts/         build_coppe_2526 (la raccolta coppe, Fase 138),
                  registra_raccolta_coppa_diretta (la porta d'ingresso delle
                  raccolte manuali di COPPA: verifica e CONFRONTA con la fonte
                  automatica partita per partita, Fase 139),
+                 registra_raccolta_statistiche_coppa_diretta (la TERZA porta,
+                 Fase 140: le STATISTICHE di coppa -- squadra per PERIODO
+                 (Totale/1T/2T/Supplementari) + giocatore con `ID partita`.
+                 Normalizza le 6 metriche COMPOSITE della fonte
+                 («77% (364/473)») nelle 45 canoniche dei campionati, cosi'
+                 coppa e campionato si confrontano senza codice speciale. Il
+                 controllo forte non e' una fonte esterna: e' la raccolta di
+                 coppa GIA' in casa, con soglia esplicita 0.005 -- oltre
+                 l'arrotondamento non e' piu' precisione, e' un dato che cambia),
                  download_data, build_database, backtest, analyze, tune, calibrate,
                  markets (multi-mercato), analyze_gap (anatomia del gap col mercato),
                  predict (il TOOL d'uso: DC senza quote, market-implied con --odds),
@@ -485,7 +494,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.328 verdi al 03/08/2026), fra cui i guardiani
+tests/           test unitari (1.364 verdi al 04/08/2026), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/

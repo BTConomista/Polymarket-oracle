@@ -1,0 +1,38 @@
+Carabao Cup (EFL Cup) 2025/26 — statistiche di squadra e individuali,Unnamed: 1
+,
+Fonte,diretta.it (Flashscore)
+Partite,91
+Prima giornata,12.08.2025 (1° turno)
+Finale,22.03.2026 Arsenal - Manchester City
+Turno escluso,"Turno preliminare (2 partite, 29.07 e 05.08.2025), come da indicazioni"
+,
+Nota sui nomi dei turni,
+,"I nomi dei turni mostrati dal sito sono inaffidabili: la pagina etichetta come ""Finale"" anche partite del turno preliminare."
+,"I turni in questo file sono quindi assegnati raggruppando le partite per data, non copiati dal sito."
+Struttura,"1° turno 35, 2° turno 23, 3° turno 16, 4° turno (ottavi) 8, quarti 4, semifinali andata 2, semifinali ritorno 2, finale 1"
+,
+"Foglio ""Statistiche squadra""",
+,Una riga per ogni combinazione partita + periodo + squadra.
+Periodi,"Totale, 1° tempo, 2° tempo"
+Righe,546
+Statistiche per riga,35
+Partite con statistiche di squadra,"91 su 91, tutte tracciate"
+,
+Verifica di quadratura,
+,Su tutte e 91 le partite: 1° tempo + 2° tempo = Totale. Zero discordanze.
+Partite con tempi supplementari,0
+,In Carabao Cup non si giocano i supplementari: in caso di parita si va direttamente ai rigori.
+Partite decise ai rigori,19
+,
+"Foglio ""Statistiche giocatori""",
+,"Una riga per ogni giocatore sceso in campo (titolari e subentrati), con tutte le metriche pubblicate."
+Righe,2855
+Metriche per giocatore,103
+Partite con statistiche individuali,91 su 91 — copertura completa
+Controlli,"Nessuna squadra con meno di 11 giocatori, nessun giocatore duplicato."
+,"134 giocatori senza rating: sono subentri di pochi minuti, per i quali diretta.it non assegna un voto."
+,
+Risultati,
+,"Nel foglio Partite i punteggi non sono mai sommati: colonne separate per 90 minuti, dopo i supplementari e rigori,"
+,"piu la colonna ""Risultato (esteso)"" che li scrive per esteso, es. ""1-1, poi rigori 4-3""."
+,"Le semifinali sono di andata e ritorno: ogni riga e una singola gara, i punteggi non sono mai aggregati."

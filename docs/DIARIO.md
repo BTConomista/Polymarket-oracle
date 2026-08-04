@@ -342,6 +342,8 @@ correzioni.*
 - [Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze](#fase-139--la-controprova-arriva-due-fonti-indipendenti-sulla-coppa-italia-zero-divergenze)
 - [Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo](#fase-139-bis--i-tre-ponti-e-perché-il-terzo-si-regge-sul-secondo)
 - [Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava](#fase-139-ter--caso-per-caso-quattro-coppe-due-fonti-e-il-foglio-che-nessuno-guardava)
+- [Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose](#fase-139-quater--due-copie-della-stessa-funzione-e-solo-una-sapeva-le-cose)
+- [Fase 140 — Le coppe imparano a dividere i due tempi, e la chiave che mancava](#fase-140--le-coppe-imparano-a-dividere-i-due-tempi-e-la-chiave-che-mancava)
 
 ---
 
@@ -16265,3 +16267,192 @@ non dà errore — dà un numero più basso che sembra un limite del dato. Il se
 c'era e l'abbiamo guardato per giorni: lo stesso file registrato dalla porta
 d'ingresso diceva 117, lo script accanto diceva 77. **Due numeri diversi sullo
 stesso dato sono sempre un bug, mai un dettaglio.**
+
+---
+
+## Fase 140 — Le coppe imparano a dividere i due tempi, e la chiave che mancava
+
+**Obiettivo.** L'utente consegna, per Carabao Cup e FA Cup 2025-26, tre file a
+coppa: l'`.xlsx` originale e i due CSV esportati (giocatori, squadra). Le stesse
+due coppe erano **già** in casa dalla Fase 139-bis/ter. La domanda non è quindi
+«come si importa», è: **questa consegna aggiunge qualcosa, o è un doppione?** —
+e §5-ter del `CLAUDE.md` dice che il doppione esatto è l'unico caso in cui si
+può lasciare fuori un dato, ma solo dopo averlo verificato a zero celle
+divergenti e **avendolo chiesto all'utente**.
+
+**Ragionamento.** Il confronto va fatto prima di scrivere qualsiasi cosa, e va
+fatto sulle colonne, non sui totali. Tre differenze, tutte e tre sostanziali:
+
+1. un foglio **«Statistiche squadra» che nelle coppe non esisteva**: 45 metriche
+   per (squadra, partita, **periodo**). È lo stesso dato che la Fase 131 ha
+   portato per le 5 leghe — quello che serve al residuo aperto delle Fasi 96/99
+   («il secondo tempo è mal calibrato mentre il primo no → serve un modello a
+   due stadi»). Per le coppe non c'era: ora c'è, supplementari compresi;
+2. la colonna **`ID partita` sulle statistiche per giocatore**. Non è cosmetica:
+   `scripts/aggancia_coppe.py` **documenta a riga 239** di aver dovuto aggirarne
+   l'assenza appaiando per `(Data, Casa, Ospite)` e poi per nome. La chiave
+   esplicita rende esatto un aggancio che era dedotto;
+3. **sei decimali invece di tre** su ogni metrica continua.
+
+Più un quarto, minore: i turni passano dalle etichette generiche del sito
+(`1/8 FINALE`, `SEMI FINALI`) a quelle editoriali (`4° turno (ottavi)`,
+`Semifinali (andata)`), che distinguono andata e ritorno.
+
+**Alternative considerate.** (a) Scrivere due script usa-e-getta: scartata, il
+repo ha già due «porte d'ingresso» che verificano prima di accettare, e una
+terza consegna che entra senza porta è una consegna di cui nessuno saprà più
+com'è entrata. (b) Piegare le coppe allo schema dei campionati (`Giornata`,
+round-robin, join allo snapshot di lega): impossibile e sbagliato — una coppa
+non ha giornate né round-robin, e non esiste uno snapshot di coppa contro cui
+fare il join. (c) Tenere le sei metriche **composite** come le consegna la fonte
+(`77% (364/473)`): scartata, perché è esattamente ciò che impedirebbe di
+confrontare una partita di coppa con una di campionato senza codice speciale.
+
+**Scelta.** Una **terza porta**,
+`scripts/registra_raccolta_statistiche_coppa_diretta.py`, che verifica sei cose
+e si ferma su ognuna. Il controllo forte, qui, non è una fonte esterna: è **la
+raccolta di coppa già in casa**, che è una consegna indipendente della stessa
+competizione. E la soglia del confronto è **esplicita**: oltre l'arrotondamento
+non è «più precisione», è un dato che cambia — e allora ci si ferma (R5).
+
+**Risultato.** Tutto verde, e i conti chiudono esatti (📐 sotto):
+
+| | Carabao Cup | FA Cup |
+|---|---|---|
+| partite | 91 | 63 |
+| squadra-partita × periodi | 182 × 3 = **546** | 126 × 3 + 28 = **406** |
+| partite con supplementari | 0 | **14** (= 28 righe) |
+| additività dei periodi | **7.098 / 7.098** | **4.914 / 4.914** |
+| fedeltà CSV ↔ `.xlsx` (giocatori) | **328.325 / 328.325** | **227.010 / 227.010** |
+| fedeltà CSV ↔ `.xlsx` (squadra) | **24.024 / 24.024** | **17.864 / 17.864** |
+| punteggi vs raccolta già in casa | **91 / 91** | **63 / 63** |
+| divergenze **reali** vs consegna prec. | **0** su 322.615 celle | **0** su 223.062 celle |
+| scarto massimo | 0.0005 | 0.0005 |
+| turni rietichettati | 8 | 6 |
+
+Tre controlli **semantici indipendenti**, che nessuna verifica della porta
+impone — quindi se tornano è perché il dato è quello giusto: le 1.638 celle
+composite riespanse a mano coincidono tutte; il **possesso palla somma a 100**
+su 91/91 partite; `Risultato squadra` coincide col foglio Partite su 182/182.
+
+**Il difetto trovato non era nei dati: era nel controllo.** La prima esecuzione
+si è fermata su *«134 celle divergono dall'originale»* sulla colonna `Rating`.
+I due file erano identici: 134 NaN, **negli stessi punti**. Da **pandas 3.0**
+`astype(str)` lascia il `NaN` com'è invece di produrre la stringa `'nan'`, e
+`NaN != NaN` è vero — quindi il confronto testuale segnalava ogni cella vuota.
+Un controllo che grida al lupo su un dato sano è peggio di nessun controllo:
+è quello che alla terza volta viene spento. `_testo()` ora fa `fillna` **prima**
+del confronto, e `test_testo_e_null_safe` è la sua regressione.
+
+**Un'anomalia dichiarata anche se non è un errore (R4).** Nella cartella
+`files/diretta_efl_cup_2526/` convivono ora due manifesti che chiamano la stessa
+competizione in due modi: `EFL Cup` (quello già in casa) e `Carabao Cup` (come
+la scrive la fonte, ed è il nome sponsorizzato). Due nomi nella stessa cartella
+sono esattamente ciò che una sessione futura legge come **due competizioni
+diverse**: il manifesto tiene il nome canonico della cartella e dichiara l'altro
+in `coppa_come_dichiarata_dalla_fonte`, con la nota che sono la stessa cosa.
+
+**Lezione.** *«È lo stesso dato» è un'ipotesi, non un'osservazione — e si misura
+colonna per colonna, non riga per riga.* Le righe erano identiche in numero
+(2.855 e 1.974) e i giocatori gli stessi: a livello di conteggi questa consegna
+**sembrava** un doppione perfetto. Ciò che la rende preziosa vive tutto nelle
+colonne — una in più, e tre decimali in più su quelle già presenti. Un controllo
+fermo ai totali di riga l'avrebbe archiviata come ridondante, e avremmo buttato
+il foglio che serve al modello a due stadi.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge ancora queste
+colonne. È uno stato legittimo e va scritto come tale (§5-ter), non nascosto.
+
+### 📐 Il modello in dettaglio
+
+Questa fase non introduce matematica di modello: introduce due **identità di
+struttura**, ed è su quelle che si regge la verifica. Vanno scritte come
+identità proprio perché una scomposizione che ricompone non si può leggere al
+contrario (regola aggiunta dalla Fase 92).
+
+**1 · La normalizzazione dello schema — perché 35 diventano 45.** La fonte
+consegna sei metriche in forma *composita*, che i campionati hanno già espanse:
+
+```
+"77% (364/473)"  ->  (riusciti, totali, percentuale) = (364, 473, 77)
+"61%"            ->  Possesso palla % = 61
+```
+
+Il conto delle colonne è esatto, non approssimato:
+
+```
+35 metriche consegnate
+ −  6 composite (Possesso palla, Passaggi, Passaggi lunghi,
+                 Passaggi offensivi, Cross, Tackles)
+ = 29 metriche pure                                       29
+ + Possesso palla        -> 1 colonna                     +1
+ + le altre 5 composite  -> 3 colonne ciascuna           +15
+ = 45  =  len(team_stats.COLONNE_METRICHE)               ────
+                                                          45
+```
+
+45 è esattamente il numero delle metriche canoniche dei campionati: è questo che
+permette a `test_le_metriche_di_coppa_sono_quelle_dei_campionati` di pretendere
+l'**uguaglianza dell'elenco**, non l'inclusione.
+
+**2 · L'additività fra periodi.** Per ogni (partita, squadra) e per ogni metrica
+di *conteggio*:
+
+```
+Totale  =  1° tempo  +  2° tempo  [ +  Supplementari, dove giocati ]
+```
+
+Le percentuali sono fuori: sono rapporti, e la somma di due rapporti non è il
+rapporto della somma. Sono le 6 di `COLONNE_NON_ADDITIVE`, quindi le additive
+sono `45 − 6 = 39`. Da qui i due totali delle celle controllate, che ricompongono
+alla cifra:
+
+```
+Carabao : 182 squadra-partita × 39 metriche additive = 7.098   ✓ 7.098/7.098
+FA Cup  : 126 squadra-partita × 39 metriche additive = 4.914   ✓ 4.914/4.914
+```
+
+Nel caso della FA Cup la somma ha **tre** addendi su 14 partite delle 63: il
+`groupby` somma tutti i periodi diversi da `Totale`, quindi la stessa riga di
+codice regge entrambi i casi senza sapere quale partita sia andata ai
+supplementari — ed è la verifica 4 a pretendere che i due fatti (chi ha righe
+`Supplementari` / chi li dichiara giocati nel foglio Partite) **coincidano come
+insiemi**, non solo come conteggi.
+
+**3 · Le celle di fedeltà.** Anche questi numeri sono ri-derivabili, e servono a
+dimostrare che il confronto ha guardato *tutto* il foglio e non un campione:
+
+```
+Carabao giocatori : 2.855 righe × 115 colonne = 328.325   ✓
+Carabao squadra   :   546 righe ×  44 colonne =  24.024   ✓
+FA Cup  giocatori : 1.974 righe × 115 colonne = 227.010   ✓
+FA Cup  squadra   :   406 righe ×  44 colonne =  17.864   ✓
+```
+
+**4 · Perché la soglia è 0.005 e non «piccola».** La consegna precedente era
+arrotondata a **3 decimali**; l'errore massimo di un arrotondamento a 3 decimali
+è mezza unità dell'ultima cifra:
+
+```
+max |errore di arrotondamento|  =  0.5 × 10⁻³  =  0.0005
+soglia adottata                 =  0.005  =  10 × 0.0005
+```
+
+Il fattore 10 è il margine che separa «più precisione» da «dato diverso»: sotto
+la soglia il confronto **non può** distinguere le due consegne, sopra la soglia
+la differenza non è spiegabile con l'arrotondamento e lo script si ferma. Lo
+scarto misurato è **esattamente 0.0005** su entrambe le coppe — cioè il massimo
+compatibile con l'arrotondamento e nemmeno un millesimo oltre. Se un giorno
+quel numero salisse, non sarebbe più precisione: sarebbe un dato che cambia.
+
+**5 · Il confronto delle celle, e perché non è testuale.** Il CSV consegnato
+scrive `3` dove l'`.xlsx` scrive `3.0`: un confronto di stringhe fallirebbe su
+un dato identico. Il confronto è quindi numerico dove entrambi i lati si leggono
+come numeri (`|x − y| ≤ 5·10⁻⁷`), e testuale **null-safe** altrove:
+
+```
+divergente(x, y) =  |x − y| > 5·10⁻⁷              se entrambi numerici
+                    testo(x) ≠ testo(y)           se nessuno dei due lo è
+   con  testo(s) = s.astype("string").fillna("").strip()
+                            ^^^^^^^^^^ senza questo, NaN ≠ NaN → 134 falsi positivi
+```

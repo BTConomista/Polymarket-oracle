@@ -31,14 +31,24 @@ rete). Contenuto:
 | `diretta_{lega}_2526/squadra_per_partita.csv.gz` (×5) | ⭐ **il primo dato che separa i due tempi**: **45 statistiche per squadra-partita in tre periodi** (Totale / 1° tempo / 2° tempo), tutte e 5 le leghe 2025-26, **10.512 righe** su 1.752 partite di campionato. Stessa fonte **diretta.it/Flashscore** (dato a monte Opta), raccolta **a mano** dall'utente il 01/08/2026. ⚠️ **Il progetto non rivendica alcuna licenza**: leggere `README_statistiche_squadra.md` prima di usarli o ridistribuirli | `src/data/team_stats.py` (nessun modello li usa ancora) |
 
 | `diretta_coppa_italia_2526/` | ⭐ **la prima raccolta manuale di una COPPA**: Coppa Italia 2025-26 completa (45 partite, dal turno preliminare alla finale) — risultati nei tre pezzi (90'/supplementari/rigori), formazioni e panchina, eventi col minuto **con la sequenza completa dei rigori**, e **103 statistiche per giocatore** su 41 partite. Raccolta a mano dall'utente il 31/07/2026, registrata il 03/08/2026. ⭐ **Confrontata partita per partita con la nostra raccolta automatica** (`data/coppe_2526/`): 45/45 punteggi identici, 88/88 undici identici, **zero divergenze**. ⚠️ Il manifesto si chiama `manifesto_coppa.json` e non `manifesto.json`: e' cosi' che i caricatori dei campionati non ci inciampano. Stessa avvertenza di licenza delle altre raccolte diretta.it | `scripts/registra_raccolta_coppa_diretta.py` (nessun modello la legge ancora) |
+| `diretta_{efl_cup,fa_cup}_2526/` (STATISTICHE) | ⭐ **le coppe imparano a dividere i due tempi**: `squadra_per_partita.csv.gz` porta le **45 statistiche per (squadra, partita, PERIODO)** — Totale / 1° / 2° tempo, più «Supplementari» dove giocati — che per le coppe non esistevano; ed è lo stesso schema delle 5 leghe, quindi coppa e campionato si confrontano senza codice speciale. In più `stat_giocatori.csv` guadagna la colonna **`ID partita`**, la chiave di join che `aggancia_coppe.py` doveva aggirare, e passa da 3 a **6 decimali**. Consegnate dall'utente il 04/08/2026. Verifiche: additività **7.098/7.098** e **4.914/4.914**, fedeltà CSV↔`.xlsx` **328.325/328.325** e **227.010/227.010**, **0 divergenze reali** dalla consegna precedente. ⚠️ Il manifesto si chiama `manifesto_statistiche.json`: è il **terzo** nome, per la stessa ragione degli altri due. ⚠️ `EFL Cup` e `Carabao Cup` sono la **stessa** competizione (nome sponsorizzato), il manifesto lo dichiara | `scripts/registra_raccolta_statistiche_coppa_diretta.py` (nessun modello le legge ancora) |
 
-> ⚠️ Nelle cartelle `diretta_*` convivono **due dataset diversi**: quello per
-> **giocatore** (`partita_per_partita.csv.gz` + `manifesto.json`) e quello per
-> **squadra** (`squadra_per_partita.csv.gz` + `manifesto_squadra.json`). I due
-> manifesti hanno nomi diversi apposta: ogni caricatore scopre le raccolte
-> cercando il proprio, così le cartelle di **Bundesliga e Ligue 1** — che hanno
-> solo il dato di squadra — restano invisibili a `player_stats` invece di farlo
-> fallire su un file che non c'è. Un test lo verifica.
+> ⚠️ Nelle cartelle `diretta_*` convivono **dataset diversi**, e ognuno ha il
+> **proprio manifesto**: quello per **giocatore** di campionato
+> (`partita_per_partita.csv.gz` + `manifesto.json`), quello per **squadra**
+> (`squadra_per_partita.csv.gz` + `manifesto_squadra.json`), quello di **coppa**
+> (`partite`/`formazioni`/`eventi`/`stat_giocatori` + `manifesto_coppa.json`) e,
+> dalla Fase 140, le **statistiche di coppa** (`squadra_per_partita.csv.gz` +
+> `manifesto_statistiche.json`). I nomi sono diversi apposta: ogni caricatore
+> scopre le raccolte cercando il proprio, così le cartelle di **Bundesliga e
+> Ligue 1** — che hanno solo il dato di squadra — restano invisibili a
+> `player_stats` invece di farlo fallire su un file che non c'è. Un test lo
+> verifica.
+>
+> ⚠️ Nelle due cartelle di coppa con le statistiche convivono **due originali**
+> (`originale_coppa.xlsx` e `originale_statistiche.xlsx`) e **non sono
+> alternativi**: il primo ha formazioni ed eventi, il secondo le statistiche di
+> squadra per periodo. Nessuno dei due contiene l'altro.
 
 **Chi li legge** (`grep` su `scripts/` e `src/`): 10 script —
 `build_league_snapshot.py`, `_run_ah_benchmark.py`, `_run_counts_nb.py`,
