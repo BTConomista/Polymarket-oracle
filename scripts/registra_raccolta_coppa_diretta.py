@@ -273,25 +273,86 @@ def _stessa_persona(a: tuple, b: tuple) -> bool:
     return False
 
 
-def _appaia_undici(A: list[frozenset], B: list[frozenset]) -> int:
-    """Quanti giocatori restano spaiati fra due undici.
+def numero_maglia(x) -> int | None:
+    """Il numero di maglia come intero, o `None` se la fonte non lo scrive.
 
-    Due passate, e la seconda serve davvero: le convenzioni sui nomi spagnoli
-    non sono in relazione di sottoinsieme («Santiago Perez J.» contro «Yellu
-    Santiago» — la stessa persona, Yellu Santiago Pérez). Dopo che la prima
-    passata ha appaiato tutti gli altri, accettare un **token in comune** e'
-    sicuro: un giocatore davvero diverso non condivide il cognome.
+    Le due fonti lo tengono in due tipi diversi (float nella manuale, stringa
+    nell'automatica): senza normalizzarlo `15.0 == "15"` e' falso e il confronto
+    non troverebbe mai niente.
+    """
+    try:
+        return int(float(x))
+    except (TypeError, ValueError):
+        return None
+
+
+def _appaia_undici(A: list[tuple], B: list[tuple]) -> tuple[list[str], list[str], int]:
+    """Chi resta spaiato fra due undici, e quanti ha riconosciuto il NUMERO DI MAGLIA.
+
+    `A` e `B` sono liste di `(token, numero, nome)`; torna i **nomi** rimasti
+    scoperti dai due lati — non un conteggio: un buco si dichiara con dentro
+    scritto chi e', altrimenti la sessione dopo deve rifare l'indagine da capo.
+
+    Due passate sul NOME, in ordine di forza decrescente, poi una terza che il
+    nome non lo guarda affatto.
+
+    1. `_stessa_persona` — sottoinsieme dei token + iniziali.
+    2. **token in comune**, solo sui residui: le convenzioni sui nomi spagnoli
+       non sono in relazione di sottoinsieme («Santiago Perez J.» contro «Yellu
+       Santiago» — la stessa persona, Yellu Santiago Pérez). Dopo che la prima
+       passata ha appaiato tutti gli altri, un giocatore davvero diverso non
+       condivide il cognome.
+    3. ⭐ **il NUMERO DI MAGLIA** (Copa del Rey). Le due fonti scrivono lo stesso
+       giocatore con due nomi **diversi**, non con due grafie diverse, e nessuna
+       normalizzazione puo' arrivarci: «Pibe» contro «Agustín Pastoriza», «Ruiz
+       A. M.» contro «Azael Martín». Ma il numero di maglia e' **unico dentro
+       una squadra in una partita**: due righe con lo stesso numero SONO la
+       stessa persona. Non e' un'euristica sul nome, e' un identificatore
+       indipendente — la stessa natura del `club_id` per le squadre.
+
+    ⚠️ Perche' non bastano ne' una regola sul nome ne' `SINONIMI_GIOCATORE`.
+    Sulla Copa del Rey le coppie distinte da agganciare erano **53**, e solo
+    **15** hanno una relazione grafica su cui una regola potrebbe reggersi
+    (troncamento o due modifiche: «Willman M.»/Willmann, «Petxa A.»/Petxarroman,
+    «Babanzilla M.»/Babanzila). Le altre **38 non hanno nessuna relazione**: sono
+    soprannomi («Jogo» = Jonathan Gómez, «Yusi» = Youssef Enríquez, «Pacha» =
+    Alfonso Espino) e **cognomi doppi scelti in modo diverso dalle due fonti** —
+    diretta.it mostra il secondo cognome e abbrevia il resto, il registro mostra
+    nome + primo cognome («Martinez M. G.» = Miguel García, «Sanchez A.» = Álex
+    Salto). Metterle nei sinonimi sarebbe peggio del problema: quella tabella e'
+    **globale**, quindi una voce `sanchez -> salto` verrebbe applicata alle **79
+    righe** che portano «Sánchez» nelle sei raccolte (138 per «García»), e
+    trasformerebbe un buco dichiarato in agganci sbagliati.
+
+    Quanto vale il numero, misurato: sulle **8.071** coppie che il nome aggancia
+    gia' da solo nelle cinque coppe confrontabili, il numero coincide **8.059**
+    volte (**99,85%**). Sui residui della Copa del Rey ne risolve **69 su 70**.
+
+    ⚠️ Si accetta **solo la coppia univoca da entrambe le parti**: se due residui
+    portano lo stesso numero, o se un numero pesca due candidati liberi, non si
+    aggancia nessuno dei due. E' la regola di sempre — un aggancio incerto resta
+    vuoto — e qui costa poco perche' il numero e' gia' unico per costruzione.
+
+    ⚠️ **L'ordine non e' negoziabile: il numero va per ULTIMO, dopo i nomi.** Non
+    e' prudenza astratta, e' un caso reale sfiorato. Portugalete-Valladolid
+    29/10/2025: diretta.it scrive «Crespo G.» col **18**, la fonte automatica da'
+    il 18 a Gorka Tapiador e l'11 a Gorka Crespo. Se il numero avesse avuto la
+    precedenza, Crespo sarebbe finito su Tapiador — un aggancio sbagliato al
+    posto di un buco. Col nome davanti, Crespo trova Crespo e resta scoperto solo
+    Tapiador, che e' la verita': quell'undici manuale ha **10** titolari, e
+    `verifica_undici` lo dichiarava gia' (233/234).
     """
     liberi, spaiati = list(B), []
     for a in A:
         for i, b in enumerate(liberi):
-            if _stessa_persona(a, b):
+            if _stessa_persona(a[0], b[0]):
                 liberi.pop(i)
                 break
         else:
             spaiati.append(a)
+
     def condivide_una_parola(a, b) -> bool:
-        return any(pa & pb for pa in a[0] for pb in b[0])
+        return any(pa & pb for pa in a[0][0] for pb in b[0][0])
 
     residui = []
     for a in spaiati:
@@ -301,7 +362,22 @@ def _appaia_undici(A: list[frozenset], B: list[frozenset]) -> int:
                 break
         else:
             residui.append(a)
-    return len(residui) + len(liberi)
+
+    da_numero = 0
+    quanti_a, quanti_b = {}, {}
+    for a in residui:
+        quanti_a[a[1]] = quanti_a.get(a[1], 0) + 1
+    for b in liberi:
+        quanti_b[b[1]] = quanti_b.get(b[1], 0) + 1
+    ancora = []
+    for a in residui:
+        n = a[1]
+        if n is not None and quanti_a.get(n) == 1 and quanti_b.get(n) == 1:
+            liberi.pop(next(i for i, b in enumerate(liberi) if b[1] == n))
+            da_numero += 1
+        else:
+            ancora.append(a)
+    return [a[2] for a in ancora], [b[2] for b in liberi], da_numero
 
 
 def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
@@ -399,6 +475,7 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
             "formazioni": {
                 "squadre_partita_confrontabili": 0,
                 "undici_identici": 0,
+                "giocatori_appaiati_dal_numero_di_maglia": 0,
                 "con_differenze": [],
                 "non_confrontabile": "la fonte automatica non ha formazioni per "
                                      "questa coppa (Coupe de France, da Wikipedia)",
@@ -407,23 +484,34 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
     mappa_k = {g: k for g, k in zip(N.game_id, N.k) if pd.notna(g)}
     NF["k"] = NF.game_id.map(mappa_k)
 
-    uguali = totale = 0
+    uguali = totale = da_numero = 0
     form_diverse = []
     for k in sorted(set(F.k) & set(NF.k.dropna())):
         l = F[(F.k == k) & (F.Gruppo == "Titolare")]
         n = NF[(NF.k == k) & (NF.ruolo_partita == "titolare")]
         for squadra in set(l._s.dropna()):
-            A = [_token(v) for v in l[l._s == squadra].Giocatore]
-            B = [_token(v) for v in n[n.club_id == squadra].giocatore]
+            lq, nq = l[l._s == squadra], n[n.club_id == squadra]
+            A = [(_token(v), numero_maglia(x), str(v))
+                 for v, x in zip(lq.Giocatore, lq.Numero)]
+            B = [(_token(v), numero_maglia(x), str(v))
+                 for v, x in zip(nq.giocatore, nq.numero)]
             if not B:
                 continue
             totale += 1
-            spaiati = _appaia_undici(A, B)
-            if spaiati == 0:
+            solo_diretta, solo_registro, n_num = _appaia_undici(A, B)
+            da_numero += n_num
+            if not solo_diretta and not solo_registro:
                 uguali += 1
             else:
-                form_diverse.append({"partita": k, "club_id": int(squadra),
-                                     "spaiati": spaiati})
+                form_diverse.append({
+                    "partita": k, "club_id": int(squadra),
+                    "spaiati": len(solo_diretta) + len(solo_registro),
+                    # i NOMI, non solo quanti: e' cio' che permette di riprendere
+                    # l'indagine senza rifarla (§5-bis R4 — un'anomalia si
+                    # dichiara, anche quando non e' un errore nostro).
+                    "solo_nella_manuale": solo_diretta,
+                    "solo_nell_automatica": solo_registro,
+                })
 
     return {
         "eseguito": True,
@@ -431,6 +519,10 @@ def confronta_con_automatica(fogli: dict, coppa: str) -> dict:
         "formazioni": {
             "squadre_partita_confrontabili": totale,
             "undici_identici": uguali,
+            # dichiarato a parte, MAI confuso con gli identici per nome: sono
+            # undici in cui le due fonti concordano sulla persona ma non sulla
+            # scrittura del nome, e chi legge ha diritto di saperlo.
+            "giocatori_appaiati_dal_numero_di_maglia": da_numero,
             "con_differenze": form_diverse,
         },
     }
@@ -531,7 +623,14 @@ def main() -> int:
         if p["divergenti"]:
             for d in p["divergenti"]:
                 _log(f"       DIVERGE {d['partita']}: {d['differenze']}")
-        _log(f"     undici identici {f['undici_identici']}/{f['squadre_partita_confrontabili']}")
+        _log(f"     undici identici {f['undici_identici']}/{f['squadre_partita_confrontabili']}"
+             + (f" · {f['giocatori_appaiati_dal_numero_di_maglia']} giocatori "
+                f"riconosciuti dal NUMERO di maglia, non dal nome"
+                if f.get("giocatori_appaiati_dal_numero_di_maglia") else ""))
+        for d in f["con_differenze"]:
+            _log(f"       DIVERGE {d['partita']} club {d['club_id']}: "
+                 f"manuale {d['solo_nella_manuale']} · "
+                 f"automatica {d['solo_nell_automatica']}")
     _log(f"\n  scritto {(dest / FILE_MANIFESTO).relative_to(RADICE)}")
     return 0
 

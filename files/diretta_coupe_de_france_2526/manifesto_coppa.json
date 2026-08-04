@@ -181,6 +181,7 @@
       "formazioni": {
         "squadre_partita_confrontabili": 0,
         "undici_identici": 0,
+        "giocatori_appaiati_dal_numero_di_maglia": 0,
         "con_differenze": [],
         "non_confrontabile": "la fonte automatica non ha formazioni per questa coppa (Coupe de France, da Wikipedia)"
       }

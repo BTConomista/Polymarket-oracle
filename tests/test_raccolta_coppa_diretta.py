@@ -61,8 +61,14 @@ def test_due_omonimi_in_rosa_non_si_confondono():
     assert not _stessa_persona(_token("Esposito Sa."), _token("Francesco Esposito"))
 
 
+def _g(nome, numero=None):
+    """Una riga di formazione come la vuole `_appaia_undici`: token, numero, nome."""
+    return (_token(nome), numero, nome)
+
+
 def test_giocatori_diversi_non_si_agganciano():
-    assert _appaia_undici([_token("Rossi M.")], [_token("Bianchi L.")]) == 2
+    a, b, _ = _appaia_undici([_g("Rossi M.", 4)], [_g("Bianchi L.", 9)])
+    assert (a, b) == (["Rossi M."], ["Bianchi L."])
 
 
 def test_convenzione_spagnola_appaiata_solo_in_seconda_passata():
@@ -71,7 +77,57 @@ def test_convenzione_spagnola_appaiata_solo_in_seconda_passata():
     from scripts.registra_raccolta_coppa_diretta import _stessa_persona
     a, b = _token("Santiago Perez J."), _token("Yellu Santiago")
     assert not _stessa_persona(a, b)
-    assert _appaia_undici([a], [b]) == 0
+    solo_a, solo_b, da_numero = _appaia_undici([_g("Santiago Perez J.", 7)],
+                                               [_g("Yellu Santiago", 7)])
+    assert (solo_a, solo_b) == ([], [])
+    assert da_numero == 0, "questo lo appaia il NOME, non deve contarsi sul numero"
+
+
+# --------------------------------------------------------------------------- #
+# il numero di maglia — la terza passata (Copa del Rey)
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("diretta, registro", [
+    ("Pibe", "Agustín Pastoriza"),      # soprannome contro nome anagrafico
+    ("Yusi", "Youssef Enríquez"),
+    ("Martinez M. G.", "Miguel García"),  # cognome doppio scelto in modo diverso
+    ("Sanchez A.", "Álex Salto"),
+])
+def test_il_numero_di_maglia_aggancia_dove_il_nome_non_puo(diretta, registro):
+    """Nessuna normalizzazione arriva a questi: non condividono un carattere.
+
+    Sono 28 coppie su 39 nella Copa del Rey, e sono la ragione della terza
+    passata: il numero di maglia e' unico dentro una squadra in una partita,
+    quindi due righe con lo stesso numero sono la stessa persona.
+    """
+    solo_a, solo_b, da_numero = _appaia_undici([_g(diretta, 22)], [_g(registro, 22)])
+    assert (solo_a, solo_b, da_numero) == ([], [], 1)
+
+
+def test_senza_numero_i_nomi_diversi_restano_spaiati():
+    """Il numero e' l'unica prova: tolto quello, l'aggancio NON si indovina."""
+    solo_a, solo_b, _ = _appaia_undici([_g("Pibe")], [_g("Agustín Pastoriza")])
+    assert (solo_a, solo_b) == (["Pibe"], ["Agustín Pastoriza"])
+
+
+def test_numero_diverso_non_aggancia():
+    """Numancia-Maiorca 02/12/2025: diretta.it schiera «Jony» (9), la fonte
+    automatica «Berto» (18). Le fonti dissentono davvero — l'undici ufficiale
+    (bet365/VAVEL) da' ragione alla manuale — e la differenza deve restare."""
+    solo_a, solo_b, _ = _appaia_undici([_g("Jony", 9)], [_g("Berto", 18)])
+    assert (solo_a, solo_b) == (["Jony"], ["Berto"])
+
+
+def test_numero_conteso_non_aggancia_nessuno():
+    """Due residui con lo stesso numero: un aggancio incerto resta VUOTO.
+
+    Sceglierne uno vorrebbe dire far vincere l'ordine del file, cioe' scegliere
+    a caso — lo stesso guardrail delle partite contese in `coppe_aggancio`.
+    """
+    solo_a, solo_b, da_numero = _appaia_undici(
+        [_g("Pibe", 22), _g("Jogo", 22)],
+        [_g("Agustín Pastoriza", 22), _g("Jonathan Gómez", 22)])
+    assert da_numero == 0
+    assert len(solo_a) == 2 and len(solo_b) == 2
 
 
 # --------------------------------------------------------------------------- #

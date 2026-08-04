@@ -107,6 +107,7 @@
       "formazioni": {
         "squadre_partita_confrontabili": 124,
         "undici_identici": 124,
+        "giocatori_appaiati_dal_numero_di_maglia": 0,
         "con_differenze": []
       }
     }
