@@ -23,7 +23,26 @@ rete). Contenuto:
 | `football_data_la_liga_bundle.json` | idem per La Liga | idem |
 | `understat_premier_league_bundle.json` | xG/npxG/PPDA/deep Understat (Premier) | idem |
 | `understat_la_liga_bundle.json` | idem per La Liga | idem |
-| `player_scores/` | dataset player-scores (valutazioni rosa reali, dcaribou/transfermarkt-datasets, dichiarato CC0 — ⚠️ **ma vedi la decisione aperta sulla catena della licenza in `docs/DATI.md` §4**: Transfermarkt pubblica una riserva `ai-all` machine-readable e il sui generis sulla banca dati resta suo), **4 file `.csv.gz`**: `appearances` (41 MB), `player_valuations` (5,4 MB), `players` (3,9 MB), `clubs` (47 KB) — è la voce che pesa | `scripts/build_squad_values.py` (Fase 67), `src/data/player_scores.py` |
+| `player_scores/` | dataset player-scores (valutazioni rosa reali, dcaribou/transfermarkt-datasets, dichiarato CC0 — ⚠️ **ma vedi la decisione aperta sulla catena della licenza in `docs/DATI.md` §4**: Transfermarkt pubblica una riserva `ai-all` machine-readable e il sui generis sulla banca dati resta suo), **7 file `.csv.gz`**: `appearances` (41 MB), `player_valuations` (5,4 MB), `players` (3,9 MB), `clubs` (47 KB), e — dalla **Fase 140** — `games` (4,7 MB), `club_games` (1,9 MB), `competitions` (2 KB) | `scripts/build_squad_values.py` (Fase 67), `src/data/player_scores.py`, `src/data/allenatori.py` (Fase 140) |
+
+> **Vintage dei file `player_scores/`.** I quattro storici sono di **Kaggle, 18
+> luglio 2026**; `games`, `club_games` e `competitions` sono stati scaricati il
+> **4 agosto 2026** (versione Kaggle **674**, sha256 del grezzo:
+> `games.csv` `41287cd88c4f74c4…`, `club_games.csv` `a12209a5fb78f7cd…`,
+> `competitions.csv` `6e62a5e2b3040464…`). Le due date **non allineate** non
+> sono un problema misurato: `games` è un sovrainsieme di `appearances`
+> (0 `game_id` di `appearances` mancano in `games`) e nel perimetro delle 5
+> leghe × 9 stagioni **una sola partita su 16.111** ha una riga in `games` e
+> nessuna in `appearances` — Nantes-Tolosa del 17/05/2026, l'ultima giornata,
+> che alla stessa data manca anche di allenatori e arbitro. Fuori dal
+> perimetro il divario è strutturale e non temporale: 15.532 partite di
+> `games` non hanno presenze perché la fonte raccoglie le presenze su meno
+> competizioni di quante ne calendarizzi.
+>
+> ⚠️ `club_games.csv` è un **duplicato esatto e algoritmico** di `games.csv`:
+> ricostruito in otto righe, **0 celle divergenti su 1.957.076**. È conservato
+> per la regola «raccogliere tutto» (`CLAUDE.md` §5-ter), non perché serva —
+> nessun codice lo legge, ed è uno stato legittimo e dichiarato.
 
 | `diretta_serie_a_2526/` | ⭐ **il primo dato "Tier B" del progetto**: **97 statistiche per giocatore-partita** (tocchi, passaggi, dribbling, contrasti, recuperi, falli individuali, xG/xA individuali), Serie A 2025-26, **11.894 righe** su 379/380 partite. Fonte **diretta.it/Flashscore**, dato a monte di **Opta**, raccolto **a mano** dall'utente il 31/07/2026. ⚠️ **Il progetto non rivendica alcuna licenza su questi dati**: leggere `diretta_serie_a_2526/README.md` §1-bis prima di usarli o ridistribuirli | **nessuno** (inseriti il 31/07/2026, nessun codice li legge ancora) |
 
