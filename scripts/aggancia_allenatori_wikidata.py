@@ -113,6 +113,27 @@ FINESTRA_A = pd.Timestamp("2026-06-30")
 TOLLERANZA_GIORNI = 45
 
 
+def _stessa_persona(a: str, b: str) -> bool:
+    """Due grafie che sono lo stesso uomo per **variante del nome proprio**.
+
+    Non è una somiglianza generica: richiede il **cognome identico** e il nome
+    proprio compatibile (uno prefisso dell'altro, o stessa iniziale). Nasce da
+    due casi veri e distinti: `Adi Hütter` contro `Adolf Hütter` (diminutivo) e
+    `Freddie Ljungberg` contro `Fredrik Ljungberg` — che Wikidata usa **nella
+    stessa storia di club**, quindi la fonte non concorda nemmeno con sé stessa.
+
+    ⚠️ Il rischio è fondere due persone con lo stesso cognome e la stessa
+    iniziale. È basso qui perché la regola si applica **dentro lo stesso club e
+    su intervalli sovrapposti**, mai come chiave globale — e l'esito resta
+    marcato a parte (`confermato_variante`), mai confuso con una conferma piena.
+    """
+    ta, tb = a.split(), b.split()
+    if not ta or not tb or ta[-1] != tb[-1]:
+        return False
+    na, nb = ta[0], tb[0]
+    return na == nb or na.startswith(nb) or nb.startswith(na) or na[0] == nb[0]
+
+
 def _norm(s: str) -> str:
     s = unicodedata.normalize("NFKD", str(s))
     s = "".join(c for c in s if not unicodedata.combining(c))
@@ -368,10 +389,29 @@ def passo_persone() -> pd.DataFrame:
 
 
 def passo_confronto() -> pd.DataFrame:
-    wd = pd.read_csv(FILE_MANDATI)
-    wd["wd_da"] = pd.to_datetime(wd["wd_da"], errors="coerce")
-    wd["wd_a"] = pd.to_datetime(wd["wd_a"], errors="coerce")
-    wd["chiave"] = wd["manager_nome"].map(A.normalizza_nome)
+    """Ogni nostro mandato contro ENTRAMBI i lati di Wikidata.
+
+    I due lati non sono ridondanti: la storia del *club* (`P286`) e quella
+    della *persona* (`P6087`) sono compilate da mani diverse e coprono cose
+    diverse — al Genoa il lato club comincia nel 2018 e ignora il 2017-18. Una
+    conferma da un lato solo è una conferma; un'assenza da entrambi non è una
+    smentita, è un silenzio, e come tale viene scritta.
+    """
+    club = pd.read_csv(FILE_CLUB)
+    qid_club = dict(zip(club.club_id, club.qid))
+
+    lato_club = pd.read_csv(FILE_MANDATI)
+    lato_club["chiave"] = lato_club["manager_nome"].map(A.normalizza_nome)
+    for c in ("wd_da", "wd_a"):
+        lato_club[c] = pd.to_datetime(lato_club[c], errors="coerce")
+
+    if FILE_MANDATI_PERSONA.exists():
+        lato_pers = pd.read_csv(FILE_MANDATI_PERSONA)
+        for c in ("wd_da", "wd_a"):
+            lato_pers[c] = pd.to_datetime(lato_pers[c], errors="coerce")
+    else:
+        lato_pers = pd.DataFrame(columns=["manager_key", "manager_qid",
+                                          "club_qid", "wd_da", "wd_a"])
 
     tutte = A.load_partite()
     per = A.load_partite(solo_top5=True, stagioni=A.STAGIONI)
@@ -379,68 +419,99 @@ def passo_confronto() -> pd.DataFrame:
     nostri = nostri[nostri.club_id.isin(set(per.club_id))
                     & (nostri.data_a >= FINESTRA_DA)
                     & (nostri.data_da <= FINESTRA_A)]
+    tol = pd.Timedelta(days=TOLLERANZA_GIORNI)
+
+    def copre(righe, da, a):
+        """Le righe il cui intervallo contiene il nostro, entro tolleranza.
+
+        Una data mancante è un estremo APERTO, non un vincolo: `wd_a` vuoto
+        significa «ancora in carica», e trattarlo come «finito subito»
+        trasformerebbe ogni mandato in corso in una divergenza.
+        """
+        return righe[((righe.wd_da.isna()) | (righe.wd_da <= da + tol))
+                     & ((righe.wd_a.isna()) | (righe.wd_a >= a - tol))]
 
     righe = []
     for _, m in nostri.iterrows():
-        cand = wd[wd.club_id == m.club_id]
-        stesso_nome = cand[cand.chiave == m.manager_key]
-        # 1. stesso nome E finestre che si toccano -> confermato
-        ok = stesso_nome[
-            ((stesso_nome.wd_da.isna())
-             | (stesso_nome.wd_da <= m.data_da + pd.Timedelta(days=TOLLERANZA_GIORNI)))
-            & ((stesso_nome.wd_a.isna())
-               | (stesso_nome.wd_a >= m.data_a - pd.Timedelta(days=TOLLERANZA_GIORNI)))]
-        if len(ok):
-            r = ok.iloc[0]
-            verdetto, qid, nota = "confermato", r.manager_qid, ""
-        elif len(stesso_nome):
-            r = stesso_nome.iloc[0]
-            verdetto, qid = "date_diverse", r.manager_qid
-            nota = (f"wikidata {r.wd_da.date() if pd.notna(r.wd_da) else '?'}"
-                    f"→{r.wd_a.date() if pd.notna(r.wd_a) else '?'}")
-        elif len(cand) == 0:
-            verdetto, qid, nota, r = "club_senza_storia", None, "", None
+        cq = qid_club.get(m.club_id)
+        cc = lato_club[lato_club.club_id == m.club_id]
+        pp = lato_pers[(lato_pers.manager_key == m.manager_key)
+                       & (lato_pers.club_qid == cq)]
+        cc_nome = cc[cc.chiave == m.manager_key]
+        variante = False
+        if cc_nome.empty:
+            simili = cc[[_stessa_persona(m.manager_key, k) for k in cc.chiave]]
+            if not simili.empty:
+                cc_nome, variante = simili, True
+
+        ok_club, ok_pers = copre(cc_nome, m.data_da, m.data_a), copre(pp, m.data_da, m.data_a)
+        qid = (ok_club.iloc[0].manager_qid if len(ok_club)
+               else (ok_pers.iloc[0].manager_qid if len(ok_pers)
+                     else (cc_nome.iloc[0].manager_qid if len(cc_nome) else None)))
+
+        if len(ok_club) and len(ok_pers):
+            verdetto, lato, nota = "confermato", "entrambi", ""
+        elif len(ok_club):
+            verdetto = "confermato_variante" if variante else "confermato"
+            lato = "club"
+            nota = f"Wikidata scrive «{ok_club.iloc[0].manager_nome}»" if variante else ""
+        elif len(ok_pers):
+            verdetto, lato, nota = "confermato", "persona", ""
+        elif len(cc_nome) or len(pp):
+            # il nome c'è in quel club, ma non in quelle date
+            verdetto, lato = "date_diverse", "club" if len(cc_nome) else "persona"
+            fonte = cc_nome if len(cc_nome) else pp
+            nota = "; ".join(
+                f"{s.wd_da.date() if pd.notna(s.wd_da) else '?'}"
+                f"→{s.wd_a.date() if pd.notna(s.wd_a) else '?'}"
+                for _, s in fonte.iterrows())
+        elif cc.empty:
+            verdetto, lato, nota = "club_senza_storia", "-", ""
         else:
-            # nessun mandato con quel nome: chi dice Wikidata in quelle date?
-            sovrap = cand[((cand.wd_da.isna()) | (cand.wd_da <= m.data_a))
-                          & ((cand.wd_a.isna()) | (cand.wd_a >= m.data_da))]
+            sovrap = copre(cc, m.data_da, m.data_a)
+            if sovrap.empty:
+                sovrap = cc[((cc.wd_da.isna()) | (cc.wd_da <= m.data_a))
+                            & ((cc.wd_a.isna()) | (cc.wd_a >= m.data_da))]
             verdetto = "assente_da_wikidata" if sovrap.empty else "nome_diverso"
-            qid = None
-            nota = "; ".join(f"{s.manager_nome} "
-                             f"({s.wd_da.date() if pd.notna(s.wd_da) else '?'}"
-                             f"→{s.wd_a.date() if pd.notna(s.wd_a) else '?'})"
-                             for _, s in sovrap.iterrows())
-            r = None
+            lato = "club"
+            nota = "; ".join(
+                f"{s.manager_nome} ({s.wd_da.date() if pd.notna(s.wd_da) else '?'}"
+                f"→{s.wd_a.date() if pd.notna(s.wd_a) else '?'})"
+                for _, s in sovrap.iterrows())
+
         righe.append({
-            "club_id": int(m.club_id), "club": m.club_name,
+            "club_id": int(m.club_id), "club": m.club_name, "club_qid": cq,
             "manager_key": m.manager_key, "allenatore": m.allenatore,
             "nostro_da": m.data_da.date(), "nostro_a": m.data_a.date(),
             "partite": int(m.partite), "interruzione": bool(m.interruzione),
-            "verdetto": verdetto, "manager_qid": qid,
-            "wd_da": (r.wd_da.date() if r is not None and pd.notna(r.wd_da) else None),
-            "wd_a": (r.wd_a.date() if r is not None and pd.notna(r.wd_a) else None),
-            "nota": nota})
+            "verdetto": verdetto, "lato": lato, "manager_qid": qid, "nota": nota})
+
     df = pd.DataFrame(righe)
     df.to_csv(FILE_CONFRONTO, index=False)
 
-    print("\nverdetti automatici:")
+    df["confermato_qualsiasi"] = df.verdetto.str.startswith("confermato")
+    print("\nverdetti automatici sui nostri", len(df), "mandati:")
     for v, n in df.verdetto.value_counts().items():
         print(f"  {v:22s} {n:5d}  ({100*n/len(df):5.1f}%)")
-    residuo = df[df.verdetto != "confermato"]
-    FILE_RESIDUO.write_text(residuo.to_json(orient="records", indent=1,
-                                            force_ascii=False), encoding="utf-8")
-    print(f"\n{len(df)} mandati confrontati, RESIDUO {len(residuo)} "
-          f"-> {FILE_RESIDUO.relative_to(ROOT)}")
+    print("\nconferme per lato:")
+    print(df[df.confermato_qualsiasi].lato.value_counts().to_string())
 
-    # identità: una chiave con due Q-id è due persone
+    residuo = df[~df.confermato_qualsiasi].copy()
+    residuo.to_json(FILE_RESIDUO, orient="records", indent=1, force_ascii=False)
+    print(f"\nRESIDUO {len(residuo)} mandati -> {FILE_RESIDUO.relative_to(ROOT)}")
+    print("  di cui marcati interruzione (A->X->A):",
+          int(residuo.interruzione.sum()))
+
+    # ⭐ L'IDENTITA': una chiave-nome con due Q-id e' due persone, e non e' piu'
+    # una dichiarazione — e' un dato.
     conf = (df[df.manager_qid.notna()].groupby("manager_key")["manager_qid"]
             .nunique().sort_values(ascending=False))
     multi = conf[conf > 1]
-    print(f"\nchiavi-nome con PIU' DI UN Q-id (= più persone): {len(multi)}")
+    print(f"\nchiavi-nome con PIU' DI UN Q-id (= piu' persone): {len(multi)}")
     for k in multi.index:
-        qs = df[df.manager_key == k][["manager_qid", "club"]].dropna()
-        print(f"  {k}: " + ", ".join(f"{q} ({c})" for q, c in
-                                     qs.drop_duplicates().itertuples(index=False)))
+        for q, c in (df[df.manager_key == k][["manager_qid", "club"]]
+                     .dropna().drop_duplicates().itertuples(index=False)):
+            print(f"    {k:20s} {q:10s} {c}")
     return df
 
 
