@@ -28,13 +28,22 @@ campionati), ed è metà del punto di questo strato.
    496 nomi (485 partite = 3,01%), globalmente 36 su 7.031.
    Ma **non ripara il caso opposto**, che è quello pericoloso: due uomini
    diversi con lo stesso nome diventano una riga sola. `Míchel` sono **due**
-   allenatori spagnoli (José Miguel González: Siviglia, Olympiakos, Marsiglia,
-   Rayo, Málaga, Getafe, Al-Qadsiah; Miguel Ángel Sánchez: Huesca, Girona) e
-   il 2022-10-02 la stessa stringa siede su **due panchine lo stesso giorno**,
-   Girona e Olympiakos. `conflitti_identita()` cerca esattamente questo: 11
-   nomi globali sono **dimostrabilmente** ≥2 persone. Sono un limite
-   dichiarato, non un bug da nascondere: risolverli richiede una fonte di
-   identità esterna (strato 2, come per i giocatori).
+   allenatori spagnoli e il 2022-10-02 la stessa stringa siede su **due
+   panchine lo stesso giorno**, Girona e Olympiakos. `conflitti_identita()`
+   cerca esattamente questo: 11 nomi globali sono **dimostrabilmente** ≥2
+   persone. Sono un limite dichiarato, non un bug da nascondere: risolverli
+   richiede una fonte di identità esterna.
+   ✅ **Sciolto alla Fase 141** con i Q-id di Wikidata, e la divisione NON è
+   quella che questa riga diceva prima: **Míchel Sánchez** (Miguel Ángel
+   Sánchez Muñoz, Q-id unico) ha Rayo 2017-19, Huesca 2019-21 e Girona dal
+   2021 — *Rayo compreso*, che la prima stesura attribuiva all'altro;
+   **Míchel González** (José Miguel González) ha Málaga e Getafe nel nostro
+   perimetro, più Siviglia, Olympiakos, Marsiglia e Al-Qadsiah fuori.
+   ⚠️ E `luis castro`, l'altro conflitto del perimetro, **non si divide qui**:
+   i suoi due mandati nostri (Nantes, Levante) sono la stessa persona (nato il
+   1961-09-03); la collisione del 2019 è fra una partita del perimetro e una
+   fuori. Un nome ambiguo *globalmente* può essere non ambiguo nel perimetro,
+   e i due conti non vanno confusi.
 
 2. **«ESPERIENZA GLOBALE» NON ESISTE: ESISTE «ESPERIENZA VISIBILE AL
    DATASET».** Il file per le top-5 comincia il **2012-08-10**, e i campionati
