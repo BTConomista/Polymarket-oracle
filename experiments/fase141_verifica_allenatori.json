@@ -6,26 +6,28 @@
   "club_senza_p286": 1,
   "mandati_lato_club": 1023,
   "allenatori_lato_club": 562,
-  "allenatori_totali": null,
-  "allenatori_risolti": null,
-  "mandati_lato_persona": 0
+  "allenatori_totali": 494,
+  "allenatori_risolti": 237,
+  "mandati_lato_persona": 1373
  },
  "accordo": {
   "mandati": 1190,
-  "confermati": 838,
-  "quota": 0.7042,
+  "confermati": 896,
+  "quota": 0.7529,
   "per_verdetto": {
-   "confermato": 818,
-   "nome_diverso": 157,
-   "assente_da_wikidata": 152,
-   "date_diverse": 33,
-   "confermato_variante": 20,
-   "club_senza_storia": 10
+   "confermato": 878,
+   "nome_diverso": 138,
+   "assente_da_wikidata": 114,
+   "date_diverse": 36,
+   "confermato_variante": 18,
+   "club_senza_storia": 6
   },
   "per_lato": {
-   "club": 838
+   "club": 483,
+   "entrambi": 355,
+   "persona": 58
   },
-  "partite_confermate": 35104,
+  "partite_confermate": 37286,
   "partite_totali": 43165
  },
  "identita": {
@@ -49,18 +51,18 @@
  },
  "sandwich": {
   "totali": 65,
-  "chiusi": 35,
-  "aperti": 30,
+  "chiusi": 36,
+  "aperti": 29,
   "per_verdetto": {
-   "confermato": 35,
-   "nome_diverso": 24,
-   "assente_da_wikidata": 3,
-   "date_diverse": 2,
+   "confermato": 36,
+   "nome_diverso": 23,
+   "date_diverse": 3,
+   "assente_da_wikidata": 2,
    "club_senza_storia": 1
   }
  },
  "residuo": {
-  "mandati": 352,
-  "partite": 8061
+  "mandati": 294,
+  "partite": 5879
  }
 }
