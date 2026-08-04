@@ -362,10 +362,16 @@ def passo_persone() -> pd.DataFrame:
             # Ma i due modi di fallire non sono la stessa cosa, e confonderli
             # gonfia il conto degli omonimi sospetti con dei silenzi:
             #   - `senza_p6087`  l'entità non dichiara NESSUN club allenato:
-            #                    assenza di prova, non prova contraria. È il
-            #                    caso di gran lunga più frequente;
-            #   - `club_diversi` l'entità dichiara club, e non sono i nostri:
-            #                    QUESTO sì che è un segnale di omonimia.
+            #                    assenza di prova, non prova contraria (123);
+            #   - `club_diversi` l'entità dichiara club, e nessuno è fra i
+            #                    nostri (104).
+            #
+            # ⚠️ NEMMENO `club_diversi` è una prova di omonimia, e chiamarlo
+            # così sarebbe l'errore R6 di questo passo: `P6087` è popolata a
+            # macchia di leopardo, quindi «dichiara due club e non sono i
+            # nostri» è compatibile con un omonimo **e** con la stessa persona
+            # descritta a metà. Separarli richiede il caso per caso; qui i due
+            # stati esistono per non farli contare insieme, non per decidere.
             if not comuni:
                 esito["stato"] = ("senza_p6087" if not suoi else "club_diversi")
                 esito["qid_candidato"] = qid
