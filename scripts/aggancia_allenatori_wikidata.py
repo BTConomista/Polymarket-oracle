@@ -335,8 +335,8 @@ def passo_persone() -> pd.DataFrame:
         nome = grafie[chiave]
         attesi = {q for q in nostri_club.get(chiave, set()) if q}
         esito = {"manager_key": chiave, "grafia": nome, "qid": None,
-                 "nome_wd": None, "nascita": None, "titolo": None,
-                 "club_confermati": 0, "stato": "residuo"}
+                 "qid_candidato": None, "nome_wd": None, "nascita": None,
+                 "titolo": None, "club_confermati": 0, "stato": "residuo"}
         for cand in _candidati_persona(nome):
             qid = _qid_da_pagina(cand)
             if not qid:
@@ -358,8 +358,17 @@ def passo_persone() -> pd.DataFrame:
             comuni = suoi & attesi
             # ⚠️ LA VALIDAZIONE: non basta che il nome combaci, deve combaciare
             # almeno un CLUB. Senza questa riga un omonimo entrerebbe muto.
+            #
+            # Ma i due modi di fallire non sono la stessa cosa, e confonderli
+            # gonfia il conto degli omonimi sospetti con dei silenzi:
+            #   - `senza_p6087`  l'entità non dichiara NESSUN club allenato:
+            #                    assenza di prova, non prova contraria. È il
+            #                    caso di gran lunga più frequente;
+            #   - `club_diversi` l'entità dichiara club, e non sono i nostri:
+            #                    QUESTO sì che è un segnale di omonimia.
             if not comuni:
-                esito["stato"] = "nome_trovato_club_no"
+                esito["stato"] = ("senza_p6087" if not suoi else "club_diversi")
+                esito["qid_candidato"] = qid
                 continue
             esito.update(qid=qid, nome_wd=_etichetta(ent),
                          nascita=WD.data_nascita(ent), titolo=cand,
