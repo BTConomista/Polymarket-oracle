@@ -136,8 +136,27 @@ def _candidati(nome: str) -> list[str]:
     return list(dict.fromkeys(x for x in c if x))
 
 
+def _riprova(fn, *a, tentativi: int = 4, **k):
+    """Rete instabile: un `Connection reset` non e' un'assenza di dato.
+
+    Trattare un errore di rete come "non trovato" creerebbe un buco che nessuno
+    saprebbe piu' distinguere da un'assenza vera (R6, stessa ragione per cui
+    `fetch_entity` alza invece di restituire None).
+    """
+    import time as _t
+    for i in range(tentativi):
+        try:
+            return fn(*a, **k)
+        except Exception as e:                       # noqa: BLE001
+            if i == tentativi - 1:
+                print(f"    ⚠️ rinuncio dopo {tentativi} tentativi: {e}", flush=True)
+                raise
+            _t.sleep(2 ** (i + 1))
+    return None
+
+
 def _qid_da_pagina(titolo: str) -> str | None:
-    html = WP.fetch_page(titolo.replace(" ", "_"), lang="en")
+    html = _riprova(WP.fetch_page, titolo.replace(" ", "_"), lang="en")
     if not html:
         return None
     m = re.search(r'"wgWikibaseItemId":"(Q\d+)"', html)
@@ -179,7 +198,7 @@ def passo_club() -> pd.DataFrame:
             qid = _qid_da_pagina(cand)
             if not qid:
                 continue
-            ent = WD.fetch_entity(qid)
+            ent = _riprova(WD.fetch_entity, qid)
             if ent is None or not _e_club(ent):
                 continue
             esito.update(qid=qid, titolo=cand, etichetta=_etichetta(ent),
@@ -199,11 +218,31 @@ def passo_club() -> pd.DataFrame:
 
 
 def _data_qual(c: dict, prop: str) -> str | None:
+    """La data di un qualificatore, normalizzata al giorno.
+
+    ⚠️ Wikidata scrive le date a **precisione variabile**: `+1958-00-00T00:00:00Z`
+    significa «1958, mese e giorno non noti», non «il giorno zero». Passarla a
+    `pd.Timestamp` alza `month must be in 1..12` — ed e' esattamente il tipo di
+    dato che, se lo si "aggiustasse" in silenzio, farebbe credere a una
+    precisione che la fonte non dichiara. Qui si normalizza al **primo giorno**
+    del periodo noto, e la precisione resta leggibile in `_precisione_qual`.
+    """
     q = c.get("qualifiers", {}).get(prop)
     if not q:
         return None
     t = q[0].get("datavalue", {}).get("value", {}).get("time")
-    return t[1:11] if t else None
+    if not t:
+        return None
+    anno, mese, giorno = t[1:5], t[6:8], t[9:11]
+    return f"{anno}-{mese if mese != '00' else '01'}-{giorno if giorno != '00' else '01'}"
+
+
+def _precisione_qual(c: dict, prop: str) -> int | None:
+    """11 = giorno, 10 = mese, 9 = anno (scala Wikidata)."""
+    q = c.get("qualifiers", {}).get(prop)
+    if not q:
+        return None
+    return q[0].get("datavalue", {}).get("value", {}).get("precision")
 
 
 def passo_storie() -> pd.DataFrame:
@@ -211,7 +250,7 @@ def passo_storie() -> pd.DataFrame:
     club = club[club.stato == "risolto"]
     righe, cache_nomi = [], {}
     for _, cb in club.iterrows():
-        ent = WD.fetch_entity(cb.qid)
+        ent = _riprova(WD.fetch_entity, cb.qid)
         for c in ent.get("claims", {}).get(P_ALLENATORE, []):
             mid = c["mainsnak"].get("datavalue", {}).get("value", {}).get("id")
             if not mid:
@@ -224,12 +263,14 @@ def passo_storie() -> pd.DataFrame:
             if a and pd.Timestamp(a) < FINESTRA_DA:
                 continue
             if mid not in cache_nomi:
-                e = WD.fetch_entity(mid)
+                e = _riprova(WD.fetch_entity, mid)
                 cache_nomi[mid] = ({"nome": _etichetta(e),
                                     "nascita": WD.data_nascita(e)}
                                    if e else {"nome": "", "nascita": None})
             righe.append({"club_id": int(cb.club_id), "club_name": cb.club_name,
                           "club_qid": cb.qid, "manager_qid": mid,
+                          "prec_da": _precisione_qual(c, WD.P_INIZIO),
+                          "prec_a": _precisione_qual(c, WD.P_FINE),
                           "manager_nome": cache_nomi[mid]["nome"],
                           "manager_nascita": cache_nomi[mid]["nascita"],
                           "wd_da": da, "wd_a": a, "rank": c.get("rank")})
@@ -279,7 +320,7 @@ def passo_persone() -> pd.DataFrame:
             qid = _qid_da_pagina(cand)
             if not qid:
                 continue
-            ent = WD.fetch_entity(qid)
+            ent = _riprova(WD.fetch_entity, qid)
             if ent is None:
                 continue
             ist = {c["mainsnak"].get("datavalue", {}).get("value", {}).get("id")
@@ -306,6 +347,8 @@ def passo_persone() -> pd.DataFrame:
                 cq = c["mainsnak"].get("datavalue", {}).get("value", {}).get("id")
                 mandati.append({"manager_key": chiave, "manager_qid": qid,
                                 "club_qid": cq,
+                                "prec_da": _precisione_qual(c, WD.P_INIZIO),
+                                "prec_a": _precisione_qual(c, WD.P_FINE),
                                 "wd_da": _data_qual(c, WD.P_INIZIO),
                                 "wd_a": _data_qual(c, WD.P_FINE)})
             break
