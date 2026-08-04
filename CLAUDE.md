@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.343 verdi** al 03/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.371 verdi** al 04/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.343 verdi al 03/08/2026)
+python -m pytest                       # test (1.371 verdi al 04/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -350,6 +350,17 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  in PERIODI -- Totale/1T/2T, 5 leghe 2025-26, 1.752 partite. E' il
                  primo dato che separa i due tempi: serve alla pista 6-bis, il
                  modello a due stadi. team_form(periodo=) e' l'unica forma sicura R8)
+                 allenatori.py (Fase 140: IL DATABASE ALLENATORI, strato 1, da
+                 games.csv. load_partite = una riga per partita-club; panchine()
+                 = i mandati; esperienza_prima() = la forma sicura R8.
+                 ⚠️ Tre trappole MISURATE, non ipotesi: il nome NON e'
+                 un'identita' -- conflitti_identita() dimostra 11 omonimi col
+                 test "nessuno allena due club lo stesso giorno", 2 nel
+                 perimetro; manager_name e' CHI SEDEVA IN PANCHINA quella
+                 partita, non chi era in carica (836 mandati su 13.810 sono un
+                 vice per una gara: usa ricuci=True); l'esperienza e' VISIBILE
+                 AL DATASET, non globale. E clubs.coach_name NON va usata:
+                 e' l'allenatore corrente, trappola R8)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
@@ -485,7 +496,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.343 verdi al 03/08/2026), fra cui i guardiani
+tests/           test unitari (1.371 verdi al 04/08/2026), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/

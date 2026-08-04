@@ -1039,6 +1039,83 @@ sono anagrafica di identità (chi è chi), non misure della partita.
 
 ---
 
+## 5-nonies · Allenatori e arbitri per partita (`files/player_scores/games.csv.gz`) — Fase 140
+
+`games.csv` del dataset `davidcariboo/player-scores` — la **tabella-cardine**
+che il progetto aveva già in licenza e non aveva mai importato. **88.958
+partite**, 70 competizioni, dal 2006-06-09 al 2026-07-06; il perimetro delle 5
+leghe × 9 stagioni ne conta **16.111**, cioè esattamente le righe degli
+snapshot congelati. Vintage: Kaggle **versione 674, 4 agosto 2026** (i quattro
+file player-scores più vecchi sono del 18 luglio — impatto misurato in
+`files/README.md`: **1 partita su 16.111**).
+
+Si legge da `src/data/allenatori.py`; ogni numero di questa sezione si
+ricalcola con `python scripts/_run_fase140_allenatori.py`.
+
+### Le colonne, e quando si sanno (R8)
+
+| colonna | ⏱️ | note |
+|---|:--:|---|
+| `date`, `competition_id`, `season`, `round`, `stadium` | `pre` | |
+| `home/away_club_id`, `_name` | `pre` | |
+| **`home/away_club_manager_name`** | **`pre`** | l'allenatore si sa da giorni: è uno dei pochi dati davvero `pre` del progetto |
+| `referee` | **`pre`** in teoria (designato ~2 giorni prima), ma qui è letto a partita finita | è la stessa colonna che la Fase 125 usava da uno script una tantum |
+| `home/away_club_goals`, `_position` | `post` | `club_position` è la classifica **dopo** la giornata: si usa ritardata |
+| `attendance`, `home/away_club_formation` | `post` | `attendance` manca nel 13,3% del perimetro (regime porte chiuse compreso) |
+| `aggregate` | — | ⚠️ è la **copia letterale** del risultato in 88.958 righe su 88.958: non è il risultato d'andata e ritorno |
+
+### Copertura (perimetro 5 leghe × 9 stagioni)
+
+| | valore |
+|---|--:|
+| partite | 16.111 |
+| club-partita senza allenatore | **2 / 32.222 (99,994%)** |
+| celle `referee` mancanti | 6 / 16.111 |
+| allenatori distinti (chiavi normalizzate) | 494 |
+| mandati, timeline completa | 1.190 |
+
+L'unica partita senza allenatore è **Nantes-Tolosa del 17/05/2026**: le mancano
+anche l'arbitro e ogni presenza. È la coda del vintage, non un difetto
+sistematico.
+
+### ⚠️ Tre trappole misurate — tutte «finti pieni» (R6)
+
+1. **Il nome non è un'identità.** Non esiste un id-allenatore: solo una stringa
+   libera. `normalizza_nome` unisce le due grafie dello stesso uomo (496 grafie
+   → 494 chiavi nel perimetro; 7.031 → 6.995 globali) ma **non separa gli
+   omonimi**. Il test di impossibilità fisica — nessuno allena due club lo
+   stesso giorno — ne trova **11 globali**, di cui **2 nel perimetro**:
+   `michel` (Míchel Sánchez e Míchel González: il 2022-10-02 Girona e
+   Olympiakos) e `luis castro`. `conflitti_identita()` li elenca; scioglierli
+   richiede una fonte di identità esterna, che questo strato non ha.
+2. **`manager_name` è chi sedeva in panchina quella partita**, non chi era in
+   carica. Il pattern `A → X → A` (vice per una gara: squalifica, malattia,
+   turno di coppa) vale **836 mandati su 13.810**, 412 dei quali di una partita
+   sola. `panchine()` li marca sempre (`interruzione`) e li riassorbe su
+   richiesta (`ricuci=True`).
+3. **L'esperienza è visibile al dataset, non globale.** Il file per le top-5
+   comincia il **2012-08-10** e i campionati extra-europei entrano nel **2025**:
+   Ancelotti «esordisce» in Ligue 1 nel 2012, Mourinho in Liga nel 2012.
+   `esperienza_prima()` restituisce `censurata`, e ⚠️ `censurata=False` **non**
+   vuol dire esperienza completa (Guardiola: flag False, quattro stagioni al
+   Barcellona invisibili).
+
+### Da NON usare
+
+**`clubs.coach_name`** (in `files/player_scores/clubs.csv.gz`, 403/796 non
+nulli) è l'allenatore **corrente** del club, senza data. Su una partita del
+2019 le attribuisce il tecnico di oggi: trappola R8 pura. `src/data/allenatori.py`
+non la legge, e non va letta.
+
+**`club_games.csv.gz`** è un **duplicato esatto e algoritmico** di `games.csv`
+(0 celle divergenti su 1.957.076, ricostruito in otto righe). Conservato per la
+regola §5-ter, non perché serva; il suo `is_win` è per giunta **lossy** — i
+38.604 pareggi sono codificati come le 69.656 sconfitte.
+
+**Stato d'uso: raccolto e strutturato, non usato da nessun modello.**
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

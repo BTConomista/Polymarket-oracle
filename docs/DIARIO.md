@@ -342,6 +342,8 @@ correzioni.*
 - [Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze](#fase-139--la-controprova-arriva-due-fonti-indipendenti-sulla-coppa-italia-zero-divergenze)
 - [Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo](#fase-139-bis--i-tre-ponti-e-perché-il-terzo-si-regge-sul-secondo)
 - [Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava](#fase-139-ter--caso-per-caso-quattro-coppe-due-fonti-e-il-foglio-che-nessuno-guardava)
+- [Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose](#fase-139-quater--due-copie-della-stessa-funzione-e-solo-una-sapeva-le-cose)
+- [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 
 ---
 
@@ -16265,3 +16267,264 @@ non dà errore — dà un numero più basso che sembra un limite del dato. Il se
 c'era e l'abbiamo guardato per giorni: lo stesso file registrato dalla porta
 d'ingresso diceva 117, lo script accanto diceva 77. **Due numeri diversi sullo
 stesso dato sono sempre un bug, mai un dettaglio.**
+
+---
+
+## Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto
+
+**Obiettivo.** Aprire il fronte **allenatori**, che il
+`docs/PIANO_DATABASE_GIOCATORI.md` progetta da giorni (§1.6, voci F1-F32) e che
+`docs/AUDIT_FONTI_GIOCATORI.md` ha auditato senza che una riga di codice lo
+toccasse. Non «misurare se l'allenatore conta»: **prima costruire il dato**, e
+descriverlo onestamente. Un modello su un dato non descritto è un modello su
+qualcos'altro.
+
+**Ragionamento.** Il piano dice una cosa sola con certezza: il dato-cardine
+esiste già ed è `games.csv` dello **stesso** dataset che il progetto usa dalla
+Fase 67 per i valori rosa. Nessuna fonte nuova, nessuna licenza nuova, nessun
+matching per nome dei club — solo l'unico file grande di player-scores mai
+importato. La Fase 125 lo aveva già letto per l'arbitro, ma da uno script
+`_run_*` una tantum che scaricava 708 MB da Kaggle a ogni esecuzione: il dato
+non era **strutturale**, e alla sessione dopo non esisteva più.
+
+**Alternative considerate.**
+
+1. *Partire dalle statistiche di stile* (xG/PPDA/deep degli snapshot, per
+   misurare subito la «firma» dell'allenatore). Scartata: è il passo 2. Senza i
+   mandati non c'è niente su cui fare il join, e la firma stilistica misurata
+   su mandati sbagliati è una firma di qualcun altro.
+2. *Prendere `club_games.csv`*, che offre la vista per-club già pronta.
+   Verificato prima di deciderlo, e la verifica ha risposto da sola:
+   ricostruito da `games.csv` in otto righe, **0 celle divergenti su
+   1.957.076**. È un duplicato esatto e algoritmico. Conservato lo stesso
+   (regola §5-ter: raccogliere non è usare), ma nessun codice lo legge.
+3. *Usare `clubs.coach_name`*, che il repo ha già in casa. **No**: è
+   l'allenatore **corrente** del club, senza data (403/796 non nulli).
+   Applicarlo a una partita del 2019 le attribuisce il tecnico di oggi. È la
+   trappola R8 in forma pura, e il modulo non la legge apposta.
+
+**Scelta.** `files/player_scores/games.csv.gz` (+ `club_games`, `competitions`)
+come fonte congelata, `src/data/allenatori.py` come modulo strutturale — stessa
+architettura di `careers.py`: una vista lunga (`load_partite`), una vista
+derivata (`panchine`), e **una sola funzione sicura** per le feature
+(`esperienza_prima`, forma R8). Più il workflow d'import esteso, perché un
+re-import non se li dimentichi.
+
+### Il risultato: la copertura è ottima, e non è la notizia
+
+`games.csv` copre il perimetro **esattamente**: 16.111 partite nelle 5 leghe ×
+9 stagioni, le stesse righe degli snapshot congelati. L'allenatore manca in **2
+club-partita su 32.222** (99,994%) — ed è una partita sola, Nantes-Tolosa del
+17/05/2026, a cui alla stessa data mancano anche l'arbitro e ogni giocatore.
+L'audit diceva «meno dello 0,3% mancante»: era pessimista di 50 volte.
+
+Ma la copertura è la domanda facile. Le due che contano hanno risposto peggio.
+
+### 1 · Il nome non è un'identità — e sbaglia in **due** direzioni
+
+La fonte non ha un id-allenatore: solo una stringa. Il difetto **noto**
+dall'audit è che la stessa persona compare con due grafie, con intervalli
+disgiunti — la fonte ha cambiato ortografia in corsa:
+
+| chiave | grafia | partite | da → a |
+|---|---|--:|---|
+| `ivan juric` | Ivan Juric | 231 | 2017-08-20 → 2025-04-06 |
+| | Ivan Jurić | 11 | 2025-08-24 → 2025-11-09 |
+| `bruno genesio` | Bruno Génésio | 209 | 2017-08-05 → 2025-05-17 |
+| | Bruno Genesio | 34 | 2025-08-17 → 2026-05-17 |
+
+Normalizzare li unisce, e costa poco: nel perimetro **496 grafie → 494 chiavi**,
+2 gruppi, **485 partite = 3,01%**; globalmente 7.031 → 6.995, 36 gruppi.
+
+Il difetto **non noto** è l'opposto, ed è quello pericoloso: due uomini diversi
+con lo stesso nome diventano una riga sola, e nessuna normalizzazione lo ripara.
+Il test che lo trova non ha bisogno di fonti esterne — è di impossibilità
+fisica, nello spirito della regola R5: **nessuno allena due club lo stesso
+giorno**. Esito: **11 nomi globali sono dimostrabilmente ≥2 persone**, 29
+collisioni. Il più grosso è dentro il nostro perimetro:
+
+> `michel` — il 2022-10-02 la stessa stringa siede sulla panchina del **Girona**
+> (ES1) e su quella dell'**Olympiakos** (GR1). Sono Míchel Sánchez e Míchel
+> González, due allenatori spagnoli diversi. 13 collisioni fra il 2022 e il
+> 2025, e la stringa raccoglie **nove club** in nove anni.
+
+`luis castro` è l'altro caso nel perimetro (5 collisioni: Shakhtar e
+Panetolikos lo stesso giorno del 2019). Con una finestra di 7 giorni invece che
+di 0 i nomi sospetti salgono a 43 — ma quella finestra include i passaggi lampo
+veri fra due club, quindi è un limite superiore, non un verdetto.
+
+**Non si risolve qui.** Sciogliere un omonimo richiede una fonte di identità
+esterna (uno strato 2, come `wikidata_identity.py` per i giocatori). Ciò che si
+può fare oggi è **impedire che entri in una feature senza che nessuno lo sappia**:
+`conflitti_identita()` lo elenca, e un test lo tiene elencato.
+
+### 2 · La panchina non è un contratto — e chi lo assume conta 696 cambi che non ci sono
+
+Il campo si chiama `manager_name`, e la tentazione è leggerlo come «l'allenatore
+in carica». Il dato dice di no, e lo dice da solo:
+
+| data | competizione | avversario | allenatore |
+|---|---|---|---|
+| 2021-11-20 | Bundesliga | Hoffenheim | Jesse Marsch |
+| 2021-11-24 | Champions | Club Brugge | **Achim Beierlorzer** |
+| 2021-11-28 | Bundesliga | Leverkusen | Jesse Marsch |
+| 2021-12-03 | Bundesliga | Union Berlin | Jesse Marsch |
+| 2021-12-07 | Champions | Manchester City | **Achim Beierlorzer** |
+| 2021-12-11 | Bundesliga | Mönchengladbach | Domenico Tedesco |
+
+Un contratto non si alterna a giorni alterni. Un **vice in panchina per una
+partita** sì: squalifica, malattia, turno di coppa lasciato all'assistente. Il
+campo registra *chi sedeva in panchina quella partita*, che è un'altra cosa — e
+i casi hanno tutti un nome verificabile: Stuivenberg per Arteta il 1/1/2022,
+Vivas per Simeone il 4/1/2025, Hermann per Heynckes il 10/2/2018, Critchley per
+Klopp il 4/2/2020.
+
+La firma del fenomeno è il pattern **A → X → A**: lo stesso allenatore prima e
+dopo. Sono **836 mandati su 13.810 (6,05%)**, di cui **412 di una partita sola**.
+Chi non li riassorbe conta due cambi in panchina finti per ciascuno: **4.416
+cambi in corso di stagione contro i 3.720 veri, +18,7%**.
+
+**Terzo modo di sbagliare, più banale e altrettanto efficace**: tagliare i
+mandati sul solo campionato. Sui club del perimetro sono **1.190 sulla timeline
+completa contro 906 sulla sola lega — 284 spariti**, quasi tutti traghettatori
+di una partita in coppa. Una panchina ha una timeline sola, e ci passano
+campionato, coppa nazionale ed Europa in ordine di data.
+
+### 3 · L'esperienza è **visibile al dataset**, non globale
+
+L'audit lo aveva già scritto (F26) e qui è confermato dal codice, non citato:
+`games.csv` per le top-5 comincia il **2012-08-10**, e Brasile, Argentina, MLS,
+Giappone e Arabia entrano solo nel **2025**. Contare le partite precedenti e
+chiamarlo «esperienza in carriera» produce falsi conclamati:
+
+| allenatore | prima partita **visibile** | dove |
+|---|---|---|
+| Carlo Ancelotti | 2012-08-11 | Ligue 1 |
+| José Mourinho | 2012-08-19 | Liga |
+| Claudio Ranieri | 2013-08-10 | Ligue 1 |
+| Roy Hodgson | 2012-06-11 | Europei |
+| Ronald Koeman | 2012-07-31 | preliminari di Champions |
+
+Per questo la funzione si chiama `esperienza_prima` e non
+`esperienza_globale`, e restituisce `censurata`: quando è True i totali sono un
+**limite inferiore**. Al 1° agosto 2025, dei **145 allenatori** poi in panchina
+nelle 5 leghe, **22 (15,2%) non hanno nessuna partita precedente visibile** e
+**31 dei restanti sono censurati**.
+
+⚠️ E `censurata=False` **non** vuol dire «esperienza completa»: il flag vede
+solo la censura **temporale**, al bordo della competizione. Quella di
+**copertura** — chi ha allenato dove la fonte non guarda: seconde divisioni,
+giovanili, campionati entrati nel 2025 — dall'interno del dataset non è
+rilevabile. Il controesempio è **Guardiola**: prima partita visibile il
+2013-07-27 col Bayern, `censurata=False`, e quattro stagioni al Barcellona
+(2008-2012) invisibili perché la Liga nel dataset comincia nell'agosto 2012.
+
+### 📐 Il modello in dettaglio
+
+Nessuna statistica nuova: le formule qui sono **definizioni**, ed è esattamente
+il punto — le tre trappole di sopra nascono tutte da una definizione data per
+scontata. Verificate riga per riga contro `src/data/allenatori.py`.
+
+**(1) La chiave del nome** (`normalizza_nome`):
+
+```
+k(nome) = collassa_spazi( minuscolo( senza_accenti( NFKD(nome) ) ) )
+          con  {'-', "'", '.'} → ' '
+
+senza_accenti(s) = "".join(c for c in s if not unicodedata.combining(c))
+```
+
+NFKD scompone «ć» in «c» + segno combinante e il filtro toglie il secondo: è
+questa riga, e nessun elenco di alias scritto a mano, a unire Jurić e Juric.
+Perché anche trattino/apostrofo/punto: «Sanchez-Flores» e «Sanchez Flores» sono
+lo stesso uomo, e le iniziali puntate compaiono nelle grafie brevi.
+**Il costo di questa scelta è dichiarato**: k non è iniettiva sulle persone, e
+la (3) misura di quanto.
+
+**(2) La segmentazione dei mandati** (`panchine`), ordinando per
+`(club_id, date, game_id)`:
+
+```
+nuovo(i)   = [ k(i) ≠ k(i−1) ]     con i−1 nello stesso club (True alla prima riga)
+mandato_id = cumsum(nuovo)
+```
+
+Un `cumsum` su un confronto con la riga precedente, e non l'intervallo
+`(min data, max data)` di quel nome in quel club. La differenza non è di stile:
+con l'intervallo, **Allegri risulta al Milan dal 2010 al 2026** — perché ci è
+tornato — e quindi «sovrapposto a sé stesso» alla Juventus per **3.546 giorni**.
+Era il falso positivo che il primo tentativo di test sugli omonimi produceva:
+non erano omonimi, erano **ritorni**.
+
+**(3) Il conflitto di identità** (`conflitti_identita`), su `G` giorni di
+finestra:
+
+```
+conflitto(k) ⟺ ∃ (d₁,c₁), (d₂,c₂) osservate per k  con  c₁ ≠ c₂  ∧  |d₁ − d₂| ≤ G
+```
+
+`G = 0` è il verdetto netto (nessuno allena due club lo stesso giorno: 11 nomi);
+`G = 7` è il sospetto (43 nomi, ma include i passaggi lampo veri). Il test è
+volutamente **interno**: non chiede nessuna fonte esterna, quindi non può
+essere rimandato in attesa di procurarsela.
+
+**(4) L'interruzione e la ricucitura** (`panchine(ricuci=True)`), con soglia
+`S = 1` partita:
+
+```
+interruzione(m)  ⟺  precedente(m) ≠ ∅  ∧  precedente(m) = successivo(m)
+assorbibile(m)   ⟺  interruzione(m)  ∧  partite(m) ≤ S
+
+gruppo(mᵢ) = gruppo(mᵢ₋₂)   se assorbibile(mᵢ₋₁) ∧ stesso club ∧ k(mᵢ) = k(mᵢ₋₂)
+ospite(mᵢ) = ultimo gruppo NON assorbito dello stesso club
+```
+
+`S = 1` non è tarato su una metrica — non c'è una metrica: è la soglia che
+ricuce **solo** ciò che il pattern A→X→A rende quasi certo (una partita sola:
+412 casi su 836) e lascia in piedi gli altri 424, dove «il vecchio è tornato
+dopo un mese» e «il vice ha traghettato un mese» non sono distinguibili senza
+una fonte sui contratti. La soglia è un parametro, e chi la alza sa cosa sta
+comprando.
+
+L'identità che tiene onesta la ricucitura, e che un test verifica:
+
+```
+Σ partite(mandati ricuciti) + Σ partite_altrui  =  righe di load_partite()
+                175.816     +        412        =        176.228            ✅
+```
+
+Le partite del vice **non spariscono**: escono dai mandati ed entrano in
+`partite_altrui` del mandato che le ospita. Una ricucitura che perdesse righe
+sarebbe una correzione al dato travestita da vista derivata.
+
+**(5) La censura a sinistra** (`esperienza_prima`):
+
+```
+censurata(k) ⟺ primo_incarico(k) ≤ d₀( competizione_d'esordio(k) ) + 90 giorni
+d₀(c) = min data osservata nella competizione c
+```
+
+Il bordo è **per competizione**, non uno solo: le top-5 cominciano nel 2012, il
+Brasile nel 2025. Un bordo unico dichiarerebbe «esordiente» mezzo campionato
+brasiliano. I 90 giorni sono una finestra di mercato più preparazione: chi
+compare entro un'estate dall'apertura della raccolta era già lì prima, e il
+dataset non può saperlo. Numeri: **1.064 allenatori su 4.194 (25,4%)** censurati
+al 1° agosto 2020.
+
+**Lezione.** *La copertura di un campo non dice quasi niente sulla sua
+affidabilità.* Qui è al **99,994%**, ed è precisamente per questo che le tre
+trappole sono pericolose: nessun controllo di completezza le vede, perché non
+c'è niente di vuoto. Il nome c'è sempre — ma a volte è di due persone; il
+mandato si ricostruisce sempre — ma a volte è una squalifica; l'esperienza si
+conta sempre — ma parte da dove comincia il file. È la regola **R6** (il buco
+peggiore non è il `NaN`, è il finto pieno) applicata a un fronte nuovo, e vale
+la pena scriverlo: le tre si sono trovate **guardando il dato**, non
+rileggendo il piano che lo descriveva da giorni.
+
+**Stato.** Nessun modello legge questo modulo, e nessuna misura di valore
+predittivo è stata fatta: **è infrastruttura**. Il passo successivo naturale è
+il join dei mandati con gli snapshot ricchi (xG/PPDA/deep) per il test che
+l'utente ha descritto — lo *stesso* allenatore su **due squadre diverse** — e
+va fatto sapendo che sul perimetro gli allenatori con abbastanza partite in
+≥2 club sono pochi, e che il tetto informativo delle 100+ fasi precedenti non
+si sospende per un fronte nuovo.

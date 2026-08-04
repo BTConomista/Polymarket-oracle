@@ -17,6 +17,26 @@
 > Struttura: **A** infortuni · **B** carriere extra-Europa · **C** tabella di audit
 > delle 118 voci · **D** cosa NON è a posto · **E** sorprese · **F** conteggi.
 > Chi ha poco tempo legga **D** e **F**.
+>
+> ⚽ **AGGIORNAMENTO 04/08/2026 — il fronte ALLENATORI (F1-F32) è stato
+> COSTRUITO** (Fase 140, `src/data/allenatori.py`). Non è più «stato delle
+> fonti»: è dato importato e misurato. Cosa cambia rispetto a questo verbale:
+> - **confermati**: F1 (copertura quasi totale — anzi **99,994%**, 2 club-partita
+>   su 32.222: il «meno dello 0,3%» del piano era pessimista di 50×), F3
+>   (`club_games.is_win` è lossy — e in più il file è un **duplicato esatto**:
+>   0 celle divergenti su 1.957.076), F4/F27 (la chiave è già scissa nella
+>   fonte: 2 gruppi nel perimetro, **485 partite = 3,01%**), F25/F26
+>   (l'esperienza è visibile al dataset, non globale), F30 (`clubs.coach_name`
+>   è la trappola R8: il modulo non la legge);
+> - **NUOVO, e nessuna delle 118 voci lo prevedeva**: il nome sbaglia anche
+>   nella direzione **opposta** — due allenatori diversi dietro una stringa
+>   sola. Dimostrato con un test di impossibilità fisica: **11 nomi globali**,
+>   2 nel perimetro (`michel` = Míchel Sánchez + Míchel González, il 2022-10-02
+>   su due panchine lo stesso giorno);
+> - **NUOVO**: `manager_name` è **chi sedeva in panchina quella partita**, non
+>   chi era in carica. Il pattern A→X→A vale **836 mandati su 13.810**, e F9
+>   (l'effetto rimbalzo) va misurato sui mandati **ricuciti**, altrimenti
+>   parte da 4.416 eventi invece di 3.720.
 
 ---
 

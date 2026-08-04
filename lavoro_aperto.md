@@ -417,6 +417,19 @@ segnalare?
 
 ### 7.5 · 💭 Database giocatore/arbitri/allenatori ⭐ (idea dell'utente, 29/07/2026)
 
+> ⚽ **04/08/2026 — il fronte ALLENATORI è passato da piano a codice (Fase 140).**
+> `games.csv` importato come fonte congelata, `src/data/allenatori.py` come
+> modulo strutturale (mandati, cambi, esperienza R8, rilevatore di omonimi),
+> 24 test. Copertura del perimetro **99,994%**. Cosa resta aperto **qui**: il
+> passo 2 (join dei mandati con xG/PPDA/deep per il test «stesso allenatore,
+> due squadre»), lo strato d'identità che scioglie gli omonimi, e i fronti
+> **giocatori** e **nazionali**, intatti.
+> ⚠️ La costruzione ha smentito tre punti che il piano dava per buoni: il nome
+> **non è una chiave d'identità**, `manager_name` è **chi era in panchina
+> quella partita** (non chi era in carica), e l'esperienza è **visibile al
+> dataset**, non globale. Dettaglio: `docs/DIARIO.md` Fase 140.
+
+
 > 🔴 **Stato al 31/07/2026 — `docs/AUDIT_FONTI_GIOCATORI.md`** (13 agenti): tutte e
 > **118 le voci** dei tre fronti auditate con verifica avversariale. **Solo il 30,5%
 > è davvero VERIFICATO**; 13 voci sono ASSUNTE (dichiarate a posto e mai misurate) e

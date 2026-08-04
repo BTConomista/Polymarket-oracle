@@ -4,7 +4,7 @@ I termini ricorrono ovunque nel [DIARIO](DIARIO.md), nel [README](../README.md) 
 nella [rosa dei modelli](PANCHINA.md), ma erano definiti solo dove nascono. Qui
 ognuno ha 1-2 righe e la fase che lo introduce. Ordine tematico.
 
-Aggiornato alla **Fase 101-ter** (5 leghe: Serie A, Premier, La Liga,
+Aggiornato alla **Fase 140** (5 leghe: Serie A, Premier, La Liga,
 Bundesliga, Ligue 1). Dove una definizione è stata smentita da una fase
 successiva la voce lo dice, con la forma del §1.4 (si marca, non si cancella).
 
@@ -313,6 +313,31 @@ successiva la voce lo dice, con la forma del §1.4 (si marca, non si cancella).
   una riga che sembra corrotta (spiegare prima di accusare); R6 il **finto
   pieno**; R7 ogni statistica di testa vuole il suo **intervallo** e ogni «non
   c'è effetto» la sua **potenza**. *(Fase 100, CLAUDE.md §5-bis)*
+
+- **mandato (panchina)** — un periodo continuo in cui lo *stesso* allenatore
+  guida lo *stesso* club, ricavato tagliando la timeline del club dove cambia
+  il nome. Due passaggi dello stesso allenatore nello stesso club sono **due**
+  mandati: l'intervallo grezzo (prima e ultima partita di quel nome lì) direbbe
+  che Allegri è al Milan dal 2010 al 2026. *(Fase 140,
+  `src/data/allenatori.py`)*
+- **interruzione (pattern A → X → A)** — un «mandato» di poche partite con lo
+  stesso allenatore prima e dopo: quasi sempre un **vice in panchina** per una
+  gara (squalifica, malattia, turno di coppa), non un cambio. Sono 836 su
+  13.810, e contarle come mandati sovrastima i cambi in panchina del 18,7%.
+  `panchine(ricuci=True)` le riassorbe senza perdere le partite. *(Fase 140)*
+- **conflitto di identità** — due allenatori diversi dietro lo stesso nome. Si
+  dimostra con un test di **impossibilità fisica**, senza fonti esterne:
+  nessuno allena due club lo stesso giorno. Ne esistono 11 nel dataset globale,
+  2 nel nostro perimetro (`michel` sono Míchel Sánchez e Míchel González).
+  Si **dichiarano**, non si risolvono: servirebbe uno strato d'identità
+  esterno. *(Fase 140)*
+- **esperienza visibile al dataset** — le partite precedenti che la fonte
+  *mostra*, che non sono la carriera: `games.csv` per le top-5 comincia il
+  2012-08-10, quindi Ancelotti «esordisce» nel 2012. Il nome lungo esiste
+  apposta, per non poter scrivere «esperienza globale». ⚠️ Il flag `censurata`
+  vede solo la censura **temporale**; quella di **copertura** (chi ha allenato
+  dove la fonte non guarda) non è rilevabile dall'interno. *(Fase 140; il
+  gemello per i giocatori è `censored_left` in `careers.py`)*
 
 ## Convenzioni del progetto
 
