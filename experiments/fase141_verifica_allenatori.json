@@ -1,0 +1,66 @@
+{
+ "fase": 141,
+ "ponte": {
+  "club_totali": 153,
+  "club_risolti": 153,
+  "club_senza_p286": 1,
+  "mandati_lato_club": 1023,
+  "allenatori_lato_club": 562,
+  "allenatori_totali": null,
+  "allenatori_risolti": null,
+  "mandati_lato_persona": 0
+ },
+ "accordo": {
+  "mandati": 1190,
+  "confermati": 838,
+  "quota": 0.7042,
+  "per_verdetto": {
+   "confermato": 818,
+   "nome_diverso": 157,
+   "assente_da_wikidata": 152,
+   "date_diverse": 33,
+   "confermato_variante": 20,
+   "club_senza_storia": 10
+  },
+  "per_lato": {
+   "club": 838
+  },
+  "partite_confermate": 35104,
+  "partite_totali": 43165
+ },
+ "identita": {
+  "chiavi_multi_qid": 1,
+  "dettaglio": {
+   "nathan jones": [
+    {
+     "qid": "Q10387537",
+     "club": "Southampton FC"
+    },
+    {
+     "qid": "Q10387537",
+     "club": "Stoke City"
+    },
+    {
+     "qid": "Q707158",
+     "club": "Luton Town"
+    }
+   ]
+  }
+ },
+ "sandwich": {
+  "totali": 65,
+  "chiusi": 35,
+  "aperti": 30,
+  "per_verdetto": {
+   "confermato": 35,
+   "nome_diverso": 24,
+   "assente_da_wikidata": 3,
+   "date_diverse": 2,
+   "club_senza_storia": 1
+  }
+ },
+ "residuo": {
+  "mandati": 352,
+  "partite": 8061
+ }
+}
