@@ -256,6 +256,8 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     # `partite` nasce da un merge LEFT su `P`, quindi le righe sono allineate:
     # la chiave grezza si prende da P, il game_id dal risultato.
     mappa_gid = {k: v for k, v in zip(chiave(P), partite.game_id) if pd.notna(v)}
+    mappa_gid_id = {k: v for k, v in zip(P["ID partita"], partite.game_id)
+                    if pd.notna(v)}
 
     def collega_foglio(nome_file: str, colonna_nome: str) -> pd.DataFrame:
         d = pd.read_csv(cartella / nome_file)
@@ -274,6 +276,21 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
             [risolvi(k, n) for k, n in zip(chiave(d), d[colonna_nome])],
             index=d.index).astype("Int64")
         return d
+
+    # --- statistiche di SQUADRA (nuove, Fase 139-quater) ------------------- #
+    # Non hanno un giocatore: si agganciano a (game_id, club_id). E' il primo
+    # dato di coppa diviso per PERIODO — Totale / 1o tempo / 2o tempo /
+    # Supplementari — cioe' la forma che serve al modello a due stadi.
+    squadra = None
+    f_sq = cartella / "stat_squadra.csv"
+    if f_sq.exists():
+        squadra = pd.read_csv(f_sq)
+        squadra["competizione"] = coppa
+        squadra["game_id"] = squadra["ID partita"].map(mappa_gid_id).astype("Int64")
+        squadra["club_id"] = squadra.Squadra.map(cid).astype("Int64")
+        _log(f"  stat squadra: {int(squadra.game_id.notna().sum())}/{len(squadra)} "
+             f"con game_id · {int(squadra.club_id.notna().sum())}/{len(squadra)} "
+             f"con club_id")
 
     eventi = collega_foglio("eventi.csv", "Giocatore")
     stat = collega_foglio("stat_giocatori.csv", "Giocatore")
@@ -330,8 +347,16 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
         "agganciate": int(stat.player_id.notna().sum()),
         "con_game_id": int(stat.game_id.notna().sum()),
     }
-    return {"squadre": squadre, "partite": partite, "giocatori": giocatori,
-            "eventi": eventi, "statistiche": stat}, quadro
+    tabelle = {"squadre": squadre, "partite": partite, "giocatori": giocatori,
+               "eventi": eventi, "statistiche": stat}
+    if squadra is not None:
+        tabelle["statistiche_squadra"] = squadra
+        quadro["statistiche_squadra"] = {
+            "righe": int(len(squadra)),
+            "con_game_id": int(squadra.game_id.notna().sum()),
+            "con_club_id": int(squadra.club_id.notna().sum()),
+        }
+    return tabelle, quadro
 
 
 def main() -> int:
@@ -344,7 +369,7 @@ def main() -> int:
     appearances = C._load_appearances()
 
     tabelle = {"squadre": [], "partite": [], "giocatori": [],
-               "eventi": [], "statistiche": []}
+               "eventi": [], "statistiche": [], "statistiche_squadra": []}
     quadri = []
     for d in raccolte():
         m = json.loads((d / FILE_MANIFESTO).read_text(encoding="utf-8"))
@@ -361,6 +386,8 @@ def main() -> int:
 
     USCITA.mkdir(parents=True, exist_ok=True)
     for k, pezzi in tabelle.items():
+        if not pezzi:
+            continue
         f = USCITA / f"aggancio_{k}.csv"
         pd.concat(pezzi, ignore_index=True).to_csv(f, index=False)
         _log(f"\n  scritto {f.relative_to(RADICE)}")

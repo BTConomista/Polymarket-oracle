@@ -94,3 +94,32 @@ dichiarata in `docs/DATI.md` §4 (il dataset si dichiara CC0, ma Transfermarkt
 pubblica una riserva `ai-all` e il diritto sui generis sulla banca dati resta
 suo). openfootball è pubblico; Wikipedia è CC BY-SA. Il progetto non rivendica
 alcuna licenza su questi dati.
+
+
+## Statistiche di SQUADRA per periodo (Fase 139-quater)
+
+Secondo consegnato di diretta.it, **complementare** al primo: porta un dato che
+la raccolta base non aveva — le statistiche di squadra divise per **periodo**
+(Totale / 1° tempo / 2° tempo / Supplementari), 35 metriche per riga.
+
+| coppa | righe | partite | supplementari |
+|---|--:|--:|--:|
+| Coppa Italia | 272 | 45 | 2 righe (1 partita) |
+| DFB-Pokal | 406 | 63 | 28 righe (14 partite) |
+
+Vive in `files/diretta_<coppa>_2526/stat_squadra.csv`, agganciato in
+`data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` + `club_id`).
+Le righe senza `game_id` sono quelle della **finale**, che la fonte automatica
+non ha: 6 per coppa, cioè 2 squadre × 3 periodi.
+
+⭐ **È il primo dato di coppa che separa i due tempi**, cioè la forma che serve
+al modello a due stadi (residuo aperto delle Fasi 96/99: il secondo tempo è mal
+calibrato perché è *game-state*, e per modellarlo serve il punteggio
+all'intervallo). Per i campionati lo stesso dato esiste dalla Fase 131.
+
+Lo stesso file porta anche una versione **migliore** delle statistiche per
+giocatore: stessi valori (verificato — 0 celle divergenti oltre l'arrotondamento
+su 149.000 confrontate) ma con `ID partita`, che prima mancava, e i decimali per
+intero invece che troncati a tre.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.

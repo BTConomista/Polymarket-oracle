@@ -47,6 +47,11 @@ FOGLI = {
     "formazioni_e_cambi.csv": ("aggancio_giocatori.csv", "player_id"),
     "eventi.csv": ("aggancio_eventi.csv", "player_id"),
     "stat_giocatori.csv": ("aggancio_statistiche.csv", "player_id"),
+    # Le statistiche di SQUADRA non hanno un giocatore: si agganciano alla
+    # partita. Sono entrate dopo (Fase 139-quater) e non tutte le raccolte le
+    # hanno ancora — il controllo salta le raccolte che non le hanno, ma non
+    # perdona quelle che ce l'hanno e non le agganciano.
+    "stat_squadra.csv": ("aggancio_statistiche_squadra.csv", "game_id"),
 }
 
 
@@ -73,6 +78,8 @@ def verifica() -> tuple[list[dict], list[str]]:
         coppa = json.loads(
             (cartella / FILE_MANIFESTO).read_text(encoding="utf-8"))["coppa"]
         for foglio, (tab, colonna) in FOGLI.items():
+            if not (cartella / foglio).exists():
+                continue
             grezzo = pd.read_csv(cartella / foglio, low_memory=False)
             agganciato = tabelle.get(tab)
             if agganciato is None:

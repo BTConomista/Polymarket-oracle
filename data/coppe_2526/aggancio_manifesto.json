@@ -93,6 +93,11 @@
       "righe": 1307,
       "agganciate": 1299,
       "con_game_id": 1275
+    },
+    "statistiche_squadra": {
+      "righe": 272,
+      "con_game_id": 266,
+      "con_club_id": 272
     }
   },
   {
@@ -543,6 +548,11 @@
       "righe": 1979,
       "agganciate": 1975,
       "con_game_id": 1948
+    },
+    "statistiche_squadra": {
+      "righe": 406,
+      "con_game_id": 400,
+      "con_club_id": 406
     }
   },
   {

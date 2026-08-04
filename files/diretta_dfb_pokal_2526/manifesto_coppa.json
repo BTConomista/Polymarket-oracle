@@ -50,5 +50,36 @@
         "con_differenze": []
       }
     }
+  },
+  "statistiche": {
+    "file": "bdee54a4-DFBPokal_202526_STATISTICHE_1.xlsx",
+    "sha256": "10ef3f4bc1a5484f6a97dc3f219579a163a325e4b9241bff2a3f10b2a16d1d0d",
+    "partite": {
+      "raccolta": 63,
+      "statistiche": 63,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": []
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1979,
+      "righe_dopo": 1979,
+      "colonne_prima": 114,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0
+    },
+    "statistiche_squadra": {
+      "righe": 406,
+      "partite": 63,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 126,
+        "1° tempo": 126,
+        "2° tempo": 126,
+        "Supplementari": 28
+      }
+    }
   }
 }

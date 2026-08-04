@@ -53,6 +53,11 @@ from src.data.club_matching import _TRADUZIONE  # noqa: E402
 from src.data.coppe_aggancio import appaia_partite  # noqa: E402
 
 FOGLI = ["Partite", "Formazioni e cambi", "Eventi", "Stat giocatori", "Note"]
+
+# Il file delle STATISTICHE e' un secondo consegnato, COMPLEMENTARE al primo:
+# non ha formazioni ne' eventi, e in piu' ha il foglio di SQUADRA per PERIODO
+# (Totale / 1o tempo / 2o tempo / Supplementari) che il primo non aveva.
+FOGLI_STATISTICHE = ["Partite", "Statistiche squadra", "Statistiche giocatori", "Note"]
 NOSTRE = RADICE / "data" / "coppe_2526"
 
 # ⚠️ Il nome del manifesto NON e' `manifesto.json`, ed e' deliberato: e' cosi'
@@ -102,6 +107,86 @@ SINONIMI_GIOCATORE = {
 
 def _log(m: str) -> None:
     print(m, flush=True)
+
+
+def integra_statistiche(cartella: Path, xlsx: Path) -> dict:
+    """Integra il file di STATISTICHE in una raccolta gia' registrata.
+
+    E' un secondo consegnato, non un sostituto: porta il foglio di SQUADRA per
+    PERIODO — che la raccolta base non aveva — e una versione del foglio
+    giocatori con due cose in piu': la colonna `ID partita` (che mancava, e che
+    obbligava ad agganciare per data+squadre) e i decimali per intero, dove
+    prima erano arrotondati a tre.
+
+    ⚠️ Non si sovrascrive niente senza VERIFICARE prima che sia lo stesso dato:
+    le partite devono essere le stesse, e sul foglio giocatori si pretende che i
+    valori coincidano a meno dell'arrotondamento. Un file «definitivo» che in
+    realta' e' di un'altra raccolta non deve poter entrare in silenzio.
+    """
+    x = pd.ExcelFile(xlsx)
+    mancanti = [f for f in FOGLI_STATISTICHE if f not in x.sheet_names]
+    if mancanti:
+        raise ValueError(f"fogli mancanti nel file di statistiche: {mancanti}")
+    fogli = {}
+    for f in FOGLI_STATISTICHE:
+        d = x.parse(f)
+        d.columns = [str(c).replace("\ufeff", "").strip() for c in d.columns]
+        fogli[f] = d
+
+    quadro: dict = {"file": xlsx.name,
+                    "sha256": hashlib.sha256(xlsx.read_bytes()).hexdigest()}
+
+    # 1. le partite devono essere le stesse della raccolta gia' registrata
+    base = pd.read_csv(cartella / "partite.csv")
+    nuove = fogli["Partite"]
+    chiave = lambda d: set(zip(d.Data, d.Casa, d.Ospite))  # noqa: E731
+    solo_base, solo_nuove = chiave(base) - chiave(nuove), chiave(nuove) - chiave(base)
+    quadro["partite"] = {"raccolta": len(base), "statistiche": len(nuove),
+                         "solo_nella_raccolta": sorted(map(str, solo_base)),
+                         "solo_nelle_statistiche": sorted(map(str, solo_nuove))}
+    if solo_base or solo_nuove:
+        raise ValueError(
+            f"le partite non coincidono: {len(solo_base)} solo nella raccolta, "
+            f"{len(solo_nuove)} solo nelle statistiche. Il file di statistiche "
+            f"non appartiene a questa raccolta, o una delle due e' incompleta.")
+
+    # 2. il foglio giocatori dev'essere lo STESSO dato, piu' preciso
+    vecchio = pd.read_csv(cartella / "stat_giocatori.csv")
+    nuovo = fogli["Statistiche giocatori"]
+    comuni = [c for c in vecchio.columns if c in set(nuovo.columns)]
+    a = nuovo[comuni].sort_values(comuni[:8]).reset_index(drop=True)
+    b = vecchio[comuni].sort_values(comuni[:8]).reset_index(drop=True)
+    oltre_arrotondamento = 0
+    if a.shape == b.shape:
+        for c in comuni:
+            if pd.api.types.is_numeric_dtype(a[c]) and pd.api.types.is_numeric_dtype(b[c]):
+                import numpy as np
+                x1, y1 = a[c].fillna(-9e9), b[c].fillna(-9e9)
+                oltre_arrotondamento += int(
+                    (~np.isclose(x1, y1, rtol=0, atol=0.0006)).sum())
+    quadro["fedelta_giocatori"] = {
+        "righe_prima": len(vecchio), "righe_dopo": len(nuovo),
+        "colonne_prima": vecchio.shape[1], "colonne_dopo": nuovo.shape[1],
+        "colonne_nuove": [c for c in nuovo.columns if c not in set(vecchio.columns)],
+        "celle_divergenti_oltre_arrotondamento": oltre_arrotondamento,
+    }
+    if oltre_arrotondamento:
+        raise ValueError(
+            f"{oltre_arrotondamento} celle divergono OLTRE l'arrotondamento: "
+            f"non e' la stessa misura piu' precisa, e' un dato diverso.")
+
+    # 3. si scrive solo dopo che tutto e' tornato
+    nuovo.to_csv(cartella / "stat_giocatori.csv", index=False)
+    sq = fogli["Statistiche squadra"]
+    sq.to_csv(cartella / "stat_squadra.csv", index=False)
+    shutil.copy2(xlsx, cartella / "originale_statistiche.xlsx")
+    quadro["statistiche_squadra"] = {
+        "righe": len(sq),
+        "partite": int(sq["ID partita"].nunique()),
+        "metriche": int(len(sq.columns) - 9),
+        "per_periodo": {k: int(v) for k, v in sq.Periodo.value_counts().items()},
+    }
+    return quadro
 
 
 def leggi_xlsx(percorso: Path) -> dict[str, pd.DataFrame]:
@@ -536,6 +621,9 @@ def main() -> int:
                          "manifesto se non indicato")
     ap.add_argument("--stagione", default="2526")
     ap.add_argument("--cartella", type=Path, help="ri-registra una raccolta esistente")
+    ap.add_argument("--statistiche", type=Path,
+                    help="il file di STATISTICHE (squadra per periodo + giocatori), "
+                         "da integrare in una raccolta gia' registrata: serve --cartella")
     ap.add_argument("--extra", type=Path, nargs="*", default=[],
                     help="altri file consegnati da archiviare com'e' (csv, ecc.)")
     args = ap.parse_args()
@@ -564,6 +652,25 @@ def main() -> int:
         for f in args.extra:
             shutil.copy2(f, dest / f"originale_{f.name.split('_')[-1]}")
         _log(f"  archiviati gli originali in {dest.relative_to(RADICE)}")
+
+    if args.statistiche:
+        q = integra_statistiche(dest, args.statistiche)
+        _log(f"  statistiche integrate in {dest.relative_to(RADICE)}")
+        _log(f"     giocatori: {q['fedelta_giocatori']['righe_dopo']} righe, "
+             f"{q['fedelta_giocatori']['colonne_dopo']} colonne "
+             f"(+{q['fedelta_giocatori']['colonne_nuove']}), "
+             f"{q['fedelta_giocatori']['celle_divergenti_oltre_arrotondamento']} "
+             f"celle divergenti oltre l'arrotondamento")
+        s = q["statistiche_squadra"]
+        _log(f"     SQUADRA (nuovo): {s['righe']} righe · {s['partite']} partite · "
+             f"{s['metriche']} metriche · periodi {s['per_periodo']}")
+        vecchio_m = json.loads((dest / FILE_MANIFESTO).read_text(encoding="utf-8"))
+        vecchio_m["statistiche"] = q
+        (dest / FILE_MANIFESTO).write_text(
+            json.dumps(vecchio_m, indent=2, ensure_ascii=False, default=str),
+            encoding="utf-8")
+        _log(f"  manifesto aggiornato")
+        return 0
 
     fogli = leggi_xlsx(xlsx)
     _log(f"  fogli letti: " + ", ".join(f"{k} ({len(v)})" for k, v in fogli.items()))
