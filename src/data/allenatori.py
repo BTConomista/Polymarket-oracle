@@ -537,6 +537,63 @@ def esperienza_prima(
                 "primo_incarico", "censurata"]]
 
 
+REGISTRO_INCARICHI = (Path(__file__).resolve().parents[2] / "data"
+                      / "allenatori_wikidata" / "registro_incarichi.csv")
+
+
+def incarichi_verificati() -> pd.DataFrame:
+    """Il registro della Fase 141: **chi era davvero in panchina**, con la fonte.
+
+    Una riga per nostro mandato, con l'esito della verifica contro fonti
+    esterne — il confronto strutturato con Wikidata e, sul residuo, la ricerca
+    caso per caso. Colonne che contano: `verificato_da` (`wikidata` /
+    `caso_per_caso` / vuoto), `in_carica` (chi lo era davvero), `ruolo`
+    (`titolare` / `traghettatore` / `vice`), `fonte`.
+
+    ⚠️ **Non corregge niente, e non va usata come se lo facesse.** `panchine()`
+    continua a restituire ciò che dice la fonte primaria: questo registro sta
+    accanto al dato, non al suo posto (regola R3). Dove le due fonti non
+    concordano lo dice, e la scelta di quale credere resta di chi legge.
+
+    ⚠️ Una riga con `in_carica` compilato e `fonte` vuota è un **difetto**, non
+    un dato: lo script che genera il registro la marca, e chi lo consuma
+    dovrebbe scartarla invece di fidarsene.
+
+    Ritorna un DataFrame vuoto — non alza — se la verifica non è stata
+    eseguita: è uno strato opzionale, come lo strato 2 delle carriere.
+    """
+    if not REGISTRO_INCARICHI.exists():
+        return pd.DataFrame(columns=[
+            "club_id", "club", "manager_key", "allenatore", "nostro_da",
+            "nostro_a", "partite", "verdetto", "verificato_da", "in_carica",
+            "ruolo", "fonte", "nota_verifica", "verificato", "senza_fonte"])
+    df = pd.read_csv(REGISTRO_INCARICHI)
+    for c in ("nostro_da", "nostro_a"):
+        df[c] = pd.to_datetime(df[c], errors="coerce")
+    return df
+
+
+def con_verifica(panchine_df: pd.DataFrame | None = None) -> pd.DataFrame:
+    """`panchine()` affiancata al registro — **affiancata, non sostituita**.
+
+    Aggiunge le colonne della verifica ai mandati, agganciandoli su
+    `(club_id, manager_key, data_da)`. I mandati non verificati restano, con le
+    colonne vuote: sparire sarebbe il modo più rapido di far sembrare completa
+    una verifica che non lo è.
+    """
+    if panchine_df is None:
+        panchine_df = panchine()
+    reg = incarichi_verificati()
+    if reg.empty:
+        return panchine_df.assign(verificato_da="", in_carica="", ruolo="",
+                                  fonte="")
+    colonne = ["club_id", "manager_key", "nostro_da", "verdetto",
+               "verificato_da", "in_carica", "ruolo", "fonte", "nota_verifica"]
+    return panchine_df.merge(
+        reg[colonne].rename(columns={"nostro_da": "data_da"}),
+        on=["club_id", "manager_key", "data_da"], how="left")
+
+
 def rapporto_copertura(games: pd.DataFrame | None = None) -> dict:
     """Cosa questo strato copre e cosa no — i numeri da rieseguire, non citare.
 

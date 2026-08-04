@@ -323,3 +323,49 @@ def test_i_falsi_esordi_del_perimetro_sono_censurati(tutte):
     e = A.esperienza_prima("2026-01-01", tutte,
                            manager_keys=["carlo ancelotti", "jose mourinho"])
     assert e["censurata"].all()
+
+
+# --------------------------------------------------------------------------
+# 5 · Il registro della verifica esterna (Fase 141)
+# --------------------------------------------------------------------------
+
+def test_il_registro_e_opzionale(monkeypatch, tmp_path):
+    """Chi clona il repo senza aver eseguito la verifica deve poter usare il
+    modulo lo stesso: lo strato esterno e' opzionale per costruzione."""
+    monkeypatch.setattr(A, "REGISTRO_INCARICHI", tmp_path / "non_esiste.csv")
+    vuoto = A.incarichi_verificati()
+    assert vuoto.empty
+    assert "in_carica" in vuoto.columns          # lo schema c'e' comunque
+
+
+def test_con_verifica_non_perde_ne_aggiunge_mandati(mandati):
+    """⚠️ Il modo piu' rapido di far sembrare completa una verifica che non lo
+    e' sarebbe far sparire i mandati non verificati. Restano, con le colonne
+    vuote."""
+    campione = mandati.head(200)
+    unito = A.con_verifica(campione)
+    assert len(unito) == len(campione)
+    assert set(unito["manager_key"]) == set(campione["manager_key"])
+    for c in ("verificato_da", "in_carica", "ruolo", "fonte"):
+        assert c in unito.columns
+
+
+def test_il_registro_non_corregge_la_fonte_primaria(tutte):
+    """R3: `panchine()` deve dare lo stesso identico risultato con o senza
+    registro. Se un giorno qualcuno lo facesse "applicare", questo test cade."""
+    prima = A.panchine(tutte.head(5000))
+    dopo = A.con_verifica(A.panchine(tutte.head(5000)))
+    comuni = list(prima.columns)
+    pd.testing.assert_frame_equal(prima[comuni], dopo[comuni])
+
+
+def test_una_risposta_senza_fonte_e_marcata_come_difetto():
+    """`in_carica` compilato e `fonte` vuota non e' un dato: il registro deve
+    saperlo dire di se stesso."""
+    reg = A.incarichi_verificati()
+    if reg.empty:
+        pytest.skip("verifica esterna non eseguita in questo ambiente")
+    assert "senza_fonte" in reg.columns
+    verificate = reg[reg["verificato"]]
+    assert (verificate["fonte"].fillna("") != "").all(), (
+        "ci sono righe verificate senza fonte: sono un difetto, non un dato")
