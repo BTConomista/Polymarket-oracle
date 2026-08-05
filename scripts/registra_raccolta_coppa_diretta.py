@@ -154,21 +154,45 @@ def integra_statistiche(cartella: Path, xlsx: Path) -> dict:
     vecchio = pd.read_csv(cartella / "stat_giocatori.csv")
     nuovo = fogli["Statistiche giocatori"]
     comuni = [c for c in vecchio.columns if c in set(nuovo.columns)]
-    a = nuovo[comuni].sort_values(comuni[:8]).reset_index(drop=True)
-    b = vecchio[comuni].sort_values(comuni[:8]).reset_index(drop=True)
+    # ⚠️ La chiave di ordinamento dev'essere STABILE FRA LE DUE FONTI, altrimenti
+    # il confronto misura il disallineamento invece dei valori. Prima ordinavo
+    # sulle prime otto colonne comuni, `Turno` compreso: sulla Carabao Cup i due
+    # consegnati lo scrivono in modo diverso («1° turno» contro «1/64 FINALE»),
+    # le due tabelle finivano in ordine diverso e divergevano **122.401 celle**
+    # su un dato che e' identico riga per riga. Era un controllo cieco: bocciava
+    # il dato buono per una differenza di etichetta.
+    CHIAVE = ["Data", "Squadra", "Giocatore"]
+    if any(c not in comuni for c in CHIAVE):
+        raise ValueError(f"chiave di confronto assente: {CHIAVE}")
+    doppioni = int(nuovo.duplicated(subset=CHIAVE).sum())
+    if doppioni:
+        raise ValueError(
+            f"{doppioni} righe con la stessa (data, squadra, giocatore): la "
+            f"chiave non e' univoca e il confronto non sarebbe affidabile.")
+    a = nuovo[comuni].sort_values(CHIAVE).reset_index(drop=True)
+    b = vecchio[comuni].sort_values(CHIAVE).reset_index(drop=True)
     oltre_arrotondamento = 0
+    etichette_diverse = {}
     if a.shape == b.shape:
+        import numpy as np
         for c in comuni:
             if pd.api.types.is_numeric_dtype(a[c]) and pd.api.types.is_numeric_dtype(b[c]):
-                import numpy as np
                 x1, y1 = a[c].fillna(-9e9), b[c].fillna(-9e9)
                 oltre_arrotondamento += int(
                     (~np.isclose(x1, y1, rtol=0, atol=0.0006)).sum())
+            else:
+                # le colonne testuali NON bloccano: una nomenclatura diversa
+                # del turno e' un fatto da dichiarare, non un dato sbagliato.
+                d = (a[c].fillna("~").astype(str).str.lower()
+                     != b[c].fillna("~").astype(str).str.lower())
+                if d.any():
+                    etichette_diverse[c] = int(d.sum())
     quadro["fedelta_giocatori"] = {
         "righe_prima": len(vecchio), "righe_dopo": len(nuovo),
         "colonne_prima": vecchio.shape[1], "colonne_dopo": nuovo.shape[1],
         "colonne_nuove": [c for c in nuovo.columns if c not in set(vecchio.columns)],
         "celle_divergenti_oltre_arrotondamento": oltre_arrotondamento,
+        "colonne_testuali_con_etichette_diverse": etichette_diverse,
     }
     if oltre_arrotondamento:
         raise ValueError(

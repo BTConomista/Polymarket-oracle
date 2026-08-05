@@ -107,14 +107,25 @@ la raccolta base non aveva — le statistiche di squadra divise per **periodo**
 | Coppa Italia | 272 | 45 | 2 righe (1 partita) |
 | DFB-Pokal | 406 | 63 | 28 righe (14 partite) |
 | FA Cup | 406 | 63 | 28 righe (14 partite) |
+| EFL Cup (Carabao) | 546 | 91 | **0** — e non è un buco, vedi sotto |
 
-Mancano ancora Carabao Cup, Copa del Rey e Coupe de France: la porta le accetta
-con lo stesso comando, `--statistiche <file> --cartella <dir> --coppa <nome>`.
+Mancano ancora Copa del Rey e Coupe de France: la porta le accetta con lo stesso
+comando, `--statistiche <file> --cartella <dir> --coppa <nome>`.
+
+⚠️ **La Carabao Cup non ha righe «Supplementari», e non è un dato mancante: è
+il regolamento.** Dal 2018-19 la EFL Cup va **direttamente ai rigori** in ogni
+turno; i supplementari restano solo per la finale, che nel 2025-26 è finita 0-2
+nei 90 minuti. Il conferma dal dato indipendente: nelle 91 partite non c'è **un
+solo evento** oltre il 90° (`eventi.csv` ha 1T, 2T e Rigori, nessun
+«Supplementari»), mentre le altre tre coppe ne hanno 6/131/142. Nessun periodo è
+stato perso per strada — non c'era.
 
 Vive in `files/diretta_<coppa>_2526/stat_squadra.csv`, agganciato in
 `data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` + `club_id`).
 Le righe senza `game_id` sono quelle della **finale**, che la fonte automatica
-non ha: 6 per coppa, cioè 2 squadre × 3 periodi.
+non ha: 6 per coppa, cioè 2 squadre × 3 periodi. **La Carabao fa eccezione**
+(546/546 con `game_id`): è l'unica delle quattro la cui finale player-scores
+contiene.
 
 ⭐ **È il primo dato di coppa che separa i due tempi**, cioè la forma che serve
 al modello a due stadi (residuo aperto delle Fasi 96/99: il secondo tempo è mal

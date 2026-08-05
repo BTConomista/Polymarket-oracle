@@ -1039,6 +1039,56 @@ sono anagrafica di identità (chi è chi), non misure della partita.
 
 ---
 
+## 5-octies-bis · Statistiche di SQUADRA per periodo delle coppe (`files/diretta_*_2526/stat_squadra.csv`) — Fase 139-quinquies
+
+Il **secondo consegnato** di diretta.it per ogni coppa, complementare al primo:
+porta ciò che la raccolta base non aveva — le statistiche di squadra divise per
+**periodo**, **35 metriche** per riga (xG, xGOT, possesso, tiri per esito e per
+zona, passaggi, cross, contrasti, parate, gol evitati…).
+
+| coppa | righe | partite | Totale / 1° / 2° | Supplementari |
+|---|--:|--:|---|--:|
+| Coppa Italia | 272 | 45 | 90 / 90 / 90 | 2 |
+| DFB-Pokal | 406 | 63 | 126 / 126 / 126 | 28 |
+| FA Cup | 406 | 63 | 126 / 126 / 126 | 28 |
+| EFL Cup (Carabao) | 546 | 91 | 182 / 182 / 182 | **0** |
+
+⚠️ **Lo zero della Carabao non è un dato mancante: è il regolamento.** Dal
+2018-19 la EFL Cup va **direttamente ai rigori** in ogni turno tranne la finale
+(finita 0-2 nei 90'). Verificato sul dato indipendente: nelle 91 partite non c'è
+**un solo evento** oltre il 90°, contro 6/131/142 delle altre tre coppe (R4).
+
+Mancano **Copa del Rey** e **Coupe de France**.
+
+**Aggancio**: `data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` +
+`club_id`). Le righe senza `game_id` sono esattamente quelle della **finale**
+che `games.csv` non contiene — 6 per coppa (2 squadre × 3 periodi): 400/406 per
+Coppa Italia, Pokal e FA Cup, **546/546 per la Carabao**, l'unica delle quattro
+la cui finale la fonte automatica ha.
+
+**Lo stesso file porta anche una versione migliore del foglio giocatori**:
+stessi valori — verificato, **0 celle divergenti oltre l'arrotondamento su
+843.960 confrontate** (1.307+1.979+1.974+2.855 righe × 104 colonne in comune) —
+ma con `ID partita`, che prima mancava, e i decimali per intero invece che
+troncati a tre. Il vecchio foglio viene sovrascritto **solo dopo** che la
+verifica è tornata; l'originale come consegnato resta in
+`originale_statistiche.xlsx` (§5-ter).
+
+**Disponibilità temporale (R8)**: tutte `post` — sono misure della partita. Le
+colonne identificative (`Data`, `Casa`, `Ospite`, `Squadra`, `Periodo`) sono
+`statico`/`pre`.
+
+⭐ **È il primo dato di COPPA che separa i due tempi**, cioè la forma che serve
+al modello a due stadi (residuo aperto delle Fasi 96/99). Per i campionati lo
+stesso dato esiste dalla Fase 131.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+
+⚠️ **Licenza**: vale l'avvertenza delle altre raccolte diretta.it
+(`files/README.md`) — il progetto non rivendica alcun diritto su questi dati.
+
+---
+
 ## 5-nonies · Allenatori e arbitri per partita (`files/player_scores/games.csv.gz`) — Fase 140
 
 `games.csv` del dataset `davidcariboo/player-scores` — la **tabella-cardine**

@@ -60,5 +60,38 @@
         "con_differenze": []
       }
     }
+  },
+  "statistiche": {
+    "file": "72952aa2-CarabaoCup_202526_STATISTICHE.xlsx",
+    "sha256": "7dbfdcc663163a3d3dd5391293c4d86378d27d6833cd9499cf44f6ad86a61944",
+    "partite": {
+      "raccolta": 91,
+      "statistiche": 91,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": []
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 2855,
+      "righe_dopo": 2855,
+      "colonne_prima": 114,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0,
+      "colonne_testuali_con_etichette_diverse": {
+        "Turno": 2703
+      }
+    },
+    "statistiche_squadra": {
+      "righe": 546,
+      "partite": 91,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 182,
+        "1° tempo": 182,
+        "2° tempo": 182
+      }
+    }
   }
 }

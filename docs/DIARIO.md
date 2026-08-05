@@ -343,6 +343,7 @@ correzioni.*
 - [Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo](#fase-139-bis--i-tre-ponti-e-perché-il-terzo-si-regge-sul-secondo)
 - [Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava](#fase-139-ter--caso-per-caso-quattro-coppe-due-fonti-e-il-foglio-che-nessuno-guardava)
 - [Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose](#fase-139-quater--due-copie-della-stessa-funzione-e-solo-una-sapeva-le-cose)
+- [Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono](#fase-139-quinquies--il-secondo-consegnato-e-un-controllo-che-bocciava-il-dato-buono)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 
 ---
@@ -16267,6 +16268,147 @@ non dà errore — dà un numero più basso che sembra un limite del dato. Il se
 c'era e l'abbiamo guardato per giorni: lo stesso file registrato dalla porta
 d'ingresso diceva 117, lo script accanto diceva 77. **Due numeri diversi sullo
 stesso dato sono sempre un bug, mai un dettaglio.**
+
+---
+
+## Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono
+
+**Obiettivo.** L'utente consegna, una coppa alla volta, un **secondo** file
+diretta.it: le statistiche. Non sostituisce il primo — porta un foglio che la
+raccolta base non aveva, le statistiche di **squadra divise per periodo**
+(Totale / 1° tempo / 2° tempo / Supplementari, 35 metriche). Integrarlo senza
+prendersi dentro, di soppiatto, un file che appartiene a un'altra raccolta.
+
+**Ragionamento.** Il rischio non è che il file sia sbagliato: è che sia *un
+altro*. Un secondo consegnato assomiglia sempre al primo, e il modo naturale di
+integrarlo — sovrascrivere il foglio giocatori con la versione più ricca —
+cancella l'unica copia con cui si potrebbe accorgersene. Quindi la regola:
+**si verifica prima, si scrive dopo**, e la verifica è che le due versioni siano
+*la stessa misura, più precisa*, non due misure.
+
+**Alternative considerate.**
+
+1. *Tenere i due fogli affiancati* senza sovrascrivere. Scartata: il nuovo è il
+   vecchio più `ID partita` e più decimali — due copie dello stesso dato sono
+   due verità da tenere allineate, e la Fase 139-quater ha appena mostrato cosa
+   costa (due implementazioni della stessa regola, e solo una sapeva le cose).
+   L'originale come consegnato resta comunque archiviato (`originale_statistiche.xlsx`, §5-ter).
+2. *Confrontare all'uguaglianza esatta.* Non regge: il primo consegnato tronca
+   a tre decimali, il secondo no. Ogni cella con decimali risulterebbe diversa.
+3. *Confrontare solo i conteggi di riga.* È il controllo che non controlla
+   niente: due raccolte diverse della stessa coppa hanno lo stesso numero di
+   righe per costruzione.
+
+**Scelta.** Confronto cella per cella sulle colonne in comune, con una soglia
+pari all'arrotondamento dichiarato, e la scrittura subordinata a zero
+divergenze.
+
+### 📐 Il modello in dettaglio
+
+`integra_statistiche` in `scripts/registra_raccolta_coppa_diretta.py`,
+verificato riga per riga contro il codice:
+
+```
+(1) le partite devono essere le stesse
+    P(d) = { (Data, Casa, Ospite) }
+    si procede  sse  P(raccolta) = P(statistiche)      (simmetrica, non inclusione)
+
+(2) il foglio giocatori dev'essere lo STESSO dato, piu' preciso
+    comuni = colonne(vecchio) ∩ colonne(nuovo)
+    K      = (Data, Squadra, Giocatore)
+    si procede  sse  nuovo non ha duplicati su K
+    a = nuovo[comuni] ordinato per K ,  b = vecchio[comuni] ordinato per K
+
+    per ogni c ∈ comuni:
+        se numerica(a[c]) ∧ numerica(b[c]):
+            divergenti += #{ i : |a_i − b_i| > 0.0006 }        (NaN → −9e9 su entrambi)
+        altrimenti:
+            etichette[c] = #{ i : lower(a_i) ≠ lower(b_i) }    (dichiarato, NON bloccante)
+
+(3) si scrive  sse  divergenti = 0
+```
+
+**Perché 0.0006 e non 0.001 né 0.** Il primo consegnato è arrotondato alla
+terza cifra: fra il valore troncato e quello pieno la differenza legittima
+massima è **mezzo passo, 0.0005**. La soglia è quel mezzo passo più un margine
+per la rappresentazione binaria — ammette l'arrotondamento e **nient'altro**:
+7.5 contro 1.234 non passa, ed è il caso che un test verifica apposta.
+
+**Perché K = (Data, Squadra, Giocatore), ed è qui che si era rotto.** La chiave
+di ordinamento dev'essere **stabile fra le due fonti**, altrimenti il confronto
+non misura i valori: misura il disallineamento. Prima ordinavo sulle prime otto
+colonne in comune — `Competizione, Turno, Data, Casa, Ospite, Lato, Squadra,
+Giocatore` — e `Turno` è **un'etichetta scritta dalla fonte**, non l'identità
+della riga. Sulla Carabao Cup i due consegnati la scrivono in due modi:
+
+| | raccolta base | file statistiche |
+|---|---|---|
+| primo turno | `1/64 FINALE` | `1° turno` |
+| ottavi | `1/8 FINALE` | `4° turno (ottavi)` |
+| semifinali | `SEMI FINALI` | `Semifinali (andata)` / `(ritorno)` |
+| quarti, finale | `QUARTI DI FINALE`, `FINALE` | `Quarti di finale`, `Finale` |
+
+Le due tabelle finivano in ordine diverso e il confronto le leggeva riga *i*
+contro riga *j*. Esito, ri-derivabile dalla storia di git (`git show
+HEAD:files/diretta_efl_cup_2526/stat_giocatori.csv`):
+
+```
+chiave vecchia (8 colonne, Turno compreso) → 122.401 celle divergenti
+chiave nuova   (Data, Squadra, Giocatore)  →       0 celle divergenti
+duplicati sulla chiave nuova               →       0   (su tutte e quattro le coppe)
+```
+
+**Stesso dato, due risposte.** Il controllo bocciava il file buono, e lo
+bocciava con un numero grosso — cioè nella forma che sembra di più una scoperta.
+Le 152 righe che coincidevano anche con la chiave vecchia sono quarti e finale,
+gli unici due turni che le due fonti scrivono uguale a meno del maiuscolo: se
+avessi guardato *quali* righe divergevano invece di quante, la diagnosi era lì.
+
+### Il risultato, quattro coppe
+
+| coppa | righe giocatore | celle divergenti | righe squadra | partite | periodi |
+|---|--:|--:|--:|--:|---|
+| Coppa Italia | 1.307 | **0** | 272 | 45 | 90/90/90 + **2** suppl. |
+| DFB-Pokal | 1.979 | **0** | 406 | 63 | 126/126/126 + **28** suppl. |
+| FA Cup | 1.974 | **0** | 406 | 63 | 126/126/126 + **28** suppl. |
+| EFL Cup (Carabao) | 2.855 | **0** | 546 | 91 | 182/182/182, **nessuna** suppl. |
+
+**843.960 celle numeriche confrontate** (righe × 104 colonne in comune), zero
+divergenti oltre l'arrotondamento: il file nuovo aggiunge `ID partita` e i
+decimali per intero senza cambiare **un solo valore**.
+
+⭐ **È il primo dato di coppa che separa i due tempi**, cioè esattamente la forma
+che chiede il residuo aperto delle Fasi 96/99 (il secondo tempo è mal calibrato
+perché è *game-state*). Per i campionati lo stesso dato esiste dalla Fase 131.
+
+**L'assenza che non è un buco.** La Carabao non ha righe «Supplementari», e la
+tentazione è archiviarla come raccolta incompleta. È il **regolamento**: dal
+2018-19 la EFL Cup va dritta ai rigori in ogni turno tranne la finale, e la
+finale 2025-26 è finita 0-2 nei 90 minuti. La conferma non è una nota di
+formato ma il **dato indipendente**: nelle 91 partite non c'è **un solo evento**
+oltre il 90° (`eventi.csv` ha 1° tempo, 2° tempo e Rigori), contro 6 / 131 / 142
+eventi supplementari delle altre tre coppe. Nessun periodo perso per strada: non
+c'era. (R4: un'anomalia si dichiara **anche** quando non è un errore.)
+
+**L'aggancio.** `aggancio_statistiche_squadra.csv`, `game_id` + `club_id`. Le
+righe senza `game_id` sono **esattamente** quelle della finale che `games.csv`
+non contiene — 6 per coppa, cioè 2 squadre × 3 periodi: 400/406 su Coppa Italia,
+Pokal e FA Cup. La **Carabao fa eccezione a 546/546**: è l'unica delle quattro
+la cui finale la fonte automatica ha. Completezza complessiva dopo l'ingresso:
+**47.114 righe raccolte, 40.331 agganciate (86,2%)** — il resto è il tetto
+dichiarato della Coupe de France (§5-octies).
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+Mancano Copa del Rey e Coupe de France: la porta le accetta con lo stesso
+comando.
+
+**Lezione.** *Quando un controllo boccia, la prima domanda non è «quanto
+diverge» ma «quali righe».* Un conteggio grosso ha l'aria di una scoperta, e
+122.401 su un dato identico riga per riga è la stessa cifra che avrebbe prodotto
+una raccolta completamente sbagliata. La differenza si vede solo nel dettaglio —
+e lì c'era, perché le uniche righe *non* divergenti erano quelle dei due turni
+che le due fonti scrivono nello stesso modo. **Una chiave di confronto non è mai
+un dettaglio implementativo: è ciò che decide che cosa si sta confrontando.**
 
 ---
 
