@@ -58,6 +58,7 @@ def costruisci(esito_workflow: dict | None) -> pd.DataFrame:
     conf["ruolo"] = ""
     conf["fonte"] = ""
     conf["nota_verifica"] = ""
+    conf["confidenza"] = ""
 
     chiuso = conf.verdetto.isin(AUTOMATICI_CHIUSI)
     conf.loc[chiuso, "verificato_da"] = "wikidata"
@@ -68,22 +69,32 @@ def costruisci(esito_workflow: dict | None) -> pd.DataFrame:
         for q in conf.loc[chiuso, "manager_qid"]]
 
     # --- ciò che ha chiuso la verifica caso per caso
+    conf["refutazione"] = "non_controllato"
     if esito_workflow:
-        vivi = {c["id"]: c for c in esito_workflow.get("sopravvissuti", [])}
-        # i verdetti REFUTATI non entrano come se nulla fosse: entrano con la
-        # correzione dello scettico, e se lo scettico non ne propone una la
-        # riga resta aperta. Un verdetto caduto non è un verdetto piu' debole,
-        # e' un verdetto che non c'e'.
-        for c in esito_workflow.get("caduti", []):
-            ref = c.get("refutazione") or {}
-            if ref.get("verdetto_corretto") and ref.get("in_carica_corretto"):
-                vivi[c["id"]] = {**c,
-                                 "verdetto": ref["verdetto_corretto"],
-                                 "in_carica_davvero": ref["in_carica_corretto"],
-                                 "fonti": ref.get("fonti") or c.get("fonti") or [],
-                                 "nota": "corretto in refutazione: "
-                                         + (ref.get("perche") or ""),
-                                 "confidenza": "media"}
+        casi = {c["id"]: c for c in esito_workflow.get("casi", [])}
+        esiti = {e["id"]: e for e in esito_workflow.get("esiti_refutazione", [])}
+
+        # ⚠️ LA DISTINZIONE CHE NON VA PERSA: «ha superato lo scettico» e «non
+        # e' mai passato dallo scettico» sono due cose diverse, e finirebbero
+        # nella stessa colonna se non le si separasse. La copertura della
+        # refutazione e' parziale (limite di sessione), e il registro lo dice
+        # riga per riga invece di lasciarlo intendere.
+        vivi = {}
+        for i, c in casi.items():
+            e = esiti.get(i)
+            if e is None:
+                vivi[i] = {**c, "_refutazione": "non_controllato"}
+            elif e.get("regge"):
+                vivi[i] = {**c, "_refutazione": "regge"}
+            elif e.get("verdetto_corretto") and e.get("in_carica_corretto"):
+                # un verdetto caduto non e' un verdetto piu' debole: entra solo
+                # con la correzione dello scettico, mai come stava prima
+                vivi[i] = {**c, "verdetto": e["verdetto_corretto"],
+                           "in_carica_davvero": e["in_carica_corretto"],
+                           "fonti": e.get("fonti") or c.get("fonti") or [],
+                           "nota": "corretto in refutazione: " + (e.get("perche") or ""),
+                           "confidenza": "media", "_refutazione": "corretto"}
+            # refutato senza correzione proposta -> la riga resta APERTA
         for i, riga in conf.iterrows():
             v = vivi.get(riga["id"])
             if not v or riga["verificato_da"]:
@@ -93,6 +104,8 @@ def costruisci(esito_workflow: dict | None) -> pd.DataFrame:
             conf.at[i, "in_carica"] = v.get("in_carica_davvero", "")
             conf.at[i, "ruolo"] = v.get("ruolo_nostro", "ignoto")
             conf.at[i, "fonte"] = " | ".join(fonti[:3])
+            conf.at[i, "refutazione"] = v.get("_refutazione", "non_controllato")
+            conf.at[i, "confidenza"] = v.get("confidenza", "")
             conf.at[i, "nota_verifica"] = (
                 f"{v.get('verdetto', '')}"
                 + (f" ({v.get('motivo')})" if v.get("motivo") else "")
@@ -119,6 +132,14 @@ def main() -> None:
     print("come è stato verificato ciascuno:")
     for k, v in df.verificato_da.replace("", "NON VERIFICATO").value_counts().items():
         print(f"  {k:18s} {v:5d}  ({100*v/n:5.1f}%)")
+    caso = df[df.verificato_da == "caso_per_caso"]
+    if len(caso):
+        print("\n⚠️ copertura della REFUTAZIONE sui casi verificati a mano:")
+        for k, v in caso.refutazione.value_counts().items():
+            print(f"  {k:18s} {v:5d}  ({100*v/len(caso):5.1f}%)")
+        print("  «non_controllato» NON vuol dire «verificato due volte»: vuol")
+        print("  dire che nessuno scettico ha riaperto quel caso.")
+
     print(f"\nverificati in tutto: {int(df.verificato.sum())}/{n} "
           f"({100*df.verificato.mean():.1f}%)")
     print(f"in PARTITE:          {int(df[df.verificato].partite.sum())}/"
@@ -136,14 +157,27 @@ def main() -> None:
         print("\nruolo attribuito ai nostri mandati:")
         print(ruoli.to_string())
 
-    diversi = df[(df.in_carica != "") & (df.in_carica != df.allenatore)]
-    if len(diversi):
-        print(f"\n⭐ {len(diversi)} mandati in cui in carica c'era UN ALTRO "
-              f"({int(diversi.partite.sum())} partite):")
-        print(diversi[["club", "allenatore", "nostro_da", "nostro_a",
-                       "partite", "in_carica", "ruolo"]]
-              .sort_values("partite", ascending=False).head(20)
+    # ⚠️ NON si confrontano le STRINGHE `in_carica` e `allenatore`: differiscono
+    # in 109 righe, e quasi tutte sono lo stesso uomo col nome anagrafico
+    # («Rubi» → Joan Francesc Ferrer Sicilia, «Pepe Bordalás» → José Bordalás).
+    # Un confronto fra stringhe qui misura le convenzioni sui nomi, non i
+    # cambi di panchina — ed e' il numero che si finirebbe per pubblicare.
+    #
+    # E nemmeno il traghettatore e' «un altro»: un interim E' in carica. Il
+    # solo caso in cui il nostro dato attribuisce le partite a chi NON era in
+    # carica e' il VICE per una gara.
+    vice = df[df.ruolo == "vice"]
+    if len(vice):
+        print(f"\n⭐ {len(vice)} mandati in cui il nostro dato ha in panchina il "
+              f"VICE, non chi era in carica ({int(vice.partite.sum())} partite):")
+        print(vice[["club", "allenatore", "nostro_da", "partite", "in_carica",
+                    "refutazione"]]
+              .sort_values("partite", ascending=False).head(25)
               .to_string(index=False))
+    tragh = df[df.ruolo == "traghettatore"]
+    print(f"\n{len(tragh)} mandati sono un TRAGHETTATORE "
+          f"({int(tragh.partite.sum())} partite): era in carica lui, ad interim "
+          f"— non e' un errore del dato, e' un ruolo che il dato non distingue.")
 
     aperti = df[~df.verificato]
     print(f"\nresta APERTO: {len(aperti)} mandati ({int(aperti.partite.sum())} partite)")
