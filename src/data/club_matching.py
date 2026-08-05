@@ -131,6 +131,19 @@ ALIAS: dict[str, str] = {
     "Stoccarda": "VfB Stuttgart",
     "Union Berlino": "1.FC Union Berlin",
     "L.R. Vicenza": "LR Vicenza",
+    # Esonimi italiani dei club FRANCESI (Coupe de France, Fase 139-sexies).
+    # Erano l'unico buco NON strutturale della coppa francese: sei club di
+    # Ligue 1 restavano senza `club_id` perche' la forma italiana non ha un
+    # solo token in comune col registro («Lione» contro «Olympique Lyon»),
+    # mentre tutti gli altri nomi mancanti sono club che nel registro non
+    # esistono affatto. Verificati due volte: `candidati()` = 1 sul registro,
+    # e 34 partite di Ligue 1 2025-26 a testa in `games.csv`.
+    "Lilla": "LOSC Lille",
+    "Lione": "Olympique Lyon",          # NON «Lyon - La Duchere», altro club
+    "Marsiglia": "Olympique Marseille",
+    "Nizza": "OGC Nice",
+    "PSG": "Paris Saint-Germain",       # NON «Paris FC» ne' «Paris 13 Atl.»
+    "Strasburgo": "RC Strasbourg Alsace",
     # --- Abbreviazioni INGLESI di diretta.it (Carabao Cup e FA Cup 2025-26,
     # Fase 139-ter). Verificate una per una: `candidati()` deve dare 1.
     # ⚠️ Due di queste erano AMBIGUE nella forma corta, ed e' il caso «Brest»
@@ -154,11 +167,21 @@ ALIAS: dict[str, str] = {
     # accanto a ogni nome (vedi `coupe_de_france.py`).
 }
 
-# Nomi che NON vanno agganciati: sono squadre RISERVE, che nel nostro dataset in
-# larga parte non esistono. Agganciarle alla prima squadra e' peggio di lasciarle
-# vuote — attribuisce presenze di terza divisione al club maggiore. `normalizza`
-# torna un frozenset, quindi «Bilbao Athletic» e «Athletic Bilbao» collassano
-# sullo stesso insieme: senza questo elenco l'ordine dei token non protegge.
+# Nomi che NON vanno agganciati. Due classi, per due motivi diversi — ma con lo
+# stesso esito giusto: **vuoto**, perche' il club vero nel registro non c'e'.
+#
+# (1) squadre RISERVE, che nel nostro dataset in larga parte non esistono.
+#     Agganciarle alla prima squadra e' peggio di lasciarle vuote — attribuisce
+#     presenze di terza divisione al club maggiore. `normalizza` torna un
+#     frozenset, quindi «Bilbao Athletic» e «Athletic Bilbao» collassano sullo
+#     stesso insieme: senza questo elenco l'ordine dei token non protegge.
+#
+# (2) OMONIMI STRANIERI: un nome corto che nelle nostre fonti indica un club
+#     assente dal registro, ma che nel registro pesca un club estero con lo
+#     stesso nome. E' il caso «Brest» daccapo (§ALIAS), e non da' errore: da'
+#     una CERTEZZA sbagliata (R6). Trovati sulla Coupe de France, Fase
+#     139-sexies, e verificati sulle competizioni che quei `club_id` giocano
+#     davvero in `games.csv` — che e' l'informazione indipendente (R5 passo 2).
 NON_AGGANCIARE: frozenset[str] = frozenset({
     "bilbao athletic", "real madrid castilla", "barcelona atletic",
     "barcelona b", "real madrid b", "atletico madrid b", "sevilla atletico",
@@ -166,6 +189,19 @@ NON_AGGANCIARE: frozenset[str] = frozenset({
     # football-data chiama cosi' la riserva della Real Sociedad, che gioca in
     # Segunda: stesso motivo di tutte le altre, non va agganciata alla prima.
     "sociedad b", "real sociedad b",
+    # --- (2) omonimi stranieri, Coupe de France 2025-26.
+    # «Red Star» = Red Star FC (Ligue 2, Saint-Ouen; L2 secondo Wikipedia).
+    # Il registro ha SOLO Red Star Belgrade (159): 190 partite fra SER1, CL e
+    # EL, mai una francese. Il club francese non c'e' affatto.
+    "red star",
+    # «Lusitanos» = US Lusitanos Saint-Maur (National 2; N2 secondo Wikipedia).
+    # Il registro ha SOLO FC Lusitanos (28958), che e' **andorrano**: 8 partite,
+    # tutte di qualificazione CL/EL fra il 2012 e il 2016.
+    "lusitanos",
+    # ⚠️ «Pirae» NON sta qui: AS Pirae (17782) e' il club giusto — Tahiti, e la
+    # Coupe de France ammette davvero le squadre d'oltremare. Verificato:
+    # Wikipedia lo da' in «Tahiti Ligue 1», e il registro lo ha per il Mondiale
+    # per club 2021. Un omonimo che NON e' un omonimo va lasciato agganciato.
 })
 
 

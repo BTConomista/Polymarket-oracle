@@ -15,6 +15,7 @@ esista **una sola** implementazione, e che i due script chiamino quella.
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from src.data.club_matching import Agganciatore
 from src.data.coppe_aggancio import appaia_partite, chiave_partita, deduci_club
@@ -114,3 +115,51 @@ def test_i_due_script_usano_la_stessa_implementazione():
     for modulo in (A, R):
         assert not hasattr(modulo, "deduci_club"), modulo.__name__
         assert not hasattr(modulo, "_chiave_partita"), modulo.__name__
+
+
+# --------------------------------------------------------------------------- #
+# i club francesi: l'esonimo che serve, e l'omonimo che inganna (Fase 139-sexies)
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("diretta, club_id, chi", [
+    ("Lilla", 1082, "LOSC Lille"),
+    ("Lione", 1041, "Olympique Lyon"),
+    ("Marsiglia", 244, "Olympique Marseille"),
+    ("Nizza", 417, "OGC Nice"),
+    ("PSG", 583, "Paris Saint-Germain"),
+    ("Strasburgo", 667, "RC Strasbourg Alsace"),
+])
+def test_esonimi_italiani_dei_club_francesi(diretta, club_id, chi):
+    """diretta.it e' un sito italiano e traduce anche le citta' francesi.
+
+    Erano l'unico buco NON strutturale della Coupe de France: sei club di
+    Ligue 1 senza `club_id` perche' «Lione» e «Olympique Lyon» non hanno un
+    solo token in comune. Ognuno vale 34 partite di Ligue 1 2025-26 in
+    `games.csv` — la verifica indipendente, non solo il candidato unico.
+    """
+    assert Agganciatore().aggancia(diretta) == club_id, chi
+
+
+@pytest.mark.parametrize("nome, perche", [
+    ("Red Star", "Red Star FC (Ligue 2) — il registro ha solo il Belgrado"),
+    ("Lusitanos", "US Lusitanos Saint-Maur (N2) — il registro ha solo l'andorrano"),
+])
+def test_omonimi_stranieri_restano_vuoti(nome, perche):
+    """Il caso «Brest» daccapo: un nome corto che pesca un club estero.
+
+    Non e' un mancato aggancio, e' una CERTEZZA sbagliata (R6) — e non da'
+    errore a valle: attribuisce le partite di un club francese a uno serbo.
+    Il club vero nel registro non c'e' affatto, quindi l'esito giusto e'
+    **vuoto**, non un altro `club_id`.
+    """
+    assert Agganciatore().aggancia(nome) is None, perche
+
+
+def test_un_omonimo_che_non_e_un_omonimo_resta_agganciato():
+    """Il rovescio: «Pirae» SEMBRA lo stesso caso e non lo e'.
+
+    AS Pirae e' tahitiano, la Coupe de France ammette le squadre d'oltremare,
+    e il registro ce l'ha per il Mondiale per club 2021. Bloccarlo «per
+    prudenza» toglierebbe un aggancio giusto: la prudenza si applica dopo aver
+    guardato, non al posto di guardare.
+    """
+    assert Agganciatore().aggancia("Pirae") == 17782

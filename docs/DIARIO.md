@@ -344,6 +344,7 @@ correzioni.*
 - [Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava](#fase-139-ter--caso-per-caso-quattro-coppe-due-fonti-e-il-foglio-che-nessuno-guardava)
 - [Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose](#fase-139-quater--due-copie-della-stessa-funzione-e-solo-una-sapeva-le-cose)
 - [Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono](#fase-139-quinquies--il-secondo-consegnato-e-un-controllo-che-bocciava-il-dato-buono)
+- [Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado](#fase-139-sexies--lione-non-è-olympique-lyon-e-red-star-non-è-di-belgrado)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 
 ---
@@ -16409,6 +16410,173 @@ una raccolta completamente sbagliata. La differenza si vede solo nel dettaglio �
 e lì c'era, perché le uniche righe *non* divergenti erano quelle dei due turni
 che le due fonti scrivono nello stesso modo. **Una chiave di confronto non è mai
 un dettaglio implementativo: è ciò che decide che cosa si sta confrontando.**
+
+---
+
+## Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado
+
+**Obiettivo.** Integrare le statistiche della **Coupe de France** — la sesta e
+ultima coppa consegnata — con la stessa porta delle altre. Ma la coppa francese
+è quella che il progetto ha sempre trattato come un caso perso: **0/201**
+partite con `game_id`, **19,7%** dei giocatori agganciati, e una spiegazione già
+scritta due volte («la fonte automatica è Wikipedia, non ha identificatori»).
+Verificare se quella spiegazione copre *tutto* il buco o solo una parte.
+
+**Ragionamento.** La spiegazione strutturale è vera e resta vera: senza
+`game_id` dall'altra sponda non si costruisce il ponte. Ma «i club francesi
+minori non sono nel registro in nessuna grafia» (Fase 139-quater) è
+un'affermazione **sui minori**, e non era mai stata verificata sui **maggiori**.
+La Coupe de France dai 32esimi in poi la giocano i club di Ligue 1, che nel
+registro ci sono di sicuro. Se non si agganciano, il problema non è il dato.
+
+### 1 · L'esonimo, ancora
+
+Elencati i club che dai 32esimi in poi restavano senza `club_id`: **41 su 64**,
+e sei di quei nomi sono `Lilla`, `Lione`, `Marsiglia`, `Nizza`, `PSG`,
+`Strasburgo`. Non è un caso nuovo — è **lo stesso** della Fase 139-bis, dove i
+club tedeschi arrivavano come `Stoccarda`, `Friburgo`, `Colonia`. diretta.it è
+un sito italiano e traduce le città straniere, e la regola del sottoinsieme non
+può salvare un nome che col registro non condivide **un solo token**:
+
+```
+normalizza("Lione")          = {lione}
+normalizza("Olympique Lyon") = {olympique, lyon}
+                               intersezione = ∅  →  nessun candidato
+```
+
+Verificati due volte, come vuole il file: `candidati()` = **1** sul registro, e
+poi la prova indipendente su `games.csv` — **34 partite di Ligue 1 2025-26** a
+testa, che è il numero giusto per un campionato a 18 squadre. Aggiunti in
+`club_matching.ALIAS` (non in `ALIAS_COPPA`: un esonimo italiano vale per
+qualunque fonte in lingua italiana, non solo per questa coppa).
+
+### 2 · E nella stessa verifica, due falsi positivi
+
+Guardando l'elenco dei club **risolti** — non solo di quelli mancanti — due
+nomi non tornavano: `Lusitanos` e `Pirae`, agganciati, in mezzo a PSG e
+Marsiglia. Un club dilettantistico che si aggancia dove tutti gli altri no è
+sospetto per costruzione.
+
+| nome diretta.it | agganciato a | chi è davvero | verdetto |
+|---|---|---|---|
+| `Red Star` | **Red Star Belgrade** (159) | Red Star FC, Ligue 2 (Saint-Ouen) | ❌ falso positivo |
+| `Lusitanos` | **FC Lusitanos** (28958) | US Lusitanos Saint-Maur, National 2 | ❌ falso positivo |
+| `Pirae` | AS Pirae (17782) | AS Pirae, Tahiti Ligue 1 | ✅ **giusto** |
+
+La diagnosi non è per somiglianza di nome — è per **dove quei `club_id` giocano
+davvero** (R5 passo 2, informazione indipendente):
+
+```
+159    190 partite   SER1, CL, CLQ, EL, ELQ      → Stella Rossa di Belgrado
+28958    8 partite   CLQ, ELQ  (2012-2016)       → FC Lusitanos, Andorra
+17782    1 partita   KLUB      (2021)            → AS Pirae, Mondiale per club
+```
+
+E Wikipedia, dall'altro lato, scrive la divisione accanto a ogni nome: `Red Star
+FC` = **L2**, `US Lusitanos Saint-Maur` = **N2**, `AS Pirae` = *Tahiti Ligue 1*.
+Il terzo caso è quello che conta di più per il metodo: **sembrava** lo stesso
+errore degli altri due e non lo era. La Coupe de France ammette davvero le
+squadre d'oltremare, e bloccare `Pirae` «per prudenza» avrebbe tolto un aggancio
+giusto. La prudenza si applica **dopo** aver guardato, non al posto di guardare.
+
+Nessuno dei due falsi positivi si ripara con un alias: il club vero **non è nel
+registro**, quindi l'unico esito corretto è **vuoto**. Vivono in
+`NON_AGGANCIARE`, che finora conteneva solo squadre riserve e ora ha una seconda
+classe dichiarata — gli **omonimi stranieri**.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la regola di aggancio è quella della Fase 139-quater
+(`candidati` per sottoinsieme di token, accettato solo se **unico**). Qui
+cambiano due tabelle, e vale la pena scrivere *cosa* sono:
+
+```
+candidati(n) = ∅                                     se lower(n) ∈ NON_AGGANCIARE
+             = { c : token(nome_c) = A(token(n)) }   se esiste un match esatto
+             = { c : A(token(n)) ⊆ token(nome_c) }   altrimenti
+             dove A = ALIAS applicato sull'insieme di token
+
+aggancia(n)  = l'unico elemento di candidati(n)   se |candidati(n)| = 1
+             = None                               altrimenti
+```
+
+`ALIAS` **aggiunge** agganci che i token non possono trovare;
+`NON_AGGANCIARE` **toglie** agganci che i token trovano e sono sbagliati. Sono
+le due direzioni dello stesso errore, e servono entrambe: la prima costa
+copertura, la seconda costa *correttezza* — ed è la più cara, perché non si vede.
+
+### Il risultato
+
+| | prima | dopo |
+|---|--:|--:|
+| club → `club_id` | 29/202 | **33/202** |
+| giocatori → `player_id` | 492 (19,7%) | **932 (37,4%)** |
+| titolari | 295 (21,3%) | **546 (39,4%)** |
+| righe di evento | 456 | **844** |
+| statistiche per giocatore | 399 | **750** |
+| stat. di squadra con `club_id` | 168/476 | **234/476** |
+| **completezza, sei coppe** | 40.331 / 47.590 (85,3%) | **41.510 / 47.590 (87,8%)** |
+
+Il `+4` netto sui club è `+6` esonimi `−2` falsi positivi. Le altre cinque coppe
+sono **immutate**, verificato sul giro completo degli agganci.
+
+Resta **0/201** sul `game_id`: quello sì è strutturale, e non si muove finché la
+fonte automatica di quella coppa è Wikipedia.
+
+### Le statistiche di squadra, e una copertura che va letta
+
+476 righe, 87 partite su 201, 35 metriche. È l'unica delle cinque coppe con la
+copertura **a scalini**, e il taglio è netto:
+
+| turni | partite | righe | metriche piene |
+|---|--:|--:|--:|
+| dai 32esimi alla finale | 63/63 | 378 | ~27 su 29 |
+| 7° e 8° turno (dilettanti) | 24/138 | 98 | **1,2 su 29** |
+
+Le 98 righe scarne portano **i soli cartellini**, e non è un difetto: esistono
+*perché* c'è stato un cartellino. La prova è il confronto con l'altra fonte
+della stessa raccolta — `eventi.csv`, che ha i cartellini col minuto:
+**48/48 identiche** sulle righe «Totale», e **0 partite** con righe di
+statistica senza nemmeno un cartellino negli eventi. È anche il motivo per cui i
+periodi non si bilanciano (Totale 174, 2° tempo 160, 1° tempo 142): la riga di
+un tempo esiste solo se in quel tempo è successo qualcosa. Le altre colonne sono
+**vuote**, non zero — se fossero zero sarebbe un finto pieno (R6).
+
+**La coerenza dei tre periodi, misurata** — un controllo che non costava niente
+e non era mai stato fatto su una coppa (128 squadra-partita coi tre periodi):
+
+```
+1° tempo + 2° tempo = Totale
+  29 metriche numeriche              126/126 additive
+  5 metriche a rapporto «p% (n/d)»   n e d additivi 252/252
+  Possesso palla (non additiva)      casa + ospite = 100 in 189/189 gruppi completi
+```
+
+⚠️ **La prima lettura del possesso era sbagliata, ed era mia**: «49 gruppi su
+238 non fanno 100» veniva da un `groupby().sum()` che somma i `NaN` come zeri.
+Righe con possesso 0% nel file: **zero**. Ci sono 98 righe dove il possesso
+*manca*, e sono esattamente le righe scarne dei turni dilettantistici. Un
+`NaN` letto come `0` è lo stesso errore che la regola R6 descrive — solo
+commesso dal lettore invece che dalla fonte.
+
+### Una guardia in più sulla porta d'ingresso
+
+Ri-registrare la raccolta dopo aver cambiato gli alias, e poi re-integrare le
+statistiche **dall'originale già archiviato**, sollevava `SameFileError` —
+`copy2(x, x)` — **dopo** aver riscritto i due CSV e **prima** di aggiornare il
+manifesto: la raccolta restava a metà. Ora la copia si salta quando sorgente e
+destinazione sono lo stesso file. È il motivo per cui la §5-ter conserva gli
+originali: rifare il lavoro da lì dev'essere la strada normale, non un caso
+limite.
+
+**Lezione.** *Una spiegazione strutturale corretta può coprire un buco più
+piccolo di quello che sembra.* «La Coupe de France non ha identificatori» era
+vero, ed è rimasto vero — ma spiegava l'80% del buco, non il 100%, e per due
+fasi il restante 20% è stato archiviato insieme al resto. Il modo di
+accorgersene è stato guardare l'elenco dei nomi mancanti **uno per uno** invece
+del totale: sei righe su quaranta erano PSG, Marsiglia, Lione. **Un numero
+aggregato non dice mai di che cosa è fatto**, e la stessa occhiata che ha
+trovato i sei mancanti ha trovato i due agganciati per sbaglio.
 
 ---
 

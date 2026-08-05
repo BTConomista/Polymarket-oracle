@@ -96,7 +96,7 @@ suo). openfootball è pubblico; Wikipedia è CC BY-SA. Il progetto non rivendica
 alcuna licenza su questi dati.
 
 
-## Statistiche di SQUADRA per periodo (Fase 139-quater)
+## Statistiche di SQUADRA per periodo (Fasi 139-quinquies / 139-sexies)
 
 Secondo consegnato di diretta.it, **complementare** al primo: porta un dato che
 la raccolta base non aveva — le statistiche di squadra divise per **periodo**
@@ -108,14 +108,26 @@ la raccolta base non aveva — le statistiche di squadra divise per **periodo**
 | DFB-Pokal | 406 | 63 | 28 righe (14 partite) |
 | FA Cup | 406 | 63 | 28 righe (14 partite) |
 | EFL Cup (Carabao) | 546 | 91 | **0** — e non è un buco, vedi sotto |
+| Coupe de France | 476 | **87 su 201** | 0 — copertura parziale, vedi sotto |
 
-Mancano ancora Copa del Rey e Coupe de France: la porta le accetta con lo stesso
-comando, `--statistiche <file> --cartella <dir> --coppa <nome>`.
+Manca ancora la Copa del Rey: la porta la accetta con lo stesso comando,
+`--statistiche <file> --cartella <dir> --coppa <nome>`.
+
+⚠️ **La Coupe de France è l'unica con la copertura a scalini, e il taglio è
+netto**: dai 32esimi in poi (63 partite, dove entrano i club di Ligue 1) ci sono
+**tutti e tre i periodi per tutte**, con ~27 metriche su 29 piene. Nei due turni
+dilettantistici (7° e 8°, 138 partite) ci sono righe per **24 partite soltanto**,
+e quelle righe portano **i soli cartellini** — 1,2 metriche su 29. Non è un
+`0` che finge di essere una misura: le altre colonne sono **vuote** (R6). Le 98
+righe scarne esistono *perché* c'è stato un cartellino, e il conteggio combacia
+con gli eventi **48/48**, verificato riga per riga. Per questo i periodi non si
+bilanciano (Totale 174, 2° tempo 160, 1° tempo 142): la riga di un tempo esiste
+solo se in quel tempo è successo qualcosa.
 
 ⚠️ **La Carabao Cup non ha righe «Supplementari», e non è un dato mancante: è
 il regolamento.** Dal 2018-19 la EFL Cup va **direttamente ai rigori** in ogni
 turno; i supplementari restano solo per la finale, che nel 2025-26 è finita 0-2
-nei 90 minuti. Il conferma dal dato indipendente: nelle 91 partite non c'è **un
+nei 90 minuti. La conferma viene dal dato indipendente: nelle 91 partite non c'è **un
 solo evento** oltre il 90° (`eventi.csv` ha 1T, 2T e Rigori, nessun
 «Supplementari»), mentre le altre tre coppe ne hanno 6/131/142. Nessun periodo è
 stato perso per strada — non c'era.
@@ -124,8 +136,27 @@ Vive in `files/diretta_<coppa>_2526/stat_squadra.csv`, agganciato in
 `data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` + `club_id`).
 Le righe senza `game_id` sono quelle della **finale**, che la fonte automatica
 non ha: 6 per coppa, cioè 2 squadre × 3 periodi. **La Carabao fa eccezione**
-(546/546 con `game_id`): è l'unica delle quattro la cui finale player-scores
-contiene.
+(546/546 con `game_id`): è l'unica la cui finale player-scores contiene. **La
+Coupe de France fa l'eccezione opposta** — 0/476 con `game_id` e 234/476 con
+`club_id`: la sua fonte automatica è Wikipedia, che non porta identificatori
+(assenza a monte, non un limite dell'aggancio).
+
+### La coerenza interna dei tre periodi, misurata
+
+I due tempi devono ricomporre il totale, ed è una verifica che non costa niente
+e non era mai stata fatta. Sulla Coupe de France, 128 squadra-partita coi tre
+periodi:
+
+| famiglia | esito |
+|---|---|
+| 29 metriche numeriche (xG, tiri, angoli, falli, parate…) | **126/126 additive** |
+| 5 metriche a rapporto (`Passaggi`, `Cross`, `Tackles`…) | numeratore e denominatore **252/252 additivi** |
+| `Possesso palla` (percentuale, non additiva) | casa + ospite = 100 in **189/189** gruppi completi |
+
+⚠️ La prima lettura del possesso diceva «49 gruppi su 238 non fanno 100»: era
+un `groupby().sum()` che tratta i `NaN` come zeri. Non c'è **nessuna** riga con
+possesso 0%: ci sono 98 righe dove il possesso manca — e sono esattamente le
+righe scarne dei turni dilettantistici.
 
 ⭐ **È il primo dato di coppa che separa i due tempi**, cioè la forma che serve
 al modello a due stadi (residuo aperto delle Fasi 96/99: il secondo tempo è mal

@@ -203,7 +203,15 @@ def integra_statistiche(cartella: Path, xlsx: Path) -> dict:
     nuovo.to_csv(cartella / "stat_giocatori.csv", index=False)
     sq = fogli["Statistiche squadra"]
     sq.to_csv(cartella / "stat_squadra.csv", index=False)
-    shutil.copy2(xlsx, cartella / "originale_statistiche.xlsx")
+    # ⚠️ Ri-integrare PARTENDO dall'originale gia' archiviato e' il modo normale
+    # di rifare il lavoro quando cambia qualcosa a monte (un alias di club, una
+    # regola di aggancio): l'originale conservato per la §5-ter serve proprio a
+    # questo. Senza la guardia, `copy2` alza SameFileError DOPO aver riscritto i
+    # due CSV e PRIMA di aggiornare il manifesto — cioe' lascia la raccolta in
+    # uno stato a meta'.
+    archivio = cartella / "originale_statistiche.xlsx"
+    if xlsx.resolve() != archivio.resolve():
+        shutil.copy2(xlsx, archivio)
     quadro["statistiche_squadra"] = {
         "righe": len(sq),
         "partite": int(sq["ID partita"].nunique()),

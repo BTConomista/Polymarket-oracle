@@ -325,3 +325,25 @@ def test_un_valore_davvero_diverso_blocca_ancora(tmp_path):
         integra_statistiche(cartella, xlsx)
     # e non deve aver scritto niente: si sovrascrive solo dopo la verifica
     assert not (cartella / "stat_squadra.csv").exists()
+
+
+def test_si_puo_ri_integrare_dall_originale_gia_archiviato(tmp_path):
+    """Rifare il lavoro partendo dall'originale conservato dev'essere possibile.
+
+    E' il motivo per cui la §5-ter lo conserva: quando cambia qualcosa a monte
+    — un alias di club, una regola di aggancio — si ri-registra e si re-integra
+    dagli originali. Senza la guardia, `copy2` alzava `SameFileError` **dopo**
+    aver riscritto i due CSV e **prima** del manifesto: la raccolta restava a
+    meta', che e' lo stato peggiore in cui lasciarla.
+    """
+    from scripts.registra_raccolta_coppa_diretta import integra_statistiche
+
+    cartella = tmp_path / "raccolta"
+    xlsx = _scrivi_raccolta_finta(cartella, "1/64 FINALE", "1° turno")
+    integra_statistiche(cartella, xlsx)
+
+    archivio = cartella / "originale_statistiche.xlsx"
+    assert archivio.exists()
+    q = integra_statistiche(cartella, archivio)          # non deve sollevare
+    assert q["fedelta_giocatori"]["celle_divergenti_oltre_arrotondamento"] == 0
+    assert archivio.exists()

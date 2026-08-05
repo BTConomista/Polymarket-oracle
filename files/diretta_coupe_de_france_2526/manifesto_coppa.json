@@ -91,7 +91,7 @@
         ],
         "buchi_colmati_dalla_manuale": [],
         "club_dedotti_dalle_partite": {},
-        "appaiate_per_nome_dentro_la_giornata": 122,
+        "appaiate_per_nome_dentro_la_giornata": 121,
         "contese_lasciate_vuote": 0,
         "non_appaiate_manuale": [
           "2025-11-15 OCPAM-Reims",
@@ -184,6 +184,37 @@
         "giocatori_appaiati_dal_numero_di_maglia": 0,
         "con_differenze": [],
         "non_confrontabile": "la fonte automatica non ha formazioni per questa coppa (Coupe de France, da Wikipedia)"
+      }
+    }
+  },
+  "statistiche": {
+    "file": "originale_statistiche.xlsx",
+    "sha256": "8ca470c1596070b64de0db9c41633d0e18b7511b5b172eab42141e7ff113211a",
+    "partite": {
+      "raccolta": 201,
+      "statistiche": 201,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": []
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1924,
+      "righe_dopo": 1924,
+      "colonne_prima": 114,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0,
+      "colonne_testuali_con_etichette_diverse": {}
+    },
+    "statistiche_squadra": {
+      "righe": 476,
+      "partite": 87,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 174,
+        "2° tempo": 160,
+        "1° tempo": 142
       }
     }
   }

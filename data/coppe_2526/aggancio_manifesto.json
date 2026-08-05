@@ -104,7 +104,7 @@
     "coppa": "Coupe de France",
     "squadre": {
       "totali": 202,
-      "agganciate": 29,
+      "agganciate": 33,
       "non_agganciate": [
         "APM Metz",
         "AS Le Gosier",
@@ -199,14 +199,12 @@
         "Les Bleuets",
         "Les Herbiers",
         "Les Sables",
-        "Lilla",
-        "Lione",
         "Longuenesse",
         "Loon Plage",
+        "Lusitanos",
         "Lyon - La Duchere",
         "Magenta",
         "Marmande",
-        "Marsiglia",
         "Mauguio Carnon",
         "Mazeres",
         "Montceau",
@@ -216,7 +214,6 @@
         "Moulien",
         "Mulhouse",
         "Mutzig",
-        "Nizza",
         "Nord Lozere",
         "OCPAM",
         "Oissel",
@@ -224,7 +221,6 @@
         "Olympique de Villefontaine",
         "Orleans",
         "Orvault",
-        "PSG",
         "Paris 13 Atl.",
         "Pau FC",
         "Pen Hir",
@@ -241,6 +237,7 @@
         "Quevilly Rouen",
         "Racing CFF",
         "Raon L Etape",
+        "Red Star",
         "Reims Ste Anne",
         "Rodez",
         "Romorantin",
@@ -268,7 +265,6 @@
         "Stade Quimperlois",
         "Steenvoorde",
         "Strasbourg Koenigshoffen",
-        "Strasburgo",
         "Thionville",
         "Torcy",
         "Touraine",
@@ -285,7 +281,7 @@
       "totali": 201,
       "agganciate": 0,
       "appaiate_con_la_fonte_automatica": 161,
-      "appaiate_per_nome_dentro_la_giornata": 122,
+      "appaiate_per_nome_dentro_la_giornata": 121,
       "contese_lasciate_vuote": 0,
       "club_dedotti_dalle_partite": {},
       "non_agganciate": [
@@ -494,22 +490,27 @@
     },
     "giocatori": {
       "righe": 2495,
-      "agganciate": 492,
-      "quota": 0.1972,
+      "agganciate": 932,
+      "quota": 0.3735,
       "titolari": 1386,
-      "titolari_agganciati": 295,
-      "persone_distinte": 233
+      "titolari_agganciati": 546,
+      "persone_distinte": 390
     },
     "eventi": {
       "righe": 2792,
       "con_giocatore": 2472,
-      "agganciate": 456,
+      "agganciate": 844,
       "con_game_id": 0
     },
     "statistiche": {
       "righe": 1924,
-      "agganciate": 399,
+      "agganciate": 750,
       "con_game_id": 0
+    },
+    "statistiche_squadra": {
+      "righe": 476,
+      "con_game_id": 0,
+      "con_club_id": 234
     }
   },
   {
