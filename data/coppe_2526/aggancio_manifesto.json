@@ -627,6 +627,11 @@
       "righe": 1974,
       "agganciate": 1957,
       "con_game_id": 1947
+    },
+    "statistiche_squadra": {
+      "righe": 406,
+      "con_game_id": 400,
+      "con_club_id": 406
     }
   }
 ]

@@ -106,6 +106,10 @@ la raccolta base non aveva — le statistiche di squadra divise per **periodo**
 |---|--:|--:|--:|
 | Coppa Italia | 272 | 45 | 2 righe (1 partita) |
 | DFB-Pokal | 406 | 63 | 28 righe (14 partite) |
+| FA Cup | 406 | 63 | 28 righe (14 partite) |
+
+Mancano ancora Carabao Cup, Copa del Rey e Coupe de France: la porta le accetta
+con lo stesso comando, `--statistiche <file> --cartella <dir> --coppa <nome>`.
 
 Vive in `files/diretta_<coppa>_2526/stat_squadra.csv`, agganciato in
 `data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` + `club_id`).

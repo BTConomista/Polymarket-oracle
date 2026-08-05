@@ -111,5 +111,36 @@
         "con_differenze": []
       }
     }
+  },
+  "statistiche": {
+    "file": "fdb79e96-FACup_202526_STATISTICHE.xlsx",
+    "sha256": "090b775c462afccc3132ef6efef9e96159f760f0ceba05ccf5dd99bb9e355a42",
+    "partite": {
+      "raccolta": 63,
+      "statistiche": 63,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": []
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1974,
+      "righe_dopo": 1974,
+      "colonne_prima": 114,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0
+    },
+    "statistiche_squadra": {
+      "righe": 406,
+      "partite": 63,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 126,
+        "1° tempo": 126,
+        "2° tempo": 126,
+        "Supplementari": 28
+      }
+    }
   }
 }
