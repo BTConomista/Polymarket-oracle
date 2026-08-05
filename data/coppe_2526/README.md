@@ -96,7 +96,7 @@ suo). openfootball è pubblico; Wikipedia è CC BY-SA. Il progetto non rivendica
 alcuna licenza su questi dati.
 
 
-## Statistiche di SQUADRA per periodo (Fasi 139-quinquies / 139-sexies)
+## Statistiche di SQUADRA per periodo (Fasi 139-quinquies → 139-septies)
 
 Secondo consegnato di diretta.it, **complementare** al primo: porta un dato che
 la raccolta base non aveva — le statistiche di squadra divise per **periodo**
@@ -109,20 +109,29 @@ la raccolta base non aveva — le statistiche di squadra divise per **periodo**
 | FA Cup | 406 | 63 | 28 righe (14 partite) |
 | EFL Cup (Carabao) | 546 | 91 | **0** — e non è un buco, vedi sotto |
 | Coupe de France | 476 | **87 su 201** | 0 — copertura parziale, vedi sotto |
+| Copa del Rey | 692 | **114 su 117** | 52 righe (13 partite) |
 
-Manca ancora la Copa del Rey: la porta la accetta con lo stesso comando,
-`--statistiche <file> --cartella <dir> --coppa <nome>`.
+**Ci sono tutte e sei.** 2.798 righe, 463 partite, 35 metriche per riga.
 
-⚠️ **La Coupe de France è l'unica con la copertura a scalini, e il taglio è
-netto**: dai 32esimi in poi (63 partite, dove entrano i club di Ligue 1) ci sono
-**tutti e tre i periodi per tutte**, con ~27 metriche su 29 piene. Nei due turni
-dilettantistici (7° e 8°, 138 partite) ci sono righe per **24 partite soltanto**,
-e quelle righe portano **i soli cartellini** — 1,2 metriche su 29. Non è un
-`0` che finge di essere una misura: le altre colonne sono **vuote** (R6). Le 98
-righe scarne esistono *perché* c'è stato un cartellino, e il conteggio combacia
-con gli eventi **48/48**, verificato riga per riga. Per questo i periodi non si
-bilanciano (Totale 174, 2° tempo 160, 1° tempo 142): la riga di un tempo esiste
-solo se in quel tempo è successo qualcosa.
+⚠️ **Coupe de France e Copa del Rey hanno la copertura a TRE LIVELLI**, ed è la
+fonte a farla così: quanto più il turno è dilettantistico, meno pubblica. Il
+livello non è dichiarato da nessuna colonna — si legge da quante metriche sono
+piene, e va guardato prima di usare il dato.
+
+| livello | metriche piene | cosa c'è | dove |
+|---|--:|---|---|
+| **completo** | ~27 su 29 | tutto, xG e possesso compresi | Coupe: dai 32esimi. Rey: dai 1/16 + 15 partite del 2° turno |
+| **base** | 8-10 | tiri, angoli, falli, fuorigioco, rimesse, punizioni, cartellini — nessun xG, nessun possesso | Rey: 13 partite del 2° turno |
+| **solo cartellini** | 1-2 | i cartellini e basta | Coupe: 24 partite dei turni 7-8. Rey: 53 del 1° turno |
+
+Le righe del terzo livello esistono **perché** c'è stato un cartellino, e il
+conteggio combacia con `eventi.csv`: **48/48** sulla Coupe, **106/106** sul Rey.
+Le altre colonne sono **vuote**, non zero — se fossero zero sarebbe un finto
+pieno (R6). Ed è anche il motivo per cui i periodi non si bilanciano: la riga di
+un tempo esiste solo se in quel tempo è successo qualcosa.
+
+Senza statistiche del tutto: **114 partite** della Coupe de France e **3** della
+Copa del Rey.
 
 ⚠️ **La Carabao Cup non ha righe «Supplementari», e non è un dato mancante: è
 il regolamento.** Dal 2018-19 la EFL Cup va **direttamente ai rigori** in ogni
@@ -136,27 +145,44 @@ Vive in `files/diretta_<coppa>_2526/stat_squadra.csv`, agganciato in
 `data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` + `club_id`).
 Le righe senza `game_id` sono quelle della **finale**, che la fonte automatica
 non ha: 6 per coppa, cioè 2 squadre × 3 periodi. **La Carabao fa eccezione**
-(546/546 con `game_id`): è l'unica la cui finale player-scores contiene. **La
-Coupe de France fa l'eccezione opposta** — 0/476 con `game_id` e 234/476 con
-`club_id`: la sua fonte automatica è Wikipedia, che non porta identificatori
-(assenza a monte, non un limite dell'aggancio).
+(546/546 con `game_id`): è l'unica la cui finale player-scores contiene, e con
+lei la **Copa del Rey** (692/692 su entrambi). **La Coupe de France fa
+l'eccezione opposta** — 0/476 con `game_id` e 234/476 con `club_id`: la sua
+fonte automatica è Wikipedia, che non porta identificatori (assenza a monte, non
+un limite dell'aggancio).
 
-### La coerenza interna dei tre periodi, misurata
+⚠️ **La stessa fonte può scrivere un club in due modi fra i due consegnati**:
+sulla Copa del Rey `Ciudad Cieza` nella raccolta base e `Cieza` nel file di
+statistiche — stesse due partite, stessi 14 giocatori, un club solo (CD Cieza,
+`club_id` 56725, confermato dalla fonte automatica). Il sinonimo si accetta solo
+per **sottoinsieme di token** e solo se **unico nei due sensi**, si **dichiara**
+nel manifesto, e la colonna resta com'è consegnata: si canonicalizza la chiave,
+non il dato.
 
-I due tempi devono ricomporre il totale, ed è una verifica che non costa niente
-e non era mai stata fatta. Sulla Coupe de France, 128 squadra-partita coi tre
-periodi:
+### La coerenza interna dei periodi, misurata
 
-| famiglia | esito |
-|---|---|
-| 29 metriche numeriche (xG, tiri, angoli, falli, parate…) | **126/126 additive** |
-| 5 metriche a rapporto (`Passaggi`, `Cross`, `Tackles`…) | numeratore e denominatore **252/252 additivi** |
-| `Possesso palla` (percentuale, non additiva) | casa + ospite = 100 in **189/189** gruppi completi |
+I tempi devono ricomporre il totale, ed è una verifica che non costa niente e
+non era mai stata fatta.
+
+| famiglia | Coupe de France | Copa del Rey |
+|---|---|---|
+| 29 metriche numeriche (xG, tiri, angoli, falli, parate…) | **126/126** | **2.146/2.146** |
+| 5 metriche a rapporto (`Passaggi`, `Cross`, `Tackles`…): numeratore e denominatore | **252/252** | **720/720** |
+| `Possesso palla` (percentuale, non additiva): casa + ospite = 100 | **189/189** | **197/197** |
+
+⭐ **E ha stabilito un fatto di semantica che nessuno aveva verificato: `Totale`
+è la partita INTERA, supplementari compresi.** Non il 90'. Sulle 102
+squadra-partita andate ai supplementari nelle quattro coppe che ne hanno:
+
+```
+1° tempo + 2° tempo + Supplementari = Totale     2.228 / 2.228 celle
+1° tempo + 2° tempo                 = Totale       628 / 2.232   (cioè: falso)
+```
 
 ⚠️ La prima lettura del possesso diceva «49 gruppi su 238 non fanno 100»: era
 un `groupby().sum()` che tratta i `NaN` come zeri. Non c'è **nessuna** riga con
-possesso 0%: ci sono 98 righe dove il possesso manca — e sono esattamente le
-righe scarne dei turni dilettantistici.
+possesso 0%: ci sono righe dove il possesso **manca**, e sono esattamente quelle
+del terzo livello.
 
 ⭐ **È il primo dato di coppa che separa i due tempi**, cioè la forma che serve
 al modello a due stadi (residuo aperto delle Fasi 96/99: il secondo tempo è mal

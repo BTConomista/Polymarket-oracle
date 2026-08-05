@@ -18,7 +18,12 @@ import pandas as pd
 import pytest
 
 from src.data.club_matching import Agganciatore
-from src.data.coppe_aggancio import appaia_partite, chiave_partita, deduci_club
+from src.data.coppe_aggancio import (
+    appaia_partite,
+    chiave_partita,
+    deduci_club,
+    sinonimi_squadra,
+)
 
 # Un registro finto: due club soli, così i test non dipendono da
 # `club_names.csv.gz` (che cambia quando cambia il dataset a monte).
@@ -163,3 +168,37 @@ def test_un_omonimo_che_non_e_un_omonimo_resta_agganciato():
     guardato, non al posto di guardare.
     """
     assert Agganciatore().aggancia("Pirae") == 17782
+
+
+# --------------------------------------------------------------------------- #
+# la stessa fonte, due consegnati, due grafie dello stesso club (Fase 139-septies)
+# --------------------------------------------------------------------------- #
+def _p(*coppie):
+    return pd.DataFrame([{"Casa": a, "Ospite": b} for a, b in coppie])
+
+
+def test_sinonimo_accettato_per_sottoinsieme_di_token():
+    """Il caso Copa del Rey: «Cieza» nel file di statistiche, «Ciudad Cieza»
+    nella raccolta base. Stesse partite, stessi giocatori, un club solo."""
+    sin = sinonimi_squadra(_p(("Ciudad Cieza", "Levante")), _p(("Cieza", "Levante")))
+    assert sin == {"Cieza": "Ciudad Cieza"}
+
+
+def test_nessun_sinonimo_se_i_nomi_coincidono_gia():
+    assert sinonimi_squadra(_p(("Levante", "Reus")), _p(("Levante", "Reus"))) == {}
+
+
+def test_un_nome_che_somiglia_a_due_non_si_sceglie():
+    """La regola di sempre: dove non c'è un vincitore unico, la casella resta
+    vuota. «Ourense» fra «Ourense CF» e «UD Ourense» sono club DIVERSI della
+    stessa città — indovinare qui è il caso «Brest» daccapo."""
+    sin = sinonimi_squadra(_p(("Ourense CF", "UD Ourense")), _p(("Ourense", "Levante")))
+    assert sin == {}
+
+
+def test_due_nomi_che_puntano_allo_stesso_non_si_scelgono():
+    """L'unicità va pretesa nei DUE sensi: se due grafie nuove rivendicano lo
+    stesso nome vecchio, una delle due è sbagliata e non si sa quale."""
+    sin = sinonimi_squadra(_p(("Ciudad Cieza", "Levante")),
+                           _p(("Cieza", "Ciudad"), ("Levante", "Reus")))
+    assert sin == {}

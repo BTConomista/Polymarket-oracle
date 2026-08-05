@@ -46,6 +46,54 @@ ALIAS_COPPA = {
 }
 
 
+def sinonimi_squadra(riferimento: pd.DataFrame, altro: pd.DataFrame,
+                     colonne: tuple[str, ...] = ("Casa", "Ospite")) -> dict[str, str]:
+    """`nome nell'altro foglio -> nome nel foglio di riferimento`, per i residui.
+
+    ⚠️ Serve perche' la STESSA fonte scrive lo stesso club in due modi in due
+    consegnati diversi. Copa del Rey: «Ciudad Cieza» nella raccolta base,
+    «Cieza» nel file di statistiche — stesse due partite (29/10 col Cordoba,
+    03/12 col Levante), stessi 14 giocatori riga per riga, e la fonte
+    automatica conferma un solo club (CD Cieza, `club_id` 56725).
+
+    Sta QUI, e non in uno dei due script, per la lezione della Fase 139-quater:
+    la porta d'ingresso deve accettare il file e lo script degli agganci deve
+    poterlo collegare, e se le due copie della regola divergono il buco non da'
+    errore — da' un numero piu' basso che sembra un limite del dato.
+
+    Resta un CONTROLLO, non un colabrodo. Tre vincoli, tutti necessari:
+      1. si guardano solo i nomi che NON si appaiano gia' alla lettera;
+      2. si accetta solo per **sottoinsieme di token** (`{cieza} ⊆ {ciudad,
+         cieza}`), la stessa regola usata ovunque nel progetto per i club;
+      3. l'appaiamento dev'essere **unico nei due sensi** — un nome nuovo che
+         somiglia a due vecchi, o viceversa, non si sceglie a caso: si lascia
+         fuori, e il controllo a valle fallira' come deve.
+    """
+    def nomi(d):
+        pres = [c for c in colonne if c in d.columns]
+        return {str(x) for c in pres for x in d[c].dropna()}
+
+    vecchi, recenti = nomi(riferimento), nomi(altro)
+    residui_n, residui_v = recenti - vecchi, vecchi - recenti
+    if not residui_n or not residui_v:
+        return {}
+
+    tok_v = {v: normalizza(v) for v in residui_v}
+    proposte: dict[str, list[str]] = {}
+    for n in residui_n:
+        tn = normalizza(n)
+        if not tn:
+            continue
+        proposte[n] = [v for v, tv in tok_v.items() if tn <= tv or tv <= tn]
+
+    quante: dict[str, int] = {}
+    for cand in proposte.values():
+        for v in cand:
+            quante[v] = quante.get(v, 0) + 1
+    return {n: c[0] for n, c in proposte.items()
+            if len(c) == 1 and quante[c[0]] == 1}
+
+
 def chiave_squadra(club_id, nome) -> str:
     """Un lato della chiave di partita: il `club_id` se c'e', il nome se manca.
 

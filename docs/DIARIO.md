@@ -345,6 +345,7 @@ correzioni.*
 - [Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose](#fase-139-quater--due-copie-della-stessa-funzione-e-solo-una-sapeva-le-cose)
 - [Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono](#fase-139-quinquies--il-secondo-consegnato-e-un-controllo-che-bocciava-il-dato-buono)
 - [Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado](#fase-139-sexies--lione-non-è-olympique-lyon-e-red-star-non-è-di-belgrado)
+- [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 
 ---
@@ -16577,6 +16578,157 @@ accorgersene è stato guardare l'elenco dei nomi mancanti **uno per uno** invece
 del totale: sei righe su quaranta erano PSG, Marsiglia, Lione. **Un numero
 aggregato non dice mai di che cosa è fatto**, e la stessa occhiata che ha
 trovato i sei mancanti ha trovato i due agganciati per sbaglio.
+
+---
+
+## Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono
+
+**Obiettivo.** Integrare le statistiche della **Copa del Rey**, la sesta e
+ultima, e chiudere il secondo consegnato su tutte le coppe.
+
+**Ragionamento.** Le prime quattro erano entrate senza toccare una riga di
+codice. La Carabao aveva richiesto una correzione, la Coupe de France un'altra.
+Il sospetto, arrivando alla sesta, non era «funzionerà» ma «cosa scriverà
+diversamente *questa*»: e la risposta è arrivata due volte in due controlli
+diversi, entrambi legittimi, entrambi tarati troppo stretti.
+
+### 1 · «Le partite non coincidono»: 2 su 117
+
+Il primo controllo si è fermato subito. Due partite «solo nella raccolta» e due
+«solo nelle statistiche», stessa data e stesso avversario:
+
+```
+solo raccolta    ('03.12.2025', 'Ciudad Cieza', 'Levante')   ('29.10.2025', 'Ciudad Cieza', 'Cordoba')
+solo statistiche ('03.12.2025', 'Cieza',        'Levante')   ('29.10.2025', 'Cieza',        'Cordoba')
+```
+
+**È un club solo, e non l'abbiamo dedotto: lo dice la fonte indipendente.**
+`data/coppe_2526/partite.csv` ha esattamente quelle due partite sotto **CD
+Cieza**, `club_id` **56725**, terza divisione — e la raccolta base risolveva già
+`Ciudad Cieza` a quello stesso id. Le 14 righe di giocatore sono le stesse
+persone riga per riga.
+
+### 2 · «Un doppione»: e sono due persone
+
+Corretto il primo, il secondo controllo si è fermato su una riga:
+
+> `1 righe con la stessa (data, squadra, giocatore)`
+
+`Fernandez Pol`, Reus FCR, 03/12/2025. Non è un doppione — la raccolta base lo
+dimostra da sola, perché ha il **numero di maglia**:
+
+| | numero | gruppo | rating | minuti |
+|---|--:|---|--:|--:|
+| Fernandez P. | **3** | Titolare | 5.9 | 90 |
+| Fernandez P. | **24** | Panchina, entrato al 59' | 6.2 | 31 |
+
+E i due rating del file di statistiche sono **5.9 e 6.2**. Sono due uomini, e la
+chiave del confronto pretendeva un'unicità che il dato non ha.
+
+### 📐 Il modello in dettaglio
+
+Due tabelle di regole cambiano, entrambe **dentro** il confronto e nessuna sul
+dato scritto.
+
+**(1) Il sinonimo di club** (`coppe_aggancio.sinonimi_squadra`, verificato
+contro il sorgente):
+
+```
+V = nomi di club nel foglio di RIFERIMENTO      (partite.csv della raccolta)
+N = nomi di club nell'ALTRO foglio              (il consegnato nuovo)
+residui:  N∖V  e  V∖N                            ← chi si appaia gia' alla lettera esce
+
+proposte(n) = { v ∈ V∖N : token(n) ⊆ token(v)  ∨  token(v) ⊆ token(n) }
+si accetta  n → v   sse   |proposte(n)| = 1
+                     ∧   v e' proposto da UN SOLO n            (unicita' nei due sensi)
+```
+
+`{cieza} ⊆ {ciudad, cieza}` → accettato. Le tre condizioni sono le stesse di
+`deduci_club` (Fase 139-quater) e servono per lo stesso motivo: «Ourense» fra
+«Ourense CF» e «UD Ourense» sono **club diversi della stessa città**, e
+indovinare lì è il caso «Brest» daccapo. Il sinonimo **si dichiara** nel
+manifesto (`sinonimi_di_squadra_accettati`) e **non riscrive la colonna**: si
+canonicalizza la chiave, non il dato.
+
+**(2) La chiave del confronto riga per riga**, terza versione in tre coppe:
+
+```
+Fase 139-quinquies   (Competizione, Turno, Data, Casa, Ospite, Lato, Squadra, Giocatore)
+                     → 122.401 celle «divergenti» su un dato identico  (Turno e' un'etichetta)
+Fase 139-quinquies   (Data, Squadra, Giocatore)
+                     → 1 «doppione» su due persone diverse             (troppo stretta)
+Fase 139-septies     (Data, canon(Squadra), Giocatore, Stato)          ← quella buona
+```
+
+`Stato` ∈ {Titolare, Subentrato} separa i due Fernandez, è scritto uguale nei
+due consegnati, e sulle altre cinque coppe **non cambia niente**: 0 doppioni
+prima e 0 dopo. `canon` è la mappa del punto (1).
+
+**Dove vive la regola, e perché lì.** `sinonimi_squadra` sta in
+`src/data/coppe_aggancio.py`, non nello script. Non è pulizia: senza, la porta
+d'ingresso accettava il file e lo script degli agganci perdeva le **27 righe**
+di quelle due partite — `stat_giocatori` da 94,2% a **92,3%**, un calo che
+sembra un limite del dato. È la lezione della Fase 139-quater applicata prima di
+pagarla: **due copie della stessa regola divergono, e la divergenza non dà
+errore.**
+
+### Il risultato: sei coppe su sei
+
+| coppa | righe | partite | supplementari |
+|---|--:|--:|--:|
+| Coppa Italia | 272 | 45 | 2 |
+| DFB-Pokal | 406 | 63 | 28 |
+| FA Cup | 406 | 63 | 28 |
+| EFL Cup | 546 | 91 | 0 (regolamento) |
+| Coupe de France | 476 | 87 / 201 | 0 |
+| **Copa del Rey** | **692** | **114 / 117** | **52** |
+| **totale** | **2.798** | **463** | |
+
+Fedeltà del foglio giocatori sulle sei: **1.193.504 celle numeriche confrontate,
+0 divergenti** oltre l'arrotondamento. Aggancio: **692/692** con `game_id` e
+`club_id` — la Copa del Rey è, con la Carabao, una delle due coppe la cui finale
+la fonte automatica contiene. Completezza sulle sei: **48.282 righe raccolte,
+42.202 agganciate (88,0%)**.
+
+### La copertura ha tre livelli, e nessuna colonna lo dice
+
+Copa del Rey e Coupe de France non hanno una copertura piena né vuota: hanno
+**tre livelli**, e li fa la fonte — meno il turno è professionistico, meno
+pubblica.
+
+| livello | metriche piene | dove |
+|---|--:|---|
+| completo (xG, possesso, passaggi…) | ~27 / 29 | Rey dai 1/16 + 15 partite del 2° turno; Coupe dai 32esimi |
+| base (tiri, angoli, falli, fuorigioco, rimesse, punizioni, cartellini) | 8-10 | Rey: 13 partite del 2° turno |
+| solo cartellini | 1-2 | Rey: 53 partite del 1° turno; Coupe: 24 dei turni 7-8 |
+
+Il terzo livello non è un difetto e non è un finto pieno: quelle righe esistono
+**perché** c'è stato un cartellino, le altre colonne sono `NaN` e non `0`, e il
+conteggio combacia con `eventi.csv` — **106/106** sul Rey, 48/48 sulla Coupe.
+Ma il livello **non è dichiarato da nessuna colonna**: si legge da quante
+metriche sono piene, e chi userà questo dato deve guardarlo prima.
+
+### ⭐ E una semantica che nessuno aveva verificato: `Totale` non è il 90'
+
+Le quattro coppe con i supplementari permettono un test che non costa niente:
+
+```
+1° tempo + 2° tempo + Supplementari = Totale     2.228 / 2.228 celle
+1° tempo + 2° tempo                 = Totale       628 / 2.232
+```
+
+**`Totale` è la partita intera, supplementari compresi.** Non era scritto da
+nessuna parte, e la lettura sbagliata non dà errore: dà numeri più piccoli su
+13-14 partite per coppa — esattamente quelle dove il dato conta di più.
+
+**Lezione.** *Tre coppe di fila, tre volte lo stesso errore: un controllo giusto
+tarato su una chiave che il dato non rispetta.* Il turno è un'etichetta della
+fonte, il nome del club è una grafia della fonte, e (data, squadra, giocatore)
+non è un'identità perché due persone possono chiamarsi uguale. Ogni volta il
+controllo ha risposto con qualcosa che **sembrava una scoperta** — 122.401 celle
+divergenti, due partite mancanti, un doppione — e ogni volta il dato era giusto.
+La domanda che ha risolto tutte e tre è la stessa: **non «quanto diverge» ma
+«quali righe, e perché proprio quelle».**
 
 ---
 

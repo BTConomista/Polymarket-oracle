@@ -120,5 +120,44 @@
         ]
       }
     }
+  },
+  "statistiche": {
+    "file": "20ba2434-CopaDelRey_202526_STATISTICHE.xlsx",
+    "sha256": "fda435ada8dc3bb7d3f3f98709aa647551c911417154fdbb919e633d33adaf13",
+    "partite": {
+      "raccolta": 117,
+      "statistiche": 117,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": [],
+      "sinonimi_di_squadra_accettati": {
+        "Cieza": "Ciudad Cieza"
+      }
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1437,
+      "righe_dopo": 1437,
+      "colonne_prima": 115,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0,
+      "colonne_testuali_con_etichette_diverse": {
+        "Turno": 898,
+        "Casa": 30,
+        "Squadra": 14
+      }
+    },
+    "statistiche_squadra": {
+      "righe": 692,
+      "partite": 114,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 228,
+        "2° tempo": 216,
+        "1° tempo": 196,
+        "Supplementari": 52
+      }
+    }
   }
 }

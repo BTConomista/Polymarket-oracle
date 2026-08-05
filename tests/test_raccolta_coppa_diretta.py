@@ -238,7 +238,8 @@ class TestCoppaItaliaRegistrata:
 # il secondo consegnato: le statistiche (Fase 139-quater)
 # --------------------------------------------------------------------------- #
 def _scrivi_raccolta_finta(cartella: Path, turno_vecchio: str, turno_nuovo: str,
-                           valore_nuovo: float = 1.234) -> Path:
+                           valore_nuovo: float = 1.234,
+                           squadra_casa_nuova: str = "A") -> Path:
     """Una raccolta minima + il suo file di statistiche, con i due consegnati
     che scrivono il TURNO in due modi diversi.
 
@@ -255,34 +256,45 @@ def _scrivi_raccolta_finta(cartella: Path, turno_vecchio: str, turno_nuovo: str,
     ])
     partite.to_csv(cartella / "partite.csv", index=False)
 
-    def giocatori(turno, valore, ordine):
+    def giocatori(turno, valore, ordine, squadra_casa="A"):
         d = pd.DataFrame([
             {"Competizione": "C", "Turno": turno, "Data": "12.08.2025",
-             "Casa": "A", "Ospite": "B", "Squadra": "A", "Giocatore": "Rossi M.",
+             "Casa": squadra_casa, "Ospite": "B", "Squadra": squadra_casa,
+             "Giocatore": "Rossi M.", "Stato": "Titolare",
              "Tocchi": 40, "Rating": valore},
+            # ⚠️ stesso nome, stessa squadra, stessa partita — e sono DUE
+            # persone: e' il caso «Fernandez P.» del Reus (numeri 3 e 24).
+            # Senza `Stato` nella chiave, il confronto le vede come un doppione.
+            {"Competizione": "C", "Turno": turno, "Data": "12.08.2025",
+             "Casa": squadra_casa, "Ospite": "B", "Squadra": squadra_casa,
+             "Giocatore": "Rossi M.", "Stato": "Subentrato",
+             "Tocchi": 12, "Rating": valore + 2},
             {"Competizione": "C", "Turno": turno, "Data": "13.08.2025",
              "Casa": "C", "Ospite": "D", "Squadra": "C", "Giocatore": "Bianchi L.",
-             "Tocchi": 51, "Rating": valore + 1},
+             "Stato": "Titolare", "Tocchi": 51, "Rating": valore + 1},
         ])
         return d.iloc[ordine].reset_index(drop=True)
 
     # il vecchio in un ordine, il nuovo nell'altro: e' proprio quello che
     # l'ordinamento deve rimettere a posto
-    giocatori(turno_vecchio, 1.234, [0, 1]).to_csv(
+    giocatori(turno_vecchio, 1.234, [0, 1, 2]).to_csv(
         cartella / "stat_giocatori.csv", index=False)
 
     xlsx = cartella / "statistiche.xlsx"
     squadra = pd.DataFrame([
         {"Competizione": "C", "Turno": turno_nuovo, "Data": "12.08.2025",
-         "Casa": "A", "Ospite": "B", "Periodo": p, "Lato": lato,
+         "Casa": squadra_casa_nuova, "Ospite": "B", "Periodo": p, "Lato": lato,
          "Squadra": sq, "ID partita": "p1", "Tiri": 3}
         for p in ("Totale", "1° tempo", "2° tempo")
-        for lato, sq in (("Casa", "A"), ("Ospite", "B"))
+        for lato, sq in (("Casa", squadra_casa_nuova), ("Ospite", "B"))
     ])
     with pd.ExcelWriter(xlsx) as w:
-        partite.assign(Turno=turno_nuovo).to_excel(w, sheet_name="Partite", index=False)
-        nuovo = giocatori(turno_nuovo, valore_nuovo, [1, 0])
-        nuovo["ID partita"] = ["p2", "p1"]         # la colonna che il vecchio non ha
+        (partite.assign(Turno=turno_nuovo)
+                .replace({"Casa": {"A": squadra_casa_nuova}})
+                .to_excel(w, sheet_name="Partite", index=False))
+        nuovo = giocatori(turno_nuovo, valore_nuovo, [2, 1, 0],
+                          squadra_casa=squadra_casa_nuova)
+        nuovo["ID partita"] = ["p2", "p1", "p1"]   # la colonna che il vecchio non ha
         nuovo.to_excel(w, sheet_name="Statistiche giocatori", index=False)
         squadra.to_excel(w, sheet_name="Statistiche squadra", index=False)
         pd.DataFrame({"Nota": []}).to_excel(w, sheet_name="Note", index=False)
@@ -306,7 +318,7 @@ def test_un_turno_scritto_diversamente_non_e_un_dato_diverso(tmp_path):
 
     f = q["fedelta_giocatori"]
     assert f["celle_divergenti_oltre_arrotondamento"] == 0
-    assert f["colonne_testuali_con_etichette_diverse"] == {"Turno": 2}
+    assert f["colonne_testuali_con_etichette_diverse"] == {"Turno": 3}
     assert f["colonne_nuove"] == ["ID partita"]
     assert q["statistiche_squadra"]["righe"] == 6
     assert (cartella / "stat_squadra.csv").exists()
@@ -347,3 +359,44 @@ def test_si_puo_ri_integrare_dall_originale_gia_archiviato(tmp_path):
     q = integra_statistiche(cartella, archivio)          # non deve sollevare
     assert q["fedelta_giocatori"]["celle_divergenti_oltre_arrotondamento"] == 0
     assert archivio.exists()
+
+
+def test_due_omonimi_nella_stessa_squadra_non_sono_un_doppione(tmp_path):
+    """Copa del Rey: DUE `Fernandez P.` nel Reus il 03/12/2025, numeri 3 e 24.
+
+    Uno titolare per 90', uno subentrato al 59'; i due rating (5.9 e 6.2)
+    combaciano riga per riga con la raccolta base, che li distingue per numero
+    di maglia. Sono due persone. La chiave del confronto pretende l'unicità, e
+    senza `Stato` avrebbe rifiutato il file dicendo «doppione» — cioè avrebbe
+    bocciato il dato buono per la terza volta in tre coppe.
+    """
+    from scripts.registra_raccolta_coppa_diretta import integra_statistiche
+
+    cartella = tmp_path / "raccolta"
+    xlsx = _scrivi_raccolta_finta(cartella, "1/64 FINALE", "1° turno")
+    q = integra_statistiche(cartella, xlsx)
+    assert q["fedelta_giocatori"]["righe_dopo"] == 3
+    scritto = pd.read_csv(cartella / "stat_giocatori.csv")
+    omonimi = scritto[scritto.Giocatore == "Rossi M."]
+    assert len(omonimi) == 2
+    assert sorted(omonimi.Stato) == ["Subentrato", "Titolare"]
+
+
+def test_un_club_scritto_diversamente_fra_i_due_consegnati(tmp_path):
+    """«Cieza» nel file di statistiche, «Ciudad Cieza» nella raccolta base.
+
+    Il controllo «le partite devono essere le stesse» bocciava due partite che
+    ci sono. Il sinonimo va **accettato e dichiarato**, non applicato in
+    silenzio: finisce nel manifesto, e la colonna resta com'è consegnata.
+    """
+    from scripts.registra_raccolta_coppa_diretta import integra_statistiche
+
+    cartella = tmp_path / "raccolta"
+    xlsx = _scrivi_raccolta_finta(cartella, "1° turno", "1° turno",
+                                  squadra_casa_nuova="A Ciudad")
+    q = integra_statistiche(cartella, xlsx)
+    assert q["partite"]["sinonimi_di_squadra_accettati"] == {"A Ciudad": "A"}
+    assert q["partite"]["solo_nella_raccolta"] == []
+    assert q["fedelta_giocatori"]["celle_divergenti_oltre_arrotondamento"] == 0
+    # la grafia consegnata NON viene riscritta: si canonicalizza solo la chiave
+    assert set(pd.read_csv(cartella / "stat_giocatori.csv").Squadra) == {"A Ciudad", "C"}

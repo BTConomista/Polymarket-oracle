@@ -45,7 +45,7 @@ import pandas as pd
 RADICE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RADICE))
 
-from src.data.coppe_aggancio import appaia_partite  # noqa: E402
+from src.data.coppe_aggancio import appaia_partite, sinonimi_squadra  # noqa: E402
 from scripts.registra_raccolta_coppa_diretta import (  # noqa: E402
     FILE_MANIFESTO,
     _stessa_persona as _uguali,
@@ -262,6 +262,18 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     def collega_foglio(nome_file: str, colonna_nome: str) -> pd.DataFrame:
         d = pd.read_csv(cartella / nome_file)
         d["competizione"] = coppa
+        # ⚠️ Il foglio delle statistiche arriva da un SECONDO consegnato, e la
+        # stessa fonte puo' scrivere un club in due modi fra i due file: sulla
+        # Copa del Rey «Cieza» contro «Ciudad Cieza» di `partite.csv`. La
+        # chiave e' (Data, Casa, Ospite): senza riportare i nomi alla stessa
+        # grafia, le 27 righe di quelle due partite perdono `game_id` e
+        # `player_id` — e il calo (94,2% -> 92,3%) sembra un limite del dato.
+        # Stessa funzione della porta d'ingresso, per la lezione della F139-quater.
+        sin = sinonimi_squadra(P, d)
+        if sin:
+            for col in ("Casa", "Ospite", "Squadra"):
+                if col in d.columns:
+                    d[col] = [sin.get(str(x), x) for x in d[col]]
         d["game_id"] = pd.Series([mappa_gid.get(k) for k in chiave(d)],
                                  index=d.index).astype("Int64")
         def risolvi(k, n):
@@ -286,6 +298,11 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     if f_sq.exists():
         squadra = pd.read_csv(f_sq)
         squadra["competizione"] = coppa
+        sin_sq = sinonimi_squadra(P, squadra)
+        if sin_sq:
+            for col in ("Casa", "Ospite", "Squadra"):
+                if col in squadra.columns:
+                    squadra[col] = [sin_sq.get(str(x), x) for x in squadra[col]]
         squadra["game_id"] = squadra["ID partita"].map(mappa_gid_id).astype("Int64")
         squadra["club_id"] = squadra.Squadra.map(cid).astype("Int64")
         _log(f"  stat squadra: {int(squadra.game_id.notna().sum())}/{len(squadra)} "

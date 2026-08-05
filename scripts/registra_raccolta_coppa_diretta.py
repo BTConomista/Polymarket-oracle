@@ -50,7 +50,7 @@ RADICE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RADICE))
 
 from src.data.club_matching import _TRADUZIONE  # noqa: E402
-from src.data.coppe_aggancio import appaia_partite  # noqa: E402
+from src.data.coppe_aggancio import appaia_partite, sinonimi_squadra  # noqa: E402
 
 FOGLI = ["Partite", "Formazioni e cambi", "Eventi", "Stat giocatori", "Note"]
 
@@ -139,11 +139,15 @@ def integra_statistiche(cartella: Path, xlsx: Path) -> dict:
     # 1. le partite devono essere le stesse della raccolta gia' registrata
     base = pd.read_csv(cartella / "partite.csv")
     nuove = fogli["Partite"]
-    chiave = lambda d: set(zip(d.Data, d.Casa, d.Ospite))  # noqa: E731
+    sinonimi = sinonimi_squadra(base, nuove)
+    canon = lambda n: sinonimi.get(str(n), str(n))  # noqa: E731
+    chiave = lambda d: set(zip(d.Data, map(canon, d.Casa),  # noqa: E731
+                               map(canon, d.Ospite)))
     solo_base, solo_nuove = chiave(base) - chiave(nuove), chiave(nuove) - chiave(base)
     quadro["partite"] = {"raccolta": len(base), "statistiche": len(nuove),
                          "solo_nella_raccolta": sorted(map(str, solo_base)),
-                         "solo_nelle_statistiche": sorted(map(str, solo_nuove))}
+                         "solo_nelle_statistiche": sorted(map(str, solo_nuove)),
+                         "sinonimi_di_squadra_accettati": sinonimi}
     if solo_base or solo_nuove:
         raise ValueError(
             f"le partite non coincidono: {len(solo_base)} solo nella raccolta, "
@@ -161,16 +165,31 @@ def integra_statistiche(cartella: Path, xlsx: Path) -> dict:
     # le due tabelle finivano in ordine diverso e divergevano **122.401 celle**
     # su un dato che e' identico riga per riga. Era un controllo cieco: bocciava
     # il dato buono per una differenza di etichetta.
-    CHIAVE = ["Data", "Squadra", "Giocatore"]
-    if any(c not in comuni for c in CHIAVE):
-        raise ValueError(f"chiave di confronto assente: {CHIAVE}")
+    # ⚠️ E `Squadra` va portata alla stessa grafia PRIMA di ordinare, per lo
+    # stesso motivo: sulla Copa del Rey «Cieza» e «Ciudad Cieza» sono lo stesso
+    # club, e 14 righe finirebbero in due punti diversi delle due tabelle. La
+    # colonna resta com'e' consegnata: si canonicalizza solo la CHIAVE.
+    # ⚠️ E nemmeno (data, squadra, giocatore) basta: la Copa del Rey ha DUE
+    # `Fernandez P.` nel Reus il 03/12/2025 — numeri 3 e 24, uno titolare per
+    # 90' e uno subentrato al 59'. Sono due persone, non una riga doppia (la
+    # raccolta base le distingue per numero di maglia, e i due rating 5.9/6.2
+    # combaciano riga per riga). `Stato` li separa, e' scritto uguale nei due
+    # consegnati, e sulle altre cinque coppe non cambia niente: 0 doppioni
+    # prima e dopo.
+    CHIAVE = ["Data", "_squadra", "Giocatore", "Stato"]
+    for d in (vecchio, nuovo):
+        if any(c not in d.columns for c in ("Data", "Squadra", "Giocatore", "Stato")):
+            raise ValueError(
+                "chiave di confronto assente: Data/Squadra/Giocatore/Stato")
+        d["_squadra"] = [canon(x) for x in d["Squadra"]]
     doppioni = int(nuovo.duplicated(subset=CHIAVE).sum())
     if doppioni:
         raise ValueError(
             f"{doppioni} righe con la stessa (data, squadra, giocatore): la "
             f"chiave non e' univoca e il confronto non sarebbe affidabile.")
-    a = nuovo[comuni].sort_values(CHIAVE).reset_index(drop=True)
-    b = vecchio[comuni].sort_values(CHIAVE).reset_index(drop=True)
+    a = nuovo.sort_values(CHIAVE).reset_index(drop=True)[comuni]
+    b = vecchio.sort_values(CHIAVE).reset_index(drop=True)[comuni]
+    nuovo = nuovo.drop(columns="_squadra")
     oltre_arrotondamento = 0
     etichette_diverse = {}
     if a.shape == b.shape:

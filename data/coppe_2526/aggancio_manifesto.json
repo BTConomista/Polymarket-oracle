@@ -55,6 +55,11 @@
       "righe": 1437,
       "agganciate": 1353,
       "con_game_id": 1437
+    },
+    "statistiche_squadra": {
+      "righe": 692,
+      "con_game_id": 692,
+      "con_club_id": 692
     }
   },
   {
