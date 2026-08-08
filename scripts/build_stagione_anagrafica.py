@@ -168,6 +168,8 @@ def squadre_2026_27() -> dict[str, set[str]]:
     for r in _arch.leggi(ultimo)["righe"]:
         if " vs " not in (r.get("partita") or ""):
             continue
+        if r.get("fascia", "campionato") != "campionato":
+            continue          # coppe e cadetterie fuori dall'anagrafica (F142)
         casa, ospite = r["partita"].split(" vs ", 1)
         out.setdefault(r["lega"], set()).update([casa.strip(), ospite.strip()])
     return out

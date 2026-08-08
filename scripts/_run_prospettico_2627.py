@@ -96,6 +96,11 @@ def fixture_veri(snapshot: Path) -> list[dict]:
     d = _arch.leggi(snapshot)
     viste: dict[tuple, dict] = {}
     for r in d["righe"]:
+        # Il test prospettico e' definito sui 5 campionati modellati: una
+        # partita di Coppa Italia non ha una previsione da congelare, perche'
+        # il modello non sa prezzare Vicenza-Catania (Fase 142).
+        if r.get("fascia", "campionato") != "campionato":
+            continue
         casa, ospite = r["partita"].split(" vs ")
         chiave = (r["lega"], casa, ospite)
         if chiave in viste:

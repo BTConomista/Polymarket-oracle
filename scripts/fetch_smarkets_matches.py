@@ -65,6 +65,7 @@ USO:
 from __future__ import annotations
 
 import argparse
+import collections
 import datetime as dt
 import json
 import re
@@ -109,6 +110,102 @@ SLUG_LEGA = {
     "france-ligue-1": "ligue_1",
 }
 
+# ---------------------------------------------------------------------------
+# IL PERIMETRO ALLARGATO (Fase 142, decisione utente 08/08/2026)
+#
+# Misurato l'08/08: Smarkets espone **865 partite su 124 competizioni** e noi
+# ne prendevamo 58, il 6,7%. Fuori restavano cose che il progetto usa o
+# vorrebbe usare -- fra cui la Coppa Italia che giocava **quel giorno**.
+# Allargato a: coppe nazionali dei nostri 5 paesi, competizioni UEFA per club,
+# seconde divisioni dei 5 paesi. Perche' queste tre e non altre:
+#   - COPPE: il progetto ha gia' i dati di coppa 2025-26 (Fase 138, 662
+#     partite) e non ha **mai** avuto una quota per quelle partite;
+#   - SECONDE DIVISIONI: e' il buco del prior neopromosse δ (Fase 7/8), che
+#     oggi e' una costante per lega *proprio perche'* non abbiamo dati sulla
+#     serie cadetta;
+#   - UEFA: il progetto non ha mai avuto una scala di forza comune fra
+#     campionati, e il mercato la prezza per noi.
+# Costo misurato: +11 min e +710 KB sul giro giornaliero (era 20 min/593 KB).
+#
+# ⚠️ NON SONO LEGHE, e la colonna si chiama `lega` per compatibilita' con
+# l'archivio gia' scritto: ogni riga porta anche `fascia`
+# (campionato/coppa/seconda), ed e' quella che va usata per filtrare.
+SLUG_ESTESO = {
+    # --- coppe nazionali (fascia "coppa") ---
+    "italy-coppa-italia": ("coppa_italia", "coppa"),
+    "england-league-cup": ("league_cup", "coppa"),
+    # --- supercoppe ---
+    "germany-supercup": ("supercoppa_germania", "coppa"),
+    "france-super-cup": ("supercoppa_francia", "coppa"),
+    "uefa-super-cup": ("supercoppa_uefa", "coppa"),
+    # --- UEFA per club ---
+    "uefa-champions-league-qualification": ("ucl_qual", "coppa"),
+    "uefa-europa-league-qualification": ("uel_qual", "coppa"),
+    # --- seconde divisioni dei 5 paesi (fascia "seconda") ---
+    "italy-serie-b": ("serie_b", "seconda"),
+    "england-championship": ("championship", "seconda"),
+    "spain-la-liga-2": ("la_liga_2", "seconda"),
+    "germany-2-bundesliga": ("bundesliga_2", "seconda"),
+    "france-ligue-2": ("ligue_2", "seconda"),
+}
+
+# LE ATTESE: competizioni che vogliamo e che l'API **non espone ancora**.
+#
+# PERCHE' SI TIRA A INDOVINARE, QUI E SOLO QUI. Coppa del Rey, DFB-Pokal,
+# Coupe de France, FA Cup e i gironi UEFA cominciano piu' avanti, e l'API di
+# Smarkets espone **solo** cio' che e' `upcoming`: non c'e' modo di leggere
+# oggi il nome che avranno (provati `/competitions/` e `/sports/`: 404;
+# `state=new`: zero eventi). Le alternative erano due, entrambe peggiori:
+# aspettare che compaiano e perdere i primi giorni di traiettoria -- che non
+# tornano (`newseason.md` §2) -- oppure includere per prefisso di paese, che
+# tirerebbe dentro anche National League North e le femminili.
+#
+# Indovinare qui e' **sicuro** perche' non e' un'assunzione silenziosa: uno
+# slug sbagliato semplicemente non combacia mai, e il RADAR qui sotto ci dice
+# che cosa e' comparso davvero. Piu' varianti per la stessa coppa costano
+# zero, quindi se ne mettono piu' d'una dove la convenzione non e' ovvia
+# (osservate dal vivo: `italy-coppa-italia` usa il nome nativo,
+# `england-league-cup` e `france-super-cup` no).
+SLUG_ATTESI = {
+    "england-fa-cup": ("fa_cup", "coppa"),
+    "england-community-shield": ("community_shield", "coppa"),
+    "spain-copa-del-rey": ("copa_del_rey", "coppa"),
+    "spain-copa-rey": ("copa_del_rey", "coppa"),
+    "spain-super-cup": ("supercoppa_spagna", "coppa"),
+    "spain-supercopa": ("supercoppa_spagna", "coppa"),
+    "germany-dfb-pokal": ("dfb_pokal", "coppa"),
+    "germany-pokal": ("dfb_pokal", "coppa"),
+    "france-coupe-de-france": ("coupe_de_france", "coppa"),
+    "france-french-cup": ("coupe_de_france", "coppa"),
+    "italy-super-cup": ("supercoppa_italia", "coppa"),
+    "italy-supercoppa": ("supercoppa_italia", "coppa"),
+    "uefa-champions-league": ("ucl", "coppa"),
+    "uefa-europa-league": ("uel", "coppa"),
+    "uefa-conference-league": ("uecl", "coppa"),
+    "uefa-europa-conference-league": ("uecl", "coppa"),
+}
+
+# Il perimetro effettivo: verificati + attesi. Gli attesi non fanno danno
+# finche' non compaiono, e il giorno che compaiono sono gia' dentro.
+PERIMETRO = {**SLUG_ESTESO, **SLUG_ATTESI}
+
+# IL RADAR (R6 applicato al perimetro, non alla cella).
+#
+# Il modo realistico in cui perderemo una competizione non e' un errore di
+# codice: e' che si chiami diversamente da come l'abbiamo scritta, e che
+# nessuno se ne accorga -- esattamente com'e' andata con `spain-laliga` ->
+# `spain-la-liga` il 31/07, trovata a mano cinque giorni dopo. Il radar
+# elenca ogni competizione dei nostri paesi (o UEFA) che il listino espone e
+# che NOI non raccogliamo, e la scrive nel log e nel file. Non decide niente:
+# toglie il silenzio.
+RADAR_PREFISSI = ("italy-", "england-", "spain-", "germany-", "france-", "uefa-")
+# Fuori dal radar cio' che non vogliamo comunque: non e' rumore da guardare
+# ogni giorno. Stessa logica di EXCLUDE_COMP in fetch_smarkets_outrights.py.
+RADAR_ESCLUSI = re.compile(
+    r"women|ladies|femminile|-u\d\d|youth|reserves?|primavera|national-league|"
+    r"regionalliga|oberliga|serie-c|serie-d|liga-3|division-3|ligue-3|"
+    r"3-liga|league-1|league-2|federacion|national-2|national-3")
+
 # I mercati che il progetto prezza davvero (docs/PANCHINA.md, listino Tier 1).
 # Il nome e' quello che usa Smarkets, verificato dal vivo.
 MERCATI_BASE = {
@@ -129,9 +226,57 @@ MERCATI_PRINCIPALI = {"1x2", "ou25", "ggng"}
 _ORA = re.compile(r"^(\d{4}-\d{2}-\d{2})T")
 
 
-def _slug_lega(full_slug: str | None) -> str | None:
+def _competizione(full_slug: str | None) -> str | None:
+    """Il segmento di competizione dello slug, o None se lo slug e' malformato."""
     m = re.match(r"/sport/football/([^/]+)/", full_slug or "")
-    return SLUG_LEGA.get(m.group(1)) if m else None
+    return m.group(1) if m else None
+
+
+def _slug_lega(full_slug: str | None) -> str | None:
+    """La chiave d'archivio della competizione, o None se e' fuori perimetro.
+
+    Il confronto e' ESATTO sul segmento di competizione, non "contiene": un
+    match largo su un'API che puo' rinominare i suoi slug e' il modo tipico di
+    raccogliere la competizione sbagliata senza accorgersene. Dalla Fase 142
+    guarda in tre mappe invece di una, ma la regola non cambia.
+    """
+    c = _competizione(full_slug)
+    if c is None:
+        return None
+    if c in SLUG_LEGA:
+        return SLUG_LEGA[c]
+    voce = PERIMETRO.get(c)
+    return voce[0] if voce else None
+
+
+def _fascia(full_slug: str | None) -> str | None:
+    """`campionato` per i 5 modellati, `coppa`/`seconda` per il resto.
+
+    E' il campo con cui si filtra: la colonna `lega` porta anche
+    `coppa_italia` e `serie_b` dalla Fase 142, e un lettore che facesse
+    `groupby('lega')` credendole campionati sbaglierebbe in silenzio.
+    """
+    c = _competizione(full_slug)
+    if c is None:
+        return None
+    if c in SLUG_LEGA:
+        return "campionato"
+    voce = PERIMETRO.get(c)
+    return voce[1] if voce else None
+
+
+def fuori_perimetro(competizioni: dict[str, int]) -> dict[str, int]:
+    """Il RADAR: competizioni dei nostri paesi (o UEFA) che NON raccogliamo.
+
+    `competizioni` e' {slug: quante partite} come il listino l'ha esposto.
+    Ritorna il sottoinsieme che ci riguarderebbe e che sta fuori: e' li' che
+    comparira' `germany-dfb-pokal` col nome vero se l'abbiamo indovinato
+    sbagliato, ed e' l'unico modo di accorgersene senza guardare a mano.
+    """
+    return {c: n for c, n in competizioni.items()
+            if c.startswith(RADAR_PREFISSI)
+            and c not in SLUG_LEGA and c not in PERIMETRO
+            and not RADAR_ESCLUSI.search(c)}
 
 
 def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
@@ -151,6 +296,13 @@ def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
     partite nostre in un listino non vuoto» non e' uno stato che l'off-season
     produce: e' un'anomalia. Zero eventi in assoluto lo e' a maggior ragione --
     da qualche parte nel mondo si gioca sempre.
+
+    ⚠️ `nostri` sono le partite dei 5 CAMPIONATI, non del perimetro (Fase
+    142). La differenza non e' formale: le coppe vanno e vengono per
+    costruzione -- la Coppa Italia fuori stagione ha zero partite ed e'
+    giusto cosi' -- quindi contarle qui dentro spegnerebbe la guardia proprio
+    nel caso che deve prendere. Se sparissero tutti e 5 i campionati e
+    restassero le coppe, `nostri` deve valere zero e l'allarme deve suonare.
     """
     if eventi_totali == 0:
         return ("il listino delle partite future e' VUOTO: 0 eventi calcio in "
@@ -184,20 +336,32 @@ def leghe_assenti(nostre: list[dict]) -> set[str]:
     ri-scaricano (`newseason.md` §2). Chi chiama raccoglie tutto, scrive il
     file, e solo dopo esce con codice diverso da zero.
     """
-    esposte = {e["lega"] for e in nostre}
+    # Il filtro sulla fascia non e' ridondante dalla Fase 142: `nostre`
+    # contiene anche coppe e cadetterie, e senza il filtro basterebbe una
+    # collisione di chiave (una coppa che si chiamasse `serie_a`) perche' la
+    # guardia si spegnesse da sola.
+    esposte = {e["lega"] for e in nostre if e.get("fascia") == "campionato"}
     return set(SLUG_LEGA.values()) - esposte
 
 
-def scandaglia_upcoming() -> tuple[list[dict], int]:
-    """Tutte le partite delle 5 leghe che Smarkets espone, e quanti eventi
-    calcio ha mostrato in totale (il secondo serve solo alla diagnosi)."""
-    nostre, totale = [], 0
+def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
+    """Le partite del perimetro, il totale degli eventi calcio, e il conteggio
+    per competizione.
+
+    Il terzo valore (Fase 142) serve al radar: senza il listino COMPLETO per
+    competizione non si puo' dire che cosa stiamo lasciando fuori.
+    """
+    nostre, totale, competizioni = [], 0, {}
     url = "/events/?type=football_match&state=upcoming&limit=200"
     while url:
         d = _get(url)
         for e in d.get("events", []):
             totale += 1
-            lega = _slug_lega(e.get("full_slug"))
+            slug = e.get("full_slug")
+            c = _competizione(slug)
+            if c:
+                competizioni[c] = competizioni.get(c, 0) + 1
+            lega = _slug_lega(slug)
             if not lega:
                 continue
             try:
@@ -206,11 +370,12 @@ def scandaglia_upcoming() -> tuple[list[dict], int]:
             except ValueError:
                 continue
             nostre.append({"event_id": e["id"], "nome": e.get("name"),
-                           "lega": lega, "inizio": e.get("start_datetime"),
+                           "lega": lega, "fascia": _fascia(slug),
+                           "inizio": e.get("start_datetime"),
                            "_inizio": inizio})
         nx = (d.get("pagination") or {}).get("next_page")
         url = f"/events/{nx}" if nx else None
-    return nostre, totale
+    return nostre, totale, competizioni
 
 
 def entro_finestra(nostre: list[dict], entro_ore: int,
@@ -338,7 +503,12 @@ def quote_partita(ev: dict, tutti: bool,
             libro = libri.get(str(c["id"])) or {}
             p = book_price(libro)
             righe.append({
-                "lega": ev["lega"], "partita": ev["nome"],
+                "lega": ev["lega"],
+                # `fascia` e' il campo con cui si filtra dalla Fase 142:
+                # `lega` porta anche coppe e cadetterie, e un lettore che le
+                # scambiasse per campionati sbaglierebbe in silenzio.
+                "fascia": ev.get("fascia", "campionato"),
+                "partita": ev["nome"],
                 "inizio": ev["inizio"], "event_id": ev["event_id"],
                 "mercato": etichetta, "mercato_smarkets": nome,
                 "market_id": mid, "contratto": c.get("name"),
@@ -372,24 +542,38 @@ def main(argv=None) -> None:
                          f"(default {BUDGET_MINUTI}; <=0 = nessun limite)")
     a = ap.parse_args(argv)
 
-    nostre, totale = scandaglia_upcoming()
+    nostre, totale, competizioni = scandaglia_upcoming()
 
     # R6: prima di tutto, il listino ricevuto ha senso? Un giro che raccoglie
     # zero perche' l'API e' muta deve FALLIRE, non uscire verde come un giro
-    # che raccoglie zero perche' e' off-season.
-    perche = anomalia_del_listino(totale, len(nostre))
+    # che raccoglie zero perche' e' off-season. Si conta sui soli CAMPIONATI:
+    # le coppe hanno zero partite per mezza stagione ed e' normale.
+    campionati = [e for e in nostre if e["fascia"] == "campionato"]
+    perche = anomalia_del_listino(totale, len(campionati))
     if perche:
         raise SystemExit(f"ANOMALIA nel listino Smarkets: {perche}")
 
     # La guardia per-lega (01/08/2026): NON solleva qui, o perderemmo anche le
     # leghe che ci sono. Si raccoglie, si scrive, si esce rosso alla fine.
     mancanti = leghe_assenti(nostre)
+    ignorate = fuori_perimetro(competizioni)
 
     entro = 0 if a.tutte_le_esposte else a.entro_ore
     evs = entro_finestra(nostre, entro)
     quali = "esposte" if entro <= 0 else f"entro {entro}h"
-    print(f"eventi calcio nel listino: {totale} | partite delle 5 leghe "
-          f"esposte: {len(nostre)} | in raccolta ({quali}): {len(evs)}")
+    per_fascia = collections.Counter(e["fascia"] for e in evs)
+    print(f"eventi calcio nel listino: {totale} su {len(competizioni)} "
+          f"competizioni | perimetro esposto: {len(nostre)} "
+          f"({len(campionati)} dei 5 campionati) | in raccolta ({quali}): "
+          f"{len(evs)}  " + " ".join(f"{k}={v}" for k, v in sorted(per_fascia.items())))
+    if ignorate:
+        # Il radar (Fase 142). NON e' un allarme: e' l'elenco di cio' che
+        # stiamo lasciando fuori pur riguardandoci, ed e' il posto dove
+        # comparira' `germany-dfb-pokal` col nome vero se l'abbiamo scritto
+        # sbagliato in SLUG_ATTESI. Silenzio qui = una coppa persa in silenzio.
+        print(f"\n📡 fuori perimetro ma dei nostri paesi/UEFA "
+              f"({sum(ignorate.values())} partite su {len(ignorate)} competizioni): "
+              + ", ".join(f"{c}({n})" for c, n in sorted(ignorate.items())))
     if mancanti:
         print(f"\n⚠️  LEGHE SENZA NESSUNA PARTITA ESPOSTA: "
               f"{', '.join(sorted(mancanti))}. Probabile rinominamento dello "
@@ -397,8 +581,15 @@ def main(argv=None) -> None:
               f"-> spain-la-liga, 31/07/2026). Controllare SLUG_LEGA contro il "
               f"listino vero PRIMA del calcio d'inizio: i dati pre-partita non "
               f"si recuperano dopo.\n")
-    for e in sorted(evs, key=lambda x: x["_inizio"]):
-        print(f"   [{e['lega']:15s}] {e['inizio']}  {e['nome']}")
+    # ORDINE DI RACCOLTA = ORDINE DI CALCIO D'INIZIO (Fase 142). Non e'
+    # cosmetica: se il budget scade si perde la CODA, e la coda dev'essere
+    # cio' che manca di piu' -- una partita fra tre settimane la ri-prendiamo
+    # domani, una che comincia fra un'ora no. Prima della Fase 142 il ciclo
+    # seguiva l'ordine dell'API, cioe' un ordine arbitrario, e col perimetro
+    # allargato toccare il tetto e' diventato plausibile.
+    evs = sorted(evs, key=lambda x: x["_inizio"])
+    for e in evs:
+        print(f"   [{e['lega']:20s}] {e['inizio']}  {e['nome']}")
 
     if not evs:
         # Non e' un errore, ma non e' nemmeno un non-evento: si dice quanto
@@ -480,6 +671,16 @@ def main(argv=None) -> None:
         "solo_principali": a.solo_principali,
         "eventi_calcio_nel_listino": totale,
         "partite_nostre_esposte": len(nostre),
+        # Dalla Fase 142 il file non contiene solo campionati: senza questi
+        # tre campi, chi rilegge fra mesi non puo' sapere CHE COSA questo
+        # giro poteva contenere -- e un file di coppe non e' confrontabile
+        # riga per riga con uno di soli campionati.
+        "perimetro": sorted({(e["fascia"], e["lega"]) for e in evs}),
+        "partite_per_fascia": dict(sorted(per_fascia.items())),
+        # Il radar: cosa il listino esponeva dei nostri paesi e noi NON
+        # abbiamo preso. Un elenco non vuoto non e' un errore -- e' l'unico
+        # posto dove si vede una coppa nuova col nome che non avevamo previsto.
+        "fuori_perimetro": dict(sorted(ignorate.items())),
         # Un buco DICHIARATO e' innocuo, uno silenzioso no (R6). Chi rilegge
         # l'archivio fra mesi deve poter distinguere «la Liga non c'era» da
         # «la Liga non l'abbiamo chiesta».
