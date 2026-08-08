@@ -1186,6 +1186,46 @@ stesso dato esiste dalla Fase 131.
 
 ---
 
+## 5-octies-ter · L'incrocio dei dati di coppa (`data/coppe_2526/incrocio_*`) — Fase 139-octies
+
+Risponde alla domanda «per QUESTA partita ho tutto, e si unisce?». Prodotto da
+`python scripts/verifica_incrocio_coppe.py --csv`:
+`incrocio_per_partita.csv` (una riga per partita del perimetro, un booleano per
+blocco) e `incrocio_manifesto.json` (i conteggi).
+
+⚠️ **Tre distinzioni che un conteggio unico confonde**, e per cui lo script
+produce quattro tabelle invece di una:
+
+| | |
+|---|---|
+| **fuori perimetro ≠ buco** | 82 delle 662 partite non sono mai state chieste (decisione utente sul perimetro): al denominatore diventerebbero un difetto immaginario |
+| **senza ponte ≠ assente** | sulla chiave `game_id` la Coupe de France è 0 su tutto; sulla **sua** chiave ha 201 partite, 63 con le sostituzioni, 87 con le statistiche di squadra |
+| **presente ≠ unibile** | una partita può esserci da entrambe le parti mentre le **persone** non si uniscono: è il join `player_id`, e va misurato a parte |
+
+**Esito** (05/08/2026), sulle **580** partite del perimetro:
+
+| | |
+|---|--:|
+| incrociabili su TUTTI i blocchi | **296 / 580 (51,0%)** |
+| idem, escludendo la Coupe de France | **296 / 379 (78,1%)** |
+| FA Cup / EFL Cup / DFB-Pokal / Coppa Italia | 98,4% · 97,8% · 96,8% · 88,9% |
+| Copa del Rey | 37,6% (il First Round non ha statistiche individuali) |
+| **titolare → la sua statistica individuale** (`player_id`) | **6.489 / 6.600 (98,3%)** |
+
+**Il meteo non esiste per il 2025-26**: zero su 662, e non è «manca in qualche
+partita». L'infrastruttura del progetto (`fetch_stadi_coordinate.py`,
+`stagione_2026_2027/giornaliero/`) è **prospettica** — raccoglie la *previsione*
+a 16 giorni, che all'indietro non si ricostruisce. Per chiuderlo servirebbero:
+le coordinate di **363 stadi su 422** (ne abbiamo 59, che coprono 110 partite),
+una fonte storica (`open-meteo.com`, raggiungibile e senza chiave), e la
+consapevolezza che il risultato sarebbe un **consuntivo `post`**, non la
+previsione `pre` che serve a un modello (R8).
+
+**Disponibilità temporale (R8)**: `incrocio_per_partita.csv` è **`statico`** —
+descrive la copertura delle nostre tabelle, non la partita.
+
+---
+
 ## 5-nonies · Allenatori e arbitri per partita (`files/player_scores/games.csv.gz`) — Fase 140
 
 `games.csv` del dataset `davidcariboo/player-scores` — la **tabella-cardine**

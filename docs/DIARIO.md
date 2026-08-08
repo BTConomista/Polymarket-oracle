@@ -346,6 +346,7 @@ correzioni.*
 - [Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono](#fase-139-quinquies--il-secondo-consegnato-e-un-controllo-che-bocciava-il-dato-buono)
 - [Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado](#fase-139-sexies--lione-non-è-olympique-lyon-e-red-star-non-è-di-belgrado)
 - [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
+- [Fase 139-octies — «Le colonne ci sono» non è «si uniscono»](#fase-139-octies--le-colonne-ci-sono-non-è-si-uniscono)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 - [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
 - [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
@@ -16731,6 +16732,171 @@ controllo ha risposto con qualcosa che **sembrava una scoperta** — 122.401 cel
 divergenti, due partite mancanti, un doppione — e ogni volta il dato era giusto.
 La domanda che ha risolto tutte e tre è la stessa: **non «quanto diverge» ma
 «quali righe, e perché proprio quelle».**
+
+---
+
+## Fase 139-octies — «Le colonne ci sono» non è «si uniscono»
+
+**Obiettivo.** Domanda dell'utente: *«verifica che siamo in grado di incrociare
+tutti i dati relativi a queste partite: allenatore, arbitro, statistiche di
+squadra, meteo, 11 titolari + sostituzioni + statistiche individuali»*. Non
+«esistono le tabelle» — quello si vede dagli schemi. **Si uniscono, partita per
+partita?**
+
+**Ragionamento.** La domanda ha una risposta facile e sbagliata: elencare le
+colonne di ogni file e dire di sì. Ogni blocco vive in una tabella diversa, con
+una chiave diversa, da una fonte diversa; e la Fase 139-ter aveva già mostrato
+cosa costa non contarlo — **8.475 righe di evento raccolte e collegate a
+niente**, invisibili perché le percentuali su partite e formazioni erano al 99%.
+Quindi: si conta riga per riga, e si scrive uno script perché il numero resti
+ri-calcolabile.
+
+**Alternative considerate.**
+
+1. *Una tabella sola, «quante partite hanno tutto».* È quella che ho scritto per
+   prima, ed era **sbagliata in due modi contemporaneamente** (vedi sotto).
+2. *Elencare le colonne per file.* Non risponde: dice che il dato esiste, non
+   che si unisce a quella partita.
+3. *Fidarsi delle percentuali di aggancio già pubblicate* (99,8%, 94,7%…).
+   Sono per **foglio**, non per **partita**: una coppa può avere tutti i fogli
+   agganciati al 99% e pochissime partite con *tutti* i blocchi insieme.
+
+**Scelta.** `scripts/verifica_incrocio_coppe.py`, che produce **quattro**
+tabelle. Quattro e non una perché il conteggio unico confonde tre cose diverse.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: è una misura, e la formula è la definizione di «incrociabile».
+
+```
+perimetro   = { partite : dentro_perimetro }                     580 su 662
+
+blocchi automatici (chiave game_id, fonte player-scores)
+  arbitro      = arbitro ≠ ∅
+  allenatori   = allenatore_casa ≠ ∅  ∧  allenatore_ospite ≠ ∅
+  undici       = |{ club : #titolari(game_id, club) = 11 }| = 2      ← DUE, non ≥1
+  minuti       = #{ righe con minuti ≠ ∅ } > 0
+
+blocchi manuali (chiave ID partita, fonte diretta.it)
+  sostituzioni = #eventi di tipo «Sostituzione» > 0
+  stat. indiv. = #righe in aggancio_statistiche > 0
+  stat. squadra= #righe in aggancio_statistiche_squadra > 0
+
+incrociabile(p) = p ∈ perimetro
+                ∧ ∃ ponte: ID partita → game_id
+                ∧ ⋀ (tutti i blocchi delle due sponde)
+```
+
+**Perché `undici` pretende DUE squadre e non almeno una.** Una formazione sola
+non è metà del dato: è un dato inutilizzabile per qualunque confronto fra le due
+squadre, che è l'unica cosa per cui serve. Con la soglia «≥1» la FA Cup
+risulterebbe più coperta di quanto sia.
+
+### Il mio primo conteggio era sbagliato in due modi, e vale la pena dirlo
+
+La prima versione dava questa riga:
+
+```
+Coupe de France   201 partite   arbitro 0   allenatori 0   undici 0   sostituzioni 0
+                                stat_ind 0  stat_squadra 0
+```
+
+Letta così: «della coppa francese non abbiamo niente». **È falso.** La Coupe de
+France ha 2.495 righe di formazione, 2.792 eventi, 1.924 statistiche individuali
+e 476 di squadra. Contavo i blocchi **manuali** sulla chiave **automatica**, e
+quella coppa di `game_id` non ne ha nemmeno uno: il conteggio misurava il ponte,
+non il dato. E la FA Cup risultava 62/123 perché al denominatore mettevo tutte
+le partite invece del **perimetro** — 60 di quelle non sono un buco, non sono
+mai state chieste.
+
+> **fuori perimetro ≠ buco · senza ponte ≠ assente · presente ≠ unibile**
+
+Sono tre errori diversi con lo stesso effetto: far sembrare mancante ciò che c'è.
+
+### Il risultato
+
+**1 · Fonte automatica** (sul perimetro): arbitro 378/379 fuori dalla Francia,
+allenatori 376, undici 376, minuti 348.
+**2 · Raccolta manuale** (sul raccolto): sostituzioni 442/580, statistiche
+individuali 366, di squadra 463.
+**3 · L'incrocio vero**, tutti i blocchi sullo stesso `game_id`:
+
+| coppa | nel perimetro | incrociabili | quota |
+|---|--:|--:|--:|
+| FA Cup | 63 | 62 | **98,4%** |
+| EFL Cup | 91 | 89 | **97,8%** |
+| DFB-Pokal | 63 | 61 | **96,8%** |
+| Coppa Italia | 45 | 40 | **88,9%** |
+| Copa del Rey | 117 | 44 | 37,6% |
+| Coupe de France | 201 | 0 | 0% |
+| **totale** | **580** | **296** | **51,0%** |
+
+Senza la Coupe de France — che è un problema di natura diversa — **296/379,
+78,1%**.
+
+**4 · Il giro completo, ed è quello che conta**: dal titolare (player-scores)
+alla **sua** riga di statistica (diretta.it), per `player_id`. Le tabelle 1-3
+possono essere verdi e questa rossa: la partita c'è da entrambe le parti, le
+**persone** no.
+
+```
+DFB-Pokal      1.361 / 1.364   99,8%
+Coppa Italia     876 /   880   99,5%
+FA Cup         1.353 / 1.364   99,2%
+EFL Cup        1.975 / 2.002   98,7%
+Copa del Rey     924 /   990   93,3%
+TOTALE         6.489 / 6.600   98,3%
+```
+
+**E la prova che il join si fa davvero**, non solo che i conteggi tornano —
+`--partita 4631307`, Empoli-Reggiana del 15/08/2025:
+
+```
+arbitro                              Andrea Calzavara
+allenatori                           Guido Pagliuca / Davide Dionigi
+stadio, spettatori                   Carlo Castellani, 1.894
+moduli                               3-5-2 flat / 3-4-2-1
+titolari                             22, tutti e 22 con player_id
+titolari con statistica individuale  22 / 22
+sostituzioni                         18
+statistiche di squadra               6 righe, 1° tempo / 2° tempo / Totale
+meteo                                None
+```
+
+### I tre motivi del «no», e sono diversi fra loro
+
+1. **Coupe de France (201)** — nessun `game_id`: la sua fonte automatica è
+   Wikipedia, che non porta identificatori. Assenza **a monte**, non nostra. I
+   dati manuali si incrociano fra loro; con arbitro/allenatori/formazioni no,
+   perché dall'altra parte non esistono.
+2. **Copa del Rey (73)** — il **First Round**, 56 partite, ha **zero**
+   statistiche individuali: diretta.it non le pubblica per il turno
+   dilettantistico. Dal Round of 32 in poi la coppa è al **100%**. È lo stesso
+   taglio a livelli già trovato sulle statistiche di squadra (Fase 139-septies):
+   non un difetto della raccolta, una politica della fonte.
+3. **Le tre finali** — `games.csv` non le contiene.
+
+### ⚠️ Il meteo: non c'è, e non è un dettaglio
+
+**Zero su 662.** Non «manca in qualche partita»: non esiste in nessuna tabella
+del progetto per il 2025-26. L'infrastruttura c'è ed è **prospettica**
+(`fetch_stadi_coordinate.py` + `stagione_2026_2027/giornaliero/`): raccoglie la
+*previsione* a 16 giorni per il 2026-27, e una previsione all'indietro non si
+ricostruisce — dopo esiste solo il consuntivo. Cosa servirebbe, misurato:
+
+| pezzo | stato |
+|---|---|
+| coordinate degli stadi | **59 su 422** stadi di coppa (110 partite su 662): le 90 raccolte coprono i club delle 5 leghe, non i minori |
+| fonte storica | `open-meteo.com`, raggiungibile e senza chiave (`MANUALE_SOPRAVVIVENZA` §1), **mai usata** |
+| natura del dato | sarebbe un **consuntivo `post`**, non la previsione `pre` — sotto R8 sono due cose diverse, e a un modello serve la seconda |
+
+**Lezione.** *Le percentuali di aggancio già pubblicate erano tutte al 99%, e la
+metà delle partite non si incrocia lo stesso.* Non è una contraddizione: quelle
+erano per **foglio** («quante righe di evento hanno un `player_id`»), questa è
+per **partita** («questa partita ha tutti i blocchi insieme»). Sono domande
+diverse e danno numeri diversi, e la seconda è quella che decide se un modello
+si può addestrare. **Una copertura alta su ogni pezzo non implica un pezzo
+intero da nessuna parte.**
 
 ---
 

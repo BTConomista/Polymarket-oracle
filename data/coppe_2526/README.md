@@ -195,3 +195,99 @@ su 149.000 confrontate) ma con `ID partita`, che prima mancava, e i decimali per
 intero invece che troncati a tre.
 
 **Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+
+
+## L'incrocio: i blocchi si uniscono? (Fase 139-octies)
+
+Domanda dell'utente: *«verifica che siamo in grado di incrociare tutti i dati
+relativi a queste partite»*. Misurato con
+`python scripts/verifica_incrocio_coppe.py` — che produce **quattro** tabelle e
+non una, perché un conteggio unico confonde tre cose diverse:
+
+> **fuori perimetro** ≠ buco · **senza ponte** ≠ assente · **presente** ≠ unibile
+
+### 1 · Fonte automatica (player-scores), chiave `game_id` — sul perimetro
+
+| coppa | nel perimetro | arbitro | allenatori | 11+11 titolari | minuti |
+|---|--:|--:|--:|--:|--:|
+| Coppa Italia | 45 | 45 | 44 | 44 | 41 |
+| DFB-Pokal | 63 | 63 | 62 | 62 | 61 |
+| EFL Cup | 91 | 91 | 91 | 91 | 89 |
+| FA Cup | 63 | 63 | 62 | 62 | 62 |
+| Copa del Rey | 117 | 116 | 117 | 117 | 95 |
+| Coupe de France | 201 | **0** | **0** | **0** | **0** |
+
+### 2 · Raccolta manuale (diretta.it), chiave `ID partita` — sul raccolto
+
+| coppa | raccolte | sostituzioni | stat. individuali | stat. squadra | con ponte al `game_id` |
+|---|--:|--:|--:|--:|--:|
+| Coppa Italia | 45 | 45 | 41 | 45 | 44 |
+| DFB-Pokal | 63 | 63 | 63 | 63 | 62 |
+| EFL Cup | 91 | 91 | 91 | 91 | 91 |
+| FA Cup | 63 | 63 | 63 | 63 | 62 |
+| Copa del Rey | 117 | 117 | **45** | 114 | 117 |
+| Coupe de France | 201 | 63 | 63 | 87 | **0** |
+
+### 3 · L'incrocio vero: TUTTI i blocchi sullo stesso `game_id`
+
+| coppa | nel perimetro | incrociabili | quota |
+|---|--:|--:|--:|
+| FA Cup | 63 | 62 | **98,4%** |
+| EFL Cup | 91 | 89 | **97,8%** |
+| DFB-Pokal | 63 | 61 | **96,8%** |
+| Coppa Italia | 45 | 40 | **88,9%** |
+| Copa del Rey | 117 | 44 | 37,6% |
+| Coupe de France | 201 | 0 | 0% |
+| **totale** | **580** | **296** | **51,0%** |
+
+Escludendo la Coupe de France — che è un problema di natura diversa — sono
+**296/379, il 78,1%**.
+
+### 4 · Il giro completo: dal titolare alla SUA statistica individuale
+
+È il join che conta davvero, e non lo si vede dalle tabelle sopra: una partita
+può esserci da entrambe le parti mentre le **persone** non si uniscono. Join per
+`player_id` fra due fonti indipendenti:
+
+| coppa | titolari | agganciati alla propria riga | quota |
+|---|--:|--:|--:|
+| DFB-Pokal | 1.364 | 1.361 | 99,8% |
+| Coppa Italia | 880 | 876 | 99,5% |
+| FA Cup | 1.364 | 1.353 | 99,2% |
+| EFL Cup | 2.002 | 1.975 | 98,7% |
+| Copa del Rey | 990 | 924 | 93,3% |
+| **totale** | **6.600** | **6.489** | **98,3%** |
+
+### I tre motivi per cui una partita non si incrocia — e sono diversi
+
+1. **Coupe de France (201)**: nessun `game_id`, quindi nessun ponte. La sua
+   fonte automatica è Wikipedia, che non porta identificatori. I dati manuali
+   ci sono e si incrociano **fra loro**; con arbitro/allenatore/formazioni no,
+   perché dall'altra sponda non esistono. Assenza a monte.
+2. **Copa del Rey (73)**: il **First Round**, 56 partite, ha **0** statistiche
+   individuali — diretta.it non le pubblica per il turno dilettantistico. Dal
+   Round of 32 in poi la coppa è al **100%**. È lo stesso taglio a livelli
+   delle statistiche di squadra.
+3. **Le finali (3)** di Coppa Italia, FA Cup e DFB-Pokal: `games.csv` non le
+   contiene, quindi non hanno `game_id`.
+
+### ⚠️ Il meteo non c'è, e non è un dettaglio da sottintendere
+
+**Per il 2025-26 il meteo non esiste in nessuna tabella del progetto.** Non è
+«manca in qualche partita»: è zero su 662. L'infrastruttura che esiste
+(`scripts/fetch_stadi_coordinate.py`, `data/stagione_2026_2027/giornaliero/`) è
+**prospettica** — raccoglie la *previsione* a 16 giorni per la stagione 2026-27,
+e una previsione non si ricostruisce all'indietro.
+
+Cosa servirebbe, misurato:
+
+| pezzo | stato |
+|---|---|
+| coordinate degli stadi | **59 su 422** stadi di coppa (110 partite su 662). Gli altri 363 sono club minori, fuori dalle 96 voci raccolte per le 5 leghe |
+| fonte storica | **non ancora usata**. `open-meteo.com` è raggiungibile e senza chiave (`docs/MANUALE_SOPRAVVIVENZA.md` §1) e ha l'archivio storico |
+| il dato | sarebbe un **consuntivo** (`post`), non la previsione pre-partita (`pre`) — due cose diverse sotto R8, e per un modello conta la seconda |
+
+Riproducibile con `python scripts/verifica_incrocio_coppe.py --csv`; la matrice
+per partita finisce in `incrocio_per_partita.csv`, i conteggi in
+`incrocio_manifesto.json`. Per il giro end-to-end su una singola partita:
+`--partita <game_id>`.
