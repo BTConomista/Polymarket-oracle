@@ -406,6 +406,19 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
   partita) perché stanno entrambi in un solo lotto da 20. `--solo-principali`
   risparmia byte, **non minuti** — il ragionamento della Fase 118 era giusto
   sull'archivio e sbagliato sul tempo. Vale per qualunque API con `id1,id2,…`.
+- ⭐ **Quando un cron non è abbastanza puntuale, la risposta non è un cron più
+  fitto: è un job che si tiene il tempo da solo** (Fase 143). Il ritardo di
+  30-40 minuti si eredita identico su qualunque periodo — un cron ogni 2
+  minuti sarebbe altrettanto in ritardo, *più* la coda di run che si
+  cancellano a vicenda. Dentro un job già acceso `time.sleep` è esatto:
+  spostare la cadenza lì rende impreciso solo l'**avvio**. Un job standard può
+  restare acceso **6 ore**, e sui repo **pubblici** i minuti dei runner
+  standard **non si pagano**: è questo che rende praticabile un job lungo
+  invece di mille corti.
+- **La sessione lunga va fatta durare più del periodo della sentinella**
+  (Fase 143): con periodo `P` e sessione `D`, un ritardo `r` produce un buco
+  `max(0, r − (D − P))`. Con `D ≤ P` **ogni** ritardo è un buco per
+  costruzione; la sovrapposizione costa solo qualche giro duplicato.
 - ⚠️ **Un `concurrency group` tiene UN run in corso e UNO SOLO pending: il
   terzo che arriva CANCELLA quello pending** (Fase 142, pagata). Quindi
   allungare la durata di un job ne cambia la *pianificazione*: giri da 20

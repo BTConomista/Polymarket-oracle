@@ -102,6 +102,15 @@ di `data/smarkets_matches/` abbia `leghe_senza_partite_esposte: []` **e** tutte
 e 5 le leghe fra le righe. Che il file esista non basta — il 31/07 esisteva,
 pesava 120 KB e non conteneva La Liga.
 
+⚠️ **Il LIVE non è più scoperto per la raccolta (Fase 143), ma lo è per il
+modello.** `data/smarkets_live/` accumula prezzi in-play da sabato 08/08; non
+esiste ancora **niente** che li usi, ed è uno stato legittimo (§5-ter,
+«raccolto ≠ usato»). Il primo mattone modellistico resta quello della Fase
+96/99: il **modello a due stadi** del secondo tempo. Aperto anche il lavoro a
+valle sul punteggio: la regola di ricostruzione (`⌈max linea O/U settled⌉` e
+minimo componentwise) è verificata su **una** partita e va validata su
+partite a risultato noto prima di diventare un dato.
+
 ⚠️ **E dalla Fase 142 il file NON contiene solo campionati**: si filtra su
 `fascia == "campionato"` prima di contare le leghe. `lega` porta anche
 `coppa_italia`, `serie_b`, `ucl_qual`, e un conteggio che li includesse

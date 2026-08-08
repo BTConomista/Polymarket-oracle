@@ -351,6 +351,7 @@ correzioni.*
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 - [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
 - [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
+- [Fase 143 — Il live: un job che cicla, e un punteggio che non è un campo](#fase-143--il-live-un-job-che-cicla-e-un-punteggio-che-non-è-un-campo)
 
 ---
 
@@ -17665,3 +17666,127 @@ condizioni normali, perché si esce quando si è finito e non allo scadere.
    incluso un `len({lega}) >= 5` che quattro coppe fanno passare. Un dato nuovo
    in una colonna vecchia è un finto pieno in attesa (R6): il perimetro si
    allarga leggendo chi legge, non chi scrive.
+
+---
+
+## Fase 143 — Il live: un job che cicla, e un punteggio che non è un campo
+
+**Obiettivo.** Richiesta dell'utente: *«riusciamo ad implementare un qualche
+script o programmino che riesce a vedere quando si giocheranno le partite
+(tenendo conto del fuso orario), ad attivarsi automaticamente e a raccogliere
+dati poco prima dell'inizio e ogni tot minuti durante la partita?»*. Cioè la
+famiglia che `CLAUDE.md` §6 dichiara scoperta da sempre: **il live**.
+
+**Ragionamento / ipotesi.** Tre domande, e nessuna aveva la risposta che
+sembrava.
+
+*1. Il fuso orario non è il problema.* Smarkets dà `start_datetime` in **UTC
+con la Z**. Non c'è niente da convertire: c'è da **non introdurre** l'ora
+locale. Tutto lo script lavora in UTC, e il rischio sarebbe stato scrivere
+codice che «tiene conto del fuso» e con ciò lo sbaglia.
+
+*2. Il problema è che il cron non è puntuale.* Misurato lo stesso giorno sul
+workflow gemello: i giri delle `:07` sono partiti alle **08:54, 09:49, 10:45,
+11:37** — da 30 a 40 minuti di ritardo. Per «ogni due minuti durante la
+partita» è fatale. E la mossa ovvia — un cron ogni due minuti — è peggio:
+sarebbe altrettanto in ritardo, e i run si accoderebbero e si
+cancellerebbero a vicenda (§ Fase 142, run 31258806209 `cancelled`).
+
+*3. Il punteggio non è esposto.* Nessun endpoint di tabellone: provati
+`/events/{id}/scores/` e `/events/{id}/state/`, **404** entrambi. Senza il
+punteggio una traiettoria in-play è una serie di prezzi di cui non si sa a
+quale partita corrispondono.
+
+**Alternative considerate.** Per la cadenza: *cron ogni 2 minuti* (scartato,
+sopra); *VPS esterno* (scartato: il progetto ha deliberatamente evitato di
+averne uno, Fase 115); **job che cicla al suo interno** (scelto). Per la
+profondità, quattro opzioni misurate e presentate all'utente, che ha scelto la
+più prudente: *«partiamo più leggeri e vediamo»* — nucleo ogni 2 minuti,
+listino pieno ogni 15.
+
+**Scelta.** Una **sentinella** (cron ogni 30 min) che accende un job che resta
+acceso **40 minuti** e cicla a due velocità. Solo l'*avvio* è impreciso;
+`time.sleep` dentro un job già acceso è esatto. Costa zero perché il repo è
+pubblico e per i repo pubblici i minuti di Actions sui runner standard non si
+pagano — è questo che rende praticabile un job lungo invece di mille corti.
+
+**📐 Il modello in dettaglio.** Nessuna matematica di modello: è raccolta. Ma
+tre relazioni vanno scritte, perché sono scelte e non default.
+
+*Perché la sessione dura più del periodo della sentinella.* Con periodo `P` e
+sessione `D`, la copertura ha un buco ogni volta che il ritardo `r` supera il
+margine:
+
+```
+buco = max(0, r − (D − P))
+con P = 30, D = 40:  buco = max(0, r − 10)
+```
+
+Il ritardo misurato è 30-40 min, quindi i buchi restano possibili — ma `D > P`
+è ciò che li **riduce** invece di garantirli: con `D ≤ P` ogni ritardo diventa
+un buco per costruzione. La sovrapposizione costa qualche giro duplicato (file
+diversi, istanti diversi: si distinguono da soli) e tiene al massimo 2 job
+accesi insieme. Un test protegge la disuguaglianza.
+
+*Perché i tick persi si saltano invece di recuperarli.* A 25 partite in
+contemporanea un giro pieno dura ~3 minuti, più del passo del nucleo (2). Il
+tick successivo è
+
+```
+t' = t + k·passo   con k = min{k ∈ ℕ⁺ : t + k·passo > adesso}
+```
+
+cioè il primo istante **futuro sulla griglia originale** — non `adesso +
+passo` (deriverebbe la cadenza a ogni sforamento) e non `t + passo`
+(rincorrerebbe un orario che non tornerà, girando a vuoto).
+
+*Come si legge il punteggio da ciò che è quotato.* Due stimatori indipendenti,
+entrambi esatti (non approssimazioni):
+
+```
+gol_totali  = ⌈max{ linea L : stato(O/U L) = settled }⌉
+(casa, fuori) = ( min{ c : "c - f" ancora quotato },
+                  min{ f : "c - f" ancora quotato } )
+```
+
+Verificato dal vivo su **Cambridge Utd-Barnet** (08/08, 13:42): sopravvivevano
+2-1, 2-2, 2-3, 3-1, 3-2, 3-3 → minimo componentwise **2-1**; e O/U 0.5/1.5/2.5
+`settled` con 3.5 `live` → **3 gol**. `2+1 = 3`: i due concordano. La stessa
+identità vale per **corner** e **cartellini**, che hanno le loro linee O/U.
+
+⚠️ **Nel file il punteggio NON è dedotto.** La formula qui sopra è verificata
+su *una* partita: diventa un dato solo dopo una validazione su partite a
+risultato noto (§5, stime dichiarate). Il file contiene ciò che l'API ha
+detto, e la deduzione resta un lavoro a valle.
+
+**Risultato.** Provato dal vivo su due partite di League Cup in corso: 4 giri,
+**2.136 righe**, l'1X2 che si muove ogni minuto (`0.8101 → 0.8101 → 0.8132 →
+0.8165` su Cambridge, mentre il tempo scorre) e il punteggio ricostruito.
+**16 test nuovi**; le tre mutazioni provate — tick che rincorre gli arretrati,
+righe senza istante, sessione più corta del periodo — sono tutte catturate.
+
+**Un buco chiuso nel raccoglitore che c'era già.** Non registravamo
+`market.state`. In-play un prezzo assente significa insieme «mercato già
+deciso» e «nessuna liquidità»: **due stati opposti indistinguibili**, cioè un
+finto pieno (R6). Non è mai mancato a nessuno solo perché pre-partita tutto è
+sempre `live`. Ed esiste un terzo valore che non avevo previsto: **`halted`**
+(169 righe su 2.136), il mercato sospeso — cioè l'istante in cui *sta
+succedendo qualcosa*, un gol in verifica o un VAR. In sé è informazione.
+
+**Lezione.** Tre.
+
+1. **Quando un cron non è abbastanza puntuale, la risposta non è un cron più
+   fitto: è un processo che si tiene il tempo da solo.** Un cron ogni 2 minuti
+   avrebbe ereditato lo stesso ritardo *e* aggiunto la coda di run che si
+   cancellano. Spostare la cadenza *dentro* il job la rende esatta al secondo,
+   e il ritardo resta solo sull'avvio — dove costa poco.
+2. **Un dato che sembra assente può essere implicito nella struttura di ciò
+   che resta.** Non c'è un campo punteggio, ma c'è l'insieme dei mercati
+   ancora aperti — e da lì il punteggio esce per identità, con due stimatori
+   che si controllano a vicenda. Vale la pena chiedersi, prima di dichiarare
+   che un dato non c'è, se non lo stia già dicendo qualcos'altro.
+3. **Un'assenza deliberata va protetta come una presenza.** L'unico modo di
+   non far cancellare le sessioni è **non** mettere un `concurrency group`, e
+   un'assenza sembra una dimenticanza: fra sei mesi qualcuno lo aggiungerebbe
+   «per pulizia» e le sessioni tornerebbero a morire in silenzio. C'è un test
+   che pretende che non ci sia, col motivo scritto dentro.

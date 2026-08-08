@@ -100,7 +100,17 @@ def test_ogni_nome_mai_visto_nell_archivio_si_aggancia():
         d'inizio, non durante;
       - e se tornasse alla convenzione vecchia, resta agganciata lo stesso.
 
-    E' la seconda linea di difesa: la prima e' `event_id`, che non cambia."""
+    E' la seconda linea di difesa: la prima e' `event_id`, che non cambia.
+
+    ⚠️ Solo la fascia `campionato` (Fase 142). Dal perimetro allargato
+    l'archivio contiene anche coppe, UEFA e seconde divisioni, e il confronto
+    qui sotto e' contro gli snapshot delle 5 leghe: per `bundesliga_2` non
+    esiste alcun `data/bundesliga_2_matches.csv`, e per la Coppa Italia
+    nemmeno potrebbe -- ci giocano club di Serie C. Non e' un allentamento
+    della guardia: e' il suo perimetro vero, perche' un nome del Vicenza non
+    ha una controparte da agganciare in nessuno snapshot.
+    Estendere il controllo a coppe e cadetterie richiede prima quegli
+    snapshot, ed e' un lavoro a se'."""
     import json
 
     archivio = _archivio.snapshots()
@@ -110,6 +120,8 @@ def test_ogni_nome_mai_visto_nell_archivio_si_aggancia():
     per_lega: dict[str, set[str]] = {}
     for f in archivio:
         for r in _archivio.leggi(f)["righe"]:
+            if r.get("fascia", "campionato") != "campionato":
+                continue
             casa, ospite = r["partita"].split(" vs ")
             per_lega.setdefault(r["lega"], set()).update([casa, ospite])
 

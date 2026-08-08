@@ -829,6 +829,40 @@ risultato esatto anche dal denso), non da subire.
 
 ---
 
+## 5-ter-bis · Quote IN-PLAY (`data/smarkets_live/`) — Fase 143
+
+Prezzi raccolti **a partita in corso**. Specifica completa nel README della
+cartella: **`data/smarkets_live/README.md`**. Qui solo ciò che serve al catalogo.
+
+| | |
+|---|---|
+| **fonte** | Smarkets, stessa API del 5-ter, ma `state=live` |
+| **perimetro** | lo stesso del pre-partita (5 campionati + coppe + UEFA + seconde divisioni) |
+| **granularità riga** | (istante, partita, mercato, contratto) — un file per **sessione** contiene decine di giri |
+| **cadenza** | nucleo (1X2, O/U 2.5, GG/NG, risultato esatto) ogni **2 min**; listino pieno (~103 mercati) ogni **15 min** |
+| **si scrive con** | `python scripts/fetch_smarkets_live.py`; automazione `.github/workflows/smarkets-live.yml` (sentinella ogni 30 min) |
+| **disponibilità (R8)** | ⚠️ `post` rispetto al calcio d'inizio, `pre` rispetto al minuto successivo. Un prezzo al 67' **non** è utilizzabile per prevedere la stessa partita da fermo: è utilizzabile per prevedere ciò che accade **dopo** il 67' |
+
+**⚠️ Perché è una cartella separata e non un file in più nel 5-ter.** Un prezzo
+in-play **conosce il punteggio**, uno pre-partita no: non sono confrontabili
+riga per riga. Nella stessa cartella, ogni lettore dell'archivio pre-partita —
+`ultimo_listino_completo()` per primo — li leggerebbe come la stessa cosa
+**senza dare errore**.
+
+**Il campo `stato_mercato` (nuovo, Fase 143):** `live` / `settled` / `halted`.
+Esiste anche nel 5-ter, dove vale sempre `live`. In-play distingue «prezzo
+assente perché il mercato è già deciso» da «prezzo assente perché non c'è
+liquidità» — due stati opposti che senza questo campo sono lo stesso `None`.
+`halted` è il mercato **sospeso**: l'istante in cui sta succedendo qualcosa.
+
+**Il punteggio si ricostruisce ma NON è nel file.** `gol = ⌈max linea O/U
+settled⌉` e `(casa, fuori) = minimo componentwise dei punteggi ancora quotati`
+sono due stimatori indipendenti che concordano (verificati su una partita,
+08/08/2026). Restano una **regola da validare** su partite a risultato noto:
+finché non lo è, il file contiene ciò che l'API ha detto e nient'altro (§5).
+
+---
+
 ## 5-quater · Stagione 2026-27, raccolta quotidiana (`data/stagione_2026_2027/`) — Fasi 119/120
 
 Cartella **nuova**, con una sua specifica completa: **`data/stagione_2026_2027/README.md`**.
