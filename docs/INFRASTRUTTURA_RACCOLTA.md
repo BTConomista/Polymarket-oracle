@@ -115,6 +115,73 @@ Costo: raccolta doppia nelle ore di sovrapposizione (file distinti, istanti
 distinti — la deduplica a valle è banale) e un secondo workflow da tenere
 allineato al primo. **Non è ancora stato provato.**
 
+## 4-ter. La proposta dell'utente: gemelli + staging + compattazione
+
+Proposta (08/08): *«due o anche più workflow gemelli, salvare tutto in una
+cartella provvisoria da svuotare periodicamente per eliminare i doppioni e
+aggiungere al database solo i dati puliti»*.
+
+**È l'architettura giusta**, e per una ragione strutturale: disaccoppia
+l'*affidabilità della raccolta* dalla *pulizia dei dati*. Se i doppioni non
+fanno danno, la ridondanza diventa gratis, e ogni gemello in più è un
+miglioramento che non può peggiorare niente — mentre con workflow che si
+coordinano fra loro ogni gemello in più è un rischio in più. E mette la parte
+fragile dove un errore non costa: se la compattazione fallisce il grezzo c'è
+ancora; se fallisce un gemello, gli altri hanno il dato.
+
+Due correzioni, entrambe misurate.
+
+### (a) Lo staging NON può stare in git
+
+`git` non dimentica: committare e poi cancellare lascia la storia. Misurato
+sui file veri dell'08/08 (un giro pieno su 25 partite = **1,1 MB compressi**):
+
+```
+una giornata piena, 1 gemello: 40 giri pieni + 120 di nucleo ≈  19 MB
+                   3 gemelli:                                ≈  57 MB
+       x ~150 giornate di calcio in una stagione:            ≈ 8,4 GB
+```
+
+Contro un limite consigliato di **1 GB** per repo (duro: 5 GB). Lo svuotamento
+periodico **non svuoterebbe niente**.
+
+Il posto giusto sono gli **artefatti di Actions**: gratis sui repo pubblici,
+scadenza configurabile, fuori dalla storia di git. La compattazione li scarica,
+fonde e committa solo il risultato; il grezzo scade da solo.
+
+### (b) Il «doppione» non è quello che sembra
+
+Misurato su una sessione vera (28.147 letture, 10 giri, 25 partite):
+
+```
+letture in cui il libro E' CAMBIATO:  21.351  (75,9%)
+letture identiche alla precedente:     6.796  (24,1%)
+```
+
+Quindi **due letture ravvicinate di due gemelli NON sono doppioni**: sono due
+campioni di una serie temporale, e buttarne una getta informazione vera. Il
+doppione è un'altra cosa: una lettura **identica alla precedente dello stesso
+contratto**. Toglierla non perde nulla — fra due cambiamenti il prezzo era
+quello, ricostruibile esattamente. È **compressione, non selezione**, ed è per
+questo che sta in regola con §5-ter («si conserva l'originale»).
+
+E ha una proprietà che rende la proposta migliore di com'è stata formulata:
+**più gemelli si aggiungono, più la compattazione rende.** Con 3 gemelli il
+campionamento effettivo passa da 2 minuti a ~40 secondi, quindi fra un
+campione e l'altro il libro cambia meno spesso, quindi la frazione di letture
+identiche sale. La ridondanza costa **meno che linearmente**.
+
+### Cosa resta da sorvegliare
+
+1. **Il grezzo scade.** Se la compattazione si ferma più a lungo della
+   scadenza degli artefatti, i dati si perdono per davvero. Il cane da guardia
+   dovrà controllare anche lei («l'ultimo compattato ha meno di N ore?»).
+2. **Contesa su git**: con lo staging fuori dal repo pushano solo la
+   compattazione e i giri pre-partita, quindi il problema quasi sparisce — ed
+   è una ragione in più per non tenere lo staging in git.
+
+**Stato: valutata e non ancora costruita.**
+
 ## 5. Cosa NON sappiamo, ed è il punto
 
 Le misure del §3 sono aneddoti di una giornata sola. Per decidere servono
