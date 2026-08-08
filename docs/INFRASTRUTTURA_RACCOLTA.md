@@ -36,6 +36,7 @@ Tutti dell'08/08/2026, su questo repo:
 | il cron può **non partire** | `smarkets-live.yml` a zero run per mezz'ora con 25 partite in corso |
 | i run in coda si **cancellano** | run 31258806209, `cancelled` |
 | un job dura al massimo **6 ore** | limite documentato |
+| il runner è **3,5× più lento** verso Smarkets | una chiamata costa 0,54 s da questo ambiente, **~1,8 s dal runner** |
 
 E il rovescio, che è consistente:
 
@@ -46,6 +47,31 @@ E il rovescio, che è consistente:
 - codice e dati nello stesso posto, con la storia in git;
 - **le mail dei run falliti arrivano davvero** — è così che è cominciata la
   sessione dell'08/08.
+
+### 3-bis. La lentezza del runner, che non è un dettaglio
+
+Scoperta il 08/08 misurando il primo run in-play vero: **un solo giro pieno su
+25 partite ha impiegato 9 minuti e 50 secondi**, contro i ~3 minuti stimati.
+Conseguenza diretta: zero giri di nucleo, cadenza dichiarata mai realizzata.
+
+La causa non è l'API, è il collegamento del runner:
+
+```
+costo di una chiamata:  0,54 s da questo ambiente  |  ~1,8 s dal runner
+di cui throttle nostro: 0,35 s                     |   0,35 s
+=> ritmo effettivo:     ~2,9 richieste/s (al tetto)|  ~0,55 richieste/s (1/5 del tetto)
+```
+
+Qui siamo **limitati dall'API**, sul runner siamo **limitati dalla latenza**.
+Rimedio applicato (Fase 144-ter): chiamate in parallelo con un limitatore di
+ritmo condiviso — si sovrappongono le *attese*, non si aumentano le richieste.
+Guadagno atteso sul runner ~5×; **da questo ambiente il guadagno è 1,1×, cioè
+nullo**, perché qui non c'era niente da recuperare. La verifica va fatta sul
+runner, ed è in corso.
+
+⚠️ Questo peggiora il conto del §4: se un giro pieno costa minuti, la
+sessione da 5 ore ne contiene molti meno di quanti sembrasse, e il tempo speso
+a ri-leggere il listino pieno è tempo sottratto alla cadenza fine.
 
 ## 4. Il vincolo che decide: 6 ore contro 10,5
 
@@ -111,7 +137,7 @@ all'intera raccolta.
 
 | | cosa risolve | cosa costa | reversibile? |
 |---|---|---|---|
-| **A. Server sempre acceso** (Oracle Always Free, o Hetzner ~4 €/mese) | tutti e quattro i limiti: cron al secondo, nessun tetto di durata, nessuna coda | una macchina da mantenere e aggiornare; una chiave di scrittura sul repo da custodire; **un nuovo punto di rottura che nessun sistema sorveglia** — il cane da guardia dovrebbe girare altrove | sì: il codice non cambia, cambia chi lo lancia |
+| **A. Server sempre acceso** (Oracle Always Free, o Hetzner ~4 €/mese) | tutti e cinque i limiti: cron al secondo, nessun tetto di durata, nessuna coda, **e una rete che si può scegliere** (la lentezza del runner verso Smarkets non è una costante dell'universo) | una macchina da mantenere e aggiornare; una chiave di scrittura sul repo da custodire; **un nuovo punto di rottura che nessun sistema sorveglia** — il cane da guardia dovrebbe girare altrove | sì: il codice non cambia, cambia chi lo lancia |
 | **B. Cloudflare Workers + Cron Triggers** | cron al minuto, gratis, molto puntuale | tetto strettissimo di CPU per invocazione: un giro su 25 partite non ci sta. Andrebbe riscritto come tante micro-invocazioni con stato esterno, fuori da Python | no: riscrittura |
 | **C. Cloud Run + Cloud Scheduler** | cron preciso, job fino a 24h | account cloud con carta; più pezzi da configurare; costo che può comparire fuori dal free tier | sì, ma con lavoro |
 | **D. Catena auto-innescata su Actions** | toglie la dipendenza dal cron ripetuto | ⚠️ **da verificare**: GitHub blocca di proposito i workflow che si ri-innescano col token automatico; servirebbe un token personale come segreto — cioè un segreto da custodire e che scade | sì, banalmente |
