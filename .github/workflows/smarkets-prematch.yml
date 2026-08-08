@@ -65,7 +65,27 @@ permissions:
   contents: write
 
 concurrency:
-  group: smarkets-prematch
+  # UN GRUPPO PER REGIME (Fase 142). Prima era uno solo, e col perimetro
+  # allargato e' costato dati veri nel giro di poche ore.
+  #
+  # La regola di GitHub e': per ogni gruppo puo' esserci **un run in corso e
+  # UNO SOLO pending**, e all'arrivo di un terzo *«any previously pending job
+  # or workflow in the concurrency group will be canceled»*. Con i giri corti
+  # (58 partite, 20 min) non capitava mai; con 158 partite un lungo raggio
+  # occupa il gruppo per ~35-45 minuti, e nel frattempo bastano due corse
+  # orarie accodate perche' la prima venga **cancellata**.
+  # Misurato l'08/08/2026: run 31258806209 delle 13:07 -> `cancelled`.
+  #
+  # A morire e' proprio il giro che vale di piu': la CHIUSURA e' il prezzo a
+  # T-2h, e dopo il fischio non esiste piu' (newseason.md §2). E muore in
+  # silenzio -- un run `cancelled` non scrive niente e non suona niente.
+  #
+  # Separarli e' sicuro: i due regimi scrivono file con nomi diversi
+  # (timestamp al secondo) e l'unica risorsa condivisa e' il push su main, che
+  # ha gia' il suo ciclo di 3 tentativi con `pull --rebase --autostash`.
+  group: >-
+    smarkets-prematch-${{ github.event.schedule == '7 * * * *'
+      && 'chiusura' || 'lungo' }}
   cancel-in-progress: false
 
 jobs:

@@ -711,3 +711,36 @@ def test_ogni_input_del_workflow_e_davvero_usato():
     assert not non_usati, (
         f"input dichiarati e mai letti dal job: {non_usati}. Nella UI di "
         f"GitHub compare la casella e spuntarla non produce alcun effetto.")
+
+
+def test_la_chiusura_ha_un_gruppo_di_concorrenza_suo():
+    """La corsa di CHIUSURA non deve poter essere cancellata da un giro lungo.
+
+    GitHub tiene un run in corso e UNO SOLO pending per gruppo, e all'arrivo
+    di un terzo cancella quello pending. Con un gruppo unico e i giri da
+    ~35-45 min del perimetro allargato, la corsa oraria di chiusura finisce
+    cancellata -- misurato l'08/08/2026, run 31258806209. E' il giro che vale
+    di piu' (prezzo a T-2h, dopo il fischio non esiste) e moriva in silenzio:
+    un run `cancelled` non scrive niente e non suona niente.
+
+    Il test non verifica la stringa esatta, ma l'invariante: il gruppo
+    dev'essere una FUNZIONE del cron, non una costante.
+    """
+    import yaml
+
+    wf = yaml.safe_load((Path(__file__).resolve().parents[1] / ".github"
+                         / "workflows" / "smarkets-prematch.yml").read_text())
+    gruppo = " ".join(str(wf["concurrency"]["group"]).split())
+    crons = [c["cron"] for c in wf[True]["schedule"]]
+    chiusura = "7 * * * *"
+
+    assert chiusura in crons, "il cron di chiusura non c'e' piu': test da rivedere"
+    assert "github.event.schedule" in gruppo, (
+        "il gruppo di concorrenza e' una costante: un giro lungo puo' far "
+        "cancellare la corsa di chiusura accodata dietro")
+    assert chiusura in gruppo, (
+        f"il gruppo non distingue il cron di chiusura ({chiusura!r}): "
+        f"gruppo = {gruppo!r}")
+    # e non si torna a cancel-in-progress: un giro in corso non va ucciso,
+    # perche' i dati raccolti fin li' si scrivono solo alla fine
+    assert wf["concurrency"]["cancel-in-progress"] is False
