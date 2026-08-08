@@ -57,6 +57,12 @@ concurrency:
 jobs:
   raccogli:
     runs-on: ubuntu-latest
+    # Rete di sicurezza esterna al budget dello script (BUDGET_MINUTI = 45):
+    # se il processo si pianta invece di rallentare, il budget -- che si
+    # controlla fra una partita e l'altra -- non scatta. Il default di GitHub
+    # e' 6 ore, e sei ore di runner appeso bloccherebbero anche tutte le corse
+    # orarie di chiusura che si accodano dietro la stessa `concurrency`.
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -99,6 +105,16 @@ jobs:
           fi
 
       - name: Salva lo snapshot (se c'e' qualcosa da salvare)
+        # ANCHE SE IL PASSO PRIMA E' FALLITO (08/08/2026). Lo script scrive il
+        # file PRIMA di uscire rosso, apposta: «il file e' salvo, l'allarme e'
+        # visibile». Ma senza questo `if` il passo di commit veniva SALTATO,
+        # il file restava sul runner e moriva con lui -- cioe' l'allarme
+        # costava esattamente i dati che doveva proteggere. Vale per tutte e
+        # tre le uscite rosse: lega sparita, partite perse, raccolta a zero
+        # (in quest'ultimo caso non c'e' nulla da committare e il passo esce
+        # da solo). `!cancelled()` e non `always()`: se il giro e' stato
+        # annullato a mano, non si committa.
+        if: ${{ !cancelled() }}
         run: |
           if [ -z "$(git status --porcelain data/smarkets_matches/)" ]; then
             echo "nessuna partita in finestra: niente da committare (non e' un errore)"

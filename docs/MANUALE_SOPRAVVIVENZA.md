@@ -372,6 +372,29 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
 - **`smarkets-prematch.yml` È un'automazione viva** (dalla Fase 116/118): due
   cron, denso ogni 6 h e lungo raggio 1×/giorno, che committano su `main`.
   L'unico dei workflow del repo a scrivere dati in continuo.
+- ⚠️⚠️ **Un passo fallito SALTA i passi successivi — e questo può buttare via
+  i dati che il fallimento doveva proteggere** (Fase 141, pagata sul campo).
+  Lo schema «lo script scrive il file, *poi* esce rosso per segnalare che la
+  raccolta è incompleta» è giusto in Python e **non funziona in Actions**: il
+  passo di commit non gira e il file muore col runner. In
+  `smarkets-prematch.yml` è rimasto rotto dalla Fase 116 all'08/08/2026, e ha
+  buttato anche la raccolta dell'allarme «lega sparita» del 01/08. Rimedio:
+  `if: ${{ !cancelled() }}` sul passo che salva (`!cancelled()` e non
+  `always()`: un giro annullato a mano non deve committare). **Regola
+  generale: ogni workflow in cui un passo scrive e un passo dopo salva va
+  letto assumendo che il primo possa fallire.**
+- **Un `HTTPError` non è tutto uguale, e il ciclo di ritentativi va scritto
+  guardando la tabella HTTP, non il caso che ti è capitato** (Fase 141). Il
+  nostro `_get` riprovava sul 429 (il caso della Fase 97) e rilanciava tutto
+  il resto — 503 compreso, che è *per definizione* «riprova fra poco». Un solo
+  503 ha ucciso un giro da 58 partite. Transitori: **429, 500, 502, 503,
+  504**; i 4xx restano fatali.
+- **Chi aggiunge ritentativi deve aggiungere anche un tetto al tempo** (Fase
+  141): 5 tentativi con backoff sono 45 s per chiamata, e su 1.566 chiamate
+  fanno ~19,6 h di runner appeso durante un guasto prolungato. `timeout-minutes`
+  sul job **non basta** (uccide anche il salvataggio): serve un budget dentro
+  lo script, controllato fra un'unità di lavoro e l'altra, che scriva ciò che
+  ha raccolto e dichiari il resto.
 - **Nessuno degli altri tre workflow è un'automazione viva**: `import_dataset.yml` ha
   il cron mensile disattivato (motivazione dell'audit Fase 92 scritta nel
   file), e `betexplorer-scrape.yml` / `kaggle-ou-probe.yml` puntano alla

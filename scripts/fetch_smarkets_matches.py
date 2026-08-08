@@ -38,6 +38,15 @@ intera, senza perdere nulla di cio' che il motore usa davvero.
 COSA *NON* FA. Non piazza scommesse e non legge conti: e' sola lettura di
 dati pubblici. Il progetto non scommette (CLAUDE.md §5).
 
+SE LA RETE FA I CAPRICCI (Fase 141). Il giro **non muore piu' su un guasto
+singolo**: un `HTTP 503` alla 22a partita di 58 aveva buttato via 7.870 righe
+gia' raccolte. Ora una partita che fallisce costa se stessa, e' DICHIARATA in
+`partite_incomplete` dentro il file, e le altre si salvano; l'uscita e' rossa
+solo se si perde una partita intera. `--budget-minuti` (45) e' il tetto al
+tempo totale: allo scadere si scrive cio' che si ha invece di insistere.
+⚠️ Perche' questo serva a qualcosa, il passo di commit del workflow deve
+girare **anche se questo script esce rosso** (`if: !cancelled()`).
+
 FORMATO. Un file per esecuzione in `data/smarkets_matches/YYYY-MM-DDTHH-MM.json.gz`,
 **versionato e COMPRESSO** (dalla Fase 136: a listino intero il giro giornaliero
 fa ~16 MB, il gzip toglie 19,6x senza perdere un byte; l'archivio `.json`
@@ -223,6 +232,23 @@ def entro_finestra(nostre: list[dict], entro_ore: int,
 # **17 volte meno**. E' la differenza fra «tutti i mercati» possibile e impossibile.
 LOTTO_MERCATI = 20
 
+# Quanto puo' durare la raccolta prima di scrivere cio' che ha e fermarsi.
+#
+# PERCHE' ESISTE (08/08/2026). E' il contrappeso ai tentativi ripetuti sui 5xx:
+# un guasto ISOLATO costa fino a 45s di attesa (3+6+12+24) e va benissimo, ma
+# se Smarkets sta giu' per mezz'ora *ogni* chiamata costa 45s e il giro non
+# finisce piu' -- a listino intero sono 58 partite x 13 lotti x 2 chiamate,
+# cioe' ore di runner bruciate per non scrivere niente. Il rimedio non e'
+# togliere i tentativi: e' dire quando smettere.
+#
+# 45 minuti: il giro piu' lungo che facciamo -- lungo raggio, tutti i mercati,
+# 58 partite -- e' stato misurato a ~20s a partita (log dell'08/08/2026: 21
+# partite in 7'30" scandaglio compreso), cioe' ~20 minuti. Il doppio abbondante
+# lascia spazio a un giro piu' affollato e a qualche ritentativo senza mai
+# tagliare una raccolta sana, e tiene il giro dentro l'ora prima che la corsa
+# oraria di chiusura si accodi.
+BUDGET_MINUTI = 45
+
 
 def _etichetta_generica(m: dict, nome: str) -> str:
     """L'etichetta di un mercato fuori da MERCATI_BASE, STABILE fra partite.
@@ -264,9 +290,16 @@ def _libri_per_contratto(quote: dict) -> dict:
     return piatta
 
 
-def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[dict]:
-    """Le quote di una partita: una riga per (mercato, contratto)."""
-    righe = []
+def quote_partita(ev: dict, tutti: bool,
+                  solo_principali: bool = False) -> tuple[list[dict], int]:
+    """Le quote di una partita: una riga per (mercato, contratto).
+
+    Ritorna anche **quanti mercati sono andati persi** per un guasto di rete,
+    perche' un raccolto parziale che si spaccia per completo e' esattamente il
+    «finto pieno» della regola R6: il file c'e', e' grosso, e mancano venti
+    mercati che nessuno cerchera' mai piu'. Chi chiama lo dichiara nel file.
+    """
+    righe, persi = [], 0
     mercati = (_get(f"/events/{ev['event_id']}/markets/") or {}).get("markets", [])
 
     # Prima si sceglie COSA serve, poi si chiede in blocco: cosi' il costo
@@ -285,9 +318,18 @@ def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[
 
     ids = list(scelti)
     for i in range(0, len(ids), LOTTO_MERCATI):
-        lotto = ",".join(ids[i:i + LOTTO_MERCATI])
-        contratti = (_get(f"/markets/{lotto}/contracts/") or {}).get("contracts", [])
-        libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
+        gruppo = ids[i:i + LOTTO_MERCATI]
+        lotto = ",".join(gruppo)
+        # Un lotto che non arriva costa 20 mercati, non la partita e non il
+        # giro: si annota e si prosegue. Il contrario -- propagare -- e' cio'
+        # che l'08/08/2026 ha fatto perdere 21 partite gia' in memoria.
+        try:
+            contratti = (_get(f"/markets/{lotto}/contracts/") or {}).get("contracts", [])
+            libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
+        except Exception as ex:                       # noqa: BLE001 - vedi sopra
+            persi += len(gruppo)
+            print(f"      ⚠ {len(gruppo)} mercati persi ({type(ex).__name__}: {ex})")
+            continue
         for c in contratti:
             mid = str(c.get("market_id") or "")
             if mid not in scelti:
@@ -309,7 +351,7 @@ def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[
                 "vol_banco": sum(x.get("quantity", 0) for x in libro.get("bids") or []),
                 "vol_puntatore": sum(x.get("quantity", 0) for x in libro.get("offers") or []),
             })
-    return righe
+    return righe, persi
 
 
 def main(argv=None) -> None:
@@ -325,6 +367,9 @@ def main(argv=None) -> None:
                     help=f"solo i mercati che il motore consuma: {sorted(MERCATI_PRINCIPALI)}")
     ap.add_argument("--dry-run", action="store_true",
                     help="mostra le partite che prenderebbe, senza chiedere quote")
+    ap.add_argument("--budget-minuti", type=int, default=BUDGET_MINUTI,
+                    help=f"tempo massimo di raccolta, poi scrive cio' che ha "
+                         f"(default {BUDGET_MINUTI}; <=0 = nessun limite)")
     a = ap.parse_args(argv)
 
     nostre, totale = scandaglia_upcoming()
@@ -368,10 +413,55 @@ def main(argv=None) -> None:
         print("\n--dry-run: nessuna quota richiesta, nessun file scritto.")
         return
 
-    righe = []
+    # UNA PARTITA CHE FALLISCE NON FA FALLIRE IL GIRO (08/08/2026).
+    # Il giro di lungo raggio delle 06:24 e' morto su un HTTP 503 alla 22a
+    # partita su 58, e con lui le 21 gia' in memoria: mai scritte, mai
+    # committate, perse per sempre (`newseason.md` §2 -- cio' che non si
+    # raccoglie prima del fischio non torna piu'). L'eccezione propagava fino
+    # in cima perche' era piu' comodo scrivere il ciclo cosi', non perche'
+    # qualcuno avesse deciso che 1 partita su 58 vale le altre 57.
+    righe, incomplete = [], []
+    scade = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(minutes=a.budget_minuti)) if a.budget_minuti > 0 else None
     for i, e in enumerate(evs, 1):
-        righe += quote_partita(e, a.tutti_i_mercati, a.solo_principali)
-        print(f"  [{i}/{len(evs)}] {e['nome']}: {len(righe)} righe totali")
+        if scade and dt.datetime.now(dt.timezone.utc) >= scade:
+            # Il tempo e' finito: si dichiara cio' che resta e si va a
+            # scrivere. Meglio 40 partite salvate e 18 dichiarate perse che
+            # 58 perse in silenzio dentro un giro che non finisce.
+            for resto in evs[i - 1:]:
+                incomplete.append({"partita": resto["nome"],
+                                   "event_id": resto["event_id"],
+                                   "lega": resto["lega"],
+                                   "mercati_persi": "tutti",
+                                   "errore": f"budget di {a.budget_minuti} "
+                                             f"minuti esaurito"})
+            print(f"  ⏱ budget di {a.budget_minuti} minuti esaurito: "
+                  f"{len(evs) - i + 1} partite non raccolte, si salva il resto")
+            break
+        try:
+            r, persi = quote_partita(e, a.tutti_i_mercati, a.solo_principali)
+        except Exception as ex:                       # noqa: BLE001 - vedi sopra
+            incomplete.append({"partita": e["nome"], "event_id": e["event_id"],
+                               "lega": e["lega"], "mercati_persi": "tutti",
+                               "errore": f"{type(ex).__name__}: {ex}"})
+            print(f"  [{i}/{len(evs)}] {e['nome']}: PERSA "
+                  f"({type(ex).__name__}: {ex})")
+            continue
+        righe += r
+        if persi:
+            incomplete.append({"partita": e["nome"], "event_id": e["event_id"],
+                               "lega": e["lega"], "mercati_persi": persi,
+                               "errore": "lotti di mercati non arrivati"})
+        print(f"  [{i}/{len(evs)}] {e['nome']}: {len(righe)} righe totali"
+              + (f"  ⚠ {persi} mercati persi" if persi else ""))
+
+    if not righe:
+        # Qui evs non era vuoto (quel caso e' gia' uscito sopra): zero righe
+        # significa che NON siamo riusciti a chiedere nulla. Scrivere un file
+        # vuoto lo renderebbe indistinguibile da un'off-season.
+        raise SystemExit(
+            f"raccolta FALLITA: {len(evs)} partite in finestra e zero righe "
+            f"raccolte. L'API non ha risposto a nessuna richiesta di quote.")
 
     quando = dt.datetime.now(dt.timezone.utc)
     DEST.mkdir(parents=True, exist_ok=True)
@@ -394,6 +484,10 @@ def main(argv=None) -> None:
         # l'archivio fra mesi deve poter distinguere «la Liga non c'era» da
         # «la Liga non l'abbiamo chiesta».
         "leghe_senza_partite_esposte": sorted(mancanti),
+        # Stesso motivo (R6): chi rilegge deve poter distinguere «quel mercato
+        # non era quotato» da «quel mercato non e' arrivato». Vuoto = raccolta
+        # completa di tutto cio' che era in finestra.
+        "partite_incomplete": incomplete,
         "nota_prezzi": ("probabilita' 0-1: p_banco/p_puntatore sono i due lati "
                         "del libro, p_mid il punto medio (somma ~1.005 sulle "
                         "coppie complementari). MAI quote decimali."),
@@ -402,15 +496,37 @@ def main(argv=None) -> None:
         "righe": righe,
     }
     dest = _archivio.scrivi(dest, dati)
-    print(f"\nscritto {dest.relative_to(ROOT)}  ({len(righe)} righe, "
+    # `relative_to` solleva se il file sta fuori dal repo (ci capita nei test,
+    # e capiterebbe con un DEST spostato): un errore nel messaggio d'errore
+    # nasconderebbe il motivo vero dell'uscita rossa.
+    dove = dest.relative_to(ROOT) if dest.is_relative_to(ROOT) else dest
+    print(f"\nscritto {dove}  ({len(righe)} righe, "
           f"{len({r['partita'] for r in righe})} partite)")
 
     # Solo ORA si esce rosso: il file e' salvo, l'allarme e' visibile.
+    # (Perche' questo funzioni davvero, il passo di commit del workflow deve
+    # girare ANCHE se questo passo fallisce: `if: always()` in
+    # .github/workflows/smarkets-prematch.yml. Senza, il file resta sul runner
+    # e viene buttato -- ed e' quello che e' successo fino all'08/08/2026.)
+    allarmi = []
     if mancanti:
-        raise SystemExit(
-            f"raccolta INCOMPLETA: nessuna partita esposta per "
-            f"{', '.join(sorted(mancanti))} (dati comunque salvati in "
-            f"{dest.relative_to(ROOT)})")
+        allarmi.append("nessuna partita esposta per "
+                       + ", ".join(sorted(mancanti)))
+    # Rosso solo per una partita PERSA INTERA, non per qualche mercato: una
+    # partita persa e' un buco nella traiettoria pre-partita che nessun giro
+    # successivo riempie (quel prezzo, a quell'ora, non esiste piu'), mentre
+    # qualche mercato mancante lascia la traiettoria leggibile ed e' gia'
+    # dichiarato nel file. La soglia distingue «serve un umano» da «e' andata
+    # storta una richiesta»: senza, un 503 isolato su 58 partite manderebbe
+    # una mail rossa e le mail rosse che non chiedono nulla si smettono di
+    # leggere.
+    perse = [x for x in incomplete if x["mercati_persi"] == "tutti"]
+    if perse:
+        allarmi.append(f"{len(perse)} partite perse per intero: "
+                       + ", ".join(x["partita"] for x in perse))
+    if allarmi:
+        raise SystemExit("raccolta INCOMPLETA: " + "; ".join(allarmi)
+                         + f" (dati comunque salvati in {dove})")
 
 
 if __name__ == "__main__":

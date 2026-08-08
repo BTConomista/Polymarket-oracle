@@ -776,6 +776,24 @@ La soglia è misurata: il 28/07, nel giorno più vuoto dell'anno, il listino
 aveva **709 eventi calcio su 101 competizioni** con tutte e 5 le nostre
 presenti (9-10 partite ciascuna).
 
+**⚠️ Un file può essere legittimamente PARZIALE (Fase 141), e lo dichiara.**
+Fino all'08/08/2026 un guasto di rete su una partita faceva perdere l'intero
+giro: un `HTTP 503` alla 22ª partita di 58 ha buttato **7.870 righe già
+raccolte**, mai scritte. Ora il giro sopravvive e salva ciò che ha — quindi
+chi rilegge deve poter distinguere «quel mercato non era quotato» da «quel
+mercato non è arrivato». Due campi lo dicono, e **vanno letti prima di usare
+il file**:
+
+| campo | significato |
+|---|---|
+| `leghe_senza_partite_esposte` | (dal 01/08) le nostre leghe con zero partite nel listino — tipicamente uno slug rinominato a monte |
+| `partite_incomplete` | (dal 08/08) una voce per partita non raccolta o raccolta a metà: `mercati_persi` vale `"tutti"` oppure il numero di mercati caduti, con il motivo (`HTTPError…`, budget esaurito) |
+
+Vuoti entrambi = raccolta completa di tutto ciò che era in finestra. **Un
+congelamento per il test prospettico non si fa su un file che li ha pieni.**
+Un giro che non raccoglie *nessuna* riga, invece, non scrive alcun file: un
+archivio non deve mai contenere un silenzio che sembra un dato (R6).
+
 **Costo dell'archivio, dichiarato.** 454 byte per riga misurati. Il lungo
 raggio vale ~149 KB/giorno (~45 MB a stagione); il **denso in-season** è la
 voce pesante e porta il totale nell'ordine dei **250-300 MB** versionati per

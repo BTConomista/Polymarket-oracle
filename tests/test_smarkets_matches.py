@@ -231,3 +231,262 @@ def test_nessuno_legge_l_archivio_a_mano():
     assert not sospetti, (
         "questi leggono l'archivio Smarkets a mano e si perderanno i .json.gz:\n"
         + "\n".join(sospetti))
+
+
+# ---------------------------------------------------------------------------
+# RESILIENZA DELLA RACCOLTA (08/08/2026)
+#
+# Il giro di lungo raggio delle 06:24 e' morto su un `HTTP Error 503: Service
+# Unavailable` alla 22a partita su 58, portandosi via le 21 gia' raccolte: mai
+# scritte, mai committate. Tre difetti in fila, e questi test tengono chiusi
+# tutti e tre:
+#   1. `_get` riprovava sul 429 ma non sui 5xx, che sono transitori uguale;
+#   2. l'eccezione di UNA partita usciva dal ciclo e uccideva l'intero giro;
+#   3. anche uscendo rossi dopo aver scritto, il passo di commit del workflow
+#      veniva saltato e il file moriva sul runner (`if: always()`, testato in
+#      test_workflow_smarkets_commit_anche_se_la_raccolta_fallisce).
+# ---------------------------------------------------------------------------
+
+import urllib.error   # noqa: E402
+import urllib.request  # noqa: E402
+
+import fetch_smarkets_matches as fsm   # noqa: E402
+import fetch_smarkets_outrights as fso  # noqa: E402
+
+
+class _Risposta:
+    """Il minimo che serve a `_get`: un context manager con `.read()`."""
+
+    def __init__(self, corpo: bytes):
+        self._corpo = corpo
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        return False
+
+    def read(self):
+        return self._corpo
+
+
+def _errore(codice: int) -> urllib.error.HTTPError:
+    return urllib.error.HTTPError("http://x", codice, "boom", {}, None)
+
+
+@pytest.fixture
+def _senza_attese(monkeypatch):
+    """Toglie di mezzo throttle e backoff: qui si misura la LOGICA dei
+    tentativi, non il tempo che aspettano."""
+    monkeypatch.setattr(fso.time, "sleep", lambda _s: None)
+
+
+@pytest.mark.parametrize("codice", sorted(fso.HTTP_TRANSITORI))
+def test_get_riprova_sui_codici_transitori(codice, monkeypatch, _senza_attese):
+    """503 compreso: e' letteralmente il codice che ha ucciso il giro."""
+    tentativi = []
+
+    def finto(url, timeout=None):
+        tentativi.append(url)
+        if len(tentativi) < 3:
+            raise _errore(codice)
+        return _Risposta(b'{"ok": true}')
+
+    monkeypatch.setattr(urllib.request, "urlopen", finto)
+    assert fso._get("/events/") == {"ok": True}
+    assert len(tentativi) == 3
+
+
+@pytest.mark.parametrize("codice", [400, 401, 403, 404, 422])
+def test_get_non_riprova_sugli_errori_di_richiesta(codice, monkeypatch, _senza_attese):
+    """Un 404 non diventa un 200 riprovando: insistere nasconderebbe un bug
+    nostro dietro cinque tentativi e venti secondi."""
+    tentativi = []
+
+    def finto(url, timeout=None):
+        tentativi.append(url)
+        raise _errore(codice)
+
+    monkeypatch.setattr(urllib.request, "urlopen", finto)
+    with pytest.raises(urllib.error.HTTPError):
+        fso._get("/events/")
+    assert len(tentativi) == 1
+
+
+def test_get_si_arrende_dopo_i_tentativi(monkeypatch, _senza_attese):
+    """Un guasto che dura non deve diventare un ciclo infinito, ne' un `{}`
+    silenzioso: deve propagare, cosi' chi chiama lo dichiara."""
+    tentativi = []
+
+    def finto(url, timeout=None):
+        tentativi.append(url)
+        raise _errore(503)
+
+    monkeypatch.setattr(urllib.request, "urlopen", finto)
+    with pytest.raises(urllib.error.HTTPError):
+        fso._get("/events/", retries=4)
+    assert len(tentativi) == 4
+
+
+_EVENTO = {"event_id": 1, "nome": "Inter vs Milan", "lega": "serie_a",
+           "inizio": "2026-08-22T16:30:00Z",
+           "_inizio": dt.datetime(2026, 8, 22, 16, 30, tzinfo=dt.timezone.utc)}
+
+
+def _finto_get(guasti=()):
+    """Un `_get` finto: due mercati, un contratto ciascuno. `guasti` elenca i
+    frammenti di URL che devono fallire con un 503."""
+    def get(path):
+        if any(g in path for g in guasti):
+            raise _errore(503)
+        if path.endswith("/markets/"):
+            return {"markets": [{"id": 10, "name": "Full-time result"},
+                                {"id": 11, "name": "Both teams to score"}]}
+        if "/contracts/" in path:
+            ids = path.split("/markets/")[1].split("/")[0].split(",")
+            return {"contracts": [{"id": 100 + int(i), "market_id": int(i),
+                                   "name": "c"} for i in ids]}
+        return {str(100 + int(i)): {"bids": [], "offers": []}
+                for i in path.split("/markets/")[1].split("/")[0].split(",")}
+    return get
+
+
+def test_quote_partita_dichiara_i_mercati_persi(monkeypatch):
+    """Un lotto che non arriva costa i suoi mercati, non la partita -- e il
+    conto torna indietro a chi chiama, perche' un raccolto parziale che si
+    spaccia per completo e' il «finto pieno» di R6."""
+    monkeypatch.setattr(fsm, "LOTTO_MERCATI", 1)      # un mercato per lotto
+    monkeypatch.setattr(fsm, "_get", _finto_get(guasti=("/markets/11/",)))
+    righe, persi = fsm.quote_partita(_EVENTO, tutti=False)
+    assert persi == 1
+    assert [r["mercato"] for r in righe] == ["1x2"]   # l'altro e' salvo
+
+
+def test_quote_partita_senza_guasti_non_perde_nulla(monkeypatch):
+    monkeypatch.setattr(fsm, "_get", _finto_get())
+    righe, persi = fsm.quote_partita(_EVENTO, tutti=False)
+    assert persi == 0
+    assert {r["mercato"] for r in righe} == {"1x2", "ggng"}
+
+
+def _tre_partite():
+    base = dt.datetime(2026, 8, 22, 16, 30, tzinfo=dt.timezone.utc)
+    return [{"event_id": i, "nome": f"A{i} vs B{i}", "lega": "serie_a",
+             "inizio": base.isoformat(), "_inizio": base} for i in (1, 2, 3)]
+
+
+def _prepara_main(monkeypatch, tmp_path, quote):
+    """Aggancia `main` a tre partite finte e a una cartella temporanea."""
+    monkeypatch.setattr(fsm, "scandaglia_upcoming",
+                        lambda: (_tre_partite(), 700))
+    monkeypatch.setattr(fsm, "leghe_assenti", lambda _n: set())
+    monkeypatch.setattr(fsm, "quote_partita", quote)
+    monkeypatch.setattr(fsm, "DEST", tmp_path)
+
+
+def _letto(tmp_path):
+    from src.data import smarkets_archive
+    files = sorted(tmp_path.iterdir())
+    assert len(files) == 1, f"atteso un file solo, trovati {files}"
+    return smarkets_archive.leggi(files[0])
+
+
+def test_una_partita_persa_non_porta_via_le_altre(monkeypatch, tmp_path):
+    """IL BUG DELL'08/08/2026, in una riga: la seconda partita esplode e le
+    altre due devono comunque finire su disco."""
+    def quote(ev, tutti, solo_principali=False):
+        if ev["event_id"] == 2:
+            raise _errore(503)
+        return [{"partita": ev["nome"], "mercato": "1x2"}], 0
+
+    _prepara_main(monkeypatch, tmp_path, quote)
+    with pytest.raises(SystemExit):      # incompleta: si esce rossi, ma DOPO
+        fsm.main(["--entro-ore", "0"])
+
+    dati = _letto(tmp_path)
+    assert {r["partita"] for r in dati["righe"]} == {"A1 vs B1", "A3 vs B3"}
+    # e il buco e' DICHIARATO nel file, non solo nei log
+    assert [x["partita"] for x in dati["partite_incomplete"]] == ["A2 vs B2"]
+    assert dati["partite_incomplete"][0]["mercati_persi"] == "tutti"
+
+
+def test_raccolta_completa_esce_verde_e_senza_buchi(monkeypatch, tmp_path):
+    _prepara_main(monkeypatch, tmp_path,
+                  lambda ev, tutti, solo_principali=False:
+                  ([{"partita": ev["nome"], "mercato": "1x2"}], 0))
+    fsm.main(["--entro-ore", "0"])       # nessun SystemExit
+    dati = _letto(tmp_path)
+    assert len(dati["righe"]) == 3
+    assert dati["partite_incomplete"] == []
+
+
+def test_qualche_mercato_perso_e_dichiarato_ma_non_fa_fallire(monkeypatch, tmp_path):
+    """Rosso solo per una partita persa INTERA. Qualche mercato mancante
+    lascia la traiettoria leggibile ed e' gia' scritto nel file: farne una
+    mail rossa insegna solo a non leggere le mail rosse."""
+    _prepara_main(monkeypatch, tmp_path,
+                  lambda ev, tutti, solo_principali=False:
+                  ([{"partita": ev["nome"], "mercato": "1x2"}], 4))
+    fsm.main(["--entro-ore", "0"])
+    dati = _letto(tmp_path)
+    assert len(dati["righe"]) == 3
+    assert [x["mercati_persi"] for x in dati["partite_incomplete"]] == [4, 4, 4]
+
+
+def test_zero_righe_su_partite_in_finestra_e_un_fallimento(monkeypatch, tmp_path):
+    """Se NESSUNA quota arriva non si scrive un file vuoto: sarebbe
+    indistinguibile da un'off-season, e l'archivio non deve mai contenere un
+    silenzio che sembra un dato (R6)."""
+    def quote(ev, tutti, solo_principali=False):
+        raise _errore(503)
+
+    _prepara_main(monkeypatch, tmp_path, quote)
+    with pytest.raises(SystemExit, match="raccolta FALLITA"):
+        fsm.main(["--entro-ore", "0"])
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_budget_esaurito_salva_il_raccolto_e_dichiara_il_resto(monkeypatch, tmp_path):
+    """Il contrappeso ai tentativi: se l'API e' giu' a lungo, ogni chiamata
+    costa fino a 45s e il giro non finirebbe piu'. Allo scadere si scrive cio'
+    che si ha, e le partite non raccolte sono dichiarate una per una."""
+    _prepara_main(monkeypatch, tmp_path,
+                  lambda ev, tutti, solo_principali=False:
+                  ([{"partita": ev["nome"], "mercato": "1x2"}], 0))
+
+    # l'orologio avanza di un'ora a ogni lettura: la prima partita passa,
+    # dalla seconda il budget e' gia' scaduto
+    orologio = iter([dt.datetime(2026, 8, 8, 6, h, tzinfo=dt.timezone.utc)
+                     for h in (0, 1, 59, 59, 59, 59)])
+
+    class _Dt(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return next(orologio)
+
+    monkeypatch.setattr(fsm.dt, "datetime", _Dt)
+    with pytest.raises(SystemExit, match="budget|INCOMPLETA"):
+        fsm.main(["--entro-ore", "0", "--budget-minuti", "45"])
+
+    dati = _letto(tmp_path)
+    assert [r["partita"] for r in dati["righe"]] == ["A1 vs B1"]
+    assert [x["partita"] for x in dati["partite_incomplete"]] == \
+        ["A2 vs B2", "A3 vs B3"]
+    assert all("budget" in x["errore"] for x in dati["partite_incomplete"])
+
+
+def test_workflow_smarkets_commit_anche_se_la_raccolta_fallisce():
+    """Il terzo difetto dell'08/08/2026, e il piu' beffardo: lo script scrive
+    il file PRIMA di uscire rosso apposta («i dati sono comunque salvati»), ma
+    in GitHub Actions un passo fallito SALTA quelli dopo -- quindi il commit
+    non avveniva e l'allarme costava esattamente i dati che proteggeva.
+
+    Il test legge il workflow: il passo che salva deve avere un `if:` che
+    sopravvive al fallimento del passo prima.
+    """
+    testo = (Path(__file__).resolve().parents[1]
+             / ".github" / "workflows" / "smarkets-prematch.yml").read_text()
+    salva = testo.split("- name: Salva lo snapshot")[1].split("run: |")[0]
+    assert "!cancelled()" in salva or "always()" in salva, (
+        "il passo di commit verrebbe saltato quando la raccolta esce rossa, "
+        "e il file scritto morirebbe sul runner")

@@ -347,6 +347,7 @@ correzioni.*
 - [Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado](#fase-139-sexies--lione-non-è-olympique-lyon-e-red-star-non-è-di-belgrado)
 - [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
+- [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
 
 ---
 
@@ -16990,3 +16991,150 @@ l'utente ha descritto — lo *stesso* allenatore su **due squadre diverse** — 
 va fatto sapendo che sul perimetro gli allenatori con abbastanza partite in
 ≥2 club sono pochi, e che il tetto informativo delle 100+ fasi precedenti non
 si sospende per un fronte nuovo.
+
+---
+
+## Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via
+
+**Obiettivo.** Rimettere in piedi il workflow `smarkets-prematch.yml`, fallito
+l'**08/08/2026** sul giro di lungo raggio delle 06:24 (`All jobs have failed`,
+7'47" prima di morire). E, visto che la raccolta pre-partita ha una scadenza
+vera — il 15 agosto la Liga comincia, e ciò che non si raccoglie prima del
+fischio non torna più (`newseason.md` §2) — capire *perché* un guasto di rete
+è riuscito a costare l'intero giro.
+
+**Ragionamento / ipotesi.** Il log dice tutto in una riga:
+
+```
+urllib.error.HTTPError: HTTP Error 503: Service Unavailable
+  File "scripts/fetch_smarkets_matches.py", line 290, in quote_partita
+    libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
+```
+
+e appena sopra: `[21/58] Espanyol vs Levante UD: 7870 righe totali`. Cioè
+**7.870 righe già in memoria** — 21 partite, cinque leghe, il listino intero —
+buttate via da un errore sulla 22ª. Non è un difetto solo: sono tre, in fila, e
+ognuno da solo sarebbe bastato a salvare i dati.
+
+1. **`_get` riprovava sul 429 ma non sui 5xx.** La funzione (Fase 97,
+   `fetch_smarkets_outrights.py`) ha un ciclo di 5 tentativi che tratta il 429
+   come «aspetta e riprova» e **rilancia tutto il resto**. Un 503 è per
+   definizione temporaneo — *Service Unavailable*, «riprova fra poco» — ed era
+   classificato con i 404. Nessuno l'aveva deciso: il 429 era il caso che si
+   era presentato alla Fase 97, e la riga era stata scritta per quello.
+2. **L'eccezione di UNA partita usciva dal ciclo del `main`.** `righe +=
+   quote_partita(...)` senza `try`: la 22ª partita non aveva il diritto di
+   uccidere le altre 57, ma l'aveva.
+3. **Il più beffardo.** Lo script scrive il file **prima** di uscire rosso,
+   apposta — il commento della Fase 116 dice *«Solo ORA si esce rosso: il file
+   è salvo, l'allarme è visibile»*. Ma in GitHub Actions un passo fallito
+   **salta quelli dopo**: il passo `Salva lo snapshot` non girava mai, e il
+   file moriva sul runner. L'allarme costava esattamente i dati che doveva
+   proteggere. Questo difetto non è del guasto dell'08/08: c'era da sempre,
+   e valeva anche per l'uscita rossa della lega sparita (01/08) — che quindi,
+   quel giorno, ha buttato la raccolta delle altre quattro leghe.
+
+**Alternative considerate.**
+- *Solo ritentare sui 5xx.* Il rimedio più piccolo, e insufficiente: sposta la
+  soglia di rottura senza toglierla. Un guasto che dura più di 45 secondi
+  ricrea la stessa perdita totale.
+- *Far fallire il giro a ogni mercato mancante.* Onesto ma inutilizzabile: un
+  503 isolato su 58 partite manderebbe una mail rossa, e le mail rosse che non
+  chiedono niente si smettono di leggere. La soglia adottata distingue «serve
+  un umano» da «è andata storta una richiesta»: **rosso solo per una partita
+  persa intera** (un buco nella traiettoria che nessun giro successivo riempie:
+  quel prezzo, a quell'ora, non esiste più), giallo-dichiarato per qualche
+  mercato.
+- *Scrivere un file parziale a ogni partita.* Rende la raccolta a prova di
+  crash brutale, ma moltiplica i file d'archivio e complica la rilettura. Il
+  budget di tempo (sotto) copre lo stesso rischio a costo zero.
+
+**Scelta.** Quattro modifiche, una per difetto più il contrappeso:
+
+1. `HTTP_TRANSITORI = {429, 500, 502, 503, 504}` in `_get`: si riprova con
+   backoff 3-6-12-24s. I **4xx restano fatali** — un 404 non diventa un 200
+   riprovando, e insistere nasconderebbe un bug nostro dietro venti secondi.
+2. `quote_partita` ritorna `(righe, mercati_persi)` e tollera un lotto caduto:
+   costa 20 mercati, non la partita.
+3. `main` avvolge ogni partita in un `try`, accumula `partite_incomplete` e le
+   **scrive nel file** — un buco dichiarato è innocuo, uno silenzioso è il
+   «finto pieno» di R6. Zero righe totali su una finestra non vuota resta un
+   fallimento senza file: un archivio non deve mai contenere un silenzio che
+   sembra un dato.
+4. `if: ${{ !cancelled() }}` sul passo di commit del workflow, così «i dati
+   sono comunque salvati» diventa vero.
+
+**📐 Il modello in dettaglio.** Nessuna matematica nuova — è codice di
+raccolta — ma due numeri vanno motivati, perché sono scelte e non default.
+
+*Il backoff, e perché il primo fix ne richiede un secondo.* Il tempo peggiore
+speso su una singola chiamata che fallisce sempre è la somma delle attese fra
+i 5 tentativi:
+
+```
+attesa_max = Σ(k=0..3) 3·2^k = 3 + 6 + 12 + 24 = 45 s
+```
+
+Su un guasto **isolato** sono 45 secondi ben spesi. Ma se Smarkets è giù per
+mezz'ora, *ogni* chiamata costa 45 s, e il giro di lungo raggio a listino
+intero fa
+
+```
+chiamate = 58 partite × (1 + 13 lotti × 2) = 1.566
+1.566 × 45 s ≈ 19,6 ore
+```
+
+cioè un runner appeso che non scrive niente e blocca, dietro la stessa
+`concurrency`, tutte le corse orarie di chiusura. **Il rimedio non è togliere i
+tentativi: è dire quando smettere.** Da qui `BUDGET_MINUTI = 45`, controllato
+fra una partita e l'altra; allo scadere si scrive ciò che si ha e le partite
+non raccolte sono dichiarate una per una.
+
+*Perché 45 minuti e non un numero a caso.* Il giro più lungo che facciamo
+(lungo raggio, tutti i mercati) è misurato **dal log del guasto stesso**: 21
+partite in 7'30" scandaglio del listino compreso, cioè
+
+```
+per_partita = (7 min 30 s − ~1 min di scandaglio) / 21 ≈ 18,6 s
+giro_intero = 58 × 18,6 s ≈ 18 min
+```
+
+Il budget è **due volte e mezzo** il giro sano: non taglia mai una raccolta che
+sta andando bene, lascia spazio a un calendario più affollato e a qualche
+ritentativo, e tiene il giro dentro l'ora prima che la corsa oraria si accodi.
+A protezione del caso in cui il processo si *pianti* invece di rallentare — il
+budget si controlla fra una partita e l'altra, quindi non scatterebbe — il job
+ha `timeout-minutes: 55` contro le 6 ore di default di GitHub.
+
+**Risultato.**
+
+| difetto | prima | dopo |
+|---|---|---|
+| 503 su una chiamata | eccezione immediata | 5 tentativi, 45 s di backoff |
+| guasto su 1 partita di 58 | **57 partite perse** | 1 dichiarata, 57 salvate |
+| uscita rossa dopo la scrittura | passo di commit **saltato**, file perso | committato, poi rosso |
+| API giù a lungo | fino a ~19,6 h di runner | ≤ 45 min, con ciò che ha raccolto |
+
+**16 test nuovi** in `tests/test_smarkets_matches.py` (46 nel file, suite
+verde): i tentativi per ognuno dei 5 codici transitori, il non-tentativo sui
+5 codici di richiesta, la resa dopo l'ultimo tentativo, i mercati persi
+dichiarati, «una partita persa non porta via le altre» (il bug in una riga), il
+budget che salva il raccolto, e un test che **legge il YAML del workflow** e
+pretende l'`if:` sul passo di commit.
+
+**Lezione.** Tre cose, e la terza è quella che vale oltre questo file.
+
+1. **Un elenco di casi transitori scritto per il caso che si è presentato è un
+   elenco incompleto per definizione.** Il 429 era arrivato alla Fase 97, il
+   503 no: la riga trattava «non-429» come «errore vero» perché nessuno aveva
+   guardato l'altra metà della tabella HTTP.
+2. **Un ciclo che accumula in memoria è un ciclo che può perdere tutto.** Il
+   costo di un `try` per iterazione è tre righe; il costo di non averlo è
+   proporzionale a quanto sei arrivato lontano — cioè massimo proprio quando fa
+   più male.
+3. **Un allarme che gira DOPO la scrittura ma PRIMA del salvataggio non è un
+   allarme: è una perdita di dati con un messaggio sopra.** Il commento diceva
+   «il file è salvo» e il codice Python faceva la sua parte; era il YAML a non
+   saperlo. La verifica di un'invariante non può fermarsi al confine del
+   linguaggio in cui è scritta — per questo il guardiano nuovo legge il
+   workflow, non il codice.

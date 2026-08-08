@@ -119,6 +119,16 @@ _norm = lambda s: re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
 _THROTTLE = 0.35        # s fra una chiamata e l'altra: l'API limita a ~3/s e
                         # senza pausa il giro completo prende un 429 a meta'
 
+# I codici HTTP che significano «riprova fra un attimo», non «la richiesta e'
+# sbagliata». 429 e' il rate limit (gia' gestito dalla Fase 97); i 5xx sono il
+# server che vacilla, ed erano trattati come errori definitivi -- il che ha
+# ucciso il giro di lungo raggio dell'08/08/2026 con un **503 alla 22a partita
+# su 58**, buttando via le 21 gia' raccolte. Un 503 e' per definizione
+# temporaneo ("Service Unavailable"): l'unica risposta sensata e' aspettare.
+# 4xx restano fatali: se chiediamo un mercato che non esiste, riprovare cinque
+# volte non lo fa apparire, e mascherarlo sarebbe peggio.
+HTTP_TRANSITORI = {429, 500, 502, 503, 504}
+
 
 def _get(path: str, retries: int = 5):
     url = path if path.startswith("http") else API + path
@@ -128,8 +138,11 @@ def _get(path: str, retries: int = 5):
             with urllib.request.urlopen(url, timeout=30) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as ex:
-            # 429 = rate limit: si aspetta e si riprova, non e' un errore vero
-            if ex.code != 429 or k == retries - 1:
+            # rate limit o server che vacilla: si aspetta e si riprova, non e'
+            # un errore vero. L'attesa e' 3, 6, 12, 24s: un 503 di Smarkets
+            # dura tipicamente qualche secondo, e un backoff piu' corto
+            # rischia di sprecare i tentativi tutti dentro lo stesso guasto.
+            if ex.code not in HTTP_TRANSITORI or k == retries - 1:
                 raise
             time.sleep(3 * 2 ** k)
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):

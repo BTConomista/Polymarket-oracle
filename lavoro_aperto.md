@@ -102,6 +102,13 @@ di `data/smarkets_matches/` abbia `leghe_senza_partite_esposte: []` **e** tutte
 e 5 le leghe fra le righe. Che il file esista non basta — il 31/07 esisteva,
 pesava 120 KB e non conteneva La Liga.
 
+⚠️ **E dalla Fase 141 anche `partite_incomplete: []`.** Un giro può ora
+sopravvivere a un guasto di rete salvando ciò che ha raccolto: è il
+comportamento voluto (l'08/08 un `HTTP 503` alla 22ª partita su 58 aveva
+buttato tutte e 58), ma significa che un file può essere **legittimamente
+parziale**. Il buco è dichiarato lì dentro, partita per partita — e un
+congelamento non si fa su un file che ne ha.
+
 ---
 
 ## 2 · Le piste — lo stato canonico è `docs/PISTE.md` §0-bis
