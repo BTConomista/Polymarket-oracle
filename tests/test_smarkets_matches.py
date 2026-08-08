@@ -685,3 +685,29 @@ def test_archivio_legge_ancora_i_file_pre_fase_142(tmp_path):
                            ("serie_a", "premier_league", "la_liga",
                             "bundesliga", "ligue_1")]})
     assert arch.ultimo_listino_completo(tmp_path).name == "2026-08-01T10-00-00.json.gz"
+
+
+def test_ogni_input_del_workflow_e_davvero_usato():
+    """Un input dichiarato e mai letto e' peggio di un input assente: nella
+    UI di GitHub c'e' la casella, la si spunta, e non succede niente.
+
+    Pagato l'08/08/2026: aggiunto `tutti_i_mercati` per poter forzare a mano
+    il regime di chiusura (il cron orario parte con 30-40 min di ritardo), e
+    committato SENZA collegarlo al comando. La casella c'era e non faceva
+    nulla -- un guasto che nessun test del codice Python puo' vedere, perche'
+    il difetto sta fra il YAML e se stesso.
+    """
+    import re
+
+    testo = (Path(__file__).resolve().parents[1]
+             / ".github" / "workflows" / "smarkets-prematch.yml").read_text()
+    blocco = testo.split("workflow_dispatch:")[1].split("permissions:")[0]
+    # gli input sono le chiavi a 6 spazi d'indentazione dentro `inputs:`
+    dichiarati = re.findall(r"^      (\w+):$", blocco.split("inputs:")[1], re.M)
+    assert dichiarati, "nessun input trovato: il parsing del workflow e' rotto"
+
+    corpo = testo.split("jobs:")[1]
+    non_usati = [i for i in dichiarati if f"inputs.{i}" not in corpo]
+    assert not non_usati, (
+        f"input dichiarati e mai letti dal job: {non_usati}. Nella UI di "
+        f"GitHub compare la casella e spuntarla non produce alcun effetto.")

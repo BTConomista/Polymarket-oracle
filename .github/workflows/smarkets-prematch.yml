@@ -114,8 +114,15 @@ jobs:
             # trova nulla da committare: e' il comportamento voluto, non un guasto.
             python scripts/fetch_smarkets_matches.py --entro-ore 2 --tutti-i-mercati
           else
+            # Avvio a mano (o cron denso ogni 6h). `--tutti-i-mercati` solo se
+            # richiesto: il default resta il listino base, che e' cio' che il
+            # cron denso ha sempre fatto.
+            EXTRA=""
+            if [ "${{ github.event.inputs.tutti_i_mercati }}" = "true" ]; then
+              EXTRA="--tutti-i-mercati"
+            fi
             python scripts/fetch_smarkets_matches.py \
-              --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"
+              --entro-ore "${{ github.event.inputs.entro_ore || 72 }}" $EXTRA
           fi
 
       - name: Salva lo snapshot (se c'e' qualcosa da salvare)
