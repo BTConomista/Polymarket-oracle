@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.478 verdi** al 08/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.499 verdi** al 08/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.478 verdi al 08/08/2026)
+python -m pytest                       # test (1.499 verdi al 08/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -365,7 +365,17 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         build_coppe_2526 (la raccolta coppe, Fase 138),
+scripts/         fetch_smarkets_live (Fase 143: la raccolta IN-PLAY. Una
+                 SENTINELLA ogni 30' accende un job che cicla 40' al suo
+                 interno -- il cron di GitHub parte con 30-40' di ritardo, e
+                 un cron piu' fitto erediterebbe lo stesso ritardo. Nucleo
+                 ogni 2', listino pieno ogni 15'. Il PUNTEGGIO non e' un campo
+                 dell'API ma si ricostruisce da cosa e' ancora quotato --
+                 `stato_mercato == settled` sulle linee O/U, e minimo
+                 componentwise dei punteggi superstiti: due stimatori che
+                 concordano. ⚠️ nel file NON e' dedotto: e' una regola ancora
+                 da validare),
+                 build_coppe_2526 (la raccolta coppe, Fase 138),
                  aggancia_coppe (i TRE PONTI delle raccolte di coppa: squadre->
                  club_id, partite->game_id, giocatori->player_id. L'ordine
                  conta: agganciata la partita, i candidati per un giocatore
@@ -410,7 +420,11 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
-data/            coppe_2526/ (COPPE NAZIONALI 2025-26: 662 partite, 18.566 righe
+data/            smarkets_live/ (Fase 143: quote IN-PLAY, cartella SEPARATA da
+                 smarkets_matches -- un prezzo in-play conosce il punteggio,
+                 uno pre-partita no, e mescolarli romperebbe in silenzio ogni
+                 lettore dell'archivio pre-partita. Leggere il suo README)
+                 coppe_2526/ (COPPE NAZIONALI 2025-26: 662 partite, 18.566 righe
                  di formazione, 8.177 eventi col minuto. 204 partite senza
                  formazione, dichiarate. Leggere il suo README PRIMA di usare
                  il punteggio)
@@ -507,7 +521,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.478 verdi al 08/08/2026; ⚠️ 1 ROSSO aperto:
+tests/           test unitari (1.499 verdi al 08/08/2026; ⚠️ 1 ROSSO aperto:
                  test_nomi_smarkets_2627::test_ogni_nome_mai_visto_nell_archivio_si_aggancia
                  cerca data/bundesliga_2_matches.csv, che non esiste -- l'ha
                  aperto l'allargamento del perimetro Smarkets alle seconde
