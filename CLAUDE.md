@@ -490,6 +490,13 @@ docs/CENSIMENTO_FONTI.md   censimento a 13 agenti di TUTTE le fonti (01/08/2026)
                  9 affermazioni FALSE o non ri-calcolabili trovate nei nostri
                  stessi documenti (fra cui il f=0.4396 usato sui cartellini, dove
                  il vero e 0.3200)
+docs/INFRASTRUTTURA_RACCOLTA.md  dove deve girare la raccolta: ragionamento
+                 APERTO (08/08/2026), nessuna decisione presa. I requisiti per
+                 famiglia di dati (il lungo raggio non ha problemi, l'in-play
+                 si'), i limiti di Actions MISURATI, e il vincolo che decide:
+                 una giornata piena chiede 10,5h di copertura continua e un job
+                 ne dura 6. Aggiornare quando arrivano i numeri del cane da
+                 guardia
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
