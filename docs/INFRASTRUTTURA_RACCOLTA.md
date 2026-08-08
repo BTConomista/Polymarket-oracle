@@ -209,6 +209,43 @@ campionamento effettivo passa da 2 minuti a ~40 secondi, quindi fra un
 campione e l'altro il libro cambia meno spesso, quindi la frazione di letture
 identiche sale. La ridondanza costa **meno che linearmente**.
 
+### (b-bis) ⚠️ RETTIFICA: togliere le letture identiche NON è senza perdita
+
+Sopra ho scritto che eliminare una lettura identica alla precedente «non perde
+nulla». **È falso, e vale la pena vedere perché.**
+
+```
+letture:  t1=A  t2=A  t3=A  t4=A  t5=B
+tenendo solo i cambiamenti:  t1=A, t5=B
+```
+
+Il valore è ricostruibile, sì — ma la **risoluzione temporale del cambiamento**
+no: con tutte le letture so che il libro è cambiato fra t4 e t5, con le sole
+due so soltanto che è cambiato fra t1 e t5. Su un dato in-play, dove la
+domanda interessante è *quanto in fretta il prezzo reagisce a un gol*, quella
+è esattamente l'informazione che conta.
+
+**La forma giusta è la codifica a corse con ENTRAMBI gli estremi**:
+
+```
+{ contratto, valore, da: t1, a: t4, n_letture: 4 }   poi   { valore B, da: t5, ... }
+```
+
+Così si sa che il valore era A **almeno fino a t4** e che il cambio è avvenuto
+in (t4, t5]. Questa è davvero senza perdita, e regge la regola §5-ter.
+
+**Quanto si risparmia, misurato** su 126.004 righe in-play vere:
+
+| chiave usata per «identico» | righe tenute |
+|---|---|
+| solo il prezzo medio | 34,0% |
+| i due lati del libro (banco + puntatore) | 40,9% |
+| **libro + volumi** | **43,8%** |
+
+Avevo previsto che includere i volumi azzerasse la compattazione: **misurato,
+costa 3 punti**. Quindi non c'è nessun compromesso da fare — si tengono anche
+i volumi e si comprime lo stesso di ~2,3×.
+
 ### Cosa resta da sorvegliare
 
 1. **Il grezzo scade.** Se la compattazione si ferma più a lungo della
