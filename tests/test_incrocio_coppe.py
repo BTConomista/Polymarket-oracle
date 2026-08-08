@@ -65,8 +65,11 @@ def test_quattro_coppe_si_incrociano_quasi_per_intero(sponde):
     X = dentro.merge(M[M.ha_ponte][["game_id"] + col_m], on="game_id", how="left")
     for c in col_m:
         X[c] = X[c].fillna(False)
-    tutti = ["b_arbitro", "b_allenatori", "b_undici_titolari",
-             "b_minuti_giocati"] + col_m
+    # ⚠️ `b_minuti_giocati` e' fuori dalla congiunzione: i minuti non erano fra
+    # i blocchi chiesti, e sono pieni su 5.438 righe di formazione su 18.566
+    # per un buco di `appearances.csv` — nessuna partita li ha su tutte le
+    # righe. Includerli misurerebbe la fonte, non i nostri agganci.
+    tutti = ["b_arbitro", "b_allenatori", "b_undici_titolari"] + col_m
     X["ok"] = X[tutti].all(axis=1)
     quota = X[X.competizione.isin(
         ["Coppa Italia", "DFB-Pokal", "EFL Cup", "FA Cup"])].groupby(
@@ -113,3 +116,21 @@ def test_il_meteo_e_dichiarato_assente(sponde):
     esattamente il momento in cui va riscritto."""
     P, _ = sponde
     assert not P.b_meteo.any()
+
+
+def test_i_minuti_sono_un_buco_della_FONTE_e_va_detto(sponde):
+    """⚠️ Il criterio «almeno una riga coi minuti» era mio, ed era troppo largo.
+
+    Con quello 348 partite su 379 risultavano coperte. Misurato: `minuti` e'
+    pieno su **5.438 righe su 18.566** e **nessuna partita** ce l'ha su tutte —
+    perche' `appearances.csv` di player-scores porta 5.438 righe su queste
+    partite (mediana 16 invece di ~35). Il builder non ne perde nemmeno una: e'
+    la fonte a non averle. Con il criterio stretto (tutti i titolari) sono 70.
+    """
+    P, _ = sponde
+    F = pd.read_csv(COPPE / "formazioni.csv")
+    assert F.minuti.notna().sum() == 5438
+    quota = (F[F.game_id.notna()].assign(ha=F.minuti.notna())
+             .groupby("game_id")["ha"].mean())
+    assert (quota < 1).all(), "nessuna partita ha i minuti su TUTTE le righe"
+    assert int(P.b_minuti_giocati.sum()) == 70

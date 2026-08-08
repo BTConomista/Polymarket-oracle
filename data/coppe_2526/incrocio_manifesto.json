@@ -34,14 +34,14 @@
       "b_arbitro": 116,
       "b_allenatori": 117,
       "b_undici_titolari": 117,
-      "b_minuti_giocati": 95
+      "b_minuti_giocati": 12
     },
     "Coppa Italia": {
       "nel_perimetro": 45,
       "b_arbitro": 45,
       "b_allenatori": 44,
       "b_undici_titolari": 44,
-      "b_minuti_giocati": 41
+      "b_minuti_giocati": 18
     },
     "Coupe de France": {
       "nel_perimetro": 201,
@@ -55,21 +55,21 @@
       "b_arbitro": 63,
       "b_allenatori": 62,
       "b_undici_titolari": 62,
-      "b_minuti_giocati": 61
+      "b_minuti_giocati": 12
     },
     "EFL Cup": {
       "nel_perimetro": 91,
       "b_arbitro": 91,
       "b_allenatori": 91,
       "b_undici_titolari": 91,
-      "b_minuti_giocati": 89
+      "b_minuti_giocati": 16
     },
     "FA Cup": {
       "nel_perimetro": 63,
       "b_arbitro": 63,
       "b_allenatori": 62,
       "b_undici_titolari": 62,
-      "b_minuti_giocati": 62
+      "b_minuti_giocati": 12
     }
   },
   "sponda_manuale": {
@@ -134,13 +134,13 @@
     },
     "DFB-Pokal": {
       "nel_perimetro": 63,
-      "incrociabile": 61,
-      "quota": 96.8
+      "incrociabile": 62,
+      "quota": 98.4
     },
     "EFL Cup": {
       "nel_perimetro": 91,
-      "incrociabile": 89,
-      "quota": 97.8
+      "incrociabile": 91,
+      "quota": 100.0
     },
     "FA Cup": {
       "nel_perimetro": 63,
@@ -148,6 +148,6 @@
       "quota": 98.4
     }
   },
-  "incrociabili": 296,
+  "incrociabili": 299,
   "meteo": "assente per il 2025-26 (l'infrastruttura e' prospettica)"
 }

@@ -1206,9 +1206,9 @@ produce quattro tabelle invece di una:
 
 | | |
 |---|--:|
-| incrociabili su TUTTI i blocchi | **296 / 580 (51,0%)** |
-| idem, escludendo la Coupe de France | **296 / 379 (78,1%)** |
-| FA Cup / EFL Cup / DFB-Pokal / Coppa Italia | 98,4% · 97,8% · 96,8% · 88,9% |
+| incrociabili su TUTTI i blocchi | **299 / 580 (51,6%)** |
+| idem, escludendo la Coupe de France | **299 / 379 (78,9%)** |
+| EFL Cup / FA Cup / DFB-Pokal / Coppa Italia | 100% · 98,4% · 98,4% · 88,9% |
 | Copa del Rey | 37,6% (il First Round non ha statistiche individuali) |
 | **titolare → la sua statistica individuale** (`player_id`) | **6.489 / 6.600 (98,3%)** |
 
@@ -1223,6 +1223,53 @@ previsione `pre` che serve a un modello (R8).
 
 **Disponibilità temporale (R8)**: `incrocio_per_partita.csv` è **`statico`** —
 descrive la copertura delle nostre tabelle, non la partita.
+
+---
+
+## 5-octies-quater · Il pannello interrogabile delle coppe (`src/data/coppe_query.py`) — Fase 139-novies
+
+Non un file di dati: due **viste denormalizzate** costruite al volo, in cui ogni
+riga di misura porta con sé le sue dimensioni (competizione, turno, data,
+squadra, avversario, **allenatore**, allenatore avversario, **arbitro**,
+divisione, modulo, esito).
+
+| vista | righe × colonne | grana |
+|---|--:|---|
+| `pannello_squadra(periodo="Totale")` | 746 × 59 | partita × squadra × periodo |
+| `pannello_giocatore()` | 9.462 × 134 | partita × giocatore |
+
+Rispondono alle due domande poste dall'utente il 05/08/2026:
+`statistiche_allenatore(nome, competizione=…)` e
+`statistiche_giocatore(giocatore=…, arbitro=…, competizione=…)`.
+
+⚠️ **Il lato è la chiave, ed è l'errore silenzioso.** `partite.csv` ha
+`allenatore_casa`/`allenatore_ospite`, la riga di misura ha `Lato`: attaccare
+l'allenatore senza guardarlo mette l'avversario su metà delle righe, e i numeri
+restano plausibili. Verificato contro un percorso indipendente
+(`allenatori.load_partite()`, che legge `games.csv`): **746/746 concordano**, e
+i due allenatori non coincidono su nessuna riga — quindi l'errore sarebbe stato
+visibile.
+
+⚠️ **La numerosità va guardata prima della media.** `copertura()` la stampa: in
+una stagione di coppa la mediana è **2 partite per allenatore** e **1 per
+arbitro**; solo 101 allenatori su 350 arrivano a 3 partite, solo 7 arbitri su
+207 arrivano a 5. La query risponde sempre, ma una media su due partite non è
+una media.
+
+⚠️ **Il nome non è un'identità** (Fase 140): le chiavi normalizzate uniscono le
+grafie della stessa persona, non separano due omonimi. Per gli arbitri non
+esiste nemmeno un id.
+
+**Fuori dal pannello**: la Coupe de France (niente `game_id`, quindi niente
+arbitro/allenatore da attaccare), le partite fuori perimetro, e i **minuti**,
+presenti solo sul 51,7% delle righe giocatore — buco della fonte
+(`appearances.csv` porta 5.438 righe su 18.566 di formazione), non del join:
+ogni riga di statistica trova il suo giocatore, **9.312 su 9.312**.
+
+**Disponibilità temporale (R8)**: le dimensioni sono `pre` (arbitro e allenatore
+si sanno prima), le misure `post`. Il pannello **mescola i due tipi per
+costruzione** — è una vista di analisi, non una tabella di feature: chi ne
+ricava una feature deve prendere le misure da partite **precedenti**.
 
 ---
 

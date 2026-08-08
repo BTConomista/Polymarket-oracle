@@ -208,14 +208,24 @@ non una, perché un conteggio unico confonde tre cose diverse:
 
 ### 1 · Fonte automatica (player-scores), chiave `game_id` — sul perimetro
 
-| coppa | nel perimetro | arbitro | allenatori | 11+11 titolari | minuti |
+| coppa | nel perimetro | arbitro | allenatori | 11+11 titolari | minuti¹ |
 |---|--:|--:|--:|--:|--:|
-| Coppa Italia | 45 | 45 | 44 | 44 | 41 |
-| DFB-Pokal | 63 | 63 | 62 | 62 | 61 |
-| EFL Cup | 91 | 91 | 91 | 91 | 89 |
-| FA Cup | 63 | 63 | 62 | 62 | 62 |
-| Copa del Rey | 117 | 116 | 117 | 117 | 95 |
+| Coppa Italia | 45 | 45 | 44 | 44 | 18 |
+| DFB-Pokal | 63 | 63 | 62 | 62 | 12 |
+| EFL Cup | 91 | 91 | 91 | 91 | 16 |
+| FA Cup | 63 | 63 | 62 | 62 | 12 |
+| Copa del Rey | 117 | 116 | 117 | 117 | 12 |
 | Coupe de France | 201 | **0** | **0** | **0** | **0** |
+
+¹ ⚠️ **I minuti sono un buco della FONTE, e il primo criterio era mio e troppo
+largo.** Contavo «almeno una riga con i minuti» e uscivano 348 partite su 379.
+Misurato davvero: `minuti` è pieno su **5.438 righe di formazione su 18.566
+(29,3%)** e **nessuna partita** ce l'ha su tutte — perché `appearances.csv` di
+player-scores porta 5.438 righe su queste partite, mediana **16** invece di ~35.
+Il builder non ne perde nemmeno una (5.438 = 5.438, verificato). Col criterio
+stretto — *tutti* i titolari — sono **70 partite su 458**. Per questo i minuti
+**non entrano** nella congiunzione della tabella 3: non erano fra i blocchi
+chiesti, e includerli misurerebbe la fonte invece dei nostri agganci.
 
 ### 2 · Raccolta manuale (diretta.it), chiave `ID partita` — sul raccolto
 
@@ -232,16 +242,16 @@ non una, perché un conteggio unico confonde tre cose diverse:
 
 | coppa | nel perimetro | incrociabili | quota |
 |---|--:|--:|--:|
+| EFL Cup | 91 | 91 | **100%** |
 | FA Cup | 63 | 62 | **98,4%** |
-| EFL Cup | 91 | 89 | **97,8%** |
-| DFB-Pokal | 63 | 61 | **96,8%** |
+| DFB-Pokal | 63 | 62 | **98,4%** |
 | Coppa Italia | 45 | 40 | **88,9%** |
 | Copa del Rey | 117 | 44 | 37,6% |
 | Coupe de France | 201 | 0 | 0% |
-| **totale** | **580** | **296** | **51,0%** |
+| **totale** | **580** | **299** | **51,6%** |
 
 Escludendo la Coupe de France — che è un problema di natura diversa — sono
-**296/379, il 78,1%**.
+**299/379, il 78,9%**.
 
 ### 4 · Il giro completo: dal titolare alla SUA statistica individuale
 
@@ -291,3 +301,82 @@ Riproducibile con `python scripts/verifica_incrocio_coppe.py --csv`; la matrice
 per partita finisce in `incrocio_per_partita.csv`, i conteggi in
 `incrocio_manifesto.json`. Per il giro end-to-end su una singola partita:
 `--partita <game_id>`.
+
+
+## Interrogare: allenatore × arbitro × squadra × giocatore (Fase 139-novies)
+
+Domanda dell'utente: *«se chiedo le statistiche che hanno avuto le squadre di un
+determinato allenatore in quella competizione siamo in grado di rispondere, o le
+statistiche di un giocatore quando ad arbitrare la partita era un certo
+arbitro»*. **Sì**, e lo fa `src/data/coppe_query.py`:
+
+```python
+from src.data import coppe_query as Q
+
+Q.statistiche_allenatore("Diego Simeone", competizione="Copa del Rey")
+Q.statistiche_giocatore(giocatore="Trafford James")          # con l'arbitro accanto
+Q.statistiche_giocatore(player_id=406635, arbitro="Michael Oliver")
+Q.pannello_squadra()      # 746 righe × 59 colonne, la tabella grezza
+Q.pannello_giocatore()    # 9.462 righe × 134 colonne
+Q.copertura()             # ⚠️ da guardare PRIMA di credere a una media
+```
+
+Due tabelle denormalizzate, una per squadra-partita e una per giocatore-partita,
+in cui **ogni riga di misura porta con sé le sue dimensioni**: competizione,
+turno, data, squadra, avversario, allenatore, allenatore avversario, arbitro,
+divisione, modulo, esito.
+
+### ⚠️ Il lato è la parte difficile, ed è silenziosa se sbagliata
+
+`partite.csv` ha `allenatore_casa` e `allenatore_ospite`; una riga di statistica
+ha `Lato`. Attaccare l'allenatore senza guardare il lato dà **metà delle righe
+con l'allenatore avversario** — e i numeri restano plausibili, le medie
+credibili, nessun conteggio se ne accorge.
+
+Verificato contro un percorso **indipendente**: `allenatori.load_partite()`, che
+legge `games.csv` e costruisce la vista lunga per conto suo. **746/746 righe
+concordano**, zero senza riscontro. E la controprova: `allenatore` e
+`allenatore_avv` non coincidono su **nessuna** riga, quindi un errore di lato
+sarebbe stato visibile.
+
+### ⚠️ «Si può rispondere» non è «la risposta è una statistica»
+
+| | |
+|---|--:|
+| righe squadra-partita | 746 |
+| righe giocatore-partita | 9.462 |
+| allenatori distinti | 350 |
+| **partite per allenatore, mediana** | **2** |
+| allenatori con ≥ 3 partite | 101 |
+| arbitri distinti | 207 |
+| **partite per arbitro, mediana** | **1** |
+| arbitri con ≥ 5 partite | 7 |
+| giocatori distinti | 4.886 |
+| giocatori con ≥ 3 partite | 1.118 |
+
+Una coppa è a eliminazione diretta: **una media su due partite non è una media.**
+La query risponde sempre; la numerosità dice se la risposta significa qualcosa,
+e `copertura()` la stampa apposta. Per un'analisi seria servono le stagioni
+precedenti, o l'unione con i campionati.
+
+### Esempio, verificato sul dato
+
+`Q.statistiche_allenatore("Diego Simeone", competizione="Copa del Rey")` → 6
+righe, tutte con `squadra = Atlético de Madrid`, dal Round of 32 alla finale, con
+xG, tiri, possesso, angoli, falli e l'arbitro di ogni partita.
+
+`Q.statistiche_giocatore(giocatore="Trafford James")` → 11 righe (EFL Cup + FA
+Cup), **10 arbitri diversi**, con minuti, rating e metriche individuali.
+
+### Cosa NON entra nel pannello
+
+- la **Coupe de France**: nessun `game_id`, quindi né arbitro né allenatore da
+  attaccare alle sue misure;
+- le partite **fuori perimetro** e quelle senza statistiche;
+- i **minuti** ci sono solo sul **51,7%** delle righe giocatore — buco della
+  fonte, non del join (ogni riga trova il suo giocatore in `formazioni.csv`:
+  9.312 su 9.312);
+- ⚠️ **il nome non è un'identità** (Fase 140): le chiavi normalizzate uniscono
+  le grafie della stessa persona, non garantiscono che due omonimi restino
+  separati. Per gli arbitri è peggio che per gli allenatori — non abbiamo
+  nemmeno un id.

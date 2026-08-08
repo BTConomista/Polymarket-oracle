@@ -87,13 +87,25 @@ def _sponda_automatica() -> pd.DataFrame:
     P["squadre_con_11"] = P["squadre_con_11"].fillna(0).astype(int)
     P["b_undici_titolari"] = P.squadre_con_11 == 2
 
-    # i minuti giocati sono cio' che rende la formazione una TIMELINE e non una
-    # fotografia: senza, «chi era in campo al 70°» non si sa.
-    minuti = (F.dropna(subset=["minuti"]).groupby("game_id").size()
-              .rename("righe_con_minuti"))
-    P = P.merge(minuti, on="game_id", how="left")
-    P["righe_con_minuti"] = P["righe_con_minuti"].fillna(0).astype(int)
-    P["b_minuti_giocati"] = P.righe_con_minuti > 0
+    # ⚠️ I MINUTI: qui avevo sbagliato, ed e' lo stesso errore che due righe piu'
+    # su avevo evitato apposta. La prima versione contava «almeno una riga con i
+    # minuti» — e con quella soglia 348 partite su 379 risultavano coperte.
+    # Misurato davvero: `minuti` e' pieno su **5.438 righe di formazione su
+    # 18.566 (29,3%)**, e **nessuna partita** ce l'ha su tutte le righe. Non e'
+    # un difetto nostro: `appearances.csv` di player-scores porta 5.438 righe su
+    # queste partite (mediana **16** per partita invece di ~35) e il merge del
+    # builder non ne perde nemmeno una. E' un buco della FONTE.
+    # Il criterio onesto e' il piu' stretto che abbia senso — tutti i titolari —
+    # e da' **70 partite su 458**.
+    tot_tit = tit.groupby("game_id")["n"].sum().rename("titolari_totali")
+    con_min = (F[(F.ruolo_partita == "titolare") & F.minuti.notna()]
+               .groupby("game_id").size().rename("titolari_con_minuti"))
+    P = P.merge(tot_tit, on="game_id", how="left").merge(
+        con_min, on="game_id", how="left")
+    P["titolari_totali"] = P["titolari_totali"].fillna(0).astype(int)
+    P["titolari_con_minuti"] = P["titolari_con_minuti"].fillna(0).astype(int)
+    P["b_minuti_giocati"] = ((P.titolari_totali > 0)
+                             & (P.titolari_con_minuti == P.titolari_totali))
 
     # Dichiarato, non omesso: per il 2025-26 il meteo non esiste in nessuna
     # tabella del progetto. L'infrastruttura c'e' (coordinate degli stadi,
@@ -221,6 +233,11 @@ def main() -> int:
 
     # --- 1. la sponda automatica ------------------------------------------ #
     col_a = ["b_arbitro", "b_allenatori", "b_undici_titolari", "b_minuti_giocati"]
+    # ⚠️ `b_minuti_giocati` NON entra nella congiunzione dell'incrocio: i minuti
+    # non erano fra i blocchi chiesti, e includerli farebbe crollare il numero
+    # per un buco della fonte invece che per un difetto degli agganci. Restano
+    # riportati a parte, con la loro copertura vera.
+    col_incrocio = ["b_arbitro", "b_allenatori", "b_undici_titolari"]
     ta = dentro.groupby("competizione")[col_a].sum()
     ta.insert(0, "nel_perimetro", dentro.groupby("competizione").size())
     _log("\n=== 1. FONTE AUTOMATICA (player-scores) — chiave `game_id` ===")
@@ -243,7 +260,7 @@ def main() -> int:
         M[M.ha_ponte][["game_id"] + col_m], on="game_id", how="left")
     for c in col_m:
         X[c] = X[c].fillna(False)
-    tutti = col_a + col_m
+    tutti = col_incrocio + col_m
     X["incrociabile"] = X[tutti].all(axis=1)
     tx = X.groupby("competizione")[["incrociabile"]].sum()
     tx.insert(0, "nel_perimetro", X.groupby("competizione").size())

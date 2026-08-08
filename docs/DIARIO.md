@@ -347,6 +347,7 @@ correzioni.*
 - [Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado](#fase-139-sexies--lione-non-è-olympique-lyon-e-red-star-non-è-di-belgrado)
 - [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
 - [Fase 139-octies — «Le colonne ci sono» non è «si uniscono»](#fase-139-octies--le-colonne-ci-sono-non-è-si-uniscono)
+- [Fase 139-novies — La domanda era un'altra: non «si toccano» ma «so rispondere»](#fase-139-novies--la-domanda-era-unaltra-non-si-toccano-ma-so-rispondere)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 - [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
 - [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
@@ -16897,6 +16898,156 @@ per **partita** («questa partita ha tutti i blocchi insieme»). Sono domande
 diverse e danno numeri diversi, e la seconda è quella che decide se un modello
 si può addestrare. **Una copertura alta su ogni pezzo non implica un pezzo
 intero da nessuna parte.**
+
+---
+
+## Fase 139-novies — La domanda era un'altra: non «si toccano» ma «so rispondere»
+
+**Obiettivo.** L'utente precisa cosa intendeva per «incrociare»:
+
+> *«se io chiedo le statistiche che hanno avuto le squadre di un determinato
+> allenatore in quella competizione siamo in grado di rispondere, o le
+> statistiche di un giocatore quando ad arbitrare la partita era un certo
+> arbitro»*
+
+La Fase 139-octies aveva risposto a una domanda **più debole** — «i blocchi si
+uniscono?» — e la risposta era sì. Questa è più esigente: la dimensione da cui
+si parte (allenatore, arbitro) vive nella fonte **automatica**, la misura che si
+chiede vive nella raccolta **manuale**, e perché la query funzioni la dimensione
+dev'essere attaccata **a ogni riga di misura, dal lato giusto**.
+
+**Ragionamento.** Il rischio non è che la query fallisca: è che **risponda
+sbagliato senza dirlo**. `partite.csv` ha `allenatore_casa` e
+`allenatore_ospite`; una riga di statistica ha `Lato`. Se attacco l'allenatore
+ignorando il lato, metà delle righe finiscono con l'allenatore **avversario** —
+e non c'è niente di anomalo da vedere: le medie restano plausibili, i conteggi
+tornano, nessun test di copertura se ne accorge. È lo stesso genere di difetto
+del `Turno` nella chiave di ordinamento (Fase 139-quinquies), ma peggiore,
+perché lì il controllo urlava e qui tacerebbe.
+
+**Alternative considerate.**
+
+1. *Rispondere caso per caso con un `groupby` scritto sul momento.* Funziona una
+   volta e si sbaglia la seconda: il join per lato è esattamente il pezzo che si
+   dimentica. Se la domanda è ricorrente, la risposta è un modulo.
+2. *Una tabella sola, molto larga (squadra + giocatore insieme).* Sbagliata di
+   grana: moltiplicherebbe le misure di squadra per il numero di giocatori, e
+   ogni media di squadra risulterebbe pesata per la rosa.
+3. *Materializzare un CSV denormalizzato.* Scartata: si costruisce in un secondo
+   dalle tabelle di aggancio, e un file in più è un file che diverge.
+
+**Scelta.** `src/data/coppe_query.py`, due viste costruite al volo —
+`pannello_squadra()` (746 × 59) e `pannello_giocatore()` (9.462 × 134) — più le
+due funzioni che rispondono alle domande così come sono state poste.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la correttezza sta tutta nella **chiave del join**.
+
+```
+(1) le dimensioni, una riga per (partita, lato)
+    L = { (game_id, Lato=Casa)  con squadra=casa,  allenatore=allenatore_casa  }
+      ∪ { (game_id, Lato=Ospite) con squadra=ospite, allenatore=allenatore_ospite }
+    arbitro, stadio, turno, competizione → identici sui due lati (sono della PARTITA)
+
+(2) le misure si attaccano SOLO su (game_id, Lato)
+    pannello_squadra   = L ⋈ statistiche_squadra   on (game_id, Lato)
+    pannello_giocatore = L ⋈ statistiche_individuali on (game_id, Lato)
+                           ⋈ formazioni              on (game_id, player_id)
+
+(3) chiavi normalizzate per la RICERCA, non per l'identità
+    allenatore_chiave = normalizza_nome(allenatore)      (allenatori.normalizza_nome)
+    arbitro_chiave    = normalizza_nome(arbitro)
+```
+
+**Perché `(game_id, Lato)` e non `(game_id, club_id)`**, che pure sarebbe più
+«pulito»: le statistiche di squadra hanno `club_id`, ma quelle **individuali**
+no — hanno `Lato` e `Squadra`. Una sola chiave per entrambe evita due percorsi
+diversi, ed è la lezione della Fase 139-quater: due implementazioni della stessa
+regola divergono, e la divergenza non dà errore.
+
+**La verifica del lato, ed è il cuore della fase.** Non basta che il codice
+sembri giusto: l'ho confrontato con un percorso **indipendente** —
+`allenatori.load_partite()`, che legge `games.csv` e costruisce la vista lunga
+per conto suo, senza passare da `partite.csv`.
+
+```
+righe verificate                       746 / 746   ✅
+righe senza riscontro                    0
+controprova: allenatore = allenatore_avv 0 / 746   ← un errore di lato sarebbe visibile
+```
+
+La controprova conta quanto la verifica: se i due allenatori coincidessero
+spesso, il test principale passerebbe anche con il lato sbagliato.
+
+### Il risultato: le due domande, sul dato vero
+
+**«Le squadre di Simeone in Copa del Rey»** → 6 righe, tutte `Atlético de
+Madrid`, dal Round of 32 alla finale:
+
+| turno | avversario | esito | xG | tiri | possesso | falli |
+|---|---|:--:|--:|--:|--:|--:|
+| Round of 32 | Atlético Baleares | V 3-2 | 1.35 | 10 | 57% | 14 |
+| Round of 16 | Deportivo | V 1-0 | 1.43 | 15 | 52% | 11 |
+| Quarti | Real Betis | V 5-0 | 2.95 | 12 | 58% | 11 |
+| Semifinale A | Barcelona | V 4-0 | 2.37 | 12 | 34% | 17 |
+| Semifinale R | Barcelona | P 0-3 | 0.63 | 7 | 29% | 7 |
+| Finale | Real Sociedad | N 2-2 | 1.68 | 19 | 63% | 17 |
+
+**«Un giocatore, con l'arbitro accanto»** → `Trafford James`, 11 partite fra EFL
+Cup e FA Cup, **10 arbitri diversi**, con minuti, rating e metriche individuali.
+E nella forma esatta della domanda — un giocatore *sotto un certo arbitro* — il
+filtro si compone: `statistiche_giocatore(player_id=…, arbitro=…)`.
+
+### ⚠️ «Si può rispondere» non è «la risposta è una statistica»
+
+| | |
+|---|--:|
+| partite per allenatore, **mediana** | **2** |
+| allenatori con ≥ 3 partite | 101 su 350 |
+| partite per arbitro, **mediana** | **1** |
+| arbitri con ≥ 5 partite | **7 su 207** |
+| giocatori con ≥ 3 partite | 1.118 su 4.886 |
+
+Una coppa è a eliminazione diretta: la maggior parte degli allenatori ci passa
+due volte e la maggior parte degli arbitri una. La query risponde sempre; **una
+media su due partite non è una media**, e `copertura()` lo stampa apposta perché
+il pannello non inviti all'errore. Per un'analisi vera servono le stagioni
+precedenti o l'unione coi campionati.
+
+### ⚠️ Una correzione a un numero che avevo pubblicato ieri
+
+Scrivendo il test sui minuti ho messo una soglia a caso (`> 0.8`) ed è andato
+rosso: i minuti coprono il **51,7%** delle righe del pannello. Indagando, il
+difetto era **nella Fase 139-octies**, cioè in un numero che avevo appena
+pubblicato. Lì `b_minuti_giocati` era definito «almeno una riga con i minuti» —
+la stessa soglia debole che due righe più sopra avevo evitato apposta per gli
+undici titolari, e che lì avevo motivato per iscritto.
+
+Misurato davvero:
+
+```
+minuti pieni in formazioni.csv        5.438 / 18.566   (29,3%)
+partite con TUTTE le righe piene            0 / 458
+partite con tutti i TITOLARI pieni         70 / 458
+appearances.csv su queste partite     5.438 righe, mediana 16 per partita (invece di ~35)
+il builder ne perde                         0          (5.438 = 5.438, verificato)
+```
+
+**È un buco della fonte, non nostro.** Conseguenze, applicate: il criterio è ora
+il più stretto che abbia senso (*tutti* i titolari, 70 partite), e i minuti
+**escono dalla congiunzione** dell'incrocio — non erano fra i blocchi chiesti
+dall'utente, e tenerli dentro avrebbe fatto crollare il totale per un difetto di
+`appearances.csv` invece che per i nostri agganci. Il totale corretto è
+**299/580 (51,6%)**, non 296/580, e l'EFL Cup passa a **91/91, il 100%**.
+
+**Lezione.** *Una soglia messa a caso in un test è un'ipotesi, e vale la pena
+scriverla anche quando si è quasi sicuri.* Il `> 0.8` non difendeva niente —
+l'avevo scritto per riempire un `assert` — e ha trovato un difetto in un numero
+pubblicato il giorno prima, in un punto dove avevo già enunciato la regola
+giusta e non l'avevo applicata. **Enunciare un criterio non è applicarlo**, e il
+posto dove il divario si vede è il test, purché il test dica un numero e non
+`> 0`.
 
 ---
 
