@@ -406,6 +406,14 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
   partita) perché stanno entrambi in un solo lotto da 20. `--solo-principali`
   risparmia byte, **non minuti** — il ragionamento della Fase 118 era giusto
   sull'archivio e sbagliato sul tempo. Vale per qualunque API con `id1,id2,…`.
+- ⚠️ **Un `concurrency group` tiene UN run in corso e UNO SOLO pending: il
+  terzo che arriva CANCELLA quello pending** (Fase 142, pagata). Quindi
+  allungare la durata di un job ne cambia la *pianificazione*: giri da 20
+  minuti non si accodavano mai, giri da 35-45 sì, e la corsa oraria accodata
+  dietro muore `cancelled` — senza scrivere niente e senza suonare niente.
+  Se in un workflow convivono un giro lungo e uno breve ma prezioso, **vanno
+  in gruppi diversi**, non nello stesso. Regola generale: una modifica che
+  cambia la durata di un job va guardata anche dal lato della schedulazione.
 - **Censire il perimetro di una raccolta è una chiamata sola, e non lo si fa
   mai** (Fase 142): `SLUG_LEGA` conteneva 5 voci dalla Fase 116 e nessuno aveva
   più chiesto quanto stessimo lasciando fuori. Erano **865 partite su 124

@@ -17458,7 +17458,22 @@ prendesse le partite di League Cup delle 14:00.
    giocano a orari tondi e sono poche; con 31 partite di League Cup alle 14:00
    diventa un rischio reale. Da qui l'input `tutti_i_mercati`, per poter
    forzare a mano il regime di chiusura quando serve.
-3. **Un input dichiarato e mai letto è peggio di un input assente**, e l'ho
+3. **Allungare i giri ha fatto cancellare la corsa di chiusura** — una
+   regressione introdotta da questa stessa fase, trovata guardando i run
+   mentre giravano e non rileggendo il YAML. GitHub tiene, per ogni
+   `concurrency group`, **un run in corso e uno solo pending**: all'arrivo di
+   un terzo, *«any previously pending job or workflow in the concurrency group
+   will be canceled»*. Con i giri da 20 minuti non capitava mai; con 158
+   partite un lungo raggio occupa il gruppo 35-45 minuti, e due corse orarie
+   accodate bastano perché la prima muoia (misurato: run 31258806209 delle
+   13:07, `cancelled`). A morire è **il giro che vale di più** — la chiusura è
+   il prezzo a T-2h — e muore **in silenzio**: un run cancellato non scrive
+   niente e non suona niente. Rimedio: un gruppo **per regime**, che è sicuro
+   perché i due scrivono file con nomi diversi e il push ha già i suoi tre
+   tentativi con `pull --rebase`. La lezione generale: **una modifica che
+   cambia la *durata* di un job può cambiarne la *pianificazione*, e la
+   pianificazione non ha test.**
+4. **Un input dichiarato e mai letto è peggio di un input assente**, e l'ho
    commesso e committato nello stesso pomeriggio: la casella compariva nella
    UI di GitHub e spuntarla non faceva niente. È lo stesso genere di buco del
    punto 3 della Fase 141 — un'invariante che vive **fra il YAML e se stesso**,
@@ -17466,7 +17481,7 @@ prendesse le partite di League Cup delle 14:00.
    (`test_ogni_input_del_workflow_e_davvero_usato`) pretende che ogni input
    compaia sotto `jobs:`; verificato per mutazione, col YAML rotto fallisce
    con `assert not ['tutti_i_mercati']`.
-4. **Allargare un dato è per metà un lavoro sui suoi consumatori.** La parte
+5. **Allargare un dato è per metà un lavoro sui suoi consumatori.** La parte
    difficile non è stata prendere le coppe: è stata trovare i quattro punti a
    valle che le avrebbero scambiate per campionati **senza dare errore** —
    incluso un `len({lega}) >= 5` che quattro coppe fanno passare. Un dato nuovo
