@@ -75,7 +75,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from fetch_smarkets_matches import (  # noqa: E402
-    MERCATI_NUCLEO, quote_partita, scandaglia_live)
+    MERCATI_NUCLEO, quote_partita, scandaglia_live, scandaglia_upcoming)
 from src.data import smarkets_archive as _archivio   # noqa: E402
 
 DEST = ROOT / "data" / "smarkets_live"
@@ -96,6 +96,35 @@ DEST = ROOT / "data" / "smarkets_live"
 DURATA_MINUTI = 300
 OGNI_NUCLEO = 2       # minuti fra due giri stretti
 OGNI_PIENO = 15       # minuti fra due giri a listino intero
+
+# ⚠️ LO SCAGLIONAMENTO (Fase 144-bis, segnalato dall'utente e misurato).
+# Le partite non cominciano tutte insieme: 141 partite del perimetro su **82
+# orari distinti**, con salti di 15/30/60/75/90 minuti fra un via e il
+# successivo (misurato l'08/08; 11 salti su 17 stanno sotto i 90 minuti).
+# Sono paesi diversi, e un sabato sera vero e' 18:00 -> 18:30 -> 18:45.
+#
+# Due conseguenze, entrambe dimenticate nella prima stesura:
+#
+#  1. ORIZZONTE_PRE -- si segue una partita gia' PRIMA del via, non solo da
+#     `state=live`. Era il pezzo della richiesta dell'utente («poco prima
+#     dell'inizio») che il raccoglitore in-play non copriva affatto: restava
+#     appeso alla corsa oraria di chiusura, che pero' slitta di 30-40 minuti
+#     e puo' quindi mancare del tutto una partita. Cosi' invece la traiettoria
+#     attraversa il fischio d'inizio senza interruzione.
+#
+#  2. ORIZZONTE_ATTESA -- non ci si spegne se il prossimo via e' vicino. Con
+#     la sola regola dei giri vuoti la sessione sarebbe morta nel buco fra le
+#     18:00 e le 18:45, cioe' esattamente dove lo scaglionamento la mette.
+#     90 minuti coprono tutti i salti misurati tranne i due lunghi (165 e 210
+#     minuti), dove spegnersi e' giusto: li' non si gioca davvero.
+ORIZZONTE_PRE = 20
+ORIZZONTE_ATTESA = 90
+
+# Ogni quanti giri si ri-legge il listino delle partite FUTURE. Il listino dei
+# live e' 1-2 pagine, quello completo ne fa 5: rileggerlo a ogni giro
+# costerebbe piu' delle quote di una partita. Ogni 5 giri (~10 minuti) e'
+# abbastanza fitto: una partita entra nell'orizzonte 20 minuti prima del via.
+GIRI_PER_RILEGGERE_IL_CALENDARIO = 5
 
 # Dopo quanti giri consecutivi SENZA partite del perimetro ci si spegne.
 # Non zero: fra la fine di un blocco e l'inizio del successivo puo' esserci
@@ -130,6 +159,36 @@ def prossimo_tick(adesso: dt.datetime, ultimo: dt.datetime,
     return nuovo
 
 
+def da_seguire(vive: list[dict], future: list[dict],
+               adesso: dt.datetime,
+               orizzonte_pre: int = ORIZZONTE_PRE
+               ) -> tuple[list[dict], dt.datetime | None]:
+    """Chi va raccolto ADESSO, e quando c'e' il prossimo calcio d'inizio.
+
+    Non basta `state=live`: una partita che comincia fra un quarto d'ora e' il
+    momento in cui il prezzo pre-partita vale di piu' e sta per sparire per
+    sempre. Si comincia a seguirla `orizzonte_pre` minuti prima, cosi' la
+    traiettoria attraversa il fischio d'inizio senza un buco.
+
+    Il secondo valore serve a decidere se spegnersi: con gli orari scaglionati
+    (15/30/60/75 minuti fra un via e l'altro) «adesso non si gioca» non vuol
+    dire «oggi non si gioca piu'».
+    """
+    per_id = {e["event_id"]: dict(e, fase="live") for e in vive}
+    prossimo = None
+    for e in future:
+        k = e.get("_inizio")
+        if k is None or e["event_id"] in per_id:
+            continue
+        if k <= adesso:
+            continue                     # gia' cominciata: la copre `vive`
+        if prossimo is None or k < prossimo:
+            prossimo = k
+        if k <= adesso + dt.timedelta(minutes=orizzonte_pre):
+            per_id[e["event_id"]] = dict(e, fase="pre")
+    return list(per_id.values()), prossimo
+
+
 def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
     """Un passaggio su tutte le partite in corso. Ritorna (righe, incomplete).
 
@@ -159,6 +218,11 @@ def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
             # una serie temporale senza il tempo.
             x["istante_utc"] = quando
             x["giro"] = "pieno" if pieno else "nucleo"
+            # `pre` o `live`: la stessa serie attraversa il calcio d'inizio, e
+            # un prezzo che non conosce il punteggio non e' confrontabile con
+            # uno che lo conosce. Senza questo campo la distinzione andrebbe
+            # ri-dedotta ogni volta dall'orario, cioe' si perderebbe.
+            x["fase"] = ev.get("fase", "live")
         righe += r
     return righe, incomplete
 
@@ -170,16 +234,32 @@ def main(argv=None) -> None:
     ap.add_argument("--ogni-nucleo", type=int, default=OGNI_NUCLEO)
     ap.add_argument("--ogni-pieno", type=int, default=OGNI_PIENO,
                     help="0 = mai il listino pieno, solo il nucleo")
+    ap.add_argument("--orizzonte-pre", type=int, default=ORIZZONTE_PRE,
+                    help="da quanti minuti PRIMA del via si segue una partita")
+    ap.add_argument("--orizzonte-attesa", type=int, default=ORIZZONTE_ATTESA,
+                    help="non ci si spegne se il prossimo via e' entro N minuti")
     ap.add_argument("--dry-run", action="store_true",
-                    help="elenca le partite in corso e esce")
+                    help="elenca le partite da seguire e esce")
     a = ap.parse_args(argv)
 
     vive, totale = scandaglia_live()
-    print(f"partite in corso: {totale} nel mondo, {len(vive)} del perimetro")
-    for e in vive:
-        print(f"   [{e['lega']:20s}] iniziata {e['inizio']}  {e['nome']}")
+    future, _, _ = scandaglia_upcoming()
+    adesso0 = dt.datetime.now(dt.timezone.utc)
+    seguire, prossimo_via = da_seguire(vive, future, adesso0, a.orizzonte_pre)
+    print(f"partite in corso: {totale} nel mondo, {len(vive)} del perimetro | "
+          f"da seguire adesso (live + entro {a.orizzonte_pre}'): {len(seguire)}")
+    for e in sorted(seguire, key=lambda x: x["inizio"]):
+        print(f"   [{e['lega']:20s}] {e['fase']:4s} {e['inizio']}  {e['nome']}")
+    if prossimo_via:
+        print(f"   prossimo calcio d'inizio: {prossimo_via.isoformat()} "
+              f"(fra {(prossimo_via - adesso0).total_seconds()/60:.0f} min)")
 
-    if not vive:
+    # Si parte anche a mani vuote se il prossimo via e' vicino: e' lo
+    # scaglionamento: una sessione che esce subito perche' «adesso non si
+    # gioca» tornerebbe a dipendere dal cron per la partita di fra un'ora.
+    attesa0 = ((prossimo_via - adesso0).total_seconds() / 60
+               if prossimo_via else None)
+    if not seguire and not (attesa0 is not None and attesa0 <= a.orizzonte_attesa):
         # NON e' un errore e NON scrive nulla: e' lo stato normale per venti
         # ore al giorno. Ma si dice quante ne stanno giocando nel mondo, cosi'
         # «zero» resta un'informazione: zero nostre su zero mondiali e' notte,
@@ -196,6 +276,7 @@ def main(argv=None) -> None:
     dest = DEST / f"{avvio.strftime('%Y-%m-%dT%H-%M-%S')}.json"
 
     righe, incomplete, giri = [], [], collections.Counter()
+    # `future` e' gia' letto sopra: il ciclo lo rilegge ogni tanto, non subito.
     t_nucleo = avvio
     t_pieno = avvio if a.ogni_pieno > 0 else None
 
@@ -246,19 +327,49 @@ def main(argv=None) -> None:
         try:
             vive, _ = scandaglia_live()
         except Exception as ex:                       # noqa: BLE001
-            print(f"  ⚠ scandaglio fallito ({type(ex).__name__}): "
+            print(f"  ⚠ scandaglio live fallito ({type(ex).__name__}): "
                   f"si tiene l'elenco precedente")
-        if not vive:
+        # Il calendario delle FUTURE costa 5 pagine invece di 1-2: si rilegge
+        # ogni tanto, non a ogni giro. Una partita entra nell'orizzonte 20
+        # minuti prima del via, quindi ~10 minuti di stantio sono innocui.
+        if n % GIRI_PER_RILEGGERE_IL_CALENDARIO == 0:
+            try:
+                future, _, _ = scandaglia_upcoming()
+            except Exception as ex:                   # noqa: BLE001
+                print(f"  ⚠ calendario non riletto ({type(ex).__name__})")
+
+        seguire, prossimo_via = da_seguire(vive, future, adesso, a.orizzonte_pre)
+
+        if not seguire:
+            # ⚠️ Qui NON basta contare i giri vuoti: con gli orari scaglionati
+            # (18:00 -> 18:30 -> 18:45) «adesso non si gioca» non vuol dire
+            # «oggi non si gioca piu'», e spegnersi nel buco significherebbe
+            # dipendere di nuovo dal cron per riaccendersi.
+            attesa = ((prossimo_via - adesso).total_seconds() / 60
+                      if prossimo_via else None)
+            if attesa is not None and attesa <= a.orizzonte_attesa:
+                if vuoti == 0:
+                    print(f"  · pausa: nessuna partita adesso, la prossima "
+                          f"fra {attesa:.0f} min -- si resta accesi")
+                vuoti = 0
+                # si dorme fino a poco prima del via, invece di girare a vuoto
+                sonno = max(30.0, min(
+                    (attesa - a.orizzonte_pre) * 60, 300.0))
+                time.sleep(sonno)
+                t_nucleo = prossimo_tick(
+                    dt.datetime.now(dt.timezone.utc), t_nucleo, a.ogni_nucleo)
+                continue
             vuoti += 1
             if vuoti >= GIRI_VUOTI_PER_SPEGNERSI:
-                print(f"  nessuna partita del perimetro da {vuoti} giri: "
+                q = f", la prossima fra {attesa/60:.1f}h" if attesa else ""
+                print(f"  nessuna partita del perimetro da {vuoti} giri{q}: "
                       f"la sessione si spegne (non e' un errore).")
                 break
             t_nucleo = prossimo_tick(adesso, t_nucleo, a.ogni_nucleo)
             continue
         vuoti = 0
 
-        r, inc = un_giro(vive, pieno)
+        r, inc = un_giro(seguire, pieno)
         righe += r
         incomplete += inc
         giri["pieno" if pieno else "nucleo"] += 1

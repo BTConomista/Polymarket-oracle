@@ -228,3 +228,91 @@ def test_la_sessione_dura_piu_del_periodo_della_sentinella():
         f"un cron in ritardo lascerebbe un buco")
     # e il job dev'essere piu' lungo della sessione, o la tronca lui
     assert wf["jobs"]["raccogli"]["timeout-minutes"] > live.DURATA_MINUTI
+
+
+# ---------------------------------------------------------------------------
+# LO SCAGLIONAMENTO (Fase 144-bis, segnalato dall'utente e misurato)
+# 141 partite del perimetro su 82 orari distinti, con salti di 15/30/60/75/90
+# minuti: sono paesi diversi. Un sabato sera vero e' 18:00 -> 18:30 -> 18:45.
+# ---------------------------------------------------------------------------
+
+def _futura(eid, nome, kickoff):
+    return {"event_id": eid, "nome": nome, "lega": "serie_a",
+            "fascia": "campionato", "inizio": kickoff.isoformat(),
+            "_inizio": kickoff}
+
+
+def test_si_segue_una_partita_gia_PRIMA_del_via():
+    """Il pezzo della richiesta che il raccoglitore in-play non copriva: «poco
+    prima dell'inizio». Restava appeso alla corsa oraria di chiusura, che pero'
+    slitta di 30-40 minuti e puo' mancare del tutto una partita."""
+    adesso = dt.datetime(2026, 8, 8, 17, 50, tzinfo=UTC)
+    future = [_futura(1, "A vs B", adesso + dt.timedelta(minutes=10)),
+              _futura(2, "C vs D", adesso + dt.timedelta(minutes=55))]
+    seguire, prossimo = live.da_seguire([], future, adesso, orizzonte_pre=20)
+    assert [e["nome"] for e in seguire] == ["A vs B"], "solo quella entro 20'"
+    assert all(e["fase"] == "pre" for e in seguire)
+    assert prossimo == adesso + dt.timedelta(minutes=10)
+
+
+def test_una_partita_live_non_viene_duplicata_dal_calendario():
+    """La stessa partita compare in `vive` e nel calendario: raccoglierla due
+    volte per giro raddoppierebbe le righe senza aggiungere niente."""
+    adesso = dt.datetime(2026, 8, 8, 18, 10, tzinfo=UTC)
+    vive = [{"event_id": 1, "nome": "A vs B", "lega": "serie_a",
+             "fascia": "campionato", "inizio": "x", "inplay": True}]
+    future = [_futura(1, "A vs B", adesso - dt.timedelta(minutes=10))]
+    seguire, _ = live.da_seguire(vive, future, adesso)
+    assert len(seguire) == 1 and seguire[0]["fase"] == "live"
+
+
+def test_una_partita_gia_cominciata_ma_non_ancora_live_non_conta_come_futura():
+    """Fra il calcio d'inizio e il momento in cui l'API la marca `live` c'e'
+    una finestra: non dev'essere scambiata per «prossimo via», o la sessione
+    resterebbe accesa credendo che debba ancora cominciare."""
+    adesso = dt.datetime(2026, 8, 8, 18, 2, tzinfo=UTC)
+    future = [_futura(9, "gia' iniziata", adesso - dt.timedelta(minutes=2))]
+    seguire, prossimo = live.da_seguire([], future, adesso)
+    assert seguire == [] and prossimo is None
+
+
+def test_il_prossimo_via_e_il_PRIMO_futuro_non_l_ultimo():
+    adesso = dt.datetime(2026, 8, 8, 17, 0, tzinfo=UTC)
+    future = [_futura(1, "tardi", adesso + dt.timedelta(hours=3)),
+              _futura(2, "presto", adesso + dt.timedelta(minutes=45)),
+              _futura(3, "medio", adesso + dt.timedelta(hours=2))]
+    _, prossimo = live.da_seguire([], future, adesso)
+    assert prossimo == adesso + dt.timedelta(minutes=45)
+
+
+def test_l_orizzonte_di_attesa_copre_i_salti_veri_misurati():
+    """I salti misurati l'08/08 fra un via e il successivo: 15, 30, 60, 75, 90
+    minuti. La sessione non deve spegnersi in nessuno di questi buchi --
+    altrimenti muore fra le 18:00 e le 18:45 e per riaccendersi dipende di
+    nuovo dal cron, che e' il problema che stiamo togliendo di mezzo."""
+    for salto in (15, 30, 60, 75, 90):
+        assert salto <= live.ORIZZONTE_ATTESA, (
+            f"un buco di {salto} min spegnerebbe la sessione")
+    # ma i due salti lunghi misurati (165 e 210) devono spegnerla: li' non si
+    # gioca davvero, e tenere acceso un runner a vuoto non serve a nessuno
+    assert live.ORIZZONTE_ATTESA < 165
+
+
+def test_l_orizzonte_pre_e_piu_corto_dell_attesa():
+    """Se fossero uguali, una partita entrerebbe nell'orizzonte esattamente
+    quando la sessione smette di aspettarla."""
+    assert live.ORIZZONTE_PRE < live.ORIZZONTE_ATTESA
+
+
+def test_la_riga_dichiara_se_e_pre_o_live(monkeypatch):
+    """La stessa serie attraversa il calcio d'inizio, e un prezzo che non
+    conosce il punteggio non e' confrontabile con uno che lo conosce."""
+    monkeypatch.setattr(live, "quote_partita",
+                        lambda ev, tutti, mercati_ammessi=None:
+                        ([{"partita": ev["nome"]}], 0))
+    ev = {"event_id": 1, "nome": "A vs B", "fase": "pre"}
+    righe, _ = live.un_giro([ev], pieno=False)
+    assert righe[0]["fase"] == "pre"
+    ev["fase"] = "live"
+    righe, _ = live.un_giro([ev], pieno=False)
+    assert righe[0]["fase"] == "live"
