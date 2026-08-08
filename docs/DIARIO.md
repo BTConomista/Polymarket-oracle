@@ -17449,7 +17449,24 @@ prendesse le partite di League Cup delle 14:00.
    5 voci dalla Fase 116 e nessuno aveva più chiesto *quanto* stessimo
    lasciando fuori. La risposta era 93,3%, e comprendeva una partita che si
    giocava quel pomeriggio. Il censimento costa una chiamata API.
-2. **Allargare un dato è per metà un lavoro sui suoi consumatori.** La parte
+2. **Il cron orario di GitHub parte con 30-40 minuti di ritardo** (misurato
+   quel giorno: i giri delle `:07` sono partiti alle 08:54, 09:49, 10:45,
+   11:37). Non è un guasto ed è documentato, ma cambia il conto di una cosa
+   che qui pesa: la finestra `--entro-ore 2` del regime di chiusura diventa di
+   fatto **T-1h20/T-0h20**, e una partita che comincia entro ~40 minuti dal
+   cron può non essere presa affatto. Con le sole 5 leghe non si vedeva —
+   giocano a orari tondi e sono poche; con 31 partite di League Cup alle 14:00
+   diventa un rischio reale. Da qui l'input `tutti_i_mercati`, per poter
+   forzare a mano il regime di chiusura quando serve.
+3. **Un input dichiarato e mai letto è peggio di un input assente**, e l'ho
+   commesso e committato nello stesso pomeriggio: la casella compariva nella
+   UI di GitHub e spuntarla non faceva niente. È lo stesso genere di buco del
+   punto 3 della Fase 141 — un'invariante che vive **fra il YAML e se stesso**,
+   che nessun test del codice Python può vedere. Il guardiano nuovo
+   (`test_ogni_input_del_workflow_e_davvero_usato`) pretende che ogni input
+   compaia sotto `jobs:`; verificato per mutazione, col YAML rotto fallisce
+   con `assert not ['tutti_i_mercati']`.
+4. **Allargare un dato è per metà un lavoro sui suoi consumatori.** La parte
    difficile non è stata prendere le coppe: è stata trovare i quattro punti a
    valle che le avrebbero scambiate per campionati **senza dare errore** —
    incluso un `len({lega}) >= 5` che quattro coppe fanno passare. Un dato nuovo
