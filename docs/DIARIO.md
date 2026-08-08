@@ -352,6 +352,7 @@ correzioni.*
 - [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
 - [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
 - [Fase 143 — Il live: un job che cicla, e un punteggio che non è un campo](#fase-143--il-live-un-job-che-cicla-e-un-punteggio-che-non-è-un-campo)
+- [Fase 144 — Il cane da guardia: «avrei dovuto raccogliere, l'ho fatto?»](#fase-144--il-cane-da-guardia-avrei-dovuto-raccogliere-lho-fatto)
 
 ---
 
@@ -17790,3 +17791,141 @@ succedendo qualcosa*, un gol in verifica o un VAR. In sé è informazione.
    un'assenza sembra una dimenticanza: fra sei mesi qualcuno lo aggiungerebbe
    «per pulizia» e le sessioni tornerebbero a morire in silenzio. C'è un test
    che pretende che non ci sia, col motivo scritto dentro.
+
+---
+
+## Fase 144 — Il cane da guardia: «avrei dovuto raccogliere, l'ho fatto?»
+
+**Obiettivo.** Osservazione dell'utente, dopo che era stato lui ad accorgersi
+che il raccoglitore in-play non stava girando: *«il fatto che te lo abbia
+dovuto ricordare io è un problema: queste cose dovrebbero eseguirsi da sole
+senza che io ogni volta debba stare qui a ricordarlo»*. Ha ragione, e il
+difetto è più profondo di un cron mancato.
+
+**Ragionamento.** Tutto ciò che il progetto aveva costruito fino a quel
+momento — ritentativi sui 5xx, buchi dichiarati nel file, budget di tempo,
+gruppi di concorrenza, guardiani sul YAML — risponde alla domanda **«il giro è
+andato bene?»**. Nessuna parte rispondeva a **«il giro è partito?»**.
+
+E la differenza è tutta:
+
+```
+giro fallito   -> run rosso -> mail -> qualcuno guarda
+giro non partito -> nessun run -> nessun file -> ... esattamente come una notte senza partite
+```
+
+**«Niente» è insieme il risultato di un guasto e quello della normalità.** È la
+regola R6 del progetto — «il buco peggiore non è il `NaN`, è il finto pieno» —
+applicata al **processo** invece che alla cella. E l'unico rilevatore era
+l'utente.
+
+**Scelta.** Un controllo che non guarda i run ma l'**archivio**, cioè il
+risultato, e cerca il silenzio dove sarebbe dovuto esserci un dato. Quattro
+domande, ognuna con la sua soglia motivata:
+
+| | soglia | perché quella |
+|---|---|---|
+| A. freschezza del lungo raggio | 26 h | 24 suonerebbe per il ritardo del cron (30-40 min misurati), non per il guasto |
+| B. copertura di chiusura | un prezzo entro 3 h dal via | un prezzo di due settimane prima non è una chiusura |
+| C. copertura in-play | ≥50% delle partite giocate | il live è nato ieri: una soglia stretta sarebbe rumore |
+| D. buchi già dichiarati | qualunque | i file lo dicono già, ma nessuno andrebbe a leggerli |
+
+Gira **quattro volte al giorno** a orari sfalsati — se un giro salta, il
+successivo è a sei ore e non a ventiquattro — e quando trova qualcosa **esce
+rosso**, perché la mail di un run fallito è l'unico canale che arriva davvero.
+
+**Risultato immediato:** al primo colpo ha trovato `copertura in-play 4%`, cioè
+esattamente il buco che l'utente aveva notato a mano. E nella stessa giornata
+ha mandato la sua prima mail vera.
+
+**📐 Il modello in dettaglio.** Non c'è matematica di modello, ma tre relazioni
+vanno scritte perché sono scelte e non default.
+
+*Perché la sessione in-play deve durare più del periodo della sentinella.* Con
+periodo `P` e sessione `D`, un ritardo `r` del cron produce un buco:
+
+```
+buco = max(0, r − (D − P))
+```
+
+Con `D ≤ P` **ogni** ritardo è un buco per costruzione. Da qui `D = 300 min`
+contro `P = 30`: la sentinella smette di essere un metronomo e diventa un
+accendino — un solo cron andato a buon fine copre un pomeriggio.
+
+*Perché la coda tagliata dal budget non è indifferente.* Il valore di una
+partita persa è l'inverso di quante occasioni restano di riprenderla:
+
+```
+partita fra 3 settimane -> ~21 giri giornalieri rimasti -> perdita ≈ 1/21
+partita fra 1 ora       -> 0 giri rimasti               -> perdita = tutto
+```
+
+Da cui l'ordine di raccolta per calcio d'inizio. **Ma** — e questo è il punto
+scoperto misurando — *un taglio una tantum si media, un taglio quotidiano no*:
+se il tetto viene toccato ogni giorno a essere persa è **sempre la stessa
+coda** (le 9 partite di Bundesliga, le più lontane). Budget da 45 a 90 minuti.
+
+*Il ritmo delle richieste non è una costante ma una funzione dell'ambiente.*
+Misurato lo stesso pomeriggio, allo stesso ritmo nominale di 2,9 richieste/s:
+
+```
+questo container : 24 richieste su 24 accettate, zero 429
+runner di GitHub : 151 mercati persi per 429 in un solo giro
+```
+
+Quindi l'intervallo si tara da solo: `×1,6` a ogni 429, `×0,99` a ogni
+successo, fra 0,35 s e 3 s. **Asimmetrico apposta**: un 429 è un fatto, un
+successo è solo l'assenza di un rifiuto — risalire alla stessa velocità con cui
+si scende farebbe oscillare il ritmo intorno al limite.
+
+**La riparazione (144-quinquies).** Seconda osservazione dell'utente: *«se si
+limita solo ad avvertirmi... sarebbe utile se poi lo facesse ripartire»*.
+Giusto, ma solo per ciò che si **può** riparare, e la distinzione è netta:
+
+| buco | riparabile | come |
+|---|---|---|
+| lungo raggio fermo | **sì** | lo rifà lui, sincrono: le partite lontane sono ancora esposte |
+| in-play scoperto | **solo se si gioca ancora** | accende una sessione via `gh` |
+| chiusura persa | **no** | quel prezzo non esiste più da nessuna parte |
+
+⚠️ **Il pezzo che rende la riparazione una riparazione è il RI-CONTROLLO.**
+Dopo aver riparato si ri-esegue il controllo, ed è rosso solo su ciò che
+resta. Senza, un guasto cronico resterebbe verde per sempre — il guardiano
+direbbe «ho riparato» a ogni giro senza che niente cambi. **Una riparazione
+che non si verifica è una speranza, ed è peggio del problema di partenza
+perché aggiunge la falsa sicurezza.** È anche il motivo per cui il lungo
+raggio si ripara *facendolo qui* invece di delegarlo: così si può guardare se
+ha funzionato.
+
+**Il bilancio della prima giornata vera (08/08).** 267.401 righe in-play su 41
+partite, 207 giri, 8 sessioni. **Copertura in-play 100%** delle 40 partite
+giocate; **cadenza reale del nucleo con mediana 2,0 minuti**, cioè esattamente
+quella dichiarata; la sessione da 5 ore ha fatto 20 giri pieni + 120 di nucleo
+su 39 partite. Una sola partita senza prezzo di chiusura — QPR-Millwall — e la
+causa è nota al minuto: è cominciata alle 13:00 e l'ultimo giro di chiusura
+utile è partito alle 11:37, quando girava ancora il codice pre-perimetro
+(pushato alle 11:58). Non un guasto: una modifica arrivata venti minuti tardi.
+
+**E il radar ha ripagato il suo costo.** Alle 21:38 ha segnalato
+`uefa-europa-conference-league-qualification` — una competizione dei nostri
+paesi che stavamo buttando, e che si giocava quella sera. Nessuna delle
+varianti indovinate in `SLUG_ATTESI` la copriva (avevo scritto
+`uefa-conference-league` e `uefa-europa-conference-league`, non il suffisso
+`-qualification`). Confronto: `spain-laliga → spain-la-liga` era stato trovato
+**a mano, cinque giorni dopo**; questo in poche ore, senza che nessuno
+guardasse.
+
+**Lezione.** Tre, e la prima è quella che vale oltre questo progetto.
+
+1. **Un sistema che funziona solo se qualcuno se ne ricorda non è
+   automatizzato: è delegato.** Il confine fra i due non si vede finché tutto
+   va bene, perché un sistema delegato in salute è indistinguibile da uno
+   automatizzato. Si vede il giorno in cui smette — e allora la domanda
+   giusta non è «perché si è rotto» ma «perché non me l'ha detto lui».
+2. **Sorvegliare l'esito è diverso dal sorvegliare il processo, e solo il
+   primo prende il caso peggiore.** Il processo può fallire in modi che
+   producono un errore (visibili) o non partire affatto (invisibile). Solo un
+   controllo sul *risultato atteso* copre entrambi.
+3. **Una riparazione automatica senza verifica è un peggioramento.** Trasforma
+   un guasto rumoroso in un guasto silenzioso con un'etichetta rassicurante
+   sopra. Se non si può verificare, meglio limitarsi a segnalare.

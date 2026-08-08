@@ -102,6 +102,13 @@ di `data/smarkets_matches/` abbia `leghe_senza_partite_esposte: []` **e** tutte
 e 5 le leghe fra le righe. Che il file esista non basta — il 31/07 esisteva,
 pesava 120 KB e non conteneva La Liga.
 
+⚠️ **Dalla Fase 144 il controllo pre-congelamento NON si fa più a mano.**
+`scripts/controlla_raccolta.py` gira 4×/giorno, verifica freschezza del lungo
+raggio, copertura di chiusura e copertura in-play, **ripara** ciò che si può
+(rifà il lungo raggio, accende l'in-play se si gioca ancora) e ri-controlla.
+Quello che segue resta vero come *cosa* controllare, ma non serve più
+ricordarsene: se manca qualcosa arriva una mail rossa.
+
 ⚠️ **Il LIVE non è più scoperto per la raccolta (Fase 143), ma lo è per il
 modello.** `data/smarkets_live/` accumula prezzi in-play da sabato 08/08; non
 esiste ancora **niente** che li usi, ed è uno stato legittimo (§5-ter,
