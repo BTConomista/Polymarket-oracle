@@ -102,6 +102,13 @@ di `data/smarkets_matches/` abbia `leghe_senza_partite_esposte: []` **e** tutte
 e 5 le leghe fra le righe. Che il file esista non basta — il 31/07 esisteva,
 pesava 120 KB e non conteneva La Liga.
 
+⚠️ **E dalla Fase 142 il file NON contiene solo campionati**: si filtra su
+`fascia == "campionato"` prima di contare le leghe. `lega` porta anche
+`coppa_italia`, `serie_b`, `ucl_qual`, e un conteggio che li includesse
+direbbe «cinque leghe» con due leghe e tre coppe. Vale anche il contrario:
+`fuori_perimetro` non vuoto nel file è il radar che segnala una competizione
+nostra lasciata fuori — da guardare, non un errore.
+
 ⚠️ **E dalla Fase 141 anche `partite_incomplete: []`.** Un giro può ora
 sopravvivere a un guasto di rete salvando ciò che ha raccolto: è il
 comportamento voluto (l'08/08 un `HTTP 503` alla 22ª partita su 58 aveva

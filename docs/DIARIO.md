@@ -348,6 +348,7 @@ correzioni.*
 - [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 - [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
+- [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
 
 ---
 
@@ -17138,3 +17139,153 @@ pretende l'`if:` sul passo di commit.
    saperlo. La verifica di un'invariante non può fermarsi al confine del
    linguaggio in cui è scritta — per questo il guardiano nuovo legge il
    workflow, non il codice.
+
+---
+
+## Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro
+
+**Obiettivo.** Domanda dell'utente subito dopo la Fase 141: *«questo lavoro su
+quali partite lo facciamo? verifichiamo se possiamo allargarlo anche alle
+partite di coppa per esempio o ad altre di campionato»*. Misurare che cosa
+Smarkets espone davvero, quanto costerebbe prenderlo, e allargare il perimetro
+di raccolta.
+
+**Ragionamento / ipotesi.** La domanda non si risponde a stima: si conta. Il
+censimento del listino dell'08/08/2026 dà **865 partite su 124 competizioni**,
+e noi ne prendevamo **58 — il 6,7%**. Fra le 807 che buttavamo:
+
+| | esposte l'08/08 | prima partita |
+|---|---|---|
+| Coppa Italia | 4 | **quel giorno, 18:00** |
+| England League Cup | 31 | **quel giorno, 12:00** |
+| Supercoppe (UEFA, Germania, Francia) | 3 | 12 ago |
+| UCL / UEL qualificazioni | 14 | 11 ago |
+| Seconde divisioni dei 5 paesi | 47 | 14 ago |
+| Terze/quarte divisioni | 35 | |
+| Amichevoli di club | 57 | |
+| Resto del mondo | 616 | |
+
+Il primo fatto è già una risposta: **la Coppa Italia giocava quel giorno e non
+la stavamo prendendo.**
+
+**Alternative considerate.** Il perimetro è una scelta dell'utente (§5-ter dice
+che escludere un dato si decide con lui), quindi le opzioni sono state
+misurate e presentate, non decise. Scartate: *tutto il calcio esposto* (a
+listino pieno sono ~112 minuti, non ci sta nel budget di 45 e richiederebbe di
+ripensare i cron) e *terze divisioni + amichevoli* (le amichevoli hanno
+formazioni finte: valore predittivo basso). **Scelto**: coppe dei 5 paesi +
+UEFA per club + seconde divisioni, **a listino pieno** come i campionati.
+
+**Perché queste tre famiglie.** Non è «più dati è meglio»: ognuna tocca un
+buco che il progetto ha già.
+1. **Coppe** — il progetto ha i dati di coppa 2025-26 (Fase 138, 662 partite,
+   6 tornei) e **non ha mai avuto una quota** per quelle partite. Questa è la
+   loro controparte prospettica.
+2. **Seconde divisioni** — è il buco del **prior neopromosse δ** (Fase 7/8):
+   oggi è una costante per lega (0.19-0.33) *proprio perché* non abbiamo dati
+   sulla cadetteria. Con le quote di Serie B/Championship/Liga 2 la forza di
+   ogni squadra che sale diventa stimabile una per una.
+3. **UEFA** — il progetto non ha mai avuto una **scala di forza comune fra
+   campionati**. Le quote di UCL/UEL sono l'unico modo di misurarla: il
+   mercato la prezza per noi.
+
+**📐 Il modello in dettaglio.** Nessuna matematica di modello: è raccolta. Ma
+tre numeri e una regola vanno motivati.
+
+*Il costo, misurato per regime (08/08/2026, campione di 5 partite):*
+
+```
+solo principali (3 mercati)     5,6 righe   1,75 s   0,28 KB gz   per partita
+listino base    (6 mercati)    24,0 righe   1,68 s   0,60 KB gz   per partita
+tutti i mercati (~110)        239,2 righe   7,03 s   7,84 KB gz   per partita
+```
+
+⚠️ **`--solo-principali` è una falsa economia sul tempo.** 3 e 6 mercati costano
+identico (1,75 contro 1,68 s) perché stanno **comunque in un solo lotto da 20**:
+il costo è il numero di *lotti*, non di mercati. Risparmia byte, non minuti.
+Il ragionamento della Fase 118 — «il lungo raggio si ferma ai principali per
+renderlo sostenibile» — era giusto sull'archivio e sbagliato sul tempo.
+
+*Il perimetro nuovo, misurato dal vivo:*
+
+```
+158 partite = 58 campionati + 52 coppe + 48 seconde
+tempo ≈ 58×20,6 + 52×7 + 48×5 ≈ 1.760 s ≈ 29 min   (era 19'57")
+peso  ≈ 593 KB + ~710 KB ≈ 1,3 MB per giro
+```
+
+Sta nel budget di 45 minuti della Fase 141 con ~16 minuti di margine. Le coppe
+costano **meno** dei campionati (Coppa Italia: 47 mercati e 4,7 s, contro 110
+mercati e ~20 s di una Serie A): il listino di una partita minore è più corto.
+
+*La regola dell'ordinamento, che è una conseguenza aritmetica del budget.*
+Il ciclo seguiva l'ordine dell'API, cioè un ordine arbitrario. Con 58 partite
+il budget non si toccava mai e non importava; con 158 diventa plausibile, e
+allora **quali** partite finiscono nella coda tagliata smette di essere
+indifferente:
+
+```
+valore di una partita persa ≈ (quante altre occasioni avremo di riprenderla)⁻¹
+  partita fra 3 settimane → ~21 giri giornalieri rimasti → perdita ≈ 1/21
+  partita fra 1 ora       → 0 giri rimasti               → perdita = tutto
+```
+
+Quindi si raccoglie in **ordine di calcio d'inizio**: la coda tagliata è
+sempre ciò che manca di meno.
+
+**Il rischio vero, e cosa lo copre.** Non è raccogliere di più: è che **a valle
+qualcosa scambi una coppa per un campionato senza dare errore**. Quattro punti,
+tutti trovati leggendo i consumatori invece che immaginandoli:
+
+| dove | cosa sarebbe successo |
+|---|---|
+| ogni riga | `groupby('lega')` avrebbe messo Vicenza-Catania fra le partite di Serie A → aggiunto **`fascia`** (campionato/coppa/seconda) su ogni riga |
+| `anomalia_del_listino` | contando anche le coppe, la sparizione di tutti e 5 i campionati non avrebbe suonato → conta i soli campionati |
+| `ultimo_listino_completo` | cercava `len({lega}) >= 5`: **due leghe e quattro coppe** superano la soglia → un file parziale travestito da completo |
+| prospettico / mappa nomi / anagrafica | avrebbero cercato negli snapshot squadre di Serie B e di UCL che lì non esistono → filtrano su `fascia == campionato` |
+
+L'assenza del campo vale `campionato`, così i file già in archivio restano
+leggibili.
+
+**Il problema degli slug che non conosciamo ancora, e perché qui si indovina.**
+Copa del Rey, DFB-Pokal, Coupe de France, FA Cup e i gironi UEFA cominciano più
+avanti, e l'API espone **solo** ciò che è `upcoming`: non c'è modo di leggere
+oggi il nome che avranno (provati `/competitions/` e `/sports/`: **404**;
+`state=new`: **zero eventi**). Le due strade pulite erano entrambe peggiori —
+aspettare che compaiano perde i primi giorni di traiettoria, che non tornano;
+includere per prefisso di paese tira dentro National League North e le
+femminili. Quindi:
+
+- **`SLUG_ATTESI`** — gli slug che ci aspettiamo, con più varianti dove la
+  convenzione non è ovvia (osservato dal vivo: `italy-coppa-italia` usa il nome
+  nativo, `england-league-cup` e `france-super-cup` no). Indovinare è **sicuro**
+  perché uno slug sbagliato semplicemente non combacia mai;
+- **il RADAR** — `fuori_perimetro()` elenca ogni competizione dei nostri paesi
+  o UEFA che il listino espone e noi *non* prendiamo, nel log **e nel file**
+  (`fuori_perimetro`). È lì che comparirà `germany-dfb-pokal` col nome vero se
+  l'abbiamo scritto sbagliato.
+
+L'accoppiata rende l'errore **rumoroso invece che silenzioso**, ed è il rimedio
+diretto allo stesso guasto di `spain-laliga` → `spain-la-liga` (31/07, trovato a
+mano cinque giorni dopo).
+
+**Risultato.** Perimetro da 58 a **158 partite** (+172%), giro da 20 a ~29
+minuti, archivio da 593 KB a ~1,3 MB per giro. Verificato dal vivo su un file
+misto: 1.321 righe su tre partite, una per fascia, `fuori_perimetro: {}` e
+`partite_incomplete: []`. **6 test riscritti** (codificavano il perimetro
+stretto: erano la decisione di allora, non una verità) **e 10 nuovi**, 69 nel
+file; suite intera a **1.458 verdi**. Push alle 11:58 UTC, in tempo perché il giro di chiusura delle 12:07
+prendesse le partite di League Cup delle 14:00.
+
+**Lezione.** Due, e la seconda vale oltre questo file.
+
+1. **Un perimetro scritto una volta non si rilegge più.** `SLUG_LEGA` conteneva
+   5 voci dalla Fase 116 e nessuno aveva più chiesto *quanto* stessimo
+   lasciando fuori. La risposta era 93,3%, e comprendeva una partita che si
+   giocava quel pomeriggio. Il censimento costa una chiamata API.
+2. **Allargare un dato è per metà un lavoro sui suoi consumatori.** La parte
+   difficile non è stata prendere le coppe: è stata trovare i quattro punti a
+   valle che le avrebbero scambiate per campionati **senza dare errore** —
+   incluso un `len({lega}) >= 5` che quattro coppe fanno passare. Un dato nuovo
+   in una colonna vecchia è un finto pieno in attesa (R6): il perimetro si
+   allarga leggendo chi legge, non chi scrive.

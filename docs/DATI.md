@@ -743,6 +743,7 @@ era l'handicap asiatico (Fase 88).
 | **fonte** | **Smarkets** (API v3 pubblica, senza chiave né account) — una **borsa**, non un bookmaker |
 | **file** | `YYYY-MM-DDTHH-MM-SS.json`, uno per esecuzione. I **secondi** nel nome non sono un vezzo: i due regimi possono cadere nello stesso minuto e si sovrascriverebbero in silenzio (Fase 118) |
 | **granularità riga** | (partita, mercato, contratto) con `p_banco`, `p_puntatore`, `p_mid`, `lato`, `spread`, `vol_banco`, `vol_puntatore` |
+| **perimetro** | dalla **Fase 142**: i 5 campionati **+ coppe nazionali dei 5 paesi + UEFA per club + seconde divisioni**. Misurato l'08/08: 158 partite esposte (58+52+48) su 865 che il listino espone. ⚠️ La colonna si chiama `lega` ma contiene anche `coppa_italia`, `serie_b`, `ucl_qual`: **si filtra su `fascia`** (`campionato`/`coppa`/`seconda`), non su `lega` |
 | **prezzi** | **PROBABILITÀ 0-1**, mai quote decimali. Sulle coppie complementari il mid somma ~1.003 (overround quasi nullo di una borsa) |
 | **mercati** | *denso*: 1X2, GG/NG, O/U 1.5/2.5/3.5, **risultato esatto**. *Lungo raggio*: solo 1X2 + O/U 2.5 + GG/NG (quelli che il motore consuma) |
 | **si scrive con** | `python scripts/fetch_smarkets_matches.py` (`--entro-ore`, `--tutte-le-esposte`, `--solo-principali`, `--tutti-i-mercati`, `--dry-run`) |
@@ -794,10 +795,36 @@ congelamento per il test prospettico non si fa su un file che li ha pieni.**
 Un giro che non raccoglie *nessuna* riga, invece, non scrive alcun file: un
 archivio non deve mai contenere un silenzio che sembra un dato (R6).
 
+**⚠️ `fascia`: il campo con cui si filtra (Fase 142).** Dal perimetro allargato
+il file **non contiene solo campionati**. `lega` è rimasta la colonna storica
+(l'archivio già scritto la usa) ma porta anche `coppa_italia`, `league_cup`,
+`ucl_qual`, `serie_b`… Chi raggruppa per `lega` credendo di avere campionati
+mette Vicenza-Catania fra le partite di Serie A **e non riceve nessun errore**.
+
+| `fascia` | cosa contiene |
+|---|---|
+| `campionato` | i 5 modellati. **È il filtro da usare** per tutto ciò che parla di Serie A/Premier/Liga/Bundesliga/Ligue 1 |
+| `coppa` | Coppa Italia, League Cup, supercoppe, UEFA per club (e Copa del Rey, DFB-Pokal, Coupe de France quando compariranno) |
+| `seconda` | Serie B, Championship, Liga 2, 2.Bundesliga, Ligue 2 |
+
+I file **precedenti alla Fase 142 non hanno il campo**: sono tutti e soli
+campionati, quindi l'assenza vale `campionato` — è così che
+`ultimo_listino_completo()` continua a leggere l'archivio storico.
+
+Tre campi nuovi nei metadati dicono che cosa quel giro *poteva* contenere:
+`perimetro` (le coppie fascia/lega raccolte), `partite_per_fascia` e
+**`fuori_perimetro`** — il radar: le competizioni dei nostri paesi o UEFA che
+il listino esponeva e che non abbiamo preso. Non è un errore se non è vuoto:
+è l'unico posto dove si vedrà una coppa nuova comparire con un nome che non
+avevamo previsto.
+
 **Costo dell'archivio, dichiarato.** 454 byte per riga misurati. Il lungo
 raggio vale ~149 KB/giorno (~45 MB a stagione); il **denso in-season** è la
 voce pesante e porta il totale nell'ordine dei **250-300 MB** versionati per
-stagione. È una cifra da **decidere** (leve: frequenza del cron, esclusione del
+stagione. ⚠️ **Rimisurato alla Fase 142**: col perimetro allargato e il listino
+pieno il giro di lungo raggio è passato da 593 KB a **~1,3 MB** (158 partite
+invece di 58), quindi l'ordine di grandezza per la stagione va rivisto verso
+l'alto — resta una cifra da **decidere**, non da subire. È una cifra da **decidere** (leve: frequenza del cron, esclusione del
 risultato esatto anche dal denso), non da subire.
 
 ---

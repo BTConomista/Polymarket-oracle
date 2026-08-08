@@ -1,5 +1,11 @@
-"""Raccoglie le quote PRE-PARTITA di Smarkets per le 5 leghe, con banco e
-puntatore (Fase 116).
+"""Raccoglie le quote PRE-PARTITA di Smarkets, con banco e puntatore (Fase 116).
+
+PERIMETRO (allargato alla Fase 142, decisione utente): i **5 campionati**
+modellati, le **coppe nazionali** dei 5 paesi, le competizioni **UEFA per
+club** e le **seconde divisioni** dei 5 paesi -- 158 partite misurate l'08/08
+contro le 58 di prima. Ogni riga porta `fascia` (campionato/coppa/seconda) ed
+e' quella che si filtra: `lega` e' la colonna storica e contiene anche
+`coppa_italia` e `serie_b`.
 
 PERCHE' ESISTE. Il test prospettico della Fase 78 -- previsioni congelate
 prima del calcio d'inizio e scorate dopo -- e' il gold standard che il

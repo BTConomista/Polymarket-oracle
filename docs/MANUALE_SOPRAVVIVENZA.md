@@ -395,6 +395,22 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
   sul job **non basta** (uccide anche il salvataggio): serve un budget dentro
   lo script, controllato fra un'unità di lavoro e l'altra, che scriva ciò che
   ha raccolto e dichiari il resto.
+- **L'API Smarkets espone SOLO ciò che è `upcoming`** (Fase 142, misurato):
+  `/competitions/` e `/sports/` danno **404**, `state=new` restituisce **zero
+  eventi**. Non c'è modo di leggere oggi il nome-slug che avrà una competizione
+  che comincia fra due mesi. Conseguenza pratica: per una coppa fuori stagione
+  o si indovina lo slug in anticipo (sicuro: uno sbagliato non combacia mai) o
+  si perdono i primi giorni di traiettoria quando compare.
+- **Il costo di una chiamata a lotti è il numero di LOTTI, non di campi**
+  (Fase 142): 3 mercati e 6 mercati costano identico (1,75 contro 1,68 s a
+  partita) perché stanno entrambi in un solo lotto da 20. `--solo-principali`
+  risparmia byte, **non minuti** — il ragionamento della Fase 118 era giusto
+  sull'archivio e sbagliato sul tempo. Vale per qualunque API con `id1,id2,…`.
+- **Censire il perimetro di una raccolta è una chiamata sola, e non lo si fa
+  mai** (Fase 142): `SLUG_LEGA` conteneva 5 voci dalla Fase 116 e nessuno aveva
+  più chiesto quanto stessimo lasciando fuori. Erano **865 partite su 124
+  competizioni**, ne prendevamo 58 — e fra le escluse c'era la Coppa Italia
+  che giocava quel pomeriggio.
 - **Nessuno degli altri tre workflow è un'automazione viva**: `import_dataset.yml` ha
   il cron mensile disattivato (motivazione dell'audit Fase 92 scritta nel
   file), e `betexplorer-scrape.yml` / `kaggle-ou-probe.yml` puntano alla

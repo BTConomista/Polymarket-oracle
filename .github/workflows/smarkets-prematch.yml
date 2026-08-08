@@ -18,11 +18,14 @@ on:
     # DENSO, ogni 6 ore: tutti i mercati delle partite entro 72h. E' la
     # traiettoria che si addensa verso il calcio d'inizio.
     - cron: '17 */6 * * *'
-    # LUNGO RAGGIO, una volta al giorno: tutte le partite che l'API espone
-    # (misurato: ~1 giornata per lega, 48 partite) ma solo sui mercati che il
-    # motore consuma. Senza questo, fino al 12 agosto non si raccoglierebbe
-    # NULLA -- mentre il listino dell'esordio e' gia' quotato e si muove da
-    # oggi, e quei giorni non si recuperano (newseason.md §2).
+    # LUNGO RAGGIO, una volta al giorno: tutte le partite che l'API espone,
+    # a listino pieno (il flag `--solo-principali` e' caduto il 02/08, §5-ter).
+    # Misurato l'08/08/2026 col perimetro della Fase 142: **158 partite** --
+    # 58 dei campionati, 52 di coppa, 48 di seconda divisione -- per ~29 min
+    # di giro, dentro il budget di 45 dello script.
+    # Senza questo giro, fino al 12 agosto non si raccoglierebbe NULLA --
+    # mentre il listino dell'esordio e' gia' quotato e si muove da oggi, e
+    # quei giorni non si recuperano (newseason.md §2).
     - cron: '41 5 * * *'
     # CHIUSURA, ogni ora ma solo su cio' che inizia entro 2 ore (decisione D1,
     # Fase 129). Il regime denso a 6 ore lascerebbe l'ultimo prezzo vecchio
