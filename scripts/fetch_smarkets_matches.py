@@ -189,6 +189,14 @@ SLUG_ATTESI = {
     "uefa-europa-league": ("uel", "coppa"),
     "uefa-conference-league": ("uecl", "coppa"),
     "uefa-europa-conference-league": ("uecl", "coppa"),
+    # ⚠️ TROVATO DAL RADAR l'08/08 alle 21:38, non da noi: il turno di
+    # qualificazione si chiama `uefa-europa-conference-league-qualification`,
+    # e nessuna delle varianti indovinate lo copriva -- si giocava quella sera
+    # e lo stavamo buttando. E' esattamente il caso per cui il radar esiste:
+    # gli slug indovinati sbagliano, e l'unica difesa e' che qualcuno lo dica.
+    # I turni di qualificazione UEFA hanno un suffisso, i gironi no.
+    "uefa-europa-conference-league-qualification": ("uecl_qual", "coppa"),
+    "uefa-conference-league-qualification": ("uecl_qual", "coppa"),
 }
 
 # Il perimetro effettivo: verificati + attesi. Gli attesi non fanno danno
