@@ -75,9 +75,15 @@ _VIVE = [{"event_id": 1, "nome": "A vs B", "lega": "league_cup",
           "fascia": "campionato", "inizio": "2026-08-08T12:30:00Z", "inplay": True}]
 
 
-def test_ogni_riga_porta_l_istante_e_il_tipo_di_giro(monkeypatch):
-    """Senza `istante_utc` per riga un file di sessione e' un mucchio di
-    prezzi senza tempo: il dato piu' importante di una serie temporale."""
+def test_ogni_riga_porta_DUE_tempi_e_il_tipo_di_giro(monkeypatch):
+    """Due tempi, e servono entrambi (Fase 144-ter).
+
+    La prima stesura dava a tutte le righe di un giro lo stesso istante. Con
+    25 partite un giro pieno dura minuti -- misurato sul runner: **9'50"** --
+    quindi quell'istante era il tempo SBAGLIATO per quasi tutte le righe:
+    una serie temporale con la data finta. Ora `istante_utc` dice quando
+    QUELLA partita e' stata letta, `giro_utc` raggruppa il passaggio.
+    """
     monkeypatch.setattr(live, "quote_partita",
                         lambda ev, tutti, mercati_ammessi=None:
                         ([{"partita": ev["nome"], "mercato": "1x2"}], 0))
@@ -85,7 +91,44 @@ def test_ogni_riga_porta_l_istante_e_il_tipo_di_giro(monkeypatch):
     assert len(righe) == 2 and not incomplete
     assert all(r["giro"] == "nucleo" for r in righe)
     assert all(r["istante_utc"].endswith("+00:00") for r in righe), "l'istante e' UTC"
-    assert len({r["istante_utc"] for r in righe}) == 1, "stesso giro, stesso istante"
+    assert len({r["giro_utc"] for r in righe}) == 1, "stesso giro, stesso giro_utc"
+    # e l'istante e' PER PARTITA: puo' coincidere in un test istantaneo, ma
+    # non dev'essere lo stesso campo di `giro_utc`
+    assert all(r["istante_utc"] >= r["giro_utc"] for r in righe)
+
+
+def test_le_partite_si_interrogano_in_parallelo(monkeypatch):
+    """Non per fare piu' richieste al secondo -- il limitatore in
+    `fetch_smarkets_outrights` le tiene comunque a ~3/s -- ma per sovrapporre
+    le ATTESE DI RETE, che sul runner sono l'80% del tempo."""
+    import time as _t
+    monkeypatch.setattr(live, "quote_partita",
+                        lambda ev, tutti, mercati_ammessi=None:
+                        (_t.sleep(0.2) or [{"partita": ev["nome"]}], 0))
+    molte = [dict(_VIVE[0], event_id=i, nome=f"p{i}") for i in range(6)]
+    t0 = _t.monotonic()
+    righe, _ = live.un_giro(molte, pieno=False)
+    durata = _t.monotonic() - t0
+    assert len(righe) == 6
+    assert durata < 0.2 * 6 * 0.6, (
+        f"{durata:.2f}s per 6 partite da 0.2s: sembra sequenziale")
+
+
+def test_il_limitatore_delle_richieste_e_condiviso_fra_i_thread():
+    """Il `sleep` per-chiamata basta a un thread solo; con sei darebbe sei
+    volte il ritmo e il 429 arriverebbe subito. Il limitatore serializza gli
+    istanti di PARTENZA, non le attese."""
+    import concurrent.futures as _cf
+    import time as _t
+    import fetch_smarkets_outrights as fso
+
+    t0 = _t.monotonic()
+    with _cf.ThreadPoolExecutor(max_workers=6) as pool:
+        list(pool.map(lambda _: fso._attendi_il_turno(), range(6)))
+    durata = _t.monotonic() - t0
+    # sei turni a 0.35s l'uno non possono stare in meno di ~5 intervalli
+    assert durata >= 5 * fso._THROTTLE * 0.9, (
+        f"{durata:.2f}s per 6 turni: il ritmo non e' rispettato")
 
 
 def test_il_giro_stretto_chiede_solo_il_nucleo(monkeypatch):

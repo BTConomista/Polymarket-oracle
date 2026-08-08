@@ -65,6 +65,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import concurrent.futures as cf
 import datetime as dt
 import sys
 import time
@@ -189,6 +190,16 @@ def da_seguire(vive: list[dict], future: list[dict],
     return list(per_id.values()), prossimo
 
 
+# Quante partite si interrogano in parallelo. Non e' per fare piu' richieste
+# al secondo -- quelle restano limitate da `_attendi_il_turno` a ~3/s in tutto
+# il processo -- ma per SOVRAPPORRE LE ATTESE DI RETE. Misurato l'08/08: dal
+# runner di GitHub una chiamata costa ~1.8s di cui solo 0.35 di throttle, e in
+# sequenza un giro pieno su 25 partite ha preso 9'50", zero giri di nucleo.
+# 6 lavoratori bastano a saturare il ritmo consentito (6 / 1.8s ≈ 3.3 al
+# secondo) senza sfondarlo: oltre, aspetterebbero solo il limitatore.
+LAVORATORI = 6
+
+
 def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
     """Un passaggio su tutte le partite in corso. Ritorna (righe, incomplete).
 
@@ -196,34 +207,45 @@ def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
     non il giro -- e qui vale doppio, perche' un giro perso e' un buco in una
     serie temporale che non si puo' ricampionare.
     """
-    quando = dt.datetime.now(dt.timezone.utc).isoformat()
+    giro_id = dt.datetime.now(dt.timezone.utc).isoformat()
     righe, incomplete = [], []
-    for ev in vive:
+
+    def una(ev):
+        letto = dt.datetime.now(dt.timezone.utc).isoformat()
         try:
             r, persi = quote_partita(
                 ev, tutti=pieno,
                 mercati_ammessi=None if pieno else MERCATI_NUCLEO)
         except Exception as ex:                       # noqa: BLE001
-            incomplete.append({"istante": quando, "partita": ev["nome"],
-                               "event_id": ev["event_id"],
-                               "errore": f"{type(ex).__name__}: {ex}"})
-            continue
-        if persi:
-            incomplete.append({"istante": quando, "partita": ev["nome"],
-                               "event_id": ev["event_id"],
-                               "mercati_persi": persi})
+            return [], [{"istante": letto, "partita": ev["nome"],
+                         "event_id": ev["event_id"],
+                         "errore": f"{type(ex).__name__}: {ex}"}]
+        inc = ([{"istante": letto, "partita": ev["nome"],
+                 "event_id": ev["event_id"], "mercati_persi": persi}]
+               if persi else [])
         for x in r:
-            # L'istante e' PER RIGA: un file di sessione contiene decine di
-            # giri, e senza questo campo sarebbero indistinguibili -- cioe'
-            # una serie temporale senza il tempo.
-            x["istante_utc"] = quando
+            # ⚠️ DUE tempi, e servono entrambi (Fase 144-ter).
+            # `istante_utc` e' quando QUESTA partita e' stata letta: un giro su
+            # 25 partite dura minuti, e spalmare tutte le righe sullo stesso
+            # istante sarebbe una serie temporale con il tempo sbagliato.
+            # `giro_utc` e' l'inizio del giro, e serve a raggruppare le righe
+            # che appartengono allo stesso passaggio.
+            x["istante_utc"] = letto
+            x["giro_utc"] = giro_id
             x["giro"] = "pieno" if pieno else "nucleo"
             # `pre` o `live`: la stessa serie attraversa il calcio d'inizio, e
             # un prezzo che non conosce il punteggio non e' confrontabile con
             # uno che lo conosce. Senza questo campo la distinzione andrebbe
             # ri-dedotta ogni volta dall'orario, cioe' si perderebbe.
             x["fase"] = ev.get("fase", "live")
-        righe += r
+        return r, inc
+
+    # Le partite in parallelo, le CHIAMATE comunque a ritmo limitato: e' la
+    # latenza che si sovrappone, non il numero di richieste al secondo.
+    with cf.ThreadPoolExecutor(max_workers=min(LAVORATORI, max(1, len(vive)))) as pool:
+        for r, inc in pool.map(una, vive):
+            righe += r
+            incomplete += inc
     return righe, incomplete
 
 

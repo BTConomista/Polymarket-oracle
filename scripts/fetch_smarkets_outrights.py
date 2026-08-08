@@ -49,6 +49,7 @@ import argparse
 import json
 import re
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -119,6 +120,32 @@ _norm = lambda s: re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
 _THROTTLE = 0.35        # s fra una chiamata e l'altra: l'API limita a ~3/s e
                         # senza pausa il giro completo prende un 429 a meta'
 
+# IL LIMITATORE CONDIVISO (Fase 144-ter). Il `time.sleep(_THROTTLE)` da solo
+# vale finche' chiama un thread solo: con N thread darebbe N volte il ritmo e
+# il 429 arriverebbe subito. Questo invece serializza gli ISTANTI DI PARTENZA
+# -- una richiesta ogni 0.35s in tutto il processo -- lasciando pero' le
+# attese di rete SOVRAPPOSTE.
+#
+# Perche' serve: misurato l'08/08, una chiamata costa 0.54s da questo ambiente
+# ma ~1.8s dal runner di GitHub, e di quel tempo il throttle e' solo 0.35 --
+# il resto e' latenza. In sequenza, un giro pieno su 25 partite (325 chiamate)
+# ha impiegato **9 minuti e 50 secondi** sul runner, mangiandosi l'intera
+# sessione e producendo ZERO giri di nucleo: la cadenza dichiarata non si e'
+# mai realizzata. A ritmo pieno le stesse 325 chiamate stanno in ~110s.
+_RITMO = threading.Lock()
+_PROSSIMA_PARTENZA = [0.0]
+
+
+def _attendi_il_turno() -> None:
+    """Blocca finche' non e' il turno di questa richiesta. Thread-safe."""
+    with _RITMO:
+        adesso = time.monotonic()
+        quando = max(adesso, _PROSSIMA_PARTENZA[0])
+        _PROSSIMA_PARTENZA[0] = quando + _THROTTLE
+    ritardo = quando - time.monotonic()
+    if ritardo > 0:
+        time.sleep(ritardo)
+
 # I codici HTTP che significano «riprova fra un attimo», non «la richiesta e'
 # sbagliata». 429 e' il rate limit (gia' gestito dalla Fase 97); i 5xx sono il
 # server che vacilla, ed erano trattati come errori definitivi -- il che ha
@@ -134,7 +161,7 @@ def _get(path: str, retries: int = 5):
     url = path if path.startswith("http") else API + path
     for k in range(retries):
         try:
-            time.sleep(_THROTTLE)
+            _attendi_il_turno()
             with urllib.request.urlopen(url, timeout=30) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as ex:
