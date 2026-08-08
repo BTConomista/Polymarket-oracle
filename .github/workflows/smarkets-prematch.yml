@@ -91,12 +91,14 @@ concurrency:
 jobs:
   raccogli:
     runs-on: ubuntu-latest
-    # Rete di sicurezza esterna al budget dello script (BUDGET_MINUTI = 45):
+    # Rete di sicurezza esterna al budget dello script (BUDGET_MINUTI = 90,
+    # ri-tarato l'08/08 dopo che il primo giro col perimetro allargato ha
+    # esaurito i 45 e perso 22 partite su 157):
     # se il processo si pianta invece di rallentare, il budget -- che si
     # controlla fra una partita e l'altra -- non scatta. Il default di GitHub
     # e' 6 ore, e sei ore di runner appeso bloccherebbero anche tutte le corse
     # orarie di chiusura che si accodano dietro la stessa `concurrency`.
-    timeout-minutes: 55
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

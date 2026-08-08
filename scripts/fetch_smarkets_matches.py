@@ -412,13 +412,24 @@ LOTTO_MERCATI = 20
 # cioe' ore di runner bruciate per non scrivere niente. Il rimedio non e'
 # togliere i tentativi: e' dire quando smettere.
 #
-# 45 minuti: il giro piu' lungo che facciamo -- lungo raggio, tutti i mercati,
-# 58 partite -- e' stato misurato a ~20s a partita (log dell'08/08/2026: 21
-# partite in 7'30" scandaglio compreso), cioe' ~20 minuti. Il doppio abbondante
-# lascia spazio a un giro piu' affollato e a qualche ritentativo senza mai
-# tagliare una raccolta sana, e tiene il giro dentro l'ora prima che la corsa
-# oraria di chiusura si accodi.
-BUDGET_MINUTI = 45
+# ⚠️ RI-TARATO A 90 (08/08/2026, stesso giorno). Il primo giro col perimetro
+# allargato ha ESAURITO i 45 minuti e dichiarato perse 22 partite su 157: 135
+# raccolte in 45 minuti fanno **20 s a partita**, non i 5-7 s misurati su un
+# campione di cinque. Il campione era di mattina; il giro vero e' di sabato
+# pomeriggio, con l'API sotto carico e le partite in corso.
+#
+# E il taglio NON e' innocuo come sembrava. L'ordinamento per calcio d'inizio
+# fa perdere la coda, che e' giusto per un taglio UNA TANTUM -- ma se il taglio
+# avviene ogni giorno, a essere persa e' **sempre la stessa coda**: le 9
+# partite di Bundesliga (28-30 agosto) sarebbero uscite dalla raccolta tutti i
+# giorni fino al 28. Un taglio casuale si media, un taglio sistematico no.
+#
+# 90 minuti: il giro pieno misurato e' ~52 min (157 x 20 s), quindi il tetto
+# sta al 173% del giro sano -- lo stesso margine che 45 dava sui 20 minuti di
+# prima. Tenerlo alto non costa nulla in condizioni normali (si esce quando si
+# e' finito, non allo scadere) e resta un tetto vero contro un guasto lungo:
+# 90 minuti invece delle ~19,6 ore che i ritentativi darebbero da soli.
+BUDGET_MINUTI = 90
 
 
 def _etichetta_generica(m: dict, nome: str) -> str:

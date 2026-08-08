@@ -17443,7 +17443,34 @@ stretto: erano la decisione di allora, non una verità) **e 10 nuovi**, 69 nel
 file; suite intera a **1.458 verdi**. Push alle 11:58 UTC, in tempo perché il giro di chiusura delle 12:07
 prendesse le partite di League Cup delle 14:00.
 
-**Lezione.** Due, e la seconda vale oltre questo file.
+**⚠️ Il primo giro vero ha smentito la stima, e ha scoperto un difetto del
+taglio.** Run 31257772327, perimetro allargato in produzione: **50.509 righe,
+135 partite, 16 competizioni** su tutte e tre le fasce — ma **`partite_incomplete: 22`**,
+budget esaurito. 135 partite in 45 minuti fanno **20 s a partita**, non i 5-7 s
+misurati la mattina su un campione di cinque: il giro vero è di sabato
+pomeriggio, con l'API sotto carico e le partite in corso. La stima di ~29
+minuti era sbagliata del 55%.
+
+Il meccanismo della Fase 141 ha fatto il suo lavoro — file scritto, buchi
+dichiarati, coda tagliata invece che testa — ma il taglio ha rivelato un
+difetto che l'ordinamento da solo non copre:
+
+```
+perse: 9 Bundesliga + 6 La Liga + 3 Serie A + 2 Serie B + 1 Premier + 1 Ligue 1
+       = le 22 con il calcio d'inizio più lontano
+```
+
+**Un taglio una tantum si media, un taglio quotidiano no.** Ordinare per
+calcio d'inizio è giusto per la singola occorrenza, ma se il tetto viene
+toccato *ogni giorno* a essere persa è **sempre la stessa coda**: le 9 partite
+di Bundesliga (28-30 agosto) sarebbero uscite dalla raccolta tutti i giorni
+fino al 28, cioè proprio la lega più lontana non avrebbe **mai** una
+traiettoria di lungo raggio. Budget ri-tarato a **90 minuti** (173% del giro
+pieno misurato, 157 × 20 s ≈ 52 min — lo stesso margine che 45 dava sui 20
+minuti di prima) e `timeout-minutes` a 100. Tenerlo alto non costa nulla in
+condizioni normali, perché si esce quando si è finito e non allo scadere.
+
+**Lezione.** Cinque, e le ultime tre valgono oltre questo file.
 
 1. **Un perimetro scritto una volta non si rilegge più.** `SLUG_LEGA` conteneva
    5 voci dalla Fase 116 e nessuno aveva più chiesto *quanto* stessimo
