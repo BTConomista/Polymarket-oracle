@@ -1,0 +1,99 @@
+name: Raccolta quote IN-PLAY Smarkets (Fase 143)
+
+# PERCHE' ESISTE. Il live e' l'unica famiglia di mercati che il progetto
+# dichiara scoperta da sempre (CLAUDE.md §6) ed e' il dato piu' irrecuperabile
+# che abbiamo: una quota pre-partita si puo' almeno cercare a posteriori da
+# qualche parte, il prezzo dell'1X2 al 67' con la partita sull'1-1 non esiste
+# piu' appena la partita finisce. Richiesta dell'utente, 08/08/2026.
+#
+# COSTO: zero. Il repo e' PUBBLICO, e per i repo pubblici i minuti di Actions
+# sui runner standard non si pagano. E' questo che rende possibile un job che
+# resta acceso 40 minuti invece di un cron ogni due.
+#
+# SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
+
+on:
+  schedule:
+    # LA SENTINELLA, ogni 30 minuti. Non e' lei a raccogliere ogni 2 minuti:
+    # e' lei ad ACCENDERE un job che poi cicla al suo interno.
+    #
+    # Perche' non un cron ogni 2 minuti, che sarebbe la cosa ovvia: il cron di
+    # GitHub parte con **30-40 minuti di ritardo** (misurato l'08/08/2026: i
+    # giri delle :07 del workflow gemello sono partiti alle 08:54, 09:49,
+    # 10:45, 11:37). Un cron ogni 2 minuti sarebbe altrettanto in ritardo, e in
+    # piu' i run si accoderebbero e si cancellerebbero a vicenda. Dentro un job
+    # gia' acceso, invece, `time.sleep` e' esatto: solo l'AVVIO e' impreciso.
+    #
+    # Nelle ore senza partite del perimetro il giro costa una chiamata di
+    # listino e finisce in ~10 secondi senza scrivere niente.
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      durata_minuti:
+        description: 'Quanto resta acceso il ciclo'
+        default: '40'
+      ogni_nucleo:
+        description: 'Minuti fra due giri stretti (1X2, O/U 2.5, GG/NG, risultato esatto)'
+        default: '2'
+      ogni_pieno:
+        description: 'Minuti fra due giri a listino intero (0 = mai)'
+        default: '15'
+
+permissions:
+  contents: write
+
+# ⚠️ NESSUN `concurrency` QUI, ED E' DELIBERATO.
+#
+# Un gruppo di concorrenza SERIALIZZEREBBE le sessioni: la seconda resterebbe
+# pending dietro alla prima, e all'arrivo della terza GitHub cancellerebbe
+# quella in attesa -- esattamente il guasto misurato l'08/08 sul workflow
+# pre-partita (run 31258806209, `cancelled`). Su un dato irrecuperabile come
+# l'in-play sarebbe il modo peggiore di perderlo: in silenzio.
+#
+# Le sessioni durano 40 minuti e la sentinella gira ogni 30, quindi si
+# sovrappongono per ~10 minuti APPOSTA -- e' cosi' che il ritardo del cron
+# viene assorbito invece di produrre un buco. La sovrapposizione costa qualche
+# giro duplicato (file diversi, istanti diversi: si distinguono da soli) e
+# tiene al massimo 2 job accesi insieme, dentro qualunque limite.
+# Sul push non c'e' corsa: ogni sessione scrive un file col proprio timestamp,
+# e il passo di commit ha gia' i suoi tre tentativi con `pull --rebase`.
+
+jobs:
+  raccogli:
+    runs-on: ubuntu-latest
+    # La sessione dura 40 minuti; 60 lascia margine per il checkout, per un
+    # ultimo giro lungo e per il commit finale.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Raccogli le quote in-play
+        run: |
+          python scripts/fetch_smarkets_live.py \
+            --durata-minuti "${{ github.event.inputs.durata_minuti || 40 }}" \
+            --ogni-nucleo   "${{ github.event.inputs.ogni_nucleo   || 2 }}" \
+            --ogni-pieno    "${{ github.event.inputs.ogni_pieno    || 15 }}"
+
+      - name: Salva la sessione (se c'e' qualcosa da salvare)
+        # ANCHE SE IL PASSO PRIMA E' FALLITO: lo script riscrive il file su
+        # disco ogni 5 giri apposta, e senza questo `if` un errore all'ultimo
+        # minuto butterebbe 40 minuti di raccolta. E' la lezione della Fase
+        # 141, applicata prima di ripagarla.
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain data/smarkets_live/)" ]; then
+            echo "nessuna partita del perimetro in corso: niente da committare (non e' un errore)"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/smarkets_live/
+          git commit -m "Smarkets in-play: sessione $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1

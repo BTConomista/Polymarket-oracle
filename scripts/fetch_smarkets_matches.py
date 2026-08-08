@@ -229,6 +229,16 @@ MERCATI_BASE = {
 # ferma a questi.
 MERCATI_PRINCIPALI = {"1x2", "ou25", "ggng"}
 
+# Il NUCLEO del ciclo in-play (Fase 143): i mercati che vanno letti spesso.
+# Sono i tre principali piu' il RISULTATO ESATTO, che qui non e' un lusso: e'
+# il mercato da cui si ricostruisce il punteggio corrente -- il minimo
+# componentwise dei punteggi ancora quotati -- e senza di lui una traiettoria
+# in-play e' una serie di prezzi di cui non si sa a che partita corrispondono.
+# Verificato dal vivo l'08/08 su Cambridge-Barnet: sopravvivevano 2-1, 2-2,
+# 2-3, 3-1, 3-2, 3-3 (minimo 2-1) e le linee O/U 0.5/1.5/2.5 erano `settled`
+# mentre la 3.5 era `live` -- due segnali indipendenti, entrambi 3 gol.
+MERCATI_NUCLEO = {"1x2", "ou25", "ggng", "risultato_esatto"}
+
 _ORA = re.compile(r"^(\d{4}-\d{2}-\d{2})T")
 
 
@@ -384,6 +394,36 @@ def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
     return nostre, totale, competizioni
 
 
+def scandaglia_live() -> tuple[list[dict], int]:
+    """Le partite del perimetro attualmente IN CORSO (Fase 143).
+
+    Usa `state=live`, che l'API espone e che e' l'unico modo affidabile di
+    sapere che una partita sta giocando: l'orario di inizio non basta (rinvii,
+    recuperi, supplementari) e non c'e' nessun endpoint di tabellone --
+    provati `/events/{id}/scores/` e `/state/`: 404.
+
+    Ritorna anche il totale mondiale, solo per la diagnosi: se le nostre sono
+    zero mentre nel mondo se ne giocano quaranta, e' il caso di guardare.
+    """
+    vive, totale = [], 0
+    url = "/events/?type=football_match&state=live&limit=200"
+    while url:
+        d = _get(url)
+        for e in d.get("events", []):
+            totale += 1
+            slug = e.get("full_slug")
+            lega = _slug_lega(slug)
+            if not lega:
+                continue
+            vive.append({"event_id": e["id"], "nome": e.get("name"),
+                         "lega": lega, "fascia": _fascia(slug),
+                         "inizio": e.get("start_datetime"),
+                         "inplay": bool(e.get("inplay_enabled"))})
+        nx = (d.get("pagination") or {}).get("next_page")
+        url = f"/events/{nx}" if nx else None
+    return vive, totale
+
+
 def entro_finestra(nostre: list[dict], entro_ore: int,
                    adesso: dt.datetime | None = None) -> list[dict]:
     """Il sottoinsieme che inizia entro N ore. `entro_ore` <= 0 = nessun
@@ -472,9 +512,13 @@ def _libri_per_contratto(quote: dict) -> dict:
     return piatta
 
 
-def quote_partita(ev: dict, tutti: bool,
-                  solo_principali: bool = False) -> tuple[list[dict], int]:
+def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False,
+                  mercati_ammessi: set | None = None) -> tuple[list[dict], int]:
     """Le quote di una partita: una riga per (mercato, contratto).
+
+    `mercati_ammessi` (Fase 143) tiene solo le etichette elencate, qualunque
+    sia il resto dei filtri: serve al ciclo in-play, che alterna un giro
+    stretto ogni pochi minuti a un giro pieno ogni tanto.
 
     Ritorna anche **quanti mercati sono andati persi** per un guasto di rete,
     perche' un raccolto parziale che si spaccia per completo e' esattamente il
@@ -486,7 +530,7 @@ def quote_partita(ev: dict, tutti: bool,
 
     # Prima si sceglie COSA serve, poi si chiede in blocco: cosi' il costo
     # dipende dai mercati richiesti, non da quelli esposti.
-    scelti: dict[str, tuple[str, str]] = {}
+    scelti: dict[str, tuple[str, str, str]] = {}
     for m in mercati:
         nome = m.get("name") or ""
         etichetta = MERCATI_BASE.get(nome)
@@ -496,7 +540,16 @@ def quote_partita(ev: dict, tutti: bool,
             etichetta = _etichetta_generica(m, nome)
         if solo_principali and etichetta not in MERCATI_PRINCIPALI:
             continue
-        scelti[str(m["id"])] = (etichetta, nome)
+        if mercati_ammessi is not None and etichetta not in mercati_ammessi:
+            continue
+        # `state` del MERCATO (Fase 143), non del contratto. In-play vale
+        # `settled` per i mercati gia' decisi (a 3 gol fatti, O/U 0.5/1.5/2.5
+        # sono settled e 3.5 e' live) e senza di lui un prezzo assente
+        # significa insieme «mercato chiuso» e «nessuna liquidita'»: due
+        # stati opposti indistinguibili, cioe' un finto pieno (R6).
+        # Pre-partita e' sempre `live`, ed e' per questo che finora non e'
+        # mancato a nessuno.
+        scelti[str(m["id"])] = (etichetta, nome, m.get("state"))
 
     ids = list(scelti)
     for i in range(0, len(ids), LOTTO_MERCATI):
@@ -516,7 +569,7 @@ def quote_partita(ev: dict, tutti: bool,
             mid = str(c.get("market_id") or "")
             if mid not in scelti:
                 continue          # l'API puo' restituire piu' di quanto chiesto
-            etichetta, nome = scelti[mid]
+            etichetta, nome, stato_mercato = scelti[mid]
             libro = libri.get(str(c["id"])) or {}
             p = book_price(libro)
             righe.append({
@@ -528,6 +581,9 @@ def quote_partita(ev: dict, tutti: bool,
                 "partita": ev["nome"],
                 "inizio": ev["inizio"], "event_id": ev["event_id"],
                 "mercato": etichetta, "mercato_smarkets": nome,
+                # `live` / `settled`: in-play distingue «non quotato» da
+                # «gia' deciso», e da qui si ricostruisce il punteggio.
+                "stato_mercato": stato_mercato,
                 "market_id": mid, "contratto": c.get("name"),
                 "contract_id": c["id"],
                 # book_price (Fase 97): prezzi come PROBABILITA' 0-1, mai quote
