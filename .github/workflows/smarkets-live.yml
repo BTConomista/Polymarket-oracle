@@ -30,8 +30,8 @@ on:
   workflow_dispatch:
     inputs:
       durata_minuti:
-        description: 'Quanto resta acceso il ciclo'
-        default: '40'
+        description: 'Quanto resta acceso il ciclo (si spegne prima se non si gioca)'
+        default: '300'
       ogni_nucleo:
         description: 'Minuti fra due giri stretti (1X2, O/U 2.5, GG/NG, risultato esatto)'
         default: '2'
@@ -42,28 +42,44 @@ on:
 permissions:
   contents: write
 
-# ⚠️ NESSUN `concurrency` QUI, ED E' DELIBERATO.
+# ⚠️ QUESTA SCELTA E' STATA RIBALTATA NEL GIRO DI UN'ORA, E IL PERCHE' CONTA.
 #
-# Un gruppo di concorrenza SERIALIZZEREBBE le sessioni: la seconda resterebbe
-# pending dietro alla prima, e all'arrivo della terza GitHub cancellerebbe
-# quella in attesa -- esattamente il guasto misurato l'08/08 sul workflow
-# pre-partita (run 31258806209, `cancelled`). Su un dato irrecuperabile come
-# l'in-play sarebbe il modo peggiore di perderlo: in silenzio.
+# Prima stesura: NESSUN gruppo di concorrenza, perche' un gruppo serializza le
+# sessioni e la terza in coda cancella quella in attesa -- il guasto misurato
+# l'08/08 sul workflow pre-partita (run 31258806209, `cancelled`). Con sessioni
+# da 40 minuti il ragionamento era giusto: la sessione successiva serviva per
+# la continuita', e cancellarla apriva un buco.
 #
-# Le sessioni durano 40 minuti e la sentinella gira ogni 30, quindi si
-# sovrappongono per ~10 minuti APPOSTA -- e' cosi' che il ritardo del cron
-# viene assorbito invece di produrre un buco. La sovrapposizione costa qualche
-# giro duplicato (file diversi, istanti diversi: si distinguono da soli) e
-# tiene al massimo 2 job accesi insieme, dentro qualunque limite.
+# Poi la sessione e' diventata di 5 ORE e si spegne da sola quando il calcio
+# finisce. Cambia tutto: mentre una sessione gira, le sentinelle successive
+# sono REDONDANTI, non necessarie. Senza un gruppo, con la sentinella ogni 30
+# minuti, si arriverebbe a **dieci sessioni in parallelo** sulle stesse
+# partite -- dieci runner e dieci copie dello stesso dato.
+#
+# Quindi il gruppo ci vuole, e la cancellazione dei pending qui e' un PREGIO,
+# non un difetto: cancella cio' che non serve. E quando la sessione finisce,
+# l'ultima sentinella in attesa parte subito e raccoglie cio' che e' ancora in
+# corso -- oppure esce in dieci secondi se non si gioca piu'.
+#
+# `cancel-in-progress: false` resta obbligatorio: uccidere una sessione VIVA
+# butterebbe i giri non ancora committati.
+# Rischio accettato e dichiarato: se una sessione si pianta senza raccogliere,
+# blocca le altre fino al `timeout-minutes`. Per questo il timeout esiste, e
+# per questo il cane da guardia (controlla-raccolta.yml) misura la copertura
+# invece di fidarsi dei run.
+concurrency:
+  group: smarkets-live
+  cancel-in-progress: false
 # Sul push non c'e' corsa: ogni sessione scrive un file col proprio timestamp,
 # e il passo di commit ha gia' i suoi tre tentativi con `pull --rebase`.
 
 jobs:
   raccogli:
     runs-on: ubuntu-latest
-    # La sessione dura 40 minuti; 60 lascia margine per il checkout, per un
-    # ultimo giro lungo e per il commit finale.
-    timeout-minutes: 60
+    # La sessione dura al massimo 300 minuti (si spegne da sola quando il
+    # calcio finisce); 330 lascia margine per checkout, ultimo giro e commit.
+    # Il tetto duro di un job e' 6 ore: 330 ci sta sotto con margine.
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -73,7 +89,7 @@ jobs:
       - name: Raccogli le quote in-play
         run: |
           python scripts/fetch_smarkets_live.py \
-            --durata-minuti "${{ github.event.inputs.durata_minuti || 40 }}" \
+            --durata-minuti "${{ github.event.inputs.durata_minuti || 300 }}" \
             --ogni-nucleo   "${{ github.event.inputs.ogni_nucleo   || 2 }}" \
             --ogni-pieno    "${{ github.event.inputs.ogni_pieno    || 15 }}"
 

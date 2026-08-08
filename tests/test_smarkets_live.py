@@ -162,30 +162,59 @@ def test_nessuno_legge_l_archivio_in_play_a_mano():
 
 # ------------------------------------------------------------------ workflow
 
-def test_il_workflow_in_play_non_ha_gruppo_di_concorrenza():
-    """DELIBERATO, e va protetto perche' sembra una dimenticanza.
+def test_il_workflow_in_play_ha_un_gruppo_ma_non_uccide_le_sessioni_vive():
+    """La scelta ribaltata nel giro di un'ora, e il perche' va tenuto scritto.
 
-    Un gruppo serializzerebbe le sessioni: la seconda pending dietro la prima,
-    e all'arrivo della terza GitHub cancella quella in attesa -- il guasto
-    misurato l'08/08 sul workflow pre-partita (run 31258806209). Su un dato
-    irrecuperabile come l'in-play sarebbe il modo peggiore di perderlo.
+    Con sessioni da 40 minuti il gruppo era SBAGLIATO: la sessione successiva
+    serviva per la continuita' e cancellarla apriva un buco. Con sessioni da 5
+    ore che si spengono da sole, le sentinelle successive sono redondanti --
+    e senza gruppo, a una sentinella ogni 30 minuti, si arriverebbe a dieci
+    sessioni in parallelo sulle stesse partite.
+
+    Ma `cancel-in-progress` deve restare **false**: cancellare i pending e'
+    il pregio, uccidere una sessione VIVA butterebbe i giri non committati.
     """
+    import re
     import yaml
 
-    wf = yaml.safe_load((Path(__file__).resolve().parents[1] / ".github"
-                         / "workflows" / "smarkets-live.yml").read_text())
-    assert "concurrency" not in wf, (
-        "aggiungere un concurrency group qui fa cancellare le sessioni "
-        "accodate: vedi il commento nel workflow")
+    radice = Path(__file__).resolve().parents[1]
+    testo = (radice / ".github" / "workflows" / "smarkets-live.yml").read_text()
+    wf = yaml.safe_load(testo)
+    assert wf["concurrency"]["group"], "senza gruppo si accendono N sessioni gemelle"
+    assert wf["concurrency"]["cancel-in-progress"] is False, (
+        "cancel-in-progress ucciderebbe una sessione viva e i suoi giri non "
+        "ancora committati")
+
+    # la sessione dev'essere lunga: e' cio' che rende il gruppo la scelta
+    # giusta invece di quella sbagliata. Se qualcuno la riportasse a 40
+    # minuti, il gruppo tornerebbe a essere un danno.
+    assert live.DURATA_MINUTI >= 120, (
+        "sessione corta + gruppo = le sessioni che servono vengono cancellate: "
+        "o si allunga la sessione o si toglie il gruppo")
+    tmt = wf["jobs"]["raccogli"]["timeout-minutes"]
+    assert tmt > live.DURATA_MINUTI and tmt < 360, "il tetto duro di un job e' 6h"
+
     # e il passo che salva deve sopravvivere al fallimento del passo prima
     salva = wf["jobs"]["raccogli"]["steps"][-1]
     assert "cancelled()" in str(salva.get("if")) or "always" in str(salva.get("if"))
 
 
+def test_la_sessione_si_spegne_da_sola_quando_non_si_gioca():
+    """E' cio' che rende sostenibile una sessione da 5 ore: senza, un runner
+    resterebbe acceso a vuoto fino al timeout ogni volta che il calcio
+    finisce prima."""
+    assert live.GIRI_VUOTI_PER_SPEGNERSI > 0
+    # ma non troppo presto: fra un blocco e l'altro c'e' l'intervallo, e
+    # ri-accendersi dipenderebbe di nuovo dal cron
+    assert live.GIRI_VUOTI_PER_SPEGNERSI * live.OGNI_NUCLEO >= 15
+
+
 def test_la_sessione_dura_piu_del_periodo_della_sentinella():
-    """La sovrapposizione e' il modo in cui si assorbe il ritardo del cron
-    (30-40 minuti, misurato): se la sessione fosse piu' corta del periodo,
-    ogni ritardo diventerebbe un buco nella traiettoria."""
+    """Dalla Fase 144 la sessione dura MOLTO piu' del periodo: la sentinella
+    non e' piu' un metronomo ma un accendino, e un solo cron andato a buon
+    fine copre un blocco intero. La disuguaglianza resta la garanzia minima:
+    se la sessione fosse piu' corta del periodo, ogni ritardo del cron
+    (30-40 minuti, misurato) diventerebbe un buco."""
     import re
     import yaml
 

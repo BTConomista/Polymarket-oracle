@@ -84,9 +84,25 @@ DEST = ROOT / "data" / "smarkets_live"
 # due sessioni consecutive si sovrappongono invece di lasciare un buco quando
 # il cron arriva in ritardo. Duplicare qualche giro costa niente (file diversi,
 # istanti diversi); un buco nella traiettoria in-play non si recupera.
-DURATA_MINUTI = 40
+# ⚠️ RI-PENSATO (Fase 144, poche ore dopo). La prima stesura durava 40 minuti
+# e si appoggiava alla sentinella per la continuita': sbagliato due volte.
+# (a) La sentinella e' un cron di GitHub, cioe' la cosa meno affidabile che
+#     abbiamo -- il workflow live e' rimasto ZERO run per mezz'ora con 25
+#     partite in corso, e se n'e' accorto l'utente.
+# (b) Una sessione corta perde le partite che cominciano MENTRE gira.
+# Ora la sessione copre un blocco intero (5 ore, sotto il tetto di 6 di un
+# job) e si spegne da sola quando il calcio finisce: cosi' un solo cron andato
+# a buon fine basta a coprire un pomeriggio, invece di dieci.
+DURATA_MINUTI = 300
 OGNI_NUCLEO = 2       # minuti fra due giri stretti
 OGNI_PIENO = 15       # minuti fra due giri a listino intero
+
+# Dopo quanti giri consecutivi SENZA partite del perimetro ci si spegne.
+# Non zero: fra la fine di un blocco e l'inizio del successivo puo' esserci
+# una pausa, e ri-accendersi dipende di nuovo dal cron. 10 giri di nucleo
+# sono ~20 minuti di silenzio -- abbastanza per non spegnersi durante
+# l'intervallo di una partita, poco per non tenere acceso un runner a vuoto.
+GIRI_VUOTI_PER_SPEGNERSI = 10
 
 # Ogni quanti giri si committa. Il file viene RISCRITTO su disco a ogni giro
 # (costa niente), ma su disco del runner non serve a nulla: quello che conta
@@ -210,7 +226,7 @@ def main(argv=None) -> None:
         }
         return _archivio.scrivi(dest, dati)
 
-    n = 0
+    n, vuoti = 0, 0
     while dt.datetime.now(dt.timezone.utc) < fine:
         adesso = dt.datetime.now(dt.timezone.utc)
         # Il giro pieno ha la precedenza: e' il piu' raro, e farlo slittare
@@ -219,6 +235,28 @@ def main(argv=None) -> None:
         if not pieno and adesso < t_nucleo:
             time.sleep(min(5, (t_nucleo - adesso).total_seconds()))
             continue
+
+        # RI-SCANDAGLIO A OGNI GIRO (Fase 144). Nella prima stesura `vive` era
+        # calcolato una volta all'avvio: una partita che cominciava DURANTE la
+        # sessione non veniva raccolta da quella sessione, e doveva aspettare
+        # il cron successivo -- 30-40 minuti dopo, quando esiste. Con sessioni
+        # da 5 ore sarebbe stato il caso normale, non l'eccezione.
+        # Costa una chiamata di listino per giro, contro le decine dei
+        # prezzi: e' rumore nel conto del tempo.
+        try:
+            vive, _ = scandaglia_live()
+        except Exception as ex:                       # noqa: BLE001
+            print(f"  ⚠ scandaglio fallito ({type(ex).__name__}): "
+                  f"si tiene l'elenco precedente")
+        if not vive:
+            vuoti += 1
+            if vuoti >= GIRI_VUOTI_PER_SPEGNERSI:
+                print(f"  nessuna partita del perimetro da {vuoti} giri: "
+                      f"la sessione si spegne (non e' un errore).")
+                break
+            t_nucleo = prossimo_tick(adesso, t_nucleo, a.ogni_nucleo)
+            continue
+        vuoti = 0
 
         r, inc = un_giro(vive, pieno)
         righe += r
