@@ -46,7 +46,18 @@ on:
         description: 'Raccogli le partite che iniziano entro N ore'
         default: '72'
       lungo_raggio:
-        description: 'Tutto cio che l API espone, solo mercati principali'
+        description: 'Tutto cio che l API espone, a listino pieno'
+        type: boolean
+        default: false
+      # Aggiunto l'08/08/2026 dopo averne avuto bisogno. Il cron orario di
+      # GitHub parte con **30-40 minuti di ritardo** (misurato quel giorno:
+      # 08:54 / 09:49 / 10:45 / 11:37 per i cron delle :07), e non c'era modo
+      # di forzare a mano il regime di CHIUSURA -- finestra stretta e listino
+      # pieno. Un avvio a mano finiva nel ramo generico, che prende i soli 6
+      # mercati di base: metà del listino perduta proprio nell'ora in cui il
+      # prezzo vale di piu' e in cui non si recupera dopo.
+      tutti_i_mercati:
+        description: 'Listino pieno (~110 mercati) anche con una finestra stretta'
         type: boolean
         default: false
 
