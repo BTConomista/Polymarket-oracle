@@ -77,6 +77,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from fetch_smarkets_matches import (  # noqa: E402
     MERCATI_NUCLEO, quote_partita, scandaglia_live, scandaglia_upcoming)
+from fetch_smarkets_outrights import ritmo_corrente as _ritmo   # noqa: E402
 from src.data import smarkets_archive as _archivio   # noqa: E402
 
 DEST = ROOT / "data" / "smarkets_live"
@@ -313,6 +314,11 @@ def main(argv=None) -> None:
             "sessione_fine_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
             "cadenza_minuti": {"nucleo": a.ogni_nucleo, "pieno": a.ogni_pieno},
             "giri": dict(giri),
+            # A che ritmo l'ambiente ci ha lasciato correre (Fase 144-quater).
+            # Se e' molto sopra il minimo, l'API stava rifiutando: e' la
+            # spiegazione di una sessione con pochi giri, e senza questo campo
+            # resterebbe un mistero.
+            "intervallo_fra_richieste_s": round(_ritmo(), 3),
             "partite": sorted({r["partita"] for r in righe}),
             "nota_punteggio": (
                 "il punteggio NON e' un campo dell'API: si ricostruisce da "

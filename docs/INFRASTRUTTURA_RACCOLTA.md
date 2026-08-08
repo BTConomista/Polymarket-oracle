@@ -115,6 +115,44 @@ Costo: raccolta doppia nelle ore di sovrapposizione (file distinti, istanti
 distinti — la deduplica a valle è banale) e un secondo workflow da tenere
 allineato al primo. **Non è ancora stato provato.**
 
+### 3-ter. Il parallelismo ha reso 1,56×, non 5× — e ha scoperto il limite vero
+
+Misurato sul runner (run 31262917393, 25 partite, listino pieno):
+
+```
+prima: 590 s (9'50")   dopo: 378,6 s (6'19")   ->  1,56x, non il 5x previsto
+giri di nucleo:  0     ->  1                    (meglio, ma la cadenza di 2' resta lontana)
+⚠️ 151 mercati persi per HTTP 429 in un solo giro
+```
+
+I 429 sono la spiegazione del guadagno mancato: **fra rifiuti e attese si
+mangia gran parte del teorico**. E il fatto che conta è questo:
+
+| ambiente | ritmo nominale | esito |
+|---|---|---|
+| questo container | 2,9 req/s | **24 su 24 accettate, zero 429** |
+| runner GitHub | 2,9 req/s | **151 mercati persi per 429** |
+
+Stesso ritmo, esito opposto. Le ragioni plausibili sono due e non sappiamo
+distinguerle — l'IP di un runner è **condiviso fra molti utenti di Actions**, e
+il volume sostenuto è diverso (~1.000 chiamate contro 24). Il punto però non è
+quale delle due: **un numero fisso non può essere giusto in entrambi i posti.**
+
+Rimedio (Fase 144-quater): l'intervallo **si tara da solo** — cresce di 1,6×
+a ogni 429, decade dello 0,99 a ogni successo, fra un minimo e un massimo
+dichiarati. Asimmetrico apposta: un 429 è un fatto, un successo è solo
+l'assenza di un rifiuto. Il ritmo raggiunto finisce **scritto nel file**, così
+una sessione con pochi giri non resta un mistero.
+
+⚠️ Nota su come è nato l'equivoco: il valore 0,35 s viene dalla Fase 97 ma
+**non era mai stato provato al suo ritmo nominale**. In sequenza la latenza
+aggiungeva spaziatura da sola (0,55 req/s effettive sul runner contro le 2,9
+nominali): il limite vero dell'API non l'avevamo mai toccato. L'abbiamo
+toccato solo parallelizzando.
+
+**Conseguenza per la decisione infrastrutturale:** il runner non è solo più
+lento, è anche **più rifiutato**. Sono due svantaggi distinti e si sommano.
+
 ## 4-ter. La proposta dell'utente: gemelli + staging + compattazione
 
 Proposta (08/08): *«due o anche più workflow gemelli, salvare tutto in una

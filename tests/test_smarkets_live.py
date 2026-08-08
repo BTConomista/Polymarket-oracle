@@ -359,3 +359,71 @@ def test_la_riga_dichiara_se_e_pre_o_live(monkeypatch):
     ev["fase"] = "live"
     righe, _ = live.un_giro([ev], pieno=False)
     assert righe[0]["fase"] == "live"
+
+
+def test_il_ritmo_si_tara_da_solo_sui_rifiuti():
+    """Un numero fisso non puo' essere giusto in due ambienti diversi.
+
+    Misurato l'08/08 allo STESSO ritmo nominale (2,9 richieste/s): da questo
+    ambiente 24 richieste su 24 accettate, dal runner di GitHub 151 mercati
+    persi per 429. Quindi l'intervallo non e' una costante da indovinare: si
+    alza quando l'API rifiuta e ridiscende piano quando accetta.
+    """
+    import fetch_smarkets_outrights as fso
+
+    partenza = fso.ritmo_corrente()
+    try:
+        fso._rallenta()
+        assert fso.ritmo_corrente() > partenza, "un 429 deve rallentare"
+        for _ in range(500):
+            fso._accelera()
+        assert fso.ritmo_corrente() == pytest.approx(fso._INTERVALLO_MIN), (
+            "dopo tanti successi si deve tornare al minimo")
+        # e non si scende MAI sotto il minimo, per quanti successi arrivino
+        for _ in range(200):
+            fso._accelera()
+        assert fso.ritmo_corrente() >= fso._INTERVALLO_MIN
+        # ne' si sale all'infinito
+        for _ in range(50):
+            fso._rallenta()
+        assert fso.ritmo_corrente() <= fso._INTERVALLO_MAX
+    finally:
+        fso._INTERVALLO[0] = partenza
+
+
+def test_la_risalita_e_piu_lenta_della_discesa():
+    """Asimmetria voluta: un 429 e' un fatto (l'API ha detto no), un successo
+    e' solo l'assenza di un rifiuto. Tornare veloci alla stessa velocita' con
+    cui si rallenta farebbe oscillare il ritmo intorno al limite, prendendo
+    un 429 ogni pochi secondi."""
+    import fetch_smarkets_outrights as fso
+    assert fso._CRESCITA > 1 / fso._DECADIMENTO, (
+        "la risalita e' piu' rapida della discesa: il ritmo oscillerebbe")
+
+
+def test_il_ritmo_raggiunto_finisce_nel_file(monkeypatch, tmp_path):
+    """Una sessione con pochi giri e' un mistero, se non si sa che l'API stava
+    rifiutando. Il ritmo e' la diagnosi, e va scritta dove restera'."""
+    monkeypatch.setattr(live, "scandaglia_live", lambda: (_VIVE, 100))
+    monkeypatch.setattr(live, "scandaglia_upcoming", lambda: ([], 0, {}))
+    monkeypatch.setattr(live, "quote_partita",
+                        lambda ev, tutti, mercati_ammessi=None:
+                        ([{"partita": ev["nome"]}], 0))
+    monkeypatch.setattr(live, "DEST", tmp_path)
+    live.main(["--durata-minuti", "0", "--ogni-pieno", "0"])
+
+    from src.data import smarkets_archive as arch
+    d = arch.leggi(sorted(tmp_path.glob("*.gz"))[0])
+    assert d["intervallo_fra_richieste_s"] > 0
+
+
+def test_i_workflow_non_bufferizzano_lo_stdout():
+    """Un log che non dice QUANDO non serve a diagnosi: senza
+    PYTHONUNBUFFERED tutte le righe escono con lo stesso istante e la durata
+    di un giro si puo' misurare solo a posteriori dal file (successo 08/08)."""
+    import yaml
+    radice = Path(__file__).resolve().parents[1]
+    for nome in ("smarkets-live.yml", "smarkets-prematch.yml"):
+        wf = yaml.safe_load((radice / ".github" / "workflows" / nome).read_text())
+        job = wf["jobs"][list(wf["jobs"])[0]]
+        assert (job.get("env") or {}).get("PYTHONUNBUFFERED") == "1", nome

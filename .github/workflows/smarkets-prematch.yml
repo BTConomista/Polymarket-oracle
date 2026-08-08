@@ -99,7 +99,16 @@ jobs:
     # e' 6 ore, e sei ore di runner appeso bloccherebbero anche tutte le corse
     # orarie di chiusura che si accodano dietro la stessa `concurrency`.
     timeout-minutes: 100
+    env:
+      # Senza questo lo stdout di Python esce tutto in blocco alla
+      # fine e i timestamp del log di Actions sono inutilizzabili: la
+      # durata di un giro si e' potuta misurare solo a posteriori dal
+      # file (08/08). Un log che non dice QUANDO non serve a diagnosi.
+      PYTHONUNBUFFERED: '1'
     steps:
+      # Senza questo lo stdout di Python esce tutto in blocco alla fine, e i
+      # timestamp del log di Actions diventano inutilizzabili: la durata di un
+      # giro si e' potuta misurare solo a posteriori dal file (08/08).
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
