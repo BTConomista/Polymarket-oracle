@@ -31,7 +31,8 @@ on:
         default: '36'
 
 permissions:
-  contents: read
+  contents: write        # la riparazione del lungo raggio committa il file
+  actions: write         # ...e accende la sessione in-play se si sta giocando
 
 # Nessuna corsa: e' un controllo di sola lettura, due esecuzioni insieme non
 # si danno fastidio. E soprattutto NON deve poter essere cancellato da un
@@ -40,14 +41,37 @@ permissions:
 jobs:
   controlla:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Ci sono buchi nella raccolta?
+      - name: Ci sono buchi? E se si', si rimettono in piedi
+        # `--ripara` non si limita a segnalare: rifa' il giro di lungo raggio
+        # (le partite lontane sono ancora esposte) e accende una sessione
+        # in-play se si sta ancora giocando. Poi RI-CONTROLLA, ed e' rosso solo
+        # su cio' che resta -- una riparazione che non si verifica e' una
+        # speranza, e un guasto cronico resterebbe verde per sempre.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python scripts/controlla_raccolta.py \
+          python scripts/controlla_raccolta.py --ripara \
             --ore "${{ github.event.inputs.ore || 36 }}"
+
+      - name: Salva cio' che la riparazione ha raccolto
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain data/)" ]; then
+            echo "niente da committare"; exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "Riparazione raccolta $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1

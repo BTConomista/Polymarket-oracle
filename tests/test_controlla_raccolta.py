@@ -198,3 +198,105 @@ def test_il_workflow_del_guardiano_gira_piu_di_una_volta_al_giorno():
     assert len(ore.split(",")) >= 3
     # e non deve avere un concurrency group: il guardiano non va cancellato
     assert "concurrency" not in wf
+
+
+# ---------------------------------------------------------------------------
+# LA RIPARAZIONE (Fase 144-quinquies)
+# Osservazione dell'utente: «un cane da guardia che si limita ad avvertirmi mi
+# sposta il lavoro addosso invece di toglierlo». Giusto — ma solo per cio' che
+# si PUO' riparare, e la differenza va tenuta netta.
+# ---------------------------------------------------------------------------
+
+def test_il_lungo_raggio_stantio_e_dichiarato_RIPARABILE(archivio):
+    """Le partite lontane sono ancora esposte: il dato e' li' da riprendere."""
+    pre, live = archivio
+    kick = _archivio_sano(pre, live)
+    for f in arch.snapshots(pre):
+        if arch.leggi(f).get("entro_ore") == 0:
+            f.unlink()
+    _scrivi(pre, ADESSO - dt.timedelta(hours=30),
+            {"entro_ore": 0, "righe": [_riga("A vs B", kick)]})
+    r = cr.controlla(adesso=ADESSO)
+    assert "lungo_raggio" in r["riparabili"]
+
+
+def test_una_chiusura_persa_NON_e_riparabile(archivio):
+    """La distinzione che conta. La partita e' finita: quel prezzo non esiste
+    piu' da nessuna parte, e mettere «riparabile» qui sarebbe una bugia che
+    manderebbe il sistema a rincorrere un dato inesistente — e, peggio, a
+    dichiararsi a posto dopo averlo «riparato»."""
+    pre, live = archivio
+    kick = ADESSO - dt.timedelta(hours=4)
+    _scrivi(pre, ADESSO - dt.timedelta(hours=24),
+            {"entro_ore": 0, "righe": [_riga("A vs B", kick)]})
+    _scrivi(live, kick, {"partite": ["A vs B"], "righe": []})
+    r = cr.controlla(adesso=ADESSO)
+    assert any(p.startswith("B)") for p in r["problemi"])
+    assert "chiusura" not in " ".join(r["riparabili"])
+    assert r["riparabili"] == [] or r["riparabili"] == ["lungo_raggio"]
+
+
+def test_l_in_play_e_riparabile_solo_se_si_gioca_ancora(monkeypatch):
+    """Accendere una sessione per partite finite non recupera niente: sarebbe
+    un runner acceso a vuoto e un «riparato» falso nel rapporto."""
+    import fetch_smarkets_matches as fsm
+    monkeypatch.setattr(fsm, "scandaglia_live", lambda: ([], 40))
+    fatto = cr.ripara({"in_play"})
+    assert any("NON riparabile" in x for x in fatto)
+    assert any("non si sta giocando" in x for x in fatto)
+
+
+def test_se_si_gioca_ancora_la_sessione_si_accende(monkeypatch):
+    import fetch_smarkets_matches as fsm
+    monkeypatch.setattr(fsm, "scandaglia_live",
+                        lambda: ([{"nome": "A vs B"}] * 7, 40))
+    chiamate = []
+    monkeypatch.setattr(cr, "_accendi_workflow",
+                        lambda n: chiamate.append(n) or True)
+    fatto = cr.ripara({"in_play"})
+    assert chiamate == ["smarkets-live.yml"]
+    assert any("7 partite in corso" in x and "accesa" in x for x in fatto)
+
+
+def test_un_dispatch_fallito_e_DETTO_non_taciuto(monkeypatch):
+    """Se il dispatch non passa, dirlo: altrimenti il rapporto direbbe
+    «riparato» e il buco resterebbe, che e' il caso peggiore — la falsa
+    sicurezza al posto del problema."""
+    import fetch_smarkets_matches as fsm
+    monkeypatch.setattr(fsm, "scandaglia_live", lambda: ([{"nome": "x"}], 1))
+    monkeypatch.setattr(cr, "_accendi_workflow", lambda n: False)
+    fatto = cr.ripara({"in_play"})
+    assert any("NON accesa" in x for x in fatto)
+
+
+def test_il_workflow_ri_controlla_dopo_aver_riparato():
+    """IL PUNTO dell'intera riparazione. Senza il ri-controllo, un guasto
+    cronico resterebbe verde per sempre: il guardiano direbbe «ho riparato» a
+    ogni giro senza che niente cambi. Una riparazione che non si verifica e'
+    una speranza, ed e' peggio del problema di partenza perche' aggiunge la
+    falsa sicurezza."""
+    testo = (ROOT / "scripts" / "controlla_raccolta.py").read_text()
+    dopo = testo.split("fatto = ripara(")[1]
+    assert "controlla(ore=a.ore)" in dopo, (
+        "dopo la riparazione non si ri-controlla: il guardiano si fiderebbe "
+        "di se stesso")
+    assert "BUCHI RIMASTI DOPO LA RIPARAZIONE" in dopo
+
+
+def test_il_workflow_del_guardiano_puo_riparare():
+    """Servono i permessi giusti, o la riparazione fallisce in silenzio:
+    scrivere il file del lungo raggio (contents) e accendere la sessione
+    in-play (actions)."""
+    import yaml
+    wf = yaml.safe_load((ROOT / ".github" / "workflows"
+                         / "controlla-raccolta.yml").read_text())
+    assert wf["permissions"]["contents"] == "write"
+    assert wf["permissions"]["actions"] == "write"
+    passi = wf["jobs"]["controlla"]["steps"]
+    controllo = next(s for s in passi if "buchi" in (s.get("name") or "").lower())
+    assert "--ripara" in controllo["run"]
+    assert "GH_TOKEN" in (controllo.get("env") or {})
+    # e cio' che la riparazione raccoglie va committato, o e' stato inutile
+    assert any("git commit" in (s.get("run") or "") for s in passi)
+    # il timeout deve reggere una riparazione (budget 20 min) piu' i controlli
+    assert wf["jobs"]["controlla"]["timeout-minutes"] >= 30

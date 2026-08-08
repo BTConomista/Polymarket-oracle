@@ -139,7 +139,10 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
     prematch = carica(_archivio.ARCHIVIO, da)
     inplay = carica(LIVE, da) if LIVE.exists() else []
 
-    problemi, note = [], []
+    # `problemi` sono stringhe da leggere, `riparabili` sono etichette da
+    # AGIRE. Tenerli separati evita che la riparazione debba interpretare del
+    # testo -- cioe' evita che una modifica al messaggio rompa la riparazione.
+    problemi, note, riparabili = [], [], set()
 
     # --- A. freschezza del lungo raggio -------------------------------------
     lunghi = [d for d in prematch if d.get("entro_ore") == 0]
@@ -148,6 +151,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             f"A) NESSUN giro di lungo raggio negli ultimi {int((adesso-da).total_seconds()//3600)}h: "
             "e' il solo giro che vede le partite lontane, e la sua traiettoria "
             "non si recupera dopo.")
+        riparabili.add("lungo_raggio")
         eta_lungo = None
     else:
         ultimo = max(lunghi, key=lambda d: d["_quando"])
@@ -156,6 +160,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             problemi.append(
                 f"A) l'ultimo giro di lungo raggio ha {eta_lungo:.1f}h "
                 f"(soglia {ORE_LUNGO_RAGGIO}h): {ultimo['_file']}")
+            riparabili.add("lungo_raggio")
 
     # --- B. copertura di chiusura -------------------------------------------
     giocate = partite_giocate(prematch, adesso, ore)
@@ -185,6 +190,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             f"C) in-play su {len(coperte & set(giocate))}/{len(giocate)} "
             f"partite giocate ({quota:.0%}, soglia {QUOTA_INPLAY_MINIMA:.0%}): "
             "la sentinella non sta girando, oppure gira quando non serve.")
+        riparabili.add("in_play")
 
     # --- D. buchi gia' dichiarati nei file ------------------------------------
     recenti = [d for d in prematch if adesso - d["_quando"] <= dt.timedelta(hours=ore)]
@@ -210,7 +216,98 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
         "copertura_inplay": round(quota, 3),
         "problemi": problemi,
         "note": note,
+        # Cosa si puo' rimettere in piedi da soli, e cosa no. Le partite gia'
+        # giocate senza prezzo di chiusura NON sono qui dentro: quel prezzo non
+        # esiste piu', e fingere di ripararlo sarebbe peggio che dichiararlo.
+        "riparabili": sorted(riparabili),
     }
+
+
+def ripara(riparabili: set | list) -> list[str]:
+    """Rimette in piedi cio' che si puo'. Ritorna cosa ha fatto.
+
+    ⚠️ DUE MODI DIVERSI, e la differenza non e' un dettaglio implementativo.
+
+    Il **lungo raggio** si ripara FACENDOLO QUI, in modo sincrono: le partite
+    lontane sono ancora esposte, quindi il dato e' ancora li' da prendere. E
+    farlo qui ha una proprieta' che vale piu' della semplicita': **si puo'
+    verificare subito se ha funzionato**, ri-eseguendo il controllo dopo. Una
+    riparazione che non si puo' verificare e' una speranza.
+
+    L'**in-play** non si puo' fare qui -- durerebbe ore e questo e' un
+    controllo da quindici minuti -- e soprattutto non si puo' recuperare: se
+    la partita e' finita, quel prezzo non esiste piu'. L'unica riparazione
+    sensata e' accendere una sessione **se si sta ancora giocando**, e si fa
+    chiedendo a GitHub di lanciare il workflow. Fatto e non verificabile
+    subito: sara' il controllo dopo a dire se e' servito.
+
+    ⚠️ Cio' che NON e' qui dentro: le partite gia' giocate senza prezzo di
+    chiusura. Quel prezzo non esiste piu' e non c'e' niente da riparare --
+    fingere il contrario sarebbe peggio che dichiararlo.
+    """
+    fatto = []
+
+    if "lungo_raggio" in riparabili:
+        print("\n🔧 riparazione: rifaccio il giro di lungo raggio "
+              "(le partite lontane sono ancora esposte)")
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import fetch_smarkets_matches as fsm
+        try:
+            # budget stretto: questo e' un controllo, non la raccolta ufficiale
+            fsm.main(["--tutte-le-esposte", "--tutti-i-mercati",
+                      "--budget-minuti", "20"])
+            fatto.append("lungo raggio rifatto")
+        except SystemExit as e:
+            # anche una raccolta incompleta ha scritto il suo file: e' meglio
+            # di niente, e il ri-controllo dira' se basta
+            fatto.append(f"lungo raggio rifatto, con riserve ({e})")
+        except Exception as e:                        # noqa: BLE001
+            fatto.append(f"lungo raggio NON riparato ({type(e).__name__}: {e})")
+
+    if "in_play" in riparabili:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from fetch_smarkets_matches import scandaglia_live
+        try:
+            vive, _ = scandaglia_live()
+        except Exception:                             # noqa: BLE001
+            vive = []
+        if not vive:
+            fatto.append("in-play NON riparabile: non si sta giocando "
+                         "(le partite di prima sono finite, quei prezzi non "
+                         "esistono piu')")
+        else:
+            ok = _accendi_workflow("smarkets-live.yml")
+            fatto.append(
+                f"in-play: {len(vive)} partite in corso, sessione "
+                + ("accesa" if ok else "NON accesa (dispatch fallito)"))
+    return fatto
+
+
+def _accendi_workflow(nome: str) -> bool:
+    """Chiede a GitHub di lanciare un workflow. Vero se la richiesta e' passata.
+
+    Usa `gh`, che sui runner c'e' gia'. Il token automatico basta: il
+    `workflow_dispatch` e' una delle due eccezioni alla regola per cui gli
+    eventi generati da GITHUB_TOKEN non creano nuovi run.
+    ⚠️ Se quella regola cambiasse, questa riparazione smetterebbe in silenzio
+    -- ed e' per questo che il controllo successivo ri-misura la copertura
+    invece di fidarsi del fatto che il dispatch sia partito.
+    """
+    import subprocess
+    try:
+        r = subprocess.run(
+            ["gh", "workflow", "run", nome], capture_output=True, text=True,
+            timeout=60, cwd=ROOT)
+        if r.returncode != 0:
+            print(f"   ⚠ dispatch fallito: {r.stderr.strip()[:200]}")
+        return r.returncode == 0
+    except FileNotFoundError:
+        print("   ⚠ `gh` non disponibile qui: la riparazione in-play vale "
+              "solo dentro GitHub Actions")
+        return False
+    except Exception as e:                            # noqa: BLE001
+        print(f"   ⚠ dispatch fallito: {type(e).__name__}: {e}")
+        return False
 
 
 def main(argv=None) -> None:
@@ -218,6 +315,9 @@ def main(argv=None) -> None:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--ore", type=int, default=ORE_FINESTRA)
     ap.add_argument("--json", type=Path, help="scrive il rapporto anche in JSON")
+    ap.add_argument("--ripara", action="store_true",
+                    help="non limitarsi a segnalare: rimetti in piedi cio' "
+                         "che si puo', poi ri-controlla")
     a = ap.parse_args(argv)
 
     r = controlla(ore=a.ore)
@@ -232,12 +332,39 @@ def main(argv=None) -> None:
     if a.json:
         a.json.write_text(json.dumps(r, indent=1, ensure_ascii=False))
 
-    if r["problemi"]:
-        # ROSSO, e con dentro il motivo: la mail di GitHub cita la prima riga
-        # dell'errore, quindi la prima riga deve dire che cosa manca.
+    if not r["problemi"]:
+        print("\n✅ nessun buco: la raccolta sta facendo il suo lavoro.")
+        return
+
+    print("\n⚠️  BUCHI TROVATI:")
+    for x in r["problemi"]:
+        print(f"   {x}")
+
+    if not (a.ripara and r["riparabili"]):
         raise SystemExit("\n⛔ RACCOLTA CON BUCHI:\n" +
-                         "\n".join(f"   {p}" for p in r["problemi"]))
-    print("\n✅ nessun buco: la raccolta sta facendo il suo lavoro.")
+                         "\n".join(f"   {x}" for x in r["problemi"]))
+
+    fatto = ripara(r["riparabili"])
+    print("\n🔧 riparazione:")
+    for x in fatto:
+        print(f"   {x}")
+    if a.json:
+        a.json.write_text(json.dumps({**r, "riparazione": fatto},
+                                     indent=1, ensure_ascii=False))
+
+    # ⚠️ IL RI-CONTROLLO E' IL PUNTO. Una riparazione che non si verifica e'
+    # una speranza: se dichiarassimo "riparato" senza guardare, un guasto
+    # cronico resterebbe verde per sempre -- che e' peggio del problema di
+    # partenza, perche' aggiunge la falsa sicurezza.
+    dopo = controlla(ore=a.ore)
+    if not dopo["problemi"]:
+        print("\n✅ riparato e verificato: il buco non c'e' piu'.")
+        return
+    raise SystemExit(
+        "\n⛔ BUCHI RIMASTI DOPO LA RIPARAZIONE:\n"
+        + "\n".join(f"   {x}" for x in dopo["problemi"])
+        + "\n   (cio' che si poteva rimettere in piedi e' stato tentato: "
+        + "; ".join(fatto) + ")")
 
 
 if __name__ == "__main__":
