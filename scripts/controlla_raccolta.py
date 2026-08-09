@@ -84,6 +84,25 @@ ORE_FINESTRA = 36          # quanto indietro si guarda per le partite giocate
 ORE_CHIUSURA = 3           # «chiusura» = un prezzo entro N ore dal via
 QUOTA_INPLAY_MINIMA = 0.5  # sotto questa frazione di partite coperte, si segnala
 
+# ⚠️ QUANDO UNA CHIUSURA MANCANTE E' RUMORE E QUANDO E' UN GUASTO (Fase 145).
+#
+# Il guardiano e' stato ROSSO 5 volte su 5 da quando esiste, sempre per lo
+# stesso allarme: **1 partita su 44** senza prezzo entro 3h dal via. E' il
+# difetto contro cui avevo messo in guardia scrivendo il guardiano stesso --
+# «un allarme che suona sempre si smette di leggere» -- e l'ho costruito lo
+# stesso.
+#
+# La soglia non e' arbitraria, viene dal comportamento misurato. La corsa di
+# chiusura e' oraria con finestra 2h, e il cron slitta di 30-40 minuti: una
+# partita sfugge quando nessun giro cade nella sua finestra, ed e' un evento
+# raro ma non nullo. **Una mancanza ogni ~40 partite e' la coda normale di
+# quel jitter**; tre o piu' no, quello e' il giro orario che non gira.
+#
+# Sotto soglia resta una NOTA nel rapporto: il dato perso e' dichiarato lo
+# stesso, semplicemente non sveglia nessuno.
+CHIUSURE_PERSE_PER_ALLARME = 3      # in assoluto
+CHIUSURE_PERSE_QUOTA = 0.10         # oppure in frazione, per giornate piccole
+
 
 def _iso(s):
     try:
@@ -177,11 +196,19 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
         if not visto:
             senza_chiusura.append((partita, kickoff.isoformat()))
     if senza_chiusura:
-        problemi.append(
-            f"B) {len(senza_chiusura)}/{len(giocate)} partite giocate nelle "
-            f"ultime {ore}h senza un prezzo entro {ORE_CHIUSURA}h dal via: "
-            + ", ".join(p for p, _ in senza_chiusura[:6])
-            + (" …" if len(senza_chiusura) > 6 else ""))
+        quota_perse = len(senza_chiusura) / max(1, len(giocate))
+        testo = (f"{len(senza_chiusura)}/{len(giocate)} partite giocate nelle "
+                 f"ultime {ore}h senza un prezzo entro {ORE_CHIUSURA}h dal via: "
+                 + ", ".join(p for p, _ in senza_chiusura[:6])
+                 + (" …" if len(senza_chiusura) > 6 else ""))
+        # Sopra soglia e' un guasto (il giro orario non gira); sotto e' la coda
+        # normale del jitter del cron, e resta una nota.
+        if (len(senza_chiusura) >= CHIUSURE_PERSE_PER_ALLARME
+                or quota_perse > CHIUSURE_PERSE_QUOTA):
+            problemi.append("B) " + testo)
+        else:
+            note.append("B) " + testo + "  [sotto soglia: e' la coda normale "
+                        "del ritardo del cron, non un guasto]")
 
     # --- C. copertura in-play ------------------------------------------------
     coperte = set()

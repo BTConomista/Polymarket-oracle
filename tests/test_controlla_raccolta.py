@@ -300,3 +300,61 @@ def test_il_workflow_del_guardiano_puo_riparare():
     assert any("git commit" in (s.get("run") or "") for s in passi)
     # il timeout deve reggere una riparazione (budget 20 min) piu' i controlli
     assert wf["jobs"]["controlla"]["timeout-minutes"] >= 30
+
+
+# ---------------------------------------------------------------------------
+# LA SOGLIA SULLE CHIUSURE PERSE (Fase 145)
+# Il guardiano e' stato rosso 5 volte su 5 per 1 partita su 44. Un rosso
+# permanente maschera il prossimo guasto vero: e' il difetto contro cui avevo
+# messo in guardia scrivendo il guardiano stesso.
+# ---------------------------------------------------------------------------
+
+def _giornata(pre, live, n_partite, n_senza_chiusura):
+    kick = ADESSO - dt.timedelta(hours=3)
+    righe = [_riga(f"A{i} vs B{i}", kick) for i in range(n_partite)]
+    _scrivi(pre, ADESSO - dt.timedelta(hours=10), {"entro_ore": 0, "righe": righe})
+    # la chiusura c'e' per tutte tranne le prime n_senza_chiusura
+    _scrivi(pre, kick - dt.timedelta(hours=1),
+            {"entro_ore": 2, "righe": righe[n_senza_chiusura:]})
+    _scrivi(live, kick, {"partite": [r["partita"] for r in righe], "righe": []})
+
+
+def test_UNA_chiusura_persa_su_quaranta_non_e_un_allarme(archivio):
+    """Il caso vero: 1/44. E' la coda normale del jitter del cron (orario,
+    finestra 2h, slittamento 30-40 min), non il giro che non gira."""
+    pre, live = archivio
+    _giornata(pre, live, 44, 1)
+    r = cr.controlla(adesso=ADESSO)
+    assert not any(p.startswith("B)") for p in r["problemi"]), r["problemi"]
+    assert any(n.startswith("B)") for n in r["note"]), "ma dev'essere DICHIARATA"
+    assert "sotto soglia" in " ".join(r["note"])
+
+
+def test_TRE_chiusure_perse_sono_un_allarme(archivio):
+    """Tre su quaranta e' tre volte la coda attesa: li' il giro orario non
+    sta girando, ed e' il caso per cui il guardiano esiste."""
+    pre, live = archivio
+    _giornata(pre, live, 44, 3)
+    r = cr.controlla(adesso=ADESSO)
+    assert any(p.startswith("B)") for p in r["problemi"]), r["problemi"]
+
+
+def test_su_una_giornata_PICCOLA_conta_la_frazione(archivio):
+    """Due partite su sei sono il 33%: in assoluto sono poche, ma e' un terzo
+    della giornata. La soglia assoluta da sola lascerebbe passare il guasto
+    nei giorni di calendario magro."""
+    pre, live = archivio
+    _giornata(pre, live, 6, 2)
+    r = cr.controlla(adesso=ADESSO)
+    assert any(p.startswith("B)") for p in r["problemi"]), r["problemi"]
+
+
+def test_la_soglia_non_nasconde_il_dato(archivio):
+    """Tollerare non vuol dire dimenticare: la partita persa resta scritta nel
+    rapporto anche quando non suona (R6 -- un buco dichiarato e' innocuo, uno
+    silenzioso no)."""
+    pre, live = archivio
+    _giornata(pre, live, 44, 1)
+    r = cr.controlla(adesso=ADESSO)
+    assert len(r["senza_chiusura"]) == 1
+    assert r["senza_chiusura"][0][0] == "A0 vs B0"
