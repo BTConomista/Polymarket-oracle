@@ -174,14 +174,38 @@ Due correzioni, entrambe misurate.
 `git` non dimentica: committare e poi cancellare lascia la storia. Misurato
 sui file veri dell'08/08 (un giro pieno su 25 partite = **1,1 MB compressi**):
 
+⚠️ **RETTIFICA (08/08, misurato sui file veri).** La prima stesura diceva
+**8,4 GB a stagione** con tre gemelli. **Sbagliato di nove volte**, e l'errore
+era di metodo: avevo moltiplicato il peso di un giro *isolato* per il numero di
+giri. Ma il file è compresso **nel suo insieme**, e giri successivi sulle
+stesse 25 partite sono quasi identici fra loro: gzip li toglie quasi del tutto.
+
+I numeri veri, dalla sessione da 5 ore del cron (20 giri pieni + 120 di nucleo,
+85.456 righe, **2,2 MB compressi**) e da tre sessioni realmente simultanee:
+
 ```
-una giornata piena, 1 gemello: 40 giri pieni + 120 di nucleo ≈  19 MB
-                   3 gemelli:                                ≈  57 MB
-       x ~150 giornate di calcio in una stagione:            ≈ 8,4 GB
+1 gemello, 1 giornata:  2,2 MB   ->  0,32 GB grezzi a stagione (~150 giornate)
+3 gemelli, 1 giornata:  6,5 MB   ->  0,95 GB grezzi a stagione
 ```
 
-Contro un limite consigliato di **1 GB** per repo (duro: 5 GB). Lo svuotamento
-periodico **non svuoterebbe niente**.
+E **la compattazione a corse misurata su tre gemelli veri** (stesse 25 partite,
+stessa finestra):
+
+```
+grezzi separati:  917 + 1.353 + 1.220 = 3.490 KB   (139.752 righe)
+compattato:                               862 KB   ( 56.816 corse)
+riduzione 4,0x  ->  tre gemelli compattati costano 0,64x UN gemello grezzo
+```
+
+Cioè: **compattare tre gemelli costa meno che tenere un gemello solo senza
+compattare**, e il peso permanente nel repo scende a ~**0,20 GB a stagione**.
+
+**Quindi l'argomento contro il grezzo nel repo NON è più «non ci sta».** È più
+debole e va detto per quello che è: 0,95 GB a stagione *che non si possono più
+togliere* (git conserva la storia anche dopo una cancellazione), per un dato il
+cui valore **scade in pochi giorni** — appena la compattazione l'ha assorbito.
+Gli artefatti costano zero e spariscono da soli; il grezzo in git è un impegno
+permanente per un bene temporaneo. Resta una scelta, non un divieto.
 
 Il posto giusto sono gli **artefatti di Actions**: gratis sui repo pubblici,
 scadenza configurabile, fuori dalla storia di git. La compattazione li scarica,
