@@ -1,0 +1,79 @@
+name: Gemello 4 — raccolta IN-PLAY (prova Fase 145)
+
+# UNO DEI QUATTRO GEMELLI. Il corpo e' identico agli altri tre: cambiano solo
+# il numero, il minuto del cron e il gruppo di concorrenza. Se modifichi questo
+# file, modifica gli altri tre -- c'e' un test che pretende che restino uguali
+# (`test_i_quattro_gemelli_sono_identici`).
+#
+# ⚠️ NON e' questo file a decidere se il gemello 4 lavora oggi: lo decide
+# `scripts/gemelli_prova.py`, che porta il calendario della prova. Il workflow
+# gira sempre; lo script esce in dieci secondi nei giorni in cui questo gemello
+# non e' previsto. Cosi' il livello (1, 2, 3 o 4 gemelli) si cambia in un file
+# solo, e nessuno deve ricordarsi niente ogni mattina.
+#
+# COSTO: zero, il repo e' pubblico.
+# SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
+
+on:
+  schedule:
+    # Sfalsato di 15 minuti esatti dagli altri (60/4): non serve alla continuita' (le
+    # sessioni durano 5 ore e si sovrappongono comunque) ma evita quattro
+    # listini nello stesso secondo, e mette i quattro gemelli in code diverse
+    # se GitHub e' sotto carico.
+    - cron: '48 * * * *'
+  workflow_dispatch:
+    inputs:
+      durata_minuti:
+        description: 'Quanto resta acceso il ciclo'
+        default: '300'
+
+permissions:
+  contents: write
+
+concurrency:
+  # UN GRUPPO PER GEMELLO. Serve a due cose: che le sentinelle ridondanti dello
+  # STESSO gemello si cancellino mentre la sua sessione gira (senza, se ne
+  # accenderebbero dieci), e che i gemelli NON si blocchino a vicenda -- se
+  # condividessero il gruppo, quattro gemelli diventerebbero uno in fila.
+  group: gemello-4
+  cancel-in-progress: false
+
+jobs:
+  raccogli:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Raccogli (gemello 4)
+        run: |
+          python scripts/fetch_smarkets_live.py \
+            --gemello 4 \
+            --durata-minuti "${{ github.event.inputs.durata_minuti || 300 }}"
+
+      - name: Salva la sessione (se c'e' qualcosa da salvare)
+        # Anche se il passo prima e' fallito: lo script riscrive il file ogni
+        # cinque giri apposta, e senza questo `if` un errore all'ultimo minuto
+        # butterebbe cinque ore di raccolta (lezione della Fase 141).
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain data/smarkets_live/)" ]; then
+            echo "niente da committare (nessuna partita, o gemello non previsto oggi)"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/smarkets_live/
+          git commit -m "Gemello 4: sessione in-play $(date -u +'%Y-%m-%d %H:%M UTC')"
+          # con quattro gemelli la corsa sul push e' la norma, non l'eccezione:
+          # cinque tentativi invece di tre, e attese crescenti
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 5 tentativi"; exit 1

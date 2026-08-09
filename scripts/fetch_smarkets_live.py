@@ -78,6 +78,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from fetch_smarkets_matches import (  # noqa: E402
     MERCATI_NUCLEO, quote_partita, scandaglia_live, scandaglia_upcoming)
 from fetch_smarkets_outrights import ritmo_corrente as _ritmo   # noqa: E402
+import gemelli_prova as _prova   # noqa: E402
 from src.data import smarkets_archive as _archivio   # noqa: E402
 
 DEST = ROOT / "data" / "smarkets_live"
@@ -200,6 +201,11 @@ def da_seguire(vive: list[dict], future: list[dict],
 # secondo) senza sfondarlo: oltre, aspetterebbero solo il limitatore.
 LAVORATORI = 6
 
+# Quale gemello sta girando: serve dentro `un_giro`, che non ha accesso agli
+# argomenti. Una lista di un elemento invece di una variabile globale semplice
+# perche' e' l'unico modo pulito di scriverla da `main` e leggerla da li'.
+GEMELLO = [1]
+
 
 def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
     """Un passaggio su tutte le partite in corso. Ritorna (righe, incomplete).
@@ -239,6 +245,7 @@ def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
             # uno che lo conosce. Senza questo campo la distinzione andrebbe
             # ri-dedotta ogni volta dall'orario, cioe' si perderebbe.
             x["fase"] = ev.get("fase", "live")
+            x["gemello"] = GEMELLO[0]
         return r, inc
 
     # Le partite in parallelo, le CHIAMATE comunque a ritmo limitato: e' la
@@ -261,9 +268,22 @@ def main(argv=None) -> None:
                     help="da quanti minuti PRIMA del via si segue una partita")
     ap.add_argument("--orizzonte-attesa", type=int, default=ORIZZONTE_ATTESA,
                     help="non ci si spegne se il prossimo via e' entro N minuti")
+    ap.add_argument("--gemello", type=int, default=1,
+                    help="quale gemello sono (1-4). Esce subito se il "
+                         "calendario della prova non mi prevede oggi")
     ap.add_argument("--dry-run", action="store_true",
                     help="elenca le partite da seguire e esce")
     a = ap.parse_args(argv)
+
+    # IL CALENDARIO DELLA PROVA (Fase 145). I quattro gemelli sono sempre
+    # accesi come workflow; e' qui che si decide chi lavora oggi. Cosi' il
+    # livello si cambia senza toccare niente ogni giorno -- che sarebbe una
+    # cosa da ricordarsi, cioe' quella che la Fase 144 ha deciso di togliere.
+    print(_prova.descrizione())
+    if not _prova.attivo_oggi(a.gemello):
+        print(f"gemello {a.gemello}: oggi non sono previsto, esco senza "
+              f"raccogliere (non e' un errore).")
+        return
 
     vive, totale = scandaglia_live()
     future, _, _ = scandaglia_upcoming()
@@ -293,10 +313,13 @@ def main(argv=None) -> None:
         print("\n--dry-run: nessuna quota richiesta, nessun file scritto.")
         return
 
+    GEMELLO[0] = a.gemello
     avvio = dt.datetime.now(dt.timezone.utc)
     fine = avvio + dt.timedelta(minutes=a.durata_minuti)
     DEST.mkdir(parents=True, exist_ok=True)
-    dest = DEST / f"{avvio.strftime('%Y-%m-%dT%H-%M-%S')}.json"
+    # Il numero di gemello NEL NOME: due gemelli possono partire nello stesso
+    # secondo, e senza distinzione uno dei due file sparirebbe in silenzio.
+    dest = DEST / f"{avvio.strftime('%Y-%m-%dT%H-%M-%S')}-g{a.gemello}.json"
 
     righe, incomplete, giri = [], [], collections.Counter()
     # `future` e' gia' letto sopra: il ciclo lo rilegge ogni tanto, non subito.
@@ -310,6 +333,12 @@ def main(argv=None) -> None:
                     "confrontabili con quelli pre-partita di "
                     "data/smarkets_matches/ (li' il prezzo non conosce il "
                     "punteggio, qui si').",
+            # CHI ha raccolto: senza, con quattro gemelli la copertura si
+            # misura solo in aggregato -- e se uno muore gli altri lo coprono
+            # e non lo sappiamo. E' il numero per cui la prova si fa.
+            "gemello": a.gemello,
+            "gemelli_previsti_oggi": _prova.gemelli_previsti(),
+            "giorno_di_prova": _prova.giorno_di_prova(),
             "sessione_avvio_utc": avvio.isoformat(),
             "sessione_fine_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
             "cadenza_minuti": {"nucleo": a.ogni_nucleo, "pieno": a.ogni_pieno},

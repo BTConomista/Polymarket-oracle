@@ -71,7 +71,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+sys.path.insert(0, str(ROOT / "scripts"))
+
 from src.data import smarkets_archive as _archivio   # noqa: E402
+import gemelli_prova as _prova   # noqa: E402
 
 LIVE = ROOT / "data" / "smarkets_live"
 
@@ -205,8 +208,41 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             note.append(f"D) {d['_file']}: fuori perimetro "
                         f"{list(d['fuori_perimetro'])[:4]}")
 
+    # --- E. LA MISURA PER GEMELLO (Fase 145) --------------------------------
+    # Il guardiano misura la copertura AGGREGATA, ed e' giusto per il suo
+    # mestiere. Ma con quattro gemelli, se uno muore gli altri tre coprono, la
+    # copertura resta 100% e non lo sappiamo -- mentre «quanto spesso fallisce
+    # un singolo gemello» e' esattamente il numero per cui la prova si fa.
+    # Qui non si SEGNALA niente: si CONTA, e il conto finisce nel rapporto.
+    gemelli: dict = {}
+    for d in inplay:
+        g = d.get("gemello")
+        if g is None:
+            continue                       # file pre-Fase 145
+        s = gemelli.setdefault(str(g), {"sessioni": 0, "giri": 0, "righe": 0,
+                                        "partite": set(), "giri_incompleti": 0,
+                                        "mercati_persi": 0, "ritmo_max": 0.0})
+        s["sessioni"] += 1
+        s["giri"] += sum((d.get("giri") or {}).values())
+        s["righe"] += len(d.get("righe") or [])
+        s["partite"].update(d.get("partite") or [])
+        inc = d.get("giri_incompleti") or []
+        s["giri_incompleti"] += len(inc)
+        s["mercati_persi"] += sum(x.get("mercati_persi", 0) for x in inc
+                                  if isinstance(x.get("mercati_persi"), int))
+        s["ritmo_max"] = max(s["ritmo_max"],
+                             d.get("intervallo_fra_richieste_s") or 0.0)
+    for s in gemelli.values():
+        s["partite"] = len(s["partite"])
+
     return {
         "adesso_utc": adesso.isoformat(),
+        # per gemello, e il livello previsto oggi: senza il secondo, «il
+        # gemello 3 ha zero sessioni» e' indistinguibile fra «e' morto» e
+        # «oggi non era previsto dal calendario».
+        "per_gemello": gemelli,
+        "gemelli_previsti_oggi": _prova.gemelli_previsti(adesso.date()),
+        "giorno_di_prova": _prova.giorno_di_prova(adesso.date()),
         "finestra_ore": ore,
         "file_prematch": len(prematch),
         "file_inplay": len(inplay),
@@ -327,6 +363,13 @@ def main(argv=None) -> None:
           + (f"{r['eta_lungo_raggio_ore']}h fa" if r["eta_lungo_raggio_ore"] is not None else "MAI"))
     print(f"  partite giocate in finestra: {r['partite_giocate_in_finestra']} | "
           f"copertura in-play: {r['copertura_inplay']:.0%}")
+    if r["per_gemello"]:
+        print(f"  {_prova.descrizione()}")
+        print(f"  {'gemello':>8s} {'sessioni':>9s} {'giri':>6s} {'partite':>8s} "
+              f"{'mercati persi':>14s} {'ritmo max':>10s}")
+        for g, s in sorted(r["per_gemello"].items()):
+            print(f"  {g:>8s} {s['sessioni']:9d} {s['giri']:6d} {s['partite']:8d} "
+                  f"{s['mercati_persi']:14d} {s['ritmo_max']:10.2f}")
     for n in r["note"]:
         print(f"  · {n}")
     if a.json:
