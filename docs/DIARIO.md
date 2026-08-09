@@ -348,6 +348,7 @@ correzioni.*
 - [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
 - [Fase 139-octies — «Le colonne ci sono» non è «si uniscono»](#fase-139-octies--le-colonne-ci-sono-non-è-si-uniscono)
 - [Fase 139-novies — La domanda era un'altra: non «si toccano» ma «so rispondere»](#fase-139-novies--la-domanda-era-unaltra-non-si-toccano-ma-so-rispondere)
+- [Fase 139-decies — Il club è la chiave, non la partita: tre identità sbagliate](#fase-139-decies--il-club-è-la-chiave-non-la-partita-tre-identità-sbagliate)
 - [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
 - [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
 - [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
@@ -17050,6 +17051,127 @@ pubblicato il giorno prima, in un punto dove avevo già enunciato la regola
 giusta e non l'avevo applicata. **Enunciare un criterio non è applicarlo**, e il
 posto dove il divario si vede è il test, purché il test dica un numero e non
 `> 0`.
+
+---
+
+## Fase 139-decies — Il club è la chiave, non la partita: tre identità sbagliate
+
+**Obiettivo.** Continuare sull'incrocio cercando **punti carenti** (richiesta
+utente). Non «verificare che funzioni» — quello era la 139-octies/novies — ma
+andare a cercare dove **risponde e sbaglia**, che è la categoria che non dà
+segnale.
+
+**Ragionamento.** Il pannello della fase precedente butta via la colonna
+`Squadra` delle misure e si fida del `Lato`. Non l'avevo mai verificato: se le
+due fonti dissentissero sul lato, ogni riga finirebbe sulla squadra sbagliata e
+i numeri resterebbero plausibili. È il primo posto dove guardare, e il modo di
+guardarci è un'informazione **indipendente**: non il nome della squadra (che le
+due fonti scrivono diversamente — «Cadice» contro «Cádiz CF»), ma il **club_id**.
+
+### Il controllo, e le tre cose che ha trovato
+
+```
+statistiche di SQUADRA   club_id della misura = club_id del lato   2.304 / 2.304  ✅
+statistiche INDIVIDUALI  club del giocatore   = club del lato      9.309 / 9.312  ⚠️ 3
+```
+
+Tre righe su 9.312 — poche, ma sono **certezze sbagliate** (R6): un giocatore
+attribuito all'altra squadra non è un buco, è un dato che a valle nessuno
+smentisce.
+
+| caso | riga di statistica | `player_id` assegnato | chi è davvero |
+|---|---|---|---|
+| Navalcarnero-Getafe | `Juanmi` (Casa, Navalcarnero) | 126737 | `Juanmi` del **Getafe** |
+| Navalcarnero-Getafe | `Perez Jose` (Ospite, Getafe) | 1283890 | `Jaime Pérez` del **Navalcarnero** |
+| Ourense-… | `Sanchez Alberto` (Casa) | 1312698 | `Selton Sánchez`, club 621 |
+
+Nel primo caso lo **stesso** `player_id` finiva sulle righe di **entrambe** le
+squadre: in quella partita ci sono due Juanmi — `Juanmi` (Getafe, 126737) e
+`Juanmi Heredero` (Navalcarnero, 285973).
+
+**La causa.** In `aggancia_coppe.collega_foglio` la chiave era
+`(Data, Casa, Ospite)` — la **partita** — quindi i candidati venivano da
+**entrambe le rose**, e il dizionario per nome collideva sugli omonimi. È
+esattamente la lezione «il lato è la chiave» applicata male un livello più
+sotto: l'avevo scritta per il pannello e non per gli agganci.
+
+### 📐 Il modello in dettaglio
+
+```
+PRIMA   candidati(riga) = { giocatori con player_id della PARTITA }
+        risolvi(n)      = anagrafica[(partita, n)]                     ← collide sugli omonimi
+                        | l'unico t ∈ candidati con _uguali(tok(n), t)
+
+DOPO    club(riga) = cid(Squadra)                     se il foglio ha `Squadra`
+                   = cid(lato)                        altrimenti (eventi: solo `Lato`)
+                   = cid(lato OPPOSTO)                se `Tipo evento` = Autogol
+        candidati(riga) = { giocatori del (PARTITA, CLUB) }
+        + guardia: un `player_id` rivendicato da DUE nomi nella stessa partita
+                   viene tolto a entrambi                              (solo fogli 1-riga-per-persona)
+        + ripiego: dove il club non si risolve (Coupe de France) si torna alla
+                   ricerca larga, che resta subordinata all'unicità
+```
+
+**Le due trappole pagate mentre lo scrivevo**, entrambe trovate misurando e non
+ragionando:
+
+1. **`eventi.csv` non ha la colonna `Squadra`** — ha solo `Lato`. Prendendo il
+   club dal solo `Squadra`, gli eventi cadevano nel ripiego e le righe
+   agganciate crollavano da **3.639 a 561** sulla sola Copa del Rey. Il lato
+   basta: la partita dice chi gioca in casa.
+2. ⭐ **L'autogol va al contrario.** Dopo la correzione mancavano ancora 36
+   righe, e **35 erano `Autogol`**: diretta.it li registra sul lato che ne
+   **beneficia**, ma il giocatore è dell'altra squadra — la stessa convenzione
+   che la Fase 138 aveva già misurato sulla fonte automatica (invertirla faceva
+   scendere la resa dal 98,5% all'89,7%). Cercati nella rosa sbagliata, non si
+   trovavano.
+
+La 36ª riga persa **era giusto perderla**: `Mendy A.`, gol di Montpellier in
+Coupe de France, era agganciato a `891998` — un giocatore del **Nizza**. Il
+Montpellier in quella partita non ha nemmeno un giocatore agganciato: non c'era
+niente di corretto da trovare.
+
+### Il quarto difetto, e l'ha trovato un invariante diverso
+
+Un `player_id` non può servire **due persone**. Nella Copa del Rey
+`Perez Andoni` e `Perez Alex` del **Club Portugalete** finivano entrambi su
+**634542** — stessa squadra, quindi il vincolo di club non poteva vederlo. È la
+regola di sempre (dove non c'è un vincitore unico non vince nessuno) applicata a
+un punto dove mancava: ogni riga si risolveva per conto suo. Ora la coppia
+contesa resta **vuota**, ed è **1 caso su sei coppe**.
+
+### Il risultato
+
+| foglio | prima | dopo |
+|---|--:|--:|
+| statistiche individuali, Copa del Rey | 1.353 | **1.357** |
+| statistiche individuali, EFL Cup | 2.818 | **2.830** |
+| statistiche individuali, FA Cup | 1.957 | **1.960** |
+| statistiche individuali, DFB-Pokal | 1.975 | **1.976** |
+| eventi (sei coppe) | 12.906 | **12.906** |
+| completezza complessiva | 42.202 | **42.219** |
+
+E gli invarianti, che prima non erano mai stati misurati:
+
+```
+giocatore nel club del suo lato        9.332 / 9.332   ✅
+eventi coerenti (autogol invertito)   11.990 / 11.990  ✅
+un player_id = una persona per match       0 violazioni ✅
+righe duplicate nel pannello               0            ✅
+```
+
+⚠️ **Un fatto che sembra un difetto e non lo è**: 15 coppie (partita, giocatore)
+compaiono su **entrambi** i lati negli eventi. Sono **15 su 15** giocatori con un
+autogol: l'autogol sta sul lato avversario, il cartellino o la sostituzione sul
+proprio. È la convenzione, non un errore — e va scritta (R4), altrimenti la
+sessione dopo la «corregge».
+
+**Lezione.** *Una regola enunciata in un posto non è applicata negli altri.* «Il
+lato è la chiave» era scritto nel docstring del pannello, con la sua verifica a
+746/746 — e un livello più sotto, negli agganci, i candidati si cercavano ancora
+nella partita intera. Il modo di accorgersene non è rileggere il codice: è
+**incrociare due informazioni che devono coincidere** (il club del giocatore e
+il club del suo lato) e guardare le righe che non tornano.
 
 ---
 

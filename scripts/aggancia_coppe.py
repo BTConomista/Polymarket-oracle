@@ -243,14 +243,27 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     def chiave(d):
         return list(zip(d.Data, d.Casa, d.Ospite))
 
+    # ⭐ LA CHIAVE E' (partita, CLUB), non la partita. Cercare i candidati nella
+    # partita intera li prende da ENTRAMBE le rose, e in una partita ci sono
+    # omonimi: Navalcarnero-Getafe del 03/12/2025 ha «Juanmi» (Getafe, 126737) e
+    # «Juanmi Heredero» (Navalcarnero, 285973). Con la chiave per partita il
+    # dizionario per nome collideva e **lo stesso `player_id` finiva sulle due
+    # righe di squadre diverse**; altre due righe prendevano un giocatore
+    # dell'altra squadra. Tre righe sbagliate su 9.312 — poche, ma sono
+    # «certezze sbagliate» (R6), non buchi: a valle nessuno le vede.
+    # Trovate confrontando il club del giocatore con il club del suo lato.
+    def chiave_club(d, club_col):
+        return list(zip(d.Data, d.Casa, d.Ospite, club_col))
+
+    kg = chiave_club(g, g.club_id)
     anagrafica = {(k, n): p for k, n, p in
-                  zip(chiave(g), g.Giocatore, g.player_id) if pd.notna(p)}
+                  zip(kg, g.Giocatore, g.player_id) if pd.notna(p)}
     # ⚠️ `stat_giocatori` scrive i nomi per INTERO («Dumfries Denzel») mentre
     # `formazioni` li abbrevia («Dumfries D.»): la ricerca per stringa esatta
     # trovava 30 righe su 1.307. Per quel foglio serve la regola di confronto,
     # non l'uguaglianza — e i nomi interi sono anzi il caso FACILE.
     per_partita = {}
-    for k, n, pid in zip(chiave(g), g.Giocatore, g.player_id):
+    for k, n, pid in zip(kg, g.Giocatore, g.player_id):
         if pd.notna(pid):
             per_partita.setdefault(k, []).append((_tok(n), pid))
     # `partite` nasce da un merge LEFT su `P`, quindi le righe sono allineate:
@@ -259,7 +272,8 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
     mappa_gid_id = {k: v for k, v in zip(P["ID partita"], partite.game_id)
                     if pd.notna(v)}
 
-    def collega_foglio(nome_file: str, colonna_nome: str) -> pd.DataFrame:
+    def collega_foglio(nome_file: str, colonna_nome: str,
+                       una_riga_per_persona: bool = False) -> pd.DataFrame:
         d = pd.read_csv(cartella / nome_file)
         d["competizione"] = coppa
         # ⚠️ Il foglio delle statistiche arriva da un SECONDO consegnato, e la
@@ -276,17 +290,73 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
                     d[col] = [sin.get(str(x), x) for x in d[col]]
         d["game_id"] = pd.Series([mappa_gid.get(k) for k in chiave(d)],
                                  index=d.index).astype("Int64")
-        def risolvi(k, n):
-            diretto = anagrafica.get((k, n))
-            if diretto is not None:
-                return diretto
+
+        # ⚠️ Il club della riga, e qui c'e' la trappola: `stat_giocatori` ha la
+        # colonna `Squadra`, **`eventi` no** — ha solo `Lato`. Prendendolo dal
+        # solo `Squadra` gli eventi restavano senza club e ripiegavano sulla
+        # ricerca larga: 3.639 righe agganciate diventavano 561. Il lato basta,
+        # perche' la partita dice chi gioca in casa e chi fuori.
+        if "Squadra" in d.columns:
+            club_riga = [cid(x) for x in d["Squadra"]]
+        else:
+            # ⭐ E l'AUTOGOL va al contrario. diretta.it registra l'autogol sul
+            # lato che ne **beneficia** — e' la stessa convenzione che la Fase
+            # 138 aveva gia' misurato sulla fonte automatica (invertirla faceva
+            # crollare la resa dal 98,5% all'89,7%) — ma il giocatore e'
+            # dell'altra squadra. Senza questa riga i 35 autogol delle sei
+            # coppe restano senza `player_id`: cercati nella rosa sbagliata.
+            autogol = (d["Tipo evento"].astype(str)
+                       .str.contains("utogol", na=False))
+            club_riga = [cid((o if a else c) if l == "Casa" else (c if a else o))
+                         for l, c, o, a in
+                         zip(d["Lato"], d["Casa"], d["Ospite"], autogol)]
+
+        def risolvi(k_club, k_part, n):
+            if k_club[3] is not None:
+                diretto = anagrafica.get((k_club, n))
+                if diretto is not None:
+                    return diretto
+                t = _tok(n)
+                hit = [pid for tb, pid in per_partita.get(k_club, [])
+                       if _uguali(t, tb)]
+                if len(hit) == 1:
+                    return hit[0]
+                return None
+            # ripiego senza club (Coupe de France: i club non sono nel
+            # registro): si cerca in tutta la partita, per nome esatto e poi
+            # per regola, e **solo** se il risultato e' unico.
+            for kk, righe in per_partita.items():
+                if kk[:3] == k_part and (kk, n) in anagrafica:
+                    return anagrafica[(kk, n)]
             t = _tok(n)
-            hit = [pid for tb, pid in per_partita.get(k, []) if _uguali(t, tb)]
+            hit = [pid for kk, righe in per_partita.items() if kk[:3] == k_part
+                   for tb, pid in righe if _uguali(t, tb)]
             return hit[0] if len(hit) == 1 else None
 
         d["player_id"] = pd.Series(
-            [risolvi(k, n) for k, n in zip(chiave(d), d[colonna_nome])],
+            [risolvi((dd, cc, oo, cl), (dd, cc, oo), n)
+             for (dd, cc, oo), cl, n in
+             zip(chiave(d), club_riga, d[colonna_nome])],
             index=d.index).astype("Int64")
+
+        # ⭐ Un `player_id` non puo' servire DUE persone nella stessa partita.
+        # Ogni riga si risolve per conto suo, quindi due nomi diversi dello
+        # stesso club possono rivendicare lo stesso candidato: nella Copa del
+        # Rey «Perez Andoni» e «Perez Alex» del Club Portugalete finivano
+        # entrambi su 634542. E' la regola di sempre applicata qui — dove non
+        # c'e' un vincitore unico non vince nessuno — e vale solo per i fogli
+        # con UNA riga per persona (le statistiche); negli EVENTI lo stesso
+        # giocatore ha per forza piu' righe.
+        if una_riga_per_persona:
+            gruppo = d.groupby(["game_id", "player_id"], dropna=True)
+            contesi = {k for k, v in gruppo[colonna_nome].nunique().items()
+                       if v > 1}
+            if contesi:
+                d["player_id"] = [
+                    pd.NA if (g, p) in contesi else p
+                    for g, p in zip(d.game_id, d.player_id)]
+                _log(f"    ⚠️ {len(contesi)} `player_id` rivendicati da due "
+                     f"persone nello stesso match: lasciati VUOTI")
         return d
 
     # --- statistiche di SQUADRA (nuove, Fase 139-quater) ------------------- #
@@ -310,7 +380,8 @@ def aggancia(cartella: Path, appearances=None) -> tuple[dict, dict]:
              f"con club_id")
 
     eventi = collega_foglio("eventi.csv", "Giocatore")
-    stat = collega_foglio("stat_giocatori.csv", "Giocatore")
+    stat = collega_foglio("stat_giocatori.csv", "Giocatore",
+                          una_riga_per_persona=True)
     # negli eventi ci sono righe senza persona (es. il punteggio dopo un gol
     # avversario): il denominatore giusto e' quelle CON un nome.
     ev_con_nome = eventi[eventi.Giocatore.notna()]

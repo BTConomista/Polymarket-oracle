@@ -53,7 +53,7 @@
     },
     "statistiche": {
       "righe": 1437,
-      "agganciate": 1353,
+      "agganciate": 1357,
       "con_game_id": 1437
     },
     "statistiche_squadra": {
@@ -504,12 +504,12 @@
     "eventi": {
       "righe": 2792,
       "con_giocatore": 2472,
-      "agganciate": 844,
+      "agganciate": 843,
       "con_game_id": 0
     },
     "statistiche": {
       "righe": 1924,
-      "agganciate": 750,
+      "agganciate": 748,
       "con_game_id": 0
     },
     "statistiche_squadra": {
@@ -552,7 +552,7 @@
     },
     "statistiche": {
       "righe": 1979,
-      "agganciate": 1975,
+      "agganciate": 1976,
       "con_game_id": 1948
     },
     "statistiche_squadra": {
@@ -593,7 +593,7 @@
     },
     "statistiche": {
       "righe": 2855,
-      "agganciate": 2818,
+      "agganciate": 2830,
       "con_game_id": 2855
     },
     "statistiche_squadra": {
@@ -636,7 +636,7 @@
     },
     "statistiche": {
       "righe": 1974,
-      "agganciate": 1957,
+      "agganciate": 1960,
       "con_game_id": 1947
     },
     "statistiche_squadra": {

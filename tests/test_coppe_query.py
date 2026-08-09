@@ -124,3 +124,74 @@ def test_la_copertura_dichiara_anche_la_numerosita():
     assert "arbitri_con_almeno_5_partite" in c
     assert c["partite_per_allenatore_mediana"] < 5, \
         "se un giorno sale, e' perche' sono entrate altre stagioni: aggiorna il commento"
+
+
+# --------------------------------------------------------------------------- #
+# gli invarianti di IDENTITÀ (Fase 139-decies)
+# --------------------------------------------------------------------------- #
+# Sono nati da un difetto vero, trovato confrontando il club del giocatore col
+# club del suo lato: tre righe di statistica portavano un giocatore dell'altra
+# squadra, e una coppia di omonimi condivideva un `player_id`. Nessuno di questi
+# dava errore — davano numeri.
+
+def test_ogni_giocatore_appartiene_al_club_del_suo_lato(giocatore):
+    """⭐ Il controllo che ha trovato il bug.
+
+    La riga di statistica dice `Lato`; `formazioni.csv` dice a che club
+    appartiene quel `player_id`. Devono coincidere. Prima della correzione i
+    candidati si cercavano nella PARTITA e non nella SQUADRA, e in
+    Navalcarnero-Getafe c'erano due «Juanmi»: lo stesso `player_id` finiva su
+    entrambe le squadre.
+    """
+    F = (pd.read_csv(Q.COPPE / "formazioni.csv")[["game_id", "player_id", "club_id"]]
+         .rename(columns={"club_id": "club_form"}))
+    j = (giocatore[["game_id", "player_id", "club_id"]].dropna(subset=["player_id"])
+         .merge(F, on=["game_id", "player_id"], how="left")
+         .dropna(subset=["club_form"]))
+    assert len(j) > 9000
+    diverse = j[j.club_id.astype("Int64") != j.club_form.astype("Int64")]
+    assert diverse.empty, diverse.head().to_dict("records")
+
+
+def test_gli_autogol_stanno_sul_lato_di_CHI_LI_SUBISCE():
+    """diretta.it registra l'autogol sul lato che ne **beneficia**, ma il
+    giocatore è dell'altra squadra — la stessa convenzione già misurata sulla
+    fonte automatica alla Fase 138.
+
+    Senza questa regola i 35 autogol delle sei coppe restano senza `player_id`,
+    cercati nella rosa sbagliata; con la regola invertita tutto il resto si
+    romperebbe. Qui si verifica che valga per ogni riga, nei due sensi.
+    """
+    ev = pd.read_csv(Q.COPPE / "aggancio_eventi.csv")
+    ev = ev[ev.game_id.notna() & ev.player_id.notna()]
+    F = (pd.read_csv(Q.COPPE / "formazioni.csv")[["game_id", "player_id", "club_id"]]
+         .rename(columns={"club_id": "club_form"}))
+    L = (Q._partite_per_lato()[["game_id", "Lato", "club_id"]]
+         .rename(columns={"club_id": "club_lato"}))
+    j = (ev[["game_id", "Lato", "Tipo evento", "player_id"]]
+         .merge(L, on=["game_id", "Lato"], how="left")
+         .merge(F, on=["game_id", "player_id"], how="left")
+         .dropna(subset=["club_lato", "club_form"]))
+    autogol = j["Tipo evento"].astype(str).str.contains("utogol", na=False)
+    suo_lato = j.club_form.astype("Int64") == j.club_lato.astype("Int64")
+    assert int(autogol.sum()) > 20, "se gli autogol spariscono, il test non prova più niente"
+    assert (~suo_lato[autogol]).all(), "un autogol sul lato di chi lo segna"
+    assert suo_lato[~autogol].all(), "un evento normale sul lato sbagliato"
+
+
+def test_un_player_id_non_serve_due_persone_nella_stessa_partita():
+    """Ogni riga si risolve per conto suo, quindi due nomi diversi dello stesso
+    club possono rivendicare lo stesso candidato: «Perez Andoni» e «Perez Alex»
+    del Club Portugalete finivano entrambi su 634542. Dove non c'è un vincitore
+    unico non vince nessuno — e la casella resta vuota."""
+    st = pd.read_csv(Q.COPPE / "aggancio_statistiche.csv")
+    st = st.dropna(subset=["game_id", "player_id"])
+    per_id = st.groupby(["game_id", "player_id"])["Giocatore"].nunique()
+    assert (per_id == 1).all(), per_id[per_id > 1].to_dict()
+
+
+def test_il_pannello_non_duplica_le_righe(giocatore):
+    """Un giocatore, una riga per partita. Se il merge coi minuti duplicasse,
+    ogni media per giocatore sarebbe pesata a caso."""
+    d = giocatore.dropna(subset=["player_id"])
+    assert not d.duplicated(subset=["game_id", "player_id"]).any()

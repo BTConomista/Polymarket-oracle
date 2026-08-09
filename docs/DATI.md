@@ -1076,6 +1076,21 @@ diretta.it → `club_id`), `aggancio_partite` (`ID partita` → `game_id`),
 `player_id`). Si rigenerano con `python scripts/aggancia_coppe.py`; la
 completezza si controlla con `python scripts/verifica_aggancio_coppe.py`.
 
+⚠️ **I candidati si cercano nel (partita, CLUB), non nella partita** (Fase
+139-decies). Cercarli nella partita intera li prende da entrambe le rose, e in
+una partita ci sono omonimi: in Navalcarnero-Getafe lo stesso `player_id`
+finiva sulle righe di tutte e due le squadre. Corollari misurati:
+- il club di una riga viene da `Squadra` dove c'è, **dal `Lato`** dove non c'è
+  (`eventi.csv` ha solo quello: prenderlo dal solo `Squadra` faceva crollare gli
+  eventi agganciati da 3.639 a 561);
+- ⭐ **l'autogol sta sul lato di chi lo SUBISCE** — diretta.it lo registra sul
+  lato che ne beneficia, ma il giocatore è dell'altra squadra (stessa
+  convenzione della fonte automatica, Fase 138). Senza l'inversione i **35
+  autogol** delle sei coppe restano senza `player_id`;
+- un `player_id` **non può servire due persone** nella stessa partita: dove due
+  nomi lo rivendicano resta vuoto per entrambi (1 caso, «Perez Andoni»/«Perez
+  Alex» del Club Portugalete).
+
 ⚠️ **Un aggancio incerto resta VUOTO** — mai scelto a caso. Le colonne
 `club_id`, `game_id` e `player_id` sono quindi nullable *per progetto*, e la
 colonna `metodo` dice come si è arrivati a ciascun `player_id` (`nome`,
@@ -1119,6 +1134,20 @@ dove la partita non esiste nella fonte automatica).
    è la convenzione spagnola sui **due cognomi** — «Sanchez Alonso M.» contro
    «Mario Sánchez» — che la regola del sottoinsieme non aggancia. Dichiarata,
    non chiusa.
+
+**Invarianti verificati** (Fase 139-decies, tutti in `tests/test_coppe_query.py`):
+
+| invariante | esito |
+|---|--:|
+| il giocatore appartiene al club del suo lato | **9.332 / 9.332** |
+| eventi coerenti col lato (autogol invertito) | **11.990 / 11.990** |
+| un `player_id` = una persona per partita | 0 violazioni |
+| righe duplicate nel pannello | 0 |
+
+⚠️ **15 coppie (partita, giocatore) compaiono su ENTRAMBI i lati** negli eventi,
+e non è un difetto: sono **15/15** giocatori con un autogol — quello sta sul
+lato avversario, il cartellino o la sostituzione sul proprio. Dichiarato per R4,
+altrimenti la sessione dopo lo «corregge».
 
 **Disponibilità temporale (R8)**: tutte queste tabelle sono **`statico`** —
 sono anagrafica di identità (chi è chi), non misure della partita.
