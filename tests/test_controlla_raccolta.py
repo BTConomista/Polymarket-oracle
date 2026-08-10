@@ -358,3 +358,39 @@ def test_la_soglia_non_nasconde_il_dato(archivio):
     r = cr.controlla(adesso=ADESSO)
     assert len(r["senza_chiusura"]) == 1
     assert r["senza_chiusura"][0][0] == "A0 vs B0"
+
+
+def test_l_anticipo_e_il_MINIMO_non_il_massimo(archivio):
+    """L'errore vero del 10/08, in un test.
+
+    Con `max` si prende la cattura piu' LONTANA dal fischio -- che per una
+    partita vista ogni ora e' quella del giorno prima -- e si conclude che le
+    chiusure mancano quando ci sono tutte. Qui la partita e' vista a T-24h e
+    di nuovo a T-30min: l'anticipo giusto e' 30 minuti, non 1440.
+    """
+    pre, live = archivio
+    kick = ADESSO - dt.timedelta(hours=2)
+    riga = [_riga("A vs B", kick)]
+    _scrivi(pre, kick - dt.timedelta(hours=24), {"entro_ore": 0, "righe": riga})
+    _scrivi(pre, kick - dt.timedelta(minutes=30), {"entro_ore": 2, "righe": riga})
+    _scrivi(live, kick, {"partite": ["A vs B"], "righe": []})
+
+    r = cr.controlla(adesso=ADESSO)
+    assert not r["senza_chiusura"]
+    assert r["anticipo_chiusura_min"]["migliore"] == 30.0, (
+        "con max darebbe 1440: la cattura di ieri invece di quella di stasera")
+
+
+def test_l_anticipo_dice_la_QUALITA_non_solo_la_presenza(archivio):
+    """45 partite tutte prese a T-2h59min sarebbero «100% coperte» e inutili
+    per il test prospettico, dove la chiusura e' il prezzo dell'ultimo momento.
+    La copertura da sola non lo distingue; la mediana si'."""
+    pre, live = archivio
+    kick = ADESSO - dt.timedelta(hours=4)
+    righe = [_riga(f"A{i} vs B{i}", kick) for i in range(4)]
+    _scrivi(pre, kick - dt.timedelta(hours=10), {"entro_ore": 0, "righe": righe})
+    _scrivi(pre, kick - dt.timedelta(minutes=170), {"entro_ore": 2, "righe": righe})
+    _scrivi(live, kick, {"partite": [r["partita"] for r in righe], "righe": []})
+    r = cr.controlla(adesso=ADESSO)
+    assert not r["senza_chiusura"], "sono coperte..."
+    assert r["anticipo_chiusura_min"]["mediana"] == 170.0, "...ma male"

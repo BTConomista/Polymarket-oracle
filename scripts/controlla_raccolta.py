@@ -186,14 +186,22 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
 
     # --- B. copertura di chiusura -------------------------------------------
     giocate = partite_giocate(prematch, adesso, ore)
-    senza_chiusura = []
+    senza_chiusura, anticipi = [], []
     for partita, kickoff in sorted(giocate.items(), key=lambda kv: kv[1]):
         limite = kickoff - dt.timedelta(hours=ORE_CHIUSURA)
-        visto = any(
-            limite <= d["_quando"] <= kickoff
-            and any(r["partita"] == partita for r in (d.get("righe") or []))
-            for d in prematch)
-        if not visto:
+        # ⚠️ Il MINIMO, cioe' la cattura piu' VICINA al fischio. Sembra ovvio e
+        # non lo e': in uno script usa-e-getta ho usato `max` e ho concluso che
+        # mancavano 21 chiusure su 45 quando c'erano tutte (10/08). `max` da'
+        # la cattura piu' LONTANA, che per una partita vista ogni ora e' quella
+        # di ieri. Il conto giusto sta qui dentro, testato, cosi' non c'e' piu'
+        # motivo di riscriverlo a mano ogni volta.
+        viste = [(kickoff - d["_quando"]).total_seconds() / 60
+                 for d in prematch
+                 if limite <= d["_quando"] <= kickoff
+                 and any(r["partita"] == partita for r in (d.get("righe") or []))]
+        if viste:
+            anticipi.append(min(viste))
+        else:
             senza_chiusura.append((partita, kickoff.isoformat()))
     if senza_chiusura:
         quota_perse = len(senza_chiusura) / max(1, len(giocate))
@@ -276,6 +284,15 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
         "eta_lungo_raggio_ore": round(eta_lungo, 1) if eta_lungo is not None else None,
         "partite_giocate_in_finestra": len(giocate),
         "senza_chiusura": senza_chiusura,
+        # Quanto prima del fischio e' arrivato l'ultimo prezzo. Non e' un
+        # allarme -- e' la QUALITA' della chiusura: 45 partite tutte prese a
+        # T-3h sarebbero "100% coperte" e inutili per il test prospettico.
+        "anticipo_chiusura_min": ({
+            "n": len(anticipi),
+            "mediana": round(sorted(anticipi)[len(anticipi) // 2], 1),
+            "migliore": round(min(anticipi), 1),
+            "peggiore": round(max(anticipi), 1),
+        } if anticipi else None),
         "copertura_inplay": round(quota, 3),
         "problemi": problemi,
         "note": note,
@@ -390,6 +407,11 @@ def main(argv=None) -> None:
           + (f"{r['eta_lungo_raggio_ore']}h fa" if r["eta_lungo_raggio_ore"] is not None else "MAI"))
     print(f"  partite giocate in finestra: {r['partite_giocate_in_finestra']} | "
           f"copertura in-play: {r['copertura_inplay']:.0%}")
+    ac = r.get("anticipo_chiusura_min")
+    if ac:
+        print(f"  ultimo prezzo prima del fischio: mediana T-{ac['mediana']:.0f}min "
+              f"(migliore T-{ac['migliore']:.0f}, peggiore T-{ac['peggiore']:.0f}) "
+              f"su {ac['n']} partite")
     if r["per_gemello"]:
         print(f"  {_prova.descrizione()}")
         print(f"  {'gemello':>8s} {'sessioni':>9s} {'giri':>6s} {'partite':>8s} "
