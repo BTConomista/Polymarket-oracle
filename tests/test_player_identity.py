@@ -233,11 +233,19 @@ def test_registro_manuale_solo_dove_manca_laggancio():
     assert m["fonte"].notna().all()
 
 
-def test_copertura_totale_sulle_tre_leghe():
-    """Il traguardo raggiunto: 35.339 righe su 35.339.
+def test_copertura_del_ponte_su_tutte_le_raccolte():
+    """La copertura del ponte, lega per lega, con le eccezioni NOMINATE.
 
-    Se una raccolta futura lo fa scendere, è un dato nuovo che il ponte non
-    copre — e va guardato, non ignorato.
+    Era «35.339 righe su 35.339» sulle prime tre leghe. Con la Bundesliga
+    (Fase 138) le righe sono **44.894** e la copertura scende a 44.891 —
+    **3 righe**, tutte del Mainz e tutte di due soli giocatori: **Ben Bobzien**
+    e **Fabio Moreno Fell**.
+
+    Non e' un difetto del ponte ne' un errore di nome: i due **non esistono
+    affatto** nel dataset player-scores da cui il ponte pesca (`grep` sui nomi:
+    zero righe). E' un limite di copertura della FONTE, e va dichiarato invece
+    che nascosto dietro una soglia morbida — un `> 0.99` lascerebbe passare in
+    silenzio anche una raccolta futura che ne perde duecento.
     """
     from src.data import player_stats as PS
     try:
@@ -245,4 +253,14 @@ def test_copertura_totale_sulle_tre_leghe():
     except Exception:
         pytest.skip("raccolte non disponibili")
     out = PI.collega_per_eliminazione(d)
-    assert out["player_id"].notna().mean() == 1.0
+
+    per_lega = out.groupby("lega")["player_id"].apply(lambda s: s.isna().sum())
+    for lega in ("serie_a", "premier_league", "la_liga"):
+        if lega in per_lega.index:
+            assert per_lega[lega] == 0, f"{lega}: {per_lega[lega]} righe senza player_id"
+
+    scoperte = out[out["player_id"].isna()]
+    assert len(scoperte) == len(out) - out["player_id"].notna().sum()
+    assert set(scoperte["Giocatore"]) <= {"Bobzien Ben", "Moreno Fell Fabio"}, \
+        f"nuovi giocatori fuori dal ponte: {sorted(set(scoperte['Giocatore']))}"
+    assert len(scoperte) == 3

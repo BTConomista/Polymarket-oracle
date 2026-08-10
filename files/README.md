@@ -25,7 +25,7 @@ rete). Contenuto:
 | `understat_la_liga_bundle.json` | idem per La Liga | idem |
 | `player_scores/` | dataset player-scores (valutazioni rosa reali, dcaribou/transfermarkt-datasets, dichiarato CC0 — ⚠️ **ma vedi la decisione aperta sulla catena della licenza in `docs/DATI.md` §4**: Transfermarkt pubblica una riserva `ai-all` machine-readable e il sui generis sulla banca dati resta suo), **4 file `.csv.gz`**: `appearances` (41 MB), `player_valuations` (5,4 MB), `players` (3,9 MB), `clubs` (47 KB) — è la voce che pesa | `scripts/build_squad_values.py` (Fase 67), `src/data/player_scores.py` |
 
-| `diretta_serie_a_2526/` | ⭐ **il primo dato "Tier B" del progetto**: **97 statistiche per giocatore-partita** (tocchi, passaggi, dribbling, contrasti, recuperi, falli individuali, xG/xA individuali), Serie A 2025-26, **11.894 righe** su 379/380 partite. Fonte **diretta.it/Flashscore**, dato a monte di **Opta**, raccolto **a mano** dall'utente il 31/07/2026. ⚠️ **Il progetto non rivendica alcuna licenza su questi dati**: leggere `diretta_serie_a_2526/README.md` §1-bis prima di usarli o ridistribuirli | **nessuno** (inseriti il 31/07/2026, nessun codice li legge ancora) |
+| `diretta_{lega}_2526/partita_per_partita.csv.gz` (×4) | ⭐ **il dato "Tier B" del progetto**: **97 statistiche + rating per giocatore-partita** (tocchi, passaggi, dribbling, contrasti, recuperi, falli individuali, xG/xA individuali). **Serie A** 11.894 righe (379/380 partite), **Premier** 11.492 (380/380), **La Liga** 11.953 (380/380) — raccolte il 31/07-01/08/2026 — e **Bundesliga** 9.617 (306/306 di campionato + 2 di spareggio), raccolta il **09/08/2026**. In tutto **44.894 righe giocatore-partita**. La consegna Bundesliga porta anche **quattro fogli che le altre non hanno**: elenco partite, formazioni (panchinari compresi), 2.884 sostituzioni e 2.261 eventi di cronaca. Fonte **diretta.it/Flashscore**, dato a monte di **Opta**, raccolto **a mano** dall'utente. ⚠️ **Il progetto non rivendica alcuna licenza su questi dati**: leggere `diretta_serie_a_2526/README.md` §1-bis prima di usarli o ridistribuirli | `src/data/player_stats.py` (nessun modello li usa ancora) |
 
 
 | `diretta_{lega}_2526/squadra_per_partita.csv.gz` (×5) | ⭐ **il primo dato che separa i due tempi**: **45 statistiche per squadra-partita in tre periodi** (Totale / 1° tempo / 2° tempo), tutte e 5 le leghe 2025-26, **10.512 righe** su 1.752 partite di campionato. Stessa fonte **diretta.it/Flashscore** (dato a monte Opta), raccolta **a mano** dall'utente il 01/08/2026. ⚠️ **Il progetto non rivendica alcuna licenza**: leggere `README_statistiche_squadra.md` prima di usarli o ridistribuirli | `src/data/team_stats.py` (nessun modello li usa ancora) |
@@ -34,9 +34,10 @@ rete). Contenuto:
 > **giocatore** (`partita_per_partita.csv.gz` + `manifesto.json`) e quello per
 > **squadra** (`squadra_per_partita.csv.gz` + `manifesto_squadra.json`). I due
 > manifesti hanno nomi diversi apposta: ogni caricatore scopre le raccolte
-> cercando il proprio, così le cartelle di **Bundesliga e Ligue 1** — che hanno
-> solo il dato di squadra — restano invisibili a `player_stats` invece di farlo
-> fallire su un file che non c'è. Un test lo verifica.
+> cercando il proprio, così una cartella che ha **solo** il dato di squadra
+> resta invisibile a `player_stats` invece di farlo fallire su un file che non
+> c'è. Un test lo verifica. Dal 09/08/2026 la **Bundesliga ha entrambi**;
+> l'unica cartella con il solo dato di squadra è ora la **Ligue 1**.
 
 **Chi li legge** (`grep` su `scripts/` e `src/`): 10 script —
 `build_league_snapshot.py`, `_run_ah_benchmark.py`, `_run_counts_nb.py`,

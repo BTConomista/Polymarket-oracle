@@ -76,6 +76,22 @@ def verifica(df: pd.DataFrame, lega: str) -> dict:
     if d["data"].isna().any():
         raise SystemExit(f"❌ {int(d['data'].isna().sum())} date non interpretabili")
 
+    # La colonna `Fase` (Bundesliga in poi) separa il campionato dallo spareggio
+    # promozione/retrocessione. I controlli e i conteggi del manifesto valgono
+    # per il CAMPIONATO: lo spareggio non sta negli snapshot, quindi un join
+    # calcolato su tutto risulterebbe incompleto per un motivo che non e' un
+    # difetto. Le righe fuori campionato restano nel file e si contano a parte.
+    fuori = pd.DataFrame(columns=d.columns)
+    if "Fase" in d.columns:
+        ignote = set(d["Fase"].dropna()) - set(PS.FASI_CAMPIONATO) - set(PS.FASI_FUORI_CAMPIONATO)
+        if ignote:
+            raise SystemExit(
+                f"❌ fasi sconosciute: {sorted(ignote)}. Aggiungerle a "
+                "src/data/player_stats.py (FASI_CAMPIONATO / FASI_FUORI_CAMPIONATO)."
+            )
+        fuori = d[~d["Fase"].isin(PS.FASI_CAMPIONATO)]
+        d = d[d["Fase"].isin(PS.FASI_CAMPIONATO)]
+
     titolari = (
         d[d["Titolare/Subentrato"].astype(str).str.strip().str.lower() == "titolare"]
         .groupby(["data", "Squadra"]).size()
@@ -99,7 +115,13 @@ def verifica(df: pd.DataFrame, lega: str) -> dict:
             raise SystemExit(f"❌ {col} fuori da 0-100")
 
     info = {
-        "righe_attese": int(len(d)),
+        # righe_attese conta il FILE INTERO (spareggio compreso): e' la guardia
+        # che verifica di aver letto tutto il disco. I conteggi che seguono sono
+        # invece di CAMPIONATO, cioe' cio' che load_player_matches restituisce
+        # col suo default.
+        "righe_attese": int(len(d) + len(fuori)),
+        "righe_campionato": int(len(d)),
+        "righe_fuori_campionato": int(len(fuori)),
         "team_partita_attesi": int(d.groupby(["data", "Squadra", "Avversario"]).ngroups),
         "squadre": int(d["Squadra"].nunique()),
         "giocatori": int(d["Giocatore"].nunique()),
@@ -154,6 +176,13 @@ def main() -> int:
     ap.add_argument("--stagione", default=None)
     ap.add_argument("--fonte", default="diretta.it (Flashscore)")
     ap.add_argument("--foglio", default=None, help="nome del foglio Excel")
+    ap.add_argument("--originale", type=Path, default=None,
+                    help="il file COME CONSEGNATO, da archiviare accanto ai CSV "
+                         "(regola §5-ter: senza l'originale un bug della nostra "
+                         "conversione e' indistinguibile dal dato)")
+    ap.add_argument("--fogli-extra", action="store_true",
+                    help="salva anche i fogli di contorno presenti nell'.xlsx "
+                         "(Partite, Formazioni, Cambi, Eventi, Note e copertura)")
     args = ap.parse_args()
 
     if args.cartella:
@@ -176,6 +205,27 @@ def main() -> int:
                                           index=False, compression="gzip")
         if args.legenda:
             shutil.copy(args.legenda, cartella / PS.FILE_LEGENDA)
+        if args.originale:
+            shutil.copy(args.originale, cartella / f"originale{args.originale.suffix}")
+        if args.fogli_extra:
+            # I fogli che la fonte espone SOLO per alcune consegne. Si prendono
+            # tutti (§5-ter): raccogliere e usare sono due decisioni separate.
+            extra = {"Partite": PS.FILE_ELENCO, "Formazioni": PS.FILE_FORMAZIONI,
+                     "Cambi": PS.FILE_CAMBI, "Eventi": PS.FILE_EVENTI}
+            disponibili = pd.ExcelFile(args.partite).sheet_names
+            for foglio, dest in extra.items():
+                if foglio in disponibili:
+                    _leggi(args.partite, foglio).to_csv(
+                        cartella / dest, index=False, compression="gzip")
+                    print(f"   + foglio «{foglio}» -> {dest}")
+            if "Note e copertura" in disponibili:
+                _leggi(args.partite, "Note e copertura").to_csv(
+                    cartella / "note_fonte_giocatori.csv", index=False)
+                print("   + foglio «Note e copertura» -> note_fonte_giocatori.csv")
+            if "Legenda" in disponibili and not args.legenda:
+                _leggi(args.partite, "Legenda").to_csv(
+                    cartella / PS.FILE_LEGENDA, index=False)
+                print(f"   + foglio «Legenda» -> {PS.FILE_LEGENDA}")
 
     print(f"verifico {lega}/{stagione} ({len(df):,} righe)…")
     info = verifica(df, lega)

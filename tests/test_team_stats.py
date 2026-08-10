@@ -392,14 +392,33 @@ def test_le_statistiche_sono_tutte_post(tm):
 def test_non_rompe_il_caricatore_per_giocatore():
     """I due dataset vivono nella stessa cartella e non devono vedersi.
 
-    Bundesliga e Ligue 1 hanno solo il dato di squadra: se `player_stats` le
-    scoprisse, `load_player_matches(tutte=True)` fallirebbe su un file che non
-    c'e'. Il manifesto separato (`manifesto_squadra.json`) e' cio' che lo
-    impedisce.
+    Una cartella che ha **solo** il dato di squadra non deve comparire fra le
+    raccolte per giocatore: se `player_stats` la scoprisse,
+    `load_player_matches(tutte=True)` fallirebbe su un file che non c'e'. Il
+    manifesto separato (`manifesto_squadra.json`) e' cio' che lo impedisce.
+
+    Il test non incide piu' l'elenco delle leghe (lo faceva, e alla Fase 138 e'
+    diventato falso il giorno in cui la **Bundesliga** ha avuto anche il dato
+    per giocatore). Verifica la PROPRIETA': `player_stats` vede tutte e sole le
+    cartelle che hanno davvero il file per giocatore. Oggi l'unica con il solo
+    dato di squadra e' la Ligue 1, e il test lo scopre invece di saperlo.
     """
-    leghe_giocatore = {r["lega"] for r in ps.raccolte()}
-    assert leghe_giocatore == {"serie_a", "premier_league", "la_liga"}
-    assert len(ps.load_player_matches(tutte=True)) == 35339
+    per_squadra = {r["lega"] for r in ts.raccolte_squadra()}
+    per_giocatore = {r["lega"] for r in ps.raccolte()}
+    assert per_giocatore <= per_squadra
+
+    for r in ts.raccolte_squadra():
+        ha_il_file = (r["cartella"] / ps.FILE_PARTITE).exists()
+        assert ha_il_file == (r["lega"] in per_giocatore), (
+            f"{r['lega']}: file per giocatore {'presente' if ha_il_file else 'assente'} "
+            f"ma la raccolta {'non ' if ha_il_file else ''}e' visibile a player_stats")
+
+    # e il caricamento cumulativo funziona davvero, senza esplodere sulle
+    # cartelle che il file per giocatore non ce l'hanno
+    tutte = ps.load_player_matches(tutte=True)
+    assert set(tutte["lega"]) == per_giocatore
+    assert len(tutte) == sum(r["righe_campionato"] if "righe_campionato" in r
+                             else r["righe_attese"] for r in ps.raccolte())
 
 
 def test_periodi_affiancati():

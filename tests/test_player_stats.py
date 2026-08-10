@@ -224,3 +224,194 @@ def test_le_statistiche_sono_tutte_post(pm):
     assert not stats & set(ps.PRE_COLUMNS)
     assert not stats & set(ps.STATIC_COLUMNS)
     assert "Palloni toccati" in stats and "Goal previsti (xG)" in stats
+
+
+# --------------------------------------------------------------------------
+# 3 · Bundesliga 2025-26 (Fase 138): la prima raccolta con FASE e con i
+#     quattro fogli di contorno. Ogni test qui sotto inchioda una cosa
+#     misurata durante la verifica della consegna, non un'intenzione.
+# --------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def bl() -> pd.DataFrame:
+    """Bundesliga, solo campionato (il default)."""
+    return ps.load_player_matches("bundesliga", "2526")
+
+
+@pytest.fixture(scope="module")
+def bl_tutto() -> pd.DataFrame:
+    """Bundesliga, spareggio compreso."""
+    return ps.load_player_matches("bundesliga", "2526", solo_campionato=False)
+
+
+def test_bundesliga_lo_spareggio_e_fuori_dal_campionato(bl, bl_tutto):
+    """Lo spareggio promozione/retrocessione NON e' campionato.
+
+    Wolfsburg-Paderborn (andata 21/05, ritorno 25/05) sono 2 partite vere, ma
+    non stanno negli snapshot e non contano per la classifica: mescolarle al
+    campionato gonfierebbe ogni conteggio di 2 partite e farebbe comparire una
+    19ª squadra (il Paderborn, che gioca in 2. Bundesliga).
+    """
+    assert "Fase" in bl_tutto.columns
+    assert set(bl_tutto["Fase"]) == {"Campionato", "Spareggio"}
+    assert set(bl["Fase"]) == {"Campionato"}
+
+    assert bl.groupby(["data", "Squadra", "Avversario"]).ngroups == 612
+    assert bl_tutto.groupby(["data", "Squadra", "Avversario"]).ngroups == 616
+    assert bl["Squadra"].nunique() == 18
+    assert bl_tutto["Squadra"].nunique() == 19          # + Paderborn
+    assert len(bl) == 9555 and len(bl_tutto) == 9617
+
+
+def test_bundesliga_il_manifesto_scompone_le_due_fasi(manifesto_bl):
+    """`righe_attese` conta il FILE (guardia sul disco), gli altri due contano
+    le due fasi. Se non tornassero, il file e il manifesto racconterebbero due
+    storie diverse e nessuno saprebbe quale credere."""
+    m = manifesto_bl
+    assert m["righe_attese"] == 9617
+    assert m["righe_campionato"] + m["righe_fuori_campionato"] == m["righe_attese"]
+    assert m["team_partita_attesi"] == 612 and m["partite_attese"] == 306
+    assert m["join_snapshot"] == "612/612" and m["snapshot_verificato"] is True
+
+
+@pytest.fixture(scope="module")
+def manifesto_bl() -> dict:
+    r = [x for x in ps.raccolte()
+         if x["lega"] == "bundesliga" and x["stagione"] == "2526"]
+    assert r, "raccolta bundesliga/2526 non registrata"
+    return r[0]
+
+
+def test_bundesliga_join_totale_e_lo_spareggio_alza(bl, bl_tutto):
+    """Il join dev'essere totale sul campionato — e deve ALZARE sullo spareggio.
+
+    Non e' un difetto: e' la guardia che fa il suo mestiere. Le 62 righe dello
+    spareggio non hanno una partita corrispondente in `data/bundesliga_matches.csv`
+    perche' quella partita, in campionato, non e' mai stata giocata.
+    """
+    j = ps.join_to_snapshot(bl)
+    assert len(j) == len(bl)
+    assert j["home_team"].notna().all()
+    with pytest.raises(ValueError, match="non agganciate"):
+        ps.join_to_snapshot(bl_tutto)
+
+
+def test_fase_non_e_una_statistica(bl):
+    """`Fase` e' un'etichetta di competizione. Contarla fra le statistiche
+    farebbe dichiarare 99 misure dove ne esistono 98 (97 Opta + il rating), e
+    il manifesto erediterebbe il numero sbagliato."""
+    assert "Fase" not in ps.statistic_columns(bl)
+    assert len(ps.statistic_columns(bl)) == 98
+
+
+def test_gol_concessi_e_una_statistica_individuale(bl):
+    """⚠️ `Gol concessi` NON e' il totale di squadra ripetuto su ogni riga: e'
+    quanti gol ha preso la squadra **mentre quel giocatore era in campo**.
+
+    E' la trappola piu' facile di questo dataset — la colonna e' piena per tutti
+    e dieci i ruoli, portieri compresi, e sommarla sulla rosa da' un numero che
+    *sembra* i gol subiti moltiplicati per undici, perche' e' esattamente quello.
+    Il controllo giusto e' sui soli portieri, e li' torna esatto.
+    """
+    bl = bl.copy()
+    bl["subiti"] = bl["Risultato squadra"].str.split("-").map(lambda v: int(v[1]))
+    chiave = ["data", "Squadra", "Avversario"]
+
+    por = bl[bl["Ruolo"] == "Portiere"].groupby(chiave)["Gol concessi"].sum()
+    veri = bl.groupby(chiave)["subiti"].first()
+    assert (por == veri).all(), "somma sui portieri != gol subiti"
+
+    tutti = bl.groupby(chiave)["Gol concessi"].sum()
+    rapporto = (tutti / veri.replace(0, float("nan"))).dropna()
+    assert 10.0 <= rapporto.mean() <= 11.0
+    assert rapporto.max() <= 11.0      # non piu' di 11 in campo per gol
+
+
+def test_i_cartellini_di_squadra_si_ricompongono_da_quelli_individuali(bl):
+    """⭐ L'identita' esatta fra le due viste della stessa fonte.
+
+        gialli(squadra) = Σ gialli(in campo) + 2 × Σ secondi_gialli + gialli in panchina
+
+    Il «2 ×» e' la convenzione di Opta: a chi viene espulso per doppia
+    ammonizione le statistiche individuali NON registrano il primo giallo —
+    tengono solo il flag `Secondo cartellino giallo` e il rosso. La pagina di
+    squadra invece conta tutti i cartellini **mostrati**.
+
+    Misurato: l'identita' (senza il terzo addendo) torna su **606/612**
+    squadra-partita. Dei 6 residui, **5** sono un giallo a un giocatore mai
+    entrato — verificati uno per uno nel foglio Formazioni, `Stato = "Non
+    entrato"` — e **1** e' una divergenza vera fra le due pagine del sito.
+    Senza questo test la divergenza sembrerebbe un errore di estrazione.
+    """
+    from src.data import team_stats
+
+    ts = team_stats.load_team_matches(lega="bundesliga", stagione="2526")
+    ts = ts[ts["Periodo"] == "Totale"].set_index(["data", "Squadra"])
+
+    a = bl.groupby(["data", "Squadra"])[
+        ["Cartellini gialli", "Secondo cartellino giallo"]].sum()
+    j = a.join(ts[["Cartellini gialli"]].rename(
+        columns={"Cartellini gialli": "squadra"}), how="inner")
+    ricostruito = j["Cartellini gialli"] + 2 * j["Secondo cartellino giallo"]
+
+    assert len(j) == 612
+    assert int((ricostruito == j["squadra"]).sum()) == 606
+    residui = (ricostruito - j["squadra"]).loc[ricostruito != j["squadra"]]
+    assert sorted(residui.value_counts().to_dict().items()) == [(-1.0, 5), (1.0, 1)]
+
+    # e i 5 residui negativi hanno davvero un ammonito rimasto in panchina
+    form = ps.load_lineups("bundesliga", "2526")
+    ev = ps.load_events("bundesliga", "2526")
+    for (data, squadra) in residui[residui < 0].index:
+        gialli = ev[(ev["data"] == data) & (ev["Squadra"] == squadra)
+                    & ev["Evento"].astype(str).str.contains("Giallo")]
+        in_campo = set(bl[(bl["data"] == data) & (bl["Squadra"] == squadra)]["Giocatore"])
+        fuori = [g for g in gialli["Giocatore"].dropna().unique() if g not in in_campo]
+        assert fuori, f"{data} {squadra}: nessun ammonito fuori dal campo"
+        stati = form[(form["data"] == data) & (form["Squadra"] == squadra)
+                     & form["Giocatore"].isin(fuori)]["Stato"]
+        assert (stati == "Non entrato").any(), f"{data} {squadra}: {stati.tolist()}"
+
+
+def test_i_fogli_di_contorno_ci_sono_e_dicono_chi_li_ha(bl):
+    """I quattro fogli nuovi si caricano; chiederli a una raccolta che non li
+    ha alza un errore che ELENCA chi li ha, invece di restituire un vuoto —
+    che sarebbe indistinguibile da «non e' successo niente» (regola R6)."""
+    assert len(ps.load_match_list("bundesliga", "2526")) == 308
+    assert len(ps.load_lineups("bundesliga", "2526")) == 12299
+    assert len(ps.load_substitutions("bundesliga", "2526")) == 2884
+    assert len(ps.load_events("bundesliga", "2526")) == 2261
+
+    with pytest.raises(FileNotFoundError, match="bundesliga/2526"):
+        ps.load_events("serie_a", "2526")
+
+
+def test_le_formazioni_contengono_chi_non_e_entrato(bl):
+    """E' l'unico foglio che vede la panchina: senza, i cartellini ai non
+    entrati resterebbero inspiegabili (vedi il test dell'identita')."""
+    form = ps.load_lineups("bundesliga", "2526")
+    assert set(form["Stato"]) >= {"Titolare", "Subentrato", "Non entrato"}
+    assert (form["Stato"] == "Non entrato").sum() > 0
+    # chi e' sceso in campo sta in entrambi i fogli; chi non e' entrato solo qui
+    scesi = set(zip(bl["data"], bl["Squadra"], bl["Giocatore"]))
+    non_entrati = form[form["Stato"] == "Non entrato"]
+    fuori = set(zip(non_entrati["data"], non_entrati["Squadra"], non_entrati["Giocatore"]))
+    assert not (scesi & fuori), "un giocatore non puo' essere insieme in campo e non entrato"
+
+
+def test_la_cronaca_eventi_e_dichiaratamente_incompleta(bl):
+    """⚠️ Il foglio Eventi e' la cronaca REDAZIONALE del sito, non un tracciato.
+
+    Elenca 887 gol piu' 20 autogol = 907, contro i **990** realmente segnati in
+    campionato piu' spareggio. Il test lo inchioda apposta: serve a impedire
+    che qualcuno, un domani, la usi per CONTARE. Per contare ci sono le
+    statistiche individuali, che tornano esatte (test sopra).
+    """
+    ev = ps.load_events("bundesliga", "2526")
+    in_cronaca = int(ev["Evento"].astype(str).isin(["Gol", "Autogol"]).sum())
+    bl = bl.copy()
+    bl["fatti"] = bl["Risultato squadra"].str.split("-").map(lambda v: int(v[0]))
+    veri = int(bl.groupby(["data", "Squadra", "Avversario"])["fatti"].first().sum())
+    assert veri == 990
+    assert in_cronaca < veri, "se la cronaca fosse completa questo test va aggiornato"
+    assert in_cronaca == 907

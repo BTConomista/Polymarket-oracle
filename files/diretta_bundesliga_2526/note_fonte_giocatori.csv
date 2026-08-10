@@ -1,0 +1,18 @@
+Voce,Dettaglio
+Fonte,diretta.it (Flashscore) — Bundesliga 2025/2026
+Estrazione,9 agosto 2026
+Partite di campionato,306 (34 giornate x 9)
+Spareggio promozione/retrocessione,"2 partite (Wolfsburg-Paderborn), marcate ""Spareggio"" nella colonna Fase"
+Partite con statistiche per giocatore,308 (copertura completa)
+Righe giocatore-partita,9617 — solo chi è sceso in campo (titolari + subentrati)
+Squadre,18
+Statistiche per riga,97 + rating Diretta
+Colonne escluse perché sempre a zero in tutta la stagione,Legni colpiti; Rigori segnati / sbagliati / parati nella serie finale
+Percentuali,"Espresse 0-100. Nel foglio riepilogo sono ricalcolate sui totali stagionali, non come media delle medie."
+Giocatori con più squadre,Chi ha cambiato club a gennaio compare con una riga per squadra nel riepilogo.
+Foglio Formazioni,"Include anche i panchinari non entrati (Stato = ""Non entrato""), esclusi dal foglio partita per partita. 12.299 righe."
+Foglio Cambi,"2.884 sostituzioni, ricavate unendo la cronaca della partita e le formazioni (chi esce, chi entra, minuto)."
+Foglio Eventi,"Cronaca pubblicata da diretta.it: gol, autogol, rigori assegnati, cartellini. Per 69 partite su 308 la cronaca del sito non riporta tutti i gol. Gol, assist e cartellini per giocatore nei fogli principali NON vengono da qui ma dalle statistiche individuali, e sono completi (gol di squadra = gol dei giocatori in 616 squadra-partita su 616)."
+Tre partite senza anagrafica giocatori sul sito,"Heidenheim-Magonza (g.34), Augusta-Francoforte (g.31), Heidenheim-St. Pauli (g.31): diretta.it non espone la scheda giocatori. Statistiche e rating sono completi; nome e ruolo sono stati ricostruiti dalle altre partite della stagione."
+,
+Nessuna partita mancante: tutte e 308 le partite hanno statistiche complete per giocatore.,

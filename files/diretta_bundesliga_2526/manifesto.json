@@ -1,0 +1,18 @@
+{
+  "righe_attese": 9617,
+  "righe_campionato": 9555,
+  "righe_fuori_campionato": 62,
+  "team_partita_attesi": 612,
+  "squadre": 18,
+  "giocatori": 499,
+  "statistiche": 98,
+  "data_prima": "2025-08-22",
+  "data_ultima": "2026-05-16",
+  "partite_attese": 306,
+  "join_snapshot": "612/612",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "bundesliga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+}

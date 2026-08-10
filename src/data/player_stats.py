@@ -55,6 +55,25 @@ FILE_STAGIONE = "riepilogo_stagionale.csv.gz"
 FILE_LEGENDA = "legenda.csv"
 FILE_MANIFESTO = "manifesto.json"
 
+# I quattro fogli "di contorno" arrivati con la Bundesliga (Fase 138): elenco
+# partite, formazioni (panchinari compresi), sostituzioni, cronaca. Le prime
+# tre leghe non li hanno — sono opzionali per costruzione, e i caricatori qui
+# sotto dicono ESPLICITAMENTE quali raccolte li espongono invece di restituire
+# un DataFrame vuoto (un vuoto silenzioso e' indistinguibile da «non ci sono
+# eventi», ed e' il tipo di finto pieno che la regola R6 vieta).
+FILE_ELENCO = "partite.csv.gz"
+FILE_FORMAZIONI = "formazioni.csv.gz"
+FILE_CAMBI = "cambi.csv.gz"
+FILE_EVENTI = "eventi.csv.gz"
+
+# La colonna `Fase` distingue il campionato dalle partite che campionato non
+# sono (lo spareggio promozione/retrocessione di Bundesliga e Ligue 1). Le due
+# consegne usano PAROLE DIVERSE per la stessa cosa — «Campionato»/«Spareggio»
+# nei file giocatore, «Stagione regolare»/«Play-off» in quelli di squadra — e
+# la differenza va dichiarata, non normalizzata di nascosto sul disco (R4).
+FASI_CAMPIONATO = ("Campionato", "Stagione regolare")
+FASI_FUORI_CAMPIONATO = ("Spareggio", "Play-off", "Playoff")
+
 # Le uniche colonne NON `post` (regola R8). Tutto il resto esiste solo a
 # partita finita. `Titolare/Subentrato` e' `post` nel dato storico ma
 # diventerebbe `pre` se raccolto dalla formazione ufficiale ~1h prima: qui
@@ -125,12 +144,20 @@ def load_player_matches(
     *,
     strict: bool = True,
     tutte: bool = False,
+    solo_campionato: bool = True,
 ) -> pd.DataFrame:
     """Una riga per giocatore-partita, con `data`, `lega` e `stagione`.
 
     Senza argomenti carica **l'unica** raccolta presente; con `lega`/`stagione`
     ne sceglie una; con ``tutte=True`` le impila tutte (le colonne `lega` e
     `stagione` restano a distinguerle).
+
+    ``solo_campionato`` (default) tiene le sole righe di campionato dove la
+    raccolta ha la colonna ``Fase``, ed e' un no-op dove non ce l'ha. Serve
+    perche' lo **spareggio promozione/retrocessione** non e' campionato: non sta
+    negli snapshot, quindi `join_to_snapshot()` lo lascerebbe orfano e alzerebbe.
+    Metterlo a ``False`` lo include, e allora ogni conteggio va tenuto separato
+    per `Fase` — mescolarli e' l'errore piu' facile su questi file.
 
     ⚠️ Le 97 statistiche sono TUTTE `post` (R8): non passarle a un modello per
     la partita che le ha prodotte. Usa `team_form()`.
@@ -140,7 +167,8 @@ def load_player_matches(
     """
     if tutte:
         pezzi = [
-            load_player_matches(r.get("lega"), r.get("stagione"), strict=strict)
+            load_player_matches(r.get("lega"), r.get("stagione"), strict=strict,
+                                solo_campionato=solo_campionato)
             for r in raccolte()
         ]
         return pd.concat(pezzi, ignore_index=True) if pezzi else pd.DataFrame()
@@ -167,7 +195,22 @@ def load_player_matches(
                 f"{r.get('lega')}/{r.get('stagione')}: attese {attese} righe "
                 f"giocatore-partita, trovate {len(df)}"
             )
-        att_tm = r.get("team_partita_attesi")
+
+    if solo_campionato and "Fase" in df.columns:
+        ignote = set(df["Fase"].dropna()) - set(FASI_CAMPIONATO) - set(FASI_FUORI_CAMPIONATO)
+        if ignote:
+            raise ValueError(
+                f"{r.get('lega')}/{r.get('stagione')}: fasi sconosciute {sorted(ignote)}. "
+                "Aggiungerle a FASI_CAMPIONATO o FASI_FUORI_CAMPIONATO invece di "
+                "lasciarle decidere al caso a un filtro che non le conosce."
+            )
+        df = df[df["Fase"].isin(FASI_CAMPIONATO)].reset_index(drop=True)
+
+    if strict:
+        # `team_partita_attesi` e' un conteggio DI CAMPIONATO: confrontarlo con
+        # un caricamento che include lo spareggio farebbe fallire una guardia
+        # per un motivo che non e' un difetto.
+        att_tm = r.get("team_partita_attesi") if solo_campionato else None
         if att_tm is not None:
             n = df.groupby(["data", "Squadra", "Avversario"]).ngroups
             if n != att_tm:
@@ -176,6 +219,73 @@ def load_player_matches(
                     f"team-partita, trovati {n}"
                 )
     return df
+
+
+def _foglio_extra(nome_file: str, cosa: str, lega, stagione) -> pd.DataFrame:
+    """Uno dei quattro fogli di contorno, se la raccolta ce l'ha.
+
+    Alza con l'elenco di chi ce l'ha invece di restituire un DataFrame vuoto:
+    un vuoto silenzioso e' indistinguibile da «non e' successo niente».
+    """
+    r = _raccolta(lega, stagione)
+    percorso = r["cartella"] / nome_file
+    if not percorso.exists():
+        con = [f"{x.get('lega')}/{x.get('stagione')}" for x in raccolte()
+               if (x["cartella"] / nome_file).exists()]
+        raise FileNotFoundError(
+            f"{r.get('lega')}/{r.get('stagione')} non espone {cosa}: la fonte non "
+            f"lo ha consegnato per questa raccolta. Ce l'hanno: {con or 'nessuna'}."
+        )
+    df = _read(percorso)
+    if "Data" in df.columns:
+        df["data"] = pd.to_datetime(df["Data"], format="%d.%m.%Y")
+    # Stessa normalizzazione dei nomi squadra del caricatore principale: senza,
+    # questi fogli non si incrociano con le altre tabelle e il disallineamento
+    # non da' errore — da' zero righe in comune (l'edizione italiana del sito
+    # scrive "Augusta" dove noi scriviamo "Augsburg").
+    from .sources import TEAM_ALIASES
+
+    for col in ("Squadra", "Avversario", "Casa", "Trasferta"):
+        if col in df.columns:
+            df[col] = df[col].map(lambda x: TEAM_ALIASES.get(x, x))
+    df["lega"] = r.get("lega")
+    df["stagione"] = r.get("stagione")
+    return df
+
+
+def load_match_list(lega=None, stagione=None) -> pd.DataFrame:
+    """L'elenco delle partite come lo pubblica la fonte (con `ID partita`)."""
+    return _foglio_extra(FILE_ELENCO, "l'elenco partite", lega, stagione)
+
+
+def load_lineups(lega=None, stagione=None) -> pd.DataFrame:
+    """Le formazioni, **panchinari non entrati compresi** (`Stato`).
+
+    ⚠️ E' l'unico foglio che contiene chi NON e' sceso in campo, e serve a
+    spiegare una divergenza vera: i cartellini mostrati alla panchina stanno
+    nelle statistiche di SQUADRA e non possono stare in quelle per giocatore
+    (Fase 138). Con la formazione ufficiale sarebbe anche il primo dato `pre`
+    della famiglia, ma qui arriva a posteriori: resta `post`.
+    """
+    return _foglio_extra(FILE_FORMAZIONI, "le formazioni", lega, stagione)
+
+
+def load_substitutions(lega=None, stagione=None) -> pd.DataFrame:
+    """Le sostituzioni (minuto, chi esce, chi entra)."""
+    return _foglio_extra(FILE_CAMBI, "le sostituzioni", lega, stagione)
+
+
+def load_events(lega=None, stagione=None) -> pd.DataFrame:
+    """La cronaca: gol, autogol, rigori, cartellini, col minuto.
+
+    ⚠️ **INCOMPLETA per costruzione**: e' la cronaca redazionale del sito, non
+    un tracciato. Sulla Bundesliga 2025-26 elenca 907 gol dei 990 realmente
+    segnati (69 partite su 308 non li riportano tutti). Gol, assist e cartellini
+    per giocatore NON vengono da qui ma dalle statistiche individuali, che sono
+    complete. Usarla per contare e' sbagliato; usarla per **datare** un evento
+    (il minuto) o per spiegare una divergenza e' il suo mestiere.
+    """
+    return _foglio_extra(FILE_EVENTI, "la cronaca eventi", lega, stagione)
 
 
 def load_season_totals(lega: str | None = None, stagione: str | None = None) -> pd.DataFrame:
@@ -202,6 +312,11 @@ def statistic_columns(df: pd.DataFrame | None = None) -> list[str]:
     skip = set(PRE_COLUMNS) | set(STATIC_COLUMNS) | {
         "data", "lega", "stagione", "Risultato squadra", "Esito",
         "Titolare/Subentrato",
+        # `Fase` e' un'etichetta di competizione, non una misura: senza questa
+        # riga la Bundesliga dichiarerebbe 98 statistiche invece di 97, e il
+        # manifesto scritto dallo script di registrazione ne erediterebbe il
+        # conteggio sbagliato.
+        "Fase",
     }
     return [c for c in df.columns if c not in skip]
 

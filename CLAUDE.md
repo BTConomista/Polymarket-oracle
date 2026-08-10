@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.265 verdi** al 02/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.274 verdi** al 10/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.265 verdi al 02/08/2026)
+python -m pytest                       # test (1.274 verdi al 10/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -337,7 +337,13 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  season_sim.py (Fase 89: simulazione Monte Carlo di una STAGIONE
                  intera -> mercato CAMPIONE; classifica con spareggi UFFICIALI
                  per lega, h2h in SA/Liga, DR in Premier)
-                 player_stats.py (97 statistiche per GIOCATORE-partita, 3 leghe)
+                 player_stats.py (97 statistiche + rating per GIOCATORE-partita,
+                 4 leghe 2025-26 -- manca la Ligue 1. 44.894 righe. Dalla Fase
+                 138 la colonna Fase separa il campionato dallo spareggio
+                 (load_player_matches lo esclude per default: negli snapshot
+                 non c'e'), e la sola Bundesliga porta 4 fogli in piu' --
+                 partite/formazioni/cambi/eventi. ⚠️ Gol concessi e'
+                 INDIVIDUALE: gol presi mentre quel giocatore era in campo
                  smarkets_archive.py (Fase 136: elenca e legge gli snapshot
                  Smarkets, .json storici e .json.gz nuovi. ultimo_listino_completo()
                  e' quello che serve: «l'ultimo file» puo' essere un giro di
@@ -466,7 +472,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.265 verdi al 02/08/2026), fra cui i guardiani
+tests/           test unitari (1.274 verdi al 10/08/2026), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/

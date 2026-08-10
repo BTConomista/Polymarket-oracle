@@ -338,6 +338,7 @@ correzioni.*
 - [Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile](#fase-135--il-listino-intero-da-6-mercati-a-110-e-il-batching-che-lo-rende-possibile)
 - [Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime](#fase-136--anche-il-giro-giornaliero-prende-tutto-e-larchivio-si-comprime)
 - [Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere](#fase-137--i-guardiani-mancanti-tre-difetti-che-nessun-test-poteva-vedere)
+- [Fase 138 — La Bundesliga per giocatore: e i cartellini che non tornavano](#fase-138--la-bundesliga-per-giocatore-e-i-cartellini-che-non-tornavano)
 
 ---
 
@@ -15561,3 +15562,197 @@ non l'ultima salva. Deducendo `n` dai dati tornano entrambe giuste senza toccare
 turno. L'euristica ragiona sul calendario **teorico**, quindi fino all'ultima
 giornata giocata vede ancora 10 gare da giocare e non dichiara nessuno «deciso». È
 corretto così: nessuno, in quel momento, lo sapeva.
+
+---
+
+## Fase 138 — La Bundesliga per giocatore: e i cartellini che non tornavano
+
+**Obiettivo.** Integrare la consegna dell'utente: statistiche **per giocatore
+per partita** della Bundesliga 2025-26. È la quarta lega del dato "Tier B" —
+mancavano Bundesliga e Ligue 1 — e arriva con un report di verifica proprio.
+
+**Ragionamento.** Il report dell'utente dichiara «nessun errore di estrazione»
+su 308 partite. Non è un motivo per non verificare: è un motivo per verificare
+**altro**. I suoi controlli sono interni al dato e contro il sito; i miei sono
+contro **due fonti che diretta.it non conosce** — lo snapshot football-data
+(gol e date) e le statistiche di **squadra** già in repo (falli, cartellini,
+tiri). Se il dato è giusto, tre viste indipendenti devono ricomporsi.
+
+**Struttura.** 9.617 righe giocatore-partita, 109 colonne. Lo schema è
+**identico** a quello delle tre leghe già in casa — stesse 108 colonne, stesso
+ordine — più una: **`Fase`**, che separa il campionato dallo **spareggio
+promozione/retrocessione** (Wolfsburg-Paderborn, andata e ritorno). E quattro
+**fogli che le altre consegne non avevano**: elenco partite, formazioni
+(panchinari compresi), 2.884 sostituzioni, 2.261 eventi di cronaca.
+
+**Esito dei controlli: 30 su 35 al primo colpo, e i 5 residui erano tutti
+spiegabili.** Due erano **miei errori**, tre sono proprietà del dato.
+
+### I due errori miei
+
+**«19 squadre invece di 18».** Sono 18 di Bundesliga **più il Paderborn**, che
+gioca lo spareggio salendo dalla seconda divisione. In campionato sono 18. Il
+controllo era scritto male, non il dato.
+
+**«I gol concessi non tornano: 129/612».** Qui l'errore è più interessante,
+perché è la **trappola** di questo dataset. Avevo sommato `Gol concessi` su
+tutta la rosa, dando per scontato che fosse il totale di squadra ripetuto su
+ogni riga. Non lo è: è una statistica **individuale** — i gol che la squadra ha
+preso **mentre quel giocatore era in campo**. La conferma è numerica e netta: il
+rapporto fra la somma sulla rosa e i gol davvero subiti vale **10,96 in media,
+fra 10,0 e 11,0** — cioè gli undici in campo a ogni gol. Ristretto ai portieri,
+il controllo torna **612/612**.
+
+### ⭐ I cartellini: una divergenza vera, e la sua identità esatta
+
+Contro le statistiche di squadra, i falli tornano su 612/612 e il fuorigioco
+pure. I **cartellini gialli** no: 585/612, con la somma dei giocatori quasi
+sempre **più bassa** di quella di squadra (scarti −1, −2, fino a −4).
+
+Non è un errore di estrazione: è una **convenzione di Opta** più un limite
+strutturale del file, e insieme danno un'identità esatta.
+
+```
+gialli(squadra) = Σ gialli(giocatori scesi in campo)
+                + 2 × Σ secondi_gialli(giocatori scesi in campo)
+                + gialli mostrati a chi in campo non è mai entrato
+```
+
+Il **«2 ×»** è la convenzione: a chi viene espulso per doppia ammonizione le
+statistiche individuali **non registrano il primo giallo** — tengono solo il
+flag `Secondo cartellino giallo` e il rosso. La pagina di squadra invece conta
+tutti i cartellini **mostrati**. Il terzo addendo è il limite: il file
+giocatore-partita contiene **solo chi è sceso in campo**, quindi un giallo alla
+panchina non ha una riga dove stare.
+
+Misurato: i primi due addendi ricompongono il totale di squadra su **606/612**
+squadra-partita. Dei 6 residui, **5 hanno segno −1 e sono un giallo a un
+giocatore mai entrato** — verificati uno per uno nel foglio Formazioni, dove
+`Stato = "Non entrato"`, col nome: Zesiger (Augusta, due volte), Zieler
+(Colonia), Müller (Wolfsburg), Baldé (Amburgo). Il **sesto** ha segno +1 ed è
+una divergenza vera fra le due pagine dello stesso sito. Stessa storia per i
+rossi: 611/612, e il residuo è di nuovo Müller da non entrato.
+
+**Perché questa è la parte che conta.** Senza il foglio Formazioni la
+divergenza sarebbe rimasta «27 partite con i cartellini che non tornano» — un
+sospetto di errore di estrazione impossibile da chiudere. Con un terzo punto di
+vista sulla stessa fonte diventa un'identità che si ricompone, e ciò che resta
+fuori si riduce a **una** riga su 612. È la regola R5 applicata alla lettera:
+**spiegare prima di accusare**, e diagnosticare con informazione indipendente.
+
+**Il quinto residuo: i tiri.** `Tiri totali` diverge su 2 squadra-partita su
+612 e `Tiri in porta` su 1, di ±1 o ±2. Nessuna spiegazione strutturale: è
+**incoerenza della fonte** fra due sue pagine. Si dichiara e non si corregge
+(R3, R4) — è la stessa famiglia del `Tackles %` a 133 già dichiarato per le
+statistiche di squadra.
+
+### Cosa è entrato, e come
+
+Tutto (§5-ter). Oltre alle due tabelle principali, i **quattro fogli nuovi**:
+non servono a nessun modello oggi, ma il foglio Formazioni ha appena pagato il
+proprio spazio spiegando i cartellini. Con loro l'**originale come consegnato**
+(`originale.xlsx`, 4,85 MB): la fedeltà della nostra conversione è verificata,
+**1.305.193 celle su 1.305.193 identiche** sui sei fogli.
+
+⚠️ La **cronaca eventi è incompleta per costruzione** — 907 gol elencati contro
+i 990 realmente segnati, perché è la cronaca redazionale del sito e non un
+tracciato. Un test lo inchioda apposta, così nessuno la userà mai per contare.
+
+**Il `Fase` ha richiesto tre correzioni al codice**, tutte piccole e tutte
+necessarie: `load_player_matches` filtra il campionato per default (altrimenti
+`join_to_snapshot` alza sulle 62 righe di spareggio, che negli snapshot non
+esistono e non devono esistere); `statistic_columns` esclude `Fase`, che è
+un'etichetta di competizione e non una misura; il manifesto scompone
+`righe_attese` in campionato e fuori campionato. Le tre leghe senza `Fase` non
+se ne accorgono: il filtro è un no-op dove la colonna non c'è.
+
+⚠️ **Una divergenza di vocabolario, dichiarata e non normalizzata** (R4): la
+consegna per giocatore scrive `Campionato`/`Spareggio`, quella per squadra
+`Stagione regolare`/`Play-off`. Sono le stesse due cose. Il codice accetta
+entrambe le coppie e **alza** su una terza parola sconosciuta, invece di
+lasciarla decidere al caso da un filtro che non la conosce.
+
+### Due guardiani che si sono rotti, ed è il loro mestiere
+
+L'ingresso della quarta lega ha fatto cadere **due test verdi da mesi**. Nessuno
+dei due era sbagliato quando è stato scritto: entrambi avevano **inciso un
+elenco** dove serviva una proprietà.
+
+Il primo dichiarava che `player_stats` vedesse esattamente
+`{serie_a, premier_league, la_liga}` — vero fino al giorno in cui la Bundesliga
+ha avuto anche il dato per giocatore. Riscritto per verificare la **proprietà**
+che davvero conta (una cartella compare fra le raccolte per giocatore *se e solo
+se* il file per giocatore c'è davvero), il test scopre da sé che oggi l'unica
+con il solo dato di squadra è la Ligue 1, invece di saperlo.
+
+Il secondo ha trovato qualcosa. Il ponte d'identità dei giocatori copriva
+35.339 righe su 35.339; ora copre **44.891 su 44.894**. Le **3 righe** scoperte
+sono tutte del Mainz e di due soli giocatori, **Ben Bobzien** e **Fabio Moreno
+Fell** — e non è un problema di nome: i due **non esistono affatto** nel dataset
+player-scores da cui il ponte pesca (cercati per cognome: zero righe). È un
+limite di copertura **della fonte**. Il test ora li nomina: rilassarlo a
+«copertura > 99%» avrebbe lasciato passare in silenzio anche una raccolta futura
+che ne perde duecento.
+
+**Risultato.** 4 leghe su 5 con il dato per giocatore, **44.894 righe
+giocatore-partita**. Resta fuori la **Ligue 1**, l'unica cartella con il solo
+dato di squadra. Suite: 1.265 → **1.274** verdi.
+
+**Lezione.** Un dato che «non torna» contro una seconda fonte non è ancora un
+errore: è una **domanda**. Qui la risposta stava in un terzo foglio che nessuno
+aveva chiesto e che è arrivato solo perché la regola è raccogliere tutto. Il
+foglio Formazioni non serviva a niente il giorno in cui è entrato — e ha
+spiegato una divergenza sei ore dopo.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello: è una fase di dati. Ma tre identità esatte, tutte verificate
+sul dato vero e tutte diventate test.
+
+**(1) I gol, in due passaggi.** Per ogni squadra-partita, con `G` i gol dei
+giocatori e `A` gli autogol:
+
+```
+gol_fatti(X)  = Σ G(giocatori di X) + Σ A(giocatori dell'avversaria)
+gol_subiti(X) = Σ GolConcessi(PORTIERI di X)          ← solo i portieri
+```
+
+La seconda riga è il punto. `GolConcessi` è definita **per giocatore**: i gol
+presi dalla squadra mentre lui era in campo. Da cui, sommando su tutta la rosa:
+
+```
+Σ GolConcessi(tutta la rosa) = Σ_gol (uomini in campo a quel gol) ≈ 11 · gol_subiti
+```
+
+misurato **10,96** (min 10,0 — una squadra in dieci; max 11,0). Entrambe le
+identità tornano **612/612**, e la seconda ricompone anche il totale di
+campionato: **990 = 990**.
+
+**(2) I cartellini gialli.** Con `y` i gialli individuali, `s` i secondi gialli
+e `p` i cartellini alla panchina:
+
+```
+gialli_squadra = Σ y + 2·Σ s + p
+```
+
+Il coefficiente **2** non è una taratura: è la conseguenza esatta della
+convenzione della fonte. Un'espulsione per doppia ammonizione mostra **due**
+cartellini (li conta la pagina di squadra) ma nel dato individuale lascia
+`y = 0, s = 1` — quindi mancano **entrambi** i gialli, e vanno rimessi
+moltiplicando `s` per 2. Verifica: con `p = 0` l'identità torna su **606/612**;
+i 6 residui sono 5 casi con `p = 1` (verificati per nome nel foglio Formazioni)
+e 1 incoerenza della fonte. In stagione i secondi gialli sono **23**.
+
+**(3) La fedeltà della conversione.** Per ogni foglio `f` con `r_f` righe e
+`c_f` colonne, confrontando cella per cella l'`.xlsx` consegnato e il `.csv.gz`
+scritto da noi (uguaglianza esatta sulle stringhe, `atol = 1e-9` sui numeri,
+`NaN == NaN`):
+
+```
+Σ_f r_f · c_f = 1.048.253 + 3.080 + 147.588 + 23.072 + 27.132 + 56.068
+              = 1.305.193 celle,  divergenti 0
+```
+
+È il controllo che l'archiviazione dell'originale rende possibile: senza il
+file come consegnato, un bug della **nostra** conversione sarebbe
+indistinguibile dal dato.

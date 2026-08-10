@@ -1,0 +1,98 @@
+Codice statistica (diretta.it/Flashscore),Etichetta italiana,Nota
+ASSISTS_GOAL,Assist,Somma stagionale nel foglio riepilogo
+BALL_RECOVERIES,Palloni recuperati,Somma stagionale nel foglio riepilogo
+BIG_CHANCES_CREATED,Grandi occasioni create,Somma stagionale nel foglio riepilogo
+BIG_CHANCES_MISSED,Grandi occasioni fallite,Somma stagionale nel foglio riepilogo
+BIG_CHANCES_SAVED,Grandi occasioni parate,Somma stagionale nel foglio riepilogo
+BOX_ENTRIES_ACCURATE,Ingressi in area riusciti,Somma stagionale nel foglio riepilogo
+BOX_ENTRIES_EFFICIENCY,Ingressi in area (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+BOX_ENTRIES_TOTAL,Ingressi in area totali,Somma stagionale nel foglio riepilogo
+CARDS_RED,Cartellini rossi,Somma stagionale nel foglio riepilogo
+CARDS_YELLOW,Cartellini gialli,Somma stagionale nel foglio riepilogo
+CARDS_YELLOW_SECOND,Secondo cartellino giallo,Somma stagionale nel foglio riepilogo
+CHALLENGE_LOST,Dribbling subiti,Somma stagionale nel foglio riepilogo
+CLEARANCES,Respinte difensive,Somma stagionale nel foglio riepilogo
+CLEARANCES_OFF_LINE,Salvataggi sulla linea,Somma stagionale nel foglio riepilogo
+CROSSES_ACCURACY,Cross riusciti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+CROSSES_ACCURATE,Cross riusciti,Somma stagionale nel foglio riepilogo
+CROSSES_TOTAL,Cross totali,Somma stagionale nel foglio riepilogo
+DRIBBLES_EFFICIENCY,Dribbling riusciti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+DRIBBLES_TOTAL,Dribbling tentati,Somma stagionale nel foglio riepilogo
+DRIBBLES_WON,Dribbling riusciti,Somma stagionale nel foglio riepilogo
+DUELS_AERIAL_EFFICIENCY,Duelli aerei vinti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+DUELS_AERIAL_TOTAL,Duelli aerei totali,Somma stagionale nel foglio riepilogo
+DUELS_AERIAL_WON,Contrasti aerei vinti,Somma stagionale nel foglio riepilogo
+DUELS_EFFICIENCY,Duelli vinti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+DUELS_GROUND_EFFICIENCY,Duelli a terra vinti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+DUELS_GROUND_TOTAL,Duelli a terra totali,Somma stagionale nel foglio riepilogo
+DUELS_GROUND_WON,Contrasti a terra vinti,Somma stagionale nel foglio riepilogo
+DUELS_TOTAL,Contrasti,Somma stagionale nel foglio riepilogo
+DUELS_WON,Contrasti vinti,Somma stagionale nel foglio riepilogo
+ERRORS_LEAD_TO_GOAL,Errori che hanno portato al gol,Somma stagionale nel foglio riepilogo
+ERRORS_LEAD_TO_SHOT,Errori che hanno portato al tiro,Somma stagionale nel foglio riepilogo
+EXPECTED_ASSISTS,Assist previsti (xA),Somma stagionale nel foglio riepilogo
+EXPECTED_GOALS,Goal previsti (xG),Somma stagionale nel foglio riepilogo
+EXPECTED_GOALS_ON_TARGET,xG sui Tiri in porta (xGOT),Somma stagionale nel foglio riepilogo
+EXPECTED_GOALS_ON_TARGET_FACED,xGot affrontati,Somma stagionale nel foglio riepilogo
+FINAL_THIRD_ENTRIES_EFFICIENCY,Ingressi nel terzo finale (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+FINAL_THIRD_ENTRIES_SUCCESSFUL,Ingressi nel terzo finale riusciti,Somma stagionale nel foglio riepilogo
+FINAL_THIRD_ENTRIES_TOTAL,Ingressi nel terzo finale totali,Somma stagionale nel foglio riepilogo
+FOULS_COMMITTED,Falli commessi,Somma stagionale nel foglio riepilogo
+FOULS_SUFFERED,Falli subiti,Somma stagionale nel foglio riepilogo
+GOALS,Gol,Somma stagionale nel foglio riepilogo
+GOALS_CONCEDED,Gol concessi,Somma stagionale nel foglio riepilogo
+GOALS_OWN,Autogol,Somma stagionale nel foglio riepilogo
+GOALS_PENALTY,Gol su rigore,Somma stagionale nel foglio riepilogo
+GOALS_PREVENTED,Gol evitati,Somma stagionale nel foglio riepilogo
+GOALS_PREVENTED_NO_PENALTIES,Gol evitati (esclusi rigori),Somma stagionale nel foglio riepilogo
+HIGH_CLAIM_EFFICIENCY,Uscite alte riuscite (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+HIGH_CLAIM_SAVED,Uscite alte riuscite,Somma stagionale nel foglio riepilogo
+HIGH_CLAIM_TOTAL,Uscite alte totali,Somma stagionale nel foglio riepilogo
+INTERCEPTIONS,Palle intercettate,Somma stagionale nel foglio riepilogo
+KEEPER_SWEEPER_TOTAL,Interventi fuori area,Somma stagionale nel foglio riepilogo
+KEEPER_THROWS_TOTAL,Rimesse,Somma stagionale nel foglio riepilogo
+KEY_PASSES,Passaggi chiave,Somma stagionale nel foglio riepilogo
+LAYOFFS_ACCURACY,Sponde riuscite (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+LAYOFFS_ACCURATE,Sponde riuscite,Somma stagionale nel foglio riepilogo
+LAYOFFS_TOTAL,Sponde tentate,Somma stagionale nel foglio riepilogo
+LONG_BALLS_ACCURACY,Passaggi lunghi riusciti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+LONG_BALLS_ACCURATE,Passaggi lunghi riusciti,Somma stagionale nel foglio riepilogo
+LONG_BALLS_TOTAL,Passaggi lunghi totali,Somma stagionale nel foglio riepilogo
+MATCH_MINUTES_PLAYED,Minuti giocati,Somma stagionale nel foglio riepilogo
+OFFSIDES,Fuorigioco,Somma stagionale nel foglio riepilogo
+OUTFIELDER_BLOCKS,Tiri bloccati (giocatore di movimento),Somma stagionale nel foglio riepilogo
+PASSES_ACCURACY,Precisione passaggi (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+PASSES_ACCURATE,Passaggi riusciti,Somma stagionale nel foglio riepilogo
+PASSES_FINAL_THIRD_ACCURACY,Passaggi nel terzo finale (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+PASSES_FINAL_THIRD_ACCURATE,Passaggi riusciti nel terzo finale,Somma stagionale nel foglio riepilogo
+PASSES_FINAL_THIRD_TOTAL,Passaggi nel terzo finale totali,Somma stagionale nel foglio riepilogo
+PASSES_OPEN_PLAY_ACCURACY,Passaggi su azione (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+PASSES_OPEN_PLAY_ACCURATE,Passaggi su azione riusciti,Somma stagionale nel foglio riepilogo
+PASSES_OPEN_PLAY_TOTAL,Passaggi su azione totali,Somma stagionale nel foglio riepilogo
+PASSES_TOTAL,Passaggi totali,Somma stagionale nel foglio riepilogo
+PENALTIES_COMMITTED,Rigori concessi (falli),Somma stagionale nel foglio riepilogo
+PENALTIES_NOT_CONVERTED,Rigori sbagliati,Somma stagionale nel foglio riepilogo
+PENALTIES_SAVED,Rigori parati,Somma stagionale nel foglio riepilogo
+PENALTIES_WON,Rigori conquistati,Somma stagionale nel foglio riepilogo
+PROGRESSIVE_CARRIES,Conduzioni progressive,Somma stagionale nel foglio riepilogo
+PROGRESSIVE_PASSES_ACCURACY,Passaggi progressivi riusciti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+PROGRESSIVE_PASSES_ACCURATE,Passaggi progressivi riusciti,Somma stagionale nel foglio riepilogo
+PROGRESSIVE_PASSES_TOTAL,Passaggi progressivi totali,Somma stagionale nel foglio riepilogo
+PUNCHES_TOTAL,Respinte di pugno,Somma stagionale nel foglio riepilogo
+SAVES_TOTAL,Salvataggi del portiere,Somma stagionale nel foglio riepilogo
+SHOTS_BLOCKED,Tiri fermati,Somma stagionale nel foglio riepilogo
+SHOTS_BOX_IN,Tiri dall'area di rigore,Somma stagionale nel foglio riepilogo
+SHOTS_BOX_OUT,Tiri da fuori area,Somma stagionale nel foglio riepilogo
+SHOTS_FACED,Tiri subiti,Somma stagionale nel foglio riepilogo
+SHOTS_HEAD,Colpi di testa verso la porta,Somma stagionale nel foglio riepilogo
+SHOTS_OFF_TARGET,Tiri fuori,Somma stagionale nel foglio riepilogo
+SHOTS_ON_TARGET,Tiri in porta,Somma stagionale nel foglio riepilogo
+SHOTS_TOTAL,Tiri totali,Somma stagionale nel foglio riepilogo
+TACKLES_EFFICIENCY,Tackle vinti (%),Percentuale 0-100. Nel riepilogo ricalcolata sui totali stagionali.
+TACKLES_TOTAL,Tackle totali,Somma stagionale nel foglio riepilogo
+TACKLES_WON,Tackles vinti,Somma stagionale nel foglio riepilogo
+TACKLE_LAST_MAN,Tackle da ultimo uomo,Somma stagionale nel foglio riepilogo
+THROUGH_BALLS,Passaggi filtranti,Somma stagionale nel foglio riepilogo
+TOUCHES_BOX_OPPOSITE,Palloni toccati nell'area avversaria,Somma stagionale nel foglio riepilogo
+TOUCHES_TOTAL,Palloni toccati,Somma stagionale nel foglio riepilogo
+TURNOVERS,Palloni persi,Somma stagionale nel foglio riepilogo
