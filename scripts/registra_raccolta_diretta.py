@@ -107,8 +107,16 @@ def verifica(df: pd.DataFrame, lega: str) -> dict:
     if dup:
         raise SystemExit(f"❌ {dup} righe duplicate (giornata+squadra+giocatore)")
 
-    if not d["Minuti giocati"].between(1, 120).all():
-        raise SystemExit("❌ minuti fuori dal range 1-120")
+    # ⚠️ Lo ZERO e' ammesso, e viene CONTATO. Il limite era 1-120 e la Ligue 1
+    # l'ha fatto scattare su una riga: Ali Youssef, titolare in Lorient-Nantes
+    # (g. 20) con rating 6,5 e un giallo all'88' — ha giocato, ma diretta.it non
+    # gli attribuisce minuti. E' una lacuna della fonte, cioe' uno zero che
+    # significa «non lo so»: il finto pieno della regola R6. Non si corregge
+    # (R3) e non si nasconde: si lascia com'e' e si dichiara nel manifesto,
+    # cosi' chi filtra su `Minuti giocati > 0` sa che sta perdendo quella riga.
+    if not d["Minuti giocati"].between(0, 120).all():
+        raise SystemExit("❌ minuti fuori dal range 0-120")
+    zero_minuti = d[d["Minuti giocati"] == 0]
     for col in [c for c in d.columns if "(%)" in c]:
         v = d[col].dropna()
         if len(v) and not v.between(0, 100).all():
@@ -122,6 +130,11 @@ def verifica(df: pd.DataFrame, lega: str) -> dict:
         "righe_attese": int(len(d) + len(fuori)),
         "righe_campionato": int(len(d)),
         "righe_fuori_campionato": int(len(fuori)),
+        "righe_con_zero_minuti": [
+            {"data": str(r.data.date()), "squadra": r.Squadra,
+             "giocatore": r.Giocatore}
+            for r in zero_minuti.itertuples()
+        ],
         "team_partita_attesi": int(d.groupby(["data", "Squadra", "Avversario"]).ngroups),
         "squadre": int(d["Squadra"].nunique()),
         "giocatori": int(d["Giocatore"].nunique()),

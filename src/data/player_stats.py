@@ -68,11 +68,15 @@ FILE_EVENTI = "eventi.csv.gz"
 
 # La colonna `Fase` distingue il campionato dalle partite che campionato non
 # sono (lo spareggio promozione/retrocessione di Bundesliga e Ligue 1). Le due
-# consegne usano PAROLE DIVERSE per la stessa cosa — «Campionato»/«Spareggio»
-# nei file giocatore, «Stagione regolare»/«Play-off» in quelli di squadra — e
-# la differenza va dichiarata, non normalizzata di nascosto sul disco (R4).
+# consegne usano PAROLE DIVERSE per la stessa cosa, e ogni consegna nuova ne
+# ha portata una terza: «Campionato»/«Spareggio» nel file giocatore della
+# Bundesliga, «Stagione regolare»/«Play-off» in quelli di squadra,
+# «Play Off retrocessione» nel file giocatore della Ligue 1. Si accettano
+# tutte e si ALZA su una parola sconosciuta — la differenza va dichiarata, non
+# normalizzata di nascosto sul disco (R4).
 FASI_CAMPIONATO = ("Campionato", "Stagione regolare")
-FASI_FUORI_CAMPIONATO = ("Spareggio", "Play-off", "Playoff")
+FASI_FUORI_CAMPIONATO = ("Spareggio", "Play-off", "Playoff",
+                         "Play Off retrocessione")
 
 # Le uniche colonne NON `post` (regola R8). Tutto il resto esiste solo a
 # partita finita. `Titolare/Subentrato` e' `post` nel dato storico ma

@@ -236,16 +236,21 @@ def test_registro_manuale_solo_dove_manca_laggancio():
 def test_copertura_del_ponte_su_tutte_le_raccolte():
     """La copertura del ponte, lega per lega, con le eccezioni NOMINATE.
 
-    Era «35.339 righe su 35.339» sulle prime tre leghe. Con la Bundesliga
-    (Fase 145) le righe sono **44.894** e la copertura scende a 44.891 —
-    **3 righe**, tutte del Mainz e tutte di due soli giocatori: **Ben Bobzien**
-    e **Fabio Moreno Fell**.
+    Era «35.339 righe su 35.339» sulle prime tre leghe. Con tutte e cinque
+    (Fasi 145-146) le righe sono **54.303** e la copertura e' **54.270**.
+    Le 33 righe scoperte hanno tutte una causa nominata:
 
-    Non e' un difetto del ponte ne' un errore di nome: i due **non esistono
-    affatto** nel dataset player-scores da cui il ponte pesca (`grep` sui nomi:
-    zero righe). E' un limite di copertura della FONTE, e va dichiarato invece
-    che nascosto dietro una soglia morbida — un `> 0.99` lascerebbe passare in
-    silenzio anche una raccolta futura che ne perde duecento.
+    - **22** sono una partita sola, **Nantes-Tolosa del 17/05/2026**, fermata
+      al 22' e omologata 0-0 — cioe' TUTTE le sue righe: nel dataset
+      player-scores le presenze di una gara mai finita non ci sono;
+    - **11** sono **sei giocatori** che nel dataset **non esistono affatto**
+      (Bobzien e Moreno Fell del Mainz; Nduquidi del Metz; Cabral Pape,
+      Nibombe e Toure del Monaco). Cercati per cognome: zero righe.
+
+    Nessuna delle due e' un difetto del ponte: sono limiti di copertura della
+    FONTE, e vanno dichiarati invece che nascosti dietro una soglia morbida —
+    un `> 0.99` lascerebbe passare in silenzio anche una raccolta futura che
+    ne perde duecento.
     """
     from src.data import player_stats as PS
     try:
@@ -260,7 +265,14 @@ def test_copertura_del_ponte_su_tutte_le_raccolte():
             assert per_lega[lega] == 0, f"{lega}: {per_lega[lega]} righe senza player_id"
 
     scoperte = out[out["player_id"].isna()]
-    assert len(scoperte) == len(out) - out["player_id"].notna().sum()
-    assert set(scoperte["Giocatore"]) <= {"Bobzien Ben", "Moreno Fell Fabio"}, \
-        f"nuovi giocatori fuori dal ponte: {sorted(set(scoperte['Giocatore']))}"
-    assert len(scoperte) == 3
+    assert len(scoperte) == 33
+
+    interrotta = scoperte[(scoperte["data"] == pd.Timestamp("2026-05-17"))
+                          & (scoperte["Squadra"].isin(["Nantes", "Toulouse"]))]
+    assert len(interrotta) == 22            # tutte le righe di quella partita
+    assert set(interrotta.groupby("Squadra").size()) == {11}
+
+    ignoti = set(scoperte.drop(interrotta.index)["Giocatore"])
+    assert ignoti == {"Bobzien Ben", "Moreno Fell Fabio", "Nduquidi Joseph",
+                      "Cabral Pape", "Nibombe Samuel", "Toure Ilane"}, \
+        f"nuovi giocatori fuori dal ponte: {sorted(ignoti)}"

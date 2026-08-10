@@ -1,0 +1,20 @@
+Voce,Dettaglio
+Fonte,diretta.it (Flashscore) — Ligue 1 2025/2026
+Estrazione,10 agosto 2026
+Partite di campionato,306 (34 giornate x 9)
+Play Off retrocessione,"4 partite, marcate ""Play Off retrocessione"" nella colonna Fase: quarti (Red Star-Rodez) e semifinale (St. Etienne-Rodez) sono turni interni alla Ligue 2, la finale andata e ritorno St. Etienne-Nizza mette in palio il posto in Ligue 1."
+Partite con statistiche per giocatore,310 (copertura completa)
+Righe giocatore-partita,9536 — solo chi è sceso in campo (titolari + subentrati)
+Squadre di Ligue 1,18 (più le tre squadre di Ligue 2 presenti solo nei play off)
+Statistiche per riga,97 + rating Diretta
+Colonne escluse perché sempre a zero o quasi,"Legni colpiti; Rigori segnati / sbagliati / parati nella serie finale (la sola lotteria dei rigori della stagione è St. Etienne-Rodez, semifinale play off)"
+Percentuali,"Espresse 0-100. Nel foglio riepilogo sono ricalcolate sui totali stagionali, non come media delle medie."
+Giocatori con più squadre,Chi ha cambiato club a gennaio compare con una riga per squadra nel riepilogo (es. Esteban Lepaul: 1 gol con l'Angers e 20 con il Rennes).
+"Nantes-Tolosa, giornata 34","Partita interrotta al 22' per invasione di campo. La Lega ha omologato lo 0-0, quindi il risultato conta in classifica; le statistiche dei giocatori coprono i soli 22 minuti giocati."
+"Youssef Ali (Nantes), giornata 20","Unica riga con 0 minuti: diretta.it non registra i suoi minuti benché il giocatore sia sceso in campo (ha rating 6,5 e un giallo all'88'). Il dato è lasciato come sulla fonte."
+Due partite senza anagrafica giocatori sul sito,Lorient-Auxerre e Metz-Brest (giornata 24): diretta.it non espone la scheda giocatori. Statistiche e rating sono completi; nome e ruolo sono stati ricostruiti dalle altre partite della stagione.
+Foglio Formazioni,"Include anche i panchinari non entrati (Stato = ""Non entrato""), esclusi dal foglio partita per partita. 12.350 righe."
+Foglio Cambi,"2.751 sostituzioni, ricavate unendo la cronaca della partita e le formazioni (chi esce, chi entra, minuto)."
+Foglio Eventi,"Cronaca pubblicata da diretta.it: gol, autogol, rigori assegnati, cartellini. Per 71 partite su 310 la cronaca del sito non riporta tutti i gol. Gol, assist e cartellini per giocatore nei fogli principali NON vengono da qui ma dalle statistiche individuali, e sono completi (gol di squadra = gol dei giocatori in 620 squadra-partita su 620)."
+,
+Nessuna partita mancante: tutte e 310 le partite hanno statistiche complete per giocatore.,

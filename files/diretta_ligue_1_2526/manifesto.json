@@ -1,0 +1,25 @@
+{
+  "righe_attese": 9536,
+  "righe_campionato": 9409,
+  "righe_fuori_campionato": 127,
+  "righe_con_zero_minuti": [
+    {
+      "data": "2026-01-31",
+      "squadra": "Nantes",
+      "giocatore": "Youssef Ali"
+    }
+  ],
+  "team_partita_attesi": 612,
+  "squadre": 18,
+  "giocatori": 551,
+  "statistiche": 98,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-17",
+  "partite_attese": 306,
+  "join_snapshot": "612/612",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "ligue_1",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+}

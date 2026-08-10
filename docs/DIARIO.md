@@ -355,6 +355,7 @@ correzioni.*
 - [Fase 143 — Il live: un job che cicla, e un punteggio che non è un campo](#fase-143--il-live-un-job-che-cicla-e-un-punteggio-che-non-è-un-campo)
 - [Fase 144 — Il cane da guardia: «avrei dovuto raccogliere, l'ho fatto?»](#fase-144--il-cane-da-guardia-avrei-dovuto-raccogliere-lho-fatto)
 - [Fase 145 — La Bundesliga per giocatore: e i cartellini che non tornavano](#fase-145--la-bundesliga-per-giocatore-e-i-cartellini-che-non-tornavano)
+- [Fase 146 — La Ligue 1 chiude il perimetro, e una riga sola che sbaglia in due modi](#fase-146--la-ligue-1-chiude-il-perimetro-e-una-riga-sola-che-sbaglia-in-due-modi)
 
 ---
 
@@ -18266,3 +18267,159 @@ scritto da noi (uguaglianza esatta sulle stringhe, `atol = 1e-9` sui numeri,
 È il controllo che l'archiviazione dell'originale rende possibile: senza il
 file come consegnato, un bug della **nostra** conversione sarebbe
 indistinguibile dal dato.
+
+---
+
+## Fase 146 — La Ligue 1 chiude il perimetro, e una riga sola che sbaglia in due modi
+
+**Obiettivo.** L'ultima delle cinque leghe. Con la Ligue 1 il dato "Tier B" —
+97 statistiche + rating per giocatore-partita — copre **l'intero perimetro
+modellato**: 54.303 righe, 3.502 squadra-partita, 5 campionati.
+
+**Ragionamento.** Stessa procedura della Bundesliga (Fase 145), e per lo stesso
+motivo: il report dell'utente è interno al dato e al sito, i miei controlli sono
+contro **due fonti che diretta.it non conosce** — lo snapshot football-data e le
+statistiche di squadra già in repo. Se il dato è giusto, tre viste indipendenti
+si ricompongono.
+
+**Struttura.** 9.536 righe, 109 colonne, schema **identico** alla Bundesliga —
+stesso ordine, stessi quattro fogli di contorno. `Fase` separa le 306 partite di
+campionato dalle 4 del **tabellone play-off retrocessione**, che porta dentro
+tre squadre di Ligue 2 (Red Star, Rodez, St. Étienne): in campionato le squadre
+restano 18, in tutto sono 21.
+
+**Esito.** Coerenza interna: **612/612** su ognuno dei sei controlli. Contro lo
+snapshot: join **612/612**, risultati **612/612**. Gol di campionato **863 =
+863**. Contro le statistiche di squadra: fuorigioco, tiri totali e tiri in porta
+tornano **612/612** — in Bundesliga i tiri divergevano su 3 squadra-partita,
+qui su nessuna.
+
+### ⭐ Una riga sola, due sintomi diversi
+
+Il caso che vale la fase. **Ali Youssef**, titolare in Lorient-Nantes (giornata
+20), ha rating 6,5 e **0 minuti giocati**: è l'unica riga a zero di tutto il
+dataset, su cinque leghe. Uno zero che significa «non lo so» è esattamente il
+**finto pieno** della regola R6 — chi filtra su `Minuti giocati > 0` lo perde
+senza accorgersene.
+
+Ma la stessa riga sbaglia una seconda volta, e non l'aveva notato nessuno: la
+cronaca gli attribuisce un **cartellino giallo all'88'**, e le statistiche
+individuali **non ce l'hanno**. È ciò che spiega uno dei residui dei cartellini
+di quella partita — dove sembravano due difetti indipendenti (un minutaggio
+mancante e un cartellino che non torna) c'è **un record troncato solo**.
+
+Il limite sui minuti nello script di registrazione era `1-120` e si è fermato
+qui. L'ho aperto a `0-120` e **contato**: la riga è dichiarata per nome nel
+manifesto (`righe_con_zero_minuti`), non corretta (R3) e non nascosta.
+
+### La partita che non è stata giocata
+
+**Nantes-Tolosa del 17/05/2026**, interrotta al 22' per invasione di campo e
+poi omologata 0-0. È un caso che il repo conosceva già — `docs/DATI.md`
+§1-quater l'aveva risolto — e qui torna da un'altra porta: le statistiche
+coprono i **22 minuti davvero giocati**, cioè 22 righe (i soli titolari,
+nessun subentrato) e 484 minuti in tutto invece di 1.980.
+
+È il controllo più informativo di tutto il lotto, perché dimostra ciò che
+nessun totale di stagione mostrerebbe: il dato **non è stato riempito** fino
+a 90'. Un file "aggiustato" avrebbe 990 minuti per parte e sarebbe
+indistinguibile da uno giusto guardando le somme.
+
+Quella stessa partita spiega anche **22 delle 33** righe che il ponte
+d'identità non aggancia — cioè *tutte* le sue righe: nel dataset player-scores
+le presenze di una gara mai finita non ci sono. Le altre **11** sono **sei
+giocatori** che in quel dataset non esistono affatto: due del Mainz (già noti
+dalla Fase 145), uno del Metz, tre del Monaco.
+
+### I cartellini: la stessa identità, con più residui
+
+L'identità della Fase 145 vale anche qui:
+
+```
+gialli(squadra) = Σ gialli + 2 × Σ secondi_gialli + gialli fuori dal campo
+```
+
+ma ricompone **594/612** invece di 606/612. Dei 18 residui: **4** sono un giallo
+a un `Non entrato`, **1** è al **tecnico** (Paulo Fonseca, Lyon 22/03 — non è né
+fra i giocatori né in formazione: è la conferma che anche la panchina tecnica
+finisce nel conteggio di squadra), **1** è la riga troncata di Ali Youssef. Gli
+altri **12** — 9 a +1 e 3 a −1 — sono incoerenze vere fra due pagine dello
+stesso sito.
+
+⚠️ E qui una precisazione che in Bundesliga non era possibile fare: **la cronaca
+concorda col totale di squadra in 17 casi su 18**. Quindi non è il totale di
+squadra a essere strano: è il **dato individuale** a divergere. Si dichiara e
+non si corregge (R3/R4). Stessa famiglia i falli, che divergono su 2
+squadra-partita su 612, entrambe del Nantes.
+
+**Un terzo vocabolario per `Fase`.** La Bundesliga scriveva `Spareggio`, i file
+di squadra `Play-off`, questo scrive **`Play Off retrocessione`**. Tre parole per
+la stessa cosa in tre consegne. Il codice le accetta tutte e **alza** su una
+quarta sconosciuta, invece di lasciarla decidere al caso a un filtro che non la
+conosce — è la scelta della Fase 145, e la Ligue 1 l'ha appena giustificata.
+
+**Risultato.** **5 leghe su 5**, 54.303 righe giocatore-partita. Fedeltà della
+conversione: **1.304.436 celle su 1.304.436** sui sei fogli. Suite: 1.577 →
+**1.583** verdi.
+
+**Lezione.** Due sintomi diversi possono essere **una sola causa**, e il modo per
+accorgersene è incrociare fogli che nessuno aveva chiesto: senza la cronaca, il
+cartellino mancante di Ali Youssef sarebbe rimasto uno dei dodici residui
+inspiegati, e lo zero nei minuti un caso a sé. La stessa regola della Fase 145 —
+raccogliere tutto — ha pagato la seconda volta in due giorni.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello: fase di dati. Le identità sono quelle della Fase 145, qui
+ri-misurate sulla Ligue 1 — ed è il punto: una formula che vale su una lega sola
+è un caso, su due è una regola della fonte.
+
+**(1) I gol, in due passaggi.** Identiche alla Fase 145:
+
+```
+gol_fatti(X)  = Σ G(giocatori di X) + Σ A(giocatori dell'avversaria)   → 612/612
+gol_subiti(X) = Σ GolConcessi(PORTIERI di X)                           → 612/612
+```
+
+e la conferma della semantica per-giocatore, cioè che `GolConcessi` conta i gol
+presi **mentre quel giocatore era in campo**:
+
+```
+Σ GolConcessi(tutta la rosa) / gol_subiti = 10,93   (min 9,0 — squadra in nove;
+                                                     max 11,0)
+```
+
+Il **9,0** è nuovo rispetto alla Bundesliga (che si fermava a 10,0) e non è un
+difetto: è una squadra rimasta in nove al momento di un gol. Il limite superiore
+resta 11,0 su entrambe le leghe, ed è quello che l'identità impone.
+
+**(2) I cartellini.** Stessa formula, coefficiente **2** per la stessa ragione
+(la doppia ammonizione mostra due cartellini ma il dato individuale ne registra
+zero, tenendo solo il flag `Secondo cartellino giallo` e il rosso):
+
+| | Bundesliga | Ligue 1 |
+|---|--:|--:|
+| identità esatta (senza il terzo addendo) | 606/612 | **594/612** |
+| residui spiegati (panchina, tecnico, riga troncata) | 5 | **6** |
+| incoerenze della fonte | 1 | **12** |
+| doppie ammonizioni in stagione | 23 | **21** |
+
+**(3) La partita interrotta, come vincolo aritmetico.** Con `m` i minuti
+giocati prima dell'interruzione e nessuna sostituzione:
+
+```
+minuti_totali = 2 squadre × 11 giocatori × m = 22 m
+```
+
+Misurato: **484 = 22 × 22**, cioè `m = 22'`. Il vincolo è forte perché lega tre
+cose che potevano essere riempite indipendentemente — il numero di righe (22,
+non 30), il totale dei minuti (484, non 1.980) e l'assenza di subentrati — e le
+lega a un numero, il minuto dell'interruzione, che sta su una fonte esterna
+(Wikipedia, e `docs/DATI.md` §1-quater).
+
+**(4) La fedeltà della conversione.** Stesso conto della Fase 145, sui sei fogli:
+
+```
+Σ_f r_f · c_f = 1.039.424 + 3.100 + 148.200 + 22.008 + 26.220 + 65.484
+              = 1.304.436 celle,  divergenti 0
+```

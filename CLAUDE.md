@@ -197,7 +197,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
 <<<<<<< HEAD
-- [ ] **Test** — mantieni `pytest` verde (**1.577 verdi** al 10/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.583 verdi** al 10/08/2026); aggiungi
 =======
 - [ ] **Test** — mantieni `pytest` verde (**1.538 verdi** al 08/08/2026); aggiungi
 >>>>>>> origin/main
@@ -275,7 +275,7 @@ python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
 <<<<<<< HEAD
-python -m pytest                       # test (1.577 verdi al 10/08/2026)
+python -m pytest                       # test (1.583 verdi al 10/08/2026)
 =======
 python -m pytest                       # test (1.538 verdi al 08/08/2026)
 >>>>>>> origin/main
@@ -346,12 +346,14 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  intera -> mercato CAMPIONE; classifica con spareggi UFFICIALI
                  per lega, h2h in SA/Liga, DR in Premier)
                  player_stats.py (97 statistiche + rating per GIOCATORE-partita,
-                 4 leghe 2025-26 -- manca la Ligue 1. 44.894 righe. Dalla Fase
-                 145 la colonna Fase separa il campionato dallo spareggio
+                 TUTTE E 5 le leghe 2025-26, 54.303 righe. Dalla Fase 145 la
+                 colonna Fase separa il campionato dallo spareggio
                  (load_player_matches lo esclude per default: negli snapshot
-                 non c'e'), e la sola Bundesliga porta 4 fogli in piu' --
+                 non c'e'), e Bundesliga e Ligue 1 portano 4 fogli in piu' --
                  partite/formazioni/cambi/eventi. ⚠️ Gol concessi e'
-                 INDIVIDUALE: gol presi mentre quel giocatore era in campo
+                 INDIVIDUALE: gol presi mentre quel giocatore era in campo.
+                 ⚠️ Una riga a 0 minuti (Ali Youssef) e' una lacuna della
+                 fonte dichiarata nel manifesto, non un giocatore fuori
                  smarkets_archive.py (Fase 136: elenca e legge gli snapshot
                  Smarkets, .json storici e .json.gz nuovi. ultimo_listino_completo()
                  e' quello che serve: «l'ultimo file» puo' essere un giro di
@@ -550,7 +552,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
 <<<<<<< HEAD
-tests/           test unitari (1.577 verdi al 10/08/2026), fra cui i guardiani
+tests/           test unitari (1.583 verdi al 10/08/2026), fra cui i guardiani
 =======
 tests/           test unitari (1.538 verdi al 08/08/2026; ⚠️ 1 ROSSO aperto:
                  test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_

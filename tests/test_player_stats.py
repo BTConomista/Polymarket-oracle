@@ -415,3 +415,134 @@ def test_la_cronaca_eventi_e_dichiaratamente_incompleta(bl):
     assert veri == 990
     assert in_cronaca < veri, "se la cronaca fosse completa questo test va aggiornato"
     assert in_cronaca == 907
+
+
+# --------------------------------------------------------------------------
+# 4 · Ligue 1 2025-26 (Fase 146): la quinta e ultima lega. Porta un terzo
+#     vocabolario per `Fase`, una partita INTERROTTA e una riga di fonte
+#     troncata che si manifesta in due modi diversi.
+# --------------------------------------------------------------------------
+
+@pytest.fixture(scope="module")
+def l1() -> pd.DataFrame:
+    return ps.load_player_matches("ligue_1", "2526")
+
+
+def test_ligue1_il_playoff_e_fuori_dal_campionato(l1):
+    """Terzo vocabolario per la stessa cosa: «Play Off retrocessione».
+
+    Bundesliga scriveva «Spareggio», i file di squadra «Play-off». Il codice le
+    accetta tutte e **alza** su una parola nuova, invece di lasciarla passare a
+    un filtro che non la conosce.
+
+    Il tabellone porta dentro tre squadre di Ligue 2 (Red Star, Rodez,
+    St. Etienne): in campionato le squadre restano 18, in tutto sono 21.
+    """
+    tutto = ps.load_player_matches("ligue_1", "2526", solo_campionato=False)
+    assert set(tutto["Fase"]) == {"Campionato", "Play Off retrocessione"}
+    assert "Play Off retrocessione" in ps.FASI_FUORI_CAMPIONATO
+    assert set(l1["Fase"]) == {"Campionato"}
+
+    assert len(l1) == 9409 and len(tutto) == 9536
+    assert l1.groupby(["data", "Squadra", "Avversario"]).ngroups == 612
+    assert l1["Squadra"].nunique() == 18
+    assert tutto["Squadra"].nunique() == 21
+    assert ps.join_to_snapshot(l1)["home_team"].notna().all()
+
+
+def test_ligue1_la_partita_interrotta_ha_solo_i_titolari(l1):
+    """Nantes-Tolosa del 17/05/2026, fermata al 22' per invasione di campo.
+
+    La Lega ha omologato lo 0-0, quindi il risultato conta in classifica e la
+    partita c'e' nel nostro snapshot — ma le statistiche coprono i **22 minuti
+    davvero giocati**: 22 righe (i soli titolari, nessun subentrato) e
+    22 x 11 x 2 = 484 minuti in tutto.
+
+    E' il controllo che dimostra che il dato NON e' stato riempito fino a 90':
+    un file "aggiustato" avrebbe 990 minuti per parte e nessuno se ne
+    accorgerebbe guardando i totali di stagione.
+    """
+    m = l1[(l1["data"] == pd.Timestamp("2026-05-17"))
+           & (l1["Squadra"].isin(["Nantes", "Toulouse"]))]
+    assert len(m) == 22
+    assert (m["Titolare/Subentrato"] == "Titolare").all()
+    assert int(m["Minuti giocati"].sum()) == 484
+    assert set(m.groupby("Squadra").size()) == {11}
+
+
+def test_ligue1_la_riga_troncata_si_vede_in_due_modi(l1):
+    """⭐ Una sola lacuna della fonte, due sintomi — ed e' la stessa riga.
+
+    Ali Youssef, titolare in Lorient-Nantes (g. 20, 31/01/2026), ha rating 6,5
+    ma **0 minuti giocati**: e' l'unica riga a zero di tutto il dataset, e uno
+    zero che significa «non lo so» e' il finto pieno della regola R6.
+
+    Il secondo sintomo e' che la stessa riga **perde anche il cartellino**: la
+    cronaca gli attribuisce un giallo all'88', le statistiche individuali no.
+    E' cio' che spiega uno dei residui dei cartellini di quella partita — non
+    due difetti diversi, un record troncato solo.
+
+    Non si corregge (R3) e non si nasconde: il manifesto la dichiara per nome.
+    """
+    zero = l1[l1["Minuti giocati"] == 0]
+    assert len(zero) == 1
+    riga = zero.iloc[0]
+    assert riga["Giocatore"] == "Youssef Ali" and riga["Squadra"] == "Nantes"
+    assert riga["Titolare/Subentrato"] == "Titolare" and riga["Rating"] > 0
+    assert riga["Cartellini gialli"] == 0          # il giallo non c'e'
+
+    ev = ps.load_events("ligue_1", "2526")
+    suo = ev[(ev["data"] == riga["data"]) & (ev["Giocatore"] == "Youssef Ali")]
+    assert (suo["Evento"] == "Cartellino Giallo").any(), \
+        "la cronaca dovrebbe avere il giallo che le statistiche individuali perdono"
+
+    m = [x for x in ps.raccolte() if x["lega"] == "ligue_1"][0]
+    assert len(m["righe_con_zero_minuti"]) == 1
+    assert m["righe_con_zero_minuti"][0]["giocatore"] == "Youssef Ali"
+
+
+def test_ligue1_i_cartellini_tornano_meno_che_in_bundesliga(l1):
+    """La stessa identita' della Bundesliga, ma con piu' residui — e va detto.
+
+        gialli(squadra) = Σ gialli + 2 × Σ secondi_gialli + gialli fuori dal campo
+
+    In Bundesliga i primi due addendi ricomponevano 606/612; qui **594/612**.
+    Dei 18 residui: **4** sono un giallo a un `Non entrato`, **1** e' al
+    tecnico (Paulo Fonseca, Lyon 22/03 — non e' ne' fra i giocatori ne' in
+    formazione), **1** e' la riga troncata di Ali Youssef. Gli altri **12**
+    (9 a +1 e 3 a −1) sono incoerenze vere fra due pagine dello stesso sito:
+    la cronaca concorda col totale di squadra in 17 casi su 18, quindi e' il
+    dato individuale a divergere. Si dichiarano e non si correggono (R3/R4).
+    """
+    from src.data import team_stats
+
+    ts = team_stats.load_team_matches(lega="ligue_1", stagione="2526")
+    ts = ts[ts["Periodo"] == "Totale"].set_index(["data", "Squadra"])
+    a = l1.groupby(["data", "Squadra"])[
+        ["Cartellini gialli", "Secondo cartellino giallo"]].sum()
+    j = a.join(ts[["Cartellini gialli"]].rename(
+        columns={"Cartellini gialli": "squadra"}), how="inner")
+    ricostruito = j["Cartellini gialli"] + 2 * j["Secondo cartellino giallo"]
+
+    assert len(j) == 612
+    assert int((ricostruito == j["squadra"]).sum()) == 594
+    residui = (ricostruito - j["squadra"]).loc[ricostruito != j["squadra"]]
+    assert sorted(residui.value_counts().to_dict().items()) == [(-1.0, 9), (1.0, 9)]
+
+
+def test_ligue1_ha_i_quattro_fogli_di_contorno(l1):
+    assert len(ps.load_match_list("ligue_1", "2526")) == 310
+    assert len(ps.load_lineups("ligue_1", "2526")) == 12350
+    assert len(ps.load_substitutions("ligue_1", "2526")) == 2751
+    assert len(ps.load_events("ligue_1", "2526")) == 2185
+
+
+def test_tutte_e_cinque_le_leghe_hanno_il_dato_per_giocatore():
+    """Il traguardo: il Tier B copre l'intero perimetro modellato."""
+    leghe = {r["lega"] for r in ps.raccolte()}
+    assert leghe == {"serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"}
+    tutte = ps.load_player_matches(tutte=True)
+    assert len(tutte) == 54303
+    # 758 + 760 + 760 + 612 + 612 = 3.502 squadra-partita, cioe' 1.751 partite
+    # (la Serie A ne ha una in meno: Lecce-Como del 27/12, dichiarata).
+    assert tutte.groupby(["lega", "data", "Squadra", "Avversario"]).ngroups == 3502
