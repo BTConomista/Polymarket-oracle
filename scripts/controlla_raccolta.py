@@ -348,7 +348,7 @@ def ripara(riparabili: set | list) -> list[str]:
         sys.path.insert(0, str(ROOT / "scripts"))
         from fetch_smarkets_matches import scandaglia_live
         try:
-            vive, _ = scandaglia_live()
+            vive, _, _ = scandaglia_live()
         except Exception:                             # noqa: BLE001
             vive = []
         if not vive:

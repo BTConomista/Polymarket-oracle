@@ -404,7 +404,7 @@ def test_la_risalita_e_piu_lenta_della_discesa():
 def test_il_ritmo_raggiunto_finisce_nel_file(monkeypatch, tmp_path):
     """Una sessione con pochi giri e' un mistero, se non si sa che l'API stava
     rifiutando. Il ritmo e' la diagnosi, e va scritta dove restera'."""
-    monkeypatch.setattr(live, "scandaglia_live", lambda: (_VIVE, 100))
+    monkeypatch.setattr(live, "scandaglia_live", lambda: (_VIVE, 100, []))
     monkeypatch.setattr(live, "scandaglia_upcoming", lambda: ([], 0, {}))
     monkeypatch.setattr(live, "quote_partita",
                         lambda ev, tutti, mercati_ammessi=None:
@@ -427,3 +427,71 @@ def test_i_workflow_non_bufferizzano_lo_stdout():
         wf = yaml.safe_load((radice / ".github" / "workflows" / nome).read_text())
         job = wf["jobs"][list(wf["jobs"])[0]]
         assert (job.get("env") or {}).get("PYTHONUNBUFFERED") == "1", nome
+
+
+# ---------------------------------------------------------------------------
+# IL PERIMETRO DI PROVA (Fase 146)
+# Serve a provare l'infrastruttura nelle ore in cui il nostro perimetro non
+# gioca: 3-7 ore al giorno contro le 5-14 di tutto il calcio (misurato 09/08).
+# ---------------------------------------------------------------------------
+
+def _altra(i, inizio="2026-08-10T20:00:00Z"):
+    return {"event_id": 900 + i, "nome": f"X{i} vs Y{i}",
+            "lega": "brazil-serie-a", "fascia": "prova",
+            "inizio": inizio, "inplay": True}
+
+
+def test_la_prova_RIEMPIE_il_carico_non_lo_aumenta():
+    """Il punto che rende accettabile allargare a ~800 partite esposte: non si
+    prendono tutte, si completa fino al tetto. Con le nostre gia' al tetto, la
+    prova non aggiunge una sola richiesta."""
+    nostre = [dict(_VIVE[0], event_id=i) for i in range(live.TETTO_PARTITE)]
+    assert live.riempi_con_la_prova(nostre, [_altra(i) for i in range(50)]) == []
+
+
+def test_la_prova_riempie_quando_le_nostre_sono_poche():
+    nostre = [dict(_VIVE[0], event_id=i) for i in range(5)]
+    scelte = live.riempi_con_la_prova(nostre, [_altra(i) for i in range(50)])
+    assert len(scelte) == live.TETTO_PARTITE - 5
+    assert all(e["fascia"] == "prova" for e in scelte)
+
+
+def test_con_zero_nostre_la_prova_arriva_al_tetto():
+    """L'ora vuota, che e' il caso per cui tutto questo esiste."""
+    assert len(live.riempi_con_la_prova([], [_altra(i) for i in range(50)])) \
+        == live.TETTO_PARTITE
+
+
+def test_la_scelta_delle_partite_di_prova_e_STABILE():
+    """L'ordine dell'API e' arbitrario: senza un criterio, l'insieme
+    cambierebbe a ogni giro e la serie temporale sarebbe fatta di partite
+    diverse ogni due minuti."""
+    altre = [_altra(i, f"2026-08-10T{10 + i}:00:00Z") for i in range(30)]
+    a = [e["nome"] for e in live.riempi_con_la_prova([], altre)]
+    b = [e["nome"] for e in live.riempi_con_la_prova([], list(reversed(altre)))]
+    assert a == b, "l'insieme dipende dall'ordine in cui l'API le ha elencate"
+
+
+def test_le_righe_di_prova_finiscono_in_UNA_CARTELLA_SEPARATA():
+    """Decisione dell'utente, e la ragione e' che un file misto sarebbe
+    esattamente cio' che la separazione esiste per evitare: un modello che
+    pesca il Brasile credendo di leggere la Serie A."""
+    from src.data import smarkets_archive as arch
+    assert live.DEST_PROVA != live.DEST != arch.ARCHIVIO
+    assert live.DEST_PROVA.name == "smarkets_prova"
+
+
+def test_la_cartella_di_prova_dice_cosa_NON_farci():
+    """Un README che elenca solo il contenuto non protegge da niente: deve
+    dire che questi dati non vanno usati per un modello, e perche'."""
+    testo = (Path(__file__).resolve().parents[1] / "data" / "smarkets_prova"
+             / "README.md").read_text()
+    assert "non sono dati del progetto" in testo.lower()
+    assert "campione di comodo" in testo
+    assert "raccolti e non usati" in testo
+
+
+def test_il_tetto_e_il_carico_gia_provato():
+    """25 non e' un numero tondo: e' il turno di Carabao Cup dell'08/08, cioe'
+    il carico su cui il sistema e' gia' stato misurato."""
+    assert live.TETTO_PARTITE == 25

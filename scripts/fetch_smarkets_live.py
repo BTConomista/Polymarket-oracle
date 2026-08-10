@@ -82,6 +82,12 @@ import gemelli_prova as _prova   # noqa: E402
 from src.data import smarkets_archive as _archivio   # noqa: E402
 
 DEST = ROOT / "data" / "smarkets_live"
+# ⚠️ CARTELLA SEPARATA (Fase 146, decisione utente: «teniamoli solo come prova
+# in una cartella a parte»). Sono partite di campionati che NON modelliamo,
+# raccolte per un motivo tecnico -- provare l'infrastruttura anche nelle ore in
+# cui il nostro perimetro non gioca. Sono dati veri e si conservano (§5-ter),
+# ma non devono finire dove un modello potrebbe pescarli per sbaglio.
+DEST_PROVA = ROOT / "data" / "smarkets_prova"
 
 # La sentinella gira ogni 30 minuti; la sessione dura di piu' APPOSTA, cosi'
 # due sessioni consecutive si sovrappongono invece di lasciare un buco quando
@@ -136,6 +142,19 @@ GIRI_PER_RILEGGERE_IL_CALENDARIO = 5
 # l'intervallo di una partita, poco per non tenere acceso un runner a vuoto.
 GIRI_VUOTI_PER_SPEGNERSI = 10
 
+# ⚠️ IL TETTO DEL PERIMETRO DI PROVA, e perche' ce n'e' uno.
+#
+# Smarkets espone ~800 partite in contemporanea: prenderle tutte
+# moltiplicherebbe il carico per cinque, e allora misureremmo i rifiuti di un
+# sistema che non useremo mai. Il perimetro di prova RIEMPIE le ore vuote fino
+# al carico normale, non lo aumenta: se le nostre gia' giocano, non aggiunge
+# niente.
+#
+# 25 e' il numero misurato del nostro giorno pieno (il turno di Carabao Cup
+# dell'08/08), quindi e' il carico su cui il sistema e' gia' stato provato.
+TETTO_PARTITE = 25
+
+
 # Ogni quanti giri si committa. Il file viene RISCRITTO su disco a ogni giro
 # (costa niente), ma su disco del runner non serve a nulla: quello che conta
 # e' il commit, ed e' la lezione della Fase 141 -- i dati in memoria, o su un
@@ -160,6 +179,28 @@ def prossimo_tick(adesso: dt.datetime, ultimo: dt.datetime,
         saltati = int((adesso - nuovo) / passo) + 1
         nuovo += saltati * passo
     return nuovo
+
+
+def riempi_con_la_prova(nostre: list[dict], altre: list[dict],
+                        tetto: int = TETTO_PARTITE) -> list[dict]:
+    """Le partite di PROVA che completano il carico fino al tetto.
+
+    Serve a una cosa sola: **provare l'infrastruttura anche nelle ore in cui il
+    nostro perimetro non gioca**. Misurato il 09/08: il nostro perimetro copre
+    3-7 ore al giorno, tutto il calcio 5-14 -- senza questo, meta' delle ore
+    non le proveremmo mai, e i guasti che capitano di notte li scopriremmo la
+    prima notte che contano.
+
+    NON aumenta il carico: lo completa. Se le nostre partite riempiono gia' il
+    tetto, ritorna vuoto. Si preferiscono le partite gia' cominciate da poco
+    (l'ordine dell'API e' arbitrario, ma un criterio stabile evita che
+    l'insieme cambi a ogni giro senza motivo).
+    """
+    spazio = max(0, tetto - len(nostre))
+    if not spazio:
+        return []
+    return sorted(altre, key=lambda e: (e.get("inizio") or ""),
+                  reverse=True)[:spazio]
 
 
 def da_seguire(vive: list[dict], future: list[dict],
@@ -205,6 +246,7 @@ LAVORATORI = 6
 # argomenti. Una lista di un elemento invece di una variabile globale semplice
 # perche' e' l'unico modo pulito di scriverla da `main` e leggerla da li'.
 GEMELLO = [1]
+
 
 
 def un_giro(vive: list[dict], pieno: bool) -> tuple[list[dict], list[dict]]:
@@ -268,6 +310,10 @@ def main(argv=None) -> None:
                     help="da quanti minuti PRIMA del via si segue una partita")
     ap.add_argument("--orizzonte-attesa", type=int, default=ORIZZONTE_ATTESA,
                     help="non ci si spegne se il prossimo via e' entro N minuti")
+    ap.add_argument("--perimetro-prova", action="store_true",
+                    help="riempi le ore vuote con partite di campionati che "
+                         "NON seguiamo, fino al tetto: finiscono in "
+                         "data/smarkets_prova/, mai nell'archivio vero")
     ap.add_argument("--gemello", type=int, default=1,
                     help="quale gemello sono (1-4). Esce subito se il "
                          "calendario della prova non mi prevede oggi")
@@ -285,7 +331,7 @@ def main(argv=None) -> None:
               f"raccogliere (non e' un errore).")
         return
 
-    vive, totale = scandaglia_live()
+    vive, totale, altre = scandaglia_live()
     future, _, _ = scandaglia_upcoming()
     adesso0 = dt.datetime.now(dt.timezone.utc)
     seguire, prossimo_via = da_seguire(vive, future, adesso0, a.orizzonte_pre)
@@ -302,7 +348,14 @@ def main(argv=None) -> None:
     # gioca» tornerebbe a dipendere dal cron per la partita di fra un'ora.
     attesa0 = ((prossimo_via - adesso0).total_seconds() / 60
                if prossimo_via else None)
-    if not seguire and not (attesa0 is not None and attesa0 <= a.orizzonte_attesa):
+    # ⚠️ Col perimetro di PROVA acceso, «le nostre non giocano» non e' piu' un
+    # motivo per uscire: e' esattamente il caso per cui la prova esiste. Senza
+    # questa riga la sessione si spegneva prima di guardare il resto del
+    # mondo, cioe' non avrebbe mai provato le ore vuote -- l'unica cosa che le
+    # avevamo chiesto di fare.
+    c_e_la_prova = a.perimetro_prova and bool(altre)
+    if (not seguire and not c_e_la_prova
+            and not (attesa0 is not None and attesa0 <= a.orizzonte_attesa)):
         # NON e' un errore e NON scrive nulla: e' lo stato normale per venti
         # ore al giorno. Ma si dice quante ne stanno giocando nel mondo, cosi'
         # «zero» resta un'informazione: zero nostre su zero mondiali e' notte,
@@ -321,7 +374,7 @@ def main(argv=None) -> None:
     # secondo, e senza distinzione uno dei due file sparirebbe in silenzio.
     dest = DEST / f"{avvio.strftime('%Y-%m-%dT%H-%M-%S')}-g{a.gemello}.json"
 
-    righe, incomplete, giri = [], [], collections.Counter()
+    righe, righe_prova, incomplete, giri = [], [], [], collections.Counter()
     # `future` e' gia' letto sopra: il ciclo lo rilegge ogni tanto, non subito.
     t_nucleo = avvio
     t_pieno = avvio if a.ogni_pieno > 0 else None
@@ -382,7 +435,7 @@ def main(argv=None) -> None:
         # Costa una chiamata di listino per giro, contro le decine dei
         # prezzi: e' rumore nel conto del tempo.
         try:
-            vive, _ = scandaglia_live()
+            vive, _, altre = scandaglia_live()
         except Exception as ex:                       # noqa: BLE001
             print(f"  ⚠ scandaglio live fallito ({type(ex).__name__}): "
                   f"si tiene l'elenco precedente")
@@ -396,6 +449,24 @@ def main(argv=None) -> None:
                 print(f"  ⚠ calendario non riletto ({type(ex).__name__})")
 
         seguire, prossimo_via = da_seguire(vive, future, adesso, a.orizzonte_pre)
+
+        if not seguire and a.perimetro_prova and altre:
+            # Le nostre non giocano ma il resto del mondo si': e' l'ora vuota
+            # che vogliamo provare. Si raccoglie solo la prova e si prosegue.
+            di_prova = riempi_con_la_prova([], altre)
+            r, inc = un_giro(di_prova, pieno)
+            righe_prova += [x for x in r if x.get("fascia") == "prova"]
+            incomplete += inc
+            giri["pieno" if pieno else "nucleo"] += 1
+            n += 1
+            vuoti = 0
+            print(f"  giro {n} ({'pieno' if pieno else 'nucleo'}): "
+                  f"SOLO PROVA, {len(r)} righe, {len(di_prova)} partite")
+            adesso = dt.datetime.now(dt.timezone.utc)
+            if pieno:
+                t_pieno = prossimo_tick(adesso, t_pieno, a.ogni_pieno)
+            t_nucleo = prossimo_tick(adesso, t_nucleo, a.ogni_nucleo)
+            continue
 
         if not seguire:
             # ⚠️ Qui NON basta contare i giri vuoti: con gli orari scaglionati
@@ -426,13 +497,24 @@ def main(argv=None) -> None:
             continue
         vuoti = 0
 
-        r, inc = un_giro(seguire, pieno)
+        # Il perimetro di PROVA riempie il carico fino al tetto: se le nostre
+        # gia' lo riempiono non aggiunge niente, e non aumenta mai il ritmo.
+        di_prova = (riempi_con_la_prova(seguire, altre)
+                    if a.perimetro_prova else [])
+
+        r, inc = un_giro(seguire + di_prova, pieno)
+        # e si dividono SUBITO: un file misto sarebbe la cosa che questa
+        # cartella separata esiste per evitare.
+        prova = [x for x in r if x.get("fascia") == "prova"]
+        r = [x for x in r if x.get("fascia") != "prova"]
+        righe_prova += prova
         righe += r
         incomplete += inc
         giri["pieno" if pieno else "nucleo"] += 1
         n += 1
         print(f"  giro {n} ({'pieno' if pieno else 'nucleo'}): "
               f"{len(r)} righe, {len(righe)} totali"
+              + (f" (+{len(prova)} di prova, {len(di_prova)} partite)" if prova else "")
               + (f"  ⚠ {len(inc)} problemi" if inc else ""))
 
         adesso = dt.datetime.now(dt.timezone.utc)
@@ -442,6 +524,26 @@ def main(argv=None) -> None:
 
         if n % GIRI_PER_COMMIT == 0:
             scrivi()
+
+    if righe_prova:
+        DEST_PROVA.mkdir(parents=True, exist_ok=True)
+        _archivio.scrivi(
+            DEST_PROVA / f"{avvio.strftime('%Y-%m-%dT%H-%M-%S')}-g{a.gemello}.json",
+            {"fonte": "api.smarkets.com/v3",
+             "tipo": "DATI DI PROVA: campionati che il progetto NON modella, "
+                     "raccolti solo per provare l'infrastruttura nelle ore in "
+                     "cui il nostro perimetro non gioca. Leggere il README "
+                     "della cartella prima di usarli per qualunque cosa.",
+             "gemello": a.gemello,
+             "sessione_avvio_utc": avvio.isoformat(),
+             "sessione_fine_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+             "competizioni": sorted({r["lega"] for r in righe_prova}),
+             "partite": sorted({r["partita"] for r in righe_prova}),
+             "righe": righe_prova})
+        print(f"  + {len(righe_prova)} righe di PROVA "
+              f"({len({r['partita'] for r in righe_prova})} partite, "
+              f"{len({r['lega'] for r in righe_prova})} competizioni) "
+              f"in data/smarkets_prova/")
 
     scritto = scrivi()
     dove = scritto.relative_to(ROOT) if scritto.is_relative_to(ROOT) else scritto

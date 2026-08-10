@@ -54,6 +54,7 @@ jobs:
         run: |
           python scripts/fetch_smarkets_live.py \
             --gemello 3 \
+            --perimetro-prova \
             --durata-minuti "${{ github.event.inputs.durata_minuti || 300 }}"
 
       - name: Salva la sessione (se c'e' qualcosa da salvare)
@@ -62,13 +63,13 @@ jobs:
         # butterebbe cinque ore di raccolta (lezione della Fase 141).
         if: ${{ !cancelled() }}
         run: |
-          if [ -z "$(git status --porcelain data/smarkets_live/)" ]; then
+          if [ -z "$(git status --porcelain data/smarkets_live/ data/smarkets_prova/)" ]; then
             echo "niente da committare (nessuna partita, o gemello non previsto oggi)"
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/smarkets_live/
+          git add data/smarkets_live/ data/smarkets_prova/
           git commit -m "Gemello 3: sessione in-play $(date -u +'%Y-%m-%d %H:%M UTC')"
           # con quattro gemelli la corsa sul push e' la norma, non l'eccezione:
           # cinque tentativi invece di tre, e attese crescenti

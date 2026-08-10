@@ -420,7 +420,14 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
-data/            smarkets_live/ (Fase 143: quote IN-PLAY, cartella SEPARATA da
+data/            smarkets_prova/ (Fase 146: DATI DI PROVA -- campionati che NON
+                 modelliamo, raccolti solo per provare l'infrastruttura nelle
+                 ore in cui il nostro perimetro non gioca (3-7h al giorno
+                 contro 5-14 di tutto il calcio). Riempiono il carico fino al
+                 tetto di 25, non lo aumentano. ⚠️ NON usarli per un modello:
+                 sono un campione di comodo, scelto in base a quando
+                 l'infrastruttura aveva bisogno di lavorare. Leggere il README)
+                 smarkets_live/ (Fase 143: quote IN-PLAY, cartella SEPARATA da
                  smarkets_matches -- un prezzo in-play conosce il punteggio,
                  uno pre-partita no, e mescolarli romperebbe in silenzio ogni
                  lettore dell'archivio pre-partita. Leggere il suo README)

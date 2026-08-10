@@ -402,8 +402,13 @@ def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
     return nostre, totale, competizioni
 
 
-def scandaglia_live() -> tuple[list[dict], int]:
-    """Le partite del perimetro attualmente IN CORSO (Fase 143).
+def scandaglia_live() -> tuple[list[dict], int, list[dict]]:
+    """Le partite IN CORSO: le nostre, il totale mondiale, e le ALTRE.
+
+    Il terzo valore (Fase 146) e' il resto del calcio: serve al perimetro di
+    PROVA, che riempie le ore in cui il nostro perimetro non gioca. Arriva
+    dalla stessa scansione -- chiederlo a parte raddoppierebbe le chiamate per
+    un dato che abbiamo gia' in mano.
 
     Usa `state=live`, che l'API espone e che e' l'unico modo affidabile di
     sapere che una partita sta giocando: l'orario di inizio non basta (rinvii,
@@ -413,7 +418,7 @@ def scandaglia_live() -> tuple[list[dict], int]:
     Ritorna anche il totale mondiale, solo per la diagnosi: se le nostre sono
     zero mentre nel mondo se ne giocano quaranta, e' il caso di guardare.
     """
-    vive, totale = [], 0
+    vive, altre, totale = [], [], 0
     url = "/events/?type=football_match&state=live&limit=200"
     while url:
         d = _get(url)
@@ -421,15 +426,20 @@ def scandaglia_live() -> tuple[list[dict], int]:
             totale += 1
             slug = e.get("full_slug")
             lega = _slug_lega(slug)
-            if not lega:
-                continue
-            vive.append({"event_id": e["id"], "nome": e.get("name"),
-                         "lega": lega, "fascia": _fascia(slug),
-                         "inizio": e.get("start_datetime"),
-                         "inplay": bool(e.get("inplay_enabled"))})
+            voce = {"event_id": e["id"], "nome": e.get("name"),
+                    "inizio": e.get("start_datetime"),
+                    "inplay": bool(e.get("inplay_enabled"))}
+            if lega:
+                vive.append({**voce, "lega": lega, "fascia": _fascia(slug)})
+            else:
+                # Il resto del mondo, per il perimetro di PROVA (Fase 146).
+                # Non ha una chiave nostra: si tiene lo slug grezzo, che e'
+                # l'unica identita' che questi eventi hanno per noi.
+                altre.append({**voce, "lega": _competizione(slug) or "?",
+                              "fascia": "prova"})
         nx = (d.get("pagination") or {}).get("next_page")
         url = f"/events/{nx}" if nx else None
-    return vive, totale
+    return vive, totale, altre
 
 
 def entro_finestra(nostre: list[dict], entro_ore: int,
