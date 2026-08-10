@@ -55,7 +55,7 @@ FILE_STAGIONE = "riepilogo_stagionale.csv.gz"
 FILE_LEGENDA = "legenda.csv"
 FILE_MANIFESTO = "manifesto.json"
 
-# I quattro fogli "di contorno" arrivati con la Bundesliga (Fase 138): elenco
+# I quattro fogli "di contorno" arrivati con la Bundesliga (Fase 145): elenco
 # partite, formazioni (panchinari compresi), sostituzioni, cronaca. Le prime
 # tre leghe non li hanno — sono opzionali per costruzione, e i caricatori qui
 # sotto dicono ESPLICITAMENTE quali raccolte li espongono invece di restituire
@@ -264,7 +264,7 @@ def load_lineups(lega=None, stagione=None) -> pd.DataFrame:
     ⚠️ E' l'unico foglio che contiene chi NON e' sceso in campo, e serve a
     spiegare una divergenza vera: i cartellini mostrati alla panchina stanno
     nelle statistiche di SQUADRA e non possono stare in quelle per giocatore
-    (Fase 138). Con la formazione ufficiale sarebbe anche il primo dato `pre`
+    (Fase 145). Con la formazione ufficiale sarebbe anche il primo dato `pre`
     della famiglia, ma qui arriva a posteriori: resta `post`.
     """
     return _foglio_extra(FILE_FORMAZIONI, "le formazioni", lega, stagione)

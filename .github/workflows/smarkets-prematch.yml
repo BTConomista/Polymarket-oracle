@@ -18,11 +18,14 @@ on:
     # DENSO, ogni 6 ore: tutti i mercati delle partite entro 72h. E' la
     # traiettoria che si addensa verso il calcio d'inizio.
     - cron: '17 */6 * * *'
-    # LUNGO RAGGIO, una volta al giorno: tutte le partite che l'API espone
-    # (misurato: ~1 giornata per lega, 48 partite) ma solo sui mercati che il
-    # motore consuma. Senza questo, fino al 12 agosto non si raccoglierebbe
-    # NULLA -- mentre il listino dell'esordio e' gia' quotato e si muove da
-    # oggi, e quei giorni non si recuperano (newseason.md §2).
+    # LUNGO RAGGIO, una volta al giorno: tutte le partite che l'API espone,
+    # a listino pieno (il flag `--solo-principali` e' caduto il 02/08, §5-ter).
+    # Misurato l'08/08/2026 col perimetro della Fase 142: **158 partite** --
+    # 58 dei campionati, 52 di coppa, 48 di seconda divisione -- per ~29 min
+    # di giro, dentro il budget di 45 dello script.
+    # Senza questo giro, fino al 12 agosto non si raccoglierebbe NULLA --
+    # mentre il listino dell'esordio e' gia' quotato e si muove da oggi, e
+    # quei giorni non si recuperano (newseason.md §2).
     - cron: '41 5 * * *'
     # CHIUSURA, ogni ora ma solo su cio' che inizia entro 2 ore (decisione D1,
     # Fase 129). Il regime denso a 6 ore lascerebbe l'ultimo prezzo vecchio
@@ -43,7 +46,18 @@ on:
         description: 'Raccogli le partite che iniziano entro N ore'
         default: '72'
       lungo_raggio:
-        description: 'Tutto cio che l API espone, solo mercati principali'
+        description: 'Tutto cio che l API espone, a listino pieno'
+        type: boolean
+        default: false
+      # Aggiunto l'08/08/2026 dopo averne avuto bisogno. Il cron orario di
+      # GitHub parte con **30-40 minuti di ritardo** (misurato quel giorno:
+      # 08:54 / 09:49 / 10:45 / 11:37 per i cron delle :07), e non c'era modo
+      # di forzare a mano il regime di CHIUSURA -- finestra stretta e listino
+      # pieno. Un avvio a mano finiva nel ramo generico, che prende i soli 6
+      # mercati di base: metà del listino perduta proprio nell'ora in cui il
+      # prezzo vale di piu' e in cui non si recupera dopo.
+      tutti_i_mercati:
+        description: 'Listino pieno (~110 mercati) anche con una finestra stretta'
         type: boolean
         default: false
 
@@ -51,13 +65,50 @@ permissions:
   contents: write
 
 concurrency:
-  group: smarkets-prematch
+  # UN GRUPPO PER REGIME (Fase 142). Prima era uno solo, e col perimetro
+  # allargato e' costato dati veri nel giro di poche ore.
+  #
+  # La regola di GitHub e': per ogni gruppo puo' esserci **un run in corso e
+  # UNO SOLO pending**, e all'arrivo di un terzo *«any previously pending job
+  # or workflow in the concurrency group will be canceled»*. Con i giri corti
+  # (58 partite, 20 min) non capitava mai; con 158 partite un lungo raggio
+  # occupa il gruppo per ~35-45 minuti, e nel frattempo bastano due corse
+  # orarie accodate perche' la prima venga **cancellata**.
+  # Misurato l'08/08/2026: run 31258806209 delle 13:07 -> `cancelled`.
+  #
+  # A morire e' proprio il giro che vale di piu': la CHIUSURA e' il prezzo a
+  # T-2h, e dopo il fischio non esiste piu' (newseason.md §2). E muore in
+  # silenzio -- un run `cancelled` non scrive niente e non suona niente.
+  #
+  # Separarli e' sicuro: i due regimi scrivono file con nomi diversi
+  # (timestamp al secondo) e l'unica risorsa condivisa e' il push su main, che
+  # ha gia' il suo ciclo di 3 tentativi con `pull --rebase --autostash`.
+  group: >-
+    smarkets-prematch-${{ github.event.schedule == '7 * * * *'
+      && 'chiusura' || 'lungo' }}
   cancel-in-progress: false
 
 jobs:
   raccogli:
     runs-on: ubuntu-latest
+    # Rete di sicurezza esterna al budget dello script (BUDGET_MINUTI = 90,
+    # ri-tarato l'08/08 dopo che il primo giro col perimetro allargato ha
+    # esaurito i 45 e perso 22 partite su 157):
+    # se il processo si pianta invece di rallentare, il budget -- che si
+    # controlla fra una partita e l'altra -- non scatta. Il default di GitHub
+    # e' 6 ore, e sei ore di runner appeso bloccherebbero anche tutte le corse
+    # orarie di chiusura che si accodano dietro la stessa `concurrency`.
+    timeout-minutes: 100
+    env:
+      # Senza questo lo stdout di Python esce tutto in blocco alla
+      # fine e i timestamp del log di Actions sono inutilizzabili: la
+      # durata di un giro si e' potuta misurare solo a posteriori dal
+      # file (08/08). Un log che non dice QUANDO non serve a diagnosi.
+      PYTHONUNBUFFERED: '1'
     steps:
+      # Senza questo lo stdout di Python esce tutto in blocco alla fine, e i
+      # timestamp del log di Actions diventano inutilizzabili: la durata di un
+      # giro si e' potuta misurare solo a posteriori dal file (08/08).
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
@@ -94,11 +145,28 @@ jobs:
             # trova nulla da committare: e' il comportamento voluto, non un guasto.
             python scripts/fetch_smarkets_matches.py --entro-ore 2 --tutti-i-mercati
           else
+            # Avvio a mano (o cron denso ogni 6h). `--tutti-i-mercati` solo se
+            # richiesto: il default resta il listino base, che e' cio' che il
+            # cron denso ha sempre fatto.
+            EXTRA=""
+            if [ "${{ github.event.inputs.tutti_i_mercati }}" = "true" ]; then
+              EXTRA="--tutti-i-mercati"
+            fi
             python scripts/fetch_smarkets_matches.py \
-              --entro-ore "${{ github.event.inputs.entro_ore || 72 }}"
+              --entro-ore "${{ github.event.inputs.entro_ore || 72 }}" $EXTRA
           fi
 
       - name: Salva lo snapshot (se c'e' qualcosa da salvare)
+        # ANCHE SE IL PASSO PRIMA E' FALLITO (08/08/2026). Lo script scrive il
+        # file PRIMA di uscire rosso, apposta: «il file e' salvo, l'allarme e'
+        # visibile». Ma senza questo `if` il passo di commit veniva SALTATO,
+        # il file restava sul runner e moriva con lui -- cioe' l'allarme
+        # costava esattamente i dati che doveva proteggere. Vale per tutte e
+        # tre le uscite rosse: lega sparita, partite perse, raccolta a zero
+        # (in quest'ultimo caso non c'e' nulla da committare e il passo esce
+        # da solo). `!cancelled()` e non `always()`: se il giro e' stato
+        # annullato a mano, non si committa.
+        if: ${{ !cancelled() }}
         run: |
           if [ -z "$(git status --porcelain data/smarkets_matches/)" ]; then
             echo "nessuna partita in finestra: niente da committare (non e' un errore)"

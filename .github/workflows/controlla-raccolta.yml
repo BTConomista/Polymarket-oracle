@@ -1,0 +1,77 @@
+name: Controllo raccolta — «avrei dovuto raccogliere, l'ho fatto?» (Fase 144)
+
+# PERCHE' ESISTE. Tutti gli altri workflow sanno dire «il giro e' fallito».
+# Nessuno sa dire «il giro non e' partito». Un giro che non parte non produce
+# niente -- e «niente» e' anche cio' che produce una notte senza partite:
+# indistinguibili. L'08/08/2026 il raccoglitore in-play e' rimasto ZERO run per
+# mezz'ora con 25 partite del perimetro in corso, e l'unico rilevatore e' stato
+# l'utente che se n'e' accorto. Che se ne accorga l'utente e' il difetto.
+#
+# Questo workflow non guarda i run: guarda l'ARCHIVIO, e cerca il silenzio dove
+# sarebbe dovuto esserci un dato. Quando lo trova esce ROSSO, perche' la mail
+# di un run fallito e' l'unico canale che arriva davvero (e' cosi' che e'
+# cominciata la sessione dell'08/08).
+#
+# ⚠️ NON PUO' garantire di girare: e' esso stesso un cron, e vale per lui la
+# stessa inaffidabilita' che sorveglia. Non c'e' soluzione dentro Actions --
+# solo mitigazioni: gira spesso, e a orari sfalsati.
+
+on:
+  schedule:
+    # Quattro volte al giorno, a orari "storti" per non finire nel picco
+    # delle :00 (che e' quando i cron di GitHub slittano di piu').
+    # Quattro e non uno: se un giro salta, il successivo e' a sei ore, non a
+    # ventiquattro -- e sei ore di buco nella raccolta si recuperano ancora,
+    # ventiquattro no.
+    - cron: '23 3,9,15,21 * * *'
+  workflow_dispatch:
+    inputs:
+      ore:
+        description: 'Finestra da controllare (ore)'
+        default: '36'
+
+permissions:
+  contents: write        # la riparazione del lungo raggio committa il file
+  actions: write         # ...e accende la sessione in-play se si sta giocando
+
+# Nessuna corsa: e' un controllo di sola lettura, due esecuzioni insieme non
+# si danno fastidio. E soprattutto NON deve poter essere cancellato da un
+# accodamento -- e' il guardiano, se muore in silenzio siamo al punto di prima.
+
+jobs:
+  controlla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Ci sono buchi? E se si', si rimettono in piedi
+        # `--ripara` non si limita a segnalare: rifa' il giro di lungo raggio
+        # (le partite lontane sono ancora esposte) e accende una sessione
+        # in-play se si sta ancora giocando. Poi RI-CONTROLLA, ed e' rosso solo
+        # su cio' che resta -- una riparazione che non si verifica e' una
+        # speranza, e un guasto cronico resterebbe verde per sempre.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/controlla_raccolta.py --ripara \
+            --ore "${{ github.event.inputs.ore || 36 }}"
+
+      - name: Salva cio' che la riparazione ha raccolto
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain data/)" ]; then
+            echo "niente da committare"; exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "Riparazione raccolta $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1

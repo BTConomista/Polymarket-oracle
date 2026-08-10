@@ -196,7 +196,11 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
+<<<<<<< HEAD
 - [ ] **Test** — mantieni `pytest` verde (**1.274 verdi** al 10/08/2026); aggiungi
+=======
+- [ ] **Test** — mantieni `pytest` verde (**1.538 verdi** al 08/08/2026); aggiungi
+>>>>>>> origin/main
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +274,11 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
+<<<<<<< HEAD
 python -m pytest                       # test (1.274 verdi al 10/08/2026)
+=======
+python -m pytest                       # test (1.538 verdi al 08/08/2026)
+>>>>>>> origin/main
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -339,7 +347,7 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  per lega, h2h in SA/Liga, DR in Premier)
                  player_stats.py (97 statistiche + rating per GIOCATORE-partita,
                  4 leghe 2025-26 -- manca la Ligue 1. 44.894 righe. Dalla Fase
-                 138 la colonna Fase separa il campionato dallo spareggio
+                 145 la colonna Fase separa il campionato dallo spareggio
                  (load_player_matches lo esclude per default: negli snapshot
                  non c'e'), e la sola Bundesliga porta 4 fogli in piu' --
                  partite/formazioni/cambi/eventi. ⚠️ Gol concessi e'
@@ -348,15 +356,62 @@ src/models/      dixon_coles.py (il modello: _fit_counts, blend, predizione,
                  Smarkets, .json storici e .json.gz nuovi. ultimo_listino_completo()
                  e' quello che serve: «l'ultimo file» puo' essere un giro di
                  chiusura con una lega sola)
+                 coppe.py + coupe_de_france.py (Fase 138: le COPPE NAZIONALI
+                 2025-26, 6 tornei / 5 paesi. Il punteggio di games.csv SOMMA
+                 I RIGORI su 68 partite su 458: qui e' ricostruito dagli eventi
+                 e verificato contro openfootball, 42/42 identiche)
                  team_stats.py (Fase 131: 45 statistiche per SQUADRA-partita divise
                  in PERIODI -- Totale/1T/2T, 5 leghe 2025-26, 1.752 partite. E' il
                  primo dato che separa i due tempi: serve alla pista 6-bis, il
                  modello a due stadi. team_form(periodo=) e' l'unica forma sicura R8)
+                 allenatori.py (Fase 140: IL DATABASE ALLENATORI, strato 1, da
+                 games.csv. load_partite = una riga per partita-club; panchine()
+                 = i mandati; esperienza_prima() = la forma sicura R8.
+                 ⚠️ Tre trappole MISURATE, non ipotesi: il nome NON e'
+                 un'identita' -- conflitti_identita() dimostra 11 omonimi col
+                 test "nessuno allena due club lo stesso giorno", 2 nel
+                 perimetro; manager_name e' CHI SEDEVA IN PANCHINA quella
+                 partita, non chi era in carica (836 mandati su 13.810 sono un
+                 vice per una gara: usa ricuci=True); l'esperienza e' VISIBILE
+                 AL DATASET, non globale. E clubs.coach_name NON va usata:
+                 e' l'allenatore corrente, trappola R8)
 src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori),
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         download_data, build_database, backtest, analyze, tune, calibrate,
+scripts/         fetch_smarkets_live (Fase 143: la raccolta IN-PLAY. Una
+                 SENTINELLA ogni 30' accende un job che cicla 40' al suo
+                 interno -- il cron di GitHub parte con 30-40' di ritardo, e
+                 un cron piu' fitto erediterebbe lo stesso ritardo. Nucleo
+                 ogni 2', listino pieno ogni 15'. Il PUNTEGGIO non e' un campo
+                 dell'API ma si ricostruisce da cosa e' ancora quotato --
+                 `stato_mercato == settled` sulle linee O/U, e minimo
+                 componentwise dei punteggi superstiti: due stimatori che
+                 concordano. ⚠️ nel file NON e' dedotto: e' una regola ancora
+                 da validare),
+                 build_coppe_2526 (la raccolta coppe, Fase 138),
+                 aggancia_coppe (i TRE PONTI delle raccolte di coppa: squadre->
+                 club_id, partite->game_id, giocatori->player_id. L'ordine
+                 conta: agganciata la partita, i candidati per un giocatore
+                 scendono a 18-23 e il nome basta -- 25%->97,5%, Fase 139-bis),
+                 verifica_aggancio_coppe (il controllo di COMPLETEZZA: ogni
+                 riga raccolta e' in una tabella di aggancio? 27.624 righe,
+                 99,5% risolto, Fase 139-ter),
+                 coppe_query.py e' il PANNELLO interrogabile (in src/data/):
+                 allenatore x arbitro x squadra x giocatore. La parte difficile
+                 e' il LATO -- l'allenatore va preso dalla colonna giusta di
+                 partite.csv secondo `Lato`, e sbagliarlo non da' segnale
+                 (verificato 746/746 contro allenatori.load_partite),
+                 verifica_incrocio_coppe (la domanda DIVERSA: non «quante righe
+                 sono agganciate» ma «questa PARTITA ha tutti i blocchi
+                 insieme». Le due danno numeri diversi -- 99% per foglio, 51%
+                 per partita -- e la seconda e' quella che decide se un modello
+                 si puo' addestrare. --partita <game_id> fa il join completo su
+                 una sola partita, Fase 139-octies),
+                 registra_raccolta_coppa_diretta (la porta d'ingresso delle
+                 raccolte manuali di COPPA: verifica e CONFRONTA con la fonte
+                 automatica partita per partita, Fase 139),
+                 download_data, build_database, backtest, analyze, tune, calibrate,
                  markets (multi-mercato), analyze_gap (anatomia del gap col mercato),
                  predict (il TOOL d'uso: DC senza quote, market-implied con --odds),
                  build_league_snapshot (snapshot Premier/Liga dai bundle in files/),
@@ -379,7 +434,22 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
-data/            {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
+data/            smarkets_prova/ (Fase 146: DATI DI PROVA -- campionati che NON
+                 modelliamo, raccolti solo per provare l'infrastruttura nelle
+                 ore in cui il nostro perimetro non gioca (3-7h al giorno
+                 contro 5-14 di tutto il calcio). Riempiono il carico fino al
+                 tetto di 25, non lo aumentano. ⚠️ NON usarli per un modello:
+                 sono un campione di comodo, scelto in base a quando
+                 l'infrastruttura aveva bisogno di lavorare. Leggere il README)
+                 smarkets_live/ (Fase 143: quote IN-PLAY, cartella SEPARATA da
+                 smarkets_matches -- un prezzo in-play conosce il punteggio,
+                 uno pre-partita no, e mescolarli romperebbe in silenzio ogni
+                 lettore dell'archivio pre-partita. Leggere il suo README)
+                 coppe_2526/ (COPPE NAZIONALI 2025-26: 662 partite, 18.566 righe
+                 di formazione, 8.177 eventi col minuto. 204 partite senza
+                 formazione, dichiarate. Leggere il suo README PRIMA di usare
+                 il punteggio)
+                 {serie_a,premier_league,la_liga,bundesliga,ligue_1}_matches.csv
                  (SNAPSHOT congelati, versionati — schema IDENTICO, ordine
                  colonne compreso: lo verifica test_schema_identico_tra_leghe.
                  40 colonne: dalla Fase 133 ci sono anche home_goals_ht /
@@ -441,6 +511,13 @@ docs/CENSIMENTO_FONTI.md   censimento a 13 agenti di TUTTE le fonti (01/08/2026)
                  9 affermazioni FALSE o non ri-calcolabili trovate nei nostri
                  stessi documenti (fra cui il f=0.4396 usato sui cartellini, dove
                  il vero e 0.3200)
+docs/INFRASTRUTTURA_RACCOLTA.md  dove deve girare la raccolta: ragionamento
+                 APERTO (08/08/2026), nessuna decisione presa. I requisiti per
+                 famiglia di dati (il lungo raggio non ha problemi, l'in-play
+                 si'), i limiti di Actions MISURATI, e il vincolo che decide:
+                 una giornata piena chiede 10,5h di copertura continua e un job
+                 ne dura 6. Aggiornare quando arrivano i numeri del cane da
+                 guardia
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
@@ -472,7 +549,17 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
+<<<<<<< HEAD
 tests/           test unitari (1.274 verdi al 10/08/2026), fra cui i guardiani
+=======
+tests/           test unitari (1.538 verdi al 08/08/2026; ⚠️ 1 ROSSO aperto:
+                 test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_
+                 dalla_convenzione_di_smarkets -- 138 squadre su 234 senza
+                 anagrafica, tutte di uel_qual/ucl_qual/la_liga_2/serie_b:
+                 l'ha aperto l'allargamento del perimetro Smarkets, ed e' della
+                 sessione che ci sta lavorando),
+                 fra cui i guardiani
+>>>>>>> origin/main
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/

@@ -104,6 +104,12 @@ def nomi_per_lega(snapshot: Path) -> dict[str, set[str]]:
             "Raccogliere di nuovo prima di costruire la mappa.")
     out: dict[str, set[str]] = collections.defaultdict(set)
     for r in d["righe"]:
+        # La mappa dei nomi e' contro gli snapshot delle 5 leghe: un club di
+        # Serie B o di UCL non ha una controparte li' dentro, e finirebbe
+        # classificato come «nome non agganciato» inquinando il conteggio
+        # (Fase 142). Assenza del campo = file pre-142 = campionato.
+        if r.get("fascia", "campionato") != "campionato":
+            continue
         casa, ospite = r["partita"].split(" vs ")
         out[r["lega"]].update([casa, ospite])
     return dict(out)

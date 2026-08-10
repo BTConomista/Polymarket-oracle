@@ -1,0 +1,221 @@
+{
+  "coppa": "Coupe de France",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "97e628705ca39d7275e449f4677bc41381e39818f4902e17dcc90e48c364a0cd",
+  "conteggi": {
+    "partite": 201,
+    "righe_formazione": 2495,
+    "titolari": 1386,
+    "panchina": 1109,
+    "eventi": 2792,
+    "righe_statistiche": 1924,
+    "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+    "undici_titolari": {
+      "squadre_partita": 126,
+      "con_undici_esatti": 126,
+      "anomale": []
+    },
+    "punteggio_non_somma_i_rigori": {
+      "partite_ai_rigori": 54,
+      "incoerenti": []
+    },
+    "sequenza_rigori": {
+      "partite_ai_rigori": 54,
+      "sequenza_ricompone": 27,
+      "divergenti": [
+        "15.11.2025 Avranches-Paris 13 Atl.: nessun evento di rigore",
+        "15.11.2025 Pontarlier-Sochaux: nessun evento di rigore",
+        "15.11.2025 Villars-l'Isle-Sarre Union: nessun evento di rigore",
+        "15.11.2025 Andrezieux-Hauts Lyonnais: nessun evento di rigore",
+        "15.11.2025 APM Metz-Fleury-Merogis: nessun evento di rigore",
+        "15.11.2025 Fontenay-Chamalieres: nessun evento di rigore",
+        "15.11.2025 IC Croix-Racing CFF: nessun evento di rigore",
+        "15.11.2025 Loon Plage-Bethune: nessun evento di rigore",
+        "15.11.2025 Sable-Saint-Malo: nessun evento di rigore",
+        "15.11.2025 Seyssinet-Aubagne: nessun evento di rigore",
+        "15.11.2025 Steenvoorde-Chambly: nessun evento di rigore",
+        "15.11.2025 Espoir-Eveil: nessun evento di rigore",
+        "15.11.2025 Etoile Matoury-Le Geldar: nessun evento di rigore",
+        "16.11.2025 Mauguio Carnon-Selongey: nessun evento di rigore",
+        "16.11.2025 Nord Lozere-Ecotay Moingt: nessun evento di rigore",
+        "16.11.2025 Saint-Brice Courcelles-Bogny: nessun evento di rigore",
+        "16.11.2025 Saint-Cyr Collonges-Thonon-Evian: nessun evento di rigore",
+        "16.11.2025 SA Merignac-Colomiers: colonna 6-5, eventi 3-2",
+        "16.11.2025 Saint-Meziery-Perigny: nessun evento di rigore",
+        "16.11.2025 Wittenheim-Freyming: nessun evento di rigore",
+        "16.11.2025 Pen Hir-Les Sables: nessun evento di rigore",
+        "16.11.2025 Vitre-Plouvorn: nessun evento di rigore",
+        "29.11.2025 Hauts Lyonnais-Feurs: colonna 4-2, eventi 1-0",
+        "29.11.2025 Steenvoorde-Bethune: nessun evento di rigore",
+        "29.11.2025 Raon L Etape-Mulhouse: nessun evento di rigore",
+        "29.11.2025 Chauvigny-Stade Poitevin: colonna 12-11, eventi 1-0",
+        "30.11.2025 Saint-Cyr Collonges-FC Rhone: nessun evento di rigore"
+      ]
+    },
+    "confronto_con_fonte_automatica": {
+      "eseguito": true,
+      "partite": {
+        "manuale": 201,
+        "automatica": 201,
+        "appaiate": 161,
+        "identiche_su_tutti_i_punteggi": 157,
+        "divergenti": [
+          {
+            "partita": "2025-11-16 Longuenesse-Bondues",
+            "differenze": [
+              "finale: manuale 0-2 · automatica 1-2"
+            ]
+          },
+          {
+            "partita": "2025-11-16 Saint-Brice Courcelles-Bogny",
+            "differenze": [
+              "rigori: manuale (2, 4) · automatica (2, 3)"
+            ]
+          },
+          {
+            "partita": "2025-11-16 Vitre-Plouvorn",
+            "differenze": [
+              "rigori: manuale (3, 4) · automatica (2, 4)"
+            ]
+          },
+          {
+            "partita": "2025-11-29 Chauvigny-Stade Poitevin",
+            "differenze": [
+              "rigori: manuale (12, 11) · automatica (10, 9)"
+            ]
+          }
+        ],
+        "buchi_colmati_dalla_manuale": [],
+        "club_dedotti_dalle_partite": {},
+        "appaiate_per_nome_dentro_la_giornata": 121,
+        "contese_lasciate_vuote": 0,
+        "non_appaiate_manuale": [
+          "2025-11-15 OCPAM-Reims",
+          "2025-11-15 Loon Plage-Bethune",
+          "2025-11-15 Le Cellier Mauves-Laval",
+          "2025-11-15 Orleans-Bayonne",
+          "2025-11-16 Pledran-Plabennec",
+          "2025-11-16 EBBE-Bordeaux",
+          "2025-11-29 Laval-Saint-Pauloise",
+          "2025-11-29 Plabennec-Les Herbiers",
+          "2025-11-29 Steenvoorde-Bethune",
+          "2025-12-19 Guingamp-Laval",
+          "2025-12-19 Avranches-Brest",
+          "2025-12-20 Lusitanos-Lilla",
+          "2025-12-20 Lyon - La Duchere-Tolosa",
+          "2025-12-20 Bethune-Sochaux",
+          "2025-12-20 Fontenay-PSG",
+          "2025-12-21 Strasburgo-Dunkerque",
+          "2025-12-21 Nizza-St. Etienne",
+          "2025-12-21 Bourg en Bresse-Marsiglia",
+          "2025-12-21 Rennes-Les Sables",
+          "2025-12-21 Lione-Saint-Cyr Collonges",
+          "2026-01-10 Angers-Tolosa",
+          "2026-01-10 Istres-Laval",
+          "2026-01-10 Avranches-Strasburgo",
+          "2026-01-11 Chantilly-Rennes",
+          "2026-01-11 Nantes-Nizza",
+          "2026-01-11 Lilla-Lione",
+          "2026-01-12 PSG-Paris FC",
+          "2026-01-13 Bayeux-Marsiglia",
+          "2026-02-03 Marsiglia-Rennes",
+          "2026-02-04 Nizza-Montpellier",
+          "2026-02-04 Lione-Laval",
+          "2026-02-04 Tolosa-Amiens",
+          "2026-02-05 Strasburgo-Monaco",
+          "2026-03-03 Strasburgo-Reims",
+          "2026-03-04 Lorient-Nizza",
+          "2026-03-04 Marsiglia-Tolosa",
+          "2026-03-05 Lione-Lens",
+          "2026-04-21 Lens-Tolosa",
+          "2026-04-22 Strasburgo-Nizza",
+          "2026-05-22 Lens-Nizza"
+        ],
+        "non_appaiate_automatica": [
+          "2025-11-15 FC Loon-Plage-Stade béthunois FC",
+          "2025-11-15 Le Cellier Mauves FC-Stade lavallois",
+          "2025-11-15 Olympique CPAM-Stade de Reims",
+          "2025-11-15 US Orléans-Aviron bayonnais FC",
+          "2025-11-16 CS Plédran-Stade plabennécois",
+          "2025-11-16 Entente Boé Bon-Encontre-FC Girondins de Bordeaux",
+          "2025-11-29 AS Steenvoorde-Stade béthunois FC",
+          "2025-11-29 Stade lavallois-Saint-Pauloise FC",
+          "2025-11-29 Stade plabennécois-VHF Les Herbiers",
+          "2025-12-19 EA Guingamp-Stade lavallois",
+          "2025-12-19 US Avranches-Stade brestois 29",
+          "2025-12-20 Lyon-La Duchère-Toulouse FC",
+          "2025-12-20 Stade béthunois FC-FC Sochaux-Montbéliard",
+          "2025-12-20 US Lusitanos Saint-Maur-LOSC Lille",
+          "2025-12-20 Vendée Fontenay Foot-Paris Saint-Germain",
+          "2025-12-21 Bourg-Péronnas 01-Olympique de Marseille",
+          "2025-12-21 OGC Nice-AS Saint-Étienne",
+          "2025-12-21 Olympique lyonnais-FC Saint-Cyr Collonges",
+          "2025-12-21 RC Strasbourg-USL Dunkerque",
+          "2025-12-21 Stade rennais FC-Les Sables VF",
+          "2026-01-10 Angers SCO-Toulouse FC",
+          "2026-01-10 Istres FC-Stade lavallois",
+          "2026-01-10 US Avranches-RC Strasbourg",
+          "2026-01-11 FC Nantes-OGC Nice",
+          "2026-01-11 LOSC Lille-Olympique lyonnais",
+          "2026-01-11 US Chantilly-Stade rennais FC",
+          "2026-01-12 Paris Saint-Germain-Paris FC",
+          "2026-01-13 Bayeux FC-Olympique de Marseille",
+          "2026-02-03 Olympique de Marseille-Stade rennais FC",
+          "2026-02-04 OGC Nice-Montpellier HSC",
+          "2026-02-04 Olympique lyonnais-Stade lavallois",
+          "2026-02-04 Toulouse FC-Amiens SC",
+          "2026-02-05 RC Strasbourg-AS Monaco",
+          "2026-03-03 RC Strasbourg-Stade de Reims",
+          "2026-03-04 FC Lorient-OGC Nice",
+          "2026-03-04 Olympique de Marseille-Toulouse FC",
+          "2026-03-05 Olympique lyonnais-RC Lens",
+          "2026-04-21 RC Lens-Toulouse FC",
+          "2026-04-22 RC Strasbourg-OGC Nice",
+          "2026-05-22 RC Lens-OGC Nice"
+        ]
+      },
+      "formazioni": {
+        "squadre_partita_confrontabili": 0,
+        "undici_identici": 0,
+        "giocatori_appaiati_dal_numero_di_maglia": 0,
+        "con_differenze": [],
+        "non_confrontabile": "la fonte automatica non ha formazioni per questa coppa (Coupe de France, da Wikipedia)"
+      }
+    }
+  },
+  "statistiche": {
+    "file": "originale_statistiche.xlsx",
+    "sha256": "8ca470c1596070b64de0db9c41633d0e18b7511b5b172eab42141e7ff113211a",
+    "partite": {
+      "raccolta": 201,
+      "statistiche": 201,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": []
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1924,
+      "righe_dopo": 1924,
+      "colonne_prima": 114,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0,
+      "colonne_testuali_con_etichette_diverse": {}
+    },
+    "statistiche_squadra": {
+      "righe": 476,
+      "partite": 87,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 174,
+        "2° tempo": 160,
+        "1° tempo": 142
+      }
+    }
+  }
+}

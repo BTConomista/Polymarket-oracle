@@ -1,0 +1,153 @@
+{
+  "partite_totali": 662,
+  "giro_completo_titolari": {
+    "Copa del Rey": {
+      "size": 990,
+      "sum": 924,
+      "quota": 93.3
+    },
+    "Coppa Italia": {
+      "size": 880,
+      "sum": 876,
+      "quota": 99.5
+    },
+    "DFB-Pokal": {
+      "size": 1364,
+      "sum": 1361,
+      "quota": 99.8
+    },
+    "EFL Cup": {
+      "size": 2002,
+      "sum": 1975,
+      "quota": 98.7
+    },
+    "FA Cup": {
+      "size": 1364,
+      "sum": 1353,
+      "quota": 99.2
+    }
+  },
+  "nel_perimetro": 580,
+  "sponda_automatica": {
+    "Copa del Rey": {
+      "nel_perimetro": 117,
+      "b_arbitro": 116,
+      "b_allenatori": 117,
+      "b_undici_titolari": 117,
+      "b_minuti_giocati": 12
+    },
+    "Coppa Italia": {
+      "nel_perimetro": 45,
+      "b_arbitro": 45,
+      "b_allenatori": 44,
+      "b_undici_titolari": 44,
+      "b_minuti_giocati": 18
+    },
+    "Coupe de France": {
+      "nel_perimetro": 201,
+      "b_arbitro": 0,
+      "b_allenatori": 0,
+      "b_undici_titolari": 0,
+      "b_minuti_giocati": 0
+    },
+    "DFB-Pokal": {
+      "nel_perimetro": 63,
+      "b_arbitro": 63,
+      "b_allenatori": 62,
+      "b_undici_titolari": 62,
+      "b_minuti_giocati": 12
+    },
+    "EFL Cup": {
+      "nel_perimetro": 91,
+      "b_arbitro": 91,
+      "b_allenatori": 91,
+      "b_undici_titolari": 91,
+      "b_minuti_giocati": 16
+    },
+    "FA Cup": {
+      "nel_perimetro": 63,
+      "b_arbitro": 63,
+      "b_allenatori": 62,
+      "b_undici_titolari": 62,
+      "b_minuti_giocati": 12
+    }
+  },
+  "sponda_manuale": {
+    "Copa del Rey": {
+      "raccolte": 117,
+      "b_sostituzioni": 117,
+      "b_statistiche_individuali": 45,
+      "b_statistiche_squadra": 114,
+      "con_ponte_al_game_id": 117
+    },
+    "Coppa Italia": {
+      "raccolte": 45,
+      "b_sostituzioni": 45,
+      "b_statistiche_individuali": 41,
+      "b_statistiche_squadra": 45,
+      "con_ponte_al_game_id": 44
+    },
+    "Coupe de France": {
+      "raccolte": 201,
+      "b_sostituzioni": 63,
+      "b_statistiche_individuali": 63,
+      "b_statistiche_squadra": 87,
+      "con_ponte_al_game_id": 0
+    },
+    "DFB-Pokal": {
+      "raccolte": 63,
+      "b_sostituzioni": 63,
+      "b_statistiche_individuali": 63,
+      "b_statistiche_squadra": 63,
+      "con_ponte_al_game_id": 62
+    },
+    "EFL Cup": {
+      "raccolte": 91,
+      "b_sostituzioni": 91,
+      "b_statistiche_individuali": 91,
+      "b_statistiche_squadra": 91,
+      "con_ponte_al_game_id": 91
+    },
+    "FA Cup": {
+      "raccolte": 63,
+      "b_sostituzioni": 63,
+      "b_statistiche_individuali": 63,
+      "b_statistiche_squadra": 63,
+      "con_ponte_al_game_id": 62
+    }
+  },
+  "incrocio": {
+    "Copa del Rey": {
+      "nel_perimetro": 117,
+      "incrociabile": 44,
+      "quota": 37.6
+    },
+    "Coppa Italia": {
+      "nel_perimetro": 45,
+      "incrociabile": 40,
+      "quota": 88.9
+    },
+    "Coupe de France": {
+      "nel_perimetro": 201,
+      "incrociabile": 0,
+      "quota": 0.0
+    },
+    "DFB-Pokal": {
+      "nel_perimetro": 63,
+      "incrociabile": 62,
+      "quota": 98.4
+    },
+    "EFL Cup": {
+      "nel_perimetro": 91,
+      "incrociabile": 91,
+      "quota": 100.0
+    },
+    "FA Cup": {
+      "nel_perimetro": 63,
+      "incrociabile": 62,
+      "quota": 98.4
+    }
+  },
+  "incrociabili": 299,
+  "meteo": "assente per il 2025-26 (l'infrastruttura e' prospettica)"
+}

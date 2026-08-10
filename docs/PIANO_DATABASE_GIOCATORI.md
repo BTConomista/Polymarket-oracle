@@ -52,6 +52,17 @@
 > su tutto ciò che viene prima**; le sezioni §1-§8 sono conservate come storia
 > del ragionamento, con un richiamo dove sono state rettificate.
 >
+> ⚽⚽ **E PRIMA DI TUTTO, PER IL FRONTE ALLENATORI: `docs/DIARIO.md` Fase 140
+> e `docs/DATI.md` §5-nonies** (04/08/2026). Le voci F1-F32 non sono più un
+> piano: `games.csv` è **importato** e `src/data/allenatori.py` è **scritto**.
+> La costruzione ha confermato quasi tutto l'audit e ha trovato **due cose che
+> nessuna delle 118 voci prevedeva**: il nome sbaglia anche nella direzione
+> opposta (due allenatori diversi dietro una stringa sola — 11 casi dimostrati
+> con un test di impossibilità fisica, 2 nel nostro perimetro), e
+> `manager_name` è **chi sedeva in panchina quella partita**, non chi era in
+> carica (836 mandati su 13.810 sono un vice per una gara). Su quel fronte,
+> **quei due file vincono su tutto ciò che segue**.
+>
 > 🔴🔴 **E PRIMA ANCORA, `docs/AUDIT_FONTI_GIOCATORI.md`** (31/07/2026, 13 agenti):
 > ha auditato **tutte e 118 le voci** dei tre fronti (61 giocatore + 32 allenatore
 > + 25 arbitro) con un giro di verifica avversariale sopra, e ha prodotto **7

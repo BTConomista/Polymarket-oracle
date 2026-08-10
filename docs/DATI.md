@@ -464,7 +464,7 @@ falso 0: lacune **dichiarate**, nessun numero inventato.
 | football-data (Premier/Liga) | `files/football_data_*_bundle.json` (caricati a mano, Fase 54) | ✅ congelata |
 | football-data + Understat (**Bundesliga/Ligue 1**) | scaricate al volo da `scripts/fetch_sources.py` in `data/fonti/` — **non versionata** (135 MB, in `.gitignore`) | ⚠️ **le uniche due leghe senza fonte grezza congelata in repo**: ciò che è versionato è lo *snapshot* (§1) più le **90 impronte SHA256** del manifest (riga in fondo a questa tabella), che permettono di ri-scaricare e verificare l'identità bit-a-bit, non di lavorare offline sul grezzo |
 | Understat (xG + rose giocatori) | `files/understat_*_bundle.json` (Premier/Liga); Serie A: **solo lo snapshot** | ⚠️ il mirror per-stagione è **sparito** (Fase 14): le rose Serie A NON sono rigenerabili — `--enrich`/ri-matching valgono solo per Premier/Liga finché non viene caricato un bundle Understat Serie A (come Fase 54) |
-| ⭐ **diretta.it / Flashscore** (97 statistiche + rating **per giocatore-partita**) — **4 raccolte**: Serie A, Premier League, La Liga e **Bundesliga** 2025-26 | `files/diretta_{lega}_{stagione}/` (versionate; Serie A 11.894 + Premier 11.492 + Liga 11.953 + **Bundesliga 9.617** = **44.894 righe**, ognuna col proprio `manifesto.json`) | ⚠️ **il primo dato Tier B del progetto**, e l'unico con una **posizione di licenza dichiaratamente NON risolta**: dato a monte di **Opta**, raccolto **a mano** dall'utente (niente scraping), inserito su sua decisione consapevole il 31/07/2026 (Bundesliga il **09/08/2026**). **Non rivendichiamo alcuna licenza.** Copertura: Serie A 379/380, Premier e Liga **380/380**, Bundesliga **306/306** di campionato **+ 2 di spareggio** (colonna `Fase`, esclusa per default da `load_player_matches`). Join e coerenza gol verificati contro i nostri snapshot: **3.502 controlli, 3.502 passati**. Insieme fanno **1.445 partite**, ben sopra la soglia di potenza della Fase 98 (~574). Tutte le colonne statistiche sono `post` (regola R8). ⚠️ **`Gol concessi` e' INDIVIDUALE** — i gol presi mentre quel giocatore era in campo, non il totale di squadra: sommarla sulla rosa da' ~11× i gol subiti (Fase 138). La sola Bundesliga porta anche **4 fogli in piu'** — elenco partite, formazioni (panchinari compresi), 2.884 cambi, 2.261 eventi di cronaca ⚠️ **incompleta per costruzione** (907 gol elencati su 990). Leggere `files/diretta_serie_a_2526/README.md` |
+| ⭐ **diretta.it / Flashscore** (97 statistiche + rating **per giocatore-partita**) — **4 raccolte**: Serie A, Premier League, La Liga e **Bundesliga** 2025-26 | `files/diretta_{lega}_{stagione}/` (versionate; Serie A 11.894 + Premier 11.492 + Liga 11.953 + **Bundesliga 9.617** = **44.894 righe**, ognuna col proprio `manifesto.json`) | ⚠️ **il primo dato Tier B del progetto**, e l'unico con una **posizione di licenza dichiaratamente NON risolta**: dato a monte di **Opta**, raccolto **a mano** dall'utente (niente scraping), inserito su sua decisione consapevole il 31/07/2026 (Bundesliga il **09/08/2026**). **Non rivendichiamo alcuna licenza.** Copertura: Serie A 379/380, Premier e Liga **380/380**, Bundesliga **306/306** di campionato **+ 2 di spareggio** (colonna `Fase`, esclusa per default da `load_player_matches`). Join e coerenza gol verificati contro i nostri snapshot: **3.502 controlli, 3.502 passati**. Insieme fanno **1.445 partite**, ben sopra la soglia di potenza della Fase 98 (~574). Tutte le colonne statistiche sono `post` (regola R8). ⚠️ **`Gol concessi` e' INDIVIDUALE** — i gol presi mentre quel giocatore era in campo, non il totale di squadra: sommarla sulla rosa da' ~11× i gol subiti (Fase 145). La sola Bundesliga porta anche **4 fogli in piu'** — elenco partite, formazioni (panchinari compresi), 2.884 cambi, 2.261 eventi di cronaca ⚠️ **incompleta per costruzione** (907 gol elencati su 990). Leggere `files/diretta_serie_a_2526/README.md` |
 | ⭐ **diretta.it / Flashscore** (45 statistiche **per squadra-partita, divise in PERIODI**) — **5 raccolte**, tutte le leghe 2025-26 | `files/diretta_{lega}_{stagione}/squadra_per_partita.csv.gz` (versionate, 604 KB in tutto; **10.512 righe** di campionato = 3.504 squadra-partita × 3 periodi, + 38 righe di spareggio; ognuna col proprio `manifesto_squadra.json`) | ⚠️ **stessa fonte e stessa posizione di licenza NON risolta** del dato per giocatore (riga sopra); consegnato dall'utente il 01/08/2026. **È il primo dato del progetto che separa i due tempi** (Totale / 1° tempo / 2° tempo): serve al residuo aperto delle Fasi 96/99. Verificato contro football-data.co.uk, **fonte indipendente**: join **3.504/3.504**, risultato **3.504/3.504**, additività dei periodi **137.124/137.124** celle, conteggi 97,7-99,7% con scarto medio ~0. Gol per periodo dedotti vs `HTHG/HTAG`: **98,3%** (1T) e **97,9%** (2T), scarto **sempre ≤ 0**. ⚠️ Quattro cose da sapere prima di usarlo: il **vuoto è uno ZERO** (fino al 94% di NaN su 3 colonne); le righe **`Fase == 'Play-off'`** non sono campionato ed è la colonna `Fase`, mai la data, a separarle; **una partita è incompleta e sembra completa** (Nantes-Tolosa 17/05/2026, `Totale` == `1° tempo`); `Risultato squadra` ed `Esito` sono **`post` anche sulle righe di periodo** → **il punteggio all'intervallo NON è nel dataset**. Tutte le 45 metriche sono `post` (R8). ⭐ Dal 01/08/2026 ogni raccolta conserva anche **`originale_squadra.xlsx`, il file come consegnato** (regola §5-ter del `CLAUDE.md`: raccogliere tutto, e tenere l'originale perché un bug nella nostra conversione sia visibile) — fedeltà misurata, 569.700 celle e 0 divergenti. Leggere `files/README_statistiche_squadra.md` |
 | **player-scores** (valutazioni complete + presenze/rose, 5 leghe) | `files/player_scores/*.csv.gz` (versionati; import via **workflow GitHub Actions** `.github/workflows/import_dataset.yml` — il runner ha rete libera, l'ambiente cloud no) | ✅ fonte UFFICIALE dei valori rosa dalla Fase 67 (CC0, `dcaribou/transfermarkt-datasets`); rigenerabile: push di `.github/import-dataset-trigger` |
 | Transfermarkt (datalake `salimt`) | mirror GitHub, cache `data/raw/` (~106 MB, non versionata) | ✅ raggiungibile; dalla Fase 67 usato SOLO per gli infortuni (`absent_*_est`) — per i valori rosa e' superato da player-scores |
@@ -743,6 +743,7 @@ era l'handicap asiatico (Fase 88).
 | **fonte** | **Smarkets** (API v3 pubblica, senza chiave né account) — una **borsa**, non un bookmaker |
 | **file** | `YYYY-MM-DDTHH-MM-SS.json`, uno per esecuzione. I **secondi** nel nome non sono un vezzo: i due regimi possono cadere nello stesso minuto e si sovrascriverebbero in silenzio (Fase 118) |
 | **granularità riga** | (partita, mercato, contratto) con `p_banco`, `p_puntatore`, `p_mid`, `lato`, `spread`, `vol_banco`, `vol_puntatore` |
+| **perimetro** | dalla **Fase 142**: i 5 campionati **+ coppe nazionali dei 5 paesi + UEFA per club + seconde divisioni**. Misurato l'08/08: 158 partite esposte (58+52+48) su 865 che il listino espone. ⚠️ La colonna si chiama `lega` ma contiene anche `coppa_italia`, `serie_b`, `ucl_qual`: **si filtra su `fascia`** (`campionato`/`coppa`/`seconda`), non su `lega` |
 | **prezzi** | **PROBABILITÀ 0-1**, mai quote decimali. Sulle coppie complementari il mid somma ~1.003 (overround quasi nullo di una borsa) |
 | **mercati** | *denso*: 1X2, GG/NG, O/U 1.5/2.5/3.5, **risultato esatto**. *Lungo raggio*: solo 1X2 + O/U 2.5 + GG/NG (quelli che il motore consuma) |
 | **si scrive con** | `python scripts/fetch_smarkets_matches.py` (`--entro-ore`, `--tutte-le-esposte`, `--solo-principali`, `--tutti-i-mercati`, `--dry-run`) |
@@ -776,11 +777,89 @@ La soglia è misurata: il 28/07, nel giorno più vuoto dell'anno, il listino
 aveva **709 eventi calcio su 101 competizioni** con tutte e 5 le nostre
 presenti (9-10 partite ciascuna).
 
+**⚠️ Un file può essere legittimamente PARZIALE (Fase 141), e lo dichiara.**
+Fino all'08/08/2026 un guasto di rete su una partita faceva perdere l'intero
+giro: un `HTTP 503` alla 22ª partita di 58 ha buttato **7.870 righe già
+raccolte**, mai scritte. Ora il giro sopravvive e salva ciò che ha — quindi
+chi rilegge deve poter distinguere «quel mercato non era quotato» da «quel
+mercato non è arrivato». Due campi lo dicono, e **vanno letti prima di usare
+il file**:
+
+| campo | significato |
+|---|---|
+| `leghe_senza_partite_esposte` | (dal 01/08) le nostre leghe con zero partite nel listino — tipicamente uno slug rinominato a monte |
+| `partite_incomplete` | (dal 08/08) una voce per partita non raccolta o raccolta a metà: `mercati_persi` vale `"tutti"` oppure il numero di mercati caduti, con il motivo (`HTTPError…`, budget esaurito) |
+
+Vuoti entrambi = raccolta completa di tutto ciò che era in finestra. **Un
+congelamento per il test prospettico non si fa su un file che li ha pieni.**
+Un giro che non raccoglie *nessuna* riga, invece, non scrive alcun file: un
+archivio non deve mai contenere un silenzio che sembra un dato (R6).
+
+**⚠️ `fascia`: il campo con cui si filtra (Fase 142).** Dal perimetro allargato
+il file **non contiene solo campionati**. `lega` è rimasta la colonna storica
+(l'archivio già scritto la usa) ma porta anche `coppa_italia`, `league_cup`,
+`ucl_qual`, `serie_b`… Chi raggruppa per `lega` credendo di avere campionati
+mette Vicenza-Catania fra le partite di Serie A **e non riceve nessun errore**.
+
+| `fascia` | cosa contiene |
+|---|---|
+| `campionato` | i 5 modellati. **È il filtro da usare** per tutto ciò che parla di Serie A/Premier/Liga/Bundesliga/Ligue 1 |
+| `coppa` | Coppa Italia, League Cup, supercoppe, UEFA per club (e Copa del Rey, DFB-Pokal, Coupe de France quando compariranno) |
+| `seconda` | Serie B, Championship, Liga 2, 2.Bundesliga, Ligue 2 |
+
+I file **precedenti alla Fase 142 non hanno il campo**: sono tutti e soli
+campionati, quindi l'assenza vale `campionato` — è così che
+`ultimo_listino_completo()` continua a leggere l'archivio storico.
+
+Tre campi nuovi nei metadati dicono che cosa quel giro *poteva* contenere:
+`perimetro` (le coppie fascia/lega raccolte), `partite_per_fascia` e
+**`fuori_perimetro`** — il radar: le competizioni dei nostri paesi o UEFA che
+il listino esponeva e che non abbiamo preso. Non è un errore se non è vuoto:
+è l'unico posto dove si vedrà una coppa nuova comparire con un nome che non
+avevamo previsto.
+
 **Costo dell'archivio, dichiarato.** 454 byte per riga misurati. Il lungo
 raggio vale ~149 KB/giorno (~45 MB a stagione); il **denso in-season** è la
 voce pesante e porta il totale nell'ordine dei **250-300 MB** versionati per
-stagione. È una cifra da **decidere** (leve: frequenza del cron, esclusione del
+stagione. ⚠️ **Rimisurato alla Fase 142**: col perimetro allargato e il listino
+pieno il giro di lungo raggio è passato da 593 KB a **~1,3 MB** (158 partite
+invece di 58), quindi l'ordine di grandezza per la stagione va rivisto verso
+l'alto — resta una cifra da **decidere**, non da subire. È una cifra da **decidere** (leve: frequenza del cron, esclusione del
 risultato esatto anche dal denso), non da subire.
+
+---
+
+## 5-ter-bis · Quote IN-PLAY (`data/smarkets_live/`) — Fase 143
+
+Prezzi raccolti **a partita in corso**. Specifica completa nel README della
+cartella: **`data/smarkets_live/README.md`**. Qui solo ciò che serve al catalogo.
+
+| | |
+|---|---|
+| **fonte** | Smarkets, stessa API del 5-ter, ma `state=live` |
+| **perimetro** | lo stesso del pre-partita (5 campionati + coppe + UEFA + seconde divisioni) |
+| **granularità riga** | (istante, partita, mercato, contratto) — un file per **sessione** contiene decine di giri |
+| **cadenza** | nucleo (1X2, O/U 2.5, GG/NG, risultato esatto) ogni **2 min**; listino pieno (~103 mercati) ogni **15 min** |
+| **si scrive con** | `python scripts/fetch_smarkets_live.py`; automazione `.github/workflows/smarkets-live.yml` (sentinella ogni 30 min) |
+| **disponibilità (R8)** | ⚠️ `post` rispetto al calcio d'inizio, `pre` rispetto al minuto successivo. Un prezzo al 67' **non** è utilizzabile per prevedere la stessa partita da fermo: è utilizzabile per prevedere ciò che accade **dopo** il 67' |
+
+**⚠️ Perché è una cartella separata e non un file in più nel 5-ter.** Un prezzo
+in-play **conosce il punteggio**, uno pre-partita no: non sono confrontabili
+riga per riga. Nella stessa cartella, ogni lettore dell'archivio pre-partita —
+`ultimo_listino_completo()` per primo — li leggerebbe come la stessa cosa
+**senza dare errore**.
+
+**Il campo `stato_mercato` (nuovo, Fase 143):** `live` / `settled` / `halted`.
+Esiste anche nel 5-ter, dove vale sempre `live`. In-play distingue «prezzo
+assente perché il mercato è già deciso» da «prezzo assente perché non c'è
+liquidità» — due stati opposti che senza questo campo sono lo stesso `None`.
+`halted` è il mercato **sospeso**: l'istante in cui sta succedendo qualcosa.
+
+**Il punteggio si ricostruisce ma NON è nel file.** `gol = ⌈max linea O/U
+settled⌉` e `(casa, fuori) = minimo componentwise dei punteggi ancora quotati`
+sono due stimatori indipendenti che concordano (verificati su una partita,
+08/08/2026). Restano una **regola da validare** su partite a risultato noto:
+finché non lo è, il file contiene ciò che l'API ha detto e nient'altro (§5).
 
 ---
 
@@ -897,6 +976,440 @@ sospettarla. Il giudizio originale resta leggibile in `identita_wikipedia`.
 ⚖️ **Licenza mista, dichiarata**: le tappe sono CC BY-SA 4.0 (contenuto
 Wikipedia), i verdetti e i Q-id sono CC0 (Wikidata). Vedi
 `data/carriere_wikipedia/README.md`.
+
+---
+
+## 5-sexies · Coppe nazionali 2025-26 (`data/coppe_2526/`) — Fase 138
+
+**662 partite** su sei coppe e cinque paesi: Coppa Italia (45), FA Cup (123),
+EFL Cup/Carabao (93), Copa del Rey (137), DFB-Pokal (63), Coupe de France (201).
+Con **18.566 righe di formazione** (titolari + panchina + minuti giocati) e
+**8.177 eventi col minuto** (sostituzioni, gol, cartellini, rigori) su 458
+partite. Dettaglio completo in `data/coppe_2526/README.md`.
+
+⚠️ **Il difetto della fonte, da conoscere prima di usare il dato.** In
+`games.csv` di player-scores il risultato è **sommato ai rigori** su **68
+partite (14,8%)**: Braunschweig-Stuttgart risulta `11-12` mentre è finita 4-4
+(rigori 8-7). È un **finto pieno** da manuale (R6): sembra un punteggio e non
+lo è. Nella nostra raccolta il punteggio è **ricostruito dagli eventi** e vive
+in colonne separate — `gol_*_90`, `gol_*_finale`, `rigori_*` — mentre il valore
+grezzo della fonte è conservato in `gol_*_dichiarato` (per poter scoprire un
+bug nella *nostra* conversione, §5-ter). Resa **448/458 (97,8%)**; i 10 residui
+sono marcati `eventi_incompleti`, non corretti a occhio.
+
+**Verificata contro una fonte esterna**: openfootball scrive la stessa partita
+già scomposta (`7-8 pen. 4-4 a.e.t. (3-3, 1-1)`). Sulle 42 partite di
+DFB-Pokal appaiabili la ricostruzione coincide **42/42 su tutti e sei i campi**,
+zero divergenze. openfootball copre però solo la Germania per il 2025-26 e solo
+i primi due turni: è un verificatore parziale, non una fonte alternativa.
+
+**Perimetro** (decisione utente 02/08/2026): «da dove entrano i club di seconda
+divisione». Il turno d'ingresso è **misurato** — primo turno con un club che
+football-data elenca in 2ª divisione 2025-26 — e non copiato da una scheda di
+formato: Coppa Italia *Qualifying Round*, FA Cup *Third Round*, Carabao / Copa
+del Rey / DFB-Pokal *First Round*, Coupe de France *7° turno*. **577 partite**
+nel perimetro; le altre sono **tenute** e marcate `dentro_perimetro = False`.
+
+**Buchi dichiarati.** **204 partite senza formazione**: le 201 di Coupe de
+France (player-scores non ha coppe francesi in `competitions.csv`, rilievo già
+noto dall'audit fonti) e le **3 finali** — Coppa Italia, FA Cup, DFB-Pokal —
+che mancano da `games.csv` pur essendoci 846 partite di maggio 2026 in altre
+competizioni, e sono state recuperate da Wikipedia. Sono esattamente le righe
+con `game_id` vuoto.
+
+**Disponibilità temporale (R8).** Le **formazioni titolari** sono `pre` (note
+circa un'ora prima del fischio, quindi utilizzabili per prevedere anche se qui
+sono raccolte a posteriori); **sostituzioni, minuti, gol, cartellini e
+risultato** sono `post`. Arbitro, stadio e squadre sono `pre`.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge questi dati
+(§5-ter: «raccolto ≠ usato» è uno stato legittimo e va scritto).
+
+---
+
+## 5-septies · Coppa Italia 2025-26, raccolta MANUALE (`files/diretta_coppa_italia_2526/`) — Fase 139
+
+La stessa Coppa Italia della §5-sexies, letta a mano da **diretta.it
+(Flashscore)** da un collaboratore dell'utente. Non è un doppione: è la
+**seconda misura indipendente**, ed è il motivo per cui la raccolta automatica
+era stata costruita in una forma confrontabile.
+
+**Esito del confronto** (in `manifesto.json`, ricalcolabile con
+`python scripts/registra_raccolta_coppa_diretta.py --cartella …`):
+
+| confronto | esito |
+|---|---|
+| partite appaiate | **45 / 45** |
+| punteggi identici (90', finale, rigori) | **45 / 45** |
+| undici iniziali identici | **88 / 88** squadre-partita |
+
+**Cosa aggiunge** rispetto alla fonte automatica: 1.307 righe × **103 metriche
+per giocatore** (41 partite su 45 — dove diretta.it non pubblica la sezione le
+righe non ci sono); la **sequenza completa dei rigori** (256 eventi, e le 12
+partite ai rigori ricompongono 12/12 — mentre nell'automatica la sequenza è
+troncata); il **periodo** di ogni evento (1°/2° tempo, supplementari, rigori);
+e i titolari della **finale**, che `games.csv` non conteneva.
+
+**Contenuto**: `originale_coppa.xlsx` (come consegnato, §5-ter) + i cinque fogli
+esportati in CSV (`partite`, `formazioni_e_cambi`, `eventi`, `stat_giocatori`,
+`note`) + `manifesto.json` con tutte le verifiche.
+⚠️ `originale_partite.csv` e `originale_formazioni.csv` sono **duplicati esatti**
+di due fogli dell'xlsx (verificato cella per cella, 0 divergenti): restano
+archiviati perché escludere un dato richiede il consenso dell'utente (§5-ter).
+
+**Disponibilità temporale (R8)**: formazioni titolari e modulo sono `pre`;
+risultato, sostituzioni, eventi, rating e le 103 metriche sono `post`.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+
+⚠️ **Licenza**: il progetto non rivendica alcun diritto su questi dati — vale
+la stessa avvertenza delle altre raccolte diretta.it (`files/README.md`).
+
+---
+
+## 5-octies · Gli agganci delle coppe (`data/coppe_2526/aggancio_*.csv`) — Fasi 139-bis → 139-quater
+
+Cinque tabelle-ponte che collegano le **raccolte manuali** di coppa
+(`files/diretta_*_2526/`) al resto del database: `aggancio_squadre` (nome
+diretta.it → `club_id`), `aggancio_partite` (`ID partita` → `game_id`),
+`aggancio_giocatori`, `aggancio_eventi`, `aggancio_statistiche` (nome →
+`player_id`). Si rigenerano con `python scripts/aggancia_coppe.py`; la
+completezza si controlla con `python scripts/verifica_aggancio_coppe.py`.
+
+⚠️ **I candidati si cercano nel (partita, CLUB), non nella partita** (Fase
+139-decies). Cercarli nella partita intera li prende da entrambe le rose, e in
+una partita ci sono omonimi: in Navalcarnero-Getafe lo stesso `player_id`
+finiva sulle righe di tutte e due le squadre. Corollari misurati:
+- il club di una riga viene da `Squadra` dove c'è, **dal `Lato`** dove non c'è
+  (`eventi.csv` ha solo quello: prenderlo dal solo `Squadra` faceva crollare gli
+  eventi agganciati da 3.639 a 561);
+- ⭐ **l'autogol sta sul lato di chi lo SUBISCE** — diretta.it lo registra sul
+  lato che ne beneficia, ma il giocatore è dell'altra squadra (stessa
+  convenzione della fonte automatica, Fase 138). Senza l'inversione i **35
+  autogol** delle sei coppe restano senza `player_id`;
+- un `player_id` **non può servire due persone** nella stessa partita: dove due
+  nomi lo rivendicano resta vuoto per entrambi (1 caso, «Perez Andoni»/«Perez
+  Alex» del Club Portugalete).
+
+⚠️ **Un aggancio incerto resta VUOTO** — mai scelto a caso. Le colonne
+`club_id`, `game_id` e `player_id` sono quindi nullable *per progetto*, e la
+colonna `metodo` dice come si è arrivati a ciascun `player_id` (`nome`,
+`eliminazione`, `rosa_stagionale` — l'ultimo è un vincolo più debole, usato solo
+dove la partita non esiste nella fonte automatica).
+
+**Copertura misurata** (05/08/2026: la riga francese e' quella della Fase
+139-sexies, le altre cinque sono immutate dalla Fase 139-quater):
+
+| coppa | partite → `game_id` | partite appaiate | squadre → `club_id` | righe formazione → `player_id` |
+|---|--:|--:|--:|--:|
+| Coppa Italia | 44/45 | 45/45 | 44/44 | 2.130/2.133 (99,9%) |
+| DFB-Pokal | 62/63 | 63/63 | 64/64 | 2.514/2.518 (99,8%) |
+| EFL Cup | 91/91 | 91/91 | 90/90 | 3.598/3.606 (99,8%) |
+| FA Cup | 62/63 | 63/63 | 64/64 | 2.515/2.515 (100%) |
+| Copa del Rey | 117/117 | 117/117 | 116/116 | 4.775/5.040 (94,7%) |
+| Coupe de France | **0/201** | 161/201 | 33/202 | 932/2.495 (37,4%) |
+
+**Buchi dichiarati, e sono di due tipi diversi.**
+
+1. **Le tre finali** (Coppa Italia, FA Cup, DFB-Pokal): non esistono in
+   `games.csv`, quindi non hanno un `game_id` da agganciare. È il `−1` delle
+   prime due righe.
+2. **La Coupe de France è un caso a sé, e non è un limite del nostro
+   aggancio**: la sua fonte automatica è **Wikipedia** (player-scores non ha
+   coppe francesi), che non porta né `game_id` né `club_id` né formazioni —
+   **0/201 righe** hanno un identificatore. Il ponte manca dalla sponda opposta.
+   Le 161 partite *appaiate* servono comunque: è così che se ne verificano i
+   punteggi (157/161 identici). I giocatori agganciati lì passano tutti dalla
+   **rosa stagionale**, e solo per i club che il registro conosce.
+   ⚠️ **Non tutto quel buco era strutturale**, e per due fasi lo abbiamo scritto
+   come se lo fosse. Sei club di **Ligue 1** restavano vuoti solo perché
+   diretta.it li scrive con l'esonimo italiano («Lione» contro «Olympique
+   Lyon»): aggiunti in `club_matching.ALIAS`, i giocatori agganciati sono
+   passati da **19,7% a 37,4%**. Nella stessa verifica sono usciti **due falsi
+   positivi** — «Red Star» andava al **Red Star Belgrado** e «Lusitanos» all'
+   **FC Lusitanos andorrano** — ora bloccati in `NON_AGGANCIARE` (Fase
+   139-sexies).
+3. **Le 265 righe della Copa del Rey** non sono righe mancanti (le due fonti
+   hanno lo stesso numero di giocatori per squadra-partita, delta medio +0,02):
+   è la convenzione spagnola sui **due cognomi** — «Sanchez Alonso M.» contro
+   «Mario Sánchez» — che la regola del sottoinsieme non aggancia. Dichiarata,
+   non chiusa.
+
+**Invarianti verificati** (Fase 139-decies, tutti in `tests/test_coppe_query.py`):
+
+| invariante | esito |
+|---|--:|
+| il giocatore appartiene al club del suo lato | **9.332 / 9.332** |
+| eventi coerenti col lato (autogol invertito) | **11.990 / 11.990** |
+| un `player_id` = una persona per partita | 0 violazioni |
+| righe duplicate nel pannello | 0 |
+
+⚠️ **15 coppie (partita, giocatore) compaiono su ENTRAMBI i lati** negli eventi,
+e non è un difetto: sono **15/15** giocatori con un autogol — quello sta sul
+lato avversario, il cartellino o la sostituzione sul proprio. Dichiarato per R4,
+altrimenti la sessione dopo lo «corregge».
+
+**Disponibilità temporale (R8)**: tutte queste tabelle sono **`statico`** —
+sono anagrafica di identità (chi è chi), non misure della partita.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge questi agganci.
+
+---
+
+## 5-octies-bis · Statistiche di SQUADRA per periodo delle coppe (`files/diretta_*_2526/stat_squadra.csv`) — Fase 139-quinquies
+
+Il **secondo consegnato** di diretta.it per ogni coppa, complementare al primo:
+porta ciò che la raccolta base non aveva — le statistiche di squadra divise per
+**periodo**, **35 metriche** per riga (xG, xGOT, possesso, tiri per esito e per
+zona, passaggi, cross, contrasti, parate, gol evitati…).
+
+| coppa | righe | partite | Totale / 1° / 2° | Supplementari |
+|---|--:|--:|---|--:|
+| Coppa Italia | 272 | 45 | 90 / 90 / 90 | 2 |
+| DFB-Pokal | 406 | 63 | 126 / 126 / 126 | 28 |
+| FA Cup | 406 | 63 | 126 / 126 / 126 | 28 |
+| EFL Cup (Carabao) | 546 | 91 | 182 / 182 / 182 | **0** |
+| Coupe de France | 476 | **87 / 201** | 174 / 142 / 160 | 0 |
+| Copa del Rey | 692 | **114 / 117** | 228 / 196 / 216 | 52 |
+
+**Ci sono tutte e sei**: 2.798 righe, 463 partite.
+
+⚠️ **Lo zero della Carabao non è un dato mancante: è il regolamento.** Dal
+2018-19 la EFL Cup va **direttamente ai rigori** in ogni turno tranne la finale
+(finita 0-2 nei 90'). Verificato sul dato indipendente: nelle 91 partite non c'è
+**un solo evento** oltre il 90°, contro 6/131/142 delle altre tre coppe (R4).
+
+⚠️ **Coupe de France e Copa del Rey hanno la copertura a TRE LIVELLI.** Non è
+una colonna: si legge da quante metriche sono piene, e va guardato prima di
+usare il dato.
+
+| livello | metriche piene | cosa c'è | dove |
+|---|--:|---|---|
+| completo | ~27 / 29 | tutto, xG e possesso compresi | Coupe dai 32esimi; Rey dai 1/16 + 15 partite del 2° turno |
+| base | 8-10 | tiri, angoli, falli, fuorigioco, rimesse, punizioni, cartellini | Rey: 13 partite del 2° turno |
+| solo cartellini | 1-2 | i cartellini e basta | Coupe: 24 partite dei turni 7-8; Rey: 53 del 1° turno |
+
+Le righe del terzo livello esistono **perché** c'è stato un cartellino: il
+conteggio combacia con `eventi.csv` **48/48** (Coupe) e **106/106** (Rey). Le
+altre colonne sono **vuote**, non zero (R6) — ed è per questo che i periodi non
+si bilanciano: la riga di un tempo esiste solo se in quel tempo è successo
+qualcosa. Senza statistiche del tutto: 114 partite della Coupe, 3 del Rey.
+
+**Coerenza interna dei periodi, misurata**: le metriche numeriche sono additive
+**126/126** (Coupe) e **2.146/2.146** (Rey); quelle a rapporto lo sono su
+numeratore e denominatore **252/252** e **720/720**; `Possesso palla`
+(percentuale, non additiva) fa 100 fra casa e ospite in **189/189** e
+**197/197** gruppi completi.
+
+⭐ **Semantica di `Totale`, stabilita qui e mai verificata prima: è la partita
+INTERA, supplementari compresi**, non il 90'. Sulle 102 squadra-partita andate
+ai supplementari nelle quattro coppe che ne hanno, `1T + 2T + Suppl = Totale` in
+**2.228/2.228** celle, mentre `1T + 2T = Totale` regge solo in 628/2.232. Chi
+usa `Totale` come «i 90 minuti» sbaglia su 13-14 partite per coppa.
+
+⚠️ La prima lettura del possesso diceva «49 gruppi su 238 non fanno 100»: era un
+`groupby().sum()` che conta i `NaN` come zeri. Righe con possesso 0%: **nessuna**.
+
+⚠️ **La stessa fonte può scrivere un club in due modi fra i due consegnati**:
+Copa del Rey, `Ciudad Cieza` nella raccolta base e `Cieza` nel file di
+statistiche (stesse 2 partite, stessi 14 giocatori; CD Cieza, `club_id` 56725,
+confermato dalla fonte automatica). `coppe_aggancio.sinonimi_squadra` lo accetta
+solo per **sottoinsieme di token** e solo se **unico nei due sensi**, lo
+**dichiara** nel manifesto, e non riscrive la colonna: canonicalizza la chiave,
+non il dato.
+
+**Aggancio**: `data/coppe_2526/aggancio_statistiche_squadra.csv` (`game_id` +
+`club_id`). Le righe senza `game_id` sono esattamente quelle della **finale**
+che `games.csv` non contiene — 6 per coppa (2 squadre × 3 periodi): 400/406 per
+Coppa Italia, Pokal e FA Cup, **546/546 per la Carabao** e **692/692 per la Copa
+del Rey**, le due la cui finale la fonte automatica ha. La **Coupe de France** è l'eccezione opposta: **0/476**
+con `game_id` e 234/476 con `club_id`, perché la sua fonte automatica è
+Wikipedia e non porta identificatori (assenza a monte, §5-octies).
+
+**Lo stesso file porta anche una versione migliore del foglio giocatori**:
+stessi valori — verificato, **0 celle divergenti oltre l'arrotondamento su
+1.193.504 confrontate** (1.307+1.979+1.974+2.855+1.924+1.437 righe × 104 colonne in comune) —
+ma con `ID partita`, che prima mancava, e i decimali per intero invece che
+troncati a tre. Il vecchio foglio viene sovrascritto **solo dopo** che la
+verifica è tornata; l'originale come consegnato resta in
+`originale_statistiche.xlsx` (§5-ter).
+
+**Disponibilità temporale (R8)**: tutte `post` — sono misure della partita. Le
+colonne identificative (`Data`, `Casa`, `Ospite`, `Squadra`, `Periodo`) sono
+`statico`/`pre`.
+
+⭐ **È il primo dato di COPPA che separa i due tempi**, cioè la forma che serve
+al modello a due stadi (residuo aperto delle Fasi 96/99). Per i campionati lo
+stesso dato esiste dalla Fase 131.
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+
+⚠️ **Licenza**: vale l'avvertenza delle altre raccolte diretta.it
+(`files/README.md`) — il progetto non rivendica alcun diritto su questi dati.
+
+---
+
+## 5-octies-ter · L'incrocio dei dati di coppa (`data/coppe_2526/incrocio_*`) — Fase 139-octies
+
+Risponde alla domanda «per QUESTA partita ho tutto, e si unisce?». Prodotto da
+`python scripts/verifica_incrocio_coppe.py --csv`:
+`incrocio_per_partita.csv` (una riga per partita del perimetro, un booleano per
+blocco) e `incrocio_manifesto.json` (i conteggi).
+
+⚠️ **Tre distinzioni che un conteggio unico confonde**, e per cui lo script
+produce quattro tabelle invece di una:
+
+| | |
+|---|---|
+| **fuori perimetro ≠ buco** | 82 delle 662 partite non sono mai state chieste (decisione utente sul perimetro): al denominatore diventerebbero un difetto immaginario |
+| **senza ponte ≠ assente** | sulla chiave `game_id` la Coupe de France è 0 su tutto; sulla **sua** chiave ha 201 partite, 63 con le sostituzioni, 87 con le statistiche di squadra |
+| **presente ≠ unibile** | una partita può esserci da entrambe le parti mentre le **persone** non si uniscono: è il join `player_id`, e va misurato a parte |
+
+**Esito** (05/08/2026), sulle **580** partite del perimetro:
+
+| | |
+|---|--:|
+| incrociabili su TUTTI i blocchi | **299 / 580 (51,6%)** |
+| idem, escludendo la Coupe de France | **299 / 379 (78,9%)** |
+| EFL Cup / FA Cup / DFB-Pokal / Coppa Italia | 100% · 98,4% · 98,4% · 88,9% |
+| Copa del Rey | 37,6% (il First Round non ha statistiche individuali) |
+| **titolare → la sua statistica individuale** (`player_id`) | **6.489 / 6.600 (98,3%)** |
+
+**Il meteo non esiste per il 2025-26**: zero su 662, e non è «manca in qualche
+partita». L'infrastruttura del progetto (`fetch_stadi_coordinate.py`,
+`stagione_2026_2027/giornaliero/`) è **prospettica** — raccoglie la *previsione*
+a 16 giorni, che all'indietro non si ricostruisce. Per chiuderlo servirebbero:
+le coordinate di **363 stadi su 422** (ne abbiamo 59, che coprono 110 partite),
+una fonte storica (`open-meteo.com`, raggiungibile e senza chiave), e la
+consapevolezza che il risultato sarebbe un **consuntivo `post`**, non la
+previsione `pre` che serve a un modello (R8).
+
+**Disponibilità temporale (R8)**: `incrocio_per_partita.csv` è **`statico`** —
+descrive la copertura delle nostre tabelle, non la partita.
+
+---
+
+## 5-octies-quater · Il pannello interrogabile delle coppe (`src/data/coppe_query.py`) — Fase 139-novies
+
+Non un file di dati: due **viste denormalizzate** costruite al volo, in cui ogni
+riga di misura porta con sé le sue dimensioni (competizione, turno, data,
+squadra, avversario, **allenatore**, allenatore avversario, **arbitro**,
+divisione, modulo, esito).
+
+| vista | righe × colonne | grana |
+|---|--:|---|
+| `pannello_squadra(periodo="Totale")` | 746 × 59 | partita × squadra × periodo |
+| `pannello_giocatore()` | 9.462 × 134 | partita × giocatore |
+
+Rispondono alle due domande poste dall'utente il 05/08/2026:
+`statistiche_allenatore(nome, competizione=…)` e
+`statistiche_giocatore(giocatore=…, arbitro=…, competizione=…)`.
+
+⚠️ **Il lato è la chiave, ed è l'errore silenzioso.** `partite.csv` ha
+`allenatore_casa`/`allenatore_ospite`, la riga di misura ha `Lato`: attaccare
+l'allenatore senza guardarlo mette l'avversario su metà delle righe, e i numeri
+restano plausibili. Verificato contro un percorso indipendente
+(`allenatori.load_partite()`, che legge `games.csv`): **746/746 concordano**, e
+i due allenatori non coincidono su nessuna riga — quindi l'errore sarebbe stato
+visibile.
+
+⚠️ **La numerosità va guardata prima della media.** `copertura()` la stampa: in
+una stagione di coppa la mediana è **2 partite per allenatore** e **1 per
+arbitro**; solo 101 allenatori su 350 arrivano a 3 partite, solo 7 arbitri su
+207 arrivano a 5. La query risponde sempre, ma una media su due partite non è
+una media.
+
+⚠️ **Il nome non è un'identità** (Fase 140): le chiavi normalizzate uniscono le
+grafie della stessa persona, non separano due omonimi. Per gli arbitri non
+esiste nemmeno un id.
+
+**Fuori dal pannello**: la Coupe de France (niente `game_id`, quindi niente
+arbitro/allenatore da attaccare), le partite fuori perimetro, e i **minuti**,
+presenti solo sul 51,7% delle righe giocatore — buco della fonte
+(`appearances.csv` porta 5.438 righe su 18.566 di formazione), non del join:
+ogni riga di statistica trova il suo giocatore, **9.312 su 9.312**.
+
+**Disponibilità temporale (R8)**: le dimensioni sono `pre` (arbitro e allenatore
+si sanno prima), le misure `post`. Il pannello **mescola i due tipi per
+costruzione** — è una vista di analisi, non una tabella di feature: chi ne
+ricava una feature deve prendere le misure da partite **precedenti**.
+
+---
+
+## 5-nonies · Allenatori e arbitri per partita (`files/player_scores/games.csv.gz`) — Fase 140
+
+`games.csv` del dataset `davidcariboo/player-scores` — la **tabella-cardine**
+che il progetto aveva già in licenza e non aveva mai importato. **88.958
+partite**, 70 competizioni, dal 2006-06-09 al 2026-07-06; il perimetro delle 5
+leghe × 9 stagioni ne conta **16.111**, cioè esattamente le righe degli
+snapshot congelati. Vintage: Kaggle **versione 674, 4 agosto 2026** (i quattro
+file player-scores più vecchi sono del 18 luglio — impatto misurato in
+`files/README.md`: **1 partita su 16.111**).
+
+Si legge da `src/data/allenatori.py`; ogni numero di questa sezione si
+ricalcola con `python scripts/_run_fase140_allenatori.py`.
+
+### Le colonne, e quando si sanno (R8)
+
+| colonna | ⏱️ | note |
+|---|:--:|---|
+| `date`, `competition_id`, `season`, `round`, `stadium` | `pre` | |
+| `home/away_club_id`, `_name` | `pre` | |
+| **`home/away_club_manager_name`** | **`pre`** | l'allenatore si sa da giorni: è uno dei pochi dati davvero `pre` del progetto |
+| `referee` | **`pre`** in teoria (designato ~2 giorni prima), ma qui è letto a partita finita | è la stessa colonna che la Fase 125 usava da uno script una tantum |
+| `home/away_club_goals`, `_position` | `post` | `club_position` è la classifica **dopo** la giornata: si usa ritardata |
+| `attendance`, `home/away_club_formation` | `post` | `attendance` manca nel 13,3% del perimetro (regime porte chiuse compreso) |
+| `aggregate` | — | ⚠️ è la **copia letterale** del risultato in 88.958 righe su 88.958: non è il risultato d'andata e ritorno |
+
+### Copertura (perimetro 5 leghe × 9 stagioni)
+
+| | valore |
+|---|--:|
+| partite | 16.111 |
+| club-partita senza allenatore | **2 / 32.222 (99,994%)** |
+| celle `referee` mancanti | 6 / 16.111 |
+| allenatori distinti (chiavi normalizzate) | 494 |
+| mandati, timeline completa | 1.190 |
+
+L'unica partita senza allenatore è **Nantes-Tolosa del 17/05/2026**: le mancano
+anche l'arbitro e ogni presenza. È la coda del vintage, non un difetto
+sistematico.
+
+### ⚠️ Tre trappole misurate — tutte «finti pieni» (R6)
+
+1. **Il nome non è un'identità.** Non esiste un id-allenatore: solo una stringa
+   libera. `normalizza_nome` unisce le due grafie dello stesso uomo (496 grafie
+   → 494 chiavi nel perimetro; 7.031 → 6.995 globali) ma **non separa gli
+   omonimi**. Il test di impossibilità fisica — nessuno allena due club lo
+   stesso giorno — ne trova **11 globali**, di cui **2 nel perimetro**:
+   `michel` (Míchel Sánchez e Míchel González: il 2022-10-02 Girona e
+   Olympiakos) e `luis castro`. `conflitti_identita()` li elenca; scioglierli
+   richiede una fonte di identità esterna, che questo strato non ha.
+2. **`manager_name` è chi sedeva in panchina quella partita**, non chi era in
+   carica. Il pattern `A → X → A` (vice per una gara: squalifica, malattia,
+   turno di coppa) vale **836 mandati su 13.810**, 412 dei quali di una partita
+   sola. `panchine()` li marca sempre (`interruzione`) e li riassorbe su
+   richiesta (`ricuci=True`).
+3. **L'esperienza è visibile al dataset, non globale.** Il file per le top-5
+   comincia il **2012-08-10** e i campionati extra-europei entrano nel **2025**:
+   Ancelotti «esordisce» in Ligue 1 nel 2012, Mourinho in Liga nel 2012.
+   `esperienza_prima()` restituisce `censurata`, e ⚠️ `censurata=False` **non**
+   vuol dire esperienza completa (Guardiola: flag False, quattro stagioni al
+   Barcellona invisibili).
+
+### Da NON usare
+
+**`clubs.coach_name`** (in `files/player_scores/clubs.csv.gz`, 403/796 non
+nulli) è l'allenatore **corrente** del club, senza data. Su una partita del
+2019 le attribuisce il tecnico di oggi: trappola R8 pura. `src/data/allenatori.py`
+non la legge, e non va letta.
+
+**`club_games.csv.gz`** è un **duplicato esatto e algoritmico** di `games.csv`
+(0 celle divergenti su 1.957.076, ricostruito in otto righe). Conservato per la
+regola §5-ter, non perché serva; il suo `is_win` è per giunta **lossy** — i
+38.604 pareggi sono codificati come le 69.656 sconfitte.
+
+**Stato d'uso: raccolto e strutturato, non usato da nessun modello.**
 
 ---
 

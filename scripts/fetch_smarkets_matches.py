@@ -1,5 +1,11 @@
-"""Raccoglie le quote PRE-PARTITA di Smarkets per le 5 leghe, con banco e
-puntatore (Fase 116).
+"""Raccoglie le quote PRE-PARTITA di Smarkets, con banco e puntatore (Fase 116).
+
+PERIMETRO (allargato alla Fase 142, decisione utente): i **5 campionati**
+modellati, le **coppe nazionali** dei 5 paesi, le competizioni **UEFA per
+club** e le **seconde divisioni** dei 5 paesi -- 158 partite misurate l'08/08
+contro le 58 di prima. Ogni riga porta `fascia` (campionato/coppa/seconda) ed
+e' quella che si filtra: `lega` e' la colonna storica e contiene anche
+`coppa_italia` e `serie_b`.
 
 PERCHE' ESISTE. Il test prospettico della Fase 78 -- previsioni congelate
 prima del calcio d'inizio e scorate dopo -- e' il gold standard che il
@@ -38,6 +44,15 @@ intera, senza perdere nulla di cio' che il motore usa davvero.
 COSA *NON* FA. Non piazza scommesse e non legge conti: e' sola lettura di
 dati pubblici. Il progetto non scommette (CLAUDE.md §5).
 
+SE LA RETE FA I CAPRICCI (Fase 141). Il giro **non muore piu' su un guasto
+singolo**: un `HTTP 503` alla 22a partita di 58 aveva buttato via 7.870 righe
+gia' raccolte. Ora una partita che fallisce costa se stessa, e' DICHIARATA in
+`partite_incomplete` dentro il file, e le altre si salvano; l'uscita e' rossa
+solo se si perde una partita intera. `--budget-minuti` (45) e' il tetto al
+tempo totale: allo scadere si scrive cio' che si ha invece di insistere.
+⚠️ Perche' questo serva a qualcosa, il passo di commit del workflow deve
+girare **anche se questo script esce rosso** (`if: !cancelled()`).
+
 FORMATO. Un file per esecuzione in `data/smarkets_matches/YYYY-MM-DDTHH-MM.json.gz`,
 **versionato e COMPRESSO** (dalla Fase 136: a listino intero il giro giornaliero
 fa ~16 MB, il gzip toglie 19,6x senza perdere un byte; l'archivio `.json`
@@ -56,6 +71,7 @@ USO:
 from __future__ import annotations
 
 import argparse
+import collections
 import datetime as dt
 import json
 import re
@@ -100,6 +116,110 @@ SLUG_LEGA = {
     "france-ligue-1": "ligue_1",
 }
 
+# ---------------------------------------------------------------------------
+# IL PERIMETRO ALLARGATO (Fase 142, decisione utente 08/08/2026)
+#
+# Misurato l'08/08: Smarkets espone **865 partite su 124 competizioni** e noi
+# ne prendevamo 58, il 6,7%. Fuori restavano cose che il progetto usa o
+# vorrebbe usare -- fra cui la Coppa Italia che giocava **quel giorno**.
+# Allargato a: coppe nazionali dei nostri 5 paesi, competizioni UEFA per club,
+# seconde divisioni dei 5 paesi. Perche' queste tre e non altre:
+#   - COPPE: il progetto ha gia' i dati di coppa 2025-26 (Fase 138, 662
+#     partite) e non ha **mai** avuto una quota per quelle partite;
+#   - SECONDE DIVISIONI: e' il buco del prior neopromosse δ (Fase 7/8), che
+#     oggi e' una costante per lega *proprio perche'* non abbiamo dati sulla
+#     serie cadetta;
+#   - UEFA: il progetto non ha mai avuto una scala di forza comune fra
+#     campionati, e il mercato la prezza per noi.
+# Costo misurato: +11 min e +710 KB sul giro giornaliero (era 20 min/593 KB).
+#
+# ⚠️ NON SONO LEGHE, e la colonna si chiama `lega` per compatibilita' con
+# l'archivio gia' scritto: ogni riga porta anche `fascia`
+# (campionato/coppa/seconda), ed e' quella che va usata per filtrare.
+SLUG_ESTESO = {
+    # --- coppe nazionali (fascia "coppa") ---
+    "italy-coppa-italia": ("coppa_italia", "coppa"),
+    "england-league-cup": ("league_cup", "coppa"),
+    # --- supercoppe ---
+    "germany-supercup": ("supercoppa_germania", "coppa"),
+    "france-super-cup": ("supercoppa_francia", "coppa"),
+    "uefa-super-cup": ("supercoppa_uefa", "coppa"),
+    # --- UEFA per club ---
+    "uefa-champions-league-qualification": ("ucl_qual", "coppa"),
+    "uefa-europa-league-qualification": ("uel_qual", "coppa"),
+    # --- seconde divisioni dei 5 paesi (fascia "seconda") ---
+    "italy-serie-b": ("serie_b", "seconda"),
+    "england-championship": ("championship", "seconda"),
+    "spain-la-liga-2": ("la_liga_2", "seconda"),
+    "germany-2-bundesliga": ("bundesliga_2", "seconda"),
+    "france-ligue-2": ("ligue_2", "seconda"),
+}
+
+# LE ATTESE: competizioni che vogliamo e che l'API **non espone ancora**.
+#
+# PERCHE' SI TIRA A INDOVINARE, QUI E SOLO QUI. Coppa del Rey, DFB-Pokal,
+# Coupe de France, FA Cup e i gironi UEFA cominciano piu' avanti, e l'API di
+# Smarkets espone **solo** cio' che e' `upcoming`: non c'e' modo di leggere
+# oggi il nome che avranno (provati `/competitions/` e `/sports/`: 404;
+# `state=new`: zero eventi). Le alternative erano due, entrambe peggiori:
+# aspettare che compaiano e perdere i primi giorni di traiettoria -- che non
+# tornano (`newseason.md` §2) -- oppure includere per prefisso di paese, che
+# tirerebbe dentro anche National League North e le femminili.
+#
+# Indovinare qui e' **sicuro** perche' non e' un'assunzione silenziosa: uno
+# slug sbagliato semplicemente non combacia mai, e il RADAR qui sotto ci dice
+# che cosa e' comparso davvero. Piu' varianti per la stessa coppa costano
+# zero, quindi se ne mettono piu' d'una dove la convenzione non e' ovvia
+# (osservate dal vivo: `italy-coppa-italia` usa il nome nativo,
+# `england-league-cup` e `france-super-cup` no).
+SLUG_ATTESI = {
+    "england-fa-cup": ("fa_cup", "coppa"),
+    "england-community-shield": ("community_shield", "coppa"),
+    "spain-copa-del-rey": ("copa_del_rey", "coppa"),
+    "spain-copa-rey": ("copa_del_rey", "coppa"),
+    "spain-super-cup": ("supercoppa_spagna", "coppa"),
+    "spain-supercopa": ("supercoppa_spagna", "coppa"),
+    "germany-dfb-pokal": ("dfb_pokal", "coppa"),
+    "germany-pokal": ("dfb_pokal", "coppa"),
+    "france-coupe-de-france": ("coupe_de_france", "coppa"),
+    "france-french-cup": ("coupe_de_france", "coppa"),
+    "italy-super-cup": ("supercoppa_italia", "coppa"),
+    "italy-supercoppa": ("supercoppa_italia", "coppa"),
+    "uefa-champions-league": ("ucl", "coppa"),
+    "uefa-europa-league": ("uel", "coppa"),
+    "uefa-conference-league": ("uecl", "coppa"),
+    "uefa-europa-conference-league": ("uecl", "coppa"),
+    # ⚠️ TROVATO DAL RADAR l'08/08 alle 21:38, non da noi: il turno di
+    # qualificazione si chiama `uefa-europa-conference-league-qualification`,
+    # e nessuna delle varianti indovinate lo copriva -- si giocava quella sera
+    # e lo stavamo buttando. E' esattamente il caso per cui il radar esiste:
+    # gli slug indovinati sbagliano, e l'unica difesa e' che qualcuno lo dica.
+    # I turni di qualificazione UEFA hanno un suffisso, i gironi no.
+    "uefa-europa-conference-league-qualification": ("uecl_qual", "coppa"),
+    "uefa-conference-league-qualification": ("uecl_qual", "coppa"),
+}
+
+# Il perimetro effettivo: verificati + attesi. Gli attesi non fanno danno
+# finche' non compaiono, e il giorno che compaiono sono gia' dentro.
+PERIMETRO = {**SLUG_ESTESO, **SLUG_ATTESI}
+
+# IL RADAR (R6 applicato al perimetro, non alla cella).
+#
+# Il modo realistico in cui perderemo una competizione non e' un errore di
+# codice: e' che si chiami diversamente da come l'abbiamo scritta, e che
+# nessuno se ne accorga -- esattamente com'e' andata con `spain-laliga` ->
+# `spain-la-liga` il 31/07, trovata a mano cinque giorni dopo. Il radar
+# elenca ogni competizione dei nostri paesi (o UEFA) che il listino espone e
+# che NOI non raccogliamo, e la scrive nel log e nel file. Non decide niente:
+# toglie il silenzio.
+RADAR_PREFISSI = ("italy-", "england-", "spain-", "germany-", "france-", "uefa-")
+# Fuori dal radar cio' che non vogliamo comunque: non e' rumore da guardare
+# ogni giorno. Stessa logica di EXCLUDE_COMP in fetch_smarkets_outrights.py.
+RADAR_ESCLUSI = re.compile(
+    r"women|ladies|femminile|-u\d\d|youth|reserves?|primavera|national-league|"
+    r"regionalliga|oberliga|serie-c|serie-d|liga-3|division-3|ligue-3|"
+    r"3-liga|league-1|league-2|federacion|national-2|national-3")
+
 # I mercati che il progetto prezza davvero (docs/PANCHINA.md, listino Tier 1).
 # Il nome e' quello che usa Smarkets, verificato dal vivo.
 MERCATI_BASE = {
@@ -117,12 +237,70 @@ MERCATI_BASE = {
 # ferma a questi.
 MERCATI_PRINCIPALI = {"1x2", "ou25", "ggng"}
 
+# Il NUCLEO del ciclo in-play (Fase 143): i mercati che vanno letti spesso.
+# Sono i tre principali piu' il RISULTATO ESATTO, che qui non e' un lusso: e'
+# il mercato da cui si ricostruisce il punteggio corrente -- il minimo
+# componentwise dei punteggi ancora quotati -- e senza di lui una traiettoria
+# in-play e' una serie di prezzi di cui non si sa a che partita corrispondono.
+# Verificato dal vivo l'08/08 su Cambridge-Barnet: sopravvivevano 2-1, 2-2,
+# 2-3, 3-1, 3-2, 3-3 (minimo 2-1) e le linee O/U 0.5/1.5/2.5 erano `settled`
+# mentre la 3.5 era `live` -- due segnali indipendenti, entrambi 3 gol.
+MERCATI_NUCLEO = {"1x2", "ou25", "ggng", "risultato_esatto"}
+
 _ORA = re.compile(r"^(\d{4}-\d{2}-\d{2})T")
 
 
-def _slug_lega(full_slug: str | None) -> str | None:
+def _competizione(full_slug: str | None) -> str | None:
+    """Il segmento di competizione dello slug, o None se lo slug e' malformato."""
     m = re.match(r"/sport/football/([^/]+)/", full_slug or "")
-    return SLUG_LEGA.get(m.group(1)) if m else None
+    return m.group(1) if m else None
+
+
+def _slug_lega(full_slug: str | None) -> str | None:
+    """La chiave d'archivio della competizione, o None se e' fuori perimetro.
+
+    Il confronto e' ESATTO sul segmento di competizione, non "contiene": un
+    match largo su un'API che puo' rinominare i suoi slug e' il modo tipico di
+    raccogliere la competizione sbagliata senza accorgersene. Dalla Fase 142
+    guarda in tre mappe invece di una, ma la regola non cambia.
+    """
+    c = _competizione(full_slug)
+    if c is None:
+        return None
+    if c in SLUG_LEGA:
+        return SLUG_LEGA[c]
+    voce = PERIMETRO.get(c)
+    return voce[0] if voce else None
+
+
+def _fascia(full_slug: str | None) -> str | None:
+    """`campionato` per i 5 modellati, `coppa`/`seconda` per il resto.
+
+    E' il campo con cui si filtra: la colonna `lega` porta anche
+    `coppa_italia` e `serie_b` dalla Fase 142, e un lettore che facesse
+    `groupby('lega')` credendole campionati sbaglierebbe in silenzio.
+    """
+    c = _competizione(full_slug)
+    if c is None:
+        return None
+    if c in SLUG_LEGA:
+        return "campionato"
+    voce = PERIMETRO.get(c)
+    return voce[1] if voce else None
+
+
+def fuori_perimetro(competizioni: dict[str, int]) -> dict[str, int]:
+    """Il RADAR: competizioni dei nostri paesi (o UEFA) che NON raccogliamo.
+
+    `competizioni` e' {slug: quante partite} come il listino l'ha esposto.
+    Ritorna il sottoinsieme che ci riguarderebbe e che sta fuori: e' li' che
+    comparira' `germany-dfb-pokal` col nome vero se l'abbiamo indovinato
+    sbagliato, ed e' l'unico modo di accorgersene senza guardare a mano.
+    """
+    return {c: n for c, n in competizioni.items()
+            if c.startswith(RADAR_PREFISSI)
+            and c not in SLUG_LEGA and c not in PERIMETRO
+            and not RADAR_ESCLUSI.search(c)}
 
 
 def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
@@ -142,6 +320,13 @@ def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
     partite nostre in un listino non vuoto» non e' uno stato che l'off-season
     produce: e' un'anomalia. Zero eventi in assoluto lo e' a maggior ragione --
     da qualche parte nel mondo si gioca sempre.
+
+    ⚠️ `nostri` sono le partite dei 5 CAMPIONATI, non del perimetro (Fase
+    142). La differenza non e' formale: le coppe vanno e vengono per
+    costruzione -- la Coppa Italia fuori stagione ha zero partite ed e'
+    giusto cosi' -- quindi contarle qui dentro spegnerebbe la guardia proprio
+    nel caso che deve prendere. Se sparissero tutti e 5 i campionati e
+    restassero le coppe, `nostri` deve valere zero e l'allarme deve suonare.
     """
     if eventi_totali == 0:
         return ("il listino delle partite future e' VUOTO: 0 eventi calcio in "
@@ -175,20 +360,32 @@ def leghe_assenti(nostre: list[dict]) -> set[str]:
     ri-scaricano (`newseason.md` §2). Chi chiama raccoglie tutto, scrive il
     file, e solo dopo esce con codice diverso da zero.
     """
-    esposte = {e["lega"] for e in nostre}
+    # Il filtro sulla fascia non e' ridondante dalla Fase 142: `nostre`
+    # contiene anche coppe e cadetterie, e senza il filtro basterebbe una
+    # collisione di chiave (una coppa che si chiamasse `serie_a`) perche' la
+    # guardia si spegnesse da sola.
+    esposte = {e["lega"] for e in nostre if e.get("fascia") == "campionato"}
     return set(SLUG_LEGA.values()) - esposte
 
 
-def scandaglia_upcoming() -> tuple[list[dict], int]:
-    """Tutte le partite delle 5 leghe che Smarkets espone, e quanti eventi
-    calcio ha mostrato in totale (il secondo serve solo alla diagnosi)."""
-    nostre, totale = [], 0
+def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
+    """Le partite del perimetro, il totale degli eventi calcio, e il conteggio
+    per competizione.
+
+    Il terzo valore (Fase 142) serve al radar: senza il listino COMPLETO per
+    competizione non si puo' dire che cosa stiamo lasciando fuori.
+    """
+    nostre, totale, competizioni = [], 0, {}
     url = "/events/?type=football_match&state=upcoming&limit=200"
     while url:
         d = _get(url)
         for e in d.get("events", []):
             totale += 1
-            lega = _slug_lega(e.get("full_slug"))
+            slug = e.get("full_slug")
+            c = _competizione(slug)
+            if c:
+                competizioni[c] = competizioni.get(c, 0) + 1
+            lega = _slug_lega(slug)
             if not lega:
                 continue
             try:
@@ -197,11 +394,52 @@ def scandaglia_upcoming() -> tuple[list[dict], int]:
             except ValueError:
                 continue
             nostre.append({"event_id": e["id"], "nome": e.get("name"),
-                           "lega": lega, "inizio": e.get("start_datetime"),
+                           "lega": lega, "fascia": _fascia(slug),
+                           "inizio": e.get("start_datetime"),
                            "_inizio": inizio})
         nx = (d.get("pagination") or {}).get("next_page")
         url = f"/events/{nx}" if nx else None
-    return nostre, totale
+    return nostre, totale, competizioni
+
+
+def scandaglia_live() -> tuple[list[dict], int, list[dict]]:
+    """Le partite IN CORSO: le nostre, il totale mondiale, e le ALTRE.
+
+    Il terzo valore (Fase 146) e' il resto del calcio: serve al perimetro di
+    PROVA, che riempie le ore in cui il nostro perimetro non gioca. Arriva
+    dalla stessa scansione -- chiederlo a parte raddoppierebbe le chiamate per
+    un dato che abbiamo gia' in mano.
+
+    Usa `state=live`, che l'API espone e che e' l'unico modo affidabile di
+    sapere che una partita sta giocando: l'orario di inizio non basta (rinvii,
+    recuperi, supplementari) e non c'e' nessun endpoint di tabellone --
+    provati `/events/{id}/scores/` e `/state/`: 404.
+
+    Ritorna anche il totale mondiale, solo per la diagnosi: se le nostre sono
+    zero mentre nel mondo se ne giocano quaranta, e' il caso di guardare.
+    """
+    vive, altre, totale = [], [], 0
+    url = "/events/?type=football_match&state=live&limit=200"
+    while url:
+        d = _get(url)
+        for e in d.get("events", []):
+            totale += 1
+            slug = e.get("full_slug")
+            lega = _slug_lega(slug)
+            voce = {"event_id": e["id"], "nome": e.get("name"),
+                    "inizio": e.get("start_datetime"),
+                    "inplay": bool(e.get("inplay_enabled"))}
+            if lega:
+                vive.append({**voce, "lega": lega, "fascia": _fascia(slug)})
+            else:
+                # Il resto del mondo, per il perimetro di PROVA (Fase 146).
+                # Non ha una chiave nostra: si tiene lo slug grezzo, che e'
+                # l'unica identita' che questi eventi hanno per noi.
+                altre.append({**voce, "lega": _competizione(slug) or "?",
+                              "fascia": "prova"})
+        nx = (d.get("pagination") or {}).get("next_page")
+        url = f"/events/{nx}" if nx else None
+    return vive, totale, altre
 
 
 def entro_finestra(nostre: list[dict], entro_ore: int,
@@ -222,6 +460,34 @@ def entro_finestra(nostre: list[dict], entro_ore: int,
 # A lotti di 20 le richieste diventano 13 e la stessa partita si chiude in ~5s:
 # **17 volte meno**. E' la differenza fra «tutti i mercati» possibile e impossibile.
 LOTTO_MERCATI = 20
+
+# Quanto puo' durare la raccolta prima di scrivere cio' che ha e fermarsi.
+#
+# PERCHE' ESISTE (08/08/2026). E' il contrappeso ai tentativi ripetuti sui 5xx:
+# un guasto ISOLATO costa fino a 45s di attesa (3+6+12+24) e va benissimo, ma
+# se Smarkets sta giu' per mezz'ora *ogni* chiamata costa 45s e il giro non
+# finisce piu' -- a listino intero sono 58 partite x 13 lotti x 2 chiamate,
+# cioe' ore di runner bruciate per non scrivere niente. Il rimedio non e'
+# togliere i tentativi: e' dire quando smettere.
+#
+# ⚠️ RI-TARATO A 90 (08/08/2026, stesso giorno). Il primo giro col perimetro
+# allargato ha ESAURITO i 45 minuti e dichiarato perse 22 partite su 157: 135
+# raccolte in 45 minuti fanno **20 s a partita**, non i 5-7 s misurati su un
+# campione di cinque. Il campione era di mattina; il giro vero e' di sabato
+# pomeriggio, con l'API sotto carico e le partite in corso.
+#
+# E il taglio NON e' innocuo come sembrava. L'ordinamento per calcio d'inizio
+# fa perdere la coda, che e' giusto per un taglio UNA TANTUM -- ma se il taglio
+# avviene ogni giorno, a essere persa e' **sempre la stessa coda**: le 9
+# partite di Bundesliga (28-30 agosto) sarebbero uscite dalla raccolta tutti i
+# giorni fino al 28. Un taglio casuale si media, un taglio sistematico no.
+#
+# 90 minuti: il giro pieno misurato e' ~52 min (157 x 20 s), quindi il tetto
+# sta al 173% del giro sano -- lo stesso margine che 45 dava sui 20 minuti di
+# prima. Tenerlo alto non costa nulla in condizioni normali (si esce quando si
+# e' finito, non allo scadere) e resta un tetto vero contro un guasto lungo:
+# 90 minuti invece delle ~19,6 ore che i ritentativi darebbero da soli.
+BUDGET_MINUTI = 90
 
 
 def _etichetta_generica(m: dict, nome: str) -> str:
@@ -264,14 +530,25 @@ def _libri_per_contratto(quote: dict) -> dict:
     return piatta
 
 
-def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[dict]:
-    """Le quote di una partita: una riga per (mercato, contratto)."""
-    righe = []
+def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False,
+                  mercati_ammessi: set | None = None) -> tuple[list[dict], int]:
+    """Le quote di una partita: una riga per (mercato, contratto).
+
+    `mercati_ammessi` (Fase 143) tiene solo le etichette elencate, qualunque
+    sia il resto dei filtri: serve al ciclo in-play, che alterna un giro
+    stretto ogni pochi minuti a un giro pieno ogni tanto.
+
+    Ritorna anche **quanti mercati sono andati persi** per un guasto di rete,
+    perche' un raccolto parziale che si spaccia per completo e' esattamente il
+    «finto pieno» della regola R6: il file c'e', e' grosso, e mancano venti
+    mercati che nessuno cerchera' mai piu'. Chi chiama lo dichiara nel file.
+    """
+    righe, persi = [], 0
     mercati = (_get(f"/events/{ev['event_id']}/markets/") or {}).get("markets", [])
 
     # Prima si sceglie COSA serve, poi si chiede in blocco: cosi' il costo
     # dipende dai mercati richiesti, non da quelli esposti.
-    scelti: dict[str, tuple[str, str]] = {}
+    scelti: dict[str, tuple[str, str, str]] = {}
     for m in mercati:
         nome = m.get("name") or ""
         etichetta = MERCATI_BASE.get(nome)
@@ -281,24 +558,50 @@ def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[
             etichetta = _etichetta_generica(m, nome)
         if solo_principali and etichetta not in MERCATI_PRINCIPALI:
             continue
-        scelti[str(m["id"])] = (etichetta, nome)
+        if mercati_ammessi is not None and etichetta not in mercati_ammessi:
+            continue
+        # `state` del MERCATO (Fase 143), non del contratto. In-play vale
+        # `settled` per i mercati gia' decisi (a 3 gol fatti, O/U 0.5/1.5/2.5
+        # sono settled e 3.5 e' live) e senza di lui un prezzo assente
+        # significa insieme «mercato chiuso» e «nessuna liquidita'»: due
+        # stati opposti indistinguibili, cioe' un finto pieno (R6).
+        # Pre-partita e' sempre `live`, ed e' per questo che finora non e'
+        # mancato a nessuno.
+        scelti[str(m["id"])] = (etichetta, nome, m.get("state"))
 
     ids = list(scelti)
     for i in range(0, len(ids), LOTTO_MERCATI):
-        lotto = ",".join(ids[i:i + LOTTO_MERCATI])
-        contratti = (_get(f"/markets/{lotto}/contracts/") or {}).get("contracts", [])
-        libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
+        gruppo = ids[i:i + LOTTO_MERCATI]
+        lotto = ",".join(gruppo)
+        # Un lotto che non arriva costa 20 mercati, non la partita e non il
+        # giro: si annota e si prosegue. Il contrario -- propagare -- e' cio'
+        # che l'08/08/2026 ha fatto perdere 21 partite gia' in memoria.
+        try:
+            contratti = (_get(f"/markets/{lotto}/contracts/") or {}).get("contracts", [])
+            libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
+        except Exception as ex:                       # noqa: BLE001 - vedi sopra
+            persi += len(gruppo)
+            print(f"      ⚠ {len(gruppo)} mercati persi ({type(ex).__name__}: {ex})")
+            continue
         for c in contratti:
             mid = str(c.get("market_id") or "")
             if mid not in scelti:
                 continue          # l'API puo' restituire piu' di quanto chiesto
-            etichetta, nome = scelti[mid]
+            etichetta, nome, stato_mercato = scelti[mid]
             libro = libri.get(str(c["id"])) or {}
             p = book_price(libro)
             righe.append({
-                "lega": ev["lega"], "partita": ev["nome"],
+                "lega": ev["lega"],
+                # `fascia` e' il campo con cui si filtra dalla Fase 142:
+                # `lega` porta anche coppe e cadetterie, e un lettore che le
+                # scambiasse per campionati sbaglierebbe in silenzio.
+                "fascia": ev.get("fascia", "campionato"),
+                "partita": ev["nome"],
                 "inizio": ev["inizio"], "event_id": ev["event_id"],
                 "mercato": etichetta, "mercato_smarkets": nome,
+                # `live` / `settled`: in-play distingue «non quotato» da
+                # «gia' deciso», e da qui si ricostruisce il punteggio.
+                "stato_mercato": stato_mercato,
                 "market_id": mid, "contratto": c.get("name"),
                 "contract_id": c["id"],
                 # book_price (Fase 97): prezzi come PROBABILITA' 0-1, mai quote
@@ -309,7 +612,7 @@ def quote_partita(ev: dict, tutti: bool, solo_principali: bool = False) -> list[
                 "vol_banco": sum(x.get("quantity", 0) for x in libro.get("bids") or []),
                 "vol_puntatore": sum(x.get("quantity", 0) for x in libro.get("offers") or []),
             })
-    return righe
+    return righe, persi
 
 
 def main(argv=None) -> None:
@@ -325,26 +628,43 @@ def main(argv=None) -> None:
                     help=f"solo i mercati che il motore consuma: {sorted(MERCATI_PRINCIPALI)}")
     ap.add_argument("--dry-run", action="store_true",
                     help="mostra le partite che prenderebbe, senza chiedere quote")
+    ap.add_argument("--budget-minuti", type=int, default=BUDGET_MINUTI,
+                    help=f"tempo massimo di raccolta, poi scrive cio' che ha "
+                         f"(default {BUDGET_MINUTI}; <=0 = nessun limite)")
     a = ap.parse_args(argv)
 
-    nostre, totale = scandaglia_upcoming()
+    nostre, totale, competizioni = scandaglia_upcoming()
 
     # R6: prima di tutto, il listino ricevuto ha senso? Un giro che raccoglie
     # zero perche' l'API e' muta deve FALLIRE, non uscire verde come un giro
-    # che raccoglie zero perche' e' off-season.
-    perche = anomalia_del_listino(totale, len(nostre))
+    # che raccoglie zero perche' e' off-season. Si conta sui soli CAMPIONATI:
+    # le coppe hanno zero partite per mezza stagione ed e' normale.
+    campionati = [e for e in nostre if e["fascia"] == "campionato"]
+    perche = anomalia_del_listino(totale, len(campionati))
     if perche:
         raise SystemExit(f"ANOMALIA nel listino Smarkets: {perche}")
 
     # La guardia per-lega (01/08/2026): NON solleva qui, o perderemmo anche le
     # leghe che ci sono. Si raccoglie, si scrive, si esce rosso alla fine.
     mancanti = leghe_assenti(nostre)
+    ignorate = fuori_perimetro(competizioni)
 
     entro = 0 if a.tutte_le_esposte else a.entro_ore
     evs = entro_finestra(nostre, entro)
     quali = "esposte" if entro <= 0 else f"entro {entro}h"
-    print(f"eventi calcio nel listino: {totale} | partite delle 5 leghe "
-          f"esposte: {len(nostre)} | in raccolta ({quali}): {len(evs)}")
+    per_fascia = collections.Counter(e["fascia"] for e in evs)
+    print(f"eventi calcio nel listino: {totale} su {len(competizioni)} "
+          f"competizioni | perimetro esposto: {len(nostre)} "
+          f"({len(campionati)} dei 5 campionati) | in raccolta ({quali}): "
+          f"{len(evs)}  " + " ".join(f"{k}={v}" for k, v in sorted(per_fascia.items())))
+    if ignorate:
+        # Il radar (Fase 142). NON e' un allarme: e' l'elenco di cio' che
+        # stiamo lasciando fuori pur riguardandoci, ed e' il posto dove
+        # comparira' `germany-dfb-pokal` col nome vero se l'abbiamo scritto
+        # sbagliato in SLUG_ATTESI. Silenzio qui = una coppa persa in silenzio.
+        print(f"\n📡 fuori perimetro ma dei nostri paesi/UEFA "
+              f"({sum(ignorate.values())} partite su {len(ignorate)} competizioni): "
+              + ", ".join(f"{c}({n})" for c, n in sorted(ignorate.items())))
     if mancanti:
         print(f"\n⚠️  LEGHE SENZA NESSUNA PARTITA ESPOSTA: "
               f"{', '.join(sorted(mancanti))}. Probabile rinominamento dello "
@@ -352,8 +672,15 @@ def main(argv=None) -> None:
               f"-> spain-la-liga, 31/07/2026). Controllare SLUG_LEGA contro il "
               f"listino vero PRIMA del calcio d'inizio: i dati pre-partita non "
               f"si recuperano dopo.\n")
-    for e in sorted(evs, key=lambda x: x["_inizio"]):
-        print(f"   [{e['lega']:15s}] {e['inizio']}  {e['nome']}")
+    # ORDINE DI RACCOLTA = ORDINE DI CALCIO D'INIZIO (Fase 142). Non e'
+    # cosmetica: se il budget scade si perde la CODA, e la coda dev'essere
+    # cio' che manca di piu' -- una partita fra tre settimane la ri-prendiamo
+    # domani, una che comincia fra un'ora no. Prima della Fase 142 il ciclo
+    # seguiva l'ordine dell'API, cioe' un ordine arbitrario, e col perimetro
+    # allargato toccare il tetto e' diventato plausibile.
+    evs = sorted(evs, key=lambda x: x["_inizio"])
+    for e in evs:
+        print(f"   [{e['lega']:20s}] {e['inizio']}  {e['nome']}")
 
     if not evs:
         # Non e' un errore, ma non e' nemmeno un non-evento: si dice quanto
@@ -368,10 +695,55 @@ def main(argv=None) -> None:
         print("\n--dry-run: nessuna quota richiesta, nessun file scritto.")
         return
 
-    righe = []
+    # UNA PARTITA CHE FALLISCE NON FA FALLIRE IL GIRO (08/08/2026).
+    # Il giro di lungo raggio delle 06:24 e' morto su un HTTP 503 alla 22a
+    # partita su 58, e con lui le 21 gia' in memoria: mai scritte, mai
+    # committate, perse per sempre (`newseason.md` §2 -- cio' che non si
+    # raccoglie prima del fischio non torna piu'). L'eccezione propagava fino
+    # in cima perche' era piu' comodo scrivere il ciclo cosi', non perche'
+    # qualcuno avesse deciso che 1 partita su 58 vale le altre 57.
+    righe, incomplete = [], []
+    scade = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(minutes=a.budget_minuti)) if a.budget_minuti > 0 else None
     for i, e in enumerate(evs, 1):
-        righe += quote_partita(e, a.tutti_i_mercati, a.solo_principali)
-        print(f"  [{i}/{len(evs)}] {e['nome']}: {len(righe)} righe totali")
+        if scade and dt.datetime.now(dt.timezone.utc) >= scade:
+            # Il tempo e' finito: si dichiara cio' che resta e si va a
+            # scrivere. Meglio 40 partite salvate e 18 dichiarate perse che
+            # 58 perse in silenzio dentro un giro che non finisce.
+            for resto in evs[i - 1:]:
+                incomplete.append({"partita": resto["nome"],
+                                   "event_id": resto["event_id"],
+                                   "lega": resto["lega"],
+                                   "mercati_persi": "tutti",
+                                   "errore": f"budget di {a.budget_minuti} "
+                                             f"minuti esaurito"})
+            print(f"  ⏱ budget di {a.budget_minuti} minuti esaurito: "
+                  f"{len(evs) - i + 1} partite non raccolte, si salva il resto")
+            break
+        try:
+            r, persi = quote_partita(e, a.tutti_i_mercati, a.solo_principali)
+        except Exception as ex:                       # noqa: BLE001 - vedi sopra
+            incomplete.append({"partita": e["nome"], "event_id": e["event_id"],
+                               "lega": e["lega"], "mercati_persi": "tutti",
+                               "errore": f"{type(ex).__name__}: {ex}"})
+            print(f"  [{i}/{len(evs)}] {e['nome']}: PERSA "
+                  f"({type(ex).__name__}: {ex})")
+            continue
+        righe += r
+        if persi:
+            incomplete.append({"partita": e["nome"], "event_id": e["event_id"],
+                               "lega": e["lega"], "mercati_persi": persi,
+                               "errore": "lotti di mercati non arrivati"})
+        print(f"  [{i}/{len(evs)}] {e['nome']}: {len(righe)} righe totali"
+              + (f"  ⚠ {persi} mercati persi" if persi else ""))
+
+    if not righe:
+        # Qui evs non era vuoto (quel caso e' gia' uscito sopra): zero righe
+        # significa che NON siamo riusciti a chiedere nulla. Scrivere un file
+        # vuoto lo renderebbe indistinguibile da un'off-season.
+        raise SystemExit(
+            f"raccolta FALLITA: {len(evs)} partite in finestra e zero righe "
+            f"raccolte. L'API non ha risposto a nessuna richiesta di quote.")
 
     quando = dt.datetime.now(dt.timezone.utc)
     DEST.mkdir(parents=True, exist_ok=True)
@@ -390,10 +762,24 @@ def main(argv=None) -> None:
         "solo_principali": a.solo_principali,
         "eventi_calcio_nel_listino": totale,
         "partite_nostre_esposte": len(nostre),
+        # Dalla Fase 142 il file non contiene solo campionati: senza questi
+        # tre campi, chi rilegge fra mesi non puo' sapere CHE COSA questo
+        # giro poteva contenere -- e un file di coppe non e' confrontabile
+        # riga per riga con uno di soli campionati.
+        "perimetro": sorted({(e["fascia"], e["lega"]) for e in evs}),
+        "partite_per_fascia": dict(sorted(per_fascia.items())),
+        # Il radar: cosa il listino esponeva dei nostri paesi e noi NON
+        # abbiamo preso. Un elenco non vuoto non e' un errore -- e' l'unico
+        # posto dove si vede una coppa nuova col nome che non avevamo previsto.
+        "fuori_perimetro": dict(sorted(ignorate.items())),
         # Un buco DICHIARATO e' innocuo, uno silenzioso no (R6). Chi rilegge
         # l'archivio fra mesi deve poter distinguere «la Liga non c'era» da
         # «la Liga non l'abbiamo chiesta».
         "leghe_senza_partite_esposte": sorted(mancanti),
+        # Stesso motivo (R6): chi rilegge deve poter distinguere «quel mercato
+        # non era quotato» da «quel mercato non e' arrivato». Vuoto = raccolta
+        # completa di tutto cio' che era in finestra.
+        "partite_incomplete": incomplete,
         "nota_prezzi": ("probabilita' 0-1: p_banco/p_puntatore sono i due lati "
                         "del libro, p_mid il punto medio (somma ~1.005 sulle "
                         "coppie complementari). MAI quote decimali."),
@@ -402,15 +788,37 @@ def main(argv=None) -> None:
         "righe": righe,
     }
     dest = _archivio.scrivi(dest, dati)
-    print(f"\nscritto {dest.relative_to(ROOT)}  ({len(righe)} righe, "
+    # `relative_to` solleva se il file sta fuori dal repo (ci capita nei test,
+    # e capiterebbe con un DEST spostato): un errore nel messaggio d'errore
+    # nasconderebbe il motivo vero dell'uscita rossa.
+    dove = dest.relative_to(ROOT) if dest.is_relative_to(ROOT) else dest
+    print(f"\nscritto {dove}  ({len(righe)} righe, "
           f"{len({r['partita'] for r in righe})} partite)")
 
     # Solo ORA si esce rosso: il file e' salvo, l'allarme e' visibile.
+    # (Perche' questo funzioni davvero, il passo di commit del workflow deve
+    # girare ANCHE se questo passo fallisce: `if: always()` in
+    # .github/workflows/smarkets-prematch.yml. Senza, il file resta sul runner
+    # e viene buttato -- ed e' quello che e' successo fino all'08/08/2026.)
+    allarmi = []
     if mancanti:
-        raise SystemExit(
-            f"raccolta INCOMPLETA: nessuna partita esposta per "
-            f"{', '.join(sorted(mancanti))} (dati comunque salvati in "
-            f"{dest.relative_to(ROOT)})")
+        allarmi.append("nessuna partita esposta per "
+                       + ", ".join(sorted(mancanti)))
+    # Rosso solo per una partita PERSA INTERA, non per qualche mercato: una
+    # partita persa e' un buco nella traiettoria pre-partita che nessun giro
+    # successivo riempie (quel prezzo, a quell'ora, non esiste piu'), mentre
+    # qualche mercato mancante lascia la traiettoria leggibile ed e' gia'
+    # dichiarato nel file. La soglia distingue «serve un umano» da «e' andata
+    # storta una richiesta»: senza, un 503 isolato su 58 partite manderebbe
+    # una mail rossa e le mail rosse che non chiedono nulla si smettono di
+    # leggere.
+    perse = [x for x in incomplete if x["mercati_persi"] == "tutti"]
+    if perse:
+        allarmi.append(f"{len(perse)} partite perse per intero: "
+                       + ", ".join(x["partita"] for x in perse))
+    if allarmi:
+        raise SystemExit("raccolta INCOMPLETA: " + "; ".join(allarmi)
+                         + f" (dati comunque salvati in {dove})")
 
 
 if __name__ == "__main__":

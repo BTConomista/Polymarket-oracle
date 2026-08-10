@@ -1,0 +1,124 @@
+name: Raccolta quote IN-PLAY Smarkets (Fase 143)
+
+# PERCHE' ESISTE. Il live e' l'unica famiglia di mercati che il progetto
+# dichiara scoperta da sempre (CLAUDE.md §6) ed e' il dato piu' irrecuperabile
+# che abbiamo: una quota pre-partita si puo' almeno cercare a posteriori da
+# qualche parte, il prezzo dell'1X2 al 67' con la partita sull'1-1 non esiste
+# piu' appena la partita finisce. Richiesta dell'utente, 08/08/2026.
+#
+# COSTO: zero. Il repo e' PUBBLICO, e per i repo pubblici i minuti di Actions
+# sui runner standard non si pagano. E' questo che rende possibile un job che
+# resta acceso 40 minuti invece di un cron ogni due.
+#
+# SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
+
+on:
+  schedule:
+    # LA SENTINELLA, ogni 30 minuti. Non e' lei a raccogliere ogni 2 minuti:
+    # e' lei ad ACCENDERE un job che poi cicla al suo interno.
+    #
+    # Perche' non un cron ogni 2 minuti, che sarebbe la cosa ovvia: il cron di
+    # GitHub parte con **30-40 minuti di ritardo** (misurato l'08/08/2026: i
+    # giri delle :07 del workflow gemello sono partiti alle 08:54, 09:49,
+    # 10:45, 11:37). Un cron ogni 2 minuti sarebbe altrettanto in ritardo, e in
+    # piu' i run si accoderebbero e si cancellerebbero a vicenda. Dentro un job
+    # gia' acceso, invece, `time.sleep` e' esatto: solo l'AVVIO e' impreciso.
+    #
+    # Nelle ore senza partite del perimetro il giro costa una chiamata di
+    # listino e finisce in ~10 secondi senza scrivere niente.
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      durata_minuti:
+        description: 'Quanto resta acceso il ciclo (si spegne prima se non si gioca)'
+        default: '300'
+      ogni_nucleo:
+        description: 'Minuti fra due giri stretti (1X2, O/U 2.5, GG/NG, risultato esatto)'
+        default: '2'
+      ogni_pieno:
+        description: 'Minuti fra due giri a listino intero (0 = mai)'
+        default: '15'
+
+permissions:
+  contents: write
+
+# ⚠️ QUESTA SCELTA E' STATA RIBALTATA NEL GIRO DI UN'ORA, E IL PERCHE' CONTA.
+#
+# Prima stesura: NESSUN gruppo di concorrenza, perche' un gruppo serializza le
+# sessioni e la terza in coda cancella quella in attesa -- il guasto misurato
+# l'08/08 sul workflow pre-partita (run 31258806209, `cancelled`). Con sessioni
+# da 40 minuti il ragionamento era giusto: la sessione successiva serviva per
+# la continuita', e cancellarla apriva un buco.
+#
+# Poi la sessione e' diventata di 5 ORE e si spegne da sola quando il calcio
+# finisce. Cambia tutto: mentre una sessione gira, le sentinelle successive
+# sono REDONDANTI, non necessarie. Senza un gruppo, con la sentinella ogni 30
+# minuti, si arriverebbe a **dieci sessioni in parallelo** sulle stesse
+# partite -- dieci runner e dieci copie dello stesso dato.
+#
+# Quindi il gruppo ci vuole, e la cancellazione dei pending qui e' un PREGIO,
+# non un difetto: cancella cio' che non serve. E quando la sessione finisce,
+# l'ultima sentinella in attesa parte subito e raccoglie cio' che e' ancora in
+# corso -- oppure esce in dieci secondi se non si gioca piu'.
+#
+# `cancel-in-progress: false` resta obbligatorio: uccidere una sessione VIVA
+# butterebbe i giri non ancora committati.
+# Rischio accettato e dichiarato: se una sessione si pianta senza raccogliere,
+# blocca le altre fino al `timeout-minutes`. Per questo il timeout esiste, e
+# per questo il cane da guardia (controlla-raccolta.yml) misura la copertura
+# invece di fidarsi dei run.
+concurrency:
+  group: smarkets-live
+  cancel-in-progress: false
+# Sul push non c'e' corsa: ogni sessione scrive un file col proprio timestamp,
+# e il passo di commit ha gia' i suoi tre tentativi con `pull --rebase`.
+
+jobs:
+  raccogli:
+    runs-on: ubuntu-latest
+    # La sessione dura al massimo 300 minuti (si spegne da sola quando il
+    # calcio finisce); 330 lascia margine per checkout, ultimo giro e commit.
+    # Il tetto duro di un job e' 6 ore: 330 ci sta sotto con margine.
+    timeout-minutes: 330
+    env:
+      # Senza questo lo stdout di Python esce tutto in blocco alla
+      # fine e i timestamp del log di Actions sono inutilizzabili: la
+      # durata di un giro si e' potuta misurare solo a posteriori dal
+      # file (08/08). Un log che non dice QUANDO non serve a diagnosi.
+      PYTHONUNBUFFERED: '1'
+    steps:
+      # Senza questo lo stdout di Python esce tutto in blocco alla fine, e i
+      # timestamp del log di Actions diventano inutilizzabili: la durata di un
+      # giro si e' potuta misurare solo a posteriori dal file (08/08).
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Raccogli le quote in-play
+        run: |
+          python scripts/fetch_smarkets_live.py \
+            --durata-minuti "${{ github.event.inputs.durata_minuti || 300 }}" \
+            --ogni-nucleo   "${{ github.event.inputs.ogni_nucleo   || 2 }}" \
+            --ogni-pieno    "${{ github.event.inputs.ogni_pieno    || 15 }}"
+
+      - name: Salva la sessione (se c'e' qualcosa da salvare)
+        # ANCHE SE IL PASSO PRIMA E' FALLITO: lo script riscrive il file su
+        # disco ogni 5 giri apposta, e senza questo `if` un errore all'ultimo
+        # minuto butterebbe 40 minuti di raccolta. E' la lezione della Fase
+        # 141, applicata prima di ripagarla.
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain data/smarkets_live/)" ]; then
+            echo "nessuna partita del perimetro in corso: niente da committare (non e' un errore)"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/smarkets_live/
+          git commit -m "Smarkets in-play: sessione $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1

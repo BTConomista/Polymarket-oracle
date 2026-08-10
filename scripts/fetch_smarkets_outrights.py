@@ -49,6 +49,7 @@ import argparse
 import json
 import re
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -119,17 +120,101 @@ _norm = lambda s: re.sub(r"[^a-z0-9 ]", "", (s or "").lower()).strip()
 _THROTTLE = 0.35        # s fra una chiamata e l'altra: l'API limita a ~3/s e
                         # senza pausa il giro completo prende un 429 a meta'
 
+# IL LIMITATORE CONDIVISO (Fase 144-ter). Il `time.sleep(_THROTTLE)` da solo
+# vale finche' chiama un thread solo: con N thread darebbe N volte il ritmo e
+# il 429 arriverebbe subito. Questo invece serializza gli ISTANTI DI PARTENZA
+# -- una richiesta ogni 0.35s in tutto il processo -- lasciando pero' le
+# attese di rete SOVRAPPOSTE.
+#
+# Perche' serve: misurato l'08/08, una chiamata costa 0.54s da questo ambiente
+# ma ~1.8s dal runner di GitHub, e di quel tempo il throttle e' solo 0.35 --
+# il resto e' latenza. In sequenza, un giro pieno su 25 partite (325 chiamate)
+# ha impiegato **9 minuti e 50 secondi** sul runner, mangiandosi l'intera
+# sessione e producendo ZERO giri di nucleo: la cadenza dichiarata non si e'
+# mai realizzata. A ritmo pieno le stesse 325 chiamate stanno in ~110s.
+_RITMO = threading.Lock()
+_PROSSIMA_PARTENZA = [0.0]
+
+# ⚠️ IL RITMO NON E' UNA COSTANTE: DIPENDE DALL'AMBIENTE (Fase 144-quater).
+#
+# Misurato l'08/08 nello stesso pomeriggio, allo STESSO ritmo nominale di 2,9
+# richieste/s: da questo ambiente **24 richieste su 24 accettate, zero 429**;
+# dal runner di GitHub **151 mercati persi per 429** in un solo giro. Le
+# ragioni plausibili sono due e non le sappiamo distinguere: l'IP di un runner
+# e' condiviso fra molti utenti di Actions, e il volume sostenuto e' diverso
+# (~1.000 chiamate contro 24).
+#
+# Il punto non e' quale delle due: e' che **un numero fisso non puo' essere
+# giusto in entrambi i posti**. Quindi l'intervallo si TARA DA SOLO: cresce
+# quando l'API rifiuta, decade piano quando accetta. Cosi' e' veloce dove si
+# puo' ed e' prudente dove serve, senza che nessuno debba indovinare.
+#
+# ⚠️ Nota su come e' nato l'equivoco: il valore 0.35 viene dalla Fase 97, ma
+# **non era mai stato provato al suo ritmo nominale**. In sequenza la latenza
+# aggiungeva spaziatura da sola (0,55 richieste/s effettive sul runner contro
+# le 2,9 nominali), quindi il limite vero dell'API non l'avevamo mai toccato.
+# Lo abbiamo toccato solo parallelizzando.
+_INTERVALLO_MIN = _THROTTLE     # il piu' veloce che ci concediamo
+_INTERVALLO_MAX = 3.0           # oltre, tanto vale fallire e dichiararlo
+_CRESCITA = 1.6                 # a ogni 429
+_DECADIMENTO = 0.99             # a ogni successo: si torna giu' piano
+_INTERVALLO = [_THROTTLE]
+
+
+def ritmo_corrente() -> float:
+    """L'intervallo a cui il limitatore si e' tarato. Da dichiarare nei file:
+    e' la diagnosi di quanto l'ambiente ci stia lasciando correre."""
+    return _INTERVALLO[0]
+
+
+def _rallenta() -> None:
+    with _RITMO:
+        _INTERVALLO[0] = min(_INTERVALLO[0] * _CRESCITA, _INTERVALLO_MAX)
+
+
+def _accelera() -> None:
+    with _RITMO:
+        _INTERVALLO[0] = max(_INTERVALLO[0] * _DECADIMENTO, _INTERVALLO_MIN)
+
+
+def _attendi_il_turno() -> None:
+    """Blocca finche' non e' il turno di questa richiesta. Thread-safe."""
+    with _RITMO:
+        adesso = time.monotonic()
+        quando = max(adesso, _PROSSIMA_PARTENZA[0])
+        _PROSSIMA_PARTENZA[0] = quando + _INTERVALLO[0]
+    ritardo = quando - time.monotonic()
+    if ritardo > 0:
+        time.sleep(ritardo)
+
+# I codici HTTP che significano «riprova fra un attimo», non «la richiesta e'
+# sbagliata». 429 e' il rate limit (gia' gestito dalla Fase 97); i 5xx sono il
+# server che vacilla, ed erano trattati come errori definitivi -- il che ha
+# ucciso il giro di lungo raggio dell'08/08/2026 con un **503 alla 22a partita
+# su 58**, buttando via le 21 gia' raccolte. Un 503 e' per definizione
+# temporaneo ("Service Unavailable"): l'unica risposta sensata e' aspettare.
+# 4xx restano fatali: se chiediamo un mercato che non esiste, riprovare cinque
+# volte non lo fa apparire, e mascherarlo sarebbe peggio.
+HTTP_TRANSITORI = {429, 500, 502, 503, 504}
+
 
 def _get(path: str, retries: int = 5):
     url = path if path.startswith("http") else API + path
     for k in range(retries):
         try:
-            time.sleep(_THROTTLE)
+            _attendi_il_turno()
             with urllib.request.urlopen(url, timeout=30) as r:
-                return json.loads(r.read())
+                d = json.loads(r.read())
+            _accelera()
+            return d
         except urllib.error.HTTPError as ex:
-            # 429 = rate limit: si aspetta e si riprova, non e' un errore vero
-            if ex.code != 429 or k == retries - 1:
+            # rate limit o server che vacilla: si aspetta e si riprova, non e'
+            # un errore vero. L'attesa e' 3, 6, 12, 24s: un 503 di Smarkets
+            # dura tipicamente qualche secondo, e un backoff piu' corto
+            # rischia di sprecare i tentativi tutti dentro lo stesso guasto.
+            if ex.code == 429:
+                _rallenta()      # e' l'API che ci dice di andare piano
+            if ex.code not in HTTP_TRANSITORI or k == retries - 1:
                 raise
             time.sleep(3 * 2 ** k)
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):

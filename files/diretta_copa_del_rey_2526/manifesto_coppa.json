@@ -1,0 +1,163 @@
+{
+  "coppa": "Copa del Rey",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "3c9b9f94c92feb25394e5c87889d233b9ba077a35e5d6dce8cd9826f622a4d23",
+  "conteggi": {
+    "partite": 117,
+    "righe_formazione": 5040,
+    "titolari": 2573,
+    "panchina": 2467,
+    "eventi": 3854,
+    "righe_statistiche": 1437,
+    "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+    "undici_titolari": {
+      "squadre_partita": 234,
+      "con_undici_esatti": 233,
+      "anomale": [
+        {
+          "partita": "joJ5rzhD",
+          "squadra": "Portugalete",
+          "titolari": 10
+        }
+      ]
+    },
+    "punteggio_non_somma_i_rigori": {
+      "partite_ai_rigori": 12,
+      "incoerenti": []
+    },
+    "sequenza_rigori": {
+      "partite_ai_rigori": 12,
+      "sequenza_ricompone": 12,
+      "divergenti": []
+    },
+    "confronto_con_fonte_automatica": {
+      "eseguito": true,
+      "partite": {
+        "manuale": 117,
+        "automatica": 137,
+        "appaiate": 117,
+        "identiche_su_tutti_i_punteggi": 117,
+        "divergenti": [],
+        "buchi_colmati_dalla_manuale": [],
+        "club_dedotti_dalle_partite": {
+          "A Coruna": 897,
+          "Arenas Getxo": 16122,
+          "Atl. Astorga": 40977,
+          "Atl. Madrid": 13,
+          "Atl. Tordesillas": 41604,
+          "Barcellona": 131,
+          "CD Extremadura": 101648,
+          "Cadice": 2687,
+          "Ciudad Cieza": 56725,
+          "Deportivo Getxo": 29739,
+          "La Union": 132258,
+          "Maiorca": 237,
+          "Murcia": 171,
+          "Ourense CF": 55398,
+          "Reus FCR": 83848,
+          "SD Logrones": 33303,
+          "San Fernando": 57379,
+          "Saragozza": 142,
+          "Siviglia": 368,
+          "UD Logrones": 24420,
+          "UD Ourense": 60225
+        },
+        "appaiate_per_nome_dentro_la_giornata": 0,
+        "contese_lasciate_vuote": 0,
+        "non_appaiate_manuale": [],
+        "non_appaiate_automatica": [
+          "2025-09-27 Atlètic Sant Just-nan",
+          "2025-09-27 CD Getxo-nan",
+          "2025-09-27 CD Sant Jordi-nan",
+          "2025-09-27 CF Campanario-CD Yuncos",
+          "2025-09-27 CF Inter de Valdemoro-Universitario FC Las Palmas",
+          "2025-09-27 Manises CF-UD Los Garres",
+          "2025-09-27 Puerto de Vega CF-nan",
+          "2025-09-27 nan-SD Negreira",
+          "2025-09-27 nan-Atlético Palma del Río CF",
+          "2025-09-27 nan-UD Maracena",
+          "2025-10-04 Atlético Palma del Río CF-nan",
+          "2025-10-04 CD Yuncos-CF Campanario",
+          "2025-10-04 SD Negreira-nan",
+          "2025-10-04 UD Los Garres-Manises CF",
+          "2025-10-04 UD Maracena-nan",
+          "2025-10-04 Universitario FC Las Palmas-CF Inter de Valdemoro",
+          "2025-10-04 nan-Puerto de Vega CF",
+          "2025-10-04 nan-CD Getxo",
+          "2025-10-04 nan-Atlètic Sant Just",
+          "2025-10-04 nan-CD Sant Jordi"
+        ]
+      },
+      "formazioni": {
+        "squadre_partita_confrontabili": 234,
+        "undici_identici": 232,
+        "giocatori_appaiati_dal_numero_di_maglia": 69,
+        "con_differenze": [
+          {
+            "partita": "2025-10-29|18691|366",
+            "club_id": 18691,
+            "spaiati": 1,
+            "solo_nella_manuale": [],
+            "solo_nell_automatica": [
+              "Gorka Tapiador"
+            ]
+          },
+          {
+            "partita": "2025-12-02|2296|237",
+            "club_id": 2296,
+            "spaiati": 2,
+            "solo_nella_manuale": [
+              "Jony"
+            ],
+            "solo_nell_automatica": [
+              "Berto"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "statistiche": {
+    "file": "20ba2434-CopaDelRey_202526_STATISTICHE.xlsx",
+    "sha256": "fda435ada8dc3bb7d3f3f98709aa647551c911417154fdbb919e633d33adaf13",
+    "partite": {
+      "raccolta": 117,
+      "statistiche": 117,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": [],
+      "sinonimi_di_squadra_accettati": {
+        "Cieza": "Ciudad Cieza"
+      }
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1437,
+      "righe_dopo": 1437,
+      "colonne_prima": 115,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0,
+      "colonne_testuali_con_etichette_diverse": {
+        "Turno": 898,
+        "Casa": 30,
+        "Squadra": 14
+      }
+    },
+    "statistiche_squadra": {
+      "righe": 692,
+      "partite": 114,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 228,
+        "2° tempo": 216,
+        "1° tempo": 196,
+        "Supplementari": 52
+      }
+    }
+  }
+}

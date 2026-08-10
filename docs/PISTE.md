@@ -957,7 +957,26 @@ che tocca la dimensione dove la Fase 85/87 hanno trovato una tensione
 BASSO-MEDIO: il dato c'è, serve solo il join e una `implied_lambda_mu`
 multi-vincolo.
 
-### 21. Database giocatore/arbitri/allenatori — 🟢 appena aperta (29/07/2026), bozza
+### 21. Database giocatore/arbitri/allenatori — 🟢 aperta (29/07/2026); **fronte ALLENATORI: strato 1 COSTRUITO (Fase 140)**
+
+> ⚽ **AGGIORNAMENTO 04/08/2026 — il fronte allenatori non è più una bozza.**
+> `games.csv` è **importato** (`files/player_scores/games.csv.gz`, fonte
+> congelata) e c'è un modulo strutturale, `src/data/allenatori.py`: vista
+> lunga partita-club, mandati (`panchine`), cambi in panchina, esperienza in
+> forma R8. Copertura del perimetro **99,994%**. La pista **resta aperta** per
+> tutto il resto (giocatori, nazionali, Tier B) e per il passo 2 degli
+> allenatori — il join dei mandati con gli snapshot ricchi (xG/PPDA/deep) per
+> il test «stesso allenatore, due squadre».
+>
+> ⚠️ **Tre cose che il piano non prevedeva e che la costruzione ha misurato**
+> (dettaglio in `docs/DIARIO.md` Fase 140 e `docs/DATI.md` §5-nonies):
+> il nome **non è un'identità** (11 omonimi dimostrati con un test di
+> impossibilità fisica, 2 nel perimetro); `manager_name` è **chi sedeva in
+> panchina quella partita**, non chi era in carica (836 mandati su 13.810 sono
+> un vice per una gara, e ignorarlo sovrastima i cambi del 18,7%);
+> l'esperienza è **visibile al dataset**, non globale.
+> ⛔ Nessuna misura di valore predittivo: è infrastruttura.
+
 **Richiesta dell'utente**: il calcio è un gioco di squadra, ma ogni giocatore
 incide più o meno di un altro. Raccogliere, per ogni giocatore: minuti
 giocati a partita (titolare/subentrato, minuto di ingresso/uscita), gol,

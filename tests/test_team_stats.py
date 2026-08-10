@@ -397,7 +397,7 @@ def test_non_rompe_il_caricatore_per_giocatore():
     `load_player_matches(tutte=True)` fallirebbe su un file che non c'e'. Il
     manifesto separato (`manifesto_squadra.json`) e' cio' che lo impedisce.
 
-    Il test non incide piu' l'elenco delle leghe (lo faceva, e alla Fase 138 e'
+    Il test non incide piu' l'elenco delle leghe (lo faceva, e alla Fase 145 e'
     diventato falso il giorno in cui la **Bundesliga** ha avuto anche il dato
     per giocatore). Verifica la PROPRIETA': `player_stats` vede tutte e sole le
     cartelle che hanno davvero il file per giocatore. Oggi l'unica con il solo

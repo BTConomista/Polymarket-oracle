@@ -1,0 +1,173 @@
+{
+ "fase": 140,
+ "fonte": "games/player-scores",
+ "copertura": {
+  "partite_totali": 88958,
+  "competizioni": 70,
+  "prima_data": "2006-06-09",
+  "ultima_data": "2026-07-06",
+  "partite_perimetro": 16111,
+  "club_partita_perimetro": 32222,
+  "senza_allenatore_perimetro": 2,
+  "copertura_perimetro": 0.999938,
+  "nomi_grezzi_globali": 7031,
+  "chiavi_globali": 6995,
+  "nomi_grezzi_perimetro": 496,
+  "chiavi_perimetro": 494,
+  "conflitti_identita_globali": 11,
+  "conflitti_identita_perimetro": 2,
+  "mandati_globali": 13810,
+  "interruzioni_globali": 836,
+  "interruzioni_di_una_partita": 412,
+  "mandati_club_perimetro_timeline_completa": 1190,
+  "mandati_club_perimetro_solo_lega": 906,
+  "interruzioni_club_perimetro": 65
+ },
+ "copertura_per_lega": {
+  "IT1": {
+   "partite": 3420,
+   "senza_allenatore": 0,
+   "allenatori": 94
+  },
+  "GB1": {
+   "partite": 3420,
+   "senza_allenatore": 0,
+   "allenatori": 118
+  },
+  "ES1": {
+   "partite": 3420,
+   "senza_allenatore": 0,
+   "allenatori": 115
+  },
+  "L1": {
+   "partite": 2754,
+   "senza_allenatore": 0,
+   "allenatori": 115
+  },
+  "FR1": {
+   "partite": 3097,
+   "senza_allenatore": 2,
+   "allenatori": 118
+  }
+ },
+ "identita": {
+  "grafie_globali": 7031,
+  "chiavi_globali": 6995,
+  "gruppi_uniti_globali": 36,
+  "grafie_perimetro": 496,
+  "chiavi_perimetro": 494,
+  "gruppi_uniti_perimetro": 2,
+  "partite_toccate_perimetro": 485,
+  "quota_partite_perimetro": 0.0301,
+  "dettaglio_gruppi_perimetro": [
+   {
+    "manager_key": "bruno genesio",
+    "grafia": "Bruno Genesio",
+    "partite": 34,
+    "da": "2025-08-17",
+    "a": "2026-05-17"
+   },
+   {
+    "manager_key": "bruno genesio",
+    "grafia": "Bruno Génésio",
+    "partite": 209,
+    "da": "2017-08-05",
+    "a": "2025-05-17"
+   },
+   {
+    "manager_key": "ivan juric",
+    "grafia": "Ivan Juric",
+    "partite": 231,
+    "da": "2017-08-20",
+    "a": "2025-04-06"
+   },
+   {
+    "manager_key": "ivan juric",
+    "grafia": "Ivan Jurić",
+    "partite": 11,
+    "da": "2025-08-24",
+    "a": "2025-11-09"
+   }
+  ],
+  "omonimi_stesso_giorno": 11,
+  "omonimi_stesso_giorno_nomi": [
+   "angel sanchez",
+   "bert hollander",
+   "fraser duncan",
+   "joao pereira",
+   "luis castro",
+   "luis tevenet",
+   "michel",
+   "morten rasmussen",
+   "phil parkinson",
+   "sergio egea",
+   "stevie mcleish"
+  ],
+  "omonimi_nel_perimetro": [
+   "luis castro",
+   "michel"
+  ],
+  "omonimi_finestra_7_giorni": 43
+ },
+ "mandati": {
+  "globali_grezzi": 13810,
+  "globali_ricuciti": 13041,
+  "interruzioni": 836,
+  "interruzioni_una_partita": 412,
+  "perimetro_timeline_completa": 1190,
+  "perimetro_solo_lega": 906,
+  "perimetro_timeline_completa_ricuciti": 1137,
+  "perimetro_solo_lega_ricuciti": 875,
+  "durata_partite": {
+   "n": 1137,
+   "media": 37.94,
+   "mediana": 18.0,
+   "p10": 1.0,
+   "p90": 95.0,
+   "max": 768.0
+  },
+  "cambi_in_stagione_ricuciti": 3720,
+  "cambi_in_stagione_grezzi": 4416,
+  "club_stagione_con_piu_allenatori": 327,
+  "club_stagione_totali": 885
+ },
+ "esperienza": {
+  "as_of": "2025-08-01",
+  "allenatori_attivi": 145,
+  "senza_passato_visibile": 22,
+  "censurati": 31,
+  "mediana_partite_prima": 149.0,
+  "falsi_esordi": {
+   "carlo ancelotti": {
+    "prima_partita_visibile": "2012-08-11",
+    "competizione": "FR1",
+    "prima_nel_perimetro": "2017-08-18",
+    "partite_visibili": 599
+   },
+   "jose mourinho": {
+    "prima_partita_visibile": "2012-08-19",
+    "competizione": "ES1",
+    "prima_nel_perimetro": "2017-08-13",
+    "partite_visibili": 640
+   },
+   "claudio ranieri": {
+    "prima_partita_visibile": "2013-08-10",
+    "competizione": "FR1",
+    "prima_nel_perimetro": "2017-08-06",
+    "partite_visibili": 345
+   },
+   "roy hodgson": {
+    "prima_partita_visibile": "2012-06-11",
+    "competizione": "EURO",
+    "prima_nel_perimetro": "2017-09-16",
+    "partite_visibili": 222
+   },
+   "ronald koeman": {
+    "prima_partita_visibile": "2012-07-31",
+    "competizione": "CLQ",
+    "prima_nel_perimetro": "2017-08-12",
+    "partite_visibili": 297
+   }
+  }
+ }
+}

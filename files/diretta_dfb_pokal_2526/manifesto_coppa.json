@@ -1,0 +1,85 @@
+{
+  "coppa": "DFB-Pokal",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "7cb61bf1fdd58eadf5058ece5311c92052dbc902a3b992bf4015e3c5a3137482",
+  "conteggi": {
+    "partite": 63,
+    "righe_formazione": 2518,
+    "titolari": 1386,
+    "panchina": 1132,
+    "eventi": 2106,
+    "righe_statistiche": 1979,
+    "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+    "undici_titolari": {
+      "squadre_partita": 126,
+      "con_undici_esatti": 126,
+      "anomale": []
+    },
+    "punteggio_non_somma_i_rigori": {
+      "partite_ai_rigori": 8,
+      "incoerenti": []
+    },
+    "sequenza_rigori": {
+      "partite_ai_rigori": 8,
+      "sequenza_ricompone": 8,
+      "divergenti": []
+    },
+    "confronto_con_fonte_automatica": {
+      "eseguito": true,
+      "partite": {
+        "manuale": 63,
+        "automatica": 63,
+        "appaiate": 63,
+        "identiche_su_tutti_i_punteggi": 63,
+        "divergenti": [],
+        "buchi_colmati_dalla_manuale": [],
+        "club_dedotti_dalle_partite": {},
+        "appaiate_per_nome_dentro_la_giornata": 0,
+        "contese_lasciate_vuote": 0,
+        "non_appaiate_manuale": [],
+        "non_appaiate_automatica": []
+      },
+      "formazioni": {
+        "squadre_partita_confrontabili": 124,
+        "undici_identici": 124,
+        "giocatori_appaiati_dal_numero_di_maglia": 0,
+        "con_differenze": []
+      }
+    }
+  },
+  "statistiche": {
+    "file": "bdee54a4-DFBPokal_202526_STATISTICHE_1.xlsx",
+    "sha256": "10ef3f4bc1a5484f6a97dc3f219579a163a325e4b9241bff2a3f10b2a16d1d0d",
+    "partite": {
+      "raccolta": 63,
+      "statistiche": 63,
+      "solo_nella_raccolta": [],
+      "solo_nelle_statistiche": []
+    },
+    "fedelta_giocatori": {
+      "righe_prima": 1979,
+      "righe_dopo": 1979,
+      "colonne_prima": 114,
+      "colonne_dopo": 115,
+      "colonne_nuove": [
+        "ID partita"
+      ],
+      "celle_divergenti_oltre_arrotondamento": 0
+    },
+    "statistiche_squadra": {
+      "righe": 406,
+      "partite": 63,
+      "metriche": 35,
+      "per_periodo": {
+        "Totale": 126,
+        "1° tempo": 126,
+        "2° tempo": 126,
+        "Supplementari": 28
+      }
+    }
+  }
+}

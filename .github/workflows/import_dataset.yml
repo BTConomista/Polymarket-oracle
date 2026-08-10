@@ -6,6 +6,15 @@ name: Import player-scores dataset
 #   - players.csv.gz             anagrafica per l'aggancio nomi (~17 MB -> ~5)
 #   - appearances.csv.gz         presenze con minuti = rose reali (~148 MB -> ~35)
 #   - clubs.csv.gz               mappa club_id -> nome (~180 KB)
+#   - games.csv.gz               la tabella-cardine: ALLENATORE e arbitro per
+#                                partita, 88.958 partite (~25 MB -> ~4,7)
+#                                Fase 140, src/data/allenatori.py
+#   - club_games.csv.gz          vista per-club di games.csv. E' un duplicato
+#                                ESATTO (verificato: 0 celle divergenti su
+#                                1.957.076, ricostruibile in otto righe): si
+#                                conserva per la regola "raccogliere tutto"
+#                                (CLAUDE.md §5-ter), non perche' serva
+#   - competitions.csv.gz        tipo/paese/confederazione delle competizioni
 # Con gzip ogni file resta ben sotto il limite GitHub dei 100 MB: niente split.
 #
 # PERCHE' via Actions: l'ambiente di sviluppo cloud e' dietro un proxy che
@@ -63,7 +72,8 @@ jobs:
           import gzip, os, shutil
 
           WANTED = ["player_valuations.csv", "players.csv",
-                    "appearances.csv", "clubs.csv"]
+                    "appearances.csv", "clubs.csv",
+                    "games.csv", "club_games.csv", "competitions.csv"]
           OUT_DIR = "files/player_scores"
           os.makedirs(OUT_DIR, exist_ok=True)
           CHUNK = 1 << 20  # 1 MB

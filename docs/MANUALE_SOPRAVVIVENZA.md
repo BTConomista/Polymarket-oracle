@@ -372,6 +372,66 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
 - **`smarkets-prematch.yml` È un'automazione viva** (dalla Fase 116/118): due
   cron, denso ogni 6 h e lungo raggio 1×/giorno, che committano su `main`.
   L'unico dei workflow del repo a scrivere dati in continuo.
+- ⚠️⚠️ **Un passo fallito SALTA i passi successivi — e questo può buttare via
+  i dati che il fallimento doveva proteggere** (Fase 141, pagata sul campo).
+  Lo schema «lo script scrive il file, *poi* esce rosso per segnalare che la
+  raccolta è incompleta» è giusto in Python e **non funziona in Actions**: il
+  passo di commit non gira e il file muore col runner. In
+  `smarkets-prematch.yml` è rimasto rotto dalla Fase 116 all'08/08/2026, e ha
+  buttato anche la raccolta dell'allarme «lega sparita» del 01/08. Rimedio:
+  `if: ${{ !cancelled() }}` sul passo che salva (`!cancelled()` e non
+  `always()`: un giro annullato a mano non deve committare). **Regola
+  generale: ogni workflow in cui un passo scrive e un passo dopo salva va
+  letto assumendo che il primo possa fallire.**
+- **Un `HTTPError` non è tutto uguale, e il ciclo di ritentativi va scritto
+  guardando la tabella HTTP, non il caso che ti è capitato** (Fase 141). Il
+  nostro `_get` riprovava sul 429 (il caso della Fase 97) e rilanciava tutto
+  il resto — 503 compreso, che è *per definizione* «riprova fra poco». Un solo
+  503 ha ucciso un giro da 58 partite. Transitori: **429, 500, 502, 503,
+  504**; i 4xx restano fatali.
+- **Chi aggiunge ritentativi deve aggiungere anche un tetto al tempo** (Fase
+  141): 5 tentativi con backoff sono 45 s per chiamata, e su 1.566 chiamate
+  fanno ~19,6 h di runner appeso durante un guasto prolungato. `timeout-minutes`
+  sul job **non basta** (uccide anche il salvataggio): serve un budget dentro
+  lo script, controllato fra un'unità di lavoro e l'altra, che scriva ciò che
+  ha raccolto e dichiari il resto.
+- **L'API Smarkets espone SOLO ciò che è `upcoming`** (Fase 142, misurato):
+  `/competitions/` e `/sports/` danno **404**, `state=new` restituisce **zero
+  eventi**. Non c'è modo di leggere oggi il nome-slug che avrà una competizione
+  che comincia fra due mesi. Conseguenza pratica: per una coppa fuori stagione
+  o si indovina lo slug in anticipo (sicuro: uno sbagliato non combacia mai) o
+  si perdono i primi giorni di traiettoria quando compare.
+- **Il costo di una chiamata a lotti è il numero di LOTTI, non di campi**
+  (Fase 142): 3 mercati e 6 mercati costano identico (1,75 contro 1,68 s a
+  partita) perché stanno entrambi in un solo lotto da 20. `--solo-principali`
+  risparmia byte, **non minuti** — il ragionamento della Fase 118 era giusto
+  sull'archivio e sbagliato sul tempo. Vale per qualunque API con `id1,id2,…`.
+- ⭐ **Quando un cron non è abbastanza puntuale, la risposta non è un cron più
+  fitto: è un job che si tiene il tempo da solo** (Fase 143). Il ritardo di
+  30-40 minuti si eredita identico su qualunque periodo — un cron ogni 2
+  minuti sarebbe altrettanto in ritardo, *più* la coda di run che si
+  cancellano a vicenda. Dentro un job già acceso `time.sleep` è esatto:
+  spostare la cadenza lì rende impreciso solo l'**avvio**. Un job standard può
+  restare acceso **6 ore**, e sui repo **pubblici** i minuti dei runner
+  standard **non si pagano**: è questo che rende praticabile un job lungo
+  invece di mille corti.
+- **La sessione lunga va fatta durare più del periodo della sentinella**
+  (Fase 143): con periodo `P` e sessione `D`, un ritardo `r` produce un buco
+  `max(0, r − (D − P))`. Con `D ≤ P` **ogni** ritardo è un buco per
+  costruzione; la sovrapposizione costa solo qualche giro duplicato.
+- ⚠️ **Un `concurrency group` tiene UN run in corso e UNO SOLO pending: il
+  terzo che arriva CANCELLA quello pending** (Fase 142, pagata). Quindi
+  allungare la durata di un job ne cambia la *pianificazione*: giri da 20
+  minuti non si accodavano mai, giri da 35-45 sì, e la corsa oraria accodata
+  dietro muore `cancelled` — senza scrivere niente e senza suonare niente.
+  Se in un workflow convivono un giro lungo e uno breve ma prezioso, **vanno
+  in gruppi diversi**, non nello stesso. Regola generale: una modifica che
+  cambia la durata di un job va guardata anche dal lato della schedulazione.
+- **Censire il perimetro di una raccolta è una chiamata sola, e non lo si fa
+  mai** (Fase 142): `SLUG_LEGA` conteneva 5 voci dalla Fase 116 e nessuno aveva
+  più chiesto quanto stessimo lasciando fuori. Erano **865 partite su 124
+  competizioni**, ne prendevamo 58 — e fra le escluse c'era la Coppa Italia
+  che giocava quel pomeriggio.
 - **Nessuno degli altri tre workflow è un'automazione viva**: `import_dataset.yml` ha
   il cron mensile disattivato (motivazione dell'audit Fase 92 scritta nel
   file), e `betexplorer-scrape.yml` / `kaggle-ou-probe.yml` puntano alla

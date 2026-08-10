@@ -102,6 +102,36 @@ di `data/smarkets_matches/` abbia `leghe_senza_partite_esposte: []` **e** tutte
 e 5 le leghe fra le righe. Che il file esista non basta — il 31/07 esisteva,
 pesava 120 KB e non conteneva La Liga.
 
+⚠️ **Dalla Fase 144 il controllo pre-congelamento NON si fa più a mano.**
+`scripts/controlla_raccolta.py` gira 4×/giorno, verifica freschezza del lungo
+raggio, copertura di chiusura e copertura in-play, **ripara** ciò che si può
+(rifà il lungo raggio, accende l'in-play se si gioca ancora) e ri-controlla.
+Quello che segue resta vero come *cosa* controllare, ma non serve più
+ricordarsene: se manca qualcosa arriva una mail rossa.
+
+⚠️ **Il LIVE non è più scoperto per la raccolta (Fase 143), ma lo è per il
+modello.** `data/smarkets_live/` accumula prezzi in-play da sabato 08/08; non
+esiste ancora **niente** che li usi, ed è uno stato legittimo (§5-ter,
+«raccolto ≠ usato»). Il primo mattone modellistico resta quello della Fase
+96/99: il **modello a due stadi** del secondo tempo. Aperto anche il lavoro a
+valle sul punteggio: la regola di ricostruzione (`⌈max linea O/U settled⌉` e
+minimo componentwise) è verificata su **una** partita e va validata su
+partite a risultato noto prima di diventare un dato.
+
+⚠️ **E dalla Fase 142 il file NON contiene solo campionati**: si filtra su
+`fascia == "campionato"` prima di contare le leghe. `lega` porta anche
+`coppa_italia`, `serie_b`, `ucl_qual`, e un conteggio che li includesse
+direbbe «cinque leghe» con due leghe e tre coppe. Vale anche il contrario:
+`fuori_perimetro` non vuoto nel file è il radar che segnala una competizione
+nostra lasciata fuori — da guardare, non un errore.
+
+⚠️ **E dalla Fase 141 anche `partite_incomplete: []`.** Un giro può ora
+sopravvivere a un guasto di rete salvando ciò che ha raccolto: è il
+comportamento voluto (l'08/08 un `HTTP 503` alla 22ª partita su 58 aveva
+buttato tutte e 58), ma significa che un file può essere **legittimamente
+parziale**. Il buco è dichiarato lì dentro, partita per partita — e un
+congelamento non si fa su un file che ne ha.
+
 ---
 
 ## 2 · Le piste — lo stato canonico è `docs/PISTE.md` §0-bis
@@ -416,6 +446,19 @@ ferma e avvisa** invece di decidere.
 segnalare?
 
 ### 7.5 · 💭 Database giocatore/arbitri/allenatori ⭐ (idea dell'utente, 29/07/2026)
+
+> ⚽ **04/08/2026 — il fronte ALLENATORI è passato da piano a codice (Fase 140).**
+> `games.csv` importato come fonte congelata, `src/data/allenatori.py` come
+> modulo strutturale (mandati, cambi, esperienza R8, rilevatore di omonimi),
+> 24 test. Copertura del perimetro **99,994%**. Cosa resta aperto **qui**: il
+> passo 2 (join dei mandati con xG/PPDA/deep per il test «stesso allenatore,
+> due squadre»), lo strato d'identità che scioglie gli omonimi, e i fronti
+> **giocatori** e **nazionali**, intatti.
+> ⚠️ La costruzione ha smentito tre punti che il piano dava per buoni: il nome
+> **non è una chiave d'identità**, `manager_name` è **chi era in panchina
+> quella partita** (non chi era in carica), e l'esperienza è **visibile al
+> dataset**, non globale. Dettaglio: `docs/DIARIO.md` Fase 140.
+
 
 > 🔴 **Stato al 31/07/2026 — `docs/AUDIT_FONTI_GIOCATORI.md`** (13 agenti): tutte e
 > **118 le voci** dei tre fronti auditate con verifica avversariale. **Solo il 30,5%

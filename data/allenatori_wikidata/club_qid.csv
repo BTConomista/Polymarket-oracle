@@ -1,0 +1,154 @@
+club_id,club_name,partite,qid,titolo,etichetta,mandati_p286,stato
+5,AC Milan,342,Q1543,AC Milan,AC Milan,22,risolto
+13,Atlético de Madrid,342,Q8701,Atlético de Madrid,Club Atlético de Madrid,9,risolto
+11,Arsenal FC,342,Q9617,Arsenal FC,Arsenal Football Club,10,risolto
+12,Associazione Sportiva Roma,342,Q2739,Associazione Sportiva Roma,AS Roma,21,risolto
+31,Liverpool FC,342,Q1130849,Liverpool FC,Liverpool FC,6,risolto
+29,Everton FC,342,Q5794,Everton FC,Everton Football Club,8,risolto
+46,Inter Milan,342,Q631,Inter Milan,FC Inter,19,risolto
+1049,Valencia CF,342,Q10333,Valencia CF,Valencia Club de Fútbol,13,risolto
+800,Atalanta BC,342,Q1886,Atalanta BC,Atalanta Bergamasca Calcio,16,risolto
+398,Società Sportiva Lazio S.p.A.,342,Q2609,S.S. Lazio,SS Lazio,13,risolto
+410,Udinese Calcio,342,Q2798,Udinese Calcio,Udinese Calcio,14,risolto
+418,Real Madrid,342,Q8682,Real Madrid,Real Madrid CF,13,risolto
+416,Torino FC,342,Q2768,Torino FC,Torino FC,18,risolto
+506,Juventus FC,342,Q1422,Juventus FC,Juventus FC,24,risolto
+430,ACF Fiorentina,342,Q2052,ACF Fiorentina,ACF Fiorentina,22,risolto
+621,Athletic Bilbao,342,Q8687,Athletic Bilbao,Athletic Club,6,risolto
+631,Chelsea FC,342,Q9616,Chelsea FC,Chelsea Football Club,16,risolto
+762,Newcastle United,342,Q18716,Newcastle United,Newcastle United Football Club,4,risolto
+681,Real Sociedad,342,Q10315,Real Sociedad,Real Sociedad de Fútbol,4,risolto
+368,Sevilla FC,342,Q10329,Sevilla FC,Sevilla Fútbol Club,14,risolto
+379,West Ham United,342,Q18747,West Ham United,West Ham Utd FC,6,risolto
+281,Manchester City,342,Q50602,Manchester City,Manchester City FC,4,risolto
+131,FC Barcelona,342,Q7156,FC Barcelona,F.C. Barcelona,64,risolto
+150,Real Betis Balompié,342,Q8723,Real Betis Balompié,Real Betis Balompié,1,risolto
+148,Tottenham Hotspur,342,Q18741,Tottenham Hotspur,Tottenham Hotspur F.C.,14,risolto
+6195,SSC Napoli,342,Q2641,SSC Napoli,SSC Napoli,21,risolto
+873,Crystal Palace,342,Q19467,Crystal Palace (football club),Crystal Palace Football Club,4,risolto
+1237,Brighton & Hove Albion,342,Q19453,Brighton & Hove Albion,Brighton & Hove Albion Football Club,4,risolto
+1050,Villarreal CF,342,Q12297,Villarreal CF,Villarreal Club de Fútbol,10,risolto
+1025,Bologna Football Club 1909,342,Q1893,Bologna Football Club 1909,Bologna FC 1909,13,risolto
+985,Manchester United,342,Q18656,Manchester United,Manchester United FC,12,risolto
+940,Celta de Vigo,342,Q8749,Celta de Vigo,Real Club Celta de Vigo,4,risolto
+3709,Getafe CF,342,Q8806,Getafe CF,Getafe Club de Fútbol,2,risolto
+417,OGC Nice,320,Q185163,OGC Nice,Olympique Gymnaste Club de Nice Côte d'Azur,9,risolto
+1082,LOSC Lille,320,Q19516,LOSC Lille,LOSC Lille,5,risolto
+244,Olympique Marseille,320,Q132885,Olympique Marseille,Olympique de Marseille,18,risolto
+273,Stade Rennais FC,320,Q19509,Stade Rennais FC,Stade Rennais Football Club,8,risolto
+1041,Olympique Lyon,320,Q704,Olympique Lyon,Olympique Lyonnais,9,risolto
+162,AS Monaco,320,Q180305,AS Monaco,Association Sportive de Monaco Football Club,11,risolto
+995,FC Nantes,319,Q192071,FC Nantes,Football Club de Nantes,14,risolto
+667,RC Strasbourg Alsace,319,Q126334,RC Strasbourg Alsace,RC de Strasbourg Alsace,8,risolto
+583,Paris Saint-Germain,319,Q483020,Paris Saint-Germain,Paris Saint-Germain FC,25,risolto
+16,Borussia Dortmund,306,Q41420,Borussia Dortmund,Borussia Dortmund,12,risolto
+15,Bayer 04 Leverkusen,306,Q104761,Bayer 04 Leverkusen,Bayer 04 Leverkusen Fußball,11,risolto
+23826,RB Leipzig,306,Q702455,RB Leipzig,RB Lipsia,10,risolto
+167,FC Augsburg,306,Q15755,FC Augsburg,Fußball-Club Augsburg 1907,0,risolto
+82,VfL Wolfsburg,306,Q101859,VfL Wolfsburg,Verein für Leibesübungen Wolfsburg,11,risolto
+533,TSG 1899 Hoffenheim,306,Q22707,TSG 1899 Hoffenheim,Turn- und Sportgemeinschaft 1899 Hoffenheim,7,risolto
+27,Bayern Munich,306,Q15789,Bayern Munich,Fußball-Club Bayern München,18,risolto
+18,Borussia Mönchengladbach,306,Q101959,Borussia Mönchengladbach,Borussia Verein für Leibesübungen 1900 Mönchengladbach,8,risolto
+39,1.FSV Mainz 05,306,Q105254,1.FSV Mainz 05,1. Fußball- und Sportverein Mainz 05,10,risolto
+60,SC Freiburg,306,Q106394,SC Freiburg,Sport-Club Freiburg,9,risolto
+24,Eintracht Frankfurt,306,Q38245,Eintracht Frankfurt,Eintracht Frankfurt,66,risolto
+6574,US Sassuolo,304,Q8603,US Sassuolo,Unione Sportiva Sassuolo Calcio,9,risolto
+1108,Deportivo Alavés,304,Q223620,Deportivo Alavés,Deportivo Alavés,9,risolto
+543,Wolverhampton Wanderers,304,Q19500,Wolverhampton Wanderers,Wolverhampton Wanderers Football Club,9,risolto
+1390,Cagliari Calcio,304,Q1900,Cagliari Calcio,Cagliari Calcio,25,risolto
+276,Hellas Verona,304,Q8639,Hellas Verona,H. Verona,11,risolto
+252,Genoa CFC,304,Q2074,Genoa CFC,Genoa CFC,20,risolto
+969,Montpellier HSC,286,Q19513,Montpellier HSC,Montpellier Hérault Sport Club,6,risolto
+1420,Angers SCO,286,Q845137,Angers SCO,Angers Sporting Club de l'Ouest,43,risolto
+79,VfB Stuttgart,272,Q4512,VfB Stuttgart,Verein für Bewegungsspiele Stuttgart 1893,18,risolto
+86,SV Werder Bremen,272,Q51976,SV Werder Bremen,Sport-Verein Werder von 1899,7,risolto
+714,RCD Espanyol Barcelona,266,Q8780,Espanyol Barcelona,Reial Club Deportiu Espanyol de Barcelona,13,risolto
+405,Aston Villa,266,Q18711,Aston Villa,Aston Villa F.C.,4,risolto
+989,AFC Bournemouth,266,Q19568,AFC Bournemouth,AFC Bournemouth,8,risolto
+1003,Leicester City,266,Q19481,Leicester City,Leicester City F.C.,13,risolto
+331,CA Osasuna,266,Q10286,CA Osasuna,Club Atlético Osasuna,3,risolto
+1132,Burnley FC,266,Q19458,Burnley FC,Burnley Football Club,4,risolto
+180,Southampton FC,266,Q18732,Southampton FC,Southampton Football Club,10,risolto
+1421,Stade Reims,248,Q208228,Stade Reims,Stade de Reims,11,risolto
+3911,Stade Brestois 29,244,Q218372,Stade Brestois 29,Stade Brestois 29,6,risolto
+415,FC Toulouse,243,Q19518,FC Toulouse,Toulouse Football Club,8,risolto
+3,1.FC Köln,238,Q104770,1.FC Köln,1. Fußball-Club Köln 01/07,11,risolto
+89,1.FC Union Berlin,238,Q141971,1.FC Union Berlin,1. Fußballclub Union Berlin,14,risolto
+3368,Levante UD,228,Q8823,Levante UD,Levante Unión Deportiva,9,risolto
+1038,UC Sampdoria,228,Q1457,UC Sampdoria,UC Sampdoria,21,risolto
+12321,Girona FC,228,Q11945,Girona FC,Girona Futbol Club,6,risolto
+367,Rayo Vallecano,228,Q10300,Rayo Vallecano,Rayo Vallecano de Madrid,6,risolto
+237,RCD Mallorca,228,Q8835,RCD Mallorca,Real Club Deportivo Mallorca,4,risolto
+931,Fulham FC,228,Q18708,Fulham FC,Fulham Football Club,4,risolto
+826,RC Lens,216,Q191843,RC Lens,Racing Club de Lens,4,risolto
+618,AS Saint-Étienne,214,Q19521,AS Saint-Étienne,AS Saint-Étienne,10,risolto
+347,FC Metz,210,Q221525,FC Metz,Football Club de Metz,7,risolto
+44,Hertha BSC,204,Q102720,Hertha BSC,Hertha Berliner Sport-Club,12,risolto
+1148,Brentford FC,190,Q19571,Brentford FC,Brentford Football Club,4,risolto
+130,Parma Calcio 1913,190,Q2693,Parma Calcio 1913,Parma Calcio 1913,14,risolto
+366,Real Valladolid CF,190,Q10319,Real Valladolid CF,Real Valladolid Club de Fútbol,6,risolto
+749,FC Empoli,190,Q6703,Empoli F.C.,Empoli Football Club,17,risolto
+1005,US Lecce,190,Q13391,US Lecce,US Lecce,16,risolto
+1158,FC Lorient,182,Q48911,FC Lorient,Football Club Lorient-Bretagne Sud,8,risolto
+40,FC Girondins Bordeaux,180,Q172476,Girondins Bordeaux,FC Girondins de Bordeaux,7,risolto
+33,FC Schalke 04,170,Q32494,FC Schalke 04,Fußball-Club Gelsenkirchen-Schalke 04,17,risolto
+1533,SD Eibar,152,Q770740,SD Eibar,Sociedad Deportiva Eibar,4,risolto
+1531,Elche CF,152,Q10512,Elche CF,Elche Club de Fútbol,13,risolto
+1010,Watford FC,152,Q2714,Watford FC,Watford Football Club,20,risolto
+2687,Cádiz CF,152,Q460448,Cádiz CF,Cádiz Club de Fútbol,3,risolto
+703,Nottingham Forest,152,Q19490,Nottingham Forest,Nottingham Forest Football Club,12,risolto
+399,Leeds United,152,Q1128631,Leeds United,Leeds United F.C.,4,risolto
+1244,CD Leganés,152,Q856119,CD Leganés,Club Deportivo Leganés,7,risolto
+16795,Granada CF,152,Q8812,Granada CF,Granada Club de Fútbol,9,risolto
+2969,Dijon FCO,142,Q503317,Dijon FCO,Dijon Football Côte-d'Or,7,risolto
+80,VfL Bochum,136,Q105861,VfL Bochum,Verein für Leibesübungen Bochum 1848,9,risolto
+2919,AC Monza,114,Q289482,AC Monza,AC Monza,13,risolto
+3522,Spezia Calcio,114,Q8615,Spezia Calcio,Spezia Calcio,9,risolto
+1095,ESTAC Troyes,114,Q501693,ESTAC Troyes,Espérance Sportive Troyes Aube Champagne,5,risolto
+350,Sheffield United,114,Q19607,Sheffield United,Sheffield United Football Club,8,risolto
+380,US Salernitana 1919,114,Q847587,US Salernitana 1919,US Salernitana 1919,10,risolto
+472,UD Las Palmas,114,Q11979,UD Las Palmas,Unión Deportiva Las Palmas,10,risolto
+2722,SPAL,114,Q13385,SPAL,S.P.A.L.,4,risolto
+3524,Clermont Foot 63,110,Q870182,Clermont Foot 63,Clermont Foot Auvergne,3,risolto
+290,AJ Auxerre,106,Q182876,AJ Auxerre,Association de la Jeunesse Auxerroise,4,risolto
+1416,Amiens SC,104,Q866884,Amiens SC,Amiens Sporting Club Football,4,risolto
+1160,Nîmes Olympique,104,Q730809,Nîmes Olympique,Nîmes Olympique,5,risolto
+2036,1. Fußballclub Heidenheim 1846,102,Q162251,1. FC Heidenheim,1. Fussballclub Heidenheim 1846,1,risolto
+738,Le Havre AC,102,Q328658,Le Havre AC,Havre Athletic Club,5,risolto
+4083,FC Crotone,76,Q6690,FC Crotone,FC Crotone,6,risolto
+8970,Frosinone Calcio,76,Q845043,Frosinone Calcio,Frosinone Calcio,6,risolto
+1047,Como 1907,76,Q1120838,Como 1907,Como 1907,8,risolto
+3302,UD Almería,76,Q10407,UD Almería,Unión Deportiva Almería,9,risolto
+5358,SD Huesca,76,Q11971,SD Huesca,Sociedad Deportiva Huesca,6,risolto
+607,Venezia FC,76,Q501245,Venezia FC,Venezia FC,12,risolto
+855,EA Guingamp,76,Q459148,EA Guingamp,En avant Guingamp,5,risolto
+862,Chievo Verona,76,Q2037,Chievo Verona,Associazione Calcio ChievoVerona,6,risolto
+4171,Benevento Calcio,76,Q652516,Benevento Calcio,Benevento Calcio,2,risolto
+1110,Huddersfield Town,76,Q19473,Huddersfield Town,Huddersfield Town A.F.C.,15,risolto
+984,West Bromwich Albion,76,Q18744,West Bromwich Albion,West Bromwich Albion Football Club,10,risolto
+1123,Norwich City,76,Q18721,Norwich City,Norwich City Football Club,6,risolto
+2239,US Cremonese,76,Q759482,US Cremonese,US Cremonese,12,risolto
+1162,SM Caen,76,Q193377,SM Caen,Stade Malherbe Caen,6,risolto
+35,FC St. Pauli,68,Q6463,FC St. Pauli,Fußball-Club St. Pauli von 1910,5,risolto
+38,Fortuna Düsseldorf,68,Q151747,Fortuna Düsseldorf,Düsseldorfer Turn- und Sportverein Fortuna 1895,5,risolto
+41,Hamburger SV,68,Q51974,Hamburger SV,Hamburger Sport-Verein,2,risolto
+10,Arminia Bielefeld,68,Q105844,Arminia Bielefeld,Deutscher Sportclub Arminia Bielefeld,4,risolto
+42,Hannover 96,68,Q33748,Hannover 96,Hannoverscher Sportverein von 1896,5,risolto
+1147,AC Ajaccio,38,Q270051,AC Ajaccio,Athletic Club Ajaccien,1,risolto
+19,Brescia Calcio,38,Q6651,Brescia Calcio,Brescia Calcio,11,risolto
+2288,Swansea City,38,Q18659,Swansea City,Swansea City Association Football Club,9,risolto
+1084,Málaga CF,38,Q8857,Málaga CF,Málaga Club de Fútbol,3,risolto
+897,Deportivo de La Coruña,38,Q8760,Deportivo de La Coruña,Real Club Deportivo de La Coruña,13,risolto
+1031,Luton Town,38,Q18520,Luton Town,Luton Town Football Club,5,risolto
+677,Ipswich Town,38,Q9653,Ipswich Town,Ipswich Town Football Club,7,risolto
+603,Cardiff City,38,Q18662,Cardiff City,Cardiff City Football Club,10,risolto
+512,Stoke City,38,Q18736,Stoke City,Stoke City Football Club,8,risolto
+289,Sunderland AFC,38,Q18739,Sunderland AFC,Sunderland A.F.C.,9,risolto
+4172,Pisa Sporting Club,38,Q289613,Pisa Sporting Club,Pisa Sporting Club,20,risolto
+2497,Real Oviedo,38,Q271574,Real Oviedo,Real Oviedo,12,risolto
+4,1.FC Nuremberg,34,Q15786,1. FC Nürnberg,1. Fußball-Club Nürnberg Verein für Leibesübungen,7,risolto
+269,Holstein Kiel,34,Q157828,Holstein Kiel,Kieler Sportvereinigung Holstein von 1900,2,risolto
+105,SV Darmstadt 98,34,Q479351,SV Darmstadt 98,Sportverein Darmstadt 1898,5,risolto
+65,SpVgg Greuther Fürth,34,Q153539,SpVgg Greuther Fürth,Spielvereinigung Greuther Fürth,2,risolto
+127,SC Paderborn 07,34,Q160532,SC Paderborn 07,Sport-Club Paderborn 07,4,risolto
+10004,Paris FC,34,Q1051013,Paris FC,Paris FC,4,risolto

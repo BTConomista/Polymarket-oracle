@@ -338,7 +338,23 @@ correzioni.*
 - [Fase 135 — Il listino intero: da 6 mercati a 110, e il batching che lo rende possibile](#fase-135--il-listino-intero-da-6-mercati-a-110-e-il-batching-che-lo-rende-possibile)
 - [Fase 136 — Anche il giro giornaliero prende tutto, e l'archivio si comprime](#fase-136--anche-il-giro-giornaliero-prende-tutto-e-larchivio-si-comprime)
 - [Fase 137 — I guardiani mancanti: tre difetti che nessun test poteva vedere](#fase-137--i-guardiani-mancanti-tre-difetti-che-nessun-test-poteva-vedere)
-- [Fase 138 — La Bundesliga per giocatore: e i cartellini che non tornavano](#fase-138--la-bundesliga-per-giocatore-e-i-cartellini-che-non-tornavano)
+- [Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato](#fase-138--le-coppe-nazionali-entrano-nel-progetto-e-la-fonte-somma-i-rigori-al-risultato)
+- [Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze](#fase-139--la-controprova-arriva-due-fonti-indipendenti-sulla-coppa-italia-zero-divergenze)
+- [Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo](#fase-139-bis--i-tre-ponti-e-perché-il-terzo-si-regge-sul-secondo)
+- [Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava](#fase-139-ter--caso-per-caso-quattro-coppe-due-fonti-e-il-foglio-che-nessuno-guardava)
+- [Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose](#fase-139-quater--due-copie-della-stessa-funzione-e-solo-una-sapeva-le-cose)
+- [Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono](#fase-139-quinquies--il-secondo-consegnato-e-un-controllo-che-bocciava-il-dato-buono)
+- [Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado](#fase-139-sexies--lione-non-è-olympique-lyon-e-red-star-non-è-di-belgrado)
+- [Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono](#fase-139-septies--tre-volte-lo-stesso-errore-il-controllo-che-boccia-il-dato-buono)
+- [Fase 139-octies — «Le colonne ci sono» non è «si uniscono»](#fase-139-octies--le-colonne-ci-sono-non-è-si-uniscono)
+- [Fase 139-novies — La domanda era un'altra: non «si toccano» ma «so rispondere»](#fase-139-novies--la-domanda-era-unaltra-non-si-toccano-ma-so-rispondere)
+- [Fase 139-decies — Il club è la chiave, non la partita: tre identità sbagliate](#fase-139-decies--il-club-è-la-chiave-non-la-partita-tre-identità-sbagliate)
+- [Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto](#fase-140--il-database-allenatori-il-nome-non-è-unidentità-e-la-panchina-non-è-un-contratto)
+- [Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via](#fase-141--un-503-alla-22ª-partita-su-58-e-le-21-già-raccolte-buttate-via)
+- [Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro](#fase-142--prendevamo-il-67-del-listino-coppe-uefa-e-cadetterie-entrano-nel-perimetro)
+- [Fase 143 — Il live: un job che cicla, e un punteggio che non è un campo](#fase-143--il-live-un-job-che-cicla-e-un-punteggio-che-non-è-un-campo)
+- [Fase 144 — Il cane da guardia: «avrei dovuto raccogliere, l'ho fatto?»](#fase-144--il-cane-da-guardia-avrei-dovuto-raccogliere-lho-fatto)
+- [Fase 145 — La Bundesliga per giocatore: e i cartellini che non tornavano](#fase-145--la-bundesliga-per-giocatore-e-i-cartellini-che-non-tornavano)
 
 ---
 
@@ -15565,7 +15581,2478 @@ corretto così: nessuno, in quel momento, lo sapeva.
 
 ---
 
-## Fase 138 — La Bundesliga per giocatore: e i cartellini che non tornavano
+## Fase 138 — Le coppe nazionali entrano nel progetto, e la fonte somma i rigori al risultato
+
+**Obiettivo.** Decisione dell'utente (02/08/2026), dopo il disegno di
+`PIANO_DATABASE_GIOCATORI.md` §14: si parte dalle **competizioni di club**, e
+dentro queste dalle **coppe nazionali** della sola stagione 2025-26 — Coppa
+Italia, FA Cup, Carabao Cup, Copa del Rey, DFB-Pokal, Coupe de France. Il
+perimetro l'ha fissato l'utente e non è quello che avevo proposto io: **«da
+dove iniziano a giocare i club di seconda divisione in ogni nazione»**, perché
+*«i club che oggi sono in seconda domani saranno in prima, e viceversa»*. Da
+raccogliere: data, squadre, risultato, **formazioni titolari e sostituzioni**.
+Il risultato serve anche da controparte automatica alla raccolta manuale
+diretta.it che l'utente importerà.
+
+**Ragionamento e ipotesi.** L'ipotesi di partenza — la mia — era che le coppe
+fossero un fronte quasi vergine e che il costo stesse nel procurarsi il
+calendario. Verificando prima di pianificare (la stessa disciplina che alla
+§14 aveva già demolito due premesse), è caduta anche questa:
+
+1. **il calendario di coppa 2025-26 c'era già**, in `data/club_fixtures*.csv`,
+   per tutte e cinque le leghe — ma solo per le partite in cui gioca almeno un
+   club di prima divisione, e **senza risultato e senza formazioni**;
+2. **le formazioni c'erano quasi tutte**, e non me ne ero accorto: il dataset
+   player-scores contiene le coppe nazionali. `appearances` ha 891 presenze di
+   Coppa Italia 2025-26, 1.172 di FA Cup, 1.298 di Copa del Rey. Mancavano solo
+   i file che non avevamo scaricato — `games.csv`, `game_lineups.csv`,
+   `game_events.csv` — e Kaggle è raggiungibile in sessione dalla Fase 100.
+
+**Alternative considerate.** (a) Scraping di diretta.it via Playwright: dà
+tutto, ma è il lavoro che l'utente fa a mano e non serviva duplicarlo prima di
+avere una controparte. (b) openfootball come fonte primaria: **scartata per
+misura** — il 2025-26 delle coppe esiste solo per la Germania, e anche lì il
+file si ferma al 2° turno (dagli ottavi in poi le righe sono `N.N.`). È
+diventato invece il *verificatore*. (c) Wikipedia come fonte primaria: dà
+risultati ma non formazioni; è rimasta per la Coupe de France e per tre finali.
+
+**Scelta: tre fonti, con ruoli diversi.** player-scores come ossatura;
+openfootball come **verifica esterna e indipendente**; Wikipedia per ciò che
+manca. Non è ridondanza: due fonti sulla stessa partita sono l'unico modo per
+accorgersi che una delle due sbaglia (R5, passo 2) — ed è servito subito.
+
+### Il difetto: il punteggio della fonte non è il punteggio della partita
+
+Su **68 partite di coppa su 458 (14,8%)** `games.csv` riporta il risultato
+**sommato ai rigori**:
+
+```
+Eintracht Braunschweig v VfB Stuttgart   games.csv:  11-12
+la partita è finita 4-4 dopo i supplementari; rigori 7-8
+```
+
+Non è un dato mancante: è un **finto pieno** (regola R6). Un 11-12 sembra un
+punteggio, si comporta come un punteggio, passa qualunque controllo di tipo, e
+avvelenerebbe ogni modello sui gol. È **esattamente** la trappola che il
+progetto aveva già registrato per Chemnitzer-Mainz 2014 (10-9 = 5-5 più 5-4
+ai rigori): scritta in un documento, mai trasformata in un controllo. Ora lo è.
+
+**Risultato.** 662 partite su 6 coppe e 5 paesi; 18.566 righe di formazione
+(9.883 titolari, 8.683 panchina) e 8.177 eventi col minuto su 458 partite
+coperte al 100%. Ricostruzione del punteggio esatta su **448/458 (97,8%)**, con
+i 10 residui dichiarati riga per riga. Verifica esterna contro openfootball:
+**42 partite appaiate, 42/42 identiche su tutti e sei i campi** (90' casa e
+ospite, finale casa e ospite, rigori casa e ospite), **zero divergenze**.
+
+**Due ipotesi scartate misurando, non discutendo.**
+- *«gli autogol vanno riassegnati all'avversario di chi li segna»* — **falso**:
+  nel dataset sono già attribuiti alla squadra che ne **beneficia**. Invertirli
+  fa scendere la ricostruzione dal 98,5% all'89,7%: è la differenza che ha
+  deciso, non l'intuizione.
+- *«i rigori si contano dagli eventi»* — **falso**: la sequenza è **troncata**.
+  In Grimsby-Manchester United sono registrati 23 tiri, i rigori veri furono
+  12-11. Il totale contaminato di `games.csv` è più completo della sequenza,
+  quindi la stima buona è la **sottrazione**.
+
+**Il turno d'ingresso della seconda divisione è misurato, non copiato** da una
+scheda di formato: si cerca il primo turno in cui compare un club che
+football-data elenca nella seconda divisione 2025-26 di quel paese.
+
+| coppa | 2ª divisione entra a | partite | nel perimetro |
+|---|---|--:|--:|
+| Coppa Italia | Qualifying Round | 45 | 45 |
+| FA Cup | Third Round | 123 | 63 |
+| EFL Cup (Carabao) | First Round | 93 | 91 |
+| Copa del Rey | First Round | 137 | 117 |
+| DFB-Pokal | First Round | 63 | 63 |
+| Coupe de France | 7° turno | 201 | 201 |
+
+Per cinque coppe su sei l'ingresso è **il primo turno del torneo**: il
+perimetro dell'utente coincide quasi sempre con la competizione intera, e taglia
+davvero solo la FA Cup (i primi due turni, 60 partite di sole squadre minori).
+Applicando §5-ter («raccogliere tutto») le partite fuori perimetro sono state
+**tenute lo stesso** e marcate con una colonna: il perimetro è un filtro, non un
+confine di raccolta.
+
+**Buchi dichiarati** (R6: un buco dichiarato è innocuo, uno nascosto no).
+**204 partite senza formazione** — le 201 di Coupe de France più tre finali:
+Wikipedia pubblica i titolari solo per le finali, e la Coupe de France non è
+in player-scores (`competitions.csv` ha 10 coppe nazionali e nessuna francese,
+rilievo già noto). E **tre finali mancavano del tutto da `games.csv`** — Coppa
+Italia, FA Cup, DFB-Pokal — pur essendoci 846 partite di maggio 2026 in altre
+competizioni: non è un taglio temporale, è un'assenza puntuale, recuperata da
+Wikipedia.
+
+**Un controllo cieco scoperto scrivendolo.** Il primo test che avevo messo
+diceva «nessuna partita finisce con più di 10 gol». È diventato rosso su dati
+**veri**: Getafe ha vinto 11-0 in casa di una squadra di quinta divisione, il
+Saint-Étienne 11-1. Un tetto sul numero di gol non distingue il difetto dal
+calcio — è la regola R7 (la statistica di testa dev'essere quella giusta, non
+quella comoda). Sostituito con l'**identità esatta** `dichiarato = gol +
+rigori`, che il difetto lo intercetta e la goleada la lascia passare.
+
+### 📐 Il modello in dettaglio
+
+Non c'è modello nuovo: c'è una **ricomposizione esatta**, e va scritta come
+identità perché è così che si evita di leggerla al contrario (regola aggiunta
+dalla Fase 92).
+
+**1. Il punteggio, dai soli eventi** (`src/data/coppe.py::ricostruisci_punteggio`):
+
+```
+gol_casa(t)   = #{ e ∈ eventi : e.type = "Goals" ∧ e.club_id = casa ∧ e.minute ≤ t }
+gol_casa_90   = gol_casa(90)          gol_casa_finale = gol_casa(∞)
+rigori_casa   = home_club_goals − gol_casa_finale        [solo se ∃ evento "Shootout"]
+```
+
+Perché `club_id` senza correzione per gli autogol: **misurato**. Contando gli
+autogol a favore della squadra del giocatore la resa è 89,7%; attribuendoli a
+chi ne beneficia — cioè leggendo `club_id` così com'è — è 98,5%. Il numero non
+è scelto, è l'esito del confronto fra le due letture sulle stesse 458 partite.
+
+Perché i rigori per sottrazione e non per conteggio: `#Shootout(Grimsby) = 23`
+contro un 12-11 reale. La sottrazione usa `home_club_goals`, che è contaminato
+**ma completo**; il conteggio userebbe una sequenza **incompleta**. Fra un dato
+sporco-e-intero e uno pulito-e-mozzo, per una differenza, vince il primo.
+
+Due guardie, entrambe con una ragione fisica e non estetica:
+```
+rigori_casa < 0  ∨  rigori_ospite < 0   → impossibile (i gol non si sottraggono)
+rigori_casa = rigori_ospite             → impossibile (una serie di rigori non pareggia)
+```
+In entrambi i casi il valore **non** viene scritto: la riga si marca
+`eventi_incompleti`. Sono 10 righe su 458, e 9 sono turni preliminari
+dilettantistici di Copa del Rey dove manca perfino il nome di un club.
+
+**2. La verifica esterna** (`leggi_openfootball`). openfootball scrive la stessa
+partita in forma già scomposta:
+
+```
+7-8 pen.  4-4 a.e.t.  (3-3, 1-1)
+ rigori    finale       90'  primo tempo
+```
+
+⚠️ La parentesi ha **due significati**: con `a.e.t.` è il 90' (più, se c'è, il
+primo tempo); senza, è il primo tempo. Leggerla sempre allo stesso modo è
+l'errore facile, ed è coperto da un test. Il confronto fra le due letture
+indipendenti — la nostra ricostruita, la loro dichiarata — dà **42/42 su sei
+campi**: è ciò che rende la ricomposizione un fatto e non un'ipotesi.
+
+Un bug pagato qui, e vale la pena scriverlo: il parser pretendeva **due spazi**
+attorno alla `v` che separa le squadre. Nel file le colonne sono allineate,
+quindi due spazi ci sono quasi sempre — ma **non** quando il nome di casa è
+lungo abbastanza da mangiarseli («SG Sonnenhof Großaspach v Bayer Leverkusen»).
+Saltavano in silenzio 16 partite su 63, **tutte con la squadra dal nome lungo**:
+un filtro sistematico travestito da svista, che nessun conteggio totale avrebbe
+mostrato come sbagliato. L'ha trovato un test, non un'occhiata ai numeri.
+
+**3. La Coupe de France** (`src/data/coupe_de_france.py`). Il template
+`{{Feuille de match}}` tiene i rigori in un campo **separato** (`score tab`),
+quindi lì il punteggio non è mai contaminato; e scrive la **divisione** di ogni
+club accanto al nome (`<small>(N2)</small>`), cioè esattamente l'informazione
+che serve al perimetro. La squadra qualificata è in `'''grassetto'''`: è un
+secondo canale **indipendente** dal punteggio, quindi confrontarli verifica la
+lettura. Su 201 partite: 201 con punteggio, 201 con data, 201 con entrambe le
+divisioni, **0 incoerenze** fra grassetto e punteggio.
+
+**4. Le tre finali mancanti** (`leggi_finale_wikipedia`). Una trappola piccola e
+istruttiva: nell'infobox `Infobox football match` il punteggio **non** sta in un
+campo `score`, sta in `team1score`/`team2score`. Un `| score = 0–2` esiste più
+in basso nella pagina, dentro il `{{Football box}}` del riepilogo — quindi una
+ricerca su tutto il wikitext lo trova, sembra giusta, e sta leggendo **un
+template diverso** da quello da cui prende tutti gli altri campi. Si legge un
+solo template, per intero, con l'annidamento contato.
+
+**Lezione.** Tre, e nessuna riguarda un modello.
+1. **Una fonte nuova va letta contro una seconda fonte prima di crederle**, non
+   dopo. Qui il difetto era su una partita su sette, e nessun controllo interno
+   l'avrebbe visto: il dato coincide con la fonte, la fonte è sbagliata.
+2. **Un fatto scritto in un documento non è un controllo.** Chemnitzer-Mainz
+   era annotato dal 29/07 e il difetto è rientrato lo stesso, perché
+   un'annotazione non fallisce quando qualcuno la ignora. Un test sì.
+3. **I controlli di sanità vanno scelti come le statistiche di testa** (R7): un
+   tetto sui gol segnala il calcio vero e tace sul difetto; l'identità esatta fa
+   il contrario.
+
+**Cosa NON è stato fatto**, e va detto: nessun modello usa questi dati. È una
+raccolta, e il suo valore immediato è il collegamento (§14.5), non una
+conclusione. Il confronto con la raccolta manuale diretta.it dell'utente è il
+passo successivo, ed è quello che chiuderà il cerchio sulle 204 partite senza
+formazione.
+
+**Correzione applicata lo stesso giorno, dopo una domanda dell'utente**
+(«come faccio a dire al mio amico da che turno partire?»). Preparando il foglio
+di istruzioni è saltato fuori che **Wigan Athletic risultava di prima
+divisione** — gioca in League One. La causa: la divisione veniva da
+`club_names.domestic_competition_id`, che **non** è la lega corrente ma
+*«qualunque lega in cui il club sia mai comparso»*: 37 club marcati `GB1`, fra
+cui Reading, Huddersfield, Cardiff, QPR, West Brom. Un finto pieno da manuale
+(R6) — valore plausibile, formato giusto, sbagliato — e sfuggito perché nessun
+controllo confrontava quella colonna con una fonte indipendente.
+
+**Corretto** usando gli **snapshot congelati 2025-26**, che sono la verità e
+ce li avevamo in casa; servono 14 alias nuovi per i nomi abbreviati di
+football-data (`Man City`, `Nott'm Forest`, `M'gladbach`, `Ath Bilbao`…), tutti
+verificati a candidato unico, e ora il costruttore **si ferma** se un club di
+prima divisione non si aggancia, invece di degradarlo silenziosamente a «terza
+o sotto». ⚠️ **Il perimetro non cambia**: i turni d'ingresso della seconda
+divisione restano identici (Coppa Italia *Qualifying*, FA Cup *Third Round*,
+gli altri *First Round*, Coupe de France *7° turno*), perché in quei turni la
+presenza di club di seconda divisione era già rilevata da altri club. Il difetto
+sporcava l'**etichetta**, non la **conclusione** — ma andava trovato lo stesso,
+e l'ha trovato una domanda pratica, non un audit.
+
+Aggiunti: un **test di regressione** che confronta i club marcati prima
+divisione con gli snapshot lega per lega, `data/coppe_2526/da_raccogliere.csv`
+(la lista di lavoro, 580 righe, col flag `gia_abbiamo_formazioni`) e
+`data/coppe_2526/DA_RACCOGLIERE.md` (il foglio operativo per chi raccoglie a
+mano: da che turno partire, cosa saltare, e l'avvertenza di annotare 90',
+supplementari e rigori in **tre caselle separate** — 113 partite su 580
+finiscono ai rigori, una su cinque).
+
+---
+
+## Fase 139 — La controprova arriva: due fonti indipendenti sulla Coppa Italia, zero divergenze
+
+**Obiettivo.** L'utente consegna la raccolta manuale diretta.it della **Coppa
+Italia 2025-26**, fatta da un collaboratore seguendo il foglio di istruzioni
+della Fase 138. È il momento per cui `data/coppe_2526/` era stato costruito:
+non «abbiamo un altro dataset», ma **abbiamo una seconda misura della stessa
+cosa**, ed è l'unico modo di sapere se la prima era giusta (R5, passo 2).
+
+**Ragionamento.** La Fase 138 aveva trovato che la fonte automatica sbagliava
+il punteggio su 68 partite su 458 (sommava i rigori) e l'aveva corretta
+ricostruendolo dagli eventi, validando la ricostruzione contro openfootball —
+ma **solo sulla DFB-Pokal**, 42 partite, e solo sui primi due turni. Sulla
+Coppa Italia la ricostruzione non era mai stata verificata da nessuno.
+
+**Risultato — il confronto**, `scripts/registra_raccolta_coppa_diretta.py`:
+
+| confronto | esito |
+|---|---|
+| partite appaiate | **45 / 45** |
+| punteggi identici (90', finale, rigori) | **45 / 45** |
+| undici iniziali identici | **88 / 88** squadre-partita |
+| divergenze | **nessuna** |
+
+Zero. Su tre grandezze diverse, due fonti che non si sono mai parlate — una
+scaricata da Transfermarkt e ricomposta dagli eventi, una letta a mano da
+Flashscore — dicono la stessa cosa su ogni partita del torneo.
+
+**Cosa la raccolta manuale aggiunge**, oltre alla conferma:
+- le **statistiche per giocatore**: 1.307 righe × **103 metriche** (tocchi,
+  dribbling, contrasti, xG/xA individuali, ingressi in area…) su 41 partite;
+- la **sequenza completa dei rigori** — 256 eventi, ed è esattamente il punto
+  in cui la fonte automatica **tronca** (Grimsby-United ne registra 23 su 25+).
+  Qui si può *pretendere* che i rigori tornino, e tornano: **12/12**;
+- il **periodo** di ogni evento (1° tempo / 2° tempo / supplementari / rigori),
+  che da noi si deduce dal minuto invece di essere scritto;
+- la **finale**, che `games.csv` non conteneva affatto (Fase 138): ora ha i
+  suoi titolari.
+
+**Due limiti dell'aggancio dei nomi, entrambi trovati e chiusi scrivendo i
+test** — e sono la parte istruttiva.
+
+1. **Quindici undici risultavano diversi ed erano identici.** Le due fonti
+   scrivono `Gronbaek A.` e `Albert Grønbaek`, `Kilicsoy S.` e `Semih
+   Kılıçsoy`, `Hojlund R.` e `Rasmus Højlund`. È il bug già documentato in
+   `club_matching.py` — «`ø`, `ł`, `đ` non sono decomposti da NFKD» — che io
+   avevo riprodotto pari pari perché non stavo usando la tabella del progetto.
+   La conoscenza era scritta; non l'avevo applicata.
+2. ⭐ **Un test negativo ha trovato un difetto vero.** Avevo scritto «`Esposito
+   Sa.` non deve agganciarsi a `Francesco Esposito`» aspettandomi il verde: è
+   uscito **rosso**, perché buttando l'iniziale `Esposito Sa.` si riduce a
+   `{esposito}`, che è sottoinsieme di `{francesco, esposito}`. Cioè il
+   confronto **non distingueva due omonimi in rosa** — e Salvatore e Francesco
+   Esposito giocano davvero in questa Coppa Italia. Non è teorico: è il caso in
+   cui una formazione sbagliata sarebbe passata per giusta. Corretto
+   conservando l'iniziale e verificandola come prefisso.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello: un **criterio di identità fra due scritture dello stesso nome**,
+che è la cosa da rendere esplicita perché è dove si nascondono gli errori.
+
+Un nome diventa una coppia `(parole, iniziali)`:
+
+```
+_token("Esposito Sa.")      = ({"esposito"},              {"sa"})
+_token("Salvatore Esposito")= ({"salvatore","esposito"},  {})
+_token("Ndri K.")           = ({"ndri"},                  {"k"})
+_token("Konan N'Dri")       = ({"konan","ndri"},          {})
+```
+
+con, prima di tutto, `str.translate(_TRADUZIONE)` — la tabella del progetto per
+`ø ł đ ß æ ı`, che NFKD **non** decompone — e l'apostrofo **tolto** e non
+sostituito con uno spazio (spezzando, `N'Dri` darebbe `dri` e `Ndri` non
+si aggancerebbe).
+
+Due nomi sono la stessa persona quando:
+
+```
+(A ⊆ B  ∨  B ⊆ A)                          le parole intere si contengono
+∧  ∀ i ∈ iniziali(A): ∃ p ∈ B con p[:|i|]=i   ogni iniziale e' prefisso di una parola
+∧  ∀ i ∈ iniziali(B): ∃ p ∈ A con p[:|i|]=i
+```
+
+La seconda e la terza riga sono quelle che il test negativo ha imposto:
+`{esposito} ⊆ {francesco, esposito}` è vero, ma `"sa"` non è prefisso né di
+`francesco` né di `esposito`, quindi il match **cade** — mentre con `Salvatore
+Esposito` `"sa"` è prefisso di `salvatore` e il match **regge**. È una riga di
+codice che separa due persone reali.
+
+**Una seconda passata**, solo sui giocatori rimasti spaiati dopo la prima:
+accetta **un token in comune**. Serve per le convenzioni spagnole, che non sono
+in relazione di sottoinsieme — `Santiago Perez J.` contro `Yellu Santiago` è
+Yellu Santiago Pérez. È sicura *perché è seconda*: quando gli altri dieci sono
+già appaiati, un giocatore davvero diverso non condivide il cognome.
+
+**Lezione.** Tre.
+1. **La controprova va progettata prima di servire, non cercata dopo.** Il
+   confronto è costato mezz'ora perché la Fase 138 aveva già messo i punteggi
+   in colonne separate e le formazioni in una forma confrontabile. Se la
+   raccolta automatica fosse arrivata dopo quella manuale, il confronto sarebbe
+   stato un lavoro a sé.
+2. **Un test negativo vale quanto uno positivo.** Gli otto test «questi due
+   nomi sono la stessa persona» hanno confermato ciò che sapevo; l'unico test
+   «questi due NON lo sono» ha trovato un difetto che nessuno dei precedenti
+   poteva vedere. Il verde conferma, il rosso insegna.
+3. **Sapere una cosa e applicarla sono due stati diversi.** Il bug dei caratteri
+   non-decomponibili era scritto in `club_matching.py`, con tanto di elenco. L'ho
+   rifatto lo stesso, perché stavo scrivendo un normalizzatore nuovo invece di
+   usare quello che c'era. La documentazione non protegge: protegge il codice
+   condiviso.
+
+**Cosa resta aperto.** Le statistiche per giocatore (103 metriche) sono
+**raccolte e non usate** — stato legittimo e dichiarato (§5-ter). E i due CSV
+consegnati a parte sono **duplicati esatti** di due fogli dell'xlsx (verificato
+cella per cella, 0 divergenti): restano archiviati entrambi perché escludere un
+dato richiede il consenso dell'utente, non la mia valutazione (§5-ter).
+
+---
+
+## Fase 139-bis — I tre ponti, e perché il terzo si regge sul secondo
+
+**Obiettivo.** Richiesta dell'utente, dopo la consegna della **DFB-Pokal**:
+*«iniziamo ad agganciare i nomi con le presenze, le squadre con le partite, e
+tutto quello che c'è da collegare»*. Le raccolte manuali parlano per **nomi**,
+il database per **identificatori**: finché non si toccano, «la carriera di
+questo giocatore» e «come ha giocato in Coppa Italia» sono due frasi che non si
+possono dire insieme.
+
+**Prima, la DFB-Pokal.** Registrata con la stessa porta della Fase 139:
+63 partite, 2.518 righe di formazione, 1.979 righe di statistiche, 2.106 eventi.
+Verifiche interne tutte verdi (126/126 undici esatti, 8/8 sequenze di rigori).
+Contro la fonte automatica: **63/63 partite appaiate, 63/63 punteggi identici,
+122/124 undici identici** — e le 63 includono la **finale**, che `games.csv` non
+conteneva.
+
+Ci sono voluti due passaggi per arrivarci, ed entrambi meritano una riga.
+
+1. **diretta.it scrive i club tedeschi in italiano**: `Stoccarda`, `Friburgo`,
+   `Colonia`, `Amburgo`, `Magonza`, `Norimberga`, `RB Lipsia`. Sono **14 nomi**,
+   tutti esonimi, tutti verificati a candidato unico, e sono andati in
+   `club_matching.ALIAS` — non nello script, perché valgono per **qualunque**
+   fonte in lingua italiana, non per questa raccolta.
+2. ⚠️ **Un bug mio che produceva un numero credibile.** Ri-registrando la Pokal
+   con `--cartella` senza `--coppa`, lo script usava il default («Coppa Italia»)
+   e confrontava la Pokal con la coppa sbagliata: **0 partite appaiate**. Zero
+   non sembra un errore, sembra un *dato* — «le due fonti non si parlano». È il
+   tipo di difetto peggiore, e l'ha svelato solo il fatto che un attimo prima
+   erano 33. Ora il nome si riprende dal manifesto, e l'argomento esplicito ha
+   la precedenza.
+
+**Il risultato: i tre ponti.**
+
+| ponte | Coppa Italia | DFB-Pokal |
+|---|---|---|
+| squadre → `club_id` | **44/44** | **64/64** |
+| partite → `game_id` | 44/45 | 62/63 |
+| giocatori → `player_id` | **2.080/2.133 (97,5%)** | **2.467/2.518 (98,0%)** |
+
+Le due partite mancanti sono le **finali**, che la fonte automatica non ha
+(Fase 138): non è un aggancio fallito, è una controparte che non esiste.
+
+⭐ **Il terzo ponte si regge sul secondo, ed è tutta la storia.** Il primo
+tentativo usava `player_identity.collega_per_eliminazione`, la funzione già
+collaudata sui campionati, che aggancia per `(data, token del nome)`. Resa:
+**25,6%** sulla Coppa Italia, **12,0%** sulla Pokal. Il motivo non è un bug: nei
+**campionati** diretta.it scrive il nome intero (`Garces Facundo`), nelle
+**coppe** lo abbrevia (`Motta E.`) — e `{motta}` non è `{emanuele, motta}`.
+
+La soluzione non è stata un normalizzatore più furbo: è stato **usare il ponte
+già costruito**. Agganciata la partita, i candidati non sono più «tutti quelli
+in campo quel giorno» (migliaia) ma le **18-23 persone di quel club in quella
+partita**. Su un insieme così piccolo il confronto per nome è quasi sempre
+univoco: **97,5%** e **98,0%**.
+
+**Come si scompone la copertura**, perché «97,5%» da solo non dice nulla:
+
+| | righe |
+|---|--:|
+| agganciate **per nome** | 4.501 |
+| agganciate **per eliminazione** | 46 |
+| non agganciate | 104 |
+
+E delle 104: **92 sono nelle due finali**, che non hanno `game_id` e quindi non
+hanno candidati. I fallimenti veri dell'appaiamento sono **12 su 4.651 righe —
+lo 0,26%**.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello: un **criterio di assegnazione** dentro un insieme chiuso.
+
+Per ogni `(game_id, club_id)` si hanno due liste della stessa cosa: la nostra
+`A` (nomi Transfermarkt, con `player_id`) e la manuale `B` (nomi diretta.it).
+L'assegnazione è in due passate, e l'ordine è la garanzia:
+
+```
+passata 1 — per nome:   ∀ b ∈ B, si cerca l'unico a ∈ A con stessa_persona(a, b)
+passata 2 — eliminazione: se |B_spaiati| = 1 ∧ |A_liberi| = 1  →  si appaiano
+                           altrimenti NESSUNO viene agganciato
+```
+
+dove `stessa_persona` è la stessa regola della porta d'ingresso (Fase 139):
+sottoinsieme dei token **e** ogni iniziale prefisso di una parola dell'altro
+nome — la condizione che separa `Esposito Sa.` da `Francesco Esposito`.
+
+La condizione `1 ∧ 1` della seconda passata non è prudenza decorativa: con due
+spaiati e due liberi ci sono **due assegnazioni possibili** e sceglierne una
+significa, nella metà dei casi, attribuire a un giocatore le statistiche di un
+compagno di squadra. Costa 12 righe su 4.651 e le rende **dichiarate** invece
+che sbagliate.
+
+**Lezione.** Due.
+1. **Un ponte costruito abilita il successivo.** Il salto dal 25% al 97,5% non
+   viene da un algoritmo migliore: viene dall'aver ristretto il campo con un
+   collegamento che già avevamo. Vale la pena chiedersi, prima di raffinare un
+   matcher, se non ci sia un vincolo già disponibile che non si sta usando.
+2. **Uno zero è un numero come gli altri, e va sospettato allo stesso modo.**
+   «0 partite appaiate» aveva l'aspetto di un risultato — due fonti che non si
+   corrispondono — ed era un argomento di default sbagliato. Un risultato
+   drasticamente peggiore del precedente non è una scoperta finché non si è
+   escluso di averlo causato.
+
+---
+
+## Fase 139-ter — Caso per caso: quattro coppe, due fonti, e il foglio che nessuno guardava
+
+**Obiettivo.** Richiesta dell'utente: *«risolviamo caso per caso tutti i problemi
+sia per la coppa italia sia per la coppa tedesca, se serve cerchiamo su internet
+per avere conferme»*, poi la **Carabao Cup** e la **FA Cup** con lo stesso
+lavoro, e infine *«un controllo finale per verificare di aver agganciato tutti i
+dati raccolti fino ad ora»*.
+
+**Il metodo.** I casi aperti erano 22, di tre tipi. Sono stati mandati a
+**indagare in parallelo** (workflow a 6 agenti: 3 investigatori + 3 scettici
+indipendenti incaricati di **refutare** le conclusioni). Nessuna conclusione
+basata sul web è stata applicata senza che un secondo agente l'avesse
+verificata su una fonte diversa.
+
+### I tre nomi discordanti — tutti stessa persona, per tre ragioni diverse
+
+| caso | verdetto | chi sbaglia |
+|---|---|---|
+| `Pfarr M.` vs `Marcel Pfaar` | stessa persona | **diretta.it**: due lettere invertite. Il registro ufficiale DFB scrive «Marcel Pfaar, 18.10.1998» |
+| `Kessler B.` vs `Ben Nitschke` | stessa persona | **nessuno**: è un **cambio di cognome**. Il sito dello ZFC Meuselwitz elenca «Ben Nitschke (ehem. Keßler)» in una sola voce. diretta.it usa il nome in vigore alla data della partita, Transfermarkt l'attuale |
+| `Talovierov M.` vs `Maksym Taloverov` | stessa persona | **Transfermarkt**: due traslitterazioni di Таловєров. La forma con -ie- è quella del club, di UEFA e della BBC |
+
+Il secondo è il più istruttivo: **due fonti possono avere ragione entrambe** e
+dire cose diverse, perché descrivono momenti diversi. Nessuna correzione: una
+tabella di sinonimi, con la fonte scritta accanto a ciascuno.
+
+### Le 12 righe non agganciate — e un test che stavo per scrivere sbagliato
+
+Otto erano **la stessa persona con una regola troppo severa**, e la prova stava
+in casa: `stat_giocatori.csv`, il quarto foglio della stessa raccolta, scrive i
+nomi **per intero**. `Manu K. S.` è «Manu King Samuel» — la `S` è Samuel, un
+secondo nome che il registro non porta. La clausola pretendeva che **ogni**
+iniziale trovasse un prefisso; ne basta **una**. Misurato prima di applicarlo:
+**+23 righe, 0 nuove ambiguità**, e la protezione sugli omonimi resta intatta
+perché con una sola iniziale «almeno una» e «tutte» coincidono.
+
+Due erano **grafia**: `Abursu`/`Arbursu` (una `r`) e `Splettstoesser` contro
+`Splettstößer` — diretta.it espande la ö in `oe`, NFKD la riduce a `o`. Risolto
+generando **entrambe** le letture invece di sceglierne una: normalizzare in un
+verso solo romperebbe l'altro (`Muller` non aggancerebbe più `Müller`).
+
+Le altre quattro sono **assenze vere**: la riga di panchina manca nella fonte
+automatica, non la persona. Il mancato aggancio è corretto.
+
+### La partita che nessuna delle due fonti sbagliava
+
+Tranmere-Burton, 1° turno di Carabao Cup: la nostra fonte la dava il **12/08**,
+diretta.it il **19/08**. Verificato: era in programma il 12, **rinviata la sera
+stessa per un blackout** che ha lasciato senza corrente Prenton Park, e rigiocata
+il 19 d'accordo con la EFL. `games.csv` tiene la data di **calendario**, non
+quella del campo. Correzione dichiarata (R3) in
+`data/correzioni_dichiarate.csv` + tabella `DATE_CORRETTE` che **verifica il
+valore di partenza** prima di sostituire.
+
+E una volta agganciata, quella partita ha **colmato un buco nostro**: la nostra
+riga era marcata `eventi_incompleti` (5-6 grezzo, sequenza rigori assente); la
+manuale dice 1-1 più rigori 4-5, che ricompone il 5-6 esattamente. Il confronto
+ora distingue le due cose: una **divergenza** è un disaccordo, un **buco
+colmato** è il motivo per cui la seconda fonte esiste.
+
+### Il risultato, quattro coppe
+
+| | Coppa Italia | DFB-Pokal | Carabao | FA Cup |
+|---|--:|--:|--:|--:|
+| partite appaiate | **45/45** | **63/63** | **91/91** | **63/63** |
+| punteggi identici | 45/45 | 63/63 | 90/91 + 1 colmato | 63/63 |
+| **undici identici** | **88/88** | **124/124** | **180/180** | **124/124** |
+| giocatori → `player_id` | 99,9% | 99,8% | 99,8% | **100%** |
+
+**516 undici su 516.** Zero divergenze fra due fonti indipendenti.
+
+### ⭐ Il controllo finale, e cosa ha trovato subito
+
+`scripts/verifica_aggancio_coppe.py` risponde a una domanda sola: *ogni riga
+raccolta è in una tabella di aggancio?* Quando l'utente l'ha chiesto la risposta
+era **no**, e in grande: **8.475 righe di evento e 8.115 di statistica erano
+raccolte e collegate a niente**. Nessuno se n'era accorto perché i numeri che
+guardavamo — partite, formazioni — erano ottimi. **Un foglio dimenticato non dà
+errore: dà silenzio.**
+
+Agganciati anche quelli (le statistiche hanno richiesto la regola di confronto e
+non l'uguaglianza, perché quel foglio scrive i nomi per intero: da 30 righe su
+1.307 a 1.299). Stato finale:
+
+```
+27.624 righe raccolte · 27.488 agganciate · 99,5%
+✅ ogni riga raccolta è nella sua tabella, nessuna identità usata due volte
+```
+
+**Un bug trovato dal controllo stesso.** Passando agli identificatori ho scoperto
+che il lato automatico veniva **ri-derivato dal nome** pur avendo `home_club_id`
+nella riga accanto: `FC Südtirol-Alto Adige` non si agganciava (il registro lo
+chiama `FC Südtirol`) e Como-Südtirol spariva. Un giro inutile che introduce un
+punto di rottura. Stessa classe di problema per le tre finali da Wikipedia, che
+non avevano `club_id`: risolti alla fonte.
+
+**Lezione.** Tre.
+1. **«Zero» va sospettato come qualunque altro numero.** Ri-registrando la Pokal
+   senza `--coppa` il confronto dava «0 partite appaiate» — che ha l'aspetto di
+   un risultato («le due fonti non si parlano») ed era un default sbagliato del
+   mio script. L'ha svelato solo il fatto che un attimo prima erano 33.
+2. **La prova migliore era già in casa.** Otto casi su dodici si sono chiusi
+   leggendo un foglio della stessa raccolta, non cercando in rete.
+3. **Chiedere «è tutto agganciato?» è diverso da guardare le percentuali.** Le
+   percentuali erano al 99% su ciò che guardavamo, e due fogli interi erano a
+   zero. La domanda giusta non era «quanto è alta la copertura» ma «di che cosa».
+
+## Fase 139-quater — Due copie della stessa funzione, e solo una sapeva le cose
+
+**Obiettivo.** Le sei coppe nazionali 2025-26 erano registrate e agganciate, ma
+le due nuove non tornavano: **Copa del Rey 77/117** partite agganciate e
+giocatori al 66,8%, **Coupe de France 0/201** e 19,7%. Le altre quattro erano a
+posto (100% delle partite, tutti gli undici identici). Capire perché.
+
+**La causa, ed è una sola.** Il progetto aveva **due implementazioni** della
+stessa cosa — risolvere un club e appaiare una partita fra le due fonti — e solo
+una le sapeva tutte.
+
+| | `registra_raccolta_coppa_diretta.py` | `aggancia_coppe.py` |
+|---|---|---|
+| deduzione del club dalle partite | ✅ | ❌ |
+| chiave che ripiega sul nome | ✅ | ✅ |
+| appaiamento per nome dentro la giornata | ✅ | ❌ |
+| **Copa del Rey** | **117/117** | 77/117 |
+| **Coupe de France** | **161/201** | 0/201 |
+
+Non è un dettaglio di implementazione: **la divergenza era il bug.** Lo stesso
+file, le stesse due fonti, due risposte diverse — e nessun test poteva
+accorgersene, perché nessuno confrontava le due copie: erano entrambe «giuste»
+rispetto a sé stesse.
+
+**La scelta.** Risoluzione dei club e appaiamento delle partite estratti in
+`src/data/coppe_aggancio.py` (`ALIAS_COPPA`, `chiave_partita`, `deduci_club`,
+`appaia_partite`), chiamato da **entrambi** gli script. Non una funzione di
+comodo: `appaia_partite` restituisce anche la funzione `cid` — la risoluzione
+*completa* del nome di un club — perché un club dedotto per le partite e non per
+le formazioni lascerebbe quei giocatori senza `club_id`, quindi senza candidati,
+quindi vuoti. Il test `test_i_due_script_usano_la_stessa_implementazione`
+verifica che nessuno dei due si ricrei una copia propria.
+
+### 📐 Il modello in dettaglio
+
+Tre regole, in ordine di forza decrescente. Nessuna sceglie mai fra due
+possibilità: dove non c'è un vincitore unico, la casella resta vuota.
+
+**(1) La chiave di partita** (`chiave_partita`, verificata riga per riga contro
+`src/data/coppe_aggancio.py`):
+
+```
+k(riga) = data[:10] ‖ "|" ‖ lato(id_casa, nome_casa) ‖ "|" ‖ lato(id_osp, nome_osp)
+
+lato(id, nome) = str(int(id))                            se id esiste
+               = "~" + "".join(sorted(normalizza(nome)))  altrimenti
+```
+
+Il ripiego sul nome non è cosmetico: senza, le 201 righe della Coupe de France
+diventano tutte `data|<NA>|<NA>` e il merge esplode in un prodotto cartesiano
+(**4.804 righe**) che ha l'aspetto di una lista di divergenze.
+
+**(2) La deduzione del club** (`deduci_club`) — l'eliminazione applicata ai
+club invece che ai giocatori. Per ogni riga manuale con **un solo** lato
+risolto:
+
+```
+cand(nome) = { b : (a,b) ∈ automatiche(giorno), a = club_risolto }   (lato casa noto)
+si propone  nome → l'unico elemento di cand   se |cand| = 1
+si accetta  nome → c   sse   tutte le proposte per quel nome danno lo stesso c
+                             ∧ ( candidati(nome) = ∅  ∨  c ∈ candidati(nome) )
+```
+
+Le tre condizioni sono tutte necessarie e tutte pagate da un caso vero: la Copa
+del Rey ha 21 nomi che il registro non riconosce e **sette sono ambigui** —
+«Murcia» ha 4 candidati, «Ourense CF» e «UD Ourense» sono due club *diversi*
+della stessa città. Scrivere alias a mano su nomi così rifà il caso «Brest»
+(Fase 100): un aggancio sbagliato non dà errore, attribuisce le partite a un
+altro club. Esito misurato: **21 club dedotti, 116/116 squadre agganciate**.
+
+**(3) L'appaiamento per nome dentro la giornata** — per ciò che resta, e serve
+alla sola Coupe de France:
+
+```
+s(L, N) = |normalizza(casa_L) ∩ normalizza(casa_N)| + |normalizza(osp_L) ∩ normalizza(osp_N)|
+          definito solo se ENTRAMBE le intersezioni sono non vuote
+si appaia L → argmax_N s   sse  il massimo è unico e STRETTAMENTE maggiore del secondo
+                            ∧  nessun'altra riga manuale rivendica quella stessa N
+```
+
+Perché serve solo lì: nella Coupe de France **nessuno dei due lati ha un
+`club_id`** (player-scores non copre né la Ligue 2 né i dilettanti) e le due
+fonti scrivono il nome in due *forme* diverse — «Sochaux» contro «FC
+Sochaux-Montbéliard», «Grenoble» contro «Grenoble Foot 38». La regola (1) le
+vede come due squadre diverse; l'intersezione dei token no. Misurato: **122
+partite su 201** appaiate così, e in **160 delle 161** coppie finali i due nomi
+non coincidono alla lettera.
+
+L'ultima clausola (la partita contesa da due righe manuali non va a nessuna
+delle due) è la regola di sempre applicata alle partite: l'alternativa sarebbe
+far vincere la prima riga in ordine di file. Sulle sei coppe le contese sono
+**zero** — il guardrail non toglie niente a ciò che già funzionava, e c'è per
+quando la prossima raccolta ne produrrà una.
+
+### Il risultato, sei coppe
+
+| | Coppa Italia | DFB-Pokal | EFL Cup | FA Cup | **Copa del Rey** | **Coupe de France** |
+|---|--:|--:|--:|--:|--:|--:|
+| partite → `game_id` | 44/45 | 62/63 | 91/91 | 62/63 | **77 → 117/117** | 0/201 |
+| partite appaiate | 45/45 | 63/63 | 91/91 | 63/63 | **117/117** | **0 → 161/201** |
+| squadre → `club_id` | 44/44 | 64/64 | 90/90 | 64/64 | **95 → 116/116** | 29/202 |
+| giocatori → `player_id` | 99,9% | 99,8% | 99,8% | 100% | **66,8% → 94,7%** | 19,7% |
+
+Le quattro coppe già a posto sono **immutate**, verificato al byte sui manifesti.
+
+**Cosa resta fuori, e perché non è la stessa cosa.**
+
+1. **Coupe de France — assenza a monte, non nostra.** La fonte automatica di
+   quella coppa è Wikipedia (Fase 138): **0/201 righe hanno un `game_id`, 0
+   hanno un `club_id`, e non ci sono formazioni**. Il ponte manca dalla sponda
+   opposta. L'appaiamento a 161/201 non è quindi sprecato — è ciò che permette
+   di *verificare i punteggi* (157/161 identici) — ma non può produrre
+   identificatori che dall'altra parte non esistono. Provato anche il giro
+   indiretto (dedurre il `club_id` dal nome della controparte appaiata): **24
+   proposte coerenti, 0 nuove** — i club francesi minori non sono nel registro
+   in nessuna grafia. Il tetto è la copertura di player-scores, e si alza solo
+   con una fonte diversa per quella coppa.
+2. **Copa del Rey — un residuo di nomi, ed è la prossima causa.** 265 righe su
+   5.040 (98 squadre-partita). **Non sono righe mancanti**: le due fonti hanno
+   lo stesso numero di giocatori per squadra-partita (delta medio **+0,02**,
+   234 gruppi). È la convenzione spagnola sui **due cognomi** — diretta.it
+   scrive «Sanchez Alonso M.», il registro «Mario Sánchez»: nessuno dei due
+   insiemi di token contiene l'altro, quindi la regola del sottoinsieme non
+   aggancia e l'eliminazione scatta solo dove resta un candidato solo. La porta
+   d'ingresso ha già una seconda passata più permissiva (token in comune) usata
+   per *contare* gli undici; portarla nell'aggancio significherebbe *attribuire
+   identità*, ed è un esperimento a sé — con «Blanco Lopez J.»/«Blanco Garcia
+   E.» contro «Pepe Blanco»/«Eloy Blanco» nella stessa partita, il rischio non è
+   teorico. **Dichiarato, non chiuso.**
+
+**Lezione.** *Due implementazioni della stessa regola non sono ridondanza: sono
+due regole diverse che si somigliano.* Finché nessuno le confronta, la peggiore
+non dà errore — dà un numero più basso che sembra un limite del dato. Il segnale
+c'era e l'abbiamo guardato per giorni: lo stesso file registrato dalla porta
+d'ingresso diceva 117, lo script accanto diceva 77. **Due numeri diversi sullo
+stesso dato sono sempre un bug, mai un dettaglio.**
+
+---
+
+## Fase 139-quinquies — Il secondo consegnato, e un controllo che bocciava il dato buono
+
+**Obiettivo.** L'utente consegna, una coppa alla volta, un **secondo** file
+diretta.it: le statistiche. Non sostituisce il primo — porta un foglio che la
+raccolta base non aveva, le statistiche di **squadra divise per periodo**
+(Totale / 1° tempo / 2° tempo / Supplementari, 35 metriche). Integrarlo senza
+prendersi dentro, di soppiatto, un file che appartiene a un'altra raccolta.
+
+**Ragionamento.** Il rischio non è che il file sia sbagliato: è che sia *un
+altro*. Un secondo consegnato assomiglia sempre al primo, e il modo naturale di
+integrarlo — sovrascrivere il foglio giocatori con la versione più ricca —
+cancella l'unica copia con cui si potrebbe accorgersene. Quindi la regola:
+**si verifica prima, si scrive dopo**, e la verifica è che le due versioni siano
+*la stessa misura, più precisa*, non due misure.
+
+**Alternative considerate.**
+
+1. *Tenere i due fogli affiancati* senza sovrascrivere. Scartata: il nuovo è il
+   vecchio più `ID partita` e più decimali — due copie dello stesso dato sono
+   due verità da tenere allineate, e la Fase 139-quater ha appena mostrato cosa
+   costa (due implementazioni della stessa regola, e solo una sapeva le cose).
+   L'originale come consegnato resta comunque archiviato (`originale_statistiche.xlsx`, §5-ter).
+2. *Confrontare all'uguaglianza esatta.* Non regge: il primo consegnato tronca
+   a tre decimali, il secondo no. Ogni cella con decimali risulterebbe diversa.
+3. *Confrontare solo i conteggi di riga.* È il controllo che non controlla
+   niente: due raccolte diverse della stessa coppa hanno lo stesso numero di
+   righe per costruzione.
+
+**Scelta.** Confronto cella per cella sulle colonne in comune, con una soglia
+pari all'arrotondamento dichiarato, e la scrittura subordinata a zero
+divergenze.
+
+### 📐 Il modello in dettaglio
+
+`integra_statistiche` in `scripts/registra_raccolta_coppa_diretta.py`,
+verificato riga per riga contro il codice:
+
+```
+(1) le partite devono essere le stesse
+    P(d) = { (Data, Casa, Ospite) }
+    si procede  sse  P(raccolta) = P(statistiche)      (simmetrica, non inclusione)
+
+(2) il foglio giocatori dev'essere lo STESSO dato, piu' preciso
+    comuni = colonne(vecchio) ∩ colonne(nuovo)
+    K      = (Data, Squadra, Giocatore)
+    si procede  sse  nuovo non ha duplicati su K
+    a = nuovo[comuni] ordinato per K ,  b = vecchio[comuni] ordinato per K
+
+    per ogni c ∈ comuni:
+        se numerica(a[c]) ∧ numerica(b[c]):
+            divergenti += #{ i : |a_i − b_i| > 0.0006 }        (NaN → −9e9 su entrambi)
+        altrimenti:
+            etichette[c] = #{ i : lower(a_i) ≠ lower(b_i) }    (dichiarato, NON bloccante)
+
+(3) si scrive  sse  divergenti = 0
+```
+
+**Perché 0.0006 e non 0.001 né 0.** Il primo consegnato è arrotondato alla
+terza cifra: fra il valore troncato e quello pieno la differenza legittima
+massima è **mezzo passo, 0.0005**. La soglia è quel mezzo passo più un margine
+per la rappresentazione binaria — ammette l'arrotondamento e **nient'altro**:
+7.5 contro 1.234 non passa, ed è il caso che un test verifica apposta.
+
+**Perché K = (Data, Squadra, Giocatore), ed è qui che si era rotto.** La chiave
+di ordinamento dev'essere **stabile fra le due fonti**, altrimenti il confronto
+non misura i valori: misura il disallineamento. Prima ordinavo sulle prime otto
+colonne in comune — `Competizione, Turno, Data, Casa, Ospite, Lato, Squadra,
+Giocatore` — e `Turno` è **un'etichetta scritta dalla fonte**, non l'identità
+della riga. Sulla Carabao Cup i due consegnati la scrivono in due modi:
+
+| | raccolta base | file statistiche |
+|---|---|---|
+| primo turno | `1/64 FINALE` | `1° turno` |
+| ottavi | `1/8 FINALE` | `4° turno (ottavi)` |
+| semifinali | `SEMI FINALI` | `Semifinali (andata)` / `(ritorno)` |
+| quarti, finale | `QUARTI DI FINALE`, `FINALE` | `Quarti di finale`, `Finale` |
+
+Le due tabelle finivano in ordine diverso e il confronto le leggeva riga *i*
+contro riga *j*. Esito, ri-derivabile dalla storia di git (`git show
+HEAD:files/diretta_efl_cup_2526/stat_giocatori.csv`):
+
+```
+chiave vecchia (8 colonne, Turno compreso) → 122.401 celle divergenti
+chiave nuova   (Data, Squadra, Giocatore)  →       0 celle divergenti
+duplicati sulla chiave nuova               →       0   (su tutte e quattro le coppe)
+```
+
+**Stesso dato, due risposte.** Il controllo bocciava il file buono, e lo
+bocciava con un numero grosso — cioè nella forma che sembra di più una scoperta.
+Le 152 righe che coincidevano anche con la chiave vecchia sono quarti e finale,
+gli unici due turni che le due fonti scrivono uguale a meno del maiuscolo: se
+avessi guardato *quali* righe divergevano invece di quante, la diagnosi era lì.
+
+### Il risultato, quattro coppe
+
+| coppa | righe giocatore | celle divergenti | righe squadra | partite | periodi |
+|---|--:|--:|--:|--:|---|
+| Coppa Italia | 1.307 | **0** | 272 | 45 | 90/90/90 + **2** suppl. |
+| DFB-Pokal | 1.979 | **0** | 406 | 63 | 126/126/126 + **28** suppl. |
+| FA Cup | 1.974 | **0** | 406 | 63 | 126/126/126 + **28** suppl. |
+| EFL Cup (Carabao) | 2.855 | **0** | 546 | 91 | 182/182/182, **nessuna** suppl. |
+
+**843.960 celle numeriche confrontate** (righe × 104 colonne in comune), zero
+divergenti oltre l'arrotondamento: il file nuovo aggiunge `ID partita` e i
+decimali per intero senza cambiare **un solo valore**.
+
+⭐ **È il primo dato di coppa che separa i due tempi**, cioè esattamente la forma
+che chiede il residuo aperto delle Fasi 96/99 (il secondo tempo è mal calibrato
+perché è *game-state*). Per i campionati lo stesso dato esiste dalla Fase 131.
+
+**L'assenza che non è un buco.** La Carabao non ha righe «Supplementari», e la
+tentazione è archiviarla come raccolta incompleta. È il **regolamento**: dal
+2018-19 la EFL Cup va dritta ai rigori in ogni turno tranne la finale, e la
+finale 2025-26 è finita 0-2 nei 90 minuti. La conferma non è una nota di
+formato ma il **dato indipendente**: nelle 91 partite non c'è **un solo evento**
+oltre il 90° (`eventi.csv` ha 1° tempo, 2° tempo e Rigori), contro 6 / 131 / 142
+eventi supplementari delle altre tre coppe. Nessun periodo perso per strada: non
+c'era. (R4: un'anomalia si dichiara **anche** quando non è un errore.)
+
+**L'aggancio.** `aggancio_statistiche_squadra.csv`, `game_id` + `club_id`. Le
+righe senza `game_id` sono **esattamente** quelle della finale che `games.csv`
+non contiene — 6 per coppa, cioè 2 squadre × 3 periodi: 400/406 su Coppa Italia,
+Pokal e FA Cup. La **Carabao fa eccezione a 546/546**: è l'unica delle quattro
+la cui finale la fonte automatica ha. Completezza complessiva dopo l'ingresso:
+**47.114 righe raccolte, 40.331 agganciate (86,2%)** — il resto è il tetto
+dichiarato della Coupe de France (§5-octies).
+
+**Stato d'uso: raccolto, non usato.** Nessun modello legge queste colonne.
+Mancano Copa del Rey e Coupe de France: la porta le accetta con lo stesso
+comando.
+
+**Lezione.** *Quando un controllo boccia, la prima domanda non è «quanto
+diverge» ma «quali righe».* Un conteggio grosso ha l'aria di una scoperta, e
+122.401 su un dato identico riga per riga è la stessa cifra che avrebbe prodotto
+una raccolta completamente sbagliata. La differenza si vede solo nel dettaglio —
+e lì c'era, perché le uniche righe *non* divergenti erano quelle dei due turni
+che le due fonti scrivono nello stesso modo. **Una chiave di confronto non è mai
+un dettaglio implementativo: è ciò che decide che cosa si sta confrontando.**
+
+---
+
+## Fase 139-sexies — «Lione» non è «Olympique Lyon», e «Red Star» non è di Belgrado
+
+**Obiettivo.** Integrare le statistiche della **Coupe de France** — la sesta e
+ultima coppa consegnata — con la stessa porta delle altre. Ma la coppa francese
+è quella che il progetto ha sempre trattato come un caso perso: **0/201**
+partite con `game_id`, **19,7%** dei giocatori agganciati, e una spiegazione già
+scritta due volte («la fonte automatica è Wikipedia, non ha identificatori»).
+Verificare se quella spiegazione copre *tutto* il buco o solo una parte.
+
+**Ragionamento.** La spiegazione strutturale è vera e resta vera: senza
+`game_id` dall'altra sponda non si costruisce il ponte. Ma «i club francesi
+minori non sono nel registro in nessuna grafia» (Fase 139-quater) è
+un'affermazione **sui minori**, e non era mai stata verificata sui **maggiori**.
+La Coupe de France dai 32esimi in poi la giocano i club di Ligue 1, che nel
+registro ci sono di sicuro. Se non si agganciano, il problema non è il dato.
+
+### 1 · L'esonimo, ancora
+
+Elencati i club che dai 32esimi in poi restavano senza `club_id`: **41 su 64**,
+e sei di quei nomi sono `Lilla`, `Lione`, `Marsiglia`, `Nizza`, `PSG`,
+`Strasburgo`. Non è un caso nuovo — è **lo stesso** della Fase 139-bis, dove i
+club tedeschi arrivavano come `Stoccarda`, `Friburgo`, `Colonia`. diretta.it è
+un sito italiano e traduce le città straniere, e la regola del sottoinsieme non
+può salvare un nome che col registro non condivide **un solo token**:
+
+```
+normalizza("Lione")          = {lione}
+normalizza("Olympique Lyon") = {olympique, lyon}
+                               intersezione = ∅  →  nessun candidato
+```
+
+Verificati due volte, come vuole il file: `candidati()` = **1** sul registro, e
+poi la prova indipendente su `games.csv` — **34 partite di Ligue 1 2025-26** a
+testa, che è il numero giusto per un campionato a 18 squadre. Aggiunti in
+`club_matching.ALIAS` (non in `ALIAS_COPPA`: un esonimo italiano vale per
+qualunque fonte in lingua italiana, non solo per questa coppa).
+
+### 2 · E nella stessa verifica, due falsi positivi
+
+Guardando l'elenco dei club **risolti** — non solo di quelli mancanti — due
+nomi non tornavano: `Lusitanos` e `Pirae`, agganciati, in mezzo a PSG e
+Marsiglia. Un club dilettantistico che si aggancia dove tutti gli altri no è
+sospetto per costruzione.
+
+| nome diretta.it | agganciato a | chi è davvero | verdetto |
+|---|---|---|---|
+| `Red Star` | **Red Star Belgrade** (159) | Red Star FC, Ligue 2 (Saint-Ouen) | ❌ falso positivo |
+| `Lusitanos` | **FC Lusitanos** (28958) | US Lusitanos Saint-Maur, National 2 | ❌ falso positivo |
+| `Pirae` | AS Pirae (17782) | AS Pirae, Tahiti Ligue 1 | ✅ **giusto** |
+
+La diagnosi non è per somiglianza di nome — è per **dove quei `club_id` giocano
+davvero** (R5 passo 2, informazione indipendente):
+
+```
+159    190 partite   SER1, CL, CLQ, EL, ELQ      → Stella Rossa di Belgrado
+28958    8 partite   CLQ, ELQ  (2012-2016)       → FC Lusitanos, Andorra
+17782    1 partita   KLUB      (2021)            → AS Pirae, Mondiale per club
+```
+
+E Wikipedia, dall'altro lato, scrive la divisione accanto a ogni nome: `Red Star
+FC` = **L2**, `US Lusitanos Saint-Maur` = **N2**, `AS Pirae` = *Tahiti Ligue 1*.
+Il terzo caso è quello che conta di più per il metodo: **sembrava** lo stesso
+errore degli altri due e non lo era. La Coupe de France ammette davvero le
+squadre d'oltremare, e bloccare `Pirae` «per prudenza» avrebbe tolto un aggancio
+giusto. La prudenza si applica **dopo** aver guardato, non al posto di guardare.
+
+Nessuno dei due falsi positivi si ripara con un alias: il club vero **non è nel
+registro**, quindi l'unico esito corretto è **vuoto**. Vivono in
+`NON_AGGANCIARE`, che finora conteneva solo squadre riserve e ora ha una seconda
+classe dichiarata — gli **omonimi stranieri**.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la regola di aggancio è quella della Fase 139-quater
+(`candidati` per sottoinsieme di token, accettato solo se **unico**). Qui
+cambiano due tabelle, e vale la pena scrivere *cosa* sono:
+
+```
+candidati(n) = ∅                                     se lower(n) ∈ NON_AGGANCIARE
+             = { c : token(nome_c) = A(token(n)) }   se esiste un match esatto
+             = { c : A(token(n)) ⊆ token(nome_c) }   altrimenti
+             dove A = ALIAS applicato sull'insieme di token
+
+aggancia(n)  = l'unico elemento di candidati(n)   se |candidati(n)| = 1
+             = None                               altrimenti
+```
+
+`ALIAS` **aggiunge** agganci che i token non possono trovare;
+`NON_AGGANCIARE` **toglie** agganci che i token trovano e sono sbagliati. Sono
+le due direzioni dello stesso errore, e servono entrambe: la prima costa
+copertura, la seconda costa *correttezza* — ed è la più cara, perché non si vede.
+
+### Il risultato
+
+| | prima | dopo |
+|---|--:|--:|
+| club → `club_id` | 29/202 | **33/202** |
+| giocatori → `player_id` | 492 (19,7%) | **932 (37,4%)** |
+| titolari | 295 (21,3%) | **546 (39,4%)** |
+| righe di evento | 456 | **844** |
+| statistiche per giocatore | 399 | **750** |
+| stat. di squadra con `club_id` | 168/476 | **234/476** |
+| **completezza, sei coppe** | 40.331 / 47.590 (85,3%) | **41.510 / 47.590 (87,8%)** |
+
+Il `+4` netto sui club è `+6` esonimi `−2` falsi positivi. Le altre cinque coppe
+sono **immutate**, verificato sul giro completo degli agganci.
+
+Resta **0/201** sul `game_id`: quello sì è strutturale, e non si muove finché la
+fonte automatica di quella coppa è Wikipedia.
+
+### Le statistiche di squadra, e una copertura che va letta
+
+476 righe, 87 partite su 201, 35 metriche. È l'unica delle cinque coppe con la
+copertura **a scalini**, e il taglio è netto:
+
+| turni | partite | righe | metriche piene |
+|---|--:|--:|--:|
+| dai 32esimi alla finale | 63/63 | 378 | ~27 su 29 |
+| 7° e 8° turno (dilettanti) | 24/138 | 98 | **1,2 su 29** |
+
+Le 98 righe scarne portano **i soli cartellini**, e non è un difetto: esistono
+*perché* c'è stato un cartellino. La prova è il confronto con l'altra fonte
+della stessa raccolta — `eventi.csv`, che ha i cartellini col minuto:
+**48/48 identiche** sulle righe «Totale», e **0 partite** con righe di
+statistica senza nemmeno un cartellino negli eventi. È anche il motivo per cui i
+periodi non si bilanciano (Totale 174, 2° tempo 160, 1° tempo 142): la riga di
+un tempo esiste solo se in quel tempo è successo qualcosa. Le altre colonne sono
+**vuote**, non zero — se fossero zero sarebbe un finto pieno (R6).
+
+**La coerenza dei tre periodi, misurata** — un controllo che non costava niente
+e non era mai stato fatto su una coppa (128 squadra-partita coi tre periodi):
+
+```
+1° tempo + 2° tempo = Totale
+  29 metriche numeriche              126/126 additive
+  5 metriche a rapporto «p% (n/d)»   n e d additivi 252/252
+  Possesso palla (non additiva)      casa + ospite = 100 in 189/189 gruppi completi
+```
+
+⚠️ **La prima lettura del possesso era sbagliata, ed era mia**: «49 gruppi su
+238 non fanno 100» veniva da un `groupby().sum()` che somma i `NaN` come zeri.
+Righe con possesso 0% nel file: **zero**. Ci sono 98 righe dove il possesso
+*manca*, e sono esattamente le righe scarne dei turni dilettantistici. Un
+`NaN` letto come `0` è lo stesso errore che la regola R6 descrive — solo
+commesso dal lettore invece che dalla fonte.
+
+### Una guardia in più sulla porta d'ingresso
+
+Ri-registrare la raccolta dopo aver cambiato gli alias, e poi re-integrare le
+statistiche **dall'originale già archiviato**, sollevava `SameFileError` —
+`copy2(x, x)` — **dopo** aver riscritto i due CSV e **prima** di aggiornare il
+manifesto: la raccolta restava a metà. Ora la copia si salta quando sorgente e
+destinazione sono lo stesso file. È il motivo per cui la §5-ter conserva gli
+originali: rifare il lavoro da lì dev'essere la strada normale, non un caso
+limite.
+
+**Lezione.** *Una spiegazione strutturale corretta può coprire un buco più
+piccolo di quello che sembra.* «La Coupe de France non ha identificatori» era
+vero, ed è rimasto vero — ma spiegava l'80% del buco, non il 100%, e per due
+fasi il restante 20% è stato archiviato insieme al resto. Il modo di
+accorgersene è stato guardare l'elenco dei nomi mancanti **uno per uno** invece
+del totale: sei righe su quaranta erano PSG, Marsiglia, Lione. **Un numero
+aggregato non dice mai di che cosa è fatto**, e la stessa occhiata che ha
+trovato i sei mancanti ha trovato i due agganciati per sbaglio.
+
+---
+
+## Fase 139-septies — Tre volte lo stesso errore: il controllo che boccia il dato buono
+
+**Obiettivo.** Integrare le statistiche della **Copa del Rey**, la sesta e
+ultima, e chiudere il secondo consegnato su tutte le coppe.
+
+**Ragionamento.** Le prime quattro erano entrate senza toccare una riga di
+codice. La Carabao aveva richiesto una correzione, la Coupe de France un'altra.
+Il sospetto, arrivando alla sesta, non era «funzionerà» ma «cosa scriverà
+diversamente *questa*»: e la risposta è arrivata due volte in due controlli
+diversi, entrambi legittimi, entrambi tarati troppo stretti.
+
+### 1 · «Le partite non coincidono»: 2 su 117
+
+Il primo controllo si è fermato subito. Due partite «solo nella raccolta» e due
+«solo nelle statistiche», stessa data e stesso avversario:
+
+```
+solo raccolta    ('03.12.2025', 'Ciudad Cieza', 'Levante')   ('29.10.2025', 'Ciudad Cieza', 'Cordoba')
+solo statistiche ('03.12.2025', 'Cieza',        'Levante')   ('29.10.2025', 'Cieza',        'Cordoba')
+```
+
+**È un club solo, e non l'abbiamo dedotto: lo dice la fonte indipendente.**
+`data/coppe_2526/partite.csv` ha esattamente quelle due partite sotto **CD
+Cieza**, `club_id` **56725**, terza divisione — e la raccolta base risolveva già
+`Ciudad Cieza` a quello stesso id. Le 14 righe di giocatore sono le stesse
+persone riga per riga.
+
+### 2 · «Un doppione»: e sono due persone
+
+Corretto il primo, il secondo controllo si è fermato su una riga:
+
+> `1 righe con la stessa (data, squadra, giocatore)`
+
+`Fernandez Pol`, Reus FCR, 03/12/2025. Non è un doppione — la raccolta base lo
+dimostra da sola, perché ha il **numero di maglia**:
+
+| | numero | gruppo | rating | minuti |
+|---|--:|---|--:|--:|
+| Fernandez P. | **3** | Titolare | 5.9 | 90 |
+| Fernandez P. | **24** | Panchina, entrato al 59' | 6.2 | 31 |
+
+E i due rating del file di statistiche sono **5.9 e 6.2**. Sono due uomini, e la
+chiave del confronto pretendeva un'unicità che il dato non ha.
+
+### 📐 Il modello in dettaglio
+
+Due tabelle di regole cambiano, entrambe **dentro** il confronto e nessuna sul
+dato scritto.
+
+**(1) Il sinonimo di club** (`coppe_aggancio.sinonimi_squadra`, verificato
+contro il sorgente):
+
+```
+V = nomi di club nel foglio di RIFERIMENTO      (partite.csv della raccolta)
+N = nomi di club nell'ALTRO foglio              (il consegnato nuovo)
+residui:  N∖V  e  V∖N                            ← chi si appaia gia' alla lettera esce
+
+proposte(n) = { v ∈ V∖N : token(n) ⊆ token(v)  ∨  token(v) ⊆ token(n) }
+si accetta  n → v   sse   |proposte(n)| = 1
+                     ∧   v e' proposto da UN SOLO n            (unicita' nei due sensi)
+```
+
+`{cieza} ⊆ {ciudad, cieza}` → accettato. Le tre condizioni sono le stesse di
+`deduci_club` (Fase 139-quater) e servono per lo stesso motivo: «Ourense» fra
+«Ourense CF» e «UD Ourense» sono **club diversi della stessa città**, e
+indovinare lì è il caso «Brest» daccapo. Il sinonimo **si dichiara** nel
+manifesto (`sinonimi_di_squadra_accettati`) e **non riscrive la colonna**: si
+canonicalizza la chiave, non il dato.
+
+**(2) La chiave del confronto riga per riga**, terza versione in tre coppe:
+
+```
+Fase 139-quinquies   (Competizione, Turno, Data, Casa, Ospite, Lato, Squadra, Giocatore)
+                     → 122.401 celle «divergenti» su un dato identico  (Turno e' un'etichetta)
+Fase 139-quinquies   (Data, Squadra, Giocatore)
+                     → 1 «doppione» su due persone diverse             (troppo stretta)
+Fase 139-septies     (Data, canon(Squadra), Giocatore, Stato)          ← quella buona
+```
+
+`Stato` ∈ {Titolare, Subentrato} separa i due Fernandez, è scritto uguale nei
+due consegnati, e sulle altre cinque coppe **non cambia niente**: 0 doppioni
+prima e 0 dopo. `canon` è la mappa del punto (1).
+
+**Dove vive la regola, e perché lì.** `sinonimi_squadra` sta in
+`src/data/coppe_aggancio.py`, non nello script. Non è pulizia: senza, la porta
+d'ingresso accettava il file e lo script degli agganci perdeva le **27 righe**
+di quelle due partite — `stat_giocatori` da 94,2% a **92,3%**, un calo che
+sembra un limite del dato. È la lezione della Fase 139-quater applicata prima di
+pagarla: **due copie della stessa regola divergono, e la divergenza non dà
+errore.**
+
+### Il risultato: sei coppe su sei
+
+| coppa | righe | partite | supplementari |
+|---|--:|--:|--:|
+| Coppa Italia | 272 | 45 | 2 |
+| DFB-Pokal | 406 | 63 | 28 |
+| FA Cup | 406 | 63 | 28 |
+| EFL Cup | 546 | 91 | 0 (regolamento) |
+| Coupe de France | 476 | 87 / 201 | 0 |
+| **Copa del Rey** | **692** | **114 / 117** | **52** |
+| **totale** | **2.798** | **463** | |
+
+Fedeltà del foglio giocatori sulle sei: **1.193.504 celle numeriche confrontate,
+0 divergenti** oltre l'arrotondamento. Aggancio: **692/692** con `game_id` e
+`club_id` — la Copa del Rey è, con la Carabao, una delle due coppe la cui finale
+la fonte automatica contiene. Completezza sulle sei: **48.282 righe raccolte,
+42.202 agganciate (88,0%)**.
+
+### La copertura ha tre livelli, e nessuna colonna lo dice
+
+Copa del Rey e Coupe de France non hanno una copertura piena né vuota: hanno
+**tre livelli**, e li fa la fonte — meno il turno è professionistico, meno
+pubblica.
+
+| livello | metriche piene | dove |
+|---|--:|---|
+| completo (xG, possesso, passaggi…) | ~27 / 29 | Rey dai 1/16 + 15 partite del 2° turno; Coupe dai 32esimi |
+| base (tiri, angoli, falli, fuorigioco, rimesse, punizioni, cartellini) | 8-10 | Rey: 13 partite del 2° turno |
+| solo cartellini | 1-2 | Rey: 53 partite del 1° turno; Coupe: 24 dei turni 7-8 |
+
+Il terzo livello non è un difetto e non è un finto pieno: quelle righe esistono
+**perché** c'è stato un cartellino, le altre colonne sono `NaN` e non `0`, e il
+conteggio combacia con `eventi.csv` — **106/106** sul Rey, 48/48 sulla Coupe.
+Ma il livello **non è dichiarato da nessuna colonna**: si legge da quante
+metriche sono piene, e chi userà questo dato deve guardarlo prima.
+
+### ⭐ E una semantica che nessuno aveva verificato: `Totale` non è il 90'
+
+Le quattro coppe con i supplementari permettono un test che non costa niente:
+
+```
+1° tempo + 2° tempo + Supplementari = Totale     2.228 / 2.228 celle
+1° tempo + 2° tempo                 = Totale       628 / 2.232
+```
+
+**`Totale` è la partita intera, supplementari compresi.** Non era scritto da
+nessuna parte, e la lettura sbagliata non dà errore: dà numeri più piccoli su
+13-14 partite per coppa — esattamente quelle dove il dato conta di più.
+
+**Lezione.** *Tre coppe di fila, tre volte lo stesso errore: un controllo giusto
+tarato su una chiave che il dato non rispetta.* Il turno è un'etichetta della
+fonte, il nome del club è una grafia della fonte, e (data, squadra, giocatore)
+non è un'identità perché due persone possono chiamarsi uguale. Ogni volta il
+controllo ha risposto con qualcosa che **sembrava una scoperta** — 122.401 celle
+divergenti, due partite mancanti, un doppione — e ogni volta il dato era giusto.
+La domanda che ha risolto tutte e tre è la stessa: **non «quanto diverge» ma
+«quali righe, e perché proprio quelle».**
+
+---
+
+## Fase 139-octies — «Le colonne ci sono» non è «si uniscono»
+
+**Obiettivo.** Domanda dell'utente: *«verifica che siamo in grado di incrociare
+tutti i dati relativi a queste partite: allenatore, arbitro, statistiche di
+squadra, meteo, 11 titolari + sostituzioni + statistiche individuali»*. Non
+«esistono le tabelle» — quello si vede dagli schemi. **Si uniscono, partita per
+partita?**
+
+**Ragionamento.** La domanda ha una risposta facile e sbagliata: elencare le
+colonne di ogni file e dire di sì. Ogni blocco vive in una tabella diversa, con
+una chiave diversa, da una fonte diversa; e la Fase 139-ter aveva già mostrato
+cosa costa non contarlo — **8.475 righe di evento raccolte e collegate a
+niente**, invisibili perché le percentuali su partite e formazioni erano al 99%.
+Quindi: si conta riga per riga, e si scrive uno script perché il numero resti
+ri-calcolabile.
+
+**Alternative considerate.**
+
+1. *Una tabella sola, «quante partite hanno tutto».* È quella che ho scritto per
+   prima, ed era **sbagliata in due modi contemporaneamente** (vedi sotto).
+2. *Elencare le colonne per file.* Non risponde: dice che il dato esiste, non
+   che si unisce a quella partita.
+3. *Fidarsi delle percentuali di aggancio già pubblicate* (99,8%, 94,7%…).
+   Sono per **foglio**, non per **partita**: una coppa può avere tutti i fogli
+   agganciati al 99% e pochissime partite con *tutti* i blocchi insieme.
+
+**Scelta.** `scripts/verifica_incrocio_coppe.py`, che produce **quattro**
+tabelle. Quattro e non una perché il conteggio unico confonde tre cose diverse.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: è una misura, e la formula è la definizione di «incrociabile».
+
+```
+perimetro   = { partite : dentro_perimetro }                     580 su 662
+
+blocchi automatici (chiave game_id, fonte player-scores)
+  arbitro      = arbitro ≠ ∅
+  allenatori   = allenatore_casa ≠ ∅  ∧  allenatore_ospite ≠ ∅
+  undici       = |{ club : #titolari(game_id, club) = 11 }| = 2      ← DUE, non ≥1
+  minuti       = #{ righe con minuti ≠ ∅ } > 0
+
+blocchi manuali (chiave ID partita, fonte diretta.it)
+  sostituzioni = #eventi di tipo «Sostituzione» > 0
+  stat. indiv. = #righe in aggancio_statistiche > 0
+  stat. squadra= #righe in aggancio_statistiche_squadra > 0
+
+incrociabile(p) = p ∈ perimetro
+                ∧ ∃ ponte: ID partita → game_id
+                ∧ ⋀ (tutti i blocchi delle due sponde)
+```
+
+**Perché `undici` pretende DUE squadre e non almeno una.** Una formazione sola
+non è metà del dato: è un dato inutilizzabile per qualunque confronto fra le due
+squadre, che è l'unica cosa per cui serve. Con la soglia «≥1» la FA Cup
+risulterebbe più coperta di quanto sia.
+
+### Il mio primo conteggio era sbagliato in due modi, e vale la pena dirlo
+
+La prima versione dava questa riga:
+
+```
+Coupe de France   201 partite   arbitro 0   allenatori 0   undici 0   sostituzioni 0
+                                stat_ind 0  stat_squadra 0
+```
+
+Letta così: «della coppa francese non abbiamo niente». **È falso.** La Coupe de
+France ha 2.495 righe di formazione, 2.792 eventi, 1.924 statistiche individuali
+e 476 di squadra. Contavo i blocchi **manuali** sulla chiave **automatica**, e
+quella coppa di `game_id` non ne ha nemmeno uno: il conteggio misurava il ponte,
+non il dato. E la FA Cup risultava 62/123 perché al denominatore mettevo tutte
+le partite invece del **perimetro** — 60 di quelle non sono un buco, non sono
+mai state chieste.
+
+> **fuori perimetro ≠ buco · senza ponte ≠ assente · presente ≠ unibile**
+
+Sono tre errori diversi con lo stesso effetto: far sembrare mancante ciò che c'è.
+
+### Il risultato
+
+**1 · Fonte automatica** (sul perimetro): arbitro 378/379 fuori dalla Francia,
+allenatori 376, undici 376, minuti 348.
+**2 · Raccolta manuale** (sul raccolto): sostituzioni 442/580, statistiche
+individuali 366, di squadra 463.
+**3 · L'incrocio vero**, tutti i blocchi sullo stesso `game_id`:
+
+| coppa | nel perimetro | incrociabili | quota |
+|---|--:|--:|--:|
+| FA Cup | 63 | 62 | **98,4%** |
+| EFL Cup | 91 | 89 | **97,8%** |
+| DFB-Pokal | 63 | 61 | **96,8%** |
+| Coppa Italia | 45 | 40 | **88,9%** |
+| Copa del Rey | 117 | 44 | 37,6% |
+| Coupe de France | 201 | 0 | 0% |
+| **totale** | **580** | **296** | **51,0%** |
+
+Senza la Coupe de France — che è un problema di natura diversa — **296/379,
+78,1%**.
+
+**4 · Il giro completo, ed è quello che conta**: dal titolare (player-scores)
+alla **sua** riga di statistica (diretta.it), per `player_id`. Le tabelle 1-3
+possono essere verdi e questa rossa: la partita c'è da entrambe le parti, le
+**persone** no.
+
+```
+DFB-Pokal      1.361 / 1.364   99,8%
+Coppa Italia     876 /   880   99,5%
+FA Cup         1.353 / 1.364   99,2%
+EFL Cup        1.975 / 2.002   98,7%
+Copa del Rey     924 /   990   93,3%
+TOTALE         6.489 / 6.600   98,3%
+```
+
+**E la prova che il join si fa davvero**, non solo che i conteggi tornano —
+`--partita 4631307`, Empoli-Reggiana del 15/08/2025:
+
+```
+arbitro                              Andrea Calzavara
+allenatori                           Guido Pagliuca / Davide Dionigi
+stadio, spettatori                   Carlo Castellani, 1.894
+moduli                               3-5-2 flat / 3-4-2-1
+titolari                             22, tutti e 22 con player_id
+titolari con statistica individuale  22 / 22
+sostituzioni                         18
+statistiche di squadra               6 righe, 1° tempo / 2° tempo / Totale
+meteo                                None
+```
+
+### I tre motivi del «no», e sono diversi fra loro
+
+1. **Coupe de France (201)** — nessun `game_id`: la sua fonte automatica è
+   Wikipedia, che non porta identificatori. Assenza **a monte**, non nostra. I
+   dati manuali si incrociano fra loro; con arbitro/allenatori/formazioni no,
+   perché dall'altra parte non esistono.
+2. **Copa del Rey (73)** — il **First Round**, 56 partite, ha **zero**
+   statistiche individuali: diretta.it non le pubblica per il turno
+   dilettantistico. Dal Round of 32 in poi la coppa è al **100%**. È lo stesso
+   taglio a livelli già trovato sulle statistiche di squadra (Fase 139-septies):
+   non un difetto della raccolta, una politica della fonte.
+3. **Le tre finali** — `games.csv` non le contiene.
+
+### ⚠️ Il meteo: non c'è, e non è un dettaglio
+
+**Zero su 662.** Non «manca in qualche partita»: non esiste in nessuna tabella
+del progetto per il 2025-26. L'infrastruttura c'è ed è **prospettica**
+(`fetch_stadi_coordinate.py` + `stagione_2026_2027/giornaliero/`): raccoglie la
+*previsione* a 16 giorni per il 2026-27, e una previsione all'indietro non si
+ricostruisce — dopo esiste solo il consuntivo. Cosa servirebbe, misurato:
+
+| pezzo | stato |
+|---|---|
+| coordinate degli stadi | **59 su 422** stadi di coppa (110 partite su 662): le 90 raccolte coprono i club delle 5 leghe, non i minori |
+| fonte storica | `open-meteo.com`, raggiungibile e senza chiave (`MANUALE_SOPRAVVIVENZA` §1), **mai usata** |
+| natura del dato | sarebbe un **consuntivo `post`**, non la previsione `pre` — sotto R8 sono due cose diverse, e a un modello serve la seconda |
+
+**Lezione.** *Le percentuali di aggancio già pubblicate erano tutte al 99%, e la
+metà delle partite non si incrocia lo stesso.* Non è una contraddizione: quelle
+erano per **foglio** («quante righe di evento hanno un `player_id`»), questa è
+per **partita** («questa partita ha tutti i blocchi insieme»). Sono domande
+diverse e danno numeri diversi, e la seconda è quella che decide se un modello
+si può addestrare. **Una copertura alta su ogni pezzo non implica un pezzo
+intero da nessuna parte.**
+
+---
+
+## Fase 139-novies — La domanda era un'altra: non «si toccano» ma «so rispondere»
+
+**Obiettivo.** L'utente precisa cosa intendeva per «incrociare»:
+
+> *«se io chiedo le statistiche che hanno avuto le squadre di un determinato
+> allenatore in quella competizione siamo in grado di rispondere, o le
+> statistiche di un giocatore quando ad arbitrare la partita era un certo
+> arbitro»*
+
+La Fase 139-octies aveva risposto a una domanda **più debole** — «i blocchi si
+uniscono?» — e la risposta era sì. Questa è più esigente: la dimensione da cui
+si parte (allenatore, arbitro) vive nella fonte **automatica**, la misura che si
+chiede vive nella raccolta **manuale**, e perché la query funzioni la dimensione
+dev'essere attaccata **a ogni riga di misura, dal lato giusto**.
+
+**Ragionamento.** Il rischio non è che la query fallisca: è che **risponda
+sbagliato senza dirlo**. `partite.csv` ha `allenatore_casa` e
+`allenatore_ospite`; una riga di statistica ha `Lato`. Se attacco l'allenatore
+ignorando il lato, metà delle righe finiscono con l'allenatore **avversario** —
+e non c'è niente di anomalo da vedere: le medie restano plausibili, i conteggi
+tornano, nessun test di copertura se ne accorge. È lo stesso genere di difetto
+del `Turno` nella chiave di ordinamento (Fase 139-quinquies), ma peggiore,
+perché lì il controllo urlava e qui tacerebbe.
+
+**Alternative considerate.**
+
+1. *Rispondere caso per caso con un `groupby` scritto sul momento.* Funziona una
+   volta e si sbaglia la seconda: il join per lato è esattamente il pezzo che si
+   dimentica. Se la domanda è ricorrente, la risposta è un modulo.
+2. *Una tabella sola, molto larga (squadra + giocatore insieme).* Sbagliata di
+   grana: moltiplicherebbe le misure di squadra per il numero di giocatori, e
+   ogni media di squadra risulterebbe pesata per la rosa.
+3. *Materializzare un CSV denormalizzato.* Scartata: si costruisce in un secondo
+   dalle tabelle di aggancio, e un file in più è un file che diverge.
+
+**Scelta.** `src/data/coppe_query.py`, due viste costruite al volo —
+`pannello_squadra()` (746 × 59) e `pannello_giocatore()` (9.462 × 134) — più le
+due funzioni che rispondono alle domande così come sono state poste.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la correttezza sta tutta nella **chiave del join**.
+
+```
+(1) le dimensioni, una riga per (partita, lato)
+    L = { (game_id, Lato=Casa)  con squadra=casa,  allenatore=allenatore_casa  }
+      ∪ { (game_id, Lato=Ospite) con squadra=ospite, allenatore=allenatore_ospite }
+    arbitro, stadio, turno, competizione → identici sui due lati (sono della PARTITA)
+
+(2) le misure si attaccano SOLO su (game_id, Lato)
+    pannello_squadra   = L ⋈ statistiche_squadra   on (game_id, Lato)
+    pannello_giocatore = L ⋈ statistiche_individuali on (game_id, Lato)
+                           ⋈ formazioni              on (game_id, player_id)
+
+(3) chiavi normalizzate per la RICERCA, non per l'identità
+    allenatore_chiave = normalizza_nome(allenatore)      (allenatori.normalizza_nome)
+    arbitro_chiave    = normalizza_nome(arbitro)
+```
+
+**Perché `(game_id, Lato)` e non `(game_id, club_id)`**, che pure sarebbe più
+«pulito»: le statistiche di squadra hanno `club_id`, ma quelle **individuali**
+no — hanno `Lato` e `Squadra`. Una sola chiave per entrambe evita due percorsi
+diversi, ed è la lezione della Fase 139-quater: due implementazioni della stessa
+regola divergono, e la divergenza non dà errore.
+
+**La verifica del lato, ed è il cuore della fase.** Non basta che il codice
+sembri giusto: l'ho confrontato con un percorso **indipendente** —
+`allenatori.load_partite()`, che legge `games.csv` e costruisce la vista lunga
+per conto suo, senza passare da `partite.csv`.
+
+```
+righe verificate                       746 / 746   ✅
+righe senza riscontro                    0
+controprova: allenatore = allenatore_avv 0 / 746   ← un errore di lato sarebbe visibile
+```
+
+La controprova conta quanto la verifica: se i due allenatori coincidessero
+spesso, il test principale passerebbe anche con il lato sbagliato.
+
+### Il risultato: le due domande, sul dato vero
+
+**«Le squadre di Simeone in Copa del Rey»** → 6 righe, tutte `Atlético de
+Madrid`, dal Round of 32 alla finale:
+
+| turno | avversario | esito | xG | tiri | possesso | falli |
+|---|---|:--:|--:|--:|--:|--:|
+| Round of 32 | Atlético Baleares | V 3-2 | 1.35 | 10 | 57% | 14 |
+| Round of 16 | Deportivo | V 1-0 | 1.43 | 15 | 52% | 11 |
+| Quarti | Real Betis | V 5-0 | 2.95 | 12 | 58% | 11 |
+| Semifinale A | Barcelona | V 4-0 | 2.37 | 12 | 34% | 17 |
+| Semifinale R | Barcelona | P 0-3 | 0.63 | 7 | 29% | 7 |
+| Finale | Real Sociedad | N 2-2 | 1.68 | 19 | 63% | 17 |
+
+**«Un giocatore, con l'arbitro accanto»** → `Trafford James`, 11 partite fra EFL
+Cup e FA Cup, **10 arbitri diversi**, con minuti, rating e metriche individuali.
+E nella forma esatta della domanda — un giocatore *sotto un certo arbitro* — il
+filtro si compone: `statistiche_giocatore(player_id=…, arbitro=…)`.
+
+### ⚠️ «Si può rispondere» non è «la risposta è una statistica»
+
+| | |
+|---|--:|
+| partite per allenatore, **mediana** | **2** |
+| allenatori con ≥ 3 partite | 101 su 350 |
+| partite per arbitro, **mediana** | **1** |
+| arbitri con ≥ 5 partite | **7 su 207** |
+| giocatori con ≥ 3 partite | 1.118 su 4.886 |
+
+Una coppa è a eliminazione diretta: la maggior parte degli allenatori ci passa
+due volte e la maggior parte degli arbitri una. La query risponde sempre; **una
+media su due partite non è una media**, e `copertura()` lo stampa apposta perché
+il pannello non inviti all'errore. Per un'analisi vera servono le stagioni
+precedenti o l'unione coi campionati.
+
+### ⚠️ Una correzione a un numero che avevo pubblicato ieri
+
+Scrivendo il test sui minuti ho messo una soglia a caso (`> 0.8`) ed è andato
+rosso: i minuti coprono il **51,7%** delle righe del pannello. Indagando, il
+difetto era **nella Fase 139-octies**, cioè in un numero che avevo appena
+pubblicato. Lì `b_minuti_giocati` era definito «almeno una riga con i minuti» —
+la stessa soglia debole che due righe più sopra avevo evitato apposta per gli
+undici titolari, e che lì avevo motivato per iscritto.
+
+Misurato davvero:
+
+```
+minuti pieni in formazioni.csv        5.438 / 18.566   (29,3%)
+partite con TUTTE le righe piene            0 / 458
+partite con tutti i TITOLARI pieni         70 / 458
+appearances.csv su queste partite     5.438 righe, mediana 16 per partita (invece di ~35)
+il builder ne perde                         0          (5.438 = 5.438, verificato)
+```
+
+**È un buco della fonte, non nostro.** Conseguenze, applicate: il criterio è ora
+il più stretto che abbia senso (*tutti* i titolari, 70 partite), e i minuti
+**escono dalla congiunzione** dell'incrocio — non erano fra i blocchi chiesti
+dall'utente, e tenerli dentro avrebbe fatto crollare il totale per un difetto di
+`appearances.csv` invece che per i nostri agganci. Il totale corretto è
+**299/580 (51,6%)**, non 296/580, e l'EFL Cup passa a **91/91, il 100%**.
+
+**Lezione.** *Una soglia messa a caso in un test è un'ipotesi, e vale la pena
+scriverla anche quando si è quasi sicuri.* Il `> 0.8` non difendeva niente —
+l'avevo scritto per riempire un `assert` — e ha trovato un difetto in un numero
+pubblicato il giorno prima, in un punto dove avevo già enunciato la regola
+giusta e non l'avevo applicata. **Enunciare un criterio non è applicarlo**, e il
+posto dove il divario si vede è il test, purché il test dica un numero e non
+`> 0`.
+
+---
+
+## Fase 139-decies — Il club è la chiave, non la partita: tre identità sbagliate
+
+**Obiettivo.** Continuare sull'incrocio cercando **punti carenti** (richiesta
+utente). Non «verificare che funzioni» — quello era la 139-octies/novies — ma
+andare a cercare dove **risponde e sbaglia**, che è la categoria che non dà
+segnale.
+
+**Ragionamento.** Il pannello della fase precedente butta via la colonna
+`Squadra` delle misure e si fida del `Lato`. Non l'avevo mai verificato: se le
+due fonti dissentissero sul lato, ogni riga finirebbe sulla squadra sbagliata e
+i numeri resterebbero plausibili. È il primo posto dove guardare, e il modo di
+guardarci è un'informazione **indipendente**: non il nome della squadra (che le
+due fonti scrivono diversamente — «Cadice» contro «Cádiz CF»), ma il **club_id**.
+
+### Il controllo, e le tre cose che ha trovato
+
+```
+statistiche di SQUADRA   club_id della misura = club_id del lato   2.304 / 2.304  ✅
+statistiche INDIVIDUALI  club del giocatore   = club del lato      9.309 / 9.312  ⚠️ 3
+```
+
+Tre righe su 9.312 — poche, ma sono **certezze sbagliate** (R6): un giocatore
+attribuito all'altra squadra non è un buco, è un dato che a valle nessuno
+smentisce.
+
+| caso | riga di statistica | `player_id` assegnato | chi è davvero |
+|---|---|---|---|
+| Navalcarnero-Getafe | `Juanmi` (Casa, Navalcarnero) | 126737 | `Juanmi` del **Getafe** |
+| Navalcarnero-Getafe | `Perez Jose` (Ospite, Getafe) | 1283890 | `Jaime Pérez` del **Navalcarnero** |
+| Ourense-… | `Sanchez Alberto` (Casa) | 1312698 | `Selton Sánchez`, club 621 |
+
+Nel primo caso lo **stesso** `player_id` finiva sulle righe di **entrambe** le
+squadre: in quella partita ci sono due Juanmi — `Juanmi` (Getafe, 126737) e
+`Juanmi Heredero` (Navalcarnero, 285973).
+
+**La causa.** In `aggancia_coppe.collega_foglio` la chiave era
+`(Data, Casa, Ospite)` — la **partita** — quindi i candidati venivano da
+**entrambe le rose**, e il dizionario per nome collideva sugli omonimi. È
+esattamente la lezione «il lato è la chiave» applicata male un livello più
+sotto: l'avevo scritta per il pannello e non per gli agganci.
+
+### 📐 Il modello in dettaglio
+
+```
+PRIMA   candidati(riga) = { giocatori con player_id della PARTITA }
+        risolvi(n)      = anagrafica[(partita, n)]                     ← collide sugli omonimi
+                        | l'unico t ∈ candidati con _uguali(tok(n), t)
+
+DOPO    club(riga) = cid(Squadra)                     se il foglio ha `Squadra`
+                   = cid(lato)                        altrimenti (eventi: solo `Lato`)
+                   = cid(lato OPPOSTO)                se `Tipo evento` = Autogol
+        candidati(riga) = { giocatori del (PARTITA, CLUB) }
+        + guardia: un `player_id` rivendicato da DUE nomi nella stessa partita
+                   viene tolto a entrambi                              (solo fogli 1-riga-per-persona)
+        + ripiego: dove il club non si risolve (Coupe de France) si torna alla
+                   ricerca larga, che resta subordinata all'unicità
+```
+
+**Le due trappole pagate mentre lo scrivevo**, entrambe trovate misurando e non
+ragionando:
+
+1. **`eventi.csv` non ha la colonna `Squadra`** — ha solo `Lato`. Prendendo il
+   club dal solo `Squadra`, gli eventi cadevano nel ripiego e le righe
+   agganciate crollavano da **3.639 a 561** sulla sola Copa del Rey. Il lato
+   basta: la partita dice chi gioca in casa.
+2. ⭐ **L'autogol va al contrario.** Dopo la correzione mancavano ancora 36
+   righe, e **35 erano `Autogol`**: diretta.it li registra sul lato che ne
+   **beneficia**, ma il giocatore è dell'altra squadra — la stessa convenzione
+   che la Fase 138 aveva già misurato sulla fonte automatica (invertirla faceva
+   scendere la resa dal 98,5% all'89,7%). Cercati nella rosa sbagliata, non si
+   trovavano.
+
+La 36ª riga persa **era giusto perderla**: `Mendy A.`, gol di Montpellier in
+Coupe de France, era agganciato a `891998` — un giocatore del **Nizza**. Il
+Montpellier in quella partita non ha nemmeno un giocatore agganciato: non c'era
+niente di corretto da trovare.
+
+### Il quarto difetto, e l'ha trovato un invariante diverso
+
+Un `player_id` non può servire **due persone**. Nella Copa del Rey
+`Perez Andoni` e `Perez Alex` del **Club Portugalete** finivano entrambi su
+**634542** — stessa squadra, quindi il vincolo di club non poteva vederlo. È la
+regola di sempre (dove non c'è un vincitore unico non vince nessuno) applicata a
+un punto dove mancava: ogni riga si risolveva per conto suo. Ora la coppia
+contesa resta **vuota**, ed è **1 caso su sei coppe**.
+
+### Il risultato
+
+| foglio | prima | dopo |
+|---|--:|--:|
+| statistiche individuali, Copa del Rey | 1.353 | **1.357** |
+| statistiche individuali, EFL Cup | 2.818 | **2.830** |
+| statistiche individuali, FA Cup | 1.957 | **1.960** |
+| statistiche individuali, DFB-Pokal | 1.975 | **1.976** |
+| eventi (sei coppe) | 12.906 | **12.906** |
+| completezza complessiva | 42.202 | **42.219** |
+
+E gli invarianti, che prima non erano mai stati misurati:
+
+```
+giocatore nel club del suo lato        9.332 / 9.332   ✅
+eventi coerenti (autogol invertito)   11.990 / 11.990  ✅
+un player_id = una persona per match       0 violazioni ✅
+righe duplicate nel pannello               0            ✅
+```
+
+⚠️ **Un fatto che sembra un difetto e non lo è**: 15 coppie (partita, giocatore)
+compaiono su **entrambi** i lati negli eventi. Sono **15 su 15** giocatori con un
+autogol: l'autogol sta sul lato avversario, il cartellino o la sostituzione sul
+proprio. È la convenzione, non un errore — e va scritta (R4), altrimenti la
+sessione dopo la «corregge».
+
+**Lezione.** *Una regola enunciata in un posto non è applicata negli altri.* «Il
+lato è la chiave» era scritto nel docstring del pannello, con la sua verifica a
+746/746 — e un livello più sotto, negli agganci, i candidati si cercavano ancora
+nella partita intera. Il modo di accorgersene non è rileggere il codice: è
+**incrociare due informazioni che devono coincidere** (il club del giocatore e
+il club del suo lato) e guardare le righe che non tornano.
+
+---
+
+## Fase 140 — Il database allenatori: il nome non è un'identità, e la panchina non è un contratto
+
+**Obiettivo.** Aprire il fronte **allenatori**, che il
+`docs/PIANO_DATABASE_GIOCATORI.md` progetta da giorni (§1.6, voci F1-F32) e che
+`docs/AUDIT_FONTI_GIOCATORI.md` ha auditato senza che una riga di codice lo
+toccasse. Non «misurare se l'allenatore conta»: **prima costruire il dato**, e
+descriverlo onestamente. Un modello su un dato non descritto è un modello su
+qualcos'altro.
+
+**Ragionamento.** Il piano dice una cosa sola con certezza: il dato-cardine
+esiste già ed è `games.csv` dello **stesso** dataset che il progetto usa dalla
+Fase 67 per i valori rosa. Nessuna fonte nuova, nessuna licenza nuova, nessun
+matching per nome dei club — solo l'unico file grande di player-scores mai
+importato. La Fase 125 lo aveva già letto per l'arbitro, ma da uno script
+`_run_*` una tantum che scaricava 708 MB da Kaggle a ogni esecuzione: il dato
+non era **strutturale**, e alla sessione dopo non esisteva più.
+
+**Alternative considerate.**
+
+1. *Partire dalle statistiche di stile* (xG/PPDA/deep degli snapshot, per
+   misurare subito la «firma» dell'allenatore). Scartata: è il passo 2. Senza i
+   mandati non c'è niente su cui fare il join, e la firma stilistica misurata
+   su mandati sbagliati è una firma di qualcun altro.
+2. *Prendere `club_games.csv`*, che offre la vista per-club già pronta.
+   Verificato prima di deciderlo, e la verifica ha risposto da sola:
+   ricostruito da `games.csv` in otto righe, **0 celle divergenti su
+   1.957.076**. È un duplicato esatto e algoritmico. Conservato lo stesso
+   (regola §5-ter: raccogliere non è usare), ma nessun codice lo legge.
+3. *Usare `clubs.coach_name`*, che il repo ha già in casa. **No**: è
+   l'allenatore **corrente** del club, senza data (403/796 non nulli).
+   Applicarlo a una partita del 2019 le attribuisce il tecnico di oggi. È la
+   trappola R8 in forma pura, e il modulo non la legge apposta.
+
+**Scelta.** `files/player_scores/games.csv.gz` (+ `club_games`, `competitions`)
+come fonte congelata, `src/data/allenatori.py` come modulo strutturale — stessa
+architettura di `careers.py`: una vista lunga (`load_partite`), una vista
+derivata (`panchine`), e **una sola funzione sicura** per le feature
+(`esperienza_prima`, forma R8). Più il workflow d'import esteso, perché un
+re-import non se li dimentichi.
+
+### Il risultato: la copertura è ottima, e non è la notizia
+
+`games.csv` copre il perimetro **esattamente**: 16.111 partite nelle 5 leghe ×
+9 stagioni, le stesse righe degli snapshot congelati. L'allenatore manca in **2
+club-partita su 32.222** (99,994%) — ed è una partita sola, Nantes-Tolosa del
+17/05/2026, a cui alla stessa data mancano anche l'arbitro e ogni giocatore.
+L'audit diceva «meno dello 0,3% mancante»: era pessimista di 50 volte.
+
+Ma la copertura è la domanda facile. Le due che contano hanno risposto peggio.
+
+### 1 · Il nome non è un'identità — e sbaglia in **due** direzioni
+
+La fonte non ha un id-allenatore: solo una stringa. Il difetto **noto**
+dall'audit è che la stessa persona compare con due grafie, con intervalli
+disgiunti — la fonte ha cambiato ortografia in corsa:
+
+| chiave | grafia | partite | da → a |
+|---|---|--:|---|
+| `ivan juric` | Ivan Juric | 231 | 2017-08-20 → 2025-04-06 |
+| | Ivan Jurić | 11 | 2025-08-24 → 2025-11-09 |
+| `bruno genesio` | Bruno Génésio | 209 | 2017-08-05 → 2025-05-17 |
+| | Bruno Genesio | 34 | 2025-08-17 → 2026-05-17 |
+
+Normalizzare li unisce, e costa poco: nel perimetro **496 grafie → 494 chiavi**,
+2 gruppi, **485 partite = 3,01%**; globalmente 7.031 → 6.995, 36 gruppi.
+
+Il difetto **non noto** è l'opposto, ed è quello pericoloso: due uomini diversi
+con lo stesso nome diventano una riga sola, e nessuna normalizzazione lo ripara.
+Il test che lo trova non ha bisogno di fonti esterne — è di impossibilità
+fisica, nello spirito della regola R5: **nessuno allena due club lo stesso
+giorno**. Esito: **11 nomi globali sono dimostrabilmente ≥2 persone**, 29
+collisioni. Il più grosso è dentro il nostro perimetro:
+
+> `michel` — il 2022-10-02 la stessa stringa siede sulla panchina del **Girona**
+> (ES1) e su quella dell'**Olympiakos** (GR1). Sono Míchel Sánchez e Míchel
+> González, due allenatori spagnoli diversi. 13 collisioni fra il 2022 e il
+> 2025, e la stringa raccoglie **nove club** in nove anni.
+
+`luis castro` è l'altro caso nel perimetro (5 collisioni: Shakhtar e
+Panetolikos lo stesso giorno del 2019). Con una finestra di 7 giorni invece che
+di 0 i nomi sospetti salgono a 43 — ma quella finestra include i passaggi lampo
+veri fra due club, quindi è un limite superiore, non un verdetto.
+
+**Non si risolve qui.** Sciogliere un omonimo richiede una fonte di identità
+esterna (uno strato 2, come `wikidata_identity.py` per i giocatori). Ciò che si
+può fare oggi è **impedire che entri in una feature senza che nessuno lo sappia**:
+`conflitti_identita()` lo elenca, e un test lo tiene elencato.
+
+### 2 · La panchina non è un contratto — e chi lo assume conta 696 cambi che non ci sono
+
+Il campo si chiama `manager_name`, e la tentazione è leggerlo come «l'allenatore
+in carica». Il dato dice di no, e lo dice da solo:
+
+| data | competizione | avversario | allenatore |
+|---|---|---|---|
+| 2021-11-20 | Bundesliga | Hoffenheim | Jesse Marsch |
+| 2021-11-24 | Champions | Club Brugge | **Achim Beierlorzer** |
+| 2021-11-28 | Bundesliga | Leverkusen | Jesse Marsch |
+| 2021-12-03 | Bundesliga | Union Berlin | Jesse Marsch |
+| 2021-12-07 | Champions | Manchester City | **Achim Beierlorzer** |
+| 2021-12-11 | Bundesliga | Mönchengladbach | Domenico Tedesco |
+
+Un contratto non si alterna a giorni alterni. Un **vice in panchina per una
+partita** sì: squalifica, malattia, turno di coppa lasciato all'assistente. Il
+campo registra *chi sedeva in panchina quella partita*, che è un'altra cosa — e
+i casi hanno tutti un nome verificabile: Stuivenberg per Arteta il 1/1/2022,
+Vivas per Simeone il 4/1/2025, Hermann per Heynckes il 10/2/2018, Critchley per
+Klopp il 4/2/2020.
+
+La firma del fenomeno è il pattern **A → X → A**: lo stesso allenatore prima e
+dopo. Sono **836 mandati su 13.810 (6,05%)**, di cui **412 di una partita sola**.
+Chi non li riassorbe conta due cambi in panchina finti per ciascuno: **4.416
+cambi in corso di stagione contro i 3.720 veri, +18,7%**.
+
+**Terzo modo di sbagliare, più banale e altrettanto efficace**: tagliare i
+mandati sul solo campionato. Sui club del perimetro sono **1.190 sulla timeline
+completa contro 906 sulla sola lega — 284 spariti**, quasi tutti traghettatori
+di una partita in coppa. Una panchina ha una timeline sola, e ci passano
+campionato, coppa nazionale ed Europa in ordine di data.
+
+### 3 · L'esperienza è **visibile al dataset**, non globale
+
+L'audit lo aveva già scritto (F26) e qui è confermato dal codice, non citato:
+`games.csv` per le top-5 comincia il **2012-08-10**, e Brasile, Argentina, MLS,
+Giappone e Arabia entrano solo nel **2025**. Contare le partite precedenti e
+chiamarlo «esperienza in carriera» produce falsi conclamati:
+
+| allenatore | prima partita **visibile** | dove |
+|---|---|---|
+| Carlo Ancelotti | 2012-08-11 | Ligue 1 |
+| José Mourinho | 2012-08-19 | Liga |
+| Claudio Ranieri | 2013-08-10 | Ligue 1 |
+| Roy Hodgson | 2012-06-11 | Europei |
+| Ronald Koeman | 2012-07-31 | preliminari di Champions |
+
+Per questo la funzione si chiama `esperienza_prima` e non
+`esperienza_globale`, e restituisce `censurata`: quando è True i totali sono un
+**limite inferiore**. Al 1° agosto 2025, dei **145 allenatori** poi in panchina
+nelle 5 leghe, **22 (15,2%) non hanno nessuna partita precedente visibile** e
+**31 dei restanti sono censurati**.
+
+⚠️ E `censurata=False` **non** vuol dire «esperienza completa»: il flag vede
+solo la censura **temporale**, al bordo della competizione. Quella di
+**copertura** — chi ha allenato dove la fonte non guarda: seconde divisioni,
+giovanili, campionati entrati nel 2025 — dall'interno del dataset non è
+rilevabile. Il controesempio è **Guardiola**: prima partita visibile il
+2013-07-27 col Bayern, `censurata=False`, e quattro stagioni al Barcellona
+(2008-2012) invisibili perché la Liga nel dataset comincia nell'agosto 2012.
+
+### 📐 Il modello in dettaglio
+
+Nessuna statistica nuova: le formule qui sono **definizioni**, ed è esattamente
+il punto — le tre trappole di sopra nascono tutte da una definizione data per
+scontata. Verificate riga per riga contro `src/data/allenatori.py`.
+
+**(1) La chiave del nome** (`normalizza_nome`):
+
+```
+k(nome) = collassa_spazi( minuscolo( senza_accenti( NFKD(nome) ) ) )
+          con  {'-', "'", '.'} → ' '
+
+senza_accenti(s) = "".join(c for c in s if not unicodedata.combining(c))
+```
+
+NFKD scompone «ć» in «c» + segno combinante e il filtro toglie il secondo: è
+questa riga, e nessun elenco di alias scritto a mano, a unire Jurić e Juric.
+Perché anche trattino/apostrofo/punto: «Sanchez-Flores» e «Sanchez Flores» sono
+lo stesso uomo, e le iniziali puntate compaiono nelle grafie brevi.
+**Il costo di questa scelta è dichiarato**: k non è iniettiva sulle persone, e
+la (3) misura di quanto.
+
+**(2) La segmentazione dei mandati** (`panchine`), ordinando per
+`(club_id, date, game_id)`:
+
+```
+nuovo(i)   = [ k(i) ≠ k(i−1) ]     con i−1 nello stesso club (True alla prima riga)
+mandato_id = cumsum(nuovo)
+```
+
+Un `cumsum` su un confronto con la riga precedente, e non l'intervallo
+`(min data, max data)` di quel nome in quel club. La differenza non è di stile:
+con l'intervallo, **Allegri risulta al Milan dal 2010 al 2026** — perché ci è
+tornato — e quindi «sovrapposto a sé stesso» alla Juventus per **3.546 giorni**.
+Era il falso positivo che il primo tentativo di test sugli omonimi produceva:
+non erano omonimi, erano **ritorni**.
+
+**(3) Il conflitto di identità** (`conflitti_identita`), su `G` giorni di
+finestra:
+
+```
+conflitto(k) ⟺ ∃ (d₁,c₁), (d₂,c₂) osservate per k  con  c₁ ≠ c₂  ∧  |d₁ − d₂| ≤ G
+```
+
+`G = 0` è il verdetto netto (nessuno allena due club lo stesso giorno: 11 nomi);
+`G = 7` è il sospetto (43 nomi, ma include i passaggi lampo veri). Il test è
+volutamente **interno**: non chiede nessuna fonte esterna, quindi non può
+essere rimandato in attesa di procurarsela.
+
+**(4) L'interruzione e la ricucitura** (`panchine(ricuci=True)`), con soglia
+`S = 1` partita:
+
+```
+interruzione(m)  ⟺  precedente(m) ≠ ∅  ∧  precedente(m) = successivo(m)
+assorbibile(m)   ⟺  interruzione(m)  ∧  partite(m) ≤ S
+
+gruppo(mᵢ) = gruppo(mᵢ₋₂)   se assorbibile(mᵢ₋₁) ∧ stesso club ∧ k(mᵢ) = k(mᵢ₋₂)
+ospite(mᵢ) = ultimo gruppo NON assorbito dello stesso club
+```
+
+`S = 1` non è tarato su una metrica — non c'è una metrica: è la soglia che
+ricuce **solo** ciò che il pattern A→X→A rende quasi certo (una partita sola:
+412 casi su 836) e lascia in piedi gli altri 424, dove «il vecchio è tornato
+dopo un mese» e «il vice ha traghettato un mese» non sono distinguibili senza
+una fonte sui contratti. La soglia è un parametro, e chi la alza sa cosa sta
+comprando.
+
+L'identità che tiene onesta la ricucitura, e che un test verifica:
+
+```
+Σ partite(mandati ricuciti) + Σ partite_altrui  =  righe di load_partite()
+                175.816     +        412        =        176.228            ✅
+```
+
+Le partite del vice **non spariscono**: escono dai mandati ed entrano in
+`partite_altrui` del mandato che le ospita. Una ricucitura che perdesse righe
+sarebbe una correzione al dato travestita da vista derivata.
+
+**(5) La censura a sinistra** (`esperienza_prima`):
+
+```
+censurata(k) ⟺ primo_incarico(k) ≤ d₀( competizione_d'esordio(k) ) + 90 giorni
+d₀(c) = min data osservata nella competizione c
+```
+
+Il bordo è **per competizione**, non uno solo: le top-5 cominciano nel 2012, il
+Brasile nel 2025. Un bordo unico dichiarerebbe «esordiente» mezzo campionato
+brasiliano. I 90 giorni sono una finestra di mercato più preparazione: chi
+compare entro un'estate dall'apertura della raccolta era già lì prima, e il
+dataset non può saperlo. Numeri: **1.064 allenatori su 4.194 (25,4%)** censurati
+al 1° agosto 2020.
+
+**Lezione.** *La copertura di un campo non dice quasi niente sulla sua
+affidabilità.* Qui è al **99,994%**, ed è precisamente per questo che le tre
+trappole sono pericolose: nessun controllo di completezza le vede, perché non
+c'è niente di vuoto. Il nome c'è sempre — ma a volte è di due persone; il
+mandato si ricostruisce sempre — ma a volte è una squalifica; l'esperienza si
+conta sempre — ma parte da dove comincia il file. È la regola **R6** (il buco
+peggiore non è il `NaN`, è il finto pieno) applicata a un fronte nuovo, e vale
+la pena scriverlo: le tre si sono trovate **guardando il dato**, non
+rileggendo il piano che lo descriveva da giorni.
+
+**Stato.** Nessun modello legge questo modulo, e nessuna misura di valore
+predittivo è stata fatta: **è infrastruttura**. Il passo successivo naturale è
+il join dei mandati con gli snapshot ricchi (xG/PPDA/deep) per il test che
+l'utente ha descritto — lo *stesso* allenatore su **due squadre diverse** — e
+va fatto sapendo che sul perimetro gli allenatori con abbastanza partite in
+≥2 club sono pochi, e che il tetto informativo delle 100+ fasi precedenti non
+si sospende per un fronte nuovo.
+
+---
+
+## Fase 141 — Un 503 alla 22ª partita su 58, e le 21 già raccolte buttate via
+
+**Obiettivo.** Rimettere in piedi il workflow `smarkets-prematch.yml`, fallito
+l'**08/08/2026** sul giro di lungo raggio delle 06:24 (`All jobs have failed`,
+7'47" prima di morire). E, visto che la raccolta pre-partita ha una scadenza
+vera — il 15 agosto la Liga comincia, e ciò che non si raccoglie prima del
+fischio non torna più (`newseason.md` §2) — capire *perché* un guasto di rete
+è riuscito a costare l'intero giro.
+
+**Ragionamento / ipotesi.** Il log dice tutto in una riga:
+
+```
+urllib.error.HTTPError: HTTP Error 503: Service Unavailable
+  File "scripts/fetch_smarkets_matches.py", line 290, in quote_partita
+    libri = _libri_per_contratto(_get(f"/markets/{lotto}/quotes/") or {})
+```
+
+e appena sopra: `[21/58] Espanyol vs Levante UD: 7870 righe totali`. Cioè
+**7.870 righe già in memoria** — 21 partite, cinque leghe, il listino intero —
+buttate via da un errore sulla 22ª. Non è un difetto solo: sono tre, in fila, e
+ognuno da solo sarebbe bastato a salvare i dati.
+
+1. **`_get` riprovava sul 429 ma non sui 5xx.** La funzione (Fase 97,
+   `fetch_smarkets_outrights.py`) ha un ciclo di 5 tentativi che tratta il 429
+   come «aspetta e riprova» e **rilancia tutto il resto**. Un 503 è per
+   definizione temporaneo — *Service Unavailable*, «riprova fra poco» — ed era
+   classificato con i 404. Nessuno l'aveva deciso: il 429 era il caso che si
+   era presentato alla Fase 97, e la riga era stata scritta per quello.
+2. **L'eccezione di UNA partita usciva dal ciclo del `main`.** `righe +=
+   quote_partita(...)` senza `try`: la 22ª partita non aveva il diritto di
+   uccidere le altre 57, ma l'aveva.
+3. **Il più beffardo.** Lo script scrive il file **prima** di uscire rosso,
+   apposta — il commento della Fase 116 dice *«Solo ORA si esce rosso: il file
+   è salvo, l'allarme è visibile»*. Ma in GitHub Actions un passo fallito
+   **salta quelli dopo**: il passo `Salva lo snapshot` non girava mai, e il
+   file moriva sul runner. L'allarme costava esattamente i dati che doveva
+   proteggere. Questo difetto non è del guasto dell'08/08: c'era da sempre,
+   e valeva anche per l'uscita rossa della lega sparita (01/08) — che quindi,
+   quel giorno, ha buttato la raccolta delle altre quattro leghe.
+
+**Alternative considerate.**
+- *Solo ritentare sui 5xx.* Il rimedio più piccolo, e insufficiente: sposta la
+  soglia di rottura senza toglierla. Un guasto che dura più di 45 secondi
+  ricrea la stessa perdita totale.
+- *Far fallire il giro a ogni mercato mancante.* Onesto ma inutilizzabile: un
+  503 isolato su 58 partite manderebbe una mail rossa, e le mail rosse che non
+  chiedono niente si smettono di leggere. La soglia adottata distingue «serve
+  un umano» da «è andata storta una richiesta»: **rosso solo per una partita
+  persa intera** (un buco nella traiettoria che nessun giro successivo riempie:
+  quel prezzo, a quell'ora, non esiste più), giallo-dichiarato per qualche
+  mercato.
+- *Scrivere un file parziale a ogni partita.* Rende la raccolta a prova di
+  crash brutale, ma moltiplica i file d'archivio e complica la rilettura. Il
+  budget di tempo (sotto) copre lo stesso rischio a costo zero.
+
+**Scelta.** Quattro modifiche, una per difetto più il contrappeso:
+
+1. `HTTP_TRANSITORI = {429, 500, 502, 503, 504}` in `_get`: si riprova con
+   backoff 3-6-12-24s. I **4xx restano fatali** — un 404 non diventa un 200
+   riprovando, e insistere nasconderebbe un bug nostro dietro venti secondi.
+2. `quote_partita` ritorna `(righe, mercati_persi)` e tollera un lotto caduto:
+   costa 20 mercati, non la partita.
+3. `main` avvolge ogni partita in un `try`, accumula `partite_incomplete` e le
+   **scrive nel file** — un buco dichiarato è innocuo, uno silenzioso è il
+   «finto pieno» di R6. Zero righe totali su una finestra non vuota resta un
+   fallimento senza file: un archivio non deve mai contenere un silenzio che
+   sembra un dato.
+4. `if: ${{ !cancelled() }}` sul passo di commit del workflow, così «i dati
+   sono comunque salvati» diventa vero.
+
+**📐 Il modello in dettaglio.** Nessuna matematica nuova — è codice di
+raccolta — ma due numeri vanno motivati, perché sono scelte e non default.
+
+*Il backoff, e perché il primo fix ne richiede un secondo.* Il tempo peggiore
+speso su una singola chiamata che fallisce sempre è la somma delle attese fra
+i 5 tentativi:
+
+```
+attesa_max = Σ(k=0..3) 3·2^k = 3 + 6 + 12 + 24 = 45 s
+```
+
+Su un guasto **isolato** sono 45 secondi ben spesi. Ma se Smarkets è giù per
+mezz'ora, *ogni* chiamata costa 45 s, e il giro di lungo raggio a listino
+intero fa
+
+```
+chiamate = 58 partite × (1 + 13 lotti × 2) = 1.566
+1.566 × 45 s ≈ 19,6 ore
+```
+
+cioè un runner appeso che non scrive niente e blocca, dietro la stessa
+`concurrency`, tutte le corse orarie di chiusura. **Il rimedio non è togliere i
+tentativi: è dire quando smettere.** Da qui `BUDGET_MINUTI = 45`, controllato
+fra una partita e l'altra; allo scadere si scrive ciò che si ha e le partite
+non raccolte sono dichiarate una per una.
+
+*Perché 45 minuti e non un numero a caso.* Il giro più lungo che facciamo
+(lungo raggio, tutti i mercati) è misurato **dal log del guasto stesso**: 21
+partite in 7'30" scandaglio del listino compreso, cioè
+
+```
+per_partita = (7 min 30 s − ~1 min di scandaglio) / 21 ≈ 18,6 s
+giro_intero = 58 × 18,6 s ≈ 18 min
+```
+
+Il budget è **due volte e mezzo** il giro sano: non taglia mai una raccolta che
+sta andando bene, lascia spazio a un calendario più affollato e a qualche
+ritentativo, e tiene il giro dentro l'ora prima che la corsa oraria si accodi.
+A protezione del caso in cui il processo si *pianti* invece di rallentare — il
+budget si controlla fra una partita e l'altra, quindi non scatterebbe — il job
+ha `timeout-minutes: 55` contro le 6 ore di default di GitHub.
+
+**Risultato.**
+
+| difetto | prima | dopo |
+|---|---|---|
+| 503 su una chiamata | eccezione immediata | 5 tentativi, 45 s di backoff |
+| guasto su 1 partita di 58 | **57 partite perse** | 1 dichiarata, 57 salvate |
+| uscita rossa dopo la scrittura | passo di commit **saltato**, file perso | committato, poi rosso |
+| API giù a lungo | fino a ~19,6 h di runner | ≤ 45 min, con ciò che ha raccolto |
+
+**16 test nuovi** in `tests/test_smarkets_matches.py` (46 nel file, suite
+verde): i tentativi per ognuno dei 5 codici transitori, il non-tentativo sui
+5 codici di richiesta, la resa dopo l'ultimo tentativo, i mercati persi
+dichiarati, «una partita persa non porta via le altre» (il bug in una riga), il
+budget che salva il raccolto, e un test che **legge il YAML del workflow** e
+pretende l'`if:` sul passo di commit.
+
+**Lezione.** Tre cose, e la terza è quella che vale oltre questo file.
+
+1. **Un elenco di casi transitori scritto per il caso che si è presentato è un
+   elenco incompleto per definizione.** Il 429 era arrivato alla Fase 97, il
+   503 no: la riga trattava «non-429» come «errore vero» perché nessuno aveva
+   guardato l'altra metà della tabella HTTP.
+2. **Un ciclo che accumula in memoria è un ciclo che può perdere tutto.** Il
+   costo di un `try` per iterazione è tre righe; il costo di non averlo è
+   proporzionale a quanto sei arrivato lontano — cioè massimo proprio quando fa
+   più male.
+3. **Un allarme che gira DOPO la scrittura ma PRIMA del salvataggio non è un
+   allarme: è una perdita di dati con un messaggio sopra.** Il commento diceva
+   «il file è salvo» e il codice Python faceva la sua parte; era il YAML a non
+   saperlo. La verifica di un'invariante non può fermarsi al confine del
+   linguaggio in cui è scritta — per questo il guardiano nuovo legge il
+   workflow, non il codice.
+
+---
+
+## Fase 142 — Prendevamo il 6,7% del listino: coppe, UEFA e cadetterie entrano nel perimetro
+
+**Obiettivo.** Domanda dell'utente subito dopo la Fase 141: *«questo lavoro su
+quali partite lo facciamo? verifichiamo se possiamo allargarlo anche alle
+partite di coppa per esempio o ad altre di campionato»*. Misurare che cosa
+Smarkets espone davvero, quanto costerebbe prenderlo, e allargare il perimetro
+di raccolta.
+
+**Ragionamento / ipotesi.** La domanda non si risponde a stima: si conta. Il
+censimento del listino dell'08/08/2026 dà **865 partite su 124 competizioni**,
+e noi ne prendevamo **58 — il 6,7%**. Fra le 807 che buttavamo:
+
+| | esposte l'08/08 | prima partita |
+|---|---|---|
+| Coppa Italia | 4 | **quel giorno, 18:00** |
+| England League Cup | 31 | **quel giorno, 12:00** |
+| Supercoppe (UEFA, Germania, Francia) | 3 | 12 ago |
+| UCL / UEL qualificazioni | 14 | 11 ago |
+| Seconde divisioni dei 5 paesi | 47 | 14 ago |
+| Terze/quarte divisioni | 35 | |
+| Amichevoli di club | 57 | |
+| Resto del mondo | 616 | |
+
+Il primo fatto è già una risposta: **la Coppa Italia giocava quel giorno e non
+la stavamo prendendo.**
+
+**Alternative considerate.** Il perimetro è una scelta dell'utente (§5-ter dice
+che escludere un dato si decide con lui), quindi le opzioni sono state
+misurate e presentate, non decise. Scartate: *tutto il calcio esposto* (a
+listino pieno sono ~112 minuti, non ci sta nel budget di 45 e richiederebbe di
+ripensare i cron) e *terze divisioni + amichevoli* (le amichevoli hanno
+formazioni finte: valore predittivo basso). **Scelto**: coppe dei 5 paesi +
+UEFA per club + seconde divisioni, **a listino pieno** come i campionati.
+
+**Perché queste tre famiglie.** Non è «più dati è meglio»: ognuna tocca un
+buco che il progetto ha già.
+1. **Coppe** — il progetto ha i dati di coppa 2025-26 (Fase 138, 662 partite,
+   6 tornei) e **non ha mai avuto una quota** per quelle partite. Questa è la
+   loro controparte prospettica.
+2. **Seconde divisioni** — è il buco del **prior neopromosse δ** (Fase 7/8):
+   oggi è una costante per lega (0.19-0.33) *proprio perché* non abbiamo dati
+   sulla cadetteria. Con le quote di Serie B/Championship/Liga 2 la forza di
+   ogni squadra che sale diventa stimabile una per una.
+3. **UEFA** — il progetto non ha mai avuto una **scala di forza comune fra
+   campionati**. Le quote di UCL/UEL sono l'unico modo di misurarla: il
+   mercato la prezza per noi.
+
+**📐 Il modello in dettaglio.** Nessuna matematica di modello: è raccolta. Ma
+tre numeri e una regola vanno motivati.
+
+*Il costo, misurato per regime (08/08/2026, campione di 5 partite):*
+
+```
+solo principali (3 mercati)     5,6 righe   1,75 s   0,28 KB gz   per partita
+listino base    (6 mercati)    24,0 righe   1,68 s   0,60 KB gz   per partita
+tutti i mercati (~110)        239,2 righe   7,03 s   7,84 KB gz   per partita
+```
+
+⚠️ **`--solo-principali` è una falsa economia sul tempo.** 3 e 6 mercati costano
+identico (1,75 contro 1,68 s) perché stanno **comunque in un solo lotto da 20**:
+il costo è il numero di *lotti*, non di mercati. Risparmia byte, non minuti.
+Il ragionamento della Fase 118 — «il lungo raggio si ferma ai principali per
+renderlo sostenibile» — era giusto sull'archivio e sbagliato sul tempo.
+
+*Il perimetro nuovo, misurato dal vivo:*
+
+```
+158 partite = 58 campionati + 52 coppe + 48 seconde
+tempo ≈ 58×20,6 + 52×7 + 48×5 ≈ 1.760 s ≈ 29 min   (era 19'57")
+peso  ≈ 593 KB + ~710 KB ≈ 1,3 MB per giro
+```
+
+Sta nel budget di 45 minuti della Fase 141 con ~16 minuti di margine. Le coppe
+costano **meno** dei campionati (Coppa Italia: 47 mercati e 4,7 s, contro 110
+mercati e ~20 s di una Serie A): il listino di una partita minore è più corto.
+
+*La regola dell'ordinamento, che è una conseguenza aritmetica del budget.*
+Il ciclo seguiva l'ordine dell'API, cioè un ordine arbitrario. Con 58 partite
+il budget non si toccava mai e non importava; con 158 diventa plausibile, e
+allora **quali** partite finiscono nella coda tagliata smette di essere
+indifferente:
+
+```
+valore di una partita persa ≈ (quante altre occasioni avremo di riprenderla)⁻¹
+  partita fra 3 settimane → ~21 giri giornalieri rimasti → perdita ≈ 1/21
+  partita fra 1 ora       → 0 giri rimasti               → perdita = tutto
+```
+
+Quindi si raccoglie in **ordine di calcio d'inizio**: la coda tagliata è
+sempre ciò che manca di meno.
+
+**Il rischio vero, e cosa lo copre.** Non è raccogliere di più: è che **a valle
+qualcosa scambi una coppa per un campionato senza dare errore**. Quattro punti,
+tutti trovati leggendo i consumatori invece che immaginandoli:
+
+| dove | cosa sarebbe successo |
+|---|---|
+| ogni riga | `groupby('lega')` avrebbe messo Vicenza-Catania fra le partite di Serie A → aggiunto **`fascia`** (campionato/coppa/seconda) su ogni riga |
+| `anomalia_del_listino` | contando anche le coppe, la sparizione di tutti e 5 i campionati non avrebbe suonato → conta i soli campionati |
+| `ultimo_listino_completo` | cercava `len({lega}) >= 5`: **due leghe e quattro coppe** superano la soglia → un file parziale travestito da completo |
+| prospettico / mappa nomi / anagrafica | avrebbero cercato negli snapshot squadre di Serie B e di UCL che lì non esistono → filtrano su `fascia == campionato` |
+
+L'assenza del campo vale `campionato`, così i file già in archivio restano
+leggibili.
+
+**Il problema degli slug che non conosciamo ancora, e perché qui si indovina.**
+Copa del Rey, DFB-Pokal, Coupe de France, FA Cup e i gironi UEFA cominciano più
+avanti, e l'API espone **solo** ciò che è `upcoming`: non c'è modo di leggere
+oggi il nome che avranno (provati `/competitions/` e `/sports/`: **404**;
+`state=new`: **zero eventi**). Le due strade pulite erano entrambe peggiori —
+aspettare che compaiano perde i primi giorni di traiettoria, che non tornano;
+includere per prefisso di paese tira dentro National League North e le
+femminili. Quindi:
+
+- **`SLUG_ATTESI`** — gli slug che ci aspettiamo, con più varianti dove la
+  convenzione non è ovvia (osservato dal vivo: `italy-coppa-italia` usa il nome
+  nativo, `england-league-cup` e `france-super-cup` no). Indovinare è **sicuro**
+  perché uno slug sbagliato semplicemente non combacia mai;
+- **il RADAR** — `fuori_perimetro()` elenca ogni competizione dei nostri paesi
+  o UEFA che il listino espone e noi *non* prendiamo, nel log **e nel file**
+  (`fuori_perimetro`). È lì che comparirà `germany-dfb-pokal` col nome vero se
+  l'abbiamo scritto sbagliato.
+
+L'accoppiata rende l'errore **rumoroso invece che silenzioso**, ed è il rimedio
+diretto allo stesso guasto di `spain-laliga` → `spain-la-liga` (31/07, trovato a
+mano cinque giorni dopo).
+
+**Risultato.** Perimetro da 58 a **158 partite** (+172%), giro da 20 a ~29
+minuti, archivio da 593 KB a ~1,3 MB per giro. Verificato dal vivo su un file
+misto: 1.321 righe su tre partite, una per fascia, `fuori_perimetro: {}` e
+`partite_incomplete: []`. **6 test riscritti** (codificavano il perimetro
+stretto: erano la decisione di allora, non una verità) **e 10 nuovi**, 69 nel
+file; suite intera a **1.458 verdi**. Push alle 11:58 UTC, in tempo perché il giro di chiusura delle 12:07
+prendesse le partite di League Cup delle 14:00.
+
+**⚠️ Il primo giro vero ha smentito la stima, e ha scoperto un difetto del
+taglio.** Run 31257772327, perimetro allargato in produzione: **50.509 righe,
+135 partite, 16 competizioni** su tutte e tre le fasce — ma **`partite_incomplete: 22`**,
+budget esaurito. 135 partite in 45 minuti fanno **20 s a partita**, non i 5-7 s
+misurati la mattina su un campione di cinque: il giro vero è di sabato
+pomeriggio, con l'API sotto carico e le partite in corso. La stima di ~29
+minuti era sbagliata del 55%.
+
+Il meccanismo della Fase 141 ha fatto il suo lavoro — file scritto, buchi
+dichiarati, coda tagliata invece che testa — ma il taglio ha rivelato un
+difetto che l'ordinamento da solo non copre:
+
+```
+perse: 9 Bundesliga + 6 La Liga + 3 Serie A + 2 Serie B + 1 Premier + 1 Ligue 1
+       = le 22 con il calcio d'inizio più lontano
+```
+
+**Un taglio una tantum si media, un taglio quotidiano no.** Ordinare per
+calcio d'inizio è giusto per la singola occorrenza, ma se il tetto viene
+toccato *ogni giorno* a essere persa è **sempre la stessa coda**: le 9 partite
+di Bundesliga (28-30 agosto) sarebbero uscite dalla raccolta tutti i giorni
+fino al 28, cioè proprio la lega più lontana non avrebbe **mai** una
+traiettoria di lungo raggio. Budget ri-tarato a **90 minuti** (173% del giro
+pieno misurato, 157 × 20 s ≈ 52 min — lo stesso margine che 45 dava sui 20
+minuti di prima) e `timeout-minutes` a 100. Tenerlo alto non costa nulla in
+condizioni normali, perché si esce quando si è finito e non allo scadere.
+
+**Lezione.** Cinque, e le ultime tre valgono oltre questo file.
+
+1. **Un perimetro scritto una volta non si rilegge più.** `SLUG_LEGA` conteneva
+   5 voci dalla Fase 116 e nessuno aveva più chiesto *quanto* stessimo
+   lasciando fuori. La risposta era 93,3%, e comprendeva una partita che si
+   giocava quel pomeriggio. Il censimento costa una chiamata API.
+2. **Il cron orario di GitHub parte con 30-40 minuti di ritardo** (misurato
+   quel giorno: i giri delle `:07` sono partiti alle 08:54, 09:49, 10:45,
+   11:37). Non è un guasto ed è documentato, ma cambia il conto di una cosa
+   che qui pesa: la finestra `--entro-ore 2` del regime di chiusura diventa di
+   fatto **T-1h20/T-0h20**, e una partita che comincia entro ~40 minuti dal
+   cron può non essere presa affatto. Con le sole 5 leghe non si vedeva —
+   giocano a orari tondi e sono poche; con 31 partite di League Cup alle 14:00
+   diventa un rischio reale. Da qui l'input `tutti_i_mercati`, per poter
+   forzare a mano il regime di chiusura quando serve.
+3. **Allungare i giri ha fatto cancellare la corsa di chiusura** — una
+   regressione introdotta da questa stessa fase, trovata guardando i run
+   mentre giravano e non rileggendo il YAML. GitHub tiene, per ogni
+   `concurrency group`, **un run in corso e uno solo pending**: all'arrivo di
+   un terzo, *«any previously pending job or workflow in the concurrency group
+   will be canceled»*. Con i giri da 20 minuti non capitava mai; con 158
+   partite un lungo raggio occupa il gruppo 35-45 minuti, e due corse orarie
+   accodate bastano perché la prima muoia (misurato: run 31258806209 delle
+   13:07, `cancelled`). A morire è **il giro che vale di più** — la chiusura è
+   il prezzo a T-2h — e muore **in silenzio**: un run cancellato non scrive
+   niente e non suona niente. Rimedio: un gruppo **per regime**, che è sicuro
+   perché i due scrivono file con nomi diversi e il push ha già i suoi tre
+   tentativi con `pull --rebase`. La lezione generale: **una modifica che
+   cambia la *durata* di un job può cambiarne la *pianificazione*, e la
+   pianificazione non ha test.**
+4. **Un input dichiarato e mai letto è peggio di un input assente**, e l'ho
+   commesso e committato nello stesso pomeriggio: la casella compariva nella
+   UI di GitHub e spuntarla non faceva niente. È lo stesso genere di buco del
+   punto 3 della Fase 141 — un'invariante che vive **fra il YAML e se stesso**,
+   che nessun test del codice Python può vedere. Il guardiano nuovo
+   (`test_ogni_input_del_workflow_e_davvero_usato`) pretende che ogni input
+   compaia sotto `jobs:`; verificato per mutazione, col YAML rotto fallisce
+   con `assert not ['tutti_i_mercati']`.
+5. **Allargare un dato è per metà un lavoro sui suoi consumatori.** La parte
+   difficile non è stata prendere le coppe: è stata trovare i quattro punti a
+   valle che le avrebbero scambiate per campionati **senza dare errore** —
+   incluso un `len({lega}) >= 5` che quattro coppe fanno passare. Un dato nuovo
+   in una colonna vecchia è un finto pieno in attesa (R6): il perimetro si
+   allarga leggendo chi legge, non chi scrive.
+
+---
+
+## Fase 143 — Il live: un job che cicla, e un punteggio che non è un campo
+
+**Obiettivo.** Richiesta dell'utente: *«riusciamo ad implementare un qualche
+script o programmino che riesce a vedere quando si giocheranno le partite
+(tenendo conto del fuso orario), ad attivarsi automaticamente e a raccogliere
+dati poco prima dell'inizio e ogni tot minuti durante la partita?»*. Cioè la
+famiglia che `CLAUDE.md` §6 dichiara scoperta da sempre: **il live**.
+
+**Ragionamento / ipotesi.** Tre domande, e nessuna aveva la risposta che
+sembrava.
+
+*1. Il fuso orario non è il problema.* Smarkets dà `start_datetime` in **UTC
+con la Z**. Non c'è niente da convertire: c'è da **non introdurre** l'ora
+locale. Tutto lo script lavora in UTC, e il rischio sarebbe stato scrivere
+codice che «tiene conto del fuso» e con ciò lo sbaglia.
+
+*2. Il problema è che il cron non è puntuale.* Misurato lo stesso giorno sul
+workflow gemello: i giri delle `:07` sono partiti alle **08:54, 09:49, 10:45,
+11:37** — da 30 a 40 minuti di ritardo. Per «ogni due minuti durante la
+partita» è fatale. E la mossa ovvia — un cron ogni due minuti — è peggio:
+sarebbe altrettanto in ritardo, e i run si accoderebbero e si
+cancellerebbero a vicenda (§ Fase 142, run 31258806209 `cancelled`).
+
+*3. Il punteggio non è esposto.* Nessun endpoint di tabellone: provati
+`/events/{id}/scores/` e `/events/{id}/state/`, **404** entrambi. Senza il
+punteggio una traiettoria in-play è una serie di prezzi di cui non si sa a
+quale partita corrispondono.
+
+**Alternative considerate.** Per la cadenza: *cron ogni 2 minuti* (scartato,
+sopra); *VPS esterno* (scartato: il progetto ha deliberatamente evitato di
+averne uno, Fase 115); **job che cicla al suo interno** (scelto). Per la
+profondità, quattro opzioni misurate e presentate all'utente, che ha scelto la
+più prudente: *«partiamo più leggeri e vediamo»* — nucleo ogni 2 minuti,
+listino pieno ogni 15.
+
+**Scelta.** Una **sentinella** (cron ogni 30 min) che accende un job che resta
+acceso **40 minuti** e cicla a due velocità. Solo l'*avvio* è impreciso;
+`time.sleep` dentro un job già acceso è esatto. Costa zero perché il repo è
+pubblico e per i repo pubblici i minuti di Actions sui runner standard non si
+pagano — è questo che rende praticabile un job lungo invece di mille corti.
+
+**📐 Il modello in dettaglio.** Nessuna matematica di modello: è raccolta. Ma
+tre relazioni vanno scritte, perché sono scelte e non default.
+
+*Perché la sessione dura più del periodo della sentinella.* Con periodo `P` e
+sessione `D`, la copertura ha un buco ogni volta che il ritardo `r` supera il
+margine:
+
+```
+buco = max(0, r − (D − P))
+con P = 30, D = 40:  buco = max(0, r − 10)
+```
+
+Il ritardo misurato è 30-40 min, quindi i buchi restano possibili — ma `D > P`
+è ciò che li **riduce** invece di garantirli: con `D ≤ P` ogni ritardo diventa
+un buco per costruzione. La sovrapposizione costa qualche giro duplicato (file
+diversi, istanti diversi: si distinguono da soli) e tiene al massimo 2 job
+accesi insieme. Un test protegge la disuguaglianza.
+
+*Perché i tick persi si saltano invece di recuperarli.* A 25 partite in
+contemporanea un giro pieno dura ~3 minuti, più del passo del nucleo (2). Il
+tick successivo è
+
+```
+t' = t + k·passo   con k = min{k ∈ ℕ⁺ : t + k·passo > adesso}
+```
+
+cioè il primo istante **futuro sulla griglia originale** — non `adesso +
+passo` (deriverebbe la cadenza a ogni sforamento) e non `t + passo`
+(rincorrerebbe un orario che non tornerà, girando a vuoto).
+
+*Come si legge il punteggio da ciò che è quotato.* Due stimatori indipendenti,
+entrambi esatti (non approssimazioni):
+
+```
+gol_totali  = ⌈max{ linea L : stato(O/U L) = settled }⌉
+(casa, fuori) = ( min{ c : "c - f" ancora quotato },
+                  min{ f : "c - f" ancora quotato } )
+```
+
+Verificato dal vivo su **Cambridge Utd-Barnet** (08/08, 13:42): sopravvivevano
+2-1, 2-2, 2-3, 3-1, 3-2, 3-3 → minimo componentwise **2-1**; e O/U 0.5/1.5/2.5
+`settled` con 3.5 `live` → **3 gol**. `2+1 = 3`: i due concordano. La stessa
+identità vale per **corner** e **cartellini**, che hanno le loro linee O/U.
+
+⚠️ **Nel file il punteggio NON è dedotto.** La formula qui sopra è verificata
+su *una* partita: diventa un dato solo dopo una validazione su partite a
+risultato noto (§5, stime dichiarate). Il file contiene ciò che l'API ha
+detto, e la deduzione resta un lavoro a valle.
+
+**Risultato.** Provato dal vivo su due partite di League Cup in corso: 4 giri,
+**2.136 righe**, l'1X2 che si muove ogni minuto (`0.8101 → 0.8101 → 0.8132 →
+0.8165` su Cambridge, mentre il tempo scorre) e il punteggio ricostruito.
+**16 test nuovi**; le tre mutazioni provate — tick che rincorre gli arretrati,
+righe senza istante, sessione più corta del periodo — sono tutte catturate.
+
+**Un buco chiuso nel raccoglitore che c'era già.** Non registravamo
+`market.state`. In-play un prezzo assente significa insieme «mercato già
+deciso» e «nessuna liquidità»: **due stati opposti indistinguibili**, cioè un
+finto pieno (R6). Non è mai mancato a nessuno solo perché pre-partita tutto è
+sempre `live`. Ed esiste un terzo valore che non avevo previsto: **`halted`**
+(169 righe su 2.136), il mercato sospeso — cioè l'istante in cui *sta
+succedendo qualcosa*, un gol in verifica o un VAR. In sé è informazione.
+
+**Lezione.** Tre.
+
+1. **Quando un cron non è abbastanza puntuale, la risposta non è un cron più
+   fitto: è un processo che si tiene il tempo da solo.** Un cron ogni 2 minuti
+   avrebbe ereditato lo stesso ritardo *e* aggiunto la coda di run che si
+   cancellano. Spostare la cadenza *dentro* il job la rende esatta al secondo,
+   e il ritardo resta solo sull'avvio — dove costa poco.
+2. **Un dato che sembra assente può essere implicito nella struttura di ciò
+   che resta.** Non c'è un campo punteggio, ma c'è l'insieme dei mercati
+   ancora aperti — e da lì il punteggio esce per identità, con due stimatori
+   che si controllano a vicenda. Vale la pena chiedersi, prima di dichiarare
+   che un dato non c'è, se non lo stia già dicendo qualcos'altro.
+3. **Un'assenza deliberata va protetta come una presenza.** L'unico modo di
+   non far cancellare le sessioni è **non** mettere un `concurrency group`, e
+   un'assenza sembra una dimenticanza: fra sei mesi qualcuno lo aggiungerebbe
+   «per pulizia» e le sessioni tornerebbero a morire in silenzio. C'è un test
+   che pretende che non ci sia, col motivo scritto dentro.
+
+---
+
+## Fase 144 — Il cane da guardia: «avrei dovuto raccogliere, l'ho fatto?»
+
+**Obiettivo.** Osservazione dell'utente, dopo che era stato lui ad accorgersi
+che il raccoglitore in-play non stava girando: *«il fatto che te lo abbia
+dovuto ricordare io è un problema: queste cose dovrebbero eseguirsi da sole
+senza che io ogni volta debba stare qui a ricordarlo»*. Ha ragione, e il
+difetto è più profondo di un cron mancato.
+
+**Ragionamento.** Tutto ciò che il progetto aveva costruito fino a quel
+momento — ritentativi sui 5xx, buchi dichiarati nel file, budget di tempo,
+gruppi di concorrenza, guardiani sul YAML — risponde alla domanda **«il giro è
+andato bene?»**. Nessuna parte rispondeva a **«il giro è partito?»**.
+
+E la differenza è tutta:
+
+```
+giro fallito   -> run rosso -> mail -> qualcuno guarda
+giro non partito -> nessun run -> nessun file -> ... esattamente come una notte senza partite
+```
+
+**«Niente» è insieme il risultato di un guasto e quello della normalità.** È la
+regola R6 del progetto — «il buco peggiore non è il `NaN`, è il finto pieno» —
+applicata al **processo** invece che alla cella. E l'unico rilevatore era
+l'utente.
+
+**Scelta.** Un controllo che non guarda i run ma l'**archivio**, cioè il
+risultato, e cerca il silenzio dove sarebbe dovuto esserci un dato. Quattro
+domande, ognuna con la sua soglia motivata:
+
+| | soglia | perché quella |
+|---|---|---|
+| A. freschezza del lungo raggio | 26 h | 24 suonerebbe per il ritardo del cron (30-40 min misurati), non per il guasto |
+| B. copertura di chiusura | un prezzo entro 3 h dal via | un prezzo di due settimane prima non è una chiusura |
+| C. copertura in-play | ≥50% delle partite giocate | il live è nato ieri: una soglia stretta sarebbe rumore |
+| D. buchi già dichiarati | qualunque | i file lo dicono già, ma nessuno andrebbe a leggerli |
+
+Gira **quattro volte al giorno** a orari sfalsati — se un giro salta, il
+successivo è a sei ore e non a ventiquattro — e quando trova qualcosa **esce
+rosso**, perché la mail di un run fallito è l'unico canale che arriva davvero.
+
+**Risultato immediato:** al primo colpo ha trovato `copertura in-play 4%`, cioè
+esattamente il buco che l'utente aveva notato a mano. E nella stessa giornata
+ha mandato la sua prima mail vera.
+
+**📐 Il modello in dettaglio.** Non c'è matematica di modello, ma tre relazioni
+vanno scritte perché sono scelte e non default.
+
+*Perché la sessione in-play deve durare più del periodo della sentinella.* Con
+periodo `P` e sessione `D`, un ritardo `r` del cron produce un buco:
+
+```
+buco = max(0, r − (D − P))
+```
+
+Con `D ≤ P` **ogni** ritardo è un buco per costruzione. Da qui `D = 300 min`
+contro `P = 30`: la sentinella smette di essere un metronomo e diventa un
+accendino — un solo cron andato a buon fine copre un pomeriggio.
+
+*Perché la coda tagliata dal budget non è indifferente.* Il valore di una
+partita persa è l'inverso di quante occasioni restano di riprenderla:
+
+```
+partita fra 3 settimane -> ~21 giri giornalieri rimasti -> perdita ≈ 1/21
+partita fra 1 ora       -> 0 giri rimasti               -> perdita = tutto
+```
+
+Da cui l'ordine di raccolta per calcio d'inizio. **Ma** — e questo è il punto
+scoperto misurando — *un taglio una tantum si media, un taglio quotidiano no*:
+se il tetto viene toccato ogni giorno a essere persa è **sempre la stessa
+coda** (le 9 partite di Bundesliga, le più lontane). Budget da 45 a 90 minuti.
+
+*Il ritmo delle richieste non è una costante ma una funzione dell'ambiente.*
+Misurato lo stesso pomeriggio, allo stesso ritmo nominale di 2,9 richieste/s:
+
+```
+questo container : 24 richieste su 24 accettate, zero 429
+runner di GitHub : 151 mercati persi per 429 in un solo giro
+```
+
+Quindi l'intervallo si tara da solo: `×1,6` a ogni 429, `×0,99` a ogni
+successo, fra 0,35 s e 3 s. **Asimmetrico apposta**: un 429 è un fatto, un
+successo è solo l'assenza di un rifiuto — risalire alla stessa velocità con cui
+si scende farebbe oscillare il ritmo intorno al limite.
+
+**La riparazione (144-quinquies).** Seconda osservazione dell'utente: *«se si
+limita solo ad avvertirmi... sarebbe utile se poi lo facesse ripartire»*.
+Giusto, ma solo per ciò che si **può** riparare, e la distinzione è netta:
+
+| buco | riparabile | come |
+|---|---|---|
+| lungo raggio fermo | **sì** | lo rifà lui, sincrono: le partite lontane sono ancora esposte |
+| in-play scoperto | **solo se si gioca ancora** | accende una sessione via `gh` |
+| chiusura persa | **no** | quel prezzo non esiste più da nessuna parte |
+
+⚠️ **Il pezzo che rende la riparazione una riparazione è il RI-CONTROLLO.**
+Dopo aver riparato si ri-esegue il controllo, ed è rosso solo su ciò che
+resta. Senza, un guasto cronico resterebbe verde per sempre — il guardiano
+direbbe «ho riparato» a ogni giro senza che niente cambi. **Una riparazione
+che non si verifica è una speranza, ed è peggio del problema di partenza
+perché aggiunge la falsa sicurezza.** È anche il motivo per cui il lungo
+raggio si ripara *facendolo qui* invece di delegarlo: così si può guardare se
+ha funzionato.
+
+**Il bilancio della prima giornata vera (08/08).** 267.401 righe in-play su 41
+partite, 207 giri, 8 sessioni. **Copertura in-play 100%** delle 40 partite
+giocate; **cadenza reale del nucleo con mediana 2,0 minuti**, cioè esattamente
+quella dichiarata; la sessione da 5 ore ha fatto 20 giri pieni + 120 di nucleo
+su 39 partite. Una sola partita senza prezzo di chiusura — QPR-Millwall — e la
+causa è nota al minuto: è cominciata alle 13:00 e l'ultimo giro di chiusura
+utile è partito alle 11:37, quando girava ancora il codice pre-perimetro
+(pushato alle 11:58). Non un guasto: una modifica arrivata venti minuti tardi.
+
+**E il radar ha ripagato il suo costo.** Alle 21:38 ha segnalato
+`uefa-europa-conference-league-qualification` — una competizione dei nostri
+paesi che stavamo buttando, e che si giocava quella sera. Nessuna delle
+varianti indovinate in `SLUG_ATTESI` la copriva (avevo scritto
+`uefa-conference-league` e `uefa-europa-conference-league`, non il suffisso
+`-qualification`). Confronto: `spain-laliga → spain-la-liga` era stato trovato
+**a mano, cinque giorni dopo**; questo in poche ore, senza che nessuno
+guardasse.
+
+**Lezione.** Tre, e la prima è quella che vale oltre questo progetto.
+
+1. **Un sistema che funziona solo se qualcuno se ne ricorda non è
+   automatizzato: è delegato.** Il confine fra i due non si vede finché tutto
+   va bene, perché un sistema delegato in salute è indistinguibile da uno
+   automatizzato. Si vede il giorno in cui smette — e allora la domanda
+   giusta non è «perché si è rotto» ma «perché non me l'ha detto lui».
+2. **Sorvegliare l'esito è diverso dal sorvegliare il processo, e solo il
+   primo prende il caso peggiore.** Il processo può fallire in modi che
+   producono un errore (visibili) o non partire affatto (invisibile). Solo un
+   controllo sul *risultato atteso* copre entrambi.
+3. **Una riparazione automatica senza verifica è un peggioramento.** Trasforma
+   un guasto rumoroso in un guasto silenzioso con un'etichetta rassicurante
+   sopra. Se non si può verificare, meglio limitarsi a segnalare.
+## Fase 145 — La Bundesliga per giocatore: e i cartellini che non tornavano
 
 **Obiettivo.** Integrare la consegna dell'utente: statistiche **per giocatore
 per partita** della Bundesliga 2025-26. È la quarta lega del dato "Tier B" —

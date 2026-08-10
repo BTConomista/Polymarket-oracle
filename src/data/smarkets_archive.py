@@ -83,11 +83,21 @@ def ultimo_listino_completo(cartella: Path | None = None,
     messaggio esplicito invece di restituire un file parziale — un listino
     parziale scambiato per completo e' il tipo di errore che nessun conteggio
     intercetta.
+
+    ⚠️ Si contano le sole righe di **fascia `campionato`** (Fase 142). Dal
+    perimetro allargato un file contiene anche coppe e seconde divisioni, e
+    `len({lega})` conterebbe `coppa_italia` e `serie_b` come se fossero
+    campionati: un file con due leghe e quattro coppe supererebbe la soglia
+    di cinque ed entrerebbe qui dentro travestito da listino completo.
+    I file scritti PRIMA della Fase 142 non hanno il campo — sono tutti e soli
+    campionati, quindi l'assenza vale `campionato`.
     """
     tutti = snapshots(cartella)
     for f in reversed(tutti):
         righe = leggi(f).get("righe") or []
-        if len({r.get("lega") for r in righe}) >= leghe_attese:
+        leghe = {r.get("lega") for r in righe
+                 if r.get("fascia", "campionato") == "campionato"}
+        if len(leghe) >= leghe_attese:
             return f
     raise FileNotFoundError(
         f"nessuno dei {len(tutti)} snapshot in {cartella or ARCHIVIO} copre "

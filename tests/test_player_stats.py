@@ -227,7 +227,7 @@ def test_le_statistiche_sono_tutte_post(pm):
 
 
 # --------------------------------------------------------------------------
-# 3 · Bundesliga 2025-26 (Fase 138): la prima raccolta con FASE e con i
+# 3 · Bundesliga 2025-26 (Fase 145): la prima raccolta con FASE e con i
 #     quattro fogli di contorno. Ogni test qui sotto inchioda una cosa
 #     misurata durante la verifica della consegna, non un'intenzione.
 # --------------------------------------------------------------------------

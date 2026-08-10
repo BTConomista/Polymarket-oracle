@@ -237,7 +237,7 @@ def test_copertura_del_ponte_su_tutte_le_raccolte():
     """La copertura del ponte, lega per lega, con le eccezioni NOMINATE.
 
     Era «35.339 righe su 35.339» sulle prime tre leghe. Con la Bundesliga
-    (Fase 138) le righe sono **44.894** e la copertura scende a 44.891 —
+    (Fase 145) le righe sono **44.894** e la copertura scende a 44.891 —
     **3 righe**, tutte del Mainz e tutte di due soli giocatori: **Ben Bobzien**
     e **Fabio Moreno Fell**.
 
