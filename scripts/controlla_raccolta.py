@@ -349,7 +349,16 @@ def ripara(riparabili: set | list) -> list[str]:
         from fetch_smarkets_matches import scandaglia_live
         try:
             vive, _, _ = scandaglia_live()
-        except Exception:                             # noqa: BLE001
+        except Exception as ex:                       # noqa: BLE001
+            # ⚠️ SI DICE PERCHE'. Questo `except` muto ha gia' inghiottito un
+            # errore di programmazione (10/08: `scandaglia_live` era passata
+            # da due valori a tre e l'unpacking falliva), facendo credere alla
+            # riparazione che non si stesse giocando -- cioe' rispondendo «non
+            # c'e' niente da riparare» a un guasto suo. Un guasto di rete e un
+            # bug qui producono lo stesso `vive = []`: almeno si distinguono
+            # nel log.
+            print(f"   ⚠ scandaglio fallito ({type(ex).__name__}: {ex}): "
+                  f"non so se si sta giocando, tratto come «no»")
             vive = []
         if not vive:
             fatto.append("in-play NON riparabile: non si sta giocando "

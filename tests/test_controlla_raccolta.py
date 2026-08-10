@@ -240,7 +240,7 @@ def test_l_in_play_e_riparabile_solo_se_si_gioca_ancora(monkeypatch):
     """Accendere una sessione per partite finite non recupera niente: sarebbe
     un runner acceso a vuoto e un «riparato» falso nel rapporto."""
     import fetch_smarkets_matches as fsm
-    monkeypatch.setattr(fsm, "scandaglia_live", lambda: ([], 40))
+    monkeypatch.setattr(fsm, "scandaglia_live", lambda: ([], 40, []))
     fatto = cr.ripara({"in_play"})
     assert any("NON riparabile" in x for x in fatto)
     assert any("non si sta giocando" in x for x in fatto)
@@ -249,7 +249,7 @@ def test_l_in_play_e_riparabile_solo_se_si_gioca_ancora(monkeypatch):
 def test_se_si_gioca_ancora_la_sessione_si_accende(monkeypatch):
     import fetch_smarkets_matches as fsm
     monkeypatch.setattr(fsm, "scandaglia_live",
-                        lambda: ([{"nome": "A vs B"}] * 7, 40))
+                        lambda: ([{"nome": "A vs B"}] * 7, 40, []))
     chiamate = []
     monkeypatch.setattr(cr, "_accendi_workflow",
                         lambda n: chiamate.append(n) or True)
@@ -263,7 +263,7 @@ def test_un_dispatch_fallito_e_DETTO_non_taciuto(monkeypatch):
     «riparato» e il buco resterebbe, che e' il caso peggiore — la falsa
     sicurezza al posto del problema."""
     import fetch_smarkets_matches as fsm
-    monkeypatch.setattr(fsm, "scandaglia_live", lambda: ([{"nome": "x"}], 1))
+    monkeypatch.setattr(fsm, "scandaglia_live", lambda: ([{"nome": "x"}], 1, []))
     monkeypatch.setattr(cr, "_accendi_workflow", lambda n: False)
     fatto = cr.ripara({"in_play"})
     assert any("NON accesa" in x for x in fatto)
