@@ -18181,9 +18181,32 @@ limite di copertura **della fonte**. Il test ora li nomina: rilassarlo a
 «copertura > 99%» avrebbe lasciato passare in silenzio anche una raccolta futura
 che ne perde duecento.
 
+### Un terzo guardiano, che era già rosso su `main`
+
+Al merge con la sessione parallela la suite è uscita rossa su un test che con
+la Bundesliga non c'entra nulla:
+`test_il_join_col_listino_non_dipende_dalla_convenzione_di_smarkets`. Verificato
+in un worktree sul commit di `origin/main` **prima** del mio merge: era **già
+rosso lì**, quindi non l'ho rotto io — e infatti la causa è la Fase 142, che ha
+allargato il listino Smarkets a coppe, preliminari UEFA e cadetterie.
+
+Il test pretendeva che **ogni** squadra del listino avesse una scheda
+d'anagrafica. Da quando il perimetro comprende Championship, Bundesliga 2,
+Ligue 2, Segunda e preliminari europei, **150 squadre su 246** non ce l'hanno —
+e non perché il join sia rotto, ma perché per quelle competizioni un'anagrafica
+di club **non esiste**. Sono due cose diverse, e confonderle rende la guardia
+inutile in entrambe le direzioni: non vede più il difetto vero (una squadra
+senza scheda in una lega che le schede ce l'ha — il bug della Fase 134) e
+strilla su una copertura mancante che è dichiarata.
+
+Corretti sia il test sia la guardia in `raccolta_giornaliera.py`, che ora
+contano **due** insiemi separati — `squadre_senza_anagrafica` (difetto, esce
+rosso) e `squadre_fuori_anagrafica` (copertura, si dichiara e basta) — e
+ricavano dai dati quali leghe l'anagrafica ce l'hanno, invece di elencarle.
+
 **Risultato.** 4 leghe su 5 con il dato per giocatore, **44.894 righe
 giocatore-partita**. Resta fuori la **Ligue 1**, l'unica cartella con il solo
-dato di squadra. Suite: 1.265 → **1.274** verdi.
+dato di squadra. Suite: **1.577 verdi** dopo il merge (era rossa di 1 all'arrivo).
 
 **Lezione.** Un dato che «non torna» contro una seconda fonte non è ancora un
 errore: è una **domanda**. Qui la risposta stava in un terzo foglio che nessuno

@@ -197,7 +197,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
 <<<<<<< HEAD
-- [ ] **Test** — mantieni `pytest` verde (**1.274 verdi** al 10/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.577 verdi** al 10/08/2026); aggiungi
 =======
 - [ ] **Test** — mantieni `pytest` verde (**1.538 verdi** al 08/08/2026); aggiungi
 >>>>>>> origin/main
@@ -275,7 +275,7 @@ python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
 <<<<<<< HEAD
-python -m pytest                       # test (1.274 verdi al 10/08/2026)
+python -m pytest                       # test (1.577 verdi al 10/08/2026)
 =======
 python -m pytest                       # test (1.538 verdi al 08/08/2026)
 >>>>>>> origin/main
@@ -550,7 +550,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
 <<<<<<< HEAD
-tests/           test unitari (1.274 verdi al 10/08/2026), fra cui i guardiani
+tests/           test unitari (1.577 verdi al 10/08/2026), fra cui i guardiani
 =======
 tests/           test unitari (1.538 verdi al 08/08/2026; ⚠️ 1 ROSSO aperto:
                  test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_

@@ -288,11 +288,26 @@ def main(argv=None) -> None:
     # poi si esce rossi.
     squadre = {(p["lega"], p["casa"]) for p in partite} | {
         (p["lega"], p["ospite"]) for p in partite}
+    # ⚠️ Due cose diverse, e confonderle rende la guardia inutile (Fase 145).
+    # Da quando il listino comprende coppe, preliminari UEFA e cadetterie
+    # (Fase 142), la maggioranza delle squadre viene da competizioni per cui
+    # un'anagrafica di club NON ESISTE: e' un limite di copertura dichiarato,
+    # non un join rotto. Il difetto vero — quello della Fase 134 — e' una
+    # squadra SENZA scheda in una lega che le schede ce l'ha: li' vuol dire
+    # che la borsa ha rinominato qualcosa e il join si e' scollegato in
+    # silenzio. Solo quello fa uscire rossi.
+    leghe_con_anagrafica = {lega for lega, _ in schede}
     orfane = sorted(f"{lega}/{nome}" for lega, nome in squadre
-                    if (lega, _canonico(nome)) not in schede)
+                    if lega in leghe_con_anagrafica
+                    and (lega, _canonico(nome)) not in schede)
+    fuori_perimetro = sorted(f"{lega}/{nome}" for lega, nome in squadre
+                             if lega not in leghe_con_anagrafica)
     if orfane:
-        print(f"⚠️ {len(orfane)}/{len(squadre)} squadre del listino senza "
-              f"anagrafica: {orfane[:10]}")
+        print(f"⚠️ {len(orfane)} squadre senza anagrafica in leghe che ce l'hanno: "
+              f"{orfane[:10]}")
+    if fuori_perimetro:
+        print(f"   ({len(fuori_perimetro)}/{len(squadre)} squadre vengono da "
+              f"competizioni fuori dall'anagrafica: atteso, non e' un guasto)")
 
     record: list[dict] = []
     for p in partite:
@@ -370,6 +385,9 @@ def main(argv=None) -> None:
         # scollegato deve restare RICONOSCIBILE il giorno dopo, altrimenti
         # l'archivio non distingue «anagrafica assente» da «tutto a posto».
         "squadre_senza_anagrafica": orfane,
+        # Distinto da sopra: queste non hanno una scheda perche' la loro
+        # competizione non e' coperta, non perche' il join si sia rotto.
+        "squadre_fuori_anagrafica": fuori_perimetro,
         "record": record,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     (d / "fonti.json").write_text(json.dumps({

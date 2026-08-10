@@ -160,9 +160,20 @@ def test_il_join_col_listino_non_dipende_dalla_convenzione_di_smarkets():
     schede = rg._schede_club()
     squadre = ({(p["lega"], p["casa"]) for p in partite}
                | {(p["lega"], p["ospite"]) for p in partite})
-    orfane = [f"{l}/{n}" for l, n in squadre
-              if (l, rg._canonico(n)) not in schede]
-    assert not orfane, f"{len(orfane)}/{len(squadre)} squadre senza anagrafica: {orfane[:10]}"
+
+    # ⚠️ La proprieta' si verifica DOVE l'anagrafica esiste (rettifica Fase 145).
+    # Da quando il listino comprende coppe, preliminari UEFA e cadetterie
+    # (Fase 142), la maggioranza delle squadre viene da competizioni che
+    # un'anagrafica di club non ce l'hanno proprio: pretenderla li' faceva
+    # fallire questo test per un motivo che con la rinomina di Smarkets non
+    # c'entra nulla — ed era rosso su `main`. Il difetto che il test deve
+    # ancora vedere e' l'altro: una squadra senza scheda in una lega che le
+    # schede ce l'ha.
+    leghe_con_anagrafica = {lega for lega, _ in schede}
+    coperte = [(l, n) for l, n in squadre if l in leghe_con_anagrafica]
+    assert coperte, "nessuna squadra delle leghe modellate nel listino"
+    orfane = [f"{l}/{n}" for l, n in coperte if (l, rg._canonico(n)) not in schede]
+    assert not orfane, f"{len(orfane)}/{len(coperte)} squadre senza anagrafica: {orfane[:10]}"
 
 
 def test_la_guardia_scatta_se_gli_alias_spariscono(monkeypatch):
