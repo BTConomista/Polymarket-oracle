@@ -432,3 +432,50 @@ def test_un_buco_VECCHIO_suona_lo_stesso(archivio):
     _scrivi(pre, kick - dt.timedelta(minutes=40), {"entro_ore": 2, "righe": righe})
     r = cr.controlla(adesso=ADESSO)
     assert any(p.startswith("C)") for p in r["problemi"]), r["problemi"]
+
+
+# --------------------------------------------------------------------------
+# IL NOME DEL FILE, E IL SUFFISSO CHE HA ACCECATO IL GUARDIANO (Fase 151)
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("nome,atteso", [
+    ("2026-08-11T13-49-21.json.gz", "2026-08-11T13:49:21+00:00"),
+    # ⚠️ IL CASO VERO. Dal 09/08 i file portano il numero del gemello in coda,
+    # e il parser di prima moriva su questo: `13:49:21:g1` non e' un orario.
+    ("2026-08-11T13-49-21-g1.json.gz", "2026-08-11T13:49:21+00:00"),
+    ("2026-08-11T13-49-21-g4.json.gz", "2026-08-11T13:49:21+00:00"),
+    ("2026-08-11T13-49-21-g0.json.gz", "2026-08-11T13:49:21+00:00"),
+    # e qualunque suffisso futuro: il nome e' un'etichetta a cui si aggiungono
+    # pezzi, non una forma fissa
+    ("2026-08-11T13-49-21-qualsiasi-cosa.json", "2026-08-11T13:49:21+00:00"),
+    ("2026-08-11T13-49-21.json", "2026-08-11T13:49:21+00:00"),
+])
+def test_l_istante_si_legge_anche_col_suffisso(nome, atteso):
+    assert cr.istante_del_file(nome).isoformat() == atteso
+
+
+@pytest.mark.parametrize("nome", [
+    "README.md", "manifest.json", "2026-08-11.json", "", "T13-49-21.json",
+])
+def test_un_nome_senza_istante_non_esplode_e_non_inventa(nome):
+    """None e non un istante finto: un file senza data va SALTATO, non
+    datato a caso — con una data inventata finirebbe dentro o fuori
+    finestra a seconda del capriccio del parser."""
+    assert cr.istante_del_file(nome) is None
+
+
+def test_i_file_dei_gemelli_finiscono_dentro_la_finestra(tmp_path):
+    """Il test che sarebbe servito. Con il parser di prima questa `carica`
+    ritornava una lista VUOTA, la copertura in-play usciva 0% e il guardiano
+    gridava «la sentinella non sta girando» — su un archivio pieno.
+
+    Un controllo che sbaglia cosi' e' peggio di uno assente: non tace, dice
+    la cosa sbagliata con la voce di un guasto vero."""
+    for nome in ("2026-08-11T10-00-14-g1", "2026-08-11T13-49-21-g1",
+                 "2026-08-11T09-00-00"):
+        arch.scrivi(tmp_path / f"{nome}.json",
+                        {"righe": [], "partite": ["A vs B"], "gemello": 1})
+    da = dt.datetime(2026, 8, 11, tzinfo=dt.timezone.utc)
+    letti = cr.carica(tmp_path, da)
+    assert len(letti) == 3, [d["_file"] for d in letti]
+    assert {d["_quando"].hour for d in letti} == {9, 10, 13}

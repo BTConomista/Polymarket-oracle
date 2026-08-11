@@ -154,3 +154,30 @@ def test_ogni_gemello_passa_il_PROPRIO_numero_allo_script():
         passi = _wf(n)["jobs"]["raccogli"]["steps"]
         raccolta = next(s for s in passi if "Raccogli" in (s.get("name") or ""))
         assert f"--gemello {n}" in raccolta["run"], f"gemello {n} passa un numero sbagliato"
+
+
+# --------------------------------------------------------------------------
+# LO ZERO: il giro di riparazione, fuori dall'esperimento
+# --------------------------------------------------------------------------
+
+def test_lo_zero_lavora_sempre_anche_a_prova_spenta(monkeypatch):
+    """Il giro che il cane da guardia lancia per riparare un buco non ha un
+    livello nell'esperimento: deve partire e basta. Se dipendesse dal
+    calendario, la riparazione smetterebbe di funzionare nei giorni in cui la
+    prova prevede pochi gemelli — cioe' proprio quando serve di piu'."""
+    for giorno in (gp.INIZIO, gp.INIZIO + dt.timedelta(days=6),
+                   gp.INIZIO + dt.timedelta(days=99)):
+        assert gp.attivo_oggi(0, giorno) is True
+    monkeypatch.setattr(gp, "PROVA_ATTIVA", False)
+    assert gp.attivo_oggi(0, gp.INIZIO) is True
+
+
+def test_lo_zero_non_e_un_gemello_e_non_sposta_i_livelli():
+    """Il conto dei gemelli previsti non deve cambiare per l'esistenza dello
+    zero: e' fuori dall'esperimento, non un livello in piu'."""
+    for giorno_n, attesi in gp.CALENDARIO.items():
+        oggi = gp.INIZIO + dt.timedelta(days=giorno_n - 1)
+        assert gp.gemelli_previsti(oggi) == attesi
+        # e i gemelli attivi restano esattamente 1..attesi
+        attivi = [n for n in range(1, 5) if gp.attivo_oggi(n, oggi)]
+        assert attivi == list(range(1, attesi + 1))

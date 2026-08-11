@@ -12,21 +12,39 @@ name: Raccolta quote IN-PLAY Smarkets (Fase 143)
 #
 # SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
 
+# ⚠️ IL CRON E' SPENTO DAL 11/08/2026, E TORNA IL 24/08 (fine della prova).
+#
+# PERCHE'. Questo workflow e' il raccoglitore in-play originale (Fase 143), e
+# i quattro `gemello-N.yml` fanno **la stessa identica cosa**. Finche' erano
+# accesi entrambi, un giorno che il calendario della prova chiama «N=1» aveva
+# in realta' **due** raccoglitori -- e per giunta indistinguibili, perche'
+# `--gemello` vale 1 di default e quindi anche le sessioni di questo workflow
+# si firmavano `gemello 1`. Misurato l'11/08: delle 8 sessioni attribuite al
+# gemello 1, **3 venivano da qui**.
+#
+# E' esattamente il fattore confuso che la Fase 147 esiste per evitare
+# (§1.2: «una cosa alla volta, e si misura»). Non si puo' misurare se
+# aggiungere gemelli aumenta i rifiuti mentre un quinto raccoglitore lavora
+# fuori conteggio.
+#
+# COSA RESTA ACCESO. `workflow_dispatch`, che e' il canale con cui il cane da
+# guardia RIPARA (`controlla_raccolta.ripara` lancia proprio questo workflow):
+# spegnere anche quello significherebbe togliere l'autoriparazione per
+# aggiustare una misura, che sarebbe uno scambio pessimo. Quando parte da li'
+# si firma `--gemello 0` -- non e' un gemello, e' il giro di riparazione, e
+# nella tabella del guardiano compare su una riga sua.
+#
+# IL CRON DI PRIMA, da rimettere il 24/08:
+#     - cron: '*/30 * * * *'
+# LA SENTINELLA, ogni 30 minuti. Non e' lei a raccogliere ogni 2 minuti: e'
+# lei ad ACCENDERE un job che poi cicla al suo interno. Perche' non un cron
+# ogni 2 minuti, che sarebbe la cosa ovvia: il cron di GitHub parte con
+# **30-40 minuti di ritardo** (misurato l'08/08/2026: i giri delle :07 del
+# workflow gemello sono partiti alle 08:54, 09:49, 10:45, 11:37). Un cron ogni
+# 2 minuti sarebbe altrettanto in ritardo, e in piu' i run si accoderebbero e
+# si cancellerebbero a vicenda. Dentro un job gia' acceso, invece,
+# `time.sleep` e' esatto: solo l'AVVIO e' impreciso.
 on:
-  schedule:
-    # LA SENTINELLA, ogni 30 minuti. Non e' lei a raccogliere ogni 2 minuti:
-    # e' lei ad ACCENDERE un job che poi cicla al suo interno.
-    #
-    # Perche' non un cron ogni 2 minuti, che sarebbe la cosa ovvia: il cron di
-    # GitHub parte con **30-40 minuti di ritardo** (misurato l'08/08/2026: i
-    # giri delle :07 del workflow gemello sono partiti alle 08:54, 09:49,
-    # 10:45, 11:37). Un cron ogni 2 minuti sarebbe altrettanto in ritardo, e in
-    # piu' i run si accoderebbero e si cancellerebbero a vicenda. Dentro un job
-    # gia' acceso, invece, `time.sleep` e' esatto: solo l'AVVIO e' impreciso.
-    #
-    # Nelle ore senza partite del perimetro il giro costa una chiamata di
-    # listino e finisce in ~10 secondi senza scrivere niente.
-    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       durata_minuti:
@@ -98,6 +116,7 @@ jobs:
       - name: Raccogli le quote in-play
         run: |
           python scripts/fetch_smarkets_live.py \
+            --gemello 0 \
             --durata-minuti "${{ github.event.inputs.durata_minuti || 300 }}" \
             --ogni-nucleo   "${{ github.event.inputs.ogni_nucleo   || 2 }}" \
             --ogni-pieno    "${{ github.event.inputs.ogni_pieno    || 15 }}"

@@ -83,7 +83,17 @@ def attivo_oggi(gemello: int, oggi: dt.date | None = None) -> bool:
     I gemelli si accendono in ordine: al livello 2 lavorano l'1 e il 2, non
     una coppia a caso. Cosi' il gemello 1 e' sempre attivo e la sua serie e'
     continua per tutti e quattordici i giorni -- e' il termine di paragone.
+
+    ⚠️ LO ZERO NON E' UN GEMELLO: e' il giro di RIPARAZIONE, quello che il
+    cane da guardia lancia a mano quando trova un buco
+    (`smarkets-live.yml`, `workflow_dispatch`). Lavora **sempre**, calendario
+    o no, perche' riparare un buco non e' un livello dell'esperimento -- e si
+    firma `0` proprio per restare **fuori** dal conteggio per gemello. Fino
+    all'11/08/2026 si firmava `1` come tutti, e per due giorni la misura del
+    gemello 1 ha pesato tre sessioni che non erano sue.
     """
+    if gemello == 0:
+        return True
     return 1 <= gemello <= gemelli_previsti(oggi)
 
 

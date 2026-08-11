@@ -252,25 +252,62 @@ def test_la_sessione_si_spegne_da_sola_quando_non_si_gioca():
     assert live.GIRI_VUOTI_PER_SPEGNERSI * live.OGNI_NUCLEO >= 15
 
 
+def _workflow(nome):
+    import yaml
+    return yaml.safe_load(
+        (Path(__file__).resolve().parents[1] / ".github" / "workflows"
+         / nome).read_text())
+
+
+def _periodo_minuti(cron: str) -> int:
+    """Ogni quanti minuti scatta questo cron (solo le due forme che usiamo)."""
+    import re
+    minuti = cron.split()[0]
+    if minuti.startswith("*/"):
+        return int(minuti[2:])
+    return 60                       # `N * * * *`: una volta l'ora
+
+
 def test_la_sessione_dura_piu_del_periodo_della_sentinella():
     """Dalla Fase 144 la sessione dura MOLTO piu' del periodo: la sentinella
     non e' piu' un metronomo ma un accendino, e un solo cron andato a buon
     fine copre un blocco intero. La disuguaglianza resta la garanzia minima:
     se la sessione fosse piu' corta del periodo, ogni ritardo del cron
-    (30-40 minuti, misurato) diventerebbe un buco."""
-    import re
-    import yaml
+    (30-40 minuti, misurato) diventerebbe un buco.
 
+    ⚠️ Dalla Fase 151 la garanzia si verifica sui QUATTRO GEMELLI e non piu'
+    su `smarkets-live.yml`: il cron di quello e' spento per la durata della
+    prova (era un quinto raccoglitore fuori conteggio, vedi Fase 151), e un
+    test che guardava solo lui sarebbe diventato un test su niente.
+    """
+    for n in (1, 2, 3, 4):
+        wf = _workflow(f"gemello-{n}.yml")
+        periodo = _periodo_minuti(wf[True]["schedule"][0]["cron"])
+        assert live.DURATA_MINUTI > periodo, (
+            f"gemello {n}: sessione {live.DURATA_MINUTI} min <= periodo "
+            f"{periodo} min: un cron in ritardo lascerebbe un buco")
+        lavoro, = wf["jobs"].values()
+        assert lavoro["timeout-minutes"] > live.DURATA_MINUTI
+
+
+def test_il_raccoglitore_originale_non_e_un_quinto_gemello():
+    """Fase 151. `smarkets-live.yml` e i `gemello-N.yml` fanno la stessa cosa:
+    accesi insieme, un giorno «N=1» ne aveva due, e per giunta indistinguibili
+    (`--gemello` vale 1 di default, quindi anche le sue sessioni si firmavano
+    `gemello 1` — 3 su 8 l'11/08). Per la durata della prova il suo cron e'
+    spento e cio' che parte a mano si firma `--gemello 0`."""
     testo = (Path(__file__).resolve().parents[1] / ".github" / "workflows"
              / "smarkets-live.yml").read_text()
-    wf = yaml.safe_load(testo)
-    cron = wf[True]["schedule"][0]["cron"]
-    periodo = int(re.match(r"\*/(\d+) ", cron).group(1))
-    assert live.DURATA_MINUTI > periodo, (
-        f"sessione {live.DURATA_MINUTI} min <= periodo sentinella {periodo} min: "
-        f"un cron in ritardo lascerebbe un buco")
-    # e il job dev'essere piu' lungo della sessione, o la tronca lui
-    assert wf["jobs"]["raccogli"]["timeout-minutes"] > live.DURATA_MINUTI
+    wf = _workflow("smarkets-live.yml")
+    assert "schedule" not in wf[True], (
+        "il cron del raccoglitore originale e' tornato acceso: se la prova a "
+        "gemelli e' finita va bene, ma allora aggiorna anche questo test")
+    assert "workflow_dispatch" in wf[True], (
+        "il dispatch e' il canale con cui il cane da guardia RIPARA: "
+        "spegnerlo toglie l'autoriparazione")
+    assert "--gemello 0" in testo, (
+        "senza `--gemello 0` le sessioni di riparazione tornano a firmarsi "
+        "come il gemello 1 e a inquinarne la misura")
 
 
 # ---------------------------------------------------------------------------

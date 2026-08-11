@@ -65,6 +65,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -129,6 +130,36 @@ def _iso(s):
         return None
 
 
+# L'istante nel nome del file: `2026-08-11T13-49-21` con QUALUNQUE coda dopo.
+#
+# ⚠️ LA CODA E' IL PUNTO, ed e' costata due giorni di cecita'. La prima
+# stesura faceva `base.split("T")` e poi `o.replace("-", ":")`: su
+# `2026-08-11T13-49-21-g1` produce `13:49:21:g1`, che non e' un orario, quindi
+# `ValueError`, quindi `continue`. Dal 09/08 alle 20:02 -- quando i file hanno
+# cominciato a portare il suffisso del gemello -- il guardiano ha smesso di
+# vedere **ogni singolo file in-play**, e ha continuato a dire «copertura 0%»
+# senza sbagliare un conto: contava zero su un insieme vuoto.
+#
+# E' il modo peggiore in cui un controllo puo' rompersi: non tace, **grida**,
+# e grida esattamente il messaggio che ci si aspetta da un guasto vero. Chi
+# leggeva la mail andava a cercare la sentinella, non il parser.
+_ISTANTE_NEL_NOME = re.compile(r"^(\d{4}-\d{2}-\d{2})T(\d{2})-(\d{2})-(\d{2})")
+
+
+def istante_del_file(nome: str) -> dt.datetime | None:
+    """L'istante di raccolta dal nome del file, o None se non lo porta.
+
+    Tollera qualunque suffisso dopo i secondi (`-g1`, `-prova`, ...): il nome
+    e' un'etichetta a cui si aggiungono pezzi nel tempo, e un parser che
+    pretende la forma esatta si rompe al primo pezzo nuovo.
+    """
+    m = _ISTANTE_NEL_NOME.match(nome)
+    if not m:
+        return None
+    g, hh, mm, ss = m.groups()
+    return dt.datetime.fromisoformat(f"{g}T{hh}:{mm}:{ss}+00:00")
+
+
 def carica(cartella: Path, da: dt.datetime) -> list[dict]:
     """I file dell'archivio toccati dopo `da`, gia' letti.
 
@@ -138,19 +169,13 @@ def carica(cartella: Path, da: dt.datetime) -> list[dict]:
     """
     fuori = []
     for f in _archivio.snapshots(cartella):
-        quando = _iso(f.name.split(".")[0].replace("T", "T").replace("-", ":", 0))
-        # il nome e' YYYY-MM-DDTHH-MM-SS: si rimettono i due punti nell'ora
-        base = f.name.split(".")[0]
-        try:
-            g, o = base.split("T")
-            quando = dt.datetime.fromisoformat(f"{g}T{o.replace('-', ':')}+00:00")
-        except ValueError:
+        quando = istante_del_file(f.name)
+        if quando is None or quando < da:
             continue
-        if quando >= da:
-            d = _archivio.leggi(f)
-            d["_file"] = f.name
-            d["_quando"] = quando
-            fuori.append(d)
+        d = _archivio.leggi(f)
+        d["_file"] = f.name
+        d["_quando"] = quando
+        fuori.append(d)
     return fuori
 
 

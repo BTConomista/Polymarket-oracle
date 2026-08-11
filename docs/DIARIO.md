@@ -18901,3 +18901,149 @@ Tutti i numeri di questa fase si ri-calcolano con:
 ```bash
 python scripts/_run_stato_2526.py
 ```
+
+---
+
+## Fase 151 — Il guardiano diceva «copertura 0%» e aveva perso di vista l'archivio
+
+**Obiettivo.** Rispondere a una domanda dell'utente — «abbiamo un primo
+responso di come ha lavorato il primo gemello?» — e trovare, provando a
+rispondere, che **lo strumento di misura era rotto da due giorni**.
+
+**Il fatto.** Il cane da guardia (Fase 144) riportava, l'11/08 alle 19:02:
+
+```
+file pre-partita: 26 | in-play: 2
+copertura in-play: 0%
+⛔ C) in-play su 0/1 partite giocate: la sentinella non sta girando
+```
+
+L'archivio, nello stesso istante, conteneva **8 sessioni in-play e 54.878
+righe**. Il guardiano non stava sbagliando un conto: contava **zero su un
+insieme vuoto**, perché non era riuscito a leggere un solo file.
+
+**La causa, e perché è il tipo peggiore di difetto.** `carica()` ricavava
+l'istante dal nome del file così:
+
+```python
+g, o = base.split("T")                      # "2026-08-11", "13-49-21-g1"
+dt.datetime.fromisoformat(f"{g}T{o.replace('-', ':')}+00:00")
+#                                 -> "2026-08-11T13:49:21:g1+00:00" -> ValueError
+except ValueError: continue                 # ...e il file sparisce, in silenzio
+```
+
+Dal **09/08 alle 20:02** — quando i file hanno cominciato a portare il
+suffisso del gemello, `-g1` — ogni singolo file in-play è stato scartato.
+Il difetto non è che il controllo tacesse: è che **gridava**, e gridava
+esattamente il messaggio che ci si aspetta da un guasto vero («la sentinella
+non sta girando»). Chi leggeva la mail andava a cercare il cron, non il
+parser. È la R6 applicata al processo: il finto pieno del controllo non è
+l'allarme mancato, è l'allarme che sembra giusto.
+
+**Il secondo difetto, trovato guardando la stessa tabella.** Il raccoglitore
+in-play originale (`smarkets-live.yml`, Fase 143) e i quattro `gemello-N.yml`
+fanno **la stessa cosa**, ed erano accesi insieme. Peggio: `--gemello` vale 1
+di default, quindi le sessioni del workflow originale si firmavano
+`gemello 1`. Delle 8 sessioni attribuite al gemello 1, **3 venivano da lì**.
+Un giorno che il calendario chiama «N=1» aveva in realtà due raccoglitori, e
+indistinguibili — cioè il fattore confuso che la Fase 147 esiste per evitare.
+
+**Scelta.** (1) Istante letto con una regex che tollera qualunque coda
+(`istante_del_file`), con tre test sui suffissi e uno che carica una cartella
+di file `-gN`. (2) Cron del workflow originale **spento fino al 24/08**, fine
+della prova; `workflow_dispatch` resta acceso perché è il canale con cui il
+guardiano ripara — togliere l'autoriparazione per aggiustare una misura
+sarebbe uno scambio pessimo. Quando parte da lì si firma **`--gemello 0`**:
+non è un gemello, è il giro di riparazione, e sta su una riga sua.
+
+**Risultato.** Stesso comando, stesso archivio, dopo la correzione:
+
+```
+file pre-partita: 26 | in-play: 10
+copertura in-play: 100%
+ gemello  sessioni  giri  partite  mercati persi  ritmo max
+       1         8   680       15             39       0.39
+✅ nessun buco
+```
+
+E il primo responso sul gemello, che era il motivo per cui si guardava:
+**3,55 rifiuti per mille** mercati chiesti (39 persi su 10.982), con
+l'intervallo fra richieste rimasto al **minimo (0,35 s) in 5 sessioni su 6** —
+il limitatore adattivo non ha quasi mai dovuto rallentare. Copertura dell'11/08
+dalle 14:40 alle 18:47 **senza un buco superiore a 5 minuti**.
+
+**Limite dichiarato.** I giorni 1 e 2 della prova (10-11/08) misurano
+«1 gemello **+ il raccoglitore originale**», non «1 gemello». Il dato non si
+può ripulire a posteriori (R3: le righe già scritte dicono `gemello 1` e
+restano così). Il livello N=1 ha però altri due giorni puliti in seconda
+settimana (12 e 13, cioè 21-22/08): il confronto si farà lì, e i primi due
+giorni valgono come rodaggio.
+
+**Lezione.** Un controllo automatico è codice come tutto il resto e va
+**testato contro i dati che vedrà davvero**, non contro quelli che vedeva il
+giorno in cui è stato scritto. Qui è bastato aggiungere due caratteri al nome
+di un file — una modifica che nessuno avrebbe classificato come rischiosa —
+per accecare il guardiano; e siccome il guardiano continuava a parlare,
+l'unico modo di accorgersene era che qualcuno andasse a contare i file a mano.
+
+### 📐 Il modello in dettaglio
+
+**(1) Il parser, prima e dopo.** La forma del nome è
+`YYYY-MM-DDTHH-MM-SS[coda].json[.gz]`. La versione rotta assumeva coda vuota
+e faceva una sostituzione **globale** dei trattini nella parte oraria:
+
+```
+o.replace("-", ":")   su "13-49-21-g1"  ->  "13:49:21:g1"     ✗
+```
+
+La versione nuova àncora l'istante all'inizio e ignora tutto il resto:
+
+```
+^(\d{4}-\d{2}-\d{2})T(\d{2})-(\d{2})-(\d{2})
+```
+
+La differenza non è di robustezza generica: è che il primo legge il nome come
+una **forma fissa**, il secondo come un **prefisso più metadati**. I nomi di
+file di questo progetto sono la seconda cosa — `-g1` è arrivato alla Fase 147
+e non sarà l'ultimo.
+
+**(2) Perché la copertura usciva esattamente 0% e non un numero strano.**
+
+```
+copertura = |coperte ∩ giudicabili| / |giudicabili|
+coperte   = ⋃ partite dichiarate nei file in-play caricati
+```
+
+Con zero file caricati, `coperte = ∅`, quindi il numeratore è 0 **qualunque**
+sia il denominatore. Un guasto vero della sentinella darebbe lo stesso 0: i
+due stati producono lo stesso numero, ed è per questo che la diagnosi era
+indistinguibile dall'esterno. Il conteggio `file in-play: 2` era l'unico
+indizio, e non era letto come tale.
+
+**(3) Il tasso di rifiuto, e perché si normalizza così.**
+
+```
+r = 1000 · persi / (letti + persi)
+  = 1000 · 39 / (10.943 + 39) = 3,55 ‰
+```
+
+`letti` sono le terne distinte (giro, partita, mercato) presenti nelle righe —
+cioè le letture riuscite — e `persi` viene da `giri_incompleti`, che ogni file
+dichiara. Il denominatore è la somma dei due, non il numero di giri: un giro
+con 13 partite chiede ~40 volte i mercati di un giro con una partita, e
+dividere per i giri misurerebbe il calendario invece del carico (§1.2, ed è la
+stessa normalizzazione della Fase 147).
+
+**(4) Perché la pausa fra le 13:15 e le 14:40 non è costata niente.** La
+sessione delle 10:00 si è spenta alle 13:15 per `GIRI_VUOTI_PER_SPEGNERSI`
+(10 giri a vuoto ≈ 20'), e l'ultima riga raccolta — su **entrambi** i
+perimetri — è delle 13:08. La successiva apre alle 14:40, che è
+
+```
+t_apertura = calcio d'inizio − ORIZZONTE_PRE = 15:00 − 20' = 14:40
+```
+
+L'intervallo scoperto, 13:08 → 14:40, contiene **zero partite in corso** del
+nostro perimetro: la copertura non ha un buco, ha un intervallo in cui non
+c'era niente da coprire. Il numero da guardare non è la durata della pausa ma
+l'insieme delle partite live in quella finestra, e quell'insieme è vuoto.
