@@ -111,12 +111,16 @@ def test_B_una_partita_giocata_senza_prezzo_di_chiusura_suona(archivio):
 def test_C_il_buco_dell_08_08_la_sentinella_che_non_gira(archivio):
     """IL CASO VERO, quello che ha aperto la Fase 144: venticinque partite in
     corso e il raccoglitore in-play a zero run. Nessun rosso da nessuna parte,
-    e se n'e' accorto l'utente."""
+    e se n'e' accorto l'utente.
+
+    ⚠️ Kickoff a -8h e non a -2h: dalla Fase 146 le partite delle ultime 6 ore
+    non si giudicano (una sessione committa alla fine e puo' essere ancora
+    accesa). Il buco resta lo stesso, si vede solo un giro dopo."""
     pre, live = archivio
-    kick = ADESSO - dt.timedelta(hours=2)
+    kick = ADESSO - dt.timedelta(hours=8)
     righe = [_riga(f"A{i} vs B{i}", kick) for i in range(25)]
     _scrivi(pre, ADESSO - dt.timedelta(hours=10), {"entro_ore": 0, "righe": righe})
-    _scrivi(pre, kick - dt.timedelta(hours=1), {"entro_ore": 2, "righe": righe})
+    _scrivi(pre, kick - dt.timedelta(minutes=40), {"entro_ore": 2, "righe": righe})
     # in-play: NIENTE
     r = cr.controlla(adesso=ADESSO)
     assert r["partite_giocate_in_finestra"] == 25
@@ -128,7 +132,7 @@ def test_C_una_copertura_in_play_parziale_ma_decente_non_suona(archivio):
     """Il live e' nato ieri e le sessioni possono legittimamente non coprire
     tutto: la soglia e' esplicita e generosa, o l'allarme diventa rumore."""
     pre, live = archivio
-    kick = ADESSO - dt.timedelta(hours=2)
+    kick = ADESSO - dt.timedelta(hours=8)      # fuori dalla finestra cieca
     righe = [_riga(f"A{i} vs B{i}", kick) for i in range(10)]
     _scrivi(pre, ADESSO - dt.timedelta(hours=10), {"entro_ore": 0, "righe": righe})
     _scrivi(pre, kick - dt.timedelta(hours=1), {"entro_ore": 2, "righe": righe})
@@ -394,3 +398,37 @@ def test_l_anticipo_dice_la_QUALITA_non_solo_la_presenza(archivio):
     r = cr.controlla(adesso=ADESSO)
     assert not r["senza_chiusura"], "sono coperte..."
     assert r["anticipo_chiusura_min"]["mediana"] == 170.0, "...ma male"
+
+
+def test_le_partite_APPENA_giocate_non_si_giudicano(archivio):
+    """Il falso allarme dell'11/08: quattro qualificazioni UEFA segnalate come
+    scoperte mentre erano ancora in corso, e la sessione che le stava
+    raccogliendo era accesa. Una sessione dura 5 ore e committa alla FINE:
+    contare come mancante cio' che non e' ancora stato committato fa gridare
+    al lupo ogni pomeriggio."""
+    pre, live = archivio
+    vecchia = ADESSO - dt.timedelta(hours=20)
+    recente = ADESSO - dt.timedelta(hours=1)
+    righe = [_riga("vecchia vs x", vecchia)] + \
+            [_riga(f"recente{i} vs y", recente) for i in range(4)]
+    _scrivi(pre, ADESSO - dt.timedelta(hours=22), {"entro_ore": 0, "righe": righe})
+    _scrivi(pre, recente - dt.timedelta(minutes=40), {"entro_ore": 2, "righe": righe})
+    _scrivi(live, vecchia, {"partite": ["vecchia vs x"], "righe": []})
+
+    r = cr.controlla(adesso=ADESSO)
+    assert r["partite_non_ancora_giudicabili"] == 4
+    assert r["copertura_inplay"] == 1.0, "l'unica giudicabile e' coperta"
+    assert not any(p.startswith("C)") for p in r["problemi"]), r["problemi"]
+    assert any("non ancora giudicabili" in n for n in r["note"]), \
+        "ma dev'essere DETTO che sono in attesa, non taciuto"
+
+
+def test_un_buco_VECCHIO_suona_lo_stesso(archivio):
+    """La cecita' sulle ultime 6 ore non deve diventare cecita' e basta."""
+    pre, live = archivio
+    kick = ADESSO - dt.timedelta(hours=20)
+    righe = [_riga(f"A{i} vs B{i}", kick) for i in range(10)]
+    _scrivi(pre, ADESSO - dt.timedelta(hours=22), {"entro_ore": 0, "righe": righe})
+    _scrivi(pre, kick - dt.timedelta(minutes=40), {"entro_ore": 2, "righe": righe})
+    r = cr.controlla(adesso=ADESSO)
+    assert any(p.startswith("C)") for p in r["problemi"]), r["problemi"]

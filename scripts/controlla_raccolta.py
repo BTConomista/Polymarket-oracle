@@ -84,6 +84,24 @@ ORE_FINESTRA = 36          # quanto indietro si guarda per le partite giocate
 ORE_CHIUSURA = 3           # «chiusura» = un prezzo entro N ore dal via
 QUOTA_INPLAY_MINIMA = 0.5  # sotto questa frazione di partite coperte, si segnala
 
+# ⚠️ QUANTO INDIETRO BISOGNA GUARDARE PERCHE' L'IN-PLAY SIA GIUDICABILE.
+#
+# Una sessione in-play dura fino a 5 ore e **committa solo alla fine**: cio'
+# che ha raccolto un'ora fa non e' ancora nell'archivio. Contarlo come
+# mancante fa gridare al lupo ogni pomeriggio -- ed e' successo l'11/08, con
+# quattro qualificazioni UEFA segnalate come scoperte mentre erano in corso e
+# la sessione che le stava raccogliendo era ancora accesa.
+#
+# 6 ore = i 300 minuti della sessione piu' un margine per il commit e per il
+# ritardo del cron. Le partite piu' recenti di cosi' NON si giudicano: si
+# dichiarano «in attesa» e le guarda il controllo dopo (che gira ogni 6 ore --
+# la stessa scala, non e' un caso).
+#
+# ⚠️ Il prezzo di questa scelta e' dichiarato: il guardiano e' CIECO
+# sull'in-play delle ultime 6 ore. Un guasto che comincia adesso lo vede al
+# giro successivo, non a questo.
+ORE_INPLAY_GIUDICABILE = 6
+
 # ⚠️ QUANDO UNA CHIUSURA MANCANTE E' RUMORE E QUANDO E' UN GUASTO (Fase 145).
 #
 # Il guardiano e' stato ROSSO 5 volte su 5 da quando esiste, sempre per lo
@@ -222,10 +240,19 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
     coperte = set()
     for d in inplay:
         coperte.update(d.get("partite") or [])
-    quota = len(coperte & set(giocate)) / len(giocate) if giocate else 1.0
-    if giocate and quota < QUOTA_INPLAY_MINIMA:
+    # Solo le partite abbastanza vecchie da essere gia' state committate.
+    limite_giudicabile = adesso - dt.timedelta(hours=ORE_INPLAY_GIUDICABILE)
+    giudicabili = {p: k for p, k in giocate.items() if k <= limite_giudicabile}
+    in_attesa = len(giocate) - len(giudicabili)
+    quota = (len(coperte & set(giudicabili)) / len(giudicabili)
+             if giudicabili else 1.0)
+    if in_attesa:
+        note.append(f"C) {in_attesa} partite delle ultime "
+                    f"{ORE_INPLAY_GIUDICABILE}h non ancora giudicabili: una "
+                    f"sessione in-play dura fino a 5h e committa alla fine")
+    if giudicabili and quota < QUOTA_INPLAY_MINIMA:
         problemi.append(
-            f"C) in-play su {len(coperte & set(giocate))}/{len(giocate)} "
+            f"C) in-play su {len(coperte & set(giudicabili))}/{len(giudicabili)} "
             f"partite giocate ({quota:.0%}, soglia {QUOTA_INPLAY_MINIMA:.0%}): "
             "la sentinella non sta girando, oppure gira quando non serve.")
         riparabili.add("in_play")
@@ -294,6 +321,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             "peggiore": round(max(anticipi), 1),
         } if anticipi else None),
         "copertura_inplay": round(quota, 3),
+        "partite_non_ancora_giudicabili": in_attesa,
         "problemi": problemi,
         "note": note,
         # Cosa si puo' rimettere in piedi da soli, e cosa no. Le partite gia'
