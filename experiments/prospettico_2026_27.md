@@ -446,8 +446,11 @@ traccia.
   ×5 leghe è powered il **solo 1X2 pooled** (n₈₀ = 574); per-lega (380/306) e
   GG/NG (2.254) e O/U 2.5 (2.988) **no** — le varianti per-lega si leggono come
   accumulo, non come verdetto al 30 giugno. **Default se nessuno decide entro
-  il 15/08**: si congela la rosa completa, perché il costo è trascurabile e
-  l'omissione è irreversibile.
+  il 13/08** (il 14 è già la vigilia: serve un giorno per i controlli fissi):
+  si congela la rosa completa, perché il costo è trascurabile e l'omissione è
+  irreversibile. ⚠️ Le varianti vanno generate con **lo stesso taglio dei
+  dati** dell'M1 congelato il 01/08 — stesse 48 partite, stesso `as_of` — o il
+  confronto appaiato non è appaiato.
 
 #### Controlli fissi, da rifare a ogni congelamento
 

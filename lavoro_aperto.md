@@ -30,8 +30,12 @@
 > lavoro aperto elencato qui sotto in tranche, con un criterio di completamento
 > verificabile. Il numero che lo motiva: le **116 celle `⬜`** della PANCHINA
 > non sono distribuite — **Serie A 2 su 51, Premier 23, Liga 24, Bundesliga 26,
-> Ligue 1 25, pooled 16**. Una lega su cinque è finita. Se questo indice e il
-> piano divergono, vale **PANCHINA**, che è la fonte canonica di entrambi.
+> Ligue 1 25, pooled 16**. Una lega su cinque è finita. ⏰ La sua **Tranche −1**
+> scade il **14 agosto** e riguarda §1 qui sotto: congelare, accanto all'M1 già
+> congelato, una **rosa di varianti** (decisione D3), così la stagione decide
+> le celle indecise invece di limitarsi a testare la config attuale. Se questo
+> indice e il piano divergono, vale **PANCHINA**, che è la fonte canonica di
+> entrambi.
 
 > 🗓️ **Stato dell'audit al 28/07/2026.** Dei 13 punti aperti di
 > `docs/AUDIT_FASI_80_100.md` §4 ne restano **3**, e **nessuno tocca il

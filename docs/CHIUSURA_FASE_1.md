@@ -57,14 +57,26 @@ Sugli altri quattro, per metà delle righe, la configurazione di produzione non
 (§2). Ma la sproporzione fra colonne non è un artefatto di classificazione: la
 Serie A ha 2 caselle vuote, la Bundesliga 26.
 
-### (b) L'unica cosa con una scadenza scade fra pochi giorni
+### (b) L'unica cosa con una scadenza scade fra tre giorni
 
-`newseason.md` §5 fissa il **16 agosto** (parte La Liga) come termine non
-negoziabile per congelare le previsioni del test prospettico 2026-27
+Il termine non negoziabile per il test prospettico 2026-27
 (`experiments/prospettico_2026_27.md`, **Fase 78 — l'unica fase formalmente
-APERTA** secondo `lavoro_aperto.md` §1). Tutto il resto di questo piano non ha
-orologio; quello sì, e ciò che non si congela prima del fischio **non si
-recupera** (`CLAUDE.md` §5-ter).
+APERTA** secondo `lavoro_aperto.md` §1) è il **14 agosto**: è la vigilia di
+**Alaves–Getafe, 15/08 17:30 UTC**, la prima partita delle cinque leghe. ⚠️
+Non il 16 — la rettifica è della Fase 127, e viene dal listino per-partita, più
+preciso degli outright. **Oggi è l'11 agosto: restano tre giorni.**
+
+Ma una parte è già fatta, e cambia cosa resta da fare:
+
+| pezzo | stato |
+|---|---|
+| **M1** (Dixon-Coles, config ufficiale) | ✅ **congelato il 01/08** (Fase 129): 48 partite di giornata 1, 5 leghe, 26 mercati ciascuna |
+| `scripts/_run_prospettico_scoring.py` | ✅ scritto il 01/08, criteri pre-registrati nel docstring, datato in git prima di ogni partita |
+| **M2** (dalle quote di chiusura) | ⏳ si esegue a ridosso del fischio, raccoglitore a T−2h acceso |
+| **la rosa di varianti** (§4) | ⛔ **non esiste**, ed è ciò che questo documento chiede di aggiungere |
+
+Tutto il resto del piano non ha orologio; questo sì, e ciò che non si congela
+prima del fischio **non si recupera** (`CLAUDE.md` §5-ter).
 
 ### (c) Una stagione non basta per tutto, e si sa già quanto basta
 
@@ -234,9 +246,9 @@ della stagione utilizzando i dati e i modelli che usavamo nella fase 1 (e molti
 modelli della fase 1 non sono neanche stati sperimentati, soprattutto quelli
 dei campionati esteri come premier e liga)»*.
 
-È il punto più importante di tutto il documento, ed è ben posto. Congelare le
-previsioni il 16 agosto significa congelare **la configurazione di oggi**: per
-Premier e Liga, il motore liscio — che in parte è misurato (φ35 ❌ F80 in
+È il punto più importante di tutto il documento, ed è ben posto. **Ed è già
+successo**: l'M1 congelato il 01/08 usa **la configurazione di oggi** — per
+Premier e Liga il motore liscio, che in parte è misurato (φ35 ❌ F80 in
 Premier, `dp_lvl` ❌ F53) e in parte è soltanto **il default prudente su celle
 mai aperte** (23 e 24 rispettivamente).
 
@@ -251,9 +263,17 @@ stagione passa e quella casella resta 🪑 per un altro anno.
 Il test prospettico chiede che le previsioni siano **pre-registrate** prima del
 fischio. Non chiede che ce ne sia **una sola**. Quindi:
 
-> **Si congelano, prima del 16 agosto, la configurazione ufficiale *e* ogni
-> variante candidata che la Tranche 1 dovrebbe decidere. Tutte scorate a fine
+> **Si congelano, prima del 14 agosto, accanto all'M1 già congelato, tutte le
+> varianti candidate che la Tranche 1 dovrebbe decidere. Tutte scorate a fine
 > stagione sugli stessi identici incontri.**
+
+⚠️ **Vincolo tecnico da rispettare o il confronto non vale**: le varianti vanno
+generate con **la stessa procedura e lo stesso taglio dei dati** dell'M1
+congelato il 01/08 (stessa colonna `as_of`, stesse 48 partite, stessi 26
+mercati). Poiché fra il 01/08 e il 14/08 nelle cinque leghe non si gioca, il
+taglio è di fatto identico — ma va **verificato**, non assunto: se una variante
+vedesse una partita in più, il confronto appaiato smetterebbe di essere
+appaiato.
 
 Questo rovescia il problema. La stagione 2026-27 smette di essere «un test di
 un modello incompleto» e diventa **l'arbitro fuori campione proprio per le
@@ -309,10 +329,11 @@ una pista chiusa costa un esperimento; non riaprirla costa non sapere mai*.
 ### Decisione da prendere (non tecnica)
 
 Va aggiunta come **D3** nella sezione «Decisioni aperte» di
-`experiments/prospettico_2026_27.md`, con **default dichiarato**: se nessuno
-decide entro il **15/08**, si congela la rosa completa (nove varianti) — perché
-il costo è trascurabile e l'omissione è irreversibile. Stessa forma del
-timebox già usato per D2.
+`experiments/prospettico_2026_27.md` (fatto), con **default dichiarato**: se
+nessuno decide entro il **13/08**, si congela la rosa completa (nove varianti)
+— perché il costo è trascurabile e l'omissione è irreversibile. Stessa forma
+del timebox già usato per D2. Il 13 e non il 14 perché il 14 è già la vigilia:
+serve un giorno di margine per i controlli fissi.
 
 ---
 
@@ -384,16 +405,17 @@ Ogni famiglia dichiara quale delle tre vince — o che nessuna batte la baseline
 
 ## 6 · Il programma, per tranche
 
-### Tranche −1 · Ciò che ha una scadenza (entro il 16 agosto)
+### Tranche −1 · Ciò che ha una scadenza (entro il 14 agosto — restano 3 giorni)
 
-1. Congelare le previsioni 2026-27 secondo `experiments/prospettico_2026_27.md`
-   §5.1, con i controlli fissi già in checklist lì.
-2. **Congelare la rosa di varianti di §4** (o registrare la decisione D3).
+1. ⭐ **Congelare la rosa di varianti di §4** (decisione D3): è l'unico pezzo
+   che non esiste e non si recupera. L'M1 è già congelato dal 01/08.
+2. Eseguire **M2** a ridosso del fischio, con i controlli fissi già in
+   checklist in `experiments/prospettico_2026_27.md` §5.1.
 3. Verificare che il raccoglitore prenda il prezzo di chiusura vero (il
    guardiano riporta `anticipo_chiusura_min`).
 
 **Perché prima di tutto:** è l'unica parte del piano che, se salta, salta per
-un anno. La Tranche 0 può cominciare il 17 agosto senza perdere nulla.
+un anno. La Tranche 0 può cominciare il 15 agosto senza perdere nulla.
 
 ### Tranche 0 · Inventario e bonifica — nessun modello girato
 
@@ -619,5 +641,6 @@ selezione ha il pooled — che è esattamente ciò che è successo al conteggio
 
 ---
 
-**Ultimo aggiornamento**: 10/08/2026 · **Stato**: APERTO, nessuna tranche
-eseguita · **Prossimo passo**: Tranche −1, entro il 16 agosto.
+**Ultimo aggiornamento**: 11/08/2026 · **Stato**: APERTO, nessuna tranche
+eseguita · **Prossimo passo**: **Tranche −1, entro il 14 agosto** — cioè
+congelare la rosa di varianti (§4), l'unico pezzo che scade.
