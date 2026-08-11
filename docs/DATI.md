@@ -837,7 +837,7 @@ cartella: **`data/smarkets_live/README.md`**. Qui solo ciò che serve al catalog
 | | |
 |---|---|
 | **fonte** | Smarkets, stessa API del 5-ter, ma `state=live` |
-| **perimetro** | lo stesso del pre-partita (5 campionati + coppe + UEFA + seconde divisioni) |
+| **perimetro** | lo stesso del pre-partita (5 campionati + coppe + UEFA + seconde divisioni + **amichevoli delle nostre 96 squadre**, Fase 149), più il **perimetro di PROVA** che riempie il carico fino a 25 partite e scrive altrove (Fase 148) |
 | **granularità riga** | (istante, partita, mercato, contratto) — un file per **sessione** contiene decine di giri |
 | **cadenza** | nucleo (1X2, O/U 2.5, GG/NG, risultato esatto) ogni **2 min**; listino pieno (~103 mercati) ogni **15 min** |
 | **si scrive con** | `python scripts/fetch_smarkets_live.py`; automazione `.github/workflows/smarkets-live.yml` (sentinella ogni 30 min) |
@@ -860,6 +860,53 @@ settled⌉` e `(casa, fuori) = minimo componentwise dei punteggi ancora quotati`
 sono due stimatori indipendenti che concordano (verificati su una partita,
 08/08/2026). Restano una **regola da validare** su partite a risultato noto:
 finché non lo è, il file contiene ciò che l'API ha detto e nient'altro (§5).
+
+**Le AMICHEVOLI delle nostre squadre (Fase 149).** È l'unica voce del
+perimetro decisa da **chi gioca** e non da **dove**: `club-friendlies` contiene
+tutto il calcio amichevole del pianeta, quindi il filtro è sui nomi delle 96
+squadre dei 5 campionati (`data/squadre_smarkets_2026_27.json`). Queste righe
+portano `fascia = "amichevole"` — valore **nuovo**, accanto a
+campionato/coppa/seconda — perché una precampionato non è una partita di
+campionato né per formazioni né per motivazione, e un modello deve poterla
+**escludere con un filtro** invece di trovarsela dentro `coppa`.
+
+⚠️ **Non usare `nome_smarkets` dell'anagrafica 2026-27 per riconoscerle.**
+Misurato l'11/08/2026: coincide col nome vero di Smarkets **32 volte su 96**
+(`Juventus Turin` contro `Juventus`, `AS Roma` contro `Roma`). Entrambi gli
+insiemi hanno 96 elementi, quindi nessun conteggio di celle piene lo rivela:
+è il **finto pieno** della R6, e si vede solo incrociando le due fonti.
+
+---
+
+## 5-ter-ter · Quote IN-PLAY di PROVA (`data/smarkets_prova/`) — Fase 148
+
+Stessa pipeline del 5-ter-bis, **cartella diversa e destino diverso**.
+Specifica nel README della cartella: **`data/smarkets_prova/README.md`**.
+
+| | |
+|---|---|
+| **fonte** | Smarkets, `state=live`, tutto ciò che è **fuori** dal nostro perimetro |
+| **perché esiste** | il nostro perimetro gioca 3-7 h al giorno contro le 5-14 di tutto il calcio: senza carico vero l'infrastruttura in-play non si prova |
+| **quanto carico aggiunge** | **zero**: riempie fino al tetto di 25 partite già esistente, `max(0, 25 − |nostre|)` |
+| **volume misurato (10-11/08/2026, 24 h)** | 100.883 righe, 56 partite-sessione, 28 competizioni |
+| **stato** | 🟡 raccolto e **mai letto da nessun modello**, ed è lo stato voluto (§5-ter: raccolto ≠ usato) |
+
+⚠️ **NON usare per stimare niente.** Non è un campione casuale del calcio: è un
+campione **di comodo**, scelto in base a quando l'infrastruttura aveva bisogno
+di lavorare — cioè il peggior criterio di selezione possibile per una stima.
+
+---
+
+## 5-ter-quater · I nomi Smarkets delle nostre squadre (`data/squadre_smarkets_2026_27.json`) — Fase 149
+
+| | |
+|---|---|
+| **cosa** | i 96 nomi con cui Smarkets chiama le squadre dei 5 campionati modellati (20+20+20+18+18) |
+| **si scrive con** | `python scripts/costruisci_squadre_smarkets.py` — **generato, mai a mano** (R3) |
+| **da dove** | dall'archivio `data/smarkets_matches/`, righe con `fascia == "campionato"`: è la fonte che parla di sé, non una traduzione né una stima |
+| **disponibilità (R8)** | `statico` (anagrafica di nomi) |
+| **usato da** | `scripts/fetch_smarkets_matches.py` per riconoscere le amichevoli delle nostre squadre |
+| **limite dichiarato** | copre le squadre **già viste** in archivio; una squadra mai comparsa non c'è, e la sua amichevole resta fuori dal perimetro. Si chiude ri-eseguendo il generatore |
 
 ---
 

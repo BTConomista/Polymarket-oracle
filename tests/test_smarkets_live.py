@@ -430,7 +430,7 @@ def test_i_workflow_non_bufferizzano_lo_stdout():
 
 
 # ---------------------------------------------------------------------------
-# IL PERIMETRO DI PROVA (Fase 146)
+# IL PERIMETRO DI PROVA (Fase 148)
 # Serve a provare l'infrastruttura nelle ore in cui il nostro perimetro non
 # gioca: 3-7 ore al giorno contro le 5-14 di tutto il calcio (misurato 09/08).
 # ---------------------------------------------------------------------------

@@ -102,7 +102,7 @@ QUOTA_INPLAY_MINIMA = 0.5  # sotto questa frazione di partite coperte, si segnal
 # giro successivo, non a questo.
 ORE_INPLAY_GIUDICABILE = 6
 
-# ⚠️ QUANDO UNA CHIUSURA MANCANTE E' RUMORE E QUANDO E' UN GUASTO (Fase 145).
+# ⚠️ QUANDO UNA CHIUSURA MANCANTE E' RUMORE E QUANDO E' UN GUASTO (Fase 147).
 #
 # Il guardiano e' stato ROSSO 5 volte su 5 da quando esiste, sempre per lo
 # stesso allarme: **1 partita su 44** senza prezzo entro 3h dal via. E' il
@@ -270,7 +270,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             note.append(f"D) {d['_file']}: fuori perimetro "
                         f"{list(d['fuori_perimetro'])[:4]}")
 
-    # --- E. LA MISURA PER GEMELLO (Fase 145) --------------------------------
+    # --- E. LA MISURA PER GEMELLO (Fase 147) --------------------------------
     # Il guardiano misura la copertura AGGREGATA, ed e' giusto per il suo
     # mestiere. Ma con quattro gemelli, se uno muore gli altri tre coprono, la
     # copertura resta 100% e non lo sappiamo -- mentre «quanto spesso fallisce
@@ -280,7 +280,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
     for d in inplay:
         g = d.get("gemello")
         if g is None:
-            continue                       # file pre-Fase 145
+            continue                       # file pre-Fase 147
         s = gemelli.setdefault(str(g), {"sessioni": 0, "giri": 0, "righe": 0,
                                         "partite": set(), "giri_incompleti": 0,
                                         "mercati_persi": 0, "ritmo_max": 0.0})

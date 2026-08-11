@@ -3,9 +3,12 @@
 PERIMETRO (allargato alla Fase 142, decisione utente): i **5 campionati**
 modellati, le **coppe nazionali** dei 5 paesi, le competizioni **UEFA per
 club** e le **seconde divisioni** dei 5 paesi -- 158 partite misurate l'08/08
-contro le 58 di prima. Ogni riga porta `fascia` (campionato/coppa/seconda) ed
-e' quella che si filtra: `lega` e' la colonna storica e contiene anche
-`coppa_italia` e `serie_b`.
+contro le 58 di prima. Dalla Fase 149 anche le **amichevoli di club in cui
+gioca una delle nostre 96 squadre**: e' l'unica voce del perimetro decisa da
+**chi gioca** e non da **dove**, perche' `club-friendlies` contiene tutto il
+calcio amichevole del mondo. Ogni riga porta `fascia`
+(campionato/coppa/seconda/amichevole) ed e' quella che si filtra: `lega` e' la
+colonna storica e contiene anche `coppa_italia` e `serie_b`.
 
 PERCHE' ESISTE. Il test prospettico della Fase 78 -- previsioni congelate
 prima del calcio d'inizio e scorate dopo -- e' il gold standard che il
@@ -203,6 +206,75 @@ SLUG_ATTESI = {
 # finche' non compaiono, e il giorno che compaiono sono gia' dentro.
 PERIMETRO = {**SLUG_ESTESO, **SLUG_ATTESI}
 
+# ---------------------------------------------------------------------------
+# LE AMICHEVOLI DELLE NOSTRE SQUADRE (Fase 149, richiesta utente del 09/08:
+# «magari allarghiamo anche alle amichevoli delle squadre che seguiamo»).
+#
+# PERCHE' NON BASTAVA UNO SLUG IN PIU'. Le due competizioni-amichevole di
+# Smarkets contengono TUTTO il calcio amichevole del pianeta: `club-friendlies`
+# l'11/08 esponeva Volos-Kalamata insieme a Juventus-Palermo. Metterle nel
+# PERIMETRO avrebbe tirato dentro centinaia di partite che non modelliamo;
+# lasciarle fuori le buttava tutte. Il confine giusto non e' la competizione:
+# e' **chi gioca**.
+#
+# COME SI DECIDE CHI E' "NOSTRO". Da `data/squadre_smarkets_2026_27.json`:
+# i 96 nomi che **Smarkets stesso** ha usato per le partite di campionato nel
+# nostro archivio (generato da `scripts/costruisci_squadre_smarkets.py`).
+# Confronto ESATTO sul nome, come ovunque qui -- un match "contiene"
+# prenderebbe la Juventus per la Juve Stabia.
+#
+# ⚠️ PERCHE' NON L'ANAGRAFICA, che pure ha un campo `nome_smarkets`. Perche'
+# quel campo non contiene il nome di Smarkets: misurato l'11/08/2026, 32
+# valori su 96 coincidono (`Juventus Turin` contro `Juventus`, `AS Roma`
+# contro `Roma`). E' un finto pieno (R6) e il dettaglio sta nella docstring
+# dello script generatore.
+#
+# ⚠️ IL BUCO CHE RESTA, dichiarato. L'elenco copre le squadre gia' viste in
+# archivio: una che non ha ancora giocato ne' e' ancora quotata non c'e', e la
+# sua amichevole resta fuori. Si chiude ri-eseguendo il generatore.
+#
+# COSA E' COSTATO NON AVERLO. Juventus-Palermo, 11/08 ore 10:13 UTC: 1.795
+# righe in-play raccolte e finite in `data/smarkets_prova/`, cioe' nella
+# cartella che il suo README dichiara «non usare per un modello».
+SLUG_AMICHEVOLI = ("club-friendlies", "elite-club-friendlies")
+_SQUADRE = ROOT / "data" / "squadre_smarkets_2026_27.json"
+_SQUADRE_NOSTRE: frozenset[str] | None = None
+
+
+def squadre_nostre() -> frozenset[str]:
+    """I nomi Smarkets dei club dei 5 campionati modellati.
+
+    Letto una volta sola e in modo TOLLERANTE: se il file mancasse o fosse
+    illeggibile la regola delle amichevoli si spegne da sola (insieme vuoto
+    -> nessuna amichevole entra) invece di far morire la raccolta. E' la
+    scelta giusta perche' il danno dei due esiti non e' simmetrico: perdere
+    un'amichevole costa un'amichevole, perdere il giro costa tutte le partite
+    di quel giro.
+    """
+    global _SQUADRE_NOSTRE
+    if _SQUADRE_NOSTRE is None:
+        try:
+            per_lega = json.loads(_SQUADRE.read_text())["per_lega"]
+        except (OSError, ValueError, KeyError):
+            per_lega = {}
+        _SQUADRE_NOSTRE = frozenset(
+            n.strip() for nomi in per_lega.values() for n in nomi if n.strip())
+    return _SQUADRE_NOSTRE
+
+
+def _amichevole_nostra(nome_evento: str | None) -> bool:
+    """C'e' una squadra dei nostri 5 campionati in questa amichevole?
+
+    Il nome dell'evento su Smarkets e' sempre «Casa vs Ospite» (verificato su
+    tutto l'archivio raccolto). Se il separatore cambiasse, questa funzione
+    smetterebbe di trovare chiunque -- ed e' il motivo per cui il radar qui
+    sotto guarda anche le amichevoli: il silenzio va reso rumoroso.
+    """
+    if not nome_evento:
+        return False
+    squadre = squadre_nostre()
+    return any(p.strip() in squadre for p in nome_evento.split(" vs "))
+
 # IL RADAR (R6 applicato al perimetro, non alla cella).
 #
 # Il modo realistico in cui perderemo una competizione non e' un errore di
@@ -256,13 +328,17 @@ def _competizione(full_slug: str | None) -> str | None:
     return m.group(1) if m else None
 
 
-def _slug_lega(full_slug: str | None) -> str | None:
+def _slug_lega(full_slug: str | None, nome_evento: str | None = None) -> str | None:
     """La chiave d'archivio della competizione, o None se e' fuori perimetro.
 
     Il confronto e' ESATTO sul segmento di competizione, non "contiene": un
     match largo su un'API che puo' rinominare i suoi slug e' il modo tipico di
     raccogliere la competizione sbagliata senza accorgersene. Dalla Fase 142
     guarda in tre mappe invece di una, ma la regola non cambia.
+
+    `nome_evento` serve alle sole AMICHEVOLI (Fase 149), dove la competizione
+    non basta a decidere: e' l'unico caso in cui il perimetro guarda **chi
+    gioca** e non **dove**. Omesso, l'amichevole resta fuori come prima.
     """
     c = _competizione(full_slug)
     if c is None:
@@ -270,15 +346,25 @@ def _slug_lega(full_slug: str | None) -> str | None:
     if c in SLUG_LEGA:
         return SLUG_LEGA[c]
     voce = PERIMETRO.get(c)
-    return voce[0] if voce else None
+    if voce:
+        return voce[0]
+    if c in SLUG_AMICHEVOLI and _amichevole_nostra(nome_evento):
+        return "amichevole"
+    return None
 
 
-def _fascia(full_slug: str | None) -> str | None:
-    """`campionato` per i 5 modellati, `coppa`/`seconda` per il resto.
+def _fascia(full_slug: str | None, nome_evento: str | None = None) -> str | None:
+    """`campionato` per i 5 modellati, `coppa`/`seconda`/`amichevole` per il resto.
 
     E' il campo con cui si filtra: la colonna `lega` porta anche
     `coppa_italia` e `serie_b` dalla Fase 142, e un lettore che facesse
     `groupby('lega')` credendole campionati sbaglierebbe in silenzio.
+
+    ⚠️ `amichevole` (Fase 149) e' la fascia che un modello NON deve mescolare
+    col resto senza pensarci: una precampionato non e' una partita di
+    campionato ne' per formazioni ne' per motivazione, ed e' proprio per
+    poterla escludere con un filtro che ha una fascia sua invece di finire
+    dentro `coppa`.
     """
     c = _competizione(full_slug)
     if c is None:
@@ -286,7 +372,11 @@ def _fascia(full_slug: str | None) -> str | None:
     if c in SLUG_LEGA:
         return "campionato"
     voce = PERIMETRO.get(c)
-    return voce[1] if voce else None
+    if voce:
+        return voce[1]
+    if c in SLUG_AMICHEVOLI and _amichevole_nostra(nome_evento):
+        return "amichevole"
+    return None
 
 
 def fuori_perimetro(competizioni: dict[str, int]) -> dict[str, int]:
@@ -297,10 +387,20 @@ def fuori_perimetro(competizioni: dict[str, int]) -> dict[str, int]:
     comparira' `germany-dfb-pokal` col nome vero se l'abbiamo indovinato
     sbagliato, ed e' l'unico modo di accorgersene senza guardare a mano.
     """
-    return {c: n for c, n in competizioni.items()
-            if c.startswith(RADAR_PREFISSI)
-            and c not in SLUG_LEGA and c not in PERIMETRO
-            and not RADAR_ESCLUSI.search(c)}
+    fuori = {c: n for c, n in competizioni.items()
+             if c.startswith(RADAR_PREFISSI)
+             and c not in SLUG_LEGA and c not in PERIMETRO
+             and not RADAR_ESCLUSI.search(c)}
+    # Le AMICHEVOLI (Fase 149) non hanno un prefisso di paese -- si chiamano
+    # `club-friendlies`, e nessuno dei prefissi qui sopra le vedrebbe. Non
+    # entrano nel radar quelle che gia' guardiamo (sarebbero rumore ogni
+    # giorno): entra solo una competizione-amichevole NUOVA o RINOMINATA, che
+    # e' l'unico modo in cui perderemmo di nuovo una Juventus-Palermo.
+    fuori.update({c: n for c, n in competizioni.items()
+                  if "friendl" in c and c not in SLUG_AMICHEVOLI
+                  and not c.startswith("international-")
+                  and not RADAR_ESCLUSI.search(c)})
+    return fuori
 
 
 def anomalia_del_listino(eventi_totali: int, nostri: int) -> str | None:
@@ -385,7 +485,7 @@ def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
             c = _competizione(slug)
             if c:
                 competizioni[c] = competizioni.get(c, 0) + 1
-            lega = _slug_lega(slug)
+            lega = _slug_lega(slug, e.get("name"))
             if not lega:
                 continue
             try:
@@ -394,7 +494,7 @@ def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
             except ValueError:
                 continue
             nostre.append({"event_id": e["id"], "nome": e.get("name"),
-                           "lega": lega, "fascia": _fascia(slug),
+                           "lega": lega, "fascia": _fascia(slug, e.get("name")),
                            "inizio": e.get("start_datetime"),
                            "_inizio": inizio})
         nx = (d.get("pagination") or {}).get("next_page")
@@ -405,7 +505,7 @@ def scandaglia_upcoming() -> tuple[list[dict], int, dict[str, int]]:
 def scandaglia_live() -> tuple[list[dict], int, list[dict]]:
     """Le partite IN CORSO: le nostre, il totale mondiale, e le ALTRE.
 
-    Il terzo valore (Fase 146) e' il resto del calcio: serve al perimetro di
+    Il terzo valore (Fase 148) e' il resto del calcio: serve al perimetro di
     PROVA, che riempie le ore in cui il nostro perimetro non gioca. Arriva
     dalla stessa scansione -- chiederlo a parte raddoppierebbe le chiamate per
     un dato che abbiamo gia' in mano.
@@ -425,14 +525,15 @@ def scandaglia_live() -> tuple[list[dict], int, list[dict]]:
         for e in d.get("events", []):
             totale += 1
             slug = e.get("full_slug")
-            lega = _slug_lega(slug)
+            lega = _slug_lega(slug, e.get("name"))
             voce = {"event_id": e["id"], "nome": e.get("name"),
                     "inizio": e.get("start_datetime"),
                     "inplay": bool(e.get("inplay_enabled"))}
             if lega:
-                vive.append({**voce, "lega": lega, "fascia": _fascia(slug)})
+                vive.append({**voce, "lega": lega,
+                             "fascia": _fascia(slug, e.get("name"))})
             else:
-                # Il resto del mondo, per il perimetro di PROVA (Fase 146).
+                # Il resto del mondo, per il perimetro di PROVA (Fase 148).
                 # Non ha una chiave nostra: si tiene lo slug grezzo, che e'
                 # l'unica identita' che questi eventi hanno per noi.
                 altre.append({**voce, "lega": _competizione(slug) or "?",

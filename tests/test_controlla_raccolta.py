@@ -113,7 +113,7 @@ def test_C_il_buco_dell_08_08_la_sentinella_che_non_gira(archivio):
     corso e il raccoglitore in-play a zero run. Nessun rosso da nessuna parte,
     e se n'e' accorto l'utente.
 
-    ⚠️ Kickoff a -8h e non a -2h: dalla Fase 146 le partite delle ultime 6 ore
+    ⚠️ Kickoff a -8h e non a -2h: dalla Fase 147 le partite delle ultime 6 ore
     non si giudicano (una sessione committa alla fine e puo' essere ancora
     accesa). Il buco resta lo stesso, si vede solo un giro dopo."""
     pre, live = archivio
@@ -307,7 +307,7 @@ def test_il_workflow_del_guardiano_puo_riparare():
 
 
 # ---------------------------------------------------------------------------
-# LA SOGLIA SULLE CHIUSURE PERSE (Fase 145)
+# LA SOGLIA SULLE CHIUSURE PERSE (Fase 147)
 # Il guardiano e' stato rosso 5 volte su 5 per 1 partita su 44. Un rosso
 # permanente maschera il prossimo guasto vero: e' il difetto contro cui avevo
 # messo in guardia scrivendo il guardiano stesso.

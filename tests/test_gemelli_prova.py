@@ -1,4 +1,4 @@
-"""Test del calendario della prova a gemelli (Fase 145).
+"""Test del calendario della prova a gemelli (Fase 147).
 
 Il calendario e' un esperimento, non una configurazione: se sbaglia, la
 settimana di raccolta produce dati che non rispondono alla domanda. Quindi si

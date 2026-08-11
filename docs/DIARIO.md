@@ -18423,3 +18423,276 @@ lega a un numero, il minuto dell'interruzione, che sta su una fonte esterna
 Σ_f r_f · c_f = 1.039.424 + 3.100 + 148.200 + 22.008 + 26.220 + 65.484
               = 1.304.436 celle,  divergenti 0
 ```
+
+---
+
+## Fase 147 — La prova a gemelli: quanti ne servono, misurato invece che scelto
+
+**Obiettivo.** Rispondere alla domanda dell'utente del 09/08: «aggiungere
+gemelli aumenta i rifiuti?». Un *gemello* è un secondo (terzo, quarto)
+workflow identico che raccoglie in-play in parallelo, sfalsato di quindici
+minuti, per coprire i buchi che il ritardo del cron di GitHub apre. La
+domanda è pratica: più gemelli = più copertura, ma anche più richieste alla
+stessa API, e Smarkets risponde `429` quando si esagera.
+
+**Ragionamento / ipotesi.** La prima stesura del piano accendeva quattro
+gemelli dal primo giorno. È stato l'utente a chiedere «sei sicuro che sia la
+migliore?», e la risposta onesta era no: quel piano viola la regola §1.2 del
+progetto — *una cosa alla volta, e si misura*. Con quattro gemelli accesi
+subito avremmo saputo che «con quattro funziona», non se **servivano**, e
+soprattutto non avremmo avuto la curva rifiuti-contro-carico.
+
+**Alternative considerate.**
+1. *Quattro dal primo giorno* — nessuna curva, nessuna risposta alla domanda.
+2. *Livelli in ordine crescente* (1,1,2,2,3,3,4…) — la curva ci sarebbe, ma
+   confusa col giorno della settimana: i quattro gemelli cadrebbero **sempre**
+   di venerdì-sabato (25 partite) e uno solo sempre di lunedì-martedì (tre).
+   Misureremmo il calendario credendo di misurare il carico.
+3. *Contro-bilanciamento su due settimane* — la seconda settimana invertita.
+   Scelta questa.
+
+**Scelta.** Quattordici giorni, calendario scritto per esteso in
+`scripts/gemelli_prova.py`, con la seconda settimana rovesciata:
+
+```
+sett. 1   lun mar mer gio ven sab dom
+          1   1   2   2   4   4   3
+sett. 2   4   4   2   2   1   1   3
+```
+
+Così N=1 e N=4 vedono **entrambi** due giorni vuoti e due pieni. I quattro
+workflow restano sempre accesi e chiedono `attivo_oggi(n)`: se il loro numero
+supera il livello del giorno escono subito. Il livello si cambia senza che
+nessuno debba ricordarsi di niente — che è la cosa che il progetto ha deciso
+di non avere più (Fase 144).
+
+**Residuo dichiarato.** N=2 cade **sempre** di mercoledì-giovedì e con
+quattordici giorni non è contro-bilanciabile. Il mercoledì ha le coppe
+europee, quindi non è un giorno vuoto, ma il limite va saputo leggendo i
+risultati.
+
+**Risultato (parziale, la prova è al giorno 2 su 14).** Il termine di paragone
+— il gemello 1 — ha una serie continua dal 10/08. Il conteggio dei rifiuti per
+mille richieste è raccolto dal cane da guardia
+(`controlla_raccolta.controlla()`, sezione «misura per gemello»); i numeri
+conclusivi non esistono ancora e **non vanno anticipati**.
+
+**Lezione.** Il piano che sembra generoso — «mettiamone quattro, non costa
+niente» — è quello che non risponde alla domanda. Il costo di un esperimento
+mal disegnato non è il tempo che prende: è che alla fine non sai niente.
+
+### 📐 Il modello in dettaglio
+
+Non c'è matematica nuova: c'è un **disegno sperimentale**, e la formula che
+conta è quella della normalizzazione. I rifiuti non si contano al giorno ma
+per mille richieste:
+
+```
+r_N = 1000 · (429 ricevuti al livello N) / (richieste fatte al livello N)
+```
+
+Il denominatore è indispensabile: al livello 4 le richieste sono ~4× quelle
+del livello 1 **e** il calendario cambia sotto. Senza normalizzare, `r`
+crescerebbe anche se la probabilità di rifiuto fosse costante.
+
+Il contro-bilanciamento si legge come una scomposizione dell'effetto misurato:
+
+```
+r_N osservato = effetto(N) + effetto(giorno) + rumore
+```
+
+Con la settimana 2 invertita, i giorni assegnati a N=1 e a N=4 sono lo stesso
+insieme {lun, mar, ven, sab}, quindi `effetto(giorno)` è **identico** nei due
+livelli e si cancella nella differenza `r_4 − r_1`. Per N=2 non si cancella
+(sempre mer-gio) e il confronto che lo coinvolge resta confuso: è il residuo
+dichiarato qui sopra, non un dettaglio da nascondere.
+
+Il numero 14 non è arbitrario: è il minimo che permette due passaggi completi
+su {1,2,4} più due domeniche a 3, cioè la struttura minima che rende il
+contro-bilanciamento possibile.
+
+---
+
+## Fase 148 — Il perimetro di prova: far lavorare l'infrastruttura quando il nostro calcio dorme
+
+**Obiettivo.** L'infrastruttura in-play va provata, ma il nostro perimetro
+gioca **3-7 ore al giorno** contro le 5-14 di tutto il calcio mondiale, e in
+agosto meno ancora. Un sistema che non lavora non si rompe, e uno che non si
+rompe non si sa se regge.
+
+**Ragionamento / ipotesi.** Le ore vuote non sono un problema di copertura:
+sono un problema di **prova**. Un job che gira a vuoto conferma solo che il
+cron parte. Serve carico vero — partite vere, mercati veri, punteggi che
+cambiano — nelle ore in cui il nostro perimetro non ne offre.
+
+**Alternative considerate.**
+1. *Non provare nelle ore vuote* — si scoprono i difetti il sabato, cioè
+   quando costano.
+2. *Allargare il perimetro vero* — significherebbe modellare campionati che
+   non modelliamo, e sporcare l'archivio con dati scelti «perché c'erano».
+3. *Un perimetro di PROVA, in una cartella a parte* — scelta questa, su
+   indicazione dell'utente: «teniamoli solo come prova in una cartella a parte
+   nel repo, comunque conserviamo i dati».
+
+**Scelta.** `scandaglia_live()` ritorna un terzo valore — il resto del calcio —
+e `riempi_con_la_prova()` completa il carico fino al tetto di 25 partite,
+**senza mai alzarlo**: la prova riempie il carico, non lo aumenta. Le righe
+finiscono in `data/smarkets_prova/`, cartella separata con un README che
+dichiara cosa sono.
+
+**Risultato (10-11 agosto, prime 24 ore).** Quattro sessioni, **100.883
+righe** su **56 partite-sessione** e **28 competizioni** — dal Brasile Serie C
+all'Australia Cup. Nella stessa finestra il perimetro nostro ha prodotto
+**12.687 righe su una sola partita**. Il rapporto è ~8:1 a favore della prova:
+esattamente ciò per cui è stata costruita.
+
+**Lezione.** Raccogliere ≠ usare (§5-ter). Questi dati **non** vanno in un
+modello: sono un campione di comodo, scelto in base a quando l'infrastruttura
+aveva bisogno di lavorare — cioè il peggior criterio di selezione possibile
+per una stima. Conservarli costa disco; buttarli costerebbe la possibilità di
+diagnosticare a posteriori un difetto dell'infrastruttura.
+
+### 📐 Il modello in dettaglio
+
+La formula è il riempimento, e il punto è che è un **minimo, non una somma**:
+
+```
+da_seguire = nostre ∪ prime(altre, max(0, TETTO − |nostre|))     TETTO = 25
+```
+
+Il `max(0, ·)` è la parte che conta. Se `|nostre| ≥ 25` il secondo insieme è
+vuoto: la prova **non aggiunge mai** una richiesta quando il perimetro vero è
+già al tetto. Il carico massimo del sistema resta quello di prima —
+
+```
+richieste/giro ≤ 25 partite × (1 listino + ⌈m/20⌉ lotti di mercati)
+```
+
+— e quindi la prova non contamina la misura della Fase 147: aggiungere gemelli
+cambia il numero di *giri*, non il tetto di partite per giro.
+
+Perché 25 e non di più: è il numero per cui un giro «nucleo» (4 mercati) sta
+dentro i 2 minuti di cadenza al ritmo misurato di ~1,8 s per chiamata sul
+runner, con 6 lavoratori in parallelo:
+
+```
+t_giro ≈ 25 × 2 chiamate × 1,8 s / 6 ≈ 15 s ≪ 120 s
+```
+
+Il margine è largo di proposito: il ritmo peggiora sotto `429`, e il limitatore
+adattivo allunga l'intervallo fino a 3 s per chiamata (×1,6 a ogni rifiuto).
+Anche nel caso peggiore `t_giro ≈ 25 s`, ancora dentro la cadenza.
+
+---
+
+## Fase 149 — Juventus-Palermo era nostra e l'abbiamo messa fra i dati di prova
+
+**Obiettivo.** Chiudere la richiesta dell'utente del 09/08 rimasta scoperta:
+«magari allarghiamo anche alle amichevoli delle squadre che seguiamo». Trovata
+mentre si rispondeva a una domanda diversa — «quali dati abbiamo raccolto per
+noi e quali per prova?» — guardando riga per riga cosa c'era nelle due
+cartelle.
+
+**Il fatto.** L'11/08/2026 alle 10:13 UTC si è giocata **Juventus-Palermo**,
+amichevole di una squadra che modelliamo. Il sistema l'ha raccolta: **1.795
+righe in-play, 53 giri, 31 mercati**. Le ha scritte in
+`data/smarkets_prova/`, cioè nella cartella il cui README dice «⚠️ NON usarli
+per un modello». Il dato c'era e l'abbiamo messo nel posto sbagliato.
+
+**Ragionamento / ipotesi.** Il perimetro, fino a qui, si è sempre deciso da
+**dove** si gioca: uno slug di competizione, confronto esatto. Per le
+amichevoli quel criterio non funziona — `club-friendlies` conteneva, la stessa
+sera, Volos-Kalamata e Juventus-Palermo. Metterlo nel perimetro avrebbe tirato
+dentro centinaia di partite che non modelliamo; lasciarlo fuori le buttava
+tutte. Il confine giusto non è la competizione: è **chi gioca**.
+
+**Alternative considerate.**
+1. *Slug in perimetro* — +40 partite al giorno di calcio che non ci riguarda.
+2. *Lasciare com'è* — perde tutte le amichevoli, e le amichevoli sono
+   **l'unico calcio vero** delle nostre squadre prima del 15 agosto.
+3. *Filtro per squadra* — scelta questa. È l'unica voce del perimetro decisa
+   da chi gioca; ha una `fascia` propria (`amichevole`) proprio perché un
+   modello deve poterla **escludere** con un filtro, non trovarsela dentro
+   `coppa`.
+
+**La sorpresa, che è un difetto dei dati.** L'anagrafica di inizio stagione
+(`data/stagione_2026_2027/club/*/*/anagrafica.json`, Fase 120) ha un campo che
+si chiama **`nome_smarkets`**: sembrava fatto apposta. Misurato: dei suoi 96
+valori, **32 coincidono** con un nome che Smarkets ha davvero usato nel nostro
+archivio. Gli altri 64 sono nomi di un'altra fonte — `Juventus Turin` contro
+`Juventus`, `Inter Milano` contro `Inter Milan`, `AS Roma` contro `Roma`. Il
+campo porta il nome di una fonte e contiene il nome di un'altra: **finto
+pieno** da manuale (R6). Non è vuoto, non è `NaN`, nessun controllo di
+completezza lo vede — e chi lo usa per un join perde due terzi delle righe in
+silenzio.
+
+**Scelta.** Non correggerlo (R3: niente modifiche a mano, e quel file è letto
+da `scripts/raccolta_giornaliera.py`, che ha un difetto probabilmente identico
+in lavorazione altrove) ma **non usarlo**: i nomi giusti si generano
+dall'archivio, dove Smarkets parla di se stesso —
+`scripts/costruisci_squadre_smarkets.py` →
+`data/squadre_smarkets_2026_27.json`, 96 nomi, 20+20+20+18+18.
+
+**Risultato.** `_slug_lega`/`_fascia` accettano il nome dell'evento e
+riconoscono l'amichevole nostra; sei test nuovi, fra cui quello che fissa la
+differenza fra **Juventus** e **Juve Stabia** (un confronto "contiene" —
+la scorciatoia ovvia — prenderebbe la Serie B per la Serie A). Il radar è
+stato esteso alle competizioni-amichevole nuove o rinominate: `club-friendlies`
+non ha prefisso di paese, quindi nessuno dei `RADAR_PREFISSI` la vedeva.
+
+**Lezione.** Due, e la seconda è la più scomoda. (1) Una richiesta dell'utente
+che non entra nello schema esistente — qui: un perimetro che si decide da chi
+gioca e non da dove — rischia di essere fatta a metà e dichiarata fatta.
+(2) Un campo il cui **nome** dichiara una fonte non è una prova che contenga
+quella fonte: va misurato contro la fonte vera prima di costruirci sopra. Il
+costo di non averlo fatto sarebbe stato un filtro che sembra funzionare e
+riconosce un terzo delle squadre.
+
+### 📐 Il modello in dettaglio
+
+Il perimetro, che fino alla Fase 142 era una funzione del solo slug, diventa:
+
+```
+lega(slug, nome) = SLUG_LEGA[c]                     se c ∈ SLUG_LEGA
+                 = PERIMETRO[c][0]                  se c ∈ PERIMETRO
+                 = "amichevole"                     se c ∈ SLUG_AMICHEVOLI
+                                                      ∧ nostra(nome)
+                 = None                             altrimenti
+con   c = segmento di competizione di `full_slug`
+      nostra(nome) = ∃ p ∈ split(nome, " vs ") : p.strip() ∈ S
+      S = i 96 nomi di data/squadre_smarkets_2026_27.json
+```
+
+Tre proprietà scelte, ognuna col suo motivo numerico:
+
+1. **L'ordine dei rami.** Il ramo amichevole è **ultimo**: se una competizione
+   fosse insieme in `PERIMETRO` e in `SLUG_AMICHEVOLI`, vince il perimetro
+   esplicito. Oggi l'intersezione è vuota, ma l'ordine rende la cosa vera
+   anche domani.
+2. **`nome` ha default `None`**, e con `None` la funzione ritorna esattamente
+   ciò che ritornava prima. Non è cortesia verso i test vecchi: significa che
+   nessun lettore dell'archivio vede il perimetro allargarsi di nascosto.
+3. **Appartenenza esatta, non sottostringa.** Con `∈` su un insieme,
+   `"Juve Stabia" ∈ S` è falso perché la stringa non è nell'insieme; con
+   `"Juventus" ⊂ nome` sarebbe **vero** per «Palermo vs Juve Stabia»? No — ma
+   lo sarebbe per «Juventus Next Gen», che gioca in Serie C. La regola esatta
+   costa un `False` di troppo dove il nome differisce; la regola larga costa
+   una squadra sbagliata dentro l'archivio, che è peggio.
+
+Il numero 32/96 dell'anagrafica si ri-calcola così:
+
+```
+|A ∩ V| dove A = {nome_smarkets di 96 anagrafiche}
+              V = {nomi in data/smarkets_matches/ con fascia == "campionato"}
+        = 32,   |A| = |V| = 96
+```
+
+Entrambi gli insiemi hanno 96 elementi — l'anagrafica **è** completa, e
+proprio per questo il difetto non si vede contando le celle piene: si vede
+solo incrociando le due fonti (R6).
+
+La degradazione del nuovo filtro è **asimmetrica di proposito**: se
+`data/squadre_smarkets_2026_27.json` mancasse, `S = ∅` e nessuna amichevole
+entra. Perdere un'amichevole costa un'amichevole; far morire il giro
+costerebbe tutte le partite del giro. Un test verifica `|S| = 96` proprio
+perché quella degradazione è silenziosa.

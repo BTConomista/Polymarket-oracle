@@ -28,7 +28,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from fetch_smarkets_matches import (  # noqa: E402
     LOTTO_MERCATI, MERCATI_BASE, MERCATI_PRINCIPALI, PERIMETRO, SLUG_LEGA,
     _etichetta_generica, _fascia, _libri_per_contratto, _slug_lega,
-    anomalia_del_listino, entro_finestra, fuori_perimetro, leghe_assenti)
+    anomalia_del_listino, entro_finestra, fuori_perimetro, leghe_assenti,
+    squadre_nostre)
 
 
 @pytest.mark.parametrize("slug,atteso", [
@@ -121,6 +122,69 @@ def test_ogni_voce_del_perimetro_ha_fascia_valida():
 def test_slug_malformato_non_esplode():
     for s in (None, "", "/sport/tennis/atp/x", "non-uno-slug"):
         assert _slug_lega(s) is None
+
+
+# --------------------------------------------------------------------------
+# LE AMICHEVOLI DELLE NOSTRE SQUADRE (Fase 149)
+# --------------------------------------------------------------------------
+
+AMICHEVOLE = "/sport/football/elite-club-friendlies/2026/08/11/10-13/a-vs-b"
+AMICHEVOLE_BASE = "/sport/football/club-friendlies/2026/08/10/18-00/a-vs-b"
+
+
+def test_l_amichevole_di_una_nostra_squadra_entra():
+    """Il caso vero: Juventus-Palermo, 11/08/2026 10:13 UTC. Prima di questo
+    test 1.795 righe in-play sono finite in `data/smarkets_prova/`, cioe' nella
+    cartella che il suo README dichiara «non usare per un modello»."""
+    assert _slug_lega(AMICHEVOLE, "Juventus vs Palermo") == "amichevole"
+    assert _fascia(AMICHEVOLE, "Juventus vs Palermo") == "amichevole"
+    # e vale anche quando la nostra squadra e' in trasferta
+    assert _slug_lega(AMICHEVOLE_BASE, "Palermo vs Juventus") == "amichevole"
+
+
+def test_l_amichevole_di_estranei_resta_fuori():
+    """`club-friendlies` contiene tutto il calcio amichevole del pianeta:
+    se entrasse la competizione invece della squadra, il perimetro
+    triplicherebbe con partite che non modelliamo."""
+    assert _slug_lega(AMICHEVOLE_BASE, "NFC Volos vs Kalamata") is None
+    assert _fascia(AMICHEVOLE_BASE, "NFC Volos vs Kalamata") is None
+
+
+def test_il_confronto_sul_nome_e_esatto_e_non_contiene():
+    """`Juve Stabia` NON e' la Juventus. Un match "contiene" -- la scorciatoia
+    ovvia -- prenderebbe la Serie B per la Serie A senza dire niente."""
+    assert _slug_lega(AMICHEVOLE_BASE, "Palermo vs Juve Stabia") is None
+
+
+def test_senza_nome_l_amichevole_resta_fuori_come_prima():
+    """Retro-compatibilita': ogni chiamata che non passa il nome (i test
+    vecchi, ma anche qualunque lettore dell'archivio) deve vedere il
+    comportamento di prima, non un perimetro allargato di nascosto."""
+    assert _slug_lega(AMICHEVOLE_BASE) is None
+    assert _fascia(AMICHEVOLE) is None
+
+
+def test_l_elenco_delle_squadre_c_e_ed_e_completo():
+    """Se il file sparisse, la regola si spegnerebbe **in silenzio** (insieme
+    vuoto = nessuna amichevole entra). E' la degradazione giusta, ma va
+    accorta da qualcuno: questo test e' quel qualcuno."""
+    squadre = squadre_nostre()
+    assert len(squadre) == 96, f"attese 96 squadre, trovate {len(squadre)}"
+    # nomi COME LI SCRIVE SMARKETS, non come li scrive l'anagrafica: il campo
+    # `nome_smarkets` di data/stagione_2026_2027 dice `Juventus Turin` e
+    # `Inter Milano`, che Smarkets non ha mai usato (32 su 96 coincidono).
+    for atteso in ("Juventus", "Inter Milan", "Man Utd", "Roma", "PSG"):
+        assert atteso in squadre
+
+
+def test_il_radar_vede_una_competizione_amichevole_nuova():
+    """Le amichevoli non hanno prefisso di paese: nessuno dei RADAR_PREFISSI
+    le vedrebbe. Quelle che gia' guardiamo NON devono suonare (sarebbe rumore
+    ogni giorno); una nuova o rinominata si'."""
+    listino = {"club-friendlies": 40, "elite-club-friendlies": 3,
+               "top-friendlies": 2, "international-friendlies": 9,
+               "women-club-friendlies": 4, "italy-serie-a": 10}
+    assert fuori_perimetro(listino) == {"top-friendlies": 2}
 
 
 def test_le_leghe_dichiarate_sono_le_cinque_del_progetto():

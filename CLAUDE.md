@@ -196,11 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-<<<<<<< HEAD
-- [ ] **Test** — mantieni `pytest` verde (**1.583 verdi** al 10/08/2026); aggiungi
-=======
-- [ ] **Test** — mantieni `pytest` verde (**1.538 verdi** al 08/08/2026); aggiungi
->>>>>>> origin/main
+- [ ] **Test** — mantieni `pytest` verde (**1.595 verdi** all'11/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -274,11 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-<<<<<<< HEAD
-python -m pytest                       # test (1.583 verdi al 10/08/2026)
-=======
-python -m pytest                       # test (1.538 verdi al 08/08/2026)
->>>>>>> origin/main
+python -m pytest                       # test (1.595 verdi all'11/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -381,7 +373,11 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         fetch_smarkets_live (Fase 143: la raccolta IN-PLAY. Una
+scripts/         costruisci_squadre_smarkets (Fase 149: rigenera
+                 data/squadre_smarkets_2026_27.json dall'archivio. Da rifare
+                 quando una squadra nuova compare nel listino: finche' non c'e',
+                 la sua amichevole resta fuori dal perimetro)
+                 fetch_smarkets_live (Fase 143: la raccolta IN-PLAY. Una
                  SENTINELLA ogni 30' accende un job che cicla 40' al suo
                  interno -- il cron di GitHub parte con 30-40' di ritardo, e
                  un cron piu' fitto erediterebbe lo stesso ritardo. Nucleo
@@ -436,7 +432,16 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
-data/            smarkets_prova/ (Fase 146: DATI DI PROVA -- campionati che NON
+data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
+                 usa per le squadre dei 5 campionati. Generato da
+                 scripts/costruisci_squadre_smarkets.py leggendo l'archivio,
+                 NON scritto a mano. Serve a riconoscere un'amichevole di una
+                 nostra squadra dentro `club-friendlies`.
+                 ⚠️ NON usare `nome_smarkets` dell'anagrafica 2026-27 al suo
+                 posto: MISURATO, coincide col nome vero 32 volte su 96 --
+                 finto pieno da manuale, R6, e nessun conteggio di celle piene
+                 lo vede perche' entrambi gli insiemi hanno 96 elementi)
+                 smarkets_prova/ (Fase 148: DATI DI PROVA -- campionati che NON
                  modelliamo, raccolti solo per provare l'infrastruttura nelle
                  ore in cui il nostro perimetro non gioca (3-7h al giorno
                  contro 5-14 di tutto il calcio). Riempiono il carico fino al
@@ -551,17 +556,11 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-<<<<<<< HEAD
-tests/           test unitari (1.583 verdi al 10/08/2026), fra cui i guardiani
-=======
-tests/           test unitari (1.538 verdi al 08/08/2026; ⚠️ 1 ROSSO aperto:
+tests/           test unitari (1.595 verdi all'11/08/2026; il ROSSO su
                  test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_
-                 dalla_convenzione_di_smarkets -- 138 squadre su 234 senza
-                 anagrafica, tutte di uel_qual/ucl_qual/la_liga_2/serie_b:
-                 l'ha aperto l'allargamento del perimetro Smarkets, ed e' della
-                 sessione che ci sta lavorando),
-                 fra cui i guardiani
->>>>>>> origin/main
+                 dalla_convenzione_di_smarkets e' stato chiuso il 10/08 -- non
+                 era un join rotto ma una copertura mancante, e la guardia
+                 confondeva le due cose), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/

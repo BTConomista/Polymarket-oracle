@@ -82,7 +82,7 @@ import gemelli_prova as _prova   # noqa: E402
 from src.data import smarkets_archive as _archivio   # noqa: E402
 
 DEST = ROOT / "data" / "smarkets_live"
-# ⚠️ CARTELLA SEPARATA (Fase 146, decisione utente: «teniamoli solo come prova
+# ⚠️ CARTELLA SEPARATA (Fase 148, decisione utente: «teniamoli solo come prova
 # in una cartella a parte»). Sono partite di campionati che NON modelliamo,
 # raccolte per un motivo tecnico -- provare l'infrastruttura anche nelle ore in
 # cui il nostro perimetro non gioca. Sono dati veri e si conservano (§5-ter),
@@ -321,7 +321,7 @@ def main(argv=None) -> None:
                     help="elenca le partite da seguire e esce")
     a = ap.parse_args(argv)
 
-    # IL CALENDARIO DELLA PROVA (Fase 145). I quattro gemelli sono sempre
+    # IL CALENDARIO DELLA PROVA (Fase 147). I quattro gemelli sono sempre
     # accesi come workflow; e' qui che si decide chi lavora oggi. Cosi' il
     # livello si cambia senza toccare niente ogni giorno -- che sarebbe una
     # cosa da ricordarsi, cioe' quella che la Fase 144 ha deciso di togliere.
