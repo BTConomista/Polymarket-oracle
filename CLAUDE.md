@@ -558,6 +558,16 @@ docs/BETEXPLORER_SCRAPER.md   lo scraper della Fase B di quella caccia
 docs/audit_5_leghe/   gli 11 report integrali dell'audit a 5 leghe (Fase 100) +
                  REGOLE.md + numeri/ (i JSON grezzi dietro ogni tabella).
                  Verbale esteso di cio' che il DIARIO riassume
+docs/audit_identita/   ⛔ audit dell'IDENTITA del database (11/08/2026),
+                 INTERROTTO a meta': 64 reperti su club/giocatori/allenatori/
+                 carriere, di cui **solo 11 verificati**. Vanno letti come
+                 ipotesi con un numero accanto, non come difetti accertati.
+                 Il reperto gia' ri-verificato a mano: `Espanol` aggancia
+                 UNIVOCAMENTE «Jove Espanol San Vicente» invece dell'Espanyol,
+                 su 266 partite di Liga — un aggancio falso e sicuro di se',
+                 la categoria che nessun conteggio vede. Leggere 00_indice.md
+                 §7 prima di riprendere: dice anche perche' il workflow e'
+                 morto (ventaglio di verifica non limitato) e come rifarlo
 docs/AUDIT_FASI_80_100.md   verbale dell'audit delle ultime 20 fasi (Fase 101):
                  ogni rilievo con evidenza, stato (corretto / da decidere) e
                  rimando al punto del repo

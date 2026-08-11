@@ -1,0 +1,21 @@
+import pandas as pd, sys
+sys.path.insert(0,'/home/user/Polymarket-oracle')
+from src.data import allenatori as A
+g = A._leggi_games()
+print("games righe", len(g), "prima", g.date.min().date(), "ultima", g.date.max().date())
+tutte = A.load_partite(g)
+print("club-partita con allenatore", len(tutte))
+m = A.panchine(tutte)
+print("mandati globali", len(m))
+print("interruzioni", int(m.interruzione.sum()))
+print("interruzioni di 1 partita", int((m.interruzione & (m.partite==1)).sum()))
+perim = A.load_partite(g, solo_top5=True, stagioni=A.STAGIONI)
+print("perimetro righe", len(perim), "partite", perim.game_id.nunique())
+conf = A.conflitti_identita(tutte)
+print("conflitti righe", len(conf), "nomi distinti", conf.manager_key.nunique())
+print(conf.to_string())
+chiavi_p = set(perim.manager_key)
+cp = conf[conf.manager_key.isin(chiavi_p)]
+print("conflitti nel perimetro (nome compare nel perimetro): righe", len(cp), "nomi", cp.manager_key.nunique(), sorted(cp.manager_key.unique()))
+tutte.to_pickle('/tmp/claude-0/-home-user-Polymarket-oracle/b3327155-e644-51d1-9512-6e349f88a5c8/scratchpad/tutte.pkl')
+m.to_pickle('/tmp/claude-0/-home-user-Polymarket-oracle/b3327155-e644-51d1-9512-6e349f88a5c8/scratchpad/mandati.pkl')
