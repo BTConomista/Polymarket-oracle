@@ -528,6 +528,18 @@ docs/INFRASTRUTTURA_RACCOLTA.md  dove deve girare la raccolta: ragionamento
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
+docs/REGISTRO_VARIANTI.md   la lista COMPLETA di ogni modello/leva/covariata/
+                 costante mai sperimentata, e lo stato della sua PREVISIONE
+                 prospettica su ogni lega (richiesta utente 11/08/2026: usare
+                 tutto, anche panchina e bocciati). ~73 varianti in Serie A.
+                 ⚠️ Due cose da capire prima di eseguire: (1) il disegno e'
+                 walk-forward PER GIORNATA, non una profezia di agosto -- e
+                 questo scioglie la scadenza, perche' una variante entrata
+                 prima della giornata 5 e' pre-registrata sulle giornate 5-38;
+                 (2) «tutte le varianti» = una leva alla volta dalla config
+                 ufficiale (§1.2), non tutte le combinazioni, che sarebbero
+                 2^60. Il registro traccia la PRODUZIONE; PANCHINA resta la
+                 fonte dello stato scientifico
 docs/CHIUSURA_FASE_1.md   il piano per dichiarare DAVVERO conclusa la Fase 1
                  (10/08/2026, richiesta utente su una sua bozza): perimetro
                  congelato, i SEI stati con cui una casella si svuota (fra cui

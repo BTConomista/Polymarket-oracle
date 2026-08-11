@@ -295,6 +295,16 @@ dopo.
 | 7 | **devig di Shin** al posto del moltiplicativo | 🪑 su tutte e cinque | 5 celle + pooled |
 | 8 | **estremizzazione della chiusura O/U** (α) su SA/Premier/Liga | ⬜⬜⬜ | 3 celle |
 
+⭐ **Aggiornamento 11/08/2026 — la rosa è diventata un registro.** Su richiesta
+dell'utente la rosa non si ferma a nove varianti: si estende a **tutto** ciò che
+il progetto ha sperimentato, panchina e bocciati compresi (*«così possiamo
+vedere se funziona anche se lo avevamo messo in panchina»*). L'elenco completo
+e il suo stato vivono in **[`docs/REGISTRO_VARIANTI.md`](REGISTRO_VARIANTI.md)**
+— ~73 varianti solo in Serie A. Le nove qui sopra restano **il sottoinsieme
+prioritario**: sono quelle che, se vincessero, cambierebbero la produzione.
+⚠️ E il registro scioglie la scadenza: nel disegno walk-forward solo ciò che
+si vuole giudicare **dalla giornata 1** deve essere pronto il 14 agosto.
+
 Nove previsioni per partita invece di una. Il costo è un `dict` di
 configurazione e una colonna in più nello scoring — **non** nove esperimenti.
 
