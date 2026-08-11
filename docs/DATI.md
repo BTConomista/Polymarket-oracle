@@ -130,7 +130,7 @@ suite, così il prossimo rinominamento rompe i test e non la raccolta.
 | xG | `home/away_xg, home/away_npxg` | Understat | 100% meno **2 partite dichiarate**: Nantes-Toulouse 17/05/2026 (Ligue 1, `isResult=false`) e Holstein Kiel-Bochum 09/02/2025 (Bundesliga, **record segnaposto**: vedi §4-bis) |
 | stile | `home/away_ppda, home/away_deep` | Understat | come sopra |
 | valore rosa | `home/away_squad_value` | **player-scores** (Transfermarkt via Kaggle, Fase 67) + **29** celle 2025-26 da Transfermarkt diretto (13 alla Fase 70 sulle 3 leghe storiche + 16 all'audit delle 5 leghe — 5 Bundesliga, 11 Ligue 1, in `data/squad_value_2526_transfermarkt.csv`, regola R2; vedi §4) | **100% su TUTTE le stagioni, incluse la 2025-26** — zero NaN residui |
-| assenze (STIMA, suffisso `_est`) | `home/away_absent_count_est, home/away_absent_value_est` | Transfermarkt + rose Understat | 100% (ma è una **stima dichiarata**, vedi §4) |
+| assenze (STIMA, suffisso `_est`) | `home/away_absent_count_est, home/away_absent_value_est` | Transfermarkt + rose Understat | 100% di celle piene fino al 2024-25 (è una **stima dichiarata**, vedi §4) · ⚠️ **2025-26: piena ma VUOTA** — la fonte infortuni è congelata a settembre 2025, quindi da ottobre il valore è `0.0` = "non lo so", non "nessun assente". **Non usarla come covariata su quella stagione**: vedi §4-quater |
 | congestione | `home/away_rest_days_full, home/away_midweek_europe` | openfootball + snapshot | **100%** (Fase 68: gli esordi sono radicati coi calendari 'preludio' — massima serie 2016-17 + seconde serie) |
 
 ---
@@ -580,6 +580,70 @@ Due letture non ovvie del registro, entrambe volute:
 2. **una riga `proposta` non è una decisione rimandata**: è una decisione presa
    in negativo, scritta nel campo `motivo`. L'unico appunto legittimo — già
    rilevato dall'audit — è che l'etichetta più onesta sarebbe `respinta`.
+
+---
+
+## 4-quater · La colonna PIENA e VUOTA: le assenze nel 2025-26
+
+Trovato l'11/08/2026 aprendo `main` per un controllo di routine sulla stagione
+appena chiusa. È il caso **R6** in forma pura — *il buco peggiore non è il
+`NaN`: è il finto pieno* — e merita una sezione perché nessuno dei controlli
+che il progetto già esegue lo vedeva.
+
+**Il fatto.** `home/away_absent_count_est` è piena al **100%** su tutte e nove
+le stagioni: zero `NaN`, anche nel 2025-26. Ma il valore che `add_absences`
+scrive quando la fonte non conosce nessun infortunio **non è `NaN`, è `0.0`**
+(`src/data/transfermarkt.py`, `counts[side].append(float(len(absent)))` — la
+lista vuota dà zero). Un conteggio di celle non-nulle non può distinguere
+*«nessuno è infortunato»* da *«non so chi è infortunato»*.
+
+**Come si vede lo stesso.** Non guardando quante celle sono piene, ma
+**quante volte il conteggio SALE**. Una fonte infortuni viva fa salire spesso
+il numero di indisponibili di una squadra: arrivano infortuni nuovi. Una fonte
+ferma può solo farlo scendere — i vecchi guariscono e nessuno li rimpiazza.
+
+```
+passo(squadra, t) = absent_count_est(squadra, t) − absent_count_est(squadra, t−1)
+% sale = #{passi > 0} / #{passi}          su tutte le squadre-partita di una stagione
+```
+
+| stagione | passi | sale | % sale | % righe a 0 |
+|---|--:|--:|--:|--:|
+| 2017-18 → 2024-25 | ~3.400/anno | ~840-1.015 | **23,6% → 29,2%** | 7,3% → 14,6% |
+| **2025-26** | 3.408 | **55** | **1,6%** | **83,5%** |
+
+E dentro il 2025-26 il taglio ha una data:
+
+| mese | passi | sale | % sale | media assenti |
+|---|--:|--:|--:|--:|
+| 2025-08 | 156 | 35 | 22,4% | 2,18 |
+| 2025-09 | 306 | 20 | 6,5% | 0,97 |
+| **2025-10 → 2026-05** | 2.946 | **0** | **0,0%** | 0,30 → 0,01 |
+
+**Zero salite in otto mesi consecutivi**, su 2.946 passi. Non è un calcio
+senza infortuni: è il dump infortuni di Transfermarkt fermo a **settembre
+2025**. Quello che si osserva dopo è la coda dei soli infortuni iniziati prima
+del taglio, che guariscono uno alla volta — da cui il decadimento monotono
+della media da 2,18 a 0,01.
+
+**Cosa NON è.** Non è un bug del codice: `add_absences` fa esattamente ciò che
+dice. Non è un difetto che sporca le previsioni: `covariates` è `()` di default
+(`scripts/backtest.py`), quindi nessun backtest ufficiale legge questa colonna.
+
+**Perché conta lo stesso, e molto.** È una trappola armata per chi verrà dopo.
+Chiunque provi `--covariates absence` sul 2025-26 misurerebbe il nulla e ne
+concluderebbe *«le assenze non predicono»* — un risultato negativo su una
+colonna vuota, esattamente ciò che il principio §1.10 del CLAUDE.md vieta di
+scrivere senza il suo perimetro. La verifica costa un comando:
+
+```bash
+python scripts/_run_stato_2526.py    # blocco 2 = questa tabella
+```
+
+**Cosa serve per ripararla.** Ri-scaricare il dump infortuni con
+`force=True` una volta che la fonte è tornata avanti (`_load_injuries`), e
+ricostruire la colonna. Finché non succede, il 2025-26 va trattato come
+**assenze non disponibili**, non come *«stagione senza assenti»*.
 
 ---
 

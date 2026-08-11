@@ -18696,3 +18696,208 @@ La degradazione del nuovo filtro è **asimmetrica di proposito**: se
 entra. Perdere un'amichevole costa un'amichevole; far morire il giro
 costerebbe tutte le partite del giro. Un test verifica `|S| = 96` proprio
 perché quella degradazione è silenziosa.
+
+---
+
+## Fase 150 — La colonna piena e vuota: le assenze del 2025-26
+
+**Obiettivo.** Nessuno, all'inizio: *«apriamo `main` e vediamo come va il
+database per la stagione 2025-26»*. Un controllo di routine sulla stagione
+appena chiusa (l'ultima giornata è del 24/05/2026), fatto l'11/08/2026.
+
+**Risultato in una riga.** Il 2025-26 è **completo e sano** — 1.752 partite,
+zero buchi nuovi, gli incroci con le raccolte per squadra e per giocatore
+tengono al 100% — tranne **una colonna, che è piena e vuota insieme**.
+
+**Il fatto.** `home/away_absent_count_est` ha **zero `NaN`** nel 2025-26,
+come in tutte le altre otto stagioni. Ma l'83,5% delle righe vale `0.0`,
+contro il 7-14% di ogni stagione precedente. Il primo controllo che chiunque
+farebbe — *quante celle sono piene?* — dà 100% e passa oltre.
+
+**Ragionamento / ipotesi.** Due spiegazioni sono compatibili con «tanti zeri»,
+e portano a decisioni opposte: *(a)* una stagione con pochi infortunati (il
+dato è buono, va usato); *(b)* la fonte si è fermata e lo zero significa «non
+lo so» (il dato è vuoto, va escluso). Distinguerle contando gli zeri è
+impossibile — servono due misure che le separino.
+
+La prima è il **decadimento**: la media di assenti nel 2025-26 non oscilla,
+**scende monotona** da 2,18 in agosto a 0,01 in maggio. Un campionato non
+guarisce progressivamente per dieci mesi.
+
+La seconda è decisiva, ed è la firma vera: **quante volte il conteggio SALE**.
+Una fonte viva fa arrivare infortuni nuovi; una ferma può solo far guarire i
+vecchi. Nelle otto stagioni precedenti sale nel **23,6-29,2%** dei passi. Nel
+2025-26 sale nell'**1,6%** — e da **ottobre 2025 in poi, esattamente zero
+volte su 2.946 passi**.
+
+**Alternative considerate.**
+1. *Svuotare la colonna a `NaN` sul 2025-26.* Scartata: è una modifica ai dati
+   (R3) per un difetto che sta a **monte**, nella fonte. Il registro delle
+   correzioni serve a riparare celle sbagliate, non a nascondere una fonte
+   ferma.
+2. *Ri-scaricare il dump con `force=True`.* È la riparazione vera, ma non si
+   può fare oggi alla cieca: se la fonte è ancora indietro si ri-scaricano
+   106 MB per ottenere gli stessi zeri. Resta il passo da fare quando la fonte
+   avanza.
+3. *Documentare e disarmare la trappola* — scelta questa, più uno script che
+   ri-calcola la firma in un comando.
+
+**Scelta e perché.** Il difetto **non tocca nessuna previsione**: `covariates`
+è `()` di default in `scripts/backtest.py`, quindi nessun backtest ufficiale
+legge quella colonna. Il danno è tutto **futuro e indiretto**: chi provasse
+`--covariates absence` sul 2025-26 misurerebbe il nulla e scriverebbe *«le
+assenze non predicono»* — un negativo su una colonna vuota, cioè proprio ciò
+che il principio §1.10 vieta di registrare senza il suo perimetro. Il costo di
+lasciarlo implicito è una conclusione falsa in archivio; il costo di scriverlo
+è questa voce.
+
+**Risultato (i numeri).**
+
+| controllo | esito |
+|---|---|
+| partite 2025-26, 5 leghe | **1.752** (380/380/380/306/306), stagioni intere |
+| colonne con `NaN` nuovi | **nessuna** — l'unico buco (Nantes-Toulouse, `isResult=false`) era già dichiarato |
+| incrocio con `team_stats` | **3.504/3.504** (100%), `join_to_snapshot` non alza |
+| incrocio con `player_stats` | 3.502/3.504 — manca **Como-Lecce 27/12/2025** |
+| gol a due fonti indipendenti | **96,3% esatti**, 3,6% sotto di 1, 0,1% sotto di 2, **0 sovrastime** |
+| assenze: % passi in salita | **1,6%** contro 23,6-29,2% storico; **0,0% da ottobre** |
+| quote 2025-26 | vere (overround 1,0613, zero righe a 1,0000) ma il margine **salta** sul confine di stagione |
+| `pytest` su clone pulito | **1.580/1.595** — 15 non passano per due dipendenze non dichiarate |
+
+**Due difetti minori trovati per strada.**
+
+1. **`bs4` e `openpyxl` non erano in `pyproject.toml`.** La suite era verde
+   solo sulle macchine dove qualcuno li aveva installati a mano: su un clone
+   pulito 9 test danno errore in raccolta (`wikipedia_careers.py` non si
+   importa) e 6 falliscono (gli `.xlsx` archiviati non si leggono).
+   Aggiunti a `dev`; con quelli, **1.595 verdi** come dichiarato.
+2. **Il margine delle quote salta sul confine di stagione**: 1,0480 a maggio
+   2025 → 1,0586 ad agosto 2025, poi deriva fino a 1,0676. Il salto è **fra**
+   le stagioni, non dentro: cinque paesi non ri-prezzano il margine nella
+   stessa notte, quindi punta a un cambio nel paniere di book dietro `AvgC*`,
+   non a un fatto di mercato. **Non verificato alla fonte** — è
+   un'osservazione, non una diagnosi.
+
+**Lezione.** Tre, in ordine di quanto costano.
+
+1. **Un conteggio di celle piene non è una misura di copertura.** Lo sapevamo
+   già (R6), ma qui il finto pieno è sopravvissuto perché la colonna è
+   *dichiarata stima*: «è una stima» ha funzionato da spiegazione per un
+   comportamento che invece era un guasto. Un'etichetta di incertezza non
+   copre l'assenza totale di informazione.
+2. **La firma di una fonte ferma è la monotonia, non il livello.** Il livello
+   («pochi assenti») è ambiguo; la direzione dei passi no. Vale per qualunque
+   colonna alimentata da un dump esterno — vale già oggi per gli infortuni, e
+   varrà per le prossime.
+3. **Sbagliare il LATO non dà segnale, dà rumore travestito da segnale.**
+   Il primo confronto dei gol fra le due fonti dava il **74% di righe
+   divergenti**: non un dato rotto, ma `gol_dedotti` letto come «gol segnati»
+   quando è «gol subiti». La stessa trappola già pagata sulle coppe
+   (Fase 139-*). Un 74% di divergenza fra due fonti serie è quasi sempre un
+   errore di chi confronta.
+
+### 📐 Il modello in dettaglio
+
+**La quantità che separa le due ipotesi.** Detto `a(s,t)` il conteggio di
+assenti della squadra `s` alla sua `t`-esima partita della stagione, il passo è
+
+```
+Δ(s,t) = a(s,t) − a(s,t−1)                     t = 2 … n_s
+salita(S) = #{(s,t) : Δ(s,t) > 0} / #{(s,t)}
+```
+
+dove le partite di ogni squadra sono ordinate per data e si contano **sia in
+casa sia in trasferta** (una squadra-partita per riga, quindi 2 righe per
+partita: 3.408 passi su 1.752 partite ≈ 2 × 1.752 − 96 squadre).
+
+Perché `salita` distingue e il livello no. Sotto l'ipotesi *(a)* — fonte viva,
+stagione con pochi infortuni — gli infortuni restano un processo di arrivo:
+`E[salita] > 0` e resta stabile, perché ogni infortunio che finisce è
+preceduto da uno che inizia. Sotto *(b)* — dump congelato alla data `T` — per
+`t > T` **nessun infortunio può iniziare**, quindi `Δ ≤ 0` per costruzione:
+
+```
+a(s,t) = #{ giocatori i ∈ rosa(s) : inizio_i ≤ data(t) ≤ fine_i }
+con  inizio_i ≤ T  per ogni i noto        (nessun record dopo il taglio)
+⇒    t > T  ⇒  l'insieme può solo perdere elementi  ⇒  Δ(s,t) ≤ 0
+```
+
+È un'implicazione **esatta**, non statistica: una sola salita dopo `T`
+falsificherebbe l'ipotesi del congelamento. Ne osserviamo **zero su 2.946**.
+
+I valori misurati:
+
+| stagione | passi | salite | `salita` |
+|---|--:|--:|--:|
+| 2017-18 | 3.554 | 839 | 23,6% |
+| 2018-19 | 3.554 | 887 | 25,0% |
+| 2019-20 | 3.352 | 925 | 27,6% |
+| 2020-21 | 3.554 | 982 | 27,6% |
+| 2021-22 | 3.554 | 993 | 27,9% |
+| 2022-23 | 3.554 | 1.015 | 28,6% |
+| 2023-24 | 3.408 | 996 | 29,2% |
+| 2024-25 | 3.408 | 978 | 28,7% |
+| **2025-26** | **3.408** | **55** | **1,6%** |
+
+Le 55 salite residue stanno tutte in agosto-settembre 2025 (35 + 20), cioè
+**prima** del taglio: sono infortuni veri, registrati mentre la fonte era
+ancora viva. Da `T` ≈ fine settembre 2025 in poi la colonna è, letteralmente,
+una funzione non crescente del tempo.
+
+**Da dove viene lo zero.** Nel codice non c'è nessuna decisione di scrivere
+zero al posto di `NaN`: è la lunghezza di una lista vuota
+(`src/data/transfermarkt.py`, `add_absences`).
+
+```
+absent = [ id ∈ rosa(s) : ∃ (inizio, fine) ∈ infortuni(id), inizio ≤ d ≤ fine ]
+count  = float(len(absent))                      # = 0.0 se la fonte non sa nulla
+value  = Σ valore(id, d) se absent else 0.0
+```
+
+`len([]) = 0` e `0.0` è indistinguibile da «zero assenti misurato». Questo è
+il punto in cui il *finto pieno* nasce: non da un errore, ma da un tipo di
+ritorno che non ha modo di dire «non lo so».
+
+**La controprova dei gol, col lato giusto.** `team_stats.gol_dedotti` è
+
+```
+gol_SUBITI(riga) = round( xGot_affrontati − Gol_evitati )
+```
+
+perché «Gol evitati» è definito dalla fonte come `xGOT affrontato − gol
+subiti`. Il confronto corretto contro lo snapshot è quindi
+
+```
+dedotti(r)  vs  away_goals(r)   se r è la squadra di casa
+dedotti(r)  vs  home_goals(r)   se r è la squadra ospite
+```
+
+e non contro i gol della squadra stessa. Con il lato giusto: **3.375/3.504
+esatti (96,3%)**, 125 a −1, 4 a −2, **0 positivi**. Il segno conta: gli
+autogol non entrano nell'xGOT di chi ne beneficia, quindi la deduzione può
+solo **sottostimare**. Zero sovrastime su 3.504 è la conferma che l'identità
+regge; una sola sovrastima sarebbe stata un difetto vero. I 4 casi a −2 sono
+partite con due autogol, tutti verificabili (Man City-Burnley 5-1, Arsenal-
+Wolves 2-1, Bayern-Wolfsburg 8-1, Metz-Auxerre 1-3).
+
+**Il gap col mercato nel 2025-26**, per completezza, dai cinque backtest
+registrati in `runs.jsonl` (log-loss 1X2, walk-forward, config ufficiale):
+
+| lega | Dixon-Coles | mercato | gap |
+|---|--:|--:|--:|
+| Serie A | 0,9924 | 0,9784 | **+0,0140** |
+| Premier | 1,0255 | 1,0118 | **+0,0137** |
+| La Liga | 0,9761 | 0,9648 | **+0,0113** |
+| Bundesliga | 0,9701 | 0,9510 | **+0,0191** |
+| Ligue 1 | 0,9941 | 0,9755 | **+0,0186** |
+
+Nulla di anomalo: sono i valori attesi (§6 del CLAUDE.md dichiara +0,0167
+Serie A, +0,0181 Bundesliga, +0,0190 Ligue 1 sul pieno storico). Una stagione
+sola è troppo poco per leggerci una tendenza — è un controllo di sanità, non
+una misura.
+
+Tutti i numeri di questa fase si ri-calcolano con:
+
+```bash
+python scripts/_run_stato_2526.py
+```

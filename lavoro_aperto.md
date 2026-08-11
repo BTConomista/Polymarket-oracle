@@ -637,13 +637,14 @@ operativa di ciò che è rimasto aperto; i numeri stanno nei due verbali.*
 > Fase 98 → un nullo non chiude il fronte) e la **licenza**, dichiaratamente non
 > risolta (`files/diretta_serie_a_2526/README.md` §1-bis).
 
-### B · Lavori concreti, nessuna decisione richiesta (3)
+### B · Lavori concreti, nessuna decisione richiesta (4)
 
 | # | cosa | costo | valore |
 |---|---|---|---|
 | B1 | ⭐ **Le 10.008 righe Understat già su disco** — xG, xA, npxG, xGChain, xGBuildup, key_passes per giocatore, scartate da `parse_season_players` (`src/data/understat.py`, righe 214-241) | **1-2 ore** | il pezzo più prezioso del Tier B, **già in repo**. ⚠️ grana **stagione** e solo **2 leghe su 5**; R8: usabile solo **ritardato** |
 | B2 | **I token di `description` mai estratti** da `game_events` — fra cui **due falli individuali VERI**: `Handball by` (832) e `Fouled player` (2.256); più `Counter attack goal` (1.430), `Tap-in` (829), `Direct free kick` (783) | poche ore | i falli individuali erano in checklist come «Tier B, nessuna fonte»: **ci sono già**. ⚠️ subordinato ad A1 |
 | B3 | **Chiudere o congelare le 13 voci ASSUNTE** dell'audit | variabile | finché sono ASSUNTE **non vanno usate**: sono dichiarate a posto e mai misurate |
+| B4 | 🩹 **Ri-scaricare il dump infortuni di Transfermarkt** (`transfermarkt._load_injuries(force=True)`) e ricostruire `absent_*_est` | mezz'ora + ~106 MB | la fonte è **ferma a settembre 2025** (Fase 150): la colonna è piena di `0.0` che significano «non lo so», e da ottobre non registra **zero** infortuni nuovi su 2.946 passi. Non tocca nessuna previsione (`covariates` è `()`) ma rende il 2025-26 inutilizzabile per qualunque prova sulle assenze. ⚠️ **Prima verificare che la fonte sia avanzata**, altrimenti si ri-scaricano 106 MB per gli stessi zeri. Quando è riparata: `tests/test_assenze_congelate.py` diventa rosso apposta, e vanno aggiornati `docs/DATI.md` §4-quater e §3 |
 
 ### C · Buchi strutturali DICHIARATI — non sono da risolvere, sono da non ri-scoprire
 

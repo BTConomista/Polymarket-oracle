@@ -10,8 +10,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Il minimo per far girare `python -m pytest` VERDE su un clone pulito.
+# ⚠️ bs4 e openpyxl non servono al modello, ma servono ai TEST: senza,
+# `src/data/wikipedia_careers.py` non si importa (9 errori in raccolta) e
+# `registra_raccolta_*_diretta.py` non legge gli .xlsx archiviati (6 falliti).
+# Erano assenti da qui fino all'11/08/2026: la suite era verde solo sulle
+# macchine dove qualcuno li aveva installati a mano.
 dev = [
     "pytest>=7.0",
+    "beautifulsoup4>=4.11",
+    "openpyxl>=3.1",
 ]
 # Modelli di famiglia diversa dal Dixon-Coles (Fase 21+): gradient boosting,
 # ecc. Non serve al modello core ne' ai test — solo agli script _run_*_gbm.
