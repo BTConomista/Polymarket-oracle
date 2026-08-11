@@ -425,6 +425,29 @@ traccia.
   T−6h. Nessuna delle due è sbagliata; sceglierne una in silenzio sì.
 - **D2 · Che cosa si fa se P1 non chiude in tempo.** Timebox dichiarato: il
   test parte **col solo M1** e lo si scrive, invece di far slittare tutto.
+- **D3 · Si congela UNA configurazione o una ROSA di varianti?** (aperta il
+  10/08/2026, richiesta utente: *«così noi prevediamo i risultati della
+  stagione utilizzando i modelli della fase 1, e molti non sono neanche stati
+  sperimentati, soprattutto Premier e Liga»*). Il rilievo è **misurato**: le
+  celle `⬜` della PANCHINA sono **2 su 51 in Serie A** e **23-26 nelle altre
+  quattro** — per metà delle righe la config di Premier/Liga/Bundesliga/Ligue 1
+  non è *scelta*, è **rimasta**. Congelando la sola config ufficiale, la
+  stagione passa senza decidere nessuna di quelle celle. La proposta
+  (`docs/CHIUSURA_FASE_1.md` §4) è congelare **nove varianti** — la config
+  ufficiale più otto candidate che sono tutte **interruttori di
+  configurazione**, non codice nuovo: router θ Liga, φ35 Liga, θ+φ35,
+  `dp_tilt` Serie A, `dp_tilt` pooled, ensemble emivite, devig di Shin,
+  estremizzazione O/U. Costo: un `dict` e una colonna nello scoring. Vincoli
+  che restano: il **primario non cambia** (M1 vs baseline, log-loss 1X2,
+  pooled) e la rosa è una **famiglia secondaria pre-registrata** con Holm al
+  suo interno (criterio 5); e **la config ufficiale non si tocca ora** —
+  accendere il router θ in Liga su evidenza da panchina è ciò che lo stato 🪑
+  esiste per impedire. ⚠️ Limite dichiarato: con 1.752 partite in una stagione
+  ×5 leghe è powered il **solo 1X2 pooled** (n₈₀ = 574); per-lega (380/306) e
+  GG/NG (2.254) e O/U 2.5 (2.988) **no** — le varianti per-lega si leggono come
+  accumulo, non come verdetto al 30 giugno. **Default se nessuno decide entro
+  il 15/08**: si congela la rosa completa, perché il costo è trascurabile e
+  l'omissione è irreversibile.
 
 #### Controlli fissi, da rifare a ogni congelamento
 

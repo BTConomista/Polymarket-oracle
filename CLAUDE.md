@@ -528,6 +528,14 @@ docs/INFRASTRUTTURA_RACCOLTA.md  dove deve girare la raccolta: ragionamento
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
+docs/CHIUSURA_FASE_1.md   il piano per dichiarare DAVVERO conclusa la Fase 1
+                 (10/08/2026, richiesta utente su una sua bozza): perimetro
+                 congelato, i SEI stati con cui una casella si svuota (fra cui
+                 ⛔ «non decidibile per potenza», la novita'), il protocollo
+                 unico e il programma per tranche. ⚠️ Il numero che lo motiva:
+                 le 116 celle ⬜ NON sono distribuite — Serie A 2 su 51, le
+                 altre quattro 23-26. E §4 scioglie il conflitto col test
+                 prospettico: si congela una ROSA di varianti, non un modello
 docs/CACCIA_OU_2017_19.md   piano dedicato per l'ultimo buco dati reale (O/U
                  di CHIUSURA 2017-19; l'apertura e' dato reale dalla Fase 73).
                  CHIUSO alla Fase 100: il dato esiste (1xBet via footiqo) ma NON
