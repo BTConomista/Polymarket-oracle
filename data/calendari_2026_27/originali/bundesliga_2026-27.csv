@@ -1,0 +1,307 @@
+﻿campionato,paese,stagione,giornata,data,giorno,ora_italiana,ora_locale,squadra_casa,squadra_trasferta,data_ora_provvisoria,casa_nome_ufficiale,trasferta_nome_ufficiale,kickoff_utc
+Bundesliga,Germania,2026-27,1,2026-08-28,Venerdì,20:30,20:30,Bayern Monaco,Stoccarda,no,FC Bayern München,VfB Stuttgart,2026-08-28T18:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Augsburg,Schalke 04,no,FC Augsburg,FC Schalke 04,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Borussia Dortmund,Amburgo,no,Borussia Dortmund,Hamburger SV,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Colonia,Hoffenheim,no,1. FC Köln,TSG 1899 Hoffenheim,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Elversberg,Leverkusen,no,SV 07 Elversberg,Bayer 04 Leverkusen,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Friburgo,Werder Brema,no,SC Freiburg,SV Werder Bremen,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Mainz,Paderborn,no,1. FSV Mainz 05,SC Paderborn 07,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,RB Lipsia,Borussia M'gladbach,no,RB Leipzig,Borussia Mönchengladbach,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,1,2026-08-29,Sabato,15:30,15:30,Union Berlino,Eintracht Francoforte,no,1. FC Union Berlin,Eintracht Frankfurt,2026-08-29T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Amburgo,Mainz,sì,Hamburger SV,1. FSV Mainz 05,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Borussia M'gladbach,Elversberg,sì,Borussia Mönchengladbach,SV 07 Elversberg,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Eintracht Francoforte,Augsburg,sì,Eintracht Frankfurt,FC Augsburg,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Hoffenheim,Borussia Dortmund,sì,TSG 1899 Hoffenheim,Borussia Dortmund,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Leverkusen,Union Berlino,sì,Bayer 04 Leverkusen,1. FC Union Berlin,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Paderborn,Friburgo,sì,SC Paderborn 07,SC Freiburg,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Schalke 04,Bayern Monaco,sì,FC Schalke 04,FC Bayern München,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Stoccarda,Colonia,sì,VfB Stuttgart,1. FC Köln,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,2,2026-09-05,Sabato,15:30,15:30,Werder Brema,RB Lipsia,sì,SV Werder Bremen,RB Leipzig,2026-09-05T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Augsburg,Leverkusen,sì,FC Augsburg,Bayer 04 Leverkusen,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Borussia Dortmund,Paderborn,sì,Borussia Dortmund,SC Paderborn 07,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Colonia,Werder Brema,sì,1. FC Köln,SV Werder Bremen,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Elversberg,Bayern Monaco,sì,SV 07 Elversberg,FC Bayern München,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Friburgo,Borussia M'gladbach,sì,SC Freiburg,Borussia Mönchengladbach,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Hoffenheim,Stoccarda,sì,TSG 1899 Hoffenheim,VfB Stuttgart,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Mainz,Eintracht Francoforte,sì,1. FSV Mainz 05,Eintracht Frankfurt,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,RB Lipsia,Amburgo,sì,RB Leipzig,Hamburger SV,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,3,2026-09-12,Sabato,15:30,15:30,Union Berlino,Schalke 04,sì,1. FC Union Berlin,FC Schalke 04,2026-09-12T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Amburgo,Colonia,sì,Hamburger SV,1. FC Köln,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Bayern Monaco,Union Berlino,sì,FC Bayern München,1. FC Union Berlin,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Borussia M'gladbach,Mainz,sì,Borussia Mönchengladbach,1. FSV Mainz 05,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Eintracht Francoforte,Friburgo,sì,Eintracht Frankfurt,SC Freiburg,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Leverkusen,RB Lipsia,sì,Bayer 04 Leverkusen,RB Leipzig,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Paderborn,Hoffenheim,sì,SC Paderborn 07,TSG 1899 Hoffenheim,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Schalke 04,Elversberg,sì,FC Schalke 04,SV 07 Elversberg,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Stoccarda,Borussia Dortmund,sì,VfB Stuttgart,Borussia Dortmund,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,4,2026-09-19,Sabato,15:30,15:30,Werder Brema,Augsburg,sì,SV Werder Bremen,FC Augsburg,2026-09-19T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Augsburg,Bayern Monaco,sì,FC Augsburg,FC Bayern München,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Borussia Dortmund,Werder Brema,sì,Borussia Dortmund,SV Werder Bremen,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Colonia,Borussia M'gladbach,sì,1. FC Köln,Borussia Mönchengladbach,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Friburgo,Schalke 04,sì,SC Freiburg,FC Schalke 04,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Hoffenheim,Amburgo,sì,TSG 1899 Hoffenheim,Hamburger SV,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Mainz,Leverkusen,sì,1. FSV Mainz 05,Bayer 04 Leverkusen,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Paderborn,Stoccarda,sì,SC Paderborn 07,VfB Stuttgart,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,RB Lipsia,Eintracht Francoforte,sì,RB Leipzig,Eintracht Frankfurt,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,5,2026-10-10,Sabato,15:30,15:30,Union Berlino,Elversberg,sì,1. FC Union Berlin,SV 07 Elversberg,2026-10-10T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Amburgo,Stoccarda,sì,Hamburger SV,VfB Stuttgart,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Bayern Monaco,RB Lipsia,sì,FC Bayern München,RB Leipzig,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Borussia M'gladbach,Hoffenheim,sì,Borussia Mönchengladbach,TSG 1899 Hoffenheim,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Eintracht Francoforte,Colonia,sì,Eintracht Frankfurt,1. FC Köln,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Elversberg,Augsburg,sì,SV 07 Elversberg,FC Augsburg,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Leverkusen,Friburgo,sì,Bayer 04 Leverkusen,SC Freiburg,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Schalke 04,Mainz,sì,FC Schalke 04,1. FSV Mainz 05,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Union Berlino,Borussia Dortmund,sì,1. FC Union Berlin,Borussia Dortmund,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,6,2026-10-17,Sabato,15:30,15:30,Werder Brema,Paderborn,sì,SV Werder Bremen,SC Paderborn 07,2026-10-17T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Augsburg,Union Berlino,sì,FC Augsburg,1. FC Union Berlin,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Borussia Dortmund,Eintracht Francoforte,sì,Borussia Dortmund,Eintracht Frankfurt,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Colonia,Schalke 04,sì,1. FC Köln,FC Schalke 04,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Friburgo,Bayern Monaco,sì,SC Freiburg,FC Bayern München,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Hoffenheim,Leverkusen,sì,TSG 1899 Hoffenheim,Bayer 04 Leverkusen,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Mainz,Werder Brema,sì,1. FSV Mainz 05,SV Werder Bremen,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Paderborn,Amburgo,sì,SC Paderborn 07,Hamburger SV,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,RB Lipsia,Elversberg,sì,RB Leipzig,SV 07 Elversberg,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,7,2026-10-24,Sabato,15:30,15:30,Stoccarda,Borussia M'gladbach,sì,VfB Stuttgart,Borussia Mönchengladbach,2026-10-24T13:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Augsburg,Friburgo,sì,FC Augsburg,SC Freiburg,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Bayern Monaco,Borussia Dortmund,sì,FC Bayern München,Borussia Dortmund,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Borussia M'gladbach,Paderborn,sì,Borussia Mönchengladbach,SC Paderborn 07,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Eintracht Francoforte,Amburgo,sì,Eintracht Frankfurt,Hamburger SV,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Elversberg,Mainz,sì,SV 07 Elversberg,1. FSV Mainz 05,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Leverkusen,Stoccarda,sì,Bayer 04 Leverkusen,VfB Stuttgart,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Schalke 04,RB Lipsia,sì,FC Schalke 04,RB Leipzig,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Union Berlino,Colonia,sì,1. FC Union Berlin,1. FC Köln,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,8,2026-10-31,Sabato,15:30,15:30,Werder Brema,Hoffenheim,sì,SV Werder Bremen,TSG 1899 Hoffenheim,2026-10-31T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Amburgo,Borussia M'gladbach,sì,Hamburger SV,Borussia Mönchengladbach,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Borussia Dortmund,Elversberg,sì,Borussia Dortmund,SV 07 Elversberg,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Colonia,Leverkusen,sì,1. FC Köln,Bayer 04 Leverkusen,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Friburgo,Union Berlino,sì,SC Freiburg,1. FC Union Berlin,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Hoffenheim,Schalke 04,sì,TSG 1899 Hoffenheim,FC Schalke 04,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Mainz,Bayern Monaco,sì,1. FSV Mainz 05,FC Bayern München,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Paderborn,Eintracht Francoforte,sì,SC Paderborn 07,Eintracht Frankfurt,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,RB Lipsia,Augsburg,sì,RB Leipzig,FC Augsburg,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,9,2026-11-07,Sabato,15:30,15:30,Stoccarda,Werder Brema,sì,VfB Stuttgart,SV Werder Bremen,2026-11-07T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Augsburg,Mainz,sì,FC Augsburg,1. FSV Mainz 05,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Bayern Monaco,Colonia,sì,FC Bayern München,1. FC Köln,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Borussia M'gladbach,Borussia Dortmund,sì,Borussia Mönchengladbach,Borussia Dortmund,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Eintracht Francoforte,Hoffenheim,sì,Eintracht Frankfurt,TSG 1899 Hoffenheim,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Elversberg,Friburgo,sì,SV 07 Elversberg,SC Freiburg,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Leverkusen,Paderborn,sì,Bayer 04 Leverkusen,SC Paderborn 07,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Schalke 04,Stoccarda,sì,FC Schalke 04,VfB Stuttgart,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Union Berlino,RB Lipsia,sì,1. FC Union Berlin,RB Leipzig,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,10,2026-11-21,Sabato,15:30,15:30,Werder Brema,Amburgo,sì,SV Werder Bremen,Hamburger SV,2026-11-21T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Amburgo,Bayern Monaco,sì,Hamburger SV,FC Bayern München,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Borussia Dortmund,Leverkusen,sì,Borussia Dortmund,Bayer 04 Leverkusen,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Colonia,Elversberg,sì,1. FC Köln,SV 07 Elversberg,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Friburgo,RB Lipsia,sì,SC Freiburg,RB Leipzig,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Hoffenheim,Augsburg,sì,TSG 1899 Hoffenheim,FC Augsburg,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Mainz,Union Berlino,sì,1. FSV Mainz 05,1. FC Union Berlin,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Paderborn,Schalke 04,sì,SC Paderborn 07,FC Schalke 04,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Stoccarda,Eintracht Francoforte,sì,VfB Stuttgart,Eintracht Frankfurt,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,11,2026-11-28,Sabato,15:30,15:30,Werder Brema,Borussia M'gladbach,sì,SV Werder Bremen,Borussia Mönchengladbach,2026-11-28T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Augsburg,Colonia,sì,FC Augsburg,1. FC Köln,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Bayern Monaco,Paderborn,sì,FC Bayern München,SC Paderborn 07,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Eintracht Francoforte,Werder Brema,sì,Eintracht Frankfurt,SV Werder Bremen,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Elversberg,Stoccarda,sì,SV 07 Elversberg,VfB Stuttgart,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Friburgo,Hoffenheim,sì,SC Freiburg,TSG 1899 Hoffenheim,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Leverkusen,Borussia M'gladbach,sì,Bayer 04 Leverkusen,Borussia Mönchengladbach,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,RB Lipsia,Mainz,sì,RB Leipzig,1. FSV Mainz 05,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Schalke 04,Borussia Dortmund,sì,FC Schalke 04,Borussia Dortmund,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,12,2026-12-05,Sabato,15:30,15:30,Union Berlino,Amburgo,sì,1. FC Union Berlin,Hamburger SV,2026-12-05T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Amburgo,Schalke 04,sì,Hamburger SV,FC Schalke 04,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Borussia Dortmund,Augsburg,sì,Borussia Dortmund,FC Augsburg,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Borussia M'gladbach,Eintracht Francoforte,sì,Borussia Mönchengladbach,Eintracht Frankfurt,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Colonia,RB Lipsia,sì,1. FC Köln,RB Leipzig,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Hoffenheim,Bayern Monaco,sì,TSG 1899 Hoffenheim,FC Bayern München,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Mainz,Friburgo,sì,1. FSV Mainz 05,SC Freiburg,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Paderborn,Elversberg,sì,SC Paderborn 07,SV 07 Elversberg,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Stoccarda,Union Berlino,sì,VfB Stuttgart,1. FC Union Berlin,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,13,2026-12-12,Sabato,15:30,15:30,Werder Brema,Leverkusen,sì,SV Werder Bremen,Bayer 04 Leverkusen,2026-12-12T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Augsburg,Paderborn,sì,FC Augsburg,SC Paderborn 07,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Bayern Monaco,Werder Brema,sì,FC Bayern München,SV Werder Bremen,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Elversberg,Amburgo,sì,SV 07 Elversberg,Hamburger SV,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Friburgo,Stoccarda,sì,SC Freiburg,VfB Stuttgart,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Leverkusen,Eintracht Francoforte,sì,Bayer 04 Leverkusen,Eintracht Frankfurt,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Mainz,Colonia,sì,1. FSV Mainz 05,1. FC Köln,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,RB Lipsia,Borussia Dortmund,sì,RB Leipzig,Borussia Dortmund,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Schalke 04,Borussia M'gladbach,sì,FC Schalke 04,Borussia Mönchengladbach,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,14,2026-12-19,Sabato,15:30,15:30,Union Berlino,Hoffenheim,sì,1. FC Union Berlin,TSG 1899 Hoffenheim,2026-12-19T14:30Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Amburgo,Leverkusen,sì,Hamburger SV,Bayer 04 Leverkusen,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Borussia Dortmund,Mainz,sì,Borussia Dortmund,1. FSV Mainz 05,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Borussia M'gladbach,Bayern Monaco,sì,Borussia Mönchengladbach,FC Bayern München,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Colonia,Friburgo,sì,1. FC Köln,SC Freiburg,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Eintracht Francoforte,Schalke 04,sì,Eintracht Frankfurt,FC Schalke 04,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Hoffenheim,Elversberg,sì,TSG 1899 Hoffenheim,SV 07 Elversberg,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Paderborn,RB Lipsia,sì,SC Paderborn 07,RB Leipzig,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Stoccarda,Augsburg,sì,VfB Stuttgart,FC Augsburg,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,15,2027-01-09,Sabato,13:00,13:00,Werder Brema,Union Berlino,sì,SV Werder Bremen,1. FC Union Berlin,2027-01-09T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Augsburg,Borussia M'gladbach,sì,FC Augsburg,Borussia Mönchengladbach,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Bayern Monaco,Leverkusen,sì,FC Bayern München,Bayer 04 Leverkusen,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Colonia,Borussia Dortmund,sì,1. FC Köln,Borussia Dortmund,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Elversberg,Eintracht Francoforte,sì,SV 07 Elversberg,Eintracht Frankfurt,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Friburgo,Amburgo,sì,SC Freiburg,Hamburger SV,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Mainz,Hoffenheim,sì,1. FSV Mainz 05,TSG 1899 Hoffenheim,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,RB Lipsia,Stoccarda,sì,RB Leipzig,VfB Stuttgart,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Schalke 04,Werder Brema,sì,FC Schalke 04,SV Werder Bremen,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,16,2027-01-13,Mercoledì,13:00,13:00,Union Berlino,Paderborn,sì,1. FC Union Berlin,SC Paderborn 07,2027-01-13T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Amburgo,Augsburg,sì,Hamburger SV,FC Augsburg,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Borussia Dortmund,Friburgo,sì,Borussia Dortmund,SC Freiburg,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Borussia M'gladbach,Union Berlino,sì,Borussia Mönchengladbach,1. FC Union Berlin,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Eintracht Francoforte,Bayern Monaco,sì,Eintracht Frankfurt,FC Bayern München,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Hoffenheim,RB Lipsia,sì,TSG 1899 Hoffenheim,RB Leipzig,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Leverkusen,Schalke 04,sì,Bayer 04 Leverkusen,FC Schalke 04,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Paderborn,Colonia,sì,SC Paderborn 07,1. FC Köln,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Stoccarda,Mainz,sì,VfB Stuttgart,1. FSV Mainz 05,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,17,2027-01-16,Sabato,13:00,13:00,Werder Brema,Elversberg,sì,SV Werder Bremen,SV 07 Elversberg,2027-01-16T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Amburgo,Borussia Dortmund,sì,Hamburger SV,Borussia Dortmund,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Borussia M'gladbach,RB Lipsia,sì,Borussia Mönchengladbach,RB Leipzig,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Eintracht Francoforte,Union Berlino,sì,Eintracht Frankfurt,1. FC Union Berlin,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Hoffenheim,Colonia,sì,TSG 1899 Hoffenheim,1. FC Köln,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Leverkusen,Elversberg,sì,Bayer 04 Leverkusen,SV 07 Elversberg,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Paderborn,Mainz,sì,SC Paderborn 07,1. FSV Mainz 05,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Schalke 04,Augsburg,sì,FC Schalke 04,FC Augsburg,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Stoccarda,Bayern Monaco,sì,VfB Stuttgart,FC Bayern München,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,18,2027-01-23,Sabato,13:00,13:00,Werder Brema,Friburgo,sì,SV Werder Bremen,SC Freiburg,2027-01-23T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Augsburg,Eintracht Francoforte,sì,FC Augsburg,Eintracht Frankfurt,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Bayern Monaco,Schalke 04,sì,FC Bayern München,FC Schalke 04,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Borussia Dortmund,Hoffenheim,sì,Borussia Dortmund,TSG 1899 Hoffenheim,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Colonia,Stoccarda,sì,1. FC Köln,VfB Stuttgart,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Elversberg,Borussia M'gladbach,sì,SV 07 Elversberg,Borussia Mönchengladbach,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Friburgo,Paderborn,sì,SC Freiburg,SC Paderborn 07,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Mainz,Amburgo,sì,1. FSV Mainz 05,Hamburger SV,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,RB Lipsia,Werder Brema,sì,RB Leipzig,SV Werder Bremen,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,19,2027-01-30,Sabato,13:00,13:00,Union Berlino,Leverkusen,sì,1. FC Union Berlin,Bayer 04 Leverkusen,2027-01-30T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Amburgo,RB Lipsia,sì,Hamburger SV,RB Leipzig,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Bayern Monaco,Elversberg,sì,FC Bayern München,SV 07 Elversberg,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Borussia M'gladbach,Friburgo,sì,Borussia Mönchengladbach,SC Freiburg,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Eintracht Francoforte,Mainz,sì,Eintracht Frankfurt,1. FSV Mainz 05,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Leverkusen,Augsburg,sì,Bayer 04 Leverkusen,FC Augsburg,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Paderborn,Borussia Dortmund,sì,SC Paderborn 07,Borussia Dortmund,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Schalke 04,Union Berlino,sì,FC Schalke 04,1. FC Union Berlin,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Stoccarda,Hoffenheim,sì,VfB Stuttgart,TSG 1899 Hoffenheim,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,20,2027-02-06,Sabato,13:00,13:00,Werder Brema,Colonia,sì,SV Werder Bremen,1. FC Köln,2027-02-06T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Augsburg,Werder Brema,sì,FC Augsburg,SV Werder Bremen,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Borussia Dortmund,Stoccarda,sì,Borussia Dortmund,VfB Stuttgart,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Colonia,Amburgo,sì,1. FC Köln,Hamburger SV,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Elversberg,Schalke 04,sì,SV 07 Elversberg,FC Schalke 04,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Friburgo,Eintracht Francoforte,sì,SC Freiburg,Eintracht Frankfurt,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Hoffenheim,Paderborn,sì,TSG 1899 Hoffenheim,SC Paderborn 07,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Mainz,Borussia M'gladbach,sì,1. FSV Mainz 05,Borussia Mönchengladbach,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,RB Lipsia,Leverkusen,sì,RB Leipzig,Bayer 04 Leverkusen,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,21,2027-02-13,Sabato,13:00,13:00,Union Berlino,Bayern Monaco,sì,1. FC Union Berlin,FC Bayern München,2027-02-13T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Amburgo,Hoffenheim,sì,Hamburger SV,TSG 1899 Hoffenheim,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Bayern Monaco,Augsburg,sì,FC Bayern München,FC Augsburg,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Borussia M'gladbach,Colonia,sì,Borussia Mönchengladbach,1. FC Köln,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Eintracht Francoforte,RB Lipsia,sì,Eintracht Frankfurt,RB Leipzig,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Elversberg,Union Berlino,sì,SV 07 Elversberg,1. FC Union Berlin,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Leverkusen,Mainz,sì,Bayer 04 Leverkusen,1. FSV Mainz 05,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Schalke 04,Friburgo,sì,FC Schalke 04,SC Freiburg,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Stoccarda,Paderborn,sì,VfB Stuttgart,SC Paderborn 07,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,22,2027-02-20,Sabato,13:00,13:00,Werder Brema,Borussia Dortmund,sì,SV Werder Bremen,Borussia Dortmund,2027-02-20T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Augsburg,Elversberg,sì,FC Augsburg,SV 07 Elversberg,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Borussia Dortmund,Union Berlino,sì,Borussia Dortmund,1. FC Union Berlin,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Colonia,Eintracht Francoforte,sì,1. FC Köln,Eintracht Frankfurt,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Friburgo,Leverkusen,sì,SC Freiburg,Bayer 04 Leverkusen,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Hoffenheim,Borussia M'gladbach,sì,TSG 1899 Hoffenheim,Borussia Mönchengladbach,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Mainz,Schalke 04,sì,1. FSV Mainz 05,FC Schalke 04,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Paderborn,Werder Brema,sì,SC Paderborn 07,SV Werder Bremen,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,RB Lipsia,Bayern Monaco,sì,RB Leipzig,FC Bayern München,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,23,2027-02-27,Sabato,13:00,13:00,Stoccarda,Amburgo,sì,VfB Stuttgart,Hamburger SV,2027-02-27T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Amburgo,Paderborn,sì,Hamburger SV,SC Paderborn 07,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Bayern Monaco,Friburgo,sì,FC Bayern München,SC Freiburg,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Borussia M'gladbach,Stoccarda,sì,Borussia Mönchengladbach,VfB Stuttgart,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Eintracht Francoforte,Borussia Dortmund,sì,Eintracht Frankfurt,Borussia Dortmund,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Elversberg,RB Lipsia,sì,SV 07 Elversberg,RB Leipzig,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Leverkusen,Hoffenheim,sì,Bayer 04 Leverkusen,TSG 1899 Hoffenheim,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Schalke 04,Colonia,sì,FC Schalke 04,1. FC Köln,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Union Berlino,Augsburg,sì,1. FC Union Berlin,FC Augsburg,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,24,2027-03-03,Mercoledì,13:00,13:00,Werder Brema,Mainz,sì,SV Werder Bremen,1. FSV Mainz 05,2027-03-03T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Amburgo,Eintracht Francoforte,sì,Hamburger SV,Eintracht Frankfurt,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Borussia Dortmund,Bayern Monaco,sì,Borussia Dortmund,FC Bayern München,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Colonia,Union Berlino,sì,1. FC Köln,1. FC Union Berlin,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Friburgo,Augsburg,sì,SC Freiburg,FC Augsburg,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Hoffenheim,Werder Brema,sì,TSG 1899 Hoffenheim,SV Werder Bremen,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Mainz,Elversberg,sì,1. FSV Mainz 05,SV 07 Elversberg,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Paderborn,Borussia M'gladbach,sì,SC Paderborn 07,Borussia Mönchengladbach,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,RB Lipsia,Schalke 04,sì,RB Leipzig,FC Schalke 04,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,25,2027-03-06,Sabato,13:00,13:00,Stoccarda,Leverkusen,sì,VfB Stuttgart,Bayer 04 Leverkusen,2027-03-06T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Augsburg,RB Lipsia,sì,FC Augsburg,RB Leipzig,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Bayern Monaco,Mainz,sì,FC Bayern München,1. FSV Mainz 05,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Borussia M'gladbach,Amburgo,sì,Borussia Mönchengladbach,Hamburger SV,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Eintracht Francoforte,Paderborn,sì,Eintracht Frankfurt,SC Paderborn 07,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Elversberg,Borussia Dortmund,sì,SV 07 Elversberg,Borussia Dortmund,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Leverkusen,Colonia,sì,Bayer 04 Leverkusen,1. FC Köln,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Schalke 04,Hoffenheim,sì,FC Schalke 04,TSG 1899 Hoffenheim,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Union Berlino,Friburgo,sì,1. FC Union Berlin,SC Freiburg,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,26,2027-03-13,Sabato,13:00,13:00,Werder Brema,Stoccarda,sì,SV Werder Bremen,VfB Stuttgart,2027-03-13T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Amburgo,Werder Brema,sì,Hamburger SV,SV Werder Bremen,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Borussia Dortmund,Borussia M'gladbach,sì,Borussia Dortmund,Borussia Mönchengladbach,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Colonia,Bayern Monaco,sì,1. FC Köln,FC Bayern München,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Friburgo,Elversberg,sì,SC Freiburg,SV 07 Elversberg,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Hoffenheim,Eintracht Francoforte,sì,TSG 1899 Hoffenheim,Eintracht Frankfurt,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Mainz,Augsburg,sì,1. FSV Mainz 05,FC Augsburg,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Paderborn,Leverkusen,sì,SC Paderborn 07,Bayer 04 Leverkusen,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,RB Lipsia,Union Berlino,sì,RB Leipzig,1. FC Union Berlin,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,27,2027-03-20,Sabato,13:00,13:00,Stoccarda,Schalke 04,sì,VfB Stuttgart,FC Schalke 04,2027-03-20T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Augsburg,Hoffenheim,sì,FC Augsburg,TSG 1899 Hoffenheim,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Bayern Monaco,Amburgo,sì,FC Bayern München,Hamburger SV,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Borussia M'gladbach,Werder Brema,sì,Borussia Mönchengladbach,SV Werder Bremen,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Eintracht Francoforte,Stoccarda,sì,Eintracht Frankfurt,VfB Stuttgart,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Elversberg,Colonia,sì,SV 07 Elversberg,1. FC Köln,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Leverkusen,Borussia Dortmund,sì,Bayer 04 Leverkusen,Borussia Dortmund,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,RB Lipsia,Friburgo,sì,RB Leipzig,SC Freiburg,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Schalke 04,Paderborn,sì,FC Schalke 04,SC Paderborn 07,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,28,2027-04-03,Sabato,14:00,14:00,Union Berlino,Mainz,sì,1. FC Union Berlin,1. FSV Mainz 05,2027-04-03T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Amburgo,Union Berlino,sì,Hamburger SV,1. FC Union Berlin,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Borussia Dortmund,Schalke 04,sì,Borussia Dortmund,FC Schalke 04,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Borussia M'gladbach,Leverkusen,sì,Borussia Mönchengladbach,Bayer 04 Leverkusen,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Colonia,Augsburg,sì,1. FC Köln,FC Augsburg,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Hoffenheim,Friburgo,sì,TSG 1899 Hoffenheim,SC Freiburg,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Mainz,RB Lipsia,sì,1. FSV Mainz 05,RB Leipzig,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Paderborn,Bayern Monaco,sì,SC Paderborn 07,FC Bayern München,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Stoccarda,Elversberg,sì,VfB Stuttgart,SV 07 Elversberg,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,29,2027-04-10,Sabato,14:00,14:00,Werder Brema,Eintracht Francoforte,sì,SV Werder Bremen,Eintracht Frankfurt,2027-04-10T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Augsburg,Borussia Dortmund,sì,FC Augsburg,Borussia Dortmund,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Bayern Monaco,Hoffenheim,sì,FC Bayern München,TSG 1899 Hoffenheim,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Eintracht Francoforte,Borussia M'gladbach,sì,Eintracht Frankfurt,Borussia Mönchengladbach,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Elversberg,Paderborn,sì,SV 07 Elversberg,SC Paderborn 07,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Friburgo,Mainz,sì,SC Freiburg,1. FSV Mainz 05,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Leverkusen,Werder Brema,sì,Bayer 04 Leverkusen,SV Werder Bremen,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,RB Lipsia,Colonia,sì,RB Leipzig,1. FC Köln,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Schalke 04,Amburgo,sì,FC Schalke 04,Hamburger SV,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,30,2027-04-17,Sabato,14:00,14:00,Union Berlino,Stoccarda,sì,1. FC Union Berlin,VfB Stuttgart,2027-04-17T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Amburgo,Elversberg,sì,Hamburger SV,SV 07 Elversberg,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Borussia Dortmund,RB Lipsia,sì,Borussia Dortmund,RB Leipzig,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Borussia M'gladbach,Schalke 04,sì,Borussia Mönchengladbach,FC Schalke 04,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Colonia,Mainz,sì,1. FC Köln,1. FSV Mainz 05,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Eintracht Francoforte,Leverkusen,sì,Eintracht Frankfurt,Bayer 04 Leverkusen,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Hoffenheim,Union Berlino,sì,TSG 1899 Hoffenheim,1. FC Union Berlin,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Paderborn,Augsburg,sì,SC Paderborn 07,FC Augsburg,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Stoccarda,Friburgo,sì,VfB Stuttgart,SC Freiburg,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,31,2027-04-24,Sabato,14:00,14:00,Werder Brema,Bayern Monaco,sì,SV Werder Bremen,FC Bayern München,2027-04-24T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Augsburg,Stoccarda,sì,FC Augsburg,VfB Stuttgart,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Bayern Monaco,Borussia M'gladbach,sì,FC Bayern München,Borussia Mönchengladbach,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Elversberg,Hoffenheim,sì,SV 07 Elversberg,TSG 1899 Hoffenheim,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Friburgo,Colonia,sì,SC Freiburg,1. FC Köln,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Leverkusen,Amburgo,sì,Bayer 04 Leverkusen,Hamburger SV,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Mainz,Borussia Dortmund,sì,1. FSV Mainz 05,Borussia Dortmund,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,RB Lipsia,Paderborn,sì,RB Leipzig,SC Paderborn 07,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Schalke 04,Eintracht Francoforte,sì,FC Schalke 04,Eintracht Frankfurt,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,32,2027-05-08,Sabato,14:00,14:00,Union Berlino,Werder Brema,sì,1. FC Union Berlin,SV Werder Bremen,2027-05-08T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Amburgo,Friburgo,sì,Hamburger SV,SC Freiburg,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Borussia Dortmund,Colonia,sì,Borussia Dortmund,1. FC Köln,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Borussia M'gladbach,Augsburg,sì,Borussia Mönchengladbach,FC Augsburg,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Eintracht Francoforte,Elversberg,sì,Eintracht Frankfurt,SV 07 Elversberg,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Hoffenheim,Mainz,sì,TSG 1899 Hoffenheim,1. FSV Mainz 05,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Leverkusen,Bayern Monaco,sì,Bayer 04 Leverkusen,FC Bayern München,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Paderborn,Union Berlino,sì,SC Paderborn 07,1. FC Union Berlin,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Stoccarda,RB Lipsia,sì,VfB Stuttgart,RB Leipzig,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,33,2027-05-15,Sabato,14:00,14:00,Werder Brema,Schalke 04,sì,SV Werder Bremen,FC Schalke 04,2027-05-15T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Augsburg,Amburgo,sì,FC Augsburg,Hamburger SV,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Bayern Monaco,Eintracht Francoforte,sì,FC Bayern München,Eintracht Frankfurt,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Colonia,Paderborn,sì,1. FC Köln,SC Paderborn 07,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Elversberg,Werder Brema,sì,SV 07 Elversberg,SV Werder Bremen,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Friburgo,Borussia Dortmund,sì,SC Freiburg,Borussia Dortmund,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Mainz,Stoccarda,sì,1. FSV Mainz 05,VfB Stuttgart,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,RB Lipsia,Hoffenheim,sì,RB Leipzig,TSG 1899 Hoffenheim,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Schalke 04,Leverkusen,sì,FC Schalke 04,Bayer 04 Leverkusen,2027-05-22T12:00Z
+Bundesliga,Germania,2026-27,34,2027-05-22,Sabato,14:00,14:00,Union Berlino,Borussia M'gladbach,sì,1. FC Union Berlin,Borussia Mönchengladbach,2027-05-22T12:00Z

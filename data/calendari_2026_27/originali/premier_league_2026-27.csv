@@ -1,0 +1,381 @@
+﻿campionato,paese,stagione,giornata,data,giorno,ora_italiana,ora_locale,squadra_casa,squadra_trasferta,data_ora_provvisoria,casa_nome_ufficiale,trasferta_nome_ufficiale,kickoff_utc
+Premier League,Inghilterra,2026-27,1,2026-08-21,Venerdì,21:00,20:00,Arsenal,Coventry,no,Arsenal FC,Coventry City FC,2026-08-21T19:00Z
+Premier League,Inghilterra,2026-27,1,2026-08-22,Sabato,13:30,12:30,Hull City,Manchester United,no,Hull City AFC,Manchester United FC,2026-08-22T11:30Z
+Premier League,Inghilterra,2026-27,1,2026-08-22,Sabato,16:00,15:00,Everton,Crystal Palace,no,Everton FC,Crystal Palace FC,2026-08-22T14:00Z
+Premier League,Inghilterra,2026-27,1,2026-08-22,Sabato,16:00,15:00,Ipswich,Sunderland,no,Ipswich Town FC,Sunderland AFC,2026-08-22T14:00Z
+Premier League,Inghilterra,2026-27,1,2026-08-22,Sabato,16:00,15:00,Nottingham Forest,Leeds,no,Nottingham Forest FC,Leeds United FC,2026-08-22T14:00Z
+Premier League,Inghilterra,2026-27,1,2026-08-22,Sabato,18:30,17:30,Brentford,Tottenham,no,Brentford FC,Tottenham Hotspur FC,2026-08-22T16:30Z
+Premier League,Inghilterra,2026-27,1,2026-08-23,Domenica,15:00,14:00,Brighton,Aston Villa,no,Brighton & Hove Albion FC,Aston Villa FC,2026-08-23T13:00Z
+Premier League,Inghilterra,2026-27,1,2026-08-23,Domenica,15:00,14:00,Manchester City,Bournemouth,no,Manchester City FC,AFC Bournemouth,2026-08-23T13:00Z
+Premier League,Inghilterra,2026-27,1,2026-08-23,Domenica,17:30,16:30,Newcastle,Liverpool,no,Newcastle United FC,Liverpool FC,2026-08-23T15:30Z
+Premier League,Inghilterra,2026-27,1,2026-08-24,Lunedì,21:00,20:00,Fulham,Chelsea,no,Fulham FC,Chelsea FC,2026-08-24T19:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Aston Villa,Arsenal,sì,Aston Villa FC,Arsenal FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Bournemouth,Everton,sì,AFC Bournemouth,Everton FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Chelsea,Brighton,sì,Chelsea FC,Brighton & Hove Albion FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Coventry,Hull City,sì,Coventry City FC,Hull City AFC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Crystal Palace,Manchester City,sì,Crystal Palace FC,Manchester City FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Leeds,Brentford,sì,Leeds United FC,Brentford FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Liverpool,Nottingham Forest,sì,Liverpool FC,Nottingham Forest FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Manchester United,Ipswich,sì,Manchester United FC,Ipswich Town FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Sunderland,Fulham,sì,Sunderland AFC,Fulham FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,2,2026-08-29,Sabato,16:00,15:00,Tottenham,Newcastle,sì,Tottenham Hotspur FC,Newcastle United FC,2026-08-29T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Arsenal,Chelsea,sì,Arsenal FC,Chelsea FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Brentford,Sunderland,sì,Brentford FC,Sunderland AFC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Brighton,Leeds,sì,Brighton & Hove Albion FC,Leeds United FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Everton,Manchester United,sì,Everton FC,Manchester United FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Fulham,Crystal Palace,sì,Fulham FC,Crystal Palace FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Hull City,Aston Villa,sì,Hull City AFC,Aston Villa FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Ipswich,Liverpool,sì,Ipswich Town FC,Liverpool FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Manchester City,Coventry,sì,Manchester City FC,Coventry City FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Newcastle,Bournemouth,sì,Newcastle United FC,AFC Bournemouth,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,3,2026-09-05,Sabato,16:00,15:00,Nottingham Forest,Tottenham,sì,Nottingham Forest FC,Tottenham Hotspur FC,2026-09-05T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Aston Villa,Nottingham Forest,sì,Aston Villa FC,Nottingham Forest FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Bournemouth,Brentford,sì,AFC Bournemouth,Brentford FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Chelsea,Hull City,sì,Chelsea FC,Hull City AFC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Coventry,Brighton,sì,Coventry City FC,Brighton & Hove Albion FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Crystal Palace,Ipswich,sì,Crystal Palace FC,Ipswich Town FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Leeds,Newcastle,sì,Leeds United FC,Newcastle United FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Liverpool,Fulham,sì,Liverpool FC,Fulham FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Manchester United,Manchester City,sì,Manchester United FC,Manchester City FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Sunderland,Arsenal,sì,Sunderland AFC,Arsenal FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,4,2026-09-12,Sabato,16:00,15:00,Tottenham,Everton,sì,Tottenham Hotspur FC,Everton FC,2026-09-12T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Bournemouth,Liverpool,sì,AFC Bournemouth,Liverpool FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Brentford,Chelsea,sì,Brentford FC,Chelsea FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Brighton,Arsenal,sì,Brighton & Hove Albion FC,Arsenal FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Everton,Ipswich,sì,Everton FC,Ipswich Town FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Fulham,Manchester United,sì,Fulham FC,Manchester United FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Leeds,Crystal Palace,sì,Leeds United FC,Crystal Palace FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Manchester City,Sunderland,sì,Manchester City FC,Sunderland AFC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Newcastle,Hull City,sì,Newcastle United FC,Hull City AFC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Nottingham Forest,Coventry,sì,Nottingham Forest FC,Coventry City FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,5,2026-09-19,Sabato,16:00,15:00,Tottenham,Aston Villa,sì,Tottenham Hotspur FC,Aston Villa FC,2026-09-19T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Arsenal,Leeds,sì,Arsenal FC,Leeds United FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Aston Villa,Brentford,sì,Aston Villa FC,Brentford FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Chelsea,Bournemouth,sì,Chelsea FC,AFC Bournemouth,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Coventry,Newcastle,sì,Coventry City FC,Newcastle United FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Crystal Palace,Nottingham Forest,sì,Crystal Palace FC,Nottingham Forest FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Hull City,Everton,sì,Hull City AFC,Everton FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Ipswich,Fulham,sì,Ipswich Town FC,Fulham FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Liverpool,Manchester City,sì,Liverpool FC,Manchester City FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Manchester United,Tottenham,sì,Manchester United FC,Tottenham Hotspur FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,6,2026-10-10,Sabato,16:00,15:00,Sunderland,Brighton,sì,Sunderland AFC,Brighton & Hove Albion FC,2026-10-10T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Bournemouth,Sunderland,sì,AFC Bournemouth,Sunderland AFC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Brentford,Liverpool,sì,Brentford FC,Liverpool FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Brighton,Crystal Palace,sì,Brighton & Hove Albion FC,Crystal Palace FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Everton,Chelsea,sì,Everton FC,Chelsea FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Fulham,Hull City,sì,Fulham FC,Hull City AFC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Leeds,Manchester United,sì,Leeds United FC,Manchester United FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Manchester City,Ipswich,sì,Manchester City FC,Ipswich Town FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Newcastle,Aston Villa,sì,Newcastle United FC,Aston Villa FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Nottingham Forest,Arsenal,sì,Nottingham Forest FC,Arsenal FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,7,2026-10-17,Sabato,16:00,15:00,Tottenham,Coventry,sì,Tottenham Hotspur FC,Coventry City FC,2026-10-17T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Arsenal,Everton,sì,Arsenal FC,Everton FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Aston Villa,Manchester City,sì,Aston Villa FC,Manchester City FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Chelsea,Tottenham,sì,Chelsea FC,Tottenham Hotspur FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Coventry,Fulham,sì,Coventry City FC,Fulham FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Crystal Palace,Newcastle,sì,Crystal Palace FC,Newcastle United FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Hull City,Brentford,sì,Hull City AFC,Brentford FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Ipswich,Nottingham Forest,sì,Ipswich Town FC,Nottingham Forest FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Liverpool,Brighton,sì,Liverpool FC,Brighton & Hove Albion FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Manchester United,Bournemouth,sì,Manchester United FC,AFC Bournemouth,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,8,2026-10-24,Sabato,16:00,15:00,Sunderland,Leeds,sì,Sunderland AFC,Leeds United FC,2026-10-24T14:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Aston Villa,Fulham,sì,Aston Villa FC,Fulham FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Bournemouth,Leeds,sì,AFC Bournemouth,Leeds United FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Brentford,Nottingham Forest,sì,Brentford FC,Nottingham Forest FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Chelsea,Manchester United,sì,Chelsea FC,Manchester United FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Coventry,Sunderland,sì,Coventry City FC,Sunderland AFC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Hull City,Ipswich,sì,Hull City AFC,Ipswich Town FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Liverpool,Arsenal,sì,Liverpool FC,Arsenal FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Manchester City,Brighton,sì,Manchester City FC,Brighton & Hove Albion FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Newcastle,Everton,sì,Newcastle United FC,Everton FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,9,2026-10-31,Sabato,16:00,15:00,Tottenham,Crystal Palace,sì,Tottenham Hotspur FC,Crystal Palace FC,2026-10-31T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Arsenal,Hull City,sì,Arsenal FC,Hull City AFC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Brighton,Brentford,sì,Brighton & Hove Albion FC,Brentford FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Crystal Palace,Liverpool,sì,Crystal Palace FC,Liverpool FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Everton,Coventry,sì,Everton FC,Coventry City FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Fulham,Newcastle,sì,Fulham FC,Newcastle United FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Ipswich,Bournemouth,sì,Ipswich Town FC,AFC Bournemouth,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Leeds,Tottenham,sì,Leeds United FC,Tottenham Hotspur FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Manchester United,Aston Villa,sì,Manchester United FC,Aston Villa FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Nottingham Forest,Manchester City,sì,Nottingham Forest FC,Manchester City FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,10,2026-11-07,Sabato,16:00,15:00,Sunderland,Chelsea,sì,Sunderland AFC,Chelsea FC,2026-11-07T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Aston Villa,Sunderland,sì,Aston Villa FC,Sunderland AFC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Bournemouth,Nottingham Forest,sì,AFC Bournemouth,Nottingham Forest FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Brentford,Everton,sì,Brentford FC,Everton FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Chelsea,Leeds,sì,Chelsea FC,Leeds United FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Coventry,Crystal Palace,sì,Coventry City FC,Crystal Palace FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Hull City,Brighton,sì,Hull City AFC,Brighton & Hove Albion FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Liverpool,Manchester United,sì,Liverpool FC,Manchester United FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Manchester City,Fulham,sì,Manchester City FC,Fulham FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Newcastle,Arsenal,sì,Newcastle United FC,Arsenal FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,11,2026-11-21,Sabato,16:00,15:00,Tottenham,Ipswich,sì,Tottenham Hotspur FC,Ipswich Town FC,2026-11-21T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Arsenal,Manchester City,sì,Arsenal FC,Manchester City FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Brighton,Newcastle,sì,Brighton & Hove Albion FC,Newcastle United FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Crystal Palace,Hull City,sì,Crystal Palace FC,Hull City AFC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Everton,Liverpool,sì,Everton FC,Liverpool FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Fulham,Bournemouth,sì,Fulham FC,AFC Bournemouth,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Ipswich,Aston Villa,sì,Ipswich Town FC,Aston Villa FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Leeds,Coventry,sì,Leeds United FC,Coventry City FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Manchester United,Brentford,sì,Manchester United FC,Brentford FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Nottingham Forest,Chelsea,sì,Nottingham Forest FC,Chelsea FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,12,2026-11-28,Sabato,16:00,15:00,Sunderland,Tottenham,sì,Sunderland AFC,Tottenham Hotspur FC,2026-11-28T15:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Aston Villa,Everton,sì,Aston Villa FC,Everton FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Bournemouth,Brighton,sì,AFC Bournemouth,Brighton & Hove Albion FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Brentford,Arsenal,sì,Brentford FC,Arsenal FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Chelsea,Crystal Palace,sì,Chelsea FC,Crystal Palace FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Coventry,Ipswich,sì,Coventry City FC,Ipswich Town FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Hull City,Nottingham Forest,sì,Hull City AFC,Nottingham Forest FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Liverpool,Sunderland,sì,Liverpool FC,Sunderland AFC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Manchester City,Leeds,sì,Manchester City FC,Leeds United FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Newcastle,Manchester United,sì,Newcastle United FC,Manchester United FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,13,2026-12-02,Mercoledì,21:00,20:00,Tottenham,Fulham,sì,Tottenham Hotspur FC,Fulham FC,2026-12-02T20:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Aston Villa,Crystal Palace,sì,Aston Villa FC,Crystal Palace FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Bournemouth,Hull City,sì,AFC Bournemouth,Hull City AFC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Brentford,Manchester City,sì,Brentford FC,Manchester City FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Chelsea,Liverpool,sì,Chelsea FC,Liverpool FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Everton,Fulham,sì,Everton FC,Fulham FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Leeds,Ipswich,sì,Leeds United FC,Ipswich Town FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Manchester United,Coventry,sì,Manchester United FC,Coventry City FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Newcastle,Sunderland,sì,Newcastle United FC,Sunderland AFC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Nottingham Forest,Brighton,sì,Nottingham Forest FC,Brighton & Hove Albion FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,14,2026-12-05,Sabato,16:00,15:00,Tottenham,Arsenal,sì,Tottenham Hotspur FC,Arsenal FC,2026-12-05T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Arsenal,Bournemouth,sì,Arsenal FC,AFC Bournemouth,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Brighton,Everton,sì,Brighton & Hove Albion FC,Everton FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Coventry,Aston Villa,sì,Coventry City FC,Aston Villa FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Crystal Palace,Manchester United,sì,Crystal Palace FC,Manchester United FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Fulham,Brentford,sì,Fulham FC,Brentford FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Hull City,Tottenham,sì,Hull City AFC,Tottenham Hotspur FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Ipswich,Newcastle,sì,Ipswich Town FC,Newcastle United FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Liverpool,Leeds,sì,Liverpool FC,Leeds United FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Manchester City,Chelsea,sì,Manchester City FC,Chelsea FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,15,2026-12-12,Sabato,16:00,15:00,Sunderland,Nottingham Forest,sì,Sunderland AFC,Nottingham Forest FC,2026-12-12T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Arsenal,Manchester United,sì,Arsenal FC,Manchester United FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Bournemouth,Coventry,sì,AFC Bournemouth,Coventry City FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Brentford,Newcastle,sì,Brentford FC,Newcastle United FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Brighton,Ipswich,sì,Brighton & Hove Albion FC,Ipswich Town FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Chelsea,Aston Villa,sì,Chelsea FC,Aston Villa FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Leeds,Fulham,sì,Leeds United FC,Fulham FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Liverpool,Tottenham,sì,Liverpool FC,Tottenham Hotspur FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Manchester City,Hull City,sì,Manchester City FC,Hull City AFC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Nottingham Forest,Everton,sì,Nottingham Forest FC,Everton FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,16,2026-12-19,Sabato,16:00,15:00,Sunderland,Crystal Palace,sì,Sunderland AFC,Crystal Palace FC,2026-12-19T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Aston Villa,Leeds,sì,Aston Villa FC,Leeds United FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Coventry,Chelsea,sì,Coventry City FC,Chelsea FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Crystal Palace,Arsenal,sì,Crystal Palace FC,Arsenal FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Everton,Sunderland,sì,Everton FC,Sunderland AFC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Fulham,Brighton,sì,Fulham FC,Brighton & Hove Albion FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Hull City,Liverpool,sì,Hull City AFC,Liverpool FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Ipswich,Brentford,sì,Ipswich Town FC,Brentford FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Manchester United,Nottingham Forest,sì,Manchester United FC,Nottingham Forest FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Newcastle,Manchester City,sì,Newcastle United FC,Manchester City FC,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,17,2026-12-26,Sabato,16:00,15:00,Tottenham,Bournemouth,sì,Tottenham Hotspur FC,AFC Bournemouth,2026-12-26T15:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Aston Villa,Liverpool,sì,Aston Villa FC,Liverpool FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Coventry,Brentford,sì,Coventry City FC,Brentford FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Crystal Palace,Bournemouth,sì,Crystal Palace FC,AFC Bournemouth,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Everton,Manchester City,sì,Everton FC,Manchester City FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Fulham,Arsenal,sì,Fulham FC,Arsenal FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Hull City,Leeds,sì,Hull City AFC,Leeds United FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Ipswich,Chelsea,sì,Ipswich Town FC,Chelsea FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Manchester United,Sunderland,sì,Manchester United FC,Sunderland AFC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Newcastle,Nottingham Forest,sì,Newcastle United FC,Nottingham Forest FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,18,2026-12-30,Mercoledì,21:00,20:00,Tottenham,Brighton,sì,Tottenham Hotspur FC,Brighton & Hove Albion FC,2026-12-30T20:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Arsenal,Ipswich,sì,Arsenal FC,Ipswich Town FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Bournemouth,Aston Villa,sì,AFC Bournemouth,Aston Villa FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Brentford,Crystal Palace,sì,Brentford FC,Crystal Palace FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Brighton,Manchester United,sì,Brighton & Hove Albion FC,Manchester United FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Chelsea,Newcastle,sì,Chelsea FC,Newcastle United FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Leeds,Everton,sì,Leeds United FC,Everton FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Liverpool,Coventry,sì,Liverpool FC,Coventry City FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Manchester City,Tottenham,sì,Manchester City FC,Tottenham Hotspur FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Nottingham Forest,Fulham,sì,Nottingham Forest FC,Fulham FC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,19,2027-01-02,Sabato,13:00,12:00,Sunderland,Hull City,sì,Sunderland AFC,Hull City AFC,2027-01-02T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Arsenal,Brentford,sì,Arsenal FC,Brentford FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Brighton,Bournemouth,sì,Brighton & Hove Albion FC,AFC Bournemouth,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Crystal Palace,Chelsea,sì,Crystal Palace FC,Chelsea FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Everton,Aston Villa,sì,Everton FC,Aston Villa FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Fulham,Tottenham,sì,Fulham FC,Tottenham Hotspur FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Ipswich,Coventry,sì,Ipswich Town FC,Coventry City FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Leeds,Manchester City,sì,Leeds United FC,Manchester City FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Manchester United,Newcastle,sì,Manchester United FC,Newcastle United FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Nottingham Forest,Hull City,sì,Nottingham Forest FC,Hull City AFC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,20,2027-01-06,Mercoledì,13:00,12:00,Sunderland,Liverpool,sì,Sunderland AFC,Liverpool FC,2027-01-06T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Aston Villa,Manchester United,sì,Aston Villa FC,Manchester United FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Bournemouth,Ipswich,sì,AFC Bournemouth,Ipswich Town FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Brentford,Brighton,sì,Brentford FC,Brighton & Hove Albion FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Chelsea,Sunderland,sì,Chelsea FC,Sunderland AFC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Coventry,Everton,sì,Coventry City FC,Everton FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Hull City,Arsenal,sì,Hull City AFC,Arsenal FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Liverpool,Crystal Palace,sì,Liverpool FC,Crystal Palace FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Manchester City,Nottingham Forest,sì,Manchester City FC,Nottingham Forest FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Newcastle,Fulham,sì,Newcastle United FC,Fulham FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,21,2027-01-16,Sabato,13:00,12:00,Tottenham,Leeds,sì,Tottenham Hotspur FC,Leeds United FC,2027-01-16T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Arsenal,Newcastle,sì,Arsenal FC,Newcastle United FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Brighton,Manchester City,sì,Brighton & Hove Albion FC,Manchester City FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Crystal Palace,Tottenham,sì,Crystal Palace FC,Tottenham Hotspur FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Everton,Brentford,sì,Everton FC,Brentford FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Fulham,Aston Villa,sì,Fulham FC,Aston Villa FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Ipswich,Hull City,sì,Ipswich Town FC,Hull City AFC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Leeds,Chelsea,sì,Leeds United FC,Chelsea FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Manchester United,Liverpool,sì,Manchester United FC,Liverpool FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Nottingham Forest,Bournemouth,sì,Nottingham Forest FC,AFC Bournemouth,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,22,2027-01-23,Sabato,13:00,12:00,Sunderland,Coventry,sì,Sunderland AFC,Coventry City FC,2027-01-23T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Aston Villa,Ipswich,sì,Aston Villa FC,Ipswich Town FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Bournemouth,Fulham,sì,AFC Bournemouth,Fulham FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Brentford,Manchester United,sì,Brentford FC,Manchester United FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Chelsea,Nottingham Forest,sì,Chelsea FC,Nottingham Forest FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Coventry,Leeds,sì,Coventry City FC,Leeds United FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Hull City,Crystal Palace,sì,Hull City AFC,Crystal Palace FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Liverpool,Everton,sì,Liverpool FC,Everton FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Manchester City,Arsenal,sì,Manchester City FC,Arsenal FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Newcastle,Brighton,sì,Newcastle United FC,Brighton & Hove Albion FC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,23,2027-01-30,Sabato,13:00,12:00,Tottenham,Sunderland,sì,Tottenham Hotspur FC,Sunderland AFC,2027-01-30T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Arsenal,Liverpool,sì,Arsenal FC,Liverpool FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Brighton,Hull City,sì,Brighton & Hove Albion FC,Hull City AFC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Crystal Palace,Coventry,sì,Crystal Palace FC,Coventry City FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Everton,Newcastle,sì,Everton FC,Newcastle United FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Fulham,Manchester City,sì,Fulham FC,Manchester City FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Ipswich,Tottenham,sì,Ipswich Town FC,Tottenham Hotspur FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Leeds,Bournemouth,sì,Leeds United FC,AFC Bournemouth,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Manchester United,Chelsea,sì,Manchester United FC,Chelsea FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Nottingham Forest,Brentford,sì,Nottingham Forest FC,Brentford FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,24,2027-02-06,Sabato,13:00,12:00,Sunderland,Aston Villa,sì,Sunderland AFC,Aston Villa FC,2027-02-06T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Aston Villa,Bournemouth,sì,Aston Villa FC,AFC Bournemouth,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Coventry,Liverpool,sì,Coventry City FC,Liverpool FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Crystal Palace,Brentford,sì,Crystal Palace FC,Brentford FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Everton,Leeds,sì,Everton FC,Leeds United FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Fulham,Nottingham Forest,sì,Fulham FC,Nottingham Forest FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Hull City,Sunderland,sì,Hull City AFC,Sunderland AFC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Ipswich,Arsenal,sì,Ipswich Town FC,Arsenal FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Manchester United,Brighton,sì,Manchester United FC,Brighton & Hove Albion FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Newcastle,Chelsea,sì,Newcastle United FC,Chelsea FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,25,2027-02-10,Mercoledì,13:00,12:00,Tottenham,Manchester City,sì,Tottenham Hotspur FC,Manchester City FC,2027-02-10T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Arsenal,Fulham,sì,Arsenal FC,Fulham FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Bournemouth,Crystal Palace,sì,AFC Bournemouth,Crystal Palace FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Brentford,Coventry,sì,Brentford FC,Coventry City FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Brighton,Tottenham,sì,Brighton & Hove Albion FC,Tottenham Hotspur FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Chelsea,Ipswich,sì,Chelsea FC,Ipswich Town FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Leeds,Aston Villa,sì,Leeds United FC,Aston Villa FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Liverpool,Hull City,sì,Liverpool FC,Hull City AFC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Manchester City,Newcastle,sì,Manchester City FC,Newcastle United FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Nottingham Forest,Manchester United,sì,Nottingham Forest FC,Manchester United FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,26,2027-02-20,Sabato,13:00,12:00,Sunderland,Everton,sì,Sunderland AFC,Everton FC,2027-02-20T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Aston Villa,Chelsea,sì,Aston Villa FC,Chelsea FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Coventry,Bournemouth,sì,Coventry City FC,AFC Bournemouth,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Crystal Palace,Sunderland,sì,Crystal Palace FC,Sunderland AFC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Everton,Nottingham Forest,sì,Everton FC,Nottingham Forest FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Fulham,Leeds,sì,Fulham FC,Leeds United FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Hull City,Manchester City,sì,Hull City AFC,Manchester City FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Ipswich,Brighton,sì,Ipswich Town FC,Brighton & Hove Albion FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Manchester United,Arsenal,sì,Manchester United FC,Arsenal FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Newcastle,Brentford,sì,Newcastle United FC,Brentford FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,27,2027-02-27,Sabato,13:00,12:00,Tottenham,Liverpool,sì,Tottenham Hotspur FC,Liverpool FC,2027-02-27T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Arsenal,Crystal Palace,sì,Arsenal FC,Crystal Palace FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Bournemouth,Tottenham,sì,AFC Bournemouth,Tottenham Hotspur FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Brentford,Ipswich,sì,Brentford FC,Ipswich Town FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Brighton,Fulham,sì,Brighton & Hove Albion FC,Fulham FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Chelsea,Coventry,sì,Chelsea FC,Coventry City FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Leeds,Hull City,sì,Leeds United FC,Hull City AFC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Liverpool,Aston Villa,sì,Liverpool FC,Aston Villa FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Manchester City,Everton,sì,Manchester City FC,Everton FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Nottingham Forest,Newcastle,sì,Nottingham Forest FC,Newcastle United FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,28,2027-03-03,Mercoledì,13:00,12:00,Sunderland,Manchester United,sì,Sunderland AFC,Manchester United FC,2027-03-03T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Aston Villa,Hull City,sì,Aston Villa FC,Hull City AFC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Bournemouth,Newcastle,sì,AFC Bournemouth,Newcastle United FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Chelsea,Arsenal,sì,Chelsea FC,Arsenal FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Coventry,Manchester City,sì,Coventry City FC,Manchester City FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Crystal Palace,Fulham,sì,Crystal Palace FC,Fulham FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Leeds,Brighton,sì,Leeds United FC,Brighton & Hove Albion FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Liverpool,Ipswich,sì,Liverpool FC,Ipswich Town FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Manchester United,Everton,sì,Manchester United FC,Everton FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Sunderland,Brentford,sì,Sunderland AFC,Brentford FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,29,2027-03-13,Sabato,13:00,12:00,Tottenham,Nottingham Forest,sì,Tottenham Hotspur FC,Nottingham Forest FC,2027-03-13T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Arsenal,Sunderland,sì,Arsenal FC,Sunderland AFC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Brentford,Bournemouth,sì,Brentford FC,AFC Bournemouth,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Brighton,Coventry,sì,Brighton & Hove Albion FC,Coventry City FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Everton,Tottenham,sì,Everton FC,Tottenham Hotspur FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Fulham,Liverpool,sì,Fulham FC,Liverpool FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Hull City,Chelsea,sì,Hull City AFC,Chelsea FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Ipswich,Crystal Palace,sì,Ipswich Town FC,Crystal Palace FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Manchester City,Manchester United,sì,Manchester City FC,Manchester United FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Newcastle,Leeds,sì,Newcastle United FC,Leeds United FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,30,2027-03-20,Sabato,13:00,12:00,Nottingham Forest,Aston Villa,sì,Nottingham Forest FC,Aston Villa FC,2027-03-20T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Aston Villa,Brighton,sì,Aston Villa FC,Brighton & Hove Albion FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Bournemouth,Manchester City,sì,AFC Bournemouth,Manchester City FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Chelsea,Fulham,sì,Chelsea FC,Fulham FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Coventry,Arsenal,sì,Coventry City FC,Arsenal FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Crystal Palace,Everton,sì,Crystal Palace FC,Everton FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Leeds,Nottingham Forest,sì,Leeds United FC,Nottingham Forest FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Liverpool,Newcastle,sì,Liverpool FC,Newcastle United FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Manchester United,Hull City,sì,Manchester United FC,Hull City AFC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Sunderland,Ipswich,sì,Sunderland AFC,Ipswich Town FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,31,2027-04-10,Sabato,14:00,13:00,Tottenham,Brentford,sì,Tottenham Hotspur FC,Brentford FC,2027-04-10T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Arsenal,Aston Villa,sì,Arsenal FC,Aston Villa FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Brentford,Leeds,sì,Brentford FC,Leeds United FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Brighton,Chelsea,sì,Brighton & Hove Albion FC,Chelsea FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Everton,Bournemouth,sì,Everton FC,AFC Bournemouth,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Fulham,Sunderland,sì,Fulham FC,Sunderland AFC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Hull City,Coventry,sì,Hull City AFC,Coventry City FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Ipswich,Manchester United,sì,Ipswich Town FC,Manchester United FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Manchester City,Crystal Palace,sì,Manchester City FC,Crystal Palace FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Newcastle,Tottenham,sì,Newcastle United FC,Tottenham Hotspur FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,32,2027-04-17,Sabato,14:00,13:00,Nottingham Forest,Liverpool,sì,Nottingham Forest FC,Liverpool FC,2027-04-17T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Aston Villa,Coventry,sì,Aston Villa FC,Coventry City FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Bournemouth,Arsenal,sì,AFC Bournemouth,Arsenal FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Brentford,Fulham,sì,Brentford FC,Fulham FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Chelsea,Manchester City,sì,Chelsea FC,Manchester City FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Everton,Brighton,sì,Everton FC,Brighton & Hove Albion FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Leeds,Liverpool,sì,Leeds United FC,Liverpool FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Manchester United,Crystal Palace,sì,Manchester United FC,Crystal Palace FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Newcastle,Ipswich,sì,Newcastle United FC,Ipswich Town FC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Nottingham Forest,Sunderland,sì,Nottingham Forest FC,Sunderland AFC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,33,2027-04-24,Sabato,14:00,13:00,Tottenham,Hull City,sì,Tottenham Hotspur FC,Hull City AFC,2027-04-24T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Arsenal,Tottenham,sì,Arsenal FC,Tottenham Hotspur FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Brighton,Nottingham Forest,sì,Brighton & Hove Albion FC,Nottingham Forest FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Coventry,Manchester United,sì,Coventry City FC,Manchester United FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Crystal Palace,Aston Villa,sì,Crystal Palace FC,Aston Villa FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Fulham,Everton,sì,Fulham FC,Everton FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Hull City,Bournemouth,sì,Hull City AFC,AFC Bournemouth,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Ipswich,Leeds,sì,Ipswich Town FC,Leeds United FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Liverpool,Chelsea,sì,Liverpool FC,Chelsea FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Manchester City,Brentford,sì,Manchester City FC,Brentford FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,34,2027-05-01,Sabato,14:00,13:00,Sunderland,Newcastle,sì,Sunderland AFC,Newcastle United FC,2027-05-01T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Bournemouth,Manchester United,sì,AFC Bournemouth,Manchester United FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Brentford,Aston Villa,sì,Brentford FC,Aston Villa FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Brighton,Sunderland,sì,Brighton & Hove Albion FC,Sunderland AFC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Everton,Hull City,sì,Everton FC,Hull City AFC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Fulham,Ipswich,sì,Fulham FC,Ipswich Town FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Leeds,Arsenal,sì,Leeds United FC,Arsenal FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Manchester City,Liverpool,sì,Manchester City FC,Liverpool FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Newcastle,Coventry,sì,Newcastle United FC,Coventry City FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Nottingham Forest,Crystal Palace,sì,Nottingham Forest FC,Crystal Palace FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,35,2027-05-08,Sabato,14:00,13:00,Tottenham,Chelsea,sì,Tottenham Hotspur FC,Chelsea FC,2027-05-08T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Arsenal,Nottingham Forest,sì,Arsenal FC,Nottingham Forest FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Aston Villa,Newcastle,sì,Aston Villa FC,Newcastle United FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Chelsea,Everton,sì,Chelsea FC,Everton FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Coventry,Tottenham,sì,Coventry City FC,Tottenham Hotspur FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Crystal Palace,Brighton,sì,Crystal Palace FC,Brighton & Hove Albion FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Hull City,Fulham,sì,Hull City AFC,Fulham FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Ipswich,Manchester City,sì,Ipswich Town FC,Manchester City FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Liverpool,Brentford,sì,Liverpool FC,Brentford FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Manchester United,Leeds,sì,Manchester United FC,Leeds United FC,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,36,2027-05-15,Sabato,14:00,13:00,Sunderland,Bournemouth,sì,Sunderland AFC,AFC Bournemouth,2027-05-15T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Bournemouth,Chelsea,sì,AFC Bournemouth,Chelsea FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Brentford,Hull City,sì,Brentford FC,Hull City AFC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Brighton,Liverpool,sì,Brighton & Hove Albion FC,Liverpool FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Everton,Arsenal,sì,Everton FC,Arsenal FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Fulham,Coventry,sì,Fulham FC,Coventry City FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Leeds,Sunderland,sì,Leeds United FC,Sunderland AFC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Manchester City,Aston Villa,sì,Manchester City FC,Aston Villa FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Newcastle,Crystal Palace,sì,Newcastle United FC,Crystal Palace FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Nottingham Forest,Ipswich,sì,Nottingham Forest FC,Ipswich Town FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,37,2027-05-23,Domenica,14:00,13:00,Tottenham,Manchester United,sì,Tottenham Hotspur FC,Manchester United FC,2027-05-23T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Arsenal,Brighton,sì,Arsenal FC,Brighton & Hove Albion FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Aston Villa,Tottenham,sì,Aston Villa FC,Tottenham Hotspur FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Chelsea,Brentford,sì,Chelsea FC,Brentford FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Coventry,Nottingham Forest,sì,Coventry City FC,Nottingham Forest FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Crystal Palace,Leeds,sì,Crystal Palace FC,Leeds United FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Hull City,Newcastle,sì,Hull City AFC,Newcastle United FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Ipswich,Everton,sì,Ipswich Town FC,Everton FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Liverpool,Bournemouth,sì,Liverpool FC,AFC Bournemouth,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Manchester United,Fulham,sì,Manchester United FC,Fulham FC,2027-05-30T12:00Z
+Premier League,Inghilterra,2026-27,38,2027-05-30,Domenica,14:00,13:00,Sunderland,Manchester City,sì,Sunderland AFC,Manchester City FC,2027-05-30T12:00Z

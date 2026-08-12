@@ -1,0 +1,381 @@
+﻿campionato,paese,stagione,giornata,data,giorno,ora_italiana,ora_locale,squadra_casa,squadra_trasferta,data_ora_provvisoria,casa_nome_ufficiale,trasferta_nome_ufficiale,kickoff_utc
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Atalanta,Sassuolo,sì,Atalanta BC,US Sassuolo Calcio,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Bologna,Lazio,sì,Bologna FC 1909,SS Lazio,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Frosinone,Juventus,sì,Frosinone Calcio,Juventus FC,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Genoa,Napoli,sì,Genoa CFC,SSC Napoli,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Inter,Monza,sì,FC Internazionale Milano,AC Monza,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Parma,Cagliari,sì,Parma Calcio 1913,Cagliari Calcio,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Roma,Fiorentina,sì,AS Roma,ACF Fiorentina,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Torino,Milan,sì,Torino FC,AC Milan,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Udinese,Como,sì,Udinese Calcio,Como 1907,2026-08-23T16:30Z
+Serie A,Italia,2026-27,1,2026-08-23,Domenica,18:30,18:30,Venezia,Lecce,sì,Venezia FC,US Lecce,2026-08-23T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Atalanta,Bologna,sì,Atalanta BC,Bologna FC 1909,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Cagliari,Inter,sì,Cagliari Calcio,FC Internazionale Milano,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Fiorentina,Frosinone,sì,ACF Fiorentina,Frosinone Calcio,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Juventus,Parma,sì,Juventus FC,Parma Calcio 1913,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Lazio,Genoa,sì,SS Lazio,Genoa CFC,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Lecce,Roma,sì,US Lecce,AS Roma,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Milan,Venezia,sì,AC Milan,Venezia FC,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Monza,Udinese,sì,AC Monza,Udinese Calcio,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Napoli,Como,sì,SSC Napoli,Como 1907,2026-08-30T16:30Z
+Serie A,Italia,2026-27,2,2026-08-30,Domenica,18:30,18:30,Sassuolo,Torino,sì,US Sassuolo Calcio,Torino FC,2026-08-30T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Bologna,Sassuolo,sì,Bologna FC 1909,US Sassuolo Calcio,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Cagliari,Lecce,sì,Cagliari Calcio,US Lecce,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Fiorentina,Torino,sì,ACF Fiorentina,Torino FC,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Frosinone,Venezia,sì,Frosinone Calcio,Venezia FC,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Genoa,Como,sì,Genoa CFC,Como 1907,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Inter,Napoli,sì,FC Internazionale Milano,SSC Napoli,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Juventus,Milan,sì,Juventus FC,AC Milan,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Parma,Monza,sì,Parma Calcio 1913,AC Monza,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Roma,Atalanta,sì,AS Roma,Atalanta BC,2026-09-06T16:30Z
+Serie A,Italia,2026-27,3,2026-09-06,Domenica,18:30,18:30,Udinese,Lazio,sì,Udinese Calcio,SS Lazio,2026-09-06T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Atalanta,Cagliari,sì,Atalanta BC,Cagliari Calcio,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Como,Parma,sì,Como 1907,Parma Calcio 1913,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Genoa,Frosinone,sì,Genoa CFC,Frosinone Calcio,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Inter,Udinese,sì,FC Internazionale Milano,Udinese Calcio,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Lazio,Milan,sì,SS Lazio,AC Milan,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Lecce,Monza,sì,US Lecce,AC Monza,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Napoli,Bologna,sì,SSC Napoli,Bologna FC 1909,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Sassuolo,Juventus,sì,US Sassuolo Calcio,Juventus FC,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Torino,Roma,sì,Torino FC,AS Roma,2026-09-13T16:30Z
+Serie A,Italia,2026-27,4,2026-09-13,Domenica,18:30,18:30,Venezia,Fiorentina,sì,Venezia FC,ACF Fiorentina,2026-09-13T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Bologna,Torino,sì,Bologna FC 1909,Torino FC,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Fiorentina,Napoli,sì,ACF Fiorentina,SSC Napoli,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Frosinone,Como,sì,Frosinone Calcio,Como 1907,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Juventus,Atalanta,sì,Juventus FC,Atalanta BC,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Milan,Lecce,sì,AC Milan,US Lecce,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Monza,Sassuolo,sì,AC Monza,US Sassuolo Calcio,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Parma,Genoa,sì,Parma Calcio 1913,Genoa CFC,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Roma,Inter,sì,AS Roma,FC Internazionale Milano,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Udinese,Cagliari,sì,Udinese Calcio,Cagliari Calcio,2026-09-20T16:30Z
+Serie A,Italia,2026-27,5,2026-09-20,Domenica,18:30,18:30,Venezia,Lazio,sì,Venezia FC,SS Lazio,2026-09-20T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Atalanta,Venezia,sì,Atalanta BC,Venezia FC,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Cagliari,Juventus,sì,Cagliari Calcio,Juventus FC,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Como,Roma,sì,Como 1907,AS Roma,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Genoa,Fiorentina,sì,Genoa CFC,ACF Fiorentina,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Inter,Parma,sì,FC Internazionale Milano,Parma Calcio 1913,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Lazio,Monza,sì,SS Lazio,AC Monza,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Lecce,Bologna,sì,US Lecce,Bologna FC 1909,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Napoli,Frosinone,sì,SSC Napoli,Frosinone Calcio,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Sassuolo,Milan,sì,US Sassuolo Calcio,AC Milan,2026-10-11T16:30Z
+Serie A,Italia,2026-27,6,2026-10-11,Domenica,18:30,18:30,Torino,Udinese,sì,Torino FC,Udinese Calcio,2026-10-11T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Bologna,Inter,sì,Bologna FC 1909,FC Internazionale Milano,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Fiorentina,Como,sì,ACF Fiorentina,Como 1907,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Frosinone,Sassuolo,sì,Frosinone Calcio,US Sassuolo Calcio,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Juventus,Lazio,sì,Juventus FC,SS Lazio,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Milan,Atalanta,sì,AC Milan,Atalanta BC,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Monza,Cagliari,sì,AC Monza,Cagliari Calcio,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Parma,Torino,sì,Parma Calcio 1913,Torino FC,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Roma,Genoa,sì,AS Roma,Genoa CFC,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Udinese,Lecce,sì,Udinese Calcio,US Lecce,2026-10-18T16:30Z
+Serie A,Italia,2026-27,7,2026-10-18,Domenica,18:30,18:30,Venezia,Napoli,sì,Venezia FC,SSC Napoli,2026-10-18T16:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Atalanta,Frosinone,sì,Atalanta BC,Frosinone Calcio,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Cagliari,Bologna,sì,Cagliari Calcio,Bologna FC 1909,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Como,Sassuolo,sì,Como 1907,US Sassuolo Calcio,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Genoa,Venezia,sì,Genoa CFC,Venezia FC,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Inter,Fiorentina,sì,FC Internazionale Milano,ACF Fiorentina,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Lazio,Parma,sì,SS Lazio,Parma Calcio 1913,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Lecce,Juventus,sì,US Lecce,Juventus FC,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Napoli,Roma,sì,SSC Napoli,AS Roma,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Torino,Monza,sì,Torino FC,AC Monza,2026-10-25T17:30Z
+Serie A,Italia,2026-27,8,2026-10-25,Domenica,18:30,18:30,Udinese,Milan,sì,Udinese Calcio,AC Milan,2026-10-25T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Fiorentina,Atalanta,sì,ACF Fiorentina,Atalanta BC,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Frosinone,Lecce,sì,Frosinone Calcio,US Lecce,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Genoa,Juventus,sì,Genoa CFC,Juventus FC,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Milan,Bologna,sì,AC Milan,Bologna FC 1909,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Monza,Napoli,sì,AC Monza,SSC Napoli,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Parma,Udinese,sì,Parma Calcio 1913,Udinese Calcio,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Roma,Cagliari,sì,AS Roma,Cagliari Calcio,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Sassuolo,Lazio,sì,US Sassuolo Calcio,SS Lazio,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Torino,Como,sì,Torino FC,Como 1907,2026-10-28T17:30Z
+Serie A,Italia,2026-27,9,2026-10-28,Mercoledì,18:30,18:30,Venezia,Inter,sì,Venezia FC,FC Internazionale Milano,2026-10-28T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Atalanta,Parma,sì,Atalanta BC,Parma Calcio 1913,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Bologna,Monza,sì,Bologna FC 1909,AC Monza,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Como,Venezia,sì,Como 1907,Venezia FC,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Frosinone,Torino,sì,Frosinone Calcio,Torino FC,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Juventus,Napoli,sì,Juventus FC,SSC Napoli,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Lazio,Cagliari,sì,SS Lazio,Cagliari Calcio,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Lecce,Genoa,sì,US Lecce,Genoa CFC,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Milan,Inter,sì,AC Milan,FC Internazionale Milano,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Sassuolo,Fiorentina,sì,US Sassuolo Calcio,ACF Fiorentina,2026-11-01T17:30Z
+Serie A,Italia,2026-27,10,2026-11-01,Domenica,18:30,18:30,Udinese,Roma,sì,Udinese Calcio,AS Roma,2026-11-01T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Cagliari,Frosinone,sì,Cagliari Calcio,Frosinone Calcio,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Fiorentina,Juventus,sì,ACF Fiorentina,Juventus FC,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Genoa,Milan,sì,Genoa CFC,AC Milan,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Inter,Como,sì,FC Internazionale Milano,Como 1907,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Monza,Atalanta,sì,AC Monza,Atalanta BC,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Napoli,Lazio,sì,SSC Napoli,SS Lazio,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Parma,Bologna,sì,Parma Calcio 1913,Bologna FC 1909,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Roma,Sassuolo,sì,AS Roma,US Sassuolo Calcio,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Torino,Lecce,sì,Torino FC,US Lecce,2026-11-08T17:30Z
+Serie A,Italia,2026-27,11,2026-11-08,Domenica,18:30,18:30,Venezia,Udinese,sì,Venezia FC,Udinese Calcio,2026-11-08T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Atalanta,Inter,sì,Atalanta BC,FC Internazionale Milano,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Bologna,Udinese,sì,Bologna FC 1909,Udinese Calcio,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Como,Cagliari,sì,Como 1907,Cagliari Calcio,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Juventus,Venezia,sì,Juventus FC,Venezia FC,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Lazio,Lecce,sì,SS Lazio,US Lecce,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Milan,Frosinone,sì,AC Milan,Frosinone Calcio,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Monza,Fiorentina,sì,AC Monza,ACF Fiorentina,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Napoli,Torino,sì,SSC Napoli,Torino FC,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Parma,Roma,sì,Parma Calcio 1913,AS Roma,2026-11-22T17:30Z
+Serie A,Italia,2026-27,12,2026-11-22,Domenica,18:30,18:30,Sassuolo,Genoa,sì,US Sassuolo Calcio,Genoa CFC,2026-11-22T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Cagliari,Milan,sì,Cagliari Calcio,AC Milan,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Como,Juventus,sì,Como 1907,Juventus FC,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Frosinone,Parma,sì,Frosinone Calcio,Parma Calcio 1913,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Inter,Genoa,sì,FC Internazionale Milano,Genoa CFC,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Lecce,Atalanta,sì,US Lecce,Atalanta BC,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Roma,Monza,sì,AS Roma,AC Monza,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Sassuolo,Napoli,sì,US Sassuolo Calcio,SSC Napoli,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Torino,Lazio,sì,Torino FC,SS Lazio,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Udinese,Fiorentina,sì,Udinese Calcio,ACF Fiorentina,2026-11-29T17:30Z
+Serie A,Italia,2026-27,13,2026-11-29,Domenica,18:30,18:30,Venezia,Bologna,sì,Venezia FC,Bologna FC 1909,2026-11-29T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Bologna,Roma,sì,Bologna FC 1909,AS Roma,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Fiorentina,Cagliari,sì,ACF Fiorentina,Cagliari Calcio,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Frosinone,Inter,sì,Frosinone Calcio,FC Internazionale Milano,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Genoa,Torino,sì,Genoa CFC,Torino FC,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Juventus,Udinese,sì,Juventus FC,Udinese Calcio,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Lazio,Atalanta,sì,SS Lazio,Atalanta BC,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Milan,Parma,sì,AC Milan,Parma Calcio 1913,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Monza,Como,sì,AC Monza,Como 1907,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Napoli,Lecce,sì,SSC Napoli,US Lecce,2026-12-06T17:30Z
+Serie A,Italia,2026-27,14,2026-12-06,Domenica,18:30,18:30,Venezia,Sassuolo,sì,Venezia FC,US Sassuolo Calcio,2026-12-06T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Atalanta,Genoa,sì,Atalanta BC,Genoa CFC,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Cagliari,Venezia,sì,Cagliari Calcio,Venezia FC,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Como,Bologna,sì,Como 1907,Bologna FC 1909,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Inter,Torino,sì,FC Internazionale Milano,Torino FC,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Juventus,Monza,sì,Juventus FC,AC Monza,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Lazio,Roma,sì,SS Lazio,AS Roma,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Lecce,Sassuolo,sì,US Lecce,US Sassuolo Calcio,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Napoli,Milan,sì,SSC Napoli,AC Milan,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Parma,Fiorentina,sì,Parma Calcio 1913,ACF Fiorentina,2026-12-13T17:30Z
+Serie A,Italia,2026-27,15,2026-12-13,Domenica,18:30,18:30,Udinese,Frosinone,sì,Udinese Calcio,Frosinone Calcio,2026-12-13T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Atalanta,Napoli,sì,Atalanta BC,SSC Napoli,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Fiorentina,Bologna,sì,ACF Fiorentina,Bologna FC 1909,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Frosinone,Lazio,sì,Frosinone Calcio,SS Lazio,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Genoa,Udinese,sì,Genoa CFC,Udinese Calcio,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Lecce,Inter,sì,US Lecce,FC Internazionale Milano,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Milan,Como,sì,AC Milan,Como 1907,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Roma,Juventus,sì,AS Roma,Juventus FC,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Sassuolo,Parma,sì,US Sassuolo Calcio,Parma Calcio 1913,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Torino,Cagliari,sì,Torino FC,Cagliari Calcio,2026-12-20T17:30Z
+Serie A,Italia,2026-27,16,2026-12-20,Domenica,18:30,18:30,Venezia,Monza,sì,Venezia FC,AC Monza,2026-12-20T17:30Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Bologna,Juventus,sì,Bologna FC 1909,Juventus FC,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Cagliari,Genoa,sì,Cagliari Calcio,Genoa CFC,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Como,Lecce,sì,Como 1907,US Lecce,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Fiorentina,Lazio,sì,ACF Fiorentina,SS Lazio,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Inter,Sassuolo,sì,FC Internazionale Milano,US Sassuolo Calcio,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Monza,Milan,sì,AC Monza,AC Milan,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Parma,Napoli,sì,Parma Calcio 1913,SSC Napoli,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Roma,Frosinone,sì,AS Roma,Frosinone Calcio,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Torino,Venezia,sì,Torino FC,Venezia FC,2027-01-03T12:00Z
+Serie A,Italia,2026-27,17,2027-01-03,Domenica,13:00,13:00,Udinese,Atalanta,sì,Udinese Calcio,Atalanta BC,2027-01-03T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Atalanta,Como,sì,Atalanta BC,Como 1907,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Frosinone,Bologna,sì,Frosinone Calcio,Bologna FC 1909,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Genoa,Monza,sì,Genoa CFC,AC Monza,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Juventus,Torino,sì,Juventus FC,Torino FC,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Lazio,Inter,sì,SS Lazio,FC Internazionale Milano,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Lecce,Parma,sì,US Lecce,Parma Calcio 1913,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Milan,Fiorentina,sì,AC Milan,ACF Fiorentina,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Napoli,Cagliari,sì,SSC Napoli,Cagliari Calcio,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Sassuolo,Udinese,sì,US Sassuolo Calcio,Udinese Calcio,2027-01-06T12:00Z
+Serie A,Italia,2026-27,18,2027-01-06,Mercoledì,13:00,13:00,Venezia,Roma,sì,Venezia FC,AS Roma,2027-01-06T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Bologna,Genoa,sì,Bologna FC 1909,Genoa CFC,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Cagliari,Sassuolo,sì,Cagliari Calcio,US Sassuolo Calcio,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Como,Lazio,sì,Como 1907,SS Lazio,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Fiorentina,Lecce,sì,ACF Fiorentina,US Lecce,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Inter,Juventus,sì,FC Internazionale Milano,Juventus FC,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Monza,Frosinone,sì,AC Monza,Frosinone Calcio,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Parma,Venezia,sì,Parma Calcio 1913,Venezia FC,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Roma,Milan,sì,AS Roma,AC Milan,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Torino,Atalanta,sì,Torino FC,Atalanta BC,2027-01-10T12:00Z
+Serie A,Italia,2026-27,19,2027-01-10,Domenica,13:00,13:00,Udinese,Napoli,sì,Udinese Calcio,SSC Napoli,2027-01-10T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Atalanta,Roma,sì,Atalanta BC,AS Roma,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Cagliari,Como,sì,Cagliari Calcio,Como 1907,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Juventus,Genoa,sì,Juventus FC,Genoa CFC,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Lazio,Bologna,sì,SS Lazio,Bologna FC 1909,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Lecce,Udinese,sì,US Lecce,Udinese Calcio,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Milan,Torino,sì,AC Milan,Torino FC,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Napoli,Fiorentina,sì,SSC Napoli,ACF Fiorentina,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Parma,Inter,sì,Parma Calcio 1913,FC Internazionale Milano,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Sassuolo,Monza,sì,US Sassuolo Calcio,AC Monza,2027-01-17T12:00Z
+Serie A,Italia,2026-27,20,2027-01-17,Domenica,13:00,13:00,Venezia,Frosinone,sì,Venezia FC,Frosinone Calcio,2027-01-17T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Bologna,Atalanta,sì,Bologna FC 1909,Atalanta BC,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Como,Napoli,sì,Como 1907,SSC Napoli,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Fiorentina,Sassuolo,sì,ACF Fiorentina,US Sassuolo Calcio,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Frosinone,Milan,sì,Frosinone Calcio,AC Milan,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Genoa,Parma,sì,Genoa CFC,Parma Calcio 1913,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Inter,Venezia,sì,FC Internazionale Milano,Venezia FC,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Juventus,Cagliari,sì,Juventus FC,Cagliari Calcio,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Lecce,Torino,sì,US Lecce,Torino FC,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Monza,Lazio,sì,AC Monza,SS Lazio,2027-01-24T12:00Z
+Serie A,Italia,2026-27,21,2027-01-24,Domenica,13:00,13:00,Roma,Udinese,sì,AS Roma,Udinese Calcio,2027-01-24T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Atalanta,Fiorentina,sì,Atalanta BC,ACF Fiorentina,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Cagliari,Parma,sì,Cagliari Calcio,Parma Calcio 1913,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Genoa,Lecce,sì,Genoa CFC,US Lecce,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Lazio,Venezia,sì,SS Lazio,Venezia FC,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Milan,Juventus,sì,AC Milan,Juventus FC,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Monza,Roma,sì,AC Monza,AS Roma,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Napoli,Inter,sì,SSC Napoli,FC Internazionale Milano,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Sassuolo,Como,sì,US Sassuolo Calcio,Como 1907,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Torino,Frosinone,sì,Torino FC,Frosinone Calcio,2027-01-31T12:00Z
+Serie A,Italia,2026-27,22,2027-01-31,Domenica,13:00,13:00,Udinese,Bologna,sì,Udinese Calcio,Bologna FC 1909,2027-01-31T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Atalanta,Lazio,sì,Atalanta BC,SS Lazio,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Bologna,Milan,sì,Bologna FC 1909,AC Milan,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Como,Monza,sì,Como 1907,AC Monza,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Fiorentina,Udinese,sì,ACF Fiorentina,Udinese Calcio,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Inter,Cagliari,sì,FC Internazionale Milano,Cagliari Calcio,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Juventus,Sassuolo,sì,Juventus FC,US Sassuolo Calcio,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Lecce,Napoli,sì,US Lecce,SSC Napoli,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Parma,Frosinone,sì,Parma Calcio 1913,Frosinone Calcio,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Roma,Torino,sì,AS Roma,Torino FC,2027-02-07T12:00Z
+Serie A,Italia,2026-27,23,2027-02-07,Domenica,13:00,13:00,Venezia,Genoa,sì,Venezia FC,Genoa CFC,2027-02-07T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Bologna,Como,sì,Bologna FC 1909,Como 1907,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Cagliari,Lazio,sì,Cagliari Calcio,SS Lazio,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Frosinone,Fiorentina,sì,Frosinone Calcio,ACF Fiorentina,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Genoa,Atalanta,sì,Genoa CFC,Atalanta BC,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Inter,Milan,sì,FC Internazionale Milano,AC Milan,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Monza,Lecce,sì,AC Monza,US Lecce,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Napoli,Juventus,sì,SSC Napoli,Juventus FC,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Roma,Parma,sì,AS Roma,Parma Calcio 1913,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Torino,Sassuolo,sì,Torino FC,US Sassuolo Calcio,2027-02-14T12:00Z
+Serie A,Italia,2026-27,24,2027-02-14,Domenica,13:00,13:00,Udinese,Venezia,sì,Udinese Calcio,Venezia FC,2027-02-14T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Atalanta,Monza,sì,Atalanta BC,AC Monza,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Como,Torino,sì,Como 1907,Torino FC,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Fiorentina,Inter,sì,ACF Fiorentina,FC Internazionale Milano,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Juventus,Bologna,sì,Juventus FC,Bologna FC 1909,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Lazio,Napoli,sì,SS Lazio,SSC Napoli,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Lecce,Frosinone,sì,US Lecce,Frosinone Calcio,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Milan,Genoa,sì,AC Milan,Genoa CFC,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Sassuolo,Roma,sì,US Sassuolo Calcio,AS Roma,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Udinese,Parma,sì,Udinese Calcio,Parma Calcio 1913,2027-02-21T12:00Z
+Serie A,Italia,2026-27,25,2027-02-21,Domenica,13:00,13:00,Venezia,Cagliari,sì,Venezia FC,Cagliari Calcio,2027-02-21T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Bologna,Lecce,sì,Bologna FC 1909,US Lecce,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Cagliari,Udinese,sì,Cagliari Calcio,Udinese Calcio,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Como,Milan,sì,Como 1907,AC Milan,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Frosinone,Napoli,sì,Frosinone Calcio,SSC Napoli,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Genoa,Lazio,sì,Genoa CFC,SS Lazio,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Inter,Atalanta,sì,FC Internazionale Milano,Atalanta BC,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Monza,Juventus,sì,AC Monza,Juventus FC,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Parma,Sassuolo,sì,Parma Calcio 1913,US Sassuolo Calcio,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Roma,Venezia,sì,AS Roma,Venezia FC,2027-02-28T12:00Z
+Serie A,Italia,2026-27,26,2027-02-28,Domenica,13:00,13:00,Torino,Fiorentina,sì,Torino FC,ACF Fiorentina,2027-02-28T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Atalanta,Torino,sì,Atalanta BC,Torino FC,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Fiorentina,Venezia,sì,ACF Fiorentina,Venezia FC,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Juventus,Roma,sì,Juventus FC,AS Roma,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Lazio,Frosinone,sì,SS Lazio,Frosinone Calcio,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Lecce,Como,sì,US Lecce,Como 1907,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Milan,Cagliari,sì,AC Milan,Cagliari Calcio,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Monza,Genoa,sì,AC Monza,Genoa CFC,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Napoli,Parma,sì,SSC Napoli,Parma Calcio 1913,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Sassuolo,Bologna,sì,US Sassuolo Calcio,Bologna FC 1909,2027-03-07T12:00Z
+Serie A,Italia,2026-27,27,2027-03-07,Domenica,13:00,13:00,Udinese,Inter,sì,Udinese Calcio,FC Internazionale Milano,2027-03-07T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Bologna,Napoli,sì,Bologna FC 1909,SSC Napoli,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Cagliari,Fiorentina,sì,Cagliari Calcio,ACF Fiorentina,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Como,Udinese,sì,Como 1907,Udinese Calcio,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Frosinone,Monza,sì,Frosinone Calcio,AC Monza,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Genoa,Roma,sì,Genoa CFC,AS Roma,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Lazio,Juventus,sì,SS Lazio,Juventus FC,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Milan,Sassuolo,sì,AC Milan,US Sassuolo Calcio,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Parma,Lecce,sì,Parma Calcio 1913,US Lecce,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Torino,Inter,sì,Torino FC,FC Internazionale Milano,2027-03-14T12:00Z
+Serie A,Italia,2026-27,28,2027-03-14,Domenica,13:00,13:00,Venezia,Atalanta,sì,Venezia FC,Atalanta BC,2027-03-14T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Atalanta,Milan,sì,Atalanta BC,AC Milan,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Fiorentina,Genoa,sì,ACF Fiorentina,Genoa CFC,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Inter,Frosinone,sì,FC Internazionale Milano,Frosinone Calcio,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Juventus,Como,sì,Juventus FC,Como 1907,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Monza,Bologna,sì,AC Monza,Bologna FC 1909,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Napoli,Venezia,sì,SSC Napoli,Venezia FC,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Parma,Lazio,sì,Parma Calcio 1913,SS Lazio,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Roma,Lecce,sì,AS Roma,US Lecce,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Sassuolo,Cagliari,sì,US Sassuolo Calcio,Cagliari Calcio,2027-03-21T12:00Z
+Serie A,Italia,2026-27,29,2027-03-21,Domenica,13:00,13:00,Udinese,Torino,sì,Udinese Calcio,Torino FC,2027-03-21T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Cagliari,Napoli,sì,Cagliari Calcio,SSC Napoli,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Como,Fiorentina,sì,Como 1907,ACF Fiorentina,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Frosinone,Udinese,sì,Frosinone Calcio,Udinese Calcio,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Genoa,Inter,sì,Genoa CFC,FC Internazionale Milano,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Lecce,Lazio,sì,US Lecce,SS Lazio,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Milan,Monza,sì,AC Milan,AC Monza,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Roma,Bologna,sì,AS Roma,Bologna FC 1909,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Sassuolo,Atalanta,sì,US Sassuolo Calcio,Atalanta BC,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Torino,Juventus,sì,Torino FC,Juventus FC,2027-04-04T12:00Z
+Serie A,Italia,2026-27,30,2027-04-04,Domenica,14:00,14:00,Venezia,Parma,sì,Venezia FC,Parma Calcio 1913,2027-04-04T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Bologna,Venezia,sì,Bologna FC 1909,Venezia FC,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Cagliari,Atalanta,sì,Cagliari Calcio,Atalanta BC,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Fiorentina,Milan,sì,ACF Fiorentina,AC Milan,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Frosinone,Genoa,sì,Frosinone Calcio,Genoa CFC,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Inter,Roma,sì,FC Internazionale Milano,AS Roma,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Juventus,Lecce,sì,Juventus FC,US Lecce,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Lazio,Torino,sì,SS Lazio,Torino FC,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Napoli,Sassuolo,sì,SSC Napoli,US Sassuolo Calcio,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Parma,Como,sì,Parma Calcio 1913,Como 1907,2027-04-11T12:00Z
+Serie A,Italia,2026-27,31,2027-04-11,Domenica,14:00,14:00,Udinese,Monza,sì,Udinese Calcio,AC Monza,2027-04-11T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Atalanta,Udinese,sì,Atalanta BC,Udinese Calcio,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Bologna,Cagliari,sì,Bologna FC 1909,Cagliari Calcio,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Como,Frosinone,sì,Como 1907,Frosinone Calcio,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Fiorentina,Parma,sì,ACF Fiorentina,Parma Calcio 1913,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Milan,Napoli,sì,AC Milan,SSC Napoli,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Monza,Inter,sì,AC Monza,FC Internazionale Milano,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Roma,Lazio,sì,AS Roma,SS Lazio,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Sassuolo,Lecce,sì,US Sassuolo Calcio,US Lecce,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Torino,Genoa,sì,Torino FC,Genoa CFC,2027-04-18T12:00Z
+Serie A,Italia,2026-27,32,2027-04-18,Domenica,14:00,14:00,Venezia,Juventus,sì,Venezia FC,Juventus FC,2027-04-18T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Cagliari,Monza,sì,Cagliari Calcio,AC Monza,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Frosinone,Roma,sì,Frosinone Calcio,AS Roma,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Genoa,Sassuolo,sì,Genoa CFC,US Sassuolo Calcio,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Inter,Bologna,sì,FC Internazionale Milano,Bologna FC 1909,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Juventus,Fiorentina,sì,Juventus FC,ACF Fiorentina,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Lazio,Como,sì,SS Lazio,Como 1907,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Lecce,Milan,sì,US Lecce,AC Milan,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Napoli,Udinese,sì,SSC Napoli,Udinese Calcio,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Parma,Atalanta,sì,Parma Calcio 1913,Atalanta BC,2027-04-25T12:00Z
+Serie A,Italia,2026-27,33,2027-04-25,Domenica,14:00,14:00,Venezia,Torino,sì,Venezia FC,Torino FC,2027-04-25T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Atalanta,Juventus,sì,Atalanta BC,Juventus FC,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Bologna,Fiorentina,sì,Bologna FC 1909,ACF Fiorentina,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Como,Inter,sì,Como 1907,FC Internazionale Milano,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Lecce,Cagliari,sì,US Lecce,Cagliari Calcio,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Milan,Lazio,sì,AC Milan,SS Lazio,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Monza,Venezia,sì,AC Monza,Venezia FC,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Roma,Napoli,sì,AS Roma,SSC Napoli,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Sassuolo,Frosinone,sì,US Sassuolo Calcio,Frosinone Calcio,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Torino,Parma,sì,Torino FC,Parma Calcio 1913,2027-05-02T12:00Z
+Serie A,Italia,2026-27,34,2027-05-02,Domenica,14:00,14:00,Udinese,Genoa,sì,Udinese Calcio,Genoa CFC,2027-05-02T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Fiorentina,Roma,sì,ACF Fiorentina,AS Roma,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Frosinone,Atalanta,sì,Frosinone Calcio,Atalanta BC,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Genoa,Cagliari,sì,Genoa CFC,Cagliari Calcio,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Inter,Lecce,sì,FC Internazionale Milano,US Lecce,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Lazio,Sassuolo,sì,SS Lazio,US Sassuolo Calcio,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Napoli,Monza,sì,SSC Napoli,AC Monza,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Parma,Milan,sì,Parma Calcio 1913,AC Milan,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Torino,Bologna,sì,Torino FC,Bologna FC 1909,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Udinese,Juventus,sì,Udinese Calcio,Juventus FC,2027-05-09T12:00Z
+Serie A,Italia,2026-27,35,2027-05-09,Domenica,14:00,14:00,Venezia,Como,sì,Venezia FC,Como 1907,2027-05-09T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Bologna,Frosinone,sì,Bologna FC 1909,Frosinone Calcio,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Cagliari,Torino,sì,Cagliari Calcio,Torino FC,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Como,Atalanta,sì,Como 1907,Atalanta BC,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Juventus,Inter,sì,Juventus FC,FC Internazionale Milano,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Lazio,Udinese,sì,SS Lazio,Udinese Calcio,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Lecce,Fiorentina,sì,US Lecce,ACF Fiorentina,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Milan,Roma,sì,AC Milan,AS Roma,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Monza,Parma,sì,AC Monza,Parma Calcio 1913,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Napoli,Genoa,sì,SSC Napoli,Genoa CFC,2027-05-16T12:00Z
+Serie A,Italia,2026-27,36,2027-05-16,Domenica,14:00,14:00,Sassuolo,Venezia,sì,US Sassuolo Calcio,Venezia FC,2027-05-16T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Atalanta,Lecce,sì,Atalanta BC,US Lecce,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Fiorentina,Monza,sì,ACF Fiorentina,AC Monza,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Frosinone,Cagliari,sì,Frosinone Calcio,Cagliari Calcio,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Genoa,Bologna,sì,Genoa CFC,Bologna FC 1909,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Inter,Lazio,sì,FC Internazionale Milano,SS Lazio,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Parma,Juventus,sì,Parma Calcio 1913,Juventus FC,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Roma,Como,sì,AS Roma,Como 1907,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Torino,Napoli,sì,Torino FC,SSC Napoli,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Udinese,Sassuolo,sì,Udinese Calcio,US Sassuolo Calcio,2027-05-23T12:00Z
+Serie A,Italia,2026-27,37,2027-05-23,Domenica,14:00,14:00,Venezia,Milan,sì,Venezia FC,AC Milan,2027-05-23T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Bologna,Parma,sì,Bologna FC 1909,Parma Calcio 1913,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Cagliari,Roma,sì,Cagliari Calcio,AS Roma,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Como,Genoa,sì,Como 1907,Genoa CFC,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Juventus,Frosinone,sì,Juventus FC,Frosinone Calcio,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Lazio,Fiorentina,sì,SS Lazio,ACF Fiorentina,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Lecce,Venezia,sì,US Lecce,Venezia FC,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Milan,Udinese,sì,AC Milan,Udinese Calcio,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Monza,Torino,sì,AC Monza,Torino FC,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Napoli,Atalanta,sì,SSC Napoli,Atalanta BC,2027-05-30T12:00Z
+Serie A,Italia,2026-27,38,2027-05-30,Domenica,14:00,14:00,Sassuolo,Inter,sì,US Sassuolo Calcio,FC Internazionale Milano,2027-05-30T12:00Z

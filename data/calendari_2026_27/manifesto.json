@@ -1,0 +1,71 @@
+{
+  "fonte": "consegna diretta dell'utente (11/08/2026), file caricati in sessione",
+  "descrizione": "calendari completi 2026-27 dei 5 campionati modellati",
+  "righe": 1752,
+  "per_lega": {
+    "Bundesliga": {
+      "partite": 306,
+      "squadre": 18,
+      "giornate": 34,
+      "atteso_round_robin": 306,
+      "completo": true
+    },
+    "La Liga": {
+      "partite": 380,
+      "squadre": 20,
+      "giornate": 38,
+      "atteso_round_robin": 380,
+      "completo": true
+    },
+    "Ligue 1": {
+      "partite": 306,
+      "squadre": 18,
+      "giornate": 34,
+      "atteso_round_robin": 306,
+      "completo": true
+    },
+    "Premier League": {
+      "partite": 380,
+      "squadre": 20,
+      "giornate": 38,
+      "atteso_round_robin": 380,
+      "completo": true
+    },
+    "Serie A": {
+      "partite": 380,
+      "squadre": 20,
+      "giornate": 38,
+      "atteso_round_robin": 380,
+      "completo": true
+    }
+  },
+  "date_provvisorie": {
+    "sì": 1643,
+    "no": 109
+  },
+  "colonne": [
+    "campionato",
+    "paese",
+    "stagione",
+    "giornata",
+    "data",
+    "giorno",
+    "ora_italiana",
+    "ora_locale",
+    "squadra_casa",
+    "squadra_trasferta",
+    "data_ora_provvisoria",
+    "casa_nome_ufficiale",
+    "trasferta_nome_ufficiale",
+    "kickoff_utc"
+  ],
+  "sha256": {
+    "bundesliga_2026-27.csv": "c5c4214a543134e4",
+    "calendari_2026-27_top5.csv": "e4d43bb4bd322d27",
+    "calendari_2026-27_top5_PUNTOEVIRGOLA.csv": "81a6483c63bdd507",
+    "la_liga_2026-27.csv": "22158d08ff15c04a",
+    "ligue_1_2026-27.csv": "f1c3ad73c110c2fc",
+    "premier_league_2026-27.csv": "c8987cf7f4da255e",
+    "serie_a_2026-27.csv": "99559fc767c1b09d"
+  }
+}

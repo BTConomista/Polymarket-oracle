@@ -1,0 +1,307 @@
+﻿campionato,paese,stagione,giornata,data,giorno,ora_italiana,ora_locale,squadra_casa,squadra_trasferta,data_ora_provvisoria,casa_nome_ufficiale,trasferta_nome_ufficiale,kickoff_utc
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Angers,Lille,sì,Angers SCO,Lille OSC,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Le Havre,Monaco,sì,Le Havre AC,AS Monaco FC,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Le Mans,Brest,sì,Le Mans FC,Stade Brestois 29,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Lens,Auxerre,sì,Racing Club de Lens,AJ Auxerre,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Marsiglia,Strasburgo,sì,Olympique de Marseille,RC Strasbourg Alsace,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Nizza,Lorient,sì,OGC Nice,FC Lorient,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,PSG,Rennes,sì,Paris Saint-Germain FC,Stade Rennais FC 1901,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Tolosa,Lione,sì,Toulouse FC,Olympique Lyonnais,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,1,2026-08-22,Sabato,17:00,17:00,Troyes,Paris FC,sì,ES Troyes AC,Paris FC,2026-08-22T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Auxerre,Angers,no,AJ Auxerre,Angers SCO,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Brest,Tolosa,no,Stade Brestois 29,Toulouse FC,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Lione,Le Havre,no,Olympique Lyonnais,Le Havre AC,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Lorient,Troyes,no,FC Lorient,ES Troyes AC,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Monaco,Marsiglia,no,AS Monaco FC,Olympique de Marseille,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Paris FC,Nizza,no,Paris FC,OGC Nice,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Rennes,Le Mans,no,Stade Rennais FC 1901,Le Mans FC,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-29,Sabato,17:00,17:00,Strasburgo,Lens,no,RC Strasbourg Alsace,Racing Club de Lens,2026-08-29T15:00Z
+Ligue 1,Francia,2026-27,2,2026-08-30,Domenica,20:45,20:45,Lille,PSG,no,Lille OSC,Paris Saint-Germain FC,2026-08-30T18:45Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Angers,Rennes,sì,Angers SCO,Stade Rennais FC 1901,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Le Havre,Brest,sì,Le Havre AC,Stade Brestois 29,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Lens,Lorient,sì,Racing Club de Lens,FC Lorient,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Lione,Auxerre,sì,Olympique Lyonnais,AJ Auxerre,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Marsiglia,Paris FC,sì,Olympique de Marseille,Paris FC,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Nizza,Le Mans,sì,OGC Nice,Le Mans FC,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,PSG,Monaco,sì,Paris Saint-Germain FC,AS Monaco FC,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Tolosa,Lille,sì,Toulouse FC,Lille OSC,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,3,2026-09-05,Sabato,17:00,17:00,Troyes,Strasburgo,sì,ES Troyes AC,RC Strasbourg Alsace,2026-09-05T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Auxerre,Nizza,sì,AJ Auxerre,OGC Nice,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Brest,PSG,sì,Stade Brestois 29,Paris Saint-Germain FC,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Le Havre,Angers,sì,Le Havre AC,Angers SCO,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Le Mans,Lens,sì,Le Mans FC,Racing Club de Lens,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Lille,Troyes,sì,Lille OSC,ES Troyes AC,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Lorient,Tolosa,sì,FC Lorient,Toulouse FC,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Paris FC,Lione,sì,Paris FC,Olympique Lyonnais,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Rennes,Marsiglia,sì,Stade Rennais FC 1901,Olympique de Marseille,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,4,2026-09-12,Sabato,17:00,17:00,Strasburgo,Monaco,sì,RC Strasbourg Alsace,AS Monaco FC,2026-09-12T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Angers,Troyes,no,Angers SCO,ES Troyes AC,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Auxerre,Brest,no,AJ Auxerre,Stade Brestois 29,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Le Mans,Lorient,no,Le Mans FC,FC Lorient,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Lione,Rennes,no,Olympique Lyonnais,Stade Rennais FC 1901,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Monaco,Lens,no,AS Monaco FC,Racing Club de Lens,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Nizza,Lille,no,OGC Nice,Lille OSC,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Paris FC,Strasburgo,no,Paris FC,RC Strasbourg Alsace,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-19,Sabato,17:00,17:00,Tolosa,Le Havre,no,Toulouse FC,Le Havre AC,2026-09-19T15:00Z
+Ligue 1,Francia,2026-27,5,2026-09-20,Domenica,20:45,20:45,Marsiglia,PSG,no,Olympique de Marseille,Paris Saint-Germain FC,2026-09-20T18:45Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Brest,Angers,sì,Stade Brestois 29,Angers SCO,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Lens,Lione,sì,Racing Club de Lens,Olympique Lyonnais,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Lille,Le Havre,sì,Lille OSC,Le Havre AC,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Lorient,Paris FC,sì,FC Lorient,Paris FC,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Monaco,Tolosa,sì,AS Monaco FC,Toulouse FC,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Nizza,Strasburgo,sì,OGC Nice,RC Strasbourg Alsace,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,PSG,Le Mans,sì,Paris Saint-Germain FC,Le Mans FC,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Rennes,Auxerre,sì,Stade Rennais FC 1901,AJ Auxerre,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,6,2026-10-10,Sabato,17:00,17:00,Troyes,Marsiglia,sì,ES Troyes AC,Olympique de Marseille,2026-10-10T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Angers,Marsiglia,sì,Angers SCO,Olympique de Marseille,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Le Havre,Auxerre,sì,Le Havre AC,AJ Auxerre,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Le Mans,Tolosa,sì,Le Mans FC,Toulouse FC,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Lille,Brest,sì,Lille OSC,Stade Brestois 29,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Lione,Nizza,sì,Olympique Lyonnais,OGC Nice,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Lorient,Monaco,sì,FC Lorient,AS Monaco FC,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Paris FC,Rennes,sì,Paris FC,Stade Rennais FC 1901,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Strasburgo,PSG,sì,RC Strasbourg Alsace,Paris Saint-Germain FC,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,7,2026-10-17,Sabato,17:00,17:00,Troyes,Lens,sì,ES Troyes AC,Racing Club de Lens,2026-10-17T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Angers,Lorient,no,Angers SCO,FC Lorient,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Auxerre,Le Mans,no,AJ Auxerre,Le Mans FC,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Brest,Nizza,no,Stade Brestois 29,OGC Nice,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Lens,Paris FC,no,Racing Club de Lens,Paris FC,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Marsiglia,Le Havre,no,Olympique de Marseille,Le Havre AC,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Monaco,Lille,no,AS Monaco FC,Lille OSC,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Rennes,Strasburgo,no,Stade Rennais FC 1901,RC Strasbourg Alsace,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-24,Sabato,17:00,17:00,Tolosa,Troyes,no,Toulouse FC,ES Troyes AC,2026-10-24T15:00Z
+Ligue 1,Francia,2026-27,8,2026-10-25,Domenica,20:45,20:45,PSG,Lione,no,Paris Saint-Germain FC,Olympique Lyonnais,2026-10-25T19:45Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Le Havre,PSG,sì,Le Havre AC,Paris Saint-Germain FC,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Lille,Lens,sì,Lille OSC,Racing Club de Lens,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Lione,Angers,sì,Olympique Lyonnais,Angers SCO,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Lorient,Brest,sì,FC Lorient,Stade Brestois 29,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Marsiglia,Tolosa,sì,Olympique de Marseille,Toulouse FC,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Nizza,Rennes,sì,OGC Nice,Stade Rennais FC 1901,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Paris FC,Monaco,sì,Paris FC,AS Monaco FC,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Strasburgo,Auxerre,sì,RC Strasbourg Alsace,AJ Auxerre,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,9,2026-10-31,Sabato,17:00,17:00,Troyes,Le Mans,sì,ES Troyes AC,Le Mans FC,2026-10-31T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Angers,Nizza,no,Angers SCO,OGC Nice,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Auxerre,Paris FC,no,AJ Auxerre,Paris FC,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Brest,Lione,no,Stade Brestois 29,Olympique Lyonnais,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Le Havre,Lorient,no,Le Havre AC,FC Lorient,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Le Mans,Monaco,no,Le Mans FC,AS Monaco FC,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,PSG,Troyes,no,Paris Saint-Germain FC,ES Troyes AC,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Rennes,Lille,no,Stade Rennais FC 1901,Lille OSC,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,17:00,17:00,Tolosa,Strasburgo,no,Toulouse FC,RC Strasbourg Alsace,2026-11-07T16:00Z
+Ligue 1,Francia,2026-27,10,2026-11-07,Sabato,20:45,20:45,Lens,Marsiglia,no,Racing Club de Lens,Olympique de Marseille,2026-11-07T19:45Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Lens,Tolosa,sì,Racing Club de Lens,Toulouse FC,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Lille,Lione,sì,Lille OSC,Olympique Lyonnais,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Lorient,Rennes,sì,FC Lorient,Stade Rennais FC 1901,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Marsiglia,Le Mans,sì,Olympique de Marseille,Le Mans FC,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Monaco,Auxerre,sì,AS Monaco FC,AJ Auxerre,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Nizza,PSG,sì,OGC Nice,Paris Saint-Germain FC,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Paris FC,Angers,sì,Paris FC,Angers SCO,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Strasburgo,Brest,sì,RC Strasbourg Alsace,Stade Brestois 29,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,11,2026-11-21,Sabato,17:00,17:00,Troyes,Le Havre,sì,ES Troyes AC,Le Havre AC,2026-11-21T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Angers,Lens,sì,Angers SCO,Racing Club de Lens,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Auxerre,Marsiglia,sì,AJ Auxerre,Olympique de Marseille,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Brest,Paris FC,sì,Stade Brestois 29,Paris FC,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Le Havre,Strasburgo,sì,Le Havre AC,RC Strasbourg Alsace,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Le Mans,Lille,sì,Le Mans FC,Lille OSC,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Lione,Monaco,sì,Olympique Lyonnais,AS Monaco FC,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Nizza,Troyes,sì,OGC Nice,ES Troyes AC,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,PSG,Lorient,sì,Paris Saint-Germain FC,FC Lorient,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,12,2026-11-28,Sabato,17:00,17:00,Tolosa,Rennes,sì,Toulouse FC,Stade Rennais FC 1901,2026-11-28T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Lens,Le Havre,sì,Racing Club de Lens,Le Havre AC,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Lille,Auxerre,sì,Lille OSC,AJ Auxerre,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Marsiglia,Nizza,sì,Olympique de Marseille,OGC Nice,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Monaco,Angers,sì,AS Monaco FC,Angers SCO,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Paris FC,Le Mans,sì,Paris FC,Le Mans FC,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Rennes,Brest,sì,Stade Rennais FC 1901,Stade Brestois 29,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Strasburgo,Lorient,sì,RC Strasbourg Alsace,FC Lorient,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Tolosa,PSG,sì,Toulouse FC,Paris Saint-Germain FC,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,13,2026-12-05,Sabato,17:00,17:00,Troyes,Lione,sì,ES Troyes AC,Olympique Lyonnais,2026-12-05T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Angers,Strasburgo,no,Angers SCO,RC Strasbourg Alsace,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Auxerre,Tolosa,no,AJ Auxerre,Toulouse FC,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Brest,Troyes,no,Stade Brestois 29,ES Troyes AC,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Le Havre,Le Mans,no,Le Havre AC,Le Mans FC,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Lorient,Lille,no,FC Lorient,Lille OSC,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Nizza,Lens,no,OGC Nice,Racing Club de Lens,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,PSG,Paris FC,no,Paris Saint-Germain FC,Paris FC,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-12,Sabato,17:00,17:00,Rennes,Monaco,no,Stade Rennais FC 1901,AS Monaco FC,2026-12-12T16:00Z
+Ligue 1,Francia,2026-27,14,2026-12-13,Domenica,20:45,20:45,Lione,Marsiglia,no,Olympique Lyonnais,Olympique de Marseille,2026-12-13T19:45Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Brest,Marsiglia,no,Stade Brestois 29,Olympique de Marseille,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Le Mans,Lione,no,Le Mans FC,Olympique Lyonnais,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Lille,Strasburgo,no,Lille OSC,RC Strasbourg Alsace,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Lorient,Auxerre,no,FC Lorient,AJ Auxerre,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Monaco,Nizza,no,AS Monaco FC,OGC Nice,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Paris FC,Le Havre,no,Paris FC,Le Havre AC,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Tolosa,Angers,no,Toulouse FC,Angers SCO,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-02,Sabato,13:00,13:00,Troyes,Rennes,no,ES Troyes AC,Stade Rennais FC 1901,2027-01-02T12:00Z
+Ligue 1,Francia,2026-27,15,2027-01-03,Domenica,13:00,13:00,Lens,PSG,no,Racing Club de Lens,Paris Saint-Germain FC,2027-01-03T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Angers,PSG,sì,Angers SCO,Paris Saint-Germain FC,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Auxerre,Troyes,sì,AJ Auxerre,ES Troyes AC,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Lione,Lorient,sì,Olympique Lyonnais,FC Lorient,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Marsiglia,Lille,sì,Olympique de Marseille,Lille OSC,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Monaco,Brest,sì,AS Monaco FC,Stade Brestois 29,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Nizza,Le Havre,sì,OGC Nice,Le Havre AC,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Paris FC,Tolosa,sì,Paris FC,Toulouse FC,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Rennes,Lens,sì,Stade Rennais FC 1901,Racing Club de Lens,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,16,2027-01-16,Sabato,13:00,13:00,Strasburgo,Le Mans,sì,RC Strasbourg Alsace,Le Mans FC,2027-01-16T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Le Havre,Rennes,sì,Le Havre AC,Stade Rennais FC 1901,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Le Mans,Angers,sì,Le Mans FC,Angers SCO,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Lens,Brest,sì,Racing Club de Lens,Stade Brestois 29,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Lille,Paris FC,sì,Lille OSC,Paris FC,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Lorient,Marsiglia,sì,FC Lorient,Olympique de Marseille,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,PSG,Auxerre,sì,Paris Saint-Germain FC,AJ Auxerre,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Strasburgo,Lione,sì,RC Strasbourg Alsace,Olympique Lyonnais,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Tolosa,Nizza,sì,Toulouse FC,OGC Nice,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,17,2027-01-23,Sabato,13:00,13:00,Troyes,Monaco,sì,ES Troyes AC,AS Monaco FC,2027-01-23T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Angers,Le Havre,sì,Angers SCO,Le Havre AC,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Brest,Strasburgo,sì,Stade Brestois 29,RC Strasbourg Alsace,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Le Mans,Nizza,sì,Le Mans FC,OGC Nice,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Lione,Lille,sì,Olympique Lyonnais,Lille OSC,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Marsiglia,Troyes,sì,Olympique de Marseille,ES Troyes AC,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Monaco,PSG,sì,AS Monaco FC,Paris Saint-Germain FC,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Paris FC,Auxerre,sì,Paris FC,AJ Auxerre,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Rennes,Lorient,sì,Stade Rennais FC 1901,FC Lorient,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,18,2027-01-30,Sabato,13:00,13:00,Tolosa,Lens,sì,Toulouse FC,Racing Club de Lens,2027-01-30T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Auxerre,Monaco,no,AJ Auxerre,AS Monaco FC,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Le Havre,Tolosa,no,Le Havre AC,Toulouse FC,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Lens,Angers,no,Racing Club de Lens,Angers SCO,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Lorient,Le Mans,no,FC Lorient,Le Mans FC,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Nizza,Brest,no,OGC Nice,Stade Brestois 29,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Rennes,Lione,no,Stade Rennais FC 1901,Olympique Lyonnais,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Strasburgo,Paris FC,no,RC Strasbourg Alsace,Paris FC,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-06,Sabato,13:00,13:00,Troyes,Lille,no,ES Troyes AC,Lille OSC,2027-02-06T12:00Z
+Ligue 1,Francia,2026-27,19,2027-02-07,Domenica,13:00,13:00,PSG,Marsiglia,no,Paris Saint-Germain FC,Olympique de Marseille,2027-02-07T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Auxerre,Strasburgo,sì,AJ Auxerre,RC Strasbourg Alsace,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Brest,Rennes,sì,Stade Brestois 29,Stade Rennais FC 1901,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Le Mans,PSG,sì,Le Mans FC,Paris Saint-Germain FC,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Lille,Nizza,sì,Lille OSC,OGC Nice,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Lione,Lens,sì,Olympique Lyonnais,Racing Club de Lens,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Lorient,Le Havre,sì,FC Lorient,Le Havre AC,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Marsiglia,Angers,sì,Olympique de Marseille,Angers SCO,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Paris FC,Troyes,sì,Paris FC,ES Troyes AC,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,20,2027-02-13,Sabato,13:00,13:00,Tolosa,Monaco,sì,Toulouse FC,AS Monaco FC,2027-02-13T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Angers,Paris FC,sì,Angers SCO,Paris FC,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Le Havre,Lione,sì,Le Havre AC,Olympique Lyonnais,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Lens,Troyes,sì,Racing Club de Lens,ES Troyes AC,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Lille,Lorient,sì,Lille OSC,FC Lorient,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Monaco,Le Mans,sì,AS Monaco FC,Le Mans FC,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Nizza,Auxerre,sì,OGC Nice,AJ Auxerre,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,PSG,Brest,sì,Paris Saint-Germain FC,Stade Brestois 29,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Rennes,Tolosa,sì,Stade Rennais FC 1901,Toulouse FC,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,21,2027-02-20,Sabato,13:00,13:00,Strasburgo,Marsiglia,sì,RC Strasbourg Alsace,Olympique de Marseille,2027-02-20T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Auxerre,Lille,no,AJ Auxerre,Lille OSC,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Brest,Monaco,no,Stade Brestois 29,AS Monaco FC,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Le Mans,Paris FC,no,Le Mans FC,Paris FC,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Lione,Tolosa,no,Olympique Lyonnais,Toulouse FC,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Lorient,Angers,no,FC Lorient,Angers SCO,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Marsiglia,Rennes,no,Olympique de Marseille,Stade Rennais FC 1901,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Strasburgo,Le Havre,no,RC Strasbourg Alsace,Le Havre AC,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-27,Sabato,13:00,13:00,Troyes,Nizza,no,ES Troyes AC,OGC Nice,2027-02-27T12:00Z
+Ligue 1,Francia,2026-27,22,2027-02-28,Domenica,13:00,13:00,PSG,Lens,no,Paris Saint-Germain FC,Racing Club de Lens,2027-02-28T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Angers,Auxerre,sì,Angers SCO,AJ Auxerre,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Le Havre,Nizza,sì,Le Havre AC,OGC Nice,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Lens,Strasburgo,sì,Racing Club de Lens,RC Strasbourg Alsace,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Lille,Marsiglia,sì,Lille OSC,Olympique de Marseille,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Monaco,Lione,sì,AS Monaco FC,Olympique Lyonnais,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Paris FC,Brest,sì,Paris FC,Stade Brestois 29,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Rennes,PSG,sì,Stade Rennais FC 1901,Paris Saint-Germain FC,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Tolosa,Le Mans,sì,Toulouse FC,Le Mans FC,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,23,2027-03-06,Sabato,13:00,13:00,Troyes,Lorient,sì,ES Troyes AC,FC Lorient,2027-03-06T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Auxerre,PSG,sì,AJ Auxerre,Paris Saint-Germain FC,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Brest,Lille,sì,Stade Brestois 29,Lille OSC,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Le Havre,Lens,sì,Le Havre AC,Racing Club de Lens,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Le Mans,Rennes,sì,Le Mans FC,Stade Rennais FC 1901,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Lione,Troyes,sì,Olympique Lyonnais,ES Troyes AC,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Marsiglia,Monaco,sì,Olympique de Marseille,AS Monaco FC,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Nizza,Tolosa,sì,OGC Nice,Toulouse FC,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Paris FC,Lorient,sì,Paris FC,FC Lorient,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,24,2027-03-13,Sabato,13:00,13:00,Strasburgo,Angers,sì,RC Strasbourg Alsace,Angers SCO,2027-03-13T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Angers,Le Mans,no,Angers SCO,Le Mans FC,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Lens,Lille,no,Racing Club de Lens,Lille OSC,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Lorient,Nizza,no,FC Lorient,OGC Nice,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Monaco,Le Havre,no,AS Monaco FC,Le Havre AC,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,PSG,Strasburgo,no,Paris Saint-Germain FC,RC Strasbourg Alsace,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Rennes,Paris FC,no,Stade Rennais FC 1901,Paris FC,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Tolosa,Brest,no,Toulouse FC,Stade Brestois 29,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-20,Sabato,13:00,13:00,Troyes,Auxerre,no,ES Troyes AC,AJ Auxerre,2027-03-20T12:00Z
+Ligue 1,Francia,2026-27,25,2027-03-21,Domenica,13:00,13:00,Marsiglia,Lione,no,Olympique de Marseille,Olympique Lyonnais,2027-03-21T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Angers,Monaco,sì,Angers SCO,AS Monaco FC,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Auxerre,Lens,sì,AJ Auxerre,Racing Club de Lens,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Brest,Lorient,sì,Stade Brestois 29,FC Lorient,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Le Havre,Troyes,sì,Le Havre AC,ES Troyes AC,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Le Mans,Marsiglia,sì,Le Mans FC,Olympique de Marseille,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Lille,Rennes,sì,Lille OSC,Stade Rennais FC 1901,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Nizza,Lione,sì,OGC Nice,Olympique Lyonnais,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Paris FC,PSG,sì,Paris FC,Paris Saint-Germain FC,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,26,2027-04-03,Sabato,14:00,14:00,Strasburgo,Tolosa,sì,RC Strasbourg Alsace,Toulouse FC,2027-04-03T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Le Mans,Auxerre,sì,Le Mans FC,AJ Auxerre,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Lille,Tolosa,sì,Lille OSC,Toulouse FC,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Lione,Strasburgo,sì,Olympique Lyonnais,RC Strasbourg Alsace,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Lorient,Lens,sì,FC Lorient,Racing Club de Lens,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Marsiglia,Brest,sì,Olympique de Marseille,Stade Brestois 29,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Monaco,Rennes,sì,AS Monaco FC,Stade Rennais FC 1901,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Nizza,Paris FC,sì,OGC Nice,Paris FC,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,PSG,Le Havre,sì,Paris Saint-Germain FC,Le Havre AC,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,27,2027-04-10,Sabato,14:00,14:00,Troyes,Angers,sì,ES Troyes AC,Angers SCO,2027-04-10T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Angers,Lione,sì,Angers SCO,Olympique Lyonnais,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Auxerre,Lorient,sì,AJ Auxerre,FC Lorient,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Brest,Le Mans,sì,Stade Brestois 29,Le Mans FC,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Le Havre,Marsiglia,sì,Le Havre AC,Olympique de Marseille,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Lens,Nizza,sì,Racing Club de Lens,OGC Nice,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Monaco,Strasburgo,sì,AS Monaco FC,RC Strasbourg Alsace,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,PSG,Lille,sì,Paris Saint-Germain FC,Lille OSC,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Rennes,Troyes,sì,Stade Rennais FC 1901,ES Troyes AC,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,28,2027-04-17,Sabato,14:00,14:00,Tolosa,Paris FC,sì,Toulouse FC,Paris FC,2027-04-17T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Le Mans,Le Havre,sì,Le Mans FC,Le Havre AC,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Lille,Monaco,sì,Lille OSC,AS Monaco FC,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Lione,Brest,sì,Olympique Lyonnais,Stade Brestois 29,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Lorient,PSG,sì,FC Lorient,Paris Saint-Germain FC,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Marsiglia,Auxerre,sì,Olympique de Marseille,AJ Auxerre,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Nizza,Angers,sì,OGC Nice,Angers SCO,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Paris FC,Lens,sì,Paris FC,Racing Club de Lens,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Strasburgo,Rennes,sì,RC Strasbourg Alsace,Stade Rennais FC 1901,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,29,2027-04-24,Sabato,14:00,14:00,Troyes,Tolosa,sì,ES Troyes AC,Toulouse FC,2027-04-24T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Auxerre,Lione,sì,AJ Auxerre,Olympique Lyonnais,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Le Havre,Paris FC,sì,Le Havre AC,Paris FC,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Lens,Le Mans,sì,Racing Club de Lens,Le Mans FC,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Monaco,Lorient,sì,AS Monaco FC,FC Lorient,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,PSG,Angers,sì,Paris Saint-Germain FC,Angers SCO,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Rennes,Nizza,sì,Stade Rennais FC 1901,OGC Nice,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Strasburgo,Lille,sì,RC Strasbourg Alsace,Lille OSC,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Tolosa,Marsiglia,sì,Toulouse FC,Olympique de Marseille,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,30,2027-05-01,Sabato,14:00,14:00,Troyes,Brest,sì,ES Troyes AC,Stade Brestois 29,2027-05-01T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Angers,Tolosa,no,Angers SCO,Toulouse FC,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Brest,Auxerre,no,Stade Brestois 29,AJ Auxerre,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Le Mans,Troyes,no,Le Mans FC,ES Troyes AC,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Lens,Monaco,no,Racing Club de Lens,AS Monaco FC,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Lorient,Strasburgo,no,FC Lorient,RC Strasbourg Alsace,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Nizza,Marsiglia,no,OGC Nice,Olympique de Marseille,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Paris FC,Lille,no,Paris FC,Lille OSC,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-08,Sabato,14:00,14:00,Rennes,Le Havre,no,Stade Rennais FC 1901,Le Havre AC,2027-05-08T12:00Z
+Ligue 1,Francia,2026-27,31,2027-05-09,Domenica,14:00,14:00,Lione,PSG,no,Olympique Lyonnais,Paris Saint-Germain FC,2027-05-09T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Auxerre,Rennes,sì,AJ Auxerre,Stade Rennais FC 1901,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Brest,Le Havre,sì,Stade Brestois 29,Le Havre AC,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Lille,Angers,sì,Lille OSC,Angers SCO,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Lione,Le Mans,sì,Olympique Lyonnais,Le Mans FC,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Marsiglia,Lens,sì,Olympique de Marseille,Racing Club de Lens,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Monaco,Paris FC,sì,AS Monaco FC,Paris FC,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,PSG,Nizza,sì,Paris Saint-Germain FC,OGC Nice,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Strasburgo,Troyes,sì,RC Strasbourg Alsace,ES Troyes AC,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,32,2027-05-16,Domenica,14:00,14:00,Tolosa,Lorient,sì,Toulouse FC,FC Lorient,2027-05-16T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Angers,Brest,sì,Angers SCO,Stade Brestois 29,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Le Havre,Lille,sì,Le Havre AC,Lille OSC,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Le Mans,Strasburgo,sì,Le Mans FC,RC Strasbourg Alsace,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Lens,Rennes,sì,Racing Club de Lens,Stade Rennais FC 1901,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Lorient,Lione,sì,FC Lorient,Olympique Lyonnais,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Nizza,Monaco,sì,OGC Nice,AS Monaco FC,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Paris FC,Marsiglia,sì,Paris FC,Olympique de Marseille,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Tolosa,Auxerre,sì,Toulouse FC,AJ Auxerre,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,33,2027-05-22,Sabato,14:00,14:00,Troyes,PSG,sì,ES Troyes AC,Paris Saint-Germain FC,2027-05-22T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Auxerre,Le Havre,sì,AJ Auxerre,Le Havre AC,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Brest,Lens,sì,Stade Brestois 29,Racing Club de Lens,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Lille,Le Mans,sì,Lille OSC,Le Mans FC,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Lione,Paris FC,sì,Olympique Lyonnais,Paris FC,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Marsiglia,Lorient,sì,Olympique de Marseille,FC Lorient,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Monaco,Troyes,sì,AS Monaco FC,ES Troyes AC,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,PSG,Tolosa,sì,Paris Saint-Germain FC,Toulouse FC,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Rennes,Angers,sì,Stade Rennais FC 1901,Angers SCO,2027-05-29T12:00Z
+Ligue 1,Francia,2026-27,34,2027-05-29,Sabato,14:00,14:00,Strasburgo,Nizza,sì,RC Strasbourg Alsace,OGC Nice,2027-05-29T12:00Z
