@@ -19047,3 +19047,127 @@ L'intervallo scoperto, 13:08 → 14:40, contiene **zero partite in corso** del
 nostro perimetro: la copertura non ha un buco, ha un intervallo in cui non
 c'era niente da coprire. Il numero da guardare non è la durata della pausa ma
 l'insieme delle partite live in quella finestra, e quell'insieme è vuoto.
+
+---
+
+## Fase 152 — Un gemello basta a coprire, due servono a vedere meglio (misura intermedia)
+
+**Obiettivo.** Al giorno 3 su 14 della prova (Fase 147), rispondere con i dati
+alle domande dell'utente: **servono altri gemelli?**, e **la prova va portata
+fino alla prima giornata di campionato?** Misura intermedia, dichiarata come
+tale: la prova continua.
+
+**Il metodo, che è la parte nuova.** Non si aspetta la fine della prova per
+sapere se un gemello in più serve: si misura il **controfattuale** sui dati
+già raccolti. L'11/08 due raccoglitori hanno seguito le stesse 13 partite
+(il gemello 1 e — per il difetto della Fase 151 — il workflow originale). Si
+ricalcola quindi la copertura **togliendo i file di uno dei due** e si guarda
+cosa cambia. È il confronto appaiato più pulito possibile: stesse partite,
+stesso giorno, stesso mercato.
+
+**Risultato (14 partite, 10-12 agosto).**
+
+| | due raccoglitori | **solo uno** |
+|---|---|---|
+| partite coperte dal 1' al 105' | 14/14 | **14/14** |
+| buco massimo dentro la partita, mediana | 3,2' | **6,0'** |
+| buco massimo, peggiore | 3,7' | **7,0'** |
+
+Nessuna partita si perde con un raccoglitore solo. Quello che si perde è la
+**risoluzione**: il buco peggiore raddoppia, da 3,7' a 7,0'.
+
+**Il tetto, che è aritmetico e non sperimentale.** La cadenza nominale del
+giro nucleo è **2 minuti**. Con due gemelli sfalsati il buco osservato (2,1-3,7')
+è già dell'ordine della cadenza: un terzo e un quarto gemello **non possono**
+scendere sotto, perché il limite non è il numero di raccoglitori ma
+`OGNI_NUCLEO`. Dal terzo in poi si compra **assicurazione** contro la morte di
+una sessione, non risoluzione. Chi volesse più risoluzione deve abbassare la
+cadenza, che è una leva diversa e con un costo diverso.
+
+**I rifiuti, seconda domanda della prova.** 118 mercati persi su 89.094 letti
+= **1,32 ‰**. E sono **quantizzati in lotti di 20** (`LOTTO_MERCATI`): non
+sono 118 rifiuti, sono **~6 richieste fallite in tre giorni**. Il limitatore
+adattivo è rimasto al minimo (0,35 s) in 12 sessioni su 14; è salito a
+**2,85 s** una volta sola, nella sessione con il carico più alto mai visto
+(44 partite distinte, due raccoglitori sovrapposti). Segnale coerente con
+«il carico conta», ma n=1: non è una conclusione.
+
+**Il conflitto trovato guardando il calendario, e che nessuno aveva visto.**
+La prova finisce il **23 agosto**. Il calendario già quotato dice:
+
+```
+La Liga        15-17 ago      (dentro la prova, livello 4 e 4)
+Premier / Ligue 1 / Serie A   21-24 ago
+Bundesliga     28-30 ago      (FUORI dalla prova)
+```
+
+Il contro-bilanciamento della Fase 147 mette **N=1 nei giorni 12 e 13**, cioè
+**venerdì 21 e sabato 22 agosto**: l'apertura di Premier, Ligue 1 e Serie A.
+Quando il calendario è stato scritto (09/08) «giorno pieno» voleva dire un
+sabato qualunque; adesso vuol dire **il weekend più irrecuperabile della
+stagione**. E la prima giornata di Serie A si chiude il **24**, un giorno
+dopo la fine della prova; la Bundesliga apre interamente fuori.
+
+**Perché la scoperta non è un allarme.** Proprio la misura qui sopra dice che
+a N=1 non si **perde** una partita: si perde risoluzione, da 3,7' a 7,0'. Il
+costo del conflitto è quantificato, non ipotetico — ed è questo che permette
+di decidere invece di spaventarsi.
+
+**Lezione.** Un disegno sperimentale ha una data di scadenza come i dati che
+raccoglie. Il contro-bilanciamento era giusto il 9 agosto e resta corretto
+come statistica; è il **mondo** sotto di lui a essere cambiato, perché nel
+frattempo il calendario di tre campionati si è materializzato dentro la
+seconda settimana. Vale la pena rileggere il disegno di un esperimento lungo
+**contro il calendario vero**, non solo contro se stesso.
+
+### 📐 Il modello in dettaglio
+
+**(1) Il buco di copertura, definito.** Per una partita con calcio d'inizio
+`k` e letture `t₁ < … < t_n` dentro `[k, k+105']`:
+
+```
+buco(partita) = max( t₁ − k ,  max_i (t_{i+1} − t_i) )
+```
+
+Il primo termine c'è apposta: una sessione che entra al 10' non ha buchi
+interni ma ha perso dieci minuti, e senza `t₁ − k` risulterebbe perfetta.
+
+**(2) Perché il controfattuale è lecito qui.** Le due sessioni dell'11/08
+hanno interrogato la **stessa API sulle stesse partite negli stessi minuti**:
+togliere i file di una non è una simulazione, è togliere osservazioni
+realmente indipendenti dallo stesso processo. L'unica cosa che il
+controfattuale **non** cattura è l'effetto del carico sull'API — con un
+raccoglitore solo le richieste sarebbero state la metà, quindi i rifiuti
+semmai **meno**. La stima del buco a N=1 è dunque **conservativa**: il vero
+sarebbe uguale o migliore.
+
+**(3) Il tetto della cadenza.** Con `m` raccoglitori sfalsati uniformemente e
+cadenza `c`, il buco atteso è
+
+```
+buco ≈ c / m        finché  c/m ≫ durata_di_un_giro (~15-25 s)
+```
+
+Con `c = 2'`: `m=1 → 2'`, `m=2 → 1'`, `m=4 → 30 s`. Ma il buco **osservato** a
+m=2 è 2,1-3,7', cioè ≈ `c`, non `c/2`: lo sfalsamento non è uniforme perché il
+cron di GitHub slitta di 30-40 minuti in modo indipendente per ciascun
+workflow, e due sessioni che partono a caso dentro un'ora non sono sfalsate di
+mezz'ora — sono sfalsate a caso. **Il termine che domina non è `m`, è il
+jitter dell'avvio**, ed è per questo che il rendimento decresce così in
+fretta: aggiungere raccoglitori aumenta la probabilità che *qualcuno* stia
+girando, non la finezza della griglia.
+
+**(4) Il tasso di rifiuto, e perché va letto in lotti.** I mercati si chiedono
+a gruppi di `LOTTO_MERCATI = 20`:
+
+```
+richieste ≈ (letti + persi) / 20 = (88.976 + 118) / 20 ≈ 4.455
+richieste fallite = 118 / 20 ≈ 6
+tasso per richiesta ≈ 6 / 4.455 = 1,3 ‰
+```
+
+Il tasso per mercato e quello per richiesta coincidono (1,32 ‰ contro 1,3 ‰)
+perché i mercati si perdono **sempre a lotti interi**: non esiste un mezzo
+lotto perso. Il numero da riportare è quello delle **richieste**, perché è
+quello che l'API vede e limita; dire «118 mercati persi» suona dieci volte
+peggio di «sei richieste andate male in tre giorni».
