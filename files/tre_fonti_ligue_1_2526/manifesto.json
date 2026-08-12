@@ -1,0 +1,50 @@
+{
+ "lega": "ligue_1",
+ "stagione": "2526",
+ "consegnata": "2026-08-11 (zip)",
+ "fonti": [
+  "SofaScore",
+  "WhoScored",
+  "Understat"
+ ],
+ "e_campionato": true,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 99730,
+   "sha256": "94d5c2e062c472f86ec1b48b8e87a095475c98330b84e688ad71afda35e72b1d"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 467318,
+   "sha256": "3ef3ceea37f10c1ef4f7f3f3c3d4c0ab7faa00cf7e962f7a7704d53cbc689f09"
+  },
+  "giocatori.csv.gz": {
+   "righe": 13444,
+   "sha256": "e5771c7e5155a8058030e97e8b8a95c45c521ac98011da92a8ff20f1c6b4347d"
+  },
+  "heatmap.csv.gz": {
+   "righe": 469243,
+   "sha256": "639bdd8859473e479bb5fa98a20a85a077ac634ad150f18e7d19ec31b3abff65"
+  },
+  "legenda.csv.gz": {
+   "righe": 548,
+   "sha256": "cb9b6a11bdfbd0d094977827676531db8f7798412a32e29a236b7d61eec115f4"
+  },
+  "squadre.csv.gz": {
+   "righe": 1912,
+   "sha256": "568e3ffa8d7af12733eec3202ece80c4770c4b534c44fabb8836623fc5f63333"
+  }
+ },
+ "righe_totale": 612,
+ "squadre": 18,
+ "partite": 306,
+ "aggancio_snapshot": "612/612 su squadre, giocatori, heatmap ed eventi_opta",
+ "spareggio": {
+  "turni": [
+   "1° turno preliminare",
+   "2° turno preliminare",
+   "Finale"
+  ],
+  "righe_escluse": 8,
+  "nota": "lo spareggio francese e' a TRE turni, non uno: la costante Turno=='Finale' della Bundesliga ne avrebbe preso un quarto"
+ }
+}

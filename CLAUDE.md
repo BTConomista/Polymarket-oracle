@@ -472,8 +472,7 @@ data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
                  outright_snapshots/ (prezzi outright live, uno per giorno)
                  squad_value_2526_transfermarkt.csv (fonte secondaria, regola R2)
                  football.db (SQLite, rigenerabile, NON versionato)
-files/tre_fonti_{serie_a,premier_league,la_liga,bundesliga}_2526/  QUATTRO LEGHE
-                 2025-26 DA TRE
+files/tre_fonti_*_2526/  SETTE RACCOLTE 2025-26 DA TRE
                  FONTI (SofaScore, Opta/WhoScored, Understat), 11/08/2026.
                  Portano cio' che il progetto non aveva: EVENT DATA (562.672 +
                  577.884 tocchi con X/Y, secondo e qualificatori), POSIZIONI
@@ -507,7 +506,19 @@ files/tre_fonti_{serie_a,premier_league,la_liga,bundesliga}_2526/  QUATTRO LEGHE
                  come in player_stats, altrimenti 616 righe e una 19a squadra.
                  ⭐ La Bundesliga e' anche la prima consegna che ripara un
                  difetto A MONTE: la colonna `possession % (normalizzato)`
-                 chiude il falso positivo sul possesso (da 760 discordanze a 2)
+                 chiude il falso positivo sul possesso (da 760 discordanze a 2).
+                 ⚠️ LE DUE UEFA (Europa e Conference) NON SONO CAMPIONATI: non
+                 hanno snapshot a cui agganciarsi (il criterio e' «quante delle
+                 NOSTRE squadre ci sono»: 11 e 5), non hanno tutte le fonti
+                 (Understat non copre le coppe -> EL a due fonti, Conference a
+                 UNA), e il loro PUNTEGGIO SOMMA LA LOTTERIA DEI RIGORI --
+                 stesso difetto di games.csv sulle coppe nazionali, ma qui
+                 l'export lo dichiara: usare `tre_fonti.punteggio_vero()`.
+                 ⭐ Il tripwire sui gol e' SCATTATO sulla Ligue 1, ed era
+                 giusto: Understat accreditava a Emersonn l'autogol di Clinton
+                 Mata. Lo stesso sintomo ha DUE cause, e l'autogol le separa
+                 13 volte su 13 -- l'ipotesi «convenzione autogol», falsa per i
+                 primi 9 casi, e' vera per il decimo
 files/tre_fonti_serie_a_2526/  SERIE A 2025-26 DA TRE FONTI (SofaScore,
                  Opta/WhoScored, Understat), 11/08/2026. Porta cio' che il
                  progetto non aveva: EVENT DATA (562.672 tocchi con X/Y,

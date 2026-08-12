@@ -302,7 +302,7 @@ def test_discordanze_esclude_le_false_per_default(sq):
 # --------------------------------------------------------------------------
 # LA SECONDA LEGA — il momento in cui si vede se il modulo generalizza
 # --------------------------------------------------------------------------
-@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga"])
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"])
 def test_ogni_lega_aggancia_TUTTE_le_sue_squadra_partita(lega):
     """Il totale NON e' 760 per tutte: Bundesliga e Ligue 1 ne hanno 612.
 
@@ -325,7 +325,7 @@ def test_ogni_lega_aggancia_TUTTE_le_sue_squadra_partita(lega):
     assert nostre == attese, f"{lega}: {len(attese - nostre)} squadra-partita non agganciate"
 
 
-@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga"])
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"])
 def test_ogni_lega_ha_lid_partita_misto_rinominato(lega):
     """Il difetto che SI ripete: presente su entrambe le leghe.
 
@@ -349,7 +349,7 @@ def test_le_righe_orfane_NON_si_ripetono_fuori_dalla_serie_a():
     Quindi non e' un difetto sistematico dell'export ma un incidente su un
     nome: la riparazione resta per-lega e non va promossa a regola.
     """
-    for lega in ("premier_league", "la_liga", "bundesliga"):
+    for lega in ("premier_league", "la_liga", "bundesliga", "ligue_1"):
         assert lega not in tf.ORFANE
         s = tf.squadre(lega, periodo="Totale")
         attese = tf.DIMENSIONI[lega][1] * 2
@@ -380,7 +380,8 @@ def test_lallineamento_dei_gol_e_una_regola_non_una_lista():
     sarebbe girata sulla Premier correggendo ZERO righe e senza dire niente —
     un silenzio indistinguibile da «qui non ci sono difetti».
     """
-    attesi = {"serie_a": 2, "premier_league": 3, "la_liga": 4, "bundesliga": 2}
+    attesi = {"serie_a": 2, "premier_league": 3, "la_liga": 4,
+              "bundesliga": 2, "ligue_1": 2}
     for lega, n in attesi.items():
         assert int(tf.giocatori(lega)["gol_corretto_da_noi"].sum()) == n, lega
 
@@ -393,7 +394,7 @@ def test_un_file_non_ancora_consegnato_da_un_errore_che_lo_dice():
     un'ora, ed e' il caso che ha imposto il messaggio esplicito.
     """
     with pytest.raises(FileNotFoundError, match="non ha ancora|nessuna raccolta"):
-        tf.heatmap("ligue_1")
+        tf.eventi_opta("uefa_conference_league")
 
 
 @pytest.mark.parametrize("lega,righe", [("serie_a", 556996), ("premier_league", 573203), ("la_liga", 570768)])
@@ -435,7 +436,7 @@ def test_tocchi_e_vuota_su_TUTTE_e_tre_e_quindi_e_del_formato():
     Tre leghe indipendenti allo 0,0% dicono che `Tocchi` e' una colonna del
     FORMATO mai riempita, non l'incidente di una consegna.
     """
-    for lega in ("serie_a", "premier_league", "la_liga", "bundesliga"):
+    for lega in ("serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"):
         assert tf.copertura("Tocchi", lega, blocco="heatmap")["stato"] == "vuota"
 
 
@@ -499,7 +500,7 @@ def test_atletico_nudo_di_eventi_opta_viene_riportato_al_nome_intero():
     assert "Ath Madrid" in set(e["Squadra"].dropna())
 
 
-@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga"])
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"])
 def test_eventi_opta_aggancia_tutte_le_squadra_partita(lega):
     """La misura che ha scoperto DUE volte lo stesso difetto.
 
@@ -528,7 +529,8 @@ def test_id_evento_NON_e_una_chiave_univoca():
     e questo test esiste perche' nessuno lo faccia credendolo sicuro.
     """
     for lega, attesi in (("serie_a", 45), ("premier_league", 82), ("la_liga", 44),
-                         ("bundesliga", 79)):
+                         ("bundesliga", 79), ("ligue_1", 42),
+                         ("uefa_europa_league", 199)):
         e = tf.eventi_opta(lega, colonne=["ID evento"])
         assert e["ID evento"].duplicated().sum() == attesi, lega
 
@@ -555,15 +557,17 @@ def test_lo_spareggio_e_fuori_per_default():
     assert "Paderborn" in set(con["Squadra"]) and "Paderborn" not in set(senza["Squadra"])
 
 
-def test_il_marcatore_dello_spareggio_e_lunico_turno_fuori_schema():
-    """«Finale» e' l'unico valore di `Turno` che non sia «Giornata N».
+def test_in_bundesliga_lo_spareggio_e_un_turno_solo():
+    """Un turno in Bundesliga, TRE in Ligue 1: per questo la regola non e' una costante.
 
-    Conta perche' giustifica il filtro: se ci fossero altri turni fuori schema,
-    escludere per `Turno == "Finale"` ne lascerebbe passare qualcuno.
+    La prima stesura inchiodava `Turno == "Finale"`, che qui basta e sulla
+    Ligue 1 no. Il test tiene il fatto per la Bundesliga, e quello sulla
+    Ligue 1 tiene il contro-esempio che ha imposto la regola generale.
     """
     s = tf.squadre("bundesliga", periodo="Totale", spareggio=True)
-    fuori = {t for t in s["Turno"].dropna().unique() if not str(t).startswith("Giornata")}
-    assert fuori == {tf.TURNO_SPAREGGIO}
+    fuori = {t for t in s["Turno"].dropna().unique()
+             if not str(t).startswith(tf.PREFISSO_GIORNATA)}
+    assert fuori == {"Finale"}
 
 
 def test_la_bundesliga_ha_la_colonna_che_ripara_il_possesso_a_monte():
@@ -587,3 +591,103 @@ def test_la_bundesliga_ha_la_colonna_che_ripara_il_possesso_a_monte():
     # E la conseguenza: quasi nessuna discordanza dichiarata sul possesso.
     marcate = s["Discordanze"].fillna("").str.contains("possesso").sum()
     assert marcate <= 5, f"{marcate} righe ancora marcate: il falso positivo non e' chiuso"
+
+
+# ==========================================================================
+# LA QUINTA LEGA, E LE PRIME DUE COMPETIZIONI CHE NON SONO CAMPIONATI
+# ==========================================================================
+def test_lo_spareggio_francese_e_a_TRE_turni_non_uno():
+    """La costante `Turno == "Finale"` ne avrebbe preso un quarto.
+
+    In Bundesliga lo spareggio e' un turno solo (2 partite). In Ligue 1 sono
+    TRE — «1° turno preliminare», «2° turno preliminare», «Finale» — per 4
+    partite in totale. Inchiodare «Finale» avrebbe lasciato dentro 3 squadre di
+    Ligue 2 e portato il conteggio a 616 invece di 612.
+
+    Da cui la regola: in un CAMPIONATO, tutto cio' che non e' «Giornata N» e'
+    spareggio. Il test inchioda che i turni fuori schema siano piu' di uno,
+    cosi' nessuno torni a una costante.
+    """
+    con = tf.squadre("ligue_1", periodo="Totale", spareggio=True)
+    fuori = {t for t in con["Turno"].dropna().unique()
+             if not str(t).startswith(tf.PREFISSO_GIORNATA)}
+    assert len(fuori) == 3, f"attesi 3 turni di spareggio, trovati {fuori}"
+    senza = tf.squadre("ligue_1", periodo="Totale")
+    assert len(senza) == 612 and senza["Squadra"].nunique() == 18
+    assert len(con) == 620 and con["Squadra"].nunique() == 21
+
+
+@pytest.mark.parametrize("uefa", ["uefa_europa_league", "uefa_conference_league"])
+def test_nelle_uefa_non_si_esclude_nessun_turno(uefa):
+    """Qui i turni fuori schema SONO la competizione, non uno spareggio.
+
+    «3° turno preliminare», «Ottavi di finale», «Spareggi di knockout»:
+    applicare la regola dei campionati butterebbe meta' del torneo. Da cui
+    `E_CAMPIONATO`, che e' False per le UEFA.
+    """
+    assert tf.E_CAMPIONATO[uefa] is False
+    a = tf.squadre(uefa, periodo="Totale")
+    b = tf.squadre(uefa, periodo="Totale", spareggio=True)
+    assert len(a) == len(b) > 0
+
+
+def test_le_uefa_non_hanno_tutte_e_tre_le_fonti():
+    """Understat non copre le coppe europee, e non e' un difetto.
+
+    Chiamare «a tre fonti» una raccolta che ne ha una sarebbe un finto pieno
+    nel nome. `fonti(lega)` dice quali ci sono davvero, e le colonne delle
+    fonti assenti NON esistono — chiederle da' KeyError, non NaN.
+    """
+    assert tf.fonti("serie_a") == ("SofaScore", "WhoScored", "Understat")
+    assert tf.fonti("uefa_europa_league") == ("SofaScore", "WhoScored")
+    assert tf.fonti("uefa_conference_league") == ("SofaScore",)
+    e = tf.squadre("uefa_europa_league", periodo="Totale")
+    assert "xG (Understat)" not in e.columns
+    c = tf.squadre("uefa_conference_league", periodo="Totale")
+    assert "ratings (WhoScored)" not in c.columns
+
+
+def test_il_punteggio_delle_uefa_somma_la_lotteria_dei_rigori():
+    """`Gol casa (SofaScore)` legge «6» dove il campo ha detto 1.
+
+    Omonia-Wolfsberger del 28/08/2025: 1-1 sul campo, 5 rigori. La colonna
+    normale somma i due. E' lo stesso difetto che il CLAUDE.md documenta per
+    games.csv sulle coppe nazionali — li' e' costato una ricostruzione.
+
+    ⭐ Qui l'export lo DICHIARA con le colonne derivate, e `punteggio_vero()`
+    le usa. Il test verifica che la differenza esista davvero: se un giorno la
+    colonna normale smettesse di sommare, andrebbe aggiornata la
+    documentazione, non ignorato il rosso.
+    """
+    s = tf.squadre("uefa_conference_league", periodo="Totale")
+    ai_rigori = s["Decisa ai rigori (derivata)"] == "si"
+    assert ai_rigori.sum() // 2 == 6, "attese 6 partite decise ai rigori"
+
+    casa, _ = tf.punteggio_vero(s)
+    sommato = pd.to_numeric(s.loc[ai_rigori, "Gol casa (SofaScore)"], errors="coerce")
+    vero = pd.to_numeric(casa[ai_rigori], errors="coerce")
+    assert (vero < sommato).all(), "il punteggio derivato dovrebbe essere piu' basso"
+    # E nei campionati non c'e' lotteria: punteggio_vero torna la colonna normale.
+    sa = tf.squadre("serie_a", periodo="Totale")
+    c2, _ = tf.punteggio_vero(sa)
+    assert c2.equals(sa["Gol casa (SofaScore)"])
+
+
+def test_le_uefa_portano_le_nostre_squadre_in_europa():
+    """E' la ragione per cui servono: 11 nostre squadre in EL, 5 in Conference.
+
+    Non hanno uno snapshot a cui agganciarsi — sono competizioni, non
+    campionati — quindi il criterio non e' «760/760» ma «quante delle nostre
+    ci sono, e sotto che nome».
+    """
+    from src.data.sources import TEAM_ALIASES
+    nostre = set()
+    for lega in tf.DIMENSIONI:
+        s = pd.read_csv(f"data/{lega}_matches.csv")
+        s = s[s["season"].astype(str) == "2526"]
+        nostre |= set(s["home_team"]) | set(s["away_team"])
+
+    for uefa, attese in (("uefa_europa_league", 11), ("uefa_conference_league", 5)):
+        s = tf.squadre(uefa, periodo="Totale")
+        sq = {TEAM_ALIASES.get(x, x) for x in s["Squadra"].dropna()}
+        assert len(sq & nostre) == attese, f"{uefa}: {sorted(sq & nostre)}"

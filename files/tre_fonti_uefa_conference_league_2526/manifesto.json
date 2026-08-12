@@ -1,0 +1,67 @@
+{
+ "lega": "uefa_conference_league",
+ "stagione": "2526",
+ "consegnata": "2026-08-11 (zip)",
+ "fonti": [
+  "SofaScore"
+ ],
+ "e_campionato": false,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 69780,
+   "sha256": "2b8a71a56b0939d43f8f2fa9b5c82048cc0b3e106a66b554dd3cbd080203e481"
+  },
+  "giocatori.csv.gz": {
+   "righe": 22727,
+   "sha256": "be6c855f6e2d4c08d71dea0d3df17a320af4b88c1006611d3b399542cf0d82c6"
+  },
+  "heatmap.csv.gz": {
+   "righe": 335001,
+   "sha256": "5df654604faa6f7296c9fcd60b9536ac27fe39f249a6b0d7bfab8e047bd95088"
+  },
+  "legenda.csv.gz": {
+   "righe": 376,
+   "sha256": "cafbb209a8d446ac1ec1cebbe39faca744a2a0ad4544e3a83f993aeb760c1cf0"
+  },
+  "squadre.csv.gz": {
+   "righe": 1874,
+   "sha256": "6fdc406f68c6ded801e7882cd02cc0e2f4ee3da4964ef1d3a48ae6546fee97f6"
+  }
+ },
+ "righe_totale": 818,
+ "squadre": 164,
+ "partite": 409,
+ "non_ha_snapshot": "e' una competizione, non un campionato: il criterio non e' 760/760 ma quante delle NOSTRE squadre ci sono",
+ "nostre_squadre": [
+  "Crystal Palace",
+  "Fiorentina",
+  "Mainz",
+  "Strasbourg",
+  "Vallecano"
+ ],
+ "squadre_straniere": 159,
+ "turni": [
+  "1° turno preliminare",
+  "2° turno preliminare",
+  "3° turno preliminare",
+  "Finale",
+  "Giornata 1",
+  "Giornata 2",
+  "Giornata 3",
+  "Giornata 4",
+  "Giornata 5",
+  "Giornata 6",
+  "Ottavi di finale",
+  "Quarti di finale",
+  "Semifinali",
+  "Spareggi di knockout",
+  "Spareggi di qualificazione"
+ ],
+ "fonti_mancanti": "Understat non copre le UEFA (-37 colonne in EL). La Conference ha SOLO SofaScore (-75)",
+ "punteggio_somma_i_rigori": {
+  "quante": 6,
+  "esempio": "Omonia-Wolfsberger 28/08/2025: 'Gol casa (SofaScore)' = 6, il campo ha detto 1 (5 rigori)",
+  "nota": "stesso difetto di games.csv sulle coppe nazionali (CLAUDE.md), ma QUI l'export lo dichiara",
+  "usare": "le colonne '... senza rigori (derivata)', o tre_fonti.punteggio_vero()"
+ }
+}

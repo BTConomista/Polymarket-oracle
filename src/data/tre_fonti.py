@@ -99,6 +99,56 @@ LEGA_DEFAULT = "serie_a"
 # Le tre fonti fuse a monte. L'ordine e' quello di preferenza dichiarato in §5.
 FONTI = ("SofaScore", "WhoScored", "Understat")
 
+# ⚠️ MA NON TUTTE LE RACCOLTE HANNO TUTTE E TRE LE FONTI, e non e' un difetto:
+# Understat copre i campionati e NON le competizioni UEFA. Chiamare «a tre
+# fonti» una raccolta che ne ha una sarebbe un finto pieno nel nome.
+FONTI_PER_RACCOLTA: dict[str, tuple[str, ...]] = {
+    "serie_a": FONTI, "premier_league": FONTI, "la_liga": FONTI,
+    "bundesliga": FONTI, "ligue_1": FONTI,
+    "uefa_europa_league": ("SofaScore", "WhoScored"),   # niente Understat: -37 colonne
+    "uefa_conference_league": ("SofaScore",),           # solo SofaScore: -75 colonne
+}
+
+# ⚠️⚠️ IL PUNTEGGIO DELLE UEFA SOMMA LA LOTTERIA DEI RIGORI.
+# `Gol casa (SofaScore)` su una partita decisa ai rigori NON e' il risultato
+# della partita: e' risultato + rigori. Omonia-Wolfsberger del 28/08/2025 legge
+# «6» dove il campo ha detto 1 (5 rigori). E' lo stesso difetto che il CLAUDE.md
+# documenta per games.csv sulle coppe nazionali (68 partite su 458), e che li'
+# e' costato una ricostruzione.
+#
+# ⭐ Qui pero' l'export lo DICHIARA, con tre colonne derivate:
+#     Decisa ai rigori (derivata)              si/no
+#     Gol casa senza rigori (derivata)         il punteggio VERO
+#     Gol trasferta senza rigori (derivata)
+# Sono 6 partite su 409 in Conference. Usa quelle, non `Gol casa`.
+COLONNE_PUNTEGGIO_VERO = (
+    "Gol casa senza rigori (derivata)",
+    "Gol trasferta senza rigori (derivata)",
+)
+
+
+def fonti(lega: str = LEGA_DEFAULT) -> tuple[str, ...]:
+    """Le fonti che coprono DAVVERO questa raccolta.
+
+    Non e' sempre tre: Understat non copre le competizioni UEFA, e la
+    Conference arriva con SofaScore soltanto. Chiedere `xG (Understat)` a una
+    raccolta UEFA non da' NaN — da' KeyError, perche' la colonna non c'e'.
+    """
+    return FONTI_PER_RACCOLTA.get(lega, FONTI)
+
+
+def punteggio_vero(df: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
+    """Il punteggio della PARTITA, non partita + lotteria dei rigori.
+
+    ⚠️ Nelle raccolte UEFA `Gol casa (SofaScore)` somma i rigori sulle partite
+    decise ai rigori: Omonia-Wolfsberger legge «6» dove il campo ha detto 1.
+    Dove l'export fornisce le colonne derivate le usa; altrove torna le colonne
+    normali, che nei campionati sono gia' giuste (non c'e' lotteria).
+    """
+    if all(c in df.columns for c in COLONNE_PUNTEGGIO_VERO):
+        return df[COLONNE_PUNTEGGIO_VERO[0]], df[COLONNE_PUNTEGGIO_VERO[1]]
+    return df["Gol casa (SofaScore)"], df["Gol trasferta (SofaScore)"]
+
 
 def raccolta(lega: str = LEGA_DEFAULT) -> Path:
     """La cartella della raccolta a tre fonti di una lega."""
@@ -309,38 +359,53 @@ DIMENSIONI: dict[str, tuple[int, int]] = {
     "bundesliga": (18, 306), "ligue_1": (18, 306),
 }
 
-# ⚠️ IL TURNO CHE NON E' UNA GIORNATA. In Bundesliga (e in Ligue 1) le ultime
-# due partite della stagione non sono di campionato: sono lo **spareggio**
-# promozione/retrocessione contro una squadra di seconda divisione — nel
-# 2025-26 Wolfsburg-Paderborn, andata e ritorno, marcate `Turno == "Finale"`.
+# ⚠️ I TURNI CHE NON SONO GIORNATE DI CAMPIONATO.
 #
-# Vanno separate, e per due motivi distinti:
-#  * nei nostri snapshot NON ci sono (sono partite di seconda divisione), quindi
-#    lasciarle dentro fa fallire l'aggancio su 4 righe e porta il conteggio a
-#    616 dove le squadra-partita di campionato sono 612;
-#  * portano dentro una 19a squadra (Paderborn) che nel campionato non c'e'.
+# In Bundesliga e Ligue 1 la stagione non finisce con l'ultima giornata: c'e' lo
+# **spareggio** promozione/retrocessione contro squadre di seconda divisione.
+# Quelle partite nei nostri snapshot NON ci sono, e tenerle dentro gonfia i
+# conteggi e tira dentro squadre che nel campionato non giocano.
 #
-# E' la stessa convenzione di `player_stats.load_player_matches`, che esclude
-# lo spareggio per default con la colonna `Fase`. Qui la colonna `Fase` non
-# c'e': il marcatore e' `Turno`, e «Finale» e' l'unico valore che non sia
-# «Giornata N» (verificato: 35 turni distinti, uno solo fuori schema).
-TURNO_SPAREGGIO = "Finale"
+# ⚠️ La prima stesura inchiodava un valore solo — `Turno == "Finale"`, che
+# bastava per la Bundesliga (Wolfsburg-Paderborn, 2 partite). Sulla Ligue 1 lo
+# spareggio e' a TRE turni («1° turno preliminare», «2° turno preliminare»,
+# «Finale») e la costante ne avrebbe preso un quarto: 4 righe su 8, lasciando
+# dentro 3 squadre di Ligue 2 e portando il conteggio a 616 invece di 612.
+# Da cui la regola: in un CAMPIONATO, tutto cio' che non e' «Giornata N» e'
+# spareggio.
+#
+# ⚠️ E la regola vale SOLO per i campionati. Nelle competizioni UEFA i turni
+# fuori schema («3° turno preliminare», «Ottavi di finale», «Spareggi di
+# knockout») sono la competizione stessa: escluderli butterebbe meta' del
+# torneo. Da cui `E_CAMPIONATO`.
+PREFISSO_GIORNATA = "Giornata"
+
+#: True = campionato (i turni non-«Giornata N» sono lo spareggio, e vanno fuori).
+#: False = coppa/torneo (ogni turno e' competizione, non si esclude niente).
+E_CAMPIONATO: dict[str, bool] = {
+    "serie_a": True, "premier_league": True, "la_liga": True,
+    "bundesliga": True, "ligue_1": True,
+    "uefa_europa_league": False, "uefa_conference_league": False,
+}
 
 
-def _togli_spareggio(df: pd.DataFrame, spareggio: bool) -> pd.DataFrame:
+def _togli_spareggio(df: pd.DataFrame, lega: str, spareggio: bool) -> pd.DataFrame:
     """Toglie le righe dello spareggio promozione/retrocessione, se richiesto.
 
-    Default: FUORI. E' la stessa convenzione di
+    Default: FUORI, e solo nei CAMPIONATI. E' la stessa convenzione di
     `player_stats.load_player_matches`, e per la stessa ragione: quelle partite
     nei nostri snapshot **non ci sono** — sono di seconda divisione — quindi
-    tenerle dentro fa fallire l'aggancio e gonfia i conteggi (616 righe dove le
-    squadra-partita di campionato sono 612).
+    tenerle dentro fa fallire l'aggancio e gonfia i conteggi.
+
+    Nelle competizioni UEFA non tocca nulla: li' i turni fuori schema sono la
+    competizione (vedi `E_CAMPIONATO`).
     """
-    if spareggio or "Turno" not in df.columns:
+    if spareggio or "Turno" not in df.columns or not E_CAMPIONATO.get(lega, False):
         return df
-    fuori = df["Turno"] == TURNO_SPAREGGIO
+    fuori = df["Turno"].notna() & ~df["Turno"].astype(str).str.startswith(PREFISSO_GIORNATA)
     if fuori.any():
-        log.info("escluse %d righe di spareggio (Turno=%s)", int(fuori.sum()), TURNO_SPAREGGIO)
+        log.info("escluse %d righe di spareggio (%s): turni %s", int(fuori.sum()), lega,
+                 sorted(df.loc[fuori, "Turno"].unique()))
     return df[~fuori].copy()
 
 
@@ -403,7 +468,7 @@ def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True,
     if prima - len(df):
         log.info("scartate %d righe orfane Verona/Hellas Verona", prima - len(df))
 
-    df = _togli_spareggio(df, spareggio)
+    df = _togli_spareggio(df, lega, spareggio)
     if solo_partite:
         df = df[df["Livello"] == "Partita"].copy()
     if periodo is not None:
@@ -438,66 +503,103 @@ def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita",
     avvelenato, e la correzione dei 2 gol persi da Understat (riparazione 4).
     """
     df = _leggi("giocatori", lega, low_memory=False)
-    df = _togli_spareggio(df, spareggio)
+    df = _togli_spareggio(df, lega, spareggio)
     if livello is not None and "Livello" in df.columns:
         df = df[df["Livello"] == livello].copy()
 
     df = _rinomina_id_avvelenato(df)
     df = _normalizza_squadre(df, lega)
 
-    df = _allinea_gol(df)
+    df = _allinea_gol(df, lega)
     return df.reset_index(drop=True)
 
 
-def _allinea_gol(df: pd.DataFrame) -> pd.DataFrame:
+def _allinea_gol(df: pd.DataFrame, lega: str) -> pd.DataFrame:
     """Allinea i gol di Understat a SofaScore dove il file dichiara discordanza.
 
-    ⚠️ E' una REGOLA, non una lista di eccezioni, e la differenza conta. La
-    prima stesura elencava le 2 righe della Serie A per (data, giocatore):
-    avrebbe girato sulla Premier senza correggere nulla e senza dire niente —
-    un silenzio indistinguibile da «qui non ci sono difetti».
+    SofaScore vince in ENTRAMBI i versi, e i due versi hanno due cause diverse,
+    misurate su tutte e cinque le leghe (13 righe discordanti in totale):
 
-    La regola e' legittima perche' la DIREZIONE e' verificata, non assunta:
-    su tutte e 5 le righe discordanti delle due leghe (2 Serie A, 3 Premier)
-    la differenza e' **sempre +1 a favore di SofaScore** e `Autogol` vale
-    **sempre 0** su entrambe le fonti. Le prime due sono state istruite a mano
-    su quattro fonti indipendenti (eventi + snapshot football-data): gli eventi
-    danno `Gol / regular` con un `Tiro` e uno `scoreChange` allo stesso minuto.
-    E' una lacuna di Understat, non una convenzione sugli autogol — l'ipotesi
-    ovvia, che era falsa.
+    | verso | righe | autogol nella partita | causa |
+    |---|--:|--:|---|
+    | SofaScore > Understat | **12** | **0/12** | Understat PERDE un gol vero |
+    | Understat > SofaScore | **1** | **1/1** | Understat ATTRIBUISCE l'autogol al marcatore avversario |
 
-    ⚠️ IL TRIPWIRE: se un giorno una riga discordasse nell'altro verso
-    (Understat > SofaScore), la regola non varrebbe piu' e la funzione **alza**.
-    Meglio fermarsi che applicare in silenzio una correzione la cui premessa e'
-    caduta.
+    La separazione e' perfetta: la presenza di un autogol nella partita predice
+    il verso 13 volte su 13.
+
+    ⚠️ COME CI SIAMO ARRIVATI, e perche' conta. La prima stesura della regola
+    valeva in UN verso solo, con un tripwire che alzava se Understat avesse
+    dichiarato PIU' gol. Sulla Ligue 1 il tripwire **e' scattato**: Emersonn
+    (Toulouse, 05/10/2025) 1 contro 2. Istruito a mano — Lyon-Toulouse 1-2, e
+    dei due gol del Tolosa uno e' l'**autogol di Clinton Mata all'87'**, che
+    Understat accredita a Emersonn. Il tripwire ha fatto esattamente il suo
+    mestiere: fermare invece di applicare una regola la cui premessa era caduta.
+
+    E c'e' un'ironia utile: l'ipotesi «sara' la convenzione sugli autogol» era
+    **falsa** per i primi 9 casi (verificata e smentita su 4 fonti) ed e' **vera**
+    per il decimo. Lo stesso sintomo, due cause — motivo per cui la verifica va
+    rifatta e non ereditata.
+
+    ⚠️ IL TRIPWIRE CHE RESTA: uno scarto maggiore di 1 gol, o un
+    `Understat > SofaScore` in una partita SENZA autogol, romperebbe la
+    spiegazione. In quel caso la funzione alza invece di correggere in silenzio.
     """
     df["gol_corretto_da_noi"] = False
     if not {"Gol (SofaScore)", "Gol (Understat)", "Discordanze"} <= set(df.columns):
         return df
 
     marcate = df["Discordanze"].fillna("").str.contains(r"\bgol\b", regex=True)
-    sofa = pd.to_numeric(df.loc[marcate, "Gol (SofaScore)"], errors="coerce")
-    under = pd.to_numeric(df.loc[marcate, "Gol (Understat)"], errors="coerce")
+    if not marcate.any():
+        return df
 
-    al_contrario = (under > sofa).fillna(False)
-    if al_contrario.any():
-        righe = df.loc[marcate][al_contrario][["Data", "Giocatore"]].to_dict("records")
+    sofa = pd.to_numeric(df["Gol (SofaScore)"], errors="coerce")
+    under = pd.to_numeric(df["Gol (Understat)"], errors="coerce")
+    scarto = (sofa - under).abs()
+
+    grosse = marcate & (scarto > 1).fillna(False)
+    if grosse.any():
         raise RuntimeError(
-            "premessa caduta: Understat dichiara PIU' gol di SofaScore su "
-            f"{righe}. La regola vale solo perche' la direzione e' sempre la "
-            "stessa (Understat sottostima). Istruire questi casi a mano prima "
-            "di proseguire — vedi la docstring di _allinea_gol."
+            f"scarto sui gol maggiore di 1 su {df.loc[grosse, ['Data', 'Giocatore']].to_dict('records')}. "
+            "Le due cause note (Understat perde un gol / accredita un autogol) valgono "
+            "1 gol ciascuna: qui c'e' altro. Istruire a mano — vedi _allinea_gol."
         )
 
-    da_correggere = marcate & (
-        pd.to_numeric(df["Gol (SofaScore)"], errors="coerce")
-        > pd.to_numeric(df["Gol (Understat)"], errors="coerce")
-    ).fillna(False)
+    # Il verso «Understat di piu'» si spiega SOLO con un autogol nella partita.
+    sopra = marcate & (under > sofa).fillna(False)
+    if sopra.any():
+        _verifica_autogol(df.loc[sopra], lega)
+
+    da_correggere = marcate & (sofa != under) & sofa.notna() & under.notna()
     df.loc[da_correggere, "Gol (Understat)"] = df.loc[da_correggere, "Gol (SofaScore)"]
     df.loc[da_correggere, "gol_corretto_da_noi"] = True
     if da_correggere.any():
-        log.info("allineati %d gol persi da Understat", int(da_correggere.sum()))
+        log.info("allineati %d gol a SofaScore (%s)", int(da_correggere.sum()), lega)
     return df
+
+
+def _verifica_autogol(righe: pd.DataFrame, lega: str) -> None:
+    """Alza se una riga «Understat > SofaScore» NON ha un autogol a spiegarla.
+
+    E' il tripwire della seconda causa. Senza, una riga con quel verso verrebbe
+    corretta assumendo una spiegazione che non e' stata verificata su di lei.
+    """
+    try:
+        ev = _leggi("eventi", lega, low_memory=False)
+    except FileNotFoundError:
+        return                                   # senza eventi non si puo' verificare
+    autogol = ev[(ev.get("Categoria") == "Evento") & (ev.get("Sottotipo") == "ownGoal")]
+    senza = [
+        {"Data": r["Data"], "Giocatore": r["Giocatore"]}
+        for _, r in righe.iterrows()
+        if not len(autogol[autogol["Data"] == r["Data"]])
+    ]
+    if senza:
+        raise RuntimeError(
+            f"Understat dichiara PIU' gol di SofaScore su {senza}, e in quelle partite "
+            "NON c'e' un autogol. La spiegazione nota (Understat accredita l'autogol al "
+            "marcatore avversario) qui non vale: istruire a mano prima di proseguire."
+        )
 
 
 def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None,
@@ -532,7 +634,7 @@ def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None,
     per scegliere la chiave invece di indovinarla.
     """
     df = _leggi("eventi", lega, low_memory=False)
-    df = _togli_spareggio(df, spareggio)
+    df = _togli_spareggio(df, lega, spareggio)
     if categoria is not None:
         valide = set(df["Categoria"].dropna().unique())
         if categoria not in valide:
@@ -557,7 +659,7 @@ def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None,
     ⚠️ Nessuna delle sue 34 colonne e' descritta dalla legenda consegnata.
     """
     df = _leggi("eventi_opta", lega, low_memory=False, usecols=colonne)
-    df = _togli_spareggio(df, spareggio)
+    df = _togli_spareggio(df, lega, spareggio)
     if partita is not None and "ID partita" in df.columns:
         df = df[df["ID partita"] == partita].copy()
     return _normalizza_squadre(df, lega).reset_index(drop=True)
@@ -572,7 +674,7 @@ def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None,
     contiene niente (vedi `colonne_vuote`).
     """
     df = _leggi("heatmap", lega, low_memory=False)
-    df = _togli_spareggio(df, spareggio)
+    df = _togli_spareggio(df, lega, spareggio)
     if partita is not None:
         df = df[df["ID partita"] == partita].copy()
     return _normalizza_squadre(df, lega).reset_index(drop=True)

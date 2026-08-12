@@ -1,0 +1,74 @@
+{
+ "lega": "uefa_europa_league",
+ "stagione": "2526",
+ "consegnata": "2026-08-11 (zip)",
+ "fonti": [
+  "SofaScore",
+  "WhoScored"
+ ],
+ "e_campionato": false,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 63845,
+   "sha256": "20e3f4b08e0464a79dfc6955c90c231da43ce9f80da10da281f750b641553639"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 289078,
+   "sha256": "fb4fa4a591ddf4951ade97357be5a933e8ff33b5904ef53348c54eb922e93951"
+  },
+  "giocatori.csv.gz": {
+   "righe": 14411,
+   "sha256": "e86247a10c498ff9b05643b10da9552b87966cf17f46219e3c7f297f5bdfdfd7"
+  },
+  "heatmap.csv.gz": {
+   "righe": 286399,
+   "sha256": "00b01ebc7d833ceb377fba977b23cd3a0cd641a99e8ee7b4cd84dfcc76cdf19c"
+  },
+  "legenda.csv.gz": {
+   "righe": 495,
+   "sha256": "8b335a1e20e0459d1a71b74057dc7526bf2a670bc8e7b5ebf9132367209020b7"
+  },
+  "squadre.csv.gz": {
+   "righe": 1426,
+   "sha256": "3b614f3b487e3073798733261a791568e9d8f8e0368de70d7741c221d84c7730"
+  }
+ },
+ "righe_totale": 542,
+ "squadre": 77,
+ "partite": 271,
+ "non_ha_snapshot": "e' una competizione, non un campionato: il criterio non e' 760/760 ma quante delle NOSTRE squadre ci sono",
+ "nostre_squadre": [
+  "Aston Villa",
+  "Betis",
+  "Bologna",
+  "Celta",
+  "Freiburg",
+  "Lille",
+  "Lyon",
+  "Nice",
+  "Nott'm Forest",
+  "Roma",
+  "Stuttgart"
+ ],
+ "squadre_straniere": 66,
+ "turni": [
+  "1° turno preliminare",
+  "2° turno preliminare",
+  "3° turno preliminare",
+  "Finale",
+  "Giornata 1",
+  "Giornata 2",
+  "Giornata 3",
+  "Giornata 4",
+  "Giornata 5",
+  "Giornata 6",
+  "Giornata 7",
+  "Giornata 8",
+  "Ottavi di finale",
+  "Quarti di finale",
+  "Semifinali",
+  "Spareggi di qualificazione",
+  "Spareggi ottavi"
+ ],
+ "fonti_mancanti": "Understat non copre le UEFA (-37 colonne in EL). La Conference ha SOLO SofaScore (-75)"
+}
