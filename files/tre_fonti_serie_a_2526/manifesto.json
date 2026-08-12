@@ -1,0 +1,122 @@
+{
+ "lega": "serie_a",
+ "stagione": "2526",
+ "fonti": [
+  "SofaScore",
+  "WhoScored (Opta)",
+  "Understat"
+ ],
+ "consegnata": "2026-08-11",
+ "partite": 380,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 122209,
+   "sha256": "0254538702528194974d777993301dc10b4a4d6f8746a70a5d54fc177542b248"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 562672,
+   "sha256": "c63c5b5e8aea065d310e1fb012f6054d3701f826241e3297feab094a3c2d8749"
+  },
+  "giocatori.csv.gz": {
+   "righe": 19126,
+   "sha256": "23610942c9911ebcab26da89492380ff0faaac9e1fd327c5de0a2ed3701f8f8e"
+  },
+  "heatmap.csv.gz": {
+   "righe": 556996,
+   "sha256": "54b374c1de2fee978a6344f83906a84e9644d558fe275546515695cfce90f1c1"
+  },
+  "legenda.csv.gz": {
+   "righe": 522,
+   "sha256": "f02df9f09324923d3738de0867d35c8e29af35ff25a85247a5ba67865f3be013"
+  },
+  "legenda_v1_incompleta.csv.gz": {
+   "righe": 440,
+   "sha256": "d2e45a53527ba30a799728b479fb7d33eb0e592fac8f0ac8a1d87867fde1e06d"
+  },
+  "squadre.csv.gz": {
+   "righe": 2342,
+   "sha256": "fa4dbf2d68d957f234978ee70dc4f82240239964ff3e0f99f7f0dfc28770c262"
+  }
+ },
+ "grane": {
+  "squadre": "squadra-partita-periodo (Totale/1T/2T) + 60 righe di classifica",
+  "giocatori": "giocatore-partita (+ livelli Rosa e Stagione)",
+  "eventi": "CONTENITORE: 7 categorie, 5 di partita e 2 di squadra",
+  "eventi_opta": "evento (ogni tocco)",
+  "heatmap": "posizione (ogni tocco)"
+ },
+ "aggancio_snapshot": {
+  "squadre": "760/760",
+  "giocatori": "760/760",
+  "heatmap": "760/760",
+  "eventi_opta": "760/760",
+  "eventi": "380/380 partite (cat. di partita), 760/760 e 759/759 (cat. di squadra)"
+ },
+ "riparazioni_in_lettura": [
+  {
+   "id": 1,
+   "cosa": "2 righe orfane Verona/Hellas Verona scartate (duplicato parziale, dato non perso)",
+   "effetto": "762 righe Totale -> 760"
+  },
+  {
+   "id": 2,
+   "cosa": "colonna 'ID partita' rinominata 'ID partita (misto, NON usare)': impila 3 numerazioni (436 valori distinti contro 380)",
+   "effetto": "un join su quella colonna appaierebbe partite diverse senza errore"
+  },
+  {
+   "id": 3,
+   "cosa": "colonne vuote dichiarate",
+   "dettaglio": {
+    "squadre": [
+     "Meteo (WhoScored)"
+    ],
+    "heatmap": [
+     "Tocchi"
+    ]
+   }
+  },
+  {
+   "id": 4,
+   "cosa": "2 gol persi da Understat allineati a SofaScore, marcati in 'gol_corretto_da_noi'",
+   "verifica": "NON sono autogol: Autogol=0 su entrambe, gli eventi danno Gol/regular + Tiro + scoreChange allo stesso minuto, e lo snapshot football-data conferma il punteggio. Quattro fonti concordi",
+   "righe": [
+    {
+     "data": "2026-02-15",
+     "giocatore": "Nikola Moro",
+     "squadra": "Bologna"
+    },
+    {
+     "data": "2025-12-27",
+     "giocatore": "Pierre Kalulu",
+     "squadra": "Juventus"
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "cosa": "preferenza di fonte dichiarata",
+   "dettaglio": {
+    "gol": "SofaScore",
+    "minuti": "SofaScore",
+    "xG": "entrambe separate: sono due MODELLI diversi (971,4 contro 1077,5 di somma stagionale)"
+   }
+  }
+ ],
+ "limiti_non_riparati": [
+  "Spettatori e' post ma sta fra colonne anagrafiche: trappola R8",
+  "discordanze dichiarate dal file: 6.616 righe su 19.126 (34,6%) — 6.597 minuti (convenzione sul minuto del cambio, non errore), 44 tiri, 2 gol (questi corretti)"
+ ],
+ "controprova_gol": "323 partite appaiate contro data/serie_a_matches.csv, 323 gol identici, 0 divergenze",
+ "legenda": {
+  "v2 (in uso)": "legenda.csv.gz — 522 righe, COMPLETA: 503 colonne su 503 documentate, zero scoperte (misurato)",
+  "v1 (conservata)": "legenda_v1_incompleta.csv.gz — 440 righe, consegnata per prima. Lasciava scoperte 53 colonne, fra cui TUTTO eventi_opta. Conservata per la regola 5-ter: e' l'originale come consegnato",
+  "schemi_diversi": "v1 usa (Sezione,Voce,Dettaglio,...), v2 usa (Sezione,File,Colonna o voce,...). tre_fonti.legenda(versione=) legge entrambe"
+ },
+ "limiti_chiusi": [
+  {
+   "cosa": "legenda incompleta",
+   "quando": "11/08/2026, consegna v2",
+   "esito": "503/503 colonne documentate"
+  }
+ ]
+}

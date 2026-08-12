@@ -472,6 +472,21 @@ data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
                  outright_snapshots/ (prezzi outright live, uno per giorno)
                  squad_value_2526_transfermarkt.csv (fonte secondaria, regola R2)
                  football.db (SQLite, rigenerabile, NON versionato)
+files/tre_fonti_serie_a_2526/  SERIE A 2025-26 DA TRE FONTI (SofaScore,
+                 Opta/WhoScored, Understat), 11/08/2026. Porta cio' che il
+                 progetto non aveva: EVENT DATA (562.672 tocchi con X/Y,
+                 secondo e qualificatori), POSIZIONI (556.996), arbitro,
+                 stadio, spettatori, tracking fisico, momentum, classifica.
+                 380/380 partite, aggancio 760/760 allo snapshot.
+                 ⚠️ USARE src/data/tre_fonti.py, MAI pd.read_csv diretto: cinque
+                 difetti sono riparati IN LETTURA (R3, i file restano come
+                 consegnati). Fra questi: la colonna `ID partita` impila TRE
+                 numerazioni (436 valori per 380 partite) ed e' rinominata
+                 «NON usare»; Understat perde 2 gol veri, verificati su 4 fonti
+                 (NON sono autogol: l'ipotesi ovvia era falsa); e la GRANA di
+                 `eventi` cambia con la categoria — 5 su 7 sono di partita e
+                 hanno Squadra vuota, quindi la chiave (data,squadra) produce
+                 96.510 finte orfane. Leggere il suo README
 files/           dati GREZZI versionati: i bundle football-data/Understat di
                  Premier e Liga (Fase 54, input di build_league_snapshot) e il
                  dataset player_scores (valori rosa, Fase 67). Nati perche' la
