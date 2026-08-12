@@ -543,6 +543,16 @@ docs/INFRASTRUTTURA_RACCOLTA.md  dove deve girare la raccolta: ragionamento
 docs/MANUALE_SOPRAVVIVENZA.md   conoscenza operativa dell'ambiente (rete
                  raggiungibile, limiti degli strumenti MCP, fatti su GitHub
                  Actions, fonti esterne valutate/scartate)
+docs/PLAYBOOK_PREVISIONI.md   la PROCEDURA per produrre previsioni su
+                 partite non ancora giocate, scritta per essere riusata per la
+                 Fase 2, altre leghe e le coppe (richiesta utente 12/08/2026).
+                 Le tre regole che non si negoziano (non si prevede cio' che e'
+                 gia' successo; ogni riga dice da dove viene; il commit e' la
+                 prova), l'ORIZZONTE MOBILE a K giornate e il suo tranello --
+                 una partita riceve K previsioni ma per il verdetto ne conta
+                 UNA, l'ultima, altrimenti ogni partita pesa K volte e gli IC
+                 escono falsamente stretti. ⚠️ Si salvano i PARAMETRI (lambda,
+                 mu, rho), non i 26 mercati: 68 milioni di righe contro 2,6
 docs/REGISTRO_VARIANTI.md   la lista COMPLETA di ogni modello/leva/covariata/
                  costante mai sperimentata, e lo stato della sua PREVISIONE
                  prospettica su ogni lega (richiesta utente 11/08/2026: usare
