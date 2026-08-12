@@ -11,10 +11,39 @@ tf.squadre("la_liga", periodo="Totale")   # 760 squadra-partita, 215 colonne
 tf.giocatori("la_liga")                   # giocatore-partita, 190 colonne
 tf.eventi("la_liga", categoria="Tiro")
 tf.heatmap("la_liga")                     # 570.768 posizioni
+tf.eventi_opta("la_liga")                 # 577.205 eventi, da due parti
 ```
 
-⏳ **`eventi_opta` non è ancora arrivato** — l'utente lo consegna in **due
-file**. `tf.eventi_opta("la_liga")` alza un errore che dice quale file manca.
+✅ **Raccolta completa.** `eventi_opta` è arrivato in **due parti** (288.798 +
+288.407 righe): `tf.eventi_opta("la_liga")` le ricompone in **577.205** eventi
+su 380 partite, e aggancia **760/760**.
+
+⚠️ **Il taglio è grezzo, non logico, e cade dentro una partita.**
+Levante-Espanyol dell'11/01/2026 ha **166 eventi in parte1** (fino al 7' del
+primo tempo) e **1.327 in parte2**, contro una mediana di 1.517 a partita. Chi
+leggesse una parte sola la vedrebbe monca **senza che nulla glielo dica**: 166
+è un numero plausibile per una riga di dati, e nessun conteggio se ne accorge.
+Zero eventi duplicati fra le due parti — quindi la concatenazione è corretta e
+necessaria.
+
+⚠️ **`ID evento` non è una chiave univoca**: 44 doppioni in Liga, 45 in Serie A,
+82 in Premier — e ci sono anche nei file **non** spezzati, quindi non è un
+effetto della ricomposizione. Parte cadono dentro la stessa partita, parte fra
+partite diverse. Non usarlo come chiave primaria.
+
+## ⚠️ Due convenzioni di nome nello stesso file
+
+`eventi_opta` scrive **`Atletico`** nudo nella colonna `Squadra` e
+**`Atlético Madrid`** in `Casa`/`Trasferta`. Effetto misurato prima della
+riparazione: l'aggancio si fermava a **722/760** squadra-partita, e le 38
+mancanti erano **tutte dell'Atletico** — mentre le *partite* agganciavano
+380/380, il che rendeva il difetto **invisibile a un controllo per partita**.
+
+L'alias sta in `tre_fonti.ALIAS_RACCOLTA`, **non** in `sources.TEAM_ALIASES`:
+quella mappa è globale al progetto e «Atletico» da solo è ambiguo fuori dalla
+Liga (Mineiro, Nacional, decine di altri). Metterlo lì sarebbe un join che
+indovina — la cosa che la regola d'oro vieta. Il difetto **non si ripete**:
+in Serie A e Premier la colonna `Squadra` di `eventi_opta` aggancia tutto.
 
 ## Il modulo ha retto senza modifiche
 

@@ -434,3 +434,89 @@ def test_tocchi_e_vuota_su_TUTTE_e_tre_e_quindi_e_del_formato():
     """
     for lega in ("serie_a", "premier_league", "la_liga"):
         assert tf.copertura("Tocchi", lega, blocco="heatmap")["stato"] == "vuota"
+
+
+# --------------------------------------------------------------------------
+# Il blocco arrivato SPEZZATO, e il difetto che il taglio nasconde
+# --------------------------------------------------------------------------
+def test_eventi_opta_della_liga_e_ricomposto_dalle_due_parti():
+    """577.205 eventi da due file, e la partita a cavallo torna intera.
+
+    Il taglio e' GREZZO, non logico: cade dentro Levante-Espanyol dell'11/01,
+    166 eventi in parte1 (fino al 7' del primo tempo) e 1.327 in parte2, contro
+    una mediana di 1.517 a partita. Chi leggesse una parte sola vedrebbe quella
+    partita monca **senza che nulla glielo dica** — 166 e' un numero plausibile
+    per una riga di dati, e nessun conteggio se ne accorge.
+    """
+    e = tf.eventi_opta("la_liga", colonne=["ID partita", "Minuto", "Periodo"])
+    assert len(e) == 577205
+    assert e["ID partita"].nunique() == 380
+
+    tagliata = e[e["ID partita"] == 1914070]
+    assert len(tagliata) == 1493, "la partita a cavallo del taglio non e' intera"
+    assert set(tagliata["Periodo"]) >= {"FirstHalf", "SecondHalf"}
+    mediana = e.groupby("ID partita").size().median()
+    assert abs(len(tagliata) - mediana) < mediana * 0.3, "resta anomala per numero di eventi"
+
+
+def test_percorso_alza_se_il_blocco_e_spezzato():
+    """Chiedere UN file per un blocco in due parti deve fallire, non troncare.
+
+    E' la guardia che impedisce di reintrodurre il difetto: `_percorso` esiste
+    per i blocchi interi, `_percorsi`/`_leggi` per quelli spezzati. Prendere la
+    prima parte e chiamarla «il file» perderebbe meta' della stagione in
+    silenzio.
+    """
+    with pytest.raises(RuntimeError, match="in 2 parti"):
+        tf._percorso("eventi_opta", "la_liga")
+    assert len(tf._percorsi("eventi_opta", "la_liga")) == 2
+    assert len(tf._percorsi("eventi_opta", "serie_a")) == 1
+
+
+# --------------------------------------------------------------------------
+# Due convenzioni di nome nello STESSO file
+# --------------------------------------------------------------------------
+def test_atletico_nudo_di_eventi_opta_viene_riportato_al_nome_intero():
+    """`eventi_opta` della Liga scrive «Atletico» in Squadra e «Atlético Madrid» in Casa.
+
+    Due convenzioni in due colonne dello stesso file. Effetto misurato prima
+    della riparazione: eventi_opta agganciava 722/760 squadra-partita, e le 38
+    mancanti erano tutte dell'Atletico — mentre le PARTITE agganciavano
+    380/380, il che rendeva il difetto invisibile a un controllo per partita.
+
+    ⚠️ L'alias sta in `ALIAS_RACCOLTA`, non in `sources.TEAM_ALIASES`: quella
+    mappa e' globale al progetto e «Atletico» da solo e' ambiguo fuori dalla
+    Liga (Mineiro, Nacional, decine di altri). Metterlo li' sarebbe un join che
+    indovina.
+    """
+    assert "Atletico" not in __import__("src.data.sources", fromlist=["x"]).TEAM_ALIASES
+    assert tf.ALIAS_RACCOLTA["la_liga"]["Atletico"] == "Atlético Madrid"
+    e = tf.eventi_opta("la_liga", colonne=["Squadra"])
+    assert "Atletico" not in set(e["Squadra"].dropna())
+    assert "Ath Madrid" in set(e["Squadra"].dropna())
+
+
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga"])
+def test_eventi_opta_aggancia_tutte_le_squadra_partita(lega):
+    """760/760 su tutte e tre. E' la misura che ha scoperto il caso Atletico."""
+    snap = pd.read_csv(f"data/{lega}_matches.csv")
+    snap = snap[snap["season"].astype(str) == "2526"]
+    d = pd.to_datetime(snap["date"]).dt.date
+    attese = set(zip(d, snap["home_team"])) | set(zip(d, snap["away_team"]))
+    e = tf.eventi_opta(lega, colonne=["Data", "Squadra"])
+    nostre = {x for x in zip(pd.to_datetime(e["Data"]).dt.date, e["Squadra"].astype(str))
+              if x[1] != "nan"}
+    assert nostre >= attese, f"{lega}: {len(attese - nostre)} squadra-partita senza eventi"
+
+
+def test_id_evento_NON_e_una_chiave_univoca():
+    """44-82 ID ripetuti per lega, e ci sono anche nei file NON spezzati.
+
+    Quindi non e' un effetto della ricomposizione: e' una proprieta' del dato.
+    Parte dei doppioni sta dentro la stessa partita, parte fra partite diverse.
+    Chi usasse `ID evento` come chiave primaria perderebbe righe in silenzio —
+    e questo test esiste perche' nessuno lo faccia credendolo sicuro.
+    """
+    for lega, attesi in (("serie_a", 45), ("premier_league", 82), ("la_liga", 44)):
+        e = tf.eventi_opta(lega, colonne=["ID evento"])
+        assert e["ID evento"].duplicated().sum() == attesi, lega

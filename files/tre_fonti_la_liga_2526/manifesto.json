@@ -13,6 +13,14 @@
    "righe": 123834,
    "sha256": "0bff38f7afeec41c652e200908120cdb02ab75a2e4a064ff20a7f2193f44dca8"
   },
+  "eventi_opta_parte1.csv.gz": {
+   "righe": 288798,
+   "sha256": "337c921f41f24af08e5d07612e8dc228c9e796a7749038fcfb9d2850b7b3d986"
+  },
+  "eventi_opta_parte2.csv.gz": {
+   "righe": 288407,
+   "sha256": "4fa44098090b61c1a7fd27ad0c91bc4abb86619ad62041f7e05ce54df20a16fb"
+  },
   "giocatori.csv.gz": {
    "righe": 18329,
    "sha256": "3f240dd438a8433c19fa9a4a5db9f0c4af6587d596df0f993e59ab767717a49e"
@@ -30,14 +38,12 @@
    "sha256": "5c9a70755970e2f56e3a527d1eb7d91fdea0925c757841070eb8120635a77bee"
   }
  },
- "manca_ancora": [
-  "eventi_opta — l'utente lo consegna in DUE file, annunciati"
- ],
  "schema": "IDENTICO alla Serie A su tutti e cinque i file consegnati (la Premier aveva 3 colonne in piu')",
  "aggancio_snapshot": {
   "squadre": "760/760",
   "giocatori": "760/760",
-  "heatmap": "760/760"
+  "heatmap": "760/760",
+  "eventi_opta": "760/760"
  },
  "generalizzazione": "il modulo ha retto SENZA modifiche al codice di lettura: 760/760 al primo colpo. L'unico intervento e' stato aggiungere lo stato «quasi vuota» per Meteo",
  "difetti": {
@@ -86,5 +92,30 @@
    "assist": 7
   }
  },
- "espanyol": "la raccolta scrive «Espanyol», TEAM_ALIASES lo porta a «Espanol» come il nostro snapshot: aggancia. ⚠️ NON confondere con il reperto dell'audit d'identita', che riguarda club_matching.Agganciatore e resta aperto"
+ "espanyol": "la raccolta scrive «Espanyol», TEAM_ALIASES lo porta a «Espanol» come il nostro snapshot: aggancia. ⚠️ NON confondere con il reperto dell'audit d'identita', che riguarda club_matching.Agganciatore e resta aperto",
+ "completa": "sei blocchi su sei; eventi_opta consegnato in DUE parti",
+ "eventi_opta_spezzato": {
+  "parti": 2,
+  "righe_totali": 577205,
+  "partite": 380,
+  "taglio": "GREZZO, non logico: cade dentro Levante-Espanyol dell'11/01/2026 — 166 eventi in parte1 (fino al 7' del primo tempo) e 1.327 in parte2, contro una mediana di 1.517 a partita",
+  "perche_conta": "chi leggesse una parte sola vedrebbe quella partita monca senza che nulla glielo dica: 166 e' un numero plausibile per una riga di dati, e nessun conteggio di righe se ne accorge",
+  "trattamento": "tre_fonti._leggi() ricompone in ordine di suffisso numerico (non alfabetico: con dieci parti parte10 verrebbe prima di parte2). _percorso() ALZA se il blocco e' spezzato",
+  "eventi_duplicati_fra_le_parti": 0
+ },
+ "due_convenzioni_nello_stesso_file": {
+  "quale": "eventi_opta scrive «Atletico» NUDO nella colonna Squadra e «Atlético Madrid» in Casa/Trasferta",
+  "effetto_misurato": "aggancio di eventi_opta fermo a 722/760 squadra-partita, tutte e 38 le mancanti dell'Atletico. ⚠️ Le PARTITE agganciavano 380/380: un controllo per partita non lo vedeva",
+  "riparazione": "alias in tre_fonti.ALIAS_RACCOLTA, NON in sources.TEAM_ALIASES: quella mappa e' globale e «Atletico» da solo e' ambiguo fuori dalla Liga (Mineiro, Nacional...). Metterlo li' sarebbe un join che indovina",
+  "non_si_ripete": "colonna Squadra di eventi_opta: 0 nomi non agganciati in Serie A e Premier"
+ },
+ "id_evento": {
+  "univoco": false,
+  "duplicati": {
+   "serie_a": 45,
+   "premier_league": 82,
+   "la_liga": 44
+  },
+  "nota": "presenti anche nei file NON spezzati, quindi non e' un effetto della ricomposizione. Parte dentro la stessa partita, parte fra partite diverse. NON usare come chiave primaria"
+ }
 }

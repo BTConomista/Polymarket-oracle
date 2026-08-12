@@ -210,38 +210,108 @@ DISPONIBILITA_POST_INSIDIOSE = (
 )
 
 
-def _percorso(nome: str, lega: str) -> Path:
-    """Il file `nome` della raccolta di `lega`, con un errore che dice cosa fare.
+def _percorsi(nome: str, lega: str) -> list[Path]:
+    """I file di `nome` per `lega`: uno solo, oppure le parti in ordine.
 
-    Le consegne arrivano una lega per volta e non sempre complete: la Premier
-    e' arrivata senza `heatmap`. Un FileNotFoundError generico manderebbe a
-    cercare un bug dove c'e' solo un file che deve ancora arrivare.
+    ⚠️ UN BLOCCO PUO' ARRIVARE SPEZZATO. `eventi_opta` della Liga e' stato
+    consegnato in `eventi_opta_parte1.csv.gz` e `_parte2.csv.gz`, ed e' un
+    taglio **grezzo**, non logico: cade dentro una partita. Levante-Espanyol
+    dell'11/01/2026 ha 166 eventi (fino al 7' del primo tempo) in parte1 e i
+    restanti 1.327 in parte2 — contro una mediana di 1.517 eventi a partita.
+
+    Chi leggesse una parte sola vedrebbe quella partita **monca senza che nulla
+    glielo dica**: 166 eventi sono un numero plausibile per una riga di dati, e
+    nessun conteggio di righe se ne accorge. Da cui la ricomposizione qui, che
+    non e' una comodita' ma una riparazione.
+
+    L'ordine e' quello del suffisso numerico, non quello alfabetico: con dieci
+    parti `parte10` verrebbe prima di `parte2`.
     """
     base = raccolta(lega)
-    p = base / f"{nome}.csv.gz"
-    if not p.exists():
-        if base.exists():
-            presenti = sorted(x.stem.replace(".csv", "") for x in base.glob("*.csv.gz"))
-            raise FileNotFoundError(
-                f"la raccolta di {lega} non ha ancora {nome!r}. "
-                f"Presenti: {presenti}. Vedi {base / 'README.md'}"
-            )
+    intero = base / f"{nome}.csv.gz"
+    if intero.exists():
+        return [intero]
+
+    parti = sorted(
+        base.glob(f"{nome}_parte*.csv.gz"),
+        key=lambda p: int("".join(c for c in p.stem.split("_parte")[-1] if c.isdigit()) or 0),
+    )
+    if parti:
+        return parti
+
+    if base.exists():
+        presenti = sorted({x.name.split("_parte")[0].replace(".csv.gz", "")
+                           for x in base.glob("*.csv.gz")})
         raise FileNotFoundError(
-            f"nessuna raccolta a tre fonti per {lega!r}. "
-            f"Disponibili: {leghe_disponibili()}"
+            f"la raccolta di {lega} non ha ancora {nome!r}. "
+            f"Presenti: {presenti}. Vedi {base / 'README.md'}"
         )
-    return p
+    raise FileNotFoundError(
+        f"nessuna raccolta a tre fonti per {lega!r}. "
+        f"Disponibili: {leghe_disponibili()}"
+    )
 
 
-def _normalizza_squadre(df: pd.DataFrame) -> pd.DataFrame:
-    """Porta i nomi squadra alla grafia canonica del progetto (TEAM_ALIASES).
+def _percorso(nome: str, lega: str) -> Path:
+    """Come `_percorsi` ma pretende un file solo. Alza se il blocco e' spezzato."""
+    p = _percorsi(nome, lega)
+    if len(p) > 1:
+        raise RuntimeError(
+            f"{nome} di {lega} e' in {len(p)} parti: usa _percorsi() e concatena, "
+            "altrimenti perdi le righe delle parti successive"
+        )
+    return p[0]
+
+
+def _leggi(nome: str, lega: str, **kwargs) -> pd.DataFrame:
+    """Legge un blocco, ricomponendolo se e' arrivato spezzato."""
+    parti = _percorsi(nome, lega)
+    frames = [pd.read_csv(p, **kwargs) for p in parti]
+    if len(frames) > 1:
+        log.info("%s di %s ricomposto da %d parti", nome, lega, len(frames))
+        return pd.concat(frames, ignore_index=True)
+    return frames[0]
+
+
+# Alias validi SOLO dentro questa raccolta, e per una ragione precisa.
+#
+# ⚠️ `eventi_opta` della Liga scrive «Atletico» NUDO nella colonna `Squadra`,
+# mentre `Casa`/`Trasferta` dello stesso file scrivono «Atlético Madrid»: due
+# convenzioni in due colonne dello stesso file. Effetto misurato: l'aggancio di
+# eventi_opta si ferma a 722/760 squadra-partita, e le 38 mancanti sono tutte
+# dell'Atletico — mentre le PARTITE agganciano 380/380, il che rende il difetto
+# invisibile a un controllo per partita.
+#
+# Perche' NON in sources.TEAM_ALIASES: quella mappa e' globale al progetto, e
+# «Atletico» da solo e' ambiguo fuori dalla Liga (Atletico Mineiro, Atletico
+# Nacional, decine di altri). Mapparlo li' sarebbe un join che indovina — la
+# cosa che la regola d'oro vieta. Qui il perimetro e' noto: il file e' di Liga
+# 2025-26 e le sue 20 squadre sono quelle.
+ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
+    "la_liga": {"Atletico": "Atlético Madrid"},
+}
+
+
+def _normalizza_squadre(df: pd.DataFrame, lega: str = LEGA_DEFAULT) -> pd.DataFrame:
+    """Porta i nomi squadra alla grafia canonica del progetto.
+
+    Due passaggi, in quest'ordine: prima gli alias LOCALI alla raccolta
+    (`ALIAS_RACCOLTA`, che riparano le convenzioni interne al file), poi quelli
+    globali del progetto (`TEAM_ALIASES`).
 
     Non e' cosmesi: senza, `Hellas Verona` e `Verona` restano due squadre per
     qualunque join, ed e' esattamente il bug che il §5 del CLAUDE.md racconta.
     """
+    locali = ALIAS_RACCOLTA.get(lega, {})
+
+    def canonico(x):
+        if not isinstance(x, str):
+            return x
+        return TEAM_ALIASES.get(locali.get(x, x), locali.get(x, x))
+
     for col in ("Squadra", "Avversario", "Casa", "Trasferta"):
         if col in df.columns:
-            df[col] = df[col].map(lambda x: TEAM_ALIASES.get(x, x) if isinstance(x, str) else x)
+            df[col] = df[col].map(canonico)
     return df
 
 
@@ -270,7 +340,7 @@ def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True, periodo: str
     Le 2 righe orfane «Verona» vengono scartate (riparazione 1): sono un
     duplicato parziale, la partita completa c'e' gia' sotto «Hellas Verona».
     """
-    df = pd.read_csv(_percorso("squadre", lega), low_memory=False)
+    df = _leggi("squadre", lega, low_memory=False)
 
     prima = len(df)
     maschera_orfane = pd.Series(False, index=df.index)
@@ -285,7 +355,7 @@ def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True, periodo: str
     if periodo is not None:
         df = df[df["Periodo"] == periodo].copy()
 
-    df = _normalizza_squadre(df)
+    df = _normalizza_squadre(df, lega)
     return df.reset_index(drop=True)
 
 
@@ -296,10 +366,10 @@ def classifica(lega: str = LEGA_DEFAULT) -> pd.DataFrame:
     del progetto dove la classifica di Serie A esiste come dato invece che
     come qualcosa da ricalcolare dai risultati.
     """
-    df = pd.read_csv(_percorso("squadre", lega), low_memory=False)
+    df = _leggi("squadre", lega, low_memory=False)
     df = df[df["Livello"] == "Stagione"].copy()
     piene = [c for c in df.columns if df[c].notna().any()]
-    return _normalizza_squadre(df[piene]).reset_index(drop=True)
+    return _normalizza_squadre(df[piene], lega).reset_index(drop=True)
 
 
 def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita") -> pd.DataFrame:
@@ -312,12 +382,12 @@ def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita") -> p
     Applica: normalizzazione dei nomi squadra, rinomina dell'`ID partita`
     avvelenato, e la correzione dei 2 gol persi da Understat (riparazione 4).
     """
-    df = pd.read_csv(_percorso("giocatori", lega), low_memory=False)
+    df = _leggi("giocatori", lega, low_memory=False)
     if livello is not None and "Livello" in df.columns:
         df = df[df["Livello"] == livello].copy()
 
     df = _rinomina_id_avvelenato(df)
-    df = _normalizza_squadre(df)
+    df = _normalizza_squadre(df, lega)
 
     df = _allinea_gol(df)
     return df.reset_index(drop=True)
@@ -404,13 +474,13 @@ def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None) -> pd.Data
     `Evento`, 759/759 per `Tiro`, 379/379 per `Quota`). Usa `GRANA[categoria]`
     per scegliere la chiave invece di indovinarla.
     """
-    df = pd.read_csv(_percorso("eventi", lega), low_memory=False)
+    df = _leggi("eventi", lega, low_memory=False)
     if categoria is not None:
         valide = set(df["Categoria"].dropna().unique())
         if categoria not in valide:
             raise ValueError(f"categoria {categoria!r} assente. Valide: {sorted(valide)}")
         df = df[df["Categoria"] == categoria].copy()
-    return _normalizza_squadre(df).reset_index(drop=True)
+    return _normalizza_squadre(df, lega).reset_index(drop=True)
 
 
 def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None, colonne: list[str] | None = None) -> pd.DataFrame:
@@ -427,10 +497,10 @@ def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None, colonne
 
     ⚠️ Nessuna delle sue 34 colonne e' descritta dalla legenda consegnata.
     """
-    df = pd.read_csv(_percorso("eventi_opta", lega), low_memory=False, usecols=colonne)
+    df = _leggi("eventi_opta", lega, low_memory=False, usecols=colonne)
     if partita is not None and "ID partita" in df.columns:
         df = df[df["ID partita"] == partita].copy()
-    return _normalizza_squadre(df).reset_index(drop=True)
+    return _normalizza_squadre(df, lega).reset_index(drop=True)
 
 
 def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None) -> pd.DataFrame:
@@ -440,10 +510,10 @@ def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None) -> pd.DataF
     SofaScore. La colonna `Tocchi` e' **vuota al 100%**: c'e' nello schema e non
     contiene niente (vedi `colonne_vuote`).
     """
-    df = pd.read_csv(_percorso("heatmap", lega), low_memory=False)
+    df = _leggi("heatmap", lega, low_memory=False)
     if partita is not None:
         df = df[df["ID partita"] == partita].copy()
-    return _normalizza_squadre(df).reset_index(drop=True)
+    return _normalizza_squadre(df, lega).reset_index(drop=True)
 
 
 def legenda(lega: str = LEGA_DEFAULT, *, versione: str = "v2") -> pd.DataFrame:
@@ -465,9 +535,9 @@ def legenda(lega: str = LEGA_DEFAULT, *, versione: str = "v2") -> pd.DataFrame:
     tutto.
     """
     if versione == "v2":
-        return pd.read_csv(_percorso("legenda", lega))
+        return _leggi("legenda", lega)
     if versione == "v1":
-        return pd.read_csv(_percorso("legenda_v1_incompleta", lega))
+        return _leggi("legenda_v1_incompleta", lega)
     raise ValueError(f"versione {versione!r} sconosciuta: usa 'v1' o 'v2'")
 
 
@@ -554,7 +624,7 @@ def colonne_non_documentate(lega: str = LEGA_DEFAULT, *, versione: str = "v2") -
     righe = leg[leg["Sezione"] == "Legenda"]
     for nome, in_legenda in _NOME_IN_LEGENDA.items():
         try:
-            cols = list(pd.read_csv(_percorso(nome, lega), nrows=0).columns)
+            cols = list(_leggi(nome, lega, nrows=0).columns)
         except FileNotFoundError:
             continue          # file non ancora consegnato per questa lega
         if "File" in righe.columns:                       # schema v2
