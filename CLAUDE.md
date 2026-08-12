@@ -472,7 +472,8 @@ data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
                  outright_snapshots/ (prezzi outright live, uno per giorno)
                  squad_value_2526_transfermarkt.csv (fonte secondaria, regola R2)
                  football.db (SQLite, rigenerabile, NON versionato)
-files/tre_fonti_{serie_a,premier_league,la_liga}_2526/  TRE LEGHE 2025-26 DA TRE
+files/tre_fonti_{serie_a,premier_league,la_liga,bundesliga}_2526/  QUATTRO LEGHE
+                 2025-26 DA TRE
                  FONTI (SofaScore, Opta/WhoScored, Understat), 11/08/2026.
                  Portano cio' che il progetto non aveva: EVENT DATA (562.672 +
                  577.884 tocchi con X/Y, secondo e qualificatori), POSIZIONI
@@ -497,7 +498,16 @@ files/tre_fonti_{serie_a,premier_league,la_liga}_2526/  TRE LEGHE 2025-26 DA TRE
                  notna().any() risponde «funziona» su due righe -- e per questo
                  c'e' `copertura()`, che torna lo STATO e non un booleano.
                  ⚠️ Il modulo ha retto sulla terza lega SENZA modifiche al
-                 codice di lettura: 760/760 al primo colpo
+                 codice di lettura: 760/760 al primo colpo.
+                 ⚠️ CON LA BUNDESLIGA NON SONO 760 MA 612: 18 squadre e 306
+                 partite. `DIMENSIONI` tiene i due formati -- inchiodare 760
+                 avrebbe fatto sembrare rotta una lega solo piu' piccola. E le
+                 ultime 2 partite sono lo SPAREGGIO contro una squadra di
+                 seconda divisione (Turno == 'Finale'): escluse per default
+                 come in player_stats, altrimenti 616 righe e una 19a squadra.
+                 ⭐ La Bundesliga e' anche la prima consegna che ripara un
+                 difetto A MONTE: la colonna `possession % (normalizzato)`
+                 chiude il falso positivo sul possesso (da 760 discordanze a 2)
 files/tre_fonti_serie_a_2526/  SERIE A 2025-26 DA TRE FONTI (SofaScore,
                  Opta/WhoScored, Understat), 11/08/2026. Porta cio' che il
                  progetto non aveva: EVENT DATA (562.672 tocchi con X/Y,

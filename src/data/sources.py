@@ -144,6 +144,13 @@ TEAM_ALIASES: dict[str, str] = {
     # (Premier 2025-26, 11/08/2026). Era l'UNICA delle 20 squadre a non
     # agganciare: le altre 19 passavano gia' dagli alias qui sopra.
     "Wolverhampton": "Wolves",
+    # Due forme tedesche della raccolta a tre fonti (Bundesliga 2025-26,
+    # 11/08/2026). Il progetto conosceva gia' «1. FC Heidenheim 1846» e
+    # «Borussia M.Gladbach» — con l'anno e col punto — ma non queste, che
+    # differiscono di un carattere. Erano le uniche 2 squadre su 18 a non
+    # agganciare, e insieme valevano 136 squadra-partita su 612.
+    "1. FC Heidenheim": "Heidenheim",
+    "Borussia M'gladbach": "M'gladbach",
     # Forme brevi usate da diretta.it/Flashscore (aggiunte 01/08/2026 con la
     # raccolta Premier 2025-26). Le altre 17 squadre combaciavano gia': queste
     # tre sono le uniche differenze, e senza di esse il join si fermava a

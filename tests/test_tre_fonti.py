@@ -302,29 +302,30 @@ def test_discordanze_esclude_le_false_per_default(sq):
 # --------------------------------------------------------------------------
 # LA SECONDA LEGA — il momento in cui si vede se il modulo generalizza
 # --------------------------------------------------------------------------
-@pytest.mark.parametrize("lega,snapshot", [
-    ("serie_a", "data/serie_a_matches.csv"),
-    ("premier_league", "data/premier_league_matches.csv"),
-    ("la_liga", "data/la_liga_matches.csv"),
-])
-def test_ogni_lega_aggancia_le_sue_760_squadra_partita(lega, snapshot):
-    """760/760 su entrambe. E' la misura che dice se la raccolta e' usabile.
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga"])
+def test_ogni_lega_aggancia_TUTTE_le_sue_squadra_partita(lega):
+    """Il totale NON e' 760 per tutte: Bundesliga e Ligue 1 ne hanno 612.
 
-    Sulla Premier ha richiesto UN alias nuovo: SofaScore scrive
-    «Wolverhampton», il nostro snapshot «Wolves», e `TEAM_ALIASES` aveva solo
-    «Wolverhampton Wanderers». Le altre 19 squadre passavano gia'.
+    Inchiodare 760 avrebbe fatto passare la Bundesliga per rotta quando era
+    solo piu' piccola — 18 squadre, 306 partite. `DIMENSIONI` tiene i due
+    formati, e il test confronta col numero della LEGA.
+
+    Ogni lega ha richiesto i suoi alias: «Wolverhampton» in Premier,
+    «1. FC Heidenheim» e «Borussia M'gladbach» in Bundesliga.
     """
+    squadre_attese, partite_attese = tf.DIMENSIONI[lega]
     s = tf.squadre(lega, periodo="Totale")
-    snap = pd.read_csv(snapshot)
+    snap = pd.read_csv(f"data/{lega}_matches.csv")
     snap = snap[snap["season"].astype(str) == "2526"]
     d = pd.to_datetime(snap["date"]).dt.date
     attese = set(zip(d, snap["home_team"])) | set(zip(d, snap["away_team"]))
     nostre = set(zip(pd.to_datetime(s["Data"]).dt.date, s["Squadra"]))
-    assert len(attese) == 760
+    assert len(attese) == partite_attese * 2
+    assert s["Squadra"].nunique() == squadre_attese
     assert nostre == attese, f"{lega}: {len(attese - nostre)} squadra-partita non agganciate"
 
 
-@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga"])
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga"])
 def test_ogni_lega_ha_lid_partita_misto_rinominato(lega):
     """Il difetto che SI ripete: presente su entrambe le leghe.
 
@@ -335,8 +336,9 @@ def test_ogni_lega_ha_lid_partita_misto_rinominato(lega):
     g = tf.giocatori(lega)
     assert tf.ID_AVVELENATO not in g.columns
     assert tf.ID_RINOMINATO in g.columns
+    partite = tf.DIMENSIONI[lega][1]
     for col in tf.ID_PARTITA_PER_FONTE.values():
-        assert g[col].nunique() == 380
+        assert g[col].nunique() == partite, f"{lega}/{col}: {g[col].nunique()} invece di {partite}"
 
 
 def test_le_righe_orfane_NON_si_ripetono_fuori_dalla_serie_a():
@@ -347,10 +349,11 @@ def test_le_righe_orfane_NON_si_ripetono_fuori_dalla_serie_a():
     Quindi non e' un difetto sistematico dell'export ma un incidente su un
     nome: la riparazione resta per-lega e non va promossa a regola.
     """
-    for lega in ("premier_league", "la_liga"):
+    for lega in ("premier_league", "la_liga", "bundesliga"):
         assert lega not in tf.ORFANE
         s = tf.squadre(lega, periodo="Totale")
-        assert len(s) == 760, f"{lega}: {len(s)} righe invece di 760"
+        attese = tf.DIMENSIONI[lega][1] * 2
+        assert len(s) == attese, f"{lega}: {len(s)} righe invece di {attese}"
         assert s["Avversario"].notna().all()
 
 
@@ -377,7 +380,7 @@ def test_lallineamento_dei_gol_e_una_regola_non_una_lista():
     sarebbe girata sulla Premier correggendo ZERO righe e senza dire niente —
     un silenzio indistinguibile da «qui non ci sono difetti».
     """
-    attesi = {"serie_a": 2, "premier_league": 3, "la_liga": 4}
+    attesi = {"serie_a": 2, "premier_league": 3, "la_liga": 4, "bundesliga": 2}
     for lega, n in attesi.items():
         assert int(tf.giocatori(lega)["gol_corretto_da_noi"].sum()) == n, lega
 
@@ -390,7 +393,7 @@ def test_un_file_non_ancora_consegnato_da_un_errore_che_lo_dice():
     un'ora, ed e' il caso che ha imposto il messaggio esplicito.
     """
     with pytest.raises(FileNotFoundError, match="non ha ancora|nessuna raccolta"):
-        tf.heatmap("bundesliga")
+        tf.heatmap("ligue_1")
 
 
 @pytest.mark.parametrize("lega,righe", [("serie_a", 556996), ("premier_league", 573203), ("la_liga", 570768)])
@@ -432,7 +435,7 @@ def test_tocchi_e_vuota_su_TUTTE_e_tre_e_quindi_e_del_formato():
     Tre leghe indipendenti allo 0,0% dicono che `Tocchi` e' una colonna del
     FORMATO mai riempita, non l'incidente di una consegna.
     """
-    for lega in ("serie_a", "premier_league", "la_liga"):
+    for lega in ("serie_a", "premier_league", "la_liga", "bundesliga"):
         assert tf.copertura("Tocchi", lega, blocco="heatmap")["stato"] == "vuota"
 
 
@@ -496,9 +499,16 @@ def test_atletico_nudo_di_eventi_opta_viene_riportato_al_nome_intero():
     assert "Ath Madrid" in set(e["Squadra"].dropna())
 
 
-@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga"])
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga", "bundesliga"])
 def test_eventi_opta_aggancia_tutte_le_squadra_partita(lega):
-    """760/760 su tutte e tre. E' la misura che ha scoperto il caso Atletico."""
+    """La misura che ha scoperto DUE volte lo stesso difetto.
+
+    La colonna `Squadra` di `eventi_opta` usa una forma che le altre colonne
+    dello stesso file non usano: «Atletico» nudo in Liga, la sigla «RBL» in
+    Bundesliga. Due leghe su quattro, sempre UNA squadra, sempre quella colonna.
+    ⚠️ L'aggancio per PARTITA resta perfetto in entrambi i casi, quindi solo il
+    controllo per squadra-partita lo rivela.
+    """
     snap = pd.read_csv(f"data/{lega}_matches.csv")
     snap = snap[snap["season"].astype(str) == "2526"]
     d = pd.to_datetime(snap["date"]).dt.date
@@ -517,6 +527,63 @@ def test_id_evento_NON_e_una_chiave_univoca():
     Chi usasse `ID evento` come chiave primaria perderebbe righe in silenzio —
     e questo test esiste perche' nessuno lo faccia credendolo sicuro.
     """
-    for lega, attesi in (("serie_a", 45), ("premier_league", 82), ("la_liga", 44)):
+    for lega, attesi in (("serie_a", 45), ("premier_league", 82), ("la_liga", 44),
+                         ("bundesliga", 79)):
         e = tf.eventi_opta(lega, colonne=["ID evento"])
         assert e["ID evento"].duplicated().sum() == attesi, lega
+
+
+# --------------------------------------------------------------------------
+# LA QUARTA LEGA — 18 squadre, e due partite che non sono di campionato
+# --------------------------------------------------------------------------
+def test_lo_spareggio_e_fuori_per_default():
+    """4 righe di Wolfsburg-Paderborn che nei nostri snapshot NON esistono.
+
+    Sono lo spareggio promozione/retrocessione contro una squadra di seconda
+    divisione, marcate `Turno == "Finale"`. Tenerle dentro fa due danni: porta
+    il conteggio a 616 dove le squadra-partita di campionato sono 612, e tira
+    dentro una 19a squadra (Paderborn) che nel campionato non c'e'.
+
+    E' la stessa convenzione di `player_stats.load_player_matches`, che le
+    esclude per default con la colonna `Fase`. Qui `Fase` non c'e' e il
+    marcatore e' `Turno`.
+    """
+    senza = tf.squadre("bundesliga", periodo="Totale")
+    con = tf.squadre("bundesliga", periodo="Totale", spareggio=True)
+    assert len(senza) == 612 and senza["Squadra"].nunique() == 18
+    assert len(con) == 616 and con["Squadra"].nunique() == 19
+    assert "Paderborn" in set(con["Squadra"]) and "Paderborn" not in set(senza["Squadra"])
+
+
+def test_il_marcatore_dello_spareggio_e_lunico_turno_fuori_schema():
+    """«Finale» e' l'unico valore di `Turno` che non sia «Giornata N».
+
+    Conta perche' giustifica il filtro: se ci fossero altri turni fuori schema,
+    escludere per `Turno == "Finale"` ne lascerebbe passare qualcuno.
+    """
+    s = tf.squadre("bundesliga", periodo="Totale", spareggio=True)
+    fuori = {t for t in s["Turno"].dropna().unique() if not str(t).startswith("Giornata")}
+    assert fuori == {tf.TURNO_SPAREGGIO}
+
+
+def test_la_bundesliga_ha_la_colonna_che_ripara_il_possesso_a_monte():
+    """La quarta consegna aggiunge `possession % (normalizzato)`, e funziona.
+
+    Fino alla Liga il file marcava «possesso» come discordanza su 760 righe su
+    760 — un falso positivo, perche' confrontava una percentuale con un
+    conteggio. Qui l'export aggiunge la colonna normalizzata, e la discordanza
+    dichiarata scende da 760 a **2**: il difetto e' stato chiuso A MONTE.
+
+    ⚠️ Il test verifica che la colonna sia DAVVERO una percentuale confrontabile
+    (610 righe su 612 entro 1 punto da SofaScore), non solo che esista: una
+    colonna col nome giusto e i valori sbagliati sarebbe peggio di nessuna.
+    """
+    s = tf.squadre("bundesliga", periodo="Totale")
+    assert "possession % (normalizzato) (WhoScored)" in s.columns
+    a = pd.to_numeric(s["Ball possession (SofaScore)"], errors="coerce")
+    b = pd.to_numeric(s["possession % (normalizzato) (WhoScored)"], errors="coerce")
+    vicine = ((a - b).abs() <= 1).sum()
+    assert vicine >= 600, f"solo {vicine}/612 righe entro 1 punto: la colonna non e' comparabile"
+    # E la conseguenza: quasi nessuna discordanza dichiarata sul possesso.
+    marcate = s["Discordanze"].fillna("").str.contains("possesso").sum()
+    assert marcate <= 5, f"{marcate} righe ancora marcate: il falso positivo non e' chiuso"

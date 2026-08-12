@@ -289,7 +289,59 @@ def _leggi(nome: str, lega: str, **kwargs) -> pd.DataFrame:
 # 2025-26 e le sue 20 squadre sono quelle.
 ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
     "la_liga": {"Atletico": "Atlético Madrid"},
+    # Stesso difetto, seconda occorrenza: la colonna `Squadra` di `eventi_opta`
+    # usa una forma che le altre colonne dello stesso file non usano. In
+    # Bundesliga e' la SIGLA «RBL» (RB Leipzig), mentre `Casa`/`Trasferta`
+    # scrivono il nome intero. Costava 34 squadra-partita su 612.
+    #
+    # ⚠️ Il difetto si e' ripetuto su due leghe su cinque, sempre su UNA squadra
+    # e sempre nella stessa colonna: non e' un incidente, e' una proprieta' di
+    # `eventi_opta`. Chi aggiunge una lega deve MISURARE quella colonna a parte,
+    # perche' l'aggancio per PARTITA resta perfetto e non lo rivela.
+    "bundesliga": {"RBL": "RB Leipzig"},
 }
+
+# Quante SQUADRE e quante PARTITE ha ogni campionato. Non e' una costante:
+# Bundesliga e Ligue 1 hanno 18 squadre e 306 partite, le altre tre 20 e 380.
+# Serve per dire «760 attese» o «612 attese» senza inchiodare il numero.
+DIMENSIONI: dict[str, tuple[int, int]] = {
+    "serie_a": (20, 380), "premier_league": (20, 380), "la_liga": (20, 380),
+    "bundesliga": (18, 306), "ligue_1": (18, 306),
+}
+
+# ⚠️ IL TURNO CHE NON E' UNA GIORNATA. In Bundesliga (e in Ligue 1) le ultime
+# due partite della stagione non sono di campionato: sono lo **spareggio**
+# promozione/retrocessione contro una squadra di seconda divisione — nel
+# 2025-26 Wolfsburg-Paderborn, andata e ritorno, marcate `Turno == "Finale"`.
+#
+# Vanno separate, e per due motivi distinti:
+#  * nei nostri snapshot NON ci sono (sono partite di seconda divisione), quindi
+#    lasciarle dentro fa fallire l'aggancio su 4 righe e porta il conteggio a
+#    616 dove le squadra-partita di campionato sono 612;
+#  * portano dentro una 19a squadra (Paderborn) che nel campionato non c'e'.
+#
+# E' la stessa convenzione di `player_stats.load_player_matches`, che esclude
+# lo spareggio per default con la colonna `Fase`. Qui la colonna `Fase` non
+# c'e': il marcatore e' `Turno`, e «Finale» e' l'unico valore che non sia
+# «Giornata N» (verificato: 35 turni distinti, uno solo fuori schema).
+TURNO_SPAREGGIO = "Finale"
+
+
+def _togli_spareggio(df: pd.DataFrame, spareggio: bool) -> pd.DataFrame:
+    """Toglie le righe dello spareggio promozione/retrocessione, se richiesto.
+
+    Default: FUORI. E' la stessa convenzione di
+    `player_stats.load_player_matches`, e per la stessa ragione: quelle partite
+    nei nostri snapshot **non ci sono** — sono di seconda divisione — quindi
+    tenerle dentro fa fallire l'aggancio e gonfia i conteggi (616 righe dove le
+    squadra-partita di campionato sono 612).
+    """
+    if spareggio or "Turno" not in df.columns:
+        return df
+    fuori = df["Turno"] == TURNO_SPAREGGIO
+    if fuori.any():
+        log.info("escluse %d righe di spareggio (Turno=%s)", int(fuori.sum()), TURNO_SPAREGGIO)
+    return df[~fuori].copy()
 
 
 def _normalizza_squadre(df: pd.DataFrame, lega: str = LEGA_DEFAULT) -> pd.DataFrame:
@@ -327,7 +379,8 @@ def _rinomina_id_avvelenato(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True, periodo: str | None = None) -> pd.DataFrame:
+def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True,
+            periodo: str | None = None, spareggio: bool = False) -> pd.DataFrame:
     """Squadra-partita-periodo (Totale / 1° tempo / 2° tempo), 214 colonne.
 
     `solo_partite=False` include anche le **60 righe di livello Stagione**, che
@@ -350,6 +403,7 @@ def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True, periodo: str
     if prima - len(df):
         log.info("scartate %d righe orfane Verona/Hellas Verona", prima - len(df))
 
+    df = _togli_spareggio(df, spareggio)
     if solo_partite:
         df = df[df["Livello"] == "Partita"].copy()
     if periodo is not None:
@@ -372,7 +426,8 @@ def classifica(lega: str = LEGA_DEFAULT) -> pd.DataFrame:
     return _normalizza_squadre(df[piene], lega).reset_index(drop=True)
 
 
-def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita") -> pd.DataFrame:
+def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita",
+              spareggio: bool = False) -> pd.DataFrame:
     """Giocatore-partita, 190 colonne da tre fonti.
 
     `livello` filtra la colonna omonima: `Partita` (17.829 righe, il default),
@@ -383,6 +438,7 @@ def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita") -> p
     avvelenato, e la correzione dei 2 gol persi da Understat (riparazione 4).
     """
     df = _leggi("giocatori", lega, low_memory=False)
+    df = _togli_spareggio(df, spareggio)
     if livello is not None and "Livello" in df.columns:
         df = df[df["Livello"] == livello].copy()
 
@@ -444,7 +500,8 @@ def _allinea_gol(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None) -> pd.DataFrame:
+def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None,
+           spareggio: bool = False) -> pd.DataFrame:
     """Il contenitore a sette categorie. Passane UNA, quasi sempre.
 
     | categoria | righe | grana | cos'e' |
@@ -475,6 +532,7 @@ def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None) -> pd.Data
     per scegliere la chiave invece di indovinarla.
     """
     df = _leggi("eventi", lega, low_memory=False)
+    df = _togli_spareggio(df, spareggio)
     if categoria is not None:
         valide = set(df["Categoria"].dropna().unique())
         if categoria not in valide:
@@ -483,7 +541,8 @@ def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None) -> pd.Data
     return _normalizza_squadre(df, lega).reset_index(drop=True)
 
 
-def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None, colonne: list[str] | None = None) -> pd.DataFrame:
+def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None,
+                colonne: list[str] | None = None, spareggio: bool = False) -> pd.DataFrame:
     """Event data Opta: 562.672 righe, ogni tocco con coordinate e secondo.
 
     E' il file piu' pesante della raccolta (24 MB compressi): `colonne` e
@@ -498,12 +557,14 @@ def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None, colonne
     ⚠️ Nessuna delle sue 34 colonne e' descritta dalla legenda consegnata.
     """
     df = _leggi("eventi_opta", lega, low_memory=False, usecols=colonne)
+    df = _togli_spareggio(df, spareggio)
     if partita is not None and "ID partita" in df.columns:
         df = df[df["ID partita"] == partita].copy()
     return _normalizza_squadre(df, lega).reset_index(drop=True)
 
 
-def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None) -> pd.DataFrame:
+def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None,
+            spareggio: bool = False) -> pd.DataFrame:
     """Posizioni: una riga per tocco, con X/Y su scala 0-100. Fonte SofaScore.
 
     380 partite, 586 giocatori, 556.996 righe. `partita` e' l'`ID partita` di
@@ -511,6 +572,7 @@ def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None) -> pd.DataF
     contiene niente (vedi `colonne_vuote`).
     """
     df = _leggi("heatmap", lega, low_memory=False)
+    df = _togli_spareggio(df, spareggio)
     if partita is not None:
         df = df[df["ID partita"] == partita].copy()
     return _normalizza_squadre(df, lega).reset_index(drop=True)

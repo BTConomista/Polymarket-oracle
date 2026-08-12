@@ -1,0 +1,86 @@
+{
+ "lega": "bundesliga",
+ "stagione": "2526",
+ "fonti": [
+  "SofaScore",
+  "WhoScored (Opta)",
+  "Understat"
+ ],
+ "consegnata": "2026-08-11 (due zip)",
+ "partite": 306,
+ "squadre": 18,
+ "completa": "sei blocchi su sei",
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 99543,
+   "sha256": "a2d2125812b6f3bcfefb758031f7d1e0ba74abb845e9b08dbaaffadcfb03f888"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 478270,
+   "sha256": "34d88e300b2d3e190487f79fe967795d2fcd47701ae4e73db2ba6f6a8935257d"
+  },
+  "giocatori.csv.gz": {
+   "righe": 13456,
+   "sha256": "139454ebee22636c457db01ebd744f1f25feeca705cccd8bfa2fbb7eb5bdab9e"
+  },
+  "heatmap.csv.gz": {
+   "righe": 477252,
+   "sha256": "f707e10d6d832a653370e8a3bccd6b4602658934a15c5dba21045ea2f60b64b4"
+  },
+  "legenda.csv.gz": {
+   "righe": 560,
+   "sha256": "82f1bcad105bdfcafdf41b294acca82626836f1a6b2fb05394616c1aef42042b"
+  },
+  "squadre.csv.gz": {
+   "righe": 1906,
+   "sha256": "d8a9bbeab05b731650cd7a95f191e2e51a4b6829a1ee81f7818077325b356edc"
+  }
+ },
+ "aggancio_snapshot": {
+  "squadre": "612/612",
+  "giocatori": "612/612",
+  "heatmap": "612/612",
+  "eventi_opta": "612/612"
+ },
+ "attenzione_dimensioni": "18 squadre e 306 partite, non 20 e 380: le assunzioni «760 attese» valgono solo per le tre leghe latine. tre_fonti.DIMENSIONI tiene i due formati",
+ "spareggio": {
+  "cos_e": "le ultime 2 partite (Wolfsburg-Paderborn, andata e ritorno) sono lo spareggio promozione/retrocessione contro una squadra di SECONDA divisione",
+  "marcatore": "Turno == 'Finale' — l'unico valore che non sia 'Giornata N' (35 turni distinti, uno solo fuori schema)",
+  "effetto_se_lasciate": "616 righe invece di 612, e una 19a squadra (Paderborn) che nel campionato non c'e'. Nei nostri snapshot quelle partite NON esistono",
+  "trattamento": "escluse per default, come player_stats.load_player_matches. spareggio=True le rimette"
+ },
+ "difetto_nuovo": {
+  "quale": "la colonna Squadra di eventi_opta usa la SIGLA «RBL» per RB Leipzig, mentre Casa/Trasferta scrivono il nome intero",
+  "effetto": "aggancio di eventi_opta fermo a 578/612; le PARTITE agganciavano tutte, quindi un controllo per partita non lo vedeva",
+  "riparazione": "tre_fonti.ALIAS_RACCOLTA['bundesliga']",
+  "e_la_seconda_volta": "stesso difetto della Liga («Atletico» nudo): due leghe su quattro, sempre UNA squadra, sempre quella colonna. Non e' un incidente, e' una proprieta' di eventi_opta"
+ },
+ "alias_globali_aggiunti": [
+  "1. FC Heidenheim -> Heidenheim",
+  "Borussia M'gladbach -> M'gladbach"
+ ],
+ "difetto_CHIUSO_a_monte": {
+  "quale": "il falso positivo sul possesso",
+  "come": "l'export aggiunge la colonna «possession % (normalizzato) (WhoScored)», che coincide con SofaScore entro 1 punto su 610 righe su 612",
+  "effetto": "la discordanza «possesso» dichiarata scende da 760/760 (le prime tre leghe) a 2/612"
+ },
+ "discordanze": {
+  "squadra": {
+   "corner": 8,
+   "possesso": 2,
+   "tiri": 1,
+   "tiri in porta": 1,
+   "passaggi": 2
+  },
+  "giocatore": {
+   "minuti": 5248,
+   "passaggi chiave": 151,
+   "tiri": 84,
+   "passaggi totali": 34,
+   "gol": 2,
+   "assist": 8,
+   "tiri in porta": 2
+  }
+ },
+ "id_evento_duplicati": 79
+}
