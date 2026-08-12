@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.608 verdi** all'11/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.661 verdi** al 12/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.608 verdi all'11/08/2026)
+python -m pytest                       # test (1.661 verdi al 12/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -591,6 +591,21 @@ docs/REGISTRO_VARIANTI.md   la lista COMPLETA di ogni modello/leva/covariata/
                  ufficiale (§1.2), non tutte le combinazioni, che sarebbero
                  2^60. Il registro traccia la PRODUZIONE; PANCHINA resta la
                  fonte dello stato scientifico
+docs/esempio_heatmap_giocatori/   ESEMPIO ragionato ed eseguibile: le POSIZIONI
+                 di un giocatore dal dato alla lettura (12/08/2026, richiesta
+                 utente). Non e' una fase: analisi descrittiva, niente riga in
+                 runs.jsonl. Cinque capitoli -- convenzioni e trappole, come si
+                 fa, come si legge, come si disegna, come si consegna -- piu'
+                 heatmap_giocatore.py, da cui esce ogni numero citato.
+                 ⚠️ La trappola che vale da sola la lettura: nello STESSO bundle
+                 la colonna `X` ha due convenzioni OPPOSTE -- nella heatmap e'
+                 la posizione (0 = porta propria), nei tiri e' la DISTANZA dalla
+                 porta avversaria (0 = linea di porta). Mescolarle mette i tiri
+                 nella meta' campo sbagliata e nessun controllo di intervallo se
+                 ne accorge; il dischetto del rigore (198 su 198 a X 11,5 · Y
+                 50,0 sulle due leghe) e l'ordine dei ruoli sono i due controlli
+                 che lo prendono. Vale per le sole leghe con la raccolta a tre
+                 fonti: Serie A e Premier 2025-26
 docs/CHIUSURA_FASE_1.md   il piano per dichiarare DAVVERO conclusa la Fase 1
                  (10/08/2026, richiesta utente su una sua bozza): perimetro
                  congelato, i SEI stati con cui una casella si svuota (fra cui
@@ -637,7 +652,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.608 verdi all'11/08/2026; il ROSSO su
+tests/           test unitari (1.661 verdi al 12/08/2026; il ROSSO su
                  test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_
                  dalla_convenzione_di_smarkets e' stato chiuso il 10/08 -- non
                  era un join rotto ma una copertura mancante, e la guardia

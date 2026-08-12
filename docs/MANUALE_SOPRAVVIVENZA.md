@@ -279,6 +279,16 @@ somma dei mercati esclusivi ~100-104% invece di 108-115%.
 
 ## 2 · Strumenti della sessione: limiti misurati
 
+- ⚠️ **Il container parte SENZA le dipendenze del progetto** (misurato il
+  12/08/2026): mancano `pandas`, `numpy`, `scipy`, `matplotlib`, `pytest`,
+  `bs4`, `openpyxl`. Conseguenza da conoscere prima di allarmarsi: lanciando la
+  suite così com'è si ottengono **15 rossi che NON sono rossi** — 9 errori di
+  raccolta da `ModuleNotFoundError: bs4` (via `src/data/wikipedia_careers.py`) e
+  6 fallimenti da `openpyxl` mancante (i test che leggono un `.xlsx`). Con
+  `pip install pandas numpy scipy matplotlib pytest bs4 openpyxl` la suite è
+  **verde, 1.661 passati**. Non diagnosticare un rosso del progetto prima di
+  aver installato le dipendenze: sono due minuti e cambiano il verdetto.
+  La suite intera gira in **~9 minuti**.
 - **MCP Hugging Face**: autenticato (utente BTConomista); `hf_fs cat` legge
   max **80 KB per chiamata** (un file da 32 MB = ~400 chiamate: impraticabile);
   `hub_repo_search`/`hub_repo_details` funzionano; `hf_hub_query` naviga solo
