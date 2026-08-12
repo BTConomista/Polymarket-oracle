@@ -305,6 +305,7 @@ def test_discordanze_esclude_le_false_per_default(sq):
 @pytest.mark.parametrize("lega,snapshot", [
     ("serie_a", "data/serie_a_matches.csv"),
     ("premier_league", "data/premier_league_matches.csv"),
+    ("la_liga", "data/la_liga_matches.csv"),
 ])
 def test_ogni_lega_aggancia_le_sue_760_squadra_partita(lega, snapshot):
     """760/760 su entrambe. E' la misura che dice se la raccolta e' usabile.
@@ -323,7 +324,7 @@ def test_ogni_lega_aggancia_le_sue_760_squadra_partita(lega, snapshot):
     assert nostre == attese, f"{lega}: {len(attese - nostre)} squadra-partita non agganciate"
 
 
-@pytest.mark.parametrize("lega", ["serie_a", "premier_league"])
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league", "la_liga"])
 def test_ogni_lega_ha_lid_partita_misto_rinominato(lega):
     """Il difetto che SI ripete: presente su entrambe le leghe.
 
@@ -338,7 +339,7 @@ def test_ogni_lega_ha_lid_partita_misto_rinominato(lega):
         assert g[col].nunique() == 380
 
 
-def test_le_righe_orfane_NON_si_ripetono_in_premier():
+def test_le_righe_orfane_NON_si_ripetono_fuori_dalla_serie_a():
     """Il difetto che NON si ripete, ed e' un'informazione.
 
     In Serie A la fusione «Verona»/«Hellas Verona» lascia 2 righe orfane; in
@@ -346,10 +347,11 @@ def test_le_righe_orfane_NON_si_ripetono_in_premier():
     Quindi non e' un difetto sistematico dell'export ma un incidente su un
     nome: la riparazione resta per-lega e non va promossa a regola.
     """
-    assert "premier_league" not in tf.ORFANE
-    s = tf.squadre("premier_league", periodo="Totale")
-    assert len(s) == 760
-    assert s["Avversario"].notna().all()
+    for lega in ("premier_league", "la_liga"):
+        assert lega not in tf.ORFANE
+        s = tf.squadre(lega, periodo="Totale")
+        assert len(s) == 760, f"{lega}: {len(s)} righe invece di 760"
+        assert s["Avversario"].notna().all()
 
 
 def test_meteo_e_vuota_in_serie_a_e_piena_in_premier():
@@ -375,8 +377,9 @@ def test_lallineamento_dei_gol_e_una_regola_non_una_lista():
     sarebbe girata sulla Premier correggendo ZERO righe e senza dire niente —
     un silenzio indistinguibile da «qui non ci sono difetti».
     """
-    assert int(tf.giocatori("serie_a")["gol_corretto_da_noi"].sum()) == 2
-    assert int(tf.giocatori("premier_league")["gol_corretto_da_noi"].sum()) == 3
+    attesi = {"serie_a": 2, "premier_league": 3, "la_liga": 4}
+    for lega, n in attesi.items():
+        assert int(tf.giocatori(lega)["gol_corretto_da_noi"].sum()) == n, lega
 
 
 def test_un_file_non_ancora_consegnato_da_un_errore_che_lo_dice():
@@ -390,7 +393,7 @@ def test_un_file_non_ancora_consegnato_da_un_errore_che_lo_dice():
         tf.heatmap("bundesliga")
 
 
-@pytest.mark.parametrize("lega,righe", [("serie_a", 556996), ("premier_league", 573203)])
+@pytest.mark.parametrize("lega,righe", [("serie_a", 556996), ("premier_league", 573203), ("la_liga", 570768)])
 def test_la_heatmap_c_e_su_entrambe_le_leghe_e_aggancia(lega, righe):
     """380 partite per lega, schema identico, e `Tocchi` vuota su ENTRAMBE.
 
@@ -402,3 +405,32 @@ def test_la_heatmap_c_e_su_entrambe_le_leghe_e_aggancia(lega, righe):
     assert len(h) == righe
     assert h["ID partita"].nunique() == 380
     assert h["Tocchi"].isna().all()
+
+
+def test_meteo_ha_TRE_stati_e_due_non_bastavano():
+    """0,0% · 0,3% · 98,4%: e' la terza lega che ha rotto la dicotomia.
+
+    Con Serie A (vuota) e Premier (piena) bastava un booleano. La Liga ha 2
+    righe su 760 — ne' l'una ne' l'altra — e lo stato di mezzo e' il piu'
+    insidioso dei tre: un `notna().any()` risponde «la colonna funziona» e chi
+    ci costruisce sopra lavora su 2 righe credendone 760. E' finto pieno (R6)
+    in miniatura, e una colonna a zero almeno si dichiara da sola.
+    """
+    stati = {L: tf.copertura("Meteo (WhoScored)", L)["stato"]
+             for L in ("serie_a", "la_liga", "premier_league")}
+    assert stati == {"serie_a": "vuota", "la_liga": "quasi vuota",
+                     "premier_league": "piena"}, stati
+    # E la conseguenza operativa: la Liga NON compare fra le "vuote", perche'
+    # non lo e'. Dichiararla tale sarebbe falso quanto ignorarla.
+    assert "squadre" in tf.colonne_vuote("serie_a")
+    assert "squadre" not in tf.colonne_vuote("la_liga")
+
+
+def test_tocchi_e_vuota_su_TUTTE_e_tre_e_quindi_e_del_formato():
+    """La distinzione che con una lega sola non si poteva fare.
+
+    Tre leghe indipendenti allo 0,0% dicono che `Tocchi` e' una colonna del
+    FORMATO mai riempita, non l'incidente di una consegna.
+    """
+    for lega in ("serie_a", "premier_league", "la_liga"):
+        assert tf.copertura("Tocchi", lega, blocco="heatmap")["stato"] == "vuota"

@@ -1,0 +1,90 @@
+{
+ "lega": "la_liga",
+ "stagione": "2526",
+ "fonti": [
+  "SofaScore",
+  "WhoScored (Opta)",
+  "Understat"
+ ],
+ "consegnata": "2026-08-11",
+ "partite": 380,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 123834,
+   "sha256": "0bff38f7afeec41c652e200908120cdb02ab75a2e4a064ff20a7f2193f44dca8"
+  },
+  "giocatori.csv.gz": {
+   "righe": 18329,
+   "sha256": "3f240dd438a8433c19fa9a4a5db9f0c4af6587d596df0f993e59ab767717a49e"
+  },
+  "heatmap.csv.gz": {
+   "righe": 570768,
+   "sha256": "fed495e009088c06f77c56b788018dc11868ac8196fd80aca81f3ecbdbbe5037"
+  },
+  "legenda.csv.gz": {
+   "righe": 543,
+   "sha256": "fcfafdb9698c138f01dc66708e4f03cb2223e59185ccc4c2ff10b2264ad30253"
+  },
+  "squadre.csv.gz": {
+   "righe": 2340,
+   "sha256": "5c9a70755970e2f56e3a527d1eb7d91fdea0925c757841070eb8120635a77bee"
+  }
+ },
+ "manca_ancora": [
+  "eventi_opta — l'utente lo consegna in DUE file, annunciati"
+ ],
+ "schema": "IDENTICO alla Serie A su tutti e cinque i file consegnati (la Premier aveva 3 colonne in piu')",
+ "aggancio_snapshot": {
+  "squadre": "760/760",
+  "giocatori": "760/760",
+  "heatmap": "760/760"
+ },
+ "generalizzazione": "il modulo ha retto SENZA modifiche al codice di lettura: 760/760 al primo colpo. L'unico intervento e' stato aggiungere lo stato «quasi vuota» per Meteo",
+ "difetti": {
+  "si_ripetono": [
+   {
+    "quale": "ID partita misto",
+    "valori_distinti": 538,
+    "attesi": 380,
+    "confronto": "Serie A 436 · Premier 384 · Liga 538 — il peggiore delle tre"
+   },
+   {
+    "quale": "Understat perde gol",
+    "righe": 4,
+    "confronto": "Serie A 2 · Premier 3 · Liga 4",
+    "direzione": "sempre +1 a SofaScore, autogol sempre 0 — 9 righe su 9 nelle tre leghe"
+   },
+   {
+    "quale": "discordanza «possesso» falsa",
+    "righe": 760,
+    "nota": "760/760 su tutte e tre le leghe"
+   }
+  ],
+  "non_si_ripetono": [
+   {
+    "quale": "righe orfane della fusione",
+    "liga": 0,
+    "confronto": "Serie A 2 · Premier 0 · Liga 0"
+   },
+   {
+    "quale": "copertura Meteo",
+    "liga": "0,3% (2 righe su 760) = QUASI VUOTA",
+    "confronto": "Serie A 0,0% vuota · Premier 98,4% piena · Liga 0,3% quasi vuota",
+    "conseguenza": "tre stati, non due: da cui tre_fonti.copertura()"
+   }
+  ]
+ },
+ "discordanze": {
+  "squadra_vere": 27,
+  "dettaglio_squadra": "corner 22, falli 3, passaggi 2",
+  "giocatore": {
+   "minuti": 6608,
+   "passaggi chiave": 161,
+   "tiri": 102,
+   "passaggi totali": 90,
+   "gol": 4,
+   "assist": 7
+  }
+ },
+ "espanyol": "la raccolta scrive «Espanyol», TEAM_ALIASES lo porta a «Espanol» come il nostro snapshot: aggancia. ⚠️ NON confondere con il reperto dell'audit d'identita', che riguarda club_matching.Agganciatore e resta aperto"
+}

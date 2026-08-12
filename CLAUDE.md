@@ -472,7 +472,7 @@ data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
                  outright_snapshots/ (prezzi outright live, uno per giorno)
                  squad_value_2526_transfermarkt.csv (fonte secondaria, regola R2)
                  football.db (SQLite, rigenerabile, NON versionato)
-files/tre_fonti_{serie_a,premier_league}_2526/  DUE LEGHE 2025-26 DA TRE
+files/tre_fonti_{serie_a,premier_league,la_liga}_2526/  TRE LEGHE 2025-26 DA TRE
                  FONTI (SofaScore, Opta/WhoScored, Understat), 11/08/2026.
                  Portano cio' che il progetto non aveva: EVENT DATA (562.672 +
                  577.884 tocchi con X/Y, secondo e qualificatori), POSIZIONI
@@ -490,8 +490,14 @@ files/tre_fonti_{serie_a,premier_league}_2526/  DUE LEGHE 2025-26 DA TRE
                  persi da Understat (2 in Serie A, 3 in Premier, sempre nella
                  stessa direzione -> regola con tripwire, non lista di
                  eccezioni); NON si ripetono le righe orfane della fusione
-                 (2 in Serie A, 0 in Premier) e la colonna Meteo (0,0% in
-                 Serie A, 95,9% in Premier -> `colonne_vuote` e' per-lega)
+                 (2 in Serie A, 0 nelle altre due) e la colonna Meteo, che
+                 con la TERZA lega ha rotto la dicotomia: 0,0% Serie A (vuota),
+                 0,3% Liga (QUASI vuota, 2 righe su 760), 98,4% Premier
+                 (piena). Lo stato di mezzo e' il piu' insidioso -- un
+                 notna().any() risponde «funziona» su due righe -- e per questo
+                 c'e' `copertura()`, che torna lo STATO e non un booleano.
+                 ⚠️ Il modulo ha retto sulla terza lega SENZA modifiche al
+                 codice di lettura: 760/760 al primo colpo
 files/tre_fonti_serie_a_2526/  SERIE A 2025-26 DA TRE FONTI (SofaScore,
                  Opta/WhoScored, Understat), 11/08/2026. Porta cio' che il
                  progetto non aveva: EVENT DATA (562.672 tocchi con X/Y,

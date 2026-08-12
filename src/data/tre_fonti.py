@@ -1,90 +1,84 @@
-"""⚽ LA RACCOLTA A TRE FONTI — Serie A 2025-26 da SofaScore, Opta e Understat.
+"""⚽ LE RACCOLTE A TRE FONTI — 2025-26 da SofaScore, Opta (WhoScored), Understat.
 
 `squadre()`, `giocatori()`, `eventi()`, `eventi_opta()`, `heatmap()` sono le
-funzioni da usare. Ognuna legge il file grezzo consegnato e ne restituisce una
-versione **corretta in lettura**: i file su disco restano identici a come sono
-arrivati (regola R3 — nessuna modifica a mano ai dati), le riparazioni vivono
-qui e sono quindi verificabili, ripetibili e reversibili.
+funzioni da usare. **Ognuna prende la LEGA come primo argomento**
+(`leghe_disponibili()` dice quali ci sono). Leggono il file grezzo consegnato e
+ne restituiscono una versione **corretta in lettura**: i file su disco restano
+identici a come sono arrivati (R3 — nessuna modifica a mano ai dati), le
+riparazioni vivono qui e sono quindi verificabili, ripetibili e reversibili.
 
-PERCHE' UNA RACCOLTA NUOVA E NON UN'ESTENSIONE DI QUELLE ESISTENTI. Porta tre
-cose che il progetto non aveva per un campionato:
+COSA PORTANO che il progetto non aveva per un campionato: **event data Opta**
+(ogni tocco con X/Y, secondo, qualificatori), **posizioni** (heatmap),
+**arbitro, stadio, spettatori, modulo**, **tracking fisico**, **momentum**,
+**classifica**. E' un salto di granularita', non piu' dati della stessa forma —
+vale il principio §1.10 del CLAUDE.md, per cui un esito negativo misurato su
+dati di squadra non dice nulla su dati piu' fini.
 
-* **event data Opta** (`eventi_opta`, 562.672 righe): ogni tocco con coordinate
-  X/Y, il secondo, i qualificatori e i tipi derivati. E' un salto di
-  granularita', non piu' dati della stessa forma — vale il principio §1.10 del
-  CLAUDE.md, per cui un esito negativo misurato su dati di squadra non dice
-  nulla su dati piu' fini;
-* **posizioni** (`heatmap`, 556.996 righe): dove ogni giocatore ha toccato;
-* **arbitro, stadio, spettatori, modulo** per partita di campionato: li
-  avevamo solo per le coppe.
+════════════════════════════════════════════════════════════════════════════
+LE DUE FAMIGLIE DI DIFETTI, e perche' la distinzione e' il cuore del modulo
+════════════════════════════════════════════════════════════════════════════
 
-LE CINQUE RIPARAZIONI APPLICATE IN LETTURA, e perche' ognuna.
+Con una lega sola non si puo' sapere se un difetto e' **del formato** o un
+**incidente di quella consegna**. Con tre si misura, e il risultato divide le
+riparazioni in due:
 
-1. **«Verona» contro «Hellas Verona»** (`squadre`, `giocatori`). Understat
-   scrive `Verona`, SofaScore e WhoScored `Hellas Verona`: la fusione a monte
-   ha lasciato **2 righe orfane** senza `Avversario`, con le sole colonne
-   Understat. E' il caso che il §5 del CLAUDE.md porta come esempio storico
-   (`TEAM_ALIASES`, «un join che indovina e' peggio di un join che dichiara di
-   non sapere»). Il dato **non e' perso**: la partita esiste gia', completa,
-   sotto `Hellas Verona` — le 2 righe sono un duplicato PARZIALE. Quindi si
-   scartano, non si fondono: fondere significherebbe scegliere quale valore
-   tenere dove le due grafie divergono, e non ce n'e' bisogno.
-   Effetto: 762 righe «Totale» tornano le **760** attese (380 partite × 2).
+A · SI RIPETONO SU TUTTE → riparazione generale
+  1. **`ID partita` impila tre numerazioni.** Il file ha QUATTRO colonne con
+     quel nome: le tre per-fonte hanno 380 valori distinti ciascuna e sono
+     sane; la quarta ne ha 436 (Serie A), 384 (Premier), 538 (Liga) — perche'
+     mescola SofaScore ~14M, WhoScored ~1,9M e Understat ~30k. Un join su
+     quella colonna appaia partite diverse **senza dare errore**: finto pieno
+     (R6). Viene **rinominata** `ID partita (misto, NON usare)`, non
+     cancellata: una colonna sparita si ri-scopre leggendo il grezzo, e si
+     ri-usa.
+  2. **Understat perde gol.** 2 righe in Serie A, 3 in Premier, 4 in Liga.
+     ⚠️ L'ipotesi ovvia — «convenzione sugli autogol» — e' **FALSA**, ed e'
+     stata verificata invece che assunta: `Autogol` vale 0 su entrambe le
+     fonti, gli eventi danno `Gol / regular` con un `Tiro` e uno `scoreChange`
+     allo stesso minuto, e lo snapshot football-data conferma i punteggi.
+     La DIREZIONE e' sempre la stessa (+1 a SofaScore su 9 righe su 9), ed e'
+     per questo che `_allinea_gol` e' una **regola col suo tripwire** e non
+     una lista di eccezioni — vedi la sua docstring.
+  3. **La discordanza «possesso» e' un FALSO POSITIVO.** Il file la marca su
+     760 righe su 760 in tutte e tre le leghe: `Ball possession` (SofaScore)
+     e' una percentuale, `possession` (WhoScored) un conteggio. Non possono
+     coincidere mai. Vedi `discordanze()`.
 
-2. **La colonna `ID partita` avvelenata** (`giocatori`). Il file ha QUATTRO
-   colonne `ID partita`: le tre per-fonte hanno 380 valori distinti ciascuna e
-   sono sane; la quarta, senza suffisso, ne ha **436** perche' impila tre
-   sistemi di numerazione incompatibili (SofaScore ~14M, WhoScored ~1,9M,
-   Understat ~30k). Un join su quella colonna appaierebbe partite diverse
-   **senza dare errore**: e' il finto pieno della regola R6. Viene **rinominata
-   `ID partita (misto, NON usare)`** invece che cancellata — cancellarla
-   nasconderebbe che nel file c'e', e la prossima sessione la ri-troverebbe
-   leggendo il grezzo.
+B · NON SI RIPETONO → riparazione per-lega
+  4. **Le righe orfane della fusione.** 2 in Serie A («Verona» di Understat
+     contro «Hellas Verona» delle altre due, senza `Avversario`), **zero** in
+     Premier e Liga. Era un incidente su un nome, non un difetto sistematico:
+     resta in `ORFANE`, per-lega, e non va promossa a regola. Il dato non era
+     perso — la partita esisteva gia' completa sotto l'altra grafia.
+  5. **Le colonne vuote.** `Meteo (WhoScored)` ha **tre** stati misurati:
+     0,0% in Serie A, **0,3% in Liga** (2 righe su 760), 98,4% in Premier.
+     Non e' un difetto dell'export ma una copertura diversa della fonte.
+     Da cui `colonne_vuote(lega)` e soprattutto `copertura()`, che distingue
+     *vuota* / *quasi vuota* / *piena*: lo stato di mezzo e' il piu' insidioso,
+     perche' un `notna().any()` risponde «funziona» su due righe.
 
-3. **Le colonne dichiarate e VUOTE.** `Meteo (WhoScored)` e' piena allo **0,0%**
-   e `Tocchi` (in `heatmap`) al **100% NaN**. Non sono un difetto se dichiarate,
-   ma nessuno deve costruirci sopra credendole disponibili: `colonne_vuote(lega)`
-   le elenca, e i loader le lasciano dove sono con un avviso nel manifesto.
+════════════════════════════════════════════════════════════════════════════
 
-4. **La discordanza sui GOL: Understat perde 2 gol veri.** Il file dichiara da
-   solo 6.616 righe discordanti (34,6%) nella colonna `Discordanze`: 6.597 sui
-   minuti, 44 sui tiri, **2 sui gol**. I gol sono il bersaglio del modello,
-   quindi sono stati istruiti uno per uno (R5):
+CHI VINCE quando due fonti divergono, dichiarato e non implicito:
 
-       2026-02-15  Nikola Moro    (Bologna)   SofaScore 1 · Understat 0
-       2025-12-27  Pierre Kalulu  (Juventus)  SofaScore 1 · Understat 0
-
-   ⚠️ L'ipotesi ovvia — «sara' una convenzione sugli autogol» — e' **FALSA**, ed
-   e' stata verificata invece che assunta: `Autogol` vale 0 su entrambe le
-   fonti, gli eventi registrano `Gol / regular` con un `Tiro` e uno
-   `scoreChange` allo stesso minuto, e il nostro snapshot football-data
-   conferma il punteggio (Torino 1-2 Bologna, Pisa 0-2 Juventus). Quattro
-   segnali indipendenti concordi: **e' una lacuna di Understat**, non una
-   convenzione. Da cui la regola 5.
-
-5. **Chi vince quando due fonti divergono**, dichiarato e non implicito:
-
-   | grandezza | fonte preferita | perche' |
+   | grandezza | fonte     | perche' |
    |---|---|---|
-   | gol | **SofaScore** | verificata su 4 fonti, Understat ne perde 2 |
-   | minuti | **SofaScore** | Understat differisce di ±1-4' su 6.597 righe: e' la convenzione sul minuto del cambio, non un errore. Si sceglie per coerenza, non per qualita' |
-   | xG | **entrambe, separate** | sono due modelli diversi (971,4 contro 1077,5 di somma stagionale): fonderle non ha senso, e la differenza e' informazione |
+   | gol       | SofaScore | verificata su 4 fonti, Understat ne perde |
+   | minuti    | SofaScore | Understat differisce di ±1-4' su migliaia di righe: e' la convenzione sul minuto del cambio, non un errore. Si sceglie per coerenza, non per qualita' |
+   | xG        | **entrambe, separate** | sono due MODELLI diversi (971,4 contro 1077,5 di somma stagionale in Serie A): fonderle non ha senso, e la differenza e' informazione. `preferita('xG')` ALZA apposta |
 
-   `preferita()` restituisce la colonna da usare; le altre restano nel frame.
+⚠️ DUE COSE CHE NON SI RIPARANO, e vanno sapute.
 
-⚠️ TRE COSE CHE QUESTA RACCOLTA **NON** RIPARA, e vanno sapute.
-
-* **La legenda e' incompleta.** Dichiara 198 colonne per `squadre`, il file ne
-  ha **214**; e non descrive affatto le 34 colonne di `eventi_opta`. Le 16
-  colonne non documentate sono elencate in `colonne_non_documentate()`.
 * **`Spettatori` e' `post`, non `pre`.** Sta accanto a `Stadio` e `Capienza`,
   che sono anagrafici e noti prima del fischio, ma si conosce solo a partita
-  giocata: usarla come feature sarebbe look-ahead (R8). `disponibilita()` da'
-  la classificazione colonna per colonna.
-* **`eventi` non e' una tabella, e' un contenitore.** Sette categorie di riga
-  con schemi diversi nello stesso file (Cronaca, Evento, Tiro, Momentum,
-  Quota, Serie, Migliore in campo). `eventi(categoria=...)` ne isola una;
-  leggerlo tutto insieme e' quasi sempre un errore.
+  giocata: usarla come feature sarebbe look-ahead (R8). Vedi `disponibilita()`.
+* **`eventi` non e' una tabella, e' un contenitore.** Sette categorie con
+  schemi diversi nello stesso file, e la **grana cambia con la categoria**:
+  cinque su sette descrivono la PARTITA e hanno `Squadra` vuota per
+  costruzione. Agganciarle per (data, squadra) produce 96.510 righe «orfane»
+  che orfane non sono. Usa `chiave_di(categoria)`.
+  ⚠️ `categoria` e' solo-nominale: prima della seconda lega era il primo
+  argomento posizionale, che ora e' la lega.
 """
 from __future__ import annotations
 
@@ -133,6 +127,12 @@ def leghe_disponibili() -> list[str]:
 COLONNE_VUOTE: dict[str, dict[str, tuple[str, ...]]] = {
     "serie_a": {"squadre": ("Meteo (WhoScored)",), "heatmap": ("Tocchi",)},
     "premier_league": {"heatmap": ("Tocchi",)},
+    # ⚠️ In Liga `Meteo` NON e' qui perche' non e' vuota: e' **quasi** vuota,
+    # 2 righe su 760 (0,3%). Lo stato di mezzo si chiede a `copertura()`, che
+    # esiste apposta — vedi la sua docstring per perche' due stati non
+    # bastavano. `Tocchi` invece e' a zero su tutte e tre le leghe: quella e'
+    # del formato.
+    "la_liga": {"heatmap": ("Tocchi",)},
 }
 
 # La colonna che sembra un identificatore di partita e impila tre numerazioni.
@@ -478,12 +478,56 @@ def colonne_vuote(lega: str = LEGA_DEFAULT) -> dict[str, tuple[str, ...]]:
     """Le colonne che esistono nello schema e non contengono nulla, PER LEGA.
 
     Non e' una costante del formato: `Meteo (WhoScored)` e' vuota allo 0,0% in
-    Serie A e piena al **95,9%** in Premier. Trattarla come costante avrebbe
+    Serie A e piena al **98,4%** in Premier. Trattarla come costante avrebbe
     fatto scartare un dato buono su una lega per un buco che stava sull'altra —
-    ed e' il motivo per cui questa funzione prende `lega` invece di essere un
-    dizionario globale.
+    ed e' il motivo per cui questa funzione prende `lega`.
+
+    ⚠️ Elenca solo le colonne **davvero** a zero. Per lo stato intermedio —
+    quello pericoloso — usa `copertura()`.
     """
     return dict(COLONNE_VUOTE.get(lega, {}))
+
+
+#: Sotto questa quota una colonna e' «quasi vuota»: ci sono valori, ma troppo
+#: pochi per costruirci sopra. Non e' una soglia statistica, e' il confine
+#: oltre il quale un `notna().any()` smette di essere una risposta utile.
+SOGLIA_QUASI_VUOTA = 0.05
+
+
+def copertura(colonna: str, lega: str = LEGA_DEFAULT, *, blocco: str = "squadre") -> dict:
+    """Quanto e' piena una colonna, e in quale dei TRE stati si trova.
+
+    ⚠️ Nasce dalla terza lega, e dal fatto che due stati non bastavano.
+    `Meteo (WhoScored)` misurata sulle tre raccolte:
+
+        Serie A          0,0%    (0 righe su 760)   -> vuota
+        La Liga          0,3%    (2 righe su 760)   -> QUASI VUOTA
+        Premier         98,4%  (748 righe su 760)   -> piena
+
+    Lo stato di mezzo e' il piu' insidioso dei tre, ed e' una forma di finto
+    pieno (R6): un `notna().any()` risponde «si', la colonna funziona», e chi
+    ci costruisce sopra lavora su 2 righe credendone 760. Una colonna a zero
+    almeno si dichiara da sola.
+
+    Restituisce lo stato invece di un booleano proprio per non far collassare
+    di nuovo tre casi in due.
+    """
+    frame = {"squadre": lambda: squadre(lega, solo_partite=False),
+             "giocatori": lambda: giocatori(lega, livello=None),
+             "heatmap": lambda: heatmap(lega),
+             "eventi": lambda: eventi(lega)}[blocco]()
+    if colonna not in frame.columns:
+        raise KeyError(f"{colonna!r} non e' in {blocco} di {lega}")
+    quota = float(frame[colonna].notna().mean())
+    if quota == 0.0:
+        stato = "vuota"
+    elif quota < SOGLIA_QUASI_VUOTA:
+        stato = "quasi vuota"
+    else:
+        stato = "piena"
+    return {"colonna": colonna, "lega": lega, "blocco": blocco,
+            "quota": quota, "righe_piene": int(frame[colonna].notna().sum()),
+            "righe": len(frame), "stato": stato}
 
 
 #: Il nome con cui la legenda v2 chiama ciascun file della raccolta.
