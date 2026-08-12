@@ -479,3 +479,56 @@ def test_i_file_dei_gemelli_finiscono_dentro_la_finestra(tmp_path):
     letti = cr.carica(tmp_path, da)
     assert len(letti) == 3, [d["_file"] for d in letti]
     assert {d["_quando"].hour for d in letti} == {9, 10, 13}
+
+
+# --------------------------------------------------------------------------
+# A-bis · LA FRESCHEZZA DEGLI OUTRIGHT (Fase 153)
+# --------------------------------------------------------------------------
+
+def _archivio_outright(tmp_path, giorni_fa, adesso):
+    """Una cartella outright con un solo snapshot, vecchio di N giorni."""
+    cart = tmp_path / "outright_snapshots"
+    cart.mkdir(parents=True, exist_ok=True)
+    giorno = (adesso - dt.timedelta(days=giorni_fa)).date()
+    (cart / f"{giorno}.json").write_text("{}")
+    # rumore che NON deve confondere il conto: non sono snapshot
+    (cart / "README.md").write_text("x")
+    (cart / "history.csv").write_text("x")
+    return cart
+
+
+def test_outright_fermi_da_troppo_suonano(monkeypatch, tmp_path):
+    """Il caso vero: il 12/08/2026 l'ultimo snapshot era del 26 luglio,
+    DICIOTTO giorni prima, con la stagione che apriva tre giorni dopo. Il
+    guardiano taceva perche' quel collettore non aveva un workflow — e un
+    collettore che non esiste non fa scattare nessun allarme sulla propria
+    assenza."""
+    adesso = dt.datetime(2026, 8, 12, 17, tzinfo=dt.timezone.utc)
+    monkeypatch.setattr(cr, "OUTRIGHT", _archivio_outright(tmp_path, 18, adesso))
+    r = cr.controlla(adesso=adesso)
+    assert any(p.startswith("A-bis)") for p in r["problemi"]), r["problemi"]
+    assert "outright" in r["riparabili"]
+    # 18,7 e non 18: lo snapshot porta la data, quindi vale mezzanotte,
+    # e "adesso" sono le 17:00 di diciotto giorni dopo.
+    assert r["eta_outright_giorni"] == 18.7
+
+
+def test_un_giorno_saltato_non_suona(monkeypatch, tmp_path):
+    """Il giro e' giornaliero e il cron slitta di 30-40 minuti: una soglia a
+    24h suonerebbe per il ritardo invece che per il guasto. Gli outright si
+    muovono in settimane — un giorno saltato e' rumore."""
+    adesso = dt.datetime(2026, 8, 12, 17, tzinfo=dt.timezone.utc)
+    monkeypatch.setattr(cr, "OUTRIGHT", _archivio_outright(tmp_path, 1, adesso))
+    r = cr.controlla(adesso=adesso)
+    assert not any(p.startswith("A-bis)") for p in r["problemi"]), r["problemi"]
+
+
+def test_cartella_outright_vuota_suona(monkeypatch, tmp_path):
+    """«Nessuno snapshot» e «snapshot vecchissimo» sono lo stesso guasto e
+    devono dare lo stesso allarme: senza questo, una cartella mai creata
+    passerebbe per sana."""
+    vuota = tmp_path / "mai_creata"
+    monkeypatch.setattr(cr, "OUTRIGHT", vuota)
+    r = cr.controlla(adesso=dt.datetime(2026, 8, 12, 17, tzinfo=dt.timezone.utc))
+    assert any(p.startswith("A-bis)") for p in r["problemi"])
+    assert r["eta_outright_giorni"] is None

@@ -19171,3 +19171,91 @@ perché i mercati si perdono **sempre a lotti interi**: non esiste un mezzo
 lotto perso. Il numero da riportare è quello delle **richieste**, perché è
 quello che l'API vede e limita; dire «118 mercati persi» suona dieci volte
 peggio di «sei richieste andate male in tre giorni».
+
+---
+
+## Fase 153 — Gli outright erano fermi da diciotto giorni, e nessuno poteva accorgersene
+
+**Obiettivo.** Rispondere all'utente sull'inventario dei dati raccolti — e
+scoprire, contandoli, che una famiglia intera aveva smesso di arrivare.
+
+**Il fatto.** Il 12/08/2026 l'ultimo file di `data/outright_snapshots/` era
+del **26 luglio**: diciotto giorni prima, con la stagione che apriva tre
+giorni dopo. Il cane da guardia della Fase 144 non aveva detto niente, e
+**non stava sbagliando**: controlla il lungo raggio, la chiusura e l'in-play,
+cioè i tre collettori che esistevano quando è stato scritto. Gli outright non
+avevano un workflow — e un collettore che non esiste non fa scattare nessun
+allarme sulla propria assenza.
+
+**Perché è grave e non è un dettaglio.** Il limite più duro del simulatore di
+stagione (Fase 89) è che **non esistono quote outright storiche**: si può
+dimostrare «battiamo le baseline», non «battiamo il mercato». All'indietro non
+si rimedia; in avanti sì, congelando i prezzi giorno per giorno — ed è
+esattamente per questo che `scripts/archive_outrights.py` era stato scritto
+alla Fase 97. Poi nessuno l'aveva automatizzato, e la finestra che stavamo
+perdendo è quella che **si apre una volta l'anno**: i prezzi di pre-stagione,
+quelli in cui il mercato non ha ancora visto giocare nessuno.
+
+**Scelta.** Tre cose, in quest'ordine:
+1. **snapshot preso subito**, prima di scrivere qualunque riga di codice —
+   `data/outright_snapshots/2026-08-12.json`, perché il 12 agosto scadeva
+   quella sera;
+2. **`.github/workflows/outright.yml`**, giro giornaliero alle 07:41 UTC
+   (dopo la raccolta giornaliera delle 06:23), con lo stesso `if: !cancelled()`
+   della Fase 141 sul passo di commit: se una delle due borse risponde e
+   l'altra no, il file di quella buona è già scritto e buttarlo via per
+   solidarietà con la fonte rotta sarebbe la lezione non imparata;
+3. **controllo A-bis nel guardiano** — soglia 48h — con la riparazione
+   corrispondente, sincrona e quindi verificabile come quella del lungo
+   raggio.
+
+**Risultato.** Lo snapshot del 12/08 c'è: **Smarkets** quota campione,
+retrocessione, top2/3/4/5/6, top-half e capocannoniere su tutte e 5 le leghe;
+**Polymarket** copre le 5 leghe ma **non quota affatto la retrocessione**. Fra
+i favoriti congelati oggi: Arsenal 39,6% (Premier, overround 1,011 — libro
+pieno e liquido) e Inter 50,5% in Serie A, quest'ultimo però **libro parziale**
+(solo offerte: è un tetto, non un prezzo) e va letto come tale.
+
+**Lezione, ed è generale.** Il guardiano sorveglia i collettori **che
+esistono**. Quando una famiglia di dati non ha un workflow, non ha nemmeno una
+guardia — e la sua assenza è indistinguibile dal silenzio di un periodo senza
+dati. Ogni volta che si aggiunge una fonte vanno aggiunte **due** cose, non
+una: il collettore e la sua guardia. Qui la seconda mancava da quindici fasi.
+
+### 📐 Il modello in dettaglio
+
+**(1) La soglia, e perché 48h e non 26.** Il controllo A (lungo raggio) usa 26
+ore = 24 del cron più il jitter di 30-40 minuti misurato. Per gli outright la
+soglia è **48**, ed è una scelta sul rapporto fra i due errori:
+
+```
+  falso allarme  = P(nessuno snapshot in ΔT | tutto funziona)
+  cecità         = quanto dura un guasto prima che lo si veda
+```
+
+Il giro è giornaliero come il lungo raggio, quindi il primo termine è lo
+stesso; è il **costo del secondo** a essere diverso. Una quota partita persa è
+persa per sempre (la partita si gioca e finisce); un prezzo outright si muove
+in **settimane**, quindi un giorno saltato non toglie quasi informazione alla
+serie. Con costi asimmetrici così, la soglia va spostata verso il lato che
+costa meno — e qui costa meno tacere un giorno.
+
+**(2) Perché lo snapshot è stato preso PRIMA del workflow.** Non è impazienza:
+è che le due cose hanno scadenze diverse. Il workflow raccoglie da domani in
+poi e domani esisterà comunque; il prezzo del 12 agosto esiste solo il 12
+agosto. Formalmente, il valore atteso di rimandare è
+
+```
+V(rimandare l'automazione di un giorno)  ≈ 0
+V(rimandare lo snapshot di un giorno)    = un giorno di traiettoria, perso
+```
+
+ed è lo stesso ragionamento con cui `newseason.md` §2 ordina il lavoro di
+inizio stagione. La regola operativa che ne segue: **quando trovi un
+collettore fermo, prima raccogli e poi ripara.**
+
+**(3) Cosa NON ripara la riparazione.** `ripara({"outright"})` congela i
+prezzi di oggi. I diciotto giorni fra il 26/07 e il 12/08 **non tornano**, e
+lo script non finge il contrario: è la stessa scelta della Fase 144 sulle
+chiusure perse, dove la riparazione è deliberatamente assente perché quel
+prezzo non esiste più.

@@ -31,6 +31,15 @@ COSA CONTROLLA (ogni controllo dichiara la sua tolleranza e il suo perche'):
      26 e non 24: il cron parte con 30-40 minuti di ritardo (misurato), e una
      soglia a 24 suonerebbe per il ritardo invece che per il guasto.
 
+  A-bis. FRESCHEZZA DEGLI OUTRIGHT -- l'ultimo snapshot di
+     `data/outright_snapshots/` non deve avere piu' di 48 ore. Aggiunto alla
+     Fase 153 dopo aver trovato l'archivio fermo da **diciotto giorni** a tre
+     giorni dall'apertura della stagione: nessuno se n'era accorto perche'
+     quel collettore non aveva un workflow, e **un collettore che non esiste
+     non fa scattare nessun allarme sulla propria assenza**. 48h e non 26: il
+     giro e' giornaliero e gli outright si muovono in settimane, quindi un
+     giorno saltato e' rumore.
+
   B. COPERTURA DI CHIUSURA -- ogni partita del perimetro che ha giocato nelle
      ultime 36 ore deve avere almeno un prezzo raccolto entro 3 ore dal calcio
      d'inizio. E' la misura che conta per il test prospettico della Fase 78:
@@ -78,12 +87,14 @@ from src.data import smarkets_archive as _archivio   # noqa: E402
 import gemelli_prova as _prova   # noqa: E402
 
 LIVE = ROOT / "data" / "smarkets_live"
+OUTRIGHT = ROOT / "data" / "outright_snapshots"
 
 # Le soglie, tutte qui e tutte motivate nel docstring.
 ORE_LUNGO_RAGGIO = 26      # freschezza dell'ultimo giro «tutte le esposte»
 ORE_FINESTRA = 36          # quanto indietro si guarda per le partite giocate
 ORE_CHIUSURA = 3           # «chiusura» = un prezzo entro N ore dal via
 QUOTA_INPLAY_MINIMA = 0.5  # sotto questa frazione di partite coperte, si segnala
+ORE_OUTRIGHT = 48          # eta' massima dell'ultimo snapshot outright (giro giornaliero)
 
 # ⚠️ QUANTO INDIETRO BISOGNA GUARDARE PERCHE' L'IN-PLAY SIA GIUDICABILE.
 #
@@ -227,6 +238,40 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
                 f"(soglia {ORE_LUNGO_RAGGIO}h): {ultimo['_file']}")
             riparabili.add("lungo_raggio")
 
+    # --- A-bis. freschezza degli OUTRIGHT (Fase 153) -------------------------
+    #
+    # ⚠️ PERCHE' E' STATO AGGIUNTO DOPO. Il 12/08/2026 l'ultimo snapshot
+    # outright era del **26 luglio**, diciotto giorni prima, con la stagione
+    # che apriva tre giorni dopo. Il guardiano non aveva detto niente, e non
+    # sbagliava: guardava le quote partita e l'in-play, cioe' **i collettori
+    # che esistevano quando e' stato scritto**. Gli outright non avevano un
+    # workflow, quindi non avevano nemmeno una guardia -- e un collettore che
+    # non esiste non fa mai scattare un allarme sul collettore mancante.
+    #
+    # La soglia e' 48h e non 26 come il lungo raggio: il giro e' giornaliero e
+    # gli outright si muovono lentamente (settimane, non ore), quindi un
+    # giorno saltato e' rumore. Due no.
+    # Qui il nome e' `AAAA-MM-GG.json` (un file al giorno, non un istante):
+    # la data si legge dallo `stem`, non con `istante_del_file`.
+    eta_outright = None
+    giorni = []
+    for f in (sorted(OUTRIGHT.glob("*.json")) if OUTRIGHT.exists() else []):
+        try:
+            giorni.append(dt.datetime.fromisoformat(f.stem + "T00:00:00+00:00"))
+        except ValueError:
+            continue
+    if giorni:
+        eta_outright = (adesso - max(giorni)).total_seconds() / 3600
+    if eta_outright is None or eta_outright > ORE_OUTRIGHT:
+        problemi.append(
+            "A-bis) outright: " + (
+                "nessuno snapshot" if eta_outright is None
+                else f"l'ultimo ha {eta_outright/24:.1f} giorni "
+                     f"(soglia {ORE_OUTRIGHT/24:.0f})") +
+            ". E' il mercato che non ha storico (Fase 89) e lo storico si "
+            "costruisce solo congelandolo giorno per giorno.")
+        riparabili.add("outright")
+
     # --- B. copertura di chiusura -------------------------------------------
     giocate = partite_giocate(prematch, adesso, ore)
     senza_chiusura, anticipi = [], []
@@ -334,6 +379,7 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
         "file_prematch": len(prematch),
         "file_inplay": len(inplay),
         "eta_lungo_raggio_ore": round(eta_lungo, 1) if eta_lungo is not None else None,
+        "eta_outright_giorni": round(eta_outright / 24, 1) if eta_outright is not None else None,
         "partite_giocate_in_finestra": len(giocate),
         "senza_chiusura": senza_chiusura,
         # Quanto prima del fischio e' arrivato l'ultimo prezzo. Non e' un
@@ -396,6 +442,22 @@ def ripara(riparabili: set | list) -> list[str]:
             fatto.append(f"lungo raggio rifatto, con riserve ({e})")
         except Exception as e:                        # noqa: BLE001
             fatto.append(f"lungo raggio NON riparato ({type(e).__name__}: {e})")
+
+    if "outright" in riparabili:
+        # Come il lungo raggio e per lo stesso motivo: il prezzo di OGGI e'
+        # ancora li' da prendere, quindi si prende adesso e il ri-controllo
+        # dira' se e' bastato. Cio' che NON si ripara e' il passato: i diciotto
+        # giorni fra il 26/07 e il 12/08 non tornano.
+        print("\n🔧 riparazione: congelo i prezzi outright di oggi")
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import archive_outrights as ao
+        try:
+            ao.main([])
+            fatto.append("outright archiviati")
+        except SystemExit as e:
+            fatto.append(f"outright archiviati, con riserve ({e})")
+        except Exception as e:                        # noqa: BLE001
+            fatto.append(f"outright NON archiviati ({type(e).__name__}: {e})")
 
     if "in_play" in riparabili:
         sys.path.insert(0, str(ROOT / "scripts"))
@@ -467,6 +529,8 @@ def main(argv=None) -> None:
     print(f"  file pre-partita: {r['file_prematch']} | in-play: {r['file_inplay']}")
     print(f"  ultimo lungo raggio: "
           + (f"{r['eta_lungo_raggio_ore']}h fa" if r["eta_lungo_raggio_ore"] is not None else "MAI"))
+    print("  ultimo snapshot outright: "
+          + (f"{r['eta_outright_giorni']} giorni fa" if r["eta_outright_giorni"] is not None else "MAI"))
     print(f"  partite giocate in finestra: {r['partite_giocate_in_finestra']} | "
           f"copertura in-play: {r['copertura_inplay']:.0%}")
     ac = r.get("anticipo_chiusura_min")

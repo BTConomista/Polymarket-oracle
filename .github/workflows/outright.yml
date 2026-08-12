@@ -1,0 +1,84 @@
+name: Snapshot OUTRIGHT di stagione (Fase 153)
+
+# PERCHE' ESISTE, e perche' arriva con tre settimane di ritardo.
+#
+# Il limite piu' duro del simulatore di stagione (Fase 89) e' che **non
+# esistono quote outright storiche**: si puo' dimostrare «battiamo le
+# baseline», non «battiamo il mercato». All'indietro non si rimedia; in avanti
+# si', congelando i prezzi ogni giorno -- ed e' esattamente cio' per cui
+# `scripts/archive_outrights.py` e' stato scritto alla Fase 97.
+#
+# Poi nessuno l'ha automatizzato. Misurato il 12/08/2026: l'ultimo snapshot in
+# `data/outright_snapshots/` era del **26 luglio**, diciotto giorni prima, e la
+# stagione apriva tre giorni dopo. Il cane da guardia non se n'era accorto
+# perche' guarda le quote partita e l'in-play, non gli outright: sorveglia i
+# collettori che esistono, e questo non esisteva.
+#
+# ⚠️ LA FINESTRA SI APRE UNA VOLTA L'ANNO. I prezzi di pre-stagione -- quelli
+# in cui il mercato non ha ancora visto giocare nessuno -- valgono finche' non
+# si gioca. Dopo il primo turno diventano un'altra cosa, e la traiettoria che
+# li lega non si ricostruisce (`newseason.md` §2, la stessa regola delle quote
+# partita).
+#
+# COSTO: zero. Un giro al giorno, due chiamate a due API pubbliche, pochi
+# secondi. SOLA LETTURA: il progetto non scommette (CLAUDE.md §5).
+
+on:
+  schedule:
+    # 07:41 UTC, dopo la raccolta giornaliera delle 06:23 e prima del grosso
+    # dei calci d'inizio. Minuto "storto" per non accodarsi al picco delle :00
+    # -- il cron di GitHub slitta comunque di 30-40 minuti (misurato).
+    - cron: '41 7 * * *'
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Una fonte sola (polymarket | smarkets), vuoto = entrambe'
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: outright
+  cancel-in-progress: false
+
+jobs:
+  archivia:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONUNBUFFERED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Congela i prezzi outright di oggi
+        run: |
+          python scripts/archive_outrights.py \
+            ${{ github.event.inputs.only && format('--only {0}', github.event.inputs.only) || '' }}
+
+      - name: Salva lo snapshot
+        # ANCHE SE IL PASSO PRIMA E' FALLITO: se una delle due fonti risponde e
+        # l'altra no, lo script esce rosso ma il file di quella buona e' gia'
+        # scritto. Buttarlo via per solidarieta' con la fonte rotta sarebbe la
+        # lezione della Fase 141 non imparata.
+        if: ${{ !cancelled() }}
+        run: |
+          if [ -z "$(git status --porcelain data/outright_snapshots/)" ]; then
+            # Un giorno gia' archiviato non riscrive niente: e' idempotente e
+            # non e' un guasto. Ma se succede due giorni di fila, o al primo
+            # giro dopo un cambio di stagione, vale la pena guardare.
+            echo "niente da committare (snapshot di oggi gia' presente)"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/outright_snapshots/
+          git commit -m "Outright: snapshot $(date -u +'%Y-%m-%d')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((5 * i))
+          done
+          echo "push fallito dopo 3 tentativi"; exit 1
