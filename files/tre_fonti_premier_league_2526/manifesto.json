@@ -1,0 +1,93 @@
+{
+ "lega": "premier_league",
+ "stagione": "2526",
+ "fonti": [
+  "SofaScore",
+  "WhoScored (Opta)",
+  "Understat"
+ ],
+ "consegnata": "2026-08-11",
+ "partite": 380,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 120156,
+   "sha256": "640f29ec7fee18adc2ac0636a99a770bbacda3048740e2ae51fcd0b34545944d"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 577884,
+   "sha256": "ef67185f50626bea7a7f19f7df242fe44892de4d8b3991946dac2bf733777e43"
+  },
+  "giocatori.csv.gz": {
+   "righe": 16400,
+   "sha256": "1a88c8ee48df94efbadf312b8d6bd0328257ff485b007d84cdbdee4a18b2cb36"
+  },
+  "heatmap.csv.gz": {
+   "righe": 573203,
+   "sha256": "91bed54c092a85726fd08fad43907fcb5f8001f4588099f482bc11886309bd14"
+  },
+  "legenda.csv.gz": {
+   "righe": 543,
+   "sha256": "3b9de82cd91a439ba5bb79e49dbc627decb5c468b95b6358ab2a117af3b68f02"
+  },
+  "squadre.csv.gz": {
+   "righe": 2340,
+   "sha256": "7ac0c7c9b51c53c4b21acf5dfe3a0054561551e4303e11b3138ae939c4daf3f3"
+  }
+ },
+ "aggancio_snapshot": {
+  "squadre": "760/760",
+  "giocatori": "760/760",
+  "heatmap": "760/760",
+  "eventi_opta": "760/760"
+ },
+ "schema_vs_serie_a": {
+  "esito": "SOVRAINSIEME: 3 colonne in piu', nessuna mancante",
+  "in_piu": [
+   "Average rating (SofaScore)",
+   "Km camminati (SofaScore)",
+   "Km di corsa lenta (SofaScore)"
+  ]
+ },
+ "difetti_che_SI_ripetono": [
+  {
+   "quale": "colonna ID partita mista",
+   "serie_a": "436 valori per 380 partite",
+   "premier": "384"
+  },
+  {
+   "quale": "discordanza 'possesso' falsa",
+   "nota": "760/760 righe, unita' diverse (percentuale contro conteggio)"
+  },
+  {
+   "quale": "Understat perde gol",
+   "serie_a": "2 righe",
+   "premier": "3 righe",
+   "direzione": "sempre +1 a SofaScore, autogol sempre 0"
+  }
+ ],
+ "difetti_che_NON_si_ripetono": [
+  {
+   "quale": "righe orfane della fusione",
+   "serie_a": "2 (Verona/Hellas Verona)",
+   "premier": "0 — 760/760 pulite"
+  },
+  {
+   "quale": "colonna Meteo vuota",
+   "serie_a": "0,0% piena",
+   "premier": "95,9% piena"
+  }
+ ],
+ "alias_aggiunto": "Wolverhampton -> Wolves in sources.TEAM_ALIASES: era l'unica delle 20 squadre a non agganciare",
+ "discordanze": {
+  "squadra_vere": 21,
+  "giocatore": 6089,
+  "dettaglio_squadra": "corner 11, falli 6, passaggi 4 (piu' 760 'possesso' che sono il falso positivo)"
+ },
+ "completa": "sei file su sei, heatmap inclusa (consegnata poco dopo gli altri cinque)",
+ "heatmap": {
+  "righe": 573203,
+  "partite": 380,
+  "giocatori": 534,
+  "nota": "schema identico alla Serie A; la colonna Tocchi e' vuota al 100% su ENTRAMBE le leghe — e' del formato, non della consegna"
+ }
+}

@@ -156,7 +156,7 @@ def test_le_categorie_di_partita_hanno_squadra_vuota():
     Non e' una convenzione nostra: e' come il file e' fatto. Inchiodarlo
     impedisce di "riparare" quei NaN in una sessione futura.
     """
-    e = tf.eventi("Momentum")
+    e = tf.eventi(categoria="Momentum")
     assert e["Squadra"].isna().all(), "Momentum descrive la partita, non una squadra"
 
 
@@ -188,7 +188,7 @@ def test_le_colonne_dichiarate_vuote_sono_ancora_vuote(sq):
     ⚠️ Se questo test diventa ROSSO la fonte ha cominciato a riempirle — ed e'
     una buona notizia che va scritta in README e manifesto, non ignorata.
     """
-    for col in tf.COLONNE_VUOTE["squadre"]:
+    for col in tf.colonne_vuote("serie_a").get("squadre", ()):
         assert sq[col].isna().all(), f"{col} non e' piu' vuota: aggiorna la documentazione"
 
 
@@ -297,3 +297,108 @@ def test_discordanze_esclude_le_false_per_default(sq):
     tutte = tf.discordanze_squadra(includi_false=True)
     assert len(vere) == 18, f"attese 18 discordanze vere, {len(vere)}"
     assert len(tutte) == 760
+
+
+# --------------------------------------------------------------------------
+# LA SECONDA LEGA — il momento in cui si vede se il modulo generalizza
+# --------------------------------------------------------------------------
+@pytest.mark.parametrize("lega,snapshot", [
+    ("serie_a", "data/serie_a_matches.csv"),
+    ("premier_league", "data/premier_league_matches.csv"),
+])
+def test_ogni_lega_aggancia_le_sue_760_squadra_partita(lega, snapshot):
+    """760/760 su entrambe. E' la misura che dice se la raccolta e' usabile.
+
+    Sulla Premier ha richiesto UN alias nuovo: SofaScore scrive
+    «Wolverhampton», il nostro snapshot «Wolves», e `TEAM_ALIASES` aveva solo
+    «Wolverhampton Wanderers». Le altre 19 squadre passavano gia'.
+    """
+    s = tf.squadre(lega, periodo="Totale")
+    snap = pd.read_csv(snapshot)
+    snap = snap[snap["season"].astype(str) == "2526"]
+    d = pd.to_datetime(snap["date"]).dt.date
+    attese = set(zip(d, snap["home_team"])) | set(zip(d, snap["away_team"]))
+    nostre = set(zip(pd.to_datetime(s["Data"]).dt.date, s["Squadra"]))
+    assert len(attese) == 760
+    assert nostre == attese, f"{lega}: {len(attese - nostre)} squadra-partita non agganciate"
+
+
+@pytest.mark.parametrize("lega", ["serie_a", "premier_league"])
+def test_ogni_lega_ha_lid_partita_misto_rinominato(lega):
+    """Il difetto che SI ripete: presente su entrambe le leghe.
+
+    Serie A 436 valori distinti per 380 partite, Premier 384. Diverso in
+    grandezza, identico in natura — a differenza delle righe orfane, che sono
+    un incidente della sola Serie A.
+    """
+    g = tf.giocatori(lega)
+    assert tf.ID_AVVELENATO not in g.columns
+    assert tf.ID_RINOMINATO in g.columns
+    for col in tf.ID_PARTITA_PER_FONTE.values():
+        assert g[col].nunique() == 380
+
+
+def test_le_righe_orfane_NON_si_ripetono_in_premier():
+    """Il difetto che NON si ripete, ed e' un'informazione.
+
+    In Serie A la fusione «Verona»/«Hellas Verona» lascia 2 righe orfane; in
+    Premier le righe «Totale» sono 760 esatte e nessuna e' senza avversario.
+    Quindi non e' un difetto sistematico dell'export ma un incidente su un
+    nome: la riparazione resta per-lega e non va promossa a regola.
+    """
+    assert "premier_league" not in tf.ORFANE
+    s = tf.squadre("premier_league", periodo="Totale")
+    assert len(s) == 760
+    assert s["Avversario"].notna().all()
+
+
+def test_meteo_e_vuota_in_serie_a_e_piena_in_premier():
+    """Il caso che ha imposto `colonne_vuote` PER LEGA invece che costante.
+
+    `Meteo (WhoScored)` e' allo 0,0% in Serie A e al 95,9% in Premier: non e'
+    un difetto dell'export ma una copertura diversa della fonte. Trattarla
+    come costante avrebbe fatto scartare un dato buono su una lega per un buco
+    che stava sull'altra.
+    """
+    sa = tf.squadre("serie_a", periodo="Totale")
+    pl = tf.squadre("premier_league", periodo="Totale")
+    assert sa["Meteo (WhoScored)"].isna().all()
+    assert pl["Meteo (WhoScored)"].notna().mean() > 0.9
+    assert "squadre" in tf.colonne_vuote("serie_a")
+    assert "squadre" not in tf.colonne_vuote("premier_league")
+
+
+def test_lallineamento_dei_gol_e_una_regola_non_una_lista():
+    """Su Premier corregge 3 righe che nessuno aveva elencato a mano.
+
+    E' il senso della riscrittura: una lista di eccezioni per (data,giocatore)
+    sarebbe girata sulla Premier correggendo ZERO righe e senza dire niente —
+    un silenzio indistinguibile da «qui non ci sono difetti».
+    """
+    assert int(tf.giocatori("serie_a")["gol_corretto_da_noi"].sum()) == 2
+    assert int(tf.giocatori("premier_league")["gol_corretto_da_noi"].sum()) == 3
+
+
+def test_un_file_non_ancora_consegnato_da_un_errore_che_lo_dice():
+    """Le consegne arrivano a pezzi: l'errore deve dire QUALE pezzo manca.
+
+    Un FileNotFoundError generico manderebbe a cercare un bug dove c'e' solo un
+    file che deve ancora arrivare. La Premier e' stata senza `heatmap` per
+    un'ora, ed e' il caso che ha imposto il messaggio esplicito.
+    """
+    with pytest.raises(FileNotFoundError, match="non ha ancora|nessuna raccolta"):
+        tf.heatmap("bundesliga")
+
+
+@pytest.mark.parametrize("lega,righe", [("serie_a", 556996), ("premier_league", 573203)])
+def test_la_heatmap_c_e_su_entrambe_le_leghe_e_aggancia(lega, righe):
+    """380 partite per lega, schema identico, e `Tocchi` vuota su ENTRAMBE.
+
+    Il fatto che `Tocchi` sia al 100% NaN su due leghe indipendenti dice che e'
+    una colonna del FORMATO mai riempita, non un incidente di una consegna —
+    distinzione che con una lega sola non si poteva fare.
+    """
+    h = tf.heatmap(lega)
+    assert len(h) == righe
+    assert h["ID partita"].nunique() == 380
+    assert h["Tocchi"].isna().all()

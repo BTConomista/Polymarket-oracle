@@ -43,7 +43,7 @@ LE CINQUE RIPARAZIONI APPLICATE IN LETTURA, e perche' ognuna.
 
 3. **Le colonne dichiarate e VUOTE.** `Meteo (WhoScored)` e' piena allo **0,0%**
    e `Tocchi` (in `heatmap`) al **100% NaN**. Non sono un difetto se dichiarate,
-   ma nessuno deve costruirci sopra credendole disponibili: `colonne_vuote()`
+   ma nessuno deve costruirci sopra credendole disponibili: `colonne_vuote(lega)`
    le elenca, e i loader le lasciano dove sono con un avviso nel manifesto.
 
 4. **La discordanza sui GOL: Understat perde 2 gol veri.** Il file dichiara da
@@ -97,19 +97,42 @@ from .sources import TEAM_ALIASES
 
 log = logging.getLogger(__name__)
 
-RACCOLTA = Path(__file__).resolve().parents[2] / "files" / "tre_fonti_serie_a_2526"
+FILES = Path(__file__).resolve().parents[2] / "files"
 
-LEGA = "serie_a"
 STAGIONE = "2526"
+LEGA_DEFAULT = "serie_a"
 
 # Le tre fonti fuse a monte. L'ordine e' quello di preferenza dichiarato in §5.
 FONTI = ("SofaScore", "WhoScored", "Understat")
 
-# Colonne che esistono nello schema e non contengono NULLA. Dichiararle costa
-# una riga; scoprirlo a valle costa un'analisi buttata.
-COLONNE_VUOTE: dict[str, tuple[str, ...]] = {
-    "squadre": ("Meteo (WhoScored)",),
-    "heatmap": ("Tocchi",),
+
+def raccolta(lega: str = LEGA_DEFAULT) -> Path:
+    """La cartella della raccolta a tre fonti di una lega."""
+    return FILES / f"tre_fonti_{lega}_{STAGIONE}"
+
+
+def leghe_disponibili() -> list[str]:
+    """Le leghe per cui la raccolta esiste su disco.
+
+    Serve perche' le consegne arrivano una lega per volta: al 11/08/2026 sono
+    Serie A (sei file) e Premier (cinque — la heatmap arriva dopo).
+    """
+    trovate = []
+    for p in sorted(FILES.glob(f"tre_fonti_*_{STAGIONE}")):
+        nome = p.name[len("tre_fonti_"):-len(f"_{STAGIONE}")]
+        if (p / "squadre.csv.gz").exists():
+            trovate.append(nome)
+    return trovate
+
+
+# Colonne che esistono nello schema e non contengono NULLA. Sono PER LEGA, e
+# non e' un dettaglio: `Meteo (WhoScored)` e' vuota allo 0,0% in Serie A e
+# piena al 95,9% in Premier. Non e' un difetto dell'export ma una copertura
+# diversa della fonte — trattarla come costante avrebbe fatto scartare un dato
+# buono su una lega per un buco che stava sull'altra.
+COLONNE_VUOTE: dict[str, dict[str, tuple[str, ...]]] = {
+    "serie_a": {"squadre": ("Meteo (WhoScored)",), "heatmap": ("Tocchi",)},
+    "premier_league": {"heatmap": ("Tocchi",)},
 }
 
 # La colonna che sembra un identificatore di partita e impila tre numerazioni.
@@ -123,20 +146,15 @@ ID_PARTITA_PER_FONTE = {
     "Understat": "ID partita (Understat)",
 }
 
-# Le due righe orfane della fusione «Verona»/«Hellas Verona» (riparazione 1).
-# Sono identificate per (data, squadra, fonte-unica), non per indice di riga:
-# un indice cambierebbe se il file venisse ri-consegnato con un ordine diverso.
-ORFANE_VERONA = (
-    ("2025-09-15", "Verona"),
-    ("2025-08-25", "Verona"),
-)
-
-# Le due righe dove Understat perde un gol vero (riparazione 4). Verificate
-# contro eventi + snapshot football-data: NON sono autogol.
-GOL_PERSI_DA_UNDERSTAT = (
-    ("2026-02-15", "Nikola Moro", "Bologna"),
-    ("2025-12-27", "Pierre Kalulu", "Juventus"),
-)
+# ⚠️ Le righe ORFANE della fusione sono PER LEGA, e finora ce ne sono solo in
+# Serie A: «Verona» (Understat) contro «Hellas Verona» (le altre due) ha
+# lasciato 2 righe senza `Avversario`. In Premier il difetto NON si ripete —
+# 760/760 righe pulite — quindi non e' un difetto sistematico dell'export ma
+# un incidente su un nome. Le righe si identificano per (data, squadra), non
+# per indice: un indice cambierebbe a ogni ri-consegna con ordine diverso.
+ORFANE: dict[str, tuple[tuple[str, str], ...]] = {
+    "serie_a": (("2025-09-15", "Verona"), ("2025-08-25", "Verona")),
+}
 
 # Quale fonte vince, per grandezza (riparazione 5).
 PREFERENZA: dict[str, str] = {
@@ -192,12 +210,25 @@ DISPONIBILITA_POST_INSIDIOSE = (
 )
 
 
-def _percorso(nome: str) -> Path:
-    p = RACCOLTA / f"{nome}.csv.gz"
+def _percorso(nome: str, lega: str) -> Path:
+    """Il file `nome` della raccolta di `lega`, con un errore che dice cosa fare.
+
+    Le consegne arrivano una lega per volta e non sempre complete: la Premier
+    e' arrivata senza `heatmap`. Un FileNotFoundError generico manderebbe a
+    cercare un bug dove c'e' solo un file che deve ancora arrivare.
+    """
+    base = raccolta(lega)
+    p = base / f"{nome}.csv.gz"
     if not p.exists():
+        if base.exists():
+            presenti = sorted(x.stem.replace(".csv", "") for x in base.glob("*.csv.gz"))
+            raise FileNotFoundError(
+                f"la raccolta di {lega} non ha ancora {nome!r}. "
+                f"Presenti: {presenti}. Vedi {base / 'README.md'}"
+            )
         raise FileNotFoundError(
-            f"manca {p}. La raccolta a tre fonti non e' nel repo: vedi "
-            f"{RACCOLTA / 'README.md'}"
+            f"nessuna raccolta a tre fonti per {lega!r}. "
+            f"Disponibili: {leghe_disponibili()}"
         )
     return p
 
@@ -226,7 +257,7 @@ def _rinomina_id_avvelenato(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def squadre(*, solo_partite: bool = True, periodo: str | None = None) -> pd.DataFrame:
+def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True, periodo: str | None = None) -> pd.DataFrame:
     """Squadra-partita-periodo (Totale / 1° tempo / 2° tempo), 214 colonne.
 
     `solo_partite=False` include anche le **60 righe di livello Stagione**, che
@@ -239,11 +270,11 @@ def squadre(*, solo_partite: bool = True, periodo: str | None = None) -> pd.Data
     Le 2 righe orfane «Verona» vengono scartate (riparazione 1): sono un
     duplicato parziale, la partita completa c'e' gia' sotto «Hellas Verona».
     """
-    df = pd.read_csv(_percorso("squadre"), low_memory=False)
+    df = pd.read_csv(_percorso("squadre", lega), low_memory=False)
 
     prima = len(df)
     maschera_orfane = pd.Series(False, index=df.index)
-    for data, squadra in ORFANE_VERONA:
+    for data, squadra in ORFANE.get(lega, ()):
         maschera_orfane |= (df["Data"] == data) & (df["Squadra"] == squadra) & df["Avversario"].isna()
     df = df[~maschera_orfane].copy()
     if prima - len(df):
@@ -258,20 +289,20 @@ def squadre(*, solo_partite: bool = True, periodo: str | None = None) -> pd.Data
     return df.reset_index(drop=True)
 
 
-def classifica() -> pd.DataFrame:
+def classifica(lega: str = LEGA_DEFAULT) -> pd.DataFrame:
     """Le 60 righe di livello Stagione: la classifica in tre versioni.
 
     `Tipo classifica` distingue generale / casa / trasferta. E' l'unico posto
     del progetto dove la classifica di Serie A esiste come dato invece che
     come qualcosa da ricalcolare dai risultati.
     """
-    df = pd.read_csv(_percorso("squadre"), low_memory=False)
+    df = pd.read_csv(_percorso("squadre", lega), low_memory=False)
     df = df[df["Livello"] == "Stagione"].copy()
     piene = [c for c in df.columns if df[c].notna().any()]
     return _normalizza_squadre(df[piene]).reset_index(drop=True)
 
 
-def giocatori(*, livello: str | None = "Partita") -> pd.DataFrame:
+def giocatori(lega: str = LEGA_DEFAULT, *, livello: str | None = "Partita") -> pd.DataFrame:
     """Giocatore-partita, 190 colonne da tre fonti.
 
     `livello` filtra la colonna omonima: `Partita` (17.829 righe, il default),
@@ -281,28 +312,69 @@ def giocatori(*, livello: str | None = "Partita") -> pd.DataFrame:
     Applica: normalizzazione dei nomi squadra, rinomina dell'`ID partita`
     avvelenato, e la correzione dei 2 gol persi da Understat (riparazione 4).
     """
-    df = pd.read_csv(_percorso("giocatori"), low_memory=False)
+    df = pd.read_csv(_percorso("giocatori", lega), low_memory=False)
     if livello is not None and "Livello" in df.columns:
         df = df[df["Livello"] == livello].copy()
 
     df = _rinomina_id_avvelenato(df)
     df = _normalizza_squadre(df)
 
-    # I 2 gol che Understat non registra. Non si "corregge Understat": si
-    # allinea la sua colonna al fatto accertato su quattro fonti, e lo si
-    # segna in una colonna apposta perche' resti visibile.
-    df["gol_corretto_da_noi"] = False
-    if "Gol (Understat)" in df.columns:
-        for data, giocatore, squadra in GOL_PERSI_DA_UNDERSTAT:
-            m = (df["Data"] == data) & (df["Giocatore"] == giocatore)
-            if m.any():
-                df.loc[m, "Gol (Understat)"] = df.loc[m, "Gol (SofaScore)"]
-                df.loc[m, "gol_corretto_da_noi"] = True
-
+    df = _allinea_gol(df)
     return df.reset_index(drop=True)
 
 
-def eventi(categoria: str | None = None) -> pd.DataFrame:
+def _allinea_gol(df: pd.DataFrame) -> pd.DataFrame:
+    """Allinea i gol di Understat a SofaScore dove il file dichiara discordanza.
+
+    ⚠️ E' una REGOLA, non una lista di eccezioni, e la differenza conta. La
+    prima stesura elencava le 2 righe della Serie A per (data, giocatore):
+    avrebbe girato sulla Premier senza correggere nulla e senza dire niente —
+    un silenzio indistinguibile da «qui non ci sono difetti».
+
+    La regola e' legittima perche' la DIREZIONE e' verificata, non assunta:
+    su tutte e 5 le righe discordanti delle due leghe (2 Serie A, 3 Premier)
+    la differenza e' **sempre +1 a favore di SofaScore** e `Autogol` vale
+    **sempre 0** su entrambe le fonti. Le prime due sono state istruite a mano
+    su quattro fonti indipendenti (eventi + snapshot football-data): gli eventi
+    danno `Gol / regular` con un `Tiro` e uno `scoreChange` allo stesso minuto.
+    E' una lacuna di Understat, non una convenzione sugli autogol — l'ipotesi
+    ovvia, che era falsa.
+
+    ⚠️ IL TRIPWIRE: se un giorno una riga discordasse nell'altro verso
+    (Understat > SofaScore), la regola non varrebbe piu' e la funzione **alza**.
+    Meglio fermarsi che applicare in silenzio una correzione la cui premessa e'
+    caduta.
+    """
+    df["gol_corretto_da_noi"] = False
+    if not {"Gol (SofaScore)", "Gol (Understat)", "Discordanze"} <= set(df.columns):
+        return df
+
+    marcate = df["Discordanze"].fillna("").str.contains(r"\bgol\b", regex=True)
+    sofa = pd.to_numeric(df.loc[marcate, "Gol (SofaScore)"], errors="coerce")
+    under = pd.to_numeric(df.loc[marcate, "Gol (Understat)"], errors="coerce")
+
+    al_contrario = (under > sofa).fillna(False)
+    if al_contrario.any():
+        righe = df.loc[marcate][al_contrario][["Data", "Giocatore"]].to_dict("records")
+        raise RuntimeError(
+            "premessa caduta: Understat dichiara PIU' gol di SofaScore su "
+            f"{righe}. La regola vale solo perche' la direzione e' sempre la "
+            "stessa (Understat sottostima). Istruire questi casi a mano prima "
+            "di proseguire — vedi la docstring di _allinea_gol."
+        )
+
+    da_correggere = marcate & (
+        pd.to_numeric(df["Gol (SofaScore)"], errors="coerce")
+        > pd.to_numeric(df["Gol (Understat)"], errors="coerce")
+    ).fillna(False)
+    df.loc[da_correggere, "Gol (Understat)"] = df.loc[da_correggere, "Gol (SofaScore)"]
+    df.loc[da_correggere, "gol_corretto_da_noi"] = True
+    if da_correggere.any():
+        log.info("allineati %d gol persi da Understat", int(da_correggere.sum()))
+    return df
+
+
+def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None) -> pd.DataFrame:
     """Il contenitore a sette categorie. Passane UNA, quasi sempre.
 
     | categoria | righe | grana | cos'e' |
@@ -318,6 +390,11 @@ def eventi(categoria: str | None = None) -> pd.DataFrame:
     Leggerlo senza filtro da' un frame in cui 47 colonne sono piene a macchia
     di leopardo, perche' ogni categoria ne usa un sottoinsieme diverso.
 
+    ⚠️ `categoria` e' SOLO-NOMINALE di proposito. Prima della seconda lega il
+    primo argomento posizionale era la categoria; ora e' la lega, e una
+    chiamata vecchia come `eventi("Momentum")` verrebbe letta come «la lega
+    Momentum». Meglio un errore secco che un frame sbagliato in silenzio.
+
     ⚠️ **LA GRANA CAMBIA CON LA CATEGORIA, E SBAGLIARLA SEMBRA UN DIFETTO DEI
     DATI.** Cinque categorie su sette descrivono la PARTITA, non una squadra:
     su quelle `Squadra` e' `NaN` per costruzione, e agganciarle con la chiave
@@ -327,7 +404,7 @@ def eventi(categoria: str | None = None) -> pd.DataFrame:
     `Evento`, 759/759 per `Tiro`, 379/379 per `Quota`). Usa `GRANA[categoria]`
     per scegliere la chiave invece di indovinarla.
     """
-    df = pd.read_csv(_percorso("eventi"), low_memory=False)
+    df = pd.read_csv(_percorso("eventi", lega), low_memory=False)
     if categoria is not None:
         valide = set(df["Categoria"].dropna().unique())
         if categoria not in valide:
@@ -336,7 +413,7 @@ def eventi(categoria: str | None = None) -> pd.DataFrame:
     return _normalizza_squadre(df).reset_index(drop=True)
 
 
-def eventi_opta(*, partita: int | None = None, colonne: list[str] | None = None) -> pd.DataFrame:
+def eventi_opta(lega: str = LEGA_DEFAULT, *, partita: int | None = None, colonne: list[str] | None = None) -> pd.DataFrame:
     """Event data Opta: 562.672 righe, ogni tocco con coordinate e secondo.
 
     E' il file piu' pesante della raccolta (24 MB compressi): `colonne` e
@@ -350,26 +427,26 @@ def eventi_opta(*, partita: int | None = None, colonne: list[str] | None = None)
 
     ⚠️ Nessuna delle sue 34 colonne e' descritta dalla legenda consegnata.
     """
-    df = pd.read_csv(_percorso("eventi_opta"), low_memory=False, usecols=colonne)
+    df = pd.read_csv(_percorso("eventi_opta", lega), low_memory=False, usecols=colonne)
     if partita is not None and "ID partita" in df.columns:
         df = df[df["ID partita"] == partita].copy()
     return _normalizza_squadre(df).reset_index(drop=True)
 
 
-def heatmap(*, partita: int | None = None) -> pd.DataFrame:
+def heatmap(lega: str = LEGA_DEFAULT, *, partita: int | None = None) -> pd.DataFrame:
     """Posizioni: una riga per tocco, con X/Y su scala 0-100. Fonte SofaScore.
 
     380 partite, 586 giocatori, 556.996 righe. `partita` e' l'`ID partita` di
     SofaScore. La colonna `Tocchi` e' **vuota al 100%**: c'e' nello schema e non
     contiene niente (vedi `colonne_vuote`).
     """
-    df = pd.read_csv(_percorso("heatmap"), low_memory=False)
+    df = pd.read_csv(_percorso("heatmap", lega), low_memory=False)
     if partita is not None:
         df = df[df["ID partita"] == partita].copy()
     return _normalizza_squadre(df).reset_index(drop=True)
 
 
-def legenda(*, versione: str = "v2") -> pd.DataFrame:
+def legenda(lega: str = LEGA_DEFAULT, *, versione: str = "v2") -> pd.DataFrame:
     """La documentazione consegnata: mappa ogni colonna sulla chiave della fonte.
 
     ⚠️ Ne esistono DUE, con schemi diversi, ed e' voluto tenerle entrambe.
@@ -388,18 +465,25 @@ def legenda(*, versione: str = "v2") -> pd.DataFrame:
     tutto.
     """
     if versione == "v2":
-        return pd.read_csv(_percorso("legenda"))
+        return pd.read_csv(_percorso("legenda", lega))
     if versione == "v1":
-        return pd.read_csv(_percorso("legenda_v1_incompleta"))
+        return pd.read_csv(_percorso("legenda_v1_incompleta", lega))
     raise ValueError(f"versione {versione!r} sconosciuta: usa 'v1' o 'v2'")
 
 
 # ---------------------------------------------------------------------------
 # Le funzioni che DICHIARANO i limiti, invece di lasciarli scoprire a valle.
 # ---------------------------------------------------------------------------
-def colonne_vuote() -> dict[str, tuple[str, ...]]:
-    """Le colonne che esistono nello schema e non contengono nulla."""
-    return dict(COLONNE_VUOTE)
+def colonne_vuote(lega: str = LEGA_DEFAULT) -> dict[str, tuple[str, ...]]:
+    """Le colonne che esistono nello schema e non contengono nulla, PER LEGA.
+
+    Non e' una costante del formato: `Meteo (WhoScored)` e' vuota allo 0,0% in
+    Serie A e piena al **95,9%** in Premier. Trattarla come costante avrebbe
+    fatto scartare un dato buono su una lega per un buco che stava sull'altra —
+    ed e' il motivo per cui questa funzione prende `lega` invece di essere un
+    dizionario globale.
+    """
+    return dict(COLONNE_VUOTE.get(lega, {}))
 
 
 #: Il nome con cui la legenda v2 chiama ciascun file della raccolta.
@@ -409,7 +493,7 @@ _NOME_IN_LEGENDA = {
 }
 
 
-def colonne_non_documentate(*, versione: str = "v2") -> dict[str, list[str]]:
+def colonne_non_documentate(lega: str = LEGA_DEFAULT, *, versione: str = "v2") -> dict[str, list[str]]:
     """Le colonne dei file che la legenda NON descrive. Con la v2: **nessuna**.
 
     Esiste ancora, benche' oggi torni vuoto su tutti e cinque i file, perche' e'
@@ -421,11 +505,14 @@ def colonne_non_documentate(*, versione: str = "v2") -> dict[str, list[str]]:
     eventi 47/47, eventi_opta 34/34, heatmap 18/18 — **503 su 503**.
     Con la `v1` invece resta scoperto tutto `eventi_opta` e parte di `squadre`.
     """
-    leg = legenda(versione=versione)
+    leg = legenda(lega, versione=versione)
     fuori: dict[str, list[str]] = {}
     righe = leg[leg["Sezione"] == "Legenda"]
     for nome, in_legenda in _NOME_IN_LEGENDA.items():
-        cols = list(pd.read_csv(_percorso(nome), nrows=0).columns)
+        try:
+            cols = list(pd.read_csv(_percorso(nome, lega), nrows=0).columns)
+        except FileNotFoundError:
+            continue          # file non ancora consegnato per questa lega
         if "File" in righe.columns:                       # schema v2
             descritte = set(righe[righe["File"] == in_legenda]["Colonna o voce"].dropna())
         else:                                             # schema v1
@@ -471,7 +558,7 @@ def preferita(grandezza: str) -> str:
 DISCORDANZE_FALSE = ("possesso",)
 
 
-def discordanze(*, includi_false: bool = False) -> pd.DataFrame:
+def discordanze(lega: str = LEGA_DEFAULT, *, includi_false: bool = False) -> pd.DataFrame:
     """Le righe che il file dichiara discordanti fra le sue fonti.
 
     A livello GIOCATORE (6.672 righe su 19.126, 34,9%): 6.597 minuti,
@@ -502,11 +589,11 @@ def discordanze(*, includi_false: bool = False) -> pd.DataFrame:
     Di default le false sono escluse. `includi_false=True` le rimette, per chi
     voglia vederle.
     """
-    g = giocatori(livello=None)
+    g = giocatori(lega, livello=None)
     return _filtra_discordanze(g, includi_false)
 
 
-def discordanze_squadra(*, includi_false: bool = False) -> pd.DataFrame:
+def discordanze_squadra(lega: str = LEGA_DEFAULT, *, includi_false: bool = False) -> pd.DataFrame:
     """Come `discordanze`, ma sul livello squadra-partita.
 
     E' arrivata con la terza consegna (11/08/2026): prima la colonna
@@ -514,7 +601,7 @@ def discordanze_squadra(*, includi_false: bool = False) -> pd.DataFrame:
     righe — **falso positivo**, vedi `discordanze` — e `corner` su 18, che
     invece sono vere e valgono tutte −1.
     """
-    s = squadre(periodo="Totale")
+    s = squadre(lega, periodo="Totale")
     if "Discordanze" not in s.columns:
         raise RuntimeError(
             "questa consegna di squadre.csv non ha la colonna Discordanze: "

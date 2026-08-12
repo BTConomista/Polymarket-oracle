@@ -472,6 +472,26 @@ data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
                  outright_snapshots/ (prezzi outright live, uno per giorno)
                  squad_value_2526_transfermarkt.csv (fonte secondaria, regola R2)
                  football.db (SQLite, rigenerabile, NON versionato)
+files/tre_fonti_{serie_a,premier_league}_2526/  DUE LEGHE 2025-26 DA TRE
+                 FONTI (SofaScore, Opta/WhoScored, Understat), 11/08/2026.
+                 Portano cio' che il progetto non aveva: EVENT DATA (562.672 +
+                 577.884 tocchi con X/Y, secondo e qualificatori), POSIZIONI
+                 (556.996 + 573.203), arbitro, stadio, spettatori, tracking
+                 fisico, momentum, classifica. 380/380 partite per lega,
+                 aggancio 760/760 su ogni file.
+                 ⚠️ USARE src/data/tre_fonti.py, MAI pd.read_csv diretto: i
+                 difetti sono riparati IN LETTURA (R3, i file restano come
+                 consegnati). Ogni funzione prende la LEGA come primo
+                 argomento; `categoria` di eventi() e' solo-nominale apposta,
+                 perche' prima della seconda lega era il primo posizionale.
+                 La seconda lega ha diviso i difetti in due famiglie, ed e' il
+                 motivo per cui vale la pena leggere i due README: si RIPETONO
+                 l'ID partita misto, il falso positivo sul possesso e i gol
+                 persi da Understat (2 in Serie A, 3 in Premier, sempre nella
+                 stessa direzione -> regola con tripwire, non lista di
+                 eccezioni); NON si ripetono le righe orfane della fusione
+                 (2 in Serie A, 0 in Premier) e la colonna Meteo (0,0% in
+                 Serie A, 95,9% in Premier -> `colonne_vuote` e' per-lega)
 files/tre_fonti_serie_a_2526/  SERIE A 2025-26 DA TRE FONTI (SofaScore,
                  Opta/WhoScored, Understat), 11/08/2026. Porta cio' che il
                  progetto non aveva: EVENT DATA (562.672 tocchi con X/Y,

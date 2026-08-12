@@ -140,6 +140,10 @@ TEAM_ALIASES: dict[str, str] = {
     "Nottingham Forest": "Nott'm Forest",
     "West Bromwich Albion": "West Brom",
     "Wolverhampton Wanderers": "Wolves",
+    # Forma SENZA «Wanderers», usata da SofaScore nella raccolta a tre fonti
+    # (Premier 2025-26, 11/08/2026). Era l'UNICA delle 20 squadre a non
+    # agganciare: le altre 19 passavano gia' dagli alias qui sopra.
+    "Wolverhampton": "Wolves",
     # Forme brevi usate da diretta.it/Flashscore (aggiunte 01/08/2026 con la
     # raccolta Premier 2025-26). Le altre 17 squadre combaciavano gia': queste
     # tre sono le uniche differenze, e senza di esse il join si fermava a
