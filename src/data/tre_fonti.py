@@ -465,13 +465,81 @@ def preferita(grandezza: str) -> str:
     return PREFERENZA[grandezza]
 
 
-def discordanze() -> pd.DataFrame:
-    """Le righe che il file stesso dichiara discordanti fra le sue fonti.
+# Le discordanze dichiarate dal file che NON sono disaccordi fra le fonti, ma
+# un confronto fra grandezze diverse. Vanno ignorate: contarle come difetti
+# gonfia il rumore e nasconde quelle vere.
+DISCORDANZE_FALSE = ("possesso",)
 
-    6.616 righe su 19.126 (34,6%): 6.597 sui minuti (±1-4', la convenzione sul
-    minuto del cambio), 44 sui tiri, **2 sui gol** — questi ultimi istruiti
-    uno per uno e corretti in `giocatori()`, perche' non erano una convenzione
-    ma una lacuna di Understat.
+
+def discordanze(*, includi_false: bool = False) -> pd.DataFrame:
+    """Le righe che il file dichiara discordanti fra le sue fonti.
+
+    A livello GIOCATORE (6.672 righe su 19.126, 34,9%): 6.597 minuti,
+    109 passaggi chiave, 44 tiri, 20 passaggi totali, 7 assist, **2 gol** —
+    questi ultimi istruiti uno per uno e corretti in `giocatori()`, perche' non
+    erano una convenzione ma una lacuna di Understat.
+
+    ⚠️ **UNA DELLE DISCORDANZE DICHIARATE E' FALSA, ed e' la piu' numerosa a
+    livello squadra.** Il file marca `possesso` su **760 righe su 762** — cioe'
+    praticamente tutte — e sembra dire «le due fonti non vanno d'accordo sul
+    possesso palla». Misurato, non e' cosi':
+
+        Ball possession (SofaScore)  →  21-79,  somma 100 fra le due squadre
+        possession (WhoScored)       →  201-800, somma ~898
+
+    La prima e' una **percentuale**, la seconda un **conteggio**. Non possono
+    essere uguali mai, quindi il flag e' vero *per costruzione* e non porta
+    informazione: e' un'**unita' diversa**, non un disaccordo.
+
+    E' la regola R7 applicata a una dichiarazione invece che a una misura: il
+    difetto non e' il numero, e' la statistica scelta per raccontarlo. Il
+    contro-esempio nello stesso file dimostra che il resto e' affidabile: la
+    discordanza sui `corner` e' marcata su **18 righe**, e ri-calcolandola in
+    modo indipendente (SofaScore contro `cornersTotal` di WhoScored) escono
+    **le stesse 18**, tutte a −1. Li' il confronto e' fra grandezze omogenee e
+    il file ha ragione.
+
+    Di default le false sono escluse. `includi_false=True` le rimette, per chi
+    voglia vederle.
     """
     g = giocatori(livello=None)
-    return g[g["Discordanze"].notna()].copy()
+    return _filtra_discordanze(g, includi_false)
+
+
+def discordanze_squadra(*, includi_false: bool = False) -> pd.DataFrame:
+    """Come `discordanze`, ma sul livello squadra-partita.
+
+    E' arrivata con la terza consegna (11/08/2026): prima la colonna
+    `Discordanze` esisteva solo su `giocatori`. Dichiara `possesso` su 760
+    righe — **falso positivo**, vedi `discordanze` — e `corner` su 18, che
+    invece sono vere e valgono tutte −1.
+    """
+    s = squadre(periodo="Totale")
+    if "Discordanze" not in s.columns:
+        raise RuntimeError(
+            "questa consegna di squadre.csv non ha la colonna Discordanze: "
+            "e' una versione precedente all'11/08/2026"
+        )
+    return _filtra_discordanze(s, includi_false)
+
+
+def _filtra_discordanze(df: pd.DataFrame, includi_false: bool) -> pd.DataFrame:
+    """Toglie i TOKEN falsi dalla lista, non le righe che li contengono.
+
+    ⚠️ La differenza non e' cosmetica, ed e' costata un test rosso: una riga
+    puo' dichiarare piu' grandezze insieme (`possesso; corner`). Scartare la
+    riga perche' contiene un token falso butta via anche la discordanza VERA
+    che ci sta accanto — e infatti tutte e 18 le righe con `corner` hanno
+    anche `possesso`, quindi il filtro ingenuo le azzerava tutte.
+    """
+    righe = df[df["Discordanze"].notna()].copy()
+    if includi_false:
+        return righe
+
+    def ripulisci(v: str) -> str:
+        tenuti = [t.strip() for t in str(v).split(";")
+                  if t.strip() and t.strip() not in DISCORDANZE_FALSE]
+        return "; ".join(tenuti)
+
+    righe["Discordanze"] = righe["Discordanze"].map(ripulisci)
+    return righe[righe["Discordanze"] != ""].copy()

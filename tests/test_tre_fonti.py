@@ -242,3 +242,58 @@ def test_la_legenda_v1_resta_leggibile_ed_e_ancora_incompleta():
     assert "Dettaglio" in v1.columns, "la v1 ha lo schema vecchio"
     scoperte = tf.colonne_non_documentate(versione="v1")
     assert scoperte["eventi_opta"], "con la v1 eventi_opta era completamente scoperto"
+
+
+# --------------------------------------------------------------------------
+# La discordanza FALSA: un flag vero per costruzione che non porta informazione
+# --------------------------------------------------------------------------
+def test_la_discordanza_sul_possesso_e_un_falso_positivo(sq):
+    """760 righe su 762 marcate «possesso», e non e' un disaccordo fra fonti.
+
+    `Ball possession (SofaScore)` e' una PERCENTUALE (somma 100 fra le due
+    squadre), `possession (WhoScored)` un CONTEGGIO (somma ~898). Non possono
+    coincidere mai, quindi il flag e' vero per costruzione.
+
+    E' la regola R7 applicata a una dichiarazione invece che a una misura: il
+    difetto non e' il numero, e' la statistica scelta per raccontarlo. Il test
+    inchioda le UNITA', non il flag: se un giorno la fonte normalizzasse le due
+    colonne alla stessa scala, questo diventa rosso e la discordanza va
+    ri-valutata sul serio.
+    """
+    p1 = pd.to_numeric(sq["Ball possession (SofaScore)"], errors="coerce").dropna()
+    p2 = pd.to_numeric(sq["possession (WhoScored)"], errors="coerce").dropna()
+    assert p1.max() <= 100, "SofaScore dovrebbe essere una percentuale"
+    assert p2.min() > 100, "WhoScored dovrebbe essere un conteggio, non una percentuale"
+    assert "possesso" in tf.DISCORDANZE_FALSE
+
+
+def test_la_discordanza_sui_corner_e_invece_vera(sq):
+    """Il contro-esempio che dimostra che il resto delle dichiarazioni regge.
+
+    Il file marca `corner` su 18 righe. Ri-calcolata in modo indipendente
+    (SofaScore contro `cornersTotal` di WhoScored, che e' la colonna omogenea)
+    escono **le stesse 18**, tutte a −1. Qui il confronto e' fra grandezze
+    confrontabili e la dichiarazione e' affidabile.
+
+    Serve a impedire la conclusione sbagliata «le Discordanze del file non sono
+    attendibili»: una lo e' meno, le altre si', e la differenza e' misurabile.
+    """
+    a = pd.to_numeric(sq["Corner kicks (SofaScore)"], errors="coerce")
+    tot = pd.to_numeric(sq["cornersTotal (WhoScored)"], errors="coerce")
+    divergenti = (a != tot) & a.notna() & tot.notna()
+    marcate = sq["Discordanze"].fillna("").str.contains("corner")
+    assert divergenti.sum() == 18
+    assert (divergenti == marcate).all(), "il file marca esattamente le righe divergenti"
+
+
+def test_discordanze_esclude_le_false_per_default(sq):
+    """Il default e' «solo quelle vere»: contarle tutte gonfia il rumore.
+
+    Con `possesso` dentro, il livello squadra dichiara 760 righe discordanti su
+    762 — un tasso che farebbe sembrare la raccolta inutilizzabile. Senza, ne
+    restano 18.
+    """
+    vere = tf.discordanze_squadra()
+    tutte = tf.discordanze_squadra(includi_false=True)
+    assert len(vere) == 18, f"attese 18 discordanze vere, {len(vere)}"
+    assert len(tutte) == 760

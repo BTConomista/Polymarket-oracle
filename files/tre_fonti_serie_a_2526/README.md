@@ -114,6 +114,31 @@ renderebbe non verificabile la storia della raccolta.
   convenzione fra due fonti, non un errore da correggere. `discordanze()` le
   restituisce.
 
+## ⚠️ Una discordanza dichiarata dal file è FALSA
+
+La terza consegna porta la colonna `Discordanze` anche a livello squadra, e
+marca **`possesso` su 760 righe su 762** — praticamente tutte. Sembra dire «le
+due fonti non vanno d'accordo sul possesso palla». Misurato, non è così:
+
+```
+Ball possession (SofaScore)  →  21-79,   somma 100 fra le due squadre
+possession (WhoScored)       →  201-800, somma ~898
+```
+
+La prima è una **percentuale**, la seconda un **conteggio**. Non possono
+coincidere mai: il flag è vero *per costruzione* e non porta informazione. È
+un'unità diversa, non un disaccordo — la regola R7 applicata a una
+dichiarazione invece che a una misura.
+
+**Il contro-esempio dimostra che il resto regge**: la discordanza sui `corner`
+è marcata su 18 righe, e ri-calcolandola in modo indipendente (SofaScore contro
+`cornersTotal`, la colonna omogenea) escono **le stesse 18**, tutte a −1. Lì il
+confronto è fra grandezze confrontabili e il file ha ragione.
+
+`discordanze()` e `discordanze_squadra()` tolgono il **token** falso, non la
+riga: tutte e 18 le righe con `corner` portano anche `possesso`, e un filtro
+per riga le azzererebbe.
+
 ## Cosa NON c'è, rispetto a diretta.it
 
 La raccolta è molto più ricca, ma non è un sovrainsieme. Misurato colonna per

@@ -19,6 +19,10 @@
   },
   "giocatori.csv.gz": {
    "righe": 19126,
+   "sha256": "d6ad895dcce22b30d348034af3861d886876f9482b79354c8b902619bd85078e"
+  },
+  "giocatori_v1.csv.gz": {
+   "righe": 19126,
    "sha256": "23610942c9911ebcab26da89492380ff0faaac9e1fd327c5de0a2ed3701f8f8e"
   },
   "heatmap.csv.gz": {
@@ -26,14 +30,22 @@
    "sha256": "54b374c1de2fee978a6344f83906a84e9644d558fe275546515695cfce90f1c1"
   },
   "legenda.csv.gz": {
-   "righe": 522,
-   "sha256": "f02df9f09324923d3738de0867d35c8e29af35ff25a85247a5ba67865f3be013"
+   "righe": 538,
+   "sha256": "25c6e656e1e8a06fd16ab07e0f3206a17ad114d558abe7d15483a10ddff3d3fc"
   },
   "legenda_v1_incompleta.csv.gz": {
    "righe": 440,
    "sha256": "d2e45a53527ba30a799728b479fb7d33eb0e592fac8f0ac8a1d87867fde1e06d"
   },
+  "legenda_v2.csv.gz": {
+   "righe": 522,
+   "sha256": "f02df9f09324923d3738de0867d35c8e29af35ff25a85247a5ba67865f3be013"
+  },
   "squadre.csv.gz": {
+   "righe": 2342,
+   "sha256": "9d194f4b3d57e31ee3de495ef6f76084926bf243f3acc23d892a0e7227baa5e1"
+  },
+  "squadre_v1.csv.gz": {
    "righe": 2342,
    "sha256": "fa4dbf2d68d957f234978ee70dc4f82240239964ff3e0f99f7f0dfc28770c262"
   }
@@ -118,5 +130,35 @@
    "quando": "11/08/2026, consegna v2",
    "esito": "503/503 colonne documentate"
   }
- ]
+ ],
+ "consegne": [
+  {
+   "quando": "11/08/2026 (1a)",
+   "cosa": "5 file, legenda v1",
+   "limite": "legenda incompleta: 53 colonne scoperte, tutto eventi_opta"
+  },
+  {
+   "quando": "11/08/2026 (2a)",
+   "cosa": "Squadre.csv + legenda v2",
+   "esito": "legenda completa: 503/503 colonne"
+  },
+  {
+   "quando": "11/08/2026 (3a)",
+   "cosa": "Squadre e Giocatori con colonna Discordanze piu' ricca, legenda v3",
+   "esito": "NESSUNO dei 5 difetti chiuso; guadagno tutto in DICHIARAZIONE: Discordanze anche a livello squadra, 3 categorie nuove a livello giocatore, e una sezione «Confronto fonti» che quantifica il disaccordo su xG/xA/rating",
+   "versioni_precedenti_conservate": [
+    "squadre_v1.csv.gz",
+    "giocatori_v1.csv.gz",
+    "legenda_v2.csv.gz",
+    "legenda_v1_incompleta.csv.gz"
+   ]
+  }
+ ],
+ "discordanza_falsa": {
+  "quale": "possesso",
+  "righe": "760 su 762 a livello squadra",
+  "perche": "Ball possession (SofaScore) e' una PERCENTUALE (21-79, somma 100 fra le due squadre); possession (WhoScored) e' un CONTEGGIO (201-800, somma ~898). Non possono coincidere mai: il flag e' vero PER COSTRUZIONE e non porta informazione. Unita' diverse, non disaccordo",
+  "controesempio": "la discordanza sui corner e' invece VERA: 18 righe marcate, e ri-calcolandola in modo indipendente (SofaScore contro cornersTotal) escono le stesse 18, tutte a -1",
+  "trattamento": "tre_fonti.discordanze() e discordanze_squadra() tolgono il TOKEN falso, non la riga (tutte e 18 le righe corner portano anche 'possesso': un filtro per riga le azzerava)"
+ }
 }
