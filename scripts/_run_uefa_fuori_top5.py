@@ -28,18 +28,36 @@ nostri. Stagioni 2024 e 2025 = 2024-25 e 2025-26.
    servirebbe sommare le due gare e gestire i rigori, e il valore aggiunto per
    questa domanda e' nullo.
 
-3. **Il dataset copre 32 campionati, non tutti.** Dei 307 club che hanno
-   giocato una coppa UEFA nelle due stagioni, **149 sono in `clubs.csv` e 158
-   no**: i secondi sono di federazioni minori (San Marino, Malta, Galles, Far
-   Oer, Islanda, Lettonia, Irlanda del Nord, Montenegro...) e valgono il 49%
-   delle partite, quasi tutte nelle QUALIFICAZIONI (442 su 942 in ECLQ).
+3. **⚠️ LA LEGA DI 158 CLUB SU 307 NON E' NEL DATASET, e il perche' e' preciso.**
+   Due file parlano di club, e fanno due lavori diversi:
 
-   ⚠️ Il buco e' **sistematico e in una direzione sola**, ed e' questo che lo
-   rende innocuo per la domanda: i club invisibili sono tutti di campionati
-   piu' piccoli di quelli che restano, e nessuno di loro e' un candidato
-   all'allargamento. Se il buco fosse stato casuale la classifica sarebbe
-   inservibile; essendo monotono, sposta solo il fondo.
-   Lo script lo MISURA e lo stampa invece di lasciarlo intuire.
+       clubs.csv          796 righe · 17 colonne · il file di CONTESTO
+                          (squad_size, average_age, stadium_seats...)
+       club_names.csv   3.173 righe ·  3 colonne · il REGISTRO dei nomi
+
+   `club_names` conosce **tutti e 3.173** i club_id — ed e' il file che serve
+   per risolvere un NOME (lo dice `docs/AUDIT_DATABASE_CARRIERE.md`, ed e'
+   quello che `club_matching.py` usa). Ma la colonna
+   `domestic_competition_id` e' piena solo su **796 righe (25,1%)**: le stesse
+   che stanno in `clubs.csv`. Il dataset assegna un campionato domestico solo
+   ai club dei **32 campionati che copre**; per gli altri 158 la lega non
+   c'e', in nessuno dei due file, e nemmeno per deduzione (misurato: **0 dei
+   158** gioca una competizione domestica dentro `games.csv`).
+
+   Quindi il limite e' reale e non aggirabile con i dati in casa. E' pero'
+   **monotono**: quei 158 sono di federazioni minori (San Marino, Malta,
+   Galles, Far Oer, Islanda, Lettonia, Cipro, Azerbaigian...), valgono il 49%
+   delle partite quasi tutte in QUALIFICAZIONE, e nessuno di loro e' un
+   candidato all'allargamento. Sposta il fondo della classifica, non l'ordine
+   di chi interessa.
+
+   ⚠️ Nota di metodo, pagata due volte in questa analisi. Il nome dei club
+   mancanti veniva stampato come `?1002` perche' la prima stesura leggeva
+   ANCHE il nome da `clubs.csv`: quello era davvero il file sbagliato, ed e'
+   corretto. Ma da «il file e' sbagliato» non segue «anche la lega si
+   recupera»: sono due colonne con due coperture diverse nello stesso file, e
+   averle trattate insieme mi ha fatto annunciare una riparazione che non
+   c'era. Le coperture si misurano per COLONNA, non per file.
 
 Uso:
     python scripts/_run_uefa_fuori_top5.py
@@ -92,9 +110,14 @@ def _livello(turno: str) -> int:
 def carica() -> pd.DataFrame:
     """Una riga per (club, coppa, stagione) col turno piu' avanzato raggiunto."""
     g = pd.read_csv(FILES / "games.csv.gz", low_memory=False)
-    clubs = pd.read_csv(FILES / "clubs.csv.gz")
-    lega = dict(zip(clubs["club_id"], clubs["domestic_competition_id"]))
-    nome = dict(zip(clubs["club_id"], clubs["name"]))
+    # Due file, due coperture diverse (avvertenza 3):
+    #  - il NOME da club_names.csv.gz, che conosce tutti e 3.173 i club_id;
+    #  - la LEGA da domestic_competition_id, piena solo su 796 righe. Non c'e'
+    #    altrove: per i restanti 158 il campionato non esiste nel dataset.
+    reg = pd.read_csv(FILES / "club_names.csv.gz")
+    nome = dict(zip(reg["club_id"], reg["name"]))
+    con_lega = reg.dropna(subset=["domestic_competition_id"])
+    lega = dict(zip(con_lega["club_id"], con_lega["domestic_competition_id"]))
 
     tutte = set(COPPE) | set(QUALIFICAZIONI)
     g = g[g["competition_id"].isin(tutte) & g["season"].isin([2024, 2025])].copy()
@@ -128,13 +151,11 @@ def main() -> None:
     print("=" * 78)
     print(f"\nclub-coppa-stagione totali: {len(d)}  ·  fuori dai top 5: {len(fuori)}")
     ignoti = fuori[fuori["lega"].isna()]
+    print(f"copertura: {len(fuori) - len(ignoti)}/{len(fuori)} righe con campionato noto "
+          f"({(1 - len(ignoti) / max(len(fuori), 1)) * 100:.1f}%)")
     if len(ignoti):
-        print(f"\n⚠️  COPERTURA: {len(ignoti)} righe su {len(fuori)} sono di club che "
-              f"`clubs.csv` non conosce\n    ({ignoti['club_id'].nunique()} club di "
-              "federazioni minori: San Marino, Malta, Galles, Far Oer, Islanda...).")
-        print("    Il buco e' sistematico e MONOTONO — sono tutti campionati piu' piccoli")
-        print("    di quelli che restano — quindi sposta il fondo della classifica, non")
-        print("    l'ordine di chi ci interessa. Vedi l'avvertenza 3 in testa allo script.")
+        print(f"⚠️  {len(ignoti)} righe senza campionato "
+              f"({ignoti['club_id'].nunique()} club): {sorted(set(ignoti['club']))[:5]}")
 
     # ---- la tabella che risponde alla domanda -----------------------------
     print("\n" + "=" * 78)
