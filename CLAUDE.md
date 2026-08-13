@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.661 verdi** al 12/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.700 verdi** al 13/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.661 verdi al 12/08/2026)
+python -m pytest                       # test (1.700 verdi al 13/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -652,9 +652,24 @@ docs/audit_identita/   ⛔ audit dell'IDENTITA del database (11/08/2026),
                  Il reperto gia' ri-verificato a mano: `Espanol` aggancia
                  UNIVOCAMENTE «Jove Espanol San Vicente» invece dell'Espanyol,
                  su 266 partite di Liga — un aggancio falso e sicuro di se',
-                 la categoria che nessun conteggio vede. Leggere 00_indice.md
+                 la categoria che nessun conteggio vede. ✅ QUELLO E `Red Star
+                 FC` sono RIPARATI (Fase 154): il punto 1 della lista di ripresa
+                 e' chiuso, si riparte dal 2. Leggere 00_indice.md
                  §7 prima di riprendere: dice anche perche' il workflow e'
                  morto (ventaglio di verifica non limitato) e come rifarlo
+docs/CLUB_FUORI_PERIMETRO.md   come ci si comporta con un club che NON e' nei
+                 nostri 5 campionati (13/08/2026, domanda di metodo dell'utente).
+                 ⭐ La riga che scioglie il problema: **non manca il club, manca
+                 il suo CONTESTO** — partite, giocatori e minuti ci sono anche
+                 fuori perimetro (anagrafica giocatore 100% in tutti e tre i
+                 cerchi), mancano l'etichetta di lega e la riga di clubs.csv.
+                 Il criterio operativo e' il RUOLO, non il club: avversario ->
+                 niente da fare; soggetto da prezzare -> impossibile fuori, e
+                 non per un difetto (0 partite di campionato domestico,
+                 misurato); candidato all'allargamento -> l'etichetta c'e' gia'.
+                 ⚠️ Il rischio che cresce non e' il club mancante ma l'AGGANCIO
+                 SBAGLIATO (R6): un univoco falso non lo vede nessun conteggio.
+                 Numeri da scripts/_run_anatomia_club.py
 docs/AUDIT_FASI_80_100.md   verbale dell'audit delle ultime 20 fasi (Fase 101):
                  ogni rilievo con evidenza, stato (corretto / da decidere) e
                  rimando al punto del repo
@@ -673,7 +688,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.661 verdi al 12/08/2026; il ROSSO su
+tests/           test unitari (1.700 verdi al 13/08/2026; il ROSSO su
                  test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_
                  dalla_convenzione_di_smarkets e' stato chiuso il 10/08 -- non
                  era un join rotto ma una copertura mancante, e la guardia

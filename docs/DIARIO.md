@@ -19259,3 +19259,189 @@ prezzi di oggi. I diciotto giorni fra il 26/07 e il 12/08 **non tornano**, e
 lo script non finge il contrario: è la stessa scelta della Fase 144 sulle
 chiusure perse, dove la riparazione è deliberatamente assente perché quel
 prezzo non esiste più.
+
+---
+
+## Fase 154 — Un club fuori dai nostri campionati non è un club mancante: è un club senza contesto
+
+**Obiettivo.** Rispondere a una domanda di metodo dell'utente (13/08/2026):
+«capiterà sempre più spesso di avere nel dataset squadre che non sono nei
+nostri campionati... come ci comportiamo in quei casi? magari cerchiamo di
+capire bene il funzionamento del dataset per capire come comportarci». Non un
+esperimento: una **decisione di perimetro**, che però andava presa su numeri e
+non su impressioni.
+
+**Ragionamento / ipotesi.** L'impressione con cui si arrivava era quella
+lasciata dalla Fase 153-bis: «158 club su 307 delle coppe UEFA non hanno un
+campionato nel dataset», letta come un buco da tappare. L'ipotesi da mettere
+alla prova era che quel buco fosse **un buco di dati** — cioè che ai club fuori
+perimetro mancassero *le informazioni*. Se fosse vero, il rimedio sarebbe
+raccogliere; se falso, il rimedio è un altro.
+
+**Alternative considerate.**
+1. costruire `data/nazionalità_club.csv` a mano, dal web, come proposto il 12/08;
+2. dedurre la lega dalle partite di campionato di quei club;
+3. **misurare prima quali fatti esistono davvero**, club per club, e poi decidere.
+
+**Scelta: la terza**, e ha reso inutili le prime due.
+`scripts/_run_anatomia_club.py` misura, per ogni `club_id` che abbia giocato
+almeno una partita, quali colonne sono piene.
+
+**Risultato.**
+
+*(a) Non manca il club: manca il suo contesto.* Diviso l'universo in tre
+cerchi — nei nostri 5 campionati (176 club), negli altri 27 coperti (617),
+fuori (2.481):
+
+| cerchio | partite | formazioni | presenze giocatore | anagrafica gioc. | `clubs.csv` |
+|---|---:|---:|---:|---:|---:|
+| A · nostri 5 | 61.104 | 92,0% | 851.904 | 100% | 176/176 |
+| B · altri 27 | 92.752 | 91,4% | 1.031.384 | 100% | 617/617 |
+| C · fuori | 24.060 | 85,6% | 11.062 | 100% | **0**/2.481 |
+
+Le partite ci sono, i giocatori ci sono, l'anagrafica è piena al 100% in tutti
+e tre. Mancano **l'etichetta di campionato** e **la riga di contesto**.
+
+*(b) Il cerchio C non è una cosa sola: sono quattro famiglie.* 109 sono
+**nazionali** (stanno nello stesso spazio dei `club_id`: Italia, Brasile, Spagna);
+104 sono **orfani** (giocano ma non sono nel registro, e `home_club_name` è
+vuoto su quelle righe); **1.997** hanno il **paese deducibile dal dato** perché
+giocano una coppa nazionale — chi gioca la FA Cup è inglese, e la deduzione dà
+**0 ambiguità su 1.997**; restano **375** che giocano solo coppe UEFA.
+
+*(c) Il limite non è tappabile, e non è un difetto.* I club del cerchio C
+giocano **0** partite di campionato domestico. Zero, non «poche». Quindi la
+loro lega non è deducibile — e la domanda perde interesse, perché un club di
+cui non abbiamo nemmeno una partita di campionato non è modellabile con niente
+di quello che abbiamo, qualunque etichetta gli si attacchi.
+
+*(d) L'etichetta di lega è statica e non si contraddice mai (R8).* Club con
+partite in più di un campionato domestico: **0 su 793**. Club la cui etichetta
+contraddice le sue partite: **0**. I 39 club che hanno giocato in Serie A sono
+etichettati `IT1` tutti e 39, anche quelli il cui `last_season` è il 2013.
+`domestic_competition_id` è «l'unico dei 32 campionati coperti in cui quel club
+è mai apparso»: non mente mai, ma **non risponde** a «in che serie era nel 2019».
+
+*(e) Due anomalie dichiarate (R4).* Cinque `competition_id` di `games.csv` non
+esistono in `competitions.csv` (`CGB`, `COL1`, `KLUB`, `POCP`, `UKRS`), e
+`COL1` è anche l'unico codice usato come etichetta di lega senza riga
+anagrafica: i campionati *usati* sono 32, quelli *anagrafati* 31.
+
+*(f) Il rischio vero era un altro, e sono stati riparati due casi.* Un club
+assente si vede; un club agganciato **al club sbagliato** no.
+- **`Espanol` → `Jove Español San Vicente`** (25462, Tercera División, UNA
+  partita in `games.csv`) invece di RCD Espanyol (714), su **266 partite di La
+  Liga**, con esito etichettato «univoco». Riparato con un alias; misura di
+  controllo indipendente, la ricomposizione snapshot↔`games.csv`: **15.839 →
+  16.105 su 16.111** (98,31% → 99,96%), coppie inesistenti **272 → 6**.
+- **`Red Star FC` → Red Star Belgrade** (159): il divieto esisteva per la forma
+  corta, ma il confronto è letterale e bastava allungare il nome. Riparato
+  elencando le forme lunghe (stessa cosa per `US Lusitanos` → 28958).
+
+**Lezione / cosa ne consegue.** Due, e la seconda è quella che è costata.
+
+*La prima:* il criterio operativo non è «questo club è dentro o fuori», è **che
+cosa devo farci**. Come *avversario* di una nostra squadra il dato c'è già in
+tutti e tre i cerchi e non serve fare niente; come *soggetto* da prezzare serve
+storia di campionato, e nel cerchio C è impossibile per misura; come *candidato
+all'allargamento* si guarda il cerchio B, dove l'etichetta esiste già. La
+procedura completa è in **`docs/CLUB_FUORI_PERIMETRO.md`**.
+
+*La seconda:* **la riparazione ovvia era sbagliata, e solo la misura l'ha
+fermata.** Visto che `NON_AGGANCIARE` confronta la stringa grezza, la
+correzione naturale era confrontare gli insiemi di token di `normalizza`. Provata
+su un universo di 3.339 nomi, **rompe due agganci giusti**: `Athletic Bilbao`
+(621) e `FC Lusitanos` (28958) sparirebbero, perché `normalizza` torna un
+frozenset — quindi perde l'**ordine**, e «Bilbao Athletic» (la riserva, vietata)
+collassa su «Athletic Bilbao» — e butta le **stopword**, quindi «Lusitanos» (il
+club francese, assente dal registro) collassa su «FC Lusitanos» (l'andorrano,
+presente). Le due classi di divieto — riserve e omonimi stranieri — hanno
+bisogni **opposti**, e nessuno schema unico le serve entrambe: la regola resta
+letterale e per-voce, con un test che tiene ferma la decisione perché la
+prossima sessione non ci riprovi.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: la fase misura coperture e ripara un **join**. La
+formula rilevante è il predicato di aggancio di `src/data/club_matching.py`,
+trascritto dal sorgente.
+
+```
+normalizza(n) = { t : t ∈ token(n),  t ∉ STOPWORD,  ¬t.isdigit() }        (1)
+    dove token(n) = split della stringa dopo: traduzione dei caratteri che
+    NFKD non decompone (ø→o, ł→l, đ→d, ß→ss, æ→ae, œ→oe, ð→d, þ→th, ı→i),
+    NFKD + rimozione dei combining, lower(), saint|sankt → st, e sostituzione
+    di ogni carattere non [a-z0-9 ] con uno spazio.
+    ⚠️ il valore è un frozenset: l'ORDINE dei token non esiste.
+
+candidati(n):
+    se  strip(lower(n)) ∈ NON_AGGANCIARE          → []                     (2)
+    ts = ALIAS[normalizza(n)]  se definito, altrimenti normalizza(n)       (3)
+    se  ts = ∅  oppure  ∃ t ∈ ts : t ∉ indice     → []                     (4)
+    C  = ⋂_{t ∈ ts} indice[t]                     (i club che hanno TUTTI  (5)
+                                                   i token del nome)
+    E  = { c ∈ C : normalizza(name[c]) = ts }     (uguaglianza esatta)     (6)
+    ritorna  sorted(E)  se E ≠ ∅,  altrimenti  sorted(C)                  (7)
+
+aggancia(n) = l'unico elemento di candidati(n) se |candidati(n)| = 1,
+              altrimenti None.                                            (8)
+```
+
+**Perché il difetto `Espanol` era invisibile.** Il nome canonico interno del
+progetto è `Espanol` senza la y (`sources.TEAM_ALIASES` mappa lì quattro forme
+diverse), mentre il registro scrive «RCD Espanyol Barcelona». Quindi
+`normalizza("Espanol") = {espanol}` e `normalizza("RCD Espanyol Barcelona") =
+{espanyol, barcelona}`: il club giusto **non entra nemmeno fra i candidati**
+alla riga (5), perché non possiede il token `espanol`. L'unico club del
+registro che lo possiede è «Jove Español San Vicente» → `|C| = 1` → la (8)
+restituisce un `club_id`, e l'esito esce **etichettato univoco**. È la R6 nella
+sua forma pura: non un `None` da riempire, un valore che *sembra* una misura.
+La riparazione agisce alla riga (3): `ALIAS[{espanol}] = {espanyol, barcelona}`.
+Agisce sull'**insieme esatto**, non su un contenimento, quindi
+`normalizza("Jove Español San Vicente") = {espanol, jove, san, vicente} ≠
+{espanol}` non viene intercettato e il club di Tercera resta al suo posto
+(verificato: `aggancia("Jove Español San Vicente") = 25462`, invariato).
+
+**Perché la riga (2) non può diventare `ts ∈ NON_AGGANCIARE_TOKEN`.** Perché
+la (1) è **non iniettiva** in due modi indipendenti, e ciascuno dei due manda
+in collisione una coppia che il divieto deve tenere separata:
+
+```
+perdita dell'ORDINE      normalizza("Bilbao Athletic") = normalizza("Athletic Bilbao")
+                         = {bilbao, athletic}
+                         vietata la prima (riserva, Segunda) — la seconda è 621
+
+perdita delle SIGLE      normalizza("Lusitanos") = normalizza("FC Lusitanos")
+   (fc ∈ STOPWORD)       = {lusitanos}
+                         vietata la prima (US Lusitanos Saint-Maur, assente dal
+                         registro) — la seconda è 28958, l'andorrano, presente
+```
+
+Misurato su 3.339 nomi (registro + 5 snapshot + coppe 2025-26 + Smarkets), il
+passaggio ai token cambia **3** esiti: 1 giusto (`Espanol`) e **2 sbagliati**
+(`Athletic Bilbao` e `FC Lusitanos` → `[]`). Con la (2) lasciata letterale e le
+forme lunghe elencate a mano, gli esiti che cambiano sono **1 solo**, quello
+voluto, e il profilo dell'universo resta identico (univoci 3.279, ambigui 50,
+assenti 10 prima e dopo).
+
+**Il numero di controllo, e perché è indipendente.** La bontà della
+riparazione non è misurata sulla somiglianza delle stringhe — che è proprio il
+canale rotto — ma ricomponendo ogni partita degli snapshot contro `games.csv`
+sulla chiave (data, `club_id` casa, `club_id` trasferta), cioè su una fonte che
+non sa nulla dei nostri nomi:
+
+```
+                          ricomposte / 16.111     coppie inesistenti
+prima                     15.839  (98,31%)              272
+dopo                      16.105  (99,96%)                6
+```
+
+I **6** residui sono dichiarati (R4) e non sono agganci sbagliati: slittamenti
+di ±1 giorno con squadre e punteggio identici (Ath Madrid-Elche 29 vs
+30/12/2022; Granada-Ath Bilbao 11 vs 10/12/2023; quattro partite di Ligue 1
+2019-20). Restano i **2** scarti di punteggio già noti e già spiegati da R1
+(Verona-Roma 19/09/2020, Union Berlin-Bochum 14/12/2024).
+
+**Nessuna correzione ai dati.** Gli snapshot non sono stati toccati: la
+riparazione vive nel codice di aggancio, quindi `data/correzioni_dichiarate.csv`
+(R3) non è coinvolto.

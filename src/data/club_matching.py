@@ -100,6 +100,21 @@ ALIAS: dict[str, str] = {
     # Stesso motivo dei precedenti, e stessa verifica (1 solo candidato).
     "Inter": "Inter Milan",
     "Verona": "Hellas Verona",
+    # ⚠️ FINTO PIENO (R6), trovato il 11/08/2026 e riparato il 13/08/2026. Il
+    # nome canonico interno del progetto e' «Espanol» senza la y
+    # (src/data/sources.py, TEAM_ALIASES: "Espanyol" -> "Espanol"), mentre il
+    # registro scrive «RCD Espanyol Barcelona»: {espanol} non pescava il club
+    # giusto ma «Jove Español San Vicente» (25462, Tercera Division, UNA
+    # partita in games.csv), ed usciva etichettato «univoco». Non un aggancio
+    # mancato: una certezza sbagliata.
+    # Verificato con informazione indipendente, non per somiglianza di stringa:
+    # (a) tutte e 266 le partite dello snapshot La Liga ricompongono contro
+    #     games.csv per data + club_id avversario + punteggio esatto;
+    # (b) il profilo di presenza coincide — 7 stagioni su 9, assente 2020-21 e
+    #     2023-24 (retrocessione), esattamente come il club 714 in games.csv;
+    # (c) data/coppe_2526/partite.csv, fonte diversa e gia' agganciata, scrive
+    #     «RCD Espanyol Barcelona» -> 714.
+    "Espanol": "RCD Espanyol Barcelona",
     "Man City": "Manchester City",
     "Man United": "Manchester United",
     "Newcastle": "Newcastle United",
@@ -193,11 +208,20 @@ NON_AGGANCIARE: frozenset[str] = frozenset({
     # «Red Star» = Red Star FC (Ligue 2, Saint-Ouen; L2 secondo Wikipedia).
     # Il registro ha SOLO Red Star Belgrade (159): 190 partite fra SER1, CL e
     # EL, mai una francese. Il club francese non c'e' affatto.
-    "red star",
+    # ⚠️ Le forme LUNGHE stanno qui accanto perche' il confronto e' letterale
+    # (vedi la nota sotto `normalizza`): senza, `aggancia("Red Star FC")`
+    # tornava **159**, cioe' proprio la certezza sbagliata che questa voce
+    # esiste per impedire. Nessuna fonte in casa le scrive ancora — misurato su
+    # 3.339 nomi — sono qui prima che serva, non dopo.
+    "red star", "red star fc", "red star f.c.", "red star saint-ouen",
     # «Lusitanos» = US Lusitanos Saint-Maur (National 2; N2 secondo Wikipedia).
     # Il registro ha SOLO FC Lusitanos (28958), che e' **andorrano**: 8 partite,
     # tutte di qualificazione CL/EL fra il 2012 e il 2016.
-    "lusitanos",
+    # ⚠️ Qui la forma lunga da vietare e' quella con **US** (il club francese);
+    # «FC Lusitanos» NON va vietata, perche' e' il nome del club andorrano che
+    # nel registro c'e' davvero. Due sigle diverse, due club diversi: e' il
+    # motivo per cui questo elenco non puo' ignorare le sigle societarie.
+    "lusitanos", "us lusitanos", "us lusitanos saint-maur",
     # ⚠️ «Pirae» NON sta qui: AS Pirae (17782) e' il club giusto — Tahiti, e la
     # Coupe de France ammette davvero le squadre d'oltremare. Verificato:
     # Wikipedia lo da' in «Tahiti Ligue 1», e il registro lo ha per il Mondiale
@@ -217,6 +241,34 @@ def normalizza(nome: str) -> frozenset[str]:
     return frozenset(
         t for t in s.split() if t and t not in _STOPWORD and not t.isdigit()
     )
+
+
+# ⚠️ PERCHE' `NON_AGGANCIARE` CONFRONTA LA STRINGA E NON I TOKEN (misurato il
+# 13/08/2026, dopo aver provato il contrario e averlo dovuto ritirare).
+#
+# Il confronto sulla stringa grezza sembra fragile, e in parte lo e': il
+# divieto si aggira scrivendo il nome un filo piu' lungo — `aggancia("Red
+# Star")` da' correttamente `None`, ma `aggancia("Red Star FC")` dava **159 =
+# Red Star Belgrade**. La riparazione ovvia e' confrontare gli insiemi di token
+# (`normalizza`), che buttano via le sigle societarie. **E' stata provata, e
+# rompe due agganci giusti su tre nomi cambiati:**
+#
+#     'Athletic Bilbao'  621 (giusto)             -> []   ✗
+#     'FC Lusitanos'     28958 (giusto, Andorra)  -> []   ✗
+#     'Espanol'          25462 (sbagliato)        -> 714  ✓
+#
+# Il motivo e' scritto poche righe piu' su e vale in entrambi i sensi:
+# `normalizza` torna un **frozenset**, quindi perde l'ORDINE — «Bilbao
+# Athletic» (la riserva, vietata) e «Athletic Bilbao» (la prima squadra)
+# collassano sullo stesso insieme — e butta le stopword, quindi «Lusitanos»
+# (il club francese, che nel registro non c'e') e «FC Lusitanos» (l'andorrano,
+# che c'e') collassano anche loro.
+#
+# Le due classi di divieto hanno quindi bisogni OPPOSTI: le riserve chiedono un
+# confronto che tenga l'ordine, gli omonimi stranieri uno che ignori le sigle.
+# Nessuno schema unico le serve entrambe. La regola resta percio' **letterale e
+# per-voce**: ogni omonimo elenca le sue forme scritte, e aggiungerne una
+# quando una fonte nuova la produce e' un rigo, non un cambio di semantica.
 
 
 class Agganciatore:

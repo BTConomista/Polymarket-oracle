@@ -147,6 +147,12 @@ def test_esonimi_italiani_dei_club_francesi(diretta, club_id, chi):
 @pytest.mark.parametrize("nome, perche", [
     ("Red Star", "Red Star FC (Ligue 2) — il registro ha solo il Belgrado"),
     ("Lusitanos", "US Lusitanos Saint-Maur (N2) — il registro ha solo l'andorrano"),
+    # Le forme LUNGHE: il confronto e' letterale, quindi ogni grafia va
+    # elencata. Senza, `aggancia("Red Star FC")` tornava 159 = Belgrado —
+    # misurato il 13/08/2026, ed e' esattamente la certezza sbagliata che la
+    # voce corta esiste per impedire.
+    ("Red Star FC", "la sigla societaria non deve aggirare il divieto"),
+    ("US Lusitanos", "la sigla US e' proprio quella del club francese"),
 ])
 def test_omonimi_stranieri_restano_vuoti(nome, perche):
     """Il caso «Brest» daccapo: un nome corto che pesca un club estero.
@@ -168,6 +174,60 @@ def test_un_omonimo_che_non_e_un_omonimo_resta_agganciato():
     guardato, non al posto di guardare.
     """
     assert Agganciatore().aggancia("Pirae") == 17782
+
+
+@pytest.mark.parametrize("nome, club_id, perche", [
+    ("Athletic Bilbao", 621,
+     "«Bilbao Athletic» (la riserva) e' vietata, ma differisce solo per ORDINE"),
+    ("FC Lusitanos", 28958,
+     "«Lusitanos» e' vietato, ma differisce solo per la SIGLA societaria"),
+])
+def test_il_divieto_e_letterale_e_non_travolge_i_nomi_vicini(nome, club_id, perche):
+    """Perche' `NON_AGGANCIARE` confronta la stringa e non i token.
+
+    E' il test che tiene ferma una decisione presa DOPO aver provato il
+    contrario (13/08/2026). Confrontare gli insiemi di `normalizza` sembra la
+    riparazione ovvia — chiude «Red Star FC» — ma su un universo di 3.339 nomi
+    rompe questi due agganci giusti: `normalizza` torna un frozenset, quindi
+    perde l'ordine («Bilbao Athletic» = «Athletic Bilbao») e butta le stopword
+    («Lusitanos» = «FC Lusitanos»).
+
+    Le due classi di divieto hanno bisogni opposti e nessuno schema unico le
+    serve entrambe: la regola resta letterale e per-voce. Se un giorno qualcuno
+    ci riprova, questo test lo ferma.
+    """
+    assert Agganciatore().aggancia(nome) == club_id, perche
+
+
+# --------------------------------------------------------------------------- #
+# il FINTO PIENO dell'Espanyol (R6) — audit dell'identita', riparato il 13/08/2026
+# --------------------------------------------------------------------------- #
+def test_espanol_aggancia_il_club_di_liga_e_non_la_tercera_division():
+    """«Espanol» e' il nome canonico INTERNO del progetto (senza la y).
+
+    Il registro scrive «RCD Espanyol Barcelona» **con** la y, quindi il token
+    {espanol} non lo pescava affatto: pescava «Jove Español San Vicente»
+    (25462, UNA partita in `games.csv`) e usciva etichettato **univoco**. Non
+    un aggancio mancato — una certezza sbagliata, su 266 partite di La Liga.
+
+    Verificato con informazione indipendente: tutte e 266 le partite dello
+    snapshot ricompongono contro `games.csv` per data + club_id avversario +
+    punteggio esatto, e il profilo di presenza coincide (assente 2020-21 e
+    2023-24, le due retrocessioni).
+    """
+    assert Agganciatore().aggancia("Espanol") == 714
+
+
+def test_lalias_espanol_non_travolge_il_club_omonimo_di_tercera():
+    """Senza questo, un alias troppo largo passerebbe inosservato.
+
+    «Jove Español San Vicente» esiste davvero e ha il suo `club_id`: l'alias
+    agisce sull'insieme di token esatto ({espanol}), non su un contenimento,
+    quindi il club di Tercera resta al suo posto.
+    """
+    A = Agganciatore()
+    assert A.aggancia("Jove Español San Vicente") == 25462
+    assert A.aggancia("Espanyol") == 714
 
 
 # --------------------------------------------------------------------------- #

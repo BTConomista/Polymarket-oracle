@@ -1524,6 +1524,72 @@ regola §5-ter, non perché serva; il suo `is_win` è per giunta **lossy** — i
 
 ---
 
+## 5-decies · L'identità di un CLUB in player-scores, e i club fuori dai nostri 5 campionati (Fase 154)
+
+Misurato da `scripts/_run_anatomia_club.py`. La procedura operativa completa —
+che cosa si fa quando entra un club che non è nei nostri campionati — sta in
+**`docs/CLUB_FUORI_PERIMETRO.md`**; qui restano solo i fatti sulle colonne.
+
+**Due file parlano di club, e non sono intercambiabili.**
+
+| file | righe | disponibilità | contenuto |
+|---|---:|---|---|
+| `club_names.csv.gz` | 3.173 | statico | il **registro**: `club_id`, `name`, `domestic_competition_id` |
+| `clubs.csv.gz` | 796 | statico | il **contesto**: rosa, età media, stadio, valore, `coach_name` |
+
+⚠️ **Le coperture si misurano per COLONNA, non per file.** Nel registro il
+**nome** è pieno su 3.173/3.173 (100%), il **campionato domestico** su
+**796/3.173 (25,1%)** — e sono esattamente i club che stanno in `clubs.csv`.
+Dire «il file giusto è `club_names`» è vero per il nome e falso per la lega.
+
+**`domestic_competition_id` — disponibilità `statico`, e va letto per quello che è.**
+Non è «la lega di oggi» né «la lega di quella stagione»: è *l'unico dei 32
+campionati coperti in cui quel club è mai apparso*. Misurato: **0 club su 793**
+hanno partite in più di un campionato domestico, **0** hanno un'etichetta che
+contraddice le proprie partite, e i 39 club che hanno giocato in Serie A sono
+etichettati `IT1` tutti e 39, anche con `last_season` 2013. Non mente mai, ma
+**non risponde** a «in che serie era nel 2019»: per quello serve `games.csv`.
+
+**Che cosa esiste per un club a seconda di dove gioca.** 3.274 `club_id` hanno
+giocato almeno una partita:
+
+| | club | partite | formazioni | presenze gioc. | anagrafica gioc. | `clubs.csv` |
+|---|---:|---:|---:|---:|---:|---:|
+| nei nostri 5 campionati | 176 | 61.104 | 92,0% | 851.904 | 100% | 176/176 |
+| negli altri 27 coperti | 617 | 92.752 | 91,4% | 1.031.384 | 100% | 617/617 |
+| **fuori** | 2.481 | 24.060 | 85,6% | 11.062 | 100% | **0**/2.481 |
+
+Fuori perimetro **non mancano i fatti**: mancano l'etichetta di lega e il
+contesto. E i 2.481 sono **quattro famiglie**: 109 **nazionali** (vivono nello
+stesso spazio dei `club_id`), 104 **orfani** (giocano, non sono nel registro, e
+`home_club_name` è vuoto su quelle righe), **1.997** col paese **deducibile dal
+dato** perché giocano una coppa nazionale (0 ambiguità su 1.997), **375** senza
+alcun paese ricavabile.
+
+⛔ **La lega dei club fuori perimetro non è deducibile**: giocano **0** partite
+di campionato domestico. Non è un buco da tappare, è il perimetro della fonte.
+
+**R4 — cinque `competition_id` di `games.csv` non esistono in `competitions.csv`**:
+`CGB` (246 partite), `COL1` (200), `KLUB` (156), `POCP` (602), `UKRS` (10).
+`COL1` è anche l'unico codice usato come etichetta di lega senza riga
+anagrafica: i campionati **usati** sono 32, quelli **anagrafati** 31.
+
+**Aggancio dei nomi (`src/data/club_matching.py`).** Su un universo di 3.339
+nomi (registro + 5 snapshot + coppe 2025-26 + Smarkets): **3.279 univoci, 50
+ambigui, 10 assenti**. Il pericolo non sono gli ambigui e gli assenti — quelli
+si vedono — ma gli **univoci sbagliati** (R6). Due riparati alla Fase 154:
+`Espanol` (puntava a un club di Tercera División su 266 partite di La Liga) e
+`Red Star FC` (puntava al Belgrado). Misura di controllo indipendente, la
+ricomposizione snapshot↔`games.csv` su (data, `club_id` casa, `club_id`
+trasferta): **15.839 → 16.105 su 16.111** (98,31% → 99,96%). I **6** residui
+sono slittamenti di ±1 giorno con squadre e punteggio identici, e i **2** scarti
+di punteggio sono i casi R1 già noti.
+
+**Stato d'uso: usato** — `club_matching` è il ponte fra i nomi delle nostre
+fonti e i `club_id` di player-scores (carriere, coppe, Smarkets).
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

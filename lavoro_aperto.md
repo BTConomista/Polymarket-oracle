@@ -649,7 +649,7 @@ operativa di ciò che è rimasto aperto; i numeri stanno nei due verbali.*
 > Fase 98 → un nullo non chiude il fronte) e la **licenza**, dichiaratamente non
 > risolta (`files/diretta_serie_a_2526/README.md` §1-bis).
 
-### B · Lavori concreti, nessuna decisione richiesta (4)
+### B · Lavori concreti, nessuna decisione richiesta (5)
 
 | # | cosa | costo | valore |
 |---|---|---|---|
@@ -657,6 +657,7 @@ operativa di ciò che è rimasto aperto; i numeri stanno nei due verbali.*
 | B2 | **I token di `description` mai estratti** da `game_events` — fra cui **due falli individuali VERI**: `Handball by` (832) e `Fouled player` (2.256); più `Counter attack goal` (1.430), `Tap-in` (829), `Direct free kick` (783) | poche ore | i falli individuali erano in checklist come «Tier B, nessuna fonte»: **ci sono già**. ⚠️ subordinato ad A1 |
 | B3 | **Chiudere o congelare le 13 voci ASSUNTE** dell'audit | variabile | finché sono ASSUNTE **non vanno usate**: sono dichiarate a posto e mai misurate |
 | B4 | 🩹 **Ri-scaricare il dump infortuni di Transfermarkt** (`transfermarkt._load_injuries(force=True)`) e ricostruire `absent_*_est` | mezz'ora + ~106 MB | la fonte è **ferma a settembre 2025** (Fase 150): la colonna è piena di `0.0` che significano «non lo so», e da ottobre non registra **zero** infortuni nuovi su 2.946 passi. Non tocca nessuna previsione (`covariates` è `()`) ma rende il 2025-26 inutilizzabile per qualunque prova sulle assenze. ⚠️ **Prima verificare che la fonte sia avanzata**, altrimenti si ri-scaricano 106 MB per gli stessi zeri. Quando è riparata: `tests/test_assenze_congelate.py` diventa rosso apposta, e vanno aggiornati `docs/DATI.md` §4-quater e §3 |
+| B5 | 🔎 **La caccia agli agganci UNIVOCI E FALSI su tutte le fonti** — il punto 3 della lista di ripresa di `docs/audit_identita/00_indice.md` §7, mai eseguito | poche ore | i due casi noti sono **riparati** (Fase 154: `Espanol`, `Red Star FC`), ma la caccia sistematica no. Il metodo esiste ed è indipendente dalla stringa: ricomporre ogni partita contro `games.csv` sulla chiave (data, `club_id` casa, `club_id` trasferta) — è quello che ha dato 15.839 → 16.105 su 16.111. ⚠️ Sugli snapshot è **già fatto e pulito**; resta da fare su coppe, Smarkets e raccolte a tre fonti. È la categoria che nessun conteggio di celle piene vede (R6) |
 
 ### C · Buchi strutturali DICHIARATI — non sono da risolvere, sono da non ri-scoprire
 

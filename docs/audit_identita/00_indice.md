@@ -97,6 +97,21 @@ verificato**: `Red Star FC` che aggancia la Stella Rossa di Belgrado, perché la
 guardia `NON_AGGANCIARE` confronta la stringa grezza e le basta un suffisso «FC»
 per essere aggirata.
 
+> ✅ **ENTRAMBI RIPARATI il 13/08/2026 (Fase 154).** `Espanol` con un alias
+> (`{espanol}` → `{espanyol, barcelona}`), `Red Star FC` elencando le forme
+> lunghe accanto a quella corta. Misura di controllo **indipendente dalla
+> stringa**, come chiede il §4: ricomposizione snapshot↔`games.csv` sulla chiave
+> (data, `club_id` casa, `club_id` trasferta), **15.839 → 16.105 su 16.111**
+> (98,31% → 99,96%), coppie inesistenti **272 → 6** (i 6 residui sono
+> slittamenti di ±1 giorno con squadre e punteggio identici, dichiarati R4).
+>
+> ⚠️ E una lezione per chi riprende: la riparazione «pulita» di `Red Star FC`
+> — confrontare il divieto sugli **insiemi di token** invece che sulla stringa
+> — è stata provata e **ritirata**, perché su 3.339 nomi rompe due agganci
+> giusti (`Athletic Bilbao`, `FC Lusitanos`): `normalizza` perde l'ordine e
+> butta le sigle, e le due classi di divieto hanno bisogni opposti. Dettagli e
+> test in `docs/DIARIO.md` §Fase 154.
+
 ### Perché questo cambia una frase detta lo stesso giorno
 
 Nella stessa sessione, poche ore prima, era stato riferito che gli snapshot dei
@@ -166,9 +181,11 @@ Python, non dati originali. Se servissero, si rifanno lanciando gli script.
 
 Non è un piano approvato, è la lettura di chi ha scattato la fotografia.
 
-1. **Prima i due agganci falsi** (`Espanol`, `Red Star FC`). Sono gli unici
+1. ~~**Prima i due agganci falsi** (`Espanol`, `Red Star FC`). Sono gli unici
    reperti che sporcano il dato su cui girano i backtest, e uno dei due è già
-   verificato. Tutto il resto può aspettare; questi no.
+   verificato. Tutto il resto può aspettare; questi no.~~
+   ✅ **FATTO il 13/08/2026** (Fase 154) — vedi il riquadro del §4. Il punto 1
+   della lista è quindi chiuso: chi riprende parte dal 2.
 2. **Poi la verifica**, non l'applicazione. 53 reperti su 64 non sono mai stati
    contraddetti da nessuno, e applicare una riparazione non verificata è come
    il flag `ORDINE_ALIAS_PRIMA` rimasto nel diff: sembra lavoro fatto, ed è
