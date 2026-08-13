@@ -105,8 +105,34 @@ FONTI = ("SofaScore", "WhoScored", "Understat")
 FONTI_PER_RACCOLTA: dict[str, tuple[str, ...]] = {
     "serie_a": FONTI, "premier_league": FONTI, "la_liga": FONTI,
     "bundesliga": FONTI, "ligue_1": FONTI,
+    "uefa_champions_league": ("SofaScore", "WhoScored"),
     "uefa_europa_league": ("SofaScore", "WhoScored"),   # niente Understat: -37 colonne
     "uefa_conference_league": ("SofaScore",),           # solo SofaScore: -75 colonne
+    # LE SEI SUPERCOPPE 2025-26 (consegna 13/08/2026). Solo la UEFA ha due
+    # fonti; le cinque nazionali arrivano con SofaScore soltanto.
+    #
+    # ⚠️ E le cinque a UNA fonte portano lo stesso **19 colonne `(WhoScored)`
+    # completamente vuote**: lo schema le prevede e la consegna non le riempie.
+    # Non e' un finto pieno (sono NaN oneste) ma e' la sua anticamera — chi
+    # guarda l'elenco delle colonne conclude «c'e' anche WhoScored» e ha torto.
+    # Da cui `fonti()`, che dice quali fonti coprono DAVVERO la raccolta, e
+    # `COLONNE_VUOTE`, che le elenca.
+    "supercoppa_uefa": ("SofaScore", "WhoScored"),
+    "supercoppa_italiana": ("SofaScore",),
+    "supercopa_espana": ("SofaScore",),
+    "community_shield": ("SofaScore",),
+    "dfl_supercup": ("SofaScore",),
+    "trophee_des_champions": ("SofaScore",),
+}
+
+#: Le raccolte che sono SUPERCOPPE, con la partita/e che contengono. Non e' una
+#: comodita': serve a dire «10 attese» invece di inchiodare un numero, come
+#: `DIMENSIONI` fa per i campionati. Due sono a **final four** (semifinali +
+#: finale), le altre quattro a partita secca.
+SUPERCOPPE: dict[str, int] = {
+    "supercoppa_uefa": 1, "community_shield": 1, "dfl_supercup": 1,
+    "trophee_des_champions": 1,
+    "supercoppa_italiana": 3, "supercopa_espana": 3,   # final four
 }
 
 # ⚠️⚠️ IL PUNTEGGIO DELLE UEFA SOMMA LA LOTTERIA DEI RIGORI.
@@ -126,6 +152,44 @@ COLONNE_PUNTEGGIO_VERO = (
     "Gol trasferta senza rigori (derivata)",
 )
 
+#: ⚠️⚠️ LA CONVENZIONE SUL PUNTEGGIO NON E' UNIFORME, ed e' costata un difetto
+#: silenzioso per un mese. `True` = `Gol casa/trasferta` SOMMA la lotteria dei
+#: rigori e va riparato; `False` = e' gia' il risultato della partita.
+#:
+#: La prima stesura (integrazione UEFA, 12/08/2026) aveva ragionato per FILE:
+#: la Conference dichiarava le colonne derivate, quindi «le raccolte UEFA sono
+#: coperte». **Falso**: l'Europa League ha lo stesso difetto e NON ha le colonne
+#: derivate, quindi `punteggio_vero()` le restituiva il punteggio gonfiato su
+#: 7 partite — fra cui un «Partizan-AEK Larnaca 7-7» che era 2-1.
+#:
+#: E il verso non e' nemmeno costante dentro la stessa famiglia: la CHAMPIONS,
+#: consegnata il giorno dopo, e' PULITA. Quindi non si deduce dal torneo, non si
+#: deduce dalla fonte, e non si deduce dalla presenza dei rigori: **si misura**.
+#:
+#: Come e' stata misurata (tre prove indipendenti, `_run_punteggio_coppe.py`):
+#:   1. contando i gol VERI negli eventi (`Tipo=Gol`, piu' `Tipo=Rigore` col
+#:      `Sottotipo=scored` — che non esiste: i rigori segnati sono gia' `Gol`
+#:      con `Sottotipo=penalty`, i `Rigore` sono tutti `missed`):
+#:      EL «Gol − Rigori» = eventi su **14/14** squadra-partita, «Gol» su 1/14;
+#:      Conference **12/12** contro 0/12;
+#:   2. contro la colonna DERIVATA che la Conference dichiara: la sottrazione
+#:      la riproduce **6/6** — cioe' la regola non e' inventata da noi;
+#:   3. sulle **1.334** squadra-partita SENZA lotteria, `Gol` == eventi
+#:      1.334/1.334: la riparazione tocca solo dove deve.
+#: Per Champions e supercoppe la prova e' l'identita' dei tempi
+#: (`gol_sono_regolamentari`): 281/281 e 10/10, con 8 partite ai rigori dentro.
+RIGORI_NEL_PUNTEGGIO: dict[str, bool] = {
+    "uefa_europa_league": True,      # 7 partite, nessuna colonna derivata
+    "uefa_conference_league": True,  # 6 partite, colonne derivate presenti
+    "uefa_champions_league": False,  # 4 partite ai rigori, punteggio gia' pulito
+    "supercoppa_uefa": False, "supercoppa_italiana": False,
+    "community_shield": False, "trophee_des_champions": False,
+    "supercopa_espana": False, "dfl_supercup": False,
+}
+
+#: Le colonne della lotteria, quando c'e'.
+COLONNE_RIGORI = ("Rigori casa (SofaScore)", "Rigori trasferta (SofaScore)")
+
 
 def fonti(lega: str = LEGA_DEFAULT) -> tuple[str, ...]:
     """Le fonti che coprono DAVVERO questa raccolta.
@@ -143,11 +207,51 @@ def punteggio_vero(df: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
     ⚠️ Nelle raccolte UEFA `Gol casa (SofaScore)` somma i rigori sulle partite
     decise ai rigori: Omonia-Wolfsberger legge «6» dove il campo ha detto 1.
     Dove l'export fornisce le colonne derivate le usa; altrove torna le colonne
-    normali, che nei campionati sono gia' giuste (non c'e' lotteria).
+    normali.
+
+    ⭐ E «altrove» non vuol dire «dove non ci sono i rigori». Le SUPERCOPPE
+    2025-26 hanno la lotteria (4 partite su 10) e **non** hanno le colonne
+    derivate — perche' non ne hanno bisogno: li' l'export tiene i rigori in una
+    colonna a parte (`Rigori casa (SofaScore)`) e `Gol casa` e' gia' il tempo
+    regolamentare. Non e' una promessa dell'export: e' **misurato**, e la
+    verifica e' `gol_sono_regolamentari()`, che va eseguita su ogni consegna
+    nuova invece di fidarsi.
     """
     if all(c in df.columns for c in COLONNE_PUNTEGGIO_VERO):
         return df[COLONNE_PUNTEGGIO_VERO[0]], df[COLONNE_PUNTEGGIO_VERO[1]]
     return df["Gol casa (SofaScore)"], df["Gol trasferta (SofaScore)"]
+
+
+def gol_sono_regolamentari(df: pd.DataFrame) -> pd.Series:
+    """TRIPWIRE: `Gol casa/trasferta` e' il 90', o ci sono dentro i rigori?
+
+    L'identita' che lo decide non e' un'opinione — e' una scomposizione esatta:
+
+        Gol casa = Casa 1T + Casa 2T        (e lo stesso per la trasferta)
+
+    Se i rigori fossero sommati dentro `Gol`, l'uguaglianza salterebbe di
+    esattamente il numero dei rigori segnati. Misurata sulle sei supercoppe:
+    **10 partite su 10 la rispettano**, comprese le 4 decise ai rigori
+    (PSG-Tottenham 2-2 e rigori 4-3, Palace-Liverpool 2-2 e 3-2,
+    PSG-Marsiglia 2-2 e 4-1, Bologna-Inter 1-1 e 3-2).
+
+    ⚠️ Non e' una verifica «una volta e via»: e' una **guardia**. Se una
+    consegna futura contenesse i TEMPI SUPPLEMENTARI, i loro gol non stanno ne'
+    nel 1T ne' nel 2T e l'identita' salterebbe **pur essendo il dato giusto**.
+    In quel caso non si aggiusta il codice: si guarda la partita e si scrive
+    che cosa e' successo (R5, «spiegare prima di accusare»).
+
+    Torna una Series booleana allineata a `df`, una riga per squadra-partita.
+    """
+    serve = ("Gol casa (SofaScore)", "Gol trasferta (SofaScore)",
+             "Casa 1T (SofaScore)", "Trasferta 1T (SofaScore)",
+             "Casa 2T (SofaScore)", "Trasferta 2T (SofaScore)")
+    mancanti = [c for c in serve if c not in df.columns]
+    if mancanti:
+        raise KeyError(f"servono i tempi per verificare il punteggio: mancano {mancanti}")
+    casa = df["Casa 1T (SofaScore)"] + df["Casa 2T (SofaScore)"]
+    fuori = df["Trasferta 1T (SofaScore)"] + df["Trasferta 2T (SofaScore)"]
+    return (df["Gol casa (SofaScore)"] == casa) & (df["Gol trasferta (SofaScore)"] == fuori)
 
 
 def raccolta(lega: str = LEGA_DEFAULT) -> Path:
@@ -174,9 +278,68 @@ def leghe_disponibili() -> list[str]:
 # piena al 95,9% in Premier. Non e' un difetto dell'export ma una copertura
 # diversa della fonte — trattarla come costante avrebbe fatto scartare un dato
 # buono su una lega per un buco che stava sull'altra.
+#
+# ⚠️ NELLE SUPERCOPPE LE COLONNE VUOTE SONO 41, e non e' un difetto: sono TRE
+# famiglie con tre cause diverse, e distinguerle e' il punto.
+#
+#   (1) le 19 `(WhoScored)`  — la fonte non copre le cinque supercoppe
+#       nazionali. Lo schema le prevede lo stesso: chi legge l'elenco delle
+#       colonne conclude «c'e' anche WhoScored» e ha torto. Vedi `fonti()`.
+#   (2) le 6 dei TEMPI SUPPLEMENTARI — vuote perche' i supplementari non si
+#       sono giocati. ⭐ Non e' una curiosita': e' la conferma indipendente del
+#       tripwire `gol_sono_regolamentari()`. Se un giorno si giocassero, queste
+#       si riempirebbero E l'identita' `Gol = 1T + 2T` salterebbe: due segnali
+#       che si controllano a vicenda.
+#   (3) le 14 di CLASSIFICA (`Punti`, `Posizione`, `Vittorie`, `Girone`...) —
+#       una supercoppa non ha una classifica. Vuote per natura del torneo.
+#
+# `Rigori casa/trasferta (SofaScore)` e' vuota nelle due supercoppe che NON
+# hanno avuto lotteria (Supercopa e DFL) e piena nelle altre quattro: e' una
+# colonna condizionale, non un buco.
+_WHOSCORED_ASSENTE = (
+    "Allenatore casa (WhoScored)", "Allenatore trasferta (WhoScored)",
+    "Arbitro (WhoScored)", "Eventi Opta (WhoScored)", "ID casa (WhoScored)",
+    "ID partita (WhoScored)", "ID trasferta (WhoScored)", "Meteo (WhoScored)",
+    "Minuti giocati (WhoScored)", "Modulo casa (WhoScored)",
+    "Modulo trasferta (WhoScored)", "Novanta minuti (WhoScored)",
+    "Primo tempo (WhoScored)", "Rigori (WhoScored)", "Risultato (WhoScored)",
+    "Spettatori (WhoScored)", "Stadio (WhoScored)", "Supplementari (WhoScored)",
+    "possession % (normalizzato) (WhoScored)",
+)
+_SUPPLEMENTARI = (
+    "Casa suppl. (SofaScore)", "Casa 1° suppl. (SofaScore)",
+    "Casa 2° suppl. (SofaScore)", "Trasferta suppl. (SofaScore)",
+    "Trasferta 1° suppl. (SofaScore)", "Trasferta 2° suppl. (SofaScore)",
+)
+_CLASSIFICA = (
+    "Differenza reti", "Girone", "Gol fatti", "Gol subiti", "Note classifica",
+    "Pareggi", "Partite giocate", "Posizione", "Punti", "Qualificazione",
+    "Sconfitte", "Tipo classifica", "Vittorie",
+)
+_SUPERCOPPA_UNA_FONTE = (_WHOSCORED_ASSENTE + _SUPPLEMENTARI + _CLASSIFICA
+                         + ("Discordanze", "Spettatori (SofaScore)",
+                            "Riempimento % (SofaScore)"))
+
 COLONNE_VUOTE: dict[str, dict[str, tuple[str, ...]]] = {
     "serie_a": {"squadre": ("Meteo (WhoScored)",), "heatmap": ("Tocchi",)},
     "premier_league": {"heatmap": ("Tocchi",)},
+    # ⭐ La Champions ne ha solo DUE su 183 colonne, ed e' la raccolta piu'
+    # piena dell'intera famiglia: ha le due fonti, i supplementari giocati e la
+    # classifica della fase campionato. `Note classifica` e' vuota perche' nel
+    # nuovo formato non ci sono note; `Meteo` e' assente in ogni consegna
+    # WhoScored tranne Premier e Liga (§`copertura`).
+    "uefa_champions_league": {"squadre": ("Meteo (WhoScored)", "Note classifica")},
+    # La UEFA ha due fonti: niente famiglia (1), e Spettatori e' PIENA.
+    "supercoppa_uefa": {"squadre": _SUPPLEMENTARI + _CLASSIFICA
+                        + ("Meteo (WhoScored)",)},
+    "supercoppa_italiana": {"squadre": _SUPERCOPPA_UNA_FONTE},
+    "community_shield": {"squadre": _SUPERCOPPA_UNA_FONTE},
+    "trophee_des_champions": {"squadre": _SUPERCOPPA_UNA_FONTE},
+    # Queste due non hanno avuto NESSUNA partita ai rigori: +2 colonne vuote.
+    "supercopa_espana": {"squadre": _SUPERCOPPA_UNA_FONTE
+                         + ("Rigori casa (SofaScore)", "Rigori trasferta (SofaScore)")},
+    "dfl_supercup": {"squadre": _SUPERCOPPA_UNA_FONTE
+                     + ("Rigori casa (SofaScore)", "Rigori trasferta (SofaScore)")},
     # ⚠️ In Liga `Meteo` NON e' qui perche' non e' vuota: e' **quasi** vuota,
     # 2 righe su 760 (0,3%). Lo stato di mezzo si chiede a `copertura()`, che
     # esiste apposta — vedi la sua docstring per perche' due stati non
@@ -349,6 +512,14 @@ ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
     # `eventi_opta`. Chi aggiunge una lega deve MISURARE quella colonna a parte,
     # perche' l'aggancio per PARTITA resta perfetto e non lo rivela.
     "bundesliga": {"RBL": "RB Leipzig"},
+    # ⚠️ TERZA occorrenza, e la peggiore: nella Supercoppa UEFA `eventi_opta`
+    # scrive la forma corta per **entrambe** le squadre, su 1.393 righe su
+    # 1.393 — cioe' il 100%, contro il 5% della Liga e il 6% della Bundesliga.
+    # Tre raccolte su quattro che hanno `eventi_opta` hanno questo difetto: e'
+    # la regola, non l'eccezione. Chi consegna una raccolta nuova con
+    # `eventi_opta` deve misurare quella colonna PRIMA di dichiararla agganciata.
+    "supercoppa_uefa": {"PSG": "Paris Saint-Germain",
+                        "Tottenham": "Tottenham Hotspur"},
 }
 
 # Quante SQUADRE e quante PARTITE ha ogni campionato. Non e' una costante:
@@ -385,7 +556,14 @@ PREFISSO_GIORNATA = "Giornata"
 E_CAMPIONATO: dict[str, bool] = {
     "serie_a": True, "premier_league": True, "la_liga": True,
     "bundesliga": True, "ligue_1": True,
+    "uefa_champions_league": False,
     "uefa_europa_league": False, "uefa_conference_league": False,
+    # Le supercoppe: il turno e' «Finale» (o «Semifinali» nelle due a final
+    # four). Trattarle da campionato butterebbe via TUTTA la raccolta, perche'
+    # nessun turno si chiama «Giornata N».
+    "supercoppa_uefa": False, "supercoppa_italiana": False,
+    "supercopa_espana": False, "community_shield": False,
+    "dfl_supercup": False, "trophee_des_champions": False,
 }
 
 
@@ -475,7 +653,41 @@ def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True,
         df = df[df["Periodo"] == periodo].copy()
 
     df = _normalizza_squadre(df, lega)
+    df = _scorpora_rigori(df, lega)
     return df.reset_index(drop=True)
+
+
+def _scorpora_rigori(df: pd.DataFrame, lega: str) -> pd.DataFrame:
+    """Aggiunge le colonne derivate del punteggio dove l'export non le da'.
+
+    La riparazione vive **in lettura**, come tutte le altre di questo modulo: i
+    file restano come consegnati (R3) e chi legge trova le stesse due colonne
+    che la Conference dichiara da sola, con lo stesso significato. Cosi'
+    `punteggio_vero()` funziona su ogni raccolta senza sapere quale sia.
+
+    Non tocca nulla dove `RIGORI_NEL_PUNTEGGIO` dice `False` — e li' aggiungere
+    le colonne sarebbe peggio che non farlo: sottrarre i rigori dal punteggio
+    della Champions darebbe **1 − 4 = −3** sulla finale PSG-Arsenal.
+    """
+    if not RIGORI_NEL_PUNTEGGIO.get(lega, False):
+        return df
+    if all(c in df.columns for c in COLONNE_PUNTEGGIO_VERO):
+        return df          # l'export le dichiara gia' (Conference)
+    if not all(c in df.columns for c in COLONNE_RIGORI):
+        raise KeyError(
+            f"{lega} e' dichiarata col punteggio gonfiato dai rigori ma non ha "
+            f"{COLONNE_RIGORI}: la riparazione non e' applicabile, verifica la consegna")
+    rig_c = pd.to_numeric(df[COLONNE_RIGORI[0]], errors="coerce").fillna(0)
+    rig_t = pd.to_numeric(df[COLONNE_RIGORI[1]], errors="coerce").fillna(0)
+    df = df.copy()
+    df[COLONNE_PUNTEGGIO_VERO[0]] = df["Gol casa (SofaScore)"] - rig_c
+    df[COLONNE_PUNTEGGIO_VERO[1]] = df["Gol trasferta (SofaScore)"] - rig_t
+    df["Decisa ai rigori (derivata)"] = pd.Series(
+        ["si" if x else "no" for x in (rig_c + rig_t > 0)], index=df.index)
+    n = int((rig_c + rig_t > 0).sum())
+    if n:
+        log.info("%s: scorporata la lotteria dei rigori da %d squadra-partita", lega, n)
+    return df
 
 
 def classifica(lega: str = LEGA_DEFAULT) -> pd.DataFrame:

@@ -1,0 +1,31 @@
+{
+ "lega": "supercopa_espana",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 18,
+   "sha256": "42d4493f57010e91ebf66f23b1dee33c64bdedef1092c71781d32507dc654f2c"
+  },
+  "giocatori.csv.gz": {
+   "righe": 269,
+   "sha256": "58fb0aebc1a300b51e7116292f8c3dd92e803e9405b822dc676c38f301a60233"
+  },
+  "eventi.csv.gz": {
+   "righe": 891,
+   "sha256": "0e6cec2d912b264089764c91f1f16141769c2d9cc56c977f4506b352d620508b"
+  },
+  "heatmap.csv.gz": {
+   "righe": 4777,
+   "sha256": "8a5cf6fab4e3fd4e828b4badd93a222a28483a6dcd6ac457ab002cc85c756d71"
+  },
+  "legenda.csv.gz": {
+   "righe": 342,
+   "sha256": "a5d3cd37b4b6f49011af891defd12fe4eb2ba2bbf143a59e8b78a85e3645e23f"
+  }
+ }
+}

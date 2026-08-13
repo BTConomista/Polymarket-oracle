@@ -1,0 +1,31 @@
+{
+ "lega": "dfl_supercup",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 6,
+   "sha256": "47963db512da499d70266c24b6d9ef503c56727959becfeb9c01e771f392d812"
+  },
+  "giocatori.csv.gz": {
+   "righe": 114,
+   "sha256": "1c9cd7a154c7d7a0f4106f9b47ae5e971e2f56c06f2456cb0278645e0539b1bb"
+  },
+  "eventi.csv.gz": {
+   "righe": 314,
+   "sha256": "2ad384d4a5ca0af26e96399d73b1be19a80af5ae764d53b07e093fb6b6276dc7"
+  },
+  "heatmap.csv.gz": {
+   "righe": 1445,
+   "sha256": "c6528716f0c1cd8adb151fd6224459eb71d206cd931522b273bda716c68f45bd"
+  },
+  "legenda.csv.gz": {
+   "righe": 325,
+   "sha256": "8c10bc5c6e3d90bdd2bfa4bc63628dcee1ee6b77594d59f6309d68e78a29c4da"
+  }
+ }
+}

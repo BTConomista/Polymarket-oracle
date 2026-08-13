@@ -1,0 +1,31 @@
+{
+ "lega": "community_shield",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 6,
+   "sha256": "65346eead5eb7e9722988b64ae5495bd747242b50d04229f5c9e662796f0d60f"
+  },
+  "giocatori.csv.gz": {
+   "righe": 107,
+   "sha256": "260c07770e76b9a5077b23dbd59e2e0b49e0d9c7bdd55cf6ea805e75e7cdbd2c"
+  },
+  "eventi.csv.gz": {
+   "righe": 320,
+   "sha256": "7785854e670562cc66db7bd8f5658237e3621b060c073d445a98c0b00b8b11d0"
+  },
+  "heatmap.csv.gz": {
+   "righe": 1464,
+   "sha256": "caa191357cf7b3d3da1bc1ebd8f0a33c987a1b7300cfc00ff4353b469834e791"
+  },
+  "legenda.csv.gz": {
+   "righe": 330,
+   "sha256": "932c3cb06da3bf28763ef9b7580a7c2a770ea3f9933ab9807adcf138747f8e68"
+  }
+ }
+}

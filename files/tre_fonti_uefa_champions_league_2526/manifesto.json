@@ -1,0 +1,36 @@
+{
+ "lega": "uefa_champions_league",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore",
+  "WhoScored"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 1594,
+   "sha256": "ecdc60fd36fdc0ac874d1aed9bcbde5992727381ebab45dbc6a849600a2c3ab1"
+  },
+  "giocatori.csv.gz": {
+   "righe": 16720,
+   "sha256": "2c34b5f2417c0a0b9df23f77525ae4aea8dd0c733f6f36d386e536210ab05e1f"
+  },
+  "eventi.csv.gz": {
+   "righe": 66514,
+   "sha256": "e2434a51bd2882ef08f8b5e0d72d648f350bb8c3fef7acb67afd7a25cf3f4bd4"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 294667,
+   "sha256": "b5eef13531981e9e7a1d4cb31bd5bf51c19b0d440ed02ce5b25d1b357fc6718a"
+  },
+  "heatmap.csv.gz": {
+   "righe": 346769,
+   "sha256": "3960dcc0c56e2bf052bcdc5d64706d31d9e021b98f144c43fe5d8f6c4de293a6"
+  },
+  "legenda.csv.gz": {
+   "righe": 499,
+   "sha256": "9df22a78fec277afa456ee0947e43fabeab555dc59d9086a262d55f89c018bc0"
+  }
+ }
+}

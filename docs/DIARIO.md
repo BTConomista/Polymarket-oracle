@@ -19445,3 +19445,160 @@ di ±1 giorno con squadre e punteggio identici (Ath Madrid-Elche 29 vs
 **Nessuna correzione ai dati.** Gli snapshot non sono stati toccati: la
 riparazione vive nel codice di aggancio, quindi `data/correzioni_dichiarate.csv`
 (R3) non è coinvolto.
+
+---
+
+## Fase 155 — Sette coppe nuove, e la convenzione sul punteggio che non si eredita
+
+**Obiettivo.** Integrare sette consegne del 13/08/2026 — **Champions League** e
+le **sei supercoppe** (UEFA, Italia, Spagna, Inghilterra, Germania, Francia) —
+più i **coefficienti UEFA** per federazione e per club.
+
+**Ragionamento / ipotesi.** L'ipotesi di lavoro era che fossero sette consegne
+mecccaniche: stesso formato delle altre sette raccolte a tre fonti, stessa
+procedura, poche ore. È stata **falsificata dal primo controllo**, e il difetto
+che è saltato fuori non era nelle consegne nuove: era **nostro, in produzione da
+un mese**.
+
+**Alternative considerate.** Sul punteggio: (a) fidarsi della famiglia («sono
+tutte UEFA, si comportano come Europa e Conference»); (b) fidarsi dell'export
+(«dove servono le colonne derivate, le dichiara»); (c) **misurare per raccolta**.
+
+**Scelta: la (c)**, e le prime due si sono rivelate entrambe false.
+
+**Risultato.**
+
+*(a) Il difetto trovato, ed era in casa.* `Gol casa/trasferta (SofaScore)` di
+Europa League e Conference **somma la lotteria dei rigori**. La Conference lo
+dichiara con tre colonne derivate; l'**Europa League no**, e l'integrazione
+dell'11-12/08 aveva ragionato per file — «la Conference le dichiara, quindi le
+UEFA sono coperte» — quindi `punteggio_vero()` restituiva il punteggio gonfiato
+su **7 partite**. Il caso simbolo: **Partizan-AEK Larnaca «7-7»**, che era
+**2-1**.
+
+*(b) E la Champions, stessa famiglia e stessa fonte, è PULITA.* Non si deduce
+dal torneo, non dalla fonte, non dalla presenza dei rigori. La convenzione è
+**per raccolta e va misurata su ogni consegna**: `RIGORI_NEL_PUNTEGGIO`.
+
+*(c) Tre prove indipendenti* (`scripts/_run_punteggio_coppe.py`):
+
+| prova | Europa | Conference | Champions | supercoppe |
+|---|---|---|---|---|
+| `Gol − Rigori` = gol contati negli **eventi** | **14/14** | **12/12** | 0/8 | 0/2 |
+| `Gol` grezzo = eventi | 1/14 | 0/12 | **8/8** | **2/2** |
+| senza lotteria, `Gol` = eventi | 528/528 | 806/806 | 554/554 | — |
+| identità dei tempi | 256/271 | 403/409 | **281/281** | **10/10** |
+
+più una quarta, decisiva: la nostra sottrazione **riproduce la colonna derivata
+che la Conference dichiara da sola, 12/12**. La regola non è inventata da noi.
+
+*(d) Il difetto si ripara in LETTURA*, come tutte le altre di quel modulo:
+`_scorpora_rigori()` aggiunge alle raccolte gonfiate le stesse colonne derivate
+che la Conference porta, e `punteggio_vero()` funziona su tutte senza sapere
+quale sia. Applicare la sottrazione dove non serve **non è innocuo**: sulla
+finale di Champions darebbe **1 − 4 = −3**.
+
+*(e) Le sette raccolte nuove.* Champions: 281 partite, 82 squadre (**23
+nostre**), 2 fonti, 294.667 eventi Opta. Supercoppe: 10 partite, **tutte di
+squadre nostre** — due sono a *final four* (Italia e Spagna), le altre a partita
+secca. Cinque su sei arrivano con **una fonte sola**, e portano lo stesso
+**19 colonne `(WhoScored)` vuote**. Conversione verificata **cella per cella**:
+0 divergenti.
+
+*(f) I coefficienti UEFA*, e il pezzo che riempiono. Nel dataset player-scores
+**nessuna colonna dice di che paese è un club** (Fase 154). Il ranking lo dice
+per 410 club: **331 agganciano un `club_id`**, e **168 di questi non hanno un
+campionato domestico** — esattamente quelli su cui il dataset taceva.
+
+*(g) E un aggancio falso trovato da un invariante, non da un occhio.* Il
+controllo «un `club_id`, un paese solo» ha scovato **Bohemians** (Irlanda) e
+**Bohemians Praha** (Cechia) entrambi sul `club_id` 715, che è il ceco (60
+partite di TS1). Stessa famiglia di `Espanol` e `Red Star FC` — ma qui la
+riparazione è **sicura**, perché questa fonte porta il paese: l'ambiguità che il
+nome non risolve la risolve una colonna.
+
+**Lezione / cosa ne consegue.** Tre, e la prima è la più cara.
+
+1. **Una proprietà misurata su una consegna non è una proprietà della famiglia.**
+   «Le raccolte UEFA hanno le colonne derivate» era vero per una su tre. Il
+   ragionamento per file — invece che per raccolta — ha lasciato in produzione
+   per un mese un punteggio gonfiato su 7 partite, senza che niente lo segnalasse.
+2. **Un dato in più può togliere un errore invece di aggiungerne.** Il caso
+   Bohemians si risolve perché il ranking porta il paese. Non è sempre così, ma
+   quando succede è la conferma pratica della regola 5-ter.
+3. **Il tripwire va scritto insieme alla sua condizione di caduta.**
+   `gol_sono_regolamentari()` è documentato per **rompersi** sui tempi
+   supplementari, e la Champions lo ha fatto rompere il giorno dopo: la reazione
+   giusta non è stata aggiustare il test ma scrivere l'identità a tre addendi.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica di modello: la fase ripara un **dato**, e la formula è la
+scomposizione esatta del punteggio.
+
+```
+(1) IDENTITA' DEI TEMPI  — vale dove il punteggio e' pulito
+        Gol_casa = Casa_1T + Casa_2T + Casa_suppl
+        Gol_via  = Via_1T  + Via_2T  + Via_suppl
+
+(2) CONVENZIONE GONFIATA — vale in Europa League e Conference
+        Gol_casa = (Casa_1T + Casa_2T + Casa_suppl) + Rigori_casa
+                    \_________ risultato vero _________/  \_ lotteria _/
+
+(3) LA RIPARAZIONE, applicata in lettura solo dove (2) e' dichiarata
+        Gol_casa_vero = Gol_casa − Rigori_casa            (fillna(0))
+        Gol_via_vero  = Gol_via  − Rigori_via
+```
+
+**Perché l'identità (1) è una prova e non un indizio.** È un'uguaglianza fra
+grandezze *misurate separatamente* dalla stessa fonte: i tempi sono contati per
+periodo, il totale è un campo a sé. Se i rigori fossero dentro il totale, lo
+scarto sarebbe **esattamente** il numero dei rigori segnati — non «circa». Su
+Champions e supercoppe l'identità regge su 281/281 e 10/10 **con 8 partite ai
+rigori dentro il campione**: se la convenzione fosse quella gonfiata, quelle 8
+la farebbero saltare.
+
+**Perché la conta degli eventi è la prova più forte.** È il dato più fine della
+*stessa* fonte (R5 passo 1). ⚠️ E contarla è meno ovvio di quanto sembri:
+
+```
+    Tipo = "Gol"     Sottotipo ∈ {regular (649), penalty (61), ownGoal (20)}
+    Tipo = "Rigore"  Sottotipo ∈ {missed (29)}          ← SOLO sbagliati
+```
+
+I rigori **segnati** sono già fra i `Gol`, col sottotipo `penalty`. La prima
+stesura contava `Tipo ∈ {Gol, Rigore}` e sbagliava un caso su 14 — Partizan-AEK
+Larnaca, dove un rigore fallito al 90' veniva contato come gol. Corretto il
+filtro, l'accordo è **14/14**. È lo stesso errore di lettura, in scala minore,
+che la fase ripara: un campo che *sembra* dire una cosa e ne dice un'altra.
+
+**Perché la riparazione è una tabella e non una regola.** Perché il
+discriminante per riga non esiste. In Europa League 8 partite violano
+l'identità (1) **senza** avere la lotteria: sono gol dei supplementari che il
+file non registra nelle colonne di periodo (`Casa suppl.` è non nulla su 10
+righe su 542). Quindi «l'identità salta» non implica «ci sono i rigori dentro»,
+e la scelta va fatta **per raccolta, misurandola**:
+
+```
+RIGORI_NEL_PUNTEGGIO = {
+    uefa_europa_league:      True    # 7 partite, nessuna colonna derivata
+    uefa_conference_league:  True    # 6 partite, colonne derivate presenti
+    uefa_champions_league:   False   # 4 partite ai rigori, punteggio pulito
+    le sei supercoppe:       False   # 4 partite ai rigori, punteggio pulito
+}
+```
+
+**Il numero di controllo del ranking UEFA.** Due identità verificate sul file,
+entrambe dichiarate nel foglio `Note` e nessuna data per buona:
+
+```
+    Punti(federazione)   = Σ delle 5 stagioni                    55/55 righe
+    Coefficiente(club)   = MAX( Σ 5 stagioni ; 0.20 × Punti(federazione) )
+                                                                410/410 righe
+```
+
+Il pavimento del 20% **morde su 146 club su 410 (35,6%)**: per quelli il numero
+pubblicato è una proprietà del **paese**, non della squadra, e mette alla pari
+tutti i club della stessa federazione. Chi lo usasse come feature di forza senza
+saperlo starebbe misurando il campionato e chiamandolo club — `pavimento_attivo()`
+lo dice riga per riga.

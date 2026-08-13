@@ -1,0 +1,36 @@
+{
+ "lega": "supercoppa_uefa",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore",
+  "WhoScored"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 6,
+   "sha256": "efb2fbac7c90934b468591a73100db491344d8543c4fc6923fbba67c241574d2"
+  },
+  "giocatori.csv.gz": {
+   "righe": 106,
+   "sha256": "aad469a47e1126b4aa69b9a05bffdf88fdf6c77aeeb96a5b90c7668a20822a7c"
+  },
+  "eventi.csv.gz": {
+   "righe": 200,
+   "sha256": "bde0bb1caa3eb74f3782ea82dfd4fdf353b3d57e56f77c2eae56e1d3f356644d"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 1393,
+   "sha256": "50fb68afacb3d11f366b86437dbfbf9485f3d434150f6816179dd648d5df9d86"
+  },
+  "heatmap.csv.gz": {
+   "righe": 1354,
+   "sha256": "26c58973fbcfab0acf892038be408bfa91e22f6b72c0a1f394a3a4c1fbe25fba"
+  },
+  "legenda.csv.gz": {
+   "righe": 439,
+   "sha256": "2d765eb0a17020d777b94bfc6cc6b2a16bdf72d8b30f4094d709d850d9b2db82"
+  }
+ }
+}

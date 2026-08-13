@@ -1,0 +1,31 @@
+{
+ "lega": "supercoppa_italiana",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 18,
+   "sha256": "4ec954cbfa1de8b0a5a7bc4a1f3720d6347e8314cfd3a357a653fbbcfb9adf0e"
+  },
+  "giocatori.csv.gz": {
+   "righe": 295,
+   "sha256": "2c678a5f03853a5650e51502cdb075b5e40b75b01f8233f844e5e5bba68bcc05"
+  },
+  "eventi.csv.gz": {
+   "righe": 902,
+   "sha256": "f97e748b249db96b472bea5db245171ed04dd36e9e30ded0f049253c07490ddb"
+  },
+  "heatmap.csv.gz": {
+   "righe": 4304,
+   "sha256": "63abced62486c373f189921f933d6888fcf81b58c3d1abbd99b15aff96d956fa"
+  },
+  "legenda.csv.gz": {
+   "righe": 345,
+   "sha256": "295fc59d38aa739e73b30f71a43fcfe30e4328459ae195c3a7fa5c722e895f6a"
+  }
+ }
+}

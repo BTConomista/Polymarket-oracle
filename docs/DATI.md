@@ -1524,6 +1524,84 @@ regola §5-ter, non perché serva; il suo `is_win` è per giunta **lossy** — i
 
 ---
 
+## 5-undecies · Le sette coppe del 13/08/2026 e i coefficienti UEFA (Fase 155)
+
+**Sette raccolte nuove** in `files/`, formato delle raccolte a tre fonti:
+`tre_fonti_uefa_champions_league_2526` (281 partite, 82 squadre di cui **23
+nostre**, 2 fonti, 294.667 eventi Opta) e le **sei supercoppe**
+(`supercoppa_uefa`, `supercoppa_italiana`, `supercopa_espana`,
+`community_shield`, `dfl_supercup`, `trophee_des_champions`): 10 partite,
+**tutte di squadre nostre**. Italia e Spagna sono a *final four*, non a partita
+secca. Conversione dai CSV consegnati verificata **cella per cella, 0
+divergenti**. Si leggono con `src/data/tre_fonti.py`.
+
+### ⚠️⚠️ La convenzione sul PUNTEGGIO non si eredita fra raccolte
+
+| raccolta | `Gol casa/trasferta` | colonne derivate | riparazione |
+|---|---|---|---|
+| Europa League | **somma i rigori** (7 partite) | ❌ assenti | in lettura |
+| Conference | **somma i rigori** (6 partite) | ✅ presenti | dall'export |
+| Champions | pulito (4 partite ai rigori) | — | nessuna |
+| 6 supercoppe | pulito (4 partite ai rigori) | — | nessuna |
+
+Non si deduce dal torneo (sono tutte UEFA), né dalla fonte (è sempre SofaScore),
+né dalla presenza dei rigori. **Si misura per raccolta**:
+`python scripts/_run_punteggio_coppe.py`; la tabella è `tf.RIGORI_NEL_PUNTEGGIO`.
+
+⚠️ **Applicare la riparazione dove non serve non è innocuo**: sulla finale di
+Champions (1-1, rigori 4-3) darebbe **1 − 4 = −3**.
+
+Le prove: `Gol − Rigori` = gol contati negli **eventi** su **14/14** (EL) e
+**12/12** (Conference) contro 1/14 e 0/12 del grezzo; sulle **1.334**
+squadra-partita senza lotteria `Gol` = eventi **1.334/1.334**; identità dei tempi
+**281/281** (Champions) e **10/10** (supercoppe), con 8 partite ai rigori dentro
+il campione; e la sottrazione riproduce la colonna derivata della Conference
+**12/12**.
+
+⚠️ **Contare i gol negli eventi non è banale**: i rigori **segnati** sono
+`Tipo=Gol` con `Sottotipo=penalty`, mentre `Tipo=Rigore` esiste **solo** come
+`missed`. Sommarli conterebbe come gol un rigore fallito.
+
+### Le supercoppe: cinque su sei hanno UNA fonte
+
+Solo la Supercoppa UEFA ha SofaScore + WhoScored (e `eventi_opta`). Le altre
+cinque portano **19 colonne `(WhoScored)` completamente vuote**: lo schema le
+prevede, la consegna non le riempie. `tf.fonti()` dice quali fonti coprono
+davvero. Le colonne vuote sono 41-43 in tre famiglie — WhoScored assente, tempi
+supplementari non giocati, classifica inesistente in una supercoppa — tutte
+dichiarate in `tf.colonne_vuote()`, con un test in **entrambe** le direzioni.
+
+### I coefficienti UEFA — `data/ranking_uefa/`
+
+`coefficienti_uefa_2026-08-12.xlsx` come consegnato (fonte uefa.com, 12/08/2026
+19:55). Si legge con **`src/data/ranking_uefa.py`**, mai con `pd.read_excel`.
+
+**Disponibilità temporale: `statico`, ma con una data.** ⚠️ Il file contiene
+**due finestre** di coefficiente per federazione (21/22→25/26 e 22/23→26/27) che
+decidono due access list diverse. `federazioni()` **non ha un default**: usare il
+coefficiente di oggi per prevedere una partita di ieri è look-ahead, perché quel
+numero incorpora il risultato che si vuole prevedere (R8).
+
+**A cosa serve davvero**: dà il **paese** a **331** club agganciati, di cui
+**168 senza campionato domestico** nel dataset — il buco misurato alla Fase 154.
+I 79 non agganciati sono in gran parte le abbreviazioni UEFA dei club *più
+grandi* (`Atleti`, `B. Dortmund`, `Bayern München`), che sono già nostri.
+
+⚠️ **Il coefficiente di club non misura sempre il club**:
+`MAX(somma 5 stagioni; 20% della federazione)`, verificato **410/410**. Il
+pavimento **morde su 146 club (35,6%)**: per loro il numero è una proprietà del
+**paese**. `pavimento_attivo()` lo dice riga per riga.
+
+⚠️ **Un aggancio falso trovato da un invariante** («un `club_id`, un paese
+solo»): *Bohemians* (Irlanda) e *Bohemians Praha* (Cechia) finivano entrambi sul
+`club_id` 715, che è il ceco. Riparato con `ALIAS_PER_PAESE` — e qui la
+riparazione è **sicura** perché questa fonte porta il paese: un dato in più che
+toglie un errore invece di aggiungerne.
+
+**Stato d'uso: raccolto e strutturato, non usato da nessun modello.**
+
+---
+
 ## 5-decies · L'identità di un CLUB in player-scores, e i club fuori dai nostri 5 campionati (Fase 154)
 
 Misurato da `scripts/_run_anatomia_club.py`. La procedura operativa completa —

@@ -1,0 +1,31 @@
+{
+ "lega": "trophee_des_champions",
+ "stagione": "2526",
+ "consegnata": "2026-08-13 (zip)",
+ "fonti": [
+  "SofaScore"
+ ],
+ "e_campionato": false,
+ "file": {
+  "squadre.csv.gz": {
+   "righe": 6,
+   "sha256": "b905e30e823918b4575caea9394adc7e0ddbb2f42a057abe65c01b1139be030e"
+  },
+  "giocatori.csv.gz": {
+   "righe": 95,
+   "sha256": "0721c3ed76907194a49d7d2dedd6276bc44024b369430d902986991dcb0cabb0"
+  },
+  "eventi.csv.gz": {
+   "righe": 352,
+   "sha256": "4543eb26dc0a3be1680b5a6fb5df657f427e54f77ec513ebf500005a877ba285"
+  },
+  "heatmap.csv.gz": {
+   "righe": 1416,
+   "sha256": "92e2499b4490d0be1ed86c7a7ff3e528b4a01851163644c5f9518805fc9000ea"
+  },
+  "legenda.csv.gz": {
+   "righe": 344,
+   "sha256": "0320c9845f760e049dbcc9f5c55c810917fd01c6004b617e3554c94866f164cb"
+  }
+ }
+}

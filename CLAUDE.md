@@ -196,7 +196,7 @@ Dopo **ogni backtest / tuning / esperimento significativo**, prima di chiudere:
   promozione); modello nuovo → riga nuova; promozione/bocciatura → voce
   spostata di sezione, archivio in fondo con data e motivo. Il file deve
   restare SEMPRE allineato.
-- [ ] **Test** — mantieni `pytest` verde (**1.700 verdi** al 13/08/2026); aggiungi
+- [ ] **Test** — mantieni `pytest` verde (**1.738 verdi** al 13/08/2026); aggiungi
   un test per ogni nuova funzionalità del modello/pipeline.
 - [ ] **Dati e termini** — se l'esperimento ha toccato i DATI (colonne nuove,
   correzioni, stime), aggiorna `docs/DATI.md` (catalogo di tutto ciò che
@@ -270,7 +270,7 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python -m pytest                       # test (1.700 verdi al 13/08/2026)
+python -m pytest                       # test (1.738 verdi al 13/08/2026)
 ```
 
 ⚠️ `build_database.py --league X --refresh` ha scritto la lega X **sopra** lo
@@ -519,6 +519,35 @@ files/tre_fonti_*_2526/  SETTE RACCOLTE 2025-26 DA TRE
                  Mata. Lo stesso sintomo ha DUE cause, e l'autogol le separa
                  13 volte su 13 -- l'ipotesi «convenzione autogol», falsa per i
                  primi 9 casi, e' vera per il decimo
+files/tre_fonti_{uefa_champions_league,supercoppa_*,community_shield,dfl_supercup,
+                 trophee_des_champions}_2526/  LE SETTE COPPE della consegna
+                 13/08/2026: Champions (281 partite, 82 squadre di cui 23
+                 nostre, 2 fonti) e le SEI SUPERCOPPE (10 partite, tutte di
+                 squadre nostre; Italia e Spagna sono a FINAL FOUR, non a
+                 partita secca -- `tf.SUPERCOPPE` tiene i due formati).
+                 ⚠️⚠️ LA CONVENZIONE SUL PUNTEGGIO NON SI EREDITA. `Gol casa/
+                 trasferta` SOMMA la lotteria dei rigori in Europa League e
+                 Conference, NON in Champions ne' nelle supercoppe. Non si
+                 deduce dal torneo, dalla fonte o dalla presenza dei rigori:
+                 si MISURA per raccolta (`scripts/_run_punteggio_coppe.py`,
+                 tabella `tf.RIGORI_NEL_PUNTEGGIO`) e si ripara in lettura.
+                 Costo di non averlo fatto: `punteggio_vero()` ha dato per un
+                 mese il punteggio gonfiato all'Europa League su 7 partite --
+                 «Partizan-AEK Larnaca 7-7» era 2-1.
+                 ⚠️ Applicare la riparazione dove NON serve non e' innocuo:
+                 sulla finale di Champions darebbe 1 − 4 = −3
+data/ranking_uefa/   I COEFFICIENTI UEFA, federazioni e club (consegna utente
+                 13/08/2026, fonte uefa.com). Si legge con
+                 src/data/ranking_uefa.py, mai con pd.read_excel.
+                 ⭐ Serve a UNA cosa che il dataset non ha: il PAESE di un club
+                 (nessuna colonna, in nessun file di player-scores, lo dice).
+                 331 club agganciati, di cui 168 SENZA campionato domestico.
+                 ⚠️ R8: il file ha DUE finestre di federazione (decidono due
+                 access list diverse) e `federazioni()` non ha un default --
+                 usare il coefficiente di oggi per una partita di ieri e'
+                 look-ahead. ⚠️ Il coefficiente di CLUB e' MAX(somma 5 stagioni;
+                 20% della federazione) e il pavimento MORDE su 146 club su
+                 410: per loro il numero misura il PAESE, non la squadra
 files/tre_fonti_serie_a_2526/  SERIE A 2025-26 DA TRE FONTI (SofaScore,
                  Opta/WhoScored, Understat), 11/08/2026. Porta cio' che il
                  progetto non aveva: EVENT DATA (562.672 tocchi con X/Y,
@@ -688,7 +717,7 @@ newseason.md     (RADICE, file DEPERIBILE) piano operativo per l'inizio della
                  (previsioni congelate, traiettoria delle quote, formazioni).
                  Da archiviare a stagione avviata: cio' che sopravvive va
                  spostato in PISTE/DIARIO/MANUALE
-tests/           test unitari (1.700 verdi al 13/08/2026; il ROSSO su
+tests/           test unitari (1.738 verdi al 13/08/2026; il ROSSO su
                  test_raccolta_giornaliera::test_il_join_col_listino_non_dipende_
                  dalla_convenzione_di_smarkets e' stato chiuso il 10/08 -- non
                  era un join rotto ma una copertura mancante, e la guardia

@@ -691,3 +691,186 @@ def test_le_uefa_portano_le_nostre_squadre_in_europa():
         s = tf.squadre(uefa, periodo="Totale")
         sq = {TEAM_ALIASES.get(x, x) for x in s["Squadra"].dropna()}
         assert len(sq & nostre) == attese, f"{uefa}: {sorted(sq & nostre)}"
+
+
+# --------------------------------------------------------------------------
+# LE COPPE DELLA CONSEGNA 13/08/2026: Champions + sei supercoppe (Fase 155)
+# --------------------------------------------------------------------------
+SUPERCOPPE = ["supercoppa_uefa", "supercoppa_italiana", "supercopa_espana",
+              "community_shield", "dfl_supercup", "trophee_des_champions"]
+
+
+@pytest.mark.parametrize("chiave, partite", [
+    ("supercoppa_uefa", 1), ("community_shield", 1), ("dfl_supercup", 1),
+    ("trophee_des_champions", 1),
+    ("supercoppa_italiana", 3), ("supercopa_espana", 3),   # final four
+])
+def test_ogni_supercoppa_ha_le_partite_che_dichiara(chiave, partite):
+    """Due delle sei sono a FINAL FOUR, non a partita secca.
+
+    Inchiodare «1 partita» avrebbe fatto sembrare rotte Supercoppa Italiana e
+    Supercopa de España, che sono solo piu' grandi — stessa lezione della
+    Bundesliga a 612 righe contro le 760 delle prime tre leghe.
+    """
+    assert tf.SUPERCOPPE[chiave] == partite
+    s = tf.squadre(chiave, periodo="Totale")
+    assert len(s) == partite * 2, f"{chiave}: {len(s)} righe per {partite} partite"
+
+
+@pytest.mark.parametrize("chiave", SUPERCOPPE)
+def test_nelle_supercoppe_il_punteggio_non_contiene_i_rigori(chiave):
+    """Il TRIPWIRE: `Gol = 1T + 2T`, e quattro di queste partite sono ai rigori.
+
+    Non e' una verifica di comodo. La stessa colonna, nelle raccolte di Europa
+    League e Conference, **somma** la lotteria: «Partizan-AEK Larnaca 7-7» era
+    2-1. Qui l'identita' regge su tutte, quindi il punteggio e' quello della
+    partita e la serie finale sta nella sua colonna.
+
+    ⚠️ Se una consegna futura contenesse i TEMPI SUPPLEMENTARI, questo test
+    diventerebbe rosso **pur essendo il dato giusto** — i gol dei supplementari
+    non stanno ne' nel 1T ne' nel 2T. In quel caso non si aggiusta il test: si
+    guarda la partita e si scrive cosa e' successo (R5), come per la Champions,
+    dove l'identita' giusta e' `Gol = 1T + 2T + suppl.`.
+    """
+    s = tf.squadre(chiave, periodo="Totale")
+    ok = tf.gol_sono_regolamentari(s)
+    assert ok.all(), f"{chiave}: {(~ok).sum()} righe dove Gol != 1T + 2T"
+
+
+def test_la_champions_ha_i_supplementari_e_il_punteggio_resta_pulito():
+    """La Champions e' l'unica coppa con supplementari GIOCATI e registrati.
+
+    Ha tre colonne per i supplementari (`Casa suppl.`, `Casa 1° suppl.`,
+    `Casa 2° suppl.`), 5 partite con gol nei supplementari e 4 decise ai
+    rigori. L'identita' giusta e' quindi a tre addendi, e regge su 281/281.
+    """
+    s = tf.squadre("uefa_champions_league", periodo="Totale")
+    s = s[s["Campo"] == "Casa"]
+    def n(c):
+        return pd.to_numeric(s[c], errors="coerce").fillna(0)
+    casa = n("Casa 1T (SofaScore)") + n("Casa 2T (SofaScore)") + n("Casa suppl. (SofaScore)")
+    via = (n("Trasferta 1T (SofaScore)") + n("Trasferta 2T (SofaScore)")
+           + n("Trasferta suppl. (SofaScore)"))
+    ok = (s["Gol casa (SofaScore)"] == casa) & (s["Gol trasferta (SofaScore)"] == via)
+    assert len(s) == 281
+    assert ok.all(), f"{(~ok).sum()} partite di Champions dove Gol != 1T+2T+suppl"
+    # e ci sono davvero le partite ai rigori, altrimenti il test non prova nulla
+    ai_rigori = pd.to_numeric(s[tf.COLONNE_RIGORI[0]], errors="coerce").notna()
+    assert int(ai_rigori.sum()) == 4
+
+
+def test_la_convenzione_sul_punteggio_e_per_raccolta_e_non_si_eredita():
+    """⚠️ Il difetto che questo test esiste per impedire, in una riga.
+
+    L'integrazione UEFA aveva ragionato per FILE: «la Conference dichiara le
+    colonne derivate, quindi le raccolte UEFA sono coperte». Falso — l'Europa
+    League ha lo stesso difetto e NON le dichiara, quindi `punteggio_vero()` le
+    restituiva il punteggio gonfiato su 7 partite. E la Champions, stessa
+    famiglia e stessa fonte, e' invece pulita: la convenzione **non si eredita**.
+    """
+    assert tf.RIGORI_NEL_PUNTEGGIO["uefa_europa_league"] is True
+    assert tf.RIGORI_NEL_PUNTEGGIO["uefa_conference_league"] is True
+    assert tf.RIGORI_NEL_PUNTEGGIO["uefa_champions_league"] is False
+    for chiave in SUPERCOPPE:
+        assert tf.RIGORI_NEL_PUNTEGGIO[chiave] is False, chiave
+
+
+def test_partizan_aek_larnaca_era_2_1_non_7_7():
+    """Il caso simbolo, con il numero prima e il numero dopo.
+
+    `Gol casa/trasferta` legge 7-7 su una partita del 1° turno preliminare di
+    Europa League. La riparazione la riporta a **2-1**, ed e' verificata contro
+    i gol contati negli eventi (`scripts/_run_punteggio_coppe.py`).
+    """
+    s = tf.squadre("uefa_europa_league", periodo="Totale")
+    r = s[(s["Data"] == "2025-07-17") & (s["Squadra"] == "FK Partizan")]
+    assert len(r) == 1
+    assert (r["Gol casa (SofaScore)"].iloc[0], r["Gol trasferta (SofaScore)"].iloc[0]) == (7, 7)
+    casa, fuori = tf.punteggio_vero(r)
+    assert (casa.iloc[0], fuori.iloc[0]) == (2, 1)
+
+
+def test_la_riparazione_dei_rigori_non_tocca_chi_e_gia_pulito():
+    """Applicarla alla Champions darebbe 1 − 4 = **−3** sulla finale.
+
+    E' il motivo per cui `RIGORI_NEL_PUNTEGGIO` e' una tabella e non una
+    regola: la sottrazione applicata dove non serve non e' innocua, produce
+    punteggi negativi.
+    """
+    s = tf.squadre("uefa_champions_league", periodo="Totale")
+    f = s[s["Turno"] == "Finale"]
+    casa, fuori = tf.punteggio_vero(f)
+    assert (casa.iloc[0], fuori.iloc[0]) == (1, 1)
+    assert (casa >= 0).all() and (fuori >= 0).all()
+    # le colonne derivate NON devono essere state aggiunte
+    assert tf.COLONNE_PUNTEGGIO_VERO[0] not in s.columns
+
+
+@pytest.mark.parametrize("chiave", SUPERCOPPE + ["uefa_champions_league"])
+def test_le_colonne_dichiarate_vuote_lo_sono_davvero(chiave):
+    """E il rovescio: nessuna colonna vuota resta fuori dalla dichiarazione.
+
+    Le due direzioni misurano cose diverse. Una dichiarazione sbagliata per
+    eccesso fa scartare un dato buono; una per difetto lascia credere che una
+    colonna contenga qualcosa. Nelle supercoppe sono 41-43 colonne e la
+    dichiarazione le copre tutte.
+    """
+    grezze = pd.read_csv(f"files/tre_fonti_{chiave}_2526/squadre.csv.gz", low_memory=False)
+    dichiarate = set(tf.colonne_vuote(chiave).get("squadre", ()))
+    vuote = {c for c in grezze.columns if grezze[c].isna().all()}
+    assert dichiarate - vuote == set(), f"dichiarate vuote e non lo sono: {dichiarate - vuote}"
+    assert vuote - dichiarate == set(), f"vuote e non dichiarate: {sorted(vuote - dichiarate)}"
+
+
+def test_solo_la_supercoppa_uefa_e_la_champions_hanno_due_fonti():
+    """Cinque supercoppe su sei arrivano con SofaScore soltanto.
+
+    E portano lo stesso 19 colonne `(WhoScored)` vuote: lo schema le prevede.
+    Chiedere «quante fonti» all'elenco delle colonne da' la risposta sbagliata,
+    ed e' esattamente per questo che `fonti()` esiste.
+    """
+    assert tf.fonti("supercoppa_uefa") == ("SofaScore", "WhoScored")
+    assert tf.fonti("uefa_champions_league") == ("SofaScore", "WhoScored")
+    for chiave in SUPERCOPPE:
+        if chiave == "supercoppa_uefa":
+            continue
+        assert tf.fonti(chiave) == ("SofaScore",), chiave
+        g = pd.read_csv(f"files/tre_fonti_{chiave}_2526/squadre.csv.gz", low_memory=False)
+        ws = [c for c in g.columns if "(WhoScored)" in c]
+        assert ws, f"{chiave}: nessuna colonna WhoScored — lo schema e' cambiato"
+        assert all(g[c].isna().all() for c in ws), f"{chiave}: WhoScored non e' vuota"
+
+
+def test_le_supercoppe_sono_tutte_di_squadre_nostre():
+    """Zero club fuori perimetro: e' la differenza con le coppe UEFA.
+
+    Europa League e Conference portano soprattutto squadre che non modelliamo
+    (66 su 77 in EL). Le supercoppe nazionali, per costruzione, no: ci giocano
+    campione e vincitrice di coppa dello stesso campionato. Anche la Supercoppa
+    UEFA 2025-26 lo e' — PSG e Tottenham sono entrambe nostre.
+    """
+    from src.data.sources import TEAM_ALIASES
+    nostre = set()
+    for lega in tf.DIMENSIONI:
+        s = pd.read_csv(f"data/{lega}_matches.csv")
+        s = s[s["season"].astype(str) == "2526"]
+        nostre |= set(s["home_team"]) | set(s["away_team"])
+    for chiave in SUPERCOPPE:
+        s = tf.squadre(chiave, periodo="Totale")
+        sq = {TEAM_ALIASES.get(x, x) for x in s["Squadra"].dropna()}
+        assert sq <= nostre, f"{chiave}: fuori perimetro {sorted(sq - nostre)}"
+
+
+def test_eventi_opta_della_supercoppa_uefa_usa_i_nomi_corti():
+    """TERZA occorrenza dello stesso difetto, e la piu' estesa.
+
+    La colonna `Squadra` di `eventi_opta` scrive «PSG» e «Tottenham» mentre
+    `Casa`/`Trasferta` dello stesso file scrivono il nome intero — su 1.393
+    righe su 1.393, cioe' il 100% (Liga 5%, Bundesliga 6%). Tre raccolte su
+    quattro che hanno `eventi_opta` ce l'hanno: e' la regola, non l'eccezione.
+    """
+    assert tf.ALIAS_RACCOLTA["supercoppa_uefa"] == {
+        "PSG": "Paris Saint-Germain", "Tottenham": "Tottenham Hotspur"}
+    e = tf.eventi_opta("supercoppa_uefa")
+    s = tf.squadre("supercoppa_uefa", periodo="Totale")
+    assert set(e["Squadra"].dropna()) <= set(s["Squadra"].dropna())
