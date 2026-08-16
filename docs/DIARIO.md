@@ -19662,6 +19662,19 @@ somiglia a «niente» — spostata di un livello: qui è **«rosso» che somigli
 5. **Due guardie nuove** in `tests/test_controlla_raccolta.py` — verificate
    contro il codice **prima** del fix, dove falliscono entrambe.
 
+**Verifica in produzione (la parte che alla Fase 153 mancava).** Non ci si
+è fermati al verde dei test: entrambi i workflow sono stati lanciati a mano
+sul codice appena pushato, e si è guardato **cosa hanno prodotto**.
+
+| workflow | prima | dopo |
+|---|---|---|
+| `outright.yml` | 4 run su 4 falliti, **zero** snapshot | ✅ verde in 2m17s, commit **`52a56ff`** scritto da lui (raccolta 1m43s, contro il mezzo secondo in cui moriva) |
+| `controlla-raccolta.yml` | 10 run rossi, morte sull'import | ✅ verde in 43s, verdetto completo, niente da riparare |
+
+Il primo file scritto **dall'automazione** — non da una sessione — esiste: è
+il criterio che la lezione qui sotto chiede, e che nessuno aveva applicato al
+collettore quando è nato.
+
 **Risultato.** Snapshot del 16/08 in archivio; guardiano che, ri-eseguito,
 non ha più buchi oltre quello che il fix non può sanare all'indietro. **I
 quattro giorni fra il 12 e il 16 agosto non tornano** — e sono i primi quattro
