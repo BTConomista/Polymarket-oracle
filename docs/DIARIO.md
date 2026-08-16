@@ -19843,3 +19843,72 @@ evento **nuovo** (id diverso) il 27/08 — un rinvio. La distinzione non è
 deducibile dal vuoto: serve guardare se altrove esiste un evento con le stesse
 squadre e una data diversa. Un conteggio di celle vuote — la statistica che la
 regola R7 mette in guardia — lo segnerebbe come colpa nostra.
+
+---
+
+## Fase 156-ter — Due giorni raccolti e buttati via: la guardia che cancellava il dato
+
+**Obiettivo.** L'utente chiede di raccontare meglio la **raccolta
+giornaliera**. Guardandola si scopre che l'archivio ha **due giorni mancanti**
+— 9 e 10 agosto — su 18.
+
+**Il fatto, nei log di quei due run.** Il raccoglitore ha funzionato: scrive il
+giorno, poi controlla che ogni squadra del listino abbia un'anagrafica, non la
+trova per 150 squadre (le cadetterie appena entrate nel perimetro, Fase 142) e
+**esce 1** per far suonare l'allarme. Nel log si legge, in quest'ordine:
+
+```
+scritto data/stagione_2026_2027/giornaliero/2026-08-10/ (raccolta.json + fonti.json)
+##[error]Process completed with exit code 1.
+```
+
+Il passo di commit del workflow non aveva `if: !cancelled()`, quindi **non è
+mai partito**: i due file erano sul runner, scritti e completi, e sono morti
+col container. La guardia ha fatto il suo mestiere (segnalare) e in più ne ha
+fatto uno che non è suo (**cancellare il dato**).
+
+**Perché è esattamente la domanda che l'utente aveva appena fatto.** Un'ora
+prima aveva chiesto, sugli outright: «li abbiamo raccolti ma non salvati?». Lì
+la risposta era **no** — il filtro tagliava *prima* della richiesta, i prezzi
+non erano mai stati scaricati. Qui la risposta è **sì**: raccolti, scritti su
+disco, e persi al momento di salvarli. Due guasti che dall'esterno danno lo
+stesso vuoto e hanno rimedi opposti.
+
+**Scelta.** `if: ${{ !cancelled() }}` sul passo di commit — la stessa toppa
+già applicata alla Fase 141 (in-play) e alla Fase 153 (outright), qui non
+estesa per svista. Il run resta **rosso**: l'allarme non si perde, si perde
+solo la cancellazione. Più un test che legge lo YAML e fallisce sul workflow
+di prima.
+
+**Lezione.** Una guardia deve poter dire «questo dato è sospetto» senza avere
+il potere di **distruggerlo**. Le due cose sembrano la stessa (entrambe
+«bloccano») e non lo sono: la prima è informazione, la seconda è perdita. Ogni
+volta che un passo scrive qualcosa *prima* di poter fallire, il passo che
+salva va reso indipendente dal suo esito.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica: la formula è la semantica di GitHub Actions.
+
+```
+passo N   (raccolta)   scrive il file, poi  exit 1  se la guardia scatta
+passo N+1 (commit)     default: gira solo se TUTTI i precedenti sono OK
+                       -> con exit 1, saltato -> il file muore col container
+
+  con  if: ${{ !cancelled() }}
+passo N+1              gira comunque, TRANNE se il job e' stato cancellato
+                       -> il file viene committato; il job resta failure
+```
+
+⚠️ `!cancelled()` e non `always()`: con `always()` il passo girerebbe **anche
+su cancellazione manuale del job**, cioè proprio quando qualcuno sta cercando
+di fermare la corsa. La differenza conta su un workflow che scrive su `main`.
+
+**Il conto di ciò che è stato perso** (e di ciò che non lo è): i due giorni
+contenevano il meteo previsto (recuperabile: la partita non era ancora
+giocata, il giorno dopo si ri-prevede) e il calendario con le quote di
+riferimento (già raccolte altrove, dal collettore pre-partita). Il danno vero
+non è il contenuto di quei due file: è che **l'archivio giornaliero ha due
+buchi che nessun controllo dichiara** — la raccolta giornaliera non ha una
+voce nel cane da guardia (§A/B/C/D), esattamente come gli outright prima della
+Fase 153.

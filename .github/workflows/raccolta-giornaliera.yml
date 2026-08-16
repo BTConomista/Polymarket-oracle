@@ -42,6 +42,16 @@ jobs:
             --entro-giorni "${{ github.event.inputs.entro_giorni || 21 }}"
 
       - name: Salva il giorno
+        # ANCHE SE IL PASSO PRIMA E' FALLITO (Fase 156-ter). Il raccoglitore
+        # scrive il giorno e POI, se trova squadre senza anagrafica, esce 1 per
+        # far suonare l'allarme: e' una guardia giusta, ma senza questo `if` il
+        # file gia' scritto muore col container. E' successo davvero il 9 e il
+        # 10 agosto 2026 -- «scritto data/.../2026-08-10/» nel log, e nessun
+        # commit: due giorni raccolti e buttati via, gli unici due mancanti
+        # dell'archivio. E' la lezione della Fase 141 (non buttare cio' che hai
+        # gia' preso per solidarieta' con la parte rotta), che qui non era
+        # stata applicata. Il run resta ROSSO comunque: l'allarme non si perde.
+        if: ${{ !cancelled() }}
         run: |
           if [ -z "$(git status --porcelain data/stagione_2026_2027/giornaliero/)" ]; then
             # Non dovrebbe succedere: il giro scrive SEMPRE il suo giorno,

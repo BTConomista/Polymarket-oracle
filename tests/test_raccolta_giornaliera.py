@@ -202,3 +202,27 @@ def test_la_guardia_scatta_se_gli_alias_spariscono(monkeypatch):
                | {(p["lega"], p["ospite"]) for p in partite})
     orfane = [1 for l, n in squadre if (l, rg._canonico(n)) not in schede]
     assert orfane, "senza alias il join dovrebbe rompersi, e non si rompe"
+
+
+def test_il_giorno_si_committa_anche_se_la_guardia_ha_fatto_fallire_il_giro():
+    """Fase 156-ter, pagata con due giorni di archivio.
+
+    Il raccoglitore scrive il giorno e POI esce 1 se trova squadre senza
+    anagrafica. Senza `if: !cancelled()` sul passo di commit, quel file muore
+    col container: il 9 e il 10 agosto 2026 il log dice «scritto
+    data/.../2026-08-10/» e non c'e' nessun commit -- sono gli unici due giorni
+    mancanti dell'archivio. La guardia deve far suonare l'allarme, non
+    cancellare il dato gia' raccolto (lezione della Fase 141).
+    """
+    import yaml
+    from pathlib import Path
+
+    wf = yaml.safe_load((Path(__file__).resolve().parents[1] / ".github"
+                         / "workflows" / "raccolta-giornaliera.yml").read_text())
+    passi = wf["jobs"]["raccogli"]["steps"]
+    salva = [s for s in passi if "Salva" in (s.get("name") or "")]
+    assert salva, "manca il passo che committa il giorno"
+    cond = str(salva[0].get("if", ""))
+    assert "cancelled" in cond, (
+        "il passo di commit non gira dopo un passo fallito: il giorno gia' "
+        f"scritto verrebbe buttato via (if attuale: {cond!r})")
