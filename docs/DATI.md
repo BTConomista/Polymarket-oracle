@@ -753,7 +753,7 @@ istantanea alla volta.
 | **file** | `YYYY-MM-DD.json` (completo) + `history.csv` (formato lungo: data × fonte × lega × mercato × squadra) |
 | **mercati** | campione (5 leghe, entrambe le fonti — le **uniche** righe confrontabili fra le due); **retrocessione** (solo Premier) e Top 2/3/4/5/6 + top-half: **solo Smarkets**; qualificazioni europee: **solo Polymarket** (UECL su 4 leghe — non Bundesliga; UCL/UEL solo Ligue 1). **Capocannoniere: mai quotato** da nessuna delle due |
 | **si scrive con** | `python scripts/archive_outrights.py` (idempotente sulla data; `--only polymarket\|smarkets`, `--date`, `--from-dump`, `--show`) |
-| **stato dell'archivio** | **2 istantanee** (`2026-07-25.json`, `2026-07-26.json`) e **930 righe** in `history.csv` — 465 per data, di cui **211 Polymarket** e **254 Smarkets** (conteggio `pandas`). È un archivio appena nato: cresce solo in avanti |
+| **stato dell'archivio** | **4 istantanee** (25/07, 26/07, **12/08**, **16/08**) e **2.347 righe** in `history.csv` (conteggio `pandas`, 16/08/2026). ⚠️ **Tutte e quattro prese a mano**, e due buchi che non si recuperano: **26/07→12/08** (18 giorni senza workflow, Fase 153) e **12/08→16/08** (workflow presente ma morto 4 run su 4 su `ModuleNotFoundError: requests`, Fase 156 — cade sui primi giorni di campionato). Dal 16/08 il workflow installa la dipendenza; la prova che funzioni è il primo file scritto da lui |
 | **documentazione d'uso** | `data/outright_snapshots/README.md` |
 
 **Tre avvertenze che valgono come semantica del dato** (per estese, il README

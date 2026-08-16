@@ -19602,3 +19602,128 @@ pubblicato è una proprietà del **paese**, non della squadra, e mette alla pari
 tutti i club della stessa federazione. Chi lo usasse come feature di forza senza
 saperlo starebbe misurando il campionato e chiamandolo club — `pavimento_attivo()`
 lo dice riga per riga.
+
+---
+
+## Fase 156 — Il collettore era acceso, il guardiano suonava, e nessuno dei due funzionava
+
+**Obiettivo.** Rispondere alla domanda di stato dell'utente («quindi?»)
+guardando i collettori invece che i documenti — e trovare, guardandoli, che
+la riparazione della Fase 153 non ha mai raccolto un prezzo.
+
+**Il fatto, in tre righe.** Il guardiano dice `A-bis) outright: l'ultimo ha
+4,6 giorni (soglia 2)`. Lo snapshot più recente è quello del **12 agosto**,
+cioè quello preso *a mano* dalla Fase 153 mentre scriveva il workflow. Il
+workflow, da allora, ha girato **4 volte su 4 e fallito 4 volte su 4**:
+
+```
+ModuleNotFoundError: No module named 'requests'
+  scripts/archive_outrights.py:50  ->  scripts/fetch_polymarket_open.py:46
+```
+
+Il lato **Smarkets** di quello script usa `urllib` e sarebbe girato ovunque;
+il lato **Polymarket** usa `requests`, che sui runner di Actions non c'è
+perché il progetto lì non si installa. E siccome l'import sta in testa al
+modulo, il collettore moriva **prima di chiedere il prezzo a chiunque** —
+Smarkets compreso, che pure avrebbe risposto.
+
+**Il secondo difetto, che è il più grave dei due.** Il guardiano *aveva*
+visto il buco: il controllo A-bis della Fase 153 ha fatto esattamente il suo
+lavoro. Poi ha provato a ripararlo, e il suo `ripara({"outright"})` importa lo
+stesso modulo — con l'`import` **fuori** dal `try`. Quindi il guardiano
+**moriva sull'import mentre riparava**: dal 14/08 alle 05:09 UTC, **dieci run
+consecutivi rossi**, nessun verdetto su niente. Non solo gli outright: anche
+la copertura in-play, la chiusura e i buchi dichiarati smettevano di essere
+giudicati, perché il processo non arrivava in fondo. Un guardiano che muore
+riparando è peggio di una riparazione che fallisce dicendolo — perché nel
+primo caso si perde anche la sorveglianza di ciò che funziona.
+
+**Perché nessuno se n'è accorto per due giorni.** Il canale d'allarme del
+progetto è la mail del run rosso (Fase 144). Ma il guardiano era rosso
+**anche prima**, e per il motivo giusto: il buco outright c'era davvero. Un
+rosso legittimo e un rosso da crash producono la stessa mail, e la seconda si
+nasconde dentro la prima. È la stessa forma della Fase 144 — «niente» che
+somiglia a «niente» — spostata di un livello: qui è **«rosso» che somiglia a
+«rosso»**.
+
+**Scelta, nell'ordine della Fase 153: prima raccogli, poi ripara.**
+1. **Snapshot preso subito**, prima di toccare una riga di YAML —
+   `data/outright_snapshots/2026-08-16.json`. Congela Serie A, Premier, Liga,
+   Bundesliga e Ligue 1 su entrambe le borse: Arsenal 38,1% in Premier
+   (overround 1,021, libro pieno), Inter 50,8% in Serie A (**libro parziale**:
+   solo offerte, è un tetto e non un prezzo), Bayern 81,0%, PSG 79,7%.
+2. **`pip install --quiet requests`** in `outright.yml` **e** in
+   `controlla-raccolta.yml` (la riparazione passa dallo stesso codice).
+3. **Import dentro il `try`** in `ripara()`, su tutti e tre i rami (lungo
+   raggio, outright, in-play): un modulo mancante deve **degradare la
+   riparazione**, non uccidere il guardiano.
+4. **`requests` dichiarato** in `pyproject.toml` (extra `raccolta`): era una
+   dipendenza che non esisteva in nessun file del progetto.
+5. **Due guardie nuove** in `tests/test_controlla_raccolta.py` — verificate
+   contro il codice **prima** del fix, dove falliscono entrambe.
+
+**Risultato.** Snapshot del 16/08 in archivio; guardiano che, ri-eseguito,
+non ha più buchi oltre quello che il fix non può sanare all'indietro. **I
+quattro giorni fra il 12 e il 16 agosto non tornano** — e sono i primi quattro
+giorni di campionato, cioè esattamente la finestra in cui il prezzo outright
+si muove di più. Lo script non finge il contrario, come alla Fase 144 sulle
+chiusure perse.
+
+**Lezione, e vale oltre questo caso.** Alla Fase 153 la lezione era «ogni
+fonte nuova vuole **due** cose, il collettore e la sua guardia». Ne serve una
+terza: **la prova che il collettore gira davvero**. Qui la guardia c'era ed
+era giusta, il collettore c'era e non è mai partito, e la differenza fra i due
+stati — «raccolto zero perché non c'era niente» e «raccolto zero perché sono
+morto all'import» — non era visibile da nessuna parte se non aprendo i log di
+Actions. Il primo snapshot di un collettore nuovo va **guardato**, non
+dedotto: non si dà per buono un workflow verde in fase di scrittura, si
+aspetta il suo primo file.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: è una fase di infrastruttura. Ciò che ha una forma
+esatta è **il grafo che la guardia percorre**, e vale la pena scriverlo perché
+è la parte che si può sbagliare in silenzio.
+
+**(1) Quali script vogliono `requests`.** Punto fisso su un grafo di import
+volutamente grossolano, calcolato sui sorgenti di `scripts/`:
+
+```
+S₀ = { m : m contiene "import requests" o "from requests" }
+S_{k+1} = S_k ∪ { m : m importa un modulo di S_k }
+serve = S_n   con  S_{n+1} = S_n
+```
+
+Misurato su HEAD: `S₀ = {fetch_polymarket_open, …}` → `archive_outrights`
+(che lo importa) → `controlla_raccolta` (che importa `archive_outrights`).
+Tre passi, punto fisso al terzo. La guardia poi chiede: per ogni workflow,
+se `python scripts/X.py` con `X ∈ serve`, allora il testo del workflow deve
+contenere un `pip install … requests`.
+
+**(2) Perché il grafo è deliberatamente approssimato per eccesso.** La regex
+non distingue un import in testa da uno dentro una funzione, né un ramo morto
+da uno vivo. È voluto, e l'asimmetria dei costi lo giustifica:
+
+```
+falso positivo  = un `pip install` inutile      ≈ 2 secondi per run
+falso negativo  = un collettore morto           = 4 giorni, misurati
+```
+
+Con costi così, la guardia si sbaglia **verso il sicuro**. Il caso limite lo
+dimostra: `controlla_raccolta` importa `archive_outrights` **dentro** una
+funzione, in un ramo che scatta solo se il buco c'è — ed è esattamente il ramo
+che ha ucciso dieci run.
+
+**(3) Perché la guardia è credibile.** Non perché passa adesso — passerebbe
+anche una guardia vuota — ma perché è stata **eseguita contro il codice di
+prima**, dove riporta i due workflow colpevoli:
+
+```
+outright.yml           lancia ['archive_outrights']  | pip requests: False
+controlla-raccolta.yml lancia ['controlla_raccolta'] | pip requests: False
+```
+
+E il secondo test simula il `ModuleNotFoundError` sostituendo `__import__`:
+prima del fix `ripara({"outright"})` **solleva**, dopo torna la riga
+`outright NON archiviati (ModuleNotFoundError: …)` e il controllo prosegue.
+Un test che non fallisce mai sul codice rotto non è una guardia, è un commento.

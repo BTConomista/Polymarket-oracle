@@ -48,6 +48,13 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Dipendenze
+        # Il controllo in se' e' stdlib+pandas, ma la RIPARAZIONE degli
+        # outright passa da `archive_outrights.py` -> `requests` (Fase 156).
+        # Senza, il guardiano moriva sull'import mentre riparava: dal
+        # 14/08/2026 alle 05:09 UTC dieci run di fila rossi, e nessun verdetto.
+        run: pip install --quiet requests
+
       - name: Ci sono buchi? E se si', si rimettono in piedi
         # `--ripara` non si limita a segnalare: rifa' il giro di lungo raggio
         # (le partite lontane sono ancora esposte) e accende una sessione

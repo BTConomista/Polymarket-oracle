@@ -367,6 +367,25 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
   e funziona da qualsiasi branch. **Nota**: i commenti dentro i due file
   `.yml` ripetono ancora la premessa caduta («main, qui ancora vuoto») — è
   documentazione scaduta nel codice, non un fatto.
+- ⚠️ **Sui runner NON c'è `requests` (né pandas, né niente): il progetto lì
+  non si installa** (Fase 156, pagata con quattro giorni di outright persi).
+  I workflow lanciano `python scripts/X.py` su un runner con `setup-python` e
+  **nient'altro**: gira solo ciò che sta nella stdlib. Il collettore outright
+  della Fase 153 è morto **4 run su 4** su `ModuleNotFoundError: requests`, e
+  con lui il guardiano, che importa lo stesso modulo per riparare. Regole:
+  **(1)** chi usa `requests` mette `pip install --quiet requests` nel proprio
+  workflow — c'è una guardia che lo verifica
+  (`test_ogni_workflow_installa_requests_se_lo_script_lo_usa`); **(2)** un
+  `import` dentro una riparazione va **dentro il `try`**, altrimenti il modulo
+  mancante non degrada la riparazione, uccide il chiamante; **(3)** dove si
+  può, si preferisce `urllib` — il lato Smarkets è stdlib e infatti non si è
+  mai fermato.
+- ⚠️ **Un run ROSSO può nascondere un secondo guasto** (Fase 156). Il
+  guardiano era legittimamente rosso perché il buco outright esisteva; quando
+  ha cominciato a morire di crash **prima** di dare il verdetto, la mail era
+  identica. Il corollario della regola qui sotto: se un workflow è rosso da
+  giorni **per un motivo noto**, ogni tanto si aprono i log — perché sopra a
+  quel motivo può essersene appoggiato un altro.
 - ⚠️ **Un workflow VERDE non è un workflow che lavora** (Fase 118, pagata sul
   campo). Il primo run di `smarkets-prematch.yml` è finito **verde in 23 s
   senza scrivere nulla**: lo step di raccolta durava **3 secondi** contro i

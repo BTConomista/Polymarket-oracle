@@ -16,10 +16,26 @@ valore dell'archivio:
 | **Top 2/3/4/5/6, top-half** | — | ✅ |
 | capocannoniere | — | — (**mai quotato finora**: il tipo di mercato è supportato dall'archiviatore, ma non è ancora comparso) |
 
-**Stato dell'archivio** (conteggio `pandas` su `history.csv`): **2 istantanee**
-— `2026-07-25.json` e `2026-07-26.json` — per **930 righe**, 465 a data, di cui
-**211 Polymarket** e **254 Smarkets**. È un archivio appena nato: cresce solo in
-avanti (vedi sotto).
+**Stato dell'archivio** (conteggio `pandas` su `history.csv`, 16/08/2026):
+**4 istantanee** per **2.347 righe**.
+
+| data | Polymarket | Smarkets | come è stata presa |
+|---|---|---|---|
+| 2026-07-25 | 211 | 254 | a mano (Fase 97) |
+| 2026-07-26 | 211 | 254 | a mano |
+| 2026-08-12 | 211 | 552 | a mano (Fase 153, trovando l'archivio fermo da 18 giorni) |
+| 2026-08-16 | 211 | 443 | a mano (Fase 156, trovando il workflow morto da 4 giorni) |
+
+⚠️ **NESSUNA di queste è stata presa dall'automazione**, e i due buchi non si
+recuperano: **26/07 → 12/08** (18 giorni: il collettore non aveva un workflow,
+Fase 153) e **12/08 → 16/08** (4 giorni: il workflow c'era e falliva **4 run su
+4** su `ModuleNotFoundError: requests`, Fase 156). Il secondo buco è il più
+caro dei due in proporzione: cade sui **primi giorni di campionato**, quando il
+prezzo outright si muove di più. Dal 16/08 il workflow installa la dipendenza e
+il guardiano (soglia 48 h) non muore più mentre ripara — ma la prova che
+funzioni è **il primo file scritto da lui**, non il fatto che sia verde.
+
+È un archivio appena nato: cresce solo in avanti (vedi sotto).
 
 ## Perché esistono (il motivo è tutto qui)
 

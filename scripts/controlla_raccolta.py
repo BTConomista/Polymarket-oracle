@@ -430,8 +430,11 @@ def ripara(riparabili: set | list) -> list[str]:
         print("\n🔧 riparazione: rifaccio il giro di lungo raggio "
               "(le partite lontane sono ancora esposte)")
         sys.path.insert(0, str(ROOT / "scripts"))
-        import fetch_smarkets_matches as fsm
         try:
+            # import DENTRO il try, per lo stesso motivo scritto sotto
+            # sull'outright: un modulo mancante deve degradare la riparazione,
+            # non uccidere il guardiano (Fase 156).
+            import fetch_smarkets_matches as fsm
             # budget stretto: questo e' un controllo, non la raccolta ufficiale
             fsm.main(["--tutte-le-esposte", "--tutti-i-mercati",
                       "--budget-minuti", "20"])
@@ -450,8 +453,14 @@ def ripara(riparabili: set | list) -> list[str]:
         # giorni fra il 26/07 e il 12/08 non tornano.
         print("\n🔧 riparazione: congelo i prezzi outright di oggi")
         sys.path.insert(0, str(ROOT / "scripts"))
-        import archive_outrights as ao
         try:
+            # ⚠️ L'IMPORT STA DENTRO IL `try`, e non e' pignoleria: fuori, un
+            # `ModuleNotFoundError` (requests assente sul runner) non degrada
+            # la riparazione -- uccide il GUARDIANO, che smette di dare un
+            # verdetto su tutto il resto. E' successo davvero, dieci run di
+            # fila fra il 14 e il 16/08/2026 (Fase 156). Un guardiano che muore
+            # riparando e' peggio di una riparazione che fallisce dicendolo.
+            import archive_outrights as ao
             ao.main([])
             fatto.append("outright archiviati")
         except SystemExit as e:
@@ -461,8 +470,8 @@ def ripara(riparabili: set | list) -> list[str]:
 
     if "in_play" in riparabili:
         sys.path.insert(0, str(ROOT / "scripts"))
-        from fetch_smarkets_matches import scandaglia_live
         try:
+            from fetch_smarkets_matches import scandaglia_live
             vive, _, _ = scandaglia_live()
         except Exception as ex:                       # noqa: BLE001
             # ⚠️ SI DICE PERCHE'. Questo `except` muto ha gia' inghiottito un

@@ -532,3 +532,86 @@ def test_cartella_outright_vuota_suona(monkeypatch, tmp_path):
     r = cr.controlla(adesso=dt.datetime(2026, 8, 12, 17, tzinfo=dt.timezone.utc))
     assert any(p.startswith("A-bis)") for p in r["problemi"])
     assert r["eta_outright_giorni"] is None
+
+
+# ---------------------------------------------------------------------------
+# LA DIPENDENZA NON DICHIARATA (Fase 156)
+# Il collettore outright della Fase 153 non ha MAI prodotto uno snapshot: 4 run
+# su 4 morti su `ModuleNotFoundError: requests`, perche' sui runner di Actions
+# nessuno installa il progetto e `requests` non c'e'. Il guardiano lo aveva
+# visto (controllo A-bis, 4,6 giorni) ma moriva a sua volta sullo stesso
+# import mentre provava a riparare — dieci run rossi e nessun verdetto.
+# Due guardie, una per ciascuno dei due difetti.
+# ---------------------------------------------------------------------------
+
+def _script_che_vogliono_requests() -> set[str]:
+    """I moduli di `scripts/` che finiscono per importare `requests`.
+
+    Punto fisso su un grafo di import volutamente grossolano: basta che un
+    modulo importi (in qualunque forma) un altro modulo di `scripts/` che ne
+    ha bisogno. Grossolano verso il SICURO — al massimo chiede un `pip
+    install` di troppo, che costa due secondi; il contrario costa un
+    collettore morto per giorni.
+    """
+    import re
+
+    sorgenti = {p.stem: p.read_text() for p in (ROOT / "scripts").glob("*.py")}
+    serve = {n for n, t in sorgenti.items()
+             if re.search(r"^\s*import requests|^\s*from requests\b", t, re.M)}
+    cambiato = True
+    while cambiato:
+        cambiato = False
+        for nome, testo in sorgenti.items():
+            if nome in serve:
+                continue
+            for dep in serve:
+                if re.search(rf"\b(import|from)\s+(scripts\.)?{dep}\b", testo):
+                    serve.add(nome)
+                    cambiato = True
+                    break
+    return serve
+
+
+def test_ogni_workflow_installa_requests_se_lo_script_lo_usa():
+    """La guardia che sarebbe bastata: un workflow che lancia uno script il
+    quale (anche indirettamente) importa `requests` DEVE installarlo."""
+    import re
+
+    serve = _script_che_vogliono_requests()
+    assert "archive_outrights" in serve, (
+        "il grafo non vede piu' la dipendenza nota: e' la guardia a essere "
+        "rotta, non il codice")
+
+    mancanti = []
+    for wf in sorted((ROOT / ".github" / "workflows").glob("*.yml")):
+        testo = wf.read_text()
+        lanciati = set(re.findall(r"python\s+(?:-u\s+)?scripts/(\w+)\.py", testo))
+        lanciati |= set(re.findall(r"python\s+-m\s+scripts\.(\w+)", testo))
+        if not (lanciati & serve):
+            continue
+        if not re.search(r"pip install[^\n]*\brequests\b", testo):
+            mancanti.append(f"{wf.name} lancia {sorted(lanciati & serve)}")
+    assert not mancanti, (
+        "workflow che usano `requests` senza installarlo: " + "; ".join(mancanti))
+
+
+def test_una_riparazione_che_non_si_importa_NON_uccide_il_guardiano(monkeypatch):
+    """Il difetto peggiore dei due. Se l'import fallisce, `ripara` deve
+    tornare la riga «NON archiviati» e lasciare vivo il controllo: un
+    guardiano che muore riparando smette di sorvegliare anche cio' che
+    funziona."""
+    import builtins
+
+    vero = builtins.__import__
+
+    def finto(nome, *a, **k):
+        if nome == "archive_outrights":
+            raise ModuleNotFoundError("No module named 'requests'")
+        return vero(nome, *a, **k)
+
+    monkeypatch.delitem(sys.modules, "archive_outrights", raising=False)
+    monkeypatch.setattr(builtins, "__import__", finto)
+
+    fatto = cr.ripara({"outright"})
+    assert fatto and "NON archiviati" in fatto[0], fatto
+    assert "ModuleNotFoundError" in fatto[0]

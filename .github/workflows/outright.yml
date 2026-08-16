@@ -54,6 +54,17 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Dipendenze
+        # ⚠️ SERVE, e la sua assenza e' costata quattro giorni (Fase 156).
+        # Il lato Smarkets usa `urllib` (stdlib) e gira ovunque; il lato
+        # POLYMARKET usa `requests`, che sul runner NON c'e' -- e
+        # `archive_outrights.py` lo importa in testa, quindi senza questa riga
+        # muore prima di chiedere il prezzo a chiunque, Smarkets compreso.
+        # Il workflow e' nato cosi' alla Fase 153: 4 run su 4 falliti, mai uno
+        # snapshot. Il guardiano lo ha visto (controllo A-bis), ma moriva a sua
+        # volta sullo stesso import mentre provava a riparare.
+        run: pip install --quiet requests
+
       - name: Congela i prezzi outright di oggi
         run: |
           python scripts/archive_outrights.py \
