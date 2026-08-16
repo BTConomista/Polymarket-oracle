@@ -37,6 +37,20 @@ funzioni è **il primo file scritto da lui**, non il fatto che sia verde.
 
 È un archivio appena nato: cresce solo in avanti (vedi sotto).
 
+## ⚠️ La trappola che si apre il giorno del calcio d'inizio (Fase 156-bis)
+
+Quando una lega **comincia**, Smarkets porta il suo evento outright e i suoi
+mercati da `upcoming`/`open` a **`live`**. Fino al 16/08/2026 l'archiviatore
+teneva solo `state == "open"` (mercati **e** contratti, due filtri in AND):
+risultato, **l'archivio di una lega si spegneva il giorno della prima
+giornata**. Misurato: La Liga, partita il 15 agosto, aveva **109 righe il 12/08
+e zero il 16/08**, mentre le altre quattro leghe — non ancora cominciate — erano
+tutte presenti.
+
+Adesso si accettano `open` **e** `live`; restano fuori `settled` e `closed`,
+dove un prezzo non esiste più. Se un giorno una lega sparisce di nuovo
+dall'archivio, il primo sospetto è questo: **guardare lo `state`**, non la rete.
+
 ## Perché esistono (il motivo è tutto qui)
 
 Il limite più duro del simulatore di stagione (Fase 89) è che **non esistono

@@ -1,0 +1,2891 @@
+{
+ "generato_utc": "2026-08-16T15:24:32.814004+00:00",
+ "finestra": [
+  "2026-08-12T00:00:00+00:00",
+  "2026-08-17T00:00:00+00:00"
+ ],
+ "partite": [
+  {
+   "event_id": "45252151",
+   "partita": "Rapid Wien vs Paide Linnameeskond",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-12T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 68.99,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 32,
+    "primo_h": 68.99,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 99,
+   "live_buco_max_min": 2.1
+  },
+  {
+   "event_id": "45252152",
+   "partita": "GKS Katowice vs Hapoel Tel Aviv",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-12T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 104,
+   "primo_h": 68.99,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 32,
+    "primo_h": 68.99,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 98,
+   "live_buco_max_min": 2.3
+  },
+  {
+   "event_id": "45252153",
+   "partita": "FC Copenhagen vs Debreceni VSC",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-12T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 68.99,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 32,
+    "primo_h": 68.99,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 99,
+   "live_buco_max_min": 2.1
+  },
+  {
+   "event_id": "45256128",
+   "partita": "SSVg Velbert vs Borussia Mönchengladbach",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 38,
+   "primo_h": 20.62,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 12,
+    "primo_h": 20.62,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 89,
+   "live_buco_max_min": 11.2
+  },
+  {
+   "event_id": "45257447",
+   "partita": "Valencia vs CD Teruel",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 81,
+   "primo_h": 2.17,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 4,
+    "primo_h": 2.17,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 98,
+   "live_buco_max_min": 2.3
+  },
+  {
+   "event_id": "45252105",
+   "partita": "Newcastle vs Everton",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T16:15:00+00:00",
+   "giocata": true,
+   "n_mercati": 15,
+   "primo_h": 20.87,
+   "ultimo_h": 1.07,
+   "ggng": {
+    "n": 12,
+    "primo_h": 20.87,
+    "ultimo_h": 1.07
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 97,
+   "live_buco_max_min": 2.1
+  },
+  {
+   "event_id": "45256137",
+   "partita": "FSV Frankfurt vs Eintracht Frankfurt",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 21.12,
+   "ultimo_h": 1.32,
+   "ggng": {
+    "n": 12,
+    "primo_h": 21.12,
+    "ultimo_h": 1.32
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 98,
+   "live_buco_max_min": 3.3
+  },
+  {
+   "event_id": "45252088",
+   "partita": "Man Utd vs Leeds",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 83,
+   "primo_h": 23.12,
+   "ultimo_h": 0.32,
+   "ggng": {
+    "n": 14,
+    "primo_h": 23.12,
+    "ultimo_h": 0.32
+   },
+   "chiave_mancanti": [],
+   "live_letture": 92,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45252139",
+   "partita": "Arsenal vs Como",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 84,
+   "primo_h": 23.12,
+   "ultimo_h": 0.32,
+   "ggng": {
+    "n": 14,
+    "primo_h": 23.12,
+    "ultimo_h": 0.32
+   },
+   "chiave_mancanti": [],
+   "live_letture": 91,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45252098",
+   "partita": "Nottm Forest vs Bayer Leverkusen",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 81,
+   "primo_h": 23.37,
+   "ultimo_h": 0.57,
+   "ggng": {
+    "n": 14,
+    "primo_h": 23.37,
+    "ultimo_h": 0.57
+   },
+   "chiave_mancanti": [],
+   "live_letture": 90,
+   "live_buco_max_min": 3.2
+  },
+  {
+   "event_id": "45143667",
+   "partita": "PSG vs Aston Villa",
+   "lega": "supercoppa_uefa",
+   "fascia": "coppa",
+   "inizio": "2026-08-12T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 166,
+   "primo_h": 101.56,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 38,
+    "primo_h": 101.56,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 93,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45245401",
+   "partita": "Deportivo La Coruña vs Real Madrid",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 85,
+   "primo_h": 23.62,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 14,
+    "primo_h": 23.62,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 94,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45256322",
+   "partita": "Napoli vs Aris Thessaloniki",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 82,
+   "primo_h": 23.62,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 14,
+    "primo_h": 23.62,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 87,
+   "live_buco_max_min": 9.1
+  },
+  {
+   "event_id": "45257193",
+   "partita": "Málaga vs Fulham",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-12T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 83,
+   "primo_h": 5.17,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 6,
+    "primo_h": 5.17,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [],
+   "live_letture": 94,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45253638",
+   "partita": "FC Tobol Kostanay vs FK Partizan",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 67.68,
+   "ultimo_h": 1.12,
+   "ggng": {
+    "n": 32,
+    "primo_h": 67.68,
+    "ultimo_h": 1.12
+   },
+   "chiave_mancanti": [],
+   "live_letture": 97,
+   "live_buco_max_min": 6.7
+  },
+  {
+   "event_id": "45253986",
+   "partita": "Ilves vs HNK Rijeka",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 106,
+   "primo_h": 68.68,
+   "ultimo_h": 0.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 68.68,
+    "ultimo_h": 0.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 78,
+   "live_buco_max_min": 3.8
+  },
+  {
+   "event_id": "45253987",
+   "partita": "FK Qarabag vs Dynamo Kyiv",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 109,
+   "primo_h": 68.68,
+   "ultimo_h": 0.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 68.68,
+    "ultimo_h": 0.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 78,
+   "live_buco_max_min": 4.5
+  },
+  {
+   "event_id": "45253988",
+   "partita": "Tallinna FC Flora vs Inter Club d'Escaldes",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 108,
+   "primo_h": 68.68,
+   "ultimo_h": 0.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 68.68,
+    "ultimo_h": 0.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 77,
+   "live_buco_max_min": 5.1
+  },
+  {
+   "event_id": "45254012",
+   "partita": "Rigas FS vs FK Jablonec",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 102,
+   "primo_h": 69.18,
+   "ultimo_h": 1.27,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.18,
+    "ultimo_h": 1.27
+   },
+   "chiave_mancanti": [],
+   "live_letture": 61,
+   "live_buco_max_min": 5.2
+  },
+  {
+   "event_id": "45248976",
+   "partita": "Besiktas vs FC Hradec Králové",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 108,
+   "primo_h": 123.56,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 38,
+    "primo_h": 123.56,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 7.3
+  },
+  {
+   "event_id": "45250008",
+   "partita": "CS Universitatea Craiova vs KuPS",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 105.79,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 36,
+    "primo_h": 105.79,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 7.3
+  },
+  {
+   "event_id": "45250012",
+   "partita": "Paphos FC vs Red Bull Salzburg",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 113,
+   "primo_h": 105.79,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 36,
+    "primo_h": 105.79,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 7.3
+  },
+  {
+   "event_id": "45250013",
+   "partita": "Górnik Zabrze vs Ferencvárosi TC",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 121,
+   "primo_h": 105.79,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 36,
+    "primo_h": 105.79,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 7.6
+  },
+  {
+   "event_id": "45250016",
+   "partita": "Omonia Nicosia vs Lincoln Red Imps FC",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 102,
+   "primo_h": 105.79,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 36,
+    "primo_h": 105.79,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 48,
+   "live_buco_max_min": 5.8
+  },
+  {
+   "event_id": "45254049",
+   "partita": "ML Vitebsk vs Borac Banja Luka",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 101,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 5.6
+  },
+  {
+   "event_id": "45254050",
+   "partita": "Tromsø vs CFR Cluj",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 105,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 48,
+   "live_buco_max_min": 5.4
+  },
+  {
+   "event_id": "45254051",
+   "partita": "Midtjylland vs Bohemians",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 106,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 5.5
+  },
+  {
+   "event_id": "45254052",
+   "partita": "DAC Dunajská Streda vs FC Twente",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 109,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 48,
+   "live_buco_max_min": 5.6
+  },
+  {
+   "event_id": "45254053",
+   "partita": "Dinamo Minsk vs Braga",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 106,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 48,
+   "live_buco_max_min": 5.5
+  },
+  {
+   "event_id": "45254054",
+   "partita": "Hammarby vs Rakow Czestochowa",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 110,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [],
+   "live_letture": 49,
+   "live_buco_max_min": 4.9
+  },
+  {
+   "event_id": "45254055",
+   "partita": "FC Nordsjælland vs Valur",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 104,
+   "primo_h": 69.68,
+   "ultimo_h": 1.77,
+   "ggng": {
+    "n": 32,
+    "primo_h": 69.68,
+    "ultimo_h": 1.77
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 49,
+   "live_buco_max_min": 4.9
+  },
+  {
+   "event_id": "45248981",
+   "partita": "Víkingur vs FC Thun",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 109,
+   "primo_h": 124.06,
+   "ultimo_h": 0.28,
+   "ggng": {
+    "n": 38,
+    "primo_h": 124.06,
+    "ultimo_h": 0.28
+   },
+   "chiave_mancanti": [],
+   "live_letture": 42,
+   "live_buco_max_min": 8.4
+  },
+  {
+   "event_id": "45250009",
+   "partita": "Klaksvíkar Ítróttarfelag vs Lech Poznan",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 126,
+   "primo_h": 106.29,
+   "ultimo_h": -23.7,
+   "ggng": {
+    "n": 48,
+    "primo_h": 106.29,
+    "ultimo_h": -23.7
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45254080",
+   "partita": "NSI Runavik vs Lugano",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 106,
+   "primo_h": 70.18,
+   "ultimo_h": 0.28,
+   "ggng": {
+    "n": 32,
+    "primo_h": 70.18,
+    "ultimo_h": 0.28
+   },
+   "chiave_mancanti": [],
+   "live_letture": 42,
+   "live_buco_max_min": 5.1
+  },
+  {
+   "event_id": "45254081",
+   "partita": "FC Vaduz vs FC Inter Turku",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T17:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 107,
+   "primo_h": 70.18,
+   "ultimo_h": 0.28,
+   "ggng": {
+    "n": 32,
+    "primo_h": 70.18,
+    "ultimo_h": 0.28
+   },
+   "chiave_mancanti": [],
+   "live_letture": 41,
+   "live_buco_max_min": 5.1
+  },
+  {
+   "event_id": "45248979",
+   "partita": "CSKA-Sofia vs Maccabi Tel Aviv",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 107,
+   "primo_h": 124.56,
+   "ultimo_h": 0.78,
+   "ggng": {
+    "n": 38,
+    "primo_h": 124.56,
+    "ultimo_h": 0.78
+   },
+   "chiave_mancanti": [],
+   "live_letture": 43,
+   "live_buco_max_min": 8.4
+  },
+  {
+   "event_id": "45254130",
+   "partita": "KF Drita vs Tre Fiori",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 99,
+   "primo_h": 70.68,
+   "ultimo_h": 0.78,
+   "ggng": {
+    "n": 32,
+    "primo_h": 70.68,
+    "ultimo_h": 0.78
+   },
+   "chiave_mancanti": [],
+   "live_letture": 43,
+   "live_buco_max_min": 4.7
+  },
+  {
+   "event_id": "45254132",
+   "partita": "St. Gallen vs Sheriff Tiraspol",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 100,
+   "primo_h": 70.68,
+   "ultimo_h": 0.78,
+   "ggng": {
+    "n": 32,
+    "primo_h": 70.68,
+    "ultimo_h": 0.78
+   },
+   "chiave_mancanti": [],
+   "live_letture": 42,
+   "live_buco_max_min": 4.7
+  },
+  {
+   "event_id": "45254133",
+   "partita": "FK Shkendija 79 vs Hibernian",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 105,
+   "primo_h": 70.68,
+   "ultimo_h": 0.78,
+   "ggng": {
+    "n": 32,
+    "primo_h": 70.68,
+    "ultimo_h": 0.78
+   },
+   "chiave_mancanti": [],
+   "live_letture": 42,
+   "live_buco_max_min": 4.7
+  },
+  {
+   "event_id": "45254135",
+   "partita": "FC Sion vs Noah",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:15:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 70.93,
+   "ultimo_h": 0.08,
+   "ggng": {
+    "n": 34,
+    "primo_h": 70.93,
+    "ultimo_h": 0.08
+   },
+   "chiave_mancanti": [],
+   "live_letture": 44,
+   "live_buco_max_min": 4.9
+  },
+  {
+   "event_id": "45250011",
+   "partita": "Anderlecht vs PAOK",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 111,
+   "primo_h": 107.29,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 38,
+    "primo_h": 107.29,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 52,
+   "live_buco_max_min": 8.4
+  },
+  {
+   "event_id": "45250014",
+   "partita": "Rangers vs Jagiellonia Bialystok",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 127,
+   "primo_h": 107.29,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 38,
+    "primo_h": 107.29,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 52,
+   "live_buco_max_min": 6.8
+  },
+  {
+   "event_id": "45254147",
+   "partita": "Györi ETO FC vs Riga FC",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 104,
+   "primo_h": 71.18,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.18,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 52,
+   "live_buco_max_min": 4.9
+  },
+  {
+   "event_id": "45254148",
+   "partita": "Austria Wien vs Beitar Jerusalem",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 71.18,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.18,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 52,
+   "live_buco_max_min": 5.7
+  },
+  {
+   "event_id": "45254149",
+   "partita": "Gent vs IFK Göteborg",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 112,
+   "primo_h": 71.18,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.18,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 53,
+   "live_buco_max_min": 5.8
+  },
+  {
+   "event_id": "45254150",
+   "partita": "Motherwell vs HJK Helsinki",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 110,
+   "primo_h": 71.18,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.18,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 53,
+   "live_buco_max_min": 5.8
+  },
+  {
+   "event_id": "45250010",
+   "partita": "Hearts vs Benfica",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 111,
+   "primo_h": 107.54,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 38,
+    "primo_h": 107.54,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 60,
+   "live_buco_max_min": 6.3
+  },
+  {
+   "event_id": "45254166",
+   "partita": "Shelbourne FC vs Ajax",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 113,
+   "primo_h": 71.43,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.43,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 60,
+   "live_buco_max_min": 4.1
+  },
+  {
+   "event_id": "45250015",
+   "partita": "KS Egnatia Rrogozhinë vs Shamrock Rovers",
+   "lega": "uel_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 101,
+   "primo_h": 107.79,
+   "ultimo_h": 0.83,
+   "ggng": {
+    "n": 38,
+    "primo_h": 107.79,
+    "ultimo_h": 0.83
+   },
+   "chiave_mancanti": [],
+   "live_letture": 71,
+   "live_buco_max_min": 5.7
+  },
+  {
+   "event_id": "45254201",
+   "partita": "Dinamo Tirana vs FK Auda",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 99,
+   "primo_h": 71.68,
+   "ultimo_h": 0.83,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.68,
+    "ultimo_h": 0.83
+   },
+   "chiave_mancanti": [],
+   "live_letture": 71,
+   "live_buco_max_min": 3.5
+  },
+  {
+   "event_id": "45254202",
+   "partita": "Hajduk Split vs Žalgiris Vilnius",
+   "lega": "uecl_qual",
+   "fascia": "coppa",
+   "inizio": "2026-08-13T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 103,
+   "primo_h": 71.68,
+   "ultimo_h": 0.83,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.68,
+    "ultimo_h": 0.83
+   },
+   "chiave_mancanti": [],
+   "live_letture": 71,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45252149",
+   "partita": "Marseille vs Atlético Madrid",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-14T15:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 44.08,
+   "ultimo_h": 0.38,
+   "ggng": {
+    "n": 24,
+    "primo_h": 44.08,
+    "ultimo_h": 0.38
+   },
+   "chiave_mancanti": [],
+   "live_letture": 169,
+   "live_buco_max_min": 2.1
+  },
+  {
+   "event_id": "45253985",
+   "partita": "Parma vs Catania",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-14T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 115,
+   "primo_h": 50.17,
+   "ultimo_h": -0.07,
+   "ggng": {
+    "n": 26,
+    "primo_h": 50.17,
+    "ultimo_h": -0.07
+   },
+   "chiave_mancanti": [],
+   "live_letture": 147,
+   "live_buco_max_min": 2.8
+  },
+  {
+   "event_id": "45249965",
+   "partita": "Eintracht Braunschweig vs Bochum",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 92,
+   "primo_h": 147.06,
+   "ultimo_h": 0.43,
+   "ggng": {
+    "n": 42,
+    "primo_h": 147.06,
+    "ultimo_h": 0.43
+   },
+   "chiave_mancanti": [],
+   "live_letture": 132,
+   "live_buco_max_min": 2.8
+  },
+  {
+   "event_id": "45252693",
+   "partita": "Holstein Kiel vs FC St. Pauli",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 93,
+   "primo_h": 80.96,
+   "ultimo_h": 0.43,
+   "ggng": {
+    "n": 36,
+    "primo_h": 80.96,
+    "ultimo_h": 0.43
+   },
+   "chiave_mancanti": [],
+   "live_letture": 135,
+   "live_buco_max_min": 2.0
+  },
+  {
+   "event_id": "45254010",
+   "partita": "Cagliari vs Arezzo",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-14T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 115,
+   "primo_h": 50.67,
+   "ultimo_h": 0.43,
+   "ggng": {
+    "n": 26,
+    "primo_h": 50.67,
+    "ultimo_h": 0.43
+   },
+   "chiave_mancanti": [],
+   "live_letture": 133,
+   "live_buco_max_min": 2.3
+  },
+  {
+   "event_id": "45259878",
+   "partita": "Troyes AC vs Panetolikos",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-14T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 14.16,
+   "ultimo_h": 0.93,
+   "ggng": {
+    "n": 12,
+    "primo_h": 14.16,
+    "ultimo_h": 0.93
+   },
+   "chiave_mancanti": [],
+   "live_letture": 127,
+   "live_buco_max_min": 4.1
+  },
+  {
+   "event_id": "45256650",
+   "partita": "Coventry vs Monaco",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-14T18:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 57.99,
+   "ultimo_h": -0.17,
+   "ggng": {
+    "n": 28,
+    "primo_h": 57.99,
+    "ultimo_h": -0.17
+   },
+   "chiave_mancanti": [],
+   "live_letture": 112,
+   "live_buco_max_min": 10.6
+  },
+  {
+   "event_id": "45240857",
+   "partita": "Real Sociedad B vs CD Castellon",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 97,
+   "primo_h": 149.06,
+   "ultimo_h": 0.33,
+   "ggng": {
+    "n": 42,
+    "primo_h": 149.06,
+    "ultimo_h": 0.33
+   },
+   "chiave_mancanti": [],
+   "live_letture": 124,
+   "live_buco_max_min": 4.8
+  },
+  {
+   "event_id": "45250856",
+   "partita": "Saint-Étienne vs Clermont Foot",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 93,
+   "primo_h": 131.54,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 40,
+    "primo_h": 131.54,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 128,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45250857",
+   "partita": "En Avant Guingamp vs US Boulogne",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 91,
+   "primo_h": 131.54,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 40,
+    "primo_h": 131.54,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 128,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45250858",
+   "partita": "Reims vs USL Dunkerque",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 93,
+   "primo_h": 131.54,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 40,
+    "primo_h": 131.54,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 127,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45250867",
+   "partita": "AS Nancy vs Montpellier",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 90,
+   "primo_h": 131.54,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 40,
+    "primo_h": 131.54,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 3.0
+  },
+  {
+   "event_id": "45250855",
+   "partita": "Annecy FC vs Rodez",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 90,
+   "primo_h": 107.07,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 38,
+    "primo_h": 107.07,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 127,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45254165",
+   "partita": "Monza vs Avellino",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 132,
+   "primo_h": 71.37,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 34,
+    "primo_h": 71.37,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 127,
+   "live_buco_max_min": 3.6
+  },
+  {
+   "event_id": "45254161",
+   "partita": "Dijon FCO vs Pau FC",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 90,
+   "primo_h": 39.89,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 22,
+    "primo_h": 39.89,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 2.9
+  },
+  {
+   "event_id": "45254163",
+   "partita": "Stade Lavallois vs Nantes",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 92,
+   "primo_h": 39.89,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 22,
+    "primo_h": 39.89,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 2.7
+  },
+  {
+   "event_id": "45254164",
+   "partita": "Red Star FC 93 vs Sochaux-Montbéliard",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 91,
+   "primo_h": 39.89,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 22,
+    "primo_h": 39.89,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 2.7
+  },
+  {
+   "event_id": "45254162",
+   "partita": "Grenoble Foot 38 vs Metz",
+   "lega": "ligue_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 91,
+   "primo_h": 34.43,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 20,
+    "primo_h": 34.43,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 2.4
+  },
+  {
+   "event_id": "45259653",
+   "partita": "Atalanta vs Athletic Bilbao",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-14T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 23.28,
+   "ultimo_h": 0.58,
+   "ggng": {
+    "n": 14,
+    "primo_h": 23.28,
+    "ultimo_h": 0.58
+   },
+   "chiave_mancanti": [],
+   "live_letture": 127,
+   "live_buco_max_min": 3.7
+  },
+  {
+   "event_id": "45156887",
+   "partita": "Wolverhampton vs Blackburn",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-14T19:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 164,
+   "primo_h": 149.56,
+   "ultimo_h": 0.83,
+   "ggng": {
+    "n": 42,
+    "primo_h": 149.56,
+    "ultimo_h": 0.83
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 2.9
+  },
+  {
+   "event_id": "45254213",
+   "partita": "Fiorentina vs Benevento",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-14T19:15:00+00:00",
+   "giocata": true,
+   "n_mercati": 119,
+   "primo_h": 53.42,
+   "ultimo_h": -0.06,
+   "ggng": {
+    "n": 28,
+    "primo_h": 53.42,
+    "ultimo_h": -0.06
+   },
+   "chiave_mancanti": [],
+   "live_letture": 132,
+   "live_buco_max_min": 6.6
+  },
+  {
+   "event_id": "45261895",
+   "partita": "Arenas Club vs Osasuna",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T09:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 15,
+   "primo_h": 7.6,
+   "ultimo_h": 0.82,
+   "ggng": {
+    "n": 10,
+    "primo_h": 7.6,
+    "ultimo_h": 0.82
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 145,
+   "live_buco_max_min": 2.1
+  },
+  {
+   "event_id": "45249979",
+   "partita": "SpVgg Greuther Fürth vs 1. FC Nürnberg",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T11:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 93,
+   "primo_h": 165.56,
+   "ultimo_h": 0.41,
+   "ggng": {
+    "n": 44,
+    "primo_h": 165.56,
+    "ultimo_h": 0.41
+   },
+   "chiave_mancanti": [],
+   "live_letture": 123,
+   "live_buco_max_min": 3.7
+  },
+  {
+   "event_id": "45252688",
+   "partita": "Hertha Berlin vs Heidenheim",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T11:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 93,
+   "primo_h": 99.46,
+   "ultimo_h": 0.41,
+   "ggng": {
+    "n": 38,
+    "primo_h": 99.46,
+    "ultimo_h": 0.41
+   },
+   "chiave_mancanti": [],
+   "live_letture": 123,
+   "live_buco_max_min": 3.7
+  },
+  {
+   "event_id": "45252694",
+   "partita": "VfL Osnabrück vs 1. FC Magdeburg",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T11:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 92,
+   "primo_h": 99.46,
+   "ultimo_h": 0.41,
+   "ggng": {
+    "n": 38,
+    "primo_h": 99.46,
+    "ultimo_h": 0.41
+   },
+   "chiave_mancanti": [],
+   "live_letture": 123,
+   "live_buco_max_min": 3.7
+  },
+  {
+   "event_id": "45156886",
+   "partita": "Bolton vs Preston",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T11:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 161,
+   "primo_h": 166.06,
+   "ultimo_h": -0.04,
+   "ggng": {
+    "n": 46,
+    "primo_h": 166.06,
+    "ultimo_h": -0.04
+   },
+   "chiave_mancanti": [],
+   "live_letture": 125,
+   "live_buco_max_min": 3.7
+  },
+  {
+   "event_id": "45250863",
+   "partita": "SC Freiburg vs Crystal Palace",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T12:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 70.17,
+   "ultimo_h": 0.46,
+   "ggng": {
+    "n": 34,
+    "primo_h": 70.17,
+    "ultimo_h": 0.46
+   },
+   "chiave_mancanti": [],
+   "live_letture": 129,
+   "live_buco_max_min": 2.9
+  },
+  {
+   "event_id": "45260942",
+   "partita": "Werder Bremen vs AJ Auxerre",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T12:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 81,
+   "primo_h": 22.72,
+   "ultimo_h": 0.96,
+   "ggng": {
+    "n": 14,
+    "primo_h": 22.72,
+    "ultimo_h": 0.96
+   },
+   "chiave_mancanti": [],
+   "live_letture": 107,
+   "live_buco_max_min": 12.3
+  },
+  {
+   "event_id": "45257315",
+   "partita": "Chelsea vs Real Sociedad",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T13:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 82,
+   "primo_h": 71.17,
+   "ultimo_h": -0.04,
+   "ggng": {
+    "n": 36,
+    "primo_h": 71.17,
+    "ultimo_h": -0.04
+   },
+   "chiave_mancanti": [],
+   "live_letture": 112,
+   "live_buco_max_min": 6.1
+  },
+  {
+   "event_id": "45261489",
+   "partita": "SV Elversberg vs Lorient",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T13:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 23.22,
+   "ultimo_h": -0.04,
+   "ggng": {
+    "n": 16,
+    "primo_h": 23.22,
+    "ultimo_h": -0.04
+   },
+   "chiave_mancanti": [],
+   "live_letture": 93,
+   "live_buco_max_min": 11.1
+  },
+  {
+   "event_id": "45250862",
+   "partita": "Bayern Munich vs RB Leipzig",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T13:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 15,
+   "primo_h": 53.18,
+   "ultimo_h": 0.46,
+   "ggng": {
+    "n": 30,
+    "primo_h": 53.18,
+    "ultimo_h": 0.46
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 108,
+   "live_buco_max_min": 6.1
+  },
+  {
+   "event_id": "45261048",
+   "partita": "Borussia Mönchengladbach vs Aston Villa",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T13:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 23.72,
+   "ultimo_h": 0.46,
+   "ggng": {
+    "n": 16,
+    "primo_h": 23.72,
+    "ultimo_h": 0.46
+   },
+   "chiave_mancanti": [],
+   "live_letture": 104,
+   "live_buco_max_min": 6.1
+  },
+  {
+   "event_id": "45261520",
+   "partita": "Mainz vs Bournemouth",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T13:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 23.72,
+   "ultimo_h": 0.46,
+   "ggng": {
+    "n": 16,
+    "primo_h": 23.72,
+    "ultimo_h": 0.46
+   },
+   "chiave_mancanti": [],
+   "live_letture": 110,
+   "live_buco_max_min": 5.9
+  },
+  {
+   "event_id": "45261521",
+   "partita": "Union Berlin vs Ipswich",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T13:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 23.72,
+   "ultimo_h": 0.46,
+   "ggng": {
+    "n": 16,
+    "primo_h": 23.72,
+    "ultimo_h": 0.46
+   },
+   "chiave_mancanti": [],
+   "live_letture": 105,
+   "live_buco_max_min": 5.4
+  },
+  {
+   "event_id": "45156352",
+   "partita": "Charlton vs Derby",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 154,
+   "primo_h": 168.56,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 44,
+    "primo_h": 168.56,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45156355",
+   "partita": "Middlesbrough vs Lincoln City",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 155,
+   "primo_h": 168.56,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 44,
+    "primo_h": 168.56,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45156356",
+   "partita": "Norwich vs West Brom",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 156,
+   "primo_h": 168.56,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 44,
+    "primo_h": 168.56,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45156894",
+   "partita": "Bristol City vs Millwall",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 152,
+   "primo_h": 168.56,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 44,
+    "primo_h": 168.56,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45156895",
+   "partita": "Stoke vs Swansea",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 154,
+   "primo_h": 168.56,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 44,
+    "primo_h": 168.56,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45156899",
+   "partita": "Portsmouth vs QPR",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 156,
+   "primo_h": 168.56,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 44,
+    "primo_h": 168.56,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 115,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45257316",
+   "partita": "Everton vs Lille OSC",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 66.58,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 34,
+    "primo_h": 66.58,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 115,
+   "live_buco_max_min": 3.5
+  },
+  {
+   "event_id": "45257442",
+   "partita": "Newcastle vs Bayer Leverkusen",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 66.58,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 34,
+    "primo_h": 66.58,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 114,
+   "live_buco_max_min": 3.5
+  },
+  {
+   "event_id": "45257987",
+   "partita": "Hull vs Nice",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 66.58,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 34,
+    "primo_h": 66.58,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 115,
+   "live_buco_max_min": 3.4
+  },
+  {
+   "event_id": "45250864",
+   "partita": "Sunderland vs Rennes",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 42.53,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 24,
+    "primo_h": 42.53,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 114,
+   "live_buco_max_min": 3.5
+  },
+  {
+   "event_id": "45261545",
+   "partita": "Brighton vs Bologna",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 82,
+   "primo_h": 18.69,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 14,
+    "primo_h": 18.69,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45261546",
+   "partita": "Leeds vs Augsburg",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 82,
+   "primo_h": 18.69,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 14,
+    "primo_h": 18.69,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 115,
+   "live_buco_max_min": 3.2
+  },
+  {
+   "event_id": "45261547",
+   "partita": "Tottenham vs Hoffenheim",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 81,
+   "primo_h": 18.69,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 14,
+    "primo_h": 18.69,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 116,
+   "live_buco_max_min": 3.2
+  },
+  {
+   "event_id": "45261548",
+   "partita": "Brentford vs Eintracht Frankfurt",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 18.69,
+   "ultimo_h": 0.26,
+   "ggng": {
+    "n": 14,
+    "primo_h": 18.69,
+    "ultimo_h": 0.26
+   },
+   "chiave_mancanti": [],
+   "live_letture": 117,
+   "live_buco_max_min": 3.2
+  },
+  {
+   "event_id": "45257443",
+   "partita": "Man Utd vs AC Milan",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T14:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 15,
+   "primo_h": 67.33,
+   "ultimo_h": 0.14,
+   "ggng": {
+    "n": 36,
+    "primo_h": 67.33,
+    "ultimo_h": 0.14
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 118,
+   "live_buco_max_min": 3.9
+  },
+  {
+   "event_id": "45240856",
+   "partita": "Andorra FC vs AD Ceuta FC",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 98,
+   "primo_h": 169.56,
+   "ultimo_h": 0.39,
+   "ggng": {
+    "n": 44,
+    "primo_h": 169.56,
+    "ultimo_h": 0.39
+   },
+   "chiave_mancanti": [],
+   "live_letture": 122,
+   "live_buco_max_min": 3.0
+  },
+  {
+   "event_id": "45257472",
+   "partita": "Fulham vs Stuttgart",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 80,
+   "primo_h": 67.58,
+   "ultimo_h": 0.39,
+   "ggng": {
+    "n": 34,
+    "primo_h": 67.58,
+    "ultimo_h": 0.39
+   },
+   "chiave_mancanti": [],
+   "live_letture": 122,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45261519",
+   "partita": "Angers vs Paris FC",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 15,
+   "primo_h": 25.22,
+   "ultimo_h": 0.39,
+   "ggng": {
+    "n": 16,
+    "primo_h": 25.22,
+    "ultimo_h": 0.39
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 124,
+   "live_buco_max_min": 3.1
+  },
+  {
+   "event_id": "45223377",
+   "partita": "Borussia Dortmund vs Roma",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T15:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 86,
+   "primo_h": 68.08,
+   "ultimo_h": -0.08,
+   "ggng": {
+    "n": 36,
+    "primo_h": 68.08,
+    "ultimo_h": -0.08
+   },
+   "chiave_mancanti": [],
+   "live_letture": 115,
+   "live_buco_max_min": 7.8
+  },
+  {
+   "event_id": "45256127",
+   "partita": "Catanzaro vs FC Sudtirol",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-15T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 117,
+   "primo_h": 68.58,
+   "ultimo_h": 0.42,
+   "ggng": {
+    "n": 34,
+    "primo_h": 68.58,
+    "ultimo_h": 0.42
+   },
+   "chiave_mancanti": [],
+   "live_letture": 115,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45259892",
+   "partita": "Le Mans FC vs Le Havre",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T16:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 37.16,
+   "ultimo_h": 0.42,
+   "ggng": {
+    "n": 22,
+    "primo_h": 37.16,
+    "ultimo_h": 0.42
+   },
+   "chiave_mancanti": [],
+   "live_letture": 119,
+   "live_buco_max_min": 3.4
+  },
+  {
+   "event_id": "45156884",
+   "partita": "Sheff Utd vs Birmingham",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 161,
+   "primo_h": 171.06,
+   "ultimo_h": 0.92,
+   "ggng": {
+    "n": 44,
+    "primo_h": 171.06,
+    "ultimo_h": 0.92
+   },
+   "chiave_mancanti": [],
+   "live_letture": 120,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45256155",
+   "partita": "Udinese vs Padova",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-15T16:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 118,
+   "primo_h": 69.08,
+   "ultimo_h": 0.92,
+   "ggng": {
+    "n": 34,
+    "primo_h": 69.08,
+    "ultimo_h": 0.92
+   },
+   "chiave_mancanti": [],
+   "live_letture": 117,
+   "live_buco_max_min": 4.4
+  },
+  {
+   "event_id": "45240865",
+   "partita": "Real Oviedo vs Granada",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 99,
+   "primo_h": 171.56,
+   "ultimo_h": 0.35,
+   "ggng": {
+    "n": 44,
+    "primo_h": 171.56,
+    "ultimo_h": 0.35
+   },
+   "chiave_mancanti": [],
+   "live_letture": 117,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45240872",
+   "partita": "Cádiz vs Celta de Vigo B",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 94,
+   "primo_h": 171.56,
+   "ultimo_h": 0.35,
+   "ggng": {
+    "n": 44,
+    "primo_h": 171.56,
+    "ultimo_h": 0.35
+   },
+   "chiave_mancanti": [],
+   "live_letture": 117,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45259799",
+   "partita": "Toulouse vs Hamburger SV",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T17:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 79,
+   "primo_h": 38.16,
+   "ultimo_h": 0.35,
+   "ggng": {
+    "n": 22,
+    "primo_h": 38.16,
+    "ultimo_h": 0.35
+   },
+   "chiave_mancanti": [],
+   "live_letture": 110,
+   "live_buco_max_min": 11.2
+  },
+  {
+   "event_id": "45169641",
+   "partita": "Deportivo Alaves vs Getafe CF",
+   "lega": "la_liga",
+   "fascia": "?",
+   "inizio": "2026-08-15T17:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 165,
+   "primo_h": 432.07,
+   "ultimo_h": -0.05,
+   "ggng": {
+    "n": 80,
+    "primo_h": 432.07,
+    "ultimo_h": -0.05
+   },
+   "chiave_mancanti": [],
+   "live_letture": 123,
+   "live_buco_max_min": 2.9
+  },
+  {
+   "event_id": "45259667",
+   "partita": "Inter Milan vs Real Betis",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-15T17:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 81,
+   "primo_h": 46.03,
+   "ultimo_h": -0.05,
+   "ggng": {
+    "n": 26,
+    "primo_h": 46.03,
+    "ultimo_h": -0.05
+   },
+   "chiave_mancanti": [],
+   "live_letture": 122,
+   "live_buco_max_min": 6.0
+  },
+  {
+   "event_id": "45250752",
+   "partita": "1. FC Kaiserslautern vs Karlsruher SC",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T18:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 95,
+   "primo_h": 155.29,
+   "ultimo_h": 0.95,
+   "ggng": {
+    "n": 42,
+    "primo_h": 155.29,
+    "ultimo_h": 0.95
+   },
+   "chiave_mancanti": [],
+   "live_letture": 128,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45256268",
+   "partita": "Venezia vs Modena FC 2018",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-15T18:45:00+00:00",
+   "giocata": true,
+   "n_mercati": 123,
+   "primo_h": 71.33,
+   "ultimo_h": -0.07,
+   "ggng": {
+    "n": 36,
+    "primo_h": 71.33,
+    "ultimo_h": -0.07
+   },
+   "chiave_mancanti": [],
+   "live_letture": 124,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45256328",
+   "partita": "Torino vs Carrarese",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-15T19:15:00+00:00",
+   "giocata": true,
+   "n_mercati": 131,
+   "primo_h": 71.83,
+   "ultimo_h": 0.43,
+   "ggng": {
+    "n": 36,
+    "primo_h": 71.83,
+    "ultimo_h": 0.43
+   },
+   "chiave_mancanti": [],
+   "live_letture": 126,
+   "live_buco_max_min": 4.0
+  },
+  {
+   "event_id": "45169644",
+   "partita": "Sevilla FC vs Rayo Vallecano",
+   "lega": "la_liga",
+   "fascia": "?",
+   "inizio": "2026-08-15T19:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 164,
+   "primo_h": 434.07,
+   "ultimo_h": 0.01,
+   "ggng": {
+    "n": 80,
+    "primo_h": 434.07,
+    "ultimo_h": 0.01
+   },
+   "chiave_mancanti": [],
+   "live_letture": 123,
+   "live_buco_max_min": 8.9
+  },
+  {
+   "event_id": "45240866",
+   "partita": "Mallorca vs Real Valladolid",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-15T19:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 97,
+   "primo_h": 174.06,
+   "ultimo_h": 0.01,
+   "ggng": {
+    "n": 46,
+    "primo_h": 174.06,
+    "ultimo_h": 0.01
+   },
+   "chiave_mancanti": [],
+   "live_letture": 128,
+   "live_buco_max_min": 2.3
+  },
+  {
+   "event_id": "45262595",
+   "partita": "Liverpool vs Como",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-16T10:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 15,
+   "primo_h": 21.46,
+   "ultimo_h": 0.89,
+   "ggng": {
+    "n": 14,
+    "primo_h": 21.46,
+    "ultimo_h": 0.89
+   },
+   "chiave_mancanti": [
+    "asian_handicap_0_5"
+   ],
+   "live_letture": 98,
+   "live_buco_max_min": 3.7
+  },
+  {
+   "event_id": "45251909",
+   "partita": "Dynamo Dresden vs Darmstadt",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T11:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 94,
+   "primo_h": 147.82,
+   "ultimo_h": 0.92,
+   "ggng": {
+    "n": 42,
+    "primo_h": 147.82,
+    "ultimo_h": 0.92
+   },
+   "chiave_mancanti": [],
+   "live_letture": 54,
+   "live_buco_max_min": 8.1
+  },
+  {
+   "event_id": "45252687",
+   "partita": "Arminia Bielefeld vs Energie Cottbus",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T11:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 96,
+   "primo_h": 123.96,
+   "ultimo_h": 0.92,
+   "ggng": {
+    "n": 40,
+    "primo_h": 123.96,
+    "ultimo_h": 0.92
+   },
+   "chiave_mancanti": [],
+   "live_letture": 54,
+   "live_buco_max_min": 8.1
+  },
+  {
+   "event_id": "45255411",
+   "partita": "Hannover 96 vs Wolfsburg",
+   "lega": "bundesliga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T11:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 92,
+   "primo_h": 99.57,
+   "ultimo_h": 0.92,
+   "ggng": {
+    "n": 38,
+    "primo_h": 99.57,
+    "ultimo_h": 0.92
+   },
+   "chiave_mancanti": [],
+   "live_letture": 54,
+   "live_buco_max_min": 8.1
+  },
+  {
+   "event_id": "45156891",
+   "partita": "Watford vs Southampton",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T12:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 159,
+   "primo_h": 191.06,
+   "ultimo_h": 0.99,
+   "ggng": {
+    "n": 46,
+    "primo_h": 191.06,
+    "ultimo_h": 0.99
+   },
+   "chiave_mancanti": [],
+   "live_letture": 10,
+   "live_buco_max_min": 8.1
+  },
+  {
+   "event_id": "45237857",
+   "partita": "Nottm Forest vs Brest",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-16T13:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 83,
+   "primo_h": 41.69,
+   "ultimo_h": -0.03,
+   "ggng": {
+    "n": 24,
+    "primo_h": 41.69,
+    "ultimo_h": -0.03
+   },
+   "chiave_mancanti": [],
+   "live_letture": 1,
+   "live_buco_max_min": 4.8
+  },
+  {
+   "event_id": "45252100",
+   "partita": "Arsenal vs Man City",
+   "lega": "community_shield",
+   "fascia": "coppa",
+   "inizio": "2026-08-16T14:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 155,
+   "primo_h": 150.32,
+   "ultimo_h": 0.3,
+   "ggng": {
+    "n": 42,
+    "primo_h": 150.32,
+    "ultimo_h": 0.3
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45262888",
+   "partita": "Basel vs Barcelona",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-16T14:30:00+00:00",
+   "giocata": true,
+   "n_mercati": 82,
+   "primo_h": 19.68,
+   "ultimo_h": 0.8,
+   "ggng": {
+    "n": 14,
+    "primo_h": 19.68,
+    "ultimo_h": 0.8
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45169646",
+   "partita": "Racing Santander vs Villarreal CF",
+   "lega": "la_liga",
+   "fascia": "?",
+   "inizio": "2026-08-16T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 159,
+   "primo_h": 453.57,
+   "ultimo_h": 1.3,
+   "ggng": {
+    "n": 78,
+    "primo_h": 453.57,
+    "ultimo_h": 1.3
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45156893",
+   "partita": "Burnley vs West Ham",
+   "lega": "championship",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 160,
+   "primo_h": 193.56,
+   "ultimo_h": 1.3,
+   "ggng": {
+    "n": 44,
+    "primo_h": 193.56,
+    "ultimo_h": 1.3
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45240871",
+   "partita": "SD Eibar vs CD Tenerife",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 96,
+   "primo_h": 193.56,
+   "ultimo_h": 1.3,
+   "ggng": {
+    "n": 44,
+    "primo_h": 193.56,
+    "ultimo_h": 1.3
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45259798",
+   "partita": "FC Schalke 04 vs Real Madrid",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-16T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 84,
+   "primo_h": 60.16,
+   "ultimo_h": 1.3,
+   "ggng": {
+    "n": 30,
+    "primo_h": 60.16,
+    "ultimo_h": 1.3
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45261708",
+   "partita": "Newcastle vs Strasbourg",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-16T15:00:00+00:00",
+   "giocata": true,
+   "n_mercati": 82,
+   "primo_h": 43.69,
+   "ultimo_h": 1.3,
+   "ggng": {
+    "n": 22,
+    "primo_h": 43.69,
+    "ultimo_h": 1.3
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45257262",
+   "partita": "Frosinone vs Juve Stabia",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-16T16:00:00+00:00",
+   "giocata": false,
+   "n_mercati": 119,
+   "primo_h": 79.68,
+   "ultimo_h": 2.97,
+   "ggng": {
+    "n": 32,
+    "primo_h": 79.68,
+    "ultimo_h": 2.97
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45257946",
+   "partita": "Genoa vs Ascoli",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-16T16:30:00+00:00",
+   "giocata": false,
+   "n_mercati": 118,
+   "primo_h": 69.03,
+   "ultimo_h": 3.47,
+   "ggng": {
+    "n": 30,
+    "primo_h": 69.03,
+    "ultimo_h": 3.47
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45169636",
+   "partita": "Espanyol Barcelona vs Levante UD",
+   "lega": "la_liga",
+   "fascia": "?",
+   "inizio": "2026-08-16T17:00:00+00:00",
+   "giocata": false,
+   "n_mercati": 158,
+   "primo_h": 455.57,
+   "ultimo_h": 3.97,
+   "ggng": {
+    "n": 76,
+    "primo_h": 455.57,
+    "ultimo_h": 3.97
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45240874",
+   "partita": "Girona vs Leganés",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T17:00:00+00:00",
+   "giocata": false,
+   "n_mercati": 96,
+   "primo_h": 195.56,
+   "ultimo_h": 3.97,
+   "ggng": {
+    "n": 42,
+    "primo_h": 195.56,
+    "ultimo_h": 3.97
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45240876",
+   "partita": "Burgos CF vs Córdoba CF",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T17:00:00+00:00",
+   "giocata": false,
+   "n_mercati": 94,
+   "primo_h": 195.56,
+   "ultimo_h": 3.97,
+   "ggng": {
+    "n": 42,
+    "primo_h": 195.56,
+    "ultimo_h": 3.97
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45223379",
+   "partita": "Liverpool vs Como",
+   "lega": "amichevole",
+   "fascia": "amichevole",
+   "inizio": "2026-08-16T17:00:00+00:00",
+   "giocata": false,
+   "n_mercati": 82,
+   "primo_h": 27.96,
+   "ultimo_h": 3.97,
+   "ggng": {
+    "n": 12,
+    "primo_h": 27.96,
+    "ultimo_h": 3.97
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45165996",
+   "partita": "RC Lens vs PSG",
+   "lega": "supercoppa_francia",
+   "fascia": "coppa",
+   "inizio": "2026-08-16T18:45:00+00:00",
+   "giocata": false,
+   "n_mercati": 101,
+   "primo_h": 197.31,
+   "ultimo_h": 5.72,
+   "ggng": {
+    "n": 42,
+    "primo_h": 197.31,
+    "ultimo_h": 5.72
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45257261",
+   "partita": "Verona vs Virtus Entella",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-16T18:45:00+00:00",
+   "giocata": false,
+   "n_mercati": 120,
+   "primo_h": 82.43,
+   "ultimo_h": 5.72,
+   "ggng": {
+    "n": 32,
+    "primo_h": 82.43,
+    "ultimo_h": 5.72
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45257255",
+   "partita": "Lazio vs Mantova",
+   "lega": "coppa_italia",
+   "fascia": "coppa",
+   "inizio": "2026-08-16T19:15:00+00:00",
+   "giocata": false,
+   "n_mercati": 121,
+   "primo_h": 82.93,
+   "ultimo_h": 6.22,
+   "ggng": {
+    "n": 32,
+    "primo_h": 82.93,
+    "ultimo_h": 6.22
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45169645",
+   "partita": "Celta Vigo vs CA Osasuna",
+   "lega": "la_liga",
+   "fascia": "?",
+   "inizio": "2026-08-16T19:30:00+00:00",
+   "giocata": false,
+   "n_mercati": 124,
+   "primo_h": 458.07,
+   "ultimo_h": 83.18,
+   "ggng": {
+    "n": 46,
+    "primo_h": 458.07,
+    "ultimo_h": 83.18
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  },
+  {
+   "event_id": "45240873",
+   "partita": "Las Palmas vs Albacete Balompié",
+   "lega": "la_liga_2",
+   "fascia": "seconda",
+   "inizio": "2026-08-16T19:30:00+00:00",
+   "giocata": false,
+   "n_mercati": 96,
+   "primo_h": 198.06,
+   "ultimo_h": 6.47,
+   "ggng": {
+    "n": 40,
+    "primo_h": 198.06,
+    "ultimo_h": 6.47
+   },
+   "chiave_mancanti": [],
+   "live_letture": 0,
+   "live_buco_max_min": null
+  }
+ ],
+ "outright": {
+  "giorni_mancanti": [
+   "2026-08-13",
+   "2026-08-14",
+   "2026-08-15"
+  ],
+  "serie_perse": [
+   {
+    "fonte": "polymarket",
+    "lega": "bundesliga",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "la_liga",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "la_liga",
+    "mercato": "qual_uecl"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "ligue_1",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "ligue_1",
+    "mercato": "qual_ucl"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "ligue_1",
+    "mercato": "qual_uecl"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "ligue_1",
+    "mercato": "qual_uel"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "premier_league",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "premier_league",
+    "mercato": "qual_uecl"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "serie_a",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "polymarket",
+    "lega": "serie_a",
+    "mercato": "qual_uecl"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "bundesliga",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "bundesliga",
+    "mercato": "relegation"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "bundesliga",
+    "mercato": "top4"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "bundesliga",
+    "mercato": "top6"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "la_liga",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "ligue_1",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "ligue_1",
+    "mercato": "relegation"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "ligue_1",
+    "mercato": "top3"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "ligue_1",
+    "mercato": "top_scorer"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "relegation"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "top2"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "top4"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "top5"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "top6"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "top_half"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "premier_league",
+    "mercato": "top_scorer"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "serie_a",
+    "mercato": "champion"
+   },
+   {
+    "fonte": "smarkets",
+    "lega": "serie_a",
+    "mercato": "top4"
+   }
+  ],
+  "solo_prima": [
+   "smarkets/la_liga/relegation",
+   "smarkets/la_liga/top4",
+   "smarkets/la_liga/top_scorer"
+  ],
+  "solo_dopo": [],
+  "punti_persi": 90
+ }
+}

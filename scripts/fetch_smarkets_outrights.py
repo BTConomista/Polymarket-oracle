@@ -299,13 +299,26 @@ def fetch_outrights(quiet: bool = True) -> list[dict]:
         lg, eid = e["_league"], e["id"]
         for m in _get(f"/events/{eid}/markets/").get("markets", []):
             mt = market_type(m.get("name", ""))
-            if not mt or m.get("state") != "open":
+            # ⚠️ ANCHE `live`, E NON E' UN DETTAGLIO (Fase 156-bis). Quando la
+            # stagione COMINCIA, Smarkets porta evento e mercati da `upcoming`/
+            # `open` a `live`: un filtro `!= "open"` li scarta tutti, e
+            # l'archivio outright di quella lega si spegne **il giorno del
+            # calcio d'inizio** -- cioe' esattamente quando la serie di prezzi
+            # comincia a essere interessante. Misurato il 16/08/2026: La Liga
+            # (partita il 15) era gia' sparita dallo snapshot, mentre le altre
+            # quattro leghe, non ancora cominciate, c'erano tutte. Sarebbero
+            # cadute il 21, il 22 e il 28 agosto, una dopo l'altra, in silenzio.
+            # Restano fuori `settled`/`closed`: li' non c'e' piu' un prezzo.
+            if not mt or m.get("state") not in ("open", "live"):
                 continue
             contracts = _get(f"/markets/{m['id']}/contracts/").get("contracts", [])
             quotes = _get(f"/markets/{m['id']}/quotes/")
             entries = []
             for c in contracts:
-                if c.get("state_or_outcome") not in ("open", None):
+                # stesso motivo del filtro sui mercati: a stagione iniziata i
+                # contratti sono `live`, e senza questo il mercato passerebbe
+                # ma uscirebbe con zero esiti
+                if c.get("state_or_outcome") not in ("open", "live", None):
                     continue
                 entries.append(dict(team=c.get("name", "").strip(),
                                     contract_id=c["id"],

@@ -184,3 +184,59 @@ def test_extract_flags_settled_season_tails():
 
 def test_extract_ignores_single_matches():
     assert ar.extract([_event("Roma vs. Lazio", ["Serie A"], [("Roma", 0.5)])]) == []
+
+
+# ---------------------------------------------------------------------------
+# LA STAGIONE CHE COMINCIA (Fase 156-bis)
+# Il difetto piu' caro trovato finora su questo file, e il piu' silenzioso:
+# quando una lega comincia, Smarkets porta i suoi mercati outright da `open` a
+# `live`. Il filtro originale (`!= "open"`) li scartava tutti, quindi
+# l'archivio di quella lega si spegneva **il giorno del calcio d'inizio** --
+# cioe' quando la serie di prezzi inizia a valere. Misurato il 16/08/2026: La
+# Liga (cominciata il 15) era gia' sparita; Premier, Serie A, Ligue 1 e
+# Bundesliga, non ancora cominciate, c'erano tutte, e sarebbero cadute il 21,
+# 22 e 28 agosto una dopo l'altra.
+# ---------------------------------------------------------------------------
+
+def _finto_get(mercati, contratti, quotes):
+    """Sostituisce le tre chiamate di rete di `fetch_outrights`."""
+    def get(path):
+        if path.endswith("/markets/"):
+            return {"markets": mercati}
+        if path.endswith("/contracts/"):
+            return {"contracts": contratti}
+        if path.endswith("/quotes/"):
+            return quotes
+        raise AssertionError(f"chiamata inattesa: {path}")
+    return get
+
+
+def test_un_mercato_LIVE_viene_archiviato(monkeypatch):
+    """Stagione iniziata: mercato e contratti in `live`, prezzo c'e' -> si prende."""
+    monkeypatch.setattr(sm, "outright_events",
+                        lambda quiet=True: [{"id": 1, "name": "LaLiga 26/27",
+                                             "slug": "laliga-26-27", "_league": "la_liga"}])
+    monkeypatch.setattr(sm, "_get", _finto_get(
+        [{"id": 9, "name": "LaLiga - Winner", "state": "live"}],
+        [{"id": 11, "name": "FC Barcelona", "state_or_outcome": "live"},
+         {"id": 12, "name": "Real Madrid", "state_or_outcome": "live"}],
+        {11: {"bids": [{"price": 5200}], "offers": [{"price": 5300}]},
+         12: {"bids": [{"price": 3900}], "offers": [{"price": 4000}]}}))
+
+    righe = sm.fetch_outrights()
+    assert {r["team"] for r in righe} == {"FC Barcelona", "Real Madrid"}
+    assert all(r["market"] == "champion" and r["league"] == "la_liga" for r in righe)
+
+
+def test_un_mercato_SETTLED_resta_fuori(monkeypatch):
+    """Il rovescio: `settled`/`closed` non ha piu' un prezzo da congelare.
+    Senza questo test, «accettare live» diventerebbe «accettare tutto»."""
+    monkeypatch.setattr(sm, "outright_events",
+                        lambda quiet=True: [{"id": 1, "name": "LaLiga 26/27",
+                                             "slug": "laliga-26-27", "_league": "la_liga"}])
+    monkeypatch.setattr(sm, "_get", _finto_get(
+        [{"id": 9, "name": "LaLiga - Winner", "state": "settled"}],
+        [{"id": 11, "name": "FC Barcelona", "state_or_outcome": "settled"}],
+        {11: {"bids": [{"price": 9990}], "offers": []}}))
+
+    assert sm.fetch_outrights() == []

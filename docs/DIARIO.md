@@ -19740,3 +19740,106 @@ E il secondo test simula il `ModuleNotFoundError` sostituendo `__import__`:
 prima del fix `ripara({"outright"})` **solleva**, dopo torna la riga
 `outright NON archiviati (ModuleNotFoundError: …)` e il controllo prosegue.
 Un test che non fallisce mai sul codice rotto non è una guardia, è un commento.
+
+---
+
+## Fase 156-bis — «Elencami cosa abbiamo perso, partita per partita»: e l'elenco ne trova un'altra
+
+**Obiettivo.** Rispondere a una domanda dell'utente che sembrava di
+rendicontazione: «fammi l'elenco dei dati che abbiamo perso tra il 12 e il 16
+agosto e per cosa li avremmo usati… **fallo per ogni singola partita**».
+
+**Ragionamento / ipotesi.** La domanda contiene un'assunzione che valeva la
+pena verificare invece che correggere a parole: che il buco della Fase 156
+fosse **per-partita**. Non lo è — gli outright sono una serie per lega ×
+mercato × giorno. Ma proprio per dirlo con onestà bisognava misurare **anche**
+il piano per-partita, che nessuno aveva guardato: mentre il collettore degli
+outright era morto, gli altri hanno tenuto?
+
+**Risultato, piano per piano.**
+
+1. **Per partita: quasi niente.** Delle **142** partite con calcio d'inizio nella
+   finestra, **114 senza alcun buco**, 11 ancora da giocare; **142/142** hanno
+   la quota GG/NG e **0** sono senza prezzo di chiusura. Le mancanze vere sono
+   quattro righe in tutto (una partita di *prova* senza in-play, nove amichevoli
+   senza handicap asiatico — che Smarkets non quota lì —, sette sessioni non
+   ancora committate). Elenco integrale in
+   [`docs/PERDITE_12_16_AGOSTO.md`](PERDITE_12_16_AGOSTO.md).
+2. **Outright: 90 punti persi** — 3 giorni (13/14/15) × **30 serie**, con la
+   destinazione d'uso dichiarata riga per riga. E un'onestà in più: su
+   `top_scorer` **non esiste un uso**, è raccolto per la regola §5-ter.
+3. **⭐ La scoperta, che non era nel conto.** Contando le serie è saltato fuori
+   che il 16/08 mancava **tutta La Liga da Smarkets** (109 righe il 12, zero il
+   16). Causa: quando una lega **comincia**, Smarkets porta evento e mercati da
+   `upcoming`/`open` a **`live`**, e il filtro era `state == "open"`. Cioè:
+   **l'archivio outright di ogni lega si sarebbe spento il giorno del suo calcio
+   d'inizio** — La Liga il 15 agosto (già successo), Premier e Ligue 1 il 21,
+   Serie A il 22, Bundesliga il 28. Riparato, con due test.
+
+**Lezione.** Un difetto che si manifesta **a una data** è invisibile a
+qualunque controllo fatto prima di quella data. Il collettore outright è stato
+scritto il 12 agosto e **funzionava**, il 12 agosto: la Fase 153 non poteva
+vedere niente, perché nessuna lega era ancora cominciata. La stessa cosa vale
+per il guardiano, che confronta l'oggi con l'ieri e quindi non ha modo di
+sapere che *domani* la fonte cambierà parola. L'unico rilevatore possibile è
+**guardare il dato**, non il processo — ed è successo solo perché una domanda
+di rendicontazione ha costretto a contare le serie una per una.
+
+Corollario operativo, da applicare alle prossime quattro leghe: **il giorno in
+cui una competizione comincia è un momento di controllo**, non un giorno come
+gli altri.
+
+### 📐 Il modello in dettaglio
+
+**(1) Il filtro riparato**, in `scripts/fetch_smarkets_outrights.py`:
+
+```
+PRIMA   tieni il mercato se   state == "open"
+        tieni il contratto se state_or_outcome ∈ {"open", None}
+
+DOPO    tieni il mercato se   state ∈ {"open", "live"}
+        tieni il contratto se state_or_outcome ∈ {"open", "live", None}
+```
+
+Restano fuori `settled` e `closed`, e non è simmetria estetica: lì un prezzo
+**non c'è più** (gli esiti valgono 0 o 1), quindi archiviarli riempirebbe la
+serie di finti prezzi — il `settled_share` esiste apposta per marcare le code
+di stagione già decise (Fase 97).
+
+**(2) Perché serviva cambiare ANCHE il filtro sui contratti.** Sono due
+condizioni in AND lungo il percorso: mercato → contratti → quote. Misurato
+sull'evento LaLiga il 16/08, i 20 contratti del mercato campione erano tutti
+`live`. Con il solo primo filtro corretto:
+
+```
+mercato passa (live)  →  20 contratti, 0 accettati  →  entries = []
+                      →  «nessun price_side ≠ empty»  →  mercato scartato
+```
+
+cioè lo stesso identico risultato di prima, ma per un motivo diverso e più
+difficile da trovare. La verifica del fix è stata fatta **contro il codice di
+HEAD**, dove lo stesso caso finto produce **0 righe**, contro le 2 di adesso.
+
+**(3) La metrica di copertura in-play, e un errore mio corretto in corsa.**
+Il buco per partita è quello della Fase 152:
+
+```
+buco(partita) = max( t₁ − k ,  max_i (t_{i+1} − t_i) )     su  t ∈ [k, k+105']
+```
+
+La prima stesura dello script prendeva `t` dal **nome del file**, come fa il
+guardiano per gli snapshot pre-partita. Ma un file in-play è una **sessione di
+cinque ore** e il suo nome è l'avvio: tutte le letture finivano schiacciate su
+un istante solo, e il conto dava **69 partite su 131 senza in-play**, tutte
+false. L'istante giusto sta **nella riga** (`istante_utc`), e con quello le
+partite senza in-play sono **8**, di cui 7 sessioni non ancora committate. È lo
+specchio della Fase 151 (lì l'istante nel nome era letto male, qui il nome non
+era l'istante): un tempo preso dal posto comodo invece che da quello giusto.
+
+**(4) Perché «l'evento è sparito» non è «non l'abbiamo raccolto».**
+Celta Vigo-Osasuna del 16/08 non ha prezzi dopo il 13/08. Non è una raccolta
+fallita: l'evento **esce dal listino** e la stessa partita ricompare come
+evento **nuovo** (id diverso) il 27/08 — un rinvio. La distinzione non è
+deducibile dal vuoto: serve guardare se altrove esiste un evento con le stesse
+squadre e una data diversa. Un conteggio di celle vuote — la statistica che la
+regola R7 mette in guardia — lo segnerebbe come colpa nostra.
