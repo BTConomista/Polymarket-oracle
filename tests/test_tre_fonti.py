@@ -1181,3 +1181,183 @@ def test_la_legenda_di_laliga2_documenta_ogni_colonna():
     """328 colonne su 328, quattro file su quattro. La guardia che non ha ancora lavoro."""
     assert tf.colonne_non_documentate("laliga2") == {
         "squadre": [], "giocatori": [], "eventi": [], "heatmap": []}
+
+
+# --------------------------------------------------------------------------
+# 2. BUNDESLIGA, consegna 18/08/2026 — la seconda divisione che HA l'Opta,
+# e la partita che ha fatto scattare il tripwire sul punteggio
+# --------------------------------------------------------------------------
+@pytest.fixture(scope="module")
+def bl2():
+    return tf.squadre("bundesliga2", periodo="Totale", spareggio=True)
+
+
+def test_bundesliga2_ha_lopta_e_laliga2_no_stesso_giorno():
+    """⚠️ Due seconde divisioni consegnate lo stesso giorno, esiti opposti.
+
+    Understat non copre nessuna delle due. WhoScored invece: **niente Opta** in
+    LaLiga2 (468 pagine su 468), **306 partite su 310** qui. Se ne deduce la
+    regola generale: la copertura di una fonte non si eredita fra raccolte,
+    nemmeno fra raccolte gemelle — si misura per consegna.
+    """
+    assert tf.fonti("bundesliga2") == ("SofaScore", "WhoScored")
+    assert tf.fonti("laliga2") == ("SofaScore", "WhoScored")
+
+    opta = tf.eventi_opta("bundesliga2", colonne=["ID partita"], spareggio=True)
+    assert len(opta) == 460190
+    assert opta["ID partita"].nunique() == 306        # i 4 spareggi non ce l'hanno
+
+    with pytest.raises(FileNotFoundError, match="eventi_opta"):
+        tf.eventi_opta("laliga2")
+
+
+def test_gli_spareggi_tedeschi_tirano_dentro_due_squadre_estranee(bl2):
+    """⚠️ Caso OPPOSTO a LaLiga2, con la stessa etichetta.
+
+    Qui i 4 turni «Finale» sono i veri spareggi promozione/retrocessione e
+    coinvolgono Rot-Weiss Essen (3. Liga) e VfL Wolfsburg (Bundesliga): le
+    squadre passano da **18 a 20**. In LaLiga2 il playoff e' interno alla lega
+    e restano 22 in entrambi i casi.
+    """
+    campionato = tf.squadre("bundesliga2", periodo="Totale")
+    assert tf.DIMENSIONI["bundesliga2"] == (18, 306)
+    assert campionato["Squadra"].nunique() == 18
+    assert bl2["Squadra"].nunique() == 20
+    assert set(bl2["Squadra"]) - set(campionato["Squadra"]) == {
+        "Rot-Weiss Essen", "Wolfsburg"}
+
+    # il contrasto, nello stesso test: la' non cambia nulla
+    assert (tf.squadre("laliga2", periodo="Totale")["Squadra"].nunique()
+            == tf.squadre("laliga2", periodo="Totale", spareggio=True)["Squadra"].nunique()
+            == 22)
+
+
+def test_il_tripwire_sul_punteggio_ha_TRE_addendi_non_due(bl2):
+    """⭐ La partita che ha fatto emergere una guardia sbagliata da sempre.
+
+    `SC Paderborn 07 - VfL Wolfsburg` del 25/05/2026: 2-1, di cui **1-0 ai
+    supplementari**. E' la prima partita di un CAMPIONATO, in tutte le
+    raccolte, ad andare oltre il 90' — e con l'identita' a due addendi
+    (`Gol = 1T + 2T`) risultava «punteggio sporco» pur essendo giusta.
+
+    Il difetto non era nuovo: la stessa guardia sbagliava gia' su 10 righe di
+    Champions e 32 di Europa League. Non se n'era accorto nessuno perche' il
+    test della Champions **si era riscritto l'identita' a tre addendi per conto
+    suo** invece di chiamare la funzione: passava verde su dati giusti mentre il
+    codice restava rotto.
+    """
+    partita = bl2[(bl2["Data"] == "2026-05-25") & (bl2["Squadra"] == "Paderborn")]
+    assert len(partita) == 1
+    r = partita.iloc[0]
+    assert (r["Gol casa (SofaScore)"], r["Gol trasferta (SofaScore)"]) == (2, 1)
+    assert (r["Casa 1T (SofaScore)"], r["Casa 2T (SofaScore)"]) == (1, 0)
+    assert r["Casa suppl. (SofaScore)"] == 1              # il gol che mancava
+
+    # con i tre addendi la guardia e' verde qui e resta verde dove lo era
+    assert tf.gol_sono_regolamentari(bl2).all()
+    assert tf.gol_sono_regolamentari(
+        tf.squadre("uefa_champions_league", periodo="Totale")).all()
+
+
+def test_la_guardia_continua_a_saltare_dove_DEVE():
+    """Una guardia che non salta mai non e' una guardia.
+
+    La Conference somma la lotteria dei rigori dentro `Gol` su 6 partite: la
+    guardia le marca tutte e 6 (12 righe) e nessun'altra. E' la prova che i
+    tre addendi non l'hanno resa cieca.
+    """
+    conf = tf.squadre("uefa_conference_league", periodo="Totale")
+    falliscono = conf[~tf.gol_sono_regolamentari(conf)]
+    assert len(falliscono) == 12
+    ai_rigori = pd.to_numeric(falliscono[tf.COLONNE_RIGORI[0]], errors="coerce")
+    assert ai_rigori.notna().all()      # tutte e sole quelle con la lotteria
+
+
+def test_i_nomi_corti_di_eventi_opta_sono_QUATTORDICI_su_diciotto():
+    """⚠️ Quinta occorrenza del difetto, e la peggiore: 78% delle squadre.
+
+    La progressione misurata — Liga 1 su 20, Bundesliga 1 su 18, Supercoppa
+    UEFA 2 su 2, qui **14 su 18** — dice che quella colonna va misurata a ogni
+    consegna: l'aggancio per PARTITA resta perfetto e non la rivela mai.
+
+    ⚠️ E qui la somiglianza avrebbe fallito davvero: la traslitterazione
+    tedesca dell'umlaut **espande** la vocale (`Fürth`->`Fuerth`), quindi
+    togliere gli accenti allontana le due forme invece di avvicinarle.
+    """
+    assert len(tf.ALIAS_RACCOLTA["bundesliga2"]) == 14
+    assert tf.ALIAS_RACCOLTA["bundesliga2"]["Greuther Fuerth"] == "SpVgg Greuther Fürth"
+
+    opta = tf.eventi_opta("bundesliga2", colonne=["Squadra"], spareggio=True)
+    squadre = tf.squadre("bundesliga2", periodo="Totale")
+    assert set(opta["Squadra"].dropna()) <= set(squadre["Squadra"].dropna())
+    assert opta["Squadra"].nunique() == 18
+
+
+def test_darmstadt_e_mappato_al_contrario_e_deve_esserlo(bl2):
+    """⚠️ L'unica delle 14 scritta lungo->corto, e il motivo e' meccanico.
+
+    Le altre tredici mappano corto->lungo perche' il lungo passa poi da
+    `TEAM_ALIASES` e arriva alla forma dello snapshot. Per `Darmstadt 98` quel
+    secondo passaggio non esiste, quindi la catena si fermerebbe sulla forma
+    sbagliata. Non si possono avere entrambe le direzioni: `_normalizza_squadre`
+    applica la mappa **una volta sola**, non fino a punto fisso.
+    """
+    from src.data.sources import TEAM_ALIASES
+    assert tf.ALIAS_RACCOLTA["bundesliga2"]["Darmstadt 98"] == "Darmstadt"
+    assert "Darmstadt 98" not in TEAM_ALIASES            # il passaggio che manca
+
+    # i due lati arrivano allo STESSO nome, ed e' quello dello snapshot
+    opta = tf.eventi_opta("bundesliga2", colonne=["Squadra"], spareggio=True)
+    assert "Darmstadt" in set(bl2["Squadra"])
+    assert "Darmstadt" in set(opta["Squadra"])
+    assert "Darmstadt 98" not in set(bl2["Squadra"]) | set(opta["Squadra"])
+    bund = pd.read_csv("data/bundesliga_matches.csv", usecols=["home_team"])
+    assert "Darmstadt" in set(bund["home_team"])
+
+
+def test_la_2bundesliga_e_la_raccolta_piu_PIENA_di_tutte():
+    """Sei colonne vuote su 450, contro le 38 di LaLiga2. Una causa sola.
+
+    La' WhoScored non copriva e le sue colonne restavano previste-e-vuote; qui
+    copre, e le 57 di squadra piu' le 51 di giocatore sono piene. Le sei che
+    restano hanno tre cause dichiarate: nessuna partita ai rigori (3),
+    i supplementari di WhoScored sul solo spareggio che lui non ha (1),
+    `Note classifica` (1), e `Tocchi` della heatmap (1).
+    """
+    vuote = tf.colonne_vuote("bundesliga2")
+    assert sum(len(v) for v in vuote.values()) == 6
+    assert sum(len(v) for v in tf.colonne_vuote("laliga2").values()) == 38
+
+    s = tf.squadre("bundesliga2", solo_partite=False, spareggio=True)
+    for c in vuote["squadre"]:
+        assert s[c].isna().all(), c
+    # ...e le colonne SofaScore dei supplementari NON sono vuote: due fonti,
+    # due coperture, sullo stesso fatto
+    assert s["Casa suppl. (SofaScore)"].notna().sum() == 10
+    assert tf.copertura("Meteo (WhoScored)", "bundesliga2")["stato"] == "quasi vuota"
+
+
+def test_la_2bundesliga_ha_la_cronaca_e_laliga2_no():
+    """Sette categorie contro sei: `/comments` risponde qui e non in Spagna."""
+    ev = tf.eventi("bundesliga2", spareggio=True)
+    assert "Cronaca" in set(ev["Categoria"])
+    assert len(set(ev["Categoria"])) == 7
+    assert "Cronaca" not in set(tf.eventi("laliga2", spareggio=True)["Categoria"])
+
+
+def test_i_gol_degli_eventi_ricostruiscono_il_punteggio_anche_qui(bl2):
+    """Il controllo interno che sostituisce l'aggancio allo snapshot.
+
+    620 squadra-partita su 620, 903 gol — 26 autogol e 74 rigori compresi.
+    """
+    ev = tf.eventi("bundesliga2", categoria="Evento", spareggio=True)
+    gol = ev[(ev["Fonte"] == "SofaScore") & (ev["Tipo"] == "Gol")]
+    assert len(gol) == 903
+    assert (gol["Sottotipo"] == "ownGoal").sum() == 26
+
+    contati = gol.groupby(["ID partita (SofaScore)", "Squadra"]).size()
+    atteso = bl2.apply(
+        lambda r: r["Gol casa (SofaScore)"] if r["Campo"] == "Casa"
+        else r["Gol trasferta (SofaScore)"], axis=1)
+    chiavi = list(zip(bl2["ID partita (SofaScore)"], bl2["Squadra"]))
+    assert sum(contati.get(k, 0) == v for k, v in zip(chiavi, atteso)) == len(bl2) == 620

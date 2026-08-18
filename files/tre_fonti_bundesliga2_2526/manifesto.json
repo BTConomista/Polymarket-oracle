@@ -1,0 +1,68 @@
+{
+ "lega": "bundesliga2",
+ "competizione": "2. Bundesliga (Germania)",
+ "divisione": 2,
+ "stagione": "2526",
+ "consegnata": "2026-08-18 (due zip: raccolta + Eventi_Opta a parte)",
+ "fonti": [
+  "SofaScore",
+  "WhoScored"
+ ],
+ "fonti_assenti": {
+  "Understat": "non copre la seconda divisione tedesca: menu a 6 leghe di prima divisione, 6 varianti di URL a 404, pagine squadra che servono un altro anno o un'altra competizione (Hamburger SV risponde 2025/26 ma di Bundesliga, dove e' stato promosso)"
+ },
+ "e_campionato": true,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 93886,
+   "sha256": "ef429507e49c5555cffaf987eb68cd3f59b6a8669c59069dce099f652c17fc6f"
+  },
+  "eventi_opta.csv.gz": {
+   "righe": 460190,
+   "sha256": "618a062b4042a766ad7e3242f24813a911c72047e1eb4ed663679d0fd6bd118f"
+  },
+  "giocatori.csv.gz": {
+   "righe": 12857,
+   "sha256": "c4ea12ef871cb8d099e828ab91ddd6aca6411bf000a92c029f7a4fb0a64753a1"
+  },
+  "heatmap.csv.gz": {
+   "righe": 461520,
+   "sha256": "9c2bae604eb23ac0f14bd6c6490613579e5b0c1f829d196249c2a0c711e1d00e"
+  },
+  "legenda.csv.gz": {
+   "righe": 479,
+   "sha256": "cc53bffc1be6f29798a62a31c5f757a06a3d38173285c6ffc7fcc7540f9aa4be"
+  },
+  "squadre.csv.gz": {
+   "righe": 1918,
+   "sha256": "f39353d6f8bebcde07e7c42b2439f166103797a52375dc0d6a1436bda08c1389"
+  }
+ },
+ "squadre": 18,
+ "squadre_con_spareggi": 20,
+ "partite": 310,
+ "partite_campionato": 306,
+ "giornate": 34,
+ "spareggio": {
+  "turni": [
+   "Finale"
+  ],
+  "partite": 4,
+  "righe_escluse_squadre": 8,
+  "estranee": [
+   "Rot-Weiss Essen (3. Liga)",
+   "VfL Wolfsburg (Bundesliga)"
+  ],
+  "nota": "sono i VERI spareggi promozione/retrocessione, andata e ritorno: tirano dentro due squadre estranee al campionato. Caso opposto al playoff di LaLiga2, che e' fra squadre della stessa lega"
+ },
+ "copertura_opta": "306/310 partite (460.190 eventi). Le 4 mancanti sono gli spareggi: le loro pagine WhoScored pesano ~100 KB contro ~1 MB, cioe' non hanno match centre. Su quelle resta initialMatchDataForScrappers, 61 righe evento dentro eventi.csv",
+ "aggancio_snapshot": null,
+ "nota_snapshot": "non esiste data/bundesliga2_matches.csv: la seconda divisione tedesca non e' in LEAGUE_CONFIGS. Valgono i controlli interni.",
+ "verifiche_nostre": {
+  "gol_eventi_vs_punteggio": "620/620 squadra-partita (903 gol, 26 autogol, 74 rigori)",
+  "identita_gol_1T_2T_suppl": "310/310 — con UNA partita ai supplementari (SC Paderborn 07-VfL Wolfsburg, 25/05/2026)",
+  "legenda_copre_ogni_colonna": "450/450 su 5 file",
+  "eventi_opta_squadra": "14 nomi corti su 18 riportati alla forma lunga, accoppiamento LETTO dal dato (Campo + Casa/Trasferta), non per somiglianza",
+  "id_partita_eventi": "colonna di TESTO a due formati su 61 righe, riparata in lettura"
+ }
+}

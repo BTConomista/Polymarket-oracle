@@ -167,6 +167,20 @@ FONTI_PER_RACCOLTA: dict[str, tuple[str, ...]] = {
     # cartellini e cambi al minuto — 8.188 righe dentro `eventi`, ed e' l'unica
     # seconda fonte su questa competizione.
     "laliga2": ("SofaScore", "WhoScored"),
+    # 2. BUNDESLIGA — seconda consegna dello stesso giorno, e il **contrasto**
+    # con LaLiga2 e' la cosa da leggere. Anche qui Understat non copre la
+    # seconda divisione (stessa verifica a tre vie: menu a sei leghe, sei
+    # varianti di URL a 404, pagine squadra che servono un altro anno o
+    # addirittura un'altra competizione — Hamburger SV risponde 2025/26 ma di
+    # BUNDESLIGA, dove nel frattempo e' stato promosso). Ma WhoScored **l'Opta
+    # ce l'ha**: 306 partite su 310 col flusso completo, 460.190 eventi.
+    #
+    # ⭐ Le 4 che mancano sono gli spareggi, e la spiegazione e' la stessa
+    # misurata in LaLiga2: le loro pagine pesano ~100 KB contro ~1 MB delle
+    # altre, cioe' non hanno match centre. Due consegne diverse, stesso
+    # criterio, stesso numero — e' cosi' che un controllo positivo diventa una
+    # regola invece che un aneddoto.
+    "bundesliga2": FONTI[:2],
     "uefa_champions_league": ("SofaScore", "WhoScored"),
     "uefa_europa_league": ("SofaScore", "WhoScored"),   # niente Understat: -37 colonne
     "uefa_conference_league": ("SofaScore",),           # solo SofaScore: -75 colonne
@@ -285,23 +299,60 @@ def punteggio_vero(df: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
 
 
 def gol_sono_regolamentari(df: pd.DataFrame) -> pd.Series:
-    """TRIPWIRE: `Gol casa/trasferta` e' il 90', o ci sono dentro i rigori?
+    """TRIPWIRE: `Gol casa/trasferta` e' il risultato, o ci sono dentro i rigori?
 
-    L'identita' che lo decide non e' un'opinione — e' una scomposizione esatta:
+    L'identita' che lo decide non e' un'opinione — e' una scomposizione esatta,
+    e ha **tre** addendi:
 
-        Gol casa = Casa 1T + Casa 2T        (e lo stesso per la trasferta)
+        Gol casa = Casa 1T + Casa 2T + Casa suppl.       (idem per la trasferta)
 
-    Se i rigori fossero sommati dentro `Gol`, l'uguaglianza salterebbe di
-    esattamente il numero dei rigori segnati. Misurata sulle sei supercoppe:
-    **10 partite su 10 la rispettano**, comprese le 4 decise ai rigori
-    (PSG-Tottenham 2-2 e rigori 4-3, Palace-Liverpool 2-2 e 3-2,
-    PSG-Marsiglia 2-2 e 4-1, Bologna-Inter 1-1 e 3-2).
+    Se la lotteria dei rigori fosse sommata dentro `Gol`, l'uguaglianza
+    salterebbe di esattamente il numero dei rigori segnati — ed e' cosi' che si
+    riconosce la convenzione sporca senza fidarsi di cio' che l'export dichiara.
 
-    ⚠️ Non e' una verifica «una volta e via»: e' una **guardia**. Se una
-    consegna futura contenesse i TEMPI SUPPLEMENTARI, i loro gol non stanno ne'
-    nel 1T ne' nel 2T e l'identita' salterebbe **pur essendo il dato giusto**.
-    In quel caso non si aggiusta il codice: si guarda la partita e si scrive
-    che cosa e' successo (R5, «spiegare prima di accusare»).
+    ⚠️ ⚠️ IL TERZO ADDENDO E' STATO AGGIUNTO IL 18/08/2026, E LA STORIA E'
+    ISTRUTTIVA. La prima stesura si fermava a `1T + 2T` e la sua docstring
+    prevedeva per iscritto il proprio punto di rottura: *«se una consegna
+    futura contenesse i TEMPI SUPPLEMENTARI, i loro gol non stanno ne' nel 1T
+    ne' nel 2T e l'identita' salterebbe pur essendo il dato giusto»*. La
+    previsione era esatta — ma il caso **era gia' arrivato** e nessuno se n'era
+    accorto, perche' il test che copriva la Champions (l'unica coppa coi
+    supplementari giocati) **si era riscritto l'identita' a tre addendi per
+    conto suo** invece di chiamare questa funzione. Risultato: la guardia
+    dichiarava «punteggio sporco» su **10 righe di Champions e 32 di Europa
+    League** di dati perfettamente sani, e il test accanto passava verde.
+
+    ⭐ La lezione, che vale oltre questa funzione: **un test che ri-scrive la
+    regola invece di chiamarla non testa la regola.** Verifica i dati e lascia
+    il codice scoperto — e siccome passa, sembra che copra entrambi.
+
+    Il caso che l'ha fatto emergere e' `SC Paderborn 07 - VfL Wolfsburg` del
+    25/05/2026, spareggio di 2. Bundesliga: 2-1, di cui **1-0 ai
+    supplementari**. E' la prima partita di un CAMPIONATO, non di una coppa,
+    ad andare oltre il 90' in tutte le raccolte.
+
+    ⚠️ Cosa NON e' cambiato: la guardia resta una guardia. Se salta ancora, si
+    guarda la partita e si scrive che cosa e' successo (R5, «spiegare prima di
+    accusare»), non si aggiunge un quarto addendo per farla tacere.
+
+    Dove salta oggi, misurato su tutte le raccolte (18/08/2026):
+
+        Champions          0 partite      pulita
+        Conference         6 partite      **esattamente** le 6 con la lotteria
+        Europa League     15 partite      7 con la lotteria + 8 SENZA
+        i 7 campionati     0 partite      (2. Bundesliga compresa, col suo
+                                          supplementare)
+
+    Conference e Champions sono la prova che la guardia ora misura quello che
+    dice. ⚠️ **Le 8 righe di Europa League senza lotteria sono invece un
+    reperto NUOVO e NON diagnosticato**, ed e' giusto che restino rumorose: su
+    **7 di quelle 8 tutte e quattro le colonne dei tempi valgono ZERO mentre la
+    partita ha dei gol** — cioe' uno zero che significa «non lo so», la forma
+    piu' insidiosa di finto pieno (R6). Non e' un difetto introdotto qui: c'era
+    da prima, e nessuno lo aveva visto perche' la guardia sbagliata lo teneva
+    mescolato ad altri 32 falsi allarmi. Va istruito a mano prima di dichiarare
+    qualcosa (R5); finche' non lo e', `punteggio_vero()` sulle raccolte UEFA
+    resta affidabile per la lotteria e **muto** su questo.
 
     Torna una Series booleana allineata a `df`, una riga per squadra-partita.
     """
@@ -311,9 +362,23 @@ def gol_sono_regolamentari(df: pd.DataFrame) -> pd.Series:
     mancanti = [c for c in serve if c not in df.columns]
     if mancanti:
         raise KeyError(f"servono i tempi per verificare il punteggio: mancano {mancanti}")
-    casa = df["Casa 1T (SofaScore)"] + df["Casa 2T (SofaScore)"]
-    fuori = df["Trasferta 1T (SofaScore)"] + df["Trasferta 2T (SofaScore)"]
-    return (df["Gol casa (SofaScore)"] == casa) & (df["Gol trasferta (SofaScore)"] == fuori)
+
+    def n(colonna: str) -> pd.Series:
+        """Il tempo come numero, con l'assente a ZERO e non a NaN.
+
+        `Casa suppl.` e' NaN su ogni partita finita nei 90', che sono la quasi
+        totalita': trattarla come mancante propagherebbe NaN e farebbe risultare
+        **falsa** l'identita' ovunque, cioe' il contrario del difetto che
+        cerchiamo. Un supplementare non giocato vale zero gol.
+        """
+        if colonna not in df.columns:
+            return pd.Series(0.0, index=df.index)
+        return pd.to_numeric(df[colonna], errors="coerce").fillna(0)
+
+    casa = n("Casa 1T (SofaScore)") + n("Casa 2T (SofaScore)") + n("Casa suppl. (SofaScore)")
+    fuori = (n("Trasferta 1T (SofaScore)") + n("Trasferta 2T (SofaScore)")
+             + n("Trasferta suppl. (SofaScore)"))
+    return (n("Gol casa (SofaScore)") == casa) & (n("Gol trasferta (SofaScore)") == fuori)
 
 
 def raccolta(lega: str = LEGA_DEFAULT) -> Path:
@@ -481,6 +546,30 @@ COLONNE_VUOTE: dict[str, dict[str, tuple[str, ...]]] = {
         ),
         "heatmap": ("Tocchi",),
     },
+    # ⭐ LA 2. BUNDESLIGA NE HA **SEI**, ed e' la raccolta piu' PIENA di tutte
+    # le quindici — 183+170+45+34+18 colonne e sei buchi. Il contrasto con
+    # LaLiga2 (38 vuote) e' interamente spiegato da una cosa sola: qui
+    # WhoScored copre davvero, quindi le sue 57 colonne di squadra e 51 di
+    # giocatore sono piene invece che previste-e-vuote.
+    #
+    #  * `Rigori casa/trasferta (SofaScore)` e `Rigori (WhoScored)`: **nessuna
+    #    delle 310 partite e' finita ai rigori** — nemmeno lo spareggio, che
+    #    si e' deciso ai supplementari.
+    #  * `Supplementari (WhoScored)`: la colonna esiste ma la sola partita coi
+    #    supplementari e' uno spareggio, e degli spareggi WhoScored non ha il
+    #    match centre. Le colonne SofaScore dei supplementari invece **sono
+    #    piene** (10 righe): due fonti, due coperture, sullo stesso fatto.
+    #  * `Note classifica`: questa classifica non ha note.
+    #
+    # ⚠️ `Meteo (WhoScored)` NON e' qui, ed e' il quarto stato misurato di
+    # quella colonna: 0,0% Serie A, 0,3% Liga, 98,4% Premier, **0,63% qui**
+    # (12 righe su 1.918). Un altro «quasi vuota» — si chiede a `copertura()`.
+    "bundesliga2": {
+        "squadre": ("Rigori casa (SofaScore)", "Rigori trasferta (SofaScore)",
+                    "Supplementari (WhoScored)", "Rigori (WhoScored)",
+                    "Note classifica"),
+        "heatmap": ("Tocchi",),
+    },
 }
 
 # La colonna che sembra un identificatore di partita e impila tre numerazioni.
@@ -534,7 +623,7 @@ ID_PARTITA_PER_FONTE = {
 ID_EVENTI_MISTO: dict[str, str] = {
     "serie_a": "numerico", "premier_league": "numerico", "la_liga": "numerico",
     "bundesliga": "numerico", "ligue_1": "numerico",
-    "laliga2": "testuale",
+    "laliga2": "testuale", "bundesliga2": "testuale",
 }
 
 # ⚠️ Le righe ORFANE della fusione sono PER LEGA, e finora ce ne sono solo in
@@ -758,6 +847,61 @@ ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
     # aggiungera' quando ci sara' qualcosa a cui agganciarlo, non prima.
     "laliga2": {"Almería": "Almeria", "Cádiz": "Cadiz", "Leganés": "Leganes",
                 "Deportivo de A Coruña": "La Coruna"},
+    # ⚠️⚠️ QUINTA occorrenza del difetto di `eventi_opta.Squadra`, e di gran
+    # lunga la PEGGIORE su una lega: **14 squadre su 18**, cioe' il 78%.
+    # La progressione misurata — Liga 1 squadra (5%), Bundesliga 1 (6%),
+    # Supercoppa UEFA 2 su 2, qui 14 su 18 — chiude la questione: quella
+    # colonna va **misurata a ogni consegna**, perche' l'aggancio per PARTITA
+    # resta perfetto e non la rivela mai.
+    #
+    # ⭐ COME E' STATA COSTRUITA QUESTA MAPPA, che e' il punto piu' importante:
+    # NON per somiglianza. `eventi_opta` porta sulla stessa riga il nome corto
+    # (`Squadra`), il lato (`Campo`) e i nomi lunghi (`Casa`/`Trasferta`):
+    # l'accoppiamento e' quindi **letto dal dato**, non indovinato. Verificato
+    # che ogni nome corto corrisponda a **uno e un solo** nome lungo su tutte
+    # e 460.190 le righe.
+    #
+    # ⚠️ E qui la somiglianza avrebbe fallito davvero, non per ipotesi: la
+    # traslitterazione tedesca dell'umlaut espande la vocale invece di
+    # toglierla — `Fürth`->`Fuerth`, `Düsseldorf`->`Duesseldorf`,
+    # `Nürnberg`->`Nuernberg`, `Münster`->`Muenster`. Uno script che *toglie*
+    # gli accenti produce `Furth` da un lato e lascia `Fuerth` dall'altro: le
+    # due forme si allontanano invece di avvicinarsi. E' lo stesso errore del
+    # `Deportivo de A Coruña`->`La Coruna` di LaLiga2 (galiziano contro
+    # castigliano), trovato lo stesso giorno in un'altra lingua: **due
+    # occorrenze indipendenti in due consegne**, che e' il minimo per chiamarla
+    # una regola e non un caso.
+    "bundesliga2": {
+        "Bochum": "VfL Bochum 1848",
+        "Dynamo Dresden": "SG Dynamo Dresden",
+        "Elversberg": "SV 07 Elversberg",
+        "Fortuna Duesseldorf": "Fortuna Düsseldorf",
+        "Greuther Fuerth": "SpVgg Greuther Fürth",
+        "Hannover": "Hannover 96",
+        "Hertha Berlin": "Hertha BSC",
+        "Kaiserslautern": "1. FC Kaiserslautern",
+        "Magdeburg": "1. FC Magdeburg",
+        "Nuernberg": "1. FC Nürnberg",
+        "Paderborn": "SC Paderborn 07",
+        "Preussen Muenster": "Preußen Münster",
+        "Schalke": "FC Schalke 04",
+        # ⚠️ DARMSTADT E' L'ECCEZIONE, ed e' scritta al contrario di proposito.
+        # Le altre tredici mappano corto->lungo perche' il lungo poi passa da
+        # `TEAM_ALIASES` e arriva alla forma dello snapshot («VfL Bochum
+        # 1848»->«Bochum»). Per Darmstadt quel secondo passaggio **non esiste**
+        # (`Darmstadt 98` non e' in `TEAM_ALIASES`), quindi mappare
+        # `Darmstadt`->`Darmstadt 98` fermerebbe la catena sulla forma
+        # sbagliata. Si mappa invece il LUNGO verso il canonico: il corto e'
+        # gia' `Darmstadt`, che e' esattamente il nome dello snapshot
+        # Bundesliga — dove il club ha giocato nel 2023-24.
+        #
+        # ⚠️ Il motivo per cui non si puo' avere entrambe le direzioni:
+        # `_normalizza_squadre` applica la mappa **una volta sola**, non fino a
+        # punto fisso. Con `Darmstadt`->`Darmstadt 98` e
+        # `Darmstadt 98`->`Darmstadt` insieme, i due lati si scambierebbero di
+        # posto e resterebbero disallineati come prima.
+        "Darmstadt 98": "Darmstadt",
+    },
 }
 
 # Quante SQUADRE e quante PARTITE ha ogni campionato. Non e' una costante:
@@ -770,6 +914,7 @@ DIMENSIONI: dict[str, tuple[int, int]] = {
     # campionato del progetto che non ha ne' 20 ne' 18 squadre — la ragione per
     # cui questa mappa esiste invece di una costante.
     "laliga2": (22, 462),
+    "bundesliga2": (18, 306),      # come la Bundesliga: 18 squadre, 34 giornate da 9
 }
 
 # ⚠️ I TURNI CHE NON SONO GIORNATE DI CAMPIONATO.
@@ -819,6 +964,14 @@ E_CAMPIONATO: dict[str, bool] = {
     # legittima, quelle 6 partite sono competizione vera e non partite di
     # un'altra lega — passa `spareggio=True` e le riprende tutte.
     "laliga2": True,
+    # ⚠️ La 2. Bundesliga e' il caso OPPOSTO a LaLiga2, con la stessa
+    # etichetta: qui i 4 turni «Finale» sono i veri spareggi promozione/
+    # retrocessione, e tirano dentro **due squadre estranee** — Rot-Weiss Essen
+    # (3. Liga) e VfL Wolfsburg (Bundesliga). Misurato: **18 squadre nel
+    # campionato, 20 con gli spareggi**. Qui escluderli e' la ragione storica
+    # di questa mappa, non una convenzione: e' lo stesso caso di Bundesliga e
+    # Ligue 1.
+    "bundesliga2": True,
     "uefa_champions_league": False,
     "uefa_europa_league": False, "uefa_conference_league": False,
     # Le supercoppe: il turno e' «Finale» (o «Semifinali» nelle due a final
