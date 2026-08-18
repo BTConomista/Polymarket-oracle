@@ -35,13 +35,43 @@ def _riga(partita: str, kickoff: dt.datetime) -> dict:
             "inizio": kickoff.isoformat(), "mercato": "1x2"}
 
 
+def _outright_fresco(tmp_path: Path, adesso: dt.datetime) -> Path:
+    """Una cartella outright appena aggiornata: serve a NON far suonare A-bis."""
+    cart = tmp_path / "outright_sano"
+    cart.mkdir(parents=True, exist_ok=True)
+    (cart / f"{adesso.date()}.json").write_text("{}")
+    return cart
+
+
+def _giornaliera_fresca(tmp_path: Path, adesso: dt.datetime) -> Path:
+    """Una cartella `giornaliero/` col giorno di oggi gia' raccolto.
+
+    I giorni qui sono CARTELLE `AAAA-MM-GG`, non file: e' cosi' che scrive
+    `scripts/raccolta_giornaliera.py`, e il controllo A-ter deve leggerle
+    come tali (un file con quel nome non conta)."""
+    cart = tmp_path / "giornaliero_sano"
+    (cart / str(adesso.date())).mkdir(parents=True, exist_ok=True)
+    (cart / "README.md").write_text("x")     # rumore che non e' un giorno
+    return cart
+
+
 @pytest.fixture
 def archivio(tmp_path, monkeypatch):
-    """Un archivio finto: pre-partita in una cartella, in-play nell'altra."""
+    """Un archivio finto: pre-partita in una cartella, in-play nell'altra.
+
+    ⚠️ ISOLA ANCHE `OUTRIGHT` E `GIORNALIERA`, che i controlli A-bis e A-ter
+    leggono. Senza, questi test unitari leggevano le cartelle VERE del repo, e
+    passavano per un accidente: l'archivio reale e' piu' recente di `ADESSO`,
+    quindi l'eta' usciva NEGATIVA e nessun allarme scattava. Il verdetto
+    dipendeva dallo stato del repo invece che dal caso in prova -- cioe' il
+    test diceva «sano» senza averlo verificato.
+    """
     pre, live = tmp_path / "matches", tmp_path / "live"
     pre.mkdir(); live.mkdir()
     monkeypatch.setattr(arch, "ARCHIVIO", pre)
     monkeypatch.setattr(cr, "LIVE", live)
+    monkeypatch.setattr(cr, "OUTRIGHT", _outright_fresco(tmp_path, ADESSO))
+    monkeypatch.setattr(cr, "GIORNALIERA", _giornaliera_fresca(tmp_path, ADESSO))
     return pre, live
 
 
@@ -532,6 +562,98 @@ def test_cartella_outright_vuota_suona(monkeypatch, tmp_path):
     r = cr.controlla(adesso=dt.datetime(2026, 8, 12, 17, tzinfo=dt.timezone.utc))
     assert any(p.startswith("A-bis)") for p in r["problemi"])
     assert r["eta_outright_giorni"] is None
+
+
+# --------------------------------------------------------------------------
+# A-ter · LA FRESCHEZZA DELLA RACCOLTA GIORNALIERA
+# Stessa storia dell'A-bis, e si e' ripetuta: un collettore senza guardia non
+# fa scattare nessun allarme sulla propria assenza. Il 9 e il 10 agosto 2026 la
+# raccolta giornaliera ha scritto il suo giorno e l'ha buttato via (il commit
+# veniva saltato sull'uscita rossa, Fase 156-ter); il guardiano girava gia'
+# quattro volte al giorno e non ha detto niente, perche' non guardava li'.
+# --------------------------------------------------------------------------
+
+def _archivio_giornaliero(tmp_path, giorni_fa, adesso):
+    """Una cartella `giornaliero/` il cui ultimo giorno e' vecchio di N."""
+    cart = tmp_path / "giornaliero"
+    giorno = (adesso - dt.timedelta(days=giorni_fa)).date()
+    (cart / str(giorno)).mkdir(parents=True, exist_ok=True)
+    # rumore che NON deve contare come giorno raccolto
+    (cart / "README.md").write_text("x")
+    (cart / "2026-99-99").mkdir()          # nome che non e' una data
+    return cart
+
+
+def test_la_giornaliera_ferma_da_troppo_suona(monkeypatch, tmp_path):
+    """Il caso vero: 9 e 10 agosto 2026, due giorni raccolti e buttati via
+    senza che nessuno lo dicesse. Sono gli unici mancanti dell'archivio, e non
+    tornano — lo stato pre-partita non si ricostruisce dopo il fischio."""
+    adesso = dt.datetime(2026, 8, 11, 17, tzinfo=dt.timezone.utc)
+    monkeypatch.setattr(cr, "GIORNALIERA",
+                        _archivio_giornaliero(tmp_path, 3, adesso))
+    r = cr.controlla(adesso=adesso)
+    assert any(p.startswith("A-ter)") for p in r["problemi"]), r["problemi"]
+    assert "giornaliera" in r["riparabili"]
+    # 3,7 e non 3: la cartella porta la data, quindi vale mezzanotte, e
+    # "adesso" sono le 17:00 di tre giorni dopo.
+    assert r["eta_giornaliera_giorni"] == 3.7
+
+
+def test_un_solo_giorno_saltato_non_suona(monkeypatch, tmp_path):
+    """Il giro e' giornaliero e il cron di GitHub slitta di 30-40 minuti: a
+    cavallo della mezzanotte un giorno puo' saltare per solo ritardo. Una
+    soglia a 24h suonerebbe per il jitter invece che per il guasto."""
+    adesso = dt.datetime(2026, 8, 11, 17, tzinfo=dt.timezone.utc)
+    monkeypatch.setattr(cr, "GIORNALIERA",
+                        _archivio_giornaliero(tmp_path, 1, adesso))
+    r = cr.controlla(adesso=adesso)
+    assert not any(p.startswith("A-ter)") for p in r["problemi"]), r["problemi"]
+
+
+def test_cartella_giornaliera_vuota_suona(monkeypatch, tmp_path):
+    """«Mai raccolto» e «raccolto tantissimo tempo fa» sono lo stesso guasto e
+    devono dare lo stesso allarme: senza questo, una cartella mai creata
+    passerebbe per sana — che e' esattamente il modo in cui gli outright sono
+    rimasti scoperti diciotto giorni."""
+    monkeypatch.setattr(cr, "GIORNALIERA", tmp_path / "mai_creata")
+    r = cr.controlla(adesso=dt.datetime(2026, 8, 11, 17, tzinfo=dt.timezone.utc))
+    assert any(p.startswith("A-ter)") for p in r["problemi"])
+    assert r["eta_giornaliera_giorni"] is None
+
+
+def test_il_guardiano_sorveglia_TUTTI_i_collettori_che_committano():
+    """La guardia strutturale, non un caso particolare.
+
+    Due volte su due il buco e' nato dallo stesso posto: un collettore che
+    scrive in una cartella che il guardiano non guarda (outright, Fase 153;
+    raccolta giornaliera, 9-10/08). Questo test non prova un allarme: pretende
+    che ogni cartella committata da un workflow di raccolta abbia una costante
+    corrispondente nel guardiano. Un collettore nuovo che si dimentica la
+    guardia fa ROSSO qui, non fra tre settimane quando manca il dato."""
+    import re
+    import yaml
+
+    sorvegliate = {str(arch.ARCHIVIO), str(cr.LIVE), str(cr.OUTRIGHT),
+                   str(cr.GIORNALIERA)}
+    sorvegliate = {Path(x).name for x in sorvegliate}
+    # `smarkets_prova` sono dati di comodo per provare l'infrastruttura, non
+    # un collettore da sorvegliare: il suo perimetro e' scelto in base a
+    # quando serviva far lavorare la raccolta (data/smarkets_prova/README.md).
+    esenti = {"smarkets_prova"}
+
+    mancanti = []
+    for wf in sorted((ROOT / ".github" / "workflows").glob("*.yml")):
+        testo = wf.read_text()
+        if "schedule:" not in yaml.safe_dump(yaml.safe_load(testo) or {}):
+            continue                       # non e' un collettore periodico
+        for cartella in re.findall(r"git add (data/[\w/]+)", testo):
+            nome = Path(cartella.rstrip("/")).name
+            if nome in ("data",):
+                continue                   # `git add data/` = tutto, generico
+            if nome not in sorvegliate and nome not in esenti:
+                mancanti.append(f"{wf.name} committa {cartella} ma il "
+                                f"guardiano non ha una costante per {nome!r}")
+    assert not mancanti, "\n".join(mancanti)
 
 
 # ---------------------------------------------------------------------------

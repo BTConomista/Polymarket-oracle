@@ -88,6 +88,7 @@ import gemelli_prova as _prova   # noqa: E402
 
 LIVE = ROOT / "data" / "smarkets_live"
 OUTRIGHT = ROOT / "data" / "outright_snapshots"
+GIORNALIERA = ROOT / "data" / "stagione_2026_2027" / "giornaliero"
 
 # Le soglie, tutte qui e tutte motivate nel docstring.
 ORE_LUNGO_RAGGIO = 26      # freschezza dell'ultimo giro «tutte le esposte»
@@ -95,6 +96,7 @@ ORE_FINESTRA = 36          # quanto indietro si guarda per le partite giocate
 ORE_CHIUSURA = 3           # «chiusura» = un prezzo entro N ore dal via
 QUOTA_INPLAY_MINIMA = 0.5  # sotto questa frazione di partite coperte, si segnala
 ORE_OUTRIGHT = 48          # eta' massima dell'ultimo snapshot outright (giro giornaliero)
+ORE_GIORNALIERA = 48       # eta' massima dell'ultimo giorno raccolto (giro giornaliero)
 
 # ⚠️ QUANTO INDIETRO BISOGNA GUARDARE PERCHE' L'IN-PLAY SIA GIUDICABILE.
 #
@@ -272,6 +274,51 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
             "costruisce solo congelandolo giorno per giorno.")
         riparabili.add("outright")
 
+    # --- A-ter. freschezza della RACCOLTA GIORNALIERA ------------------------
+    #
+    # ⚠️ PERCHE' E' STATO AGGIUNTO DOPO, DI NUOVO. E' la stessa storia
+    # dell'outright, e il fatto che si sia ripetuta e' il motivo per cui vale
+    # la pena riscriverla: **un collettore senza guardia non fa scattare
+    # nessun allarme**, e il silenzio di un guasto e' identico al silenzio di
+    # una notte tranquilla.
+    #
+    # Il 9 e il 10 agosto 2026 la raccolta giornaliera ha scritto il suo
+    # giorno e l'ha buttato via: il passo di commit veniva saltato quando lo
+    # script usciva rosso (riparato alla Fase 156-ter). Il guardiano girava
+    # gia' -- quattro volte al giorno, dall'8 agosto -- e non ha detto niente,
+    # perche' guardava le quote partita, l'in-play e (da poco) gli outright:
+    # tutto tranne questa cartella. Quei due giorni sono gli unici mancanti
+    # dell'archivio e non tornano, perche' lo stato PRE-partita non si
+    # ricostruisce dopo (data/stagione_2026_2027/README.md §0).
+    #
+    # La soglia e' 48h come per gli outright e per la stessa ragione: il giro
+    # e' giornaliero e il cron di GitHub slitta di 30-40 minuti, quindi a
+    # cavallo della mezzanotte un giorno puo' saltare per solo ritardo. Due no.
+    #
+    # ⚠️ Qui i "file" sono CARTELLE `AAAA-MM-GG`, una per giorno, non istanti:
+    # la data si legge dal nome, non con `istante_del_file`.
+    eta_giornaliera = None
+    giorni_raccolti = []
+    for voce in (sorted(GIORNALIERA.iterdir()) if GIORNALIERA.exists() else []):
+        if not voce.is_dir():
+            continue                       # README.md e altri file di servizio
+        try:
+            giorni_raccolti.append(
+                dt.datetime.fromisoformat(voce.name + "T00:00:00+00:00"))
+        except ValueError:
+            continue
+    if giorni_raccolti:
+        eta_giornaliera = (adesso - max(giorni_raccolti)).total_seconds() / 3600
+    if eta_giornaliera is None or eta_giornaliera > ORE_GIORNALIERA:
+        problemi.append(
+            "A-ter) raccolta giornaliera: " + (
+                "nessun giorno raccolto" if eta_giornaliera is None
+                else f"l'ultimo ha {eta_giornaliera/24:.1f} giorni "
+                     f"(soglia {ORE_GIORNALIERA/24:.0f})") +
+            ". E' lo stato PRE-partita -- meteo, assenze, formazioni probabili "
+            "-- e dopo il fischio non si ricostruisce.")
+        riparabili.add("giornaliera")
+
     # --- B. copertura di chiusura -------------------------------------------
     giocate = partite_giocate(prematch, adesso, ore)
     senza_chiusura, anticipi = [], []
@@ -380,6 +427,8 @@ def controlla(adesso: dt.datetime | None = None, ore: int = ORE_FINESTRA) -> dic
         "file_inplay": len(inplay),
         "eta_lungo_raggio_ore": round(eta_lungo, 1) if eta_lungo is not None else None,
         "eta_outright_giorni": round(eta_outright / 24, 1) if eta_outright is not None else None,
+        "eta_giornaliera_giorni": (round(eta_giornaliera / 24, 1)
+                                   if eta_giornaliera is not None else None),
         "partite_giocate_in_finestra": len(giocate),
         "senza_chiusura": senza_chiusura,
         # Quanto prima del fischio e' arrivato l'ultimo prezzo. Non e' un
@@ -468,6 +517,29 @@ def ripara(riparabili: set | list) -> list[str]:
         except Exception as e:                        # noqa: BLE001
             fatto.append(f"outright NON archiviati ({type(e).__name__}: {e})")
 
+    if "giornaliera" in riparabili:
+        # Come il lungo raggio e l'outright: i fatti di OGGI sono ancora li' da
+        # prendere, quindi si prendono adesso e il ri-controllo dira' se e'
+        # bastato. ⚠️ Cio' che NON si ripara e' il passato: il bollettino di
+        # ieri non esiste piu', e il 9 e il 10 agosto non tornano.
+        print("\n🔧 riparazione: rifaccio la raccolta giornaliera di oggi")
+        sys.path.insert(0, str(ROOT / "scripts"))
+        try:
+            # L'import sta DENTRO il try per la ragione scritta sopra
+            # sull'outright: un modulo mancante deve degradare la riparazione,
+            # non uccidere il guardiano (Fase 156).
+            import raccolta_giornaliera as rg
+            rg.main([])
+            fatto.append("raccolta giornaliera rifatta")
+        except SystemExit as e:
+            # Lo script esce 1 quando trova squadre senza anagrafica, ma DOPO
+            # aver scritto il giorno: il file c'e', e l'allarme resta visibile
+            # nel rapporto invece di far sparire cio' che era gia' stato preso.
+            fatto.append(f"raccolta giornaliera rifatta, con riserve ({e})")
+        except Exception as e:                        # noqa: BLE001
+            fatto.append("raccolta giornaliera NON rifatta "
+                         f"({type(e).__name__}: {e})")
+
     if "in_play" in riparabili:
         sys.path.insert(0, str(ROOT / "scripts"))
         try:
@@ -540,6 +612,9 @@ def main(argv=None) -> None:
           + (f"{r['eta_lungo_raggio_ore']}h fa" if r["eta_lungo_raggio_ore"] is not None else "MAI"))
     print("  ultimo snapshot outright: "
           + (f"{r['eta_outright_giorni']} giorni fa" if r["eta_outright_giorni"] is not None else "MAI"))
+    print("  ultima raccolta giornaliera: "
+          + (f"{r['eta_giornaliera_giorni']} giorni fa"
+             if r["eta_giornaliera_giorni"] is not None else "MAI"))
     print(f"  partite giocate in finestra: {r['partite_giocate_in_finestra']} | "
           f"copertura in-play: {r['copertura_inplay']:.0%}")
     ac = r.get("anticipo_chiusura_min")

@@ -12,7 +12,7 @@ name: Raccolta quote IN-PLAY Smarkets (Fase 143)
 #
 # SOLA LETTURA di dati pubblici: il progetto non scommette (CLAUDE.md §5).
 
-# ⚠️ IL CRON E' SPENTO DAL 11/08/2026, E TORNA IL 24/08 (fine della prova).
+# ⚠️ IL CRON E' SPENTO DAL 11/08/2026. NON BASTA RIACCENDERLO.
 #
 # PERCHE'. Questo workflow e' il raccoglitore in-play originale (Fase 143), e
 # i quattro `gemello-N.yml` fanno **la stessa identica cosa**. Finche' erano
@@ -34,7 +34,27 @@ name: Raccolta quote IN-PLAY Smarkets (Fase 143)
 # si firma `--gemello 0` -- non e' un gemello, e' il giro di riparazione, e
 # nella tabella del guardiano compare su una riga sua.
 #
-# IL CRON DI PRIMA, da rimettere il 24/08:
+# ⚠️⚠️ COSA SERVE PER RIACCENDERLO, e perche' la data da sola e' una trappola.
+#
+# Qui c'era scritto «il cron torna il 24/08 (fine della prova)». E' sbagliato,
+# e sbagliato nel modo peggiore: sembra un promemoria innocuo e invece e'
+# l'istruzione per ricreare il guasto. La prova finisce il 23/08, ma dal 24
+# `gemelli_prova.GEMELLI_FUORI_PROVA = 1` rimette in piedi il gemello 1 --
+# quindi riaccendere questo cron quel giorno significa **due raccoglitori
+# in-play sulle stesse partite**, in due gruppi di concorrenza DIVERSI: non si
+# cancellano nemmeno a vicenda, e le sessioni tornano indistinguibili come
+# l'11/08.
+#
+# La decisione e' fra due strade, e va presa, non indovinata:
+#   (a) questo workflow resta a `workflow_dispatch` e il gemello 1 e' l'unico
+#       raccoglitore periodico -- e' il seguito naturale della prova, e non
+#       richiede di toccare niente il 24;
+#   (b) si riaccende il cron qui sotto E si mette `GEMELLI_FUORI_PROVA = 0`
+#       in `scripts/gemelli_prova.py`, nello stesso commit.
+# `test_non_esistono_DUE_raccoglitori_in_play_accesi_INSIEME` fa ROSSO se se
+# ne accende uno senza spegnere l'altro: la data non e' piu' l'unica guardia.
+#
+# IL CRON DI PRIMA:
 #     - cron: '*/30 * * * *'
 # LA SENTINELLA, ogni 30 minuti. Non e' lei a raccogliere ogni 2 minuti: e'
 # lei ad ACCENDERE un job che poi cicla al suo interno. Perche' non un cron

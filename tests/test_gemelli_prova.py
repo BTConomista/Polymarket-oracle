@@ -172,6 +172,51 @@ def test_lo_zero_lavora_sempre_anche_a_prova_spenta(monkeypatch):
     assert gp.attivo_oggi(0, gp.INIZIO) is True
 
 
+def test_non_esistono_DUE_raccoglitori_in_play_accesi_INSIEME():
+    """IL TRANELLO DATATO, e il motivo per cui questo test esiste.
+
+    `smarkets-live.yml` e i quattro `gemello-N.yml` fanno **la stessa identica
+    cosa**: raccolgono le quote in-play. Il cron del primo e' stato spento
+    l'11/08/2026 proprio per questo — finche' erano accesi entrambi, un giorno
+    che il calendario chiama «N=1» aveva in realta' DUE raccoglitori, e delle
+    8 sessioni attribuite al gemello 1 **3 venivano da li'**.
+
+    Ma il commento in testa a quel file dice «il cron torna il 24/08», e il
+    24/08 e' il giorno dopo la fine della prova — quando
+    `GEMELLI_FUORI_PROVA = 1` rimette in piedi il gemello 1. Seguire
+    quell'istruzione alla lettera ricrea esattamente il guasto: due
+    raccoglitori sulle stesse partite, per giunta in **due gruppi di
+    concorrenza diversi**, quindi nemmeno capaci di cancellarsi a vicenda.
+
+    Il test non sceglie QUALE dei due debba vivere — e' una decisione da
+    prendere, non da indovinare. Pretende solo che non siano accesi tutti e
+    due: o il cron di `smarkets-live.yml` resta spento (e il file conserva
+    `workflow_dispatch`, che e' il canale con cui il cane da guardia ripara),
+    oppure lo si riaccende e allora `GEMELLI_FUORI_PROVA` deve valere 0.
+    """
+    import yaml
+
+    wf = yaml.safe_load((Path(__file__).resolve().parents[1] / ".github"
+                         / "workflows" / "smarkets-live.yml").read_text())
+    # in YAML 1.1 la chiave `on:` si carica come il booleano True
+    trigger = wf.get(True) or wf.get("on") or {}
+    cron_acceso = bool(trigger.get("schedule"))
+
+    if cron_acceso:
+        assert gp.GEMELLI_FUORI_PROVA == 0, (
+            "smarkets-live.yml ha il cron ACCESO e gemelli_prova.py lascia "
+            f"{gp.GEMELLI_FUORI_PROVA} gemello/i fuori dalla prova: sono due "
+            "raccoglitori in-play sulle stesse partite, in gruppi di "
+            "concorrenza diversi. Spegnere uno dei due.")
+    else:
+        # Il cron spento non deve portarsi via l'autoriparazione: il guardiano
+        # accende questo workflow con `gh workflow run`, e senza
+        # `workflow_dispatch` la riparazione in-play sparirebbe in silenzio.
+        assert "workflow_dispatch" in trigger, (
+            "cron spento E workflow_dispatch assente: il cane da guardia non "
+            "ha piu' modo di riaccendere la raccolta in-play")
+
+
 def test_lo_zero_non_e_un_gemello_e_non_sposta_i_livelli():
     """Il conto dei gemelli previsti non deve cambiare per l'esistenza dello
     zero: e' fuori dall'esperimento, non un livello in piu'."""

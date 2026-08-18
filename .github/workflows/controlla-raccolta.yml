@@ -43,8 +43,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      # ⚠️ v5/v6 e non v4/v5: le versioni precedenti girano su Node 20, che
+      # GitHub ha deprecato (annuncio del 19/09/2025). Oggi il runner le forza
+      # gia' su Node 24 e lo dice in coda a OGNI run -- quindi il salto non
+      # cambia comportamento, toglie solo l'avviso e la scadenza. Bumpate qui
+      # per prime apposta: questo workflow e' di sola lettura (piu' la
+      # riparazione, che e' idempotente), gira quattro volte al giorno e un
+      # suo fallimento non perde dati. Se regge qui, regge sui raccoglitori.
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
 
