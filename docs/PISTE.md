@@ -795,13 +795,17 @@ confronto, prima ancora di poter fare il conto.
 mancante». ⭐ **Cambiato il 18/08/2026 (Fase 158): il pezzo mancante, per una
 seconda divisione, adesso c'è.**
 
-La consegna di **LaLiga2 (Segunda División) 2025-26**
-(`files/tre_fonti_laliga2_2526/`) porta **20.868 righe giocatore-partita con 91
-statistiche SofaScore** su 825 giocatori — cioè esattamente il **rendimento
-individuale in seconda serie** che questa pista dichiarava introvabile
+Le consegne del 18/08/2026 — **LaLiga2** (`files/tre_fonti_laliga2_2526/`) e
+**2. Bundesliga** (`files/tre_fonti_bundesliga2_2526/`) — portano
+**20.868 + 12.358 righe giocatore-partita** con 91 e 95 statistiche
+rispettivamente, su 825 e ~600 giocatori. La seconda porta in più
+**460.190 eventi Opta** con coordinate, cioè un livello di dettaglio che in
+seconda divisione il progetto non aveva nemmeno immaginato. È esattamente il
+**rendimento individuale in seconda serie** che questa pista dichiarava
+introvabile
 («football-data non ha statistiche per giocatore, e `appearances.csv` non copre
 le seconde divisioni delle nostre 5 leghe»). L'ostacolo dichiarato al punto (b)
-cade per **una lega e una stagione**.
+cade per **due leghe e una stagione**.
 
 E cade con un tempismo che non si ripete: **le tre promosse in LaLiga 2026-27
 sono Real Racing Club, Deportivo de A Coruña e Málaga**, e la stagione di prima
@@ -813,15 +817,16 @@ non raccolto al momento giusto spesso non è più recuperabile*.
 
 ⚠️ **Ciò che ancora NON c'è**, per non spacciare la pista per aperta più di
 quanto sia:
-- **una sola stagione e una sola lega**: n=1 sul fronte campionato, e il
-  principio §1.7 chiede 3+ stagioni. Un fattore di conversione stimato sulla
+- **una sola stagione**, per quanto ora su due leghe: il principio §1.7 chiede
+  3+ stagioni. Un fattore di conversione stimato sulla
   coorte 2026-27 sarebbe una **prima misura**, non una conclusione;
 - **nessuna quota e nessuno snapshot** per la Segunda (`data/laliga2_matches.csv`
   non esiste): il punto (a) — «applicare l'intera disciplina» — resta scoperto.
   Il dato per farlo però **esiste**: football-data pubblica `SP2` con schema
   identico alla prima divisione, quote di chiusura comprese. È il passo più
   economico e ben definito che questa pista abbia oggi;
-- **le altre quattro seconde divisioni** e il fronte nazionali sono immutati.
+- **le altre tre seconde divisioni** (Serie B, Championship, Ligue 2) e il
+  fronte nazionali sono immutati.
 
 **Il primo passo concreto**, se si decide di affrontarla: costruire
 `data/laliga2_matches.csv` dal `SP2` di football-data e agganciarlo alla

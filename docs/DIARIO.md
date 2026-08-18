@@ -20253,3 +20253,176 @@ in un'altra divisione — e produrrebbe un aggancio **univoco, sicuro di sé e
 falso**, che nessun conteggio di celle piene vedrebbe. È la stessa famiglia
 dell'`Espanol` → «Jove Espanol San Vicente» di `docs/audit_identita`, ed è il
 motivo per cui la mappa degli alias di questa raccolta è scritta a mano e chiusa.
+
+---
+
+## Fase 158-bis — Due seconde divisioni lo stesso giorno, e il tripwire che aveva ragione da mesi
+
+**Obiettivo.** Integrare la seconda consegna del 18/08/2026 — **2. Bundesliga
+2025-26**, 310 partite, 18 squadre, con **l'event data Opta** che LaLiga2 non
+aveva — e usare il fatto di avere *due* seconde divisioni nello stesso giorno
+per distinguere ciò che è proprietà del **formato** da ciò che è proprietà
+della **singola consegna**.
+
+**Ragionamento / ipotesi.** La Fase 158 aveva chiuso con una lezione: *cinque
+leghe concordi non sono una verifica, sono cinque volte la stessa assunzione.*
+Due consegne gemelle sono l'occasione per applicarla subito, invece di
+aspettare che lo faccia qualcun altro. L'ipotesi era che LaLiga2 avesse
+mostrato «come sono fatte le seconde divisioni». Falsa: ha mostrato come è
+fatta *quella* consegna.
+
+**Alternative considerate.** (1) Ereditare da LaLiga2 — «è una seconda
+divisione, quindi niente Opta, sei categorie, tante colonne vuote»: sarebbe
+stato rapido e sbagliato su ogni punto. (2) Rimisurare tutto da zero, ignorando
+LaLiga2: onesto ma cieco, avrebbe perso proprio il confronto che è la parte
+utile. (3) **Scelta**: rimisurare ogni proprietà, *e* metterla accanto a quella
+dell'altra consegna. È il confronto a produrre la regola, non la singola misura.
+
+**Risultato — il contrasto.** Su otto proprietà su nove le due consegne
+divergono:
+
+| | LaLiga2 | 2. Bundesliga |
+|---|---|---|
+| Understat | assente | assente |
+| Opta di WhoScored | **assente (0/468)** | **presente (306/310)** |
+| `Cronaca` | assente | presente |
+| categorie di `eventi` | 6 | 7 |
+| colonne vuote | 38 | **6 su 450** |
+| `Evento` da due fonti | sì (gol raddoppiati) | no (61 righe, solo spareggi) |
+| turni fuori-giornata | playoff **interno** | spareggi con squadre **estranee** |
+| squadre con / senza | 22 / 22 | **20 / 18** |
+| supplementari giocati | nessuno | **1 partita** |
+
+L'unica cosa che si ripete è l'assenza di Understat — e anche lì la verifica è
+stata rifatta, con una trappola in più: le pagine squadra chieste per il 2025
+non servono soltanto un altro *anno*, ma un'altra **competizione** (Hamburger SV
+risponde 2025/26 di *Bundesliga*, dove nel frattempo è stato promosso).
+
+⭐ Si ripete anche il **criterio** che dimostra l'assenza dell'Opta: le pagine
+senza match centre pesano ~100 KB contro ~1 MB. In LaLiga2 valeva per 468
+partite su 468, qui per le 4 degli spareggi. Stesso numero, due consegne: è così
+che un controllo positivo diventa una regola invece che un aneddoto.
+
+**Risultato — il tripwire.** `SC Paderborn 07 – VfL Wolfsburg` del 25/05/2026,
+spareggio di ritorno: **2-1, di cui 1-0 ai supplementari**. È la prima partita
+di un **campionato**, in tutte le raccolte, ad andare oltre il 90'. La guardia
+`gol_sono_regolamentari()` verificava `Gol = 1T + 2T` e ha dichiarato «punteggio
+sporco» su un dato perfettamente giusto — esattamente come la sua docstring
+aveva **previsto per iscritto** mesi prima.
+
+Ma la previsione era già avverata e nessuno l'aveva vista: la stessa guardia
+sbagliava su **10 righe di Champions e 32 di Europa League**. Il motivo per cui
+è passata inosservata è la parte che vale: il test che copre la Champions —
+l'unica coppa coi supplementari giocati — **si era riscritto l'identità a tre
+addendi per conto proprio** invece di chiamare la funzione. Verificava i *dati*,
+lasciava il *codice* scoperto, e siccome passava verde sembrava coprire
+entrambi.
+
+Corretta l'identità a tre addendi (`Gol = 1T + 2T + suppl.`): **310/310** qui,
+562/562 in Champions, e continua a saltare dove deve — le 6 partite di
+Conference il cui `Gol` contiene davvero la lotteria dei rigori.
+
+⚠️ **Un reperto nuovo, lasciato rumoroso invece che zittito.** In Europa League
+restano **15 partite** che falliscono l'identità: 7 hanno la lotteria (difetto
+noto, riparato da `punteggio_vero`), **8 no** — e su 7 di quelle 8 tutte e
+quattro le colonne dei tempi valgono **zero** mentre la partita ha dei gol. È
+uno zero che significa «non lo so» (R6). Non è un difetto introdotto qui: c'era
+da prima, e stava nascosto in mezzo ai 32 falsi allarmi che la guardia sbagliata
+produceva. **Non è diagnosticato**, e va istruito a mano (R5) prima di dire
+qualunque cosa su cosa sia.
+
+**Lezione.** La Fase 158 aveva detto che un difetto silenzioso si scopre quando
+arriva il caso che lo rende rumoroso. Questa aggiunge il contrario, che è più
+scomodo: **un difetto rumoroso può restare invisibile se accanto c'è un test che
+lo copre per finta.** La guardia gridava da mesi su 42 righe, e il verde del
+test accanto bastava a far leggere quel grido come rumore di fondo.
+
+E la regola operativa che ne discende: **un test che ri-scrive la regola invece
+di chiamarla non testa la regola.** Se il test della Champions avesse chiamato
+`gol_sono_regolamentari()` invece di ricostruirsi l'identità, sarebbe stato
+rosso il giorno stesso in cui la Champions è entrata nel repo.
+
+### 📐 Il modello in dettaglio
+
+**1. L'identità del punteggio, corretta.** Era a due addendi:
+
+```
+Gol casa = Casa 1T + Casa 2T                    (e lo stesso per la trasferta)
+```
+
+ed è ora a tre, con l'addendo mancante trattato come **zero** e non come NaN:
+
+```
+Gol casa = Casa 1T + Casa 2T + Casa suppl.      con suppl. assente = 0
+```
+
+Il ragionamento su ogni pezzo. *Perché tre e non due*: i gol dei supplementari
+non stanno né nel 1° né nel 2° tempo, quindi con due addendi ogni partita andata
+oltre il 90' risulta falsa **pur essendo giusta**. *Perché lo zero e non il
+NaN*: `Casa suppl.` è NaN su ogni partita finita nei 90', cioè la quasi
+totalità; propagare il NaN renderebbe l'identità falsa **ovunque**, cioè il
+contrario del difetto cercato. Un supplementare non giocato vale zero gol.
+*Perché non un quarto addendo per i rigori*: sarebbe farla tacere. La lotteria
+**deve** rompere l'identità — è l'unico modo per riconoscere, senza fidarsi di
+ciò che l'export dichiara, che `Gol` contiene qualcosa che non è il risultato
+della partita.
+
+Verifica su tutte le raccolte, dopo la correzione:
+
+| raccolta | partite che falliscono | perché |
+|---|--:|---|
+| 7 campionati (2. Bundesliga compresa) | **0** | — |
+| Champions | **0** | supplementari giocati e punteggio pulito |
+| Conference | **6** | esattamente le 6 con la lotteria ✅ |
+| Europa League | **15** | 7 con la lotteria + **8 non diagnosticate** ⚠️ |
+
+**2. La mappa dei nomi di `eventi_opta`, e perché non è una somiglianza.**
+`eventi_opta` porta sulla stessa riga il nome corto (`Squadra`), il lato
+(`Campo`) e i due nomi lunghi (`Casa`, `Trasferta`). L'accoppiamento è quindi
+**letto**, non stimato:
+
+```
+lungo(riga) = Casa(riga)        se Campo(riga) = "Casa"
+              Trasferta(riga)   altrimenti
+
+alias = { corto -> lungo }   verificando che |{lungo : corto}| = 1 per ogni corto
+```
+
+Verificato su tutte e **460.190** le righe: ogni nome corto corrisponde a uno e
+un solo nome lungo. Sono **14 squadre su 18** — il 78%, contro l'1 su 20 della
+Liga e l'1 su 18 della Bundesliga.
+
+⚠️ E qui una somiglianza avrebbe fallito **per davvero**, non per ipotesi. La
+traslitterazione tedesca dell'umlaut **espande** la vocale invece di toglierla:
+
+```
+Fürth      ->  Fuerth          togliendo l'accento:  Furth   ≠  Fuerth
+Düsseldorf ->  Duesseldorf                           Dusseldorf ≠ Duesseldorf
+Nürnberg   ->  Nuernberg                             Nurnberg   ≠ Nuernberg
+Münster    ->  Muenster                              Munster    ≠ Muenster
+```
+
+Le due forme **si allontanano** invece di avvicinarsi. È lo stesso errore del
+`Deportivo de A Coruña` → `La Coruna` della Fase 158 (galiziano contro
+castigliano), trovato lo stesso giorno in un'altra lingua: **due occorrenze
+indipendenti in due consegne**, che è il minimo per chiamarla una regola invece
+che un caso.
+
+**3. `Darmstadt`, e perché è l'unico mappato al contrario.** Le altre tredici
+vanno corto → lungo perché il lungo passa poi da `TEAM_ALIASES` e arriva alla
+forma dello snapshot:
+
+```
+"Bochum" --alias raccolta--> "VfL Bochum 1848" --TEAM_ALIASES--> "Bochum"  ✓
+```
+
+Per Darmstadt il secondo passaggio **non esiste** (`Darmstadt 98` non è in
+`TEAM_ALIASES`), quindi la catena si fermerebbe sulla forma sbagliata. Si mappa
+allora il lungo verso il canonico — `Darmstadt 98` → `Darmstadt`, il nome con
+cui il club sta nello snapshot Bundesliga, dove ha giocato nel 2023-24 — e il
+corto, che è già `Darmstadt`, resta com'è.
+
+⚠️ Le due direzioni **non possono coesistere**: `_normalizza_squadre` applica la
+mappa una volta sola, non fino a punto fisso. Con `Darmstadt → Darmstadt 98` e
+`Darmstadt 98 → Darmstadt` insieme, i due lati si scambierebbero di posto e
+resterebbero disallineati esattamente come prima.

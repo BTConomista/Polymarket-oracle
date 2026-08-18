@@ -14,9 +14,9 @@ sviluppo.
 > l'irraggiungibilità della rete. Stato della rete in
 > `docs/MANUALE_SOPRAVVIVENZA.md` §1.
 
-Pesa **401 MB** (`du -sh files/`, 18/08/2026): è **intenzionale**
-(riproducibilità senza rete). ⚠️ Il grosso non sono più i bundle: **234 MB su
-401 sono le 15 raccolte `tre_fonti_*_2526/`**, arrivate dopo che questo file era
+Pesa **425 MB** (`du -sh files/`, 18/08/2026): è **intenzionale**
+(riproducibilità senza rete). ⚠️ Il grosso non sono più i bundle: **259 MB su
+425 sono le 16 raccolte `tre_fonti_*_2526/`**, arrivate dopo che questo file era
 stato scritto (§ in fondo). Contenuto:
 
 | file/cartella | cosa | usato da |
@@ -77,11 +77,11 @@ Il workflow d'import di `player_scores/` (runner GitHub con rete libera) vive in
 `.github/workflows/import_dataset.yml`; si innesca con un push di
 `.github/import-dataset-trigger`.
 
-## Le raccolte `tre_fonti_*_2526/` (15 cartelle, 234 MB)
+## Le raccolte `tre_fonti_*_2526/` (16 cartelle, 259 MB)
 
 Le raccolte per **partita, giocatore, evento e posizione** della stagione
-2025-26: i 5 campionati modellati, LaLiga2, le 3 competizioni UEFA e le 6
-supercoppe. **Si leggono con `src/data/tre_fonti.py`, mai con `pd.read_csv`
+2025-26: i 5 campionati modellati, **due seconde divisioni** (LaLiga2 e 2.
+Bundesliga), le 3 competizioni UEFA e le 6 supercoppe. **Si leggono con `src/data/tre_fonti.py`, mai con `pd.read_csv`
 diretto**: i difetti sono riparati *in lettura* e i file restano come consegnati
 (R3). Ognuna ha il suo `README.md` e un `manifesto.json` con gli sha256.
 
@@ -99,6 +99,16 @@ colonna `ID partita` di `eventi` era **avvelenata in tutte le raccolte a due
 fonti** — la Serie A ha 760 id distinti per 380 partite, e un join lì non
 fallisce, **perde in silenzio 9.373 righe di tiri**. Dettaglio nel README della
 raccolta e in `docs/DATI.md` §5-duodecies.
+
+⭐ **E la sedicesima spiega perché il confronto vale più della singola
+misura.** `tre_fonti_bundesliga2_2526/` — **2. Bundesliga 2025-26**, consegnata
+lo stesso giorno di LaLiga2 — è anch'essa una seconda divisione a due fonti, e
+diverge dall'altra su **otto proprietà su nove**: qui l'Opta c'è (306 partite su
+310, 460.190 eventi), la `Cronaca` c'è, le categorie di `eventi` sono 7 e le
+colonne vuote **6 su 450** invece di 38. È anche la consegna che ha fatto
+scattare il tripwire sul punteggio, scoprendo che la guardia
+`gol_sono_regolamentari` sbagliava **da mesi** su 42 righe di coppe europee.
+Dettaglio nel README della raccolta e in `docs/DATI.md` §5-terdecies.
 
 ⚠️ **Nessuna di queste raccolte è letta da un modello**: sono dato archiviato
 secondo la regola §5-ter del `CLAUDE.md` (*raccogliere e usare sono due

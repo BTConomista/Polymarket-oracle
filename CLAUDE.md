@@ -588,6 +588,45 @@ files/tre_fonti_laliga2_2526/  LALIGA2 (Segunda Division) 2025-26, consegna
                  conosci NON e' una misura di copertura. E non e' accademico:
                  il Deportivo e' promosso in LaLiga 2026-27.
                  ⭐ Stato d'uso: RACCOLTO, NON USATO, ed e' uno stato legittimo
+files/tre_fonti_bundesliga2_2526/  2. BUNDESLIGA 2025-26, seconda consegna del
+                 18/08/2026: la seconda divisione che HA l'Opta. 310 partite
+                 (34 giornate da 9 + 4 spareggi), 18 squadre, 460.190 eventi
+                 Opta. E' la raccolta piu' PIENA delle sedici: 6 colonne vuote
+                 su 450.
+                 ⭐ IL VALORE E' NEL CONTRASTO CON LALIGA2, arrivata lo stesso
+                 giorno: due seconde divisioni divergono su OTTO proprieta' su
+                 nove -- Opta assente/presente, Cronaca assente/presente, 6
+                 categorie contro 7, 38 colonne vuote contro 6, playoff INTERNO
+                 alla lega contro spareggi con squadre ESTRANEE (22/22 squadre
+                 contro 20/18). Regola: la copertura di una fonte non si
+                 eredita fra raccolte, nemmeno fra gemelle -- si misura per
+                 consegna.
+                 ⚠️⚠️ E' LA CONSEGNA CHE HA FATTO SCATTARE UN TRIPWIRE CHE
+                 AVEVA RAGIONE DA MESI. SC Paderborn 07-VfL Wolfsburg del
+                 25/05/2026 e' 2-1 di cui 1-0 ai SUPPLEMENTARI: prima partita
+                 di un campionato, in tutte le raccolte, ad andare oltre il
+                 90'. `gol_sono_regolamentari` verificava Gol = 1T + 2T e la
+                 sua docstring aveva previsto per iscritto questo caso -- ma il
+                 caso era GIA' arrivato e sbagliava su 10 righe di Champions e
+                 32 di Europa League. Invisibile perche' il test della
+                 Champions si era RISCRITTO l'identita' a tre addendi per conto
+                 suo invece di chiamare la funzione: verde sui dati, codice
+                 rotto. Un test che ri-scrive la regola non testa la regola.
+                 Ora l'identita' e' Gol = 1T + 2T + suppl. (l'assente vale
+                 ZERO, non NaN).
+                 ⚠️ Reperto NUOVO e NON diagnosticato: in Europa League 15
+                 partite falliscono ancora l'identita', 7 per la lotteria e 8
+                 no -- di cui 7 con TUTTI i tempi a zero e gol nella partita
+                 (R6). Va istruito a mano (R5), non zittito.
+                 ⚠️ Quinta e peggiore occorrenza del difetto
+                 eventi_opta.Squadra: 14 squadre su 18 (78%) contro 1 su 20 in
+                 Liga. La mappa e' LETTA dal dato (Campo + Casa/Trasferta), non
+                 stimata per somiglianza -- che qui avrebbe fallito davvero,
+                 perche' la traslitterazione tedesca dell'umlaut ESPANDE la
+                 vocale (Fürth->Fuerth) e togliere gli accenti allontana le due
+                 forme invece di avvicinarle. Stesso errore del Deportivo/La
+                 Coruna di LaLiga2, in un'altra lingua e lo stesso giorno
+                 ⭐ Stato d'uso: RACCOLTO, NON USATO
 data/ranking_uefa/   I COEFFICIENTI UEFA, federazioni e club (consegna utente
                  13/08/2026, fonte uefa.com). Si legge con
                  src/data/ranking_uefa.py, mai con pd.read_excel.

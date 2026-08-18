@@ -1781,6 +1781,112 @@ conferma indipendente che era un'unità di misura diversa, non un disaccordo.
 
 ---
 
+## 5-terdecies · 2. Bundesliga 2025-26, la seconda divisione CON l'Opta (`files/tre_fonti_bundesliga2_2526/`) — Fase 158-bis
+
+Seconda consegna del 18/08/2026, arrivata poche ore dopo LaLiga2. **310 partite,
+18 squadre**: 34 giornate da 9 (306) più i **4 spareggi** promozione/
+retrocessione. Fonti **due** (SofaScore + WhoScored) — ma qui **l'Opta c'è**.
+
+| blocco | righe | note |
+|---|--:|---|
+| `squadre` | 1.918 | 1.864 di partita + 54 di classifica |
+| `giocatori` | 12.857 | 12.358 di partita + 499 di rosa, **due fonti** |
+| `eventi` | 93.886 | **sette** categorie, `Cronaca` compresa |
+| `eventi_opta` | 460.190 | 306 partite, 39 tipi, coordinate e qualificatori |
+| `heatmap` | 461.520 | 310 partite |
+| `legenda` | 479 | documenta **450 colonne su 450** |
+
+**Stato d'uso: raccolto, non usato** — come LaLiga2, e per le stesse ragioni
+(non è in `LEAGUE_CONFIGS`, niente quote, niente snapshot).
+
+⭐ **È la raccolta più piena delle sedici**: 450 colonne e **sei** vuote.
+
+### ⚠️ Il valore è nel CONTRASTO con LaLiga2, non nella singola misura
+
+Due seconde divisioni consegnate lo stesso giorno divergono su otto proprietà
+su nove. **Niente si eredita fra raccolte, nemmeno fra gemelle.**
+
+| | LaLiga2 | 2. Bundesliga |
+|---|---|---|
+| Understat | assente | assente |
+| Opta di WhoScored | **assente (0/468)** | **presente (306/310)** |
+| `Cronaca` | assente | presente |
+| categorie di `eventi` | 6 | 7 |
+| colonne vuote | 38 | **6 su 450** |
+| `Evento` da due fonti | sì (gol raddoppiati) | no |
+| turni fuori-giornata | playoff **interno** alla lega | spareggi con squadre **estranee** |
+| squadre con / senza | 22 / 22 | **20 / 18** |
+| supplementari giocati | nessuno | **1 partita** |
+
+L'unica cosa che si ripete è l'assenza di Understat — rifatta comunque da capo,
+con una trappola in più: le pagine squadra chieste per il 2025 non servono solo
+un altro *anno* ma un'altra **competizione** (Hamburger SV risponde 2025/26 ma
+di *Bundesliga*, dove è stato promosso). Si ripete anche il **criterio** che
+dimostra l'assenza dell'Opta — pagine da ~100 KB contro ~1 MB — che qui vale per
+le 4 partite di spareggio: stesso numero, due consegne.
+
+### ⭐ La partita che ha fatto scattare il tripwire sul punteggio
+
+`SC Paderborn 07 – VfL Wolfsburg`, 25/05/2026: **2-1, di cui 1-0 ai
+supplementari**. Prima partita di un **campionato**, in tutte le raccolte, ad
+andare oltre il 90'. `gol_sono_regolamentari()` verificava `Gol = 1T + 2T` e ha
+marcato «sporco» un dato giusto — come la sua docstring aveva previsto per
+iscritto.
+
+Solo che la previsione era **già avverata**: la stessa guardia sbagliava su
+**10 righe di Champions e 32 di Europa League**, e non se n'era accorto nessuno
+perché il test della Champions **si era riscritto l'identità a tre addendi per
+conto proprio** invece di chiamare la funzione. Passava verde sui dati e
+lasciava il codice rotto.
+
+Ora l'identità è `Gol = 1T + 2T + suppl.` (l'addendo assente vale **zero**, non
+NaN): 310/310 qui, 562/562 in Champions, e continua a saltare dove deve.
+
+⚠️ **Reperto NUOVO e non diagnosticato**: in Europa League restano **15 partite**
+che falliscono — 7 per la lotteria dei rigori (nota e riparata da
+`punteggio_vero`) e **8 no**, di cui **7 con tutte e quattro le colonne dei
+tempi a ZERO mentre la partita ha dei gol**. Uno zero che significa «non lo so»
+(R6). C'era da prima, nascosto fra i 32 falsi allarmi. Va istruito a mano (R5).
+
+### ⚠️ `eventi_opta.Squadra`: 14 nomi su 18, il caso peggiore mai visto
+
+Quinta occorrenza del difetto (Liga 1 su 20, Bundesliga 1 su 18, Supercoppa UEFA
+2 su 2, **qui 14 su 18**). L'aggancio per *partita* resta perfetto anche senza
+riparazione: per questo non si rivela da solo, e va misurato a ogni consegna.
+
+⭐ La mappa è **letta dal dato**, non stimata: `eventi_opta` porta sulla stessa
+riga il nome corto, il lato e i due nomi lunghi, e si è verificato che ogni corto
+corrisponda a **uno e un solo** lungo su tutte e 460.190 le righe.
+
+⚠️ Una somiglianza avrebbe fallito davvero: la traslitterazione tedesca
+dell'umlaut **espande** la vocale (`Fürth`→`Fuerth`, `Düsseldorf`→`Duesseldorf`),
+quindi togliere gli accenti **allontana** le due forme. È lo stesso errore del
+`Deportivo de A Coruña`→`La Coruna` di LaLiga2, in un'altra lingua e lo stesso
+giorno: due occorrenze indipendenti, cioè una regola e non un caso.
+
+### Le altre cose da sapere
+
+- **Gli spareggi tirano dentro due squadre estranee** (Rot-Weiss Essen della 3.
+  Liga e VfL Wolfsburg della Bundesliga): **18 squadre nel campionato, 20 con
+  gli spareggi**. Caso *opposto* a LaLiga2. Qui escluderli per default è la
+  ragione storica di `E_CAMPIONATO`, non una convenzione.
+- **`Periodo` ha due valori nuovi** — `1° supplementare` e `2° supplementare`,
+  2 righe ciascuno: chi cicla sui tre periodi soliti li trova.
+- **Niente falso positivo sul possesso**: la colonna
+  `possession % (normalizzato) (WhoScored)`, introdotta a monte con la consegna
+  della Bundesliga, c'è anche qui — **zero** token `possesso` in `Discordanze`,
+  contro 760 righe su 760 nelle prime tre leghe. Le discordanze vere sono 19
+  righe di squadra su 1.836 (1%) e 110 di giocatore su 12.198 (1%).
+- **Il rating lo pubblicano entrambe le fonti** (9.335 righe, r=0,80, scarto
+  medio 0,36 punti): concordano sull'ordine, **non** sul livello — riferimento
+  SofaScore, WhoScored come controllo, **non mediare**. L'xG solo SofaScore.
+- **`Meteo (WhoScored)` è quasi vuota**: 12 righe su 1.918 (0,63%) — quarto
+  stato misurato di quella colonna, dopo 0,0% Serie A, 0,3% Liga, 98,4% Premier.
+- **Le fonti portano cose diverse**: da SofaScore i dati fisici (km, alta
+  intensità, sprint, velocità massima), da WhoScored altezza, peso ed età.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche
