@@ -682,7 +682,7 @@ def test_le_uefa_portano_le_nostre_squadre_in_europa():
     """
     from src.data.sources import TEAM_ALIASES
     nostre = set()
-    for lega in tf.DIMENSIONI:
+    for lega in [x for x in tf.DIMENSIONI if tf.ha_snapshot(x)]:
         s = pd.read_csv(f"data/{lega}_matches.csv")
         s = s[s["season"].astype(str) == "2526"]
         nostre |= set(s["home_team"]) | set(s["away_team"])
@@ -851,7 +851,7 @@ def test_le_supercoppe_sono_tutte_di_squadre_nostre():
     """
     from src.data.sources import TEAM_ALIASES
     nostre = set()
-    for lega in tf.DIMENSIONI:
+    for lega in [x for x in tf.DIMENSIONI if tf.ha_snapshot(x)]:
         s = pd.read_csv(f"data/{lega}_matches.csv")
         s = s[s["season"].astype(str) == "2526"]
         nostre |= set(s["home_team"]) | set(s["away_team"])

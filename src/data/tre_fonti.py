@@ -67,6 +67,44 @@ CHI VINCE quando due fonti divergono, dichiarato e non implicito:
    | minuti    | SofaScore | Understat differisce di ±1-4' su migliaia di righe: e' la convenzione sul minuto del cambio, non un errore. Si sceglie per coerenza, non per qualita' |
    | xG        | **entrambe, separate** | sono due MODELLI diversi (971,4 contro 1077,5 di somma stagionale in Serie A): fonderle non ha senso, e la differenza e' informazione. `preferita('xG')` ALZA apposta |
 
+════════════════════════════════════════════════════════════════════════════
+LA RACCOLTA CHE HA ROTTO TRE COSTANTI (LaLiga2, consegna 18/08/2026)
+════════════════════════════════════════════════════════════════════════════
+
+LaLiga2 (Segunda Division) e' la prima raccolta di **seconda divisione**, e ha
+il valore che hanno i casi limite: non ha aggiunto dati simili a quelli che
+c'erano, ha mostrato quali «costanti» erano solo cinque campioni d'accordo fra
+loro. Tre in particolare, tutte scoperte misurando e non leggendo:
+
+1. **«a tre fonti» era un nome, non una misura.** Qui le fonti sono DUE, e
+   nessuna delle due assenze e' un incidente di raccolta: Understat non ha la
+   Segunda (tre verifiche indipendenti) e WhoScored non pubblica l'Opta su
+   questa competizione (468 pagine su 468, con controllo positivo su una
+   partita di LaLiga scaricata nello stesso momento). Nessun `eventi_opta`, e
+   una `Cronaca` che non esiste: le categorie di `eventi` sono **sei**, non
+   sette. Vedi `FONTI_PER_RACCOLTA`.
+
+2. **«campionato» non implica «snapshot».** Per cinque leghe le due cose
+   coincidevano, e diversi controlli ciclavano su `DIMENSIONI` aprendo
+   `data/{lega}_matches.csv` come se ci fosse sempre. LaLiga2 e' un campionato
+   e uno snapshot non ce l'ha — non e' in `LEAGUE_CONFIGS`. Vedi
+   `ha_snapshot()`.
+
+3. ⚠️⚠️ **`eventi.ID partita` era avvelenata da sempre, in TUTTE le raccolte a
+   due fonti, e nessuno l'aveva vista.** In `squadre` e `giocatori` il difetto
+   si nota perche' accanto alla colonna mista ci sono quelle per-fonte; in
+   `eventi` quelle colonne non esistono, quindi non c'era niente con cui
+   accorgersene. La Serie A ha **760 id distinti per 380 partite**: un join su
+   quella colonna perde in silenzio le 9.373 righe di tiri di Understat. Il
+   difetto e' stato trovato solo perche' LaLiga2 ne porta una **variante
+   piu' rumorosa** — colonna di TESTO, con una frase al posto del numero — che
+   rompe il join anche sulle righe sane. Ora `_ripara_id_eventi` lo chiude su
+   tutte le raccolte. Vedi `ID_EVENTI_MISTO`.
+
+⭐ La lezione generale, che vale oltre questa lega: **un difetto silenzioso si
+scopre quando arriva il caso che lo rende rumoroso.** Cinque leghe concordi non
+sono una verifica — sono cinque volte la stessa assunzione.
+
 ⚠️ DUE COSE CHE NON SI RIPARANO, e vanno sapute.
 
 * **`Spettatori` e' `post`, non `pre`.** Sta accanto a `Stadio` e `Capienza`,
@@ -105,6 +143,30 @@ FONTI = ("SofaScore", "WhoScored", "Understat")
 FONTI_PER_RACCOLTA: dict[str, tuple[str, ...]] = {
     "serie_a": FONTI, "premier_league": FONTI, "la_liga": FONTI,
     "bundesliga": FONTI, "ligue_1": FONTI,
+    # ⚠️ LALIGA2 (Segunda Division) E' LA PRIMA RACCOLTA DI **SECONDA
+    # DIVISIONE**, e le mancano DUE fonti su tre — ma non allo stesso modo,
+    # e la differenza e' tutta nel fatto che entrambe le assenze sono state
+    # **misurate** invece che dedotte dal silenzio (la prova sta in `grezzi/`):
+    #
+    #  * **Understat non ha la Segunda.** Verificato in tre modi indipendenti:
+    #    il menu del sito elenca sei sole leghe di prima divisione; cinque
+    #    varianti di URL (`La_liga_2`, `Segunda`, `Segunda_Division`,
+    #    `LaLiga2`, `Spain_2`) rispondono tutte 404; e — il modo piu' insidioso
+    #    — le pagine squadra chieste per il 2025 servono **in silenzio un altro
+    #    anno** (Almeria e Cadiz danno 2023/24, Deportivo 2026/27). Quest'ultimo
+    #    e' un finto pieno da manuale (R6): chi si fermasse al primo `200 OK`
+    #    archivierebbe la stagione sbagliata credendola giusta.
+    #  * **WhoScored c'e' ma senza Opta.** 468 pagine su 468 senza
+    #    `matchCentreData`, ~101 KB di HTML contro 1,14 MB di una partita di
+    #    LaLiga scaricata nello stesso momento dalla stessa scheda. Il
+    #    **controllo positivo** e' cio' che separa «la fonte non copre questa
+    #    competizione» da «lo scaricatore si e' rotto», ed e' per questo che
+    #    vale piu' di sei tentativi falliti. Da qui: **niente `eventi_opta`**.
+    #
+    # Quel che WhoScored da' comunque e' `initialMatchDataForScrappers` — gol,
+    # cartellini e cambi al minuto — 8.188 righe dentro `eventi`, ed e' l'unica
+    # seconda fonte su questa competizione.
+    "laliga2": ("SofaScore", "WhoScored"),
     "uefa_champions_league": ("SofaScore", "WhoScored"),
     "uefa_europa_league": ("SofaScore", "WhoScored"),   # niente Understat: -37 colonne
     "uefa_conference_league": ("SofaScore",),           # solo SofaScore: -75 colonne
@@ -273,6 +335,30 @@ def leghe_disponibili() -> list[str]:
     return trovate
 
 
+def ha_snapshot(lega: str = LEGA_DEFAULT) -> bool:
+    """C'e' un `data/{lega}_matches.csv` a cui agganciare questa raccolta?
+
+    ⚠️ NASCE DA LALIGA2, E DA UN'ASSUNZIONE CHE PER CINQUE LEGHE NON SI ERA MAI
+    VISTA: che «campionato» implichi «snapshot». Fino all'agosto 2026 le due
+    cose coincidevano — i cinque campionati raccolti erano esattamente i cinque
+    modellati — e diversi controlli scritti allora ciclano su `DIMENSIONI`
+    aprendo `data/{lega}_matches.csv` senza chiedersi se esista.
+
+    LaLiga2 le separa: e' un campionato a tutti gli effetti (42 giornate, girone
+    all'italiana) e uno snapshot **non ce l'ha**, perche' la seconda divisione
+    spagnola non e' in `LEAGUE_CONFIGS` — niente quote, niente backtest, niente
+    `δ` tarato. Conseguenza pratica: per questa raccolta il criterio
+    «aggancio 924/924» **non esiste**, e sostituirlo con un aggancio inventato
+    sarebbe peggio che non averlo. I controlli interni (i gol degli eventi
+    contro il punteggio, l'identita' `Gol = 1T + 2T`) prendono il suo posto.
+
+    La verita' su «quali leghe modelliamo» sta in un punto solo — §7 del
+    CLAUDE.md — e questa funzione la chiede li' invece di ri-elencarla.
+    """
+    from ..config import LEAGUE_CONFIGS
+    return lega in LEAGUE_CONFIGS
+
+
 # Colonne che esistono nello schema e non contengono NULLA. Sono PER LEGA, e
 # non e' un dettaglio: `Meteo (WhoScored)` e' vuota allo 0,0% in Serie A e
 # piena al 95,9% in Premier. Non e' un difetto dell'export ma una copertura
@@ -346,6 +432,55 @@ COLONNE_VUOTE: dict[str, dict[str, tuple[str, ...]]] = {
     # bastavano. `Tocchi` invece e' a zero su tutte e tre le leghe: quella e'
     # del formato.
     "la_liga": {"heatmap": ("Tocchi",)},
+    # ⚠️ LALIGA2 NE HA **38**, ed e' il numero piu' alto di ogni campionato. Le
+    # tre famiglie sono le stesse delle supercoppe, con le stesse cause:
+    #
+    #  (1) le 17 `(WhoScored)` di `squadre` + le 10 di `giocatori`. Lo schema
+    #      prevede 19 colonne WhoScored a livello squadra e **due sole sono
+    #      piene** (`Risultato` e `ID partita`); a livello giocatore ne prevede
+    #      10 e sono piene **zero**. Non e' un buco dell'export: WhoScored qui
+    #      da' solo `initialMatchDataForScrappers`, che e' una cronaca di
+    #      eventi, non una scheda partita. Il contributo di quella fonte vive
+    #      tutto dentro `eventi` (8.188 righe) — ed e' esattamente il caso che
+    #      `fonti()` esiste per dichiarare: chi legge l'elenco delle colonne
+    #      conclude «c'e' anche WhoScored a livello squadra» e ha torto.
+    #  (2) le 8 dei SUPPLEMENTARI e dei RIGORI. Vuote perche' nessuna delle 468
+    #      partite e' andata oltre il 90' — playoff promozione compreso, che
+    #      pure e' l'unico posto dove sarebbe potuto succedere. ⭐ E' la
+    #      conferma indipendente del tripwire `gol_sono_regolamentari()`, che
+    #      qui torna **468/468**: due segnali che si controllano a vicenda.
+    #  (3) `Note classifica`, vuota perche' questa classifica non ha note.
+    #      Le altre 13 colonne di classifica NON sono qui: sono piene sulle 66
+    #      righe di livello Stagione, cioe' esattamente dove devono stare.
+    #
+    # ⚠️ `Discordanze` e' vuota in `giocatori` e PIENA in `squadre` (618 righe).
+    # Non e' una svista: il confronto fra fonti esiste solo dove le fonti sono
+    # due, e a livello giocatore qui c'e' solo SofaScore.
+    "laliga2": {
+        "squadre": (
+            "Casa suppl. (SofaScore)", "Trasferta suppl. (SofaScore)",
+            "Casa 1° suppl. (SofaScore)", "Trasferta 1° suppl. (SofaScore)",
+            "Casa 2° suppl. (SofaScore)", "Trasferta 2° suppl. (SofaScore)",
+            "Rigori casa (SofaScore)", "Rigori trasferta (SofaScore)",
+            "ID casa (WhoScored)", "ID trasferta (WhoScored)",
+            "Primo tempo (WhoScored)", "Novanta minuti (WhoScored)",
+            "Supplementari (WhoScored)", "Rigori (WhoScored)",
+            "Minuti giocati (WhoScored)", "Allenatore casa (WhoScored)",
+            "Allenatore trasferta (WhoScored)", "Modulo casa (WhoScored)",
+            "Modulo trasferta (WhoScored)", "Stadio (WhoScored)",
+            "Spettatori (WhoScored)", "Arbitro (WhoScored)", "Meteo (WhoScored)",
+            "Eventi Opta (WhoScored)", "possession % (normalizzato) (WhoScored)",
+            "Note classifica",
+        ),
+        "giocatori": (
+            "Discordanze", "ID squadra (WhoScored)", "Altezza cm (WhoScored)",
+            "Peso kg (WhoScored)", "Età (WhoScored)",
+            "Migliore in campo (WhoScored)", "Entrato al minuto (WhoScored)",
+            "Uscito al minuto (WhoScored)", "ratings (WhoScored)",
+            "ID giocatore (WhoScored)", "ID partita (WhoScored)",
+        ),
+        "heatmap": ("Tocchi",),
+    },
 }
 
 # La colonna che sembra un identificatore di partita e impila tre numerazioni.
@@ -357,6 +492,49 @@ ID_PARTITA_PER_FONTE = {
     "SofaScore": "ID partita (SofaScore)",
     "WhoScored": "ID partita (WhoScored)",
     "Understat": "ID partita (Understat)",
+}
+
+#: ⚠️⚠️ LA STESSA COLONNA E' AVVELENATA ANCHE IN `eventi`, E PER 12 RACCOLTE
+#: NESSUNO SE N'ERA ACCORTO.
+#:
+#: In `squadre` e `giocatori` il difetto si vede: accanto alla colonna mista ci
+#: sono quelle per-fonte, e `_rinomina_id_avvelenato` scatta. In `eventi` le
+#: colonne per-fonte **non ci sono** — `ID partita` e' l'unica — quindi non
+#: c'era niente da confrontare e la riparazione non e' mai partita. La colonna
+#: sembra sana: e' piena al 100% e i suoi valori sono id veri.
+#:
+#: Misurato su tutte e 15 le raccolte (agosto 2026), gli stati sono TRE:
+#:
+#:   una fonte sola (7 UEFA/supercoppe)  ->  int, UNA numerazione     SANA
+#:   SofaScore + Understat (5 campionati)->  int, DUE numerazioni     MISTA
+#:   SofaScore + WhoScored (laliga2)     ->  **testo**, DUE FORMATI   MISTA
+#:
+#: Il conteggio lo dice da solo: la Serie A ha **760 id distinti per 380
+#: partite**, cioe' ogni partita compare due volte con due numeri diversi (le
+#: righe `Tiro` di Understat portano l'id di Understat). Un join su quella
+#: colonna non sbaglia rumorosamente: **perde in silenzio** le 9.373 righe di
+#: tiri di Understat, e chi conta i tiri ne conta meta' credendo di averli
+#: tutti. Finto pieno da manuale (R6).
+#:
+#: ⚠️ La forma di LaLiga2 e' peggiore e piu' facile da vedere insieme: la
+#: colonna e' **di testo**, e le righe WhoScored non contengono un numero ma
+#: una FRASE — `"14081721 (SofaScore) / 1914700 (WhoScored)"`. Effetto: il join
+#: numerico fallisce su **tutte e 94.404** le righe, comprese le 86.216
+#: SofaScore che un id giusto ce l'hanno, perche' `"14081721" != 14081721`.
+#:
+#: ⭐ Ed e' proprio la forma peggiore a essere l'unica che si ripara da sola:
+#: quella frase **contiene** l'id SofaScore, quindi il 100% delle righe si
+#: normalizza senza uscire dal file. Nei 5 campionati serve invece la mappa
+#: `ID partita (Understat)` -> `ID partita (SofaScore)` che sta in `squadre`
+#: (misurata: copre il 100% delle righe Understat su tutte e cinque).
+#:
+#: Il valore dice la FORMA del veleno, non solo che c'e': serve a scegliere la
+#: riparazione. Le raccolte assenti da questa mappa hanno una fonte sola e la
+#: colonna sana — ed e' una MISURA, non un default prudenziale.
+ID_EVENTI_MISTO: dict[str, str] = {
+    "serie_a": "numerico", "premier_league": "numerico", "la_liga": "numerico",
+    "bundesliga": "numerico", "ligue_1": "numerico",
+    "laliga2": "testuale",
 }
 
 # ⚠️ Le righe ORFANE della fusione sono PER LEGA, e finora ce ne sono solo in
@@ -520,6 +698,41 @@ ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
     # `eventi_opta` deve misurare quella colonna PRIMA di dichiararla agganciata.
     "supercoppa_uefa": {"PSG": "Paris Saint-Germain",
                         "Tottenham": "Tottenham Hotspur"},
+    # ⚠️ QUARTA occorrenza, e di natura diversa dalle prime tre: qui il file NON
+    # e' incoerente con se stesso (le 22 squadre hanno una grafia sola in tutte
+    # le colonne). E' incoerente con il RESTO DEL PROGETTO, e per una sola
+    # ragione: **gli accenti**.
+    #
+    # La grafia canonica del progetto e' quella di football-data, che e' ASCII —
+    # misurato: negli snapshot delle 5 leghe i nomi accentati sono **zero**. La
+    # raccolta arriva invece con la grafia SofaScore, accentata. Delle 22
+    # squadre, misurate una per una contro TUTTI i nostri snapshot:
+    #
+    #   6  gia' canoniche          Eibar, Granada, Huesca, e — via TEAM_ALIASES —
+    #                              Malaga, Valladolid, Las Palmas
+    #   3  divergono SOLO per accento   Almeria, Cadiz, Leganes   <- queste tre
+    #  13  assenti dai nostri dati      mai in prima divisione nella nostra
+    #                                   finestra 2017-2025
+    #
+    # Si mappano **solo le tre di mezzo**, e non e' timidezza: per quelle il
+    # bersaglio e' un fatto verificato (lo stesso club sta nei nostri snapshot
+    # scritto cosi'), mentre per le altre tredici non esiste alcun bersaglio e
+    # inventarne uno sarebbe indovinare un join — la cosa che la regola d'oro
+    # vieta. `TEAM_ALIASES` ha gia' `UD Almeria`->`Almeria`, `Cadiz CF`->`Cadiz`,
+    # `CD Leganes`->`Leganes`: mancavano le forme NUDE, che sono quelle che usa
+    # SofaScore.
+    #
+    # ⚠️⚠️ E QUI SOTTO C'E' LA TRAPPOLA VERA, che vale la pena leggere anche se
+    # non si tocchera' mai questa lega. Fra le 22 c'e' **`Real Sociedad B`**, la
+    # squadra riserve. Cercandole un corrispondente per somiglianza — come
+    # farebbe qualunque fuzzy match — si trova `Sociedad`, cioe' la **prima
+    # squadra**, che gioca in un'altra divisione. Sarebbe un aggancio
+    # **univoco, sicuro di se' e falso**: nessun conteggio di celle piene lo
+    # vedrebbe, perche' la cella risulta piena e la riga agganciata. E' la
+    # stessa famiglia dell'`Espanol`->«Jove Espanol San Vicente» di
+    # docs/audit_identita. Per questo la mappa qui e' scritta a mano, chiusa, e
+    # NON generata da una somiglianza.
+    "laliga2": {"Almería": "Almeria", "Cádiz": "Cadiz", "Leganés": "Leganes"},
 }
 
 # Quante SQUADRE e quante PARTITE ha ogni campionato. Non e' una costante:
@@ -528,6 +741,10 @@ ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
 DIMENSIONI: dict[str, tuple[int, int]] = {
     "serie_a": (20, 380), "premier_league": (20, 380), "la_liga": (20, 380),
     "bundesliga": (18, 306), "ligue_1": (18, 306),
+    # LaLiga2: 22 squadre, quindi 42 giornate da 11 partite = 462. E' il primo
+    # campionato del progetto che non ha ne' 20 ne' 18 squadre — la ragione per
+    # cui questa mappa esiste invece di una costante.
+    "laliga2": (22, 462),
 }
 
 # ⚠️ I TURNI CHE NON SONO GIORNATE DI CAMPIONATO.
@@ -556,6 +773,27 @@ PREFISSO_GIORNATA = "Giornata"
 E_CAMPIONATO: dict[str, bool] = {
     "serie_a": True, "premier_league": True, "la_liga": True,
     "bundesliga": True, "ligue_1": True,
+    # ⚠️ LALIGA2 E' UN CAMPIONATO, MA IL SUO «SPAREGGIO» E' UN'ALTRA COSA — e
+    # la regola sopra ci arriva col nome giusto e la ragione sbagliata.
+    #
+    # In Bundesliga e Ligue 1 le partite fuori-giornata sono lo spareggio
+    # promozione/retrocessione **contro squadre di seconda divisione**: si
+    # escludono perche' tirano dentro squadre estranee al campionato e fanno
+    # fallire l'aggancio allo snapshot. Qui i turni fuori-giornata sono le 6
+    # partite del **playoff promozione**, che LaLiga2 gioca **fra squadre di
+    # LaLiga2** (Almeria, Castellon, Las Palmas, Malaga — tutte e quattro gia'
+    # nelle 42 giornate). Misurato: **22 squadre col playoff e 22 senza**, e
+    # nessuno snapshot da agganciare, perche' `data/laliga2_matches.csv` non
+    # esiste. Nessuna delle due ragioni storiche vale.
+    #
+    # Resta `True` lo stesso, per una ragione diversa e piu' semplice: il
+    # default di questo modulo e' «il campionato», cioe' il girone all'italiana
+    # da 462 partite, e un playoff a eliminazione mescolato dentro un `groupby`
+    # e' la stessa sorpresa che le righe di classifica sarebbero in mezzo a
+    # quelle di partita. Chi vuole la stagione INTERA — ed e' una richiesta
+    # legittima, quelle 6 partite sono competizione vera e non partite di
+    # un'altra lega — passa `spareggio=True` e le riprende tutte.
+    "laliga2": True,
     "uefa_champions_league": False,
     "uefa_europa_league": False, "uefa_conference_league": False,
     # Le supercoppe: il turno e' «Finale» (o «Semifinali» nelle due a final
@@ -620,6 +858,82 @@ def _rinomina_id_avvelenato(df: pd.DataFrame) -> pd.DataFrame:
     if ID_AVVELENATO in df.columns and any(c in df.columns for c in ID_PARTITA_PER_FONTE.values()):
         df = df.rename(columns={ID_AVVELENATO: ID_RINOMINATO})
     return df
+
+
+def _ripara_id_eventi(df: pd.DataFrame, lega: str) -> pd.DataFrame:
+    """Da' a `eventi` una colonna-chiave utilizzabile, e marca quella che non lo e'.
+
+    Fa due cose, e la seconda e' la meta' che conta:
+
+    1. **aggiunge** `ID partita (SofaScore)`, l'id della partita nella
+       numerazione di SofaScore, su ogni riga — cosi' `eventi` si aggancia a
+       `squadre`, a `giocatori` e alla `heatmap`, che quella numerazione la
+       usano gia';
+    2. **rinomina** la colonna grezza in `ID partita (misto, NON usare)` dove
+       e' mista. Rinominare invece di cancellare e' la stessa scelta di
+       `_rinomina_id_avvelenato`: chi legge il frame vede che nel grezzo la
+       colonna c'e', e vede nel nome perche' non va usata.
+
+    Le due forme del veleno chiedono due riparazioni diverse (vedi
+    `ID_EVENTI_MISTO`): quella testuale si risolve dentro il file, quella
+    numerica ha bisogno della mappa che sta in `squadre`.
+
+    ⚠️ IL TRIPWIRE. Se la riparazione non copre TUTTE le righe, la funzione
+    alza. Una chiave di join a meta' e' peggio di una chiave assente: la
+    assente rompe subito, quella a meta' fa sparire righe in silenzio — che e'
+    esattamente il difetto che questa funzione esiste per chiudere.
+    """
+    if ID_AVVELENATO not in df.columns or ID_AVVELENATO not in df:
+        return df
+    forma = ID_EVENTI_MISTO.get(lega)
+    if forma is None:
+        return df              # una fonte sola: la colonna e' gia' un id pulito
+
+    colonna_pulita = ID_PARTITA_PER_FONTE["SofaScore"]
+    if forma == "testuale":
+        # "14081721 (SofaScore) / 1914700 (WhoScored)" -> 14081721
+        pulito = df[ID_AVVELENATO].astype(str).str.extract(r"^\s*(\d+)")[0]
+    else:
+        pulito = _id_sofascore_dalle_altre_fonti(df, lega)
+    pulito = pd.to_numeric(pulito, errors="coerce").astype("Int64")
+
+    scoperte = int(pulito.isna().sum())
+    if scoperte:
+        raise RuntimeError(
+            f"la riparazione dell'ID partita di eventi({lega!r}) lascia scoperte "
+            f"{scoperte} righe su {len(df)}. Non si prosegue con una chiave a meta': "
+            f"vedi ID_EVENTI_MISTO e misura la colonna prima di dichiararla riparata."
+        )
+
+    df = df.rename(columns={ID_AVVELENATO: ID_RINOMINATO})
+    df[colonna_pulita] = pulito
+    return df
+
+
+def _id_sofascore_dalle_altre_fonti(df: pd.DataFrame, lega: str) -> pd.Series:
+    """L'id SofaScore riga per riga, traducendo quello delle altre fonti.
+
+    Le righe con `Fonte == "SofaScore"` portano gia' il numero giusto; per le
+    altre serve la corrispondenza fra le due numerazioni, che sta in `squadre`
+    ed e' l'unico posto del progetto dove le due colonne convivono sulla stessa
+    riga. Misurata all'agosto 2026: copre il **100%** delle righe Understat su
+    tutte e cinque le leghe.
+    """
+    fonte = df["Fonte"] if "Fonte" in df.columns else pd.Series("SofaScore", index=df.index)
+    pulito = pd.to_numeric(df[ID_AVVELENATO], errors="coerce")
+
+    for nome_fonte in fonte.dropna().unique():
+        if nome_fonte == "SofaScore":
+            continue
+        colonna = ID_PARTITA_PER_FONTE.get(nome_fonte)
+        if colonna is None:
+            continue
+        chiavi = _leggi("squadre", lega, low_memory=False,
+                        usecols=[colonna, ID_PARTITA_PER_FONTE["SofaScore"]]).dropna()
+        mappa = dict(zip(chiavi[colonna], chiavi[ID_PARTITA_PER_FONTE["SofaScore"]]))
+        righe = fonte == nome_fonte
+        pulito.loc[righe] = pulito.loc[righe].map(mappa)
+    return pulito
 
 
 def squadre(lega: str = LEGA_DEFAULT, *, solo_partite: bool = True,
@@ -844,8 +1158,29 @@ def eventi(lega: str = LEGA_DEFAULT, *, categoria: str | None = None,
     380/380 partite per le cinque di partita, 760/760 squadra-partita per
     `Evento`, 759/759 per `Tiro`, 379/379 per `Quota`). Usa `GRANA[categoria]`
     per scegliere la chiave invece di indovinarla.
+
+    ⚠️ **NON SONO SEMPRE SETTE, E `Evento` NON VIENE SEMPRE DA UNA FONTE SOLA.**
+    Due cose che nei primi cinque campionati erano costanti e non lo sono:
+
+    * in **LaLiga2** le categorie sono **sei**: `Cronaca` non c'e' perche'
+      l'endpoint `/comments` di SofaScore risponde 404 su **468 partite su
+      468** — l'unico dei dodici endpoint per partita a non rispondere. Non e'
+      una raccolta parziale, e' una competizione su cui quel dato non esiste;
+    * sempre in LaLiga2, `Evento` arriva da **due fonti insieme** — 9.377 righe
+      SofaScore e 8.188 WhoScored — che raccontano **gli stessi** gol,
+      cartellini e cambi. Nelle altre raccolte l'unica categoria a due fonti e'
+      `Tiro`. ⚠️ Chi contasse i gol da `eventi(categoria="Evento")` senza
+      filtrare la fonte ne conterebbe **circa il doppio**: 1.229 su SofaScore e
+      1.222 su WhoScored, per 1.229 gol veri. Filtra sempre `Fonte`, e per i
+      gol la fonte e' SofaScore (`preferita("gol")`), che qui ricostruisce il
+      punteggio su **936 squadra-partita su 936**.
+
+    ⚠️ Sulla colonna `ID partita` — che in questo file e' avvelenata in **ogni**
+    raccolta a due fonti, LaLiga2 compresa — vedi `ID_EVENTI_MISTO` e
+    `_ripara_id_eventi`: qui esce riparata, come `ID partita (SofaScore)`.
     """
     df = _leggi("eventi", lega, low_memory=False)
+    df = _ripara_id_eventi(df, lega)
     df = _togli_spareggio(df, lega, spareggio)
     if categoria is not None:
         valide = set(df["Categoria"].dropna().unique())

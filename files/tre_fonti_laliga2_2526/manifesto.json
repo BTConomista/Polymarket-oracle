@@ -1,0 +1,89 @@
+{
+ "lega": "laliga2",
+ "competizione": "LaLiga 2 (Segunda Division / LaLiga Hypermotion), Spagna",
+ "divisione": 2,
+ "stagione": "2526",
+ "consegnata": "2026-08-18 (due zip: puliti + grezzi)",
+ "fonti": [
+  "SofaScore",
+  "WhoScored"
+ ],
+ "fonti_assenti": {
+  "Understat": "non copre la seconda divisione spagnola: menu a 6 leghe di prima divisione, 5 varianti di URL a 404, pagine squadra che servono in silenzio un altro anno. Prova in grezzi/LL2_2526_understat_verifica.json.gz",
+  "Opta (WhoScored)": "nessun matchCentreData su 468 pagine su 468 (~101 KB contro 1,14 MB del controllo positivo di LaLiga). Per questo eventi_opta NON esiste. Prova in grezzi/LL2_2526_ws_controllo2.json.gz"
+ },
+ "e_campionato": true,
+ "file": {
+  "eventi.csv.gz": {
+   "righe": 94404,
+   "sha256": "37df380e4b531ec85bdceb31938f29baf4db8f5214c682f12799a88a2d0d17dc"
+  },
+  "giocatori.csv.gz": {
+   "righe": 21483,
+   "sha256": "82cc40cab0497da9b387a6037c3afe76b323cd17faa0ad652c5693932ced4b59"
+  },
+  "heatmap.csv.gz": {
+   "righe": 675209,
+   "sha256": "957167e767ea022a7c1bc7807dfb0401225edf2c1eec82809a6d4bb3edb9327c"
+  },
+  "legenda.csv.gz": {
+   "righe": 355,
+   "sha256": "868ec60e98d0db616a6cb37fa965a526ffba3266975a77ce00bab284ca134c95"
+  },
+  "squadre.csv.gz": {
+   "righe": 2874,
+   "sha256": "88a7d211426f5fa11e5ad8dc5933af383d6150899668c8435f1474d7e5cda21b"
+  }
+ },
+ "grezzi": {
+  "LL2_2526_sofascore.json.gz": {
+   "byte": 17116322,
+   "sha256": "7cd70026cc0777341c2a023de57dafc40ee4f448c82c92a013419121d721790f"
+  },
+  "LL2_2526_ss_calendario.json.gz": {
+   "byte": 157809,
+   "sha256": "d6fda8227da5cbebae81fece76c5b4cf7453b6ceaa20c79d0573c0cece4e8df3"
+  },
+  "LL2_2526_torneo.json.gz": {
+   "byte": 382795,
+   "sha256": "a1a3e6fe852b20eedcc681f19415a625fd51328b692de857e135425f2db21be8"
+  },
+  "LL2_2526_understat_verifica.json.gz": {
+   "byte": 643,
+   "sha256": "df54c1fa6e46f8d67d06a9df498e3bb0a0506bd1e1665a56b8e8276df8f9c75a"
+  },
+  "LL2_2526_whoscored.json.gz": {
+   "byte": 460991,
+   "sha256": "9c64fc48f2526d5071a6c3b5ae2e268db70466f69ab740f00a09ac7afbbbd6af"
+  },
+  "LL2_2526_ws_controllo2.json.gz": {
+   "byte": 442,
+   "sha256": "14bb29e570adca17976bfe74bbdc738c00213cf1c39effcf36ea0dc2ebc8a3d2"
+  },
+  "LL2_2526_ws_indice.json.gz": {
+   "byte": 4412,
+   "sha256": "82a19fd5204d1101fb2841f2b1c8194f8f113c3f76719f92add3fd49885fa76d"
+  }
+ },
+ "squadre": 22,
+ "partite": 468,
+ "partite_campionato": 462,
+ "giornate": 42,
+ "playoff": {
+  "turni": [
+   "Semifinali",
+   "Finale"
+  ],
+  "partite": 6,
+  "righe_escluse_squadre": 36,
+  "nota": "il playoff promozione e' fra squadre di LaLiga2: escluderlo NON toglie nessuna squadra (22 con e senza), a differenza dello spareggio di Bundesliga e Ligue 1 che tira dentro squadre di seconda divisione"
+ },
+ "aggancio_snapshot": null,
+ "nota_snapshot": "non esiste data/laliga2_matches.csv: la seconda divisione spagnola non e' in LEAGUE_CONFIGS. La raccolta non e' agganciabile a uno snapshot e i controlli di aggancio delle altre leghe qui non si applicano.",
+ "verifiche_nostre": {
+  "gol_eventi_vs_punteggio": "936/936 squadra-partita (1.229 gol, autogol compresi)",
+  "identita_gol_1T_2T": "468/468",
+  "legenda_v2_copre_ogni_colonna": "328/328 su 4 file",
+  "id_partita_eventi": "colonna di TESTO a due formati, riparata in lettura"
+ }
+}
