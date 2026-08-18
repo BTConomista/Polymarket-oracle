@@ -14,8 +14,10 @@ sviluppo.
 > l'irraggiungibilità della rete. Stato della rete in
 > `docs/MANUALE_SOPRAVVIVENZA.md` §1.
 
-Pesa **63 MB** (`du -sh files/`): è **intenzionale** (riproducibilità senza
-rete). Contenuto:
+Pesa **401 MB** (`du -sh files/`, 18/08/2026): è **intenzionale**
+(riproducibilità senza rete). ⚠️ Il grosso non sono più i bundle: **234 MB su
+401 sono le 15 raccolte `tre_fonti_*_2526/`**, arrivate dopo che questo file era
+stato scritto (§ in fondo). Contenuto:
 
 | file/cartella | cosa | usato da |
 |---|---|---|
@@ -74,6 +76,33 @@ di verità congelata usata dai backtest; questi bundle servono a **rigenerarli**
 Il workflow d'import di `player_scores/` (runner GitHub con rete libera) vive in
 `.github/workflows/import_dataset.yml`; si innesca con un push di
 `.github/import-dataset-trigger`.
+
+## Le raccolte `tre_fonti_*_2526/` (15 cartelle, 234 MB)
+
+Le raccolte per **partita, giocatore, evento e posizione** della stagione
+2025-26: i 5 campionati modellati, LaLiga2, le 3 competizioni UEFA e le 6
+supercoppe. **Si leggono con `src/data/tre_fonti.py`, mai con `pd.read_csv`
+diretto**: i difetti sono riparati *in lettura* e i file restano come consegnati
+(R3). Ognuna ha il suo `README.md` e un `manifesto.json` con gli sha256.
+
+⚠️ **Il nome della famiglia mente su una di loro.** `tre_fonti_laliga2_2526/`
+— **LaLiga2 (Segunda División) 2025-26**, consegna 18/08/2026, 468 partite e 22
+squadre — ha **due** fonti, non tre, ed è la prima raccolta di **seconda
+divisione**. Le due assenze sono misurate, non dedotte: Understat non copre la
+Segunda, e WhoScored non pubblica l'Opta su questa competizione (468 pagine su
+468, con **controllo positivo** su una partita di LaLiga scaricata nello stesso
+momento). È anche l'unica raccolta che porta i **grezzi** in una sottocartella
+`grezzi/`, ed è lì che stanno le due prove.
+
+È la raccolta che ha fatto emergere un difetto vecchio di dodici consegne: la
+colonna `ID partita` di `eventi` era **avvelenata in tutte le raccolte a due
+fonti** — la Serie A ha 760 id distinti per 380 partite, e un join lì non
+fallisce, **perde in silenzio 9.373 righe di tiri**. Dettaglio nel README della
+raccolta e in `docs/DATI.md` §5-duodecies.
+
+⚠️ **Nessuna di queste raccolte è letta da un modello**: sono dato archiviato
+secondo la regola §5-ter del `CLAUDE.md` (*raccogliere e usare sono due
+decisioni separate*), ed è uno stato legittimo e dichiarato.
 
 > **Le altre tre leghe non passano da qui.** La Serie A ha i CSV grezzi
 > congelati in `data/football_data_raw/`; Bundesliga e Ligue 1 **non hanno una

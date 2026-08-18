@@ -136,11 +136,26 @@ sono **22 con e 22 senza**. Resta fuori per default perché il default del modul
 
 **I nomi sono accentati, il resto del progetto è ASCII.** La grafia canonica è
 quella di football-data, e negli snapshot delle 5 leghe i nomi accentati sono
-**zero**. Delle 22 squadre: 6 sono già canoniche, **3 divergono solo per
-l'accento** (Almería/Almeria, Cádiz/Cadiz, Leganés/Leganes) e sono mappate in
-`ALIAS_RACCOLTA`, **13 non esistono nei nostri dati** perché non hanno mai
-giocato in prima divisione nella finestra 2017-2025 — per quelle non c'è un
-bersaglio, e inventarlo sarebbe indovinare un join.
+**zero**. Delle 22 squadre: 6 sono già canoniche, **4 hanno un bersaglio
+verificato** nei nostri dati e sono mappate in `ALIAS_RACCOLTA`, **12 non
+esistono** perché non hanno mai giocato in prima divisione nella finestra
+2017-2025 — per quelle non c'è un bersaglio, e inventarlo sarebbe indovinare un
+join.
+
+⚠️ **La quarta è arrivata solo alla seconda passata, e il motivo insegna
+qualcosa.** Tre divergono per un **accento** (Almería/Almeria, Cádiz/Cadiz,
+Leganés/Leganes) e uno script che toglie gli accenti le trova subito. La quarta
+è `Deportivo de A Coruña` → **`La Coruna`**: fra «A Coruña» e «La Coruña» non
+c'è un accento di mezzo, c'è una **lingua** — galiziano contro castigliano — e
+nessuna normalizzazione tipografica ci arriva. L'ha trovata solo stampare i 30
+nomi dello snapshot e leggerli. **Un'euristica che risolve la famiglia di
+difetti che conosci non è una misura di copertura**: dice quanti casi di *quel*
+tipo c'erano, non quanti ne restano.
+
+⭐ E non è accademico: **Deportivo è promosso in prima divisione nel 2026-27**
+(2° in classifica). Senza quella riga, quando arriverà lo snapshot di LaLiga
+2026-27 le sue partite di Segunda non si aggancerebbero a quelle di LaLiga, e
+nessun conteggio se ne accorgerebbe.
 
 ⚠️ Fra le 22 c'è **`Real Sociedad B`**, la squadra riserve. Un aggancio per
 somiglianza le troverebbe `Sociedad`, cioè la **prima squadra**: univoco, sicuro
@@ -148,10 +163,17 @@ di sé e falso, e nessun conteggio di celle piene lo vedrebbe. È la stessa
 famiglia dell'`Espanol` → «Jove Espanol San Vicente» di `docs/audit_identita`.
 Per questo la mappa degli alias è scritta a mano e chiusa.
 
-**`Real Racing Club`** (SofaScore) è il club che `TEAM_ALIASES` conosce come
-`Racing Santander` → `Santander`. Non è mappato perché non c'è nulla a cui
-agganciarlo oggi; se un giorno arriverà uno snapshot di Segunda, è la prima riga
-da sistemare. Nel grezzo di WhoScored il nome c'è già come `Racing Santander`.
+**`Real Racing Club` resta non mappato, ed è il contrasto che spiega la
+regola.** Anche lui sale in prima divisione nel 2026-27 (1° in classifica), come
+il Deportivo — ma `Santander`, il nome con cui football-data lo chiamerebbe,
+**non compare in nessuno dei nostri snapshot**: la sua ultima stagione in prima
+divisione è del 2012, fuori dalla finestra 2017-2025. Nessun bersaglio
+verificato, nessun alias. Si aggiungerà quando ci sarà qualcosa a cui
+agganciarlo, non prima. (Nel grezzo di WhoScored il nome c'è già come
+`Racing Santander`.)
+
+**Promosse in LaLiga 2026-27**: Real Racing Club (1°, 82 punti), Deportivo de A
+Coruña (2°, 77) e Málaga (vincitrice del playoff).
 
 **38 colonne vuote**, il numero più alto di ogni campionato, in tre famiglie con
 tre cause diverse: 27 `(WhoScored)` (la fonte qui non dà schede partita — solo 2

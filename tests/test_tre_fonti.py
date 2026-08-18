@@ -11,6 +11,8 @@ dice quale difetto ha pagato. Sono guardie, non verifiche di funzionamento.
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
@@ -874,3 +876,308 @@ def test_eventi_opta_della_supercoppa_uefa_usa_i_nomi_corti():
     e = tf.eventi_opta("supercoppa_uefa")
     s = tf.squadre("supercoppa_uefa", periodo="Totale")
     assert set(e["Squadra"].dropna()) <= set(s["Squadra"].dropna())
+
+
+# --------------------------------------------------------------------------
+# LALIGA2 (Segunda Division), consegna 18/08/2026 — la prima raccolta di
+# SECONDA DIVISIONE, e le tre costanti che ha rotto
+# --------------------------------------------------------------------------
+@pytest.fixture(scope="module")
+def ll2():
+    return tf.squadre("laliga2", periodo="Totale", spareggio=True)
+
+
+def test_laliga2_ha_DUE_fonti_e_non_e_un_difetto_della_raccolta():
+    """«A tre fonti» era un nome, non una misura — e le due assenze sono misurate.
+
+    Understat non copre la seconda divisione spagnola; WhoScored non pubblica
+    l'Opta su questa competizione. Entrambe verificate con un controllo
+    positivo, non dedotte dal silenzio (le prove stanno in `grezzi/`).
+
+    Il test guarda la conseguenza osservabile: **zero** colonne `(Understat)`
+    nei file, e nessun `eventi_opta` da leggere.
+    """
+    assert tf.fonti("laliga2") == ("SofaScore", "WhoScored")
+    for blocco in ("squadre", "giocatori", "eventi"):
+        cols = tf._leggi(blocco, "laliga2", nrows=0).columns
+        assert not [c for c in cols if "(Understat)" in c], blocco
+
+    with pytest.raises(FileNotFoundError, match="eventi_opta"):
+        tf.eventi_opta("laliga2")
+
+
+def test_laliga2_e_il_primo_campionato_che_non_ha_20_ne_18_squadre(ll2):
+    """22 squadre, quindi 42 giornate da 11 partite = 462.
+
+    E' la ragione per cui `DIMENSIONI` e' una mappa e non una costante: la
+    stessa lezione della Bundesliga a 612 righe contro le 760 delle prime tre.
+    """
+    assert tf.DIMENSIONI["laliga2"] == (22, 462)
+    campionato = tf.squadre("laliga2", periodo="Totale")
+    assert campionato["Squadra"].nunique() == 22
+    assert campionato["ID partita (SofaScore)"].nunique() == 462
+    assert len(campionato) == 924
+
+
+def test_il_playoff_di_laliga2_non_toglie_nessuna_squadra(ll2):
+    """⚠️ Stesso nome, ragione opposta a Bundesliga e Ligue 1.
+
+    La' le partite fuori giornata coinvolgono squadre di SECONDA divisione,
+    estranee al campionato, e tenerle dentro gonfia i conteggi e fa fallire
+    l'aggancio. Qui il playoff promozione e' fra squadre di LaLiga2 — tutte e
+    quattro gia' nelle 42 giornate — quindi escluderlo non toglie nessuna
+    squadra: **22 con e 22 senza**.
+
+    Resta fuori per default lo stesso (il default e' il girone all'italiana),
+    ma sono 6 partite di competizione vera, non di un'altra lega.
+    """
+    senza = tf.squadre("laliga2", periodo="Totale")
+    assert ll2["Squadra"].nunique() == senza["Squadra"].nunique() == 22
+    assert len(ll2) - len(senza) == 12                    # 6 partite x 2 squadre
+    fuori = set(ll2["Turno"]) - set(senza["Turno"])
+    assert fuori == {"Semifinali", "Finale"}
+
+
+def test_i_gol_degli_eventi_ricostruiscono_il_punteggio(ll2):
+    """Il controllo che PRENDE IL POSTO dell'aggancio allo snapshot.
+
+    Le altre leghe si verificano contro `data/{lega}_matches.csv`. Qui quel
+    file non esiste, quindi il controllo dev'essere interno: gli eventi di
+    SofaScore, sommati per squadra, devono ridare il punteggio della partita.
+    Misurato: **936 squadra-partita su 936**, 1.229 gol — autogol (41) e
+    rigori (127) compresi, che e' la parte che non era scontata, perche'
+    l'autogol qui e' attribuito alla squadra che ne beneficia.
+    """
+    ev = tf.eventi("laliga2", categoria="Evento", spareggio=True)
+    gol = ev[(ev["Fonte"] == "SofaScore") & (ev["Tipo"] == "Gol")]
+    assert len(gol) == 1229
+    contati = gol.groupby(["ID partita (SofaScore)", "Squadra"]).size()
+
+    atteso = ll2.apply(
+        lambda r: r["Gol casa (SofaScore)"] if r["Campo"] == "Casa"
+        else r["Gol trasferta (SofaScore)"], axis=1)
+    chiavi = list(zip(ll2["ID partita (SofaScore)"], ll2["Squadra"]))
+    ok = sum(contati.get(k, 0) == v for k, v in zip(chiavi, atteso))
+    assert ok == len(ll2) == 936
+
+
+def test_contare_i_gol_senza_filtrare_la_fonte_li_RADDOPPIA():
+    """⚠️ In LaLiga2 anche `Evento` arriva da due fonti, non solo `Tiro`.
+
+    Nelle altre raccolte l'unica categoria a due fonti e' `Tiro`. Qui SofaScore
+    e WhoScored raccontano gli **stessi** gol, cartellini e cambi, e chi somma
+    senza filtrare `Fonte` conta 2.451 gol dove ce ne sono 1.229.
+    """
+    ev = tf.eventi("laliga2", categoria="Evento", spareggio=True)
+    assert set(ev["Fonte"]) == {"SofaScore", "WhoScored"}
+    gol = ev[ev["Tipo"] == "Gol"]
+    per_fonte = gol["Fonte"].value_counts().to_dict()
+    assert per_fonte == {"SofaScore": 1229, "WhoScored": 1222}
+    assert len(gol) == 2451                        # il numero SBAGLIATO, se non filtri
+    assert tf.preferita("gol") == "SofaScore"
+
+
+def test_laliga2_ha_SEI_categorie_di_eventi_perche_la_cronaca_non_esiste():
+    """L'endpoint /comments risponde 404 su 468 partite su 468.
+
+    Non e' una raccolta parziale: su questa competizione la cronaca minuto per
+    minuto non c'e'. E' l'unico dei dodici endpoint per partita a non
+    rispondere — il che e' anche la prova che non si tratta di uno scaricatore
+    rotto.
+    """
+    ev = tf.eventi("laliga2", spareggio=True)
+    assert set(ev["Categoria"]) == {
+        "Evento", "Migliore in campo", "Momentum", "Quota", "Serie", "Tiro"}
+    assert "Cronaca" not in set(ev["Categoria"])
+    # la grana delle sei resta quella dichiarata: cinque di partita, due di squadra
+    for categoria in set(ev["Categoria"]):
+        assert categoria in tf.GRANA
+
+
+# --------------------------------------------------------------------------
+# Riparazione 6 — `eventi.ID partita`, avvelenata da sempre in tutte le
+# raccolte a due fonti (scoperta grazie alla variante rumorosa di LaLiga2)
+# --------------------------------------------------------------------------
+def test_in_laliga2_lid_partita_di_eventi_e_TESTO_a_DUE_FORMATI():
+    """La variante rumorosa: una FRASE al posto di un numero.
+
+    ⚠️ Rompe il join anche sulle 86.216 righe sane, perche' `"14081721"` non e'
+    `14081721`. Ed e' proprio per questo che il difetto e' emerso: nelle altre
+    cinque leghe la stessa colonna e' numerica e il join non fallisce — perde
+    righe in silenzio, che e' molto peggio da accorgersene.
+    """
+    grezzo = tf._leggi("eventi", "laliga2", low_memory=False,
+                       usecols=["ID partita", "Fonte"])
+    # NON numerica: il tipo esatto dipende dalla versione di pandas
+    # (`object` fino alla 2.x, `str` dalla 3.0), il punto no.
+    assert not pd.api.types.is_numeric_dtype(grezzo["ID partita"])
+    composite = grezzo["ID partita"].astype(str).str.contains("SofaScore")
+    assert composite.sum() == 8188                      # tutte e sole le WhoScored
+    assert (composite == (grezzo["Fonte"] == "WhoScored")).all()
+    assert grezzo["ID partita"].nunique() == 936        # 468 partite, due formati
+
+
+@pytest.mark.parametrize("lega", sorted(tf.ID_EVENTI_MISTO))
+def test_lid_partita_di_eventi_esce_riparata_da_ogni_raccolta_a_due_fonti(lega):
+    """La guardia della riparazione, su tutte e sei le raccolte che ne hanno bisogno.
+
+    Prima: la Serie A dichiarava **760 id distinti per 380 partite**, perche' le
+    righe `Tiro` di Understat portano l'id di Understat. Dopo: un solo id per
+    partita, nessun buco, e l'aggancio a `squadre` al 100%.
+
+    La colonna grezza resta visibile col nome che dice di non usarla — come per
+    `giocatori`, e per la stessa ragione: una colonna cancellata si ri-scopre
+    leggendo il file, e si ri-usa.
+    """
+    ev = tf.eventi(lega, spareggio=True)
+    assert tf.ID_RINOMINATO in ev.columns
+    assert tf.ID_AVVELENATO not in ev.columns
+
+    pulita = ev["ID partita (SofaScore)"]
+    assert pulita.notna().all()
+    assert pulita.nunique() < ev[tf.ID_RINOMINATO].nunique()
+
+    sq = tf.squadre(lega, periodo="Totale", spareggio=True)
+    assert pulita.isin(sq["ID partita (SofaScore)"]).all()
+    assert pulita.nunique() == sq["ID partita (SofaScore)"].nunique()
+
+
+def test_le_raccolte_a_UNA_fonte_non_vengono_toccate():
+    """Non e' un default prudenziale: e' una misura.
+
+    Dove la raccolta ha una fonte sola la colonna porta una numerazione sola ed
+    e' gia' una chiave buona. Riparare li' avrebbe rinominato una colonna sana
+    e rotto il codice che la usa.
+    """
+    assert "uefa_champions_league" not in tf.ID_EVENTI_MISTO
+    ev = tf.eventi("uefa_champions_league")
+    assert tf.ID_AVVELENATO in ev.columns
+    assert tf.ID_RINOMINATO not in ev.columns
+    assert ev[tf.ID_AVVELENATO].nunique() == 281
+
+
+# --------------------------------------------------------------------------
+# «campionato» non implica «snapshot», e i nomi accentati
+# --------------------------------------------------------------------------
+def test_laliga2_e_il_primo_campionato_SENZA_snapshot():
+    """L'assunzione che per cinque leghe non si era mai vista.
+
+    Fino all'agosto 2026 i campionati raccolti erano esattamente i cinque
+    modellati, e due controlli ciclavano su `DIMENSIONI` aprendo
+    `data/{lega}_matches.csv` come se ci fosse sempre.
+    """
+    assert tf.ha_snapshot("laliga2") is False
+    assert not Path("data/laliga2_matches.csv").exists()
+    for lega in ("serie_a", "premier_league", "la_liga", "bundesliga", "ligue_1"):
+        assert tf.ha_snapshot(lega) is True
+        assert Path(f"data/{lega}_matches.csv").exists()
+
+
+def test_di_laliga2_si_mappano_SOLO_i_QUATTRO_nomi_con_un_bersaglio_vero(ll2):
+    """4 alias su 22 squadre, e le altre 18 restano come sono. E' voluto.
+
+    La grafia canonica del progetto e' ASCII (negli snapshot delle 5 leghe i
+    nomi accentati sono **zero**); questa raccolta arriva accentata. Solo per
+    quattro squadre esiste un bersaglio verificato — lo stesso club sta nei
+    nostri dati, scritto cosi'. Per le altre dodici non esiste, e inventarlo
+    sarebbe indovinare un join.
+
+    ⚠️ La quarta e' la lezione: `Deportivo de A Coruña` -> **`La Coruna`**. Le
+    prime tre divergono per un accento e uno script che toglie gli accenti le
+    trova; qui fra «A Coruña» e «La Coruña» non c'e' un accento, c'e' una
+    LINGUA diversa — galiziano contro castigliano — e nessuna normalizzazione
+    tipografica ci arriva. L'ha trovata solo stampare i 30 nomi dello snapshot
+    e leggerli. Un'euristica che risolve la famiglia di difetti che conosci
+    **non e' una misura di copertura**.
+    """
+    assert tf.ALIAS_RACCOLTA["laliga2"] == {
+        "Almería": "Almeria", "Cádiz": "Cadiz", "Leganés": "Leganes",
+        "Deportivo de A Coruña": "La Coruna"}
+    nomi = set(ll2["Squadra"])
+    assert {"Almeria", "Cadiz", "Leganes", "La Coruna"} <= nomi
+    assert not {"Almería", "Cádiz", "Leganés", "Deportivo de A Coruña"} & nomi
+    assert len(nomi) == 22
+
+    # i quattro bersagli esistono DAVVERO nei nostri dati: e' cio' che separa
+    # un alias da una congettura
+    liga = pd.read_csv("data/la_liga_matches.csv", usecols=["home_team"])
+    assert {"Almeria", "Cadiz", "Leganes", "La Coruna"} <= set(liga["home_team"])
+
+    # ...e `Santander` (il Racing, promosso 1o) NON esiste: per questo non e'
+    # mappato, benche' salga in prima divisione nel 2026-27
+    assert "Santander" not in set(liga["home_team"])
+    assert "Real Racing Club" in nomi
+
+
+def test_real_sociedad_B_NON_diventa_la_prima_squadra(ll2):
+    """⚠️ La trappola che nessun conteggio di celle piene vedrebbe.
+
+    `Real Sociedad B` e' la squadra riserve. Un aggancio per somiglianza le
+    troverebbe `Sociedad`, cioe' la prima squadra, che gioca in un'altra
+    divisione: univoco, sicuro di se' e falso. Stessa famiglia dell'`Espanol`
+    -> «Jove Espanol San Vicente» di docs/audit_identita.
+
+    Il test inchioda che la normalizzazione la lascia stare — ed e' una guardia
+    contro un futuro alias «furbo» che la collassasse.
+    """
+    from src.data.sources import TEAM_ALIASES
+    assert "Real Sociedad B" in set(ll2["Squadra"])
+    assert "Real Sociedad B" not in TEAM_ALIASES
+    assert "Real Sociedad B" not in tf.ALIAS_RACCOLTA["laliga2"]
+    assert TEAM_ALIASES.get("Real Sociedad") == "Sociedad"      # il bersaglio sbagliato
+
+
+def test_le_38_colonne_vuote_di_laliga2_lo_sono_davvero():
+    """Il numero piu' alto di ogni campionato, in tre famiglie con tre cause.
+
+    27 `(WhoScored)` — la fonte qui non da' schede partita, solo una cronaca di
+    eventi: 2 colonne piene su 19 a livello squadra, **zero su 10** a livello
+    giocatore. 8 di supplementari/rigori: nessuna delle 468 partite e' andata
+    oltre il 90'. Piu' `Note classifica`.
+    """
+    dichiarate = tf.colonne_vuote("laliga2")
+    assert sum(len(v) for v in dichiarate.values()) == 38
+
+    for blocco, colonne in dichiarate.items():
+        frame = {"squadre": lambda: tf.squadre("laliga2", solo_partite=False,
+                                               spareggio=True),
+                 "giocatori": lambda: tf.giocatori("laliga2", livello=None,
+                                                   spareggio=True),
+                 "heatmap": lambda: tf.heatmap("laliga2", spareggio=True)}[blocco]()
+        for c in colonne:
+            assert frame[c].isna().all(), f"{blocco}.{c} non e' piu' vuota"
+
+
+def test_i_supplementari_vuoti_confermano_il_tripwire_sul_punteggio(ll2):
+    """⭐ Due segnali indipendenti che si controllano a vicenda.
+
+    Se una partita fosse andata oltre il 90', le colonne dei supplementari si
+    riempirebbero E l'identita' `Gol = 1T + 2T` salterebbe. Qui le prime sono
+    vuote e la seconda regge su **936 righe su 936**: le due cose sono
+    coerenti, e nessuna delle due da sola lo direbbe.
+    """
+    assert tf.gol_sono_regolamentari(ll2).all()
+    assert len(ll2) == 936
+    for c in tf.COLONNE_RIGORI:
+        assert ll2[c].isna().all()
+    assert "laliga2" not in tf.RIGORI_NEL_PUNTEGGIO      # niente da scorporare
+
+
+def test_spettatori_di_laliga2_e_QUASI_vuota_non_vuota():
+    """Lo stato di mezzo, il piu' insidioso dei tre.
+
+    17 partite su 468 (3,6%): un `notna().any()` risponde «la colonna
+    funziona», e chi ci costruisce sopra lavora su 17 partite credendone 468.
+    E' il caso per cui `copertura()` torna uno stato e non un booleano.
+    """
+    stato = tf.copertura("Spettatori (SofaScore)", "laliga2")
+    assert stato["stato"] == "quasi vuota"
+    assert stato["righe_piene"] == 102                   # 17 partite x 2 squadre x 3 periodi
+    assert tf.copertura("Meteo (WhoScored)", "laliga2")["stato"] == "vuota"
+    assert tf.disponibilita("Spettatori (SofaScore)") == "post"
+
+
+def test_la_legenda_di_laliga2_documenta_ogni_colonna():
+    """328 colonne su 328, quattro file su quattro. La guardia che non ha ancora lavoro."""
+    assert tf.colonne_non_documentate("laliga2") == {
+        "squadre": [], "giocatori": [], "eventi": [], "heatmap": []}

@@ -20019,3 +20019,237 @@ suona = (nessun elemento)  oppure  (eta > SOGLIA)
 passati. `ripara()` rifà la raccolta di **oggi** — i fatti di oggi sono ancora
 lì da prendere — e il ri-controllo verifica che sia bastato. Il bollettino del
 9 e del 10 agosto non esiste più, e nessuna riparazione lo inventa.
+
+---
+
+## Fase 158 — LaLiga2: la prima seconda divisione, e il difetto che dodici consegne non avevano visto
+
+**Obiettivo.** Integrare la consegna del 18/08/2026 — **LaLiga2 (Segunda
+División) 2025-26**, 468 partite, 22 squadre, stagione completa — nel formato
+delle raccolte a tre fonti, e verificarla prima di dichiararla integrata. È il
+primo campionato di **seconda divisione** del progetto, e la prima consegna che
+arriva in due pezzi: i CSV puliti e i **grezzi** da cui sono stati prodotti.
+
+**Ragionamento / ipotesi.** Sei consegne di campionato erano andate lisce, e la
+tentazione era trattare la settima come la sesta: aggiungere una voce alle
+mappe, far girare i test, chiudere. Contro questa tentazione vale l'esperienza
+della Fase 155, dove la convenzione sul punteggio delle coppe **non si era
+ereditata** ed era costata un mese di risultati gonfiati. L'ipotesi di lavoro è
+stata quindi l'opposta: *una lega nuova non conferma le costanti, le mette alla
+prova* — e una lega **strutturalmente diversa** (seconda divisione, senza
+mercato, senza snapshot) le mette alla prova più delle altre.
+
+**Alternative considerate.**
+
+1. *Integrare e basta* — voce nelle mappe, test parametrizzati, fine. Rifiutata:
+   avrebbe propagato le assunzioni invece di misurarle.
+2. *Costruire anche uno snapshot* (football-data pubblica `SP2`) per avere le
+   quote e poterla modellare. Rimandata di proposito: l'utente ha consegnato
+   *questi* dati, e mescolare l'integrazione con l'ingresso di una sesta lega
+   modellata sarebbe stato cambiare due cose insieme (§1.2). Resta come pista.
+3. *Verificare tutto contro lo snapshot*, come per le altre cinque. **Non
+   applicabile**: lo snapshot non esiste. È stata la prima crepa, e ha portato
+   il resto.
+
+**Scelta.** Integrare la raccolta e, per ogni «costante» che la raccolta
+contraddiceva, misurare se fosse una proprietà del formato o solo cinque
+campionati d'accordo fra loro. Archiviare **anche i grezzi**, come consegnati
+(§5-ter): non per completismo, ma perché due di quei file *sono* la prova dei
+risultati negativi.
+
+**Risultato.** Tre costanti sono cadute, e la terza era un difetto vivo.
+
+1. **«A tre fonti» era un nome, non una misura.** Qui le fonti sono due, e
+   nessuna delle due assenze è un incidente di raccolta. *Understat non ha la
+   Segunda*: menu del sito con sei sole leghe di prima divisione, cinque
+   varianti di URL tutte a 404, e — il modo che conta — le pagine squadra
+   chieste per il 2025 che **servono in silenzio un altro anno** (Almería e
+   Cádiz danno 2023/24, Deportivo 2026/27), cioè un finto pieno da manuale
+   (R6). *WhoScored non pubblica l'Opta su questa competizione*: nessun
+   `matchCentreData` su 468 pagine su 468, **101 KB contro 1,14 MB** di una
+   partita di LaLiga scaricata nello stesso momento dalla stessa scheda. Quel
+   **controllo positivo** è ciò che separa «la fonte non copre» da «lo
+   scaricatore si è rotto», e vale più di sei tentativi falliti. Conseguenze:
+   niente `eventi_opta`, e `eventi` con **sei** categorie invece di sette
+   (`/comments` risponde 404 su 468 partite su 468).
+
+2. **«Campionato» non implica «snapshot».** Per cinque leghe le due cose
+   coincidevano — i campionati raccolti erano esattamente i cinque modellati —
+   e due controlli ciclavano su `DIMENSIONI` aprendo `data/{lega}_matches.csv`
+   come se ci fosse sempre. Sono i due test che hanno fallito appena LaLiga2 è
+   entrata nella mappa: non un bug introdotto, un'assunzione **resa visibile**.
+
+3. ⚠️⚠️ **`eventi.ID partita` era avvelenata da sempre, in tutte le raccolte a
+   due fonti, e in dodici consegne nessuno l'aveva vista.** La Serie A dichiara
+   **760 id distinti per 380 partite**: le righe `Tiro` di Understat portano
+   l'id di Understat. Lì un join su quella colonna **non fallisce** — perde in
+   silenzio **9.373 righe di tiri**, e chi conta i tiri ne conta metà credendo
+   di averli tutti. Era invisibile per una ragione precisa: in `squadre` e
+   `giocatori` accanto alla colonna mista ci sono quelle per-fonte, e
+   `_rinomina_id_avvelenato` scatta; in `eventi` quelle colonne **non
+   esistono**, quindi non c'era niente con cui accorgersene.
+
+   È emersa solo perché LaLiga2 ne porta la variante **rumorosa**: lì la colonna
+   è di **testo** e contiene una frase — `"14081721 (SofaScore) / 1914700
+   (WhoScored)"` — che rompe il join anche sulle 86.216 righe sane, perché
+   `"14081721" ≠ 14081721`. Un join che fallisce del tutto si nota; uno che
+   perde metà delle righe no.
+
+**I numeri della consegna, verificati.** 2.874 righe di squadra (2.808 di
+partita + 66 di classifica), 21.483 di giocatore, 94.404 di evento, 675.209
+punti di heatmap; legenda che documenta **328 colonne su 328**. Al posto
+dell'aggancio allo snapshot, che qui non esiste, valgono due controlli interni:
+i gol degli eventi ricostruiscono il punteggio su **936 squadra-partita su 936**
+(1.229 gol, 41 autogol e 127 rigori compresi) e l'identità `Gol = 1T + 2T` regge
+su **468 partite su 468**. Dopo la riparazione, `eventi` aggancia `squadre` al
+100% su tutte e sei le raccolte interessate: Serie A da 760 a 380 id distinti,
+Ligue 1 da 612 a 306.
+
+**Altre cose misurate, e dichiarate anche dove non sono difetti (R4).** Il
+playoff promozione **non è** lo spareggio di Bundesliga e Ligue 1: là entrano
+squadre di seconda divisione estranee al campionato, qui giocano quattro squadre
+di LaLiga2 e le squadre sono **22 con e 22 senza**. La categoria `Evento` arriva
+da **due fonti insieme** — 1.229 gol SofaScore e 1.222 WhoScored per 1.229 gol
+veri — quindi chi non filtra `Fonte` li raddoppia. Il falso positivo sul
+possesso **non si ripete**, e per una ragione che lo conferma a posteriori:
+WhoScored qui non pubblica statistiche di squadra, quindi non c'è nessuna
+percentuale da confrontare con nessun conteggio. `Spettatori` è **quasi vuota**
+(17 partite su 468): lo stato di mezzo, quello per cui `copertura()` esiste. E
+le colonne vuote sono **38**, il numero più alto di ogni campionato, in tre
+famiglie con tre cause diverse.
+
+**Lezione.** Due, e la seconda vale oltre questa lega.
+
+La prima è sul metodo di verifica: **un'assenza va misurata come una presenza.**
+«Understat non ha la Segunda» e «WhoScored non ha l'Opta qui» sarebbero potute
+essere due righe di README scritte a fiducia; sono invece due file in `grezzi/`
+con dentro i codici di risposta, i byte e — soprattutto — un **controllo
+positivo** che dimostra che lo strumento funzionava. Senza quello, «404» e «il
+mio scaricatore è rotto» sono indistinguibili.
+
+La seconda è più scomoda: **un difetto silenzioso si scopre quando arriva il
+caso che lo rende rumoroso.** Il veleno nell'`ID partita` di `eventi` c'era
+dalla prima consegna, ha attraversato dodici raccolte, un audit a 13 agenti e
+1.747 test, e nessuno l'ha visto — perché in quella forma non rompeva niente:
+faceva sparire righe. Ci è voluta una lega dove lo stesso difetto **rompe tutto
+subito** per renderlo visibile anche dove non rompeva niente. Da cui il
+corollario, che è il vero guadagno della fase: **cinque leghe concordi non sono
+una verifica, sono cinque volte la stessa assunzione.** Un caso limite vale più
+di un sesto caso normale, e questa raccolta — una lega che non modelliamo, senza
+quote, senza snapshot — ha ripagato il suo costo prima ancora di essere usata.
+
+### 📐 Il modello in dettaglio
+
+Nessun modello nuovo: la fase è di dati. Le formule sono quelle dei **controlli**
+che sostituiscono l'aggancio allo snapshot, e quella della **riparazione**.
+
+**1. Il tripwire sul punteggio** (già in `gol_sono_regolamentari`, Fase 155):
+
+```
+Gol casa = Casa 1T + Casa 2T          e        Gol trasferta = Trasf. 1T + Trasf. 2T
+```
+
+Se i rigori — o i supplementari — fossero sommati dentro `Gol`, l'uguaglianza
+salterebbe esattamente di quel numero. Misurata: **936 righe su 936**. Il
+controllo indipendente che la conferma sono le 8 colonne di
+supplementari/rigori **tutte vuote**: nessuna delle 468 partite è andata oltre
+il 90', playoff promozione compreso — l'unico posto dove sarebbe potuto
+succedere. Due segnali che si controllano a vicenda; nessuno dei due, da solo,
+direbbe altrettanto. `RIGORI_NEL_PUNTEGGIO` non ha una voce `laliga2`, e non è
+una dimenticanza: il default `False` è qui una **misura**, non una prudenza.
+
+**2. La ricostruzione del punteggio dagli eventi**, che è il controllo davvero
+indipendente (usa un altro blocco del file):
+
+```
+per ogni (partita p, squadra s):
+    gol_eventi(p, s) = #{ e in Eventi : Categoria(e)=Evento, Fonte(e)=SofaScore,
+                                        Tipo(e)=Gol, ID(e)=p, Squadra(e)=s }
+    atteso(p, s)     = Gol casa(p)      se s gioca in casa
+                       Gol trasferta(p) altrimenti
+```
+
+Verificata su **936 squadra-partita su 936**, somma 1.229 = 1.229. Il numero che
+rende il controllo non banale è **41**: gli autogol. Entrambe le fonti li
+attribuiscono alla squadra che ne **beneficia**, non a quella del giocatore;
+se la convenzione fosse stata l'altra, l'uguaglianza sarebbe saltata su 41
+partite. Non è stato assunto — è stato misurato dal fatto che l'identità regge.
+
+**3. La riparazione dell'`ID partita` di `eventi`.** Due forme, due formule.
+Forma **testuale** (LaLiga2), che si risolve dentro il file:
+
+```
+ID partita (SofaScore)  =  primo gruppo di cifre di  ID partita     [regex ^\s*(\d+)]
+```
+
+perché `"14081721 (SofaScore) / 1914700 (WhoScored)"` **contiene** l'id giusto
+in testa. Copertura misurata: 94.404 righe su 94.404, 468 id distinti, tutti
+dentro l'insieme degli id di `squadre`. Forma **numerica** (i cinque campionati),
+dove le righe della seconda fonte portano un id di un'altra numerazione e serve
+una traduzione:
+
+```
+ID partita (SofaScore) = ID partita                     se Fonte = SofaScore
+                       = M[ ID partita ]                altrimenti
+con  M = { u -> s : (s, u) coppia sulla stessa riga di squadre }
+```
+
+`squadre` è l'unico posto del progetto dove `ID partita (SofaScore)` e
+`ID partita (Understat)` convivono sulla stessa riga, ed è per questo che la
+mappa si costruisce da lì. Copertura misurata: **100% delle righe Understat su
+tutte e cinque le leghe**. Il tripwire alza se **una sola** riga resta senza id:
+una chiave di join a metà è peggio di una chiave assente, perché l'assente rompe
+subito e quella a metà fa sparire righe — cioè esattamente il difetto che la
+riparazione chiude.
+
+**4. La regola con cui si è deciso quali nomi mappare.** Non è estetica, è la
+differenza fra un fatto e una congettura:
+
+```
+alias(n) = c    SE ESISTE c in NOMI(snapshot) tale che  senza_accenti(n) = c
+niente          ALTRIMENTI
+```
+
+Applicata alle 22 squadre contro **tutti** i nostri snapshot: **6** già
+canoniche, **4** con un bersaglio verificato e **12** senza alcuno, perché quei
+club non hanno mai giocato in prima divisione nella finestra 2017-2025. Si
+mappano le quattro di mezzo e basta: per loro il bersaglio è un fatto (lo stesso
+club sta nei nostri dati scritto così), per le altre dodici non esiste e
+inventarlo sarebbe indovinare un join.
+
+⚠️ **E la quarta è arrivata solo alla seconda passata — è la parte istruttiva.**
+Tre divergono per un **accento** (`Almería`→`Almeria`, `Cádiz`→`Cadiz`,
+`Leganés`→`Leganes`) e lo script che toglie gli accenti le ha trovate subito,
+dando l'impressione di aver chiuso la questione. La quarta è
+`Deportivo de A Coruña` → **`La Coruna`**: fra «A Coruña» e «La Coruña» non c'è
+un accento di mezzo, c'è una **lingua** — galiziano contro castigliano — quindi
+nessuna normalizzazione tipografica ci arriva, e la somiglianza fra le due
+stringhe intere è bassa. L'ha trovata la cosa più stupida: **stampare tutti e 30
+i nomi dello snapshot e leggerli.**
+
+Da cui una regola che vale ben oltre questo caso: **un'euristica che risolve la
+famiglia di difetti che conosci non è una misura di copertura.** Dice quanti
+casi di *quel* tipo c'erano, non quanti ne restano — e siccome ne aveva trovati
+tre su tre, sembrava esaustiva. È la stessa forma dell'errore che questa fase ha
+scoperto sull'`ID partita`: uno strumento che non vede un difetto viene scambiato
+per la prova che il difetto non c'è.
+
+⭐ E non è accademico. **`Deportivo` è promosso in prima divisione nel 2026-27**
+(2° con 77 punti), insieme al **Racing Santander** (1°, 82) e al **Málaga**
+(playoff). Senza quella riga, il giorno in cui arriverà lo snapshot di LaLiga
+2026-27 le partite di Segunda del Deportivo **non si aggancerebbero** alle sue
+partite di LaLiga — e nessun conteggio se ne accorgerebbe, perché entrambe le
+tabelle risulterebbero piene.
+
+⚠️ Il Racing invece **resta non mappato**, e il contrasto è ciò che tiene onesta
+la regola: anche lui sale, ma `Santander` non compare in nessuno dei nostri
+snapshot (ultima stagione in A nel 2012, fuori finestra). Nessun bersaglio,
+nessun alias — si aggiungerà quando ci sarà qualcosa a cui agganciarlo.
+
+⚠️ E il contro-esempio che spiega perché la regola è a uguaglianza esatta e non
+a somiglianza: fra le 22 c'è **`Real Sociedad B`**, la squadra riserve. Un
+qualunque fuzzy match le troverebbe `Sociedad` — la **prima squadra**, che gioca
+in un'altra divisione — e produrrebbe un aggancio **univoco, sicuro di sé e
+falso**, che nessun conteggio di celle piene vedrebbe. È la stessa famiglia
+dell'`Espanol` → «Jove Espanol San Vicente» di `docs/audit_identita`, ed è il
+motivo per cui la mappa degli alias di questa raccolta è scritta a mano e chiusa.

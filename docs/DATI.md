@@ -1668,6 +1668,119 @@ fonti e i `club_id` di player-scores (carriere, coppe, Smarkets).
 
 ---
 
+## 5-duodecies · LaLiga2 2025-26, la prima SECONDA DIVISIONE (`files/tre_fonti_laliga2_2526/`) — Fase 158
+
+Consegna 18/08/2026, due zip (puliti + grezzi). **468 partite, 22 squadre,
+stagione completa**: 42 giornate da 11 partite (462) più il playoff promozione
+(4 semifinali + 2 finali). Si legge con `src/data/tre_fonti.py` come le altre —
+`tf.squadre("laliga2")`, `tf.eventi("laliga2")`, `tf.classifica("laliga2")`.
+
+| blocco | righe | note |
+|---|--:|---|
+| `squadre` | 2.874 | 2.808 di partita (468 × 2 × 3 periodi) + 66 di classifica |
+| `giocatori` | 21.483 | 20.868 di partita + 615 di rosa, **solo SofaScore** |
+| `eventi` | 94.404 | **sei** categorie, non sette |
+| `heatmap` | 675.209 | 468 partite, 674 giocatori |
+| `legenda` | 355 | documenta **328 colonne su 328** |
+| `grezzi/` | 7 JSON | i file come consegnati (§5-ter), 18 MB |
+
+**Stato d'uso: raccolto, non usato.** Nessun modello la legge, e non è un
+rinvio: la Segunda non è in `LEAGUE_CONFIGS`, non ha quote e non ha snapshot.
+È dato archiviato secondo la regola §5-ter — *raccogliere e usare sono due
+decisioni separate*.
+
+### ⚠️ Non è «a tre fonti»: sono due, e le assenze sono MISURATE
+
+- **Understat non copre la seconda divisione spagnola.** Tre verifiche
+  indipendenti: menu del sito con sei sole leghe di prima divisione; cinque
+  varianti di URL tutte a 404; e — il modo che conta — le pagine squadra chieste
+  per il 2025 che **servono in silenzio un altro anno** (Almería e Cádiz danno
+  2023/24, Deportivo 2026/27). Quest'ultimo è un finto pieno (R6): fermarsi al
+  primo `200 OK` avrebbe archiviato la stagione sbagliata credendola giusta.
+- **WhoScored c'è ma senza Opta**: nessun `matchCentreData` su 468 pagine su
+  468, ~101 KB contro **1,14 MB** di una partita di LaLiga scaricata nello
+  stesso momento. Quel **controllo positivo** è ciò che separa «la fonte non
+  copre» da «lo scaricatore si è rotto». Conseguenza: **niente `eventi_opta`**.
+- **`Cronaca` non esiste**: `/comments` risponde 404 su 468 partite su 468,
+  unico dei dodici endpoint per partita a non rispondere.
+
+Le prove stanno in `grezzi/LL2_2526_understat_verifica.json.gz` e
+`grezzi/LL2_2526_ws_controllo2.json.gz`: sono la parte della consegna che
+documenta i **risultati negativi** (§1.4), e sono il motivo per cui i grezzi
+sono archiviati invece che scartati.
+
+### ⚠️⚠️ `eventi.ID partita` era avvelenata in TUTTE le raccolte a due fonti
+
+Qui la colonna è **di testo** e ha due formati: `"14081721"` sulle righe
+SofaScore, `"14081721 (SofaScore) / 1914700 (WhoScored)"` sulle 8.188 righe
+WhoScored. Un join numerico fallisce su **tutte e 94.404** le righe.
+
+Cercandola nelle altre raccolte è emerso che il difetto c'era **da sempre**, e
+in dodici consegne nessuno l'aveva visto: la Serie A ha **760 id distinti per
+380 partite**, perché le righe `Tiro` di Understat portano l'id di Understat.
+Lì il join non fallisce — **perde in silenzio 9.373 righe di tiri**. Era
+invisibile perché in `squadre` e `giocatori` accanto alla colonna mista ci sono
+quelle per-fonte e la riparazione scatta, mentre in `eventi` quelle colonne non
+esistono. Ora `_ripara_id_eventi` dà a ogni raccolta un
+`ID partita (SofaScore)` pulito (760 → 380 in Serie A, 612 → 306 in Ligue 1,
+aggancio 100%) e rinomina la grezza in `ID partita (misto, NON usare)`.
+
+### ⚠️ La categoria `Evento` arriva da DUE fonti: i gol raddoppiano
+
+1.229 righe `Gol` da SofaScore e 1.222 da WhoScored, per **1.229 gol veri**.
+Chi non filtra `Fonte` ne conta 2.451. Per i gol vince SofaScore, e non per
+convenzione: ricostruisce il punteggio su **936 squadra-partita su 936** (41
+autogol e 127 rigori compresi). Le due fonti divergono su **103 partite**:
+gialli 100, cambi 19, rossi 11, gol 7.
+
+⭐ Qui **non c'è** il falso positivo sul possesso che marcava 760 righe su 760
+nelle prime tre leghe — perché WhoScored non pubblica statistiche di squadra,
+quindi non c'è nessuna percentuale da confrontare con nessun conteggio. È la
+conferma indipendente che era un'unità di misura diversa, non un disaccordo.
+
+### Le altre cose da sapere
+
+- **Niente snapshot.** `data/laliga2_matches.csv` non esiste: il criterio
+  «aggancio 924/924» delle altre leghe qui **non c'è**, e al suo posto valgono
+  i controlli interni (gol degli eventi contro il punteggio 936/936, identità
+  `Gol = 1T + 2T` 468/468). `tf.ha_snapshot()` dice quali raccolte ce l'hanno —
+  è la prima volta che «campionato» e «snapshot» si separano.
+- **Il playoff non è lo spareggio di Bundesliga e Ligue 1.** Là entrano squadre
+  di seconda divisione, estranee al campionato; qui il playoff promozione è fra
+  squadre di LaLiga2, e le squadre sono **22 con e 22 senza**. Fuori per
+  default, `spareggio=True` lo riprende.
+- **Nomi accentati contro un canone ASCII.** Negli snapshot delle 5 leghe i
+  nomi accentati sono **zero**. Delle 22 squadre: 6 già canoniche, **4 con un
+  bersaglio verificato** (mappate in `ALIAS_RACCOLTA`), **12 senza alcun
+  bersaglio** nei nostri dati, che restano come sono — inventarlo sarebbe
+  indovinare un join.
+  ⚠️ **La quarta è arrivata solo alla seconda passata.** Tre divergono per un
+  accento e uno script che toglie gli accenti le trova; la quarta è
+  `Deportivo de A Coruña` → **`La Coruna`**, dove non c'è un accento di mezzo
+  ma una **lingua** (galiziano contro castigliano). L'ha trovata solo stampare
+  i 30 nomi dello snapshot e leggerli: *un'euristica che risolve la famiglia di
+  difetti che conosci non è una misura di copertura*. E non è accademico —
+  Deportivo è **promosso in LaLiga 2026-27**, quindi senza quella riga le sue
+  partite di Segunda non si aggancerebbero a quelle di LaLiga.
+  ⚠️ Fra le 22 c'è **`Real Sociedad B`**: un aggancio per somiglianza la
+  manderebbe su `Sociedad`, la prima squadra. Univoco, sicuro di sé e falso —
+  la categoria che nessun conteggio di celle piene vede (R6).
+- **38 colonne vuote**, il numero più alto di ogni campionato, in tre famiglie:
+  27 `(WhoScored)` (2 piene su 19 a livello squadra, **zero su 10** a livello
+  giocatore), 8 di supplementari/rigori (nessuna partita oltre il 90'),
+  `Note classifica`.
+- **`Spettatori` è quasi vuota: 17 partite su 468** (3,6%) — lo stato di mezzo,
+  quello per cui `copertura()` torna uno stato e non un booleano. Resta `post`
+  (R8).
+- **Due partite rinviate** (AD Ceuta-Córdoba, Real Sociedad B-Huesca) sono nei
+  file **una volta sola**, con la data della ripetizione: i gusci vuoti alla
+  data originaria restano fuori.
+- **SofaScore ha una sfida antibot dal 2026**: senza l'header `X-Captcha` la
+  paginazione **si tronca in silenzio** (la prima raccolta si era fermata a 240
+  partite su 470 senza un errore). Fatto operativo, non un difetto dei dati.
+
+---
+
 ## 6 · Come si rigenera tutto (riproducibilità)
 
 Le tre famiglie di leghe hanno **tre percorsi diversi**, per ragioni storiche

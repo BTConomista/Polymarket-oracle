@@ -710,17 +710,35 @@ ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
     #
     #   6  gia' canoniche          Eibar, Granada, Huesca, e — via TEAM_ALIASES —
     #                              Malaga, Valladolid, Las Palmas
-    #   3  divergono SOLO per accento   Almeria, Cadiz, Leganes   <- queste tre
-    #  13  assenti dai nostri dati      mai in prima divisione nella nostra
+    #   4  hanno un bersaglio VERIFICATO nei nostri dati   <- queste quattro
+    #  12  assenti dai nostri dati      mai in prima divisione nella nostra
     #                                   finestra 2017-2025
     #
-    # Si mappano **solo le tre di mezzo**, e non e' timidezza: per quelle il
+    # Si mappano **solo le quattro di mezzo**, e non e' timidezza: per quelle il
     # bersaglio e' un fatto verificato (lo stesso club sta nei nostri snapshot
-    # scritto cosi'), mentre per le altre tredici non esiste alcun bersaglio e
+    # scritto cosi'), mentre per le altre dodici non esiste alcun bersaglio e
     # inventarne uno sarebbe indovinare un join — la cosa che la regola d'oro
     # vieta. `TEAM_ALIASES` ha gia' `UD Almeria`->`Almeria`, `Cadiz CF`->`Cadiz`,
     # `CD Leganes`->`Leganes`: mancavano le forme NUDE, che sono quelle che usa
     # SofaScore.
+    #
+    # ⚠️ LA QUARTA E' STATA TROVATA SOLO ALLA SECONDA PASSATA, E IL MOTIVO
+    # INSEGNA QUALCOSA. Le prime tre divergono per un **accento**, e uno script
+    # che toglieva gli accenti le ha trovate subito. `Deportivo de A Coruña` no:
+    # il nostro snapshot lo chiama **`La Coruna`**, e fra «A Coruña» (galiziano)
+    # e «La Coruña» (castigliano) non c'e' nessun accento di mezzo — c'e' una
+    # LINGUA diversa. Nessuna normalizzazione tipografica ci arriva, e la
+    # somiglianza fra le due stringhe intere e' bassa. L'ha trovata solo la
+    # cosa piu' stupida: **stampare tutti e 30 i nomi dello snapshot e
+    # leggerli**. Da cui la regola pratica: un'euristica che risolve la
+    # famiglia di difetti che conosci **non e' una misura di copertura** — dice
+    # quanti casi di QUEL tipo c'erano, non quanti ne restano.
+    #
+    # ⭐ E non e' accademico: `Deportivo` e' **promosso in prima divisione nel
+    # 2026-27** (2° in classifica), insieme al Racing Santander (1°) e al Malaga
+    # (playoff). Senza questa riga, il giorno in cui arrivera' lo snapshot di
+    # LaLiga 2026-27 le sue partite di Segunda **non si aggancerebbero** a
+    # quelle di LaLiga, e nessun conteggio se ne accorgerebbe.
     #
     # ⚠️⚠️ E QUI SOTTO C'E' LA TRAPPOLA VERA, che vale la pena leggere anche se
     # non si tocchera' mai questa lega. Fra le 22 c'e' **`Real Sociedad B`**, la
@@ -732,7 +750,14 @@ ALIAS_RACCOLTA: dict[str, dict[str, str]] = {
     # stessa famiglia dell'`Espanol`->«Jove Espanol San Vicente» di
     # docs/audit_identita. Per questo la mappa qui e' scritta a mano, chiusa, e
     # NON generata da una somiglianza.
-    "laliga2": {"Almería": "Almeria", "Cádiz": "Cadiz", "Leganés": "Leganes"},
+    # ⚠️ `Real Racing Club` (1° e promosso) NON e' qui, e la differenza col
+    # Deportivo e' esattamente il punto: `Santander` — il nome con cui
+    # football-data lo chiamerebbe — **non compare in nessuno dei nostri
+    # snapshot** (l'ultima sua stagione in prima divisione e' del 2012, fuori
+    # dalla finestra 2017-2025). Nessun bersaglio verificato, nessun alias: si
+    # aggiungera' quando ci sara' qualcosa a cui agganciarlo, non prima.
+    "laliga2": {"Almería": "Almeria", "Cádiz": "Cadiz", "Leganés": "Leganes",
+                "Deportivo de A Coruña": "La Coruna"},
 }
 
 # Quante SQUADRE e quante PARTITE ha ogni campionato. Non e' una costante:

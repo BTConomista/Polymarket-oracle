@@ -536,6 +536,58 @@ files/tre_fonti_{uefa_champions_league,supercoppa_*,community_shield,dfl_supercu
                  «Partizan-AEK Larnaca 7-7» era 2-1.
                  ⚠️ Applicare la riparazione dove NON serve non e' innocuo:
                  sulla finale di Champions darebbe 1 − 4 = −3
+files/tre_fonti_laliga2_2526/  LALIGA2 (Segunda Division) 2025-26, consegna
+                 18/08/2026: la prima raccolta di SECONDA DIVISIONE. 468
+                 partite (42 giornate da 11 + 6 di playoff promozione), 22
+                 squadre, stagione completa. In grezzi/ i sette JSON come
+                 consegnati (§5-ter) -- e due di quelli SONO la prova dei
+                 risultati negativi, non un accessorio.
+                 ⚠️ NON e' «a tre fonti»: sono DUE, e nessuna delle due assenze
+                 e' un incidente. Understat non copre la Segunda (menu a 6
+                 leghe di prima divisione, 5 URL a 404, e -- il modo che conta
+                 -- le pagine squadra che servono IN SILENZIO un altro anno:
+                 finto pieno, R6). WhoScored non pubblica l'Opta qui: 468
+                 pagine su 468 senza matchCentreData, ~101 KB contro 1,14 MB
+                 del CONTROLLO POSITIVO su una partita di LaLiga scaricata
+                 nello stesso momento -- ed e' il controllo positivo a
+                 separare «la fonte non copre» da «lo scaricatore e' rotto».
+                 Quindi niente eventi_opta, e `eventi` ha SEI categorie
+                 (`/comments` risponde 404 su 468 partite su 468).
+                 ⚠️⚠️ E' LA RACCOLTA CHE HA FATTO EMERGERE UN DIFETTO VECCHIO:
+                 `eventi.ID partita` era avvelenata da sempre in TUTTE le
+                 raccolte a due fonti -- la Serie A ha 760 id distinti per 380
+                 partite, e un join li' non fallisce, PERDE IN SILENZIO le
+                 9.373 righe di tiri di Understat. Invisibile per dodici
+                 consegne perche' in squadre/giocatori le colonne per-fonte ci
+                 sono e la riparazione scatta, in eventi no. Emersa solo perche'
+                 qui la colonna e' di TESTO («14081721 (SofaScore) / 1914700
+                 (WhoScored)») e rompe il join anche sulle righe sane.
+                 `_ripara_id_eventi` la chiude ovunque.
+                 ⚠️ NON ha snapshot (`data/laliga2_matches.csv` non esiste, la
+                 Segunda non e' in LEAGUE_CONFIGS): e' il primo campionato in
+                 cui «campionato» e «snapshot» si separano -- vedi
+                 `tf.ha_snapshot()`. Al posto dell'aggancio valgono due
+                 controlli interni: gol degli eventi contro il punteggio
+                 936/936 e Gol = 1T + 2T 468/468.
+                 ⚠️ La categoria `Evento` arriva da DUE fonti: chi non filtra
+                 `Fonte` conta 2.451 gol dove ce ne sono 1.229. E il playoff
+                 promozione NON e' lo spareggio di Bundesliga/Ligue 1 -- e' fra
+                 squadre di LaLiga2, 22 squadre con e senza.
+                 ⚠️ Fra le 22 c'e' `Real Sociedad B`: un aggancio per
+                 somiglianza la manderebbe sulla PRIMA squadra (`Sociedad`).
+                 Univoco, sicuro di se' e falso -- per questo gli alias della
+                 raccolta sono 4, scritti a mano, e le altre 12 squadre senza
+                 bersaglio restano come sono.
+                 ⚠️ E il quarto alias e' arrivato solo alla SECONDA passata:
+                 `Deportivo de A Coruña` -> `La Coruna`. Gli altri tre
+                 divergono per un ACCENTO e uno script che toglie gli accenti
+                 li trova; qui c'e' una LINGUA diversa (galiziano contro
+                 castigliano) e nessuna normalizzazione tipografica ci arriva.
+                 L'ha trovato solo stampare i 30 nomi dello snapshot e
+                 leggerli. Un'euristica che risolve la famiglia di difetti che
+                 conosci NON e' una misura di copertura. E non e' accademico:
+                 il Deportivo e' promosso in LaLiga 2026-27.
+                 ⭐ Stato d'uso: RACCOLTO, NON USATO, ed e' uno stato legittimo
 data/ranking_uefa/   I COEFFICIENTI UEFA, federazioni e club (consegna utente
                  13/08/2026, fonte uefa.com). Si legge con
                  src/data/ranking_uefa.py, mai con pd.read_excel.

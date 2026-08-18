@@ -791,11 +791,49 @@ perché `appearances.csv` non copre le seconde divisioni delle nostre 5 leghe
 (§9.1 n.2). Manca quindi ancora la fonte per la metà "seconda serie" del
 confronto, prima ancora di poter fare il conto.
 
-**Stato**: nessun lavoro fatto, nessuna fonte cercata per il pezzo mancante.
-È un progetto grande — tocca calendario, dati di squadra, dati di giocatore,
-modellazione, e il fronte nazionali che è già il più scoperto — non una
-singola pista da un pomeriggio. Va scomposto in passi (principio §1: tracer
-bullet prima dei moduli) quando si deciderà di affrontarlo.
+**Stato**: era «nessun lavoro fatto, nessuna fonte cercata per il pezzo
+mancante». ⭐ **Cambiato il 18/08/2026 (Fase 158): il pezzo mancante, per una
+seconda divisione, adesso c'è.**
+
+La consegna di **LaLiga2 (Segunda División) 2025-26**
+(`files/tre_fonti_laliga2_2526/`) porta **20.868 righe giocatore-partita con 91
+statistiche SofaScore** su 825 giocatori — cioè esattamente il **rendimento
+individuale in seconda serie** che questa pista dichiarava introvabile
+(«football-data non ha statistiche per giocatore, e `appearances.csv` non copre
+le seconde divisioni delle nostre 5 leghe»). L'ostacolo dichiarato al punto (b)
+cade per **una lega e una stagione**.
+
+E cade con un tempismo che non si ripete: **le tre promosse in LaLiga 2026-27
+sono Real Racing Club, Deportivo de A Coruña e Málaga**, e la stagione di prima
+divisione **sta cominciando ora**. A giugno 2027 il confronto «stesso giocatore,
+categoria diversa» sarà misurabile su una coorte vera invece che su un'ipotesi —
+ma solo perché il lato *prima* è stato archiviato adesso. È il caso da manuale
+della regola §5-ter: *raccogliere e usare sono due decisioni separate, e il dato
+non raccolto al momento giusto spesso non è più recuperabile*.
+
+⚠️ **Ciò che ancora NON c'è**, per non spacciare la pista per aperta più di
+quanto sia:
+- **una sola stagione e una sola lega**: n=1 sul fronte campionato, e il
+  principio §1.7 chiede 3+ stagioni. Un fattore di conversione stimato sulla
+  coorte 2026-27 sarebbe una **prima misura**, non una conclusione;
+- **nessuna quota e nessuno snapshot** per la Segunda (`data/laliga2_matches.csv`
+  non esiste): il punto (a) — «applicare l'intera disciplina» — resta scoperto.
+  Il dato per farlo però **esiste**: football-data pubblica `SP2` con schema
+  identico alla prima divisione, quote di chiusura comprese. È il passo più
+  economico e ben definito che questa pista abbia oggi;
+- **le altre quattro seconde divisioni** e il fronte nazionali sono immutati.
+
+**Il primo passo concreto**, se si decide di affrontarla: costruire
+`data/laliga2_matches.csv` dal `SP2` di football-data e agganciarlo alla
+raccolta a tre fonti. ⚠️ Con una trappola già identificata e misurata: dei 22
+club, **12 non compaiono in nessuno dei nostri snapshot** e i loro nomi non sono
+mai stati messi in corrispondenza con la grafia football-data — fra questi il
+**Racing Santander**, che in prima divisione sale davvero. E la lezione della
+Fase 158 su questo punto è precisa: la corrispondenza `Deportivo de A Coruña` →
+`La Coruna` **non** è stata trovata da uno script che toglie gli accenti (fra
+galiziano e castigliano non c'è un accento di mezzo), ma leggendo a mano i 30
+nomi dello snapshot. Un'euristica che risolve i casi che conosci non misura
+quanti ne restano.
 
 ## 3 · Piste che richiedono una fonte esterna nuova
 
