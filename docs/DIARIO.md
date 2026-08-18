@@ -19912,3 +19912,110 @@ non è il contenuto di quei due file: è che **l'archivio giornaliero ha due
 buchi che nessun controllo dichiara** — la raccolta giornaliera non ha una
 voce nel cane da guardia (§A/B/C/D), esattamente come gli outright prima della
 Fase 153.
+
+---
+
+## Fase 157 — Esame dei dodici workflow, uno per uno: il collettore senza guardia, e una data che era una trappola
+
+**Obiettivo.** Richiesta utente (18/08/2026): «abbiamo diverse github actions
+attive, cerchiamo di esaminarle una per una, cerchiamo errori e proviamo a
+migliorarle». Non un esperimento sul modello: una revisione
+dell'**infrastruttura di raccolta**, che è ciò che oggi produce dati nuovi.
+
+**Ragionamento / ipotesi.** La Fase 156-ter si era chiusa con un residuo
+scritto a chiare lettere: *«l'archivio giornaliero ha due buchi che nessun
+controllo dichiara — la raccolta giornaliera non ha una voce nel cane da
+guardia, esattamente come gli outright prima della Fase 153»*. L'ipotesi
+era quindi che il difetto non fosse un caso isolato ma una **forma
+ricorrente**: ogni volta che nasce un collettore, nasce senza la sua guardia,
+e il buco si scopre solo quando manca il dato. Andava verificata leggendo i
+workflow, non ricordandoli.
+
+**Alternative considerate.** (a) Fidarsi dell'esito dei run — scartata: un run
+`success` che non raccoglie niente è indistinguibile da una notte senza
+partite, ed è il motivo per cui il guardiano esiste. (b) Guardare solo i
+workflow rossi — scartata per lo stesso motivo al contrario: i due giorni
+persi il 9 e 10 agosto **erano** rossi, e nessuno se n'era accorto lo stesso.
+(c) Misurare l'**archivio** e confrontarlo con ciò che i cron promettono —
+scelta: è l'unica che vede il silenzio.
+
+**Risultato.** Tre difetti, tutti confermati con evidenza:
+
+1. **Il collettore senza guardia.** `controlla_raccolta.py` sorveglia
+   `smarkets_matches` (A/B), `smarkets_live` (C) e `outright_snapshots`
+   (A-bis) — e **non** `data/stagione_2026_2027/giornaliero/`. Prova diretta:
+   la stringa non compare nel file. Prova indiretta: il guardiano ha **41 run
+   dall'8 agosto** (≈4/giorno, quanto il suo cron), quindi girava il 9 e il 10
+   e ha taciuto. I due giorni mancano tuttora.
+   → aggiunto il **controllo A-ter**, soglia 48h, riparabile come gli altri.
+
+2. **Una data che era una trappola.** `smarkets-live.yml` diceva «il cron
+   torna il 24/08 (fine della prova)». Ma la prova finisce il **23/08** e dal
+   24 `GEMELLI_FUORI_PROVA = 1` rimette in piedi il gemello 1: eseguire quel
+   promemoria alla lettera ricrea il guasto misurato l'11/08 — due
+   raccoglitori in-play sulle stesse partite, per giunta in **gruppi di
+   concorrenza diversi**, quindi incapaci persino di cancellarsi a vicenda.
+   → commento riscritto (dice la *condizione*, non una data) e guardia
+   `test_non_esistono_DUE_raccoglitori_in_play_accesi_INSIEME`.
+
+3. **I test del guardiano leggevano le cartelle vere del repo.** La fixture
+   `archivio` isolava solo pre-partita e in-play; `OUTRIGHT` puntava a
+   `data/outright_snapshots/` reale. Passava per un **accidente aritmetico**:
+   `ADESSO = 2026-08-08` è più vecchio dell'ultimo snapshot vero, quindi
+   l'età usciva **negativa** e `> 48` era falso. Il verdetto «sano» dipendeva
+   dallo stato del repo invece che dal caso in prova.
+   → fixture isolata su tutte e quattro le cartelle.
+
+Più un fatto d'ambiente: **Node 20 è deprecato** e il runner forzava già Node
+24 avvisandolo in coda a ogni run. Bump `checkout v4→v5`, `setup-python v5→v6`,
+`upload-artifact v4→v5`. Fatto col metodo del progetto (§1.1, §1.2): **prima
+sul solo guardiano**, verificato con una run vera (run `32142809709`, success
+in 30 s, warning sparito), **poi** esteso agli altri undici.
+
+**Lezione.** Il difetto ricorrente non è «manca un controllo»: è che **la
+guardia si scrive quando si scrive il collettore, e nessuno torna indietro a
+metterla**. Per questo la toppa vera non è A-ter — è
+`test_il_guardiano_sorveglia_TUTTI_i_collettori_che_committano`, che legge i
+workflow, estrae le cartelle che committano e pretende una costante nel
+guardiano per ognuna. Il prossimo collettore senza guardia fa **rosso subito**,
+non fra tre settimane quando manca il dato.
+
+E un corollario sulle date: **un promemoria con una data dentro un commento è
+una guardia che non guarda niente.** «Riaccendi il 24/08» sembrava innocuo e
+conteneva l'istruzione per ricreare un guasto già pagato. Una condizione
+verificabile (`se il cron è acceso, allora GEMELLI_FUORI_PROVA deve valere 0`)
+costa una decina di righe e non scade.
+
+### 📐 Il modello in dettaglio
+
+Nessuna matematica nuova: A-ter è la **stessa forma** di A-bis (Fase 153),
+applicata a un'altra cartella. La formula è la freschezza dell'ultimo elemento.
+
+```
+eta   = adesso - max{ data(x) : x in CARTELLA, data(x) leggibile }
+suona = (nessun elemento)  oppure  (eta > SOGLIA)
+```
+
+**Il ragionamento su ogni numero.**
+
+- `SOGLIA = ORE_GIORNALIERA = 48h`, identica a `ORE_OUTRIGHT` e per la stessa
+  ragione: il giro è **giornaliero** (`cron: '23 6 * * *'`) e il cron di
+  GitHub slitta di **30-40 minuti** (misurato l'08/08). A cavallo della
+  mezzanotte un giorno può quindi saltare per solo ritardo, e una soglia a 24h
+  suonerebbe per il jitter invece che per il guasto — l'errore contro cui
+  mette in guardia la Fase 147 («un allarme che suona sempre si smette di
+  leggerlo»). Due giorni di silenzio non sono più spiegabili col ritardo.
+- Non è `ORE_LUNGO_RAGGIO = 26h`: quella soglia vale per un giro che gira
+  **più volte al giorno**, dove 26h sono già un'anomalia.
+- `data(x)` si legge dal **nome della cartella** (`AAAA-MM-GG`), non dall'
+  `mtime`: un `git checkout` riscrive tutti gli mtime al momento del clone, e
+  sul runner ogni file sembrerebbe nato adesso. È la stessa scelta già
+  motivata e testata per A/B (`test_l_eta_si_legge_dal_NOME_non_dal_mtime`).
+- La conseguenza aritmetica di leggere una **data** e non un istante: l'età di
+  un giorno raccolto vale mezzanotte, quindi «tre giorni fa» alle 17:00 dà
+  **3,7** e non 3,0. Il test lo fissa a quel valore, come già fa A-bis con 18,7.
+
+⚠️ **Ciò che A-ter NON ripara**, ed è dichiarato invece che finto: i giorni
+passati. `ripara()` rifà la raccolta di **oggi** — i fatti di oggi sono ancora
+lì da prendere — e il ri-controllo verifica che sia bastato. Il bollettino del
+9 e del 10 agosto non esiste più, e nessuna riparazione lo inventa.

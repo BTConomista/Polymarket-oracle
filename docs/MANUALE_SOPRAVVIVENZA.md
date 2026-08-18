@@ -475,6 +475,35 @@ fatica ogni volta che servono quote reali di partite non ancora giocate.
 - Vintage dei dati in `files/player_scores/`: **Kaggle, 18 luglio 2026**;
   l'upstream si aggiorna ~settimanalmente e **backfilla lo storico**.
 
+- ⚠️ **Node 20 è deprecato sui runner** (annuncio GitHub del 19/09/2025).
+  `actions/checkout@v4` e `actions/setup-python@v5` lo usano: il runner li
+  **forza già su Node 24** e lo scrive in coda a *ogni* log
+  (`Node.js 20 is deprecated. The following actions target Node.js 20 but are
+  being forced to run on Node.js 24`). Quindi salire a `checkout@v5` /
+  `setup-python@v6` / `upload-artifact@v5` **non cambia comportamento**: toglie
+  l'avviso e la scadenza. Fatto alla Fase 157 col metodo del progetto — prima
+  sul solo guardiano (di sola lettura, un suo fallimento non perde dati),
+  **verificato con una run vera** (`32142809709`, success in 30 s, warning
+  sparito), poi esteso agli altri undici.
+- ⚠️ **Un run `cancelled` dei gemelli NON è un guasto: è il progetto.** La tab
+  Actions mostra ~23 `cancelled` al giorno **per gemello** (misurato il
+  18/08/2026 su `gemello-4.yml`: 23 su 30 run) e sembra un disastro. Non lo è.
+  La regola di GitHub è: per gruppo di concorrenza **un run in corso e UNO
+  SOLO pending**; all'arrivo di un terzo il pending viene cancellato. Con
+  sessioni da 5 ore e sentinella oraria, 4 sentinelle su 5 sono ridondanti per
+  costruzione e muoiono **mentre sono pending** — cioè senza consumare un
+  runner. ⚠️ Il corollario che conta: **l'esito dei run non è la misura della
+  raccolta**, ed è esattamente per questo che il cane da guardia misura
+  l'ARCHIVIO. Leggere la tab Actions per giudicare la raccolta porta alla
+  conclusione sbagliata in entrambe le direzioni.
+- **Il `page` dell'API dei run non pagina** attraverso lo strumento MCP di
+  sessione: `list_workflow_runs` torna sempre i **30 più recenti** qualunque
+  sia `per_page`/`page` (verificato il 18/08 su quattro workflow: `total_count`
+  41, 91, 176, 371 e sempre 30 righe). Per la storia più vecchia di 30 run
+  serve un'altra strada. E `curl` diretto ad `api.github.com/repos/.../actions`
+  **non passa dal proxy** («GitHub access is not enabled for this session»)
+  mentre `/rate_limit` risponde: l'allowlist è per-endpoint, non per-host.
+
 ## 4 · Fonti esterne valutate in sessione
 
 | fonte | esito |
