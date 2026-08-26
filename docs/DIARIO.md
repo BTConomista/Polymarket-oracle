@@ -20426,3 +20426,206 @@ corto, che è già `Darmstadt`, resta com'è.
 mappa una volta sola, non fino a punto fisso. Con `Darmstadt → Darmstadt 98` e
 `Darmstadt 98 → Darmstadt` insieme, i due lati si scambierebbero di posto e
 resterebbero disallineati esattamente come prima.
+
+---
+
+## Fase 159 — Un file solo per tutta la stagione: quattro grane che ne devono diventare una
+
+**Obiettivo.** Richiesta esplicita dell'utente (26/08/2026): *«un file csv
+COMPLETO con tutti i dati che abbiamo raccolto di queste competizioni relative
+alla stagione 2025-2026»*, con l'elenco delle **25 competizioni** — i cinque
+campionati di prima divisione e le rispettive seconde, le sei coppe nazionali,
+le sei supercoppe, le tre coppe UEFA — e la specifica: *«tutti i dati di
+partita, statistiche di squadra, di giocatori, meteo, allenatori»*.
+
+**Ragionamento / ipotesi.** Il problema non è raccogliere: i dati ci sono già
+tutti, sparsi in sette famiglie di fonti costruite in quindici fasi diverse. Il
+problema è che stanno su **quattro grane diverse** — partita,
+squadra-partita-periodo, giocatore-partita, evento (fino al singolo tocco Opta)
+— e un CSV solo può averne **una**. La domanda vera è: quale, e cosa si perde.
+
+**Alternative considerate.**
+
+1. **Grana giocatore-partita.** Terrebbe le statistiche individuali in colonne
+   vere. Costo: ~170.000 righe × ~1.000 colonne, con i dati di partita e di
+   squadra ripetuti trenta volte per partita. Decine di GB. Scartata.
+2. **Formato lungo** `(partita, entità, statistica, valore)`. Regge tutto per
+   costruzione. Costo: ~50 milioni di righe, e un file che nessuno apre.
+   Scartata.
+3. **Grana partita, con le altre tre impacchettate.** 4.169 righe. Le
+   statistiche di squadra si affiancano in `casa_*`/`trasferta_*`; quelle dei
+   giocatori entrano in una cella come tabellina JSON; gli eventi entrano come
+   cronaca compatta e come conteggi. **Scelta.**
+
+**Scelta e perché.** La (3), con una regola dichiarata su cosa resta fuori: la
+grana **evento** non entra, entra il suo conteggio. Non è una comodità, è una
+misura: il tiro-per-tiro impacchettato pesava **25 MB su 55**, un quarto del
+file, per un dato che vive completo in `files/tre_fonti_*/eventi.csv.gz`. Lo
+stesso vale per i 2,7 milioni di tocchi Opta e i 4,8 milioni di posizioni.
+`tf_n_tiri_tracciati`, `tf_n_eventi_opta` e `tf_n_posizioni_heatmap` dicono che
+il dato esiste e quanto è denso; il dato si prende di là.
+
+**Risultato.** `data/actual_database2526.csv`: **4.169 partite × 2.014 colonne,
+76,6 MB**, **22 competizioni**. Copertura: risultato 4.169/4.169, arbitro
+3.943, allenatori 3.943, formazioni 3.965, pacchetto giocatori 4.017,
+statistiche di squadra 3.720, quote 1X2 3.506, cronaca 4.125. Sedici controlli
+avversariali (`scripts/_run_verifica_actual_database2526.py`) passano tutti;
+23 guardie in `tests/test_actual_database2526.py`.
+
+⛔ **Quattro delle 25 competizioni chieste non ci sono, e il file non poteva
+inventarle: il repo non ha una riga della loro 2025-26.** Serie B, Championship,
+Ligue 2, EFL Trophy. Verificato con grep ricorsivo su tutto il repo e `zgrep`
+sui 709 `.gz`. Esistono, ma altrove nel tempo: negli archivi Smarkets sono
+**2026-27** (il calcio d'inizio più vecchio dei tre archivi è 2026-08-08, su
+14,6 milioni di righe), in `club_fixtures` sono **1617-2425**.
+
+**Due difetti veri, trovati da un numero fuori posto e non da un errore.**
+Meritano di stare qui perché sono la stessa famiglia — *il join non fallisce,
+restituisce meno*:
+
+* **Gli innesti si sovrascrivevano.** Il montaggio agganciava un blocco alla
+  volta e scartava le colonne «già presenti»: dalla seconda competizione in poi
+  `tf_casa_formazione` esisteva già, quindi il dato di **15 competizioni su 16**
+  finiva nel cestino. Nessun errore, nessun avviso. Il sintomo era uno solo:
+  `formazione_casa` piena al **14,8%** invece che al 95%. La riparazione è
+  impilare i blocchi per famiglia *prima* di agganciarli.
+* **Il filtro dei titolari cercava una parola inglese in una colonna
+  italiana.** `ruolo_partita` delle coppe vale `titolare`/`panchina`; il filtro
+  cercava `start`. Zero titolari su 458 partite, colonna vuota, nessuna
+  eccezione. Anche qui il sintomo era una copertura assurda.
+
+**Un terzo, più sottile, sulle date.** `aggancio_statistiche_squadra.csv`
+scrive `15.11.2025`, `aggancio_partite.csv` scrive `2025-11-15`. Tagliare i
+primi dieci caratteri e usarli come chiave perdeva **476 righe di Coupe de
+France** in silenzio. `norm_data` chiude entrambe le grafie, ed è inchiodata da
+un test.
+
+**⚠️ E una risposta che l'utente non si aspettava: il meteo non c'è.** L'unica
+colonna che si chiama così, `Meteo (WhoScored)`, è un **codice numerico che
+vale 5.0 e solo 5.0** ovunque sia pieno — varianza zero. Il «98,4% piena» della
+Premier sono 748 righe identiche. È un **finto pieno da manuale (R6)**, e per
+questo nel file la colonna si chiama `meteo_codice_whoscored` e non `meteo`:
+cancellarla sarebbe stato peggio che dichiararla inservibile, ma chiamarla
+«meteo» avrebbe fatto scrivere a qualcuno una feature sul nulla.
+
+**Lezione / cosa ne consegue.** Tre cose.
+
+1. **Una copertura assurda è un messaggio, un errore è un lusso.** Entrambi i
+   difetti veri di questa fase sono stati trovati guardando una percentuale
+   fuori posto, non leggendo un traceback. Quando si fondono sette fonti, la
+   metrica da guardare per prima è *quante righe sono sopravvissute al join*,
+   confrontata con quante dovevano.
+2. **Un doppione va misurato prima di essere chiamato tale, e poi va tolto.**
+   `sofascore_coppe_europee` e le raccolte UEFA a tre fonti sembravano
+   complementari: misurato, le 912 partite sono un sottoinsieme proprio delle
+   961, con **0 partite** che hanno i giocatori solo di qua. Impacchettarli due
+   volte costava 10 MB per zero informazione. Il §5-ter («raccogliere tutto»)
+   vale per la *raccolta*, non obbliga a duplicare in un derivato.
+3. **Un archivio non è un dataset di addestramento.** Questo file mescola per
+   costruzione dati `pre` e `post` (R8) e non ha una colonna che lo dica riga
+   per riga. Sta scritto in `docs/DATI.md` §5-quaterdecies, e chi ne ricava
+   feature deve applicare la regola a mano.
+
+### 📐 Il modello in dettaglio
+
+Questa fase non introduce matematica di modello: introduce tre **regole di
+montaggio**, e vanno scritte come tali perché è lì che un file fuso si rompe.
+
+**1 · La chiave di partita.** Ogni fonte identifica la partita a modo suo; la
+chiave comune è costruita, non ereditata:
+
+```
+chiave = competizione_canonica | data_ISO | norm(casa) | norm(trasferta)
+
+norm(x) = parole( senza_accenti( canonical_team(x) ).minuscolo )  meno
+          {fc, cf, ac, as, ss, ssc, sc, afc, cd, ud, sd, rc, cp,
+           club, calcio, de, the, 1899, 1909, 1913}
+```
+
+`canonical_team` sono i **287 alias già collaudati** del progetto
+(`src/data/sources.py`): sono quelli che fanno combaciare `Internazionale` e
+`Inter`. Il resto della normalizzazione toglie solo tipografia e sigle
+societarie — **non** somiglianza: `Real Sociedad B` resta diverso da
+`Real Sociedad`, ed è voluto (il caso `Espanol` → «Jove Espanol San Vicente»
+dell'audit identità è la ragione per cui un aggancio *univoco e sbagliato* è
+peggio di un aggancio mancante).
+
+**2 · Di partita o di squadra?** Le 215 colonne di `tre_fonti.squadre()`
+descrivono in parte la partita (arbitro, stadio, punteggio) e in parte la
+squadra (possesso, tiri). La divisione è **misurata**, non dedotta dal nome:
+
+```
+colonna C è «di partita»  ⟺  quota_di_accordo(C) > 0.995
+
+    quota_di_accordo(C) = media su tutte le partite di
+                          [ valore(C, riga casa) == valore(C, riga trasferta) ]
+                          con NaN == NaN
+```
+
+La soglia è 0.995 e non 1.0 perché una manciata di partite ha un lato mancante;
+sotto soglia la colonna si affianca in `casa_*`/`trasferta_*`, sopra soglia
+diventa una colonna sola. Sulla Serie A la divisione dà 102 «di partita» e 112
+«di squadra», e riproduce esattamente quella che un'ispezione manuale trova.
+
+**3 · Il punteggio, che è due numeri e non uno.** L'identità che li separa è
+quella del tripwire `gol_sono_regolamentari`, usata al contrario:
+
+```
+Gol(lato) = 1T(lato) + 2T(lato) + suppl.(lato)          [+ rigori, se sporco]
+
+gol_<lato>          =  1T + 2T                     ← i 90 minuti
+gol_<lato>_finale   =  punteggio_vero()            ← 90' + supplementari
+rigori_<lato>       =  la lotteria, sempre a parte
+```
+
+`punteggio_vero()` toglie la lotteria dove l'export la somma dentro — Europa
+League e Conference, misurato per raccolta in `tf.RIGORI_NEL_PUNTEGGIO`, mai
+dedotto dal torneo. Il controllo che lo inchioda è
+**Partizan-AEK Larnaca**: il grezzo legge 7-7, il file scrive **2-1** con
+`rigori 5-6`. L'identità `1T + 2T = 90'` regge su **3.506 partite su 3.506**
+confrontabili, su entrambi i lati.
+
+**4 · Perché il pacchetto dei giocatori è tabellare e non una lista di
+oggetti.** Il costo è stato misurato sulle righe vere:
+
+```
+lista di oggetti   [{"nome":…,"gol":…}, …]        4.849 byte a cella
+forma tabellare    {"campi":[…],"righe":[[…]]}    3.330 byte a cella   (68,7%)
+```
+
+La differenza — 12 MB su una colonna sola — è tutta **ripetizione dei nomi dei
+campi**, 34 chiavi × ~30 giocatori × 4.169 partite × 2 lati. La forma tabellare
+resta JSON valido e auto-descrittivo; i nomi ci sono, una volta.
+
+**5 · La coalescenza, e perché la provenienza è un dato e non un commento.**
+Ogni campo normalizzato ha una lista ordinata di colonne candidate; vince la
+prima non nulla. Formalmente, per il campo *f* e la riga *r*:
+
+```
+valore(f, r)      = colonna_c(r)   con c = min{ i : COALESCENZE[f][i](r) ≠ ∅ }
+provenienza(f, r) = prefisso di quella colonna   (tf | sof | cop | dir | snap | ps)
+```
+
+Il prefisso e non il nome per esteso: **4 MB contro 2,3**, e la colonna esatta
+si ritrova dall'ordine di `COALESCENZE`, che è fisso e versionato. Senza questa
+colonna un `arbitro` sarebbe un nome senza fonte in una tabella che ne fonde
+sette — e su 36 partite l'allenatore *dipende da quale fonte ha vinto*
+(SofaScore dà il vice in panchina, WhoScored il tecnico in carica).
+
+**6 · L'aggancio delle coppe, a sicurezza decrescente.** Quattro vie, provate
+in quest'ordine, e quella che ha funzionato resta scritta in
+`cop_metodo_aggancio`:
+
+```
+1. game_id                          376 partite   (identificatore, certo)
+2. ponte aggancio_partite.csv         —           (id → id, certo)
+3. nome esatto normalizzato           54          (uguaglianza)
+4. abbreviazione UNIVOCA nel giorno  107          (inclusione fra insiemi di
+                                                   parole, accettata solo se
+                                                   resta UNA candidata)
+```
+
+La quarta è l'unica dedotta, e la condizione di unicità è ciò che la rende
+usabile: `AC Seyssinet` ⊇ `Seyssinet` passa, `Espoir` e `Eveil` no. 17 partite
+restano senza corredo, dichiarate invece che forzate.
+

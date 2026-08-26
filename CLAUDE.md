@@ -270,6 +270,8 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
+python scripts/build_actual_database2526.py         # data/actual_database2526.csv (~12 min)
+python scripts/_run_verifica_actual_database2526.py # 16 controlli avversariali
 python -m pytest                       # test (1.783 verdi al 18/08/2026)
 ```
 
@@ -373,7 +375,15 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         costruisci_squadre_smarkets (Fase 149: rigenera
+scripts/         build_actual_database2526 + _run_verifica_actual_database2526
+                 (Fase 159: monta e verifica data/actual_database2526.csv --
+                 sette famiglie di fonti su una grana sola. Leggere le tre
+                 regole di montaggio nel blocco 📐 della Fase 159 prima di
+                 toccarlo: la chiave di partita, il criterio MISURATO che
+                 divide le colonne «di partita» da quelle «di squadra», e i
+                 due punteggi -- 90 minuti e finale -- che non sono lo stesso
+                 numero)
+                 costruisci_squadre_smarkets (Fase 149: rigenera
                  data/squadre_smarkets_2026_27.json dall'archivio. Da rifare
                  quando una squadra nuova compare nel listino: finche' non c'e',
                  la sua amichevole resta fuori dal perimetro)
@@ -432,6 +442,30 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
+data/            actual_database2526.csv (Fase 159: TUTTA la stagione 2025-26 in
+                 una tabella sola -- 4.169 partite x 2.014 colonne, 22
+                 competizioni, 76,6 MB. Una riga per PARTITA; le statistiche
+                 di squadra si affiancano in casa_*/trasferta_* per periodo,
+                 quelle dei giocatori stanno impacchettate in una cella
+                 (`{"campi":[..],"righe":[[..]]}`), gli eventi come cronaca e
+                 come conteggi. Si rifa' con
+                 scripts/build_actual_database2526.py e si verifica con
+                 scripts/_run_verifica_actual_database2526.py (16 controlli).
+                 ⚠️ NON contiene il tiro-per-tiro ne' l'event data: e' grana
+                 EVENTO, provata e tolta -- pesava 25 MB su 55. Ci sono i
+                 conteggi (tf_n_tiri_tracciati, tf_n_eventi_opta), il dato sta
+                 nelle raccolte.
+                 ⚠️ IL METEO NON C'E'. L'unica colonna che si chiama cosi'
+                 vale 5.0 e SOLO 5.0 ovunque sia piena -- varianza zero, finto
+                 pieno da manuale (R6). Per questo nel file si chiama
+                 `meteo_codice_whoscored` e non `meteo`.
+                 ⚠️ Quattro delle 25 competizioni chieste dall'utente non
+                 esistono nel repo per la 2025-26: Serie B, Championship,
+                 Ligue 2, EFL Trophy. Ci sono altrove nel TEMPO -- in Smarkets
+                 sono 2026-27, in club_fixtures sono 1617-2425.
+                 ⚠️ E' un ARCHIVIO, non un dataset di addestramento: mescola
+                 per costruzione dati `pre` e `post` (R8) e non ha una colonna
+                 che lo dica riga per riga. Vedi docs/DATI.md §5-quaterdecies)
 data/            squadre_smarkets_2026_27.json (Fase 149: i 96 nomi che SMARKETS
                  usa per le squadre dei 5 campionati. Generato da
                  scripts/costruisci_squadre_smarkets.py leggendo l'archivio,
