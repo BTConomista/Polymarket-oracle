@@ -77,6 +77,25 @@ TETTO_MB = 90.0
 # ════════════════════════════════════════════════════════════════════════════
 MANIFESTO: dict[str, dict] = {}
 
+# Le chiavi valide: si riempie quando `partite.csv.gz` viene scritta, ed è ciò
+# che rende il tasso di aggancio una misura invece di una tautologia.
+CHIAVI_VALIDE: set[str] = set()
+
+NOTA_AGGANCIO = ("frazione di righe il cui match_uid ESISTE in partite.csv.gz. "
+                 "⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi "
+                 "un tasso calcolato su `notna` sarebbe 1.0 anche con tutte "
+                 "le chiavi penzolanti.")
+
+
+def _tasso_aggancio(tabella: pd.DataFrame) -> float | None:
+    """Quante righe puntano a una partita che esiste davvero."""
+    if "match_uid" not in tabella.columns:
+        return None
+    valori = tabella["match_uid"]
+    if not CHIAVI_VALIDE:
+        return float(valori.notna().mean())
+    return float(valori.isin(CHIAVI_VALIDE).mean())
+
 
 def _impronta(percorso: Path) -> str:
     digest = hashlib.sha256()
@@ -118,7 +137,8 @@ def scrivi(nome: str, tabella: pd.DataFrame, *, grana: str, fonti: list[str],
     scritti = []
     for percorso, pezzo in pezzi:
         percorso.parent.mkdir(parents=True, exist_ok=True)
-        pezzo.to_csv(percorso, index=False, compression="gzip")
+        pezzo.to_csv(percorso, index=False,
+                     compression={"method": "gzip", "mtime": 0})
         peso = percorso.stat().st_size / 1e6
         scritti.append({"file": str(percorso.relative_to(CARTELLA)),
                         "righe": int(len(pezzo)), "mb": round(peso, 2),
@@ -134,8 +154,8 @@ def scrivi(nome: str, tabella: pd.DataFrame, *, grana: str, fonti: list[str],
         "nomi_colonne": list(tabella.columns),
         "fonti": fonti,
         "spezzato_per": spezza_per,
-        "aggancio_match_uid": (float(tabella["match_uid"].notna().mean())
-                               if "match_uid" in tabella.columns else None),
+        "aggancio_match_uid": _tasso_aggancio(tabella),
+        "nota_aggancio": NOTA_AGGANCIO,
         "note": note,
         "pezzi": scritti,
     }
@@ -170,12 +190,18 @@ class ScritturaIncrementale:
         if "match_uid" in pezzo.columns:
             altre = [c for c in pezzo.columns if c != "match_uid"]
             pezzo = pezzo[["match_uid"] + altre]
-            self._agganciate += int(pezzo["match_uid"].notna().sum())
+            self._agganciate += int(
+                pezzo["match_uid"].isin(CHIAVI_VALIDE).sum() if CHIAVI_VALIDE
+                else pezzo["match_uid"].notna().sum())
         sicura = (str(etichetta).lower().replace(" ", "_")
                   .replace("/", "-").replace(".", ""))
         percorso = CARTELLA / self.nome / f"{sicura}.csv.gz"
         percorso.parent.mkdir(parents=True, exist_ok=True)
-        pezzo.to_csv(percorso, index=False, compression="gzip")
+        # `mtime=0`: gzip scriverebbe l'ora nell'intestazione, e due corse
+        # identiche darebbero file diversi. Con l'ora azzerata lo sha256 prova
+        # anche la RIPRODUCIBILITÀ, non solo l'integrità dopo la scrittura.
+        pezzo.to_csv(percorso, index=False,
+                     compression={"method": "gzip", "mtime": 0})
         peso = percorso.stat().st_size / 1e6
         self.voce["pezzi"].append({
             "file": str(percorso.relative_to(CARTELLA)), "righe": int(len(pezzo)),
@@ -193,6 +219,7 @@ class ScritturaIncrementale:
         if self.voce["righe"]:
             self.voce["aggancio_match_uid"] = (self._agganciate
                                                / self.voce["righe"])
+        self.voce["nota_aggancio"] = NOTA_AGGANCIO
         MANIFESTO[self.nome] = self.voce
         totale = sum(p["mb"] for p in self.voce["pezzi"])
         log.info("  %-38s %9d righe · %4d col · %6.1f MB · %d file",
@@ -338,13 +365,31 @@ def tabella_giocatori_tf(raccolte: list[str], per_sofa: dict) -> None:
                                       giocatori.get("Avversario", giocatori["Squadra"]),
                                       giocatori["Campo"])
             ], index=giocatori.index) if "Campo" in giocatori.columns else da_id
-            giocatori["match_uid"] = da_id.where(da_id.notna(), da_nome)
+            # ⚠️ SOLO il livello `Partita` ha un match_uid. `Rosa` è
+            # l'anagrafica di squadra-stagione e `Stagione` l'aggregato: lì
+            # `Data` e `Avversario` sono vuoti, e costruire la chiave lo stesso
+            # produceva un `Bundesliga|||wolfsburg` — una chiave sintatticamente
+            # valida che nessuna partita ha. Un aggancio che non fallisce e non
+            # trova niente è peggio di un NaN: il conteggio lo dà per riuscito.
+            giocatori["match_uid"] = (da_id.where(da_id.notna(), da_nome)
+                                      if livello == "Partita" else None)
             giocatori["raccolta"] = raccolta
             giocatori["livello"] = livello
-            # ⚠️ le righe non fuse fra le fonti (56 in Serie A, 200 in Liga)
-            # restano — sono dato — ma vanno marcate, altrimenti chi somma i
-            # gol conta due volte lo stesso giocatore.
-            giocatori["riga_non_fusa"] = identificativi.isna()
+            # ⚠️ Due colonne, non una, perché sono due fatti diversi e
+            # confonderli costava caro: la prima dice che la riga NON HA l'id
+            # di SofaScore (19.569 righe, quasi tutte perché la raccolta non
+            # porta quell'id, non perché la fusione sia fallita); la seconda
+            # dice che quel giocatore compare GIÀ in quella squadra-partita,
+            # ed è l'unica che va davvero esclusa quando si aggrega — 184
+            # righe, non 19.569. La nota precedente istruiva a buttarne
+            # cento volte tanto.
+            giocatori["senza_id_sofascore"] = identificativi.isna()
+            if livello == "Partita" and {"Data", "Squadra", "Giocatore"} <= set(
+                    giocatori.columns):
+                giocatori["giocatore_ripetuto"] = giocatori.duplicated(
+                    ["Data", "Squadra", "Giocatore"], keep="first")
+            else:
+                giocatori["giocatore_ripetuto"] = False
             pezzi.append(giocatori)
     if not pezzi:
         return
@@ -354,9 +399,14 @@ def tabella_giocatori_tf(raccolte: list[str], per_sofa: dict) -> None:
                  "(Rosa) / in una stagione (Stagione)",
            fonti=["files/tre_fonti_*_2526/giocatori.csv.gz"],
            spezza_per="Competizione",
-           note="`riga_non_fusa=True` marca le righe che la fusione fra fonti "
-                "non ha appaiato: sono un secondo record dello stesso "
-                "giocatore, da escludere quando si aggrega.")
+           note="`giocatore_ripetuto=True` marca il secondo record dello "
+                "stesso giocatore nella stessa squadra-partita: è quello da "
+                "escludere quando si aggrega. `senza_id_sofascore=True` dice "
+                "solo che la riga non porta l'id di SofaScore — quasi sempre "
+                "perché la raccolta non ce l'ha, NON perché la fusione sia "
+                "fallita: non è un motivo per scartarla. "
+                "⚠️ `match_uid` è pieno SOLO sul livello Partita: Rosa e "
+                "Stagione non sono grana partita.")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -390,6 +440,7 @@ def tabella_squadre_tf(raccolte: list[str], per_sofa: dict) -> None:
         return
     tabella = pd.concat(pezzi, ignore_index=True)
     scrivi("squadre_partita_tre_fonti", tabella,
+           spezza_per="Competizione",
            grana="una SQUADRA in una partita, per PERIODO "
                  "(Totale / 1° tempo / 2° tempo / supplementari)",
            fonti=["files/tre_fonti_*_2526/squadre.csv.gz"],
@@ -840,36 +891,115 @@ def tabelle_player_scores() -> None:
     nostre["match_uid"] = [chiave_partita(c, d, x, y) for c, d, x, y
                            in zip(nostre["competizione"], nostre["date"],
                                   nostre["club_name"], nostre["avversario_name"])]
+
+    # ⚠️ Sulle coppe UEFA i nomi di Transfermarkt e quelli di SofaScore non
+    # coincidono («Paris Saint-Germain» contro «PSG»), e 471 partite restavano
+    # con una chiave che nessuna riga di `partite.csv.gz` ha: il dato c'era da
+    # entrambe le parti, era la chiave a non incontrarsi. Stessa regola delle
+    # coppe nazionali — inclusione fra insiemi di parole, accettata solo se in
+    # quel giorno resta UNA candidata sola.
+    spina = pd.read_csv(CARTELLA / "partite.csv.gz", low_memory=False,
+                        usecols=["match_uid"]) if (CARTELLA / "partite.csv.gz").exists() else None
+    note = set(spina["match_uid"]) if spina is not None else set()
+    if note:
+        per_giorno: dict[tuple, list] = defaultdict(list)
+        for chiave in note:
+            pezzi = chiave.split("|")
+            if len(pezzi) == 4:
+                per_giorno[(pezzi[0], pezzi[1])].append((pezzi[2], pezzi[3], chiave))
+
+        def _compatibili(uno: str, altro: str) -> bool:
+            if not uno or not altro:
+                return False
+            if uno == altro:
+                return True
+            a, b = set(uno.split()), set(altro.split())
+            return a <= b or b <= a
+
+        riparate, nuove = 0, []
+        for chiave, competizione, data, casa, via in zip(
+                nostre["match_uid"], nostre["competizione"], nostre["date"],
+                nostre["club_name"], nostre["avversario_name"]):
+            if chiave in note:
+                nuove.append(chiave)
+                continue
+            candidate = [k for c, t, k
+                         in per_giorno.get((competizione, norm_data(data)), [])
+                         if _compatibili(norm_squadra(casa), c)
+                         and _compatibili(norm_squadra(via), t)]
+            if len(candidate) == 1:
+                nuove.append(candidate[0])
+                riparate += 1
+            else:
+                nuove.append(None)
+        nostre["match_uid"] = nuove
+        log.info("  Transfermarkt: %d partite agganciate per abbreviazione, "
+                 "%d senza chiave", riparate, sum(1 for k in nuove if k is None))
     per_game = dict(zip(nostre["game_id"], nostre["match_uid"]))
     # ⚠️ `partite` tiene TUTTE le 9.554 partite 2025-26 che Transfermarkt
     # censisce, non solo le nostre: 44 competizioni fuori perimetro comprese.
     # `match_uid` è pieno solo dove la partita è nel perimetro — ed è giusto
     # così: una partita di Eredivisie non ha una riga in `partite.csv.gz`.
-    partite = partite.copy()
-    partite["match_uid"] = partite["game_id"].map(per_game)
+    # ⚠️ `partite` tiene tutte le 9.554 partite 2025-26 che Transfermarkt
+    # censisce, 44 competizioni fuori perimetro comprese. La cartella è della
+    # NOSTRA stagione: restano le nostre 22 competizioni, e il resto no.
+    # ⚠️ 33 righe portano `season=2025` ma una data fuori stagione (32 sono
+    # amichevoli di nazionale del giugno 2024): la stagione la decide la DATA,
+    # non l'etichetta.
+    partite = nostre.copy()
+    quando = pd.to_datetime(partite["date"], errors="coerce")
+    prima = len(partite)
+    partite = partite[(quando >= "2025-07-01") & (quando <= "2026-07-01")].copy()
+    if len(partite) != prima:
+        log.info("    partite Transfermarkt fuori stagione scartate: %d",
+                 prima - len(partite))
     scrivi("transfermarkt_partite.csv.gz", partite,
-           grana="una partita 2025-26 vista da Transfermarkt "
-                 "(anche fuori dal nostro perimetro)",
+           grana="una partita 2025-26 delle nostre 22 competizioni, "
+                 "vista da Transfermarkt",
            fonti=["files/player_scores/games.csv.gz"],
            note="`manager_name` è CHI SEDEVA IN PANCHINA quella partita, non "
                 "chi era in carica: 836 mandati su 13.810 sono un vice per "
                 "una gara sola.")
 
     cartella = FILES / "player_scores"
+    # il perimetro: chi è sceso in campo e quali club hanno giocato. Serve a
+    # tenere fuori dalla cartella della stagione i 50.149 giocatori e i 796
+    # club di ogni epoca che i file di Transfermarkt portano per costruzione.
+    percorso_presenze = cartella / "appearances.csv.gz"
+    giocatori_2526: set = set()
+    if percorso_presenze.exists():
+        indice = pd.read_csv(percorso_presenze, low_memory=False,
+                             usecols=["game_id", "player_id"])
+        giocatori_2526 = set(indice[indice["game_id"].isin(per_game)]["player_id"])
+    club_2526 = set(nostre["club_id"]) | set(nostre["avversario_id"])
+    competizioni_2526 = set(nostre["competition_id"])
+
     for nome_file in ("appearances", "club_games", "players", "clubs",
                       "player_valuations", "club_names", "competitions"):
         percorso = cartella / f"{nome_file}.csv.gz"
         if not percorso.exists():
             continue
         frame = pd.read_csv(percorso, low_memory=False)
+        prima = len(frame)
         if "game_id" in frame.columns:
             frame["match_uid"] = frame["game_id"].map(per_game)
             # solo il perimetro: `appearances` ha 1,89 M di righe su tutto il
             # mondo e tutte le stagioni, qui interessano le nostre partite
             frame = frame[frame["match_uid"].notna()].copy()
-        elif "player_id" in frame.columns and nome_file == "player_valuations":
+        elif nome_file == "player_valuations":
             frame["date"] = pd.to_datetime(frame["date"], errors="coerce")
-            frame = frame[frame["date"] >= "2025-06-01"].copy()
+            frame = frame[(frame["date"] >= "2025-06-01")
+                          & (frame["date"] <= "2026-08-01")
+                          & frame["player_id"].isin(giocatori_2526)].copy()
+        elif nome_file == "players" and giocatori_2526:
+            frame = frame[frame["player_id"].isin(giocatori_2526)].copy()
+        elif nome_file in ("clubs", "club_names") and club_2526:
+            frame = frame[frame["club_id"].isin(club_2526)].copy()
+        elif nome_file == "competitions" and competizioni_2526:
+            frame = frame[frame["competition_id"].isin(competizioni_2526)].copy()
+        if len(frame) != prima:
+            log.info("    %s ristretto al perimetro: %d righe su %d",
+                     nome_file, len(frame), prima)
         scrivi(f"transfermarkt_{nome_file}.csv.gz", frame,
                grana=nome_file.replace("_", " "),
                fonti=[f"files/player_scores/{nome_file}.csv.gz"],
@@ -882,6 +1012,35 @@ def tabelle_player_scores() -> None:
 # ════════════════════════════════════════════════════════════════════════════
 # 8 · ANAGRAFICHE E CONTORNO — ciò che non dipende dalla singola partita
 # ════════════════════════════════════════════════════════════════════════════
+def _perimetro_2526() -> tuple[set, set]:
+    """I `player_id` e i `club_id` che il 2025-26 tocca davvero.
+
+    ⚠️ Serve a una regola dell'utente: la cartella deve contenere **solo** la
+    stagione 2025-26. Le anagrafiche di Transfermarkt e le carriere di
+    Wikipedia coprono per costruzione ogni epoca — 50.149 giocatori e 209.809
+    tappe di carriera dal secolo scorso. Tenerle intere vorrebbe dire mettere
+    nella cartella della stagione dati di trent'anni fa; buttarle vorrebbe dire
+    non poter leggere il nome di chi ha giocato. Il taglio giusto è il
+    **perimetro**: chi è sceso in campo, e i club che hanno giocato.
+    """
+    from src.data import allenatori as al
+
+    percorso = FILES / "player_scores" / "appearances.csv.gz"
+    partite = al.load_partite()
+    partite = partite[partite["season"] == 2025]
+    partite = partite[partite["competition_id"].map(PS_COMPETIZIONE).notna()]
+    club = set(partite["club_id"]) | set(partite["avversario_id"])
+    giocatori: set = set()
+    if percorso.exists():
+        presenze = pd.read_csv(percorso, low_memory=False,
+                               usecols=["game_id", "player_id"])
+        presenze = presenze[presenze["game_id"].isin(set(partite["game_id"]))]
+        giocatori = set(presenze["player_id"])
+    log.info("  perimetro 2025-26: %d giocatori · %d club",
+             len(giocatori), len(club))
+    return giocatori, club
+
+
 def tabelle_anagrafiche() -> None:
     """Coefficienti UEFA, valori rosa, calendario di club, identità degli
     allenatori, carriere dei giocatori, registro delle correzioni.
@@ -903,7 +1062,9 @@ def tabelle_anagrafiche() -> None:
     except (FileNotFoundError, ValueError, KeyError):
         log.warning("ranking UEFA club non leggibile")
 
-    for finestra in ("2025-26", "2026-27"):
+    # ⚠️ Solo la finestra 2025-26: quella 2026-27 esiste nel file e decide
+    # l'access list dell'anno DOPO — è dato di un'altra stagione (R8).
+    for finestra in ("2025-26",):
         try:
             federazioni = ru.federazioni(finestra)
         except (FileNotFoundError, ValueError, KeyError):
@@ -924,21 +1085,40 @@ def tabelle_anagrafiche() -> None:
         ("data/correzioni_dichiarate.csv", "anagrafiche/correzioni_dichiarate.csv.gz",
          "una correzione", "il registro R3: ogni correzione con valore-prima, "
          "motivo, fonte, chi ha deciso e quando."),
-        ("data/carriere_wikipedia/tappe.csv.gz", "anagrafiche/carriere_wikipedia.csv.gz",
-         "una tappa di carriera", ""),
     ]
     for origine, destinazione, grana, nota in semplici:
         percorso = RADICE / origine
         if not percorso.exists():
             continue
-        scrivi(destinazione, pd.read_csv(percorso, low_memory=False),
+        frame = pd.read_csv(percorso, low_memory=False)
+        if "season" in frame.columns:
+            # le correzioni dichiarate coprono nove stagioni: qui la nostra
+            frame = frame[frame["season"].astype(str).str.contains("2526")].copy()
+        scrivi(destinazione, frame,
                grana=grana or destinazione.split("/")[-1].replace(".csv.gz", ""),
                fonti=[origine], note=nota)
 
+    giocatori_2526, club_2526 = _perimetro_2526()
+
+    carriere = RADICE / "data" / "carriere_wikipedia" / "tappe.csv.gz"
+    if carriere.exists() and giocatori_2526:
+        tappe = pd.read_csv(carriere, low_memory=False)
+        dentro = tappe[tappe["player_id"].isin(giocatori_2526)].copy()
+        scrivi("anagrafiche/carriere_wikipedia.csv.gz", dentro,
+               grana="una tappa di carriera di un giocatore sceso in campo "
+                     "nel 2025-26",
+               fonti=["data/carriere_wikipedia/tappe.csv.gz"],
+               note=f"ristretta al perimetro: {len(dentro)} tappe su "
+                    f"{len(tappe)}. Le tappe sono di ogni epoca — è la "
+                    "carriera — ma i giocatori sono quelli del 2025-26.")
+
     cartella_wikidata = RADICE / "data" / "allenatori_wikidata"
     for percorso in sorted(cartella_wikidata.glob("*.csv")):
+        frame = pd.read_csv(percorso, low_memory=False)
+        if "club_id" in frame.columns and club_2526:
+            frame = frame[frame["club_id"].isin(club_2526)].copy()
         scrivi(f"anagrafiche/allenatori_wikidata_{percorso.stem}.csv.gz",
-               pd.read_csv(percorso, low_memory=False),
+               frame,
                grana=percorso.stem.replace("_", " "),
                fonti=[str(percorso.relative_to(RADICE))],
                note="⚠️ il NOME non è un'identità: 11 omonimi dimostrati. "
@@ -959,6 +1139,9 @@ def tabelle_anagrafiche() -> None:
                note="è la fonte del riposo vero e della congestione: copre le "
                     "partite che i 5 campionati non vedono.")
 
+    # ⚠️ Le stime dichiarate coprono 2017-2122: qui entra solo ciò che tocca
+    # la nostra stagione, e quasi nulla la tocca. Una stima del 2017-19 in una
+    # cartella intitolata 2025-26 sarebbe un dato di un'altra stagione.
     stime = RADICE / "data" / "estimates"
     if stime.exists():
         for percorso in sorted(stime.glob("*.csv")):
@@ -966,7 +1149,16 @@ def tabelle_anagrafiche() -> None:
                 frame = pd.read_csv(percorso, low_memory=False)
             except (OSError, ValueError):
                 continue
+            # ⚠️ La colonna della stagione si chiama `season` in un file e
+            # `stagione` in un altro: guardarne una sola lasciava passare 32
+            # righe del 2018-19 e del 2020-21 dentro la cartella del 2025-26.
+            for colonna in ("season", "stagione"):
+                if colonna in frame.columns:
+                    frame = frame[frame[colonna].astype(str)
+                                  .str.contains("2526")].copy()
             if frame.empty:
+                log.info("  stime %-30s nessuna riga 2025-26, non scritta",
+                         percorso.stem)
                 continue
             scrivi(f"anagrafiche/stime_{percorso.stem}.csv.gz", frame,
                    grana="una stima dichiarata",
@@ -999,6 +1191,21 @@ def tabelle_metadati(raccolte: list[str]) -> None:
                pd.concat(legende, ignore_index=True),
                grana="una colonna documentata",
                fonti=["files/tre_fonti_*_2526/legenda.csv.gz"])
+
+    legende_diretta = []
+    for percorso in sorted(FILES.glob("diretta_*_2526/legenda*.csv")):
+        try:
+            frame = pd.read_csv(percorso)
+        except (OSError, ValueError):
+            continue
+        frame["raccolta"] = percorso.parent.name
+        frame["file"] = percorso.name
+        legende_diretta.append(frame)
+    if legende_diretta:
+        scrivi("metadati/legenda_diretta.csv.gz",
+               pd.concat(legende_diretta, ignore_index=True),
+               grana="una colonna documentata delle raccolte diretta.it",
+               fonti=["files/diretta_*_2526/legenda*.csv"])
 
     manifesti = {}
     for percorso in sorted(FILES.glob("*/manifesto*.json")):
@@ -1056,6 +1263,7 @@ def tabella_partite() -> None:
     pacchetti = [c for c in tabella.columns
                  if c.endswith("_json") and c != "provenienza_json"]
     tabella = tabella.drop(columns=pacchetti)
+    CHIAVI_VALIDE.update(tabella["match_uid"].dropna())
     scrivi("partite.csv.gz", tabella, grana="una PARTITA",
            fonti=["tutte le famiglie, coalescite"],
            note="vista denormalizzata: la forma normale delle statistiche di "
@@ -1093,6 +1301,12 @@ def costruisci_cartella(solo: list[str] | None = None) -> None:
     log.info("── mappe degli identificatori ────────────────────────────────")
     per_sofa, per_ws, _ = mappe_id(raccolte)
     log.info("  %d id SofaScore · %d id WhoScored", len(per_sofa), len(per_ws))
+
+    # ⚠️ `partite.csv.gz` si costruisce PER PRIMA: è l'insieme delle chiavi
+    # valide, e i blocchi che agganciano per somiglianza (Transfermarkt sulle
+    # coppe UEFA) hanno bisogno di sapere quali chiavi esistono davvero.
+    if attivo("partite"):
+        tabella_partite()
 
     log.info("── tre fonti ─────────────────────────────────────────────────")
     if attivo("squadre"):
@@ -1132,9 +1346,7 @@ def costruisci_cartella(solo: list[str] | None = None) -> None:
     if attivo("metadati"):
         tabelle_metadati(raccolte)
 
-    log.info("── la porta d'ingresso ───────────────────────────────────────")
-    if attivo("partite"):
-        tabella_partite()
+
 
 
 def scrivi_manifesto() -> dict:
@@ -1144,6 +1356,19 @@ def scrivi_manifesto() -> dict:
     file: righe, colonne, nomi delle colonne, fonti, asse di spezzatura, tasso
     di aggancio a `match_uid` e sha256 di ogni pezzo.
     """
+    # ⚠️ Le impronte si ricalcolano QUI, non al momento della scrittura: il
+    # manifesto deve descrivere il disco **come sta alla fine**, non come stava
+    # a metà corsa. Con l'impronta presa al volo, un file riscritto più tardi
+    # nella stessa corsa lasciava nel manifesto un sha che non corrispondeva
+    # più a niente — e un manifesto che sbaglia l'impronta è peggio che non
+    # averla, perché fa gridare all'alterazione dove non c'è.
+    for voce in MANIFESTO.values():
+        for pezzo in voce["pezzi"]:
+            percorso = CARTELLA / pezzo["file"]
+            if percorso.exists():
+                pezzo["sha256"] = _impronta(percorso)
+                pezzo["mb"] = round(percorso.stat().st_size / 1e6, 2)
+
     pezzi = [p for voce in MANIFESTO.values() for p in voce["pezzi"]]
     riepilogo = {
         "stagione": STAGIONE,
@@ -1180,7 +1405,8 @@ def scrivi_readme(riepilogo: dict) -> None:
         "",
         "## La chiave che tiene insieme tutto",
         "",
-        "Ogni riga di ogni file porta **`match_uid`**, ed è la stessa ovunque:",
+        "Ogni riga **di grana partita** porta **`match_uid`**, ed è la stessa",
+        "ovunque:",
         "",
         "```",
         "match_uid = competizione | data ISO | casa normalizzata | trasferta normalizzata",
@@ -1199,6 +1425,18 @@ def scrivi_readme(riepilogo: dict) -> None:
         "Dove la fonte ha anche i suoi identificatori (`ID partita (SofaScore)`,",
         "`game_id`, `player_id`) quelli restano: servono a incrociare **dentro**",
         "la partita.",
+        "",
+        "⚠️ **Non tutte le tabelle hanno un `match_uid`, e non è una lacuna.**",
+        "Le anagrafiche (ranking UEFA, valori rosa, carriere, identità degli",
+        "allenatori), la classifica e i livelli `Rosa`/`Stagione` dei giocatori",
+        "non sono a grana partita: non c'è una partita a cui agganciarli. Il",
+        "manifesto lo dichiara con `aggancio_match_uid: null`.",
+        "",
+        "⚠️ **`aggancio_match_uid` è misurato per APPARTENENZA**, cioè la",
+        "frazione di righe la cui chiave esiste davvero in `partite.csv.gz` —",
+        "non `notna()`. La differenza non è accademica: la chiave si costruisce",
+        "sempre, quindi un tasso calcolato su `notna` direbbe 1.0 anche con",
+        "tutte le chiavi penzolanti.",
         "",
         "## Perché una cartella e non un file",
         "",
@@ -1241,14 +1479,41 @@ def scrivi_readme(riepilogo: dict) -> None:
         "   tutte le righe del 2025-26.",
         "5. **La classifica è quella FINALE**: su una partita di ottobre è",
         "   look-ahead puro (R8).",
-        "6. **R8 in generale**: questa cartella mescola per costruzione dati",
-        "   `pre` (quote, arbitro, moduli, valore rosa) e `post` (gol, xG,",
-        "   rating, posizioni). È un **archivio**, non un dataset di",
-        "   addestramento.",
+        "6. **Il meteo, quando c'è, è una lega sola.** `Meteo (WhoScored)` è",
+        "   piena su 2.262 righe squadra-partita su 19.852 (11,4%), e sono",
+        "   quasi tutte Premier League: Serie A, Ligue 1, LaLiga2 e ogni coppa",
+        "   hanno ZERO. E dove è piena vale sempre lo stesso numero.",
+        "7. **14 `match_uid` hanno un lato vuoto** — turni preliminari di Copa",
+        "   del Rey dove l'avversario manca alla fonte: la chiave esiste ma non",
+        "   si può ricostruire da (competizione, data, casa, trasferta).",
+        "8. **Lo spareggio Bundesliga/2.Bundesliga compare due volte**, una per",
+        "   competizione (4 righe per 2 partite): è così che le due raccolte lo",
+        "   consegnano, e i dati fini stanno sotto una delle due.",
+        "9. **Otto partite di Europa League** hanno i tempi che non sommano al",
+        "   risultato, cinque con entrambi i tempi a zero e gol nella partita:",
+        "   è un difetto della FONTE, ereditato e non corretto (R5 — va",
+        "   istruito a mano, non zittito).",
+        "10. **Una sola colonna JSON sopravvive**: `provenienza_json` in",
+        "    `partite.csv.gz`, che dice quale fonte ha vinto per ogni campo",
+        "    normalizzato. Non è un dato impacchettato: è la provenienza.",
+        "11. **R8 in generale**: questa cartella mescola per costruzione dati",
+        "    `pre` (quote, arbitro, moduli, valore rosa) e `post` (gol, xG,",
+        "    rating, posizioni). È un **archivio**, non un dataset di",
+        "    addestramento.",
         "",
         "## Cosa NON c'è",
         "",
-        "Quattro delle 25 competizioni chieste: **Serie B, Championship,",
+        "### Il perimetro, e come è tagliato",
+        "",
+        "Le anagrafiche di Transfermarkt e le carriere di Wikipedia coprono per",
+        "costruzione ogni epoca. Qui sono **ristrette al perimetro**: i",
+        "giocatori che sono scesi in campo nel 2025-26 e i club che hanno",
+        "giocato. Le stime dichiarate di altre stagioni, e la finestra 2026-27",
+        "del ranking UEFA, restano fuori: sono dato di un'altra stagione.",
+        "",
+        "### Le competizioni che mancano",
+        "",
+        "Quattro delle 25 chieste: **Serie B, Championship,",
         "Ligue 2, EFL Trophy**. Non è una lacuna della cartella: il repo non ha",
         "una riga della loro stagione 2025-26. Esistono altrove nel tempo — in",
         "Smarkets sono 2026-27, in `club_fixtures` sono 1617-2425.",
@@ -1291,6 +1556,27 @@ def main() -> None:
             pass
 
     costruisci_cartella(opzioni.solo)
+
+    # ⚠️ Su una ricostruzione INTERA i file che il manifesto non nomina più
+    # vanno via. Senza questo passo, una tabella tolta dal codice (una stima
+    # di un'altra stagione, la finestra 2026-27 del ranking) resterebbe sul
+    # disco per sempre: la cartella direbbe una cosa e il manifesto un'altra,
+    # e la seconda avrebbe torto senza che nessuno se ne accorga.
+    if not opzioni.solo:
+        attesi = {CARTELLA / p["file"] for voce in MANIFESTO.values()
+                  for p in voce["pezzi"]}
+        attesi |= {CARTELLA / "MANIFESTO.json", CARTELLA / "README.md"}
+        rimossi = 0
+        for percorso in sorted(CARTELLA.rglob("*")):
+            if percorso.is_file() and percorso not in attesi:
+                percorso.unlink()
+                rimossi += 1
+        for cartella in sorted(CARTELLA.rglob("*"), reverse=True):
+            if cartella.is_dir() and not any(cartella.iterdir()):
+                cartella.rmdir()
+        if rimossi:
+            log.info("puliti %d file che il manifesto non nomina più", rimossi)
+
     riepilogo = scrivi_manifesto()
     scrivi_readme(riepilogo)
 
