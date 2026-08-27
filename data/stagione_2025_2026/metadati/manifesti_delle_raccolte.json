@@ -1,0 +1,2345 @@
+{
+ "files/diretta_bundesliga_2526/manifesto.json": {
+  "righe_attese": 9617,
+  "righe_campionato": 9555,
+  "righe_fuori_campionato": 62,
+  "team_partita_attesi": 612,
+  "squadre": 18,
+  "giocatori": 499,
+  "statistiche": 98,
+  "data_prima": "2025-08-22",
+  "data_ultima": "2026-05-16",
+  "partite_attese": 306,
+  "join_snapshot": "612/612",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "bundesliga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+ },
+ "files/diretta_bundesliga_2526/manifesto_squadra.json": {
+  "lega": "bundesliga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 1850,
+  "righe_campionato": 1836,
+  "righe_playoff": 14,
+  "team_partita_attesi": 612,
+  "partite_attese": 306,
+  "squadre": 18,
+  "periodi": [
+   "1° tempo",
+   "2° tempo",
+   "Supplementari",
+   "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-22",
+  "data_ultima": "2026-05-16",
+  "join_snapshot": "612/612",
+  "risultato_coerente": "612/612",
+  "snapshot_verificato": true,
+  "additivita_periodi": "24024/24024",
+  "partite_playoff": [
+   "21.05.2026 Wolfsburg-Paderborn",
+   "25.05.2026 Paderborn-Wolfsburg"
+  ]
+ },
+ "files/diretta_copa_del_rey_2526/manifesto_coppa.json": {
+  "coppa": "Copa del Rey",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "3c9b9f94c92feb25394e5c87889d233b9ba077a35e5d6dce8cd9826f622a4d23",
+  "conteggi": {
+   "partite": 117,
+   "righe_formazione": 5040,
+   "titolari": 2573,
+   "panchina": 2467,
+   "eventi": 3854,
+   "righe_statistiche": 1437,
+   "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+   "undici_titolari": {
+    "squadre_partita": 234,
+    "con_undici_esatti": 233,
+    "anomale": [
+     {
+      "partita": "joJ5rzhD",
+      "squadra": "Portugalete",
+      "titolari": 10
+     }
+    ]
+   },
+   "punteggio_non_somma_i_rigori": {
+    "partite_ai_rigori": 12,
+    "incoerenti": []
+   },
+   "sequenza_rigori": {
+    "partite_ai_rigori": 12,
+    "sequenza_ricompone": 12,
+    "divergenti": []
+   },
+   "confronto_con_fonte_automatica": {
+    "eseguito": true,
+    "partite": {
+     "manuale": 117,
+     "automatica": 137,
+     "appaiate": 117,
+     "identiche_su_tutti_i_punteggi": 117,
+     "divergenti": [],
+     "buchi_colmati_dalla_manuale": [],
+     "club_dedotti_dalle_partite": {
+      "A Coruna": 897,
+      "Arenas Getxo": 16122,
+      "Atl. Astorga": 40977,
+      "Atl. Madrid": 13,
+      "Atl. Tordesillas": 41604,
+      "Barcellona": 131,
+      "CD Extremadura": 101648,
+      "Cadice": 2687,
+      "Ciudad Cieza": 56725,
+      "Deportivo Getxo": 29739,
+      "La Union": 132258,
+      "Maiorca": 237,
+      "Murcia": 171,
+      "Ourense CF": 55398,
+      "Reus FCR": 83848,
+      "SD Logrones": 33303,
+      "San Fernando": 57379,
+      "Saragozza": 142,
+      "Siviglia": 368,
+      "UD Logrones": 24420,
+      "UD Ourense": 60225
+     },
+     "appaiate_per_nome_dentro_la_giornata": 0,
+     "contese_lasciate_vuote": 0,
+     "non_appaiate_manuale": [],
+     "non_appaiate_automatica": [
+      "2025-09-27 Atlètic Sant Just-nan",
+      "2025-09-27 CD Getxo-nan",
+      "2025-09-27 CD Sant Jordi-nan",
+      "2025-09-27 CF Campanario-CD Yuncos",
+      "2025-09-27 CF Inter de Valdemoro-Universitario FC Las Palmas",
+      "2025-09-27 Manises CF-UD Los Garres",
+      "2025-09-27 Puerto de Vega CF-nan",
+      "2025-09-27 nan-SD Negreira",
+      "2025-09-27 nan-Atlético Palma del Río CF",
+      "2025-09-27 nan-UD Maracena",
+      "2025-10-04 Atlético Palma del Río CF-nan",
+      "2025-10-04 CD Yuncos-CF Campanario",
+      "2025-10-04 SD Negreira-nan",
+      "2025-10-04 UD Los Garres-Manises CF",
+      "2025-10-04 UD Maracena-nan",
+      "2025-10-04 Universitario FC Las Palmas-CF Inter de Valdemoro",
+      "2025-10-04 nan-Puerto de Vega CF",
+      "2025-10-04 nan-CD Getxo",
+      "2025-10-04 nan-Atlètic Sant Just",
+      "2025-10-04 nan-CD Sant Jordi"
+     ]
+    },
+    "formazioni": {
+     "squadre_partita_confrontabili": 234,
+     "undici_identici": 232,
+     "giocatori_appaiati_dal_numero_di_maglia": 69,
+     "con_differenze": [
+      {
+       "partita": "2025-10-29|18691|366",
+       "club_id": 18691,
+       "spaiati": 1,
+       "solo_nella_manuale": [],
+       "solo_nell_automatica": [
+        "Gorka Tapiador"
+       ]
+      },
+      {
+       "partita": "2025-12-02|2296|237",
+       "club_id": 2296,
+       "spaiati": 2,
+       "solo_nella_manuale": [
+        "Jony"
+       ],
+       "solo_nell_automatica": [
+        "Berto"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  "statistiche": {
+   "file": "20ba2434-CopaDelRey_202526_STATISTICHE.xlsx",
+   "sha256": "fda435ada8dc3bb7d3f3f98709aa647551c911417154fdbb919e633d33adaf13",
+   "partite": {
+    "raccolta": 117,
+    "statistiche": 117,
+    "solo_nella_raccolta": [],
+    "solo_nelle_statistiche": [],
+    "sinonimi_di_squadra_accettati": {
+     "Cieza": "Ciudad Cieza"
+    }
+   },
+   "fedelta_giocatori": {
+    "righe_prima": 1437,
+    "righe_dopo": 1437,
+    "colonne_prima": 115,
+    "colonne_dopo": 115,
+    "colonne_nuove": [
+     "ID partita"
+    ],
+    "celle_divergenti_oltre_arrotondamento": 0,
+    "colonne_testuali_con_etichette_diverse": {
+     "Turno": 898,
+     "Casa": 30,
+     "Squadra": 14
+    }
+   },
+   "statistiche_squadra": {
+    "righe": 692,
+    "partite": 114,
+    "metriche": 35,
+    "per_periodo": {
+     "Totale": 228,
+     "2° tempo": 216,
+     "1° tempo": 196,
+     "Supplementari": 52
+    }
+   }
+  }
+ },
+ "files/diretta_coppa_italia_2526/manifesto_coppa.json": {
+  "coppa": "Coppa Italia",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "efd6340e3ea8c5b7ae514cc8cbb99a9564fb937d5398310caeae7ab5d040b108",
+  "conteggi": {
+   "partite": 45,
+   "righe_formazione": 2133,
+   "titolari": 990,
+   "panchina": 1143,
+   "eventi": 1479,
+   "righe_statistiche": 1307,
+   "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+   "undici_titolari": {
+    "squadre_partita": 90,
+    "con_undici_esatti": 90,
+    "anomale": []
+   },
+   "punteggio_non_somma_i_rigori": {
+    "partite_ai_rigori": 12,
+    "incoerenti": []
+   },
+   "sequenza_rigori": {
+    "partite_ai_rigori": 12,
+    "sequenza_ricompone": 12,
+    "divergenti": []
+   },
+   "confronto_con_fonte_automatica": {
+    "eseguito": true,
+    "partite": {
+     "manuale": 45,
+     "automatica": 45,
+     "appaiate": 45,
+     "identiche_su_tutti_i_punteggi": 45,
+     "divergenti": [],
+     "buchi_colmati_dalla_manuale": [],
+     "club_dedotti_dalle_partite": {},
+     "appaiate_per_nome_dentro_la_giornata": 0,
+     "contese_lasciate_vuote": 0,
+     "non_appaiate_manuale": [],
+     "non_appaiate_automatica": []
+    },
+    "formazioni": {
+     "squadre_partita_confrontabili": 88,
+     "undici_identici": 88,
+     "giocatori_appaiati_dal_numero_di_maglia": 0,
+     "con_differenze": []
+    }
+   }
+  },
+  "statistiche": {
+   "file": "5ea225cb-CoppaItalia_202526_STATISTICHE_1.xlsx",
+   "sha256": "ebbe74a9a04f01d517c1118b62c2f25796a1f0946465e93f418216512ea523b9",
+   "partite": {
+    "raccolta": 45,
+    "statistiche": 45,
+    "solo_nella_raccolta": [],
+    "solo_nelle_statistiche": []
+   },
+   "fedelta_giocatori": {
+    "righe_prima": 1307,
+    "righe_dopo": 1307,
+    "colonne_prima": 114,
+    "colonne_dopo": 115,
+    "colonne_nuove": [
+     "ID partita"
+    ],
+    "celle_divergenti_oltre_arrotondamento": 0
+   },
+   "statistiche_squadra": {
+    "righe": 272,
+    "partite": 45,
+    "metriche": 35,
+    "per_periodo": {
+     "Totale": 90,
+     "1° tempo": 90,
+     "2° tempo": 90,
+     "Supplementari": 2
+    }
+   }
+  }
+ },
+ "files/diretta_coupe_de_france_2526/manifesto_coppa.json": {
+  "coppa": "Coupe de France",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "97e628705ca39d7275e449f4677bc41381e39818f4902e17dcc90e48c364a0cd",
+  "conteggi": {
+   "partite": 201,
+   "righe_formazione": 2495,
+   "titolari": 1386,
+   "panchina": 1109,
+   "eventi": 2792,
+   "righe_statistiche": 1924,
+   "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+   "undici_titolari": {
+    "squadre_partita": 126,
+    "con_undici_esatti": 126,
+    "anomale": []
+   },
+   "punteggio_non_somma_i_rigori": {
+    "partite_ai_rigori": 54,
+    "incoerenti": []
+   },
+   "sequenza_rigori": {
+    "partite_ai_rigori": 54,
+    "sequenza_ricompone": 27,
+    "divergenti": [
+     "15.11.2025 Avranches-Paris 13 Atl.: nessun evento di rigore",
+     "15.11.2025 Pontarlier-Sochaux: nessun evento di rigore",
+     "15.11.2025 Villars-l'Isle-Sarre Union: nessun evento di rigore",
+     "15.11.2025 Andrezieux-Hauts Lyonnais: nessun evento di rigore",
+     "15.11.2025 APM Metz-Fleury-Merogis: nessun evento di rigore",
+     "15.11.2025 Fontenay-Chamalieres: nessun evento di rigore",
+     "15.11.2025 IC Croix-Racing CFF: nessun evento di rigore",
+     "15.11.2025 Loon Plage-Bethune: nessun evento di rigore",
+     "15.11.2025 Sable-Saint-Malo: nessun evento di rigore",
+     "15.11.2025 Seyssinet-Aubagne: nessun evento di rigore",
+     "15.11.2025 Steenvoorde-Chambly: nessun evento di rigore",
+     "15.11.2025 Espoir-Eveil: nessun evento di rigore",
+     "15.11.2025 Etoile Matoury-Le Geldar: nessun evento di rigore",
+     "16.11.2025 Mauguio Carnon-Selongey: nessun evento di rigore",
+     "16.11.2025 Nord Lozere-Ecotay Moingt: nessun evento di rigore",
+     "16.11.2025 Saint-Brice Courcelles-Bogny: nessun evento di rigore",
+     "16.11.2025 Saint-Cyr Collonges-Thonon-Evian: nessun evento di rigore",
+     "16.11.2025 SA Merignac-Colomiers: colonna 6-5, eventi 3-2",
+     "16.11.2025 Saint-Meziery-Perigny: nessun evento di rigore",
+     "16.11.2025 Wittenheim-Freyming: nessun evento di rigore",
+     "16.11.2025 Pen Hir-Les Sables: nessun evento di rigore",
+     "16.11.2025 Vitre-Plouvorn: nessun evento di rigore",
+     "29.11.2025 Hauts Lyonnais-Feurs: colonna 4-2, eventi 1-0",
+     "29.11.2025 Steenvoorde-Bethune: nessun evento di rigore",
+     "29.11.2025 Raon L Etape-Mulhouse: nessun evento di rigore",
+     "29.11.2025 Chauvigny-Stade Poitevin: colonna 12-11, eventi 1-0",
+     "30.11.2025 Saint-Cyr Collonges-FC Rhone: nessun evento di rigore"
+    ]
+   },
+   "confronto_con_fonte_automatica": {
+    "eseguito": true,
+    "partite": {
+     "manuale": 201,
+     "automatica": 201,
+     "appaiate": 161,
+     "identiche_su_tutti_i_punteggi": 157,
+     "divergenti": [
+      {
+       "partita": "2025-11-16 Longuenesse-Bondues",
+       "differenze": [
+        "finale: manuale 0-2 · automatica 1-2"
+       ]
+      },
+      {
+       "partita": "2025-11-16 Saint-Brice Courcelles-Bogny",
+       "differenze": [
+        "rigori: manuale (2, 4) · automatica (2, 3)"
+       ]
+      },
+      {
+       "partita": "2025-11-16 Vitre-Plouvorn",
+       "differenze": [
+        "rigori: manuale (3, 4) · automatica (2, 4)"
+       ]
+      },
+      {
+       "partita": "2025-11-29 Chauvigny-Stade Poitevin",
+       "differenze": [
+        "rigori: manuale (12, 11) · automatica (10, 9)"
+       ]
+      }
+     ],
+     "buchi_colmati_dalla_manuale": [],
+     "club_dedotti_dalle_partite": {},
+     "appaiate_per_nome_dentro_la_giornata": 121,
+     "contese_lasciate_vuote": 0,
+     "non_appaiate_manuale": [
+      "2025-11-15 OCPAM-Reims",
+      "2025-11-15 Loon Plage-Bethune",
+      "2025-11-15 Le Cellier Mauves-Laval",
+      "2025-11-15 Orleans-Bayonne",
+      "2025-11-16 Pledran-Plabennec",
+      "2025-11-16 EBBE-Bordeaux",
+      "2025-11-29 Laval-Saint-Pauloise",
+      "2025-11-29 Plabennec-Les Herbiers",
+      "2025-11-29 Steenvoorde-Bethune",
+      "2025-12-19 Guingamp-Laval",
+      "2025-12-19 Avranches-Brest",
+      "2025-12-20 Lusitanos-Lilla",
+      "2025-12-20 Lyon - La Duchere-Tolosa",
+      "2025-12-20 Bethune-Sochaux",
+      "2025-12-20 Fontenay-PSG",
+      "2025-12-21 Strasburgo-Dunkerque",
+      "2025-12-21 Nizza-St. Etienne",
+      "2025-12-21 Bourg en Bresse-Marsiglia",
+      "2025-12-21 Rennes-Les Sables",
+      "2025-12-21 Lione-Saint-Cyr Collonges",
+      "2026-01-10 Angers-Tolosa",
+      "2026-01-10 Istres-Laval",
+      "2026-01-10 Avranches-Strasburgo",
+      "2026-01-11 Chantilly-Rennes",
+      "2026-01-11 Nantes-Nizza",
+      "2026-01-11 Lilla-Lione",
+      "2026-01-12 PSG-Paris FC",
+      "2026-01-13 Bayeux-Marsiglia",
+      "2026-02-03 Marsiglia-Rennes",
+      "2026-02-04 Nizza-Montpellier",
+      "2026-02-04 Lione-Laval",
+      "2026-02-04 Tolosa-Amiens",
+      "2026-02-05 Strasburgo-Monaco",
+      "2026-03-03 Strasburgo-Reims",
+      "2026-03-04 Lorient-Nizza",
+      "2026-03-04 Marsiglia-Tolosa",
+      "2026-03-05 Lione-Lens",
+      "2026-04-21 Lens-Tolosa",
+      "2026-04-22 Strasburgo-Nizza",
+      "2026-05-22 Lens-Nizza"
+     ],
+     "non_appaiate_automatica": [
+      "2025-11-15 FC Loon-Plage-Stade béthunois FC",
+      "2025-11-15 Le Cellier Mauves FC-Stade lavallois",
+      "2025-11-15 Olympique CPAM-Stade de Reims",
+      "2025-11-15 US Orléans-Aviron bayonnais FC",
+      "2025-11-16 CS Plédran-Stade plabennécois",
+      "2025-11-16 Entente Boé Bon-Encontre-FC Girondins de Bordeaux",
+      "2025-11-29 AS Steenvoorde-Stade béthunois FC",
+      "2025-11-29 Stade lavallois-Saint-Pauloise FC",
+      "2025-11-29 Stade plabennécois-VHF Les Herbiers",
+      "2025-12-19 EA Guingamp-Stade lavallois",
+      "2025-12-19 US Avranches-Stade brestois 29",
+      "2025-12-20 Lyon-La Duchère-Toulouse FC",
+      "2025-12-20 Stade béthunois FC-FC Sochaux-Montbéliard",
+      "2025-12-20 US Lusitanos Saint-Maur-LOSC Lille",
+      "2025-12-20 Vendée Fontenay Foot-Paris Saint-Germain",
+      "2025-12-21 Bourg-Péronnas 01-Olympique de Marseille",
+      "2025-12-21 OGC Nice-AS Saint-Étienne",
+      "2025-12-21 Olympique lyonnais-FC Saint-Cyr Collonges",
+      "2025-12-21 RC Strasbourg-USL Dunkerque",
+      "2025-12-21 Stade rennais FC-Les Sables VF",
+      "2026-01-10 Angers SCO-Toulouse FC",
+      "2026-01-10 Istres FC-Stade lavallois",
+      "2026-01-10 US Avranches-RC Strasbourg",
+      "2026-01-11 FC Nantes-OGC Nice",
+      "2026-01-11 LOSC Lille-Olympique lyonnais",
+      "2026-01-11 US Chantilly-Stade rennais FC",
+      "2026-01-12 Paris Saint-Germain-Paris FC",
+      "2026-01-13 Bayeux FC-Olympique de Marseille",
+      "2026-02-03 Olympique de Marseille-Stade rennais FC",
+      "2026-02-04 OGC Nice-Montpellier HSC",
+      "2026-02-04 Olympique lyonnais-Stade lavallois",
+      "2026-02-04 Toulouse FC-Amiens SC",
+      "2026-02-05 RC Strasbourg-AS Monaco",
+      "2026-03-03 RC Strasbourg-Stade de Reims",
+      "2026-03-04 FC Lorient-OGC Nice",
+      "2026-03-04 Olympique de Marseille-Toulouse FC",
+      "2026-03-05 Olympique lyonnais-RC Lens",
+      "2026-04-21 RC Lens-Toulouse FC",
+      "2026-04-22 RC Strasbourg-OGC Nice",
+      "2026-05-22 RC Lens-OGC Nice"
+     ]
+    },
+    "formazioni": {
+     "squadre_partita_confrontabili": 0,
+     "undici_identici": 0,
+     "giocatori_appaiati_dal_numero_di_maglia": 0,
+     "con_differenze": [],
+     "non_confrontabile": "la fonte automatica non ha formazioni per questa coppa (Coupe de France, da Wikipedia)"
+    }
+   }
+  },
+  "statistiche": {
+   "file": "originale_statistiche.xlsx",
+   "sha256": "8ca470c1596070b64de0db9c41633d0e18b7511b5b172eab42141e7ff113211a",
+   "partite": {
+    "raccolta": 201,
+    "statistiche": 201,
+    "solo_nella_raccolta": [],
+    "solo_nelle_statistiche": []
+   },
+   "fedelta_giocatori": {
+    "righe_prima": 1924,
+    "righe_dopo": 1924,
+    "colonne_prima": 114,
+    "colonne_dopo": 115,
+    "colonne_nuove": [
+     "ID partita"
+    ],
+    "celle_divergenti_oltre_arrotondamento": 0,
+    "colonne_testuali_con_etichette_diverse": {}
+   },
+   "statistiche_squadra": {
+    "righe": 476,
+    "partite": 87,
+    "metriche": 35,
+    "per_periodo": {
+     "Totale": 174,
+     "2° tempo": 160,
+     "1° tempo": 142
+    }
+   }
+  }
+ },
+ "files/diretta_dfb_pokal_2526/manifesto_coppa.json": {
+  "coppa": "DFB-Pokal",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "7cb61bf1fdd58eadf5058ece5311c92052dbc902a3b992bf4015e3c5a3137482",
+  "conteggi": {
+   "partite": 63,
+   "righe_formazione": 2518,
+   "titolari": 1386,
+   "panchina": 1132,
+   "eventi": 2106,
+   "righe_statistiche": 1979,
+   "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+   "undici_titolari": {
+    "squadre_partita": 126,
+    "con_undici_esatti": 126,
+    "anomale": []
+   },
+   "punteggio_non_somma_i_rigori": {
+    "partite_ai_rigori": 8,
+    "incoerenti": []
+   },
+   "sequenza_rigori": {
+    "partite_ai_rigori": 8,
+    "sequenza_ricompone": 8,
+    "divergenti": []
+   },
+   "confronto_con_fonte_automatica": {
+    "eseguito": true,
+    "partite": {
+     "manuale": 63,
+     "automatica": 63,
+     "appaiate": 63,
+     "identiche_su_tutti_i_punteggi": 63,
+     "divergenti": [],
+     "buchi_colmati_dalla_manuale": [],
+     "club_dedotti_dalle_partite": {},
+     "appaiate_per_nome_dentro_la_giornata": 0,
+     "contese_lasciate_vuote": 0,
+     "non_appaiate_manuale": [],
+     "non_appaiate_automatica": []
+    },
+    "formazioni": {
+     "squadre_partita_confrontabili": 124,
+     "undici_identici": 124,
+     "giocatori_appaiati_dal_numero_di_maglia": 0,
+     "con_differenze": []
+    }
+   }
+  },
+  "statistiche": {
+   "file": "bdee54a4-DFBPokal_202526_STATISTICHE_1.xlsx",
+   "sha256": "10ef3f4bc1a5484f6a97dc3f219579a163a325e4b9241bff2a3f10b2a16d1d0d",
+   "partite": {
+    "raccolta": 63,
+    "statistiche": 63,
+    "solo_nella_raccolta": [],
+    "solo_nelle_statistiche": []
+   },
+   "fedelta_giocatori": {
+    "righe_prima": 1979,
+    "righe_dopo": 1979,
+    "colonne_prima": 114,
+    "colonne_dopo": 115,
+    "colonne_nuove": [
+     "ID partita"
+    ],
+    "celle_divergenti_oltre_arrotondamento": 0
+   },
+   "statistiche_squadra": {
+    "righe": 406,
+    "partite": 63,
+    "metriche": 35,
+    "per_periodo": {
+     "Totale": 126,
+     "1° tempo": 126,
+     "2° tempo": 126,
+     "Supplementari": 28
+    }
+   }
+  }
+ },
+ "files/diretta_efl_cup_2526/manifesto_coppa.json": {
+  "coppa": "EFL Cup",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "7a6e86d327f781e31327ee59928ac3c5957475c100142c29fd2a57e46a534537",
+  "conteggi": {
+   "partite": 91,
+   "righe_formazione": 3606,
+   "titolari": 2002,
+   "panchina": 1604,
+   "eventi": 2882,
+   "righe_statistiche": 2855,
+   "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+   "undici_titolari": {
+    "squadre_partita": 182,
+    "con_undici_esatti": 182,
+    "anomale": []
+   },
+   "punteggio_non_somma_i_rigori": {
+    "partite_ai_rigori": 19,
+    "incoerenti": []
+   },
+   "sequenza_rigori": {
+    "partite_ai_rigori": 19,
+    "sequenza_ricompone": 19,
+    "divergenti": []
+   },
+   "confronto_con_fonte_automatica": {
+    "eseguito": true,
+    "partite": {
+     "manuale": 91,
+     "automatica": 93,
+     "appaiate": 91,
+     "identiche_su_tutti_i_punteggi": 90,
+     "divergenti": [],
+     "buchi_colmati_dalla_manuale": [
+      {
+       "partita": "2025-08-19 Tranmere-Burton",
+       "differenze": [
+        "rigori: manuale (4, 5) · automatica None"
+       ]
+      }
+     ],
+     "club_dedotti_dalle_partite": {},
+     "appaiate_per_nome_dentro_la_giornata": 0,
+     "contese_lasciate_vuote": 0,
+     "non_appaiate_manuale": [],
+     "non_appaiate_automatica": [
+      "2025-07-29 Barnet FC-Newport County",
+      "2025-08-05 Accrington Stanley-Oldham Athletic"
+     ]
+    },
+    "formazioni": {
+     "squadre_partita_confrontabili": 182,
+     "undici_identici": 182,
+     "giocatori_appaiati_dal_numero_di_maglia": 0,
+     "con_differenze": []
+    }
+   }
+  },
+  "statistiche": {
+   "file": "72952aa2-CarabaoCup_202526_STATISTICHE.xlsx",
+   "sha256": "7dbfdcc663163a3d3dd5391293c4d86378d27d6833cd9499cf44f6ad86a61944",
+   "partite": {
+    "raccolta": 91,
+    "statistiche": 91,
+    "solo_nella_raccolta": [],
+    "solo_nelle_statistiche": []
+   },
+   "fedelta_giocatori": {
+    "righe_prima": 2855,
+    "righe_dopo": 2855,
+    "colonne_prima": 114,
+    "colonne_dopo": 115,
+    "colonne_nuove": [
+     "ID partita"
+    ],
+    "celle_divergenti_oltre_arrotondamento": 0,
+    "colonne_testuali_con_etichette_diverse": {
+     "Turno": 2703
+    }
+   },
+   "statistiche_squadra": {
+    "righe": 546,
+    "partite": 91,
+    "metriche": 35,
+    "per_periodo": {
+     "Totale": 182,
+     "1° tempo": 182,
+     "2° tempo": 182
+    }
+   }
+  }
+ },
+ "files/diretta_fa_cup_2526/manifesto_coppa.json": {
+  "coppa": "FA Cup",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore), raccolta manuale",
+  "file_originale": "originale_coppa.xlsx",
+  "sha256": "a3dadc37031069c6f8aad0bf0eccd13d329186857797cfb6481e858045a3dfca",
+  "conteggi": {
+   "partite": 63,
+   "righe_formazione": 2515,
+   "titolari": 1386,
+   "panchina": 1129,
+   "eventi": 2008,
+   "righe_statistiche": 1974,
+   "metriche_per_giocatore": 103
+  },
+  "verifiche": {
+   "undici_titolari": {
+    "squadre_partita": 126,
+    "con_undici_esatti": 126,
+    "anomale": []
+   },
+   "punteggio_non_somma_i_rigori": {
+    "partite_ai_rigori": 9,
+    "incoerenti": []
+   },
+   "sequenza_rigori": {
+    "partite_ai_rigori": 9,
+    "sequenza_ricompone": 9,
+    "divergenti": []
+   },
+   "confronto_con_fonte_automatica": {
+    "eseguito": true,
+    "partite": {
+     "manuale": 63,
+     "automatica": 123,
+     "appaiate": 63,
+     "identiche_su_tutti_i_punteggi": 63,
+     "divergenti": [],
+     "buchi_colmati_dalla_manuale": [],
+     "club_dedotti_dalle_partite": {},
+     "appaiate_per_nome_dentro_la_giornata": 0,
+     "contese_lasciate_vuote": 0,
+     "non_appaiate_manuale": [],
+     "non_appaiate_automatica": [
+      "2025-10-31 Luton Town-Forest Green Rovers ",
+      "2025-11-01 AFC Wimbledon-Gateshead FC",
+      "2025-11-01 Barnsley FC-York City",
+      "2025-11-01 Blackpool FC-Scunthorpe United",
+      "2025-11-01 Bolton Wanderers-Huddersfield Town",
+      "2025-11-01 Boreham Wood FC-Crawley Town",
+      "2025-11-01 Brackley Town-Notts County",
+      "2025-11-01 Bromley FC-Bristol Rovers",
+      "2025-11-01 Burton Albion-St Albans City",
+      "2025-11-01 Buxton FC-Chatham Town",
+      "2025-11-01 Cambridge United-Chester FC",
+      "2025-11-01 Chelmsford City-Braintree Town",
+      "2025-11-01 Cheltenham Town-Bradford City",
+      "2025-11-01 Colchester United-Milton Keynes Dons",
+      "2025-11-01 Crewe Alexandra-Doncaster Rovers",
+      "2025-11-01 FC Halifax Town-Exeter City",
+      "2025-11-01 Fleetwood Town-Barnet FC",
+      "2025-11-01 Grimsby Town-Ebbsfleet United",
+      "2025-11-01 Macclesfield FC-AFC Totton",
+      "2025-11-01 Mansfield Town-Harrogate Town",
+      "2025-11-01 Newport County-Gillingham FC",
+      "2025-11-01 Oldham Athletic-Northampton Town",
+      "2025-11-01 Peterborough United-Cardiff City",
+      "2025-11-01 Reading FC-Carlisle United",
+      "2025-11-01 Rotherham United-Swindon Town",
+      "2025-11-01 Salford City-Lincoln City",
+      "2025-11-01 Slough Town-Altrincham FC",
+      "2025-11-01 Spennymoor Town-Barrow AFC",
+      "2025-11-01 Stevenage FC-Chesterfield FC",
+      "2025-11-01 Sutton United-AFC Telford United",
+      "2025-11-01 Tranmere Rovers-Stockport County",
+      "2025-11-01 Wealdstone FC-Southend United",
+      "2025-11-01 Weston-super-Mare AFC-Aldershot Town",
+      "2025-11-01 Wigan Athletic-Hemel Hempstead Town",
+      "2025-11-01 Wycombe Wanderers-Plymouth Argyle",
+      "2025-11-02 Eastleigh FC-Walsall FC",
+      "2025-11-02 Gainsborough Trinity-Accrington Stanley",
+      "2025-11-02 Port Vale FC-Maldon & Tiptree FC",
+      "2025-11-02 South Shields FC-Shrewsbury Town",
+      "2025-11-03 Tamworth FC-Leyton Orient",
+      "2025-12-05 Salford City-Leyton Orient",
+      "2025-12-06 Accrington Stanley-Mansfield Town",
+      "2025-12-06 Chelmsford City-Weston-super-Mare AFC",
+      "2025-12-06 Cheltenham Town-Buxton FC",
+      "2025-12-06 Chesterfield FC-Doncaster Rovers",
+      "2025-12-06 Exeter City-Wycombe Wanderers",
+      "2025-12-06 Fleetwood Town-Luton Town",
+      "2025-12-06 Grimsby Town-Wealdstone FC",
+      "2025-12-06 Milton Keynes Dons-Oldham Athletic",
+      "2025-12-06 Peterborough United-Barnsley FC",
+      "2025-12-06 Port Vale FC-Bristol Rovers",
+      "2025-12-06 Stockport County-Cambridge United",
+      "2025-12-06 Sutton United-Shrewsbury Town",
+      "2025-12-06 Swindon Town-Bolton Wanderers",
+      "2025-12-06 Wigan Athletic-Barrow AFC",
+      "2025-12-07 Blackpool FC-Carlisle United",
+      "2025-12-07 Boreham Wood FC-Newport County",
+      "2025-12-07 Gateshead FC-Walsall FC",
+      "2025-12-07 Slough Town-Macclesfield FC",
+      "2025-12-08 Brackley Town-Burton Albion"
+     ]
+    },
+    "formazioni": {
+     "squadre_partita_confrontabili": 124,
+     "undici_identici": 124,
+     "giocatori_appaiati_dal_numero_di_maglia": 0,
+     "con_differenze": []
+    }
+   }
+  },
+  "statistiche": {
+   "file": "fdb79e96-FACup_202526_STATISTICHE.xlsx",
+   "sha256": "090b775c462afccc3132ef6efef9e96159f760f0ceba05ccf5dd99bb9e355a42",
+   "partite": {
+    "raccolta": 63,
+    "statistiche": 63,
+    "solo_nella_raccolta": [],
+    "solo_nelle_statistiche": []
+   },
+   "fedelta_giocatori": {
+    "righe_prima": 1974,
+    "righe_dopo": 1974,
+    "colonne_prima": 114,
+    "colonne_dopo": 115,
+    "colonne_nuove": [
+     "ID partita"
+    ],
+    "celle_divergenti_oltre_arrotondamento": 0
+   },
+   "statistiche_squadra": {
+    "righe": 406,
+    "partite": 63,
+    "metriche": 35,
+    "per_periodo": {
+     "Totale": 126,
+     "1° tempo": 126,
+     "2° tempo": 126,
+     "Supplementari": 28
+    }
+   }
+  }
+ },
+ "files/diretta_la_liga_2526/manifesto.json": {
+  "righe_attese": 11953,
+  "team_partita_attesi": 760,
+  "squadre": 20,
+  "giocatori": 599,
+  "statistiche": 98,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-24",
+  "partite_attese": 380,
+  "join_snapshot": "760/760",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "la_liga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+ },
+ "files/diretta_la_liga_2526/manifesto_squadra.json": {
+  "lega": "la_liga",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 2280,
+  "righe_campionato": 2280,
+  "righe_playoff": 0,
+  "team_partita_attesi": 760,
+  "partite_attese": 380,
+  "squadre": 20,
+  "periodi": [
+   "1° tempo",
+   "2° tempo",
+   "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-24",
+  "join_snapshot": "760/760",
+  "risultato_coerente": "760/760",
+  "snapshot_verificato": true,
+  "additivita_periodi": "29640/29640",
+  "partite_playoff": []
+ },
+ "files/diretta_ligue_1_2526/manifesto.json": {
+  "righe_attese": 9536,
+  "righe_campionato": 9409,
+  "righe_fuori_campionato": 127,
+  "righe_con_zero_minuti": [
+   {
+    "data": "2026-01-31",
+    "squadra": "Nantes",
+    "giocatore": "Youssef Ali"
+   }
+  ],
+  "team_partita_attesi": 612,
+  "squadre": 18,
+  "giocatori": 551,
+  "statistiche": 98,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-17",
+  "partite_attese": 306,
+  "join_snapshot": "612/612",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "ligue_1",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+ },
+ "files/diretta_ligue_1_2526/manifesto_squadra.json": {
+  "lega": "ligue_1",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 1860,
+  "righe_campionato": 1836,
+  "righe_playoff": 24,
+  "team_partita_attesi": 612,
+  "partite_attese": 306,
+  "squadre": 18,
+  "periodi": [
+   "1° tempo",
+   "2° tempo",
+   "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-17",
+  "join_snapshot": "612/612",
+  "risultato_coerente": "612/612",
+  "snapshot_verificato": true,
+  "additivita_periodi": "24180/24180",
+  "partite_playoff": [
+   "12.05.2026 Red Star-Rodez",
+   "15.05.2026 St. Etienne-Rodez",
+   "26.05.2026 St. Etienne-Nice",
+   "29.05.2026 Nice-St. Etienne"
+  ]
+ },
+ "files/diretta_premier_league_2526/manifesto.json": {
+  "righe_attese": 11492,
+  "team_partita_attesi": 760,
+  "squadre": 20,
+  "giocatori": 537,
+  "statistiche": 98,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-24",
+  "partite_attese": 380,
+  "join_snapshot": "760/760",
+  "snapshot_verificato": true,
+  "partite_mancanti": [],
+  "lega": "premier_league",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+ },
+ "files/diretta_premier_league_2526/manifesto_squadra.json": {
+  "lega": "premier_league",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 2280,
+  "righe_campionato": 2280,
+  "righe_playoff": 0,
+  "team_partita_attesi": 760,
+  "partite_attese": 380,
+  "squadre": 20,
+  "periodi": [
+   "1° tempo",
+   "2° tempo",
+   "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-15",
+  "data_ultima": "2026-05-24",
+  "join_snapshot": "760/760",
+  "risultato_coerente": "760/760",
+  "snapshot_verificato": true,
+  "additivita_periodi": "29640/29640",
+  "partite_playoff": []
+ },
+ "files/diretta_serie_a_2526/manifesto.json": {
+  "righe_attese": 11894,
+  "team_partita_attesi": 758,
+  "squadre": 20,
+  "giocatori": 584,
+  "statistiche": 98,
+  "data_prima": "2025-08-23",
+  "data_ultima": "2026-05-24",
+  "partite_attese": 379,
+  "join_snapshot": "758/758",
+  "snapshot_verificato": true,
+  "partite_mancanti": [
+   {
+    "data": "2025-12-27",
+    "casa": "Lecce",
+    "trasferta": "Como"
+   }
+  ],
+  "lega": "serie_a",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)"
+ },
+ "files/diretta_serie_a_2526/manifesto_squadra.json": {
+  "lega": "serie_a",
+  "stagione": "2526",
+  "fonte": "diretta.it (Flashscore)",
+  "righe_attese": 2280,
+  "righe_campionato": 2280,
+  "righe_playoff": 0,
+  "team_partita_attesi": 760,
+  "partite_attese": 380,
+  "squadre": 20,
+  "periodi": [
+   "1° tempo",
+   "2° tempo",
+   "Totale"
+  ],
+  "statistiche": 45,
+  "data_prima": "2025-08-23",
+  "data_ultima": "2026-05-24",
+  "join_snapshot": "760/760",
+  "risultato_coerente": "760/760",
+  "snapshot_verificato": true,
+  "additivita_periodi": "29640/29640",
+  "partite_playoff": []
+ },
+ "files/tre_fonti_bundesliga2_2526/manifesto.json": {
+  "lega": "bundesliga2",
+  "competizione": "2. Bundesliga (Germania)",
+  "divisione": 2,
+  "stagione": "2526",
+  "consegnata": "2026-08-18 (due zip: raccolta + Eventi_Opta a parte)",
+  "fonti": [
+   "SofaScore",
+   "WhoScored"
+  ],
+  "fonti_assenti": {
+   "Understat": "non copre la seconda divisione tedesca: menu a 6 leghe di prima divisione, 6 varianti di URL a 404, pagine squadra che servono un altro anno o un'altra competizione (Hamburger SV risponde 2025/26 ma di Bundesliga, dove e' stato promosso)"
+  },
+  "e_campionato": true,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 93886,
+    "sha256": "ef429507e49c5555cffaf987eb68cd3f59b6a8669c59069dce099f652c17fc6f"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 460190,
+    "sha256": "618a062b4042a766ad7e3242f24813a911c72047e1eb4ed663679d0fd6bd118f"
+   },
+   "giocatori.csv.gz": {
+    "righe": 12857,
+    "sha256": "c4ea12ef871cb8d099e828ab91ddd6aca6411bf000a92c029f7a4fb0a64753a1"
+   },
+   "heatmap.csv.gz": {
+    "righe": 461520,
+    "sha256": "9c2bae604eb23ac0f14bd6c6490613579e5b0c1f829d196249c2a0c711e1d00e"
+   },
+   "legenda.csv.gz": {
+    "righe": 479,
+    "sha256": "cc53bffc1be6f29798a62a31c5f757a06a3d38173285c6ffc7fcc7540f9aa4be"
+   },
+   "squadre.csv.gz": {
+    "righe": 1918,
+    "sha256": "f39353d6f8bebcde07e7c42b2439f166103797a52375dc0d6a1436bda08c1389"
+   }
+  },
+  "squadre": 18,
+  "squadre_con_spareggi": 20,
+  "partite": 310,
+  "partite_campionato": 306,
+  "giornate": 34,
+  "spareggio": {
+   "turni": [
+    "Finale"
+   ],
+   "partite": 4,
+   "righe_escluse_squadre": 8,
+   "estranee": [
+    "Rot-Weiss Essen (3. Liga)",
+    "VfL Wolfsburg (Bundesliga)"
+   ],
+   "nota": "sono i VERI spareggi promozione/retrocessione, andata e ritorno: tirano dentro due squadre estranee al campionato. Caso opposto al playoff di LaLiga2, che e' fra squadre della stessa lega"
+  },
+  "copertura_opta": "306/310 partite (460.190 eventi). Le 4 mancanti sono gli spareggi: le loro pagine WhoScored pesano ~100 KB contro ~1 MB, cioe' non hanno match centre. Su quelle resta initialMatchDataForScrappers, 61 righe evento dentro eventi.csv",
+  "aggancio_snapshot": null,
+  "nota_snapshot": "non esiste data/bundesliga2_matches.csv: la seconda divisione tedesca non e' in LEAGUE_CONFIGS. Valgono i controlli interni.",
+  "verifiche_nostre": {
+   "gol_eventi_vs_punteggio": "620/620 squadra-partita (903 gol, 26 autogol, 74 rigori)",
+   "identita_gol_1T_2T_suppl": "310/310 — con UNA partita ai supplementari (SC Paderborn 07-VfL Wolfsburg, 25/05/2026)",
+   "legenda_copre_ogni_colonna": "450/450 su 5 file",
+   "eventi_opta_squadra": "14 nomi corti su 18 riportati alla forma lunga, accoppiamento LETTO dal dato (Campo + Casa/Trasferta), non per somiglianza",
+   "id_partita_eventi": "colonna di TESTO a due formati su 61 righe, riparata in lettura"
+  }
+ },
+ "files/tre_fonti_bundesliga_2526/manifesto.json": {
+  "lega": "bundesliga",
+  "stagione": "2526",
+  "fonti": [
+   "SofaScore",
+   "WhoScored (Opta)",
+   "Understat"
+  ],
+  "consegnata": "2026-08-11 (due zip)",
+  "partite": 306,
+  "squadre": 18,
+  "completa": "sei blocchi su sei",
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 99543,
+    "sha256": "a2d2125812b6f3bcfefb758031f7d1e0ba74abb845e9b08dbaaffadcfb03f888"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 478270,
+    "sha256": "34d88e300b2d3e190487f79fe967795d2fcd47701ae4e73db2ba6f6a8935257d"
+   },
+   "giocatori.csv.gz": {
+    "righe": 13456,
+    "sha256": "139454ebee22636c457db01ebd744f1f25feeca705cccd8bfa2fbb7eb5bdab9e"
+   },
+   "heatmap.csv.gz": {
+    "righe": 477252,
+    "sha256": "f707e10d6d832a653370e8a3bccd6b4602658934a15c5dba21045ea2f60b64b4"
+   },
+   "legenda.csv.gz": {
+    "righe": 560,
+    "sha256": "82f1bcad105bdfcafdf41b294acca82626836f1a6b2fb05394616c1aef42042b"
+   },
+   "squadre.csv.gz": {
+    "righe": 1906,
+    "sha256": "d8a9bbeab05b731650cd7a95f191e2e51a4b6829a1ee81f7818077325b356edc"
+   }
+  },
+  "aggancio_snapshot": {
+   "squadre": "612/612",
+   "giocatori": "612/612",
+   "heatmap": "612/612",
+   "eventi_opta": "612/612"
+  },
+  "attenzione_dimensioni": "18 squadre e 306 partite, non 20 e 380: le assunzioni «760 attese» valgono solo per le tre leghe latine. tre_fonti.DIMENSIONI tiene i due formati",
+  "spareggio": {
+   "cos_e": "le ultime 2 partite (Wolfsburg-Paderborn, andata e ritorno) sono lo spareggio promozione/retrocessione contro una squadra di SECONDA divisione",
+   "marcatore": "Turno == 'Finale' — l'unico valore che non sia 'Giornata N' (35 turni distinti, uno solo fuori schema)",
+   "effetto_se_lasciate": "616 righe invece di 612, e una 19a squadra (Paderborn) che nel campionato non c'e'. Nei nostri snapshot quelle partite NON esistono",
+   "trattamento": "escluse per default, come player_stats.load_player_matches. spareggio=True le rimette"
+  },
+  "difetto_nuovo": {
+   "quale": "la colonna Squadra di eventi_opta usa la SIGLA «RBL» per RB Leipzig, mentre Casa/Trasferta scrivono il nome intero",
+   "effetto": "aggancio di eventi_opta fermo a 578/612; le PARTITE agganciavano tutte, quindi un controllo per partita non lo vedeva",
+   "riparazione": "tre_fonti.ALIAS_RACCOLTA['bundesliga']",
+   "e_la_seconda_volta": "stesso difetto della Liga («Atletico» nudo): due leghe su quattro, sempre UNA squadra, sempre quella colonna. Non e' un incidente, e' una proprieta' di eventi_opta"
+  },
+  "alias_globali_aggiunti": [
+   "1. FC Heidenheim -> Heidenheim",
+   "Borussia M'gladbach -> M'gladbach"
+  ],
+  "difetto_CHIUSO_a_monte": {
+   "quale": "il falso positivo sul possesso",
+   "come": "l'export aggiunge la colonna «possession % (normalizzato) (WhoScored)», che coincide con SofaScore entro 1 punto su 610 righe su 612",
+   "effetto": "la discordanza «possesso» dichiarata scende da 760/760 (le prime tre leghe) a 2/612"
+  },
+  "discordanze": {
+   "squadra": {
+    "corner": 8,
+    "possesso": 2,
+    "tiri": 1,
+    "tiri in porta": 1,
+    "passaggi": 2
+   },
+   "giocatore": {
+    "minuti": 5248,
+    "passaggi chiave": 151,
+    "tiri": 84,
+    "passaggi totali": 34,
+    "gol": 2,
+    "assist": 8,
+    "tiri in porta": 2
+   }
+  },
+  "id_evento_duplicati": 79
+ },
+ "files/tre_fonti_community_shield_2526/manifesto.json": {
+  "lega": "community_shield",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 6,
+    "sha256": "65346eead5eb7e9722988b64ae5495bd747242b50d04229f5c9e662796f0d60f"
+   },
+   "giocatori.csv.gz": {
+    "righe": 107,
+    "sha256": "260c07770e76b9a5077b23dbd59e2e0b49e0d9c7bdd55cf6ea805e75e7cdbd2c"
+   },
+   "eventi.csv.gz": {
+    "righe": 320,
+    "sha256": "7785854e670562cc66db7bd8f5658237e3621b060c073d445a98c0b00b8b11d0"
+   },
+   "heatmap.csv.gz": {
+    "righe": 1464,
+    "sha256": "caa191357cf7b3d3da1bc1ebd8f0a33c987a1b7300cfc00ff4353b469834e791"
+   },
+   "legenda.csv.gz": {
+    "righe": 330,
+    "sha256": "932c3cb06da3bf28763ef9b7580a7c2a770ea3f9933ab9807adcf138747f8e68"
+   }
+  }
+ },
+ "files/tre_fonti_dfl_supercup_2526/manifesto.json": {
+  "lega": "dfl_supercup",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 6,
+    "sha256": "47963db512da499d70266c24b6d9ef503c56727959becfeb9c01e771f392d812"
+   },
+   "giocatori.csv.gz": {
+    "righe": 114,
+    "sha256": "1c9cd7a154c7d7a0f4106f9b47ae5e971e2f56c06f2456cb0278645e0539b1bb"
+   },
+   "eventi.csv.gz": {
+    "righe": 314,
+    "sha256": "2ad384d4a5ca0af26e96399d73b1be19a80af5ae764d53b07e093fb6b6276dc7"
+   },
+   "heatmap.csv.gz": {
+    "righe": 1445,
+    "sha256": "c6528716f0c1cd8adb151fd6224459eb71d206cd931522b273bda716c68f45bd"
+   },
+   "legenda.csv.gz": {
+    "righe": 325,
+    "sha256": "8c10bc5c6e3d90bdd2bfa4bc63628dcee1ee6b77594d59f6309d68e78a29c4da"
+   }
+  }
+ },
+ "files/tre_fonti_la_liga_2526/manifesto.json": {
+  "lega": "la_liga",
+  "stagione": "2526",
+  "fonti": [
+   "SofaScore",
+   "WhoScored (Opta)",
+   "Understat"
+  ],
+  "consegnata": "2026-08-11",
+  "partite": 380,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 123834,
+    "sha256": "0bff38f7afeec41c652e200908120cdb02ab75a2e4a064ff20a7f2193f44dca8"
+   },
+   "eventi_opta_parte1.csv.gz": {
+    "righe": 288798,
+    "sha256": "337c921f41f24af08e5d07612e8dc228c9e796a7749038fcfb9d2850b7b3d986"
+   },
+   "eventi_opta_parte2.csv.gz": {
+    "righe": 288407,
+    "sha256": "4fa44098090b61c1a7fd27ad0c91bc4abb86619ad62041f7e05ce54df20a16fb"
+   },
+   "giocatori.csv.gz": {
+    "righe": 18329,
+    "sha256": "3f240dd438a8433c19fa9a4a5db9f0c4af6587d596df0f993e59ab767717a49e"
+   },
+   "heatmap.csv.gz": {
+    "righe": 570768,
+    "sha256": "fed495e009088c06f77c56b788018dc11868ac8196fd80aca81f3ecbdbbe5037"
+   },
+   "legenda.csv.gz": {
+    "righe": 543,
+    "sha256": "fcfafdb9698c138f01dc66708e4f03cb2223e59185ccc4c2ff10b2264ad30253"
+   },
+   "squadre.csv.gz": {
+    "righe": 2340,
+    "sha256": "5c9a70755970e2f56e3a527d1eb7d91fdea0925c757841070eb8120635a77bee"
+   }
+  },
+  "schema": "IDENTICO alla Serie A su tutti e cinque i file consegnati (la Premier aveva 3 colonne in piu')",
+  "aggancio_snapshot": {
+   "squadre": "760/760",
+   "giocatori": "760/760",
+   "heatmap": "760/760",
+   "eventi_opta": "760/760"
+  },
+  "generalizzazione": "il modulo ha retto SENZA modifiche al codice di lettura: 760/760 al primo colpo. L'unico intervento e' stato aggiungere lo stato «quasi vuota» per Meteo",
+  "difetti": {
+   "si_ripetono": [
+    {
+     "quale": "ID partita misto",
+     "valori_distinti": 538,
+     "attesi": 380,
+     "confronto": "Serie A 436 · Premier 384 · Liga 538 — il peggiore delle tre"
+    },
+    {
+     "quale": "Understat perde gol",
+     "righe": 4,
+     "confronto": "Serie A 2 · Premier 3 · Liga 4",
+     "direzione": "sempre +1 a SofaScore, autogol sempre 0 — 9 righe su 9 nelle tre leghe"
+    },
+    {
+     "quale": "discordanza «possesso» falsa",
+     "righe": 760,
+     "nota": "760/760 su tutte e tre le leghe"
+    }
+   ],
+   "non_si_ripetono": [
+    {
+     "quale": "righe orfane della fusione",
+     "liga": 0,
+     "confronto": "Serie A 2 · Premier 0 · Liga 0"
+    },
+    {
+     "quale": "copertura Meteo",
+     "liga": "0,3% (2 righe su 760) = QUASI VUOTA",
+     "confronto": "Serie A 0,0% vuota · Premier 98,4% piena · Liga 0,3% quasi vuota",
+     "conseguenza": "tre stati, non due: da cui tre_fonti.copertura()"
+    }
+   ]
+  },
+  "discordanze": {
+   "squadra_vere": 27,
+   "dettaglio_squadra": "corner 22, falli 3, passaggi 2",
+   "giocatore": {
+    "minuti": 6608,
+    "passaggi chiave": 161,
+    "tiri": 102,
+    "passaggi totali": 90,
+    "gol": 4,
+    "assist": 7
+   }
+  },
+  "espanyol": "la raccolta scrive «Espanyol», TEAM_ALIASES lo porta a «Espanol» come il nostro snapshot: aggancia. ⚠️ NON confondere con il reperto dell'audit d'identita', che riguarda club_matching.Agganciatore e resta aperto",
+  "completa": "sei blocchi su sei; eventi_opta consegnato in DUE parti",
+  "eventi_opta_spezzato": {
+   "parti": 2,
+   "righe_totali": 577205,
+   "partite": 380,
+   "taglio": "GREZZO, non logico: cade dentro Levante-Espanyol dell'11/01/2026 — 166 eventi in parte1 (fino al 7' del primo tempo) e 1.327 in parte2, contro una mediana di 1.517 a partita",
+   "perche_conta": "chi leggesse una parte sola vedrebbe quella partita monca senza che nulla glielo dica: 166 e' un numero plausibile per una riga di dati, e nessun conteggio di righe se ne accorge",
+   "trattamento": "tre_fonti._leggi() ricompone in ordine di suffisso numerico (non alfabetico: con dieci parti parte10 verrebbe prima di parte2). _percorso() ALZA se il blocco e' spezzato",
+   "eventi_duplicati_fra_le_parti": 0
+  },
+  "due_convenzioni_nello_stesso_file": {
+   "quale": "eventi_opta scrive «Atletico» NUDO nella colonna Squadra e «Atlético Madrid» in Casa/Trasferta",
+   "effetto_misurato": "aggancio di eventi_opta fermo a 722/760 squadra-partita, tutte e 38 le mancanti dell'Atletico. ⚠️ Le PARTITE agganciavano 380/380: un controllo per partita non lo vedeva",
+   "riparazione": "alias in tre_fonti.ALIAS_RACCOLTA, NON in sources.TEAM_ALIASES: quella mappa e' globale e «Atletico» da solo e' ambiguo fuori dalla Liga (Mineiro, Nacional...). Metterlo li' sarebbe un join che indovina",
+   "non_si_ripete": "colonna Squadra di eventi_opta: 0 nomi non agganciati in Serie A e Premier"
+  },
+  "id_evento": {
+   "univoco": false,
+   "duplicati": {
+    "serie_a": 45,
+    "premier_league": 82,
+    "la_liga": 44
+   },
+   "nota": "presenti anche nei file NON spezzati, quindi non e' un effetto della ricomposizione. Parte dentro la stessa partita, parte fra partite diverse. NON usare come chiave primaria"
+  }
+ },
+ "files/tre_fonti_laliga2_2526/manifesto.json": {
+  "lega": "laliga2",
+  "competizione": "LaLiga 2 (Segunda Division / LaLiga Hypermotion), Spagna",
+  "divisione": 2,
+  "stagione": "2526",
+  "consegnata": "2026-08-18 (due zip: puliti + grezzi)",
+  "fonti": [
+   "SofaScore",
+   "WhoScored"
+  ],
+  "fonti_assenti": {
+   "Understat": "non copre la seconda divisione spagnola: menu a 6 leghe di prima divisione, 5 varianti di URL a 404, pagine squadra che servono in silenzio un altro anno. Prova in grezzi/LL2_2526_understat_verifica.json.gz",
+   "Opta (WhoScored)": "nessun matchCentreData su 468 pagine su 468 (~101 KB contro 1,14 MB del controllo positivo di LaLiga). Per questo eventi_opta NON esiste. Prova in grezzi/LL2_2526_ws_controllo2.json.gz"
+  },
+  "e_campionato": true,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 94404,
+    "sha256": "37df380e4b531ec85bdceb31938f29baf4db8f5214c682f12799a88a2d0d17dc"
+   },
+   "giocatori.csv.gz": {
+    "righe": 21483,
+    "sha256": "82cc40cab0497da9b387a6037c3afe76b323cd17faa0ad652c5693932ced4b59"
+   },
+   "heatmap.csv.gz": {
+    "righe": 675209,
+    "sha256": "957167e767ea022a7c1bc7807dfb0401225edf2c1eec82809a6d4bb3edb9327c"
+   },
+   "legenda.csv.gz": {
+    "righe": 355,
+    "sha256": "868ec60e98d0db616a6cb37fa965a526ffba3266975a77ce00bab284ca134c95"
+   },
+   "squadre.csv.gz": {
+    "righe": 2874,
+    "sha256": "88a7d211426f5fa11e5ad8dc5933af383d6150899668c8435f1474d7e5cda21b"
+   }
+  },
+  "grezzi": {
+   "LL2_2526_sofascore.json.gz": {
+    "byte": 17116322,
+    "sha256": "7cd70026cc0777341c2a023de57dafc40ee4f448c82c92a013419121d721790f"
+   },
+   "LL2_2526_ss_calendario.json.gz": {
+    "byte": 157809,
+    "sha256": "d6fda8227da5cbebae81fece76c5b4cf7453b6ceaa20c79d0573c0cece4e8df3"
+   },
+   "LL2_2526_torneo.json.gz": {
+    "byte": 382795,
+    "sha256": "a1a3e6fe852b20eedcc681f19415a625fd51328b692de857e135425f2db21be8"
+   },
+   "LL2_2526_understat_verifica.json.gz": {
+    "byte": 643,
+    "sha256": "df54c1fa6e46f8d67d06a9df498e3bb0a0506bd1e1665a56b8e8276df8f9c75a"
+   },
+   "LL2_2526_whoscored.json.gz": {
+    "byte": 460991,
+    "sha256": "9c64fc48f2526d5071a6c3b5ae2e268db70466f69ab740f00a09ac7afbbbd6af"
+   },
+   "LL2_2526_ws_controllo2.json.gz": {
+    "byte": 442,
+    "sha256": "14bb29e570adca17976bfe74bbdc738c00213cf1c39effcf36ea0dc2ebc8a3d2"
+   },
+   "LL2_2526_ws_indice.json.gz": {
+    "byte": 4412,
+    "sha256": "82a19fd5204d1101fb2841f2b1c8194f8f113c3f76719f92add3fd49885fa76d"
+   }
+  },
+  "squadre": 22,
+  "partite": 468,
+  "partite_campionato": 462,
+  "giornate": 42,
+  "playoff": {
+   "turni": [
+    "Semifinali",
+    "Finale"
+   ],
+   "partite": 6,
+   "righe_escluse_squadre": 36,
+   "nota": "il playoff promozione e' fra squadre di LaLiga2: escluderlo NON toglie nessuna squadra (22 con e senza), a differenza dello spareggio di Bundesliga e Ligue 1 che tira dentro squadre di seconda divisione"
+  },
+  "aggancio_snapshot": null,
+  "nota_snapshot": "non esiste data/laliga2_matches.csv: la seconda divisione spagnola non e' in LEAGUE_CONFIGS. La raccolta non e' agganciabile a uno snapshot e i controlli di aggancio delle altre leghe qui non si applicano.",
+  "verifiche_nostre": {
+   "gol_eventi_vs_punteggio": "936/936 squadra-partita (1.229 gol, autogol compresi)",
+   "identita_gol_1T_2T": "468/468",
+   "legenda_v2_copre_ogni_colonna": "328/328 su 4 file",
+   "id_partita_eventi": "colonna di TESTO a due formati, riparata in lettura"
+  }
+ },
+ "files/tre_fonti_ligue_1_2526/manifesto.json": {
+  "lega": "ligue_1",
+  "stagione": "2526",
+  "consegnata": "2026-08-11 (zip)",
+  "fonti": [
+   "SofaScore",
+   "WhoScored",
+   "Understat"
+  ],
+  "e_campionato": true,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 99730,
+    "sha256": "94d5c2e062c472f86ec1b48b8e87a095475c98330b84e688ad71afda35e72b1d"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 467318,
+    "sha256": "3ef3ceea37f10c1ef4f7f3f3c3d4c0ab7faa00cf7e962f7a7704d53cbc689f09"
+   },
+   "giocatori.csv.gz": {
+    "righe": 13444,
+    "sha256": "e5771c7e5155a8058030e97e8b8a95c45c521ac98011da92a8ff20f1c6b4347d"
+   },
+   "heatmap.csv.gz": {
+    "righe": 469243,
+    "sha256": "639bdd8859473e479bb5fa98a20a85a077ac634ad150f18e7d19ec31b3abff65"
+   },
+   "legenda.csv.gz": {
+    "righe": 548,
+    "sha256": "cb9b6a11bdfbd0d094977827676531db8f7798412a32e29a236b7d61eec115f4"
+   },
+   "squadre.csv.gz": {
+    "righe": 1912,
+    "sha256": "568e3ffa8d7af12733eec3202ece80c4770c4b534c44fabb8836623fc5f63333"
+   }
+  },
+  "righe_totale": 612,
+  "squadre": 18,
+  "partite": 306,
+  "aggancio_snapshot": "612/612 su squadre, giocatori, heatmap ed eventi_opta",
+  "spareggio": {
+   "turni": [
+    "1° turno preliminare",
+    "2° turno preliminare",
+    "Finale"
+   ],
+   "righe_escluse": 8,
+   "nota": "lo spareggio francese e' a TRE turni, non uno: la costante Turno=='Finale' della Bundesliga ne avrebbe preso un quarto"
+  }
+ },
+ "files/tre_fonti_premier_league_2526/manifesto.json": {
+  "lega": "premier_league",
+  "stagione": "2526",
+  "fonti": [
+   "SofaScore",
+   "WhoScored (Opta)",
+   "Understat"
+  ],
+  "consegnata": "2026-08-11",
+  "partite": 380,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 120156,
+    "sha256": "640f29ec7fee18adc2ac0636a99a770bbacda3048740e2ae51fcd0b34545944d"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 577884,
+    "sha256": "ef67185f50626bea7a7f19f7df242fe44892de4d8b3991946dac2bf733777e43"
+   },
+   "giocatori.csv.gz": {
+    "righe": 16400,
+    "sha256": "1a88c8ee48df94efbadf312b8d6bd0328257ff485b007d84cdbdee4a18b2cb36"
+   },
+   "heatmap.csv.gz": {
+    "righe": 573203,
+    "sha256": "91bed54c092a85726fd08fad43907fcb5f8001f4588099f482bc11886309bd14"
+   },
+   "legenda.csv.gz": {
+    "righe": 543,
+    "sha256": "3b9de82cd91a439ba5bb79e49dbc627decb5c468b95b6358ab2a117af3b68f02"
+   },
+   "squadre.csv.gz": {
+    "righe": 2340,
+    "sha256": "7ac0c7c9b51c53c4b21acf5dfe3a0054561551e4303e11b3138ae939c4daf3f3"
+   }
+  },
+  "aggancio_snapshot": {
+   "squadre": "760/760",
+   "giocatori": "760/760",
+   "heatmap": "760/760",
+   "eventi_opta": "760/760"
+  },
+  "schema_vs_serie_a": {
+   "esito": "SOVRAINSIEME: 3 colonne in piu', nessuna mancante",
+   "in_piu": [
+    "Average rating (SofaScore)",
+    "Km camminati (SofaScore)",
+    "Km di corsa lenta (SofaScore)"
+   ]
+  },
+  "difetti_che_SI_ripetono": [
+   {
+    "quale": "colonna ID partita mista",
+    "serie_a": "436 valori per 380 partite",
+    "premier": "384"
+   },
+   {
+    "quale": "discordanza 'possesso' falsa",
+    "nota": "760/760 righe, unita' diverse (percentuale contro conteggio)"
+   },
+   {
+    "quale": "Understat perde gol",
+    "serie_a": "2 righe",
+    "premier": "3 righe",
+    "direzione": "sempre +1 a SofaScore, autogol sempre 0"
+   }
+  ],
+  "difetti_che_NON_si_ripetono": [
+   {
+    "quale": "righe orfane della fusione",
+    "serie_a": "2 (Verona/Hellas Verona)",
+    "premier": "0 — 760/760 pulite"
+   },
+   {
+    "quale": "colonna Meteo vuota",
+    "serie_a": "0,0% piena",
+    "premier": "95,9% piena"
+   }
+  ],
+  "alias_aggiunto": "Wolverhampton -> Wolves in sources.TEAM_ALIASES: era l'unica delle 20 squadre a non agganciare",
+  "discordanze": {
+   "squadra_vere": 21,
+   "giocatore": 6089,
+   "dettaglio_squadra": "corner 11, falli 6, passaggi 4 (piu' 760 'possesso' che sono il falso positivo)"
+  },
+  "completa": "sei file su sei, heatmap inclusa (consegnata poco dopo gli altri cinque)",
+  "heatmap": {
+   "righe": 573203,
+   "partite": 380,
+   "giocatori": 534,
+   "nota": "schema identico alla Serie A; la colonna Tocchi e' vuota al 100% su ENTRAMBE le leghe — e' del formato, non della consegna"
+  }
+ },
+ "files/tre_fonti_serie_a_2526/manifesto.json": {
+  "lega": "serie_a",
+  "stagione": "2526",
+  "fonti": [
+   "SofaScore",
+   "WhoScored (Opta)",
+   "Understat"
+  ],
+  "consegnata": "2026-08-11",
+  "partite": 380,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 122209,
+    "sha256": "0254538702528194974d777993301dc10b4a4d6f8746a70a5d54fc177542b248"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 562672,
+    "sha256": "c63c5b5e8aea065d310e1fb012f6054d3701f826241e3297feab094a3c2d8749"
+   },
+   "giocatori.csv.gz": {
+    "righe": 19126,
+    "sha256": "d6ad895dcce22b30d348034af3861d886876f9482b79354c8b902619bd85078e"
+   },
+   "giocatori_v1.csv.gz": {
+    "righe": 19126,
+    "sha256": "23610942c9911ebcab26da89492380ff0faaac9e1fd327c5de0a2ed3701f8f8e"
+   },
+   "heatmap.csv.gz": {
+    "righe": 556996,
+    "sha256": "54b374c1de2fee978a6344f83906a84e9644d558fe275546515695cfce90f1c1"
+   },
+   "legenda.csv.gz": {
+    "righe": 538,
+    "sha256": "25c6e656e1e8a06fd16ab07e0f3206a17ad114d558abe7d15483a10ddff3d3fc"
+   },
+   "legenda_v1_incompleta.csv.gz": {
+    "righe": 440,
+    "sha256": "d2e45a53527ba30a799728b479fb7d33eb0e592fac8f0ac8a1d87867fde1e06d"
+   },
+   "legenda_v2.csv.gz": {
+    "righe": 522,
+    "sha256": "f02df9f09324923d3738de0867d35c8e29af35ff25a85247a5ba67865f3be013"
+   },
+   "squadre.csv.gz": {
+    "righe": 2342,
+    "sha256": "9d194f4b3d57e31ee3de495ef6f76084926bf243f3acc23d892a0e7227baa5e1"
+   },
+   "squadre_v1.csv.gz": {
+    "righe": 2342,
+    "sha256": "fa4dbf2d68d957f234978ee70dc4f82240239964ff3e0f99f7f0dfc28770c262"
+   }
+  },
+  "grane": {
+   "squadre": "squadra-partita-periodo (Totale/1T/2T) + 60 righe di classifica",
+   "giocatori": "giocatore-partita (+ livelli Rosa e Stagione)",
+   "eventi": "CONTENITORE: 7 categorie, 5 di partita e 2 di squadra",
+   "eventi_opta": "evento (ogni tocco)",
+   "heatmap": "posizione (ogni tocco)"
+  },
+  "aggancio_snapshot": {
+   "squadre": "760/760",
+   "giocatori": "760/760",
+   "heatmap": "760/760",
+   "eventi_opta": "760/760",
+   "eventi": "380/380 partite (cat. di partita), 760/760 e 759/759 (cat. di squadra)"
+  },
+  "riparazioni_in_lettura": [
+   {
+    "id": 1,
+    "cosa": "2 righe orfane Verona/Hellas Verona scartate (duplicato parziale, dato non perso)",
+    "effetto": "762 righe Totale -> 760"
+   },
+   {
+    "id": 2,
+    "cosa": "colonna 'ID partita' rinominata 'ID partita (misto, NON usare)': impila 3 numerazioni (436 valori distinti contro 380)",
+    "effetto": "un join su quella colonna appaierebbe partite diverse senza errore"
+   },
+   {
+    "id": 3,
+    "cosa": "colonne vuote dichiarate",
+    "dettaglio": {
+     "squadre": [
+      "Meteo (WhoScored)"
+     ],
+     "heatmap": [
+      "Tocchi"
+     ]
+    }
+   },
+   {
+    "id": 4,
+    "cosa": "2 gol persi da Understat allineati a SofaScore, marcati in 'gol_corretto_da_noi'",
+    "verifica": "NON sono autogol: Autogol=0 su entrambe, gli eventi danno Gol/regular + Tiro + scoreChange allo stesso minuto, e lo snapshot football-data conferma il punteggio. Quattro fonti concordi",
+    "righe": [
+     {
+      "data": "2026-02-15",
+      "giocatore": "Nikola Moro",
+      "squadra": "Bologna"
+     },
+     {
+      "data": "2025-12-27",
+      "giocatore": "Pierre Kalulu",
+      "squadra": "Juventus"
+     }
+    ]
+   },
+   {
+    "id": 5,
+    "cosa": "preferenza di fonte dichiarata",
+    "dettaglio": {
+     "gol": "SofaScore",
+     "minuti": "SofaScore",
+     "xG": "entrambe separate: sono due MODELLI diversi (971,4 contro 1077,5 di somma stagionale)"
+    }
+   }
+  ],
+  "limiti_non_riparati": [
+   "Spettatori e' post ma sta fra colonne anagrafiche: trappola R8",
+   "discordanze dichiarate dal file: 6.616 righe su 19.126 (34,6%) — 6.597 minuti (convenzione sul minuto del cambio, non errore), 44 tiri, 2 gol (questi corretti)"
+  ],
+  "controprova_gol": "323 partite appaiate contro data/serie_a_matches.csv, 323 gol identici, 0 divergenze",
+  "legenda": {
+   "v2 (in uso)": "legenda.csv.gz — 522 righe, COMPLETA: 503 colonne su 503 documentate, zero scoperte (misurato)",
+   "v1 (conservata)": "legenda_v1_incompleta.csv.gz — 440 righe, consegnata per prima. Lasciava scoperte 53 colonne, fra cui TUTTO eventi_opta. Conservata per la regola 5-ter: e' l'originale come consegnato",
+   "schemi_diversi": "v1 usa (Sezione,Voce,Dettaglio,...), v2 usa (Sezione,File,Colonna o voce,...). tre_fonti.legenda(versione=) legge entrambe"
+  },
+  "limiti_chiusi": [
+   {
+    "cosa": "legenda incompleta",
+    "quando": "11/08/2026, consegna v2",
+    "esito": "503/503 colonne documentate"
+   }
+  ],
+  "consegne": [
+   {
+    "quando": "11/08/2026 (1a)",
+    "cosa": "5 file, legenda v1",
+    "limite": "legenda incompleta: 53 colonne scoperte, tutto eventi_opta"
+   },
+   {
+    "quando": "11/08/2026 (2a)",
+    "cosa": "Squadre.csv + legenda v2",
+    "esito": "legenda completa: 503/503 colonne"
+   },
+   {
+    "quando": "11/08/2026 (3a)",
+    "cosa": "Squadre e Giocatori con colonna Discordanze piu' ricca, legenda v3",
+    "esito": "NESSUNO dei 5 difetti chiuso; guadagno tutto in DICHIARAZIONE: Discordanze anche a livello squadra, 3 categorie nuove a livello giocatore, e una sezione «Confronto fonti» che quantifica il disaccordo su xG/xA/rating",
+    "versioni_precedenti_conservate": [
+     "squadre_v1.csv.gz",
+     "giocatori_v1.csv.gz",
+     "legenda_v2.csv.gz",
+     "legenda_v1_incompleta.csv.gz"
+    ]
+   }
+  ],
+  "discordanza_falsa": {
+   "quale": "possesso",
+   "righe": "760 su 762 a livello squadra",
+   "perche": "Ball possession (SofaScore) e' una PERCENTUALE (21-79, somma 100 fra le due squadre); possession (WhoScored) e' un CONTEGGIO (201-800, somma ~898). Non possono coincidere mai: il flag e' vero PER COSTRUZIONE e non porta informazione. Unita' diverse, non disaccordo",
+   "controesempio": "la discordanza sui corner e' invece VERA: 18 righe marcate, e ri-calcolandola in modo indipendente (SofaScore contro cornersTotal) escono le stesse 18, tutte a -1",
+   "trattamento": "tre_fonti.discordanze() e discordanze_squadra() tolgono il TOKEN falso, non la riga (tutte e 18 le righe corner portano anche 'possesso': un filtro per riga le azzerava)"
+  }
+ },
+ "files/tre_fonti_supercopa_espana_2526/manifesto.json": {
+  "lega": "supercopa_espana",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 18,
+    "sha256": "42d4493f57010e91ebf66f23b1dee33c64bdedef1092c71781d32507dc654f2c"
+   },
+   "giocatori.csv.gz": {
+    "righe": 269,
+    "sha256": "58fb0aebc1a300b51e7116292f8c3dd92e803e9405b822dc676c38f301a60233"
+   },
+   "eventi.csv.gz": {
+    "righe": 891,
+    "sha256": "0e6cec2d912b264089764c91f1f16141769c2d9cc56c977f4506b352d620508b"
+   },
+   "heatmap.csv.gz": {
+    "righe": 4777,
+    "sha256": "8a5cf6fab4e3fd4e828b4badd93a222a28483a6dcd6ac457ab002cc85c756d71"
+   },
+   "legenda.csv.gz": {
+    "righe": 342,
+    "sha256": "a5d3cd37b4b6f49011af891defd12fe4eb2ba2bbf143a59e8b78a85e3645e23f"
+   }
+  }
+ },
+ "files/tre_fonti_supercoppa_italiana_2526/manifesto.json": {
+  "lega": "supercoppa_italiana",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 18,
+    "sha256": "4ec954cbfa1de8b0a5a7bc4a1f3720d6347e8314cfd3a357a653fbbcfb9adf0e"
+   },
+   "giocatori.csv.gz": {
+    "righe": 295,
+    "sha256": "2c678a5f03853a5650e51502cdb075b5e40b75b01f8233f844e5e5bba68bcc05"
+   },
+   "eventi.csv.gz": {
+    "righe": 902,
+    "sha256": "f97e748b249db96b472bea5db245171ed04dd36e9e30ded0f049253c07490ddb"
+   },
+   "heatmap.csv.gz": {
+    "righe": 4304,
+    "sha256": "63abced62486c373f189921f933d6888fcf81b58c3d1abbd99b15aff96d956fa"
+   },
+   "legenda.csv.gz": {
+    "righe": 345,
+    "sha256": "295fc59d38aa739e73b30f71a43fcfe30e4328459ae195c3a7fa5c722e895f6a"
+   }
+  }
+ },
+ "files/tre_fonti_supercoppa_uefa_2526/manifesto.json": {
+  "lega": "supercoppa_uefa",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore",
+   "WhoScored"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 6,
+    "sha256": "efb2fbac7c90934b468591a73100db491344d8543c4fc6923fbba67c241574d2"
+   },
+   "giocatori.csv.gz": {
+    "righe": 106,
+    "sha256": "aad469a47e1126b4aa69b9a05bffdf88fdf6c77aeeb96a5b90c7668a20822a7c"
+   },
+   "eventi.csv.gz": {
+    "righe": 200,
+    "sha256": "bde0bb1caa3eb74f3782ea82dfd4fdf353b3d57e56f77c2eae56e1d3f356644d"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 1393,
+    "sha256": "50fb68afacb3d11f366b86437dbfbf9485f3d434150f6816179dd648d5df9d86"
+   },
+   "heatmap.csv.gz": {
+    "righe": 1354,
+    "sha256": "26c58973fbcfab0acf892038be408bfa91e22f6b72c0a1f394a3a4c1fbe25fba"
+   },
+   "legenda.csv.gz": {
+    "righe": 439,
+    "sha256": "2d765eb0a17020d777b94bfc6cc6b2a16bdf72d8b30f4094d709d850d9b2db82"
+   }
+  }
+ },
+ "files/tre_fonti_trophee_des_champions_2526/manifesto.json": {
+  "lega": "trophee_des_champions",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 6,
+    "sha256": "b905e30e823918b4575caea9394adc7e0ddbb2f42a057abe65c01b1139be030e"
+   },
+   "giocatori.csv.gz": {
+    "righe": 95,
+    "sha256": "0721c3ed76907194a49d7d2dedd6276bc44024b369430d902986991dcb0cabb0"
+   },
+   "eventi.csv.gz": {
+    "righe": 352,
+    "sha256": "4543eb26dc0a3be1680b5a6fb5df657f427e54f77ec513ebf500005a877ba285"
+   },
+   "heatmap.csv.gz": {
+    "righe": 1416,
+    "sha256": "92e2499b4490d0be1ed86c7a7ff3e528b4a01851163644c5f9518805fc9000ea"
+   },
+   "legenda.csv.gz": {
+    "righe": 344,
+    "sha256": "0320c9845f760e049dbcc9f5c55c810917fd01c6004b617e3554c94866f164cb"
+   }
+  }
+ },
+ "files/tre_fonti_uefa_champions_league_2526/manifesto.json": {
+  "lega": "uefa_champions_league",
+  "stagione": "2526",
+  "consegnata": "2026-08-13 (zip)",
+  "fonti": [
+   "SofaScore",
+   "WhoScored"
+  ],
+  "e_campionato": false,
+  "file": {
+   "squadre.csv.gz": {
+    "righe": 1594,
+    "sha256": "ecdc60fd36fdc0ac874d1aed9bcbde5992727381ebab45dbc6a849600a2c3ab1"
+   },
+   "giocatori.csv.gz": {
+    "righe": 16720,
+    "sha256": "2c34b5f2417c0a0b9df23f77525ae4aea8dd0c733f6f36d386e536210ab05e1f"
+   },
+   "eventi.csv.gz": {
+    "righe": 66514,
+    "sha256": "e2434a51bd2882ef08f8b5e0d72d648f350bb8c3fef7acb67afd7a25cf3f4bd4"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 294667,
+    "sha256": "b5eef13531981e9e7a1d4cb31bd5bf51c19b0d440ed02ce5b25d1b357fc6718a"
+   },
+   "heatmap.csv.gz": {
+    "righe": 346769,
+    "sha256": "3960dcc0c56e2bf052bcdc5d64706d31d9e021b98f144c43fe5d8f6c4de293a6"
+   },
+   "legenda.csv.gz": {
+    "righe": 499,
+    "sha256": "9df22a78fec277afa456ee0947e43fabeab555dc59d9086a262d55f89c018bc0"
+   }
+  }
+ },
+ "files/tre_fonti_uefa_conference_league_2526/manifesto.json": {
+  "lega": "uefa_conference_league",
+  "stagione": "2526",
+  "consegnata": "2026-08-11 (zip)",
+  "fonti": [
+   "SofaScore"
+  ],
+  "e_campionato": false,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 69780,
+    "sha256": "2b8a71a56b0939d43f8f2fa9b5c82048cc0b3e106a66b554dd3cbd080203e481"
+   },
+   "giocatori.csv.gz": {
+    "righe": 22727,
+    "sha256": "be6c855f6e2d4c08d71dea0d3df17a320af4b88c1006611d3b399542cf0d82c6"
+   },
+   "heatmap.csv.gz": {
+    "righe": 335001,
+    "sha256": "5df654604faa6f7296c9fcd60b9536ac27fe39f249a6b0d7bfab8e047bd95088"
+   },
+   "legenda.csv.gz": {
+    "righe": 376,
+    "sha256": "cafbb209a8d446ac1ec1cebbe39faca744a2a0ad4544e3a83f993aeb760c1cf0"
+   },
+   "squadre.csv.gz": {
+    "righe": 1874,
+    "sha256": "6fdc406f68c6ded801e7882cd02cc0e2f4ee3da4964ef1d3a48ae6546fee97f6"
+   }
+  },
+  "righe_totale": 818,
+  "squadre": 164,
+  "partite": 409,
+  "non_ha_snapshot": "e' una competizione, non un campionato: il criterio non e' 760/760 ma quante delle NOSTRE squadre ci sono",
+  "nostre_squadre": [
+   "Crystal Palace",
+   "Fiorentina",
+   "Mainz",
+   "Strasbourg",
+   "Vallecano"
+  ],
+  "squadre_straniere": 159,
+  "turni": [
+   "1° turno preliminare",
+   "2° turno preliminare",
+   "3° turno preliminare",
+   "Finale",
+   "Giornata 1",
+   "Giornata 2",
+   "Giornata 3",
+   "Giornata 4",
+   "Giornata 5",
+   "Giornata 6",
+   "Ottavi di finale",
+   "Quarti di finale",
+   "Semifinali",
+   "Spareggi di knockout",
+   "Spareggi di qualificazione"
+  ],
+  "fonti_mancanti": "Understat non copre le UEFA (-37 colonne in EL). La Conference ha SOLO SofaScore (-75)",
+  "punteggio_somma_i_rigori": {
+   "quante": 6,
+   "esempio": "Omonia-Wolfsberger 28/08/2025: 'Gol casa (SofaScore)' = 6, il campo ha detto 1 (5 rigori)",
+   "nota": "stesso difetto di games.csv sulle coppe nazionali (CLAUDE.md), ma QUI l'export lo dichiara",
+   "usare": "le colonne '... senza rigori (derivata)', o tre_fonti.punteggio_vero()"
+  }
+ },
+ "files/tre_fonti_uefa_europa_league_2526/manifesto.json": {
+  "lega": "uefa_europa_league",
+  "stagione": "2526",
+  "consegnata": "2026-08-11 (zip)",
+  "fonti": [
+   "SofaScore",
+   "WhoScored"
+  ],
+  "e_campionato": false,
+  "file": {
+   "eventi.csv.gz": {
+    "righe": 63845,
+    "sha256": "20e3f4b08e0464a79dfc6955c90c231da43ce9f80da10da281f750b641553639"
+   },
+   "eventi_opta.csv.gz": {
+    "righe": 289078,
+    "sha256": "fb4fa4a591ddf4951ade97357be5a933e8ff33b5904ef53348c54eb922e93951"
+   },
+   "giocatori.csv.gz": {
+    "righe": 14411,
+    "sha256": "e86247a10c498ff9b05643b10da9552b87966cf17f46219e3c7f297f5bdfdfd7"
+   },
+   "heatmap.csv.gz": {
+    "righe": 286399,
+    "sha256": "00b01ebc7d833ceb377fba977b23cd3a0cd641a99e8ee7b4cd84dfcc76cdf19c"
+   },
+   "legenda.csv.gz": {
+    "righe": 495,
+    "sha256": "8b335a1e20e0459d1a71b74057dc7526bf2a670bc8e7b5ebf9132367209020b7"
+   },
+   "squadre.csv.gz": {
+    "righe": 1426,
+    "sha256": "3b614f3b487e3073798733261a791568e9d8f8e0368de70d7741c221d84c7730"
+   }
+  },
+  "righe_totale": 542,
+  "squadre": 77,
+  "partite": 271,
+  "non_ha_snapshot": "e' una competizione, non un campionato: il criterio non e' 760/760 ma quante delle NOSTRE squadre ci sono",
+  "nostre_squadre": [
+   "Aston Villa",
+   "Betis",
+   "Bologna",
+   "Celta",
+   "Freiburg",
+   "Lille",
+   "Lyon",
+   "Nice",
+   "Nott'm Forest",
+   "Roma",
+   "Stuttgart"
+  ],
+  "squadre_straniere": 66,
+  "turni": [
+   "1° turno preliminare",
+   "2° turno preliminare",
+   "3° turno preliminare",
+   "Finale",
+   "Giornata 1",
+   "Giornata 2",
+   "Giornata 3",
+   "Giornata 4",
+   "Giornata 5",
+   "Giornata 6",
+   "Giornata 7",
+   "Giornata 8",
+   "Ottavi di finale",
+   "Quarti di finale",
+   "Semifinali",
+   "Spareggi di qualificazione",
+   "Spareggi ottavi"
+  ],
+  "fonti_mancanti": "Understat non copre le UEFA (-37 colonne in EL). La Conference ha SOLO SofaScore (-75)"
+ },
+ "data/calendari_2026_27/manifesto.json": {
+  "fonte": "consegna diretta dell'utente (11/08/2026), file caricati in sessione",
+  "descrizione": "calendari completi 2026-27 dei 5 campionati modellati",
+  "righe": 1752,
+  "per_lega": {
+   "Bundesliga": {
+    "partite": 306,
+    "squadre": 18,
+    "giornate": 34,
+    "atteso_round_robin": 306,
+    "completo": true
+   },
+   "La Liga": {
+    "partite": 380,
+    "squadre": 20,
+    "giornate": 38,
+    "atteso_round_robin": 380,
+    "completo": true
+   },
+   "Ligue 1": {
+    "partite": 306,
+    "squadre": 18,
+    "giornate": 34,
+    "atteso_round_robin": 306,
+    "completo": true
+   },
+   "Premier League": {
+    "partite": 380,
+    "squadre": 20,
+    "giornate": 38,
+    "atteso_round_robin": 380,
+    "completo": true
+   },
+   "Serie A": {
+    "partite": 380,
+    "squadre": 20,
+    "giornate": 38,
+    "atteso_round_robin": 380,
+    "completo": true
+   }
+  },
+  "date_provvisorie": {
+   "sì": 1643,
+   "no": 109
+  },
+  "colonne": [
+   "campionato",
+   "paese",
+   "stagione",
+   "giornata",
+   "data",
+   "giorno",
+   "ora_italiana",
+   "ora_locale",
+   "squadra_casa",
+   "squadra_trasferta",
+   "data_ora_provvisoria",
+   "casa_nome_ufficiale",
+   "trasferta_nome_ufficiale",
+   "kickoff_utc"
+  ],
+  "sha256": {
+   "bundesliga_2026-27.csv": "c5c4214a543134e4",
+   "calendari_2026-27_top5.csv": "e4d43bb4bd322d27",
+   "calendari_2026-27_top5_PUNTOEVIRGOLA.csv": "81a6483c63bdd507",
+   "la_liga_2026-27.csv": "22158d08ff15c04a",
+   "ligue_1_2026-27.csv": "f1c3ad73c110c2fc",
+   "premier_league_2026-27.csv": "c8987cf7f4da255e",
+   "serie_a_2026-27.csv": "99559fc767c1b09d"
+  }
+ },
+ "data/coppe_2526/manifesto.json": {
+  "generato": "2026-08-03",
+  "fonti": {
+   "player_scores": {
+    "dataset": "davidcariboo/player-scores",
+    "cartella": "/root/.cache/kagglehub/datasets/davidcariboo/player-scores/versions/674"
+   },
+   "openfootball": "https://raw.githubusercontent.com/openfootball/deutschland/master/2025-26/cup.txt",
+   "wikipedia": "fr:Coupe de France de football 2025-2026",
+   "football_data": "https://www.football-data.co.uk/mmz4281/2526/<codice>.csv"
+  },
+  "partite_totali": 662,
+  "per_competizione": {
+   "Coupe de France": {
+    "partite": 201,
+    "turno_ingresso_seconda_divisione": "7° turno",
+    "dentro_perimetro": 201
+   },
+   "Copa del Rey": {
+    "partite": 137,
+    "turno_ingresso_seconda_divisione": "First Round",
+    "dentro_perimetro": 117
+   },
+   "FA Cup": {
+    "partite": 123,
+    "turno_ingresso_seconda_divisione": "Third Round",
+    "dentro_perimetro": 63
+   },
+   "EFL Cup": {
+    "partite": 93,
+    "turno_ingresso_seconda_divisione": "First Round",
+    "dentro_perimetro": 91
+   },
+   "DFB-Pokal": {
+    "partite": 63,
+    "turno_ingresso_seconda_divisione": "First Round",
+    "dentro_perimetro": 63
+   },
+   "Coppa Italia": {
+    "partite": 45,
+    "turno_ingresso_seconda_divisione": "Qualifying Round",
+    "dentro_perimetro": 45
+   }
+  },
+  "formazioni": {
+   "righe": 18566,
+   "partite_coperte": 458,
+   "titolari": 9883,
+   "panchina": 8683
+  },
+  "eventi": {
+   "righe": 8177,
+   "per_tipo": {
+    "Substitutions": 4328,
+    "Cards": 1699,
+    "Goals": 1437,
+    "Shootout": 713
+   }
+  },
+  "punteggio": {
+   "partite_con_rigori": 68,
+   "partite_con_supplementari": 46,
+   "dichiarato_diverso_dal_ricostruito": 78,
+   "eventi_incompleti": 10,
+   "ricomposte_esattamente": 448
+  },
+  "verifica_esterna_dfb": {
+   "partite_openfootball": 43,
+   "partite_nostre_dfb": 62,
+   "appaiate": 43,
+   "confronti": {
+    "gol_casa_90": {
+     "confrontabili": 43,
+     "uguali": 43
+    },
+    "gol_ospite_90": {
+     "confrontabili": 43,
+     "uguali": 43
+    },
+    "gol_casa_finale": {
+     "confrontabili": 43,
+     "uguali": 43
+    },
+    "gol_ospite_finale": {
+     "confrontabili": 43,
+     "uguali": 43
+    },
+    "rigori_casa": {
+     "confrontabili": 6,
+     "uguali": 6
+    },
+    "rigori_ospite": {
+     "confrontabili": 6,
+     "uguali": 6
+    }
+   },
+   "divergenti": [],
+   "solo_in_openfootball": 0
+  },
+  "verifica_coupe_de_france": {
+   "partite": 201,
+   "con_punteggio": 201,
+   "con_rigori": 54,
+   "con_data": 201,
+   "con_divisione_entrambe": 201,
+   "incoerenti": []
+  },
+  "finali_recuperate_da_wikipedia": [
+   {
+    "competizione": "Coppa Italia",
+    "casa": "Lazio",
+    "ospite": "Internazionale",
+    "gol_casa": 0,
+    "gol_ospite": 2,
+    "rigori_casa": null,
+    "rigori_ospite": null,
+    "data": "2026-05-13",
+    "stadio": "Stadio Olimpico",
+    "citta": "Rome",
+    "arbitro": "Marco Guida",
+    "spettatori": 68729,
+    "pagina": "2026 Coppa Italia final"
+   },
+   {
+    "competizione": "FA Cup",
+    "casa": "Chelsea",
+    "ospite": "Manchester City",
+    "gol_casa": 0,
+    "gol_ospite": 1,
+    "rigori_casa": null,
+    "rigori_ospite": null,
+    "data": "2026-05-16",
+    "stadio": "Wembley Stadium",
+    "citta": "London",
+    "arbitro": "Darren England (South Yorkshire)",
+    "spettatori": 83337,
+    "pagina": "2026 FA Cup final"
+   },
+   {
+    "competizione": "DFB-Pokal",
+    "casa": "Bayern Munich",
+    "ospite": "VfB Stuttgart",
+    "gol_casa": 3,
+    "gol_ospite": 0,
+    "rigori_casa": null,
+    "rigori_ospite": null,
+    "data": "2026-05-23",
+    "stadio": "Olympiastadion",
+    "citta": "Berlin",
+    "arbitro": "Sven Jablonski (Bremen)",
+    "spettatori": 74036,
+    "pagina": "2026 DFB-Pokal final"
+   }
+  ],
+  "senza_formazioni": {
+   "partite": 204,
+   "quali": "Coupe de France (201) + le 3 finali assenti da games.csv; Wikipedia non pubblica i titolari se non per le finali"
+  },
+  "aggancio_seconde_divisioni": {
+   "IT": {
+    "club_elencati": 20,
+    "agganciati": 20,
+    "non_agganciati": []
+   },
+   "EN": {
+    "club_elencati": 24,
+    "agganciati": 24,
+    "non_agganciati": []
+   },
+   "ES": {
+    "club_elencati": 22,
+    "agganciati": 21,
+    "non_agganciati": [
+     "Sociedad B"
+    ]
+   },
+   "DE": {
+    "club_elencati": 18,
+    "agganciati": 18,
+    "non_agganciati": []
+   }
+  },
+  "date_corrette": [
+   {
+    "competizione": "CGB",
+    "da": "2025-08-12",
+    "a": "2025-08-19",
+    "home_club_id": 1074,
+    "righe": 1
+   }
+  ],
+  "file": {
+   "partite.csv": {
+    "righe": 662,
+    "sha256": "578308637978fd9b89d34948fd1fba60dcbd3c1b2710579bd9c4efafab596651"
+   },
+   "formazioni.csv": {
+    "righe": 18566,
+    "sha256": "bf6bfa2627ab0ec7e4c6f792d2bbd1a8439bbdffd1c4f06704c882dea29d9477"
+   },
+   "eventi.csv": {
+    "righe": 8177,
+    "sha256": "211be6c26c2ef52088e92807ad19a6be1214be0afe3b5b4a87a8409da7ee24e2"
+   },
+   "da_raccogliere.csv": {
+    "righe": 580,
+    "sha256": "cdc10d9e6a5322e4ae12e7161ad95d5ca952fbc744709372bb6eac4e26e84c16"
+   }
+  }
+ }
+}
