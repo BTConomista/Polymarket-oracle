@@ -206,6 +206,71 @@ def controlli(cartella: Path) -> list[dict]:
              f"{sum(1 for v in dettaglio.values() if v.get('aggancio_match_uid') is not None)} "
              f"tabelle agganciate")
 
+    # 11 · il ranking UEFA non guarda avanti (R8)
+    #
+    # ⚠️ Il controllo NON è «esiste una colonna col nome giusto»: sarebbe
+    # soddisfatto da una colonna piena di copie del numero pubblicato. Si
+    # verifica l'IDENTITÀ che le separa — `pubblicato − fino_2526 = punti_2627`
+    # dove il pavimento non morde — e si pretende che su qualche riga le due
+    # finestre DIVERGANO davvero. Un controllo che passa anche quando la
+    # riparazione non è stata applicata non è un controllo.
+    colonne_uefa = ["casa_uefa_coeff_fino_2526", "casa_uefa_coeff_pubblicato",
+                    "casa_uefa_punti_2627", "casa_uefa_somma_pubblicata",
+                    "casa_uefa_somma_fino_2526"]
+    try:
+        ranking = pd.read_csv(cartella / "partite.csv.gz", usecols=colonne_uefa,
+                              low_memory=False)
+    except (ValueError, FileNotFoundError):
+        dichiara("ranking UEFA: la finestra dell'archivio è nel file", False,
+                 f"mancano le colonne {colonne_uefa}")
+    else:
+        sopra = pd.to_numeric(ranking["casa_uefa_coeff_pubblicato"],
+                              errors="coerce")
+        sotto = pd.to_numeric(ranking["casa_uefa_coeff_fino_2526"],
+                              errors="coerce")
+        futuro = pd.to_numeric(ranking["casa_uefa_punti_2627"], errors="coerce")
+        s_sopra = pd.to_numeric(ranking["casa_uefa_somma_pubblicata"],
+                                errors="coerce")
+        s_sotto = pd.to_numeric(ranking["casa_uefa_somma_fino_2526"],
+                                errors="coerce")
+        # ⚠️ L'identità si verifica sulle SOMME, non sui coefficienti. Il
+        # coefficiente è `MAX(somma; 20% federazione)`, e il pavimento è una
+        # proprietà della FINESTRA: su 6 club morde nella troncata e non nella
+        # pubblicata, quindi `pubblicato − troncato ≠ punti 26/27` per un
+        # motivo giusto. Una prima stesura di questo controllo lo chiamava
+        # difetto — era il controllo a essere sbagliato, non il dato.
+        # ⚠️ le parentesi non sono estetiche: in Python `&` lega PIÙ STRETTO
+        # di `>`, quindi `a > 1e-6 & libere` prova a fare `1e-6 & Series`.
+        note = s_sopra.notna() & s_sotto.notna() & futuro.notna()
+        rotte = int((((s_sopra - s_sotto - futuro).abs() > 1e-6) & note).sum())
+        # e il coefficiente troncato non può MAI superare il pubblicato:
+        # togliere punti non ne aggiunge.
+        cresciute = int((sotto > sopra + 1e-9).sum())
+        diverse = int(((sopra - sotto).abs() > 1e-9).sum())
+        dichiara("ranking UEFA: la 26/27 è fuori dalla finestra dell'archivio",
+                 rotte == 0 and cresciute == 0 and diverse > 0,
+                 f"{diverse} righe in cui le due finestre divergono, "
+                 f"{rotte} in cui somma_pubblicata−somma_troncata≠26/27, "
+                 f"{cresciute} in cui il troncato SUPERA il pubblicato")
+
+    # 12 · i tempi che non ricompongono sono MARCATI, non zittiti (R5)
+    try:
+        tempi = pd.read_csv(cartella / "partite.csv.gz",
+                            usecols=["tempi_non_ricompongono",
+                                     "tempi_tutti_a_zero_con_gol"],
+                            low_memory=False)
+    except (ValueError, FileNotFoundError):
+        dichiara("i tempi che non ricompongono hanno la loro colonna", False,
+                 "manca `tempi_non_ricompongono` in partite.csv.gz")
+    else:
+        quante = int(tempi["tempi_non_ricompongono"].astype("string")
+                     .str.lower().eq("true").sum())
+        zero = int(tempi["tempi_tutti_a_zero_con_gol"].astype("string")
+                   .str.lower().eq("true").sum())
+        dichiara("i tempi che non ricompongono hanno la loro colonna", True,
+                 f"{quante} partite marcate, di cui {zero} con tutti i tempi "
+                 f"a zero e gol nella partita (reperto NON diagnosticato)")
+
     return esiti
 
 

@@ -1,12 +1,12 @@
 {
  "stagione": "2025-26",
- "tabelle": 76,
- "file": 129,
- "righe_totali": 10258960,
- "mb_totali": 255.7,
+ "tabelle": 90,
+ "file": 143,
+ "righe_totali": 10334841,
+ "mb_totali": 257.1,
  "file_piu_grosso_mb": 25.5,
  "tetto_mb": 90.0,
- "competizioni": [
+ "competizioni_chieste": [
   "Serie A",
   "Serie B",
   "Premier League",
@@ -33,6 +33,30 @@
   "UEFA Europa League",
   "UEFA Conference League"
  ],
+ "competizioni_presenti": [
+  "2. Bundesliga",
+  "Bundesliga",
+  "Community Shield",
+  "Copa del Rey",
+  "Coppa Italia",
+  "Coupe de France",
+  "DFB-Pokal",
+  "DFL-Supercup",
+  "EFL Cup",
+  "FA Cup",
+  "LaLiga",
+  "LaLiga2",
+  "Ligue 1",
+  "Premier League",
+  "Serie A",
+  "Supercopa de España",
+  "Supercoppa Italiana",
+  "Supercoppa UEFA",
+  "Trophée des Champions",
+  "UEFA Champions League",
+  "UEFA Conference League",
+  "UEFA Europa League"
+ ],
  "competizioni_assenti_dal_repo": [
   "Serie B",
   "Championship",
@@ -43,8 +67,8 @@
  "tabelle_dettaglio": {
   "partite.csv.gz": {
    "grana": "una PARTITA",
-   "righe": 4169,
-   "colonne": 2175,
+   "righe": 4173,
+   "colonne": 2186,
    "nomi_colonne": [
     "match_uid",
     "competizione",
@@ -76,6 +100,8 @@
     "rigori_trasferta",
     "supplementari",
     "lotteria_rigori",
+    "tempi_non_ricompongono",
+    "tempi_tutti_a_zero_con_gol",
     "stadio",
     "citta",
     "paese_stadio",
@@ -104,16 +130,24 @@
     "cronaca",
     "giocatori_casa_in_colonna",
     "giocatori_trasferta_in_colonna",
-    "casa_uefa_coeff",
-    "trasferta_uefa_coeff",
+    "casa_uefa_coeff_fino_2526",
+    "trasferta_uefa_coeff_fino_2526",
     "casa_uefa_paese",
     "trasferta_uefa_paese",
+    "casa_uefa_pavimento_fino_2526",
+    "trasferta_uefa_pavimento_fino_2526",
     "casa_uefa_pavimento",
     "trasferta_uefa_pavimento",
-    "casa_uefa_somma5",
-    "trasferta_uefa_somma5",
-    "casa_uefa_coeff_2526",
-    "trasferta_uefa_coeff_2526",
+    "casa_uefa_somma_fino_2526",
+    "trasferta_uefa_somma_fino_2526",
+    "casa_uefa_punti_2526",
+    "trasferta_uefa_punti_2526",
+    "casa_uefa_coeff_pubblicato",
+    "trasferta_uefa_coeff_pubblicato",
+    "casa_uefa_somma_pubblicata",
+    "trasferta_uefa_somma_pubblicata",
+    "casa_uefa_punti_2627",
+    "trasferta_uefa_punti_2627",
     "casa_uefa_posizione_ranking",
     "trasferta_uefa_posizione_ranking",
     "fonti_disponibili",
@@ -2220,7 +2254,8 @@
     "trasferta_federazione_Punti",
     "trasferta_tm_eta_media",
     "trasferta_tm_rosa_n",
-    "trasferta_tm_valore_tm"
+    "trasferta_tm_valore_tm",
+    "solo_da_diretta"
    ],
    "fonti": [
     "tutte le famiglie, coalescite"
@@ -2228,13 +2263,13 @@
    "spezzato_per": null,
    "aggancio_match_uid": 1.0,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "vista denormalizzata: la forma normale delle statistiche di squadra è squadre_partita_tre_fonti.csv.gz. `provenienza_json` dice quale fonte ha vinto per ogni campo normalizzato.",
+   "note": "vista denormalizzata: la forma normale delle statistiche di squadra è squadre_partita_tre_fonti/. `solo_da_diretta=True` marca le partite che esistono in una sola raccolta (gli spareggi di Ligue 1 contro squadre di Ligue 2): hanno la riga e le statistiche, non le colonne delle altre fonti. `provenienza_json` dice quale fonte ha vinto per ogni campo normalizzato.",
    "pezzi": [
     {
      "file": "partite.csv.gz",
-     "righe": 4169,
-     "mb": 8.16,
-     "sha256": "14eeee85330c508f15fb080de5da6abcc49dfc5b059d3ea52d6b0fc8acc5b2fa"
+     "righe": 4173,
+     "mb": 7.95,
+     "sha256": "caaee9dfab198d957696173639c2e2db5742148083adf2d7c243878f5a073a04"
     }
    ]
   },
@@ -2490,98 +2525,98 @@
     {
      "file": "squadre_partita_tre_fonti/2bundesliga.csv.gz",
      "righe": 1864,
-     "mb": 0.22,
-     "sha256": "7bcd0901430fc33c43d920168e80f2b2fd2eb37baa9c2bcb66cb9f8709287000"
+     "mb": 0.21,
+     "sha256": "5acd75dcda7c8ef377f571132be0f068f522c6b961b13f318e77558cb87199e6"
     },
     {
      "file": "squadre_partita_tre_fonti/bundesliga.csv.gz",
      "righe": 1852,
-     "mb": 0.25,
-     "sha256": "7477608fc1b2fa82519395e476c03027ae03a73228468bf3c9c7d59a43bfa4ad"
+     "mb": 0.23,
+     "sha256": "041cac4584a9c946b7337a07db75555eb28cf9f55e271c75a4ab356413f5d98b"
     },
     {
      "file": "squadre_partita_tre_fonti/community_shield.csv.gz",
      "righe": 6,
      "mb": 0.0,
-     "sha256": "89f904155ba817e45012bb7ada4ae23afd4d337bc0b05b46b3965662c3d4b10b"
+     "sha256": "cf23f888fab578ae1c11670699a978e006bfec9e296bb6ffc571948773673b61"
     },
     {
      "file": "squadre_partita_tre_fonti/dfl-supercup.csv.gz",
      "righe": 6,
      "mb": 0.0,
-     "sha256": "5887a856ff77aa4369e9ba84823008947eccc5874de3d91d1c16c87f3e0b9c48"
+     "sha256": "a468890b521dde9ea32356c018e5d7781c67bfc7a8b1dbd8417ca0a3795c1f04"
     },
     {
      "file": "squadre_partita_tre_fonti/laliga.csv.gz",
      "righe": 2280,
-     "mb": 0.31,
-     "sha256": "a7c2d8d4d8b79054764ef07d07c08ef620844c9bb46dbaaf223c15da2228b69f"
+     "mb": 0.29,
+     "sha256": "1f06edaf1dabb5a0034028db993a37b1671b0cd3942c6fee23894d7af922af1a"
     },
     {
      "file": "squadre_partita_tre_fonti/laliga2.csv.gz",
      "righe": 2808,
-     "mb": 0.25,
-     "sha256": "31328fb9c3d3ee616d23b0f20e6b780030a99735ac5baef3842efd38a25977af"
+     "mb": 0.24,
+     "sha256": "dac754038eb175ecfd85d94b3e23f2c1218a2103d2a2c40f0f5c0c23c06df0fa"
     },
     {
      "file": "squadre_partita_tre_fonti/ligue1.csv.gz",
      "righe": 1858,
-     "mb": 0.25,
-     "sha256": "d999b5e469f61c41f58ec3eae246e8223e4b4a83e4f4b79294dc338077f14456"
+     "mb": 0.23,
+     "sha256": "350a5b389c7025fef27caf69a1cdfa5c563e656f7a62ed64e9a2af4d090dbfd1"
     },
     {
      "file": "squadre_partita_tre_fonti/premier_league.csv.gz",
      "righe": 2280,
-     "mb": 0.3,
-     "sha256": "da74f370343f7dd75828c46a9cd5fca95c5d99c50c8bc47b60f5572c9669e9e2"
+     "mb": 0.29,
+     "sha256": "6ef60a4e5391c17b85b30affd6b1f8779d8f2c21385b7e51de336eaacdaa6f04"
     },
     {
      "file": "squadre_partita_tre_fonti/serie_a.csv.gz",
      "righe": 2280,
-     "mb": 0.3,
-     "sha256": "4a62ef80bd47b2149f5d82b93eb81adf6855d91ed1a9aa3c36763e11ccbf8a0c"
+     "mb": 0.28,
+     "sha256": "6708514396a48ac2556c80ba06d5b1355a1f544dd2742d91ebde3d24f6601819"
     },
     {
      "file": "squadre_partita_tre_fonti/supercopa_de_españa.csv.gz",
      "righe": 18,
      "mb": 0.0,
-     "sha256": "18ca8acc97fdf268ac99c3196ba20df72cc767cf39a35c21ebb42cfdd86045b5"
+     "sha256": "948777a908b8d60b8cc4e8a3a2bd77769fa33ed8f4700f07d8cb6092a8fb2d81"
     },
     {
      "file": "squadre_partita_tre_fonti/supercoppa_italiana.csv.gz",
      "righe": 18,
      "mb": 0.0,
-     "sha256": "60e465aadf6be602fa28d677dc81ab368bf86aa1721c298da80b33ca45d75b85"
+     "sha256": "3d9779cf64625a120446f46d1b5ac1192be6a54c65f70b8c591ac15af838358d"
     },
     {
      "file": "squadre_partita_tre_fonti/supercoppa_uefa.csv.gz",
      "righe": 6,
      "mb": 0.0,
-     "sha256": "e02424567fcb2af6d2b6a5ea0aab3d76307d7d0779e44b034a6065cb754af6af"
+     "sha256": "b695551815617fcc8a028c2f2ea6f935f1fff38ae1b24dbdfc8e18c48f1a0536"
     },
     {
      "file": "squadre_partita_tre_fonti/trophée_des_champions.csv.gz",
      "righe": 6,
      "mb": 0.0,
-     "sha256": "1af36782c0992634b44c4bd9f906f742c422ce5291650ea6d0568a61ea9a6faa"
+     "sha256": "c4da1950bf90af01c36ae8489aedf5ac939b7db86de4717c1b0b644abf7bea46"
     },
     {
      "file": "squadre_partita_tre_fonti/uefa_champions_league.csv.gz",
      "righe": 1486,
-     "mb": 0.17,
-     "sha256": "ca5e930f6fbf3c9e2b8ceb34b4dec30021dfb70cfdb1799627eb7eb029c447c0"
+     "mb": 0.16,
+     "sha256": "04448f6899ccfc736a3f44d7e223263cc4d2d63547eff1fe0f0e9165d2099a4b"
     },
     {
      "file": "squadre_partita_tre_fonti/uefa_conference_league.csv.gz",
      "righe": 1766,
      "mb": 0.16,
-     "sha256": "433ccea136fd9e7bc18e739a0fd7c46c1a696170a78ec68a6ab71e9c215bccf0"
+     "sha256": "8c6aac14e5ad152687d4e3abc3fd5069799494cd3d8a8f77d8b6c9dacf94bc9d"
     },
     {
      "file": "squadre_partita_tre_fonti/uefa_europa_league.csv.gz",
      "righe": 1318,
-     "mb": 0.16,
-     "sha256": "7d2014d3bf81619b28f12e109c80ef9079bad0957bc3d6ee0c5e8f65f62daf46"
+     "mb": 0.15,
+     "sha256": "fc26750fe76d03e4582f3a9814e1aa785574dd9f545be60913830e873687e925"
     }
    ]
   },
@@ -2797,105 +2832,105 @@
     "files/tre_fonti_*_2526/giocatori.csv.gz"
    ],
    "spezzato_per": "Competizione",
-   "aggancio_match_uid": 0.8974161316707759,
+   "aggancio_match_uid": 0.8974455539929034,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "`giocatore_ripetuto=True` marca il secondo record dello stesso giocatore nella stessa squadra-partita: è quello da escludere quando si aggrega. `senza_id_sofascore=True` dice solo che la riga non porta l'id di SofaScore — quasi sempre perché la raccolta non ce l'ha, NON perché la fusione sia fallita: non è un motivo per scartarla. ⚠️ `match_uid` è pieno SOLO sul livello Partita: Rosa e Stagione non sono grana partita.",
    "pezzi": [
     {
      "file": "giocatori_partita_tre_fonti/2bundesliga.csv.gz",
      "righe": 12857,
-     "mb": 1.85,
-     "sha256": "37e9ed0deba5c06df01f34a2dabd200cd11ac330555a499174c34ff2df6cd6c6"
+     "mb": 1.77,
+     "sha256": "a718e6d1ebfcd31a66e26c460b0041eebfabb2ac5fd64636e030b5e9bf103e7f"
     },
     {
      "file": "giocatori_partita_tre_fonti/bundesliga.csv.gz",
      "righe": 13456,
-     "mb": 2.09,
-     "sha256": "c295fe9624ad86f2923c9bdb7a6cdfa6e7df0c7af2c0df7fc3845e8dc39fca74"
+     "mb": 2.0,
+     "sha256": "a4782dcae2d671431fbc5cf1f619305b5956b96973dd1dcb55b18c6907869812"
     },
     {
      "file": "giocatori_partita_tre_fonti/community_shield.csv.gz",
      "righe": 107,
      "mb": 0.01,
-     "sha256": "2e74508b17a5fe0ed6965af1f0a5d58804aa93bca3c40d52c0f558550eb96e98"
+     "sha256": "876b33f288132732e71a60aa1838de5e667baa47b994e02824f55e9fa06d425b"
     },
     {
      "file": "giocatori_partita_tre_fonti/dfl-supercup.csv.gz",
      "righe": 114,
      "mb": 0.01,
-     "sha256": "4145fd45197eb0875c9569a2f2c02cf02c7787a581b07e7b7ac7154b967a785d"
+     "sha256": "ba7d860fe0d1538fefd82edeb4f59a89f46eb784175e89eb77b0776189695fd8"
     },
     {
      "file": "giocatori_partita_tre_fonti/laliga.csv.gz",
      "righe": 18329,
-     "mb": 2.65,
-     "sha256": "58cd85b2beb67b6c02f62601307f97dd94bf43b0b61c4951a519b968b5f72906"
+     "mb": 2.55,
+     "sha256": "77b720082ffe6a4611f9d2af0fafdccebfcaffa47f5c23b9f00f4fdf918d04e5"
     },
     {
      "file": "giocatori_partita_tre_fonti/laliga2.csv.gz",
      "righe": 21483,
-     "mb": 2.16,
-     "sha256": "5fcd5c841c2dd88cc4a0890d443a80e2cefc606341edaf14386746044a2775b8"
+     "mb": 2.09,
+     "sha256": "460c3c707119324298097d54a106bddef81220c3a22aad8483f820819c458670"
     },
     {
      "file": "giocatori_partita_tre_fonti/ligue1.csv.gz",
      "righe": 13444,
-     "mb": 2.06,
-     "sha256": "2a70a18beefde63e6b9f3edbfd0583983df471bd2b9f3774f8d89a1c3e8d38d7"
+     "mb": 1.97,
+     "sha256": "664138fda16c39e9de5406d1c36a914785153757af292659402a15502da74a61"
     },
     {
      "file": "giocatori_partita_tre_fonti/premier_league.csv.gz",
      "righe": 16400,
-     "mb": 2.53,
-     "sha256": "be38ad67ddfc3e7d49a0d1e64736b8264988e4e236b3d1380a1395a9ada6ada5"
+     "mb": 2.42,
+     "sha256": "d97d0513d1498074fe742d0d1352549fd7c14364374eaf6d33fc7f62a807bca2"
     },
     {
      "file": "giocatori_partita_tre_fonti/serie_a.csv.gz",
      "righe": 19126,
-     "mb": 2.71,
-     "sha256": "f7424ca8019850e49536b65020a9603360f176d581ee68abaaa8231511d62e24"
+     "mb": 2.61,
+     "sha256": "67f7fa93d6926ec9a2c30794cbce04286015805361fd7bed8ace68957fd9658e"
     },
     {
      "file": "giocatori_partita_tre_fonti/supercopa_de_españa.csv.gz",
      "righe": 269,
      "mb": 0.02,
-     "sha256": "3f4a5b826ebb65b48db3c591d4385bdc2c6add0ca82bc80497d6869bcc8cd84c"
+     "sha256": "a831315acf27407249fa7a69516d5dc5fac0e04c32b01b80f4f4cc0e438851e0"
     },
     {
      "file": "giocatori_partita_tre_fonti/supercoppa_italiana.csv.gz",
      "righe": 295,
      "mb": 0.02,
-     "sha256": "1c8173bf319616beb422577c89598e4ca2cdd5e9a2efd43ea647c3f63affabd7"
+     "sha256": "77d198b750e882cd0a8170aef8a3f97b580b64103c4e6e35e1db29300b5b4067"
     },
     {
      "file": "giocatori_partita_tre_fonti/supercoppa_uefa.csv.gz",
      "righe": 106,
      "mb": 0.01,
-     "sha256": "b4dfc6df8224771e9cd4f9ccf672916c2453a7f588838f952c2ac9854c39e6fb"
+     "sha256": "ece07c13757b91852e0d791267b3050ba04166b9c6cb0682ae7c3de5c970e91a"
     },
     {
      "file": "giocatori_partita_tre_fonti/trophée_des_champions.csv.gz",
      "righe": 95,
      "mb": 0.01,
-     "sha256": "3098fc6c3fe25051ea981ebfeec906b8c7e787cb692261c84f308605ab512053"
+     "sha256": "dd6c4a01d2cad7db214577c2ca520d5992afbd1b8e428b2ecbb20cb742bd8bad"
     },
     {
      "file": "giocatori_partita_tre_fonti/uefa_champions_league.csv.gz",
      "righe": 16720,
-     "mb": 1.59,
-     "sha256": "5b397c4129739fe6d31d494c87ea0faf34c5dcc7a33cae13245ab4bc8e381c1b"
+     "mb": 1.54,
+     "sha256": "f22ea51976e0ab78060ae41967428a17b88143a5d0ee8c4b9ccbd09b4fb6c8fa"
     },
     {
      "file": "giocatori_partita_tre_fonti/uefa_conference_league.csv.gz",
      "righe": 22727,
-     "mb": 1.54,
-     "sha256": "bf522b56471334b79d2a8adaed6baa800e6f2035d6cba9a78fdb12749b315e8a"
+     "mb": 1.5,
+     "sha256": "d50e12a51e75ef97d6858d8a16061e41f07defcfef6e1df004c9d8063a38d31e"
     },
     {
      "file": "giocatori_partita_tre_fonti/uefa_europa_league.csv.gz",
      "righe": 14411,
-     "mb": 1.4,
-     "sha256": "401c560fe9dc5981e5f383c1a0013d12276855dbff22beaaab5217b2df5281c7"
+     "mb": 1.35,
+     "sha256": "96609216e6fccb36c4f896019239fb42b1f27f57eb50ffeec96f6d7a1637d505"
     }
    ]
   },
@@ -2947,8 +2982,8 @@
     {
      "file": "eventi.csv.gz",
      "righe": 73983,
-     "mb": 1.75,
-     "sha256": "056b5981cf355d2a3f6e286ace834f8f35bff605b05129d0eb7459c625c1a82e"
+     "mb": 1.73,
+     "sha256": "c817739bce556f848a98750b3fc0d19a7c98bc5605861eb0f684c1cbc9bc2a20"
     }
    ]
   },
@@ -3009,8 +3044,8 @@
     {
      "file": "tiri.csv.gz",
      "righe": 125896,
-     "mb": 5.11,
-     "sha256": "32944fc16d00b8220ef111c8daffe4001fc7b5e300ae8777175b1f935daa5a0a"
+     "mb": 5.09,
+     "sha256": "383ab564a593c3e6366e68cb08dbfd6f1009c922742e3e54ab6c3bac31dc1469"
     }
    ]
   },
@@ -3056,8 +3091,8 @@
     {
      "file": "cronaca.csv.gz",
      "righe": 290006,
-     "mb": 6.11,
-     "sha256": "9b2a5d9da15fcc3e9654b299999c88038f512884c2817ca61db5113a5cb25cb2"
+     "mb": 6.06,
+     "sha256": "34670155ef294f09f910000cd11ec2b3d99fb131346434b66a0fa0bed9bd7174"
     }
    ]
   },
@@ -3099,8 +3134,8 @@
     {
      "file": "momentum.csv.gz",
      "righe": 295684,
-     "mb": 1.79,
-     "sha256": "08e46a6d0de978684736dacd2301fcf366fedb8397a73f2299f7211539ba7dc6"
+     "mb": 1.78,
+     "sha256": "d6818b30f4069c5685b9914294cd998b7c7c6a413c59db13c89408b2c5075a11"
     }
    ]
   },
@@ -3146,8 +3181,8 @@
     {
      "file": "quote.csv.gz",
      "righe": 129116,
-     "mb": 1.76,
-     "sha256": "916df3e2d9f7d29188944e1ececea0d5eed33aeaa393cc2ac2fbd79abd7bc25c"
+     "mb": 1.75,
+     "sha256": "ba3052a3a234d7e1a1f77b8fb52ff84a48d81388dc981783c912f353084b72e5"
     }
    ]
   },
@@ -3191,7 +3226,7 @@
      "file": "serie.csv.gz",
      "righe": 35819,
      "mb": 0.33,
-     "sha256": "adb59a9c3ffcd3edff394cd62c3f71e763446d9dc926fcf03be3510962d48b81"
+     "sha256": "4e0f8b17cfd13d296e53cbd945a8b617838119c93902f140ccf3d747a64f956c"
     }
    ]
   },
@@ -3236,7 +3271,7 @@
      "file": "migliore_in_campo.csv.gz",
      "righe": 6376,
      "mb": 0.19,
-     "sha256": "c133285e0e35460fe6f173db343dcc07e45a2953ce70eec358bb74a6493bbcf7"
+     "sha256": "f5cc63831e17017d64b500ae030d7877565291147bb98f1b0e88e0542c1815df"
     }
    ]
   },
@@ -3279,7 +3314,7 @@
      "file": "classifiche.csv.gz",
      "righe": 732,
      "mb": 0.01,
-     "sha256": "13b320ec91035860597509c934b81dbfe563a427091f0dca93d7bed98ae5bb63"
+     "sha256": "b6c8a63ed73459cfc6eb6c17a8aa520824ca58a7cb39e18a80c4f94296ccdccf"
     }
    ]
   },
@@ -3574,7 +3609,7 @@
      "file": "coppe_partite.csv.gz",
      "righe": 662,
      "mb": 0.04,
-     "sha256": "1a407885ccd0afaa5d022e1c7205a52db25b5063258ba3d920185defb726b6fe"
+     "sha256": "f3204c9b04c11720220ea148a19f6339cbe0d22aca00070e5e0447dcd7f0fc84"
     }
    ]
   },
@@ -3613,7 +3648,7 @@
      "file": "coppe_formazioni.csv.gz",
      "righe": 18566,
      "mb": 0.37,
-     "sha256": "251ccf4d8ddf650b3eb7c829a9d33ee271f57997393c6f1f15a32b8be8758ba5"
+     "sha256": "c9fe284ae2aa008fe5580e6a6c1f332d82b8ef5647523004c117d73b8b997f2d"
     }
    ]
   },
@@ -3648,7 +3683,7 @@
      "file": "coppe_eventi.csv.gz",
      "righe": 8177,
      "mb": 0.12,
-     "sha256": "517d327e0b81436f8f6546c35db4c1ba7e379a128ed6c95ba1b88d004c316420"
+     "sha256": "cb8dd489e980403d47862bebcdc7036a578d7a7855f853595a5ebdcfb05e306b"
     }
    ]
   },
@@ -3684,7 +3719,7 @@
      "file": "coppe_aggancio_giocatori.csv.gz",
      "righe": 18307,
      "mb": 0.28,
-     "sha256": "a88f2d657d1bd0065c1f797fc3887fbce9ae35d2a0613cb5b6e17c8938d444bd"
+     "sha256": "9f7d448d2f66544e9bbc61d9f96e8243685d64bd1ab9f8ad374167665b7fad10"
     }
    ]
   },
@@ -3709,7 +3744,7 @@
      "file": "coppe_aggancio_squadre.csv.gz",
      "righe": 580,
      "mb": 0.0,
-     "sha256": "cbe8480926acd9eaf4de4be02293d99984ba2486fc8a82023f3939e4594b12d6"
+     "sha256": "332889823e5174348cafa9d587dc37319ca3cee2b7743defdece342771f89e8a"
     }
    ]
   },
@@ -3734,7 +3769,7 @@
     "data/coppe_2526/aggancio_partite.csv"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.7413793103448276,
+   "aggancio_match_uid": 0.9344827586206896,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "",
    "pezzi": [
@@ -3742,7 +3777,7 @@
      "file": "coppe_aggancio_partite.csv.gz",
      "righe": 580,
      "mb": 0.02,
-     "sha256": "585a6ca462fc49008d178be461a1d45bd81de9588888938a98585ce24555d17f"
+     "sha256": "78f8d6506e3b3aaa210e3ced39ba93239cb9a7b0db17ec59c8c701936faf164e"
     }
    ]
   },
@@ -3778,7 +3813,7 @@
      "file": "coppe_incrocio_per_partita.csv.gz",
      "righe": 580,
      "mb": 0.01,
-     "sha256": "feee74b85222d29444bbe099fb2e63b06ae9091c57ee60830f2ab133456a6fea"
+     "sha256": "3cdf63f24aed97906b6edee83210a0906b9ca7972c414c3d1a15848fdaadd8f9"
     }
    ]
   },
@@ -3814,7 +3849,7 @@
      "file": "coppe_da_raccogliere.csv.gz",
      "righe": 580,
      "mb": 0.02,
-     "sha256": "48900c57a2b7f1c957fc4aea9b03c3c9e1918a0315dace6cae91b0cf16e68d60"
+     "sha256": "06925629f8a06742161d36eba208b2d02d13dd9a45b200064f538628458b6365"
     }
    ]
   },
@@ -3947,7 +3982,7 @@
     "data/coppe_2526/aggancio_statistiche.csv"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.9119031021261763,
+   "aggancio_match_uid": 0.9630533286859533,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "",
    "pezzi": [
@@ -3955,7 +3990,7 @@
      "file": "coppe_aggancio_statistiche.csv.gz",
      "righe": 11476,
      "mb": 0.95,
-     "sha256": "2b4d306eb2e40a85f134060a53df9a3113f074aafa913451eae5ff5219838943"
+     "sha256": "a3d8d1d97f5edb3b06a4479d23baa590ce21f9a94b13e16a375f6f19b2827292"
     }
    ]
   },
@@ -4017,15 +4052,15 @@
     "data/coppe_2526/aggancio_statistiche_squadra.csv"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.8970693352394568,
+   "aggancio_match_uid": 0.9656897784131523,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "",
    "pezzi": [
     {
      "file": "coppe_aggancio_statistiche_squadra.csv.gz",
      "righe": 2798,
-     "mb": 0.17,
-     "sha256": "19b24c324ad5cb31b3f4d44697a14a0193631df8e027086e88b46f8137324f58"
+     "mb": 0.16,
+     "sha256": "a62bedbd1a1fb19bc0765fecb06cc31a0019b0c736f882bfd955c0aaa5d248d2"
     }
    ]
   },
@@ -4055,7 +4090,7 @@
     "data/coppe_2526/aggancio_eventi.csv"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.8823490509886912,
+   "aggancio_match_uid": 0.9636267442629456,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "",
    "pezzi": [
@@ -4063,13 +4098,13 @@
      "file": "coppe_aggancio_eventi.csv.gz",
      "righe": 15121,
      "mb": 0.23,
-     "sha256": "b6d1e5fb4d8db36246fd8ab7f03dd07090b2e7fda518cbb20ac447d2f5b929de"
+     "sha256": "1800ecaf1a2cd7f703725c9ef41137515d782d40dec3c0b23443b380370c4dfe"
     }
    ]
   },
   "squadre_partita_diretta.csv.gz": {
    "grana": "squadre partita diretta",
-   "righe": 10512,
+   "righe": 10550,
    "colonne": 59,
    "nomi_colonne": [
     "match_uid",
@@ -4146,15 +4181,15 @@
    "pezzi": [
     {
      "file": "squadre_partita_diretta.csv.gz",
-     "righe": 10512,
-     "mb": 0.61,
-     "sha256": "448b6ed0fc967434f0d49dc7a65a5cad378c76540c15b932914af81401dee290"
+     "righe": 10550,
+     "mb": 0.57,
+     "sha256": "42d7098219b308e855170ef668a551e4acb2210cfe3fd3ad23203b436b4ac45b"
     }
    ]
   },
   "giocatori_partita_diretta.csv.gz": {
    "grana": "giocatori partita diretta",
-   "righe": 54303,
+   "righe": 54492,
    "colonne": 114,
    "nomi_colonne": [
     "match_uid",
@@ -4286,9 +4321,9 @@
    "pezzi": [
     {
      "file": "giocatori_partita_diretta.csv.gz",
-     "righe": 54303,
-     "mb": 3.8,
-     "sha256": "dd4903308b8aec75a84d900853b9c9d913d8319270969844f9ac010a1681b905"
+     "righe": 54492,
+     "mb": 3.81,
+     "sha256": "0ec025059da6e3bbc2feeb704c97a275963a145caf1f0986855d65d66cd5903c"
     }
    ]
   },
@@ -4458,7 +4493,7 @@
     "files/diretta_ligue_1_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.9905878534626151,
+   "aggancio_match_uid": 1.0,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "formazioni/cambi/eventi/elenco esistono SOLO per Bundesliga e Ligue 1: le altre tre raccolte non li hanno.",
    "pezzi": [
@@ -4466,7 +4501,7 @@
      "file": "formazioni_diretta.csv.gz",
      "righe": 24649,
      "mb": 0.42,
-     "sha256": "03dc8154a3f0a0cce6136506e26b009c931303adc1524a9f95dca2febc84d7a1"
+     "sha256": "0cecf02aa351840352ca3257c66175149fd1e865d6961adbd580d008395bac3a"
     }
    ]
   },
@@ -4498,7 +4533,7 @@
     "files/diretta_ligue_1_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.9898846495119787,
+   "aggancio_match_uid": 1.0,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "formazioni/cambi/eventi/elenco esistono SOLO per Bundesliga e Ligue 1: le altre tre raccolte non li hanno.",
    "pezzi": [
@@ -4506,7 +4541,7 @@
      "file": "cambi_diretta.csv.gz",
      "righe": 5635,
      "mb": 0.09,
-     "sha256": "f2c2441192ba9696a9df9fa6039561b8df58f3dd7cadc446e6ebb2f537035a7c"
+     "sha256": "5ae3e9f5a632149d355d6f371c262e01961d09b7eae0101ccb544343f3419e88"
     }
    ]
   },
@@ -4542,7 +4577,7 @@
     "files/diretta_ligue_1_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.9871794871794872,
+   "aggancio_match_uid": 1.0,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "formazioni/cambi/eventi/elenco esistono SOLO per Bundesliga e Ligue 1: le altre tre raccolte non li hanno.",
    "pezzi": [
@@ -4550,15 +4585,16 @@
      "file": "eventi_diretta.csv.gz",
      "righe": 4446,
      "mb": 0.23,
-     "sha256": "3ac0a7de95314ab38dd54ee462d8ca4909f64426480113efc754e876701d8c73"
+     "sha256": "1b4edaa192d6ab69e0a2456b11ac9dfc59631b2ad551fc87392296140100f406"
     }
    ]
   },
   "elenco_partite_diretta.csv.gz": {
    "grana": "elenco partite diretta",
    "righe": 618,
-   "colonne": 14,
+   "colonne": 15,
    "nomi_colonne": [
+    "match_uid",
     "Fase",
     "Giornata",
     "Turno",
@@ -4582,15 +4618,15 @@
     "files/diretta_ligue_1_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": null,
+   "aggancio_match_uid": 1.0,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "formazioni/cambi/eventi/elenco esistono SOLO per Bundesliga e Ligue 1: le altre tre raccolte non li hanno.",
    "pezzi": [
     {
      "file": "elenco_partite_diretta.csv.gz",
      "righe": 618,
-     "mb": 0.01,
-     "sha256": "625dff9f833a95a2a4842809c5f8ed88d73c3a394bad1bb60c559b27d9b0d6cc"
+     "mb": 0.02,
+     "sha256": "6b6dc583565ffa8bd327888052baeaebc099226283f130bf3b1a1ef99b821e91"
     }
    ]
   },
@@ -4621,15 +4657,15 @@
     "files/diretta_{coppa}_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.7413793103448276,
+   "aggancio_match_uid": 0.9344827586206896,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
    "pezzi": [
     {
      "file": "coppe_diretta_partite.csv.gz",
      "righe": 580,
      "mb": 0.02,
-     "sha256": "9633963c6f0b8be359fde03d43439dcd072a5a2ed4801c068a3f3621ec545306"
+     "sha256": "ef492fb4df69d65deb3e498271ba4a97e82f81de3b472643a78e947b74c38a5c"
     }
    ]
   },
@@ -4662,15 +4698,15 @@
     "files/diretta_{coppa}_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.9287157917736385,
+   "aggancio_match_uid": 0.9696837275359153,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
    "pezzi": [
     {
      "file": "coppe_diretta_formazioni_e_cambi.csv.gz",
      "righe": 18307,
      "mb": 0.27,
-     "sha256": "807afdd57821bfe9edfd5d79c0a071a7737a1316a87ea1f457e675aa66e7de06"
+     "sha256": "2506d5361c7723111012dac79c3df035f51146405dcf3a7b0c834afab3e73b14"
     }
    ]
   },
@@ -4698,15 +4734,15 @@
     "files/diretta_{coppa}_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.8823490509886912,
+   "aggancio_match_uid": 0.9636267442629456,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
    "pezzi": [
     {
      "file": "coppe_diretta_eventi.csv.gz",
      "righe": 15121,
-     "mb": 0.16,
-     "sha256": "5e0ed5914d02b66714646cd26ac5114effc74307abbff7d7e2da988a95d6d91a"
+     "mb": 0.17,
+     "sha256": "46adcd98e49a12c31e3ff0245b4de79d4d475ef6a7e97e24ade18de0a6029d41"
     }
    ]
   },
@@ -4837,15 +4873,15 @@
     "files/diretta_{coppa}_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.9119031021261763,
+   "aggancio_match_uid": 0.9630533286859533,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
    "pezzi": [
     {
      "file": "coppe_diretta_stat_giocatori.csv.gz",
      "righe": 11476,
-     "mb": 0.89,
-     "sha256": "6fef9e0b850508781ba5f1c9d7e330e140dc1f80e87c5a0bbeb137e88c6e8664"
+     "mb": 0.9,
+     "sha256": "6a3f611f90adc491e80ee4963ec3c49b8a83eaf8a2d1425e8f6c4122fc8bfe15"
     }
    ]
   },
@@ -4905,15 +4941,15 @@
     "files/diretta_{coppa}_2526/"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 0.8970693352394568,
+   "aggancio_match_uid": 0.9656897784131523,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
    "pezzi": [
     {
      "file": "coppe_diretta_stat_squadra.csv.gz",
      "righe": 2798,
      "mb": 0.16,
-     "sha256": "a87d508d637378e7708dff2735d1acbbfddedcafe7441af5074c6d7b4464985d"
+     "sha256": "90c8a320e1d344634942dfeececd7ac228a2deeb2551dfd5349b2530d8ce2949"
     }
    ]
   },
@@ -4939,13 +4975,581 @@
    "spezzato_per": null,
    "aggancio_match_uid": null,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
-   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
    "pezzi": [
     {
      "file": "coppe_diretta_note.csv.gz",
      "righe": 137,
      "mb": 0.0,
      "sha256": "88833d02897cda88ca73bfa3a8453aa789ace2c400d95d6fbd4713ae01f717b5"
+    }
+   ]
+  },
+  "coppe_xlsx_statistiche_partite.csv.gz": {
+   "grana": "coppe xlsx statistiche partite",
+   "righe": 580,
+   "colonne": 19,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Gol casa 90",
+    "Gol ospite 90",
+    "Gol casa dts",
+    "Gol ospite dts",
+    "Rigori casa",
+    "Rigori ospite",
+    "Risultato (esteso)",
+    "Supplementari giocati",
+    "Stat giocatori disponibili",
+    "Statistiche squadra complete",
+    "ID partita",
+    "cartella",
+    "foglio",
+    "Statistiche squadra tracciate"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_statistiche_partite.csv.gz",
+     "righe": 580,
+     "mb": 0.01,
+     "sha256": "aebba4c139b98c7fed55b707da8277e1f9ccf69c14b3f66af18f8dde1b057d93"
+    }
+   ]
+  },
+  "coppe_xlsx_statistiche_statistiche_squadra.csv.gz": {
+   "grana": "coppe xlsx statistiche statistiche squadra",
+   "righe": 2798,
+   "colonne": 46,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Periodo",
+    "Lato",
+    "Squadra",
+    "ID partita",
+    "Cartellini gialli",
+    "Cartellini rossi",
+    "Possesso palla",
+    "Tiri totali",
+    "Tiri in porta",
+    "Calci d'angolo",
+    "Goal previsti (xG)",
+    "Grandi occasioni",
+    "Passaggi",
+    "Tiri fuori",
+    "xG sui Tiri in porta (xGOT)",
+    "Tiri fermati",
+    "Tiri dall'area di rigore",
+    "Tiri da fuori area",
+    "Pali colpiti",
+    "Gol di testa",
+    "Fuorigioco",
+    "Punizioni",
+    "Palloni toccati nell'area avversaria",
+    "Passaggi filtranti riusciti",
+    "Rimesse Laterali",
+    "Passaggi lunghi",
+    "Passaggi offensivi",
+    "Cross",
+    "Assist previsti (xA)",
+    "Falli",
+    "Tackles",
+    "Contrasti vinti",
+    "Respinte difensive",
+    "Palle intercettate",
+    "Errori che hanno portato al tiro",
+    "Errori che hanno portato al gol",
+    "Parate",
+    "xGot affrontati",
+    "Gol evitati",
+    "cartella",
+    "foglio"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_statistiche_statistiche_squadra.csv.gz",
+     "righe": 2798,
+     "mb": 0.15,
+     "sha256": "ad983aa4f4b8564637c3d62759a858f60abd2eb07acc01098e4edf89e2d75dc1"
+    }
+   ]
+  },
+  "coppe_xlsx_statistiche_statistiche_giocatori.csv.gz": {
+   "grana": "coppe xlsx statistiche statistiche giocatori",
+   "righe": 11476,
+   "colonne": 117,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Lato",
+    "Squadra",
+    "Giocatore",
+    "Ruolo",
+    "Stato",
+    "Rating",
+    "ID partita",
+    "PENALTIES_COMMITTED",
+    "PENALTY_SHOOTOUT_ATTEMPTS_SAVES",
+    "PENALTY_SHOOTOUT_ATTEMPTS_SCORED",
+    "HIT_WOODWORK",
+    "TURNOVERS",
+    "CHALLENGE_LOST",
+    "PENALTIES_NOT_CONVERTED",
+    "PENALTY_SHOOTOUT_ATTEMPTS_NOT_CONVERTED",
+    "GOALS_PREVENTED_NO_PENALTIES",
+    "PASSES_OPEN_PLAY_ACCURACY",
+    "PASSES_OPEN_PLAY_ACCURATE",
+    "PASSES_OPEN_PLAY_TOTAL",
+    "DUELS_EFFICIENCY",
+    "TACKLE_LAST_MAN",
+    "CLEARANCES_OFF_LINE",
+    "BIG_CHANCES_SAVED",
+    "PENALTIES_SAVED",
+    "GOALS_PENALTY",
+    "PENALTIES_WON",
+    "ASSISTS_GOAL",
+    "BIG_CHANCES_CREATED",
+    "BIG_CHANCES_MISSED",
+    "CARDS_RED",
+    "CARDS_YELLOW",
+    "CLEARANCES",
+    "CROSSES_ACCURACY",
+    "CROSSES_TOTAL",
+    "CROSSES_ACCURATE",
+    "DRIBBLES_EFFICIENCY",
+    "DUELS_AERIAL_TOTAL",
+    "DRIBBLES_TOTAL",
+    "DRIBBLES_WON",
+    "DUELS_AERIAL_EFFICIENCY",
+    "DUELS_AERIAL_WON",
+    "DUELS_GROUND_EFFICIENCY",
+    "DUELS_GROUND_TOTAL",
+    "DUELS_GROUND_WON",
+    "DUELS_TOTAL",
+    "ERRORS_LEAD_TO_GOAL",
+    "ERRORS_LEAD_TO_SHOT",
+    "EXPECTED_ASSISTS",
+    "EXPECTED_GOALS",
+    "EXPECTED_GOALS_ON_TARGET",
+    "EXPECTED_GOALS_ON_TARGET_FACED",
+    "FOULS_COMMITTED",
+    "FOULS_SUFFERED",
+    "GOALS",
+    "GOALS_CONCEDED",
+    "GOALS_OWN",
+    "GOALS_PREVENTED",
+    "INTERCEPTIONS",
+    "KEEPER_SWEEPER_TOTAL",
+    "KEEPER_THROWS_TOTAL",
+    "LONG_BALLS_ACCURACY",
+    "LONG_BALLS_TOTAL",
+    "LONG_BALLS_ACCURATE",
+    "MATCH_MINUTES_PLAYED",
+    "OFFSIDES",
+    "PASSES_ACCURACY",
+    "PASSES_TOTAL",
+    "PASSES_ACCURATE",
+    "PASSES_FINAL_THIRD_ACCURACY",
+    "PASSES_FINAL_THIRD_TOTAL",
+    "PASSES_FINAL_THIRD_ACCURATE",
+    "PUNCHES_TOTAL",
+    "SAVES_TOTAL",
+    "SHOTS_BLOCKED",
+    "SHOTS_BOX_IN",
+    "SHOTS_BOX_OUT",
+    "SHOTS_HEAD",
+    "SHOTS_OFF_TARGET",
+    "SHOTS_ON_TARGET",
+    "SHOTS_TOTAL",
+    "TACKLES_EFFICIENCY",
+    "TACKLES_TOTAL",
+    "TACKLES_WON",
+    "TOUCHES_BOX_OPPOSITE",
+    "TOUCHES_TOTAL",
+    "SHOTS_FACED",
+    "CARDS_YELLOW_SECOND",
+    "MATCH_ON_PITCH_LIVE",
+    "MATCH_MINUTES_PLAYED_LIVE",
+    "KEY_PASSES",
+    "BOX_ENTRIES_EFFICIENCY",
+    "BOX_ENTRIES_ACCURATE",
+    "BOX_ENTRIES_TOTAL",
+    "THROUGH_BALLS",
+    "LAYOFFS_ACCURACY",
+    "LAYOFFS_ACCURATE",
+    "LAYOFFS_TOTAL",
+    "FINAL_THIRD_ENTRIES_TOTAL",
+    "FINAL_THIRD_ENTRIES_SUCCESSFUL",
+    "FINAL_THIRD_ENTRIES_EFFICIENCY",
+    "BALL_RECOVERIES",
+    "HIGH_CLAIM_EFFICIENCY",
+    "HIGH_CLAIM_TOTAL",
+    "HIGH_CLAIM_SAVED",
+    "DUELS_WON",
+    "OUTFIELDER_BLOCKS",
+    "PROGRESSIVE_CARRIES",
+    "PROGRESSIVE_PASSES_TOTAL",
+    "PROGRESSIVE_PASSES_ACCURACY",
+    "PROGRESSIVE_PASSES_ACCURATE",
+    "cartella",
+    "foglio"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_statistiche_statistiche_giocatori.csv.gz",
+     "righe": 11476,
+     "mb": 0.88,
+     "sha256": "fd1b9ad94525308356d23149671629965b0a75acce268faa62cfa45ab140048d"
+    }
+   ]
+  },
+  "coppe_xlsx_statistiche_note.csv.gz": {
+   "grana": "coppe xlsx statistiche note",
+   "righe": 257,
+   "colonne": 11,
+   "nomi_colonne": [
+    "Copa del Rey 2025/26 — statistiche di squadra e individuali",
+    "Unnamed: 1",
+    "Unnamed: 2",
+    "Unnamed: 3",
+    "cartella",
+    "foglio",
+    "Coppa Italia 2025/26 — statistiche di squadra e individuali",
+    "Coppa di Francia 2025/26 — statistiche di squadra e individuali",
+    "DFB-Pokal 2025/26 — statistiche di squadra e individuali",
+    "Carabao Cup (EFL Cup) 2025/26 — statistiche di squadra e individuali",
+    "FA Cup 2025/26 — statistiche di squadra e individuali"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_statistiche_note.csv.gz",
+     "righe": 257,
+     "mb": 0.0,
+     "sha256": "ddd30fb9c1727ceb240bda20305ee6c16f9a460dd2f51cb6075b9efaa276dbb0"
+    }
+   ]
+  },
+  "coppe_xlsx_coppa_partite.csv.gz": {
+   "grana": "coppe xlsx coppa partite",
+   "righe": 580,
+   "colonne": 17,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Gol casa 90",
+    "Gol ospite 90",
+    "Gol casa dts",
+    "Gol ospite dts",
+    "Rigori casa",
+    "Rigori ospite",
+    "Risultato (esteso)",
+    "Nota andata/ritorno",
+    "Stat giocatori disponibili",
+    "ID partita",
+    "cartella",
+    "foglio"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_coppa_partite.csv.gz",
+     "righe": 580,
+     "mb": 0.01,
+     "sha256": "c962769ad6e37b34e21d1d30797fe7578504fcf567f275b80f52f23dea29283e"
+    }
+   ]
+  },
+  "coppe_xlsx_coppa_formazioni_e_cambi.csv.gz": {
+   "grana": "coppe xlsx coppa formazioni e cambi",
+   "righe": 18307,
+   "colonne": 19,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Lato",
+    "Squadra",
+    "Modulo",
+    "Gruppo",
+    "Ordine",
+    "Numero",
+    "Giocatore",
+    "Ruolo",
+    "Rating",
+    "Entrato al",
+    "Uscito al",
+    "ID partita",
+    "cartella",
+    "foglio"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_coppa_formazioni_e_cambi.csv.gz",
+     "righe": 18307,
+     "mb": 0.26,
+     "sha256": "1d0b15d2531c731025672aa05cd29f1ed79c01e10f441e6e38beba341d393859"
+    }
+   ]
+  },
+  "coppe_xlsx_coppa_eventi.csv.gz": {
+   "grana": "coppe xlsx coppa eventi",
+   "righe": 15121,
+   "colonne": 14,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Periodo",
+    "Minuto",
+    "Lato",
+    "Tipo evento",
+    "Giocatore",
+    "Punteggio dopo",
+    "ID partita",
+    "cartella",
+    "foglio"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_coppa_eventi.csv.gz",
+     "righe": 15121,
+     "mb": 0.16,
+     "sha256": "2c871616de4af70bfb66c632f5d8de8b953277a5f6e25b1fffc8bc327ac5241b"
+    }
+   ]
+  },
+  "coppe_xlsx_coppa_stat_giocatori.csv.gz": {
+   "grana": "coppe xlsx coppa stat giocatori",
+   "righe": 11476,
+   "colonne": 116,
+   "nomi_colonne": [
+    "Competizione",
+    "Turno",
+    "Data",
+    "Casa",
+    "Ospite",
+    "Lato",
+    "Squadra",
+    "Giocatore",
+    "Ruolo",
+    "Stato",
+    "Rating",
+    "ASSISTS_GOAL",
+    "BALL_RECOVERIES",
+    "BIG_CHANCES_CREATED",
+    "BIG_CHANCES_MISSED",
+    "BIG_CHANCES_SAVED",
+    "BOX_ENTRIES_ACCURATE",
+    "BOX_ENTRIES_EFFICIENCY",
+    "BOX_ENTRIES_TOTAL",
+    "CARDS_RED",
+    "CARDS_YELLOW",
+    "CARDS_YELLOW_SECOND",
+    "CHALLENGE_LOST",
+    "CLEARANCES",
+    "CLEARANCES_OFF_LINE",
+    "CROSSES_ACCURACY",
+    "CROSSES_ACCURATE",
+    "CROSSES_TOTAL",
+    "DRIBBLES_EFFICIENCY",
+    "DRIBBLES_TOTAL",
+    "DRIBBLES_WON",
+    "DUELS_AERIAL_EFFICIENCY",
+    "DUELS_AERIAL_TOTAL",
+    "DUELS_AERIAL_WON",
+    "DUELS_EFFICIENCY",
+    "DUELS_GROUND_EFFICIENCY",
+    "DUELS_GROUND_TOTAL",
+    "DUELS_GROUND_WON",
+    "DUELS_TOTAL",
+    "DUELS_WON",
+    "ERRORS_LEAD_TO_GOAL",
+    "ERRORS_LEAD_TO_SHOT",
+    "EXPECTED_ASSISTS",
+    "EXPECTED_GOALS",
+    "EXPECTED_GOALS_ON_TARGET",
+    "EXPECTED_GOALS_ON_TARGET_FACED",
+    "FINAL_THIRD_ENTRIES_EFFICIENCY",
+    "FINAL_THIRD_ENTRIES_SUCCESSFUL",
+    "FINAL_THIRD_ENTRIES_TOTAL",
+    "FOULS_COMMITTED",
+    "FOULS_SUFFERED",
+    "GOALS",
+    "GOALS_CONCEDED",
+    "GOALS_OWN",
+    "GOALS_PENALTY",
+    "GOALS_PREVENTED",
+    "GOALS_PREVENTED_NO_PENALTIES",
+    "HIGH_CLAIM_EFFICIENCY",
+    "HIGH_CLAIM_SAVED",
+    "HIGH_CLAIM_TOTAL",
+    "HIT_WOODWORK",
+    "INTERCEPTIONS",
+    "KEEPER_SWEEPER_TOTAL",
+    "KEEPER_THROWS_TOTAL",
+    "KEY_PASSES",
+    "LAYOFFS_ACCURACY",
+    "LAYOFFS_ACCURATE",
+    "LAYOFFS_TOTAL",
+    "LONG_BALLS_ACCURACY",
+    "LONG_BALLS_ACCURATE",
+    "LONG_BALLS_TOTAL",
+    "MATCH_MINUTES_PLAYED",
+    "MATCH_MINUTES_PLAYED_LIVE",
+    "MATCH_ON_PITCH_LIVE",
+    "OFFSIDES",
+    "OUTFIELDER_BLOCKS",
+    "PASSES_ACCURACY",
+    "PASSES_ACCURATE",
+    "PASSES_FINAL_THIRD_ACCURACY",
+    "PASSES_FINAL_THIRD_ACCURATE",
+    "PASSES_FINAL_THIRD_TOTAL",
+    "PASSES_OPEN_PLAY_ACCURACY",
+    "PASSES_OPEN_PLAY_ACCURATE",
+    "PASSES_OPEN_PLAY_TOTAL",
+    "PASSES_TOTAL",
+    "PENALTIES_COMMITTED",
+    "PENALTIES_NOT_CONVERTED",
+    "PENALTIES_SAVED",
+    "PENALTIES_WON",
+    "PENALTY_SHOOTOUT_ATTEMPTS_NOT_CONVERTED",
+    "PENALTY_SHOOTOUT_ATTEMPTS_SAVES",
+    "PENALTY_SHOOTOUT_ATTEMPTS_SCORED",
+    "PROGRESSIVE_CARRIES",
+    "PROGRESSIVE_PASSES_ACCURACY",
+    "PROGRESSIVE_PASSES_ACCURATE",
+    "PROGRESSIVE_PASSES_TOTAL",
+    "PUNCHES_TOTAL",
+    "SAVES_TOTAL",
+    "SHOTS_BLOCKED",
+    "SHOTS_BOX_IN",
+    "SHOTS_BOX_OUT",
+    "SHOTS_FACED",
+    "SHOTS_HEAD",
+    "SHOTS_OFF_TARGET",
+    "SHOTS_ON_TARGET",
+    "SHOTS_TOTAL",
+    "TACKLES_EFFICIENCY",
+    "TACKLES_TOTAL",
+    "TACKLES_WON",
+    "TACKLE_LAST_MAN",
+    "THROUGH_BALLS",
+    "TOUCHES_BOX_OPPOSITE",
+    "TOUCHES_TOTAL",
+    "TURNOVERS",
+    "cartella",
+    "foglio"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_coppa_stat_giocatori.csv.gz",
+     "righe": 11476,
+     "mb": 0.78,
+     "sha256": "8cf7a302b3b13a6f701afb092591dd449479f9068899c223e86a35ca8b257e6f"
+    }
+   ]
+  },
+  "coppe_xlsx_coppa_note.csv.gz": {
+   "grana": "coppe xlsx coppa note",
+   "righe": 137,
+   "colonne": 11,
+   "nomi_colonne": [
+    "Copa del Rey 2025/26 — note di raccolta",
+    "Unnamed: 1",
+    "Unnamed: 2",
+    "cartella",
+    "foglio",
+    "Fonte",
+    "diretta.it (Flashscore) — Coppa Italia 2025/2026",
+    "Coppa di Francia 2025/26 — note di raccolta",
+    "diretta.it (Flashscore) — DFB-Pokal 2025/2026",
+    "diretta.it (Flashscore) — Carabao Cup / EFL Cup 2025/2026",
+    "diretta.it (Flashscore) — FA Cup 2025/2026"
+   ],
+   "fonti": [
+    "files/diretta_{coppa}_2526/"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "raccolta manuale diretta.it delle 6 coppe nazionali; nessun modulo di src/data/ la legge. ⚠️ Le tabelle `coppe_aggancio_*` sono un SOPRAINSIEME delle `coppe_diretta_*` corrispondenti (stesse righe più game_id e player_id): restano entrambe perché le seconde hanno una manciata di righe che l'aggancio non copre.",
+   "pezzi": [
+    {
+     "file": "coppe_xlsx_coppa_note.csv.gz",
+     "righe": 137,
+     "mb": 0.0,
+     "sha256": "0ff9ede79153576343437ab507c3f659b7e56ba44a49bad7c2d82b1526657905"
     }
    ]
   },
@@ -5009,7 +5613,7 @@
      "file": "uefa_partite_sofascore.csv.gz",
      "righe": 912,
      "mb": 0.07,
-     "sha256": "e6df31d5cb80098aafa114c36fea4af028ec7c341d326ac7e414ec0571b0c079"
+     "sha256": "036dee7eaca8002f941d70dbe4657d16407383c403e1fa3422ce04eb05931f95"
     }
    ]
   },
@@ -5135,8 +5739,8 @@
     {
      "file": "uefa_giocatori.csv.gz",
      "righe": 40067,
-     "mb": 2.68,
-     "sha256": "ded8deacd188a8a3ab898ecd49c4106d07b67e1ca7dcc247abac50efcc9b2252"
+     "mb": 2.6,
+     "sha256": "dd4326b9db64d22d0141d0b57167425dd39795a81d9e19985aff412c59046c1b"
     }
    ]
   },
@@ -5214,8 +5818,8 @@
     {
      "file": "uefa_eventi.csv.gz",
      "righe": 21152,
-     "mb": 0.51,
-     "sha256": "2961447111f9c1cb0f0db148bb84f1297f21aa7b779294f1bb166143b3d00965"
+     "mb": 0.5,
+     "sha256": "04665dc6598c36b63a70b89f95f5159ccfcbd937895db6a006c84855131342c0"
     }
    ]
   },
@@ -5258,7 +5862,7 @@
      "file": "uefa_tiri.csv.gz",
      "righe": 16929,
      "mb": 0.51,
-     "sha256": "e58f980afdf6e713f5fc3a9263da5bf0cf0718f650f3552cc91fbb2e9ee3db70"
+     "sha256": "96ff054dc14d96ae366eb8d4fc4d1d8b261f5fb0994efda4803faaf25dcf9937"
     }
    ]
   },
@@ -5327,7 +5931,7 @@
      "file": "uefa_cambi.csv.gz",
      "righe": 8268,
      "mb": 0.25,
-     "sha256": "54b4622a624f5ccc49b79f3c909100322fcfea21d9b5ac265849696641ae7794"
+     "sha256": "baa82906be0e62184fc8736306ab7766a9994900ec0e5715f64e298ffb7a0f39"
     }
    ]
   },
@@ -5483,17 +6087,17 @@
      "file": "snapshot_partite.csv.gz",
      "righe": 1752,
      "mb": 0.12,
-     "sha256": "ad599585b61145260802f830e0ee305d3acc0c82736bd4be2c4791ee92b32a1f"
+     "sha256": "c4fd1d586f453581dea50d0ef1c3dea9d8c10d0c27970edb583bfee4a3bac424"
     }
    ]
   },
   "quote_football_data.csv.gz": {
    "grana": "una partita, con le ~108 colonne di quota della fonte",
    "righe": 1140,
-   "colonne": 134,
+   "colonne": 135,
    "nomi_colonne": [
     "match_uid",
-    "ï»¿Div",
+    "Div",
     "Date",
     "Time",
     "HomeTeam",
@@ -5625,6 +6229,7 @@
     "BFECAHH",
     "BFECAHA",
     "competizione",
+    "ï»¿Div",
     "Referee"
    ],
    "fonti": [
@@ -5640,7 +6245,7 @@
      "file": "quote_football_data.csv.gz",
      "righe": 1140,
      "mb": 0.16,
-     "sha256": "7f5eff935fa6253bbb4d18256667c5bb378a4b7dc515c6300c486686a942a4e2"
+     "sha256": "5d21202f529c891d2cbaa7f77d6e17790b5973439336b3c6dd3cb42f877e4e25"
     }
    ]
   },
@@ -5691,13 +6296,13 @@
      "file": "transfermarkt_partite.csv.gz",
      "righe": 3155,
      "mb": 0.22,
-     "sha256": "bce52c45e90f1b9324d75d3a52f3f59f35d0651a64eaa5b550ff28ce454cd7c0"
+     "sha256": "5d00cf0024252ebbbcf2ad8f952b79c7805d2adad256238b6b99d4b5c8e31ca2"
     }
    ]
   },
   "transfermarkt_appearances.csv.gz": {
    "grana": "appearances",
-   "righe": 73065,
+   "righe": 78012,
    "colonne": 14,
    "nomi_colonne": [
     "match_uid",
@@ -5719,21 +6324,21 @@
     "files/player_scores/appearances.csv.gz"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 1.0,
+   "aggancio_match_uid": 0.9365866789724657,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "⚠️ `red_cards` vale 0 su tutte le righe del 2025-26: finto pieno (R6).",
    "pezzi": [
     {
      "file": "transfermarkt_appearances.csv.gz",
-     "righe": 73065,
-     "mb": 1.72,
-     "sha256": "daf2766907c7fd29c5d627b4e01ab97f3761ccb04d2071811ab42b52ba0b7210"
+     "righe": 78012,
+     "mb": 1.83,
+     "sha256": "7acd2f58da758f47306299931d01e8032a0c1bf5095df8deb5d4c6f1aefafa79"
     }
    ]
   },
   "transfermarkt_club_games.csv.gz": {
    "grana": "club games",
-   "righe": 5808,
+   "righe": 6310,
    "colonne": 12,
    "nomi_colonne": [
     "match_uid",
@@ -5753,21 +6358,21 @@
     "files/player_scores/club_games.csv.gz"
    ],
    "spezzato_per": null,
-   "aggancio_match_uid": 1.0,
+   "aggancio_match_uid": 0.9204437400950871,
    "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
    "note": "",
    "pezzi": [
     {
      "file": "transfermarkt_club_games.csv.gz",
-     "righe": 5808,
-     "mb": 0.09,
-     "sha256": "13d018d40f983f57f1509cbc4ca24dd00b6b4e4dc3c1786bff61681ac6361819"
+     "righe": 6310,
+     "mb": 0.1,
+     "sha256": "c593fb6b0e9fefe124bbb7a9d25ca73052a8538a9c74bc951f1506a5fa66fc12"
     }
    ]
   },
   "transfermarkt_players.csv.gz": {
    "grana": "players",
-   "righe": 5321,
+   "righe": 4733,
    "colonne": 26,
    "nomi_colonne": [
     "player_id",
@@ -5807,9 +6412,9 @@
    "pezzi": [
     {
      "file": "transfermarkt_players.csv.gz",
-     "righe": 5321,
-     "mb": 0.46,
-     "sha256": "320befc89bf678797a95f5a000b2aec9bc35b67a64899708701b977606eba597"
+     "righe": 4733,
+     "mb": 0.4,
+     "sha256": "f560a564f8c6eeb8102a4a070c11bf95d9d9f94b802088eeda733a594bef5ddd"
     }
    ]
   },
@@ -5854,7 +6459,7 @@
   },
   "transfermarkt_player_valuations.csv.gz": {
    "grana": "player valuations",
-   "righe": 4666,
+   "righe": 4363,
    "colonne": 6,
    "nomi_colonne": [
     "player_id",
@@ -5874,9 +6479,9 @@
    "pezzi": [
     {
      "file": "transfermarkt_player_valuations.csv.gz",
-     "righe": 4666,
-     "mb": 0.05,
-     "sha256": "27042d134aa278cf0ba5de5ea7fd6c021a19f1b2be3f93e6528e87ef1ee4f27c"
+     "righe": 4363,
+     "mb": 0.04,
+     "sha256": "18471cef5f2246aa5ac3c2dbafb390840823999ea0d2c6722df32dd349ef7b58"
     }
    ]
   },
@@ -5934,7 +6539,7 @@
      "file": "transfermarkt_competitions.csv.gz",
      "righe": 21,
      "mb": 0.0,
-     "sha256": "a0f23636de338aa07cf7c8b6e8330eff22c329f898940b796e937b5b14765b11"
+     "sha256": "53cdd8749fbf9c9d83814ca3c3974c14a4eb6bdbfa9455fc1bdf94e082b5746b"
     }
    ]
   },
@@ -6003,7 +6608,7 @@
      "file": "anagrafiche/ranking_uefa_federazioni_2025-26.csv.gz",
      "righe": 55,
      "mb": 0.0,
-     "sha256": "40032fa9ec3b56698ecb0398daf1697e841603e5f3e9d6c6eb8b2201a9bbe758"
+     "sha256": "bed07b78a1cfeb02522f7142aeb8a59a99438e39354273a86b2695d103b636fc"
     }
    ]
   },
@@ -6173,8 +6778,124 @@
     {
      "file": "anagrafiche/carriere_wikipedia.csv.gz",
      "righe": 32364,
-     "mb": 0.54,
-     "sha256": "c3884a14887ca33bbdd440293361981ac93239badda2f9d70ef636e51e4dbac9"
+     "mb": 0.53,
+     "sha256": "4d3aed5febfcda4e09c939ea31bdbe98e7a280f2357e0495c5d1b6e744c8e445"
+    }
+   ]
+  },
+  "anagrafiche/identita_wikidata_qid.csv.gz": {
+   "grana": "un giocatore",
+   "righe": 4700,
+   "colonne": 5,
+   "nomi_colonne": [
+    "player_id",
+    "qid",
+    "titolo",
+    "stato",
+    "identita"
+   ],
+   "fonti": [
+    "data/carriere_wikipedia/wikidata_qid.csv.gz"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "l'identità Wikidata del giocatore e l'esito della verifica: il nome non è un'identità.",
+   "pezzi": [
+    {
+     "file": "anagrafiche/identita_wikidata_qid.csv.gz",
+     "righe": 4700,
+     "mb": 0.09,
+     "sha256": "6df4a67469060241e38da767f0daa4ae9b9c8444b904bd220509c3be88dbac86"
+    }
+   ]
+  },
+  "anagrafiche/identita_esiti_riepilogo.csv.gz": {
+   "grana": "un giocatore",
+   "righe": 5363,
+   "colonne": 11,
+   "nomi_colonne": [
+    "player_id",
+    "nome",
+    "nostro",
+    "censurato",
+    "stato",
+    "url",
+    "identita",
+    "bday_pagina",
+    "nascita_attesa",
+    "identita_wikidata",
+    "forma_discrepanza"
+   ],
+   "fonti": [
+    "data/carriere_wikipedia/esiti_riepilogo.csv"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "l'identità Wikidata del giocatore e l'esito della verifica: il nome non è un'identità.",
+   "pezzi": [
+    {
+     "file": "anagrafiche/identita_esiti_riepilogo.csv.gz",
+     "righe": 5363,
+     "mb": 0.15,
+     "sha256": "be88499e05f031053ec225b8173174e15577fd9e175c6a49f6e0353d97719f7c"
+    }
+   ]
+  },
+  "anagrafiche/identita_verdetti_wikidata.csv.gz": {
+   "grana": "un giocatore",
+   "righe": 46,
+   "colonne": 14,
+   "nomi_colonne": [
+    "player_id",
+    "qid",
+    "identita_prima",
+    "esito",
+    "motivo",
+    "nascita_wikidata",
+    "nascita_attesa",
+    "scarto_giorni",
+    "ultimo_anno_carriera",
+    "n_militanze",
+    "fonte",
+    "licenza",
+    "forma",
+    "persona_diversa"
+   ],
+   "fonti": [
+    "data/carriere_wikipedia/verdetti_wikidata.csv.gz"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "l'identità Wikidata del giocatore e l'esito della verifica: il nome non è un'identità.",
+   "pezzi": [
+    {
+     "file": "anagrafiche/identita_verdetti_wikidata.csv.gz",
+     "righe": 46,
+     "mb": 0.0,
+     "sha256": "bd5b7aa65946c0f74da6274eb0ceb828d2bfdf0a3b0ea22bf52c21d50069377d"
+    }
+   ]
+  },
+  "anagrafiche/allenatori_wikidata_residuo.json": {
+   "grana": "il residuo della verifica degli allenatori",
+   "righe": 0,
+   "colonne": 0,
+   "nomi_colonne": [],
+   "fonti": [
+    "data/allenatori_wikidata/residuo.json"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "note": "ciò che la verifica Wikidata non ha risolto.",
+   "pezzi": [
+    {
+     "file": "anagrafiche/allenatori_wikidata_residuo.json",
+     "righe": 0,
+     "mb": 0.11,
+     "sha256": "fc4c3f86fc188a3bd348bc45fadb40673eb77c4dedc5b12d5fdfd57fce510bc6"
     }
    ]
   },
@@ -6303,7 +7024,7 @@
      "file": "anagrafiche/allenatori_wikidata_mandati_persona.csv.gz",
      "righe": 1373,
      "mb": 0.02,
-     "sha256": "ef1a61fbb3ae06f88be865cfc4683f96745a7fab1b38b082a0f8c3aa415923f0"
+     "sha256": "da3e12a05813d3fe51882552fb617f0419c59f01a821f2a15e2c93ea4b777287"
     }
    ]
   },
@@ -6336,7 +7057,7 @@
      "file": "anagrafiche/allenatori_wikidata_mandati_wikidata.csv.gz",
      "righe": 932,
      "mb": 0.02,
-     "sha256": "d17aa409223639456279dd11113d55fa5c3090076cfc8b2a9473500992282b68"
+     "sha256": "a3b214d5a99d0eb692c24e5e0e0ed77f6ca313412f270486df087afe9d72472a"
     }
    ]
   },
@@ -6537,13 +7258,54 @@
      "file": "metadati/legenda_diretta.csv.gz",
      "righe": 466,
      "mb": 0.0,
-     "sha256": "c87383b807062e5b70fe5c88f2df0c73018ef0a0d02d44e0d2a2e35accd0b941"
+     "sha256": "bbec448fb63836abe38a25c798e0aa432a947a7519f87f22df5aeff88712d669"
+    }
+   ]
+  },
+  "metadati/note_delle_raccolte.csv.gz": {
+   "grana": "una nota di raccolta",
+   "righe": 250,
+   "colonne": 19,
+   "nomi_colonne": [
+    "Fonte",
+    "diretta.it (Flashscore) — Bundesliga 2025/2026",
+    "raccolta",
+    "file",
+    "Voce",
+    "Dettaglio",
+    "Copa del Rey 2025/26 — note di raccolta",
+    "Unnamed: 1",
+    "Unnamed: 2",
+    "diretta.it (Flashscore) — Coppa Italia 2025/2026",
+    "Coppa di Francia 2025/26 — note di raccolta",
+    "diretta.it (Flashscore) — DFB-Pokal 2025/2026",
+    "diretta.it (Flashscore) — Carabao Cup / EFL Cup 2025/2026",
+    "diretta.it (Flashscore) — FA Cup 2025/2026",
+    "diretta.it (Flashscore) — LaLiga 2025/2026",
+    "diretta.it (Flashscore) — Ligue 1 2025/2026",
+    "diretta.it (Flashscore) — Premier League 2025/2026",
+    "# Lecce-Como 0-3, giornata 17, 27.12.2025 - unica partita senza statistiche alla fonte: solo rating",
+    "diretta.it (Flashscore) — Serie A 2025/2026"
+   ],
+   "fonti": [
+    "files/diretta_*_2526/note*.csv"
+   ],
+   "spezzato_per": null,
+   "aggancio_match_uid": null,
+   "nota_aggancio": "frazione di righe il cui match_uid ESISTE in partite.csv.gz. ⚠️ Non è `notna()`: la chiave si costruisce sempre, quindi un tasso calcolato su `notna` sarebbe 1.0 anche con tutte le chiavi penzolanti.",
+   "note": "comprende note_coverage_lecce_como.csv, unico posto in cui esistono i rating di Lecce-Como del 27/12/2025.",
+   "pezzi": [
+    {
+     "file": "metadati/note_delle_raccolte.csv.gz",
+     "righe": 250,
+     "mb": 0.01,
+     "sha256": "1c250d6847f4d74361c9d63093e21e65f7e14e1017545c405e9f818c3dc3ef83"
     }
    ]
   },
   "metadati/manifesti_delle_raccolte.json": {
    "grana": "un manifesto di consegna",
-   "righe": 34,
+   "righe": 35,
    "colonne": 0,
    "nomi_colonne": [],
    "fonti": [
@@ -6556,9 +7318,9 @@
    "pezzi": [
     {
      "file": "metadati/manifesti_delle_raccolte.json",
-     "righe": 34,
-     "mb": 0.07,
-     "sha256": "759195f2d33253d35e29c9946c3d44441619a8e3734d1e3cc3682ee66e60e5db"
+     "righe": 35,
+     "mb": 0.09,
+     "sha256": "bd103b868edff6cdebdee61389d6b71d23f053706aa47da426b3922bf4edad6b"
     }
    ]
   }

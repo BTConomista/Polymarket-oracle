@@ -3,7 +3,7 @@
 Generato da `scripts/build_stagione_2025_2026.py`. Non modificare a mano:
 ogni correzione vive nel codice che legge la fonte (R3).
 
-**76 tabelle · 129 file · 10.258.960 righe · 255.7 MB** (il più grosso: 25.5 MB. tetto 90 MB).
+**90 tabelle · 143 file · 10.334.841 righe · 257.1 MB** (il più grosso: 25.5 MB. tetto 90 MB).
 
 ## La chiave che tiene insieme tutto
 
@@ -59,9 +59,13 @@ e non si perde niente. Vale lo stesso per le 4,77 milioni di posizioni.
 | `anagrafiche/allenatori_wikidata_mandati_wikidata.csv.gz` | mandati wikidata | 932 | 11 | 0.0 | 1 |
 | `anagrafiche/allenatori_wikidata_persone_qid.csv.gz` | persone qid | 494 | 9 | 0.0 | 1 |
 | `anagrafiche/allenatori_wikidata_registro_incarichi.csv.gz` | registro incarichi | 1.088 | 23 | 0.1 | 1 |
+| `anagrafiche/allenatori_wikidata_residuo.json` | il residuo della verifica degli allenatori | 0 | 0 | 0.1 | 1 |
 | `anagrafiche/calendario_club.csv.gz` | una partita nel calendario COMPLETO di un club (coppe ed Europa comprese) | 4.470 | 7 | 0.0 | 1 |
 | `anagrafiche/carriere_wikipedia.csv.gz` | una tappa di carriera di un giocatore sceso in campo nel 2025-26 | 32.364 | 17 | 0.5 | 1 |
 | `anagrafiche/correzioni_dichiarate.csv.gz` | una correzione | 1 | 13 | 0.0 | 1 |
+| `anagrafiche/identita_esiti_riepilogo.csv.gz` | un giocatore | 5.363 | 11 | 0.1 | 1 |
+| `anagrafiche/identita_verdetti_wikidata.csv.gz` | un giocatore | 46 | 14 | 0.0 | 1 |
+| `anagrafiche/identita_wikidata_qid.csv.gz` | un giocatore | 4.700 | 5 | 0.1 | 1 |
 | `anagrafiche/presenze_integrate.csv.gz` | presenze_integrate | 2 | 13 | 0.0 | 1 |
 | `anagrafiche/ranking_uefa_club.csv.gz` | un club nel ranking UEFA | 410 | 13 | 0.0 | 1 |
 | `anagrafiche/ranking_uefa_federazioni_2025-26.csv.gz` | una federazione nel ranking UEFA | 55 | 12 | 0.0 | 1 |
@@ -86,41 +90,51 @@ e non si perde niente. Vale lo stesso per le 4,77 milioni di posizioni.
 | `coppe_formazioni.csv.gz` | formazioni | 18.566 | 17 | 0.4 | 1 |
 | `coppe_incrocio_per_partita.csv.gz` | incrocio per partita | 580 | 14 | 0.0 | 1 |
 | `coppe_partite.csv.gz` | una partita di coppa | 662 | 35 | 0.0 | 1 |
+| `coppe_xlsx_coppa_eventi.csv.gz` | coppe xlsx coppa eventi | 15.121 | 14 | 0.2 | 1 |
+| `coppe_xlsx_coppa_formazioni_e_cambi.csv.gz` | coppe xlsx coppa formazioni e cambi | 18.307 | 19 | 0.3 | 1 |
+| `coppe_xlsx_coppa_note.csv.gz` | coppe xlsx coppa note | 137 | 11 | 0.0 | 1 |
+| `coppe_xlsx_coppa_partite.csv.gz` | coppe xlsx coppa partite | 580 | 17 | 0.0 | 1 |
+| `coppe_xlsx_coppa_stat_giocatori.csv.gz` | coppe xlsx coppa stat giocatori | 11.476 | 116 | 0.8 | 1 |
+| `coppe_xlsx_statistiche_note.csv.gz` | coppe xlsx statistiche note | 257 | 11 | 0.0 | 1 |
+| `coppe_xlsx_statistiche_partite.csv.gz` | coppe xlsx statistiche partite | 580 | 19 | 0.0 | 1 |
+| `coppe_xlsx_statistiche_statistiche_giocatori.csv.gz` | coppe xlsx statistiche statistiche giocatori | 11.476 | 117 | 0.9 | 1 |
+| `coppe_xlsx_statistiche_statistiche_squadra.csv.gz` | coppe xlsx statistiche statistiche squadra | 2.798 | 46 | 0.1 | 1 |
 | `cronaca.csv.gz` | un evento di categoria «Cronaca» (partita) | 290.006 | 25 | 6.1 | 1 |
-| `elenco_partite_diretta.csv.gz` | elenco partite diretta | 618 | 14 | 0.0 | 1 |
-| `eventi.csv.gz` | un evento di categoria «Evento» (squadra) | 73.983 | 31 | 1.8 | 1 |
+| `elenco_partite_diretta.csv.gz` | elenco partite diretta | 618 | 15 | 0.0 | 1 |
+| `eventi.csv.gz` | un evento di categoria «Evento» (squadra) | 73.983 | 31 | 1.7 | 1 |
 | `eventi_diretta.csv.gz` | eventi diretta | 4.446 | 18 | 0.2 | 1 |
 | `eventi_opta` | un TOCCO Opta | 3.708.677 | 36 | 163.4 | 9 |
 | `formazioni_diretta.csv.gz` | formazioni diretta | 24.649 | 18 | 0.4 | 1 |
-| `giocatori_partita_diretta.csv.gz` | giocatori partita diretta | 54.303 | 114 | 3.8 | 1 |
-| `giocatori_partita_tre_fonti` | un GIOCATORE in una partita (livello=Partita) / in una rosa (Rosa) / in una stagione (Stagione) | 169.939 | 202 | 20.7 | 16 |
+| `giocatori_partita_diretta.csv.gz` | giocatori partita diretta | 54.492 | 114 | 3.8 | 1 |
+| `giocatori_partita_tre_fonti` | un GIOCATORE in una partita (livello=Partita) / in una rosa (Rosa) / in una stagione (Stagione) | 169.939 | 202 | 19.9 | 16 |
 | `giocatori_stagione_diretta.csv.gz` | giocatori stagione diretta | 2.905 | 108 | 0.4 | 1 |
 | `metadati/legenda_diretta.csv.gz` | una colonna documentata delle raccolte diretta.it | 466 | 8 | 0.0 | 1 |
 | `metadati/legenda_tre_fonti.csv.gz` | una colonna documentata | 7.061 | 6 | 0.1 | 1 |
-| `metadati/manifesti_delle_raccolte.json` | un manifesto di consegna | 34 | 0 | 0.1 | 1 |
+| `metadati/manifesti_delle_raccolte.json` | un manifesto di consegna | 35 | 0 | 0.1 | 1 |
+| `metadati/note_delle_raccolte.csv.gz` | una nota di raccolta | 250 | 19 | 0.0 | 1 |
 | `migliore_in_campo.csv.gz` | un evento di categoria «Migliore in campo» (partita) | 6.376 | 23 | 0.2 | 1 |
 | `momentum.csv.gz` | un evento di categoria «Momentum» (partita) | 295.684 | 21 | 1.8 | 1 |
-| `partite.csv.gz` | una PARTITA | 4.169 | 2175 | 8.2 | 1 |
+| `partite.csv.gz` | una PARTITA | 4.173 | 2186 | 8.0 | 1 |
 | `posizioni` | una POSIZIONE (un tocco con X/Y) | 4.767.120 | 20 | 25.6 | 16 |
 | `quote.csv.gz` | un evento di categoria «Quota» (partita) | 129.116 | 25 | 1.8 | 1 |
-| `quote_football_data.csv.gz` | una partita. con le ~108 colonne di quota della fonte | 1.140 | 134 | 0.2 | 1 |
+| `quote_football_data.csv.gz` | una partita. con le ~108 colonne di quota della fonte | 1.140 | 135 | 0.2 | 1 |
 | `serie.csv.gz` | un evento di categoria «Serie» (partita) | 35.819 | 22 | 0.3 | 1 |
 | `snapshot_partite.csv.gz` | una partita dei 5 campionati (snapshot congelato) | 1.752 | 42 | 0.1 | 1 |
-| `squadre_partita_diretta.csv.gz` | squadre partita diretta | 10.512 | 59 | 0.6 | 1 |
-| `squadre_partita_tre_fonti` | una SQUADRA in una partita. per PERIODO (Totale / 1° tempo / 2° tempo / supplementari) | 19.852 | 235 | 2.4 | 16 |
+| `squadre_partita_diretta.csv.gz` | squadre partita diretta | 10.550 | 59 | 0.6 | 1 |
+| `squadre_partita_tre_fonti` | una SQUADRA in una partita. per PERIODO (Totale / 1° tempo / 2° tempo / supplementari) | 19.852 | 235 | 2.2 | 16 |
 | `tiri.csv.gz` | un evento di categoria «Tiro» (squadra) | 125.896 | 40 | 5.1 | 1 |
-| `transfermarkt_appearances.csv.gz` | appearances | 73.065 | 14 | 1.7 | 1 |
-| `transfermarkt_club_games.csv.gz` | club games | 5.808 | 12 | 0.1 | 1 |
+| `transfermarkt_appearances.csv.gz` | appearances | 78.012 | 14 | 1.8 | 1 |
+| `transfermarkt_club_games.csv.gz` | club games | 6.310 | 12 | 0.1 | 1 |
 | `transfermarkt_club_names.csv.gz` | club names | 562 | 3 | 0.0 | 1 |
 | `transfermarkt_clubs.csv.gz` | clubs | 226 | 17 | 0.0 | 1 |
 | `transfermarkt_competitions.csv.gz` | competitions | 21 | 11 | 0.0 | 1 |
 | `transfermarkt_partite.csv.gz` | una partita 2025-26 delle nostre 22 competizioni. vista da Transfermarkt | 3.155 | 29 | 0.2 | 1 |
-| `transfermarkt_player_valuations.csv.gz` | player valuations | 4.666 | 6 | 0.1 | 1 |
-| `transfermarkt_players.csv.gz` | players | 5.321 | 26 | 0.5 | 1 |
+| `transfermarkt_player_valuations.csv.gz` | player valuations | 4.363 | 6 | 0.0 | 1 |
+| `transfermarkt_players.csv.gz` | players | 4.733 | 26 | 0.4 | 1 |
 | `uefa_cambi.csv.gz` | cambi | 8.268 | 15 | 0.2 | 1 |
 | `uefa_colori_maglie.csv.gz` | colori maglie | 912 | 12 | 0.0 | 1 |
 | `uefa_eventi.csv.gz` | eventi | 21.152 | 22 | 0.5 | 1 |
-| `uefa_giocatori.csv.gz` | giocatori | 40.067 | 105 | 2.7 | 1 |
+| `uefa_giocatori.csv.gz` | giocatori | 40.067 | 105 | 2.6 | 1 |
 | `uefa_momentum.csv.gz` | momentum | 61.758 | 10 | 0.3 | 1 |
 | `uefa_note_copertura.csv.gz` | note e copertura | 16 | 2 | 0.0 | 1 |
 | `uefa_partite_sofascore.csv.gz` | una partita di coppa UEFA | 912 | 42 | 0.1 | 1 |
@@ -161,9 +175,27 @@ tasso di aggancio a `match_uid`, sha256 di ogni pezzo — sta in
    competizione (4 righe per 2 partite): è così che le due raccolte lo
    consegnano, e i dati fini stanno sotto una delle due.
 9. **Otto partite di Europa League** hanno i tempi che non sommano al
-   risultato, cinque con entrambi i tempi a zero e gol nella partita:
+   risultato, quattro con tutti i tempi a zero e gol nella partita:
    è un difetto della FONTE, ereditato e non corretto (R5 — va
-   istruito a mano, non zittito).
+   istruito a mano, non zittito). In `partite.csv.gz` sono MARCATE:
+   `tempi_non_ricompongono` e `tempi_tutti_a_zero_con_gol`.
+9-bis. **Il coefficiente UEFA pubblicato contiene il FUTURO** (R8).
+   La consegna è del 12/08/2026 e la sua finestra è 22/23-**26/27**:
+   `Somma stagioni` somma cinque colonne, e la quinta è una stagione
+   che comincia dopo l'ultima partita di questo archivio. 80 club su
+   410 hanno già punti lì. `partite.csv.gz` porta **due finestre col
+   nome che dice quale** — `*_uefa_coeff_pubblicato` (il numero della
+   UEFA, R3: la fonte non si tocca) e `*_uefa_coeff_fino_2526`
+   (troncato) — più `*_uefa_punti_2627`, il futuro esposto invece che
+   sottratto in silenzio.
+   ⚠️ La troncata è di QUATTRO stagioni (la 21/22 non è nel file):
+   non è confrontabile con un coefficiente UEFA ufficiale.
+   ⚠️ Il **pavimento** del 20% è una proprietà della FINESTRA, non del
+   club: su 6 club morde nella troncata e non nella pubblicata, quindi
+   accanto al troncato va letta `*_uefa_pavimento_fino_2526`. Fra le
+   due finestre l'identità esatta è quella sulle SOMME
+   (`somma_pubblicata − somma_fino_2526 = punti_2627`), non sui
+   coefficienti.
 10. **Una sola colonna JSON sopravvive**: `provenienza_json` in
     `partite.csv.gz`, che dice quale fonte ha vinto per ogni campo
     normalizzato. Non è un dato impacchettato: è la provenienza.
@@ -179,8 +211,20 @@ tasso di aggancio a `match_uid`, sha256 di ogni pezzo — sta in
 Le anagrafiche di Transfermarkt e le carriere di Wikipedia coprono per
 costruzione ogni epoca. Qui sono **ristrette al perimetro**: i
 giocatori che sono scesi in campo nel 2025-26 e i club che hanno
-giocato. Le stime dichiarate di altre stagioni, e la finestra 2026-27
-del ranking UEFA, restano fuori: sono dato di un'altra stagione.
+giocato. Le stime dichiarate di altre stagioni restano fuori: sono
+dato di un'altra stagione.
+
+⚠️ Un'eccezione dichiarata: `anagrafiche/ranking_uefa_club.csv.gz` è
+la tabella della UEFA **come pubblicata**, quindi ha anche la colonna
+`26/27` (R3: la fonte non si tocca). Non è una falla del perimetro —
+è la fonte, e serve a ricalcolare la troncatura. Ciò che entra nelle
+partite è la finestra dell'archivio, col nome che lo dice (trappola
+9-bis).
+
+⚠️ E le valutazioni Transfermarkt partono dal **2025-06-01**, non dal
+1° luglio: una valutazione di giugno è il prezzo con cui la squadra
+entra nella stagione. È l'unica finestra propria, ed è dichiarata nel
+verificatore.
 
 ### Le competizioni che mancano
 

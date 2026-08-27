@@ -2252,6 +2252,31 @@ def blocco_uefa() -> pd.DataFrame:
     misura il PAESE, non la squadra (vedi `src/data/ranking_uefa.py`). La
     colonna `*_uefa_pavimento` dice quando è successo, invece di lasciarlo
     dedurre.
+
+    ⚠️⚠️ **IL NUMERO PUBBLICATO CONTIENE IL FUTURO** (R8). La consegna è del
+    12/08/2026 e la sua finestra è 22/23-26/27: `Somma stagioni` somma CINQUE
+    colonne, e la quinta è `26/27` — una stagione che comincia DOPO l'ultima
+    partita di questo archivio. Non è un dettaglio teorico: 80 club su 410
+    hanno già punti lì (fino a 4,0), e sono i club dei preliminari estivi,
+    cioè proprio quelli che il ranking dovrebbe descrivere.
+
+    Il difetto è della famiglia R6, non del `NaN`: la colonna sembra una misura
+    e lo è, ma di un momento sbagliato. Nessun conteggio di celle piene lo
+    vede, e chi la usa come feature di una partita del 2025-26 fa look-ahead
+    senza accorgersene.
+
+    Qui si scrivono **entrambe** le finestre, con il nome che dice quale:
+      · `*_uefa_coeff_pubblicato` / `*_uefa_somma_pubblicata` — il numero della
+        UEFA, com'è nel file (R3: la fonte non si tocca), 26/27 incluso;
+      · `*_uefa_coeff_fino_2526` / `*_uefa_somma_fino_2526` — la stessa formula
+        troncata alla stagione dell'archivio. ⚠️ Sono **QUATTRO** stagioni
+        (22/23-25/26), non cinque: la 21/22 non è nel file, quindi non è la
+        somma-a-5 di un anno fa ma la finestra più lunga che questo archivio
+        può vedere senza guardare avanti. Chi la confronta con un coefficiente
+        UEFA ufficiale deve saperlo;
+      · `*_uefa_punti_2627` — il futuro, **esposto** invece che sottratto in
+        silenzio, così la differenza fra le due finestre è ricalcolabile riga
+        per riga.
     """
     from src.data import ranking_uefa as ru
 
@@ -2265,10 +2290,54 @@ def blocco_uefa() -> pd.DataFrame:
     club["_norm"] = club["Club"].map(norm_squadra)
     somma = pd.to_numeric(club.get("Somma stagioni"), errors="coerce")
     coefficiente = pd.to_numeric(club.get("Coefficiente UEFA"), errors="coerce")
+    quota = pd.to_numeric(club.get("Quota federazione (20%)"), errors="coerce")
     club["_pavimento"] = (coefficiente > somma + 1e-9)
+
+    # La finestra troncata. Le quattro stagioni si sommano ESPLICITAMENTE (non
+    # `somma - 26/27`) perché così il conto non dipende dal fatto che
+    # `Somma stagioni` sia davvero la somma delle colonne: la verifica di
+    # quell'identità è un controllo a sé, sotto.
+    stagioni_viste = ["22/23", "23/24", "24/25", "25/26"]
+    presenti = [c for c in stagioni_viste if c in club.columns]
+    if len(presenti) == len(stagioni_viste) and "26/27" in club.columns:
+        futuro = pd.to_numeric(club["26/27"], errors="coerce").fillna(0.0)
+        troncata = sum(pd.to_numeric(club[c], errors="coerce").fillna(0.0)
+                       for c in presenti)
+        # Controllo, non assunzione: `Somma stagioni` == le 5 colonne?
+        scarto = (troncata + futuro - somma).abs()
+        rotte = int((scarto > 1e-6).sum())
+        if rotte:
+            log.warning("ranking UEFA: `Somma stagioni` non è la somma delle "
+                        "5 colonne su %d club — la finestra troncata resta "
+                        "quella calcolata, ma il file è cambiato", rotte)
+        club["_punti_2627"] = futuro
+        club["_somma_fino_2526"] = troncata
+        club["_coeff_fino_2526"] = pd.concat(
+            [troncata, quota.fillna(0.0)], axis=1).max(axis=1)
+        # ⚠️ IL PAVIMENTO E' UNA PROPRIETA' DELLA FINESTRA, non del club.
+        # Togliere la 26/27 abbassa la somma, e su 6 club la fa scendere SOTTO
+        # il 20% della federazione: nella finestra pubblicata il coefficiente
+        # misura la squadra, in quella troncata misura il PAESE. Senza una
+        # colonna sua, chi legge `pavimento=False` accanto a
+        # `coeff_fino_2526` conclude il contrario di quel che è vero — R6
+        # nella forma che il progetto conosce meglio: il numero c'è, ed è la
+        # misura di un'altra cosa.
+        club["_pavimento_fino_2526"] = (
+            quota.fillna(0.0) > troncata + 1e-9)
+        log.info("  ranking UEFA           %4d club con punti 26/27 tolti "
+                 "dalla finestra dell'archivio", int((futuro > 0).sum()))
+    else:
+        log.warning("ranking UEFA: colonne di stagione inattese (%s) — niente "
+                    "finestra troncata", list(club.columns))
+        club["_punti_2627"] = pd.NA
+        club["_somma_fino_2526"] = pd.NA
+        club["_coeff_fino_2526"] = pd.NA
+        club["_pavimento_fino_2526"] = pd.NA
+
     return club.drop_duplicates("_norm").set_index("_norm")[
         ["Paese", "Coefficiente UEFA", "Somma stagioni", "25/26", "_pavimento",
-         "Pos"]]
+         "Pos", "_punti_2627", "_somma_fino_2526", "_coeff_fino_2526",
+         "_pavimento_fino_2526"]]
 
 
 def blocco_federazioni_uefa() -> pd.DataFrame:
@@ -2384,6 +2453,7 @@ ORDINE_TESTA = [
     "gol_casa_1t", "gol_trasferta_1t",
     "gol_casa_2t", "gol_trasferta_2t", "gol_casa_suppl", "gol_trasferta_suppl",
     "rigori_casa", "rigori_trasferta", "supplementari", "lotteria_rigori",
+    "tempi_non_ricompongono", "tempi_tutti_a_zero_con_gol",
     "stadio", "citta", "paese_stadio", "capienza", "spettatori",
     "riempimento_pct", "latitudine", "longitudine", "superficie", "meteo_codice_whoscored",
     "arbitro", "allenatore_casa", "allenatore_trasferta",
@@ -2393,11 +2463,16 @@ ORDINE_TESTA = [
     "modulo_casa", "modulo_trasferta", "formazione_casa", "formazione_trasferta",
     "marcatori_casa", "marcatori_trasferta", "cronaca",
     "giocatori_casa_in_colonna", "giocatori_trasferta_in_colonna",
-    "casa_uefa_coeff", "trasferta_uefa_coeff", "casa_uefa_paese",
-    "trasferta_uefa_paese", "casa_uefa_pavimento", "trasferta_uefa_pavimento",
-    "casa_uefa_somma5", "trasferta_uefa_somma5", "casa_uefa_coeff_2526",
-    "trasferta_uefa_coeff_2526", "casa_uefa_posizione_ranking",
-    "trasferta_uefa_posizione_ranking",
+    "casa_uefa_coeff_fino_2526", "trasferta_uefa_coeff_fino_2526",
+    "casa_uefa_paese", "trasferta_uefa_paese",
+    "casa_uefa_pavimento_fino_2526", "trasferta_uefa_pavimento_fino_2526",
+    "casa_uefa_pavimento", "trasferta_uefa_pavimento",
+    "casa_uefa_somma_fino_2526", "trasferta_uefa_somma_fino_2526",
+    "casa_uefa_punti_2526", "trasferta_uefa_punti_2526",
+    "casa_uefa_coeff_pubblicato", "trasferta_uefa_coeff_pubblicato",
+    "casa_uefa_somma_pubblicata", "trasferta_uefa_somma_pubblicata",
+    "casa_uefa_punti_2627", "trasferta_uefa_punti_2627",
+    "casa_uefa_posizione_ranking", "trasferta_uefa_posizione_ranking",
     "fonti_disponibili", "n_fonti", "provenienza_json",
 ]
 
@@ -2560,6 +2635,42 @@ def costruisci(solo: list[str] | None = None,
         pd.to_numeric(tabella.get("rigori_casa"), errors="coerce").notna()
         | pd.to_numeric(tabella.get("rigori_trasferta"), errors="coerce").notna())
 
+    # ── i tempi che non ricompongono il punteggio ──────────────────────────
+    # ⚠️ L'identità è `Gol = 1T + 2T + suppl.` con l'addendo assente a ZERO
+    # (non `NaN`: un tempo che non c'è vale zero gol, e sommare `NaN` farebbe
+    # sparire la riga invece di segnalarla). Dove non torna, il motivo è UNO
+    # dei due, e vanno tenuti distinti:
+    #   · `lotteria_rigori` — il punteggio grezzo della fonte somma i tiri dal
+    #     dischetto. È MISURATO per raccolta (`tf.RIGORI_NEL_PUNTEGGIO`) e
+    #     riparato in lettura: qui resta come promemoria;
+    #   · `tempi_non_ricompongono` — tutto il resto, cioè il residuo NON
+    #     diagnosticato. Si marca invece di zittirlo (R5, punto 5): una riga
+    #     che non si sa spiegare è un reperto, non un errore da nascondere.
+    #     Il sottoinsieme peggiore è quello con TUTTI i tempi a zero e gol
+    #     nella partita — finto pieno da manuale (R6) — e ha una colonna sua.
+    componenti = {}
+    for lato in ("casa", "trasferta"):
+        pezzi = [pd.to_numeric(tabella.get(f"gol_{lato}_1t"), errors="coerce"),
+                 pd.to_numeric(tabella.get(f"gol_{lato}_2t"), errors="coerce"),
+                 pd.to_numeric(tabella.get(f"gol_{lato}_suppl"), errors="coerce")]
+        noti = sum(p.notna().astype(int) for p in pezzi)
+        componenti[lato] = (sum(p.fillna(0.0) for p in pezzi), noti)
+    scomponibile = pd.Series(False, index=tabella.index)
+    a_zero = pd.Series(False, index=tabella.index)
+    for lato in ("casa", "trasferta"):
+        somma, noti = componenti[lato]
+        finale = pd.to_numeric(tabella[f"gol_{lato}_finale"], errors="coerce")
+        # solo dove ALMENO un tempo è noto: senza frazioni non c'è identità da
+        # verificare, e chiamarla «rotta» sarebbe un falso positivo.
+        scomponibile |= (noti > 0) & finale.notna() & ((somma - finale).abs() > 1e-9)
+        a_zero |= (noti > 0) & (somma == 0) & finale.notna() & (finale > 0)
+    tabella["tempi_non_ricompongono"] = scomponibile & ~tabella["lotteria_rigori"]
+    tabella["tempi_tutti_a_zero_con_gol"] = a_zero & ~tabella["lotteria_rigori"]
+    log.info("  identità dei tempi     %4d partite non ricompongono "
+             "(%d con tutti i tempi a zero e gol nella partita)",
+             int(tabella["tempi_non_ricompongono"].sum()),
+             int(tabella["tempi_tutti_a_zero_con_gol"].sum()))
+
     # coefficienti UEFA dei due club
     uefa = blocco_uefa()
     if not uefa.empty:
@@ -2584,9 +2695,18 @@ def costruisci(solo: list[str] | None = None,
             cache[nome] = candidate[0] if len(candidate) == 1 else None
             return cache[nome]
 
-        etichette = {"Coefficiente UEFA": "coeff", "Paese": "paese",
-                     "_pavimento": "pavimento", "Somma stagioni": "somma5",
-                     "25/26": "coeff_2526", "Pos": "posizione_ranking"}
+        # ⚠️ I nomi dicono la FINESTRA. `coeff` e `somma5` (che dicevano
+        # «5 stagioni» senza dire quali) contenevano la 26/27: rinominati in
+        # `*_pubblicato`/`*_pubblicata`, e affiancati dalla coppia troncata
+        # all'archivio. Vedi il blocco 📐 di `blocco_uefa`.
+        etichette = {"Coefficiente UEFA": "coeff_pubblicato", "Paese": "paese",
+                     "_pavimento": "pavimento",
+                     "_pavimento_fino_2526": "pavimento_fino_2526",
+                     "Somma stagioni": "somma_pubblicata",
+                     "_coeff_fino_2526": "coeff_fino_2526",
+                     "_somma_fino_2526": "somma_fino_2526",
+                     "_punti_2627": "punti_2627",
+                     "25/26": "punti_2526", "Pos": "posizione_ranking"}
         for lato in ("casa", "trasferta"):
             norme = tabella[lato].map(norm_squadra).map(aggancia)
             for colonna, breve in etichette.items():

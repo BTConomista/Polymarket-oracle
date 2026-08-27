@@ -1890,7 +1890,7 @@ giorno: due occorrenze indipendenti, cioè una regola e non un caso.
 ## 5-quaterdecies · `data/actual_database2526.csv.gz` — TUTTO il 2025-26 in una tabella (Fasi 159 / 159-bis)
 
 **Che cos'è.** Una riga per **PARTITA** della stagione 2025-26, per ogni
-competizione di cui il repo ha dati: **4.169 partite × 2.294 colonne**,
+competizione di cui il repo ha dati: **4.169 partite × 2.304 colonne**,
 **387 MB non compressi, 80,2 MB su disco**. Non è una fonte nuova: è il
 **montaggio** di sette famiglie di fonti che già c'erano, sull'unica grana che
 le regge tutte insieme. Si produce con `scripts/build_actual_database2526.py`
@@ -1964,7 +1964,8 @@ solo su 49. Non è un difetto del montaggio: `games.csv` di Transfermarkt non ha
 | `snap_` | 36 | `data/{lega}_matches.csv` — lo snapshot congelato |
 
 I **campi normalizzati** di testa (`gol_casa`, `arbitro`, `allenatore_casa`,
-`formazione_casa`, `cronaca`, `casa_uefa_coeff`, `casa_giorni_riposo`…) sono
+`formazione_casa`, `cronaca`, `casa_uefa_coeff_fino_2526`,
+`casa_giorni_riposo`…) sono
 riempiti per **coalescenza**: la prima fonte disponibile secondo un ordine
 fisso, scritto in `COALESCENZE` dentro lo script. `provenienza_json` dice,
 campo per campo e riga per riga, **quale blocco ha vinto**.
@@ -2064,6 +2065,34 @@ su quelle due leghe.
     tutte e 16 le raccolte; il valore rosa sta in `{lato}_tm_valore_tm` e in
     `ps_*_presenze_json` (`valore_alla_data`).
 
+12. **Il coefficiente UEFA pubblicato contiene il FUTURO.** La consegna è
+    del 12/08/2026 e la sua finestra è 22/23-**26/27**: `Somma stagioni` somma
+    cinque colonne, e la quinta è una stagione che comincia *dopo* l'ultima
+    partita di questo archivio. Su 410 club 80 hanno già punti lì (fino a
+    4,0), e sono i club dei preliminari estivi. Il file ne porta **due
+    finestre, col nome che dice quale**: `*_uefa_coeff_pubblicato` /
+    `*_uefa_somma_pubblicata` (il numero della UEFA, R3: la fonte non si
+    tocca) e `*_uefa_coeff_fino_2526` / `*_uefa_somma_fino_2526` (troncato
+    alla stagione dell'archivio). ⚠️ La troncata è di **quattro** stagioni,
+    non cinque — la 21/22 non è nel file — quindi non è confrontabile con un
+    coefficiente UEFA ufficiale. `*_uefa_punti_2627` espone la differenza,
+    così è ricalcolabile riga per riga: su 63 club le due finestre divergono
+    davvero, scarto massimo 2,0 (sulle altre il pavimento del 20% assorbe).
+    ⚠️⚠️ **Il pavimento è una proprietà della FINESTRA, non del club.** Su 6
+    club togliere la 26/27 fa scendere la somma sotto il 20% della
+    federazione: nella finestra pubblicata il numero misura la squadra, in
+    quella troncata misura il **paese**. `*_uefa_pavimento` descrive solo la
+    pubblicata — accanto al coefficiente troncato va letta
+    `*_uefa_pavimento_fino_2526`. L'identità esatta fra le due finestre è
+    quella sulle **somme** (`somma_pubblicata − somma_fino_2526 =
+    punti_2627`, 278/278); sui coefficienti è falsa proprio su quei 6.
+13. **`tempi_non_ricompongono` marca un reperto APERTO.** Dove `Gol ≠ 1T + 2T
+    + suppl.` senza che sia la lotteria dei rigori, il file lo dice invece di
+    zittirlo (R5, punto 5). Il sottoinsieme peggiore ha una colonna sua,
+    `tempi_tutti_a_zero_con_gol`: tempi tutti a zero e gol nella partita, cioè
+    finto pieno da manuale (R6). Sono righe di Europa League, **non
+    diagnosticate**: vanno istruite a mano, non corrette in blocco.
+
 ### R8 — questo file mescola `pre` e `post`, per costruzione
 
 Sono `pre` le quote, l'arbitro designato, i moduli, il valore rosa, i
@@ -2082,6 +2111,140 @@ python scripts/_run_verifica_actual_database2526.py     # 19 controlli
 python -m pytest tests/test_actual_database2526.py      # 28 guardie
 ```
 
+
+---
+
+## 5-quinquiesdecies · `data/stagione_2025_2026/` — la stessa stagione, al grano giusto (Fasi 159-ter / 159-quater)
+
+**Cos'è.** La cartella che contiene **tutto** ciò che il repo possiede sulla
+stagione 2025-26 — e *solo* su quella. Non è il file unico spezzato in pezzi:
+è lo stesso patrimonio riportato al **grano naturale di ogni dato**, con una
+sola chiave che li unisce.
+
+**Perché esiste, e perché non poteva essere un file.** Il conto è aritmetico e
+non c'era modo di aggirarlo. L'event data Opta impacchettato dentro le celle di
+una tabella al grano di partita pesa **1.693 MB grezzi / 243 MB gzippati**: più
+del doppio del limite di 100 MB per file che GitHub impone. Spezzato per
+raccolta, nessun pezzo supera i **25,5 MB**. La cartella non è una comodità,
+è la sola forma in cui questo dato entra in un repository.
+
+Ma il motivo *migliore* è un altro, ed è di metodo: il file unico costringeva
+ogni dato al grano della partita. Le posizioni dei giocatori — 4,77 milioni di
+punti — dentro una cella sono un pacchetto JSON da spacchettare; in una tabella
+al loro grano sono righe che si filtrano, si contano e si uniscono. **Il grano
+sbagliato non perde informazione: la rende scomoda**, e ciò che è scomodo non
+viene usato.
+
+### Le cifre
+
+| | |
+|---|--:|
+| tabelle | 90 |
+| file (una tabella grossa è spezzata) | 143 |
+| righe totali | 10.334.841 |
+| peso su disco | 257,1 MB |
+| il file più grosso | 25,5 MB |
+| partite nella porta d'ingresso | 4.173 |
+| competizioni | 22 |
+
+### Come si legge
+
+`partite.csv.gz` è **la porta d'ingresso**: una riga per partita, con
+anagrafica, risultato, stadio, arbitro, allenatori, moduli, coefficienti e le
+statistiche di squadra affiancate. Ogni altra tabella si unisce a questa con
+`match_uid`, che è sempre
+
+    competizione | data ISO | casa normalizzata | trasferta normalizzata
+
+```python
+import pandas as pd
+C = "data/stagione_2025_2026"
+partite  = pd.read_csv(f"{C}/partite.csv.gz", low_memory=False)
+posizioni = pd.read_csv(f"{C}/posizioni/serie_a.csv.gz")
+dentro = posizioni.merge(partite[["match_uid", "data", "casa"]], on="match_uid")
+```
+
+`MANIFESTO.json` dichiara per ogni tabella: la **grana** (che cosa è una riga),
+le **fonti**, il numero di righe, i pezzi con `sha256` e MB, e il **tasso di
+aggancio**. `README.md` dentro la cartella è la stessa cosa in prosa.
+
+⚠️ **`partite.csv.gz` è una vista denormalizzata, non la fonte.** Le
+statistiche di squadra affiancate in `casa_*`/`trasferta_*` sono una proiezione
+di `squadre_partita_tre_fonti/`, che è la forma normale. Se le due divergono,
+ha ragione quella.
+
+### Il tasso di aggancio — che cos'è davvero
+
+Nel manifesto ogni tabella porta `aggancio_match_uid`: la frazione di righe la
+cui chiave **esiste** in `partite.csv.gz`.
+
+⚠️ **Non è `notna()`**, e la differenza è tutta la differenza. La chiave si
+costruisce sempre — è una concatenazione di stringhe — quindi `notna()` dà 100%
+anche quando punta a una partita che non esiste. Nella prima passata dichiarava
+100% mentre **27.841 chiavi erano pendenti**. Un puntatore rotto è un `notna()`
+che passa: per questo `partite.csv.gz` si costruisce **per primo** e le altre
+tabelle si misurano contro il suo insieme di chiavi.
+
+### Le sette famiglie, e a che grano stanno
+
+| grana | tabelle | righe |
+|---|---|--:|
+| una **partita** | `partite`, `snapshot_partite`, `quote_football_data`, `coppe_partite`, `uefa_partite_sofascore`, `elenco_partite_diretta`… | ~15 mila |
+| una **squadra in una partita, per periodo** | `squadre_partita_tre_fonti/`, `squadre_partita_diretta` | ~30 mila |
+| un **giocatore in una partita** | `giocatori_partita_tre_fonti/`, `giocatori_partita_diretta`, `coppe_formazioni` | ~170 mila |
+| un **evento** | `eventi_opta/`, `eventi_tre_fonti/`, `eventi_diretta`, `coppe_eventi` | ~3,7 milioni |
+| una **posizione** | `posizioni/` | 4,77 milioni |
+| **anagrafica** (non dipende dalla partita) | `anagrafiche/` — ranking UEFA, valori rosa, carriere, identità | ~50 mila |
+| **metadati** | `metadati/` — i manifesti delle raccolte, la copertura | — |
+
+### Le stesse trappole del file unico, più due sue
+
+Tutto ciò che §5-quaterdecies elenca come trappola **vale qui identico** (il
+punteggio delle coppe, il finto pieno del meteo, la classifica finale
+look-ahead, l'allenatore che è chi sedeva in panchina). In più:
+
+1. **Quattro partite esistono in una sola raccolta.** Gli spareggi
+   promozione/retrocessione di Ligue 1 contro squadre di Ligue 2 (Rodez, Red
+   Star): le raccolte a tre fonti non li hanno — la loro Ligue 1 è il
+   campionato — diretta.it sì. `solo_da_diretta=True` li marca.
+   `partite.csv.gz` deve essere **l'universo**, non il sottoinsieme comodo:
+   senza quelle righe, 303 righe di statistiche restavano appese a una chiave
+   che nessuna partita aveva.
+2. **`giocatore_ripetuto` e `senza_id_sofascore` sono due cose diverse.** La
+   prima marca 184 righe che sono davvero un doppione; la seconda 19.569 righe
+   che semplicemente non hanno l'id della fonte. L'edizione precedente le
+   confondeva in un solo `riga_non_fusa` e diceva di scartarle: avrebbe buttato
+   19 mila righe buone per 184 cattive.
+
+### «Solo la 2025-26» è un vincolo verificato, non un'inclinazione
+
+Il perimetro è la finestra `2025-07-01 → 2026-07-01` sulla data della partita,
+con **un'eccezione dichiarata**: le valutazioni Transfermarkt partono dal
+`2025-06-01`, perché una valutazione di giugno è il prezzo con cui la squadra
+entra nella stagione. `_run_verifica_stagione_2025_2026.py` lo controlla file
+per file.
+
+⚠️ **Il filtro per stagione non si fa sul nome della colonna.** Una fonte la
+chiama `stagione`, un'altra `season`: guardarne una sola lasciava passare 32
+righe di un'altra stagione senza un messaggio. E il perimetro si filtra per
+**stagione e competizione**, mai per «la riga si è agganciata»: filtrare
+sull'esito del join cancellava 4.947 presenze di 207 partite europee vere, che
+erano nel perimetro e semplicemente non avevano trovato la loro partita.
+
+### Come si rifà e come si verifica
+
+```bash
+python scripts/build_stagione_2025_2026.py              # tutto, ~40 min
+python scripts/build_stagione_2025_2026.py --elenco     # i 15 blocchi
+python scripts/build_stagione_2025_2026.py --solo posizioni eventi_opta
+python scripts/_run_verifica_stagione_2025_2026.py      # 15 controlli
+python -m pytest tests/test_stagione_2025_2026.py       # le guardie
+```
+
+Le impronte `sha256` nel manifesto sono **riproducibili**: la compressione usa
+`mtime=0`, altrimenti due passate identiche darebbero due impronte diverse e
+il controllo «nessun file alterato» non distinguerebbe una modifica da una
+ricostruzione.
 
 ---
 

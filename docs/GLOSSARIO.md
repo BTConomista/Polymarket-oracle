@@ -289,6 +289,35 @@ successiva la voce lo dice, con la forma del §1.4 (si marca, non si cancella).
   dispersione). Errore dichiarato oggi: **MAE ~0.014 nel regime d'uso** (fit su
   stagioni successive, l'unico possibile) e ~0.012 in interpolazione; fit pooled
   su 12.457 partite e 5 leghe. *(Fasi 62-bis, 72, 73, 100)*
+- **grana (o grano) di una tabella** — che cosa è **una riga**: una partita,
+  una squadra in una partita e in un periodo, un giocatore in una partita, un
+  evento, una posizione. Non è un dettaglio di impaginazione ma
+  **informazione**: lo stesso dato al grano sbagliato non perde niente e
+  diventa scomodo (le 4,77 M di posizioni dentro una cella sono un pacchetto da
+  spacchettare; al loro grano sono righe che si filtrano e si uniscono), e ciò
+  che è scomodo non viene usato. Ogni tabella di
+  `data/stagione_2025_2026/` dichiara la propria nel manifesto.
+  *(Fasi 159, 159-ter)*
+- **`match_uid`** — la chiave unica di una partita nel database 2025-26:
+  `competizione | data ISO | casa normalizzata | trasferta normalizzata`. È una
+  **stringa costruita**, e da qui la trappola: non è mai nulla, quindi
+  `notna()` su di essa dà sempre 100% e non misura niente. L'aggancio si misura
+  per **appartenenza** all'insieme delle chiavi di `partite.csv.gz` — la
+  differenza fra le due formulazioni valeva 27.841 puntatori pendenti.
+  *(Fasi 159, 159-quater)*
+- **porta d'ingresso** — `partite.csv.gz`: la tabella al grano di partita da cui
+  si entra nella cartella della stagione e a cui tutte le altre si uniscono.
+  Dev'essere **l'universo** delle partite, non il sottoinsieme comodo: quattro
+  spareggi di Ligue 1 esistevano in una sola raccolta, e senza una riga lì le
+  loro 303 righe di statistiche restavano appese a una chiave inesistente.
+  *(Fase 159-ter)*
+- **finestra di un coefficiente** — l'insieme di stagioni che un indice
+  cumulativo somma. Il coefficiente UEFA pubblicato ne somma cinque e l'ultima
+  è la **26/27**: per una partita del 2025-26 è futuro (R8), su 80 club su 410
+  con punti già assegnati. Il file porta due finestre col nome che dice quale.
+  ⚠️ Il **pavimento** del 20% (il `MAX` con la quota di federazione) è una
+  proprietà *della finestra*, non del club: togliere una stagione può farlo
+  mordere dove prima non mordeva. *(Fase 159-quater)*
 - **segnaposto / "finto pieno"** — il buco peggiore non è il `NaN` (dichiarato, e
   quindi innocuo) ma il valore che **sembra** una misura e non lo è: un
   segnaposto della fonte, uno zero che significa «non lo so». Nessun confronto

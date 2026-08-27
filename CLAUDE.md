@@ -272,6 +272,9 @@ python scripts/predict.py Inter Juventus                          # uso pratico:
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
 python scripts/build_actual_database2526.py         # data/actual_database2526.csv.gz (~25 min)
 python scripts/_run_verifica_actual_database2526.py # 19 controlli avversariali
+python scripts/build_stagione_2025_2026.py          # data/stagione_2025_2026/ (~40 min)
+python scripts/build_stagione_2025_2026.py --elenco # i 15 blocchi, per --solo
+python scripts/_run_verifica_stagione_2025_2026.py  # 15 controlli sulla cartella
 python -m pytest                       # test (1.783 verdi al 18/08/2026)
 ```
 
@@ -375,7 +378,24 @@ src/evaluation/  metrics.py (Brier/log-loss/devig), analysis.py (analisi errori)
                  markets.py (valutazione multi-mercato di un backtest),
                  calibration.py (temperature scaling post-hoc, Fase 6),
                  experiment_log.py (compute_metrics = FONTE DI VERITA' unica; registro)
-scripts/         build_actual_database2526 + _run_verifica_actual_database2526
+scripts/         build_stagione_2025_2026 + _run_verifica_stagione_2025_2026
+                 (Fasi 159-ter/quater: monta e verifica data/stagione_2025_2026/,
+                 la stessa stagione al GRANO GIUSTO. Il file unico costringeva
+                 ogni dato al grano della partita; qui ogni dato sta al suo, e
+                 `partite.csv.gz` e' la porta d'ingresso.
+                 ⚠️ `partite.csv.gz` si costruisce PER PRIMA e non e' un
+                 dettaglio d'ordine: e' l'insieme delle chiavi valide contro
+                 cui si MISURA l'aggancio delle altre. Il tasso di aggancio
+                 non e' `notna()` -- `match_uid` e' una stringa costruita,
+                 quindi non e' mai nullo e il 100% era una tautologia che
+                 nascondeva 27.841 puntatori pendenti.
+                 ⚠️ Il perimetro si filtra per STAGIONE e COMPETIZIONE, mai
+                 per «la riga si e' agganciata»: filtrare sull'esito del join
+                 cancellava 4.947 presenze di 207 partite europee vere.
+                 ⚠️ TETTO_MB = 90, cioe' il limite di GitHub meno il 10%: il
+                 peso di un pezzo si conosce solo dopo averlo scritto, e un
+                 pezzo sopra soglia fa fallire il push a lavoro finito)
+                 build_actual_database2526 + _run_verifica_actual_database2526
                  (Fase 159: monta e verifica data/actual_database2526.csv --
                  sette famiglie di fonti su una grana sola. Leggere le tre
                  regole di montaggio nel blocco 📐 della Fase 159 prima di
@@ -442,8 +462,35 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
+data/stagione_2025_2026/  LA CARTELLA della stagione 2025-26 (Fasi
+                 159-ter/quater): 90 tabelle, 143 file, 10,3 M di righe,
+                 257 MB. E' l'archivio COMPLETO -- ci sta anche l'event data
+                 Opta, che nel file unico non entrava (243 MB gzippati contro
+                 un limite di 100). Sette grane: partita, squadra-partita-
+                 periodo, giocatore-partita, evento, posizione, anagrafica,
+                 metadati.
+                 ⭐ Si entra da `partite.csv.gz` (una riga per partita) e ci
+                 si unisce con `match_uid`. `MANIFESTO.json` dichiara per ogni
+                 tabella la GRANA (che cosa e' una riga), le fonti, le righe,
+                 gli sha256 e il tasso di aggancio.
+                 ⚠️ `partite.csv.gz` e' una VISTA denormalizzata: le
+                 statistiche di squadra affiancate in casa_*/trasferta_* sono
+                 una proiezione di squadre_partita_tre_fonti/, che e' la forma
+                 normale. Se divergono, ha ragione quella.
+                 ⚠️ Il coefficiente UEFA pubblicato CONTIENE IL FUTURO (R8):
+                 somma anche la 26/27, e 80 club su 410 hanno gia' punti li'.
+                 Ci sono due finestre col nome che dice quale --
+                 `*_uefa_coeff_pubblicato` e `*_uefa_coeff_fino_2526` -- piu'
+                 `*_uefa_punti_2627`, il futuro esposto invece che sottratto
+                 in silenzio. La troncata e' di QUATTRO stagioni (la 21/22 non
+                 e' nel file), quindi non e' confrontabile con un coefficiente
+                 UEFA ufficiale. E il pavimento del 20% e' una proprieta'
+                 della FINESTRA, non del club: su 6 club morde nella troncata
+                 e non nella pubblicata -> `*_uefa_pavimento_fino_2526`.
+                 ⚠️ Valgono TUTTE le trappole del file unico (§5-quaterdecies
+                 di docs/DATI.md), il meteo che non esiste compreso
 data/            actual_database2526.csv.gz (Fasi 159/159-bis: TUTTA la stagione
-                 2025-26 in una tabella sola -- 4.169 partite x 2.294 colonne,
+                 2025-26 in una tabella sola -- 4.169 partite x 2.304 colonne,
                  22 competizioni, 387 MB non compressi / 80,2 MB su disco.
                  Una riga per PARTITA; le statistiche di squadra si affiancano
                  in casa_*/trasferta_* per periodo, quelle a grana piu' fine
@@ -862,6 +909,12 @@ tests/           test unitari (1.783 verdi al 18/08/2026; il ROSSO su
                  confondeva le due cose), fra cui i guardiani
                  strutturali: schema identico fra le 5 leghe, e MARKET_ENGINE
                  che elenca le stesse leghe di LEAGUE_CONFIGS
+                 test_stagione_2025_2026.py (Fase 159-quater): le guardie
+                 della cartella. La piu' utile e' quella sul ranking UEFA:
+                 NON chiede che la colonna esista -- una copia del numero
+                 pubblicato la soddisferebbe -- ma che le due finestre
+                 DIVERGANO davvero. Un controllo che non puo' fallire non
+                 e' un controllo
                  test_metrics.py (Fase 137): i VALORI esatti di Brier/log-loss/
                  devig, calcolati a mano. Esiste perche' brier_1x2 non aveva un
                  solo riferimento in tests/ e log_loss_1x2 solo asserzioni

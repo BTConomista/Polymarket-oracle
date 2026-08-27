@@ -105,6 +105,27 @@ def _impronta(percorso: Path) -> str:
     return digest.hexdigest()
 
 
+def _interi_restano_interi(tabella: pd.DataFrame) -> pd.DataFrame:
+    """Riporta a intero le colonne che l'impilamento ha promosso a float.
+
+    ⚠️ Concatenare 16 raccolte in cui UNA sola ha un NaN promuove l'intera
+    colonna a float, e `21` diventa `21.0` in 356.351 celle. Non è cosmetica:
+    chi confronta la cartella con la fonte trova una divergenza su metà delle
+    celle, e chi legge `Cartellini rossi` si trova un decimale su un conteggio.
+    """
+    for colonna in tabella.columns:
+        if not pd.api.types.is_float_dtype(tabella[colonna]):
+            continue
+        valori = tabella[colonna].dropna()
+        if valori.empty or not (valori % 1 == 0).all():
+            continue
+        try:
+            tabella[colonna] = tabella[colonna].astype("Int64")
+        except (TypeError, ValueError):
+            pass
+    return tabella
+
+
 def scrivi(nome: str, tabella: pd.DataFrame, *, grana: str, fonti: list[str],
            spezza_per: str | None = None, note: str = "") -> None:
     """Scrive una tabella, spezzandola se supera il tetto, e la registra.
@@ -118,6 +139,7 @@ def scrivi(nome: str, tabella: pd.DataFrame, *, grana: str, fonti: list[str],
         log.warning("  %-34s VUOTA, non scritta", nome)
         return
 
+    tabella = _interi_restano_interi(tabella.copy())
     if "match_uid" in tabella.columns:
         altre = [c for c in tabella.columns if c != "match_uid"]
         tabella = tabella[["match_uid"] + altre]
@@ -331,6 +353,9 @@ def tabella_eventi_opta(raccolte: list[str], per_ws: dict) -> None:
 # ════════════════════════════════════════════════════════════════════════════
 # 2 · GIOCATORE-PARTITA — tutti i campi, in colonne vere
 # ════════════════════════════════════════════════════════════════════════════
+PER_WHOSCORED: dict = {}
+
+
 def tabella_giocatori_tf(raccolte: list[str], per_sofa: dict) -> None:
     """Giocatore-partita dalle tre fonti: ~190 colonne, tutti i livelli.
 
@@ -371,7 +396,14 @@ def tabella_giocatori_tf(raccolte: list[str], per_sofa: dict) -> None:
             # produceva un `Bundesliga|||wolfsburg` — una chiave sintatticamente
             # valida che nessuna partita ha. Un aggancio che non fallisce e non
             # trova niente è peggio di un NaN: il conteggio lo dà per riuscito.
-            giocatori["match_uid"] = (da_id.where(da_id.notna(), da_nome)
+            # terzo tentativo: l'id di WhoScored. I 5 orfani residui erano
+            # partite esistenti sotto un'altra grafia («Bodoe/Glimt» contro
+            # «Bodø/Glimt»): l'id non ha grafie.
+            da_ws = (giocatori["ID partita (WhoScored)"].map(PER_WHOSCORED)
+                     if "ID partita (WhoScored)" in giocatori.columns
+                     else pd.Series(None, index=giocatori.index, dtype="object"))
+            scelta = da_id.where(da_id.notna(), da_ws)
+            giocatori["match_uid"] = (scelta.where(scelta.notna(), da_nome)
                                       if livello == "Partita" else None)
             giocatori["raccolta"] = raccolta
             giocatori["livello"] = livello
@@ -561,7 +593,11 @@ def tabelle_diretta_campionati() -> None:
 
     famiglie: dict[str, list] = defaultdict(list)
     for lega, competizione in DIRETTA_LEGHE.items():
-        squadre = ts.load_team_matches(lega=lega)
+        # ⚠️ `solo_campionato=False`: il default dei due caricatori tiene
+        # fuori gli spareggi promozione/retrocessione, e sono 4 partite VERE
+        # della 2025-26 — 38 righe squadra-partita e 189 giocatore-partita che
+        # il repo possiede e che la cartella non aveva.
+        squadre = ts.load_team_matches(lega=lega, solo_campionato=False)
         if not squadre.empty:
             squadre = squadre.copy()
             squadre["competizione"] = competizione
@@ -569,7 +605,7 @@ def tabelle_diretta_campionati() -> None:
                                     for _, r in squadre.iterrows()]
             famiglie["squadre_partita_diretta"].append(squadre)
 
-        giocatori = ps.load_player_matches(lega=lega)
+        giocatori = ps.load_player_matches(lega=lega, solo_campionato=False)
         if not giocatori.empty:
             giocatori = giocatori.copy()
             giocatori["competizione"] = competizione
@@ -607,6 +643,18 @@ def tabelle_diretta_campionati() -> None:
                 frame["match_uid"] = [
                     _uid_diretta(competizione, r) if pd.notna(r["Avversario"])
                     else None for _, r in frame.iterrows()]
+            elif {"Casa", "Trasferta"} <= set(frame.columns):
+                # ⚠️ `elenco_partite` è l'UNICO dei quattro fogli già al grano
+                # di partita: non ha `Squadra`/`Campo` ma `Casa`/`Trasferta`
+                # bell'e pronte. Il ramo sopra non lo vedeva e il foglio
+                # restava senza chiave — una tabella di partite che non si
+                # poteva unire alle partite. Il difetto era invisibile perché
+                # gli altri tre fogli, che la chiave ce l'hanno, passavano
+                # dalla stessa riga di codice.
+                frame["match_uid"] = [
+                    chiave_partita(competizione, d, c, v)
+                    for d, c, v in zip(frame["Data"], frame["Casa"],
+                                       frame["Trasferta"])]
             famiglie[cosa].append(frame)
 
     for nome, pezzi in famiglie.items():
@@ -619,7 +667,7 @@ def tabelle_diretta_campionati() -> None:
                     "Bundesliga e Ligue 1: le altre tre raccolte non li hanno.")
 
 
-def tabelle_diretta_coppe(mappa_coppe: dict) -> None:
+def tabelle_diretta_coppe(mappa_coppe) -> None:
     """Le sei cartelle di coppa di diretta.it, che nessun modulo di `src/data/`
     legge: il loro manifesto si chiama `manifesto_coppa.json` e i due
     caricatori dei campionati non lo vedono.
@@ -642,11 +690,39 @@ def tabelle_diretta_coppe(mappa_coppe: dict) -> None:
             if {"Competizione", "Data", "Casa"} <= set(frame.columns):
                 colonna_ospite = "Ospite" if "Ospite" in frame.columns else "Trasferta"
                 frame["match_uid"] = [
-                    mappa_coppe.get((canon_competizione(c), norm_data(d),
-                                     norm_squadra(x), norm_squadra(y)))
+                    mappa_coppe(c, d, x, y)
                     for c, d, x, y in zip(frame["Competizione"], frame["Data"],
                                           frame["Casa"], frame[colonna_ospite])]
             famiglie[f"coppe_diretta_{nome_file}"].append(frame)
+
+    # ⚠️ Gli `.xlsx` originali delle coppe hanno fogli che i CSV NON hanno:
+    # due colonne del foglio `Partite` (`Supplementari giocati` e lo stato
+    # delle statistiche) e l'intero foglio `Note`. Erano l'unica cosa della
+    # raccolta a restare fuori, e una delle due colonne non è ricostruibile
+    # dal resto (81 divergenze su 580 provando a dedurla).
+    for cartella in sorted(FILES.glob("diretta_*_2526")):
+        if not (cartella / "manifesto_coppa.json").exists():
+            continue
+        for nome_xlsx in ("originale_statistiche", "originale_coppa"):
+            percorso = cartella / f"{nome_xlsx}.xlsx"
+            if not percorso.exists():
+                continue
+            try:
+                fogli = pd.ExcelFile(percorso)
+            except (OSError, ValueError):
+                continue
+            for foglio in fogli.sheet_names:
+                try:
+                    frame = fogli.parse(foglio)
+                except (OSError, ValueError):
+                    continue
+                if frame.empty:
+                    continue
+                frame["cartella"] = cartella.name
+                frame["foglio"] = foglio
+                etichetta = (f"coppe_xlsx_{nome_xlsx.replace('originale_', '')}"
+                             f"_{foglio.lower().replace(' ', '_')}")
+                famiglie[etichetta].append(frame)
 
     for nome, pezzi in famiglie.items():
         if not pezzi:
@@ -655,7 +731,11 @@ def tabelle_diretta_coppe(mappa_coppe: dict) -> None:
                grana=nome.replace("coppe_diretta_", "").replace("_", " "),
                fonti=["files/diretta_{coppa}_2526/"],
                note="raccolta manuale diretta.it delle 6 coppe nazionali; "
-                    "nessun modulo di src/data/ la legge.")
+                    "nessun modulo di src/data/ la legge. ⚠️ Le tabelle "
+                    "`coppe_aggancio_*` sono un SOPRAINSIEME delle "
+                    "`coppe_diretta_*` corrispondenti (stesse righe più "
+                    "game_id e player_id): restano entrambe perché le seconde "
+                    "hanno una manciata di righe che l'aggancio non copre.")
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -692,6 +772,35 @@ def tabelle_coppe() -> dict:
                                norm_squadra(riga["casa"]),
                                norm_squadra(riga["ospite"])), riga["match_uid"])
 
+    # ⚠️ Il ripiego per nome ESATTO si ferma dove le due fonti abbreviano in
+    # modo diverso: 150 righe di Coupe de France restavano senza chiave, di cui
+    # 120 risolvibili senza ambiguità («AC Seyssinet» ⊇ «Seyssinet»). Qui si
+    # aggiunge la stessa regola già usata altrove: inclusione fra insiemi di
+    # parole, accettata SOLO se in quel giorno resta una candidata sola.
+    per_giorno: dict[tuple, list] = defaultdict(list)
+    for _, riga in partite.iterrows():
+        per_giorno[(riga["competizione"], norm_data(riga["data"]))].append(
+            (norm_squadra(riga["casa"]), norm_squadra(riga["ospite"]),
+             riga["match_uid"]))
+
+    def _incluso(uno: str, altro: str) -> bool:
+        if not uno or not altro:
+            return False
+        if uno == altro:
+            return True
+        a, b = set(uno.split()), set(altro.split())
+        return a <= b or b <= a
+
+    def uid_da_nomi(competizione, data, casa, ospite):
+        coordinate = (canon_competizione(competizione), norm_data(data),
+                      norm_squadra(casa), norm_squadra(ospite))
+        esatto = mappa_nomi.get(coordinate)
+        if esatto:
+            return esatto
+        candidate = [k for c, t, k in per_giorno.get(coordinate[:2], [])
+                     if _incluso(coordinate[2], c) and _incluso(coordinate[3], t)]
+        return candidate[0] if len(candidate) == 1 else None
+
     scrivi("coppe_partite.csv.gz", partite, grana="una partita di coppa",
            fonti=["data/coppe_2526/partite.csv"],
            note="`gol_*_dichiarato` è il grezzo di games.csv e SOMMA la "
@@ -724,8 +833,7 @@ def tabelle_coppe() -> dict:
             comp = ("competizione" if "competizione" in colonne
                     else ("Competizione" if "Competizione" in colonne else None))
             if ospite and comp and data in colonne and casa in colonne:
-                ripiego = [mappa_nomi.get((canon_competizione(c), norm_data(d),
-                                           norm_squadra(x), norm_squadra(y)))
+                ripiego = [uid_da_nomi(c, d, x, y)
                            for c, d, x, y in zip(frame[comp], frame[data],
                                                  frame[casa], frame[ospite])]
                 if "match_uid" in colonne:
@@ -737,7 +845,7 @@ def tabelle_coppe() -> dict:
         scrivi(f"coppe_{nome_file}.csv.gz", frame,
                grana=nome_file.replace("_", " "),
                fonti=[f"data/coppe_2526/{nome_file}.csv"])
-    return mappa_nomi
+    return uid_da_nomi
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -852,8 +960,10 @@ def tabella_football_data() -> None:
                 continue
             frame = pd.read_csv(io.StringIO(testo))
         else:
-            frame = pd.read_csv(percorso, encoding="latin-1")
-        frame.columns = [c.lstrip("﻿") for c in frame.columns]
+            # `utf-8-sig` mangia il BOM: con `latin-1` la prima colonna si
+            # chiamava `ï»¿Div`, cioè il BOM letto come testo.
+            frame = pd.read_csv(percorso, encoding="utf-8-sig")
+        frame.columns = [c.lstrip("\ufeff") for c in frame.columns]
         frame["competizione"] = competizione
         frame["match_uid"] = [chiave_partita(competizione, norm_data(d), c, t)
                               for d, c, t in zip(frame["Date"],
@@ -935,7 +1045,11 @@ def tabelle_player_scores() -> None:
         nostre["match_uid"] = nuove
         log.info("  Transfermarkt: %d partite agganciate per abbreviazione, "
                  "%d senza chiave", riparate, sum(1 for k in nuove if k is None))
-    per_game = dict(zip(nostre["game_id"], nostre["match_uid"]))
+    # `nostre_tutte` prima del filtro sulla finestra: serve a decidere il
+    # PERIMETRO (stagione + competizione), che è cosa diversa dall'aggancio.
+    nostre_tutte = nostre.copy()
+    per_game = {g: k for g, k in zip(nostre["game_id"], nostre["match_uid"])
+                if isinstance(k, str)}
     # ⚠️ `partite` tiene TUTTE le 9.554 partite 2025-26 che Transfermarkt
     # censisce, non solo le nostre: 44 competizioni fuori perimetro comprese.
     # `match_uid` è pieno solo dove la partita è nel perimetro — ed è giusto
@@ -983,9 +1097,16 @@ def tabelle_player_scores() -> None:
         prima = len(frame)
         if "game_id" in frame.columns:
             frame["match_uid"] = frame["game_id"].map(per_game)
-            # solo il perimetro: `appearances` ha 1,89 M di righe su tutto il
-            # mondo e tutte le stagioni, qui interessano le nostre partite
-            frame = frame[frame["match_uid"].notna()].copy()
+            # ⚠️ Il filtro è di STAGIONE E COMPETIZIONE, non di aggancio
+            # riuscito: filtrare su `match_uid.notna()` buttava 4.947 presenze
+            # di 207 partite europee VERE del 2025-26, solo perché il nome del
+            # club non combaciava fra Transfermarkt e SofaScore. Una riga senza
+            # chiave è una riga da dichiarare, non da cancellare.
+            frame = frame[frame["game_id"].isin(set(nostre_tutte["game_id"]))].copy()
+            senza = int(frame["match_uid"].isna().sum())
+            if senza:
+                log.info("    %s: %d righe senza match_uid (nome del club "
+                         "divergente), tenute", nome_file, senza)
         elif nome_file == "player_valuations":
             frame["date"] = pd.to_datetime(frame["date"], errors="coerce")
             frame = frame[(frame["date"] >= "2025-06-01")
@@ -1112,6 +1233,41 @@ def tabelle_anagrafiche() -> None:
                     f"{len(tappe)}. Le tappe sono di ogni epoca — è la "
                     "carriera — ma i giocatori sono quelli del 2025-26.")
 
+    # ⚠️ La CARRIERA c'era, l'IDENTITÀ no: il QID Wikidata del giocatore e
+    # l'esito della verifica vivono in tre file che nessuna tabella portava.
+    # Il nome non è un'identità — è la regola che il progetto ripete da sei
+    # fasi — e senza il QID la carriera è appesa a una stringa.
+    for nome_file in ("wikidata_qid.csv.gz", "esiti_riepilogo.csv",
+                      "verdetti_wikidata.csv.gz"):
+        percorso = RADICE / "data" / "carriere_wikipedia" / nome_file
+        if not percorso.exists():
+            continue
+        frame = pd.read_csv(percorso, low_memory=False)
+        if "player_id" in frame.columns and giocatori_2526:
+            frame = frame[frame["player_id"].isin(giocatori_2526)].copy()
+        scrivi(f"anagrafiche/identita_{percorso.stem.replace('.csv', '')}.csv.gz",
+               frame, grana="un giocatore",
+               fonti=[str(percorso.relative_to(RADICE))],
+               note="l'identità Wikidata del giocatore e l'esito della "
+                    "verifica: il nome non è un'identità.")
+
+    residuo = RADICE / "data" / "allenatori_wikidata" / "residuo.json"
+    if residuo.exists():
+        (CARTELLA / "anagrafiche").mkdir(parents=True, exist_ok=True)
+        destinazione = CARTELLA / "anagrafiche" / "allenatori_wikidata_residuo.json"
+        destinazione.write_text(residuo.read_text())
+        MANIFESTO["anagrafiche/allenatori_wikidata_residuo.json"] = {
+            "grana": "il residuo della verifica degli allenatori",
+            "righe": 0, "colonne": 0, "nomi_colonne": [],
+            "fonti": ["data/allenatori_wikidata/residuo.json"],
+            "spezzato_per": None, "aggancio_match_uid": None,
+            "note": "ciò che la verifica Wikidata non ha risolto.",
+            "pezzi": [{"file": "anagrafiche/allenatori_wikidata_residuo.json",
+                       "righe": 0,
+                       "mb": round(destinazione.stat().st_size / 1e6, 2),
+                       "sha256": _impronta(destinazione)}],
+        }
+
     cartella_wikidata = RADICE / "data" / "allenatori_wikidata"
     for percorso in sorted(cartella_wikidata.glob("*.csv")):
         frame = pd.read_csv(percorso, low_memory=False)
@@ -1207,6 +1363,26 @@ def tabelle_metadati(raccolte: list[str]) -> None:
                grana="una colonna documentata delle raccolte diretta.it",
                fonti=["files/diretta_*_2526/legenda*.csv"])
 
+    note = []
+    for percorso in sorted(FILES.glob("diretta_*_2526/note*.csv")):
+        try:
+            frame = pd.read_csv(percorso)
+        except (OSError, ValueError):
+            continue
+        frame["raccolta"] = percorso.parent.name
+        frame["file"] = percorso.name
+        note.append(frame)
+    # ⚠️ `note_coverage_lecce_como.csv` è l'unico posto in cui vivono i 29
+    # rating di Lecce-Como del 27/12/2025, la sola partita di Serie A senza
+    # dati a livello giocatore. Un file laterale che nessun caricatore legge.
+    if note:
+        scrivi("metadati/note_delle_raccolte.csv.gz",
+               pd.concat(note, ignore_index=True),
+               grana="una nota di raccolta",
+               fonti=["files/diretta_*_2526/note*.csv"],
+               note="comprende note_coverage_lecce_como.csv, unico posto in "
+                    "cui esistono i rating di Lecce-Como del 27/12/2025.")
+
     manifesti = {}
     for percorso in sorted(FILES.glob("*/manifesto*.json")):
         try:
@@ -1214,7 +1390,11 @@ def tabelle_metadati(raccolte: list[str]) -> None:
                 percorso.read_text())
         except (OSError, ValueError):
             continue
-    for percorso in sorted((RADICE / "data").glob("*/manifesto*.json")):
+    for percorso in sorted((RADICE / "data").glob("*/*manifesto*.json")):
+        # ⚠️ `calendari_2026_27` è la stagione DOPO: il suo manifesto non ha
+        # posto in una cartella che promette solo il 2025-26.
+        if "2026_27" in str(percorso) or "2026-27" in str(percorso):
+            continue
         try:
             manifesti[str(percorso.relative_to(RADICE))] = json.loads(
                 percorso.read_text())
@@ -1263,11 +1443,49 @@ def tabella_partite() -> None:
     pacchetti = [c for c in tabella.columns
                  if c.endswith("_json") and c != "provenienza_json"]
     tabella = tabella.drop(columns=pacchetti)
+    # ⚠️ Quattro partite VERE mancavano alla spina: gli spareggi
+    # promozione/retrocessione di Ligue 1, giocati contro squadre di Ligue 2
+    # (Rodez, Red Star). Le raccolte a tre fonti non le hanno — la loro Ligue 1
+    # è il campionato — ma diretta.it sì, e senza una riga qui le loro 303
+    # righe di statistiche restavano appese a una chiave che nessuna partita
+    # aveva. `partite.csv.gz` deve essere l'universo, non il sottoinsieme
+    # comodo.
+    from src.data import team_stats as ts
+
+    aggiunte = []
+    note = set(tabella["match_uid"].dropna())
+    for lega, competizione in DIRETTA_LEGHE.items():
+        squadre = ts.load_team_matches(lega=lega, solo_campionato=False)
+        if squadre.empty:
+            continue
+        for _, riga in squadre[squadre["Campo"] == "Casa"].iterrows():
+            uid = chiave_partita(competizione, riga["Data"], riga["Squadra"],
+                                 riga["Avversario"])
+            if uid in note:
+                continue
+            note.add(uid)
+            aggiunte.append({
+                "match_uid": uid, "competizione": competizione,
+                "stagione": STAGIONE, "data": norm_data(riga["Data"]),
+                "turno": riga.get("Giornata"), "fase": riga.get("Fase"),
+                "casa": riga["Squadra"], "trasferta": riga["Avversario"],
+                "solo_da_diretta": True,
+            })
+    if aggiunte:
+        tabella = pd.concat([tabella, pd.DataFrame(aggiunte)],
+                            ignore_index=True)
+        log.info("  aggiunte alla spina %d partite che solo diretta.it ha",
+                 len(aggiunte))
+
     CHIAVI_VALIDE.update(tabella["match_uid"].dropna())
     scrivi("partite.csv.gz", tabella, grana="una PARTITA",
            fonti=["tutte le famiglie, coalescite"],
            note="vista denormalizzata: la forma normale delle statistiche di "
-                "squadra è squadre_partita_tre_fonti.csv.gz. "
+                "squadra è squadre_partita_tre_fonti/. "
+                "`solo_da_diretta=True` marca le partite che esistono in una "
+                "sola raccolta (gli spareggi di Ligue 1 contro squadre di "
+                "Ligue 2): hanno la riga e le statistiche, non le colonne "
+                "delle altre fonti. "
                 "`provenienza_json` dice quale fonte ha vinto per ogni campo "
                 "normalizzato.")
 
@@ -1312,6 +1530,7 @@ def costruisci_cartella(solo: list[str] | None = None) -> None:
     if attivo("squadre"):
         tabella_squadre_tf(raccolte, per_sofa)
     if attivo("giocatori"):
+        PER_WHOSCORED.update(per_ws)
         tabella_giocatori_tf(raccolte, per_sofa)
     if attivo("eventi"):
         tabella_eventi_tf(raccolte, per_sofa)
@@ -1323,12 +1542,13 @@ def costruisci_cartella(solo: list[str] | None = None) -> None:
         tabella_eventi_opta(raccolte, per_ws)
 
     log.info("── coppe nazionali e diretta.it ──────────────────────────────")
-    mappa_coppe: dict = {}
+    mappa_coppe = None
     if attivo("coppe"):
         mappa_coppe = tabelle_coppe()
     if attivo("diretta"):
         tabelle_diretta_campionati()
-        tabelle_diretta_coppe(mappa_coppe)
+        if mappa_coppe is not None:
+            tabelle_diretta_coppe(mappa_coppe)
 
     log.info("── coppe europee, snapshot, quote, Transfermarkt ─────────────")
     if attivo("uefa"):
@@ -1378,7 +1598,11 @@ def scrivi_manifesto() -> dict:
         "mb_totali": round(sum(p["mb"] for p in pezzi), 1),
         "file_piu_grosso_mb": round(max((p["mb"] for p in pezzi), default=0), 1),
         "tetto_mb": TETTO_MB,
-        "competizioni": LISTA_UTENTE,
+        "competizioni_chieste": LISTA_UTENTE,
+        "competizioni_presenti": sorted(
+            pd.read_csv(CARTELLA / "partite.csv.gz",
+                        usecols=["competizione"])["competizione"].unique())
+        if (CARTELLA / "partite.csv.gz").exists() else [],
         "competizioni_assenti_dal_repo": [
             c for c in LISTA_UTENTE
             if c in ("Serie B", "Championship", "Ligue 2", "EFL Trophy")],
@@ -1490,9 +1714,27 @@ def scrivi_readme(riepilogo: dict) -> None:
         "   competizione (4 righe per 2 partite): è così che le due raccolte lo",
         "   consegnano, e i dati fini stanno sotto una delle due.",
         "9. **Otto partite di Europa League** hanno i tempi che non sommano al",
-        "   risultato, cinque con entrambi i tempi a zero e gol nella partita:",
+        "   risultato, quattro con tutti i tempi a zero e gol nella partita:",
         "   è un difetto della FONTE, ereditato e non corretto (R5 — va",
-        "   istruito a mano, non zittito).",
+        "   istruito a mano, non zittito). In `partite.csv.gz` sono MARCATE:",
+        "   `tempi_non_ricompongono` e `tempi_tutti_a_zero_con_gol`.",
+        "9-bis. **Il coefficiente UEFA pubblicato contiene il FUTURO** (R8).",
+        "   La consegna è del 12/08/2026 e la sua finestra è 22/23-**26/27**:",
+        "   `Somma stagioni` somma cinque colonne, e la quinta è una stagione",
+        "   che comincia dopo l'ultima partita di questo archivio. 80 club su",
+        "   410 hanno già punti lì. `partite.csv.gz` porta **due finestre col",
+        "   nome che dice quale** — `*_uefa_coeff_pubblicato` (il numero della",
+        "   UEFA, R3: la fonte non si tocca) e `*_uefa_coeff_fino_2526`",
+        "   (troncato) — più `*_uefa_punti_2627`, il futuro esposto invece che",
+        "   sottratto in silenzio.",
+        "   ⚠️ La troncata è di QUATTRO stagioni (la 21/22 non è nel file):",
+        "   non è confrontabile con un coefficiente UEFA ufficiale.",
+        "   ⚠️ Il **pavimento** del 20% è una proprietà della FINESTRA, non del",
+        "   club: su 6 club morde nella troncata e non nella pubblicata, quindi",
+        "   accanto al troncato va letta `*_uefa_pavimento_fino_2526`. Fra le",
+        "   due finestre l'identità esatta è quella sulle SOMME",
+        "   (`somma_pubblicata − somma_fino_2526 = punti_2627`), non sui",
+        "   coefficienti.",
         "10. **Una sola colonna JSON sopravvive**: `provenienza_json` in",
         "    `partite.csv.gz`, che dice quale fonte ha vinto per ogni campo",
         "    normalizzato. Non è un dato impacchettato: è la provenienza.",
@@ -1508,8 +1750,20 @@ def scrivi_readme(riepilogo: dict) -> None:
         "Le anagrafiche di Transfermarkt e le carriere di Wikipedia coprono per",
         "costruzione ogni epoca. Qui sono **ristrette al perimetro**: i",
         "giocatori che sono scesi in campo nel 2025-26 e i club che hanno",
-        "giocato. Le stime dichiarate di altre stagioni, e la finestra 2026-27",
-        "del ranking UEFA, restano fuori: sono dato di un'altra stagione.",
+        "giocato. Le stime dichiarate di altre stagioni restano fuori: sono",
+        "dato di un'altra stagione.",
+        "",
+        "⚠️ Un'eccezione dichiarata: `anagrafiche/ranking_uefa_club.csv.gz` è",
+        "la tabella della UEFA **come pubblicata**, quindi ha anche la colonna",
+        "`26/27` (R3: la fonte non si tocca). Non è una falla del perimetro —",
+        "è la fonte, e serve a ricalcolare la troncatura. Ciò che entra nelle",
+        "partite è la finestra dell'archivio, col nome che lo dice (trappola",
+        "9-bis).",
+        "",
+        "⚠️ E le valutazioni Transfermarkt partono dal **2025-06-01**, non dal",
+        "1° luglio: una valutazione di giugno è il prezzo con cui la squadra",
+        "entra nella stagione. È l'unica finestra propria, ed è dichiarata nel",
+        "verificatore.",
         "",
         "### Le competizioni che mancano",
         "",

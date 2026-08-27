@@ -20806,3 +20806,400 @@ e su `Average rating (SofaScore)` della Premier — identica su 379 partite su
 trasferta della 380ª. Una cella, sparita in silenzio. La soglia è ora
 `== 1.0`: la coincidenza deve valere su **tutte** le partite comuni.
 
+
+---
+
+## Fase 159-ter — Dalla pretesa del file unico alla cartella: il grano è un'informazione, non un formato
+
+**Obiettivo.** Richiesta dell'utente, subito dopo il censimento della Fase
+159-bis: *«invece di avere la pretesa di creare un file unico con tutti i dati
+crea una cartella, così hai il margine di suddividere tutti i dati in più file
+(in quante parti vuoi). l'importante però è che ti assicuri che ci siano
+proprio tutti ma tutti i dati»* — e, a specificare il perimetro: *«qualsiasi
+tipo di dati legato a squadre, partite, competizioni, giocatori, arbitri,
+meteo, quote della stagione 2025-26 (solo quella)»*.
+
+**Ragionamento / ipotesi.** La Fase 159-bis aveva chiuso con un numero che non
+lasciava scampo: l'event data Opta impacchettato dentro le celle di una tabella
+al grano di partita pesa **1.693 MB grezzi / 243 MB gzippati**, e il limite per
+file di GitHub è **100 MB**. Non era una questione di compressione più furba o
+di colonne da potare: 243 > 100 di un fattore due e mezzo, e nessuna scelta
+di formato lo ribalta. Il file unico *non poteva* contenere tutto — l'unica
+domanda aperta era se dirlo o se continuare a chiamare «tutto» un
+sottoinsieme.
+
+Ma il vincolo di GitHub è la ragione **peggiore** per fare la cartella, e
+accorgersene ha cambiato il disegno. La ragione buona è che il file unico
+costringeva ogni dato al grano della partita, e **il grano di un dato è
+informazione**, non una scelta di impaginazione. Le 4,77 milioni di posizioni
+dei giocatori, dentro una cella, sono un pacchetto JSON: per contarle bisogna
+spacchettarlo, per filtrarle bisogna spacchettarlo, per unirle a qualcos'altro
+bisogna spacchettarlo. Al loro grano naturale sono righe: si filtrano, si
+contano, si uniscono. Il grano sbagliato non perde informazione — **la rende
+scomoda**, e ciò che è scomodo non viene usato. Un archivio che nessuno apre
+non è un archivio.
+
+**Alternative considerate.**
+
+1. **Restare al file unico e dichiarare l'esclusione.** Onesto, e per una
+   settimana è stato lo stato del repo. Ma l'utente aveva chiesto *tutto*, due
+   volte, con parole che non lasciavano margine di interpretazione.
+2. **Un file unico compresso più aggressivamente** (zstd, parquet). Il parquet
+   avrebbe risolto la dimensione — e infatti è la scelta giusta per un dataset
+   di lavoro. Scartato per due motivi: il repo ha una convenzione (`.csv.gz`,
+   che `pd.read_csv` apre senza dire niente) e questo è un **archivio da
+   consegnare**, il cui pregio principale è che chiunque lo apra con lo
+   strumento che ha già.
+3. **La cartella, un file per raccolta.** Sarebbe stata la traduzione più
+   diretta di com'è organizzato `files/`. Scartata perché replica la struttura
+   delle *fonti*, che è un fatto storico, invece di quella dei *dati*: due
+   raccolte diverse della stessa cosa finiscono in due file che nessuno pensa
+   di unire.
+4. **La cartella, un file per GRANA.** Scelta. Una tabella per «che cosa è una
+   riga», le raccolte impilate dentro con una colonna che le distingue, e una
+   sola chiave che tiene insieme tutto.
+
+**Scelta e perché.** La cartella per grana, con `partite.csv.gz` come **porta
+d'ingresso** — una riga per partita — e `match_uid` come unica chiave di
+unione. Le tabelle grosse si spezzano lungo un asse dichiarato (`spezza_per`)
+finché ogni pezzo sta sotto i **90 MB**, un margine del 10% sotto il limite di
+GitHub perché il limite si scopre al `git push`, cioè dopo quaranta minuti di
+lavoro.
+
+Il criterio dello spezzamento non è «quanti file voglio» ma «quale colonna
+divide questo dato in modo che una domanda tipica ne tocchi uno solo»: le
+posizioni si spezzano per raccolta, perché chi studia la Serie A non ha ragione
+di leggere la Bundesliga. Lo spezzamento *casuale* avrebbe dato gli stessi MB e
+nessuno dei vantaggi.
+
+**Risultato.**
+
+| | |
+|---|--:|
+| tabelle | 90 |
+| file | 143 |
+| righe totali | 10.334.841 |
+| peso su disco | 257,1 MB |
+| il pezzo più grosso | 25,5 MB (contro un tetto di 90) |
+| partite nella porta d'ingresso | 4.173 |
+| competizioni | 22 |
+
+Le sette grane, e quanto pesa ciascuna: partita (~15 mila righe),
+squadra-partita-periodo (~30 mila), giocatore-partita (~170 mila), evento (~3,7
+milioni), posizione (4,77 milioni), anagrafica (~50 mila), metadati.
+
+**Quattro partite sono entrate perché la porta d'ingresso deve essere
+l'universo.** Gli spareggi promozione/retrocessione di Ligue 1 contro squadre
+di Ligue 2 (Rodez, Red Star) non sono nelle raccolte a tre fonti — la loro
+Ligue 1 è il *campionato* — ma diretta.it li ha. Senza una riga in
+`partite.csv.gz`, le loro **303 righe** di statistiche restavano appese a una
+chiave che nessuna partita aveva: presenti nel file, invisibili a ogni join.
+`solo_da_diretta=True` le marca.
+
+**Lezione.** *Il grano di un dato è un'informazione da conservare, non un
+dettaglio di impaginazione.* Per due fasi il progetto ha trattato «mettere
+tutto in un file» come l'obiettivo e il grano come il prezzo da pagare. Era
+rovesciato: il grano è il dato, il numero di file è il prezzo. E il prezzo era
+zero — una cartella non costa niente a chi la legge, se ha un manifesto che
+dice che cosa c'è dentro e una chiave che lo tiene insieme.
+
+### 📐 Il modello in dettaglio
+
+Non c'è matematica nuova: c'è una **chiave** e un **criterio di spezzamento**,
+e sbagliare l'una o l'altro rompe in silenzio.
+
+**1 · La chiave.** Identica alla Fase 159, `chiave_partita` in
+`scripts/build_actual_database2526.py`:
+
+```
+match_uid = competizione | data ISO | norm_squadra(casa) | norm_squadra(trasferta)
+```
+
+dove `norm_squadra` passa per `sources.canonical_team` (287 alias) e poi toglie
+accenti e sigle. È una **stringa costruita**, e questo è il punto che la Fase
+159-quater ha pagato: si costruisce sempre, quindi `notna()` su di essa non
+dice niente.
+
+**2 · Il tetto e l'asse di spezzamento.** In `scripts/build_stagione_2025_2026.py`:
+
+```
+TETTO_MB = 90.0
+
+scrivi(nome, tabella, spezza_per=colonna):
+    se peso_stimato(tabella) <= TETTO_MB:  un pezzo solo
+    altrimenti:                            un pezzo per valore distinto di `colonna`
+```
+
+Il **90** non è arbitrario e non è ottimizzato: è il limite di GitHub (100)
+meno un margine del 10%. Il margine serve perché il peso di un pezzo si conosce
+solo *dopo* averlo scritto, e la compressione varia con il contenuto: un pezzo
+stimato a 98 MB che ne pesa 103 fa fallire il push a lavoro finito.
+
+`spezza_per` è la **raccolta** su ogni tabella a grana fine (posizioni, eventi
+Opta, giocatori, squadre). Il valore misurato: il pezzo più grosso è 25,5 MB,
+cioè il 28% del tetto — c'è margine per una sesta lega senza ripensare nulla.
+
+**3 · La scrittura incrementale, e perché non è un dettaglio.** La prima
+versione concatenava tutti i pezzi e *poi* spezzava:
+
+```
+tabella = pd.concat(pezzi)        # 8,5 milioni di righe in memoria
+per ogni valore v: scrivi(tabella[tabella[asse] == v])
+```
+
+Il container è morto due volte con **exit 137** (OOM). La forma adottata
+(`ScritturaIncrementale`) non costruisce mai la tabella intera:
+
+```
+per ogni pezzo p:
+    per ogni valore v presente in p:  appendi p[p[asse]==v] al file di v
+```
+
+Il conto: 8,5 M righe × ~90 colonne in un `DataFrame` pandas sono ~6 GB di
+picco; scritte a pezzi, il picco è quello del pezzo più grosso, ~400 MB. Non è
+un'ottimizzazione — è la differenza fra «gira» e «non gira».
+
+**4 · Gli interi che restano interi.** `_interi_restano_interi` fa il cast a
+`Int64` (nullable) di ogni colonna numerica i cui valori non nulli sono tutti
+interi:
+
+```
+è_intero(C)  ⟺  C.dropna() == C.dropna().round()  su tutte le righe
+```
+
+Senza, una colonna che passa per un solo `NaN` diventa `float64` e si scrive
+`7.0` dove il dato è «sette gol». Misurato: **356.351 celle**. Non è estetica —
+`read_csv` le rilegge come float, e ogni confronto con un intero letto da
+un'altra tabella fallisce senza dare errore.
+
+---
+
+## Fase 159-quater — Il verificatore che passava e il difetto che nascondeva: cinque controlli che misuravano se stessi
+
+**Obiettivo.** L'utente: *«riavvia il workflow e assicurati che svolga il suo
+compito fino alla fine. in caso, usa il workflow anche solo per ricontrollare
+il lavoro»*. Cioè: la cartella della Fase 159-ter è dichiarata completa —
+dimostrarlo, con un ventaglio avversariale, invece di crederlo.
+
+**Ragionamento / ipotesi.** L'ipotesi con cui si è partiti è quella che rende
+utile un audit: **il verificatore è un pezzo di software come gli altri, e può
+essere rotto esattamente come il codice che controlla.** Un controllo che passa
+non è una prova finché non si è verificato che *fallisca* quando deve. Il
+sospetto specifico: fra i tredici controlli scritti insieme alla cartella,
+quanti misuravano davvero una proprietà del dato e quanti misuravano una
+proprietà di se stessi?
+
+**Alternative considerate.**
+
+1. **Rileggere il codice.** Costa poco e trova i difetti che si sanno già
+   cercare. Non trova quelli della famiglia «il controllo è d'accordo con
+   l'errore», perché a rileggerlo il controllo sembra giusto.
+2. **Confrontare la cartella con le fonti, cella per cella.** Costoso e
+   necessario, ma cieco sui difetti *strutturali*: una cella giusta al posto
+   sbagliato passa.
+3. **Un ventaglio di agenti avversariali, ciascuno su un asse diverso**
+   (conteggi contro fonte, chiavi, perimetro, R6/finto pieno, R8/look-ahead,
+   leggibilità, manifesto), con l'istruzione esplicita di *provare a rompere*
+   invece di confermare. Scelta, e ripetuta tre volte.
+
+**Scelta e perché.** Tre passate di workflow (8 + 7 + 7 agenti). La terza è
+quella che conta come verdetto: oltre **50 milioni di celle** confrontate con
+le fonti, **zero divergenze di valore**. Il dato è quello che dice di essere.
+Tutti i difetti trovati sono **strutturali** — e questa asimmetria è il
+risultato più interessante della fase.
+
+**Risultato: sette difetti, e cinque erano nel verificatore.**
+
+1. **Il tasso di aggancio era una tautologia.** Il manifesto dichiarava
+   `aggancio_match_uid = 100%` per ogni tabella, e il conto era
+   `match_uid.notna()`. Ma `match_uid` è una **stringa costruita** per
+   concatenazione: non è mai nulla, per costruzione. Il 100% non misurava
+   l'aggancio — misurava che il codice avesse eseguito la riga che costruisce
+   la chiave. Sotto quel 100% c'erano **27.841 chiavi pendenti**: puntatori a
+   partite che non esistono. Riparato misurando l'**appartenenza** all'insieme
+   delle chiavi vere, il che ha imposto di costruire `partite.csv.gz` **per
+   primo**.
+2. **Il perimetro si filtrava sul nome italiano di una colonna.** Il filtro
+   «solo 2025-26» guardava `stagione`; una fonte chiama quella colonna
+   `season`, e **32 righe** di un'altra stagione passavano senza un messaggio.
+3. **Il perimetro si filtrava sull'esito del join.** Tenere solo le righe con
+   `match_uid` agganciato cancellava **4.947 presenze** di **207 partite
+   europee vere**: erano dentro il perimetro e semplicemente non avevano
+   trovato la loro partita. Il perimetro si filtra per **stagione e
+   competizione** — proprietà del dato — mai per «si è agganciata», che è una
+   proprietà del nostro codice.
+4. **Il verificatore leggeva le date con `dayfirst=True, format="mixed"`** e
+   quindi capiva `2026-05-09` come *5 settembre*. Un controllo sul perimetro
+   che sbaglia a leggere le date è il caso puro del controllo che misura se
+   stesso.
+5. **Le impronte `sha256` non erano riproducibili** (il `mtime` finisce dentro
+   il gzip) ed erano prese a metà corsa. Due ricostruzioni identiche davano due
+   impronte diverse: il controllo «nessun file alterato» non distingueva una
+   modifica da una ricostruzione, cioè non distingueva niente. Riparato con
+   `compression={"method":"gzip","mtime":0}` e ricalcolo a fine corsa.
+6. **Una tabella era scritta gzippata senza l'estensione `.csv.gz`**, e
+   `pd.read_csv` alzava `UnicodeDecodeError`. Il manifesto era perfetto, il
+   file illeggibile: nessuno dei tredici controlli apriva i file, li
+   *descriveva*.
+7. **`riga_non_fusa` accusava 19.569 righe di essere doppioni** quando lo erano
+   **184**, e la nota diceva di scartarle. Diviso in due colonne con due nomi
+   diversi (`giocatore_ripetuto`, `senza_id_sofascore`), perché un'etichetta
+   che unisce un difetto e una mancanza fa buttare 19 mila righe buone per 184
+   cattive.
+
+**E due difetti nel dato, entrambi della famiglia R8/R6.**
+
+8. **Il coefficiente UEFA conteneva il futuro.** La consegna è del 12/08/2026 e
+   la sua finestra è 22/23-**26/27**: `Somma stagioni` somma cinque colonne, e
+   la quinta è una stagione che comincia *dopo* l'ultima partita
+   dell'archivio. **80 club su 410** hanno già punti lì, e sono i club dei
+   preliminari estivi — cioè proprio quelli che il numero dovrebbe descrivere.
+   Nessun conteggio di celle piene lo vede: la colonna è piena, il numero è
+   giusto, il **momento** è sbagliato.
+9. **Otto partite non ricompongono i tempi**, e quattro di queste hanno *tutti
+   i tempi a zero e gol nella partita* (finto pieno da manuale, R6). Sono di
+   Europa League e **non sono diagnosticate**. Marcate, non zittite.
+10. **Il pavimento del 20% è una proprietà della FINESTRA, non del club** — e
+    l'ha trovato il controllo nuovo, fallendo. Togliere la 26/27 abbassa la
+    somma, e su **6 club** la fa scendere sotto il 20% del coefficiente di
+    federazione: nella finestra pubblicata il numero misura la squadra, in
+    quella troncata misura il **paese**. La colonna `*_uefa_pavimento`
+    descrive solo la finestra pubblicata, quindi accanto al coefficiente
+    troncato dice `False` mentre il pavimento morde — chi legge conclude
+    l'opposto di ciò che è vero. Aggiunta `*_uefa_pavimento_fino_2526`.
+    ⚠️ Il controllo che l'ha scoperto era **anch'esso sbagliato** (verificava
+    l'identità sui coefficienti invece che sulle somme): un controllo troppo
+    rigido ha trovato un difetto vero pur essendo rotto. Non è un modo
+    affidabile di lavorare, è un promemoria che il rosso va **diagnosticato**,
+    mai zittito allentando la soglia — allentarla qui avrebbe fatto passare il
+    controllo e lasciato il difetto.
+
+**Verifica finale: 15/15 controlli.**
+
+**Lezione.** *Un controllo che non può fallire non è un controllo.* Cinque
+difetti su sette erano nel verificatore, e tutti e cinque della stessa
+famiglia: il controllo era d'accordo con l'errore perché condivideva
+l'assunzione che lo produceva. `notna()` su una chiave costruita, il nome
+italiano di una colonna, `dayfirst` su date ISO, il `mtime` dentro l'impronta,
+il manifesto letto al posto del file. La regola operativa che ne esce, e che
+vale per ogni guardia futura del progetto: **prima di credere a un controllo
+verde, rompere il dato di proposito e verificare che diventi rosso.** Se non
+diventa rosso, il controllo non stava guardando lì.
+
+Corollario sul metodo dell'audit: le tre passate hanno confrontato oltre 50
+milioni di celle con le fonti e **non hanno trovato una sola divergenza di
+valore**, mentre hanno trovato nove difetti strutturali. Non è un caso ed è
+generalizzabile: i valori li verifica il codice che li copia, che è semplice e
+si ripete; la struttura la verifica solo chi si chiede *che cosa significa una
+riga*, e quella domanda non ha un test automatico che la ponga da sola.
+
+### 📐 Il modello in dettaglio
+
+Quattro identità. Ognuna è una riga di codice che prima non c'era, e ognuna era
+per intero il difetto.
+
+**1 · L'aggancio: appartenenza, non non-nullità.** In
+`scripts/build_stagione_2025_2026.py`, `_tasso_aggancio`:
+
+```
+PRIMA:  aggancio(T) = |{r ∈ T : r.match_uid ≠ NULL}| / |T|
+DOPO:   aggancio(T) = |{r ∈ T : r.match_uid ∈ CHIAVI_VALIDE}| / |T|
+```
+
+con `CHIAVI_VALIDE` popolato quando si scrive `partite.csv.gz`. Le due
+espressioni si somigliano e non hanno niente in comune: la prima ha come
+massimo la copertura del codice, la seconda quella del dato. Misurato: la prima
+dava `1.000` su tutte le tabelle, la seconda ha scoperto **27.841** puntatori
+pendenti. La differenza fra 100% e la verità era interamente dentro la scelta
+dell'operatore.
+
+**2 · Il ranking UEFA: due finestre, col nome che dice quale.** In
+`scripts/build_actual_database2526.py`, `blocco_uefa`. La UEFA pubblica
+
+```
+Somma stagioni     = 22/23 + 23/24 + 24/25 + 25/26 + 26/27
+Coefficiente UEFA  = MAX(Somma stagioni ; 20% del coefficiente di federazione)
+```
+
+verificato sul file: l'identità regge su **410/410** righe, e il pavimento del
+20% morde su 146. Per una partita del 2025-26 l'addendo `26/27` è futuro. La
+finestra dell'archivio è quindi
+
+```
+somma_fino_2526  = 22/23 + 23/24 + 24/25 + 25/26
+coeff_fino_2526  = MAX(somma_fino_2526 ; 20% del coefficiente di federazione)
+```
+
+⚠️ Sono **quattro** stagioni, non cinque: la 21/22 non è nel file. Quindi
+`coeff_fino_2526` **non è** il coefficiente UEFA di un anno fa e non va
+confrontato con uno ufficiale — è la finestra più lunga che questo archivio può
+vedere senza guardare avanti, ed è scritto nella docstring perché chi la usa lo
+sappia.
+
+Tre scelte di forma, ognuna con un motivo:
+- le quattro stagioni si sommano **esplicitamente**, non come
+  `Somma stagioni − 26/27`, così il conto non dipende dal fatto che la colonna
+  pubblicata sia davvero la somma delle altre. Quell'identità è verificata a
+  parte e, se un giorno il file cambiasse, il log lo direbbe invece di
+  propagare l'errore in silenzio;
+- il numero pubblicato **resta nel file** (`*_uefa_coeff_pubblicato`): la fonte
+  non si tocca (R3), si affianca;
+- il futuro è **esposto** (`*_uefa_punti_2627`) invece che sottratto di
+  nascosto, così la differenza fra le due finestre è ricalcolabile riga per
+  riga: `pubblicato − troncato = punti 26/27` ovunque il pavimento non morda.
+
+Misurato: **80 club** hanno punti 26/27, e su **63** (dopo la deduplica per
+nome normalizzato) le due finestre divergono davvero — sulle altre il pavimento
+del 20% assorbe la differenza. Scarto massimo **2,0** punti.
+
+⚠️ **L'identità che si verifica è quella sulle SOMME**, non sui coefficienti:
+
+```
+somma_pubblicata − somma_fino_2526 = punti_2627        ESATTA, 278/278
+coeff_fino_2526 ≤ coeff_pubblicato                     monotona, 0 violazioni
+coeff_pubblicato − coeff_fino_2526 = punti_2627        FALSA su 6 club
+```
+
+La terza è falsa per un motivo giusto, ed è il reperto 10 qui sopra: il
+coefficiente è `MAX(somma; quota)` e il pavimento **cambia stato fra le due
+finestre**. Su FC Malisheva la somma pubblicata è 3,5 (nessun pavimento), la
+troncata è 2,0 e la quota di federazione 2,706 — quindi il coefficiente
+troncato è 2,706, e `3,5 − 2,706 = 0,794 ≠ 1,5`. Il dato è corretto; era
+l'identità scelta a essere quella sbagliata.
+
+**3 · I tempi che non ricompongono.** L'identità è quella corretta alla Fase
+150 sulla 2. Bundesliga, con l'addendo assente a **zero** e non a `NaN`:
+
+```
+Gol = 1T + 2T + suppl.        (l'addendo assente vale 0)
+```
+
+Dove non torna, il motivo è uno di due, e vanno tenuti distinti:
+
+```
+lotteria_rigori          il punteggio grezzo somma i tiri dal dischetto —
+                         MISURATO per raccolta (tf.RIGORI_NEL_PUNTEGGIO)
+tempi_non_ricompongono   tutto il resto = il residuo NON diagnosticato
+```
+
+Il controllo si applica **solo dove almeno un tempo è noto** (`noti > 0`):
+senza frazioni non c'è identità da verificare, e chiamarla «rotta» sarebbe un
+falso positivo su ogni partita che non ha la scomposizione. Misurato: **8**
+partite marcate, di cui **4** con `tempi_tutti_a_zero_con_gol` — la colonna che
+isola il sottoinsieme peggiore, quello dove i tempi *sembrano* misurati (sono
+zero, non `NaN`) e la partita ha gol. È R6 in forma pura, ed è un reperto
+aperto: si istruisce a mano (R5), non si corregge in blocco.
+
+**4 · Il controllo che deve poter fallire.** Il controllo nuovo sul ranking non
+verifica «esiste una colonna col nome giusto» — sarebbe soddisfatto da una
+colonna piena di copie del numero pubblicato. Verifica due cose insieme:
+
+```
+(a) ∃ righe con |pubblicato − troncato| > 0        le finestre DIVERGONO davvero
+(b) ∀ righe senza pavimento:
+       |pubblicato − troncato − punti_2627| ≤ 1e-6  l'identità torna
+```
+
+La (a) è la parte che rende il controllo capace di fallire: senza, il verde
+sarebbe compatibile con la riparazione mai applicata. È esattamente la lezione
+della fase, scritta in una condizione.
