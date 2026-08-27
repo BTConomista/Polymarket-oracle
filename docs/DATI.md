@@ -1887,55 +1887,65 @@ giorno: due occorrenze indipendenti, cioè una regola e non un caso.
 
 ---
 
-## 5-quaterdecies · `data/actual_database2526.csv` — TUTTO il 2025-26 in una tabella (Fase 159)
+## 5-quaterdecies · `data/actual_database2526.csv.gz` — TUTTO il 2025-26 in una tabella (Fasi 159 / 159-bis)
 
 **Che cos'è.** Una riga per **PARTITA** della stagione 2025-26, per ogni
-competizione di cui il repo ha dati: **4.169 partite × 2.014 colonne, 76,6 MB**,
-prodotto da `scripts/build_actual_database2526.py` e verificato da
-`scripts/_run_verifica_actual_database2526.py` (16 controlli, tutti passati).
-Non è una fonte nuova: è il **montaggio** di sette fonti che già c'erano,
-sull'unica grana che le regge tutte insieme.
+competizione di cui il repo ha dati: **4.169 partite × 2.294 colonne**,
+**387 MB non compressi, 80,2 MB su disco**. Non è una fonte nuova: è il
+**montaggio** di sette famiglie di fonti che già c'erano, sull'unica grana che
+le regge tutte insieme. Si produce con `scripts/build_actual_database2526.py`
+e si verifica con `scripts/_run_verifica_actual_database2526.py` (19 controlli).
 
-Nasce da una richiesta esplicita dell'utente (26/08/2026): *«un file csv
-COMPLETO con tutti i dati che abbiamo raccolto di queste competizioni relative
-alla stagione 2025-2026»*, con l'elenco delle 25 competizioni.
+### Perché `.csv.gz` e non `.csv`
+
+Perché 387 MB non stanno in un file che GitHub accetta: il limite è **100 MB**,
+oltre il quale il push viene rifiutato. `.csv.gz` **non è un formato diverso**:
+è lo stesso CSV, compresso, ed è la convenzione di questo repo per ogni tabella
+grossa (`heatmap.csv.gz`, `eventi_opta.csv.gz`, `partita_per_partita.csv.gz`).
+Si apre senza dire niente:
+
+```python
+import pandas as pd
+d = pd.read_csv("data/actual_database2526.csv.gz", low_memory=False)
+```
+
+Chi vuole il CSV piatto lo rigenera col profilo ridotto:
+`python scripts/build_actual_database2526.py --profilo leggero`.
 
 ### Le 22 competizioni, e le 4 che non ci sono
 
-| competizione | partite | risultato | arbitro | allenatori | formazioni | giocatori | stat squadra | quote | spettatori |
-|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
-| LaLiga2 | 468 | 468 | 468 | 468 | 468 | 468 | 468 | 468 | 17 |
-| UEFA Conference League | 409 | 409 | 405 | 409 | 409 | 409 | 230 | 409 | 220 |
-| LaLiga | 380 | 380 | 380 | 380 | 380 | 380 | 380 | 380 | 380 |
-| Premier League | 380 | 380 | 380 | 380 | 380 | 380 | 380 | 380 | 380 |
-| Serie A | 380 | 380 | 380 | 380 | 380 | 380 | 380 | 380 | 380 |
-| 2. Bundesliga | 310 | 310 | 310 | 310 | 310 | 310 | 310 | 310 | 308 |
-| Ligue 1 | 310 | 310 | 310 | 310 | 310 | 310 | 310 | 310 | 308 |
-| Bundesliga | 308 | 308 | 308 | 308 | 308 | 308 | 308 | 308 | 308 |
-| UEFA Champions League | 281 | 281 | 281 | 281 | 281 | 281 | 227 | 281 | 232 |
-| UEFA Europa League | 271 | 271 | 271 | 271 | 271 | 271 | 271 | 271 | 243 |
-| Coupe de France | 201 | 201 | **0** | **0** | 0 | 49 | 70 | **0** | 0 |
-| Copa del Rey | 137 | 137 | 116 | 117 | 137 | 137 | 114 | 0 | 117 |
-| FA Cup | 123 | 123 | 123 | 120 | 122 | 123 | 63 | 0 | 122 |
-| EFL Cup | 93 | 93 | 93 | 93 | 93 | 93 | 91 | 0 | 92 |
-| DFB-Pokal | 63 | 63 | 63 | 62 | 62 | 63 | 63 | 0 | 63 |
-| Coppa Italia | 45 | 45 | 45 | 44 | 44 | 45 | 45 | 0 | 45 |
-| Supercoppa Italiana · Supercopa de España | 3 + 3 | tutte | tutte | tutte | tutte | tutte | tutte | 5/6 | tutte |
-| Community Shield · DFL-Supercup · Trophée des Champions · Supercoppa UEFA | 1 ciascuna | tutte | tutte | tutte | tutte | tutte | tutte | tutte | 3/4 |
-| **totale** | **4.169** | 4.169 | 3.943 | 3.943 | 3.965 | 4.017 | 3.720 | 3.506 | 3.225 |
+| competizione | partite | arbitro | allenatori | formazioni | giocatori | posizioni | tiri | quote |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|
+| LaLiga2 | 468 | 468 | 468 | 468 | 468 | 468 | 468 | 468 |
+| UEFA Conference League | 409 | 409 | 409 | 409 | 409 | 228 | 228 | 409 |
+| LaLiga · Premier · Serie A | 380 ×3 | tutte | tutte | tutte | tutte | tutte | tutte | tutte |
+| 2. Bundesliga · Ligue 1 | 310 ×2 | tutte | tutte | tutte | tutte | tutte | tutte | tutte |
+| Bundesliga | 308 | 308 | 308 | 308 | 308 | 308 | 308 | 308 |
+| UEFA Champions League | 281 | 281 | 281 | 281 | 281 | 226 | 226 | 281 |
+| UEFA Europa League | 271 | 271 | 271 | 271 | 271 | 189 | 189 | 271 |
+| Coupe de France | 201 | **0** | **0** | **0** | 49 | 0 | 0 | **0** |
+| Copa del Rey | 137 | 116 | 117 | 137 | 137 | 0 | 0 | 0 |
+| FA Cup | 123 | 123 | 120 | 122 | 123 | 0 | 0 | 0 |
+| EFL Cup | 93 | 93 | 93 | 93 | 93 | 0 | 0 | 0 |
+| DFB-Pokal | 63 | 63 | 62 | 62 | 63 | 0 | 0 | 0 |
+| Coppa Italia | 45 | 45 | 44 | 44 | 45 | 0 | 0 | 0 |
+| le 6 supercoppe | 10 | 10 | 10 | 10 | 10 | 10 | 10 | 9 |
+| **totale** | **4.169** | 3.947 | 3.943 | 3.965 | 4.017 | 3.189 | 3.189 | 3.506 |
 
 ⛔ **Quattro delle 25 competizioni chieste NON ci sono, e non è una lacuna del
 file: il repo non ha una riga della loro stagione 2025-26.** Serie B,
-Championship, Ligue 2, EFL Trophy. Ricerca fatta con grep ricorsivo su tutto il
-repo e `zgrep` sui 709 file `.gz`. Esistono nel repo, ma per altre stagioni:
-in `data/smarkets_matches/` e `data/smarkets_prova/` (serie_b 20 partite,
-championship 36, ligue_2 36, efl-trophy 8 — **tutte con calcio d'inizio da
-agosto 2026**, cioè 2026-27) e in `data/club_fixtures*.csv` (3.297 righe Serie
-B, 2.723 Championship, 3.384 Ligue 2 — **stagioni 1617-2425**, il «preludio»
-che radica il riposo delle neopromosse).
+Championship, Ligue 2, EFL Trophy. Ricerca con grep ricorsivo su tutto il repo
+e `zgrep` sui 709 file `.gz`. Esistono nel repo, ma per altre stagioni: in
+`data/smarkets_*` sono **2026-27** (il calcio d'inizio più vecchio di 14,6
+milioni di righe è 2026-08-08) e in `data/club_fixtures*.csv` sono
+**1617-2425**.
 
-⭐ In più rispetto alle 25 chieste c'è la **Supercoppa UEFA** (1 partita): il
-dato c'era, ed escluderlo sarebbe stato buttarlo. La colonna
+⛔ **La Coupe de France è strutturalmente povera**: 201 partite di calendario e
+risultato da Wikipedia, ma **arbitro 0/201, allenatori 0/201**, e formazioni
+solo su 49. Non è un difetto del montaggio: `games.csv` di Transfermarkt non ha
+**nessuna** coppa francese, e Wikipedia riporta i titolari solo per la finale.
+
+⭐ In più rispetto alle 25 chieste c'è la **Supercoppa UEFA** (1 partita).
 `competizione_in_lista_utente` la distingue.
 
 ### Come sono fatte le colonne
@@ -1944,116 +1954,132 @@ dato c'era, ed escluderlo sarebbe stato buttarlo. La colonna
 
 | blocco | colonne | fonte |
 |---|--:|---|
-| *(nessuno)* | 63 | i campi normalizzati, uguali per tutte le competizioni |
-| `tf_` | 783 | `files/tre_fonti_*_2526` — SofaScore + Opta/WhoScored + Understat |
-| `sof_` | 479 | `files/sofascore_coppe_europee_2526` — le tre coppe UEFA |
-| `cop_` | 337 | `data/coppe_2526` — le 6 coppe nazionali |
-| `dir_` | 300 | `files/diretta_*_2526` — i 5 campionati |
-| `snap_` | 36 | `data/{lega}_matches.csv` — quote football-data, xG, riposo |
-| `ps_` | 16 | `files/player_scores/games.csv.gz` — arbitro e allenatori |
-
-`lato` è `casa`/`trasferta` (assente = dato di partita); `periodo` è
-`tot`/`1t`/`2t`/`sup1`/`sup2` (assente = la statistica non ha periodo). La
-fonte originale resta dentro il nome — `(SofaScore)`, `(WhoScored)`,
-`(Understat)` — perché due fonti che misurano la stessa grandezza **non sono
-la stessa colonna** (§`tre_fonti.preferita`).
+| *(nessuno)* | 95 | i campi normalizzati, uguali per tutte le competizioni |
+| `tf_` | 852 | `files/tre_fonti_*_2526` — SofaScore + Opta/WhoScored + Understat |
+| `sof_` | 482 | `files/sofascore_coppe_europee_2526` — le tre coppe UEFA |
+| `cop_` | 340 | `data/coppe_2526` + `files/diretta_*` — le 6 coppe nazionali |
+| `dir_` | 319 | `files/diretta_*_2526` — i 5 campionati |
+| `fd_` | 128 | `data/football_data_raw/` e i bundle — **quote grezze** |
+| `ps_` | 42 | `files/player_scores/` — arbitro, allenatori, presenze, club |
+| `snap_` | 36 | `data/{lega}_matches.csv` — lo snapshot congelato |
 
 I **campi normalizzati** di testa (`gol_casa`, `arbitro`, `allenatore_casa`,
-`stadio`, `formazione_casa`, `cronaca`…) sono riempiti per **coalescenza**: si
-prende la prima fonte disponibile secondo un ordine fisso, scritto in
-`COALESCENZE` dentro lo script. `provenienza_json` dice, campo per campo e riga
-per riga, **quale blocco ha vinto** (`tf`/`sof`/`cop`/`snap`/`ps`/`dir`).
+`formazione_casa`, `cronaca`, `casa_uefa_coeff`, `casa_giorni_riposo`…) sono
+riempiti per **coalescenza**: la prima fonte disponibile secondo un ordine
+fisso, scritto in `COALESCENZE` dentro lo script. `provenienza_json` dice,
+campo per campo e riga per riga, **quale blocco ha vinto**.
 
-### I pacchetti: la grana del giocatore dentro una cella
+### I pacchetti: le grane fini dentro una cella
 
 Le colonne che finiscono in `_json` contengono una tabellina in forma
-`{"campi":[…],"righe":[[…],…]}`. Si rileggono in due righe:
+`{"campi":[…],"righe":[[…],…]}` — si rileggono in due righe:
 
 ```python
 v = json.loads(riga["tf_casa_giocatori_json"])
 pd.DataFrame(v["righe"], columns=v["campi"])
 ```
 
+| pacchetto | cosa contiene | partite |
+|---|---|--:|
+| `tf_{lato}_giocatori_json` | **tutti** i ~176 campi per giocatore, 3 fonti | 3.507 |
+| `tf_heatmap_json` | le **POSIZIONI**: `{id: {"l":lato,"p":[[x,y],…]}}` | 3.189 |
+| `tf_tiri_json` | tiro per tiro con xG, xGOT e coordinate | 3.189 |
+| `tf_commento_json` | il commento minuto per minuto di SofaScore | 2.597 |
+| `tf_momentum_json` | la curva di pressione, ~92 punti a partita | 3.208 |
+| `tf_quote_json` | i mercati senza colonne piatte (O/U, handicap) | 3.493 |
+| `dir_{lato}_giocatori_json` | le 97 statistiche di diretta.it per giocatore | 1.751 |
+| `dir_{lato}_formazione_json` | distinta con panchina, ruolo, rating, minuti | 612 |
+| `dir_{lato}_cambi_json` · `_cronaca_json` | cambi ed eventi col minuto | 611 · 596 |
+| `cop_{lato}_giocatori_json` | le 103 statistiche di coppa per giocatore | 352 |
+| `cop_{lato}_formazione_json` | la distinta di coppa da player-scores | 458 |
+| `cop_eventi_{ps,diretta}_json` | gli eventi di coppa con gli id | 458 · 537 |
+| `cop_aggancio_giocatori_json` | **come** ogni giocatore è stato agganciato | 376 |
+| `sof_{lato}_giocatori_json` | le 87 metriche SofaScore delle coppe UEFA | 912 |
+| `sof_tiri_json` | i tiri UEFA, con `Zona porta` che altrove non c'è | 643 |
+| `sof_posizioni_medie_json` · `sof_colori_json` | baricentri e maglie | 643 · 912 |
+| `ps_{lato}_presenze_json` | minuti/gol/assist/cartellini + **anagrafica** + valore di mercato **alla data** | 2.408 |
+
 ⚠️ I valori assenti sono `null` **espliciti**, mai zeri: la matrice è
 rettangolare per costruzione, e un `null` significa «questa fonte non ha
 misurato quel campo per quel giocatore».
 
-`giocatori_casa_in_colonna` / `giocatori_trasferta_in_colonna` dicono in quale
-colonna sta il pacchetto di QUELLA partita (cambia fra campionati e coppe).
-
 ### ⚠️ Cosa NON c'è dentro, e perché
 
-* **Il tiro-per-tiro e l'event data.** Sono grana **evento**, non partita:
-  2,7 milioni di tocchi Opta, 4,8 milioni di posizioni, ~300 mila tiri. Il
-  tiro-per-tiro è stato provato in questo file e **tolto**: pesava 25 MB su 55,
-  un quarto del totale. Restano i **conteggi** (`tf_n_tiri_tracciati`,
-  `tf_n_eventi_opta`, `tf_n_posizioni_heatmap`), che dicono che il dato esiste
-  e quanto è denso; il dato sta in `files/tre_fonti_*/`.
-* **Il commento testuale** di SofaScore (~113 righe a partita): resta il
-  conteggio `tf_n_righe_commento`. La cronaca strutturata — gol, cartellini,
-  sostituzioni col minuto — c'è, in `cronaca`.
-* **Le anagrafiche del giocatore** (nazionalità, altezza, data di nascita,
-  valore, piede): sono `statico` per R8, non descrivono *questa* partita. Ne
-  restano gli aggregati di squadra (`tf_*_altezza_media_cm`,
-  `tf_*_valore_schierati_eur`).
-* **Le quote di borsa Smarkets e gli outright**: sono **2026-27**, non
-  2025-26 — misurato, il calcio d'inizio più vecchio dei tre archivi è
-  2026-08-08 (§5-ter, §5-bis).
+**Una cosa sola, e per aritmetica:** l'**event data Opta** — 2,7 milioni di
+tocchi con coordinate, secondo e qualificatori. Impacchettato pesa **1,7 GB
+grezzi / 243 MB gzippati**: da solo, più del doppio del limite di GitHub.
+Resta in `files/tre_fonti_*/eventi_opta.csv.gz`, e nel file ci sono i conteggi
+(`tf_n_eventi_opta`). Chi lo vuole in tabella lo genera in locale:
+`python scripts/build_actual_database2526.py --con-opta` produce un file da
+~2 GB **non versionabile**.
 
-### ⚠️⚠️ Le trappole di questo file, tutte misurate
+Restano fuori anche, e sono dichiarati: i livelli **Rosa** e **Stagione** di
+`giocatori()` e `riepilogo_stagionale.csv.gz` (grana stagione: gli stessi
+identici valori ripetuti su ogni partita di quella squadra, e aggregati che per
+costruzione contengono il futuro di ogni singola partita); le **carriere**
+`data/carriere_wikipedia/tappe.csv.gz` (209.809 tappe, anagrafica di giocatore
+non di partita); il grezzo football-data di **Bundesliga e Ligue 1**, che la
+Fase 100 ha scaricato senza archiviare, per cui le 128 colonne `fd_` sono vuote
+su quelle due leghe.
 
-1. **Il «meteo» non è il meteo.** L'unica colonna che si chiama così è
-   `tf_Meteo (WhoScored)`, normalizzata qui in
-   `meteo_codice_whoscored`: è un **codice numerico che vale 5.0 e solo 5.0**
-   ovunque sia pieno (varianza zero, 9% di riempimento). Il «98,4% piena» della
-   Premier sono 748 righe identiche. Finto pieno da manuale (R6). **Il progetto
-   non ha dati meteo.** La colonna resta perché cancellare un dato è peggio che
-   dichiararlo inservibile.
-2. **Due punteggi, non uno.** `gol_casa` sono i **90 minuti** — l'unico numero
-   confrontabile fra un campionato e una coppa, e quello su cui si regolano i
-   mercati 1X2. `gol_casa_finale` include i supplementari. Nessuno dei due
-   include la lotteria dei rigori, che sta in `rigori_casa`: in Europa League e
-   Conference l'export la somma dentro `Gol casa` («Partizan-AEK Larnaca 7-7»
-   era 2-1) e `tre_fonti.punteggio_vero` la toglie. È il controllo n° 7 della
-   verifica.
+### ⚠️⚠️ Le trappole, tutte misurate
+
+1. **Il «meteo» non è il meteo.** `meteo_codice_whoscored` è un **codice
+   numerico che vale 5.0 e solo 5.0** ovunque sia pieno (varianza zero). Il
+   «98,4% piena» della Premier sono 748 righe identiche. Finto pieno da manuale
+   (R6). **Il progetto non ha dati meteo.**
+2. **Due punteggi, non uno.** `gol_casa` sono i **90 minuti**;
+   `gol_casa_finale` include i supplementari; `rigori_casa` è la lotteria, mai
+   dentro gli altri due. In Europa League e Conference l'export somma la
+   lotteria dentro `Gol casa` («Partizan-AEK Larnaca 7-7» era 2-1) e
+   `tre_fonti.punteggio_vero` la toglie.
 3. **`allenatore_casa` è chi sedeva in panchina, non chi era in carica.** La
    coalescenza preferisce SofaScore, che registra il **vice** quando il tecnico
-   era squalificato (Landucci per Allegri, Stellini per Conte). WhoScored e
-   Transfermarkt danno il tecnico in carica, e sono nel file:
-   `tf_Allenatore casa (WhoScored)`, `ps_allenatore_casa`. Divergono su 36
-   partite su 1.752, e **non è grafia**: è informazione in più.
-4. **`tf_Partite/Gialli/Rossi arbitro (SofaScore)` sono look-ahead.** Sono
-   costanti per arbitro: la fotografia al giorno della raccolta, non il
-   conteggio alla data della partita. Non usarle come feature.
-5. **`snap_home_absent_count_est` e `_value_est` sono un finto pieno.** Piene
-   al 100% anche nel 2025-26, ma il dump infortuni è congelato a settembre
-   2025: da ottobre lo `0.0` significa «non lo so» (§4-quater).
-6. **Le statistiche di squadra delle coppe sono TESTO composito.** Le colonne
-   `cop_*` arrivano da diretta.it con valori tipo `86% (387/448)`: non sono
-   numeri, e vanno scomposte prima di usarle.
-7. **7 partite di Copa del Rey non hanno l'avversario nella fonte**
-   (turno di qualificazione, `partite.csv` con `ospite` vuoto): la colonna
-   `trasferta` è vuota lì, e la chiave di partita lo riflette.
-8. **L'aggancio delle coppe ha tre metodi di sicurezza decrescente**, dichiarati
-   riga per riga in `cop_metodo_aggancio`: `game_id` (376 partite), `nome
-   esatto` (54), `abbreviazione univoca nel giorno` (107 — «Seyssinet» per «AC
-   Seyssinet», accettata solo quando resta una candidata sola in quel giorno).
-   17 partite restano senza corredo, dichiarate.
+   era squalificato. WhoScored e Transfermarkt danno il tecnico in carica e
+   sono nel file. Divergono su 36 partite su 1.752, e non è grafia.
+   `allenatore_{lato}_manager_qid` porta l'identità Wikidata: **il nome non è
+   un'identità**, ci sono 11 omonimi dimostrati.
+4. **`tf_Partite/Gialli/Rossi arbitro (SofaScore)` sono look-ahead**: costanti
+   per arbitro, la fotografia al giorno della raccolta.
+5. **`snap_home_absent_count_est` è un finto pieno**: il dump infortuni è
+   congelato a settembre 2025, da ottobre lo `0.0` significa «non lo so»
+   (§4-quater).
+6. **`red_cards` dentro `ps_*_presenze_json` è un finto pieno**: vale 0 su
+   tutte e 76.887 le righe del 2025-26, mentre le stesse competizioni nel
+   2024-25 ne contano 265. I cartellini veri stanno in `tf_*_giocatori_json` e
+   in `cronaca`.
+7. **`tf_*_classifica_*` è la classifica FINALE**, uguale su ogni partita di
+   quella squadra: su una partita di ottobre è **look-ahead puro**.
+8. **Le statistiche di squadra delle coppe sono TESTO composito** (`86%
+   (387/448)`): vanno scomposte prima di usarle.
+9. **7 partite di Copa del Rey non hanno l'avversario nella fonte** (turno di
+   qualificazione con `ospite` vuoto).
+10. **L'aggancio delle coppe ha tre metodi di sicurezza decrescente**, scritti
+    riga per riga in `cop_metodo_aggancio`: `game_id` (376), `nome esatto`
+    (54), `abbreviazione univoca nel giorno` (112). Lo stesso vale per
+    `ps_` sulle coppe UEFA, dove 220 partite si agganciano per abbreviazione e
+    ~100 restano senza.
+11. **`tf_*_valore_schierati_eur` NON esiste** — l'edizione precedente di
+    questa sezione lo prometteva. `Valore di mercato (SofaScore)` è vuota in
+    tutte e 16 le raccolte; il valore rosa sta in `{lato}_tm_valore_tm` e in
+    `ps_*_presenze_json` (`valore_alla_data`).
 
 ### R8 — questo file mescola `pre` e `post`, per costruzione
 
 Sono `pre` le quote, l'arbitro designato, i moduli, il valore rosa, i
-coefficienti UEFA; sono `post` gol, xG, rating, minuti, spettatori, momentum.
-**Non c'è una colonna che lo dica riga per riga**: la separazione vive qui e in
-§R8 del CLAUDE.md. È un **archivio**, non un dataset di addestramento: chi
-costruisce feature da qui deve applicare la regola a mano.
+coefficienti UEFA, i giorni di riposo; sono `post` gol, xG, rating, minuti,
+spettatori, momentum, posizioni, classifica. **Non c'è una colonna che lo dica
+riga per riga**: la separazione vive qui. È un **archivio**, non un dataset di
+addestramento.
 
 ### Come si rifà
 
 ```bash
-python scripts/build_actual_database2526.py            # ~12 minuti
-python scripts/_run_verifica_actual_database2526.py    # 16 controlli
-python -m pytest tests/test_actual_database2526.py     # 23 guardie
+python scripts/build_actual_database2526.py             # completo, ~25 min
+python scripts/build_actual_database2526.py --profilo leggero   # il CSV piatto
+python scripts/build_actual_database2526.py --con-opta  # +2,7 M eventi, ~2 GB
+python scripts/_run_verifica_actual_database2526.py     # 19 controlli
+python -m pytest tests/test_actual_database2526.py      # 28 guardie
 ```
 
 

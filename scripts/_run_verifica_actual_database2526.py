@@ -24,7 +24,7 @@ if str(RADICE) not in sys.path:
     sys.path.insert(0, str(RADICE))
 
 from scripts.build_actual_database2526 import (  # noqa: E402
-    COMPETIZIONI, LISTA_UTENTE, USCITA_DEFAULT,
+    COMPETIZIONI, LISTA_UTENTE, USCITA_COMPLETA, USCITA_DEFAULT,
 )
 
 # Quante partite ci aspettiamo per competizione. Sono i conteggi delle FONTI,
@@ -160,7 +160,53 @@ def controlli(tabella: pd.DataFrame) -> list[dict]:
         dichiara("gol: snapshot == tre fonti", divergenti == 0,
                  f"{divergenti} divergenze su {int(confrontabili.sum())} confronti")
 
-    # 13 · la data è sempre dentro la stagione 2025-26
+    # 13 · i blocchi a grana fine ci sono, e si rileggono
+    #      (la domanda dell'utente: «ci sono anche le heatmap?»)
+    fini = {
+        "tf_heatmap_json": "posizioni (heatmap)",
+        "tf_tiri_json": "tiro per tiro",
+        "tf_commento_json": "commento testuale",
+        "tf_momentum_json": "curva di pressione",
+        "tf_casa_giocatori_json": "giocatori tre fonti",
+        "dir_casa_giocatori_json": "giocatori diretta.it",
+        "cop_casa_giocatori_json": "giocatori di coppa",
+        "ps_casa_presenze_json": "presenze player-scores",
+        "sof_posizioni_medie_json": "posizioni medie SofaScore",
+        "tf_quote_json": "quote per mercato",
+    }
+    assenti = [nome for colonna, nome in fini.items()
+               if colonna not in tabella.columns]
+    dichiara("i blocchi a grana fine sono nel file", not assenti,
+             f"assenti: {assenti}" if assenti else
+             " · ".join(f"{n} {tabella[c].notna().sum()}"
+                        for c, n in fini.items()))
+
+    # 14 · la heatmap non è un guscio: conta le posizioni impacchettate
+    if "tf_heatmap_json" in tabella.columns:
+        campione = tabella["tf_heatmap_json"].dropna().head(120)
+        posizioni = 0
+        giocatori = 0
+        for valore in campione:
+            per_giocatore = json.loads(valore)
+            giocatori += len(per_giocatore)
+            posizioni += sum(len(v["p"]) for v in per_giocatore.values())
+        media = posizioni / max(len(campione), 1)
+        dichiara("heatmap: posizioni vere dentro il pacchetto", media > 500,
+                 f"{media:.0f} posizioni e {giocatori / max(len(campione), 1):.0f} "
+                 f"giocatori per partita, su {len(campione)} partite")
+        # e coincidono col conteggio dichiarato
+        confronto = tabella[tabella["tf_heatmap_json"].notna()
+                            & tabella["tf_n_posizioni_heatmap"].notna()].head(120)
+        rotte = 0
+        for _, riga in confronto.iterrows():
+            dentro = sum(len(v["p"]) for v in
+                         json.loads(riga["tf_heatmap_json"]).values())
+            if abs(dentro - riga["tf_n_posizioni_heatmap"]) > 2:
+                rotte += 1
+        dichiara("heatmap: pacchetto == conteggio dichiarato", rotte == 0,
+                 f"{rotte} divergenze su {len(confronto)}")
+
+    # 15 · la data è sempre dentro la stagione 2025-26
     date = pd.to_datetime(tabella["data"], errors="coerce")
     fuori = int(((date < "2025-06-01") | (date > "2026-08-01")).sum())
     dichiara("date dentro la stagione 2025-26", fuori == 0,
@@ -171,11 +217,17 @@ def controlli(tabella: pd.DataFrame) -> list[dict]:
 
 def main() -> None:
     argomenti = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    argomenti.add_argument("--file", type=Path, default=USCITA_DEFAULT)
+    argomenti.add_argument("--file", type=Path, default=None,
+                           help="default: il file completo se c'è, altrimenti "
+                                "quello leggero")
     argomenti.add_argument("--json", type=Path, default=None)
     opzioni = argomenti.parse_args()
 
-    tabella = pd.read_csv(opzioni.file, low_memory=False)
+    percorso = opzioni.file
+    if percorso is None:
+        percorso = (USCITA_COMPLETA if USCITA_COMPLETA.exists() else USCITA_DEFAULT)
+    opzioni.file = percorso
+    tabella = pd.read_csv(percorso, low_memory=False)
     print(f"{opzioni.file}: {len(tabella)} partite × {tabella.shape[1]} colonne "
           f"· {opzioni.file.stat().st_size / 1e6:.1f} MB\n")
 

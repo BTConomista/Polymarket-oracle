@@ -270,8 +270,8 @@ python scripts/tune.py --sweep shrinkage --values 0 1 1.5 3       # tuning iperp
 python scripts/markets.py              # listino multi-mercato
 python scripts/predict.py Inter Juventus                          # uso pratico: DC senza quote
 python scripts/predict.py Inter Juventus --odds 2.10 3.30 3.60 1.85 1.95  # market-implied
-python scripts/build_actual_database2526.py         # data/actual_database2526.csv (~12 min)
-python scripts/_run_verifica_actual_database2526.py # 16 controlli avversariali
+python scripts/build_actual_database2526.py         # data/actual_database2526.csv.gz (~25 min)
+python scripts/_run_verifica_actual_database2526.py # 19 controlli avversariali
 python -m pytest                       # test (1.783 verdi al 18/08/2026)
 ```
 
@@ -442,19 +442,32 @@ experiments/     runs.jsonl (registro replicabile) + README (formato)
                  fasi corrispondenti
                  prospettico_2026_27* : le previsioni CONGELATE del test
                  prospettico (Fase 78, APERTO)
-data/            actual_database2526.csv (Fase 159: TUTTA la stagione 2025-26 in
-                 una tabella sola -- 4.169 partite x 2.014 colonne, 22
-                 competizioni, 76,6 MB. Una riga per PARTITA; le statistiche
-                 di squadra si affiancano in casa_*/trasferta_* per periodo,
-                 quelle dei giocatori stanno impacchettate in una cella
-                 (`{"campi":[..],"righe":[[..]]}`), gli eventi come cronaca e
-                 come conteggi. Si rifa' con
-                 scripts/build_actual_database2526.py e si verifica con
-                 scripts/_run_verifica_actual_database2526.py (16 controlli).
-                 ⚠️ NON contiene il tiro-per-tiro ne' l'event data: e' grana
-                 EVENTO, provata e tolta -- pesava 25 MB su 55. Ci sono i
-                 conteggi (tf_n_tiri_tracciati, tf_n_eventi_opta), il dato sta
-                 nelle raccolte.
+data/            actual_database2526.csv.gz (Fasi 159/159-bis: TUTTA la stagione
+                 2025-26 in una tabella sola -- 4.169 partite x 2.294 colonne,
+                 22 competizioni, 387 MB non compressi / 80,2 MB su disco.
+                 Una riga per PARTITA; le statistiche di squadra si affiancano
+                 in casa_*/trasferta_* per periodo, quelle a grana piu' fine
+                 stanno impacchettate in una cella nella forma tabellare
+                 `{"campi":[..],"righe":[[..]]}` -- che costa il 31% in meno
+                 di una lista di oggetti, 12 MB su una colonna sola.
+                 ⭐ CI SONO le POSIZIONI (tf_heatmap_json, 4,77 M di punti
+                 impacchettati per GIOCATORE e non per tocco: 74 MB invece di
+                 333), il tiro-per-tiro, il commento minuto per minuto, i 176
+                 campi per giocatore, le 98 colonne di quote football-data con
+                 l'handicap asiatico completo, le presenze Transfermarkt con
+                 anagrafica e valore di mercato ALLA DATA, la classifica, i
+                 coefficienti UEFA di club e federazione, i giorni di riposo.
+                 Si rifa' con scripts/build_actual_database2526.py (--profilo
+                 leggero per il CSV piatto) e si verifica con
+                 scripts/_run_verifica_actual_database2526.py (19 controlli).
+                 ⚠️ E' .csv.gz e non .csv perche' 387 MB non stanno in un file
+                 che GitHub accetta (limite 100 MB). Non e' un formato diverso:
+                 pd.read_csv lo apre senza dire niente, ed e' la convenzione
+                 del repo per ogni tabella grossa.
+                 ⚠️ RESTA FUORI UNA COSA SOLA, e per aritmetica: l'event data
+                 OPTA, 1,7 GB grezzi / 243 MB gzippati -- da solo piu' del
+                 doppio del limite. `--con-opta` lo genera in locale (~2 GB,
+                 non versionabile). Nel file ci sono i conteggi.
                  ⚠️ IL METEO NON C'E'. L'unica colonna che si chiama cosi'
                  vale 5.0 e SOLO 5.0 ovunque sia piena -- varianza zero, finto
                  pieno da manuale (R6). Per questo nel file si chiama

@@ -105,6 +105,7 @@ from src.data import tre_fonti as tf  # noqa: E402
 log = logging.getLogger("actual_database2526")
 
 USCITA_DEFAULT = RADICE / "data" / "actual_database2526.csv"
+USCITA_COMPLETA = RADICE / "data" / "actual_database2526.csv.gz"
 STAGIONE = "2025-26"
 
 # ── le 25 competizioni chieste, più quelle che il repo ha in aggiunta ────────
@@ -235,12 +236,18 @@ PERIODO_SIGLA = {
 CHIAVI_SQUADRE = (
     "Competizione", "Stagione", "Turno", "Data", "Ora", "Fuso",
     "Data e ora ISO (UTC)", "Timestamp", "Riga", "Livello", "Fonti",
-    "Squadra", "Campo", "Avversario", "Periodo", "Discordanze",
+    "Squadra", "Campo", "Avversario", "Periodo",
 )
+# ⚠️ `Discordanze` NON sta fra le chiavi: è un dato, non un'etichetta di
+# servizio. Dice quali grandezze divergono fra le fonti su quella
+# squadra-partita — l'unica colonna del file che segnala dove il dato è
+# incerto. Tenerla fra le chiavi la faceva sparire da entrambi i lati.
 
-# i campi per giocatore che finiscono nel JSON impacchettato. Curati: nel file
-# grezzo ce ne sono ~190 per giocatore, e ~30 giocatori a partita — un JSON
-# completo peserebbe più di tutto il resto della tabella messo insieme.
+# I campi per giocatore del profilo LEGGERO. Nel file grezzo ce ne sono 176 per
+# giocatore e ~30 giocatori a partita; questi 34 sono i più usati.
+# ⚠️ Nel profilo COMPLETO (il default) non si usa questa lista: si prendono
+# TUTTI i campi disponibili. Costa 105 MB grezzi contro 38, ma il file completo
+# è gzippato e lì la differenza è 14 MB contro 5.
 CAMPI_GIOCATORE: dict[str, str] = {
     "Giocatore": "nome",
     "Ruolo": "ruolo",
@@ -277,6 +284,39 @@ CAMPI_GIOCATORE: dict[str, str] = {
     "xGBuildup (Understat)": "xgbuildup",
     "ID giocatore (SofaScore)": "id_sofa",
 }
+
+
+# Le colonne di servizio delle raccolte: identificano la partita, non il
+# giocatore, e nel pacchetto sarebbero 30 copie della stessa cosa.
+META_RACCOLTA = frozenset({
+    "Competizione", "Stagione", "Turno", "Data", "Ora", "Fuso",
+    "Data e ora ISO (UTC)", "Timestamp", "Riga", "Livello", "Fonti",
+    "Casa", "Trasferta", "Campo", "Avversario", "Discordanze",
+    "ID partita (misto, NON usare)", "data", "lega", "stagione",
+    "Giornata", "Fase", "competizione", "turno", "ID partita",
+    "Gol casa", "Gol trasferta", "Squadra",
+})
+
+
+class Profilo:
+    """Quanto di ogni fonte entra nel file. Non è un'opzione di comodo: è la
+    riga che separa «l'archivio della stagione» dal «riassunto della stagione».
+
+    `COMPLETO` (default) prende **tutti** i campi di ogni fonte e impacchetta
+    anche i blocchi a grana fine — posizioni, tiri, commento testuale — che il
+    profilo `LEGGERO` riduce a conteggi. Il file che ne esce non sta in un CSV
+    non compresso (≈370 MB): esce `.csv.gz`, come ogni altra tabella grossa di
+    questo repo.
+
+    ⚠️ L'unico blocco che resta fuori anche da `COMPLETO` è l'**event data
+    Opta**, e non per scelta di stile: impacchettato pesa **1,7 GB grezzi /
+    243 MB gzippati**, cioè da solo più del doppio del limite di 100 MB che
+    GitHub impone a un file. Si aggiunge con `--con-opta`, che produce un file
+    da ~2 GB **non versionabile**: serve a chi lavora in locale.
+    """
+
+    LEGGERO = "leggero"
+    COMPLETO = "completo"
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -368,7 +408,10 @@ def _pulisci(valore: object) -> object:
             return None
         if valore.is_integer():
             return int(valore)
-        return round(valore, 4)
+        # 6 decimali e non 4: `Distance covered` di SofaScore ha cifre
+        # significative oltre il quarto, e arrotondare a 4 cambiava 337 valori
+        # su 173.614 rispetto alla fonte.
+        return round(valore, 6)
     if isinstance(valore, (np.integer,)):
         return int(valore)
     if isinstance(valore, (np.floating,)):
@@ -462,7 +505,13 @@ def _classifica_colonne(squadre: pd.DataFrame) -> tuple[set[str], set[str]]:
             continue
         a = casa[colonna].astype("string").fillna("∅")
         b = fuori[colonna].astype("string").fillna("∅")
-        (di_partita if len(comuni) and (a.values == b.values).mean() > 0.995
+        # ⚠️ La soglia è l'uguaglianza ESATTA, non 0,995. Con 0,995
+        # `Average rating (SofaScore)` della Premier — identica su 379 partite
+        # su 380 — veniva issata a colonna di partita, e il valore del lato
+        # trasferta della 380ª spariva senza lasciare traccia. Una cella, ma
+        # sparita in silenzio: è la categoria di difetto che questo file deve
+        # rendere impossibile.
+        (di_partita if len(comuni) and (a.values == b.values).all()
          else di_squadra).add(colonna)
     return di_partita, di_squadra
 
@@ -552,9 +601,9 @@ def blocco_tre_fonti(raccolta: str) -> pd.DataFrame:
 
 
 # ── giocatori: pacchetto JSON + colonne riassuntive ─────────────────────────
-def _riga_giocatore(riga: pd.Series) -> dict:
+def _riga_giocatore(riga: pd.Series, campi: dict[str, str]) -> dict:
     fuori = {}
-    for colonna, breve in CAMPI_GIOCATORE.items():
+    for colonna, breve in campi.items():
         if colonna not in riga.index:
             continue
         valore = _pulisci(riga[colonna])
@@ -563,7 +612,19 @@ def _riga_giocatore(riga: pd.Series) -> dict:
     return fuori
 
 
-def _riassunto_giocatori(gruppo: pd.DataFrame) -> dict:
+def campi_giocatore(colonne, profilo: str) -> dict[str, str]:
+    """La mappa colonna → nome breve, secondo il profilo.
+
+    Nel profilo completo il «nome breve» è il nome per esteso: rinominare 176
+    campi a mano sarebbe un dizionario da mantenere, e un dizionario che si
+    disallinea è peggio di un nome lungo.
+    """
+    if profilo == Profilo.LEGGERO:
+        return CAMPI_GIOCATORE
+    return {c: c for c in colonne if c not in META_RACCOLTA}
+
+
+def _riassunto_giocatori(gruppo: pd.DataFrame, profilo: str) -> dict:
     """Le colonne leggibili a occhio, ricavate dalle righe dei giocatori."""
     def col(nome: str) -> pd.Series:
         return (gruppo[nome] if nome in gruppo.columns
@@ -630,13 +691,17 @@ def _riassunto_giocatori(gruppo: pd.DataFrame) -> dict:
                             if giocata.any() and altezza[giocata].notna().any() else None,
         "valore_schierati_eur": (int(valore[titolare].sum())
                                  if valore[titolare].notna().any() else None),
-        "giocatori_json": json_tabellare(
-            [_riga_giocatore(r) for _, r in gruppo.iterrows()],
-            list(CAMPI_GIOCATORE.values())),
+        "giocatori_json": _pacchetto_giocatori(gruppo, profilo),
     }
 
 
-def blocco_giocatori_tf(raccolta: str) -> pd.DataFrame:
+def _pacchetto_giocatori(gruppo: pd.DataFrame, profilo: str) -> str | None:
+    campi = campi_giocatore(gruppo.columns, profilo)
+    return json_tabellare([_riga_giocatore(r, campi) for _, r in gruppo.iterrows()],
+                          list(campi.values()))
+
+
+def blocco_giocatori_tf(raccolta: str, profilo: str = Profilo.COMPLETO) -> pd.DataFrame:
     giocatori = tf.giocatori(raccolta, spareggio=True)
     if giocatori.empty:
         return pd.DataFrame()
@@ -652,7 +717,7 @@ def blocco_giocatori_tf(raccolta: str) -> pd.DataFrame:
     righe: dict[str, dict] = defaultdict(dict)
     for (chiave, campo), gruppo in giocatori.groupby(["_chiave", "Campo"], sort=False):
         lato = "casa" if campo == "Casa" else "trasferta"
-        for nome, valore in _riassunto_giocatori(gruppo).items():
+        for nome, valore in _riassunto_giocatori(gruppo, profilo).items():
             righe[chiave][f"tf_{lato}_{nome}"] = valore
 
     fuori = pd.DataFrame.from_dict(righe, orient="index")
@@ -687,6 +752,10 @@ def _cronaca(gruppo: pd.DataFrame) -> str | None:
         coda = f" (assist {assist})" if pd.notna(assist) and assist else ""
         punteggio = riga.get("Punteggio")
         coda += f" [{punteggio}]" if pd.notna(punteggio) and punteggio else ""
+        # il Dettaglio è il MOTIVO del cartellino (Foul, Argument, Time
+        # wasting, …): 14 valori distinti che senza questa riga cadevano.
+        dettaglio = _testo(riga.get("Dettaglio"))
+        coda += f" {{{dettaglio}}}" if dettaglio else ""
         lato = riga.get("Campo")
         lato = "" if pd.isna(lato) else f" — {lato}"
         voce = f"{_minuto(riga)} {etichetta}"
@@ -773,14 +842,42 @@ def _quote_partita(gruppo: pd.DataFrame) -> dict:
     return fuori
 
 
-def blocco_eventi_tf(raccolta: str) -> pd.DataFrame:
+def _mappa_id_sofascore(raccolta: str, competizione: str | None) -> dict:
+    """`ID partita (SofaScore)` → chiave di partita, presa dalla spina dorsale."""
+    squadre = tf.squadre(raccolta, spareggio=True, periodo="Totale")
+    mappa = {}
+    for _, riga in squadre[squadre["Campo"] == "Casa"].iterrows():
+        identificativo = riga.get("ID partita (SofaScore)")
+        if pd.notna(identificativo):
+            mappa[identificativo] = chiave_partita(
+                competizione, riga["Data"], riga["Squadra"], riga["Avversario"])
+    return mappa
+
+
+def blocco_eventi_tf(raccolta: str, profilo: str = Profilo.COMPLETO) -> pd.DataFrame:
     eventi = tf.eventi(raccolta, spareggio=True)
     if eventi.empty:
         return pd.DataFrame()
     competizione = TF_COMPETIZIONE.get(raccolta) or canon_competizione(
         eventi["Competizione"].dropna().iloc[0])
-    eventi["_chiave"] = [chiave_partita(competizione, d, c, t) for d, c, t
-                         in zip(eventi["Data"], eventi["Casa"], eventi["Trasferta"])]
+
+    # ⚠️ L'aggancio si fa per ID, NON per (data, squadre). Su 9 partite le
+    # righe di Understat portano una data diversa da quelle di SofaScore
+    # (Brest-Lorient vive come 2026-02-07 e come 2026-02-08): con la chiave
+    # per nome e data la partita si spezza in due, una metà non trova la spina
+    # dorsale e sparisce — e `tf_n_tiri_tracciati` finisce per dichiarare 25
+    # tiri dove ce ne sono 49. La colonna non resta vuota: resta PIENA E
+    # SBAGLIATA, che è il difetto peggiore (R6). `ID partita (SofaScore)` è
+    # riparato dal modulo (`_ripara_id_eventi`), vale lo stesso numero sulle
+    # due date, ed è pieno al 100% sulle categorie che lo usano.
+    per_id = _mappa_id_sofascore(raccolta, competizione)
+    per_nome = [chiave_partita(competizione, d, c, t) for d, c, t
+                in zip(eventi["Data"], eventi["Casa"], eventi["Trasferta"])]
+    da_id = eventi["ID partita (SofaScore)"].map(per_id) \
+        if "ID partita (SofaScore)" in eventi.columns \
+        else pd.Series(None, index=eventi.index, dtype="object")
+    eventi["_chiave"] = da_id.where(da_id.notna(), pd.Series(per_nome,
+                                                             index=eventi.index))
     categorie = set(eventi["Categoria"].dropna().unique())
     righe: dict[str, dict] = defaultdict(dict)
 
@@ -793,19 +890,22 @@ def blocco_eventi_tf(raccolta: str) -> pd.DataFrame:
             righe[chiave]["tf_cronaca"] = _cronaca(gruppo)
             righe[chiave]["tf_n_eventi"] = int(len(gruppo))
 
-    # tiro per tiro: entra il CONTEGGIO, non i tiri.
-    # ⚠️ Non è una svista. Il tiro è grana EVENTO, non grana partita — la
-    # stessa ragione per cui i 2,7 milioni di tocchi Opta restano fuori. E il
-    # costo è misurato: impacchettato in JSON pesava 25 MB su un file di 55,
-    # un quarto del totale per un dato che vive già, completo e con più
-    # colonne, in `files/tre_fonti_*/eventi.csv.gz` (categoria «Tiro»).
-    # Il conteggio per fonte dice che c'è e quanto è denso.
+    # tiro per tiro, con xG, xGOT e coordinate. Nel profilo leggero resta solo
+    # il conteggio (costava 25 MB su 55 non compressi); nel completo entra per
+    # intero — gzippato pesa 6 MB.
     if "Tiro" in categorie:
         fetta = eventi[eventi["Categoria"] == "Tiro"]
+        campi = [c for c in fetta.columns
+                 if c not in META_RACCOLTA and fetta[c].notna().any()]
         for chiave, gruppo in fetta.groupby("_chiave", sort=False):
             righe[chiave]["tf_n_tiri_tracciati"] = int(len(gruppo))
             for fonte, quanti in gruppo["Fonte"].value_counts().items():
                 righe[chiave][f"tf_n_tiri_{_testo(fonte).lower()}"] = int(quanti)
+            if profilo == Profilo.COMPLETO:
+                righe[chiave]["tf_tiri_json"] = json_tabellare(
+                    [{c: _pulisci(r[c]) for c in campi}
+                     for _, r in gruppo.sort_values(["Fonte", "Minuto"]).iterrows()],
+                    campi)
 
     # curva di pressione: ~92 punti a partita, uno per minuto
     if "Momentum" in categorie:
@@ -826,8 +926,17 @@ def blocco_eventi_tf(raccolta: str) -> pd.DataFrame:
     if "Serie" in categorie:
         fetta = eventi[eventi["Categoria"] == "Serie"]
         for chiave, gruppo in fetta.groupby("_chiave", sort=False):
-            pezzi = [f"{r.get('Tipo')}: {r.get('Valore')}"
-                     for _, r in gruppo.iterrows() if pd.notna(r.get("Tipo"))]
+            # ⚠️ senza il Sottotipo le due strisce diventano indistinguibili:
+            # «No losses: 6; No losses: 3» — la prima è generale, la seconda
+            # negli scontri diretti, e nel testo non c'era modo di saperlo.
+            pezzi = []
+            for _, r in gruppo.iterrows():
+                if pd.isna(r.get("Tipo")):
+                    continue
+                sotto = _testo(r.get("Sottotipo"))
+                sigla = {"general": "g", "head2head": "h2h"}.get(sotto, sotto)
+                etichetta = f"{r.get('Tipo')} ({sigla})" if sigla else _testo(r.get("Tipo"))
+                pezzi.append(f"{etichetta}: {r.get('Valore')}")
             righe[chiave]["tf_serie"] = "; ".join(pezzi) or None
 
     if "Migliore in campo" in categorie:
@@ -839,13 +948,161 @@ def blocco_eventi_tf(raccolta: str) -> pd.DataFrame:
                 righe[chiave][f"tf_{lato}_mvp"] = riga.get("Giocatore")
                 righe[chiave][f"tf_{lato}_mvp_rating"] = _pulisci(riga.get("Valore"))
 
+    # il commento minuto per minuto di SofaScore: ~113 righe a partita.
     if "Cronaca" in categorie:
         fetta = eventi[eventi["Categoria"] == "Cronaca"]
+        campi = [c for c in fetta.columns
+                 if c not in META_RACCOLTA and fetta[c].notna().any()]
         for chiave, gruppo in fetta.groupby("_chiave", sort=False):
             righe[chiave]["tf_n_righe_commento"] = int(len(gruppo))
+            if profilo == Profilo.COMPLETO:
+                righe[chiave]["tf_commento_json"] = json_tabellare(
+                    [{c: _pulisci(r[c]) for c in campi}
+                     for _, r in gruppo.iterrows()], campi)
 
     fuori = pd.DataFrame.from_dict(righe, orient="index")
     fuori.index.name = "_chiave"
+    return fuori.reset_index()
+
+
+def blocco_posizioni_tf(raccolta: str, con_opta: bool = False) -> pd.DataFrame:
+    """Le POSIZIONI (heatmap) e, a richiesta, l'event data Opta.
+
+    ⚠️ Le due cose hanno ordini di grandezza diversi e vanno decise separate:
+
+    | blocco   | righe totali | impacchettato | gzippato |
+    |----------|-------------:|--------------:|---------:|
+    | heatmap  |    4,8 M     |     74 MB     |   16 MB  |
+    | Opta     |    2,7 M     |   1.693 MB    |  243 MB  |
+
+    La heatmap ci sta e infatti c'è. L'Opta da solo supera di più del doppio il
+    limite di 100 MB per file di GitHub, **anche gzippato**: entra solo con
+    `--con-opta`, e il file che ne esce non è versionabile.
+
+    La heatmap è impacchettata per GIOCATORE e non per tocco:
+    `{"<id giocatore>": {"l": "C", "p": [[x, y], …]}}`. Il nome del giocatore
+    non si ripete 1.466 volte a partita — è quello che fa scendere il blocco da
+    333 MB a 74. L'anagrafica del giocatore sta nel pacchetto `giocatori_json`,
+    agganciabile per `ID giocatore (SofaScore)`.
+    """
+    fuori: dict[str, dict] = defaultdict(dict)
+    squadre = tf.squadre(raccolta, spareggio=True, periodo="Totale")
+    if squadre.empty:
+        return pd.DataFrame()
+    competizione = TF_COMPETIZIONE.get(raccolta)
+    per_sofa, per_ws = {}, {}
+    for _, riga in squadre[squadre["Campo"] == "Casa"].iterrows():
+        chiave = chiave_partita(competizione, riga["Data"], riga["Squadra"],
+                                riga["Avversario"])
+        if pd.notna(riga.get("ID partita (SofaScore)")):
+            per_sofa[riga["ID partita (SofaScore)"]] = chiave
+        if pd.notna(riga.get("ID partita (WhoScored)")):
+            per_ws[riga["ID partita (WhoScored)"]] = chiave
+
+    try:
+        posizioni = tf.heatmap(raccolta, spareggio=True)
+    except (FileNotFoundError, KeyError, ValueError):
+        posizioni = pd.DataFrame()
+    if not posizioni.empty:
+        colonna = ("ID partita (SofaScore)" if "ID partita (SofaScore)"
+                   in posizioni.columns else "ID partita")
+        posizioni = posizioni.copy()
+        posizioni["_lato"] = np.where(posizioni["Campo"] == "Casa", "C", "T")
+        for identificativo, gruppo in posizioni.groupby(colonna, sort=False):
+            chiave = per_sofa.get(identificativo) or per_ws.get(identificativo)
+            if not chiave:
+                continue
+            per_giocatore: dict[str, dict] = {}
+            for gid, lato, x, y in zip(gruppo["ID giocatore"], gruppo["_lato"],
+                                       gruppo["X"], gruppo["Y"]):
+                if pd.isna(x) or pd.isna(y):
+                    continue
+                etichetta = str(int(gid)) if pd.notna(gid) else "?"
+                voce = per_giocatore.setdefault(etichetta, {"l": lato, "p": []})
+                voce["p"].append([_pulisci(x), _pulisci(y)])
+            fuori[chiave]["tf_heatmap_json"] = json_compatto(per_giocatore)
+            fuori[chiave]["tf_n_posizioni_heatmap"] = int(len(gruppo))
+
+    if con_opta:
+        try:
+            opta = tf.eventi_opta(raccolta, spareggio=True)
+        except (FileNotFoundError, KeyError, ValueError):
+            opta = pd.DataFrame()
+        if not opta.empty:
+            campi = [c for c in opta.columns
+                     if c not in META_RACCOLTA and opta[c].notna().any()]
+            for identificativo, gruppo in opta.groupby("ID partita", sort=False):
+                chiave = per_ws.get(identificativo)
+                if not chiave:
+                    continue
+                fuori[chiave]["tf_eventi_opta_json"] = json_tabellare(
+                    [{c: _pulisci(r[c]) for c in campi}
+                     for _, r in gruppo.iterrows()], campi)
+
+    risultato = pd.DataFrame.from_dict(fuori, orient="index")
+    risultato.index.name = "_chiave"
+    if not risultato.empty:
+        log.info("  posizioni %-23s %4d partite%s", raccolta,
+                 len(risultato), " (+ Opta)" if con_opta else "")
+    return risultato.reset_index()
+
+
+def blocco_classifica_tf(raccolta: str) -> pd.DataFrame:
+    """La CLASSIFICA finale, in tre versioni per squadra (generale/casa/fuori).
+
+    Vive nelle righe `Livello='Stagione'` di `squadre`, che `tf.squadre()`
+    esclude di default — e per questo, prima, le sue 13 colonne uscivano vuote
+    e venivano scartate come tali. È l'unico blocco del file a grana
+    **stagione**: posizione, punti, differenza reti, qualificazione europea.
+
+    ⚠️⚠️ È la classifica **finale**, quella di fine stagione, e vale identica
+    su ogni partita di quella squadra. Su una partita di ottobre è
+    **look-ahead puro** (R8): dice come è finito il campionato che quella
+    partita doveva ancora decidere. Sta qui perché è informazione che il repo
+    ha e che l'utente ha chiesto, non perché sia usabile come feature — e il
+    nome delle colonne (`tf_casa_classifica_*`) lo dichiara.
+    """
+    try:
+        classifica = tf.classifica(raccolta)
+    except (FileNotFoundError, KeyError, ValueError):
+        return pd.DataFrame()
+    if classifica.empty or "Squadra" not in classifica.columns:
+        return pd.DataFrame()
+
+    campi = ["Posizione", "Partite giocate", "Vittorie", "Pareggi", "Sconfitte",
+             "Gol fatti", "Gol subiti", "Differenza reti", "Punti",
+             "Qualificazione", "Girone", "Note classifica"]
+    campi = [c for c in campi if c in classifica.columns]
+    per_squadra: dict[tuple, dict] = {}
+    for _, riga in classifica.iterrows():
+        tipo = _testo(riga.get("Tipo classifica")) or "Generale"
+        per_squadra[(norm_squadra(riga["Squadra"]), tipo)] = {
+            c: _pulisci(riga[c]) for c in campi}
+
+    squadre = tf.squadre(raccolta, spareggio=True, periodo="Totale")
+    competizione = TF_COMPETIZIONE.get(raccolta)
+    accumulo: dict[str, dict] = defaultdict(dict)
+    for _, riga in squadre[squadre["Campo"] == "Casa"].iterrows():
+        chiave = chiave_partita(competizione, riga["Data"], riga["Squadra"],
+                                riga["Avversario"])
+        for lato, nome in (("casa", riga["Squadra"]),
+                           ("trasferta", riga["Avversario"])):
+            for tipo in ("Generale", "Casa", "Trasferta"):
+                voce = per_squadra.get((norm_squadra(nome), tipo))
+                if not voce:
+                    continue
+                sigla = {"Generale": "gen", "Casa": "incasa",
+                         "Trasferta": "fuori"}[tipo]
+                for campo, valore in voce.items():
+                    if valore is not None:
+                        accumulo[chiave][
+                            f"tf_{lato}_classifica_{sigla}_{campo}"] = valore
+
+    fuori = pd.DataFrame.from_dict(accumulo, orient="index")
+    fuori.index.name = "_chiave"
+    if not fuori.empty:
+        log.info("  classifica %-22s %4d partite · %3d colonne",
+                 raccolta, len(fuori), fuori.shape[1])
     return fuori.reset_index()
 
 
@@ -882,17 +1139,6 @@ def blocco_conteggi_tf(raccolta: str) -> pd.DataFrame:
     except (FileNotFoundError, KeyError, ValueError):
         log.info("  %s: nessun event data Opta", raccolta)
 
-    try:
-        posizioni = tf.heatmap(raccolta, spareggio=True)
-        colonna = ("ID partita (SofaScore)" if "ID partita (SofaScore)"
-                   in posizioni.columns else "ID partita")
-        for identificativo, quante in posizioni[colonna].value_counts().items():
-            chiave = per_id_sofa.get(identificativo) or per_id_ws.get(identificativo)
-            if chiave:
-                fuori[chiave]["tf_n_posizioni_heatmap"] = int(quante)
-    except (FileNotFoundError, KeyError, ValueError):
-        log.info("  %s: nessuna heatmap", raccolta)
-
     risultato = pd.DataFrame.from_dict(fuori, orient="index")
     risultato.index.name = "_chiave"
     return risultato.reset_index()
@@ -902,6 +1148,7 @@ def blocco_conteggi_tf(raccolta: str) -> pd.DataFrame:
 # 2 · COPPE NAZIONALI — data/coppe_2526 (6 tornei, 662 partite)
 # ════════════════════════════════════════════════════════════════════════════
 COPPE_DIR = RADICE / "data" / "coppe_2526"
+DIRETTA_DIR = RADICE / "files"
 
 # come è stata agganciata ogni partita di coppa: resta nel file, in
 # `cop_metodo_aggancio`, perché un aggancio dedotto e uno letto da un id non
@@ -909,14 +1156,19 @@ COPPE_DIR = RADICE / "data" / "coppe_2526"
 METODI_AGGANCIO: dict[str, str] = {}
 
 CAMPI_GIOCATORE_COPPA = {
+    # ⚠️ Sei di questi nomi erano SBAGLIATI, e il codice li saltava in
+    # silenzio con un `if colonna in riga.index`: il pacchetto dichiarava 26
+    # campi e ne consegnava 20. Fra i mancanti c'erano i MINUTI GIOCATI — il
+    # campo più elementare di una statistica individuale — pieni 11.476/11.476
+    # nella fonte. I nomi giusti sono quelli qui sotto, letti dal file.
     "Giocatore": "nome", "Ruolo": "ruolo", "Stato": "stato", "Rating": "rating",
-    "MINUTES_PLAYED": "min", "GOALS": "gol", "ASSISTS_GOAL": "assist",
-    "OWN_GOALS": "autogol", "SHOTS_TOTAL": "tiri", "SHOTS_ON_TARGET": "tiri_porta",
+    "MATCH_MINUTES_PLAYED": "min", "GOALS": "gol", "ASSISTS_GOAL": "assist",
+    "GOALS_OWN": "autogol", "SHOTS_TOTAL": "tiri", "SHOTS_ON_TARGET": "tiri_porta",
     "EXPECTED_GOALS": "xg", "EXPECTED_ASSISTS": "xa", "PASSES_TOTAL": "pass",
     "PASSES_ACCURATE": "pass_ok", "KEY_PASSES": "pass_chiave",
-    "TOUCHES": "tocchi", "DRIBBLES_SUCCESSFUL": "dribbling",
+    "TOUCHES_TOTAL": "tocchi", "DRIBBLES_WON": "dribbling",
     "TACKLES_TOTAL": "contrasti", "INTERCEPTIONS": "intercetti",
-    "DUELS_WON": "duelli_v", "FOULS": "falli", "SAVES": "parate",
+    "DUELS_WON": "duelli_v", "FOULS_COMMITTED": "falli", "SAVES_TOTAL": "parate",
     "GOALS_CONCEDED": "gol_concessi", "CARDS_YELLOW": "gialli",
     "CARDS_RED": "rossi", "player_id": "player_id",
 }
@@ -1035,7 +1287,7 @@ def _chiave_da_aggancio(riga: pd.Series, per_game: dict, diretta_a_game: dict,
     return candidate[0]
 
 
-def blocco_coppe() -> tuple[pd.DataFrame, pd.DataFrame]:
+def blocco_coppe(profilo: str = Profilo.COMPLETO) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Spina dorsale delle coppe nazionali + tutto ciò che vi si aggancia."""
     partite = _leggi_coppe("partite")
     if partite.empty:
@@ -1096,17 +1348,16 @@ def blocco_coppe() -> tuple[pd.DataFrame, pd.DataFrame]:
             if not chiave:
                 continue
             nome_lato = "casa" if lato == "Casa" else "trasferta"
-            pacchetto = []
-            for _, riga in gruppo.iterrows():
-                voce = {}
-                for colonna, breve in CAMPI_GIOCATORE_COPPA.items():
-                    if colonna in riga.index:
-                        valore = _pulisci(riga[colonna])
-                        if valore is not None and valore != "":
-                            voce[breve] = valore
-                pacchetto.append(voce)
+            campi = (CAMPI_GIOCATORE_COPPA if profilo == Profilo.LEGGERO
+                     else {c: c for c in gruppo.columns
+                           if c not in META_RACCOLTA and c != "Lato"})
+            pacchetto = [{breve: _pulisci(riga[colonna])
+                          for colonna, breve in campi.items()
+                          if colonna in riga.index
+                          and _pulisci(riga[colonna]) not in (None, "")}
+                         for _, riga in gruppo.iterrows()]
             accumulo[chiave][f"cop_{nome_lato}_giocatori_json"] = json_tabellare(
-                pacchetto, list(CAMPI_GIOCATORE_COPPA.values()))
+                pacchetto, list(campi.values()))
             accumulo[chiave][f"cop_{nome_lato}_n_giocatori"] = int(len(gruppo))
 
     # -- formazioni (player-scores: minuti, gol, assist, cartellini) --------
@@ -1154,6 +1405,15 @@ def blocco_coppe() -> tuple[pd.DataFrame, pd.DataFrame]:
                  for _, r in gruppo.iterrows()], campi)
 
     # -- eventi col minuto ---------------------------------------------------
+    # id → nome, dalle formazioni: senza questa mappa la cronaca di
+    # player-scores non dice CHI ha segnato (vedi sotto).
+    nomi_giocatori: dict[object, str] = {}
+    if not formazioni.empty and "player_id" in formazioni.columns:
+        for identificativo, nome_giocatore in zip(formazioni["player_id"],
+                                                  formazioni["giocatore"]):
+            if pd.notna(identificativo) and pd.notna(nome_giocatore):
+                nomi_giocatori[identificativo] = str(nome_giocatore)
+
     for nome, prefisso in (("aggancio_eventi", "diretta"), ("eventi", "ps")):
         eventi = _leggi_coppe(nome)
         if eventi.empty:
@@ -1172,8 +1432,24 @@ def blocco_coppe() -> tuple[pd.DataFrame, pd.DataFrame]:
             for _, riga in gruppo.iterrows():
                 minuto = riga.get("minuto", riga.get("Minuto"))
                 tipo = _testo(riga.get("tipo") or riga.get("Tipo evento"))
-                chi = _testo(riga.get("giocatore") or riga.get("Giocatore")
-                             or riga.get("descrizione"))
+                # ⚠️ `eventi.csv` di player-scores NON ha una colonna
+                # `giocatore`: ha `giocatore_id`. Cercare il nome e ripiegare
+                # su `descrizione` produceva «2' Goals , 1. Tournament Goal»,
+                # cioè una cronaca in cui il marcatore non è identificato — su
+                # 458 partite e 8.177 eventi. Qui il nome si risolve dall'id.
+                chi = _testo(riga.get("Giocatore"))
+                if not chi:
+                    chi = nomi_giocatori.get(riga.get("giocatore_id"), "")
+                    if not chi and pd.notna(riga.get("giocatore_id")):
+                        chi = f"#{int(riga['giocatore_id'])}"
+                    entrato = nomi_giocatori.get(riga.get("entrato_id"))
+                    if entrato:
+                        chi = f"{entrato} ← {chi}" if chi else entrato
+                    assistman = nomi_giocatori.get(riga.get("assist_id"))
+                    if assistman:
+                        chi += f" (assist {assistman})"
+                if not chi:
+                    chi = _testo(riga.get("descrizione"))
                 lato = _testo(riga.get("Lato") or riga.get("club"))
                 punteggio = _testo(riga.get("Punteggio dopo"))
                 voce = f"{_etichetta_minuto(minuto)} {tipo} {chi}"
@@ -1183,6 +1459,71 @@ def blocco_coppe() -> tuple[pd.DataFrame, pd.DataFrame]:
                     voce += f" — {lato}"
                 pezzi.append(voce.strip())
             accumulo[chiave][f"cop_cronaca_{prefisso}"] = " | ".join(pezzi) or None
+            if profilo == Profilo.COMPLETO:
+                campi = [c for c in gruppo.columns
+                         if c not in META_RACCOLTA and c not in {"_chiave"}]
+                accumulo[chiave][f"cop_eventi_{prefisso}_json"] = json_tabellare(
+                    [{c: _pulisci(r[c]) for c in campi}
+                     for _, r in gruppo.iterrows()], campi)
+
+    # -- diretta.it: le SEI cartelle di coppa, che nessun modulo legge -------
+    # `files/diretta_{coppa}_2526/` non ha un caricatore in src/data/ (il suo
+    # manifesto si chiama `manifesto_coppa.json` e i due lettori dei campionati
+    # non lo vedono). Da qui arrivano due cose che player-scores non ha: la
+    # DISTINTA completa con panchina, ruolo, rating e minuti di ingresso/uscita,
+    # e un SECONDO punteggio, misurato da un'altra fonte.
+    for cartella in sorted(DIRETTA_DIR.glob("diretta_*_2526")):
+        if not (cartella / "manifesto_coppa.json").exists():
+            continue
+        for nome_file, etichetta in (("partite", "partita"),
+                                     ("formazioni_e_cambi", "distinta")):
+            percorso = cartella / f"{nome_file}.csv"
+            if not percorso.exists():
+                continue
+            frame = pd.read_csv(percorso, low_memory=False)
+            frame["_chiave"] = [
+                _chiave_da_aggancio(r, per_game, diretta_a_game, per_nome,
+                                    per_giorno)
+                for _, r in frame.iterrows()]
+            frame = frame[frame["_chiave"].notna()]
+            if frame.empty:
+                continue
+            if etichetta == "partita":
+                colonne = [c for c in frame.columns
+                           if c not in META_RACCOLTA and c != "_chiave"
+                           and c not in {"Ospite"}]
+                for _, riga in frame.iterrows():
+                    for colonna in colonne:
+                        valore = _pulisci(riga[colonna])
+                        if valore is not None:
+                            accumulo[riga["_chiave"]][f"dir_{colonna}"] = valore
+            else:
+                campi = [c for c in frame.columns
+                         if c not in META_RACCOLTA and c not in {"_chiave", "Lato",
+                                                                 "Ospite"}]
+                for (chiave, lato), gruppo in frame.groupby(["_chiave", "Lato"],
+                                                            sort=False):
+                    nome_lato = "casa" if _testo(lato).lower().startswith("cas") \
+                        else "trasferta"
+                    accumulo[chiave][f"dir_{nome_lato}_distinta_json"] = json_tabellare(
+                        [{c: _pulisci(r[c]) for c in campi}
+                         for _, r in gruppo.iterrows()], campi)
+
+    # -- il METODO con cui ogni giocatore è stato agganciato al player_id ----
+    # Tre sicurezze diverse (nome 15.246, rosa stagionale 1.062, eliminazione
+    # 156) che non valgono uguale: senza questa colonna un player_id dedotto
+    # per eliminazione è indistinguibile da uno letto.
+    agganci = _leggi_coppe("aggancio_giocatori")
+    if not agganci.empty and profilo == Profilo.COMPLETO:
+        agganci["_chiave"] = agganci["game_id"].map(per_game)
+        campi = [c for c in agganci.columns
+                 if c not in {"_chiave", "competizione", "turno", "data"}]
+        for chiave, gruppo in agganci.groupby("_chiave", sort=False):
+            if not isinstance(chiave, str):
+                continue
+            accumulo[chiave]["cop_aggancio_giocatori_json"] = json_tabellare(
+                [{c: _pulisci(r[c]) for c in campi} for _, r in gruppo.iterrows()],
+                campi)
 
     # -- quali blocchi esistono davvero per quella partita -------------------
     incrocio = _leggi_coppe("incrocio_per_partita")
@@ -1215,7 +1556,7 @@ DIRETTA_LEGHE = {
 }
 
 
-def blocco_diretta(lega: str) -> pd.DataFrame:
+def blocco_diretta(lega: str, profilo: str = Profilo.COMPLETO) -> pd.DataFrame:
     """Le 45 statistiche di diretta.it, affiancate per lato e per periodo.
 
     ⚠️ Non sono un doppione di SofaScore anche dove le grandezze si chiamano
@@ -1274,6 +1615,16 @@ def blocco_diretta(lega: str) -> pd.DataFrame:
                 valori = pd.to_numeric(gruppo[colonna], errors="coerce").fillna(0)
                 nomi = gruppo["Giocatore"][valori > 0]
                 accumulo[chiave][f"dir_{lato}_{etichetta}"] = "; ".join(nomi) or None
+            # ⚠️ Le 97 statistiche di diretta.it NON sono un doppione di
+            # SofaScore: sono un'altra misura della stessa partita, con voci
+            # che l'altra fonte non ha (`Gol concessi` individuale, gli
+            # ingressi in area, i passaggi progressivi). Nel profilo completo
+            # entrano per intero — 29 MB grezzi, 5 gzippati.
+            if profilo == Profilo.COMPLETO:
+                campi = [c for c in gruppo.columns if c not in META_RACCOLTA]
+                accumulo[chiave][f"dir_{lato}_giocatori_json"] = json_tabellare(
+                    [{c: _pulisci(r[c]) for c in campi}
+                     for _, r in gruppo.iterrows()], campi)
 
     # -- formazioni, cambi ed eventi: solo Bundesliga e Ligue 1 li hanno ------
     for cosa, funzione in (("formazione", "load_lineups"),
@@ -1297,6 +1648,7 @@ def blocco_diretta(lega: str) -> pd.DataFrame:
             via = avversario if campo == "Casa" else squadra
             chiave = chiave_partita(competizione, data, casa, via)
             lato = "casa" if campo == "Casa" else "trasferta"
+            campi = [c for c in gruppo.columns if c not in META_RACCOLTA]
             if cosa == "formazione":
                 titolari = gruppo[gruppo["Stato"].astype("string").str.lower()
                                         .str.contains("titolare", na=False)]
@@ -1313,10 +1665,29 @@ def blocco_diretta(lega: str) -> pd.DataFrame:
                     for m, e, u in zip(gruppo["Minuto"], gruppo["Entra"],
                                        gruppo["Esce"])) or None
             else:
-                accumulo[chiave][f"dir_{lato}_cronaca"] = "; ".join(
-                    f"{_etichetta_minuto(r['Minuto'])} {_testo(r['Evento'])} "
-                    f"{_testo(r['Giocatore'])}".strip()
-                    for _, r in gruppo.iterrows()) or None
+                # ⚠️ `Giocatore collegato` e `Tipo collegato` sono il secondo
+                # nome dell'evento (chi ha fornito l'assist, chi è entrato):
+                # senza, un gol e un cambio si leggono uguali.
+                pezzi = []
+                for _, r in gruppo.iterrows():
+                    voce = (f"{_etichetta_minuto(r['Minuto'])} "
+                            f"{_testo(r['Evento'])} {_testo(r['Giocatore'])}").strip()
+                    collegato = _testo(r.get("Giocatore collegato"))
+                    if collegato:
+                        voce += f" [{_testo(r.get('Tipo collegato'))} {collegato}]"
+                    punteggio = _testo(r.get("Punteggio"))
+                    if punteggio:
+                        voce += f" ({punteggio})"
+                    pezzi.append(voce)
+                accumulo[chiave][f"dir_{lato}_cronaca"] = "; ".join(pezzi) or None
+            # la tabella per intero: la stringa qui sopra è una lettura, non il
+            # dato. La panchina, il ruolo, il rating e i minuti di ingresso e
+            # uscita esistono solo qui — 24.649 righe fra Bundesliga e Ligue 1,
+            # di cui 5.523 subentrati e 5.496 mai entrati.
+            if profilo == Profilo.COMPLETO:
+                accumulo[chiave][f"dir_{lato}_{cosa}_json"] = json_tabellare(
+                    [{c: _pulisci(r[c]) for c in campi}
+                     for _, r in gruppo.iterrows()], campi)
 
     fuori = pd.DataFrame.from_dict(accumulo, orient="index")
     fuori.index.name = "_chiave"
@@ -1371,7 +1742,7 @@ def _chiave_sof(riga: pd.Series) -> str:
                           riga.get("Trasferta", riga.get("Avversario")))
 
 
-def blocco_coppe_europee() -> tuple[pd.DataFrame, pd.DataFrame]:
+def blocco_coppe_europee(profilo: str = Profilo.COMPLETO) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Champions, Europa e Conference dal 1° preliminare alla finale.
 
     ⚠️ Il foglio `Partite` dell'`.xlsx` è il pezzo più ricco della consegna e
@@ -1419,24 +1790,30 @@ def blocco_coppe_europee() -> tuple[pd.DataFrame, pd.DataFrame]:
             if valore is not None:
                 accumulo[riga["_chiave"]][f"sof_{lato}_{sigla}_{voce}"] = valore
 
-    # -- giocatori: solo il CONTEGGIO ---------------------------------------
-    # ⚠️ Misurato, non supposto: le 912 partite di questa raccolta sono tutte
-    # dentro le 961 delle raccolte tre-fonti UEFA (0 partite con giocatori qui
-    # e non li'), stessa fonte SofaScore, stesso numero di giocatori a partita,
-    # e l'unico campo in piu' e' la nazionalita' — un dato `statico` del
-    # giocatore, non della partita. Impacchettarli due volte costava 10 MB per
-    # zero informazione: qui resta il conteggio, il pacchetto e'
-    # `tf_{lato}_giocatori_json`.
+    # -- giocatori ----------------------------------------------------------
+    # ⚠️ RETTIFICA di una motivazione scritta e SBAGLIATA. Qui c'era scritto
+    # che rispetto alle raccolte tre-fonti «l'unico campo in più è la
+    # nazionalità». È falso, e la misura lo dice: delle 87 metriche per
+    # giocatore di questa consegna **66 non arrivavano nel file**, e 17 non
+    # esistono in nessun'altra raccolta. Le 912 partite sono davvero un
+    # sottoinsieme delle 961 tre-fonti — quello era vero — ma «stesse partite»
+    # non vuol dire «stesse colonne». Il pacchetto torna dentro per intero.
     giocatori = pd.read_csv(SOF_DIR / "giocatori.csv.gz", low_memory=False)
     giocatori["_chiave"] = [
         chiave_partita(canon_competizione(r["Competizione"]), r["Data"],
                        r["Squadra"] if r["Campo"] == "Casa" else r["Avversario"],
                        r["Avversario"] if r["Campo"] == "Casa" else r["Squadra"])
         for _, r in giocatori.iterrows()]
+    campi_giocatori = [c for c in giocatori.columns
+                       if c not in META_RACCOLTA and c != "_chiave"]
     for (chiave, campo), gruppo in giocatori.groupby(["_chiave", "Campo"],
                                                      sort=False):
         lato = "casa" if campo == "Casa" else "trasferta"
         accumulo[chiave][f"sof_{lato}_n_giocatori"] = int(len(gruppo))
+        if profilo == Profilo.COMPLETO:
+            accumulo[chiave][f"sof_{lato}_giocatori_json"] = json_tabellare(
+                [{c: _pulisci(r[c]) for c in campi_giocatori}
+                 for _, r in gruppo.iterrows()], campi_giocatori)
 
     # -- eventi, cambi, tiri, momentum, posizioni medie, colori --------------
     eventi = pd.read_csv(SOF_DIR / "eventi.csv.gz", low_memory=False)
@@ -1452,14 +1829,22 @@ def blocco_coppe_europee() -> tuple[pd.DataFrame, pd.DataFrame]:
         gruppo = gruppo.sort_values(["Minuto", "Recupero"], na_position="last")
         pezzi = []
         for _, riga in gruppo.iterrows():
-            chi = _testo(riga.get("Giocatore")) or (
-                f"{_testo(riga.get('Entra'))} ← {_testo(riga.get('Esce'))}")
+            chi = _testo(riga.get("Giocatore"))
+            if not chi:
+                entra, esce = _testo(riga.get("Entra")), _testo(riga.get("Esce"))
+                chi = f"{entra} ← {esce}".strip(" ←") if (entra or esce) else ""
             tipo = _testo(riga.get("Tipo"))
             sotto = _testo(riga.get("Sottotipo"))
             punteggio = _testo(riga.get("Punteggio"))
             voce = f"{_etichetta_minuto(riga.get('Minuto'))} {tipo}"
             voce += f"/{sotto}" if sotto else ""
             voce += f" {chi}" if chi else ""
+            # `Assist` (l'assistman di 1.775 gol) e `Dettaglio` (il motivo del
+            # cartellino) cadevano nella compattazione: 7 colonne su 21.
+            assistman = _testo(riga.get("Assist"))
+            voce += f" (assist {assistman})" if assistman else ""
+            dettaglio = _testo(riga.get("Dettaglio"))
+            voce += f" {{{dettaglio}}}" if dettaglio else ""
             voce += f" [{punteggio}]" if punteggio else ""
             voce += f" — {_testo(riga.get('Campo'))}"
             pezzi.append(voce)
@@ -1474,12 +1859,21 @@ def blocco_coppe_europee() -> tuple[pd.DataFrame, pd.DataFrame]:
             for m, e, u in zip(gruppo["Minuto"], gruppo["Entra"],
                                gruppo["Esce"])) or None
 
-    # i tiri, come sopra: conteggio. Stesso doppione misurato (0 partite con
-    # tiri qui e non nelle raccolte tre-fonti), stessa grana-evento.
+    # i tiri: il conteggio sempre, il pacchetto nel profilo completo.
+    # ⚠️ Non è del tutto un doppione dei tiri di tre-fonti: qui c'è
+    # `Zona porta` (14 categorie, dove il tiro attraversa lo specchio) che di là
+    # non esiste — di là ci sono le coordinate `Porta Y`/`Porta Z`, da cui è
+    # largamente ma non esattamente derivabile.
     tiri = pd.read_csv(SOF_DIR / "tiri.csv.gz", low_memory=False)
     tiri["_chiave"] = tiri["ID partita"].map(per_id)
+    campi_tiro = [c for c in tiri.columns if c not in META_RACCOLTA
+                  and c not in {"_chiave"}]
     for chiave, gruppo in tiri.groupby("_chiave", sort=False):
         accumulo[chiave]["sof_n_tiri_tracciati"] = int(len(gruppo))
+        if profilo == Profilo.COMPLETO:
+            accumulo[chiave]["sof_tiri_json"] = json_tabellare(
+                [{c: _pulisci(r[c]) for c in campi_tiro}
+                 for _, r in gruppo.sort_values("Minuto").iterrows()], campi_tiro)
 
     momentum = pd.read_csv(SOF_DIR / "momentum.csv.gz", low_memory=False)
     momentum["_chiave"] = momentum["ID partita"].map(per_id)
@@ -1522,6 +1916,11 @@ PS_COMPETIZIONE = {
     "L1": "Bundesliga", "FR1": "Ligue 1",
     "CIT": "Coppa Italia", "FAC": "FA Cup", "CDR": "Copa del Rey",
     "DFB": "DFB-Pokal",
+    # ⚠️ `CGB` è la Carabao Cup e mancava: 93 partite di EFL Cup uscivano
+    # senza NESSUNA colonna ps_ — arbitro, allenatori e moduli che la fonte ha
+    # al 100%. Un buco che nessun conteggio vede, perché la colonna esiste ed
+    # è solo vuota su quelle righe.
+    "CGB": "EFL Cup",
     "SCI": "Supercoppa Italiana", "SUC": "Supercopa de España",
     "GBCS": "Community Shield", "DFL": "DFL-Supercup",
     "FRCH": "Trophée des Champions", "USC": "Supercoppa UEFA",
@@ -1531,7 +1930,7 @@ PS_COMPETIZIONE = {
 }
 
 
-def blocco_player_scores() -> pd.DataFrame:
+def blocco_player_scores(chiavi_note: set | None = None) -> pd.DataFrame:
     """L'arbitro e i due allenatori, per le competizioni che Transfermarkt copre.
 
     È la fonte di riserva — e per le coppe nazionali spesso l'unica — di
@@ -1553,6 +1952,42 @@ def blocco_player_scores() -> pd.DataFrame:
         chiave_partita(c, d, x, y) for c, d, x, y in
         zip(partite["competizione"], partite["date"],
             partite["club_name"], partite["avversario_name"])]
+
+    # ⚠️ Sulle coppe UEFA i nomi di Transfermarkt e quelli di SofaScore non
+    # coincidono («Paris Saint-Germain» contro «PSG»), e 470 partite su 958
+    # restavano senza arbitro e senza allenatori — il dato c'era da entrambe
+    # le parti, era la chiave a non incontrarsi. Qui si riprova con la stessa
+    # regola delle coppe nazionali: inclusione fra insiemi di parole,
+    # accettata solo se in quel giorno resta UNA candidata sola.
+    if chiavi_note is not None:
+        per_giorno: dict[tuple, list[tuple[str, str, str]]] = defaultdict(list)
+        for chiave in chiavi_note:
+            pezzi = chiave.split("|")
+            if len(pezzi) == 4:
+                per_giorno[(pezzi[0], pezzi[1])].append((pezzi[2], pezzi[3], chiave))
+        note = set(chiavi_note)
+        riparate = 0
+        nuove = []
+        for chiave, competizione, data, casa, via in zip(
+                partite["_chiave"], partite["competizione"], partite["date"],
+                partite["club_name"], partite["avversario_name"]):
+            if chiave in note:
+                nuove.append(chiave)
+                continue
+            candidate = [k for c, t, k
+                         in per_giorno.get((competizione, norm_data(data)), [])
+                         if _compatibili(norm_squadra(casa), c)
+                         and _compatibili(norm_squadra(via), t)]
+            if len(candidate) == 1:
+                nuove.append(candidate[0])
+                riparate += 1
+            else:
+                nuove.append(chiave)
+        partite["_chiave"] = nuove
+        if riparate:
+            log.info("  player-scores: %d partite agganciate per abbreviazione",
+                     riparate)
+
     fuori = pd.DataFrame({
         "_chiave": partite["_chiave"],
         "ps_game_id": partite["game_id"],
@@ -1574,6 +2009,236 @@ def blocco_player_scores() -> pd.DataFrame:
     }).drop_duplicates("_chiave")
     log.info("  player-scores            %4d partite", len(fuori))
     return fuori
+
+
+def blocco_presenze_ps() -> pd.DataFrame:
+    """`appearances.csv.gz`: minuti, gol, assist e cartellini per GIOCATORE.
+
+    Perché serve anche dove abbiamo già i giocatori: è l'unica fonte per
+    giocatore che copre **tutte** le competizioni con la stessa struttura,
+    coppe nazionali comprese, e porta il `player_id` di Transfermarkt — la
+    chiave con cui un giocatore si segue fra una competizione e l'altra e fra
+    una stagione e l'altra. Dove le raccolte a tre fonti non arrivano (i turni
+    minori di coppa) è l'unica che c'è.
+
+    ⚠️ È una misura **diversa** da quella di SofaScore, non una copia: i minuti
+    di Transfermarkt e quelli di SofaScore divergono di ±1-4' su migliaia di
+    righe per la convenzione sul minuto del cambio. Restano due colonne.
+    """
+    percorso = RADICE / "files" / "player_scores" / "appearances.csv.gz"
+    if not percorso.exists():
+        log.warning("manca %s", percorso)
+        return pd.DataFrame()
+
+    from src.data import allenatori as al
+
+    partite = al.load_partite()
+    partite = partite[partite["casa"] & (partite["season"] == 2025)].copy()
+    partite["competizione"] = partite["competition_id"].map(PS_COMPETIZIONE)
+    partite = partite[partite["competizione"].notna()]
+    per_game = {}
+    lato_di_club = {}
+    for _, riga in partite.iterrows():
+        chiave = chiave_partita(riga["competizione"], riga["date"],
+                                riga["club_name"], riga["avversario_name"])
+        per_game[riga["game_id"]] = chiave
+        lato_di_club[(riga["game_id"], riga["club_id"])] = "casa"
+        lato_di_club[(riga["game_id"], riga["avversario_id"])] = "trasferta"
+
+    presenze = pd.read_csv(percorso, low_memory=False)
+    presenze = presenze[presenze["game_id"].isin(per_game)]
+    if presenze.empty:
+        return pd.DataFrame()
+
+    # ⚠️ `red_cards` è un FINTO PIENO sul 2025-26: non è nulla, vale **0 su
+    # tutte** le 76.887 righe del perimetro e su tutte e 20 le competizioni,
+    # mentre le stesse competizioni nel 2024-25 ne contano 265. Resta nel
+    # pacchetto — cancellare un dato è peggio che dichiararlo — ma chi la usa
+    # deve sapere che è muta (R6). I cartellini veri stanno in
+    # `tf_*_giocatori_json` e in `cronaca`.
+    campi = ["player_id", "player_name", "minutes_played", "goals", "assists",
+             "yellow_cards", "red_cards", "player_club_id"]
+
+    # l'anagrafica del giocatore e il valore di mercato ALLA DATA: player_id è
+    # la chiave che li lega, ed è l'unica che segue un giocatore fra una
+    # competizione e l'altra.
+    anagrafica: dict[object, dict] = {}
+    percorso_giocatori = RADICE / "files" / "player_scores" / "players.csv.gz"
+    if percorso_giocatori.exists():
+        campi_anagrafici = ["date_of_birth", "country_of_citizenship",
+                            "country_of_birth", "position", "sub_position",
+                            "foot", "height_in_cm", "market_value_in_eur",
+                            "highest_market_value_in_eur", "agent_name",
+                            "contract_expiration_date", "international_caps",
+                            "international_goals"]
+        elenco = pd.read_csv(percorso_giocatori, low_memory=False)
+        elenco = elenco[elenco["player_id"].isin(set(presenze["player_id"]))]
+        for _, riga in elenco.iterrows():
+            anagrafica[riga["player_id"]] = {
+                c: _pulisci(riga[c]) for c in campi_anagrafici if c in riga.index}
+        campi = campi + campi_anagrafici
+
+    valori: dict[object, list] = defaultdict(list)
+    percorso_valori = RADICE / "files" / "player_scores" / "player_valuations.csv.gz"
+    if percorso_valori.exists():
+        quotazioni = pd.read_csv(percorso_valori, low_memory=False)
+        quotazioni = quotazioni[quotazioni["player_id"].isin(set(presenze["player_id"]))]
+        quotazioni["date"] = pd.to_datetime(quotazioni["date"], errors="coerce")
+        for identificativo, gruppo in quotazioni.groupby("player_id"):
+            gruppo = gruppo.sort_values("date")
+            valori[identificativo] = list(zip(gruppo["date"],
+                                              gruppo["market_value_in_eur"]))
+        campi = campi + ["valore_alla_data"]
+
+    def valore_alla_data(identificativo, quando) -> object:
+        """Il valore di mercato più recente **non successivo** alla partita.
+        Prendere l'ultimo valore noto sarebbe look-ahead (R8)."""
+        storia = valori.get(identificativo)
+        if not storia or pd.isna(quando):
+            return None
+        precedenti = [v for d, v in storia if pd.notna(d) and d <= quando]
+        return _pulisci(precedenti[-1]) if precedenti else None
+
+    presenze = presenze.copy()
+    presenze["_quando"] = pd.to_datetime(presenze["date"], errors="coerce")
+    accumulo: dict[str, dict] = defaultdict(dict)
+    for (identificativo, club), gruppo in presenze.groupby(
+            ["game_id", "player_club_id"], sort=False):
+        chiave = per_game.get(identificativo)
+        lato = lato_di_club.get((identificativo, club))
+        if not chiave or not lato:
+            continue
+        accumulo[chiave][f"ps_{lato}_n_presenze"] = int(len(gruppo))
+        pacchetto = []
+        for _, riga in gruppo.iterrows():
+            voce = {c: _pulisci(riga[c]) for c in campi if c in riga.index}
+            voce.update(anagrafica.get(riga["player_id"], {}))
+            valore = valore_alla_data(riga["player_id"], riga["_quando"])
+            if valore is not None:
+                voce["valore_alla_data"] = valore
+            pacchetto.append(voce)
+        accumulo[chiave][f"ps_{lato}_presenze_json"] = json_tabellare(pacchetto, campi)
+
+    percorso_club = RADICE / "files" / "player_scores" / "clubs.csv.gz"
+    if percorso_club.exists():
+        club = pd.read_csv(percorso_club, low_memory=False)
+        # ⚠️ `coach_name` è l'allenatore CORRENTE, senza data: usarla per una
+        # partita di ottobre è look-ahead puro. Resta fuori apposta (§CLAUDE.md).
+        campi_club = ["club_code", "name", "domestic_competition_id",
+                      "total_market_value", "squad_size", "average_age",
+                      "foreigners_number", "foreigners_percentage",
+                      "national_team_players", "stadium_name", "stadium_seats",
+                      "net_transfer_record"]
+        per_club = {r["club_id"]: {c: _pulisci(r[c]) for c in campi_club
+                                   if c in r.index}
+                    for _, r in club.iterrows()}
+        for _, riga in partite.iterrows():
+            chiave = chiave_partita(riga["competizione"], riga["date"],
+                                    riga["club_name"], riga["avversario_name"])
+            for lato, club_id in (("casa", riga["club_id"]),
+                                  ("trasferta", riga["avversario_id"])):
+                for campo, valore in per_club.get(club_id, {}).items():
+                    if valore is not None:
+                        accumulo[chiave][f"ps_{lato}_club_{campo}"] = valore
+
+    fuori = pd.DataFrame.from_dict(accumulo, orient="index")
+    fuori.index.name = "_chiave"
+    log.info("  presenze player-scores   %4d partite · %3d colonne",
+             len(fuori), fuori.shape[1] if not fuori.empty else 0)
+    return fuori.reset_index()
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# 6-bis · FOOTBALL-DATA GREZZO — le 98 colonne di quote che lo snapshot pota
+# ════════════════════════════════════════════════════════════════════════════
+FD_GREZZO = {
+    "serie_a": ("Serie A", RADICE / "data" / "football_data_raw" / "serie_a_2526.csv"),
+    "premier_league": ("Premier League",
+                       RADICE / "files" / "football_data_premier_league_bundle.json"),
+    "la_liga": ("LaLiga",
+                RADICE / "files" / "football_data_la_liga_bundle.json"),
+}
+
+
+def blocco_football_data() -> pd.DataFrame:
+    """I CSV di football-data come arrivano: 131 colonne, non le 10 dello snapshot.
+
+    ⚠️ Lo snapshot congelato tiene **10** colonne di quota (1X2 e O/U 2.5,
+    apertura e chiusura, medie multi-book): sono quelle su cui gira il modello.
+    Il file grezzo ne ha **108**, e fra quelle che cadevano c'è
+    **l'handicap asiatico al completo** — `AHh`/`AHCh` (le due linee) e i 20
+    prezzi B365/Pinnacle/Max/Avg/Betfair-Exchange di apertura e chiusura —
+    cioè l'unico mercato che il progetto abbia mai validato contro una quota
+    esterna e indipendente (Fase 88). Più i singoli bookmaker uno per uno, i
+    falli, i corner e i cartellini di football-data, e l'arbitro (Premier).
+
+    ⚠️ Copre TRE leghe su cinque: Serie A da `data/football_data_raw/`,
+    Premier e Liga dai bundle in `files/`. Per Bundesliga e Ligue 1 il grezzo
+    non è archiviato — la Fase 100 le ha scaricate e ne ha tenuto solo lo
+    snapshot — e quindi lì queste colonne restano vuote. Buco dichiarato.
+    """
+    import io
+    import json as _json
+
+    pezzi = []
+    for lega, (competizione, percorso) in FD_GREZZO.items():
+        if not percorso.exists():
+            log.warning("football-data grezzo assente per %s", lega)
+            continue
+        if percorso.suffix == ".json":
+            bundle = _json.loads(percorso.read_text())
+            testo = bundle.get(f"{lega}_2526.csv")
+            if not testo:
+                continue
+            frame = pd.read_csv(io.StringIO(testo))
+        else:
+            frame = pd.read_csv(percorso, encoding="latin-1")
+        frame.columns = [c.lstrip("\ufeff") for c in frame.columns]
+        if "HomeTeam" not in frame.columns:
+            continue
+        frame["_chiave"] = [chiave_partita(competizione, norm_data(d), c, t)
+                            for d, c, t in zip(frame["Date"], frame["HomeTeam"],
+                                               frame["AwayTeam"])]
+        frame = frame.drop(columns=[c for c in ("Div", "Date", "Time", "HomeTeam",
+                                                "AwayTeam") if c in frame.columns])
+        frame = frame.rename(columns={c: f"fd_{c}" for c in frame.columns
+                                      if c != "_chiave"})
+        pezzi.append(frame)
+        log.info("  football-data grezzo %-16s %4d partite · %3d colonne",
+                 lega, len(frame), frame.shape[1] - 1)
+    if not pezzi:
+        return pd.DataFrame()
+    return pd.concat(pezzi, ignore_index=True)
+
+
+def blocco_identita_allenatori() -> dict:
+    """L'IDENTITÀ dell'allenatore: il QID Wikidata, non solo il nome.
+
+    ⚠️ Il nome non è un'identità — `allenatori.conflitti_identita()` dimostra
+    11 omonimi col test «nessuno allena due club lo stesso giorno». Il QID sì,
+    ed è l'unico modo per seguire un allenatore fra club e stagioni senza
+    rischiare di fondere due persone. Porta anche il **ruolo** (titolare o
+    vice) e il verdetto della verifica esterna.
+    """
+    percorso = (RADICE / "data" / "allenatori_wikidata" / "registro_incarichi.csv")
+    if not percorso.exists():
+        return {}
+    registro = pd.read_csv(percorso, low_memory=False)
+    from src.data import allenatori as al
+
+    per_nome: dict[str, dict] = {}
+    for _, riga in registro.iterrows():
+        nome = _testo(riga.get("allenatore"))
+        if not nome:
+            continue
+        chiave = al.normalizza_nome(nome)
+        voce = {c: _pulisci(riga[c]) for c in
+                ("manager_qid", "ruolo", "in_carica", "verdetto", "confidenza")
+                if c in riga.index}
+        per_nome.setdefault(chiave, {k: v for k, v in voce.items()
+                                     if v is not None})
+    log.info("  identità allenatori      %4d nomi con QID", len(per_nome))
+    return per_nome
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -1604,6 +2269,32 @@ def blocco_uefa() -> pd.DataFrame:
     return club.drop_duplicates("_norm").set_index("_norm")[
         ["Paese", "Coefficiente UEFA", "Somma stagioni", "25/26", "_pavimento",
          "Pos"]]
+
+
+def blocco_federazioni_uefa() -> pd.DataFrame:
+    """Il ranking UEFA per FEDERAZIONE, finestra 2025-26.
+
+    ⚠️ Il file ha DUE finestre (2025-26 e 2026-27) perché decidono due access
+    list diverse, e `federazioni()` non ha un default: usare il coefficiente di
+    oggi per una partita di ieri è look-ahead (R8). Qui si prende quella della
+    stagione del file, dichiarata nella colonna `finestra`.
+    """
+    from src.data import ranking_uefa as ru
+
+    try:
+        federazioni = ru.federazioni("2025-26")
+    except (FileNotFoundError, ValueError, KeyError) as errore:
+        log.warning("ranking per federazione non leggibile: %s", errore)
+        return pd.DataFrame()
+    if federazioni.empty:
+        return pd.DataFrame()
+    per_paese = {}
+    for _, riga in federazioni.iterrows():
+        voce = {c: _pulisci(riga[c]) for c in federazioni.columns
+                if c not in {"Federazione", "finestra"}}
+        per_paese[_senza_accenti(str(riga["Federazione"])).lower()] = voce
+        per_paese[_testo(riga.get("Cod")).lower()] = voce
+    return pd.DataFrame({"_voce": pd.Series(per_paese)})
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -1696,15 +2387,21 @@ ORDINE_TESTA = [
     "stadio", "citta", "paese_stadio", "capienza", "spettatori",
     "riempimento_pct", "latitudine", "longitudine", "superficie", "meteo_codice_whoscored",
     "arbitro", "allenatore_casa", "allenatore_trasferta",
+    "allenatore_casa_manager_qid", "allenatore_trasferta_manager_qid",
+    "allenatore_casa_ruolo", "allenatore_trasferta_ruolo",
+    "casa_giorni_riposo", "trasferta_giorni_riposo",
     "modulo_casa", "modulo_trasferta", "formazione_casa", "formazione_trasferta",
     "marcatori_casa", "marcatori_trasferta", "cronaca",
     "giocatori_casa_in_colonna", "giocatori_trasferta_in_colonna",
     "casa_uefa_coeff", "trasferta_uefa_coeff", "casa_uefa_paese",
     "trasferta_uefa_paese", "casa_uefa_pavimento", "trasferta_uefa_pavimento",
+    "casa_uefa_somma5", "trasferta_uefa_somma5", "casa_uefa_coeff_2526",
+    "trasferta_uefa_coeff_2526", "casa_uefa_posizione_ranking",
+    "trasferta_uefa_posizione_ranking",
     "fonti_disponibili", "n_fonti", "provenienza_json",
 ]
 
-PREFISSI = ("tf_", "dir_", "snap_", "cop_", "sof_", "ps_")
+PREFISSI = ("tf_", "dir_", "snap_", "fd_", "cop_", "sof_", "ps_")
 
 
 def _coalesce(tabella: pd.DataFrame) -> pd.DataFrame:
@@ -1748,7 +2445,9 @@ def _esito(casa: object, trasferta: object) -> str | None:
     return "X"
 
 
-def costruisci(solo: list[str] | None = None) -> pd.DataFrame:
+def costruisci(solo: list[str] | None = None,
+               profilo: str = Profilo.COMPLETO,
+               con_opta: bool = False) -> pd.DataFrame:
     """Monta la tabella: spina dorsale, innesti, colonne normalizzate."""
     raccolte = [r for r in tf.leghe_disponibili()
                 if solo is None or r in solo]
@@ -1768,16 +2467,20 @@ def costruisci(solo: list[str] | None = None) -> pd.DataFrame:
         if base.empty:
             continue
         spine.append(base)
-        famiglie["tf_giocatori"].append(blocco_giocatori_tf(raccolta))
-        famiglie["tf_eventi"].append(blocco_eventi_tf(raccolta))
+        famiglie["tf_giocatori"].append(blocco_giocatori_tf(raccolta, profilo))
+        famiglie["tf_eventi"].append(blocco_eventi_tf(raccolta, profilo))
         famiglie["tf_conteggi"].append(blocco_conteggi_tf(raccolta))
+        if profilo == Profilo.COMPLETO:
+            famiglie["tf_posizioni"].append(
+                blocco_posizioni_tf(raccolta, con_opta=con_opta))
+            famiglie["tf_classifica"].append(blocco_classifica_tf(raccolta))
 
     if solo is None or "coppe" in (solo or []):
-        spina_coppe, corredo_coppe = blocco_coppe()
+        spina_coppe, corredo_coppe = blocco_coppe(profilo)
         if not spina_coppe.empty:
             spine.append(spina_coppe)
             famiglie["coppe"].append(corredo_coppe)
-        spina_europa, corredo_europa = blocco_coppe_europee()
+        spina_europa, corredo_europa = blocco_coppe_europee(profilo)
         if not spina_europa.empty:
             spine.append(spina_europa)
             famiglie["sofascore_europa"].append(corredo_europa)
@@ -1798,9 +2501,13 @@ def costruisci(solo: list[str] | None = None) -> pd.DataFrame:
     log.info("── innesti ───────────────────────────────────────────────────")
     if solo is None:
         for lega in DIRETTA_LEGHE:
-            famiglie["diretta"].append(blocco_diretta(lega))
+            famiglie["diretta"].append(blocco_diretta(lega, profilo))
         famiglie["snapshot"].append(blocco_snapshot())
-        famiglie["player_scores"].append(blocco_player_scores())
+        famiglie["football_data"].append(blocco_football_data())
+        famiglie["player_scores"].append(
+            blocco_player_scores(set(tabella["_chiave"])))
+        if profilo == Profilo.COMPLETO:
+            famiglie["presenze"].append(blocco_presenze_ps())
 
     for nome, pezzi in famiglie.items():
         pezzi = [p for p in pezzi
@@ -1856,11 +2563,100 @@ def costruisci(solo: list[str] | None = None) -> pd.DataFrame:
     # coefficienti UEFA dei due club
     uefa = blocco_uefa()
     if not uefa.empty:
+        # ⚠️ Due difetti chiusi qui. (1) La funzione preparava SEI campi e ne
+        # scriveva TRE: `Somma stagioni`, `25/26` e `Pos` erano selezionati e
+        # non mappati da nessuno. (2) L'aggancio per nome normalizzato grezzo
+        # perdeva 417 partite UEFA su 962 — «Dortmund» non è «B. Dortmund» —
+        # benché una squadra che gioca la Champions sia nel ranking per
+        # definizione. Qui, dopo l'uguaglianza esatta, si prova l'inclusione
+        # fra insiemi di parole, accettata solo se resta UN club solo.
+        parole = {n: set(n.split()) for n in uefa.index}
+        cache: dict[str, str | None] = {}
+
+        def aggancia(nome: str) -> str | None:
+            if nome in uefa.index:
+                return nome
+            if nome in cache:
+                return cache[nome]
+            mie = set(nome.split())
+            candidate = [n for n, sue in parole.items()
+                         if mie and (mie <= sue or sue <= mie)]
+            cache[nome] = candidate[0] if len(candidate) == 1 else None
+            return cache[nome]
+
+        etichette = {"Coefficiente UEFA": "coeff", "Paese": "paese",
+                     "_pavimento": "pavimento", "Somma stagioni": "somma5",
+                     "25/26": "coeff_2526", "Pos": "posizione_ranking"}
+        for lato in ("casa", "trasferta"):
+            norme = tabella[lato].map(norm_squadra).map(aggancia)
+            for colonna, breve in etichette.items():
+                tabella[f"{lato}_uefa_{breve}"] = norme.map(uefa[colonna])
+
+    identita = blocco_identita_allenatori()
+    if identita:
+        from src.data import allenatori as al
+        for lato in ("casa", "trasferta"):
+            chiavi = tabella[f"allenatore_{lato}"].map(
+                lambda x: al.normalizza_nome(_testo(x)) if _testo(x) else "")
+            voci = [identita.get(k, {}) for k in chiavi]
+            for campo in ("manager_qid", "ruolo", "verdetto"):
+                tabella[f"allenatore_{lato}_{campo}"] = [v.get(campo) for v in voci]
+
+    # riposo e congestione da `club_fixtures`: il calendario di club COMPLETO,
+    # coppe ed Europa comprese. Lo snapshot lo porta solo per i 5 campionati;
+    # qui vale per ogni partita di cui conosciamo il calendario dei due club.
+    fixtures = []
+    for percorso in sorted((RADICE / "data").glob("club_fixtures*.csv")):
+        try:
+            fixtures.append(pd.read_csv(percorso))
+        except (OSError, ValueError):
+            continue
+    if fixtures:
+        calendario = pd.concat(fixtures, ignore_index=True)
+        calendario = calendario[calendario["season"] == 2526].copy()
+        calendario["_data"] = pd.to_datetime(calendario["date"], errors="coerce")
+        calendario["_squadra"] = calendario["team"].map(norm_squadra)
+        per_squadra = {n: sorted(g["_data"].dropna().unique())
+                       for n, g in calendario.groupby("_squadra")}
+
+        def riposo(nome: object, quando) -> object:
+            giorni = per_squadra.get(norm_squadra(nome))
+            if not giorni or pd.isna(quando):
+                return None
+            prima = [g for g in giorni if g < quando]
+            return int((quando - prima[-1]) / np.timedelta64(1, "D")) if prima else None
+
+        quando_serie = pd.to_datetime(tabella["data"], errors="coerce")
+        for lato in ("casa", "trasferta"):
+            tabella[f"{lato}_giorni_riposo"] = [
+                riposo(n, q) for n, q in zip(tabella[lato], quando_serie)]
+
+    federazioni = blocco_federazioni_uefa()
+    if not federazioni.empty:
+        mappa = federazioni["_voce"].to_dict()
+        for lato in ("casa", "trasferta"):
+            colonna_paese = f"{lato}_uefa_paese"
+            if colonna_paese not in tabella.columns:
+                continue
+            voci = tabella[colonna_paese].map(
+                lambda x: mappa.get(_senza_accenti(_testo(x)).lower(), {}))
+            for campo in ("Pos", "Punti", "Club_in_corsa", "Club_totali",
+                          "25/26", "24/25"):
+                tabella[f"{lato}_federazione_{campo.replace('/', '_')}"] = [
+                    v.get(campo) for v in voci]
+
+    # il valore rosa di Transfermarkt: due campi che lo snapshot non porta
+    percorso_rose = RADICE / "data" / "squad_value_2526_transfermarkt.csv"
+    if percorso_rose.exists():
+        rose = pd.read_csv(percorso_rose)
+        per_squadra = {norm_squadra(r["team"]): r for _, r in rose.iterrows()}
         for lato in ("casa", "trasferta"):
             norme = tabella[lato].map(norm_squadra)
-            tabella[f"{lato}_uefa_coeff"] = norme.map(uefa["Coefficiente UEFA"])
-            tabella[f"{lato}_uefa_paese"] = norme.map(uefa["Paese"])
-            tabella[f"{lato}_uefa_pavimento"] = norme.map(uefa["_pavimento"])
+            for campo, breve in (("squad_size", "rosa_n"), ("avg_age", "eta_media"),
+                                 ("squad_value_tm", "valore_tm")):
+                tabella[f"{lato}_tm_{breve}"] = [
+                    _pulisci(per_squadra[n][campo]) if n in per_squadra else None
+                    for n in norme]
 
     # dove sta il pacchetto dei giocatori di QUESTA partita. Non è il
     # pacchetto: è il suo indirizzo. Copiarlo in una colonna «unificata»
@@ -1880,7 +2676,8 @@ def costruisci(solo: list[str] | None = None) -> pd.DataFrame:
     # provenienza a colpo d'occhio
     presenze = {}
     for prefisso, etichetta in (("tf_", "tre_fonti"), ("dir_", "diretta"),
-                                ("snap_", "snapshot"), ("cop_", "coppe"),
+                                ("snap_", "snapshot"), ("fd_", "football_data"),
+                                ("cop_", "coppe"),
                                 ("sof_", "sofascore_europa"),
                                 ("ps_", "player_scores")):
         colonne = [c for c in tabella.columns if c.startswith(prefisso)]
@@ -1912,7 +2709,19 @@ def costruisci(solo: list[str] | None = None) -> pd.DataFrame:
 
 def main() -> None:
     argomenti = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    argomenti.add_argument("--out", type=Path, default=USCITA_DEFAULT)
+    argomenti.add_argument("--out", type=Path, default=None,
+                           help="default: data/actual_database2526.csv.gz "
+                                "(completo) o .csv (leggero)")
+    argomenti.add_argument("--profilo", choices=[Profilo.COMPLETO, Profilo.LEGGERO],
+                           default=Profilo.COMPLETO,
+                           help="completo = tutti i campi di ogni fonte + "
+                                "posizioni, tiri e commento; leggero = i campi "
+                                "curati e i soli conteggi")
+    argomenti.add_argument("--con-opta", action="store_true",
+                           help="aggiunge i 2,7 milioni di eventi Opta. ⚠️ Il "
+                                "file che ne esce pesa ~2 GB (243 MB gzippato) "
+                                "e NON e versionabile su GitHub, che rifiuta i "
+                                "file sopra i 100 MB")
     argomenti.add_argument("--solo", nargs="*", default=None,
                            help="limita alle raccolte indicate (per prove)")
     argomenti.add_argument("-v", "--verboso", action="store_true")
@@ -1921,14 +2730,28 @@ def main() -> None:
                         format="%(message)s" if not opzioni.verboso
                         else "%(levelname)s %(name)s %(message)s")
 
-    tabella = costruisci(opzioni.solo)
-    opzioni.out.parent.mkdir(parents=True, exist_ok=True)
-    tabella.to_csv(opzioni.out, index=False)
-    peso = opzioni.out.stat().st_size / 1e6
+    uscita = opzioni.out
+    if uscita is None:
+        uscita = (USCITA_DEFAULT if opzioni.profilo == Profilo.LEGGERO
+                  else USCITA_COMPLETA)
+
+    tabella = costruisci(opzioni.solo, opzioni.profilo, opzioni.con_opta)
+    uscita.parent.mkdir(parents=True, exist_ok=True)
+    # `.csv.gz` non e un formato diverso: e lo stesso CSV, compresso. E la
+    # convenzione di questo repo per ogni tabella grossa (heatmap.csv.gz,
+    # eventi_opta.csv.gz, partita_per_partita.csv.gz), e pandas lo apre senza
+    # dire niente: `pd.read_csv("....csv.gz")`.
+    tabella.to_csv(uscita, index=False,
+                   compression="gzip" if uscita.suffix == ".gz" else None)
+    peso = uscita.stat().st_size / 1e6
     log.info("──────────────────────────────────────────────────────────────")
-    log.info("scritto %s", opzioni.out)
-    log.info("%d partite · %d colonne · %.1f MB", len(tabella),
+    log.info("scritto %s  (profilo %s%s)", uscita, opzioni.profilo,
+             ", con Opta" if opzioni.con_opta else "")
+    log.info("%d partite · %d colonne · %.1f MB su disco", len(tabella),
              tabella.shape[1], peso)
+    if peso > 100:
+        log.warning("⚠️  oltre i 100 MB: GitHub RIFIUTA questo file. "
+                    "Serve Git LFS, o va spezzato.")
     log.info("competizioni: %d", tabella["competizione"].nunique())
     for competizione, quante in tabella["competizione"].value_counts().items():
         log.info("   %-26s %4d", competizione, quante)

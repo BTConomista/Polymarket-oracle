@@ -20629,3 +20629,180 @@ La quarta è l'unica dedotta, e la condizione di unicità è ciò che la rende
 usabile: `AC Seyssinet` ⊇ `Seyssinet` passa, `Espoir` e `Eveil` no. 17 partite
 restano senza corredo, dichiarate invece che forzate.
 
+---
+
+## Fase 159-bis — «Ci sono proprio TUTTI i dati?»: il censimento che risponde no, e i tre difetti che trova strada facendo
+
+**Obiettivo.** Domanda dell'utente subito dopo la Fase 159: *«sei sicuro di
+aver messo proprio TUTTI i dati? comprese le heatmap, le formazioni per
+partita e tutto, ma proprio tutto?»*, seguita da *«voglio un file csv che copra
+tutto, ma proprio tutto quello che abbiamo a disposizione»*.
+
+**Ragionamento / ipotesi.** La risposta onesta si sapeva già: **no**. La Fase
+159 aveva tenuto fuori, per scelta dichiarata, tutto ciò che è a grana evento o
+posizione. Ma «no per scelta» e «no per svista» sono due cose diverse, e
+distinguerle a occhio non si può su 2.014 colonne. Serviva un censimento
+**colonna per colonna**: per ogni colonna di ogni fonte, quel dato è nel file,
+sì o no, e se no è un'esclusione scritta da qualche parte o un buco silenzioso?
+
+**Alternative considerate.** Rileggere il codice (veloce, ma verifica le
+intenzioni, non il risultato); confrontare i soli nomi delle colonne (non vede
+una colonna che c'è ed è vuota); **censire eseguendo**, cioè caricare ogni
+fonte col suo modulo, contare le celle piene e confrontarle con quelle del
+file. Scelta la terza, su sei agenti in parallelo più uno di sintesi.
+
+**Risultato — cosa mancava davvero.** Il censimento ha diviso il file in tre,
+e la divisione è netta: **tutto ciò che è a grana squadra-partita era dentro
+quasi al 100%** (tf.squadre 199/215, diretta 54/54, coppe 47/47, snapshot
+40/40); **tutto ciò che è a grana giocatore-partita era potato al 15-35%**
+(tf.giocatori 34/191, coppe 20/118, diretta 6/108, sofascore 0/104); **tutto
+ciò che è a grana evento o posizione era ridotto a un conteggio**. E il
+divario più grosso non era nemmeno lì: erano le **98 colonne di quote
+football-data** che lo snapshot pota, fra cui **l'handicap asiatico al
+completo** — l'unico mercato che il progetto abbia mai validato contro una
+quota esterna e indipendente (Fase 88).
+
+**Il file completo.** Il vincolo è aritmetico: 387 MB non compressi non stanno
+in un file che GitHub accetta (il limite è 100 MB). Ma `.csv.gz` è la
+convenzione di questo repo per ogni tabella grossa, e comprimendo il file
+completo pesa **80,2 MB**. Quindi *tutto tranne uno* ci sta:
+**4.169 partite × 2.294 colonne**, con dentro le posizioni (4,8 milioni di
+punti heatmap, impacchettate per giocatore), il tiro per tiro, il commento
+minuto per minuto, i 176 campi per giocatore invece di 34, le 97 statistiche
+di diretta.it, le 103 di coppa, le 87 delle coppe UEFA, le presenze
+Transfermarkt con l'anagrafica e il valore di mercato **alla data**, la
+classifica, i coefficienti UEFA di club e federazione, i giorni di riposo.
+
+L'unica cosa che resta fuori è **l'event data Opta**: impacchettato pesa
+**1,7 GB grezzi / 243 MB gzippati**, da solo più del doppio del limite. Non è
+una preferenza, è una sottrazione. Si genera in locale con `--con-opta`.
+
+**⭐ I tre difetti veri, che il censimento ha trovato mentre cercava altro.**
+
+1. **I tiri di 9 partite erano dimezzati, e la colonna lo diceva sbagliato.**
+   Su 9 partite (1 LaLiga, 8 Ligue 1) le righe `Tiro` di Understat portano una
+   **data diversa** da quelle di SofaScore — Brest-Lorient vive come
+   2026-02-07 *e* come 2026-02-08. Con la chiave `(data, casa, trasferta)` la
+   partita si spezzava in due, una metà non trovava la spina dorsale e
+   spariva: `tf_n_tiri_tracciati` dichiarava **25 tiri dove ce ne sono 49**.
+   La colonna non restava vuota — restava **piena e sbagliata**, che è la
+   categoria peggiore (R6). Chiuso agganciando per `ID partita (SofaScore)`,
+   che il modulo già ripara e che vale lo stesso numero sulle due date.
+2. **Sei campi dichiarati e mai scritti.** `CAMPI_GIOCATORE_COPPA` nominava
+   sei colonne che nella fonte non esistono (`MINUTES_PLAYED` invece di
+   `MATCH_MINUTES_PLAYED`, `TOUCHES` invece di `TOUCHES_TOTAL`…). Il codice
+   faceva `if colonna in riga.index` e le saltava **senza dire niente**: il
+   pacchetto dichiarava 26 campi e ne consegnava 20. Fra i mancanti, i
+   **minuti giocati** — il campo più elementare di una statistica individuale,
+   pieno 11.476/11.476 nella fonte.
+3. **93 partite senza arbitro perché mancava una riga in un dizionario.**
+   `CGB` — il codice della Carabao Cup — non era in `PS_COMPETIZIONE`, e tutta
+   l'EFL Cup usciva senza nessuna colonna `ps_`, pur avendo arbitro e
+   allenatori al 100% nella fonte. Stessa famiglia: la colonna esiste, è solo
+   vuota su quelle righe, e nessun conteggio aggregato se ne accorge.
+
+E due **affermazioni false nelle sedi di dichiarazione**, che valgono quanto i
+difetti: `tf_*_valore_schierati_eur` era promesso da docstring e DATI.md e non
+esiste (la colonna sorgente è vuota in tutte e 16 le raccolte); e le esclusioni
+dal pacchetto giocatori erano chiamate «anagrafiche del giocatore» mentre per
+l'89% erano **statistiche di quella partita**.
+
+**Lezione / cosa ne consegue.**
+
+1. **Una dichiarazione non è una verifica.** I tre difetti stavano tutti sotto
+   una riga di documentazione che diceva un'altra cosa, e nessuno era visibile
+   dal file: due producevano colonne piene di numeri sbagliati, uno colonne
+   vuote su un sottoinsieme. L'unico modo di trovarli è stato **ricaricare
+   ogni fonte e contare**.
+2. **Il limite di 100 MB è un vincolo di progettazione, non un dettaglio di
+   consegna.** Ha deciso la grana (partita), la codifica dei pacchetti
+   (tabellare invece che lista di oggetti: 12 MB su una colonna sola) e cosa
+   resta fuori. Un formato scelto senza misurare il peso avrebbe portato a un
+   file che non si può nemmeno pushare.
+3. **«Doppione» è un'ipotesi da misurare due volte.** La Fase 159 aveva tolto
+   il pacchetto giocatori delle coppe UEFA scrivendo che «l'unico campo in più
+   è la nazionalità». Misurato: **66 metriche su 87 non arrivavano**, e 17 non
+   esistono in nessun'altra raccolta. Le due raccolte coprivano le stesse
+   *partite* — quello era vero — e da lì si era dedotto che coprissero le
+   stesse *colonne*, che è un'altra affermazione.
+
+### 📐 Il modello in dettaglio
+
+**1 · Perché l'Opta non ci sta, in numeri.** Il conto è una sottrazione, e va
+scritto perché è ciò che decide il contenuto del file:
+
+```
+                          righe      impacchettato    gzippato
+heatmap                 4,77 M          74 MB          16 MB     → DENTRO
+tiri (categoria Tiro)   0,30 M          34 MB           6 MB     → DENTRO
+commento (Cronaca)      0,29 M          54 MB           6 MB     → DENTRO
+giocatori (176 campi)   0,15 M         105 MB          14 MB     → DENTRO
+eventi_opta             3,71 M       1.693 MB         243 MB     → FUORI
+
+file completo senza Opta:  387 MB grezzi →  80,2 MB gzippati   ✔ (<100)
+file completo con Opta:  ~2.080 MB grezzi → ~323 MB gzippati    ✘
+```
+
+Non c'è codifica che salvi l'ultima riga: anche nella forma più compatta
+provata (11 campi su 34) l'Opta gzippato pesa **165 MB**, e il limite di GitHub
+è 100. È l'unica esclusione del file che non sia una scelta.
+
+**2 · La codifica tabellare, e quanto vale.** Un pacchetto per giocatore può
+essere una lista di oggetti o una tabellina con l'intestazione dichiarata una
+volta sola:
+
+```
+lista di oggetti   [{"nome":…,"gol":…}, …]        4.849 byte a cella
+forma tabellare    {"campi":[…],"righe":[[…]]}    3.330 byte a cella   (68,7%)
+```
+
+La differenza è **tutta ripetizione dei nomi dei campi**: 34 chiavi × ~30
+giocatori × 4.169 partite × 2 lati = 12 MB su una colonna sola. Con 176 campi
+invece di 34 il risparmio è proporzionalmente più grande, ed è quello che ha
+reso possibile tenere tutti i campi.
+
+**3 · La heatmap: perché per giocatore e non per tocco.** Il file grezzo ha una
+riga per posizione, con dentro il nome del giocatore e della squadra ripetuti
+1.466 volte a partita. Impacchettando per giocatore
+
+```
+{"<id giocatore>": {"l": "C"|"T", "p": [[x, y], …]}}
+```
+
+l'anagrafica compare una volta per giocatore invece che una per tocco, e il
+blocco scende da **333 MB a 74**. Il nome si ritrova in
+`tf_{lato}_giocatori_json` per `ID giocatore (SofaScore)`.
+
+**4 · La regola che ha trovato il primo difetto.** La chiave di aggancio degli
+eventi era
+
+```
+chiave = (competizione, Data, Casa, Trasferta)
+```
+
+e presuppone che tutte le righe di una partita portino la stessa data. Su 9
+partite non è vero, perché le due fonti registrano il fuso in modo diverso.
+La chiave corretta usa l'**identificatore**, e ripiega sui nomi solo dove
+l'identificatore manca:
+
+```
+chiave(riga) = mappa[ID partita (SofaScore)]           se presente
+             = (competizione, Data, Casa, Trasferta)   altrimenti
+```
+
+L'identificatore è già riparato in lettura da `tre_fonti._ripara_id_eventi`, ed
+è **pieno al 100%** sulle categorie che lo usano. Effetto misurato in Ligue 1:
+i tiri per partita passano da 24,7 medi su 302 partite a **49,5 su 310**.
+
+**5 · La soglia di «colonna di partita», portata a uguaglianza esatta.** Il
+criterio della Fase 159 era
+
+```
+colonna C è «di partita»  ⟺  quota_di_accordo(C) > 0,995
+```
+
+e su `Average rating (SofaScore)` della Premier — identica su 379 partite su
+380 — issava la colonna a valore unico, facendo sparire il valore del lato
+trasferta della 380ª. Una cella, sparita in silenzio. La soglia è ora
+`== 1.0`: la coincidenza deve valere su **tutte** le partite comuni.
+
