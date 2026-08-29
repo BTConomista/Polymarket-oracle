@@ -13092,3 +13092,955 @@ snapshot_date,source,league,market,team,price,prob,exclusive,overround,price_sum
 2026-08-28,smarkets,serie_a,champion,Udinese Calcio,,,True,,,0.3,20,10,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
 2026-08-28,smarkets,serie_a,champion,US Lecce,,,True,,,0.3,20,10,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
 2026-08-28,smarkets,serie_a,champion,Venezia FC,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,polymarket,serie_a,champion,Atalanta,0.0065,0.0064292779426310615,True,1.011,1.011,0.7,20,,0.006,0.007,,,,6258.684182000001,66311.69852,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Bologna,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,4570.293,55799.43346,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Cagliari,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,3444.593958,47694.22258,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Como,0.0315,0.031157270029673608,True,1.011,1.011,0.7,20,,0.025,0.038,,,,19932.380908000003,64549.53667,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Fiorentina,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,4730.525832,42335.72306,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Genoa,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,3855.4075,49548.98484,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Inter Milan,0.485,0.47972304648862535,True,1.011,1.011,0.7,20,,0.48,0.49,,,,46285.625488000005,138106.3406,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Juventus,0.125,0.12363996043521273,True,1.011,1.011,0.7,20,,0.12,0.13,,,,7350.455940999999,77102.7865,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Lazio,0.0015,0.0014836795252225529,True,1.011,1.011,0.7,20,,0.001,0.002,,,,5094.983333000001,64101.84255,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Lecce,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,4114.153947999999,45835.18794,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,AC Milan,0.135,0.13353115727002976,True,1.011,1.011,0.7,20,,0.13,0.14,,,,15623.243879000001,64963.221,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Napoli,0.125,0.12363996043521273,True,1.011,1.011,0.7,20,,0.12,0.13,,,,7324.8604780000005,65157.0251,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Parma,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,3642.0687500000004,47461.58668,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Roma,0.0955,0.09446092977250252,True,1.011,1.011,0.7,20,,0.081,0.11,,,,49571.903841,53304.47498,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Sassuolo,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,3651.3507500000005,43765.24897,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Torino,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,4112.8815,47141.09426,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Udinese,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,3382.3175,52115.40592,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Venezia,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,4132.4388,47914.25365,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Frosinone,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,4044.2438,42959.54225,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,serie_a,champion,Monza,0.0005,0.000494559841740851,True,1.011,1.011,0.7,20,,,0.001,,,,3267.3395,42934.03013,1147895.42601,204389.75288800002,Serie A: 2027 Champion,serie-a-2027-champion-20260701200118390,,
+2026-08-29,polymarket,premier_league,champion,Arsenal,0.505,0.49029126213592256,True,1.03,1.03,0.7,20,,0.5,0.51,,,,697163.0669139998,243067.6672,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Aston Villa,0.0055,0.00533980582524272,True,1.03,1.03,0.7,20,,0.005,0.006,,,,478672.59827,425946.9053,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Bournemouth,0.0015,0.0014563106796116512,True,1.03,1.03,0.7,20,,0.001,0.002,,,,560194.524333,590069.31726,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Brentford,0.0055,0.00533980582524272,True,1.03,1.03,0.7,20,,0.005,0.006,,,,737626.648471,289075.84518,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Brighton,0.0075,0.007281553398058255,True,1.03,1.03,0.7,20,,0.007,0.008,,,,602979.651178,150495.47761,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Chelsea,0.135,0.1310679611650486,True,1.03,1.03,0.7,20,,0.13,0.14,,,,628663.300301,302258.9411,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Crystal Palace,0.0005,0.0004854368932038837,True,1.03,1.03,0.7,20,,,0.001,,,,312011.29123300005,655998.77141,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Everton,0.0015,0.0014563106796116512,True,1.03,1.03,0.7,20,,0.001,0.002,,,,312072.668,608076.1975,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Fulham,0.0005,0.0004854368932038837,True,1.03,1.03,0.7,20,,,0.001,,,,259279.15306,519293.8379,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Leeds United,0.0015,0.0014563106796116512,True,1.03,1.03,0.7,20,,0.001,0.002,,,,395248.961272,470221.43362,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Liverpool,0.065,0.06310679611650488,True,1.03,1.03,0.7,20,,0.06,0.07,,,,552561.5464799999,183782.1395,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Manchester City,0.225,0.21844660194174767,True,1.03,1.03,0.7,20,,0.22,0.23,,,,1914729.2996670003,352671.4163,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Manchester United,0.055,0.05339805825242721,True,1.03,1.03,0.7,20,,0.05,0.06,,,,501203.88651,400052.5347,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Newcastle United,0.0035,0.0033980582524271857,True,1.03,1.03,0.7,20,,0.003,0.004,,,,568773.4950570001,173955.24028,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Nottingham Forest,0.0005,0.0004854368932038837,True,1.03,1.03,0.7,20,,,0.001,,,,314537.65859400004,609049.10966,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Tottenham,0.014,0.013592233009708743,True,1.03,1.03,0.7,20,,0.013,0.015,,,,662162.106497,343165.12824,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Sunderland,0.0005,0.0004854368932038837,True,1.03,1.03,0.7,20,,,0.001,,,,339437.672227,645391.22253,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Coventry City,0.0005,0.0004854368932038837,True,1.03,1.03,0.7,20,,,0.001,,,,275260.340749,642153.7207,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Ipswich Town,0.0005,0.0004854368932038837,True,1.03,1.03,0.7,20,,,0.001,,,,207399.92476099997,557122.2663,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,premier_league,champion,Hull City,0.0015,0.0014563106796116512,True,1.03,1.03,0.7,20,,0.001,0.002,,,,697754.4315059999,136279.4836,8299016.82617,11016114.955079999,EPL: 2027 Champion,epl-2027-champion-20260701200428749,,
+2026-08-29,polymarket,la_liga,champion,Alavés,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,250068.22400000002,258934.98163,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Athletic Bilbao,0.0015,0.0015090543259557358,True,0.994,0.994,0.857,21,,0.001,0.002,,,,217956.247499,182021.26757,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Atlético Madrid,0.0275,0.027665995975855156,True,0.994,0.994,0.857,21,,0.027,0.028,,,,298513.15499099996,179735.60186,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Barcelona,0.565,0.5684104627766604,True,0.994,0.994,0.857,21,,0.56,0.57,,,,319464.42169,208798.0723,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Betis,0.0035,0.0035211267605633834,True,0.994,0.994,0.857,21,,0.003,0.004,,,,148593.287724,246935.56083,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Celta Vigo,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,139493.130333,249052.01519,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Espanyol,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,66592.027,275513.27842,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Getafe,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,78570.95999999999,278503.99652,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Osasuna,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,69871.407,281181.41318,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Rayo Vallecano,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,93613.33400000002,280884.54357,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Real Madrid,0.385,0.3873239436619722,True,0.994,0.994,0.857,21,,0.38,0.39,,,,434948.786717,216897.2997,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Real Sociedad,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,115640.60271599998,253662.8117,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Sevilla,0.0015,0.0015090543259557358,True,0.994,0.994,0.857,21,,0.001,0.002,,,,285118.135333,228186.10783,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Valencia,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,148489.973,194930.0171,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Villarreal,0.003,0.0030181086519114717,True,0.994,0.994,0.857,21,,0.002,0.004,,,,255511.81514500006,225987.49585,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Levante,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,67680.389,276865.54784,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Elche,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,66496.19700000001,276873.28334,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Racing Santander,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,161347.814499,274780.71309,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Deportivo La Coruña,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,70995.115,267806.52139,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Málaga,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,65171.942499000004,272317.48815,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,la_liga,champion,Team C,0.0005,0.0005030181086519119,True,0.994,0.994,0.857,21,,,0.001,,,,3245.65,225256.21932,5156398.82438,3357382.615146,LALIGA: 2027 Champion,laliga-2027-champion-20260701200737375,,
+2026-08-29,polymarket,ligue_1,champion,Angers,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3940.5054999999998,30444.31889,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Auxerre,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3264.65,31848.81343,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Brest,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3225.97,30756.59946,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Le Havre,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3199.926,30850.14616,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Lens,0.0375,0.036945812807881784,True,1.015,1.015,0.611,18,,0.037,0.038,,,,21039.998542,41977.53183,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Lille,0.0615,0.06059113300492613,True,1.015,1.015,0.611,18,,0.046,0.077,,,,22291.104387000003,40608.08619,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Lyon,0.0235,0.02315270935960592,True,1.015,1.015,0.611,18,,0.023,0.024,,,,19282.748428,49874.26688,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Marseille,0.048,0.04729064039408869,True,1.015,1.015,0.611,18,,0.046,0.05,,,,31862.922421999996,51183.58441,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Monaco,0.0265,0.026108374384236462,True,1.015,1.015,0.611,18,,0.025,0.028,,,,18139.512224,51933.6849,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Nice,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3189.96,40997.32489,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Paris Saint-Germain,0.8,0.7881773399014781,True,1.015,1.015,0.611,18,,0.79,0.81,,,,62354.877614000005,204926.6529,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Rennes,0.0105,0.0103448275862069,True,1.015,1.015,0.611,18,,0.01,0.011,,,,15653.089159,51619.33454,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Strasbourg,0.0025,0.002463054187192119,True,1.015,1.015,0.611,18,,0.002,0.003,,,,12438.545666000002,34155.02144,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Toulouse,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3218.5699999999997,31101.30425,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Lorient,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3217.9800000000005,30749.42218,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Paris FC,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,4023.815679,42645.22709,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Troyes,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,3114.02,31031.56206,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,ligue_1,champion,Le Mans,0.0005,0.0004926108374384238,True,1.015,1.015,0.611,18,,,0.001,,,,4104.08,32621.36131,854285.75961,237501.675621,Ligue 1: 2027 Champion,ligue-1-2027-champion-20260701201053335,,
+2026-08-29,polymarket,bundesliga,champion,Bayern Munich,0.875,0.8574228319451249,True,1.0205,1.0205,0.778,18,,0.87,0.88,,,,32093.460015,216642.161,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Borussia Dortmund,0.055,0.053895149436550716,True,1.0205,1.0205,0.778,18,,0.05,0.06,,,,10641.911490000002,23690.8448,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Bayer Leverkusen,0.0355,0.034786869181773636,True,1.0205,1.0205,0.778,18,,0.035,0.036,,,,9933.319648000002,20090.34582,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,RB Leipzig,0.0315,0.0308672219500245,True,1.0205,1.0205,0.778,18,,0.031,0.032,,,,6101.017996,21077.64681,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Eintracht Frankfurt,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,9312.234865999999,22140.65978,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,VfB Stuttgart,0.0085,0.008329250367466928,True,1.0205,1.0205,0.778,18,,0.008,0.009,,,,9643.215962,18467.7308,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,TSG Hoffenheim,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,6729.112999999999,21338.68001,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,SC Freiburg,0.002,0.0019598236158745713,True,1.0205,1.0205,0.778,18,,0.001,0.003,,,,7594.155,19950.71831,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Mainz 05,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,7416.334999999998,21531.88903,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Borussia Mönchengladbach,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,6732.1205,21595.26059,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,1. FC Köln,0.0005,0.0004899559039686428,True,1.0205,1.0205,0.778,18,,,0.001,,,,2749.9575,19096.08401,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,FC Augsburg,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,6500.220499999999,22474.08239,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Union Berlin,0.0005,0.0004899559039686428,True,1.0205,1.0205,0.778,18,,,0.001,,,,3041.96,20812.63669,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Werder Bremen,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,6550.220499999999,20273.44347,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Hamburger SV,0.0005,0.0004899559039686428,True,1.0205,1.0205,0.778,18,,,0.001,,,,2740.339,20470.51525,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,Schalke 04,0.0015,0.0014698677119059287,True,1.0205,1.0205,0.778,18,,0.001,0.002,,,,6264.740499999999,21251.62145,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,SC Paderborn,0.0005,0.0004899559039686428,True,1.0205,1.0205,0.778,18,,,0.001,,,,2169.9575,19976.46601,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,bundesliga,champion,SV Elversberg,0.0005,0.0004899559039686428,True,1.0205,1.0205,0.778,18,,,0.001,,,,1043.672,20637.76449,574321.1338,137257.950977,Bundesliga: 2027 Champion,bundesliga-2027-champion-20260708164840303,,
+2026-08-29,polymarket,premier_league,champion,Arsenal,0.945,0.1590373611578593,True,5.942,5.942,0.0,20,,0.93,0.96,,,,2875.6273960000008,3860.2941,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Aston Villa,0.22,0.03702457085156513,True,5.942,5.942,0.0,20,,0.19,0.25,,,,300.16518,595.8225,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Bournemouth,0.06,0.010097610232245034,True,5.942,5.942,0.0,20,,0.04,0.08,,,,1810.17045,140.1014,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Brentford,0.5,0.0841467519353753,True,5.942,5.942,0.0,20,,0.1,0.9,,,,95,9.9679,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Brighton & Hove Albion,0.18,0.030292830696735103,True,5.942,5.942,0.0,20,,0.17,0.19,,,,215,366.867,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Chelsea,0.855,0.14389094580949174,True,5.942,5.942,0.0,20,,0.84,0.87,,,,677.3766189999999,1063.8347,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Crystal Palace,0.155,0.026085493099966342,True,5.942,5.942,0.0,20,,0.02,0.29,,,,,851.7677,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Everton,0.16,0.026926960619320095,True,5.942,5.942,0.0,20,,0.02,0.3,,,,21,89.8878,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Fulham,0.1,0.01682935038707506,True,5.942,5.942,0.0,20,,0.07,0.13,,,,273.84000000000003,1056.4243,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Leeds United,0.16,0.026926960619320095,True,5.942,5.942,0.0,20,,0.02,0.3,,,,,101.6679,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Liverpool,0.72,0.12117132278694041,True,5.942,5.942,0.0,20,,0.7,0.74,,,,28.150916999999996,2800.376,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Manchester City,0.8,0.13463480309660047,True,5.942,5.942,0.0,20,,0.79,0.81,,,,2035.7381649999998,2613.049,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Manchester United,0.52,0.08751262201279031,True,5.942,5.942,0.0,20,,0.51,0.53,,,,349.198359,1311.1032,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Newcastle United,0.09,0.015146415348367552,True,5.942,5.942,0.0,20,,0.08,0.1,,,,1111.2,736.4278,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Nottingham Forest,0.065,0.010939077751598789,True,5.942,5.942,0.0,20,,0.05,0.08,,,,21,184.7679,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Sunderland,0.07,0.011780545270952542,True,5.942,5.942,0.0,20,,0.05,0.09,,,,,373.7277,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Tottenham Hotspur,0.245,0.041231908448333895,True,5.942,5.942,0.0,20,,0.22,0.27,,,,972.9968469999999,960.282,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Coventry City,0.055,0.009256142712891283,True,5.942,5.942,0.0,20,,0.03,0.08,,,,46,154.1376,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Hull City,0.0115,0.0019353752945136316,True,5.942,5.942,0.0,20,,0.002,0.021,,,,519.5496499999999,69.36843,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Ipswich Town,0.0305,0.005132951868057893,True,5.942,5.942,0.0,20,,0.011,0.05,,,,,97.97787,17217.47632,11352.013583,EPL: Team to qualify for the 2027-28 UEFA Champions League,epl-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Atlético de Madrid,0.86,0.08361691784151676,True,10.285,10.285,0.0,20,,0.83,0.89,,,,720.530407,1227.4231,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,FC Barcelona,0.96,0.09333981526494893,True,10.285,10.285,0.0,20,,0.95,0.97,,,,52.46875,2868.9843,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Real Madrid,0.96,0.09333981526494893,True,10.285,10.285,0.0,20,,0.95,0.97,,,,21,2119.8643,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Athletic Club,0.52,0.05055906660184734,True,10.285,10.285,0.0,20,,0.08,0.96,,,,,6.3992,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Real Betis,0.6,0.05833738454059308,True,10.285,10.285,0.0,20,,0.23,0.97,,,,181,411.5193,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Villarreal,0.335,0.03257170636849781,True,10.285,10.285,0.0,20,,0.33,0.34,,,,93.235291,158.6795,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Real Sociedad,0.505,0.04910063198833251,True,10.285,10.285,0.0,20,,0.04,0.97,,,,44,2.9993,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Sevilla,0.495,0.048128342245989296,True,10.285,10.285,0.0,20,,0.07,0.92,,,,,14.5793,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Celta Vigo,0.495,0.048128342245989296,True,10.285,10.285,0.0,20,,0.01,0.98,,,,,2.4995,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Rayo Vallecano,0.52,0.05055906660184734,True,10.285,10.285,0.0,20,,0.05,0.99,,,,,2.1795,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Getafe,0.475,0.04618376276130286,True,10.285,10.285,0.0,20,,0.05,0.9,,,,,4.7295,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Osasuna,0.495,0.048128342245989296,True,10.285,10.285,0.0,20,,0.01,0.98,,,,,2.2895,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Alavés,0.485,0.04715605250364607,True,10.285,10.285,0.0,20,,0.05,0.92,,,,,4.4591,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Levante,0.49,0.04764219737481769,True,10.285,10.285,0.0,20,,0.06,0.92,,,,,6.9195,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Espanyol,0.07,0.0068060281964025275,True,10.285,10.285,0.0,20,,0.04,0.1,,,,120,22.1796,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Elche,0.5,0.048614487117160904,True,10.285,10.285,0.0,20,,0.01,0.99,,,,,2.0796,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Valencia,0.515,0.050072921730675735,True,10.285,10.285,0.0,20,,0.1,0.93,,,,,11.1393,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Racing Santander,0.5,0.048614487117160904,True,10.285,10.285,0.0,20,,0.01,0.99,,,,,2.0795,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Deportivo La Coruña,0.47,0.04569761789013125,True,10.285,10.285,0.0,20,,0.04,0.9,,,,63.3263,5.9292,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,la_liga,champion,Málaga,0.035,0.0034030140982012637,True,10.285,10.285,0.0,20,,0.02,0.05,,,,382,404.12055,7498.97178,1677.560748,LaLiga: Team to qualify for the 2027-28 UEFA Champions League,laliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Bayern Munich,0.955,0.14826890234435644,True,6.441,6.441,0.0,18,,0.94,0.97,,,,1074.764056,1460.6871,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Bayer Leverkusen,0.455,0.07064120478186617,True,6.441,6.441,0.0,18,,0.25,0.66,,,,775.905339,363.0977,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Borussia Dortmund,0.73,0.11333643844123582,True,6.441,6.441,0.0,18,,0.71,0.75,,,,864.25,841.1142,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,RB Leipzig,0.55,0.08539046731873932,True,6.441,6.441,0.0,18,,0.32,0.78,,,,33.656966,155.0038,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Eintracht Frankfurt,0.54,0.08383791336748951,True,6.441,6.441,0.0,18,,0.13,0.95,,,,,52.0076,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,VfB Stuttgart,0.28,0.04347151063499457,True,6.441,6.441,0.0,18,,0.25,0.31,,,,847.0693919999999,620.3339,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,SC Freiburg,0.525,0.0815090824406148,True,6.441,6.441,0.0,18,,0.08,0.97,,,,55.723633,19.3873,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,FC Augsburg,0.045,0.006986492780624126,True,6.441,6.441,0.0,18,,0.03,0.06,,,,86,157.254,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Werder Bremen,0.075,0.011644154634373544,True,6.441,6.441,0.0,18,,0.07,0.08,,,,21,141.8739,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,FSV Mainz 05,0.515,0.07995652848936499,True,6.441,6.441,0.0,18,,0.07,0.96,,,,112.76888699999999,4.7377,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,TSG Hoffenheim,0.67,0.10402111473373699,True,6.441,6.441,0.0,18,,0.38,0.96,,,,427.36,42.4886,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Union Berlin,0.07,0.010867877658748642,True,6.441,6.441,0.0,18,,0.04,0.1,,,,87,24.448,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Borussia Mönchengladbach,0.525,0.0815090824406148,True,6.441,6.441,0.0,18,,0.06,0.99,,,,,5.5277,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Hamburger SV,0.3545,0.05503803757180561,True,6.441,6.441,0.0,18,,0.01,0.699,,,,,40.728,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,1. FC Köln,0.037,0.005744449619624281,True,6.441,6.441,0.0,18,,0.015,0.059,,,,,182.4809,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,Schalke 04,0.05,0.00776276975624903,True,6.441,6.441,0.0,18,,0.03,0.07,,,,183,394.2579,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,SV Elversberg,0.0345,0.00535631113181183,True,6.441,6.441,0.0,18,,0.01,0.059,,,,176.2,134.77319,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,bundesliga,champion,SC Paderborn,0.03,0.004657661853749417,True,6.441,6.441,0.0,18,,0.011,0.049,,,,421,126.25792,4935.24441,5165.698273,Bundesliga: Team to qualify for the 2027-28 UEFA Champions League,bundesliga-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,AC Milan,0.55,0.10643444605708757,True,5.1675,5.1675,0.0,20,,0.54,0.56,,,,5502.6143250000005,1897.2378,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Atalanta,0.105,0.02031930333817126,True,5.1675,5.1675,0.0,20,,0.07,0.14,,,,547.69,349.5314,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Bologna,0.065,0.012578616352201257,True,5.1675,5.1675,0.0,20,,0.029,0.101,,,,796.07,72.73866,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Cagliari,0.039,0.007547169811320754,True,5.1675,5.1675,0.0,20,,0.021,0.057,,,,81,726.80087,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Como,0.815,0.1577164973391388,True,5.1675,5.1675,0.0,20,,0.64,0.99,,,,202.83333199999998,116.1216,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Fiorentina,0.07,0.013546202225447508,True,5.1675,5.1675,0.0,20,,0.04,0.1,,,,,286.176,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Genoa,0.045,0.008708272859216255,True,5.1675,5.1675,0.0,20,,0.03,0.06,,,,113,803.9378,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Inter Milan,0.9705,0.18780841799709724,True,5.1675,5.1675,0.0,20,,0.951,0.99,,,,789.6472709999999,889.96107,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Juventus,0.725,0.14029995162070633,True,5.1675,5.1675,0.0,20,,0.71,0.74,,,,164.35184900000002,954.3116,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Lazio,0.0655,0.012675374939525882,True,5.1675,5.1675,0.0,20,,0.032,0.099,,,,680.03,288.19828,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Lecce,0.045,0.008708272859216255,True,5.1675,5.1675,0.0,20,,0.03,0.06,,,,222,1032.1478,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Napoli,0.62,0.11998064828253506,True,5.1675,5.1675,0.0,20,,0.61,0.63,,,,656.882425,456.0934,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Parma,0.045,0.008708272859216255,True,5.1675,5.1675,0.0,20,,0.03,0.06,,,,19.99,444.7776,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Roma,0.755,0.14610546686018383,True,5.1675,5.1675,0.0,20,,0.71,0.8,,,,962.1856760000001,687.4586,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Sassuolo,0.045,0.008708272859216255,True,5.1675,5.1675,0.0,20,,0.03,0.06,,,,219,803.1174,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Torino,0.045,0.008708272859216255,True,5.1675,5.1675,0.0,20,,0.03,0.06,,,,87,1161.9976,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Udinese,0.0545,0.01054668601838413,True,5.1675,5.1675,0.0,20,,0.016,0.093,,,,84.7,95.36779,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Venezia,0.045,0.008708272859216255,True,5.1675,5.1675,0.0,20,,0.03,0.06,,,,339,1254.1078,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Frosinone,0.0315,0.006095791001451379,True,5.1675,5.1675,0.0,20,,0.014,0.049,,,,121,2443.36777,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,serie_a,champion,Monza,0.0315,0.006095791001451379,True,5.1675,5.1675,0.0,20,,0.01,0.053,,,,63,961.53897,15891.33262,11651.994878,Serie A: Team to qualify for the 2027-28 UEFA Champions League,serie-a-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Angers,0.45,0.07328990228013033,True,6.14,6.14,0.0,18,,0.02,0.88,,,,57.169575,7.498,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Auxerre,0.47,0.07654723127035833,True,6.14,6.14,0.0,18,,0.05,0.89,,,,18.4747,4.7754,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Brest,0.27,0.043973941368078195,True,6.14,6.14,0.0,18,,0.05,0.49,,,,63.441514,19.9452,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Le Havre,0.45,0.07328990228013033,True,6.14,6.14,0.0,18,,0.05,0.85,,,,84,9.5472,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Lens,0.385,0.06270358306188928,True,6.14,6.14,0.0,18,,0.38,0.39,,,,508.607842,388.6764,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Lille,0.345,0.05618892508143324,True,6.14,6.14,0.0,18,,0.34,0.35,,,,130.777776,153.2079,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Lorient,0.07,0.01140065146579805,True,6.14,6.14,0.0,18,,0.042,0.098,,,,54.68375,71.05828,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Lyon,0.56,0.0912052117263844,True,6.14,6.14,0.0,18,,0.29,0.83,,,,257.714284,166.6137,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Marseille,0.59,0.09609120521172641,True,6.14,6.14,0.0,18,,0.34,0.84,,,,1391.192378,120.8047,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Monaco,0.52,0.08469055374592838,True,6.14,6.14,0.0,18,,0.11,0.93,,,,145.33333,70.802,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Nice,0.1,0.016286644951140072,True,6.14,6.14,0.0,18,,0.08,0.12,,,,88,120.2077,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Paris FC,0.47,0.07654723127035833,True,6.14,6.14,0.0,18,,0.04,0.9,,,,77.98313999999999,6.8279,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Paris Saint-Germain,0.935,0.15228013029315968,True,6.14,6.14,0.0,18,,0.92,0.95,,,,,1567.5435,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Rennes,0.225,0.03664495114006516,True,6.14,6.14,0.0,18,,0.22,0.23,,,,37.593070999999995,900.327,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Strasbourg,0.11,0.017915309446254076,True,6.14,6.14,0.0,18,,0.08,0.14,,,,60.29156,138.8545,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Toulouse,0.055,0.008957654723127038,True,6.14,6.14,0.0,18,,0.03,0.08,,,,104.99000000000001,178.4975,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Troyes,0.075,0.012214983713355053,True,6.14,6.14,0.0,18,,0.05,0.1,,,,61,63.0526,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,ligue_1,champion,Le Mans,0.06,0.009771986970684042,True,6.14,6.14,0.0,18,,0.04,0.08,,,,21,432.6921,4682.82138,3162.25292,Ligue 1: Team to qualify for the 2027-28 UEFA Champions League,ligue-1-team-to-qualify-for-the-2027-28-uefa-champions-league,,
+2026-08-29,polymarket,premier_league,champion,Birmingham City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6678,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Blackburn Rovers,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.568,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Bristol City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Charlton Athletic,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.5679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Coventry City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Derby County,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Hull City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Ipswich Town,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.5679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Leicester City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Middlesbrough,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.0679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Millwall,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.668,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Norwich City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.668,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Oxford United,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.5679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Portsmouth,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Preston North End,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.5679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Queens Park Rangers,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Sheffield United,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Southampton,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.6679,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Stoke City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.568,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Swansea City,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.1459,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Watford,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.568,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,West Bromwich Albion,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.568,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,champion,Wrexham,0.5,0.043478260869565216,True,11.5,11.5,0.0,23,,0.01,0.99,,,,,1.0711,36.4402,0.0,EFL Championship: Team promoted to Premier League (2026-27),efl-championship-team-promoted-to-premier-league-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Arsenal,0.1,0.1,False,,4.26,0.0,20,,0.01,0.19,,,,10,990.9921,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Aston Villa,0.11,0.11,False,,4.26,0.0,20,,0.03,0.19,,,,,3292.718,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Bournemouth,0.125,0.125,False,,4.26,0.0,20,,0.06,0.19,,,,,3873.8678,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Brentford,0.11,0.11,False,,4.26,0.0,20,,0.03,0.19,,,,,3129.7178,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Brighton & Hove Albion,0.1,0.1,False,,4.26,0.0,20,,0.01,0.19,,,,,3060.5679,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Chelsea,0.1,0.1,False,,4.26,0.0,20,,0.01,0.19,,,,,3324.568,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Coventry City,0.39,0.39,False,,4.26,0.0,20,,0.29,0.49,,,,204.081631,2667.4235,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Crystal Palace,0.285,0.285,False,,4.26,0.0,20,,0.18,0.39,,,,,964.5641,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Everton,0.16,0.16,False,,4.26,0.0,20,,0.03,0.29,,,,,1070.717,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Fulham,0.305,0.305,False,,4.26,0.0,20,,0.12,0.49,,,,,806.5665,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Hull City,0.56,0.56,False,,4.26,0.0,20,,0.5,0.62,,,,500,2853.3603,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Ipswich Town,0.43,0.43,False,,4.26,0.0,20,,0.25,0.61,,,,,1370.16,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Leeds United,0.195,0.195,False,,4.26,0.0,20,,0.09,0.3,,,,,2064.3677,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Liverpool,0.1,0.1,False,,4.26,0.0,20,,0.01,0.19,,,,,3192.6678,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Manchester City,0.105,0.105,False,,4.26,0.0,20,,0.02,0.19,,,,,1001.6679,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Manchester United,0.15,0.15,False,,4.26,0.0,20,,0.01,0.29,,,,,3030.568,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Newcastle United,0.11,0.11,False,,4.26,0.0,20,,0.03,0.19,,,,,1156.6167,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Nottingham Forest,0.265,0.265,False,,4.26,0.0,20,,0.14,0.39,,,,,1116.2659,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Sunderland,0.33,0.33,False,,4.26,0.0,20,,0.17,0.49,,,,,871.5649,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Tottenham Hotspur,0.23,0.23,False,,4.26,0.0,20,,0.07,0.39,,,,,771.6679,40610.6098,714.081631,Premier League: Teams relegated (2026-27),premier-league-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Alavés,0.52,0.52,False,,9.31,0.0,20,,0.05,0.99,,,,,41.1535,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Athletic Bilbao,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Atlético Madrid,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Barcelona,0.08,0.08,False,,9.31,0.0,20,,0.01,0.15,,,,,129.1679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Celta Vigo,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Deportivo La Coruña,0.52,0.52,False,,9.31,0.0,20,,0.05,0.99,,,,,41.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Elche,0.52,0.52,False,,9.31,0.0,20,,0.05,0.99,,,,,41.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Espanyol,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Getafe,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Levante,0.525,0.525,False,,9.31,0.0,20,,0.06,0.99,,,,,51.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Málaga,0.54,0.54,False,,9.31,0.0,20,,0.09,0.99,,,,,91.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Osasuna,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Racing Santander,0.525,0.525,False,,9.31,0.0,20,,0.06,0.99,,,,,61.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Rayo Vallecano,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Real Betis,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Real Madrid,0.08,0.08,False,,9.31,0.0,20,,0.01,0.15,,,,,129.1679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Real Sociedad,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Sevilla,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.668,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Valencia,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Villarreal,0.5,0.5,False,,9.31,0.0,20,,0.01,0.99,,,,,1.6679,607.1984,0.0,LaLiga: Teams relegated (2026-27),laliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Bayer Leverkusen,0.21,0.21,False,,7.565,0.0,18,,0.02,0.4,,,,,63.0793,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Bayern Munich,0.08,0.08,False,,7.565,0.0,18,,0.01,0.15,,,,,291.2116,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Borussia Dortmund,0.205,0.205,False,,7.565,0.0,18,,0.01,0.4,,,,,62.0795,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Borussia Mönchengladbach,0.435,0.435,False,,7.565,0.0,18,,0.02,0.85,,,,,18.0793,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Eintracht Frankfurt,0.385,0.385,False,,7.565,0.0,18,,0.02,0.75,,,,,28.0794,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,FC Augsburg,0.455,0.455,False,,7.565,0.0,18,,0.01,0.9,,,,,12.0796,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,1. FC Köln,0.5,0.5,False,,7.565,0.0,18,,0.01,0.99,,,,,1.4323,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,FC Schalke 04,0.5,0.5,False,,7.565,0.0,18,,0.01,0.99,,,,,2.0795,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Hamburger SV,0.505,0.505,False,,7.565,0.0,18,,0.02,0.99,,,,,2.0794,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Mainz 05,0.5,0.5,False,,7.565,0.0,18,,0.02,0.98,,,,,3.0796,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,RB Leipzig,0.28,0.28,False,,7.565,0.0,18,,0.01,0.55,,,,,47.0796,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,SC Freiburg,0.5,0.5,False,,7.565,0.0,18,,0.02,0.98,,,,,3.0795,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,SC Paderborn,0.62,0.62,False,,7.565,0.0,18,,0.25,0.99,,,,,27.0795,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,SV Elversberg,0.47,0.47,False,,7.565,0.0,18,,0.02,0.92,,,,,68.0796,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,TSG Hoffenheim,0.38,0.38,False,,7.565,0.0,18,,0.01,0.75,,,,,26.4358,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Union Berlin,0.5,0.5,False,,7.565,0.0,18,,0.02,0.98,,,,,3.0796,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,VfB Stuttgart,0.5,0.5,False,,7.565,0.0,18,,0.02,0.98,,,,,3.0795,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Werder Bremen,0.54,0.54,False,,7.565,0.0,18,,0.1,0.98,,,,,13.0796,674.2724,0.0,Bundesliga: Teams relegated (2026-27),bundesliga-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Angers,0.5,0.5,False,,9.01,0.0,18,,0.01,0.99,,,,,2.0795,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Auxerre,0.5,0.5,False,,9.01,0.0,18,,0.01,0.99,,,,,2.0794,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Brest,0.5,0.5,False,,9.01,0.0,18,,0.01,0.99,,,,,2.0795,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Le Havre,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0794,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Le Mans,0.505,0.505,False,,9.01,0.0,18,,0.02,0.99,,,,,1.4322,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lens,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0796,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lille,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0796,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lorient,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0796,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lyon,0.505,0.505,False,,9.01,0.0,18,,0.02,0.99,,,,,2.895,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Marseille,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0794,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Monaco,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0794,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Nice,0.5,0.5,False,,9.01,0.0,18,,0.01,0.99,,,,,2.0796,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Paris FC,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,2.9939,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Paris Saint-Germain,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0795,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Rennes,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.048,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Strasbourg,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0153,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Toulouse,0.5,0.5,False,,9.01,0.0,18,,0.02,0.98,,,,,3.0795,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Troyes,0.5,0.5,False,,9.01,0.0,18,,0.01,0.99,,,,,2.0794,46.6883,0.0,Ligue 1: Teams relegated (2026-27),ligue-1-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Atalanta,0.5,0.5,False,,10.13,0.0,20,,0.02,0.98,,,,,2.6678,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Bologna,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Cagliari,0.52,0.52,False,,10.13,0.0,20,,0.05,0.99,,,,,21.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Como,0.5,0.5,False,,10.13,0.0,20,,0.02,0.98,,,,,2.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Fiorentina,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Frosinone,0.525,0.525,False,,10.13,0.0,20,,0.06,0.99,,,,,61.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Genoa,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Inter Milan,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Juventus,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Lazio,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Lecce,0.52,0.52,False,,10.13,0.0,20,,0.05,0.99,,,,,41.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,AC Milan,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.1602,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Monza,0.54,0.54,False,,10.13,0.0,20,,0.09,0.99,,,,,91.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Napoli,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Parma,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Roma,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Sassuolo,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.668,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Torino,0.5,0.5,False,,10.13,0.0,20,,0.02,0.98,,,,,2.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Udinese,0.5,0.5,False,,10.13,0.0,20,,0.01,0.99,,,,,1.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Venezia,0.525,0.525,False,,10.13,0.0,20,,0.06,0.99,,,,,61.6679,305.254,0.0,Serie A: Teams relegated (2026-27),serie-a-teams-relegated-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Arsenal,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Aston Villa,0.495,0.495,False,,7.995,0.0,16,,0.01,0.98,,,,,2.1295,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Bournemouth,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0796,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Brentford,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.1296,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Brighton & Hove Albion,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Chelsea,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0796,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Coventry City,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0796,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Crystal Palace,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Everton,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0796,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Fulham,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Hull City,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Ipswich Town,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Leeds United,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0795,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Liverpool,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0296,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Manchester City,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0796,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,premier_league,relegation,Manchester United,0.5,0.5,False,,7.995,0.0,16,,0.01,0.99,,,,,2.0796,33.3228,0.0,Premier League: 17th Place (Relegation Survivor) 2026-27,premier-league-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Alavés,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Athletic Bilbao,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.618,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Atlético Madrid,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Barcelona,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Celta Vigo,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Deportivo La Coruña,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Elche,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Espanyol,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Getafe,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Levante,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.618,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Málaga,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Osasuna,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Racing Santander,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Rayo Vallecano,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Real Betis,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Real Madrid,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Real Sociedad,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Sevilla,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Valencia,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,la_liga,relegation,Villarreal,0.5,0.5,False,,10.0,0.0,20,,0.01,0.99,,,,,1.668,34.708,0.0,LaLiga: 17th Place (Relegation Survivor) 2026-27,laliga-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Bayer Leverkusen,0.355,0.355,False,,7.005,0.0,18,,0.01,0.7,,,,,31.6679,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Bayern Munich,0.205,0.205,False,,7.005,0.0,18,,0.01,0.4,,,,,121.6679,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Borussia Dortmund,0.255,0.255,False,,7.005,0.0,18,,0.01,0.5,,,,,51.668,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Borussia Mönchengladbach,0.415,0.415,False,,7.005,0.0,18,,0.01,0.82,,,,,19.1179,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Eintracht Frankfurt,0.355,0.355,False,,7.005,0.0,18,,0.01,0.7,,,,,31.6679,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,FC Augsburg,0.44,0.44,False,,7.005,0.0,18,,0.09,0.79,,,,,21.168,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,1. FC Köln,0.425,0.425,False,,7.005,0.0,18,,0.01,0.84,,,,,17.158,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,FC Schalke 04,0.435,0.435,False,,7.005,0.0,18,,0.01,0.86,,,,,15.198,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Hamburger SV,0.48,0.48,False,,7.005,0.0,18,,0.01,0.95,,,,,5.618,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Mainz 05,0.425,0.425,False,,7.005,0.0,18,,0.01,0.84,,,,,17.3479,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,RB Leipzig,0.305,0.305,False,,7.005,0.0,18,,0.01,0.6,,,,,41.668,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,SC Freiburg,0.36,0.36,False,,7.005,0.0,18,,0.01,0.71,,,,,24.678,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,SC Paderborn,0.36,0.36,False,,7.005,0.0,18,,0.01,0.71,,,,,32.978,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,SV Elversberg,0.445,0.445,False,,7.005,0.0,18,,0.01,0.88,,,,,12.1947,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,TSG Hoffenheim,0.425,0.425,False,,7.005,0.0,18,,0.01,0.84,,,,,32.348,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Union Berlin,0.44,0.44,False,,7.005,0.0,18,,0.09,0.79,,,,,24.268,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,VfB Stuttgart,0.36,0.36,False,,7.005,0.0,18,,0.01,0.71,,,,,37.978,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,bundesliga,relegation,Werder Bremen,0.52,0.52,False,,7.005,0.0,18,,0.1,0.94,,,,,20.3578,549.06,0.0,Bundesliga: 15th Place (Relegation Survivor) 2026-27,bundesliga-15th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Angers,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Auxerre,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Brest,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Le Havre,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lens,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lille,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lorient,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Lyon,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Marseille,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Monaco,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Nice,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Paris FC,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Paris Saint-Germain,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Rennes,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Strasbourg,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Toulouse,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Troyes,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,ligue_1,relegation,Le Mans,0.495,0.495,False,,8.91,0.0,18,,,0.99,,,,,1.568,28.224,0.0,Ligue 1: 16th Place (Relegation Survivor) 2026-27,ligue-1-16th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Atalanta,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Bologna,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Cagliari,0.495,0.495,False,,8.99,0.0,18,,0.01,0.98,,,,,2.1296,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Como,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Fiorentina,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Frosinone,0.495,0.495,False,,8.99,0.0,18,,0.01,0.98,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Genoa,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Inter Milan,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0296,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Juventus,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.1296,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Lazio,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Lecce,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,AC Milan,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Monza,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Napoli,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Parma,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Roma,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Sassuolo,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0796,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,polymarket,serie_a,relegation,Torino,0.5,0.5,False,,8.99,0.0,18,,0.01,0.99,,,,,2.0795,37.5821,0.0,Serie A: 17th Place (Relegation Survivor) 2026-27,serie-a-17th-place-relegation-survivor-2026-27,,
+2026-08-29,smarkets,bundesliga,champion,1. FC Cologne,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Bayer Leverkusen,0.0379,0.03697741353236742,True,1.025,1.025,0.778,18,18,0.0217,0.0541,0.0324,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Bayern Munich,0.8493,0.8286257866237374,True,1.025,1.025,0.778,18,18,0.7812,0.9174,0.1362,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Borussia Dortmund,0.06085,0.059368749695107054,True,1.025,1.025,0.778,18,18,0.0417,0.08,0.0383,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Borussia Monchengladbach,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Eintracht Frankfurt,0.0036,0.0035123664569003347,True,1.025,1.025,0.778,18,18,0.0001,0.0071,0.007,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,FC Augsburg,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,FSV Mainz,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Hamburger SV,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,RB Leipzig,0.04345,0.04239231182008877,True,1.025,1.025,0.778,18,18,0.0263,0.0606,0.0343,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,SC Freiburg,0.00215,0.002097663300648811,True,1.025,1.025,0.778,18,18,0.0001,0.0042,0.0041,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Schalke 04,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,SC Paderborn 07,0.00105,0.001024440216595931,True,1.025,1.025,0.778,18,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,SV 07 Elversberg,0.00105,0.001024440216595931,True,1.025,1.025,0.778,18,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,TSG Hoffenheim,0.0067,0.00653690423923118,True,1.025,1.025,0.778,18,18,0.0001,0.0133,0.0132,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Union Berlin,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,VfB Stuttgart,0.0053,0.005170983950436604,True,1.025,1.025,0.778,18,18,0.0001,0.0105,0.0104,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,champion,Werder Bremen,0.0017,0.0016586174935362692,True,1.025,1.025,0.778,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Winner,141172192
+2026-08-29,smarkets,bundesliga,top4,1. FC Cologne,,,False,,,,18,0,,0.0263,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Bayer Leverkusen,,,False,,,,18,0,,0.6993,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Bayern Munich,,,False,,,,18,0,,0.9999,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Borussia Dortmund,,,False,,,,18,0,,0.8065,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Borussia Monchengladbach,,,False,,,,18,0,,0.087,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Eintracht Frankfurt,,,False,,,,18,0,,0.1471,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,FC Augsburg,,,False,,,,18,0,,0.0312,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,FSV Mainz,,,False,,,,18,0,,0.04,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Hamburger SV,,,False,,,,18,0,,0.0312,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,RB Leipzig,,,False,,,,18,0,,0.7407,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,SC Freiburg,,,False,,,,18,0,,0.1064,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Schalke 04,,,False,,,,18,0,,0.0208,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,SC Paderborn 07,,,False,,,,18,0,,0.0071,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,SV 07 Elversberg,,,False,,,,18,0,,0.0053,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,TSG Hoffenheim,,,False,,,,18,0,,0.2041,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Union Berlin,,,False,,,,18,0,,0.05,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,VfB Stuttgart,,,False,,,,18,0,,0.2532,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,top4,Werder Bremen,,,False,,,,18,0,,0.0606,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Top 4,154930445
+2026-08-29,smarkets,bundesliga,relegation,1. FC Cologne,,,False,,,,18,0,,0.3378,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Bayer Leverkusen,,,False,,,,18,0,,0.0033,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Bayern Munich,,,False,,,,18,0,,0.002,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Borussia Dortmund,,,False,,,,18,0,,0.0033,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Borussia Monchengladbach,,,False,,,,18,0,,0.1042,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Eintracht Frankfurt,,,False,,,,18,0,,0.0526,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,FC Augsburg,,,False,,,,18,0,,0.2326,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,FSV Mainz,,,False,,,,18,0,,0.1724,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Hamburger SV,,,False,,,,18,0,,0.2632,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,RB Leipzig,,,False,,,,18,0,,0.0033,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,SC Freiburg,,,False,,,,18,0,,0.1042,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Schalke 04,,,False,,,,18,0,,0.3333,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,SC Paderborn 07,,,False,,,,18,0,,0.5376,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,SV 07 Elversberg,,,False,,,,18,0,,0.6024,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,TSG Hoffenheim,,,False,,,,18,0,,0.0294,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Union Berlin,,,False,,,,18,0,,0.1389,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,VfB Stuttgart,,,False,,,,18,0,,0.0294,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,bundesliga,relegation,Werder Bremen,,,False,,,,18,0,,0.1389,,ask_only,partial,,,,,Bundesliga 26/27,bundesliga-26-27,Bundesliga - Relegation,155700614
+2026-08-29,smarkets,premier_league,champion,AFC Bournemouth,,,True,1.0092,1.0092,0.667,20,18,,0.002,,ask_only,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Arsenal FC,0.51955,0.5148137138327388,True,1.0092,1.0092,0.667,20,18,0.5155,0.5236,0.0081,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Aston Villa,0.00395,0.003913991280221959,True,1.0092,1.0092,0.667,20,18,0.002,0.0059,0.0039,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Brentford FC,0.0065,0.006440745144669045,True,1.0092,1.0092,0.667,20,18,0.0059,0.0071,0.0012,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Brighton & Hove Albion,0.00375,0.003715814506539834,True,1.0092,1.0092,0.667,20,18,0.0033,0.0042,0.0009,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Chelsea FC,0.1266,0.1254458977407848,True,1.0092,1.0092,0.667,20,18,0.125,0.1282,0.0032,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Coventry City,,,True,1.0092,1.0092,0.667,20,18,,0.002,,ask_only,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Crystal Palace,0.00105,0.0010404280618311534,True,1.0092,1.0092,0.667,20,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Everton FC,0.00265,0.0026258422512881493,True,1.0092,1.0092,0.667,20,18,0.002,0.0033,0.0013,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Fulham FC,0.00105,0.0010404280618311534,True,1.0092,1.0092,0.667,20,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Hull City,0.0015,0.0014863258026159337,True,1.0092,1.0092,0.667,20,18,0.001,0.002,0.001,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Ipswich Town,0.00105,0.0010404280618311534,True,1.0092,1.0092,0.667,20,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Leeds United,0.00265,0.0026258422512881493,True,1.0092,1.0092,0.667,20,18,0.002,0.0033,0.0013,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Liverpool FC,0.06785,0.06723147047166073,True,1.0092,1.0092,0.667,20,18,0.0588,0.0769,0.0181,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Manchester City,0.21055,0.20863059849385654,True,1.0092,1.0092,0.667,20,18,0.2083,0.2128,0.0045,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Manchester United,0.03935,0.038991280221958,True,1.0092,1.0092,0.667,20,18,0.037,0.0417,0.0047,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Newcastle United,0.00335,0.003319460959175585,True,1.0092,1.0092,0.667,20,18,0.0033,0.0034,0.0001,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Nottingham Forest,0.00215,0.002130400317082838,True,1.0092,1.0092,0.667,20,18,0.001,0.0033,0.0023,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Sunderland AFC,0.00105,0.0010404280618311534,True,1.0092,1.0092,0.667,20,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,champion,Tottenham Hotspur,0.0146,0.014466904478795088,True,1.0092,1.0092,0.667,20,18,0.0125,0.0167,0.0042,mid,two_sided,,,,,Premier League 26/27,premier-league-26-27,Premier League - Winner,141560780
+2026-08-29,smarkets,premier_league,top_scorer,Alejandro Garnacho,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Alexander Isak,0.07615,,True,,,0.294,92,17,0.0571,0.0952,0.0381,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Alexis Mac Allister,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Amad Diallo,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Antoine Semenyo,,,True,,,0.294,92,17,,0.0476,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Arnaud Kalimuendo Muinga,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Benjamin Sesko,0.01185,,True,,,0.294,92,17,0.002,0.0217,0.0197,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Brennan Johnson,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Brian Brobbey,,,True,,,0.294,92,17,,0.01,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Brian Djomeni Madjo,0.251,,True,,,0.294,92,17,0.002,0.5,0.498,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Bruno Fernandes,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Bryan Mbeumo,0.0173,,True,,,0.294,92,17,0.0001,0.0345,0.0344,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Bukayo Saka,0.0067,,True,,,0.294,92,17,0.0001,0.0133,0.0132,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Callum Wilson,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Carvalho Rodrigo Muniz,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Charalambos Kostoulas,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Christos Tzolis,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Chris Wood,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Cody Gakpo,0.0063,,True,,,0.294,92,17,0.0001,0.0125,0.0124,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Cole Palmer,0.04035,,True,,,0.294,92,17,0.0294,0.0513,0.0219,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Daizen Maeda,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Dango Ouattara,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Dan Ndoye,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Danny Welbeck,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Declan Rice,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Dominic Calvert-Lewin,0.01395,,True,,,0.294,92,17,0.0001,0.0278,0.0277,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Dominic Solanke,0.00595,,True,,,0.294,92,17,0.0001,0.0118,0.0117,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Dominik Szoboszlai,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Eberechi Eze,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Eli Junior Kroupi,,,True,,,0.294,92,17,,0.0033,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Ellis Simms,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Emersonn Correia Da Silva,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Erling Braut Haaland,0.63095,,True,,,0.294,92,17,0.5952,0.6667,0.0715,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Evan Ferguson,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Federico Chiesa,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Florian Richard Wirtz,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Francisco Evanilson De Lima Barbosa,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Gabriel Magalhaes,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Gabriel Martinelli,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Georginio Rutter,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Gonzalo Garcia,,,True,,,0.294,92,17,,0.0105,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Haji Wright,,,True,,,0.294,92,17,,0.0033,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Harry Wilson,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Harvey Barnes,,,True,,,0.294,92,17,,0.0033,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Hugo Ekitike,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Igor Jesus,,,True,,,0.294,92,17,,0.0111,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Igor Thiago,0.05625,,True,,,0.294,92,17,0.0435,0.069,0.0255,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Iliman Ndiaye,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Ismaila Sarr,,,True,,,0.294,92,17,,0.0083,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Jack Clarke,,,True,,,0.294,92,17,,0.5,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Jaidon Anthony,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Jean-Philippe Mateta,,,True,,,0.294,92,17,,0.01,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Jeremy Doku,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Joao Pedro Junqueira de Jesus,0.0952,,True,,,0.294,92,17,0.0714,0.119,0.0476,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Joe Gelhardt,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Johan Manzambi,,,True,,,0.294,92,17,,0.0071,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,John McGinn,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Jorgen Larsen,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Joshua Zirkzee,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Kai Havertz,0.0235,,True,,,0.294,92,17,0.01,0.037,0.027,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Kevin Schade,,,True,,,0.294,92,17,,0.01,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Kiernan Frank Dewsbury-Hall,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Liam Delap,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Marcus Rashford,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Martin Odegaard,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Mateus Fernandes,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Matheus Cunha,,,True,,,0.294,92,17,,0.0133,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Mathis Rayan Cherki,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Mathys Henri Tel,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Mikel Merino,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Mikey Moore,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Mohammed Kudus,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Morgan Gibbs-White,,,True,,,0.294,92,17,,0.0111,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Morgan Rogers,,,True,,,0.294,92,17,,0.0143,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Nick Woltemade,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Nicolas Jackson,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Noni Madueke,,,True,,,0.294,92,17,,0.002,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Norberto Bercique Gomes Betuncal,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Oliver McBurnie,,,True,,,0.294,92,17,,0.0034,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Omar Marmoush,0.0125,,True,,,0.294,92,17,0.005,0.02,0.015,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Phil Foden,,,True,,,0.294,92,17,,0.005,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Promise Oluwatobi Emmanuel David Akinpelu,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Rayan Vitor,,,True,,,0.294,92,17,,0.004,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Richarlison De Andrade,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Rio Ngumoha,0.00215,,True,,,0.294,92,17,0.0001,0.0042,0.0041,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Taiwo Awoniyi,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Thierno Mamadou Barry,,,True,,,0.294,92,17,,0.0091,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Victor Munoz,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Viktor Gyokeres,0.01565,,True,,,0.294,92,17,0.0001,0.0312,0.0311,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,William Osula,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Yoane Wissa,0.00505,,True,,,0.294,92,17,0.0001,0.01,0.0099,mid,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top_scorer,Youri Tielemans,,,True,,,0.294,92,17,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top Goalscorer,153292048
+2026-08-29,smarkets,premier_league,top4,AFC Bournemouth,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Arsenal FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Aston Villa,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Brentford FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Brighton & Hove Albion,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Chelsea FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Coventry City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Crystal Palace,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Everton FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Fulham FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Hull City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Ipswich Town,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Leeds United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Liverpool FC,,,False,,,,20,0,,0.6667,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Manchester City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Manchester United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Newcastle United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Nottingham Forest,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Sunderland AFC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top4,Tottenham Hotspur,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 4,142430849
+2026-08-29,smarkets,premier_league,top6,AFC Bournemouth,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Arsenal FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Aston Villa,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Brentford FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Brighton & Hove Albion,,,False,,,,20,0,0.125,,,bid_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Chelsea FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Coventry City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Crystal Palace,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Everton FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Fulham FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Hull City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Ipswich Town,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Leeds United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Liverpool FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Manchester City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Manchester United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Newcastle United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Nottingham Forest,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Sunderland AFC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top6,Tottenham Hotspur,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Top 6,149275994
+2026-08-29,smarkets,premier_league,top_half,AFC Bournemouth,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Arsenal FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Aston Villa,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Brentford FC,,,False,,,,20,0,0.625,,,bid_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Brighton & Hove Albion,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Chelsea FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Coventry City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Crystal Palace,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Everton FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Fulham FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Hull City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Ipswich Town,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Leeds United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Liverpool FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Manchester City,,,False,,,,20,0,0.9091,,,bid_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Manchester United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Newcastle United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Nottingham Forest,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Sunderland AFC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,top_half,Tottenham Hotspur,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - To Finish in Top Half,149275993
+2026-08-29,smarkets,premier_league,relegation,AFC Bournemouth,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Arsenal FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Aston Villa,,,False,,,,20,0,0.01,,,bid_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Brentford FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Brighton & Hove Albion,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Chelsea FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Coventry City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Crystal Palace,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Everton FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Fulham FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Hull City,,,False,,,,20,0,,0.7407,,ask_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Ipswich Town,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Leeds United,,,False,,,,20,0,0.0667,,,bid_only,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Liverpool FC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Manchester City,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Manchester United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Newcastle United,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Nottingham Forest,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Sunderland AFC,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,premier_league,relegation,Tottenham Hotspur,,,False,,,,20,0,,,,empty,partial,,,,,Premier League 26/27,premier-league-26-27,Premier League - Relegation,142427177
+2026-08-29,smarkets,la_liga,champion,Athletic Bilbao,,,True,,,0.4,20,5,,0.0033,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Atletico Madrid,0.02495,,True,,,0.4,20,5,0.0154,0.0345,0.0191,mid,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,CA Osasuna,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Deportivo Alaves,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Elche CF,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Espanyol Barcelona,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,FC Barcelona,0.5781,,True,,,0.4,20,5,0.5714,0.5848,0.0134,mid,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Getafe CF,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Levante UD,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Malaga CF,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Racing Santander,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Rayo Vallecano,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,RC Celta de Vigo,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,RC Deportivo de La Coruna,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Real Betis Seville,0.00205,,True,,,0.4,20,5,0.0001,0.004,0.0039,mid,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Real Madrid,0.39355,,True,,,0.4,20,5,0.3704,0.4167,0.0463,mid,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Real Sociedad San Sebastian,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Sevilla FC,0.0017,,True,,,0.4,20,5,0.0001,0.0033,0.0032,mid,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Valencia CF,,,True,,,0.4,20,5,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,champion,Villarreal CF,,,True,,,0.4,20,5,,0.0034,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Winner,142497917
+2026-08-29,smarkets,la_liga,top4,Athletic Bilbao,,,False,,,,20,0,,0.2632,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Atletico Madrid,,,False,,,,20,0,,0.7463,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,CA Osasuna,,,False,,,,20,0,,0.0714,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Deportivo Alaves,,,False,,,,20,0,,0.0625,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Elche CF,,,False,,,,20,0,,0.0263,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Espanyol Barcelona,,,False,,,,20,0,,0.0513,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,FC Barcelona,,,False,,,,20,0,,0.9999,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Getafe CF,,,False,,,,20,0,,0.0625,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Levante UD,,,False,,,,20,0,,0.0333,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Malaga CF,,,False,,,,20,0,,0.0167,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Racing Santander,,,False,,,,20,0,,0.0263,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Rayo Vallecano,,,False,,,,20,0,,0.0513,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,RC Celta de Vigo,,,False,,,,20,0,,0.0833,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,RC Deportivo de La Coruna,,,False,,,,20,0,,0.0417,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Real Betis Seville,,,False,,,,20,0,,0.4274,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Real Madrid,,,False,,,,20,0,,0.9901,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Real Sociedad San Sebastian,,,False,,,,20,0,,0.1316,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Sevilla FC,,,False,,,,20,0,,0.1,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Valencia CF,,,False,,,,20,0,,0.0833,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top4,Villarreal CF,,,False,,,,20,0,,0.2326,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top 4,149337141
+2026-08-29,smarkets,la_liga,top_scorer,Abdessamad Ezzalzouli,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Ademola Lookman,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Alberto Moleiro,,,True,,,,54,0,,0.0105,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Alexander Sorloth,,,True,,,,54,0,,0.0208,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Alex Baena,,,True,,,,54,0,,0.0071,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Andres Martin Garcia,,,True,,,,54,0,,0.0071,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Ante Budimir,,,True,,,,54,0,,0.05,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Anthony Gordon,,,True,,,,54,0,,0.0167,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Antony Matheus Dos Santos,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Arda Guler,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Ayoze Perez,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Bernardo Silva,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Borja Iglesias,,,True,,,,54,0,,0.0263,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Carlos Ruiz Rubio,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Dani Olmo,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Endrick De Sousa,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Federico Valverde,,,True,,,,54,0,,0.0042,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Fermin Lopez,,,True,,,,54,0,,0.0167,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Georges Mikautadze,,,True,,,,54,0,,0.04,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Gerard Moreno,,,True,,,,54,0,,0.0357,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Giovani Lo Celso,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Giuliano Simeone,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Goncalo Manuel Guedes,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Gorka Guruzeta,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Hugo Duro,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Inaki Williams,,,True,,,,54,0,,0.0042,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Jorge Frutos,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Juan Camilo Hernandez Suarez,,,True,,,,54,0,,0.0167,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Jude Bellingham,,,True,,,,54,0,,0.04,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Julian Alvarez,,,True,,,,54,0,,0.0541,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Kang-In Lee,,,True,,,,54,0,,0.0208,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Karim Adeyemi,,,True,,,,54,0,,0.0105,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Kylian Mbappe,,,True,,,,54,0,,0.7937,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Lamine Yamal,,,True,,,,54,0,,0.08,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Lucas Boye,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Mariano Diaz,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Martin Satriano,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Mikiel Oyarzabal,,,True,,,,54,0,,0.0541,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Nicolas Pepe,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Nico Williams,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Oihan Sancet,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Orri Steinn Oskarsson,,,True,,,,54,0,,0.0042,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Pablo Fornals,,,True,,,,54,0,,0.0071,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Pierre Aubameyang,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Rafa Mir Vicente,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Raphinha,,,True,,,,54,0,,0.1136,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Robbie Ure,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Roberto Fernandez,,,True,,,,54,0,,0.0091,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Thiago Almada,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Toni Martinez,,,True,,,,54,0,,0.0133,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Troy Parrott,,,True,,,,54,0,,0.0208,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Vinicius Junior,,,True,,,,54,0,,0.05,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Yan Diomande,,,True,,,,54,0,,0.0263,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,top_scorer,Yeremay Hernandez,,,True,,,,54,0,,0.0053,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Top Goalscorer,156107609
+2026-08-29,smarkets,la_liga,relegation,Athletic Bilbao,,,False,,,,20,0,,0.0312,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Atletico Madrid,,,False,,,,20,0,,0.0042,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,CA Osasuna,,,False,,,,20,0,,0.1695,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Deportivo Alaves,,,False,,,,20,0,,0.2326,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Elche CF,,,False,,,,20,0,,0.3676,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Espanyol Barcelona,,,False,,,,20,0,,0.2041,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,FC Barcelona,,,False,,,,20,0,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Getafe CF,,,False,,,,20,0,,0.1613,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Levante UD,,,False,,,,20,0,,0.3333,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Malaga CF,,,False,,,,20,0,,0.4808,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Racing Santander,,,False,,,,20,0,,0.3846,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Rayo Vallecano,,,False,,,,20,0,,0.2532,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,RC Celta de Vigo,,,False,,,,20,0,,0.1389,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,RC Deportivo de La Coruna,,,False,,,,20,0,,0.2899,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Real Betis Seville,,,False,,,,20,0,,0.0105,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Real Madrid,,,False,,,,20,0,,0.002,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Real Sociedad San Sebastian,,,False,,,,20,0,,0.0952,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Sevilla FC,,,False,,,,20,0,,0.1087,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Valencia CF,,,False,,,,20,0,,0.1389,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,la_liga,relegation,Villarreal CF,,,False,,,,20,0,,0.0357,,ask_only,partial,,,,,LaLiga 26/27,laliga-26-27,LaLiga - Relegation,154485876
+2026-08-29,smarkets,ligue_1,champion,AJ Auxerre,0.0017,0.0016699410609037327,True,1.018,1.018,0.667,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Angers SCO,0.00105,0.0010314341846758349,True,1.018,1.018,0.667,18,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,AS Monaco,0.0384,0.03772102161100196,True,1.018,1.018,0.667,18,18,0.0227,0.0541,0.0314,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,ESTAC Troyes,0.00105,0.0010314341846758349,True,1.018,1.018,0.667,18,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,FC Lorient,0.0017,0.0016699410609037327,True,1.018,1.018,0.667,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Le Havre AC,0.0017,0.0016699410609037327,True,1.018,1.018,0.667,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Le Mans FC,0.00105,0.0010314341846758349,True,1.018,1.018,0.667,18,18,0.0001,0.002,0.0019,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Lille OSC,0.0341,0.03349705304518664,True,1.018,1.018,0.667,18,18,0.0182,0.05,0.0318,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,OGC Nice,0.00215,0.002111984282907662,True,1.018,1.018,0.667,18,18,0.0001,0.0042,0.0041,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Olympique Lyon,0.0259,0.025442043222003927,True,1.018,1.018,0.667,18,18,0.0118,0.04,0.0282,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Olympique Marseille,0.0813,0.07986247544204322,True,1.018,1.018,0.667,18,18,0.0606,0.102,0.0414,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Paris FC,0.00215,0.002111984282907662,True,1.018,1.018,0.667,18,18,0.0001,0.0042,0.0041,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Paris Saint-Germain,0.76735,0.7537819253438114,True,1.018,1.018,0.667,18,18,0.6944,0.8403,0.1459,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Racing Club De Lens,0.04345,0.04268172888015717,True,1.018,1.018,0.667,18,18,0.0263,0.0606,0.0343,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Stade Brest 29,0.0017,0.0016699410609037327,True,1.018,1.018,0.667,18,18,0.0001,0.0033,0.0032,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Stade Rennais FC,0.0084,0.008251473477406679,True,1.018,1.018,0.667,18,18,0.0001,0.0167,0.0166,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Strasbourg Alsace,0.0027,0.002652259332023576,True,1.018,1.018,0.667,18,18,0.0001,0.0053,0.0052,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,champion,Toulouse FC,0.00215,0.002111984282907662,True,1.018,1.018,0.667,18,18,0.0001,0.0042,0.0041,mid,two_sided,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Winner,144833349
+2026-08-29,smarkets,ligue_1,top3,AJ Auxerre,,,False,,,,18,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Angers SCO,,,False,,,,18,0,,0.0042,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,AS Monaco,,,False,,,,18,0,,0.3521,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,ESTAC Troyes,,,False,,,,18,0,,0.0042,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,FC Lorient,,,False,,,,18,0,,0.0263,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Le Havre AC,,,False,,,,18,0,,0.0133,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Le Mans FC,,,False,,,,18,0,,0.0053,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Lille OSC,,,False,,,,18,0,,0.3356,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,OGC Nice,,,False,,,,18,0,,0.04,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Olympique Lyon,,,False,,,,18,0,,0.3125,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Olympique Marseille,,,False,,,,18,0,,0.4808,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Paris FC,,,False,,,,18,0,,0.0455,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Paris Saint-Germain,,,False,,,,18,0,,0.9999,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Racing Club De Lens,,,False,,,,18,0,,0.4032,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Stade Brest 29,,,False,,,,18,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Stade Rennais FC,,,False,,,,18,0,,0.1852,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Strasbourg Alsace,,,False,,,,18,0,,0.0606,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,top3,Toulouse FC,,,False,,,,18,0,,0.04,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top 3,152773933
+2026-08-29,smarkets,ligue_1,relegation,AJ Auxerre,,,False,,,,18,0,,0.3175,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Angers SCO,,,False,,,,18,0,,0.5495,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,AS Monaco,,,False,,,,18,0,,0.0043,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,ESTAC Troyes,,,False,,,,18,0,,0.5263,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,FC Lorient,,,False,,,,18,0,,0.1786,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Le Havre AC,,,False,,,,18,0,,0.3356,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Le Mans FC,,,False,,,,18,0,,0.5,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Lille OSC,,,False,,,,18,0,,0.0077,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,OGC Nice,,,False,,,,18,0,,0.1887,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Olympique Lyon,,,False,,,,18,0,,0.0077,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Olympique Marseille,,,False,,,,18,0,,0.0037,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Paris FC,,,False,,,,18,0,,0.1163,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Paris Saint-Germain,,,False,,,,18,0,,0.0033,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Racing Club De Lens,,,False,,,,18,0,,0.0043,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Stade Brest 29,,,False,,,,18,0,,0.303,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Stade Rennais FC,,,False,,,,18,0,,0.0217,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Strasbourg Alsace,,,False,,,,18,0,,0.0909,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,relegation,Toulouse FC,,,False,,,,18,0,,0.1163,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Relegation,153300055
+2026-08-29,smarkets,ligue_1,top_scorer,Achraf Hakimi,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Amine Gouiri,,,True,,,,35,0,,0.1163,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Anssumane Fati,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Becket Godo,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Corentin Tolisso,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Desire Doue,,,True,,,,35,0,,0.0833,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Esteban Lepaul,,,True,,,,35,0,,0.1887,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Fabian Ruiz,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Ferran Torres,,,True,,,,35,0,,0.1613,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Florian Thauvin,,,True,,,,35,0,,0.0625,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Folarin Balogun,,,True,,,,35,0,,0.0625,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Igor Paixao,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Ilan Kebbal,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Issa Soumare,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Jean-Philippe Krasso,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Joao Neves,,,True,,,,35,0,,0.0042,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Joaquin Panichelli,,,True,,,,35,0,,0.0263,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Khvicha Kvaratskhelia,,,True,,,,35,0,,0.1042,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Lassine Sinayoko,,,True,,,,35,0,,0.0263,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Lois Openda,,,True,,,,35,0,,0.069,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Ludovic Ajorque,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Matias Pardo,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Matthis Abline,,,True,,,,35,0,,0.0625,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Mohamed Bamba,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Odsonne Edouard,,,True,,,,35,0,,0.0513,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Olivier Giroud,,,True,,,,35,0,,0.0312,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Ousmane Dembele,,,True,,,,35,0,,0.2326,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Pablo Pagis,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Pavel Sulc,,,True,,,,35,0,,0.0263,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Prosper Peter,,,True,,,,35,0,,0.0167,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Remy Lascary,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Romain Del Castillo,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Sofiane Diop,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Vitinha,,,True,,,,35,0,,0.0053,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,ligue_1,top_scorer,Yann Gboho,,,True,,,,35,0,,0.0208,,ask_only,partial,,,,,Ligue 1 26/27,ligue-1-26-27,Ligue 1 - Top Goalscorer,156246043
+2026-08-29,smarkets,serie_a,champion,ACF Fiorentina,0.00505,,True,,,0.3,20,10,0.0001,0.01,0.0099,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,AC Milan,0.10795,,True,,,0.3,20,10,0.0909,0.125,0.0341,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,AC Monza,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,AS Roma,0.0945,,True,,,0.3,20,10,0.087,0.102,0.015,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Atalanta BC,0.02775,,True,,,0.3,20,10,0.01,0.0455,0.0355,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Bologna FC,0.00315,,True,,,0.3,20,10,0.0001,0.0062,0.0061,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Cagliari Calcio,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Como 1907,0.03395,,True,,,0.3,20,10,0.0294,0.0385,0.0091,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Frosinone Calcio,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Genoa CFC,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Inter Milano,0.4547,,True,,,0.3,20,10,0.4464,0.463,0.0166,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Juventus Turin,0.11145,,True,,,0.3,20,10,0.08,0.1429,0.0629,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Lazio Rome,0.00505,,True,,,0.3,20,10,0.0001,0.01,0.0099,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Parma Calcio,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Sassuolo Calcio,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,SSC Napoli,0.10915,,True,,,0.3,20,10,0.102,0.1163,0.0143,mid,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Torino FC,,,True,,,0.3,20,10,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Udinese Calcio,,,True,,,0.3,20,10,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,US Lecce,,,True,,,0.3,20,10,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,champion,Venezia FC,,,True,,,0.3,20,10,,0.002,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Winner,144839330
+2026-08-29,smarkets,serie_a,top4,ACF Fiorentina,,,False,,,,20,0,,0.0714,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,AC Milan,,,False,,,,20,0,,0.6757,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,AC Monza,,,False,,,,20,0,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,AS Roma,,,False,,,,20,0,,0.5618,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Atalanta BC,,,False,,,,20,0,,0.2381,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Bologna FC,,,False,,,,20,0,,0.0333,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Cagliari Calcio,,,False,,,,20,0,,0.0105,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Como 1907,,,False,,,,20,0,,0.3425,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Frosinone Calcio,,,False,,,,20,0,,0.0033,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Genoa CFC,,,False,,,,20,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Inter Milano,,,False,,,,20,0,,0.9709,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Juventus Turin,,,False,,,,20,0,,0.7042,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Lazio Rome,,,False,,,,20,0,,0.1,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Parma Calcio,,,False,,,,20,0,,0.0071,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Sassuolo Calcio,,,False,,,,20,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,SSC Napoli,,,False,,,,20,0,,0.6757,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Torino FC,,,False,,,,20,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Udinese Calcio,,,False,,,,20,0,,0.0263,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,US Lecce,,,False,,,,20,0,,0.0042,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top4,Venezia FC,,,False,,,,20,0,,0.0034,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top 4,156063222
+2026-08-29,smarkets,serie_a,top_scorer,Akor Adams,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Albert Gudmundsson,,,True,,,,61,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Albion Rrahmani,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Alisson Santos de Almeida,,,True,,,,61,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Anastasios Douvikas,,,True,,,,61,0,,0.0625,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Andrea Adorante,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Ange Yoan Bonny,,,True,,,,61,0,,0.0263,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Antonio Raimondo,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Artem Dovbyk,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Assane Diao,,,True,,,,61,0,,0.0105,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Bioty Moise Kean,,,True,,,,61,0,,0.0625,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Boulaye Dia,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Charles de Ketelaere,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Che Adams,,,True,,,,61,0,,0.0071,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Cher Ndour,,,True,,,,61,0,,0.0042,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Christian Pulisic,,,True,,,,61,0,,0.0312,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,David Neres,,,True,,,,61,0,,0.0071,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Domenico Berardi,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Donyell Malen,,,True,,,,61,0,,0.4065,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Elias Havel,,,True,,,,61,0,,0.0105,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Fares Ghedjemis,,,True,,,,61,0,,0.0263,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Fernandes Francisco Conceicao,,,True,,,,61,0,,0.0053,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Franco Mastantuono,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Giacomo Raspadori,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Gianluca Scamacca,,,True,,,,61,0,,0.04,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Giovanni Simeone,,,True,,,,61,0,,0.04,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Goncalo Ramos,,,True,,,,61,0,,0.1,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Gustavo Varela,,,True,,,,61,0,,0.0105,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Hakan Calhanoglu,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Idrissa Gueye,,,True,,,,61,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Jay Robinson,,,True,,,,61,0,,0.0053,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Jonathan David,,,True,,,,61,0,,0.0357,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Keinan Davis,,,True,,,,61,0,,0.0312,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Kenan Yildiz,,,True,,,,61,0,,0.0263,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Kevin De Bruyne,,,True,,,,61,0,,0.0263,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Lautaro Martinez,,,True,,,,61,0,,0.1316,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Lorenzo Colombo,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Lorenzo Pellegrini,,,True,,,,61,0,,0.0091,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Marcus Thuram,,,True,,,,61,0,,0.0556,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Martin Baturina,,,True,,,,61,0,,0.0071,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Mateo Pellegrino,,,True,,,,61,0,,0.0357,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Matias Malvano Soule,,,True,,,,61,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Mattia Zaccagni,,,True,,,,61,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Nicolas Paz,,,True,,,,61,0,,0.0357,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Nicolo Cambiaghi,,,True,,,,61,0,,0.0071,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Nicolo Zaniolo,,,True,,,,61,0,,0.0042,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Nikola Krstovic,,,True,,,,61,0,,0.0357,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Patrick Cutrone,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Paulo Dybala,,,True,,,,61,0,,0.0105,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Petar Ratkov,,,True,,,,61,0,,0.0208,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Pio Esposito,,,True,,,,61,0,,0.0556,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Rafael Leao,,,True,,,,61,0,,0.0263,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Randal Muani,,,True,,,,61,0,,0.0455,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Rasmus Hojlund,,,True,,,,61,0,,0.0625,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Riccardo Orsolini,,,True,,,,61,0,,0.0357,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Romano Schmid,,,True,,,,61,0,,0.0042,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Sandro Kulenovic,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Santiago Castro,,,True,,,,61,0,,0.0312,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Scott McTominay,,,True,,,,61,0,,0.0167,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Sebastiano Esposito,,,True,,,,61,0,,0.0133,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
+2026-08-29,smarkets,serie_a,top_scorer,Weston McKennie,,,True,,,,61,0,,0.0071,,ask_only,partial,,,,,Serie A 26/27,serie-a-26-27,Serie A - Top Goalscorer,158311517
