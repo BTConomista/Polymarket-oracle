@@ -1,0 +1,344 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://coach-beard.local/schemas/leghe-fantacalcio-export.json",
+    "title": "Coach Beard - Leghe Fantacalcio Export Contract",
+    "description": "Contratto dati e istruzioni per generare il CSV di importazione rose compatibile con Leghe Fantacalcio tramite il formato ufficiale FantaAsta Live.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schemaVersion",
+      "league",
+      "teams"
+    ],
+    "properties": {
+      "schemaVersion": {
+        "type": "string",
+        "const": "1.0.0"
+      },
+      "league": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "initialCredits",
+          "datasetVersion",
+          "rosterRules"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "initialCredits": {
+            "type": "integer",
+            "const": 1000
+          },
+          "datasetVersion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rosterRules": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "P",
+              "D",
+              "C",
+              "A"
+            ],
+            "properties": {
+              "P": {
+                "type": "integer",
+                "const": 3
+              },
+              "D": {
+                "type": "integer",
+                "const": 8
+              },
+              "C": {
+                "type": "integer",
+                "const": 8
+              },
+              "A": {
+                "type": "integer",
+                "const": 6
+              }
+            }
+          }
+        }
+      },
+      "teams": {
+        "type": "array",
+        "minItems": 8,
+        "maxItems": 8,
+        "items": {
+          "$ref": "#/$defs/team"
+        }
+      }
+    },
+    "$defs": {
+      "team": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "teamId",
+          "displayOrder",
+          "name",
+          "players"
+        ],
+        "properties": {
+          "teamId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "displayOrder": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^,$\\r\\n]+$",
+            "description": "Il nome non può contenere virgole, dollari o ritorni a capo perché il parser ufficiale divide ogni riga con una semplice virgola."
+          },
+          "players": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 25,
+            "items": {
+              "$ref": "#/$defs/purchase"
+            }
+          }
+        }
+      },
+      "purchase": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "officialPlayerId",
+          "playerName",
+          "role",
+          "purchasePrice",
+          "status"
+        ],
+        "properties": {
+          "officialPlayerId": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID numerico del calciatore presente nel listone ufficiale Fantacalcio. È il valore esportato nel CSV."
+          },
+          "playerName": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Usato per interfaccia, verifiche e audit. Non viene scritto nel CSV Leghe."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "P",
+              "D",
+              "C",
+              "A"
+            ]
+          },
+          "purchasePrice": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "status": {
+            "type": "string",
+            "const": "purchased"
+          }
+        }
+      }
+    },
+    "x-officialExportFormat": {
+      "target": "Leghe Fantacalcio",
+      "sourceCompatibility": "FantaAsta Live",
+      "fileExtension": ".csv",
+      "mimeType": "text/csv;charset=utf-8",
+      "encoding": "UTF-8",
+      "bom": false,
+      "delimiter": ",",
+      "lineEnding": "LF",
+      "header": false,
+      "teamBlockMarker": [
+        "$",
+        "$",
+        "$"
+      ],
+      "purchaseColumns": [
+        "team.name",
+        "player.officialPlayerId",
+        "player.purchasePrice"
+      ],
+      "filenamePattern": "coach-beard-leghe-{leagueSlug}-{YYYY-MM-DD}.csv",
+      "exampleCsv": "$,$,$\nAtletico Ma Non Troppo,1234,28\nAtletico Ma Non Troppo,5678,1\n$,$,$\nReal Colizzati,9012,47\nReal Colizzati,3456,15\n"
+    },
+    "x-transformationAlgorithm": [
+      "Validate the complete input against this JSON Schema.",
+      "Run all cross-record validations listed in x-businessValidation before serialization.",
+      "Sort teams by displayOrder ascending.",
+      "For each team, append exactly one marker row containing three dollar signs: $,$,$.",
+      "Select only players whose status is purchased.",
+      "Sort players deterministically by role order P,D,C,A and then by playerName using the Italian locale.",
+      "For each selected player append: team name, official numeric player ID, purchase price.",
+      "Join columns with a literal comma and rows with LF. Do not add a header row.",
+      "Append one final LF at end of file.",
+      "Return the CSV as UTF-8 text without BOM.",
+      "Never use an LLM to calculate, validate or serialize this export."
+    ],
+    "x-businessValidation": {
+      "blockingRules": [
+        "There must be exactly 8 teams.",
+        "Every displayOrder must be unique and cover the integers from 1 to 8.",
+        "Every team name must be unique and must not contain comma, dollar sign, CR or LF.",
+        "Every final roster must contain exactly 25 purchased players.",
+        "Every final roster must contain exactly 3 P, 8 D, 8 C and 6 A.",
+        "Every officialPlayerId must be unique across the entire league.",
+        "Every officialPlayerId must exist in the datasetVersion locked to the auction session.",
+        "Every purchasePrice must be a positive integer.",
+        "The sum of purchasePrice for each team must be less than or equal to 1000.",
+        "The computed remaining credits must equal 1000 minus the sum of purchase prices.",
+        "Do not export nominated, unsold, released, deleted or compensated purchases."
+      ],
+      "errorContract": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "path"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "x-cursorImplementationTask": {
+      "objective": "Implementare l'export deterministico delle rose di Coach Beard nel formato CSV accettato da Leghe Fantacalcio.",
+      "requiredFunctions": [
+        {
+          "signature": "validateLegheExport(input): ValidationResult",
+          "behavior": "Valida schema JSON e regole cross-record senza modificare l'input."
+        },
+        {
+          "signature": "generateLegheFantacalcioCsv(input): string",
+          "behavior": "Restituisce esattamente il CSV descritto in x-officialExportFormat o solleva un errore tipizzato se la validazione fallisce."
+        },
+        {
+          "signature": "buildLegheExportFilename(leagueName, date): string",
+          "behavior": "Genera un nome file sicuro secondo filenamePattern."
+        }
+      ],
+      "implementationConstraints": [
+        "Use TypeScript strict mode.",
+        "Keep serializer and validators in the domain/export module, independent from Next.js and database code.",
+        "Use integer arithmetic only for credits and prices.",
+        "Do not silently repair malformed team names or unknown player IDs.",
+        "Do not quote team names containing commas: reject them because the official importer uses simple comma splitting.",
+        "Do not expose database IDs in place of officialPlayerId.",
+        "The download route must require the authenticated allowlisted owner.",
+        "The export must be reproducible: identical logical input produces identical CSV bytes."
+      ],
+      "requiredTests": [
+        "Golden-file test comparing the generated CSV byte-for-byte with expected output.",
+        "Reject a league with 7 or 9 teams.",
+        "Reject duplicate officialPlayerId values across different teams.",
+        "Reject a team name containing a comma, dollar sign or newline.",
+        "Reject a roster with incorrect role counts.",
+        "Reject a team that spends more than 1000 credits.",
+        "Reject a player ID absent from the locked dataset version.",
+        "Verify marker row before every team block.",
+        "Verify absence of header and BOM.",
+        "Verify deterministic team and player ordering.",
+        "Verify one final LF and no additional blank rows.",
+        "Verify that compensated or released acquisitions are excluded."
+      ],
+      "definitionOfDone": [
+        "All required tests pass.",
+        "A CSV generated from a completed simulated auction can be uploaded from Admin > Gestione Rose > Importa rose.",
+        "The Leghe interface recognizes all 8 roster blocks and allows each roster to be associated with the corresponding league team.",
+        "Player IDs and purchase prices shown in the import preview match Coach Beard exactly."
+      ]
+    },
+    "examples": [
+      {
+        "schemaVersion": "1.0.0",
+        "league": {
+          "name": "Esempio Coach Beard",
+          "initialCredits": 1000,
+          "datasetVersion": "serie-a-example-v1",
+          "rosterRules": {
+            "P": 3,
+            "D": 8,
+            "C": 8,
+            "A": 6
+          }
+        },
+        "teams": [
+          {
+            "teamId": "team-1",
+            "displayOrder": 1,
+            "name": "Squadra 1",
+            "players": []
+          },
+          {
+            "teamId": "team-2",
+            "displayOrder": 2,
+            "name": "Squadra 2",
+            "players": []
+          },
+          {
+            "teamId": "team-3",
+            "displayOrder": 3,
+            "name": "Squadra 3",
+            "players": []
+          },
+          {
+            "teamId": "team-4",
+            "displayOrder": 4,
+            "name": "Squadra 4",
+            "players": []
+          },
+          {
+            "teamId": "team-5",
+            "displayOrder": 5,
+            "name": "Squadra 5",
+            "players": []
+          },
+          {
+            "teamId": "team-6",
+            "displayOrder": 6,
+            "name": "Squadra 6",
+            "players": []
+          },
+          {
+            "teamId": "team-7",
+            "displayOrder": 7,
+            "name": "Squadra 7",
+            "players": []
+          },
+          {
+            "teamId": "team-8",
+            "displayOrder": 8,
+            "name": "Squadra 8",
+            "players": []
+          }
+        ]
+      }
+    ]
+  }
+  

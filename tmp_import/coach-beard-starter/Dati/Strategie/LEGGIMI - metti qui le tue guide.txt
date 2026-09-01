@@ -1,0 +1,15 @@
+METTI QUI LE GUIDE DEI TUOI ESPERTI
+====================================
+
+Un file Excel (.xlsx) per ogni fonte che segui, ad esempio:
+  Strategia_NomeEsperto1.xlsx
+  Strategia_NomeEsperto2.xlsx
+
+Cosa deve esserci dentro? Almeno il nome del giocatore e una
+valutazione (prezzo consigliato, fascia, o percentuale di budget).
+Colonne extra (commenti, titolarita, affidabilita...) sono benvenute.
+
+NON serve un formato preciso: quando costruirai l'app, l'AI
+analizzera' i TUOI file e adattera' il codice alle TUE colonne.
+Anche una sola guida basta per iniziare. Puoi perfino crearla tu
+in Excel con le tue convinzioni personali.

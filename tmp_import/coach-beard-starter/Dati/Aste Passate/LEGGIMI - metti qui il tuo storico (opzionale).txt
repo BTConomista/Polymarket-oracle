@@ -1,0 +1,12 @@
+METTI QUI LO STORICO DELLE TUE ASTE PASSATE (OPZIONALE)
+========================================================
+
+Se hai i risultati delle aste degli anni scorsi (chi ha comprato
+chi, e a quanto), mettili qui: un file Excel (.xlsx) o Apple
+Numbers (.numbers) per ogni asta.
+
+Servono all'app per stimare i prezzi "reali" della tua lega,
+che spesso sono diversi da quelli delle guide.
+
+Non ce li hai? Nessun problema: cancella pure questa cartella
+e dillo all'AI. L'app funziona benissimo anche senza.
