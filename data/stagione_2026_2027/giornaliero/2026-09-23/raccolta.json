@@ -1,0 +1,3324 @@
+{
+ "giorno": "2026-09-23",
+ "generato_utc": "2026-09-23T11:49:13.330763+00:00",
+ "livello": "fatti",
+ "partite_in_finestra": 109,
+ "squadre_senza_anagrafica": [],
+ "squadre_fuori_anagrafica": [
+  "amichevole/FC Schalke 04",
+  "amichevole/Rot-Weiß Oberhausen",
+  "bundesliga_2/1. FC Kaiserslautern",
+  "bundesliga_2/1. FC Magdeburg",
+  "bundesliga_2/1. FC Nürnberg",
+  "bundesliga_2/Arminia Bielefeld",
+  "bundesliga_2/Bochum",
+  "bundesliga_2/Darmstadt",
+  "bundesliga_2/Dynamo Dresden",
+  "bundesliga_2/Eintracht Braunschweig",
+  "bundesliga_2/Energie Cottbus",
+  "bundesliga_2/FC St. Pauli",
+  "bundesliga_2/Hannover 96",
+  "bundesliga_2/Heidenheim",
+  "bundesliga_2/Hertha Berlin",
+  "bundesliga_2/Holstein Kiel",
+  "bundesliga_2/Karlsruher SC",
+  "bundesliga_2/SpVgg Greuther Fürth",
+  "bundesliga_2/VfL Osnabrück",
+  "bundesliga_2/Wolfsburg",
+  "championship/Birmingham",
+  "championship/Blackburn",
+  "championship/Bolton",
+  "championship/Bristol City",
+  "championship/Burnley",
+  "championship/Cardiff",
+  "championship/Charlton",
+  "championship/Derby",
+  "championship/Lincoln City",
+  "championship/Middlesbrough",
+  "championship/Millwall",
+  "championship/Norwich",
+  "championship/Portsmouth",
+  "championship/Preston",
+  "championship/QPR",
+  "championship/Sheff Utd",
+  "championship/Southampton",
+  "championship/Stoke",
+  "championship/Swansea",
+  "championship/Watford",
+  "championship/West Brom",
+  "championship/West Ham",
+  "championship/Wolverhampton",
+  "championship/Wrexham",
+  "la_liga_2/AD Ceuta FC",
+  "la_liga_2/Albacete Balompié",
+  "la_liga_2/Almería",
+  "la_liga_2/Andorra FC",
+  "la_liga_2/Burgos CF",
+  "la_liga_2/CD Castellon",
+  "la_liga_2/CD Eldense",
+  "la_liga_2/CD Tenerife",
+  "la_liga_2/Cádiz",
+  "la_liga_2/Córdoba CF",
+  "la_liga_2/Girona",
+  "la_liga_2/Granada",
+  "la_liga_2/Las Palmas",
+  "la_liga_2/Leganés",
+  "la_liga_2/Mallorca",
+  "la_liga_2/RC Celta Fortuna",
+  "la_liga_2/Real Oviedo",
+  "la_liga_2/Real Sociedad B",
+  "la_liga_2/Real Sporting de Gijon",
+  "la_liga_2/Real Valladolid",
+  "la_liga_2/SD Eibar",
+  "la_liga_2/Sabadell",
+  "ligue_2/AS Nancy",
+  "ligue_2/Annecy FC",
+  "ligue_2/Clermont Foot",
+  "ligue_2/Dijon FCO",
+  "ligue_2/En Avant Guingamp",
+  "ligue_2/Grenoble Foot 38",
+  "ligue_2/Metz",
+  "ligue_2/Montpellier",
+  "ligue_2/Nantes",
+  "ligue_2/Pau FC",
+  "ligue_2/Red Star FC 93",
+  "ligue_2/Reims",
+  "ligue_2/Rodez",
+  "ligue_2/Saint-Étienne",
+  "ligue_2/Sochaux-Montbéliard",
+  "ligue_2/Stade Lavallois",
+  "ligue_2/US Boulogne",
+  "ligue_2/USL Dunkerque",
+  "serie_b/Arezzo",
+  "serie_b/Ascoli",
+  "serie_b/Avellino",
+  "serie_b/Benevento",
+  "serie_b/Carrarese",
+  "serie_b/Catanzaro",
+  "serie_b/Cesena",
+  "serie_b/Cremonese",
+  "serie_b/Empoli",
+  "serie_b/FC Sudtirol",
+  "serie_b/Juve Stabia",
+  "serie_b/Mantova",
+  "serie_b/Modena FC 2018",
+  "serie_b/Padova",
+  "serie_b/Palermo",
+  "serie_b/Pisa",
+  "serie_b/Sampdoria",
+  "serie_b/Verona",
+  "serie_b/Vicenza",
+  "serie_b/Virtus Entella",
+  "ucl/Arsenal",
+  "ucl/Atlético Madrid",
+  "ucl/Barcelona",
+  "ucl/Bayern Munich",
+  "ucl/Club Brugge",
+  "ucl/Galatasaray",
+  "ucl/Inter Milan",
+  "ucl/Lille OSC",
+  "ucl/Man Utd",
+  "ucl/Napoli",
+  "ucl/PSV",
+  "ucl/RB Leipzig",
+  "ucl/RC Lens",
+  "ucl/Sabah FC",
+  "ucl/Slavia Prague",
+  "ucl/Sporting",
+  "ucl/Viking FK",
+  "ucl/Villarreal"
+ ],
+ "record": [
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Rot-Weiß Oberhausen vs FC Schalke 04",
+   "lega": "amichevole",
+   "inizio": "2026-09-24T17:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779273+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Girona vs Albacete Balompié",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-25T18:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779288+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "AD Ceuta FC vs Real Sociedad B",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-26T12:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779294+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Granada vs Andorra FC",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-26T14:15:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779299+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "CD Tenerife vs Cádiz",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-26T16:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779304+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "RC Celta Fortuna vs Sabadell",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-26T16:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779308+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Real Valladolid vs Córdoba CF",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-27T12:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779312+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Mallorca vs Almería",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-27T14:15:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779323+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "SD Eibar vs Las Palmas",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-27T16:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779331+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Burgos CF vs CD Eldense",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-27T16:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779335+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Real Oviedo vs Real Sporting de Gijon",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-27T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779339+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Leganés vs CD Castellon",
+   "lega": "la_liga_2",
+   "inizio": "2026-09-28T18:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779343+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Heidenheim vs 1. FC Kaiserslautern",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-09T16:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779347+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Eintracht Braunschweig vs Holstein Kiel",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-09T16:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779350+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Montpellier vs Grenoble Foot 38",
+   "lega": "ligue_2",
+   "inizio": "2026-10-09T18:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779354+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "USL Dunkerque vs Annecy FC",
+   "lega": "ligue_2",
+   "inizio": "2026-10-09T18:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779358+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "AS Nancy vs En Avant Guingamp",
+   "lega": "ligue_2",
+   "inizio": "2026-10-09T18:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779362+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Pau FC vs Stade Lavallois",
+   "lega": "ligue_2",
+   "inizio": "2026-10-09T18:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779365+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Sochaux-Montbéliard vs US Boulogne",
+   "lega": "ligue_2",
+   "inizio": "2026-10-09T18:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:11.779371+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Borussia Dortmund vs Werder Bremen",
+   "lega": "bundesliga",
+   "inizio": "2026-10-09T18:30:00Z",
+   "stadio": "SIGNAL IDUNA PARK",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "ora_non_coperta",
+    "cercata": "2026-10-09T18:00"
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:12.309648+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Avellino vs Sampdoria",
+   "lega": "serie_b",
+   "inizio": "2026-10-09T18:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:12.309672+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "RC Lens vs Lyon",
+   "lega": "ligue_1",
+   "inizio": "2026-10-09T18:45:00Z",
+   "stadio": "Stade Bollaert-Delelis",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "ora_non_coperta",
+    "cercata": "2026-10-09T18:00"
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:12.817008+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Málaga vs Espanyol",
+   "lega": "la_liga",
+   "inizio": "2026-10-09T19:00:00Z",
+   "stadio": "La Rosaleda",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "ora_non_coperta",
+    "cercata": "2026-10-09T19:00"
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328008+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "West Ham vs QPR",
+   "lega": "championship",
+   "inizio": "2026-10-09T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328030+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "VfL Osnabrück vs Dynamo Dresden",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-10T11:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328037+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Darmstadt vs Energie Cottbus",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-10T11:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328044+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "1. FC Magdeburg vs Hannover 96",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-10T11:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328051+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Arsenal vs Leeds",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T11:30:00Z",
+   "stadio": "Emirates Stadium",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328072+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Swansea vs Norwich",
+   "lega": "championship",
+   "inizio": "2026-10-10T11:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328078+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "West Brom vs Birmingham",
+   "lega": "championship",
+   "inizio": "2026-10-10T11:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328082+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Charlton vs Bristol City",
+   "lega": "championship",
+   "inizio": "2026-10-10T11:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328087+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Rayo Vallecano vs Athletic Bilbao",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T12:00:00Z",
+   "stadio": "Estadio de Vallecas",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328096+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Clermont Foot vs Red Star FC 93",
+   "lega": "ligue_2",
+   "inizio": "2026-10-10T12:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328101+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Nantes vs Reims",
+   "lega": "ligue_2",
+   "inizio": "2026-10-10T12:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328105+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Genoa vs Fiorentina",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T13:00:00Z",
+   "stadio": "Luigi Ferraris",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328113+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "FC Sudtirol vs Ascoli",
+   "lega": "serie_b",
+   "inizio": "2026-10-10T13:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328117+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Empoli vs Palermo",
+   "lega": "serie_b",
+   "inizio": "2026-10-10T13:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328124+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Benevento vs Cesena",
+   "lega": "serie_b",
+   "inizio": "2026-10-10T13:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328130+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Virtus Entella vs Juve Stabia",
+   "lega": "serie_b",
+   "inizio": "2026-10-10T13:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328135+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Augsburg vs Bayern Munich",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "stadio": "WWK ARENA",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328141+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "SC Paderborn 07 vs Stuttgart",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "stadio": "Home Deluxe Arena",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328150+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Hoffenheim vs Hamburger SV",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "stadio": "PreZero Arena",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328160+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Mainz vs Bayer Leverkusen",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "stadio": "Mewa Arena",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328167+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Union Berlin vs SV Elversberg",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "stadio": "Stadion An der Alten Försterei",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328174+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Sunderland vs Brighton",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": "Stadium of Light",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328181+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Ipswich vs Fulham",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": "Portman Road",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328187+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Aston Villa vs Brentford",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": "Villa Park",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328192+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Chelsea vs Bournemouth",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": "Stamford Bridge",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328201+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Sheff Utd vs Lincoln City",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328205+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Middlesbrough vs Wolverhampton",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328209+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Watford vs Burnley",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328213+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Preston vs Millwall",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328217+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Bolton vs Stoke",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328221+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Blackburn vs Cardiff",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328225+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Derby vs Wrexham",
+   "lega": "championship",
+   "inizio": "2026-10-10T14:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328228+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Alaves vs Atlético Madrid",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T14:15:00Z",
+   "stadio": "Mendizorroza",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328236+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Lille OSC vs Le Havre",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T15:15:00Z",
+   "stadio": "Decathlon Arena-Stade Pierre-Mauroy",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328243+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Vicenza vs Pisa",
+   "lega": "serie_b",
+   "inizio": "2026-10-10T15:15:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328249+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Inter Milan vs Parma",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T16:00:00Z",
+   "stadio": "Giuseppe Meazza",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328257+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Man Utd vs Tottenham",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T16:30:00Z",
+   "stadio": "Old Trafford",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328263+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "RB Leipzig vs Eintracht Frankfurt",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T16:30:00Z",
+   "stadio": "Red Bull Arena",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328269+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Barcelona vs Getafe",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T16:30:00Z",
+   "stadio": "Spotify Camp Nou",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328276+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Arezzo vs Cremonese",
+   "lega": "serie_b",
+   "inizio": "2026-10-10T17:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328280+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Saint-Étienne vs Rodez",
+   "lega": "ligue_2",
+   "inizio": "2026-10-10T18:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328284+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "1. FC Nürnberg vs Wolfsburg",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-10T18:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328289+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Monaco vs Toulouse",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "stadio": "Stade Louis-II",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328296+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "PSG vs Le Mans FC",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "stadio": "Parc des Princes",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328303+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Lorient vs Paris FC",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "stadio": "Stade du Moustoir",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328311+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Brest vs Angers",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "stadio": "Stade Francis-Le Blé",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328318+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Napoli vs Frosinone",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T18:45:00Z",
+   "stadio": "Diego Armando Maradona",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328323+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Real Madrid vs Villarreal",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T19:00:00Z",
+   "stadio": "Santiago Bernabéu",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 17,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328330+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Como vs Roma",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T10:30:00Z",
+   "stadio": "Giuseppe Sinigaglia",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328336+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Southampton vs Portsmouth",
+   "lega": "championship",
+   "inizio": "2026-10-11T11:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328339+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Hertha Berlin vs SpVgg Greuther Fürth",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-11T11:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328344+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Bochum vs Arminia Bielefeld",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-11T11:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328348+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "FC St. Pauli vs Karlsruher SC",
+   "lega": "bundesliga_2",
+   "inizio": "2026-10-11T11:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328352+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Elche CF vs Celta Vigo",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T12:00:00Z",
+   "stadio": "Manuel Martínez Valero",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328362+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Crystal Palace vs Nottm Forest",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T13:00:00Z",
+   "stadio": "Selhurst Park",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328370+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Hull vs Everton",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T13:00:00Z",
+   "stadio": "MKM Stadium",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328377+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Lazio vs Monza",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T13:00:00Z",
+   "stadio": "Olimpico di Roma",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328382+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Lecce vs Bologna",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T13:00:00Z",
+   "stadio": "Ettore Giardiniero",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328388+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Nice vs Strasbourg",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T13:00:00Z",
+   "stadio": "Allianz Riviera",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328394+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Catanzaro vs Mantova",
+   "lega": "serie_b",
+   "inizio": "2026-10-11T13:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328398+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Köln vs Borussia Mönchengladbach",
+   "lega": "bundesliga",
+   "inizio": "2026-10-11T13:30:00Z",
+   "stadio": "RheinEnergieSTADION",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328405+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Real Sociedad vs Deportivo La Coruña",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T14:15:00Z",
+   "stadio": "Anoeta",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328413+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Rennes vs AJ Auxerre",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T15:15:00Z",
+   "stadio": "Roazhon Park",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328419+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Padova vs Carrarese",
+   "lega": "serie_b",
+   "inizio": "2026-10-11T15:15:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328423+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Liverpool vs Man City",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T15:30:00Z",
+   "stadio": "Anfield",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328431+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "SC Freiburg vs FC Schalke 04",
+   "lega": "bundesliga",
+   "inizio": "2026-10-11T15:30:00Z",
+   "stadio": "Europa-Park Stadion",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328437+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Sassuolo vs AC Milan",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T16:00:00Z",
+   "stadio": "Mapei Stadium - Città del Tricolore",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328443+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Real Betis vs Osasuna",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T16:30:00Z",
+   "stadio": "La Cartuja",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328448+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Modena FC 2018 vs Verona",
+   "lega": "serie_b",
+   "inizio": "2026-10-11T17:30:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328452+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Cagliari vs Juventus",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T18:45:00Z",
+   "stadio": "Unipol Domus",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328458+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Troyes AC vs Marseille",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T18:45:00Z",
+   "stadio": "Stade de l'Aube",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 18,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328463+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Racing Santander vs Valencia",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328468+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Atalanta vs Venezia",
+   "lega": "serie_a",
+   "inizio": "2026-10-12T16:30:00Z",
+   "stadio": "New Balance Arena - Bergamo",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 19,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328473+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Torino vs Udinese",
+   "lega": "serie_a",
+   "inizio": "2026-10-12T18:45:00Z",
+   "stadio": "Olimpico Grande Torino",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 19,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328479+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Dijon FCO vs Metz",
+   "lega": "ligue_2",
+   "inizio": "2026-10-12T18:45:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328486+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Coventry vs Newcastle",
+   "lega": "premier_league",
+   "inizio": "2026-10-12T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328490+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Levante UD vs Sevilla",
+   "lega": "la_liga",
+   "inizio": "2026-10-12T19:00:00Z",
+   "stadio": "Ciutat de València",
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "fuori_orizzonte",
+    "giorni_mancanti": 19,
+    "orizzonte_giorni": 16
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328496+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Sabah FC vs Slavia Prague",
+   "lega": "ucl",
+   "inizio": "2026-10-13T16:45:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328500+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "RC Lens vs Sporting",
+   "lega": "ucl",
+   "inizio": "2026-10-13T16:45:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328504+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Villarreal vs Napoli",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328508+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "RB Leipzig vs PSV",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328512+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Viking FK vs Bayern Munich",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328517+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Atlético Madrid vs Man Utd",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328521+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Inter Milan vs Club Brugge",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328525+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Galatasaray vs Barcelona",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328530+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "meteo_previsto",
+   "partita": "Arsenal vs Lille OSC",
+   "lega": "ucl",
+   "inizio": "2026-10-13T19:00:00Z",
+   "stadio": null,
+   "stadio_confermato": false,
+   "stadio_nota": "impianto abituale della squadra di casa, NON confermato per questa partita: nelle coppe europee il 12,3% delle gare interne si gioca altrove",
+   "valore": {
+    "stato": "coordinate_mancanti",
+    "stadio": null
+   },
+   "fonte": null,
+   "raccolto_utc": "2026-09-23T11:49:13.328536+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Borussia Dortmund vs Werder Bremen",
+   "lega": "bundesliga",
+   "inizio": "2026-10-09T18:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330541+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Borussia Dortmund vs Werder Bremen",
+   "lega": "bundesliga",
+   "inizio": "2026-10-09T18:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330550+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "RC Lens vs Lyon",
+   "lega": "ligue_1",
+   "inizio": "2026-10-09T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330554+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "RC Lens vs Lyon",
+   "lega": "ligue_1",
+   "inizio": "2026-10-09T18:45:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330557+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Málaga vs Espanyol",
+   "lega": "la_liga",
+   "inizio": "2026-10-09T19:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330559+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Málaga vs Espanyol",
+   "lega": "la_liga",
+   "inizio": "2026-10-09T19:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330562+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Arsenal vs Leeds",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T11:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330568+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Arsenal vs Leeds",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T11:30:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330570+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Rayo Vallecano vs Athletic Bilbao",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T12:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330573+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Rayo Vallecano vs Athletic Bilbao",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T12:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330575+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Genoa vs Fiorentina",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T13:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330577+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Genoa vs Fiorentina",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T13:00:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330579+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Augsburg vs Bayern Munich",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330581+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Augsburg vs Bayern Munich",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330583+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "SC Paderborn 07 vs Stuttgart",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330585+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "SC Paderborn 07 vs Stuttgart",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330587+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Hoffenheim vs Hamburger SV",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330591+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Hoffenheim vs Hamburger SV",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330593+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Mainz vs Bayer Leverkusen",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330595+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Mainz vs Bayer Leverkusen",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330597+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Union Berlin vs SV Elversberg",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330599+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Union Berlin vs SV Elversberg",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T13:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330601+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Sunderland vs Brighton",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330603+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Sunderland vs Brighton",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330605+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Ipswich vs Fulham",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330607+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Ipswich vs Fulham",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330609+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Aston Villa vs Brentford",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330611+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Aston Villa vs Brentford",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330613+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Chelsea vs Bournemouth",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330615+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Chelsea vs Bournemouth",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T14:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330617+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Alaves vs Atlético Madrid",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T14:15:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330619+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Alaves vs Atlético Madrid",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T14:15:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330621+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Lille OSC vs Le Havre",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T15:15:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330623+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Lille OSC vs Le Havre",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T15:15:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330625+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Inter Milan vs Parma",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T16:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330627+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Inter Milan vs Parma",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T16:00:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330629+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Man Utd vs Tottenham",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T16:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330633+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Man Utd vs Tottenham",
+   "lega": "premier_league",
+   "inizio": "2026-10-10T16:30:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330635+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "RB Leipzig vs Eintracht Frankfurt",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T16:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330637+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "RB Leipzig vs Eintracht Frankfurt",
+   "lega": "bundesliga",
+   "inizio": "2026-10-10T16:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330639+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Barcelona vs Getafe",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T16:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330641+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Barcelona vs Getafe",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T16:30:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330643+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Monaco vs Toulouse",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330645+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Monaco vs Toulouse",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330647+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "PSG vs Le Mans FC",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330649+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "PSG vs Le Mans FC",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330650+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Lorient vs Paris FC",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330654+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Lorient vs Paris FC",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330656+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Brest vs Angers",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330658+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Brest vs Angers",
+   "lega": "ligue_1",
+   "inizio": "2026-10-10T18:45:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330660+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Napoli vs Frosinone",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330661+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Napoli vs Frosinone",
+   "lega": "serie_a",
+   "inizio": "2026-10-10T18:45:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330663+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Real Madrid vs Villarreal",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T19:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330665+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Real Madrid vs Villarreal",
+   "lega": "la_liga",
+   "inizio": "2026-10-10T19:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330668+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Como vs Roma",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T10:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330670+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Como vs Roma",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T10:30:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330672+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Elche CF vs Celta Vigo",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T12:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330676+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Elche CF vs Celta Vigo",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T12:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330678+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Crystal Palace vs Nottm Forest",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T13:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330679+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Crystal Palace vs Nottm Forest",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T13:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330681+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Hull vs Everton",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T13:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330683+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Hull vs Everton",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T13:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330685+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Lazio vs Monza",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T13:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330687+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Lazio vs Monza",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T13:00:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330689+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Lecce vs Bologna",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T13:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330691+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Lecce vs Bologna",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T13:00:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330693+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Nice vs Strasbourg",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T13:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330696+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Nice vs Strasbourg",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T13:00:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330698+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Köln vs Borussia Mönchengladbach",
+   "lega": "bundesliga",
+   "inizio": "2026-10-11T13:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330701+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Köln vs Borussia Mönchengladbach",
+   "lega": "bundesliga",
+   "inizio": "2026-10-11T13:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330702+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Real Sociedad vs Deportivo La Coruña",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T14:15:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330704+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Real Sociedad vs Deportivo La Coruña",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T14:15:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330706+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Rennes vs AJ Auxerre",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T15:15:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330708+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Rennes vs AJ Auxerre",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T15:15:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330710+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Liverpool vs Man City",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T15:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330712+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Liverpool vs Man City",
+   "lega": "premier_league",
+   "inizio": "2026-10-11T15:30:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330714+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "SC Freiburg vs FC Schalke 04",
+   "lega": "bundesliga",
+   "inizio": "2026-10-11T15:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330718+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "SC Freiburg vs FC Schalke 04",
+   "lega": "bundesliga",
+   "inizio": "2026-10-11T15:30:00Z",
+   "regola": "DFL",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330721+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Sassuolo vs AC Milan",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T16:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330722+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Sassuolo vs AC Milan",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T16:00:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330724+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Real Betis vs Osasuna",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T16:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330726+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Real Betis vs Osasuna",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T16:30:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330728+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Cagliari vs Juventus",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330730+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Cagliari vs Juventus",
+   "lega": "serie_a",
+   "inizio": "2026-10-11T18:45:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330732+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Troyes AC vs Marseille",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330734+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Troyes AC vs Marseille",
+   "lega": "ligue_1",
+   "inizio": "2026-10-11T18:45:00Z",
+   "regola": "LFP, regola semplificata dal 2025-26 (prima: 3)",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330736+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Racing Santander vs Valencia",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T19:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330739+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Racing Santander vs Valencia",
+   "lega": "la_liga",
+   "inizio": "2026-10-11T19:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330741+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Atalanta vs Venezia",
+   "lega": "serie_a",
+   "inizio": "2026-10-12T16:30:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330743+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Atalanta vs Venezia",
+   "lega": "serie_a",
+   "inizio": "2026-10-12T16:30:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330745+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Torino vs Udinese",
+   "lega": "serie_a",
+   "inizio": "2026-10-12T18:45:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330747+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Torino vs Udinese",
+   "lega": "serie_a",
+   "inizio": "2026-10-12T18:45:00Z",
+   "regola": "art. 19 c.9 Codice di Giustizia Sportiva (FIGC)",
+   "soglie": [
+    5,
+    10,
+    14,
+    17,
+    19
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330749+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Coventry vs Newcastle",
+   "lega": "premier_league",
+   "inizio": "2026-10-12T19:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330751+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Coventry vs Newcastle",
+   "lega": "premier_league",
+   "inizio": "2026-10-12T19:00:00Z",
+   "regola": "regolamento Premier League",
+   "soglie": [
+    5,
+    10,
+    15
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330753+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "arbitro_designato",
+   "partita": "Levante UD vs Sevilla",
+   "lega": "la_liga",
+   "inizio": "2026-10-12T19:00:00Z",
+   "arbitro": null,
+   "var": null,
+   "designato_il": null,
+   "stato_raccolta": "da_implementare",
+   "perche_serve": "vale quanto il fattore campo sui cartellini (Fase 125) e la tendenza persiste fra stagioni",
+   "raccolto_utc": "2026-09-23T11:49:13.330755+00:00"
+  },
+  {
+   "tipo": "fatto",
+   "cosa": "bollettino_disciplinare",
+   "partita": "Levante UD vs Sevilla",
+   "lega": "la_liga",
+   "inizio": "2026-10-12T19:00:00Z",
+   "regola": "RFEF/LaLiga",
+   "soglie": [
+    5
+   ],
+   "diffidati": [],
+   "squalificati": [],
+   "stato_calcolo": "stagione non iniziata: nessun cartellino",
+   "raccolto_utc": "2026-09-23T11:49:13.330757+00:00"
+  }
+ ]
+}
