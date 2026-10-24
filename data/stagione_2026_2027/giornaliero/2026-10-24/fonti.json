@@ -1,0 +1,296 @@
+{
+ "giorno": "2026-10-24",
+ "nota": "verbale di OGNI fetch, riusciti e falliti. Un giorno senza questo file è un giorno di cui non sappiamo nulla, e va trattato come tale in ogni analisi.",
+ "tentati": 36,
+ "falliti": 1,
+ "voci": [
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=52.509167&longitude=-1.884722&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:48.734142+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14230,
+   "durata_s": 0.58
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=40.436111&longitude=-3.599444&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:49.313945+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14211,
+   "durata_s": 0.29
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=45.813889&longitude=9.072222&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:49.604407+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14080,
+   "durata_s": 0.42
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=39.199694&longitude=9.137417&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:50.021441+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14399,
+   "durata_s": 0.31
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=49.984167&longitude=8.224167&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:50.330376+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14057,
+   "durata_s": 0.3
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=51.345833&longitude=12.348056&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:50.633230+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14055,
+   "durata_s": 0.2
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=50.933611&longitude=6.875&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:50.829080+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14168,
+   "durata_s": 0.44
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=51.555556&longitude=-0.279722&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:51.270477+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14277,
+   "durata_s": 0.2
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=48.323321&longitude=10.885926&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:51.467931+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14042,
+   "durata_s": 0.36
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=51.555&longitude=-0.108333&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:51.828684+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14254,
+   "durata_s": 0.17
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=43.301378&longitude=-1.973617&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:51.997606+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14229,
+   "durata_s": 0.2
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=40.827967&longitude=14.193008&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:52.202075+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14220,
+   "durata_s": 0.18
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=51.481667&longitude=-0.191111&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:52.385044+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14231,
+   "durata_s": 0.22
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=51.4925&longitude=7.451667&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:52.604388+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14188,
+   "durata_s": 0.28
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=39.474722&longitude=-0.358333&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:52.882874+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14303,
+   "durata_s": 0.18
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=50.4329&longitude=2.81491&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:53.064717+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14166,
+   "durata_s": 0.17
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=41.933889&longitude=12.454722&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:53.233071+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14255,
+   "durata_s": 0.22
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=40.436111&longitude=-3.599444&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:53.454260+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14212,
+   "durata_s": 0.17
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=45.478056&longitude=9.123889&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:53.623576+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14078,
+   "durata_s": 0.18
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=43.264205&longitude=-2.949369&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:53.808350+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14234,
+   "durata_s": 0.24
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=51.398333&longitude=-0.085556&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:54.052773+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14222,
+   "durata_s": 0.23
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=53.463056&longitude=-2.291389&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:54.286956+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14252,
+   "durata_s": 0.24
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=53.746111&longitude=-0.367778&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:54.530373+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14305,
+   "durata_s": 0.23
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=53.430833&longitude=-2.960833&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:54.760301+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14297,
+   "durata_s": 0.37
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=43.727778&longitude=7.415556&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:15:55.128475+00:00",
+   "esito": "errore",
+   "errore": "URLError",
+   "byte": 0,
+   "durata_s": 25.09
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=44.416431&longitude=8.952428&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:20.220139+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14311,
+   "durata_s": 0.49
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=45.708889&longitude=9.680833&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:20.706586+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14033,
+   "durata_s": 0.32
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=46.081603&longitude=13.200136&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:21.031322+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14046,
+   "durata_s": 0.23
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=42.211861&longitude=-8.740328&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:21.264954+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14237,
+   "durata_s": 0.39
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=43.269241&longitude=5.394907&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:21.653242+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14374,
+   "durata_s": 0.17
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=47.45905&longitude=-0.53163&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:21.823926+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14218,
+   "durata_s": 0.24
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=48.10743&longitude=-1.71282&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:22.063473+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14214,
+   "durata_s": 0.2
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=47.78672&longitude=3.58871&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:22.267811+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14142,
+   "durata_s": 0.19
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=54.914429&longitude=-1.388173&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:22.453243+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14292,
+   "durata_s": 0.18
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=48.021536&longitude=7.830006&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:22.629237+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14047,
+   "durata_s": 0.17
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=40.365278&longitude=18.208889&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-10-24T11:16:22.796731+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14500,
+   "durata_s": 0.18
+  }
+ ]
+}
