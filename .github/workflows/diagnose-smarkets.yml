@@ -1,0 +1,23 @@
+name: Diagnosi accesso API Smarkets
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/diagnose_smarkets_http.py
+      - .github/workflows/diagnose-smarkets.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          sparse-checkout: scripts/diagnose_smarkets_http.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: python -u scripts/diagnose_smarkets_http.py
