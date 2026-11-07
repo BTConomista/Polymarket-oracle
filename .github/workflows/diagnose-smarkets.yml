@@ -1,23 +1,30 @@
-name: Diagnosi accesso API Smarkets
+name: Verifica client Smarkets
 on:
   push:
     branches: [main]
     paths:
+      - scripts/fetch_smarkets_outrights.py
       - scripts/diagnose_smarkets_http.py
+      - tests/test_smarkets_http.py
       - .github/workflows/diagnose-smarkets.yml
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  probe:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-        with:
-          sparse-checkout: scripts/diagnose_smarkets_http.py
-          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - run: python -u scripts/diagnose_smarkets_http.py
+      - run: pip install --quiet pytest requests numpy scipy pandas
+      - name: Regressione collettori e guardiano (senza rete)
+        run: >-
+          python -m pytest -q tests/test_smarkets_http.py
+          tests/test_smarkets_matches.py tests/test_smarkets_live.py
+          tests/test_outright_archive.py tests/test_controlla_raccolta.py
+          tests/test_gemelli_prova.py
+      - name: API reali con il client condiviso (sola lettura)
+        run: python -u scripts/diagnose_smarkets_http.py

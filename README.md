@@ -143,6 +143,7 @@ resto sono rendimenti decrescenti — segno che il modello è al **tetto** dei d
 
 | Fase | Leva provata | Effetto (1X2) | Esito |
 |:--:|---|--:|:--:|
+| 07/11/2026 · manutenzione | [Client Smarkets: header HTTP espliciti](docs/incidenti/2026-11-07-smarkets-403.md) | nessuna modifica al modello | A/B sul runner: 403 senza header, 200 JSON con header; verifica automatica dei collettori |
 | 2b | shrinkage + emivita | gap −0.0051 | ✅ adottato |
 | 3 | tiri in porta grezzi (SOT) | nullo / negativo | ❌ off |
 | 4b | blend gol / **xG** (α=0.75) | guadagno (soprat. O/U) | ✅ adottato |

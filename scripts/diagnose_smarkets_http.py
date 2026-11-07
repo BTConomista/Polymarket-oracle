@@ -1,30 +1,25 @@
-"""Diagnosi in sola lettura dell'accesso pubblico Smarkets dal runner."""
-import json
-import subprocess
-import time
-import urllib.error
-import urllib.request
+"""Verifica in sola lettura il client Smarkets dal runner, senza salvare prezzi."""
+from fetch_smarkets_outrights import _get, OUTRIGHT_NODE
 
-URL = "https://api.smarkets.com/v3/events/?type=football_match&state=upcoming&limit=1"
-
-def probe(label, headers):
-    request = urllib.request.Request(URL, headers=headers)
-    try:
-        response = urllib.request.urlopen(request, timeout=30)
-    except urllib.error.HTTPError as error:
-        response = error
-    with response:
-        body = response.read(1200).decode("utf-8", errors="replace")
-        print(json.dumps({"client": label, "status": response.status,
-                          "headers": {k: v for k, v in response.headers.items()
-                                      if k.lower() in {"server", "content-type", "cf-mitigated", "retry-after"}},
-                          "body": body}, ensure_ascii=False), flush=True)
+def main():
+    first = None
+    for label, path in (
+        ("pre-partita", "/events/?type=football_match&state=upcoming&limit=1"),
+        ("live", "/events/?type=football_match&state=live&limit=1"),
+        ("outright", f"/events/?parent_id={OUTRIGHT_NODE}&limit=1"),
+    ):
+        data = _get(path)
+        assert isinstance(data.get("events"), list), f"{label}: risposta senza events"
+        print(f"{label}: OK, {len(data['events'])} eventi nella pagina", flush=True)
+        if label == "pre-partita" and data["events"]:
+            first = data["events"][0]
+    if first:
+        markets = _get(f"/events/{first['id']}/markets/")["markets"]
+        assert markets, "evento senza mercati: prezzi non verificati"
+        market_id = markets[0]["id"]
+        assert "contracts" in _get(f"/markets/{market_id}/contracts/")
+        assert isinstance(_get(f"/markets/{market_id}/quotes/"), dict)
+        print("mercati, contratti e libro quote: OK", flush=True)
 
 if __name__ == "__main__":
-    probe("urllib default", {})
-    time.sleep(2)
-    probe("urllib JSON", {"Accept": "application/json",
-                         "User-Agent": "Polymarket-Oracle/1.0 (+https://github.com/BTConomista/Polymarket-oracle)"})
-    time.sleep(2)
-    subprocess.run(["curl", "--silent", "--show-error", "--max-time", "30",
-                    "--include", URL], check=False)
+    main()

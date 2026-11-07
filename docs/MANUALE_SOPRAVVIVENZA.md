@@ -565,3 +565,11 @@ niente VPN.
 *Cosa NON sta qui (perché già scritto altrove): le fasi in DIARIO.md, il
 catalogo dati in DATI.md, la rosa dei modelli in PANCHINA.md, la caccia alle
 quote O/U in CACCIA_OU_2017_19.md, i commenti del workflow.*
+
+
+## 7 novembre 2026 — Smarkets 403 sul runner
+
+Il client urllib predefinito riceve HTML Cloudflare 403; la stessa richiesta
+con `Accept: application/json` e User-Agent identificativo riceve JSON 200.
+Usare il client condiviso, non aggiungere retry dei 403 o silenziare gli allarmi.
+[Prova, correzione e limiti](incidenti/2026-11-07-smarkets-403.md).

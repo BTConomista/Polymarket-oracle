@@ -55,6 +55,12 @@ import urllib.error
 import urllib.request
 
 API = "https://api.smarkets.com/v3"
+# Header espliciti: sul runner (07/11/2026) urllib senza header riceve
+# una pagina Cloudflare 403; questa richiesta JSON riceve 200.
+HTTP_HEADERS = {
+    "Accept": "application/json",
+    "User-Agent": "Polymarket-Oracle/1.0 (+https://github.com/BTConomista/Polymarket-oracle)",
+}
 FOOTBALL_ROOT = 121005          # nodo "Football"
 OUTRIGHT_NODE = 649058          # nodo "Outright": qui vivono i mercati di stagione
 
@@ -203,7 +209,8 @@ def _get(path: str, retries: int = 5):
     for k in range(retries):
         try:
             _attendi_il_turno()
-            with urllib.request.urlopen(url, timeout=30) as r:
+            request = urllib.request.Request(url, headers=HTTP_HEADERS)
+            with urllib.request.urlopen(request, timeout=30) as r:
                 d = json.loads(r.read())
             _accelera()
             return d
