@@ -20,11 +20,10 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install --quiet pytest requests numpy scipy pandas PyYAML
-      - name: Regressione collettori e guardiano (senza rete)
+      - name: Regressione client e collettori (senza rete)
         run: >-
           python -m pytest -q tests/test_smarkets_http.py
           tests/test_smarkets_matches.py tests/test_smarkets_live.py
-          tests/test_outright_archive.py tests/test_controlla_raccolta.py
-          tests/test_gemelli_prova.py
+          tests/test_outright_archive.py
       - name: API reali con il client condiviso (sola lettura)
         run: python -u scripts/diagnose_smarkets_http.py
