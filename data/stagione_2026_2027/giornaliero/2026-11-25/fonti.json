@@ -1,0 +1,48 @@
+{
+ "giorno": "2026-11-25",
+ "nota": "verbale di OGNI fetch, riusciti e falliti. Un giorno senza questo file è un giorno di cui non sappiamo nulla, e va trattato come tale in ogni analisi.",
+ "tentati": 5,
+ "falliti": 0,
+ "voci": [
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=53.066389&longitude=8.8375&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-11-25T17:24:33.683963+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14176,
+   "durata_s": 0.08
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=45.427761&longitude=12.363731&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-11-25T17:24:33.759903+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14046,
+   "durata_s": 0.03
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=48.40293&longitude=-4.46148&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-11-25T17:24:33.790808+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14356,
+   "durata_s": 1.05
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=52.94&longitude=-1.132778&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-11-25T17:24:34.843459+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14249,
+   "durata_s": 0.03
+  },
+  {
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=39.494722&longitude=-0.364167&hourly=temperature_2m%2Cprecipitation%2Cwind_speed_10m%2Crelative_humidity_2m&timezone=UTC&forecast_days=16",
+   "quando_utc": "2026-11-25T17:24:34.874127+00:00",
+   "esito": "ok",
+   "http": 200,
+   "byte": 14193,
+   "durata_s": 0.87
+  }
+ ]
+}
